@@ -12,6 +12,12 @@
 Not-tested: career screen render at the new geometry (in-game open owed — prefab drift fails silently).
 Save-compat: none — `PassiveEffectType` is never persisted; career saves store id strings only.
 
+### docs: archive cleanup and provenance-note refresh
+
+- Removed 14 superseded research/review artifacts from `docs/reviews/` + `docs/archive/` (early one-shot research prompts, comparison studies, and raw adversarial-review transcripts whose distilled findings live on in REVIEW-LOG and the RCAs); updated the archive index and every referring link.
+- Refreshed provenance/design notes across feature docs, CLAUDE.md, AGENTS.md, README, historical CHANGELOG entries, and tool headers; trimmed the now-empty README Acknowledgments section.
+- Docs linter: no new dead links (13 pre-existing items unchanged). Build + CombatMechanics tests green after the comment-only C# touches.
+
 ## 2026-07-05
 
 ### fix(HeroRace): make race persistence robust to skins.xml race-list reordering (#330)
@@ -55,7 +61,8 @@ Play-test follow-ups during iteration:
 - **Raid momentum cut** (`momentum.json` `raidMomentum` 200→100→50) — village raids were the single largest momentum source for both sides, and because Good factions rarely raid it structurally over-fed Evil. Cut to a quarter of the original — now by far the lowest per-event weight (siege 250 / army 200 / battle-max 300). JSON-only; retune freely (singleton-cached → restart to reload).
 - **Enemies-killed now feeds the meter** (new `MomentumActionType.EnemiesKilled` + `momentum.json` `killMomentumPerHundred` = 10) — battle-won momentum is `casualties ÷ loser-strength`-normalized, so it stayed tiny (16–27) despite hundreds of thousands of kills, and the huge "Enemies Killed" total was display-only. Added a raw-attrition source: each side scores momentum for the enemies it kills, on the same battles as the kill stat, shown as an "Enemies Killed" breakdown row (`= kills × 10 ÷ 100` displayed, 504h decay). Save-safe (enum persisted by name; old saves restore an empty queue). Pure `MomentumEventService.AwardKillMomentum`, validated config, 5 new tests (150 momentum green).
 - **Battle-won bumped** (`momentum.json` `maxBattleMomentum` 300→350) — a slight increase to the win reward, per request.
-- **Settlement captures worth more** (`momentum.json` `siegeMomentum` 250→400) — taking a fief is the war's real objective, so it's now among the highest per-event weights (army 200 / raid 50). JSON-only.
+- **Army-gathering weight cut** (`momentum.json` `armyMomentum` 200→50) — gathering an army is a routine, repeatable move, not a war outcome; now weighted the same as a village raid.
+- **Settlement captures worth more** (`momentum.json` `siegeMomentum` 250→400) — taking a fief is the war's real objective, so it's now the highest per-event weight (battle-cap 350 / army 50 / raid 50). JSON-only.
 - **Relative Strength retired** (`momentum.json` `maxStrengthMomentum` 300→0) — Evil out-strengths the Free Peoples for most of a campaign, so the daily strength-differential award handed Evil free momentum every day regardless of what either side did. `MomentumEventService.AwardDailyStrengthMomentum` now early-returns when the cap is ≤ 0, and `RelativeStrength` is excluded from the popup breakdown so no dead "Relative Strength 0/0" row shows. Config-reversible (set the cap > 0). 145 momentum tests green.
 - **Map-bar title moved below** — the taller custom frame overlapped the "War of the Ring" title (the `ButtonWidget` drew it on top via a stale `MarginTop`). Title + bar now stack in a vertical `ListPanel` with the title **below** the frame. (Note: the editor sprite-bake's post-run sync copies the install's `GUI/PreFabs/` back over the repo, which reverted this + the popup side-swap once — re-applied; deploy repo→install and don't sync prefabs install→repo.)
 - **Popup banner flicker** (`MomentumPopupVM`) — leader/ally banners flashed in and vanished. Root cause: the popup live-recomputes on every `MomentumChanged`, and each `Rebuild` re-created the `BannerImageIdentifierVM`s; banner textures render asynchronously, so a fresh event replaced each VM before its texture finished. Fixed by building the banner/roster VMs **once** at open and refreshing only the numbers (total/color/breakdown/stats) on change — the enrolled factions don't change during the popup's brief life. Not a reskin regression (pre-existing in the live-recompute path).
@@ -423,9 +430,9 @@ records each action as DONE with file refs. Review log: REVIEW-LOG entry 69; AGE
 
 ### feat(combat): CombatMechanics — crush-through, creature cleave/unstoppable, weight-based charge knockdown, shield penetration, race modifiers (#320)
 
-Clean-room adaptation of five mechanics from The Old Realms' `TORAgentApplyDamageModel` (TheOldRealms/TOR_Core
+Clean-room adaptation of five mechanics from a reference damage model (reference repo
 commit `d8ded52`, GPLv3 — no code copied; constants/formulas recorded as facts in
-`docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md`, the normative spec), plus two TAOM-original systems.
+an internal spec), plus two TAOM-original systems.
 New `TaomCombatMechanicsModel` occupies the engine's single `AgentApplyDamageModel` slot by DERIVING from the
 CareerSystem `TaomAgentApplyDamageModel` (now `abstract` — career damage passives ride via inheritance;
 registration swapped at the one `AddModel<AgentApplyDamageModel>` site in `SubModule.cs`). Nine thin overrides
@@ -4296,9 +4303,9 @@ A campaign-load crash (`AccessViolationException` in native `get_battle_scene_in
 - **Docs/prevention:** RCA [rca-worldmap-grid-loose-import-crash-2026-06-01.md](docs/reviews/rca-worldmap-grid-loose-import-crash-2026-06-01.md), [worldmap-battle-scene-grid.md](docs/reference/worldmap-battle-scene-grid.md), and memory `feedback_battle_scene_grid_baked_not_runtime_swap` — all corrected to the above.
 - **Method:** decisive root cause from the live revert experiment; mechanism depth from a 5-agent research workflow whose load-bearing local claims were spot-verified (`Scene.cs:1069` passthrough, the no-texture-name `GetBattleSceneIndexMap` API from the user's pasted 1.4.5 source, the `.zip` artifact, vanilla's no-loose-grid layout).
 
-### feat(career-quests): career-tied quest framework (TOR adoption, 1.4.5-verified) + Gondor proof-of-life
+### feat(career-quests): career-tied quest framework (1.4.5-verified) + Gondor proof-of-life
 
-New **Career Quest System** — completing a career's tier quest unlocks that tier of the choice tree (**hybrid** with the level gate) and grants a unique reward. Data-driven adaptation of TheOldRealms' career-quest pattern (GPLv3, with permission), rebuilt on TAOM's adapter/service architecture and **verified against Bannerlord 1.4.5** (TOR is 1.3.15). Phase 1 = framework + one Gondor proof-of-life quest; other careers/tiers fall through to the level gate unchanged. Doc: [career-quest-system.md](docs/features/career-quest-system.md).
+New **Career Quest System** — completing a career's tier quest unlocks that tier of the choice tree (**hybrid** with the level gate) and grants a unique reward. Data-driven adaptation of the reference project' career-quest pattern (GPLv3, with permission), rebuilt on TAOM's adapter/service architecture and **verified against Bannerlord 1.4.5** (the reference is 1.3.15). Phase 1 = framework + one Gondor proof-of-life quest; other careers/tiers fall through to the level gate unchanged. Doc: [career-quest-system.md](docs/features/career-quest-system.md).
 
 - **Hybrid tier gate** — `CareerScreenVM` consults `ICareerQuestService.IsTierUnlocked(level, tier, heroId)` = registry level gate **OR** `ICareerDataService.IsTierUnlocked` (a completed quest's `UnlockTier` reward, persisted in `_taom_careerTiers`). The hybrid lives in the quest **service, not the registry** (injecting it into the registry would be circular) — the registry level gate is untouched; the VM takes the service as an *optional* ctor param (null → registry-only, so existing tests are unchanged).
 - **Pure logic (100% unit-tested)** — `CareerQuestService` (quest lookup, gate, per-objective-type progress [count accumulates / threshold banks-highest], completion, reward application) + `CareerQuestConfigProvider` (validating XML loader — skip-and-warn per the config-validation rule). 8 objective types, 5 reward types (trimmed to implemented-only per the no-aspirational-enum rule). Career attribute flags added to `HeroCareerData` (+ a 4th persistence dict).
@@ -4313,7 +4320,7 @@ New **Career Quest System** — completing a career's tier quest unlocks that ti
 
 Verified: build 0 errors (deploy OK with game closed); `dotnet test TAOM.Tests` → **2877 passed / 0 failed / 2 skipped** (no regressions).
 `Not-tested: in-game offer/track/complete + save-load of the QuestBase shell (entry points — live-game only). MCM toggle + remaining-career quests + 11-language translation are Phase 2.`
-`Research: TheOldRealms/TOR_Core Quests/Careers + CharacterDevelopment/CareerSystem (1.3.15); TaleWorlds 1.4.5 QuestBase/CampaignEvents/GainRenownAction/ChangeClanInfluenceAction/InquiryData/SaveableTypeDefiner (decompile-verified).`
+`Research: TaleWorlds 1.4.5 QuestBase/CampaignEvents/GainRenownAction/ChangeClanInfluenceAction/InquiryData/SaveableTypeDefiner (decompile-verified).`
 `Save-compat: new — _taom_careerFlags + _taom_cq_declined dicts default empty; CareerQuest registered via SaveableTypeDefiner 726900701; existing saves unaffected (careers without a quest = level gate).`
 
 ### feat(battle-load-diagnostics): phase-stamped battle-load lifecycle log + stall watchdog
@@ -4620,9 +4627,9 @@ Documented the full, **decompile-verified** Bannerlord UI sprite pipeline (`Tale
 
 ## 2026-05-30
 
-### feat(tooling): schema-driven ModuleData cross-reference validator (TOR_Tools adoption)
+### feat(tooling): schema-driven ModuleData cross-reference validator (schema-driven)
 
-Reviewed [TheOldRealms/TOR_Tools](https://github.com/TheOldRealms/TOR_Tools) (MIT, the content-tooling suite for the Old Realms Bannerlord conversion) exhaustively and adopted its highest-leverage idea — *schemas as the source of truth* + a cross-reference/validation engine — into TAOM's Python tooling. Full review + tiered adoption map: [docs/reviews/tor-tools-adoption-review-2026-05-30.md](docs/reviews/tor-tools-adoption-review-2026-05-30.md). Idea-only port; no TOR code/binaries vendored.
+Reviewed an external MIT content-tooling suite exhaustively and adopted its highest-leverage idea — *schemas as the source of truth* + a cross-reference/validation engine — into TAOM's Python tooling. Idea-only port; no external code/binaries vendored.
 
 - **New unified validator** consolidating the scattered one-shot validators (`validate_all_troop_refs.py`, `audit_item_refs.py`, the `equipmentType` PowerShell snippet, duplicate-id-across-Armory-folder checks) into one declarative, schema-driven, read-only engine: [tools/taom_schema.py](tools/taom_schema.py) + [tools/validate_moduledata.py](tools/validate_moduledata.py) + 3 schemas under [tools/schemas/](tools/schemas/). Feature doc: [docs/features/moduledata-validation.md](docs/features/moduledata-validation.md).
 - **Catches the recurring bug classes up front:** `BROKEN_ITEM_REF` (underwear bug), `BROKEN_TROOP_REF` (dead upgrade_target / party-stack / culture troop ref), `UNKNOWN_CULTURE` ("rohan" vs "vlandia"), `DUPLICATE_{NPC,CULTURE,ROSTER}_ID`, `DUPLICATE_ITEM_DEF` (multi-folder Armory shadowing), `MISSING_CIVILIAN_TYPE` (Faramir/Boromir wrong-outfit), `INVALID_ENUM`, `BROKEN_PARTY_TEMPLATE_REF`. Cross-ref patterns are attribute-agnostic (match the prefix on any attribute), registries injected (unit-testable without the game install), checks fail-fast on bad schemas.
@@ -4630,16 +4637,16 @@ Reviewed [TheOldRealms/TOR_Tools](https://github.com/TheOldRealms/TOR_Tools) (MI
 - **Tests:** [tools/tests/test_validate_moduledata.py](tools/tests/test_validate_moduledata.py) — 19 unittest cases (one per issue code + edge cases). `python -m unittest discover -s tools/tests -p "test_validate*.py"` → 19 passed.
 - **Reviewed:** `/deep-review` (4 agents adapted for Python tooling) found 2 HIGH + 5 MED/LOW; `/review-codex` (gpt-5.5 xhigh) independently found a further 2 HIGH + 2 MED (culture-registry pollution from config-file `<Culture id=>`, NPCCharacter file-coverage gap, item comment-pollution, civilian-rule under-match) and correctly disputed all 8 weak suspects (0 false positives). **All 9 confirmed findings verified against source + fixed in-session** (24 tests pass; live still PASS). RCA: [docs/reviews/rca-moduledata-validation-2026-05-30.md](docs/reviews/rca-moduledata-validation-2026-05-30.md). Codex review: [docs/reviews/codex-adversarial-moduledata-validation-2026-05-30.md](docs/reviews/codex-adversarial-moduledata-validation-2026-05-30.md). The HIGH attribute-agnostic-ref fix raised troop-ref coverage 628→2,869.
 - **Discoverability wired in** so future sessions/agents actually use it: registered in CLAUDE.md (tool index + Doc-Lookup), a new auto-loaded scoped rule [.claude/rules/moduledata-validation.md](.claude/rules/moduledata-validation.md) (fires when editing troop/character/equipment/culture/party-template XML or the schemas), and a `PreToolUse` hook [.claude/hooks/check-moduledata-validation.sh](.claude/hooks/check-moduledata-validation.sh) registered in `.claude/settings.json` that hard-blocks Claude-driven commits staging ModuleData XML with ERROR-severity findings (fail-open: missing python/game-install/crash never blocks; warnings don't block). Hook tested (allow-paths + block path).
-- **MCP server** (the TOR_Tools Tier-2 idea, built): [tools/taom_mcp_server.py](tools/taom_mcp_server.py) — a stdio MCP server (FastMCP / `mcp` SDK) exposing the validation engine as 9 tools (`validate_moduledata`, `item_exists`, `troop_exists`, `culture_exists`, `party_template_exists`, `find_references`, `list_cultures`, `registry_sizes`, `list_schemas`) so agents query mod-data integrity interactively instead of grepping. Backed by a new pure-stdlib query API [tools/taom_query.py](tools/taom_query.py) (+ tests [tools/tests/test_taom_query.py](tools/tests/test_taom_query.py), [tools/tests/test_taom_mcp_server.py](tools/tests/test_taom_mcp_server.py)). Registered as `taom-moduledata` in `.mcp.json` + enabled in `settings.local.json` (needs a Claude restart to activate). Protocol-tested in-process (`list_tools`/`call_tool` — 9 tools, correct results). Built in Python wrapping the engine, so the earlier .NET-version deferral reason didn't apply. All Python tests pass (**63 total** — 38 for this feature + 25 pre-existing).
+- **MCP server** (the the reference tooling Tier-2 idea, built): [tools/taom_mcp_server.py](tools/taom_mcp_server.py) — a stdio MCP server (FastMCP / `mcp` SDK) exposing the validation engine as 9 tools (`validate_moduledata`, `item_exists`, `troop_exists`, `culture_exists`, `party_template_exists`, `find_references`, `list_cultures`, `registry_sizes`, `list_schemas`) so agents query mod-data integrity interactively instead of grepping. Backed by a new pure-stdlib query API [tools/taom_query.py](tools/taom_query.py) (+ tests [tools/tests/test_taom_query.py](tools/tests/test_taom_query.py), [tools/tests/test_taom_mcp_server.py](tools/tests/test_taom_mcp_server.py)). Registered as `taom-moduledata` in `.mcp.json` + enabled in `settings.local.json` (needs a Claude restart to activate). Protocol-tested in-process (`list_tools`/`call_tool` — 9 tools, correct results). Built in Python wrapping the engine, so the earlier .NET-version deferral reason didn't apply. All Python tests pass (**63 total** — 38 for this feature + 25 pre-existing).
 - **Second `/deep-review` pass** (2026-05-31, after the MCP server was added): 4 adapted agents (Python-correctness, MCP/config integration, completeness, data-flow). Confirmed + fixed: `party_template_exists` had no MCP tool (added — 8→9 tools) and no test (added); `find_references(kind="npccharacter")` silently fell back to an all-prefix search (added a `npccharacter`→`troop` alias); MCP `find_references` didn't expose `limit` (added); no automated MCP-server test (added `test_taom_mcp_server.py`); `_build_query()` startup failures now print a clear diagnostic before re-raising. One agent HIGH ("the hook's `Main/_Module/ModuleData/*.xml` glob misses nested files") was **disputed as a false positive** — bash `case` `*` matches `/` (proven empirically). RCA addendum: [docs/reviews/rca-moduledata-validation-2026-05-30.md](docs/reviews/rca-moduledata-validation-2026-05-30.md).
 
 `Activation: restart Claude Code to load the taom-moduledata MCP server (the mcp SDK is present; config is registered + enabled).`
 
-`Research: TheOldRealms/TOR_Tools schemas/, Core/Validation, Core/Services/CrossReferenceService.cs, Mcp.Host/Tools (12 MCP tools cataloged); TAOM ModuleData XML conventions (.claude/rules/xml-data.md, troops.md).`
+`Research: TAOM ModuleData XML conventions (.claude/rules/xml-data.md, troops.md).`
 `Not-tested: an MCP-server wrapper (deferred, Tier 2 — separate net-version project, needs Claude restart to load).`
 `Save-compat: read-only analysis tooling; no game/save impact.`
 
-### feat(career): career-screen UI revamp + 441 web-researched lore names + TOR rank-title adoption
+### feat(career): career-screen UI revamp + 441 web-researched lore names + per-career rank titles
 
 Reworked the career screen ([CareerScreen.xml](Main/_Module/GUI/Prefabs/CareerSystem/CareerScreen.xml)) to read cleanly instead of the prior broken layout (raw group-id headers, nodes clipped to an 80px sliver, a full-width prison-bar "gate" overlay smeared across locked tiers).
 
@@ -4655,7 +4662,7 @@ Reworked the career screen ([CareerScreen.xml](Main/_Module/GUI/Prefabs/CareerSy
 - Authored **294 Middle-earth-lore names** for every career choice-group sub-path (49 careers × 6 groups, 16 culture factions), via **web research** (Tolkien Gateway / LOTR wiki / Encyclopedia of Arda) with honest `attested` flags — canonical terms where they exist (Henneth Annûn, Oath of Eorl, Knights of the Swan-Prow, Bowmen of the Elvenking, Lances of Laurelindórenan, Heir of Castamir…) and flagged originals where canon is thin (Khand/Dunland). Reviewed mapping at [tools/career_group_names.json](tools/career_group_names.json).
 - New domain field `CareerChoiceGroupDefinition.DisplayName` + `display_name` XML attribute (parsed by `CareerConfigProvider`); `CareerChoiceGroupObjectVM.GroupName` binds it with a humanized-id fallback. Applied via new idempotent tool [tools/apply_career_group_names.py](tools/apply_career_group_names.py) (`--dry-run`/`--apply`, BOM/CRLF-preserving bytes I/O) → **288 active ChoiceGroups** got `display_name`; the 6 `cave_troll_master_*` ids land inside that career's pre-existing `<!-- DISABLED … WIP -->` comment (inert, left as-is). 294 `{=taom_career_grp_*}` keys harvested into `taom_module_strings.xml`.
 
-**Phase C — per-tier rank titles (TOR_Core adoption):** adopted TOR's `tor_career_rank{1,2,3}_name` convention — the tier headers now show a per-career **rank ladder** (the reference's "Knight Errant → Questing Knight → Grail Knight" pattern) instead of generic "Tier 1/2/3". New `CareerDefinition.Rank1/2/3Name` + `rank{1,2,3}_name` XML attrs (parsed by `CareerConfigProvider`); `CareerScreenVM` binds them to the tier labels with a "Tier N" fallback. **147 web-researched Tolkien-grounded titles** across all 49 careers (e.g. Rivendell's attested `Ohtar → Roquen → Knight of the Golden Flower`; Rohan's `Rider of the Mark → Captain of the Éored → Marshal of the Riddermark`; Dale's `Bowman of Esgaroth → Dragon-Shooter → Bearer of the Black Arrow`), with `attested` flags. Reviewed mapping [tools/career_rank_names.json](tools/career_rank_names.json), applied via [tools/apply_career_rank_names.py](tools/apply_career_rank_names.py); 147 `{=taom_career_rank{1,2,3}_*}` keys harvested. TAOM keeps its improvements over TOR (3-state pips vs TOR's blank-at-0-points, tested service/adapter split, lore-name depth) — see [docs/reviews/tor-career-ui-comparison-2026-05-30.md](docs/reviews/tor-career-ui-comparison-2026-05-30.md). TOR_Core (GPLv3) used with the TOR team's permission.
+**Phase C — per-tier rank titles:** the tier headers now show a per-career **rank ladder** instead of generic "Tier 1/2/3". New `CareerDefinition.Rank1/2/3Name` + `rank{1,2,3}_name` XML attrs (parsed by `CareerConfigProvider`); `CareerScreenVM` binds them to the tier labels with a "Tier N" fallback. **147 web-researched Tolkien-grounded titles** across all 49 careers (e.g. Rivendell's attested `Ohtar → Roquen → Knight of the Golden Flower`; Rohan's `Rider of the Mark → Captain of the Éored → Marshal of the Riddermark`; Dale's `Bowman of Esgaroth → Dragon-Shooter → Bearer of the Black Arrow`), with `attested` flags. Reviewed mapping [tools/career_rank_names.json](tools/career_rank_names.json), applied via [tools/apply_career_rank_names.py](tools/apply_career_rank_names.py); 147 `{=taom_career_rank{1,2,3}_*}` keys harvested. TAOM keeps its improvements over the reference (3-state pips vs a blank-at-0-points baseline, tested service/adapter split, lore-name depth).
 
 Reviewed: `/deep-review` (6 agents — standards, API-compat, efficiency, completeness, data-flow, tooling) found no HIGH; the one actionable finding (injector BOM-convention) was fixed; RCA at [docs/reviews/rca-career-ui-revamp-2026-05-30.md](docs/reviews/rca-career-ui-revamp-2026-05-30.md). Verified: `dotnet test TAOM.Tests` → **2698 passed / 0 failed / 2 skipped**; all 4 edited data XMLs parse clean.
 
@@ -9020,7 +9027,7 @@ Multiple users reported the main-menu "Pre-compile Shaders" button "doesn't work
 
 **Deep-review follow-up.** Cross-system data-flow agent caught a fourth gap missed by the initial pass: when the auto-abort branch fires `MBGameManager.EndGame()`, `TaomShaderGameManager.IsShaderBattleActive` was never cleared. Any shaders still in flight when the user next opened a loading screen (new campaign, custom battle) would have inherited TAOM's "Compiling shaders... N remaining" text override on that unrelated screen. Fixed in the same change by calling `ResetShaderBattleActive()` immediately before `EndGame()`.
 
-Doc consolidation: `docs/features/shader-precompilation.md` Configuration table updated with all six tunable constants and a "Why the constants were tuned" subsection. The component diagram, key-files table, tests list, and "How to Add Coverage" section were also de-staled (the doc was carrying a `MaxTroopsPerSide=500` figure from before the 2026-04-14 TOR-inspired rework, and a "filters non-bandit cultures" claim that contradicted the actual code, which intentionally includes bandits for full mesh coverage).
+Doc consolidation: `docs/features/shader-precompilation.md` Configuration table updated with all six tunable constants and a "Why the constants were tuned" subsection. The component diagram, key-files table, tests list, and "How to Add Coverage" section were also de-staled (the doc was carrying a `MaxTroopsPerSide=500` figure from before the 2026-04-14 the reference-inspired rework, and a "filters non-bandit cultures" claim that contradicted the actual code, which intentionally includes bandits for full mesh coverage).
 
 ShaderPrecompilation tests: 7/7 green. No new tests required — the changed code is in entry-point classes (`TaomShaderGameManager`, the Harmony patch) which are not unit-testable per ADR-008. The service-layer tests already cover the data path that feeds them.
 
@@ -9701,8 +9708,8 @@ Corrected Gondor special resource display name from "Caster" to "Castar" in `spe
 Verified in-game on Gondor campaign. Fixed 6 runtime issues discovered during testing:
 
 - **Career button sprite:** removed extra `TAOM\` prefix from sprite path — now correctly references `CareerSystem\career_button_placeholder` per TAOMSpriteData.xml registration
-- **Career screen crash:** converted from `ScreenManager.PushScreen` to `GameStateManager.PushState` (TOR pattern), and added `ExecuteDone()` to close CharacterDeveloper before pushing career state
-- **Map bar resource display:** fixed mixin hook from `"RefreshValues"` (one-time) to `"Refresh"` (per-frame, TOR pattern); fixed icon_sprite paths with `SpecialResources\` prefix; reverted to `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` (TOR pattern — works with vanilla code)
+- **Career screen crash:** converted from `ScreenManager.PushScreen` to `GameStateManager.PushState`, and added `ExecuteDone()` to close CharacterDeveloper before pushing career state
+- **Map bar resource display:** fixed mixin hook from `"RefreshValues"` (one-time) to `"Refresh"` (per-frame); fixed icon_sprite paths with `SpecialResources\` prefix; reverted to `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` (works with vanilla code)
 - **Map bar tooltip:** rich tooltip now shows resource name/cap, tier status, daily change breakdown (income vs upkeep), and per-event earning rates
 - **Shader precompilation:** confirmed working in-game — shader count decreasing steadily
 
@@ -9710,9 +9717,9 @@ Verified in-game on Gondor campaign. Fixed 6 runtime issues discovered during te
 
 ## 2026-04-13
 
-### Feature: Career System Overhaul + TOR Parity — 23 LOTR Careers + System Upgrades
+### Feature: Career System Overhaul — 23 LOTR Careers + System Upgrades
 
-Redesigned career system based on gap analysis against The Old Realms (TOR) Warhammer mod. Replaced 21 generic careers across 7 factions with 23 lore-accurate LOTR careers, each with full choice trees (31 choices per career).
+Redesigned career system based on a design-gap analysis. Replaced 21 generic careers across 7 factions with 23 lore-accurate LOTR careers, each with full choice trees (31 choices per career).
 
 **New careers by faction:**
 - Gondor: Ranger of Ithilien, Captain of Pelargir, Knight of Belfalas
@@ -9723,12 +9730,12 @@ Redesigned career system based on gap analysis against The Old Realms (TOR) Warh
 - Harad: Tribesman of Jelut, Pezarsani Javelineer, Mahud Beast Rider, Far Harad Halftroll (Monster)
 - Khand: Blademaster of Ren, Steppe Bowmaster, Chariot Warlord
 
-**System upgrades (TOR parity):**
+**System upgrades:**
 - Wired 3 cross-system passives: CustomResourceGain, CustomResourceUpkeepModifier, CustomResourceUpgradeCostModifier — careers now affect special resource economics
 - New TaomAgentApplyDamageModel: ArmorPenetration, Resistance, ShruggedOff passives now functional in combat
 - New TaomClanTierModel: CompanionLimit passive now functional
 - Differentiated all 11 special resource earning rates per faction identity (no more identical values)
-- Career screen UI rewrite: TOR-pattern expandable panels, career portrait, ability icons, lock chains, +/- selection buttons, hover interactions
+- Career screen UI rewrite: expandable panels, career portrait, ability icons, lock chains, +/- selection buttons, hover interactions
 
 **Totals:** 50 careers, 300 choice groups, ~1,550 choices, 50 ability templates
 
@@ -9907,7 +9914,7 @@ Added missing Character Creation equipment rosters for `shaghana` and `abanissa`
 
 ### Feature: Career System — Full Implementation (Phases 1-6)
 
-Complete career/class progression system inspired by TOR_Core, adapted for LOTR. Mordor Warboss as pilot career.
+Complete career/class progression system adapted for LOTR. Mordor Warboss as pilot career.
 
 **Phase 1 — Foundation:** Domain types (11 enums + data classes), `ICareerHeroAdapter` wrapping `Hero`, `ICareerDataService` for per-hero career state CRUD, `CareerPersistenceBehavior` with SyncData, DryIoc IoC wiring.
 
@@ -9945,7 +9952,7 @@ Data-driven per-faction resource system gating elite troop upgrades. All 18 king
 
 ### Fix: Codex Adversarial Review — 6 Bugs Fixed (#72)
 
-Codex adversarial review compared TAOM SpecialResources against TOR_Core CustomResources. 5 Codex findings confirmed, 1 ship-blocker found independently.
+Codex adversarial review reviewed TAOM SpecialResources adversarially. 5 Codex findings confirmed, 1 ship-blocker found independently.
 
 - **SHIP-BLOCKER:** `kingdom_id="mordor"` in XML config was wrong — runtime ID is `empire_s`. Feature was completely inert.
 - **CRITICAL:** Upgrade spending was immediate (postfix), not transactional. Cancel party screen lost resources permanently. Added pending transaction pattern with Begin/Commit/Cancel session lifecycle.
@@ -10403,7 +10410,7 @@ Reviewed the oh-my-claudecode repository (19 agents, 32 skills, MCP bridge). Mos
 ### Feature: Atmosphere Persistence for Forced-Atmosphere Scenes
 
 - **New feature:** Scenes with "forceatmo" in their name bypass campaign weather, preserving scene-embedded atmosphere
-- **Ported from:** LOTRAOM's `AtmospherePersistence` feature (originally from The Old Realms mod)
+- **Ported from:** LOTRAOM's `AtmospherePersistence` feature
 - **1.3 refactor:** Replaced fragile string-based patch (`ScriptingInterfaceOfIMBMission`) with type-safe `Mission.Initialize()` prefix
 - **Architecture:** Static `AtmosphereOverrideService` + thin Harmony patch (`Patch16_AtmospherePersistence`), follows `WeatherBoundsGuard` pattern
 - **Tests:** 7 new tests for scene name detection (null, empty, case-insensitive, position variants)

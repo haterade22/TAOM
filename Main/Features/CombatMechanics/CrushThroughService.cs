@@ -9,7 +9,7 @@ namespace TAOM.Features.CombatMechanics;
 // Per-hit hot path (TaomCombatMechanicsModel.DecideCrushedThrough → here): all config lookups are
 // precomputed in the constructor; only the MCM-backed settings getters (toggles + max-chance
 // slider, which change mid-session) are read per call. No LINQ, no allocation per call.
-// Mechanics 1-3 of docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md (the normative spec).
+// Mechanics 1-3 of the combat-mechanics spec (the normative spec).
 public class CrushThroughService : ICrushThroughService
 {
     // The engine appends these to Monster.StringId for settlement variants. Membership is

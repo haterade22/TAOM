@@ -5008,7 +5008,7 @@ FILE Main/SubModule.cs
   596:         campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService));
   597:         // CombatMechanics (2026-07-02): TaomCombatMechanicsModel DERIVES from the (now abstract)
   598:         // TaomAgentApplyDamageModel — one AgentApplyDamageModel slot, career passives via
-  599:         // inheritance + TOR-derived mechanics on top (docs/features/combat-mechanics.md).
+  599:         // inheritance + the combat feel pack on top (docs/features/combat-mechanics.md).
   600:         campaignStarter.AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(
   601:             careerAgentStat,
   602:             IoC.Resolve<Features.CombatMechanics.ICrushThroughService>(),

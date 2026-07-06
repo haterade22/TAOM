@@ -3,7 +3,7 @@ using TAOM.Features.CombatMechanics.Domain;
 
 namespace TAOM.Features.CombatMechanics;
 
-// Constants sourced from the clean-room spec (docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md).
+// Constants sourced from the clean-room spec (the combat-mechanics spec).
 // Deserialized with ObjectCreationHandling.Replace so a JSON list/dict REPLACES the compiled
 // default instead of Json.NET's append-merge (which would duplicate list entries).
 public class CombatMechanicsConfig

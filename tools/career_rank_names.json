@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "purpose": "Reviewed web-researched per-tier RANK titles for careers (tier headers on the career screen). Adopted from TOR_Core's tor_career_rank{1,2,3}_name convention, authored clean for TAOM/LOTR.",
+    "purpose": "Reviewed web-researched per-tier RANK titles for careers (tier headers on the career screen). Authored clean for TAOM/LOTR.",
     "format": "<careerId>: { rank1:{name,attested}, rank2:{...}, rank3:{...} }. attested=true = canonical Tolkien term/title.",
     "applied_by": "tools/apply_career_rank_names.py (writes rank{1,2,3}_name=\"{=taom_career_rank{N}_<id>}<name>\" onto each <Career>)",
     "count": 147

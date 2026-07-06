@@ -1,13 +1,12 @@
 # Adversarial review -- TAOM CareerSystem screen revamp (2026-05-30)
 
-You are an adversarial reviewer. TAOM is a Lord of the Rings total-conversion mod of Mount & Blade II: Bannerlord v1.4.5. This session revamped the Career screen UI and adopted per-tier rank titles from TOR_Core (permission granted; GPLv3). Find real bugs. Confirm or DISPUTE each Known Suspect with evidence from the actual files. Do not flag vanilla-matching code as bugs. Use `--` not em-dash.
+You are an adversarial reviewer. TAOM is a Lord of the Rings total-conversion mod of Mount & Blade II: Bannerlord v1.4.5. This session revamped the Career screen UI and added per-tier rank titles. Find real bugs. Confirm or DISPUTE each Known Suspect with evidence from the actual files. Do not flag vanilla-matching code as bugs. Use `--` not em-dash.
 
 ## TAOM ID CHEATSHEET
 Kingdom IDs: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale, erebor, rivendell, lothlorien, mirkwood, isengard, gundabad, dolguldur, umbar.
 "rohan" is NOT valid (use vlandia). "dol_guldur" is NOT valid (use dolguldur).
 
 ## READ FIRST
-- docs/reviews/tor-career-ui-comparison-2026-05-30.md (what was adopted from TOR and why)
 - docs/features/career-system.md (feature overview)
 - Main/_Module/GUI/Prefabs/CareerSystem/CareerScreen.xml (the rewritten prefab)
 

@@ -8,7 +8,7 @@ namespace TAOM.Tests.Features.CombatMechanics;
 public class ShieldPenetrationServiceTests
 {
     // Mirrors the service constants (installed 1.4.6 TaleWorlds.Core.WeaponFlags — spec
-    // docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md "Engine ground truth").
+    // the combat-mechanics spec "Engine ground truth").
     private const ulong CanPenetrateShieldFlag = 0x20000UL;
     private const ulong MultiplePenetrationFlag = 0x40000000UL;
 

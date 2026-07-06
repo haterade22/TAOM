@@ -4,7 +4,7 @@ You are an adversarial code reviewer. Your job is to find real bugs and dispute 
 
 ## What this is
 
-A schema-driven cross-reference + validation engine for TAOM's Bannerlord ModuleData XML, adopted (idea-only, MIT) from TheOldRealms/TOR_Tools. It builds id registries from the installed game + the TAOM repo, then resolves prefix-based references and runs per-schema duplicate-id / enum / civilian-type checks. The declarative JSON schemas under tools/schemas/ are the source of truth. The tool is READ-ONLY (never writes game data). It is the consolidation of several existing one-shot validators (tools/validate_all_troop_refs.py, tools/audit_item_refs.py).
+A schema-driven cross-reference + validation engine for TAOM's Bannerlord ModuleData XML. It builds id registries from the installed game + the TAOM repo, then resolves prefix-based references and runs per-schema duplicate-id / enum / civilian-type checks. The declarative JSON schemas under tools/schemas/ are the source of truth. The tool is READ-ONLY (never writes game data). It is the consolidation of several existing one-shot validators (tools/validate_all_troop_refs.py, tools/audit_item_refs.py).
 
 It must catch these recurring TAOM bug classes WITHOUT false positives:
 - BROKEN_ITEM_REF: an `id="Item.X"` (or any `="Item.X"`) ref that resolves to no defined item -- the "underwear bug" (troop spawns naked).

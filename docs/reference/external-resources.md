@@ -31,7 +31,7 @@ Curated, verified external references for improving TAOM (Bannerlord 1.4.5 LOTR 
 
 ## Engineering / total-conversion design
 
-- **Comparable mods to study** (scope/balance/roster mgmt): [Kingdoms of Arda](https://www.moddb.com/mods/a-lord-of-the-rings-mod-kingdoms-of-arda) 🔎 (closest LOTR analog), [The Old Realms](https://www.moddb.com/mods/the-old-realms) 🔎 (largest-roster TC), Enderal 🔎 (volunteer long-cycle TC).
+- **Comparable mods to study** (scope/balance/roster mgmt): [Kingdoms of Arda](https://www.moddb.com/mods/a-lord-of-the-rings-mod-kingdoms-of-arda) 🔎 (closest LOTR analog), Enderal 🔎 (volunteer long-cycle TC).
 - **[Game-mods semantic versioning](https://github.com/pragasette/game-mods-semver)** ✅ — *same major = save-safe; major bump = new game.* Worth formalizing as TAOM's save-compat contract (complements the `Save-compat:` commit trailer).
 - **.NET perf**: reflection cost (compiled-delegate vs `MethodInfo.Invoke` break-even ~3,500 calls) → cache reflected accessors in per-tick GameModels; .NET 4.7.2 ZLib speedup for large XML loads.
 

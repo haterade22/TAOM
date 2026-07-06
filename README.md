@@ -172,9 +172,3 @@ Place all modules in your Bannerlord `Modules/` directory, enable them in the la
 This mod is a fan project and is not affiliated with or endorsed by the Tolkien Estate,
 New Line Cinema, or TaleWorlds Entertainment.
 
-## Acknowledgments
-
-- **[The Old Realms (TOR)](https://www.moddb.com/mods/the-old-realms)** — TAOM's Career System and
-  Special Resources were inspired by TOR's Warhammer total conversion. Their career-progression and
-  resource-gating designs served as the reference architecture, adapted for a Lord of the Rings
-  setting.

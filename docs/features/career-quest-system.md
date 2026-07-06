@@ -2,7 +2,7 @@
 
 ## Overview
 
-Choosing a career can now drive a **story arc**: a career tier quest with trackable objectives that, when completed, unlocks that tier of the career's choice tree (**in addition to** the level gate — *hybrid*) and grants a unique reward. Adapted from TheOldRealms (TOR_Core, GPLv3, with permission) and rebuilt **data-driven** on TAOM's adapter/service architecture, verified against Bannerlord 1.4.5 (TOR's reference is 1.3.15).
+Choosing a career can now drive a **story arc**: a career tier quest with trackable objectives that, when completed, unlocks that tier of the career's choice tree (**in addition to** the level gate — *hybrid*) and grants a unique reward. Built **data-driven** on TAOM's adapter/service architecture, verified against Bannerlord 1.4.5.
 
 Phase 1 ships the framework + one Gondor proof-of-life quest; all other careers/tiers fall through to the level gate unchanged.
 
@@ -21,7 +21,7 @@ The [Career System](career-system.md) was purely mechanical: tiers unlocked by h
 - **Entry trigger** — `CareerQuestCampaignBehavior` (thin): on session-launch + daily, offers the lowest not-yet-done tier's quest via inquiry; accept → `StartQuest`. A declined quest is remembered (flat-dict SyncData) so it isn't re-offered.
 - **Adapter (ADR-007)** — `IQuestHeroAdapter` (reads skill/renown/gold; sinks renown/influence/item); the service never touches `Hero`.
 
-**1.4.5 verification (TOR is 1.3.15).** Every engine API was decompiled against the installed DLLs before use (4-cluster verification pass). Key drift caught: **`InquiryData` + `InformationManager` moved `TaleWorlds.Core` → `TaleWorlds.Library`**; `TournamentFinished` winner is a `CharacterObject`; `SettlementEntered` (not `OnSettlementEntered`); `SetDialogs`/`InitializeQuestOnGameLoad` are `protected abstract`; `QuestBase` has its own `HourlyTick`/`DailyTick` (poll there, not via `CampaignEvents`); hero lookup via `Campaign.Current.CampaignObjectManager.Find<Hero>`. `QuestDueTime` is absolute → use `CampaignTime.DaysFromNow`, not `CampaignTime.Years`.
+**1.4.5 verification.** Every engine API was decompiled against the installed DLLs before use (4-cluster verification pass). Key drift caught: **`InquiryData` + `InformationManager` moved `TaleWorlds.Core` → `TaleWorlds.Library`**; `TournamentFinished` winner is a `CharacterObject`; `SettlementEntered` (not `OnSettlementEntered`); `SetDialogs`/`InitializeQuestOnGameLoad` are `protected abstract`; `QuestBase` has its own `HourlyTick`/`DailyTick` (poll there, not via `CampaignEvents`); hero lookup via `Campaign.Current.CampaignObjectManager.Find<Hero>`. `QuestDueTime` is absolute → use `CampaignTime.DaysFromNow`, not `CampaignTime.Years`.
 
 ## Configuration
 
@@ -80,4 +80,4 @@ The existing Career System (`ICareerDataService`, `ICareerRegistry`), and vanill
 
 ## Changelog
 
-- 2026-06-01 — Career-tied quest framework (TOR adoption, 1.4.5-verified) + Gondor proof-of-life: hybrid tier gate (quest unlock OR level gate), pure `CareerQuestService` + validating `CareerQuestConfigProvider`, `CareerQuest : QuestBase` engine shell, `CareerQuestSaveableTypeDefiner` (save-id collision fixed → `726900802`), career attribute flags. Post-review: `KillEnemyLords` → `DefeatEnemyLords` (capture, not execute).
+- 2026-06-01 — Career-tied quest framework (1.4.5-verified) + Gondor proof-of-life: hybrid tier gate (quest unlock OR level gate), pure `CareerQuestService` + validating `CareerQuestConfigProvider`, `CareerQuest : QuestBase` engine shell, `CareerQuestSaveableTypeDefiner` (save-id collision fixed → `726900802`), career attribute flags. Post-review: `KillEnemyLords` → `DefeatEnemyLords` (capture, not execute).

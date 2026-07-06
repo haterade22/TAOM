@@ -835,7 +835,7 @@ exec
    9: namespace TAOM.Features.CareerSystem.Quests;
   10: 
   11: /// <summary>
-  12: /// Entry trigger for career tier quests (thin — mirrors TOR's SimpleCareerQuestBehavior). On
+  12: /// Entry trigger for career tier quests (thin — thin). On
   13: /// session launch + daily, if the player's career has an authored quest for the lowest not-yet-done
   14: /// tier and none is already running, it offers the quest via an inquiry; accepting starts a
   15: /// <see cref="CareerQuest"/>. A declined quest is remembered (flat-dict SyncData) so it is not
@@ -974,7 +974,7 @@ exec
  succeeded in 525ms:
    1: <?xml version="1.0" encoding="utf-8"?>
    2: <!--
-   3:   Career-tied quest definitions (Phase 6, adapted from TOR_Core, verified on Bannerlord 1.4.5).
+   3:   Career-tied quest definitions (Phase 6, verified on Bannerlord 1.4.5).
    4:   Each <CareerQuest> binds to a (career_id, tier); completing its objectives unlocks that tier of
    5:   the career's choice tree (hybrid with the level gate) and applies its rewards. Careers/tiers with
    6:   no entry here simply fall through to the level gate (graceful — like the Gondor-first rollout of

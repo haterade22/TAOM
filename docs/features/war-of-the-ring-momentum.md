@@ -84,7 +84,7 @@ Kingdoms are resolved by StringId with `Kingdom.All.FirstOrDefault(k => k.String
 | `events.maxBattleMomentum` | 350 | battle-won cap (scaled by casualties ÷ loser strength — stays small; that's why `killMomentumPerHundred` exists). Was 300, bumped 2026-07-05 |
 | `events.siegeMomentum` | 400 | fixed per captured settlement (was 250 — raised 2026-07-05: taking a fief is the war's real objective, now the highest per-event weight) |
 | `events.raidMomentum` | 50 | fixed per raided village (was 200 → 100 → 50 over 2026-07-04/05: Good factions rarely raid, so raids structurally over-fed Evil) |
-| `events.armyMomentum` | 200 | fixed per army gathered |
+| `events.armyMomentum` | 50 | fixed per army gathered (was 200 — lowered 2026-07-06 to match raids: gathering an army is a routine move, not a war outcome) |
 | `events.maxStrengthMomentum` | **0** | daily strength-differential cap — **retired 2026-07-05** (was 300): Evil out-strengths Free for most of a campaign, so it just fed Evil free daily momentum. At 0 the award is skipped and the `RelativeStrength` row is dropped from the breakdown; set > 0 to bring it back |
 | `events.killMomentumPerHundred` | 10 | **new 2026-07-05** — momentum per 100 enemies killed in battle, RAW attrition (not strength-normalized like battle-won, which stays tiny). Displayed = kills × this ÷ 100. Accrues for both sides on every war battle (mirrors the kill stat). Shows as an "Enemies Killed" breakdown row. 0 disables |
 | `durationsHours.*` | 504/504/504/168/12/504 | decay windows (battle/siege/raid/army/strength/**enemiesKilled**) |

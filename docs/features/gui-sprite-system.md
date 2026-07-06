@@ -208,7 +208,7 @@ internal class MyPrefab : PrefabExtensionInsertPatch
 
 ### Prefab: `CareerScreen.xml`
 
-Modeled on TOR's career screen with expandable choice panels.
+Expandable choice panels.
 
 **Layout:**
 ```
@@ -263,7 +263,7 @@ CareerScreenVM
 
 Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. Uses `Sprite="CareerSystem\career_button_placeholder"` (233x75). Visibility gated by `@HasCareer` from `CharacterDeveloperCareerMixin`.
 
-**Opening flow (TOR pattern):** `Patch27` Harmony postfix on `ViewModel.ExecuteCommand` catches `"ExecuteOpenCareerScreen"` → calls `charDevVM.ExecuteDone()` to close Character Developer first → then `Game.Current.GameStateManager.PushState<CareerScreenGameState>()`. The `[GameStateScreen]` attribute on `GauntletCareerScreen` properly deactivates the map bar input layer.
+**Opening flow:** `Patch27` Harmony postfix on `ViewModel.ExecuteCommand` catches `"ExecuteOpenCareerScreen"` → calls `charDevVM.ExecuteDone()` to close Character Developer first → then `Game.Current.GameStateManager.PushState<CareerScreenGameState>()`. The `[GameStateScreen]` attribute on `GauntletCareerScreen` properly deactivates the map bar input layer.
 
 **Critical:** Must close CharacterDeveloper BEFORE pushing career state. Without `ExecuteDone()`, the map bar global layer continues ticking input with invalid context → `IndexOutOfRangeException`.
 
@@ -275,9 +275,9 @@ Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `Charac
 
 **Status:** Verified in-game (2026-04-14). Gondor Caster showing with tooltip on map bar.
 
-### Architecture (TOR Pattern)
+### Architecture
 
-Uses `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` objects — the same approach TOR uses successfully. A `SpecialResourceSpriteWidget` (extends `IconBrushWidget`) replaces the default icon in the item template to dynamically load the resource's sprite.
+Uses `SecondaryInfoItems.Add()` with proper `MapInfoItemVM` objects. A `SpecialResourceSpriteWidget` (extends `IconBrushWidget`) replaces the default icon in the item template to dynamically load the resource's sprite.
 
 ```
 SpecialResourceMapBarMixin (ViewModelMixin on MapInfoVM, hooks "Refresh")
@@ -291,7 +291,7 @@ SpecialResourceIconPrefab (PrefabExtension on MapBar)
     with SpecialResourceSpriteWidget (dynamic icon loading)
 ```
 
-**Critical:** The mixin MUST hook `"Refresh"` (per-frame), NOT `"RefreshValues"` (one-time init). TOR uses the same pattern.
+**Critical:** The mixin MUST hook `"Refresh"` (per-frame), NOT `"RefreshValues"` (one-time init).
 
 ### Tooltip Content
 

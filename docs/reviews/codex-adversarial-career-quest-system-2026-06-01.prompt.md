@@ -1,6 +1,6 @@
 # Codex Adversarial Review -- TAOM Career Quest System (Phase 1)
 
-You are reviewing a NEW feature in the TAOM Bannerlord 1.4.5 total-conversion mod: a career-tied quest system. Completing a career's tier quest unlocks that tier of the career choice tree (hybrid with the existing level gate) and grants a reward. Adapted from TheOldRealms TOR_Core (which targets Bannerlord 1.3.15 -- API drift is a real risk; TAOM is 1.4.5). The code already passed a 4-cluster 1.4.5 API verification + a 5-agent internal deep-review; you are the adversarial second opinion.
+You are reviewing a NEW feature in the TAOM Bannerlord 1.4.5 total-conversion mod: a career-tied quest system. Completing a career's tier quest unlocks that tier of the career choice tree (hybrid with the existing level gate) and grants a reward. Ported from a 1.3.15-era reference implementation (API drift is a real risk; TAOM is 1.4.5). The code already passed a 4-cluster 1.4.5 API verification + a 5-agent internal deep-review; you are the adversarial second opinion.
 
 Repo root: c:/Users/mikew/source/repos/TAOM
 

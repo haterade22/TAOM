@@ -4,7 +4,7 @@ using TAOM.Features.CombatMechanics.Domain;
 
 namespace TAOM.Features.CombatMechanics;
 
-// Spec mechanic 5 (docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md) — TAOM-original
+// Spec mechanic 5 (the combat-mechanics spec) — TAOM-original
 // weight-driven two-branch charge knockdown. Branch A: overwhelming mass (weight ratio ≥ the MCM
 // auto-knockdown slider) at charging speed knocks down unconditionally, ignoring the engine's
 // KnockBack (0.7-dot) gate. Branch B: the vanilla deterministic formula with the penetration term

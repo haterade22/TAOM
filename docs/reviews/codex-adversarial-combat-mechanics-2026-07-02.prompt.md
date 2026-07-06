@@ -1,6 +1,6 @@
 ADVERSARIAL REVIEW: CombatMechanics feature (TAOM, Bannerlord 1.4.6, issue #320)
 
-You are reviewing a NEW feature that occupies the engine's single AgentApplyDamageModel slot. It is a clean-room adaptation of mechanics from The Old Realms (GPLv3; the normative spec is docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md -- constants/formulas as facts, no code copied). Your job: find real bugs. Be adversarial -- assume something is wrong and hunt for it. A 6-agent Claude deep review already ran and its 8 findings were fixed (docs/reviews/rca-combat-mechanics-2026-07-02.md) -- do NOT re-report those; find what it missed.
+You are reviewing a NEW feature that occupies the engine's single AgentApplyDamageModel slot. It is a spec-driven implementation (constants/formulas recorded as facts, no code copied). Your job: find real bugs. Be adversarial -- assume something is wrong and hunt for it. A 6-agent Claude deep review already ran and its 8 findings were fixed (docs/reviews/rca-combat-mechanics-2026-07-02.md) -- do NOT re-report those; find what it missed.
 
 TAOM ID CHEATSHEET:
 Kingdom IDs: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Shaghana, abanissa=Abanissa
@@ -9,7 +9,6 @@ NOTE: "rohan" is NOT a valid ID (Rohan uses "vlandia"). "dol_guldur" is NOT vali
 RACE names in this feature come from the TAOM race registry (raceage precedent): human, dwarf, orc, uruk_hai, uruk, pale_uruk, dg_uruk, berserker, goblin, cave_troll, hill_troll, elf, nazghul, saruman. Monster ids: cave_troll, hill_troll, spider, taom_war_elephant, taom_mumakil, warg (+_settlement/_settlement_fast/_settlement_slow variants).
 
 READ FIRST:
-- docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md (normative spec: formulas, constants, engine facts)
 - docs/features/combat-mechanics.md (architecture + override table)
 - Main/_Module/ModuleData/combat_mechanics/combat_mechanics_config.json
 - docs/reviews/rca-combat-mechanics-2026-07-02.md (already-fixed findings -- do not re-report)
@@ -54,7 +53,7 @@ FINDINGS OR OBSERVATIONS: numbered, each with severity (P1 blocking / P2 should-
 QUALITY GATES:
 - Paste vanilla decompile snippets you actually read (not from memory).
 - Verify every "missing X" claim by grepping the repo before reporting it.
-- TOR comparison fairness: upstream targets Bannerlord 1.3.15; do not report 1.4.6 API differences as TAOM bugs.
+- Upstream-comparison fairness: the reference targets Bannerlord 1.3.15; do not report 1.4.6 API differences as TAOM bugs.
 - The spec doc is normative for constants -- a constant matching the spec is not a bug even if you would tune it differently.
 
 PRIOR REVIEW LESSONS:

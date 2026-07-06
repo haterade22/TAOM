@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace TAOM.Features.CombatMechanics;
 
 // Spec mechanics 4 (creature cleave) + 7 (creature unstoppable) + the per-race stagger threshold
-// multiplier (docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md). Per-hit HOT PATH: config
+// multiplier (the combat-mechanics spec). Per-hit HOT PATH: config
 // lookups are precomputed once in the constructor — every id is expanded to base + the three
 // LOTRLOME settlement variants at construction (CrushThroughService pattern), so the per-call
 // path is a bare HashSet/Dictionary lookup with zero allocation. Settings getters are read per

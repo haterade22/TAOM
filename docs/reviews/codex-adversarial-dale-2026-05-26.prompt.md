@@ -123,7 +123,7 @@ Suggested fix:
 ## QUALITY GATES
 
 - Every "missing X" claim must be verified by grep, NOT guessed
-- Vanilla API claims must come from `taom-src` or `ilspycmd` -- NOT inferred from old TOR/Calradia knowledge
+- Vanilla API claims must come from `taom-src` or `ilspycmd` -- NOT inferred from stale Calradia knowledge
 - "Dale should do X" critiques where X is not in the change scope (e.g., custom Dale kingdom, custom Dale clans) should be flagged as DESIGN ALTERNATIVE, not BUG
 - If a Known Suspect is DISPUTED, explain WHY the original concern was unfounded
 

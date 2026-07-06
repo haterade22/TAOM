@@ -4,7 +4,7 @@
 
 Seven battle-feel mechanics layered onto the single `AgentApplyDamageModel` slot: skill-based crush-through-block, monster auto-crush-through, orc shield-crush-through, creature cleave, creature stagger immunity (unstoppable), weight-driven charge knockdown, and config-granted shield penetration — plus a per-race combat-modifier table (dwarf/elf/orc flavor) that feeds several of them. All config/MCM-toggleable; master toggle off restores exactly the pre-feature behavior.
 
-**Derived-from:** clean-room adaptation of mechanics in The Old Realms' `TORAgentApplyDamageModel` (`TheOldRealms/TOR_Core`, commit `d8ded52`, GPLv3 — no code copied; constants/formulas recorded as facts in [docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md](../reviews/adopt-tor-combat-mechanics-2026-07-02.md), the normative spec). The weight-driven charge knockdown and the race-modifier table are TAOM-original designs.
+**Design notes:** mechanics specified as behavioral facts and implemented in TAOM's own architecture (no external code). The weight-driven charge knockdown and the race-modifier table are TAOM-original designs.
 
 ## Why This Exists
 

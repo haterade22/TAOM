@@ -1,6 +1,6 @@
 # RCA — Career Screen Revamp deep-review (2026-05-30)
 
-Deep-review of the career-screen revamp (Phase A prefab/VM + Phase B group names + Phase C rank titles + TOR_Core adoption). 6 agents (Standards, API-compat, Efficiency, Completeness, Data-flow, Tooling-correctness). **No HIGH/CRITICAL findings.** Standards PASS, API-compat 11/11 verified, efficiency PASS, completeness COMPLETE, data-flow all bindings connected. Findings below are LOW / pre-existing.
+Deep-review of the career-screen revamp (Phase A prefab/VM + Phase B group names + Phase C rank titles). 6 agents (Standards, API-compat, Efficiency, Completeness, Data-flow, Tooling-correctness). **No HIGH/CRITICAL findings.** Standards PASS, API-compat 11/11 verified, efficiency PASS, completeness COMPLETE, data-flow all bindings connected. Findings below are LOW / pre-existing.
 
 ## Findings
 

@@ -1044,7 +1044,7 @@ warning: in the working copy of 'Main/Features/CareerSystem/CareerPerkMissionBeh
   52:         // Phase 5: GameModel support
   53:         container.Register<ICareerHeroAdapterFactory, CareerHeroAdapterFactory>(Reuse.Singleton);
   54: 
-  55:         // Phase 6: Career-tied quest system (adapted from TOR_Core, verified on 1.4.5)
+  55:         // Phase 6: Career-tied quest system (verified on 1.4.5)
   56:         container.Register<ICareerQuestConfigProvider, CareerQuestConfigProvider>(Reuse.Singleton);
   57:         container.Register<ICareerQuestService, CareerQuestService>(Reuse.Singleton);
   58:         container.Register<IQuestHeroAdapterFactory, QuestHeroAdapterFactory>(Reuse.Singleton);

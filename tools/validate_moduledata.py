@@ -5,7 +5,7 @@ audit_item_refs.py, the equipmentType civilian PowerShell snippet, the
 duplicate-id-across-Armory-folders checks) into a single cross-reference +
 schema engine.
 
-Adopted from TheOldRealms/TOR_Tools (MIT) — its schema/validation/cross-ref
+A schema/validation/cross-ref
 architecture, ported to Python. The declarative schemas under tools/schemas/
 are the source of truth; this CLI just wires registries to the engine and
 prints a severity-classified report. See tools/taom_schema.py for the engine

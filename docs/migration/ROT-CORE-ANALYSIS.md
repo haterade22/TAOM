@@ -74,7 +74,6 @@ protected override void OnBeforeInitialModuleScreenSetAsRoot()
 ### Module Compatibility Checks
 
 **Banned Modules (will cause exit):**
-- `TOR_Core`
 - `CA_EagleRising`
 
 **Integrated Modules (warns user):**

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TAOM.Features.CombatMechanics;
 
-// Spec mechanic 8 (docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md): config-granted shield
+// Spec mechanic 8 (the combat-mechanics spec): config-granted shield
 // penetration flags in DecideMissileWeaponFlags + the runtime-flag shield-damage correction in
 // CalculateShieldDamage (native underestimation workaround, TW forums 470085/470117).
 //

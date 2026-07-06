@@ -22,7 +22,7 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 14 | 2026-04-05 | Wave4A (Weather+Atmosphere+Shader) | no-ship | agree | 3 (1 HIGH, 2 MEDIUM) | 0 | 0 | v6 |
 | 15 | 2026-04-05 | Wave4B (Time+ChildGen+Startup+Menu+Enc+BattleScenes) | no-ship | agree | 3 (1 HIGH, 2 MEDIUM) | 0 | 0 | v6 |
 | 16 | 2026-04-06 | Infrastructure (Adapters+Core+SubModule+IoC) | no-ship | agree | 3 (2 HIGH, 1 MEDIUM) | 0 | 0 | v6 |
-| 17 | 2026-04-07 | SpecialResources (adversarial vs TOR_Core) | needs-attention | partial-agree | 2 confirmed (sprite, storage) | 1 (kingdom_id) | 0 | v6-adversarial |
+| 17 | 2026-04-07 | SpecialResources (adversarial) | needs-attention | partial-agree | 2 confirmed (sprite, storage) | 1 (kingdom_id) | 0 | v6-adversarial |
 | 18 | 2026-06-24 | SaveLoadTableauGuard (#299) | issues-found | agree | 1 confirmed (CRITICAL patch-apply timing) + 1 LOW | 0 | 0 | adversarial-xhigh |
 | 19 | 2026-06-25 | ShaderPrecompile Phase 0 (#287) | ship | agree | 1 LOW (doc test-name drift) — confirmed all 6 suspects + the disputed boundary-direct-read non-defect | 0 | 0 | adversarial-xhigh |
 | 20 | 2026-06-26 | Career phantom-passive wiring | clean/ship | agree | 0 — CLEAN; 7/8 suspects DISPUTED + 1 PARTIAL (Damage stage-move, non-defect); corroborated the 6-dim in-house deep-review (0 HIGH/6 MED/3 LOW, all fixed) | 0 | 0 | adversarial-xhigh |
@@ -44,7 +44,7 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 18 | 2026-04-06 | CharacterSelection (transpiler) | no-ship | 1 fix + 2 deferred (need decompilation) | 1 (race fallback) | 0 | 0 | v6 |
 | 19 | 2026-04-07 | SpecialResources | needs-attention | agree (5 confirmed + 1 ship-blocker Claude found) | 5 (1 CRIT pending txn, 1 CRIT no clamp, 1 HIGH raid, 1 HIGH save, 1 LOW cap) | 0 | 1 (wrong kingdom_id) | v6 |
 | 20 | 2026-04-07 | CareerSystem | N/A — feature not built | N/A | 0 | 0 | 0 | v6 |
-| 21 | 2026-04-07 | CareerSystem (impl vs TOR) | needs-attention | partial-agree | 2 confirmed (tier validation, save serialization) + 1 partial (widget def) | 3 (mutation scope, ability scope, passive coverage — intentional v1 scope) | 1 (hallucinated AllowedRaces property) | v6-adversarial |
+| 21 | 2026-04-07 | CareerSystem (impl) | needs-attention | partial-agree | 2 confirmed (tier validation, save serialization) + 1 partial (widget def) | 3 (mutation scope, ability scope, passive coverage — intentional v1 scope) | 1 (hallucinated AllowedRaces property) | v6-adversarial |
 | 22 | 2026-04-08 | SettlementGuards | needs-attention | partial-agree | 1 confirmed (spear culture IDs) + 2 self-found (reflection caching, dead attributes) | 1 (spawn-point severity overstated) | 0 | v6 |
 
 | 23 | 2026-04-08 | NamedCompanions + Wanderer Race | needs-attention | agree | 1 confirmed (load teleport) + 1 dead code | 0 | 0 | v6 |
@@ -1429,7 +1429,7 @@ User report: towns drain to 0 gold and never recover. Root cause (verified insta
 
 ## Review 69 — CombatMechanics (2026-07-02)
 
-New feature (#320): clean-room adaptation of five TOR_Core combat mechanics (GPLv3 — spec-doc-only implementation, `docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md`) + two TAOM-original systems (weight-driven charge knockdown from `Monster.Weight` ratios; per-race combat-modifier table). `TaomCombatMechanicsModel` derives from the now-abstract CareerSystem `TaomAgentApplyDamageModel` in the engine's single `AgentApplyDamageModel` slot; 9 thin overrides → 4 pure services + race resolver; 107 tests. Built via 5 parallel builder agents against frozen contracts — a first for a C# feature.
+New feature (#320): clean-room adaptation of five combat mechanics (spec-doc-only implementation) + two TAOM-original systems (weight-driven charge knockdown from `Monster.Weight` ratios; per-race combat-modifier table). `TaomCombatMechanicsModel` derives from the now-abstract CareerSystem `TaomAgentApplyDamageModel` in the engine's single `AgentApplyDamageModel` slot; 9 thin overrides → 4 pure services + race resolver; 107 tests. Built via 5 parallel builder agents against frozen contracts — a first for a C# feature.
 
 **Deep-review (6 agents: 5 core + spec-conformance): 8 findings, all fixed in-session.** Standards/compat/spec-math PASS. Standouts: per-hit `Substring` allocation in cleave normalization (HIGH — replaced with construction-time variant expansion, which also fixed a cross-service config-semantics divergence); engine-input NaN polarity holes (`momentumRemaining <= 0f` passes NaN — 4th instance of the NaN-gate class, new LESSONS-LEARNED rule "positive-polarity gates on engine floats"); `GetHorseChargePenetration` bypassing the master toggle; MCM slider bypassing the JSON ordering invariant. Root-cause pattern: **parallel-builder seams** — every finding lived at a boundary between independently-authored components; new LESSONS-LEARNED rule "shared sub-problems get ONE prescribed solution in the contract". RCA: `docs/reviews/rca-combat-mechanics-2026-07-02.md`.
 

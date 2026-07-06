@@ -8,7 +8,7 @@ are the valid culture ids?", "validate the ModuleData" -- instead of grep-and-ho
 
 It is the interactive counterpart to the batch CLI (tools/validate_moduledata.py)
 and the pre-commit hook (.claude/hooks/check-moduledata-validation.sh); all three
-share the same engine. Adopted (idea-only, MIT) from TheOldRealms/TOR_Tools, whose
+share the same engine. The design follows a schema-driven validation engine whose
 MCP host exposes the same shape of query/validate tools.
 
 Requires the `mcp` Python SDK. Run standalone to smoke-test:

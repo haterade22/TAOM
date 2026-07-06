@@ -167,7 +167,7 @@ For EACH finding:
 
 **Decompile vanilla targets.** For Harmony/GameModel findings, check `E:\Decompiled_Bannerlord\` (Campaign/, MountAndBlade/, Modules/, Core/, UI/).
 
-**Check TOR comparison fairness.** TOR targets older Bannerlord — flag API differences.
+**Check donor-comparison fairness.** Ported references may target an older Bannerlord — flag API differences.
 
 **Check what Codex missed:**
 - Config ID consistency (kingdom/culture IDs match cheatsheet?)

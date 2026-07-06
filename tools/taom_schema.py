@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Schema-driven cross-reference + validation engine for TAOM ModuleData XML.
 
-This is TAOM's port of the IDEAS behind TheOldRealms/TOR_Tools (MIT) —
+Schema-driven validation engine —
 its `SchemaDefinition`/`CrossReferenceService`/`ValidationService` — into TAOM's
-Python tooling world. It does NOT vendor any TOR code; only the architecture is
+Python tooling world. No external code is vendored; the architecture is
 adopted: declarative JSON schemas as the source of truth, a cross-reference
 graph resolved against id registries, and a severity-classified issue model.
 
@@ -33,7 +33,7 @@ from pathlib import Path
 
 
 # --------------------------------------------------------------------------- #
-# Issue model (mirrors TOR's ValidationIssue: severity + location + message)   #
+# Issue model (severity + location + message)                                  #
 # --------------------------------------------------------------------------- #
 class Severity(Enum):
     ERROR = "ERROR"

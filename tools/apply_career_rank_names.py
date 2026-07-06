@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Inject web-researched per-tier RANK titles onto <Career> elements.
 
-Phase C of the career-screen revamp (TOR_Core adoption). Reads the reviewed
+Phase C of the career-screen revamp. Reads the reviewed
 mapping (tools/career_rank_names.json) and writes
 rank1_name/rank2_name/rank3_name="{=taom_career_rank{N}_<id>}<Name>" onto each
 matching <Career> in taom_careers.xml. Emits the companion localization snippet.

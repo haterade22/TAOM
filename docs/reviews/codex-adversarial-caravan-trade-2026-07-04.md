@@ -6162,7 +6162,7 @@ Main\Features\TaomSettings.cs:649: [SettingPropertyBool("Apply To Player", Order
 Main\Features\TaomSettings.cs:650: HintText = "When ON (default), YOUR party can sail. When OFF, you stay land-bound (AI still sails if 'Apply To AI Lords' is on). The master 'Enable Naval Travel' toggle off disables sailing for everyone.")]
 Main\Features\TaomSettings.cs:671: [SettingPropertyBool("Apply To Player", Order = 2,
 Main\Features\TaomSettings.cs:677: HintText = "When ON (default), AI lords' parties and garrisons also shed opposed-alignment troops. When OFF, only the player is affected (if 'Apply To Player' is on).")]
-Main\Features\TaomSettings.cs:694: HintText = "Master toggle for the TOR-derived combat feel pack: skill-based crush-through, monster/orc crush-through, creature cleave, creature stagger immunity, weight-based charge knockdown, shield penetration, race combat modifiers. When off, everything below is inert and combat behaves exactly as before this feature.")]
+Main\Features\TaomSettings.cs:694: HintText = "Master toggle for the combat feel pack: skill-based crush-through, monster/orc crush-through, creature cleave, creature stagger immunity, weight-based charge knockdown, shield penetration, race combat modifiers. When off, everything below is inert and combat behaves exactly as before this feature.")]
 
  succeeded in 701ms:
 402: CacheVeryFarDistances();
