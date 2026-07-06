@@ -12,6 +12,10 @@ public class RaceManager : IRaceManager
     private readonly IFaceGenAdapter _faceGenAdapter;
     private Dictionary<int, string>? _idToName;
     private Dictionary<string, int>? _nameToId;
+    // Issue #330 — the raw FaceGen.GetRaceNames() array (index == race int). Kept separately from
+    // _idToName because Dictionary.Values ordering is an implementation detail; the RacePersistence
+    // legend does index math against this list.
+    private IReadOnlyList<string>? _orderedRaceNames;
     private bool _initialized;
     private readonly object _initLock = new();
 
@@ -47,6 +51,7 @@ public class RaceManager : IRaceManager
             if (raceNames != null)
             {
                 _logger.LogInfo($"Initializing RaceManager with {raceNames.Length} races from game data");
+                _orderedRaceNames = raceNames; // adapter returns a clone — safe to keep
                 for (var i = 0; i < raceNames.Length; i++)
                 {
                     var raceName = raceNames[i];
@@ -60,6 +65,7 @@ public class RaceManager : IRaceManager
                 _logger.LogWarning("FaceGen.GetRaceNames() returned null, using fallback mapping");
                 idToName[0] = "human";
                 nameToId["human"] = 0;
+                _orderedRaceNames = new[] { "human" };
             }
         }
         catch (Exception ex)
@@ -67,9 +73,16 @@ public class RaceManager : IRaceManager
             _logger?.LogError($"Error initializing race mappings: {ex.Message}");
             idToName[0] = "human";
             nameToId["human"] = 0;
+            _orderedRaceNames = new[] { "human" };
         }
 
         return (idToName, nameToId);
+    }
+
+    public IReadOnlyList<string> GetOrderedRaceNames()
+    {
+        EnsureInitialized();
+        return _orderedRaceNames!;
     }
 
     public List<int> GetAllRaceIds()

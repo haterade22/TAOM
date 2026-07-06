@@ -1451,6 +1451,18 @@ User report confirmed: a Mordor-captured Gondor town flips `Settlement.Culture` 
 
 ---
 
+## Review 72 — HeroRace persistence legend (#330) (2026-07-05)
+
+User-identified bug confirmed: `RacePersistenceService` persisted hero races as raw ints — indices into the merged skins.xml race list (`FaceGen.GetRaceNames()` order) — so an insert/remove/reorder between save and load (LOTRLOME skins.xml change, Native-race patch, third-party race mod toggle) silently remapped every hero's race; the `IsValidRaceId` guard is in-range-only and cannot detect a shift. Fix: `CaptureHeroRaces` snapshots the ordered race-name list (`IRaceManager.GetOrderedRaceNames`, new) as a `;`-joined legend under `_taom_raceNameLegend`; restore translates savedInt→name→current id (validate-before-lookup; removed race skips+warns); absent legend = legacy raw-int path byte-for-byte; `SyncRaceData` clears map+legend on `IsLoading` (fixes the same-process stale-map leak, #130-R1 class). +14 tests; suite 4,120 green. TDD RED proven pre-implementation (CS1061 ×4).
+
+**Deep-review (5 agents): 0 code findings, 2 doc items.** Standards/efficiency PASS; Compat 8/8 on installed 1.4.6 (`IsLoading` load-pass semantics, absent-key SyncData leaves ref unchanged, `SyncData<string>` + `Dictionary<string,int>` both registered save types); Data-flow 9 traced / 0 gaps — capture-before-write ordering PROVEN synchronous from decompiled `SaveHandler.SaveTick` (OnBeforeSave drains listeners before the MBSaveLoad write), new-campaign/load-after-load state matrix fully covered, both keys single-owner. Completeness caught a PRE-EXISTING stale doc line (hero-race.md:109 still described the pre-#130 "skips race 0" capture) — fixed in the same session's doc update.
+
+**Codex (gpt-5.5 xhigh): 0 P1 / 0 P2 / 0 P3 — VERDICT CLEAN.** All 6 seeded Known Suspects DISPUTED with decompiled evidence: duplicate-key `_records.Add` throw unreachable (one sync per key per pass); clear-on-load unreachable during save-as-then-continue (save side always constructs `BehaviorSaveData(true)`); legend-path race-0 divergence from legacy is correct name-based behavior, not a regression; degraded-legend capture has no real-game path (FaceGen.CreateInstance runs from native `OnLoadCommonFinished`, long before first `OnBeforeSave`); old builds tolerate the extra unqueried record (no strict-consumption check); the restore-loop refactor checked against concrete (saved, hero, legend, mapping) tuples on both paths. All 8 lifecycle scenarios (shift, mod-removal, pre-#330, pre-TAOM, same-process mixed loads, new campaign, dead heroes, CC round-trip) PASS. Codex sandbox again couldn't run dotnet tests; local suite green.
+
+**Process:** issue #330 opened BEFORE implementation; both reviews ran BEFORE any commit; docs (hero-race.md legend section + stale-line fix) and CHANGELOG landed pre-commit. No AGENTS.md update — zero false positives, no new miss category. Codex prompt + extracted review: `docs/reviews/codex-adversarial-race-persistence-legend-2026-07-05.{prompt.md,md}` (1.9MB session log discarded, final message kept). RCA: `docs/reviews/rca-race-persistence-legend-2026-07-05.md` (0 code findings; doc-drift item recorded).
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

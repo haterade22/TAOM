@@ -154,6 +154,46 @@ public class RaceManagerTests
         Assert.IsTrue(result.Contains("orc"));
     }
 
+    // Issue #330 — GetOrderedRaceNames backs the race-name legend in RacePersistenceService.
+    // Ordering MUST match the FaceGen index order (saved race ints index into this list);
+    // GetAllRaceNames rides Dictionary.Values insertion order, an implementation detail.
+
+    [TestMethod]
+    public void GetOrderedRaceNames_ReturnsNamesInFaceGenOrder()
+    {
+        var result = _sut.GetOrderedRaceNames();
+
+        Assert.AreEqual(4, result.Count);
+        Assert.AreEqual("human", result[0]);
+        Assert.AreEqual("dwarf", result[1]);
+        Assert.AreEqual("elf", result[2]);
+        Assert.AreEqual("orc", result[3]);
+    }
+
+    [TestMethod]
+    public void GetOrderedRaceNames_NullFaceGenResult_FallsBackToHuman()
+    {
+        _faceGenAdapter.GetRaceNames().Returns((string[])null);
+        var sut = new RaceManager(_logger, _faceGenAdapter);
+
+        var result = sut.GetOrderedRaceNames();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("human", result[0]);
+    }
+
+    [TestMethod]
+    public void GetOrderedRaceNames_WhenAdapterThrows_FallsBackToHuman()
+    {
+        _faceGenAdapter.GetRaceNames().Throws(new InvalidOperationException("FaceGen not ready"));
+        var sut = new RaceManager(_logger, _faceGenAdapter);
+
+        var result = sut.GetOrderedRaceNames();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("human", result[0]);
+    }
+
     [TestMethod]
     public void InitializeRaceMappings_WhenAdapterThrows_LogsErrorAndFallsBackToHuman()
     {

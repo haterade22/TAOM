@@ -26,6 +26,15 @@ public class RacePersistenceServiceTests
         // Phase 9b #171 — IRaceManager injected for validate-before-restore. Default-stub valid for
         // any non-zero so existing tests pass unchanged; specific tests override IsValidRaceId.
         _raceManager.IsValidRaceId(Arg.Any<int>()).Returns(true);
+        // Issue #330 — identity name mapping (id == index in ordered names) so capture-then-restore
+        // tests behave exactly as before the legend was introduced; shift tests override per name.
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human", "dwarf", "elf" });
+        _raceManager.IsValidRaceName("human").Returns(true);
+        _raceManager.IsValidRaceName("dwarf").Returns(true);
+        _raceManager.IsValidRaceName("elf").Returns(true);
+        _raceManager.GetRaceIdFromName("human").Returns(0);
+        _raceManager.GetRaceIdFromName("dwarf").Returns(1);
+        _raceManager.GetRaceIdFromName("elf").Returns(2);
         _sut = new RacePersistenceService(_heroRosterAdapter, _raceManager, _logger);
     }
 
@@ -284,6 +293,236 @@ public class RacePersistenceServiceTests
         Assert.AreEqual(1, _sut.CapturedRaceCount);
     }
 
+    // --- Issue #330 — legend-based (name) restore: robust to skins.xml merge-order changes ---
+    //
+    // The saved race int is a position index into FaceGen.GetRaceNames() (the merged skins.xml
+    // <race> list in module load order). CaptureHeroRaces snapshots that list as a ";"-joined
+    // legend so RestoreHeroRaces can translate savedInt -> legend name -> CURRENT id. A reorder /
+    // insert / remove between save and load then restores the correct race instead of whatever
+    // race now happens to sit at the old index (which IsValidRaceId cannot detect — it's in-range).
+
+    [TestMethod]
+    public void RestoreHeroRaces_LegendPresent_ShiftedIndices_TranslatesByName()
+    {
+        // Save-time: dwarf was id 1 (legend human;dwarf;elf). Load-time: dwarf now sits at id 5.
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_dwarf"] = 1 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _raceManager.GetRaceIdFromName("dwarf").Returns(5);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1) // engine loaded the hero with the stale index
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_dwarf", 5);
+        _heroRosterAdapter.DidNotReceive().SetHeroRace("hero_dwarf", 1);
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_LegendPresent_RemovedRaceName_SkipsAndWarns()
+    {
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_elf"] = 2 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _raceManager.IsValidRaceName("elf").Returns(false); // race removed from the module set
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_elf", 0)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("elf")));
+        // Validate-before-lookup: GetRaceIdFromName falls back to 0/human — must not be consulted
+        // for an invalid name, or the fallback would silently restore the hero as human.
+        _raceManager.DidNotReceive().GetRaceIdFromName("elf");
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_LegendPresent_SavedIntOutOfLegendRange_SkipsAndWarns()
+    {
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_corrupt"] = 7 },
+            NextLoadLegend = "human;dwarf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_corrupt", 0)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("hero_corrupt")));
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_LegendPresent_TranslatedIdMatchesCurrent_DoesNotSetRace()
+    {
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_dwarf"] = 1 },
+            NextLoadLegend = "human;dwarf;elf"
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1) // identity mapping: dwarf still resolves to id 1
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void CaptureHeroRaces_SetsLegendFromOrderedRaceNames()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1)
+        });
+
+        _sut.CaptureHeroRaces();
+        var store = new RoundTripDataStore { IsSaving = true };
+        _sut.SyncRaceData(store);
+
+        Assert.AreEqual("human;dwarf;elf", store.LastSavedLegend);
+    }
+
+    // Issue #330 — clear-on-load. SyncData with an absent key leaves the ref value unchanged, so
+    // loading an older-format (or pre-TAOM) save after a newer session in the same process would
+    // otherwise restore the PREVIOUS campaign's data onto colliding StringIds (#130-R1 bug class,
+    // previously only fixed for new campaigns via ResetForNewCampaign).
+
+    [TestMethod]
+    public void SyncRaceData_Loading_AbsentKeys_ClearsStaleState()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1),
+            new HeroRaceInfo("hero_elf", 2)
+        });
+        _sut.CaptureHeroRaces();
+        Assert.AreEqual(2, _sut.CapturedRaceCount);
+
+        // Load a save that predates this feature entirely: neither key present.
+        _sut.SyncRaceData(new RoundTripDataStore { IsSaving = false });
+
+        Assert.AreEqual(0, _sut.CapturedRaceCount);
+        _sut.RestoreHeroRaces();
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void SyncRaceData_Saving_DoesNotClear()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1)
+        });
+        _sut.CaptureHeroRaces();
+
+        var store = new RoundTripDataStore { IsSaving = true };
+        _sut.SyncRaceData(store);
+
+        Assert.AreEqual(1, _sut.CapturedRaceCount);
+        Assert.AreEqual(1, store.LastSavedDict["hero_dwarf"]);
+    }
+
+    [TestMethod]
+    public void ResetForNewCampaign_ClearsLegend()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1)
+        });
+        _sut.CaptureHeroRaces();
+
+        _sut.ResetForNewCampaign();
+        var store = new RoundTripDataStore { IsSaving = true };
+        _sut.SyncRaceData(store);
+
+        Assert.AreEqual("", store.LastSavedLegend);
+    }
+
+    // Issue #330 — legacy path: a save written before the legend existed restores by raw int,
+    // byte-for-byte today's behavior (incl. the #171 IsValidRaceId guard and the race-0 bypass).
+
+    [TestMethod]
+    public void RestoreHeroRaces_NoLegend_LegacyIntPath_RestoresRawInt()
+    {
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_dwarf"] = 1 }
+            // NextLoadLegend deliberately absent — pre-#330 save
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 0)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_dwarf", 1);
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_NoLegend_InvalidSavedRaceId_SkipsAndLeavesCurrent()
+    {
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_removed"] = 99 }
+        };
+        _sut.SyncRaceData(store);
+        _raceManager.IsValidRaceId(99).Returns(false);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_removed", 0)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void RestoreHeroRaces_NoLegend_SavedHumanRace_StillRestores()
+    {
+        var store = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = new Dictionary<string, int> { ["hero_reset_to_human"] = 0 }
+        };
+        _sut.SyncRaceData(store);
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_reset_to_human", 2)
+        });
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_reset_to_human", 0);
+    }
+
     // --- Phase 9b #181 — CharacterCreation × HeroRace round-trip via save/load ---
     //
     // Closes the cross-feature contract gap from Phase 6 #171: a player race assigned at
@@ -318,19 +557,30 @@ public class RacePersistenceServiceTests
         Assert.IsNotNull(savedSnapshot, "SyncData must publish a snapshot when saving");
         Assert.AreEqual(elfRace, savedSnapshot[playerId], "Player race must be in the save snapshot");
         Assert.AreEqual(1, savedSnapshot["npc_dwarf"], "NPC race must also be in the save snapshot");
+        Assert.AreEqual("human;dwarf;elf", savingStore.LastSavedLegend, "Legend must be in the save snapshot (#330)");
 
         // Step 4 — Load: NEW service instance (simulates Bannerlord process restart),
-        // SyncData (loading) populates the new instance's map from the persisted snapshot.
+        // SyncData (loading) populates the new instance's map + legend from the persisted snapshot.
+        // Issue #330 — the load-side race list has SHIFTED (a race was inserted before the
+        // LOTRLOME block): dwarf is now id 4, elf id 7. Restore must follow the names.
         var freshAdapter = Substitute.For<IHeroRosterAdapter>();
         var freshRaceManager = Substitute.For<IRaceManager>();
-        freshRaceManager.IsValidRaceId(Arg.Any<int>()).Returns(true);
+        freshRaceManager.IsValidRaceName("dwarf").Returns(true);
+        freshRaceManager.IsValidRaceName("elf").Returns(true);
+        freshRaceManager.GetRaceIdFromName("dwarf").Returns(4);
+        freshRaceManager.GetRaceIdFromName("elf").Returns(7);
         var freshService = new RacePersistenceService(freshAdapter, freshRaceManager, Substitute.For<IModLogger>());
-        var loadingStore = new RoundTripDataStore { IsSaving = false, NextLoadDict = savedSnapshot };
+        var loadingStore = new RoundTripDataStore
+        {
+            IsSaving = false,
+            NextLoadDict = savedSnapshot,
+            NextLoadLegend = savingStore.LastSavedLegend
+        };
         freshService.SyncRaceData(loadingStore);
         Assert.AreEqual(2, freshService.CapturedRaceCount, "Fresh instance must rehydrate the snapshot");
 
         // Step 5 — OnSessionLaunched restore: heroes are loaded with race=0 (vanilla), Restore
-        // re-applies the captured race=2 to the player.
+        // re-applies the captured races translated through the legend to the CURRENT ids.
         freshAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
         {
             new HeroRaceInfo(playerId, 0),
@@ -338,15 +588,16 @@ public class RacePersistenceServiceTests
         });
         freshService.RestoreHeroRaces();
 
-        freshAdapter.Received(1).SetHeroRace(playerId, elfRace);
-        freshAdapter.Received(1).SetHeroRace("npc_dwarf", 1);
+        freshAdapter.Received(1).SetHeroRace(playerId, 7);
+        freshAdapter.Received(1).SetHeroRace("npc_dwarf", 4);
     }
 }
 
 /// <summary>
-/// Minimal hand-rolled IDataStore stub for Phase 9b #181 round-trip test. NSubstitute can't easily
-/// model ref-parameter `SyncData<T>(string, ref T)` with the Do-callback pattern, so we capture
-/// the saved dict on save and re-inject it on load directly.
+/// Minimal hand-rolled IDataStore stub for the Phase 9b #181 round-trip + #330 legend tests.
+/// NSubstitute can't easily model ref-parameter `SyncData<T>(string, ref T)` with the Do-callback
+/// pattern, so we capture the saved values on save and re-inject them on load directly. Like the
+/// engine, an absent key on load (null Next*) leaves the ref value unchanged and returns false.
 /// </summary>
 internal class RoundTripDataStore : IDataStore
 {
@@ -354,17 +605,33 @@ internal class RoundTripDataStore : IDataStore
     public bool IsLoading => !IsSaving;
     public Dictionary<string, int> LastSavedDict { get; private set; }
     public Dictionary<string, int> NextLoadDict { get; set; }
+    public string LastSavedLegend { get; private set; }
+    public string NextLoadLegend { get; set; }
 
     public bool SyncData<T>(string key, ref T data)
     {
-        if (IsSaving && data is Dictionary<string, int> dict)
+        if (IsSaving)
         {
-            LastSavedDict = new Dictionary<string, int>(dict);
-            return true;
+            if (data is Dictionary<string, int> dict)
+            {
+                LastSavedDict = new Dictionary<string, int>(dict);
+                return true;
+            }
+            if (data is string legend)
+            {
+                LastSavedLegend = legend;
+                return true;
+            }
+            return false;
         }
-        if (!IsSaving && NextLoadDict != null)
+        if (typeof(T) == typeof(Dictionary<string, int>) && NextLoadDict != null)
         {
             data = (T)(object)NextLoadDict;
+            return true;
+        }
+        if (typeof(T) == typeof(string) && NextLoadLegend != null)
+        {
+            data = (T)(object)NextLoadLegend;
             return true;
         }
         return false;

@@ -27,7 +27,7 @@ Five Harmony patches intercept the key rendering and race-assignment paths:
 - `CharacterTableau_RefreshCharacterTableau_Patch` — Postfix on `CharacterTableau.RefreshCharacterTableau`. Delegates to `CharacterTableauService.RefreshCharacterTableau`, which rebuilds agent visuals with race-aware position offsets read from `CharacterAvatarPatch.json`.
 - `BasicCharacterTableau_RefreshCharacterTableau_Patch` (`Patch55_BasicTableauRaceGuard`, applied in `OnBeforeInitialModuleScreenSetAsRoot`) — Prefix on the private `BasicCharacterTableau.RefreshCharacterTableau` (the Save/Load hero preview, a **different** class from `CharacterTableau`). Coerces the private `_race` to the human base via `IBasicTableauRaceGuard.ResolveSafeRace` so the agentless static-morph build can't AV on a custom-race head — see "Save/Load Hero Preview CTD Guard" below.
 
-`RacePersistenceBehavior` (CampaignBehaviorBase) captures all hero races to a `Dictionary<string, int>` before save (`OnBeforeSaveEvent`) and restores them after session launch (`OnSessionLaunchedEvent`). The dictionary is serialized through `SyncData` under the key `_taom_heroRaceMap`.
+`RacePersistenceBehavior` (CampaignBehaviorBase) captures all hero races to a `Dictionary<string, int>` before save (`OnBeforeSaveEvent`) and restores them after session launch (`OnSessionLaunchedEvent`). The dictionary is serialized through `SyncData` under the key `_taom_heroRaceMap`, alongside a **race-name legend** (`_taom_raceNameLegend`, #330): the race names in FaceGen index order at capture time, `;`-joined into one string. The saved ints are positions in the merged skins.xml `<race>` list, which shifts when a race is inserted/removed/reordered or the module set changes — so restore translates `savedInt → legend[savedInt] (name) → IRaceManager.GetRaceIdFromName(name)` (validate-before-lookup via `IsValidRaceName`; a removed race skips + warns and the hero keeps its XML race). An absent/empty legend (pre-#330 save) takes the legacy raw-int path unchanged (`IsValidRaceId` guard, race-0 bypass). The legend is one string beside the proven `Dictionary<string,int>` deliberately — a `Dictionary<string,string>` failed to round-trip `IDataStore` at ~1000 entries (WotR Momentum, 2026-07-03). `SyncRaceData` also clears both fields when `dataStore.IsLoading` before syncing, so a same-process load of an older-format save can't inherit the previous campaign's map/legend (#130-R1 bug class, previously only handled for new campaigns).
 
 Position offsets per race are stored in two JSON config files: `CharacterAvatarPatch.json` (inventory/avatar view) and `CharacterImagePatch.json` (character spawner). Each entry has `race`, `horizontal`, `vertical`, and `zoom` float offsets.
 
@@ -55,9 +55,13 @@ FaceGen.GetBaseMonsterFromRace() [Postfix Patch5_FaceGen]
 
 RacePersistenceBehavior (CampaignBehaviorBase)
     |-> OnBeforeSave -> RacePersistenceService.CaptureHeroRaces()
+    |       captures hero races + the ordered race-name legend (IRaceManager.GetOrderedRaceNames)
     |-> OnSessionLaunched -> RacePersistenceService.RestoreHeroRaces()
+    |       legend present: savedInt -> legend[savedInt] -> GetRaceIdFromName -> SetHeroRace(currentId)
+    |       legend absent (pre-#330 save): legacy raw-int restore
     |-> SyncData -> RacePersistenceService.SyncRaceData(dataStore)
-                       serializes _taom_heroRaceMap
+                       clears map+legend when IsLoading, then serializes
+                       _taom_heroRaceMap + _taom_raceNameLegend
 ```
 
 ## Configuration
@@ -80,7 +84,7 @@ Special case: entries prefixed with `mount_` (e.g., `mount_dwarf`) are used to o
 | `Main/Features/HeroRace/IBasicTableauRaceGuard.cs` / `BasicTableauRaceGuard.cs` | Allow-list deciding which races are safe in the agentless `BasicCharacterTableau` build (Save/Load preview); coerces others to the human base |
 | `Main/Features/HeroRace/CharacterSpawnerService.cs` | Full reimplementation of `CharacterSpawner.InitWithCharacter` with race-aware monster base |
 | `Main/Features/HeroRace/EyeHeightAdjustmentHook.cs` | Lowers dwarf eye height by 0.2 via reflection on the `Monster` struct |
-| `Main/Features/HeroRace/RacePersistenceService.cs` | Captures and restores hero race integers across save/load |
+| `Main/Features/HeroRace/RacePersistenceService.cs` | Captures and restores hero races across save/load — ints + a `;`-joined race-name legend so restore is robust to skins.xml merge-order shifts (#330) |
 | `Main/Features/HeroRace/RacePersistenceBehavior.cs` | CampaignBehaviorBase wiring for save/load events and SyncData |
 | `Main/Features/HeroRace/RacePositionConfigurationService.cs` | Reads both config files and exposes race and mount position items by race name |
 | `Main/Features/HeroRace/Configuration/RacePositionConfig.cs` | JSON config POCO + `LoadConfig`/`WriteConfig` helpers |
@@ -106,7 +110,7 @@ Special case: entries prefixed with `mount_` (e.g., `mount_dwarf`) are used to o
 
 ## Tests
 - `EyeHeightAdjustmentHookTests.cs` — verifies that `OnGetBaseMonsterFromRace` modifies `StandingEyeHeight` and `CrouchEyeHeight` for race id mapping to "dwarf", and is a no-op for other races or race 0.
-- `RacePersistenceServiceTests.cs` — verifies that `CaptureHeroRaces` skips race 0, that `RestoreHeroRaces` only calls `SetHeroRace` for heroes whose stored race differs from the current, and that `SyncRaceData` calls `dataStore.SyncData` with the correct key.
+- `RacePersistenceServiceTests.cs` — verifies that `CaptureHeroRaces` stores ALL heroes including humans (#130 P2) plus the ordered race-name legend, that `RestoreHeroRaces` translates saved ints through the legend to CURRENT ids (shifted-index, removed-race skip+warn, out-of-range skip, translated-id-equal no-op) and falls back to the legacy raw-int path when the legend is absent, that `SyncRaceData` clears stale state on load and syncs both keys, and the full save→load round-trip under a shifted load-side mapping.
 - `RacePersistenceBehaviorTests.cs` — verifies event registration bindings.
 - `RacePositionConfigTests.cs` — verifies deserialization of config items and fallback to an empty config when the file is absent.
 
@@ -177,6 +181,7 @@ Becoming the **ruler of a kingdom** crashed to desktop. Two crash logs (2026-06-
 **Scope / residual.** `Main/Features/HeroRace/Hooks/GauntletSceneNotification_OpenScene_Guard_Patch.cs` (three patch classes: the OpenScene Finalizer, the OnTick deferred-close Postfix, the InitializeWithAgentVisuals diagnostic Prefix). The one remaining live-only check is the deferred-close path — verify in-game that after an aborted become-king cinematic the campaign map still accepts input and the next scene-notification still displays. Known minor residual (engine-side, not fixable from a patch): the `PopupSceneSpawnPoint` that crashed throws before it's added to `_sceneCharacterScripts`, so its half-built `AgentVisuals` isn't `Reset()` during teardown — a bounded one-per-abort managed-reference leak reclaimed at scene `ClearAll()`. Fallback if the deferred close ever proves insufficient: suppress the offending notification up front via a `MBInformationManager.ShowSceneNotification` Prefix (deterministic, but loses those cinematics). Adversarially reviewed by 5 agents (0 HIGH; the deferred-close gap above was the one real finding, now fixed).
 
 ## Changelog
+- 2026-07-05 — Reorder-proof race persistence (#330): `CaptureHeroRaces` snapshots the ordered race-name list (`IRaceManager.GetOrderedRaceNames`, new) as a `;`-joined legend under `_taom_raceNameLegend`; `RestoreHeroRaces` translates saved ints through the legend to CURRENT ids so a skins.xml merge-order shift (insert/remove/reorder, module-set change, Native-race patch) can no longer silently remap hero races — the old `IsValidRaceId` guard only caught out-of-range ints, not shifts. Removed race → skip+warn, hero keeps XML race. Pre-#330 saves take the legacy raw-int path unchanged; the first save after the update writes the legend. `SyncRaceData` clears map+legend on `IsLoading` (fixes the same-process stale-map leak for loads, the #130-R1 class). Deep-review 5 agents: 0 code findings; Codex adversarial pass on file.
 - 2026-07-02 — Race-correct Save/Load preview for verified races: `BasicTableauRaceGuard` refactored from a hardcoded int allow-list (`{0}`) to a name-based `TableauSafeRaceNames` resolved per call via `IRaceManager` (validate-before-lookup, throw-safe → human). Uruk empirically render-verified in the agentless build and allow-listed — an uruk save now previews as an uruk. Dwarf stays coerced (#295 proven unsafe). 9 guard tests.
 - 2026-06-25 — Scene-notification visual CTD guard: `Patch56_SceneNotificationVisualGuard` Finalizer on `GauntletSceneNotification.OpenScene` aborts a become-king/sibling cinematic cleanly when a character's human `AgentVisuals` is null (the engine derefs it unguarded in `PopupSceneSpawnPoint.InitializeWithAgentVisuals`). Fourth raw render path; cause-agnostic; registered in `OnGameInitializationFinished`. Teardown is **deferred** to an `OnTick` Postfix so `OnTick:127-129` can't re-lock input after the close (deep-review MED soft-lock fix). Companion diagnostic Prefix probes the engine's deref chain (`GetCopyAgentVisualsData`/`GetEquipment`) and logs the failing member. 5-agent review: 0 HIGH. Exact culprit pending a live capture.
 - 2026-06-24 — Save/Load hero preview CTD guard (#299): `BasicCharacterTableau_RefreshCharacterTableau_Patch` + `BasicTableauRaceGuard` coerce a custom `_race` to the human base so the agentless static-morph build can't AV on a morph-less custom head (issue #295 class). Save/Load-preview-only; in-game `CharacterTableau` untouched. Own `Patch55_BasicTableauRaceGuard` category applied pre-menu in `OnBeforeInitialModuleScreenSetAsRoot` (Codex C1: `Patch2_RefreshTableau` applies at campaign-init, too late for the cold-menu save list).

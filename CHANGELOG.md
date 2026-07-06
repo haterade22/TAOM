@@ -2,6 +2,18 @@
 
 ## 2026-07-05
 
+### fix(HeroRace): make race persistence robust to skins.xml race-list reordering (#330)
+
+`RacePersistenceService` stores each hero's race in the save as an **int** — a position index into `FaceGen.GetRaceNames()`, the merged skins.xml `<race>` list in module load order. Insert/remove/reorder a race between save and load (a LOTRLOME skins.xml change anywhere but append-at-end, a Bannerlord patch touching Native races, the player toggling another race mod) and every saved int silently re-points to a *different* race — the existing `IsValidRaceId` guard is an in-range check and cannot detect a shift. Only append-at-end has happened so far (`sauron`, 2026-07-02), which is why no save has visibly broken yet.
+
+- **Race-name legend**: `CaptureHeroRaces` snapshots the ordered race-name list as one `;`-joined string (the engine's own `GetRaceIds` delimiter), synced under the new key `_taom_raceNameLegend` beside the existing `Dictionary<string,int>`. Restore translates `savedInt → legend[savedInt] → GetRaceIdFromName(name)` — reorder-proof; a genuinely removed race skips + warns and the hero keeps its XML race. Deliberately NOT a `Dictionary<string,string>` (failed to round-trip `IDataStore` at ~1000 entries — WotR Momentum, 2026-07-03).
+- **New `IRaceManager.GetOrderedRaceNames()`** — exposes the init-time FaceGen array; `GetAllRaceNames()` rides `Dictionary.Values` ordering and is unsafe for index math.
+- **Clear-on-load**: `SyncRaceData` resets map + legend when `dataStore.IsLoading` before syncing — an absent-key `SyncData` leaves ref values unchanged, so a same-process load of an older-format/pre-TAOM save previously inherited the prior campaign's races onto colliding StringIds (#130-R1 class, until now only handled for new campaigns).
+- **Migration is automatic**: pre-#330 saves have no legend → legacy raw-int path byte-for-byte (incl. race-0 bypass + `IsValidRaceId` guard); the first save after the update writes the legend. Old TAOM builds ignore the new key.
+- +14 tests (legend shift/removed/out-of-range/no-op, capture, clear-on-load, legacy path, shifted round-trip; `GetOrderedRaceNames` order + fallbacks). Full suite green (4120 passed). Deep-review (5 agents): 0 code findings; engine semantics (`IsLoading`, absent-key behavior, `SyncData<string>` + `Dictionary<string,int>` support) verified against installed 1.4.6 DLLs.
+
+Save-compat: new `_taom_raceNameLegend` string key; absent on old saves → legacy path; additive only. See `docs/features/hero-race.md`.
+
 ### feat(diagnostics): log which sieges hit the vanilla gathering dead end
 
 `Patch49_ArmyGatheringNreGuard` already swallows the vanilla siege-start NRE in `Army.FindBestGatheringSettlementAndMoveTheLeader` (`Army.cs:726` null `GatePosition`) so a besieger army that can't resolve a gathering fortification no longer CTDs — but the finalizer logged only a context-free `LogDebug` breadcrumb, so there was no way to see *which* sieges are broken. The guard now records the failure context before swallowing, turning the dead end into a reviewable to-fix list.
