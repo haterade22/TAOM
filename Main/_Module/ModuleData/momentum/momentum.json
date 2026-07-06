@@ -6,7 +6,7 @@
     "maxBattleMomentum": 350,
     "siegeMomentum": 400,
     "raidMomentum": 50,
-    "armyMomentum": 50,
+    "armyMomentum": 25,
     "maxStrengthMomentum": 0,
     "killMomentumPerHundred": 40
   },
