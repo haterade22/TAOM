@@ -232,6 +232,14 @@ public class CareerConfigProvider : ICareerConfigProvider
             var passiveEl = el.Element("PassiveEffect") ?? el.Element("PassiveEffects")?.Element("PassiveEffect");
             if (passiveEl != null)
             {
+                // An unrecognized type= must surface loudly, not silently coerce to Special (inert).
+                // ParseEnum's fallback is for survival, not acceptance — mirror its case-insensitive
+                // parse here so the gate and the parse can't disagree.
+                var typeRaw = passiveEl.Attribute("type")?.Value;
+                if (typeRaw != null && !Enum.TryParse<PassiveEffectType>(typeRaw, true, out _))
+                    _logger.LogWarning(
+                        $"CareerConfig: choice '{el.Attribute("id")?.Value}' has unknown PassiveEffect " +
+                        $"type '{typeRaw}' — treated as Special (inert pip).");
                 passive = new PassiveEffect(
                     effectType: ParseEnum<PassiveEffectType>(passiveEl, "type", PassiveEffectType.Special),
                     // Accept value= as an alias for magnitude= (the wrapper schema uses value=).

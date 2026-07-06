@@ -8,8 +8,7 @@ using TAOM.Features.CombatMechanics.Domain;
 
 namespace TAOM.Features.CombatMechanics.Models;
 
-// CombatMechanics feature (clean-room TOR_Core adaptation — docs/reviews/
-// adopt-tor-combat-mechanics-2026-07-02.md). Derives from the CareerSystem model so career
+// CombatMechanics feature. Derives from the CareerSystem model so career
 // passives ride along via inheritance — only ONE AgentApplyDamageModel can be registered.
 // Thin boundary per gamemodels.md rule 4: each override is primitive extraction + one service
 // call + fall-through to base; all decisions live in the four pure services. Short-circuit

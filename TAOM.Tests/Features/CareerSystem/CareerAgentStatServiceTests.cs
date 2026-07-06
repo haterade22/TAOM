@@ -99,9 +99,9 @@ public class CareerAgentStatServiceTests
     }
 
     [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithHorseChargeDamagePassive_ScalesMountChargeDamage()
+    public void ApplyAgentStatModifiers_HeroWithMountChargeDamagePassive_ScalesMountChargeDamage()
     {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.HorseChargeDamage).Returns(0.15f);
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0.15f);
 
         var props = new AgentDrivenProperties();
         props.MountChargeDamage = 100f;
@@ -112,9 +112,9 @@ public class CareerAgentStatServiceTests
     }
 
     [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithZeroHorseChargeDamage_DoesNotMutateMountChargeDamage()
+    public void ApplyAgentStatModifiers_HeroWithZeroMountChargeDamage_DoesNotMutateMountChargeDamage()
     {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.HorseChargeDamage).Returns(0f);
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MountChargeDamage).Returns(0f);
 
         var props = new AgentDrivenProperties();
         props.MountChargeDamage = 80f;
@@ -243,7 +243,7 @@ public class CareerAgentStatServiceTests
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // ApplyMaxHealthPassives — hero Health (flat) + mount HorseHealth (multiplicative)
+    // ApplyMaxHealthPassives — hero Health (flat) + mount MountHealth (multiplicative)
     // ──────────────────────────────────────────────────────────────────────────
 
     [TestMethod]
@@ -257,9 +257,9 @@ public class CareerAgentStatServiceTests
     }
 
     [TestMethod]
-    public void ApplyMaxHealthPassives_MountWithHeroRider_ScalesHorseHealthMultiplicatively()
+    public void ApplyMaxHealthPassives_MountWithHeroRider_ScalesMountHealthMultiplicatively()
     {
-        _passives.GetPassiveMagnitude("rider1", PassiveEffectType.HorseHealth).Returns(0.15f);
+        _passives.GetPassiveMagnitude("rider1", PassiveEffectType.MountHealth).Returns(0.15f);
 
         var result = _sut.ApplyMaxHealthPassives(heroId: null, mountRiderHeroId: "rider1", baseHealth: 200f);
 
@@ -267,9 +267,9 @@ public class CareerAgentStatServiceTests
     }
 
     [TestMethod]
-    public void ApplyMaxHealthPassives_MountWithZeroHorseHealth_ReturnsBase()
+    public void ApplyMaxHealthPassives_MountWithZeroMountHealth_ReturnsBase()
     {
-        _passives.GetPassiveMagnitude("rider1", PassiveEffectType.HorseHealth).Returns(0f);
+        _passives.GetPassiveMagnitude("rider1", PassiveEffectType.MountHealth).Returns(0f);
 
         var result = _sut.ApplyMaxHealthPassives(heroId: null, mountRiderHeroId: "rider1", baseHealth: 200f);
 
@@ -440,7 +440,7 @@ public class CareerAgentStatServiceTests
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // ShouldShrugOffBlow — victim ShruggedOff passive
+    // ShouldShrugOffBlow — victim ShrugOff passive
     // ──────────────────────────────────────────────────────────────────────────
 
     [TestMethod]
@@ -451,16 +451,16 @@ public class CareerAgentStatServiceTests
     }
 
     [TestMethod]
-    public void ShouldShrugOffBlow_ZeroShruggedOffMagnitude_ReturnsFalse()
+    public void ShouldShrugOffBlow_ZeroShrugOffMagnitude_ReturnsFalse()
     {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ShruggedOff).Returns(0f);
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ShrugOff).Returns(0f);
         Assert.IsFalse(_sut.ShouldShrugOffBlow("hero1"));
     }
 
     [TestMethod]
-    public void ShouldShrugOffBlow_NonZeroShruggedOffMagnitude_ReturnsTrue()
+    public void ShouldShrugOffBlow_NonZeroShrugOffMagnitude_ReturnsTrue()
     {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ShruggedOff).Returns(0.5f);
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ShrugOff).Returns(0.5f);
         Assert.IsTrue(_sut.ShouldShrugOffBlow("hero1"));
     }
 
@@ -468,7 +468,7 @@ public class CareerAgentStatServiceTests
     public void ShouldShrugOffBlow_NegativeMagnitude_ReturnsFalse()
     {
         // shrugOff > 0f gate — negative magnitude does NOT trigger shrug.
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ShruggedOff).Returns(-0.5f);
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ShrugOff).Returns(-0.5f);
         Assert.IsFalse(_sut.ShouldShrugOffBlow("hero1"));
     }
 }

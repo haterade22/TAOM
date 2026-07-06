@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Re-tune the six career "phantom" PassiveEffect types into a 10-15% band.
 
-Context: HorseChargeDamage / HorseHealth / StealthBonus / TroopResistance / Ammo /
-HealthRegeneration were authored with no runtime consumer, so their magnitudes were never
+Context: MountChargeDamage / MountHealth / StealthBonus / TroopResistance / Ammo /
+HeroHealing were authored with no runtime consumer, so their magnitudes were never
 applied and drifted (flat HP like 30/60/100, raw ammo counts like 5/8, fractions 0.03-0.20).
 Now that consumers are wired, the maintainer wants every one of these to be ~a 10-15% increase,
-expressed as a percentage multiplier (magnitude in [0.10, 0.15]). HorseHealth + Ammo consumers
+expressed as a percentage multiplier (magnitude in [0.10, 0.15]). MountHealth + Ammo consumers
 became multiplicative to match, so their flat values must also become fractions.
 
 The value is scaled by the pip's career tier (higher tier = bigger bonus), staying in band:
@@ -26,8 +26,8 @@ import sys
 from pathlib import Path
 
 PHANTOM_TYPES = {
-    "HorseChargeDamage", "HorseHealth", "StealthBonus",
-    "TroopResistance", "Ammo", "HealthRegeneration",
+    "MountChargeDamage", "MountHealth", "StealthBonus",
+    "TroopResistance", "Ammo", "HeroHealing",
 }
 
 TIER_VALUE = {0: "0.10", 1: "0.10", 2: "0.13", 3: "0.15"}

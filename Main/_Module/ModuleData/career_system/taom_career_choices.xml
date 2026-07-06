@@ -38,7 +38,7 @@
     <Choice id="ranger_of_ithilien_t1_a_p4" type="Passive"
             description="{=taom_roi_t1a_p4}+5% battle renown gain."
             icon_sprite="career_choice_roi_t1a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -100,7 +100,7 @@
     <Choice id="ranger_of_ithilien_t2_a_p4" type="Passive"
             description="{=taom_roi_t2a_p4}+10% battle renown gain."
             icon_sprite="career_choice_roi_t2a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -157,7 +157,7 @@
     <Choice id="ranger_of_ithilien_t3_a_p3" type="Passive"
             description="{=taom_roi_t3a_p3}+15% battle renown gain."
             icon_sprite="career_choice_roi_t3a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ranger_of_ithilien_t3_a_p4" type="Passive"
             description="{=taom_roi_t3a_p4}+10% troop damage."
@@ -233,7 +233,7 @@
     <Choice id="captain_of_osgiliath_t1_a_p4" type="Passive"
             description="{=taom_cop_t1a_p4}+5% battle renown gain."
             icon_sprite="career_choice_cop_t1a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -293,7 +293,7 @@
     <Choice id="captain_of_osgiliath_t2_a_p4" type="Passive"
             description="{=taom_cop_t2a_p4}+10% battle renown gain."
             icon_sprite="career_choice_cop_t2a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -353,7 +353,7 @@
     <Choice id="captain_of_osgiliath_t3_a_p4" type="Passive"
             description="{=taom_cop_t3a_p4}+10% custom resource gain."
             icon_sprite="career_choice_cop_t3a_p4">
-      <PassiveEffect type="CustomResourceGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="SpecialResourceGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -414,7 +414,7 @@
     <Choice id="knight_of_belfalas_t1_a_p2" type="Passive"
             description="{=taom_kob_t1a_p2}+10% horse charge damage."
             icon_sprite="career_choice_kob_t1a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="knight_of_belfalas_t1_a_p3" type="Passive"
             description="{=taom_kob_t1a_p3}+5% troop damage."
@@ -424,7 +424,7 @@
     <Choice id="knight_of_belfalas_t1_a_p4" type="Passive"
             description="{=taom_kob_t1a_p4}+5% battle renown gain."
             icon_sprite="career_choice_kob_t1a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -449,7 +449,7 @@
     <Choice id="knight_of_belfalas_t1_b_p3" type="Passive"
             description="{=taom_kob_t1b_p3}+10% horse health."
             icon_sprite="career_choice_kob_t1b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="knight_of_belfalas_t1_b_p4" type="Passive"
             description="{=taom_kob_t1b_p4}+10% troop resistance."
@@ -469,7 +469,7 @@
     <Choice id="knight_of_belfalas_t2_a_p1" type="Passive"
             description="{=taom_kob_t2a_p1}+13% horse charge damage."
             icon_sprite="career_choice_kob_t2a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="knight_of_belfalas_t2_a_p2" type="Passive"
             description="{=taom_kob_t2a_p2}+12% melee damage."
@@ -484,7 +484,7 @@
     <Choice id="knight_of_belfalas_t2_a_p4" type="Passive"
             description="{=taom_kob_t2a_p4}+10% battle renown gain."
             icon_sprite="career_choice_kob_t2a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -509,7 +509,7 @@
     <Choice id="knight_of_belfalas_t2_b_p3" type="Passive"
             description="{=taom_kob_t2b_p3}+13% horse health."
             icon_sprite="career_choice_kob_t2b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="knight_of_belfalas_t2_b_p4" type="Passive"
             description="{=taom_kob_t2b_p4}+13% troop resistance."
@@ -544,7 +544,7 @@
     <Choice id="knight_of_belfalas_t3_a_p4" type="Passive"
             description="{=taom_kob_t3a_p4}-10% custom resource upgrade cost."
             icon_sprite="career_choice_kob_t3a_p4">
-      <PassiveEffect type="CustomResourceUpgradeCostModifier" magnitude="-0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="SpecialResourceUpgradeCostModifier" magnitude="-0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -570,7 +570,7 @@
     <Choice id="knight_of_belfalas_t3_b_p3" type="Passive"
             description="{=taom_kob_t3b_p3}+15% horse charge damage."
             icon_sprite="career_choice_kob_t3b_p3">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="knight_of_belfalas_t3_b_p4" type="Passive"
             description="{=taom_kob_t3b_p4}+15% troop resistance."
@@ -855,7 +855,7 @@
             description="{=taom_buc_t3_b_p3_desc}Victory brings fearsome reputation. +12% battle renown gain."
             icon_sprite="career_choice_buc_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
     <Choice id="black_uruk_captain_t3_b_p4" type="Passive"
@@ -1143,7 +1143,7 @@
             description="{=taom_mc_t3_b_p3_desc}Death in Sauron's name brings great renown. +12% battle renown gain."
             icon_sprite="career_choice_mc_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
     <Choice id="mulkerhili_cultist_t3_b_p4" type="Passive"
@@ -1177,7 +1177,7 @@
         <Mutation target_id="snaga_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t1_a_p1" type="Passive"
@@ -1185,7 +1185,7 @@
             description="{=taom_sr_t1_a_p1_desc}Your mount is as vicious as you. +10% horse charge damage."
             icon_sprite="career_choice_sr_t1_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t1_a_p2" type="Passive"
@@ -1223,7 +1223,7 @@
         <Mutation target_id="snaga_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t1_b_p1" type="Passive"
@@ -1231,7 +1231,7 @@
             description="{=taom_sr_t1_b_p1_desc}Your beast keeps its legs in the hardest fights. +10% horse health."
             icon_sprite="career_choice_sr_t1_b_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseHealth" value="0.10" />
+        <PassiveEffect type="MountHealth" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t1_b_p2" type="Passive"
@@ -1269,7 +1269,7 @@
         <Mutation target_id="snaga_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t2_a_p1" type="Passive"
@@ -1277,7 +1277,7 @@
             description="{=taom_sr_t2_a_p1_desc}Your charge breaks enemy formations. +13% horse charge damage."
             icon_sprite="career_choice_sr_t2_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t2_a_p2" type="Passive"
@@ -1293,7 +1293,7 @@
             description="{=taom_sr_t2_a_p3_desc}Successful raids bring great renown. +8% battle renown gain."
             icon_sprite="career_choice_sr_t2_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.08" />
+        <PassiveEffect type="RenownGain" value="0.08" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t2_a_p4" type="Passive"
@@ -1315,7 +1315,7 @@
         <Mutation target_id="snaga_rider_ability" property="Duration" calculator="flat" value="2" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t2_b_p1" type="Passive"
@@ -1361,7 +1361,7 @@
         <Mutation target_id="snaga_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t3_a_p1" type="Passive"
@@ -1369,7 +1369,7 @@
             description="{=taom_sr_t3_a_p1_desc}Your charge devastates all in its path. +15% horse charge damage."
             icon_sprite="career_choice_sr_t3_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t3_a_p2" type="Passive"
@@ -1393,7 +1393,7 @@
             description="{=taom_sr_t3_a_p4_desc}Your raids bring great fear and renown. +12% battle renown gain."
             icon_sprite="career_choice_sr_t3_a_p4">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -1407,7 +1407,7 @@
         <Mutation target_id="snaga_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t3_b_p1" type="Passive"
@@ -1439,7 +1439,7 @@
             description="{=taom_sr_t3_b_p4_desc}The shadow cavalry's deeds are legendary. +14% battle renown gain."
             icon_sprite="career_choice_sr_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.14" />
+        <PassiveEffect type="RenownGain" value="0.14" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -1719,7 +1719,7 @@
             description="{=taom_ohw_t3_b_p3_desc}Your deeds are sung in the dark halls of Mordor. +14% battle renown gain."
             icon_sprite="career_choice_ohw_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.14" />
+        <PassiveEffect type="RenownGain" value="0.14" />
       </PassiveEffects>
     </Choice>
     <Choice id="olog_hai_warchief_t3_b_p4" type="Passive"
@@ -2006,7 +2006,7 @@
             description="{=taom_moa_t3_b_p3_desc}Your deeds bring glory to Aldburg. +12% battle renown gain."
             icon_sprite="career_choice_moa_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
     <Choice id="marksman_of_aldburg_t3_b_p4" type="Passive"
@@ -2027,7 +2027,7 @@
           description="{=taom_ew_root_desc}Warcry of Eorl grants +10% horse charge damage, summoning the thunder of the ancestors."
           icon_sprite="career_choice_eotheod_windrider_root">
     <PassiveEffects>
-      <PassiveEffect type="HorseChargeDamage" value="0.10" />
+      <PassiveEffect type="MountChargeDamage" value="0.10" />
     </PassiveEffects>
   </Choice>
 
@@ -2040,7 +2040,7 @@
         <Mutation target_id="eotheod_windrider_ability" property="Radius" calculator="flat" value="3" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t1_a_p1" type="Passive"
@@ -2048,7 +2048,7 @@
             description="{=taom_ew_t1_a_p1_desc}You lead the charge and none can match your speed. +10% horse charge damage."
             icon_sprite="career_choice_ew_t1_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t1_a_p2" type="Passive"
@@ -2056,7 +2056,7 @@
             description="{=taom_ew_t1_a_p2_desc}Horse and rider are one. +10% horse health."
             icon_sprite="career_choice_ew_t1_a_p2">
       <PassiveEffects>
-        <PassiveEffect type="HorseHealth" value="0.10" />
+        <PassiveEffect type="MountHealth" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t1_a_p3" type="Passive"
@@ -2086,7 +2086,7 @@
         <Mutation target_id="eotheod_windrider_ability" property="Duration" calculator="flat" value="4" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t1_b_p1" type="Passive"
@@ -2118,7 +2118,7 @@
             description="{=taom_ew_t1_b_p4_desc}Your horse is battle-hardened. +10% horse health."
             icon_sprite="career_choice_ew_t1_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="HorseHealth" value="0.10" />
+        <PassiveEffect type="MountHealth" value="0.10" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -2132,7 +2132,7 @@
         <Mutation target_id="eotheod_windrider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t2_a_p1" type="Passive"
@@ -2140,7 +2140,7 @@
             description="{=taom_ew_t2_a_p1_desc}Nothing stands before the Rohirrim. +13% horse charge damage."
             icon_sprite="career_choice_ew_t2_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t2_a_p2" type="Passive"
@@ -2178,7 +2178,7 @@
         <Mutation target_id="eotheod_windrider_ability" property="Duration" calculator="flat" value="2" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t2_b_p1" type="Passive"
@@ -2186,7 +2186,7 @@
             description="{=taom_ew_t2_b_p1_desc}Your horse has the blood of the Mearas. +13% horse health."
             icon_sprite="career_choice_ew_t2_b_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseHealth" value="0.13" />
+        <PassiveEffect type="MountHealth" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t2_b_p2" type="Passive"
@@ -2224,7 +2224,7 @@
         <Mutation target_id="eotheod_windrider_ability" property="Radius" calculator="flat" value="5" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t3_a_p1" type="Passive"
@@ -2232,7 +2232,7 @@
             description="{=taom_ew_t3_a_p1_desc}As at the Fields of the Pelennor, your charge is unstoppable. +15% horse charge damage."
             icon_sprite="career_choice_ew_t3_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t3_a_p2" type="Passive"
@@ -2256,7 +2256,7 @@
             description="{=taom_ew_t3_a_p4_desc}Your deeds bring glory to the Mark. +12% battle renown gain."
             icon_sprite="career_choice_ew_t3_a_p4">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -2270,7 +2270,7 @@
         <Mutation target_id="eotheod_windrider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t3_b_p1" type="Passive"
@@ -2294,7 +2294,7 @@
             description="{=taom_ew_t3_b_p3_desc}The deeds of the Eotheod are sung for ages. +14% battle renown gain."
             icon_sprite="career_choice_ew_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.14" />
+        <PassiveEffect type="RenownGain" value="0.14" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t3_b_p4" type="Passive"
@@ -2544,7 +2544,7 @@
             description="{=taom_ws_t3_a_p4_desc}Victory in defence brings great honour. +12% battle renown gain."
             icon_sprite="career_choice_ws_t3_a_p4">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -2582,7 +2582,7 @@
             description="{=taom_ws_t3_b_p3_desc}The Mark's finest guardian. +12% battle renown gain."
             icon_sprite="career_choice_ws_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
     <Choice id="watchman_of_stangard_t3_b_p4" type="Passive"
@@ -2831,7 +2831,7 @@
             description="{=taom_alr_t3_a_p4_desc}Your name is feared from the Isen to the Misty Mountains. +12% battle renown gain."
             icon_sprite="career_choice_alr_t3_a_p4">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -2869,7 +2869,7 @@
             description="{=taom_alr_t3_b_p3_desc}Your name echoes through every Dunlending hall. +14% battle renown gain."
             icon_sprite="career_choice_alr_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.14" />
+        <PassiveEffect type="RenownGain" value="0.14" />
       </PassiveEffects>
     </Choice>
     <Choice id="avanc_luth_raider_t3_b_p4" type="Passive"
@@ -3119,7 +3119,7 @@
             description="{=taom_wh_t3_a_p4_desc}Your name is whispered in enemy camps. +12% battle renown gain."
             icon_sprite="career_choice_wh_t3_a_p4">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -3157,7 +3157,7 @@
             description="{=taom_wh_t3_b_p3_desc}Every trophy adds to your fearsome legend. +14% battle renown gain."
             icon_sprite="career_choice_wh_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.14" />
+        <PassiveEffect type="RenownGain" value="0.14" />
       </PassiveEffects>
     </Choice>
     <Choice id="wolfskin_hunter_t3_b_p4" type="Passive"
@@ -3178,7 +3178,7 @@
           description="{=taom_cr_root_desc}Warpack Charge grants +10% horse charge damage and drives enemy lines into chaos."
           icon_sprite="career_choice_clanguard_rider_root">
     <PassiveEffects>
-      <PassiveEffect type="HorseChargeDamage" value="0.10" />
+      <PassiveEffect type="MountChargeDamage" value="0.10" />
     </PassiveEffects>
   </Choice>
 
@@ -3191,7 +3191,7 @@
         <Mutation target_id="clanguard_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t1_a_p1" type="Passive"
@@ -3199,7 +3199,7 @@
             description="{=taom_cr_t1_a_p1_desc}You ride as one with your mount. +10% horse charge damage."
             icon_sprite="career_choice_cr_t1_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t1_a_p2" type="Passive"
@@ -3207,7 +3207,7 @@
             description="{=taom_cr_t1_a_p2_desc}Dunlending mountain ponies are tough as iron. +10% horse health."
             icon_sprite="career_choice_cr_t1_a_p2">
       <PassiveEffects>
-        <PassiveEffect type="HorseHealth" value="0.10" />
+        <PassiveEffect type="MountHealth" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t1_a_p3" type="Passive"
@@ -3237,7 +3237,7 @@
         <Mutation target_id="clanguard_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.10" />
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t1_b_p1" type="Passive"
@@ -3283,7 +3283,7 @@
         <Mutation target_id="clanguard_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t2_a_p1" type="Passive"
@@ -3291,7 +3291,7 @@
             description="{=taom_cr_t2_a_p1_desc}Your charge shatters enemy formations. +13% horse charge damage."
             icon_sprite="career_choice_cr_t2_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t2_a_p2" type="Passive"
@@ -3307,7 +3307,7 @@
             description="{=taom_cr_t2_a_p3_desc}Successful raids build fearsome reputation. +8% battle renown gain."
             icon_sprite="career_choice_cr_t2_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.08" />
+        <PassiveEffect type="RenownGain" value="0.08" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t2_a_p4" type="Passive"
@@ -3329,7 +3329,7 @@
         <Mutation target_id="clanguard_rider_ability" property="Duration" calculator="flat" value="2" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.13" />
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t2_b_p1" type="Passive"
@@ -3375,7 +3375,7 @@
         <Mutation target_id="clanguard_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t3_a_p1" type="Passive"
@@ -3383,7 +3383,7 @@
             description="{=taom_cr_t3_a_p1_desc}Your charge cannot be stopped. +15% horse charge damage."
             icon_sprite="career_choice_cr_t3_a_p1">
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t3_a_p2" type="Passive"
@@ -3407,7 +3407,7 @@
             description="{=taom_cr_t3_a_p4_desc}Songs of your charge echo from the Misty Mountains. +12% battle renown gain."
             icon_sprite="career_choice_cr_t3_a_p4">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.12" />
+        <PassiveEffect type="RenownGain" value="0.12" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -3421,7 +3421,7 @@
         <Mutation target_id="clanguard_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
-        <PassiveEffect type="HorseChargeDamage" value="0.15" />
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t3_b_p1" type="Passive"
@@ -3445,7 +3445,7 @@
             description="{=taom_cr_t3_b_p3_desc}Your raids are feared from Edoras to Orthanc. +14% battle renown gain."
             icon_sprite="career_choice_cr_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="BattleRenownGain" value="0.14" />
+        <PassiveEffect type="RenownGain" value="0.14" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t3_b_p4" type="Passive"
@@ -3480,7 +3480,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blademaster_of_ren_t1_a_p4" type="Passive" description="{=taom_bor_t1a_p4}+5% battle renown gain." icon_sprite="career_choice_bor_t1a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3513,7 +3513,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blademaster_of_ren_t2_a_p3" type="Passive" description="{=taom_bor_t2a_p3}+10% battle renown gain." icon_sprite="career_choice_bor_t2a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blademaster_of_ren_t2_a_p4" type="Passive" description="{=taom_bor_t2a_p4}+3 party size." icon_sprite="career_choice_bor_t2a_p4">
       <PassiveEffect type="PartySize" magnitude="3" operation="Add" />
@@ -3552,7 +3552,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blademaster_of_ren_t3_a_p4" type="Passive" description="{=taom_bor_t3a_p4}+15% battle renown gain." icon_sprite="career_choice_bor_t3a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3616,7 +3616,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="steppe_bowmaster_t1_b_p4" type="Passive" description="{=taom_sb_t1b_p4}+5% battle renown gain." icon_sprite="career_choice_sb_t1b_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3652,7 +3652,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="steppe_bowmaster_t2_b_p4" type="Passive" description="{=taom_sb_t2b_p4}+10% battle renown gain." icon_sprite="career_choice_sb_t2b_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3667,7 +3667,7 @@
       <PassiveEffect type="Ammo" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="steppe_bowmaster_t3_a_p3" type="Passive" description="{=taom_sb_t3a_p3}+15% battle renown gain." icon_sprite="career_choice_sb_t3a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="steppe_bowmaster_t3_a_p4" type="Passive" description="{=taom_sb_t3a_p4}+15% party spotting range." icon_sprite="career_choice_sb_t3a_p4">
       <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -3699,7 +3699,7 @@
   <Choice id="chariot_warlord_root" group_id="" type="Passive"
           description="{=taom_chariot_warlord_root_desc}Scything Charge grants +10% horse charge damage and inspires mounted warriors."
           icon_sprite="career_choice_chariot_warlord_root">
-    <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
   </Choice>
 
   <ChoiceGroup id="chariot_warlord_t1_a" display_name="{=taom_career_grp_chariot_warlord_t1_a}Scythe-Rider" career_id="chariot_warlord" tier="1">
@@ -3707,7 +3707,7 @@
       <Mutations><Mutation target_id="chariot_warlord_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t1_a_p1" type="Passive" description="{=taom_cw_t1a_p1}+10% horse charge damage." icon_sprite="career_choice_cw_t1a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="chariot_warlord_t1_a_p2" type="Passive" description="{=taom_cw_t1a_p2}+8% melee damage." icon_sprite="career_choice_cw_t1a_p2">
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
@@ -3725,7 +3725,7 @@
       <Mutations><Mutation target_id="chariot_warlord_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t1_b_p1" type="Passive" description="{=taom_cw_t1b_p1}+10% horse health." icon_sprite="career_choice_cw_t1b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="chariot_warlord_t1_b_p2" type="Passive" description="{=taom_cw_t1b_p2}+25 max health." icon_sprite="career_choice_cw_t1b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -3734,7 +3734,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="chariot_warlord_t1_b_p4" type="Passive" description="{=taom_cw_t1b_p4}+5% battle renown gain." icon_sprite="career_choice_cw_t1b_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3743,7 +3743,7 @@
       <Mutations><Mutation target_id="chariot_warlord_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t2_a_p1" type="Passive" description="{=taom_cw_t2a_p1}+13% horse charge damage." icon_sprite="career_choice_cw_t2a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="chariot_warlord_t2_a_p2" type="Passive" description="{=taom_cw_t2a_p2}+10% party movement speed." icon_sprite="career_choice_cw_t2a_p2">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -3764,13 +3764,13 @@
       <PassiveEffect type="Damage" magnitude="0.10" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="chariot_warlord_t2_b_p2" type="Passive" description="{=taom_cw_t2b_p2}+13% horse health." icon_sprite="career_choice_cw_t2b_p2">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="chariot_warlord_t2_b_p3" type="Passive" description="{=taom_cw_t2b_p3}+12% troop damage." icon_sprite="career_choice_cw_t2b_p3">
       <PassiveEffect type="TroopDamage" magnitude="0.12" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="chariot_warlord_t2_b_p4" type="Passive" description="{=taom_cw_t2b_p4}+10% battle renown gain." icon_sprite="career_choice_cw_t2b_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3779,7 +3779,7 @@
       <Mutations><Mutation target_id="chariot_warlord_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t3_a_p1" type="Passive" description="{=taom_cw_t3a_p1}+15% horse charge damage." icon_sprite="career_choice_cw_t3a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="chariot_warlord_t3_a_p2" type="Passive" description="{=taom_cw_t3a_p2}+15% melee damage." icon_sprite="career_choice_cw_t3a_p2">
       <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
@@ -3788,7 +3788,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="chariot_warlord_t3_a_p4" type="Passive" description="{=taom_cw_t3a_p4}+15% battle renown gain." icon_sprite="career_choice_cw_t3a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3797,7 +3797,7 @@
       <Mutations><Mutation target_id="chariot_warlord_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t3_b_p1" type="Passive" description="{=taom_cw_t3b_p1}+15% horse health." icon_sprite="career_choice_cw_t3b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="chariot_warlord_t3_b_p2" type="Passive" description="{=taom_cw_t3b_p2}+15% party movement speed." icon_sprite="career_choice_cw_t3b_p2">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -3834,7 +3834,7 @@
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="tribesman_of_jelut_t1_a_p4" type="Passive" description="{=taom_toj_t1a_p4}+5% battle renown gain." icon_sprite="career_choice_toj_t1a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3867,7 +3867,7 @@
       <PassiveEffect type="Damage" magnitude="0.10" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="tribesman_of_jelut_t2_a_p3" type="Passive" description="{=taom_toj_t2a_p3}+10% battle renown gain." icon_sprite="career_choice_toj_t2a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="tribesman_of_jelut_t2_a_p4" type="Passive" description="{=taom_toj_t2a_p4}+3 party size." icon_sprite="career_choice_toj_t2a_p4">
       <PassiveEffect type="PartySize" magnitude="3" operation="Add" />
@@ -3906,7 +3906,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="tribesman_of_jelut_t3_a_p4" type="Passive" description="{=taom_toj_t3a_p4}+15% battle renown gain." icon_sprite="career_choice_toj_t3a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3952,7 +3952,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="pezarsani_javelineer_t1_a_p4" type="Passive" description="{=taom_pj_t1a_p4}+5% battle renown gain." icon_sprite="career_choice_pj_t1a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -3988,7 +3988,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="pezarsani_javelineer_t2_a_p4" type="Passive" description="{=taom_pj_t2a_p4}+10% battle renown gain." icon_sprite="career_choice_pj_t2a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4021,7 +4021,7 @@
       <PassiveEffect type="Ammo" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="pezarsani_javelineer_t3_a_p3" type="Passive" description="{=taom_pj_t3a_p3}+15% battle renown gain." icon_sprite="career_choice_pj_t3a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="pezarsani_javelineer_t3_a_p4" type="Passive" description="{=taom_pj_t3a_p4}+15% movement speed." icon_sprite="career_choice_pj_t3a_p4">
       <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -4053,7 +4053,7 @@
   <Choice id="mahud_beast_rider_root" group_id="" type="Passive"
           description="{=taom_mahud_beast_rider_root_desc}Echoes of Mûmakan grants +10% horse charge damage and spreads fear."
           icon_sprite="career_choice_mahud_beast_rider_root">
-    <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
   </Choice>
 
   <ChoiceGroup id="mahud_beast_rider_t1_a" display_name="{=taom_career_grp_mahud_beast_rider_t1_a}Tusk Vanguard" career_id="mahud_beast_rider" tier="1">
@@ -4061,7 +4061,7 @@
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
     <Choice id="mahud_beast_rider_t1_a_p1" type="Passive" description="{=taom_mbr_t1a_p1}+10% horse charge damage." icon_sprite="career_choice_mbr_t1a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="mahud_beast_rider_t1_a_p2" type="Passive" description="{=taom_mbr_t1a_p2}+8% melee damage." icon_sprite="career_choice_mbr_t1a_p2">
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
@@ -4079,13 +4079,13 @@
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="mahud_beast_rider_t1_b_p1" type="Passive" description="{=taom_mbr_t1b_p1}+10% horse health." icon_sprite="career_choice_mbr_t1b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="mahud_beast_rider_t1_b_p2" type="Passive" description="{=taom_mbr_t1b_p2}+5% troop damage." icon_sprite="career_choice_mbr_t1b_p2">
       <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="mahud_beast_rider_t1_b_p3" type="Passive" description="{=taom_mbr_t1b_p3}+5% battle renown gain." icon_sprite="career_choice_mbr_t1b_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="mahud_beast_rider_t1_b_p4" type="Passive" description="{=taom_mbr_t1b_p4}+5% resistance." icon_sprite="career_choice_mbr_t1b_p4">
       <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
@@ -4097,7 +4097,7 @@
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="mahud_beast_rider_t2_a_p1" type="Passive" description="{=taom_mbr_t2a_p1}+13% horse charge damage." icon_sprite="career_choice_mbr_t2a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="mahud_beast_rider_t2_a_p2" type="Passive" description="{=taom_mbr_t2a_p2}+10% troop morale." icon_sprite="career_choice_mbr_t2a_p2">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4106,7 +4106,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="mahud_beast_rider_t2_a_p4" type="Passive" description="{=taom_mbr_t2a_p4}+10% battle renown gain." icon_sprite="career_choice_mbr_t2a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4118,7 +4118,7 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="mahud_beast_rider_t2_b_p2" type="Passive" description="{=taom_mbr_t2b_p2}+13% horse health." icon_sprite="career_choice_mbr_t2b_p2">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="mahud_beast_rider_t2_b_p3" type="Passive" description="{=taom_mbr_t2b_p3}+10% party movement speed." icon_sprite="career_choice_mbr_t2b_p3">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4133,7 +4133,7 @@
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
     <Choice id="mahud_beast_rider_t3_a_p1" type="Passive" description="{=taom_mbr_t3a_p1}+15% horse charge damage." icon_sprite="career_choice_mbr_t3a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="mahud_beast_rider_t3_a_p2" type="Passive" description="{=taom_mbr_t3a_p2}+15% melee damage." icon_sprite="career_choice_mbr_t3a_p2">
       <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
@@ -4142,7 +4142,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="mahud_beast_rider_t3_a_p4" type="Passive" description="{=taom_mbr_t3a_p4}+15% battle renown gain." icon_sprite="career_choice_mbr_t3a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4151,7 +4151,7 @@
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="mahud_beast_rider_t3_b_p1" type="Passive" description="{=taom_mbr_t3b_p1}+15% horse health." icon_sprite="career_choice_mbr_t3b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="mahud_beast_rider_t3_b_p2" type="Passive" description="{=taom_mbr_t3b_p2}+15% party movement speed." icon_sprite="career_choice_mbr_t3b_p2">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -4204,7 +4204,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="far_harad_halftroll_t1_b_p3" type="Passive" description="{=taom_fhh_t1b_p3}+5% battle renown gain." icon_sprite="career_choice_fhh_t1b_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="far_harad_halftroll_t1_b_p4" type="Passive" description="{=taom_fhh_t1b_p4}+25 max health." icon_sprite="career_choice_fhh_t1b_p4">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -4243,7 +4243,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="far_harad_halftroll_t2_b_p4" type="Passive" description="{=taom_fhh_t2b_p4}+10% battle renown gain." icon_sprite="career_choice_fhh_t2b_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4276,7 +4276,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="far_harad_halftroll_t3_b_p3" type="Passive" description="{=taom_fhh_t3b_p3}+15% battle renown gain." icon_sprite="career_choice_fhh_t3b_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="far_harad_halftroll_t3_b_p4" type="Passive" description="{=taom_fhh_t3b_p4}+5 party size." icon_sprite="career_choice_fhh_t3b_p4">
       <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
@@ -4399,7 +4399,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="codyan_legionaire_t3_b_p4" type="Passive" description="{=taom_cl_t3_b_p4}+15% battle renown gain." icon_sprite="career_choice_cl_t3_b_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4427,7 +4427,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="lokhas_drus_marksman_t1_a_p4" type="Passive" description="{=taom_ldm_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_ldm_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4460,7 +4460,7 @@
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="lokhas_drus_marksman_t2_a_p3" type="Passive" description="{=taom_ldm_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_ldm_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="lokhas_drus_marksman_t2_a_p4" type="Passive" description="{=taom_ldm_t2_a_p4}+2 party size." icon_sprite="career_choice_ldm_t2_a_p4">
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
@@ -4496,7 +4496,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="lokhas_drus_marksman_t3_a_p3" type="Passive" description="{=taom_ldm_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_ldm_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="lokhas_drus_marksman_t3_a_p4" type="Passive" description="{=taom_ldm_t3_a_p4}+15% troop damage." icon_sprite="career_choice_ldm_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -4528,7 +4528,7 @@
   <Choice id="balchoth_kan_root" group_id="" type="Passive"
           description="{=taom_bk_root_desc}Unyielding grants +10% horse charge damage as your warband rides without mercy."
           icon_sprite="career_choice_bk_root">
-    <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
   </Choice>
 
   <ChoiceGroup id="balchoth_kan_t1_a" display_name="{=taom_career_grp_balchoth_kan_t1_a}Balchoth Rider" career_id="balchoth_kan" tier="1">
@@ -4536,13 +4536,13 @@
       <Mutations><Mutation target_id="balchoth_kan_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
     <Choice id="balchoth_kan_t1_a_p1" type="Passive" description="{=taom_bk_t1_a_p1}+10% horse charge damage." icon_sprite="career_choice_bk_t1_a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="balchoth_kan_t1_a_p2" type="Passive" description="{=taom_bk_t1_a_p2}+5% troop morale." icon_sprite="career_choice_bk_t1_a_p2">
       <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="balchoth_kan_t1_a_p3" type="Passive" description="{=taom_bk_t1_a_p3}+10% horse health." icon_sprite="career_choice_bk_t1_a_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="balchoth_kan_t1_a_p4" type="Passive" description="{=taom_bk_t1_a_p4}+5% melee damage." icon_sprite="career_choice_bk_t1_a_p4">
       <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
@@ -4578,7 +4578,7 @@
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="balchoth_kan_t2_a_p3" type="Passive" description="{=taom_bk_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_bk_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="balchoth_kan_t2_a_p4" type="Passive" description="{=taom_bk_t2_a_p4}-10% troop wages." icon_sprite="career_choice_bk_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -4590,10 +4590,10 @@
       <Mutations><Mutation target_id="balchoth_kan_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
     <Choice id="balchoth_kan_t2_b_p1" type="Passive" description="{=taom_bk_t2_b_p1}+13% horse charge damage." icon_sprite="career_choice_bk_t2_b_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="balchoth_kan_t2_b_p2" type="Passive" description="{=taom_bk_t2_b_p2}+13% horse health." icon_sprite="career_choice_bk_t2_b_p2">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="balchoth_kan_t2_b_p3" type="Passive" description="{=taom_bk_t2_b_p3}+10% resistance." icon_sprite="career_choice_bk_t2_b_p3">
       <PassiveEffect type="Resistance" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4608,10 +4608,10 @@
       <Mutations><Mutation target_id="balchoth_kan_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
     <Choice id="balchoth_kan_t3_a_p1" type="Passive" description="{=taom_bk_t3_a_p1}+15% horse charge damage." icon_sprite="career_choice_bk_t3_a_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="balchoth_kan_t3_a_p2" type="Passive" description="{=taom_bk_t3_a_p2}+15% horse health." icon_sprite="career_choice_bk_t3_a_p2">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="balchoth_kan_t3_a_p3" type="Passive" description="{=taom_bk_t3_a_p3}+15% troop morale." icon_sprite="career_choice_bk_t3_a_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -4626,7 +4626,7 @@
       <Mutations><Mutation target_id="balchoth_kan_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="balchoth_kan_t3_b_p1" type="Passive" description="{=taom_bk_t3_b_p1}+15% horse charge damage." icon_sprite="career_choice_bk_t3_b_p1">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="balchoth_kan_t3_b_p2" type="Passive" description="{=taom_bk_t3_b_p2}+20% troop morale." icon_sprite="career_choice_bk_t3_b_p2">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
@@ -4681,7 +4681,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_guardsman_t1_b_p4" type="Passive" description="{=taom_dg2_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_dg2_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4696,7 +4696,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="dale_guardsman_t2_a_p3" type="Passive" description="{=taom_dg2_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_dg2_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_guardsman_t2_a_p4" type="Passive" description="{=taom_dg2_t2_a_p4}-10% troop wages." icon_sprite="career_choice_dg2_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -4747,13 +4747,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_guardsman_t3_b_p2" type="Passive" description="{=taom_dg2_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_dg2_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_guardsman_t3_b_p3" type="Passive" description="{=taom_dg2_t3_b_p3}+20% troop morale." icon_sprite="career_choice_dg2_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_guardsman_t3_b_p4" type="Passive" description="{=taom_dg2_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_dg2_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4781,7 +4781,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_marksman_t1_a_p4" type="Passive" description="{=taom_dm_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_dm_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4817,7 +4817,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_marksman_t2_a_p4" type="Passive" description="{=taom_dm_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_dm_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4850,7 +4850,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_marksman_t3_a_p3" type="Passive" description="{=taom_dm_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_dm_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_marksman_t3_a_p4" type="Passive" description="{=taom_dm_t3_a_p4}+10% troop damage." icon_sprite="career_choice_dm_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4893,7 +4893,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="dale_outrider_t1_a_p2" type="Passive" description="{=taom_dor_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_dor_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_outrider_t1_a_p3" type="Passive" description="{=taom_dor_t1_a_p3}+7% swing speed." icon_sprite="career_choice_dor_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -4908,7 +4908,7 @@
       <Mutations><Mutation target_id="dale_outrider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="dale_outrider_t1_b_p1" type="Passive" description="{=taom_dor_t1_b_p1}+10% horse health." icon_sprite="career_choice_dor_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="dale_outrider_t1_b_p2" type="Passive" description="{=taom_dor_t1_b_p2}+25 max health." icon_sprite="career_choice_dor_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -4935,7 +4935,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_outrider_t2_a_p4" type="Passive" description="{=taom_dor_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_dor_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -4947,10 +4947,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="dale_outrider_t2_b_p2" type="Passive" description="{=taom_dor_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_dor_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_outrider_t2_b_p3" type="Passive" description="{=taom_dor_t2_b_p3}+13% horse health." icon_sprite="career_choice_dor_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="dale_outrider_t2_b_p4" type="Passive" description="{=taom_dor_t2_b_p4}+10% swing speed." icon_sprite="career_choice_dor_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4965,7 +4965,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="dale_outrider_t3_a_p2" type="Passive" description="{=taom_dor_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_dor_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_outrider_t3_a_p3" type="Passive" description="{=taom_dor_t3_a_p3}+15% swing speed." icon_sprite="career_choice_dor_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -4980,7 +4980,7 @@
       <Mutations><Mutation target_id="dale_outrider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="dale_outrider_t3_b_p1" type="Passive" description="{=taom_dor_t3_b_p1}+15% horse health." icon_sprite="career_choice_dor_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="dale_outrider_t3_b_p2" type="Passive" description="{=taom_dor_t3_b_p2}-15% troop wages." icon_sprite="career_choice_dor_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
@@ -5035,7 +5035,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ironguard_t1_b_p4" type="Passive" description="{=taom_ig_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_ig_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5050,7 +5050,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="ironguard_t2_a_p3" type="Passive" description="{=taom_ig_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_ig_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ironguard_t2_a_p4" type="Passive" description="{=taom_ig_t2_a_p4}-10% troop wages." icon_sprite="career_choice_ig_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -5101,13 +5101,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ironguard_t3_b_p2" type="Passive" description="{=taom_ig_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_ig_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ironguard_t3_b_p3" type="Passive" description="{=taom_ig_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ig_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ironguard_t3_b_p4" type="Passive" description="{=taom_ig_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_ig_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5135,7 +5135,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="crossbow_master_t1_a_p4" type="Passive" description="{=taom_cbm_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_cbm_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5171,7 +5171,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="crossbow_master_t2_a_p4" type="Passive" description="{=taom_cbm_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_cbm_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5204,7 +5204,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="crossbow_master_t3_a_p3" type="Passive" description="{=taom_cbm_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_cbm_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="crossbow_master_t3_a_p4" type="Passive" description="{=taom_cbm_t3_a_p4}+10% troop damage." icon_sprite="career_choice_cbm_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5247,7 +5247,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="ram_rider_t1_a_p2" type="Passive" description="{=taom_rr_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_rr_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ram_rider_t1_a_p3" type="Passive" description="{=taom_rr_t1_a_p3}+7% swing speed." icon_sprite="career_choice_rr_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -5262,7 +5262,7 @@
       <Mutations><Mutation target_id="ram_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="ram_rider_t1_b_p1" type="Passive" description="{=taom_rr_t1_b_p1}+10% horse health." icon_sprite="career_choice_rr_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="ram_rider_t1_b_p2" type="Passive" description="{=taom_rr_t1_b_p2}+25 max health." icon_sprite="career_choice_rr_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -5289,7 +5289,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ram_rider_t2_a_p4" type="Passive" description="{=taom_rr_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_rr_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5301,10 +5301,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="ram_rider_t2_b_p2" type="Passive" description="{=taom_rr_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_rr_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ram_rider_t2_b_p3" type="Passive" description="{=taom_rr_t2_b_p3}+13% horse health." icon_sprite="career_choice_rr_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="ram_rider_t2_b_p4" type="Passive" description="{=taom_rr_t2_b_p4}+10% swing speed." icon_sprite="career_choice_rr_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5319,7 +5319,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="ram_rider_t3_a_p2" type="Passive" description="{=taom_rr_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_rr_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ram_rider_t3_a_p3" type="Passive" description="{=taom_rr_t3_a_p3}+15% swing speed." icon_sprite="career_choice_rr_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -5334,7 +5334,7 @@
       <Mutations><Mutation target_id="ram_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="ram_rider_t3_b_p1" type="Passive" description="{=taom_rr_t3_b_p1}+15% horse health." icon_sprite="career_choice_rr_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="ram_rider_t3_b_p2" type="Passive" description="{=taom_rr_t3_b_p2}-15% troop wages." icon_sprite="career_choice_rr_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
@@ -5389,7 +5389,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blade_dancer_t1_b_p4" type="Passive" description="{=taom_bd_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_bd_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5404,7 +5404,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="blade_dancer_t2_a_p3" type="Passive" description="{=taom_bd_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_bd_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blade_dancer_t2_a_p4" type="Passive" description="{=taom_bd_t2_a_p4}-10% troop wages." icon_sprite="career_choice_bd_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -5455,13 +5455,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blade_dancer_t3_b_p2" type="Passive" description="{=taom_bd_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_bd_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blade_dancer_t3_b_p3" type="Passive" description="{=taom_bd_t3_b_p3}+20% troop morale." icon_sprite="career_choice_bd_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blade_dancer_t3_b_p4" type="Passive" description="{=taom_bd_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_bd_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5489,7 +5489,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="elven_archer_t1_a_p4" type="Passive" description="{=taom_elar_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_elar_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5525,7 +5525,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="elven_archer_t2_a_p4" type="Passive" description="{=taom_elar_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_elar_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5558,7 +5558,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="elven_archer_t3_a_p3" type="Passive" description="{=taom_elar_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_elar_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="elven_archer_t3_a_p4" type="Passive" description="{=taom_elar_t3_a_p4}+10% troop damage." icon_sprite="career_choice_elar_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5601,7 +5601,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="rivendell_knight_t1_a_p2" type="Passive" description="{=taom_rvk_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_rvk_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="rivendell_knight_t1_a_p3" type="Passive" description="{=taom_rvk_t1_a_p3}+7% swing speed." icon_sprite="career_choice_rvk_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -5616,7 +5616,7 @@
       <Mutations><Mutation target_id="rivendell_knight_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="rivendell_knight_t1_b_p1" type="Passive" description="{=taom_rvk_t1_b_p1}+10% horse health." icon_sprite="career_choice_rvk_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="rivendell_knight_t1_b_p2" type="Passive" description="{=taom_rvk_t1_b_p2}+25 max health." icon_sprite="career_choice_rvk_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -5643,7 +5643,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="rivendell_knight_t2_a_p4" type="Passive" description="{=taom_rvk_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_rvk_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5655,10 +5655,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="rivendell_knight_t2_b_p2" type="Passive" description="{=taom_rvk_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_rvk_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="rivendell_knight_t2_b_p3" type="Passive" description="{=taom_rvk_t2_b_p3}+13% horse health." icon_sprite="career_choice_rvk_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="rivendell_knight_t2_b_p4" type="Passive" description="{=taom_rvk_t2_b_p4}+10% swing speed." icon_sprite="career_choice_rvk_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5673,7 +5673,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="rivendell_knight_t3_a_p2" type="Passive" description="{=taom_rvk_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_rvk_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="rivendell_knight_t3_a_p3" type="Passive" description="{=taom_rvk_t3_a_p3}+15% swing speed." icon_sprite="career_choice_rvk_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -5688,7 +5688,7 @@
       <Mutations><Mutation target_id="rivendell_knight_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="rivendell_knight_t3_b_p1" type="Passive" description="{=taom_rvk_t3_b_p1}+15% horse health." icon_sprite="career_choice_rvk_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="rivendell_knight_t3_b_p2" type="Passive" description="{=taom_rvk_t3_b_p2}-15% troop wages." icon_sprite="career_choice_rvk_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
@@ -5743,7 +5743,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warden_t1_b_p4" type="Passive" description="{=taom_wdn_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_wdn_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5758,7 +5758,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="warden_t2_a_p3" type="Passive" description="{=taom_wdn_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_wdn_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warden_t2_a_p4" type="Passive" description="{=taom_wdn_t2_a_p4}-10% troop wages." icon_sprite="career_choice_wdn_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -5809,13 +5809,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warden_t3_b_p2" type="Passive" description="{=taom_wdn_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_wdn_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warden_t3_b_p3" type="Passive" description="{=taom_wdn_t3_b_p3}+20% troop morale." icon_sprite="career_choice_wdn_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warden_t3_b_p4" type="Passive" description="{=taom_wdn_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_wdn_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5843,7 +5843,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="galadhrim_archer_t1_a_p4" type="Passive" description="{=taom_gar_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_gar_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5879,7 +5879,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="galadhrim_archer_t2_a_p4" type="Passive" description="{=taom_gar_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_gar_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -5912,7 +5912,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="galadhrim_archer_t3_a_p3" type="Passive" description="{=taom_gar_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_gar_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="galadhrim_archer_t3_a_p4" type="Passive" description="{=taom_gar_t3_a_p4}+10% troop damage." icon_sprite="career_choice_gar_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5955,7 +5955,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="sentinel_t1_a_p2" type="Passive" description="{=taom_snt_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_snt_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="sentinel_t1_a_p3" type="Passive" description="{=taom_snt_t1_a_p3}+7% swing speed." icon_sprite="career_choice_snt_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -5970,7 +5970,7 @@
       <Mutations><Mutation target_id="sentinel_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="sentinel_t1_b_p1" type="Passive" description="{=taom_snt_t1_b_p1}+10% horse health." icon_sprite="career_choice_snt_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="sentinel_t1_b_p2" type="Passive" description="{=taom_snt_t1_b_p2}+25 max health." icon_sprite="career_choice_snt_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -5997,7 +5997,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="sentinel_t2_a_p4" type="Passive" description="{=taom_snt_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_snt_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6009,10 +6009,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="sentinel_t2_b_p2" type="Passive" description="{=taom_snt_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_snt_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="sentinel_t2_b_p3" type="Passive" description="{=taom_snt_t2_b_p3}+13% horse health." icon_sprite="career_choice_snt_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="sentinel_t2_b_p4" type="Passive" description="{=taom_snt_t2_b_p4}+10% swing speed." icon_sprite="career_choice_snt_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6027,7 +6027,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="sentinel_t3_a_p2" type="Passive" description="{=taom_snt_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_snt_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="sentinel_t3_a_p3" type="Passive" description="{=taom_snt_t3_a_p3}+15% swing speed." icon_sprite="career_choice_snt_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -6042,7 +6042,7 @@
       <Mutations><Mutation target_id="sentinel_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="sentinel_t3_b_p1" type="Passive" description="{=taom_snt_t3_b_p1}+15% horse health." icon_sprite="career_choice_snt_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="sentinel_t3_b_p2" type="Passive" description="{=taom_snt_t3_b_p2}-15% troop wages." icon_sprite="career_choice_snt_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
@@ -6097,7 +6097,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_walker_t1_b_p4" type="Passive" description="{=taom_shw_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_shw_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6112,7 +6112,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="shadow_walker_t2_a_p3" type="Passive" description="{=taom_shw_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_shw_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_walker_t2_a_p4" type="Passive" description="{=taom_shw_t2_a_p4}-10% troop wages." icon_sprite="career_choice_shw_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -6163,13 +6163,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_walker_t3_b_p2" type="Passive" description="{=taom_shw_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_shw_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_walker_t3_b_p3" type="Passive" description="{=taom_shw_t3_b_p3}+20% troop morale." icon_sprite="career_choice_shw_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_walker_t3_b_p4" type="Passive" description="{=taom_shw_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_shw_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6197,7 +6197,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="silvan_archer_t1_a_p4" type="Passive" description="{=taom_sva_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_sva_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6233,7 +6233,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="silvan_archer_t2_a_p4" type="Passive" description="{=taom_sva_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_sva_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6266,7 +6266,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="silvan_archer_t3_a_p3" type="Passive" description="{=taom_sva_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_sva_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="silvan_archer_t3_a_p4" type="Passive" description="{=taom_sva_t3_a_p4}+10% troop damage." icon_sprite="career_choice_sva_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6309,7 +6309,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="elk_rider_t1_a_p2" type="Passive" description="{=taom_elk_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_elk_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="elk_rider_t1_a_p3" type="Passive" description="{=taom_elk_t1_a_p3}+7% swing speed." icon_sprite="career_choice_elk_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -6324,7 +6324,7 @@
       <Mutations><Mutation target_id="elk_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="elk_rider_t1_b_p1" type="Passive" description="{=taom_elk_t1_b_p1}+10% horse health." icon_sprite="career_choice_elk_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="elk_rider_t1_b_p2" type="Passive" description="{=taom_elk_t1_b_p2}+25 max health." icon_sprite="career_choice_elk_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -6351,7 +6351,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="elk_rider_t2_a_p4" type="Passive" description="{=taom_elk_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_elk_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6363,10 +6363,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="elk_rider_t2_b_p2" type="Passive" description="{=taom_elk_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_elk_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="elk_rider_t2_b_p3" type="Passive" description="{=taom_elk_t2_b_p3}+13% horse health." icon_sprite="career_choice_elk_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="elk_rider_t2_b_p4" type="Passive" description="{=taom_elk_t2_b_p4}+10% swing speed." icon_sprite="career_choice_elk_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6381,7 +6381,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="elk_rider_t3_a_p2" type="Passive" description="{=taom_elk_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_elk_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="elk_rider_t3_a_p3" type="Passive" description="{=taom_elk_t3_a_p3}+15% swing speed." icon_sprite="career_choice_elk_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -6396,7 +6396,7 @@
       <Mutations><Mutation target_id="elk_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="elk_rider_t3_b_p1" type="Passive" description="{=taom_elk_t3_b_p1}+15% horse health." icon_sprite="career_choice_elk_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="elk_rider_t3_b_p2" type="Passive" description="{=taom_elk_t3_b_p2}-15% troop wages." icon_sprite="career_choice_elk_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
@@ -6451,7 +6451,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_berserker_t1_b_p4" type="Passive" description="{=taom_ub_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_ub_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6466,7 +6466,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="uruk_berserker_t2_a_p3" type="Passive" description="{=taom_ub_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_ub_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_berserker_t2_a_p4" type="Passive" description="{=taom_ub_t2_a_p4}-10% troop wages." icon_sprite="career_choice_ub_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -6517,13 +6517,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_berserker_t3_b_p2" type="Passive" description="{=taom_ub_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_ub_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_berserker_t3_b_p3" type="Passive" description="{=taom_ub_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ub_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_berserker_t3_b_p4" type="Passive" description="{=taom_ub_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_ub_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6551,7 +6551,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_crossbow_t1_a_p4" type="Passive" description="{=taom_ucb_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_ucb_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6587,7 +6587,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_crossbow_t2_a_p4" type="Passive" description="{=taom_ucb_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_ucb_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6620,7 +6620,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_crossbow_t3_a_p3" type="Passive" description="{=taom_ucb_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_ucb_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_crossbow_t3_a_p4" type="Passive" description="{=taom_ucb_t3_a_p4}+10% troop damage." icon_sprite="career_choice_ucb_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6663,7 +6663,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="warg_scout_t1_a_p2" type="Passive" description="{=taom_wsc_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_wsc_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warg_scout_t1_a_p3" type="Passive" description="{=taom_wsc_t1_a_p3}+7% swing speed." icon_sprite="career_choice_wsc_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -6678,7 +6678,7 @@
       <Mutations><Mutation target_id="warg_scout_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warg_scout_t1_b_p1" type="Passive" description="{=taom_wsc_t1_b_p1}+10% horse health." icon_sprite="career_choice_wsc_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="warg_scout_t1_b_p2" type="Passive" description="{=taom_wsc_t1_b_p2}+25 max health." icon_sprite="career_choice_wsc_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -6705,7 +6705,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warg_scout_t2_a_p4" type="Passive" description="{=taom_wsc_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_wsc_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6717,10 +6717,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="warg_scout_t2_b_p2" type="Passive" description="{=taom_wsc_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_wsc_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warg_scout_t2_b_p3" type="Passive" description="{=taom_wsc_t2_b_p3}+13% horse health." icon_sprite="career_choice_wsc_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="warg_scout_t2_b_p4" type="Passive" description="{=taom_wsc_t2_b_p4}+10% swing speed." icon_sprite="career_choice_wsc_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6735,7 +6735,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="warg_scout_t3_a_p2" type="Passive" description="{=taom_wsc_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_wsc_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warg_scout_t3_a_p3" type="Passive" description="{=taom_wsc_t3_a_p3}+15% swing speed." icon_sprite="career_choice_wsc_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -6750,7 +6750,7 @@
       <Mutations><Mutation target_id="warg_scout_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warg_scout_t3_b_p1" type="Passive" description="{=taom_wsc_t3_b_p1}+15% horse health." icon_sprite="career_choice_wsc_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="warg_scout_t3_b_p2" type="Passive" description="{=taom_wsc_t3_b_p2}-15% troop wages." icon_sprite="career_choice_wsc_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
@@ -6806,7 +6806,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="cave_troll_master_t1_b_p4" type="Passive" description="{=taom_ctm_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_ctm_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6821,7 +6821,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="cave_troll_master_t2_a_p3" type="Passive" description="{=taom_ctm_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_ctm_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="cave_troll_master_t2_a_p4" type="Passive" description="{=taom_ctm_t2_a_p4}-10% troop wages." icon_sprite="career_choice_ctm_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -6872,13 +6872,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="cave_troll_master_t3_b_p2" type="Passive" description="{=taom_ctm_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_ctm_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="cave_troll_master_t3_b_p3" type="Passive" description="{=taom_ctm_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ctm_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="cave_troll_master_t3_b_p4" type="Passive" description="{=taom_ctm_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_ctm_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
   -->
@@ -6907,7 +6907,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="goblin_sniper_t1_a_p4" type="Passive" description="{=taom_gbs_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_gbs_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6943,7 +6943,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="goblin_sniper_t2_a_p4" type="Passive" description="{=taom_gbs_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_gbs_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -6976,7 +6976,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="goblin_sniper_t3_a_p3" type="Passive" description="{=taom_gbs_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_gbs_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="goblin_sniper_t3_a_p4" type="Passive" description="{=taom_gbs_t3_a_p4}+10% troop damage." icon_sprite="career_choice_gbs_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7019,7 +7019,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="warg_pack_leader_t1_a_p2" type="Passive" description="{=taom_wpl_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_wpl_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warg_pack_leader_t1_a_p3" type="Passive" description="{=taom_wpl_t1_a_p3}+7% swing speed." icon_sprite="career_choice_wpl_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -7034,7 +7034,7 @@
       <Mutations><Mutation target_id="warg_pack_leader_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warg_pack_leader_t1_b_p1" type="Passive" description="{=taom_wpl_t1_b_p1}+10% horse health." icon_sprite="career_choice_wpl_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="warg_pack_leader_t1_b_p2" type="Passive" description="{=taom_wpl_t1_b_p2}+25 max health." icon_sprite="career_choice_wpl_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -7061,7 +7061,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warg_pack_leader_t2_a_p4" type="Passive" description="{=taom_wpl_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_wpl_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7073,10 +7073,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="warg_pack_leader_t2_b_p2" type="Passive" description="{=taom_wpl_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_wpl_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warg_pack_leader_t2_b_p3" type="Passive" description="{=taom_wpl_t2_b_p3}+13% horse health." icon_sprite="career_choice_wpl_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="warg_pack_leader_t2_b_p4" type="Passive" description="{=taom_wpl_t2_b_p4}+10% swing speed." icon_sprite="career_choice_wpl_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7091,7 +7091,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="warg_pack_leader_t3_a_p2" type="Passive" description="{=taom_wpl_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_wpl_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warg_pack_leader_t3_a_p3" type="Passive" description="{=taom_wpl_t3_a_p3}+15% swing speed." icon_sprite="career_choice_wpl_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -7106,7 +7106,7 @@
       <Mutations><Mutation target_id="warg_pack_leader_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warg_pack_leader_t3_b_p1" type="Passive" description="{=taom_wpl_t3_b_p1}+15% horse health." icon_sprite="career_choice_wpl_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="warg_pack_leader_t3_b_p2" type="Passive" description="{=taom_wpl_t3_b_p2}-15% troop wages." icon_sprite="career_choice_wpl_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
@@ -7161,7 +7161,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_warrior_t1_b_p4" type="Passive" description="{=taom_swr_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_swr_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7176,7 +7176,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="shadow_warrior_t2_a_p3" type="Passive" description="{=taom_swr_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_swr_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_warrior_t2_a_p4" type="Passive" description="{=taom_swr_t2_a_p4}-10% troop wages." icon_sprite="career_choice_swr_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -7227,13 +7227,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_warrior_t3_b_p2" type="Passive" description="{=taom_swr_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_swr_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_warrior_t3_b_p3" type="Passive" description="{=taom_swr_t3_b_p3}+20% troop morale." icon_sprite="career_choice_swr_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_warrior_t3_b_p4" type="Passive" description="{=taom_swr_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_swr_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7261,7 +7261,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="necromancer_acolyte_t1_a_p4" type="Passive" description="{=taom_nca_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_nca_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7297,7 +7297,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="necromancer_acolyte_t2_a_p4" type="Passive" description="{=taom_nca_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_nca_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7330,7 +7330,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="necromancer_acolyte_t3_a_p3" type="Passive" description="{=taom_nca_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_nca_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="necromancer_acolyte_t3_a_p4" type="Passive" description="{=taom_nca_t3_a_p4}+10% troop damage." icon_sprite="career_choice_nca_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7373,7 +7373,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="fell_rider_t1_a_p2" type="Passive" description="{=taom_flr_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_flr_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="fell_rider_t1_a_p3" type="Passive" description="{=taom_flr_t1_a_p3}+7% swing speed." icon_sprite="career_choice_flr_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -7388,7 +7388,7 @@
       <Mutations><Mutation target_id="fell_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="fell_rider_t1_b_p1" type="Passive" description="{=taom_flr_t1_b_p1}+10% horse health." icon_sprite="career_choice_flr_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="fell_rider_t1_b_p2" type="Passive" description="{=taom_flr_t1_b_p2}+25 max health." icon_sprite="career_choice_flr_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -7415,7 +7415,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="fell_rider_t2_a_p4" type="Passive" description="{=taom_flr_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_flr_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7427,10 +7427,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="fell_rider_t2_b_p2" type="Passive" description="{=taom_flr_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_flr_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="fell_rider_t2_b_p3" type="Passive" description="{=taom_flr_t2_b_p3}+13% horse health." icon_sprite="career_choice_flr_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="fell_rider_t2_b_p4" type="Passive" description="{=taom_flr_t2_b_p4}+10% swing speed." icon_sprite="career_choice_flr_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7445,7 +7445,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="fell_rider_t3_a_p2" type="Passive" description="{=taom_flr_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_flr_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="fell_rider_t3_a_p3" type="Passive" description="{=taom_flr_t3_a_p3}+15% swing speed." icon_sprite="career_choice_flr_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -7460,7 +7460,7 @@
       <Mutations><Mutation target_id="fell_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="fell_rider_t3_b_p1" type="Passive" description="{=taom_flr_t3_b_p1}+15% horse health." icon_sprite="career_choice_flr_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="fell_rider_t3_b_p2" type="Passive" description="{=taom_flr_t3_b_p2}-15% troop wages." icon_sprite="career_choice_flr_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
@@ -7515,7 +7515,7 @@
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_boarder_t1_b_p4" type="Passive" description="{=taom_crb_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_crb_t1_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7530,7 +7530,7 @@
       <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
     </Choice>
     <Choice id="corsair_boarder_t2_a_p3" type="Passive" description="{=taom_crb_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_crb_t2_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_boarder_t2_a_p4" type="Passive" description="{=taom_crb_t2_a_p4}-10% troop wages." icon_sprite="career_choice_crb_t2_a_p4">
       <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
@@ -7581,13 +7581,13 @@
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_boarder_t3_b_p2" type="Passive" description="{=taom_crb_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_crb_t3_b_p2">
-      <PassiveEffect type="HealthRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_boarder_t3_b_p3" type="Passive" description="{=taom_crb_t3_b_p3}+20% troop morale." icon_sprite="career_choice_crb_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_boarder_t3_b_p4" type="Passive" description="{=taom_crb_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_crb_t3_b_p4">
-      <PassiveEffect type="TroopRegeneration" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7615,7 +7615,7 @@
       <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_crossbow_t1_a_p4" type="Passive" description="{=taom_crc_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_crc_t1_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7651,7 +7651,7 @@
       <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_crossbow_t2_a_p4" type="Passive" description="{=taom_crc_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_crc_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7684,7 +7684,7 @@
       <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_crossbow_t3_a_p3" type="Passive" description="{=taom_crc_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_crc_t3_a_p3">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_crossbow_t3_a_p4" type="Passive" description="{=taom_crc_t3_a_p4}+10% troop damage." icon_sprite="career_choice_crc_t3_a_p4">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7727,7 +7727,7 @@
       <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="corsair_captain_t1_a_p2" type="Passive" description="{=taom_crca_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_crca_t1_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_captain_t1_a_p3" type="Passive" description="{=taom_crca_t1_a_p3}+7% swing speed." icon_sprite="career_choice_crca_t1_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
@@ -7742,7 +7742,7 @@
       <Mutations><Mutation target_id="corsair_captain_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="corsair_captain_t1_b_p1" type="Passive" description="{=taom_crca_t1_b_p1}+10% horse health." icon_sprite="career_choice_crca_t1_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.10" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
     </Choice>
     <Choice id="corsair_captain_t1_b_p2" type="Passive" description="{=taom_crca_t1_b_p2}+25 max health." icon_sprite="career_choice_crca_t1_b_p2">
       <PassiveEffect type="Health" magnitude="25" operation="Add" />
@@ -7769,7 +7769,7 @@
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_captain_t2_a_p4" type="Passive" description="{=taom_crca_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_crca_t2_a_p4">
-      <PassiveEffect type="BattleRenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
 
@@ -7781,10 +7781,10 @@
       <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="corsair_captain_t2_b_p2" type="Passive" description="{=taom_crca_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_crca_t2_b_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_captain_t2_b_p3" type="Passive" description="{=taom_crca_t2_b_p3}+13% horse health." icon_sprite="career_choice_crca_t2_b_p3">
-      <PassiveEffect type="HorseHealth" magnitude="0.13" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
     </Choice>
     <Choice id="corsair_captain_t2_b_p4" type="Passive" description="{=taom_crca_t2_b_p4}+10% swing speed." icon_sprite="career_choice_crca_t2_b_p4">
       <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7799,7 +7799,7 @@
       <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
     </Choice>
     <Choice id="corsair_captain_t3_a_p2" type="Passive" description="{=taom_crca_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_crca_t3_a_p2">
-      <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_captain_t3_a_p3" type="Passive" description="{=taom_crca_t3_a_p3}+15% swing speed." icon_sprite="career_choice_crca_t3_a_p3">
       <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -7814,7 +7814,7 @@
       <Mutations><Mutation target_id="corsair_captain_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="corsair_captain_t3_b_p1" type="Passive" description="{=taom_crca_t3_b_p1}+15% horse health." icon_sprite="career_choice_crca_t3_b_p1">
-      <PassiveEffect type="HorseHealth" magnitude="0.15" operation="Add" />
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
     </Choice>
     <Choice id="corsair_captain_t3_b_p2" type="Passive" description="{=taom_crca_t3_b_p2}-15% troop wages." icon_sprite="career_choice_crca_t3_b_p2">
       <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />

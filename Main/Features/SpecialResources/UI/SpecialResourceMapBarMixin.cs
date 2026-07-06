@@ -49,7 +49,7 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
         var resource = _lastResource;
         if (resource == null) return;
 
-        // Add to SecondaryInfoItems once (TOR pattern — works with vanilla MapInfoItemVM)
+        // Add to SecondaryInfoItems once (works with vanilla MapInfoItemVM)
         if (_baseInitialized && !_itemAdded && ViewModel is MapInfoVM mapInfo)
         {
             mapInfo.SecondaryInfoItems.Add(_resourceInfo);

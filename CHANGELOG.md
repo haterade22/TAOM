@@ -1,5 +1,17 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-06
+
+### refactor(career): prune passive-effect vocabulary, harden config parse, retune career screen
+
+- **`PassiveEffectType` pruned + renamed + regrouped.** 15 unused members deleted (none referenced by code, shipped XML, or saves — the enum is parsed from XML at load and never persisted). 10 members renamed to project vocabulary: `SpecialResourceGain` / `SpecialResourceUpkeepModifier` / `SpecialResourceUpgradeCostModifier` (match the SpecialResources feature), `MountHealth` / `MountChargeDamage` (TAOM mounts aren't only horses), `SmithingCostReduction`, `TroopSurvival`, `HeroHealing`, `RenownGain`, `ShrugOff`. Swept across all consumers: 8 C# files, 240 `type=` attributes in `taom_career_choices.xml`, 4 test files, 2 tools scripts. Members regrouped by domain with a consumers-note header. The engine parameter `isShruggedOff` (TaleWorlds signature in `TaomCombatMechanicsModel`) is intentionally untouched.
+- **Unknown `type=` values now warn at load** (`CareerConfigProvider.ParseChoice`): an unrecognized value previously coerced silently to `Special` (inert pip); now a WARNING names the choice id + raw value. Case-insensitive parity with `ParseEnum` pinned by a new test (`LoadChoices_UnknownPassiveType_LogsWarningAndFallsBackToSpecial`).
+- **Career screen prefab retune** (`GUI/PreFabs/CareerSystem/CareerScreen.xml`): VisualDefinitions renamed (`CareerHeaderSlide` / `CareerFooterSlide` / `CareerNodePanel`) and retimed, inert `EaseIn` markup dropped (decompile-verified — the prefab parser never reads it), pane split now 520/1400, node hover width 768. `CareerChoiceGroupObjectVM` click handlers rewritten to LINQ (behavior-identical; click-rate only).
+- Deep review (5 agents) + Codex pre-review: **0 HIGH/P1/P2**; 2 P3 test-hygiene findings fixed in-session (old vocabulary in test method names; negative-parse exemplar → synthetic `NoSuchEffectType`). Stale enum names fixed in `docs/features/battle-balance.md` + `special-resources.md`. RCA: `docs/reviews/rca-career-enum-prefab-cleanup-2026-07-06.md`; systemic lesson appended to LESSONS-LEARNED (rename sweeps end with a substring pass over tests/docs). Full suite green (4121 passed).
+
+Not-tested: career screen render at the new geometry (in-game open owed — prefab drift fails silently).
+Save-compat: none — `PassiveEffectType` is never persisted; career saves store id strings only.
+
 ## 2026-07-05
 
 ### fix(HeroRace): make race persistence robust to skins.xml race-list reordering (#330)

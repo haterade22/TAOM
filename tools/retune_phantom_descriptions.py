@@ -3,7 +3,7 @@
 
 Companion to retune_phantom_passives.py. That script changed magnitudes to a uniform 10/13/15%
 band; this one fixes the player-facing description text that still states the OLD numbers, and
-converts the now-multiplicative HorseHealth/Ammo descriptions from flat counts to percentages.
+converts the now-multiplicative MountHealth/Ammo descriptions from flat counts to percentages.
 
 TYPE-PHRASE-ANCHORED so it never touches an ability-mutation number: it only rewrites a number
 that is directly attached to the passive's own effect phrase (e.g. "+5% horse charge damage" or
@@ -26,11 +26,11 @@ STRINGS = Path("Main/_Module/ModuleData/taom_career_strings.xml")
 
 # type -> (effect phrase as it appears in descriptions). All six now render as a percentage.
 PHRASES = {
-    "HorseChargeDamage": "horse charge damage",
-    "HorseHealth": "horse health",
+    "MountChargeDamage": "horse charge damage",
+    "MountHealth": "horse health",
     "StealthBonus": "stealth bonus",
     "TroopResistance": "troop resistance",
-    "HealthRegeneration": "health regeneration",
+    "HeroHealing": "health regeneration",
     "Ammo": "ammo",
 }
 

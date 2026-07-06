@@ -30,7 +30,7 @@ public interface ICareerAgentStatService
 
     /// <summary>
     /// Returns the agent's adjusted max health. A hero gets a flat <c>Health</c> career-passive
-    /// add; a MOUNT whose rider is a hero gets a multiplicative <c>HorseHealth</c> bonus. Exactly
+    /// add; a MOUNT whose rider is a hero gets a multiplicative <c>MountHealth</c> bonus. Exactly
     /// one of <paramref name="heroId"/> / <paramref name="mountRiderHeroId"/> is expected to be
     /// non-null (the boundary never sets both — an agent is a hero or a mount, not both).
     /// </summary>
@@ -52,7 +52,7 @@ public interface ICareerAgentStatService
     float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, string? troopLeaderHeroId, AttackTypeMask hitMask, float baseResult);
 
     /// <summary>
-    /// Returns true if the victim hero has a non-zero ShruggedOff career passive.
+    /// Returns true if the victim hero has a non-zero ShrugOff career passive.
     /// Caller is responsible for short-circuiting on the base GameModel result first.
     /// </summary>
     bool ShouldShrugOffBlow(string? victimHeroId);

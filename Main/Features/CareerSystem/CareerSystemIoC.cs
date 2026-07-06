@@ -52,7 +52,7 @@ public static class CareerSystemIoC
         // Phase 5: GameModel support
         container.Register<ICareerHeroAdapterFactory, CareerHeroAdapterFactory>(Reuse.Singleton);
 
-        // Phase 6: Career-tied quest system (adapted from TOR_Core, verified on 1.4.5)
+        // Phase 6: Career-tied quest system (verified on 1.4.5)
         container.Register<ICareerQuestConfigProvider, CareerQuestConfigProvider>(Reuse.Singleton);
         container.Register<ICareerQuestService, CareerQuestService>(Reuse.Singleton);
         container.Register<IQuestHeroAdapterFactory, QuestHeroAdapterFactory>(Reuse.Singleton);

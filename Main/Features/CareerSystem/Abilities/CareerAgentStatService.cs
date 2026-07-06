@@ -43,8 +43,8 @@ public class CareerAgentStatService : ICareerAgentStatService
 
         if (!string.IsNullOrEmpty(mountRiderHeroId))
         {
-            var horseHealth = _passives.GetPassiveMagnitude(mountRiderHeroId!, PassiveEffectType.HorseHealth);
-            if (horseHealth != 0f) return baseHealth * (1f + horseHealth);
+            var MountHealth = _passives.GetPassiveMagnitude(mountRiderHeroId!, PassiveEffectType.MountHealth);
+            if (MountHealth != 0f) return baseHealth * (1f + MountHealth);
         }
 
         return baseHealth;
@@ -102,7 +102,7 @@ public class CareerAgentStatService : ICareerAgentStatService
     public bool ShouldShrugOffBlow(string? victimHeroId)
     {
         if (string.IsNullOrEmpty(victimHeroId)) return false;
-        var shrugOff = _passives.GetPassiveMagnitude(victimHeroId!, PassiveEffectType.ShruggedOff);
+        var shrugOff = _passives.GetPassiveMagnitude(victimHeroId!, PassiveEffectType.ShrugOff);
         return shrugOff > 0f;
     }
 
@@ -124,7 +124,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         var speedBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
         if (speedBonus != 0f) props.MaxSpeedMultiplier += speedBonus;
 
-        var chargeBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.HorseChargeDamage);
+        var chargeBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.MountChargeDamage);
         if (chargeBonus != 0f) props.MountChargeDamage *= (1f + chargeBonus);
     }
 

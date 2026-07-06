@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem.Domain;
@@ -39,30 +40,20 @@ public class CareerChoiceGroupObjectVM : ViewModel
     {
         if (!_isActive) return;
 
-        for (int i = 0; i < _choices.Count; i++)
-        {
-            if (!_choices[i].IsTaken)
-            {
-                _choices[i].SelectChoice();
-                _choiceChangedAction?.Invoke();
-                return;
-            }
-        }
+        var next = _choices.FirstOrDefault(c => !c.IsTaken);
+        if (next == null) return;
+        next.SelectChoice();
+        _choiceChangedAction?.Invoke();
     }
 
     public void ExecuteClickDecrease()
     {
         if (!_isActive) return;
 
-        for (int i = _choices.Count - 1; i >= 0; i--)
-        {
-            if (_choices[i].IsTaken)
-            {
-                _choices[i].DeSelectChoice();
-                _choiceChangedAction?.Invoke();
-                return;
-            }
-        }
+        var last = _choices.LastOrDefault(c => c.IsTaken);
+        if (last == null) return;
+        last.DeSelectChoice();
+        _choiceChangedAction?.Invoke();
     }
 
     [DataSourceProperty]

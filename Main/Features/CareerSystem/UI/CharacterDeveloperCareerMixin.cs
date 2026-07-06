@@ -59,7 +59,7 @@ internal class CharacterDeveloperCareerMixin : BaseViewModelMixin<CharacterDevel
     {
         _logger?.LogInfo("CareerSystem: ExecuteOpenCareerScreen triggered from character developer");
 
-        // Close CharacterDeveloper first (TOR pattern) — prevents
+        // Close CharacterDeveloper first — prevents
         // GauntletMapBarGlobalLayer from ticking with invalid input context
         if (ViewModel is CharacterDeveloperVM charDevVM)
             charDevVM.ExecuteDone();

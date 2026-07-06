@@ -18,7 +18,6 @@ public sealed class CareerDefinition
     /// Per-tier rank/title names (localized, e.g. "{=key}Captain of Ithilien"). Shown as the
     /// tier headers on the career screen — the career's rank at tiers 1/2/3, escalating in
     /// prestige. Empty when the XML omits them; the screen VM falls back to "Tier N" then.
-    /// (Adopted from TOR_Core's tor_career_rank{1,2,3}_name convention.)
     /// </summary>
     public string Rank1Name { get; }
     public string Rank2Name { get; }

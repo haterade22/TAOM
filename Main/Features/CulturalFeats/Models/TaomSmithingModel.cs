@@ -35,7 +35,7 @@ public class TaomSmithingModel : DefaultSmithingModel
     {
         var result = new ExplainedNumber(baseCost, false);
         _feats.ApplySmithingFeats(CultureFeatAdapter.FromOrNull(hero?.Culture), ref result);
-        _careerPassives.ApplyFactor(hero?.StringId, ref result, PassiveEffectType.EnchantmentCostReduction);
+        _careerPassives.ApplyFactor(hero?.StringId, ref result, PassiveEffectType.SmithingCostReduction);
         return (int)result.ResultNumber;
     }
 }

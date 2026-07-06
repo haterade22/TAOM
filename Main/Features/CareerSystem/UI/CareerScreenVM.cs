@@ -136,7 +136,7 @@ public class CareerScreenVM : ViewModel
         CareerPortraitSprite = $"CareerSystem\\Portraits\\{career.PortraitSprite}";
 
         // Tier headers show the career's per-tier RANK title (e.g. "Captain of Ithilien") when
-        // authored, falling back to the generic "Tier N" label. (Adopted from TOR_Core.)
+        // authored, falling back to the generic "Tier N" label.
         Tier1Label = !string.IsNullOrEmpty(career.Rank1Name)
             ? new TextObject(career.Rank1Name).ToString()
             : new TextObject("{=taom_career_tier1}Tier 1").ToString();

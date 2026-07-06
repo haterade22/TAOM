@@ -23,9 +23,8 @@ public enum CareerQuestRewardType
     GrantInfluence,
 
     /// <summary>
-    /// Set a string flag in the hero's career data (TAOM's clean equivalent of TOR's
-    /// <c>Hero.AddAttribute</c>) used to gate downstream dialog/content. Flag name in
-    /// <see cref="CareerQuestRewardDefinition.Param"/>.
+    /// Set a string flag in the hero's career data, used to gate downstream dialog/content.
+    /// Flag name in <see cref="CareerQuestRewardDefinition.Param"/>.
     /// </summary>
     GrantAttributeFlag
 }

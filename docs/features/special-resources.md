@@ -46,7 +46,7 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 - **Desertion:** At 0 balance, 10% of each upkeep-troop type deserts daily (min 1 per type)
 - **Notifications:** Green chat for earnings, yellow deficit warning (only when the next daily tick's projected balance would fall to ≤ 0 — i.e. one day before desertion; a low-but-stable balance is silent), center-screen desertion alert
 - **SyncData persistence:** Composite `heroId:resourceId` keys, cap enforcement on load
-- **Career passive integration:** `CustomResourceGain` scales daily earning, `CustomResourceUpkeepModifier` reduces upkeep, `CustomResourceUpgradeCostModifier` reduces upgrade cost — all wired through `ICareerPassiveService`
+- **Career passive integration:** `SpecialResourceGain` scales daily earning, `SpecialResourceUpkeepModifier` reduces upkeep, `SpecialResourceUpgradeCostModifier` reduces upgrade cost — all wired through `ICareerPassiveService`
 - **Resource tiers:** Optional `<Tiers>` XML element defines threshold-based progression (pilot: Gems with 3 tiers). `GetCurrentTier()` resolves highest tier where balance >= threshold. Map bar shows tier name when active.
 - **Map bar display:** Uses `[DataSourceProperty]` bindings on mixin + `PrefabExtensionInsertPatch` — does NOT add to `SecondaryInfoItems` (causes vanilla IndexOutOfRange crash). See [gui-sprite-system.md](gui-sprite-system.md).
 - **Comprehensive logging:** `[SpecRes]` prefix throughout all components

@@ -44,7 +44,7 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
     public override float GetEffectiveMaxHealth(Agent agent)
     {
         var baseHealth = base.GetEffectiveMaxHealth(agent);
-        // Hero → flat Health passive; mount whose rider is a hero → multiplicative HorseHealth.
+        // Hero → flat Health passive; mount whose rider is a hero → multiplicative MountHealth.
         // Primitive extraction only; the decision lives in the service (gamemodels.md rule 4).
         var heroId = agent.IsHero ? (agent.Character as CharacterObject)?.HeroObject?.StringId : null;
         var rider = agent.IsMount ? agent.RiderAgent : null;

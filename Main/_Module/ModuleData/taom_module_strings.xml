@@ -856,7 +856,7 @@
 	<string id="taom_cq_capt_osg_t2_obj_battles" text="{=taom_cq_capt_osg_t2_obj_battles}Win battles for Gondor" />
 	<string id="taom_cq_capt_osg_t2_obj_skill" text="{=taom_cq_capt_osg_t2_obj_skill}Master the One Handed blade" />
 	<string id="taom_cq_capt_osg_t2_obj_renown" text="{=taom_cq_capt_osg_t2_obj_renown}Win renown along the Anduin" />
-	<!-- Career per-tier rank titles (Phase C; web-researched, adopted from TOR) -->
+	<!-- Career per-tier rank titles (Phase C; web-researched) -->
 	<string id="taom_career_rank1_avanc_luth_raider" text="{=taom_career_rank1_avanc_luth_raider}Painted Reaver" />
 	<string id="taom_career_rank2_avanc_luth_raider" text="{=taom_career_rank2_avanc_luth_raider}Clan Berserker" />
 	<string id="taom_career_rank3_avanc_luth_raider" text="{=taom_career_rank3_avanc_luth_raider}Avanc-lúth War-Chief" />

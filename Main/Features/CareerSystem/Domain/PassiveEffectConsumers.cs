@@ -6,8 +6,8 @@ namespace TAOM.Features.CareerSystem.Domain;
 //
 // A career pip whose PassiveEffect type is NOT in this set is a PHANTOM bonus: the UI shows
 // it, the player selects it, CareerPassiveService caches its magnitude — and nothing ever
-// reads that magnitude, so the pip is inert. Six such types (HorseChargeDamage / HorseHealth /
-// StealthBonus / TroopResistance / Ammo / HealthRegeneration) shipped as phantoms across ~211
+// reads that magnitude, so the pip is inert. Six such types (MountChargeDamage / MountHealth /
+// StealthBonus / TroopResistance / Ammo / HeroHealing) shipped as phantoms across ~211
 // pips before they were wired up; this set + the CareerConfigProvider load-time warning + the
 // CareerChoicesIntegrationTests "no phantom in shipped XML" regression guard exist so a new
 // phantom can never ship silently again. (csharp-architecture.md "Config Providers MUST Validate".)
@@ -26,9 +26,9 @@ public static class PassiveEffectConsumers
         PassiveEffectType.ArmorPenetration,    // CalculateDamageAmplification
         PassiveEffectType.SwingSpeed,          // SwingSpeedMultiplier
         PassiveEffectType.MovementSpeed,       // MaxSpeedMultiplier
-        PassiveEffectType.ShruggedOff,         // DecideAgentShrugOffBlow
-        PassiveEffectType.HorseChargeDamage,   // MountChargeDamage (rider props)
-        PassiveEffectType.HorseHealth,         // mount GetEffectiveMaxHealth (multiplicative)
+        PassiveEffectType.ShrugOff,         // DecideAgentShrugOffBlow
+        PassiveEffectType.MountChargeDamage,   // MountChargeDamage (rider props)
+        PassiveEffectType.MountHealth,         // mount GetEffectiveMaxHealth (multiplicative)
         PassiveEffectType.Ammo,                // OnAgentBuild ammo refill (multiplicative)
         PassiveEffectType.TroopResistance,     // CalculateDamageReduction for the leader's non-hero troops
 
@@ -42,16 +42,16 @@ public static class PassiveEffectConsumers
         PassiveEffectType.TroopMorale,         // TaomPartyMoraleModel
         PassiveEffectType.TroopWages,          // TaomPartyWageModel
         PassiveEffectType.TroopUpgradeCost,    // TaomPartyTroopUpgradeModel
-        PassiveEffectType.TroopRegeneration,   // TaomPartyHealingModel.GetSurvivalChance
-        PassiveEffectType.HealthRegeneration,  // TaomPartyHealingModel.GetDailyHealingHpForHeroes
+        PassiveEffectType.TroopSurvival,   // TaomPartyHealingModel.GetSurvivalChance
+        PassiveEffectType.HeroHealing,  // TaomPartyHealingModel.GetDailyHealingHpForHeroes
         PassiveEffectType.InventoryCapacity,   // TaomInventoryCapacityModel
-        PassiveEffectType.BattleRenownGain,    // TaomBattleRewardModel
-        PassiveEffectType.EnchantmentCostReduction, // TaomSmithingModel
+        PassiveEffectType.RenownGain,    // TaomBattleRewardModel
+        PassiveEffectType.SmithingCostReduction, // TaomSmithingModel
 
         // ── Special resources (SpecialResourceService) ──
-        PassiveEffectType.CustomResourceGain,
-        PassiveEffectType.CustomResourceUpkeepModifier,
-        PassiveEffectType.CustomResourceUpgradeCostModifier,
+        PassiveEffectType.SpecialResourceGain,
+        PassiveEffectType.SpecialResourceUpkeepModifier,
+        PassiveEffectType.SpecialResourceUpgradeCostModifier,
     };
 
     public static bool IsConsumed(PassiveEffectType type) => Consumed.Contains(type);

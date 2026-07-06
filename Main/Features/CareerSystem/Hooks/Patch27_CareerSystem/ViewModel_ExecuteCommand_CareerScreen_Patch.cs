@@ -13,7 +13,7 @@ public static class ViewModel_ExecuteCommand_CareerScreen_Patch
     {
         if (commandName == "ExecuteOpenCareerScreen" && __instance is CharacterDeveloperVM charDevVM)
         {
-            // Close CharacterDeveloper first (TOR pattern) — prevents
+            // Close CharacterDeveloper first — prevents
             // GameState.HandleInitialize NullRef and map bar input crash
             charDevVM.ExecuteDone();
             GauntletCareerScreen.OpenCareerScreen();

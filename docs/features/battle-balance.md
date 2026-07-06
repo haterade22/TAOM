@@ -19,7 +19,7 @@ Three GameModel overrides that tune large-scale battle math: troop power values 
 
 Three independent vanilla GameModels each need overriding with different shapes of data — a tier-keyed dictionary, a binary player/AI switch, and a culture-keyed dictionary. The override classes need access to both the JSON config (defaults, comprehensive coverage) and the MCM settings (live override knobs). Constructor injection through DryIoc keeps each model thin and testable.
 
-A fourth wrinkle: `TaomPartyHealingModel` integrates the [career system](career-system.md)'s `TroopRegeneration` passive — survival chance gets a multiplicative bonus when the party leader has the passive. This crosses feature boundaries deliberately (career passives are an opt-in modifier on top of the cultural baseline, not a replacement).
+A fourth wrinkle: `TaomPartyHealingModel` integrates the [career system](career-system.md)'s `TroopSurvival` passive — survival chance gets a multiplicative bonus when the party leader has the passive. This crosses feature boundaries deliberately (career passives are an opt-in modifier on top of the cultural baseline, not a replacement).
 
 ### Solution Approach
 
@@ -49,7 +49,7 @@ TaomMilitaryPowerModel       TaomCombatSimulationModel       TaomPartyHealingMod
   : DefaultMilitaryPowerModel  : DefaultCombatSimulationModel  : DefaultPartyHealingModel
   GetDefaultTroopPower         GetBluntDamageChance            GetSurvivalChance
                                                                     |
-                                                                    +-> ICareerPassiveService.GetPassiveMagnitude(TroopRegeneration)
+                                                                    +-> ICareerPassiveService.GetPassiveMagnitude(TroopSurvival)
 ```
 
 ## Configuration
@@ -124,7 +124,7 @@ Both providers register `Reuse.Singleton` — the JSON file is cached for the en
 - `IBattleBalanceSettingsProvider` (this feature)
 - `IPathService` (Core/Infrastructure) — locates `Main/_Module/ModuleData/`
 - `IModLogger` (Core/Logging)
-- `ICareerPassiveService` (`CareerSystem`) — resolved lazily inside `TaomPartyHealingModel.GetSurvivalChance` via `IoC.Resolve` to avoid hard coupling at construction. Provides `TroopRegeneration` passive magnitude per hero.
+- `ICareerPassiveService` (`CareerSystem`) — resolved lazily inside `TaomPartyHealingModel.GetSurvivalChance` via `IoC.Resolve` to avoid hard coupling at construction. Provides `TroopSurvival` passive magnitude per hero.
 
 ## Tests
 

@@ -234,6 +234,12 @@ When two agents or two review passes disagree on a TaleWorlds API signature, re-
 
 ## Build, Tooling & Workflow
 
+### After a whole-word identifier rename sweep, run a substring sweep over tests and docs
+A vocabulary rename executed with `\b`-bounded regex (correct — it protects engine-owned compound identifiers such as the `isShruggedOff` engine parameter) leaves embedded occurrences untouched: 10 test METHOD NAMES still carried old tokens (`…HeroWithHorseChargeDamagePassive…`, `…CustomResourceGain_ScalesEarning`) and 2 feature docs still used old names, because compound identifiers have no word boundary at the seam and the sweep's file-set excluded `docs/`.
+- **Why missed:** the boundary choice was deliberate and verified for production code, so "sweep complete" was declared off the whole-word grep; the deep-review completeness agent re-checked with the same whole-word assumption and also passed it — only an independent substring grep (Codex) caught the survivors. One grep methodology is not completeness evidence.
+- **Prevent:** every identifier rename sweep ends with a SECOND, substring (no `\b`) grep over `TAOM.Tests/` and `docs/`, triaging each hit (rename test names/docs; leave engine-owned identifiers). Negative "unknown value" tests use synthetic tokens (`NoSuchEffectType`), never retired real names.
+- **Source:** docs/reviews/rca-career-enum-prefab-cleanup-2026-07-06.md.
+
 ### Every numeric claim in a CHANGELOG/doc/commit body comes from a command run this session, not recall
 The CultureConversion notable-replacement CHANGELOG entry claimed "+10" new tests; the diff had 9. The number was recalled ("about ten") while authoring the entry instead of counted. Second confirmed instance of the evidence-over-claims §C fabrication class (first: the 2026-05-30 hotfix-review doc authored before its proving diff was read).
 - **Why missed:** the entry was written at the end of a long implementation flow where the author "knew" the test count; §C's never-invent list explicitly includes counts, but the rule fired on tool OUTPUT recall, and a self-authored diff felt exempt. It isn't — your own diff is tool output too.

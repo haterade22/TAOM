@@ -2,15 +2,15 @@
   <Constants>
   </Constants>
   <VisualDefinitions>
-    <VisualDefinition Name="BottomMenu" EaseIn="true" TransitionDuration="0.45">
-      <VisualState PositionYOffset="6" State="Default" />
+    <VisualDefinition Name="CareerFooterSlide" TransitionDuration="0.35">
+      <VisualState PositionYOffset="8" State="Default" />
     </VisualDefinition>
-    <VisualDefinition Name="TopPanel" EaseIn="true" TransitionDuration="0.45">
-      <VisualState PositionYOffset="-6" State="Default" />
+    <VisualDefinition Name="CareerHeaderSlide" TransitionDuration="0.35">
+      <VisualState PositionYOffset="-8" State="Default" />
     </VisualDefinition>
-    <VisualDefinition Name="ExtendablePanel" EaseIn="true" TransitionDuration="0.2">
+    <VisualDefinition Name="CareerNodePanel" TransitionDuration="0.25">
       <VisualState SuggestedWidth="80" SuggestedHeight="220" State="Default" />
-      <VisualState SuggestedWidth="750" SuggestedHeight="220" State="Hovered" />
+      <VisualState SuggestedWidth="768" SuggestedHeight="220" State="Hovered" />
     </VisualDefinition>
   </VisualDefinitions>
   <Window>
@@ -20,7 +20,7 @@
         <Standard.Background />
 
         <!--Top Panel - Title-->
-        <Widget VisualDefinition="TopPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="755" SuggestedHeight="182" HorizontalAlignment="Center" PositionYOffset="-182" Sprite="StdAssets\tabbar_standart" ValueFactor="-30">
+        <Widget VisualDefinition="CareerHeaderSlide" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="755" SuggestedHeight="182" HorizontalAlignment="Center" PositionYOffset="-182" Sprite="StdAssets\tabbar_standart" ValueFactor="-30">
           <Children>
             <RichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="18" Brush="Quest.CenterPanel.Title.Text" Brush.FontSize="45" Text="@ScreenTitle" />
           </Children>
@@ -34,7 +34,7 @@
               <Children>
 
                 <!-- LEFT PANEL: Career Info -->
-                <Widget WidthSizePolicy="Fixed" SuggestedWidth="500" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" Sprite="StdAssets\Popup\canvas">
+                <Widget WidthSizePolicy="Fixed" SuggestedWidth="520" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" Sprite="StdAssets\Popup\canvas">
                   <Children>
                     <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>
@@ -92,7 +92,7 @@
                 </Widget>
 
                 <!-- RIGHT PANEL: Choice Groups (Tier 3 top -> Tier 1 bottom) -->
-                <Widget WidthSizePolicy="Fixed" SuggestedWidth="1420" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right">
+                <Widget WidthSizePolicy="Fixed" SuggestedWidth="1400" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right">
                   <Children>
 
                     <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
@@ -107,7 +107,7 @@
                               <ItemTemplate>
                                 <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="40" MarginRight="40">
                                   <Children>
-                                    <ImageWidget VisualDefinition="ExtendablePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
+                                    <ImageWidget VisualDefinition="CareerNodePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
                                       <Children>
                                         <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="220" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
                                         <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalLeftToRight">
@@ -177,7 +177,7 @@
                               <ItemTemplate>
                                 <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="40" MarginRight="40">
                                   <Children>
-                                    <ImageWidget VisualDefinition="ExtendablePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
+                                    <ImageWidget VisualDefinition="CareerNodePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
                                       <Children>
                                         <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="220" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
                                         <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalLeftToRight">
@@ -243,7 +243,7 @@
                               <ItemTemplate>
                                 <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="40" MarginRight="40">
                                   <Children>
-                                    <ImageWidget VisualDefinition="ExtendablePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
+                                    <ImageWidget VisualDefinition="CareerNodePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
                                       <Children>
                                         <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="220" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
                                         <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalLeftToRight">
@@ -392,7 +392,7 @@
         </Widget>
 
         <!--Close Screen Button-->
-        <Standard.DialogCloseButtons VisualDefinition="BottomMenu" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="100" Parameter.DoneButtonAction="ExecuteClose" Parameter.DoneButtonText="@DoneLbl" Parameter.ShowCancel="false" />
+        <Standard.DialogCloseButtons VisualDefinition="CareerFooterSlide" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="100" Parameter.DoneButtonAction="ExecuteClose" Parameter.DoneButtonText="@DoneLbl" Parameter.ShowCancel="false" />
 
       </Children>
     </Widget>

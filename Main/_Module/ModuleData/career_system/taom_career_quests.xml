@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Career-tied quest definitions (Phase 6, adapted from TOR_Core, verified on Bannerlord 1.4.5).
+  Career-tied quest definitions (Phase 6, verified on Bannerlord 1.4.5).
   Each <CareerQuest> binds to a (career_id, tier); completing its objectives unlocks that tier of
   the career's choice tree (hybrid with the level gate) and applies its rewards. Careers/tiers with
   no entry here simply fall through to the level gate (graceful — like the Gondor-first rollout of

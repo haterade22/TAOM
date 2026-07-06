@@ -99,8 +99,8 @@ public class CareerChoicesIntegrationTests
         // Phantom-bonus regression guard. Every PassiveEffect type used by a shipped pip MUST
         // have a runtime consumer (PassiveEffectConsumers). A type without one is selectable in
         // the career tree but inert in-game. Six such types shipped as phantoms across ~211 pips
-        // (HorseChargeDamage / HorseHealth / StealthBonus / TroopResistance / Ammo /
-        // HealthRegeneration) before being wired; this pins the shipped XML so a new phantom
+        // (MountChargeDamage / MountHealth / StealthBonus / TroopResistance / Ammo /
+        // HeroHealing) before being wired; this pins the shipped XML so a new phantom
         // cannot ship silently again.
         var phantom = _provider.LoadChoices()
             .Where(c => c.Passive != null && !PassiveEffectConsumers.IsConsumed(c.Passive.EffectType))

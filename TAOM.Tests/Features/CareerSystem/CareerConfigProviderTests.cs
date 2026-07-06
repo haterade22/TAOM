@@ -471,6 +471,24 @@ public class CareerConfigProviderTests
     }
 
     [TestMethod]
+    public void LoadChoices_UnknownPassiveType_LogsWarningAndFallsBackToSpecial()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""NoSuchEffectType"" magnitude=""0.1"" />
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual(PassiveEffectType.Special, choices[0].Passive.EffectType);
+        _logger.Received().LogWarning(Arg.Is<string>(
+            s => s.Contains("unknown") && s.Contains("c1") && s.Contains("NoSuchEffectType")));
+    }
+
+    [TestMethod]
     public void LoadChoices_ConsumedPassiveType_NoPhantomWarning()
     {
         WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");

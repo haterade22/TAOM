@@ -691,7 +691,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Combat Mechanics", GroupOrder = 24)]
     [SettingPropertyBool("Enable Combat Mechanics", Order = 0,
-        HintText = "Master toggle for the TOR-derived combat feel pack: skill-based crush-through, monster/orc crush-through, creature cleave, creature stagger immunity, weight-based charge knockdown, shield penetration, race combat modifiers. When off, everything below is inert and combat behaves exactly as before this feature.")]
+        HintText = "Master toggle for the combat feel pack: skill-based crush-through, monster/orc crush-through, creature cleave, creature stagger immunity, weight-based charge knockdown, shield penetration, race combat modifiers. When off, everything below is inert and combat behaves exactly as before this feature.")]
     public bool EnableCombatMechanics { get; set; } = true;
 
     [SettingPropertyGroup("Combat Mechanics")]

@@ -9,7 +9,7 @@ using TAOM.Features.CareerSystem.Domain;
 namespace TAOM.Features.CareerSystem.Quests;
 
 /// <summary>
-/// Entry trigger for career tier quests (thin — mirrors TOR's SimpleCareerQuestBehavior). On
+/// Entry trigger for career tier quests (thin). On
 /// session launch + daily, if the player's career has an authored quest for the lowest not-yet-done
 /// tier and none is already running, it offers the quest via an inquiry; accepting starts a
 /// <see cref="CareerQuest"/>. A declined quest is remembered (flat-dict SyncData) so it is not

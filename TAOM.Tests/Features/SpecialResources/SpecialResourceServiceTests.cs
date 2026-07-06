@@ -564,10 +564,10 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void GetProjectedDailyNet_AppliesCareerGainAndUpkeepModifiers()
     {
-        // Mirrors ApplyDailyTick math: earning gets +CustomResourceGain, upkeep gets CustomResourceUpkeepModifier.
+        // Mirrors ApplyDailyTick math: earning gets +SpecialResourceGain, upkeep gets SpecialResourceUpkeepModifier.
         // Earning: 4 * 0.5 = 2.0, +20% = 2.4. Upkeep: 10 * 0.3 = 3.0, -50% = 1.5. Net = 2.4 - 1.5 = 0.9.
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceGain).Returns(0.2f);
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpkeepModifier).Returns(-0.5f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceGain).Returns(0.2f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpkeepModifier).Returns(-0.5f);
         var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 10) };
@@ -647,7 +647,7 @@ public class SpecialResourceServiceTests
     {
         // Regression test for #174 / #194. Pre-fix, ClampUpgradeCount + CanAffordUpgrade + SpendForUpgrade
         // all called GetEffectiveUpgradeCost (discounted), but QueueUpgradeSpend used the bare base cost.
-        // A career with -30% CustomResourceUpgradeCostModifier would let the player queue upgrades at
+        // A career with -30% SpecialResourceUpgradeCostModifier would let the player queue upgrades at
         // the discounted gate, then get debited the full base price at CommitSession — silently
         // overpaying by the discount percentage.
         //
@@ -659,7 +659,7 @@ public class SpecialResourceServiceTests
         var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 10, dailyUpkeep: 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
         _passiveService
-            .GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpgradeCostModifier)
+            .GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpgradeCostModifier)
             .Returns(-0.30f);
 
         _service.BeginPartyScreenSession();
@@ -804,10 +804,10 @@ public class SpecialResourceServiceTests
     // ── Career Passive Integration ──
 
     [TestMethod]
-    public void ApplyDailyTick_CustomResourceGain_ScalesEarning()
+    public void ApplyDailyTick_SpecialResourceGain_ScalesEarning()
     {
         // 0.2 = 20% bonus to resource gain
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceGain).Returns(0.2f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceGain).Returns(0.2f);
         _storage.Get("hero1", "war_spoils").Returns(100f);
 
         _service.ApplyDailyTick("hero1", "empire_s", null, 4, new List<TroopUpkeepInfo>());
@@ -819,7 +819,7 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void ApplyDailyTick_NoCareerPassive_EarningUnchanged()
     {
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceGain).Returns(0f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceGain).Returns(0f);
         _storage.Get("hero1", "war_spoils").Returns(100f);
 
         _service.ApplyDailyTick("hero1", "empire_s", null, 4, new List<TroopUpkeepInfo>());
@@ -829,10 +829,10 @@ public class SpecialResourceServiceTests
     }
 
     [TestMethod]
-    public void GetDailyUpkeep_CustomResourceUpkeepModifier_ReducesUpkeep()
+    public void GetDailyUpkeep_SpecialResourceUpkeepModifier_ReducesUpkeep()
     {
         // -0.25 = 25% upkeep reduction
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpkeepModifier).Returns(-0.25f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpkeepModifier).Returns(-0.25f);
         var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 10) };
@@ -846,7 +846,7 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void GetDailyUpkeep_NoCareerPassive_UpkeepUnchanged()
     {
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpkeepModifier).Returns(0f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpkeepModifier).Returns(0f);
         var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
         var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 10) };
@@ -869,10 +869,10 @@ public class SpecialResourceServiceTests
     }
 
     [TestMethod]
-    public void SpendForUpgrade_CustomResourceUpgradeCostModifier_ReducesCost()
+    public void SpendForUpgrade_SpecialResourceUpgradeCostModifier_ReducesCost()
     {
         // -0.3 = 30% cost reduction
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpgradeCostModifier).Returns(-0.3f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpgradeCostModifier).Returns(-0.3f);
         var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 10, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
 
@@ -883,10 +883,10 @@ public class SpecialResourceServiceTests
     }
 
     [TestMethod]
-    public void ClampUpgradeCount_CustomResourceUpgradeCostModifier_AllowsMore()
+    public void ClampUpgradeCount_SpecialResourceUpgradeCostModifier_AllowsMore()
     {
         // -0.5 = 50% cost reduction
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpgradeCostModifier).Returns(-0.5f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpgradeCostModifier).Returns(-0.5f);
         var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
         _storage.Get("hero1", "war_spoils").Returns(10f);
@@ -899,7 +899,7 @@ public class SpecialResourceServiceTests
     [TestMethod]
     public void SpendForUpgrade_NoCareerPassive_CostUnchanged()
     {
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpgradeCostModifier).Returns(0f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpgradeCostModifier).Returns(0f);
         var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", 4, 0.2f);
         _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
 
@@ -914,8 +914,8 @@ public class SpecialResourceServiceTests
         // Earning: 4 towns * 0.5 = 2.0 (no gain modifier)
         // Upkeep: 10 troops * 0.3 = 3.0, with -50% modifier = 1.5
         // Net: 2.0 - 1.5 = 0.5 (positive, should AddCapped)
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceGain).Returns(0f);
-        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpkeepModifier).Returns(-0.5f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceGain).Returns(0f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.SpecialResourceUpkeepModifier).Returns(-0.5f);
         _storage.Get("hero1", "war_spoils").Returns(100f);
         var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
         _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);

@@ -10,7 +10,7 @@ public class HeroCareerData
     public List<int> TierUnlocks { get; set; }
 
     /// <summary>
-    /// Career-quest attribute flags (TAOM's equivalent of TOR's <c>Hero.AddAttribute</c>): string
+    /// Career-quest attribute flags: string
     /// markers granted by quest completion (GrantAttributeFlag reward) and read by downstream
     /// dialog/content gating. Persisted alongside the rest of the hero's career data.
     /// </summary>

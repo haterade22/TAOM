@@ -154,12 +154,12 @@ public class SpecialResourceService : ISpecialResourceService
         return ComputeDailyNet(heroId, resource, ownedTownCount, troopsWithUpkeep);
     }
 
-    // Single source of truth for the daily earning(+CustomResourceGain) − upkeep(+CustomResourceUpkeepModifier)
+    // Single source of truth for the daily earning(+SpecialResourceGain) − upkeep(+SpecialResourceUpkeepModifier)
     // math, shared by ApplyDailyTick (which applies it) and GetProjectedDailyNet (which projects the next tick).
     private float ComputeDailyNet(string heroId, SpecialResource resource, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
     {
         var earning = resource.DailyPerTown * ownedTownCount;
-        var gainModifier = GetPassiveMagnitude(heroId, PassiveEffectType.CustomResourceGain);
+        var gainModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceGain);
         if (gainModifier != 0f)
             earning *= (1f + gainModifier);
 
@@ -288,7 +288,7 @@ public class SpecialResourceService : ISpecialResourceService
         var cost = _config.GetTroopCost(troopId);
         if (cost == null) return;
 
-        // Phase 9b #174: apply the career-passive CustomResourceUpgradeCostModifier here too.
+        // Phase 9b #174: apply the career-passive SpecialResourceUpgradeCostModifier here too.
         // Pre-fix this queued base cost while ClampUpgradeCount + SpendForUpgrade used the
         // discounted cost — so a player with a -30% career discount got the cheaper *count* but
         // was debited the full price at CommitSession, silently overpaying by the discount %.
@@ -402,7 +402,7 @@ public class SpecialResourceService : ISpecialResourceService
                 total += cost.DailyUpkeep * troop.Count;
         }
 
-        var upkeepModifier = GetPassiveMagnitude(heroId, PassiveEffectType.CustomResourceUpkeepModifier);
+        var upkeepModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceUpkeepModifier);
         if (upkeepModifier != 0f)
             total *= (1f + upkeepModifier);
 
@@ -474,7 +474,7 @@ public class SpecialResourceService : ISpecialResourceService
     private float GetEffectiveUpgradeCost(string heroId, float baseCostPerUnit, int count)
     {
         var totalCost = baseCostPerUnit * count;
-        var costModifier = GetPassiveMagnitude(heroId, PassiveEffectType.CustomResourceUpgradeCostModifier);
+        var costModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceUpgradeCostModifier);
         if (costModifier != 0f)
             totalCost *= (1f + costModifier);
         return Math.Max(0f, totalCost);
