@@ -35,16 +35,9 @@ public enum PassiveEffectType
     CustomResourceGain,
     BuffDuration,
     DebuffDuration,
-    SpellRadius,
-    SpellEffectiveness,
     StealthBonus,
     BonusDamageShield,
     ShruggedOff,
     TroopSkill,
-    UnitPartyWeight,
-    WindsOfMagic,
-    WindsCostReduction,
-    WindsRegeneration,
-    PrayerCoolDownReduction,
-    WindsCooldownReduction
+    UnitPartyWeight
 }

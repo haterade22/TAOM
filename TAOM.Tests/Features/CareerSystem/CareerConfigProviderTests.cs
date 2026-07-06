@@ -460,14 +460,14 @@ public class CareerConfigProviderTests
         WriteChoicesXml(@"<?xml version='1.0'?>
 <CareerChoices>
   <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
-    <PassiveEffect type=""WindsOfMagic"" magnitude=""0.1"" />
+    <PassiveEffect type=""BuffDuration"" magnitude=""0.1"" />
   </Choice>
 </CareerChoices>");
 
         _provider.LoadChoices();
 
         _logger.Received().LogWarning(Arg.Is<string>(
-            s => s.Contains("phantom") && s.Contains("c1") && s.Contains("WindsOfMagic")));
+            s => s.Contains("phantom") && s.Contains("c1") && s.Contains("BuffDuration")));
     }
 
     [TestMethod]
