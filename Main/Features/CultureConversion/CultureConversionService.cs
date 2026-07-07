@@ -85,6 +85,16 @@ public class CultureConversionService : ICultureConversionService
             return;
         }
 
+        // Ownership moved within the same culture mid-hold (fief grant after capture, barter,
+        // re-grant, same-culture recapture) — assimilation continues, the clock does NOT restart.
+        // Without this, a contested frontier fief re-queues forever and never converts
+        // (castle_E6 queued 16× with zero completions, play-test 2026-07-07).
+        if (record.HasPending && record.PendingTargetCultureId == ownerCulture)
+        {
+            _logger.LogDebug($"CultureConversion: {settlementId} already pending toward {ownerCulture} — timer continues");
+            return;
+        }
+
         record.StartPending(nowDays, ownerCulture);
         _store.Put(record);
         _logger.LogDebug($"CultureConversion: {settlementId} queued for conversion to {ownerCulture} (hold {_settings.RequiredHoldDays}d)");
@@ -108,6 +118,7 @@ public class CultureConversionService : ICultureConversionService
             var ownerCulture = _adapter.GetOwnerCultureId(record.SettlementId);
             if (string.IsNullOrEmpty(ownerCulture) || ownerCulture != record.PendingTargetCultureId)
             {
+                _logger.LogDebug($"CultureConversion: {record.SettlementId} stale timer toward {record.PendingTargetCultureId} dropped (owner culture now '{ownerCulture ?? "none"}')");
                 record.ClearPending();
                 PersistOrDrop(record);
                 continue;
@@ -200,6 +211,7 @@ public class CultureConversionService : ICultureConversionService
     {
         if (!exists || !record.HasPending)
             return;
+        _logger.LogDebug($"CultureConversion: {record.SettlementId} pending conversion to {record.PendingTargetCultureId} cancelled");
         record.ClearPending();
         PersistOrDrop(record);
     }

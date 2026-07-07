@@ -42,7 +42,7 @@ Each managed town/castle has a [`SettlementConversionRecord`](../../Main/Feature
 
 Flow:
 
-1. **Conquest** (`OnSettlementOwnerChanged`, towns/castles only): if the new owner's culture differs from the fief's effective culture, start a hold-timer toward it — **gated** on the target being a recruitable culture (has a `CultureMap` pool) and, optionally, on not being player-owned. Same-culture transfers / rebellions cancel any timer.
+1. **Conquest** (`OnSettlementOwnerChanged`, towns/castles only): if the new owner's culture differs from the fief's effective culture, start a hold-timer toward it — **gated** on the target being a recruitable culture (has a `CultureMap` pool) and, optionally, on not being player-owned. Same-culture transfers / rebellions cancel any timer. **Timer continuity (2026-07-07):** an owner change whose culture matches the already-pending target — the capture→grant double-fire, kingdom re-grants, barters, same-culture recaptures — leaves the running timer untouched instead of restarting it. Without this, a contested frontier fief re-queued forever and never converted (`castle_E6` queued 16× with zero completions in play-testing). A *different* culture taking over still restarts the timer toward the new target, and a recapture by the fief's effective culture still cancels it.
 2. **Daily sweep** (`DailyTickEvent`): when `now − start ≥ RequiredHoldDays` (and loyalty ≥ floor if `RequireStableLoyalty`), apply the conversion — set `Settlement.Culture` on the town + bound villages, replace foreign-culture notables (below), clear notable volunteer slots (so recruits repopulate from the new pool), record the override.
 3. **Restore**: if the target equals the original culture (reconquest by the original culture), the override record is *removed* entirely, restoring vanilla same-culture loyalty.
 4. **Load** (`OnGameLoadedEvent`): re-apply every completed override (the engine reverted `Settlement.Culture` to XML on load).
@@ -87,6 +87,7 @@ Because conversion flips the shared `Settlement.Culture` field (and because othe
 
 ## Known limitations
 
+- **Cross-culture interruption resets conversion progress.** The hold is *uninterrupted* by design: if the fief's effective culture retakes it mid-timer, the timer cancels, and a later reconquest starts the full `RequiredHoldDays` again. Same-culture ownership churn no longer resets the clock (see Timer continuity above), but a fief that genuinely flips between two *cultures* faster than the hold period never converts — lower "Days To Convert" in MCM if your borders are that hot.
 - **Pre-feature converted saves keep their old-culture notables.** Notable replacement fires only inside `ApplyConversion`; the on-load re-apply deliberately never replaces. A settlement converted before this shipped (2026-07-03) is not retroactively fixed — it catches up only if reconquered and re-converted.
 - **A culture missing an occupation template keeps that notable.** The template pre-check skips-with-log rather than crash (currently unreachable for real cultures — see the coverage audit note above).
 - **The old notable's gold evaporates; the replacement starts with vanilla's 10000.** Notables have no clan, so `ApplyByRemove` routes their gold nowhere. Acceptable — notable gold is cosmetic.
@@ -159,6 +160,7 @@ MCM knobs (merged over JSON by [`CultureConversionSettingsProvider`](../../Main/
 
 ## Changelog
 
+- 2026-07-07 — **Timer continuity**: same-culture ownership changes (fief grant after capture, re-grants, barters, same-culture recaptures) no longer restart the hold-timer — the clock continues from the original capture. Cancel/stale-drop paths now log at DEBUG for diagnosability. Root-caused from a play-test where `castle_E6` queued 16× toward `khuzait` without ever converting.
 - 2026-07-03 — **Notable replacement**: conversion now replaces foreign-culture notables with same-occupation notables from the new culture's templates (a Mordor-converted Gondor town gets orc merchants/gang leaders). Property (workshops/alleys/caravans) transfers to the replacements; relations reset; active issues cancel; power zeroed pre-removal to suppress the vanilla old-culture heir spawn. New `replaceNotablesOnConversion` JSON field + "Replace Notables On Conversion" MCM toggle (default on).
 - 2026-06-02 — Introduced the `Main/Features/CultureConversion/` module: conquered cross-culture towns/castles (and bound villages) gradually flip `Settlement.Culture` after a configurable hold period, recruiting the new owner's troops and dropping the foreign-occupier loyalty penalty; reconquest-to-original reverts. Adds a converted-settlement recruitment branch (`HasCulturePool` gate + `VolunteerContext` fields), persisted records re-applied on load, JSON + MCM "Culture Conversion" config. Includes deep-review + Codex fixes (stale-record purge on culture-removal, `HasCulturePool` playable-culture gate adding Rohan/Harad).
 

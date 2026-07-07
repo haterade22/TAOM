@@ -2,6 +2,22 @@
 
 ## 2026-07-07
 
+### fix(culture-conversion): same-culture ownership changes no longer restart the hold-timer (#333)
+
+Play-test report (Grymmclúd/`castle_E6` captured as Rhûn, still dwarven): the conversion pipeline itself was
+healthy — the fief had simply been queued toward `khuzait` **16 times across four days of play with zero
+completions**, because `OnSettlementConquered` restarted the 45-day clock on EVERY ownership change. The
+capture→grant double-fire (every conquest), kingdom re-grants, barters, and same-culture recaptures each reset
+the timer, so a contested frontier fief could never accumulate the hold.
+
+- `CultureConversionService.OnSettlementConquered`: if a timer is already pending toward the new owner's culture,
+  it now CONTINUES (placed after the recruitment-pool/player-owned gates, so gate cancels still win). A different
+  culture still restarts; a recapture by the effective culture still cancels (uninterrupted-hold by design —
+  documented as a known limitation with the MCM "Days To Convert" pointer).
+- Cancel + stale-timer-drop paths now log at DEBUG — both were silent, which slowed the diagnosis.
+- Tests: +2 (same-target re-grant keeps the original start day and converts on the original schedule;
+  capture→grant double-fire keeps the first timestamp). Suite 4162/0 green.
+
 ### feat(diagnostics): SaveLoadDiagnostics (Patch61) — name the real cause behind "A problem occured while trying to load the saved game."
 
 - **Why:** multiple players report saves failing to load with the engine's generic load-failure dialog. The engine swallows the real exception — `LoadContext.Load` catches everything and prints only `ex.Message` (with TWParallel fill loops that's the useless "One or more errors occurred"), `LoadResult.CreateFailed` records the hardcoded string "Not implemented", and CrashReport never fires because nothing escapes. Field triage was additionally blind because the shipped "v2.0.9" label spans 34 commits.

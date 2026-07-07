@@ -177,6 +177,36 @@ public class CultureConversionServiceTests
         Assert.IsFalse(record.IsConverted);
     }
 
+    [TestMethod]
+    public void OnSettlementConquered_SameTargetOwnerChange_DoesNotRestartTimer()
+    {
+        // A fief grant, barter, or same-culture recapture mid-hold must NOT reset the clock —
+        // castle_E6 was queued toward khuzait 16 times without ever converting (play-test 2026-07-07).
+        GivenCrossCultureConquest(original: "gondor", owner: "mordor");
+        _sut.OnSettlementConquered(Town, 100.0);
+
+        _sut.OnSettlementConquered(Town, 130.0); // same owner culture, different owner clan
+
+        Assert.IsTrue(_store.TryGet(Town, out var record));
+        Assert.AreEqual(100.0, record.PendingStartDays.Value, 0.0001, "Timer must continue from the first conquest.");
+
+        // 46 days after the ORIGINAL capture (only 16 after the re-grant) → converts.
+        _sut.RunDailyChecks(146.0);
+        _adapter.Received().SetSettlementCulture(Town, "mordor");
+    }
+
+    [TestMethod]
+    public void OnSettlementConquered_GrantDoubleFire_KeepsOriginalStartDay()
+    {
+        // Vanilla fires OnSettlementOwnerChanged twice per conquest: capture, then the fief grant.
+        GivenCrossCultureConquest();
+        _sut.OnSettlementConquered(Town, 100.0);
+        _sut.OnSettlementConquered(Town, 100.01);
+
+        Assert.IsTrue(_store.TryGet(Town, out var record));
+        Assert.AreEqual(100.0, record.PendingStartDays.Value, 0.0001);
+    }
+
     // --- RunDailyChecks: completion ---
 
     [TestMethod]
