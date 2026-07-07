@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAOM — Fixing a save that won't load</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --panel: #ffffff; --ink: #23201a; --muted: #6b645a;
+    --accent: #8a6d2f; --accent-ink: #5c4a1e; --line: #e2dccf;
+    --code-bg: #2b2622; --code-ink: #f3ead6;
+    --warn-bg: #fbe7d6; --warn-line: #d99a4e; --warn-ink: #7a4a12;
+    --ok-bg: #e4efe0; --ok-line: #6fa361; --ok-ink: #315a2a;
+    --rec-bg: #eef3fa; --rec-line: #6f93c4; --rec-ink: #2f4d78;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17140f; --panel: #211d16; --ink: #ece5d6; --muted: #a49a86;
+      --accent: #d9b56b; --accent-ink: #e7c987; --line: #362f24;
+      --code-bg: #0e0c09; --code-ink: #f3ead6;
+      --warn-bg: #3a2a15; --warn-line: #b9822f; --warn-ink: #f0c98a;
+      --ok-bg: #1e2c1a; --ok-line: #5d8a50; --ok-ink: #b7d9ab;
+      --rec-bg: #16232f; --rec-line: #4d6f9c; --rec-ink: #a9c6e8;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 800px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.title { border-bottom: 3px solid var(--accent); padding-bottom: 18px; margin-bottom: 8px; }
+  h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 6px; letter-spacing: .2px; }
+  h2 {
+    font-size: 1.2rem; margin: 38px 0 12px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--line); color: var(--accent-ink);
+  }
+  h3 { font-size: 1.02rem; margin: 24px 0 8px; }
+  p { margin: 12px 0; }
+  .lede { color: var(--muted); font-size: 1.02rem; margin-top: 4px; }
+  a { color: var(--accent-ink); }
+  code {
+    font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    background: rgba(138,109,47,.14); padding: .12em .4em; border-radius: 4px; font-size: .92em;
+    word-break: break-word;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-ink); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; margin: 12px 0;
+    font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    font-size: .88rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; border-radius: 0; color: inherit; font-size: 1em; }
+  .callout { border-radius: 8px; padding: 14px 16px 14px 18px; margin: 18px 0; border-left: 5px solid; }
+  .callout p:first-child { margin-top: 0; } .callout p:last-child { margin-bottom: 0; }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
+  .callout.ok   { background: var(--ok-bg);   border-color: var(--ok-line);   color: var(--ok-ink); }
+  .badge {
+    display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .4px;
+    background: var(--rec-line); color: #fff; padding: 2px 8px; border-radius: 20px;
+    vertical-align: middle; margin-left: 8px; text-transform: uppercase;
+  }
+  ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 16px 0; }
+  ol.steps > li {
+    position: relative; padding: 4px 0 18px 52px; margin: 0;
+    border-left: 2px solid var(--line); margin-left: 16px;
+  }
+  ol.steps > li:last-child { border-left-color: transparent; }
+  ol.steps > li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: -17px; top: 0; width: 32px; height: 32px;
+    background: var(--accent); color: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .95rem;
+  }
+  ol.steps > li > strong { display: block; margin-bottom: 2px; }
+  ul.notes { padding-left: 20px; } ul.notes li { margin: 10px 0; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 4px 22px 14px; margin: 20px 0;
+  }
+  .panel.rec { border-color: var(--rec-line); border-left-width: 5px; }
+  footer {
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: .88rem;
+  }
+  kbd {
+    font-family: ui-monospace, Consolas, monospace; background: var(--panel);
+    border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px;
+    padding: 1px 6px; font-size: .85em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <h1>Fixing a &ldquo;A problem occured while trying to load the saved game&rdquo; save</h1>
+  <p class="lede">TAOM (Tales From the Age of Men) &mdash; Windows recovery guide</p>
+</header>
+
+<p><strong>What happened:</strong> a bug in TAOM v2.0.9&rsquo;s War of the Ring tracker made the game write a broken
+value into your save once a campaign got large (usually around in-game day&nbsp;~50). Every save made after that point
+fails to load with the error dialog. <strong>This is fixed in the current update</strong> &mdash; but if you have older
+saves that already won&rsquo;t load, this guide recovers them.</p>
+
+<div class="callout ok">
+  <p><b>Good news:</b> your campaign is fine. The broken part is only the cosmetic war-progress meter&rsquo;s history.
+  The repair resets that one thing and leaves your heroes, parties, settlements, and everything else untouched.
+  The repaired save loads normally.</p>
+</div>
+
+<p>There are two ways to run the repair. <strong>PowerShell (Option&nbsp;A) needs nothing installed</strong> &mdash;
+it&rsquo;s built into Windows 10 and 11 &mdash; so try that first. Python (Option&nbsp;B) is there if you&rsquo;d rather.</p>
+
+<h2>Where your saves are</h2>
+<p>Your Bannerlord saves live in one of these folders. Open <strong>File&nbsp;Explorer</strong> and paste the path into
+the address bar:</p>
+<pre><code>%USERPROFILE%\Documents\Mount and Blade II Bannerlord\Game Saves</code></pre>
+<p>If that folder doesn&rsquo;t exist (some PCs redirect Documents to OneDrive), try:</p>
+<pre><code>%USERPROFILE%\OneDrive\Documents\Mount and Blade II Bannerlord\Game Saves</code></pre>
+<p>You should see your <code>.sav</code> files there (e.g. <code>Elves209.sav</code>, <code>main_campaign.sav</code>,
+<code>save_5.sav</code>).</p>
+
+<h2>Option A &mdash; PowerShell <span class="badge">recommended &middot; no install</span></h2>
+<div class="panel rec">
+<ol class="steps">
+  <li>
+    <strong>Get the script.</strong> Download <code>repair_sav_strings.ps1</code> (the mod author will provide the file)
+    and <strong>put it in your Game Saves folder</strong>, next to your <code>.sav</code> files.
+  </li>
+  <li>
+    <strong>Open PowerShell in that folder.</strong> In File Explorer, hold <kbd>Shift</kbd> and right-click an empty area
+    of the Game Saves folder, then choose <strong>&ldquo;Open PowerShell window here&rdquo;</strong> (on some PCs it&rsquo;s
+    &ldquo;Open in Terminal&rdquo;). A blue window opens, already pointed at your saves.
+  </li>
+  <li>
+    <strong>Check the save first</strong> (safe, changes nothing). Type this, replacing <code>YourSave</code> with your
+    save&rsquo;s name:
+    <pre><code>powershell -ExecutionPolicy Bypass -File .\repair_sav_strings.ps1 "YourSave.sav"</code></pre>
+    If the save has the bug, you&rsquo;ll see a line like:
+    <pre><code>Found 1 oversized entry ... [MOMENTUM war-tracker string]</code></pre>
+    (If it says <em>&ldquo;NOT hit by the momentum bug&rdquo;</em>, that save fails for a different reason &mdash; send it
+    to the mod author.)
+  </li>
+  <li>
+    <strong>Repair it.</strong> Run the same command with <code>-Repair</code> added:
+    <pre><code>powershell -ExecutionPolicy Bypass -File .\repair_sav_strings.ps1 "YourSave.sav" -Repair</code></pre>
+    It may take up to a minute on a large campaign &mdash; wait for the <code>REPAIRED -&gt;</code> line. It writes a new
+    file next to the original: <strong><code>YourSave_fixed.sav</code></strong>. Your original is not touched.
+  </li>
+  <li>
+    <strong>Load <code>YourSave_fixed.sav</code></strong> (see <em>Loading the fixed save</em> below).
+  </li>
+</ol>
+</div>
+
+<h2>Option B &mdash; Python <span style="font-weight:400;color:var(--muted);font-size:.85rem">(alternative)</span></h2>
+<div class="panel">
+<ol class="steps">
+  <li>
+    <strong>Install Python</strong> (~5&nbsp;min): go to <a href="https://www.python.org/downloads/">python.org/downloads</a>,
+    click <strong>Download Python</strong>, run the installer, and <strong>tick &ldquo;Add Python to PATH&rdquo;</strong> on
+    the first screen before clicking Install.
+  </li>
+  <li><strong>Get the script</strong> <code>repair_sav_strings.py</code> and put it in your Game Saves folder.</li>
+  <li>
+    <strong>Open a terminal there:</strong> in File Explorer, click the address bar, type <kbd>cmd</kbd>, press
+    <kbd>Enter</kbd>.
+  </li>
+  <li>
+    <strong>Check, then repair:</strong>
+    <pre><code>python repair_sav_strings.py "YourSave.sav"
+python repair_sav_strings.py "YourSave.sav" --repair</code></pre>
+    This writes <strong><code>YourSave_fixed.sav</code></strong> next to the original.
+  </li>
+</ol>
+</div>
+
+<h2>Loading the fixed save</h2>
+<p>Start Bannerlord with the <strong>exact same mods enabled</strong> as when the save was made, go to <em>Load Game</em>,
+and pick the <code>_fixed</code> save. It should load normally. The War of the Ring meter starts fresh and rebuilds itself
+as the war continues &mdash; nothing else is lost.</p>
+
+<h2>Troubleshooting</h2>
+<ul class="notes">
+  <li><strong>The name has spaces</strong> (e.g. <code>main campaign.sav</code>) &rarr; keep the quotes around it, exactly
+    as shown.</li>
+  <li><strong>You didn&rsquo;t put the script in the saves folder</strong> &rarr; give both full paths instead.
+    PowerShell:
+    <pre><code>powershell -ExecutionPolicy Bypass -File "C:\path\to\repair_sav_strings.ps1" "C:\...\Game Saves\YourSave.sav" -Repair</code></pre>
+  </li>
+  <li><strong>Keep your original</strong> until you&rsquo;ve confirmed the <code>_fixed</code> save loads. If anything
+    looks wrong, the original is still there.</li>
+  <li><strong>The <code>_fixed</code> save fails to load too</strong> &rarr; the mod list at save time must match. If the
+    save was made with extra add-ons (e.g. TAOMTweaks, TAOMFixes), enable those same versions before loading. If it still
+    fails, it&rsquo;s a different issue &mdash; send the save to the mod author.</li>
+  <li><strong>(Python only) <code>'python' is not recognized...</code></strong> &rarr; Python isn&rsquo;t on PATH. Re-run
+    the Python installer, choose <em>Modify</em>, tick &ldquo;Add Python to PATH&rdquo; (or reinstall with that box
+    checked), then close and reopen the terminal.</li>
+</ul>
+
+<footer>
+  Technical details of the bug and fix are in the mod&rsquo;s repository
+  (<code>docs/reviews/rca-momentum-save-corruption-2026-07-07.md</code>). To prevent it going forward, update to the
+  current TAOM version &mdash; new saves stay safe automatically.
+</footer>
+
+</div>
+</body>
+</html>

@@ -2,7 +2,9 @@
 
 ## Overview
 
-Always-on `[SaveLoad]` lifecycle logging for save-game writes and loads. Captures the real exception the engine swallows behind the generic **"A problem occured while trying to load the saved game."** dialog, names the exact saved type/SaveId/behavior whose data failed, detects definer/build mismatches the engine silently null-fills, and catches bad save WRITES on the async writer thread at write time. Companion offline tool: `tools/inspect_sav.py`.
+Always-on `[SaveLoad]` lifecycle logging for save-game writes and loads. Captures the real exception the engine swallows behind the generic **"A problem occured while trying to load the saved game."** dialog, names the exact saved type/SaveId/behavior whose data failed, detects definer/build mismatches the engine silently null-fills, and catches bad save WRITES on the async writer thread at write time. Companion offline tools: `tools/inspect_sav.py` (triage) + `tools/repair_sav_strings.py` (recovery for the momentum >32 KB corruption — see the RCA below).
+
+**First real-world find (2026-07-07):** this stack root-caused the multi-user v2.0.9 "corrupted save" reports — `WarOfTheRingMomentum` serialized its event log as one `SyncData` string that crossed the engine's 32,767-byte archive-entry limit, corrupting the save at write time (`ArchiveSerializer` writes entry length as `(short)Data.Length`). The `ArchiveDeserializer.LoadFrom` hook stamps it live; `repair_sav_strings.py` recovers already-bricked saves. Full write-up: `docs/reviews/rca-momentum-save-corruption-2026-07-07.md`. The permanent fix (chunked momentum serialization) is in `docs/features/war-of-the-ring-momentum.md`.
 
 ## Why This Exists
 
@@ -20,14 +22,18 @@ Multiple players reported "corrupted saves" (2026-07-07). Investigation mapped t
 
 Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only across the boundary, ADR-007) → `IModLogger` → `Logs/taom_debug_*.log` (FileLogger flushes per line — the last stamp survives a frozen process).
 
-**Two Harmony categories, both applied in `OnSubModuleLoad`** (loads fire from the main menu; the late `OnGameInitializationFinished` batch would miss the first load — Patch58 precedent):
+**Four Harmony categories, all applied in `OnSubModuleLoad`** (loads fire from the main menu; the late `OnGameInitializationFinished` batch would miss the first load — Patch58 precedent):
 
 | Category | Hooks | Why split |
 |---|---|---|
-| `Patch61_SaveLoadDiagnostics` | 10 hooks on public engine types (`typeof` targets) | — |
-| `Patch61_SaveLoadDiagnostics_Reflection` | `ContainerLoadData_Fill_Patch`, `CampaignBehaviorDataStore_LoadBehaviorData_Patch` (internal engine types via `AccessTools.TypeByName`) | Engine drift in an internal type name must not kill the typeof-based hooks; each category has its own try/catch in SubModule.cs |
+| `Patch61_SaveLoadDiagnostics` | 12 hooks on public engine types (`typeof` targets) | — |
+| `Patch61_SaveLoadDiagnostics_ContainerFill` | `ContainerLoadData_Fill_Patch` (internal type) | Harmony aborts a category on the FIRST failing class, so each reflection-target hook gets its own category — one drifted internal type can't kill a sibling. Each category has its own try/catch in SubModule.cs, and every `TargetMethod(s)` logs the specific missing binding (Patch57 precedent). |
+| `Patch61_SaveLoadDiagnostics_BehaviorData` | `CampaignBehaviorDataStore_LoadBehaviorData_Patch` (internal type; covers `LoadBehaviorData` + `SaveBehaviorData`) | same |
+| `Patch61_SaveLoadDiagnostics_ArchiveParse` | `ArchiveDeserializer_LoadFrom_Patch` (internal type) | same |
 
-**Invariant: diagnostics never alter engine behavior.** Every Finalizer returns `__exception` unchanged; no Postfix writes `__result`; every hook body try/catch-swallows its own faults; the service swallows logger faults.
+**Invariant: diagnostics never alter engine behavior.** Every Finalizer is **void** — it reads `__exception` but cannot replace or swallow it, and Harmony keeps true-rethrow semantics (original stack preserved for downstream consumers like CrashReport). No Postfix writes `__result`; every hook body try/catch-swallows its own faults; the service swallows logger faults.
+
+**SaveShield interplay (review 2026-07-07 HIGH):** TAOM.Dependencies' SaveShield finalizes `SandBoxSaveHelper.TryLoadSave`, `MBSaveLoad.LoadSaveGameData`, both `SaveManager.Load` overloads, and `LoadResult.InitializeObjects/AfterInitializeObjects` at default priority and **swallows** exceptions (its recovery design). SaveShield installs earlier (TAOM.Dependencies loads before TAOM), so at equal priority its finalizers run first and Patch61 would see `__exception == null`. Every Patch61 Finalizer therefore carries `[HarmonyPriority(Priority.First)]` — it observes and logs the original exception, then SaveShield swallows exactly as before.
 
 **Thread model:** hooks fire on TWParallel load workers and the async save-writer thread. The service is lock-free (Interlocked seq + fault counter, ConcurrentDictionary dedup) and fault-throttled (20 fault lines per attempt, 50 distinct unknown SaveIds) so a systematically corrupt graph cannot flood the log.
 
@@ -39,12 +45,12 @@ Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only a
 |---|---|---|
 | `LoadRequested` | `SandBoxSaveHelper.TryLoadSave` Prefix | Load clicked; lifecycle reset |
 | `ModuleCheck` | same | Save identity: appVersion, created, character, `taomBuild`, full module:version list |
-| `GraphFault` | `LoadContext.CreateLoadData` / `ContainerLoadData.*` Finalizers | **The money stamp** — exact failing type, SaveId, object idx / container step + flattened exception chain + stack |
-| `UnknownSaveId` | `ObjectHeaderLoadData.CreateObject` / `ContainerHeaderLoadData.GetObjectTypeDefinition` Postfixes | Save carries a SaveId this build has no definition for (definer/build mismatch); deduped |
-| `BehaviorSyncFault` | `CampaignBehaviorDataStore.LoadBehaviorData` Finalizer | Named behavior's SyncData failed (type changed between builds) |
-| `LoadFault` | `SaveManager.Load` Finalizer/Postfix | Uncaught NRE (unreadable file) or `LoadResult.Successful=false` |
+| `GraphFault` | `LoadContext.CreateLoadData` / `ContainerLoadData.{InitializeReaders,FillCreatedObject,Read,FillObject}` / `HeaderLoadData_Readers` (`InitialieReaders` ×2 + `ContainerHeaderLoadData.CreateObject`) / `ArchiveDeserializer.LoadFrom` Finalizers | **The money stamp** — exact failing type, `SaveId.GetStringId()`, object idx / container step / header phase / raw chunk size + flattened exception chain + stack. `kind=` distinguishes object / container / objectHeader / containerHeader / archiveParse |
+| `UnknownSaveId` | `ObjectHeaderLoadData.CreateObject` / `ContainerHeaderLoadData.GetObjectTypeDefinition` Postfixes | Save carries a SaveId this build has no definition for (definer/build mismatch); deduped by `GetStringId()` |
+| `BehaviorSyncFault` | `CampaignBehaviorDataStore.{Load,Save}BehaviorData` Finalizer | Named behavior's SyncData failed (`dir=load`: type changed between builds; `dir=save`: collection-pass fault before `SaveBegin`) |
+| `LoadFault` | `SaveManager.Load` Finalizer/Postfix, `LoadResult.Initialize*` Finalizer | Uncaught exception (unreadable file / definer registration / metadata version), `LoadResult.Successful=false` (message says explicitly when NO interior stamp was captured), or a deferred `[LoadInitializationCallback]` throw |
 | `LoadFailed` | `MBSaveLoad.LoadSaveGameData` Postfix | Null LoadResult — the dialog is now on screen; cause is in the stamps above |
-| `LoadDataOk` / `AllBehaviorDataLoaded` | milestones | Deserialization / behavior data completed |
+| `LoadDataOk` / `ObjectsInitialized` / `AllBehaviorDataLoaded` | milestones | Deserialization / deferred init callbacks / behavior data completed. `ObjectsInitialized` matters: SaveShield swallows callback-phase exceptions into a silent half-load — a log ending at `LoadDataOk` with a `LoadFault step=InitializeObjects` stamp is that case |
 | `SaveBegin` | `SaveManager.Save` Prefix | Save lifecycle reset |
 | `SaveWriteFault` | `FileDriver.Save` Finalizer/Postfix | Write threw ON the async writer thread (#292 class), or non-Success `SaveResult` (disk full / antivirus / OneDrive lock) |
 | `SaveStatusFault` / `SaveCompleted` | `SaveOutput.PrintStatus` | Faulted-task AggregateException at `Game.OnSaveCompleted` (#292 signature) / terminal result + serialization errors |
@@ -72,7 +78,13 @@ Triage split it gives without launching the game: **zero/garbage header** → sa
 
 ## Tests
 
-Service: 17 tests (seq/reset semantics, Aggregate/TargetInvocation flattening, stack line, 20-fault throttle + reset, unknown-SaveId dedup + reset, logger-throw resilience, 100-way parallel seq distinctness). Hooks: all 12 targets drift-guarded by `HarmonyPatchBindingTests` against the installed engine (the reflection hooks via their `TargetMethod(s)` members).
+Service: 20 tests (seq/reset semantics, Aggregate/TargetInvocation flattening incl. the composed Aggregate-wrapping-TIE production shape, stack line, 20-fault throttle + reset, `FaultCount` reset, unknown-SaveId dedup + 50-cap + reset, logger-throw resilience, 100-way parallel seq distinctness). Bindings: all 15 targets drift-guarded by `HarmonyPatchBindingTests` (via `TargetMethod(s)`), plus `SaveLoadDiagnosticsBindingTests` (4 tests) pinning what that suite can't see — the `ContainerHeaderLoadData` PROPERTY binding (a rename silently degrades container attribution to `<null>`), both `CampaignBehaviorDataStore` methods, `ArchiveDeserializer.LoadFrom(byte[])`, and `SaveId.GetStringId()`.
+
+## Known limitations
+
+- **Cross-attempt straggler stamps:** the async save-writer can still be flushing when the next save/load resets the lifecycle — a late `SaveWriteFault`/`SaveCompleted` can appear under the next attempt's seq numbers. Match by the `name='...'` field, not seq.
+- **Unhooked sites (accepted):** `LoadContext.LoadString`'s per-entry reads and `ObjectHeaderLoadData.ResolveObject/AdvancedResolveObject` faults reach the engine swallow without a specific interior stamp — the `SaveManager.Load` Postfix then says explicitly that no interior stamp was captured (naming the unhooked phases) instead of pointing at nonexistent stamps. `ArchiveDeserializer.LoadFrom` covers the raw parse of those phases' chunks.
+- **Pre-`SaveBegin` save faults:** `OnBeforeSave`/`SaveBehaviorData` fire before `SaveManager.Save`, so a fault there stamps `BehaviorSyncFault dir=save` under the previous attempt's lifecycle — unambiguous via the phase + dir fields.
 
 ## How-To: triage a user's failing save
 

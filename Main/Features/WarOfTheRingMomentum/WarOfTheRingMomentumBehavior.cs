@@ -34,13 +34,19 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
     private readonly UI.IMomentumUIService _uiService;
     private readonly IModLogger _logger;
 
-    // Persisted as a single JSON STRING, not a Dictionary<string,string>. A deep campaign
-    // fills the momentum store with up to ~1000 event entries; syncing that as a dictionary
-    // container did not round-trip through the engine's IDataStore at scale (stats/momentum
-    // reset on reload). A single string is the most robust SyncData primitive — unbounded,
-    // no container definition. Key renamed to "_v2" so an old-format (dict) save just loads
-    // as absent → fresh state (a one-time reset on the first load after this change).
-    private string _persistedJson = string.Empty;
+    // Persisted as the serialized momentum JSON split across N SyncData strings, one count
+    // key + N chunk keys (see MomentumSyncChunker). A single string was fatal: the engine's
+    // ArchiveSerializer writes each archive entry's length as (short)Data.Length, so any
+    // SyncData string > 32,767 UTF-8 bytes corrupts the save AT WRITE TIME — a developed
+    // campaign's momentum log crosses that around day ~50 and every save after is unloadable
+    // (the v2.0.9 "A problem occured while trying to load the saved game." reports). Chunking
+    // caps every synced string below the engine limit regardless of log size — no data
+    // dropped. Keys renamed to "_v3" so an old single-string _v2 (or dict _v1) save loads as
+    // absent → fresh state (a one-time momentum reset on the first load after this change;
+    // kingdoms re-enroll + momentum re-accrues on the next daily tick).
+    private const string CountKey = "_taom_wotr_momentum_v3_count";
+    private const string ChunkKeyPrefix = "_taom_wotr_momentum_v3_";
+    private List<string> _chunks = new();
 
     public WarOfTheRingMomentumBehavior(
         IMomentumStateStore stateStore,
@@ -83,12 +89,30 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
     public override void SyncData(IDataStore dataStore)
     {
         if (dataStore.IsSaving)
-            _persistedJson = JsonConvert.SerializeObject(_stateStore.Serialize());
+            _chunks = MomentumSyncChunker.Split(JsonConvert.SerializeObject(_stateStore.Serialize()));
 
-        dataStore.SyncData("_taom_wotr_momentum_v2", ref _persistedJson);
+        // Sync the chunk count first, then that many chunk keys. On load the count comes from
+        // the save (absent → 0 → fresh state, the one-time _v2→_v3 migration reset). Every
+        // chunk string is < the engine's 32,767-byte entry limit, so no entry can corrupt.
+        int count = _chunks.Count;
+        dataStore.SyncData(CountKey, ref count);
 
         if (dataStore.IsLoading)
-            _stateStore.Deserialize(ParsePersisted(_persistedJson));
+        {
+            _chunks = new List<string>(count);
+            for (int i = 0; i < count; i++)
+                _chunks.Add(string.Empty);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            var chunk = _chunks[i];
+            dataStore.SyncData(ChunkKeyPrefix + i, ref chunk);
+            _chunks[i] = chunk ?? string.Empty;
+        }
+
+        if (dataStore.IsLoading)
+            _stateStore.Deserialize(ParsePersisted(MomentumSyncChunker.Join(_chunks)));
     }
 
     private Dictionary<string, string> ParsePersisted(string json)

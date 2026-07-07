@@ -41,6 +41,18 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 
 ---
 
+## Save-game diagnostics & recovery
+
+Offline `.sav` triage — stdlib only, no game required. Both understand the v1.4.6 container format (`[int32 metaLen][JSON metadata][raw-deflate GameData]` → Header/ObjectData/ContainerData/Strings archives). See `docs/features/save-load-diagnostics.md`.
+
+| Script | Purpose | CLI |
+|--------|---------|-----|
+| `inspect_sav.py` | Dump a save's ApplicationVersion / character / module:version table / `TAOM_Build`; `--verify` walks the deflated GameData section framing (OK / TRUNCATED / corrupt with byte offsets). Triage which build wrote a save and whether it's physically intact. | `<path.sav>`, `--verify` |
+| `repair_sav_strings.py` | **Recovery for the v2.0.9 momentum >32 KB save-corruption bug** (`ArchiveSerializer` int16-length truncation — see the RCA). Parses the Strings archive, recovers the truncated entry length via the sequential-entry-id anchor, resets the oversized momentum string to empty, re-frames + recompresses to `<name>_fixed.sav`. Diagnose-only by default (non-destructive). Zero campaign-data loss — only the cosmetic war-meter history clears; the fixed save loads on the vanilla engine. **Player-facing Windows how-to: `docs/SAVE-REPAIR-GUIDE.md`** (paste-to-Discord/Nexus ready). | `<path.sav>`, `--repair`, `--force` |
+| `repair_sav_strings.ps1` | **PowerShell twin of the above — no Python install** (ships with Windows 10/11). Verified byte-identical (decompressed) output to the `.py` on both failure shapes (day-52 >65 KB desync + day-20 negative-length). Uses .NET `DeflateStream` — the SAME library the engine uses, so the rewritten deflate is guaranteed compatible. Slower (~40 s/large save vs ~1 s) due to per-call overhead, but a one-time repair. This is the **recommended** path for non-technical players (Option A in the guide). | `-Path <sav>`, `-Repair`, `-Force` (run via `powershell -ExecutionPolicy Bypass -File`) |
+
+---
+
 ## Content Generation
 
 | Script | Purpose | Output |
