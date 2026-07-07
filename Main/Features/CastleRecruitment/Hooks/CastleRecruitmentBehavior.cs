@@ -32,7 +32,7 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
     {
         _service = service;
         _logger = logger;
-        _maintainer = new CastleNotableMaintainer(service);
+        _maintainer = new CastleNotableMaintainer(service, logger);
     }
 
     public override void RegisterEvents()

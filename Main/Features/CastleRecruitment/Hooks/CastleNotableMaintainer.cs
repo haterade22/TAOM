@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.CastleRecruitment.Hooks;
 
@@ -16,26 +19,47 @@ namespace TAOM.Features.CastleRecruitment.Hooks;
 internal sealed class CastleNotableMaintainer
 {
     private readonly ICastleRecruitmentService _service;
+    private readonly IModLogger _logger;
+    private readonly HashSet<string> _warnedMissingTemplates = new HashSet<string>();
 
-    public CastleNotableMaintainer(ICastleRecruitmentService service)
+    public CastleNotableMaintainer(ICastleRecruitmentService service, IModLogger logger)
     {
         _service = service;
+        _logger = logger;
     }
 
     public void EnsureAllCastles()
     {
         foreach (Settlement settlement in Settlement.All)
         {
-            if (settlement.IsCastle)
+            if (!settlement.IsCastle)
+                continue;
+            // Runs inside OnNewGameCreated/OnGameLoaded: an escaped exception doesn't CTD — it stalls
+            // the engine's loading state machine, which re-runs the handler every tick forever
+            // (crash report 2026-07-07: 26k+ identical NREs on a tester's new-game loading screen).
+            try
+            {
                 EnsureCastleNotables(settlement);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"[CastleRecruitment] EnsureCastleNotables failed for '{settlement.StringId}' — skipping castle: {ex}");
+            }
         }
     }
 
     /// <summary>Daily per-castle work: top up the notable population, then generate volunteers.</summary>
     public void TickCastle(Settlement castle)
     {
-        EnsureCastleNotables(castle);
-        FillCastleVolunteers(castle);
+        try
+        {
+            EnsureCastleNotables(castle);
+            FillCastleVolunteers(castle);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[CastleRecruitment] daily tick failed for '{castle.StringId}' — skipping castle: {ex}");
+        }
     }
 
     /// <summary>Tops a castle up to its per-occupation targets. Only ever ADDS notables (never moves
@@ -43,17 +67,61 @@ internal sealed class CastleNotableMaintainer
     /// loads/ticks — counts the live notables first and spawns only the deficit.</summary>
     private void EnsureCastleNotables(Settlement castle)
     {
+        string cultureId = castle.Culture?.StringId ?? "(null-culture)";
+
+        // CreateNotable NREs when the culture has no template for the occupation
+        // (GetRandomTemplateByOccupation returns null on an empty filtered list) — pre-check and
+        // skip, same guard as CultureConversionAdapter.ReplaceNotable (#325).
+        var templates = castle.Culture?.NotableTemplates;
+        if (templates == null)
+        {
+            WarnOnce($"{cultureId}:no-templates",
+                $"[CastleRecruitment] culture '{cultureId}' has no NotableTemplates — skipping castle notables (first seen at '{castle.StringId}')");
+            return;
+        }
+
+        // The engine's occupation filter (GetRandomTemplateByOccupation's Where) does NOT null-check,
+        // so a single null entry (malformed <notable_templates> ref — ReadObjectReferenceFromXml
+        // returns null on a missing name attribute) NREs EVERY CreateNotable for the culture,
+        // regardless of occupation. Skip the culture entirely rather than spam the daily-tick catch.
+        if (templates.Any(t => t == null))
+        {
+            WarnOnce($"{cultureId}:null-template-entry",
+                $"[CastleRecruitment] culture '{cultureId}' has a null NotableTemplates entry (malformed <notable_templates> ref) — skipping castle notables (first seen at '{castle.StringId}')");
+            return;
+        }
+
         foreach (var target in _service.GetOccupationTargets())
         {
             Occupation occupation = ToOccupation(target.Key);
+            if (!templates.Any(t => t.Occupation == occupation))
+            {
+                WarnOnce($"{cultureId}:{occupation}",
+                    $"[CastleRecruitment] culture '{cultureId}' has no {occupation} notable template — skipping (first seen at '{castle.StringId}')");
+                continue;
+            }
+
             int existing = CountNotables(castle, occupation);
             for (int i = existing; i < target.Value; i++)
             {
                 // Vanilla NotablesCampaignBehavior.OnHeroCreated places the new notable into its
                 // HomeSettlement (the castle), gives 10000 gold, and assigns a supporter clan.
-                HeroCreator.CreateNotable(occupation, castle);
+                // Unreachable on v1.4.6 — CreateNotable throws rather than returning null (the
+                // pre-checks + the per-castle catch are the real guards); kept as a cheap forward
+                // guard should a future engine build convert the throw into a null return.
+                if (HeroCreator.CreateNotable(occupation, castle) == null)
+                {
+                    _logger.LogWarning($"[CastleRecruitment] CreateNotable returned null for {occupation} at '{castle.StringId}'");
+                    break;
+                }
             }
         }
+    }
+
+    private void WarnOnce(string key, string message)
+    {
+        if (_warnedMissingTemplates.Add(key))
+            _logger.LogWarning(message);
     }
 
     private static int CountNotables(Settlement castle, Occupation occupation)

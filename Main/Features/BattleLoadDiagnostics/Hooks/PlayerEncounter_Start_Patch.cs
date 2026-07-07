@@ -19,10 +19,18 @@ public static class PlayerEncounter_Start_Patch
     public static void Postfix()
     {
         var svc = _service;
-        if (svc == null || !svc.IsEnabled) return;
+        if (svc == null) return;
+
+        // ResetLifecycle runs even while the master toggle is off: its stale-exit-window
+        // close is an unconditional state transition (the clock/seq work inside self-gates
+        // on IsEnabled). A hook-level IsEnabled gate here bypassed the closer — a toggle-off
+        // mid-exit-window could leave the window latched (Codex review 2026-07-06, P2).
+        try { svc.ResetLifecycle(); }
+        catch { /* diagnostic only — never break encounter start */ }
+
+        if (!svc.IsEnabled) return;
         try
         {
-            svc.ResetLifecycle();
             int size = MobileParty.MainParty?.MemberRoster?.TotalManCount ?? 0;
             svc.LogEncounterStart(size);
         }

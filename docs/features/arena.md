@@ -1,12 +1,13 @@
-# Arena (Tournament Model + Dwarf Dismount)
+# Arena (Tournament Model + Dwarf Dismount + Exit-Hang Fix)
 
 ## Overview
 
-Replaces vanilla's tournament model with a culture-aware, race-aware variant. Three concerns:
+Replaces vanilla's tournament model with a culture-aware, race-aware variant. Four concerns:
 
 1. **Per-participant culture armor** — participants wear armor matching their *own* culture (a dwarf gets dwarf gear, not the host town's human kit), preventing skeleton-clipping. Data-driven via `gear_practice_dummy_<culture>` NPCs — see [tournament-armor-assignment.md](tournament-armor-assignment.md).
 2. **Culture-filtered prize pools** — rewards are drawn from the host town's culture across two tiers (Tierf 2–4 regular, Tierf 4+ elite).
 3. **Dwarf dismount (Patch46, 2026-06-09)** — dwarves never fight mounted in tournaments. Their custom (shorter) skeleton clips them *inside* the horse mesh. A Harmony postfix strips the horse from dwarf participants.
+4. **Tournament-exit hang fix (Patch60, 2026-07-06, #331)** — exiting any tournament hung the loading screen 30s–2min (measured 108s). Engine defect: `MissionGauntletTournamentView.OnMissionScreenFinalize` nulls its `_gauntletMovie`/`_gauntletLayer` **without releasing them** (the practice view releases correctly), so the 'Tournament' movie — the only mission UI holding live item/character tableau widgets (prize, round weapon icons, winner panel), usually with a prize render in flight at exit — is torn down inside `ScreenBase.HandleFinalize`'s layer loop under the exit loading screen, where it stalls. [Patch60_TournamentExitMovieRelease](../../Main/Features/Arena/Hooks/Patch60_TournamentExitMovieRelease.cs) captures the layer/movie in a Prefix (the original body nulls the fields) and, in a Postfix — after the body has dropped focus + finalized the VM, so `TryLoseFocus` can't NRE — replicates the practice view's `ReleaseMovie` → `RemoveLayer` sequence at `OnEndMission` time, while the mission renderer still services tableau work. Fail-safe: any failure degrades to the vanilla leak (the hang), never a broken exit. Two drift-guard tests pin the private-field bindings; `HarmonyPatchBindingTests` pins the target. Evidence chain: the `BattleLoadDiagnostics` exit phases ([battle-load-diagnostics.md](battle-load-diagnostics.md)) bracketed the hang to the layer-finalize loop (+8,276 gen0 GCs; native scene clear = 4ms), and two adversarial multi-agent decompile rounds exonerated all TAOM code and refuted every alternative mechanism.
 
 Tournament start/end timing constants are also exposed for tuning.
 

@@ -55,3 +55,13 @@ When a patch holds static state across frames AND drives that state from polling
 **Why this rule exists:** RCA `docs/reviews/rca-shader-precompilation-initial-zero-latch-2026-05-04.md`. The shader-precompilation patch's `_lastShaderCount = -1` collided with `Utilities.GetNumberOfShaderCompilationsInProgress() == 0` on the first frame after a warm-cache load. The patch fired its completion branch, killed its own latch, and produced an entire battle of blank loading screens that looked like the feature was completely broken.
 
 **Sibling rule:** see `.claude/rules/csharp-architecture.md` "Entity State Matrix" for the lifecycle equivalent (*when does this entity die?*). Observation matrix and lifecycle matrix are different reviews — both are needed for static-state machines that observe external state.
+
+## Latches & Toggle Gates (MANDATORY for any window/latch flag spanning multiple hooks)
+
+A latch (`_windowActive`, `_inflight`, `BattleLoadLoadingWindow`-style static flags) that is OPENED in one hook and CLOSED in others has three failure modes that unit tests on the owning service structurally miss. All three shipped in one changeset (tournament-exit diagnostics, 2026-07-06 — two caught by deep-review Data Flow, the third by Codex one review later):
+
+1. **Closer coverage per opener path.** Enumerate every code path that can OPEN the latch and verify a closer exists on EACH (or gate the opener to the paths the closers cover, e.g. `Campaign.Current != null`). An opener that fires for "any mission" with closers that only fire for "campaign missions" leaks the latch.
+2. **Toggles gate I/O, never state transitions.** `if (!IsEnabled) return;` above a `_latch = false` line means a mid-window toggle-off latches the flag forever. Structure every latch-touching method as: state transition first (unconditional), then the `IsEnabled` gate, then logging/side effects.
+3. **Verify "unconditional" at the OUTERMOST gate.** After fixing #2 inside the service, grep every CALLER of the fixed method — a hook-level `!svc.IsEnabled` early-out re-conditions the "unconditional" transition and the service-layer regression tests cannot see it. The fix is only done when the outermost gate on every call path passes state transitions through.
+
+**Why this rule exists:** RCA `docs/reviews/rca-tournament-exit-hang-2026-07-06.md` (findings 1, 2, 4) — the exit-window latch shipped with campaign-only closers for an any-mission opener plus toggle-gated closes; the service-layer fix for the toggle gate was then bypassed by hook-level gates, caught only by the Codex pass. Master record: `docs/reviews/LESSONS-LEARNED.md` "State, Lifecycle & Save" → "Diagnostics latches".

@@ -17,6 +17,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     private readonly Stopwatch _stopwatch = new Stopwatch();
     private int _seq;
     private volatile string _currentStatusLine = "phase=<none>";
+    private volatile bool _exitWindowActive;
 
     public BattleLoadDiagnosticsService(
         IModLogger logger,
@@ -33,6 +34,10 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
 
     public void ResetLifecycle()
     {
+        // Window state transitions are UNCONDITIONAL — a stale exit window must close even
+        // while the master toggle is off, or a mid-window toggle-off latches it and the next
+        // map activation emits spurious Exit* lines (deep-review data-flow finding, 2026-07-06).
+        _exitWindowActive = false;
         if (!IsEnabled) return;
         try
         {
@@ -67,6 +72,9 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
 
     public void LogMissionInitialize(string sceneName)
     {
+        // A mission starting means any still-open exit window is stale (chained mission
+        // without map activation) — close it unconditionally before entry-phase logging.
+        _exitWindowActive = false;
         if (!IsEnabled) return;
         Emit(BattleLoadPhase.MissionInitialize, $"scene='{sceneName}'");
     }
@@ -100,6 +108,89 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     {
         if (!IsEnabled) return;
         Emit(BattleLoadPhase.BattlePlayable, $"scene='{sceneName}' agents={agentCount}");
+    }
+
+    // ---- Mission-exit lifecycle (issue #331) ----
+
+    public bool IsExitWindowActive => _exitWindowActive;
+
+    public void LogExitBegin(string missionName, string sceneName, int agentCount, int allAgentCount)
+    {
+        if (!IsEnabled) return;
+        try
+        {
+            Interlocked.Exchange(ref _seq, 0);
+            _stopwatch.Restart();
+            _exitWindowActive = true;
+            Emit(BattleLoadPhase.ExitBegin,
+                $"mission='{missionName}' scene='{sceneName}' agents={agentCount}/{allAgentCount} {GcStats()}");
+        }
+        catch (Exception ex) { SafeWarn("LogExitBegin", ex); }
+    }
+
+    public void LogExitTeardownBegin()
+    {
+        if (!IsExitPhaseLoggable()) return;
+        Emit(BattleLoadPhase.ExitTeardownBegin, string.Empty);
+    }
+
+    public void LogExitTeardownDone()
+    {
+        if (!IsExitPhaseLoggable()) return;
+        Emit(BattleLoadPhase.ExitTeardownDone, string.Empty);
+    }
+
+    public void LogExitStateFinalizeBegin()
+    {
+        if (!IsExitPhaseLoggable()) return;
+        Emit(BattleLoadPhase.ExitStateFinalizeBegin, string.Empty);
+    }
+
+    public void LogExitStateFinalizeDone()
+    {
+        if (!IsExitPhaseLoggable()) return;
+        Emit(BattleLoadPhase.ExitStateFinalizeDone, string.Empty);
+    }
+
+    public void LogExitResourceClearBegin(bool forceClearGpuResources)
+    {
+        if (!IsExitPhaseLoggable()) return;
+        Emit(BattleLoadPhase.ExitResourceClearBegin, $"forceClearGpu={forceClearGpuResources}");
+    }
+
+    public void LogExitResourceClearDone()
+    {
+        if (!IsExitPhaseLoggable()) return;
+        Emit(BattleLoadPhase.ExitResourceClearDone, string.Empty);
+    }
+
+    public void LogMapResumed(bool isSaving)
+    {
+        if (!IsExitPhaseLoggable()) return;
+        Emit(BattleLoadPhase.MapResumed, $"isSaving={isSaving} {GcStats()}");
+    }
+
+    public void LogFirstMapTick(bool isSaving)
+    {
+        if (IsExitPhaseLoggable())
+            Emit(BattleLoadPhase.FirstMapTick, $"isSaving={isSaving}");
+        // Close unconditionally — the hook only calls this while the window is open, and a
+        // mid-window toggle-off must not latch the window (only the LOGGING is gated).
+        _exitWindowActive = false;
+    }
+
+    private bool IsExitPhaseLoggable() => IsEnabled && _exitWindowActive;
+
+    // gen0/gen1/gen2 collection counts + managed heap size. Deltas between ExitBegin and
+    // MapResumed expose a mission-end full GC (Common.MemoryCleanupGC) as the time sink.
+    private static string GcStats()
+    {
+        try
+        {
+            long heapMb = GC.GetTotalMemory(forceFullCollection: false) / (1024 * 1024);
+            return $"gc={GC.CollectionCount(0)}/{GC.CollectionCount(1)}/{GC.CollectionCount(2)} heapMB={heapMb}";
+        }
+        catch { return "gc=<unavailable>"; }
     }
 
     // Single choke point: increment the sequence, stamp elapsed ms, update the status line

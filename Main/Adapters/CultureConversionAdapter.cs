@@ -140,7 +140,18 @@ public class CultureConversionAdapter : ICultureConversionAdapter
                 return false;
             }
 
+            // The engine's occupation filter does NOT null-check, so a single null entry (malformed
+            // <notable_templates> ref) NREs CreateNotable even when a valid match exists — same gate
+            // as CastleNotableMaintainer (#332 deep-review finding, 2026-07-07).
+            if (templates.Any(t => t == null))
+            {
+                _logger.LogWarning($"CultureConversionAdapter: culture '{settlement.Culture?.StringId}' has a null NotableTemplates entry (malformed <notable_templates> ref) — keeping '{heroId}'");
+                return false;
+            }
+
             var replacement = HeroCreator.CreateNotable(occupation, settlement);
+            // Unreachable on v1.4.6 — CreateNotable throws rather than returning null; cheap forward
+            // guard should a future engine build convert the throw into a null return.
             if (replacement == null)
             {
                 _logger.LogWarning($"CultureConversionAdapter: CreateNotable returned null for {occupation} in '{settlement.StringId}' — keeping '{heroId}'");

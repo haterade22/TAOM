@@ -187,7 +187,7 @@
 	<string id="taom_ability_uruk_crossbow_tt" text="{=taom_ability_uruk_crossbow_tt}Unleash a barrage of Orthanc-forged bolts — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_warg_scout" text="{=taom_ability_warg_scout}Pack Howl" />
 	<string id="taom_ability_warg_scout_tt" text="{=taom_ability_warg_scout_tt}Unleash a terrifying warg-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-	<string id="taom_ability_cave_troll_master" text="{=taom_ability_cave_troll_master}Troll Frenzy" />
+	<string id="taom_ability_cave_troll_master" text="{=taom_ability_cave_troll_master}Gundabad Berserker" />
 	<string id="taom_ability_cave_troll_master_tt" text="{=taom_ability_cave_troll_master_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_goblin_sniper" text="{=taom_ability_goblin_sniper}Poison Dart" />
 	<string id="taom_ability_goblin_sniper_tt" text="{=taom_ability_goblin_sniper_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
@@ -1779,33 +1779,33 @@
 	<string id="taom_wsc_t3_b_p2" text="{=taom_wsc_t3_b_p2}-15% troop wages." />
 	<string id="taom_wsc_t3_b_p3" text="{=taom_wsc_t3_b_p3}+15% party movement speed." />
 	<string id="taom_wsc_t3_b_p4" text="{=taom_wsc_t3_b_p4}+75 max health." />
-	<string id="taom_cave_troll_master_root_desc" text="{=taom_cave_troll_master_root_desc}Troll Frenzy grants +25 health and drives your trolls berserk." />
-	<string id="taom_ctm_t1_a_key" text="{=taom_ctm_t1_a_key}Troll Frenzy radius increased, empowering more warriors." />
+	<string id="taom_cave_troll_master_root_desc" text="{=taom_cave_troll_master_root_desc}Gundabad Berserker grants +25 health and drives your trolls berserk." />
+	<string id="taom_ctm_t1_a_key" text="{=taom_ctm_t1_a_key}Gundabad Berserker radius increased, empowering more warriors." />
 	<string id="taom_ctm_t1_a_p1" text="{=taom_ctm_t1_a_p1}+8% melee damage." />
 	<string id="taom_ctm_t1_a_p2" text="{=taom_ctm_t1_a_p2}+5% troop damage." />
 	<string id="taom_ctm_t1_a_p3" text="{=taom_ctm_t1_a_p3}+30 max health." />
 	<string id="taom_ctm_t1_a_p4" text="{=taom_ctm_t1_a_p4}+7% swing speed." />
-	<string id="taom_ctm_t1_b_key" text="{=taom_ctm_t1_b_key}Troll Frenzy duration extended, fortifying the defense." />
+	<string id="taom_ctm_t1_b_key" text="{=taom_ctm_t1_b_key}Gundabad Berserker duration extended, fortifying the defense." />
 	<string id="taom_ctm_t1_b_p1" text="{=taom_ctm_t1_b_p1}+8% resistance." />
 	<string id="taom_ctm_t1_b_p2" text="{=taom_ctm_t1_b_p2}+5% troop morale." />
 	<string id="taom_ctm_t1_b_p3" text="{=taom_ctm_t1_b_p3}+10% troop resistance." />
 	<string id="taom_ctm_t1_b_p4" text="{=taom_ctm_t1_b_p4}+5% troop regeneration." />
-	<string id="taom_ctm_t2_a_key" text="{=taom_ctm_t2_a_key}Troll Frenzy charge reduced, activating more frequently." />
+	<string id="taom_ctm_t2_a_key" text="{=taom_ctm_t2_a_key}Gundabad Berserker charge reduced, activating more frequently." />
 	<string id="taom_ctm_t2_a_p1" text="{=taom_ctm_t2_a_p1}+10% troop morale." />
 	<string id="taom_ctm_t2_a_p2" text="{=taom_ctm_t2_a_p2}+2 party size." />
 	<string id="taom_ctm_t2_a_p3" text="{=taom_ctm_t2_a_p3}+10% battle renown gain." />
 	<string id="taom_ctm_t2_a_p4" text="{=taom_ctm_t2_a_p4}-10% troop wages." />
-	<string id="taom_ctm_t2_b_key" text="{=taom_ctm_t2_b_key}Troll Frenzy grants additional defensive buffs while active." />
+	<string id="taom_ctm_t2_b_key" text="{=taom_ctm_t2_b_key}Gundabad Berserker grants additional defensive buffs while active." />
 	<string id="taom_ctm_t2_b_p1" text="{=taom_ctm_t2_b_p1}+12% resistance." />
 	<string id="taom_ctm_t2_b_p2" text="{=taom_ctm_t2_b_p2}+60 max health." />
 	<string id="taom_ctm_t2_b_p3" text="{=taom_ctm_t2_b_p3}+13% troop resistance." />
 	<string id="taom_ctm_t2_b_p4" text="{=taom_ctm_t2_b_p4}+10% troop damage." />
-	<string id="taom_ctm_t3_a_key" text="{=taom_ctm_t3_a_key}Troll Frenzy radius greatly expanded, devastating power." />
+	<string id="taom_ctm_t3_a_key" text="{=taom_ctm_t3_a_key}Gundabad Berserker radius greatly expanded, devastating power." />
 	<string id="taom_ctm_t3_a_p1" text="{=taom_ctm_t3_a_p1}+15% melee damage." />
 	<string id="taom_ctm_t3_a_p2" text="{=taom_ctm_t3_a_p2}+100 max health." />
 	<string id="taom_ctm_t3_a_p3" text="{=taom_ctm_t3_a_p3}+15% troop damage." />
 	<string id="taom_ctm_t3_a_p4" text="{=taom_ctm_t3_a_p4}+4 party size." />
-	<string id="taom_ctm_t3_b_key" text="{=taom_ctm_t3_b_key}Troll Frenzy charge greatly reduced, nearly always available." />
+	<string id="taom_ctm_t3_b_key" text="{=taom_ctm_t3_b_key}Gundabad Berserker charge greatly reduced, nearly always available." />
 	<string id="taom_ctm_t3_b_p1" text="{=taom_ctm_t3_b_p1}+18% resistance." />
 	<string id="taom_ctm_t3_b_p2" text="{=taom_ctm_t3_b_p2}+15% health regeneration." />
 	<string id="taom_ctm_t3_b_p3" text="{=taom_ctm_t3_b_p3}+20% troop morale." />

@@ -132,6 +132,7 @@ public static class IoC
         MissionDiagnosticIoC.RegisterMissionDiagnosticFeature(container);
         CrashReportIoC.RegisterCrashReportFeature(container);
         BattleLoadDiagnosticsIoC.RegisterBattleLoadDiagnosticsFeature(container);
+        Features.SaveLoadDiagnostics.SaveLoadDiagnosticsIoC.RegisterSaveLoadDiagnosticsFeature(container);
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
 

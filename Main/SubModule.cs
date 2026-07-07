@@ -175,6 +175,62 @@ public class SubModule : MBSubModuleBase
         // binding failure inside the prefix falls back to the vanilla video. See docs/features/skip-campaign-intro.md.
         Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro.Initialize(IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch58_SkipCampaignIntro");
+
+        // Patch61_SaveLoadDiagnostics — always-on [SaveLoad] lifecycle logging for the "corrupted
+        // save" investigation. The engine swallows the real exception behind the generic
+        // "A problem occured while trying to load the saved game." dialog (LoadContext.Load catches
+        // and prints only ex.Message), so interior Finalizers stamp the actual failing type/SaveId
+        // to taom_debug, and save-side hooks catch bad WRITES (the #292 class) at write time.
+        // All Finalizers are VOID (true rethrow, stack preserved, structurally can't swallow) at
+        // Priority.First — SaveShield (TAOM.Dependencies) finalizes 4 overlapping methods at
+        // default priority and SWALLOWS; ours must observe the exception first (review 2026-07-07
+        // HIGH). Applied here in OnSubModuleLoad like Patch58: loads are triggered from the main
+        // menu, before any game init — the late batch would miss the first load. Each
+        // reflection-target hook (internal engine types) gets its OWN category: Harmony aborts a
+        // category on the first failing class, so per-hook categories keep one drifted internal
+        // type from killing its siblings. Diagnostics must never break startup: every category in
+        // its own try/catch, fail = vanilla.
+        try
+        {
+            var saveLoadDiagnostics = IoC.Resolve<Features.SaveLoadDiagnostics.ISaveLoadDiagnosticsService>();
+            var saveLoadLogger = IoC.Resolve<IModLogger>();
+            Features.SaveLoadDiagnostics.Hooks.SandBoxSaveHelper_TryLoadSave_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.MBSaveLoad_LoadSaveGameData_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.SaveManager_Load_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.LoadContext_CreateLoadData_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.ObjectHeaderLoadData_CreateObject_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.ContainerHeaderLoadData_GetObjectTypeDefinition_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.HeaderLoadData_Readers_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.LoadResult_InitializeCallbacks_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.CampaignBehaviorManager_LoadBehaviorData_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.SaveManager_Save_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.FileDriver_Save_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.SaveOutput_PrintStatus_Patch.Initialize(saveLoadDiagnostics);
+            Features.SaveLoadDiagnostics.Hooks.ContainerLoadData_Fill_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
+            Features.SaveLoadDiagnostics.Hooks.CampaignBehaviorDataStore_LoadBehaviorData_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
+            Features.SaveLoadDiagnostics.Hooks.ArchiveDeserializer_LoadFrom_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
+            _harmony.PatchCategory("Patch61_SaveLoadDiagnostics");
+            foreach (var category in new[]
+            {
+                "Patch61_SaveLoadDiagnostics_ContainerFill",
+                "Patch61_SaveLoadDiagnostics_BehaviorData",
+                "Patch61_SaveLoadDiagnostics_ArchiveParse",
+            })
+            {
+                try
+                {
+                    _harmony.PatchCategory(category);
+                }
+                catch (System.Exception ex)
+                {
+                    saveLoadLogger.LogWarning($"[SaveLoad] {category} not applied (engine drift?): {ex.GetType().Name}: {ex.Message}");
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError($"[SaveLoad] init failed — save/load diagnostics inactive: {ex.GetType().Name}: {ex.Message}");
+        }
         // Patch0_BattleScenes: loads TAOM's sp_battle_scenes.xml (full 0-255 map_indices coverage) so the
         // TAOM_Map Main_map grid's extended indices (158-255) resolve to real battle terrains instead of
         // FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01 (TAOM_Map ships Main_map +
@@ -832,8 +888,25 @@ public class SubModule : MBSubModuleBase
         Features.BattleLoadDiagnostics.Hooks.BattleSceneSelection_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.Mission_Initialize_BattleLoad_Patch.Initialize(battleLoadSvc, battleLoadStallMarker);
         Features.BattleLoadDiagnostics.Hooks.Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch.Initialize(battleLoadSvc, equipSnapshotAdapter);
+        // Exit-phase probes (issue #331 — 30s-2min hang exiting tournaments): stamp the
+        // mission end -> map resume window so the dominant phase gap names the time sink.
+        Features.BattleLoadDiagnostics.Hooks.Mission_EndMission_ExitPhase_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.Mission_EndMissionInternal_ExitPhase_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.Mission_ClearUnreferencedResources_ExitPhase_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.MissionState_OnFinalize_ExitPhase_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.MapState_OnActivate_ExitPhase_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.MapState_OnTick_ExitPhase_Patch.Initialize(battleLoadSvc);
         _harmony.PatchCategory("Patch43_BattleLoadDiagnostics");
         IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
+
+        // Patch60 — release the tournament UI movie/layer at OnEndMission time. The engine's
+        // MissionGauntletTournamentView leaks both (nulls without release, unlike the practice
+        // view), deferring the Tournament-movie teardown into ScreenBase.HandleFinalize under
+        // the exit loading screen, where an in-flight prize tableau render stalls it ~108s (#331).
+        var tournamentExitLogger = IoC.Resolve<IModLogger>();
+        Features.Arena.Hooks.Patch60_TournamentExitMovieRelease.Initialize(tournamentExitLogger);
+        try { _harmony.PatchCategory("Patch60_TournamentExitMovieRelease"); }
+        catch (System.Exception ex) { tournamentExitLogger.LogWarning($"[Arena] Patch60 tournament-exit movie release failed to apply: {ex.Message}"); }
 
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to

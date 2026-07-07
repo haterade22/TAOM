@@ -402,7 +402,7 @@
 
   <!-- DISABLED 2026-05-14: Cave Troll Master ability WIP; not ready for live game yet. Re-enable by uncommenting.
   <AbilityTemplate id="cave_troll_master_ability"
-                   display_name="{=taom_ability_cave_troll_master}Troll Frenzy"
+                   display_name="{=taom_ability_cave_troll_master}Gundabad Berserker"
                    sprite="ability_cave_troll_master_icon"
                    cooldown="0" duration="8" radius="50"
                    cast_type="Instant" target_type="Self" crosshair_type="Self"

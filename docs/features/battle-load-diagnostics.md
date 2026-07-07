@@ -59,6 +59,23 @@ The pure decision `BattleLoadStallWatchdog.ShouldFire(windowOpen, elapsed, thres
 
 `Mission.Initialize` is the universal mission-setup path, so the loading window (and thus the watchdog + phase-5 logging) opens for **every** mission — field battle, siege, arena, town/conversation tableau, hideout — not only battles. **This is intentional.** Gating to battles would require detecting mission type at `Mission.Initialize` prefix time, and if that detection were unreliable at the moment of an *early* freeze, the gate would suppress the exact data we're hunting. For a diagnostic, a false-negative (missing the hang) is far worse than a false-positive (an extra bundle on a slow non-battle load). The watchdog marker embeds the scene name (`last phase=MissionInitialize scene='battle_terrain_b'` vs `scene='town_ES2'`), so a fired bundle self-identifies whether it was a battle or a town/arena load. Net effect: the tool catches *any* mission-load hang, which is strictly more coverage than the battle-only ask. (Deep-review 2026-06-01 MEDIUM finding — resolved as intentional scope; see `docs/reviews/rca-battle-load-diagnostics-2026-06-01.md`.)
 
+### The mission-EXIT lifecycle (issue #331)
+
+The load phases above answer "where did the *entry* hang?". The exit phases answer the mirror question — motivated by a user report of a **30 s–2 min constant hang exiting any tournament** (practice fights and field battles exit normally), which no static analysis could localize. Same line format, same `Patch43_BattleLoadDiagnostics` category, same master toggle; `LogExitBegin` restarts the seq counter + stopwatch so an exit reads as its own `seq=1..N` run.
+
+| # | Phase | Hook | TaleWorlds seam (v1.4.6) |
+|---|-------|------|--------------------------|
+| 1 | `ExitBegin` | `Mission_EndMission_ExitPhase_Patch` (Postfix) | `Mission.EndMission()` — sets state `EndingNextFrame`; stamps mission/scene, `agents=<active>/<all>`, GC counts + heap |
+| 2 | `ExitTeardownBegin` / `ExitTeardownDone` | `Mission_EndMissionInternal_ExitPhase_Patch` (Prefix + Postfix) | `Mission.EndMissionInternal()` (private) — behaviors' `OnEndMission*`, agent `OnRemove`/`OnDelete`, `FreeResources` + native `FinalizeMission` |
+| 3 | `ExitStateFinalizeBegin` / `ExitStateFinalizeDone` | `MissionState_OnFinalize_ExitPhase_Patch` (Prefix + Postfix) | `MissionState.OnFinalize()` — wraps `Mission.OnMissionStateFinalize` (behavior removal + resource clear) |
+| 4 | `ExitResourceClearBegin` / `ExitResourceClearDone` | `Mission_ClearUnreferencedResources_ExitPhase_Patch` (Prefix + Postfix) | `Mission.ClearUnreferencedResources(bool)` — `Common.MemoryCleanupGC()` (forced full GC) + native GPU `ClearResources` when `forceClearGPUResources` |
+| 5 | `MapResumed` | `MapState_OnActivate_ExitPhase_Patch` (Postfix) | `MapState.OnActivate()` — loading screen over; stamps GC delta + `isSaving` (`SaveHandler.IsSaving`) |
+| 6 | `FirstMapTick` | `MapState_OnTick_ExitPhase_Patch` (Postfix, one-shot) | `MapState.OnTick(float)` — menu/VM re-init done; **closes the exit window** |
+
+**Exit-window gating.** `ExitBegin` opens a window (`IsExitWindowActive`); every other exit phase is silent outside it. This keeps the probes inert where their targets also fire elsewhere: `ClearUnreferencedResources` runs at mission *load*, `MapState.OnActivate` fires at campaign start/load, and `MapState.OnTick` runs **every map frame forever** (its postfix is a two-read early-out when the window is closed, per the hot-path rule). The window is **campaign-scoped**: `ExitBegin` opens only when `Campaign.Current != null` (custom battles have no `MapState` to complete the lifecycle, so opening there would leak the window). Closers, all **unconditional state transitions independent of the master toggle** (a mid-window toggle-off gates only the logging, never the close — deep-review data-flow finding 2026-07-06): `FirstMapTick` (normal path), the next `ResetLifecycle` (next campaign encounter), and the next `Mission.Initialize` (chained mission without map activation). `Mission.EndMission` re-invocation for the same mission is deduped by identity hash so the stopwatch is never restarted mid-exit. **Known limitation:** quitting to the main menu from *inside* a mission and then loading a campaign in the same process can emit one stale `MapResumed`/`FirstMapTick` pair with an implausibly large `t=+` value (self-heals immediately; cosmetic, and the huge timestamp self-identifies as stale).
+
+**Reading an exit log:** the dominant gap names the sink — `ExitTeardownBegin→Done` = managed teardown / native finalize; `ExitResourceClearBegin→Done` = mission-end full GC / GPU clear (compare the `gc=`/`heapMB=` stamps on `ExitBegin` vs `MapResumed`); `MapResumed→FirstMapTick` = campaign/UI resume; `isSaving=True` = an autosave inside the window.
+
 ## Configuration
 
 MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`, auto-registered by MCM). Defaults are the "diagnose now" posture — everything ON.
@@ -83,7 +100,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/BattleLoadStallException.cs` | Synthetic exception for the watchdog's bundle call (never thrown into the game) |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
 | `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase` DTOs |
-| `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 6 phase hooks + `BattleLoadPhaseBehavior` |
+| `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 6 load-phase hooks + `BattleLoadPhaseBehavior` + the 6 exit-phase hooks (`*_ExitPhase_Patch`, issue #331) |
 | `Main/Adapters/IEquipmentSnapshotAdapter.cs` / `EquipmentSnapshotAdapter.cs` | ADR-007 boundary: `Agent`/`Equipment`/`ItemObject` → `EquipmentSnapshot` |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsIoC.cs` | DryIoc registrations |
 
@@ -98,7 +115,7 @@ Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` (`OnGameInitialization
 
 ## Tests
 
-`TAOM.Tests/Features/BattleLoadDiagnostics/` (36 tests, all green):
+`TAOM.Tests/Features/BattleLoadDiagnostics/` (50 tests, all green — 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window):
 
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.

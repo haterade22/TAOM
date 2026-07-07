@@ -6769,13 +6769,13 @@
 
   <!-- DISABLED 2026-05-14: Cave Troll Master choice tree WIP; not ready for live game yet. Re-enable by uncommenting.
   <Choice id="cave_troll_master_root" group_id="" type="Passive"
-          description="{=taom_cave_troll_master_root_desc}Troll Frenzy grants +25 health and drives your trolls berserk."
+          description="{=taom_cave_troll_master_root_desc}Gundabad Berserker grants +25 health and drives your trolls berserk."
           icon_sprite="career_choice_cave_troll_master_root">
     <PassiveEffect type="Health" magnitude="25" operation="Add" />
   </Choice>
 
   <ChoiceGroup id="cave_troll_master_t1_a" display_name="{=taom_career_grp_cave_troll_master_t1_a}Pit-Whip Driver" career_id="cave_troll_master" tier="1">
-    <Choice id="cave_troll_master_t1_a_key" type="Keystone" description="{=taom_ctm_t1_a_key}Troll Frenzy radius increased, empowering more warriors." icon_sprite="career_choice_ctm_t1_a_key">
+    <Choice id="cave_troll_master_t1_a_key" type="Keystone" description="{=taom_ctm_t1_a_key}Gundabad Berserker radius increased, empowering more warriors." icon_sprite="career_choice_ctm_t1_a_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
     <Choice id="cave_troll_master_t1_a_p1" type="Passive" description="{=taom_ctm_t1_a_p1}+8% melee damage." icon_sprite="career_choice_ctm_t1_a_p1">
@@ -6793,7 +6793,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="cave_troll_master_t1_b" display_name="{=taom_career_grp_cave_troll_master_t1_b}Cave-Mouth Warden" career_id="cave_troll_master" tier="1">
-    <Choice id="cave_troll_master_t1_b_key" type="Keystone" description="{=taom_ctm_t1_b_key}Troll Frenzy duration extended, fortifying the defense." icon_sprite="career_choice_ctm_t1_b_key">
+    <Choice id="cave_troll_master_t1_b_key" type="Keystone" description="{=taom_ctm_t1_b_key}Gundabad Berserker duration extended, fortifying the defense." icon_sprite="career_choice_ctm_t1_b_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
     <Choice id="cave_troll_master_t1_b_p1" type="Passive" description="{=taom_ctm_t1_b_p1}+8% resistance." icon_sprite="career_choice_ctm_t1_b_p1">
@@ -6811,7 +6811,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="cave_troll_master_t2_a" display_name="{=taom_career_grp_cave_troll_master_t2_a}Goblin-town Tyrant" career_id="cave_troll_master" tier="2">
-    <Choice id="cave_troll_master_t2_a_key" type="Keystone" description="{=taom_ctm_t2_a_key}Troll Frenzy charge reduced, activating more frequently." icon_sprite="career_choice_ctm_t2_a_key">
+    <Choice id="cave_troll_master_t2_a_key" type="Keystone" description="{=taom_ctm_t2_a_key}Gundabad Berserker charge reduced, activating more frequently." icon_sprite="career_choice_ctm_t2_a_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="cave_troll_master_t2_a_p1" type="Passive" description="{=taom_ctm_t2_a_p1}+10% troop morale." icon_sprite="career_choice_ctm_t2_a_p1">
@@ -6829,7 +6829,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="cave_troll_master_t2_b" display_name="{=taom_career_grp_cave_troll_master_t2_b}Deep-Hold Breaker" career_id="cave_troll_master" tier="2">
-    <Choice id="cave_troll_master_t2_b_key" type="Keystone" description="{=taom_ctm_t2_b_key}Troll Frenzy grants additional defensive buffs while active." icon_sprite="career_choice_ctm_t2_b_key">
+    <Choice id="cave_troll_master_t2_b_key" type="Keystone" description="{=taom_ctm_t2_b_key}Gundabad Berserker grants additional defensive buffs while active." icon_sprite="career_choice_ctm_t2_b_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
     <Choice id="cave_troll_master_t2_b_p1" type="Passive" description="{=taom_ctm_t2_b_p1}+12% resistance." icon_sprite="career_choice_ctm_t2_b_p1">
@@ -6847,7 +6847,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="cave_troll_master_t3_a" display_name="{=taom_career_grp_cave_troll_master_t3_a}Scourge of Gundabad" career_id="cave_troll_master" tier="3">
-    <Choice id="cave_troll_master_t3_a_key" type="Keystone" description="{=taom_ctm_t3_a_key}Troll Frenzy radius greatly expanded, devastating power." icon_sprite="career_choice_ctm_t3_a_key">
+    <Choice id="cave_troll_master_t3_a_key" type="Keystone" description="{=taom_ctm_t3_a_key}Gundabad Berserker radius greatly expanded, devastating power." icon_sprite="career_choice_ctm_t3_a_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
     <Choice id="cave_troll_master_t3_a_p1" type="Passive" description="{=taom_ctm_t3_a_p1}+15% melee damage." icon_sprite="career_choice_ctm_t3_a_p1">
@@ -6865,7 +6865,7 @@
   </ChoiceGroup>
 
   <ChoiceGroup id="cave_troll_master_t3_b" display_name="{=taom_career_grp_cave_troll_master_t3_b}Dread of the Northern Halls" career_id="cave_troll_master" tier="3">
-    <Choice id="cave_troll_master_t3_b_key" type="Keystone" description="{=taom_ctm_t3_b_key}Troll Frenzy charge greatly reduced, nearly always available." icon_sprite="career_choice_ctm_t3_b_key">
+    <Choice id="cave_troll_master_t3_b_key" type="Keystone" description="{=taom_ctm_t3_b_key}Gundabad Berserker charge greatly reduced, nearly always available." icon_sprite="career_choice_ctm_t3_b_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="cave_troll_master_t3_b_p1" type="Passive" description="{=taom_ctm_t3_b_p1}+18% resistance." icon_sprite="career_choice_ctm_t3_b_p1">

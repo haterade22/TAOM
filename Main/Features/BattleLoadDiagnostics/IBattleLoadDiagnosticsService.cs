@@ -37,4 +37,21 @@ public interface IBattleLoadDiagnosticsService
 
     // Phase 6 — first OnMissionTick reached: the battle is playable (load succeeded).
     void LogBattlePlayable(string sceneName, int agentCount);
+
+    // ---- Mission-EXIT lifecycle (issue #331 — localize the tournament-exit hang) ----
+    // ExitBegin opens an "exit window", restarts the stopwatch + sequence counter, and
+    // stamps GC/heap stats. Every other exit phase is silent unless the window is open,
+    // so probes on methods that also fire at load time (ClearUnreferencedResources) or on
+    // every map frame (MapState.OnTick) stay inert outside a mission exit. The window
+    // closes at FirstMapTick or on the next ResetLifecycle.
+    bool IsExitWindowActive { get; }
+    void LogExitBegin(string missionName, string sceneName, int agentCount, int allAgentCount);
+    void LogExitTeardownBegin();
+    void LogExitTeardownDone();
+    void LogExitStateFinalizeBegin();
+    void LogExitStateFinalizeDone();
+    void LogExitResourceClearBegin(bool forceClearGpuResources);
+    void LogExitResourceClearDone();
+    void LogMapResumed(bool isSaving);
+    void LogFirstMapTick(bool isSaving);
 }
