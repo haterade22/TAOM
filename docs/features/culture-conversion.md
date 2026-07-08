@@ -100,7 +100,7 @@ Because conversion flips the shared `Settlement.Culture` field (and because othe
 | Field | Default | Meaning |
 |-------|---------|---------|
 | `enabled` | `true` | Master toggle for new conversions (existing overrides still re-apply). |
-| `requiredHoldDays` | `45` | Days the new owner must hold a cross-culture fief before it converts (`[1, 100000]`). |
+| `requiredHoldDays` | `1` | Days the new owner must hold a cross-culture fief before it converts (`[1, 100000]`). Shipped at 1 = near-instant conversion on capture; raise it for slower, more gradual assimilation. |
 | `requireStableLoyalty` | `false` | If true, also wait for loyalty ≥ `minLoyaltyToConvert`. |
 | `minLoyaltyToConvert` | `50` | Loyalty floor (`[0, 100]`, NaN/∞-guarded) when the loyalty gate is on. |
 | `convertPlayerOwnedSettlements` | `true` | If false, the player's own conquests never convert (AI conquests still do). |

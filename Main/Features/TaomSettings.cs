@@ -115,8 +115,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Culture Conversion")]
     [SettingPropertyInteger("Days To Convert", 1, 365, Order = 1,
-        HintText = "Days the new owner must hold a cross-culture fief before it converts. Lower = faster cultural takeover. Default: 45.")]
-    public int CultureConversionHoldDays { get; set; } = 45;
+        HintText = "Days the new owner must hold a cross-culture fief before it converts. Lower = faster cultural takeover. Default: 1 (near-instant on capture).")]
+    public int CultureConversionHoldDays { get; set; } = 1;
 
     [SettingPropertyGroup("Culture Conversion")]
     [SettingPropertyBool("Require Stable Loyalty", Order = 2,

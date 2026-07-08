@@ -6,7 +6,7 @@ public class CultureConversionConfig
     public bool Enabled { get; set; } = true;
 
     /// <summary>Days the new owner must hold a cross-culture fief before it converts.</summary>
-    public int RequiredHoldDays { get; set; } = 45;
+    public int RequiredHoldDays { get; set; } = 1;
 
     /// <summary>When true, conversion also waits for loyalty to reach <see cref="MinLoyaltyToConvert"/>.</summary>
     public bool RequireStableLoyalty { get; set; } = false;

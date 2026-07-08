@@ -79,7 +79,7 @@ public class CultureConversionConfigProviderTests
         var config = _sut.GetConfig();
 
         Assert.IsTrue(config.Enabled);
-        Assert.AreEqual(45, config.RequiredHoldDays);
+        Assert.AreEqual(1, config.RequiredHoldDays);
         Assert.IsFalse(config.RequireStableLoyalty);
         Assert.IsTrue(config.ConvertPlayerOwnedSettlements);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not found")));
@@ -92,7 +92,7 @@ public class CultureConversionConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(45, config.RequiredHoldDays);
+        Assert.AreEqual(1, config.RequiredHoldDays);
         _logger.Received().LogError(Arg.Is<string>(s => s.Contains("Failed to parse")));
     }
 
@@ -103,7 +103,7 @@ public class CultureConversionConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(45, config.RequiredHoldDays);
+        Assert.AreEqual(1, config.RequiredHoldDays);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("requiredHoldDays=0")));
     }
 
@@ -114,7 +114,7 @@ public class CultureConversionConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(45, config.RequiredHoldDays);
+        Assert.AreEqual(1, config.RequiredHoldDays);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("requiredHoldDays=-10")));
     }
 
