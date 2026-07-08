@@ -7,6 +7,15 @@ using TaleWorlds.Core;
 
 namespace TAOM.Features.BannerColorPersistence.Hooks;
 
+/// <summary>
+/// Removed the vanilla 32-layer banner cap by transpiling out the <c>RemoveRange</c> trim in
+/// <c>Banner.TryGetBannerDataFromCode</c>. As of Bannerlord v1.4.7 the engine makes banner layers
+/// natively unlimited ("Made the banner layers unlimited in the banner reader") — the target method
+/// no longer contains the <c>RemoveRange</c>/32-layer guard, so this transpiler is now a no-op and
+/// is <b>off by default</b> (<see cref="BannerColorConfig.EnableLayerLimitTranspiler"/> = false). It
+/// is kept rather than deleted so a future engine that reintroduces the cap can re-enable it via
+/// config. See docs/migration/v1.4.7-impact.md.
+/// </summary>
 [HarmonyPatchCategory("Patch15_BannerLayerLimit")]
 public static class Banner_TryGetBannerDataFromCode_Transpiler
 {
@@ -26,6 +35,13 @@ public static class Banner_TryGetBannerDataFromCode_Transpiler
     [HarmonyTranspiler]
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
+        // Bail out quietly when the feature is disabled (the default since v1.4.7). Without this the
+        // transpiler still scans for the now-absent RemoveRange and logs a spurious "RemoveRange not
+        // found" warning on every load, because the config is otherwise only consulted at runtime via
+        // the injected ShouldSkipLayerLimit() call — which is never injected when RemoveRange is gone.
+        if (!ShouldSkipLayerLimit())
+            return instructions;
+
         var list = new List<CodeInstruction>(instructions);
 
         // Find the RemoveRange callvirt

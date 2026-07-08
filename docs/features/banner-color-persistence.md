@@ -69,11 +69,11 @@ SubModule.OnGameInitializationFinished()
   "EnableDriftGuard": true,
   "EnableBannerPaste": true,
   "EnableUniqueSecondaryColor": true,
-  "EnableLayerLimitTranspiler": true
+  "EnableLayerLimitTranspiler": false
 }
 ```
 
-All flags default to `true`. Set individual flags to `false` to disable specific sub-features without disabling the entire feature.
+All flags default to `true` **except `EnableLayerLimitTranspiler`, which defaults to `false` since Bannerlord v1.4.7** — the engine made banner layers natively unlimited (`Banner.TryGetBannerDataFromCode` no longer has the 32-layer `RemoveRange` cap), so the transpiler is a no-op and is left off (see `docs/migration/v1.4.7-impact.md`). Set individual flags to `false` to disable specific sub-features without disabling the entire feature.
 
 ## Key Files
 

@@ -231,6 +231,9 @@ constants as knobs, shipping base 25000. See
   (`Settlement.Culture` not engine-saved; castle `.Village == null`).
 - [docs/features/troop-weight-system.md](../../features/troop-weight-system.md) — the weighted
   `NumberOfAllMembers` getter that this model corrects for the garrison food term.
+- [docs/features/settlement-building-levels.md](../../features/settlement-building-levels.md) — the
+  LIVE-file data pass that seeds each fief's starting building LEVELS (the buildings whose effects
+  feed the food-production and prosperity terms above).
 
 ---
 

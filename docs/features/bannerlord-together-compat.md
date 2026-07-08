@@ -8,7 +8,7 @@ TAOM supports passive plug-and-play co-op via [BannerlordTogether (BT)](https://
 
 | Requirement | Details |
 |-------------|---------|
-| Bannerlord version | **1.4.5** (TAOM's target; BT's stated minimum is 1.3.15 — co-op at 1.4.5 has not been re-verified since TAOM's v1.4.5 migration) |
+| Bannerlord version | **1.4.7** (TAOM's target; BT's stated minimum is 1.3.15 — co-op has not been re-verified since TAOM's v1.4.5 migration) |
 | BannerlordTogether | v0.2.2+ |
 | TAOM version | **Same version on all clients** |
 | All players | Must have TAOM installed and enabled |

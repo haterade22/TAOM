@@ -738,6 +738,12 @@ Lord SkillSets are shared aggressively (the orc trio feeds 6 cultures; `taom_kni
 - **Prevent:** every lord balance pass starts with the set-usage scan (culture × set × count, shared-outside flag), forks where shared, bumps culture-exclusive canonicals uniformly (preserves hand-tuned hierarchy order), and ends with the non-target-culture byte-identity check. Codified in `docs/ai-includes/lord-skills-authoring.md` "Per-culture balance variants".
 - **Source:** #322/#323/#326 sessions 2026-07-02/03.
 
+### Hand-curating a tiered data set: reserve the top of the RATIONED axis for named exemplars, and let an independent pass check the gradient
+When assigning per-fief building levels (221 towns/castles onto lore+role tiers), fortifications is the "rationed" axis: `fort3` must be reserved for capitals + named legendary fortresses only, and culture-flavor deltas must NOT touch it (military flavor lifts siege/barracks, never walls). Two Mordor "major" castles (Barad Wath/Nûrn) got a manual `fort=3` override "because the name means tower" — giving ordinary keeps siege-parity with the four legendary Mordor fortresses and flattening the very tier gradient the standard exists to protect; simultaneously the flagship Rhûn city was under-walled (`fort2`) below the poorer Khand sub-capital (`fort3`).
+- **Why missed:** the author sees each fief in isolation — a per-fief "tower → tall walls" call is locally defensible but globally flattens the top of the scale. The inconsistency is only visible when the whole axis is compared across tier-peers and factions at once.
+- **Prevent:** pick ONE rationed axis per tiered data set and hard-reserve its max value for named exemplars + capitals; forbid auto-flavor from modifying it. Run an independent adversarial pass (the 7-bloc review workflow judging each value against its tier + cross-faction peers) — it caught all 3 deviations pre-apply. Same "single author can't self-see the seam" class as [[feedback_parallel_builder_shared_subproblems]].
+- **Source:** settlement building-levels curation 2026-07-08; docs/features/settlement-building-levels.md; docs/reviews/settlement-buildings-audit-2026-07-08.md.
+
 ## Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)
 
 ### Register every Harmony patch in all three places or it's silent dead code

@@ -74,8 +74,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Native Skin Fixes")]
     [SettingPropertyBool("Enable Native Skin Fixes", Order = 0,
-        HintText = "Installs the native MinHook detours that fix engine rendering bugs TaleWorlds won't: the covers_head hand-morph freeze (jazz-hands under closed helms) + hair/beard cloth physics. ON by default — all 7 hook targets are authored + verified against Bannerlord v1.4.6's TaleWorlds.Native.dll (RTTI-anchored disassembly + interior byte-triangulation; each pattern single-matches its expected address). Turn OFF to fully disable the native hooks (vanilla rendering) if you ever hit instability. Requires an app restart to take effect.")]
-    public bool EnableNativeSkinFixes { get; set; } = true;
+        HintText = "Currently DISABLED — the native MinHook detours (covers_head hand-morph freeze + hair/beard cloth physics) are parked in code and this toggle has no effect for now: the hooks never load and engine rendering is vanilla regardless of this setting. The hook targets remain authored + verified against Bannerlord v1.4.6's TaleWorlds.Native.dll; re-enabling is a code change (uncomment the install branch in SubModule.cs + flip this default back to true).")]
+    public bool EnableNativeSkinFixes { get; set; } = false;
 
     // --- Castle Recruitment ---
 

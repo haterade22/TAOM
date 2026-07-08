@@ -5,8 +5,17 @@
 Three native MinHook detours into `TaleWorlds.Native.dll` that fix engine
 rendering bugs TaleWorlds has refused to fix: helmets that freeze hand morphs
 (`covers_head`), hair cloth physics that never registers, and beard cloth
-physics that never registers. Hooks are installed at boot from `TaomSubModule.OnBeforeInitialModuleScreenSetAsRoot`
-and uninstalled at module unload.
+physics that never registers. When active, hooks install at boot from `TaomSubModule.OnBeforeInitialModuleScreenSetAsRoot`
+and uninstall at module unload.
+
+> **PARKED / OFF by default (2026-07-08, user decision).** The install call in
+> `SubModule.cs` is commented out, so the native hooks NEVER load — engine
+> rendering is vanilla for everyone, regardless of the MCM toggle. MCM persists a
+> saved value over the compiled default, so parking at the wiring level is the only
+> way to override a machine that already saved the toggle ON; the compiled MCM
+> default is also `false`. The v1.4.6 hook targets remain authored + verified.
+> **RE-ENABLE** = uncomment the install branch in `SubModule.cs` + flip
+> `EnableNativeSkinFixes` back to `true`.
 
 ## Why This Exists
 
@@ -144,7 +153,7 @@ porting to a new engine version.
 | `Dependencies/NativeSkinFixes.NativeHooks/dllmain.cpp` | DLL entry — initializes logger on attach, uninstalls hooks on detach |
 | `Dependencies/NativeSkinFixes.NativeHooks/Signatures.h` | Central registry of byte patterns + historical RVAs (v1.4.6 patterns authored 2026-06-30) |
 | `tools/native_sig_author.py` | RE helper that authored the v1.4.6 patterns — RTTI vtable resolution, disasm, IDA-pattern uniqueness scan, rip-relative xref, function-start finder, old→new prologue `diff`, interior byte-triangulation. See "v1.4.6 native port" below. |
-| `Main/Features/TaomSettings.cs` (`EnableNativeSkinFixes`) | MCM toggle "Native Skin Fixes → Enable Native Skin Fixes" gating the install at boot |
+| `Main/Features/TaomSettings.cs` (`EnableNativeSkinFixes`) | MCM toggle "Native Skin Fixes → Enable Native Skin Fixes" gating the install at boot (default OFF; **currently parked** — the install call is commented out in `SubModule.cs`, so the toggle has no effect until re-enabled) |
 | `Dependencies/NativeSkinFixes.NativeHooks/SignatureScanner.{h,cpp}` | IDA-pattern parser + linear scan over `.text` section |
 | `Dependencies/NativeSkinFixes.NativeHooks/CoversHeadHook.{h,cpp}` | Hook 1: forces `HeadVisible` bit ON so Face_mesh is always created |
 | `Dependencies/NativeSkinFixes.NativeHooks/HairClothHook.{h,cpp}` | Hook 2: rescues orphan cloth at `Face_mesh+0x1A0` + re-enters factory for beard cloth at `+0x108` |
@@ -296,7 +305,9 @@ rcx=Face_mesh — the last two were correct, which is why only HairCloth threw.
 
 - **MCM master toggle** `EnableNativeSkinFixes` (`TaomSettings`), gated in
   `SubModule.OnBeforeInitialModuleScreenSetAsRoot`, fail-closed if MCM isn't
-  ready. Default ON for verified v1.4.6; flip OFF to fully disable.
+  ready. **Parked 2026-07-08:** default OFF and the install call is commented out
+  at the wiring level, so the hooks are inert regardless of the toggle (see the
+  PARKED note at the top). RE-ENABLE = uncomment the install branch + flip the default.
 - **Required-cloth-pair all-or-nothing.** HairCloth + FaceMeshObserve are a
   coupled pair (FaceMeshObserve suppresses the static hair HairCloth animates);
   if either fails to resolve, ALL hooks roll back (no lone-hook half-state).

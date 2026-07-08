@@ -53,6 +53,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/check-native-dll-crt.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-doc-config-drift.sh"
           }
         ]
       },

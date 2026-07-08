@@ -46,7 +46,7 @@ public class BannerColorConfigProviderTests
         Assert.IsTrue(config.EnableDriftGuard);
         Assert.IsTrue(config.EnableBannerPaste);
         Assert.IsTrue(config.EnableUniqueSecondaryColor);
-        Assert.IsTrue(config.EnableLayerLimitTranspiler);
+        Assert.IsFalse(config.EnableLayerLimitTranspiler); // off by default since v1.4.7 (engine natively unlimited)
     }
 
     [TestMethod]
@@ -65,7 +65,7 @@ public class BannerColorConfigProviderTests
         Assert.IsTrue(config.EnableDriftGuard);
         Assert.IsTrue(config.EnableBannerPaste);
         Assert.IsTrue(config.EnableUniqueSecondaryColor);
-        Assert.IsTrue(config.EnableLayerLimitTranspiler);
+        Assert.IsFalse(config.EnableLayerLimitTranspiler); // JSON omits it -> C# default (false since v1.4.7)
     }
 
     [TestMethod]
@@ -84,7 +84,7 @@ public class BannerColorConfigProviderTests
         Assert.IsTrue(config.EnableDriftGuard);
         Assert.IsTrue(config.EnableBannerPaste);
         Assert.IsTrue(config.EnableUniqueSecondaryColor);
-        Assert.IsTrue(config.EnableLayerLimitTranspiler);
+        Assert.IsFalse(config.EnableLayerLimitTranspiler); // invalid JSON -> C# default (false since v1.4.7)
     }
 
     [TestMethod]

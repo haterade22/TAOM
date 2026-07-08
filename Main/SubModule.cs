@@ -377,24 +377,26 @@ public class SubModule : MBSubModuleBase
         // TaleWorlds won't: covers_head morph freeze, hair cloth orphan, beard
         // cloth orphan. Loads TAOM.NativeSkinFixes.dll from Main/_Module/bin
         // and pattern-scans TaleWorlds.Native.dll for the hook targets at
-        // install time. Failure is logged and the game continues vanilla — no
-        // crash, no NRE. See docs/features/native-skin-fixes.md.
+        // install time. See docs/features/native-skin-fixes.md.
         //
-        // GATED OFF BY DEFAULT (MCM "Native Skin Fixes → Enable Native Skin
-        // Fixes"). These hooks write to hardcoded offsets inside the native
-        // engine DLL; a pattern/offset mismatch for the installed game build
-        // corrupts memory (the 2026-06-30 infinite-load / battle CTD). The gate
-        // is fail-closed: if MCM isn't available this early, Instance is null
-        // and we skip install. Opt in only once the byte patterns are authored
-        // + verified for the installed build.
-        bool nsfEnabled = false;
-        try { nsfEnabled = TaomSettings.Instance?.EnableNativeSkinFixes == true; }
-        catch { /* MCM not ready — fail closed */ }
-        if (nsfEnabled)
-            NativeSkinFixesInstaller.Install(IoC.Resolve<IModLogger>());
-        else
-            IoC.Resolve<IModLogger>().LogInfo(
-                "[NativeSkinFixes] disabled (MCM 'Enable Native Skin Fixes' is off) — engine rendering is vanilla");
+        // PARKED 2026-07-08 (user decision) — DISABLED at the wiring level. The
+        // install call below is commented out so the native hooks NEVER load,
+        // regardless of any persisted MCM "Native Skin Fixes → Enable Native
+        // Skin Fixes" value (MCM persists a saved value over the compiled
+        // default, so flipping the default alone would not stop machines that
+        // already saved it ON). Engine rendering is vanilla for everyone.
+        // RE-ENABLE: uncomment the install branch below AND flip the MCM default
+        // (TaomSettings.EnableNativeSkinFixes) back to true.
+        IoC.Resolve<IModLogger>().LogInfo(
+            "[NativeSkinFixes] parked (disabled at the wiring level) — engine rendering is vanilla");
+        // bool nsfEnabled = false;
+        // try { nsfEnabled = TaomSettings.Instance?.EnableNativeSkinFixes == true; }
+        // catch { /* MCM not ready — fail closed */ }
+        // if (nsfEnabled)
+        //     NativeSkinFixesInstaller.Install(IoC.Resolve<IModLogger>());
+        // else
+        //     IoC.Resolve<IModLogger>().LogInfo(
+        //         "[NativeSkinFixes] disabled (MCM 'Enable Native Skin Fixes' is off) — engine rendering is vanilla");
 
         // Pre-compile Shaders — RE-ENABLED 2026-06-17 (issue #287). Walks the all-characters battle
         // (character/equipment shaders) then each TAOM battle scene (terrain + forced-atmosphere

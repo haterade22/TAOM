@@ -18,7 +18,7 @@ fixed points (load, pre-menu, game start, mission init, tick, unload). Inside th
 | Override | When | What TAOM does |
 |---|---|---|
 | **`OnSubModuleLoad()`** (:91) | Earliest — module DLL loaded, before menu | `_harmony = new Harmony("com.taom.mod")` (:104); apply most patch categories via **`_harmony.PatchCategory("PatchNN_X")`** (:133-242); wire static patch fields via `.Initialize(service, …)` (:207-235); IoC bootstrap. |
-| **`OnBeforeInitialModuleScreenSetAsRoot()`** (:247) | After all modules load, before main menu | Pre-menu setup; NativeSkinFixes **install** (the native MinHook layer — managed Harmony can't touch native). |
+| **`OnBeforeInitialModuleScreenSetAsRoot()`** (:247) | After all modules load, before main menu | Pre-menu setup; NativeSkinFixes **install** (the native MinHook layer — managed Harmony can't touch native; **parked 2026-07-08** — the install call is commented out, so it does no MinHook work until re-enabled). |
 | **`OnGameStart(Game, IGameStarter)`** (:294) | A game (campaign) is starting | `if (gameStarter is CampaignGameStarter cs)` → **`cs.AddBehavior(new XxxBehavior(...))`** (every CampaignBehavior, Phase 9) + **`cs.AddModel(new TaomXxxModel(...))`** (every GameModel, Phase 7/15/16). |
 | **`OnGameInitializationFinished(Game)`** (:512) | Campaign fully initialized | Post-init; defensive-infra success marker (DR3 `OnGameInitializationFinished`). |
 | **`OnMissionBehaviorInitialize(Mission)`** (:640) | Each mission is being built (Phase 17 step 6) | **Deferred patches** whose target's cctor reads `Mission.Current`/`Campaign.Current` — the `Formation.SetMovementOrder` category (Phase 13/17), one-shot-guarded. Per-mission MissionBehavior wiring. |

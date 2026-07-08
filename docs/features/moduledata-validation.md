@@ -159,12 +159,3 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 ## Changelog
 
 - 2026-05-30 — Initial schema-driven ModuleData cross-reference validator: unified `taom_schema.py` engine + `validate_moduledata.py` CLI + 3 schemas catching the recurring bug classes (broken item/troop/culture/party-template refs, duplicate ids, missing civilian type, invalid enum); wired in as an auto-loaded scoped rule + a commit-blocking PreToolUse hook. Same dated entry covers the 2026-05-31 follow-up: the `taom_query.py` query API + `taom_mcp_server.py` MCP server (9 tools) and a second deep-review pass. See repo-root `CHANGELOG.md` for full detail.
-
----
-
-<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-
-## Referenced by
-
-
-<!-- backlinks-end -->

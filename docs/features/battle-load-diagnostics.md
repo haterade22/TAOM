@@ -191,6 +191,7 @@ Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a
 
 ## Referenced by
 
+- [docs/features/arena.md](./arena.md)
 - [docs/features/atmosphere-persistence.md](./atmosphere-persistence.md)
 - [docs/INDEX.md](../INDEX.md)
 

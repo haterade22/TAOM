@@ -82,22 +82,22 @@ All paths ultimately funnel through `MakePeaceAction.ApplyInternal`, which Layer
 {
   "enabled": true,
   "phase1": {
-    "triggerDay": 1,
+    "triggerDay": 2,
     "wars": [
       { "attacker": "isengard", "defender": "vlandia" },
       { "attacker": "empire", "defender": "vlandia" }
     ]
   },
   "phase2": {
-    "triggerDay": 1,
+    "triggerDay": 14,
     "autoWarBetweenHostileTiers": true,
     "blockPeaceBetweenHostileTiers": true,
     "wars": []
   },
   "testMode": {
     "enabled": false,
-    "phase1Day": 2,
-    "phase2Day": 5
+    "phase1Day": 1,
+    "phase2Day": 3
   }
 }
 ```

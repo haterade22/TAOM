@@ -132,6 +132,9 @@ NaN/Infinity literals and the rate-0 accepted extreme).
   the engine's full food/prosperity/gold loop, including the town-gold drain/inflow map.
 - [settlement-food.md](settlement-food.md) — the donor pattern (thin model + pure service +
   validated config + MCM toggle).
+- [settlement-building-levels.md](settlement-building-levels.md) — the sibling data-side pass on
+  the same LIVE `settlements.xml` (per-fief starting building levels; same dump/apply/`.bak`/idempotent
+  machinery as the prosperity tools above).
 
 ---
 

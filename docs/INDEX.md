@@ -83,6 +83,7 @@
 - [culture-conversion](features/culture-conversion.md) — conquered fiefs gradually adopt the owner's culture: Settlement.Culture flip + notable replacement (#325) + converted-recruitment branch
 - [settlement-food](features/settlement-food.md) — garrison food-leak fix + tunable food, TaomSettlementFoodModel
 - [settlement-economy](features/settlement-economy.md) — tunable town market-gold regen (drained markets recover), TaomSettlementEconomyModel (#317)
+- [settlement-building-levels](features/settlement-building-levels.md) — lore+role starting building levels for all 221 towns/castles (data pass on the LIVE settlements.xml; author/dump/apply tooling)
 - [caravan-trade](features/caravan-trade.md) — AI/player caravans range further, trade across the war, carry fuller baskets; 4 postfixes (Patch59) + TaomCaravanModel (#329)
 - [startup-resources](features/startup-resources.md) — per-culture player startup gold/items
 - [cultural-feats](features/cultural-feats.md) — 16 culture-feat GameModel overrides (Patch18)

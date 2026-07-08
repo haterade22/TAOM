@@ -29,22 +29,22 @@
 | Need | Command | Notes |
 |------|---------|-------|
 | **Engine process understanding** | `Read` [`docs/reference/engine/`](../reference/engine/) | **First for "how does X work" questions.** 19 processes pre-analyzed + TAOM-relevant gotchas: lifecycle, formations, mount/rider, campaign-mission seam, heartbeat, agent spawn, GauntletUI, GameModel, save/object system. Check here before cold decompile. |
-| **TaleWorlds signature / decompile** | `pwsh tools/taom-src.ps1 path <FullTypeName>` | **PRIMARY for signature verification.** Decompiles the installed **v1.4.5** DLL on cache miss, prints an absolute `.cs` path. Compose: `rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)` |
-| Browse engine source for patterns | `Read`/`Grep` under `E:\Decompiled_Bannerlord\` | **v1.4.5** dump. Fine for browsing; for authoritative signatures still prefer `taom-src`. ⚠️ SHIPPING-CLIENT build — editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX toolchain) only exist in `_editor_build\`. "Absent from dump" ≠ "doesn't exist." |
+| **TaleWorlds signature / decompile** | `pwsh tools/taom-src.ps1 path <FullTypeName>` | **PRIMARY for signature verification.** Decompiles the installed DLL (auto-detected version, currently **v1.4.7**) on cache miss, prints an absolute `.cs` path. Compose: `rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)` |
+| Browse engine source for patterns | `Read`/`Grep` under `E:\Decompiled_Bannerlord\` | **v1.4.7** dump. Fine for browsing; for authoritative signatures still prefer `taom-src`. ⚠️ SHIPPING-CLIENT build — editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX toolchain) only exist in `_editor_build\`. "Absent from dump" ≠ "doesn't exist." |
 | Decompile fallback | `ilspycmd "<dll>" -t "<Type>"` or the `ilspy` MCP | Only if `taom-src` fails. |
 | **Build** | `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` | Use this, NOT `./build.ps1`, during agent work (avoids `out/` contention). |
 | **Test** | `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true` | Add `--filter "FullyQualifiedName~X"` to narrow. |
 | Engine-binding gate | `dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"` | Verifies patch/GameModel/reflection bindings resolve against the installed engine. |
 | Troop equipment refs | `python tools/validate_all_troop_refs.py` | Underwear-bug gate across all 7 culture troop XMLs. Proves refs resolve **on disk** — NOT that the engine loaded a NEW item file (those load only at a full game restart; naked-in-game with a green gate = new-file-not-loaded, not a data defect). |
-| API signature snapshot | `pwsh tools/snapshot_api_surface.ps1 [-Check]` | Regenerate / verify the committed v1.4.5 signature snapshot. |
+| API signature snapshot | `pwsh tools/snapshot_api_surface.ps1 [-Check]` | Regenerate / verify the committed signature snapshot (self-labels the installed version, currently v1.4.7). |
 | **Native crash site naming** | `python tools/native_crash_triage.py --rva 0x<EventLog-fault-offset>` (or `--ip 0x<RIP> --base 0x<module-base>`) | Names a native CTD site WITHOUT symbols: pdata function bounds, hexdump, referenced strings, caller chains. Full protocol (Event Log, debugger setup): `.claude/skills/native-crash-triage/SKILL.md`. |
 | **Creature-mount data parity** | `python tools/audit_mount_parity.py` | Diffs a mount's Monster/usage/action surfaces vs warg/elephant/horse. Run BEFORE battle-testing creature changes; extend its `FILES`/`MOUNTS` maps for new creatures. |
-| Doc health | `python tools/lint_docs.py --summary` | Dead links / stale-version refs / orphan docs. |
+| Doc health | `python tools/lint_docs.py --summary` | Dead links / stale-version refs / orphan docs / config-example drift (doc JSON vs shipped config) / version mismatch (CLAUDE.md + snapshot vs the pin). |
 | **Claude-config / foreign-skill security audit** | `python tools/audit_claude_config.py` (self) or `--root <repo> --external` (vet a foreign skill at full severity) | Stdlib + optional YARA; deterministic, read-only. Self-audit before ship; `--external` BEFORE adopting an outside skill. Full skill: `.claude/skills/security-scan/SKILL.md`. |
 | Doc graph | `python tools/graph_query.py metrics` (+ `explain <doc>` / `path <a> <b>`) | Query/audit the docs link graph: god-nodes/bridges/orphans (`metrics`), a doc's neighbourhood (`explain`), shortest path between two docs (`path`). `--json` for machine output. Full ref: [`docs/features/doc-graph.md`](../features/doc-graph.md). |
 | Full tool list | see [`tools/README.md`](../../tools/README.md) | Generators, rebalancers, localization, faction-map, etc. |
 
-**Target engine version is Bannerlord v1.4.5.** Anything in an agent prompt or doc that still says "v1.3.15" is stale — trust the installed DLLs + `taom-src`.
+**Target engine version is Bannerlord v1.4.7.** Anything in an agent prompt or doc that still names "v1.3.15" / "v1.4.5" / "v1.4.6" as the *current* target is stale — trust the installed DLLs + `taom-src` (which auto-detects the version).
 
 ---
 

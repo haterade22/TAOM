@@ -1,0 +1,81 @@
+{
+  "town_DG1": {
+    "building_settlement_fortifications": 3,
+    "building_settlement_barracks": 3,
+    "building_settlement_training_fields": 3,
+    "building_settlement_guard_house": 2,
+    "building_settlement_siege_workshop": 3,
+    "building_settlement_tax_office": 2,
+    "building_settlement_marketplace": 2,
+    "building_settlement_warehouse": 3,
+    "building_settlement_mason": 3,
+    "building_settlement_waterworks": 2,
+    "building_settlement_courthouse": 2,
+    "building_settlement_roads_and_paths": 2
+  },
+  "castle_DG2": {
+    "building_castle_fortifications": 2,
+    "building_castle_barracks": 3,
+    "building_castle_training_fields": 1,
+    "building_castle_guard_house": 1,
+    "building_castle_siege_workshop": 2,
+    "building_castle_castallans_office": 1,
+    "building_castle_granary": 2,
+    "building_castle_craftmans_quarters": 0,
+    "building_castle_farmlands": 2,
+    "building_castle_mason": 1,
+    "building_castle_roads_and_paths": 1
+  },
+  "castle_DG3": {
+    "building_castle_fortifications": 2,
+    "building_castle_barracks": 2,
+    "building_castle_training_fields": 1,
+    "building_castle_guard_house": 0,
+    "building_castle_siege_workshop": 2,
+    "building_castle_castallans_office": 1,
+    "building_castle_granary": 1,
+    "building_castle_craftmans_quarters": 0,
+    "building_castle_farmlands": 1,
+    "building_castle_mason": 0,
+    "building_castle_roads_and_paths": 1
+  },
+  "castle_DG1": {
+    "building_castle_fortifications": 2,
+    "building_castle_barracks": 2,
+    "building_castle_training_fields": 1,
+    "building_castle_guard_house": 0,
+    "building_castle_siege_workshop": 2,
+    "building_castle_castallans_office": 1,
+    "building_castle_granary": 1,
+    "building_castle_craftmans_quarters": 0,
+    "building_castle_farmlands": 1,
+    "building_castle_mason": 0,
+    "building_castle_roads_and_paths": 1
+  },
+  "castle_DG4": {
+    "building_castle_fortifications": 2,
+    "building_castle_barracks": 2,
+    "building_castle_training_fields": 1,
+    "building_castle_guard_house": 0,
+    "building_castle_siege_workshop": 2,
+    "building_castle_castallans_office": 1,
+    "building_castle_granary": 1,
+    "building_castle_craftmans_quarters": 0,
+    "building_castle_farmlands": 1,
+    "building_castle_mason": 0,
+    "building_castle_roads_and_paths": 1
+  },
+  "castle_DG5": {
+    "building_castle_fortifications": 2,
+    "building_castle_barracks": 2,
+    "building_castle_training_fields": 1,
+    "building_castle_guard_house": 0,
+    "building_castle_siege_workshop": 2,
+    "building_castle_castallans_office": 1,
+    "building_castle_granary": 1,
+    "building_castle_craftmans_quarters": 0,
+    "building_castle_farmlands": 1,
+    "building_castle_mason": 0,
+    "building_castle_roads_and_paths": 1
+  }
+}

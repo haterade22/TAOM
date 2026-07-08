@@ -63,20 +63,17 @@ public class NativeSkinFixesInstallerTests
     }
 
     [TestMethod]
-    public void EnableNativeSkinFixes_DefaultsToTrue_ForVerifiedV146Build()
+    public void EnableNativeSkinFixes_DefaultsToFalse_ParkedAtWiringLevel()
     {
-        // ON by default as of the v1.4.6 native port (2026-06-30). All 7 hook
-        // targets were authored + verified against the installed v1.4.6
-        // TaleWorlds.Native.dll (RTTI-anchored disassembly + interior byte-
-        // triangulation for the two functions whose prologues changed); each
-        // pattern single-matches its expected RVA, and every struct offset the
-        // hooks use was verified stable. The MCM toggle remains the opt-OUT for
-        // anyone who hits instability, and the installer's required-cloth-pair
-        // all-or-nothing + fail-closed pattern scan keep a future engine bump
-        // safe (a pattern miss => inert, never a wrong-address hook). Flipping
-        // this default back to false must be a deliberate response to a real
-        // regression, not a silent refactor.
-        Assert.IsTrue(new TaomSettings().EnableNativeSkinFixes);
+        // OFF by default as of 2026-07-08 (user decision). The native hooks are
+        // parked at the wiring level: the install call in SubModule.cs is
+        // commented out, so the detours never load regardless of any persisted
+        // MCM value. The compiled default is false to match. The hook targets
+        // remain authored + verified against the installed v1.4.6
+        // TaleWorlds.Native.dll — this is a deliberate opt-out, not a lost
+        // capability. RE-ENABLE is a code change: uncomment the install branch
+        // in SubModule.cs AND flip this default back to true.
+        Assert.IsFalse(new TaomSettings().EnableNativeSkinFixes);
     }
 
     [TestMethod]

@@ -3,11 +3,14 @@
 **Migration: Bannerlord 1.3.15 → 1.4.5 — Functional foundation complete (2026-05-22).**
 **Status:** S0–S5b ✅ landed (adapters, GameModels, equipment XML migration, roster authoring). S6–S12 (smoke test, per-tier feature validation, Codex review, closeout) were rolled into ongoing feature work on the `bannerlord-1.4.5` branch rather than executed as discrete gates — see commit history from 2026-05-22 onward for de-facto validation (CC fixes, warg combat, faction-map UI overhaul, career system tooltips, etc.). The formal validation pipeline was not run; runtime exposure has come through feature development.
 
+**Subsequent minor engine bumps (tracked engine, no schema migration):** v1.4.5 → v1.4.6 (spider/elephant native-crash line) → **v1.4.7 (2026-07-08, current)**. Each was handled via `/engine-bump` (preserve baseline → regen decompile → `/verify-bindings` → parity audits → snapshot refresh) rather than a fresh migration.
+
 For detailed analysis see:
+- [v1.4.7-impact.md](v1.4.7-impact.md) — **v1.4.7 changelog→surface→verdict impact matrix + code changes (current bump)**
 - [v1.4.x-overview.md](v1.4.x-overview.md) — executive summary + session map
 - [v1.4.x-changes.md](v1.4.x-changes.md) — full changelog analysis
 - [v1.4.x-equipment-overhaul.md](v1.4.x-equipment-overhaul.md) — v1.4.3 equipment system deep dive
-- [v1.4.x-taom-impact.md](v1.4.x-taom-impact.md) — per-surface impact matrix
+- [v1.4.x-taom-impact.md](v1.4.x-taom-impact.md) — per-surface impact matrix (1.3.15→1.4.5)
 - [dual-dll-setup.md](dual-dll-setup.md) — Steam update + DLL backup procedure
 
 Plan file: `C:\Users\mikew\.claude\plans\we-did-this-on-crystalline-piglet.md`

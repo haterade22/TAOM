@@ -19,6 +19,7 @@ Conventions match .claude/hooks/detect-docs-gaps.sh for the feature-slug fuzzy m
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from dataclasses import dataclass, field
@@ -81,6 +82,8 @@ class LintReport:
     stale_versions: list[tuple[Path, int, str, str]] = field(default_factory=list)
     orphan_features: list[Path] = field(default_factory=list)
     missing_feature_docs: list[tuple[str, str]] = field(default_factory=list)
+    config_drift: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    version_mismatches: list[tuple[Path, int, str, str]] = field(default_factory=list)
 
     @property
     def total(self) -> int:
@@ -89,6 +92,8 @@ class LintReport:
             + len(self.stale_versions)
             + len(self.orphan_features)
             + len(self.missing_feature_docs)
+            + len(self.config_drift)
+            + len(self.version_mismatches)
         )
 
 
@@ -206,6 +211,137 @@ def check_stale_versions(files: list[Path]) -> list[tuple[Path, int, str, str]]:
     return findings
 
 
+# --- config-example drift ---------------------------------------------------
+# A feature doc that embeds a ```json block mirroring a shipped ModuleData config must
+# not drift from the shipped defaults. We compare only keys present in BOTH the doc block
+# and the shipped file (partial examples are fine — a doc showing 5 of 7 keys is not
+# flagged for the 2 it omits); a shared key whose value differs, or a doc key ABSENT from
+# the shipped file (renamed/removed), is drift. Doc blocks that aren't valid JSON (annotated
+# with `...` or `//` comments) are skipped — not comparable. This is the enforcement for the
+# v1.4.7 finding: flipping banner_color_config.json's EnableLayerLimitTranspiler default left
+# the feature doc's example showing the old `true`.
+MODULEDATA_JSON_RE = re.compile(r"([\w./\\-]*ModuleData[\w./\\-]*\.json)")
+JSON_FENCE_OPEN_RE = re.compile(r"^\s*```json\s*$")
+FENCE_CLOSE_RE = re.compile(r"^\s*```\s*$")
+
+
+def _config_json_blocks(text: str):
+    """Yield (config_path, json_body, open_lineno) for each ```json block preceded
+    (within 6 lines) by a ModuleData/*.json path reference."""
+    lines = text.splitlines()
+    i = 0
+    while i < len(lines):
+        if JSON_FENCE_OPEN_RE.match(lines[i]):
+            open_line = i
+            j = i + 1
+            body: list[str] = []
+            while j < len(lines) and not FENCE_CLOSE_RE.match(lines[j]):
+                body.append(lines[j])
+                j += 1
+            cfg_path = None
+            for k in range(open_line - 1, max(-1, open_line - 7), -1):
+                m = MODULEDATA_JSON_RE.search(lines[k])
+                if m:
+                    cfg_path = m.group(1)
+                    break
+            if cfg_path:
+                yield cfg_path, "\n".join(body), open_line + 1
+            i = j + 1
+        else:
+            i += 1
+
+
+def _is_historical_doc(f: Path) -> bool:
+    """Migration/archive/audit dirs + rca-/codex-*/doc-lint- transcripts capture point-in-time
+    state; their config examples are historical, not living docs. Same exemption set the
+    stale-version check uses."""
+    f_posix = str(f).replace("\\", "/")
+    if any(f_posix.startswith(prefix) for prefix in STALE_VERSION_EXEMPT_PREFIXES):
+        return True
+    if any(sub in f.name for sub in STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS):
+        return True
+    return False
+
+
+def check_config_example_drift(files: list[Path]) -> list[tuple[Path, int, str, str]]:
+    findings: list[tuple[Path, int, str, str]] = []
+    for f in files:
+        if _is_historical_doc(f):
+            continue
+        try:
+            text = f.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for cfg_path, json_body, lineno in _config_json_blocks(text):
+            cfg_file = (REPO_ROOT / cfg_path.replace("\\", "/")).resolve()
+            if not cfg_file.exists():
+                continue
+            try:
+                doc_json = json.loads(json_body)
+            except ValueError:
+                continue  # annotated / partial example — not comparable
+            try:
+                shipped = json.loads(cfg_file.read_text(encoding="utf-8-sig"))
+            except (OSError, ValueError):
+                continue
+            if not isinstance(doc_json, dict) or not isinstance(shipped, dict):
+                continue
+            for key, dval in doc_json.items():
+                if key not in shipped:
+                    findings.append((f, lineno, cfg_path,
+                                     f"doc example key '{key}' is not in shipped {cfg_path}"))
+                elif shipped[key] != dval:
+                    findings.append((f, lineno, cfg_path,
+                                     f"doc shows \"{key}\": {json.dumps(dval)} but shipped {cfg_path} has {json.dumps(shipped[key])}"))
+    return findings
+
+
+# --- version consistency ----------------------------------------------------
+# The canonical committed game-version markers must agree with the pin
+# (.claude/pinned-game-version.txt): CLAUDE.md's "Target: Bannerlord X" line(s) and the
+# API-snapshot headers. Catches "pin bumped but a doc/snapshot left stale" — the exact
+# drift this repo was in at the start of the v1.4.7 bump (pin v1.4.6, snapshot v1.4.5).
+def _norm_ver(s: str) -> str:
+    return s.strip().lower().lstrip("v")
+
+
+def check_version_consistency() -> list[tuple[Path, int, str, str]]:
+    findings: list[tuple[Path, int, str, str]] = []
+    pin_file = REPO_ROOT / ".claude" / "pinned-game-version.txt"
+    if not pin_file.exists():
+        return findings
+    try:
+        pin_raw = pin_file.read_text(encoding="utf-8").strip()
+    except OSError:
+        return findings
+    pin = _norm_ver(pin_raw)
+    if not pin:
+        return findings
+
+    def check_file(path: Path, pattern: re.Pattern, what: str):
+        if not path.exists():
+            return
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            return
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            m = pattern.search(line)
+            if m and _norm_ver(m.group(1)) != pin:
+                findings.append((path, lineno, m.group(1),
+                                 f"{what} says {m.group(1)} but pin is {pin_raw}"))
+
+    check_file(REPO_ROOT / "CLAUDE.md",
+               re.compile(r"Target:\s*Bannerlord\s+v?([0-9]+(?:\.[0-9]+)+)"),
+               "CLAUDE.md target")
+    snap_dir = DOCS_DIR / "reference" / "taleworlds-api-snapshot"
+    for name in ("gamemodel-bases.md", "patch-targets.md"):
+        check_file(snap_dir / name,
+                   re.compile(r"\(v?([0-9]+(?:\.[0-9]+)+)\s+snapshot\)"),
+                   f"snapshot header ({name})")
+    return findings
+
+
 def pascal_to_kebab(name: str) -> str:
     """InitialChildGeneration -> initial-child-generation. Matches detect-docs-gaps.sh."""
     s = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", name)
@@ -302,6 +438,8 @@ def format_report(report: LintReport, quick: bool) -> str:
         out.append(f"- Stale version refs (outside migration/archive): **{len(report.stale_versions)}**")
         out.append(f"- Orphan feature docs (no inbound references): **{len(report.orphan_features)}**")
         out.append(f"- Missing feature docs (Main/Features/<X> with no docs/features/<x>.md): **{len(report.missing_feature_docs)}**")
+        out.append(f"- Config-example drift (doc JSON != shipped ModuleData config): **{len(report.config_drift)}**")
+        out.append(f"- Version mismatches (CLAUDE.md / snapshot != pin): **{len(report.version_mismatches)}**")
     out.append("")
     if report.dead_links:
         out.append("## Dead links")
@@ -334,6 +472,24 @@ def format_report(report: LintReport, quick: bool) -> str:
             for name, target in report.missing_feature_docs:
                 out.append(f"- `{name}` → `{target}`")
             out.append("")
+        if report.config_drift:
+            out.append("## Config-example drift")
+            out.append("")
+            out.append("A feature doc's `json` example disagrees with the shipped `ModuleData` config it mirrors. "
+                       "Update the doc example (or the shipped config) so they match.")
+            out.append("")
+            for f, lineno, _cfg, msg in report.config_drift:
+                out.append(f"- `{rel(f)}:{lineno}` — {msg}")
+            out.append("")
+        if report.version_mismatches:
+            out.append("## Version mismatches")
+            out.append("")
+            out.append("A committed game-version marker disagrees with `.claude/pinned-game-version.txt`. "
+                       "Update it to the pin (run `/engine-bump` if the pin itself is behind the installed game).")
+            out.append("")
+            for f, lineno, _v, msg in report.version_mismatches:
+                out.append(f"- `{rel(f)}:{lineno}` — {msg}")
+            out.append("")
     if report.total == 0:
         out.append("**Clean — no findings.**")
         out.append("")
@@ -351,6 +507,8 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--quick", action="store_true", help="Only run the dead-link check (fastest)")
     ap.add_argument("--report", type=Path, help="Write report to this path instead of stdout (atomic via .tmp+rename)")
     ap.add_argument("--fail-on-dead", action="store_true", help="Exit 1 if any dead links found")
+    ap.add_argument("--fail-on-drift", action="store_true",
+                    help="Exit 1 if any config-example drift OR version mismatch found (pre-commit gate)")
     ap.add_argument("--summary", action="store_true", help="Emit a --- delimited grep-friendly summary block instead of the full markdown report")
     args = ap.parse_args(argv)
 
@@ -365,6 +523,8 @@ def main(argv: list[str]) -> int:
         report.stale_versions = check_stale_versions(files)
         report.orphan_features = check_orphan_features(files)
         report.missing_feature_docs = check_missing_feature_docs(feature_doc_basenames())
+        report.config_drift = check_config_example_drift(files)
+        report.version_mismatches = check_version_consistency()
 
     if args.summary:
         # Structured grep-friendly block, modeled on autoresearch's train.py final output
@@ -374,6 +534,8 @@ def main(argv: list[str]) -> int:
             f"stale_versions:    {len(report.stale_versions)}",
             f"orphan_features:   {len(report.orphan_features)}",
             f"missing_features:  {len(report.missing_feature_docs)}",
+            f"config_drift:      {len(report.config_drift)}",
+            f"version_mismatch:  {len(report.version_mismatches)}",
             f"total_findings:    {report.total}",
             "---",
             "",
@@ -393,6 +555,8 @@ def main(argv: list[str]) -> int:
             sys.stdout.write(rendered)
 
     if args.fail_on_dead and report.dead_links:
+        return 1
+    if args.fail_on_drift and (report.config_drift or report.version_mismatches):
         return 1
     return 0
 

@@ -14,12 +14,17 @@ namespace TAOM.Features.ArmyTargeting.Hooks;
 /// <c>Kingdom.Settlements</c> fortification is under siege / out of range AND
 /// <c>SettlementHelper.FindNearestFortificationToMobileParty</c> returns null — vanilla
 /// dereferences <c>settlement.GatePosition</c> with no null guard
-/// (TaleWorlds.CampaignSystem.Army.cs:726, v1.4.6). It fires on the map tick that starts the
-/// siege (Army.OnSiegeStarted), crashing the game while the player walks / fast-forwards. A null
-/// <c>Kingdom</c> (army leader's clan not in a kingdom) throws in the same method at Army.cs:659.
-/// The crash report (2026-06-17) shows NO TAOM patch anywhere on the stack — this is a vanilla
-/// missing-null-guard that TAOM's aggressive cross-map siege targeting (Patch22_ArmyTargeting)
-/// makes more reachable, not a defect TAOM introduces.
+/// (TaleWorlds.CampaignSystem.Army.cs:726 — verified STILL unguarded in v1.4.7). It fires on the
+/// map tick that starts the siege (Army.OnSiegeStarted), crashing the game while the player walks /
+/// fast-forwards. A null <c>Kingdom</c> (army leader's clan not in a kingdom) throws in the same
+/// method at Army.cs:659 (also unchanged in v1.4.7). The crash report (2026-06-17) shows NO TAOM
+/// patch anywhere on the stack — this is a vanilla missing-null-guard that TAOM's aggressive
+/// cross-map siege targeting (Patch22_ArmyTargeting) makes more reachable, not a defect TAOM
+/// introduces.
+///
+/// v1.4.7 shipped an "AI behaviour null reference" crash fix, but decompiling this method on v1.4.7
+/// shows both derefs above are UNCHANGED (same lines, no guard added) — that fix targeted a
+/// different site, so this guard remains load-bearing. See docs/migration/v1.4.7-impact.md.
 ///
 /// The Finalizer swallows ONLY <see cref="NullReferenceException"/>. Net effect: the broken army
 /// skips relocating its gathering leader this tick (vanilla already null-guards

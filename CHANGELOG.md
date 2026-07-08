@@ -1,5 +1,122 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-08
+
+### chore(docs): enforce config-example + version-marker consistency (prevent doc drift)
+
+- **Why:** the v1.4.7 deep-review found the banner-color feature doc still advertised the old
+  `EnableLayerLimitTranspiler: true` default after the flip — a silent doc-vs-code drift (docs aren't
+  compiled or tested). Rather than just fix the one doc, make the whole class a hard gate.
+- **Two new `tools/lint_docs.py` checks:** (1) **config-example drift** — a `docs/features/*.md`
+  `json` example whose values disagree with the shipped `Main/_Module/ModuleData/**/*.json` config it
+  mirrors (compares shared keys only, so partial examples are fine; also flags a doc key the shipped
+  config no longer has); (2) **version mismatch** — CLAUDE.md's "Target: Bannerlord X" line(s) or an
+  API-snapshot header that disagrees with `.claude/pinned-game-version.txt`. Historical docs
+  (migration/archive/rca-/codex-*) are exempt, reusing the existing stale-version exemption set.
+- **Enforcement:** `.claude/hooks/check-doc-config-drift.sh` (PreToolUse Bash) runs
+  `lint_docs.py --fail-on-drift` and **hard-blocks `git commit`** when a relevant file is staged and
+  drift/mismatch is found. Fail-open per the TAOM hook rule (no python / linter crash / nothing
+  relevant staged never blocks). **Wiring into `.claude/settings.json` is pending — the
+  config-protection guardrail blocks settings edits without an explicit OK (the hook is dormant until
+  registered).**
+- **Drift found + fixed by the new checks:** `docs/features/war-of-the-ring.md` config example
+  (`triggerDay` 1→2/14, testMode days) was out of sync with the shipped `war_of_the_ring.json`;
+  `docs/ai-includes/agent-operating-manual.md` + `docs/features/bannerlord-together-compat.md` still
+  named v1.4.5 as the *current* target. All fixed; `config_drift` + `version_mismatch` now 0.
+- **Also made version-labels self-updating** so this class stops recurring: `tools/snapshot_api_surface.ps1`
+  and the `taom-src` skill now derive the version from `Version.xml`/auto-detection instead of a
+  hardcoded string.
+- **Tests:** `tools/tests/test_lint_docs.py` — 14 unit tests (value mismatch, partial-example OK,
+  extra/removed key, non-JSON skip, BOM config, historical exemption, version consistency, v-prefix).
+- **Files:** `tools/lint_docs.py`, `.claude/hooks/check-doc-config-drift.sh`, `tools/tests/test_lint_docs.py`,
+  `.claude/skills/lint-docs/SKILL.md`, CLAUDE.md hooks table, the doc fixes above. RCA:
+  `docs/reviews/rca-v1.4.7-bump-2026-07-08.md`.
+
+Save-compat: none — docs, tooling, and a commit-gate hook only.
+
+### chore(engine): bump to Bannerlord v1.4.7 + impact analysis
+
+- **Bump:** Steam auto-updated the installed shipping client v1.4.6 → **v1.4.7** (base game + War Sails). Handled via the
+  `/engine-bump` offline pipeline: preserved the v1.4.6 decompile baseline (`_shipping_build_v1.4.6` + `_categories_v1.4.6`),
+  regenerated the category tree + dual-build + `_manifest.json` to v1.4.7, MD5-diffed the blast radius (**10 assemblies
+  changed**, none added/removed), bumped `.claude/pinned-game-version.txt`.
+- **Compatibility:** `BindingVerification` gate **green (50/50)** — every Harmony target, GameModel override, and reflection
+  site still resolves against v1.4.7. Creature/scene parity clean (`audit_mount_parity`, `audit_action_set_parity` 0 gaps,
+  `audit_battle_scenes` all 256 indices). API snapshot regenerated + reproducible; the generator now version-stamps from
+  `Version.xml` so its header no longer goes stale. Full impact matrix: `docs/migration/v1.4.7-impact.md`.
+- **Patch15_BannerLayerLimit disabled** — v1.4.7 "made the banner layers unlimited in the banner reader"
+  (`Banner.TryGetBannerDataFromCode` no longer has the `RemoveRange`/32-cap), so the transpiler is a no-op that logged
+  `RemoveRange not found` every load. Flipped `EnableLayerLimitTranspiler` false in BOTH `BannerColorConfig.cs` and the
+  shipped `banner_color_config.json` (JSON overrides the C# default) + added an early quiet-return guard so a disabled
+  transpiler no longer logs the warning (the warning fired before the flag was consulted). Kept, not deleted. 3 tests flipped.
+- **Patch49_ArmyGatheringNreGuard kept** — the v1.4.7 "null reference in AI behaviour" fix is a different site; the
+  decompile confirms the guarded `Army.FindBestGatheringSettlementAndMoveTheLeader` derefs (`Army.cs:726` / `:659`) are
+  still unguarded in v1.4.7, so the crash guard remains load-bearing (comment refreshed).
+- **Unaffected (verified):** save-metadata stamp (Patch61 already upserts), attacking-a-raiding-party + village-no-militia
+  crashes (different sites), `.sack` shader bloat (no TAOM workaround), cloth-sim crash (NativeSkinFixes parked).
+- **Owed:** in-game control battles (vanilla → creatures charge/melee, Messenger conversation exit, SmartCavalry charge,
+  >32-layer banner) — the only checks an offline session can't run.
+
+Save-compat: none — decompile/docs/config-default changes only; no save-serialized state touched.
+
+### chore(rendering): disable NativeSkinFixes by default (parked at the wiring level)
+
+- **Change:** the three native MinHook detours (covers_head hand-morph freeze + hair/beard cloth physics) are
+  now OFF by default. The install call in `SubModule.OnBeforeInitialModuleScreenSetAsRoot` is commented out, so
+  the hooks never load and engine rendering is vanilla for everyone — regardless of any persisted MCM value.
+- **Why the wiring-level park, not just a default flip:** the install gate reads `TaomSettings.Instance.EnableNativeSkinFixes`,
+  and MCM persists a user's saved value over the compiled default. Flipping the default alone would leave the feature
+  ON for any machine that already saved the toggle ON (the NavalTravel-park rationale). The compiled MCM default is
+  also set to `false` and the hint rewritten to note the parked state.
+- **Files:** `Main/SubModule.cs` (install branch commented out + `RE-ENABLE` breadcrumb), `Main/Features/TaomSettings.cs`
+  (`EnableNativeSkinFixes` default `true`→`false`, hint), `TAOM.Tests/.../NativeSkinFixesInstallerTests.cs` (pinning
+  test flipped to assert the `false` default), `docs/features/native-skin-fixes.md` (parked status).
+- **Reversible:** the native DLL + C++ source stay in place; RE-ENABLE = uncomment the install branch + flip the default.
+
+Save-compat: no save impact — the change only governs whether native hooks install at boot.
+
+### feat(map): lore + role starting building levels for all 221 towns & castles
+
+- **Problem:** TAOM's `settlements.xml` seeded each fief's building levels (fortifications/barracks/marketplace/…)
+  as a semi-random scatter uncorrelated with prosperity or importance — the lowest-prosperity town outgunned the
+  highest, and only Minas Tirith was hand-set. New campaigns therefore started arbitrary. Building levels are read
+  once at new-campaign creation (`Town.Deserialize`, skipped for saved games), valid range 0–3, fortifications
+  floors at 1; towns carry 12 `building_settlement_*`, castles 11 `building_castle_*` (grounded in installed
+  vanilla `DefaultBuildingTypes`).
+- **Change:** every one of the 221 towns/castles hand-curated to a lore + role standard — capitals & legendary
+  fortresses maxed (Minas Tirith, Barad-dûr, Erebor, Orthanc, Dol Guldur); the Black Gate / Cirith Ungol /
+  Cair Andros / Helm's Deep read as great fortresses regardless of prosperity; remote holds sparse but defensible.
+  Consistent numbers via a pinned role-tier expander + culture flavor (orc garrisons brutal & civic-poor; dwarven
+  wall-and-mason; elven refined; Umbar mercantile). fort3 rationed to capitals + legendary fortresses only. Applied
+  to the LIVE `TAOM_Map/ModuleData/settlements.xml`: 221 fiefs, 1,363 building levels altered.
+- **Tooling (new, modeled on the prosperity analyze/rebalance pair):** `tools/author_settlement_buildings.py`
+  (source of truth: hand decisions + deterministic expander → per-culture JSONs + audit doc),
+  `tools/dump_settlement_buildings.py` (read-only current-level dumper), `tools/apply_settlement_buildings.py`
+  (two-level-regex safe applier: `.bak`, byte round-trip, exactly-once assertion, range/fort-floor/id-set
+  validation, dry-run default, idempotent). Decisions recorded in `tools/data/settlement_building_levels/*.json`.
+- **Review:** 7-bloc adversarial workflow over the audit doc; 3 low-severity consistency fixes incorporated
+  (Barad Wath / Barad Nûrn fort3→2 to reserve fort3 for legendary Mordor fortresses; Ardûvar fort2→3 to match the
+  Khand capital). Verified live: re-run reports 0 changes (idempotent), XML re-parses clean, lore overrides confirmed.
+- **Docs:** `docs/features/settlement-building-levels.md`; per-fief audit artifact
+  `docs/reviews/settlement-buildings-audit-2026-07-08.md`.
+
+Save-compat: seeds NEW campaigns only; existing saves keep their own building data.
+
+### balance(culture-conversion): ship the 1-day conversion hold as the default for everyone (#333)
+
+- **Change:** `RequiredHoldDays` / `CultureConversionHoldDays` default 45 → **1** in all three places — the JSON
+  (`culture_conversion_config.json`), the compiled config fallback (`CultureConversionConfig`), and the MCM
+  compiled default (`TaomSettings`). The MCM default is the one that actually governs a new player (MCM-over-JSON:
+  the settings provider reads `TaomSettings.Instance.CultureConversionHoldDays` and only falls back to the JSON
+  when MCM is absent), so all three move together to keep the shipped default coherent.
+- **Effect:** a cross-culture fief converts the day after its hold begins — culture flips + notables replace almost
+  immediately on capture, and the foreign-occupier loyalty penalty drops right away (near-instant pacification). A
+  deliberate fast-war-map choice; raise "Days To Convert" in MCM for slower, gradual assimilation.
+- **Existing players:** MCM persists a player's saved value, so anyone who already launched the mod keeps their
+  stored hold (typically 45) until they reset MCM or set "Days To Convert" to 1 themselves; only fresh installs
+  pick up the new default automatically.
+- 4 config-provider default-assertion tests updated (45 → 1); suite 4169/0 green.
+
 ## 2026-07-07
 
 ### fix(war-of-the-ring): chunk momentum SyncData so it never corrupts saves — the v2.0.9 "A problem occured while trying to load the saved game." bug

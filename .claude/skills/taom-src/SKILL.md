@@ -1,12 +1,12 @@
 ---
 name: taom-src
-description: Decompile and cache TaleWorlds v1.3.15 types via `taom-src path <Type>`. Returns absolute path for grep/cat composition. Use before patching, overriding, or writing adapters.
+description: Use before patching, overriding, or writing an adapter that touches a TaleWorlds type — decompile + cache the installed engine's types via `taom-src path <Type>`; returns an absolute path for grep/cat.
 argument-hint: [path|list|remove|clean] <FullyQualifiedType>
 ---
 
 # taom-src — one-command TaleWorlds source lookup
 
-Wraps `ilspycmd` against the **installed v1.3.15 DLLs** and caches at `~/.taom-src/v1.3.15/`. Inspired by [vercel-labs/opensrc](https://github.com/vercel-labs/opensrc). Use this **before** every `[HarmonyPatch]`, `GameModel` override, or adapter that touches a TaleWorlds type — never guess signatures from the v1.4 dump at `E:\Decompiled_Bannerlord\`.
+Wraps `ilspycmd` against the **installed DLLs** (auto-detects the engine version from `Version.xml` — currently v1.4.7) and caches at `~/.taom-src/<version>/`. Inspired by [vercel-labs/opensrc](https://github.com/vercel-labs/opensrc). Use this **before** every `[HarmonyPatch]`, `GameModel` override, or adapter that touches a TaleWorlds type — never guess signatures from the `E:\Decompiled_Bannerlord\` dump (it can lag the installed engine after a bump).
 
 ## Core pattern
 
@@ -43,7 +43,7 @@ Progress goes to stderr, path goes to stdout — safe in `$(...)`.
 |---|---|
 | About to write `[HarmonyPatch(typeof(X), nameof(X.Y))]` | `taom-src path X` first — verify `Y` exists with the expected signature |
 | About to override `GetCharacterWage` on `DefaultPartyWageModel` | `taom-src path DefaultPartyWageModel` — copy the exact base signature |
-| About to call a TaleWorlds API from an adapter | `taom-src path <Type>` — confirm method exists in v1.3.15 (not just v1.4) |
+| About to call a TaleWorlds API from an adapter | `taom-src path <Type>` — confirm the method exists in the installed engine with the expected signature |
 | Bug investigation: "vanilla does X, what does its code actually look like?" | `taom-src path <ClassName>` then `rg` for the symptom |
 | Want to know what's already cached | `taom-src list` |
 
@@ -51,13 +51,13 @@ Progress goes to stderr, path goes to stdout — safe in `$(...)`.
 
 | Situation | Use instead |
 |---|---|
-| Looking for a class but don't know the FQN | `grep -r "ClassName" E:/Decompiled_Bannerlord/` to find namespace, **then** `taom-src path` to verify v1.3.15 |
-| Need to browse a whole namespace tree | `ls E:/Decompiled_Bannerlord/<area>/` (v1.4 is fine for browsing) |
+| Looking for a class but don't know the FQN | `grep -r "ClassName" E:/Decompiled_Bannerlord/` to find namespace, **then** `taom-src path` to verify against the installed engine |
+| Need to browse a whole namespace tree | `ls E:/Decompiled_Bannerlord/<area>/` (the dump is fine for browsing patterns) |
 | Need full type list of a DLL | `mcp__ilspy__list_types` (the ILSpy MCP is purpose-built for this) |
 
 ## Why this exists
 
-The recurring failure mode (caught by Codex review 2026-05-06, see `feedback_codex_caught_api_misread.md` in memory): two agents disagreed on a TaleWorlds API; the more confident one was wrong because it inferred from the v1.4 decompile folder. A single primitive that always lands on v1.3.15 — and caches so the cost is paid once per type — removes the temptation to skip verification.
+The recurring failure mode (caught by Codex review 2026-05-06, see `feedback_codex_caught_api_misread.md` in memory): two agents disagreed on a TaleWorlds API; the more confident one was wrong because it inferred from the decompile folder rather than the installed DLLs. A single primitive that always lands on the installed engine version — and caches so the cost is paid once per type — removes the temptation to skip verification.
 
 ## Environment requirements
 

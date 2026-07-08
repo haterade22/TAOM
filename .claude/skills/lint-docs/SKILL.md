@@ -11,15 +11,18 @@ Runs `tools/lint_docs.py` and presents the findings inline. Backs [ADR-010](../.
 ## What it checks
 
 1. **Dead markdown links** — every `[text](path)` in `docs/` whose target doesn't resolve relative to the source file. Excludes external URLs, file:// links, code-fence and inline-code spans, codex transcripts (codex-adversarial-*, codex-prompt-*, codex-result-*), TEMPLATE.md, and docs/archive/.
-2. **Stale version refs** — `1.3.15`, `1.3.x`, `Bannerlord 1.3` mentions outside `docs/migration/` and `docs/archive/`. Current target is **v1.4.5**; new feature docs and reviews should reference the current version. Historical RCA / codex-adversarial files are exempted (they intentionally cite the version under review).
+2. **Stale version refs** — `1.3.15`, `1.3.x`, `Bannerlord 1.3` mentions outside `docs/migration/` and `docs/archive/`. Current target is **v1.4.7** (the pin at `.claude/pinned-game-version.txt`); new feature docs and reviews should reference the current version. Historical RCA / codex-adversarial files are exempted (they intentionally cite the version under review).
 3. **Orphan feature docs** — files in `docs/features/` that no other doc references. Either link them into `docs/INDEX.md` / a feature doc / an RCA, or delete them.
 4. **Missing feature docs** — `Main/Features/<X>/` directories with no matching `docs/features/<x>.md` (PascalCase→kebab-case + fuzzy match, same algorithm as `.claude/hooks/detect-docs-gaps.sh`).
+5. **Config-example drift** — a `docs/features/*.md` `json` example whose values disagree with the shipped `Main/_Module/ModuleData/**/*.json` config it mirrors (shared keys only — a partial example showing a subset is fine), or a doc key the shipped config no longer has. Historical docs (migration/archive/reviews) exempt. The v1.4.7 case: flipping a config default left the feature doc's example showing the old value, invisibly. **Blocks commits** via `.claude/hooks/check-doc-config-drift.sh`.
+6. **Version mismatch** — CLAUDE.md's "Target: Bannerlord X" line(s) or an API-snapshot header that disagrees with `.claude/pinned-game-version.txt`. Catches "pin bumped but a doc/snapshot left stale" (run `/engine-bump` if the pin itself is behind the installed game). Also gated by the same hook.
 
 ## Modes
 
-- `$ARGUMENTS` empty or `--full` → run all four checks.
+- `$ARGUMENTS` empty or `--full` → run all six checks.
 - `$ARGUMENTS` contains `--quick` → only check dead links (fastest; suitable for tight loops).
 - `$ARGUMENTS` contains `--write-report` → write to `docs/reviews/doc-lint-<YYYY-MM-DD>.md` instead of streaming inline.
+- `--fail-on-drift` → exit 1 if any config-example drift OR version mismatch is found. This is the mode the `check-doc-config-drift.sh` pre-commit hook runs; the other four checks never block a commit.
 
 ## Steps
 
