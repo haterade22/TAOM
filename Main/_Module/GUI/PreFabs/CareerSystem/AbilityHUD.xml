@@ -1,32 +1,22 @@
 <Prefab>
   <Window>
     <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-            SuggestedWidth="220" SuggestedHeight="132"
+            SuggestedWidth="130" SuggestedHeight="166"
             HorizontalAlignment="Right" VerticalAlignment="Bottom"
             MarginRight="480" MarginBottom="80"
             IsVisible="@IsVisible">
       <Children>
-        <!-- Background -->
-        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                Sprite="BlankWhiteSquare_9" Color="#000000AA" />
-
-        <!-- Ability icon (top, prominent) -->
+        <!-- Ability icon (fills the panel) -->
         <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                SuggestedWidth="64" SuggestedHeight="64"
+                SuggestedWidth="110" SuggestedHeight="110"
                 HorizontalAlignment="Center" VerticalAlignment="Top"
-                MarginTop="6"
+                MarginTop="8"
                 Sprite="@AbilitySprite" />
 
-        <!-- Ability name (below icon) -->
-        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                    Text="@AbilityName" HorizontalAlignment="Center"
-                    VerticalAlignment="Top" MarginTop="74"
-                    Brush="ButtonBrush1.Text" Brush.FontSize="16" />
-
-        <!-- Ready indicator (below ability name when ready) -->
+        <!-- Ready indicator (below icon when ready) -->
         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                     Text="Press V" HorizontalAlignment="Center"
-                    VerticalAlignment="Top" MarginTop="96"
+                    VerticalAlignment="Top" MarginTop="120"
                     IsVisible="@IsReady"
                     Brush="ButtonBrush1.Text" />
 

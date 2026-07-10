@@ -1,5 +1,69 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-10
+
+### feat(career-system): all 49 career ability icons + compact battle HUD (#101)
+
+- **Icons:** every enabled career now has a 256x256 ability icon in a unified "named effect-icon"
+  style — the ability's effect/emblem as a gritty painterly oil painting with the ability name
+  hand-lettered across the bottom (Poisoned Blades = venom-slick crossed scimitars, Soul Drain =
+  souls spiraling into a shadow hand, Warcry of Eorl = the sounding horn + white-horse banner, …).
+  Art user-generated in Midjourney from per-ability prompts (faction palette + grounded-LOTR VFX
+  policy: no wild-fantasy glow; overt effects only for the Dol Guldur sorcery set); downscaled
+  Lanczos to 256 and baked into the `ui_taom_career_system` atlas (49/49 rects pixel-verified,
+  manifest + atlas + `_tex.tpac` chain regenerated in order, install↔repo synced byte-identical).
+- **Battle HUD** (`GUI/PreFabs/CareerSystem/AbilityHUD.xml`): panel 220x132 → 130x166, icon
+  64 → 110, career-name line and black backdrop removed — the icon, "Press V" ready text, and the
+  charge bar now float directly on the battle view. The VM's `AbilityName` property is now unbound
+  (dead binding, candidate for later cleanup).
+- **Rename:** `cave_troll_master` ability "Troll Frenzy" → "Gundabad Berserker"
+  (`taom_career_strings.xml`, `taom_career_choices.xml`, the disabled template block — 16
+  occurrences). The 12 `Languages/*/std_taom_career_strings_*.xml` files still carry the old
+  translated name for those 8 string ids until the next `/localize` run.
+- **Docs:** `career-system.md` (icon how-to rewritten: bake required, `sprite=` attr is dead,
+  house style recorded) + `gui-sprite-system.md` (Sprites-Needed row closed; two empirical bake
+  lessons: a repo→install deploy can silently clobber a fresh CLI bake — always
+  `sync_sprite_bake.ps1` immediately; an editor pass can rebuild only the tpac without re-packing —
+  mtime-check the manifest/atlas/tpac trio).
+
+Not-tested: career-screen render of the new icons (battle HUD render verified in-game via
+screenshot; the career screen resolves the identical sprite id).
+
+### fix(dependencies): tournament-exit hang round 2 — PatchShield must never shield the Gauntlet UI layer (#331, the REAL fix)
+
+- **Round-2 evidence (post-Patch60):** the ~107s stall MOVED with the relocated movie release into `EndMissionInternal` (2026-07-09 logs: `ReleaseMovie=104,482ms` / `108,866ms`; `RemoveLayer=0ms`), with the gen0 GC delta **+8,276 in all three measured hangs** across different towns and 4-745 agents — a deterministic fixed workload intrinsic to releasing the Tournament movie. Round-1's static arithmetic (widget counts, O(1) scans) was built on assumed counts and wrong.
+- **Measured, not modeled:** new `ExitStallSampler` (`Main/Features/BattleLoadDiagnostics/`) — background thread that photographs the MAIN thread's managed stack at +15/+30/+60s into any exit stall (armed by the exit window's new `ExitWindowOpenedUtcTicks`; `Thread.Suspend` + the obsolete-as-warning `StackTrace(Thread,bool)` ctor, net472). First repro named the sink in one shot: `PatchShield.ShieldFinalizerVoid` atop a 16-deep `WidgetTemplate.OnRelease_Patch2` recursion; the second sample caught `MethodBase.GetMethodFromHandle` inside `WidgetFactory.IsCustomType_Patch2`.
+- **Three-factor root cause, each harmless alone:** (1) the engine's tournament UI re-instantiates bracket templates per round, accumulating `WidgetTemplate._customTypeChildren` into a ~10^6-call release recursion (fixed per tournament — hence the invariant gen0 delta); (2) UIExtenderEx legitimately patches `WidgetFactory.IsCustomType` (prefix) and blank-transpiles `WidgetTemplate.OnRelease`; (3) TAOM.Dependencies' **PatchShield** stacks a `__originalMethod`-binding Harmony finalizer on EVERY patched method in the process — Harmony's wrapper then pays `GetMethodFromHandle` + try/catch per call (~50µs). ~10^6 × ~50µs ≈ 107s of frozen exit.
+- **Fix:** `PatchShield.Install` now skips targets in `TaleWorlds.GauntletUI`/`TaleWorlds.TwoDimension`/`TaleWorlds.MountAndBlade.GauntletUI` namespaces (`ExcludedTargetNamespacePrefixes`) — the UI layer is per-widget-recursion hot and shield value there is nil. **Measured result: tournament exit 105-109s → 9.5s** (`ReleaseMovie=8,822ms`, gen0 delta +3). The residual ~9s is UIExtenderEx's legitimate prefix wrapper at ~10^6 calls — normal loading-screen territory, not worth patching third-party internals (simplicity criterion). The third prefix came out of the round-2 deep review's compat agent: TAOM's own Patch38 nameplate-fade target (~3000 calls/sec on the campaign map) was silently paying the same shield tax every frame.
+- Patch60 (round 1) stays: the leak it fixes is real and its relocation is cost-neutral; its new per-exit `ReleaseMovie=Nms` stamp is the permanent regression canary. Sampler thresholds raised to +15/+30/+60s (above the known-good residual) and kept as standing diagnostics.
+- Suite 4177 green (+12 tests: sampler schedule, exit-window ticks lifecycle, toggle/closer regressions).
+- **Round-2 reviews (deep-review 5 agents + Codex review 73, 0 P1 / 2 P2 / 4 P3 — all addressed):** `Poll` gained an `Interlocked` reentrancy guard (Timer ticks overlap when a capture blocks); the sampler got its own MCM kill switch ("Enable Exit Stall Sampler" — the only diagnostics component that suspends the main thread); capture errors now log AFTER Resume (nothing allocates inside the suspended window); the compat agent's empirical CLR pass killed a false code comment (the `StackTrace(Thread,bool)` ctor was never hidden — a named-argument typo had been misread as a missing ctor; now a direct call) and caught TAOM's own Patch38 nameplate target (~3000 calls/sec) still paying the shield tax → third exclusion prefix `TaleWorlds.MountAndBlade.GauntletUI`. RCA findings 5-14: `docs/reviews/rca-tournament-exit-hang-2026-07-06.md`.
+
+Research: WidgetTemplate.CreateWidgets/OnRelease + WidgetFactory.IsCustomType (installed 1.4.6), Bannerlord.UIExtenderEx WidgetFactoryManager.Patch (vendored DLL decompile), PatchShield.Install/ShieldFinalizerVoid
+Save-compat: none — UI teardown + diagnostics only.
+
+## 2026-07-09
+
+### balance(special-resources): raise all caps 400–600 → 10000, zero the starting amounts
+
+- **Why:** the 2000-cost Mûmakil (`harad_mumakil_rider`, `recruit_cost="2000"`) was permanently
+  unrecruitable — every resource capped at 400–600, and a creature is charged in the *recruiting
+  player's* resolved resource (War Spoils for Mordor/Isengard/Gundabad/Dol Guldur players, War Drums
+  for Harad/Aserai players), both far under 2000. Raising all 11 caps to 10000 makes the Mûmakil — and
+  any future high-cost special creature/elite — affordable in every faction.
+- **Also:** `starting_amount` set to 0 on all 11 resources — heroes now begin with an empty reserve and
+  earn from scratch (was 20–40).
+- **Data-only:** `special_resources_config.xml`. The `cap` flows `SpecialResourceConfigProvider` →
+  `SpecialResource.Cap` → the `Math.Min(current + amount, Cap)` earning clamp and the `… / Cap` map-bar
+  display; no C# change. Config is singleton-cached, so a **full game restart** (not a save reload) is
+  needed to pick up the new values.
+- **Files:** `Main/_Module/ModuleData/special_resources/special_resources_config.xml`,
+  `docs/features/special-resources.md`.
+
+Save-compat: none — the raised cap only relaxes the ceiling (existing balances ≤500 round-trip unchanged
+and may now grow toward 10000); `starting_amount` affects only fresh hero seeding, so no saved balance is
+retroactively zeroed.
+
 ## 2026-07-08
 
 ### chore(docs): enforce config-example + version-marker consistency (prevent doc drift)

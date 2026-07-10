@@ -72,11 +72,17 @@ public static class Patch60_TournamentExitMovieRelease
             // Practice-view parity: the original body already finalized the VM and dropped
             // focus; ReleaseMovie is idempotence-guarded (Contains + IsReleased) and RemoveLayer
             // finalizes the layer now, while the mission renderer still services tableau work.
+            // Timed per call (#331 round 2): the ~107s exit stall moved WITH this release, so
+            // these stamps split the cost between ReleaseMovie and RemoveLayer for the RCA.
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             layer.ReleaseMovie(movie);
+            long releaseMs = sw.ElapsedMilliseconds;
 
             var screen = __instance.MissionScreen;
             if (screen != null && screen.HasLayer(layer))
                 screen.RemoveLayer(layer);
+
+            _logger?.LogInfo($"[Arena] Patch60 tournament UI released: ReleaseMovie={releaseMs}ms RemoveLayer={sw.ElapsedMilliseconds - releaseMs}ms");
         }
         catch (Exception ex)
         {

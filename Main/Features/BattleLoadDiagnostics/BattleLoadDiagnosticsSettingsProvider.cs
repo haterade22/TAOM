@@ -21,6 +21,9 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
     public bool StallWatchdogBundleEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableStallWatchdogBundle ?? true;
 
+    public bool ExitStallSamplerEnabled =>
+        BattleLoadDiagnosticsSettings.Instance?.EnableExitStallSampler ?? true;
+
     public double StallWatchdogSeconds
     {
         get

@@ -284,4 +284,40 @@ public class BattleLoadDiagnosticsServiceTests
 
         Assert.IsFalse(_sut.IsExitWindowActive);
     }
+
+    // ---- ExitWindowOpenedUtcTicks (feeds ExitStallSampler, #331 round 2) ----
+    // The ticks latch must mirror the bool exactly: nonzero only while the window is open,
+    // cleared by every closer (incl. the unconditional-close paths).
+
+    [TestMethod]
+    public void LogExitBegin_SetsExitWindowOpenedTicks()
+    {
+        _sut.LogExitBegin("m", "s", 1, 1);
+        Assert.AreNotEqual(0L, _sut.ExitWindowOpenedUtcTicks);
+    }
+
+    [TestMethod]
+    public void LogFirstMapTick_ClearsExitWindowOpenedTicks()
+    {
+        _sut.LogExitBegin("m", "s", 1, 1);
+        _sut.LogFirstMapTick(false);
+        Assert.AreEqual(0L, _sut.ExitWindowOpenedUtcTicks);
+    }
+
+    [TestMethod]
+    public void ResetLifecycle_WhenDisabledMidWindow_ClearsExitWindowOpenedTicks()
+    {
+        _sut.LogExitBegin("m", "s", 1, 1);
+        _settings.IsEnabled.Returns(false);
+        _sut.ResetLifecycle();
+        Assert.AreEqual(0L, _sut.ExitWindowOpenedUtcTicks);
+    }
+
+    [TestMethod]
+    public void LogMissionInitialize_ClearsExitWindowOpenedTicks()
+    {
+        _sut.LogExitBegin("m", "s", 1, 1);
+        _sut.LogMissionInitialize("next_scene");
+        Assert.AreEqual(0L, _sut.ExitWindowOpenedUtcTicks);
+    }
 }

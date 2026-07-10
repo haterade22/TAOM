@@ -307,7 +307,7 @@ The hover tooltip shows:
 | Sprite ID | Size | Count | Used By |
 |-----------|------|-------|---------|
 | `career_{id}_portrait` | 400x200 | 50 | CareerScreen left panel |
-| `ability_{id}_icon` | 120x120 | 50 | CareerScreen ability section |
+| ~~`{career_id}_ability`~~ | 256x256 | **DONE 2026-07-07** — all 49 enabled careers baked (named effect-icon set; see career-system.md) | CareerScreen ability section + battle HUD |
 | `CareerSystem\locked_chains` | Full tier width | 1 | Tier lock overlay |
 | `CareerSystem\plus_sign_icon` | 50x50 | 1 | Choice group add button |
 | `CareerSystem\minus_sign_icon` | 50x50 | 1 | Choice group remove button |
@@ -376,6 +376,7 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-07-07 — All 49 career ability icons baked (see career-system.md). Two empirical bake-pipeline findings: (1) **the CLI junction pack works but can be clobbered** — a repo→install deploy fired mid-verification and silently reverted the fresh manifest+atlas to the repo's stale copies (old mtimes preserved, looks like a revert); the fix is bake-then-`sync_sprite_bake.ps1` **in the same breath**, after which any deploy copies identical files. (2) **An editor pass may rebuild only the `_tex.tpac` without re-packing** — mtime the manifest/atlas/tpac trio after any bake: all three must be newer than the newest source PNG, and the tpac must postdate the atlas it compiles. A tpac compiled from a pre-repack atlas renders the old art, not blanks.
 - 2026-06-19 — Career-ability pips now visibly light up on point-take: new `career_point_pip_lit` ring sprite (brightened + glow halo) for the taken state, widened alpha gaps on the other states, baked + committed.
 - 2026-05-31 — Decompile-verified GUI sprite-bake pipeline documented end-to-end (`SpriteSheetGenerator.exe` inputs/outputs, no `pack0.tpac` for UI atlases, `_tex.tpac` is a separate downstream texture-compile); added "Verifying a sprite (bake + render)" and "Deploying a prefab/sprite change" sections plus the consolidated gotchas table.
 - 2026-05-31 — Career-pip blank-render fix established the "two failure modes" rule: a new loose PNG must be packed by the generator (bake) AND the prefab must size/tint it readably (render); baked != visible, only the live game confirms render.

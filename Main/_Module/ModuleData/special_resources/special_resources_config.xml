@@ -4,7 +4,7 @@
   <!-- War Spoils (Mordor/Isengard/Gundabad/Dol Guldur) — aggressive, war-driven factions -->
   <!-- High battle/raid/siege earning, low daily (depend on conquest, not economy) -->
   <Resource id="war_spoils" display_name="War Spoils" icon_sprite="SpecialResources\taom_war_spoils_icon"
-    cap="500" starting_amount="30" daily_per_town="0.2"
+    cap="10000" starting_amount="0" daily_per_town="0.2"
     per_battle_victory_base="14" per_raid="12" per_siege_victory="20"
     per_prisoner="2" per_tournament_win="3" per_hideout_clear="8">
     <Kingdom id="empire_s" />
@@ -20,7 +20,7 @@
   <!-- Gems (Erebor) — mining economy, wealth through industry -->
   <!-- High daily (mines), low battle earning (dwarves fight for defense, not plunder) -->
   <Resource id="gems" display_name="Gems" icon_sprite="SpecialResources\taom_gems_icon"
-    cap="600" starting_amount="40" daily_per_town="1.0"
+    cap="10000" starting_amount="0" daily_per_town="1.0"
     per_battle_victory_base="5" per_raid="3" per_siege_victory="10"
     per_prisoner="0" per_tournament_win="8" per_hideout_clear="4">
     <Kingdom id="erebor" />
@@ -38,7 +38,7 @@
   <!-- Castar (Gondor) — ancient Numenorean lore, scholarly and defensive -->
   <!-- Moderate daily (Minas Tirith libraries), moderate battle, high siege (defense) -->
   <Resource id="caster" display_name="Castar" icon_sprite="SpecialResources\taom_caster_icon"
-    cap="500" starting_amount="25" daily_per_town="0.6"
+    cap="10000" starting_amount="0" daily_per_town="0.6"
     per_battle_victory_base="8" per_raid="4" per_siege_victory="18"
     per_prisoner="1" per_tournament_win="6" per_hideout_clear="5">
     <Kingdom id="empire_w" />
@@ -48,7 +48,7 @@
   <!-- Marks (Rohan) — honor-driven horse lords -->
   <!-- High battle and tournament (martial culture), no raid (dishonorable) -->
   <Resource id="marks" display_name="Marks" icon_sprite="SpecialResources\taom_marks_icon"
-    cap="500" starting_amount="25" daily_per_town="0.4"
+    cap="10000" starting_amount="0" daily_per_town="0.4"
     per_battle_victory_base="12" per_raid="0" per_siege_victory="12"
     per_prisoner="1" per_tournament_win="10" per_hideout_clear="6">
     <Kingdom id="vlandia" />
@@ -58,7 +58,7 @@
   <!-- Elven Wine (Rivendell/Lothlorien/Mirkwood) — peaceful, patient, ageless -->
   <!-- High daily (elven craft), low battle (elves fight reluctantly), no raid -->
   <Resource id="elven_wine" display_name="Elven Wine" icon_sprite="SpecialResources\taom_elven_wine_icon"
-    cap="400" starting_amount="35" daily_per_town="0.8"
+    cap="10000" starting_amount="0" daily_per_town="0.8"
     per_battle_victory_base="6" per_raid="0" per_siege_victory="10"
     per_prisoner="0" per_tournament_win="8" per_hideout_clear="4">
     <Kingdom id="rivendell" />
@@ -72,7 +72,7 @@
   <!-- Lake Fish (Dale/Sturgia) — trade-based economy, Lake-town heritage -->
   <!-- High daily (trade), moderate battle, high tournament (festive culture) -->
   <Resource id="lake_fish" display_name="Lake Fish" icon_sprite="SpecialResources\taom_lake_fish_icon"
-    cap="500" starting_amount="30" daily_per_town="0.7"
+    cap="10000" starting_amount="0" daily_per_town="0.7"
     per_battle_victory_base="7" per_raid="5" per_siege_victory="10"
     per_prisoner="1" per_tournament_win="8" per_hideout_clear="5">
     <Kingdom id="sturgia" />
@@ -82,7 +82,7 @@
   <!-- War Drums (Harad/Shaghana/Abanissa) — martial escalation, momentum -->
   <!-- Very high raid/battle (warlike culture), moderate daily, low tournament -->
   <Resource id="war_drums" display_name="War Drums" icon_sprite="SpecialResources\taom_war_drums_icon"
-    cap="500" starting_amount="25" daily_per_town="0.3"
+    cap="10000" starting_amount="0" daily_per_town="0.3"
     per_battle_victory_base="14" per_raid="14" per_siege_victory="16"
     per_prisoner="2" per_tournament_win="4" per_hideout_clear="8">
     <Kingdom id="aserai" />
@@ -96,7 +96,7 @@
   <!-- Tribal Relics (Khand/Battania) — ancestral totems, earned through deeds -->
   <!-- Balanced: moderate everything, slightly higher hideout/raid (tribal warfare) -->
   <Resource id="tribal_relics" display_name="Tribal Relics" icon_sprite="SpecialResources\taom_tribal_relics_icon"
-    cap="450" starting_amount="20" daily_per_town="0.4"
+    cap="10000" starting_amount="0" daily_per_town="0.4"
     per_battle_victory_base="10" per_raid="10" per_siege_victory="12"
     per_prisoner="1" per_tournament_win="6" per_hideout_clear="8">
     <Kingdom id="battania" />
@@ -106,7 +106,7 @@
   <!-- Dunlending Ale (Dunland/Empire) — communal, celebration-driven -->
   <!-- High raid (raiding Rohan is cultural tradition), high hideout, low daily -->
   <Resource id="dunlending_ale" display_name="Dunlending Ale" icon_sprite="SpecialResources\taom_dunlending_ale_icon"
-    cap="400" starting_amount="20" daily_per_town="0.3"
+    cap="10000" starting_amount="0" daily_per_town="0.3"
     per_battle_victory_base="10" per_raid="12" per_siege_victory="10"
     per_prisoner="1" per_tournament_win="5" per_hideout_clear="10">
     <Kingdom id="empire" />
@@ -116,7 +116,7 @@
   <!-- Plunder (Umbar) — piracy, raiding, and maritime conquest -->
   <!-- Very high raid/prisoner (corsair slavers), moderate battle, low daily -->
   <Resource id="plunder" display_name="Plunder" icon_sprite="SpecialResources\taom_plunder_icon"
-    cap="500" starting_amount="30" daily_per_town="0.3"
+    cap="10000" starting_amount="0" daily_per_town="0.3"
     per_battle_victory_base="10" per_raid="16" per_siege_victory="14"
     per_prisoner="3" per_tournament_win="4" per_hideout_clear="10">
     <Kingdom id="umbar" />
@@ -126,7 +126,7 @@
   <!-- War Banners (Rhun/Khuzait) — disciplined military hierarchy -->
   <!-- High battle/siege (organized armies), moderate daily (tribute), low raid -->
   <Resource id="war_banners" display_name="War Banners" icon_sprite="SpecialResources\taom_war_banners_icon"
-    cap="500" starting_amount="25" daily_per_town="0.5"
+    cap="10000" starting_amount="0" daily_per_town="0.5"
     per_battle_victory_base="12" per_raid="6" per_siege_victory="16"
     per_prisoner="1" per_tournament_win="6" per_hideout_clear="5">
     <Kingdom id="khuzait" />

@@ -45,6 +45,11 @@ public interface IBattleLoadDiagnosticsService
     // every map frame (MapState.OnTick) stay inert outside a mission exit. The window
     // closes at FirstMapTick or on the next ResetLifecycle.
     bool IsExitWindowActive { get; }
+
+    /// <summary>UTC ticks when the exit window opened; 0 while closed. Feeds the exit-stall
+    /// stack sampler (#331 round 2) the same way BattleLoadLoadingWindow feeds the watchdog.</summary>
+    long ExitWindowOpenedUtcTicks { get; }
+
     void LogExitBegin(string missionName, string sceneName, int agentCount, int allAgentCount);
     void LogExitTeardownBegin();
     void LogExitTeardownDone();

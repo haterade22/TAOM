@@ -27,6 +27,7 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 19 | 2026-06-25 | ShaderPrecompile Phase 0 (#287) | ship | agree | 1 LOW (doc test-name drift) — confirmed all 6 suspects + the disputed boundary-direct-read non-defect | 0 | 0 | adversarial-xhigh |
 | 20 | 2026-06-26 | Career phantom-passive wiring | clean/ship | agree | 0 — CLEAN; 7/8 suspects DISPUTED + 1 PARTIAL (Damage stage-move, non-defect); corroborated the 6-dim in-house deep-review (0 HIGH/6 MED/3 LOW, all fixed) | 0 | 0 | adversarial-xhigh |
 | 21 | 2026-07-06 | TournamentExitHang #331 (exit diagnostics + Patch60) | issues-found | agree | 1 confirmed P2 — hook-level `IsEnabled` gates bypassed the deep-review fix's unconditional window-closers (fix verified only at the service layer); S1-S6 suspects all resolved with decompiles | 0 | 0 | adversarial-xhigh |
+| 22 | 2026-07-10 | TournamentExitHang #331 ROUND 2 (ExitStallSampler + PatchShield exclusion) | issues-found | agree | 2 P2 (Timer reentrancy on Poll; no independent sampler toggle) + 4 P3 (suspended-window logging, main-thread invariant [deferred+documented], 2 drift) — all addressed; deep-review compat agent separately caught the false ctor comment + the still-shielded Patch38 hot target | 0 | 0 | adversarial-xhigh |
 
 ## Metrics
 

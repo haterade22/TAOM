@@ -9,4 +9,8 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     bool StallWatchdogEnabled { get; }
     bool StallWatchdogBundleEnabled { get; }
     double StallWatchdogSeconds { get; }
+
+    /// <summary>Independent gate for the exit-stall stack sampler (#331 round 2) — the only
+    /// diagnostics component that suspends the main thread; disableable on its own.</summary>
+    bool ExitStallSamplerEnabled { get; }
 }

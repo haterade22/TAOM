@@ -263,7 +263,7 @@ The empty `id=""` resolves to a null `ItemObject`, which `Equipment.DeserializeN
 2. Restart Bannerlord (provider caches via `Reuse.Singleton`; save-load is NOT enough)
 
 ### Add a new ability icon
-See #101 — currently 41 of 50 careers have no PNG. Drop a 256x256 PNG into `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/Abilities/<career_id>_ability.png` and add the corresponding `<Name>CareerSystem\Abilities\<career_id>_ability</Name>` registration in `Main/_Module/GUI/TAOMSpriteData.xml`.
+**All 49 enabled careers have icons as of 2026-07-07** (#101 closed by the named effect-icon set; only the disabled `far_harad_halftroll` lacks one). To add/replace: drop a 256x256 PNG at `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/Abilities/<career_id>_ability.png`, then run the sprite bake (do NOT hand-edit `TAOMSpriteData.xml` — the generator rewrites it; see [gui-sprite-system.md](./gui-sprite-system.md) "The sprite-bake pipeline"). The icon id is string-built in C# as `CareerSystem\Abilities\{ability_template_id}` (`CareerScreenVM.cs` + `AbilityHudController.cs`); the `sprite=` attribute on `<AbilityTemplate>` is dead — nothing reads it. House style: full-bleed square "named effect-icon" — the ability's effect/emblem as a gritty painterly oil painting with the ability name hand-lettered across the bottom (no soldiers, no circular token framing).
 
 ## Effect-Scope Badges in Choice Tree (UX)
 
@@ -281,6 +281,7 @@ When the player picks "I wish to discuss my career path" on any companion (under
 
 ## Changelog
 
+- 2026-07-07 — All 49 enabled careers got ability icons (closes the #101 art gap): "named effect-icon" style — the ability's effect/emblem as a gritty oil painting with the name hand-lettered in the art (user-generated via Midjourney from per-ability prompts; 256x256; baked into the `ui_taom_career_system` atlas). Battle HUD compacted: panel 220x132→130x166, icon 64→110, career-name line and black backdrop removed (icon + "Press V" + charge bar only). Renamed the `cave_troll_master` ability "Troll Frenzy"→"Gundabad Berserker" (English source; the 12 translation files are stale for those 8 strings until the next `/localize` run). Battle-HUD render verified in-game; career-screen render uses the same sprite id (not separately eyeballed).
 - 2026-06-19 — Career-ability pips now visibly light up when a skill is increased: taken state uses a brighter dedicated `career_point_pip_lit` sprite (One-Ring ring whitened + glow halo) instead of a ~12% alpha bump on the shared hollow ring (#290).
 - 2026-06-15 — Right-anchored the in-battle ability HUD beside the player health bar (`MarginRight="480"`) so it tracks the right edge and stays reachable on ultrawide displays.
 - 2026-06-02 — Decomposed `CareerPerkMissionBehavior` 302→139 LOC into three Singleton controllers + two adapters; repurposed 98 dead `MaxCharge` mutations as `CooldownReduction` with a `min_cooldown_seconds` floor (closes #102, #104).

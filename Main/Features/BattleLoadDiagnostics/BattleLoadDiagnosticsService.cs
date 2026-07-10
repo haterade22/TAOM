@@ -18,6 +18,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     private int _seq;
     private volatile string _currentStatusLine = "phase=<none>";
     private volatile bool _exitWindowActive;
+    private long _exitWindowOpenedUtcTicks; // 0 = closed; read via Interlocked (feeds ExitStallSampler)
 
     public BattleLoadDiagnosticsService(
         IModLogger logger,
@@ -37,7 +38,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         // Window state transitions are UNCONDITIONAL — a stale exit window must close even
         // while the master toggle is off, or a mid-window toggle-off latches it and the next
         // map activation emits spurious Exit* lines (deep-review data-flow finding, 2026-07-06).
-        _exitWindowActive = false;
+        CloseExitWindow();
         if (!IsEnabled) return;
         try
         {
@@ -74,7 +75,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     {
         // A mission starting means any still-open exit window is stale (chained mission
         // without map activation) — close it unconditionally before entry-phase logging.
-        _exitWindowActive = false;
+        CloseExitWindow();
         if (!IsEnabled) return;
         Emit(BattleLoadPhase.MissionInitialize, $"scene='{sceneName}'");
     }
@@ -114,6 +115,8 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
 
     public bool IsExitWindowActive => _exitWindowActive;
 
+    public long ExitWindowOpenedUtcTicks => Interlocked.Read(ref _exitWindowOpenedUtcTicks);
+
     public void LogExitBegin(string missionName, string sceneName, int agentCount, int allAgentCount)
     {
         if (!IsEnabled) return;
@@ -122,6 +125,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
             Interlocked.Exchange(ref _seq, 0);
             _stopwatch.Restart();
             _exitWindowActive = true;
+            Interlocked.Exchange(ref _exitWindowOpenedUtcTicks, DateTime.UtcNow.Ticks);
             Emit(BattleLoadPhase.ExitBegin,
                 $"mission='{missionName}' scene='{sceneName}' agents={agentCount}/{allAgentCount} {GcStats()}");
         }
@@ -176,10 +180,16 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
             Emit(BattleLoadPhase.FirstMapTick, $"isSaving={isSaving}");
         // Close unconditionally — the hook only calls this while the window is open, and a
         // mid-window toggle-off must not latch the window (only the LOGGING is gated).
-        _exitWindowActive = false;
+        CloseExitWindow();
     }
 
     private bool IsExitPhaseLoggable() => IsEnabled && _exitWindowActive;
+
+    private void CloseExitWindow()
+    {
+        _exitWindowActive = false;
+        Interlocked.Exchange(ref _exitWindowOpenedUtcTicks, 0L);
+    }
 
     // gen0/gen1/gen2 collection counts + managed heap size. Deltas between ExitBegin and
     // MapResumed expose a mission-end full GC (Common.MemoryCleanupGC) as the time sink.

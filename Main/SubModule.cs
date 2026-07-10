@@ -901,6 +901,17 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch43_BattleLoadDiagnostics");
         IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
 
+        // Exit-stall stack sampler (#331 round 2): OnGameInitializationFinished runs on the
+        // game's main thread — the same thread the tournament-exit stall freezes — so this
+        // is a valid capture point for the sampler's main-thread reference. (Verified against
+        // 1.4.6/1.4.7: native tick → Module.OnApplicationTick → GameManager → Campaign init.
+        // If a future engine bump moves game-init off the tick thread, the sampler would walk
+        // the wrong thread — re-verify this call chain on engine bumps; accepted as-is per
+        // Codex round-2 P3, no runtime invariant check.)
+        var exitStallSampler = IoC.Resolve<Features.BattleLoadDiagnostics.ExitStallSampler>();
+        exitStallSampler.SetMainThread(System.Threading.Thread.CurrentThread);
+        exitStallSampler.Start();
+
         // Patch60 — release the tournament UI movie/layer at OnEndMission time. The engine's
         // MissionGauntletTournamentView leaks both (nulls without release, unlike the practice
         // view), deferring the Tournament-movie teardown into ScreenBase.HandleFinalize under

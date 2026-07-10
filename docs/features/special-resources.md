@@ -74,7 +74,7 @@ Behavior  Patch26    MapBarMixin  SpriteWidget  ICareerPassiveService
 
 ```xml
 <Resource id="war_spoils" display_name="War Spoils" icon_sprite="taom_war_spoils_icon"
-  cap="500" starting_amount="30" daily_per_town="0.2"
+  cap="10000" starting_amount="0" daily_per_town="0.2"
   per_battle_victory_base="14" per_raid="12" per_siege_victory="20"
   per_prisoner="2" per_tournament_win="3" per_hideout_clear="8">
   <Kingdom id="empire_s" />
@@ -88,7 +88,7 @@ Earning rates are now differentiated per faction identity:
 - **Aggressive factions** (Mordor, Harad): high battle/raid, low daily
 - **Mining/trade factions** (Erebor, Dale): high daily, low battle
 - **Honor factions** (Rohan): high tournament, zero raid
-- **Peaceful factions** (Elves): high daily, zero raid, lower cap
+- **Peaceful factions** (Elves): high daily, zero raid
 
 ### Resource Tiers (Optional): `<Tiers>` element inside `<Resource>`
 
@@ -141,7 +141,7 @@ instead, so AI lords are never charged).
 
 ### Current Values (all resources)
 
-- Cap: 500, Starting: 30
+- Cap: 10000, Starting: 0
 - Daily per town: +0.5, Battle: +10 (x enemy ratio 0.5-2x), Raid: +8, Siege: +15, Prisoner: +1, Tournament: +5, Hideout: +6
 - 12 Mordor elite troops costed (other factions pending)
 
