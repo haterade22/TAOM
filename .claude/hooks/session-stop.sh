@@ -2,7 +2,7 @@
 # Stop hook: Append a session summary (commits + modified files) to a rolling log.
 # Enables "what did I do yesterday" reconstruction without git-log spelunking.
 
-cd "c:/Users/mikew/source/repos/TAOM" || exit 0
+cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 
 LOG_DIR=".claude/logs"
 mkdir -p "$LOG_DIR" 2>/dev/null

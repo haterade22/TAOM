@@ -15,7 +15,7 @@ fi
 
 echo "Running dotnet build before commit..." >&2
 
-cd "c:/Users/mikew/source/repos/TAOM"
+cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 if ! dotnet build --no-restore 2>&1 | tail -20; then
   echo "BUILD FAILED — commit blocked." >&2
   exit 2

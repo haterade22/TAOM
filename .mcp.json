@@ -11,7 +11,7 @@
         "--context",
         "ide-assistant",
         "--project",
-        "c:/Users/mikew/source/repos/TAOM"
+        "E:/repos/TAOM"
       ],
       "env": {}
     },
@@ -25,7 +25,7 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "C:\\Users\\mikew\\source\\repos\\TAOM",
+        "E:\\repos\\TAOM",
         "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules",
         "E:\\LOTRAOMAssets\\LOTRAOM_Jan_1_Patreon\\Modules\\LOTRAOM\\ModuleData"
       ],
@@ -48,7 +48,7 @@
     "taom-moduledata": {
       "type": "stdio",
       "command": "python",
-      "args": ["c:/Users/mikew/source/repos/TAOM/tools/taom_mcp_server.py"],
+      "args": ["E:/repos/TAOM/tools/taom_mcp_server.py"],
       "env": {}
     },
     "imagine": {

@@ -2,6 +2,18 @@
 
 ## 2026-07-10
 
+### chore: relocate repo to `E:\repos\TAOM`
+
+- Moved the working copy from `C:\Users\mikew\source\repos\TAOM` to `E:\repos\TAOM`.
+- Repointed the runtime configs that embedded the old absolute path: `.mcp.json` (serena
+  `--project`, filesystem root, taom-moduledata server), `.codex/config.toml` (filesystem root).
+- Future-proofed 7 hooks that hardcoded `cd "c:/Users/mikew/source/repos/TAOM"` — now
+  `cd "${CLAUDE_PROJECT_DIR:-$(pwd)}"` (matching the newer hooks) so a future move needs no edits:
+  `session-start`, `session-stop`, `pre-compact`, `post-compact`, `detect-docs-gaps`,
+  `check-build-before-commit`, `log-agent`.
+- Build stays relocation-clean (`Directory.Build.props` resolves the game via `BANNERLORD_GAME_DIR`).
+  The Claude Code memory dir was moved alongside (slug `c--…` → `e--repos-TAOM`).
+
 ### feat(career-system): all 49 career ability icons + compact battle HUD (#101)
 
 - **Icons:** every enabled career now has a 256x256 ability icon in a unified "named effect-icon"

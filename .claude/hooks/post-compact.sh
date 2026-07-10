@@ -3,7 +3,7 @@
 # Context survives, but fresh re-reads of MEMORY.md and modified files anchor
 # the post-compaction conversation in current state.
 
-cd "c:/Users/mikew/source/repos/TAOM" || exit 0
+cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 
 echo "=== Context Restored After Compaction ==="
 

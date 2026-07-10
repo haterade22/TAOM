@@ -2,7 +2,7 @@
 # PreCompact hook: Dump working state before context compaction
 # Output survives summarization so Claude can recover context
 
-cd "c:/Users/mikew/source/repos/TAOM" || exit 0
+cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 
 echo "=== Pre-Compaction State Snapshot ==="
 echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S' 2>/dev/null || echo 'unknown')"

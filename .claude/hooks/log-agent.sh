@@ -15,7 +15,7 @@ else
   AGENT_TYPE=${AGENT_TYPE:-unknown}
 fi
 
-LOG_DIR="c:/Users/mikew/source/repos/TAOM/.claude/logs"
+LOG_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/logs"
 LOG_FILE="${LOG_DIR}/agent-audit.log"
 
 mkdir -p "$LOG_DIR" 2>/dev/null

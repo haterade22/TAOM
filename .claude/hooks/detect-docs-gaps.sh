@@ -13,7 +13,7 @@ fi
 
 [[ "$SOURCE" != "startup" ]] && exit 0
 
-cd "c:/Users/mikew/source/repos/TAOM" || exit 0
+cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 [[ ! -d Main/Features ]] && exit 0
 [[ ! -d docs/features ]] && exit 0
 

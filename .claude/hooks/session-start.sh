@@ -16,7 +16,7 @@ if [[ "$SOURCE" != "startup" ]]; then
   exit 0
 fi
 
-cd "c:/Users/mikew/source/repos/TAOM" || exit 0
+cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 
 echo "=== TAOM Session Context ==="
 
