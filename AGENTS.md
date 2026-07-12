@@ -591,32 +591,57 @@ Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.c
 
 ## Harmony Patch Categories (Known Intentional Patches)
 
-These are all registered, intentional patches. Do not flag them as unauthorized modifications.
+These are all registered, intentional patches — do not flag them as unauthorized modifications. Current-as-of 2026-07-12; per-patch rationale/history/RCAs: `docs/reference/harmony-patch-registry.md` (single maintained source — this table is a routing snapshot).
 
-| Category | Feature | Target |
-|----------|---------|--------|
-| `Patch0_BattleScenes` | Battle scenes (DISABLED) | `Campaign.InitializeScenes` |
-| `Patch1_FirstTimeInit` | First-time initialization | Various |
-| `Patch2_RefreshTableau` | Banner tableau refresh | Various |
-| `Patch3_SetRace` | Race assignment | Various |
-| `Patch4_CharacterSpawner` | Character spawning | Various |
-| `Patch5_FaceGen` | Face generation | Various |
-| `Patch6_BannerEditor` | Banner editor | Various |
-| `Patch7_FactionMap` | Faction map | Various |
-| `Patch8_SiegeCampGuard` | Siege camp guard | Various |
-| `Patch9_RaceFilter` | Race filter | Various |
-| `Patch10_WeatherBoundsGuard` | Weather bounds clamping | `DefaultMapWeatherModel` |
-| `Patch11_Diplomacy` | Diplomacy system | Various |
-| `Patch12_WarOfTheRing` | War of the Ring | Various |
-| `Patch14_Execution` | Execution system | Various |
-| `Patch15_BannerLayerLimit` | Banner layer limit | Various |
-| `Patch16_AtmospherePersistence` | Forced-atmosphere scenes | `Mission.Initialize` |
-| `Patch17_TroopWeight` | Troop weight system | `PartyBase`, `TroopRoster` |
-| `Patch18_CulturalFeats` | Custom culture feat registration | `Campaign.InitializeDefaultCampaignObjects` |
-| `Patch19_CustomBattles` | Custom battle TAOM factions | `CustomBattleData`, `CustomBattleHelper` |
-| `Patch20_NarrativeHorseGuard` | Suppress CC narrative horse crashes | `CharacterCreationCampaignBehavior` |
-| `Patch21_ShaderPrecompilation` | Loading screen shader progress | `LoadingWindowViewModel` |
-| `Patch22_ArmyTargeting` | Border proximity floor | `AiMilitaryBehavior` |
+|----------|---------|--------|--------|
+| `Patch0_BattleScenes` | Battle scenes | `Campaign.InitializeScenes` | DISABLED |
+| `Patch1_FirstTimeInit` | First-time initialization | Various | active |
+| `Patch2_RefreshTableau` | Banner tableau refresh | Various | active |
+| `Patch3_SetRace` | Race assignment | Various | active |
+| `Patch4_CharacterSpawner` | Character spawning | Various | active |
+| `Patch5_FaceGen` | Face generation | Various | active |
+| `Patch6_BannerEditor` | Banner editor | Various | active |
+| `Patch7_FactionMap` | Faction map | Various | active |
+| `Patch8_SiegeCampGuard` | Siege camp guard | Various | active |
+| `Patch9_RaceFilter` | Culture-restricted race dropdown on CC | `FaceGenVM.Refresh` | active |
+| `Patch10_WeatherBoundsGuard` | Weather bounds clamping | `DefaultMapWeatherModel` | active |
+| `Patch11_Diplomacy` | Diplomacy system | Various | active |
+| `Patch12_WarOfTheRing` | War of the Ring | Various | active |
+| `Patch14_Execution` | Execution system | Various | active |
+| `Patch15_BannerLayerLimit` | Banner layer limit | Various | DISABLED (engine-native since v1.4.7) |
+| `Patch16_AtmospherePersistence` | Forced-atmosphere scenes | `Mission.Initialize` | active |
+| `Patch17_TroopWeight` | TroopWeight shed-on-upgrade (elite tax lives in `TaomPartySizeModel` since 2026-07-11) | `PartyUpgraderCampaignBehavior.UpgradeReadyTroops` (Postfix) | active |
+| `Patch18_CulturalFeats` | Custom culture feat registration | `Campaign.InitializeDefaultCampaignObjects` | active |
+| `Patch19_CustomBattles` | Custom battle TAOM factions/commanders/troops | `CustomBattleData`, `CustomBattleHelper`, `BannerlordMissions` | active |
+| `Patch20_NarrativeHorseGuard` | Suppress CC narrative horse crashes for no-mount cultures | `CharacterCreationCampaignBehavior`, `CharacterCreationNarrativeStageView` | active |
+| `Patch21_ShaderPrecompilation` | Loading-screen shader progress text | `LoadingWindowViewModel` | active |
+| `Patch22_ArmyTargeting` | Border proximity floor for priority-list targets | `AiMilitaryBehavior` | active |
+| `Patch23_BannerColorPersistence` | Player clan colors everywhere (UI + 3D battle + conversation) | `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView`, `Agent.EquipItemsFromSpawnEquipment`, `AgentVisuals.Create` (manual), `MapConversationTableau` (manual ×2), `OrderOfBattleHeroItemVM` | active |
+| `Patch24_BannerDriftGuard` | Block vanilla banner color drift during War of the Ring | `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor` | active |
+| `Patch26_SpecialResources` | Per-kingdom resource gating + transactional spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand` | active |
+| `Patch27_CareerSystem` | Career screen opening + ability V-key activation | `ViewModel.ExecuteCommand`, `AgentStatCalculateModel.UpdateAgentStats` | active |
+| `Patch28_SettlementGuards` | Per-settlement guard injection + per-culture spear mapping | `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual) | active |
+| `Patch29_CCBodyProperties` | Per-culture default BodyProperties on CC + body re-apply | `CharacterCreationContent.SetSelectedCulture`, `CharacterCreationCultureStageVM.OnCultureSelection`, `CharacterCreationNarrativeStageView.RefreshAgentVisuals` | active |
+| `Patch31_SmartCavalryAI` | Player-cavalry coordinated line-charge state machine | `Formation.SetMovementOrder` (Postfix, deferred — see `Patch_MissionTime_SetMovementOrder`) | active |
+| `Patch34_QuickActions` | Inventory "Sell All" multi-action menu | `SPInventoryVM.ExecuteSellAllItems` (Prefix), `SPInventoryVM` ctor (Postfix), `SPInventoryVM.RefreshCallbacks` (Postfix), `SPInventoryVM.OnFinalize` (Postfix) | active |
+| `Patch38_SettlementNameplateFade` | Distance-based settlement nameplate fade (hot path ~3000/s) | `SettlementNameplateWidget.DetermineTargetAlphaValue` (Postfix) | active |
+| `Patch40_HideoutDescription` | Themed LOTR hideout encounter descriptions | `HideoutCampaignBehavior.game_menu_hideout_place_on_init` (private, Postfix) | active |
+| `Patch42_CastleRecruitment` | Castle troop recruitment — AI half | `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler), `AiVisitSettlementBehavior.FillSettlementsToVisitWithDistancesAsDays` (Transpiler), `RecruitmentCampaignBehavior.HourlyTickParty` (Postfix) | active |
+| `Patch44_CCNameAutofill` | Pre-fill CC Review-stage name field (culture-appropriate) | `CharacterCreationReviewStageVM..ctor` (Postfix) | active |
+| `Patch46_TournamentDwarfDismount` | Dwarf tournament dismount (race-keyed) | `TournamentFightMissionController.PrepareForMatch` (Postfix) | active |
+| `Patch47_SpiderDeathDismount` | Spider rider-death native-AV guard | `Agent.Die` (Prefix) | active |
+| `Patch48_SpiderHitDismountGuard` | Spider surviving-rider dismount-AV guard (Patch47 sibling) | `Agent.HandleBlowAux` (private, Prefix) | active |
+| `Patch49_ArmyGatheringNreGuard` | Army-gathering map-tick NRE guard + `[SiegeDiag]` diagnostics | `Army.FindBestGatheringSettlementAndMoveTheLeader` (private, Finalizer) | active |
+| `Patch50_DropFlaggedItemGuard` | Warg-on-warg bite NRE guard | `Agent.CheckToDropFlaggedItem` (public, Finalizer) | active |
+| `Patch53_PartyIconScale` | Campaign-map party-icon figure/mount scale (MCM slider) | `MobilePartyVisual.AddCharacterToPartyIcon` (private, Transpiler) | active |
+| `Patch54_NavalTravelBoatVisual` | NavalTravel at-sea boat mesh | `MobilePartyVisual.OnTransitionEnded` + `.AddMobileIconComponents` (Postfix ×2, SandBox.View) | PARKED 2026-06-26 (#120/#296) |
+| `Patch56_SceneNotificationVisualGuard` | Become-king cinematic CTD guard (null AgentVisuals) | `GauntletSceneNotification.OpenScene` (private, Finalizer) + `.OnTick` (Postfix, deferred close) + `PopupSceneSpawnPoint.InitializeWithAgentVisuals` (diagnostic Prefix) | active |
+| `Patch57_NavalAtSeaLandRescueGuard` | At-sea land-pathfind native-AV guard | `AIMoveToNearestLandBehavior.AiHourlyTick` (internal, Prefix) | PARKED 2026-06-26 (#120/#296) |
+| `Patch58_SkipCampaignIntro` | Skip vanilla campaign intro video on NEW game (always-on) | `SandBoxGameManager.OnLoadFinished` (public override, Prefix) | active |
+| `Patch59_CaravanTrade` | Caravan range/war-gate/basket levers | `CaravansCampaignBehavior.CanTradeWith` + `.GetTradeScoreForTown` + `.GetDistanceLimitVeryFarAsDaysForNavigationType` + `.CalculateBudgetFactor` (all private, Postfix ×4) | active |
+| `Patch60_TournamentExitMovieRelease` | Tournament-exit movie release (#331 round 1; canary `ReleaseMovie=Nms`) | `MissionGauntletTournamentView.OnMissionScreenFinalize` (public override, SandBox.GauntletUI.dll, Prefix+Postfix) | active |
+| `Patch61_SaveLoadDiagnostics` | Always-on `[SaveLoad]` lifecycle logging (15 hooks) | save/load pipeline Finalizers/Postfixes (see the feature doc) | active |
+| `Patch_MissionTime_SetMovementOrder` | Shared deferred category — ANY postfix with `MovementOrder` in its signature MUST use it | `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2) | active |
 
 ---
 

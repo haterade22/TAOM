@@ -4,6 +4,23 @@
 
 ## 2026-07-12
 
+### refactor(claude-md): Harmony table → docs/reference/harmony-patch-registry.md, thin routing residue (repo-reorg Track C3)
+
+- The 25.6 KB Harmony Patch Categories table (48 categories; the fat rows were 400–3,000-char essays) moved
+  **verbatim** into `docs/reference/harmony-patch-registry.md` (one `## PatchNN` section per category, with
+  Target + full rationale/history/RCA links). CLAUDE.md keeps a 4-column thin routing table
+  (Category | Feature | exact Target signature | Status) — stack-trace→owner routing stays eager;
+  PARKED/DISABLED flags stay load-bearing in-row. CLAUDE.md 160.8 KB → 142.8 KB; budget findings 75 → 56.
+- Corrections while in there: `Patch15_BannerLayerLimit` now shows **DISABLED (engine-native since
+  v1.4.7)** — the old table predated the bump; `AGENTS.md`'s Harmony snapshot (stale: ended at Patch22,
+  wrong Patch17 target) replaced with the current thin table + registry pointer (registry = single
+  maintained source).
+- `.claude/rules/harmony-patches.md` (paths-scoped: loads when editing hooks) gains the read-the-registry
+  step, the **`Patch_MissionTime_SetMovementOrder` mandate** (any `MovementOrder`-signature postfix must
+  join the deferred category — `MovementOrder.cctor` reads `Mission.Current`), apply-timing guidance, and
+  its stale "v1.4.5"/"Patch0 through Patch6" lines fixed. `submodule-lifecycle-and-harmony.md` citation +
+  INDEX.md row updated.
+
 ### refactor(claude-md): Rebalancing Tools table → tools/README.md union-merge (repo-reorg Track C2)
 
 - The 13.4 KB / 42-row Rebalancing Tools table duplicated (and in 23 cases was the ONLY home of) per-tool

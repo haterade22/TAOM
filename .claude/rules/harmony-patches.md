@@ -7,12 +7,19 @@ paths:
 
 # Harmony Patch Rules
 
+## Before editing ANY patch: read its registry entry
+
+Every patch category's rationale, history, crash-guard semantics, and RCA links live in
+[`docs/reference/harmony-patch-registry.md`](../../docs/reference/harmony-patch-registry.md) —
+read the target patch's section before changing it. CLAUDE.md keeps only the thin routing table
+(category | feature | target | status).
+
 ## Research First (MANDATORY)
-ALWAYS decompile the target method with `ilspycmd` before writing a patch. Verify:
+ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 path <Type>`) before writing a patch. Verify:
 - Exact method signature (parameters, return types, access modifiers)
 - Whether the method is virtual, sealed, or static
 - Correct namespace and class hierarchy
-- Method existence in Bannerlord v1.4.5
+- Method existence in the installed engine version (see `.claude/pinned-game-version.txt`)
 
 ## Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.
@@ -28,7 +35,13 @@ ALWAYS decompile the target method with `ilspycmd` before writing a patch. Verif
 ## Patch Organization
 - Place in `Main/Features/{FeatureName}/Hooks/` directory
 - Name: `{TargetClass}{TargetMethod}Patch.cs`
-- Register in `SubModule.cs` patch categories (Patch0 through Patch6)
+- Register in a `SubModule.cs` patch category (`[HarmonyPatchCategory]` + the SubModule apply batch — verify the apply TIMING fits the target: most apply in `OnGameInitializationFinished`, but targets that fire during new-game load/main menu need `OnSubModuleLoad`, e.g. `Patch58`/`Patch61`; see the registry)
+
+## MovementOrder postfixes: use the shared deferred category (MANDATORY)
+Any patch with `MovementOrder` in its postfix signature MUST join `Patch_MissionTime_SetMovementOrder`
+(applied once from `OnMissionBehaviorInitialize`), because `MovementOrder.cctor` reads
+`Mission.Current.CurrentTime` — null in `OnSubModuleLoad`/`OnGameInitializationFinished`. It currently
+houses Patch31_SmartCavalryAI + Patch35_CompanionTactics; add yours there, never a fresh category.
 
 ## Common Pitfalls
 - Collection modification during iteration — use `.ToList()` copy
