@@ -1,5 +1,14 @@
 # Troop Weight System
 
+> **⚠️ MECHANISM CHANGED 2026-07-11 (count → limit).** The "elite tax" is now applied by **deflating the
+> party-size LIMIT** (`TaomPartySizeModel` → `ITroopWeightService.ApplyPartySizeWeightPenalty`), NOT by
+> weighting the member COUNT. Every troop count now reads **raw** everywhere (map/party-screen/battle agree);
+> the displayed limit shrinks with heavy troops. The count-getter patches, weighted-display hooks, the
+> `WeightedCountCache`, and the `[CountFlicker]` diagnostic were removed. **The Overview / Architecture /
+> Phantom-Wounded / count-cache sections below describe the pre-rework design and are retained for history —
+> the authoritative current behavior is the "Count-Display Investigation + Planned Rework → IMPLEMENTED
+> 2026-07-11" section.**
+
 ## Overview
 
 Elite and supernatural units consume more party capacity than standard troops. A cave troll takes 4 party slots, Rivendell elves take 2 each, and legendary commanders take 3. This prevents players from fielding armies composed entirely of elite units, encouraging balanced army compositions that fit Middle-earth lore.
@@ -145,6 +154,71 @@ Already weight-aware (no work): anything reading `NumberOfAllMembers` directly, 
 nameplate *number* via `PartyBaseHelper.GetPartySizeText`). `ArmyManagementItemVM.Strength` is a power
 figure, not a count — out of scope.
 
+## Count-Display Investigation + Planned Rework (2026-07-11)
+
+Player reports of "incorrect troop count" split into **two distinct symptoms**, both traced this session.
+The umbrella conclusion: the weighting makes displayed party-size numbers disagree with the real body
+count, and that (not any single bug) is what confuses players. Issue investigation lives here so a future
+session doesn't re-derive it.
+
+### Symptom A — campaign-map nameplate "200 then 20 then back" (NOT the weighting)
+The always-visible number over a party icon reads RAW `NumberOfHealthyMembers` via
+`SandBoxUIHelper.GetPartyHealthyCount` (`SandBox.ViewModelCollection.dll`) — a value TroopWeight never
+patches (`PartyNameplateVM.RefreshDynamicProperties` → `Count`). So the map flicker is **not** the
+weighting. A temporary `[CountFlicker]` diagnostic (`SandBoxUIHelper_GetPartyHealthyCount_Patch`,
+`Patch17_TroopWeight` category — logs a classified line on any large-ratio swing) captured **38 events**
+in one session and proved the mechanism is the vanilla **army-sum**: `GetPartyHealthyCount` sums an army
+*leader's* attached parties, so a leader's nameplate shows the whole-army healthy total (e.g. Dûrzan
+`swing=52->890`, where `armyTotalHealthy = 52 solo + 838 attached`) and its solo count otherwise —
+swinging as army membership/leadership churns. Overwhelmingly lords (37/38 events), essentially not
+bandits (1 tiny event). Every event had `NumberOfAllMembers == fresh` (no cache defect) and **zero**
+desertion events fired — desertion (`AlignmentDesertion` + `SpecialResources`) is remove-only + daily,
+so it cannot produce a back-and-forth swing.
+
+### Symptom B — "party screen shows 325 / capacity 407, but only 159 fight" (IS the weighting, working as designed)
+Map + battle show the RAW body count (159); the party screen (weighted `NumberOfAllMembers`) and the
+"Land Troop Capacity" bar (weighted healthy+wounded) show the ~2× WEIGHTED slot cost. This is the
+feature doing exactly what it's built to do (heavy troops cost more party-size budget) — but the mismatch
+reads as "the game can't count." Whether 325 is correct weighting (elite-heavy party) vs an
+over-weight bug is confirmable per-party via the existing `[TroopCountDiag]` dump (per-slot weights,
+logged on party-screen open).
+
+### IMPLEMENTED 2026-07-11 — option 2: weighting moved from the count onto the size limit
+Every surface now shows the real (raw) count while the "heavy troops cost more" cap is preserved. Because
+the party screen and the engine's recruit gate read the *same* `NumberOfAllMembers` getter, you can't make
+one raw and the other weighted by patching the getter — so the weighting was **relocated off the count**:
+
+1. **Unpatched** `PartyBase.NumberOfAllMembers` / `NumberOfRegularMembers` (patches + hooks + the
+   `WeightedCountCache` deleted) → every count (party screen, nameplate, capacity, tooltips, menus, battle)
+   now reads RAW and they all agree.
+2. **Removed** the 5 `TroopWeightDisplayHook` surfaces + the `[CountFlicker]` diagnostic (~26 files total).
+   The phantom-wounded fix those hooks provided is now moot — nothing is weighted in display, so no surplus
+   can render as fake wounds.
+3. **`TaomPartySizeModel.GetPartyMemberSizeLimit`** now calls `ITroopWeightService.ApplyPartySizeWeightPenalty`,
+   which subtracts the weight surplus (`ceil(weighted) − raw`) from the limit — clamped so it never drops
+   below 1 (pure, unit-tested `TroopWeightService.ComputeSizePenalty`). Boundary math:
+   `weighted = baseLimit` ⟺ `raw = baseLimit − (weighted − raw)`; enforcement path
+   `MobileParty.PartySizeRatio = NumberOfAllMembers / PartySizeLimit` (`MobileParty.cs:1176`) +
+   `PartyBase.PartySizeLimit` (`PartyBase.cs:343-351`).
+4. **Shed-on-upgrade** adapted to the deflated frame: over-cap when `raw > PartySizeLimit`; recovers the
+   pre-deflation base (`deflated + surplus`) so `PlanShed` (unchanged) still trims in the weighted frame.
+
+**Visible consequence (by design):** the party-size **limit** now shrinks as heavy troops are added
+(`150 / 240` instead of `150 / 300`) — the honest way to show the weight cost without an invisible recruit
+wall. The recruit *cap* is preserved exactly; only the intermediate fill-ratio shifts slightly.
+
+**Blast-radius handling** — unpatching a global getter changed every consumer of the weighted count:
+- `SpecialResources` battle-reward scaling (`SpecialResourcesBehavior:253`) read the weighted enemy count;
+  **preserved** by switching it to an explicit `CalculateWeightedMemberCount` call (same rewards).
+- `SettlementFood`'s garrison food-leak correction (`TownFoodSnapshot`) computed `weighted − raw`; now `= 0`
+  because the getter is raw, and vanilla food math is correct at source — **net food unchanged**, the
+  correction self-neutralizes (left in place; its rationale is now handled upstream).
+- Incidental side-effects the old global weighting had on OTHER engine consumers (party speed, etc.) are
+  intentionally gone — the feature now affects only the size cap, its stated purpose.
+
+Symptom A (army-sum nameplate) is separate and left as vanilla behavior — a later decision (show solo count
+on nameplates, or calm army churn) if players still complain now that the party-UI counts are honest.
+
 ## Configuration
 
 ### Config File: `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`
@@ -227,12 +301,14 @@ Weight values are continuous floats — any positive value works. Common tiers:
 ## Performance
 
 - **Troop weight lookup:** `Dictionary<string, float>` eagerly populated at startup — O(1) per troop, no lazy caching or writes on hot path
-- **Party member count cache:** `Dictionary<int, (int Version, float Weight)>` in `PartyBaseNumberOfAllMembersHook` — keyed by party hash, invalidated by `TroopRoster.VersionNo` changes, trims 25% at 2000 entries
+- **Party member count cache:** shared `WeightedCountCache<PartyBase>` (a reference-keyed `ConditionalWeakTable<PartyBase, …>`) in `PartyBaseNumberOfAllMembersHook` / `PartyBaseNumberOfRegularMembersHook`, invalidated by `MemberRoster.VersionNo` changes. Keyed by **object identity, never `GetHashCode()`** — the pre-2026-07-11 `Dictionary<int hashcode, …>` let two hashcode-colliding parties that shared a `VersionNo` read each other's weighted count, producing the campaign-map "200 ↔ 20" party-count flicker on raw `NumberOfAllMembers`/`NumberOfRegularMembers` reads (RCA `docs/reviews/rca-troopweight-phantom-wounded-2026-06-07.md` §2). The table GC-evicts a party's entry with the party, so it can't grow unbounded (there was never any 25%-at-2000-entries trim — that was doc drift).
 - **PartyBase-only patching:** Patches target `PartyBase.NumberOfAllMembers` / `NumberOfRegularMembers` only, NOT `TroopRoster.TotalManCount` / `TotalHealthyCount`. TroopRoster getters fire for every roster in the game (prisoners, garrisons, temp rosters); patching them caused IndexOutOfRange on partially-initialized rosters during game loading.
-- **Single-threaded:** All caches use `Dictionary` (not `ConcurrentDictionary`) because the campaign tick loop is single-threaded
+- **Thread-safety:** the display cache (`TroopWeightService._healthCache`) and the count caches (`WeightedCountCache`) both use `ConditionalWeakTable`, which is internally synchronized — safe even though the getters can be touched off the main campaign-tick thread (the earlier unlocked `Dictionary` was not).
 
 ## Changelog
 
+- 2026-07-11 — **Count → limit rework (raw counts everywhere).** Relocated the "elite tax" from weighting the member count to deflating the party-size limit: `TaomPartySizeModel` now subtracts `ceil(weighted)−raw` from the limit (`ApplyPartySizeWeightPenalty` / pure `ComputeSizePenalty`, clamped ≥1), and the two count-getter patches + 5 weighted-display hooks + `WeightedCountCache` + `[CountFlicker]` diagnostic were deleted (~26 files). Every troop count now reads raw (map/party-screen/battle agree); the displayed limit shrinks with heavy troops; the recruit cap is preserved exactly. Shed-on-upgrade adapted to the deflated frame. Ripples: `SpecialResources` reward scaling preserved via explicit weighted-count call; `SettlementFood` garrison correction self-neutralizes (net food unchanged). New string `{=taom_troop_weight_size}` (needs `/localize`).
+- 2026-07-11 — Count-cache collision fix + flicker diagnostic (SUPERSEDED same day by the rework above, which deleted both). Had replaced the `GetHashCode()`-keyed `Dictionary` in the count-getter hooks with a reference-keyed `WeightedCountCache` (closing the cross-party contamination flagged in the 2026-06-07 RCA §2) and added the `[CountFlicker]` diagnostic that PROVED the campaign-map "200↔20" flicker is the vanilla army-sum (raw `NumberOfHealthyMembers`), NOT the weighting.
 - 2026-06-16 — Shed-on-upgrade: `Patch17_TroopWeight` postfix on `UpgradeReadyTroops` makes AI lords respect the weight budget by trimming the cheapest bodies via the pure `ITroopWeightService.PlanShed` planner; also fixed unweighted UI counts (clan-screen party list + main-party "Land Troop Capacity" row).
 - 2026-06-07 — Phantom-wounded display fix across four UI surfaces (main/any-party health tooltips, encounter menu item, party nameplate text), rewriting battle-ready/wounded from a weighted split so the surplus no longer shows as fake wounds.
 - 2026-05-14 — Phase 9c: disabled the `cave_troll` weight-4.0 entry in-place (WIP troll content). Phase 9b: added `TroopWeightHooksTests.cs` (10 tests) for the four `IOn*` hook implementations.

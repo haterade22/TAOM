@@ -255,13 +255,9 @@ public class SubModule : MBSubModuleBase
         var executionHook = IoC.Resolve<IOnExecutionAction>();
         ExecutionIoC.InitializeHooks(executionHook);
 
-        TroopWeightIoC.InitializeHooks(
-            IoC.Resolve<IOnPartyBaseNumberOfAllMembers>(),
-            IoC.Resolve<IOnPartyBaseNumberOfRegularMembers>(),
-            IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
-            IoC.Resolve<IOnPartyVMPopulatePartyListLabel>(),
-            IoC.Resolve<IOnPartyUpgraderUpgradeReadyTroops>(),
-            IoC.Resolve<TroopWeightDisplayHook>());
+        // Only the shed-on-upgrade hook survives the 2026-07-11 count->limit rework; the weight penalty
+        // itself is applied by TaomPartySizeModel (registered in CreateGameModels), not a Harmony patch.
+        TroopWeightIoC.InitializeHooks(IoC.Resolve<IOnPartyUpgraderUpgradeReadyTroops>());
 
         CustomBattlesIoC.InitializeHooks(
             IoC.Resolve<IOnGetCustomBattleCommanders>(),
@@ -578,7 +574,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
         campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives));
-        campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>()));
         campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats));
         campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
@@ -616,7 +612,8 @@ public class SubModule : MBSubModuleBase
         var specialResourceConfig = IoC.Resolve<ISpecialResourceConfigProvider>();
         var specialResourceLogger = IoC.Resolve<IModLogger>();
         var specialResourceBehavior = new SpecialResourcesBehavior(
-            specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger);
+            specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger,
+            IoC.Resolve<ITroopWeightService>());
         campaignStarter.AddBehavior(specialResourceBehavior);
         PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
 

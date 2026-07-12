@@ -14,6 +14,26 @@ public interface ITroopWeightService
     float CalculateWeightedElementCount(TroopRosterElement element);
 
     /// <summary>
+    /// The "elite tax" as a party-size-LIMIT deflation (the 2026-07-11 rework): instead of inflating the
+    /// member COUNT (which polluted every count display), heavy troops now SHRINK the party-size limit by
+    /// their weight surplus, so counts read raw everywhere while the recruit cap still fills at the troop
+    /// weight. Subtracts <c>ceil(weightedCount) − rawCount</c> from <paramref name="limit"/> (clamped so
+    /// the limit stays ≥ 1). No-op when <c>EnableTroopWeight</c> is off or the party is light. Gated +
+    /// engine-touching (mirrors <see cref="CalculateWeightedMemberCount"/>); the clamp math is the pure,
+    /// unit-tested <see cref="TroopWeightService.ComputeSizePenalty"/>.
+    /// </summary>
+    void ApplyPartySizeWeightPenalty(PartyBase party, ref ExplainedNumber limit);
+
+    /// <summary>
+    /// The party's TRUE (pre-weight-penalty) size limit — what the limit would be without the elite-tax
+    /// deflation. The shed-on-upgrade hook needs this to trim a heavy party back to its real cap; it can't
+    /// reconstruct it from the deflated <c>PartySizeLimit</c> alone because the penalty clamp is lossy
+    /// (a clamped limit floors at 1 regardless of the true base). Returns the current deflated limit as a
+    /// fallback when no penalty has been captured (e.g. <c>EnableTroopWeight</c> off).
+    /// </summary>
+    int GetTrueBaseSizeLimit(PartyBase party);
+
+    /// <summary>
     /// Pure core for the weighted battle-ready / wounded split. Sums (Number-WoundedNumber)*weight
     /// into Healthy and WoundedNumber*weight into Wounded, then ceilings each. This is the
     /// authoritative fix for the phantom-wounded display bug: weighted-healthy + weighted-wounded

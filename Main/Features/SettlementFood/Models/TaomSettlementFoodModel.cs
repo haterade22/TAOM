@@ -9,9 +9,10 @@ namespace TAOM.Features.SettlementFood.Models;
 /// Tunable settlement-food override. Two jobs (see docs/features/settlement-food.md):
 ///
 /// <list type="number">
-/// <item>Fix the Troop-Weight leak: vanilla reads <c>GarrisonParty.Party.NumberOfAllMembers</c> (which
-/// Patch17 inflates to the weighted count) for the garrison food term, so elite garrisons ate 2–3×
-/// intended. The service adds back the over-count so the garrison term uses the RAW body count.</item>
+/// <item>Garrison food term: reads the RAW body count. This originally corrected a Troop-Weight leak —
+/// vanilla read <c>GarrisonParty.Party.NumberOfAllMembers</c>, which TroopWeight patched to a weighted
+/// count, so elite garrisons ate 2–3× intended. Since the 2026-07-11 count→limit rework the getter is raw
+/// again, so this correction is now an inert no-op (kept harmless); the garrison term is correct at source.</item>
 /// <item>Expose vanilla's hardcoded constants (consumption divisors, base/village/flat production,
 /// storage caps) as MCM/JSON knobs so the high-prosperity food squeeze can be dialled out.</item>
 /// </list>

@@ -9,6 +9,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ScreenSystem;
 using TAOM.Core.Logging;
+using TAOM.Features.TroopWeight;
 
 namespace TAOM.Features.SpecialResources;
 
@@ -18,17 +19,20 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     private readonly ISpecialResourceStorageService _storage;
     private readonly ISpecialResourceConfigProvider _config;
     private readonly IModLogger _logger;
+    private readonly ITroopWeightService _troopWeight;
 
     public SpecialResourcesBehavior(
         ISpecialResourceService service,
         ISpecialResourceStorageService storage,
         ISpecialResourceConfigProvider config,
-        IModLogger logger)
+        IModLogger logger,
+        ITroopWeightService troopWeight)
     {
         _service = service;
         _storage = storage;
         _config = config;
         _logger = logger;
+        _troopWeight = troopWeight;
     }
 
     private PartyScreenLogic _activePartyScreenLogic;
@@ -248,9 +252,17 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
             var enemySide = mapEvent.BattleState == BattleState.AttackerVictory
                 ? mapEvent.DefenderSide : mapEvent.AttackerSide;
+            // Enemy strength for reward scaling, preserved EXACTLY across the 2026-07-11 TroopWeight rework.
+            // Pre-rework this read `p.Party.NumberOfAllMembers`, whose Harmony weighting was gated on
+            // EnableTroopWeight — so toggling the feature off reverted this to raw "for free". The getter is
+            // now raw always, so replicate the old toggle behaviour: weighted when on, raw when off
+            // (deep-review 2026-07-11 GAP#2 — otherwise "off = vanilla" breaks for this consumer).
+            bool weightOn = TaomSettings.Instance?.EnableTroopWeight ?? true;
             var enemyCount = 0;
             foreach (var p in enemySide.Parties)
-                enemyCount += p.Party?.NumberOfAllMembers ?? 0;
+                enemyCount += weightOn
+                    ? (int)System.Math.Ceiling(_troopWeight.CalculateWeightedMemberCount(p.Party))
+                    : (p.Party?.NumberOfAllMembers ?? 0);
 
             var playerCount = hero.PartyBelongedTo?.MemberRoster?.TotalManCount ?? 1;
             var ratio = (float)enemyCount / playerCount;

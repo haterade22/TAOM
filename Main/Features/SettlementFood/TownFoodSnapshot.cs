@@ -7,10 +7,12 @@ namespace TAOM.Features.SettlementFood;
 /// Primitive snapshot of a <see cref="Town"/>'s food-relevant state, built at the GameModel boundary
 /// so <see cref="SettlementFoodService"/> never touches sealed TaleWorlds types (ADR-007).
 ///
-/// <para><see cref="WeightedGarrisonCount"/> reads the (Troop-Weight-patched) <c>NumberOfAllMembers</c>
-/// getter; <see cref="RawGarrisonCount"/> reads the unpatched <c>MemberRoster.TotalManCount</c>. Vanilla
-/// <c>PartyBase.NumberOfAllMembers => MemberRoster.TotalManCount</c>, so their difference is exactly the
-/// weight inflation the food model must undo.</para>
+/// <para><see cref="WeightedGarrisonCount"/> reads <c>NumberOfAllMembers</c>; <see cref="RawGarrisonCount"/>
+/// reads <c>MemberRoster.TotalManCount</c>. Historically TroopWeight patched the former to a weighted count
+/// and this snapshot's difference undid the resulting garrison food inflation. Since the 2026-07-11
+/// count→limit rework the getter is RAW again (<c>NumberOfAllMembers => MemberRoster.TotalManCount</c>), so
+/// the two are equal and the correction is an inert no-op — vanilla food math is now correct at source.
+/// Retained (harmless) rather than removed to keep the boundary DTO stable.</para>
 /// </summary>
 public sealed class TownFoodSnapshot
 {

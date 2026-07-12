@@ -118,6 +118,29 @@ public class TroopWeightXmlLoaderTests
     }
 
     [TestMethod]
+    public void GetTroopWeights_NaNOrInfinityWeight_SkipsEntryWithWarning()
+    {
+        // IEEE-754 NaN comparisons are always false, so a bare `weight <= 0` guard lets "NaN"/"Infinity"
+        // through — which poisons the party's weighted sum and casts to int.MinValue downstream. The loader
+        // must reject non-finite weights (deep-review 2026-07-11 GAP#3; "Config Providers MUST Validate").
+        WriteXml(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<TroopWeights>
+    <TroopWeight id=""nan_troop"" weight=""NaN"" />
+    <TroopWeight id=""inf_troop"" weight=""Infinity"" />
+    <TroopWeight id=""valid_troop"" weight=""2.0"" />
+</TroopWeights>");
+
+        var result = _sut.GetTroopWeights();
+
+        Assert.AreEqual(1, result.Count, "only the finite, positive weight should load");
+        Assert.IsTrue(result.ContainsKey("valid_troop"));
+        Assert.IsFalse(result.ContainsKey("nan_troop"));
+        Assert.IsFalse(result.ContainsKey("inf_troop"));
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("nan_troop") && s.Contains("finite")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("inf_troop") && s.Contains("finite")));
+    }
+
+    [TestMethod]
     public void GetTroopWeights_MissingIdAttribute_SkipsEntryWithWarning()
     {
         WriteXml(@"<?xml version=""1.0"" encoding=""utf-8""?>

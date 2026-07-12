@@ -4,8 +4,8 @@ namespace TAOM.Features.TroopWeight;
 /// Engine-free description of one member-roster element for shed planning. Carries everything the
 /// pure <see cref="ITroopWeightService.PlanShed"/> planner needs so it never touches a sealed
 /// TaleWorlds type. <see cref="Count"/> is the element's total <c>Number</c> (incl. wounded), to
-/// match <see cref="ITroopWeightService.CalculateWeightedMemberCount"/> / the patched
-/// <c>NumberOfAllMembers</c> the party-size limit is compared against.
+/// match <see cref="ITroopWeightService.CalculateWeightedMemberCount"/> — the weighted basis the shed
+/// compares against the party's true (pre-deflation) size limit.
 /// </summary>
 public readonly struct WeightedTroopEntry
 {

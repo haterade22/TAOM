@@ -5,6 +5,7 @@ using System.IO;
 using System.Xml;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 
 namespace TAOM.Features.TroopWeight;
 
@@ -78,9 +79,13 @@ public class TroopWeightXmlLoader : ITroopWeightXmlLoader
                     continue;
                 }
 
-                if (weight <= 0)
+                // Reject NaN/Infinity BEFORE the range check — IEEE-754 NaN comparisons are always false, so
+                // a bare `weight <= 0` lets `weight="NaN"`/`"Infinity"` through, poisoning the whole party's
+                // weighted sum and casting to int.MinValue downstream (mandatory "Config Providers MUST
+                // Validate" rule; FiniteFloatValidator exists for exactly this).
+                if (!FiniteFloatValidator.IsFinite(weight) || weight <= 0)
                 {
-                    _logger.LogWarning($"Weight must be positive for troop '{id}' (got {weight}) — skipping");
+                    _logger.LogWarning($"Weight must be a positive finite number for troop '{id}' (got '{weightStr}') — skipping");
                     continue;
                 }
 

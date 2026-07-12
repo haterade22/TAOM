@@ -36,12 +36,20 @@ public class PartyUpgraderUpgradeReadyTroopsHook : IOnPartyUpgraderUpgradeReadyT
             if (roster == null || roster.Count <= 0)
                 return;
 
-            int limit = party.PartySizeLimit;
-
-            // Cheap early-out: only build entries + plan when the weighted total actually exceeds the cap.
-            float weighted = _troopWeightService.CalculateWeightedMemberCount(party);
-            if (weighted <= limit)
+            // 2026-07-11 rework: the weight penalty now DEFLATES the party-size limit rather than inflating
+            // the count, so party.PartySizeLimit is the EFFECTIVE (deflated) cap and the count reads raw.
+            // The party is over budget when its raw count exceeds the deflated limit (equivalent to the old
+            // "weighted > base limit").
+            int deflatedLimit = party.PartySizeLimit;
+            int raw = roster.TotalManCount;
+            if (raw <= deflatedLimit)
                 return;
+
+            // The weighted-frame planner needs the TRUE (pre-deflation) base. Ask the service for it rather
+            // than reconstructing `deflated + surplus` — that overshoots whenever the penalty was clamped
+            // (deep-review 2026-07-11 GAP#1), which is exactly the post-upgrade heavy party the shed targets.
+            int limit = _troopWeightService.GetTrueBaseSizeLimit(party);
+            float weighted = _troopWeightService.CalculateWeightedMemberCount(party);
 
             int count = roster.Count;
             var entries = new List<WeightedTroopEntry>(count);

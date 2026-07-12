@@ -11,39 +11,18 @@ public static class TroopWeightIoC
         container.Register<ITroopWeightXmlLoader, TroopWeightXmlLoader>(Reuse.Singleton);
         container.Register<ITroopWeightService, TroopWeightService>(Reuse.Singleton);
 
-        // TEMPORARY: troop-count diagnostic behavior (special-currency undercount investigation).
-        // Remove alongside TroopCountDiagnosticsBehavior once the root cause is pinned.
+        // TEMPORARY: special-currency troop-count undercount diagnostic (separate investigation).
+        // Remove alongside TroopCountDiagnosticsBehavior once that root cause is pinned.
         container.Register<TroopCountDiagnosticsBehavior>(Reuse.Singleton);
 
-        container.Register<IOnPartyBaseNumberOfAllMembers, PartyBaseNumberOfAllMembersHook>(Reuse.Singleton);
-        container.Register<IOnPartyBaseNumberOfRegularMembers, PartyBaseNumberOfRegularMembersHook>(Reuse.Singleton);
-        container.Register<IOnRecruitmentVMRefreshPartyProperties, RecruitmentVMRefreshPartyPropertiesHook>(Reuse.Singleton);
-        container.Register<IOnPartyVMPopulatePartyListLabel, PartyVMPopulatePartyListLabelHook>(Reuse.Singleton);
+        // Shed-on-upgrade is the ONLY surviving Patch17 hook after the 2026-07-11 rework moved the "elite
+        // tax" from inflating the member count to deflating the party-size limit (TaomPartySizeModel). The
+        // count-getter + weighted-display patches were removed so every troop count now reads raw.
         container.Register<IOnPartyUpgraderUpgradeReadyTroops, PartyUpgraderUpgradeReadyTroopsHook>(Reuse.Singleton);
-
-        // One instance fixes all four phantom-wounded display surfaces (it implements four IOn* hooks).
-        container.Register<TroopWeightDisplayHook>(Reuse.Singleton);
     }
 
-    public static void InitializeHooks(
-        IOnPartyBaseNumberOfAllMembers allMembersHook,
-        IOnPartyBaseNumberOfRegularMembers regularMembersHook,
-        IOnRecruitmentVMRefreshPartyProperties recruitmentVMHook,
-        IOnPartyVMPopulatePartyListLabel partyVMHook,
-        IOnPartyUpgraderUpgradeReadyTroops upgraderHook,
-        TroopWeightDisplayHook displayHook)
+    public static void InitializeHooks(IOnPartyUpgraderUpgradeReadyTroops upgraderHook)
     {
-        PartyBase_NumberOfAllMembers_Patch.Initialize(allMembersHook);
-        PartyBase_NumberOfRegularMembers_Patch.Initialize(regularMembersHook);
-        RecruitmentVM_RefreshPartyProperties_Patch.Initialize(recruitmentVMHook);
-        PartyVM_PopulatePartyListLabel_Patch.Initialize(partyVMHook);
         PartyUpgraderUpgradeReadyTroops_Patch.Initialize(upgraderHook);
-
-        // Phantom-wounded display fixes (battle-ready / wounded derived from weighted vs unweighted getters).
-        CampaignUIHelper_GetMainPartyHealthTooltip_Patch.Initialize(displayHook);
-        CampaignUIHelper_GetPartyHealthTooltip_Patch.Initialize(displayHook);
-        GameMenuPartyItemVM_RefreshCounts_Patch.Initialize(displayHook);
-        PartyBaseHelper_GetPartySizeText_Patch.Initialize(displayHook);
-        ClanPartyItemVM_UpdateProperties_Patch.Initialize(displayHook);
     }
 }

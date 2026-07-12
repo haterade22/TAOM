@@ -5,6 +5,7 @@ using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.TroopWeight;
 
@@ -88,13 +89,68 @@ public class TroopWeightService : ITroopWeightService
         return element.Number * weight;
     }
 
+    // Cached so the per-limit-query ExplainedNumber annotation doesn't allocate a TextObject each call.
+    private static readonly TextObject HeavyTroopsText = new("{=taom_troop_weight_size}Heavy troops");
+
+    // The pre-penalty (true) party-size limit captured the last time ApplyPartySizeWeightPenalty ran for a
+    // party, so the shed hook can recover it EXACTLY. A clamped deflated limit is lossy — a clamp floors it
+    // at 1 regardless of the true base, so `deflated + surplus` overshoots and the shed under-trims exactly
+    // the elite-heavy parties it exists to police (deep-review 2026-07-11, data-flow GAP#1). Reference-keyed
+    // + GC-evicting like _healthCache.
+    private readonly ConditionalWeakTable<PartyBase, StrongBox<int>> _lastBaseLimit = new();
+
+    public void ApplyPartySizeWeightPenalty(PartyBase party, ref ExplainedNumber limit)
+    {
+        if (!(TaomSettings.Instance?.EnableTroopWeight ?? true))
+            return;
+        if (party?.MemberRoster == null)
+            return;
+
+        int baseLimit = (int)limit.ResultNumber;   // pre-penalty true base — remembered for the shed hook
+        _lastBaseLimit.GetOrCreateValue(party).Value = baseLimit;
+
+        int raw = party.MemberRoster.TotalManCount;
+        int weighted = (int)Math.Ceiling(CalculateWeightedMemberCount(party));
+        int penalty = ComputeSizePenalty(raw, weighted, baseLimit);
+        if (penalty > 0)
+            limit.Add(-penalty, HeavyTroopsText);
+    }
+
+    public int GetTrueBaseSizeLimit(PartyBase party)
+    {
+        if (party == null)
+            return 0;
+        // Reading PartySizeLimit forces the engine to recompute GetPartyMemberSizeLimit on a roster-version
+        // change (the shed runs right after an upgrade bumps the version), which re-runs
+        // ApplyPartySizeWeightPenalty and refreshes the cached base for the current version.
+        int deflated = party.PartySizeLimit;
+        return _lastBaseLimit.TryGetValue(party, out var box) ? box.Value : deflated;
+    }
+
+    /// <summary>
+    /// Pure clamp for the party-size weight penalty: the amount to subtract from a party's size limit so
+    /// its raw count fills the cap at the troop weight. = <c>weightedCount − rawCount</c> (the weight
+    /// surplus), never below 0, and never so large that the limit would drop below 1 (a party always
+    /// holds at least its leader). Engine-free; unit-tested.
+    /// </summary>
+    public static int ComputeSizePenalty(int rawCount, int weightedCount, int baseLimit)
+    {
+        int penalty = weightedCount - rawCount;
+        if (penalty <= 0)
+            return 0;
+        int maxReducible = baseLimit - 1;
+        if (maxReducible <= 0)
+            return 0;
+        return penalty > maxReducible ? maxReducible : penalty;
+    }
+
     // Weighted contribution of one roster element. Shared by the pure (testable) and the
     // roster-walking (cached) entry points so their arithmetic can never drift apart.
     // Separate-ceiling note: ComputeWeightedHealthyAndWounded ceilings Healthy and Wounded
-    // independently, matching PartyVMPopulatePartyListLabelHook. For integer weights (what TAOM
-    // ships) Healthy + Wounded == the weighted member total exactly. With fractional weights and
-    // mixed wound states the two ceilings can sum to 1 above Ceiling(total) — a cosmetic-only,
-    // intentional consistency with the existing party-list label.
+    // independently. For integer weights (what TAOM ships) Healthy + Wounded == the weighted member
+    // total exactly. With fractional weights and mixed wound states the two ceilings can sum to 1
+    // above Ceiling(total) — cosmetic only. (Only the special-currency count diagnostic consumes this
+    // now; the weighted-display hooks that used it were removed in the 2026-07-11 count->limit rework.)
     private static (float Healthy, float Wounded) WeightedContribution(float weight, int number, int woundedNumber)
     {
         int wounded = woundedNumber < 0 ? 0 : woundedNumber;
@@ -167,8 +223,8 @@ public class TroopWeightService : ITroopWeightService
         if (entries == null || entries.Count == 0)
             return result;
 
-        // Weighted member total on the same basis as CalculateWeightedMemberCount / the patched
-        // NumberOfAllMembers the size limit is checked against (Number * weight, incl. wounded).
+        // Weighted member total on the same basis as CalculateWeightedMemberCount (Number * weight, incl.
+        // wounded) — the frame the shed compares against the party's true (pre-deflation) size limit.
         double weighted = 0d;
         for (int i = 0; i < entries.Count; i++)
         {
