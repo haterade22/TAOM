@@ -175,20 +175,34 @@ scan_skills() {
 }
 
 scan_rules() {
-    RULES_TOKENS=0
+    # Rules WITHOUT a `paths:` frontmatter field load at conversation start (eager);
+    # rules WITH paths: are glob-gated (conditional/lazy). See harness-facts.md
+    # "Rule loader (memory) semantics". Pre-2026-07-12 this counted ALL rules as
+    # eager "worst case", overstating the baseline by every conditional rule.
+    RULES_TOKENS=0          # eager (always-load) only
+    RULES_COND_TOKENS=0     # conditional (paths:-gated)
     RULES_COUNT=0
+    RULES_EAGER_COUNT=0
     RULES_HEAVY=()
     local dir="$REPO_ROOT/.claude/rules"
     [[ ! -d "$dir" ]] && return
     while IFS= read -r -d '' file; do
         local name=$(basename "$file" .md)
-        local lines tokens
+        local lines tokens kind
         lines=$(wc -l < "$file" | tr -d ' ')
         tokens=$(estimate_prose_tokens "$file")
-        RULES_TOKENS=$(( RULES_TOKENS + tokens ))
+        if head -n 10 "$file" | grep -q '^paths:' 2>/dev/null; then
+            kind="cond "
+            RULES_COND_TOKENS=$(( RULES_COND_TOKENS + tokens ))
+        else
+            kind="EAGER"
+            RULES_TOKENS=$(( RULES_TOKENS + tokens ))
+            RULES_EAGER_COUNT=$(( RULES_EAGER_COUNT + 1 ))
+        fi
         RULES_COUNT=$(( RULES_COUNT + 1 ))
         if [[ $VERBOSE -eq 1 ]]; then
-            printf "  rule  %-40s %4d lines  ~%5d tokens\n" "$name" "$lines" "$tokens"
+            printf "  rule  %-40s %4d lines  ~%5d tokens  [%s]
+" "$name" "$lines" "$tokens" "$kind"
         fi
         if [[ $lines -gt 100 ]]; then
             RULES_HEAVY+=("$name ($lines lines)")
@@ -437,7 +451,7 @@ EOF
 printf "| %-16s | %6d | %9d | %12s |\n" "CLAUDE.md"     1                    "$CLAUDE_TOKENS" "—"
 printf "| %-16s | %6d | %9d | %12d |\n" "Agents"        "$AGENTS_COUNT"      "$AGENTS_TOKENS" "$AGENTS_LAZY_TOKENS"
 printf "| %-16s | %6d | %9d | %12d |\n" "Skills"        "$SKILLS_COUNT"      "$SKILLS_TOKENS" "$SKILLS_LAZY_TOKENS"
-printf "| %-16s | %6d | %9d | %12s |\n" "Rules"         "$RULES_COUNT"       "$RULES_TOKENS" "—"
+printf "| %-16s | %6d | %9d | %12d |\n" "Rules"         "$RULES_COUNT"       "$RULES_TOKENS" "$RULES_COND_TOKENS"
 printf "| %-16s | %6d | %9d | %12s |\n" "MCP servers"   "$MCP_SERVERS"       "$MCP_TOKENS" "—"
 printf "| %-16s | %6d | %9d | %12s |\n" "MEMORY.md"     1                    "$MEMORY_TOKENS" "—"
 printf "| %-16s | %6d | %9s | %12s |\n" "Hooks (.sh)"   "$HOOKS_COUNT"       "(not in ctx)" "—"

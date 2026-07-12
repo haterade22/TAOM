@@ -27,6 +27,19 @@
   the campaign array was always length 3). In-game smoke owed: join a siege at Rivendell town, ≥30 s on
   the map with the siege overlay active, confirm 1 ram + 2 tower circles and no CTD.
 
+### chore(harness): Track D follow-ups — fresh context baseline, scan fix, hook recency window, description trims (repo-reorg)
+
+- **`docs/context-budget-baseline.md` re-baselined** (April's was 8x stale): eager startup excl. MCP =
+  ~26K tokens (CLAUDE.md 14.2K + always-load rules 8.9K + skill/agent descriptions + MEMORY.md).
+  `scan.sh` fixed to split always-load vs paths-gated rules (pre-fix it counted all 22 rules eager,
+  +18K phantom). The 59.4K MCP figure is CONDITIONAL — this session observed schemas DEFERRED behind
+  ToolSearch (eager ~0); the baseline documents the levers (unauthenticated github/imagine, ilspy vs
+  taom-src overlap) as user decisions if another session type proves eager.
+- **`check-deep-review.sh`** mute-grep now recency-scoped (last 8h, awk timestamp filter, fail-open to
+  the old whole-file grep) — months-old audit entries had permanently silenced the reminder; stale
+  "Bannerlord 1.3" in the message fixed.
+- **Skill descriptions**: `lint-cleanup-loop` 42→22 words, `taom-src` 31→23 (the ≤30 cap).
+
 ### refactor(claude-md): secondary slims + budget gate flipped to ENFORCE (repo-reorg Tracks C7+C8, decomposition complete)
 
 - **Section slims:** Skills table -> routing-only one-liners (descriptions already load eagerly from SKILL.md

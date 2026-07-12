@@ -1,6 +1,6 @@
 ---
 name: lint-cleanup-loop
-description: Autonomous doc-rot reduction loop modeled on karpathy/autoresearch's program.md pattern. Picks one stale-version ref / dead link / orphan / missing-doc at a time, fixes it, re-lints, commits if the metric improved, advances or resets. Runs until 0 findings or N stuck iterations.
+description: Autonomous doc-rot loop — fix one lint finding at a time, re-lint, commit on improvement; runs until clean or N stuck iterations.
 argument-hint: [--category stale_versions|dead_links|orphan_features|missing_features|all] [--max-iters N]
 ---
 

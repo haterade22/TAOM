@@ -1,6 +1,6 @@
 ---
 name: taom-src
-description: Use before patching, overriding, or writing an adapter that touches a TaleWorlds type — decompile + cache the installed engine's types via `taom-src path <Type>`; returns an absolute path for grep/cat.
+description: Use before patching, overriding, or adapting a TaleWorlds type — `taom-src path <Type>` decompiles + caches the installed engine, returning an absolute path.
 argument-hint: [path|list|remove|clean] <FullyQualifiedType>
 ---
 
