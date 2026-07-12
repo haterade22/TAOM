@@ -4,6 +4,15 @@
 
 ## 2026-07-12
 
+### refactor(claude-md): GameModel Overrides rows capped at one line (repo-reorg Track C4)
+
+- All 40 GameModel rows stay (the table is the routing map for "which model owns X"), but the 5 rows
+  that had grown into 400–1,100-char essays (`TaomPartySizeModel`, `TaomPartyNavigationModel`,
+  `TaomMarriageModel`, `TaomSettlementEconomyModel`, `TaomCombatMechanicsModel`) are now one-liners +
+  feature-doc links — each evicted claim verified present in the linked doc before thinning (grep-checked:
+  limit-deflation mechanism, PARKED re-enable steps, wraith marriage overrides, `GetTownGoldChange`
+  scope + engine-bump note, CTB/cleave/knockdown mechanics). Budget findings 56 → 51.
+
 ### refactor(claude-md): Harmony table → docs/reference/harmony-patch-registry.md, thin routing residue (repo-reorg Track C3)
 
 - The 25.6 KB Harmony Patch Categories table (48 categories; the fat rows were 400–3,000-char essays) moved
