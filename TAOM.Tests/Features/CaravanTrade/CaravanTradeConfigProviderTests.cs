@@ -51,6 +51,7 @@ public class CaravanTradeConfigProviderTests
   ""nearFieldFlattenDays"": 3.0,
   ""maxCompensation"": 8.0,
   ""antiShuttlePenalty"": 0.5,
+  ""homeDistanceReweight"": false,
   ""warTradePolicy"": ""IgnoreWar"",
   ""budgetFactorFloor"": 0.4,
   ""initialTradeGold"": 20000,
@@ -66,6 +67,7 @@ public class CaravanTradeConfigProviderTests
         Assert.AreEqual(3.0f, c.NearFieldFlattenDays, 0.0001f);
         Assert.AreEqual(8.0f, c.MaxCompensation, 0.0001f);
         Assert.AreEqual(0.5f, c.AntiShuttlePenalty, 0.0001f);
+        Assert.IsFalse(c.HomeDistanceReweight);
         Assert.AreEqual("IgnoreWar", c.WarTradePolicy);
         Assert.AreEqual(0.4f, c.BudgetFactorFloor, 0.0001f);
         Assert.AreEqual(20000, c.InitialTradeGold);
@@ -167,17 +169,33 @@ public class CaravanTradeConfigProviderTests
     {
         // > 1 would flip the score sign.
         WriteConfig(@"{ ""antiShuttlePenalty"": 1.5 }");
-        Assert.AreEqual(0.35f, _sut.GetConfig().AntiShuttlePenalty, 0.0001f);
+        Assert.AreEqual(0.5f, _sut.GetConfig().AntiShuttlePenalty, 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("antiShuttlePenalty")));
     }
 
     [TestMethod]
     public void GetConfig_NegativeAntiShuttlePenalty_RevertsAndWarns()
     {
-        // < 0 would reward returning to the town just left.
+        // < 0 would reward returning to a just-visited town.
         WriteConfig(@"{ ""antiShuttlePenalty"": -0.2 }");
-        Assert.AreEqual(0.35f, _sut.GetConfig().AntiShuttlePenalty, 0.0001f);
+        Assert.AreEqual(0.5f, _sut.GetConfig().AntiShuttlePenalty, 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("antiShuttlePenalty")));
+    }
+
+    [TestMethod]
+    public void GetConfig_MissingHomeDistanceReweight_DefaultsTrue()
+    {
+        WriteConfig(@"{ ""rangeMultiplier"": 1.6 }");
+        Assert.IsTrue(_sut.GetConfig().HomeDistanceReweight);
+    }
+
+    [TestMethod]
+    public void GetConfig_HomeDistanceReweightFalse_Honored()
+    {
+        WriteConfig(@"{ ""homeDistanceReweight"": false }");
+        Assert.IsFalse(_sut.GetConfig().HomeDistanceReweight);
+        // A bool has no invalid-but-parseable state -> no warning.
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("homeDistanceReweight")));
     }
 
     [TestMethod]

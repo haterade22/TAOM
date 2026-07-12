@@ -28,7 +28,8 @@ public class CaravanTradeServiceTests
         _settings.DistanceDecayExponent.Returns(0.5f);
         _settings.NearFieldFlattenDays.Returns(2.0f);
         _settings.MaxCompensation.Returns(6.0f);
-        _settings.AntiShuttlePenalty.Returns(0.35f);
+        _settings.AntiShuttlePenalty.Returns(0.5f);
+        _settings.HomeDistanceReweight.Returns(true);
         _settings.WarTradePolicy.Returns(WarTradePolicy.SameAlignmentAndNeutral);
         _settings.BudgetFactorFloor.Returns(0.35f);
         _settings.InitialTradeGold.Returns(15000);
@@ -43,61 +44,87 @@ public class CaravanTradeServiceTests
     public void ReweightTradeScore_Disabled_ReturnsRawScore()
     {
         _settings.Enabled.Returns(false);
-        Assert.AreEqual(42f, _sut.ReweightTradeScore(42f, 3f, false, false, false, false), 0.0001f);
+        Assert.AreEqual(42f, _sut.ReweightTradeScore(42f, 3f, false, false, 1f, false), 0.0001f);
     }
 
     [TestMethod]
     public void ReweightTradeScore_PlayerCaravanWhenPlayerScopeOff_ReturnsRawScore()
     {
         _settings.ApplyToPlayerCaravans.Returns(false);
-        Assert.AreEqual(42f, _sut.ReweightTradeScore(42f, 3f, false, false, false, isPlayerCaravan: true), 0.0001f);
+        Assert.AreEqual(42f, _sut.ReweightTradeScore(42f, 3f, false, false, 1f, isPlayerCaravan: true), 0.0001f);
     }
 
     [TestMethod]
     public void ReweightTradeScore_RejectionScore_PassesThroughUnchanged()
     {
         // Vanilla returns -1 for non-navigable / distance-cut rejects.
-        Assert.AreEqual(-1f, _sut.ReweightTradeScore(-1f, 3f, false, false, false, false), 0.0001f);
-        Assert.AreEqual(0f, _sut.ReweightTradeScore(0f, 3f, false, false, false, false), 0.0001f);
+        Assert.AreEqual(-1f, _sut.ReweightTradeScore(-1f, 3f, false, false, 1f, false), 0.0001f);
+        Assert.AreEqual(0f, _sut.ReweightTradeScore(0f, 3f, false, false, 1f, false), 0.0001f);
     }
 
     [TestMethod]
     public void ReweightTradeScore_NaNRawScore_ReturnsRawScore()
     {
         // Positive-requirement gate: NaN must fail into the vanilla passthrough.
-        Assert.IsTrue(float.IsNaN(_sut.ReweightTradeScore(float.NaN, 3f, false, false, false, false)));
+        Assert.IsTrue(float.IsNaN(_sut.ReweightTradeScore(float.NaN, 3f, false, false, 1f, false)));
     }
 
     [TestMethod]
     public void ReweightTradeScore_NonPositiveDays_ReturnsRawScore()
     {
-        Assert.AreEqual(10f, _sut.ReweightTradeScore(10f, 0f, false, false, false, false), 0.0001f);
+        // days<=0 skips the distance reweight; a neutral recency factor leaves rawScore unchanged.
+        Assert.AreEqual(10f, _sut.ReweightTradeScore(10f, 0f, false, false, 1f, false), 0.0001f);
     }
 
     [TestMethod]
     public void ReweightTradeScore_NaNDays_ReturnsRawScore()
     {
-        Assert.AreEqual(10f, _sut.ReweightTradeScore(10f, float.NaN, false, false, false, false), 0.0001f);
+        Assert.AreEqual(10f, _sut.ReweightTradeScore(10f, float.NaN, false, false, 1f, false), 0.0001f);
     }
 
     [TestMethod]
     public void ReweightTradeScore_NavalCaravan_ReturnsRawScoreUnchanged()
     {
         // Naval uses a different vanilla distance factor; the shuttle is a land problem.
-        Assert.AreEqual(10f, _sut.ReweightTradeScore(10f, 3f, isNaval: true, false, false, false), 0.0001f);
+        Assert.AreEqual(10f, _sut.ReweightTradeScore(10f, 3f, isNaval: true, false, 1f, false), 0.0001f);
     }
 
     [TestMethod]
-    public void ReweightTradeScore_HomeTown_ReturnsRawScoreUnchanged()
+    public void ReweightTradeScore_HomeTown_NowCompressed()
     {
-        Assert.AreEqual(10f, _sut.ReweightTradeScore(10f, 1f, false, isHomeTown: true, false, false), 0.0001f);
+        // Home-rubber-band regression: with HomeDistanceReweight on (default), the home town is
+        // distance-compressed identically to a non-home town at the same days — it no longer passes
+        // through raw with its near-field proximity advantage.
+        float home = _sut.ReweightTradeScore(10f, 1f, false, isHomeTown: true, 1f, false);
+        float nonHome = _sut.ReweightTradeScore(10f, 1f, false, isHomeTown: false, 1f, false);
+        Assert.AreEqual(nonHome, home, 0.0001f);
+        Assert.IsTrue(home < 10f, $"home should be compressed below raw, was {home}");
+    }
+
+    [TestMethod]
+    public void ReweightTradeScore_HomeTown_EscapeHatchOff_PassesDistanceButRecencyStillApplies()
+    {
+        // HomeDistanceReweight off restores the old home distance exemption: raw distance passes
+        // through, but the recency penalty still applies to home.
+        _settings.HomeDistanceReweight.Returns(false);
+        Assert.AreEqual(10f, _sut.ReweightTradeScore(10f, 1f, false, isHomeTown: true, 1f, false), 0.0001f);
+        Assert.AreEqual(5f, _sut.ReweightTradeScore(10f, 1f, false, isHomeTown: true, 0.5f, false), 0.0001f);
+    }
+
+    [TestMethod]
+    public void ReweightTradeScore_RecencyAppliedToHome()
+    {
+        // With the escape hatch on (default), home is compressed AND recency-penalized.
+        float noPenalty = _sut.ReweightTradeScore(10f, 1f, false, isHomeTown: true, 1f, false);
+        float penalized = _sut.ReweightTradeScore(10f, 1f, false, isHomeTown: true, 0.5f, false);
+        Assert.AreEqual(noPenalty * 0.5f, penalized, 0.0001f);
     }
 
     [TestMethod]
     public void ReweightTradeScore_LandTown_AppliesStripAndReweight()
     {
         // m = days / (flatten+days)^alpha = 3 / (2+3)^0.5 = 3 / 2.23607 = 1.34164; result = 10 * 1.34164.
-        float result = _sut.ReweightTradeScore(10f, 3f, false, false, false, false);
+        float result = _sut.ReweightTradeScore(10f, 3f, false, false, 1f, false);
         Assert.AreEqual(13.4164f, result, 0.001f);
     }
 
@@ -107,8 +134,8 @@ public class CaravanTradeServiceTests
         // Vanilla rawScore already embeds 1/days. Near town: days=1, base profit 100 -> rawScore 100.
         // Far town: days=5, base profit 200 -> rawScore 40. Vanilla picks near (100 > 40) despite the
         // far town being twice as profitable per trip; after the reweight the far town wins.
-        float near = _sut.ReweightTradeScore(100f, 1f, false, false, false, false);
-        float far = _sut.ReweightTradeScore(40f, 5f, false, false, false, false);
+        float near = _sut.ReweightTradeScore(100f, 1f, false, false, 1f, false);
+        float far = _sut.ReweightTradeScore(40f, 5f, false, false, 1f, false);
         Assert.IsTrue(far > near, $"expected far({far}) > near({near}) after reweight");
     }
 
@@ -116,8 +143,8 @@ public class CaravanTradeServiceTests
     public void ReweightTradeScore_EqualBaseProfit_StillPrefersNear_ButCompressed()
     {
         // Equal base profit P0=100: near rawScore=100/1, far rawScore=100/5=20.
-        float near = _sut.ReweightTradeScore(100f, 1f, false, false, false, false);
-        float far = _sut.ReweightTradeScore(20f, 5f, false, false, false, false);
+        float near = _sut.ReweightTradeScore(100f, 1f, false, false, 1f, false);
+        float far = _sut.ReweightTradeScore(20f, 5f, false, false, 1f, false);
         Assert.IsTrue(near > far, "near should still edge out an equally-profitable far town");
         Assert.IsTrue(near / far < 2.0f, $"advantage should be compressed well below vanilla's 5x (was {near / far:F2})");
     }
@@ -126,17 +153,34 @@ public class CaravanTradeServiceTests
     public void ReweightTradeScore_VeryFarTown_MultiplierClampedToMaxCompensation()
     {
         // m = 1000/(2+1000)^0.5 = 31.6, clamped to maxCompensation 6 -> result = 10 * 6.
-        float result = _sut.ReweightTradeScore(10f, 1000f, false, false, false, false);
+        float result = _sut.ReweightTradeScore(10f, 1000f, false, false, 1f, false);
         Assert.AreEqual(60f, result, 0.01f);
     }
 
     [TestMethod]
-    public void ReweightTradeScore_JustLeftTown_AppliesAntiShuttlePenalty()
+    public void ReweightTradeScore_RecencyFactor_MultipliesResult()
     {
-        float without = _sut.ReweightTradeScore(10f, 3f, false, false, isJustLeftTown: false, false);
-        float with = _sut.ReweightTradeScore(10f, 3f, false, false, isJustLeftTown: true, false);
-        // penalty 0.35 -> with == without * (1 - 0.35).
-        Assert.AreEqual(without * 0.65f, with, 0.001f);
+        // A recency factor multiplies the reweighted result (the working anti-shuttle penalty).
+        float full = _sut.ReweightTradeScore(10f, 3f, false, false, 1f, false);
+        float cut = _sut.ReweightTradeScore(10f, 3f, false, false, 0.65f, false);
+        Assert.AreEqual(full * 0.65f, cut, 0.001f);
+    }
+
+    [TestMethod]
+    public void ReweightTradeScore_NaNRecencyFactor_NoPenaltyApplied()
+    {
+        // Engine-Float gate: a NaN factor must be ignored (finite result == the un-penalized reweight).
+        float full = _sut.ReweightTradeScore(10f, 3f, false, false, 1f, false);
+        float withNaN = _sut.ReweightTradeScore(10f, 3f, false, false, float.NaN, false);
+        Assert.AreEqual(full, withNaN, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ReweightTradeScore_RecencyFactorOutOfRange_Ignored()
+    {
+        float full = _sut.ReweightTradeScore(10f, 3f, false, false, 1f, false);
+        Assert.AreEqual(full, _sut.ReweightTradeScore(10f, 3f, false, false, 1.5f, false), 0.0001f);
+        Assert.AreEqual(full, _sut.ReweightTradeScore(10f, 3f, false, false, -0.1f, false), 0.0001f);
     }
 
     // ---------------- ScaleVeryFarDistance ----------------

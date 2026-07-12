@@ -56,7 +56,7 @@ After restoring from this snapshot — or after any LOTRLOME update — `action_
 
 The races `hill_troll`, `nazghul`, and `saruman` also have `_facegen` entries in LOTRLOME but are not consumed by any TAOM culture; they're listed here only so a future re-snapshot doesn't accidentally drop them.
 
-The `sauron` race (issue #321 — verbatim elf clone for lord_1_17, adult `min_scale` 1.40, appended at the END of `skins.xml`/`monsters.xml`) is NPC-only and **intentionally has NO `_facegen` entries**: facegen action_sets are required only for CC-playable races, and no culture's `cultures.json` `races[]` lists `sauron`. Do not "fix" this in a future facegen audit. No `as_sauron_*` action_sets exist by design — **two mechanisms cover it** (deep-review #321 compat agent, decompiled v1.4.6): battles/conversations use `Monster.ActionSetCode` = `as_human_warrior` directly; settlement scenes and the campaign map GENERATE suffixed names from the base monster id (`as_sauron_lord`, `as_sauron_map` via `ActionSetCode.GenerateActionSetNameWithSuffix` / `MBGlobals.GetActionSetWithSuffix`) which don't exist and resolve through the engine's **native silent fallback** on missing action-set ids — the same proven path elf rides today (`as_elf_map` fires for every elf lord's party icon, zero errors across months of campaigns). Optional deterministic hardening if curated civilian animations are ever wanted: `base_monster="human"` on `sauron_settlement` (flattens generated names to existing `as_human_*`, the `orc_settlement_fast` pattern).
+The `sauron` race (issue #321 — verbatim elf clone for lord_1_17, adult `min_scale` 1.40, appended at the END of `skins.xml`/`monsters.xml`) is NPC-only and **intentionally has NO `_facegen` entries**: facegen action_sets are required only for CC-playable races, and no culture's `cultures.json` `races[]` lists `sauron`. Do not "fix" sauron's **facegen** in a future facegen audit — it stays intentionally absent (NPC-only, not CC-playable; battles/conversations use `Monster.ActionSetCode` = `as_human_warrior` directly). Its settlement/map **civilian** sets, which the engine GENERATES from the base monster id (`as_sauron_lord`, `as_sauron_villager`, `as_sauron_map`, … via `ActionSetCode.GenerateActionSetNameWithSuffix` / `MBGlobals.GetActionSetWithSuffix`), formerly didn't exist and resolved through the engine's **native silent fallback** on missing ids — the same path elf rode. As of **2026-07-11** those civilian sets are authored for sauron — and elf, plus the 3 prop-carry sets every non-human race was missing — as `as_human_*` aliases; see "Civilian action-set family coverage" below.
 
 **Quick sanity check after any restore** (run from a shell with grep):
 ```bash
@@ -100,9 +100,51 @@ python tools/patch_dwarf_action_parity.py --target "docs/reference/lotrlome-armo
 
 To find *which* sets need fixing (not just dwarf), run **`python tools/audit_action_set_parity.py`** first — it resolves every action_set's effective surface (own actions + full `base_set` chain + the cross-module merge) and exits non-zero listing any HUMANOID set short of Native's surface. As of 2026-06-25 it reports 0 humanoid gaps across all 1110 humanoid sets; the 9 creature-mount sets (spider/elephant/chariot) use a separate surface (`audit_mount_parity.py`).
 
+## Civilian action-set family coverage — every race's townsfolk idles
+
+Separate from the combat parity above: a settlement NPC's idle-role animation comes from a
+GENERATED action-set name `as_<race>[_female]_<suffix>` (`villager` / `villager_2` / `lord` /
+`beggar` / `guard` / notable / tavern / `villager_carry_*` / `map` …), built by
+`ActionSetCode.GenerateActionSetNameWithSuffix`. If `as_<race>_<suffix>` doesn't exist the
+lookup silently falls back to ONE default set, so **every NPC of that role plays the same
+idle**. Elves shipped with ONLY `as_elf_facegen`/`_female_facegen`, so every elf civilian
+shared one animation in every town (the 2026-07-11 report); every other non-human race was
+also missing the 3 prop-carry sets (`villager_carry_bucket_on_lefthand`, `villager_carry_fish_buckets`,
+`worker_carry_wood_on_shoulder`).
+
+Elves/sauron use the human skeleton and have no race-specific civilian clips, so the fix
+aliases each missing set to the human (or, for an own-skeleton race, its own) family:
+
+| Race skeleton | root | `base_set` for a missing `as_<race>_<suffix>` |
+|---|---|---|
+| human-skeleton (elf, sauron, orc, uruk, uruk_hai, goblin, dg_uruk, pale_uruk, berserker, nazghul, saruman) | `as_human_warrior` | `as_human_<suffix>` (correct role animation, shared skeleton) |
+| own-skeleton (dwarf) | `as_dwarf_warrior` | `as_dwarf_villager` (same skeleton, safe generic idle — never a human clip on the dwarf rig) |
+
+Thin self-closing aliases are the proven form — vanilla's own female carry sets are exactly
+this (`as_human_female_villager_carry_axe base_set="as_human_villager_carry_axe" />`); civilian
+lookups DO fall through `base_set` (unlike the facegen path, per the elf-CC RCA above). The
+generated block lives between `<!-- TAOM-CIVILIAN-COVERAGE:START/END -->` markers.
+
+```bash
+# Audit coverage per race (read-only; exits non-zero if any settlement race has a gap):
+python tools/audit_civilian_action_set_coverage.py
+
+# (Re)generate the alias block — idempotent, comment-safe, writes .bak, --dry-run default.
+# Run against BOTH the live file AND this snapshot:
+python tools/generate_race_civilian_action_sets.py --apply
+python tools/generate_race_civilian_action_sets.py \
+  --target "docs/reference/lotrlome-armory-snapshot/action_sets.xml" --apply
+```
+
+**Re-run after every engine bump** (a new human civilian set becomes a new per-race gap) and
+after any LOTRLOME update that overwrites the live file. Trolls (`cave_troll`/`hill_troll`) are
+intentionally NOT covered — although their monsters carry `_settlement` boilerplate, no TAOM culture
+assigns a troll race to townsfolk/notables, so they never stand in a town and their civilian family is N/A.
+
 ## Snapshot date
 
-2026-07-02 — `skins.xml` + `monsters.xml` patched in place: appended race `sauron` (verbatim elf clone, adult `min_scale` 1.40, 5 Monster entries; issue #321) to BOTH the live files and this snapshot via a scripted append-at-end (`.bak-sauron` backups left beside the live files). No `action_sets.xml` change — the race is NPC-only and needs no facegen sets.
+2026-07-11 — `action_sets.xml` patched in place (LIVE + this snapshot): +194 civilian action-set aliases (208 lines) giving every settlement race the full townsfolk idle family — elf + sauron the full 82 each (they had only facegen), the other non-human races the 3 prop-carry sets they lacked. Additions-only, between `TAOM-CIVILIAN-COVERAGE` markers, generated by `tools/generate_race_civilian_action_sets.py` (audit: `tools/audit_civilian_action_set_coverage.py`). Fixes the "all elves do the same idle in every town" report. See "Civilian action-set family coverage" above.
+Previous: 2026-07-02 — `skins.xml` + `monsters.xml` patched in place: appended race `sauron` (verbatim elf clone, adult `min_scale` 1.40, 5 Monster entries; issue #321) to BOTH the live files and this snapshot via a scripted append-at-end (`.bak-sauron` backups left beside the live files). No `action_sets.xml` change — the race is NPC-only and needs no facegen sets.
 Previous: 2026-06-25 — `action_sets.xml` patched in place: +423 missing Native 1.4.6 action types added to `as_dwarf_warrior` for engine parity (+1311 lines, additions-only; the dwarf water-CTD fix). Done via `tools/patch_dwarf_action_parity.py`, NOT a full re-snapshot — so the snapshot still lags the LIVE file on the spider/elephant/chariot creature sets added during the June 2026 mount work (10 action_sets present in LIVE, absent here). Re-snapshot those separately if they ever need a restore.
 Previous: 2026-05-22 — `action_sets.xml` re-snapshotted with elf CC parent entries appended.
 Previous: 2026-05-04 — initial snapshot with the 1.3 action-type alias edits across the 12 pre-existing facegen sets.

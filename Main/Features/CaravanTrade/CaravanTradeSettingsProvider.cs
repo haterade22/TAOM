@@ -27,6 +27,7 @@ public class CaravanTradeSettingsProvider : ICaravanTradeSettingsProvider
     public float NearFieldFlattenDays => Cfg.NearFieldFlattenDays;
     public float MaxCompensation => Cfg.MaxCompensation;
     public float AntiShuttlePenalty => Cfg.AntiShuttlePenalty;
+    public bool HomeDistanceReweight => Cfg.HomeDistanceReweight;
 
     public WarTradePolicy WarTradePolicy => ResolveWarPolicy();
     public float BudgetFactorFloor => TaomSettings.Instance?.CaravanBudgetDiversityFloor ?? Cfg.BudgetFactorFloor;

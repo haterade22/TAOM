@@ -37,16 +37,20 @@ public interface ICaravanTradeService
     /// make longer viable trips competitive. Strips vanilla's land <c>1/days</c> distance spike and
     /// re-applies a gentler <c>1/(nearFieldFlatten + days)^decayExponent</c> curve, clamped by
     /// <c>maxCompensation</c>; near-equal-distance towns become near-tied so the built-in profit
-    /// estimate (which passes through untouched) decides. Naval and the home settlement are returned
-    /// unchanged (naval uses a different vanilla factor; home has its own return-pull tuning).
+    /// estimate (which passes through untouched) decides. Then applies the per-caravan recency penalty
+    /// so just-visited towns are deprioritized. Naval passes through unchanged (different vanilla
+    /// distance factor). The home settlement is compressed like any other town unless
+    /// <see cref="ICaravanTradeSettingsProvider.HomeDistanceReweight"/> is off (escape hatch); vanilla's
+    /// upstream home-gravity (<c>num5</c>, already folded into <paramref name="rawScore"/>) is preserved
+    /// either way, so caravans still return home to deliver payouts on the natural cadence.
     /// </summary>
     /// <param name="rawScore">Vanilla's <c>GetTradeScoreForTown</c> result. Values ≤ 0 (rejections) pass through.</param>
     /// <param name="days">Raw travel time in days (vanilla's <c>num</c>), recomputed from the same public inputs.</param>
     /// <param name="isNaval">Caravan has naval capability (uses vanilla's different naval distance factor).</param>
-    /// <param name="isHomeTown">Candidate is the caravan's home settlement (skip re-weight).</param>
-    /// <param name="isJustLeftTown">Candidate is the town the caravan just left and is not home (anti-shuttle penalty).</param>
+    /// <param name="isHomeTown">Candidate is the caravan's home settlement (distance re-weight gated by the escape hatch).</param>
+    /// <param name="recencyPenaltyFactor">Recency multiplier in (0,1] from <see cref="ICaravanVisitMemory"/>; 1 = no penalty. NaN/out-of-range is ignored.</param>
     /// <param name="isPlayerCaravan">Caravan is player-owned (scoped off when player-application is disabled).</param>
-    float ReweightTradeScore(float rawScore, float days, bool isNaval, bool isHomeTown, bool isJustLeftTown, bool isPlayerCaravan);
+    float ReweightTradeScore(float rawScore, float days, bool isNaval, bool isHomeTown, float recencyPenaltyFactor, bool isPlayerCaravan);
 
     /// <summary>
     /// Scale the vanilla "very far" distance ceiling so profitable distant towns aren't hard-rejected.

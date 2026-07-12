@@ -22,7 +22,7 @@ Mirrors the `ArmyTargeting` precedent (which solves the identical "AI thrashes b
 | # | Lever | Engine seam (all private) | Mechanism |
 |---|-------|---------------------------|-----------|
 | 1 | **War gate** (highest impact) | `CanTradeWith(IFaction, IFaction)` postfix (`ref bool __result`) | Flips a war-caused `false → true` per `WarTradePolicy`. Guards: only when `IsAtWarWith` (a peacetime false is the player's prohibited-kingdom exclusion — respected); the player's `_prohibitedKingdomsForPlayerCaravans` list is honored even during war (cached reflection). Policy resolves via `IAlignmentService.GetKingdomSide`, falling back to `GetCultureSide` when the kingdom isn't classified (player-founded kingdoms). Scoped at the player's **faction** level (matches vanilla's own player-caravan marker in this method). |
-| 2 | **Range re-weight + anti-shuttle** | `GetTradeScoreForTown(...)` postfix (`ref float __result`) | Recomputes raw travel days from the same public inputs vanilla used (`AiHelper.GetBestNavigationTypeAndAdjustedDistanceOfSettlementForMobileParty` + caravan-speed props), strips vanilla's `1/days` spike and re-applies `1/(nearFieldFlatten+days)^decayExponent` clamped by `maxCompensation`; cuts the score of the town just left (`LastVisitedSettlement`, not home). Selection-only; profit + payout untouched. Naval + home pass through. Scoped per **clan** (`Owner.Clan == PlayerClan`). |
+| 2 | **Range re-weight + recency penalty** | `GetTradeScoreForTown(...)` postfix (`ref float __result`) + `CaravanVisitMemoryBehavior` | Recomputes raw travel days from the same public inputs vanilla used (`AiHelper.GetBestNavigationTypeAndAdjustedDistanceOfSettlementForMobileParty` + caravan-speed props), strips vanilla's `1/days` spike and re-applies `1/(nearFieldFlatten+days)^decayExponent` clamped by `maxCompensation`; then multiplies by a per-caravan **recency penalty** (from `ICaravanVisitMemory`) that deprioritizes the last few towns visited so caravans circulate. The home town is compressed like any other (`homeDistanceReweight`, default on — fixes the home rubber-band) while vanilla's upstream home-gravity (`num5`) is preserved. Selection-only; profit + payout untouched. Naval passes through. Scoped per **clan** (`Owner.Clan == PlayerClan`). |
 | 3 | **Range envelope** | `GetDistanceLimitVeryFarAsDaysForNavigationType(bool)` postfix (`ref float __result`) | Scales the vanilla "very far" ceiling by `RangeMultiplier` on each **read** (the single read-point — the Close/Med/Far bands + the `distanceCut` veto all derive from it). Reads the master toggle live, so master-off reverts instantly. **Engine-global** — the getter has no per-caravan context, so this lever cannot be player-scoped. (Earlier the write-once `CacheVeryFarDistances` cache was scaled, but that left the ceiling scaled after a mid-session master-off — Codex 2026-07-04 MED.) |
 | 4 | **Basket diversity** | `CalculateBudgetFactor(MobileParty)` postfix + `TaomCaravanModel` overrides | Floors the vanilla `budgetFactor` to `BudgetFactorFloor` so even poor caravans clear the `< 7f` gate on several categories. `TaomCaravanModel.GetInitialTradeGold` raises the starting-gold floor (never lowers vanilla's large/main-hero bonus); `GetMaxGoldToSpendOnOneItemCategory` is exposed for tuning (default = vanilla). |
 
@@ -32,7 +32,7 @@ Levers 1–3 let caravans reach the undersupplied far / same-alignment towns van
 
 ### Data flow
 
-`caravan_trade_config.json` → `CaravanTradeConfigProvider` (validate-and-fall-back) → `CaravanTradeSettingsProvider` (MCM-over-JSON merge) → `CaravanTradeService` (pure decisions) ← the 4 hooks + `TaomCaravanModel`. War policy additionally consults `IAlignmentService` (Execution feature) — resolving `GetKingdomSide` directly and branching on `FactionSide.Neutral`, **not** `AreEnemyAlignments` (whose Neutral-as-enemy-of-everyone semantics are inverted for this purpose — see RCA below).
+`caravan_trade_config.json` → `CaravanTradeConfigProvider` (validate-and-fall-back) → `CaravanTradeSettingsProvider` (MCM-over-JSON merge) → `CaravanTradeService` (pure decisions) ← the 4 hooks + `TaomCaravanModel`. For the recency lever, `CaravanVisitMemoryBehavior` records town entries into the singleton `ICaravanVisitMemory`, and the `GetTradeScoreForTown` hook reads the recency penalty from it and passes it into `CaravanTradeService.ReweightTradeScore` (so the `IsActiveFor` player-scope gate governs it). War policy additionally consults `IAlignmentService` (Execution feature) — resolving `GetKingdomSide` directly and branching on `FactionSide.Neutral`, **not** `AreEnemyAlignments` (whose Neutral-as-enemy-of-everyone semantics are inverted for this purpose — see RCA below).
 
 ## Configuration
 
@@ -46,7 +46,8 @@ Levers 1–3 let caravans reach the undersupplied far / same-alignment towns van
 | `distanceDecayExponent` | `0.5` | [0.25, 4] | JSON | Curve alpha; lower = ranges further. |
 | `nearFieldFlattenDays` | `2.0` | [0, 20] | JSON | Ties near towns so profit decides. |
 | `maxCompensation` | `6.0` | [1, 20] | JSON | Clamp so one far town can't pull caravans map-wide. |
-| `antiShuttlePenalty` | `0.35` | [0, 1] | JSON | Score cut on the town just left. |
+| `antiShuttlePenalty` | `0.5` | [0, 1] | JSON | Recency penalty strength: max score cut on the most-recently-visited town, decaying over the caravan's last 4 visited towns. Raise toward 0.6–0.7 if shuttling persists. |
+| `homeDistanceReweight` | `true` | — | JSON | `true` = distance-compress the home town like any other (fixes the home rubber-band); `false` = restore the old home distance exemption if caravans return home too rarely. Home-gravity preserved either way. |
 | `warTradePolicy` | `SameAlignmentAndNeutral` | enum | ✅ dropdown | `None` (vanilla) / `IgnoreWar` / `SameAlignmentAndNeutral`. |
 | `budgetFactorFloor` | `0.35` | [0, 1] | ✅ | Fuller baskets for poor caravans. |
 | `initialTradeGold` | `15000` | [1000, 100000] | JSON | Starting-gold floor. |
@@ -59,7 +60,9 @@ Levers 1–3 let caravans reach the undersupplied far / same-alignment towns van
 | File | Purpose |
 |------|---------|
 | `Main/Features/CaravanTrade/ICaravanTradeService.cs` | Pure decision surface + `WarTradePolicy` enum. |
-| `Main/Features/CaravanTrade/CaravanTradeService.cs` | All logic (reweight, war policy, budget floor, gold resolution). TaleWorlds-free. |
+| `Main/Features/CaravanTrade/CaravanTradeService.cs` | All logic (reweight, recency, war policy, budget floor, gold resolution). TaleWorlds-free. |
+| `Main/Features/CaravanTrade/ICaravanVisitMemory.cs` / `CaravanVisitMemory.cs` | Pure per-caravan ring of the last 4 visited towns → recency penalty factor (string-keyed, ADR-007). |
+| `Main/Features/CaravanTrade/CaravanVisitMemoryBehavior.cs` | Thin `CampaignBehaviorBase` — records town entries (`SettlementEntered`), evicts on `MobilePartyDestroyed`. No `SyncData`. |
 | `Main/Features/CaravanTrade/CaravanTradeConfig.cs` | JSON DTO + `WarTradePolicyParser` (known-set validation). |
 | `Main/Features/CaravanTrade/CaravanTradeConfigProvider.cs` | Load + field-by-field validation. |
 | `Main/Features/CaravanTrade/CaravanTradeSettingsProvider.cs` | MCM-over-JSON merge; dropdown-index → enum. |
@@ -78,7 +81,8 @@ Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` (`Patch59_CaravanTrade
 
 ## Tests
 
-- `TAOM.Tests/Features/CaravanTrade/CaravanTradeServiceTests.cs` — every lever + the war-policy matrix (same-side / opposite-side / **Neutral-on-each-side** regression) + NaN/disabled/player-scope gates.
+- `TAOM.Tests/Features/CaravanTrade/CaravanTradeServiceTests.cs` — every lever + the war-policy matrix (same-side / opposite-side / **Neutral-on-each-side** regression) + NaN/disabled/player-scope gates + the home-compression regression (`ReweightTradeScore_HomeTown_NowCompressed`) + recency-factor + NaN-factor gates.
+- `TAOM.Tests/Features/CaravanTrade/CaravanVisitMemoryTests.cs` — recency decay, ring bounding, most-recent-rank, **`GetRecencyPenaltyFactor_PreviousTown_IsPenalized`** (the inert-penalty regression sentinel), `NeverReturnsZero_NoStranding`, NaN/zero/out-of-range strength gates, `Clear`.
 - `TAOM.Tests/Features/CaravanTrade/CaravanTradeConfigProviderTests.cs` — one test per validation rule, incl. the `warTradePolicy` M1 typo-trap.
 - `TAOM.Tests/Features/CaravanTrade/CaravanTradeBindingTests.cs` — `[BindingVerification]` drift-guards for the 4 private methods, the 2 `FieldRef` targets, the `AiHelper` helper, and the `DefaultCaravanModel` override targets (all pass against installed v1.4.6). The 4 postfixes also auto-enroll in `HarmonyPatchBindingTests`.
 
@@ -96,7 +100,7 @@ All 4 hooks lazy-cache their `IoC.Resolve` (`??=`); the `CanTradeWith` hook lazy
 ## Known limitations / playtest items
 
 - **Player-scope is not uniform across the four levers** (Codex 2026-07-04). The engine seams have different context, so `ApplyToPlayerCaravans` scopes at different granularities: the **re-weight + basket-diversity** levers scope per **clan** (correct "your caravans"); the **war gate** scopes per **faction** (all caravans in your kingdom — matches vanilla's own player-caravan marker in `CanTradeWith`, which has no owner context); the **range envelope** is **engine-global** (the ceiling getter has no caravan context at all). In practice, with the toggle off your caravans still route by vanilla's nearest-first selection (the re-weight is off), so the global ceiling rarely changes their behavior; documented in the MCM hint.
-- **Home rubber-band (design note):** home is exempt from the distance re-weight while non-home near towns are scaled down, which could bias caravans toward returning home more than intended. Deliberate (vanilla's home-return `num5` pull must not be disturbed); flagged for playtest. If too frequent, apply a mild reweight to home or add a home-pull knob.
+- **Home rubber-band — FIXED (2026-07-11).** The original home exemption kept the home town's full `1/days` near-field spike while non-home towns were compressed, so a caravan homed at a hub (e.g. Minas Tirith) re-selected home the moment it parked at any neighbor — "leaves and immediately returns." Two root causes: (1) the old anti-shuttle penalty was **inert** — it keyed on `LastVisitedSettlement`, which equals the parked/current town at decision time (that town is already excluded by vanilla), so it never fired on a selectable town; (2) the home distance exemption. Fix: a per-caravan **recency memory** (`ICaravanVisitMemory`) penalizes the genuinely-previous towns, and the home town is now distance-compressed like any other (`homeDistanceReweight`, default on). Vanilla's upstream home-gravity (`num5`) is preserved, and caravan income is paid to the owner wherever the caravan is (verified: `DefaultClanFinanceModel.AddIncomeFromParty` is not home-gated), so payouts are unaffected. Escape hatch: set `homeDistanceReweight=false` if playtest shows home visits are too rare. Known residual: the recency memory enlarges the loop to ~5 distinct towns rather than guaranteeing map-wide circulation (tunable via `antiShuttlePenalty`).
 - **Naval caravans unchanged:** the shuttle is a land problem; naval caravans pass through vanilla (naval travel is parked in TAOM anyway, #296).
 - **Category-count cap:** the vanilla top-5/top-10 category *breadth* cap is unchanged in v1; the budget-floor + initial-gold levers make more of those slots fill, which is the primary "one item" fix. Raising the count itself would need a `BuyGoods` transpiler (deferred).
 

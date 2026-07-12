@@ -717,6 +717,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CultureMarketplace.Domain.MarketplaceTuning>(),
             IoC.Resolve<IModLogger>()));
 
+        // CaravanTrade — per-caravan visit memory feeding the GetTradeScoreForTown recency penalty
+        // (fixes caravans shuttling between the nearest two towns). Registered unconditionally so a
+        // mid-session master-toggle-on works immediately; no SyncData (ephemeral, rebuilds as caravans move).
+        campaignStarter.AddBehavior(IoC.Resolve<Features.CaravanTrade.CaravanVisitMemoryBehavior>());
+
         // CastleRecruitment (Patch42) — castle notable population + maintenance + volunteer fill +
         // player "Recruit troops" castle menu + issue/quest suppression for castle notables.
         // Registered unconditionally so the MCM master toggle takes effect at runtime.

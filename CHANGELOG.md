@@ -2,6 +2,22 @@
 
 ## 2026-07-11
 
+### balance(mordor): make Black Uruks rarer in recruitment and lord parties
+
+- **Recruitment.** Dropped the `mordor_uruk_grunt` (Black Uruk Grunt) weight **3 → 1** in the Mordor
+  town pool + culture fallback (`VolunteerRecruitmentService.Mordor.cs`), taking the recruitable Black
+  Uruk from **20% → ~7.7%** of a town's volunteers. Castles were already 0% (unchanged). The
+  "Morannon more plentiful than Black Uruks" invariant still holds (5 vs 1).
+- **Lord parties.** Set every `mordor_uruk_*` stack to `min_value="0" max_value="8"` (from `50`) across
+  the 16 Mordor lord templates — the generic `kingdom_hero_party_mordor_template` + the 15
+  `kingdom_hero_party_mordor_empire_south_1…15_template` (71 stacks). The engine's seed-fill weights
+  each troop by `min + (max−min)×ratio` with every other Mordor stack at `max=50`, so **`max_value` is
+  the proportion lever, not `min_value`** — dropping uruk `max` 50→8 cuts the Black Uruk share of a
+  freshly-spawned Mordor lord army from ~32% to ~7%; orcs/wargs/Morannon become the bulk.
+- **Scope.** Mercenary / outlaw / patrol / rebel Mordor templates left as-is (per user). No troop ids
+  changed → save-clean. Recruitment DataRow tests re-baselined to the new 13-total pool; full suite
+  green (4198), `validate_moduledata.py` PASS.
+
 ### fix(shader-precompilation): 1.4.7 deployment-NRE — precompile stuck on 1.4.7 (#336)
 
 - **Symptom.** On Bannerlord 1.4.7 the main-menu **Pre-compile Shaders** walk got stuck indefinitely;
@@ -29,6 +45,70 @@
 - **Known caveat.** The successful run completed the character battle in 20s on a warm shader cache, so the
   force-finish path for that item wasn't exercised (its `InitialPlayerAgent` was non-null and it settled
   before deployment mattered); a cold-cache run would additionally validate it. #336 stays OPEN for that.
+
+### fix(animation): give every race the full civilian action-set family (elves shared one town idle)
+
+- **Symptom.** Elf NPCs in every town all played the *same* idle animation. **Root cause:** a settlement
+  NPC's idle-role animation comes from a GENERATED action-set name `as_<race>[_female]_<suffix>`
+  (`villager`/`lord`/`beggar`/`guard`/carry-prop/`map`…, via `ActionSetCode.GenerateActionSetNameWithSuffix`);
+  when `as_<race>_<suffix>` is absent the engine silently falls back to ONE default set. Elves shipped with
+  ONLY `as_elf_facegen`/`_female_facegen` (Character-Creation), so all 82 civilian roles collapsed to one idle.
+- **Wider audit (per user request — "check each race").** The gap wasn't elf-only: **every** non-human race
+  was also missing the same 3 prop-carry sets (`villager_carry_bucket_on_lefthand`, `villager_carry_fish_buckets`,
+  `worker_carry_wood_on_shoulder`).
+- **Fix — data, in LOTRLOME_Armory `action_sets.xml` (live) + the tracked snapshot.** 194 thin `base_set`
+  aliases in a `TAOM-CIVILIAN-COVERAGE` block: elf + sauron get the full 82 each, the other 10 non-human races
+  their 3 missing carry sets. Human-skeleton races (elf/sauron/orc/uruk/…) alias to `as_human_<suffix>` (correct
+  role animation, shared skeleton); dwarf (own skeleton) aliases to `as_dwarf_villager` (never a human clip on
+  the dwarf rig, the 1.4.6 water-CTD class). No C# change — the existing
+  `ActionSetCode_GenerateActionSetNameWithSuffix_Patch` already emits `as_elf_villager`; the fix makes it resolve.
+- **Tooling (new).** `tools/audit_civilian_action_set_coverage.py` (read-only per-race coverage vs human, exits
+  non-zero on a gap) + `tools/generate_race_civilian_action_sets.py` (idempotent alias generator, `.bak`, dry-run
+  default). Re-run both after every engine bump / LOTRLOME update (added to the snapshot-README discipline).
+- **Verified:** both files parse; coverage audit 43/43 + 39/39 for all 13 settlement races;
+  `audit_action_set_parity.py` 0 humanoid gaps; generator byte-idempotent (re-apply → identical hash). Trolls
+  excluded by design (never townsfolk). **In-game verification owed** (elf-CC RCA rule: XML animation fixes must
+  be confirmed live) — visit towns with elf/orc/dwarf populations, confirm varied male + female idles.
+- **Reviewed (3-agent adversarial pass).** Completeness agent decompiled every engine caller of
+  `GetActionSetWithSuffix` (townsfolk/notable/hero-spawn/disguise/carry-item helpers) and confirmed the 43+39
+  reference == the full set of generated civilian suffixes — no role falls back. Regression agent cleared
+  facegen / active-patch / save / duplicate-id interactions and disproved the T-pose risk (civilian sets DO
+  inherit `base_set`, unlike the facegen path). Tooling agent found only latent re-run hazards (own-skeleton
+  race lacking its own villager → self-alias; no dangling-abort; fragile skeleton detection) — all fixed
+  in-session: explicit `OWN_SKELETON_RACES`, dangling → refuse-to-write, empty-native + non-UTF-8 guards,
+  multi-block dedup, self-reference skip.
+
+### fix(caravan-trade): stop caravans leaving a town and immediately returning
+
+- **Two root causes, both confirmed against the decompiled v1.4.7 engine.** (1) The shipped
+  "anti-shuttle penalty" was **inert**: it keyed on `caravanParty.LastVisitedSettlement`, which is set
+  only on settlement *enter* (`MobileParty.cs:602`) and never cleared, and the caravan re-decides its
+  destination *while still parked* — so at decision time `LastVisitedSettlement == CurrentSettlement`,
+  the town vanilla already excludes from candidates (`CaravansCampaignBehavior.cs:923`). The penalty
+  never fired on a selectable town. (2) The home town was **exempt from the distance re-weight**, so it
+  kept vanilla's full `1/days` near-field spike + growing `num5` gravity while every neighbor was
+  compressed — a caravan homed at a hub (e.g. Minas Tirith) re-selected home the moment it parked at any
+  neighbor, reading as "leaves and immediately returns."
+- **Fix.** New per-caravan **visit memory** (`ICaravanVisitMemory` + thin `CaravanVisitMemoryBehavior`
+  on `SettlementEntered`/`MobilePartyDestroyed`, no `SyncData`) records the last 4 towns each caravan
+  entered and yields a recency penalty that deprioritizes just-visited towns — targeting genuinely
+  *selectable* towns, unlike the old `LastVisitedSettlement` check. The penalty is a strictly-positive
+  multiplicative floor (never a hard exclusion → no stranding in sparse regions), routed *into*
+  `ReweightTradeScore` so the `IsActiveFor` player-scope gate governs it. The home town is now
+  distance-compressed like any other (`homeDistanceReweight`, default on), which loses its proximity
+  edge while preserving vanilla's upstream `num5` home-gravity — caravans still return home on the
+  payout cadence. **Verified safe:** `DefaultClanFinanceModel.AddIncomeFromParty` pays the owner
+  regardless of caravan location, so home-compression cannot starve caravan income.
+- **Config.** Repurposed the (previously inert) `antiShuttlePenalty` knob as the recency-penalty
+  strength (default `0.35 → 0.5`); added `homeDistanceReweight` (default `true`) as a JSON escape hatch
+  to restore the old home exemption if playtest shows home visits are too rare. Both JSON-only.
+- **Known residual:** the recency memory enlarges the loop to ~5 distinct towns rather than guaranteeing
+  map-wide circulation; tunable via `antiShuttlePenalty`. In-game playtest owed (home-return frequency is
+  the one thing unit tests can't settle).
+
+Research: `CaravansCampaignBehavior` (`FindNextDestinationForCaravan`/`GetTradeScoreForTown`/`num5`), `MobileParty.LastVisitedSettlement`, `DefaultClanFinanceModel.AddIncomeFromParty`, `CampaignEvents.{SettlementEntered,MobilePartyDestroyed}` (installed v1.4.7).
+Save-compat: no new SyncData — ephemeral memory, rebuilds as caravans move; master-off = exact vanilla.
+Not-tested: the Harmony postfix + behavior invocation (requires a live campaign) — the pure memory + reweight services are unit-tested (80 CaravanTrade tests green).
 
 ### refactor(troop-weight): move the "elite tax" from the member count to the party-size limit — raw counts everywhere
 
@@ -92,7 +172,6 @@ Not-tested: the GameModel invocation + shed Harmony postfix (require a live camp
 
 Research: `SandBox.ViewModelCollection.SandBoxUIHelper.GetPartyHealthyCount`, `PartyBase.NumberOf*` getters (installed v1.4.7).
 Not-tested: the Harmony postfix invocation (requires a live campaign) — the pure detector/formatter are unit-tested.
-
 
 ## 2026-07-10
 

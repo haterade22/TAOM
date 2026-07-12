@@ -22,7 +22,7 @@ public class CaravanTradeService : ICaravanTradeService
         _logger = logger;
     }
 
-    public float ReweightTradeScore(float rawScore, float days, bool isNaval, bool isHomeTown, bool isJustLeftTown, bool isPlayerCaravan)
+    public float ReweightTradeScore(float rawScore, float days, bool isNaval, bool isHomeTown, float recencyPenaltyFactor, bool isPlayerCaravan)
     {
         if (!IsActiveFor(isPlayerCaravan))
             return rawScore;
@@ -32,29 +32,37 @@ public class CaravanTradeService : ICaravanTradeService
             return rawScore;
 
         // Naval uses a different vanilla distance factor (not 1/days); the shuttle is a land problem.
-        // Home has its own vanilla return-pull tuning we must not disturb.
-        if (isNaval || isHomeTown)
+        if (isNaval)
             return rawScore;
 
-        // Positive-requirement gate: NaN or non-positive days -> vanilla.
-        if (!(days > 0f))
-            return rawScore;
+        float result = rawScore;
 
         // Strip vanilla's land 1/days spike and re-apply a gentler curve:
         //   newScore = rawScore * days / (nearFieldFlatten + days)^alpha
         // For an equal base profit P0 (rawScore = P0/days) this is P0 / (flatten+days)^alpha, so near
         // towns lose their runaway advantage and the built-in profit estimate becomes the differentiator.
-        double denom = Math.Pow(_settings.NearFieldFlattenDays + days, _settings.DistanceDecayExponent);
-        float multiplier = denom > 0d ? (float)(days / denom) : 1f;
+        // The home town is compressed like everyone else (removing its "rubber-band" proximity edge)
+        // UNLESS the HomeDistanceReweight escape hatch is off; either way vanilla's upstream home-gravity
+        // (num5, already in rawScore) is untouched, so caravans still return home on the payout cadence.
+        // Positive-requirement gate on days keeps NaN/non-positive days out of Math.Pow.
+        bool applyDistanceReweight = (!isHomeTown || _settings.HomeDistanceReweight) && days > 0f;
+        if (applyDistanceReweight)
+        {
+            double denom = Math.Pow(_settings.NearFieldFlattenDays + days, _settings.DistanceDecayExponent);
+            float multiplier = denom > 0d ? (float)(days / denom) : 1f;
 
-        float maxComp = _settings.MaxCompensation;
-        if (multiplier > maxComp)
-            multiplier = maxComp;
+            float maxComp = _settings.MaxCompensation;
+            if (multiplier > maxComp)
+                multiplier = maxComp;
 
-        float result = rawScore * multiplier;
+            result = rawScore * multiplier;
+        }
 
-        if (isJustLeftTown)
-            result *= 1f - _settings.AntiShuttlePenalty;
+        // Recency penalty (home + non-home): deprioritize just-visited towns so caravans circulate.
+        // Engine-Float gate: a NaN / out-of-range factor is ignored rather than emitting a corrupted
+        // score. A valid factor is in (0,1], so this never turns a positive score into a rejection.
+        if (FiniteFloatValidator.IsFiniteInRange(recencyPenaltyFactor, 0f, 1f))
+            result *= recencyPenaltyFactor;
 
         return result;
     }

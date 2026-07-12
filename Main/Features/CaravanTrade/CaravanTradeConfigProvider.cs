@@ -66,6 +66,7 @@ public class CaravanTradeConfigProvider : ICaravanTradeConfigProvider
             NearFieldFlattenDays = parsed.NearFieldFlattenDays,
             MaxCompensation = parsed.MaxCompensation,
             AntiShuttlePenalty = parsed.AntiShuttlePenalty,
+            HomeDistanceReweight = parsed.HomeDistanceReweight,
             WarTradePolicy = parsed.WarTradePolicy,
             BudgetFactorFloor = parsed.BudgetFactorFloor,
             InitialTradeGold = parsed.InitialTradeGold,

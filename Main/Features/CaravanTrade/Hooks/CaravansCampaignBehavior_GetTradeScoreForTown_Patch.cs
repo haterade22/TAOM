@@ -22,6 +22,7 @@ namespace TAOM.Features.CaravanTrade.Hooks;
 public static class CaravansCampaignBehavior_GetTradeScoreForTown_Patch
 {
     private static ICaravanTradeService _service;
+    private static ICaravanVisitMemory _memory;
 
     [HarmonyPostfix]
     public static void Postfix(ref float __result, MobileParty caravanParty, Town town)
@@ -33,6 +34,7 @@ public static class CaravansCampaignBehavior_GetTradeScoreForTown_Patch
         try
         {
             _service ??= IoC.Resolve<ICaravanTradeService>();
+            _memory ??= IoC.Resolve<ICaravanVisitMemory>();
 
             bool isNaval = caravanParty.HasNavalNavigationCapability;
             AiHelper.GetBestNavigationTypeAndAdjustedDistanceOfSettlementForMobileParty(
@@ -45,10 +47,14 @@ public static class CaravansCampaignBehavior_GetTradeScoreForTown_Patch
             float days = navDistance / (speed * CampaignTime.HoursInDay);
 
             bool isHome = town.Settlement == caravanParty.HomeSettlement;
-            bool isJustLeft = !isHome && town.Settlement == caravanParty.LastVisitedSettlement;
             bool isPlayer = caravanParty.Owner?.Clan == Clan.PlayerClan;
 
-            __result = _service.ReweightTradeScore(__result, days, isNaval, isHome, isJustLeft, isPlayer);
+            // Recency penalty from the per-caravan visit memory (string ids at the boundary, ADR-007).
+            // Replaces the old LastVisitedSettlement check, which was inert (it only ever matched the
+            // parked/current town, which vanilla already excludes from candidates).
+            float recency = _memory.GetRecencyPenaltyFactor(caravanParty.StringId, town.Settlement.StringId);
+
+            __result = _service.ReweightTradeScore(__result, days, isNaval, isHome, recency, isPlayer);
         }
         catch (Exception)
         {

@@ -15,7 +15,17 @@ public class CaravanTradeConfig
     public float DistanceDecayExponent { get; set; } = 0.5f;
     public float NearFieldFlattenDays { get; set; } = 2.0f;
     public float MaxCompensation { get; set; } = 6.0f;
-    public float AntiShuttlePenalty { get; set; } = 0.35f;
+
+    // Recency penalty strength: max fractional score cut on the most-recently-visited town, decaying
+    // over the last few towns each caravan visited (the anti-shuttle lever, now actually applied to a
+    // selectable town via the per-caravan visit memory). Kept the old field name for save/config compat.
+    public float AntiShuttlePenalty { get; set; } = 0.5f;
+
+    // Escape hatch: when true (default) the home town is distance-compressed like any other town so it
+    // loses its near-field proximity advantage (fixes the home rubber-band); set false to restore the
+    // old home distance exemption if caravans return home too rarely. Vanilla's home-gravity is
+    // preserved either way, so caravans still deliver payouts home.
+    public bool HomeDistanceReweight { get; set; } = true;
 
     // War policy (Lever 1). Validated against the known set; unknown reverts to the default.
     public string WarTradePolicy { get; set; } = "SameAlignmentAndNeutral";

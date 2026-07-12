@@ -27,8 +27,11 @@ public interface ICaravanTradeSettingsProvider
     /// <summary>Upper clamp on the score multiplier so one hyper-profitable far town can't pull caravans map-wide.</summary>
     float MaxCompensation { get; }
 
-    /// <summary>Fractional score cut applied to the town a caravan just left (0 = off, 1 = fully deprioritize).</summary>
+    /// <summary>Recency penalty strength: max fractional cut on the most-recently-visited town, decaying over the last few towns visited (0 = off, 1 = fully deprioritize).</summary>
     float AntiShuttlePenalty { get; }
+
+    /// <summary>Whether to distance-compress the home town like any other (true, default = fixes the home rubber-band) or keep the old home distance exemption (false).</summary>
+    bool HomeDistanceReweight { get; }
 
     /// <summary>Resolved war-trade policy (MCM dropdown over validated JSON string).</summary>
     WarTradePolicy WarTradePolicy { get; }

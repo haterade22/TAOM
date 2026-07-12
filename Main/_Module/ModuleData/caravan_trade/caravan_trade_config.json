@@ -4,12 +4,15 @@
   "enabled": true,
   "applyToPlayerCaravans": true,
 
-  "_comment_range": "Lever 2/3 — how far caravans range and how strongly distance is rewarded. rangeMultiplier scales the vanilla 'very far' ceiling [1..4]. The re-weight strips vanilla's 1/days spike and re-applies 1/(nearFieldFlattenDays+days)^distanceDecayExponent, clamped by maxCompensation. Lower distanceDecayExponent = ranges further. nearFieldFlattenDays ties near towns so profit decides. antiShuttlePenalty cuts the score of the town just left.",
+  "_comment_range": "Lever 2/3 — how far caravans range and how strongly distance is rewarded. rangeMultiplier scales the vanilla 'very far' ceiling [1..4]. The re-weight strips vanilla's 1/days spike and re-applies 1/(nearFieldFlattenDays+days)^distanceDecayExponent, clamped by maxCompensation. Lower distanceDecayExponent = ranges further. nearFieldFlattenDays ties near towns so profit decides.",
   "rangeMultiplier": 1.6,
   "distanceDecayExponent": 0.5,
   "nearFieldFlattenDays": 2.0,
   "maxCompensation": 6.0,
-  "antiShuttlePenalty": 0.35,
+
+  "_comment_recency": "Anti-shuttle recency memory. antiShuttlePenalty [0..1] = max score cut on the most-recently-visited town, decaying over the caravan's last 4 visited towns (a caravan is pushed off the 2-4 towns it just orbited toward fresh ones). Raise toward 0.6-0.7 if shuttling persists. homeDistanceReweight (true = fix the 'home rubber-band' by distance-compressing the home town like any other; false = restore the old home exemption if caravans return home too rarely — vanilla home-gravity is preserved either way, so payouts still get delivered home).",
+  "antiShuttlePenalty": 0.5,
+  "homeDistanceReweight": true,
 
   "_comment_war": "Lever 1 — one of None (vanilla, war blocks trade), IgnoreWar (trade anywhere non-besieged), SameAlignmentAndNeutral (default: trade with same-side or neutral factions but not the enemy side).",
   "warTradePolicy": "SameAlignmentAndNeutral",

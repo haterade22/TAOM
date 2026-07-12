@@ -11,14 +11,14 @@ public partial class VolunteerRecruitmentService
 {
     // --- Mordor Settlement Mappings ---
     // Two distinct pools by settlement type:
-    //   - Towns (3): canonical Mordor pool with Morannon as the dominant elite-orc path (weight 5/15),
-    //                Black Uruks as the rare elite (weight 3), orcs as the common baseline (weight 4),
+    //   - Towns (3): canonical Mordor pool with Morannon as the dominant elite-orc path (weight 5/13),
+    //                Black Uruks as the rare elite (weight 1), orcs as the common baseline (weight 4),
     //                plus 3 specialist tier-2 entries.
     //   - Castles (8): town pool MINUS Black Uruks (per user spec: BU recruitable in towns only);
     //                  Morannon weight 4 (still > the orc_recruit common baseline tier-wise as elite line).
     //
     // Per user direction (2026-06-08): Morannon troops must be MORE plentiful than Black Uruks in Mordor.
-    // Weight 5 for Morannon vs 3 for Black Uruk in towns satisfies that.
+    // Weight 5 for Morannon vs 1 for Black Uruk in towns satisfies that (Black Uruks made rarer 2026-07-11).
     //
     // town_ES2 (Pelgaur / Minas Morgul) has the existing AddSettlementConditional Ithil Guard rule
     // that fires BEFORE this SettlementMap lookup when Gondor owns the town. When Mordor owns
@@ -28,7 +28,7 @@ public partial class VolunteerRecruitmentService
     {
         (string, int)[] townPool =
         {
-            ("mordor_uruk_grunt",   3),  // Black Uruk Grunt — line entry; rare elite
+            ("mordor_uruk_grunt",   1),  // Black Uruk Grunt — line entry; rare elite
             ("mordor_orc_recruit",  4),  // Orc Recruit — common baseline
             ("mordor_orc_impaler",  1),  // mid-tier orc polearm specialist
             ("mordor_orc_hunter",   1),  // mid-tier orc ranged
@@ -64,7 +64,7 @@ public partial class VolunteerRecruitmentService
     {
         CultureMap["mordor"] = new List<VolunteerChance>
         {
-            new VolunteerChance("mordor_uruk_grunt",   3),
+            new VolunteerChance("mordor_uruk_grunt",   1),
             new VolunteerChance("mordor_orc_recruit",  4),
             new VolunteerChance("mordor_orc_impaler",  1),
             new VolunteerChance("mordor_orc_hunter",   1),
