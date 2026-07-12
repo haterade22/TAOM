@@ -27,6 +27,17 @@
   the campaign array was always length 3). In-game smoke owed: join a siege at Rivendell town, ≥30 s on
   the map with the siege overlay active, confirm 1 ram + 2 tower circles and no CTD.
 
+### docs(tests): test-mirror gap assessment — 3 of 4 flagged gaps are non-gaps (repo-reorg Track D)
+
+- The reorg audit flagged 4 `Main/Features/` dirs without `TAOM.Tests/Features/` mirrors. Assessed:
+  **ElephantLike** — covered by proxy (`ElephantAttackServiceTests` + `MumakilAttackServiceTests` exercise the
+  shared `ElephantLikeAttackService` through both bindings; a mirror dir would duplicate). **BattleScenes** —
+  3 thin Harmony hooks on a DISABLED feature (entry points: "test via game" per ADR-008). **CharacterSelection** —
+  one shipped transpiler (`Late_Transpiler`), same entry-point category. **MissionDiagnostic** — the one real
+  item: `MissionDiagnosticService` (173 lines) has no tests; the two snapshot methods read live engine state
+  (boundary, not unit-testable) but `LogActionSetSeen`/`ResetForNewMission` dedup logic is testable — deferred
+  as test debt (writing C# was out of the reorg's scope; pick up with the next MissionDiagnostic change).
+
 ### refactor(agents-md): rolling essay log — 25 per-review essays archived, catalog kept (repo-reorg Track D)
 
 - AGENTS.md's "Lessons From Prior Reviews" held 25 verbatim per-review essays (~53 KB) PLUS the ~90-pattern
