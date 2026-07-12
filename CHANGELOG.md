@@ -4,6 +4,20 @@
 
 ## 2026-07-12
 
+### refactor(claude-md): Rebalancing Tools table → tools/README.md union-merge (repo-reorg Track C2)
+
+- The 13.4 KB / 42-row Rebalancing Tools table duplicated (and in 23 cases was the ONLY home of) per-tool
+  documentation. **Union-merged into `tools/README.md`:** 23 missing tools added (armor authors #211,
+  troop revamps #212 + polish #224 as a new "Troop revamps" section, `extract_perks`/`analyze_lord_balance`/
+  `analyze_troop_balance`, starter-armor pair, `raise_party_template_maxes`, `validate_gondor_refs`,
+  `rollback_erebor_iron_misfile`); overlapping rows enriched with the CLAUDE.md-only gotchas
+  (**battania=khand** CULTURE_MAP, clean-tree-regen pre-flight + unsafe per-culture re-resolution,
+  `detect_culture` elite-line routing + militia-L21-by-design, iron_hills canonical folder, elf-lord
+  tier-cap math, engine-ignores-inline-skills). Verified: all 42 table tools now resolve in README.
+- CLAUDE.md residue: a 3-line "Rebalancing & Data Tools" pointer (catalog + preferred validators +
+  analyze-before-apply rule). CLAUDE.md 173.8 KB → 160.8 KB; budget findings 88 → 75.
+  `author-armor` skill repointed to the README sections.
+
 ### feat(lint-docs): CLAUDE.md eager-load budget check — warn-only until the decomposition lands (repo-reorg Track C1)
 
 - CLAUDE.md loads into every session + agent spawn; it hit 174 KB (~30K tokens, 8× its April baseline)

@@ -8,7 +8,7 @@ argument-hint: [culture]
 
 Author or revamp a culture's `LOTRLOME_Armory` armor items and re-point troop equipment rosters. This is the **armor-only** flow (revamps like #99 / #211 / #212 / #224). For a brand-new culture (armor + troops + recruitment + culture wiring), use `/new-culture` instead.
 
-Reference: CLAUDE.md "Equipment & Armory" + "Rebalancing Tools" tables.
+Reference: CLAUDE.md "Equipment & Armory" table + tools/README.md (Content Generation / Rebalancing sections).
 
 ## Step 0 — Find the canonical folder (MANDATORY, the recurring bug)
 Before authoring ANY item, grep **all** `LOTRLOME_items/*/` subfolders for the item-id prefix:

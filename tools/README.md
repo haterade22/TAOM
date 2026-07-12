@@ -33,7 +33,8 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 | `taom_schema.py` | Engine behind the validator (registries + schema model + `Validator` + `build_registries`). Importable; unit-tested (`tools/tests/test_validate_moduledata.py`). | (library) |
 | `taom_query.py` | Query API over the engine — `item_exists` / `troop_exists` / `culture_exists` / `find_references` / `validate` / listings. Pure stdlib; backs the MCP server; unit-tested (`tools/tests/test_taom_query.py`). | (library) |
 | `taom_mcp_server.py` | **MCP stdio server** exposing the query API as 9 tools so Claude agents query mod-data integrity interactively (registered in `.mcp.json` as `taom-moduledata`; needs the `mcp` SDK; restart Claude to load). See `docs/features/moduledata-validation.md` "MCP server". | `python tools/taom_mcp_server.py` (smoke-test) |
-| `validate_all_troop_refs.py` | Per-task: armor refs across troop files vs LOTRLOME_Armory (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`; kept for now). | (none) |
+| `validate_all_troop_refs.py` | Per-task: `sk_*/ar_*/clo_urukscout_*/urukscout_*` refs across all 7 culture troop XMLs vs LOTRLOME_Armory — the "underwear bug" gate (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`; kept for now). | (none) |
+| `validate_gondor_refs.py` | Legacy Gondor-only predecessor of the above (`sk_gd_*` in `troops_gondor.xml`). Superseded — prefer `validate_moduledata.py`. | (none) |
 | `audit_item_refs.py` | Per-task: every `Item.X` ref vs the multi-module item registry (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`). | `--show-locations`, `--limit` |
 | `validate_mesh_refs.py` | **Mesh/collision-body ref validator** (read-only, pure stdlib). Extracts every `mesh`/`body_name`/`shield_body_name`/`holster_mesh`/`holster_mesh_with_weapon`/`flying_mesh` ref from item XML and checks existence across 3 tiers: A) rgl_log content warnings (authoritative), B) `.tpac` Metamesh TOC (visual meshes), C) raw-byte scan for `bo_` collision bodies (coarse). Built to confirm/eliminate the "missing `bo_` mesh causes battle-load hang" hypothesis. Body-aware + rgl-aware successor to `Audit-MeshRefs.ps1`. See `docs/features/mesh-ref-validation.md`. | `--scan-bodies`, `--rgl-log`, `--no-rgl-log`, `--no-tier-b`, `--items`, `--game`, `--tpac-modules`, `--json`, `--code`, `--warnings-as-errors` |
 
@@ -59,7 +60,15 @@ Offline `.sav` triage — stdlib only, no game required. Both understand the v1.
 |--------|---------|--------|
 | `generate_gondor_troops.py` | Generate Gondor troop tree XML | `Main/_Module/ModuleData/troops/troops_gondor.xml` |
 | `generate_rhun_troops.py` | Generate Rhûn troop tree XML | `Main/_Module/ModuleData/troops/troops_rhun.xml` |
-| `generate_gondor_armor.py` | Generate Gondor armor item definitions and append to LOTRLOME_Armory | LOTRLOME_Armory armor XMLs |
+| `generate_gondor_armor.py` | Phase-1 Gondor armor item author (Anorien/MT/Osgiliath/Cair Andros/Ithilien) — writes to `lotraom-assets` | LOTRLOME_Armory armor XMLs (`--dry-run`, `--apply`, `--armory-path`) |
+| `generate_gondor_armor_phase2.py` | Phase-2 author for 8 missing Gondor families (Lossarnach/PG/Har/Anf/Sere/Leb/Bel/Lam) — defaults to Steam install (#99) | LOTRLOME_Armory (`--dry-run`, `--apply`, `--armory-path`) |
+| `generate_mordor_armor.py` | Mordor armor author (#211): generic orc pool `sk_gn_orc_*` (9 helmet shapes) + `sk_md_orc_*` paint sets + KEYforce Morannon sub-line `sk_md_mor_*` (92 items). All helmets emit `hair_cover_type="all"` + `beard_cover_type="all"`; all bracers explicitly `covers_hands="false"`. | (`--dry-run`, `--apply`, `--armory-path`) |
+| `generate_isengard_armor.py` | Isengard `sk_is_orc_*` paint helmets + `clo_urukscout_*` cloth overlays (#211) | (`--dry-run`, `--apply`, `--armory-path`) |
+| `generate_dolguldur_armor.py` | Dol Guldur `sk_dg_orc_*` paint helmets (Brt+Vgd excluded per spec; #211) | (`--dry-run`, `--apply`, `--armory-path`) |
+| `generate_erebor_armor.py` | Erebor Iron Hills `sk_dwarf_iron_*` author — parses spec at runtime; **defaults to `iron_hills/` folder, NOT `erebor/`** (the canonical-folder rule; #211) | (`--dry-run`, `--apply`, `--armory-path`) |
+| `generate_rhun_armor.py` | Rhûn final Loke-Rim elite helmets — closes the 22-item gap (#211) | (`--dry-run`, `--apply`, `--armory-path`) |
+| `generate_starter_armor.py` | Author low-stat career-archetype starter armor (chest+legs × 3 archetypes) for the 12 non-Gondor career cultures by cloning each culture's own items (mesh/cover flags borrowed), slot stat re-set to anchors Ranged ~5 / Cavalry ~7 / Infantry ~9; no `value=` → trivial computed resale. Gondor excluded (hand-tuned). See `docs/features/starting-equipment-tuning.md`. | (`--apply`, `--armory-path`) |
+| `wire_career_starter_armor.py` | Rewire `taom_career_starting_equipment.xml` so every career roster sets Body+Leg from the matching `starter_*` items and CLEARS Head/Cape/Gloves, keeping weapons + mounts. Idempotent. | (`--apply`) |
 | `generate_char_creation_equipment.py` | Generate character creation equipment rosters for 10 custom cultures | `Main/_Module/ModuleData/taom_char_creation_equipment.xml` |
 | `generate_xslt.py` | Generate `spcultures.xslt` from LOTRAOM reference data | `Main/_Module/ModuleData/spcultures.xslt` |
 | `generate_batch2_wanderers.py` | Generate wanderers for 8 kingdoms lacking LOTRAOM data | taom_wanderers*.xml files |
@@ -70,10 +79,12 @@ Offline `.sav` triage — stdlib only, no game required. Both understand the v1.
 
 | Script | Purpose | CLI Flags |
 |--------|---------|-----------|
-| `rebalance_troops.py` | Uniform baseline + cultural modifier for all troop skills | `--dry-run`, `--apply` |
+| `rebalance_troops.py` | Uniform per-(level,group) baseline + per-culture `CULTURAL_MODS` curve for all troop skills (16 cultures incl. `goblin`/`mistymountainorcs`/`dale`). `detect_culture` routes id-based elite sub-lines to their own modifier (`iron_hills_*`→`iron_hills`, `mordor_uruk_*`→`mordor_uruk`, `orthanc_*`→`isengard_orthanc`; `rhun_new`→`rhun`); `SKIP_TROOP_IDS` excludes `cave_troll` + `harad_elephant_rider`; militia take the L21 baseline BY DESIGN (tough for siege/village defense). See `docs/features/troop-skill-balance.md`. | `--dry-run`, `--apply` |
+| `analyze_troop_balance.py` | **Read-only** per-culture troop balance overview (imports `rebalance_troops.py`'s curve verbatim — run BEFORE any rebaseline). HTML+md+JSON to `tools/reports/troop-balance/`: heatmap parity matrix, outliers, upgrade/weight cross-refs, level-monotonicity check (no lower level stronger than a higher), militia-excluded. | `--outlier-threshold N`, `--stdout` |
 | `rebalance_armor.py` | Baseline + cultural modifier formula for all armor items | `--dry-run`, `--apply`, `--export-csv` |
 | `rebalance_weapons.py` | Points-based weapon damage with per-culture multipliers | `--dry-run`, `--apply`, `--export-csv` |
-| `rebalance_lords.py` | Baseline + cultural modifier + age scaling for all lords | `--dry-run`, `--apply`, `--export-csv`, `--skills-only` |
+| `rebalance_lords.py` | Baseline + cultural modifier + age scaling for all lords (XSLT + XML). Its `CULTURE_MAP` is the culture-attr→TAOM map other tools import — **battania=khand** (NOT mirkwood; fixed 12b06e47 after Variag lords wore elven mods). | `--dry-run`, `--apply`, `--export-csv`, `--skills-only` |
+| `raise_party_template_maxes.py` | Set `max_value="50"` on every stack of the 8 bandit raider/boss templates + all `kingdom_hero_party_*` templates in `taom_partyTemplates.xml` (boss 1/1 hero stacks kept; never lowers; idempotent; #315). | `--dry-run` (default), `--apply` |
 | `audit_cc_bonuses.py` | Audit character-creation skill/attribute/focus bonuses per culture (per-stage uniformity, value-aware worst-case concentration, vanilla-budget comparison, full menu dump). `--apply` zeroes the career-stage payload + culture-base bonus via formatting-preserving line edits (CRLF + inline arrays preserved, writes `.bak`). Reads the 6 `charactercreation/*_menu.json` + `cultures.json` + career eligibility from `career_system/taom_careers.xml`. | `--report` (default), `--out`, `--export-csv`, `--dry-run`, `--apply` |
 | `analyze_settlement_prosperity.py` | Read-only starting-prosperity report: LIVE TAOM_Map vs vanilla per class, flat-cluster flags, town gold-equilibrium columns (#317). Reports to `tools/reports/settlement-prosperity/`. | `--stdout`, `--cluster-threshold`, `--game-dir` |
 | `rebalance_settlement_prosperity.py` | Lift-only per-class vanilla quantile-map rebaseline of TAOM_Map starting prosperity (LIVE external file, `.bak`, idempotent; seeds NEW campaigns only — #317). | `--dry-run` (default), `--apply`, `--allow-lower`, `--town-uplift`, `--pin-zero-village`, `--preserve`, `--game-dir` |
@@ -89,9 +100,11 @@ Offline `.sav` triage — stdlib only, no game required. Both understand the v1.
 | `assign_xslt_lord_equipment.py` | Assign LOTR equipment to XSLT-transformed lords in `lords.xslt` | `--dry-run`, `--apply` |
 | `complete_lords_xslt.py` | Make all vanilla lord attributes explicit in `lords.xslt` (no passthrough) | `--dry-run`, `--apply`, `--export-csv` |
 | `fix_lord_cultures_and_mounts.py` | Fix lord cultures + add mounts to battle equipment templates | `--dry-run`, `--apply` |
-| `apply_culture_skills_traits.py` | **Lord SkillSet generator** — source of truth for `taom_lord_skill_sets.xml` (74 archetypes incl. per-culture balance variants, canonical overrides, `archetype_alias`). Pre-flight: regen on a clean tree must diff empty before any `--apply`. See `docs/ai-includes/lord-skills-authoring.md`. | `--skillsets-only`, `--culture <key>`, `--all-cultures`, `--apply` |
-| `repoint_evil_lord_skillsets.py` | Balance-pass repoint/parity (#322/#323/#326): culture-scoped skill_template swaps onto variant sets + full inline-`<skills>` sync from the sets XML + `TEMPLATE_ASSIGN` for template-less adults. Safe alternative to per-culture generator re-resolution on drifted cultures. | `--dry-run` (default), `--apply` |
-| `author_elf_lords.py` | One-off lord/clan authoring reference (#324): complete NPCCharacter+Hero+Faction wiring for 10 new elf lords + 2 Lothlórien clans; copy this pattern for future lord expansions (parties/clan is tier-capped). | `--dry-run` (default), `--apply` |
+| `apply_culture_skills_traits.py` | **Lord SkillSet generator** — source of truth for `taom_lord_skill_sets.xml` (**never hand-edit the XML**; 74 archetypes incl. per-culture balance variants, canonical overrides, `archetype_alias` ×6 cultures). Pre-flight: regen on a clean tree must diff empty before any `--apply` (the 1f7a7a9a drift lesson); per-culture `--culture X --apply` re-resolution is UNSAFE on drifted cultures — use `repoint_evil_lord_skillsets.py` instead. See `docs/ai-includes/lord-skills-authoring.md`. | `--skillsets-only`, `--culture <key>`, `--all-cultures`, `--apply` |
+| `repoint_evil_lord_skillsets.py` | Balance-pass repoint/parity (#322/#323/#326): culture-scoped skill_template swaps onto variant sets + full inline-`<skills>` sync from the sets XML + `TEMPLATE_ASSIGN` for template-less adults. Post-condition + idempotency checked. Safe alternative to per-culture generator re-resolution on drifted cultures. | `--dry-run` (default), `--apply` |
+| `author_elf_lords.py` | One-off lord/clan authoring reference (#324): complete NPCCharacter+Hero+Faction wiring for 10 new elf lords + 2 Lothlórien clans, inline skills from live SkillSets, donor face keys; copy this pattern for future lord expansions. Parties/clan is tier-capped: <3→1, 3-4→2, 5+→3. | `--dry-run` (default), `--apply` |
+| `extract_perks.py` | Parse the decompiled `DefaultPerks.cs` into a perk catalog: 374 perks × 18 skills × 12 tiers (levels 25→300), each pair with role + numeric bonus + `{VALUE}`-rendered effect. Output `tools/data/bannerlord_perks.json` (committed) + `tools/reports/lord-balance/perks.html`. **Re-run after an engine bump.** See `docs/features/lord-perk-review.md`. | `--defaultperks <path>`, `--stdout` |
+| `analyze_lord_balance.py` | **Read-only** per-culture lord stats + perk review (lord analog of `analyze_troop_balance.py`). Resolves authoritative skills via `skill_template`→`taom_lord_skill_sets.xml` (**the engine ignores inline `<skills>`**); one HTML per culture + `index.html` — 18-skill per-lord table, every unlocked perk (deduped by SkillSet), data-quality (unresolved templates, inline/SkillSet drift). See `docs/features/lord-perk-review.md`. | `--stdout`, `--culture <name>` |
 
 ## Cleanup (One-Shot)
 
@@ -99,6 +112,23 @@ Offline `.sav` triage — stdlib only, no game required. Both understand the v1.
 |--------|---------|
 | `cleanup_deleted_gondor_armor.py` | Remove orphaned Gondor armor entries whose FBX sources were deleted | `--dry-run`, `--apply` |
 | `cleanup_deleted_gondor_items.py` | Remove deleted Gondor item definitions from LOTRLOME_Armory (no args) |
+| `rollback_erebor_iron_misfile.py` | One-off: remove mis-filed `sk_dwarf_iron_*` items from `erebor/` (used once during the #211 deep-review RCA) | `--dry-run`, `--apply` |
+
+## Troop revamps (#212 + polish #224 — completed one-offs, kept for the mechanical-swap pattern)
+
+All are EquipmentRoster swappers over the culture troop XMLs; `--dry-run` (default) / `--apply`.
+
+| Script | Purpose |
+|--------|---------|
+| `apply_gondor_troop_revamp.py` | Mechanical EquipmentRoster swap for 107 Gondor troops + delete orphan blocks (#99) |
+| `apply_mordor_troop_revamp.py` | Swap + 21 new orc/Nurn Warg/Black Uruk troops + 14 deletes (#212) |
+| `apply_isengard_troop_revamp.py` | Swap + 13 new `isengard_orc_*` troops; `orthanc_*` line preserved (#212) |
+| `apply_dolguldur_troop_revamp.py` | Swap (17 refits) + 12 deletes (old Khamûl stubs + berserker line); flexible indent regex (#212) |
+| `apply_gundabad_troop_revamp.py` | Swap + 1 new `gundabad_bolgs_ironfang` T8 + 4 deletes (#212) |
+| `apply_erebor_troop_revamp.py` | Swap (41 refits) + 13 new `iron_hills_noble_*` troops; 0 deletes (#212) |
+| `cleanup_deleted_troops_212.py` | Sweep deleted-troop refs from `taom_partyTemplates.xml`, `troop_weights.xml`, `troop_resource_costs.xml` (#212) |
+| `expand_party_templates_212.py` | Insert new troops into `kingdom_hero_party_<culture>_template` blocks via positional splice (#212) |
+| `apply_gondor_polish_224.py` | **Delta-style** Gondor polish: per-slot `set`/`clear`/`replace` ops + 2 new PG cavalry NPCs + upgrade-target patch (#224 — distinct from the full-roster swap pattern) |
 
 ## One-offs — `tools/oneoff/`
 
