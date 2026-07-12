@@ -100,6 +100,23 @@ Offline `.sav` triage — stdlib only, no game required. Both understand the v1.
 | `cleanup_deleted_gondor_armor.py` | Remove orphaned Gondor armor entries whose FBX sources were deleted | `--dry-run`, `--apply` |
 | `cleanup_deleted_gondor_items.py` | Remove deleted Gondor item definitions from LOTRLOME_Armory (no args) |
 
+## One-offs — `tools/oneoff/`
+
+**Convention (2026-07-12): one-off scripts land in `tools/oneoff/`** — finished migration/authoring
+scripts kept for reference (rerunning one is the exception, not the design). The top-level `tools/`
+dir holds only living, recurring tools. The initial sweep moved 33 scripts referenced by no living
+doc (per-culture clan/lord authors, `fix_v1_4_5_item_ids.py`-class migration fixes, kitbash test
+builders, dao-rock scene one-offs, `md_to_html.py`) plus the 11 legacy lords-migration scripts at
+`tools/oneoff/lords-migration/`. When a new script finishes its one job, `git mv` it here in the
+same session; when authoring a script you expect to rerun, keep it in `tools/` and add a README row.
+
+## Review analytics
+
+| Script | Purpose | CLI Flags |
+|--------|---------|-----------|
+| `analyze_reviews.py` | Parse `docs/reviews/REVIEW-LOG.md` tables → per-prompt-version accuracy + cumulative bug chart at `docs/reviews/progress.png` (karpathy/autoresearch port) | `--summary`, `--no-plot` |
+| `spider_render_triage.py` | One-command crash triage: auto-finds latest `taom_debug` + `rgl_log` + crash dump, prints a VERDICT (stdlib, read-only, fail-soft) | (no flags) |
+
 ## Faction Map
 
 | Script | Purpose | CLI Flags |

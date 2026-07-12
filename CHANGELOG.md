@@ -4,6 +4,20 @@
 
 ## 2026-07-12
 
+### chore(tools): segregate finished one-offs into tools/oneoff/ (repo-reorg Track B)
+
+- 33 scripts referenced by **no living doc** (checked `tools/`-prefixed AND bare-name mentions across
+  CLAUDE.md, AGENTS.md, `.claude/`, docs/ai-includes+features+migration+reference, INDEX, tools/README,
+  .github; plus cross-import + subprocess-invocation scans over `tools/*.py` + `tools/tests/`) moved via
+  `git mv` to `tools/oneoff/` — per-culture clan/lord authors, v1.4.x migration fixes, kitbash test
+  builders, dao-rock scene one-offs. Zero dangling references confirmed post-move; lint unchanged (11).
+- 14 candidates **kept** in `tools/` on evidence: bare-name README/rule/doc references (`audit_item_refs`,
+  `repair_sav_strings.ps1`, the faction-map trio — also pending the unmerged `impl-005` edit to
+  `process_faction_map.py`), plus living-but-undocumented `analyze_reviews.py` + `spider_render_triage.py`,
+  which gained README rows ("Review analytics").
+- **Convention (new):** one-off scripts land in `tools/oneoff/` when their job is done — documented in
+  `tools/README.md` § One-offs + a CLAUDE.md Key Paths row.
+
 ### chore(changelog): roll 2026 H1 entries to docs/changelog-archive/ (repo-reorg Track B)
 
 - Root `CHANGELOG.md` had grown to 1.49 MB / ~11.9K lines (112 date sections since 2026-01-24) —

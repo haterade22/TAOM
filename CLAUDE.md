@@ -412,6 +412,7 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
 | Decompiled source | `E:\Decompiled_Bannerlord\` (pre-decompiled, organized by category) |
 | CI/CD | `.github/workflows/build.yml` |
+| One-off scripts (finished) | `tools/oneoff/` — one-off migration/authoring scripts move here when done; `tools/` keeps only living tools (see `tools/README.md` § One-offs) |
 | Shared build props | `Directory.Build.props` |
 | Skills | `.claude/skills/` |
 | Rules | `.claude/rules/` |
