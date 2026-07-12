@@ -33,6 +33,11 @@ FEATURES_DIR = DOCS_DIR / "features"
 MIGRATION_DIR = DOCS_DIR / "migration"
 ARCHIVE_DIR = DOCS_DIR / "archive"
 AUDITS_DIR = DOCS_DIR / "audits"
+# Rolled-out CHANGELOG halves: verbatim historical text whose links/versions were written
+# relative to the repo root at the time — never lint them as living docs.
+CHANGELOG_ARCHIVE_DIR = DOCS_DIR / "changelog-archive"
+# Gitignored raw Codex transcripts (docs/reviews/raw/): on-disk reference only, never curated.
+REVIEWS_RAW_DIR = DOCS_DIR / "reviews" / "raw"
 MAIN_FEATURES_DIR = REPO_ROOT / "Main" / "Features"
 
 LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
@@ -49,9 +54,13 @@ STALE_VERSION_EXEMPT_PREFIXES = (
     str(MIGRATION_DIR).replace("\\", "/"),
     str(ARCHIVE_DIR).replace("\\", "/"),
     str(AUDITS_DIR).replace("\\", "/"),
+    str(CHANGELOG_ARCHIVE_DIR).replace("\\", "/"),
+    str(REVIEWS_RAW_DIR).replace("\\", "/"),
 )
 DEAD_LINK_EXEMPT_PREFIXES = (
     str(ARCHIVE_DIR).replace("\\", "/"),
+    str(CHANGELOG_ARCHIVE_DIR).replace("\\", "/"),
+    str(REVIEWS_RAW_DIR).replace("\\", "/"),
 )
 # Some review files document past API surface and intentionally cite 1.3.15.
 # codex-prompt-* / codex-result-* are Codex review transcripts — by design they instruct/record
