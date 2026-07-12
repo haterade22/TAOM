@@ -33,6 +33,19 @@ FEATURES_DIR = DOCS_DIR / "features"
 MIGRATION_DIR = DOCS_DIR / "migration"
 ARCHIVE_DIR = DOCS_DIR / "archive"
 AUDITS_DIR = DOCS_DIR / "audits"
+# CLAUDE.md eager-load budget (repo-reorg 2026-07-12). CLAUDE.md loads into EVERY session
+# and every agent spawn; at 174 KB it cost ~30K tokens before any work happened. The
+# decomposition thinned it to one-line table rows + doc links; these caps stop regrowth.
+# The bloat pattern is specific: a feature's whole design pasted into a table row (1-3K chars).
+CLAUDE_MD = REPO_ROOT / "CLAUDE.md"
+CLAUDE_MD_MAX_BYTES = 60_000       # hard cap (fail when enforcement is on)
+CLAUDE_MD_WARN_BYTES = 55_000      # report-only early warning
+CLAUDE_MD_MAX_TABLE_ROW = 400      # chars; thin rows run ~80-300
+CLAUDE_MD_MAX_PROSE_LINE = 600     # chars; catches paragraph bloat outside tables
+# Warn-only during the decomposition migration; flipped to True at its end (C8) so
+# --fail-on-drift (the pre-commit gate) blocks budget violations.
+CLAUDE_MD_BUDGET_ENFORCE = False
+
 # Rolled-out CHANGELOG halves: verbatim historical text whose links/versions were written
 # relative to the repo root at the time — never lint them as living docs.
 CHANGELOG_ARCHIVE_DIR = DOCS_DIR / "changelog-archive"
@@ -93,6 +106,7 @@ class LintReport:
     missing_feature_docs: list[tuple[str, str]] = field(default_factory=list)
     config_drift: list[tuple[Path, int, str, str]] = field(default_factory=list)
     version_mismatches: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    budget: list[tuple[Path, int, str, str]] = field(default_factory=list)
 
     @property
     def total(self) -> int:
@@ -103,6 +117,7 @@ class LintReport:
             + len(self.missing_feature_docs)
             + len(self.config_drift)
             + len(self.version_mismatches)
+            + len(self.budget)
         )
 
 
@@ -431,6 +446,39 @@ def check_orphan_features(files: list[Path]) -> list[Path]:
     return orphans
 
 
+def check_claude_md_budget() -> list[tuple[Path, int, str, str]]:
+    """CLAUDE.md eager-load budget: total size + per-line caps.
+
+    Findings are (file, lineno, kind, message). lineno 0 = whole-file finding.
+    Fenced code blocks are exempt from line caps (commands/JSON wrap awkwardly).
+    """
+    findings: list[tuple[Path, int, str, str]] = []
+    if not CLAUDE_MD.is_file():
+        return findings
+    size = CLAUDE_MD.stat().st_size
+    if size > CLAUDE_MD_MAX_BYTES:
+        findings.append((CLAUDE_MD, 0, "size",
+                         f"CLAUDE.md is {size:,} B — over the {CLAUDE_MD_MAX_BYTES:,} B budget. "
+                         f"Move detail to docs/features/, docs/reference/, or a paths:-scoped rule."))
+    elif size > CLAUDE_MD_WARN_BYTES:
+        findings.append((CLAUDE_MD, 0, "size-warn",
+                         f"CLAUDE.md is {size:,} B — approaching the {CLAUDE_MD_MAX_BYTES:,} B budget "
+                         f"(warn threshold {CLAUDE_MD_WARN_BYTES:,} B)."))
+    text = CLAUDE_MD.read_text(encoding="utf-8", errors="replace")
+    for lineno, line in iter_lines_outside_code_fences(text):
+        stripped = line.rstrip("\n")
+        if stripped.lstrip().startswith("|"):
+            if len(stripped) > CLAUDE_MD_MAX_TABLE_ROW:
+                findings.append((CLAUDE_MD, lineno, "table-row",
+                                 f"table row is {len(stripped)} chars (cap {CLAUDE_MD_MAX_TABLE_ROW}) — "
+                                 f"a row is an index entry; the prose belongs in the linked doc."))
+        elif len(stripped) > CLAUDE_MD_MAX_PROSE_LINE:
+            findings.append((CLAUDE_MD, lineno, "prose-line",
+                             f"line is {len(stripped)} chars (cap {CLAUDE_MD_MAX_PROSE_LINE}) — "
+                             f"move the detail to a doc and keep a pointer."))
+    return findings
+
+
 def rel(p: Path) -> str:
     try:
         return str(p.relative_to(REPO_ROOT)).replace("\\", "/")
@@ -449,6 +497,7 @@ def format_report(report: LintReport, quick: bool) -> str:
         out.append(f"- Missing feature docs (Main/Features/<X> with no docs/features/<x>.md): **{len(report.missing_feature_docs)}**")
         out.append(f"- Config-example drift (doc JSON != shipped ModuleData config): **{len(report.config_drift)}**")
         out.append(f"- Version mismatches (CLAUDE.md / snapshot != pin): **{len(report.version_mismatches)}**")
+        out.append(f"- CLAUDE.md budget (size/row/line caps{'' if CLAUDE_MD_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**")
     out.append("")
     if report.dead_links:
         out.append("## Dead links")
@@ -499,6 +548,17 @@ def format_report(report: LintReport, quick: bool) -> str:
             for f, lineno, _v, msg in report.version_mismatches:
                 out.append(f"- `{rel(f)}:{lineno}` — {msg}")
             out.append("")
+        if report.budget:
+            out.append("## CLAUDE.md budget")
+            out.append("")
+            out.append("CLAUDE.md is the eager per-session context load — it stays an INDEX (thin table rows "
+                       "+ doc links). Detail belongs in docs/features/, docs/reference/, or a paths:-scoped rule."
+                       + ("" if CLAUDE_MD_BUDGET_ENFORCE else " (Warn-only during the decomposition migration.)"))
+            out.append("")
+            for f, lineno, kind, msg in report.budget:
+                loc = f"`{rel(f)}:{lineno}`" if lineno else f"`{rel(f)}`"
+                out.append(f"- {loc} — [{kind}] {msg}")
+            out.append("")
     if report.total == 0:
         out.append("**Clean — no findings.**")
         out.append("")
@@ -534,6 +594,7 @@ def main(argv: list[str]) -> int:
         report.missing_feature_docs = check_missing_feature_docs(feature_doc_basenames())
         report.config_drift = check_config_example_drift(files)
         report.version_mismatches = check_version_consistency()
+        report.budget = check_claude_md_budget()
 
     if args.summary:
         # Structured grep-friendly block, modeled on autoresearch's train.py final output
@@ -545,6 +606,7 @@ def main(argv: list[str]) -> int:
             f"missing_features:  {len(report.missing_feature_docs)}",
             f"config_drift:      {len(report.config_drift)}",
             f"version_mismatch:  {len(report.version_mismatches)}",
+            f"claude_budget:     {len(report.budget)}",
             f"total_findings:    {report.total}",
             "---",
             "",
@@ -565,7 +627,11 @@ def main(argv: list[str]) -> int:
 
     if args.fail_on_dead and report.dead_links:
         return 1
-    if args.fail_on_drift and (report.config_drift or report.version_mismatches):
+    if args.fail_on_drift and (
+        report.config_drift
+        or report.version_mismatches
+        or (CLAUDE_MD_BUDGET_ENFORCE and report.budget)
+    ):
         return 1
     return 0
 

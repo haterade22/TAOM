@@ -82,17 +82,19 @@ OUT=$("$PY" tools/lint_docs.py --fail-on-drift 2>/dev/null)
 RC=$?
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 
-# Extract just the two drift sections (they are the last sections of the report), bounded.
-DETAILS=$(printf '%s' "$OUT" | awk '/^## Config-example drift/{f=1} f' | head -40)
+# Extract just the gating sections (drift / version / CLAUDE.md budget — the report's tail), bounded.
+DETAILS=$(printf '%s' "$OUT" | awk '/^## (Config-example drift|Version mismatches|CLAUDE\.md budget)/{f=1} f' | head -40)
 
 MSG=$(printf '%s' "$DETAILS" | python3 -c '
 import sys, json
 lines = [l for l in sys.stdin.read().splitlines() if l.strip()][:36]
 print(json.dumps(
-    "[check-doc-config-drift] git commit BLOCKED: a documented config example or version "
-    "marker drifted from the source of truth. Sync the doc json example to the shipped "
-    "Main/_Module/ModuleData config (or the version marker to .claude/pinned-game-version.txt), "
-    "then re-stage. Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
+    "[check-doc-config-drift] git commit BLOCKED: a documented config example / version "
+    "marker drifted from the source of truth, or CLAUDE.md broke its eager-load budget "
+    "(60KB file / 400-char table rows / 600-char prose lines — CLAUDE.md is an index; move "
+    "detail to the linked doc). Sync the doc example to the shipped ModuleData config, the "
+    "version marker to .claude/pinned-game-version.txt, or thin the CLAUDE.md row, then "
+    "re-stage. Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
 

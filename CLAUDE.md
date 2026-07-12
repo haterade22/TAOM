@@ -2,7 +2,7 @@
 
 Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 
-> **Target: Bannerlord 1.4.7** (installed game version; pinned in `.claude/pinned-game-version.txt`). The codebase migrated from v1.3.15 (landed 2026-05-22) onto the 1.4.x line and tracks the installed engine, which advanced to **v1.4.7** (2026-07-08; the spider/elephant native-crash work + `Patch47`–`Patch50` originate from the 1.4.6 line and still bind on 1.4.7). The `E:\Decompiled_Bannerlord\` baseline dump is **v1.4.7** (regenerated 2026-07-08; v1.4.6 + v1.4.5 baselines preserved at `_categories_v1.4.6\`/`_shipping_build_v1.4.6\` + `_categories_v1.4.5\`/`_shipping_build_v1.4.5\`) — `ilspycmd`/`taom-src` against the installed DLLs remains authoritative for signatures after any future engine bump. v1.4.7 impact analysis: [`docs/migration/v1.4.7-impact.md`](docs/migration/v1.4.7-impact.md). Migration audit trail: [`docs/migration/TRACKING.md`](docs/migration/TRACKING.md); original plan: [`docs/migration/v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md).
+> **Target: Bannerlord 1.4.7** (installed; pinned in `.claude/pinned-game-version.txt` — the session-start hook warns on drift → run `/engine-bump`). The `E:\Decompiled_Bannerlord\` dump matches (v1.4.7; older baselines preserved) but `ilspycmd`/`taom-src` on the installed DLLs is authoritative for signatures. Impact + history: [`docs/migration/v1.4.7-impact.md`](docs/migration/v1.4.7-impact.md) · [`TRACKING.md`](docs/migration/TRACKING.md) · [`v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md).
 
 ## Commands
 

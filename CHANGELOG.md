@@ -4,6 +4,19 @@
 
 ## 2026-07-12
 
+### feat(lint-docs): CLAUDE.md eager-load budget check — warn-only until the decomposition lands (repo-reorg Track C1)
+
+- CLAUDE.md loads into every session + agent spawn; it hit 174 KB (~30K tokens, 8× its April baseline)
+  because feature prose kept accreting into table rows. `check_claude_md_budget()` in `tools/lint_docs.py`
+  now enforces: **≤60,000 B file** (55 KB warn), **≤400-char table rows**, **≤600-char prose lines**
+  (fenced blocks exempt). New `budget` report section + `claude_budget:` summary line; wired into
+  `--fail-on-drift` behind `CLAUDE_MD_BUDGET_ENFORCE` (False = warn-only during the Track C migration,
+  flipped at C8). `check-doc-config-drift.sh`'s detail-extraction + deny message cover the new section.
+- Current reading: 88 findings (1 size + 87 over-cap rows/lines) — the migration's progress meter.
+- Preamble trimmed to the pin + doc pointers (the baseline-dump history it carried is in
+  `docs/migration/v1.4.7-impact.md`); the `Target: Bannerlord 1.4.7` line stays verbatim-parseable
+  for `check_version_consistency` (version_mismatch still 0).
+
 ### refactor(docs): split LESSONS-LEARNED.md into per-category files under docs/reviews/lessons/ (repo-reorg Track B)
 
 - The master lessons record had reached 371 KB / 206 lessons in one file — the review skills' "read the
