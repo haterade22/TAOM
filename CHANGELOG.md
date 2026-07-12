@@ -27,6 +27,16 @@
   the campaign array was always length 3). In-game smoke owed: join a siege at Rivendell town, ≥30 s on
   the map with the siege overlay active, confirm 1 ram + 2 tower circles and no CTD.
 
+### refactor(agents-md): rolling essay log — 25 per-review essays archived, catalog kept (repo-reorg Track D)
+
+- AGENTS.md's "Lessons From Prior Reviews" held 25 verbatim per-review essays (~53 KB) PLUS the ~90-pattern
+  distilled catalog (bugs-Codex-misses / false-positives / what-Codex-does-well) that already harvested their
+  lessons. The essays moved verbatim to `docs/reviews/agents-md-review-lessons-archive.md` (complete history,
+  newest first); AGENTS.md keeps the newest 5 essays + the FULL catalog (the operative reviewer calibration)
+  + intentional-patterns + harness-review notes. **New rolling convention:** each review cycle adds its essay
+  at the top, rotates the 6th-oldest to the archive, and harvests durable patterns into the catalog +
+  `docs/reviews/lessons/`. AGENTS.md 149.7 KB → 110.8 KB (−26% of Codex's per-review context).
+
 ### chore(harness): Track D follow-ups — fresh context baseline, scan fix, hook recency window, description trims (repo-reorg)
 
 - **`docs/context-budget-baseline.md` re-baselined** (April's was 8x stale): eager startup excl. MCP =
