@@ -5,6 +5,10 @@ _Module/bin/
 TestResults/
 out/
 
+# Regenerated report artifacts: tools/validate_moduledata.py --json report.json
+# (documented in .claude/rules/moduledata-validation.md) — never commit.
+/report.json
+
 # Visual Studio Edit-and-Continue / debug temp. VS dumps decompiled engine sources
 # here while stepping (e.g. enc_temp_folder/<hash>/MissionState.cs). Never commit —
 # a background auto-commit swept one in on 2026-06-14.

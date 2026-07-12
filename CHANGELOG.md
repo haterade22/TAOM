@@ -1,5 +1,19 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-12
+
+### chore(repo): remove tracked root scratch + relocate legacy scripts/ (repo-reorg Track B)
+
+- **Removed from tracking** (regenerable or one-off artifacts committed by accident): `SPOrderOfBattleVM.tmp.cs`
+  (scratch decompile), `mordor-lords.html` (one-off lords viz), `out/0Harmony.decompiled.cs` (497 KB stale
+  decompile — `/taom-src` regenerates on demand; `out/` was already gitignored), `report.json` (empty `[]`;
+  regenerates via `tools/validate_moduledata.py --json report.json`, now gitignored as `/report.json`).
+- **Moved** the 11 legacy Jan–Mar lords-migration one-offs `scripts/` → `tools/oneoff/lords-migration/`
+  (one-off scripts now live under `tools/oneoff/`); repointed the 5 references in
+  `docs/migration/{SESSION-S5a-S5b-PROMPT,TRACKING,v1.4.x-equipment-overhaul,v1.4.x-taom-impact}.md`.
+- `lint_docs.py`: 0 new dead links (13 pre-existing, unrelated); drift checks clean.
+- Part of the approved 2026-07-11 repo-reorg plan (Track B item 1 of 6).
+
 ## 2026-07-11
 
 ### balance(mordor): make Black Uruks rarer in recruitment and lord parties

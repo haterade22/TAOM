@@ -81,7 +81,7 @@ If `git worktree add` reports the branch is checked out elsewhere, that's the ma
    ⚠️ Pay attention to the `<Flags>` syntax: it's ONE element with per-flag attributes, not multiple `<Flag>` children: `<Flags IsLordTemplate="true" IsFemaleTemplate="true" />`.
 
 5. **Update Python tooling that GENERATES TAOM XML** to emit the new format (so future regen doesn't bring back deprecated patterns). Files to update:
-   - `scripts/replace_equipment_templates.py`
+   - `tools/oneoff/lords-migration/replace_equipment_templates.py`
    - `tools/assign_xslt_lord_equipment.py`, `tools/assign_lord_equipment.py`
    - `tools/generate_rhun_troops.py`, `tools/generate_gondor_troops.py`
    - `tools/generate_char_creation_equipment.py`, `tools/generate_batch2_wanderers.py`
