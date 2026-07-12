@@ -25,7 +25,7 @@ Expect `Logged in using ChatGPT`. If not, stop and tell the user to `codex login
 cd "<repo-root>" && codex exec - < "<prompt-file>" > "<output-file>" 2>&1
 ```
 - Run with `run_in_background: true` on the Bash tool.
-- Output path: `docs/reviews/codex-verify-{feature-or-uncommitted}-{date}.md`.
+- Output path: `docs/reviews/raw/codex-verify-{feature-or-uncommitted}-{date}.md`.
 - Codex picks up project rules from `AGENTS.md` automatically.
 
 ## Step 1: Identify Files to Review
@@ -69,7 +69,7 @@ For `/review-codex` (the heavier adversarial flow), the prompt is much richer wi
 2. Dispatch:
    ```
    Bash tool call:
-     command: cd "<repo-root>" && codex exec - < "docs/reviews/codex-verify-{target}-{date}.prompt.md" > "docs/reviews/codex-verify-{target}-{date}.md" 2>&1
+     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec - < "docs/reviews/codex-verify-{target}-{date}.prompt.md" > "docs/reviews/raw/codex-verify-{target}-{date}.md" 2>&1
      run_in_background: true
      timeout: 600000
    ```
@@ -80,7 +80,7 @@ When the background notification arrives, proceed to Step 4 automatically.
 
 ## Step 4: Retrieve & Validate Output
 
-Read `docs/reviews/codex-verify-{target}-{date}.md`. Check:
+Read `docs/reviews/raw/codex-verify-{target}-{date}.md`. Check:
 - File is non-empty
 - Does not start with `Error:` / `panic:` / `login required`
 - Contains structured findings (severity tags, file:line refs)

@@ -665,7 +665,7 @@ Pipeline: `/deep-review` (5-agent core) → 2 HIGH gaps caught and fixed in same
 
 **Source brief:** [docs/reviews/codex-prompt-siegedismount-2026-05-06.md](codex-prompt-siegedismount-2026-05-06.md). 8 Known Suspects (4 confirming /deep-review fixes, 4 new attack lines).
 
-**Codex findings file:** [docs/reviews/codex-adversarial-siegedismount-2026-05-06.md](codex-adversarial-siegedismount-2026-05-06.md). Reconstructed from stdout because Codex's `apply_patch` was rejected by read-only sandbox; `ilspycmd`/`dotnet` also rejected by shell policy, so vanilla decompilation code blocks were verified separately by Claude.
+**Codex findings file:** [docs/reviews/codex-adversarial-siegedismount-2026-05-06.md](raw/codex-adversarial-siegedismount-2026-05-06.md). Reconstructed from stdout because Codex's `apply_patch` was rejected by read-only sandbox; `ilspycmd`/`dotnet` also rejected by shell policy, so vanilla decompilation code blocks were verified separately by Claude.
 
 **Verdict from Codex:** needs-attention (no-ship).
 
@@ -769,7 +769,7 @@ Pipeline: `/deep-review` (5-agent core) returned PASS on standards/compatibility
 
 **Source brief:** [docs/reviews/codex-prompt-mixedformations-2026-05-06.md](codex-prompt-mixedformations-2026-05-06.md). 9 Known Suspects (2 confirming /deep-review fixes, 7 new attack lines).
 
-**Codex findings file:** [docs/reviews/codex-adversarial-mixedformations-2026-05-06.md](codex-adversarial-mixedformations-2026-05-06.md). Reconstructed from stdout because Codex's `apply_patch` was rejected by read-only sandbox; `ilspycmd` also blocked by shell policy, so vanilla decompilation code blocks were verified separately by Claude outside the sandbox.
+**Codex findings file:** [docs/reviews/codex-adversarial-mixedformations-2026-05-06.md](raw/codex-adversarial-mixedformations-2026-05-06.md). Reconstructed from stdout because Codex's `apply_patch` was rejected by read-only sandbox; `ilspycmd` also blocked by shell policy, so vanilla decompilation code blocks were verified separately by Claude outside the sandbox.
 
 **Verdict from Codex:** needs-attention (no-ship).
 
@@ -795,9 +795,9 @@ Pipeline: `/deep-review` (5-agent core) returned PASS on standards/compatibility
 
 Pipeline: `/deep-review` (5-agent core) caught 1 CRITICAL (`_navigationType` field-vs-property reflection mismatch) + 1 standards violation (service-locator in adapter) + 1 cross-system inconsistency (`SortedPathKey` sort order vs vanilla); all 3 fixed in same session. HIGH-perf items (ThreadStatic arg pools + ConcurrentQueue swap) also implemented per user direction. THEN `/review-codex` returned **6 additional findings: 2 P1 + 2 P2 + 2 P3**, all confirmed and fixed in same session.
 
-**Source brief:** [docs/reviews/codex-adversarial-editorcacherebuild-2026-05-12.md](codex-adversarial-editorcacherebuild-2026-05-12.md). 7 Known Suspects.
+**Source brief:** [docs/reviews/codex-adversarial-editorcacherebuild-2026-05-12.md](raw/codex-adversarial-editorcacherebuild-2026-05-12.md). 7 Known Suspects.
 
-**Codex findings file:** [docs/reviews/codex-adversarial-editorcacherebuild-2026-05-12-review.md](codex-adversarial-editorcacherebuild-2026-05-12-review.md).
+**Codex findings file:** [docs/reviews/codex-adversarial-editorcacherebuild-2026-05-12-review.md](raw/codex-adversarial-editorcacherebuild-2026-05-12-review.md).
 
 **Verdict from Codex:** ISSUES FOUND (no-ship — until P1s fixed).
 
@@ -1120,7 +1120,7 @@ Codex (gpt-5.5 xhigh) adversarial pass after a 5-agent `/deep-review`. **Deep-re
 
 ### 2026-06-01 — CareerSystem Switch Picker + Effect-Scope Badges (review #46 / meta-RCA — skipped review gates)
 
-**META-RCA: I shipped without running `/deep-review` or `/review-codex` first** — a direct violation of the CLAUDE.md mandatory completion workflow. The user asked "Did you do a /deep-review and a /review-codex" and the honest answer was "no." Both reviews were then run via the Workflow tool ([deep-review](deep-review-career-switch-picker-2026-06-01.md): 49 agents in adversarial-verify-plus-completeness-critic pattern) and Codex (gpt-5.5 xhigh, [codex review](codex-adversarial-career-switch-picker-2026-06-01.md)). The same skipped-gate failure mode shipped at the Cooldown rework two reviews ago (#31, RCA: same — stopped at build-green instead of running the documented closeout).
+**META-RCA: I shipped without running `/deep-review` or `/review-codex` first** — a direct violation of the CLAUDE.md mandatory completion workflow. The user asked "Did you do a /deep-review and a /review-codex" and the honest answer was "no." Both reviews were then run via the Workflow tool ([deep-review](deep-review-career-switch-picker-2026-06-01.md): 49 agents in adversarial-verify-plus-completeness-critic pattern) and Codex (gpt-5.5 xhigh, [codex review](raw/codex-adversarial-career-switch-picker-2026-06-01.md)). The same skipped-gate failure mode shipped at the Cooldown rework two reviews ago (#31, RCA: same — stopped at build-green instead of running the documented closeout).
 
 **Division of labor:**
 - Deep-review (5 dimensions × 2 skeptics each + completeness critic = 49 agents) confirmed 20 findings: brush dead, empty-state binding mismatch, multiple dead `[DataSourceProperty]`s, loc-key propagation gap, discarded ctor param, cold-path allocations, test gaps.

@@ -3,7 +3,7 @@
 **Date:** 2026-05-31
 **Feature:** `Main/Features/CulturalFeats/*` per-occupation town notable-count refactor (follow-up to commit `582275f`)
 **Review pipeline:** `/verify` → `/deep-review` (5 agents, all PASS) → `/review-codex` → fix → final `/verify`
-**Codex output:** [`codex-adversarial-cultural-feats-per-occupation-2026-05-31.md`](codex-adversarial-cultural-feats-per-occupation-2026-05-31.md)
+**Codex output:** [`codex-adversarial-cultural-feats-per-occupation-2026-05-31.md`](raw/codex-adversarial-cultural-feats-per-occupation-2026-05-31.md)
 **Codex prompt:** [`codex-adversarial-cultural-feats-per-occupation-2026-05-31.prompt.md`](codex-adversarial-cultural-feats-per-occupation-2026-05-31.prompt.md)
 
 ## Top-line summary

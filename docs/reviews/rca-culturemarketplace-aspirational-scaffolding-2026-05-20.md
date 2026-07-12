@@ -63,7 +63,7 @@ Phase 1 (deep-review) RCA complete. Findings were design-time, not architecture-
 
 ## Addendum — Phase 2 (Codex adversarial review)
 
-Codex review at [`docs/reviews/codex-adversarial-culturemarketplace-2026-05-20.md`](codex-adversarial-culturemarketplace-2026-05-20.md): **0 CRITICAL, 0 HIGH, 2 MEDIUM, 2 LOW**. All 4 confirmed and fixed in the same session. Disputed: S4 (culture type asymmetry), S5 (weighted-draw bias), S6 (save-load), S7 (threading), S8 (quest reservations).
+Codex review at [`docs/reviews/codex-adversarial-culturemarketplace-2026-05-20.md`](raw/codex-adversarial-culturemarketplace-2026-05-20.md): **0 CRITICAL, 0 HIGH, 2 MEDIUM, 2 LOW**. All 4 confirmed and fixed in the same session. Disputed: S4 (culture type asymmetry), S5 (weighted-draw bias), S6 (save-load), S7 (threading), S8 (quest reservations).
 
 ### Findings + Root Cause Table (Phase 2)
 
@@ -201,7 +201,7 @@ This makes the per-culture pool composition transparent. If the Rivendell pool c
 
 ## Addendum — Phase 3 (Codex self-review of fixes)
 
-Codex re-reviewed the C1-C6 fix code at [`docs/reviews/codex-adversarial-culturemarketplace-fixes-2026-05-20.md`](codex-adversarial-culturemarketplace-fixes-2026-05-20.md). Verdict: **0 CRITICAL, 0 HIGH, 0 MEDIUM, 1 LOW**. Six of seven Known Suspects DISPUTED (no bug); one CONFIRMED. Regression check on C1-C4 was clean.
+Codex re-reviewed the C1-C6 fix code at [`docs/reviews/codex-adversarial-culturemarketplace-fixes-2026-05-20.md`](raw/codex-adversarial-culturemarketplace-fixes-2026-05-20.md). Verdict: **0 CRITICAL, 0 HIGH, 0 MEDIUM, 1 LOW**. Six of seven Known Suspects DISPUTED (no bug); one CONFIRMED. Regression check on C1-C4 was clean.
 
 ### Finding (Phase 3)
 

@@ -81,7 +81,7 @@ After fixing `MinPartiesToInfest` wiring:
 
 ## Codex adversarial review (Phase 2)
 
-After Phase 1 (deep-review + 1 fix), `/review-codex` ran against the post-fix tree. Codex confirmed **4 additional bugs Claude's 5 deep-review agents missed** (1 CRITICAL, 3 HIGH). All 4 fixed in same session. Prompt + output at [`codex-adversarial-bandit-management-2026-05-27.prompt.md`](codex-adversarial-bandit-management-2026-05-27.prompt.md) / [`.md`](codex-adversarial-bandit-management-2026-05-27.md).
+After Phase 1 (deep-review + 1 fix), `/review-codex` ran against the post-fix tree. Codex confirmed **4 additional bugs Claude's 5 deep-review agents missed** (1 CRITICAL, 3 HIGH). All 4 fixed in same session. Prompt + output at [`codex-adversarial-bandit-management-2026-05-27.prompt.md`](codex-adversarial-bandit-management-2026-05-27.prompt.md) / [`.md`](raw/codex-adversarial-bandit-management-2026-05-27.md).
 
 | # | Sev | Bug | Why Claude missed | Fix |
 |---|---|---|---|---|

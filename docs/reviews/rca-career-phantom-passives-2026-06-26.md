@@ -67,7 +67,7 @@ Suspects closed — 7 DISPUTED (code correct) + 1 PARTIAL. Codex independently d
 consumer (`PartyBase.cs:1078-1082`, `num <= ratio` → lower ratio = harder to spot), and the masked
 cache, and self-disputed the only two candidate false-positives (the 18 skipped keystone descriptions
 + the residual `operation`/`is_percentage` XML attributes — both intentional). Output:
-[codex-adversarial-career-phantom-passives-2026-06-26.md](codex-adversarial-career-phantom-passives-2026-06-26.md).
+[codex-adversarial-career-phantom-passives-2026-06-26.md](raw/codex-adversarial-career-phantom-passives-2026-06-26.md).
 
 **Documented design consequence (suspect 1 PARTIAL, verified independently here).** The engine damage
 pipeline is `ApplyDamageAmplifications(1) → ApplyDamageScaling(2) → ApplyDamageReductions(3) →

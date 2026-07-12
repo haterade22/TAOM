@@ -3,7 +3,7 @@
 **Feature:** 24 new cultural feats across 11 cultures (105 → 129 total). Issue [#273](https://github.com/haterade22/TAOM/issues/273).
 **Commits:** `bf9226f` (core C#/XML/tests), `ce07ebe` (faction-map content), + a follow-up review-fix commit (this RCA's fixes).
 **Review pipeline:** build + full test + `validate_moduledata.py` → `/deep-review` (5 agents) → `/review-codex` (gpt-5.5 xhigh) → fix → RCA → docs.
-**Codex output:** [`codex-adversarial-cultural-feats-wave1-2026-06-07.md`](codex-adversarial-cultural-feats-wave1-2026-06-07.md) · **prompt:** [`.prompt.md`](codex-adversarial-cultural-feats-wave1-2026-06-07.prompt.md)
+**Codex output:** [`codex-adversarial-cultural-feats-wave1-2026-06-07.md`](raw/codex-adversarial-cultural-feats-wave1-2026-06-07.md) · **prompt:** [`.prompt.md`](codex-adversarial-cultural-feats-wave1-2026-06-07.prompt.md)
 
 ---
 

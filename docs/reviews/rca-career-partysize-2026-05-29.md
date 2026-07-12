@@ -46,7 +46,7 @@ class impossible to ship undetected.
 
 **Codex adversarial pass (Finding #6):** the heavyweight Codex review verified all 6 suspects against
 source (0 false positives) and caught the Health root description mismatch the 6-agent deep-review
-missed — see [codex-adversarial-career-partysize-2026-05-29.md](codex-adversarial-career-partysize-2026-05-29.md).
+missed — see [codex-adversarial-career-partysize-2026-05-29.md](raw/codex-adversarial-career-partysize-2026-05-29.md).
 This is the value of the independent adversarial pass: the deep-review checked description↔magnitude
 consistency for the type it was reconciling (PartySize) but not for a *sibling* flat-consumed type
 (Health) activated by the same change.

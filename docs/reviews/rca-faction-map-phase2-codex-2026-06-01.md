@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-01
 **Feature:** `Main/Features/FactionMap/*` + `factions.json` + `taom_module_strings.xml`, Phase 2 of issue [#260](https://github.com/haterade22/TAOM/issues/260).
-**Codex output:** [`codex-adversarial-faction-map-phase2-2026-06-01.md`](codex-adversarial-faction-map-phase2-2026-06-01.md)
+**Codex output:** [`codex-adversarial-faction-map-phase2-2026-06-01.md`](raw/codex-adversarial-faction-map-phase2-2026-06-01.md)
 **Codex prompt:** [`codex-adversarial-faction-map-phase2-2026-06-01.prompt.md`](codex-adversarial-faction-map-phase2-2026-06-01.prompt.md)
 **Sibling RCA:** [`rca-faction-map-phase2-2026-06-01.md`](rca-faction-map-phase2-2026-06-01.md) (deep-review fix shipped earlier).
 

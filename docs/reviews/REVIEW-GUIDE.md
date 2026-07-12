@@ -28,6 +28,10 @@ How to write effective prompts, what to verify, and what we've learned.
 
 **Critical rule:** Claude ALWAYS reviews the Codex output. Codex findings are hypotheses, not facts. Every finding must be verified against source code before implementing.
 
+## Artifact retention (2026-07-12)
+
+Raw Codex stdout transcripts (2–4 MB each) land in **`docs/reviews/raw/`, which is gitignored** — they stay on disk for local reference but never enter git. The **committed** durable record per review is: the `*.prompt.md` (reusable dispatch artifact), the `rca-*.md` (incident analysis), the `REVIEW-LOG.md` entry (scoring history), and any `LESSONS-LEARNED.md` entries (cross-feature rules). The `/review-codex`, `/codex-verify`, and `/deep-review` skills write to `raw/` automatically. Historical raw transcripts (through 2026-07-11) were untracked and moved to `raw/` in the same change; links from older RCAs point at `raw/...` and resolve on-disk but not in a fresh clone — the committed distillate is the durable record.
+
 ---
 
 ## Repeatable Process

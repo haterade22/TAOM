@@ -12,7 +12,7 @@ Handles the full Codex review lifecycle automatically — Claude dispatches Code
 - No argument: auto-detect from git what was changed, write prompt, dispatch
 - Feature name (no `.md`): write prompt for that feature, dispatch
 - Path to `.md` file: verify that existing Codex review, implement fixes
-- If a `codex-adversarial-*.md` file was recently created in `docs/reviews/`, ask user if they want to verify it
+- If a `codex-adversarial-*.md` file was recently created in `docs/reviews/raw/`, ask user if they want to verify it
 
 ## Codex CLI invocation contract (added 2026-05-25)
 
@@ -29,7 +29,7 @@ Expect `Logged in using ChatGPT` (or equivalent). If not logged in, stop the ski
 cd "<repo-root>" && codex exec - < "<prompt-file-path>" > "<output-file-path>" 2>&1
 ```
 - `codex exec -` reads the prompt from stdin (avoids argv length limits for large prompts).
-- Output (stdout + stderr) goes to `docs/reviews/codex-adversarial-{feature}-{date}.md`.
+- Output (stdout + stderr) goes to `docs/reviews/raw/codex-adversarial-{feature}-{date}.md`.
 - Wrap with `run_in_background: true` on the Bash tool call — Codex with `model_reasoning_effort = "xhigh"` typically runs 10-45 minutes. The harness notifies when the background job completes.
 - Model + reasoning effort come from `~/.codex/config.toml` (currently `model = "gpt-5.5"`, `model_reasoning_effort = "xhigh"`). Do NOT override unless the user asks.
 - Codex picks up project rules from `AGENTS.md` automatically (no need to mention it in the prompt).
@@ -45,7 +45,7 @@ cd "<repo-root>" && codex exec - < "<prompt-file-path>" > "<output-file-path>" 2
 
 1. Run `git diff --name-only HEAD` and `git diff --name-only HEAD~3..HEAD` to find recently changed `.cs` files
 2. Group changed files by feature directory (e.g., `Main/Features/SettlementGuards/` → SettlementGuards)
-3. Check `docs/reviews/` for any `codex-adversarial-*.md` file modified in the last hour
+3. Check `docs/reviews/raw/` for any `codex-adversarial-*.md` file modified in the last hour
    - If found: go to **Phase 3** (verify that review)
    - If not found: go to **Phase 2** (write prompt for the most-changed feature)
 
@@ -113,7 +113,7 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
 8. Prior review lessons:
    SUCCESSES: Config ID cross-ref caught rohan/dol_guldur mismatches. Vanilla decompilation caught missing gates. Lifecycle tracing caught stale caches.
    FAILURES: Codex assumed empire=Rohan (it is Dunland). Codex flagged vanilla-matching code as bugs. Codex skipped hard sections.
-9. Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
+9. Output to: docs/reviews/raw/codex-adversarial-{feature}-{date}.md
 
 ### 2e: Dispatch Codex directly
 
@@ -122,7 +122,7 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
 3. **Dispatch via Bash** in background:
    ```
    Bash tool call:
-     command: cd "<repo-root>" && codex exec - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/codex-adversarial-{feature}-{date}.md" 2>&1
+     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md" 2>&1
      run_in_background: true
      timeout: 600000  (10 min — Codex usually finishes inside this; harness will notify when actually done)
    ```
@@ -137,7 +137,7 @@ Tell the user:
   Manual fallback:
     1. Open a terminal
     2. cd <repo-root>
-    3. codex exec - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/codex-adversarial-{feature}-{date}.md"
+    3. mkdir -p docs/reviews/raw && codex exec - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md"
     4. When done, re-invoke /review-codex with the .md file path as argument
 ```
 

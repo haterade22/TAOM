@@ -142,3 +142,8 @@ docs/raw/**/*.tar.gz
 # .codex_tmp*/ — Codex CLI sandbox temp dirs (restrictive ACLs spam git warnings).
 .dotnet_cli_home/
 .codex_tmp*/
+
+# Raw Codex/adversarial review transcripts (2-4 MB each): kept on disk for
+# reference, never committed. The durable record is the committed distillate
+# (prompt + RCA + REVIEW-LOG entry + LESSONS-LEARNED). See docs/reviews/REVIEW-GUIDE.md.
+docs/reviews/raw/

@@ -24,13 +24,13 @@ If triggered:
    - Write a focused prompt to `docs/reviews/codex-prereview-{feature}-{date}.prompt.md` (short version of the `/review-codex` prompt -- focus on Known Suspects + architectural risks; skip the heavy vanilla-decompile block).
    - Run via Bash:
      ```
-     command: cd "<repo-root>" && codex exec - < "docs/reviews/codex-prereview-{feature}-{date}.prompt.md" > "docs/reviews/codex-prereview-{feature}-{date}.md" 2>&1
+     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec - < "docs/reviews/codex-prereview-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-prereview-{feature}-{date}.md" 2>&1
      run_in_background: true
      timeout: 600000
      ```
    - See `.claude/skills/review-codex/SKILL.md` "Codex CLI invocation contract" for full dispatch semantics.
 3. Continue to Step 1 immediately — do NOT wait for Codex here. The 5 Claude agents run in parallel with the Codex background job.
-4. After all 5 Claude agents complete (Step 2), check if the Codex background job has notified. If yes, read `docs/reviews/codex-prereview-{feature}-{date}.md`. If not yet (Claude agents finish faster on this kind of work), Codex result will arrive later -- proceed with Step 3 using just the Claude agent results and append Codex when it arrives.
+4. After all 5 Claude agents complete (Step 2), check if the Codex background job has notified. If yes, read `docs/reviews/raw/codex-prereview-{feature}-{date}.md`. If not yet (Claude agents finish faster on this kind of work), Codex result will arrive later -- proceed with Step 3 using just the Claude agent results and append Codex when it arrives.
 5. Include Codex findings in the Step 3 compiled report as a sixth section:
    ```
    CODEX REVIEW:  [PASS/ISSUES — N findings]

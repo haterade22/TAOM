@@ -2,6 +2,21 @@
 
 ## 2026-07-12
 
+### chore(reviews): retention policy — raw Codex transcripts move to gitignored docs/reviews/raw/ (repo-reorg Track B)
+
+- **Problem.** `docs/reviews/` had grown to 43 MB / 265 git-tracked files, ~36 MB of it raw Codex stdout
+  transcripts (2–4 MB each) accumulating ~100 files/month with no retention scheme — repo bloat + grep noise
+  on every review-history search.
+- **One-time sweep.** 73 raw outputs (`codex-adversarial-*` non-prompt + `codex-prereview/selfreview/result-*`)
+  untracked (`git rm --cached`) and moved to `docs/reviews/raw/` (new, gitignored). Files stay on disk;
+  history keeps the old blobs (only ~1.5% of the pack — rewrite pointless). Deleted `_issue_body_tmp.md`.
+- **Kept committed** (the durable record): all 71 prompts (`*.prompt.md` + legacy `codex-prompt-*`), all
+  `rca-*.md`, `LESSONS-LEARNED.md`, `REVIEW-LOG/GUIDE`, adopt/audit docs. 14 RCA/REVIEW-LOG links repointed
+  to `raw/…` (resolve on-disk; dead in a fresh clone — accepted, the distillate is the record).
+- **Future flow.** `/review-codex`, `/codex-verify`, `/deep-review` now dispatch `codex exec` output to
+  `docs/reviews/raw/` (`mkdir -p` guard for fresh clones); prompts still commit. Retention section added to
+  `REVIEW-GUIDE.md`.
+
 ### chore(repo): remove tracked root scratch + relocate legacy scripts/ (repo-reorg Track B)
 
 - **Removed from tracking** (regenerable or one-off artifacts committed by accident): `SPOrderOfBattleVM.tmp.cs`
