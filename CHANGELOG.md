@@ -4,6 +4,18 @@
 
 ## 2026-07-12
 
+### refactor(docs): split LESSONS-LEARNED.md into per-category files under docs/reviews/lessons/ (repo-reorg Track B)
+
+- The master lessons record had reached 371 KB / 206 lessons in one file — the review skills' "read the
+  relevant category first" step meant loading (or section-hunting) the whole thing. **All 206 lessons moved
+  VERBATIM** (script-verified: per-category `###` counts sum to the source's 206) into 13 files at
+  `docs/reviews/lessons/<category>.md` (6–54 KB each); `LESSONS-LEARNED.md` stays at its path as a thin
+  index (3.4 KB — intro, house shape, linked ToC with per-category counts) so every historical
+  "LESSONS-LEARNED 'Category'" prose citation still resolves.
+- Each category file carries an append-here header with the house shape (`### rule` → Why missed →
+  Prevent → Source). Read/append instruction sites updated: `/deep-review` (Phase 3e), `/review-codex`
+  (Phase 3e), CLAUDE.md Doc Lookup row, harness MEMORY.md.
+
 ### chore(tools): segregate finished one-offs into tools/oneoff/ (repo-reorg Track B)
 
 - 33 scripts referenced by **no living doc** (checked `tools/`-prefixed AND bare-name mentions across
