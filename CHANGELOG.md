@@ -38,6 +38,7 @@
   Doc Lookup / Skill Routing / Scoped Rules / Hooks / Equipment over-cap rows trimmed. Fixed live
   version-drift while in there (the taom-src paragraph still said "installed v1.4.6" / "v1.4.5 dump" —
   now version-agnostic via the pin).
+- **Scoped Rules table:** `hook-authoring.md` + `native-cpp-ports.md` registered (follow-up commit).
 - **Config-row consolidation:** 16 per-feature config rows (SettlementFood config, CaravanTrade config,
   CareerSystem sprites, ...) dropped after verifying each path is documented in its feature doc's
   Configuration section; one umbrella row remains.
