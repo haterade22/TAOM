@@ -2,6 +2,17 @@
 
 ## 2026-07-12
 
+### chore(hooks): size-capped rotation for the two unbounded .claude/logs writers (repo-reorg Track B)
+
+- `session-stop.sh` rotates `session-log.md` at 1 MB → `.1` generation (was 2.8 MB, unbounded since
+  March); `log-agent.sh` rotates `agent-audit.log` at 256 KB → `.1` (was 270 KB). One previous
+  generation kept; both verified live (real oversized logs rolled on first trigger).
+- Side benefit: `check-deep-review.sh` greps `agent-audit.log` for deep-review evidence — with months
+  of unrotated history the reminder was permanently satisfied; rotation restores a recent window
+  (session-scoped filtering remains an optional follow-up).
+- `/context-save` Storage notes now tell the saver to prune >30-day snapshots whose work has landed
+  (the 18 stale 2026-05-13 phase snapshots this session deleted were the motivating case).
+
 ### chore(reviews): retention policy — raw Codex transcripts move to gitignored docs/reviews/raw/ (repo-reorg Track B)
 
 - **Problem.** `docs/reviews/` had grown to 43 MB / 265 git-tracked files, ~36 MB of it raw Codex stdout

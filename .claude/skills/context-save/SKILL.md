@@ -122,6 +122,7 @@ The amend bypass (Codex review #28) was a real prevention-theater finding. Now c
 - Directory is gitignored (snapshots are local working state, not part of the repo)
 - Naming convention: ISO-style timestamp first so `ls` orders chronologically
 - Old snapshots are NOT auto-pruned — clean up manually with `rm` or via /context-restore's "clear" mode
+- **When saving, prune stale siblings:** delete snapshots >30 days old whose work has demonstrably landed (check MEMORY.md / git log); keep anything still referenced as in-flight
 
 ## Pair with
 
