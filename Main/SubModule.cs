@@ -938,6 +938,15 @@ public class SubModule : MBSubModuleBase
             _harmony.PatchCategory("Patch_MissionTime_SetMovementOrder");
         }
 
+        // 1.4.7 headless-battle deployment-NRE guard: added ONLY while a shader-precompile walk is in
+        // flight (never a normal battle — IsWalkInProgress is false then). Seeds Mission.InitialPlayerAgent
+        // on the first agent build so the engine's new DeploymentMissionController.SetupTeams deref doesn't
+        // NRE the player-less precompile battle. Must be added HERE (the engine's mission-init hook, with
+        // the mission handed in directly) — an AddMissionBehavior from the game manager's OnLoadFinished
+        // no-ops because Mission.Current is not yet the battle mission at that point.
+        if (Features.ShaderPrecompilation.ShaderPrecompileRunner.IsWalkInProgress)
+            mission.AddMissionBehavior(new Features.ShaderPrecompilation.ShaderPrecompilePlayerAgentGuard(IoC.Resolve<IModLogger>()));
+
         mission.AddMissionBehavior(new AdvancedCombatBehavior());
         mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());

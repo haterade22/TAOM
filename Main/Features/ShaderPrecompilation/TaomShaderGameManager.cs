@@ -48,6 +48,11 @@ public class TaomShaderGameManager : CustomGameManager
                 ? BuildCharacterBattleData()
                 : BuildScenePassData(_item.SceneId);
             CustomBattleHelper.StartGame(data);
+            // The 1.4.7 deployment-NRE guard (ShaderPrecompilePlayerAgentGuard) is added from
+            // SubModule.OnMissionBehaviorInitialize (gated on ShaderPrecompileRunner.IsWalkInProgress) —
+            // NOT here: at this point Mission.Current is not yet the battle mission, so an
+            // AddMissionBehavior call silently no-ops (confirmed in-game 2026-07-10 — the guard never
+            // registered and the deployment NRE still fired).
             ShaderPrecompileRunner.NotifyItemRendering(_generation);
         }
         catch (Exception ex)

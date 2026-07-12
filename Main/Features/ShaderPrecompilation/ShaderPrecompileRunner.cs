@@ -6,6 +6,7 @@ using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.ShaderPrecompilation.Domain;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
+using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -30,6 +31,18 @@ public sealed class ShaderPrecompileRunner
     // (a short timeout would stack a new game on an uncleaned stack). TickEnding logs the live state
     // at 1 Hz so the first real walk confirms the clean path fires well before this (issue #287).
     private const long EndTimeoutMs   = 90_000;
+
+    // Per-item-kind decider caps. The all-characters battle legitimately compiles for 20-70 min so it
+    // keeps the generous defaults (churn backstop OFF — it can compile continuously for a long stretch);
+    // a single scene pass should never take minutes, so it gets tight caps + the churn backstop. This is
+    // the 1.4.7 stall bound: when the native shader counter churns without ever settling to zero, a scene
+    // pass can no longer trap the walk for the full 90 min default (the "stuck for hours" report).
+    private const long CharBattlePerItemMs    = 5_400_000;     // 90 min absolute
+    private const long CharBattleNoProgressMs = 900_000;       // 15 min frozen-count
+    private const long CharBattleMaxActiveMs  = long.MaxValue; // churn backstop disabled for the long battle
+    private const long ScenePerItemMs         = 480_000;       // 8 min absolute
+    private const long SceneNoProgressMs      = 180_000;       // 3 min frozen-count
+    private const long SceneMaxActiveMs       = 360_000;       // 6 min continuous-nonzero (churn)
 
     // The currently-running instance, for the static game-manager callbacks. Only one walk at a time.
     private static ShaderPrecompileRunner _active;
@@ -63,6 +76,11 @@ public sealed class ShaderPrecompileRunner
     }
 
     public bool IsActive => _state != RunState.Idle && _state != RunState.Complete;
+
+    // True while a walk is in flight (any item, including between-item teardown). SubModule
+    // .OnMissionBehaviorInitialize reads this to add the 1.4.7 deployment-NRE guard ONLY to the shader
+    // battles — a normal battle (no walk running) never gets it.
+    public static bool IsWalkInProgress => _active != null && _active.IsActive;
 
     // Single-line status for the loading-screen patch + the in-menu/in-mission reporter.
     public string StatusLine { get; private set; } = string.Empty;
@@ -99,7 +117,10 @@ public sealed class ShaderPrecompileRunner
     private void StartCurrentItem()
     {
         var item = _plan[_index];
-        _decider.ResetForItem();
+        if (item.Kind == PrecompileItemKind.CharacterBattle)
+            _decider.ResetForItem(CharBattlePerItemMs, CharBattleNoProgressMs, CharBattleMaxActiveMs);
+        else
+            _decider.ResetForItem(ScenePerItemMs, SceneNoProgressMs, SceneMaxActiveMs);
         _lastRemaining = -1;
         int gen = ++_generation;
         EnterState(RunState.Starting);
@@ -150,6 +171,11 @@ public sealed class ShaderPrecompileRunner
     // ---- per-frame driver (SubModule.OnApplicationTick) ---- //
     public void Tick()
     {
+        // Escape hatch: a held Ctrl+Shift+K cancels a stuck walk without killing the game. Uses the
+        // IMMEDIATE key state (not the buffered poll) because this runs from OnApplicationTick, outside
+        // the map input layer (the NavalTravel precedent). Checked before the state switch so it fires
+        // in any state (loading or rendering).
+        if (IsActive && IsCancelHotkeyDown()) { Cancel(); return; }
         try
         {
             switch (_state)
@@ -196,7 +222,7 @@ public sealed class ShaderPrecompileRunner
         }
         else if (action == PrecompileAction.AbortItem)
         {
-            _logger?.LogWarning($"[ShaderPrecompilation] item {_index + 1} hit per-item timeout after {Sec(itemElapsed)}s — advancing");
+            _logger?.LogWarning($"[ShaderPrecompilation] item {_index + 1} aborted ({_decider.LastAbortReason}) after {Sec(itemElapsed)}s, remaining={remaining} — advancing");
             BeginEnd();
         }
     }
@@ -250,6 +276,34 @@ public sealed class ShaderPrecompileRunner
         _active = null;
     }
 
+    // User-triggered escape hatch (Ctrl+Shift+K) for a walk that's taking too long — tears the current
+    // game down (the same MBGameManager.EndGame the per-item teardown uses, so it's proven safe from any
+    // active state) and returns to the main menu, re-arming everything the walk suppressed. No-op if idle.
+    public void Cancel()
+    {
+        if (!IsActive) return;
+        _logger?.LogWarning($"[ShaderPrecompilation] walk CANCELLED by user at item {_index + 1}/{_plan.Count} (state {_state})");
+        try { MBGameManager.EndGame(); }
+        catch (Exception ex) { _logger?.LogWarning($"[ShaderPrecompilation] EndGame threw on cancel: {ex.Message}"); }
+        _crashGuard.ClearLoading();                              // don't record the in-flight scene as a crash
+        BattleLoadStallWatchdog.SuppressStallDetection = false;  // re-arm the stall watchdog for real battles
+        EnterState(RunState.Idle);                               // IsActive -> false; a fresh Begin() may run later
+        StatusLine = "Shader pre-compilation cancelled.";
+        try { InformationManager.DisplayMessage(new InformationMessage(StatusLine)); } catch { }
+        _active = null;
+    }
+
+    private static bool IsCancelHotkeyDown()
+    {
+        try
+        {
+            return Input.IsKeyDownImmediate(InputKey.LeftControl)
+                && Input.IsKeyDownImmediate(InputKey.LeftShift)
+                && Input.IsKeyDownImmediate(InputKey.K);
+        }
+        catch { return false; }  // input layer not ready (e.g. mid-load) — never break the walk over a poll
+    }
+
     // One concise in-game pointer at walk start when a prior scene hard-crashed: the native fault address
     // (Windows Event Log) is the one thing we need to actually fix it (#287). Best-effort — never break the walk.
     private void ShowCrashCaptureToast(int skippedCount)
@@ -277,7 +331,7 @@ public sealed class ShaderPrecompileRunner
         int totalSec = Sec(now - _walkStartedMs);
         string rem = remaining < 0 ? "loading" : $"{remaining} shaders";
         StatusLine = $"Pre-compiling shaders — {_index + 1}/{_plan.Count}: {item.Description} — {rem} " +
-                     $"(item {FormatElapsed(itemSec)}, total {FormatElapsed(totalSec)})";
+                     $"(item {FormatElapsed(itemSec)}, total {FormatElapsed(totalSec)}) — Ctrl+Shift+K to cancel";
         _lastStatusMs = now;
     }
 

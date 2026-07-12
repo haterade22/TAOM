@@ -2,6 +2,34 @@
 
 ## 2026-07-11
 
+### fix(shader-precompilation): 1.4.7 deployment-NRE — precompile stuck on 1.4.7 (#336)
+
+- **Symptom.** On Bannerlord 1.4.7 the main-menu **Pre-compile Shaders** walk got stuck indefinitely;
+  worked on 1.4.6. A user debugger caught `NullReferenceException` at
+  `DeploymentMissionController.SetupTeams():173`, thrown every mission tick.
+- **Root cause — a 1.4.7 engine regression, not TAOM code.** 1.4.7 added an **unconditional** deref of
+  `Mission.InitialPlayerAgent` to `DeploymentMissionController.SetupTeams()`/`FinishDeployment()` (the new
+  `AgentControllerType` hand-control). That field is set only when an agent builds with `Controller ==
+  Player` (`Mission.cs:4024`); the precompile custom battle is **headless** (no human), so it stays null
+  and the deref NREs. 1.4.6 had no such deref. Managed shader APIs are byte-identical across the bump.
+  Scoped to precompile — every real battle has a player agent, so normal play is unaffected.
+- **Fix.** `ShaderPrecompilePlayerAgentGuard` (`MissionLogic`, added only during a walk via
+  `SubModule.OnMissionBehaviorInitialize` gated on `ShaderPrecompileRunner.IsWalkInProgress`): seeds
+  `InitialPlayerAgent` on the first agent build (before the deref) + force-finishes the OoB deployment so
+  the headless battle doesn't freeze waiting for a *Deploy* click. Reflection write of the private field is
+  drift-guarded by `ReflectionSiteBindingTests`.
+- **Robustness package** (bounds any future stall regardless of cause): per-item-kind decider caps (a scene
+  pass bails at 8 min instead of the 90 min the character battle needs), a **churn backstop** (a count that
+  changes every frame but never returns to 0 now aborts — the old frozen-count guard missed it),
+  self-classifying abort logs (`AbsoluteTimeout`/`FrozenCount`/`ChurnTimeout`), and a **Ctrl+Shift+K**
+  in-game cancel.
+- **Verified.** In-game 1.4.7: `WALK COMPLETE — 13 items in 8m 6s`, 0 NRE, 0 hang; the seed fired on all
+  12 deployment missions. 7 new/updated unit tests; full suite green. Deep-reviewed (5 agents: 0 functional
+  defects). RCA `docs/reviews/rca-shader-precompile-1.4.7-2026-07-11.md`.
+- **Known caveat.** The successful run completed the character battle in 20s on a warm shader cache, so the
+  force-finish path for that item wasn't exercised (its `InitialPlayerAgent` was non-null and it settled
+  before deployment mattered); a cold-cache run would additionally validate it. #336 stays OPEN for that.
+
 ### refactor(troop-weight): move the "elite tax" from the member count to the party-size limit — raw counts everywhere
 
 - **Player-facing fix.** Troop counts were confusingly inflated: a party could show **325** on the party

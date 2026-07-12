@@ -123,4 +123,99 @@ public class ShaderPrecompileDeciderTests
         d.ResetForItem();
         Assert.IsFalse(d.HasObservedWork, "ResetForItem must clear the per-item observed-work latch");
     }
+
+    // ---- 1.4.7 robustness: churn backstop, per-kind caps, self-classifying abort reason ---- //
+
+    [TestMethod]
+    public void Decide_ContinuouslyCompilingPastChurnCap_Aborts_WithChurnReason()
+    {
+        // The 1.4.7 hang class: a count that CHANGES every frame (never returns to 0) never trips the
+        // frozen-count guard (which needs an UNCHANGED count). The churn backstop bounds it — continuously
+        // nonzero for maxActiveCompile -> abort. grace=100, settle=50, noProgress=huge (won't fire),
+        // perItem=huge (won't fire), maxActiveCompile=300ms.
+        var d = new ShaderPrecompileDecider(100, 50, 1_000_000, 1_000_000, 300);
+        d.ResetForItem();
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(9, 10, 1000, false));   // active-compile clock starts = 1000
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(7, 100, 1150, false));  // changed, 150 < 300 (frozen guard can't fire — count moving)
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(5, 200, 1250, false));  // 250 < 300
+        Assert.AreEqual(PrecompileAction.AbortItem, d.Decide(4, 300, 1310, false)); // 1310-1000 = 310 >= 300 -> churn abort
+        Assert.AreEqual(PrecompileAbortReason.ChurnTimeout, d.LastAbortReason);
+    }
+
+    [TestMethod]
+    public void Decide_CompileDipsToZeroBeforeChurnCap_ResetsChurnClock()
+    {
+        // A dip to 0 (even brief, between batches) resets the continuously-nonzero clock, so a healthy
+        // batchy compile is never mistaken for a runaway churn.
+        var d = new ShaderPrecompileDecider(100, 50, 1_000_000, 1_000_000, 300);
+        d.ResetForItem();
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(9, 10, 1000, false));   // active clock = 1000
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(0, 100, 1200, false));  // dip to 0 -> churn clock reset; idle starts
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(5, 150, 1250, false));  // work again -> active clock = 1250
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(4, 250, 1450, false));  // 1450-1250 = 200 < 300 -> no churn abort
+    }
+
+    [TestMethod]
+    public void ResetForItem_WithCaps_OverridesCtorDefaults_AbsoluteReason()
+    {
+        // The runner passes per-item-kind caps via the overload. A short perItem override must abort
+        // sooner than the (huge) ctor default, and the reason must be the absolute backstop.
+        var d = new ShaderPrecompileDecider(100, 50, 1_000_000, 10_000_000, long.MaxValue);
+        d.ResetForItem(perItemTimeoutMs: 500, noProgressTimeoutMs: 1_000_000, maxActiveCompileMs: long.MaxValue);
+        Assert.AreEqual(PrecompileAction.AbortItem, d.Decide(5, itemElapsedMs: 500, nowMs: 1000, isLoading: false));
+        Assert.AreEqual(PrecompileAbortReason.AbsoluteTimeout, d.LastAbortReason);
+    }
+
+    [TestMethod]
+    public void Decide_FrozenCount_SetsFrozenReason()
+    {
+        var d = new ShaderPrecompileDecider(100, 50, 200, 10_000, long.MaxValue);
+        d.ResetForItem();
+        d.Decide(7, 10, 1000, false);
+        d.Decide(7, 100, 1150, false);
+        Assert.AreEqual(PrecompileAction.AbortItem, d.Decide(7, 250, 1210, false));
+        Assert.AreEqual(PrecompileAbortReason.FrozenCount, d.LastAbortReason);
+    }
+
+    [TestMethod]
+    public void ResetForItem_ClearsAbortReason()
+    {
+        var d = new ShaderPrecompileDecider(100, 50, 200, 10_000, long.MaxValue);
+        d.ResetForItem();
+        d.Decide(7, 10, 1000, false);
+        d.Decide(7, 300, 1300, false); // frozen abort
+        Assert.AreNotEqual(PrecompileAbortReason.None, d.LastAbortReason);
+        d.ResetForItem();
+        Assert.AreEqual(PrecompileAbortReason.None, d.LastAbortReason, "ResetForItem must clear the last abort reason");
+    }
+
+    [TestMethod]
+    public void Decide_ChurnCapDisabledByDefault_DoesNotAbortChangingCount()
+    {
+        // Backward-compat: the default ctor (no maxActiveCompile) leaves churn disabled, so a changing
+        // count that never settles keeps waiting exactly as before (only the absolute/frozen caps bound it).
+        var d = new ShaderPrecompileDecider(100, 50, 1_000_000, 1_000_000); // 4-arg: maxActiveCompile defaults to disabled
+        d.ResetForItem();
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(9, 10, 1000, false));
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(7, 5_000, 6000, false));   // changing, way past any short cap
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(5, 50_000, 51_000, false));
+        Assert.AreEqual(PrecompileAbortReason.None, d.LastAbortReason);
+    }
+
+    [TestMethod]
+    public void ResetForItemNoArg_RestartsChurnClock_NoCarryOverAbort()
+    {
+        // The no-arg ResetForItem() (used between items) must RESTART the continuous-compile clock, not
+        // carry the previous item's start time — else a fresh item at a later wall-clock would abort instantly.
+        var d = new ShaderPrecompileDecider(100, 50, 1_000_000, 1_000_000, 300);
+        d.ResetForItem();
+        d.Decide(9, 10, 1000, false);                                              // churn clock starts = 1000
+        Assert.AreEqual(PrecompileAction.AbortItem, d.Decide(8, 400, 1400, false)); // 1400-1000 = 400 >= 300 -> churn abort
+        Assert.AreEqual(PrecompileAbortReason.ChurnTimeout, d.LastAbortReason);
+
+        d.ResetForItem();                                                          // restore ctor caps + clear churn clock/reason
+        Assert.AreEqual(PrecompileAbortReason.None, d.LastAbortReason);
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(9, 10, 2000, false));      // churn clock restarts at 2000, NOT the old 1000
+        Assert.AreEqual(PrecompileAction.Wait, d.Decide(8, 200, 2200, false));     // 2200-2000 = 200 < 300 -> wait (no carry-over abort)
+    }
 }
