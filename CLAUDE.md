@@ -60,11 +60,7 @@ If a task has internal sub-steps, those go in your head or as conversation, not 
 
 ### Inline-hook activation (skills with `hooks:` frontmatter)
 
-Hooks declared in a SKILL.md `hooks:` block are scoped to that skill's lifecycle — **they only fire while the skill is invoked.** This has three concrete consequences:
-
-1. **State files alone are inert.** Writing `.claude/tmp/freeze/freeze-dir.txt` from a non-`/freeze` agent does nothing — the freeze hook is not active. To engage the boundary, **invoke `/freeze`** (via the Skill tool). Other agents that recommend scope-locking must direct the user to `/freeze`, not simulate it.
-2. **Cross-skill hook reuse is intentional and explicit.** `/investigate` re-declares the freeze hook in its own SKILL.md frontmatter so writing the state file from inside `/investigate` works (its hooks are active). Don't extend this pattern blindly to other skills — copy the hook block deliberately.
-3. **Global enforcement belongs in `.claude/settings.json`.** If you need a hook that fires regardless of which skill is active, declare it there. Inline-frontmatter hooks are the right tool for opt-in / scoped behavior, not unconditional safety nets.
+Frontmatter hooks fire ONLY while their skill is invoked — a state file written from another context is inert (invoke `/freeze`, don't simulate it); global enforcement belongs in `.claude/settings.json`. Facts + the `/investigate` cross-skill exception: `.claude/rules/harness-facts.md` "Hook lifecycle".
 
 ### Edit scope discipline
 
@@ -76,72 +72,54 @@ See also `.claude/rules/think-before-coding.md` (always-load) for the assumption
 
 ### Native C++ port discipline
 
-**When porting C++ code from an upstream mod into TAOM (`Dependencies/*.NativeHooks/`, scene scripts, or any other vendored native), audit the port from scratch. "Upstream worked" only means "produced correct output" — it does NOT mean the port is fit to ship in TAOM.**
-
-The recurring failure mode: architectural changes (rename functions, change export signatures, retarget output path) consume the audit budget; behavioral preservation (logging, exception handling, lock balance) flies through unaudited. Three review findings on the NativeSkinFixes port (2026-05-26) traced to this — all inherited verbatim from the upstream Nexus mod. See `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md`.
-
-Before you commit a C++ port, walk this checklist:
-
-1. **Hot-path logging.** Every `OutputDebugString` / `fprintf` / `fputs` / `LogLine` call inside a function the engine calls per-frame / per-Face_mesh / per-agent must be sample-gated (atomic counter + summary on uninstall). Upstream debug logging is rarely audited; it's almost always a HIGH finding when it survives the port.
-2. **SEH filter specificity.** `__except (EXCEPTION_EXECUTE_HANDLER)` is a code smell. Use `GetExceptionCode()` to narrow to the specific class you expect (typically `EXCEPTION_ACCESS_VIOLATION`); let heap corruption / stack overflow propagate to the OS crash dumper.
-3. **Inter-function offsets.** Any computation like `helperFunc = mainFunc - 0xF6A0` is fragile across engine versions and must be replaced with an independent signature scan. The original NativeSkinFixes had one such offset for `NotifyPhysics`; the port replaced it with a 7th pattern.
-4. **Atomic counters.** Any `static int counter` touched from a hook body is racy if the engine fires on multiple threads. Use `volatile LONG64` + `InterlockedIncrement64`.
-5. **SRWLock balance.** Reads use `AcquireSRWLockShared`; writes use `AcquireSRWLockExclusive`. Verify both sides — upstream mods routinely take the exclusive lock for reads ("just in case") and silently serialise everything.
-6. **`/deep-review` with C++ in scope.** The skill prompt now includes C++ HOT-PATH CHECKS and C++ Native Hook Standards blocks that fire automatically when `.cpp`/`.h` files are in the changeset (per the post-mortem on the same RCA). Run it.
-
-This is a project-level discipline, not a one-off feature note — every future C++ port has the same risk profile. See `feedback_native_port_hot_path_audit.md`, `feedback_seh_filter_specificity.md`.
+Porting C++ from an upstream mod? "Upstream worked" != fit to ship. The 6-point audit checklist (hot-path logging, SEH filter specificity, inter-function offsets, atomic counters, SRWLock balance, `/deep-review` with C++ in scope) lives in the paths-scoped rule `.claude/rules/native-cpp-ports.md` (loads when editing `Dependencies/**/*.cpp|h` or `Main/SceneScripts/**`). RCA: `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md`.
 
 ## Skills (Slash Commands)
 
+Full workflows live in each skill's SKILL.md (descriptions already load eagerly — this table is routing only).
+
 | Command | Purpose |
 |---------|---------|
-| `/research [Class]` | Decompile and analyze TaleWorlds classes |
-| `/new-feature [Name]` | Scaffold a new feature module with IoC, services, tests |
-| `/issue [bug\|feature\|crash] [desc]` | Create a GitHub issue with all required TAOM sections |
-| `/xslt-check [file]` | Validate XSLT against SandBoxCore vanilla XML |
-| `/migration-status` | Check v1.2 -> v1.3 migration progress |
-| `/scope-check [change]` | Assess whether a proposed change fits current work context |
-| `/build-fix [error]` | Incrementally fix dotnet build errors, one at a time, minimal diffs |
-| `/verify [quick\|full]` | Run build + test + git status and produce pass/fail report |
-| `/deslop [path]` | Regression-safe C# AI-slop cleanup: deletion-first, tests-first |
-| `/new-adr [name]` | Scaffold an auto-numbered ADR with context pre-filled from git log + CHANGELOG |
-| `/commit-split` | Group changed files by concern and commit each group atomically |
-| `/deep-review [feature]` | Launch 5+ agents: standards, compat, efficiency, completeness, data flow (8 trace categories incl. sprite verification + vanilla interaction safety). No agent limit. |
-| `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 5+ Claude agents + adaptive expansion |
-| `/codex-verify [feature]` | Dispatch lightweight Codex verification directly via `codex exec` (5-20 min); harness notifies on completion |
-| `/review-codex` | Heavyweight adversarial review: write prompt, dispatch Codex directly via `codex exec` (10-45 min), auto-verify findings + implement fixes when notification arrives |
-| `/context-budget [--verbose]` | Audit token consumption across `.claude/` (agents, skills, rules, MCP, CLAUDE.md). Recommend trims. |
-| `/freeze` | Hard-block all Edit/Write outside a chosen directory for the rest of the session. Pair with `/unfreeze` to release. |
-| `/unfreeze` | Release the directory edit lock set by `/freeze`. |
-| `/investigate` | Systematic 6-phase root-cause debugging. Auto-engages `/freeze` to lock debug scope. Iron Law: no fixes without root cause. |
-| `/agent-introspection-debugging` | 4-phase self-debug for failing AGENT runs (looping, drifting, burning tokens). Complements `/investigate` (which is for code bugs). |
-| `/context-save` | Snapshot working context (git, in-flight tasks, decisions, files) to `.claude/state/context/` so a future session can resume without losing progress. |
-| `/context-restore` | Load the most recent (or named) snapshot from `/context-save`. |
-| `/skill-stocktake` | Quality audit of installed skills + agents. Quick scan (recent only) or `full`. Catches decay (broken refs, stale paths, bloated descriptions). |
-| `/verify-bindings [check\|refresh\|full]` | Verify all Harmony patch / GameModel / reflection bindings resolve against the installed engine + refresh the committed API snapshot. Use after an engine bump or patch/GameModel change. |
-| `/ship [feature]` | Orchestrate the MANDATORY completion sequence: `/verify` → `/deep-review` → fix → `/review-codex` → close issue → docs → CHANGELOG. C# features touching ≥2 files only. |
-| `/new-culture [id]` | Author/revamp a culture's armor + troop tree + recruitment end-to-end (follows `docs/ai-includes/new-culture-authoring.md`). |
-| `/lord-skills [name\|culture]` | Assign lore-driven lord skills + traits via the TAOM SkillSet system (`docs/ai-includes/lord-skills-authoring.md`). |
-| `/localize [c#\|xml\|xslt]` | Propagate new player-facing text through the 12-language localization pipeline. |
-| `/author-armor [culture]` | Author LOTRLOME armor items + swap troop rosters (enforces canonical-folder + cover-attribute rules). |
-| `/finish-branch [branch] [base]` | Integrate a merge-ready branch into trunk: FF-check → merge → regenerate backlinks → CHANGELOG → delete branch (local+remote) → push (confirm). Post-`/ship`; TAOM trunk-based, not Git Flow. |
-| `/adopt-external [url]` | Review an external repo/article and fold the useful parts into TAOM: security-vet first (when the candidate ships `.claude/` skills/config, run `tools/audit_claude_config.py --root <clone> --external` on the foreign tree BEFORE porting) → map novel-vs-duplicative → tiered recommendation → port (never install) → adversarial review → commit. Follows `docs/ai-includes/external-repo-adoption.md`. |
-| `/security-scan` | Audit a Claude config for committed secrets, over-broad permissions, hook exfiltration, MCP risk, hidden-unicode injection. Default = TAOM's own (`.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md`); `--root <dir> --external` vets a FOREIGN/untrusted skill (SkillSpector-derived threat categories + Python-AST + clean-room YARA at full severity) — use during `/adopt-external`'s security-vet. Runs `tools/audit_claude_config.py`. |
-| `/doc-graph [explain\|path\|metrics]` | Query + audit the docs/ knowledge graph (`tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). Topology, not search. ADR-010 Phase 5; sibling of the `/lint-docs` + `/knowledge-compile` doc-tooling layer. |
-| `/improve [quick\|deep\|category\|branch\|next\|plan\|review-plan\|execute\|reconcile] [--issues]` | Whole-repo improvement audit (10 categories incl. game-data integrity) → vetted prioritized findings → self-contained handoff plans in `plans/` for cheaper executors. Advisor never edits source. Ported from shadcn/improve (MIT). |
-| `/native-crash-triage` | Root-cause native CTDs (AV in TaleWorlds.Native.dll) without symbols: Event Log fault offsets → `tools/native_crash_triage.py` (pdata bounds, string maps, caller chains) → mixed-mode debugger protocol. The 3-sites-in-one-day v1.4.6 method. |
-| `/new-creature-mount [name]` | Author a rideable creature mount end-to-end per `docs/ai-includes/creature-mount-authoring.md` (elephant+spider-proven): assets → Monster/action/usage XML → C# BT → parity-audit-first validation. |
-| `/refine-creature-anim` | Refine/author creature locomotion + mounted-rider clips in a live Blender-MCP session per `docs/ai-includes/creature-animation-blender-mcp-workflow.md`: extract→analyze_gait→re-phase/damp→export Kit-ready FBX. GUI-only; hands off to `/new-creature-mount` for Kit-compile + in-game test. |
-| `/engine-bump` | Respond to a Bannerlord version change: preserve decompile baseline → regen + managed diff → `/verify-bindings` + parity audits → control battles. Session-start hook warns on drift (pin: `.claude/pinned-game-version.txt`). |
-| `/humanizer` | Deep-clean AI-writing tells out of a finished prose artifact (doc/RCA/issue/commit body) via the full 33-pattern reference. Carves out TAOM's em-dash/boldface/inline-header house style. Always-on companion: `.claude/rules/ai-prose-style.md`. Ported from blader/humanizer (MIT). |
+| `/research [Class]` | Decompile + analyze TaleWorlds classes |
+| `/new-feature [Name]` | Scaffold feature module (IoC, services, tests) |
+| `/issue [bug\|feature\|crash]` | GitHub issue with required TAOM sections |
+| `/xslt-check [file]` | Validate XSLT against vanilla XML |
+| `/migration-status` | v1.2 -> v1.3 migration progress |
+| `/scope-check [change]` | Scope-creep assessment |
+| `/build-fix [error]` | Incremental build-error fixes, minimal diffs |
+| `/verify [quick\|full]` | Build + test + git pass/fail report |
+| `/deslop [path]` | Deletion-first AI-slop cleanup (tests green first) |
+| `/new-adr [name]` | Scaffold auto-numbered ADR |
+| `/commit-split` | Group changes by concern, commit atomically |
+| `/deep-review [feature]` | 5+ parallel review agents; `--codex` adds a Codex pre-review |
+| `/codex-verify [feature]` | Lightweight Codex verification (5-20 min) |
+| `/review-codex` | Heavyweight Codex adversarial review (10-45 min) |
+| `/context-budget [--verbose]` | Token-consumption audit across `.claude/` |
+| `/freeze` / `/unfreeze` | Hard directory edit lock / release |
+| `/investigate` | 6-phase root-cause debugging (Iron Law; auto-freeze) |
+| `/agent-introspection-debugging` | Self-debug failing agent runs |
+| `/context-save` / `/context-restore` | Snapshot / restore working context |
+| `/skill-stocktake` | Skill + agent quality audit |
+| `/verify-bindings [mode]` | Verify Harmony/GameModel/reflection bindings vs installed engine |
+| `/ship [feature]` | Orchestrate the mandatory completion sequence |
+| `/new-culture [id]` | Culture armor + troop tree + recruitment end-to-end |
+| `/lord-skills [name\|culture]` | Lore-driven lord skills + traits (SkillSet system) |
+| `/localize [c#\|xml\|xslt]` | 12-language localization propagation |
+| `/author-armor [culture]` | LOTRLOME armor items + roster swaps (canonical-folder + cover rules) |
+| `/finish-branch [branch] [base]` | Integrate a merge-ready branch into trunk |
+| `/adopt-external [url]` | External adoption: security-vet (`audit_claude_config.py --root <clone> --external` BEFORE porting) -> map -> tier -> port-never-install -> review |
+| `/security-scan` | Claude-config security audit — own tree, or `--root <dir> --external` for a foreign skill |
+| `/doc-graph [mode]` | Docs knowledge-graph topology queries |
+| `/improve [mode]` | Whole-repo improvement audit -> handoff plans in `plans/` |
+| `/native-crash-triage` | Root-cause native CTDs without symbols |
+| `/new-creature-mount [name]` | Rideable creature end-to-end (warg parity is law) |
+| `/refine-creature-anim` | Creature locomotion/rider clips in live Blender-MCP |
+| `/engine-bump` | Bannerlord version-change response (baseline-preserve first) |
+| `/humanizer` | Deep-clean AI-writing tells from a finished prose artifact |
 
 ### Workflow → Skill convention
 
-**Every recurring, multi-step workflow we develop becomes a skill.** When you find yourself running a process that is (a) **repeatable**, (b) **multi-step or chains other skills**, and (c) **carries TAOM-specific gotchas worth encoding**, author a `.claude/skills/<name>/SKILL.md` for it before the knowledge evaporates into a one-off transcript. The skill is a thin entry point — trigger, ordered steps, key tools, top gotchas — that **points to** the authoritative doc (`docs/ai-includes/*`, etc.) rather than duplicating it.
-
-**Do NOT skill-ify** one-offs, pure reference docs, or single-command operations — skill descriptions load **eagerly** into every conversation + Task spawn (see `.claude/rules/harness-facts.md`), so each skill is a permanent context tax. The filter is the three-part test above; when in doubt, leave it a doc and let `/skill-stocktake` flag it if it recurs.
-
-New skills must: keep `description` ≤30 words, follow the frontmatter rules in `.claude/rules/external-skill-ports.md`, register in the table above, and update `CHANGELOG.md` (the pre-commit hook enforces the last one).
+**Every recurring, multi-step workflow becomes a skill** when it is (a) repeatable, (b) multi-step or chains skills, and (c) carries TAOM-specific gotchas. The skill is a thin entry point pointing at the authoritative doc. **Do NOT skill-ify** one-offs, pure reference, or single commands — descriptions load eagerly into every conversation, a permanent context tax. New skills: description <=30 words, follow `.claude/rules/external-skill-ports.md`, register in the table above, update CHANGELOG.
 
 ## Skill Routing (when to invoke what)
 
@@ -174,8 +152,8 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | Multiple seemingly-unrelated bugs in same session/save, suspect shared root | **`error-detective` agent** (Task tool) | None — always |
 | "this method is too long", "this class needs to be split", structural cleanup without behavior change | **`refactoring-specialist` agent** (Task tool) | Tests must be green BEFORE invoking. Tests must remain green AFTER. |
 | "audit our skills", "are any skills broken", quarterly harness check | **`/skill-stocktake`** | None — diagnostic, no destructive action |
-| User shares an external repo/article "to see what we can adopt", "review this repo", "next repo", pastes a GitHub URL, OR shares an external skill / SKILL.md / Claude plugin / hook / MCP server to evaluate for adoption into TAOM | **`/adopt-external`** | None — always. It runs the security-vet-first → map → tier → port-never-install → review → commit cycle. When the candidate ships `.claude/` skills/config, the security-vet phase MUST run `python tools/audit_claude_config.py --root <clone> --external` (SkillSpector categories at full severity) on the foreign tree BEFORE porting. |
-| Before `/ship`, after editing a hook / MCP server / `settings*.json` permission / `CLAUDE.md`, OR after pulling/porting external `.claude/` config (skill, hook, MCP) into TAOM | **`/security-scan`** | Only when config/hooks/permissions changed, shipping, or external config was pulled — skip for routine feature edits. To vet a foreign skill BEFORE adoption, run `audit_claude_config.py --root <clone> --external` (see `/adopt-external`). |
+| User shares an external repo/article/skill/plugin to evaluate for adoption ("review this repo", "next repo", pastes a GitHub URL or a SKILL.md) | **`/adopt-external`** | None — always. Security-vet first: foreign `.claude/` trees get `python tools/audit_claude_config.py --root <clone> --external` BEFORE porting. |
+| Before `/ship`, after editing hooks / MCP servers / `settings*.json` permissions / CLAUDE.md, or after porting external `.claude/` config | **`/security-scan`** | Skip for routine feature edits. Foreign-skill vetting uses `--root <clone> --external` (see `/adopt-external`). |
 | "audit the whole repo", "what's worth doing / what should we build next", "write a handoff plan for X" | **`/improve`** | Repo-wide / proactive asks only — change-scoped C# review stays with `/deep-review`; build+test gating with `/verify`. |
 
 ### Soft suggest (offer, don't auto-invoke)
@@ -226,7 +204,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `response-style.md` | _(no `paths:` — always-load)_ | Open every reply with scrutiny, not agreement (challenge / name the gap when load-bearing); tag every response `[Certain]`/`[Likely]`/`[Guessing]`. |
 | `ai-prose-style.md` | _(no `paths:` — always-load)_ | Keep AI-writing tells (significance inflation, vague attributions, rule-of-three, filler, generic conclusions) out of produced prose (commits, CHANGELOG, issues, docs, RCAs). Carves out TAOM's em-dash/boldface house style. Full reference + deep-clean: `/humanizer`. |
 | `external-skill-ports.md` | `.claude/skills/**/SKILL.md` | Authoring a skill from scratch + per-field checklist for porting from external suites (gstack, etc.). |
-| `moduledata-validation.md` | `troops/troops_*.xml`, `characters/*.xml`, `equipmentsets/*.xml`, `taom_spcultures.xml`, `taom_partyTemplates.xml`, `named_companions/*.xml`, `taom_wanderers.xml`, `taom_education_character_templates.xml`, `tools/schemas/*.json` | Run `python tools/validate_moduledata.py` before committing ModuleData edits; schemas are source-of-truth; add new NPCCharacter-def files to `taom_npccharacter.json` applies_to. |
+| `moduledata-validation.md` | `troops/`, `characters/`, `equipmentsets/`, `taom_spcultures.xml`, `taom_partyTemplates.xml`, `named_companions/`, wanderers + education templates, `tools/schemas/*.json` | Run `python tools/validate_moduledata.py` before committing ModuleData edits; schemas are source-of-truth |
 | `vanilla-data-comparison.md` | `**/settlements.xml`, `**/sp_battle_scenes.xml`, `**/spcultures.xml`, `**/taom_spcultures.xml`, `**/spclans.xml`, `**/spkingdoms.xml`, `**/*.xslt` | Compare against current installed vanilla before modifying mirrored data. Vanilla renames/removes scenes & re-schemas XML between versions → stale TAOM refs crash. Scene-ref audit tools + post-bump checklist. |
 
 ## Custom Agents
@@ -281,8 +259,8 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | Work with GUI/sprites/UI | [gui-sprite-system.md](./docs/features/gui-sprite-system.md) |
 | Check ADR rules | [docs/adrs/](./docs/adrs/README.md) |
 | Ensure code quality | [code-quality.md](./docs/ai-includes/code-quality.md) |
-| Consult / append the master lessons-learned record (every `/deep-review`, `/review-codex`, and RCA lesson, by subsystem) | [docs/reviews/LESSONS-LEARNED.md](./docs/reviews/LESSONS-LEARNED.md) (index) → per-category files at `docs/reviews/lessons/<category>.md` — **read the relevant category file before touching a subsystem; append a `### rule / Why missed / Prevent / Source` entry there after every RCA.** Indexed from the harness memory (`~/.claude/projects/.../memory/MEMORY.md`) |
-| Review or rebaseline troop skill balance per culture (the baseline + `CULTURAL_MODS` curve, the read-only overview, the exclusion list) | [troop-skill-balance.md](./docs/features/troop-skill-balance.md) — `analyze_troop_balance.py` (read-only overview) + `rebalance_troops.py` (`--dry-run`/`--apply`); run the overview first, inspect downward deltas (they can signal a too-weak modifier, not over-tuned troops) |
+| Consult / append the master lessons-learned record | [LESSONS-LEARNED.md](./docs/reviews/LESSONS-LEARNED.md) (index) → `docs/reviews/lessons/<category>.md` — **read the category file before touching a subsystem; append the `### rule / Why missed / Prevent / Source` entry there after every RCA** |
+| Review or rebaseline troop skill balance per culture | [troop-skill-balance.md](./docs/features/troop-skill-balance.md) — run the read-only overview (`analyze_troop_balance.py`) BEFORE `rebalance_troops.py`; downward deltas can signal a too-weak modifier, not over-tuned troops |
 | Review LORD stats + the perks each lord's skills unlock, per culture (read-only) | [lord-perk-review.md](./docs/features/lord-perk-review.md) — `extract_perks.py` (perk catalog) + `analyze_lord_balance.py` (per-culture HTML); authoritative skills resolve via `skill_template`→`taom_lord_skill_sets.xml`, NOT the inline `<skills>`; no single-formula parity (two lord-skill systems) |
 | Check migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
 | Audit/fix scene refs after a version bump (battle-near-place crashes) | [scene-reference-audit.md](./docs/reference/scene-reference-audit.md) — `audit_scene_names.py` + `audit_battle_scenes.py` + `remap_stale_scene_names.py`; vanilla renames/removes scenes between versions |
@@ -294,8 +272,8 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | Author a new culture's armor + troop tree (end-to-end) | [new-culture-authoring.md](./docs/ai-includes/new-culture-authoring.md) — phases, helpers, color convention, iteration loops |
 | Add or fix lord skills + traits (any culture, any canonical character) | [lord-skills-authoring.md](./docs/ai-includes/lord-skills-authoring.md) — TAOM SkillSet system, archetype catalog, per-NPC override recipes, gotchas |
 | Add a rideable creature mount end-to-end (assets → Monster/action/usage XML → C# BT → validation) | [creature-mount-authoring.md](./docs/ai-includes/creature-mount-authoring.md) — elephant+spider-distilled; warg = reference implementation; 1.4.6 lookup-hardening (total key coverage, no `CanAttack`, `actt_dash` jump start, 45-row jump tables); 17-gotcha index; `tools/audit_mount_parity.py` |
-| Replace/refine a mount's FBX/tpac assets (constant animation refinement) | [creature-mount-authoring.md](./docs/ai-includes/creature-mount-authoring.md) → "REPLACING FBX / TPAC FILES" — back up, then the 4 silent-break failure modes (dropped skeleton → riderless, dropped `quad_movement` → AV, orphaned binding, un-split mesh). **MANDATORY post-deploy gate: `python tools/verify_mount_assets.py <creature>`** before battle-testing. Skeleton-drop fix: re-BUNDLE via `tools/tpac_skeleton_inject.py` (NOT `tpac_skeleton_extract.py` — a standalone skeleton tpac CRASHES the engine; spider 2026-06-14) |
-| Refine/author creature locomotion or mounted-rider animation clips in Blender (not data/XML) | [creature-animation-blender-mcp-workflow.md](./docs/ai-includes/creature-animation-blender-mcp-workflow.md) — Blender 5.1.2 slotted-action API, the `harness.py` toolkit, in-place authoring, gait biomechanics (elephant lateral / spider tetrapod), `quad_movement` Kit-compile boundary, composite rider-fit verification |
+| Replace/refine a mount's FBX/tpac assets | [creature-mount-authoring.md](./docs/ai-includes/creature-mount-authoring.md) → "REPLACING FBX / TPAC FILES" — back up, 4 silent-break failure modes, **MANDATORY post-deploy gate `python tools/verify_mount_assets.py <creature>`**; skeleton-drop fix = re-BUNDLE via `tpac_skeleton_inject.py` (a standalone skeleton tpac CRASHES the engine) |
+| Refine/author creature locomotion or rider clips in Blender (not data/XML) | [creature-animation-blender-mcp-workflow.md](./docs/ai-includes/creature-animation-blender-mcp-workflow.md) — Blender 5.1.2 slotted-action API, `harness.py` toolkit, gait biomechanics, the `quad_movement` Kit-compile boundary |
 | Create a craftable weapon (FBX → tpac → 4 XML files, by hand) | [weapon-creation-workflow.md](./docs/ai-includes/weapon-creation-workflow.md) — manual Step A–Z; per-piece schema, `bo_` collision convention, brace/couch/pike, **bows/shields = no decimals** rule. Automated alternative: [weapon-xml-pipeline.md](./docs/features/weapon-xml-pipeline.md) |
 | Plan future GameModel overrides | [roadmap.md](./docs/roadmap.md) |
 | Add or update translations | [TRANSLATOR_GUIDE.md](./docs/localization/TRANSLATOR_GUIDE.md) + [tools/README.md](./tools/README.md#localization-pipeline) |
@@ -306,8 +284,8 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | Understand mount/rider runtime or creature seating (howdah, riderless spider) | [mount-and-rider-runtime.md](./docs/reference/engine/mount-and-rider-runtime.md) — two-phase `EventControlFlag` mount, `RiderSitBone`, `UsableMachine` howdah `StandingPoint` seating |
 | Understand formation geometry, team AI, or `AutoGenerated.dll` DivideByZero | [formations-and-team-ai.md](./docs/reference/engine/formations-and-team-ai.md) — count-division sites (lines 756/1295/1428/1449), `_MT` threading, spider DivideByZero lead |
 | Understand DailyTick / CampaignTime / party AI / staggered AI ticks | [campaign-tick-time-and-party-ai.md](./docs/reference/engine/campaign-tick-time-and-party-ai.md) — heartbeat loop, `CampaignTime` struct, `TickPartialHourlyAi` stagger |
-| Understand settlement food / prosperity / hearth / caravans (why garrisons starve) | [settlement-economy-food-prosperity.md](./docs/reference/engine/settlement-economy-food-prosperity.md) — food = production − consumption (`Prosperity/40` + `garrison/20`), village food caps at 18/day, the prosperity death-spiral, garrisons don't starve-to-death, caravans don't feed towns, + the `TaomSettlementFoodModel` Troop-Weight fix |
-| Understand the quest/issue system, or convert vanilla quests to LOTR | [issue-and-quest-system.md](./docs/reference/engine/issue-and-quest-system.md) (engine A-to-Z: `IssueBase`/`QuestBase`/`IssueManager`/`QuestManager`, the 43-issue sandbox set, `RemoveBehaviors<T>` suppression, `SpecialQuestType` auto-cancel rule) + [lotr-issues.md](./docs/features/lotr-issues.md) (**IMPLEMENTED** 2026-06-20 — 43 vanilla procedural issues suppressed + replaced by 43 LOTR issues via XML-config + 3 generic templates: DeliverGoods/DeliverPersonnel/Combat; `LotrIssueSuppression.RemoveBehaviors<T>`; SaveableTypeDefiner base 726900801; per-issue disposition matrix) |
+| Understand settlement food / prosperity / hearth / caravans (why garrisons starve) | [settlement-economy-food-prosperity.md](./docs/reference/engine/settlement-economy-food-prosperity.md) — the food math, village caps, prosperity death-spiral, + the `TaomSettlementFoodModel` Troop-Weight fix |
+| Understand the quest/issue system, or convert vanilla quests to LOTR | [issue-and-quest-system.md](./docs/reference/engine/issue-and-quest-system.md) (engine A-to-Z) + [lotr-issues.md](./docs/features/lotr-issues.md) (**IMPLEMENTED** 2026-06-20 — 43 vanilla issues suppressed + replaced via XML-config + 3 generic templates) |
 | Browse all engine process docs | [docs/reference/engine/](./docs/reference/engine/) — full arc: campaign heartbeat → object graph → encounter seam → mission lifecycle → agent spawn → formation/team AI → mount/rider → combat stats → usable machines → UI → save/object system → GameModel → scene/script → campaign behaviors → items → module integration → settlement economy |
 
 ## Localization
@@ -325,11 +303,7 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | **Cache** (machine-translated, resumable) | `tools/translation_cache/<lang>.json` | Git-tracked. Re-runs free. ~700KB-1.3MB per lang. |
 | **Validation tests** | [TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs](./TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs) | Enforces 8 LanguageFile refs per language, well-formed XML, no missing files. |
 
-**When adding new TAOM C# code that displays text to the player:** wrap with `{=KEY}default` format (e.g., `new TextObject("{=taom_my_feature_label}My Feature")`) and add the key to `taom_module_strings.xml`. Then re-run the translation tool to propagate to all 11 AI-translated languages.
-
-**When adding new source XML files for in-game text:** add the file path to `SubModule.xml` as a `<XmlNode><XmlName id="GameText" path="..."/>` entry, add a `<LanguageFile>` reference in all 12 `language_data.xml` files, create empty stubs per language, and bump the `LanguageDataXmlTests.HaveExactlyXLanguageFiles` test count.
-
-**When XSLT files inject new text with `{=KEY}default`:** the keys need to be harvested into `taom_xslt_strings.xml` (see commit `20713a1` for the precedent). Run `tools/translate_with_claude.py` after the harvest to propagate.
+- **New C# player-facing text:** wrap `{=KEY}default`, add to `taom_module_strings.xml`, re-run the translation tool. **New source XML text files:** SubModule GameText node + `<LanguageFile>` x12 + stubs + bump the `LanguageDataXmlTests` count. **XSLT-injected `{=KEY}` text:** harvest into `taom_xslt_strings.xml` (precedent `20713a1`), then translate. Full workflow: `/localize` + [TRANSLATOR_GUIDE.md](./docs/localization/TRANSLATOR_GUIDE.md).
 
 ## Key Paths
 
@@ -387,28 +361,12 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | BehaviorTreeWrapper library (inlined) | `Main/BehaviorTreeWrapper/` — Bannerlord/Agent bindings over `BehaviorTrees` (`BehaviorTreeMissionLogic`, `BehaviorTreeAgentComponent`, listeners). `BehaviorTreeMissionLogic : MissionLogic` (NOT just `MissionBehavior` — regression rule, see `docs/reviews/rca-looter-battle-nre-2026-05-24.md`). Compiles into `TAOM.dll`. |
 | Alliance.Wargs | External module: Monster id="warg", animations, items |
 | CC narrative data | `Main/_Module/ModuleData/charactercreation/` (JSON) |
-| XML config | `Main/_Module/ModuleData/` |
+| XML config (per-feature) | `Main/_Module/ModuleData/<feature>/` — every feature's config/data paths + validation rules live in its `docs/features/<name>.md` Configuration section (sprites: `Main/_Module/GUI/SpriteParts/` + [gui-sprite-system.md](docs/features/gui-sprite-system.md)) |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
 | **TAOM_Map settlements (LIVE)** | `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` — **external module, NOT in repo**; the repo's `Main/_Module/ModuleData/settlements.xml` is a **STALE SHADOW** (edits don't affect the game). Live renames: `tools/Apply-MapVillageNames.py`. See [taom-map-settlement-naming.md](docs/reference/taom-map-settlement-naming.md) |
-| SpecialResources config | `Main/_Module/ModuleData/special_resources/` (resource defs + troop costs XML) |
-| CultureMarketplace config | `Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml` (optional per-culture blacklist + weight-boost overrides; ships empty — auto-derive from `MBObjectManager` is the default; `FiniteFloatValidator`-guarded weights, NaN/Infinity/negative/>1000 revert to 1.0 with warning) |
-| CareerSystem config | `Main/_Module/ModuleData/career_system/` (career defs + choice trees + ability templates + ability tuning XML) |
-| RevoltTuning config | `Main/_Module/ModuleData/configs/revolt_tuning_config.json` (4 thresholds/penalties; validated on load) |
-| SettlementFood config | `Main/_Module/ModuleData/settlement_food/settlement_food_config.json` (8 food knobs: garrison/prosperity consumption divisors, town/castle base food, per-village multiplier, flat bonus, storage caps; ships at vanilla values; validated — divisors ≥ 1, floats finite ≥ 0, invalid reverts to vanilla default; singleton-cached → app restart to reload) |
-| SettlementEconomy config | `Main/_Module/ModuleData/settlement_economy/settlement_economy_config.json` (3 town-gold regen knobs: base / perProsperity / regenRate; **ships BUFFED — base 25000 vs vanilla 10000** so drained town markets recover, #317; validated — finite, base [0,200000], slope [0,100], rate [0,1], invalid reverts to shipped default; singleton-cached → app restart to reload) |
-| CaravanTrade config | `Main/_Module/ModuleData/caravan_trade/caravan_trade_config.json` — four-lever knobs, validated field-by-field (`FiniteFloatValidator` + ordering + `warTradePolicy` string-set; invalid → shipped default); MCM "Caravan Trade" overrides headline knobs; singleton-cached → app restart to reload. See [caravan-trade.md](docs/features/caravan-trade.md) |
-| Messengers config | `Main/_Module/ModuleData/messengers/messenger_config.json` (advanced tuning — `accidentChancePerHour` + `travelSpeedMultiplier`; rejects NaN/Infinity/out-of-range; player-facing knobs in MCM `TaomSettings.Messengers`) |
-| CareerSystem CC config | `Main/_Module/ModuleData/charactercreation/career_menu.json` (50 career CC skill/attribute bonuses) |
 | CareerSystem starter equipment | `Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml` (per-(culture, archetype, gender) rosters) + LOTRLOME_Armory `LOTRLOME_items/<culture>/starter_armors.xml` — career starting kits; cover-attribute rule (`covers_legs`/`covers_hands`) in career-system.md. See [starting-equipment-tuning.md](docs/features/starting-equipment-tuning.md) |
-| CareerSystem sprites | `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/` (portraits 800x400, ability icons 256x256, dedicated atlas) |
-| Sprite atlas config | `Main/_Module/GUI/SpriteParts/Config.xml` (sprite category registration with `<AlwaysLoad />`) |
-| SettlementGuards config | `Main/_Module/ModuleData/settlement_guards/settlement_guards_config.xml` (per-settlement guard pools, clan/culture fallbacks, spear mappings) |
 | VolunteerRecruitment service | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` (+ per-culture partials under `RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs`, #308) — settlement/clan/culture volunteer pools + conditional pools driving `TaomVolunteerModel.GetBasicVolunteer`. See [volunteer-recruitment.md](./docs/features/volunteer-recruitment.md) |
-| VolunteerRecruitment Gondor JSON | `Main/_Module/ModuleData/recruitment_pools/gondor.json` — 23 Gondor chance groups + conditional Ithil Guard rule; %→integer weights ×10000, NaN/Infinity/negative rejected, fail-closed on unknown conditions; hand-written `InitializeGondorSettlements` kept as fallback. See [volunteer-recruitment.md](./docs/features/volunteer-recruitment.md) |
-| NamedCompanions config | `Main/_Module/ModuleData/named_companions/` (companion defs XML, spawn config JSON, backstory strings XML) |
-| StartupResources config | `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml` |
-| CCBodyProperties config | `Main/_Module/ModuleData/charactercreation/cc_body_properties.xml` (per-culture default BodyProperties for CC preview; 128-hex key per culture) |
 | TaleWorlds DLLs | `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client` |
 | Decompiled source | `E:\Decompiled_Bannerlord\` (pre-decompiled, organized by category) |
 | CI/CD | `.github/workflows/build.yml` |
@@ -578,7 +536,7 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 | Doc | When to update | Path |
 |-----|---------------|------|
 | **CHANGELOG.md** | Every session | `CHANGELOG.md` |
-| **CLAUDE.md** | New files, paths, patterns | `CLAUDE.md` |
+| **CLAUDE.md** | New features add ONE <=400-char Key Paths row + registry/table rows; prose goes in the feature doc, never the table (linter-enforced budget) | `CLAUDE.md` |
 | **ADRs** | Architectural decisions | `docs/adrs/` |
 | **Migration tracking** | Migration tasks | `docs/migration/TRACKING.md` |
 | **GitHub Issues** | Every feature, bug, crash, system fix | `gh issue create/close` |
@@ -586,96 +544,10 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 
 ## GitHub Issue & Knowledge Base Requirements (MANDATORY)
 
-### GitHub Issues — Create for ALL Work
-
-Every feature, bug fix, crash fix, or system change MUST have a GitHub issue. No exceptions.
-
-**When to create:**
-- Starting a new feature → create issue BEFORE implementation
-- Fixing a bug/crash → create issue documenting the problem FIRST
-- Completing a fix that was done without an issue → create issue retroactively with full details
-
-**Issue content — be exhaustive:**
-
-For **bug/crash fixes**, the issue body MUST include:
-1. **Problem** — exact error message, stack trace, reproduction steps
-2. **Analysis** — root cause investigation, what was examined, why it happened
-3. **Solution** — what was changed and WHY that approach was chosen
-4. **Files changed** — list of modified files with one-line descriptions
-5. **Testing** — how the fix was verified
-
-For **features**, the issue body MUST include:
-1. **Motivation** — why this feature exists, what problem it solves
-2. **Design** — architecture decisions, alternatives considered
-3. **Implementation** — key files, patterns used, configuration
-4. **Testing** — test coverage, how to verify it works
-
-**Lifecycle:**
-- Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
-- Reference the issue number in commits when possible
-- **Close the issue** with `gh issue close` when the work is complete and verified
-
-**Commands:** Use `gh issue create` and `gh issue close` via Bash.
-
-### Feature Documentation — `docs/features/`
-
-Every completed feature MUST have a documentation file at `docs/features/<feature-name>.md`. This is the **knowledge base** that prevents future sessions from re-analyzing solved problems.
-
-**Use template:** `docs/features/TEMPLATE.md`
-
-**Sections required:**
-- Overview — what it does in 2-3 sentences
-- Why This Exists — the problem it solves, with specific examples
-- Architecture — design challenge, solution approach, component diagram
-- Configuration — config files, data formats, current values
-- Key Files — table of all files with their purpose
-- Dependencies — what it relies on
-- Tests — test file locations and coverage summary
-- How-To — common operations (e.g., "How to add a new X")
-- Performance — any optimization notes (if applicable)
-
-**Existing examples:** `docs/features/race-age-system.md`, `docs/features/offspring-race-inheritance.md`
-
-**Rule:** If a future session needs to understand a feature, the doc should contain enough detail that ZERO decompilation, code reading, or re-analysis is needed for the conceptual understanding. Code reading is only for the current state of the implementation.
-
-### Completion Workflow (MANDATORY — every feature, no exceptions)
-
-Before closing out any feature or fix, run this FULL sequence:
-
-```
-Phase 1: BUILD & INTERNAL REVIEW
-  1. /verify                        — build + tests pass
-  2. /deep-review [feature]         — 5+ parallel agents (standards, compat, efficiency, completeness, data-flow)
-  3. Fix all confirmed findings (HIGH must fix in-session)
-
-Phase 2: CODEX ADVERSARIAL REVIEW (Claude dispatches directly, no user terminal step)
-  4. /review-codex                  — writes prompt to docs/reviews/codex-adversarial-{feature}-{date}.prompt.md
-                                      AND dispatches via `codex exec - < prompt.md > output.md 2>&1` (run_in_background)
-                                      AND tells the user once: "dispatched, expected window 10-45 min"
-  5. (harness notifies on completion — Claude auto-resumes; no /review-codex re-invocation needed)
-  6. Verify each Codex finding by reading TAOM source + decompiling vanilla targets — implement confirmed fixes
-
-Phase 3: SELF-REVIEW (review our OWN fixes)
-  7. /review-codex                  — second pass, same auto-dispatch flow against the post-fix diff
-  8. (harness notifies on completion)
-  9. Verify findings on our fixes, implement confirmed fixes
-
-Phase 4: CLOSE OUT
-  10. /verify                       — final build + tests pass
-  11. Create/close GitHub issue with full details
-        ↑ Issue must exist BEFORE the closing commit, not after.
-          Codex review #28 caught us creating issue #92 retroactively for
-          b7e7188. The pre-commit hook only enforces CHANGELOG, not issue
-          creation — discipline is on the author. Pattern: open the issue
-          when starting the work, reference it in commit messages, close
-          it with the final commit.
-  12. Write/update docs/features/<name>.md
-  13. Update CHANGELOG.md
-```
-
-**Do not skip any phase.** Phase 2 catches bugs Claude misses (43 found in codebase review). Phase 3 catches bugs in our fixes (already caught IsFemale field targeting wrong type, shaghana/abanissa alignment mismatch). Each phase exists because the previous one proved insufficient.
-
-**Process docs:** `docs/reviews/REVIEW-GUIDE.md` (prompt templates), `docs/reviews/REVIEW-LOG.md` (scoring history)
+- **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair). Exhaustive bodies — bug: Problem/Analysis/Solution/Files/Testing; feature: Motivation/Design/Implementation/Testing. Label, reference in commits, `gh issue close` when verified.
+- **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md), detailed enough that a future session needs ZERO decompilation or re-analysis for conceptual understanding.
+- **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix (HIGH in-session) -> `/review-codex` (auto-dispatch) + verify/fix -> `/review-codex` self-review pass -> final `/verify` -> issue (must exist BEFORE the closing commit) + feature doc + CHANGELOG. `/ship` orchestrates it; full templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md).
+- **Process docs:** `docs/reviews/REVIEW-GUIDE.md` (prompt templates), `docs/reviews/REVIEW-LOG.md` (scoring history).
 
 ## Commits
 
@@ -718,13 +590,13 @@ Phase 4: CLOSE OUT
 
 ### TaleWorlds Research — Lookup Order
 
-**Always use `taom-src` first.** It runs `ilspycmd` against the installed v1.4.6 DLLs and caches under `~/.taom-src/v1.4.6/` (the script auto-detects the version from `Version.xml`, so older `~/.taom-src/v1.4.5/` + `v1.3.15/` caches remain on disk but are unused). The dump at `E:\Decompiled_Bannerlord\` is v1.4.6 (regenerated 2026-07-02, matching installed) and fine for browsing namespaces/patterns; for authoritative method signatures still prefer `taom-src` against the installed DLLs (the dump can lag after a future engine bump).
+**Always use `taom-src` first.** It runs `ilspycmd` against the installed DLLs (version auto-detected from `Version.xml`) and caches under `~/.taom-src/<version>/`. The `E:\Decompiled_Bannerlord\` dump matches the pin and is fine for browsing namespaces/patterns; for authoritative signatures prefer `taom-src` against the installed DLLs (the dump can lag after an engine bump).
 
 | Step | Action | When |
 |------|--------|------|
 | 0. **[Engine process docs](./docs/reference/engine/)** | Pre-filtered, TAOM-relevant, file:line-cited docs for 19 engine subsystems | **First** for "how does X work" questions (lifecycle, formation, mount/rider, campaign-mission seam, heartbeat, spawn pipeline). Saves raw decompile time when the process is already documented. |
 | 1. **`pwsh tools/taom-src.ps1 path <Type>`** | One command — decompiles the installed (v1.4.7) DLL on cache miss, returns absolute path | **For signature verification** (Harmony patch, GameModel override, adapter, API call) — authoritative; run after you understand the process conceptually |
-| 2. **Browse `E:\Decompiled_Bannerlord\`** | `Read` / `Grep` / `find` against the v1.4.5 dump (see folder layout below) | Finding which DLL a class lives in, exploring a namespace tree |
+| 2. **Browse `E:\Decompiled_Bannerlord\`** | `Read` / `Grep` / `find` against the dump | Finding which DLL a class lives in, exploring a namespace tree |
 | 3. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Fallback if `taom-src` fails (e.g., need a full DLL type listing) |
 
 See `.claude/skills/taom-src/SKILL.md` for full usage. Composes with standard tools:
@@ -732,29 +604,7 @@ See `.claude/skills/taom-src/SKILL.md` for full usage. Composes with standard to
 rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)
 ```
 
-**Decompiled source layout** (`E:\Decompiled_Bannerlord\` — for browsing only, never signatures):
-
-> ⚠️ **The category folders below are the SHIPPING-CLIENT decompile — they STRIP editor-only code.** Editor-only
-> managed types (`EditorGame`, `MBEditor`, `AnimalSpawnSettings`, `VertexAnimator`, FBX-import / scene / animation
-> authoring) live ONLY in the **wEditor** build of the *same-named* DLLs — **"absent from this dump" ≠ "doesn't
-> exist."** Lookup order: **shipping → if missing, the editor build → if still missing, it's native (Qt/C++).** For
-> both builds side-by-side use the dual-build decompile at `E:\Decompiled_Bannerlord\{_shipping_build,_editor_build}\`
-> (regen: `tools/decompile_bannerlord.ps1`); inspect native DLLs with `tools/pe_inspect.py`. Full map (builds,
-> managed-vs-native, the Mono/PhysX/Granite/DX11 engine stack, FBX→tpac pipeline):
-> [docs/reference/bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md).
-
-| Folder | Contents |
-|--------|----------|
-| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,556 files) |
-| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (1,977 files) |
-| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views (1,362 files) |
-| `Core/` | `TaleWorlds.Core`, Library, SaveSystem, Localization (666 files) |
-| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (386 files) |
-| `UI/` | GauntletUI, PrefabSystem, PSAI (285 files) |
-| `Network/` | Diamond, Network, PlayerServices (147 files) |
-| `Platform/` | PlatformService, Achievements, ModuleManager (69 files) |
-| `Launcher/` | Launcher.Library, Launcher.Steam (40 files) |
-| `ThirdParty/` | Newtonsoft.Json, Steamworks.NET, jose-jwt (1,081 files) |
+**Decompiled source layout:** `E:\Decompiled_Bannerlord\` category tree = the SHIPPING-CLIENT decompile (STRIPS editor-only code — "absent from the dump" != "doesn't exist"; editor-only types live in the `{_shipping_build,_editor_build}` dual-build). Folder map, builds, native-DLL inspection: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md).
 
 **DLL path** (for ILSpy MCP fallback): `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\` (shipping). **Editor build = `…\bin\Win64_Shipping_wEditor\`** — same-named DLLs with editor-only types compiled in.
 
@@ -787,8 +637,8 @@ Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy, taom-moduleda
 | `mark-verification-run.sh` | PostToolUse (Bash) | Touches `.claude/logs/.verification-ran` when `dotnet build`/`dotnet test`/`build.ps1` runs. Feeds the verification Stop hook. |
 | `check-verification-evidence.sh` | Stop | Reminds to build/test when a `.cs` file changed but no verification ran since the last edit. Enforces `.claude/rules/evidence-over-claims.md`. |
 | `check-moduledata-validation.sh` | PreToolUse (Bash) | Hard-blocks `git commit` when staged `Main/_Module/ModuleData/**/*.xml` fails the ERROR-severity checks of `tools/validate_moduledata.py` (broken Item/NPCCharacter ref, unknown culture, duplicate id). Fail-open: missing python / game install / validator crash never blocks. Warnings don't block — run the tool to see them. |
-| `check-native-dll-crt.sh` | PreToolUse (Bash) | Hard-blocks `git commit` when the staged vendored `TAOM.NativeSkinFixes.dll` links a dynamic/debug CRT (imports `vcruntime*`/`msvcp140*`/`ucrtbase*`/`api-ms-win-crt*` via `tools/pe_inspect.py`). Those runtime DLLs are absent on players' machines without Visual Studio → `LoadLibrary` Win32 error 126 → feature inert. The DLL must link a static CRT (Debug `/MTd`, Release `/MT`). Fail-open: not staged / no python / DLL absent never blocks. |
-| `check-doc-config-drift.sh` | PreToolUse (Bash) | Hard-blocks `git commit` when a staged `docs/features/*.md`, `Main/_Module/ModuleData/**/*.json`, `.claude/pinned-game-version.txt`, `CLAUDE.md`, or API-snapshot markdown has **config-example drift** (a feature-doc `json` example disagreeing with the shipped config it mirrors) or a **version mismatch** (CLAUDE.md target / snapshot header ≠ the pin), via `tools/lint_docs.py --fail-on-drift`. Enforcement for the v1.4.7-bump doc-drift finding (`docs/reviews/rca-v1.4.7-bump-2026-07-08.md`). Fail-open: no python / linter crash / nothing relevant staged never blocks. |
+| `check-native-dll-crt.sh` | PreToolUse (Bash) | Hard-blocks commit when the staged `TAOM.NativeSkinFixes.dll` links a dynamic/debug CRT (absent on player machines → `LoadLibrary` error 126); must link static CRT (`/MT`). Fail-open |
+| `check-doc-config-drift.sh` | PreToolUse (Bash) | Hard-blocks commit on config-example drift, version mismatch vs the pin, or a CLAUDE.md budget violation, via `tools/lint_docs.py --fail-on-drift`. Fail-open |
 
 ## Hook Response Contracts
 
@@ -812,7 +662,7 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
 - Target: Bannerlord v1.4.7 (installed game version; the `E:\Decompiled_Bannerlord\` dump is v1.4.7 as of 2026-07-08 — `ilspycmd` on the installed 1.4.7 DLLs is authoritative)
-- `E:\Decompiled_Bannerlord\` holds the v1.4.7 dump (category tree + dual-build both regenerated 2026-07-08 via `tools/decompile_to_folder.ps1` + `tools/decompile_bannerlord.ps1`; v1.4.6 + v1.4.5 baselines kept at `_categories_v1.4.6\`/`_shipping_build_v1.4.6\` + `_categories_v1.4.5\` + `_shipping_build_v1.4.5\`) — **the category tree is the SHIPPING-CLIENT decompile (strips editor code).** For editor-only code use the dual-build decompile `E:\Decompiled_Bannerlord\{_shipping_build,_editor_build}\` (see the ⚠️ note under "Decompiled source layout" + [docs/reference/bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md)). Browse for patterns; `ilspycmd` on installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` remains authoritative for signatures.
+- `E:\Decompiled_Bannerlord\` — v1.4.7 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}` for editor types; older baselines preserved). Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md); installed DLLs stay authoritative for signatures.
 - Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
 
@@ -844,7 +694,7 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | **Global items** | `LOTRLOME_items\LOTRAOM_weapons.xml`, `LOTRAOM_shields.xml`, `LOTRAOM_horses.xml` |
 | **Gondor prefix** | `sk_gd_ano_` (Anorien), `sk_gd_mns_` (Minas Tirith), `sk_gd_osg_` (Osgiliath), `sk_gd_cair_` (Cair Andros), `sk_gd_ith_` (Ithilien) |
 | **KEYforce spec drops** | `E:\repos\lotraom-assets\tools\<culture>_armors_and_troops.txt` — per-culture item lists + unit progression specs |
-| **CC facegen action_sets** | LIVE at `E:\Steam\...\LOTRLOME_Armory\ModuleData\action_sets.xml` (TAOM's own copy was removed 2026-05-04). Tracked snapshot at [`docs/reference/lotrlome-armory-snapshot/action_sets.xml`](docs/reference/lotrlome-armory-snapshot/action_sets.xml). Every TAOM-consumed race id MUST have `as_<race>_facegen` + `as_<race>_female_facegen` entries with the full ~106-action surface (copy `as_dwarf_facegen` verbatim, rename `id` + `base_set` only). Slim entries break post-parent CC stages. See [`docs/features/character-creation.md`](docs/features/character-creation.md#lotrlome-as_race_facegen-action_set-requirement-live-in-lotrlome_armory-not-taom) + memory `feedback_lotrlome_action_set_aliases.md`. |
+| **CC facegen action_sets** | LIVE at `E:\Steam\...\LOTRLOME_Armory\ModuleData\action_sets.xml`; tracked snapshot `docs/reference/lotrlome-armory-snapshot/`. Every TAOM race id needs full-surface `as_<race>_facegen` + `_female_facegen` (copy `as_dwarf_facegen`; slim entries break post-parent CC). See [character-creation.md](docs/features/character-creation.md) |
 
 ### Armory folder canonical home per item-id prefix
 

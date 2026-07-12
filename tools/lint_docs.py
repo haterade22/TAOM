@@ -37,14 +37,17 @@ AUDITS_DIR = DOCS_DIR / "audits"
 # and every agent spawn; at 174 KB it cost ~30K tokens before any work happened. The
 # decomposition thinned it to one-line table rows + doc links; these caps stop regrowth.
 # The bloat pattern is specific: a feature's whole design pasted into a table row (1-3K chars).
+# Cap calibration: the decomposition landed at ~91 KB — the honest floor at one-line density
+# with 85 Key Paths + 65 Harmony + 40 GameModel rows all kept (the plan's 60 KB estimate
+# predated recovering 17 missing Harmony categories). 100 KB hard / 95 KB warn = ~9 KB of
+# new-feature headroom before the gate nags; tighten if the index is ever slimmed further.
 CLAUDE_MD = REPO_ROOT / "CLAUDE.md"
-CLAUDE_MD_MAX_BYTES = 60_000       # hard cap (fail when enforcement is on)
-CLAUDE_MD_WARN_BYTES = 55_000      # report-only early warning
+CLAUDE_MD_MAX_BYTES = 100_000      # hard cap (fails --fail-on-drift)
+CLAUDE_MD_WARN_BYTES = 95_000      # report-only early warning
 CLAUDE_MD_MAX_TABLE_ROW = 400      # chars; thin rows run ~80-300
 CLAUDE_MD_MAX_PROSE_LINE = 600     # chars; catches paragraph bloat outside tables
-# Warn-only during the decomposition migration; flipped to True at its end (C8) so
-# --fail-on-drift (the pre-commit gate) blocks budget violations.
-CLAUDE_MD_BUDGET_ENFORCE = False
+# Enforcement flipped ON at the end of the decomposition (2026-07-12, Track C8).
+CLAUDE_MD_BUDGET_ENFORCE = True
 
 # Rolled-out CHANGELOG halves: verbatim historical text whose links/versions were written
 # relative to the repo root at the time — never lint them as living docs.

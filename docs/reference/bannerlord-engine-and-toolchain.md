@@ -199,3 +199,33 @@ References: [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanis
 - [docs/reference/engine/agent-spawn-and-render-pipeline.md](engine/agent-spawn-and-render-pipeline.md)
 
 <!-- backlinks-end -->
+
+## Decompiled-source folder layout (E:\Decompiled_Bannerlord\ category tree)
+
+Moved from CLAUDE.md (repo-reorg 2026-07-12). The category tree is the SHIPPING-CLIENT decompile (strips editor-only code) — for editor-only types use the dual-build decompile `{_shipping_build,_editor_build}` described above.
+
+**Decompiled source layout** (`E:\Decompiled_Bannerlord\` — for browsing only, never signatures):
+
+> ⚠️ **The category folders below are the SHIPPING-CLIENT decompile — they STRIP editor-only code.** Editor-only
+> managed types (`EditorGame`, `MBEditor`, `AnimalSpawnSettings`, `VertexAnimator`, FBX-import / scene / animation
+> authoring) live ONLY in the **wEditor** build of the *same-named* DLLs — **"absent from this dump" ≠ "doesn't
+> exist."** Lookup order: **shipping → if missing, the editor build → if still missing, it's native (Qt/C++).** For
+> both builds side-by-side use the dual-build decompile at `E:\Decompiled_Bannerlord\{_shipping_build,_editor_build}\`
+> (regen: `tools/decompile_bannerlord.ps1`); inspect native DLLs with `tools/pe_inspect.py`. Full map (builds,
+> managed-vs-native, the Mono/PhysX/Granite/DX11 engine stack, FBX→tpac pipeline):
+> this doc.
+
+| Folder | Contents |
+|--------|----------|
+| `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,556 files) |
+| `MountAndBlade/` | `TaleWorlds.MountAndBlade` — missions, agents, game logic (1,977 files) |
+| `Modules/` | `SandBox`, `StoryMode` — module behaviors, views (1,362 files) |
+| `Core/` | `TaleWorlds.Core`, Library, SaveSystem, Localization (666 files) |
+| `Engine/` | Engine, InputSystem, ScreenSystem, Navigation (386 files) |
+| `UI/` | GauntletUI, PrefabSystem, PSAI (285 files) |
+| `Network/` | Diamond, Network, PlayerServices (147 files) |
+| `Platform/` | PlatformService, Achievements, ModuleManager (69 files) |
+| `Launcher/` | Launcher.Library, Launcher.Steam (40 files) |
+| `ThirdParty/` | Newtonsoft.Json, Steamworks.NET, jose-jwt (1,081 files) |
+
+**DLL path** (for ILSpy MCP fallback): `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\` (shipping). **Editor build = `…\bin\Win64_Shipping_wEditor\`** — same-named DLLs with editor-only types compiled in.

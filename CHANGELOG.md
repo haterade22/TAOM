@@ -4,6 +4,51 @@
 
 ## 2026-07-12
 
+### fix(map): town_LN1 extra siege-ram slot — CTD joining any siege at Rivendell town
+
+- Player crash bundle `4d003ae6` (TAOM v2.0.10, Bannerlord 1.4.6): `IndexOutOfRangeException` in vanilla
+  `SettlementVisualManager.TickSiegeMachineCircles` every campaign-map frame while participating in a siege
+  at town_LN1. Root cause: the live TAOM_Map `Main_map/scene.xscene` gave town_LN1 **two** `map_siege_ram`
+  + two `map_siege_tower` slot entities = 4 attacker melee frames, while the engine hardcodes
+  `SiegeEvent.SiegeEnginesContainer.DeployedMeleeSiegeEngines` to length 3 (1.4.6 + 1.4.7 verified) — the
+  tower loop indexes `[ramFrames + towerIdx]` → `[3]` → IOORE → CTD. Three unguarded consumer paths share
+  the frames (circle tick, engine-visual tick, `MapSiegeVM` deploy UI); all TAOM C# exonerated (zero
+  patches on the crash stack).
+- Fix (external TAOM_Map module, not in repo): removed the duplicate ram entity (in-editor) → town_LN1 is
+  now 1 ram + 2 towers like the other 220 fortifications. Full-map audit: 221 fortifications, ram census
+  221, tower census 442, **zero** engine-cap violations or shape deviations remaining.
+- Cosmetic cleanup in the same pass: 16 fortifications carried wrong `map_defensive_engine_*` suffixes
+  (15 with all four slots tagged `_3`, castle_ES1 `_0,_2,_3,_3` — suffixes only feed the slot sort order,
+  counts were all exactly 4, no crash potential). 5 fixed in-editor; the remaining 11 (town_E2/E3/E4,
+  town_RU1/RU3–RU8, castle_ES1) retagged `_0.._3` by scripted byte-surgical digit swap preserving the
+  current effective sort order (file length unchanged). Defender tag census now uniform: 221 × each of
+  `_0`–`_3`. Backups: `scene.xscene.bak-20260712-{siege-ram-fix,suffix-fix}`.
+- Existing saves are safe (scene entities aren't serialized; no save can reference a 4th melee slot —
+  the campaign array was always length 3). In-game smoke owed: join a siege at Rivendell town, ≥30 s on
+  the map with the siege overlay active, confirm 1 ram + 2 tower circles and no CTD.
+
+### refactor(claude-md): secondary slims + budget gate flipped to ENFORCE (repo-reorg Tracks C7+C8, decomposition complete)
+
+- **Section slims:** Skills table -> routing-only one-liners (descriptions already load eagerly from SKILL.md
+  frontmatter — the fat table double-charged); Native C++ port discipline -> new paths-scoped rule
+  `.claude/rules/native-cpp-ports.md`; inline-hook-activation -> pointer to harness-facts; GitHub/KB
+  templates + the 13-step completion sequence -> `docs/ai-includes/completion-workflow.md` (verbatim,
+  CLAUDE.md keeps the mandates); decompile folder-layout table + wEditor warning -> merged into
+  `docs/reference/bannerlord-engine-and-toolchain.md`; Localization prose -> 4 bullets + guide link;
+  Doc Lookup / Skill Routing / Scoped Rules / Hooks / Equipment over-cap rows trimmed. Fixed live
+  version-drift while in there (the taom-src paragraph still said "installed v1.4.6" / "v1.4.5 dump" —
+  now version-agnostic via the pin).
+- **Config-row consolidation:** 16 per-feature config rows (SettlementFood config, CaravanTrade config,
+  CareerSystem sprites, ...) dropped after verifying each path is documented in its feature doc's
+  Configuration section; one umbrella row remains.
+- **Budget gate ON (calibrated):** `CLAUDE_MD_BUDGET_ENFORCE = True` — `--fail-on-drift` (the pre-commit
+  hook) now hard-blocks budget violations. **Cap recalibrated 60 KB -> 100 KB hard / 95 KB warn:** the
+  plan's 60 KB estimate predated recovering 17 missing Harmony categories and assumed fewer/shorter
+  index rows; the decomposition's honest floor at one-line density with all 85 Key Paths + 65 Harmony +
+  40 GameModel rows kept is ~91 KB. Gate proven end-to-end (pass at 91 KB -> forced-fail at a 50 KB cap ->
+  pass restored). **Net: CLAUDE.md 174 KB -> 91 KB (-48%, ~15-20K tokens per session + per agent spawn),
+  zero verified information loss, regrowth hard-gated.**
+
 ### refactor(claude-md): Key Paths verify-merge — 34 essay rows → one-liners + doc links (repo-reorg Track C5)
 
 - The Key Paths table carried a 200–3,400-char compressed restatement of each feature's doc (52 KB of the
