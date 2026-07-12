@@ -36,7 +36,7 @@ Levers 1–3 let caravans reach the undersupplied far / same-alignment towns van
 
 ## Configuration
 
-`Main/_Module/ModuleData/caravan_trade/caravan_trade_config.json` (singleton-cached — edits need an app restart). Validated field-by-field; invalid values revert to the shipped default with a logged warning. MCM group **"Caravan Trade"** exposes the headline knobs (which override the matching JSON fields at runtime); the curve internals stay JSON-only.
+`Main/_Module/ModuleData/caravan_trade/caravan_trade_config.json` (singleton-cached — edits need an app restart). Validated field-by-field; invalid values revert to the shipped default with a logged warning. Validation covers finite-float checks (`FiniteFloatValidator`), ordering constraints between related fields, and the `warTradePolicy` known-string set. MCM group **"Caravan Trade"** exposes the headline knobs (which override the matching JSON fields at runtime); the curve internals stay JSON-only.
 
 | Field | Default | Range | MCM? | Meaning |
 |-------|---------|-------|------|---------|
@@ -107,6 +107,8 @@ All 4 hooks lazy-cache their `IoC.Resolve` (`??=`); the `CanTradeWith` hook lazy
 ## References
 
 - Deep-review RCA: `docs/reviews/rca-caravan-trade-2026-07-04.md` (HIGH war-gate Neutral-inversion caught + fixed).
+- Codex adversarial review (2026-07-04): 4 MED findings, all fixed.
+- GitHub issue: #329.
 - Engine background: `docs/reference/engine/settlement-economy-food-prosperity.md` §Caravans.
 
 ---

@@ -753,6 +753,12 @@ bump as of 2026-06-12.
       + `SetTargetZ`. If Z-snap issues persist with our approach, switching to the donor's pattern requires: (1) `TranslateUser="true"`
       on seat entities in `taom_howdah_agent.xml`, (2) calling `base.OnTick(dt)` at the end of `TaomHowdahStandingPoint.OnTick`.
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+- **GitHub issue: #278** tracks the War Elephant feature.
+- The per-agent behavior tree attaches inside `ElephantMissionBehavior` via **`BTRegister`** (no new IoC registration — nodes resolve the service lazily through `ElephantCombat.Profile`).
+- The howdah prefab's repo path is **`Main/_Module/Prefabs/taom_howdah_agent.xml`** (the `taom_howdah_agent.xml` referenced throughout this doc).
+
 ---
 
 ## Changelog

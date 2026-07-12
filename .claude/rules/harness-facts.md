@@ -56,61 +56,9 @@ ahead of this one.
 | MEMORY.md is loaded at the start of every conversation. Cap is whichever binds first: first ~200 lines OR first ~25KB. | https://code.claude.com/docs/en/memory (verified 2026-04-26) | Counts toward the eager startup baseline. `scan_memory()` should enforce both caps in the token estimate. |
 | MEMORY.md lives at `~/.claude/projects/<project-slug>/memory/MEMORY.md`. The Claude Code memory docs only say `<project>` "is derived from the git repository". The exact derivation (drive letter lowercased + `--` + path with `/` and `\` replaced by `-`) is **empirical, not doc-backed** — observed on Windows + Git Bash on 2026-04-26. The format may differ on other platforms or change in future Claude Code versions. | https://code.claude.com/docs/en/memory + empirical | When auditing memory across projects, derive the candidate slug from `cygpath -w "$REPO_ROOT"` then transform — and fall back to substring matching if the derived slug doesn't match an actual directory. Substring matching alone on basename is ambiguous when multiple project slugs share a substring (TAOM, TAOM-Online, taommod), so prefer derived-then-fallback over fallback-only. |
 
-## Authoring a new hook — mirror the sibling's FULL convention set (EMPIRICAL: TAOM 2026-05-29)
+## Hook authoring conventions -> `.claude/rules/hook-authoring.md`
 
-When you add a hook to an existing category (a Stop reminder, a PreToolUse gate, a PostToolUse logger), do NOT copy only the part you're focused on. Enumerate and consciously **match-or-deviate** on the sibling hooks' entire convention set:
-
-| Convention | Where to copy it from | The 2026-05-29 miss |
-|---|---|---|
-| Detection (git state vs stdin JSON) | the nearest sibling in the same event | (got this right) |
-| **Muting / idempotency** (early-exit when already-handled) | `check-deep-review.sh` checks the audit log before re-reminding | `check-verification-evidence.sh` shipped without muting → re-nagged on every Stop while `.cs` stayed dirty (MED) |
-| **I/O preamble** (`INPUT=$(cat)` etc.) | copy a sibling's verbatim | `mark-verification-run.sh` hand-wrote `cat 2>/dev/null` + `printf`, diverging from 13 siblings (LOW) |
-| Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event | (got this right) |
-
-**Root cause** (RCA `docs/reviews/rca-superpowers-enforcement-2026-05-29.md`): treating a sibling as a *detection* template instead of a *full behavioral* template — same shape as the C++-port hot-path miss (`feedback_native_port_hot_path_audit.md`). The fix is a pre-flight pass over the sibling's whole body, not just the lines you need.
-
-## Git invocation forms hooks must handle
-
-When writing a PreToolUse(Bash) hook that filters on git subcommands, enumerate explicitly which invocation forms it must catch — substring matching `*"git commit"*` MISSES the following real-world forms (Codex review 2026-04-26 found this gap):
-
-| Form | Purpose | Handled by `*"git commit"*` substring? |
-|------|---------|----------------------------------------|
-| `git commit` | Bare commit | YES |
-| `git commit -m "msg"` | Commit with message | YES |
-| `git commit --amend` | Amend (must NOT blanket-skip — see "amend exemptions" below) | YES |
-| `git commit -F file.txt` | Commit with message file | YES |
-| `git -C /path commit` | Run as if from /path (no leading `cd`) | NO — needs `*"git -"*" commit"*` |
-| `git -c key=val commit` | One-time config override | NO — same |
-| `git --git-dir=/path commit` | Operate on a specific git-dir | NO — would need a separate pattern |
-| `git commit-tree` | Plumbing — DIFFERENT command, must NOT match | YES (false positive) — needs explicit `*"git commit-"*` rejection |
-| `git commit-graph` | Plumbing — same | YES (false positive) — same |
-
-**Reference pattern** (used by `check-changelog-changed.sh`, `check-claude-files-tracked.sh`, and `suggest-compact.sh`):
-
-```bash
-case "$COMMAND" in
-    *"git commit-"*) echo '{}'; exit 0 ;;       # commit-tree etc — different command
-esac
-case "$COMMAND" in
-    *"git commit"* | *"git -"*" commit"* ) ;;   # bare or with leading flags
-    *) echo '{}'; exit 0 ;;
-esac
-```
-
-**MANDATORY for any new hook that detects git commits.** Codex review #29 caught `suggest-compact.sh` shipping in `79350f2` with a bare `*"git commit"*` substring matcher — the same recursion-risk class codified after review #28. The prevention rule existed but wasn't applied to its own first user.
-
-When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping. The `/skill-stocktake` checklist now includes this check.
-
-## Amend exemptions in pre-commit hooks (recursion-risk pattern)
-
-Do NOT blanket-skip `git commit --amend` in pre-commit hooks. `amend` is commonly used as a workflow ("oops, forgot a file, amend it in") — that's exactly the case the hook needs to catch. Codex review 2026-04-26 caught this as prevention theater: both `check-changelog-changed.sh` and `check-claude-files-tracked.sh` originally exempted `--amend`, defeating the very gates they were supposed to enforce.
-
-Two correct patterns depending on what the hook checks:
-
-| Hook checks | Correct amend handling |
-|-------------|------------------------|
-| Files in the commit's diff (e.g., is CHANGELOG.md staged?) | Compute the **post-amend file set** as `staged ∪ HEAD` and apply the same gate. If CHANGELOG was already in HEAD's diff, it's still in the post-amend commit — the gate correctly allows. |
-| Working-tree state (e.g., is a file gitignored?) | Don't exempt amend at all. Working-tree state is amend-independent — a gitignored file on disk is just as broken in an amended commit as in a fresh one. |
+Writing or modifying a `.claude/hooks/` script? The authoring conventions — mirror-the-sibling's-FULL-convention-set, the two-stage git-commit matcher (handles `git -C ... commit`, rejects `commit-tree`), amend-exemption patterns, and log-rotation for appending hooks — live in the paths-scoped rule `.claude/rules/hook-authoring.md`, which loads automatically when a hook file is opened. The durable lifecycle facts (fail-open mandate, JSON output contract, settings-vs-frontmatter scoping) stay in the tables above.
 
 ## Gitignore blast radius
 
@@ -131,78 +79,26 @@ When you write or modify any skill, agent, rule, or hook in `.claude/`:
 
 5. **When writing facts in this file** (or any rule that asserts behavior) — every fact must explicitly cite either a doc URL (DOC-BACKED) or an observation context (EMPIRICAL: where, when, by whom). Vague "verified" claims without source attribution age into wrong assumptions. Example: the project-slug derivation rule was originally presented as fact; Codex caught that the Claude Code memory docs only say `<project>` "is derived from the git repository" — the exact format is empirical-on-Windows, not doc-backed.
 
-## Parallel-port build watcher (EMPIRICAL: TAOM 2026-05-06, CompanionTactics port session)
+## Parallel-port build watcher (EMPIRICAL: TAOM 2026-05-06)
 
-> **Prevention rule:** when spawning multiple `Agent` calls that may edit overlapping single-owner files, pass `isolation: "worktree"` on each. The cascade documented below is the symptom of NOT doing that. See **Worktree isolation for parallel agent runs** further down for the rule and rationale.
-
-When multiple feature ports run simultaneously in the TAOM working tree, an external watcher monitors build output and **auto-edits source files in response to build failures**. Symptoms confirmed during the CompanionTactics port:
-
-| What gets re-added | Where | When |
-|---|---|---|
-| `<Compile Remove="Features\<Feature>\**\*.cs" />` | `Main/TAOM.csproj` and `TAOM.Tests/TAOM.Tests.csproj` | After ANY build failure that mentions the feature |
-| Comments around `using TAOM.Features.<Feature>.*;` directives | `Main/SubModule.cs`, `Main/IoC.cs` | Same trigger |
-| Comments around integration calls (`AddBehavior`, `AddMissionBehavior`, `_harmony.Patch(AccessTools.Method(...))`) | `Main/SubModule.cs` | Same trigger |
-| Banner comment `// TEMP-SMARTCAVALRY-EXCLUDE: <error category>` | All of the above | Same trigger |
-
-**Key implication:** the watcher does NOT differentiate which feature actually had the error. A build failure caused by FiefManagement (or any other parallel port in flight) can trigger exclusion of CompanionTactics if both feature names appear in the build output. The cascade is destructive: excluding feature A causes its types to vanish from the namespace, which causes references in feature B to fail-compile, which triggers the watcher to exclude B too, and so on.
-
-**Workaround during integration:**
-1. Run `git status` BEFORE making single-owner-file edits — note which other parallel ports have unstaged changes.
-2. Make all source-file edits to YOUR feature first; ensure it compiles cleanly in isolation.
-3. Reserve csproj + `SubModule.cs` + `IoC.cs` edits for a SINGLE atomic batch.
-4. Run the build IMMEDIATELY in the same response (`dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true --verbosity quiet`).
-5. If the watcher re-comments after one cycle, find ALL the cumulative comment markers (grep for `TEMP-SMARTCAVALRY-EXCLUDE`) and uncomment them in one Edit, then build IMMEDIATELY again.
-6. If the watcher still wins after 2 attempts, check whether other parallel-port features have errors that are causing the cascade — fix those too, OR coordinate with the user to pause those ports.
-7. If you can't get an atomic build pass, fully-qualify your integration call sites (e.g., `new Features.CompanionTactics.FormationPresets.Hooks.FormationPresetCampaignBehavior(...)`) so the using-comment cycle doesn't break compilation. **Caveat:** this only helps if the namespace itself is included in the compile (i.e., the csproj exclusion is OFF) — if the watcher also excludes the source files, FQN resolution still fails.
-
-**Detection signature:** if you see comments matching `// TEMP-SMARTCAVALRY-EXCLUDE: <feature> parallel-port has compile errors; restore when ready.` adjacent to a using directive or integration call, the watcher has run on your feature.
-
-**Don't:** chase the watcher with iterative re-Edits — each cycle costs ~30s and burns context. Either close the build cleanly in ONE atomic batch, or accept that the feature ships with auto-commented integration and document the manual restoration in the feature doc + CHANGELOG.
-
-**RCA reference:** `docs/reviews/rca-companiontactics-2026-05-06.md` documents the full session lost to this watcher (~2 hours).
+An external watcher auto-comments a feature's csproj includes + `SubModule.cs`/`IoC.cs` integration (`// TEMP-SMARTCAVALRY-EXCLUDE` markers) after ANY build failure mentioning it, without distinguishing which parallel port actually broke — cascading across features. **Prevention: pass `isolation: "worktree"` on parallel Agent calls that may edit single-owner files** (see the rule below). Full symptom table + integration workaround + detection signature: `docs/ai-includes/agent-teams.md` "Case studies"; RCA `docs/reviews/rca-companiontactics-2026-05-06.md` (~2 hours lost).
 
 ## Parallel builder briefs: shared sub-problems get ONE prescribed solution (EMPIRICAL: TAOM 2026-07-02, CombatMechanics)
 
-When fanning a feature out to parallel builder agents against shared contracts, any sub-problem that appears in MORE THAN ONE brief (id normalization, NaN handling, validation invariants, hot-path allocation patterns) must be solved once in the shared contract/foundation files — never left to per-builder judgment. Independently-correct builders otherwise diverge at the seams, and per-component review structurally cannot catch it:
+When fanning a feature out to parallel builder agents against shared contracts, any sub-problem that appears in MORE THAN ONE brief (id normalization, NaN handling, validation invariants, hot-path allocation patterns) must be solved once in the shared contract/foundation files — never left to per-builder judgment; independently-correct builders diverge at the seams, and per-component review structurally cannot catch it.
 
-- Two CombatMechanics services normalized settlement-variant monster ids differently (runtime `Substring`-per-hit vs construction-time set expansion) — simultaneously a per-hit allocation AND a config-semantics inconsistency (a suffixed config entry matched in one service, never in the other).
-- The MCM slider clamp and the JSON validator enforced different ordering rules for the same value (each authored by a different hand).
-- The config-NaN rule was applied rigorously by the provider builder while the engine-input NaN side had no owner at all.
-
-**Pre-dispatch checklist:** (1) list sub-problems appearing in ≥2 briefs; (2) pin one solution in the shared contracts or a shared helper; (3) after integration, run a cross-consistency review over the seams (data-flow + efficiency agents), not only per-file checks. All four seam findings were caught by the cross-cutting review agents, none by per-component work. RCA: `docs/reviews/rca-combat-mechanics-2026-07-02.md`; LESSONS-LEARNED "Build, Tooling & Workflow".
+**Pre-dispatch checklist:** (1) list sub-problems appearing in >=2 briefs; (2) pin one solution in the shared contracts or a shared helper; (3) after integration, run a cross-consistency review over the seams (data-flow + efficiency agents), not only per-file checks. The four CombatMechanics seam findings behind this rule: `docs/ai-includes/agent-teams.md` "Case studies"; RCA `docs/reviews/rca-combat-mechanics-2026-07-02.md`.
 
 ## Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
 
-**Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call. Each agent then operates in its own git worktree on a temporary branch — the shared TAOM working tree is never touched in parallel, and the build watcher cascade above cannot fire.
+**Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call — each agent gets its own git worktree on a temporary branch, so the shared tree is never touched in parallel and the build-watcher cascade cannot fire.
 
-| Source | What it tells us |
-|---|---|
-| Claude Code Agent tool docs (DOC-BACKED) | The Agent tool accepts `isolation: "worktree"`; the worktree is auto-cleaned if the agent makes no changes, otherwise its path + branch are returned in the result. |
-| `feedback_parallel_port_build_watcher.md` (EMPIRICAL: TAOM 2026-05-06) | The cascade exists; the workaround is heroic Edit-cycles that burn ~30s each. The RCA documents ~2 hours lost. |
-| karpathy/autoresearch `.gitignore` (DOC-BACKED, March 2026) | Lists `worktrees/`, `queue/`, plus `CLAUDE.md`/`AGENTS.md` as "Agent prompt files (generated per-session by launchers)". The launcher fans agents into worktrees — confirming the same prevention from a second independent codebase. |
+**When to apply:** always for parallel edits to the files above, "parallel ports"/"multiple features in flight" requests, or parallel feature scaffolding (`feature-builder`, `/new-feature`).
+**When NOT needed:** read-only agents (`Explore`, research `Plan`); a single Agent call; agents on provably disjoint feature folders that don't touch csproj/IoC/SubModule (rare — audit the file set before assuming).
+**After they return:** merge each worktree branch's diff back sequentially; prune stale checkouts under `.claude/worktrees/` once merged/abandoned (4 forgotten trees cost 22 GB by 2026-07-11).
 
-**When to apply:**
-- Always, when the Agent calls will edit any of the files listed above.
-- Always, when the user asks for "parallel ports" or "multiple features in flight".
-- Always, when the prompt to the agent involves new feature scaffolding (`feature-builder`, `/new-feature`).
+Evidence table + invocation example: `docs/ai-includes/agent-teams.md` "Case studies".
 
-**When NOT needed:**
-- Read-only Agent calls (`Explore`, research-only `Plan` agents). They never write — no contention possible.
-- Single Agent call (no parallelism — no overlap).
-- Agents touching disjoint feature folders only (`Main/Features/A/...` vs `Main/Features/B/...`) AND not editing csproj/IoC/SubModule. This is rare in practice for new feature work; assume worktrees are needed unless you've audited the file set.
+## Last verified: 2026-07-12
 
-**How to invoke:**
-```
-Agent({
-  description: "...",
-  subagent_type: "feature-builder",
-  prompt: "...",
-  isolation: "worktree"
-})
-```
-
-If two parallel Agent calls in the same message both need to edit a single-owner file, BOTH must use `isolation: "worktree"`. After they return, the user/orchestrator is responsible for sequentially merging the diffs from each worktree branch back into the main tree — the watcher cascade only triggers on simultaneous edits to the same working tree, not on sequential merges.
-
-## Last verified: 2026-05-07
-
-This file is the source of truth for harness behavior in TAOM. Update the "Last verified" date and add new facts whenever a Codex review or experiment confirms something not yet captured here.
+This file is the source of truth for harness behavior in TAOM. Update the "Last verified" date and add new facts whenever a Codex review or experiment confirms something not yet captured here. Authoring-time conventions live in their scoped rules (`hook-authoring.md`, `external-skill-ports.md`); incident write-ups live in `docs/ai-includes/agent-teams.md` + the RCAs.

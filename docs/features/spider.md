@@ -330,6 +330,11 @@ the module is outside this repo, so that ledger is the only durable record of it
 - 2026-06-12 — v1.4.6 engine-bump campaign: three native crash sites root-caused and fixed (`CanAttack`, jump lookup, Die path); spider mount GREEN on 1.4.6.
 - 2026-06-11 — Giant spider rideable mount WORKING in battle; root cause was a missing `quad_movement` clip tag.
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+- The L/R mesh split was done **2026-06-05** (on the later-refuted "~40 per-mesh palette" premise — see "Why this exists" #2/#3 above).
+- The refuted premise, stated precisely: the only bone cap in the engine is the **64-bone `Skeleton.MaxBoneCount`**, NOT any per-mesh limit — one mesh skins the whole ≤63-bone skeleton, so a body is never split for bone count (memory: `feedback_no_40_bone_per_mesh_limit`).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

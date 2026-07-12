@@ -53,7 +53,7 @@ Flow:
 
 `IVolunteerRecruitmentService.HasCulturePool(cultureId)` reports whether a culture has a recruitment pool (`CultureMap` entry) so the conversion service never converts a fief to a culture it can't recruit for — minor/bandit cultures, and **playable cultures whose troop set isn't authored yet** (see "Known limitations" below). Rohan (`vlandia`) and Harad (`aserai`) culture-level pools were added 2026-06-02 (Codex review) so their conquests convert.
 
-### Notable replacement (2026-07-03)
+### Notable replacement (2026-07-03, issue #325)
 
 Without it, existing notables keep their `Hero.Culture` forever: nothing in vanilla changes a living notable's culture, a notable dying at `Power >= NotableDisappearPowerLimit` (100) is replaced by a relative that **copies the dead notable's culture** (`NotablesCampaignBehavior.OnHeroKilled` → `CreateRelativeNotableHero`), and only rare low-power propertyless notables disappear for the weekly deficit refill to backfill from the (converted) `settlement.Culture.NotableTemplates`. So a Mordor-held Gondor town stayed run by Gondorians indefinitely.
 
@@ -161,7 +161,7 @@ MCM knobs (merged over JSON by [`CultureConversionSettingsProvider`](../../Main/
 ## Changelog
 
 - 2026-07-07 — **Timer continuity**: same-culture ownership changes (fief grant after capture, re-grants, barters, same-culture recaptures) no longer restart the hold-timer — the clock continues from the original capture. Cancel/stale-drop paths now log at DEBUG for diagnosability. Root-caused from a play-test where `castle_E6` queued 16× toward `khuzait` without ever converting.
-- 2026-07-03 — **Notable replacement**: conversion now replaces foreign-culture notables with same-occupation notables from the new culture's templates (a Mordor-converted Gondor town gets orc merchants/gang leaders). Property (workshops/alleys/caravans) transfers to the replacements; relations reset; active issues cancel; power zeroed pre-removal to suppress the vanilla old-culture heir spawn. New `replaceNotablesOnConversion` JSON field + "Replace Notables On Conversion" MCM toggle (default on).
+- 2026-07-03 — **Notable replacement** (issue #325): conversion now replaces foreign-culture notables with same-occupation notables from the new culture's templates (a Mordor-converted Gondor town gets orc merchants/gang leaders). Property (workshops/alleys/caravans) transfers to the replacements; relations reset; active issues cancel; power zeroed pre-removal to suppress the vanilla old-culture heir spawn. New `replaceNotablesOnConversion` JSON field + "Replace Notables On Conversion" MCM toggle (default on).
 - 2026-06-02 — Introduced the `Main/Features/CultureConversion/` module: conquered cross-culture towns/castles (and bound villages) gradually flip `Settlement.Culture` after a configurable hold period, recruiting the new owner's troops and dropping the foreign-occupier loyalty penalty; reconquest-to-original reverts. Adds a converted-settlement recruitment branch (`HasCulturePool` gate + `VolunteerContext` fields), persisted records re-applied on load, JSON + MCM "Culture Conversion" config. Includes deep-review + Codex fixes (stale-record purge on culture-removal, `HasCulturePool` playable-culture gate adding Rohan/Harad).
 
 ---

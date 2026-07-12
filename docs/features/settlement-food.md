@@ -37,7 +37,8 @@ Thin GameModel → pure service → primitive snapshot (ADR-002 / ADR-007), mirr
   and overrides `CalculateTownFoodStocksChange` to call `base(...)` then add the service delta.
 - **`SettlementFoodService.ComputeFoodDelta`** — pure (no TaleWorlds types): garrison raw-count
   correction `(weighted − raw)/divisor` (always) + siege-gated production knobs (base-food delta,
-  per-village `(hearthLevel+1)×(mult−6)`, flat bonus). Returns 0 when disabled.
+  per-village `(hearthLevel+1)×(mult−6)`, flat bonus). Returns 0 when disabled. The production
+  deltas are siege-gated because vanilla zeroes food production while a settlement is under siege.
 - **`TownFoodSnapshot.FromTown`** — boundary factory converting sealed `Town` → primitives
   (raw `MemberRoster.TotalManCount` vs patched `NumberOfAllMembers`, per-Normal-village hearth levels).
 - **`SettlementFoodConfigProvider`** — loads + validates JSON; reverts invalid values to vanilla.

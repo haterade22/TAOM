@@ -2,6 +2,8 @@
 
 Full per-category rationale, history, and RCA links for every TAOM Harmony patch — moved verbatim from CLAUDE.md's Harmony Patch Categories table (repo-reorg 2026-07-12) so the eager-loaded CLAUDE.md keeps only the thin routing table (category | feature | target | status). **Before editing any patch, read its section here** and the scoped rule [.claude/rules/harmony-patches.md](../../.claude/rules/harmony-patches.md) (loads automatically when a `Main/**/Hooks/**` file is opened). Most sections end with a `docs/features/<x>.md` pointer — that feature doc remains the deep-dive.
 
+> **Ground truth is the code:** `grep -r 'HarmonyPatchCategory' Main/` enumerates every attribute-registered category — this registry is maintained by hand and can lag. Two caveats when reconciling: **manual patches carry no category attribute by design** (Patch28_SettlementGuards' two manual patches, Patch23_BannerColorPersistence's manual entries), and the Patch31_SmartCavalryAI / Patch35_CompanionTactics `Formation.SetMovementOrder` postfixes register under the shared `Patch_MissionTime_SetMovementOrder` category attribute, not their feature-numbered ones.
+
 ## Patch0_BattleScenes
 
 **Target:** `Campaign.InitializeScenes`
@@ -80,6 +82,12 @@ Diplomacy system
 
 War of the Ring
 
+## Patch13_RaceAge
+
+**Target:** `HeroCreator.DeliverOffSpring` (Transpiler)
+
+Noise reduction, NOT a crash fix. Vanilla `DeliverOffSpring` carries a `Debug.SilentAssert(mother.Race == father.Race)`; in TAOM mixed-race couples are normal, so the assert fires on every cross-race birth — breaking an attached debugger via `Debugger.Break()` and spamming "Silent Assert Failed!" debug-log lines (ButterLib's wrapper only logs; harmless for players). The transpiler NOPs the entire assert sequence (args + call), matching the `SilentAssert` call by operand method name because `CallerXxx` default-parameter attributes can defeat `MethodInfo.Equals`. If either IL anchor is missing (already-NOPped by a prior application, or engine IL drift) it logs a warning and degrades to a no-op instead of throwing out of `PatchCategory` — this transpiler is explicitly non-idempotent, which is why the `OnGameInitializationFinished` patch batch is one-shot guarded (`_gameInitPatchesApplied` in `SubModule.cs`). Behavior is otherwise unchanged — the birth proceeds identically. Owning feature: RaceAge — see `docs/features/race-age-system.md`.
+
 ## Patch14_Execution
 
 **Target:** Various
@@ -146,6 +154,12 @@ UI color persistence + 3D battle + conversation — player clan colors everywher
 
 Block vanilla banner color drift during War of the Ring
 
+## Patch25_LocalizationOverride
+
+**Target:** `MBTextManager.GetLocalizedText` (Prefix, bound via `TargetMethod()`/`AccessTools.Method`)
+
+English string overrides for vanilla `{=ID}` tokens. Vanilla `GetLocalizedText` short-circuits for English — it returns the inline text from the `{=ID}text` value and never consults `LocalizedTextManager` — so `module_strings.xml` entries that reuse vanilla `{=ID}` tokens are silently ignored. The Prefix parses the leading `{=ID}` (skipping non-token strings and the `{=!}`/`{=*}` sentinels) and, when an override is registered in the patch's static dictionary (`RegisterOverride`), returns that text instead — making the ~120 "The" fixes in `taom_module_strings.xml` actually take effect. Unregistered ids fall through to vanilla. See `docs/features/localization-override.md`.
+
 ## Patch26_SpecialResources
 
 **Target:** `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand`
@@ -170,11 +184,23 @@ Per-settlement guard troop injection + per-culture spear mapping (manual patches
 
 Per-culture default BodyProperties on CC screen + culture-stage-VM body re-apply + career menu player body sync
 
+## Patch30_MixedFormations
+
+**Target:** `Formation.GetOrderPositionOfUnit` (Prefix)
+
+Mixed ranged/melee formation layout — the Prefix replaces a unit's vanilla order position with the plane position computed by `IFormationLayoutService.ComputeUnitPlanePosition(formation, agentIndex, agentIsRanged)`, grounded via `Scene.GetGroundHeightAtPosition` and validated through `Mission.IsFormationUnitPositionAvailable` before overriding `__result` (Codex review #35 HIGH: vanilla's Hold path routes through that availability check to keep units off non-navigable terrain — an unavailable candidate falls through to vanilla so the engine's own `unit.GetWorldPosition()` fallback applies). Any null/missing-value/exception path returns `true` (vanilla). HOT PATH — fires per-unit per-formation-position-recalculation (up to ~40,000×/frame worst case in 200-unit formations), so the service singleton is cached in a static field per the harmony-patches hot-path rule. See `docs/features/mixed-formations.md`.
+
 ## Patch31_SmartCavalryAI
 
 **Target:** `Formation.SetMovementOrder` (Postfix, deferred — see `Patch_MissionTime_SetMovementOrder`)
 
 Coordinated line-charge state machine on player cavalry (Forming→Charging→PassingThrough→Reforming + Rerouting branch); recursion-guarded. **Note:** the `Formation.SetMovementOrder` Postfix lives in the shared `Patch_MissionTime_SetMovementOrder` category (see below).
+
+## Patch33_EquipPresets
+
+**Target:** `SPInventoryVM.RefreshValues` (Postfix) + `GauntletInventoryScreen.OnInitialize` (Postfix) / `.OnFinalize` (Prefix)
+
+Equipment-preset save/load overlay on the inventory screen. The `RefreshValues` Postfix captures the live VM into `IInventoryScreenAdapter.SetActive` so the preset menu can read active-hero/equipment-mode state and trigger a refresh after Load — hooked at `RefreshValues` (not the ctor) because the VM is constructed before `_currentCharacter` is finalized. Hot-ish path (fires every transaction tick while inventory is open): adapter + logger are lazily static-cached. The `OnInitialize` Postfix — settings-gated on `IEquipPresetsSettingsProvider.IsEnabled` — creates a new `GauntletLayer` at z-order **1000** (way above vanilla `InventoryScreen`'s 15) hosting `PresetsOverlay.xml` + a `PresetsOverlayVM` datasource, with `InputRestrictions` set so button clicks register but no focus steal; the `OnFinalize` Prefix removes the layer and clears the captured VM (a leaked layer on re-entry is logged defensively, not disposed). See `docs/features/equip-presets.md`.
 
 ## Patch34_QuickActions
 
@@ -182,11 +208,35 @@ Coordinated line-charge state machine on player cavalry (Forming→Charging→Pa
 
 Inventory "Sell All" multi-action menu + active-VM capture + per-save search-toggle apply + thread-static bypass for vanilla re-entry
 
+## Patch35_CompanionTactics
+
+**Target:** `PartyCharacterVM.RefreshValues` (Postfix), `OrderOfBattleHeroItemVM.RefreshValues` (Postfix), `OrderOfBattleVM..ctor` (parameterless, Postfix) + `.OnFinalize` (Prefix), `MissionGauntletOrderOfBattleUIHandler.OnMissionScreenTick` (Postfix) + `.OnMissionScreenFinalize` (Postfix), `Mission.OnTick(float,float,bool,bool)` (Postfix); plus `OrderOfBattleHeroItemVM.GetCaptainTooltip` (private — **manual** Postfix wired in `SubModule.cs` via `AccessTools.Method`, attribute binding can't resolve it) and the `CancelStanceOnMove` Postfix on `Formation.SetMovementOrder(MovementOrder)` which registers under the shared `Patch_MissionTime_SetMovementOrder` category (see that section)
+
+CompanionTactics UI hooks, two halves. **Roles:** the `PartyCharacterVM.RefreshValues` Postfix appends the companion's role prefix to character names (thin — delegates to `IRoleTooltipDecorator`); the `OrderOfBattleHeroItemVM.RefreshValues` Postfix does the same on the OOB screen at `LowerThanNormal` priority so it runs AFTER Patch23's tooltip rewrite; the manual `GetCaptainTooltip` Postfix decorates the captain tooltip. **FormationPresets:** the `OrderOfBattleVM` ctor Postfix captures the new VM into a tracker (empty `MethodType.Constructor` form chosen so BUTR.Harmony.Analyzer resolves it statically), the `OnFinalize` Prefix clears it; the OOB UI-handler tick Postfix delegates to `IOOBOverlayService` which drives the false→true→false attach/detach cycle for the Save/Load/AutoAssign buttons overlay, and the handler-finalize Postfix detaches the layer; the `Mission.OnTick` Postfix is a near-no-op hot path (~60Hz, zero-alloc toggle check only — the donor mod's hotkey reads moved into `OOBButtonsVM` button commands). See `docs/features/companion-tactics.md`.
+
+## Patch36_FiefManagement
+
+**Target:** `MapScreen.OnFrameTick` (Postfix) + `GameStateScreenManager.CreateScreen` (Prefix)
+
+Fief-management hub. The `OnFrameTick` Postfix polls `IMapScreenInputAdapter.IsF6Pressed` and opens the `fief_hub` game menu (`GameMenu.ActivateGameMenu`) when the player owns fiefs (a no-fief press shows an information message instead) — gated on the MCM `EnableFiefManagement` toggle and vanilla `MapScreen`'s FULL modal-suppression set (`MapState` active, not in menu / battle simulation / army management / marriage offer / heir selection / map cheats / map incident / overlay context menu / encyclopedia — Codex review #38b caught that an `IsInMenu`-only guard let F6 fire during modals that read the swapped `MainParty.CurrentSettlement`). The `CreateScreen` Prefix intercepts `FiefManagementGameState` and returns TAOM's `GauntletFiefManagementScreen` (with `IRemoteFiefSettlementSwapper`), skipping vanilla screen creation; all other states pass through. See `docs/features/fief-management.md`.
+
+## Patch37_CrashReport
+
+**Target:** 9 Finalizers on engine lifecycle methods — `Managed.ApplicationTick`, `ScriptComponentBehavior.OnTick`, `Module.OnApplicationTick`, `MissionView.OnMissionScreenTick`, `ScreenManager.Tick`, `ScreenManager.Update()` (no-arg inner overload, explicitly disambiguated), `Mission.Tick`, `MissionBehavior.OnMissionTick`, `MBSubModuleBase.OnSubModuleLoad` — plus a dev-trigger Postfix on `Module.OnApplicationTick` (`CrashReportApplicationTickTrigger` in `DevTriggers/`, priority 900 so its MCM-toggled throw lands INTO the Finalizer) and reflection-attached Finalizers on every `*CallbacksGenerated` method via `Native2ManagedPatcher` at runtime (hundreds of methods)
+
+TAOM's crash-capture pipeline. Every Finalizer (all at `[HarmonyPriority(800)]` — matching BetterExceptionWindow's published tier so co-installed ordering is deterministic; the service's `TrySuspend` on BUTR's handler makes co-existence rare) routes the exception through `CrashReportPatchHelper.HandleAndSwallow`, which captures the report and swallows (returns null) so the game continues. Everything shares this one category so `_harmony.UnpatchCategory("Patch37_CrashReport")` detaches the lot in one call. MUST register FIRST in `SubModule.OnSubModuleLoad` (immediately after `IoC.Configure()`) to maximise coverage of other mods' `OnSubModuleLoad` throws — see the chicken-and-egg caveat in `docs/features/crash-report.md`.
+
 ## Patch38_SettlementNameplateFade
 
 **Target:** `SettlementNameplateWidget.DetermineTargetAlphaValue` (Postfix)
 
 Distance-based settlement nameplate fade on the campaign map — Postfix multiplies vanilla target alpha by [0,1] fade factor derived from `DistanceToCamera`. MCM-tunable near/far band (default 80..200), master toggle. Hot path (~3000 calls/sec): service captured once via `Initialize` static-field; settings provider caches `TaomSettings.Instance` reference in its ctor.
+
+## Patch39_BanditPartySize
+
+**Target:** `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` (Postfix)
+
+PlayerProgress-scaled bandit party sizes (the roster half of BanditManagement — the density levers live in `TaomBanditDensityModel`, no patch). Vanilla builds the initial roster by rolling `num = MinValue + (MaxValue − MinValue) × ratio` per `PartyTemplateStack`, with the (private) ratio function returning 0.4–1.2 for bandits and vanilla asserting `ratio ≤ 1.0` — so the ratio itself can't be postfixed. Instead, after the roster is built, this Postfix walks each template stack and scales its troop count UP by `IBanditScalingService.GetPartySizeMultiplier(Campaign.Current.PlayerProgress)`, capping at the stack's `MaxValue` — respecting the upper bound the party templates already encode while letting endgame bandit parties reliably hit full templated strength instead of the random vanilla draw. Non-bandit parties (player, lords, caravans, villagers, patrols) and multipliers ≤ 1 pass through untouched; service-disabled = vanilla. See `docs/features/bandit-management.md`.
 
 ## Patch40_HideoutDescription
 
@@ -194,11 +244,25 @@ Distance-based settlement nameplate fade on the campaign map — Postfix multipl
 
 Themed LOTR hideout encounter descriptions — Postfix re-sets the `HIDEOUT_DESCRIPTION` GameText var for TAOM's 5 bandit cultures, replacing vanilla's hardcoded-culture default "(Undefined hideout type)". Delegates to `IHideoutDescriptionService` (string→string, ADR-007 clean); runs before menu render so the lazy `{HIDEOUT_DESCRIPTION}` substitution picks up the override. Only `hideout_place` shows the var; `hideout_after_wait` needs no patch.
 
+## Patch41_McmLayoutFix
+
+**Target:** `WidgetFactoryManager.CreateAndRegister(string, XmlDocument)` (UIExtenderEx assembly, Postfix)
+
+Repairs MCM's inverted options-screen layout (the v1.4.0 `VerticalBottomToTop` regression). MCM registers its embedded options-screen prefabs through this method; the registered `Func<WidgetPrefab>` closes over the SAME `XmlDocument` reference and parses it lazily at first screen-open, so mutating the document in this Postfix — `McmLayoutRewriter.FlipMcmLayout`, which flips the inverted layouts — repairs the screen before that parse. A Harmony Postfix instead of UIExtenderEx's `[PrefabExtension]` because MCM's embedded prefabs load via UIExtenderEx's `LoadFromDocument` reverse-patch, which never runs the `ProcessMovie` step that applies PrefabExtension patches — a PrefabExtension on these movies is a silent no-op. Timing: registered from `SubModule.OnSubModuleLoad`, which completes for all modules before MCM's `ResourceInjector.Inject()` runs at `OnBeforeInitialModuleScreenSetAsRoot`, so the Postfix is attached before MCM calls `CreateAndRegister`. Cosmetic fix — any exception is logged and swallowed so MCM screen registration never breaks. No dedicated feature doc — root-cause analysis lives in `McmLayoutRewriter` + the patch file (`Main/Features/Mcm/Hooks/Patch41_McmLayoutFix.cs`).
+
+Feature doc: `docs/features/mcm.md` (authored 2026-07-12).
+
 ## Patch42_CastleRecruitment
 
 **Target:** `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler), `AiVisitSettlementBehavior.FillSettlementsToVisitWithDistancesAsDays` (Transpiler), `RecruitmentCampaignBehavior.HourlyTickParty` (Postfix)
 
 Castle troop recruitment — AI half (player menu + notable spawn/fill + issue suppression live in `CastleRecruitmentBehavior`, not Harmony). Two transpilers swap the single `!settlement.IsCastle` AI-scoring gate for a runtime toggle (`CastleAiToggle.IsCastleAndAiDisabled`, same Settlement→bool stack shape) so AI lords score + travel to castles like towns; a postfix invokes the private `CheckRecruiting` for an AI party in a non-besieged castle (bound once to an open delegate — no per-call alloc). Transpilers pin to the FIRST `get_IsCastle` + require a nearby anchor (`GetAvailableWageBudget` / `IsSettlementSuitableForVisitingCondition`), else fail-safe to vanilla.
+
+## Patch43_BattleLoadDiagnostics
+
+**Target:** 11 hooks — battle-load phase stamps: `PlayerEncounter.Start` (Postfix), `MissionState.OpenNew` (Prefix), `DefaultSceneModel.GetBattleSceneForMapPatch` (Postfix), `Mission.Initialize` (private, Prefix), `Agent.EquipItemsFromSpawnEquipment` (Prefix+Postfix); mission-EXIT phase stamps: `Mission.EndMission` (Postfix), `Mission.EndMissionInternal` (Prefix+Postfix), `Mission.ClearUnreferencedResources` (Prefix+Postfix), `MissionState.OnFinalize` (Prefix+Postfix), `MapState.OnActivate` (Postfix), `MapState.OnTick` (Postfix)
+
+Always-on `[BattleLoad]` diagnostics: phase-stamps the entire attack → battle-playable lifecycle (and the mission-exit phase) to `Logs/taom_debug_*.log`, paired with a background-thread stall watchdog — when a battle hangs on the loading screen (no crash, no stack trace — main thread blocked, so the CrashReport pipeline never fires), the last line before the freeze names the stuck phase. `MissionState.OpenNew` is the single funnel for every mission (scene name + attacker/defender/sizes/player side); the `Agent.EquipItemsFromSpawnEquipment` pair is the money hook — the Prefix logs the agent's full `SpawnEquipment` loadout BEFORE the engine equips, so an `AgentEquipBegin` without a matching `AgentEquipOk` names the agent + item whose `bo_` collision mesh is missing (the historical hang cause; companion tool `docs/features/mesh-ref-validation.md`). The exit-phase stamps (EndMission → ClearUnreferencedResources → OnFinalize → MapState reactivation) fed the #331 tournament-exit RCA (see Patch60). Phases coexist with the pre-existing Patch16 / Patch23 hooks on the shared targets. Applied in `OnGameInitializationFinished` (one-shot guarded). See `docs/features/battle-load-diagnostics.md`.
 
 ## Patch44_CCNameAutofill
 
@@ -236,6 +300,12 @@ Map-tick CTD guard (crash report 2026-06-17). Vanilla `Army.FindBestGatheringSet
 
 Warg-on-warg bite NRE guard (crash report 2026-06-17; caught, non-fatal log spam). The shared synthetic-bite path (`CustomAttacksUtils.TakeDamage` → `Mission.RegisterBlow` → `Agent.HandleBlow` → `Mission.OnAgentHit`) calls `affectedAgent.CheckToDropFlaggedItem()` (Mission.cs:5609) on the victim; when the victim is a non-vanilla mount (a warg biting another warg) it passes the `CanWieldWeapon` guard but `Equipment[wieldedIndex].Item` is null → `.ItemFlags` NRE (Agent.cs:3595). Finalizer swallows ONLY `NullReferenceException`; damage is applied upstream in `HandleBlow` so the bite still lands, and the only skipped effect (a flagged-item drop) doesn't apply to a mount. Covers warg + spider. Lives in `Main/Features/AdvancedCombat/Hooks/`.
 
+## Patch51_RecruitmentResourceGate
+
+**Target:** `RecruitmentVM.RefreshPartyProperties` (Postfix)
+
+SpecialResources — gates the recruit-volunteers Done button on the player's special-resource balance. Vanilla `RefreshPartyProperties` sets `IsDoneEnabled` from gold; this Postfix ANDs in a resource check so a troop the player can't afford in resources (e.g. an elephant/spider costing `war_drums` / `war_spoils`) blocks the recruit. It groups the recruit cart (one entry per unit) into troopId→count, evaluates via `IOnRecruitmentResourceGate.EvaluateCart(heroId, kingdomId, cultureId, entries)`, and on a block sets `IsDoneEnabled = false` + swaps the `DoneHint` to "Requires {AMOUNT} {RESOURCE}". Only ever forces the flag FALSE — the gold gate is preserved, and an already-disabled button is left alone. This is the block half only; the actual deduction happens on `OnUnitRecruitedEvent` in `SpecialResourcesBehavior`. Hook + logger injected once via `Initialize` (no per-call IoC resolve). See `docs/features/special-resources.md`.
+
 ## Patch53_PartyIconScale
 
 **Target:** `MobilePartyVisual.AddCharacterToPartyIcon` (private, Transpiler)
@@ -247,6 +317,12 @@ Campaign-map party-icon figure/mount scale. Transpiler rewrites the two hardcode
 **Target:** `MobilePartyVisual.OnTransitionEnded` + `.AddMobileIconComponents` (Postfix ×2, SandBox.View)
 
 **PARKED 2026-06-26 — not applied (commented out in `SubModule.cs`, #120/#296).** Renders an at-sea party as a boat — the base game renders NO ship at sea without `NavalDLC.View` (it omits the leader figure + adds nothing). Two Postfixes share `UpdateBoat`: `OnTransitionEnded` drives add/remove on the embark/disembark (the at-sea change does NOT trigger an icon rebuild, so the rebuild hook alone never saw it), `AddMobileIconComponents` re-adds on rebuild. Adds the base-game `Native` `boat_sail_on` mesh (also `map_icon_ship`; no DLC) scaled `boatScale` to the party's `StrategicEntity`, tag-idempotent (`taom_naval_boat`). `Main/Features/NavalTravel/Hooks/`. NavalTravel feature #296.
+
+## Patch55_BasicTableauRaceGuard
+
+**Target:** `BasicCharacterTableau.RefreshCharacterTableau` (private, Prefix)
+
+Main-menu Save/Load hero-preview CTD guard for custom races. `BasicCharacterTableau` (instantiated only by `SaveLoadHeroTableauTextureProvider`) builds the preview body via the agentless native `MBAgentVisuals.FillEntityWithBodyMeshesWithoutAgentVisuals(entity, SkinGenerationParams{_race}, …)` on the hardcoded human skeleton; for a TAOM custom-race save the native static-morph build access-violates — the custom-race head meshes lack the per-face-component morph data vanilla heads carry (same class as the Erebor-arena crash, issue #295). A native AV can't be try/caught, so the fix is preventive: the Prefix coerces the private `_race` field (injected as `ref int ____race` — Harmony's `___` prefix + `_race`) to a render-safe race via `IBasicTableauRaceGuard.ResolveSafeRace` (ADR-002/007), an EMPIRICAL per-race allow-list keyed by race NAME (ids shift with skins.xml merge order): races proven to render pass through true-to-race (uruk verified 2026-07-02), dwarf is proven unsafe (#295), every unverified race coerces to the human base — the preview shows a human head with correct equipment until the race is render-verified or its morph data is authored asset-side. Scope is narrow by construction: only the Save/Load preview uses `BasicCharacterTableau`; the in-game tableaus use the AgentVisuals path and are untouched. CRITICAL timing (Codex C1, issue #299): its OWN category applied from `SubModule.OnBeforeInitialModuleScreenSetAsRoot` (process-static one-shot) — NOT the sibling `Patch2_RefreshTableau` batch in `OnGameInitializationFinished`, which is too late because the save list renders on the COLD main menu. Guard injected once via `Initialize` from HeroRaceIoC. Owning feature: HeroRace — see `docs/features/hero-race.md`.
 
 ## Patch56_SceneNotificationVisualGuard
 
@@ -284,9 +360,41 @@ Arena — tournament-exit hang fix, round 1 of 2 (#331; **necessary-not-sufficie
 
 Always-on `[SaveLoad]` lifecycle logging to `Logs/taom_debug_*.log` for the "corrupted save" investigation — the engine swallows the real load exception behind the generic "A problem occured while trying to load the saved game." dialog (`LoadContext.Load` catches + prints only `ex.Message`). 15 thin hooks in 4 categories (`Patch61_SaveLoadDiagnostics` + one isolated per-internal-type reflection category). Interior Finalizers (all **void** + `Priority.First` — SaveShield in TAOM.Dependencies swallows at 4 overlapping methods, so ours must observe first) stamp the exact failing type/`SaveId.GetStringId()`/chunk at the graph throw sites (`LoadContext.CreateLoadData`, `ContainerLoadData.*`, header readers, `ArchiveDeserializer.LoadFrom`); unknown-SaveId detection (`ObjectHeaderLoadData.CreateObject` / `ContainerHeaderLoadData.GetObjectTypeDefinition` — engine silently null-fills); per-behavior SyncData attribution (`CampaignBehaviorDataStore.{Load,Save}BehaviorData`); save-WRITE faults on the async thread (`FileDriver.Save` / `SaveOutput.PrintStatus` — the #292 class + AV/OneDrive write blocks); `TAOM_Build` metadata stamp (`MBSaveLoad.GetSaveMetaData`) so every save self-identifies its build. Applied in `OnSubModuleLoad` (Patch58 precedent — loads fire from the main menu). Offline companions `tools/inspect_sav.py` + `tools/repair_sav_strings.py`. This stack root-caused the v2.0.9 momentum >32 KB corruption (RCA `docs/reviews/rca-momentum-save-corruption-2026-07-07.md`). `Main/Features/SaveLoadDiagnostics/`. See `docs/features/save-load-diagnostics.md`.
 
+The three internal-engine-type hooks below are ISOLATED sub-categories of this feature (Harmony aborts a whole category on the first failing class, so a reflection-bind failure on one internal type must not kill the other 12 hooks). `SubModule.OnSubModuleLoad` applies each in its own try/catch right after the main category.
+
+## Patch61_SaveLoadDiagnostics_ArchiveParse
+
+**Target:** `ArchiveDeserializer.LoadFrom(byte[])` (internal engine type, bound via `AccessTools.TypeByName` + `TargetMethod()`; void Finalizer, `Priority.First`)
+
+Attributes raw archive-chunk parse faults (review 2026-07-07 MED). Every raw archive parse — header chunk, strings chunk, per-object chunk, per-container chunk — passes through `ArchiveDeserializer.LoadFrom(byte[])`; a bit-flipped or truncated chunk that survived the deflate faults here first. The Finalizer stamps `kind=archiveParse chunkBytes=N` to `ISaveLoadDiagnosticsService.LogFault(GraphFault, …)` and rethrows (void Finalizer): the byte length distinguishes "tiny/empty chunk" (truncation) from "full-size chunk with garbage" (bit corruption). Bind failures log a `[SaveLoad]` engine-drift warning and self-disable instead of failing module load. See `docs/features/save-load-diagnostics.md`.
+
+## Patch61_SaveLoadDiagnostics_BehaviorData
+
+**Target:** `CampaignBehaviorDataStore.LoadBehaviorData` + `.SaveBehaviorData` (internal engine type, bound via `AccessTools.TypeByName` + `TargetMethods()`; void Finalizer, `Priority.First`)
+
+Per-behavior SyncData attribution, BOTH directions. Load: the engine reads every behavior's data via a raw `(T)value` cast (`BehaviorSaveData.SyncData`) with NO per-behavior try/catch — an `InvalidCastException` (a SyncData type changed between the writing and loading builds) aborts campaign start with zero context about WHICH behavior. Save: the collection pass (`SaveBehaviorData`, fired from `OnBeforeSave` BEFORE `SaveManager.Save`) has the same shape — a duplicate-record or serializer fault names no behavior. The Finalizer stamps direction + the behavior's full type name (`BehaviorSyncFault`) then rethrows. Per-method bind failures log which direction is uninstrumented. See `docs/features/save-load-diagnostics.md`.
+
+## Patch61_SaveLoadDiagnostics_ContainerFill
+
+**Target:** `ContainerLoadData.InitializeReaders` / `.FillCreatedObject` / `.Read` / `.FillObject` (internal engine type, bound via `AccessTools.TypeByName` + `TargetMethods()`; void Finalizer, `Priority.First`)
+
+The money hook for CONTAINER data — dictionaries and lists, which is where TAOM's growing SyncData surfaces live (`_taom_heroRaceMap`, `_taom_specialResources`, the career dicts). `LoadContext.Load` fills containers inline under TWParallel (NOT via `CreateLoadData`), so the object-side hook never sees these faults. `InitializeReaders` is included because it runs per container BEFORE the fill methods and its raw dictionary-indexer entry lookups are the FIRST throw site for a truncated/corrupted container chunk (review 2026-07-07 HIGH). The Finalizer stamps `kind=container step=<method> saveId/type/elements` from the once-cached `ContainerHeaderLoadData` property, then rethrows. Own category so drift here can't kill any other hook. See `docs/features/save-load-diagnostics.md`.
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)
 
 Shared deferred category for `Formation.SetMovementOrder(MovementOrder)` postfixes. Applied once from `OnMissionBehaviorInitialize` (one-shot static guard) because `MovementOrder.cctor` reads `Mission.Current.CurrentTime` — null in `OnSubModuleLoad`/`OnGameInitializationFinished`. Currently houses Patch31_SmartCavalryAI's charge handler and Patch35_CompanionTactics' `CancelStanceOnMove` postfix. **Any future patch with `MovementOrder` in its postfix signature must use this category.**
+
+## Late_ActionSetOverride
+
+**Target:** `ActionSetCode.GenerateActionSetNameWithSuffix` (Prefix)
+
+Race-aware action-set name generation for custom races. The Prefix replaces the vanilla name build: a null `Monster` returns `as_human[_female]<suffix>`; otherwise the result is `as_<monsterId>[_female]<suffix>`, where `monsterId` prefers `Monster.BaseMonster` when present and falls back to the full `StringId` (matching vanilla's preference order) — so TAOM's custom-race monsters resolve to their own `as_<race>*` action sets (the LOTRLOME_Armory `as_<race>_facegen` requirement in `docs/features/character-creation.md` depends on this resolution). Returns `false` (skip original) on success; any exception falls through to vanilla. Applied in the late `OnGameInitializationFinished` batch alongside `Late_Transpiler` (one-shot guarded). Historical note in-file (Phase 9b #151): Harmony 2 attribute patches require `public static class` — this was TAOM's one non-static outlier, since fixed. Owning feature: HeroRace — see `docs/features/hero-race.md`.
+
+## Late_Transpiler
+
+**Target:** `BodyGeneratorView.RefreshCharacterEntityAux` (Transpiler)
+
+CharacterSelection face-generator action-set injection. The transpiler finds the `Newobj` for `AgentVisualsData`'s parameterless ctor and inserts, right after it, a call to the patch's own `GetActionSet(BodyGeneratorView)` + `AgentVisualsData.ActionSet(...)` — so the body-generator preview is built with a race-appropriate `_facegen` action set (`BodyGen.Race` → `FaceGen.GetBaseMonsterFromRace`, null → human fallback, then `MBGlobals.GetActionSetWithSuffix(monster, isFemale, "_facegen")`) instead of the human default. Degrades gracefully (Phase 9b #160): if any of the three lookups (ctor / `ActionSet` method / `Newobj` IL match) fails, it logs the specific gap and returns the original instructions unchanged — previously such a mismatch threw out of `PatchCategory` during `OnGameInitializationFinished` and bricked startup. Applied in the late `OnGameInitializationFinished` batch (one-shot guarded). See `docs/features/character-selection.md`.
 

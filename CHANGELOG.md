@@ -4,6 +4,39 @@
 
 ## 2026-07-12
 
+### refactor(claude-md): Key Paths verify-merge — 34 essay rows → one-liners + doc links (repo-reorg Track C5)
+
+- The Key Paths table carried a 200–3,400-char compressed restatement of each feature's doc (52 KB of the
+  file). A 28-agent verify-merge pass processed the 34 over-cap rows: each agent diffed its row's claims
+  against the destination doc, **appended anything missing to the doc first** (e.g. QuickActions' thread-static
+  vanilla-bypass + `TransactionCount` mechanics, NavalTravel's navmesh-stays-enabled rationale, Messengers'
+  `MapCoord` ADR-007 row, SettlementFood's siege-gating rationale), then produced the ≤400-char thin row.
+  Load-bearing flags stay in-row: PARKED/DISABLED + re-enable pointers (NavalTravel, NativeSkinFixes),
+  the TAOM_Map LIVE-vs-stale-shadow warning, the vendored-DLL allowlist (`/improve` depends on both).
+- **`docs/features/mcm.md` authored** (the doc-gap hook's standing flag): Patch41 on UIExtenderEx
+  `WidgetFactoryManager.CreateAndRegister` flips MCM's 5 embedded prefabs to top-to-bottom layout;
+  grounded in `f23434b0`/#252. INDEX.md gains mcm + the previously-unlinked save-load-diagnostics rows.
+- **Harmony registry completeness:** a code sweep found 15 patch categories in `Main/**`
+  `[HarmonyPatchCategory]` attributes that the old CLAUDE.md table never listed (Patch13 RaceAge,
+  Patch25 LocalizationOverride, Patch30 MixedFormations, Patch33 EquipPresets, Patch35 CompanionTactics,
+  Patch36 FiefManagement, Patch37 CrashReport, Patch39 BanditPartySize, Patch41 McmLayoutFix,
+  Patch43 BattleLoadDiagnostics, Patch51 RecruitmentResourceGate, Patch55 BasicTableauRaceGuard,
+  3× Patch61 reflection sub-categories, + `Late_*` ×2) — documented in the registry from the actual
+  patch files; the CLAUDE.md/AGENTS.md thin tables gain their rows. (Reverse check: Patch28 + Patch31
+  legitimately carry no category attribute — manual patches.)
+- CLAUDE.md 140.6 KB → ~107 KB; budget findings 51 → 17.
+
+### refactor(rules): harness-facts.md split — durable facts stay always-load, authoring lore goes scoped (repo-reorg Track C6)
+
+- `harness-facts.md` (23.5 KB, always-load) held durable harness facts AND authoring-time conventions +
+  incident write-ups. Split: hook-authoring conventions (sibling-mirroring table, git-invocation-forms +
+  two-stage matcher, amend exemptions, + a new log-rotation convention) → new **paths-scoped rule
+  `.claude/rules/hook-authoring.md`** (loads only when a `.claude/hooks/` file is open); the parallel-port
+  build-watcher saga, CombatMechanics builder-brief seam findings, and worktree evidence/invocation detail →
+  `docs/ai-includes/agent-teams.md` "Case studies" (verbatim). Distilled rules (worktree isolation
+  when-to-apply, builder-briefs checklist, watcher prevention) stay always-load with pointers.
+  harness-facts.md 23.5 KB → 14.6 KB (−9 KB eager per session); "Last verified" bumped to 2026-07-12.
+
 ### refactor(claude-md): GameModel Overrides rows capped at one line (repo-reorg Track C4)
 
 - All 40 GameModel rows stay (the table is the routing map for "which model owns X"), but the 5 rows

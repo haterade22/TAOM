@@ -109,6 +109,19 @@ the folder loads as a duplicate item id.
 - Verify resale in-game: removing `value=` lets the engine compute, which still scales with tier, so a high-tier
   crafted weapon will not drop to zero.
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+- **History:** `taom_career_starting_equipment.xml` shipped Gondor-only as of 2026-05-19 (Gondor authored
+  end-to-end as proof of life; other cultures fell through to the culture default). As of 2026-07-12 it carries
+  78 `player_career_*` rosters across 13 cultures (13 × 3 archetypes × 2 genders).
+- **Item-count drift:** a prior CLAUDE.md row stated "15 starter armor items per culture" in `starter_armors.xml`.
+  The live Armory files now carry **6 per culture** — `starter_{archetype}_{culture}_{body|leg}_a`, 2 slots × 3
+  archetypes — verified across all 13 culture folders on 2026-07-12.
+- **Cover attributes:** when authoring starter (or any) armor items, `covers_legs="true"` is REQUIRED on leg items
+  and `covers_hands="true"` on glove items — without them the mesh does not render (bare legs/hands despite the
+  item being equipped). Full rule + failure modes: [career-system.md](career-system.md) "cover attributes" section
+  (memory: `feedback_lotrlome_armor_cover_attributes.md`).
+
 ## Related docs
 
 - [career-cc-selection.md](career-cc-selection.md) — the CC career-selection stage + archetype-driven starting

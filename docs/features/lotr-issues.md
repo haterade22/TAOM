@@ -358,6 +358,16 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 | `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` | 308 localization keys (English source-of-truth) |
 | `TAOM.Tests/Features/LotrIssues/*` | config-provider + service + suppression tests (50) |
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+- The as-built feature uses **NO Harmony patch and NO GameModel override** — suppression + replacement run entirely
+  through the guarded `RemoveBehaviors<T>` sweep and the vanilla `OnCheckForIssueEvent` pipeline.
+- Combat template event bindings: `DefeatRaids` counts won battles via `OnPlayerBattleEndEvent`; `CaptureLords` fires
+  when an at-war lord is taken prisoner via `HeroPrisonerTaken`; `WinTournaments` counts via `TournamentFinished`.
+- Reward application on the pure service is the `ILotrIssueService.ApplyRewards` method.
+- Issue-attached quests leave `SpecialQuestType` empty and survive `QuestManager.OnGameLoaded` via its **issue-link
+  branch** (only issue-less quests need a `SpecialQuestType`).
+
 ## Changelog
 
 - 2026-06-20 — Implemented: `Main/Features/LotrIssues/` suppresses all 43 vanilla issue behaviors (`LotrIssueSuppression.SuppressAll` → guarded `RemoveBehaviors<T>`, host `IssuesCampaignBehavior` kept) and replaces them via 3 generic templates (DeliverGoods/DeliverPersonnel/Combat) driven by `taom_lotr_issues.xml`; saves at base `726900801` (localIds 101–106), 308 localization keys.

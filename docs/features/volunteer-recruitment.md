@@ -210,6 +210,12 @@ Known overhead: the `LogDebug` call in `GetVolunteerTroopId` interpolates a stri
 - **Issue:** #215 — feat(troops): Rhun recruitment + Easterling → Loke-Rim + conditional-pool API
 - **Status:** Closed (delivered in commit `bce0824`)
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+- **Per-culture partial-file split (2026-07-01, #308).** The hand-written `InitializeXxx*()` pool methods no longer all live in `VolunteerRecruitmentService.cs` — they are split into per-culture partial files under `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs` (Dale, DolGuldur, Dunland, Erebor, Gondor, Harad, Isengard, Lothlorien, Mirkwood, Mordor, OrcKingdoms, Rhun, Rivendell, Rohan, Umbar). The core `VolunteerRecruitmentService.cs` file keeps the maps, the lookup cascade, and the weighted pick. Where sections above say a culture "lives entirely in `VolunteerRecruitmentService.cs`", read that as its `RecruitmentPools` partial.
+- **Gondor JSON coverage (full list).** The 23 chance groups in `recruitment_pools/gondor.json` cover Anórien / Osgiliath / Cair Andros / Lebennin / Pelargir / Lossarnach / Belfalas / Dol Amroth / Linhir / Tolfalas / Lamedon / Calembel / Pinnath Gelin / Arndir / Blackroot Vale / Anfalas / Serelond / Lond Cirion / Harondor / Methir, plus the conditional Ithil Guard rule (Osgiliath, Calembel, and Blackroot Vale are not named in the Configuration section's list above).
+- **Hand-written Gondor safety net by name.** The hand-written `InitializeGondorSettlements` method is kept as the safety net for the JSON: JSON entries overwrite the hand-written keys at runtime; test runs where the JSON file is missing fall back to hand-written behaviour.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -51,7 +51,9 @@ The player click-to-sail flow is entirely base-engine: the map move handler call
 then `MobileParty.SetMoveGoToPoint(point, navigationType)`. The engine also embarks/disembarks
 (`MobileParty.SetSailAtPosition` / `DisembarkToPosition` / `FinishNavigationTransitionInternal`). The
 only gate on *movement* is the `PartyNavigationModel` GameModel — so unlocking sailing = overriding that
-one model. No navmesh hack.
+one model. No navmesh hack. (The same `PartyNavigationModel` also drives
+`DisableUnwalkableNavigationMeshes`, so with the override registered the water navmesh stays enabled —
+no navmesh patch is needed.)
 
 **The boat *visual* is a separate problem the GameModel does NOT solve.** Reading `SandBox.View`'s
 `MobilePartyVisual.AddCharacterToPartyIcon`: at sea it *omits* the leader figure but adds no ship —

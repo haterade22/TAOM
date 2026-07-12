@@ -188,6 +188,11 @@ The `Patch31` Postfix runs on every `SetMovementOrder` call but bails on non-cav
 - **Issue:** TBD — to be opened with feature port commits.
 - **Status:** Pending in-game verification.
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+- **Codex adversarial review:** 4 Codex adversarial findings were fixed during the port, including NaN propagation through `Clamp` and a cross-feature collision with MixedFormations.
+- **Recursion guard is a thread-local depth counter, not a boolean.** `SmartCavalryRecursionGuard` (verified in source: `[ThreadStatic] int _depth`) increments per `Enter()` scope and decrements on dispose, so nested `Enter()` scopes are safe — the inner dispose decrements rather than clearing. `Reset()` is a defensive escape hatch called from `SmartCavalryAIMissionBehavior.OnEndMission` so abnormal mission termination during a suppressed callstack can't permanently disable the feature. This supersedes the "single boolean, not a counter" wording in Known limitations above (the counter upgrade closed that follow-up).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

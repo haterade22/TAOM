@@ -128,6 +128,15 @@ Update the `SellEvent` / `UnequipEvent` constants in `QuickActionsAudioPlayer.cs
 - The filter loop iterates `RightItemListVM` (typically <100 items). No reflection on the hot path — direct property reads only. No allocation per item beyond the adapter wrappers (one `InventoryItemAdapter` per right-pane item per click).
 - `InventoryVMAdapter` is a singleton; the active-VM reference is replaced on each inventory open via the constructor Postfix.
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+Claims from the CLAUDE.md Key Paths row, verified against the current source (`Main/Features/QuickActions/Hooks/Patch34_SellAllItemsMenu.cs`, `Main/Adapters/InventoryVMAdapter.cs`). Where these differ from the mechanism descriptions in Solution Approach / Dependencies above, the notes below reflect the shipped implementation:
+
+- **Thread-static bypass for "Sell All (Vanilla)"** — `Patch34_SellAllItemsMenu` (Prefix) holds a `[ThreadStatic] _bypassQuickActions` flag. The "Sell All (Vanilla)" menu option sets the flag and re-enters `__instance.ExecuteSellAllItems()`; the Prefix sees the flag set and returns `true`, so the player gets the unmodified vanilla `TransferAll(false)` behavior (including its zero-count-cleanup logic). This supersedes the "manual replication of vanilla bulk-sell" described under Solution Approach item 2.
+- **Full-stack sells** — `TrySellItem` (in `InventoryVMAdapter`) sets `SPItemVM.TransactionCount = StackAmount` before invoking the sell. Vanilla `ProcessSellItem` reads `item.TransactionCount` (default 1), so without this every batch action sold exactly one unit per stack.
+- **Unequip All routes through `InventoryLogic.TransferCommand`** — `TryUnequipAllPlayerSlots` builds `TransferCommand`s and submits them via `InventoryLogic.AddTransferCommands` when an inventory screen is open, so vanilla `AfterTransfer` rebuilds `RightItemListVM` and the equipment-slot `SPItemVM`s. Direct mutation of `Hero.BattleEquipment` + `ItemRoster.AddToCounts` left the UI showing stale empty rows; the `IPlayerEquipmentAdapter` direct-mutation path described under Dependencies remains only as a defensive fallback when no inventory screen is active.
+- **Port verification baseline** — the removal of the 8-probe (right-pane item list) + 5-probe (`SPItemVM` sell method) reflection chains was verified against the v1.3.15 installed DLLs at port time.
+
 ## Changelog
 
 - 2026-05-13 — Fixed the `IsSearchAvailable` per-save contract (#146): added a `_persistedVersion` SyncData tag so the search toggle survives reload while a mid-game MCM change still takes effect, instead of unconditional per-tick overwrite.

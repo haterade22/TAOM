@@ -29,6 +29,8 @@ grep "XmlName id=\"Settlements\"" Main/_Module/SubModule.xml
 
 **The existing tools (`tools/Apply-SettlementNames.ps1`, `tools/Generate-Settlements.ps1`, `tools/Settlement-Breakdown.ps1`) target the STALE repo copy.** Use them only if you intend to update the repo's snapshot — do NOT rely on them to affect in-game behavior. For live changes, use [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py) which targets the external module directly.
 
+**Harness memory pointer:** this live-vs-stale-shadow fact is also recorded in the Claude harness memory as `feedback_taom_map_live_vs_stale_shadow.md` (pre-reorg flat file name; preserved under the 2026-06-24 memory reorganization's backup/topic structure).
+
 ## File Architecture
 
 ```

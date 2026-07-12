@@ -142,6 +142,10 @@ The two-layer design was decompile-verified (v1.4.6) and deep-reviewed:
    (incl. Khamûl) are registered, so the graph is wraith-internal — no non-wraith is widowed. No
    clan/heir invariant is broken (heir/leader logic keys on clan membership, not family links).
 
+The deep review ran 7 dimensions plus a critic pass; the critic caught both the
+lords-vs-heroes-xslt premise inversion (item 1 above) and Khamûl's initial omission from the
+wraith registry.
+
 ## How-To
 
 **Add or remove a wraith:** add the lord StringId to the `WraithIds` set in `NazgulRegistry.cs`, a

@@ -113,6 +113,7 @@ Out-of-range values revert to defaults with a warning. **JSON config requires a 
 | [Main/Features/Messengers/Domain/MessengerValidationResult.cs](../../Main/Features/Messengers/Domain/MessengerValidationResult.cs) | 11-value rejection enum |
 | [Main/Features/Messengers/Domain/PendingMessenger.cs](../../Main/Features/Messengers/Domain/PendingMessenger.cs) | Saveable POCO + `Serialize`/`TryDeserialize` |
 | [Main/Features/Messengers/Domain/PositionUpdate.cs](../../Main/Features/Messengers/Domain/PositionUpdate.cs) | Service return struct (new position + arrived flag) |
+| [Main/Features/Messengers/Domain/MapCoord.cs](../../Main/Features/Messengers/Domain/MapCoord.cs) | TAOM-owned 2D map-coordinate struct — keeps the service/domain layers free of TaleWorlds types per ADR-007; the boundary (`MessengerCampaignBehavior`) converts to/from `Vec2` (NaN = invalid sentinel, `IsValid` matches `Vec2.IsValid` incl. ±Infinity rejection) |
 | [Main/Features/Messengers/MessengerCampaignBehavior.cs](../../Main/Features/Messengers/MessengerCampaignBehavior.cs) | Boundary: dialog tree, IMissionListener, encounter routing, `SyncData` |
 | [Main/Features/Messengers/MessengerIoC.cs](../../Main/Features/Messengers/MessengerIoC.cs) | DryIoc registrations |
 | [Main/Features/Messengers/UI/MessengerEncyclopediaPrefabExtension.cs](../../Main/Features/Messengers/UI/MessengerEncyclopediaPrefabExtension.cs) | UIExtenderEx prefab patch (button injection) |

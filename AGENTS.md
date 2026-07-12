@@ -607,6 +607,7 @@ These are all registered, intentional patches — do not flag them as unauthoriz
 | `Patch10_WeatherBoundsGuard` | Weather bounds clamping | `DefaultMapWeatherModel` | active |
 | `Patch11_Diplomacy` | Diplomacy system | Various | active |
 | `Patch12_WarOfTheRing` | War of the Ring | Various | active |
+| `Patch13_RaceAge` | NOP vanilla's same-race birth assert (mixed-race births are normal in TAOM) | `HeroCreator.DeliverOffSpring` (Transpiler) | active |
 | `Patch14_Execution` | Execution system | Various | active |
 | `Patch15_BannerLayerLimit` | Banner layer limit | Various | DISABLED (engine-native since v1.4.7) |
 | `Patch16_AtmospherePersistence` | Forced-atmosphere scenes | `Mission.Initialize` | active |
@@ -616,32 +617,48 @@ These are all registered, intentional patches — do not flag them as unauthoriz
 | `Patch20_NarrativeHorseGuard` | Suppress CC narrative horse crashes for no-mount cultures | `CharacterCreationCampaignBehavior`, `CharacterCreationNarrativeStageView` | active |
 | `Patch21_ShaderPrecompilation` | Loading-screen shader progress text | `LoadingWindowViewModel` | active |
 | `Patch22_ArmyTargeting` | Border proximity floor for priority-list targets | `AiMilitaryBehavior` | active |
-| `Patch23_BannerColorPersistence` | Player clan colors everywhere (UI + 3D battle + conversation) | `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView`, `Agent.EquipItemsFromSpawnEquipment`, `AgentVisuals.Create` (manual), `MapConversationTableau` (manual ×2), `OrderOfBattleHeroItemVM` | active |
+| `Patch23_BannerColorPersistence` | Player clan colors everywhere (UI + 3D battle + conversation) | 16 targets across `CampaignUIHelper`/`SandBoxUIHelper`/party+inventory VMs/`Mission`/`Banner`/`AgentVisuals.Create`/`MapConversationTableau` — full list in the registry | active |
 | `Patch24_BannerDriftGuard` | Block vanilla banner color drift during War of the Ring | `Clan.UpdateBannerColorsAccordingToKingdom`, `Clan.UpdateBannerColor` | active |
+| `Patch25_LocalizationOverride` | Let English module_strings overrides of vanilla `{=ID}` tokens apply | `MBTextManager.GetLocalizedText` (Prefix) | active |
 | `Patch26_SpecialResources` | Per-kingdom resource gating + transactional spending | `PartyCharacterVM.InitializeUpgrades`, `PartyScreenLogic.UpgradeTroop`, `PartyScreenLogic.AddCommand` | active |
 | `Patch27_CareerSystem` | Career screen opening + ability V-key activation | `ViewModel.ExecuteCommand`, `AgentStatCalculateModel.UpdateAgentStats` | active |
 | `Patch28_SettlementGuards` | Per-settlement guard injection + per-culture spear mapping | `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual) | active |
 | `Patch29_CCBodyProperties` | Per-culture default BodyProperties on CC + body re-apply | `CharacterCreationContent.SetSelectedCulture`, `CharacterCreationCultureStageVM.OnCultureSelection`, `CharacterCreationNarrativeStageView.RefreshAgentVisuals` | active |
+| `Patch30_MixedFormations` | Mixed ranged/melee formation layout (hot path, vanilla fall-through) | `Formation.GetOrderPositionOfUnit` (Prefix) | active |
 | `Patch31_SmartCavalryAI` | Player-cavalry coordinated line-charge state machine | `Formation.SetMovementOrder` (Postfix, deferred — see `Patch_MissionTime_SetMovementOrder`) | active |
+| `Patch33_EquipPresets` | Equipment-preset overlay on the inventory screen | `SPInventoryVM.RefreshValues` (Postfix), `GauntletInventoryScreen.OnInitialize` (Postfix) / `.OnFinalize` (Prefix) | active |
 | `Patch34_QuickActions` | Inventory "Sell All" multi-action menu | `SPInventoryVM.ExecuteSellAllItems` (Prefix), `SPInventoryVM` ctor (Postfix), `SPInventoryVM.RefreshCallbacks` (Postfix), `SPInventoryVM.OnFinalize` (Postfix) | active |
+| `Patch35_CompanionTactics` | Companion role prefixes (party/OOB) + OOB formation-preset overlay | `PartyCharacterVM.RefreshValues`, `OrderOfBattleHeroItemVM.RefreshValues`, `OrderOfBattleVM` ctor/finalize, OOB UI handler tick/finalize (+ manual tooltip Postfix; movement postfix in the shared deferred category) | active |
+| `Patch36_FiefManagement` | F6 fief-management screen (custom GameState) | `MapScreen.OnFrameTick` (Postfix), `GameStateScreenManager.CreateScreen` (Prefix) | active |
+| `Patch37_CrashReport` | Crash-capture pipeline (Priority-800 Finalizers -> `CrashReportPatchHelper`) | 9 engine-lifecycle Finalizers (`Managed.ApplicationTick`, `ScreenManager.Tick`, `Mission.Tick`, ...) | active |
 | `Patch38_SettlementNameplateFade` | Distance-based settlement nameplate fade (hot path ~3000/s) | `SettlementNameplateWidget.DetermineTargetAlphaValue` (Postfix) | active |
+| `Patch39_BanditPartySize` | Scale bandit initial rosters by PlayerProgress (cap = stack MaxValue) | `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` (Postfix) | active |
 | `Patch40_HideoutDescription` | Themed LOTR hideout encounter descriptions | `HideoutCampaignBehavior.game_menu_hideout_place_on_init` (private, Postfix) | active |
+| `Patch41_McmLayoutFix` | Flip MCM options screen to top-to-bottom layout (#252) | UIExtenderEx `WidgetFactoryManager.CreateAndRegister` (Postfix) | active |
 | `Patch42_CastleRecruitment` | Castle troop recruitment — AI half | `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler), `AiVisitSettlementBehavior.FillSettlementsToVisitWithDistancesAsDays` (Transpiler), `RecruitmentCampaignBehavior.HourlyTickParty` (Postfix) | active |
+| `Patch43_BattleLoadDiagnostics` | `[BattleLoad]` phase stamps: attack->playable + mission-exit lifecycle + stall watchdog | 11 hooks (`PlayerEncounter.Start`, `MissionState.OpenNew`, `Mission.EndMission`, `MapState.OnTick`, ...) | active |
 | `Patch44_CCNameAutofill` | Pre-fill CC Review-stage name field (culture-appropriate) | `CharacterCreationReviewStageVM..ctor` (Postfix) | active |
 | `Patch46_TournamentDwarfDismount` | Dwarf tournament dismount (race-keyed) | `TournamentFightMissionController.PrepareForMatch` (Postfix) | active |
 | `Patch47_SpiderDeathDismount` | Spider rider-death native-AV guard | `Agent.Die` (Prefix) | active |
 | `Patch48_SpiderHitDismountGuard` | Spider surviving-rider dismount-AV guard (Patch47 sibling) | `Agent.HandleBlowAux` (private, Prefix) | active |
 | `Patch49_ArmyGatheringNreGuard` | Army-gathering map-tick NRE guard + `[SiegeDiag]` diagnostics | `Army.FindBestGatheringSettlementAndMoveTheLeader` (private, Finalizer) | active |
 | `Patch50_DropFlaggedItemGuard` | Warg-on-warg bite NRE guard | `Agent.CheckToDropFlaggedItem` (public, Finalizer) | active |
+| `Patch51_RecruitmentResourceGate` | Special-resource affordability gate on the recruit Done button | `RecruitmentVM.RefreshPartyProperties` (Postfix) | active |
 | `Patch53_PartyIconScale` | Campaign-map party-icon figure/mount scale (MCM slider) | `MobilePartyVisual.AddCharacterToPartyIcon` (private, Transpiler) | active |
 | `Patch54_NavalTravelBoatVisual` | NavalTravel at-sea boat mesh | `MobilePartyVisual.OnTransitionEnded` + `.AddMobileIconComponents` (Postfix ×2, SandBox.View) | PARKED 2026-06-26 (#120/#296) |
+| `Patch55_BasicTableauRaceGuard` | Render-safe race coercion for Save/Load preview (custom-race native AV, #295) | `BasicCharacterTableau.RefreshCharacterTableau` (private, Prefix) | active |
 | `Patch56_SceneNotificationVisualGuard` | Become-king cinematic CTD guard (null AgentVisuals) | `GauntletSceneNotification.OpenScene` (private, Finalizer) + `.OnTick` (Postfix, deferred close) + `PopupSceneSpawnPoint.InitializeWithAgentVisuals` (diagnostic Prefix) | active |
 | `Patch57_NavalAtSeaLandRescueGuard` | At-sea land-pathfind native-AV guard | `AIMoveToNearestLandBehavior.AiHourlyTick` (internal, Prefix) | PARKED 2026-06-26 (#120/#296) |
 | `Patch58_SkipCampaignIntro` | Skip vanilla campaign intro video on NEW game (always-on) | `SandBoxGameManager.OnLoadFinished` (public override, Prefix) | active |
 | `Patch59_CaravanTrade` | Caravan range/war-gate/basket levers | `CaravansCampaignBehavior.CanTradeWith` + `.GetTradeScoreForTown` + `.GetDistanceLimitVeryFarAsDaysForNavigationType` + `.CalculateBudgetFactor` (all private, Postfix ×4) | active |
 | `Patch60_TournamentExitMovieRelease` | Tournament-exit movie release (#331 round 1; canary `ReleaseMovie=Nms`) | `MissionGauntletTournamentView.OnMissionScreenFinalize` (public override, SandBox.GauntletUI.dll, Prefix+Postfix) | active |
 | `Patch61_SaveLoadDiagnostics` | Always-on `[SaveLoad]` lifecycle logging (15 hooks) | save/load pipeline Finalizers/Postfixes (see the feature doc) | active |
+| `Patch61_SaveLoadDiagnostics_ArchiveParse` | Archive-chunk parse-fault stamps (truncation vs corruption) | `ArchiveDeserializer.LoadFrom` (internal, void Finalizer, Priority.First) | active |
+| `Patch61_SaveLoadDiagnostics_BehaviorData` | Names WHICH behavior's SyncData failed | `CampaignBehaviorDataStore.LoadBehaviorData`/`.SaveBehaviorData` (internal, void Finalizer) | active |
+| `Patch61_SaveLoadDiagnostics_ContainerFill` | Container (dict/list SyncData) load-fault stamps | `ContainerLoadData.InitializeReaders`/`FillCreatedObject`/`Read`/`FillObject` (internal, void Finalizers) | active |
 | `Patch_MissionTime_SetMovementOrder` | Shared deferred category — ANY postfix with `MovementOrder` in its signature MUST use it | `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2) | active |
+| `Late_ActionSetOverride` | Race-aware action-set name resolution (null monster -> human; vanilla fall-through) | `ActionSetCode.GenerateActionSetNameWithSuffix` (Prefix) | active |
+| `Late_Transpiler` | Race-appropriate `_facegen` action set in the face-gen preview | `BodyGeneratorView.RefreshCharacterEntityAux` (Transpiler) | active |
 
 ---
 

@@ -6,7 +6,7 @@ Three native MinHook detours into `TaleWorlds.Native.dll` that fix engine
 rendering bugs TaleWorlds has refused to fix: helmets that freeze hand morphs
 (`covers_head`), hair cloth physics that never registers, and beard cloth
 physics that never registers. When active, hooks install at boot from `TaomSubModule.OnBeforeInitialModuleScreenSetAsRoot`
-and uninstall at module unload.
+and uninstall at module unload (`OnSubModuleUnloaded`).
 
 > **PARKED / OFF by default (2026-07-08, user decision).** The install call in
 > `SubModule.cs` is commented out, so the native hooks NEVER load — engine
@@ -159,7 +159,7 @@ porting to a new engine version.
 | `Dependencies/NativeSkinFixes.NativeHooks/HairClothHook.{h,cpp}` | Hook 2: rescues orphan cloth at `Face_mesh+0x1A0` + re-enters factory for beard cloth at `+0x108` |
 | `Dependencies/NativeSkinFixes.NativeHooks/FaceMeshObserveHook.{h,cpp}` | Hook 3: temporarily nulls hair/beard/all-face slots during render-list rebuild |
 | `Dependencies/NativeSkinFixes.NativeHooks/Logging.{h,cpp}` | Unified log to `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\Logs\TAOM\NativeSkinFixes.log` |
-| `Dependencies/NativeSkinFixes.NativeHooks/NativeSkinFixes.NativeHooks.vcxproj` | VS C++ project (x64, MSVC v143, C++17) outputting `TAOM.NativeSkinFixes.dll` directly into `Main/_Module/bin/Win64_Shipping_Client/` |
+| `Dependencies/NativeSkinFixes.NativeHooks/NativeSkinFixes.NativeHooks.vcxproj` | Standalone VS C++ project (x64, MSVC v143, C++17; NOT part of `TAOM.sln`) outputting `TAOM.NativeSkinFixes.dll` directly into `Main/_Module/bin/Win64_Shipping_Client/` |
 | `Dependencies/NativeSkinFixes.NativeHooks/Build.ps1` | Manual `msbuild` wrapper for developer rebuilds |
 | `Dependencies/NativeSkinFixes.NativeHooks/MinHook/` | Vendored MinHook 1.3.4 (MIT) — `MinHook.x64.dll`, `.lib`, `.exp`, and `MinHook.h` header |
 | `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | Compiled native DLL (vendored binary, committed via `.gitignore` allowlist) |

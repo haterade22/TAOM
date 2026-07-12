@@ -292,6 +292,14 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 - 2026-05-27 — `fix`: XSLT-remove the 5 vanilla hideout-bandit clans to stop the new-game `KeyNotFoundException` in `GetInfestedHideoutCount` (looters clan kept).
 - 2026-05-27 — `feat`: initial feature — replace 5 vanilla bandit cultures with LOTR factions, `TaomBanditDensityModel` + `Patch39_BanditPartySize` PlayerProgress scaling, MCM/JSON config, 99-hideout migration (issue #247).
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+- **`TaomBanditDensityModel` overrides 6 properties** (source-verified): `NumberOfMinimumBanditPartiesInAHideoutToInfestIt`, `NumberOfMaximumHideoutsAtEachBanditFaction`, `NumberOfInitialHideoutsAtEachBanditFaction` (the early-game density lever, vanilla 7 → default 14), `NumberOfMaximumBanditPartiesInEachHideout`, `NumberOfMaximumTroopCountForFirstFightInHideout`, `NumberOfMaximumTroopCountForBossFightInHideout`. (The Architecture diagram's "4 properties" count predates the 2026-05-29 initial-hideouts + min-to-infest additions.)
+- The `Cap`/`Scale` helpers are `internal static` and unit-tested **directly via `InternalsVisibleTo("TAOM.Tests")`**; `Cap` floors at vanilla even when an MCM cap is set below the vanilla base.
+- The 5 LOTR bandit cultures each have a **matching bandit clan row in `characters/clans.xml`** (5 rows, one `<Faction is_bandit="true">` per culture).
+- The vanilla `looters` clan is **kept** because its `StringId == "looters"` is hardcoded in `DefaultBanditDensityModel`, and looter spawning runs on a separate code path from hideout bandits.
+- `TAOM_Map/SubModule.xml` declares `<DependedModule Id="TAOM"/>` (the external map module now depends on TAOM, so the LOTR bandit cultures its hideouts reference are guaranteed loaded).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

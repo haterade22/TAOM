@@ -75,7 +75,9 @@ None. Hardcoded always-skip; no JSON/XML config and no MCM toggle.
 
 ## Dependencies
 
-- `SandBox.SandBoxGameManager` — the patched type (vanilla SandBox module).
+- `SandBox.SandBoxGameManager` — the patched type (vanilla SandBox module). The private
+  `LaunchSandboxCharacterCreation()` binding is resolved via `AccessTools.Method`; both reflection
+  bindings are `AccessTools`-cached in static fields.
 - `TaleWorlds.MountAndBlade.MBGameManager.IsLoaded` (protected setter) — set via `AccessTools.PropertySetter`.
 - `IModLogger` (Core/Logging) — fallback warning logging only.
 

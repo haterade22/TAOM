@@ -117,6 +117,8 @@
 - [localization](features/localization.md) — 12 languages × 3 modules, AI-translated via tools
 - [localization-override](features/localization-override.md) — per-language curated overrides
 - [army-targeting](features/army-targeting.md) — besieger commitment stickiness, priority lists, border floor
+- [mcm](features/mcm.md) — MCM options-screen top-to-bottom layout fix (Patch41 on UIExtenderEx `WidgetFactoryManager.CreateAndRegister`; #252)
+- [save-load-diagnostics](features/save-load-diagnostics.md) — always-on `[SaveLoad]` lifecycle logging (Patch61, 15 hooks) — stamps the exact failing type/SaveId/chunk the engine's generic load-error dialog swallows; root-caused the v2.0.9 momentum save corruption
 
 ### Infrastructure & tooling
 - **Claude-config security auditor** — `tools/audit_claude_config.py` (behind `/security-scan`): scans `.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md` for secrets / over-broad permissions / hook-exfil / MCP risk / prompt-injection, plus SkillSpector-derived skill-threat categories + Python-AST + clean-room YARA. Run on TAOM's own config before `/ship` or after a hook/permission/MCP change; run `--root <repo> --external` (full severity) to vet a FOREIGN skill BEFORE adopting it via `/adopt-external`. Adoption review: [adopt-skillspector](reviews/adopt-skillspector-2026-06-22.md).

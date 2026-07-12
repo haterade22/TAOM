@@ -186,6 +186,12 @@ Edit `cache_rebuild_config.json`: `"forceVanilla": true` or `"enabled": false`. 
 - **Issue:** [#118](https://github.com/haterade22/TAOM/issues/118)
 - **Status:** Open (implementation complete; Phase 14 integration test pending vanilla run completion)
 
+## Migrated notes (from CLAUDE.md, 2026-07-12)
+
+- **Logging detail (verified in `RuntimeCacheRebuildService.cs` + the parallel builders):** the comprehensive build logging includes **per-phase memory deltas** (`GC.GetTotalMemory` before/after Phase 1, Phase 2, and the overall build), **first-pair liveness heartbeats** (Phase 1 logs the FIRST entrance pair to confirm the pathfinder is reachable; Phase 2 logs the first neighbor-check to confirm the corridor-scan path), and **atomic-write integrity diagnostics** (resolved output path, output-directory existence, existing cache file size + last-modified, target-drive free space, and step-by-step `.tmp` + `File.Replace` logging) — in addition to the build-correlation IDs, environment snapshot, and scene CRCs already documented above.
+- **Correction to the Key Files table:** both `ParallelPhase1Builder` and `ParallelPhase2Builder` buffer results in a **`ConcurrentQueue`** (not `ConcurrentBag` as the Phase 1 row above says) with locked dict writes — the source comment notes `ConcurrentQueue` has cheaper enumeration for the single-threaded post-loop flush.
+- **NavalDLC port support is tracked at [#120](https://github.com/haterade22/TAOM/issues/120)** — the Phase 1 builders already carry `MobileParty.NavigationType.Naval` cases.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
