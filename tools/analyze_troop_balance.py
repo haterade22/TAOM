@@ -120,8 +120,11 @@ def parse_resource_costs():
     return gated
 
 
-def parse_troop_file(filepath):
-    """Parse one troops_*.xml. Returns (filename_culture, [troop_record, ...])."""
+def parse_troop_file(filepath, item_classes=None):
+    """Parse one troops_*.xml. Returns (filename_culture, [troop_record, ...]).
+
+    item_classes: item id -> skill class map (taom_schema.build_item_class_registry)
+    for equipment-driven specialization; None degrades to name-only detection."""
     filename = os.path.basename(filepath)
     filename_culture = filename.replace('troops_', '').replace('.xml', '')
     root = ET.parse(filepath).getroot()
@@ -161,8 +164,10 @@ def parse_troop_file(filepath):
 
         equip = npc.find('Equipments')
         has_equipment = equip is not None and len(list(equip)) > 0
+        weapon_classes = rb.troop_weapon_classes(npc, item_classes) if item_classes else None
 
         troops.append({
+            'weapon_classes': weapon_classes,
             'file': filename,
             'file_culture': filename_culture,
             'id': troop_id,
@@ -191,7 +196,8 @@ def analyze(troops, weights, threshold):
         t['mount_rider'] = (not special) and is_mount_rider(t['id'], t['name'])
 
         fc = formula_culture(t['culture'])
-        ref = rb.calculate_skills(fc, t['level'], t['group'], t['id'], t['name'])
+        ref = rb.calculate_skills(fc, t['level'], t['group'], t['id'], t['name'],
+                                  t.get('weapon_classes'))
         t['ref'] = ref
         t['off_grid'] = ref is None
 
@@ -919,11 +925,26 @@ def main():
         sys.exit(1)
 
     weights = parse_weights()
+
+    # Equipment-driven specialization (mirrors rebalance_troops.py). READ-ONLY
+    # tool, so a missing game install degrades to name-only detection with a
+    # loud warning instead of failing (per environment-failures.md).
+    import taom_schema as ts
+    game_modules = rb.DEFAULT_GAME_MODULES
+    item_classes = None
+    if os.path.isdir(game_modules):
+        item_classes = ts.build_item_class_registry(rb.MODULEDATA_DIR, game_modules)
+    else:
+        print(f'WARNING: Bannerlord Modules folder not found: {game_modules}\n'
+              f'         Weapon specialization falls back to NAME-ONLY detection — the\n'
+              f'         "ideal" curve may mis-judge crossbow / two-hander troops.',
+              file=sys.stderr)
+
     by_culture = defaultdict(list)
     all_troops = []
     file_cultures = []
     for fp in files:
-        fc, troops = parse_troop_file(fp)
+        fc, troops = parse_troop_file(fp, item_classes)
         file_cultures.append(fc)
         for t in troops:
             by_culture[t['culture']].append(t)

@@ -18,12 +18,30 @@ TAOM keeps every troop's 8 combat skills (Athletics, Riding, OneHanded, TwoHande
 
 ```
 final_skill = BASELINE[group][level][skill] + CULTURAL_MODS[culture].get(skill, 0)
-            (then optional weapon-spec swap: crossbow/pike/sword/axe troops shift melee skills)
+            (then weapon specialization, EQUIPMENT-DRIVEN since 2026-07-13:
+             carries crossbow + no bow        -> swap Bow <-> Crossbow
+             name has pike/spear/sword/axe/…  -> ±15 flavour shifts (name-based, unchanged)
+             carries 2H + no polearm, Pol>2H  -> swap Polearm <-> TwoHanded)
 ```
 
 - **`GROUP_BASELINES`** — Infantry / Ranged / Cavalry / HorseArcher tables keyed by the 11 tier levels `{1,6,11,16,21,26,31,36,41,46,51}`. Troops at off-grid levels (e.g. L7, L13) are skipped (no reference).
 - **`CULTURAL_MODS`** — per-culture skill deltas applied on top of baseline (the faction's identity). Keyed by the **filename culture** (`troops_<culture>.xml`), with two special cases in `detect_culture`: `iron_hills_*` ids (which live in the erebor file) → `iron_hills`, and `rhun_new` (the Rhûn file) → `rhun`.
-- **`SKIP_TROOP_IDS`** — troops excluded from the formula entirely (genuine non-humanoid creatures + hand-tuned bespoke mounts): currently `cave_troll` and `harad_elephant_rider`.
+- **`SKIP_TROOP_IDS`** — troops excluded from the formula entirely (genuine non-humanoid creatures + hand-tuned bespoke mounts): currently `cave_troll`, `harad_elephant_rider`, and `harad_mumakil_rider`.
+
+### Equipment-driven weapon specialization (#340/#341, 2026-07-13)
+
+Weapon detection was originally **name-keyword-only** (`crossbow`/`arbalest`/`naffatun` triggered the Bow↔Crossbow swap), which mis-statted every crossbowman named "Sharpshooter/Marksman/Scout/Sniper" (12 troops shipped Bow-top) and left two-hander troops named "Knight/Berserker/Champion" on the polearm-biased baselines (59 troops shipped Polearm-top — Cavalry L41 is 1H 310 / 2H 160 / Pol 340 by design). The fix:
+
+- `taom_schema.build_item_class_registry(moduledata, game_modules)` maps item id → skill class. It must read **both** vanilla `<Item Type="…">` and Armory `<CraftedItem crafting_template="…">` — the entire install has zero `Type="TwoHandedWeapon"` items; every two-hander is a crafted item.
+- `rebalance_troops.troop_weapon_classes(npc, item_classes)` collects the classes actually carried (weapon slots Item0–3).
+- The Bow↔Crossbow swap fires iff crossbow-carried-and-no-bow (unambiguous: no troop carries both). The `naffatun` keyword is gone — it had wrongly swapped two javelin throwers.
+- A total-preserving sanity post-pass swaps Polearm↔TwoHanded when a troop carries a two-hander, no polearm, and Polearm > TwoHanded. Idempotent; mixed carriers untouched; monotonicity unaffected (totals preserved).
+- **The writer hard-fails without the game install** (`--game-modules`, default = the standard Steam path) rather than silently degrading to the name heuristic. The read-only analyzer degrades to name-only with a loud warning instead.
+- Contract tests: `tools/tests/test_rebalance_equipment.py`.
+
+**Known off-formula residuals** a `--dry-run` will always report: the hand-tuned `gondor_loss_noble{,_veteran,_sergeant,_warden,_captain}` line (5 troops, intentional — do not `--apply` over them without deciding their fate, tracked in #343) and 28 Mordor/Morannon partial-skill-block troops that report CHANGED but never produce byte changes (the regex writer only rewrites values already present).
+
+**Deferred (#343):** 108 troops carrying only 1H weapons with Polearm strictly top (+46 exact ties) need a 3-way redistribution decision, not a mechanical pair swap.
 
 `tools/analyze_troop_balance.py` **imports these tables verbatim** — it never re-derives the curve, so the "ideal" and the "writer" can never disagree. It compares each troop's actual skills to `calculate_skills(...)` and reports the delta.
 

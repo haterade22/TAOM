@@ -422,6 +422,86 @@ def _scan_files(file_list, pattern):
     return found
 
 
+# --------------------------------------------------------------------------- #
+# Weapon-class registry (item id -> skill class)                               #
+# --------------------------------------------------------------------------- #
+# Vanilla items carry <Item Type="...">; TAOM/Armory weapons are
+# <CraftedItem crafting_template="..."> with NO Type attribute. The entire
+# install has zero Type="TwoHandedWeapon" items — every two-hander everywhere
+# is a CraftedItem — so a class resolver MUST read both attributes.
+_ITEM_OPEN_RE = re.compile(r"<(?:Item|CraftedItem)\b[^>]*?>", re.S)
+_ATTR_ID_RE = re.compile(r'\bid="([^"]+)"')
+_ATTR_TYPE_RE = re.compile(r'\bType="([^"]+)"')
+_ATTR_TEMPLATE_RE = re.compile(r'\bcrafting_template="([^"]+)"')
+
+# Measured vocabulary across all item roots (2026-07-13): Type values
+# {OneHandedWeapon, Polearm, Bow, Crossbow, Thrown, SlingStones, Arrows, Bolts,
+# Shield, + armor/goods types} and crafting_template values {Dagger, Mace,
+# OneHandedAxe, OneHandedSword, TwoHandedAxe, TwoHandedMace, TwoHandedSword,
+# Pike, TwoHandedPolearm, Javelin, ThrowingAxe, ThrowingKnife}.
+WEAPON_CLASS_TO_SKILL = {
+    # <Item Type="..."> (vanilla)
+    "OneHandedWeapon": "OneHanded",
+    "TwoHandedWeapon": "TwoHanded",   # unused in current data; kept for safety
+    "Polearm": "Polearm",
+    "Bow": "Bow",
+    "Crossbow": "Crossbow",
+    "Thrown": "Throwing",
+    "SlingStones": "Throwing",
+    "Arrows": "Arrows",
+    "Bolts": "Bolts",
+    "Shield": "Shield",
+    # <CraftedItem crafting_template="..."> (TAOM / Armory / vanilla crafted)
+    "Dagger": "OneHanded",
+    "Mace": "OneHanded",
+    "OneHandedAxe": "OneHanded",
+    "OneHandedSword": "OneHanded",
+    "TwoHandedAxe": "TwoHanded",
+    "TwoHandedMace": "TwoHanded",
+    "TwoHandedSword": "TwoHanded",
+    "Pike": "Polearm",
+    "TwoHandedPolearm": "Polearm",
+    "Javelin": "Throwing",
+    "ThrowingAxe": "Throwing",
+    "ThrowingKnife": "Throwing",
+}
+
+
+def build_item_class_registry(moduledata, game_modules) -> dict:
+    """Map item id -> skill class ('OneHanded'/'TwoHanded'/'Polearm'/'Bow'/
+    'Crossbow'/'Throwing'/'Arrows'/'Bolts'/'Shield') for every weapon-classed
+    item across the same item roots as build_registries. Non-weapon items
+    (armor, horses, goods) are omitted."""
+    moduledata = Path(moduledata)
+    game_modules = Path(game_modules) if game_modules else None
+
+    item_roots = []
+    if game_modules:
+        for name in ("SandBoxCore", "SandBox", "Native", "StoryMode", "CustomBattle",
+                     "LOTRLOME_Armory", "Alliance.Wargs", "ADOD_Beasts", "NavalDLC"):
+            item_roots.append(game_modules / name / "ModuleData")
+    item_roots.append(moduledata)
+
+    classes = {}
+    for root in item_roots:
+        if not root.exists():
+            continue
+        for xml in root.rglob("*.xml"):
+            text = _read_stripped(xml)
+            for m in _ITEM_OPEN_RE.finditer(text):
+                tag = m.group(0)
+                mid = _ATTR_ID_RE.search(tag)
+                if not mid:
+                    continue
+                mtype = _ATTR_TYPE_RE.search(tag)
+                mtmpl = _ATTR_TEMPLATE_RE.search(tag)
+                raw = (mtype and mtype.group(1)) or (mtmpl and mtmpl.group(1))
+                skill = WEAPON_CLASS_TO_SKILL.get(raw) if raw else None
+                if skill:
+                    classes[mid.group(1)] = skill
+    return classes
+
+
 def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     """Build cross-reference registries from the real game install + TAOM repo.
 

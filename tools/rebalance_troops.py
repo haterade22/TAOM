@@ -6,9 +6,17 @@ Applies uniform baseline + cultural modifier formula to all troops.
 Ensures cultures are within 5-10 skill points of each other per level/group,
 with elven factions 25-50 points above baseline.
 
+Weapon specialization is EQUIPMENT-DRIVEN (2026-07-13): the tool reads each
+troop's actual weapon item classes (via tools/taom_schema.build_item_class_registry,
+which needs the game install for vanilla + Armory item definitions) and swaps
+Bow<->Crossbow / Polearm<->TwoHanded to match the carried weapons. Name keywords
+alone previously mis-statted crossbowmen named "Sharpshooter" and two-hander
+cavalry named "Knight" (issues #340/#341).
+
 Usage:
     python rebalance_troops.py --dry-run    # Preview changes
     python rebalance_troops.py --apply      # Write changes to XML files
+    python rebalance_troops.py --apply --game-modules "E:/.../Modules"
 """
 
 import xml.etree.ElementTree as ET
@@ -19,17 +27,24 @@ import re
 import copy
 from collections import defaultdict
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import taom_schema as ts  # noqa: E402  build_item_class_registry
+
 TROOPS_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData', 'troops')
+MODULEDATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData')
+DEFAULT_GAME_MODULES = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules"
 SKILL_NAMES = ['Athletics', 'Riding', 'OneHanded', 'TwoHanded', 'Polearm', 'Bow', 'Crossbow', 'Throwing']
 
 SKIP_FILES = set()
 
 # Troops EXCLUDED from the formula rebaseline — genuine non-humanoid creatures and
 # hand-tuned bespoke mount riders whose skills are intentionally off the humanoid curve.
-# (cave_troll = monster; harad_elephant_rider = bespoke elephant-back archer.)
+# (cave_troll = monster; harad_elephant_rider / harad_mumakil_rider = bespoke
+# elephant/mumakil-back riders.)
 SKIP_TROOP_IDS = {
     'cave_troll',
     'harad_elephant_rider',
+    'harad_mumakil_rider',
 }
 
 # =============================================================================
@@ -221,16 +236,41 @@ def detect_culture(troop_id, filename_culture):
     return filename_culture
 
 
-def detect_weapon_specialization(troop_id, troop_name):
+def troop_weapon_classes(npc_elem, item_classes):
+    """Set of skill classes ('OneHanded'/'TwoHanded'/'Polearm'/'Bow'/'Crossbow'/
+    'Throwing'/'Arrows'/'Bolts'/'Shield') the troop actually carries, from the
+    inline battle-equipment weapon slots (Item0..Item3). Civilian sets are
+    template refs with no inline weapons, so nothing to exclude."""
+    classes = set()
+    for eq in npc_elem.findall('.//equipment'):
+        slot = eq.get('slot', '')
+        if not slot.startswith('Item'):
+            continue
+        item_id = (eq.get('id') or '').replace('Item.', '', 1)
+        skill = item_classes.get(item_id)
+        if skill:
+            classes.add(skill)
+    return classes
+
+
+def detect_weapon_specialization(troop_id, troop_name, weapon_classes=None):
     """
-    Detect weapon specialization from troop name/id.
+    Detect weapon specialization. The Bow<->Crossbow swap is decided from the
+    troop's ACTUAL equipment when weapon_classes is provided (name keywords
+    mis-statted crossbowmen named "Sharpshooter"/"Marksman");
+    the name-keyword fallback exists only for callers without a game install.
+    Melee boosts stay name-based (flavour shifts, ±15) — the equipment-driven
+    Polearm<->TwoHanded sanity swap lives in calculate_skills.
     Returns a dict of skill swaps to apply on top of the base formula.
     """
     name_lower = (troop_name + ' ' + troop_id).lower()
     swaps = {}
 
     # Crossbow specialists: swap Bow and Crossbow values
-    if any(kw in name_lower for kw in ['crossbow', 'arbalest', 'naffatun']):
+    if weapon_classes is not None:
+        if 'Crossbow' in weapon_classes and 'Bow' not in weapon_classes:
+            swaps['_swap_bow_crossbow'] = True
+    elif any(kw in name_lower for kw in ['crossbow', 'arbalest']):
         swaps['_swap_bow_crossbow'] = True
 
     # Pike/Halberd/Spear specialists: boost Polearm, reduce OneHanded
@@ -289,8 +329,13 @@ def is_militia(troop_id, troop_name):
     return 'militia' in name_lower and any(kw in name_lower for kw in ['spearman', 'archer', 'veteran'])
 
 
-def calculate_skills(culture, level, group, troop_id, troop_name):
-    """Calculate balanced skills for a troop."""
+def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes=None):
+    """Calculate balanced skills for a troop.
+
+    weapon_classes: set of skill classes the troop actually carries (from
+    troop_weapon_classes). When provided, drives the Bow<->Crossbow swap and
+    the Polearm<->TwoHanded sanity swap; when None, falls back to name-only
+    detection (no game install)."""
     baselines = GROUP_BASELINES.get(group)
     if not baselines:
         return None
@@ -319,9 +364,19 @@ def calculate_skills(culture, level, group, troop_id, troop_name):
         skills[skill] = max(0, base_val + mod_val)
 
     # Apply weapon specialization
-    specialization = detect_weapon_specialization(troop_id, troop_name)
+    specialization = detect_weapon_specialization(troop_id, troop_name, weapon_classes)
     if specialization:
         skills = apply_specialization(skills, specialization)
+
+    # Equipment sanity swap: a troop whose only heavy melee weapon is a
+    # two-hander must not have Polearm as its top melee skill (the Cavalry/
+    # Infantry baselines are polearm-biased by default, so "Knight"-named
+    # two-hander troops otherwise inherit Polearm-top stats).
+    # Total-preserving and idempotent.
+    if (weapon_classes and 'TwoHanded' in weapon_classes
+            and 'Polearm' not in weapon_classes
+            and skills['Polearm'] > skills['TwoHanded']):
+        skills['Polearm'], skills['TwoHanded'] = skills['TwoHanded'], skills['Polearm']
 
     return skills
 
@@ -427,8 +482,13 @@ def apply_skills_via_regex(filepath, troop_skill_map):
         f.write(content)
 
 
-def process_file(filepath, dry_run=True):
-    """Process a single troop XML file. Returns list of change records."""
+def process_file(filepath, dry_run=True, item_classes=None):
+    """Process a single troop XML file. Returns list of change records.
+
+    item_classes: item id -> skill class map from
+    taom_schema.build_item_class_registry. Required for equipment-driven
+    specialization; main() always supplies it (hard-fails without the game
+    install)."""
     filename = os.path.basename(filepath)
     if filename in SKIP_FILES:
         return []
@@ -469,7 +529,8 @@ def process_file(filepath, dry_run=True):
                 old_skills[s.get('id')] = int(s.get('value', '0'))
 
         # Calculate new skills
-        new_skills = calculate_skills(culture, level, group, troop_id, troop_name)
+        weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
+        new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes)
         if new_skills is None:
             changes.append({
                 'file': filename,
@@ -575,13 +636,34 @@ def print_report(all_changes):
 
 
 def main():
-    if len(sys.argv) < 2 or sys.argv[1] not in ('--dry-run', '--apply'):
-        print("Usage: python rebalance_troops.py --dry-run|--apply")
+    args = [a for a in sys.argv[1:]]
+    game_modules = DEFAULT_GAME_MODULES
+    if '--game-modules' in args:
+        i = args.index('--game-modules')
+        if i + 1 >= len(args):
+            print("ERROR: --game-modules requires a path argument")
+            sys.exit(1)
+        game_modules = args[i + 1]
+        del args[i:i + 2]
+    if len(args) != 1 or args[0] not in ('--dry-run', '--apply'):
+        print("Usage: python rebalance_troops.py --dry-run|--apply [--game-modules <path>]")
         sys.exit(1)
 
-    dry_run = sys.argv[1] == '--dry-run'
+    dry_run = args[0] == '--dry-run'
     mode = "DRY RUN" if dry_run else "APPLYING CHANGES"
     print(f"\n*** {mode} ***\n")
+
+    # Equipment-driven specialization needs the item-class registry from the
+    # game install (vanilla Type= + Armory crafting_template=). This is a
+    # WRITER tool — it must not silently degrade to the name-only heuristic
+    # that mis-statted crossbowmen/two-handers in the first place.
+    if not os.path.isdir(game_modules):
+        print(f"ERROR: Bannerlord Modules folder not found: {game_modules}\n"
+              f"       Equipment-driven weapon specialization needs the game install.\n"
+              f"       Pass --game-modules <path to .../Mount & Blade II Bannerlord/Modules>.")
+        sys.exit(1)
+    item_classes = ts.build_item_class_registry(MODULEDATA_DIR, game_modules)
+    print(f"Item-class registry: {len(item_classes):,} weapon-classed items")
 
     troop_files = sorted(glob.glob(os.path.join(TROOPS_DIR, 'troops_*.xml')))
     print(f"Found {len(troop_files)} troop files")
@@ -593,7 +675,7 @@ def main():
             print(f"  SKIPPING {filename}")
             continue
         print(f"  Processing {filename}...")
-        changes = process_file(filepath, dry_run=dry_run)
+        changes = process_file(filepath, dry_run=dry_run, item_classes=item_classes)
         all_changes.extend(changes)
 
     print_report(all_changes)
