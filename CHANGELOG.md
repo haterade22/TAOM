@@ -2,6 +2,28 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-13
+
+### fix(arena): Patch62 — tournament-exit heap-corruption AV contained to a logged movie leak (#339)
+
+- Player crash report (TAOM v2.0.12, Bannerlord 1.4.7, signature `4698b4d4`): CTD exiting a won
+  tournament at arena_aserai_a — `AccessViolationException` in `Dictionary.FindEntry` via
+  `WidgetFactory.IsCustomType` during the recursive `WidgetTemplate.OnRelease` walk of the Tournament
+  movie. The AV fired twice on the same exit: Patch60's early release caught it (fail-safe → vanilla
+  leak), then `GauntletLayer.ClearContext` re-walked the same corrupt tree at `ScreenManager.PopScreen`
+  uncaught. Corruption pre-dates mission end (prize tableau render in flight at exit — the #331
+  round-1 fingerprint); root cause is engine/native territory, this fix is containment.
+- `Patch62_MovieReleaseAvGuard`: AV-only Harmony Finalizer on `GauntletMovie.Release` (Patch50
+  pattern) — suppress + WARNING with the movie name, everything else propagates. Suppressing on the
+  first (Patch60 → `ReleaseMovie`) attempt also drops the movie from `_movieIdentifiers`, so the
+  fatal pop-time re-walk never happens. Cost on recurrence: one bounded leaked movie instead of a
+  lost session. Cold path (once per movie lifetime). 4 behavior tests.
+- CrashReport correlator fix: "Patches on throwing call stack" printed `(no patches)` for every
+  Harmony replacement frame (`*_PatchN`) — `GetPatchInfo` is keyed on the ORIGINAL method. The
+  collector now resolves frames via `Harmony.GetOriginalMethodFromStackframe` (verified present in
+  shipped 2.4.2), so field reports name patch owners on exactly the frames that matter. 2 tests
+  (live in-process Harmony patch; RED confirmed pre-fix).
+
 ## 2026-07-12
 
 ### fix(map): town_LN1 extra siege-ram slot — CTD joining any siege at Rivendell town

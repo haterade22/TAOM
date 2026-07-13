@@ -231,6 +231,26 @@ public class SubModule : MBSubModuleBase
         {
             IoC.Resolve<IModLogger>().LogError($"[SaveLoad] init failed — save/load diagnostics inactive: {ex.GetType().Name}: {ex.Message}");
         }
+
+        // Patch62 — containment guard (#339): a heap-corruption AccessViolationException inside
+        // the Tournament movie's WidgetTemplate release walk CTD'd a player session (fired in
+        // Patch60's early release AND again uncaught at the pop-time re-walk of the leaked
+        // movie). The finalizer suppresses AV-only on GauntletMovie.Release, converting the
+        // crash into one logged leaked movie; suppression on the first (Patch60) attempt also
+        // removes the movie from the layer, so the fatal re-walk never happens. Applied here in
+        // OnSubModuleLoad (Patch58/Patch61 precedent), NOT the late OnGameInitializationFinished
+        // batch: GauntletMovie.Release runs for EVERY movie in the process — main menu, character
+        // creation, load screen — all before any game init (the #299 apply-timing lesson).
+        try
+        {
+            Features.Arena.Hooks.GauntletMovie_Release_AvGuard_Patch.Initialize(IoC.Resolve<IModLogger>());
+            _harmony.PatchCategory("Patch62_MovieReleaseAvGuard");
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning($"[Arena] Patch62 movie-release AV guard failed to apply: {ex.Message}");
+        }
+
         // Patch0_BattleScenes: loads TAOM's sp_battle_scenes.xml (full 0-255 map_indices coverage) so the
         // TAOM_Map Main_map grid's extended indices (158-255) resolve to real battle terrains instead of
         // FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01 (TAOM_Map ships Main_map +
