@@ -4,6 +4,50 @@
 
 ## 2026-07-13
 
+### fix(balance): Gondor now out-armors Mordor at every tier (#342)
+
+- User reports "Mordor has better armor than Gondor" confirmed against the design curve (Gondor +1 /
+  Mordor −1 protection): the Black Uruk `sk_uruk_mordor_*_heavy_*` set (bracers 30, pauldrons 25/20)
+  sat above even Gondor's ELITE kit, Mordor's elite chest/helmets tied Gondor's (50/40), and Gondor's
+  keyword-tiered items sat at baseline+0 (authored before the +1 cultural mod existed). Troop-level:
+  L31–36 uruks totalled 180–185 armor vs Gondor's standard 157; even L1 orc recruits out-armored L6 levies.
+- Live-armory fix via `tools/oneoff/fix_gondor_mordor_armor_parity.py` (371 stat changes, backups
+  `*.bak-parity-20260713`): Mordor-exclusive kit capped at the Mordor curve — the uruk heavy set
+  re-statted as roster-ELITE (worn L26–36), per owner decision; Gondor baseline+0 stats topped up to +1.
+  Shared orc pools (`sk_gn_orc_*`/`sk_md_orc_*`, worn by goblin/mistymountainorcs/isengard) and
+  umbar/isengard items misfiled in `mordor/` left untouched — Gondor's +1 breaks those ties instead.
+- Roster fixes (`troops_{gondor,mordor}.xml`): L6 levies get light helmets; L16 line infantry/nobles
+  upgrade light gloves/greaves → medium; mirrored militia units topped up; L6 warg rider dropped to
+  band-correct light kit.
+- Verified: Gondor > Mordor at every slot×tier item max AND per-troop armor totals (median + max) at
+  every shared level band. `validate_moduledata.py` PASS; analyzer unchanged (2 pre-existing elf flags).
+- Owed: in-game smoke (needs game restart — item XML loads at launch), then close #342.
+
+### fix(troops): skills now follow equipment — 73 troops corrected, weapon spec is equipment-driven (#340, #341, #344)
+
+- Player reports: Tolfalas Sharpshooter (crossbowman) showed Bow 245 / Crossbow 50; Arndir Hill-Knight
+  (two-handed-sword cavalry) showed Polearm 345 / Two Handed 165. Root cause: `rebalance_troops.py`
+  detected weapon specialization from **name keywords only** — crossbowmen named Sharpshooter/Marksman/
+  Scout/Sniper never got the Bow↔Crossbow swap (12 troops), and two-hander troops named Knight/Berserker/
+  Champion inherited the polearm-biased Cavalry/Infantry baselines untouched (59 troops). The analyzer
+  imports the same name-derived curve, so it structurally couldn't flag either.
+- Tooling fix: `taom_schema.build_item_class_registry` (item id → skill class; reads BOTH vanilla
+  `<Item Type>` and Armory `<CraftedItem crafting_template>` — zero `Type="TwoHandedWeapon"` items exist
+  anywhere) + equipment-driven swap rules in `rebalance_troops.py` (writer hard-fails without the game
+  install; analyzer degrades loudly). `naffatun` keyword removed (had swapped 2 javelin throwers).
+  `harad_mumakil_rider` added to `SKIP_TROOP_IDS`. 10 contract tests in `tools/tests/test_rebalance_equipment.py`.
+- Data fix via frozen-set one-off (`tools/oneoff/fix_skill_equipment_mismatch.py`): 73 troops across 11
+  files, every write a pure pair permutation (aborts otherwise — protects the 5 hand-tuned
+  `gondor_loss_noble*` residuals). 7 vestigial `bodkin_arrows_a` (arrows, no bow) stripped from the
+  Gondor crossbow line. Save-compatible (values + equipment lines only, ids untouched).
+- Name-vs-weapon equipment fixes (#344): 6 troops whose name promised a weapon they didn't carry —
+  Balcoth Axeman line → Loke Axes I/II, Serelond Maceman line → empire maces t4/t5, Harad Spear
+  Fighter/Guard → southern spears t3/t4 (Item0 swaps only; no skill ripple, generator dry-run identical).
+- Deferred to #343: 108 one-hander-only troops with Polearm strictly top (+46 ties) need a 3-way
+  redistribution decision; optional validator skill-vs-equipment WARNING check.
+- Owed: in-game smoke (encyclopedia: Sharpshooter Crossbow-top, Hill-Knight TwoHanded-top, Balcoth
+  Axeman wielding an axe).
+
 ### fix(arena): Patch62 — tournament-exit heap-corruption AV contained to a logged movie leak (#339)
 
 - Player crash report (TAOM v2.0.12, Bannerlord 1.4.7, signature `4698b4d4`): CTD exiting a won

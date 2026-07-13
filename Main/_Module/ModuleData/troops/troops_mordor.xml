@@ -1266,10 +1266,10 @@
                 value="242" />
             <skill
                 id="TwoHanded"
-                value="228" />
+                value="247" />
             <skill
                 id="Polearm"
-                value="247" />
+                value="228" />
             <skill
                 id="Bow"
                 value="25" />
@@ -1663,10 +1663,10 @@
                 value="282" />
             <skill
                 id="TwoHanded"
-                value="268" />
+                value="287" />
             <skill
                 id="Polearm"
-                value="287" />
+                value="268" />
             <skill
                 id="Bow"
                 value="30" />
@@ -2775,9 +2775,7 @@
         <equipment slot="Item0" id="Item.wm_mordor_set1_axe_a02" />
         <equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
         <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_b" />
-        <equipment slot="Body" id="Item.sk_md_orc_arc_chest_med_a" />
-        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
-        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_light_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
         <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
       </EquipmentRoster>
     </Equipments>

@@ -391,7 +391,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.aserai_sword_3_t3" />
+                    id="Item.southern_spear_3_t3" />
                 <equipment
                     slot="Item1"
                     id="Item.desert_round_shield" />
@@ -713,7 +713,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.aserai_sword_5_t4" />
+                    id="Item.southern_spear_3_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.desert_round_shield" />

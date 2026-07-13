@@ -26,10 +26,10 @@
                 value="38" />
             <skill
                 id="TwoHanded"
-                value="23" />
+                value="28" />
             <skill
                 id="Polearm"
-                value="28" />
+                value="23" />
             <skill
                 id="Bow"
                 value="5" />
@@ -162,10 +162,10 @@
                 value="70" />
             <skill
                 id="TwoHanded"
-                value="60" />
+                value="70" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="60" />
             <skill
                 id="Bow"
                 value="10" />
@@ -456,10 +456,10 @@
                 value="100" />
             <skill
                 id="TwoHanded"
-                value="90" />
+                value="95" />
             <skill
                 id="Polearm"
-                value="95" />
+                value="90" />
             <skill
                 id="Bow"
                 value="15" />
@@ -913,10 +913,10 @@
                 value="185" />
             <skill
                 id="TwoHanded"
-                value="160" />
+                value="170" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="160" />
             <skill
                 id="Bow"
                 value="20" />
@@ -1049,10 +1049,10 @@
                 value="185" />
             <skill
                 id="TwoHanded"
-                value="160" />
+                value="170" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="160" />
             <skill
                 id="Bow"
                 value="20" />
@@ -1867,10 +1867,10 @@
                 value="90" />
             <skill
                 id="Bow"
-                value="170" />
+                value="35" />
             <skill
                 id="Crossbow"
-                value="35" />
+                value="170" />
             <skill
                 id="Throwing"
                 value="50" />

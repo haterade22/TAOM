@@ -2344,10 +2344,10 @@
                 value="230" />
             <skill
                 id="TwoHanded"
-                value="220" />
+                value="240" />
             <skill
                 id="Polearm"
-                value="240" />
+                value="220" />
             <skill
                 id="Bow"
                 value="15" />
@@ -2401,10 +2401,10 @@
                 value="270" />
             <skill
                 id="TwoHanded"
-                value="260" />
+                value="280" />
             <skill
                 id="Polearm"
-                value="280" />
+                value="260" />
             <skill
                 id="Bow"
                 value="20" />

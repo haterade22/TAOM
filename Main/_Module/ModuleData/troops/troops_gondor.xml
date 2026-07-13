@@ -32,36 +32,42 @@
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -159,8 +165,8 @@
       <skill id="Athletics" value="85" />
       <skill id="Riding" value="20" />
       <skill id="OneHanded" value="100" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="100" />
+      <skill id="TwoHanded" value="100" />
+      <skill id="Polearm" value="90" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="20" />
@@ -235,8 +241,8 @@
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="20" />
       <skill id="OneHanded" value="120" />
-      <skill id="TwoHanded" value="130" />
-      <skill id="Polearm" value="135" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="130" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="40" />
@@ -1404,8 +1410,8 @@
       <skill id="Athletics" value="38" />
       <skill id="Riding" value="10" />
       <skill id="OneHanded" value="38" />
-      <skill id="TwoHanded" value="23" />
-      <skill id="Polearm" value="33" />
+      <skill id="TwoHanded" value="33" />
+      <skill id="Polearm" value="23" />
       <skill id="Bow" value="5" />
       <skill id="Crossbow" value="0" />
       <skill id="Throwing" value="0" />
@@ -1439,8 +1445,8 @@
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
       <skill id="OneHanded" value="70" />
-      <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
+      <skill id="TwoHanded" value="75" />
+      <skill id="Polearm" value="60" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="10" />
@@ -1547,8 +1553,8 @@
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
       <skill id="OneHanded" value="240" />
-      <skill id="TwoHanded" value="215" />
-      <skill id="Polearm" value="240" />
+      <skill id="TwoHanded" value="240" />
+      <skill id="Polearm" value="215" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="70" />
@@ -1659,8 +1665,8 @@
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
       <skill id="OneHanded" value="255" />
-      <skill id="TwoHanded" value="215" />
-      <skill id="Polearm" value="225" />
+      <skill id="TwoHanded" value="225" />
+      <skill id="Polearm" value="215" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="70" />
@@ -1695,8 +1701,8 @@
       <skill id="Athletics" value="145" />
       <skill id="Riding" value="35" />
       <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="255" />
-      <skill id="Polearm" value="280" />
+      <skill id="TwoHanded" value="280" />
+      <skill id="Polearm" value="255" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="80" />
@@ -1731,8 +1737,8 @@
       <skill id="Athletics" value="165" />
       <skill id="Riding" value="40" />
       <skill id="OneHanded" value="320" />
-      <skill id="TwoHanded" value="295" />
-      <skill id="Polearm" value="315" />
+      <skill id="TwoHanded" value="315" />
+      <skill id="Polearm" value="295" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="90" />
@@ -1783,6 +1789,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_spear" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -1855,8 +1862,8 @@
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
-        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -2003,6 +2010,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Body" id="Item.sk_gd_bel_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
               <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -2228,9 +2236,9 @@
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_bel_inf_chest_med_a" />
-        <equipment slot="Cape" id="Item.sk_gd_ano_cape_b" />
-        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -2382,8 +2390,8 @@
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
-        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -2859,8 +2867,8 @@
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
-        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -3043,7 +3051,6 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.crossbow_b" />
         <equipment slot="Item1" id="Item.bolt_b" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
@@ -3082,7 +3089,6 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.crossbow_c" />
         <equipment slot="Item1" id="Item.bolt_b" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -3121,7 +3127,6 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.crossbow_d" />
         <equipment slot="Item1" id="Item.bolt_c" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -3149,8 +3154,8 @@
       <skill id="OneHanded" value="175" />
       <skill id="TwoHanded" value="105" />
       <skill id="Polearm" value="105" />
-      <skill id="Bow" value="205" />
-      <skill id="Crossbow" value="40" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="205" />
       <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets>
@@ -3160,7 +3165,6 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.crossbow_e" />
         <equipment slot="Item1" id="Item.bolt_c" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
@@ -3188,8 +3192,8 @@
       <skill id="OneHanded" value="205" />
       <skill id="TwoHanded" value="125" />
       <skill id="Polearm" value="125" />
-      <skill id="Bow" value="245" />
-      <skill id="Crossbow" value="50" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="245" />
       <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets />
@@ -3197,7 +3201,6 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.crossbow_f" />
         <equipment slot="Item1" id="Item.bolt_d" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
@@ -3240,6 +3243,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_spear" />
         <equipment slot="Body" id="Item.sk_gd_pin_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
               <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -3313,8 +3317,8 @@
         <equipment slot="Head" id="Item.sk_gd_pin_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
-        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -3538,8 +3542,8 @@
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
-        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -3597,8 +3601,8 @@
       <skill id="Athletics" value="120" />
       <skill id="Riding" value="165" />
       <skill id="OneHanded" value="180" />
-      <skill id="TwoHanded" value="85" />
-      <skill id="Polearm" value="200" />
+      <skill id="TwoHanded" value="200" />
+      <skill id="Polearm" value="85" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="30" />
@@ -3635,8 +3639,8 @@
       <skill id="Athletics" value="135" />
       <skill id="Riding" value="215" />
       <skill id="OneHanded" value="230" />
-      <skill id="TwoHanded" value="105" />
-      <skill id="Polearm" value="255" />
+      <skill id="TwoHanded" value="255" />
+      <skill id="Polearm" value="105" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="40" />
@@ -3673,8 +3677,8 @@
       <skill id="Athletics" value="155" />
       <skill id="Riding" value="275" />
       <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="135" />
-      <skill id="Polearm" value="305" />
+      <skill id="TwoHanded" value="305" />
+      <skill id="Polearm" value="135" />
       <skill id="Bow" value="45" />
       <skill id="Crossbow" value="30" />
       <skill id="Throwing" value="50" />
@@ -3711,8 +3715,8 @@
       <skill id="Athletics" value="175" />
       <skill id="Riding" value="325" />
       <skill id="OneHanded" value="320" />
-      <skill id="TwoHanded" value="165" />
-      <skill id="Polearm" value="345" />
+      <skill id="TwoHanded" value="345" />
+      <skill id="Polearm" value="165" />
       <skill id="Bow" value="50" />
       <skill id="Crossbow" value="35" />
       <skill id="Throwing" value="60" />
@@ -4262,6 +4266,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
               <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -4335,8 +4340,8 @@
         <equipment slot="Head" id="Item.sk_gd_anf_inf_helmet_med_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
-        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -4739,7 +4744,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
+        <equipment slot="Item0" id="Item.empire_mace_3_t4" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Head" id="Item.sk_gd_sere_helmet_elite_a" />
         <equipment slot="Body" id="Item.sk_gd_sere_chest_heavy_a" />
@@ -4776,7 +4781,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
+        <equipment slot="Item0" id="Item.empire_mace_4_t5" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Item2" id="Item.imperial_spear_t2" />
         <equipment slot="Head" id="Item.sk_gd_sere_helmet_elite_b" />
@@ -4894,7 +4899,6 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.crossbow_d" />
         <equipment slot="Item1" id="Item.bolt_c" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -4933,7 +4937,6 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.crossbow_e" />
         <equipment slot="Item1" id="Item.bolt_c" />
-        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a06" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
@@ -6858,6 +6861,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Item1" id="Item.gond_shield_three_black" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -7416,6 +7420,8 @@
         <equipment slot="Item1" id="Item.default_arrows" />
         <equipment slot="Item2" id="Item.default_arrows" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -7450,7 +7456,8 @@
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -7485,6 +7492,8 @@
         <equipment slot="Item3" id="Item.wm_gondor_sword_a02" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_b" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.ithilien_boots" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
