@@ -56,6 +56,18 @@ public sealed class HarmonyCorrelationCollector
             if (frames != null && i < frames.Count)
             {
                 try { mb = frames[i].GetMethod(); } catch { mb = null; }
+                // A patched frame holds Harmony's REPLACEMENT method (renders as Foo_PatchN),
+                // and GetPatchInfo is keyed on the ORIGINAL — the #339 field report printed
+                // "(no patches)" on all 17 patched frames of the crash stack, exactly the
+                // frames whose owners mattered. GetOriginalMethodFromStackframe maps a
+                // replacement back to its original and returns the frame's own method when
+                // it isn't a replacement; on any failure keep the raw GetMethod() result.
+                try
+                {
+                    var original = Harmony.GetOriginalMethodFromStackframe(frames[i]);
+                    if (original != null) mb = original;
+                }
+                catch { /* crash context — resolution must never break collection */ }
             }
             var info = mb != null ? SafeGetPatchInfo(mb) : null;
             var list = new List<HarmonyPatchSnapshot>();

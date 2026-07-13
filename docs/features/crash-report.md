@@ -116,7 +116,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 | Identity | `Native` + `TAOM` module versions, Bannerlord.exe FileVersion, TAOM.dll SHA1, language code |
 | Exception | Type, message, source, HResult, target site, stack trace, `Exception.Data` dictionary, full inner chain (≤10 deep) |
 | Stack Frames | Per-frame method, declaring type/assembly, file/line (when PDB present), IL offset |
-| Harmony Correlation | Patches affecting **every** frame in the stack, plus full inventory (every patched method grouped by owner) |
+| Harmony Correlation | Patches affecting **every** frame in the stack, plus full inventory (every patched method grouped by owner). Harmony replacement frames (`Foo_PatchN`) are resolved back to their original method via `Harmony.GetOriginalMethodFromStackframe` before the patch lookup — without this every patched frame printed `(no patches)`, exactly the frames that matter (#339, fixed 2026-07-13) |
 | Modules | Per-mod: id, version, load index, official flag, main DLL SHA1, manifest path, declared deps, dep-order inversion flag, XML files declared |
 | Assemblies | Every loaded assembly with name, version, location, GAC flag |
 | Campaign | UniqueGameId, time, hero (level/clan/kingdom/gold/renown/influence/race), party (size/wounded/prisoners/morale/food/tier histogram), current settlement or map position, recent CampaignEvents ring buffer |
