@@ -137,6 +137,17 @@ It does **not** judge qualitative identity (e.g. "rhun weighs too much for caval
 
 Full pre-sweep backup at `…/scratchpad/FULL_armory_backup_*`. Remaining design decisions (optional): mordor relabel-vs-split; whether to nerf the 2 elf shoulder slots; the mercenary retag target.
 
+## Gondor/Mordor parity pass (2026-07-13, #342)
+
+User reports "Mordor armor beats Gondor" confirmed and fixed. `tools/oneoff/fix_gondor_mordor_armor_parity.py` (one-off; reuses the curve via `import rebalance_armor`) applied 371 stat changes to the live tree, backed up as `*.bak-parity-20260713`:
+
+- **Mordor cap-only (153):** items worn *exclusively* by Mordor troops pulled down to the Mordor (−1) curve. The `sk_uruk_mordor_*_heavy_*` Black Uruk set — the pending relabel-vs-split decision above — was resolved as **roster-ELITE** (worn L26–36): bracers 30→25, pauldrons 25/20→14/11, greaves kept at 30 (≤ elite 33). Uruk `_medium_` kit capped at medium (bracers 20→13, pauldrons 15/12→7/7); the L11-anchored `chainmail_captain_*` capped at roster-light (35→19).
+- **Shared-pool constraint:** `sk_gn_orc_*` + `sk_md_orc_*` (also worn by goblin/mistymountainorcs/isengard), `urukscout_*` (isengard, misfiled in mordor/), and `ar_ardunian_*` (umbar) are NOT capped — nerfing them would hit other cultures as collateral. Ties on shared kit are broken by the Gondor top-up instead: Gondor leads shared kit by 1, Mordor-exclusive kit by 2.
+- **Gondor top-up-only (218):** keyword-tiered stats sitting exactly at the plain baseline raised to the Gondor (+1) curve (e.g. heavy chest 42→43, elite helmet 40→41). Off-pattern regional specials untouched.
+- **Roster fixes (repo `troops_{gondor,mordor}.xml`):** L6 Gondor levies got the light helmet (they had none — orc recruits out-armored them); L16 Gondor line infantry/nobles upgraded from light gloves/greaves to medium (they wore med chest+helm with light extremities, losing to fully-slotted orc medium kit); mirrored `gondor_militia_archer`/`_veteran_*` topped up; `mordor_warg_rider` (L6) dropped its medium chest + cape/gloves to band-correct light.
+
+Post-fix verification: Gondor > Mordor at every slot×tier max (uruk set judged as elite), and per-troop total armor Gondor-dominant (median AND max) at every shared level band (L6–L36). `validate_moduledata.py` PASS; analyzer still 2 errors (the pre-existing elf-shoulder flags). In-game smoke owed (restart required — armor stat changes only load at launch).
+
 ## Dependencies
 
 - `rebalance_armor.py` (curve) — the analyzer imports it.
