@@ -174,9 +174,9 @@ Career screen opening + ability V-key activation (3 archetypes: Infantry/Ranged/
 
 ## Patch28_SettlementGuards
 
-**Target:** `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual)
+**Target:** `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual), `GuardsCampaignBehavior.InitializeGarrisonCharacters` (manual, Postfix)
 
-Per-settlement guard troop injection + per-culture spear mapping (manual patches)
+Per-settlement guard troop injection + per-culture spear mapping (manual patches). The `InitializeGarrisonCharacters` Postfix (#346, 2026-07-14) scrubs excluded-race troops (cave troll) out of the private `_garrisonTroops` guard candidate list — vanilla draws guards from it weighted by troop LEVEL, so the L51 troll dominated the pick in any settlement without a configured pool. Field read via cached `AccessTools.Field`, fail-open warn-once; garrison roster/siege defense untouched. See `docs/features/settlement-guards.md` "Guard-Duty Race Exclusions".
 
 ## Patch29_CCBodyProperties
 

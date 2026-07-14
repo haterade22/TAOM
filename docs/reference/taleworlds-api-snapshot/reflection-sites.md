@@ -60,8 +60,11 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…NavigationCache`1` | `Deserialize` | method | `NavigationCacheAdapter.cs:113` | Cache deserialize |
 | `…Map.DistanceCache.NavigationCacheElement`1` | `Sort` | method (static) | `NavigationCacheAdapter.cs:101` | Element sort |
 | `…Map.DistanceCache.SandBoxNavigationCache` | `GetSceneXmlCrcValues` | method | `NavigationCacheAdapter.cs:107` | Scene CRC validation |
+| `SandBox.CampaignBehaviors.GuardsCampaignBehavior` | `PrepareGuardAgentDataFromGarrison` | method (static) | `GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs:30` | SettlementGuards config-pool guard build (backfilled 2026-07-14 — predates the gate) |
+| `…GuardsCampaignBehavior` | `_garrisonTroops` | field | `GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.cs:33` | Excluded-race guard scrub (#346) |
 
 Status (2026-05-28): **all 32 resolve against installed v1.4.5.**
+Status (2026-07-14): SettlementGuards rows added (`PrepareGuardAgentDataFromGarrison` backfill + `_garrisonTroops`, #346) — **all 35 gate rows resolve against installed v1.4.7.**
 
 ---
 

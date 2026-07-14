@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Domain;
@@ -14,6 +15,7 @@ public class SettlementGuardServiceTests
     private ISettlementGuardConfigProvider _config;
     private IRandomProvider _random;
     private IModLogger _logger;
+    private IRaceManager _raceManager;
     private SettlementGuardService _sut;
 
     [TestInitialize]
@@ -22,7 +24,8 @@ public class SettlementGuardServiceTests
         _config = Substitute.For<ISettlementGuardConfigProvider>();
         _random = Substitute.For<IRandomProvider>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new SettlementGuardService(_config, _random, _logger);
+        _raceManager = Substitute.For<IRaceManager>();
+        _sut = new SettlementGuardService(_config, _random, _logger, _raceManager);
     }
 
     // --- Fallback chain: settlement → clan → culture ---
@@ -215,6 +218,54 @@ public class SettlementGuardServiceTests
         var result = _sut.ResolveSpearItemId("unknown");
 
         Assert.IsNull(result);
+    }
+
+    // --- Guard-duty race exclusion (#346: cave troll must never spawn as a visible guard) ---
+
+    [TestMethod]
+    public void IsRaceExcludedFromGuardDuty_CaveTrollRace_ReturnsTrue()
+    {
+        _raceManager.IsValidRaceId(7).Returns(true);
+        _raceManager.GetRaceNameFromId(7).Returns("cave_troll");
+
+        var result = _sut.IsRaceExcludedFromGuardDuty(7);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsRaceExcludedFromGuardDuty_HumanRace_ReturnsFalse()
+    {
+        _raceManager.IsValidRaceId(0).Returns(true);
+        _raceManager.GetRaceNameFromId(0).Returns("human");
+
+        var result = _sut.IsRaceExcludedFromGuardDuty(0);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsRaceExcludedFromGuardDuty_InvalidRaceId_ReturnsFalseWithoutNameLookup()
+    {
+        // Validate-before-lookup: GetRaceNameFromId coerces unknown ids to "human", so an
+        // invalid id must be rejected BEFORE the name lookup, never resolved through it.
+        _raceManager.IsValidRaceId(999).Returns(false);
+
+        var result = _sut.IsRaceExcludedFromGuardDuty(999);
+
+        Assert.IsFalse(result);
+        _raceManager.DidNotReceive().GetRaceNameFromId(Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void IsRaceExcludedFromGuardDuty_CaveTrollMixedCase_ReturnsTrue()
+    {
+        _raceManager.IsValidRaceId(7).Returns(true);
+        _raceManager.GetRaceNameFromId(7).Returns("Cave_Troll");
+
+        var result = _sut.IsRaceExcludedFromGuardDuty(7);
+
+        Assert.IsTrue(result);
     }
 
     // --- Helpers ---

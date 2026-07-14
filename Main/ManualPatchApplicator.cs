@@ -32,6 +32,7 @@ internal static class ManualPatchApplicator
         var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
         GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);
         GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(settlementGuardService);
+        GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.Initialize(settlementGuardService);
 
         // Manual patches for private GuardsCampaignBehavior methods (SandBox.dll)
         var takeGuardTarget = GuardsCampaignBehavior_TakeGuardAgentData_Patch.TargetMethod();
@@ -49,6 +50,14 @@ internal static class ManualPatchApplicator
                 nameof(GuardsCampaignBehavior_GetSuitableSpear_Patch.Prefix)));
         else
             IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] GetSuitableSpear not found — culture-specific spears will not apply");
+
+        var garrisonScrubTarget = GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.TargetMethod();
+        if (garrisonScrubTarget != null)
+            harmony.Patch(garrisonScrubTarget, postfix: new HarmonyMethod(
+                typeof(GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch),
+                nameof(GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.Postfix)));
+        else
+            IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] InitializeGarrisonCharacters not found — excluded-race garrison scrub will not apply (#346)");
 
         // Manual patch for private MobilePartyVisual method (SandBox.View.dll)
         var mobilePartyTarget = MobilePartyVisual_AddCharacterToPartyIcon_Patch.TargetMethod();

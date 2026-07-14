@@ -2,6 +2,26 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-14
+
+### fix(settlement-guards): cave trolls no longer spawn as visible town/castle guards (#346)
+
+- Root cause: vanilla `GuardsCampaignBehavior` fills its guard candidate list from the garrison filtered
+  only on `Occupation == Soldier` and picks **weighted by troop level** — the L51 `cave_troll` (shed into
+  Mordor garrisons by `kingdom_hero_party_mordor_template`) dominated the draw wherever no guard pool is
+  configured (everywhere but Gondor), so trolls routinely manned Mordor guard posts.
+- Fix: race-keyed guard-duty exclusion (`SettlementGuardService.IsRaceExcludedFromGuardDuty`, hardcoded
+  `cave_troll`, validate-before-lookup via `IRaceManager`) enforced at two points: a new manual Postfix on
+  `GuardsCampaignBehavior.InitializeGarrisonCharacters` scrubs `_garrisonTroops` in place (covers all five
+  guard types; empty list → vanilla `culture.Guard`), and the existing TakeGuardAgentData Prefix rejects
+  excluded-race config-pool entries. Fail-open: cached `AccessTools.Field`, one-shot warnings.
+- Garrison membership and siege defense untouched (`MemberRoster` never modified); prison guards unaffected.
+- Tests: +4 service (exclusion predicate incl. invalid-race-id gate), wiring catalog extended to the third
+  manual patch site, binding gate pins `_garrisonTroops` + backfills `PrepareGuardAgentDataFromGarrison`
+  (35 reflection rows, all resolve on installed v1.4.7). Suite 4210 green.
+- Owed: in-game smoke (Mordor town with troll garrison, Gondor pool regression, siege defense), then close #346.
+  Follow-up content issue: authored Mordor guard pool.
+
 ## 2026-07-13
 
 ### fix(balance): Gondor now out-armors Mordor at every tier (#342)

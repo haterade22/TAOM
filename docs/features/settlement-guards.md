@@ -18,11 +18,13 @@ The guard spawning pipeline in `GuardsCampaignBehavior` (SandBox.dll) has no ext
 
 ### Solution Approach
 
-Two Harmony Prefixes on private methods, manually patched (not via PatchCategory since the target methods require `AccessTools.Method`):
+Three Harmony patches on private methods, manually patched (not via PatchCategory since the target methods require `AccessTools.Method`):
 
 1. **TakeGuardAgentData Prefix** -- Intercepts troop selection. If the settlement has a custom guard pool in the XML config, resolves a troop ID via weighted random selection, then delegates to vanilla's `PrepareGuardAgentDataFromGarrison` (called via cached reflection) for equipment assembly. Falls back to vanilla behavior if no config exists.
 
 2. **GetSuitableSpear Prefix** -- Replaces the vanilla hardcode (`battania -> northern_spear_2_t3`, else `western_spear_3_t3`) with a per-culture lookup from the XML config.
+
+3. **InitializeGarrisonCharacters Postfix** -- Scrubs excluded-race troops (cave troll) out of vanilla's private `_garrisonTroops` guard candidate list right after vanilla builds it. See "Guard-Duty Race Exclusions" below.
 
 ### Component Diagram
 
@@ -84,6 +86,18 @@ Optional `<PrisonGuard troop="..."/>` overrides the culture's default prison gua
 - Linhir (town_EW7): Haven Guards, Pavise Guards
 - 9 castles with region-specific guards (Cair Andros, Ithilien, Lossarnach, Harondor, etc.)
 
+## Guard-Duty Race Exclusions (#346)
+
+**What:** troops whose race is in `SettlementGuardService.ExcludedGuardRaces` (hardcoded: `cave_troll`) never spawn as visible settlement guards.
+
+**Why:** vanilla's guard pick filters the garrison only on `Occupation == Soldier` and weights **by troop level** — the L51 `cave_troll` (fed into Mordor garrisons via `kingdom_hero_party_mordor_template`) dominated the draw in any settlement without a configured pool, so trolls routinely stood guard at Mordor towns.
+
+**How (two enforcement points):**
+- `GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch` (Postfix) scrubs excluded-race entries out of the private `_garrisonTroops` list in place — the single choke point feeding all five guard spawn types. If the scrub empties the list, vanilla falls back to `culture.Guard`. The field is read via `AccessTools.Field` cached in `Initialize()` (deliberately NOT Harmony `___`-injection: an engine rename degrades to a one-shot warning + vanilla instead of a patch-application crash).
+- The TakeGuardAgentData Prefix rejects a **config-pool** entry whose troop has an excluded race (pool picks bypass `_garrisonTroops`), warns once naming the offending troop id, and returns to vanilla selection.
+
+**Boundaries:** the exclusion set is a hardcoded correctness invariant, not config — a config-driven list would reintroduce the leak on config-load failure. The scrub never touches `MemberRoster`: trolls stay in garrisons and still fight in siege defense. Prison guards use the separate authored `culture.PrisonGuard` path and are unaffected. The race check is validate-before-lookup (`IRaceManager.IsValidRaceId` gates `GetRaceNameFromId`, which coerces unknown ids to `"human"`).
+
 ## Key Files
 
 | File | Purpose |
@@ -95,8 +109,9 @@ Optional `<PrisonGuard troop="..."/>` overrides the culture's default prison gua
 | `Main/Features/SettlementGuards/Domain/GuardEntry.cs` | Troop ID + weight + spawn points |
 | `Main/Features/SettlementGuards/Domain/GuardPool.cs` | Collection of guards + optional prison guard |
 | `Main/Features/SettlementGuards/Domain/SettlementGuardContext.cs` | Settlement/clan/culture IDs for resolution |
-| `Main/Features/SettlementGuards/Hooks/GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs` | Harmony Prefix on troop selection |
+| `Main/Features/SettlementGuards/Hooks/GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs` | Harmony Prefix on troop selection (+ excluded-race pool-entry guard) |
 | `Main/Features/SettlementGuards/Hooks/GuardsCampaignBehavior_GetSuitableSpear_Patch.cs` | Harmony Prefix on spear item selection |
+| `Main/Features/SettlementGuards/Hooks/GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.cs` | Harmony Postfix scrubbing excluded races from `_garrisonTroops` (#346) |
 | `Main/Features/SettlementGuards/SettlementGuardsIoC.cs` | DryIoc Singleton registrations |
 | `Main/_Module/ModuleData/settlement_guards/settlement_guards_config.xml` | XML config |
 
@@ -105,11 +120,14 @@ Optional `<PrisonGuard troop="..."/>` overrides the culture's default prison gua
 - `IPathService` (Core) -- ModuleDataPath for config file location
 - `IModLogger` (Core) -- Logging
 - `IRandomProvider` (TroopProgression) -- Weighted random selection (shared with VolunteerRecruitmentService)
+- `IRaceManager` (Core) -- Race id -> name resolution for the guard-duty race exclusion (#346)
 
 ## Tests
 
 - `TAOM.Tests/Features/SettlementGuards/SettlementGuardConfigProviderTests.cs` -- 13 tests: XML parsing, lazy loading, missing file, spear mappings, default weights, multiple entries
-- `TAOM.Tests/Features/SettlementGuards/SettlementGuardServiceTests.cs` -- 14 tests: fallback chain (settlement -> clan -> culture -> null), weighted selection, spawn-point filtering, spear resolution
+- `TAOM.Tests/Features/SettlementGuards/SettlementGuardServiceTests.cs` -- 18 tests: fallback chain (settlement -> clan -> culture -> null), weighted selection, spawn-point filtering, spear resolution, guard-duty race exclusion (troll true / human false / invalid-id rejected without name lookup / case-insensitive)
+- `TAOM.Tests/Features/SettlementGuards/SettlementGuardsWiringTests.cs` -- wiring catalog: IoC registration + all three manual patch sites (TargetMethod + Initialize) asserted against ManualPatchApplicator source
+- `TAOM.Tests/Migration/ReflectionSiteBindingTests.cs` -- pins `_garrisonTroops` (field) + `PrepareGuardAgentDataFromGarrison` (method) against the installed SandBox.dll
 - `TAOM.Tests/Core/ConfigIdValidationTests.cs` -- 11 tests: validates all culture IDs in config against known valid set
 
 ## How to Add Guards for a New Settlement
@@ -137,6 +155,7 @@ Fully safe. `GuardsCampaignBehavior.SyncData` is empty -- guards spawn fresh eve
 
 ## Changelog
 
+- 2026-07-14 — #346: guard-duty race exclusion — cave trolls no longer spawn as visible settlement guards. New `InitializeGarrisonCharacters` Postfix scrubs excluded races from `_garrisonTroops`; pool-entry guard in the TakeGuardAgentData Prefix; `IRaceManager` injected into the service. Garrison/siege combat untouched.
 - 2026-05-13 — Phase 9b: closed #192 (added a manual-Harmony wiring smoke test for the two `_harmony.Patch(...)` sites, which have no `[HarmonyPatchCategory]`) and #157 (replaced the bare `catch {}` in `GuardsCampaignBehavior_TakeGuardAgentData_Patch` with `catch (Exception ex)` + one-shot `IModLogger.LogError` to avoid per-spawn log spam).
 - 2026-04-08 — Initial Per-Settlement Guard System: Harmony prefixes on `TakeGuardAgentDataFromGarrisonTroopList` and `GetSuitableSpear`, XML config with 14 Gondor settlements + 16 culture spear mappings, settlement→clan→culture fallback, weighted random selection, 27 tests.
 

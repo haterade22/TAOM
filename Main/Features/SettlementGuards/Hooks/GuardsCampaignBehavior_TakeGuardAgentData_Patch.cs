@@ -21,6 +21,8 @@ public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
     // We do not want per-spawn log spam (TakeGuardAgentDataFromGarrisonTroopList fires for every
     // settlement enter).
     private static bool _exceptionLogged;
+    // #346 — one-shot warning when a configured guard pool names an excluded-race troop.
+    private static bool _excludedPoolTroopWarned;
 
     public static void Initialize(ISettlementGuardService service)
     {
@@ -66,6 +68,22 @@ public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
             var character = MBObjectManager.Instance.GetObject<CharacterObject>(troopId);
             if (character == null) return true;
 
+            // #346 — a config-pool entry bypasses the _garrisonTroops scrub, so an excluded race
+            // authored into settlement_guards_config.xml must also fall back to vanilla (which
+            // draws from the already-scrubbed garrison list).
+            if (_service.IsRaceExcludedFromGuardDuty(character.Race))
+            {
+                if (!_excludedPoolTroopWarned)
+                {
+                    _excludedPoolTroopWarned = true;
+                    IoC.Resolve<IModLogger>()?.LogWarning(
+                        $"[SettlementGuards] Configured guard troop '{troopId}' has a race excluded " +
+                        $"from guard duty — ignoring the pool entry and using vanilla selection. " +
+                        $"Remove it from settlement_guards_config.xml. This log fires once per process.");
+                }
+                return true;
+            }
+
             if (_prepareMethod != null)
             {
                 __result = (AgentData)_prepareMethod.Invoke(null, new object[] { character, overrideWeaponWithSpear, unarmed });
@@ -74,7 +92,7 @@ public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
         }
         catch (Exception ex)
         {
-            // Phase 9b #157 — verified via ilspycmd that v1.3.15 still has
+            // Phase 9b #157 — verified via ilspycmd that v1.4.7 (re-checked 2026-07-14, #346) still has
             // `private static AgentData PrepareGuardAgentDataFromGarrison(CharacterObject, bool, bool)`
             // so the `Invoke(null, ...)` static call shape is correct as of writing. Any exception
             // here is therefore unexpected — log it ONCE per process so a future TaleWorlds API
@@ -88,7 +106,7 @@ public static class GuardsCampaignBehavior_TakeGuardAgentData_Patch
                     IoC.Resolve<IModLogger>()?.LogError(
                         $"[SettlementGuards] PrepareGuardAgentDataFromGarrison invoke failed: " +
                         $"{ex.GetType().Name}: {ex.Message}. Falling back to vanilla guards. " +
-                        $"This log fires once per process — verify v1.3.15 signature via ilspycmd " +
+                        $"This log fires once per process — verify the installed engine's signature via ilspycmd " +
                         $"on SandBox.dll if behavior is unexpected.");
                 }
                 catch { /* logger resolution failure must not surface to vanilla path */ }

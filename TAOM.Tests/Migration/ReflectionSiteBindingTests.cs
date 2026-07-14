@@ -78,6 +78,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCache`1", "NavigationCache`1", "Deserialize", "Method", "NavigationCacheAdapter.cs:113")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.NavigationCacheElement`1", "NavigationCacheElement`1", "Sort", "Method", "NavigationCacheAdapter.cs:101")]
     [DataRow("TaleWorlds.CampaignSystem.Map.DistanceCache.SandBoxNavigationCache", "SandBoxNavigationCache", "GetSceneXmlCrcValues", "Method", "NavigationCacheAdapter.cs:107")]
+    // --- SettlementGuards patch-body reflection (patch TARGETS are auto-covered by HarmonyPatchBindingTests) ---
+    [DataRow("SandBox.CampaignBehaviors.GuardsCampaignBehavior", "GuardsCampaignBehavior", "PrepareGuardAgentDataFromGarrison", "Method", "GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs:30")]
+    [DataRow("SandBox.CampaignBehaviors.GuardsCampaignBehavior", "GuardsCampaignBehavior", "_garrisonTroops", "Field", "GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.cs:33")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

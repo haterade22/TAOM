@@ -3,6 +3,7 @@ using System.Linq;
 using DryIoc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Domain;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.SettlementGuards;
@@ -11,9 +12,10 @@ using TAOM.Features.TroopProgression;
 namespace TAOM.Tests.Features.SettlementGuards;
 
 // Wiring-regression test for SettlementGuards. Unlike most TAOM features, SettlementGuards uses
-// MANUAL Harmony patching (no [HarmonyPatchCategory]) because both target methods
-// (GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList + GetSuitableSpear) are private
-// instance methods that AccessTools cannot resolve via attribute-based discovery. The patches are
+// MANUAL Harmony patching (no [HarmonyPatchCategory]) because all three target methods
+// (GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList + GetSuitableSpear +
+// InitializeGarrisonCharacters) are private instance methods that AccessTools cannot resolve via
+// attribute-based discovery. The patches are
 // applied in Main/ManualPatchApplicator.cs (extracted from SubModule.OnGameInitializationFinished,
 // which calls ManualPatchApplicator.ApplyAll(_harmony)) via harmony.Patch(...) plus an
 // Initialize(_service) call that wires the static IoC reference each patch's Prefix reads.
@@ -73,6 +75,10 @@ public class SettlementGuardsWiringTests
         StringAssert.Contains(applicatorSource, "GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod()",
             "ManualPatchApplicator must call GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod() and then " +
             "harmony.Patch(...) on the result. Without it, per-culture spear assignment does not apply.");
+
+        StringAssert.Contains(applicatorSource, "GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.TargetMethod()",
+            "ManualPatchApplicator must call GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.TargetMethod() and then " +
+            "harmony.Patch(...) on the result. Without it, excluded races (cave troll, #346) can spawn as settlement guards.");
     }
 
     [TestMethod]
@@ -92,6 +98,11 @@ public class SettlementGuardsWiringTests
         StringAssert.Contains(applicatorSource, "GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(",
             "ManualPatchApplicator must call GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(...) " +
             "before any guard spawn fires. Without it the Prefix's _service field stays null.");
+
+        StringAssert.Contains(applicatorSource, "GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.Initialize(",
+            "ManualPatchApplicator must call GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.Initialize(...) " +
+            "before any guard spawn fires. Without it the Postfix's _service/_garrisonTroopsField stay null " +
+            "and the excluded-race scrub (#346) never runs.");
     }
 
     // --- DryIoc registration smoke test ---
@@ -105,6 +116,8 @@ public class SettlementGuardsWiringTests
         // SettlementGuardService ctor pulls IRandomProvider (cross-feature dep from TroopProgression)
         // — mirror what Main/IoC.cs guarantees by registering TroopProgressionIoC before SettlementGuardsIoC.
         container.RegisterInstance<IRandomProvider>(Substitute.For<IRandomProvider>());
+        // Ctor also pulls IRaceManager (Core) for the guard-duty race exclusion (#346).
+        container.RegisterInstance<IRaceManager>(Substitute.For<IRaceManager>());
 
         SettlementGuardsIoC.RegisterSettlementGuardsFeature(container);
 
