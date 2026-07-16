@@ -27,6 +27,14 @@ public static class Patch30_FormationGetOrderPositionOfUnit
             // this per-unit hot path (~40,000×/frame) before any IoC resolve or adapter allocation.
             if (Mission.Current?.IsFieldBattle != true) return true;
 
+            // Banner bearers own their slot. BannerBearerLogic places them via SwitchUnitLocations
+            // into the engine's dedicated banner positions (RelativeFormationPosition[6] tables);
+            // returning a mixed-formation position for them instead would scatter the standards
+            // through the ranks. Returning true lets vanilla place the bearer. Cheap enough for
+            // this hot path — Agent.Banner is Equipment?.GetBanner(), a single _weaponSlots[4]
+            // read with no loop or allocation. Codex review 2026-07-16 MED (BannerBearers).
+            if (unit?.Banner != null) return true;
+
             var service = _service ??= IoC.Resolve<IFormationLayoutService>();
             if (service == null) return true;
 

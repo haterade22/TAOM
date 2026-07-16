@@ -247,3 +247,37 @@ The rivendell/tents pipeline's only integration contract is string agreement (te
 - **Why missed:** per-file review passes structurally cannot see cross-file contract drift; docstrings were written as intent under iteration pressure.
 - **Prevent:** shared helpers (or emitted sidecar maps) for any name derivation used by ≥2 scripts — the tooling twin of the parallel-builder-briefs rule; on review, diff every duplicated helper; verify every docstring safety claim has an enforcing code path; dry-run must gate every mutation including mkdir. RCA: `docs/reviews/rca-asset-pipeline-tools-2026-07-16.md`.
 - **Source:** deep-review 2026-07-16, cross-script consistency agent (2 HIGH gaps confirmed live).
+
+### When a rewrite adds an early return to a loop body, enumerate what the old unconditional path guaranteed
+The `FileLogger` crash-durability rewrite added `if (_logFile == null) return;` at the top of `Drain()` for null-safety. The old code had no guard — it dequeued unconditionally and wrote via `_logFile?.`, which *incidentally* guaranteed the queue always drains. That guarantee was load-bearing for `ProcessQueue`'s `while (!_stopping || !_queue.IsEmpty)` exit condition: post-`Dispose` the new guard leaves items queued forever, so a still-live writer thread spins at 100% of a core until process exit.
+- **Why missed:** the new guard is locally correct and globally a liveness regression. The rewrite preserved ordering and null-safety (both tested); the drain-regardless property was never named, documented, or tested — it was an emergent side effect of the old shape.
+- **Prevent:** when adding a guard clause to a method a loop depends on, read the loop's exit condition and ask whether the guard can permanently prevent it from clearing. Pin the invariant with a test asserting the *side effect the loop needs* ("the queue drains"), not merely the absence of an exception. RCA: `docs/reviews/rca-battle-load-blind-window-2026-07-16.md`.
+- **Source:** deep-review 2026-07-16, dedicated concurrency agent (MED, RED-proven: "Drain() left 200 item(s) queued after Dispose").
+
+### A diagnostic that fails silently is worse than one that fails loudly — a swallowed fault still needs a channel
+`FileLogger.Drain()` swallowed all write faults in an empty catch. Both constraints behind that were real: an IO fault now lands on the game thread and must not propagate into engine code, and the catch cannot log without re-entering itself. But a disk-full/AV-lock fault then dropped the in-flight line and every subsequent one, forever, with zero signal — the crash-forensics instrument would look healthy while losing exactly the lines it exists to capture, during the incident it exists to document.
+- **Why missed:** the design question "swallow or propagate?" was asked and answered; "swallowed and therefore invisible" was never asked. No rule covered it.
+- **Prevent:** for any swallowed fault in a diagnostic/observability path, provide a signal that does not re-enter the faulting component — a counter surfaced on recovery, a one-shot sentinel, a field the crash bundle reads. "It can't log from here" is a reason to find another channel, not to stay silent. RCA: `docs/reviews/rca-battle-load-blind-window-2026-07-16.md`.
+- **Source:** deep-review 2026-07-16, dedicated concurrency agent (MED).
+
+### Before dispatching /deep-review, name the changeset's riskiest property and check a core agent actually covers it
+Commit `c53c8436` was nominally a Harmony changeset (4 new bindings incl. a private engine method) — covered from three directions by Agents 1/2/5, all clean. Its *actual* risk was a lock/liveness rewrite of `FileLogger`, which every feature depends on. Both confirmed defects were in those 20 lines, and all five core agents read the file and missed both; they were found only because a 6th concurrency agent was hand-rolled.
+- **Why missed:** the 5 core agents are calibrated for TAOM's usual work (Harmony, GameModels, adapters, XML). Agent 3 came closest but frames locks as a *throughput* concern — it asked "how long does this block?" (and got the number wrong: it claimed a 50ms stall from a `Thread.Sleep` that sits outside the lock) instead of "can this loop fail to terminate?"
+- **Prevent:** name the single riskiest property of the changeset before dispatch; if no core agent's rule set covers it, write the extra agent. The core five are a floor, not a ceiling — the skill says so, and this is the worked example. Triggers: threading/locking, process lifetime, native interop, anything under `Main/Core/` that every feature depends on. RCA: `docs/reviews/rca-battle-load-blind-window-2026-07-16.md`.
+- **Source:** deep-review 2026-07-16 (6 agents; 5 core PASS, 6th found 2 MED).
+### When an approved plan says "fix it in data", fixing it in code instead is a rule breach waiting to happen
+The BannerBearers plan (2026-07-16) specified adding `<banner_bearer_replacement_weapons>` to the cultures missing it, with C# only as a defensive backstop. Mid-implementation the reasoning shifted -- "a C# fallback reading the troop's own sidearm is per-troop accurate and maintenance-free" -- and the XML was skipped. That single deviation produced an ADR-002 breach (a `for`+`if` loop inside a GameModel, which `.claude/rules/gamemodels.md` rejects as binary regardless of line count), a spurious nullable question, two efficiency findings, and a master-toggle leak. All four dissolved the moment the plan's original data fix was applied and the C# was deleted. The deep review's own suggested fix was worse still -- move the loop into the service -- which would have breached ADR-007 by putting the sealed `BasicCharacterObject`/`ItemObject` across a service boundary.
+- **Why missed:** the deviation was reasoned locally ("this is more accurate") without re-checking it against the rules the plan was written to satisfy. Plans get scrutiny; mid-implementation changes usually do not.
+- **Prevent:** treat a mid-implementation deviation from an approved plan as a decision needing the same scrutiny as the plan -- state it explicitly and re-check it against the ADRs before proceeding. Corollary: prefer data over code for anything expressible as data. Data is validated by `validate_moduledata.py` plus a parse smoke test and cannot breach an architecture rule; the equivalent C# can, and did. A build-time test pinning a data invariant beats runtime C# defending it.
+- **Source:** docs/reviews/rca-banner-bearers-2026-07-16.md (finding 4, HIGH).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/rca-butr-dependency-update-2026-07-16.md](../rca-butr-dependency-update-2026-07-16.md)
+
+<!-- backlinks-end -->

@@ -1,0 +1,68 @@
+{
+  "_comment": "Battlefield banner bearers. Drives the engine's native BannerBearerLogic, which is already present in every field battle, sally-out and siege. Edits require a full game restart (config is cached for the process lifetime).",
+
+  "Enabled": true,
+
+  "_comment_MinimumFormationTroopCount": "Formations smaller than this never raise a banner. Engine floor is 2; valid range 2-100.",
+  "MinimumFormationTroopCount": 4,
+
+  "_comment_MaxBearersPerFormation": "Hard ceiling per formation. Valid range 1-6 — the engine's bearer arrangement tables only hold 6 positions.",
+  "MaxBearersPerFormation": 4,
+
+  "_comment_BannerPerSoldiers": "One banner per N soldiers, per formation class. 0 disables banners for that class. Note: extra bearers add visual density and redundancy (the banner effect survives a bearer dying) — the formation bonus itself does NOT stack.",
+  "InfantryBannerPerSoldiers": 20,
+  "RangedBannerPerSoldiers": 25,
+  "CavalryBannerPerSoldiers": 15,
+  "HorseArcherBannerPerSoldiers": 15,
+  "OtherBannerPerSoldiers": 25,
+
+  "_comment_ExcludedRaces": "Races that never carry a standard. Race ids come from LOTRLOME_Armory/ModuleData/skins.xml. Named races are heroes anyway (the engine already excludes heroes) and are listed for belt-and-braces.",
+  "ExcludedRaces": [
+    "cave_troll",
+    "hill_troll",
+    "nazghul",
+    "saruman",
+    "sauron"
+  ],
+
+  "_comment_CultureBanners": "Culture StringId -> banner ItemObject id. Vanilla banner items are neutral-culture with using_tableau=true, so the cloth always renders the party's own heraldry — the item picks a pole/cloth silhouette and a BannerComponent effect tier, it does NOT lock the faction. Map a culture to \"\" to give it no banner. Custom LOTR banner meshes can be swapped in later by changing ids here, with no code change.",
+  "_comment_CultureBanners_ids": "KEYS ARE StringIds, NOT display names. TAOM re-skins the six vanilla cultures via spcultures.xslt, which overrides <name> but NEVER the id — so Rohirrim = 'vlandia', Dunlendings = 'empire', Haradrim = 'aserai', Easterlings/Rhun = 'khuzait', Barding/Dale = 'sturgia', Variag/Khand = 'battania'. Using the LOTR name as a key silently gives that faction the default banner instead.",
+  "CultureBanners": {
+    "gondor": "standard_of_duty_t1",
+    "gondor_soldiers": "standard_of_duty_t1",
+    "vlandia": "banner_of_the_horseman_t1",
+    "sturgia": "close_shields_banner_t1",
+
+    "erebor": "banner_of_oaken_shields_t1",
+    "erebor_warriors": "banner_of_oaken_shields_t1",
+
+    "rivendell": "archers_flag_t1",
+    "lothlorien": "archers_flag_t1",
+    "mirkwood": "scouts_flag_t1",
+    "mirkwood_stalkers": "scouts_flag_t1",
+
+    "isengard": "standard_of_fury_t1",
+    "mordor": "standard_of_fury_t1",
+    "dolguldur": "standard_of_fury_t1",
+    "gundabad": "standard_of_fury_t1",
+    "gundabad_raiders": "standard_of_fury_t1",
+    "goblin": "standard_of_fury_t1",
+    "mistymountainorcs": "standard_of_fury_t1",
+
+    "khuzait": "tug_of_wooden_arrow_t1",
+    "rhun_raiders": "tug_of_wooden_arrow_t1",
+    "battania": "tug_of_the_roaming_horse_t1",
+    "aserai": "banner_of_faris_falcon_t1",
+    "harad_raiders": "banner_of_faris_falcon_t1",
+    "umbar": "banner_of_desert_winds_t1",
+    "umbar_corsairs": "banner_of_desert_winds_t1",
+    "shaghana": "banner_of_faris_falcon_t1",
+    "abanissa": "banner_of_faris_falcon_t1",
+
+    "empire": "deer_bane_flag_t1",
+    "dunland_raiders": "deer_bane_flag_t1"
+  },
+
+  "_comment_DefaultBannerItemId": "Fallback for any culture not listed above. Empty by design (fail closed): 38 cultures are registered but only the 28 above are TAOM's — the rest are vanilla leftovers still referenced by live data (looters, sea_raiders, forest_bandits, desert_bandits, mountain_bandits, steppe_bandits, nord, vakken, darshi) plus neutral_culture. Naming a banner here hands one to ALL of them — e.g. looters raising the Gondorian Standard of Duty. A forgotten culture with no banner is a cosmetic absence; with the wrong banner it is an immersion break.",
+  "DefaultBannerItemId": ""
+}

@@ -63,6 +63,7 @@ using TAOM.Features.LocalizationOverride.Hooks;
 using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Hooks;
 using TAOM.Features.CareerSystem;
+using TAOM.Features.BannerBearers.Models;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.CombatMechanics.Models;
 using TAOM.Features.SettlementGuards;
@@ -694,6 +695,13 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CombatMechanics.ICombatMechanicsConfigProvider>(),
             IoC.Resolve<Features.CombatMechanics.ICombatMechanicsSettingsProvider>()));
         campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
+        // BannerBearers: the engine's BannerBearerLogic already runs in every field battle,
+        // sally-out and siege — this model supplies TAOM's policy (bearers per formation, the
+        // race gate, an unarmed-bearer backstop). Resolved through MissionGameModels, which
+        // takes the LAST registered model, so ours wins over SandBox's. Campaign-only: Custom
+        // Battle builds CustomBattleBannerBearersModel off a BasicGameStarter and is unaffected.
+        campaignStarter.AddModel<BattleBannerBearersModel>(new TaomBattleBannerBearersModel(
+            IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +
@@ -1021,6 +1029,9 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new SiegeDismountMissionBehavior());
         AddTaomBehavior(new MixedFormationsMissionBehavior());
         AddTaomBehavior(new SmartCavalryAIMissionBehavior());
+        // Added unconditionally per TAOM convention; gates internally on
+        // Mission.Mode == Deployment (the bearer-freeze guard) and on a live BannerBearerLogic.
+        AddTaomBehavior(new Features.BannerBearers.Hooks.BannerBearerAssignmentMissionLogic());
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();

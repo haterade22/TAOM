@@ -50,11 +50,24 @@ MixedFormationsSettingsProvider
 
 Patch30 (Harmony Prefix on Formation.GetOrderPositionOfUnit)
    ↓
+   fall through to vanilla when: not a field battle │ unit is a banner bearer
+   ↓
    FormationAdapter wraps Formation
    FormationLayoutService.ComputeUnitPlanePosition(formation, agentIndex, isRanged)
    ↓
    Vec2 plane position OR null (fall through to vanilla)
 ```
+
+### Fall-through cases (do not remove)
+
+Patch30 returns `false` — suppressing vanilla — for every unit it positions. That makes it a **silent monopoly** on `GetOrderPositionOfUnit`: any other feature that relies on the vanilla path breaks against it with no error and no crash. Two cases deliberately fall through:
+
+| Case | Why |
+|---|---|
+| `Mission.IsFieldBattle != true` | Open-field only. Siege, sally-out, hideout, naval and settlement missions keep vanilla positioning. Placed first to short-circuit the hot path before any IoC resolve. |
+| `unit?.Banner != null` | **Banner bearers own their slot.** `BannerBearerLogic` places them via `Formation.SwitchUnitLocations` into the engine's dedicated `RelativeFormationPosition[6]` banner positions; returning a mixed-formation position instead scatters the standards through the ranks. Added 2026-07-16 (Codex review 74, MED) — see [banner-bearers.md](./banner-bearers.md). `Agent.Banner` is `Equipment?.GetBanner()`, a single `_weaponSlots[4]` read with no loop or allocation, so it is cheap enough to sit on this path. |
+
+**Rule for future work:** when another TAOM feature starts producing a new *kind* of unit the engine positions specially, add a fall-through here rather than letting Patch30 override it. Flagging the interaction as "untested" in a doc is not the same as resolving it — that exact gap shipped the banner-bearer misplacement past a 5-agent review that had been briefed on it.
 
 The Harmony patch and `MissionBehavior` are the boundary classes (ADR-002); they construct `FormationAdapter` instances and pass them to the service. `Hero`, `Agent`, `Formation`, `Team` never cross the service boundary.
 
@@ -187,6 +200,7 @@ Debug-mode round-trip:
 
 ## Referenced by
 
+- [docs/features/banner-bearers.md](./banner-bearers.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

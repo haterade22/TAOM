@@ -37,6 +37,7 @@
 - [advanced-combat](features/advanced-combat.md) — SpatialGrid, BoneCollision, CustomAttacks subsystems
 - [smart-cavalry-ai](features/smart-cavalry-ai.md) — player-team cavalry state machine (Form → Charge → PassThrough → Reform)
 - [mixed-formations](features/mixed-formations.md) — heterogeneous formation layout system
+- [banner-bearers](features/banner-bearers.md) — formations raise their faction standard; bearers keep their race. Drives the engine's native `BannerBearerLogic` via `TaomBattleBannerBearersModel` + one deployment-window `SetFormationBanner` call
 - [companion-tactics](features/companion-tactics.md) — companion-driven formation overrides; `CancelStanceOnMove` postfix
 - [warg-combat](features/warg-combat.md) — BT elements, WargAttackService, WargMissionBehavior
 - [spider](features/spider.md) — spider creature combat (PAUSED: native render AV; fix = wolf's public SpawnMonster + un-split mesh)

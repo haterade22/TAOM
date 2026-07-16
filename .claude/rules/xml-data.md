@@ -1,6 +1,7 @@
 ---
 paths:
   - "Main/_Module/ModuleData/**/*.xml"
+  - "Main/_Module/ModuleData/**/*.json"
   - "Main/_Module/ModuleData/characters/**"
   - "Main/_Module/ModuleData/factionmap/**"
 ---
@@ -40,6 +41,8 @@ EN=Rohan, ES=Mordor, EW=Gondor, A=Harad, B=Dunland, V=Vlandia, K=Easterlings, S=
 ## Config ID Cross-Reference (MANDATORY)
 
 After writing ANY XML/JSON config containing culture, kingdom, or settlement IDs, cross-reference EVERY ID against this table before moving on.
+
+> **This section shipped a bug on 2026-07-16 because its own `paths:` excluded the file that broke it.** BannerBearers keyed a culture map on `rohan`/`dale`/`khand`/`dunland`/`harad`/`rhun` — the exact six names the "Common mistake" line below names as WRONG — in `banner_bearers_config.json`. The rule said "ANY XML/JSON config" while the glob was `**/*.xml`, so it never loaded for the `.json` file (58 of TAOM's 59 ModuleData JSON configs were outside the trigger). Fixed by adding `**/*.json`. **Prose scope and glob scope must agree**: if a rule says it governs a file type, its `paths:` must actually match that file type. When keying a config on entity ids, also ship a test asserting every KEY resolves — a dead dictionary key is silent at every layer. See `docs/reviews/rca-banner-bearers-2026-07-16.md`.
 
 ### Culture StringIds (runtime values)
 

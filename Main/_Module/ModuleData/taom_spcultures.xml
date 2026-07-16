@@ -4254,6 +4254,12 @@
       <name name="{=taom_bandit_dunland_f4}Gwyneth" />
       <name name="{=taom_bandit_dunland_f5}Olwen" />
     </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.iron_spatha_sword_t2" />
+    <item id="Item.empire_sword_1_t2" />
+    <item id="Item.empire_sword_2_t3" />
+    <item id="Item.empire_sword_6_t5" />
+  </banner_bearer_replacement_weapons>
   </Culture>
 
   <!-- Rhûn Raiders (replaces steppe_bandits) -->
@@ -4290,6 +4296,12 @@
       <name name="{=taom_bandit_rhun_f4}Tahjia" />
       <name name="{=taom_bandit_rhun_f5}Sangela" />
     </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.khuzait_sword_1_t2" />
+    <item id="Item.khuzait_sword_2_t3" />
+    <item id="Item.khuzait_sword_3_t3" />
+    <item id="Item.khuzait_sword_4_t4" />
+  </banner_bearer_replacement_weapons>
   </Culture>
 
   <!-- Haradrim Raiders (replaces desert_bandits) -->
@@ -4326,6 +4338,12 @@
       <name name="{=taom_bandit_harad_f4}Bezara" />
       <name name="{=taom_bandit_harad_f5}Mûzana" />
     </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.aserai_sword_1_t2" />
+    <item id="Item.aserai_sword_3_t3" />
+    <item id="Item.aserai_sword_4_t4" />
+    <item id="Item.aserai_sword_5_t4" />
+  </banner_bearer_replacement_weapons>
   </Culture>
 
   <!-- Gundabad Orc Raiders (replaces mountain_bandits) -->
@@ -4362,6 +4380,12 @@
       <name name="{=taom_bandit_gundabad_f4}Grishta" />
       <name name="{=taom_bandit_gundabad_f5}Narzga" />
     </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.wm_gundabad_sword_a01" />
+    <item id="Item.wm_gundabad_sword_a02" />
+    <item id="Item.wm_gundabad_sword_a03" />
+    <item id="Item.wm_gundabad_sword_a04" />
+  </banner_bearer_replacement_weapons>
   </Culture>
 
   <!-- Umbar Corsairs (replaces sea_raiders) -->
@@ -4398,6 +4422,12 @@
       <name name="{=taom_bandit_umbar_f4}Tarmiriel" />
       <name name="{=taom_bandit_umbar_f5}Inzilbêth" />
     </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.iron_spatha_sword_t2" />
+    <item id="Item.empire_sword_1_t2" />
+    <item id="Item.empire_sword_2_t3" />
+    <item id="Item.empire_sword_6_t5" />
+  </banner_bearer_replacement_weapons>
   </Culture>
 
   <!-- ============================================== -->
@@ -4442,6 +4472,12 @@
       <name name="{=taom_bandit_gondor_f4}Gilraen" />
       <name name="{=taom_bandit_gondor_f5}Anwen" />
     </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.wm_gondor_sword_a01" />
+    <item id="Item.wm_gondor_sword_a02" />
+    <item id="Item.wm_gondor_sword_a03" />
+    <item id="Item.wm_gondor_sword_a04" />
+  </banner_bearer_replacement_weapons>
   </Culture>
 
   <!-- Erebor Warriors (exiled dwarven bands) -->
@@ -4478,6 +4514,12 @@
       <name name="{=taom_bandit_erebor_f4}Thora" />
       <name name="{=taom_bandit_erebor_f5}Frida" />
     </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.sm_dwarf_erebor_1h_axe_a" />
+    <item id="Item.sm_dwarf_erebor_1h_axe_b" />
+    <item id="Item.sm_dwarf_erebor_1h_axe_c" />
+    <item id="Item.sm_dwarf_erebor_1h_axe_d" />
+  </banner_bearer_replacement_weapons>
   </Culture>
 
   <!-- Mirkwood Stalkers (renegade Silvan ambushers) -->
@@ -4514,6 +4556,12 @@
       <name name="{=taom_bandit_mirkwood_f4}Faelivrin" />
       <name name="{=taom_bandit_mirkwood_f5}Míriel" />
     </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.mirkwood_sword_a01" />
+    <item id="Item.mirkwood_spear_a01" />
+    <item id="Item.mirkwood_spear_a02" />
+    <item id="Item.mirkwood_glaive_a01" />
+  </banner_bearer_replacement_weapons>
   </Culture>
 
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->

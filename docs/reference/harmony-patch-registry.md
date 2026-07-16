@@ -190,11 +190,23 @@ Per-culture default BodyProperties on CC screen + culture-stage-VM body re-apply
 
 Mixed ranged/melee formation layout — the Prefix replaces a unit's vanilla order position with the plane position computed by `IFormationLayoutService.ComputeUnitPlanePosition(formation, agentIndex, agentIsRanged)`, grounded via `Scene.GetGroundHeightAtPosition` and validated through `Mission.IsFormationUnitPositionAvailable` before overriding `__result` (Codex review #35 HIGH: vanilla's Hold path routes through that availability check to keep units off non-navigable terrain — an unavailable candidate falls through to vanilla so the engine's own `unit.GetWorldPosition()` fallback applies). Any null/missing-value/exception path returns `true` (vanilla). HOT PATH — fires per-unit per-formation-position-recalculation (up to ~40,000×/frame worst case in 200-unit formations), so the service singleton is cached in a static field per the harmony-patches hot-path rule. See `docs/features/mixed-formations.md`.
 
+**Fall-through cases (do not remove).** A blanket `return false` on a positioning Prefix is a silent monopoly on that engine decision — any other feature relying on the vanilla path breaks against it with no error. Patch30 therefore falls through for:
+- **Non-field-battle missions** (`Mission.IsFieldBattle != true`) — siege, sally-out, hideout, naval, settlement.
+- **Banner bearers** (`unit?.Banner != null`) — `BannerBearerLogic` places them via `SwitchUnitLocations` into the engine's dedicated `RelativeFormationPosition[6]` banner slots; overriding their order position scatters the standards through the ranks. Added 2026-07-16 (Codex review 74 MED) when BannerBearers first gave formations bearers for Patch30 to misplace. `Agent.Banner` is `Equipment?.GetBanner()` — one `_weaponSlots[4]` read, no loop or allocation, so the check is cheap enough for this hot path, and it sits *before* the IoC resolve. See `docs/features/banner-bearers.md` + `docs/reviews/rca-banner-bearers-2026-07-16.md`.
+
 ## Patch31_SmartCavalryAI
 
 **Target:** `Formation.SetMovementOrder` (Postfix, deferred — see `Patch_MissionTime_SetMovementOrder`)
 
 Coordinated line-charge state machine on player cavalry (Forming→Charging→PassingThrough→Reforming + Rerouting branch); recursion-guarded. **Note:** the `Formation.SetMovementOrder` Postfix lives in the shared `Patch_MissionTime_SetMovementOrder` category (see below).
+
+**Open-field-only (do not remove).** This is an open-field line charge and must never manipulate formations outside a field battle. `CavalryChargeService.HandleChargeOrder`/`.Tick` bail unless `IBattlefieldQueryAdapter.IsFieldBattle` (engine `Mission.IsFieldBattle` — true ONLY for `MissionTeamAIType == FieldBattle`), so no native `Formation.SetPositioning`/`SetMovementOrder` is issued in a siege / sally-out / hideout / naval / settlement mission. That native re-entry, while the engine is still finalizing siege deployment, is the suspected path behind the Grymmclúd siege CTD (#349).
+
+**The service gate alone is NOT sufficient — gate the tick too.** `SmartCavalryAIMissionBehavior.OnMissionTick` also calls `ApplyCollisionAvoidance`, which writes `agent.SetMovementDirection` per mounted unit per frame **bypassing `ICavalryChargeService` entirely**; with `AvoidFriendlies` (default `true`) the feature kept manipulating cavalry every frame in a siege even with the service gated. The same gate therefore sits at the top of `OnMissionTick` (which also skips the per-formation adapter build). Deep-review 2026-07-16 HIGH — gating one layer did not gate the feature; see the lesson "Gating a feature OFF requires path enumeration, not layer gating" in `docs/reviews/lessons/gamemodels-services.md`.
+
+**Live read — never cache.** `MissionTeamAIType` is assigned in `MissionCombatantsLogic.EarlyStart`, and the engine runs *every* `OnBehaviorInitialize` before *any* `EarlyStart` — so caching `IsFieldBattle` at init would read `NoTeamAI` 100% of the time and silently disable the feature in every battle.
+
+**Caveat:** `OpenSiegeMissionNoDeployment` hardcodes `(MissionTeamAITypeEnum)1` = `FieldBattle` (`SandBoxMissions.cs:1582`, identical v1.4.6/v1.4.7), so relief-force / no-deployment siege assaults still run the feature — accepted (genuine maneuvering battles). See `docs/features/smart-cavalry-ai.md` + `docs/reviews/rca-siege-guards-2026-07-16.md`.
 
 ## Patch33_EquipPresets
 
@@ -408,3 +420,13 @@ Race-aware action-set name generation for custom races. The Prefix replaces the 
 
 CharacterSelection face-generator action-set injection. The transpiler finds the `Newobj` for `AgentVisualsData`'s parameterless ctor and inserts, right after it, a call to the patch's own `GetActionSet(BodyGeneratorView)` + `AgentVisualsData.ActionSet(...)` — so the body-generator preview is built with a race-appropriate `_facegen` action set (`BodyGen.Race` → `FaceGen.GetBaseMonsterFromRace`, null → human fallback, then `MBGlobals.GetActionSetWithSuffix(monster, isFemale, "_facegen")`) instead of the human default. Degrades gracefully (Phase 9b #160): if any of the three lookups (ctor / `ActionSet` method / `Newobj` IL match) fails, it logs the specific gap and returns the original instructions unchanged — previously such a mismatch threw out of `PatchCategory` during `OnGameInitializationFinished` and bricked startup. Applied in the late `OnGameInitializationFinished` batch (one-shot guarded). See `docs/features/character-selection.md`.
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/arena.md](../features/arena.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

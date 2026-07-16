@@ -121,3 +121,18 @@ When a guard catches an exception and "fail-safes to vanilla behavior", trace wh
 - **Why missed:** Issue #339 (2026-07-13, v2.0.12 player CTD). Patch60's tournament-exit release caught an `AccessViolationException` mid-`WidgetTemplate.OnRelease` walk and fell back to "today's vanilla leak" — but the vanilla leak means `GauntletLayer.ClearContext` re-walks the SAME corrupt template tree at `ScreenManager.PopScreen`, where the identical AV escaped uncaught and killed the session. The round-1/round-2 reviews all accepted "worst case = vanilla behavior" without asking what vanilla does with the state the failure leaves behind.
 - **Prevent:** For every `catch → fall back to vanilla` in a patch, answer in the code comment: "does the vanilla path re-execute this operation on this same state later, and is THAT site guarded?" Fix here = Patch62_MovieReleaseAvGuard, an AV-only Finalizer on `GauntletMovie.Release` itself — the shared chokepoint both attempts flow through — so the first suppression also removes the movie from `_movieIdentifiers` and the re-walk never happens.
 - **Source:** issue #339, crash signature 4698b4d4 (player report 2026-07-13), docs/reference/harmony-patch-registry.md § Patch62_MovieReleaseAvGuard
+### A position/layout Prefix that returns `false` for EVERY unit silently overrides other features' unit placement
+MixedFormations' `Patch30_FormationGetOrderPositionOfUnit` Prefixes `Formation.GetOrderPositionOfUnit` and returns `false` (suppressing vanilla) for every unit in an open-field battle, substituting its own computed position. When BannerBearers (2026-07-16) started giving formations banner bearers, the engine placed them via `SwitchUnitLocations` into its dedicated `RelativeFormationPosition[6]` banner slots -- and Patch30 then overrode where they actually stood, scattering the standards through the ranks. No crash; the bearers still carry banners and still grant the formation effect. Fixed by letting bearers fall through to vanilla: `if (unit?.Banner != null) return true;`, placed before the IoC resolve to keep the ~40,000x/frame path cheap (`Agent.Banner` is `Equipment?.GetBanner()` -- one `_weaponSlots[4]` read, no loop, no allocation).
+- **Why missed:** this was a KNOWN UNKNOWN, not an unknown unknown -- the feature doc, the plan, and the deep-review Data Flow agent's brief all named "MixedFormations + banners = possible arrangement thrash" as the top untested interaction. It still went unresolved, because resolving it required reading a DIFFERENT feature's patch and reasoning about which one wins. Per-feature review scopes structurally exclude that. Codex, given the whole repo and no scope boundary, found it immediately.
+- **Prevent:** when a feature starts producing a new KIND of unit/entity the engine positions specially (banner bearers, detached units, siege-engine crew), grep every TAOM Prefix on the relevant engine positioning method and check each for a blanket `return false`. A blanket-suppress Prefix is a silent monopoly on that decision -- every future feature that relies on the vanilla path breaks against it with no error. Conversely, when WRITING such a Prefix, prefer falling through (`return true`) for any unit the engine has special plans for. Flagging an interaction as "untested" in a doc is not the same as resolving it: schedule the cross-feature trace, or hand it to a whole-repo reviewer.
+- **Source:** docs/reviews/rca-banner-bearers-2026-07-16.md (Codex C2, MED).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+
+<!-- backlinks-end -->

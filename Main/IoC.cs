@@ -4,6 +4,7 @@ using TAOM.Adapters;
 using TAOM.Core.Domain;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
+using TAOM.Features.BannerBearers;
 using TAOM.Features.BannerColorPersistence;
 using TAOM.Features.BannerInjection;
 using TAOM.Features.HeroRace;
@@ -121,6 +122,7 @@ public static class IoC
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
+        BannerBearersIoC.RegisterBannerBearersFeature(container);
         QuickActionsIoC.RegisterQuickActionsFeature(container);
         MessengerIoC.RegisterMessengerFeature(container);
         EquipPresetsIoC.RegisterEquipPresetsFeature(container);

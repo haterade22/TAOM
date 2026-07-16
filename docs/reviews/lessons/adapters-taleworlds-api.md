@@ -93,3 +93,18 @@ A Harmony getter-patch often carries a toggle (`if (!EnableX) return;`) so the w
 - **Why missed:** the TroopWeight rework removed the `NumberOfAllMembers` getter patch (which gated its weighting on `EnableTroopWeight`) and rewired SpecialResources' battle-reward scaling to `CalculateWeightedMemberCount` — which has no toggle awareness. With the feature off, rewards stayed weighted instead of reverting to raw. The author replicated the getter's weighted *value* but forgot the getter's *toggle*. Data-flow deep-review agent caught it (2026-07-11).
 - **Prevent:** when replacing a gated patched getter with a direct service call, grep the removed patch for its gate and replicate it at the new call site (`weightOn ? weighted : raw`). Extends the MCM master-toggle-fold check (Agent 5 rule 2b) to the *patch-removal* case, not just GameModel overrides.
 - **Source:** `docs/reviews/rca-troopweight-count-to-limit-2026-07-11.md` finding #2.
+### `Formation.GetFirstUnit()` is not a culture/identity owner -- it is literally `Arrangement.GetAllUnits()[0]`
+BannerBearers (2026-07-16) resolved a formation's culture with `formation.GetFirstUnit()?.Character?.Culture?.StringId` to pick its banner. `GetFirstUnit()` is `GetUnitWithIndex(0)`, which reads `Arrangement.GetAllUnits()[0]` -- an arrangement slot, carrying no semantic meaning about the formation. In a single-culture formation it is right by accident; in a mixed-culture one (an allied Gondor+Rohan army, or a mercenary-heavy player party) the whole formation flies whichever standard happened to be arranged into slot 0, and can differ between deployments. Fixed with a majority-culture vote in the service plus an ordinal tie-break so the result never depends on arrangement order.
+- **Why missed:** the code needed *a* culture per formation and took the cheapest one that compiled. "First unit" reads as a reasonable proxy and is correct for the common case, so it looks fine in isolation -- it only misbehaves in mixed formations, which no unit test can construct (no live `Formation`). All 5 deep-review agents accepted it; the API-compatibility agent even verified `GetFirstUnit()`'s null-return behaviour without ever questioning its *semantics*. Signature correctness and semantic correctness are different reviews.
+- **Prevent:** when you need a per-formation identity (culture, faction, tier), do NOT sample one unit. Aggregate across `UnitsWithoutLooseDetachedOnes` (majority, with a deterministic tie-break), or take it from a real owner -- `formation.Captain`, `formation.Team.GeneralAgent`, or the party. Generalises: any `GetFirstX()` / `[0]` / `.First()` on an engine collection is a SAMPLE, not a representative; if the code treats it as representative, it is only correct while the collection is homogeneous. Ask "what happens when this collection is mixed?" before using index 0.
+- **Source:** docs/reviews/rca-banner-bearers-2026-07-16.md (Codex C1, MED).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+
+<!-- backlinks-end -->

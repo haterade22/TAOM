@@ -2,6 +2,12 @@
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Testing & QA lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
+### If you didn't watch the test fail, mutate the code until it does
+TDD's RED step is not ceremony — it is the only evidence that a test *can* fail, and therefore that a green run means anything. Writing the tests first but running them for the first time *after* the implementation lands (the natural rhythm when batching file writes) skips it silently: you get "48 passed" and no idea whether any of those 48 would notice the feature being deleted. A test that cannot fail is indistinguishable from a test that passes.
+- **Why missed:** PrisonerRecruitment (2026-07-16). Tests were authored before the implementation — satisfying the letter of test-first — but both were written before anything was executed, so RED was never observed. The suite went green on the first run and the gap was invisible; it surfaced only because the author flagged it against their own work.
+- **Prevent:** run the suite once before the implementation exists, even if it just fails to compile. If that ordering has already been lost, recover the evidence with **mutation testing**: disable each load-bearing rule in turn (`if (false && …)`) and confirm the expected tests fail, and that the COUNT matches what that rule owns. On PrisonerRecruitment: disabling the same-culture rule failed exactly 3 tests, removing the Neutral guard exactly 2 — that, not the green run, is what proved the tests real. Cheap (two edits + two filtered runs) and it also pins which test owns which behavior. Corollary for derived/scanning tests: add a floor assertion on the scan count (`Assert.IsTrue(found >= 8)`) so a regex matching nothing fails instead of vacuously passing every row.
+- **Source:** docs/reviews/rca-prisoner-recruitment-2026-07-16.md finding 4
+
 ### A warm-cache pass is not proof the cold path works — validate render/compile/deployment fixes cold
 A shader-precompile / render / battle-load fix that "completes fine in-game" may be riding a WARM cache that short-circuits the very path the fix targets. The ShaderPrecompilation 1.4.7 fix (#336) completed the all-characters battle in 20s on a warm shader cache — so fast it settled *before* the deployment phase could matter, meaning the force-finish path (the item's specific hang fix) never actually fired. A cold run (the prior attempt) had hung on that same item. A fast green run nearly read as full validation; only the per-item log detail (no seed line, no force-finish line, 20s vs the earlier multi-hour hang) exposed that the targeted path was skipped.
 - **Why missed:** "it completed, all items green" is a strong success signal and easy to over-trust. The structural fixes (NRE guard) ARE proven regardless of cache (they fire on the first tick); but the *duration-dependent* path (deployment-view hang) only manifests when the item takes long enough to reach it — which a warm cache prevents.
@@ -85,3 +91,18 @@ For any feature driven by bulk-authored config (many entities authored by hand o
 - **Why missed:** Career party-size RCA 2026-05-29. Two defects shipped and survived the original feature review: (1) 310 career choices were authored in a `<PassiveEffects>` (plural) wrapper with a `value=` attribute, but the parser read only a direct `<PassiveEffect>` child and only `magnitude=` — whole careers across 16 cultures had completely dead passives, yet every unit test passed because they all fed the direct schema; (2) 5 `PassiveEffectType` values (`Ammo`, `HorseChargeDamage`, etc.) were authored in XML with no GameModel/service consumer — the magnitude parsed and cached to a float nothing read. Both are upstream of or invisible to standard deep-review checks: the data-flow enum-coverage trace starts from the *parsed* passive, but the wrapped entries never parsed, so they weren't in the cache to trace.
 - **Prevent:** A single real-file integration test would have caught defect #1 immediately (310 null passives) and surfaced #2. Sibling rules: data-flow tracing, enumerate-from-source-of-truth.
 - **Source:** memory/feedback_parse_real_config_in_tests.md
+### A doc-vs-config consistency check cannot catch a defect present in both
+The BannerBearers Completeness agent (2026-07-16) verified all 11 shipped config fields matched the feature doc's Configuration table **field-for-field and value-for-value, and passed** -- while six of the config's culture keys were dead and matched nothing in the game. The doc and the config were consistently wrong together, so cross-checking them proved only that they agreed. The same review's `ShippedBannerBearerConfigTests` validated every banner item **id** against vanilla's `banners.xml` and passed for the same reason: the values were all real; nobody validated the keys.
+- **Why missed:** "does the doc match the shipped config?" and "does the shipped config match reality?" feel like the same question and are not. Only the second has teeth. Validating the value side of a map is the reflex; the key side is where the silent failure lives.
+- **Prevent:** pin config against the **engine/ModuleData reality**, never against the documentation. For any map keyed on entity ids, ship a test asserting every key resolves against the real entity set at the same time you ship the config. Treat a doc-vs-config test as a drift detector only -- never as correctness evidence.
+- **Source:** docs/reviews/rca-banner-bearers-2026-07-16.md (finding 1; "why each agent missed these").
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+
+<!-- backlinks-end -->

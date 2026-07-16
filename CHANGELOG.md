@@ -92,6 +92,101 @@ extending the wrong tool off a false-negative grep): `docs/reviews/rca-siege-loa
 Research: PreloadHelper.WaitForMeshesToBeLoaded; TpacTool.Lib PhysicsShape.TYPE_GUID
 Not-tested: in-game siege load (owed)
 
+### feat(banner-bearers): formations raise their faction standard, and bearers keep their race (#351)
+
+TAOM battle lines now field banner bearers. A bearer is one of the formation's own soldiers, so
+an orc formation's bearer is an orc, a dwarf formation's is a dwarf.
+
+Reviewed the third-party "Raise your Banner" mod (v16.1.7, 4,535 lines decompiled) as the
+reference implementation and did **not** port it. The engine already ships the whole system —
+`BannerBearerLogic` is added to every field battle, sally-out and siege — it simply never
+switches on: `SetFormationBanner` has only two gameplay callers, and both need a hero captain
+carrying a banner item. TAOM's lords carry none, so no formation ever got one. Supplying that
+one call is the entire feature.
+
+Driving the native system also makes the race bug structurally impossible. RYB spawns clones
+from a synthetic `ryb_banner_bearer` character that declares no `race`, so `AgentData` derives a
+human skeleton *and* human skin from it. That is unfixable in its architecture: `AgentRace` is
+referenced zero times in `Mission.cs` (multiplayer-only), `AgentData.Race()` sets
+`GenderOverriden` without a gender and would silently force every bearer male, and the skin comes
+from `Character.Race` on a shared `MBObjectManager` singleton. The engine's `UpdateAgent`
+converts an existing agent in place and never respawns it, so race cannot drift.
+
+- `TaomBattleBannerBearersModel` overrides the `BattleBannerBearersModel` slot: bearers scale
+  with formation size per class (vanilla hardcodes 1), a configurable race gate, and a backstop
+  for the unarmed-bearer bug.
+- `BannerBearerAssignmentMissionLogic` assigns banners on `OnTeamDeployed` — vanilla's own call
+  site. Gated hard on `Mission.Mode == Deployment`: `SetFormationBanner` ends in
+  `SetIsAIPaused(true)` and the only unpause is `DeploymentMissionController.FinishDeployment`,
+  which removes itself, so a post-deployment call freezes every bearer for the whole battle.
+  No tick loop — the engine self-heals reinforcements via `GetMissingBannerCount`.
+- Race gate excludes trolls and named races (`cave_troll`, `hill_troll`, `nazghul`, `saruman`,
+  `sauron`), configurable in JSON. Mirrors the #346 cave-troll guard exclusion. `Agent.IsHuman`
+  is the *humanoid* flag, so all 14 LOTRLOME races already qualified as bearers.
+- Ships zero art: vanilla's 45 banner items are neutral-culture with `using_tableau="true"`, so
+  the cloth renders each party's own heraldry. Custom LOTR meshes swap in later via config only.
+- Added `<banner_bearer_replacement_weapons>` to the 8 `is_bandit` cultures that declared none —
+  they would have fielded bearers holding a banner and nothing else, since vanilla returns null
+  there and the engine clears the other weapon slots. All 28 cultures now declare them.
+- Master toggle off = exact vanilla: the assignment logic does nothing **and every GameModel
+  override defers to `base`**, so vanilla's own hero-captain banner path keeps working.
+  Campaign-only; Custom Battle is unaffected.
+
+`/deep-review` (5 agents) found 2 CRITICAL + 2 HIGH + 1 MED + 1 LOW, all fixed in-session; one
+further CRITICAL was disputed and dismissed with evidence. Both CRITICALs were data-flow gaps
+invisible to the type system and silent at runtime:
+
+- **Six culture keys matched nothing.** `spcultures.xslt` re-skins the vanilla cultures by
+  overriding `<name>` but never `id` — so Rohirrim is `vlandia`, Dunlendings `empire`, Haradrim
+  `aserai`, Easterlings `khuzait`, Barding `sturgia`, Variag `battania`. The config keyed all six
+  on their LOTR names, so six of the mod's highest-volume factions silently flew the generic
+  Gondor standard. Fixed, plus three regression tests pinning every key against the real culture
+  set.
+- **The master toggle didn't restore vanilla.** With the feature off, the model returned `0`
+  bearers instead of deferring to vanilla's `1` — suppressing banners for formations vanilla's
+  own hero-captain path had bannered, i.e. worse than vanilla rather than equal to it. Three
+  sibling overrides leaked the same way. All four now `return base.<Method>(...)` when disabled.
+
+A third bug surfaced while preparing the Codex pass: `DefaultBannerItemId` shipped as
+`standard_of_duty_t1`, so every **unmapped** culture flew a Gondor standard. 38 cultures are
+registered but only 28 are TAOM's — the rest are vanilla leftovers (`looters`, `sea_raiders`,
+`forest_bandits`, …) still carrying ~99 live references in TAOM's own data, so every
+vanilla-culture bandit warband would have raised the Standard of Duty. The default now ships
+empty: only explicitly-mapped cultures field standards. Fail closed — a forgotten culture with no
+banner is a cosmetic absence, with the wrong banner it is an immersion break.
+
+`/review-codex` (gpt-5.5 xhigh) then ran against the corrected state: **0 CRITICAL, 0 HIGH, 2 MED,
+1 LOW, zero disagreements — SHIP WITH FIXES.** All six seeded suspects came back favourable,
+independently confirming the deployment-window freeze guard is sufficient. Codex found none of the
+bugs the internal review found and two it structurally could not have, both about whether a
+*choice* is semantically right rather than whether code is correct:
+
+- **Formation culture came from `GetFirstUnit()`** — which is literally `Arrangement.GetAllUnits()[0]`,
+  an arrangement slot, not a culture owner. A mixed-culture formation (allied army, mercenary-heavy
+  party) flew whichever standard landed in slot 0. Now a majority vote with an ordinal tie-break, so
+  the result never depends on arrangement order.
+- **MixedFormations' `Patch30` was overriding banner-bearer placement** — it blanket-suppresses
+  vanilla `GetOrderPositionOfUnit` for every unit in a field battle, so the engine's dedicated banner
+  slots were ignored and standards scattered through the ranks. Bearers now fall through to vanilla.
+- `ExcludedRaces` typos failed open (an unknown name never matches). Now validated on first use,
+  where the race registry is live, and warned once.
+
+**The most useful finding wasn't about banners.** `.claude/rules/xml-data.md` has a section titled
+"Config ID Cross-Reference (MANDATORY)" that names all six wrong culture names explicitly — and its
+`paths:` matched only `**/*.xml` while its prose said "ANY XML/JSON config". The rule written to
+prevent this exact mistake could not fire on the `.json` file that made it, and 58 of TAOM's 59
+ModuleData JSON configs sat outside the trigger. Fixed by adding `**/*.json`. The fact was already
+documented in four live places; the failure was knowledge with no trigger, not missing knowledge.
+
+RCA + 7 lessons codified: `docs/reviews/rca-banner-bearers-2026-07-16.md`.
+
+61 tests, all green; full suite green. In-game verification still owed — see the feature doc.
+
+Research: BannerBearerLogic, BattleBannerBearersModel, SandboxBattleBannerBearersModel, AgentData, Mission.SpawnTroop, spcultures.xslt
+Rejected: clean-room port of Raise your Banner — re-inherits the race bug the engine path cannot have
+Rejected: C# fallback for the unarmed-bearer gap — the loop breaches ADR-002 and the sealed types make a service extraction breach ADR-007; the data fix has neither problem
+Constraint: SetFormationBanner is deployment-only; UpdateAgent pauses AI and only DeploymentMissionController unpauses
+Not-tested: in-game bearer movement, reinforcement waves, MixedFormations arrangement interaction
 
 ### fix(battle-load-diagnostics): crash-durable logging + split the OpenNew→Initialize blind window
 
