@@ -638,6 +638,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When ON (default), AI lords are also blocked from recruiting in opposed-alignment settlements. When OFF, AI recruits freely (you are still gated if 'Apply To Player' is on).")]
     public bool EnableAlignmentRecruitmentAi { get; set; } = true;
 
+    // --- Prisoner Recruitment ---
+
+    [SettingPropertyGroup("World/Prisoner Recruitment", GroupOrder = 39)]
+    [SettingPropertyBool("Waive Same-Side Prisoner Morale Cost", Order = 0,
+        HintText = "When enabled (default), recruiting a prisoner of your own faction or your own side of the war costs no morale — an Isengard captor loses nothing taking on Mordor, Gundabad or Dunland troops, since all serve Sauron. Alignment comes from execution/alignment.json. Neutral factions (Khand, Umbar) only waive their own culture, not each other. When off, prisoner morale is vanilla (-1 per troop, -2 per bandit).")]
+    public bool EnablePrisonerRecruitmentWaiver { get; set; } = true;
+
+    [SettingPropertyGroup("World/Prisoner Recruitment")]
+    [SettingPropertyBool("Apply To Player", Order = 1,
+        HintText = "When ON (default), YOU pay no morale for same-side prisoners. When OFF, you pay the vanilla cost (AI lords still get the waiver if 'Apply To AI Lords' is on).")]
+    public bool EnablePrisonerRecruitmentWaiverPlayer { get; set; } = true;
+
+    [SettingPropertyGroup("World/Prisoner Recruitment")]
+    [SettingPropertyBool("Apply To AI Lords", Order = 2,
+        HintText = "When ON (default), AI lords also pay no morale for same-side prisoners, so allied factions absorb each other's captured troops more readily. When OFF, only you benefit (if 'Apply To Player' is on).")]
+    public bool EnablePrisonerRecruitmentWaiverAi { get; set; } = true;
+
     // --- Naval Travel ---
 
     [SettingPropertyGroup("World/Naval Travel", GroupOrder = 37)]

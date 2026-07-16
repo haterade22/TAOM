@@ -88,6 +88,7 @@ public static class IoC
         ExecutionIoC.RegisterExecutionFeature(container);
         RecruitmentAlignmentIoC.RegisterAlignmentRecruitmentFeature(container);
         AlignmentDesertionIoC.RegisterAlignmentDesertionFeature(container);
+        Features.PrisonerRecruitment.PrisonerRecruitmentIoC.RegisterPrisonerRecruitmentFeature(container);
         NazgulFamilyIoC.RegisterNazgulFamilyFeature(container);
         NavalTravelIoC.RegisterNavalTravelFeature(container);
         EncyclopediaIoC.RegisterEncyclopediaFeature(container);

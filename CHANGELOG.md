@@ -4,6 +4,50 @@
 
 ## 2026-07-16
 
+### feat(prisoner-recruitment): no morale lost recruiting your own side's prisoners (#353)
+
+Recruiting a prisoner cost morale regardless of who they were. An Isengard player pressing captured
+Mordor orcs into service paid the same −1 per troop as they would for Gondorian knights, even though
+both sides serve Sauron. Vanilla's only relief is a perk: `Leadership.Presence` (same culture) or
+`Roguery.TwoFaced` (bandits).
+
+The waiver now fires on two rules: the prisoner is of your **own culture**, or on your **own
+non-Neutral alignment side**. Everything else keeps the vanilla penalty, including the −2 for bandits.
+
+Rule 1 exists because of the Neutral factions. Khand, Umbar, Shaghâna and Âbanissa are `neutral` in
+`alignment.json`, so the side rule deliberately never fires for them — without a same-culture rule a
+Khand player would lose morale recruiting Khand troops. The consequence is an asymmetry worth knowing:
+Khand waives Khand but not Umbar. Neutral means unaffiliated, not allied.
+
+No data change was needed. Dunland's culture is `empire`, already `evil` — as are `mordor`,
+`isengard`, `gundabad`, `dolguldur`, `khuzait` (Rhûn) and `aserai` (Harad).
+
+The hook is `PrisonerRecruitmentCalculationModel.GetPrisonerRecruitmentMoraleEffect`, which AI
+recruitment, the party screen, and the UI cost label all resolve through `Campaign.Current.Models` —
+so one override covers all three and the shown cost can't desync from the applied one. No Harmony
+patch. Side data is reused from Execution's `IAlignmentService` rather than duplicated; this feature is
+the mirror of AlignmentDesertion, which sheds troops whose culture opposes the owner's side.
+
+Bandits never waive, via three barriers TAOM already had: bandit troops carry dedicated bandit
+cultures, none of those ids appears in `alignment.json`, and vanilla blocks bandit-culture prisoners
+from recruitment outright. Only the middle one is an editable file, so a test pins it — deriving the
+bandit id set from `taom_spcultures.xml` rather than hardcoding a list that could itself go stale.
+
+49 tests. MCM group "World/Prisoner Recruitment" (master + player/AI gates, default on); master off is
+exact vanilla. Save-clean — no persisted state.
+
+`/deep-review` found no live bug. Its data-flow agent did catch that the bandit safety story was
+weaker than written: the barrier "no `occupation="Bandit"` troop carries a mainline culture" was a fact
+about the shipped data with nothing enforcing it, and vanilla keys the −2 on per-troop occupation while
+gating recruitability on per-culture `IsBandit` — so a troop pairing the two would have been both
+recruitable and waivable. None exists; a test now derives the bandit-culture set from
+`taom_spcultures.xml` and pins it. RCA: `docs/reviews/rca-prisoner-recruitment-2026-07-16.md`.
+
+Not-tested: in-game verification that the model resolves at runtime (owed).
+Research: DefaultPrisonerRecruitmentCalculationModel.GetPrisonerRecruitmentMoraleEffect, GameModelsManager.GetGameModel, Campaign.Initialize
+Rejected: hoisting the duplicated kingdom→culture ResolveSide onto IAlignmentService — a 4-service refactor doesn't belong in a feature PR
+Save-compat: No new state — decision is recomputed per call
+
 ### fix(armory): siege load hung forever on two physics-body typos (#352)
 
 Loading a siege with Dunland troops froze the game permanently — no crash, no error log, one CPU

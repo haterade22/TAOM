@@ -54,6 +54,7 @@
 - [troop-progression](features/troop-progression.md) — tier-by-tier upgrade rules, MaxCharacterTier 10
 - [troop-tree-revamp](features/troop-tree-revamp.md) — multi-culture troop roster authoring discipline
 - [volunteer-recruitment](features/volunteer-recruitment.md) — per-settlement / clan / culture recruitment pools (TaomVolunteerModel)
+- [prisoner-recruitment](features/prisoner-recruitment.md) — no morale lost recruiting a prisoner of your own faction or alignment side (TaomPrisonerRecruitmentCalculationModel)
 - [equip-presets](features/equip-presets.md) — save/load equipment preset overlay on inventory
 - [lord-skills](features/lord-skills.md) — lore-driven SkillSets for every TAOM lord (~880 NPCs, 17 cultures, 35 archetypes); authoring guide [lord-skills-authoring.md](ai-includes/lord-skills-authoring.md)
 

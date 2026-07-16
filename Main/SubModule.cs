@@ -22,6 +22,7 @@ using TAOM.Features.Diplomacy.Models;
 using TAOM.Features.Execution;
 using TAOM.Features.Execution.Hooks;
 using TAOM.Features.Execution.Models;
+using TAOM.Features.PrisonerRecruitment.Models;
 using TAOM.Features.RaceAge;
 using TAOM.Features.RaceAge.Models;
 using TAOM.Features.StartupResources;
@@ -519,6 +520,13 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomCharacterStatsModel());
         campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
         campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
+
+        // Prisoner-recruitment morale waiver: no morale lost recruiting a prisoner of your own
+        // faction or alignment side (Isengard taking on Mordor/Gundabad/Dunland troops). Vanilla
+        // charges -1/-2 regardless. Registering here (OnGameStart) puts TAOM after SandBox's
+        // DefaultPrisonerRecruitmentCalculationModel in the backwards model scan, so ours resolves.
+        campaignStarter.AddModel(new TaomPrisonerRecruitmentCalculationModel(
+            IoC.Resolve<TAOM.Features.PrisonerRecruitment.IPrisonerRecruitmentMoraleService>()));
 
         // NavalTravel — PARKED 2026-06-26: TAOM_Map's navmesh isn't set up to take advantage of naval
         // travel (no naval region navmesh → AI can't route at sea; #296/#120), so the feature is disabled
