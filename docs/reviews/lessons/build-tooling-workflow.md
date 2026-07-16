@@ -235,3 +235,15 @@ During #326 close-out, `git diff` showed lord_BC2_2's face-tag block as removed 
 - **Why missed:** a parallel session owned uncommitted work in the same tree, so an unexplained "removal" pattern-matched to "their edit — exclude it" instead of "diff artifact — verify it". The exclusion machinery was built before the block-level comparison was made.
 - **Prevent:** before any partial-staging surgery keyed off a diff hunk, extract the touched block from HEAD and worktree and compare CONTENT (regex the element out of both). If they match, the hunk is presentation. Cheap, and it inverts the default: verify first, machinery second.
 - **Source:** #326 session 2026-07-03; evidence-over-claims §C applied to git output.
+
+### In headless Blender, every dimensions/bound_box/matrix_world read after a mutating op needs view_layer.update()
+Four incidents in two days (rivendell asset pipeline 2026-07-15/16): stale `matrix_world` right after import baked garbage transforms; stale `bound_box` after `join()` made a tiny-cluster filter degrade, report dims read 0.0, and the chunk re-pivot silently no-op; a "record foliage transforms" feature read matrices AFTER a bake had zeroed them all to Identity.
+- **Why missed:** ops-based flows force depsgraph evaluation implicitly, so the bugs only appear in data-level/headless paths; and the visible symptom (dims 0.0 in a report column) was dismissed as "cosmetic" instead of traced.
+- **Prevent:** treat `bpy.context.view_layer.update()` as mandatory after import/join/transform_apply and before any `matrix_world`/`dimensions`/`bound_box` read; snapshot transforms BEFORE any bake step; never label an anomalous report value cosmetic without tracing it. RCA: `docs/reviews/rca-asset-pipeline-tools-2026-07-16.md`.
+- **Source:** deep-review 2026-07-16 (asset-pipeline tooling agents).
+
+### Multi-script pipelines glued by name agreement need ONE shared derivation, and a safety claim in a docstring is a bug until enforced in code
+The rivendell/tents pipeline's only integration contract is string agreement (texture stems ↔ material names ↔ mesh ids ↔ meshlists). Five drifted `sanitize()` copies, a collision-disambiguation one script performs and its consumer can't derive, a `MISSING:` convention its consumer never handled, and meshlist producers added without re-auditing readers — plus a `--force` flag whose docstring promised hand-made files were safe while the code had no such check, and a `--dry-run` that still mkdir'd + wrote reports.
+- **Why missed:** per-file review passes structurally cannot see cross-file contract drift; docstrings were written as intent under iteration pressure.
+- **Prevent:** shared helpers (or emitted sidecar maps) for any name derivation used by ≥2 scripts — the tooling twin of the parallel-builder-briefs rule; on review, diff every duplicated helper; verify every docstring safety claim has an enforcing code path; dry-run must gate every mutation including mkdir. RCA: `docs/reviews/rca-asset-pipeline-tools-2026-07-16.md`.
+- **Source:** deep-review 2026-07-16, cross-script consistency agent (2 HIGH gaps confirmed live).

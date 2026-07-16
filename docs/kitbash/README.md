@@ -13,6 +13,8 @@ outside the editor without re-learning the asset layout every time.
 | Mirkwood (elven) | — | Not catalogued yet (referenced in `taom_mirkwood_kitbash.xml`) |
 | Gondor | — | Not catalogued yet (referenced in `taom_gondor_kitbash.xml`) |
 | Mordor | — | Not catalogued yet (referenced in `taom_mordor_kitbash.xml`) |
+| Rivendell (elven) | — | Converted from the ElvenForestCity UE 5.1 kit (2026-07-15): 458 modular meshes + ~660 textures + 196 generated materials in `TAOM_Map/AssetSources/Scenes/Rivendell/`. Not catalogued yet. Pipeline: [ue-to-bannerlord-asset-pipeline.md](../reference/ue-to-bannerlord-asset-pipeline.md). **Naming exception:** materials are named `t_rivendell_<set>` (== their texture set, user decision) — no `m_` prefix. |
+| Tents (culture-neutral) | — | Fab Medieval Tent Collection (2026-07-16): one kit FBX (`Scenes/Tents/tents_medieval_kit.fbx`, 9 tents + `bo_` twins, wood physics) + `t_tent_*` texture sets (white/clear canvas only). Wide-family + On_Sticks textures missing from the vault (pending re-download). Same `t_`-material naming as Rivendell. |
 
 ## Naming conventions (shared across all TAOM kits)
 

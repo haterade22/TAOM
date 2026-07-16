@@ -4,6 +4,28 @@
 
 ## 2026-07-16
 
+### fix(tools): deep review of the 10 asset-pipeline scripts — 1 CRITICAL + 8 HIGH confirmed, fixed in-session
+
+- 5 focused tooling agents (core C# agents N/A for a pure-Python changeset, per deep-review Step 2c).
+  Highlights: citysplit foliage placements were recorded at world origin (bake zeroed matrices before
+  the transform snapshot — CRITICAL); stale `bound_box` after `join()` no-opped the chunk re-pivot and
+  explained the dismissed "0.0 dims" symptom; `'tree' ⊂ 'street'` foliage misclassification;
+  `generate_rivendell_materials --force` would have overwritten hand-made materials against its own
+  docstring (now enforced via `_generated_manifest.json`, seeded 183 generated / hand-made excluded);
+  texture `--dry-run` still wrote to the live module; meshlist pollution let citysplit chunk ids match
+  as placement "templates" (now split into `_meshlists_assembled`). Full findings table, output audit,
+  deferred items (stem-map sidecar, sanitize unification, weld-inside-big-join, normal-map resampling):
+  [`docs/reviews/rca-asset-pipeline-tools-2026-07-16.md`](docs/reviews/rca-asset-pipeline-tools-2026-07-16.md);
+  2 lessons appended to `docs/reviews/lessons/build-tooling-workflow.md`.
+- Docs: new reference [`docs/reference/ue-to-bannerlord-asset-pipeline.md`](docs/reference/ue-to-bannerlord-asset-pipeline.md)
+  (pipeline stages + tpac material format + Blender/UE gotchas, CLAUDE.md Doc-Lookup row added);
+  the 10 scripts registered in `tools/README.md` § UE→Bannerlord asset pipeline; Rivendell + Tents
+  rows added to `docs/kitbash/README.md` (incl. the t_-material naming exception).
+- Known-bad outputs: the four `assembled/*_layout.json` files predate these fixes — their foliage arrays
+  are origin-garbage; do not build prefabs from them (assembled direction is parked anyway).
+- Note: the user's hand-made `t_rivendell_arch_starlight_mtl.tpac` is missing from disk (no tooling here
+  deletes materials; likely removed in an editor session) — surfaced for recreation if unintended.
+
 ### feat(tools): Medieval Tent Collection (Fab) → Bannerlord Tents kit
 
 - `tools/oneoff/convert_tent_textures.py`: Substance-style separate maps → `t_tent_*_{d,n,s,h}`

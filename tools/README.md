@@ -130,6 +130,21 @@ All are EquipmentRoster swappers over the culture troop XMLs; `--dry-run` (defau
 | `expand_party_templates_212.py` | Insert new troops into `kingdom_hero_party_<culture>_template` blocks via positional splice (#212) |
 | `apply_gondor_polish_224.py` | **Delta-style** Gondor polish: per-slot `set`/`clear`/`replace` ops + 2 new PG cavalry NPCs + upgrade-target patch (#224 — distinct from the full-roster swap pattern) |
 
+## One-offs — `tools/oneoff/` — UE→Bannerlord asset pipeline (2026-07-15/16)
+
+The Rivendell (ElvenForestCity UE 5.1 kit) + Tents (Fab) conversion pipeline. Full workflow,
+format findings, and gotchas: [`docs/reference/ue-to-bannerlord-asset-pipeline.md`](../docs/reference/ue-to-bannerlord-asset-pipeline.md);
+review RCA: `docs/reviews/rca-asset-pipeline-tools-2026-07-16.md`.
+
+| Script | Purpose |
+|--------|---------|
+| `ue_export_rivendell.py` / `ue_export_rivendell_fixup.py` | UE **editor Python** (headless `UnrealEditor-Cmd -run=pythonscript -EnablePlugins=PythonScriptPlugin`): bulk StaticMesh→FBX (UCX riding along, LOD0 only), Texture2D→TGA (fixup retries failures as PNG/EXR/BMP), + `material_bindings.json` (mesh→material-instance→texture/scalar params, parent-chain walk). Read-only on the source project. |
+| `blender_normalize_rivendell.py` | Headless Blender batch (MS-Store app → invoke `blender-launcher.exe`, DETACHES: completion = `_normalize_report/<run>/DONE.txt`). Modes: `mesh` (per-asset: bake, lowercase `sm_<kit>_*`, `bo_` twin + physics material, decimate cap, shardable `--shard i/n`), `building` (join level → one mesh), `citysplit` (grid-cluster city → per-structure chunks + layout JSON), `level` (merged reference). `--kit`/`--physmat`/`--material-map`. |
+| `blender_dump_level_placements.py` / `blender_reconstruct_buildings.py` | Match UE level instances back to modular kit meshes (squashed-key matcher, 92% on the house level) → placements JSON / rebuild a building by stamping modular meshes + their `bo_` twins at recorded transforms. Rivendell-hardcoded (`KIT`); assembled-scene direction currently parked. |
+| `analyze_rivendell_bindings.py` / `build_rivendell_material_sheet.py` | Bindings JSON → master-material taxonomy (+ per-mesh CSV) / → `material_rename_map.json` + `material_sheet.csv` (final material = texture-set stem incl. `t_` prefix — user decision; same-set instances merged, `_foliage`/`_translucent` family suffixes). |
+| `generate_rivendell_materials.py` | Writes `*_mtl.tpac` material files by cloning a hand-made template (tpac v2; three 16-byte texture-GUID slots; **checksum unvalidated by the editor**). `--force` only overwrites names in `_generated_manifest.json` — hand-made materials are code-protected. |
+| `convert_rivendell_textures.py` / `convert_tent_textures.py` | Metal-rough → Bannerlord spec-gloss `t_*_{d,n,s}[,h]` (packed ORM / separate Substance maps; `_s` = R:metal G:gloss B:AO, empirical vs shipped kits; constant-high-metal guard on untrusted ChannelMaps). |
+
 ## One-offs — `tools/oneoff/`
 
 **Convention (2026-07-12): one-off scripts land in `tools/oneoff/`** — finished migration/authoring
