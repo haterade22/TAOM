@@ -9,9 +9,14 @@ namespace TAOM.Tests.Features.SiegeDismount;
 // Wiring-regression test for SiegeDismount. The Phase 4 audit issue #193 originally claimed this
 // feature uses manual _harmony.Patch(...) like SettlementGuards (#192), but Phase 9a verification
 // (and Codex confirmation) corrected the mechanism: SiegeDismount wires via
-//     mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
+//     AddTaomBehavior(new SiegeDismountMissionBehavior());
 // inside Main/SubModule.cs::OnMissionBehaviorInitialize. The MissionBehavior subclass resolves
 // ISiegeDismountService from IoC in its ctor and forwards Mission lifecycle calls.
+//
+// 2026-07-16: the call was `mission.AddMissionBehavior(new SiegeDismountMissionBehavior());` until
+// the battle-load blind-window work routed TAOM's own behaviors through the local AddTaomBehavior
+// helper, which [BattleLoad]-stamps each behavior by name before handing it to the engine. The
+// registration guarantee this test defends is unchanged — only the call's shape moved.
 //
 // The wiring is uniquely vulnerable to a Messengers-class regression in TWO ways:
 //   1. If the AddMissionBehavior call is dropped from SubModule.cs, the behavior never registers
@@ -46,8 +51,8 @@ public class SiegeDismountWiringTests
 
         // Two-part assertion: the call literal AND the lifecycle method that contains it.
         // The call literal alone could appear inside a comment or unreachable branch.
-        StringAssert.Contains(subModuleSource, "mission.AddMissionBehavior(new SiegeDismountMissionBehavior());",
-            "Main/SubModule.cs must call mission.AddMissionBehavior(new SiegeDismountMissionBehavior()) " +
+        StringAssert.Contains(subModuleSource, "AddTaomBehavior(new SiegeDismountMissionBehavior());",
+            "Main/SubModule.cs must register SiegeDismountMissionBehavior via AddTaomBehavior(...) " +
             "from inside OnMissionBehaviorInitialize. Audit-motivating regression class: drop the line and " +
             "siege dismount stops applying with zero diagnostic.");
 

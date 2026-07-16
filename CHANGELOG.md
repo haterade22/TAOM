@@ -4,6 +4,40 @@
 
 ## 2026-07-16
 
+### fix(battle-load-diagnostics): crash-durable logging + split the OpenNew→Initialize blind window
+
+Triaging a player CTD (TAOM v2.0.12, attacking Deserters at Nan Angren, vanilla scene
+`battania_village_c`) surfaced two defects that made the crash **unprovable from its own log**. The
+crash itself is NOT fixed — root cause is still unknown, and the reporter can supply no further
+artifacts. This makes the next report self-localizing.
+
+- **`FileLogger` lost its final lines on every hard crash.** `Enqueue` only queued; a background
+  thread (`IsBackground`, 50 ms idle sleep) did the writing, so a dying process took the undrained
+  queue with it — the forensics instrument systematically dropped the lines it exists to capture.
+  INFO/WARNING/ERROR now drain and flush synchronously on the calling thread; DEBUG (5079 of the
+  5356 lines in the player's session) stays async. One queue, one lock, so global order holds and
+  `StreamWriter` is never touched concurrently. Also closes a pre-existing race: `Dispose`'s
+  `Join(5s)` can time out, and the drain/dispose then raced the live writer into an
+  `ObjectDisposedException` on a background thread. Cost is ~15 ms across a multi-second load.
+- **The `MissionOpenNew` → `MissionInitialize` window was one dark segment** spanning a tick
+  boundary, because the OpenNew stamp is a *Prefix*. Four new stamps name the segment that died:
+  an `OpenNew` Postfix, the private `MissionState.LoadMission`, the native
+  `Utilities.ClearOldResourcesAndObjects` (the one native call in the window, and the shape that
+  access-violates), and `Mission.AfterStart` — which brackets *every* submodule's
+  `OnMissionBehaviorInitialize`, so a report can now **exonerate** TAOM rather than only accuse it.
+  TAOM's own behaviors are stamped by name via an `AddTaomBehavior` helper.
+- `Patch43_BattleLoadDiagnostics` is now try/catch-guarded on apply, like Patch60/61/62 — the
+  category binds a private method by string, and a diagnostics category must never break startup.
+- Existing `FileLoggerTests` were structurally blind: all four disposed before asserting, and
+  `Dispose` drains, so they passed against any implementation. New tests read the open file via
+  `FileShare.ReadWrite` without disposing.
+
+Registry corrections: Patch43 is **14** hooks (was 11), and `Mission.Initialize` is **public**
+(`Mission.cs:1798`), not private as the entry claimed since the feature shipped.
+
+Not-tested: Harmony patch invocation (requires live game) — in-game smoke owed.
+Research: `MissionState.cs:302/235/241/243/345`, `Mission.cs:1798/3799/3815` (installed v1.4.7).
+
 ### fix(tools): deep review of the 10 asset-pipeline scripts — 1 CRITICAL + 8 HIGH confirmed, fixed in-session
 
 - 5 focused tooling agents (core C# agents N/A for a pure-Python changeset, per deep-review Step 2c).

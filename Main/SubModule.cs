@@ -912,6 +912,12 @@ public class SubModule : MBSubModuleBase
         Features.BattleLoadDiagnostics.Hooks.BattleSceneSelection_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.Mission_Initialize_BattleLoad_Patch.Initialize(battleLoadSvc, battleLoadStallMarker);
         Features.BattleLoadDiagnostics.Hooks.Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch.Initialize(battleLoadSvc, equipSnapshotAdapter);
+        // OpenNew->Initialize window probes (2026-07-16 Nan Angren player CTD): the OpenNew stamp
+        // is a Prefix, so a crash in OpenNew's body, in LoadMission, or in the native resource
+        // clear all produced an identical log tail. These name the segment that died.
+        Features.BattleLoadDiagnostics.Hooks.MissionState_LoadMission_BattleLoad_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.Utilities_ClearOldResourcesAndObjects_BattleLoad_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.Mission_AfterStart_BattleLoad_Patch.Initialize(battleLoadSvc);
         // Exit-phase probes (issue #331 — 30s-2min hang exiting tournaments): stamp the
         // mission end -> map resume window so the dominant phase gap names the time sink.
         Features.BattleLoadDiagnostics.Hooks.Mission_EndMission_ExitPhase_Patch.Initialize(battleLoadSvc);
@@ -920,7 +926,14 @@ public class SubModule : MBSubModuleBase
         Features.BattleLoadDiagnostics.Hooks.MissionState_OnFinalize_ExitPhase_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.MapState_OnActivate_ExitPhase_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.MapState_OnTick_ExitPhase_Patch.Initialize(battleLoadSvc);
-        _harmony.PatchCategory("Patch43_BattleLoadDiagnostics");
+        // Guarded like Patch60/61/62: this category binds four engine targets by string (one of
+        // them private), so an engine bump can throw here. A DIAGNOSTICS category must never take
+        // startup down with it — losing the stamps is survivable, losing the game is not.
+        try { _harmony.PatchCategory("Patch43_BattleLoadDiagnostics"); }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning($"[BattleLoad] Patch43 diagnostics failed to apply: {ex.Message}");
+        }
         IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
 
         // Exit-stall stack sampler (#331 round 2): OnGameInitializationFinished runs on the
@@ -963,6 +976,24 @@ public class SubModule : MBSubModuleBase
             _harmony.PatchCategory("Patch_MissionTime_SetMovementOrder");
         }
 
+        // [BattleLoad] TAOM-behavior bracket. Mission.AfterStart calls this for EVERY submodule,
+        // so the Begin->Done pair fences OUR behaviors off from other mods' — a crash between
+        // MissionAfterStartBegin and TaomBehaviorsBegin is not ours, which is what lets a player
+        // report exonerate TAOM instead of merely accusing it.
+        var battleLoadDiagSvc = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
+        try { battleLoadDiagSvc?.LogTaomBehaviorsBegin(); } catch { /* diagnostic only */ }
+        int taomBehaviorCount = 0;
+
+        // Stamps the name BEFORE handing the behavior to the engine: the ctors here are trivial,
+        // but AddMissionBehavior does real engine registration, so a fault there leaves the
+        // culprit's name as the last line rather than forcing source archaeology on the order.
+        void AddTaomBehavior(MissionBehavior behavior)
+        {
+            try { battleLoadDiagSvc?.LogTaomBehaviorAdded(behavior.GetType().Name); } catch { /* diagnostic only */ }
+            mission.AddMissionBehavior(behavior);
+            taomBehaviorCount++;
+        }
+
         // 1.4.7 headless-battle deployment-NRE guard: added ONLY while a shader-precompile walk is in
         // flight (never a normal battle — IsWalkInProgress is false then). Seeds Mission.InitialPlayerAgent
         // on the first agent build so the engine's new DeploymentMissionController.SetupTeams deref doesn't
@@ -970,23 +1001,23 @@ public class SubModule : MBSubModuleBase
         // the mission handed in directly) — an AddMissionBehavior from the game manager's OnLoadFinished
         // no-ops because Mission.Current is not yet the battle mission at that point.
         if (Features.ShaderPrecompilation.ShaderPrecompileRunner.IsWalkInProgress)
-            mission.AddMissionBehavior(new Features.ShaderPrecompilation.ShaderPrecompilePlayerAgentGuard(IoC.Resolve<IModLogger>()));
+            AddTaomBehavior(new Features.ShaderPrecompilation.ShaderPrecompilePlayerAgentGuard(IoC.Resolve<IModLogger>()));
 
-        mission.AddMissionBehavior(new AdvancedCombatBehavior());
-        mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
-        mission.AddMissionBehavior(new AutonomousMovementPlayerController());
-        mission.AddMissionBehavior(new WargMissionBehavior());
-        mission.AddMissionBehavior(new SpiderMissionBehavior());
-        mission.AddMissionBehavior(new Features.Elephant.ElephantMissionBehavior());
-        mission.AddMissionBehavior(new Features.Mumakil.MumakilMissionBehavior());
-        mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
-        mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
-        mission.AddMissionBehavior(new SmartCavalryAIMissionBehavior());
-        mission.AddMissionBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
+        AddTaomBehavior(new AdvancedCombatBehavior());
+        AddTaomBehavior(new BehaviorTreeMissionLogic());
+        AddTaomBehavior(new AutonomousMovementPlayerController());
+        AddTaomBehavior(new WargMissionBehavior());
+        AddTaomBehavior(new SpiderMissionBehavior());
+        AddTaomBehavior(new Features.Elephant.ElephantMissionBehavior());
+        AddTaomBehavior(new Features.Mumakil.MumakilMissionBehavior());
+        AddTaomBehavior(new SiegeDismountMissionBehavior());
+        AddTaomBehavior(new MixedFormationsMissionBehavior());
+        AddTaomBehavior(new SmartCavalryAIMissionBehavior());
+        AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();
         if (colorStore != null)
-            mission.AddMissionBehavior(new AgentColorStoreCleanupBehavior(colorStore));
+            AddTaomBehavior(new AgentColorStoreCleanupBehavior(colorStore));
 
         // MissionDiagnostic: added LAST so it sees all behaviors added by TAOM AND
         // every other mod in the load chain. Dumps MissionBehaviors + MissionLogics
@@ -997,24 +1028,23 @@ public class SubModule : MBSubModuleBase
         var raceMgr = IoC.Resolve<Core.Domain.IRaceManager>();
         var diagLogger = IoC.Resolve<IModLogger>();
         if (diagSvc != null && raceMgr != null && diagLogger != null)
-            mission.AddMissionBehavior(new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger));
+            AddTaomBehavior(new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger));
 
         // BattleLoadDiagnostics phase-6: "battle playable" marker on first tick + closes
         // the loading window so the stall watchdog stands down and phase-5 stops logging.
-        var battleLoadDiagSvc = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
         if (battleLoadDiagSvc != null && battleLoadDiagSvc.IsEnabled)
-            mission.AddMissionBehavior(new Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior(
+            AddTaomBehavior(new Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior(
                 battleLoadDiagSvc, IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>()));
 
         // Dev-trigger behavior watches the CrashReport MCM toggle and throws a tagged
         // TaomDevTriggerException on the next OnMissionTick when the player flips
         // "Throw On Next Mission Tick". QA only — no-op in normal play.
-        mission.AddMissionBehavior(new Features.CrashReport.DevTriggers.CrashReportDevTriggerMissionBehavior());
+        AddTaomBehavior(new Features.CrashReport.DevTriggers.CrashReportDevTriggerMissionBehavior());
 
         var careerAbilityService = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
         if (careerAbilityService != null && Campaign.Current != null)
         {
-            mission.AddMissionBehavior(new Features.CareerSystem.CareerPerkMissionBehavior(
+            AddTaomBehavior(new Features.CareerSystem.CareerPerkMissionBehavior(
                 IoC.Resolve<ICareerDataService>(),
                 careerAbilityService,
                 IoC.Resolve<Features.CareerSystem.Abilities.IAbilityActivationController>(),
@@ -1023,6 +1053,8 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<Features.CareerSystem.ICareerPassiveService>(),
                 IoC.Resolve<IModLogger>()));
         }
+
+        try { battleLoadDiagSvc?.LogTaomBehaviorsDone(taomBehaviorCount); } catch { /* diagnostic only */ }
     }
 
     protected override void OnApplicationTick(float dt)

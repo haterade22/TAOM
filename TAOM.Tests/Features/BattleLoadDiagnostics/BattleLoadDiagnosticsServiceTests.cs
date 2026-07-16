@@ -320,4 +320,143 @@ public class BattleLoadDiagnosticsServiceTests
         _sut.LogMissionInitialize("next_scene");
         Assert.AreEqual(0L, _sut.ExitWindowOpenedUtcTicks);
     }
+
+    // --- OpenNew -> Initialize blind-window stamps (2026-07-16 Nan Angren player CTD) ---------
+
+    [TestMethod]
+    public void LogMissionOpenNewDone_Enabled_EmitsPhaseWithCreatedFlag()
+    {
+        _sut.LogMissionOpenNewDone("Battle", missionCreated: true);
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("phase=MissionOpenNewDone") && s.Contains("mission='Battle'") && s.Contains("created=True")));
+    }
+
+    [TestMethod]
+    public void LogLoadMissionBegin_Enabled_EmitsPhase()
+    {
+        _sut.LogLoadMissionBegin();
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=LoadMissionBegin")));
+    }
+
+    [TestMethod]
+    public void LogResourceClearOldBegin_Enabled_EmitsPhase()
+    {
+        _sut.LogResourceClearOldBegin();
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=ResourceClearOldBegin")));
+    }
+
+    [TestMethod]
+    public void LogResourceClearOldDone_Enabled_EmitsPhase()
+    {
+        _sut.LogResourceClearOldDone();
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=ResourceClearOldDone")));
+    }
+
+    [TestMethod]
+    public void LogMissionAfterStartBegin_Enabled_EmitsPhase()
+    {
+        _sut.LogMissionAfterStartBegin();
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=MissionAfterStartBegin")));
+    }
+
+    [TestMethod]
+    public void LogMissionAfterStartDone_Enabled_EmitsPhase()
+    {
+        _sut.LogMissionAfterStartDone();
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=MissionAfterStartDone")));
+    }
+
+    [TestMethod]
+    public void LogTaomBehaviorsBegin_Enabled_EmitsPhase()
+    {
+        _sut.LogTaomBehaviorsBegin();
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=TaomBehaviorsBegin")));
+    }
+
+    [TestMethod]
+    public void LogTaomBehaviorsDone_Enabled_EmitsPhaseWithCount()
+    {
+        _sut.LogTaomBehaviorsDone(11);
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=TaomBehaviorsDone") && s.Contains("count=11")));
+    }
+
+    [TestMethod]
+    public void LogTaomBehaviorAdded_Enabled_EmitsPhaseWithBehaviorName()
+    {
+        _sut.LogTaomBehaviorAdded("SpiderMissionBehavior");
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("phase=TaomBehaviorAdded") && s.Contains("behavior='SpiderMissionBehavior'")));
+    }
+
+    // The whole point of this stamp is surviving a hard crash. LogDebug is the async path and gets
+    // dropped when the process dies, so a well-meaning "it's just noise, make it DEBUG" refactor
+    // would silently re-open the blind window with every other test still green.
+    [TestMethod]
+    public void LogTaomBehaviorAdded_UsesDurableLogInfo_NotLogDebug()
+    {
+        _sut.LogTaomBehaviorAdded("WargMissionBehavior");
+        _logger.Received().LogInfo(Arg.Any<string>());
+        _logger.DidNotReceive().LogDebug(Arg.Is<string>(s => s.Contains("WargMissionBehavior")));
+    }
+
+    [TestMethod]
+    public void NewPhaseMethods_WhenDisabled_WriteNothing()
+    {
+        _settings.IsEnabled.Returns(false);
+
+        _sut.LogMissionOpenNewDone("Battle", true);
+        _sut.LogLoadMissionBegin();
+        _sut.LogResourceClearOldBegin();
+        _sut.LogResourceClearOldDone();
+        _sut.LogMissionAfterStartBegin();
+        _sut.LogMissionAfterStartDone();
+        _sut.LogTaomBehaviorsBegin();
+        _sut.LogTaomBehaviorAdded("X");
+        _sut.LogTaomBehaviorsDone(0);
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    // These are pure probes. The exit-window latch has its own opener/closer contract (#331), and
+    // a stamp that silently closed it would strand the exit diagnostics.
+    [TestMethod]
+    public void NewPhaseMethods_DoNotAlterExitWindowState()
+    {
+        _sut.LogExitBegin("m", "s", 1, 1);
+
+        _sut.LogMissionOpenNewDone("Battle", true);
+        _sut.LogLoadMissionBegin();
+        _sut.LogResourceClearOldBegin();
+        _sut.LogResourceClearOldDone();
+        _sut.LogMissionAfterStartBegin();
+        _sut.LogTaomBehaviorsBegin();
+        _sut.LogTaomBehaviorAdded("X");
+        _sut.LogTaomBehaviorsDone(1);
+        _sut.LogMissionAfterStartDone();
+
+        Assert.IsTrue(_sut.IsExitWindowActive);
+    }
+
+    [TestMethod]
+    public void NewPhaseMethods_WhenLoggerThrows_DoNotPropagate()
+    {
+        _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(_ => throw new InvalidOperationException("boom"));
+
+        _sut.LogMissionOpenNewDone("Battle", true);
+        _sut.LogLoadMissionBegin();
+        _sut.LogResourceClearOldBegin();
+        _sut.LogResourceClearOldDone();
+        _sut.LogMissionAfterStartBegin();
+        _sut.LogMissionAfterStartDone();
+        _sut.LogTaomBehaviorsBegin();
+        _sut.LogTaomBehaviorAdded("X");
+        _sut.LogTaomBehaviorsDone(1);
+    }
+
+    [TestMethod]
+    public void CurrentStatusLine_AfterNewPhase_ReflectsLatestPhase()
+    {
+        _sut.LogResourceClearOldBegin();
+        StringAssert.Contains(_sut.CurrentStatusLine, "phase=ResourceClearOldBegin");
+    }
 }

@@ -14,6 +14,29 @@ public enum BattleLoadPhase
     BattlePlayable,
     StallWatchdog,
 
+    // MissionOpenNew -> MissionInitialize used to be one dark window spanning a tick boundary:
+    // the OpenNew stamp is a Prefix, so a crash anywhere in OpenNew's body, in LoadMission, or in
+    // the native resource clear looked identical (2026-07-16 Nan Angren player CTD). These split
+    // it into named segments. Runtime order:
+    //   MissionOpenNew -> MissionOpenNewDone -> [tick] -> LoadMissionBegin ->
+    //   ResourceClearOldBegin -> ResourceClearOldDone -> MissionInitialize
+    // ResourceClearOld* brackets the NATIVE Utilities.ClearOldResourcesAndObjects() — the one
+    // native call in the window, and the shape that access-violates.
+    MissionOpenNewDone,
+    LoadMissionBegin,
+    ResourceClearOldBegin,
+    ResourceClearOldDone,
+
+    // MissionInitialize -> BattlePlayable. Mission.AfterStart runs OnMissionBehaviorInitialize for
+    // EVERY submodule, so AfterStartBegin -> TaomBehaviorsBegin is other mods' work: that gap is
+    // what lets a report exonerate TAOM rather than merely implicate it. TaomBehaviorAdded names
+    // each of TAOM's own behaviors, so a death inside them says WHICH one.
+    MissionAfterStartBegin,
+    TaomBehaviorsBegin,
+    TaomBehaviorAdded,
+    TaomBehaviorsDone,
+    MissionAfterStartDone,
+
     // Mission-exit lifecycle (issue #331). Order mirrors the engine's teardown flow:
     // Mission.EndMission -> EndMissionInternal -> MissionState.OnFinalize -> MapState.OnActivate.
     // ResourceClear (MemoryCleanupGC + native ClearResources) runs NESTED INSIDE

@@ -23,11 +23,33 @@ public interface IBattleLoadDiagnosticsService
     // PlayerEncounter (or null) so this stays free of TaleWorlds types.
     void LogMissionOpenNew(string missionName, string sceneName, string? encounterSummary);
 
+    // Phase 2b — OpenNew's body returned (mission constructed, state pushed). Its absence after a
+    // MissionOpenNew stamp means the crash was inside OpenNew itself.
+    void LogMissionOpenNewDone(string missionName, bool missionCreated);
+
+    // Phase 2c — MissionState.LoadMission entered, on the tick AFTER OpenNew. Together with
+    // MissionInitialize this brackets OnMissionScreenPreLoad + the native resource clear.
+    void LogLoadMissionBegin();
+
+    // Phase 2d — brackets the NATIVE Utilities.ClearOldResourcesAndObjects(). A Begin with no Done
+    // puts the fault in native resource teardown rather than in managed load code.
+    void LogResourceClearOldBegin();
+    void LogResourceClearOldDone();
+
     // Phase 3 — battle-terrain scene chosen for the world-map tile.
     void LogBattleSceneSelected(int mapIndex, string sceneId, bool isNaval);
 
     // Phase 4 — Mission.Initialize entered.
     void LogMissionInitialize(string sceneName);
+
+    // Phase 4b — Mission.AfterStart brackets EVERY submodule's OnMissionBehaviorInitialize, so the
+    // AfterStartBegin -> TaomBehaviorsBegin gap is other mods. TaomBehaviorAdded names each TAOM
+    // behavior as it is added, so a death inside our own 11 identifies the culprit.
+    void LogMissionAfterStartBegin();
+    void LogMissionAfterStartDone();
+    void LogTaomBehaviorsBegin();
+    void LogTaomBehaviorAdded(string behaviorName);
+    void LogTaomBehaviorsDone(int count);
 
     // Phase 5 — per-agent equipment spawn. Begin is written (and flushed) BEFORE the
     // engine equips the agent; Ok only after it returns. A begin with no matching Ok = the

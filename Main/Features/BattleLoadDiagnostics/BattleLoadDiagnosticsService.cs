@@ -65,6 +65,30 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         Emit(BattleLoadPhase.MissionOpenNew, detail);
     }
 
+    public void LogMissionOpenNewDone(string missionName, bool missionCreated)
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.MissionOpenNewDone, $"mission='{missionName}' created={missionCreated}");
+    }
+
+    public void LogLoadMissionBegin()
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.LoadMissionBegin, string.Empty);
+    }
+
+    public void LogResourceClearOldBegin()
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.ResourceClearOldBegin, string.Empty);
+    }
+
+    public void LogResourceClearOldDone()
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.ResourceClearOldDone, string.Empty);
+    }
+
     public void LogBattleSceneSelected(int mapIndex, string sceneId, bool isNaval)
     {
         if (!IsEnabled) return;
@@ -103,6 +127,38 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     {
         if (!IsEnabled) return;
         Emit(BattleLoadPhase.AgentEquipOk, $"agent#{agentIndex} '{agentName}'");
+    }
+
+    public void LogMissionAfterStartBegin()
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.MissionAfterStartBegin, string.Empty);
+    }
+
+    public void LogMissionAfterStartDone()
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.MissionAfterStartDone, string.Empty);
+    }
+
+    public void LogTaomBehaviorsBegin()
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.TaomBehaviorsBegin, string.Empty);
+    }
+
+    // Must Emit (LogInfo), never LogDebug: DEBUG is the async path and a crash drops it, which is
+    // the exact failure this stamp exists to survive. Pinned by a test.
+    public void LogTaomBehaviorAdded(string behaviorName)
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.TaomBehaviorAdded, $"behavior='{behaviorName}'");
+    }
+
+    public void LogTaomBehaviorsDone(int count)
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.TaomBehaviorsDone, $"count={count}");
     }
 
     public void LogBattlePlayable(string sceneName, int agentCount)

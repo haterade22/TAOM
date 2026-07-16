@@ -12,7 +12,7 @@ The leading hypothesis (historically the cause) is a missing `bo_` collision mes
 
 ## Architecture
 
-### The six lifecycle phases
+### The lifecycle phases
 
 Each phase is a thin Harmony hook (or `MissionLogic`) that delegates one call to `IBattleLoadDiagnosticsService`, which writes a consistent line:
 
@@ -22,16 +22,36 @@ Each phase is a thin Harmony hook (or `MissionLogic`) that delegates one call to
 
 `seq` is a monotonic counter (`Interlocked.Increment`); `t=+Nms` is `Stopwatch` elapsed since the encounter began. A large gap between two consecutive `seq` lines is the stall location.
 
-| # | Phase | Hook | TaleWorlds seam (v1.4.6) |
+| # | Phase | Hook | TaleWorlds seam (v1.4.7) |
 |---|-------|------|--------------------------|
 | 1 | `EncounterStart` | `PlayerEncounter_Start_Patch` (Postfix) | `PlayerEncounter.Start()` — resets the lifecycle clock |
 | 2 | `MissionOpenNew` | `MissionState_OpenNew_Patch` (Prefix) | `MissionState.OpenNew(string, MissionInitializerRecord, …)` — logs scene + attacker/defender/sizes/side from `PlayerEncounter.Current` |
-| 3 | `BattleSceneSelected` | `BattleSceneSelection_Patch` (Postfix) | `DefaultSceneModel.GetBattleSceneForMapPatch(MapPatchData, bool)` — logs `mapIndex → sceneId` |
-| 4 | `MissionInitialize` | `Mission_Initialize_BattleLoad_Patch` (Prefix) | `Mission.Initialize` (private) — opens the loading window |
+| 2b | `MissionOpenNewDone` | `MissionState_OpenNew_Patch` (**Postfix**) | `OpenNew` returned — mission constructed + state pushed |
+| 2c | `LoadMissionBegin` | `MissionState_LoadMission_BattleLoad_Patch` (Prefix) | `MissionState.LoadMission` (private) — the NEXT tick |
+| 2d | `ResourceClearOldBegin` / `Done` | `Utilities_ClearOldResourcesAndObjects_BattleLoad_Patch` (Prefix + Postfix) | `Utilities.ClearOldResourcesAndObjects()` — **the one native call in the window** |
+| 3 | `BattleSceneSelected` | `BattleSceneSelection_Patch` (Postfix) | `DefaultSceneModel.GetBattleSceneForMapPatch(MapPatchData, bool)` — logs `mapIndex → sceneId`. Fires BEFORE phase 2, and only for map-patch terrain — absent on village/town scenes |
+| 4 | `MissionInitialize` | `Mission_Initialize_BattleLoad_Patch` (Prefix) | `Mission.Initialize` (public) — opens the loading window |
+| 4b | `MissionAfterStartBegin` / `Done` | `Mission_AfterStart_BattleLoad_Patch` (Prefix + Postfix) | `Mission.AfterStart()` — runs `OnMissionBehaviorInitialize` for **every** submodule |
+| 4c | `TaomBehaviorsBegin` / `TaomBehaviorAdded` / `TaomBehaviorsDone` | `AddTaomBehavior` helper in `SubModule.OnMissionBehaviorInitialize` (no patch) | TAOM's own behaviors, each stamped by name |
 | 5 | `AgentEquipBegin` / `AgentEquipOk` | `Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch` (Prefix + Postfix) | `Agent.EquipItemsFromSpawnEquipment(bool,bool,bool,int)` — **the money hook** |
 | 6 | `BattlePlayable` | `BattleLoadPhaseBehavior : MissionLogic` (first `OnMissionTick`) | closes the loading window — load succeeded |
 
 All hooks share the Harmony category `Patch43_BattleLoadDiagnostics`. Phases 4 and 5 coexist with the pre-existing prefixes on the same methods (`Patch16_AtmospherePersistence` on `Mission.Initialize`, `Patch23_BannerColorPersistence` on `EquipItemsFromSpawnEquipment`) — Harmony runs all of them.
+
+#### Why 2b–2d and 4b–4c exist (the 2026-07-16 blind window)
+
+Phase 2 is a **Prefix**, so its line is written *before* `OpenNew`'s body runs. Until 2026-07-16 the next stamp was phase 4 — and between them sits `OpenNew`'s whole body, a **tick boundary**, `LoadMission`, every behavior's `OnMissionScreenPreLoad`, and a native resource clear. A player CTD at Nan Angren (TAOM v2.0.12, vanilla scene `battania_village_c`) produced a log ending at `MissionOpenNew`, which was consistent with *every* one of those and therefore proved none of them. The engine order is:
+
+```
+MissionOpenNew → MissionOpenNewDone → [tick] → LoadMissionBegin →
+  ResourceClearOldBegin → ResourceClearOldDone → MissionInitialize →
+  MissionAfterStartBegin → TaomBehaviorsBegin → TaomBehaviorAdded ×N →
+  TaomBehaviorsDone → MissionAfterStartDone → AgentEquip… → BattlePlayable
+```
+
+Two of these earn their keep for a specific reason. `ResourceClearOld*` brackets the only **native** call in the window — the shape that access-violates, e.g. when a previous mission's exit left the native heap corrupt (cf. Patch62 / #339); it has exactly one caller in the shipping build, so it adds no noise. And `MissionAfterStartBegin` is what makes the TAOM stamps **exonerating**: `Mission.AfterStart` iterates every loaded submodule, so the gap between it and `TaomBehaviorsBegin` is *other mods'* behavior construction. Without it, "died after Initialize" could be pinned on nobody.
+
+Verified engine seams (v1.4.7): `MissionState.cs:302` (`OpenNew`) · `:235` (`private void LoadMission()`) · `:241` (native clear) · `:243` (`Initialize`) · `:345` → `Mission.cs:3799` (`AfterStart`) → `:3815` (`OnMissionBehaviorInitialize` per submodule).
 
 ### The money hook (phase 5)
 
@@ -164,6 +184,20 @@ Open the user's `Modules/.../Logs/taom_debug_<timestamp>.log` and find the last 
 - ends at `phase=BattleSceneSelected` (no `MissionInitialize`) → scene-load hang, not equipment.
 - a `WATCHDOG STILL LOADING after Ns — last phase=…` line → the watchdog fired; the `last phase` is the freeze point, and a `taom_crash_*.zip` bundle was written alongside.
 - ends at `phase=BattlePlayable` → the load completed; the hang is elsewhere.
+
+Within the OpenNew→Initialize window, the last stamp names the segment:
+
+| Log ends at | The fault is in |
+|---|---|
+| `MissionOpenNew` (no `MissionOpenNewDone`) | `OpenNew`'s body — `OnMissionIsStarting`, the native `Mission` ctor, the SandBox behavior handler, or `PushState` |
+| `MissionOpenNewDone` (no `LoadMissionBegin`) | the tick boundary — `MissionState.OnInitialize`/`OnActivate`, or the game never ticked again |
+| `LoadMissionBegin` (no `ResourceClearOldBegin`) | a behavior's `OnMissionScreenPreLoad` |
+| `ResourceClearOldBegin` (no `Done`) | **native** resource teardown — suspect heap corruption inherited from the previous mission's exit (cf. Patch62 / #339) |
+| `ResourceClearOldDone` (no `MissionInitialize`) | between the clear and `Mission.Initialize` |
+| `MissionAfterStartBegin` (no `TaomBehaviorsBegin`) | **another mod's** `OnMissionBehaviorInitialize` — not TAOM |
+| `TaomBehaviorAdded behavior='X'` (no further stamp) | registering TAOM's `X` |
+
+**Crash-durability caveat.** `[BattleLoad]`/`[SaveLoad]` lines are INFO and, since 2026-07-16, written synchronously — so the last INFO line is a true record of how far execution got. `[DEBUG]` lines are still async and a hard crash drops whatever is queued, so **do not read the last DEBUG line as the stopping point**. Before that change every level was async, which is why the Nan Angren log could not be localized: `MissionInitialize` might have been reached and merely never written.
 
 ### Add a new lifecycle phase
 

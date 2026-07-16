@@ -476,7 +476,7 @@ Thin routing table — category → feature → exact target (maps a stack trace
 | `Patch40_HideoutDescription` | Themed LOTR hideout encounter descriptions | `HideoutCampaignBehavior.game_menu_hideout_place_on_init` (private, Postfix) | active |
 | `Patch41_McmLayoutFix` | Flip MCM options screen to top-to-bottom layout (#252) | UIExtenderEx `WidgetFactoryManager.CreateAndRegister` (Postfix) | active |
 | `Patch42_CastleRecruitment` | Castle troop recruitment — AI half | `AiVisitSettlementBehavior.AiHourlyTick` (Transpiler), `AiVisitSettlementBehavior.FillSettlementsToVisitWithDistancesAsDays` (Transpiler), `RecruitmentCampaignBehavior.HourlyTickParty` (Postfix) | active |
-| `Patch43_BattleLoadDiagnostics` | `[BattleLoad]` phase stamps: attack->playable + mission-exit lifecycle + stall watchdog | 11 hooks (`PlayerEncounter.Start`, `MissionState.OpenNew`, `Mission.EndMission`, `MapState.OnTick`, ...) | active |
+| `Patch43_BattleLoadDiagnostics` | `[BattleLoad]` phase stamps: attack->playable + OpenNew->Initialize segments + mission-exit lifecycle + stall watchdog | 14 hooks (`PlayerEncounter.Start`, `MissionState.OpenNew`, `MissionState.LoadMission`, `Utilities.ClearOldResourcesAndObjects`, `Mission.AfterStart`, `MapState.OnTick`, ...) | active |
 | `Patch44_CCNameAutofill` | Pre-fill CC Review-stage name field (culture-appropriate) | `CharacterCreationReviewStageVM..ctor` (Postfix) | active |
 | `Patch46_TournamentDwarfDismount` | Dwarf tournament dismount (race-keyed) | `TournamentFightMissionController.PrepareForMatch` (Postfix) | active |
 | `Patch47_SpiderDeathDismount` | Spider rider-death native-AV guard | `Agent.Die` (Prefix) | active |

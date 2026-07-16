@@ -31,6 +31,23 @@ public static class MissionState_OpenNew_Patch
         catch { /* diagnostic only */ }
     }
 
+    // The Prefix above stamps ENTRY, so on its own it cannot distinguish "died inside OpenNew"
+    // from "died later in the load". This Postfix closes that: no MissionOpenNewDone after a
+    // MissionOpenNew means the fault is in OpenNew's body -- OnMissionIsStarting, the native
+    // Mission ctor, the SandBox behavior handler, or PushState. Reads __result but never writes
+    // it, so it cannot alter engine control flow.
+    [HarmonyPostfix]
+    public static void Postfix(string missionName, Mission __result)
+    {
+        var svc = _service;
+        if (svc == null || !svc.IsEnabled) return;
+        try
+        {
+            svc.LogMissionOpenNewDone(missionName ?? "<null>", __result != null);
+        }
+        catch { /* diagnostic only */ }
+    }
+
     private static string? BuildEncounterSummary()
     {
         try
@@ -48,11 +65,16 @@ public static class MissionState_OpenNew_Patch
             int enemy = PlayerEncounter.EncounteredMobileParty?.MemberRoster?.TotalManCount ?? 0;
             var baseLine = $"encountered='{encountered}' side={enc.PlayerSide} main={main} enemy={enemy}";
 
-            // [RaidSpawn][diag] TEMPORARY (issue: empty deployment formations + Ready CTD when
+            // [RaidSpawn][diag] TEMPORARY (#350 — empty deployment formations + Ready CTD when
             // attacking a raiding AI lord). Dumps the live MapEvent side composition so we can tell
             // whether the player's MainParty is actually on the attacker MapEventSide and what the
             // engine's per-side spawn budget (GetNumberOfInvolvedMen) resolves to. Remove after the
             // root cause is confirmed (per feedback_comprehensive_diag_logging_then_remove).
+            //
+            // KEEP: this earned its place on 2026-07-16 — it produced the only usable evidence in
+            // the Nan Angren player CTD (5 attacker parties / 307 men vs 1 party / 63 in the battle
+            // that succeeded 6 minutes earlier). Root cause is still unproven; do not delete until
+            // #350 closes.
             var sideDump = BuildMapEventSideDump();
             return sideDump == null ? baseLine : baseLine + " | " + sideDump;
         }
