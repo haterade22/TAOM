@@ -46,6 +46,8 @@ public sealed class MixedFormationsMissionBehavior : MissionBehavior
     {
         base.OnMissionTick(dt);
         if (!_settings.IsEnabled) return;
+        // Open-field-only (live read — team-AI type is set after OnBehaviorInitialize; never cache).
+        if (Mission.Current?.IsFieldBattle != true) return;
 
         _autoApplyAccumulator += dt;
         if (_autoApplyAccumulator >= 1f)

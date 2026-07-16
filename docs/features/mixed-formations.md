@@ -31,6 +31,8 @@ The feature splits into three layers:
 - **`MixedFormationsMissionBehavior` (engine bridge)** — ticks every frame: every 1s, asks the service to apply default layouts to mixed formations on the player team; every frame, polls the configured cycle hotkey and rotates layouts on the selected formations (or all if none selected). Resolves player team and selected-formations adapters; passes them to the service.
 - **`Patch30_FormationGetOrderPositionOfUnit` (Harmony Prefix)** — intercepts vanilla; calls the service; if the service returns a `Vec2` plane position, queries `Mission.Current.Scene.GetGroundHeightAtPosition` for ground Z, builds a `WorldPosition`, and returns `false` to skip vanilla. Otherwise returns `true`.
 
+**Mission-type scope (open-field-only, siege-CTD guard 2026-07-15):** both entry points short-circuit when `Mission.Current?.IsFieldBattle != true` — the `Patch30` prefix returns `true` (vanilla positioning) on its first line, before the ~40,000×/frame hot path resolves the service or allocates an adapter; `MixedFormationsMissionBehavior.OnMissionTick` returns early, so both the 1s auto-layout apply AND the manual cycle hotkey are inert. `Mission.IsFieldBattle` is true ONLY for `MissionTeamAIType == FieldBattle`, so mixed-formation repositioning never runs in a siege / sally-out / hideout / naval / settlement mission (the guard is a live read — team-AI type is assigned after spawn, so it must not be cached at `OnBehaviorInitialize`). Per ADR-008 these entry-point guards are game-tested, not unit-tested.
+
 ### Component Diagram
 
 ```

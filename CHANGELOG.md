@@ -132,9 +132,18 @@ siege / sally-out / hideout / naval / settlement missions — verified v1.4.7 `M
 
 - **SmartCavalryAI** — added `IsFieldBattle` to `IBattlefieldQueryAdapter` (already injected into
   `CavalryChargeService`) and gated `HandleChargeOrder` + `Tick`; fully unit-tested (+2 regression tests).
+  **Also gated `SmartCavalryAIMissionBehavior.OnMissionTick`** — its `ApplyCollisionAvoidance` writes
+  `agent.SetMovementDirection` per mounted unit per frame *bypassing the service*, so the service gate alone
+  left the feature still manipulating cavalry every frame in a siege (deep-review HIGH, caught by the
+  data-flow agent — see the RCA). The tick gate covers both paths and skips the per-formation adapter build.
 - **MixedFormations** — guarded the two thin entry points: the `Patch30` prefix (first line, before the
   ~40,000×/frame hot path allocates) and `MixedFormationsMissionBehavior.OnMissionTick` (suppresses both
   auto-layout and the manual cycle hotkey in non-field missions). Entry points are game-tested per ADR-008.
+
+`/deep-review`: 1 HIGH + 1 MED + 2 LOW confirmed (all fixed or explicitly rejected with reason), 1 false
+positive refuted. RCA: [`docs/reviews/rca-siege-guards-2026-07-16.md`](docs/reviews/rca-siege-guards-2026-07-16.md).
+Verified against the engine on **both** v1.4.7 (dev) and v1.4.6 (the playtester's build) — the relevant
+`Mission`/`Formation`/`SandBoxMissions` regions are byte-for-byte identical, so the gate is safe on their install.
 
 Correct-by-design defensive guards — open-field features should never touch siege formations. They are **not
 yet confirmed** as this crash's root cause (that awaits the player's Windows Event Log fault offset), and

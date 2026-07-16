@@ -15,6 +15,13 @@ public interface IBattlefieldQueryAdapter
     /// spectator missions can leave this null; callers must short-circuit accordingly.</summary>
     bool HasPlayerTeam { get; }
 
+    /// <summary>True iff the current mission is an open-field battle
+    /// (<c>Mission.Current.IsFieldBattle</c> — team-AI type == FieldBattle). FALSE for
+    /// siege, sally-out, hideout, naval, and every settlement/no-team-AI mission. The
+    /// SmartCavalryAI line-charge feature is open-field-only, so it gates on this. False
+    /// when there is no live mission.</summary>
+    bool IsFieldBattle { get; }
+
     /// <summary>Snapshot all friendly formations on the player team OTHER than
     /// <paramref name="excludeFormationKey"/> (typically the cavalry formation itself).
     /// Used by reroute path-planning to find friendly infantry obstructing the charge line.

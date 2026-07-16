@@ -60,6 +60,12 @@ public sealed class SmartCavalryAIMissionBehavior : MissionBehavior
     {
         base.OnMissionTick(dt);
         if (!_settings.IsEnabled) return;
+        // Open-field-only. This gate is load-bearing at THIS level, not just in the service:
+        // ApplyCollisionAvoidance below writes agent.SetMovementDirection directly, bypassing
+        // ICavalryChargeService entirely, so the service-side gate cannot suppress it. Gating the
+        // whole tick also skips the per-formation adapter build. Live read — team-AI type is set in
+        // MissionCombatantsLogic.EarlyStart (after every OnBehaviorInitialize), so never cache it.
+        if (!_battlefield.IsFieldBattle) return;
 
         var team = Mission.Current?.PlayerTeam;
         if (team == null) return;

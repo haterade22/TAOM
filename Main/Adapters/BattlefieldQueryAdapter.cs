@@ -15,6 +15,11 @@ public sealed class BattlefieldQueryAdapter : IBattlefieldQueryAdapter
 
     public bool HasPlayerTeam => Mission.Current?.PlayerTeam != null;
 
+    // Mission.IsFieldBattle => MissionTeamAIType == FieldBattle (v1.4.7 Mission.cs:1373). A plain
+    // managed auto-property read, not a native computed getter, so it cannot throw once Mission is
+    // non-null. ?? false => a null mission is treated as "not a field battle" (suppress the feature).
+    public bool IsFieldBattle => Mission.Current?.IsFieldBattle ?? false;
+
     public object? PlayerTeamKey => Mission.Current?.PlayerTeam;
 
     public IReadOnlyList<IFormationAdapter> GetFriendlyFormationsExcluding(object excludeFormationKey)

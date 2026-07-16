@@ -28,6 +28,7 @@ Single Harmony Postfix on `Formation.SetMovementOrder`. The patch attribute live
 - Non-Charge / non-ChargeToTarget order
 - Non-player-team formation
 - Feature disabled in MCM
+- **Non-field-battle mission** — the coordinated line charge is open-field-only, so `CavalryChargeService.HandleChargeOrder` and `.Tick` bail unless `IBattlefieldQueryAdapter.IsFieldBattle` (engine `Mission.IsFieldBattle`, true ONLY for `MissionTeamAIType == FieldBattle`). This keeps the feature out of siege / sally-out / hideout / naval / settlement missions, where synchronously re-entering native `Formation.SetPositioning`/`SetMovementOrder` mid-deployment can fault (siege-CTD guard, 2026-07-15). Caveat: `SiegeMissionNoDeployment` relief-force assaults are engine-tagged `FieldBattle`, so the feature still runs there.
 
 When the postfix proceeds, it hands control to `ICavalryChargeService.HandleChargeOrder(...)` which decides reroute vs line-charge. The service then drives a state machine via `MissionBehavior.OnMissionTick`:
 

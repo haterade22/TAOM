@@ -77,6 +77,10 @@ public sealed class CavalryChargeService : ICavalryChargeService
         if (cav.FormationKey == null) return;
         if (!_settings.IsEnabled) return;
         if (!battlefield.HasPlayerTeam) return;
+        // Open-field-only: never issue coordinated line charges (native SetPositioning /
+        // SetMovementOrder) in a siege, sally-out, hideout, or any non-field mission. Re-entering
+        // native formation code while the engine is still finalizing siege deployment can fault.
+        if (!battlefield.IsFieldBattle) return;
         if (!cav.RepresentativeIsCavalry) return;
 
         // Phase 9b #155 — lock for the entire state-machine entry. BeginReroute / InitiateLineCharge
@@ -172,6 +176,10 @@ public sealed class CavalryChargeService : ICavalryChargeService
     {
         if (cav == null || commands == null) return;
         if (cav.FormationKey == null) return;
+        // Open-field-only (mirrors HandleChargeOrder): freeze the state machine outside a field
+        // battle. Redundant belt-and-braces — HandleChargeOrder never creates state in a siege, so
+        // there is normally nothing to drive — but keeps the guarantee if state ever pre-exists.
+        if (battlefield == null || !battlefield.IsFieldBattle) return;
 
         // Phase 9b #155 — lock for the entire tick. The Update* methods mutate state.State and
         // other CavalryFormationState fields; keeping them inside the lock prevents a concurrent

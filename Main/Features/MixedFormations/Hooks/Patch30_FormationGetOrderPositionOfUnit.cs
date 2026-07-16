@@ -21,6 +21,12 @@ public static class Patch30_FormationGetOrderPositionOfUnit
     {
         try
         {
+            // Open-field-only: skip all mixed-formation repositioning in siege / sally-out / hideout /
+            // naval / settlement missions (Mission.IsFieldBattle is FALSE for all of them). Returning
+            // true lets vanilla GetOrderPositionOfUnit compute the slot. Placed first to short-circuit
+            // this per-unit hot path (~40,000×/frame) before any IoC resolve or adapter allocation.
+            if (Mission.Current?.IsFieldBattle != true) return true;
+
             var service = _service ??= IoC.Resolve<IFormationLayoutService>();
             if (service == null) return true;
 

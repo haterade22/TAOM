@@ -57,10 +57,12 @@ public class CavalryChargeServiceTests
     }
 
     private static IBattlefieldQueryAdapter MakeBattlefield(
-        IReadOnlyList<IFormationAdapter>? friendlies = null)
+        IReadOnlyList<IFormationAdapter>? friendlies = null,
+        bool isFieldBattle = true)
     {
         var b = Substitute.For<IBattlefieldQueryAdapter>();
         b.HasPlayerTeam.Returns(true);
+        b.IsFieldBattle.Returns(isFieldBattle);
         b.GetFriendlyFormationsExcluding(Arg.Any<object>())
             .Returns(friendlies ?? new List<IFormationAdapter>());
         b.GetGroundHeightAtPosition(Arg.Any<Vec3>()).Returns(0f);
@@ -729,11 +731,55 @@ public class CavalryChargeServiceTests
         var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
         var battlefield = Substitute.For<IBattlefieldQueryAdapter>();
         battlefield.HasPlayerTeam.Returns(false);
+        // Explicit so this test isolates the HasPlayerTeam guard only. Without it, NSubstitute's
+        // bool default would leave IsFieldBattle == false and the test would pass for the wrong
+        // reason if the guard order in HandleChargeOrder is ever changed.
+        battlefield.IsFieldBattle.Returns(true);
 
         _sut.HandleChargeOrder(cav, commands, battlefield, new object(),
             new Vec3(100f, 0f, 0f, -1f), 0f);
 
         Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+    }
+
+    // ============ Open-field-only siege guard (crash-fix regression tests) ============
+
+    [TestMethod]
+    public void HandleChargeOrder_NotFieldBattle_DoesNothing()
+    {
+        // Arrange — every charge precondition is satisfied EXCEPT the mission is not an open-field
+        // battle (e.g. a siege). SmartCavalryAI must not re-enter native formation code here.
+        StubPlannerNoReroute();
+        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f));
+        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        var battlefield = MakeBattlefield(isFieldBattle: false);
+
+        // Act
+        _sut.HandleChargeOrder(cav, commands, battlefield, new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
+
+        // Assert — no native formation commands issued, state never leaves Idle.
+        Assert.AreEqual(CavalryState.Idle, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().ApplyChargeLine(Arg.Any<Vec3>(), Arg.Any<Vec2>(), Arg.Any<int>());
+        commands.DidNotReceive().IssueStop();
+        commands.DidNotReceive().IssueMoveTo(Arg.Any<Vec2>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void Tick_NotFieldBattle_DoesNotDriveStateMachine()
+    {
+        // Arrange — reach Forming in a field battle (aligned, so a normal Tick would advance to Charging).
+        StubPlannerNoReroute();
+        var cav = MakeCav(Vec2.Zero, new Vec2(1f, 0f), isAligned: true);
+        var commands = MakeCommands(Vec2.Zero, new Vec2(1f, 0f));
+        _sut.HandleChargeOrder(cav, commands, MakeBattlefield(), new object(), new Vec3(100f, 0f, 0f, -1f), 0f);
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+
+        // Act — tick with a non-field battlefield; the state machine must be frozen.
+        _sut.Tick(cav, commands, MakeBattlefield(isFieldBattle: false), 0.1f, 1f);
+
+        // Assert — no advance to Charging, no charge order issued.
+        Assert.AreEqual(CavalryState.Forming, _sut.GetState(cav.FormationKey));
+        commands.DidNotReceive().IssueChargeToTarget(Arg.Any<object>());
     }
 }
 
