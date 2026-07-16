@@ -21,14 +21,19 @@ THREE-TIER EXISTENCE CHECK
           tier that observes the *running* engine, so it is the lead signal.
   Tier B  (offline, visual meshes only):  build the present-Metamesh set from the
           .tpac tables-of-contents and flag any visual `mesh=` ref that is absent.
-  Tier C  (offline, coarse, opt-in):  `bo_` collision bodies are NOT in the .tpac
-          TOC (they live embedded in mesh metadata), so scan the raw .tpac bytes
-          for the body name as a NUL-framed needle. Coarse — confirm hits via an
-          rgl_log. Default ON only when no rgl_log is available.
+  Tier C  (offline, exact, opt-in):  `bo_` collision bodies ARE first-class .tpac
+          TOC items (PhysicsShape), so flag any `body_name=` ref absent from the
+          present-PhysicsShape set. Falls back to a coarse NUL-framed raw-byte
+          scan only for packs that soft-failed to parse. Default ON only when no
+          rgl_log is available.
+          (Until #352 this tier assumed bodies were NOT in the TOC and byte-scanned
+          for everything — hence the old "coarse, confirm via rgl_log" caveat.
+          They are: pack1.tpac exposes 382 PhysicsShape items, a count confirmed
+          independently against TpacTool's own PhysicsShape.TYPE_GUID.)
 
 ISSUE CODES
   MISSING_MESH            (ERROR,   Tier B)  visual mesh not in any .tpac TOC
-  MISSING_BODY            (ERROR,   Tier C)  collision body not found in raw bytes
+  MISSING_BODY            (ERROR,   Tier C)  collision body not in any .tpac TOC
   RUNTIME_MISSING_BODY    (ERROR,   Tier A)  engine logged get_object failed for body
   RUNTIME_MISSING_MATERIAL(WARNING, Tier A)  engine logged missing material for mesh
   DUPLICATE_MESH_NAME     (WARNING, Tier A)  engine logged a duplicate registration
@@ -63,9 +68,12 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_GAME = Path(
     r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 )
-DEFAULT_ITEMS = (
-    DEFAULT_GAME / "Modules" / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items"
-)
+# ModuleData root, NOT ModuleData/LOTRLOME_items: crafting pieces live in
+# `LOTRLOME_crafting_pieces.xml` directly under ModuleData/, and a `body_name`
+# typo there hangs mission load exactly like one on an item. Scoping to
+# LOTRLOME_items/ missed both v2.0.8 hang typos (#352) — this tool was
+# body-aware the whole time, just pointed one directory too narrow.
+DEFAULT_ITEMS = DEFAULT_GAME / "Modules" / "LOTRLOME_Armory" / "ModuleData"
 # Shared meshes live outside the Armory (Native/SandBoxCore), so the present-set
 # is the UNION across these modules' AssetPackages.
 DEFAULT_TPAC_MODULES = ["LOTRLOME_Armory", "Native", "SandBoxCore"]
@@ -254,15 +262,21 @@ TPAC_MAGIC = 0x43415054
 # Metamesh (visual mesh) TYPE_GUID a08f8b97-197c-4bea-b95b-53846cae834e, as the
 # .NET little-endian byte form the container stores (first 3 fields LE).
 METAMESH_TYPE_GUID = bytes.fromhex("978b8fa07c19ea4bb95b53846cae834e")
+# PhysicsShape (collision body) TYPE_GUID e8528e0e-64b6-4e61-bae0-7569c0452aea,
+# same LE encoding. Read off TpacTool.Lib's PhysicsShape.TYPE_GUID via reflection,
+# not guessed. Collision bodies ARE first-class TOC items — see #352.
+PHYSICSSHAPE_TYPE_GUID = bytes.fromhex("0e8e52e8b664614ebae07569c0452aea")
 
 
 @dataclass
 class TpacScanResult:
-    """Outcome of scanning one .tpac: the Metamesh names it exposes, plus a
-    soft-fail flag so an unparsable pack degrades gracefully (UNVERIFIED_MESH /
-    UNPARSED_TPAC) instead of aborting or emitting a false MISSING."""
+    """Outcome of scanning one .tpac: the Metamesh + PhysicsShape names it
+    exposes, plus a soft-fail flag so an unparsable pack degrades gracefully
+    (UNVERIFIED_MESH / UNPARSED_TPAC) instead of aborting or emitting a false
+    MISSING."""
     path: str
     metamesh_names: set = field(default_factory=set)
+    physicsshape_names: set = field(default_factory=set)
     parsed_ok: bool = True
     error: str = ""
 
@@ -275,7 +289,8 @@ def _read_sized_string(f) -> str:
 
 
 def scan_tpac_metameshes(path) -> TpacScanResult:
-    """Stream the .tpac table-of-contents and collect every Metamesh name.
+    """Stream the .tpac table-of-contents and collect every Metamesh and
+    PhysicsShape name.
 
     Lifted from tpac_skeleton_scan.scan_tpac, with the spec'd fixes:
       * no 50-result cap;
@@ -325,8 +340,11 @@ def scan_tpac_metameshes(path) -> TpacScanResult:
                     res.error = f"suspicious udep_count={udep_count} at item {i} ({name!r})"
                     return res
 
-                if type_guid == METAMESH_TYPE_GUID and name:
-                    res.metamesh_names.add(name)
+                if name:
+                    if type_guid == METAMESH_TYPE_GUID:
+                        res.metamesh_names.add(name)
+                    elif type_guid == PHYSICSSHAPE_TYPE_GUID:
+                        res.physicsshape_names.add(name)
     except (OSError, struct.error) as e:
         res.parsed_ok = False
         res.error = f"{type(e).__name__}: {e}"
@@ -335,10 +353,12 @@ def scan_tpac_metameshes(path) -> TpacScanResult:
 
 @dataclass
 class PresentSet:
-    """The offline asset inventory: visual-mesh names present across all parsed
-    .tpacs, plus the list of packs that soft-failed (so missing visual meshes can
-    be downgraded to UNVERIFIED rather than reported as false MISSING)."""
+    """The offline asset inventory: visual-mesh and collision-body names present
+    across all parsed .tpacs, plus the list of packs that soft-failed (so missing
+    assets can be downgraded to UNVERIFIED rather than reported as false
+    MISSING)."""
     metameshes: set = field(default_factory=set)
+    physicsshapes: set = field(default_factory=set)
     tpac_paths: list = field(default_factory=list)
     unparsed: list = field(default_factory=list)   # [(path, error)]
 
@@ -359,12 +379,13 @@ def tpac_paths_for_modules(game_dir: Path, modules: list) -> list:
 
 
 def build_present_set(tpac_paths: list) -> PresentSet:
-    """Union the Metamesh TOCs across the given .tpac files."""
+    """Union the Metamesh + PhysicsShape TOCs across the given .tpac files."""
     ps = PresentSet(tpac_paths=[str(p) for p in tpac_paths])
     for p in tpac_paths:
         res = scan_tpac_metameshes(p)
         if res.parsed_ok:
             ps.metameshes |= res.metamesh_names
+            ps.physicsshapes |= res.physicsshape_names
         else:
             ps.unparsed.append((res.path, res.error))
     return ps
@@ -424,13 +445,15 @@ def _scan_one_tpac_for_bodies(path, needles: dict, found: set) -> None:
 
 
 def bodies_present_in_tpacs(bodies, tpac_paths: list) -> set:
-    """Tier C (batch): which of `bodies` appear (framed) in the raw bytes of any
-    of `tpac_paths`. Reads each pack ONCE for ALL needles — O(total bytes), not
-    O(bodies × bytes) — so it stays tractable against ~150 Native packs.
+    """Tier C FALLBACK (batch): which of `bodies` appear (framed) in the raw bytes
+    of any of `tpac_paths`. Reads each pack ONCE for ALL needles — O(total bytes),
+    not O(bodies × bytes) — so it stays tractable against ~150 Native packs.
 
-    `bo_` collision bodies are embedded in mesh metadata, NOT in the .tpac TOC,
-    so this raw-byte scan is the only offline signal for them. Coarse: a hit means
-    the name's bytes exist in a pack, not that the engine can load it."""
+    Prefer PresentSet.physicsshapes: bodies ARE first-class TOC items, so the TOC
+    set is exact and this scan is only for packs that soft-failed to parse (#352
+    corrected the old "bodies aren't in the TOC" premise this was built on).
+    Coarse: a hit means the name's bytes exist in a pack, not that the engine can
+    load it."""
     needles = {b.encode("utf-8"): b for b in bodies}
     found = set()
     for p in tpac_paths:
@@ -557,13 +580,22 @@ def classify(refs: list,
                 f'contain are reported as UNVERIFIED_MESH, not MISSING',
             ))
 
-    # ---- Tier C: collision bodies via raw-byte scan ----------------------- #
+    # ---- Tier C: collision bodies vs present PhysicsShape TOC -------------- #
     if scan_bodies:
         scan_paths = body_tpac_paths
         if scan_paths is None:
             scan_paths = [Path(p) for p in (present.tpac_paths if present else [])]
-        # One read pass over the packs for ALL unique body needles.
-        present_bodies = bodies_present_in_tpacs(referenced_bodies, scan_paths)
+        if present is not None and present.physicsshapes:
+            # Exact: bodies are first-class PhysicsShape TOC items (#352).
+            present_bodies = referenced_bodies & present.physicsshapes
+            unresolved = referenced_bodies - present_bodies
+            # Only if a pack we needed soft-failed do we fall back to the coarse
+            # byte scan — never assert MISSING on evidence we couldn't read.
+            if unresolved and not present.fully_parsed:
+                present_bodies |= bodies_present_in_tpacs(unresolved, scan_paths)
+        else:
+            # No TOC available (Tier B skipped) — coarse byte scan is all we have.
+            present_bodies = bodies_present_in_tpacs(referenced_bodies, scan_paths)
         for body in sorted(referenced_bodies):
             if body in present_bodies:
                 continue
@@ -658,15 +690,23 @@ def format_report(issues: list, refs: list, present: PresentSet | None,
                  "session for the authoritative check") + ")")
     tiers.append("B (offline .tpac TOC visual-mesh)" if present is not None
                  else "B (skipped — no .tpac present-set)")
-    tiers.append("C (offline raw-byte collision-body, COARSE)" if scan_bodies
-                 else "C (skipped — pass --scan-bodies)")
+    # Which method Tier C actually used depends on whether a PhysicsShape TOC was
+    # available — say the one that ran, never assume.
+    body_toc = present is not None and bool(present.physicsshapes)
+    if not scan_bodies:
+        tiers.append("C (skipped — pass --scan-bodies)")
+    elif body_toc:
+        tiers.append("C (offline .tpac TOC collision-body, EXACT)")
+    else:
+        tiers.append("C (offline raw-byte collision-body, COARSE — no PhysicsShape TOC)")
     out.append("Tiers run:")
     for t in tiers:
         out.append(f"  - Tier {t}")
-    if scan_bodies:
-        out.append("  NOTE: Tier C is a coarse substring scan with length/NUL "
-                   "framing; a hit means the body name's bytes exist in a .tpac, "
-                   "not that the engine can load it — confirm via rgl_log.")
+    if scan_bodies and not body_toc:
+        out.append("  NOTE: no PhysicsShape TOC was available, so Tier C fell back to a "
+                   "coarse substring scan with length/NUL framing; a hit means the body "
+                   "name's bytes exist in a .tpac, not that the engine can load it — "
+                   "confirm via rgl_log.")
 
     # -- counts -- #
     n_visual = sum(1 for r in refs if r.kind == "visual_mesh")
@@ -757,23 +797,28 @@ def format_report(issues: list, refs: list, present: PresentSet | None,
         out.append(f"    {code:<26} {n}")
 
     out.append("")
-    out.append("--- Interpretation (bo-mesh / battle-load-hang hypothesis) ---")
+    out.append("--- Interpretation (bo-mesh / battle-load-hang) ---")
     item_runtime_missing = n_runtime_body
     total_missing_bodies = n_missing_body + item_runtime_missing
     if total_missing_bodies == 0 and n_missing_mesh == 0:
         out.append("  No missing collision bodies and no missing visual meshes were "
-                   "found in scanned items. The hypothesis that a missing `bo_` "
-                   "collision mesh on an item causes the battle-load hang is "
-                   "WEAKENED — look elsewhere (scene bodies, prefab refs, async "
-                   "asset load order, GPU-driver stalls per "
+                   "found in scanned items. Nothing in the SCANNED SCOPE can cause "
+                   "the load hang — but scope is exactly what this tool got wrong "
+                   "before (#352: it scanned ModuleData/LOTRLOME_items/ while the "
+                   "two live typos sat in ModuleData/LOTRLOME_crafting_pieces.xml). "
+                   "Confirm --items covers every XML that names a body before "
+                   "concluding; then look elsewhere (scene bodies, prefab refs, "
+                   "async asset load order, GPU-driver stalls per "
                    "feedback_bannerlord_async_load_check_gpu_first.md).")
     else:
         out.append(f"  {total_missing_bodies} missing collision-body ref(s) and "
-                   f"{n_missing_mesh} missing visual-mesh ref(s) found. These items "
-                   "are PRIME SUSPECTS for the battle-load hang — cross-reference "
-                   "the referencing item ids against troop rosters "
-                   "(tools/validate_all_troop_refs.py) to see which troops can "
-                   "spawn them, then reproduce a battle with those troops.")
+                   f"{n_missing_mesh} missing visual-mesh ref(s) found. A missing "
+                   "body is a CONFIRMED cause of the infinite load hang, not a "
+                   "hypothesis (#352): PreloadHelper.WaitForMeshesToBeLoaded polls "
+                   "every registered body name and never exits until each resolves. "
+                   "Check each ref for a near-match in bodies-present first — both "
+                   "real cases were suffix typos with the correct body shipped and "
+                   "sitting one character away; fix the ref, don't delete the item.")
     if rgl is None:
         out.append("  Tier A did not run (no rgl_log). The OFFLINE tiers cannot "
                    "observe the running engine — for the authoritative check, "

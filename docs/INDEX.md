@@ -152,6 +152,7 @@
 - [crash-report](features/crash-report.md) — crash report enrichment
 - [mission-diagnostic](features/mission-diagnostic.md) — first-tick MissionBehavior dump + action-set capture for mod-conflict diagnostics
 - [battle-load-diagnostics](features/battle-load-diagnostics.md) — phase-stamped battle-load lifecycle log + stall watchdog + next-session stall marker/notice; offline `tools/triage_battle_load.py` gives an equipment-vs-code verdict (#262)
+- [mesh-ref-validation](features/mesh-ref-validation.md) — `tools/validate_mesh_refs.py`: does every `mesh=` / `body_name=` in item + crafting-piece XML resolve to a packaged asset? A missing `bo_` body is a **confirmed** infinite-mission-load hang (#352) — run it after any weapon/armor authoring. A clean PASS only means "clean within `--items` scope"
 - [bannerlord-together-compat](features/bannerlord-together-compat.md) — multiplayer mod compat surface
 - [doc-graph](features/doc-graph.md) — query + audit *this* knowledge graph (`/doc-graph` skill + `tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). [ADR-010](adrs/010-knowledge-base-architecture.md) Phase 5; adopted from [graphify](reviews/adopt-graphify-2026-06-08.md)
 

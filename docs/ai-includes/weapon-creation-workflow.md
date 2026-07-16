@@ -42,6 +42,18 @@ bo_<same full mesh id>                          e.g. bo_wm_dale_ws_sword_a01_bla
 - **Blades, axe heads, spear/polearm heads, bows** need a matching `bo_` collision twin.
 - **Guards, handles, pommels** do **not** have collision meshes (they attach to the blade).
 
+> **`bo_<same full mesh id>` is exact, and getting it wrong HANGS the game — not a cosmetic bug.**
+> A `body_name` the engine can't resolve makes `PreloadHelper.WaitForMeshesToBeLoaded` spin the main
+> thread forever: no crash, no error log, one CPU core at 100%, mission never loads. LOTRLOME_Armory
+> v2.0.8 shipped two refs that broke this exact rule and hung every siege with Dunland troops (#352) —
+> `mesh="dunland_caerdh_sword_blade_2h_a"` with `body_name="bo_dunland_caerdh_sword_blade_2h"` (dropped
+> the `_a`), and `mesh="wm_harad_spear_a02_head"` with `body_name="bo_wm_harad_spear_a02_blade"` (spears
+> use `_head`; `_blade` was copy-pasted from the sword). Both assets shipped correctly — only the refs
+> were wrong. **Verify before you ship:** `python tools/validate_mesh_refs.py --scan-bodies` (see
+> [mesh-ref-validation.md](../features/mesh-ref-validation.md)). If it flags a body, look for a
+> near-match in the packaged names before deleting the item — a missing asset is a typo until proven
+> otherwise.
+
 ## Step B — Import the FBX + textures into the Bannerlord editor
 
 Importing produces:

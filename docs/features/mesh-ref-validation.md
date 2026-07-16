@@ -2,32 +2,38 @@
 
 ## Overview
 
-A pure-stdlib, read-only tool (`tools/validate_mesh_refs.py`) that extracts every mesh and collision-body reference from Bannerlord item XML and checks whether each referenced asset actually exists, across three independent tiers of evidence. It exists to confirm or eliminate a specific hypothesis: that an item referencing a **missing `bo_` collision mesh** is the cause of intermittent infinite battle-load hangs. CLI / exit-code / report conventions mirror `tools/validate_moduledata.py`.
+A pure-stdlib, read-only tool (`tools/validate_mesh_refs.py`) that extracts every mesh and collision-body reference from Bannerlord item XML and checks whether each referenced asset actually exists, across three independent tiers of evidence. CLI / exit-code / report conventions mirror `tools/validate_moduledata.py`.
 
-It is the pure-Python, body-aware, rgl-log-aware successor to `tools/Audit-MeshRefs.ps1` — that PowerShell script depends on the TpacTool C# DLLs and OMITS the collision-body attributes (`body_name` / `shield_body_name`), which are exactly the attributes the bo-mesh hypothesis is about.
+It was built to confirm or eliminate a hypothesis: that a **missing `bo_` collision body** causes intermittent infinite battle-load hangs. **The hypothesis is CONFIRMED** (#352, 2026-07-16) — a user field report traced a permanent siege-load hang via ClrMD to `PhysicsShape.GetFromResource` ← `PreloadHelper.WaitForMeshesToBeLoaded`, which polls every registered body name and only exits once each resolves. One unresolvable name spins the main thread forever: no crash, no error log, one CPU core at 100%. The cause was two `body_name` typos in LOTRLOME_Armory v2.0.8 — the assets shipped fine, the refs were a suffix off.
+
+It is the pure-Python, body-aware, rgl-log-aware successor to `tools/Audit-MeshRefs.ps1` — that PowerShell script depends on the TpacTool C# DLLs and OMITS the collision-body attributes (`body_name` / `shield_body_name`), which are exactly the attributes the load-hang class is about. **This tool owns body validation; don't add body checks to the PS1.** (A 2026-07-16 session started doing exactly that, misled by a false-negative grep, before catching the overlap.)
 
 ## Why This Exists
 
-When a Bannerlord item names an asset that the engine can't resolve, the failure mode varies: a missing **visual mesh** usually just makes the item invisible (or "underwear bug" cousin), but a missing **collision body** (`bo_*`) can stall physics/collision setup. The working hypothesis under investigation is that one such missing `bo_` body causes the engine to hang during battle load. Confirming or refuting that needs hard data:
+When a Bannerlord item names an asset that the engine can't resolve, the failure mode varies: a missing **visual mesh** usually just makes the item invisible (or "underwear bug" cousin), but a missing **collision body** (`bo_*`) hangs mission load outright — see Overview. Catching that needs hard data:
+
+> **The scope lesson (#352).** This tool caught both live typos at the exact line — but only once pointed at the right directory. Its `--items` default was `ModuleData/LOTRLOME_items/`, while crafting pieces live in `ModuleData/LOTRLOME_crafting_pieces.xml`, one level up. For a year the tool built to catch this class never read the file that contained it, and reported PASS. **A clean run means "clean within `--items` scope", never "the hang isn't a missing body".** The default is now `ModuleData/`; widen it further for any module whose body-naming XML lives elsewhere.
 
 - Which items reference which meshes/bodies, and at what `file:line`?
 - Does each referenced visual mesh exist in a packaged `.tpac`?
-- Does each referenced collision body exist (bodies are NOT in the `.tpac` table-of-contents — they're embedded in mesh metadata)?
+- Does each referenced collision body exist (as a `PhysicsShape` entry in a `.tpac` table-of-contents)?
 - What does the **running engine** itself say it couldn't load?
 
-No single check answers all of these, so the tool runs three tiers and an interpretation footer that states whether the hypothesis is supported or weakened by what was found.
+No single check answers all of these, so the tool runs three tiers and an interpretation footer that reads the findings back in plain language.
 
 ## Architecture (the three tiers)
 
 ```
-LOTRLOME_items/**/*.xml
+ModuleData/**/*.xml   (items AND crafting pieces — see the scope lesson above)
    │  extract_refs()  (attribute-exact, comment-stripped, line-numbered)
    ▼
 MeshRef[]  (name, attr, kind ∈ {visual_mesh, collision_body, prefab}, file, line, item_id, culture)
    │
    ├── Tier A  parse_rgl_log()    the running engine's own content warnings  (AUTHORITATIVE)
    ├── Tier B  build_present_set() Metamesh names from .tpac TOCs            (offline, visual)
-   └── Tier C  bodies_present_in_tpacs() raw-byte scan for bo_ names         (offline, coarse)
+   └── Tier C  build_present_set() PhysicsShape names from .tpac TOCs        (offline, EXACT)
+               └─ falls back to bodies_present_in_tpacs() raw-byte scan only
+                  for packs that soft-failed to parse                        (coarse)
    │  classify()
    ▼
 Issue[]  ──▶ format_report()  (tiers run, counts, grouped missing, interpretation, exit code)
@@ -37,7 +43,7 @@ Issue[]  ──▶ format_report()  (tiers run, counts, grouped missing, interpr
 |------|------------------|----------------|-----------|
 | **A** (needs an rgl_log) | The engine's `rgl_log[_errors]` content warnings from a real session | `RUNTIME_MISSING_BODY` (ERR if item-referenced, INFO if not), `RUNTIME_MISSING_MATERIAL` (WARN), `DUPLICATE_MESH_NAME` (WARN) | **Lead signal** — the only tier that sees the running engine |
 | **B** (offline, visual meshes) | Union of Metamesh names across the `.tpac` tables-of-contents | `MISSING_MESH` (ERR), `UNVERIFIED_MESH` (WARN, degraded), `UNPARSED_TPAC` (WARN) | Reliable offline for *visual* meshes |
-| **C** (offline, opt-in, coarse) | Raw `.tpac` bytes scanned for `bo_` names (bodies aren't in the TOC) | `MISSING_BODY` (ERR) | **Coarse** — a hit means the bytes exist, not that the engine can load it; confirm via Tier A |
+| **C** (offline, opt-in, exact) | Union of `PhysicsShape` names across the `.tpac` tables-of-contents | `MISSING_BODY` (ERR) | Reliable offline for *collision bodies*; falls back to the coarse byte scan only for packs that soft-failed to parse |
 
 Plus `PREFAB_REF` (INFO) — `prefab="X"` is recorded but is not a mesh.
 
@@ -45,8 +51,8 @@ Plus `PREFAB_REF` (INFO) — `prefab="X"` is recorded but is not a mesh.
 - **Engine importable separately from CLI.** `extract_refs_from_text`, `classify`, `scan_tpac_metameshes`, `bodies_present_in_tpacs`, `parse_rgl_text` are pure functions the unit tests call directly with synthetic data — no game install needed (the present-set is injectable, analogous to `Registries` in the ModuleData validator).
 - **Attribute-exact extraction, not "ends-with."** The include set is the exact names `mesh`, `body_name`, `shield_body_name`, `holster_mesh`, `holster_mesh_with_weapon`, `flying_mesh` (derived by grepping the LOTRLOME_Armory + SandBoxCore item XML). This deliberately excludes the look-alike traps `mesh_maturity_type` (enum), `holster_mesh_length` (numeric), `recalculate_body` / `covers_body` (bool). Defensive support for `multi_mesh` / `<meshes>`/`<Mesh name>` is included (0× in the Armory today).
 - **Unparsed `.tpac` degrades, never lies.** On parse drift / suspicious `udep_count`, `scan_tpac_metameshes` soft-fails *that one pack* (records `UNPARSED_TPAC`) instead of aborting the run; any visual mesh that would have been "missing" because of an unparsed pack is downgraded to `UNVERIFIED_MESH` (WARNING) — a false `MISSING_MESH` ERROR is never emitted from an unparsed pack.
-- **Tier C is framed to avoid prefix false-positives.** Bodies are matched as length/NUL-framed tokens (the byte after the needle must not be a name-continuation byte), so `bo_helm` does not match the longer `bo_helm_a`.
-- **Tier C reads each pack once.** `bodies_present_in_tpacs` scans every `.tpac` a single time for ALL body needles (streamed in 64 MB chunks with overlap) — O(total bytes), not O(bodies × bytes) — so it stays tractable against the ~150 Native packs (one is 2.4 GB).
+- **Tier C matches the TOC exactly (corrected in #352).** Collision bodies ARE first-class `.tpac` TOC items (`PhysicsShape`, TYPE_GUID `e8528e0e-64b6-4e61-bae0-7569c0452aea` — `pack1.tpac` exposes 382). The tool originally asserted the opposite ("bodies aren't in the TOC; they live embedded in mesh metadata") and byte-scanned instead, which is why Tier C carried a "coarse, confirm via rgl_log" caveat for a year. The `PhysicsShape` count is confirmed independently two ways: this tool's hand-rolled GUID parse, and TpacTool's own `PhysicsShape.TYPE_GUID` via reflection. Exact-set matching also makes the suffix-typo case (`..._2h` vs the shipped `..._2h_a`) impossible to pass by accident.
+- **The raw-byte scan survives as the degraded fallback.** `bodies_present_in_tpacs` is still used when a pack soft-fails to parse (or Tier B is skipped), so an unreadable pack never produces a false `MISSING_BODY` — same philosophy as `UNVERIFIED_MESH`. It is framed to avoid prefix false-positives (length/NUL-framed tokens, so `bo_helm` does not match `bo_helm_a`) and reads each pack once for ALL needles (64 MB chunks with overlap) — O(total bytes), tractable against the ~150 Native packs (one is 2.4 GB).
 - **Cross-reference is the proof.** A `get_object failed for body: X` line is reported as an ERROR only when a scanned item references `X`; otherwise it's INFO ("likely a scene body"). The live `bo_gondor_brick_rubble_c` warning is a scene body no item references — the tool correctly classifies it INFO, proving the cross-reference works end to end.
 
 ## How to run + interpret
@@ -68,7 +74,8 @@ python tools/validate_mesh_refs.py --no-tier-b
 ```
 
 **Interpreting the result:**
-- **0 missing bodies + 0 missing visual meshes** → the bo-mesh hypothesis is *weakened*; look elsewhere (scene bodies, prefab refs, async asset load order, GPU-driver stalls per `feedback_bannerlord_async_load_check_gpu_first.md`).
+- **0 missing bodies + 0 missing visual meshes** → nothing *in the scanned scope* can cause the hang. Confirm `--items` actually covers every XML that names a body (the #352 trap) before concluding; then look elsewhere (scene bodies, prefab refs, async asset load order, GPU-driver stalls per `feedback_bannerlord_async_load_check_gpu_first.md`).
+- **≥1 missing body** → that is a confirmed hang cause, not a suspect. Check `bodies-present` for a near-match first: both real cases were suffix typos with the correct body shipped one character away, so the fix is the ref, not deleting the item.
 - **N > 0 missing** → those items are *prime suspects*; cross-reference the referencing item ids against troop rosters (`tools/validate_all_troop_refs.py`) to find which troops spawn them, then reproduce a battle with those troops.
 - **Tier A vs Tier B/C can disagree** legitimately: Tier A only sees assets the engine actually touched that session, so an offline `MISSING_BODY` for an item that wasn't spawned won't appear in Tier A. The offline finding is still a real candidate — exercise that item in-game and re-check Tier A to confirm.
 
@@ -98,7 +105,7 @@ Tier A against `rgl_log_errors_77136.txt`: 1 INFO (`bo_gondor_brick_rubble_c`, a
 ## Dependencies
 
 **Python 3 standard library only** (`re`, `json`, `struct`, `argparse`, `dataclasses`, `enum`, `pathlib`) — no pip install. Reads (when present, all overridable via flags):
-- Item XML: `E:\Steam\...\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\` (`--items`)
+- Item + crafting-piece XML: `E:\Steam\...\Modules\LOTRLOME_Armory\ModuleData\` (`--items`; covers `LOTRLOME_items/**` AND the `ModuleData/`-root `LOTRLOME_crafting_pieces.xml`)
 - `.tpac` present-set: `<game>\Modules\{LOTRLOME_Armory,Native,SandBoxCore}\AssetPackages\*.tpac` (`--game`, `--tpac-modules`) — shared meshes live outside the Armory, so the set is the union
 - rgl logs: newest `rgl_log_errors_*.txt` under `C:\ProgramData\Mount and Blade II Bannerlord\logs` (`--rgl-log` / `--no-rgl-log`)
 
@@ -122,6 +129,7 @@ python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 
 ## Changelog
 
+- 2026-07-16 (#352) — **Hypothesis CONFIRMED, and the tool's two blind spots fixed.** A user field report tied a permanent siege-load hang to a missing `bo_` body, so this is now a demonstrated cause rather than a suspect. (1) **Scope:** `--items` defaulted to `ModuleData/LOTRLOME_items/`, but the two live typos sat in `ModuleData/LOTRLOME_crafting_pieces.xml` — the tool never read the file containing the bug it was built for. Default widened to `ModuleData/`. (2) **Tier C:** was a coarse byte-scan because the code asserted bodies "are NOT in the .tpac TOC"; they are (`PhysicsShape`, 382 in `pack1.tpac`, confirmed independently against TpacTool's `PhysicsShape.TYPE_GUID`). Tier C now matches the exact TOC set, byte-scanning only as a fallback for unparsable packs. The clean-run footer no longer claims the hypothesis is "WEAKENED" — it can only ever support "clean within `--items` scope". +3 tests (30 → 33).
 - 2026-06-01 — Added `tools/validate_mesh_refs.py`, a pure-stdlib three-tier mesh / collision-body existence validator (Tier A authoritative `rgl_log` cross-ref, Tier B offline `.tpac` TOC for visual meshes, Tier C coarse `bo_` byte-scan); first run found 3 real Armory data bugs and 30 new tests were added.
 
 ---
@@ -130,6 +138,8 @@ python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 
 ## Referenced by
 
+- [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
 - [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
+- [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

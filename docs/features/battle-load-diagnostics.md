@@ -8,7 +8,9 @@
 
 Users report that entering a battle *sometimes* hangs forever on the loading screen — **no crash, no stack trace**, the battle never initializes. It is intermittent, happens on user machines, and cannot be reproduced locally. A hang ≠ a crash: a crash throws (and TAOM's `CrashReport` feature already captures it); a hang means the **main thread is blocked**, so nothing is thrown and the existing crash pipeline never fires. The existing scene-reference audits (`audit_battle_scenes.py`, `audit_scene_names.py`) only catch *crashes* from missing scene folders, not this hang.
 
-The leading hypothesis (historically the cause) is a missing `bo_` collision mesh on a weapon/shield in `LOTRLOME_Armory`: the engine stalls resolving the absent mesh while spawning an agent that equips that item. The engine even logs this itself — `rgl_log_errors_*.txt` contains `get_object failed for body: bo_X` (see the companion tool [mesh-ref-validation.md](mesh-ref-validation.md)). But the hang could also be scene-side. This feature is **cause-agnostic**: it localizes *any* battle-load hang by phase, so the next user report comes with a log that points at the culprit instead of a shrug.
+A missing `bo_` collision body on a weapon/shield in `LOTRLOME_Armory` is a **confirmed** cause (#352, 2026-07-16), no longer just the leading hypothesis: `PreloadHelper.WaitForMeshesToBeLoaded` polls every registered physics-body name and only exits once each resolves, so one unresolvable name spins the main thread forever. A user traced a permanent siege-load hang to exactly this with ClrMD; the culprit was a one-token `body_name` typo (the asset shipped fine). The engine also logs it itself — `rgl_log_errors_*.txt` contains `get_object failed for body: bo_X`. Catch it offline with the companion tool [mesh-ref-validation.md](mesh-ref-validation.md), and note its lesson: a clean run only means "clean within the scanned scope".
+
+Confirmed ≠ exclusive — the hang can still be scene-side, and #352 hung in *preload*, not agent-spawn. This feature stays **cause-agnostic**: it localizes *any* battle-load hang by phase, so the next user report comes with a log that points at the culprit instead of a shrug.
 
 ## Architecture
 
@@ -60,7 +62,7 @@ The prefix builds an `EquipmentSnapshot` (via `IEquipmentSnapshotAdapter`, readi
 - **`AgentEquipBegin` with a matching `AgentEquipOk`** → that agent equipped fine.
 - **`AgentEquipBegin` with NO matching `AgentEquipOk` (log ends here)** → the freeze is inside that agent's equipment spawn, and the dumped slots name the suspect — look for `bo=<null>` / `shieldBo=<null>`.
 
-`FileLogger` flushes every line on a background writer thread (50 ms poll), so the begin line is on disk within ~50 ms even though the main thread is frozen.
+`FileLogger` writes every `[BattleLoad]` line (INFO) **synchronously on the calling thread**, so the begin line is on disk the moment the call returns — before the engine can freeze *or* crash inside the equip. Until 2026-07-16 it was queued to a background writer with a 50 ms poll, which was adequate for a **hang** (main thread frozen, writer thread alive to drain) but lost the queue outright on a **hard crash**. See "Crash-durability caveat" under *Read a hang log*.
 
 ### The loading window + stall watchdog
 
@@ -124,11 +126,12 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/BattleLoadStallException.cs` | Synthetic exception for the watchdog's bundle call (never thrown into the game) |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
 | `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase` DTOs |
-| `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 6 load-phase hooks + `BattleLoadPhaseBehavior` + the 6 exit-phase hooks (`*_ExitPhase_Patch`, issue #331) |
+| `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 8 load-phase hooks + `BattleLoadPhaseBehavior` + the 6 exit-phase hooks (`*_ExitPhase_Patch`, issue #331) — 14 patch classes total |
 | `Main/Adapters/IEquipmentSnapshotAdapter.cs` / `EquipmentSnapshotAdapter.cs` | ADR-007 boundary: `Agent`/`Equipment`/`ItemObject` → `EquipmentSnapshot` |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsIoC.cs` | DryIoc registrations |
+| `Main/Core/Logging/FileLogger.cs` | **Not part of this feature, but load-bearing for its contract** — INFO/WARNING/ERROR drain synchronously so a stamp survives a hard crash; DEBUG stays async. Changing that reopens the blind window (#350) |
 
-Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` (`OnGameInitializationFinished` applies `Patch43` + starts the watchdog; `OnMissionBehaviorInitialize` adds `BattleLoadPhaseBehavior`).
+Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` — `OnGameInitializationFinished` `Initialize(...)`s all 14 hooks then applies `Patch43` (try/catch-guarded: the category binds a private method by string, and a diagnostics category must never break startup); `OnMissionBehaviorInitialize` adds `BattleLoadPhaseBehavior` and brackets TAOM's own behaviors via the local `AddTaomBehavior` helper, which stamps each by name.
 
 ## Dependencies
 
@@ -139,12 +142,12 @@ Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` (`OnGameInitialization
 
 ## Tests
 
-`TAOM.Tests/Features/BattleLoadDiagnostics/` (50 tests, all green — 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window):
+`TAOM.Tests/Features/BattleLoadDiagnostics/` (72 tests, all green — 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests) — see *Crash-durability caveat*:
 
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
 - `BattleLoadStallWatchdogTests` — `ShouldFire` at/above/below threshold, already-fired, window-closed.
-- `BattleLoadDiagnosticsServiceTests` — disabled = no writes, scene/index/summary in markers, formatter delegation, begin-before-body ordering, status-line update, and **every phase method swallows a throwing logger** (the feature must never crash the game).
+- `BattleLoadDiagnosticsServiceTests` — disabled = no writes, scene/index/summary in markers, formatter delegation, begin-before-body ordering, status-line update, and **every phase method swallows a throwing logger** (the feature must never crash the game). The blind-window stamps add: enabled/disabled per phase, `LogTaomBehaviorAdded_UsesDurableLogInfo_NotLogDebug` (a "it's just noise, make it DEBUG" refactor would silently reopen the window with every test green), and `NewPhaseMethods_DoNotAlterExitWindowState` (the new stamps are pure probes, not latch closers).
 - `BattleLoadStallMarkerTests` — `Format`/`Parse` round-trip (scene + UTC + **absolute** log path), write→consume→delete lifecycle, consume-once, `ClearInflight`, missing-directory creation, and a locked/undeletable marker still surfacing its parsed info (parse-before-delete).
 
 Hooks and the `MissionLogic` are game-only (ADR-008) and verified in-game.
@@ -209,6 +212,9 @@ Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a
 - Master toggle off → every hook early-outs immediately.
 - The watchdog is one thread-pool timer ticking every 5 s; negligible.
 - `seq` uses `Interlocked` and the status line is a `volatile` reference, so the off-thread watchdog reads are torn-free.
+- The blind-window stamps add ~5 lines per load, plus one `TaomBehaviorAdded` per TAOM behavior (~11–15). All fire once per mission load; none is per-frame.
+- **Synchronous INFO is paid on the game thread, and the honest figure is not "a few hundred lines".** Phase 5 emits INFO *per spawning agent*, so a large battle turns ~1000 stamps into game-thread flushes, each also draining the DEBUG queued behind it — during the equip burst the game thread ends up writing most of the log. Budget: ~15 ms across a multi-second load that already does native scene I/O. It is the same total work as before, on a different thread, and it holds **only** because `Flush()` lands in the OS page cache (which a dying process does not lose) — `WriteThrough` would turn each flush into a physical disk write and is deliberately not used. This is load-time, behind a loading screen, and it is the exact window the instrument exists to survive; making those lines async again would reopen #350.
+- Lock contention is bounded by **one `Drain()` batch** (queue depth × per-line write), *not* by the writer's 50 ms poll — the `Thread.Sleep(50)` sits in `ProcessQueue`, outside `Drain()`'s lock, so a durable write can never block on it. (A review agent claimed a 50 ms stall; it conflated the wake interval with lock-hold time. See the RCA.)
 
 ## Related
 
@@ -218,6 +224,8 @@ Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a
 
 ## Changelog
 
+- 2026-07-16 — **Split the `MissionOpenNew` → `MissionInitialize` blind window** (#350) after a player CTD at Nan Angren left a log that could not be localized. Added an `OpenNew` Postfix, the private `MissionState.LoadMission`, the native `Utilities.ClearOldResourcesAndObjects` bracket, and the `Mission.AfterStart` bracket (which lets a log *exonerate* TAOM, not just accuse it), plus per-behavior `TaomBehaviorAdded` stamps. Patch43 went 11 → 14 hooks and its apply is now try/catch-guarded. Registry correction: `Mission.Initialize` is **public** (`Mission.cs:1798`), not private as claimed since this feature shipped.
+- 2026-07-16 — **Made the stamps survive a hard crash.** `FileLogger` queued every line to a background writer (`IsBackground`, 50 ms idle sleep), so a dying process took the undrained queue with it — the forensics instrument systematically lost the lines it exists to capture, which is *why* the Nan Angren log was unlocalizable. INFO/WARNING/ERROR now drain synchronously; DEBUG stays async. Deep review then found 2 MED defects in that fix itself (a post-`Dispose` writer-thread hot-spin; a write fault that failed silently) — both fixed, both pinned by tests. RCA: [rca-battle-load-blind-window-2026-07-16.md](../reviews/rca-battle-load-blind-window-2026-07-16.md).
 - 2026-06-17 — Added the `IBattleLoadStallMarker` / next-session notice: phase 4 writes `Logs/battle-load-inflight.marker`, a surviving marker on next launch surfaces a soft `StallReportNotifier` inquiry with an Open-log-folder button (plus a `battle-load-hang.md` issue template).
 - 2026-06-17 — Added `tools/triage_battle_load.py`, which parses the `[BattleLoad]` lifecycle and prints a one-line EQUIPMENT / EQUIPMENT_CONFIRMED / POST_EQUIP / SCENE / PRE_SCENE verdict naming the stuck agent/item/mesh.
 - 2026-06-17 — Fixed a startup CTD: `BattleLoadStallMarker`'s second public ctor made DryIoc throw `UnableToSelectSinglePublicConstructorFromMultiple`; the test-seam ctor was made `internal`, leaving one public ctor.
@@ -229,7 +237,6 @@ Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a
 
 ## Referenced by
 
-- [docs/features/arena.md](./arena.md)
 - [docs/features/atmosphere-persistence.md](./atmosphere-persistence.md)
 - [docs/INDEX.md](../INDEX.md)
 

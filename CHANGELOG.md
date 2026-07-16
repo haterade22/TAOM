@@ -4,6 +4,51 @@
 
 ## 2026-07-16
 
+### fix(armory): siege load hung forever on two physics-body typos (#352)
+
+Loading a siege with Dunland troops froze the game permanently — no crash, no error log, one CPU
+core at 100%. A user running their own `TAOMAssetLoadGuard` submod traced it with ClrMD to
+`PreloadHelper.WaitForMeshesToBeLoaded`, which polls every registered physics-body name and only
+exits once each resolves. One name that never resolves is an infinite loop on the main thread.
+
+They identified the body — `bo_dunland_caerdh_sword_blade_2h` — but concluded the asset was never
+shipped, and worked around it by replacing the sword with an axe. The asset ships fine:
+`bo_dunland_caerdh_sword_blade_2h_a` sits in `pack1.tpac` alongside the axe blades that work. The
+crafting piece's `mesh` carries the `_a` suffix and its `body_name` doesn't. A one-token typo, so
+the workaround deleted a working sword.
+
+Auditing every `body_name` in the Armory against every `.tpac` found a second, unreported instance:
+`bo_wm_harad_spear_a02_blade` should be `..._a02_head` (Harad spears use `_head`; only swords and
+glaives use `_blade`). It reaches missions through a crafting template rather than a troop roster,
+so it hangs only for players who craft that spear head — which is why nobody had reported it. Those
+two were the only unresolved body refs; the rest resolve against Native.
+
+The uncomfortable part: `tools/validate_mesh_refs.py` was built in #262 to test exactly this
+hypothesis ("a missing `bo_` collision mesh causes infinite battle-load hangs"), and it catches both
+typos at the exact lines — when pointed at the right directory. Its `DEFAULT_ITEMS` scanned
+`ModuleData/LOTRLOME_items/`, while crafting pieces live in `ModuleData/` root. The tool built to
+catch this never looked at the file containing it. Widened the default to `ModuleData/`.
+
+Tier C was also built on a wrong assumption, stated in its own header: that `bo_` bodies are "NOT in
+the .tpac TOC (they live embedded in mesh metadata)", which forced a coarse raw-byte scan needing
+rgl_log confirmation. They are in the TOC, as `PhysicsShape` items — `pack1.tpac` exposes 382, a
+count derived independently two ways (a hand-rolled GUID parse and TpacTool's own
+`PhysicsShape.TYPE_GUID`). Tier C now matches against that exact set and only falls back to the byte
+scan for packs that soft-fail to parse. The clean-run message no longer claims the hypothesis is
+"WEAKENED" — a clean result only ever meant "clean within `--items` scope", which is precisely the
+error that let this ship.
+
+Not adopting the reporter's other change, a 30s timeout on the preload loop that drops unresolvable
+shapes and continues: it converts a loud hang into quiet missing-collision behavior. The validator
+catches this class before ship instead.
+
+RCA (all three "the guard existed but was pointed slightly wrong" failures, incl. this session
+extending the wrong tool off a false-negative grep): `docs/reviews/rca-siege-load-hang-2026-07-16.md`.
+
+Research: PreloadHelper.WaitForMeshesToBeLoaded; TpacTool.Lib PhysicsShape.TYPE_GUID
+Not-tested: in-game siege load (owed)
+
+
 ### fix(battle-load-diagnostics): crash-durable logging + split the OpenNew→Initialize blind window
 
 Triaging a player CTD (TAOM v2.0.12, attacking Deserters at Nan Angren, vanilla scene

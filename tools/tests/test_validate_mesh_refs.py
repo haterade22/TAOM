@@ -218,6 +218,27 @@ class TierCBodyScanTests(unittest.TestCase):
         p = self._tpac_with_token(b"bo_helm_a")
         self.assertFalse(vm.body_present_in_tpacs("bo_helm", [p]))
 
+    def test_toc_present_body_resolves_without_byte_scan(self):
+        # Tier C is exact when a PhysicsShape TOC is available: no .tpac paths are
+        # passed at all, so a pass here can only come from the TOC set.
+        xml = '<Item id="sw" body_name="bo_dunland_caerdh_sword_blade_2h_a" />\n'
+        refs = vm.extract_refs_from_text(xml, "LOTRLOME_crafting_pieces.xml")
+        present = vm.PresentSet(
+            physicsshapes={"bo_dunland_caerdh_sword_blade_2h_a"}, tpac_paths=[])
+        issues = vm.classify(refs, present, rgl=None, scan_bodies=True)
+        self.assertEqual([i for i in issues if i.code == "MISSING_BODY"], [])
+
+    def test_suffix_typo_body_is_flagged_even_though_real_body_ships(self):
+        # The exact #352 shape: the shipped body is `..._2h_a`; the XML says
+        # `..._2h`. A substring-ish check would wrongly pass this.
+        xml = '<Item id="sw" body_name="bo_dunland_caerdh_sword_blade_2h" />\n'
+        refs = vm.extract_refs_from_text(xml, "LOTRLOME_crafting_pieces.xml")
+        present = vm.PresentSet(
+            physicsshapes={"bo_dunland_caerdh_sword_blade_2h_a"}, tpac_paths=[])
+        issues = vm.classify(refs, present, rgl=None, scan_bodies=True)
+        codes = [i.code for i in issues]
+        self.assertIn("MISSING_BODY", codes)
+
     def test_missing_body_classifies_as_error(self):
         xml = '<Item id="sh" shield_body_name="bo_missing" />\n'
         refs = vm.extract_refs_from_text(xml, "gondor/shoulder_armors.xml")
@@ -323,6 +344,29 @@ class TpacBinaryParseTests(unittest.TestCase):
         buf += struct.pack("<i", 0)                 # udep_count = 0
         return bytes(buf)
 
+    @staticmethod
+    def _build_one_item_tpac(name: str, type_guid: bytes) -> bytes:
+        """Same layout as _build_one_metamesh_tpac, with the item type parameterised
+        so PhysicsShape entries can be built too."""
+        buf = bytearray()
+        buf += struct.pack("<I", vm.TPAC_MAGIC)
+        buf += struct.pack("<I", 2)                 # container version 2
+        buf += b"\x11" * 16                         # package_guid
+        buf += struct.pack("<I", 1)                 # num_items
+        buf += struct.pack("<I", 0)                 # padding
+        buf += struct.pack("<I", 0)                 # padding
+        # --- item ---
+        buf += type_guid                            # 16-byte LE type guid
+        buf += b"\x22" * 16                         # item_guid
+        buf += struct.pack("<I", 0)                 # item_ver (ver>1)
+        nb = name.encode("utf-8")
+        buf += struct.pack("<i", len(nb)) + nb      # sized string
+        buf += struct.pack("<q", 0)                 # meta_size = 0
+        buf += struct.pack("<q", 0)                 # checksum
+        buf += struct.pack("<i", 0)                 # seg_count = 0
+        buf += struct.pack("<i", 0)                 # udep_count = 0
+        return bytes(buf)
+
     def test_minimal_metamesh_toc_parses(self):
         f = tempfile.NamedTemporaryFile(suffix=".tpac", delete=False)
         f.write(self._build_one_metamesh_tpac("sk_test_mesh"))
@@ -331,6 +375,18 @@ class TpacBinaryParseTests(unittest.TestCase):
         res = vm.scan_tpac_metameshes(f.name)
         self.assertTrue(res.parsed_ok, f"parse failed: {res.error}")
         self.assertIn("sk_test_mesh", res.metamesh_names)
+
+    def test_physicsshape_toc_item_is_collected_as_a_body(self):
+        # #352: collision bodies ARE first-class TOC items, not raw-byte-only.
+        f = tempfile.NamedTemporaryFile(suffix=".tpac", delete=False)
+        f.write(self._build_one_item_tpac("bo_test_body", vm.PHYSICSSHAPE_TYPE_GUID))
+        f.close()
+        self.addCleanup(lambda: os.unlink(f.name))
+        res = vm.scan_tpac_metameshes(f.name)
+        self.assertTrue(res.parsed_ok, f"parse failed: {res.error}")
+        self.assertIn("bo_test_body", res.physicsshape_names)
+        # A body must not be mistaken for a visual mesh.
+        self.assertNotIn("bo_test_body", res.metamesh_names)
 
     def test_non_metamesh_item_not_collected(self):
         # Same layout but a different type_guid -> should not be collected.
@@ -384,7 +440,7 @@ class ReportTests(unittest.TestCase):
         self.assertIn("gondor", report)
         self.assertIn("rohan", report)
 
-    def test_clean_report_says_pass_and_weakens_hypothesis(self):
+    def test_clean_report_says_pass_and_warns_about_scope(self):
         xml = '<Item id="g" mesh="sk_present" shield_body_name="bo_present" />\n'
         refs = vm.extract_refs_from_text(xml, "gondor/head_armors.xml")
         present = vm.PresentSet(metameshes={"sk_present"}, tpac_paths=["fake.tpac"])
@@ -392,7 +448,10 @@ class ReportTests(unittest.TestCase):
         issues = vm.classify(refs, present, rgl=None, scan_bodies=False)
         report = vm.format_report(issues, refs, present, rgl=None, scan_bodies=False)
         self.assertIn("PASS", report)
-        self.assertIn("WEAKENED", report)
+        # A clean run must NOT read as "the hang can't be a missing body" — #352
+        # proved a clean result only ever meant "clean WITHIN --items scope".
+        self.assertIn("SCANNED SCOPE", report)
+        self.assertNotIn("WEAKENED", report)
 
 
 # --------------------------------------------------------------------------- #
