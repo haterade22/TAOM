@@ -2,6 +2,178 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-16
+
+### feat(tools): Medieval Tent Collection (Fab) → Bannerlord Tents kit
+
+- `tools/oneoff/convert_tent_textures.py`: Substance-style separate maps → `t_tent_*_{d,n,s,h}`
+  triples (user decision: 'clear' white canvas only, dyed variants skipped; parts frame/rope/
+  rivet/fasteners included; `_s` = R:metal/G:gloss/B:AO as the Rivendell kit; DirectX normals).
+  10 sets converted. The vault ships texture zips only for High/Long/Open — **Wide family +
+  On_Sticks textures are missing from the Fab download** (user to fetch; converter re-run covers them).
+- Normalizer generalized: `--kit`/`--physmat` args + no-double-prefix naming. All 9 tents →
+  `AssetSources/Scenes/Tents/tents_medieval_kit.fbx` (ONE kit FBX, Mirkwood pattern): unique
+  `sm_tent_*` ids + `bo_` twins, `wood` physics, material slots stem-matched to the texture sets.
+
+### fix(tools): Rivendell assembled-scene pipeline — root-caused four Blender batch bugs
+
+- Stale `matrix_world` before depsgraph eval; multi-user `transform_apply` silent skip; negative
+  (mirrored) instance scales flipping baked normals; weld destroying paper-thin double-shell drapes.
+  All fixed in `blender_normalize_rivendell.py` (data-level `bake_world`, determinant-gated normal
+  flip, weld only above decimate target). Buildings-as-single-mesh at 300k (`sm_rivendell_bld_*`)
+  shipped but **failed the user's quality bar** (soup decimation melts flat architecture);
+  reconstruction-from-modular-pieces prototyped (92% instance match, `blender_reconstruct_buildings.py`,
+  `blender_dump_level_placements.py`) — first output also rejected; assembled-scene direction
+  PARKED pending user decision against the original UE exports.
+
+## 2026-07-16
+
+### test(deps): pin the BUTR dependency couplings that silently rotted through two engine bumps
+
+A 6-agent `/deep-review` of the 2026-07-15 BUTR update found **no runtime defects** — and one systemic hole: nothing
+in the repo asserted a single dependency coupling, so the Native engine pin sat at `v1.4.5.*` through the 1.4.6
+**and** 1.4.7 bumps, and the vendored impl set stayed capped at the game-1.4.1 build while BUTR shipped through
+1.4.5, all under a continuously-green 4212-test suite. Added
+[`BundledDependencyManifestTests`](TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs) (8 tests):
+compile-pin parity between both csprojs, the v99 stub derivation, vendored-DLL version homogeneity (split-brain
+refresh guard), the Native↔pinned-engine coupling, and licence attribution. It asserts *relationships*, never
+version literals — a test that restates a version is one more drift site. Verified RED against the pre-fix state.
+
+Documentation fixes from the same review (37 stale version lines across 6 files):
+
+- **`Dependencies/_Module/SubModule.xml`** — the loader's pin-comment block was stale on 6 counts. Version values
+  deleted; it now points at the authoritative sources.
+- **`THIRD-PARTY-LICENSES.txt`** — attributed 4 wrong upstream versions for binaries this update physically
+  swapped. Corrected, and now test-enforced. (A binary swap is a licence event, not just a build event.)
+- **`dr3-maintenance.md`** — restructured rather than re-synced: duplicated version values deleted (the Category 1
+  table had already been re-synced once in May and drifted again by July; its stub rows were logged broken in June
+  and were still broken). **Scenario A rewritten** — its "most likely nothing needs to change" advice for a patch
+  bump is what caused this drift. Contradictory stub rules reconciled to the minor-keyed one. The 6
+  `BUTR.CrashReport*` DLLs added to the file inventory and marked MANDATORY — their omission predates this work and
+  would have had a maintainer rebuild a bin folder that reproduces a known `ReflectionTypeLoadException`.
+- **Audit doc** — retracted a **circular** safety argument for keeping `Patch41_McmLayoutFix` (idempotency holds
+  identically in the safe and unsafe cases, so it discriminated nothing). Replaced with evidence: a byte-scan of
+  MCM's embedded prefabs across both releases (`VerticalBottomToTop` ×9→×0, total conserved at 11) proves 5.12.x
+  fixed the attribute. **Patch41 stays anyway** — MCM DLLs are unsigned and resolve by simple name, and another
+  module on the same install ships MCM 5.11.4, so load order decides which prefabs win; if an older MCM wins,
+  Patch41 is still load-bearing.
+
+API compatibility independently verified against the restored DLLs (13 verified / 0 incompatible): Patch41's
+`CreateAndRegister(string, XmlDocument)` target intact, `WidgetFactoryManager` byte-identical 2.13.1→2.13.2,
+`MCMv5.dll` 5.11.4→5.12.1 identical apart from version stamps. Deployed game install verified at 2.13.2.0 /
+5.12.1.0 / 2.11.0.0 with all six impls 1.4.0–1.4.5. RCA:
+[`docs/reviews/rca-butr-dependency-update-2026-07-16.md`](docs/reviews/rca-butr-dependency-update-2026-07-16.md).
+
+Known limitation: the in-game smoke test remains outstanding (launcher was running); no GitHub issue exists for
+this work yet.
+
+## 2026-07-15
+
+### fix(deps): update BUTR stack to current — ButterLib 2.11.0, MCM 5.12.1, UIExtenderEx 2.13.2; Native pin → 1.4.7
+
+Users reported the bundled dependencies looked out of date with 1.4.7. Audited all four BUTR deps against
+NuGet, the BUTR GitHub releases, and the current Steam Workshop installs (full findings + evidence:
+[`docs/migration/dependency-audit-2026-07-15.md`](docs/migration/dependency-audit-2026-07-15.md)) — the
+versions had been static since the May 2026 DR3 internalization, never revisited for the 1.4.6/1.4.7 bumps —
+then applied the updates:
+
+- **Native engine constraint** `v1.4.5.*` → `v1.4.7.*` (`Main/_Module/SubModule.xml`).
+- **ButterLib 2.10.4 → 2.11.0** — refreshed the vendored `Bannerlord.ButterLib.dll` + added the
+  `Implementation.1.4.2`–`1.4.5` DLLs. TAOM previously bundled only `1.4.0`/`1.4.1`, so on a 1.4.7 game the
+  BUTR meta-loader fell back to the implementation built for game 1.4.1; it now selects 1.4.5.
+- **MCM 5.11.4 → 5.12.1** — bumped the `Bannerlord.MCM` NuGet pin (both csprojs) + refreshed the vendored
+  `Bannerlord.MBOptionScreen.v1.4.0`–`v1.4.5` + `MCM.UI.Adapter.MCMv5.dll`. 5.12.1 fixes the upside-down mod
+  list that `Patch41_McmLayoutFix` works around; Patch41 is idempotent (only rewrites
+  `VerticalBottomToTop`→`VerticalTopToBottom`) so it's a harmless no-op against the corrected prefabs — its
+  removal is deferred to an in-game-confirmed cleanup.
+- **UIExtenderEx 2.13.1 → 2.13.2** (both csprojs). **Harmony stays 2.4.2** (already current). Bumped the
+  ButterLib + MBOptionScreen `.99` stub versions to match; polyfills/CrashReport/ModuleLoader verified
+  byte-identical to current Workshop (no drift).
+
+Build 0 errors, suite green (4212 passed); restored runtime DLLs confirmed UIExtenderEx 2.13.2.0 /
+MCMv5 5.12.1.0 / 0Harmony 2.4.2.0. **Pending: close the launcher, deploy, and in-game-verify the MCM options
+screen renders top-to-bottom** (and whether `[McmLayoutFix]` still logs flips — the signal to delete Patch41).
+
+Save-compat: dependency DLLs + module metadata only; no save-data impact.
+
+### fix(battle-tactics): SmartCavalryAI + MixedFormations no longer run outside open-field battles
+
+A playtester's first siege hard-crashed to desktop — native CTD, no managed exception, nothing caught by
+the crash pipeline — during OrderOfBattle formation distribution ~1s after the battle became playable
+(engine v1.4.6.115628, TAOM v2.0.12; siege of Grymmclúd on `sturgia_castle_c`). Two TAOM formation features
+had **no mission-type guard** and could manipulate formations mid-siege: **SmartCavalryAI** (`Patch31`, a
+`Formation.SetMovementOrder` postfix) synchronously re-enters native `Formation.SetPositioning` /
+`SetMovementOrder` on a player-team cavalry-classed formation; **MixedFormations** (`Patch30`, a
+`Formation.GetOrderPositionOfUnit` prefix) overrides unit slots. Both are open-field-only by design. Gated
+both on the engine's `Mission.IsFieldBattle` (true ONLY for `MissionTeamAIType == FieldBattle`; false for
+siege / sally-out / hideout / naval / settlement missions — verified v1.4.7 `Mission.cs:1373`):
+
+- **SmartCavalryAI** — added `IsFieldBattle` to `IBattlefieldQueryAdapter` (already injected into
+  `CavalryChargeService`) and gated `HandleChargeOrder` + `Tick`; fully unit-tested (+2 regression tests).
+- **MixedFormations** — guarded the two thin entry points: the `Patch30` prefix (first line, before the
+  ~40,000×/frame hot path allocates) and `MixedFormationsMissionBehavior.OnMissionTick` (suppresses both
+  auto-layout and the manual cycle hotkey in non-field missions). Entry points are game-tested per ADR-008.
+
+Correct-by-design defensive guards — open-field features should never touch siege formations. They are **not
+yet confirmed** as this crash's root cause (that awaits the player's Windows Event Log fault offset), and
+SmartCavalryAI ships OFF by default so it could only have fired if the player opted in. A separate leading
+hypothesis (a `cave_troll` garrison agent) was investigated and **de-prioritised**: the Armory snapshot shows
+the troll is a valid humanoid with a non-degenerate collision capsule ("confirmed working in battle"), so a
+troll fix would be speculative + gameplay-changing and is deferred pending an actual repro. Suite green (4214).
+
+Files: `Main/Adapters/IBattlefieldQueryAdapter.cs` + `BattlefieldQueryAdapter.cs`,
+`Main/Features/SmartCavalryAI/CavalryChargeService.cs`,
+`Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs` +
+`MixedFormationsMissionBehavior.cs`, `TAOM.Tests/Features/SmartCavalryAI/CavalryChargeServiceTests.cs`.
+Research: `Mission.IsFieldBattle`, `SandBoxMissions` team-AI-type mapping.
+Not-tested: Harmony prefix/postfix + MissionBehavior entry points (game-tested per ADR-008).
+Constraint: `SiegeMissionNoDeployment` relief-force assaults are engine-tagged `FieldBattle`, so both features
+still run there — acceptable (genuine maneuvering battle), documented rather than chased.
+
+### feat(tools): UE 5.1 → Bannerlord conversion pipeline for the ElvenForestCity kit (Rivendell)
+
+- The purchased "Environment 3D Cosmos — ElvenForestCity" kit ships as a UE 5.1 project (~511 static-mesh
+  uassets + assembled city levels), not FBX. Three one-off scripts convert it into a Bannerlord Rivendell
+  kit at `TAOM_Map/AssetSources/Scenes/Rivendell/`, following the Erebor kitbash conventions:
+  - `tools/oneoff/ue_export_rivendell.py` — UE editor Python: bulk FBX export (UCX riding along, LOD0
+    only), Texture2D → TGA, and a mesh→material→texture-parameter bindings JSON (parent-chain walk).
+    Runs headless via `UnrealEditor-Cmd -ExecutePythonScript` once UE 5.1 is installed.
+  - `tools/oneoff/blender_normalize_rivendell.py` — headless Blender batch: cm→m guard, lowercase
+    `sm_rivendell_*` renaming (engine lowercases on import), `m_rivendell_*` slot renames, `bo_` collision
+    twins (UCX/bo_ joined when present, decimated copy or hull otherwise; foliage skips), 150k-tri visual
+    decimate cap, per-FBX meshlist dumps for a future kitbash builder, CSV report. Blender here is the
+    MS-Store app — invoke via `blender-launcher.exe` (detaches; completion = `_normalize_report/DONE.txt`).
+  - `tools/oneoff/convert_rivendell_textures.py` — metal-rough → spec-gloss: `t_rivendell_*_{d,n,s}.png`
+    with `_s` = R:metallic / G:gloss / B:AO (EMPIRICAL — derived from the shipped Gondor/Mirkwood `_s`
+    maps: metal lamps R bimodal 0/255, stone statue R=0, B tracks crevices). Metallic defaults OFF: the
+    kit's ChannelMaps carry constant B=255, and reading that as metallic blacked out the diffuse in live
+    testing — a constant-high metal channel is now refused even when requested.
+- Smoke-tested without UE: converter verified on the kit's loose foliage textures (alpha masks kept);
+  normalizer verified on a kit shrub + a Gondor building FBX (decimate 200929→149998, correct bo_ pairing).
+- **Batch ran same day** (user installed UE 5.7.4 — content-only 5.1 project opens forward, export-only):
+  460/460 meshes exported and normalized via 8 parallel Blender shards, zero errors (collision: 406 UCX /
+  27 generated / 27 foliage-skip; 14 Nanite meshes hit the 150k-tri cap); 745/745 textures exported
+  (20 TGA failures recovered as PNG via `ue_export_rivendell_fixup.py`); 217 spec-gloss sets converted.
+  ORM packing confirmed from master-material parameter names via `analyze_rivendell_bindings.py`
+  (31 masters; 82 `MM_RGB_Masking` meshes simplified to their Tileable_* triple; `_B` = BaseColor quirk).
+- **Material naming (user decision, revised once):** FBX material slots are named after their texture
+  set INCLUDING the `t_` prefix — material `t_rivendell_dining_set` binds `t_rivendell_dining_set_{d,n,s}` —
+  a deliberate Rivendell-scoped departure from the kitbash `m_`/`t_` prefix split, chosen so editor
+  material creation points straight at its textures. Same-set UE instances merged: 308 instances →
+  **212 final materials** (`build_rivendell_material_sheet.py` → `material_rename_map.json` +
+  `material_sheet.csv`, every texture ref existence-checked, 0 missing).
+- **Material tpac generation** (`generate_rivendell_materials.py`): the Modding Kit's per-material
+  `*_mtl.tpac` format was reverse-engineered from the user's hand-made materials (container layout =
+  `tpac_skeleton_inject.py`; three 16-byte texture-GUID slots at meta offsets 106/126/146 for this
+  shader config; the 8-byte checksum is **not validated by the editor** — copied verbatim from the
+  template after a 9-algo × 7-slice sweep found no match; pilot validated in-editor before batching).
+  All **196 texture-bearing materials generated** (never overwrites hand-made files; name-convention
+  fallback binds same-named textures when the UE master bound no param). 16 translucent specials
+  remain manual.
+- Owed: mesh re-import (stale mixed-vintage _geo.tpac) + foliage material flags (alpha/two-sided —
+  diff-one-then-batch) + in-editor smoke test → `docs/kitbash/rivendell/` catalog. Pass-2:
+  scalar Metallic/Roughness for no-ORM sets, per-category tri budgets, emissive maps, full-city reference.
+
 ## 2026-07-14
 
 ### fix(settlement-guards): cave trolls no longer spawn as visible town/castle guards (#346)

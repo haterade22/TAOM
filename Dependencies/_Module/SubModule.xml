@@ -66,28 +66,41 @@
 	<SubModules>
 		<!--
 		DR3 (2026-05-22): TAOM.Dependencies bundles the entire BUTR stack as
-		runtime DLLs. Version pins:
-		  - Lib.Harmony 2.4.2 (NuGet → 0Harmony.dll, deployed automatically)
-		    TAOM source uses HarmonyPatchCategoryAttribute (Harmony 2.3.0+).
-		    All BUTR DLLs pin to `0Harmony Version=2.2.2.0` in metadata, but
-		    0Harmony.dll has PublicKeyToken=null (un-strong-named) so the CLR
-		    binder matches by simple name only and version mismatch is benign.
-		    SubModule.cs registers an AssemblyResolve handler as belt-and-braces
-		    that returns the loaded 0Harmony for any requested version.
-		  - Bannerlord.UIExtenderEx 2.13.1 (NuGet → Bannerlord.UIExtenderEx.dll)
-		  - Bannerlord.MCM 5.11.4 (NuGet → MCMv5.dll — API only; aligned with
-		    vendored MBOptionScreen UI version)
-		  - ButterLib 2.10.4 + Implementation.1.4.{0,1}.dll (vendored from
-		    Steam Workshop 2859232415)
-		  - BUTR.CrashReport family v14.0.0.99 (6 DLLs, vendored from the same
-		    ButterLib release — ButterLib references these in metadata; missing
-		    them caused ReflectionTypeLoadException on ButterLib's type
-		    enumeration at SubModule init).
-		  - MBOptionScreen v5.11.4 + .v1.4.{0,1}.dll + ModuleLoader (vendored
-		    from Steam Workshop 2859238197)
+		runtime DLLs.
 
-		Covers Bannerlord 1.4.5 via BUTR meta-loader version dispatch (picks
-		Implementation.1.4.1.dll + MBOptionScreen.v1.4.1.dll at runtime).
+		Exact version numbers are deliberately NOT restated here — a comment that
+		duplicates a pin is a drift site, and this block was stale for two engine
+		bumps before the 2026-07-15 refresh caught it. Authoritative sources:
+		  - NuGet pins      → Dependencies/TAOM.Dependencies.csproj <PackageReference>
+		                      (Lib.Harmony → 0Harmony.dll; Bannerlord.UIExtenderEx;
+		                      Bannerlord.MCM → MCMv5.dll, API only, kept aligned
+		                      with the vendored MBOptionScreen UI version)
+		  - Vendored DLLs   → the files in _Module/bin/Win64_Shipping_Client/
+		                      (ButterLib + Implementation.1.4.*.dll from Steam
+		                      Workshop 2859232415; MBOptionScreen + .v1.4.*.dll +
+		                      ModuleLoader + MCM.UI.Adapter from Workshop 2859238197)
+		  - Engine target   → Main/_Module/SubModule.xml's Native DependedModuleMetadata
+		  - Enforced by     → TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs
+		  - Bump procedure  → docs/migration/dr3-maintenance.md
+
+		Harmony binding note: TAOM source uses HarmonyPatchCategoryAttribute
+		(Harmony 2.3.0+). All BUTR DLLs pin `0Harmony Version=2.2.2.0` in their
+		metadata, but 0Harmony.dll has PublicKeyToken=null (un-strong-named) so
+		the CLR binder matches by simple name only and the version mismatch is
+		benign. SubModule.cs registers an AssemblyResolve handler as
+		belt-and-braces that returns the loaded 0Harmony for any requested version.
+
+		BUTR.CrashReport family (6 DLLs) is vendored from the same ButterLib
+		release — ButterLib references these in metadata; missing them caused
+		ReflectionTypeLoadException on ButterLib's type enumeration at
+		SubModule init. They are NOT optional.
+
+		The BUTR meta-loader dispatches by installed game version, selecting the
+		highest Implementation.1.4.*.dll / MBOptionScreen.v1.4.*.dll whose
+		version suffix is <= the running engine. The suffix names the game build
+		BUTR compiled against, not a version TAOM supports — so a gap between the
+		newest bundled impl and the Native pin is expected whenever BUTR has not
+		yet shipped an impl for the current engine.
 
 		End-user launcher needs ONLY TAOM and TAOM.Dependencies enabled —
 		no external Bannerlord.Harmony / .UIExtenderEx / .ButterLib /

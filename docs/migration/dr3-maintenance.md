@@ -12,25 +12,30 @@ The dependencies fall into three categories:
 
 ### Category 1 — NuGet packages (deploy automatically on build)
 
-These are pulled via `<PackageReference>` in `Dependencies/TAOM.Dependencies.csproj`:
+These are pulled via `<PackageReference>` in `Dependencies/TAOM.Dependencies.csproj`.
 
-| Package | Version pin | What it provides |
-|---|---|---|
-| `Lib.Harmony` | `2.4.2` | `0Harmony.dll` (Harmony 2.x + MonoMod + Cecil + Iced ILRepack'd) |
-| `Bannerlord.UIExtenderEx` | `2.13.1` | `Bannerlord.UIExtenderEx.dll` |
-| `Bannerlord.MCM` | `5.11.4` | `MCMv5.dll` (the MCM API — settings attributes, base classes) |
-| `System.Runtime.CompilerServices.Unsafe` | `6.0.0` | `System.Runtime.CompilerServices.Unsafe.dll` (Harmony dep) |
-| `Harmony.Extensions` | `3.2.0.77` | Source-only extension methods |
-| `BUTR.Harmony.Analyzer` | `1.0.1.50` | Roslyn analyzer (compile-time only) |
-| `Bannerlord.BuildResources` | `1.1.0.129` | MSBuild tasks for module deployment |
+> **This table deliberately carries NO version numbers.** `Dependencies/TAOM.Dependencies.csproj` is the single source of truth for every pin — read it there. A doc that restates a pin is a drift site: this table lagged the csproj for months (caught 2026-05), its stub list drifted again in June ([`plans/_audit/2026-06-12-harvest.md`](../../plans/_audit/2026-06-12-harvest.md) DEPS-05/06), and the whole stack silently rotted through the 1.4.6 **and** 1.4.7 engine bumps before the [2026-07-15 audit](dependency-audit-2026-07-15.md) caught it. The coupling invariants are now enforced by [`BundledDependencyManifestTests`](../../TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs) — a stale pin fails the build, not a code review.
+
+| Package | What it provides |
+|---|---|
+| `Lib.Harmony` | `0Harmony.dll` (Harmony 2.x + MonoMod + Cecil + Iced ILRepack'd) |
+| `Bannerlord.UIExtenderEx` | `Bannerlord.UIExtenderEx.dll` |
+| `Bannerlord.MCM` | `MCMv5.dll` (the MCM API — settings attributes, base classes) |
+| `System.Runtime.CompilerServices.Unsafe` | `System.Runtime.CompilerServices.Unsafe.dll` (Harmony dep) |
+| `Harmony.Extensions` | Source-only extension methods |
+| `BUTR.Harmony.Analyzer` | Roslyn analyzer (compile-time only) |
+| `Bannerlord.BuildResources` | MSBuild tasks for module deployment |
 
 **Update procedure:**
 1. Open `Dependencies/TAOM.Dependencies.csproj` in an editor.
 2. Bump the `Version=` attribute of the relevant `<PackageReference>`.
-3. **For `Lib.Harmony` / `Bannerlord.UIExtenderEx` / `Bannerlord.MCM` bumps**: ALSO bump the matching stub `<Version>` in `Stubs/Bannerlord.Harmony/_Module/SubModule.xml` (or `.UIExtenderEx`, `.MBOptionScreen` — note: MCM's stub is `Bannerlord.MBOptionScreen`). Third-party mods may pin the stub via `<DependedModuleMetadata version="..."/>`; drift here silently fails BLSE-enforced version checks. See "Stub modules" section below.
-4. Run `dotnet restore Dependencies/TAOM.Dependencies.csproj`.
-5. Run `./build.ps1 -RunTests` — must pass.
-6. Run smoke test (see "Verification" below).
+3. **Keep `Main/TAOM.csproj` in lockstep** — it pins the same three packages with `IncludeAssets="compile"`. Compile-time (Main) and runtime (Dependencies) MUST match or you risk `MissingMethodException` on APIs only in the newer build.
+4. **If the bump crosses a MINOR** (e.g. 2.4.x → 2.5.x, 5.11.x → 5.12.x): ALSO bump the matching stub `<Version>` to the new minor's `.99.0` in `Stubs/Bannerlord.Harmony/_Module/SubModule.xml` (or `.UIExtenderEx`, `.MBOptionScreen` — note: MCM's stub is `Bannerlord.MBOptionScreen`). A **patch** bump within the same minor needs no stub edit — the `.99.0` sentinel already covers it. See the v99 rule under "Stub modules" below.
+5. Run `dotnet restore Dependencies/TAOM.Dependencies.csproj`.
+6. Run `./build.ps1 -RunTests` — must pass. (If Bannerlord is open and you only need build+test signal, `dotnet build TAOM.sln -p:DisableModuleCopy=true` + `dotnet test` skips the game-install deploy — but it does NOT prove the deploy, so the smoke test below is still owed.)
+7. Run smoke test (see "Verification" below).
+
+Steps 3 and 4 are enforced by [`BundledDependencyManifestTests`](../../TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs) — if you forget either, `dotnet test` fails with the expected value.
 
 **Build prerequisite:** Bannerlord must be CLOSED during `./build.ps1`. The MSBuild `PostBuildCopyToModules` step deploys DLLs (including `0Harmony.dll`) directly into the game install — if Bannerlord is running, those files are file-locked and the build fails with `UnauthorizedAccessException`. Close the game, retry build.
 
@@ -38,15 +43,18 @@ These are pulled via `<PackageReference>` in `Dependencies/TAOM.Dependencies.csp
 
 These DLLs are NOT on NuGet. They're distributed as Bannerlord modules via Steam Workshop or NexusMods. We bundle them in `Dependencies/_Module/bin/Win64_Shipping_Client/`:
 
-| Module / DLL | Source (Steam Workshop ID) | Where to copy from |
+Patterns, not a fixed list — the impl set grows every time BUTR ships a build for a new game version. The DLLs on disk in `Dependencies/_Module/bin/Win64_Shipping_Client/` are the source of truth for what we currently vendor.
+
+| Module / DLL pattern | Source (Steam Workshop ID) | Where to copy from |
 |---|---|---|
 | `Bannerlord.ButterLib.dll` | `2859232415` | `E:\Steam\steamapps\workshop\content\261550\2859232415\bin\Win64_Shipping_Client\` |
-| `Bannerlord.ButterLib.Implementation.1.4.0.dll` | `2859232415` | same as above |
-| `Bannerlord.ButterLib.Implementation.1.4.1.dll` | `2859232415` | same as above |
-| `Bannerlord.MBOptionScreen.v1.4.0.dll` | `2859238197` | `E:\Steam\steamapps\workshop\content\261550\2859238197\bin\Win64_Shipping_Client\` |
-| `Bannerlord.MBOptionScreen.v1.4.1.dll` | `2859238197` | same as above |
+| `Bannerlord.ButterLib.Implementation.<game-ver>.dll` (**all** of them ≤ the engine you target) | `2859232415` | same as above |
+| `Bannerlord.MBOptionScreen.v<game-ver>.dll` (**all** of them) | `2859238197` | `E:\Steam\steamapps\workshop\content\261550\2859238197\bin\Win64_Shipping_Client\` |
 | `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll` | `2859238197` | same as above |
 | `MCM.UI.Adapter.MCMv5.dll` | `2859238197` | same as above |
+| `BUTR.CrashReport*.dll` (6 files) | `2859232415` | same as ButterLib — **not optional**, see the inventory note below |
+
+> **The `<game-ver>` suffix names the game build BUTR compiled that impl against — not a version TAOM supports.** The meta-loader picks the highest impl whose suffix is ≤ the running engine. So a gap between the newest bundled impl and the Native pin is normal whenever BUTR hasn't shipped an impl for the current engine yet (e.g. on 1.4.7 the loader correctly runs the `1.4.5` impl, because BUTR ships nothing newer). Bundling only a stale subset is the actual bug — see Scenario A.
 
 **Steam Workshop folder mapping (Bannerlord app ID = 261550):**
 - `2859188632` — Bannerlord.Harmony (we DON'T bundle this DLL — we use Lib.Harmony NuGet instead)
@@ -123,7 +131,7 @@ A separate pool of vendored DLLs lives in `Main/_Module/bin/Win64_Shipping_Clien
    ```pwsh
    Get-ChildItem "$env:BANNERLORD_GAME_DIR\Modules\TAOM.Dependencies\bin\Win64_Shipping_Client\" | Select-Object Name, LastWriteTime
    ```
-   - Should show ~25 DLLs with timestamps matching the build.
+   - Should match the file inventory at the bottom of this doc, with timestamps matching the build.
 4. **Launch Bannerlord** via Steam.
 5. **Check the launcher's enabled modules:** Only `TAOM` + `TAOM.Dependencies` (plus Native/SandBox/SandBoxCore/CustomBattle) should be required. `Bannerlord.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `Bannerlord.MBOptionScreen` should NOT be required.
 6. **Confirm in-game:**
@@ -134,15 +142,20 @@ A separate pool of vendored DLLs lives in `Main/_Module/bin/Win64_Shipping_Clien
    - Change a value, exit Options, re-enter — value persists.
 
 If any of these fail, the most common causes are:
-- Workshop folder didn't have the expected version (Bannerlord 1.4.5 has BUTR 1.4.1 builds; if you're on 1.5.0 and BUTR hasn't shipped 1.5.x yet, MCM/ButterLib won't load).
+- Workshop folder didn't have an impl at or below your engine version (if you're on a new minor and BUTR hasn't shipped a matching build yet, MCM/ButterLib won't load — see "BUTR ships behind Bannerlord").
 - DLL got corrupted on copy (re-copy from Workshop).
 - SubModule.xml version constraint doesn't match installed Bannerlord (check `Main/_Module/SubModule.xml`'s `DependedModuleMetadata id="Native" version=` line).
 
 ## Common scenarios
 
-### Scenario A: Bannerlord ships 1.4.6 (minor patch within 1.4 line)
+### Scenario A: Bannerlord ships a patch within the current minor (e.g. 1.4.6 → 1.4.7)
 
-Most likely: nothing needs to change. BUTR 1.4.1 builds typically work across all 1.4.x patches. Just bump `Main/_Module/SubModule.xml`'s Native version constraint to `v1.4.6.*` and run the smoke test.
+**This scenario's old advice ("most likely nothing needs to change") is what caused the 2026-07 drift — it was followed literally on both the 1.4.6 and 1.4.7 bumps, and both the Native pin and the vendored impl set went stale.** Do all of:
+
+1. **Bump `Main/_Module/SubModule.xml`'s Native constraint** to the new version (`v<new>.*`). Enforced by `BundledDependencyManifestTests.NativeConstraint_MatchesPinnedGameVersion` against `.claude/pinned-game-version.txt`.
+2. **Re-check the Workshop impl set.** BUTR ships new `Implementation.<game-ver>.dll` / `MBOptionScreen.v<game-ver>.dll` builds on its own cadence, independent of the engine. If the Workshop folders now hold impls newer than what we vendor, copy them in — otherwise the meta-loader silently keeps selecting an older impl than BUTR intends. (This is exactly what happened: TAOM shipped only `1.4.0`/`1.4.1` while BUTR had shipped through `1.4.5`.)
+3. **Re-check the NuGet pins** (`Lib.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.MCM`) against current releases. An engine patch is a natural checkpoint even though these version independently of the game.
+4. Run the smoke test.
 
 ### Scenario B: Bannerlord ships 1.5.0 (new minor version)
 
@@ -187,11 +200,7 @@ Process:
 
 To preserve compatibility with third-party Bannerlord mods that declare `<DependedModule Id="Bannerlord.Harmony"/>` (or `.ButterLib` / `.UIExtenderEx` / `.MBOptionScreen`) in their `SubModule.xml`, TAOM.Dependencies ships **four passive stub modules** at the standard BUTR IDs.
 
-Each stub is a single ~20-line `SubModule.xml` at:
-- `Modules/Bannerlord.Harmony/_Module/SubModule.xml` — `<Id value="Bannerlord.Harmony"/>` v2.4.2
-- `Modules/Bannerlord.UIExtenderEx/_Module/SubModule.xml` — `<Id value="Bannerlord.UIExtenderEx"/>` v2.13.1
-- `Modules/Bannerlord.ButterLib/_Module/SubModule.xml` — `<Id value="Bannerlord.ButterLib"/>` v2.10.4
-- `Modules/Bannerlord.MBOptionScreen/_Module/SubModule.xml` — `<Id value="Bannerlord.MBOptionScreen"/>` v5.11.4
+Each stub is a single ~20-line `SubModule.xml` deployed to `Modules/<ID>/_Module/SubModule.xml`, for the four standard BUTR IDs: `Bannerlord.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `Bannerlord.MBOptionScreen`. Their `<Version>` values are NOT listed here — read `Stubs/<ID>/_Module/SubModule.xml`, and see the v99 rule below for how each is derived.
 
 Source files live in `Stubs/<ID>/_Module/SubModule.xml` and are deployed by the `DeployTAOMDependenciesStubs` MSBuild target in `Dependencies/TAOM.Dependencies.csproj` (fires `AfterTargets="PostBuildCopyToModules"`).
 
@@ -203,9 +212,18 @@ Each stub:
 
 **DR3 Phase 4 update (2026-05-27):** each stub now ships a real `<SubModule>` entry referencing `TAOM.Dependencies.AliasStubSubModule` (a try/catch-wrapped `MBSubModuleBase`), superseding the original empty-`<SubModules />` design described above — this is the early-phase install point for the defensive infrastructure (see "Defensive infrastructure" below). No BUTR DLLs load from the stub itself.
 
-**Maintenance rule:** when a `PackageReference` version in `Dependencies/TAOM.Dependencies.csproj` changes (or a vendored BUTR DLL is updated), the corresponding stub's `<Version>` must be bumped to match. Third-party mods with strict version constraints via `<DependedModuleMetadata>` will see the stub's version as the authoritative answer for "what version of Harmony is available?".
+**Maintenance rule (v99 strategy, BetaDeps parity, DR3 Phase 4 — 2026-05-25):** stub `<Version>` values use the `vX.Y.99.0` pattern, where `X.Y` is the **minor** of the version we actually ship (the `PackageReference` pin for Harmony/UIExtenderEx/MCM; the vendored DLL's own version for ButterLib). They are deliberately NOT exact-match to the shipped DLL.
 
-**Maintenance rule (v99 strategy, BetaDeps parity, DR3 Phase 4 — 2026-05-25):** stub `<Version>` values use the `vX.Y.99.0` pattern, not exact-match to the shipped DLL version. Third-party mods often declare `<DependedModuleMetadata version="vX.Y.x"/>` as a minimum-version check; v99 satisfies any reasonable v2.4.x / v2.13.x / v2.10.x / v5.11.x lower-bound without claiming a major-version jump. When a `PackageReference` BUMPS its minor (e.g., Lib.Harmony 2.4.x → 2.5.x), bump the matching stub to the new minor's `.99.0` (Harmony 2.5.99.0). The vanilla launcher does not enforce these constraints at all, but BLSE-enforced minimum-version checks rely on the stub version being the answer to "what version is available?".
+Third-party mods often declare `<DependedModuleMetadata version="vX.Y.x"/>` as a minimum-version check; the `.99.0` sentinel satisfies any reasonable lower-bound within that minor without claiming a major-version jump. Consequences:
+
+- **Minor bump** (e.g. Harmony 2.4.x → 2.5.x, MCM 5.11.x → 5.12.x) → bump the stub to the new minor's `.99.0`.
+- **Patch bump** (e.g. UIExtenderEx 2.13.1 → 2.13.2) → **no stub edit**; `v2.13.99.0` already covers it.
+- The vanilla launcher does not enforce these constraints at all; BLSE does.
+- Caveat (see the Harmony stub's own comment): a legacy mod declaring a strict `v2.4.0.*` wildcard will NOT match `v2.4.99.0`.
+
+Both derivations are enforced by [`BundledDependencyManifestTests`](../../TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs) — you cannot forget the minor bump silently.
+
+> An earlier revision of this section also carried a stricter rule ("bump the stub whenever *any* version changes"), which contradicted the minor-keyed rule above on the patch-bump case. The minor-keyed rule is correct and the contradiction is removed (2026-07-16).
 
 **Red `(!)` icon on third-party mods:** this is the launcher's `IsDangerous` flag (`LauncherModuleVM.cs:280-282`) fired by TaleWorlds's `LauncherDLLData` code-verification system whenever an unsigned/third-party DLL is detected. It is a permanent warning tooltip ("Couldn't verify some or all of the code included in this module") and is **independent of toggleability** — every non-Bannerlord mod gets it. Do not mistake it for a missing-dep error. The two phenomena (`IsDisabled` = greyed/un-toggleable from missing deps, vs `IsDangerous` = red icon from unsigned code) are separate concepts in the launcher source.
 
@@ -269,11 +287,13 @@ Additionally, if the external module folder somehow survives our stub deploy (e.
 
 ### BUTR ships behind Bannerlord (HIGH)
 
-**Symptom:** Bannerlord 1.5.0 releases. BUTR hasn't shipped 1.5.x builds yet. Our bundled `Implementation.1.4.1.dll` is the closest version the loader can pick.
+**Symptom:** Bannerlord ships a new minor. BUTR hasn't shipped a matching impl yet, so our newest bundled `Implementation.<game-ver>.dll` is the closest the loader can pick.
 
-**Risk:** The fallback impl makes API calls that broke between 1.4.x → 1.5.0. ButterLib / MCM crashes at startup.
+**Risk:** The fallback impl makes API calls that broke across the minor boundary. ButterLib / MCM crashes at startup.
 
-**Mitigation:** **Do not upgrade Bannerlord until BUTR ships matching builds.** Use the `Bannerlord.dual-dll-setup.md` procedure (Steam backup of 1.4.5 install) to roll back if you accidentally updated.
+**Mitigation:** **Do not upgrade Bannerlord until BUTR ships matching builds.** Use the `dual-dll-setup.md` procedure (Steam backup of your last-known-good install) to roll back if you accidentally updated.
+
+> Note this risk applies at a **minor** boundary. Within a minor, running an older impl than the engine is normal and expected — BUTR does not ship an impl per patch.
 
 ### Fresh clone on non-Steam machine (HIGH)
 
@@ -302,9 +322,11 @@ Additionally, if the external module folder somehow survives our stub deploy (e.
 
 ### Bundled Implementation falls back wrong version (MED)
 
-**Symptom:** Bannerlord version is 1.4.5. BUTR's meta-loader picks our `Implementation.1.4.1.dll` (closest match ≤ 1.4.5).
+**Symptom:** BUTR's meta-loader picks an older bundled `Implementation.<game-ver>.dll` than the running engine (it selects the closest match ≤ the game version). This is normal *if* it's the newest impl BUTR ships — it's a **bug** if we simply failed to vendor the newer impls BUTR has released (the 2026-07 case: we shipped `1.4.0`/`1.4.1` while BUTR had `1.4.5`).
 
-**Risk:** If 1.4.1 → 1.4.5 has an API break in the methods Implementation calls, runtime crash.
+**Risk:** If the gap spans an API break in the methods Implementation calls, runtime crash.
+
+**First check:** compare the impls in the Workshop folder against ours. If BUTR has newer ones, this is a vendoring miss — copy them in (Category 2).
 
 **Mitigation:** Test smoke (see "Verification" above) catches this. If MCM tab fails to render or settings crash on access, check `mb.log` for `TypeLoadException` / `MissingMethodException`. Fix by:
 - Updating SubModule.xml's `LoaderFilter` to specifically reference the version that's known-working
@@ -321,7 +343,7 @@ For the wider TAOM team:
 
 ## Reference: file inventory
 
-After a fresh build, `Dependencies/_Module/bin/Win64_Shipping_Client/` should contain exactly these files:
+After a fresh build, `Dependencies/_Module/bin/Win64_Shipping_Client/` should contain these files. The `Implementation.*` / `MBOptionScreen.v*` sets are **open-ended** — one per game version BUTR has shipped a build for, so the count grows over time. Check the folder itself, not this list, for the current set.
 
 ```
 0Harmony.dll                                                  (NuGet — Lib.Harmony)
@@ -331,12 +353,16 @@ System.Runtime.CompilerServices.Unsafe.dll                    (NuGet — Lib.Har
 TAOM.Dependencies.dll                                         (built from our source)
 TAOM.Dependencies.pdb                                         (built from our source)
 Bannerlord.ButterLib.dll                                      (vendored from Workshop 2859232415)
-Bannerlord.ButterLib.Implementation.1.4.0.dll                 (vendored)
-Bannerlord.ButterLib.Implementation.1.4.1.dll                 (vendored)
-Bannerlord.MBOptionScreen.v1.4.0.dll                          (vendored from Workshop 2859238197)
-Bannerlord.MBOptionScreen.v1.4.1.dll                          (vendored)
+Bannerlord.ButterLib.Implementation.<game-ver>.dll  × N       (vendored — one per BUTR-supported game build)
+Bannerlord.MBOptionScreen.v<game-ver>.dll           × N       (vendored from Workshop 2859238197)
 Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll         (vendored)
 MCM.UI.Adapter.MCMv5.dll                                      (vendored)
+BUTR.CrashReport.dll                                          (vendored — ButterLib dep, MANDATORY)
+BUTR.CrashReport.Models.dll                                   (vendored — ButterLib dep, MANDATORY)
+BUTR.CrashReport.Renderer.Html.dll                            (vendored — ButterLib dep, MANDATORY)
+BUTR.CrashReport.Renderer.ImGui.dll                           (vendored — ButterLib dep, MANDATORY)
+BUTR.CrashReport.Renderer.WinForms.dll                        (vendored — ButterLib dep, MANDATORY)
+BUTR.CrashReport.Renderer.Zip.dll                             (vendored — ButterLib dep, MANDATORY)
 Microsoft.Bcl.HashCode.dll                                    (vendored — ButterLib dep)
 Microsoft.Extensions.DependencyInjection.dll                  (vendored — ButterLib dep)
 Microsoft.Extensions.DependencyInjection.Abstractions.dll     (vendored — ButterLib dep)
@@ -354,7 +380,9 @@ System.Numerics.Vectors.dll                                   (vendored — Butt
 System.Reflection.Metadata.dll                                (vendored — ButterLib dep)
 ```
 
-Total: ~28 DLLs.
+> **The 6 `BUTR.CrashReport*` DLLs are not optional and were missing from this inventory until 2026-07-16.** ButterLib references them in its metadata; without them, ButterLib's type enumeration throws `ReflectionTypeLoadException` at SubModule init — a crash this project has already shipped once. A maintainer following the old inventory would have rebuilt a bin folder that reproduces it.
+
+Count is intentionally not stated — it moves with the impl set. Compare against the folder.
 
 ## Future improvement: ILRepack consolidation
 

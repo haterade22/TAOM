@@ -182,6 +182,7 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 - [migration/api-diff-1.3.15-to-1.4.5.md](migration/api-diff-1.3.15-to-1.4.5.md) — API delta table
 - [migration/XML-SCHEMA-CHANGES.md](migration/XML-SCHEMA-CHANGES.md) — XML schema changes between versions
 - [migration/dr3-maintenance.md](migration/dr3-maintenance.md) — BUTR/MCM/ButterLib dependency pinning, smoke test, risk scenarios
+- [migration/dependency-audit-2026-07-15.md](migration/dependency-audit-2026-07-15.md) — BUTR stack audit vs engine 1.4.7 + the applied update (ButterLib 2.11.0 / MCM 5.12.1 / UIExtenderEx 2.13.2, Native pin → 1.4.7); impl-DLL fallback explained, Patch41 keep-verdict evidence
 - [migration/dual-dll-setup.md](migration/dual-dll-setup.md) — dual-DLL setup for cross-version testing
 - [migration/dr3-mcm-internalization-plan.md](migration/dr3-mcm-internalization-plan.md), [migration/dr3-execution-handoff.md](migration/dr3-execution-handoff.md) — MCM/dependency internalization
 - [migration/ROT-CORE-ANALYSIS.md](migration/ROT-CORE-ANALYSIS.md) — ToR_Core comparison

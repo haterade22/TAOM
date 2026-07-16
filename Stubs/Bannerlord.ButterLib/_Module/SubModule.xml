@@ -2,14 +2,14 @@
 <!--
   TAOM.Dependencies passive alias stub for Bannerlord.ButterLib.
   See Stubs/Bannerlord.Harmony/_Module/SubModule.xml for the full design
-  rationale. Real ButterLib + Implementation.1.4.{0,1}.dll load via
+  rationale. Real ButterLib + Implementation.1.4.{0-5}.dll load via
   TAOM.Dependencies's SubModule.xml.
 -->
 <Module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
     <Id value="Bannerlord.ButterLib" />
     <Name value="ButterLib (provided by TAOM.Dependencies)" />
-    <Version value="v2.10.99.0" />
+    <Version value="v2.11.99.0" />
     <DefaultModule value="true" />
     <SingleplayerModule value="true" />
     <MultiplayerModule value="true" />

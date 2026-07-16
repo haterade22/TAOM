@@ -2,14 +2,14 @@
 <!--
   TAOM.Dependencies passive alias stub for Bannerlord.MBOptionScreen (MCM).
   See Stubs/Bannerlord.Harmony/_Module/SubModule.xml for the full design
-  rationale. Real MCMv5.dll + Bannerlord.MBOptionScreen.v1.4.{0,1}.dll
+  rationale. Real MCMv5.dll + Bannerlord.MBOptionScreen.v1.4.{0-5}.dll
   + ModuleLoader load via TAOM.Dependencies's SubModule.xml.
 -->
 <Module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
     <Id value="Bannerlord.MBOptionScreen" />
     <Name value="MBOptionScreen / MCM (provided by TAOM.Dependencies)" />
-    <Version value="v5.11.99.0" />
+    <Version value="v5.12.99.0" />
     <DefaultModule value="true" />
     <SingleplayerModule value="true" />
     <MultiplayerModule value="true" />

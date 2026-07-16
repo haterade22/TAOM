@@ -43,8 +43,8 @@
 		     runtime (Dependencies) Harmony version creates real risk of MissingMethodException
 		     on features only in the newer version.
 		     2.4.2 is required because TAOM source uses HarmonyPatchCategoryAttribute
-		     (added in Harmony 2.3.0). All BUTR DLLs (ButterLib 2.10.4, UIExtenderEx 2.13.1,
-		     MCMv5 5.11.3) pin to `0Harmony Version=2.2.2.0` in their metadata. Since
+		     (added in Harmony 2.3.0). All BUTR DLLs (ButterLib 2.11.0, UIExtenderEx 2.13.2,
+		     MCMv5 5.12.1) pin to `0Harmony Version=2.2.2.0` in their metadata. Since
 		     0Harmony.dll has PublicKeyToken=null (un-strong-named), the CLR's default
 		     binder matches by simple name and version mismatch does NOT block resolution
 		     in practice. SubModule.cs additionally registers an AssemblyResolve handler
@@ -55,8 +55,8 @@
 		     <DependedModuleMetadata version="..."/>. See docs/migration/dr3-maintenance.md
 		     "Stub modules" section + .serena/memories/task_completion_checklist.md. -->
 		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
-		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.1" />
-		<PackageReference Include="Bannerlord.MCM" Version="5.11.4" />
+		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" />
+		<PackageReference Include="Bannerlord.MCM" Version="5.12.1" />
 	</ItemGroup>
 
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">

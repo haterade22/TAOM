@@ -92,7 +92,7 @@ The very first bundle is never cooldown-gated (`_bundlesWritten > 0` guard), so 
 
 ### BUTR coexistence
 
-TAOM ships ButterLib 2.10.4 via `TAOM.Dependencies`, which contains its own `ExceptionHandlerSubSystem`. By default we suspend it on the first capture via reflection — `ButterLibExceptionHandlerAdapter.TrySuspend()` calls `ExceptionHandlerSubSystem.Instance.Disable()`. This avoids both BUTR's window and ours firing for the same crash. The user can disable our suspension via MCM (`TAOM — Crash Report → Master → Suspend BUTR Exception Handler`).
+TAOM ships ButterLib 2.11.0 via `TAOM.Dependencies`, which contains its own `ExceptionHandlerSubSystem`. By default we suspend it on the first capture via reflection — `ButterLibExceptionHandlerAdapter.TrySuspend()` calls `ExceptionHandlerSubSystem.Instance.Disable()`. This avoids both BUTR's window and ours firing for the same crash. The user can disable our suspension via MCM (`TAOM — Crash Report → Master → Suspend BUTR Exception Handler`).
 
 ## Configuration (MCM)
 
@@ -161,7 +161,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 - `System.IO.Compression` + `System.IO.Compression.FileSystem` (.NET BCL) — ZIP bundle
 - `HarmonyLib` 2.4.2 — Finalizer attribute + reflection patching
 - `Newtonsoft.Json` 13.0.3 (already a TAOM PackageReference) — JSON renderer
-- `Bannerlord.MCM` 5.11.4 (existing) — settings page
+- `Bannerlord.MCM` 5.12.1 (existing) — settings page
 - `TaleWorlds.{DotNet,Engine,MountAndBlade,ScreenSystem}` — patch targets, type references
 - `TaleWorlds.MountAndBlade.View` (under `Modules\Native\bin\…`) — `MissionView.OnMissionScreenTick` target
 

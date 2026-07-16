@@ -10,23 +10,23 @@ Copyright (c) Andreas Pardeike
 Licensed under the MIT License.
 Source: https://github.com/pardeike/Harmony
 
-Bannerlord.UIExtenderEx.dll  --  Bannerlord.UIExtenderEx 2.13.1
+Bannerlord.UIExtenderEx.dll  --  Bannerlord.UIExtenderEx 2.13.2
 Copyright (c) BUTR (Bannerlord Unofficial Tools & Resources)
 Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.UIExtenderEx
 
-Bannerlord.ButterLib.dll + Bannerlord.ButterLib.Implementation.1.4.*.dll  --  ButterLib 2.10.4
+Bannerlord.ButterLib.dll + Bannerlord.ButterLib.Implementation.1.4.*.dll  --  ButterLib 2.11.0
 Copyright (c) BUTR
 Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.ButterLib
 
-MCMv5.dll  --  Bannerlord.MCM 5.11.4
+MCMv5.dll  --  Bannerlord.MCM 5.12.1
 Copyright (c) BUTR
 Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.MCM
 
 Bannerlord.MBOptionScreen.v1.4.*.dll, Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll,
-MCM.UI.Adapter.MCMv5.dll  --  Bannerlord.MBOptionScreen 5.11.4
+MCM.UI.Adapter.MCMv5.dll  --  Bannerlord.MBOptionScreen 5.12.1
 Copyright (c) BUTR
 Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.MCM

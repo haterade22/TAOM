@@ -14,7 +14,7 @@
     <DependedModule Id="CustomBattle" />
   </DependedModules>
   <DependedModuleMetadatas>
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.5.*" />
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.7.*" />
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
