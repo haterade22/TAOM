@@ -55,3 +55,13 @@ The campaign map scene defines each fortification's siege-engine slots as tagged
 - **Why missed:** the map was hand-authored/kitbashed outside any validation; nothing checks scene tag counts (validate_moduledata covers ModuleData XML, not `SceneObj/*.xscene`), and the crash only fires when the player *joins* a siege at the one bad settlement — AI sieges there tick fine, so it survived until a player defended Rivendell. The crash stack is 100% vanilla, which initially pointed suspicion at TAOM patches (`TaomSiegeEventModel`) — all exonerated; the log's TAOM `[SiegeDefense]` entries named a different settlement (town_G1) and were a red herring (TAOM's travel-there tracker, not the engine's `PlayerSiege` state).
 - **Prevent:** after ANY map-icon edit in TAOM_Map, audit per-fortification tag counts against the caps (def ≤ 4, atk ≤ 4, ram + tower ≤ 3): parse `SceneObj/Main_map/scene.xscene`, walk each `town_*`/`castle_*` entity's `<children>` recursively, count the four tag families (audit script pattern: scratchpad `audit_map_siege_slots.py`, 2026-07-12 session; recreate from the CHANGELOG entry if needed). The counts-must-equal-vanilla-shape check (4,4,1,2) is stricter than the caps and catches under-counts too. A defensive C# clamp (Postfix truncating `SettlementVisual`'s frame arrays to the caps, next free category Patch62) was evaluated and declined 2026-07-12 — the map fix + audit discipline is the chosen prevention; revisit if a second scene-count CTD ships.
 - **Source:** player crash bundle `taom_crash_20260712_072448_4d003ae6` + CHANGELOG 2026-07-12 fix(map) + plan `player-provided-the-following-bubbly-narwhal.md`
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+
+<!-- backlinks-end -->

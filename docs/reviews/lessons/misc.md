@@ -25,3 +25,13 @@ When CC/rendering breaks for one race, check XML config references before invest
 - **Why missed:** The elf race broke the CC parent scene; extensive time was spent investigating body meshes, stitching flags, deform keys, and planning Harmony patches. The actual fix was a missing XML reference — `as_elf_facegen` needed to be added to `skins.xml`. The depth of the cause (engine-level mesh incompatibility) was assumed without first checking the simpler possibilities.
 - **Prevent:** For any race-specific rendering issue, walk the XML-config checklist above first and rule it out before escalating to mesh/engine analysis.
 - **Source:** memory/feedback_simpler_fix_first.md (character-creation / race rendering)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+
+<!-- backlinks-end -->

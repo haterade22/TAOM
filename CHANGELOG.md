@@ -219,6 +219,28 @@ artifacts. This makes the next report self-localizing.
 Registry corrections: Patch43 is **14** hooks (was 11), and `Mission.Initialize` is **public**
 (`Mission.cs:1798`), not private as the entry claimed since the feature shipped.
 
+**Deep review (6 agents) found 2 MED defects in the fix itself — both fixed in-session.** The five
+core agents all read `FileLogger` and passed it; both defects were caught only by a hand-rolled
+concurrency agent, because no core agent has a thread-safety rule set:
+- `Drain()` early-returned on a null writer **before** dequeuing, so post-`Dispose` the queue never
+  emptied and `ProcessQueue`'s `!_queue.IsEmpty` loop could spin a core at 100% until process exit.
+  A regression: the old loop always dequeued (writing via `_logFile?.`) and could not spin.
+- The empty `catch` gave a write fault (disk full, AV lock) zero signal — the forensics instrument
+  would look healthy while silently losing lines. Now counted and self-reported as a `WARNING` on
+  the next successful drain.
+
+RCA: `docs/reviews/rca-battle-load-blind-window-2026-07-16.md` (3 lessons filed); REVIEW-LOG entry 75.
+
+Docs swept for the durability change. `battle-load-diagnostics.md` and `save-load-diagnostics.md` both
+still asserted the OLD async-only logger ("flushes on a background writer thread (50 ms poll)") — that
+claim was the reason a reader would trust the last DEBUG line, and it is now wrong for INFO and still
+right for DEBUG, so both now state the split explicitly. Also corrected while in there: the feature doc
+said 6 load-phase hooks (**8**) and 50 tests (**72**), both measured, not recalled. Separately re-synced
+the lessons index — every one of its 13 per-category counts had drifted, total **206 → 227 measured**
+(the index total, not just my +3). Per that record's own "never restate a value in prose" lesson, a
+re-sync resets the clock without removing the mechanism; making `lint_docs.py` assert the counts is the
+actual fix and is **not** done here.
+
 Not-tested: Harmony patch invocation (requires live game) — in-game smoke owed.
 Research: `MissionState.cs:302/235/241/243/345`, `Mission.cs:1798/3799/3815` (installed v1.4.7).
 

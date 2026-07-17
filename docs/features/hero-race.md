@@ -201,6 +201,7 @@ Becoming the **ruler of a kingdom** crashed to desktop. Two crash logs (2026-06-
 ## Referenced by
 
 - [docs/features/arena.md](./arena.md)
+- [docs/features/banner-bearers.md](./banner-bearers.md)
 - [docs/features/troll-race.md](./troll-race.md)
 - [docs/INDEX.md](../INDEX.md)
 

@@ -483,6 +483,7 @@ Edit `KinslayingMultiplier` in `Main/Features/Execution/Hooks/ExecutionActionHoo
 ## Referenced by
 
 - [docs/features/execution.md](./execution.md)
+- [docs/features/prisoner-recruitment.md](./prisoner-recruitment.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

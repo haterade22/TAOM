@@ -199,7 +199,6 @@ References: [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanis
 - [docs/reference/engine/agent-spawn-and-render-pipeline.md](engine/agent-spawn-and-render-pipeline.md)
 
 <!-- backlinks-end -->
-
 ## Decompiled-source folder layout (E:\Decompiled_Bannerlord\ category tree)
 
 Moved from CLAUDE.md (repo-reorg 2026-07-12). The category tree is the SHIPPING-CLIENT decompile (strips editor-only code) — for editor-only types use the dual-build decompile `{_shipping_build,_editor_build}` described above.

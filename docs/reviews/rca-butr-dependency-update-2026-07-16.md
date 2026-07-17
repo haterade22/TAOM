@@ -88,3 +88,13 @@ Appended to [`docs/reviews/lessons/build-tooling-workflow.md`](lessons/build-too
 - **In-game smoke test** — 6/6 steps outstanding (launcher was running). Deploy is verified correct on disk; the MCM options screen still needs a human eye.
 - **Patch41 removal** — remains KEEP pending the load-order question. If TAOM's MCM is confirmed to win load order in practice, the generic-prefab-name collision risk (`SettingsView`, `ModOptionsView` are not TAOM-specific) becomes pure downside and removal is the right call.
 - **`Dependencies/bin/Release/net472/`** — orphaned folder from an older output layout (its `TAOM.Dependencies.dll` predates the current build by a month; `dotnet clean -c Release` does not touch it). Not the ship path — the deployed game install is verified correct — but it misleads a version audit and should be deleted.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/dependency-audit-2026-07-15.md](../migration/dependency-audit-2026-07-15.md)
+
+<!-- backlinks-end -->

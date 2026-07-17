@@ -82,3 +82,13 @@ No IoC registration, service interface, or adapter — the rewriter is a static 
 
 - **Issue:** #252 — fix(ui): MCM mod-options screen renders bottom-to-top on v1.4.5
 - **Status:** Closed
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

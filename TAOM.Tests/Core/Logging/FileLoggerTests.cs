@@ -237,15 +237,66 @@ public class FileLoggerTests
         var logger = new FileLogger();
         logger.LogInfo("before fault");
 
-        // Fault injection: dispose the underlying writer out from under the logger, so the next
-        // write throws ObjectDisposedException from inside the drain. Reflection is the only seam
-        // -- FileLogger owns its StreamWriter and takes no injectable dependency.
-        var field = typeof(FileLogger).GetField("_logFile", BindingFlags.NonPublic | BindingFlags.Instance);
-        Assert.IsNotNull(field, "FileLogger._logFile was renamed -- update this fault-injection test.");
-        ((StreamWriter)field.GetValue(logger)).Dispose();
+        FaultTheWriter(logger);
 
         logger.LogInfo("after fault");
         logger.LogWarning("after fault");
         logger.LogError("after fault");
+    }
+
+    // A write fault drops the line the writer was mid-way through. The crash-forensics log must
+    // never look healthy while silently losing lines, so it reports the loss once writing recovers.
+    [TestMethod]
+    public void LogInfo_AfterWriteFaultRecovers_ReportsTheLostLineCount()
+    {
+        var logger = new FileLogger();
+        logger.LogInfo("before fault");
+
+        FaultTheWriter(logger);
+        logger.LogInfo("this line is lost");   // throws inside Drain, counted
+
+        RestoreWriter(logger);
+        logger.LogInfo("after recovery");
+
+        var content = ReadLogWithoutDispose();
+        StringAssert.Contains(content, "line(s) lost to a write fault");
+        StringAssert.Contains(content, "after recovery");
+    }
+
+    // REGRESSION: Drain() must dequeue even once _logFile is null. If it early-returns instead,
+    // items stay queued, ProcessQueue's `!_queue.IsEmpty` exit condition never clears, and the
+    // writer thread spins hot on a core forever. The pre-2026-07-16 loop always dequeued (writing
+    // via _logFile?.), so it could not spin -- this pins that property against reintroduction.
+    [TestMethod]
+    public void Dispose_ThenManyWrites_QueueStillDrains_SoWriterCannotSpin()
+    {
+        var logger = new FileLogger();
+        logger.Dispose();
+
+        for (int i = 0; i < 200; i++) logger.LogInfo($"post-dispose-{i}");
+
+        var queueField = typeof(FileLogger).GetField("_queue", BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(queueField, "FileLogger._queue was renamed -- update this regression test.");
+        var queue = (System.Collections.Concurrent.ConcurrentQueue<string>)queueField.GetValue(logger);
+        Assert.IsTrue(queue.IsEmpty,
+            $"Drain() left {queue.Count} item(s) queued after Dispose. ProcessQueue loops while " +
+            "!_queue.IsEmpty, so a live writer thread would spin at 100% CPU on this state.");
+    }
+
+    // Fault injection: dispose the underlying writer out from under the logger so the next write
+    // throws from inside the drain. Reflection is the only seam -- FileLogger owns its StreamWriter
+    // and takes no injectable dependency.
+    private static void FaultTheWriter(FileLogger logger)
+    {
+        var field = typeof(FileLogger).GetField("_logFile", BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(field, "FileLogger._logFile was renamed -- update this fault-injection test.");
+        ((StreamWriter)field.GetValue(logger)).Dispose();
+    }
+
+    private void RestoreWriter(FileLogger logger)
+    {
+        var field = typeof(FileLogger).GetField("_logFile", BindingFlags.NonPublic | BindingFlags.Instance);
+        var logPath = Directory.GetFiles(Path.Combine(_testDir, "Logs")).First();
+        field.SetValue(logger, new StreamWriter(logPath, append: true));
     }
 }

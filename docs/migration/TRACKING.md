@@ -648,6 +648,7 @@ BannerlordTogether v0.2.2 requires `DependentVersion="v1.3.15.110062"`. TAOM's S
 - [docs/migration/README.md](./README.md)
 - [docs/migration/s6-runtime-punchlist.md](./s6-runtime-punchlist.md)
 - [docs/migration/templates/README.md](templates/README.md)
+- [docs/migration/v1.4.7-impact.md](./v1.4.7-impact.md)
 - [docs/migration/v1.4.x-overview.md](./v1.4.x-overview.md)
 - [docs/reference/taleworlds-api-snapshot/README.md](../reference/taleworlds-api-snapshot/README.md)
 - [docs/reference/taleworlds-api-snapshot/reflection-sites.md](../reference/taleworlds-api-snapshot/reflection-sites.md)

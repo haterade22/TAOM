@@ -427,6 +427,8 @@ If ILRepack consolidation is later desired, do it as a focused project with thor
 
 ## Referenced by
 
+- [docs/features/mcm.md](../features/mcm.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/migration/dependency-audit-2026-07-15.md](./dependency-audit-2026-07-15.md)
 
 <!-- backlinks-end -->

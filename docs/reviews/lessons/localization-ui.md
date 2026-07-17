@@ -81,3 +81,13 @@ A ViewModel string property that displays config text carrying `{=key}Fallback` 
 - **Why missed:** The career screen showed raw `{=key}…` text; the fix touched 3 VM classes (`CareerScreenVM`, `CareerChoiceObjectVM`, `CareerChoiceGroupObjectVM`).
 - **Prevent:** Any VM property bound to text that originates from XML with `{=key}` tags — display_name, description, tooltip, any user-facing config string — wraps in `new TextObject(rawValue).ToString()`.
 - **Source:** memory/feedback_localization_textobject.md
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+
+<!-- backlinks-end -->

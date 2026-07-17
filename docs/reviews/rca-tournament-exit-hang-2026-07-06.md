@@ -78,3 +78,13 @@ Standards/Efficiency/Completeness/Data-Flow: PASS with zero gaps (the round-1 la
 | 12 | P3 | No runtime invariant that `OnGameInitializationFinished` stays on the tick thread across engine bumps. | Deferred with rationale (simplicity criterion): documented in the SubModule comment + re-verify-on-engine-bump note; a wrong-thread walk degrades to a harmless wrong-stack sample. |
 | 13 | P3 | Sampler header comment still said +8/+20/+45s after the threshold retune. | Fixed. |
 | 14 | P3 | Feature doc still described the deleted reflection-invoked ctor path. | Fixed alongside finding 7's code change; doc now also documents the reentrancy guard + independent toggle. |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/arena.md](../features/arena.md)
+
+<!-- backlinks-end -->

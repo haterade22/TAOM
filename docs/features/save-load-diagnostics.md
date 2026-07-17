@@ -20,7 +20,7 @@ Multiple players reported "corrupted saves" (2026-07-07). Investigation mapped t
 
 ## Architecture
 
-Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only across the boundary, ADR-007) → `IModLogger` → `Logs/taom_debug_*.log` (FileLogger flushes per line — the last stamp survives a frozen process).
+Thin hooks (ADR-002) → `ISaveLoadDiagnosticsService` (strings/Exception only across the boundary, ADR-007) → `IModLogger` → `Logs/taom_debug_*.log`. `[SaveLoad]` stamps are INFO, and since 2026-07-16 `FileLogger` writes INFO/WARNING/ERROR **synchronously on the calling thread** — so the last stamp survives a frozen process *and* a hard crash. Before that it was queued to a background writer, which covered the freeze case but lost the queue on a crash (#350); this feature's whole premise is stamping the exact failing type/SaveId/chunk, so that durability is load-bearing, not incidental. DEBUG remains async and is still dropped by a hard crash — never read the last DEBUG line as the stopping point.
 
 **Four Harmony categories, all applied in `OnSubModuleLoad`** (loads fire from the main menu; the late `OnGameInitializationFinished` batch would miss the first load — Patch58 precedent):
 
@@ -95,3 +95,13 @@ Service: 20 tests (seq/reset semantics, Aggregate/TargetInvocation flattening in
 ## Dependencies
 
 `IModLogger`/`FileLogger` (Main/Core/Logging). No MCM, no config, no SyncData of its own.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -181,3 +181,12 @@ Patches: 172. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface
 | `TAOM.Features.WeatherBoundsGuard.Hooks.DefaultMapWeatherModel_GetWeatherEventInPosition_Patch` | `TaleWorlds.CampaignSystem.GameComponents.DefaultMapWeatherModel.WeatherEvent GetWeatherEventInPosition(Vec2 pos)` |
 | `TAOM.Features.WeatherBoundsGuard.Hooks.DefaultMapWeatherModel_UpdateWeatherForPosition_Patch` | `TaleWorlds.CampaignSystem.GameComponents.DefaultMapWeatherModel.WeatherEvent UpdateWeatherForPosition(CampaignVec2 position, CampaignTime ct)` |
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/taleworlds-api-snapshot/README.md](./README.md)
+
+<!-- backlinks-end -->

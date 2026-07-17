@@ -70,3 +70,13 @@ done; Wide/On_Sticks textures pending user re-download. Open: foliage material s
 one hand-configured sample to clone), 16 manual translucent materials (`material_sheet.csv` notes
 column), assembled-scene direction decision, deferred review items (stem-map sidecar, `sanitize()`
 unification — see the RCA).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/kitbash/README.md](../kitbash/README.md)
+
+<!-- backlinks-end -->

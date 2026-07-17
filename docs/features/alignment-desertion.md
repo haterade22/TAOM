@@ -164,3 +164,13 @@ roster is scanned once into a small POCO list, decided, and written back.
 
 - **Issue:** _pending — open before the closing commit._
 - **Status:** Open
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/prisoner-recruitment.md](./prisoner-recruitment.md)
+
+<!-- backlinks-end -->

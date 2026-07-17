@@ -143,3 +143,15 @@ A 6-agent `/deep-review` over the applied change. **No runtime defects; every fi
 - BUTR GitHub releases: `Bannerlord.ButterLib` v2.11.0 ("For … v1.4.x", "v1.4.5 compatibility"), `Bannerlord.UIExtenderEx` v2.13.2.
 - Steam Workshop manifests + bin (`E:\Steam\steamapps\workshop\content\261550\{2859188632,2859222409,2859232415,2859238197}\`) — module `<Version>` + the full `Implementation.*` / `MBOptionScreen.v*` DLL lists + `Get-Item …VersionInfo`.
 - Repo: `Main/_Module/SubModule.xml:17`, `Dependencies/TAOM.Dependencies.csproj:57-59`, the four `Stubs/*/\_Module/SubModule.xml`, `Dependencies/_Module/bin/Win64_Shipping_Client/*.dll`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/dr3-maintenance.md](./dr3-maintenance.md)
+- [docs/reviews/rca-butr-dependency-update-2026-07-16.md](../reviews/rca-butr-dependency-update-2026-07-16.md)
+
+<!-- backlinks-end -->

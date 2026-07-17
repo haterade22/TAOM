@@ -20,6 +20,7 @@ public class FileLogger : IModLogger
     private readonly object _writeLock = new();
     private readonly Thread _writerThread;
     private volatile bool _stopping;
+    private int _droppedToWriteFault; // guarded by _writeLock
     private StreamWriter _logFile;
     private readonly string _logPath;
     private const string LogDirectory = "Logs";
@@ -55,19 +56,37 @@ public class FileLogger : IModLogger
     {
         lock (_writeLock)
         {
-            if (_logFile == null) return;
             try
             {
+                // Dequeue even when _logFile is gone (post-Dispose), discarding via ?. -- an early
+                // return here would leave items queued, and ProcessQueue's `!_queue.IsEmpty` exit
+                // condition would never clear, spinning the writer thread hot on a core forever.
                 while (_queue.TryDequeue(out var line))
-                    _logFile.WriteLine(line);
+                    _logFile?.WriteLine(line);
+
+                if (_logFile == null) return;
+
+                // Self-reporting: a write fault silently drops the line it was mid-way through, so
+                // say so in the log itself once writing recovers. This is the crash-forensics
+                // instrument -- it must never look healthy while quietly losing lines. Written
+                // directly, not enqueued, so it cannot re-enter Drain.
+                if (_droppedToWriteFault > 0)
+                {
+                    _logFile.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [WARNING] " +
+                        $"FileLogger: {_droppedToWriteFault} line(s) lost to a write fault.");
+                    _droppedToWriteFault = 0;
+                }
+
                 _logFile.Flush();
             }
             catch
             {
-                // A transient IO fault (AV scanner, disk full) used to land harmlessly on the
-                // writer thread. Durable writes run on the GAME thread, so it must be swallowed
-                // here or it would propagate into engine code. Do not log from this catch: it
-                // would re-enter Drain.
+                // A transient IO fault (AV scanner, disk full) used to land on the writer thread --
+                // where, unguarded, it would have killed the process. Durable writes now run on the
+                // GAME thread, so it must be swallowed here or it would propagate into engine code.
+                // Do not log from this catch: it would re-enter Drain. Count it instead; the notice
+                // above emits once writing recovers. Items still queued are retried next drain.
+                _droppedToWriteFault++;
             }
         }
     }

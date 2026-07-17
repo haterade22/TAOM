@@ -106,3 +106,13 @@ The `TaomVolunteerModel` override is a thin boundary (GameModel) and is validate
 ## Changelog
 
 - 2026-06-17 — Initial feature: alignment-gated recruitment via a single `TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero` `-1` override (no Harmony); kingdom-StringId alignment through `IAlignmentService` / `execution/alignment.json`; Symmetric/GoodRejectsEvil modes + independent player/AI MCM toggles ("World/Recruitment Alignment", GroupOrder 36) + JSON config; 34 unit tests. Issue #286.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/prisoner-recruitment.md](./prisoner-recruitment.md)
+
+<!-- backlinks-end -->

@@ -78,3 +78,13 @@ For any system that sets timed/stateful data (buffs, tracked dictionaries, sched
 - **Why missed:** Codex audit (Phase 9b #133, 2026-05-13) recommended overriding `OnGameEnd()`; verified via `ilspycmd` that no such virtual exists. An inline comment in `SpecialResourcesBehavior.RegisterEvents` documents the constraint.
 - **Prevent:** For singleton cleanup at campaign teardown: (1) best-effort hook `CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, UnsubscribeMethod)` — covers the death-of-character flow but NOT main-menu-exit (the orphan listener becomes GC-eligible once `CampaignGameStarter` releases). (2) For static event subscriptions on long-lived objects (e.g. `ScreenManager.OnPushScreen += handler`): same pattern, document the limitation inline. (3) For `Reuse.Singleton` service teardown needing campaign-2-in-same-process safety: use `OnNewGameCreatedEvent` on the ENTERING campaign (not OnGameOver on the exiting one) so reset happens just before fresh state is built — pattern shipped in #124 (BannerInjection), #128 (CareerSystem), #130 (HeroRace), #131 (RaceAge), #132 (Siege).
 - **Source:** memory/feedback_campaignbehavior_no_ongameend.md (Phase 9b #133 SpecialResources ScreenManager event-leak fix)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+
+<!-- backlinks-end -->

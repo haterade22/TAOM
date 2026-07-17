@@ -93,3 +93,13 @@ A standalone race action set — one with its own `skeleton=` and NO `base_set`,
 - **Why missed:** A standalone set compiles and plays fine for years; the gap detonates only when the engine first requests a never-before-used action (water entry), and an engine bump silently widens it. No compile-time or load-time check covers it. Also: a raw `grep`/awk type diff over-counts (it includes Native's commented-out `<!-- ... -->` actions, ~126 of them) — parse with an XML reader, which ignores comments, to get the true *active* gap (425 raw → 423 real).
 - **Prevent:** After every engine bump, run **`python tools/audit_action_set_parity.py`** (wired into `/engine-bump` Phase 4) — it resolves EVERY set's effective surface (own + full `base_set` chain + cross-module merge) and exits non-zero listing any HUMANOID set short of Native's `as_human_warrior`; fix each with `patch_dwarf_action_parity.py --set-id <id> --apply`. **Bound the blast radius by ENUMERATING, not from memory** — the audit found all 1110 humanoid sets complete after the dwarf fix (dwarf was the only gap). The LIVE file has only 5 standalone sets (the `as_human_warrior` merge-partial, `as_dwarf_warrior`, creature mounts spider/elephant/chariot); trolls (`as_cave_troll_warrior`/`as_hill_troll_warrior`) use `base_set="as_human_warrior"` and inherit dive, so are NOT at risk — a "trolls are next" claim written from memory was corrected by the deep-review's enumeration (RCA `docs/reviews/rca-dwarf-action-parity-2026-06-25.md`).
 - **Source:** `tools/patch_dwarf_action_parity.py`, `tools/audit_action_set_parity.py`, `docs/reference/lotrlome-armory-snapshot/README.md`, CHANGELOG 2026-06-25
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+
+<!-- backlinks-end -->
