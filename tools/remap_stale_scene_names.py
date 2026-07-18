@@ -36,7 +36,7 @@ REMAP = {
     "lotraom_e_osgiliath_i_forceatmo": "lotrtaom_e_osgiliath_i_forceatmo",
     # Isengard custom scenes absent on disk -> rugged vanilla of matching type
     "castle_orthanc_gate": "battania_castle_a",
-    "castle_village_isengard_a": "battania_village_c",
+    "castle_village_isengard_a": "battania_village_e",  # was battania_village_c (1.4.7-removed)
     "village_isengard_a": "battania_village_e",
     # town-center scenes deleted by the post-2026-05-28 SceneObj rename wave (plan 004).
     # NOTE: each town center repeats the scene across scene_name / _1 / _2 / _3 slots,
@@ -44,6 +44,12 @@ REMAP = {
     "HART_isengard": "taom_isengard_town_orthanc_forceatmo",
     "Helms_Deep_Town_forceatmo": "taom_rohan_castle_helms_deep_forceatmo",
     "lotrtaom_hat_gondor_town_calembel": "empire_town_h",
+    # v1.4.7 removed these vanilla scenes (leaving empty SceneObj husks), re-breaking refs a
+    # prior wave had pointed AT them. Repoint at scenes that survived 1.4.7. Both stalled a
+    # land load: scene_name=battania_village_c (Nan Angren land_raid hang) and
+    # scene_name_1=sturgia_castle_keep_a_l1_interior (36 Dale/Sturgia L1 lord's-halls). (2026-07-17)
+    "battania_village_c": "battania_village_e",
+    "sturgia_castle_keep_a_l1_interior": "sturgia_castle_keep_a_l2_interior",
 }
 
 

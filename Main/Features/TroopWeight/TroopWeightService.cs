@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -106,14 +107,49 @@ public class TroopWeightService : ITroopWeightService
         if (party?.MemberRoster == null)
             return;
 
+        // Guard the CAST, not just the arithmetic after it: a non-finite ResultNumber (another mod's
+        // ExplainedNumber mutation, a future negative-factor feat) casts to int.MinValue, which would be
+        // cached as this party's "true base" and handed to the shed planner as an astronomically large
+        // budget — shedding the party's whole roster. Bail to vanilla instead. (deep-review 2026-07-17.)
+        if (!FiniteFloatValidator.IsFinite(limit.ResultNumber))
+            return;
+
         int baseLimit = (int)limit.ResultNumber;   // pre-penalty true base — remembered for the shed hook
         _lastBaseLimit.GetOrCreateValue(party).Value = baseLimit;
 
         int raw = party.MemberRoster.TotalManCount;
         int weighted = (int)Math.Ceiling(CalculateWeightedMemberCount(party));
         int penalty = ComputeSizePenalty(raw, weighted, baseLimit);
-        if (penalty > 0)
-            limit.Add(-penalty, HeavyTroopsText);
+        SubtractResultFramePenalty(ref limit, penalty);
+    }
+
+    // Below this, a culture's factors have cancelled the limit to (or past) nothing and dividing by the
+    // scale is meaningless or sign-flipping. Not a "small number" epsilon — the gate is about the frame
+    // being usable at all.
+    private const float MinFactorScale = 0.01f;
+
+    /// <summary>
+    /// Subtracts a RESULT-frame penalty (an absolute body count) from <paramref name="limit"/>.
+    /// <see cref="ExplainedNumber.Add"/> mutates <c>BaseNumber</c>, and the result is
+    /// <c>BaseNumber * (1 + SumOfFactors)</c> — so a raw <c>Add(-penalty)</c> is silently amplified to
+    /// <c>penalty * (1 + SumOfFactors)</c> for any factor-boosted culture (call order is irrelevant;
+    /// factors are summed, not sequenced). Dividing the factor back out makes the subtraction cost exactly
+    /// <paramref name="resultFramePenalty"/> slots, and restores <see cref="ComputeSizePenalty"/>'s
+    /// "limit never drops below 1" floor, which that clamp computes in the result frame.
+    /// Engine-free; unit-tested.
+    /// </summary>
+    public static void SubtractResultFramePenalty(ref ExplainedNumber limit, int resultFramePenalty)
+    {
+        if (resultFramePenalty <= 0)
+            return;
+
+        // Positive requirement, per the engine-float gate rule: NaN fails this, an inverted
+        // `scale <= 0` early-out would let it through and poison the limit with NaN.
+        float scale = 1f + limit.SumOfFactors;
+        if (!(scale > MinFactorScale))
+            return;
+
+        limit.Add(-resultFramePenalty / scale, HeavyTroopsText);
     }
 
     public int GetTrueBaseSizeLimit(PartyBase party)
@@ -138,9 +174,15 @@ public class TroopWeightService : ITroopWeightService
         int penalty = weightedCount - rawCount;
         if (penalty <= 0)
             return 0;
-        int maxReducible = baseLimit - 1;
-        if (maxReducible <= 0)
+        // Gate on baseLimit BEFORE the subtraction, not on `baseLimit - 1` after it. `(int)float.NaN` and
+        // `(int)float.PositiveInfinity` are both int.MinValue on net472/x64, and `int.MinValue - 1`
+        // underflows (unchecked) to int.MaxValue — so a `maxReducible <= 0` check computed AFTER the
+        // subtraction reads a poisoned baseLimit as "reduce by up to int.MaxValue" and hands back a
+        // plausible penalty. Requiring `baseLimit >= 2` up front makes the subtraction unreachable for
+        // every degenerate value. (deep-review 2026-07-17, data-flow MED.)
+        if (baseLimit < 2)
             return 0;
+        int maxReducible = baseLimit - 1;
         return penalty > maxReducible ? maxReducible : penalty;
     }
 

@@ -109,9 +109,27 @@ if (!(momentumRemaining > 0f)) return false;
 if (float.IsNaN(speedFactor) || float.IsNaN(context.VictimKnockDownResistance)) return null;
 ```
 
+**Third category — float→int CASTS feeding an integer guard.** `(int)float.NaN` and `(int)float.PositiveInfinity` are BOTH `int.MinValue` (net472/x64), and `int.MinValue - 1` underflows (unchecked) to `int.MaxValue`. So an integer guard computed AFTER a subtraction reads a poisoned input as the largest possible budget:
+
+```csharp
+// ❌ WRONG — (int)NaN == int.MinValue; int.MinValue-1 wraps to int.MaxValue, so the guard passes
+int maxReducible = baseLimit - 1;
+if (maxReducible <= 0) return 0;      // never fires for a poisoned baseLimit
+
+// ✅ RIGHT — validate finiteness AT the cast, and gate the value itself, not the arithmetic after it
+if (!FiniteFloatValidator.IsFinite(limit.ResultNumber)) return;
+int baseLimit = (int)limit.ResultNumber;
+...
+if (baseLimit < 2) return 0;          // subtraction unreachable for degenerate values
+```
+
+**Rule:** validate finiteness at the cast site, and write the integer gate as a positive requirement on the value itself rather than on arithmetic derived from it. Ask of every float→int cast: *what int does this produce for NaN/±Inf, and does that value defeat a guard downstream?* One regression test per cast, asserting the degenerate input yields the safe result.
+
+**Why:** 5th instance of the NaN-gate bug class (TroopWeight party-size penalty, 2026-07-17 — `(int)limit.ResultNumber` poisoned `_lastBaseLimit` and defeated `ComputeSizePenalty`'s clamp; a NaN would have made the shed planner trim a party's entire non-hero roster). Verified empirically on net472: `ComputeSizePenalty(10, 200, (int)NaN)` returned 190, not 0. Each of the five recurrences happened because the rule's scope was one category narrower than the bug — **when touching a method, gate every float→decision path in it, not only the lines you added.** RCA: `docs/reviews/rca-troopweight-result-frame-2026-07-17.md`.
+
 **Rule:** for every decision gate on an engine-sourced float, write the gate as a **positive requirement** to proceed (or add an explicit `float.IsNaN` guard), and for `bool?` fall-through services return `null` on non-finite input so vanilla decides instead of an owned true/false computed from garbage. Add one NaN unit test per gate.
 
-**Why:** 4th instance of the NaN-gate bug class (Career cooldown #31, EditorCacheRebuild #38, CS_Road 2026-05-13 — all CONFIG floats, which produced the loader rule; CombatMechanics 2026-07-02 — ENGINE floats: `momentumRemaining <= 0f` passed NaN and could force cleave chains, a NaN charge velocity became an owned `false` suppressing knockdowns vanilla would grant). Each recurrence happened because the rule's scope was one category narrower than the bug. This section closes the runtime category; if a 5th instance appears in a category this section doesn't name, widen the scope again rather than patching the instance. Enforced at review time by `/deep-review` Agent 5 rule 4b. RCA: `docs/reviews/rca-combat-mechanics-2026-07-02.md`.
+**Why:** the NaN-gate bug class has now shipped FIVE times (Career cooldown #31, EditorCacheRebuild #38, CS_Road 2026-05-13 — all CONFIG floats, which produced the loader rule; CombatMechanics 2026-07-02 — ENGINE floats: `momentumRemaining <= 0f` passed NaN and could force cleave chains, a NaN charge velocity became an owned `false` suppressing knockdowns vanilla would grant; TroopWeight 2026-07-17 — a float→int CAST, the third category above). Each recurrence happened because the rule's scope was one category narrower than the bug. Three categories are now named: config floats at load, engine floats at runtime decision gates, and float→int casts feeding integer guards. **If a 6th instance appears in a category this section doesn't name, widen the scope again rather than patching the instance.** Enforced at review time by `/deep-review` Agent 5 rule 4b. RCAs: `docs/reviews/rca-combat-mechanics-2026-07-02.md`, `docs/reviews/rca-troopweight-result-frame-2026-07-17.md`.
 
 ## Lookup Functions With Fallbacks: Validate Before Lookup (MANDATORY)
 

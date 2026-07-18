@@ -603,7 +603,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
         campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives));
-        campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>()));
+        campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>(), IoC.Resolve<IModLogger>()));
         campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats));
         campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
@@ -860,6 +860,13 @@ public class SubModule : MBSubModuleBase
         // victim with a null wielded Item). Already caught by WargAttackService, but swallowing lets
         // OnAgentHit finish and stops the log spam. Crash report 2026-06-17. See the patch doc-comment.
         _harmony.PatchCategory("Patch50_DropFlaggedItemGuard");
+
+        // Patch63_BlowDiagnostics: toggle-gated (MCM "TAOM — Blow Diagnostics", OFF by default)
+        // durable [BlowDiag] stamps on Agent.HandleBlowAux / Agent.Die / RangedSiegeWeapon.ShootProjectileAux.
+        // Ships to capture the dwarf-siege native AV (wound + fire-pot impact) that leaves no managed
+        // stack: the last durable line before the process dies names the fatal blow. Diagnostic siblings
+        // of Patch47/48 — separate classes so the spider guards are untouched. See docs/features/blow-diagnostics.md.
+        _harmony.PatchCategory("Patch63_BlowDiagnostics");
 
         // Patch56_SceneNotificationVisualGuard: Finalizer swallowing a managed NRE in
         // PopupSceneSpawnPoint.InitializeWithAgentVisuals, reached via GauntletSceneNotification.OpenScene

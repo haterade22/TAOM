@@ -327,7 +327,7 @@
 			<xsl:attribute name="elite_caravan_party_template">PartyTemplate.elite_caravan_template_aserai</xsl:attribute>
 			<xsl:attribute name="militia_party_template">PartyTemplate.militia_aserai_template</xsl:attribute>
 			<xsl:attribute name="rebels_party_template">PartyTemplate.rebels_aserai_template</xsl:attribute>
-			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_aserai</xsl:attribute>
+			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_harad</xsl:attribute>
 
 			<!-- Encounter/display -->
 			<xsl:attribute name="encounter_background_mesh">encounter_aserai</xsl:attribute>
@@ -607,7 +607,7 @@
 			<xsl:attribute name="elite_caravan_party_template">PartyTemplate.elite_caravan_template_rohan</xsl:attribute>
 			<xsl:attribute name="militia_party_template">PartyTemplate.militia_vlandia_template</xsl:attribute>
 			<xsl:attribute name="rebels_party_template">PartyTemplate.rebels_vlandia_template</xsl:attribute>
-			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_vlandia</xsl:attribute>
+			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_rohan</xsl:attribute>
 
 			<!-- Encounter/display -->
 			<xsl:attribute name="encounter_background_mesh">encounter_vlandia</xsl:attribute>
@@ -896,7 +896,7 @@
 			<xsl:attribute name="elite_caravan_party_template">PartyTemplate.elite_caravan_template_rhun</xsl:attribute>
 			<xsl:attribute name="militia_party_template">PartyTemplate.militia_khuzait_template</xsl:attribute>
 			<xsl:attribute name="rebels_party_template">PartyTemplate.rebels_khuzait_template</xsl:attribute>
-			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_khuzait</xsl:attribute>
+			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_rhun</xsl:attribute>
 
 			<!-- Encounter/display -->
 			<xsl:attribute name="encounter_background_mesh">encounter_khuzait</xsl:attribute>
@@ -1244,8 +1244,13 @@
 				<template name="NPCCharacter.spc_dale_headman_3" />
 			</notable_templates>
 
+			<!-- Vassal reward items (Dale longbow — Bard's black-arrow theme) -->
+			<vassal_reward_items>
+				<item id="Item.dale_longbow_a" />
+			</vassal_reward_items>
+
 			<!-- Pass through vanilla child elements we don't override -->
-			<xsl:apply-templates select="*[not(self::notable_templates)]"/>
+			<xsl:apply-templates select="*[not(self::notable_templates or self::vassal_reward_items)]"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -1257,6 +1262,8 @@
 
 			<!-- Name and description -->
 			<xsl:attribute name="name">{=TAOM_battania_culture}Variag</xsl:attribute>
+			<!-- Vassal reward: Khand has no native LOTR roster; the Variags serve Mordor -->
+			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_mordor</xsl:attribute>
 			<xsl:attribute name="text">{=TAOM_battania_desc}The Variags of Khand are a fierce and warlike people, hailing from the dry and rugged lands east of Mordor. Known for their mercenary prowess and loyalty to Sauron, the Variags fight with unmatched ferocity. They ride swift warhorses into battle, wielding curved blades and long spears with deadly precision. Their bronze and crimson armor, adorned with intricate designs, reflects their proud and martial heritage. Divided into tribes and clans, the Variags unite under powerful warlords, bringing fear and chaos to the enemies of the Dark Lord.</xsl:attribute>
 
 			<!-- NPC references -->
@@ -1337,8 +1344,13 @@
 				<template name="NPCCharacter.spc_khand_headman_3" />
 			</notable_templates>
 
+			<!-- Vassal reward items (Mordor sword — Khand serves Mordor) -->
+			<vassal_reward_items>
+				<item id="Item.wm_mordor_set1_sword_a02" />
+			</vassal_reward_items>
+
 			<!-- Pass through vanilla child elements we don't override -->
-			<xsl:apply-templates select="*[not(self::notable_templates)]"/>
+			<xsl:apply-templates select="*[not(self::notable_templates or self::vassal_reward_items)]"/>
 		</xsl:copy>
 	</xsl:template>
 

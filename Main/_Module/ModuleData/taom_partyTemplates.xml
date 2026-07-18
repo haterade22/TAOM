@@ -388,8 +388,8 @@
 	<MBPartyTemplate id="vassal_reward_troops_dolguldur">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dg_uruk_black_slayer" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dg_khamul_shadow_infantry" />
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dg_khamul_shadow_archer" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dg_khamul_shadow_infantry" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dg_khamul_shadow_archer" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -863,6 +863,7 @@
 	<MBPartyTemplate id="vassal_reward_troops_mordor">
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_uruk_baraddurguard" />
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.mordor_uruk_vanguard" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1059,10 +1060,9 @@
 
 	<MBPartyTemplate id="vassal_reward_troops_dale">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dale_running_river_warden" />
-			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dale_black_arrow_marksman" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dale_kings_guard" />
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dale_lake_town_hearthguard" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dale_kings_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dale_black_arrow_marksman" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1267,6 +1267,13 @@
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_fangking" />
 			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.harad_serpentguard" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="vassal_reward_troops_umbar">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.umbar_elite_root0000" />
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.umbar_elite_root000" />
 		</stacks>
 	</MBPartyTemplate>
 

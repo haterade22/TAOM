@@ -2,6 +2,77 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-17
+
+### feat(blow-diagnostics): durable per-blow instrumentation to catch a dwarf-siege native crash
+
+A player hit two crashes-to-desktop in one siege as a dwarf — once when the character was
+**wounded**, once when a **fire pot** was about to land. Both are native AccessViolations: the
+attached logs (managed `taom_debug` + native `rgl_log`) just stop mid-battle with **no managed
+stack**, and TAOM's crash pipeline can't capture a pure native AV. Investigation ruled out the
+tempting culprits — the dwarf action-set parity is clean on 1.4.7 (`audit_action_set_parity.py`
+= 0 gaps), and the defender-Trebuchet `TaomSiegeEventModel` override is **dead API** (no caller
+in 1.4.5–1.4.7), so the fire pot is a plain vanilla FireCatapult projectile. The surviving lead
+is a custom-race (dwarf) agent taking a *specific* blow through native `Agent.HandleBlowAux` /
+`Agent.Die` — the same fault family the spider Patch47/48 guard, but those are spider-gated and
+leave a plain dwarf unguarded.
+
+New **`Patch63_BlowDiagnostics`** (feature `Main/Features/BlowDiagnostics/`) stamps every damaging
+blow, death, and siege-engine shot to the durable (synchronous-flush) log, so the LAST line before
+a hard crash names the fatal blow — victim race, blow flags, damage type, missile/fall, health.
+Toggle-gated behind MCM **"TAOM — Blow Diagnostics"**, **OFF by default** (it's a per-hit hot path);
+turn it on only to reproduce, then send `Logs/taom_debug_*.log`. Diagnostic siblings of Patch47/48
+(separate classes, the spider guards untouched); the `HandleBlowAux` prefix runs at
+`Priority.First` so it records the pristine blow. 14 unit tests; full suite green (4377). See
+[docs/features/blow-diagnostics.md](docs/features/blow-diagnostics.md).
+
+Follow-up tracked separately: the dead-API `GetAvailableDefenderSiegeEngines` override means the
+SiegeDefense "defenders get Trebuchets (Minas Tirith)" behavior is silently non-functional on
+1.4.5+ — its own issue, not this crash.
+
+### feat(vassal-rewards): every kingdom hands out its own troops, normalized to 6
+
+The one-time troop/item gift you get for swearing fealty (vanilla `DefaultVassalRewardsModel`,
+keyed off the **kingdom's** culture) had three defects across TAOM's 18 kingdoms:
+
+- **Three bespoke reward parties were orphaned.** `vassal_reward_troops_rohan`, `_harad`, and
+  `_rhun` existed but the XSLT wired Rohan/Harad/Easterlings to the vanilla-named
+  `_vlandia`/`_aserai`/`_khuzait` templates — which don't exist in TAOM and resolved to stock
+  **Calradian** troops. Joining Rohan literally gave you Vlandian knights. Repointed the three
+  XSLT cultures at their hand-authored LOTR parties.
+- **Sizes were inconsistent** (Mordor gave **1** troop, Dol Guldur 4, Dale 8, the rest 6).
+  Rebalanced every reward to a uniform **6** (1 elite + 5 second-tier, vanilla parity): Mordor
+  = Barad-dûr Guard + 5 Uruk Vanguard; Dol Guldur = 1+3+2; Dale trimmed 8→6.
+- **Cultures on borrowed rewards.** Umbar/Shaghâna/Âbanissa handed out vanilla Aserai troops —
+  now Umbar has its own `vassal_reward_troops_umbar` (Naru n'Aru Royal Guard + Abrazanim), and
+  Shaghâna/Âbanissa share Harad's (they already use Harad's roster). Dale and Khand never got a
+  TAOM reward *item* — Dale now grants a Dale longbow. Khand (Variag), which has no native LOTR
+  roster of its own, gets a **Mordor-proxy** reward (Mordor troops + a Mordor blade), since the
+  Variags serve Mordor.
+
+Data-only (party templates + `taom_spcultures.xml` + `spcultures.xslt`); no C# change, no new
+strings, no save impact (read at join-time; reward is one-time via vanilla `_receivedVassalRewards`).
+`validate_moduledata.py` clean.
+
+### fix(settlements): repoint two scenes Bannerlord 1.4.7 removed, and harden the scene audit
+
+A raid defense of Nan Angren hung forever on the loading screen (the player had to force-close).
+Root cause: Bannerlord 1.4.7 deleted the vanilla scene `battania_village_c`, leaving an **empty
+`SceneObj/battania_village_c/` husk** on disk, but TAOM_Map's `settlements.xml` still routed Nan
+Angren's `village_center` at it — the engine stalled opening a `scene.xscene` that no longer exists.
+The same 1.4.7 wave removed `sturgia_castle_keep_a_l1_interior`, referenced by **36** Dale/Sturgia
+lord's-halls (the L1 building-level slot) — every one of them a latent land-load hang.
+
+Remapped both to scenes that survived 1.4.7 (`battania_village_e`; `sturgia_castle_keep_a_l2_interior`),
+applied to the live `TAOM_Map/settlements.xml` (37 refs). The full live settlement set now resolves
+every scene ref to an on-disk `scene.xscene` (vanilla or TAOM-custom).
+
+The mandated post-bump scene audit missed this because `audit_scene_names.py` had two blind spots,
+both now fixed: it tested SceneObj **folder** existence (an empty husk passed) instead of the actual
+`scene.xscene` inside, and its regex matched only `scene_name="…"`, skipping the `scene_name_1/2/3`
+lord's-hall slots (which is why the 36 keep refs were never flagged). Separate from this hang, the
+earlier non-fatal "outside Isengard" shader AV is the known #287 `pbr_terrain` compile issue.
+
 ## 2026-07-16
 
 ### feat(prisoner-recruitment): no morale lost recruiting your own side's prisoners (#353)

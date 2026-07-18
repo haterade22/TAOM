@@ -26,7 +26,10 @@ SETTLEMENT_FILES = {
     "TAOM_shadow": MODULES / "TAOM" / "ModuleData" / "settlements.xml",
 }
 
-SCENE_RE = re.compile(r'scene_name="([^"]+)"')
+# Match every scene slot: scene_name="X" AND the lord's-hall level slots
+# scene_name_1/_2/_3="X". A bare scene_name= regex misses the interior-level slots
+# (this is why the 36 sturgia_castle_keep_a_l1_interior refs went unaudited).
+SCENE_RE = re.compile(r'scene_name(?:_\d+)?="([^"]+)"')
 
 
 def scenes_in(path: Path) -> dict[str, list[str]]:
@@ -50,7 +53,11 @@ def all_scene_folders() -> set[str]:
     folders: set[str] = set()
     for sceneobj in MODULES.glob("*/SceneObj"):
         for child in sceneobj.iterdir():
-            if child.is_dir():
+            # A scene loads only if scene.xscene exists INSIDE the folder. A bare
+            # is_dir() check treats an empty husk (e.g. battania_village_c/, left behind
+            # when v1.4.7 removed the scene) as present and hides the stale ref — exactly
+            # the folder-vs-file blind spot that let the Nan Angren land-load hang ship.
+            if child.is_dir() and (child / "scene.xscene").is_file():
                 folders.add(child.name.lower())
     return folders
 
