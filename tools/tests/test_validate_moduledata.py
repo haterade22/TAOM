@@ -302,6 +302,78 @@ class ValidatorContractTests(unittest.TestCase):
 """)
         self.assertNotIn("MISSING_CIVILIAN_TYPE", self._codes(self._run()))
 
+    # --- #354 (age-8 education CTD) regression tests ---
+
+    def test_main_culture_missing_education_templates_is_error(self):
+        # lothlorien shipped as is_main_culture with zero stage_2 education
+        # templates -> guaranteed CTD at any child's age-8 education (#354).
+        _write(self.md / "taom_spcultures.xml", """<?xml version="1.0" encoding="utf-8"?>
+<SPCultures>
+  <Culture id="gondor" is_main_culture="true" />
+</SPCultures>
+""")
+        issues = self._run()
+        self.assertIn("MISSING_EDUCATION_TEMPLATES", self._codes(issues))
+        bad = [i for i in issues if i.code == "MISSING_EDUCATION_TEMPLATES"][0]
+        self.assertEqual(bad.severity, ts.Severity.ERROR)
+        self.assertEqual(bad.entry_id, "gondor")
+        self.assertIn("0, 1, 2, 3, 4, 5", bad.message)
+
+    def test_main_culture_with_all_education_templates_is_clean(self):
+        self.registries.npccharacters |= {
+            f"child_education_templates_stage_2_page_0_branch_{b}_gondor" for b in range(6)
+        }
+        _write(self.md / "taom_spcultures.xml", """<?xml version="1.0" encoding="utf-8"?>
+<SPCultures>
+  <Culture id="gondor" is_main_culture="true" />
+</SPCultures>
+""")
+        self.assertNotIn("MISSING_EDUCATION_TEMPLATES", self._codes(self._run()))
+
+    def test_partial_education_templates_reports_missing_branches_only(self):
+        self.registries.npccharacters |= {
+            f"child_education_templates_stage_2_page_0_branch_{b}_gondor" for b in range(5)
+        }  # branch 5 missing
+        _write(self.md / "taom_spcultures.xml", """<?xml version="1.0" encoding="utf-8"?>
+<SPCultures>
+  <Culture id="gondor" is_main_culture="true" />
+</SPCultures>
+""")
+        issues = [i for i in self._run() if i.code == "MISSING_EDUCATION_TEMPLATES"]
+        self.assertEqual(len(issues), 1)
+        self.assertIn("branch(es) 5 ", issues[0].message)
+
+    def test_non_main_culture_needs_no_education_templates(self):
+        # Bandit/minor cultures never raise children through the education flow.
+        _write(self.md / "taom_spcultures.xml", """<?xml version="1.0" encoding="utf-8"?>
+<SPCultures>
+  <Culture id="gondor_soldiers" />
+</SPCultures>
+""")
+        self.assertNotIn("MISSING_EDUCATION_TEMPLATES", self._codes(self._run()))
+
+    def test_education_check_skipped_without_npc_registry(self):
+        # Degraded mode (no game install) empties the troop registry; the
+        # education check must skip rather than mass-false-positive.
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                             cultures={"gondor"}, party_templates=set())
+        _write(self.md / "taom_spcultures.xml", """<?xml version="1.0" encoding="utf-8"?>
+<SPCultures>
+  <Culture id="gondor" is_main_culture="true" />
+</SPCultures>
+""")
+        issues = ts.Validator(self.md, self.schemas, regs).run()
+        self.assertNotIn("MISSING_EDUCATION_TEMPLATES", [i.code for i in issues])
+
+    def test_commented_out_main_culture_not_checked(self):
+        _write(self.md / "taom_spcultures.xml", """<?xml version="1.0" encoding="utf-8"?>
+<SPCultures>
+  <Culture id="gondor" />
+  <!-- <Culture id="ghost" is_main_culture="true" /> -->
+</SPCultures>
+""")
+        self.assertNotIn("MISSING_EDUCATION_TEMPLATES", self._codes(self._run()))
+
     def test_civilian_rule_checks_all_equipment_sets(self):
         # A civilian roster with a second untagged EquipmentSet must be flagged
         # even when the first set is correctly tagged.

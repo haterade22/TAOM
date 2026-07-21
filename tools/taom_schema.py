@@ -176,6 +176,7 @@ class Validator:
         issues += self._ref_sweep()
         issues += self._schema_checks()
         issues += self._duplicate_item_defs()
+        issues += self._education_coverage()
         issues.sort(key=lambda i: i.sort_key())
         return issues
 
@@ -350,6 +351,52 @@ class Validator:
                     severity=Severity.WARNING, code="DUPLICATE_ITEM_DEF",
                     file=uniq[0], line=0, entry_id=item_id,
                     message=f'item "{item_id}" is defined in {len(uniq)} files ({"; ".join(uniq)}) — engine silently shadows one',
+                ))
+        return issues
+
+    # -- pass 4: age-8 education template coverage ------------------------- #
+    # The v1.4.7 engine resolves child_education_templates_stage_2_page_0_
+    # branch_{0-5}_{culture.StringId} at the age-8 education stage and
+    # dereferences the result WITHOUT a null guard (EducationCampaignBehavior.
+    # GetSpecialCharacterPropertiesForOption). A main culture missing any of the
+    # six templates is a guaranteed CTD when a child of that culture turns 8
+    # (#354: lothlorien, umbar, goblin, mistymountainorcs all shipped without).
+    _EDUCATION_BRANCHES = 6
+
+    def _education_coverage(self) -> list:
+        if not self.reg.npccharacters:
+            return []  # degraded mode (no game install): registry unavailable
+        path = self.moduledata / "taom_spcultures.xml"
+        if not path.exists():
+            return []
+        # Mask comments but keep newlines so line attribution stays accurate.
+        raw = self._read(path)
+        text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), raw)
+        rel = self._rel(path)
+        issues = []
+        for m in re.finditer(r"<Culture\b([^>]*?)/?>", text, re.S):
+            attrs = m.group(1)
+            if not re.search(r'\bis_main_culture="true"', attrs):
+                continue
+            idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+            if not idm:
+                continue
+            cid = idm.group(1)
+            missing = [
+                b for b in range(self._EDUCATION_BRANCHES)
+                if f"child_education_templates_stage_2_page_0_branch_{b}_{cid}"
+                not in self.reg.npccharacters
+            ]
+            if missing:
+                issues.append(Issue(
+                    severity=Severity.ERROR, code="MISSING_EDUCATION_TEMPLATES",
+                    file=rel, line=_lineno(text, m.start()), entry_id=cid,
+                    message=(
+                        f'main culture "{cid}" is missing stage_2 education character '
+                        f'template(s) for branch(es) {", ".join(map(str, missing))} '
+                        f'(child_education_templates_stage_2_page_0_branch_N_{cid}) — '
+                        f"age-8 child education CTDs on a null tutor template (#354)"
+                    ),
                 ))
         return issues
 
