@@ -241,11 +241,11 @@ public static class PatchShield
     /// <summary>
     /// Finalizer for void-return methods. Catches the swallow-trinity and returns
     /// silently to suppress the exception; non-matching exceptions are re-thrown by
-    /// returning the original exception (Harmony Finalizer convention).
+    /// returning the ORIGINAL exception (Harmony Finalizer convention).
     /// </summary>
     private static Exception? ShieldFinalizerVoid(MethodBase __originalMethod, Exception __exception)
     {
-        return ShouldSwallow(__originalMethod, __exception, out var unwrapped) ? null : unwrapped;
+        return ShouldSwallow(__originalMethod, __exception) ? null : __exception;
     }
 
     /// <summary>
@@ -256,19 +256,25 @@ public static class PatchShield
     /// </summary>
     private static Exception? ShieldFinalizerWithResult(MethodBase __originalMethod, Exception __exception)
     {
-        return ShouldSwallow(__originalMethod, __exception, out var unwrapped) ? null : unwrapped;
+        return ShouldSwallow(__originalMethod, __exception) ? null : __exception;
     }
 
-    private static bool ShouldSwallow(MethodBase originalMethod, Exception exception, out Exception unwrapped)
+    private static bool ShouldSwallow(MethodBase originalMethod, Exception exception)
     {
-        unwrapped = exception;
         if (exception == null) return false;
 
-        // Unwrap TargetInvocationException to get at the real reason.
+        // Unwrap TargetInvocationException ONLY to classify the real reason. The
+        // rethrow path must return the ORIGINAL exception: Harmony's generated
+        // `throw finalizerResult;` resets that object's stack trace to the patched
+        // frame, so returning the unwrapped inner exception here destroyed the real
+        // throw-site frames of every reflection-invoked handler crash (the #354
+        // education CTD bundle showed a bare NRE anchored at ExecuteCommand_Patch3
+        // with no inner exception). Returning the original TIE keeps the inner
+        // exception — and its intact stack — for the crash reporter, and restores
+        // vanilla propagation semantics.
         var ex = exception;
         while (ex is TargetInvocationException && ex.InnerException != null)
             ex = ex.InnerException;
-        unwrapped = ex;
 
         if (ex is MissingMethodException || ex is MissingFieldException || ex is TypeLoadException)
         {
