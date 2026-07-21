@@ -2,6 +2,57 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-21
+
+### fix(lotr-issues): the 7 SandBox vanilla issues were never suppressed in-game — CTD on quest accept
+
+A Patreon crash report (TAOM v2.0.12, new Rhûn campaign) showed a CTD accepting a rural notable's
+quest. The quest was vanilla **NotableWantsDaughterFound** — one of the 7 SandBox-module issue
+behaviors `LotrIssueSuppression` resolves by `Type.GetType("…, SandBox")`. That bind fails in-game
+(module DLLs are `LoadFrom`-loaded outside the appbase and the engine's `AssemblyResolve` matches
+exact FullName only), so all 7 SandBox issues stayed **live in every campaign** since the feature
+shipped; the failure was masked by graceful degradation (a warning log nobody read) and by the test
+host, where SandBox.dll IS loadable. The daughter quest then NRE'd in its constructor: it maps giver
+culture → rogue template through the vanilla `steppe_bandits` clan, which TAOM's `spclans.xslt`
+deletes → `CreateSpecialHero(null, …)` inside the accept-click → crash.
+
+Fixes: `VanillaIssueBehaviorTypes` now resolves the 7 by scanning loaded assemblies for the simple
+name `SandBox` (`ResolveTypesFromLoadedAssemblies`); the under-count log is `LogError`; and a new
+`OnGameLoaded` safety-net sweep in `LotrIssuesCampaignBehavior` cancels **uncommitted** vanilla
+issues lingering in saves made on broken builds — accepted quests, dispatched alternative
+solutions, and lord solutions are left to finish (their start paths already ran safely; cancelling
+would destroy player progress — deep-review catch). `SuppressAll` now counts actual behavior-list
+shrinkage, not just "the call didn't throw". New tests pin the 7 names against the real
+SandBox.dll as an engine-bump canary. Suite green (4389). Deep-review: 4 findings fixed
+in-session, 1 disputed — RCA `docs/reviews/rca-lotr-issues-suppression-gap-2026-07-21.md`;
+lesson `docs/reviews/lessons/adapters-taleworlds-api.md`.
+
+### fix(education): age-8 child education CTD for lothlorien + 3 more cultures (#354)
+
+A player crash bundle (`94c7b795`) CTD'd clicking the child-education map notification for a
+Lothlórien child at age 8. Root cause: `lothlorien` shipped with **zero**
+`child_education_templates_stage_2_page_0_branch_{0-5}_lothlorien` NPCCharacters — the v1.4.7
+engine resolves those ids at the Year8 stage and dereferences the result with **no null guard**
+(`EducationCampaignBehavior.GetSpecialCharacterPropertiesForOption`), so the education screen NREs
+at first paint. `umbar`, `goblin`, and `mistymountainorcs` had the identical gap (ages 2/5 never
+consult these templates, which is why it survived). Fixes:
+
+- **Data:** 24 stage_2 tutor templates added (4 cultures × 6 branches; lothlorien mirrors
+  rivendell — elf race, `fighter_rivendell` face; umbar mirrors gondor; the orc pair wear the
+  shared `sk_md_orc_*` pool their NPCs use). Plus 392 `child_education_equipments_*` rosters for
+  lothlorien/umbar/shaghana/abanissa (cosmetic — engine lookups there are null-safe).
+- **Prevention:** `tools/validate_moduledata.py` now ERRORs (`MISSING_EDUCATION_TEMPLATES`) when
+  any `is_main_culture="true"` culture lacks the 6 stage_2 templates; 6 new validator tests.
+- **Diagnostics:** `PatchShield` finalizers now rethrow the ORIGINAL exception instead of the
+  TIE-unwrapped inner one — the unwrap+rethrow reset the exception's stack to the patched frame,
+  which is exactly why this bundle blamed `ViewModel.ExecuteCommand` with no inner exception.
+  Swallow classification (missing-member trinity) is unchanged.
+
+Suite green (4386) + validator PASS. Not-tested: in-game education screen for the 4 cultures
+(owed: load a lothlorien save with an age-8 child); PatchShield finalizer runtime path (no test
+harness for the TAOM.Dependencies assembly — verified by compile + a rethrow-semantics harness).
+Lesson: `docs/reviews/lessons/data-content-cultures.md`.
+
 ## 2026-07-17
 
 ### feat(blow-diagnostics): durable per-blow instrumentation to catch a dwarf-siege native crash

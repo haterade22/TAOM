@@ -1,7 +1,10 @@
 # LOTR Issues — Vanilla Quest/Issue Conversion
 
-> **Status: IMPLEMENTED (2026-06-20).** All 43 vanilla procedural issues are suppressed and replaced by 43
-> TAOM-authored LOTR issues, built on a generic-template + XML-config architecture in `Main/Features/LotrIssues/`.
+> **Status: IMPLEMENTED (2026-06-20; suppression gap fixed 2026-07-21).** All 43 vanilla procedural issues are
+> suppressed and replaced by 43 TAOM-authored LOTR issues, built on a generic-template + XML-config architecture in
+> `Main/Features/LotrIssues/`. Until 2026-07-21 the 7 SandBox-module issues silently escaped suppression in-game
+> (Type.GetType load-context failure — see the incident note under Vanilla-Issue Suppression) and one of them CTD'd
+> on accept against TAOM data.
 > See **Implementation (as built)** below for the shipped design; the disposition matrix and risk analysis that
 > follow are the original research deliverable, kept for provenance. Engine mechanics are documented in
 > [issue-and-quest-system.md](../reference/engine/issue-and-quest-system.md).
@@ -231,8 +234,33 @@ modules before any `OnGameStart`, and TAOM loads after Sandbox).
 **Save-compat — ship as a new-campaign feature.** A save made *before* suppression may carry an in-progress vanilla
 issue/issue-quest; removing the behavior doesn't delete the serialized object, but its event hooks are gone → soft-lock
 risk. Lowest-risk path: LOTR issues apply to new campaigns; existing saves keep their in-flight vanilla issues until
-they resolve/expire. A guarded `OnGameLoaded` cancel-sweep over surviving vanilla issues is a Phase-2 option (needs the
-`IssueBase` cancel API + the OnGameLoaded entity-state-matrix discipline).
+they resolve/expire. ~~A guarded `OnGameLoaded` cancel-sweep over surviving vanilla issues is a Phase-2 option~~ —
+**shipped 2026-07-21** (see the suppression-gap incident below): the sweep cancels *uncommitted* vanilla issues on
+save load; issues with a player commitment in progress — an accepted quest, a dispatched alternative solution, or a
+lord solution — are left to resolve naturally (their start paths already ran safely).
+
+### 2026-07-21 suppression gap — the 7 SandBox issues were never suppressed in-game
+
+A Patreon crash report (TAOM v2.0.12, new Rhûn campaign, CTD accepting a notable's quest) exposed that the 7
+SandBox-module issue behaviors were live in every campaign despite `SuppressAll`:
+
+- **Resolution failure:** the 7 were resolved via `Type.GetType("SandBox.Issues.X, SandBox")`. In-game that is a
+  Load-context bind — it probes only the appbase (`bin\Win64_Shipping_Client`, which does NOT contain module DLLs;
+  they are `Assembly.LoadFrom`'d from `Modules\SandBox\bin\…`), and the engine's `AssemblyResolve` handler
+  (`TaleWorlds.Library.AssemblyLoader.OnAssemblyResolve`) matches **exact FullName only**, so the partial name
+  `"SandBox"` never matches. All 7 `Type.GetType` calls returned null in-game; `SuppressAll` logged
+  `suppressed 36/36 (intended 43)` plus a warning that was never surfaced. The unit-test host masked this in the
+  opposite direction: SandBox.dll IS loadable there, so nothing failed where anyone was looking.
+- **The crash itself:** `NotableWantsDaughterFoundIssue`'s quest ctor maps giver culture → rogue template via
+  `Clan.BanditFactions.FirstOrDefault(x => x.StringId == "steppe_bandits")?.Culture.BanditBoss`. TAOM deletes all
+  vanilla bandit clans (`spclans.xslt`), so the dict stores null and `HeroCreator.CreateSpecialHero(null, …)` NREs
+  inside the accept-option consequence → CTD. Every vanilla-culture key in that dict is a landmine on TAOM data.
+- **Fix:** `VanillaIssueBehaviorTypes` now resolves the 7 by scanning `AppDomain.CurrentDomain.GetAssemblies()` for
+  the simple name `SandBox` and calling `Assembly.GetType` (`ResolveTypesFromLoadedAssemblies`); the under-count log
+  is now `LogError`; and the `OnGameLoaded` sweep above cancels lingering uncommitted vanilla issues in existing
+  saves (`IssueBase.CompleteIssueWithCancel`, classification by namespace via `IsVanillaIssueType`). A
+  `ResolveTypesFromLoadedAssemblies_RealSandBoxAssembly_ResolvesAll7` test pins the 7 names against the real
+  SandBox.dll as an engine-bump canary.
 
 ## Text / Localization
 

@@ -29,9 +29,62 @@ public class LotrIssuesCampaignBehavior : CampaignBehaviorBase
     public override void RegisterEvents()
     {
         CampaignEvents.OnCheckForIssueEvent.AddNonSerializedListener(this, OnCheckForIssue);
+        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
     }
 
     public override void SyncData(IDataStore dataStore) { }
+
+    /// <summary>
+    /// Safety-net sweep for saves made while vanilla issue behaviors were still live (the pre-fix
+    /// Type.GetType resolution left the 7 SandBox issues unsuppressed — 2026-07-21 crash report):
+    /// cancel every lingering vanilla issue the player has NOT committed to, because accepting one can
+    /// CTD on TAOM data (the daughter quest's ctor NREs on the XSLT-deleted vanilla bandit clans).
+    /// In-progress commitments — an accepted quest, a dispatched alternative solution, a lord
+    /// solution — are left alone: their start paths already ran safely and cancelling them would
+    /// destroy player progress (an alternative-solution cancel recalls the committed companion+troops).
+    /// </summary>
+    private void OnGameLoaded(CampaignGameStarter starter)
+    {
+        try
+        {
+            var issues = Campaign.Current?.IssueManager?.Issues;
+            if (issues == null) return;
+
+            var toCancel = new System.Collections.Generic.List<IssueBase>();
+            foreach (var pair in issues)
+            {
+                var issue = pair.Value;
+                if (issue == null) continue;
+                // Any in-progress player commitment is kept: an accepted quest (ctor already ran
+                // safely), a dispatched companion+troops (alternative solution), or a lord solution.
+                // Cancelling those would destroy progress; only untouched offers are crash bombs.
+                if (issue.IssueQuest != null || issue.IsSolvingWithAlternative || issue.IsSolvingWithLordSolution) continue;
+                if (!LotrIssueSuppression.IsVanillaIssueType(issue.GetType())) continue;
+                toCancel.Add(issue); // collect first — cancelling mutates the Issues dictionary
+            }
+
+            foreach (var issue in toCancel)
+            {
+                var name = issue.GetType().Name;
+                try
+                {
+                    issue.CompleteIssueWithCancel();
+                    _logger.LogInfo($"LotrIssues: swept lingering vanilla issue '{name}' (owner '{issue.IssueOwner?.Name}')");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning($"LotrIssues: failed to sweep vanilla issue '{name}': {ex.Message}");
+                }
+            }
+
+            if (toCancel.Count > 0)
+                _logger.LogError($"LotrIssues: swept {toCancel.Count} vanilla issue(s) lingering in this save — suppression gap in the build that created it");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"LotrIssues: vanilla-issue sweep failed: {ex.Message}");
+        }
+    }
 
     private void OnCheckForIssue(Hero hero)
     {

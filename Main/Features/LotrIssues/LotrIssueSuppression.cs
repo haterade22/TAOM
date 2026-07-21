@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Issues;
 using TAOM.Core.Logging;
@@ -89,14 +90,76 @@ public static class LotrIssueSuppression
         {
             if (_cachedResolved != null) return _cachedResolved;
             var list = new List<Type>(CampaignSystemIssueTypes);
-            foreach (var name in SandBoxIssueTypeNames)
-            {
-                var t = Type.GetType(name, throwOnError: false);
-                if (t != null) list.Add(t);
-            }
+            // Type.GetType("T, SandBox") is a Load-context bind: it probes only the appbase, where
+            // module DLLs are NOT (they're Assembly.LoadFrom'd from Modules\SandBox\bin), and the
+            // engine's AssemblyResolve handler matches exact FullName only — so it returns null
+            // in-game for all 7 names (2026-07-21 crash report: the SandBox issues stayed alive).
+            // Resolve against the already-loaded assembly by simple name instead.
+            list.AddRange(ResolveTypesFromLoadedAssemblies("SandBox", SandBoxIssueTypeFullNames, AppDomain.CurrentDomain.GetAssemblies()));
             _cachedResolved = list;
             return _cachedResolved;
         }
+    }
+
+    private static IReadOnlyList<string> _sandBoxFullNames;
+
+    /// <summary>The 7 SandBox type names without the assembly qualifier (namespace-qualified only).</summary>
+    internal static IReadOnlyList<string> SandBoxIssueTypeFullNames
+    {
+        get
+        {
+            if (_sandBoxFullNames != null) return _sandBoxFullNames;
+            var fullNames = new List<string>(SandBoxIssueTypeNames.Length);
+            foreach (var name in SandBoxIssueTypeNames)
+            {
+                var comma = name.IndexOf(',');
+                fullNames.Add(comma >= 0 ? name.Substring(0, comma).Trim() : name);
+            }
+            _sandBoxFullNames = fullNames;
+            return _sandBoxFullNames;
+        }
+    }
+
+    /// <summary>
+    /// Resolve <paramref name="typeFullNames"/> from the already-loaded assembly whose SIMPLE name is
+    /// <paramref name="assemblySimpleName"/>. Missing assembly or missing types degrade to an empty /
+    /// shorter list — never a throw (the unit-test host has no SandBox.dll).
+    /// </summary>
+    internal static List<Type> ResolveTypesFromLoadedAssemblies(
+        string assemblySimpleName, IEnumerable<string> typeFullNames, IEnumerable<Assembly> loadedAssemblies)
+    {
+        var result = new List<Type>();
+        if (string.IsNullOrEmpty(assemblySimpleName) || typeFullNames == null || loadedAssemblies == null)
+            return result;
+
+        Assembly match = null;
+        foreach (var asm in loadedAssemblies)
+        {
+            if (asm != null && string.Equals(asm.GetName().Name, assemblySimpleName, StringComparison.Ordinal))
+            {
+                match = asm;
+                break;
+            }
+        }
+        if (match == null) return result;
+
+        foreach (var fullName in typeFullNames)
+        {
+            var t = match.GetType(fullName, throwOnError: false);
+            if (t != null) result.Add(t);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// True when <paramref name="issueType"/> (an issue/quest instance type OR its declaring behavior)
+    /// belongs to the vanilla procedural-issue namespaces. Nested issue types report their declaring
+    /// type's namespace, so a namespace check covers both. Drives the save-load safety-net sweep.
+    /// </summary>
+    public static bool IsVanillaIssueType(Type issueType)
+    {
+        var ns = issueType?.Namespace;
+        return ns == "TaleWorlds.CampaignSystem.Issues" || ns == "SandBox.Issues";
     }
 
     /// <summary>
@@ -115,13 +178,17 @@ public static class LotrIssueSuppression
         }
 
         var types = VanillaIssueBehaviorTypes;
+        // RemoveBehaviors<T> is a silent no-op for an unregistered type, so "the call didn't throw"
+        // proves nothing — count actual list shrinkage to keep the log honest (2026-07-21 review).
         int removed = 0;
         foreach (var t in types)
         {
             try
             {
+                int before = starter.CampaignBehaviors.Count;
                 removeBehaviors.MakeGenericMethod(t).Invoke(starter, null);
-                removed++;
+                if (starter.CampaignBehaviors.Count < before) removed++;
+                else logger?.LogWarning($"LotrIssues: {t?.Name} resolved but was not registered — engine moved its registration?");
             }
             catch (Exception ex)
             {
@@ -129,7 +196,9 @@ public static class LotrIssueSuppression
             }
         }
         logger?.LogInfo($"LotrIssues: suppressed {removed}/{types.Count} vanilla issue behaviors (intended {ExpectedVanillaIssueCount})");
+        // Under-count means vanilla issues are LIVE (they crash on TAOM data — e.g. the daughter
+        // quest NREs on the XSLT-deleted steppe_bandits clan, 2026-07-21 report). Error, not warning.
         if (types.Count < ExpectedVanillaIssueCount)
-            logger?.LogWarning($"LotrIssues: only {types.Count}/{ExpectedVanillaIssueCount} vanilla issue types resolved — some SandBox issues may not be suppressed");
+            logger?.LogError($"LotrIssues: only {types.Count}/{ExpectedVanillaIssueCount} vanilla issue types resolved — unresolved SandBox issues are NOT suppressed and remain live");
     }
 }
