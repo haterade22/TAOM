@@ -1812,4 +1812,710 @@
 				civilian="true" />
 		</Equipments>
 	</NPCCharacter>
+	<!-- LOTHLORIEN - elf, delegates faces to rivendell (no own BodyProperty); vanilla empire clothing like rivendell -->
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_0_lothlorien"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_0_lothlorien"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lothlorien"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.empire_horseman_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_1_lothlorien"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_1_lothlorien"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lothlorien"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Head"
+					id="Item.empire_crown_v2" />
+				<equipment
+					slot="Body"
+					id="Item.empire_dress" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_2_lothlorien"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_2_lothlorien"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lothlorien"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.short_padded_robe" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_3_lothlorien"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_3_lothlorien"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lothlorien"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.padded_leather_overcoat" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_4_lothlorien"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_4_lothlorien"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lothlorien"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.empire_plate_vest_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_5_lothlorien"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_5_lothlorien"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lothlorien"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Cape"
+					id="Item.scarf" />
+				<equipment
+					slot="Body"
+					id="Item.empire_horseman_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<!-- UMBAR - human corsairs, gondor faces per npcs_umbar.xml; vanilla empire clothing -->
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_0_umbar"
+		name="{=!}stage_2_page_0_branch_0_umbar"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.umbar"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.empire_horseman_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_1_umbar"
+		name="{=!}stage_2_page_0_branch_1_umbar"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.umbar"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Head"
+					id="Item.empire_crown_v2" />
+				<equipment
+					slot="Body"
+					id="Item.empire_dress" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_2_umbar"
+		name="{=!}stage_2_page_0_branch_2_umbar"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.umbar"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.short_padded_robe" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_3_umbar"
+		name="{=!}stage_2_page_0_branch_3_umbar"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.umbar"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.padded_leather_overcoat" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_4_umbar"
+		name="{=!}stage_2_page_0_branch_4_umbar"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.umbar"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.empire_plate_vest_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_5_umbar"
+		name="{=!}stage_2_page_0_branch_5_umbar"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.umbar"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Cape"
+					id="Item.scarf" />
+				<equipment
+					slot="Body"
+					id="Item.empire_horseman_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<!-- GOBLIN - goblin race, gundabad faces per npcs_goblin.xml; shared mordor orc pool clothing -->
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_0_goblin"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_0_goblin"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.goblin"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_1_goblin"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_1_goblin"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.goblin"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_2_goblin"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_2_goblin"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.goblin"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_3_goblin"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_3_goblin"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.goblin"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_4_goblin"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_4_goblin"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.goblin"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_5_goblin"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_5_goblin"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.goblin"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<!-- MISTY MOUNTAIN ORCS - orc race, gundabad faces per npcs_mistymountainorcs.xml; shared mordor orc pool clothing -->
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_0_mistymountainorcs"
+		race="orc"
+		name="{=!}stage_2_page_0_branch_0_mistymountainorcs"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.mistymountainorcs"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_1_mistymountainorcs"
+		race="orc"
+		name="{=!}stage_2_page_0_branch_1_mistymountainorcs"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.mistymountainorcs"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_2_mistymountainorcs"
+		race="orc"
+		name="{=!}stage_2_page_0_branch_2_mistymountainorcs"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.mistymountainorcs"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_3_mistymountainorcs"
+		race="orc"
+		name="{=!}stage_2_page_0_branch_3_mistymountainorcs"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.mistymountainorcs"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_4_mistymountainorcs"
+		race="orc"
+		name="{=!}stage_2_page_0_branch_4_mistymountainorcs"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.mistymountainorcs"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_5_mistymountainorcs"
+		race="orc"
+		name="{=!}stage_2_page_0_branch_5_mistymountainorcs"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.mistymountainorcs"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
 </NPCCharacters>

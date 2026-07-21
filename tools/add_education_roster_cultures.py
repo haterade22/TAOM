@@ -26,11 +26,13 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 TARGET = REPO / "Main" / "_Module" / "ModuleData" / "equipmentsets" / "taom_education_equipment_templates.xml"
 
-# The 10 cultures that own child-education rosters — all verified present in
+# The 14 cultures that own child-education rosters — all verified present in
 # taom_spcultures.xml, so Culture.<name> resolves cleanly.
+# lothlorien/umbar/shaghana/abanissa added in the age-8 education crash-fix pass (#354).
 KNOWN_CULTURES = {
-    "dolguldur", "erebor", "goblin", "gondor", "gundabad",
-    "isengard", "mirkwood", "mistymountainorcs", "mordor", "rivendell",
+    "abanissa", "dolguldur", "erebor", "goblin", "gondor", "gundabad",
+    "isengard", "lothlorien", "mirkwood", "mistymountainorcs", "mordor",
+    "rivendell", "shaghana", "umbar",
 }
 
 # Greedy [a-z0-9_]+ backtracks so group 3 is the trailing culture token,
