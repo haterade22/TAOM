@@ -31,6 +31,12 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
 2. Game-side timeline: newest `Logs/taom_debug_*.log` (game bin) + newest
    `C:\ProgramData\Mount and Blade II Bannerlord\logs\rgl_log_*.txt` — last lines date the
    crash relative to gameplay events (charge orders, scene loads).
+3. **Map an implicated patch to its owner.** If a `[BattleLoad]` / `[SaveLoad]` / `_PatchN`
+   marker in those logs, or the last managed frame before the native transition, names a TAOM
+   patch, grep it in [`docs/reference/harmony-patch-registry.md`](../../../docs/reference/harmony-patch-registry.md)
+   — it maps the patch to its exact target method + status, so you know whether a TAOM hook sits
+   on the crashing path before blaming the engine. (This is where CLAUDE.md's former "Harmony
+   Patch Categories" table now lives.)
 
 ## Phase 2 — Name the site (offline, fully scripted)
 

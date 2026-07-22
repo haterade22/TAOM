@@ -9,14 +9,24 @@ Review all changed files, split them into logical atomic commits, and execute ea
 
 ## Step 1: Inspect Current State
 
+Live working-tree state, pre-loaded (each `!`…`` line below is replaced with its command
+output before you read this skill — no tool call needed):
+
+- Unstaged: !`git status --short`
+- Unstaged diffstat: !`git diff --stat`
+- Staged diffstat: !`git diff --cached --stat`
+- Untracked: !`git ls-files --others --exclude-standard`
+
+List ALL files: staged, unstaged, and untracked. Present a consolidated list.
+
+Fallback — if the pre-loaded block above is empty (dynamic injection unavailable), run these
+directly:
 ```bash
 git status
 git diff --name-only
 git diff --name-only --cached
 git ls-files --others --exclude-standard
 ```
-
-List ALL files: staged, unstaged, and untracked. Present a consolidated list.
 
 ## Step 2: Propose Logical Groups
 

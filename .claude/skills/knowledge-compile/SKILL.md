@@ -2,6 +2,8 @@
 name: knowledge-compile
 description: Compile source material from docs/raw/<topic>/ into a navigable wiki node at docs/research/<topic>.md. Use when source-material has accumulated and needs summarization with cross-refs to existing feature docs / RCAs / memory.
 argument-hint: <topic-path-under-docs/raw>
+context: fork
+agent: general-purpose
 ---
 
 # Knowledge Compile

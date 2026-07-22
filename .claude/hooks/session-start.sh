@@ -39,6 +39,19 @@ if [[ -f "$GAME_VERSION_XML" && -f "$PIN_FILE" ]]; then
   fi
 fi
 
+# Stale-worktree visibility. Parallel-agent worktrees under .claude/worktrees/ are
+# auto-cleaned only when unchanged; abandoned ones with edits linger (4 forgotten trees
+# cost 22 GB by 2026-07-11). Surface the count so the leak can't hide. Read-only, count
+# only (no `du` — keep startup fast on a large tree). Fail-open.
+WORKTREE_DIR=".claude/worktrees"
+if [[ -d "$WORKTREE_DIR" ]]; then
+  WT_COUNT=$(find "$WORKTREE_DIR" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
+  if [[ -n "$WT_COUNT" && "$WT_COUNT" -gt 0 ]]; then
+    echo ""
+    echo "Worktrees: ${WT_COUNT} lingering under $WORKTREE_DIR — if abandoned, prune (git worktree remove) to reclaim disk."
+  fi
+fi
+
 # Last 5 commits
 echo ""
 echo "Recent commits:"

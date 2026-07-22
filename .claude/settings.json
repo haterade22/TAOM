@@ -48,15 +48,18 @@
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-moduledata-validation.sh"
+            "command": ".claude/hooks/check-moduledata-validation.sh",
+            "statusMessage": "Validating ModuleData refs before commit…"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-native-dll-crt.sh"
+            "command": ".claude/hooks/check-native-dll-crt.sh",
+            "statusMessage": "Checking vendored native DLL links a static CRT…"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/check-doc-config-drift.sh"
+            "command": ".claude/hooks/check-doc-config-drift.sh",
+            "statusMessage": "Linting docs for config drift, version, and budget…"
           }
         ]
       },
@@ -171,7 +174,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/check-verification-evidence.sh"
-          },
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
           {
             "type": "command",
             "command": ".claude/hooks/session-stop.sh"

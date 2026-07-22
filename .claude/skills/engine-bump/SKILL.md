@@ -8,7 +8,7 @@ description: Respond to a Bannerlord engine update (Steam force-bump or delibera
 Run when the installed Bannerlord version changes — whether Steam force-updated under us (the
 1.4.5 → 1.4.6 event, 2026-06-11 17:39, discovered a day late at the cost of a morning of
 misattributed crashes) or we migrate deliberately. The session-start hook warns on drift
-(pinned version in `.claude/state/pinned-game-version.txt`); this skill is the response.
+(pinned version in `.claude/pinned-game-version.txt`); this skill is the response.
 
 ## Phase 1 — Confirm + scope the drift
 
@@ -53,7 +53,8 @@ moved → all gameplay changes were NATIVE-internal.
 4. Vanilla data rescan per `.claude/rules/vanilla-data-comparison.md` (scene renames/removals,
    XML re-schemas) + check which vanilla `ModuleData` XMLs the update actually touched
    (timestamp filter).
-5. Update the pin: write the new version into `.claude/state/pinned-game-version.txt`.
+5. Update the pin: write the new version into `.claude/pinned-game-version.txt` (the file
+   `session-start.sh` reads; note it's `.claude/`, NOT `.claude/state/`).
 6. CLAUDE.md target-version note + memory update (needs explicit user OK for CLAUDE.md).
 
 ## Phase 5 — Control battles before believing anything

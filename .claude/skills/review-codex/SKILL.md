@@ -26,13 +26,13 @@ Expect `Logged in using ChatGPT` (or equivalent). If not logged in, stop the ski
 
 **Dispatch command (Phase 2e):**
 ```bash
-cd "<repo-root>" && codex exec - < "<prompt-file-path>" > "<output-file-path>" 2>&1
+cd "<repo-root>" && codex exec -c project_doc_max_bytes=65536 - < "<prompt-file-path>" > "<output-file-path>" 2>&1
 ```
 - `codex exec -` reads the prompt from stdin (avoids argv length limits for large prompts).
 - Output (stdout + stderr) goes to `docs/reviews/raw/codex-adversarial-{feature}-{date}.md`.
 - Wrap with `run_in_background: true` on the Bash tool call — Codex with `model_reasoning_effort = "xhigh"` typically runs 10-45 minutes. The harness notifies when the background job completes.
 - Model + reasoning effort come from `~/.codex/config.toml` (currently `model = "gpt-5.5"`, `model_reasoning_effort = "xhigh"`). Do NOT override unless the user asks.
-- Codex picks up project rules from `AGENTS.md` automatically (no need to mention it in the prompt).
+- Codex reads project rules from `AGENTS.md`, **but truncates it at `project_doc_max_bytes` (default 32768). AGENTS.md exceeds that, so the `-c project_doc_max_bytes=65536` override is REQUIRED** — without it Codex reviews without TAOM's Critical Rules, ADR rules, and commit conventions (they live past the cut). The project `.codex/config.toml` sets the key but is never loaded (`CODEX_HOME` unset → Codex reads `~/.codex/config.toml`), which is why the flag is passed explicitly. Confirm the fix is live with `codex debug prompt-input "hi"` (no API call): the rendered input must contain "Non-Negotiable ADR Rules". This is also why the project-declared `filesystem`/`git`/`ilspy` MCP servers are inert — they're only in the unloaded project config.
 
 **When the background job notifies completion:**
 1. Read the output file. Confirm it's a real Codex review (starts with review structure, not an error message).
@@ -122,7 +122,7 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
 3. **Dispatch via Bash** in background:
    ```
    Bash tool call:
-     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md" 2>&1
+     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c project_doc_max_bytes=65536 - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md" 2>&1
      run_in_background: true
      timeout: 600000  (10 min — Codex usually finishes inside this; harness will notify when actually done)
    ```
@@ -137,7 +137,7 @@ Tell the user:
   Manual fallback:
     1. Open a terminal
     2. cd <repo-root>
-    3. mkdir -p docs/reviews/raw && codex exec - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md"
+    3. mkdir -p docs/reviews/raw && codex exec -c project_doc_max_bytes=65536 - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md"
     4. When done, re-invoke /review-codex with the .md file path as argument
 ```
 

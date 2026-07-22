@@ -1,6 +1,8 @@
 #!/bin/bash
-# Stop hook: Append a session summary (commits + modified files) to a rolling log.
+# SessionEnd hook: Append a session summary (commits + modified files) to a rolling log.
 # Enables "what did I do yesterday" reconstruction without git-log spelunking.
+# Moved from Stop -> SessionEnd 2026-07-18: Stop fires every turn, which grew this log to
+# 137 KB (+ a 2.8 MB rotated .1). SessionEnd fires once per session — the correct teardown event.
 
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 

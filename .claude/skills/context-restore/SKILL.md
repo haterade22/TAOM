@@ -22,7 +22,13 @@ Adapted from [garrytan/gstack/context-restore](https://github.com/garrytan/gstac
 
 ## How it works
 
-1. **List available snapshots:**
+1. **List available snapshots.** Pre-loaded — the `!`…`` line below is replaced with its
+   live output before you read this skill (empty = no snapshots, or injection unavailable →
+   use the fallback):
+
+   - Snapshots (most recent first): !`ls -t "${CLAUDE_PROJECT_DIR}/.claude/state/context"/*.md 2>/dev/null | head -10`
+
+   Fallback (run directly if the pre-load above is empty):
    ```bash
    STATE_DIR="${CLAUDE_PROJECT_DIR}/.claude/state/context"
    if [[ ! -d "$STATE_DIR" ]] || [[ -z "$(ls -A "$STATE_DIR" 2>/dev/null)" ]]; then

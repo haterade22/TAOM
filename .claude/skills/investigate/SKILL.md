@@ -42,6 +42,8 @@ Gather context before forming any hypothesis.
 
 2. **Read the code.** Trace from symptom back. Use `Grep`/`find_symbol` (Serena MCP) to find references; `Read` to understand logic.
 
+2b. **Map a stack trace to its owning patch (crash-to-owner in one step).** If the trace names a TaleWorlds type or a TAOM patch, grep it in [`docs/reference/harmony-patch-registry.md`](../../../docs/reference/harmony-patch-registry.md) FIRST — the registry maps a failing type to its owning `PatchNN` category, exact target method, and status (active / DISABLED / PARKED) before you trace further. (This is where the former CLAUDE.md "Harmony Patch Categories" table now lives.)
+
 3. **Check recent changes.**
    ```bash
    git log --oneline -20 -- <affected-files>
@@ -60,7 +62,7 @@ Gather context before forming any hypothesis.
    - XSLT transforms (vanilla attribute drift)
    - `IoC.cs` registration order (service-locator hot path)
 
-6. **Verify TaleWorlds API signatures.** Per CLAUDE.md, `E:\Decompiled_Bannerlord\` is **v1.4** but the installed game is v1.3.15. Before assuming a method exists or has a particular signature, run `ilspycmd` against the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\`. If decompiled and installed disagree, trust installed. Use the `/research` skill if the surface is large.
+6. **Verify TaleWorlds API signatures.** The installed game is **v1.4.7** and `E:\Decompiled_Bannerlord\` matches (v1.4.7), but the dump can lag after an engine bump. Before assuming a method exists or has a particular signature, run `pwsh tools/taom-src.ps1 path <Type>` (or `ilspycmd`) against the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\`. If dump and installed disagree, trust installed. Use the `/research` skill if the surface is large.
 
 Output: **"Root-cause hypothesis: ..."** — a specific, testable claim about *what* is wrong and *why*.
 
@@ -93,7 +95,7 @@ Check whether the bug matches a known TAOM/Bannerlord failure pattern before wri
 
 | Pattern | Signature | Where to look |
 |---------|-----------|---------------|
-| **Harmony patch type-load** | `TypeLoadException` at startup, mod fails before main menu | Patch target signature mismatch (1.3.15 vs 1.4 decompile drift) — verify with `ilspycmd` |
+| **Harmony patch type-load** | `TypeLoadException` at startup, mod fails before main menu | Patch target signature mismatch (installed-vs-dump drift after an engine bump) — verify with `pwsh tools/taom-src.ps1 path <Type>` / `ilspycmd` |
 | **Harmony patch silent skip** | Patch loads, but behavior doesn't change in-game | Wrong target method, prefix returning false unexpectedly, manual patch matching wrong overload |
 | **GameModel cast** | `InvalidCastException` in DefaultXxxModel call | New override returning wrong type, or base call missing |
 | **Service-locator at startup** | `IoC.Resolve` returns null, NullReferenceException in patch | Service registered after CampaignBehavior runs — registration order bug. See `feedback_no_service_locator_in_services.md` |

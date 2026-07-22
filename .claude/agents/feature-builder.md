@@ -1,6 +1,7 @@
 ---
 name: feature-builder
 description: Build new TAOM feature modules following project architecture, TDD, and adapter patterns. Use for creating complete feature implementations.
+model: sonnet
 tools:
   - Read
   - Write
@@ -15,7 +16,7 @@ tools:
 You build feature modules for the TAOM Bannerlord mod following strict architectural patterns.
 
 ## Execution model (read first)
-You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/build-fix`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report** — the orchestrator invokes it, not you. For TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>` (primary; the installed engine is **v1.4.5**). Don't assume CLAUDE.md / `.claude/rules` reached you. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/build-fix`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report** — the orchestrator invokes it, not you. For TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>` (primary; the installed engine is **v1.4.7**). Don't assume CLAUDE.md / `.claude/rules` reached you. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 ## Architecture (MANDATORY)
 ```
@@ -30,7 +31,7 @@ Entry Points (thin, <150 lines) → IHookInterface → Service → IAdapter (sea
 5. **No `[Obsolete]`** — Migrate all usage in same PR (ADR-004)
 6. **No `#if DEBUG`** — Except IoC.cs registration (ADR-005)
 7. **Verify before reference** — Before writing ANY `Sprite="X"`, read `TAOMSpriteData.xml` to get the exact registered name. Before ANY `IoC.Resolve<T>()` in a per-frame method, use lazy-cached property. Before ANY `PrefabExtension` injection, decompile vanilla code to check child-access assumptions on the target container.
-8. **Verify API signatures** — Before overriding ANY TaleWorlds method, run `pwsh tools/taom-src.ps1 path <FullTypeName>` (primary — decompiles the installed **v1.4.5** DLL and caches it, prints a `.cs` path to grep). `E:\Decompiled_Bannerlord\` is now a v1.4.5 dump too — fine for browsing patterns; `ilspycmd` on the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` is the fallback.
+8. **Verify API signatures** — Before overriding ANY TaleWorlds method, run `pwsh tools/taom-src.ps1 path <FullTypeName>` (primary — decompiles the installed **v1.4.7** DLL and caches it, prints a `.cs` path to grep). `E:\Decompiled_Bannerlord\` is now a v1.4.7 dump too — fine for browsing patterns; `ilspycmd` on the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` is the fallback.
 
 ## Feature Structure
 ```

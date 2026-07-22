@@ -33,21 +33,34 @@ FEATURES_DIR = DOCS_DIR / "features"
 MIGRATION_DIR = DOCS_DIR / "migration"
 ARCHIVE_DIR = DOCS_DIR / "archive"
 AUDITS_DIR = DOCS_DIR / "audits"
-# CLAUDE.md eager-load budget (repo-reorg 2026-07-12). CLAUDE.md loads into EVERY session
-# and every agent spawn; at 174 KB it cost ~30K tokens before any work happened. The
-# decomposition thinned it to one-line table rows + doc links; these caps stop regrowth.
-# The bloat pattern is specific: a feature's whole design pasted into a table row (1-3K chars).
-# Cap calibration: the decomposition landed at ~91 KB — the honest floor at one-line density
-# with 85 Key Paths + 65 Harmony + 40 GameModel rows all kept (the plan's 60 KB estimate
-# predated recovering 17 missing Harmony categories). 100 KB hard / 95 KB warn = ~9 KB of
-# new-feature headroom before the gate nags; tighten if the index is ever slimmed further.
+# CLAUDE.md eager-load budget. CLAUDE.md loads into EVERY session and every agent spawn, so
+# every KB is a permanent per-turn tax. Two restructures thinned it: 174 KB -> 91 KB
+# (2026-07-12), then 93.6 KB -> ~42 KB (2026-07-18) by moving the four big index tables
+# (Key Paths, Harmony, GameModel, Doc Lookup) and the procedure sections (Localization, Codex,
+# Hooks, Equipment, PowerShell) out to docs/reference/*.md behind one-line stubs. The rule that
+# keeps it lean: CLAUDE.md answers "what must I never do, and where do I look next?" — a section
+# that answers "how do I do X" is a skill body; "what are all the X" is a docs/reference/ file
+# with a stub. Caps are calibrated to the ~42 KB landing; tighten further if the index is
+# slimmed again. NOTE: new features now add their row to docs/reference/feature-map.md, NOT to
+# a Key Paths table here (that table moved) — so CLAUDE.md should barely grow per feature.
 CLAUDE_MD = REPO_ROOT / "CLAUDE.md"
-CLAUDE_MD_MAX_BYTES = 100_000      # hard cap (fails --fail-on-drift)
-CLAUDE_MD_WARN_BYTES = 95_000      # report-only early warning
+CLAUDE_MD_MAX_BYTES = 46_000       # hard cap (fails --fail-on-drift); was 100_000 pre-2026-07-18
+CLAUDE_MD_WARN_BYTES = 44_000      # report-only early warning; was 95_000
 CLAUDE_MD_MAX_TABLE_ROW = 400      # chars; thin rows run ~80-300
 CLAUDE_MD_MAX_PROSE_LINE = 600     # chars; catches paragraph bloat outside tables
 # Enforcement flipped ON at the end of the decomposition (2026-07-12, Track C8).
 CLAUDE_MD_BUDGET_ENFORCE = True
+
+# AGENTS.md eager-load budget (added 2026-07-18). Codex reads AGENTS.md but TRUNCATES it at
+# project_doc_max_bytes. Before the rebuild, AGENTS.md was 112 KB with the actual review RULES
+# starting at byte ~83.5 K — past even the 64 KB flagged cap — so Codex reviewed without them.
+# The `.claude/skills/{codex-verify,review-codex,deep-review}` dispatch commands now pass
+# `-c project_doc_max_bytes=65536`; this budget keeps AGENTS.md well under that so the rules
+# (which must sit early) never get pushed past the cap again. THIS is the check that would have
+# caught the truncation. Historical catch-log lives in docs/reviews/codex-track-record.md.
+AGENTS_MD = REPO_ROOT / "AGENTS.md"
+AGENTS_MD_MAX_BYTES = 44_000       # hard cap (fails --fail-on-drift)
+AGENTS_MD_WARN_BYTES = 40_000      # report-only early warning
 
 # Rolled-out CHANGELOG halves: verbatim historical text whose links/versions were written
 # relative to the repo root at the time — never lint them as living docs.
@@ -87,6 +100,11 @@ STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS = (
     "codex-prompt-",
     "codex-result-",
     "doc-lint-",
+    # Historical Codex-review essay logs: every version ref is a fact about the review that ran,
+    # not current guidance. codex-track-record.md holds the catch-log moved out of AGENTS.md
+    # 2026-07-18; review-lessons-archive.md holds the rolled-out older essays.
+    "codex-track-record",
+    "review-lessons-archive",
 )
 # Codex review *transcripts* (prompts + results) are external-tool snapshots, not curated docs.
 # We don't lint their internal links either — they capture historical state and we don't edit them.
@@ -95,6 +113,9 @@ DEAD_LINK_EXEMPT_FILENAME_SUBSTRINGS = (
     "codex-prompt-",
     "codex-result-",
     "doc-lint-",
+    # Historical review essay-logs — their file refs capture past state; we don't edit them.
+    "codex-track-record",
+    "review-lessons-archive",
 )
 DEAD_LINK_EXEMPT_FILENAMES = ("TEMPLATE.md",)
 # Top-level dirs we walk for markdown files.
@@ -361,6 +382,12 @@ def check_version_consistency() -> list[tuple[Path, int, str, str]]:
     check_file(REPO_ROOT / "CLAUDE.md",
                re.compile(r"Target:\s*Bannerlord\s+v?([0-9]+(?:\.[0-9]+)+)"),
                "CLAUDE.md target")
+    # AGENTS.md (Codex reviewer instructions) — anchor on its stable declarative line so
+    # incidental version mentions don't false-positive. The historical review essays that DID
+    # cite old versions moved to docs/reviews/codex-track-record.md (stale-version-exempt).
+    check_file(REPO_ROOT / "AGENTS.md",
+               re.compile(r"mod for Bannerlord\s+v?([0-9]+(?:\.[0-9]+)+)"),
+               "AGENTS.md target")
     snap_dir = DOCS_DIR / "reference" / "taleworlds-api-snapshot"
     for name in ("gamemodel-bases.md", "patch-targets.md"):
         check_file(snap_dir / name,
@@ -450,10 +477,11 @@ def check_orphan_features(files: list[Path]) -> list[Path]:
 
 
 def check_claude_md_budget() -> list[tuple[Path, int, str, str]]:
-    """CLAUDE.md eager-load budget: total size + per-line caps.
+    """CLAUDE.md + AGENTS.md eager-load budgets: total size (both) + CLAUDE.md per-line caps.
 
     Findings are (file, lineno, kind, message). lineno 0 = whole-file finding.
     Fenced code blocks are exempt from line caps (commands/JSON wrap awkwardly).
+    AGENTS.md gets a size-only budget (Codex-truncation guard, see AGENTS_MD_* constants).
     """
     findings: list[tuple[Path, int, str, str]] = []
     if not CLAUDE_MD.is_file():
@@ -479,6 +507,20 @@ def check_claude_md_budget() -> list[tuple[Path, int, str, str]]:
             findings.append((CLAUDE_MD, lineno, "prose-line",
                              f"line is {len(stripped)} chars (cap {CLAUDE_MD_MAX_PROSE_LINE}) — "
                              f"move the detail to a doc and keep a pointer."))
+
+    # AGENTS.md size budget — Codex truncates it at project_doc_max_bytes; keep it small so the
+    # review RULES stay early. The catch that would have caught the 2026-07-18 truncation.
+    if AGENTS_MD.is_file():
+        asize = AGENTS_MD.stat().st_size
+        if asize > AGENTS_MD_MAX_BYTES:
+            findings.append((AGENTS_MD, 0, "size",
+                             f"AGENTS.md is {asize:,} B — over the {AGENTS_MD_MAX_BYTES:,} B budget. "
+                             f"Codex truncates at project_doc_max_bytes; move worked-examples to "
+                             f"docs/reviews/codex-track-record.md and keep the RULES early."))
+        elif asize > AGENTS_MD_WARN_BYTES:
+            findings.append((AGENTS_MD, 0, "size-warn",
+                             f"AGENTS.md is {asize:,} B — approaching the {AGENTS_MD_MAX_BYTES:,} B "
+                             f"budget (warn {AGENTS_MD_WARN_BYTES:,} B)."))
     return findings
 
 

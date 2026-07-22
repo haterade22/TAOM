@@ -2,6 +2,8 @@
 name: lint-cleanup-loop
 description: Autonomous doc-rot loop — fix one lint finding at a time, re-lint, commit on improvement; runs until clean or N stuck iterations.
 argument-hint: [--category stale_versions|dead_links|orphan_features|missing_features|all] [--max-iters N]
+disable-model-invocation: true
+disallowed-tools: AskUserQuestion
 ---
 
 # Lint Cleanup Loop
@@ -34,9 +36,9 @@ Modeled on Karpathy's [autoresearch program.md pattern](../../../docs/research/k
    - `all` — run the linter on the full set; pick whichever has the highest count
 4. **Capture baseline**: run `python tools/lint_docs.py --summary` and record the metric. Karpathy's "first run = baseline" rule (autoresearch program.md "The first run").
 5. **Initialize results.tsv**: at `.claude/state/lint-cleanup-loop/results.tsv` with header `commit\tcategory\tcount_before\tcount_after\tstatus\tdescription`. Untracked by git — same convention as `autoresearch/results.tsv` (in `.claude/state/` which is gitignored).
-6. **Confirm with user (one time only)**: "Baseline is N findings in category X. Starting the loop. I will NOT stop to ask for permission once running."
+6. **Announce baseline and start — do NOT prompt for confirmation**: print "Baseline is N findings in category X. Starting the loop; I will NOT stop for permission once running." Then kick off immediately. Invoking `/lint-cleanup-loop` **is** the authorization — this skill sets `disable-model-invocation: true` (user-only) and `disallowed-tools: AskUserQuestion` (the "NEVER STOP to ask" discipline is enforced by the harness, not just prose), so there is no confirmation step to wait on.
 
-Once confirmed, kick off the loop. Do not seek further confirmation until the metric reaches 0 or N consecutive iterations make no progress.
+Kick off the loop. Do not seek confirmation until the metric reaches 0 or N consecutive iterations make no progress.
 
 ## The experiment loop
 

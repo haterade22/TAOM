@@ -22,11 +22,11 @@ Expect `Logged in using ChatGPT`. If not, stop and tell the user to `codex login
 
 **Dispatch command:**
 ```bash
-cd "<repo-root>" && codex exec - < "<prompt-file>" > "<output-file>" 2>&1
+cd "<repo-root>" && codex exec -c project_doc_max_bytes=65536 - < "<prompt-file>" > "<output-file>" 2>&1
 ```
 - Run with `run_in_background: true` on the Bash tool.
 - Output path: `docs/reviews/raw/codex-verify-{feature-or-uncommitted}-{date}.md`.
-- Codex picks up project rules from `AGENTS.md` automatically.
+- Codex reads project rules from `AGENTS.md`, **but truncates it at `project_doc_max_bytes` (default 32768) — AGENTS.md is larger, so the `-c project_doc_max_bytes=65536` override is REQUIRED** or Codex reviews without TAOM's Critical Rules / ADR rules / commit conventions. The project `.codex/config.toml` sets this key but Codex never loads it (`CODEX_HOME` unset → it reads `~/.codex/config.toml`), so the flag is the reliable fix. Verify with `codex debug prompt-input "hi"` — the rendered input must contain "Non-Negotiable ADR Rules".
 
 ## Step 1: Identify Files to Review
 
@@ -49,7 +49,7 @@ FILES TO REVIEW: [list from Step 1, one per line]
 Focus on (in priority order):
 1. Adapter pattern violations (ADR-007) — sealed TaleWorlds types in service classes
 2. Thin entry point violations (ADR-002) — entry points over 150 lines with business logic
-3. Harmony patch target signatures — verify method signatures exist in installed v1.4.5 DLLs (NOT the decompiled folder, which is v1.4 and may have drifted)
+3. Harmony patch target signatures — verify method signatures exist in installed v1.4.7 DLLs (NOT the decompiled folder, which may have drifted)
 4. Test coverage gaps — services without corresponding test files
 5. GameModel override correctness — correct base class, base call patterns
 6. Cross-file data flow — declared types/fields/methods without consumers (aspirational scaffolding)
@@ -69,7 +69,7 @@ For `/review-codex` (the heavier adversarial flow), the prompt is much richer wi
 2. Dispatch:
    ```
    Bash tool call:
-     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec - < "docs/reviews/codex-verify-{target}-{date}.prompt.md" > "docs/reviews/raw/codex-verify-{target}-{date}.md" 2>&1
+     command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c project_doc_max_bytes=65536 - < "docs/reviews/codex-verify-{target}-{date}.prompt.md" > "docs/reviews/raw/codex-verify-{target}-{date}.md" 2>&1
      run_in_background: true
      timeout: 600000
    ```

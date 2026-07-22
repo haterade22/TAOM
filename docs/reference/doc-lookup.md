@@ -1,0 +1,49 @@
+# Doc Lookup (task -> doc)
+
+> Task-oriented index of TAOM docs. Extracted from CLAUDE.md 2026-07-18 (Tier 2 restructure). The 12 highest-traffic rows stay inline in CLAUDE.md "Doc Lookup"; `docs/INDEX.md` is the fuller curated topical map.
+
+
+**Start here for any doc question:** [docs/INDEX.md](../../docs/INDEX.md) — curated topical map across all 90 feature docs, ADRs, reviews, ai-includes, and migration docs. Knowledge-base architecture: [ADR-010](../../docs/adrs/010-knowledge-base-architecture.md).
+
+| Need to... | Read |
+|------------|------|
+| Write tests / TDD workflow | [tdd-enforcement.md](../../docs/ai-includes/tdd-enforcement.md) |
+| Research TaleWorlds mechanics | [taleworlds-research-guide.md](../../docs/ai-includes/taleworlds-research-guide.md) |
+| Debug / iterate on problem | [iterative-problem-solving.md](../../docs/ai-includes/iterative-problem-solving.md) |
+| Compare multiple approaches | [multi-approach-validation.md](../../docs/ai-includes/multi-approach-validation.md) |
+| Understand architecture | [architecture.md](../../docs/ai-includes/architecture.md) |
+| Check design patterns | [patterns.md](../../docs/ai-includes/patterns.md) |
+| Work with GUI/sprites/UI | [gui-sprite-system.md](../../docs/features/gui-sprite-system.md) |
+| Check ADR rules | [docs/adrs/](../../docs/adrs/README.md) |
+| Ensure code quality | [code-quality.md](../../docs/ai-includes/code-quality.md) |
+| Consult / append the master lessons-learned record | [LESSONS-LEARNED.md](../../docs/reviews/LESSONS-LEARNED.md) (index) → `docs/reviews/lessons/<category>.md` — **read the category file before touching a subsystem; append the `### rule / Why missed / Prevent / Source` entry there after every RCA** |
+| Review or rebaseline troop skill balance per culture | [troop-skill-balance.md](../../docs/features/troop-skill-balance.md) — run the read-only overview (`analyze_troop_balance.py`) BEFORE `rebalance_troops.py`; downward deltas can signal a too-weak modifier, not over-tuned troops |
+| Review LORD stats + the perks each lord's skills unlock, per culture (read-only) | [lord-perk-review.md](../../docs/features/lord-perk-review.md) — `extract_perks.py` (perk catalog) + `analyze_lord_balance.py` (per-culture HTML); authoritative skills resolve via `skill_template`→`taom_lord_skill_sets.xml`, NOT the inline `<skills>`; no single-formula parity (two lord-skill systems) |
+| Check migration status | [migration/TRACKING.md](../../docs/migration/TRACKING.md) |
+| Audit/fix scene refs after a version bump (battle-near-place crashes) | [scene-reference-audit.md](../../docs/reference/scene-reference-audit.md) — `audit_scene_names.py` + `audit_battle_scenes.py` + `remap_stale_scene_names.py`; vanilla renames/removes scenes between versions |
+| Compare TAOM data against current vanilla before editing mirrored XML | [.claude/rules/vanilla-data-comparison.md](../../.claude/rules/vanilla-data-comparison.md) — settlements/sp_battle_scenes/spcultures/xslt; auto-loads when those files are edited |
+| Convert a purchased UE/FBX asset kit into a Bannerlord kit (Rivendell/Tents precedent) | [ue-to-bannerlord-asset-pipeline.md](../../docs/reference/ue-to-bannerlord-asset-pipeline.md) — UE headless export, Blender normalize (Store-app launcher, staleness gotchas), spec-gloss conversion, `_mtl.tpac` generation (checksum unvalidated), t_-material naming exception |
+| Validate ModuleData cross-refs/ids before committing (broken item/troop refs, unknown culture, dup ids, civilian type) | [moduledata-validation.md](../../docs/features/moduledata-validation.md) — run `python tools/validate_moduledata.py`; schema-driven, supersedes the per-culture ref validators; auto-loaded rule + pre-commit hook wire it in |
+| Check every `mesh=` / `body_name=` ref resolves (after ANY weapon/armor authoring) | [mesh-ref-validation.md](../../docs/features/mesh-ref-validation.md) — `python tools/validate_mesh_refs.py --scan-bodies`; a missing `bo_` body is a CONFIRMED infinite mission-load hang (#352), not cosmetic; a clean PASS means only "clean within `--items` scope" |
+| Update BUTR/MCM/ButterLib dependencies | [migration/dr3-maintenance.md](../../docs/migration/dr3-maintenance.md) — version pinning, Steam Workshop fallback, smoke test, risk scenarios |
+| Use agent teams | [agent-teams.md](../../docs/ai-includes/agent-teams.md) |
+| Brief/spawn a subagent correctly | [agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md) — execution model (can't invoke skills), tool catalog, what to recommend |
+| Author a new culture's armor + troop tree (end-to-end) | [new-culture-authoring.md](../../docs/ai-includes/new-culture-authoring.md) — phases, helpers, color convention, iteration loops |
+| Add or fix lord skills + traits (any culture, any canonical character) | [lord-skills-authoring.md](../../docs/ai-includes/lord-skills-authoring.md) — TAOM SkillSet system, archetype catalog, per-NPC override recipes, gotchas |
+| Add a rideable creature mount end-to-end (assets → Monster/action/usage XML → C# BT → validation) | [creature-mount-authoring.md](../../docs/ai-includes/creature-mount-authoring.md) — elephant+spider-distilled; warg = reference implementation; 1.4.6 lookup-hardening (total key coverage, no `CanAttack`, `actt_dash` jump start, 45-row jump tables); 17-gotcha index; `tools/audit_mount_parity.py` |
+| Replace/refine a mount's FBX/tpac assets | [creature-mount-authoring.md](../../docs/ai-includes/creature-mount-authoring.md) → "REPLACING FBX / TPAC FILES" — back up, 4 silent-break failure modes, **MANDATORY post-deploy gate `python tools/verify_mount_assets.py <creature>`**; skeleton-drop fix = re-BUNDLE via `tpac_skeleton_inject.py` (a standalone skeleton tpac CRASHES the engine) |
+| Refine/author creature locomotion or rider clips in Blender (not data/XML) | [creature-animation-blender-mcp-workflow.md](../../docs/ai-includes/creature-animation-blender-mcp-workflow.md) — Blender 5.1.2 slotted-action API, `harness.py` toolkit, gait biomechanics, the `quad_movement` Kit-compile boundary |
+| Create a craftable weapon (FBX → tpac → 4 XML files, by hand) | [weapon-creation-workflow.md](../../docs/ai-includes/weapon-creation-workflow.md) — manual Step A–Z; per-piece schema, `bo_` collision convention, brace/couch/pike, **bows/shields = no decimals** rule. Automated alternative: [weapon-xml-pipeline.md](../../docs/features/weapon-xml-pipeline.md) |
+| Plan future GameModel overrides | [roadmap.md](../../docs/roadmap.md) |
+| Add or update translations | [TRANSLATOR_GUIDE.md](../../docs/localization/TRANSLATOR_GUIDE.md) + [tools/README.md](../../tools/README.md#localization-pipeline) |
+| Understand MBSubModuleBase lifecycle or Harmony patch registration | [submodule-lifecycle-and-harmony.md](../../docs/reference/engine/submodule-lifecycle-and-harmony.md) — when callbacks fire, patch kinds (Prefix/Postfix/Transpiler), deferred-apply gotcha, managed vs native boundary |
+| Understand the campaign→mission seam (encounters → battles) | [campaign-to-mission-bridge.md](../../docs/reference/engine/campaign-to-mission-bridge.md) — `EncounterManager`→`MapEvent`→`MissionState.OpenNew`, the single managed↔native handoff; AI auto-resolve without a Mission |
+| Understand campaign object graph (Hero/Clan/Kingdom/MobileParty/Settlement) | [campaign-object-graph.md](../../docs/reference/engine/campaign-object-graph.md) — sealed types, nav-property gotchas, `Settlement.Culture` not engine-saved, castle `.Village==null` NRE |
+| Debug agent spawn crashes / non-humanoid creature spawn / `AddSkinMeshes` | [agent-spawn-and-render-pipeline.md](../../docs/reference/engine/agent-spawn-and-render-pipeline.md) — `FromCharacterObj` vs `FromHorseObj` (skips skin meshes), `AgentBuildData`, `AgentVisuals` |
+| Understand mount/rider runtime or creature seating (howdah, riderless spider) | [mount-and-rider-runtime.md](../../docs/reference/engine/mount-and-rider-runtime.md) — two-phase `EventControlFlag` mount, `RiderSitBone`, `UsableMachine` howdah `StandingPoint` seating |
+| Understand formation geometry, team AI, or `AutoGenerated.dll` DivideByZero | [formations-and-team-ai.md](../../docs/reference/engine/formations-and-team-ai.md) — count-division sites (lines 756/1295/1428/1449), `_MT` threading, spider DivideByZero lead |
+| Understand DailyTick / CampaignTime / party AI / staggered AI ticks | [campaign-tick-time-and-party-ai.md](../../docs/reference/engine/campaign-tick-time-and-party-ai.md) — heartbeat loop, `CampaignTime` struct, `TickPartialHourlyAi` stagger |
+| Understand settlement food / prosperity / hearth / caravans (why garrisons starve) | [settlement-economy-food-prosperity.md](../../docs/reference/engine/settlement-economy-food-prosperity.md) — the food math, village caps, prosperity death-spiral, + the `TaomSettlementFoodModel` Troop-Weight fix |
+| Understand the quest/issue system, or convert vanilla quests to LOTR | [issue-and-quest-system.md](../../docs/reference/engine/issue-and-quest-system.md) (engine A-to-Z) + [lotr-issues.md](../../docs/features/lotr-issues.md) (**IMPLEMENTED** 2026-06-20 — 43 vanilla issues suppressed + replaced via XML-config + 3 generic templates) |
+| Browse all engine process docs | [docs/reference/engine/](../../docs/reference/engine/) — full arc: campaign heartbeat → object graph → encounter seam → mission lifecycle → agent spawn → formation/team AI → mount/rider → combat stats → usable machines → UI → save/object system → GameModel → scene/script → campaign behaviors → items → module integration → settlement economy |
+

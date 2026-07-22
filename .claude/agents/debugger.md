@@ -1,6 +1,7 @@
 ---
 name: debugger
 description: Generic systematic debugging for non-TAOM-specific issues (tooling, scripts, build infrastructure, env). Use /investigate for TAOM C# code; use this for everything else.
+model: sonnet
 tools:
   - Read
   - Write
