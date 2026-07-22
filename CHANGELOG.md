@@ -32,6 +32,49 @@ Save-compat: display text only; all ids stable.
 
 Constraint: `TAOM_Map/settlements.xml` (the live hideout names) is outside this repo — that edit is applied to the game install and won't appear in the git diff.
 
+### fix(careers): correct misleading "regeneration" pip labels (9 careers)
+
+The defensive `_b`-branch pips labeled **"+X% troop regeneration"** actually map to the `TroopSurvival`
+effect — a post-battle survival-chance multiplier (`TaomPartyHealingModel.GetSurvivalChance`: a downed
+troop survives as wounded instead of dying), not any form of healing or per-day HP recovery. Renamed
+to **"troop survival"** across all 9 careers that share the branch: `dale_guardsman`, `ironguard`,
+`blade_dancer` (Ñoldor), `warden`, `shadow_walker`, `uruk_berserker`, `cave_troll_master`,
+`shadow_warrior`, `corsair_boarder`. The paired `HeroHealing` pip **"+15% health regeneration"** →
+**"hero health regeneration"** so it reads as hero daily HP, not troops. 27 pips, each in two English
+files (`taom_career_choices.xml` inline defaults + `taom_career_strings.xml` source strings);
+magnitudes and mechanics unchanged.
+
+**English only** — the 11 AI-translated languages + PL still show the old wording; deferred to a later
+`/localize` pass. TAOM.Tests 4402 green (no test references these strings).
+
+Save-compat: none — display text only.
+
+### feat(gondor-armor): incorporate KEYforce noble armor item defs — Dol-Amroth, Linhir, Blackroot Vale, Arndir, Lond-Galen (#358)
+
+106 new `sk_gd_*` item definitions authored into `LOTRLOME_Armory` for five southern-Gondor noble
+lines from KEYforce's 2026-07-21 mesh drop, via the phase-2 generator: **Dol-Amroth** (`sk_gd_dol_*`,
+33), **Linhir** (`sk_gd_lin_*`, 22), **Blackroot Vale** (`sk_gd_vale_*`, 20), **Pinnath Gelin
+"Arndir" noble** (`sk_gd_pin_noble_*`, 21), **Lond-Galen** (`sk_gd_lon_*`, 10). Every id was verified
+against the geo-tpac mesh TOCs (`Assets/gondor_assets/{belfalas,pinnath_gelin,anfalas}/*_geo.tpac`),
+not just the spec — this caught the Lond-Galen rename below. The generator's `beard_cover_type`
+default is aligned to `none` per commit `c4886891`.
+
+**Lond-Galen was a mesh rename, not a new line.** The drop renamed its meshes
+`sk_gd_anf_lon_helmet_*` → `sk_gd_lon_helmet_*` and `sk_gd_lon_nob_chest_*` → `sk_gd_lon_chest_*`
+(the old names are absent from every geo tpac). The generator's Jun-06 "Anfalas Noble" entries were
+renamed to the verified ids, and the two troops that wore the old gear (`gondor_anf_vet_infantry`,
+`gondor_anf_vet_cavalry`) were repointed to the new ids so they stay clothed after the recompile.
+The 10 old dead-mesh item defs still linger in the live XML, now unused — retire in the follow-up.
+
+**Item defs only** — the new lines' troop trees (Dol-Amroth up to T9 Swan Knight, etc.) are a tracked
+follow-up, so the four brand-new lines' items read as "unused" until wired. Gates:
+`validate_gondor_refs.py` PASS (0 missing), `validate_moduledata.py` PASS, no duplicate ids across
+`gondor/`, all slot XMLs parse. The new armor renders once the runtime `AssetPackages/` bundles are
+recompiled via the Modding Kit (handled/coming).
+
+Research: gondor_armors_and_troops.md (KEYforce spec) + geo-tpac mesh TOCs (ground truth)
+Not-tested: in-game mesh render (gated on Modding-Kit pack recompile)
+
 ### feat(banner-bearers): infantry-only bearers + denser banners (#351)
 
 In-game tuning after first play confirmed the feature works (a Dunlending line flew the deer-bane

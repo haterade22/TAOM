@@ -1231,7 +1231,7 @@
 	<string id="taom_dg2_t1_b_p1" text="{=taom_dg2_t1_b_p1}+8% resistance." />
 	<string id="taom_dg2_t1_b_p2" text="{=taom_dg2_t1_b_p2}+5% troop morale." />
 	<string id="taom_dg2_t1_b_p3" text="{=taom_dg2_t1_b_p3}+10% troop resistance." />
-	<string id="taom_dg2_t1_b_p4" text="{=taom_dg2_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_dg2_t1_b_p4" text="{=taom_dg2_t1_b_p4}+5% troop survival." />
 	<string id="taom_dg2_t2_a_key" text="{=taom_dg2_t2_a_key}Gate Hold charge reduced, activating more frequently." />
 	<string id="taom_dg2_t2_a_p1" text="{=taom_dg2_t2_a_p1}+10% troop morale." />
 	<string id="taom_dg2_t2_a_p2" text="{=taom_dg2_t2_a_p2}+2 party size." />
@@ -1249,9 +1249,9 @@
 	<string id="taom_dg2_t3_a_p4" text="{=taom_dg2_t3_a_p4}+4 party size." />
 	<string id="taom_dg2_t3_b_key" text="{=taom_dg2_t3_b_key}Gate Hold charge greatly reduced, nearly always available." />
 	<string id="taom_dg2_t3_b_p1" text="{=taom_dg2_t3_b_p1}+18% resistance." />
-	<string id="taom_dg2_t3_b_p2" text="{=taom_dg2_t3_b_p2}+15% health regeneration." />
+	<string id="taom_dg2_t3_b_p2" text="{=taom_dg2_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_dg2_t3_b_p3" text="{=taom_dg2_t3_b_p3}+20% troop morale." />
-	<string id="taom_dg2_t3_b_p4" text="{=taom_dg2_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_dg2_t3_b_p4" text="{=taom_dg2_t3_b_p4}+15% troop survival." />
 	<string id="taom_dale_marksman_root_desc" text="{=taom_dale_marksman_root_desc}Black Arrow grants +5% ranged damage in honor of Bard the Bowman." />
 	<string id="taom_dm_t1_a_key" text="{=taom_dm_t1_a_key}Black Arrow radius increased, covering wider kill zones." />
 	<string id="taom_dm_t1_a_p1" text="{=taom_dm_t1_a_p1}+8% ranged damage." />
@@ -1324,7 +1324,7 @@
 	<string id="taom_ig_t1_b_p1" text="{=taom_ig_t1_b_p1}+8% resistance." />
 	<string id="taom_ig_t1_b_p2" text="{=taom_ig_t1_b_p2}+5% troop morale." />
 	<string id="taom_ig_t1_b_p3" text="{=taom_ig_t1_b_p3}+10% troop resistance." />
-	<string id="taom_ig_t1_b_p4" text="{=taom_ig_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_ig_t1_b_p4" text="{=taom_ig_t1_b_p4}+5% troop survival." />
 	<string id="taom_ig_t2_a_key" text="{=taom_ig_t2_a_key}Mithril Bastion charge reduced, activating more frequently." />
 	<string id="taom_ig_t2_a_p1" text="{=taom_ig_t2_a_p1}+10% troop morale." />
 	<string id="taom_ig_t2_a_p2" text="{=taom_ig_t2_a_p2}+2 party size." />
@@ -1342,9 +1342,9 @@
 	<string id="taom_ig_t3_a_p4" text="{=taom_ig_t3_a_p4}+4 party size." />
 	<string id="taom_ig_t3_b_key" text="{=taom_ig_t3_b_key}Mithril Bastion charge greatly reduced, nearly always available." />
 	<string id="taom_ig_t3_b_p1" text="{=taom_ig_t3_b_p1}+18% resistance." />
-	<string id="taom_ig_t3_b_p2" text="{=taom_ig_t3_b_p2}+15% health regeneration." />
+	<string id="taom_ig_t3_b_p2" text="{=taom_ig_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_ig_t3_b_p3" text="{=taom_ig_t3_b_p3}+20% troop morale." />
-	<string id="taom_ig_t3_b_p4" text="{=taom_ig_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_ig_t3_b_p4" text="{=taom_ig_t3_b_p4}+15% troop survival." />
 	<string id="taom_crossbow_master_root_desc" text="{=taom_crossbow_master_root_desc}Precision Barrage grants +5% ranged damage with masterwork bolts." />
 	<string id="taom_cbm_t1_a_key" text="{=taom_cbm_t1_a_key}Precision Barrage radius increased, covering wider kill zones." />
 	<string id="taom_cbm_t1_a_p1" text="{=taom_cbm_t1_a_p1}+8% ranged damage." />
@@ -1417,7 +1417,7 @@
 	<string id="taom_bd_t1_b_p1" text="{=taom_bd_t1_b_p1}+8% resistance." />
 	<string id="taom_bd_t1_b_p2" text="{=taom_bd_t1_b_p2}+5% troop morale." />
 	<string id="taom_bd_t1_b_p3" text="{=taom_bd_t1_b_p3}+10% troop resistance." />
-	<string id="taom_bd_t1_b_p4" text="{=taom_bd_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_bd_t1_b_p4" text="{=taom_bd_t1_b_p4}+5% troop survival." />
 	<string id="taom_bd_t2_a_key" text="{=taom_bd_t2_a_key}Starlight Weave charge reduced, activating more frequently." />
 	<string id="taom_bd_t2_a_p1" text="{=taom_bd_t2_a_p1}+10% troop morale." />
 	<string id="taom_bd_t2_a_p2" text="{=taom_bd_t2_a_p2}+2 party size." />
@@ -1435,9 +1435,9 @@
 	<string id="taom_bd_t3_a_p4" text="{=taom_bd_t3_a_p4}+4 party size." />
 	<string id="taom_bd_t3_b_key" text="{=taom_bd_t3_b_key}Starlight Weave charge greatly reduced, nearly always available." />
 	<string id="taom_bd_t3_b_p1" text="{=taom_bd_t3_b_p1}+18% resistance." />
-	<string id="taom_bd_t3_b_p2" text="{=taom_bd_t3_b_p2}+15% health regeneration." />
+	<string id="taom_bd_t3_b_p2" text="{=taom_bd_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_bd_t3_b_p3" text="{=taom_bd_t3_b_p3}+20% troop morale." />
-	<string id="taom_bd_t3_b_p4" text="{=taom_bd_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_bd_t3_b_p4" text="{=taom_bd_t3_b_p4}+15% troop survival." />
 	<string id="taom_elven_archer_root_desc" text="{=taom_elven_archer_root_desc}Elven Sight grants +5% ranged damage with centuries of practice." />
 	<string id="taom_elar_t1_a_key" text="{=taom_elar_t1_a_key}Elven Sight radius increased, covering wider kill zones." />
 	<string id="taom_elar_t1_a_p1" text="{=taom_elar_t1_a_p1}+8% ranged damage." />
@@ -1510,7 +1510,7 @@
 	<string id="taom_wdn_t1_b_p1" text="{=taom_wdn_t1_b_p1}+8% resistance." />
 	<string id="taom_wdn_t1_b_p2" text="{=taom_wdn_t1_b_p2}+5% troop morale." />
 	<string id="taom_wdn_t1_b_p3" text="{=taom_wdn_t1_b_p3}+10% troop resistance." />
-	<string id="taom_wdn_t1_b_p4" text="{=taom_wdn_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_wdn_t1_b_p4" text="{=taom_wdn_t1_b_p4}+5% troop survival." />
 	<string id="taom_wdn_t2_a_key" text="{=taom_wdn_t2_a_key}Nimrodel Blessing charge reduced, activating more frequently." />
 	<string id="taom_wdn_t2_a_p1" text="{=taom_wdn_t2_a_p1}+10% troop morale." />
 	<string id="taom_wdn_t2_a_p2" text="{=taom_wdn_t2_a_p2}+2 party size." />
@@ -1528,9 +1528,9 @@
 	<string id="taom_wdn_t3_a_p4" text="{=taom_wdn_t3_a_p4}+4 party size." />
 	<string id="taom_wdn_t3_b_key" text="{=taom_wdn_t3_b_key}Nimrodel Blessing charge greatly reduced, nearly always available." />
 	<string id="taom_wdn_t3_b_p1" text="{=taom_wdn_t3_b_p1}+18% resistance." />
-	<string id="taom_wdn_t3_b_p2" text="{=taom_wdn_t3_b_p2}+15% health regeneration." />
+	<string id="taom_wdn_t3_b_p2" text="{=taom_wdn_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_wdn_t3_b_p3" text="{=taom_wdn_t3_b_p3}+20% troop morale." />
-	<string id="taom_wdn_t3_b_p4" text="{=taom_wdn_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_wdn_t3_b_p4" text="{=taom_wdn_t3_b_p4}+15% troop survival." />
 	<string id="taom_galadhrim_archer_root_desc" text="{=taom_galadhrim_archer_root_desc}Silver Rain grants +5% ranged damage, arrows tipped in starlight." />
 	<string id="taom_gar_t1_a_key" text="{=taom_gar_t1_a_key}Silver Rain radius increased, covering wider kill zones." />
 	<string id="taom_gar_t1_a_p1" text="{=taom_gar_t1_a_p1}+8% ranged damage." />
@@ -1603,7 +1603,7 @@
 	<string id="taom_shw_t1_b_p1" text="{=taom_shw_t1_b_p1}+8% resistance." />
 	<string id="taom_shw_t1_b_p2" text="{=taom_shw_t1_b_p2}+5% troop morale." />
 	<string id="taom_shw_t1_b_p3" text="{=taom_shw_t1_b_p3}+10% troop resistance." />
-	<string id="taom_shw_t1_b_p4" text="{=taom_shw_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_shw_t1_b_p4" text="{=taom_shw_t1_b_p4}+5% troop survival." />
 	<string id="taom_shw_t2_a_key" text="{=taom_shw_t2_a_key}Forest Cloak charge reduced, activating more frequently." />
 	<string id="taom_shw_t2_a_p1" text="{=taom_shw_t2_a_p1}+10% troop morale." />
 	<string id="taom_shw_t2_a_p2" text="{=taom_shw_t2_a_p2}+2 party size." />
@@ -1621,9 +1621,9 @@
 	<string id="taom_shw_t3_a_p4" text="{=taom_shw_t3_a_p4}+4 party size." />
 	<string id="taom_shw_t3_b_key" text="{=taom_shw_t3_b_key}Forest Cloak charge greatly reduced, nearly always available." />
 	<string id="taom_shw_t3_b_p1" text="{=taom_shw_t3_b_p1}+18% resistance." />
-	<string id="taom_shw_t3_b_p2" text="{=taom_shw_t3_b_p2}+15% health regeneration." />
+	<string id="taom_shw_t3_b_p2" text="{=taom_shw_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_shw_t3_b_p3" text="{=taom_shw_t3_b_p3}+20% troop morale." />
-	<string id="taom_shw_t3_b_p4" text="{=taom_shw_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_shw_t3_b_p4" text="{=taom_shw_t3_b_p4}+15% troop survival." />
 	<string id="taom_silvan_archer_root_desc" text="{=taom_silvan_archer_root_desc}Canopy Strike grants +5% ranged damage from the treetops." />
 	<string id="taom_sva_t1_a_key" text="{=taom_sva_t1_a_key}Canopy Strike radius increased, covering wider kill zones." />
 	<string id="taom_sva_t1_a_p1" text="{=taom_sva_t1_a_p1}+8% ranged damage." />
@@ -1696,7 +1696,7 @@
 	<string id="taom_ub_t1_b_p1" text="{=taom_ub_t1_b_p1}+8% resistance." />
 	<string id="taom_ub_t1_b_p2" text="{=taom_ub_t1_b_p2}+5% troop morale." />
 	<string id="taom_ub_t1_b_p3" text="{=taom_ub_t1_b_p3}+10% troop resistance." />
-	<string id="taom_ub_t1_b_p4" text="{=taom_ub_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_ub_t1_b_p4" text="{=taom_ub_t1_b_p4}+5% troop survival." />
 	<string id="taom_ub_t2_a_key" text="{=taom_ub_t2_a_key}Blood Rage charge reduced, activating more frequently." />
 	<string id="taom_ub_t2_a_p1" text="{=taom_ub_t2_a_p1}+10% troop morale." />
 	<string id="taom_ub_t2_a_p2" text="{=taom_ub_t2_a_p2}+2 party size." />
@@ -1714,9 +1714,9 @@
 	<string id="taom_ub_t3_a_p4" text="{=taom_ub_t3_a_p4}+4 party size." />
 	<string id="taom_ub_t3_b_key" text="{=taom_ub_t3_b_key}Blood Rage charge greatly reduced, nearly always available." />
 	<string id="taom_ub_t3_b_p1" text="{=taom_ub_t3_b_p1}+18% resistance." />
-	<string id="taom_ub_t3_b_p2" text="{=taom_ub_t3_b_p2}+15% health regeneration." />
+	<string id="taom_ub_t3_b_p2" text="{=taom_ub_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_ub_t3_b_p3" text="{=taom_ub_t3_b_p3}+20% troop morale." />
-	<string id="taom_ub_t3_b_p4" text="{=taom_ub_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_ub_t3_b_p4" text="{=taom_ub_t3_b_p4}+15% troop survival." />
 	<string id="taom_uruk_crossbow_root_desc" text="{=taom_uruk_crossbow_root_desc}Iron Rain grants +5% ranged damage with Orthanc-forged bolts." />
 	<string id="taom_ucb_t1_a_key" text="{=taom_ucb_t1_a_key}Iron Rain radius increased, covering wider kill zones." />
 	<string id="taom_ucb_t1_a_p1" text="{=taom_ucb_t1_a_p1}+8% ranged damage." />
@@ -1789,7 +1789,7 @@
 	<string id="taom_ctm_t1_b_p1" text="{=taom_ctm_t1_b_p1}+8% resistance." />
 	<string id="taom_ctm_t1_b_p2" text="{=taom_ctm_t1_b_p2}+5% troop morale." />
 	<string id="taom_ctm_t1_b_p3" text="{=taom_ctm_t1_b_p3}+10% troop resistance." />
-	<string id="taom_ctm_t1_b_p4" text="{=taom_ctm_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_ctm_t1_b_p4" text="{=taom_ctm_t1_b_p4}+5% troop survival." />
 	<string id="taom_ctm_t2_a_key" text="{=taom_ctm_t2_a_key}Gundabad Berserker charge reduced, activating more frequently." />
 	<string id="taom_ctm_t2_a_p1" text="{=taom_ctm_t2_a_p1}+10% troop morale." />
 	<string id="taom_ctm_t2_a_p2" text="{=taom_ctm_t2_a_p2}+2 party size." />
@@ -1807,9 +1807,9 @@
 	<string id="taom_ctm_t3_a_p4" text="{=taom_ctm_t3_a_p4}+4 party size." />
 	<string id="taom_ctm_t3_b_key" text="{=taom_ctm_t3_b_key}Gundabad Berserker charge greatly reduced, nearly always available." />
 	<string id="taom_ctm_t3_b_p1" text="{=taom_ctm_t3_b_p1}+18% resistance." />
-	<string id="taom_ctm_t3_b_p2" text="{=taom_ctm_t3_b_p2}+15% health regeneration." />
+	<string id="taom_ctm_t3_b_p2" text="{=taom_ctm_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_ctm_t3_b_p3" text="{=taom_ctm_t3_b_p3}+20% troop morale." />
-	<string id="taom_ctm_t3_b_p4" text="{=taom_ctm_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_ctm_t3_b_p4" text="{=taom_ctm_t3_b_p4}+15% troop survival." />
 	<string id="taom_goblin_sniper_root_desc" text="{=taom_goblin_sniper_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin." />
 	<string id="taom_gbs_t1_a_key" text="{=taom_gbs_t1_a_key}Poison Dart radius increased, covering wider kill zones." />
 	<string id="taom_gbs_t1_a_p1" text="{=taom_gbs_t1_a_p1}+8% ranged damage." />
@@ -1882,7 +1882,7 @@
 	<string id="taom_swr_t1_b_p1" text="{=taom_swr_t1_b_p1}+8% resistance." />
 	<string id="taom_swr_t1_b_p2" text="{=taom_swr_t1_b_p2}+5% troop morale." />
 	<string id="taom_swr_t1_b_p3" text="{=taom_swr_t1_b_p3}+10% troop resistance." />
-	<string id="taom_swr_t1_b_p4" text="{=taom_swr_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_swr_t1_b_p4" text="{=taom_swr_t1_b_p4}+5% troop survival." />
 	<string id="taom_swr_t2_a_key" text="{=taom_swr_t2_a_key}Soul Drain charge reduced, activating more frequently." />
 	<string id="taom_swr_t2_a_p1" text="{=taom_swr_t2_a_p1}+10% troop morale." />
 	<string id="taom_swr_t2_a_p2" text="{=taom_swr_t2_a_p2}+2 party size." />
@@ -1900,9 +1900,9 @@
 	<string id="taom_swr_t3_a_p4" text="{=taom_swr_t3_a_p4}+4 party size." />
 	<string id="taom_swr_t3_b_key" text="{=taom_swr_t3_b_key}Soul Drain charge greatly reduced, nearly always available." />
 	<string id="taom_swr_t3_b_p1" text="{=taom_swr_t3_b_p1}+18% resistance." />
-	<string id="taom_swr_t3_b_p2" text="{=taom_swr_t3_b_p2}+15% health regeneration." />
+	<string id="taom_swr_t3_b_p2" text="{=taom_swr_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_swr_t3_b_p3" text="{=taom_swr_t3_b_p3}+20% troop morale." />
-	<string id="taom_swr_t3_b_p4" text="{=taom_swr_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_swr_t3_b_p4" text="{=taom_swr_t3_b_p4}+15% troop survival." />
 	<string id="taom_necromancer_acolyte_root_desc" text="{=taom_necromancer_acolyte_root_desc}Dark Bolt grants +5% ranged damage with necromantic energy." />
 	<string id="taom_nca_t1_a_key" text="{=taom_nca_t1_a_key}Dark Bolt radius increased, covering wider kill zones." />
 	<string id="taom_nca_t1_a_p1" text="{=taom_nca_t1_a_p1}+8% ranged damage." />
@@ -1975,7 +1975,7 @@
 	<string id="taom_crb_t1_b_p1" text="{=taom_crb_t1_b_p1}+8% resistance." />
 	<string id="taom_crb_t1_b_p2" text="{=taom_crb_t1_b_p2}+5% troop morale." />
 	<string id="taom_crb_t1_b_p3" text="{=taom_crb_t1_b_p3}+10% troop resistance." />
-	<string id="taom_crb_t1_b_p4" text="{=taom_crb_t1_b_p4}+5% troop regeneration." />
+	<string id="taom_crb_t1_b_p4" text="{=taom_crb_t1_b_p4}+5% troop survival." />
 	<string id="taom_crb_t2_a_key" text="{=taom_crb_t2_a_key}Boarding Action charge reduced, activating more frequently." />
 	<string id="taom_crb_t2_a_p1" text="{=taom_crb_t2_a_p1}+10% troop morale." />
 	<string id="taom_crb_t2_a_p2" text="{=taom_crb_t2_a_p2}+2 party size." />
@@ -1993,9 +1993,9 @@
 	<string id="taom_crb_t3_a_p4" text="{=taom_crb_t3_a_p4}+4 party size." />
 	<string id="taom_crb_t3_b_key" text="{=taom_crb_t3_b_key}Boarding Action charge greatly reduced, nearly always available." />
 	<string id="taom_crb_t3_b_p1" text="{=taom_crb_t3_b_p1}+18% resistance." />
-	<string id="taom_crb_t3_b_p2" text="{=taom_crb_t3_b_p2}+15% health regeneration." />
+	<string id="taom_crb_t3_b_p2" text="{=taom_crb_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_crb_t3_b_p3" text="{=taom_crb_t3_b_p3}+20% troop morale." />
-	<string id="taom_crb_t3_b_p4" text="{=taom_crb_t3_b_p4}+15% troop regeneration." />
+	<string id="taom_crb_t3_b_p4" text="{=taom_crb_t3_b_p4}+15% troop survival." />
 	<string id="taom_corsair_crossbow_root_desc" text="{=taom_corsair_crossbow_root_desc}Rigging Shot grants +5% ranged damage with steadied aim." />
 	<string id="taom_crc_t1_a_key" text="{=taom_crc_t1_a_key}Rigging Shot radius increased, covering wider kill zones." />
 	<string id="taom_crc_t1_a_p1" text="{=taom_crc_t1_a_p1}+8% ranged damage." />

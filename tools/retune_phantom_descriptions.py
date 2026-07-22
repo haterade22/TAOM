@@ -30,7 +30,7 @@ PHRASES = {
     "MountHealth": "horse health",
     "StealthBonus": "stealth bonus",
     "TroopResistance": "troop resistance",
-    "HeroHealing": "health regeneration",
+    "HeroHealing": "hero health regeneration",
     "Ammo": "ammo",
 }
 

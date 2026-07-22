@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
-"""Phase-2 Gondor armor: author the 8 missing regional armor families.
+"""Phase-2 Gondor armor: author the missing regional armor families.
 
 Issue: #99
-Source-of-truth: E:\\repos\\lotraom-assets\\tools\\gondor_armors_and_troops.txt
+Source-of-truth: E:\\repos\\lotraom-assets\\tools\\gondor_armors_and_troops.md
 
 Adds ~99 items for Lossarnach, Pinnath Gelin, Harondor, Anfalas, Serelond,
-Lebennin, Belfalas, Lamedon families. Idempotent — skips items already
-present in the target XML files.
+Lebennin, Belfalas, Lamedon families, plus the KEYforce noble drops:
+2026-06 (Anfalas/Lossarnach noble) and 2026-07 (Dol-Amroth, Linhir, Blackroot
+Vale, Pinnath Gelin "Arndir" noble). Idempotent — skips items already present
+in the target XML files. All 2026-07 item ids were verified against the geo-tpac
+mesh TOCs (Assets/gondor_assets/{belfalas,pinnath_gelin,anfalas}/*_geo.tpac).
+
+The 2026-07 drop RENAMED the Lond-Galen meshes: sk_gd_anf_lon_helmet_* ->
+sk_gd_lon_helmet_* and sk_gd_lon_nob_chest_* -> sk_gd_lon_chest_* (the old names
+are absent from every geo tpac). The Jun-06 "Anfalas Noble" entries below are
+renamed accordingly; the old ids linger in the live XML as dead-mesh cruft and
+their two troop refs (troops_gondor.xml) must be repointed to the new ids.
 
 Usage:
     python tools/generate_gondor_armor_phase2.py --dry-run
@@ -73,7 +82,7 @@ class ArmorItem:
     material: str
     modifier_group: str = ""
     hair_cover: str = "type2"
-    beard_cover: str = "all"
+    beard_cover: str = "none"
     covers_body: bool = False
     covers_hands: bool = False
     covers_legs: bool = False
@@ -115,13 +124,13 @@ HEAD_ARMORS = [
     ArmorItem("sk_gd_anf_cav_helmet_heavy_a", "Anfalas Cavalry Helmet A", "head", "heavy", "Plate"),
     ArmorItem("sk_gd_anf_cav_helmet_heavy_b", "Anfalas Cavalry Helmet B", "head", "heavy", "Plate"),
 
-    # ---- Anfalas Noble (6) — KEYforce noble drop 2026-06 ----
-    ArmorItem("sk_gd_anf_lon_helmet_med_a", "Anfalas Noble Helmet A", "head", "medium", "Plate"),
-    ArmorItem("sk_gd_anf_lon_helmet_med_b", "Anfalas Noble Helmet B", "head", "medium", "Plate"),
-    ArmorItem("sk_gd_anf_lon_helmet_heavy_a", "Anfalas Noble Heavy Helmet A", "head", "heavy", "Plate"),
-    ArmorItem("sk_gd_anf_lon_helmet_heavy_b", "Anfalas Noble Heavy Helmet B", "head", "heavy", "Plate"),
-    ArmorItem("sk_gd_anf_lon_helmet_elite_a", "Anfalas Noble Elite Helmet A", "head", "elite", "Plate"),
-    ArmorItem("sk_gd_anf_lon_helmet_elite_b", "Anfalas Noble Elite Helmet B", "head", "elite", "Plate"),
+    # ---- Lond-Galen Noble (6) — KEYforce; mesh renamed sk_gd_anf_lon_helmet_* -> sk_gd_lon_helmet_* (2026-07) ----
+    ArmorItem("sk_gd_lon_helmet_med_a", "Lond-Galen Noble Helmet A", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_lon_helmet_med_b", "Lond-Galen Noble Helmet B", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_lon_helmet_heavy_a", "Lond-Galen Noble Heavy Helmet A", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_lon_helmet_heavy_b", "Lond-Galen Noble Heavy Helmet B", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_lon_helmet_elite_a", "Lond-Galen Noble Elite Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_lon_helmet_elite_b", "Lond-Galen Noble Elite Helmet B", "head", "elite", "Plate"),
 
     # ---- Lossarnach Noble (6) — KEYforce noble drop 2026-06 ----
     ArmorItem("sk_gd_los_noble_helmet_med_a", "Lossarnach Noble Helmet A", "head", "medium", "Plate"),
@@ -157,6 +166,50 @@ HEAD_ARMORS = [
     ArmorItem("sk_gd_lam_nob_helmet_lord_b", "Lamedon Lord Helmet B", "head", "elite", "Plate"),
     ArmorItem("sk_gd_lam_nob_helmet_lord_c", "Lamedon Lord Helmet C", "head", "elite", "Plate"),
     ArmorItem("sk_gd_lam_nob_helmet_lord_d", "Lamedon Lord Helmet D", "head", "elite", "Plate"),
+
+    # ---- Pinnath Gelin "Arndir" Noble (10) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_pin_noble_helmet_med_a", "Arndir Noble Helmet A", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_pin_noble_helmet_med_b", "Arndir Noble Helmet B", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_pin_noble_helmet_heavy_a", "Arndir Noble Heavy Helmet A", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_pin_noble_helmet_heavy_b", "Arndir Noble Heavy Helmet B", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_pin_noble_helmet_elite_a", "Arndir Noble Elite Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_pin_noble_helmet_elite_b", "Arndir Noble Elite Helmet B", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_pin_noble_cav_helmet_heavy_a", "Arndir Knight Helmet A", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_pin_noble_cav_helmet_heavy_b", "Arndir Knight Helmet B", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_pin_noble_cav_helmet_elite_a", "Arndir Hill-Knight Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_pin_noble_cav_helmet_elite_b", "Arndir Hill-Knight Helmet B", "head", "elite", "Plate"),
+
+    # ---- Blackroot Vale Noble (7) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_vale_hood_a", "Blackroot Vale Hood A", "head", "light", "Leather"),
+    ArmorItem("sk_gd_vale_hood_b", "Blackroot Vale Hood B", "head", "light", "Leather"),
+    ArmorItem("sk_gd_vale_helmet_med_a", "Blackroot Vale Helmet", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_vale_helmet_heavy_a", "Blackroot Vale Heavy Helmet A", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_vale_helmet_heavy_b", "Blackroot Vale Heavy Helmet B", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_vale_helmet_elite_a", "Blackroot Vale Elite Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_vale_helmet_elite_b", "Blackroot Vale Elite Helmet B", "head", "elite", "Plate"),
+
+    # ---- Dol Amroth Noble (13) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_dol_helmet_med_a", "Dol Amroth Helmet", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_dol_helmet_heavy_a", "Dol Amroth Heavy Helmet A", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_dol_helmet_heavy_b", "Dol Amroth Heavy Helmet B", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_dol_cav_helmet_elite_a", "Dol Amroth Knight Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_cav_helmet_elite_b", "Dol Amroth Knight Helmet B", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_cav_helmet_elite_c", "Dol Amroth Knight Helmet C", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_cav_helmet_elite_d", "Dol Amroth Knight Helmet D", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_inf_helmet_elite_a", "Dol Amroth Foot Knight Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_inf_helmet_elite_b", "Dol Amroth Foot Knight Helmet B", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_inf_helmet_elite_c", "Dol Amroth Foot Knight Helmet C", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_inf_helmet_elite_d", "Dol Amroth Foot Knight Helmet D", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_ward_helmet_elite_a", "Dol Amroth Warden Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_ward_helmet_elite_b", "Dol Amroth Warden Helmet B", "head", "elite", "Plate"),
+
+    # ---- Linhir Noble (6) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_lin_helmet_heavy_a", "Linhir Heavy Helmet A", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_lin_helmet_heavy_b", "Linhir Heavy Helmet B", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_lin_helmet_elite_a", "Linhir Elite Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_lin_helmet_elite_b", "Linhir Elite Helmet B", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_lin_helmet_lord_a", "Linhir Lord Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_lin_helmet_lord_b", "Linhir Lord Helmet B", "head", "elite", "Plate"),
 ]
 
 
@@ -198,11 +251,11 @@ BODY_ARMORS = [
     ArmorItem("sk_gd_anf_inf_chest_heavy_a", "Anfalas Heavy Armour A", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
     ArmorItem("sk_gd_anf_inf_chest_heavy_b", "Anfalas Heavy Armour B", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
 
-    # ---- Anfalas Noble (4) — KEYforce noble drop 2026-06 (mesh prefix sk_gd_lon_*) ----
-    ArmorItem("sk_gd_lon_nob_chainmail_a", "Anfalas Noble Chainmail", "body", "light", "Chainmail", covers_body=True),
-    ArmorItem("sk_gd_lon_nob_chest_med_a", "Anfalas Noble Armour", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
-    ArmorItem("sk_gd_lon_nob_chest_heavy_a", "Anfalas Noble Heavy Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
-    ArmorItem("sk_gd_lon_nob_chest_lord_a", "Anfalas Noble Lord Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
+    # ---- Lond-Galen Noble (4) — KEYforce; mesh renamed sk_gd_lon_nob_chest_* -> sk_gd_lon_chest_* (2026-07) ----
+    ArmorItem("sk_gd_lon_chainmail_a", "Lond-Galen Noble Chainmail", "body", "light", "Chainmail", covers_body=True),
+    ArmorItem("sk_gd_lon_chest_med_a", "Lond-Galen Noble Armour", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_lon_chest_heavy_a", "Lond-Galen Noble Heavy Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_lon_chest_lord_a", "Lond-Galen Noble Lord Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
 
     # ---- Serelond (4) ----
     ArmorItem("sk_gd_sere_chest_med_a", "Serelond Armour", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
@@ -234,6 +287,36 @@ BODY_ARMORS = [
     ArmorItem("sk_gd_lam_inf_chest_heavy_a", "Lamedon Heavy Armour A", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
     ArmorItem("sk_gd_lam_inf_chest_heavy_b", "Lamedon Heavy Armour B", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
     ArmorItem("sk_gd_lam_inf_chest_lord_a", "Lamedon Lord Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
+
+    # ---- Pinnath Gelin "Arndir" Noble (6) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_pin_noble_chainmail_a", "Arndir Noble Chainmail", "body", "light", "Chainmail", covers_body=True),
+    ArmorItem("sk_gd_pin_nob_chest_med_a", "Arndir Noble Armour A", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_pin_nob_chest_med_b", "Arndir Noble Armour B", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_pin_nob_chest_heavy_a", "Arndir Noble Heavy Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_pin_nob_chest_elite_a", "Arndir Hill-Knight Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
+    ArmorItem("sk_gd_pin_nob_chest_elite_b", "Arndir Lord Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
+
+    # ---- Blackroot Vale Noble (5) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_vale_chest_med_a", "Blackroot Vale Armour A", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_vale_chest_med_b", "Blackroot Vale Armour B", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_vale_chest_heavy_a", "Blackroot Vale Shadowhunter Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_vale_chest_heavy_b", "Blackroot Vale Ranger Armour A", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_vale_chest_heavy_c", "Blackroot Vale Ranger Armour B", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+
+    # ---- Dol Amroth Noble (7) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_dol_chainmail_a", "Dol Amroth Noble Chainmail", "body", "light", "Chainmail", covers_body=True),
+    ArmorItem("sk_gd_dol_chest_med_a", "Dol Amroth Noble Armour A", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_dol_chest_med_b", "Dol Amroth Noble Armour B", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_dol_chest_heavy_a", "Dol Amroth Noble Heavy Armour A", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_dol_chest_heavy_b", "Dol Amroth Noble Heavy Armour B", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_dol_chest_elite_a", "Dol Amroth Swan Knight Armour A", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
+    ArmorItem("sk_gd_dol_chest_elite_b", "Dol Amroth Swan Knight Armour B", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
+
+    # ---- Linhir Noble (4) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_lin_chainmail_a", "Linhir Noble Chainmail", "body", "light", "Chainmail", covers_body=True),
+    ArmorItem("sk_gd_lin_chest_med_a", "Linhir Noble Armour", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_lin_chest_heavy_a", "Linhir Noble Heavy Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_lin_chest_elite_a", "Linhir Lord Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
 ]
 
 
@@ -259,6 +342,38 @@ SHOULDER_ARMORS = [
     ArmorItem("sk_gd_sere_pauld_elite_a", "Serelond Elite Pauldron", "shoulder", "elite", "Plate"),
     ArmorItem("sk_gd_sere_pauld_cape_heavy_a", "Serelond Cape Heavy Pauldron", "shoulder", "heavy", "Plate"),
     ArmorItem("sk_gd_sere_pauld_cape_elite_a", "Serelond Cape Elite Pauldron", "shoulder", "elite", "Plate"),
+
+    # ---- Pinnath Gelin "Arndir" Noble (5) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_pin_pauld_noble_med_a", "Arndir Noble Pauldron A", "shoulder", "medium", "Plate"),
+    ArmorItem("sk_gd_pin_pauld_noble_med_b", "Arndir Noble Pauldron B", "shoulder", "medium", "Plate"),
+    ArmorItem("sk_gd_pin_pauld_noble_heavy_a", "Arndir Noble Heavy Pauldron", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_pin_pauld_noble_elite_a", "Arndir Noble Elite Pauldron", "shoulder", "elite", "Plate"),
+    ArmorItem("sk_gd_pin_pauld_cape_noble_elite_a", "Arndir Noble Cape Pauldron", "shoulder", "elite", "Plate"),
+
+    # ---- Blackroot Vale Noble (8) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_vale_cape_a", "Blackroot Vale Cape A", "shoulder", "light", "Plate"),
+    ArmorItem("sk_gd_vale_cape_b", "Blackroot Vale Cape B", "shoulder", "light", "Plate"),
+    ArmorItem("sk_gd_vale_cape_c", "Blackroot Vale Cape C", "shoulder", "light", "Plate"),
+    ArmorItem("sk_gd_vale_pauld_med_a", "Blackroot Vale Pauldron", "shoulder", "medium", "Plate"),
+    ArmorItem("sk_gd_vale_pauld_heavy_a", "Blackroot Vale Heavy Pauldron", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_vale_pauld_cape_med_a", "Blackroot Vale Cape Pauldron", "shoulder", "medium", "Plate"),
+    ArmorItem("sk_gd_vale_pauld_cape_heavy_a", "Blackroot Vale Heavy Cape Pauldron A", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_vale_pauld_cape_heavy_b", "Blackroot Vale Heavy Cape Pauldron B", "shoulder", "heavy", "Plate"),
+
+    # ---- Dol Amroth Noble (6) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_dol_pauld_noble_med_a", "Dol Amroth Pauldron A", "shoulder", "medium", "Plate"),
+    ArmorItem("sk_gd_dol_pauld_noble_med_b", "Dol Amroth Pauldron B", "shoulder", "medium", "Plate"),
+    ArmorItem("sk_gd_dol_pauld_noble_heavy_a", "Dol Amroth Heavy Pauldron", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_dol_pauld_noble_elite_a", "Dol Amroth Elite Pauldron", "shoulder", "elite", "Plate"),
+    ArmorItem("sk_gd_dol_pauld_cape_noble_heavy_a", "Dol Amroth Cape Pauldron", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_dol_pauld_cape_noble_elite_a", "Dol Amroth Elite Cape Pauldron", "shoulder", "elite", "Plate"),
+
+    # ---- Linhir Noble (5) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_lin_pauld_noble_med_a", "Linhir Pauldron", "shoulder", "medium", "Plate"),
+    ArmorItem("sk_gd_lin_pauld_noble_heavy_a", "Linhir Heavy Pauldron", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_lin_pauld_noble_elite_a", "Linhir Elite Pauldron", "shoulder", "elite", "Plate"),
+    ArmorItem("sk_gd_lin_pauld_cape_noble_heavy_a", "Linhir Cape Pauldron", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_lin_pauld_cape_noble_elite_a", "Linhir Elite Cape Pauldron", "shoulder", "elite", "Plate"),
 ]
 
 
@@ -279,6 +394,17 @@ ARM_ARMORS = [
     ArmorItem("sk_gd_sere_bracer_heavy_a", "Serelond Heavy Bracer", "arm", "heavy", "Plate", covers_hands=True),
     ArmorItem("sk_gd_sere_bracer_elite_a", "Serelond Elite Bracer", "arm", "elite", "Plate", covers_hands=True),
     ArmorItem("sk_gd_sere_bracer_lord_a", "Serelond Lord Bracer", "arm", "elite", "Plate", covers_hands=True),
+
+    # ---- Dol Amroth Noble (3) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_dol_bracer_med_a", "Dol Amroth Bracer", "arm", "medium", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_dol_bracer_heavy_a", "Dol Amroth Heavy Bracer", "arm", "heavy", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_dol_bracer_elite_a", "Dol Amroth Elite Bracer", "arm", "elite", "Plate", covers_hands=True),
+
+    # ---- Linhir Noble (4) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_lin_bracer_med_a", "Linhir Bracer A", "arm", "medium", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_lin_bracer_med_b", "Linhir Bracer B", "arm", "medium", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_lin_bracer_heavy_a", "Linhir Heavy Bracer", "arm", "heavy", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_lin_bracer_elite_a", "Linhir Elite Bracer", "arm", "elite", "Plate", covers_hands=True),
 ]
 
 
@@ -290,6 +416,17 @@ LEG_ARMORS = [
     ArmorItem("sk_gd_sere_grvs_heavy_a", "Serelond Heavy Greaves", "leg", "heavy", "Plate", covers_legs=True),
     ArmorItem("sk_gd_sere_grvs_elite_a", "Serelond Elite Greaves", "leg", "elite", "Plate", covers_legs=True),
     ArmorItem("sk_gd_sere_grvs_lord_a", "Serelond Lord Greaves", "leg", "elite", "Plate", covers_legs=True),
+
+    # ---- Dol Amroth Noble (4) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_dol_grvs_light_a", "Dol Amroth Light Greaves", "leg", "light", "Plate", covers_legs=True),
+    ArmorItem("sk_gd_dol_grvs_med_a", "Dol Amroth Greaves", "leg", "medium", "Plate", covers_legs=True),
+    ArmorItem("sk_gd_dol_grvs_heavy_a", "Dol Amroth Heavy Greaves", "leg", "heavy", "Plate", covers_legs=True),
+    ArmorItem("sk_gd_dol_grvs_elite_a", "Dol Amroth Elite Greaves", "leg", "elite", "Plate", covers_legs=True),
+
+    # ---- Linhir Noble (3) — KEYforce noble drop 2026-07 ----
+    ArmorItem("sk_gd_lin_grvs_light_a", "Linhir Light Greaves", "leg", "light", "Plate", covers_legs=True),
+    ArmorItem("sk_gd_lin_grvs_med_a", "Linhir Greaves", "leg", "medium", "Plate", covers_legs=True),
+    ArmorItem("sk_gd_lin_grvs_heavy_a", "Linhir Heavy Greaves", "leg", "heavy", "Plate", covers_legs=True),
 ]
 
 
@@ -426,8 +563,8 @@ def apply(armory_base: str):
         section_comment = (
             "\n    <!-- ============================================================== -->\n"
             "    <!--  Phase-2 Gondor regional armor (issue #99, KEYforce)            -->\n"
-            "    <!--  Lossarnach, Pinnath Gelin, Harondor, Anfalas, Serelond,        -->\n"
-            "    <!--  Lebennin, Belfalas, Lamedon                                    -->\n"
+            "    <!--  incl. noble drops: Anfalas/Lossarnach (2026-06),               -->\n"
+            "    <!--  Dol-Amroth, Linhir, Blackroot Vale, Arndir/Pinnath (2026-07)   -->\n"
             "    <!-- ============================================================== -->\n\n"
         )
         content = content.replace(closing_tag, f"{section_comment}{new_xml}\n\n{closing_tag}")

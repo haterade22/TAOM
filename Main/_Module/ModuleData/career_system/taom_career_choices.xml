@@ -4680,7 +4680,7 @@
     <Choice id="dale_guardsman_t1_b_p3" type="Passive" description="{=taom_dg2_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_dg2_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="dale_guardsman_t1_b_p4" type="Passive" description="{=taom_dg2_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_dg2_t1_b_p4">
+    <Choice id="dale_guardsman_t1_b_p4" type="Passive" description="{=taom_dg2_t1_b_p4}+5% troop survival." icon_sprite="career_choice_dg2_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -4746,13 +4746,13 @@
     <Choice id="dale_guardsman_t3_b_p1" type="Passive" description="{=taom_dg2_t3_b_p1}+18% resistance." icon_sprite="career_choice_dg2_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="dale_guardsman_t3_b_p2" type="Passive" description="{=taom_dg2_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_dg2_t3_b_p2">
+    <Choice id="dale_guardsman_t3_b_p2" type="Passive" description="{=taom_dg2_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_dg2_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="dale_guardsman_t3_b_p3" type="Passive" description="{=taom_dg2_t3_b_p3}+20% troop morale." icon_sprite="career_choice_dg2_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="dale_guardsman_t3_b_p4" type="Passive" description="{=taom_dg2_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_dg2_t3_b_p4">
+    <Choice id="dale_guardsman_t3_b_p4" type="Passive" description="{=taom_dg2_t3_b_p4}+15% troop survival." icon_sprite="career_choice_dg2_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -5034,7 +5034,7 @@
     <Choice id="ironguard_t1_b_p3" type="Passive" description="{=taom_ig_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_ig_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="ironguard_t1_b_p4" type="Passive" description="{=taom_ig_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_ig_t1_b_p4">
+    <Choice id="ironguard_t1_b_p4" type="Passive" description="{=taom_ig_t1_b_p4}+5% troop survival." icon_sprite="career_choice_ig_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -5100,13 +5100,13 @@
     <Choice id="ironguard_t3_b_p1" type="Passive" description="{=taom_ig_t3_b_p1}+18% resistance." icon_sprite="career_choice_ig_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="ironguard_t3_b_p2" type="Passive" description="{=taom_ig_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_ig_t3_b_p2">
+    <Choice id="ironguard_t3_b_p2" type="Passive" description="{=taom_ig_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_ig_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="ironguard_t3_b_p3" type="Passive" description="{=taom_ig_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ig_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="ironguard_t3_b_p4" type="Passive" description="{=taom_ig_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_ig_t3_b_p4">
+    <Choice id="ironguard_t3_b_p4" type="Passive" description="{=taom_ig_t3_b_p4}+15% troop survival." icon_sprite="career_choice_ig_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -5388,7 +5388,7 @@
     <Choice id="blade_dancer_t1_b_p3" type="Passive" description="{=taom_bd_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_bd_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="blade_dancer_t1_b_p4" type="Passive" description="{=taom_bd_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_bd_t1_b_p4">
+    <Choice id="blade_dancer_t1_b_p4" type="Passive" description="{=taom_bd_t1_b_p4}+5% troop survival." icon_sprite="career_choice_bd_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -5454,13 +5454,13 @@
     <Choice id="blade_dancer_t3_b_p1" type="Passive" description="{=taom_bd_t3_b_p1}+18% resistance." icon_sprite="career_choice_bd_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="blade_dancer_t3_b_p2" type="Passive" description="{=taom_bd_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_bd_t3_b_p2">
+    <Choice id="blade_dancer_t3_b_p2" type="Passive" description="{=taom_bd_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_bd_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="blade_dancer_t3_b_p3" type="Passive" description="{=taom_bd_t3_b_p3}+20% troop morale." icon_sprite="career_choice_bd_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="blade_dancer_t3_b_p4" type="Passive" description="{=taom_bd_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_bd_t3_b_p4">
+    <Choice id="blade_dancer_t3_b_p4" type="Passive" description="{=taom_bd_t3_b_p4}+15% troop survival." icon_sprite="career_choice_bd_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -5742,7 +5742,7 @@
     <Choice id="warden_t1_b_p3" type="Passive" description="{=taom_wdn_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_wdn_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="warden_t1_b_p4" type="Passive" description="{=taom_wdn_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_wdn_t1_b_p4">
+    <Choice id="warden_t1_b_p4" type="Passive" description="{=taom_wdn_t1_b_p4}+5% troop survival." icon_sprite="career_choice_wdn_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -5808,13 +5808,13 @@
     <Choice id="warden_t3_b_p1" type="Passive" description="{=taom_wdn_t3_b_p1}+18% resistance." icon_sprite="career_choice_wdn_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="warden_t3_b_p2" type="Passive" description="{=taom_wdn_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_wdn_t3_b_p2">
+    <Choice id="warden_t3_b_p2" type="Passive" description="{=taom_wdn_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_wdn_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="warden_t3_b_p3" type="Passive" description="{=taom_wdn_t3_b_p3}+20% troop morale." icon_sprite="career_choice_wdn_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="warden_t3_b_p4" type="Passive" description="{=taom_wdn_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_wdn_t3_b_p4">
+    <Choice id="warden_t3_b_p4" type="Passive" description="{=taom_wdn_t3_b_p4}+15% troop survival." icon_sprite="career_choice_wdn_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -6096,7 +6096,7 @@
     <Choice id="shadow_walker_t1_b_p3" type="Passive" description="{=taom_shw_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_shw_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="shadow_walker_t1_b_p4" type="Passive" description="{=taom_shw_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_shw_t1_b_p4">
+    <Choice id="shadow_walker_t1_b_p4" type="Passive" description="{=taom_shw_t1_b_p4}+5% troop survival." icon_sprite="career_choice_shw_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -6162,13 +6162,13 @@
     <Choice id="shadow_walker_t3_b_p1" type="Passive" description="{=taom_shw_t3_b_p1}+18% resistance." icon_sprite="career_choice_shw_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="shadow_walker_t3_b_p2" type="Passive" description="{=taom_shw_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_shw_t3_b_p2">
+    <Choice id="shadow_walker_t3_b_p2" type="Passive" description="{=taom_shw_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_shw_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_walker_t3_b_p3" type="Passive" description="{=taom_shw_t3_b_p3}+20% troop morale." icon_sprite="career_choice_shw_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="shadow_walker_t3_b_p4" type="Passive" description="{=taom_shw_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_shw_t3_b_p4">
+    <Choice id="shadow_walker_t3_b_p4" type="Passive" description="{=taom_shw_t3_b_p4}+15% troop survival." icon_sprite="career_choice_shw_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -6450,7 +6450,7 @@
     <Choice id="uruk_berserker_t1_b_p3" type="Passive" description="{=taom_ub_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_ub_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="uruk_berserker_t1_b_p4" type="Passive" description="{=taom_ub_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_ub_t1_b_p4">
+    <Choice id="uruk_berserker_t1_b_p4" type="Passive" description="{=taom_ub_t1_b_p4}+5% troop survival." icon_sprite="career_choice_ub_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -6516,13 +6516,13 @@
     <Choice id="uruk_berserker_t3_b_p1" type="Passive" description="{=taom_ub_t3_b_p1}+18% resistance." icon_sprite="career_choice_ub_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="uruk_berserker_t3_b_p2" type="Passive" description="{=taom_ub_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_ub_t3_b_p2">
+    <Choice id="uruk_berserker_t3_b_p2" type="Passive" description="{=taom_ub_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_ub_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="uruk_berserker_t3_b_p3" type="Passive" description="{=taom_ub_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ub_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="uruk_berserker_t3_b_p4" type="Passive" description="{=taom_ub_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_ub_t3_b_p4">
+    <Choice id="uruk_berserker_t3_b_p4" type="Passive" description="{=taom_ub_t3_b_p4}+15% troop survival." icon_sprite="career_choice_ub_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -6805,7 +6805,7 @@
     <Choice id="cave_troll_master_t1_b_p3" type="Passive" description="{=taom_ctm_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_ctm_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="cave_troll_master_t1_b_p4" type="Passive" description="{=taom_ctm_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_ctm_t1_b_p4">
+    <Choice id="cave_troll_master_t1_b_p4" type="Passive" description="{=taom_ctm_t1_b_p4}+5% troop survival." icon_sprite="career_choice_ctm_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -6871,13 +6871,13 @@
     <Choice id="cave_troll_master_t3_b_p1" type="Passive" description="{=taom_ctm_t3_b_p1}+18% resistance." icon_sprite="career_choice_ctm_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="cave_troll_master_t3_b_p2" type="Passive" description="{=taom_ctm_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_ctm_t3_b_p2">
+    <Choice id="cave_troll_master_t3_b_p2" type="Passive" description="{=taom_ctm_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_ctm_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="cave_troll_master_t3_b_p3" type="Passive" description="{=taom_ctm_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ctm_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="cave_troll_master_t3_b_p4" type="Passive" description="{=taom_ctm_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_ctm_t3_b_p4">
+    <Choice id="cave_troll_master_t3_b_p4" type="Passive" description="{=taom_ctm_t3_b_p4}+15% troop survival." icon_sprite="career_choice_ctm_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -7160,7 +7160,7 @@
     <Choice id="shadow_warrior_t1_b_p3" type="Passive" description="{=taom_swr_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_swr_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="shadow_warrior_t1_b_p4" type="Passive" description="{=taom_swr_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_swr_t1_b_p4">
+    <Choice id="shadow_warrior_t1_b_p4" type="Passive" description="{=taom_swr_t1_b_p4}+5% troop survival." icon_sprite="career_choice_swr_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -7226,13 +7226,13 @@
     <Choice id="shadow_warrior_t3_b_p1" type="Passive" description="{=taom_swr_t3_b_p1}+18% resistance." icon_sprite="career_choice_swr_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="shadow_warrior_t3_b_p2" type="Passive" description="{=taom_swr_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_swr_t3_b_p2">
+    <Choice id="shadow_warrior_t3_b_p2" type="Passive" description="{=taom_swr_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_swr_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="shadow_warrior_t3_b_p3" type="Passive" description="{=taom_swr_t3_b_p3}+20% troop morale." icon_sprite="career_choice_swr_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="shadow_warrior_t3_b_p4" type="Passive" description="{=taom_swr_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_swr_t3_b_p4">
+    <Choice id="shadow_warrior_t3_b_p4" type="Passive" description="{=taom_swr_t3_b_p4}+15% troop survival." icon_sprite="career_choice_swr_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -7514,7 +7514,7 @@
     <Choice id="corsair_boarder_t1_b_p3" type="Passive" description="{=taom_crb_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_crb_t1_b_p3">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="corsair_boarder_t1_b_p4" type="Passive" description="{=taom_crb_t1_b_p4}+5% troop regeneration." icon_sprite="career_choice_crb_t1_b_p4">
+    <Choice id="corsair_boarder_t1_b_p4" type="Passive" description="{=taom_crb_t1_b_p4}+5% troop survival." icon_sprite="career_choice_crb_t1_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
@@ -7580,13 +7580,13 @@
     <Choice id="corsair_boarder_t3_b_p1" type="Passive" description="{=taom_crb_t3_b_p1}+18% resistance." icon_sprite="career_choice_crb_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="corsair_boarder_t3_b_p2" type="Passive" description="{=taom_crb_t3_b_p2}+15% health regeneration." icon_sprite="career_choice_crb_t3_b_p2">
+    <Choice id="corsair_boarder_t3_b_p2" type="Passive" description="{=taom_crb_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_crb_t3_b_p2">
       <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_boarder_t3_b_p3" type="Passive" description="{=taom_crb_t3_b_p3}+20% troop morale." icon_sprite="career_choice_crb_t3_b_p3">
       <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
     </Choice>
-    <Choice id="corsair_boarder_t3_b_p4" type="Passive" description="{=taom_crb_t3_b_p4}+15% troop regeneration." icon_sprite="career_choice_crb_t3_b_p4">
+    <Choice id="corsair_boarder_t3_b_p4" type="Passive" description="{=taom_crb_t3_b_p4}+15% troop survival." icon_sprite="career_choice_crb_t3_b_p4">
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
