@@ -99,7 +99,7 @@ class ArmorItem:
     material: str = "Plate"
     modifier_group: str = ""
     hair_cover: str = "type2"
-    beard_cover: str = "all"
+    beard_cover: str = "none"
     covers_body: bool = False
     covers_hands: bool = False
     covers_legs: bool = False

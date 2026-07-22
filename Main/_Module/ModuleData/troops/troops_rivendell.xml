@@ -54,13 +54,10 @@
                     id="Item.wm_rivendell_sword_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.rivendell_helmet_lord_circletmask_silver" />
+                    id="Item.rivendell_helmet_mask_hood" />
                 <equipment
                     slot="Body"
                     id="Item.rivendell_torso_light_light_tier4" />
-                <equipment
-                    slot="Gloves"
-                    id="Item.sk_gd_ano_gloves_a" />
                 <equipment
                     slot="Leg"
                     id="Item.rivendell_boots_leather2" />
