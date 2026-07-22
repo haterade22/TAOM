@@ -353,6 +353,11 @@ Notable NPCs (Merchant, Preacher, Artisan, GangLeader, RuralNotable) carry only 
 
 Add 6 `<NPCCharacter>` entries named `child_education_templates_stage_2_page_0_branch_{0-5}_{id}`.
 
+> **Enforced since 2026-07-21 (#354):** `tools/validate_moduledata.py` ERRORs
+> (`MISSING_EDUCATION_TEMPLATES`) when an `is_main_culture="true"` culture lacks any of the 6 —
+> the engine null-derefs the lookup at the age-8 education stage (CTD). Skipping this file is no
+> longer a silent gap.
+
 Required attributes:
 - `name="{=!}stage_2_page_0_branch_{N}_{id}"`
 - `age="45"`, `default_group="Infantry"`, `is_hero="false"`, `occupation="Lord"`, `is_template="true"`
