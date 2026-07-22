@@ -18,11 +18,20 @@ public sealed class BannerBearerConfig
     // Hard ceiling of 6: the engine's arrangement tables are RelativeFormationPosition[6]
     // (BannerBearerLineFormationPositions et al). Beyond 6 the extra bearers keep their
     // existing slots — cosmetic degradation, not a crash — so we simply don't ask for more.
-    public int MaxBearersPerFormation { get; set; } = 4;
+    public int MaxBearersPerFormation { get; set; } = 6;
+
+    // Formation classes whose troops may become bearers, by FormationClass name. Default is
+    // Infantry only: a bearer swaps its weapons for a banner + 1H sidearm, so converting an
+    // archer or cavalry troop wastes its ranged weapon / mount. Because the engine's
+    // CanFormationDeployBannerBearers gates a whole formation on CanAgentBecomeBannerBearer,
+    // an infantry-only agent gate also gives pure archer/cavalry formations zero bearers.
+    // Add "Cavalry" etc. here to re-enable a class — the per-class ratio below then applies.
+    public List<string> AllowedFormationGroups { get; set; } = new List<string> { "Infantry" };
 
     // "One banner per N soldiers", per formation class (the Raise-your-Banner knob).
-    // 0 disables banners for that class entirely.
-    public int InfantryBannerPerSoldiers { get; set; } = 20;
+    // 0 disables banners for that class entirely. A class only produces bearers if it is BOTH
+    // listed in AllowedFormationGroups AND has a ratio > 0 here.
+    public int InfantryBannerPerSoldiers { get; set; } = 10;
     public int RangedBannerPerSoldiers { get; set; } = 25;
     public int CavalryBannerPerSoldiers { get; set; } = 15;
     public int HorseArcherBannerPerSoldiers { get; set; } = 15;

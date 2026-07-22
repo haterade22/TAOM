@@ -59,12 +59,24 @@ public class ShippedBannerBearerConfigTests
 
         Assert.IsTrue(config.Enabled, "shipped config should ship enabled");
         Assert.AreEqual(4, config.MinimumFormationTroopCount);
-        Assert.AreEqual(4, config.MaxBearersPerFormation);
-        Assert.AreEqual(20, config.InfantryBannerPerSoldiers);
+        Assert.AreEqual(6, config.MaxBearersPerFormation);
+        Assert.AreEqual(10, config.InfantryBannerPerSoldiers);
         Assert.AreEqual(25, config.RangedBannerPerSoldiers);
         Assert.AreEqual(15, config.CavalryBannerPerSoldiers);
         Assert.AreEqual(15, config.HorseArcherBannerPerSoldiers);
         Assert.AreEqual(25, config.OtherBannerPerSoldiers);
+    }
+
+    [TestMethod]
+    public void ShippedConfig_AllowsInfantryOnly()
+    {
+        // A bearer swaps its weapons for a banner + sidearm — never convert an archer or rider.
+        var config = _sut.GetConfig();
+
+        CollectionAssert.Contains(config.AllowedFormationGroups, "Infantry");
+        CollectionAssert.DoesNotContain(config.AllowedFormationGroups, "Ranged");
+        CollectionAssert.DoesNotContain(config.AllowedFormationGroups, "Cavalry");
+        CollectionAssert.DoesNotContain(config.AllowedFormationGroups, "HorseArcher");
     }
 
     [TestMethod]

@@ -6,11 +6,14 @@
   "_comment_MinimumFormationTroopCount": "Formations smaller than this never raise a banner. Engine floor is 2; valid range 2-100.",
   "MinimumFormationTroopCount": 4,
 
-  "_comment_MaxBearersPerFormation": "Hard ceiling per formation. Valid range 1-6 — the engine's bearer arrangement tables only hold 6 positions.",
-  "MaxBearersPerFormation": 4,
+  "_comment_MaxBearersPerFormation": "Hard ceiling per formation. Valid range 1-6 — the engine's bearer arrangement tables only hold 6 positions. Bearers beyond 6 would hold their standard in their normal rank rather than the neat banner row.",
+  "MaxBearersPerFormation": 6,
 
-  "_comment_BannerPerSoldiers": "One banner per N soldiers, per formation class. 0 disables banners for that class. Note: extra bearers add visual density and redundancy (the banner effect survives a bearer dying) — the formation bonus itself does NOT stack.",
-  "InfantryBannerPerSoldiers": 20,
+  "_comment_AllowedFormationGroups": "Formation classes whose troops may carry a banner, by FormationClass name (Infantry, Ranged, Cavalry, HorseArcher, ...). Default is Infantry only: a bearer swaps its weapons for a banner + a 1H sidearm, so making an archer or cavalry troop a bearer wastes its bow or mount. Because the engine gates a whole formation on whether ANY unit can be a bearer, infantry-only also means pure archer/cavalry formations get zero banners. Add \"Cavalry\" etc. to re-enable a class (its per-class ratio below then applies). Unknown names are dropped at load; an empty/all-invalid list reverts to Infantry.",
+  "AllowedFormationGroups": [ "Infantry" ],
+
+  "_comment_BannerPerSoldiers": "One banner per N soldiers, per formation class. 0 disables banners for that class. A class produces bearers only if it is BOTH in AllowedFormationGroups AND has a ratio > 0. Extra bearers add visual density and redundancy (the banner effect survives a bearer dying) — the formation bonus itself does NOT stack.",
+  "InfantryBannerPerSoldiers": 10,
   "RangedBannerPerSoldiers": 25,
   "CavalryBannerPerSoldiers": 15,
   "HorseArcherBannerPerSoldiers": 15,

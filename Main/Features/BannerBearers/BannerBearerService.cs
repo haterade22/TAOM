@@ -80,6 +80,24 @@ public sealed class BannerBearerService : IBannerBearerService
         return true;
     }
 
+    public bool IsFormationGroupAllowed(FormationClass formationClass)
+    {
+        var config = _configProvider.GetConfig();
+        if (!config.Enabled) return false;
+
+        var allowed = config.AllowedFormationGroups;
+        if (allowed == null) return false;
+
+        var name = formationClass.ToString();
+        foreach (var entry in allowed)
+        {
+            if (string.IsNullOrEmpty(entry)) continue;
+            if (string.Equals(entry, name, StringComparison.OrdinalIgnoreCase)) return true;
+        }
+
+        return false;
+    }
+
     public string? ResolveBannerItemId(string? cultureId)
     {
         var config = _configProvider.GetConfig();

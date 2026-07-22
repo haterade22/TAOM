@@ -1,4 +1,5 @@
 using SandBox;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.BannerBearers.Models;
@@ -49,9 +50,13 @@ public class TaomBattleBannerBearersModel : SandboxBattleBannerBearersModel
         !_service.IsEnabled
             ? base.CanAgentBecomeBannerBearer(agent)
             // Vanilla gate first (IsHuman == the IsHumanoid agent flag, true for every LOTRLOME
-            // race; plus !IsMainAgent && !IsHero && IsAIControlled), then TAOM's race gate.
-            // -1 for a null Character is deliberately an invalid race id: IsRaceAllowed fails closed.
-            : base.CanAgentBecomeBannerBearer(agent) && _service.IsRaceAllowed(agent?.Character?.Race ?? -1);
+            // race; plus !IsMainAgent && !IsHero && IsAIControlled), then TAOM's race gate, then
+            // the formation-group gate (default: infantry only — never convert an archer or
+            // rider, whose bearer would lose its ranged weapon / mount). Sentinels fail closed:
+            // -1 is an invalid race id; NumberOfAllFormations is never an allowed group.
+            : base.CanAgentBecomeBannerBearer(agent)
+                && _service.IsRaceAllowed(agent?.Character?.Race ?? -1)
+                && _service.IsFormationGroupAllowed(agent?.Character?.DefaultFormationClass ?? FormationClass.NumberOfAllFormations);
 
     public override int GetDesiredNumberOfBannerBearersForFormation(Formation formation) =>
         !_service.IsEnabled

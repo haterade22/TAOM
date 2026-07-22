@@ -132,7 +132,7 @@ public class BannerBearerConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(4, config.MaxBearersPerFormation);
+        Assert.AreEqual(6, config.MaxBearersPerFormation);
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("MaxBearersPerFormation")));
     }
 
@@ -144,7 +144,7 @@ public class BannerBearerConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(4, config.MaxBearersPerFormation);
+        Assert.AreEqual(6, config.MaxBearersPerFormation);
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("MaxBearersPerFormation")));
     }
 
@@ -155,7 +155,7 @@ public class BannerBearerConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(20, config.InfantryBannerPerSoldiers);
+        Assert.AreEqual(10, config.InfantryBannerPerSoldiers);
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("InfantryBannerPerSoldiers")));
     }
 
@@ -215,5 +215,63 @@ public class BannerBearerConfigProviderTests
 
         // Lazy<T> caches for the process lifetime — retuning needs an app restart.
         Assert.AreSame(first, second);
+    }
+
+    // ---- AllowedFormationGroups (infantry-only gate, 2026-07-16) ---------------
+
+    [TestMethod]
+    public void GetConfig_ValidAllowedFormationGroups_Parsed()
+    {
+        WriteConfig(@"{ ""AllowedFormationGroups"": [ ""Infantry"", ""Cavalry"" ] }");
+
+        var config = _sut.GetConfig();
+
+        CollectionAssert.AreEquivalent(new[] { "Infantry", "Cavalry" }, config.AllowedFormationGroups);
+    }
+
+    [TestMethod]
+    public void GetConfig_UnknownFormationGroup_DroppedAndWarns()
+    {
+        // FormationClass is a fixed engine enum, so a typo can be caught at LOAD (unlike races).
+        WriteConfig(@"{ ""AllowedFormationGroups"": [ ""Infantry"", ""Infntry"" ] }");
+
+        var config = _sut.GetConfig();
+
+        CollectionAssert.AreEquivalent(new[] { "Infantry" }, config.AllowedFormationGroups);
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("Infntry")));
+    }
+
+    [TestMethod]
+    public void GetConfig_AllFormationGroupsUnknown_RevertsToDefaultAndWarns()
+    {
+        // An all-invalid list would leave zero eligible classes = no bearers anywhere; that is
+        // almost certainly a mistake, so revert to the default rather than silently disable.
+        WriteConfig(@"{ ""AllowedFormationGroups"": [ ""Nope"", ""AlsoNope"" ] }");
+
+        var config = _sut.GetConfig();
+
+        CollectionAssert.Contains(config.AllowedFormationGroups, "Infantry");
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("AllowedFormationGroups")));
+    }
+
+    [TestMethod]
+    public void GetConfig_EmptyAllowedFormationGroups_RevertsToDefaultAndWarns()
+    {
+        WriteConfig(@"{ ""AllowedFormationGroups"": [] }");
+
+        var config = _sut.GetConfig();
+
+        CollectionAssert.Contains(config.AllowedFormationGroups, "Infantry");
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("AllowedFormationGroups")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NullAllowedFormationGroups_RevertsToDefault()
+    {
+        WriteConfig(@"{ ""AllowedFormationGroups"": null }");
+
+        var config = _sut.GetConfig();
+
+        CollectionAssert.Contains(config.AllowedFormationGroups, "Infantry");
     }
 }

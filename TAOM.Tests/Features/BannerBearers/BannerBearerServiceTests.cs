@@ -343,6 +343,72 @@ public class BannerBearerServiceTests
         Assert.IsNull(_sut.ResolveMajorityCultureId(new string?[] { null, null }));
     }
 
+    // ---- IsFormationGroupAllowed (infantry-only gate, 2026-07-16 feedback) -----
+    // A bearer swaps its weapons for a banner + sidearm, so converting an archer or cavalry
+    // troop wastes it. Only troops whose default_group is Infantry may be picked.
+
+    [TestMethod]
+    public void IsFormationGroupAllowed_DefaultConfig_AllowsInfantryOnly()
+    {
+        Assert.IsTrue(_sut.IsFormationGroupAllowed(FormationClass.Infantry), "infantry");
+        Assert.IsFalse(_sut.IsFormationGroupAllowed(FormationClass.Ranged), "ranged");
+        Assert.IsFalse(_sut.IsFormationGroupAllowed(FormationClass.Cavalry), "cavalry");
+        Assert.IsFalse(_sut.IsFormationGroupAllowed(FormationClass.HorseArcher), "horse archer");
+    }
+
+    [TestMethod]
+    public void IsFormationGroupAllowed_ConfiguredClass_Allowed()
+    {
+        _config.AllowedFormationGroups = new List<string> { "Infantry", "Cavalry" };
+
+        Assert.IsTrue(_sut.IsFormationGroupAllowed(FormationClass.Infantry));
+        Assert.IsTrue(_sut.IsFormationGroupAllowed(FormationClass.Cavalry));
+        Assert.IsFalse(_sut.IsFormationGroupAllowed(FormationClass.Ranged));
+    }
+
+    [TestMethod]
+    public void IsFormationGroupAllowed_CaseInsensitive()
+    {
+        _config.AllowedFormationGroups = new List<string> { "infantry" };
+
+        Assert.IsTrue(_sut.IsFormationGroupAllowed(FormationClass.Infantry));
+    }
+
+    [TestMethod]
+    public void IsFormationGroupAllowed_EmptyList_AllowsNothing()
+    {
+        // A genuinely empty list means no class is eligible. The provider reverts an empty
+        // shipped list to the default, but the service must honour whatever it is handed.
+        _config.AllowedFormationGroups = new List<string>();
+
+        Assert.IsFalse(_sut.IsFormationGroupAllowed(FormationClass.Infantry));
+    }
+
+    [TestMethod]
+    public void IsFormationGroupAllowed_NullList_AllowsNothing()
+    {
+        _config.AllowedFormationGroups = null!;
+
+        Assert.IsFalse(_sut.IsFormationGroupAllowed(FormationClass.Infantry));
+    }
+
+    [TestMethod]
+    public void IsFormationGroupAllowed_UnknownEntryIgnored_DoesNotThrow()
+    {
+        _config.AllowedFormationGroups = new List<string> { "Infantry", "NotAClass", null! };
+
+        Assert.IsTrue(_sut.IsFormationGroupAllowed(FormationClass.Infantry));
+        Assert.IsFalse(_sut.IsFormationGroupAllowed(FormationClass.Ranged));
+    }
+
+    [TestMethod]
+    public void IsFormationGroupAllowed_FeatureDisabled_AllowsNothing()
+    {
+        _config.Enabled = false;
+
+        Assert.IsFalse(_sut.IsFormationGroupAllowed(FormationClass.Infantry));
+    }
+
     // ---- ExcludedRaces validation (Codex review 2026-07-16 LOW) ---------------
 
     [TestMethod]

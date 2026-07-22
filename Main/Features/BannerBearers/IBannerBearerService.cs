@@ -19,6 +19,10 @@ public interface IBannerBearerService
     // False for excluded races AND for any race id the engine doesn't know (fail-closed).
     bool IsRaceAllowed(int raceId);
 
+    // Whether a troop of this formation class may carry a banner (default: Infantry only).
+    // Keyed on the troop's DefaultFormationClass, i.e. its default_group XML attribute.
+    bool IsFormationGroupAllowed(FormationClass formationClass);
+
     // Banner ItemObject id for a culture, or null when the culture should field no banner.
     string? ResolveBannerItemId(string? cultureId);
 

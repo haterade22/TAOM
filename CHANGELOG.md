@@ -2,6 +2,33 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-22
+
+### feat(banner-bearers): infantry-only bearers + denser banners (#351)
+
+In-game tuning after first play confirmed the feature works (a Dunlending line flew the deer-bane
+standard). Two changes:
+
+- **Only infantry troops become bearers.** A bearer swaps its weapons for a banner + a 1H sidearm,
+  so making an archer or cavalry troop a bearer wastes its bow or mount. New `AllowedFormationGroups`
+  config (default `["Infantry"]`) gates `CanAgentBecomeBannerBearer` on the troop's
+  `DefaultFormationClass` — the same `default_group` its XML declares. Because vanilla's
+  `CanFormationDeployBannerBearers` gates a whole formation on whether any unit is eligible, this
+  gives pure archer/cavalry formations zero banners automatically, and `FindBannerBearableAgents`
+  excludes non-infantry from candidacy so a mixed formation never falls back to an archer. Add a
+  class name to the list to re-enable it; unknown names are dropped at load, an empty/all-invalid
+  list reverts to Infantry.
+- **Denser banners.** `InfantryBannerPerSoldiers` 20 → 10 and `MaxBearersPerFormation` 4 → 6, so a
+  ~60-man infantry line shows ~6 standards in the engine's neat banner-row arrangement (cap stays
+  6 — the arrangement tables hold 6 positions).
+
+The per-class ratios for Ranged/Cavalry/HorseArcher are inert while those classes aren't allowed,
+kept and documented so a class can be re-enabled by config alone. +13 tests (74 total); full suite
+green. `FormationClass` is a fixed engine enum so `AllowedFormationGroups` is validated at load.
+
+Research: BasicCharacterObject.DefaultFormationClass, BannerBearerLogic.FindBannerBearableAgents, DefaultFormationArrangementModel
+Not-tested: in-game density + that archer/cavalry formations show no banner
+
 ## 2026-07-21
 
 ### fix(lotr-issues): the 7 SandBox vanilla issues were never suppressed in-game — CTD on quest accept

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using TaleWorlds.Core;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.BannerBearers.Domain;
@@ -102,6 +103,7 @@ public class BannerBearerConfigProvider : IBannerBearerConfigProvider
             OtherBannerPerSoldiers = ValidatePerSoldiers(
                 parsed.OtherBannerPerSoldiers, defaults.OtherBannerPerSoldiers,
                 nameof(parsed.OtherBannerPerSoldiers), ref rejected),
+            AllowedFormationGroups = ValidateFormationGroups(parsed.AllowedFormationGroups, defaults.AllowedFormationGroups, nameof(parsed.AllowedFormationGroups), ref rejected),
             ExcludedRaces = ValidateList(parsed.ExcludedRaces, defaults.ExcludedRaces, nameof(parsed.ExcludedRaces), ref rejected),
             CultureBanners = ValidateMap(parsed.CultureBanners, defaults.CultureBanners, nameof(parsed.CultureBanners), ref rejected),
             DefaultBannerItemId = parsed.DefaultBannerItemId ?? defaults.DefaultBannerItemId,
@@ -154,5 +156,42 @@ public class BannerBearerConfigProvider : IBannerBearerConfigProvider
         }
 
         return value;
+    }
+
+    // FormationClass is a fixed engine enum, so unknown names ARE catchable at load time
+    // (unlike race ids, which need FaceGen). Drop typos with a warning; an empty or all-invalid
+    // list would leave zero eligible classes = no bearers anywhere, almost certainly a mistake,
+    // so revert to the default (Infantry). The master Enabled toggle is the real off switch.
+    private List<string> ValidateFormationGroups(List<string> value, List<string> fallback, string field, ref bool rejected)
+    {
+        if (value == null)
+        {
+            _logger.LogWarning($"BannerBearerConfigProvider: {field} is null, reverting to defaults");
+            rejected = true;
+            return fallback;
+        }
+
+        var kept = new List<string>();
+        foreach (var entry in value)
+        {
+            if (!string.IsNullOrEmpty(entry) && Enum.TryParse<FormationClass>(entry, ignoreCase: true, out _))
+            {
+                kept.Add(entry);
+            }
+            else
+            {
+                _logger.LogWarning($"BannerBearerConfigProvider: {field} entry '{entry}' is not a known FormationClass, dropping it");
+                rejected = true;
+            }
+        }
+
+        if (kept.Count == 0)
+        {
+            _logger.LogWarning($"BannerBearerConfigProvider: {field} has no valid entries, reverting to defaults");
+            rejected = true;
+            return fallback;
+        }
+
+        return kept;
     }
 }

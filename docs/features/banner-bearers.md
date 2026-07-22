@@ -101,11 +101,12 @@ Subclassing keeps `this.BannerBearerLogic` (the initialized one) behind every `b
 |---|---|---|---|
 | `Enabled` | `true` | — | Master switch. Off = exact vanilla: the MissionLogic assigns nothing, **and every GameModel override defers to `base`** so vanilla's own hero-captain / Order-of-Battle banner path keeps working untouched. |
 | `MinimumFormationTroopCount` | `4` | 2–100 | Engine floor is 2. **Must not vary mid-mission** — `OnAgentAdded`/`OnAgentRemoved` detect the threshold with exact equality (`CountOfUnits == minimum`). |
-| `MaxBearersPerFormation` | `4` | 1–6 | Ceiling of 6 is the engine's: bearer arrangement tables are `RelativeFormationPosition[6]`. |
-| `InfantryBannerPerSoldiers` | `20` | 0–1000 | One banner per N soldiers. `0` disables that class. |
-| `RangedBannerPerSoldiers` | `25` | 0–1000 | |
-| `CavalryBannerPerSoldiers` | `15` | 0–1000 | |
-| `HorseArcherBannerPerSoldiers` | `15` | 0–1000 | |
+| `MaxBearersPerFormation` | `6` | 1–6 | Ceiling of 6 is the engine's: bearer arrangement tables are `RelativeFormationPosition[6]`. |
+| `AllowedFormationGroups` | `["Infantry"]` | FormationClass names | Which classes may carry a banner. **Default infantry-only** — see below. Unknown names dropped at load; empty/all-invalid reverts to Infantry. |
+| `InfantryBannerPerSoldiers` | `10` | 0–1000 | One banner per N soldiers. `0` disables that class. A class produces bearers only if it's **both** in `AllowedFormationGroups` **and** has ratio > 0. |
+| `RangedBannerPerSoldiers` | `25` | 0–1000 | Inert while `Ranged` isn't in `AllowedFormationGroups`. |
+| `CavalryBannerPerSoldiers` | `15` | 0–1000 | Inert while `Cavalry` isn't in `AllowedFormationGroups`. |
+| `HorseArcherBannerPerSoldiers` | `15` | 0–1000 | Inert while `HorseArcher` isn't in `AllowedFormationGroups`. |
 | `OtherBannerPerSoldiers` | `25` | 0–1000 | Any formation class outside the four defaults. |
 | `ExcludedRaces` | trolls + named | — | Race ids from `LOTRLOME_Armory/ModuleData/skins.xml`. |
 | `CultureBanners` | 28 entries | — | Culture **StringId** → banner `ItemObject` id. Map to `""` for no banner. See the StringId table below — keys are ids, not LOTR names. |
@@ -153,6 +154,17 @@ TAOM ships zero banner items of its own; custom LOTR meshes can be added later a
 
 `IsRaceAllowed` **validates before lookup**: `RaceManager.GetRaceNameFromId` coerces unknown ids to `"human"`, which is not on the exclusion list, so a lookup-first check would silently admit corrupt race ids. Invalid ids fail closed.
 
+### Infantry-only gate
+
+By default only troops whose `default_group` is **Infantry** become bearers. A bearer swaps its weapons for a banner + a 1H sidearm — it loses its bow, shield, or mount — so converting an archer or cavalry troop wastes that unit. `AllowedFormationGroups` (default `["Infantry"]`) controls which classes are eligible; `CanAgentBecomeBannerBearer` checks `agent.Character.DefaultFormationClass` against it (the class is set from the same `default_group` XML attribute — `BasicCharacterObject.cs:489-497`).
+
+The guarantee is airtight because vanilla does the formation-level gating for us:
+
+- **Pure archer/cavalry formations get zero bearers.** `CanFormationDeployBannerBearers` returns false unless ≥1 unit passes `CanAgentBecomeBannerBearer` — an all-non-infantry formation has none.
+- **Mixed formations never fall back to a non-infantry bearer.** `FindBannerBearableAgents` (`BannerBearerLogic.cs:379`) filters its candidate pool by `CanAgentBecomeBannerBearer`, so an archer mixed into an infantry formation is excluded from candidacy, not merely deprioritized. A formation short on infantry gets *fewer* bearers, never an archer.
+
+To give another class banners, add its FormationClass name (`"Cavalry"`, `"Ranged"`, …) to `AllowedFormationGroups` — its per-class ratio then applies. `FormationClass` is a fixed engine enum, so a typo is caught at load (dropped + warned); an empty or all-invalid list reverts to Infantry rather than silently disabling every banner (the master `Enabled` toggle is the real off switch).
+
 ### The unarmed-bearer trap — solved in data, not code
 
 `GetBannerBearerReplacementWeapon` returns **null** for a culture with no `<banner_bearer_replacement_weapons>`, and `CreateBannerEquipmentForAgent` writes that null into the weapon slot and clears slots 1–3 (`BannerBearerLogic.cs:824-828`) — leaving a bearer holding a banner and **nothing else**. Vanilla never hits this because those cultures never get banners; switching banners on for every TAOM culture creates the bug.
@@ -178,13 +190,13 @@ The 8 bandit cultures (`dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gund
 
 ## Testing
 
-61 tests: `TAOM.Tests/Features/BannerBearers/`.
+74 tests: `TAOM.Tests/Features/BannerBearers/`.
 
 | File | Covers |
 |---|---|
-| `BannerBearerServiceTests.cs` (39) | Density curve (disabled, below/at minimum, scaling, engine cap, per-class ratios, negative counts); race gate (trolls/named excluded, all playable races allowed, **invalid id fails closed**, case-insensitivity, null entries); banner resolution; **majority-culture vote** (mixed formation ignores slot 0, tie is order-independent, null/empty entries); **unknown-excluded-race warning fires once**. |
-| `BannerBearerConfigProviderTests.cs` (14) | Missing file, malformed JSON, full parse, `ObjectCreationHandling.Replace` on both collections, one test per validation rule, summary-warning behaviour, `Lazy<T>` caching. |
-| `ShippedBannerBearerConfigTests.cs` (12) | The **shipped** config parses with zero rejections; trolls excluded, ordinary races not; every banner id is a real vanilla item. Plus the 2026-07-16 regression pins: **every culture key is a real StringId**, **no LOTR display name is used as a key**, **every bannered culture declares replacement weapons**, **the default stays empty**, **vanilla leftover cultures stay unmapped**. |
+| `BannerBearerServiceTests.cs` (42) | Density curve (disabled, below/at minimum, scaling, engine cap, per-class ratios, negative counts); race gate (trolls/named excluded, all playable races allowed, **invalid id fails closed**, case-insensitivity, null entries); banner resolution; **majority-culture vote** (mixed formation ignores slot 0, tie is order-independent, null/empty entries); **unknown-excluded-race warning fires once**; **infantry-only gate** (Infantry allowed by default, Ranged/Cavalry/HorseArcher not, configurable, case-insensitive, empty/null/unknown handling, disabled → nothing). |
+| `BannerBearerConfigProviderTests.cs` (19) | Missing file, malformed JSON, full parse, `ObjectCreationHandling.Replace` on both collections, one test per validation rule, summary-warning behaviour, `Lazy<T>` caching; **`AllowedFormationGroups` validation** (valid parse, unknown dropped + warned, all-invalid/empty/null revert to Infantry). |
+| `ShippedBannerBearerConfigTests.cs` (13) | The **shipped** config parses with zero rejections; trolls excluded, ordinary races not; every banner id is a real vanilla item; **allows infantry only**. Plus the 2026-07-16 regression pins: **every culture key is a real StringId**, **no LOTR display name is used as a key**, **every bannered culture declares replacement weapons**, **the default stays empty**, **vanilla leftover cultures stay unmapped**. |
 
 The GameModel and MissionLogic are entry points (ADR-008: not unit tested — they delegate).
 
