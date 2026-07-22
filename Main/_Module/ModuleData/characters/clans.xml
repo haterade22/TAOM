@@ -1733,7 +1733,7 @@
 		settlement_banner_mesh="none"
 		is_bandit="true"
 		is_outlaw="true"
-		name="{=taom_bandit_erebor_name}Erebor Warriors"
+		name="{=taom_bandit_erebor_name}Blacklocks"
 		tier="1"></Faction>
 
 	<Faction

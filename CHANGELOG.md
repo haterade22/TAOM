@@ -4,6 +4,34 @@
 
 ## 2026-07-22
 
+### feat(bandits): rename eastern dwarf bandits "Erebor Warriors" → "Blacklocks" (immersion)
+
+The dwarf-race bandit faction (`erebor_warriors`, ~10 hideouts in the north-east near Erebor and the
+Iron Hills) is renamed from **"Erebor Warriors"** to **"Blacklocks"** — one of the four Eastern
+Dwarf-houses of the Orocarni, here a clan fallen to shadow. This fits the eastern-map placement better
+than the old "exiled Erebor deserters" framing, since Erebor is Durin's Longbeards in the north-west.
+Community request.
+
+- Renamed the faction/culture/clan display name (`taom_bandit_erebor_name`, which drives the on-map
+  party name), the boss card `erebor_warriors_boss` "[Erebor] Warrior Captain" → **"Blacklock
+  Chieftain"**, and the 10 `hideout_erebor_*` camp names in the **live** `TAOM_Map/settlements.xml`.
+- Every `id=` kept (`erebor_warriors`, `erebor_warriors_boss`, `hideout_erebor_N`, clan id) → save
+  games unaffected; `faction_banner_key` / `clan_heraldry` stay bound, so no heraldry change.
+- Fixed a pre-existing gap: `HideoutDescriptionService` had no `erebor_warriors` entry, so the dwarf
+  hideout menu fell back to vanilla "(Undefined hideout type)". Added `taom_hideout_desc_erebor` and
+  a test (RED→GREEN).
+- Localization: name set to "Blacklocks" (verbatim proper noun) across all 12 language files + the
+  translation cache + the RU override, so the rename shows in every language. The new
+  hideout-description sentence is English-only for now, deferred to a later `/localize` pass.
+- Rank-and-file troop cards ("[Erebor] Miner" etc.) are **unchanged** — they are shared with the
+  legitimate Erebor kingdom army, so renaming them would mislabel the real faction.
+
+TAOM.Tests 4403 passed / 2 skipped (+1 new test). `validate_moduledata.py` clean.
+
+Save-compat: display text only; all ids stable.
+
+Constraint: `TAOM_Map/settlements.xml` (the live hideout names) is outside this repo — that edit is applied to the game install and won't appear in the git diff.
+
 ### feat(banner-bearers): infantry-only bearers + denser banners (#351)
 
 In-game tuning after first play confirmed the feature works (a Dunlending line flew the deer-bane

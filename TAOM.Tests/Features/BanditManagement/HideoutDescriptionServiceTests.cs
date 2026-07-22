@@ -52,6 +52,16 @@ public class HideoutDescriptionServiceTests
     }
 
     [TestMethod]
+    public void GetDescription_EreborWarriors_ReturnsEreborTemplate()
+    {
+        // Blacklocks (id kept as erebor_warriors) — dwarf bandit hideout must not fall back
+        // to vanilla "(Undefined hideout type)".
+        var result = _sut.GetDescription("erebor_warriors");
+        Assert.IsNotNull(result);
+        StringAssert.Contains(result, "{=taom_hideout_desc_erebor}");
+    }
+
+    [TestMethod]
     public void GetDescription_UnknownCulture_ReturnsNull()
     {
         Assert.IsNull(_sut.GetDescription("vlandia"));

@@ -4480,10 +4480,10 @@
   </banner_bearer_replacement_weapons>
   </Culture>
 
-  <!-- Erebor Warriors (exiled dwarven bands) -->
+  <!-- Blacklocks (eastern dwarf-clan fallen to shadow; id kept as erebor_warriors for save-compat) -->
   <Culture
     id="erebor_warriors"
-    name="{=taom_bandit_erebor_name}Erebor Warriors"
+    name="{=taom_bandit_erebor_name}Blacklocks"
     bandit_chief="NPCCharacter.erebor_reg_company"
     bandit_raider="NPCCharacter.erebor_reg_militia"
     bandit_bandit="NPCCharacter.erebor_reg_miner"

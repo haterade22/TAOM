@@ -704,7 +704,7 @@
         race="dwarf"
         default_group="Ranged"
         level="26"
-        name="{=taom_erebor_warriors_boss_name}[Erebor] Warrior Captain"
+        name="{=taom_erebor_warriors_boss_name}Blacklock Chieftain"
         occupation="Bandit"
         culture="Culture.erebor_warriors">
         <face>

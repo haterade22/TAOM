@@ -1419,8 +1419,8 @@
 	<string id="taom_bandit_gondor_f4" text="{=taom_bandit_gondor_f4}Gilraen" />
 	<string id="taom_bandit_gondor_f5" text="{=taom_bandit_gondor_f5}Anwen" />
 
-	<!-- Wave 2: Erebor Warriors -->
-	<string id="taom_bandit_erebor_name" text="{=taom_bandit_erebor_name}Erebor Warriors" />
+	<!-- Wave 2: Blacklocks (eastern dwarf-clan fallen to shadow; id kept as erebor_warriors) -->
+	<string id="taom_bandit_erebor_name" text="{=taom_bandit_erebor_name}Blacklocks" />
 	<string id="taom_bandit_erebor_m1" text="{=taom_bandit_erebor_m1}Nargûm" />
 	<string id="taom_bandit_erebor_m2" text="{=taom_bandit_erebor_m2}Borin" />
 	<string id="taom_bandit_erebor_m3" text="{=taom_bandit_erebor_m3}Frar" />
@@ -1465,6 +1465,7 @@
 	<string id="taom_hideout_desc_harad" text="{=taom_hideout_desc_harad}Out among the dunes of Harad you come upon a camouflaged Southron camp gathered about a hidden desert well." />
 	<string id="taom_hideout_desc_rhun" text="{=taom_hideout_desc_rhun}On the wide grasslands of Rhûn you make out the wagons and hide-tents of an Easterling raiding band camped in a gully." />
 	<string id="taom_hideout_desc_umbar" text="{=taom_hideout_desc_umbar}Along the southern shore you find a sheltered cove where the black ships of the Corsairs of Umbar lie at anchor." />
+	<string id="taom_hideout_desc_erebor" text="{=taom_hideout_desc_erebor}Among the bleak hills of the east you come upon a dwarf-camp of the Blacklocks, a clan long ago fallen into shadow and ruin." />
 
 	<!-- ===== FactionMap (CC) — Difficulty labels (hand-authored; consumed by FactionSelectionService.FormatDifficultyText) ===== -->
 	<string id="taom_faction_difficulty_1" text="{=taom_faction_difficulty_1}Difficulty: Very Easy" />
