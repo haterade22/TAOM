@@ -4,6 +4,63 @@
 
 ## 2026-07-23
 
+### fix(elves): female elves render on the human female basemesh instead of the male elf basemesh
+
+No dedicated female elf basemesh was ever authored, so every female `<skin>` in `<race id="elf">`
+pointed all its body-mesh slots at the male `sk_elf_basemesh_a1_*` set — female elves rendered on a
+male torso/shoulders/legs, wearing the **male** underwear mesh. The elf skins were derived from
+vanilla human female (their `min_scale` values match exactly), so the gap was purely the swapped
+meshes. Per user decision this is a **full** swap **including the head** (`face_meta_mesh` →
+`head_female_a`): female elves now use the maturity-matched vanilla human female mesh set and no longer
+carry the elf pointed-ear head.
+
+Applied to the **adult / teenager / tween** female elf blocks (each mapped to its vanilla human female
+equivalent — adult+teen use `body_female_a`, tween uses `body_female_a_kid` + `underwear_female_teen`);
+the **toddler** female's stray `sk_elf_basemesh_a1_shoulders` remnant was also fixed. The `sauron` race
+(an NPC-only verbatim elf clone, #321) is deliberately left untouched — no female sauron ever spawns.
+This is LOTRLOME_Armory data, not TAOM-owned: the live `Modules/LOTRLOME_Armory/ModuleData/skins.xml`
+(what loads) and the repo reference snapshot (`docs/reference/lotrlome-armory-snapshot/skins.xml`) were
+both patched.
+
+**The mesh swap alone was not enough.** Swapping `face_meta_mesh` left the `<face_textures>` still
+pointing at the elf head *material* `m_elf_basemesh_a1_head` — in-game this rendered a correct female
+body under a **garbled face** (smeared texture, mismatched patches, face/neck tone mismatch), because
+the elf head material's UVs don't map onto `head_female_a`. The face assets are now aligned to vanilla
+human female too: `<face_textures>` → `head_female_a/b/c/e` with `lod_material="head_female_a.lod"` and
+vanilla's `color="0xFFCAD3E0"`, keeping the elf's wider `face_texture1..10` tag coverage so characters
+whose body properties reference tags 5–10 still resolve. Two pre-existing defects fixed in the same
+pass: `<mouth_textures>` referenced `m_dwarf_basemesh_mouth_a` (a **dwarf** mouth material) → now
+`mouth_mat`; and `<eyebrow_meshes>` held a single `name=""` entry, meaning **female elves had no
+eyebrows at all** → now the vanilla female set. Child + toddler females carried the same
+human-mesh/elf-material mismatch before this session and are fixed too.
+
+**Face tattoos were off by one.** With the face rendering correctly, the character-creation tattoo
+picker showed a tattoo on the blank "no tattoo" slot. Vanilla's `<tattoo_materials>` begins with a
+*nameless* `<tattoo_material>` carrying the `Cleanface` style tag — index 0 means "no tattoo".
+LOTRLOME's elf list omits it and starts straight at `tattoo_female_a_mat`, so every index shifted
+down one (elf had 33 entries where vanilla has 34, otherwise identical). Prepending the missing
+Cleanface entry restores exact index parity. `zero_probability="85"` is deliberately left alone —
+that governs how often randomly-generated elves get a tattoo, and is a LOTRLOME design choice, not
+part of the indexing bug.
+
+Verified at the XML level: both files parse well-formed; all 5 female maturities have zero
+elf/dwarf asset references anywhere in the subtree and attributes **identical to vanilla human
+female**; tattoo lists index-match vanilla 34/34. `/deep-review` confirmed at byte level that the
+`<race id="elf">` block is the **only** region differing from the pre-change backup, and within it
+only the 5 `gender="1"` skins — male elf skins, the whole sauron clone and all 12 other races are
+byte-identical. Every one of the 89 asset names the female skins reference also resolves in
+Native's own `skins.xml`.
+**Not yet game-verified** — the face and eyebrows were confirmed in-game; the tattoo-index fix
+still needs a shader-cache-sack clear and a look at the character-creation tattoo picker.
+
+Save-compat: no migration needed — every list grew or held, so no saved index can fall out of
+range. Cosmetic drift only: saved female elves gain eyebrows (list 1→5, where index 0 was a blank
+entry), and their tattoo index shifts by one (33→34, blank Cleanface prepended at 0), so a saved
+index 0 goes from `tattoo_female_a_mat` to no tattoo. Affects the 20 authored female elf lords in
+`characters/lords.xml` (Galadriel, Arwen, …) and the three elf-culture character-creation defaults.
+
+RCA: [`docs/reviews/rca-elf-female-skins-2026-07-23.md`](docs/reviews/rca-elf-female-skins-2026-07-23.md).
+
 ### fix(banner-bearers): guard the native SetFormationBanner call against heraldry-less troops — siege CTD (#349)
 
 A manual siege assault at Stranding (`sturgia_town_c`) hard-crashed to desktop every time — native
@@ -26,7 +83,39 @@ bearers still appear wherever the parties have valid heraldry; only heraldry-les
 RCA: [`docs/reviews/rca-banner-bearers-siege-ctd-2026-07-23.md`](docs/reviews/rca-banner-bearers-siege-ctd-2026-07-23.md).
 **Not yet game-verified** — the native precondition is confirmed by decompile; the Stranding siege still owes an in-game smoke test.
 
-## 2026-07-22
+### feat(gondor): dress Gondor lords in new lord-tier armour — 15 regional variant sets by clan, battle + civilian (#358)
+
+Gondor's ~111 lords (77 in `lords.xml` + 34 injected via `lords.xslt`) shared 5 mid-tier templates —
+one even put an *infantry* chest on a lord, and groups of 16–36 lords looked identical. Replaced with
+**15 lord-tier equipment templates** (`gondor_lord_<region>_<n>`) from the 2026-07 KEYforce noble drop,
+each mirrored as a civilian twin (`_civ`, `equipmentType="Civilian"`) so lords wear the same regional
+look in **town and battle** — 30 rosters total. Lords vary within a region; clans differ across regions:
+
+- **Dol-Amroth** ×4 — `dol_cav_helmet_elite_a–d` + `dol_chest_elite_a/b` + `dol_pauld_cape_noble_elite_a`
+- **Lond-Galen** ×2 — `lon_helmet_elite_a/b` + `lon_chest_lord_a` + Serelond elite cape/bracer/greaves
+- **Linhir** ×3 — `lin_helmet_lord_a/b` + `lin_chest_elite_a` + `lin_pauld_cape_noble_elite_a`
+- **Arndir/Pinnath** ×3 — `pin_noble_cav_helmet_elite_a/b` + `pin_nob_chest_elite_a/b` + `pin_pauld_cape_noble_elite_a`
+- **Anorien/capital** ×3 — `osg_inf_chest_elite_a` + `ith_noble_helmet_heavy_a/b`/`osg_noble_helmet_heavy_a` + Anorien noble capes
+
+**Distribution is by clan** (lord id prefix): each clan gets one region, variants rotate across the
+clan's lords; regions spread evenly (17/16/16/15/13). Region↔clan geography isn't stored in the data,
+so it's assigned round-robin (adjustable). **Fountain Guard / Citadel Guard armour is reserved for
+those units** — lords use Osgiliath/noble pieces instead. Authored one missing item def,
+`sk_gd_osg_inf_chest_elite_a` (elite, mesh present but un-authored), via `generate_gondor_armor.py`.
+
+**Named-armour lords untouched:** `lord_1_60` (`tirnelion_bat_equipment`) and the six captain sets
+(Imrahil, Faramir, Forlong, Golasgil, Hirluin, Angbor) keep their signature gear.
+
+An adversarial deep-review caught a ship-blocker before commit: the new rosters initially wrapped their
+`<Equipment>` directly under `<EquipmentRoster>` with **no `<EquipmentSet>` element** — the engine
+deserializer (`MBEquipmentRoster`) reads only `EquipmentSet` children, so every roster would have loaded
+empty and all 111 lords fought naked (battle-only; the validator/build never start a campaign so none
+caught it). Fixed by wrapping all 30 rosters. Every armour item (all 30 rosters) verified exact against
+armory defs + geo-tpac mesh TOCs; all lord refs resolve; `validate_moduledata` PASS. `gondor_bat_template_medium_a`
+remains the culture `default_battle_equipment_roster` (untouched, mid-tier).
+
+Not-tested: in-game render — REQUIRES a full game restart + battle spawn to confirm lords are clothed
+(the item XML also awaits the `AssetPackages/` recompile, per #358).
 
 ### feat(bandits): rename eastern dwarf bandits "Erebor Warriors" → "Blacklocks" (immersion)
 

@@ -387,8 +387,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_a" />
-                <EquipmentSet id="gondor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_1" />
+                <EquipmentSet id="gondor_lord_dolamroth_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -442,8 +442,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
-                <EquipmentSet id="gondor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_2" />
+                <EquipmentSet id="gondor_lord_dolamroth_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -551,8 +551,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_d" />
-                <EquipmentSet id="gondor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_3" />
+                <EquipmentSet id="gondor_lord_dolamroth_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -605,8 +605,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_a" />
-                <EquipmentSet id="gondor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_4" />
+                <EquipmentSet id="gondor_lord_dolamroth_4_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -658,8 +658,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
-                <EquipmentSet id="gondor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_londgalen_1" />
+                <EquipmentSet id="gondor_lord_londgalen_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -712,8 +712,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_e" />
-                <EquipmentSet id="gondor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_londgalen_2" />
+                <EquipmentSet id="gondor_lord_londgalen_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -767,8 +767,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_a" />
-                <EquipmentSet id="gondor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_linhir_1" />
+                <EquipmentSet id="gondor_lord_linhir_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -822,8 +822,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
-                <EquipmentSet id="gondor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_linhir_2" />
+                <EquipmentSet id="gondor_lord_linhir_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1367,8 +1367,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
-                <EquipmentSet id="gondor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_linhir_3" />
+                <EquipmentSet id="gondor_lord_linhir_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1421,8 +1421,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_c" />
-                <EquipmentSet id="gondor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_arndir_1" />
+                <EquipmentSet id="gondor_lord_arndir_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1529,8 +1529,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_d" />
-                <EquipmentSet id="gondor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_arndir_2" />
+                <EquipmentSet id="gondor_lord_arndir_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2021,8 +2021,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_c" />
-                <EquipmentSet id="gondor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_arndir_3" />
+                <EquipmentSet id="gondor_lord_arndir_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2457,8 +2457,8 @@
               <Trait id="Authoritarian" value="2" />
           </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_a" />
-                <EquipmentSet id="gondor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anorien_1" />
+                <EquipmentSet id="gondor_lord_anorien_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3055,8 +3055,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
-                <EquipmentSet id="gondor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anorien_2" />
+                <EquipmentSet id="gondor_lord_anorien_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3109,8 +3109,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_c" />
-                <EquipmentSet id="gondor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anorien_3" />
+                <EquipmentSet id="gondor_lord_anorien_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3217,8 +3217,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_e" />
-                <EquipmentSet id="gondor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_1" />
+                <EquipmentSet id="gondor_lord_dolamroth_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3433,8 +3433,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_d" />
-                <EquipmentSet id="gondor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_2" />
+                <EquipmentSet id="gondor_lord_dolamroth_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3487,8 +3487,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_e" />
-                <EquipmentSet id="gondor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_3" />
+                <EquipmentSet id="gondor_lord_dolamroth_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5465,8 +5465,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_d" />
-                <EquipmentSet id="gondor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_4" />
+                <EquipmentSet id="gondor_lord_dolamroth_4_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5520,8 +5520,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_e" />
-                <EquipmentSet id="gondor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_londgalen_1" />
+                <EquipmentSet id="gondor_lord_londgalen_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5575,8 +5575,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_a" />
-                <EquipmentSet id="gondor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_londgalen_2" />
+                <EquipmentSet id="gondor_lord_londgalen_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5630,8 +5630,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
-                <EquipmentSet id="gondor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_linhir_1" />
+                <EquipmentSet id="gondor_lord_linhir_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5685,8 +5685,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_c" />
-                <EquipmentSet id="gondor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_linhir_2" />
+                <EquipmentSet id="gondor_lord_linhir_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5740,8 +5740,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_d" />
-                <EquipmentSet id="gondor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_linhir_3" />
+                <EquipmentSet id="gondor_lord_linhir_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5768,8 +5768,8 @@
             <Traits>
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_e" />
-                <EquipmentSet id="gondor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_arndir_1" />
+                <EquipmentSet id="gondor_lord_arndir_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5823,8 +5823,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_a" />
-                <EquipmentSet id="gondor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_arndir_2" />
+                <EquipmentSet id="gondor_lord_arndir_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5878,8 +5878,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
-                <EquipmentSet id="gondor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_arndir_3" />
+                <EquipmentSet id="gondor_lord_arndir_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5933,8 +5933,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_c" />
-                <EquipmentSet id="gondor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anorien_1" />
+                <EquipmentSet id="gondor_lord_anorien_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -5988,8 +5988,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_d" />
-                <EquipmentSet id="gondor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anorien_2" />
+                <EquipmentSet id="gondor_lord_anorien_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21080,8 +21080,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_c" />
-                <EquipmentSet id="gondor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_anorien_3" />
+                <EquipmentSet id="gondor_lord_anorien_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21135,8 +21135,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_d" />
-                <EquipmentSet id="gondor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_1" />
+                <EquipmentSet id="gondor_lord_dolamroth_1_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21190,8 +21190,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_e" />
-                <EquipmentSet id="gondor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_2" />
+                <EquipmentSet id="gondor_lord_dolamroth_2_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21245,8 +21245,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_a" />
-                <EquipmentSet id="gondor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_3" />
+                <EquipmentSet id="gondor_lord_dolamroth_3_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -21300,8 +21300,8 @@
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="gondor_bat_template_medium_b" />
-                <EquipmentSet id="gondor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="gondor_lord_dolamroth_4" />
+                <EquipmentSet id="gondor_lord_dolamroth_4_civ" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>

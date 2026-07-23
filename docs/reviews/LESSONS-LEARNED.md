@@ -19,11 +19,11 @@ This document **is the index** of the per-category lesson files under `lessons/`
 - [Build, Tooling & Workflow](lessons/build-tooling-workflow.md) — 45 lessons
 - [Misc](lessons/misc.md) — 4 lessons
 - [Testing & QA](lessons/testing-qa.md) — 15 lessons
-- [Data, Content & Cultures](lessons/data-content-cultures.md) — 33 lessons
+- [Data, Content & Cultures](lessons/data-content-cultures.md) — 34 lessons
 - [Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)](lessons/harmony-il.md) — 21 lessons
 - [Animation & Skeleton](lessons/animation-skeleton.md) — 16 lessons
 - [State, Lifecycle & Save](lessons/state-lifecycle-save.md) — 13 lessons
-- [XSLT & ModuleData](lessons/xslt-moduledata.md) — 14 lessons
+- [XSLT & ModuleData](lessons/xslt-moduledata.md) — 15 lessons
 - [Campaign Mechanics](lessons/campaign-mechanics.md) — 9 lessons
 - [Localization & UI](lessons/localization-ui.md) — 13 lessons
 - [Native C++ Port](lessons/native-cpp-port.md) — 3 lessons

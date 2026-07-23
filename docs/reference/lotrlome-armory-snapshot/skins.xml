@@ -175089,14 +175089,14 @@
 			body_mesh_suffix="_fem"
 			min_scale="1.06"
 			skeleton="human_skeleton"
-			body_meta_mesh="sk_elf_basemesh_a1_body"
-			body_meta_mesh_shoulders="sk_elf_basemesh_a1_shoulders"
+			body_meta_mesh="body_female_a"
+			body_meta_mesh_shoulders="body_female_a_sh"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="sk_elf_basemesh_a1_legs"
-			hands_mesh="sk_elf_basemesh_a1_arms"
-			face_meta_mesh="sk_elf_basemesh_a1_head"
-			underwear_bottom_mesh="sk_elf_underwear_male_a"
-			underwear_top_mesh="">
+			legs_mesh="feet_female_a"
+			hands_mesh="hands_female_a"
+			face_meta_mesh="head_female_a"
+			underwear_bottom_mesh="underwear_female"
+			underwear_top_mesh="underwear_female_top">
 			<deform_keys>
 				<deform_key
 					id="face_width"
@@ -176474,7 +176474,15 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="" />
+					name="female_eyebrow_2" />
+				<eyebrow_mesh
+					name="female_eyebrow_3" />
+				<eyebrow_mesh
+					name="female_eyebrow_4" />
+				<eyebrow_mesh
+					name="female_eyebrow_6" />
+				<eyebrow_mesh
+					name="female_eyebrow_7" />
 			</eyebrow_meshes>
 			<beard_meshes>
 				<beard_mesh />
@@ -176482,6 +176490,14 @@
 			<tattoo_materials
 				group_id="8"
 				zero_probability="85">
+				<tattoo_material>
+					<style_tags>
+						<style_tag
+							name="Cleanface" />
+						<style_tag
+							name="eastern" />
+					</style_tags>
+				</tattoo_material>
 				<tattoo_material
 					name="tattoo_female_a_mat"
 					tags="tattoo1">
@@ -176779,56 +176795,56 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_a"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_b"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_c"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_e"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture8,face_texture9,face_texture10"></face_texture>
 			</face_textures>
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_d"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_c"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 			</mouth_textures>
@@ -178627,14 +178643,14 @@
 			body_mesh_suffix="_fem"
 			min_scale="0.93"
 			skeleton="human_skeleton"
-			body_meta_mesh="sk_elf_basemesh_a1_body"
-			body_meta_mesh_shoulders="sk_elf_basemesh_a1_shoulders"
+			body_meta_mesh="body_female_a"
+			body_meta_mesh_shoulders="body_female_a_sh"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="sk_elf_basemesh_a1_legs"
-			hands_mesh="sk_elf_basemesh_a1_arms"
-			face_meta_mesh="sk_elf_basemesh_a1_head"
-			underwear_bottom_mesh="sk_elf_underwear_male_a"
-			underwear_top_mesh="">
+			legs_mesh="feet_female_a"
+			hands_mesh="hands_female_a"
+			face_meta_mesh="head_female_a"
+			underwear_bottom_mesh="underwear_female"
+			underwear_top_mesh="underwear_female_top">
 			<deform_keys>
 				<deform_key
 					id="face_width"
@@ -180007,7 +180023,15 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="" />
+					name="female_eyebrow_2" />
+				<eyebrow_mesh
+					name="female_eyebrow_3" />
+				<eyebrow_mesh
+					name="female_eyebrow_4" />
+				<eyebrow_mesh
+					name="female_eyebrow_6" />
+				<eyebrow_mesh
+					name="female_eyebrow_7" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -180201,56 +180225,56 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_a"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_b"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_c"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_e"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture8,face_texture9,face_texture10"></face_texture>
 			</face_textures>
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_d"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_c"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 			</mouth_textures>
@@ -182080,13 +182104,13 @@
 			body_mesh_suffix="_fem"
 			min_scale="0.78"
 			skeleton="human_skeleton"
-			body_meta_mesh="sk_elf_basemesh_a1_body"
-			body_meta_mesh_shoulders="sk_elf_basemesh_a1_shoulders"
+			body_meta_mesh="body_female_a_kid"
+			body_meta_mesh_shoulders="body_female_a_sh"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="sk_elf_basemesh_a1_legs"
-			hands_mesh="sk_elf_basemesh_a1_arms"
-			face_meta_mesh="sk_elf_basemesh_a1_head"
-			underwear_bottom_mesh="sk_elf_underwear_male_a"
+			legs_mesh="feet_female_a"
+			hands_mesh="hands_female_a"
+			face_meta_mesh="head_female_a"
+			underwear_bottom_mesh="underwear_female_teen"
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -183475,7 +183499,15 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="" />
+					name="female_eyebrow_2" />
+				<eyebrow_mesh
+					name="female_eyebrow_3" />
+				<eyebrow_mesh
+					name="female_eyebrow_4" />
+				<eyebrow_mesh
+					name="female_eyebrow_6" />
+				<eyebrow_mesh
+					name="female_eyebrow_7" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -183669,56 +183701,56 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_a"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_b"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_c"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_e"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture8,face_texture9,face_texture10"></face_texture>
 			</face_textures>
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_d"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_c"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 			</mouth_textures>
@@ -186940,7 +186972,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="" />
+					name="female_eyebrow_6" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -187134,56 +187166,56 @@
 			<face_textures
 				group_id="1">
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_a"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_b"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_c"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_e"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture8,face_texture9,face_texture10"></face_texture>
 			</face_textures>
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_d"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_c"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_kid_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_kid_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 			</mouth_textures>
@@ -188625,7 +188657,7 @@
 			min_scale="0.52"
 			skeleton="human_skeleton"
 			body_meta_mesh="body_female_a_kid4"
-			body_meta_mesh_shoulders="sk_elf_basemesh_a1_shoulders"
+			body_meta_mesh_shoulders="body_male_a_sh"
 			body_meta_mesh_upperbody="box_a"
 			legs_mesh="feet_female_kid3"
 			hands_mesh="hands_female_kid3"
@@ -189703,7 +189735,7 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="" />
+					name="female_eyebrow_6" />
 			</eyebrow_meshes>
 			<beard_meshes />
 			<tattoo_color_gradient_points>
@@ -189897,56 +189929,56 @@
 			<face_textures
 							group_id="1">
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_a"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture1,face_texture2"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_b"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture3,face_texture4"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_c"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture5,face_texture6,face_texture7"></face_texture>
 				<face_texture
-					name="m_elf_basemesh_a1_head"
-					lod_material="m_elf_basemesh_a1_head"
-					color="0xFFFFFFFF"
+					name="head_female_e"
+					lod_material="head_female_a.lod"
+					color="0xFFCAD3E0"
 					tags="face_texture8,face_texture9,face_texture10"></face_texture>
 			</face_textures>
 			<mouth_textures
 				group_id="4">
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_d"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture3,mouth_texture4"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_c"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture5,mouth_texture6"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_kid_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture1,mouth_texture2"></mouth_texture>
 				<mouth_texture
-					name="m_dwarf_basemesh_mouth_a"
-					lod_material="m_dwarf_basemesh_mouth_a"
+					name="mouth_mat_kid_b"
+					lod_material="mouth_mat"
 					color="0xFFFFFFFF"
 					tags="mouth_texture7,mouth_texture8"></mouth_texture>
 			</mouth_textures>
