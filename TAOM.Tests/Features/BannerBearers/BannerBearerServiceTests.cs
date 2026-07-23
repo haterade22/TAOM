@@ -433,6 +433,63 @@ public class BannerBearerServiceTests
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
 
+    // ---- HasRenderableHeraldry (siege native-CTD guard, 2026-07-23) -----------
+    // SetFormationBanner forces a native banner-tableau rebuild that renders the bearer's heraldry
+    // (agent.Origin.Banner). When that heraldry has no BannerData — a null origin Banner or an empty
+    // BannerDataList, reported by the MissionLogic as a count of 0 — the rebuild has nothing to draw
+    // and access-violates (0xC0000005 @ TaleWorlds.Native.dll+0x28ac0e; the 100%-repro siege
+    // OrderOfBattle CTD at sturgia_town_c). The engine picks the bearer by priority from ALL
+    // candidates, not slot 0, so ANY zero-count candidate must fail the whole formation.
+    // See rca-banner-bearers-siege-ctd-2026-07-23.md.
+
+    [TestMethod]
+    public void HasRenderableHeraldry_AllCandidatesHaveData_ReturnsTrue()
+    {
+        // A homogeneous formation of real clan/kingdom troops: every coat of arms has several
+        // BannerData entries (background + icons).
+        Assert.IsTrue(_sut.HasRenderableHeraldry(new[] { 3, 4, 3 }));
+    }
+
+    [TestMethod]
+    public void HasRenderableHeraldry_SingleCandidateWithData_ReturnsTrue()
+    {
+        Assert.IsTrue(_sut.HasRenderableHeraldry(new[] { 1 }));
+    }
+
+    [TestMethod]
+    public void HasRenderableHeraldry_AnyCandidateZero_ReturnsFalse()
+    {
+        // THE MIXED-ORIGIN CRASH CASE: slot 0 has a valid banner, but a custom-faction troop with a
+        // null origin Banner (count 0) is present and could be the priority-picked bearer → skip.
+        Assert.IsFalse(_sut.HasRenderableHeraldry(new[] { 3, 0, 5 }));
+    }
+
+    [TestMethod]
+    public void HasRenderableHeraldry_AllCandidatesZero_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.HasRenderableHeraldry(new[] { 0, 0 }));
+    }
+
+    [TestMethod]
+    public void HasRenderableHeraldry_EmptyCandidateSet_ReturnsFalse()
+    {
+        // Nothing to confirm renderable (e.g. all units detached and no first unit) → skip, not assign.
+        Assert.IsFalse(_sut.HasRenderableHeraldry(new int[0]));
+    }
+
+    [TestMethod]
+    public void HasRenderableHeraldry_NullList_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.HasRenderableHeraldry(null!));
+    }
+
+    [TestMethod]
+    public void HasRenderableHeraldry_NegativeCount_ReturnsFalse()
+    {
+        // Defensive: a count should never be negative, but any non-positive entry must fail the gate.
+        Assert.IsFalse(_sut.HasRenderableHeraldry(new[] { 3, -1 }));
+    }
+
     // ---- Pass-through ---------------------------------------------------------
 
     [TestMethod]

@@ -4,6 +4,8 @@
 **Scope:** `/deep-review` of the uncommitted changeset adding a `Mission.IsFieldBattle` gate to SmartCavalryAI and MixedFormations.
 **Trigger:** a playtester (engine v1.4.6.115628, TAOM v2.0.12) hard-crashed to desktop during his first siege — native CTD, no managed exception, nothing captured by the crash pipeline — during OrderOfBattle formation distribution ~1s after `BattlePlayable`. The guards are **defensive**; root cause is still unconfirmed pending the player's Event Log fault offset.
 
+> **RESOLVED 2026-07-23.** The fault offset arrived (`0xC0000005 @ TaleWorlds.Native.dll+0x28ac0e`, engine v1.4.7) and points at a **different** path than these defensive guards addressed: TAOM's **BannerBearers** feature (`#351`, shipped *after* this fix) drives the native `SetFormationBanner` for every team's formations at deployment, and it access-violates on a formation whose bearer has no heraldry. The `IsFieldBattle` guards here remain correct-by-design (open-field features must not touch siege formations) but were **not** this crash's root cause. Root-cause fix + RCA: [`rca-banner-bearers-siege-ctd-2026-07-23.md`](rca-banner-bearers-siege-ctd-2026-07-23.md).
+
 ## Top-line
 
 5 core agents ran. **1 HIGH, 1 MED, 2 LOW confirmed; 1 false positive refuted.** The HIGH is the important one: **the changeset did not actually do what it claimed.** It gated the *service*, but the feature had a second, service-bypassing path that kept manipulating agents in a siege every frame. All confirmed findings fixed in-session; suite green (4220 passed, 0 failed); ADR-002 restored (149/72/143/112, ceiling 150).

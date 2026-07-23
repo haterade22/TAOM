@@ -46,6 +46,17 @@ Three engine constraints shape the whole feature.
 
 **One call is the whole feature.** After `SetFormationBanner` has run once for a formation, the engine self-heals: `MissionAgentSpawnLogic` re-checks `GetMissingBannerCount(formation) > 0` per spawned troop and calls `SpawnBannerBearer` (`TaleWorlds.MountAndBlade.cs:82839-82841`). No tick loop, no post-deployment re-application.
 
+### Siege safety — the heraldry guard (native CTD, #349)
+
+Broadening `SetFormationBanner` from vanilla's player-side, hero-captained formations to **every team's** formations re-opened a precondition vanilla never had to check: the bearer's heraldry must exist. The native tableau rebuilt by `UpdateSpawnEquipmentAndRefreshVisuals` renders the bearer's heraldry `Banner`, seeded at spawn from `agent.Origin.Banner` (`Mission.cs:4434`). A custom-faction garrison/militia party whose clan/kingdom has no heraldry gives its agents a null `Banner` (or an empty `BannerDataList`); the native builder dereferences it and access-violates (`0xC0000005 @ TaleWorlds.Native.dll+0x28ac0e`) — a 100%-repro CTD on siege OrderOfBattle at `sturgia_town_c`, invisible to BUTR because it is a native AV, not a managed exception.
+
+`TryAssignBanner` guards against it: it skips `SetFormationBanner` unless **every** bearer-candidate carries renderable heraldry. Two subtleties, both from the `/deep-review` of the fix (RCA below):
+
+- **All candidates, not slot 0.** The engine picks the bearer by priority across all non-detached units (`BannerBearerLogic.FindBannerBearableAgents`), so a mixed-origin formation can pass a slot-0 check yet render a null-banner bearer. [`FormationBannerHeraldry.CollectCandidateBannerDataCounts`](../../Main/Features/BannerBearers/Hooks/FormationBannerHeraldry.cs) samples every candidate; [`BannerBearerService.HasRenderableHeraldry`](../../Main/Features/BannerBearers/BannerBearerService.cs) requires all renderable (empty set → skip).
+- **Exception-safe read.** `PartyAgentOrigin.Banner` is a computed getter that falls through to `Party.MapFaction.Banner` with no null guard, so it can *throw*, not just return null — `?.` cannot cover that. `SafeBannerDataCount` wraps the read; any failure degrades to "skip."
+
+Skipping is provably sufficient: with no `SetFormationBanner` call the engine builds no `FormationBannerController` for that formation, so the reinforcement (`GetMissingBannerCount` → null controller → 0) and `OnMissionTick` re-application paths are inert for it. Siege banner bearers still appear for every formation whose parties have valid heraldry; only heraldry-less formations go bannerless. RCA: [rca-banner-bearers-siege-ctd-2026-07-23.md](../reviews/rca-banner-bearers-siege-ctd-2026-07-23.md).
+
 ### Component Diagram
 
 ```

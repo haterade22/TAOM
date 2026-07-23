@@ -24,9 +24,10 @@ public sealed class BannerBearerAssignmentMissionLogic : MissionLogic
     // Warn once per bad id per mission, not once per formation.
     private readonly HashSet<string> _warnedBannerIds = new HashSet<string>();
 
-    // Reused across formations — OnTeamDeployed runs once per team, so this never competes with
+    // Reused across formations — OnTeamDeployed runs once per team, so these never compete with
     // the per-frame paths, but there's no reason to allocate one list per formation either.
     private readonly List<string?> _cultureScratch = new List<string?>();
+    private readonly List<int> _bannerDataScratch = new List<int>();
 
     public BannerBearerAssignmentMissionLogic()
     {
@@ -71,6 +72,15 @@ public sealed class BannerBearerAssignmentMissionLogic : MissionLogic
 
         // A hero captain may already have supplied one — never override vanilla's choice.
         if (bannerLogic.GetFormationBanner(formation) != null) return;
+
+        // THE SIEGE GUARD — do not remove. SetFormationBanner forces a native banner-tableau rebuild
+        // that renders the bearer's heraldry (agent.Origin.Banner); a custom-faction troop whose origin
+        // Banner is null or has an empty BannerDataList makes it access-violate (0xC0000005 @
+        // TaleWorlds.Native.dll+0x28ac0e — the 100%-repro siege OrderOfBattle CTD at sturgia_town_c;
+        // rca-banner-bearers-siege-ctd-2026-07-23). Vanilla only banners player-team OoB formations
+        // (always heraldry-backed); TAOM banners every team's, so it confirms every candidate first.
+        FormationBannerHeraldry.CollectCandidateBannerDataCounts(formation, _bannerDataScratch);
+        if (!_service.HasRenderableHeraldry(_bannerDataScratch)) return;
 
         var cultureId = ResolveFormationCultureId(formation);
         var itemId = _service.ResolveBannerItemId(cultureId);

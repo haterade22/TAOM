@@ -2,6 +2,30 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-23
+
+### fix(banner-bearers): guard the native SetFormationBanner call against heraldry-less troops — siege CTD (#349)
+
+A manual siege assault at Stranding (`sturgia_town_c`) hard-crashed to desktop every time — native
+`0xC0000005` in `TaleWorlds.Native.dll+0x28ac0e`, no managed exception, BUTR captured nothing. This is
+the root cause the defensive `IsFieldBattle` guards on 2026-07-15 were blocking on (they guessed
+MixedFormations/SmartCavalryAI; the fault offset now points elsewhere). BannerBearers (#351) drives the
+engine's native `SetFormationBanner` for **every team's** formations at deployment; the native
+banner-tableau rebuild access-violates when a bearer's heraldry `Banner` (`agent.Origin.Banner`, seeded
+at spawn) is null or has an empty `BannerDataList` — the state a custom-faction garrison with no
+heraldry produces. Vanilla only banners player-side, hero-captained formations, which always have
+heraldry; TAOM broadened the caller set without re-checking that precondition.
+
+Fix: `BannerBearerAssignmentMissionLogic` now skips `SetFormationBanner` unless **every** bearer-candidate
+in the formation carries renderable heraldry — checking all candidates, not slot 0, because the engine
+picks the bearer by priority from the whole set. The per-troop read is exception-safe
+(`PartyAgentOrigin.Banner` is a computed getter that can throw, not just return null). Siege banner
+bearers still appear wherever the parties have valid heraldry; only heraldry-less formations are skipped.
+`/deep-review` (5 agents) caught 3 MED issues in the first cut — all fixed in-session. Suite 4410 green.
+
+RCA: [`docs/reviews/rca-banner-bearers-siege-ctd-2026-07-23.md`](docs/reviews/rca-banner-bearers-siege-ctd-2026-07-23.md).
+**Not yet game-verified** — the native precondition is confirmed by decompile; the Stranding siege still owes an in-game smoke test.
+
 ## 2026-07-22
 
 ### feat(bandits): rename eastern dwarf bandits "Erebor Warriors" → "Blacklocks" (immersion)

@@ -34,6 +34,21 @@ public sealed class BannerBearerService : IBannerBearerService
 
     public bool IsEnabled => _configProvider.GetConfig().Enabled;
 
+    // Skip unless EVERY candidate can be safely rendered: a null origin Banner or an empty BannerDataList
+    // (count <= 0) on ANY candidate can be the priority-picked bearer and access-violate. An empty set
+    // means we could confirm nothing → skip. See the interface doc + the MissionLogic's SIEGE GUARD.
+    public bool HasRenderableHeraldry(IReadOnlyList<int> candidateBannerDataCounts)
+    {
+        if (candidateBannerDataCounts == null || candidateBannerDataCounts.Count == 0) return false;
+
+        foreach (var count in candidateBannerDataCounts)
+        {
+            if (count <= 0) return false;
+        }
+
+        return true;
+    }
+
     public int MinimumFormationTroopCount => _configProvider.GetConfig().MinimumFormationTroopCount;
 
     public int GetDesiredBearerCount(int formationUnitCount, FormationClass formationClass)

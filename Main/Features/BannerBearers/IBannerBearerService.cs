@@ -9,6 +9,16 @@ public interface IBannerBearerService
 {
     bool IsEnabled { get; }
 
+    // True iff EVERY bearer-candidate in a formation carries renderable heraldry. Each entry is one
+    // troop's agent.Origin.Banner.GetBannerDataListCount(); 0 = a null Banner or an empty BannerDataList.
+    // SetFormationBanner forces a native banner-tableau rebuild that renders the bearer's heraldry, and
+    // the engine picks that bearer by PRIORITY from ALL candidates — not slot 0 — so a single bannerless
+    // troop can be the one rendered and access-violate (0xC0000005 @ TaleWorlds.Native.dll+0x28ac0e; the
+    // 100%-repro siege OrderOfBattle CTD, rca-banner-bearers-siege-ctd-2026-07-23). Hence ALL candidates
+    // must be renderable, and an empty set (nothing to confirm) is treated as not-renderable. The
+    // MissionLogic reads the counts off the sealed types; this decides.
+    bool HasRenderableHeraldry(IReadOnlyList<int> candidateBannerDataCounts);
+
     // Read once per mission by the model — see BannerBearerConfig.MinimumFormationTroopCount
     // for why this must not vary mid-mission.
     int MinimumFormationTroopCount { get; }
