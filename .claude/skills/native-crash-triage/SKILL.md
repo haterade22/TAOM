@@ -37,6 +37,15 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
    — it maps the patch to its exact target method + status, so you know whether a TAOM hook sits
    on the crashing path before blaming the engine. (This is where CLAUDE.md's former "Harmony
    Patch Categories" table now lives.)
+4. **Assertion dialogs (engine asserts, not AVs):** the dialog is a PAUSED pre-crash state —
+   before clicking anything, copy the session's `rgl_log_<pid>`/`watchdog_log_<pid>` AND take a
+   full dump (Task Manager → Create dump file, or `rundll32 comsvcs.dll, MiniDump <pid> <path> full`).
+   Very early asserts (module scan) leave a 0-byte watchdog log and NO rgl_log — the dump is then
+   the only artifact. Post-**Ignore** Event-Log offsets name the SECONDARY (abort-path) site, not
+   the assert site. Never Ignore a queue/invariant assert to keep working — state is corrupted
+   (2026-07-24 `rglConcurrentQueue`: Ignore → permanent loading-screen hang). Editor crashes:
+   pass `--dll` pointing at the **Win64_Shipping_wEditor** `TaleWorlds.Native.dll` — offsets
+   differ from the shipping client build.
 
 ## Phase 2 — Name the site (offline, fully scripted)
 

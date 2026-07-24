@@ -32,42 +32,42 @@
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -1903,7 +1903,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_spear" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -2124,7 +2124,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Body" id="Item.sk_gd_bel_inf_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
               <equipment slot="Leg" id="Item.sk_gd_bel_boots_a" />
 </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -3402,7 +3402,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_spear" />
         <equipment slot="Body" id="Item.sk_gd_pin_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
               <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -4455,7 +4455,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
               <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -7141,7 +7141,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
         <equipment slot="Item1" id="Item.gond_shield_three_black" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
@@ -7700,7 +7700,7 @@
         <equipment slot="Item1" id="Item.default_arrows" />
         <equipment slot="Item2" id="Item.default_arrows" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
-        <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_light_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>

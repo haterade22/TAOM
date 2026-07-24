@@ -167,6 +167,24 @@ instead if that reads too strong.
 
 Not-tested: in-game render (restart + battle spawn), gated on the `AssetPackages/` recompile (#358).
 
+### fix(editor): Modding Kit startup assert `rglConcurrentQueue.h:882` — prefab folder crossed the engine's 131,072-entity load cap
+
+Root-caused by disassembling the wEditor `TaleWorlds.Native.dll` at the logged assert stack: editor
+startup parallel-enqueues every `<game_entity>` from every loaded `Prefabs\*.xml` into a native queue
+hard-capped at 131,072 items (4096 × 32; `cmp eax,0x20000` at RVA `0x7708F0`). `TAOM_Map\Prefabs\`
+hit 132,378 entities (80.5 MB) after four imported packs landed 7/24; Ignore corrupts the queue
+(permanent loading-screen hang), Abort crashes at a secondary site — the one WER records. Fix:
+classified all 1,407 top-level prefabs by real scene usage (`references.txt` + `scene.xscene` union,
+transitive closure, code-ref + vanilla-collision guards) and parked the 518 scene-unused prefabs
+(92K entities) in `Prefabs_Unused\` with a review `_INVENTORY.md`; live folder now 41,355 entities
+(~32% of cap) after restoring the `*kitbash*` working-palette libraries per review (standing
+decision: kitbash files stay live even when scene-unused). New gate: `tools/check_prefab_budget.py`. Full RCA:
+`docs/investigations/editor-rglconcurrentqueue-assert-2026-07.md`; lesson in
+`docs/reviews/lessons/data-content-cultures.md`; assert-dialog protocol added to
+`/native-crash-triage` Phase 1. Found: `icon_camera` in `Soisson_Prefabs_2.xml` shadows the Native
+editor prefab (rename before re-enabling); imported packs carry Blender-default `cube.001` meshes
+with missing materials (fix before re-enabling).
+
 ## 2026-07-23
 
 ### fix(elves): female elves render on the human female basemesh instead of the male elf basemesh
