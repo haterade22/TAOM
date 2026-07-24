@@ -82,7 +82,7 @@
 
     <!-- ===== DOL GULDUR ===== -->
     <!-- Spider Rider package (Weight 3.0): 2 (giant spider mount) + 1 (goblin rider) — elephant precedent (7.0 = 2+1+4) -->
-    <TroopWeight id="taom_spider_creature" weight="3.0" />
+    <TroopWeight id="taom_spider_creature" weight="4.0" />
 
     <!-- Khamul's Shadow Line (Weight 2.0) -->
     <TroopWeight id="dg_khamul_shadow_knight" weight="2.0" />
@@ -107,7 +107,7 @@
     <!-- ===== GUNDABAD ===== -->
     <TroopWeight id="gundabad_chosen_of_tharzog" weight="2.0" />
     <TroopWeight id="gundabad_warg_tamer" weight="2.0" />
-    <TroopWeight id="gundabad_bolgs_ironfang" weight="6.0" />
+    <TroopWeight id="gundabad_bolgs_ironfang" weight="2.0" />
 
     <!-- ===== GONDOR ===== -->
     <!-- Pinnath Gelin cavalry (#224 polish pass) — T6 elite cavalry -->
@@ -115,7 +115,7 @@
 
     <!-- ===== HARAD ===== -->
     <!-- War Elephant package (Weight 7.0): 2 (elephant) + 1 (mahout) + 4 (howdah crew, auto-spawned in battle) -->
-    <TroopWeight id="harad_elephant_rider" weight="7.0" />
+    <TroopWeight id="harad_elephant_rider" weight="10.0" />
 
     <!-- ===== ISENGARD ===== -->
     <!-- Orthanc Guard Line (Weight 2.0) -->
