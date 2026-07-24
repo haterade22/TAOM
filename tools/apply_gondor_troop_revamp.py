@@ -472,6 +472,7 @@ EQUIPMENT: Dict[str, List[Tuple[str, str]]] = {
     "gondor_bel_recruit": [
         ("Item0", "wm_gondor_sword_a01"),
         ("Body",  "sk_gd_bel_inf_chainmail_a"),
+        ("Leg",   "sk_gd_bel_boots_a"),
     ],
     "gondor_bel_hunter": [
         ("Item0", "composite_steppe_bow"),
@@ -564,6 +565,77 @@ EQUIPMENT: Dict[str, List[Tuple[str, str]]] = {
         ("Cape",  "sk_gd_osg_pauld_cape_inf_elite_b"),
         ("Gloves","sk_gd_ano_bracer_inf_med_a"),
         ("Leg",   "sk_gd_ano_grvs_inf_heavy_a"),
+    ],
+
+    # ---------------- DOL-AMROTH / SWAN KNIGHT (11) — sk_gd_dol_* refit (#358 follow-up) ----------------
+    # Weapons preserved from current rosters; Horse/HorseHarness auto-preserved (omitted).
+    # Cavalry = cape-pauldron; Infantry = plain pauldron. Elite chest only on Swan Knight T9.
+    # Helmet _a = no mask, _b = with mask (masked reserved for the pinnacle Swan Knight / Swan Guard).
+    "gondor_da_noble": [          # T3
+        ("Item0", "wm_gondor_sword_a01"), ("Item1", "gond_shield_two_swan"),
+        ("Head", "sk_gd_dol_helmet_med_a"), ("Body", "sk_gd_dol_chainmail_a"),
+        ("Cape", "sk_gd_dol_pauld_noble_med_a"), ("Gloves", "sk_gd_dol_bracer_med_a"),
+        ("Leg", "sk_gd_dol_grvs_light_a"),
+    ],
+    "gondor_da_footman": [        # T4
+        ("Item0", "wm_gondor_sword_a01"), ("Item1", "gond_shield_two_swan"),
+        ("Head", "sk_gd_dol_helmet_heavy_a"), ("Body", "sk_gd_dol_chest_med_a"),
+        ("Cape", "sk_gd_dol_pauld_noble_med_b"), ("Gloves", "sk_gd_dol_bracer_med_a"),
+        ("Leg", "sk_gd_dol_grvs_med_a"),
+    ],
+    "gondor_da_squire": [         # T5 Cavalry
+        ("Item0", "wm_gondor_swanknight_spearb"), ("Item1", "gond_shield_two_swan"), ("Item2", "wm_gondor_sword_a05"),
+        ("Head", "sk_gd_dol_helmet_heavy_b"), ("Body", "sk_gd_dol_chest_med_b"),
+        ("Cape", "sk_gd_dol_pauld_cape_noble_heavy_a"), ("Gloves", "sk_gd_dol_bracer_heavy_a"),
+        ("Leg", "sk_gd_dol_grvs_heavy_a"),
+    ],
+    "gondor_da_cavalry": [        # T6 Cavalry
+        ("Item0", "wm_gondor_swanknight_spearb"), ("Item1", "gond_shield_two_swan"), ("Item2", "wm_gondor_sword_a06"),
+        ("Head", "sk_gd_dol_helmet_heavy_a"), ("Body", "sk_gd_dol_chest_heavy_a"),
+        ("Cape", "sk_gd_dol_pauld_cape_noble_heavy_a"), ("Gloves", "sk_gd_dol_bracer_heavy_a"),
+        ("Leg", "sk_gd_dol_grvs_heavy_a"),
+    ],
+    "gondor_da_knight": [         # T7 Cavalry
+        ("Item0", "wm_gondor_swanknight_speara"), ("Item1", "gond_shield_two_swan"), ("Item2", "wm_gondor_sword_a07"),
+        ("Head", "sk_gd_dol_cav_helmet_elite_a"), ("Body", "sk_gd_dol_chest_heavy_b"),
+        ("Cape", "sk_gd_dol_pauld_cape_noble_heavy_a"), ("Gloves", "sk_gd_dol_bracer_heavy_a"),
+        ("Leg", "sk_gd_dol_grvs_heavy_a"),
+    ],
+    "gondor_da_vet_knight": [     # T8 Cavalry
+        ("Item0", "wm_gondor_swanknight_speara"), ("Item1", "gond_shield_two_swan"), ("Item2", "wm_swan_knight_swordb"),
+        ("Head", "sk_gd_dol_cav_helmet_elite_c"), ("Body", "sk_gd_dol_chest_heavy_a"),
+        ("Cape", "sk_gd_dol_pauld_cape_noble_elite_a"), ("Gloves", "sk_gd_dol_bracer_elite_a"),
+        ("Leg", "sk_gd_dol_grvs_elite_a"),
+    ],
+    "gondor_da_swan_knight": [    # T9 Cavalry — masked helm + elite chest (Swan Knight only)
+        ("Item0", "wm_swan_knight_lance_b"), ("Item1", "gond_shield_two_swan"), ("Item2", "wm_swan_knight_sworda"),
+        ("Head", "sk_gd_dol_cav_helmet_elite_b"), ("Body", "sk_gd_dol_chest_elite_a"),
+        ("Cape", "sk_gd_dol_pauld_cape_noble_elite_a"), ("Gloves", "sk_gd_dol_bracer_elite_a"),
+        ("Leg", "sk_gd_dol_grvs_elite_a"),
+    ],
+    "gondor_da_infantry": [       # T5 Infantry
+        ("Item0", "wm_swan_knight_sworda"), ("Item1", "gond_shield_two_swan"),
+        ("Head", "sk_gd_dol_helmet_heavy_a"), ("Body", "sk_gd_dol_chest_med_a"),
+        ("Cape", "sk_gd_dol_pauld_noble_heavy_a"), ("Gloves", "sk_gd_dol_bracer_heavy_a"),
+        ("Leg", "sk_gd_dol_grvs_heavy_a"),
+    ],
+    "gondor_da_vet_infantry": [   # T6 Infantry
+        ("Item0", "wm_swan_knight_sworda"), ("Item1", "gond_shield_two_swan"),
+        ("Head", "sk_gd_dol_helmet_heavy_b"), ("Body", "sk_gd_dol_chest_heavy_a"),
+        ("Cape", "sk_gd_dol_pauld_noble_heavy_a"), ("Gloves", "sk_gd_dol_bracer_heavy_a"),
+        ("Leg", "sk_gd_dol_grvs_heavy_a"),
+    ],
+    "gondor_da_foot_knight": [    # T7 Infantry
+        ("Item0", "numenorean_sword_2h_a"), ("Item1", "gond_shield_two_swan"),
+        ("Head", "sk_gd_dol_inf_helmet_elite_a"), ("Body", "sk_gd_dol_chest_heavy_b"),
+        ("Cape", "sk_gd_dol_pauld_noble_heavy_a"), ("Gloves", "sk_gd_dol_bracer_heavy_a"),
+        ("Leg", "sk_gd_dol_grvs_heavy_a"),
+    ],
+    "gondor_da_swan_guard": [     # T8 Infantry — masked helm
+        ("Item0", "numenorean_sword_2h_b"), ("Item1", "gond_shield_two_swan"),
+        ("Head", "sk_gd_dol_inf_helmet_elite_b"), ("Body", "sk_gd_dol_chest_heavy_b"),
+        ("Cape", "sk_gd_dol_pauld_noble_elite_a"), ("Gloves", "sk_gd_dol_bracer_elite_a"),
+        ("Leg", "sk_gd_dol_grvs_elite_a"),
     ],
 
     # ---------------- LAMEDON (5) ----------------

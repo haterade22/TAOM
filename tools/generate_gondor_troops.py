@@ -381,23 +381,23 @@ RING_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: ""}
 # ---- BELFALAS (T1-T6) ----
 BEL_HEAD    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
 BEL_BODY    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
-BEL_LEG     = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
+BEL_LEG     = {1: "sk_gd_bel_boots_a", 2: "", 3: "", 4: "", 5: "", 6: ""}
 BEL_CAPE    = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
 BEL_GLOVES  = {1: "", 2: "", 3: "", 4: "", 5: "", 6: ""}
 
 # ---- DOL AMROTH INFANTRY (T3-T8) ----
-DA_INF_HEAD    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
-DA_INF_BODY    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
-DA_INF_LEG     = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
-DA_INF_CAPE    = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
-DA_INF_GLOVES  = {3: "", 4: "", 5: "", 6: "", 7: "", 8: ""}
+DA_INF_HEAD    = {3: "sk_gd_dol_helmet_med_a", 4: "sk_gd_dol_helmet_heavy_a", 5: "sk_gd_dol_helmet_heavy_a", 6: "sk_gd_dol_helmet_heavy_b", 7: "sk_gd_dol_inf_helmet_elite_a", 8: "sk_gd_dol_inf_helmet_elite_b"}
+DA_INF_BODY    = {3: "sk_gd_dol_chainmail_a", 4: "sk_gd_dol_chest_med_a", 5: "sk_gd_dol_chest_med_a", 6: "sk_gd_dol_chest_heavy_a", 7: "sk_gd_dol_chest_heavy_b", 8: "sk_gd_dol_chest_heavy_b"}
+DA_INF_LEG     = {3: "sk_gd_dol_grvs_light_a", 4: "sk_gd_dol_grvs_med_a", 5: "sk_gd_dol_grvs_heavy_a", 6: "sk_gd_dol_grvs_heavy_a", 7: "sk_gd_dol_grvs_heavy_a", 8: "sk_gd_dol_grvs_elite_a"}
+DA_INF_CAPE    = {3: "sk_gd_dol_pauld_noble_med_a", 4: "sk_gd_dol_pauld_noble_med_b", 5: "sk_gd_dol_pauld_noble_heavy_a", 6: "sk_gd_dol_pauld_noble_heavy_a", 7: "sk_gd_dol_pauld_noble_heavy_a", 8: "sk_gd_dol_pauld_noble_elite_a"}
+DA_INF_GLOVES  = {3: "sk_gd_dol_bracer_med_a", 4: "sk_gd_dol_bracer_med_a", 5: "sk_gd_dol_bracer_heavy_a", 6: "sk_gd_dol_bracer_heavy_a", 7: "sk_gd_dol_bracer_heavy_a", 8: "sk_gd_dol_bracer_elite_a"}
 
 # ---- DOL AMROTH CAVALRY (T5-T9) ----
-DA_CAV_HEAD    = {5: "", 6: "", 7: "", 8: "", 9: ""}
-DA_CAV_BODY    = {5: "", 6: "", 7: "", 8: "", 9: ""}
-DA_CAV_LEG     = {5: "", 6: "", 7: "", 8: "", 9: ""}
-DA_CAV_CAPE    = {5: "", 6: "", 7: "", 8: "", 9: ""}
-DA_CAV_GLOVES  = {5: "", 6: "", 7: "", 8: "", 9: ""}
+DA_CAV_HEAD    = {5: "sk_gd_dol_helmet_heavy_b", 6: "sk_gd_dol_helmet_heavy_a", 7: "sk_gd_dol_cav_helmet_elite_a", 8: "sk_gd_dol_cav_helmet_elite_c", 9: "sk_gd_dol_cav_helmet_elite_b"}
+DA_CAV_BODY    = {5: "sk_gd_dol_chest_med_b", 6: "sk_gd_dol_chest_heavy_a", 7: "sk_gd_dol_chest_heavy_b", 8: "sk_gd_dol_chest_heavy_a", 9: "sk_gd_dol_chest_elite_a"}
+DA_CAV_LEG     = {5: "sk_gd_dol_grvs_heavy_a", 6: "sk_gd_dol_grvs_heavy_a", 7: "sk_gd_dol_grvs_heavy_a", 8: "sk_gd_dol_grvs_elite_a", 9: "sk_gd_dol_grvs_elite_a"}
+DA_CAV_CAPE    = {5: "sk_gd_dol_pauld_cape_noble_heavy_a", 6: "sk_gd_dol_pauld_cape_noble_heavy_a", 7: "sk_gd_dol_pauld_cape_noble_heavy_a", 8: "sk_gd_dol_pauld_cape_noble_elite_a", 9: "sk_gd_dol_pauld_cape_noble_elite_a"}
+DA_CAV_GLOVES  = {5: "sk_gd_dol_bracer_heavy_a", 6: "sk_gd_dol_bracer_heavy_a", 7: "sk_gd_dol_bracer_heavy_a", 8: "sk_gd_dol_bracer_elite_a", 9: "sk_gd_dol_bracer_elite_a"}
 
 # ---- LINHIR (T3-T7) ----
 LIN_HEAD    = {3: "", 4: "", 5: "", 6: "", 7: ""}

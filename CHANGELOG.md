@@ -2,6 +2,171 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-24
+
+### fix(gondor): Anórien pool — home 2 idle capstone pieces (Osgiliath bracer, Minas Ithil helmet)
+
+Two clean fixes from the Anórien-complex armour audit (the `ano_`/`osg_`/`ith_` pool: 72 items, 27
+native troops, 15 idle). Each homes a region's *own* idle piece onto a capstone that was under-equipped:
+- **`sk_gd_osg_bracer_noble_elite_a` (27)** → Osgiliath **Guard** (T6, was `bracer_noble_med_a` 15) +
+  **Dome Guard** (T7 capstone, was `heavy_a` 21). Picked so `med_a` (archer+infantry) and `heavy_a`
+  (longbowman) both stay in use — no new idle; Longbowman is deliberately kept on `heavy_a` to preserve it.
+- **`sk_gd_ith_noble_helmet_heavy_b`** → Minas Ithil **Captain** + **Sharpshooter** (T8), replacing
+  equal-armour `ano_`/`osg_` fallbacks. All three top Ithil troops (Captain, Sharpshooter, Moon Guard)
+  now wear Ithil's **own** helmet — the "Ithil uses its own armour" decision.
+
+Anórien idle **15 → 13**. The remaining 13 are reserved/deferred by decision: the 7 plain
+`ano_pauld_noble_*` + 3 plain `osg_pauld_inf_*` stay idle because the Ithil/Osgiliath lines wear the cape
+variants (kept — Ithil keeps its own look); the 2 `ano_pauld_fount_*` are the Minas Tirith Fountain line's;
+`osg_inf_chest_elite_a` is the osg lord chest (General Note 6). The Anórien Regular chest ladder was left
+as-is (deliberate "regulars stay softer than nobles"). Save-safe (4 single-slot swaps, 187 NPCCharacters
+unchanged); `validate_gondor_refs` + `validate_moduledata` PASS.
+
+**Minas Tirith Fountain Guard → its own elite chest.** Audited the `sk_gd_mns_*` set (Minas Tirith's own
+armour — 11 pieces, helmet + chest only; cape/gloves/leg have no `mns_` model so they fall back to `ano_`,
+not `osg_` — no `gondor_mt_` troop wears any `osg_` piece). The Fountain Guard (single L46 capstone) wore
+the *heavy* fount chest while its own **elite** chest `sk_gd_mns_fount_chest_elite_a` sat idle → swapped it
+onto the Guard (its "one true variant"). Per the decision, the Fountain/Citadel Guard keep their own `mns_`
+armour and the reserved osg lord chest was NOT used on them. The two idle masked-`_b` helmets
+(`mns_fount_helmet_heavy_b`, `mns_noble_helmet_heavy_b`) were then homed as helmet `_a`/`_b` variant rosters
+on the Fountain Guard + Veteran — so the `mns_` set is **10/11 used**, the lone idle piece being
+`mns_fount_chest_heavy_a` (surplus; the single-unit Fountain line has no lower tier to wear it). Save-safe;
+`validate_gondor_refs` + `validate_moduledata` PASS.
+
+### feat(gondor): equip the Linhir spear line with its own armour — last greenfield line (#358)
+
+The 5-troop Linhir line (`gondor_lin_noble` T3 → `gondor_lin_high_guard` T7, a spear/shield line)
+fought in generic Anórien `sk_gd_ano_*`. Refit to its own `sk_gd_lin_*` set per the artist Armor Guide.
+Unlike Lond-Galen, Linhir is a **near-complete self-modelled set** (22 items — helmet/chest/pauldron/
+bracer/greave all native); the **only** fallback is the medium-helmet slot on T3/T4, which borrows
+Dol-Amroth's `sk_gd_dol_helmet_med_a` (Linhir models no medium helmet — its own lowest head is
+`helmet_heavy`). Each troop carries two variant rosters (bracer `_a`/`_b` on T3/T4, helmet `_a`/`_b`
+on T5–T7). Weapons and civilian set preserved — armour-only refit.
+
+**The guide is flagged DRAFT.** The mapping follows the draft table exactly and was independently
+re-derived from the stat ladder (they agree). Two design calls: (1) the **lord/cape pieces stay off
+the troops** per the spec's reservation — `sk_gd_lin_chest_elite_a` ("Linhir Lord Armour"),
+`helmet_lord_a/b`, and the two `pauld_cape_noble_*` capes ("Linhir never wears the cape combo") — so
+17 of 22 pieces are used and the 5 reserved sit idle by design; (2) the T7 High Guard's greaves cap at
+`grvs_heavy` (28) because Linhir has no elite greave — a tier gap the draft leaves as-is.
+
+Save-safe: equipment-only, no troop id / level / weapon / upgrade_target / structure change (187
+NPCCharacters unchanged). All 17 placed ids + the `dol_helmet_med_a` fallback verified defined +
+mesh-exact (`id == mesh`); `validate_gondor_refs` + `validate_moduledata` PASS. Adversarially verified
+across three lenses — spec-parity and resolution/idle confirmed, save-safety confirmed for the five
+`gondor_lin_` troops. **Linhir was the last greenfield Gondor noble line — every southern + capital
+Gondor noble line is now equipped** (Minas Tirith `gondor_mt_` is a separate optional audit).
+Not-tested: in-game render (gated on the `AssetPackages/` recompile, #358); the draft weapon guide
+(sword + tower shield at T5–T7) is a separate weapon pass.
+
+### feat(gondor): equip the Lond-Galen crossbow line with its own armour (#358)
+
+The 5-troop Lond-Galen line (`gondor_lg_noble` T4 → `gondor_lg_haven_guard` T8 — a crossbow / pavise
+line) fought entirely in generic Anórien `sk_gd_ano_*` even though its own `sk_gd_lon_*` helmets and
+chests shipped in #358. Refit per the artist Armor Guide: Head/Body take the line's own `sk_gd_lon_*`
+(helmet med→heavy→elite by tier; chest chainmail→med→heavy), and — per the guide — the light slots
+fall back to **Serelond `sk_gd_sere_*`** (its sibling Noble line under Anfalas), **not** Anórien:
+pauldron / bracer / greave scale light→elite across the tiers. Every `sere_` fallback piece is already
+worn by Serelond troops, so all resolve + are mesh-exact. Each troop carries two variant rosters (the
+helmet `_a`/`_b` mesh pair) so all six `lon_` helmets show in formation. Weapons and the civilian set
+preserved exactly — armour-only refit.
+
+`sk_gd_lon_chest_lord_a` stays off the troops: it's the line's lord chest (worn by 4 Lond-Galen lord
+equipment sets), so the 10-piece `lon_` set is now fully used — **9 on troops, 1 on lords, 0 truly
+idle**. The two Anfalas veterans keep their shared `lon_` gear (share, not move — per the decision).
+
+Save-safe: equipment-only, no troop id / level / weapon / upgrade_target / structure change (187
+NPCCharacters unchanged). All 19 armour ids verified defined + mesh-exact (`id == mesh`);
+`validate_gondor_refs` + `validate_moduledata` PASS. Adversarially verified across three lenses
+(spec-parity, save-safety, resolution/idle) — all three confirmed, no refutation. Remaining greenfield
+Gondor noble line: **Linhir**. Not-tested: in-game render (gated on the `AssetPackages/` recompile, #358).
+
+### feat(gondor): equip the Dol-Amroth / Swan Knight troop line with its new armour (#358)
+
+The 11-troop Dol-Amroth line (`gondor_da_noble` → `gondor_da_swan_knight` T9 cavalry /
+`gondor_da_swan_guard` T8 infantry) still fought in generic Anórien armour even though the
+`sk_gd_dol_*` set shipped in #358. Refit every troop to its region armour per the artist's per-tier
+guide: cavalry branch in cape-pauldrons, infantry in plain pauldrons, elite chest reserved for the T9
+Swan Knight, and the **masked** elite helm (`cav_/inf_helmet_elite_b`) on the pinnacle Swan Knight /
+Swan Guard. Weapons (swan lances/spears, numenorean 2H) and mounts preserved. All **17 battle rosters**
+across the line converted — several troops carry 2–3 variant rosters, so a first-roster-only pass would
+have left the alternates in old armour. Also authored the one modelled-but-un-authored Belfalas boot
+(`sk_gd_bel_boots_a`) onto the T1 recruit.
+
+**Applied via a targeted per-roster armour-slot swap, not the applier's whole-file `--apply`** — a
+dry-run showed `apply_gondor_troop_revamp.py`'s `EQUIPMENT` dict has drifted from the live file
+(**61/118** troops would be rewritten) and its `DELETE_IDS` would remove a troop, so a wholesale
+`--apply` is currently unsafe. The 11 Dol-Amroth entries were still added to the dict and the
+generator's `DA_INF_*`/`DA_CAV_*` stubs filled, so both tools record the intended loadout (drift-guard).
+
+Save-safe: equipment-only, no troop id / upgrade_target / structure change (187 NPCCharacters
+unchanged). All 87 `sk_gd_dol_*` / `sk_gd_bel_*` armour refs verified mesh-exact against the geo-tpac
+TOCs; `validate_gondor_refs` PASS (0 missing), `validate_moduledata` PASS. Belfalas otherwise already
+matched its Armor Guide; its 3 un-modelled cape pieces stay on an Anórien fallback — flagged for KEYforce.
+
+Not-tested: in-game render — REQUIRES a full restart + battle spawn of the Dol-Amroth line to confirm
+each tier is clothed (gated on the `AssetPackages/` recompile, #358).
+
+### feat(gondor): equip the Arndir (Pinnath noble) + Blackroot Vale troop lines (#358)
+
+Two more greenfield Gondor noble lines wired from generic Anórien to their region armour (same #358
+follow-up as Dol-Amroth):
+- **Arndir** (Pinnath Gelin noble) — 9 `gondor_arn_*` troops (T3 Noble → T8 Hill-Knight cavalry / T7
+  Foot-Knight infantry) refit to `sk_gd_pin_noble_*` per the spec Armor Guide (cavalry cape-pauldrons,
+  Hill-Knight the elite chest, Anórien noble bracer/greave fallback). Now uses **20 of 21** idle noble
+  pieces — only `pin_nob_chest_elite_b` stays idle (spec-marked lord-only).
+- **Blackroot Vale** — 7 `gondor_brv_*` archers (Bowman → Shadowbow) refit to `sk_gd_vale_*` (hoods on
+  the scouts, plain capes → pauldron+cape on the rangers, `chest_heavy_c` archer-pad on the Shadowbow
+  line, Anórien inf bracer/greave fallback). **All 20 vale pieces now used (0 idle).**
+
+Variant rosters spread the a/b elite helms (hill_knight, foot_knight) and the medium cape-pauldron
+(vet_archer). Weapons + mounts preserved; hill_knight's mount (which sat mis-placed *outside* its roster)
+was restored *inside* both variant rosters. Save-safe — no troop id / structure change (187 NPCCharacters
+unchanged); all 57 armour refs mesh-exact; `validate_gondor_refs` + `validate_moduledata` PASS. Remaining
+greenfield Gondor noble lines: **Linhir, Lond-Galen**.
+
+Not-tested: in-game render (restart + battle spawn), gated on the `AssetPackages/` recompile (#358).
+
+### feat(gondor): Anfalas — wire the 3 idle armor pieces into variant rosters (#358)
+
+Anfalas had 13 `sk_gd_anf_*` pieces, 10 in use, 3 idle. Homed via variant rosters:
+`gondor_anf_cavalry` gains a `cav_helmet_heavy_b` variant (the masked heavy cav helm), and
+`gondor_anf_infantry` gains a variant pairing the third heavy helm `inf_helmet_heavy_c` with the
+second heavy chest `inf_chest_heavy_b`. **All 13 Anfalas pieces now used (0 idle).** `anf_cavalry`'s
+mount stays a **single shared `<equipment slot="Horse">` outside** the rosters — the engine applies a
+stray horse to every variant, so it is deliberately *not* duplicated into each roster (corrects the
+earlier "horse must live inside each roster" assumption; the hill_knight bug was the mount being
+*deleted* on rebuild, not its being outside). Equipment-only, save-safe (187 NPCCharacters unchanged);
+both new refs mesh-exact; `validate_gondor_refs` + `validate_moduledata` PASS. Not-tested: in-game
+render (gated on the `AssetPackages/` recompile, #358). The two Anfalas veterans keep their Lond-Galen
+noble gear (`sk_gd_lon_*`) by design.
+
+### feat(gondor): Lossarnach — wire the 2 idle armor pieces into variant rosters (#358)
+
+Lossarnach had 24 of 26 `sk_gd_los_*` pieces in use; the two idle ones now have homes via variant
+rosters: `gondor_loss_noble_captain` gains an `sk_gd_los_noble_helmet_elite_b` variant (2nd elite helm),
+and `gondor_loss_vet_guard` (top regular axebearer) gains an `sk_gd_los_inf_chest_elite_a` variant
+(stat 51, the elite regular chest the line never reached). **All 26 Lossarnach pieces now used.**
+Equipment-only, save-safe (187 NPCCharacters unchanged); both pieces mesh-exact; `validate_gondor_refs`
++ `validate_moduledata` PASS. Not-tested: in-game render (gated on the `AssetPackages/` recompile, #358).
+
+### feat(gondor): Lamedon troops use their full helmet + chest variety (#358)
+
+The 5-troop Lamedon line (`gondor_lam_clansman` → `gondor_lam_hill_warden`) used only 5 of its 17
+`sk_gd_lam_*` helmets and 5 of 7 chests. Added **variant battle rosters** (the engine random-picks one
+per soldier) so **every Lamedon helmet and chestplate is now used**: footman spreads its 2 medium helms,
+swordman the 3 plain heavies (+ the previously-idle `chest_med_b`), vet_swordman the 3 "gold" heavies,
+and hill_warden the 4 elite + 4 lord helms (with the idle `chest_lord_a` on one variant). 17 rosters
+total across the line. Equipment-only, save-safe — no troop id / upgrade_target / structure change (187
+NPCCharacters unchanged); all helmet/chest refs mesh-exact; `validate_gondor_refs` + `validate_moduledata`
+PASS.
+
+**Balance flag:** the 4 `nob_helmet_lord_*` (head 40) + `chest_lord_a` (body 50) are lord-tier — placing
+them on the common hill_warden (T6) makes its top variants Swan-Knight-tanky. Move them to Lamedon lords
+instead if that reads too strong.
+
+Not-tested: in-game render (restart + battle spawn), gated on the `AssetPackages/` recompile (#358).
+
 ## 2026-07-23
 
 ### fix(elves): female elves render on the human female basemesh instead of the male elf basemesh

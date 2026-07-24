@@ -427,6 +427,9 @@ LEG_ARMORS = [
     ArmorItem("sk_gd_lin_grvs_light_a", "Linhir Light Greaves", "leg", "light", "Plate", covers_legs=True),
     ArmorItem("sk_gd_lin_grvs_med_a", "Linhir Greaves", "leg", "medium", "Plate", covers_legs=True),
     ArmorItem("sk_gd_lin_grvs_heavy_a", "Linhir Heavy Greaves", "leg", "heavy", "Plate", covers_legs=True),
+
+    # ---- Belfalas (1) — KEYforce; boots mesh present but un-authored, added 2026-07 ----
+    ArmorItem("sk_gd_bel_boots_a", "Belfalas Boots", "leg", "light", "Leather", covers_legs=True),
 ]
 
 
