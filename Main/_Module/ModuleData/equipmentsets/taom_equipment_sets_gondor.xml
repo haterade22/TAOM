@@ -195,7 +195,7 @@
 	<EquipmentRoster id="imrahil_bat_equipment" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_swanknight_speara" />
-			<Equipment slot="Item1" id="Item.wm_swan_knight_swordb" />
+			<Equipment slot="Item1" id="Item.wm_swan_knight_sworda" />
 			<Equipment slot="Item2" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.imrahil_helmet" />
 			<Equipment slot="Body" id="Item.imrahil_body" />
@@ -222,7 +222,7 @@
 	<EquipmentRoster id="forlong_bat_equipment" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
-			<Equipment slot="Item1" id="Item.gond_shield_four_mustard" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
 			<Equipment slot="Item2" id="Item.wm_gondor_sword_a05" />
 			<Equipment slot="Head" id="Item.forlong_helmet" />
 			<Equipment slot="Body" id="Item.forlong_body" />
@@ -275,7 +275,7 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
 			<Equipment slot="Item1" id="Item.wm_gondor_lamedon_2h_sword_a" />
-			<Equipment slot="Item2" id="Item.gond_shield_one_greyscale" />
+			<Equipment slot="Item2" id="Item.wm_gondor_shield_a02" />
 			<Equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
 			<Equipment slot="Head" id="Item.angbor_helmet" />
 			<Equipment slot="Body" id="Item.angbor_body" />
@@ -300,7 +300,7 @@
 	<EquipmentRoster id="golasgil_bat_equipment" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
-			<Equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
+			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
 			<Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
 			<Equipment slot="Head" id="Item.golasgil_helment" />
 			<Equipment slot="Body" id="Item.golasgil_body" />
@@ -348,7 +348,7 @@
 	<EquipmentRoster id="gondor_lord_dolamroth_1" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_a" />
 			<Equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -361,7 +361,7 @@
 	<EquipmentRoster id="gondor_lord_dolamroth_1_civ" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_a" />
 			<Equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -374,7 +374,7 @@
 	<EquipmentRoster id="gondor_lord_dolamroth_2" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_gd_dol_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -387,7 +387,7 @@
 	<EquipmentRoster id="gondor_lord_dolamroth_2_civ" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_gd_dol_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -400,7 +400,7 @@
 	<EquipmentRoster id="gondor_lord_dolamroth_3" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_c" />
 			<Equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -413,7 +413,7 @@
 	<EquipmentRoster id="gondor_lord_dolamroth_3_civ" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a05" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_c" />
 			<Equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -426,7 +426,7 @@
 	<EquipmentRoster id="gondor_lord_dolamroth_4" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_d" />
 			<Equipment slot="Body" id="Item.sk_gd_dol_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -439,7 +439,7 @@
 	<EquipmentRoster id="gondor_lord_dolamroth_4_civ" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_two_swan" />
 			<Equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_d" />
 			<Equipment slot="Body" id="Item.sk_gd_dol_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -582,7 +582,7 @@
 	<EquipmentRoster id="gondor_lord_arndir_1" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_three_green" />
 			<Equipment slot="Head" id="Item.sk_gd_pin_noble_cav_helmet_elite_a" />
 			<Equipment slot="Body" id="Item.sk_gd_pin_nob_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_gd_pin_pauld_cape_noble_elite_a" />
@@ -595,7 +595,7 @@
 	<EquipmentRoster id="gondor_lord_arndir_1_civ" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_three_green" />
 			<Equipment slot="Head" id="Item.sk_gd_pin_noble_cav_helmet_elite_a" />
 			<Equipment slot="Body" id="Item.sk_gd_pin_nob_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_gd_pin_pauld_cape_noble_elite_a" />
@@ -608,7 +608,7 @@
 	<EquipmentRoster id="gondor_lord_arndir_2" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_three_green" />
 			<Equipment slot="Head" id="Item.sk_gd_pin_noble_cav_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_gd_pin_nob_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_pin_pauld_cape_noble_elite_a" />
@@ -621,7 +621,7 @@
 	<EquipmentRoster id="gondor_lord_arndir_2_civ" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_three_green" />
 			<Equipment slot="Head" id="Item.sk_gd_pin_noble_cav_helmet_elite_b" />
 			<Equipment slot="Body" id="Item.sk_gd_pin_nob_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_gd_pin_pauld_cape_noble_elite_a" />
@@ -634,7 +634,7 @@
 	<EquipmentRoster id="gondor_lord_arndir_3" culture="Culture.gondor">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_three_green" />
 			<Equipment slot="Head" id="Item.sk_gd_pin_noble_helmet_elite_a" />
 			<Equipment slot="Body" id="Item.sk_gd_pin_nob_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_gd_pin_pauld_noble_elite_a" />
@@ -647,7 +647,7 @@
 	<EquipmentRoster id="gondor_lord_arndir_3_civ" culture="Culture.gondor">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
-			<Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+			<Equipment slot="Item1" id="Item.gond_shield_three_green" />
 			<Equipment slot="Head" id="Item.sk_gd_pin_noble_helmet_elite_a" />
 			<Equipment slot="Body" id="Item.sk_gd_pin_nob_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_gd_pin_pauld_noble_elite_a" />

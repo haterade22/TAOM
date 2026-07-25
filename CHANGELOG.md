@@ -2,6 +2,47 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-25
+
+### feat(gondor): region-specific shields across every troop line + lord equipment sets
+
+Standardised Gondor shields by fief so units read at a glance. Rules: Anórien + all **unlisted** regions
+use the greyscale team-coloured `wm_gondor_shield_a02`; Pinnath Gelin (incl. Arndir) `gond_shield_three_green`;
+Dol Amroth the swan `gond_shield_two_swan`; Cair Andros `wm_gondor_shield_a_cair_andros`; Minas Ithil
+`wm_gondor_shield_a_minas_ithil` (Watcher) / `wm_gondor_shield_d_new_minas_ithil` (Vet/Sgt/Capt); Ringló Vale
+`gond_shield_four_mustard`; Belfalas + Anfalas (incl. Serelond, Lond-Galen) the generic a02. Unlisted regions
+(Lossarnach, Pelargir, Minas Tirith, Osgiliath, Calembel) were forced to a02 per decision, dropping their old
+thematic shields. **40 troops** swapped; the rest already matched. **Lord equipment sets follow the same
+rules:** Dol Amroth templates → swan, Arndir → green, the named fief-lords by fief (Imrahil swan, Hirluin
+green, Forlong/Angbor/Golasgil → a02); Boromir keeps his unique shield. Mesh-id → item-id resolved from the
+shield defs (several differ). Equipment-only, save-safe (187 NPCCharacters unchanged); `validate_moduledata`
++ `validate_gondor_refs` PASS.
+
+### feat(gondor): weapon standardisation pass + new craftable poleaxe
+
+Standardised Gondor melee weapons by rule:
+- **Spears:** foot-spears (generic `wm_gondor_spear` + vanilla `eastern`/`imperial`) → `wm_gondor_spear_b`
+  (36 refs); Fountain + Citadel Guard get the higher-blade `wm_gondor_spear_a`, replacing their vanilla pikes.
+  Pelagir spears, banner-bearer spears, and Swan Knight lances left intact; other pikes stay vanilla.
+- **Swan Knight swords:** gold `wm_swan_knight_sworda` on the Swan Knight capstone + Imrahil (Dol Amroth lord);
+  silver `swordb` on the lower swan-sword troops.
+- **Belfalas:** the melee infantry that lacked a spear (recruit/footman/soldier) each gained a `wm_gondor_spear_b`.
+- **Poleaxe (new):** authored 3 crafting pieces (`sm_ar_art_poleaxe_blade_a`/`_b`/`_handle_a`) + 2 items
+  `wm_gondor_poleaxe_a`/`_b` — a **swinging** `TwoHandedPolearm` (Cut swing + Pierce thrust), stats mirrored
+  from `dale_poleaxe`. Placed on Osgiliath Guard (`_a`) + Dome Guard (`_b`), replacing their pikes. Pieces +
+  items live in the external `LOTRLOME_Armory` (not git-tracked, per the item-def convention) and need the
+  `AssetPackages/` recompile to render; blade/handle lengths are approximated (tune reach in-game).
+
+1H swords a01–a10 were already all in use (left as-is). Save-safe; `validate_moduledata` PASS (registry +2
+items — the poleaxes resolve).
+
+### fix(gondor): non-Harondor low troops wear Anórien helmets, not the Harondor light helm
+
+Seven non-Harondor troops (L6 recruits/peasants/levy/volunteer/lumberman + the L11 `gondor_militia_archer`)
+wore `sk_gd_har_inf_helmet_light_a`, which didn't read right on non-Harondor units. Swapped to the lightest
+Anórien infantry helmet `sk_gd_ano_inf_helmet_med_a` (Anórien has no light tier); the 9 Harondor troops keep
+their own helmets. Equipment-only, save-safe; validators PASS.
+
 ## 2026-07-24
 
 ### fix(gondor): Anórien pool — home 2 idle capstone pieces (Osgiliath bracer, Minas Ithil helmet)
