@@ -4,6 +4,18 @@
 
 ## 2026-07-25
 
+### fix(gondor): defer the new poleaxe — crafted weapons hard-crash on uncompiled meshes
+
+The `wm_gondor_poleaxe_a`/`_b` items crashed new-campaign load (`ItemObject.Deserialize` NRE on the
+CraftedItem, confirmed via debugger — `this = {wm_gondor_poleaxe_a}`). Root cause: a crafted **weapon**
+assembles its combined mesh + physics **at item-deserialization**, so its `sm_ar_art_poleaxe_*` piece
+meshes being source-only (not yet in the compiled `AssetPackages/`) is a hard crash — not the
+invisible-render that armor gets on a missing mesh. The XML was complete (weapon def + crafting pieces
++ vanilla `TwoHandedPolearm` template); this is purely a mesh-compile ordering issue. Removed the 2
+items + 3 crafting pieces from the external Armory and reverted Osgiliath Guard / Dome Guard to their
+vanilla pikes. **Re-add after the AssetPackages recompile.** Everything else this session (existing
+compiled items) is unaffected.
+
 ### feat(gondor): region-specific shields across every troop line + lord equipment sets
 
 Standardised Gondor shields by fief so units read at a glance. Rules: Anórien + all **unlisted** regions

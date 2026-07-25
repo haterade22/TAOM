@@ -6701,7 +6701,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.wm_gondor_poleaxe_a" />
+        <equipment slot="Item2" id="Item.fine_pike_t4" />
         <equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
@@ -6737,7 +6737,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.wm_gondor_poleaxe_b" />
+        <equipment slot="Item2" id="Item.vlandia_pike_1_t5" />
         <equipment slot="Item3" id="Item.eastern_javelin_3_t4" />
         <equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
