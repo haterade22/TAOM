@@ -305,6 +305,21 @@ public class SubModule : MBSubModuleBase
         // in this campaign-phase block alongside the other AI patches.
         _harmony.PatchCategory("Patch59_CaravanTrade");
         _harmony.PatchCategory("Patch30_MixedFormations");
+        // Patch63 — guarded reimplementation of BannerBearerLogic.SpawnBannerBearer (issue #360):
+        // the engine's reinforcement bearer spawn reads the new agent's ExtraWeaponSlot native
+        // entity with no check and AVs when the banner never made it into the slot (validating
+        // spawn gate / native wield-time drop). Guarded like Patch60/61/62 — a containment guard
+        // must never take startup down; unresolved bindings log + fall open to vanilla.
+        try
+        {
+            Features.BannerBearers.Hooks.BannerBearerLogic_SpawnBannerBearer_Patch.Initialize(
+                IoC.Resolve<Features.BannerBearers.IBannerBearerService>(), logger);
+            _harmony.PatchCategory("Patch63_BannerBearerSpawnGuard");
+        }
+        catch (System.Exception ex)
+        {
+            logger.LogWarning($"[BannerBearers] Patch63 spawn guard failed to apply: {ex.Message}");
+        }
         // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI +
         // Patch35_CompanionTactics' Formation.SetMovementOrder hook) is applied in
         // OnMissionBehaviorInitialize — MovementOrder.cctor reads Mission.Current.CurrentTime,

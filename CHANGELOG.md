@@ -4,6 +4,29 @@
 
 ## 2026-07-25
 
+### fix(banner-bearers): siege CTD on reinforcement bearer spawn — 1H sidearm invariant + Patch63 guard (#360)
+
+Crash bundle `67b75cb4` (defense of Glad Thaw, ~6 min in): `AccessViolationException` in
+`Agent.GetWeaponEntityFromEquipmentSlot(ExtraWeaponSlot)` from the engine's
+`BannerBearerLogic.SpawnBannerBearer` on the **reinforcement** path — a code path deployment
+never runs (hence the fuse) that reads the new bearer's native slot-4 weapon entity with no
+check. Likely trigger (guard-instrumented): Mirkwood/Isengard shipped **two-handed polearms**
+as `banner_bearer_replacement_weapons` while every vanilla culture ships 1H swords and the
+model applies no class filter — the `DropOnWeaponChange` banner plausibly drops during the
+native 2H wield, emptying the slot. Three layers: **data** (mirkwood/mirkwood_stalkers keep
+`mirkwood_sword_a01` only; isengard pikes → `isengard_1h_sword_a`/`isengard_berserker_sword`),
+**test** (`BannerBearerReplacementWeaponDataTests` pins the 1H invariant against the installed
+Armory — failed on all 5 polearm entries pre-fix), **code** (`Patch63_BannerBearerSpawnGuard`:
+guarded prefix-replacement — toggle-folded eligibility gate that also closes the
+troll-as-reinforcement-bearer gap, managed slot-4 check that logs the mechanism instead of
+crashing, AV-only catch; fail-open on binding drift, pinned by `BannerBearersBindingTests`).
+Deep-review caught the first-cut gate suppressing vanilla-armed formations' bearers with the
+feature off (the 2026-07-16 regression class, now in prefix form) — fixed via
+`IsReinforcementBearerAllowed` folding the master toggle in the service. Suite 4426 green.
+RCA: `docs/reviews/rca-banner-bearers-reinforcement-av-2026-07-25.md`. Owed: in-game siege
+smoke (Glad Thaw save past a reinforcement wave; any Patch63 ANOMALY log line confirms the
+drop mechanism in the wild).
+
 ### feat(mordor): Witch-king throne prop for the Minas Morgul throne room
 
 Converted a Tripo AI-generated throne FBX into the Mordor kit: `sm_mordor_mm_throne_001.fbx`

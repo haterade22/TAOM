@@ -509,4 +509,100 @@ public class BannerBearerServiceTests
 
         Assert.AreEqual(7, _sut.MinimumFormationTroopCount);
     }
+
+    // ---- EvaluateSpawnedBearerSlot (Patch63 spawn guard, issue #360) ----------
+    // Decides whether the freshly-spawned bearer's ExtraWeaponSlot actually holds the
+    // formation banner BEFORE the patch does the engine's unguarded native slot-4 read.
+
+    [TestMethod]
+    public void EvaluateSpawnedBearerSlot_MatchingItem_ReturnsOk()
+    {
+        Assert.AreEqual(BearerSlotVerdict.Ok,
+            _sut.EvaluateSpawnedBearerSlot("scouts_flag_t1", "scouts_flag_t1"));
+    }
+
+    [TestMethod]
+    public void EvaluateSpawnedBearerSlot_NullSlot_ReturnsSlotEmpty()
+    {
+        // The Mission.SpawnTroop banner gate can silently decline (non-banner item,
+        // CannotBePickedUp sweep) — and a native wield-time drop empties the managed slot too.
+        Assert.AreEqual(BearerSlotVerdict.SlotEmpty,
+            _sut.EvaluateSpawnedBearerSlot(null, "scouts_flag_t1"));
+    }
+
+    [TestMethod]
+    public void EvaluateSpawnedBearerSlot_EmptyStringSlot_ReturnsSlotEmpty()
+    {
+        Assert.AreEqual(BearerSlotVerdict.SlotEmpty,
+            _sut.EvaluateSpawnedBearerSlot(string.Empty, "scouts_flag_t1"));
+    }
+
+    [TestMethod]
+    public void EvaluateSpawnedBearerSlot_DifferentItem_ReturnsWrongItem()
+    {
+        Assert.AreEqual(BearerSlotVerdict.WrongItem,
+            _sut.EvaluateSpawnedBearerSlot("standard_of_fury_t1", "scouts_flag_t1"));
+    }
+
+    [TestMethod]
+    public void EvaluateSpawnedBearerSlot_NullExpectedId_ReturnsWrongItem()
+    {
+        // Fail closed: with no expected banner id we cannot confirm the slot — never Ok.
+        Assert.AreEqual(BearerSlotVerdict.WrongItem,
+            _sut.EvaluateSpawnedBearerSlot("scouts_flag_t1", null));
+    }
+
+    [TestMethod]
+    public void EvaluateSpawnedBearerSlot_BothNull_ReturnsSlotEmpty()
+    {
+        // Empty slot dominates: the anomaly log must name the missing weapon record, not the id mismatch.
+        Assert.AreEqual(BearerSlotVerdict.SlotEmpty,
+            _sut.EvaluateSpawnedBearerSlot(null, null));
+    }
+
+    // ---- IsReinforcementBearerAllowed (Patch63 toggle fold) -------------------
+    // With the feature DISABLED the gate must be a no-op (vanilla parity): a vanilla
+    // hero-captain formation's reinforcement bearers must not be suppressed by TAOM policy
+    // (deep-review 2026-07-25 Flow-4; same regression class as the 2026-07-16 model finding).
+
+    [TestMethod]
+    public void IsReinforcementBearerAllowed_FeatureDisabled_AllowsExcludedRace()
+    {
+        _config.Enabled = false;
+
+        Assert.IsTrue(_sut.IsReinforcementBearerAllowed(CaveTrollId, FormationClass.Infantry));
+    }
+
+    [TestMethod]
+    public void IsReinforcementBearerAllowed_FeatureDisabled_AllowsDisallowedFormationGroup()
+    {
+        _config.Enabled = false;
+
+        Assert.IsTrue(_sut.IsReinforcementBearerAllowed(HumanId, FormationClass.Cavalry));
+    }
+
+    [TestMethod]
+    public void IsReinforcementBearerAllowed_Enabled_ExcludedRace_Denies()
+    {
+        Assert.IsFalse(_sut.IsReinforcementBearerAllowed(CaveTrollId, FormationClass.Infantry));
+    }
+
+    [TestMethod]
+    public void IsReinforcementBearerAllowed_Enabled_DisallowedFormationGroup_Denies()
+    {
+        Assert.IsFalse(_sut.IsReinforcementBearerAllowed(HumanId, FormationClass.Cavalry));
+    }
+
+    [TestMethod]
+    public void IsReinforcementBearerAllowed_Enabled_AllowedRaceAndGroup_Allows()
+    {
+        Assert.IsTrue(_sut.IsReinforcementBearerAllowed(HumanId, FormationClass.Infantry));
+    }
+
+    [TestMethod]
+    public void IsReinforcementBearerAllowed_Enabled_InvalidRaceId_Denies()
+    {
+        // Fail closed on invalid ids only while the feature owns the policy.
+        Assert.IsFalse(_sut.IsReinforcementBearerAllowed(UnknownId, FormationClass.Infantry));
+    }
 }

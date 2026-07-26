@@ -220,7 +220,8 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 - Field battle, both sides, 2+ cultures → bearers present **and moving** (watch a bearer specifically — this is the freeze check).
 - **An orc/dwarf/elf formation's bearer is still an orc/dwarf/elf.** The headline requirement.
 - No troll ever raises a banner.
-- Reinforcement wave → new bearers spawn, no freeze.
+- Reinforcement wave → new bearers spawn, no freeze. **Post-#360:** bearers carry a 1H sidearm + banner; no `[BannerBearers] Patch63 ANOMALY` WARN in `Logs/taom_debug_*.log` (an anomaly line names the drop mechanism — either outcome is signal, record it in the RCA).
+- Feature toggled OFF + a vanilla hero-captain-armed formation loses its bearer mid-battle → a replacement bearer still spawns (Patch63 vanilla-parity check, deep-review Flow-4).
 - Player Order-of-Battle deploy → finish → bearers unpause with everyone else.
 - Formation whose captain already has a `FormationBanner` → not double-applied.
 - Sally-out + siege (the other two `BannerBearerLogic` sites).
@@ -246,6 +247,8 @@ This is the feature's one real gap. Both reviews are static; the failure mode it
 11. **Bearers lose their shield.** `CreateBannerEquipmentForAgent` clears weapon slots 1–3. That is vanilla behaviour, not a TAOM bug.
 12. **Don't override `GetBannerBearerReplacementWeapon`** to paper over a culture missing `banner_bearer_replacement_weapons` — add the data and let the test catch it. The loop that costs is an ADR-002 breach, and the sealed types involved make a service extraction an ADR-007 breach.
 13. **This feature depends on MixedFormations' Patch30 falling through for bearers.** Patch30 blanket-suppresses vanilla `GetOrderPositionOfUnit` in field battles; without `if (unit?.Banner != null) return true;` the engine's banner slots are ignored and standards scatter. If bearer placement ever looks wrong, check that line first.
+14. **Replacement weapons MUST be one-handed.** The banner rides in ExtraWeaponSlot as `HeldInOffHand + HasToBeHeldUp + DropOnWeaponChange`; every vanilla culture ships only 1H swords and the vanilla model tier-matches with **no weapon-class filter** — an undeclared engine invariant. A 2H sidearm plausibly forces a native banner drop during the reinforcement spawn's `wieldInitialWeapons`, after which the engine's unguarded slot-4 read in `SpawnBannerBearer` is a `0xC0000005` CTD (issue #360, siege of Glad Thaw). `BannerBearerReplacementWeaponDataTests` pins the invariant build-time; [rca-banner-bearers-reinforcement-av-2026-07-25.md](../reviews/rca-banner-bearers-reinforcement-av-2026-07-25.md).
+15. **The engine's reinforcement path applies no per-agent bearer policy.** `MissionBattleSideSpawnContext.SpawnTroops` checks only `!IsHero` before `SpawnBannerBearer` — `CanAgentBecomeBannerBearer` (and therefore the race/formation-group gates) is deployment-only. **Patch63** reimplements `SpawnBannerBearer` with the toggle-folded gate (`IsReinforcementBearerAllowed` — disabled ⇒ vanilla parity, never suppress a vanilla-armed formation's bearers), a managed slot-4 check before the engine's unguarded native read (anomaly ⇒ WARN, not CTD), and an AV-only catch. Registry: [harmony-patch-registry.md](../reference/harmony-patch-registry.md) `Patch63_BannerBearerSpawnGuard`.
 
 ## Related
 

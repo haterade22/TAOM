@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TaleWorlds.Core;
+using TAOM.Features.BannerBearers.Domain;
 
 namespace TAOM.Features.BannerBearers;
 
@@ -42,4 +43,17 @@ public interface IBannerBearerService
     // whichever standard happened to be arranged into slot 0. Majority wins instead, with a
     // deterministic tie-break so the result never depends on arrangement order.
     string? ResolveMajorityCultureId(IReadOnlyList<string?> cultureIds);
+
+    // Patch63 spawn guard (issue #360): does the freshly-spawned bearer's ExtraWeaponSlot hold
+    // the expected formation banner? Only Ok permits the engine's native slot-4 entity read —
+    // that read has no engine-side guard and AVs on an absent weapon record. Fail closed: an
+    // unknown expected id is never Ok.
+    BearerSlotVerdict EvaluateSpawnedBearerSlot(string? slot4ItemId, string? expectedBannerItemId);
+
+    // Patch63 eligibility gate for a REINFORCEMENT bearer, folding the master toggle: with the
+    // feature disabled this is unconditionally true (vanilla parity — a vanilla hero-captain
+    // formation's replacement bearers must not be suppressed by TAOM policy; the engine's own
+    // reinforcement path applies no per-agent policy either). Enabled: the same race +
+    // formation-group policy the deployment gate applies via CanAgentBecomeBannerBearer.
+    bool IsReinforcementBearerAllowed(int raceId, FormationClass formationClass);
 }

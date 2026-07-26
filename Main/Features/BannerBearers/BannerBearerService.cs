@@ -158,6 +158,28 @@ public sealed class BannerBearerService : IBannerBearerService
         return best;
     }
 
+    public bool IsReinforcementBearerAllowed(int raceId, FormationClass formationClass)
+    {
+        // Master-toggle fold: disabled == vanilla parity. Patch63 stays applied for its crash
+        // guard, but TAOM policy must not suppress vanilla-armed formations' bearers
+        // (deep-review 2026-07-25 Flow-4; the 2026-07-16 model finding's regression class).
+        if (!IsEnabled) return true;
+
+        return IsRaceAllowed(raceId) && IsFormationGroupAllowed(formationClass);
+    }
+
+    public Domain.BearerSlotVerdict EvaluateSpawnedBearerSlot(string? slot4ItemId, string? expectedBannerItemId)
+    {
+        // Empty slot dominates WrongItem: the anomaly log must name the missing native weapon
+        // record (the AV site), not a secondary id mismatch.
+        if (string.IsNullOrEmpty(slot4ItemId)) return Domain.BearerSlotVerdict.SlotEmpty;
+        if (string.IsNullOrEmpty(expectedBannerItemId)) return Domain.BearerSlotVerdict.WrongItem;
+
+        return string.Equals(slot4ItemId, expectedBannerItemId, StringComparison.Ordinal)
+            ? Domain.BearerSlotVerdict.Ok
+            : Domain.BearerSlotVerdict.WrongItem;
+    }
+
     private void WarnOnUnknownExcludedRacesOnce(List<string> excluded)
     {
         if (_excludedRacesChecked) return;

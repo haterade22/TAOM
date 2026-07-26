@@ -822,11 +822,11 @@
     <vassal_reward_items>
       <item id="Item.mirkwood_sword_a01" />
     </vassal_reward_items>
+    <!-- 1H ONLY: the banner rides in ExtraWeaponSlot as HeldInOffHand + DropOnWeaponChange; a
+         two-handed sidearm forces a native banner drop during reinforcement spawn and the
+         engine's unguarded slot-4 read CTDs (issue #360, rca-banner-bearers-reinforcement-av). -->
     <banner_bearer_replacement_weapons>
       <item id="Item.mirkwood_sword_a01" />
-      <item id="Item.mirkwood_spear_a01" />
-      <item id="Item.mirkwood_spear_a02" />
-      <item id="Item.mirkwood_glaive_a01" />
     </banner_bearer_replacement_weapons>
     <default_policies>
       <policy id="policy_senate" />
@@ -1545,10 +1545,11 @@
     <vassal_reward_items>
       <item id="Item.isengard_1h_sword_b" />
     </vassal_reward_items>
+    <!-- 1H ONLY — see issue #360 (two-handed sidearms force a native banner drop → CTD). -->
     <banner_bearer_replacement_weapons>
       <item id="Item.isengard_1h_sword_b" />
-      <item id="Item.isengard_pike_a" />
-      <item id="Item.isengard_pike_b" />
+      <item id="Item.isengard_1h_sword_a" />
+      <item id="Item.isengard_berserker_sword" />
     </banner_bearer_replacement_weapons>
     <default_policies>
       <policy id="policy_senate" />
@@ -4556,11 +4557,9 @@
       <name name="{=taom_bandit_mirkwood_f4}Faelivrin" />
       <name name="{=taom_bandit_mirkwood_f5}Míriel" />
     </female_names>
+  <!-- 1H ONLY — see issue #360 (two-handed sidearms force a native banner drop → CTD). -->
   <banner_bearer_replacement_weapons>
     <item id="Item.mirkwood_sword_a01" />
-    <item id="Item.mirkwood_spear_a01" />
-    <item id="Item.mirkwood_spear_a02" />
-    <item id="Item.mirkwood_glaive_a01" />
   </banner_bearer_replacement_weapons>
   </Culture>
 
