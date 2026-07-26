@@ -5,7 +5,7 @@
 
 ## Top-line
 
-`AccessViolationException` in `Agent.GetWeaponEntityFromEquipmentSlot(ExtraWeaponSlot)` from `BannerBearerLogic.SpawnBannerBearer` during a defender **reinforcement wave** ~6 minutes into the siege of Glad Thaw (Mirkwood castle, `SiegeMissionWithDeployment`, Bannerlord v1.4.7.117484, TAOM v2.0.13). Third banner-bearers incident; second in a siege; first on the reinforcement path — which the feature doc had explicitly listed as verification still owed.
+**Player-reported** `AccessViolationException` in `Agent.GetWeaponEntityFromEquipmentSlot(ExtraWeaponSlot)` from `BannerBearerLogic.SpawnBannerBearer` during a defender **reinforcement wave** ~6 minutes into the siege of Glad Thaw (Mirkwood castle, `SiegeMissionWithDeployment`, Bannerlord v1.4.7.117484, TAOM v2.0.13, reporter save `UnstoppablePlay`). Third banner-bearers incident; second in a siege; first on the reinforcement path — which the feature doc had explicitly listed as verification still owed.
 
 ## Crash root cause
 
@@ -15,7 +15,7 @@
 
 **The TAOM trigger [Likely — guard-instrumented, not statically provable]:** Mirkwood's `<banner_bearer_replacement_weapons>` were three `TwoHandedPolearm` `<CraftedItem>`s + one sword (`taom_spcultures.xml:825-830`, mirrored in `mirkwood_stalkers`; Isengard shipped two pikes). **Every vanilla culture ships only 1H swords there, and `SandboxBattleBannerBearersModel.GetBannerBearerReplacementWeapon` tier-matches with no weapon-class filter** — an undeclared engine invariant. The banner item is `HeldInOffHand + HasToBeHeldUp + DropOnWeaponChange`; `Equipment.GetInitialWeaponIndicesToEquip` (`Equipment.cs:618`) classifies the banner as the off-hand wield and the sidearm as main-hand, and the native wield of a two-handed main-hand (`TryToWieldWeaponInSlot` — pure native, undecidable from managed decompile) plausibly drops the slot-4 banner before the unguarded read. Patch63's anomaly log is the standing confirmation channel: a recurrence names the sidearm and weapon class instead of crashing.
 
-**Ruled out by direct verification:** bad banner item (`scouts_flag_t1`/`standard_of_fury_t1` pass `IsBannerItem && BannerComponent != null`; no `CannotBePickedUp` flag), creatures in this battle (no spider/troll stacks in either side's party set), native-offset triage (no WER entry — TAOM's CrashReport finalizer caught the AV; managed stack is the site evidence).
+**Ruled out by direct verification:** bad banner item (`scouts_flag_t1`/`standard_of_fury_t1` pass `IsBannerItem && BannerComponent != null`; no `CannotBePickedUp` flag), creatures in this battle (no spider/troll stacks in either side's party set). **Native-offset triage unavailable:** this is a player report, so the reporter's Windows Event Log is out of reach; the bundle's managed stack — captured by TAOM's CrashReport finalizer, which is also why the reporter got a clean bundle instead of a raw CTD — is the site evidence.
 
 ## The fix (three layers)
 
@@ -45,4 +45,5 @@ The feature shipped with both reviews clean because: the reinforcement path is e
 ## Verification state
 
 - Build green, suite 4426/4428 (2 pre-existing skips), `validate_moduledata` PASS, binding pins resolve against installed v1.4.7.
-- **In-game siege smoke owed (user):** replay the Glad Thaw save past the reinforcement phase — expect no CTD, bearers with 1H sidearm + banner; any `[BannerBearers] Patch63 ANOMALY` WARN in `Logs/taom_debug_*.log` confirms the drop mechanism in the wild (either outcome is signal — record it here). Also: field battle both sides; a Mordor battle for the troll gate; feature-off battle for vanilla parity.
+- **In-game siege smoke owed:** the crash save belongs to the reporter — reproduce with a comparable siege (Mirkwood-defender garrison with reinforcements flowing, or request the reporter's `UnstoppablePlay` .sav) past a reinforcement wave — expect no CTD, bearers with 1H sidearm + banner; any `[BannerBearers] Patch63 ANOMALY` WARN in `Logs/taom_debug_*.log` confirms the drop mechanism in the wild (either outcome is signal — record it here). Also: field battle both sides; a Mordor battle for the troll gate; feature-off battle for vanilla parity.
+- **Reporter follow-up:** ship the fix in the next release build and confirm the reporter's siege survives the reinforcement phase; close #360 on that confirmation (or on local smoke + anomaly-log evidence).
