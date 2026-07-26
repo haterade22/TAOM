@@ -11429,4 +11429,1132 @@
         </Equipments>
     </NPCCharacter>
 
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+    <NPCCharacter
+        id="rivendell_noble_merc"
+        race="elf"
+        default_group="Cavalry"
+        level="36"
+        name="{=aom_merc_rivendell_noble_name}[Rivendell] Hired Noble"
+        occupation="Mercenary"
+        is_basic_troop="true"
+        culture="Culture.rivendell">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_rivendell" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="185" />
+            <skill
+                id="Riding"
+                value="300" />
+            <skill
+                id="OneHanded"
+                value="305" />
+            <skill
+                id="TwoHanded"
+                value="170" />
+            <skill
+                id="Polearm"
+                value="340" />
+            <skill
+                id="Bow"
+                value="85" />
+            <skill
+                id="Crossbow"
+                value="70" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier3" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silver" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier2_cape_silver" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_armored_tier1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_armored_tier1_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_armored_tier1_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_armored_tier3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_armored_tier3_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier1_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier1_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier2_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier2_silverb" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier2_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier2_silvergoldb" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3_silverb" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3_silvergoldb" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves2_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a02_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier2_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier2_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_armored_tier3_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_1_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves3_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a01_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier3_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier1_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_scalemail_tier3_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_2_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves4_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a02_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier2_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_armored_tier3_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_1_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves3_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.he_spear" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_rivendell_shield_a02_silver" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_rivendell_sword_a02_silver" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_archer_tier1_silvergold" />
+                <equipment
+                    slot="Cape"
+                    id="Item.rivendell_pauldron_tier2_cape_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_torso_light_armored_tier3_silvergold" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_vambraces_1_silvergold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves3_silvergold" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_southern" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.fortunas_choice" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="imladris_bowman_merc"
+        race="elf"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_merc_imladris_bowman_name}[Rivendell] Hired Imladris Bowman"
+        occupation="Mercenary"
+        culture="Culture.rivendell">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_rivendell" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="140" />
+            <skill
+                id="Riding"
+                value="50" />
+            <skill
+                id="OneHanded"
+                value="175" />
+            <skill
+                id="TwoHanded"
+                value="125" />
+            <skill
+                id="Polearm"
+                value="130" />
+            <skill
+                id="Bow"
+                value="210" />
+            <skill
+                id="Crossbow"
+                value="75" />
+            <skill
+                id="Throwing"
+                value="90" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowc" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_q1v3" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowc" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2_silver" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowc" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_q1v4" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2_silvergold" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowc" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_q2v2" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowc" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1_silvergold" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowd" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_q2v3" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowc" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_q2v4" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowd" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.highelf_longbowd" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_elven_arrow_q3v2" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_elven_arrow_v4_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_rivendell_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.rivendell_helmet_infantry_tier2" />
+                <equipment
+                    slot="Body"
+                    id="Item.rivendell_body_gold_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rivendell_gloves_gold" />
+                <equipment
+                    slot="Leg"
+                    id="Item.rivendell_boots_greaves1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

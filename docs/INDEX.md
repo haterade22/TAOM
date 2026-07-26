@@ -55,6 +55,7 @@
 - [troop-progression](features/troop-progression.md) — tier-by-tier upgrade rules, MaxCharacterTier 10
 - [troop-tree-revamp](features/troop-tree-revamp.md) — multi-culture troop roster authoring discipline
 - [volunteer-recruitment](features/volunteer-recruitment.md) — per-settlement / clan / culture recruitment pools (TaomVolunteerModel)
+- [tavern-mercenaries](features/tavern-mercenaries.md) — culture-specific `<basic_mercenary_troops>`: how the town's daily offer is rolled (70/30 split, upgrade walk, tier-inverse stack size), and why the hires are dedicated leaf `*_merc` copies of each culture's rarest recruitment-pool troops
 - [prisoner-recruitment](features/prisoner-recruitment.md) — no morale lost recruiting a prisoner of your own faction or alignment side (TaomPrisonerRecruitmentCalculationModel)
 - [equip-presets](features/equip-presets.md) — save/load equipment preset overlay on inventory
 - [lord-skills](features/lord-skills.md) — lore-driven SkillSets for every TAOM lord (~880 NPCs, 17 cultures, 35 archetypes); authoring guide [lord-skills-authoring.md](ai-includes/lord-skills-authoring.md)

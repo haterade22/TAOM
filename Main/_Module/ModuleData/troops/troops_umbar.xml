@@ -2170,4 +2170,147 @@
         </Equipments>
     </NPCCharacter>
 
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+    <NPCCharacter
+        id="umbar_elite_merc"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_merc_umbar_elite_name}[Umbar] Hired Adûnaim Recruits"
+        occupation="Mercenary"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="58" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="TwoHanded"
+                value="70" />
+            <skill
+                id="Polearm"
+                value="60" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="20" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_boromir_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_sparring_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.nordic_sloven" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_boromir_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_sparring_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.nordic_sloven" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_boromir_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_sparring_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.nordic_sloven" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_boromir_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_sparring_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gd_ano_inf_helmet_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.hood" />
+                <equipment
+                    slot="Body"
+                    id="Item.nordic_sloven" />
+                <equipment
+                    slot="Leg"
+                    id="Item.dunland_caerdh_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.peasant_2haxe_1_t1" />
+                <equipment
+                    slot="Item2"
+                    id="Item.throwing_stone" />
+                <equipment
+                    slot="Body"
+                    id="Item.bandit_envelope_dress_v1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.wrapped_shoes" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

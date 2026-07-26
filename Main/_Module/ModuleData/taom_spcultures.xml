@@ -359,9 +359,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.erebor_oathsworn_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -729,9 +727,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.rivendell_noble_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -1090,9 +1086,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.mirkwood_recruit_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -1452,9 +1446,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.imladris_bowman_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -1829,9 +1821,9 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.urukhai_warrior_merc" />
+      <template name="NPCCharacter.urukhai_scout_merc" />
+      <template name="NPCCharacter.orthanc_chosen_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -2195,9 +2187,8 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.gundabad_fighter_merc" />
+      <template name="NPCCharacter.gundabad_scout_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -2557,9 +2548,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.umbar_elite_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -2932,9 +2921,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.dg_orc_scout_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -3302,9 +3289,9 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.gondor_bel_recruit_merc" />
+      <template name="NPCCharacter.gondor_lam_clansman_merc" />
+      <template name="NPCCharacter.gondor_loss_lumberman_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -3680,9 +3667,10 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.mordor_uruk_grunt_merc" />
+      <template name="NPCCharacter.mordor_orc_impaler_merc" />
+      <template name="NPCCharacter.mordor_orc_hunter_merc" />
+      <template name="NPCCharacter.mordor_warg_tamer_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -3946,8 +3934,7 @@
       <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.harad_noble_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -4208,8 +4195,7 @@
       <template name="NPCCharacter.tournament_template_aserai_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
+      <template name="NPCCharacter.harad_noble_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -4917,9 +4903,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.goblin_fighter_merc" />
     </basic_mercenary_troops>
   </Culture>
 
@@ -5279,9 +5263,7 @@
       <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
     </tournament_team_templates_four_participant>
     <basic_mercenary_troops>
-      <template name="NPCCharacter.eastern_mercenary" />
-      <template name="NPCCharacter.western_mercenary" />
-      <template name="NPCCharacter.sword_sisters_sister_t3" />
+      <template name="NPCCharacter.mistymountainorcs_fighter_merc" />
     </basic_mercenary_troops>
   </Culture>
 

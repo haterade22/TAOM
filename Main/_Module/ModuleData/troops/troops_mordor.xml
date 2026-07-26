@@ -3435,4 +3435,446 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+    <NPCCharacter
+        id="mordor_uruk_grunt_merc"
+        race="uruk"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_merc_mordor_uruk_grunt_name}[Mordor] Hired Black Uruk Grunt"
+        occupation="Mercenary"
+        is_basic_troop="true"
+        culture="Culture.mordor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_uruk_mordor" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="58" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="72" />
+            <skill
+                id="TwoHanded"
+                value="73" />
+            <skill
+                id="Polearm"
+                value="82" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_mordor_shield_small_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_mordor_pauldron_medium_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_captain_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_captain_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_captain_c2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_captain_d1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_captain_d2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_b2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_c2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_d2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a04" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_c2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_medium_d1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_axe_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_heavy_d1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_d1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mordor_set1_axe_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_mordor_helmet_heavy_d1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_mordor_chainmail_medium_d1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_mordor_bracer_medium_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+  <NPCCharacter
+      id="mordor_orc_impaler_merc"
+      race="orc"
+      default_group="Infantry"
+      level="16"
+      name="{=aom_merc_mordor_orc_impaler_name}[Mordor] Hired Orc Impaler"
+      occupation="Mercenary"
+      culture="Culture.mordor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_orc_mordor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="75" />
+      <skill id="OneHanded" value="90" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="90" />
+      <skill id="Throwing" value="35" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a02" />
+        <equipment slot="Item1" id="Item.wm_mordor_set1_sword_a01" />
+        <equipment slot="Head" id="Item.sk_gn_orc_vgd_helmet_med_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="mordor_orc_hunter_merc"
+      race="orc"
+      default_group="Ranged"
+      level="11"
+      name="{=aom_merc_mordor_orc_hunter_name}[Mordor] Hired Orc Hunter"
+      occupation="Mercenary"
+      culture="Culture.mordor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_orc_mordor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="45" />
+      <skill id="OneHanded" value="30" />
+      <skill id="Bow" value="50" />
+      <skill id="Throwing" value="25" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.hunting_bow" />
+        <equipment slot="Item1" id="Item.barbed_arrows" />
+        <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
+        <equipment slot="Head" id="Item.sk_gn_orc_arc_helmet_med_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_c" />
+        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_light_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="mordor_warg_tamer_merc"
+      race="orc"
+      default_group="Infantry"
+      level="1"
+      name="{=aom_merc_mordor_warg_tamer_name}[Mordor] Hired Nurn Warg Tamer"
+      occupation="Mercenary"
+      culture="Culture.mordor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_orc_mordor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="20" />
+      <skill id="Riding" value="0" />
+      <skill id="OneHanded" value="25" />
+      <skill id="Polearm" value="15" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+        <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
 </NPCCharacters>

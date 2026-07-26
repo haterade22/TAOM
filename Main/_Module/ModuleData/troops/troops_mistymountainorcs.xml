@@ -2391,4 +2391,65 @@
       </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+    <NPCCharacter
+        id="mistymountainorcs_fighter_merc"
+        race="orc"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_merc_mistymountainorcs_fighter_name}[Misty Mountains] Hired Orc Raider"
+        occupation="Mercenary"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="125" />
+            <skill
+                id="TwoHanded"
+                value="115" />
+            <skill
+                id="Polearm"
+                value="133" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="55" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+              <equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

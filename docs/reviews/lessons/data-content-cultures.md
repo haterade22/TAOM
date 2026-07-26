@@ -172,6 +172,30 @@ A "verbatim" 1-for-1 port of external mod data inherits the upstream's OWN defec
 
 ---
 
+### A culture block cloned from vanilla ships vanilla CONTENT in every element nobody re-authored
+`taom_spcultures.xml` is ~350 lines per culture, and the authoring effort goes to the elements a new
+culture obviously needs (troops, party templates, notables, names). Elements that are *valid* with
+vanilla values survive the clone untouched: all 14 town-owning cultures shipped
+`<basic_mercenary_troops>` pointing at `eastern_mercenary`/`western_mercenary`/`sword_sisters_sister_t3`
+(`Culture.neutral_culture`), so Minas Morgul's tavern sold "Hired Pike" for the life of the mod.
+Refs that *resolve* are invisible to every validator — `validate_moduledata` checks that
+`NPCCharacter.X` exists, not that X belongs to this world.
+- **Why missed:** no crash, no log line, no validator, and the sibling element right above it
+  (`caravan_guard`) *was* re-authored per culture — which made the tavern look correct on the 30% of
+  daily rerolls that use it, hiding the other 70%. It surfaced only as a player screenshot. The
+  identical-block signature was the tell: 14 byte-identical copies of a per-culture element is a clone
+  artifact, never a decision.
+- **Prevent:** when auditing a cloned data block, **diff the cultures against each other, not against
+  the schema** — any element whose value is identical across every culture AND equal to vanilla's is
+  unfinished until proven deliberate (`git grep -A3 '<element>' | sort | uniq -c`). Second trap in the
+  same file: `RecruitmentCampaignBehavior` does not use the id you name — it **randomly walks
+  `UpgradeTargets` from it** (each tier 1/1.5×), which is why a T2 root surfaced as its T4 upgrade. Any
+  culture element the engine treats as a *root* rather than a *value* needs its whole reachable set
+  audited, not just the named entry.
+- **Source:** [tavern-mercenaries.md](../../features/tavern-mercenaries.md) (player report, 2026-07-26)
+
+---
+
 ### A new custom culture with lords needs child/teen/lord/education equipment templates or new-game NREs
 A new TAOM **custom** culture whose clans have lords MUST have entries in the four equipment-template files vanilla's `EquipmentSelectionModel` + childhood-education search by culture, or `InitialChildGeneration` → `HeroCreator.CreateChild` → `GetEquipmentForInitialChildrenGeneration` returns null from an empty culture-match list and NREs in `EquipmentHelper.AssignHeroEquipmentFromEquipment(hero, null)`. Custom cultures inherit NONE of these for free; only XSLT/vanilla cultures do.
 - **Why missed:** RCA issue #267 (2026-06-02) — the goblin/mistymountainorcs clone produced troops/npcs/equipment-sets/wanderers but missed all four template categories, so every new game crashed creating a goblin lord's child. `validate_moduledata` does NOT model culture→template-flag coverage and no review agent enumerated it. A "missing Armory item" hypothesis was refuted (a missing item yields an empty slot, not a null `Equipment`).

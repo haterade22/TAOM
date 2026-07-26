@@ -3610,4 +3610,282 @@
         </Equipments>
     </NPCCharacter>
 
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+    <NPCCharacter
+        id="urukhai_warrior_merc"
+        race="uruk_hai"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_merc_urukhai_warrior_name}[Isengard] Hired Uruk-Hai Warrior"
+        occupation="Mercenary"
+        culture="Culture.isengard">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_uruk_hai" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="90" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="100" />
+            <skill
+                id="Polearm"
+                value="110" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_1h_sword_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_sword_light_a4" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_b1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a3" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="urukhai_scout_merc"
+        race="uruk_hai"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_merc_urukhai_scout_name}[Isengard] Hired Uruk-Hai Scout"
+        occupation="Mercenary"
+        culture="Culture.isengard">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_uruk_hai" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="95" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="80" />
+            <skill
+                id="TwoHanded"
+                value="60" />
+            <skill
+                id="Polearm"
+                value="60" />
+            <skill
+                id="Bow"
+                value="85" />
+            <skill
+                id="Crossbow"
+                value="35" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_isengard_arrow_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_skir_a2" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_light_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a2" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="orthanc_chosen_merc"
+        race="uruk_hai"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_merc_orthanc_chosen_name}[Isengard] Hired Orthanc Chosen"
+        occupation="Mercenary"
+        is_basic_troop="true"
+        culture="Culture.isengard">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_uruk_hai" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="118" />
+            <skill
+                id="Riding"
+                value="25" />
+            <skill
+                id="OneHanded"
+                value="197" />
+            <skill
+                id="TwoHanded"
+                value="177" />
+            <skill
+                id="Polearm"
+                value="190" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="27" />
+            <skill
+                id="Throwing"
+                value="82" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_a2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_ar2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_berserker_sword" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_isengard_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_uruk_hai_helmet_officer_a4" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_uruk_hai_plate_heavy_a1" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_uruk_hai_greaves_heavy_ar3" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t2"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

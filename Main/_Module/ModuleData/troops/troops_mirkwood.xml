@@ -1471,4 +1471,80 @@
         </Equipments>
     </NPCCharacter>
 
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+    <NPCCharacter
+        id="mirkwood_recruit_merc"
+        race="elf"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_merc_mirkwood_recruit_name}[Mirkwood] Hired Silvan Levy"
+        occupation="Mercenary"
+        is_basic_troop="true"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="185" />
+            <skill
+                id="Riding"
+                value="35" />
+            <skill
+                id="OneHanded"
+                value="310" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="305" />
+            <skill
+                id="Bow"
+                value="80" />
+            <skill
+                id="Crossbow"
+                value="75" />
+            <skill
+                id="Throwing"
+                value="140" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

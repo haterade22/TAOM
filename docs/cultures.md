@@ -35,7 +35,31 @@
   - `<lord_templates>` — special faction leader templates
   - `<rebellion_hero_templates>`
   - `<tournament_team_templates_one/two/four_participant>` — tournament configs
-  - `<basic_mercenary_troops>`
+  - `<basic_mercenary_troops>` — the town tavern's hire pool. **Must list `*_merc` troops of your own
+    culture, never vanilla ids.** See "Tavern mercenaries" below.
+
+### Tavern mercenaries (`<basic_mercenary_troops>`)
+
+`RecruitmentCampaignBehavior.UpdateCurrentMercenaryTroopAndCount` rerolls each town's offer daily: 70%
+of rolls draw a random entry from this list and then **randomly walk its `UpgradeTargets`** (each tier
+deeper weighted 1/1.5×); the other 30% use the culture's `caravan_guard`. Whatever it lands on is sold
+in the backstreet menu and spawned as the walking tavern NPC.
+
+Three rules, pinned by `TAOM.Tests/Features/TroopProgression/TavernMercenaryDataTests.cs`:
+
+1. **Reference `<source>_merc` copies, not line troops.** Copy the culture's rarest recruitment-pool
+   troops (lowest `VolunteerChance` weight in `Main/Features/TroopProgression/RecruitmentPools/`) into
+   dedicated entries with `occupation="Mercenary"` and a `{=aom_merc_<source>_name}[Culture] Hired …`
+   name. Copies keep the source's skills and equipment; the originals stay `Soldier`, so notable
+   recruitment and AI party wages are untouched (occupation drives ×2 recruit cost / ×1.5 wage through
+   `TroopCostService`).
+2. **`occupation="Mercenary"` is mandatory** — the tavern NPC's hire dialogue and AI lord/caravan
+   hiring both gate on Mercenary/CaravanGuard/Gangster.
+3. **No `<upgrade_targets>` on a `_merc` copy** — the engine's upgrade walk would otherwise drift the
+   offer back onto a normal Soldier line troop.
+
+Generator: `python tools/oneoff/generate_tavern_mercenaries.py` (idempotent; add the culture's picks to
+its `PICKS` table).
 
 ### 2. NPC Character File (REQUIRED)
 **File:** Create `Main/_Module/ModuleData/characters/npcs_{culture}.xml` (~900-1,300 lines)

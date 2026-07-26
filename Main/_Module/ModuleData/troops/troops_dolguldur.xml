@@ -4321,4 +4321,201 @@
         </Equipments>
     </NPCCharacter>
 
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+    <NPCCharacter
+        id="dg_orc_scout_merc"
+        race="orc"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_merc_dg_orc_scout_name}[Dol Guldur] Hired Orc Scout"
+        occupation="Mercenary"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="107" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="115" />
+            <skill
+                id="TwoHanded"
+                value="90" />
+            <skill
+                id="Polearm"
+                value="88" />
+            <skill
+                id="Bow"
+                value="125" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_g" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_h" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

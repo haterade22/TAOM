@@ -7864,4 +7864,145 @@
       <equipment slot="HorseHarness" id="Item.gondor_horse_armor_1_pg" />
     </Equipments>
   </NPCCharacter>
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+  <NPCCharacter
+      id="gondor_bel_recruit_merc"
+      default_group="Infantry"
+      level="6"
+      name="{=aom_merc_gondor_bel_recruit_name}[Gondor] Hired Belfalas Recruit"
+      occupation="Mercenary"
+      is_basic_troop="true"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="38" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="38" />
+      <skill id="TwoHanded" value="23" />
+      <skill id="Polearm" value="33" />
+      <skill id="Bow" value="5" />
+      <skill id="Crossbow" value="0" />
+      <skill id="Throwing" value="0" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+        <equipment slot="Item1" id="Item.wm_gondor_spear_b" />
+        <equipment slot="Body" id="Item.sk_gd_bel_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+              <equipment slot="Leg" id="Item.sk_gd_bel_boots_a" />
+</EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="gondor_lam_clansman_merc"
+      default_group="Infantry"
+      level="6"
+      name="{=aom_merc_gondor_lam_clansman_name}[Gondor] Hired Lamedon Clansman"
+      occupation="Mercenary"
+      is_basic_troop="true"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="38" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="38" />
+      <skill id="TwoHanded" value="33" />
+      <skill id="Polearm" value="23" />
+      <skill id="Bow" value="5" />
+      <skill id="Crossbow" value="0" />
+      <skill id="Throwing" value="0" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lamedon_2h_sword_a" />
+        <equipment slot="Head" id="Item.sk_gd_lam_inf_helmet_light_a" />
+        <equipment slot="Body" id="Item.sk_gd_lam_inf_chainmail_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="gondor_loss_lumberman_merc"
+      default_group="Infantry"
+      level="6"
+      name="{=aom_merc_gondor_loss_lumberman_name}[Gondor] Hired Lossarnach Lumberman"
+      occupation="Mercenary"
+      is_basic_troop="true"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="38" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="38" />
+      <skill id="TwoHanded" value="23" />
+      <skill id="Polearm" value="33" />
+      <skill id="Bow" value="5" />
+      <skill id="Crossbow" value="0" />
+      <skill id="Throwing" value="0" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
+        <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+        <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
+        <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+        <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
+        <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+        <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
+        <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+        <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
+        <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+        <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
+        <equipment slot="Body" id="Item.sk_gd_los_inf_chainmail_a" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
 </NPCCharacters>

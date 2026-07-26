@@ -4,6 +4,33 @@
 
 ## 2026-07-26
 
+### fix(cultures): town taverns sold Calradian mercenaries — culture-specific hire pools
+
+Every one of the 14 town-owning cultures shipped vanilla's `<basic_mercenary_troops>` list verbatim
+(`eastern_mercenary` / `western_mercenary` / `sword_sisters_sister_t3`, all `Culture.neutral_culture`),
+so Minas Morgul's backstreets offered "Hired Pike" — `western_mercenary_t4`, reached because
+`RecruitmentCampaignBehavior.UpdateCurrentMercenaryTroopAndCount` randomly walks the drawn troop's
+`UpgradeTargets` after picking a root. The 30% `caravan_guard` branch was already correct per culture,
+which is why the tavern looked right roughly 3 days in 10.
+
+Each culture now hires its own. Added 21 `<source>_merc` troops — dedicated `occupation="Mercenary"`
+copies of that culture's **rarest** recruitment-pool entries (lowest `VolunteerChance` weight in
+`Main/Features/TroopProgression/RecruitmentPools/`), so the tavern sells the specialists notables
+rarely offer: Mordor hires Black Uruk Grunts, Orc Impalers, Orc Hunters and Nurn Warg Tamers;
+Isengard hires Uruk-Hai Warriors, Scouts and Orthanc Chosen; Umbar hires Adûnaim. Copies carry the
+source's skills and equipment, and the copies exist precisely so the **originals stay `Soldier`** —
+occupation drives ×2 recruitment cost and ×1.5 wage through `TroopCostService`, which would otherwise
+have repriced those troops in notable recruitment and in every AI party fielding them. The copies are
+leaves on purpose: an `<upgrade_targets>` entry would let the engine's walk drift the offer back onto
+a normal line troop.
+
+New `TavernMercenaryDataTests` pins all four invariants (TAOM-defined ids, Mercenary occupation, leaf
+copies, sources are their pool's rarest). `VolunteerRecruitmentServiceTests`' reachability guard gained
+a `*_merc` exemption alongside `*_militia_*` and `*_boss` — mercenaries are bought for gold, not
+volunteered. Generator: `tools/oneoff/generate_tavern_mercenaries.py` (idempotent). Save-safe — new ids
+are additive, though an existing save keeps its stored Calradian troop until that town's next reroll.
+The new `{=aom_merc_*_name}` keys ship English-only, matching every other troop name in the mod.
+
 ### fix(armory): every mace head shipped a 0-damage thrust attack — `excluded_item_usage_features` pass
 
 All 20 blade pieces in the Armory's `Mace` weapon description lacked

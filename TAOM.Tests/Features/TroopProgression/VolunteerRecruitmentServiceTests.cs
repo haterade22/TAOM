@@ -2477,7 +2477,9 @@ public class VolunteerRecruitmentServiceTests
     // troop upgrades into it. This test parses the upgrade graph from every troops_*.xml, floods from the
     // union of all pool roots (AllPooledTroopIds), and asserts the ONLY unreachable troops are the
     // intentionally non-recruited ones: settlement militia (*_militia_*), bandit-hideout bosses (*_boss),
-    // and the cave_troll monster (deferred — needs spider-style spawn support before it's safe to recruit).
+    // tavern mercenaries (*_merc — hired for gold through <basic_mercenary_troops>, guarded instead by
+    // TavernMercenaryDataTests), and the cave_troll monster (deferred — needs spider-style spawn support
+    // before it's safe to recruit).
     // A future orphaned line then fails the build here instead of silently becoming unrecruitable in-game.
 
     [TestMethod]
@@ -2557,6 +2559,7 @@ public class VolunteerRecruitmentServiceTests
     private static bool IsIntentionallyUnrecruited(string troopId)
         => troopId.Contains("_militia_")          // settlement militia — spawned, not recruited
            || troopId.EndsWith("_boss")           // bandit-hideout bosses
+           || troopId.EndsWith("_merc")           // tavern mercenaries — hired for gold, not volunteered
            || troopId == "cave_troll";            // non-humanoid monster; deferred pending spider-style spawn support
 
     private static string ResolveTroopsDir()

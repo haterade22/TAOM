@@ -6941,4 +6941,161 @@
         </Equipments>
     </NPCCharacter>
 
+
+    <!-- ===== TAVERN MERCENARIES =====
+         Dedicated Mercenary-occupation copies of this culture's rarest recruitment-pool
+         troops, referenced from <basic_mercenary_troops> in taom_spcultures.xml. Leaves by
+         design: RecruitmentCampaignBehavior walks UpgradeTargets when picking a town's offer.
+         Do NOT add upgrade_targets here. -->
+
+    <NPCCharacter
+        id="erebor_oathsworn_merc"
+        race="dwarf"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_merc_erebor_oathsworn_name}[Erebor] Hired Oathsworn"
+        occupation="Mercenary"
+        is_basic_troop="true"
+        culture="Culture.erebor">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_erebor" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="150" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="280" />
+            <skill
+                id="TwoHanded"
+                value="270" />
+            <skill
+                id="Polearm"
+                value="285" />
+            <skill
+                id="Bow"
+                value="30" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_1h_axe_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_erebor_shield_metal_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_erebor_helmet_plate_legionary_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_erebor_chest_plate_elite_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_erebor_pauldron_plate_elite_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_erebor_bracers_heavy_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_erebor_greaves_heavy_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_erebor_shield_metal_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_erebor_helmet_plate_legionary_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_erebor_pauldron_plate_elite_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_erebor_chest_plate_elite_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_erebor_bracers_heavy_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_erebor_greaves_heavy_d" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_1h_axe_c" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_spear_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_erebor_shield_metal_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_erebor_helmet_plate_legionary_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_erebor_pauldron_plate_elite_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_erebor_chest_plate_elite_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_erebor_bracers_elite_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_erebor_greaves_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dwarf_erebor_1h_axe_d" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_erebor_spear_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.sm_dwarf_erebor_shield_metal_c" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dwarf_erebor_helmet_plate_legionary_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dwarf_erebor_pauldron_plate_elite_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dwarf_erebor_chest_plate_elite_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dwarf_erebor_bracers_elite_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dwarf_erebor_greaves_elite_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="battania_troop_civilian_template_t1"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>
