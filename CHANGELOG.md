@@ -4,6 +4,22 @@
 
 ## 2026-07-25
 
+### feat(mordor): Witch-king throne prop for the Minas Morgul throne room
+
+Converted a Tripo AI-generated throne FBX into the Mordor kit: `sm_mordor_mm_throne_001.fbx`
+(2.5 m, 42.7k tris, `bo_` twin at 1.5k with `stone` physics) + `t_mordor_mm_throne_{d,n,s}` at
+2048² in `AssetSources/Scenes/Mordor/`. The Tripo auto-UV atlas (298 fragmented islands) was
+replaced with an **xatlas-style chart unwrap** — region-growing over face connectivity + small-
+fragment merge, planar projection, texel-density equalisation — landing at **128 islands / 57%
+UV utilisation / 1.4% fold-over** (probe showed Blender's Smart UV Project is unusable on dense
+organic triangulation: 1,485–2,112 islands at 17–24%). All maps rebaked selected-to-active onto
+the new layout from the Tripo originals, plus a fresh geometry AO bake (Tripo ships none);
+Cycles preview render verified before conversion. New scripts `blender_prep_witchking_throne.py`
+(headless, probe modes) + `convert_tripo_prop_textures.py` (single-set d/n/s packer; doubles as
+the Substance Painter round-trip converter — workflow in its docstring). Still owed: Modding Kit
+import (textures → FBX → editor material `t_mordor_mm_throne`), in-editor normal-direction check
+(`--flip-green` re-run if relief reads inverted), scene placement.
+
 ### fix(gondor): defer the new poleaxe — crafted weapons hard-crash on uncompiled meshes
 
 The `wm_gondor_poleaxe_a`/`_b` items crashed new-campaign load (`ItemObject.Deserialize` NRE on the

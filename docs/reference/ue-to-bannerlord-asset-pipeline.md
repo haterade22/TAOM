@@ -63,6 +63,34 @@ Review record: `docs/reviews/rca-asset-pipeline-tools-2026-07-16.md`; Blender go
 - **Fab vault downloads can be partial**: the tent collection shipped texture zips for only 3 of 6
   tent families; re-download missing "additional files" from the product page before converting.
 
+## Single-prop path — Tripo AI assets (2026-07-25, Witch-king throne)
+
+A Tripo-generated FBX (single mesh, embedded `.fbm` JPEG textures: basecolor/normal/roughness/
+metallic, no AO, ~1-unit normalized scale) is a different beast from a UE kit: the batch stages
+above don't apply, but the auto-UV atlas is hundreds of fragmented islands — unpaintable in
+Substance. The path (`tools/oneoff/blender_prep_witchking_throne.py` +
+`convert_tripo_prop_textures.py`):
+
+1. Scale to real-world height, pivot to base centre, kit-rename (`sm_mordor_mm_throne_001`).
+2. **Chart re-UV, not Smart UV Project.** Probed on the throne's 42.7k-tri organic
+   triangulation, `uv.smart_project` produced 1,485–2,112 islands at 17–24% utilization at every
+   angle limit (66–89°) — worse than the Tripo atlas (298 / 53%). The script's xatlas-style
+   charter (BFS region-growing gated on angle to the chart's area-weighted normal, sub-20-face
+   fragments absorbed into the most-shared-boundary neighbour, planar projection, per-chart
+   texel-density equalization, `uv.pack_islands`) landed 128 islands / 57% / 1.4% fold-over at
+   spread 75°. Probe first (`--probe-angles` / `--probe-spreads` report islands + utilization +
+   flipped faces without baking); spread ≥90° halves the island count but fold-over jumps to
+   5.6–10% — bake artifacts.
+3. **Rebake selected-to-active onto the new UVs** (identical geometry, 0.02 cage): EMIT bakes
+   through the source JPEGs for basecolor/rough/metal, tangent NORMAL bake (carries the source
+   normal-map perturbation into the new tangent space), fresh geometry AO (Tripo ships none).
+   Per-bake min/max/mean in DONE.txt catches an all-black pass; a Cycles preview render in the
+   staging dir catches seam garbage before any editor time.
+4. `convert_tripo_prop_textures.py` packs the plain maps into the `t_<stem>_{d,n,s}` triple —
+   and is the **Substance round-trip**: paint on the prepped FBX, export plain PBR PNGs, re-run
+   with `--src <export dir>`. Normal-map relief direction stays smoke-test-arbitrated
+   (`--flip-green`).
+
 ## Current state / open items
 
 Rivendell modular kit + 204 materials + textures: done and imported-ready. Tents: meshes + 10 sets

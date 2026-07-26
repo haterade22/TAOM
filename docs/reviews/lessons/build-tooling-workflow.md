@@ -271,6 +271,12 @@ The BannerBearers plan (2026-07-16) specified adding `<banner_bearer_replacement
 - **Prevent:** treat a mid-implementation deviation from an approved plan as a decision needing the same scrutiny as the plan -- state it explicitly and re-check it against the ADRs before proceeding. Corollary: prefer data over code for anything expressible as data. Data is validated by `validate_moduledata.py` plus a parse smoke test and cannot breach an architecture rule; the equivalent C# can, and did. A build-time test pinning a data invariant beats runtime C# defending it.
 - **Source:** docs/reviews/rca-banner-bearers-2026-07-16.md (finding 4, HIGH).
 
+### Blender's Smart UV Project is the wrong charter for dense organic triangulation — probe UV candidates before spending a bake
+Re-UV'ing the Tripo AI throne (42.7k uniform tris) for Substance paintability, `uv.smart_project` made fragmentation WORSE at every angle limit probed (66–89°: 1,485–2,112 islands at 17–24% UV utilization, vs the source atlas's 298 at 53%) — its per-face normal-bucket clustering shatters bumpy meshes. An xatlas-style charter (BFS region-growing on angle-to-chart-average-normal + sub-20-face fragment absorption into the most-shared-boundary neighbour + planar projection + `pack_islands`) landed 128 islands / 57% / 1.4% fold-over at spread 75°.
+- **Why missed:** smart_project is the reflex "auto-UV" op and its defaults look reasonable; nothing fails loudly — the first full run baked 4 maps onto a 1,993-island layout before the report's island count was compared against the baseline.
+- **Prevent:** measure the unwrap BEFORE committing a bake to it: islands + UV utilization + flipped-face count (fold-over telemetry), compared against the incumbent atlas as a gate. `blender_prep_witchking_throne.py --probe-angles/--probe-spreads` is the pattern — candidates cost seconds, bakes cost minutes each. Push chart spread past 90° only knowing fold-over jumps (5.6–10% probed) into visible bake artifacts.
+- **Source:** Witch-king throne prep session 2026-07-25 (probe JSON in the session DONE.txt records; numbers reproduced in the script docstring).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
