@@ -2,6 +2,39 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-26
+
+### fix(armory): every mace head shipped a 0-damage thrust attack — `excluded_item_usage_features` pass
+
+All 20 blade pieces in the Armory's `Mace` weapon description lacked
+`excluded_item_usage_features="thrust"`, so the composed animation set was
+`onehanded_block_shield_tipdraw_swing_thrust` — a set **with** thrust attacks — while their
+`BladeData` declares only `<Swing>`, leaving `ThrustDamageType = DamageTypes.Invalid` and the factor
+at 0 (`BladeData.cs:39` → `Crafting.cs:135`/`216`). Vanilla tags 30/30 of its own mace heads; TAOM
+tagged 0/20. Affected 19 shipped `<CraftedItem>`s carried by ~60 troop entries across Mordor,
+Isengard, Gundabad, Goblin, Misty Mountain Orcs, Dol Guldur and Rhûn, plus anything smithed from
+those heads. Also removed a vestigial `<Thrust>` (Pierce 1.76) from
+`wm_isengard_berserker_sword_a01_blade`, which already excluded `thrust` — vanilla ships zero blades
+in that contradictory state, and the stat was advertising an attack the animation set cannot perform.
+**Deliberately unchanged for vanilla parity:** the 10 fully-inert exclusions (vanilla ships 17 of its
+own 93 — `mace_head_31`–`39` tag `thrust` while appearing only in `TwoHandedMace`) and the `widegrip`
+spread, which picks a staff-vs-2H-sword animation family rather than a capability. Verified: 21
+pieces changed and nothing else, 681 pieces before and after, byte integrity preserved (no BOM, LF,
+non-ASCII runs identical); swing-only heads missing the exclusion 20 → 0, exclusion-vs-damage
+contradictions 1 → 0, and a **cross-slot union audit** (exclusions are unioned across every piece in
+a weapon, not applied per piece) enumerating 47 reachable combinations → 27 names → 0 unresolvable.
+Save-safe: crafted items recompose from their piece list each load (`ItemObject.cs:469`), ids
+unchanged. Docs: new reference [`docs/reference/item-usage-features.md`](docs/reference/item-usage-features.md)
+(mechanism, token table, the per-family vanilla rule, the union-audit method), the swing-only axe-head
+example in `weapon-creation-workflow.md` now carries a do-not-copy-to-a-mace-head callout,
+`weapon-xml-pipeline.md` documents that the attribute passes through from the manifest but is never
+inferred, RCA [`rca-crafting-usage-features-2026-07-26.md`](docs/reviews/rca-crafting-usage-features-2026-07-26.md),
+lessons appended to `xslt-moduledata.md` + `build-tooling-workflow.md`, and the LESSONS-LEARNED
+per-category counts re-synced (they had drifted 13 low; 242 actual). Lives in the untracked
+`LOTRLOME_Armory` module, so this entry and the RCA are the durable record (data-fix precedent #213).
+Owed: GitHub issue, and an in-game smoke — craft a Gundabad/Mordor mace and confirm the thrust
+attack is gone.
+
 ## 2026-07-25
 
 ### fix(banner-bearers): siege CTD on reinforcement bearer spawn — 1H sidearm invariant + Patch63 guard (#360)

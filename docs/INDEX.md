@@ -65,6 +65,7 @@
 - [multi-culture-armor-revamp](features/multi-culture-armor-revamp.md) — Mordor/Isengard/Dol Guldur/Erebor/Rhun armor pass (issue #211)
 - [weapon-xml-pipeline](features/weapon-xml-pipeline.md) — weapon XML generation + rebalancing (automated)
 - [weapon-creation-workflow](ai-includes/weapon-creation-workflow.md) — manual Step A–Z guide: FBX → tpac → 4 XML files → validate → in-game (bows/shields = no decimals)
+- [item-usage-features](reference/item-usage-features.md) — how `excluded_item_usage_features` picks a crafted weapon's animation set: full token table, the swing-only-head rule (maces need `thrust` excluded, axes don't), the reachable-union audit method
 - [dale](features/dale.md) — Dale culture authoring (armor, troops, Lake-Town recruitment override) — proof-of-life for full-culture authoring
 - [tournament-armor-assignment](features/tournament-armor-assignment.md) — per-participant culture armor in TaomTournamentModel
 - [starting-equipment-tuning](features/starting-equipment-tuning.md) — keep CC starter gear cheap to resell: how item value actually works (`DefaultItemValueModel` exponential `2.75^tier` + explicit `value=` override), the per-culture `starter_*` clone-with-low-stats pattern (5/7/9 anchors), the generator + roster-wirer tools

@@ -127,6 +127,16 @@ The pipeline auto-derives:
 - `body_name="bo_wm_swan_knight_sword_c_blade"` for blades (auto-prefixed `bo_`) unless explicitly given
 - Localization keys: `{=aom_swan_knight_sword_c_blade_name}` etc., based on the weapon's name key
 
+**Unrecognised piece attributes pass through verbatim.** Any attribute on `<Blade>` / `<Guard>` /
+`<Hilt>` / `<Pommel>` that isn't consumed as blade data (`body_name`, `holster_mesh`, `stack_amount`,
+`physics_material`) lands on the emitted `<CraftingPiece>` open tag — `manifest.py:176-186` collects it
+into `PieceSpec.attrs`, `render_pieces.py:58-61` writes it out. So a swing-only mace head declares
+`<Blade length="72" weight="1.2" excluded_item_usage_features="thrust">` in the manifest and needs no
+generator change. **That attribute is mandatory for a swing-only head in a description carrying a
+`thrust` token** (`Mace`, all four sword descriptions) — see
+[item-usage-features.md](../reference/item-usage-features.md). The generator does not infer it from
+the presence or absence of `<Thrust>`, and nothing downstream validates it.
+
 ### Single-piece weapon (bow, javelin, throwing)
 
 ```xml

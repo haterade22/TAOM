@@ -148,6 +148,14 @@ Append one `<CraftingPiece>` per mesh, before the closing `</CraftingPieces>`. S
 </CraftingPiece>
 ```
 
+> **The axe head above omits `excluded_item_usage_features` on purpose — do not copy that to a mace
+> head.** Axe descriptions (`onehanded:shield:axe`, `twohanded:widegrip:axe`) carry no `thrust` token,
+> so there is nothing to remove. `Mace` is `onehanded:block:shield:tipdraw:swing:thrust`, so a
+> swing-only mace head MUST carry `excluded_item_usage_features="thrust"` or the crafted weapon gets a
+> thrust attack with zero thrust damage. The description decides this, not the weapon's name — TAOM
+> shipped 20 such heads (several named "Orc Axe", all authored into `Mace`) before this was caught.
+> Rules + token table: [item-usage-features.md](../reference/item-usage-features.md).
+
 **Spear / thrust-only polearm head** (`wood_weapon`, `excluded_item_usage_features="swing"`):
 ```xml
 <CraftingPiece id="wm_dale_ws_spear_a01_blade" ... piece_type="Blade" length="48.81" weight="0.8"
@@ -162,6 +170,11 @@ Append one `<CraftingPiece>` per mesh, before the closing `</CraftingPieces>`. S
 ```
 (A halberd head that both cuts and thrusts keeps **both** `<Thrust>` and `<Swing>` and **omits**
 `excluded_item_usage_features`.)
+
+**The rule in one line:** exclude the attack the head has no damage element for, but only when the
+weapon description carries that token. Never declare damage you then exclude — vanilla ships zero
+blades with a `<Thrust>` element and `excluded_item_usage_features="thrust"`, because the item card
+would advertise a stat the animation set cannot deliver.
 
 **Guard / Handle / Pommel** (no `body_name`; guard carries the armor bonus):
 ```xml
@@ -187,7 +200,7 @@ Append one `<CraftingPiece>` per mesh, before the closing `</CraftingPieces>`. S
 | `mesh` | exact tpac mesh name (Step C). Convention: `mesh` == `id`. |
 | `body_name` | `bo_` + mesh (blades only). |
 | `physics_material` | `metal_weapon` or `wood_weapon`. |
-| `excluded_item_usage_features` | `swing` to make a head thrust-only (spears). |
+| `excluded_item_usage_features` | Removes tokens from the composed animation-set name (`:`-separated, unioned across all pieces in the weapon). `swing` on a thrust-only head (spears); `thrust` on a swing-only head **whose description carries a `thrust` token** (maces — not axes). Full mechanism + token table: [item-usage-features.md](../reference/item-usage-features.md). |
 | `damage_type` | `Pierce` \| `Cut` \| `Blunt`. `damage_factor` ≈ 2.0–3.5 for tier 2–4. |
 | `armor_bonus` (Guard) | small bonus, e.g. 4–5. |
 | `<Material id>` | `Iron2`–`Iron6`, `Wood`. |
