@@ -4,6 +4,60 @@
 
 ## 2026-07-26
 
+### feat(ui): game-menu hyperlinks coloured by faction (Patch64) (#362)
+
+Entering a town, the settlement, its lord and its kingdom rendered in vanilla's link colours —
+`#aa7449` tan, `#76A5B5` pale blue, `#878CAB` grey-blue — chosen for Bannerlord's dark menu panel.
+Against TAOM's parchment they scored under 3:1 and read as washed-out noise, and every settlement
+looked the same regardless of who held it.
+
+Links are now coloured by the culture of the object they point at: 20 cultures, each with a
+hand-authored style in `GameMenu.InfoText`. Minas Morgul reads oxblood; after Gondor takes it the
+place name stays Mordor-coloured while the new governor and his realm read steel-blue.
+
+The colour could not come from data alone. `HyperlinkTexts` hardcodes one style name per link
+*type*, and the rich-text parser accepts only a named style — there is no inline colour attribute
+(`RichText.cs:486-516`), so `CultureObject.Color` cannot be read at runtime and injected. Patch64
+therefore rewrites the style name in a prefix on `GameMenuVM.set_ContextText`, resolving each
+link's href back through `MBObjectManager` the way `EncyclopediaManager.GoToLink` does. The seam
+matters: `GetMenuText` returns the same cached `TextObject` reference every call and
+`IsMenuTextChanged` compares by reference every frame, so a postfix there would rebuild the menu
+text at frame rate. Patching `HyperlinkTexts` itself was rejected as process-global —
+`GetStyleOrDefault` falls back silently, so a leaked style name would turn every hyperlink in the
+game into plain body text with nothing in the log.
+
+Palette colours are pinned to relative luminance 0.035–0.10: dark enough to read on the parchment,
+light enough to stay distinct from the black body text. Hover and press darken rather than
+brighten, the opposite of vanilla's convention, because the background is light. The coverage test
+recomputes luminance from the shipped XML and fails the build on an out-of-window colour, and also
+pins every emittable style name to the brush file so the two cannot drift.
+
+Bandit cultures, other mods' cultures, unresolvable objects and the faction-less link types
+(concept, unit, ship, generic) keep their vanilla style names — those styles are separately
+retinted for the parchment in the same brush, so nothing falls back to unreadable.
+
+Guard for the one hazard no offline test can see: a module later in load order replaces
+`GUI/Brushes/GameMenu.xml` wholesale (`ResourceDepot` keys by path, last wins), and
+`Modules/DOTS/GUI/Brushes/GameMenu.xml` is byte-identical to TAOM's. Before emitting a style the
+rewriter asks the live brush whether it exists, falls back to vanilla if not, and logs once naming
+the cause. TAOM must load after DOTS.
+
+Deep-review found two real defects before commit, both fixed. The rewriter memoised its last
+(input, output) pair, but the key was the menu **string** while the answer depends on the linked
+objects' **culture** — identical text before and after a culture conversion, or across a load of a
+different save, would have returned a stale colour silently. The memo was deleted rather than
+invalidated: it guarded a path that runs once per menu open. Separately, the 21 retinted vanilla
+`Link.*` fallback styles kept vanilla's dark `#111111FF` glow, because a style redefining an
+*inherited* name does not regain the brush `Default` — `Style.FillFrom` assigns through property
+setters that latch the changed-flag at clone time. Every style now states its glow explicitly, and
+a test enforces it.
+
+Suite 4462 green (+32). Docs: `docs/features/menu-link-colors.md`, Patch64 registry entry,
+RCA `docs/reviews/rca-menu-link-colors-2026-07-26.md`.
+
+Not-tested: brush rendering, hover/press states, and that the shipped brush file is the one
+GauntletUI actually loaded — all require the running game.
+
 ### fix(cultures): town taverns sold Calradian mercenaries — culture-specific hire pools
 
 Every one of the 14 town-owning cultures shipped vanilla's `<basic_mercenary_troops>` list verbatim

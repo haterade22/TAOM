@@ -84,6 +84,12 @@ A ViewModel string property that displays config text carrying `{=key}Fallback` 
 
 ---
 
+### A GauntletUI style that redefines an INHERITED name does not regain the brush Default
+In a `BaseBrush` chain, `BrushFactory.cs:560` assigns `style.DefaultStyle = brush.DefaultStyle`, which reads like every style falls back to the brush `Default` for unset attributes. That only holds for style names the base brush did **not** already define. For inherited names, `Style.FillFrom` (`Style.cs:564`) assigns through the property setters, each of which latches `_isXChanged = true` — so the base value is baked in before your redefinition is parsed and `DefaultStyle` is never consulted again. TAOM's retinted `Link.*` fallback styles silently kept vanilla's `TextGlowColor="#111111FF"` dark halo on a pale parchment.
+- **Why missed:** the fallback claim was verified for the *new* style names and then generalised to the *redefined* ones. It was literally true for 60 of 81 styles — and the 21 exceptions were exactly the group the change existed to fix.
+- **Prevent:** when overriding an inherited style, state **every** attribute you depend on, even ones you expect to inherit; never mix "rely on the fallback" and "override explicitly" in one block. Pin it with a test asserting the attribute is present in the shipped XML.
+- **Source:** MenuLinkColors deep review 2026-07-26 (MEDIUM). RCA: `docs/reviews/rca-menu-link-colors-2026-07-26.md`
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

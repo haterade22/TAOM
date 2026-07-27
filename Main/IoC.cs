@@ -59,6 +59,7 @@ using TAOM.Features.MissionDiagnostic;
 using TAOM.Features.CrashReport;
 using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.SettlementNameplateFade;
+using TAOM.Features.MenuLinkColors;
 
 namespace TAOM;
 
@@ -138,6 +139,7 @@ public static class IoC
         Features.SaveLoadDiagnostics.SaveLoadDiagnosticsIoC.RegisterSaveLoadDiagnosticsFeature(container);
         Features.BlowDiagnostics.BlowDiagnosticsIoC.RegisterBlowDiagnosticsFeature(container);
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
+        MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
 
         _container = container;

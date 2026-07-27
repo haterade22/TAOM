@@ -167,6 +167,12 @@ Folding a master toggle inside the SERVICE is not the same as restoring vanilla.
 
 ---
 
+### A cache key must capture everything the cached answer depends on
+A memo keyed on a service method's *input* is only correct if that input determines the output. `MenuLinkStyleRewriter` cached (menu text -> rewritten text), but the rewrite depends on the linked objects' **culture**, reachable only through the lookup the cache exists to skip. Menu text is byte-identical before and after a culture conversion, and across a load of a different save — so the cache could return a stale faction colour with nothing to indicate it.
+- **Why missed:** the key was chosen because it is what the function receives, not because it is what the answer depends on. The test asserted the cache *hit* (`ResolvesLookupOnlyOnce`), which pinned the defect as intended behaviour — a test written from the mechanism can only confirm the mechanism runs.
+- **Prevent:** before adding a cache, write down what the output depends on and confirm the key covers all of it. A dependency outside the key needs an invalidation signal; with no cheap signal, do not cache. Then ask what the cache actually saves — if the guarded path runs once per UI interaction, delete it rather than fixing it. Any regression test must vary a *dependency* while holding the *key* constant.
+- **Source:** MenuLinkColors deep review 2026-07-26 (HIGH). RCA: `docs/reviews/rca-menu-link-colors-2026-07-26.md`
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

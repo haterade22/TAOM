@@ -184,6 +184,168 @@
 		</Layers>
 		<Styles>
 			<Style Name="Default" FontColor="#000000FF" FontSize="22" TextBlur="0" TextGlowColor="#00000000" TextGlowRadius="0" TextOutlineAmount="0" TextOutlineColor="#00000000" />
+
+			<!-- ================================================================================
+			     TAOM per-faction hyperlink palette (feature: MenuLinkColors, Patch64).
+
+			     The engine hardcodes one style name per LINK TYPE (Link.Settlement, Link.Hero,
+			     Link.Kingdom, Link.Clan) in TaleWorlds.Core.HyperlinkTexts, and the rich-text
+			     parser accepts only a NAMED style — there is no inline colour attribute. So
+			     colouring by faction is done by rewriting the style name at the game-menu seam:
+			     MenuLinkStyleRewriter resolves the link's href back to a game object, reads its
+			     culture, and emits "Link.Taom.<cultureId>". These names are used ONLY there, so
+			     they cannot reach the encyclopedia, quest log or tooltips.
+
+			     Colours are pinned to relative luminance 0.035 <= L <= 0.10:
+			       upper bound -> stays legible against the pale parchment background
+			       lower bound -> stays distinguishable from the BLACK body text above, so a link
+			                      still reads as a link
+			     MenuLinkBrushCoverageTests re-derives both bounds from this file — retune freely,
+			     the test is the gate.
+
+			     Hover and press DARKEN (TextColorFactor < 1). Vanilla's Link.* styles brighten
+			     (TextColorFactor 1.5) because the vanilla panel is dark; on parchment brightening
+			     washes the text out. Do not copy the vanilla convention here.
+
+			     Every style states its glow/blur/outline explicitly rather than relying on the
+			     brush Default. Do NOT "simplify" that away: inheritance differs between the two
+			     groups below. A style name NOT already on the inherited Info.Text brush becomes a
+			     fresh Style whose unset attributes do fall back to this brush's Default — but a
+			     name that IS inherited was cloned by Style.FillFrom, which assigns through the
+			     property setters and latches _isTextGlowColorChanged=true. Vanilla sets
+			     TextGlowColor="#111111FF" on every Info.Text Link style, so the retinted fallback
+			     group below silently keeps a dark halo unless it restates the value.
+
+			     Adding a culture: add three lines here AND one id to
+			     TaomCultureLinkStyles.Supported. The coverage test fails if the two drift apart.
+			     ================================================================================ -->
+
+			<!-- Free peoples -->
+			<Style Name="Link.Taom.gondor" FontColor="#243B66FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.gondor.MouseOver" FontColor="#243B66FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.gondor.MouseDown" FontColor="#243B66FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.rivendell" FontColor="#3B2A6BFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.rivendell.MouseOver" FontColor="#3B2A6BFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.rivendell.MouseDown" FontColor="#3B2A6BFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.lothlorien" FontColor="#5C5518FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.lothlorien.MouseOver" FontColor="#5C5518FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.lothlorien.MouseDown" FontColor="#5C5518FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.mirkwood" FontColor="#1F4A2EFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.mirkwood.MouseOver" FontColor="#1F4A2EFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.mirkwood.MouseDown" FontColor="#1F4A2EFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.erebor" FontColor="#6B3410FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.erebor.MouseOver" FontColor="#6B3410FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.erebor.MouseDown" FontColor="#6B3410FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<!-- vlandia = Rohirrim -->
+			<Style Name="Link.Taom.vlandia" FontColor="#3D5216FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.vlandia.MouseOver" FontColor="#3D5216FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.vlandia.MouseDown" FontColor="#3D5216FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<!-- sturgia = Barding (Dale) -->
+			<Style Name="Link.Taom.sturgia" FontColor="#0F4A55FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.sturgia.MouseOver" FontColor="#0F4A55FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.sturgia.MouseDown" FontColor="#0F4A55FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<!-- empire = Dunlendings -->
+			<Style Name="Link.Taom.empire" FontColor="#5A3E1EFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.empire.MouseOver" FontColor="#5A3E1EFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.empire.MouseDown" FontColor="#5A3E1EFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<!-- battania = Variag -->
+			<Style Name="Link.Taom.battania" FontColor="#6B2626FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.battania.MouseOver" FontColor="#6B2626FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.battania.MouseDown" FontColor="#6B2626FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<!-- Men of the East and South -->
+			<!-- khuzait = Easterlings -->
+			<Style Name="Link.Taom.khuzait" FontColor="#6B4A0EFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.khuzait.MouseOver" FontColor="#6B4A0EFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.khuzait.MouseDown" FontColor="#6B4A0EFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<!-- aserai = Haradrim -->
+			<Style Name="Link.Taom.aserai" FontColor="#8A3B08FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.aserai.MouseOver" FontColor="#8A3B08FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.aserai.MouseDown" FontColor="#8A3B08FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.abanissa" FontColor="#1E3560FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.abanissa.MouseOver" FontColor="#1E3560FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.abanissa.MouseDown" FontColor="#1E3560FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.shaghana" FontColor="#7A4A12FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.shaghana.MouseOver" FontColor="#7A4A12FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.shaghana.MouseDown" FontColor="#7A4A12FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.umbar" FontColor="#6B2044FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.umbar.MouseOver" FontColor="#6B2044FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.umbar.MouseDown" FontColor="#6B2044FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<!-- Sauron's dominion -->
+			<Style Name="Link.Taom.mordor" FontColor="#7A1010FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.mordor.MouseOver" FontColor="#7A1010FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.mordor.MouseDown" FontColor="#7A1010FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.isengard" FontColor="#3B4650FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.isengard.MouseOver" FontColor="#3B4650FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.isengard.MouseDown" FontColor="#3B4650FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.gundabad" FontColor="#4A423CFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.gundabad.MouseOver" FontColor="#4A423CFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.gundabad.MouseDown" FontColor="#4A423CFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.dolguldur" FontColor="#46295EFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.dolguldur.MouseOver" FontColor="#46295EFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.dolguldur.MouseDown" FontColor="#46295EFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.goblin" FontColor="#2E4322FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.goblin.MouseOver" FontColor="#2E4322FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.goblin.MouseDown" FontColor="#2E4322FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Taom.mistymountainorcs" FontColor="#3F3A33FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.mistymountainorcs.MouseOver" FontColor="#3F3A33FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Taom.mistymountainorcs.MouseDown" FontColor="#3F3A33FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<!-- ================================================================================
+			     Fallback link styles. These names already exist on the inherited Info.Text brush,
+			     so BrushFactory patches them in place rather than appending. They cover every link
+			     the rewriter deliberately leaves alone: bandit cultures, other mods' cultures,
+			     unresolvable objects, and the faction-less link types (concept, unit, generic).
+
+			     Vanilla's values (#aa7449, #76A5B5, #878CAB) were tuned for a DARK panel and score
+			     under 3:1 against this parchment. Retinting them here keeps the link-type
+			     distinction while making the fallback legible.
+			     ================================================================================ -->
+			<Style Name="Link" FontColor="#46331FFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.MouseOver" FontColor="#46331FFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.MouseDown" FontColor="#46331FFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Settlement" FontColor="#6B4A22FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Settlement.MouseOver" FontColor="#6B4A22FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Settlement.MouseDown" FontColor="#6B4A22FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Hero" FontColor="#234A63FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Hero.MouseOver" FontColor="#234A63FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Hero.MouseDown" FontColor="#234A63FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Kingdom" FontColor="#3F3A5EFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Kingdom.MouseOver" FontColor="#3F3A5EFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Kingdom.MouseDown" FontColor="#3F3A5EFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Clan" FontColor="#503A2EFF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Clan.MouseOver" FontColor="#503A2EFF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Clan.MouseDown" FontColor="#503A2EFF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Concept" FontColor="#1F4A55FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Concept.MouseOver" FontColor="#1F4A55FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Concept.MouseDown" FontColor="#1F4A55FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+
+			<Style Name="Link.Unit" FontColor="#6B2626FF" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Unit.MouseOver" FontColor="#6B2626FF" TextColorFactor="0.72" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
+			<Style Name="Link.Unit.MouseDown" FontColor="#6B2626FF" TextColorFactor="0.52" TextGlowColor="#00000000" TextGlowRadius="0" TextBlur="0" TextOutlineAmount="0" />
 		</Styles>
 	</Brush>
 

@@ -110,6 +110,7 @@
 - [main-menu-customizer](features/main-menu-customizer.md) — hide Campaign, rename Sandbox → "Enter The Age Of Men"
 - [lotr-issues](features/lotr-issues.md) — **IMPLEMENTED** (2026-06-20) — all 43 vanilla procedural issues suppressed + replaced by 43 LOTR issues via XML-config + 3 generic templates (DeliverGoods/DeliverPersonnel/Combat); `RemoveBehaviors<T>` suppression + SaveableTypeDefiner (base 726900801); per-issue disposition matrix retained for provenance
 - [encyclopedia](features/encyclopedia.md) — encyclopedia screen extensions, dispatch entry points
+- [menu-link-colors](features/menu-link-colors.md) — game-menu hyperlinks recoloured by the linked object's culture (Patch64); 20 `Link.Taom.*` styles in `GameMenu.InfoText`, parchment contrast window pinned by test
 - [quick-actions](features/quick-actions.md) — inventory "Sell All" multi-action menu (Patch34)
 - [fief-management](features/fief-management.md) — custom GameState for fief management
 - [arena](features/arena.md) — TaomTournamentModel with culture armor + prize pools

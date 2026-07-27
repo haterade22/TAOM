@@ -852,6 +852,9 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch24_BannerDriftGuard");
         _harmony.PatchCategory("Patch39_BanditPartySize");
         _harmony.PatchCategory("Patch40_HideoutDescription");
+        // Patch64 — retints game-menu hyperlinks by faction. GameMenuVM is constructed when the
+        // map/menu state opens, well after initialization, so the standard batch is early enough.
+        _harmony.PatchCategory("Patch64_MenuLinkColors");
         _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
         // Patch47 RE-ENABLED 2026-06-12 after full exoneration: its 06-12 morning indictment
         // ("post-sever tick AV") was actually the CanAttack charge crash at set_attack_entity
