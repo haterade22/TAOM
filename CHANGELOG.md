@@ -4,6 +4,53 @@
 
 ## 2026-07-27
 
+### fix(recruitment): every Gondor troop was already reachable — but one pool summed to 120%, and nothing checked
+
+Audited `troops_gondor.xml` against the volunteer service to confirm every troop is obtainable in some
+region, counting upgrade paths. **It is.** All **189** Gondor troops resolve: 181 reachable from a
+`gondor.json` pool root through the upgrade closure, 8 intentionally excluded (4 settlement militia, 1
+hideout boss, 3 tavern `*_merc`, matching `IsIntentionallyUnrecruited`). Zero orphans globally and zero
+in each of the 26 regional id-prefixes. All 25 `is_basic_troop` Soldier roots are pooled, and all **93**
+live `TAOM_Map` EW settlements are covered exactly once with no dead keys. Engine check: `MaxVolunteerTier
+=> 6` does *not* clamp `GetBasicVolunteer` — per `RecruitmentCampaignBehavior:228,241` it only gates the
+in-slot upgrade drift — so the level-51 Ithilien Ranger four pools list really does appear.
+
+The audit turned up three defects behind that clean result.
+
+**One group in 24 summed to 120%.** "Bar Melui" carried four Lossarnach regulars at 25 plus a 20% noble.
+`PickWeighted` normalises cumulatively, so it never crashed — it just quietly delivered 20.8%/16.7%
+instead of the design. **Rebalanced the whole culture rather than patching the one group:** the noble /
+settlement-specific line now takes 20% and the regular line 80%, replacing the retired 60/40 split, across
+**15 of the 24 groups** (the 9 single-line groups are untouched). The three Anórien capitals run 70/20/10,
+the Ithilien Ranger holding its 10%. Dol Amroth was standardised rather than exempted — it inverted the
+rule at 90/10, so **Swan Knights go from the dominant roll at `town_EW5` to a 1-in-5 chance**, the largest
+gameplay change here. No troop id or settlement key was added or removed, so reachability is untouched.
+
+**Nothing validated troop ids inside `gondor.json`.** The existing typo test reads only the C# maps — in the
+test bin `AllPooledTroopIds()` never contains a JSON id — and the reachability guard drops unknown ids
+through an `if (nodes.Contains(...))` filter. A misspelled id therefore passed every check while resolving
+to null in-game and silently voiding its weight share: exactly
+`rca-rhun-gondor-recruitment-2026-05-23.md` (`wain_cavalry` vs `wainrider_cavalry`), whose "add a
+script-level check" follow-up was never built. Two tests now close it — one collecting JSON ids
+**unfiltered**, one asserting every group totals 100 and no settlement is listed twice. Both were verified
+by injecting the failure: the typo gate named `gondor_lam_swordsman`, the totals gate named all four Bar
+Melui settlements at 120%.
+
+**The C# fallback had drifted from the JSON it shadows.** `gondor.json` overwrites `SettlementMap` at
+runtime, so `VolunteerRecruitmentService.Gondor.cs` is live only in degraded mode — and in the tests, which
+means the suite was asserting behaviour the game never exhibits. The C#-only path stranded the entire
+7-troop Ithil Guard line and pooled three ids (`anf_guardsman`, `mt_fountain_guard`, `ser_pikeman`) the JSON
+never offered, while `castle_EW10` handed out Harondor troops where the JSON says Belfalas. All 27
+towns/castles now mirror the JSON as smallest-integer ratios, plus the `town_ES2` Ithil Guard conditional.
+A drift test compares normalised shares per settlement so the two can't silently separate again; it was
+likewise proven by perturbing a weight. Villages stay unmirrored by design and inherit through
+`BoundSettlementId`.
+
+Suite green at **4482** passed / 0 failed.
+
+Save-compat: weights only — no troop ids added, removed, or renamed.
+Not-tested: in-game volunteer distribution (needs a new campaign; volunteer slots are `[SaveableProperty]`).
+
 ### chore(logging): a 4-hour session wrote 6.4 MB — cut it to ~1.2 MB, and fixed two bugs it was hiding
 
 A crash-free 4h12m session produced a **47,365-line** `taom_debug_*.log`. The per-tick tracing added

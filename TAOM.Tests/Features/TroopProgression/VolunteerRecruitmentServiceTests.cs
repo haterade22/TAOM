@@ -177,8 +177,9 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        // town_EW5 = Dol Amroth, regular troop is now Dol Amroth noble (was Belfalas recruit before geography pass)
-        Assert.AreEqual("gondor_da_noble", result);
+        // town_EW5 = Dol Amroth. Under the 80/20 standard the Belfalas regular line leads the pool and
+        // the Swan Knights are the 20% specific share, so roll 0 lands on bel_recruit.
+        Assert.AreEqual("gondor_bel_recruit", result);
     }
 
     [TestMethod]
@@ -193,8 +194,8 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        // town_EW5 (Dol Amroth → da_noble) must win over the clan_empire_west_1 pool
-        Assert.AreEqual("gondor_da_noble", result);
+        // town_EW5 (Dol Amroth → bel_recruit at roll 0) must win over the clan_empire_west_1 pool
+        Assert.AreEqual("gondor_bel_recruit", result);
     }
 
     // --- Bound settlement fallback (villages) ---
@@ -211,8 +212,8 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        // town_EW5 = Dol Amroth → da_noble at roll 0
-        Assert.AreEqual("gondor_da_noble", result);
+        // town_EW5 = Dol Amroth → bel_recruit at roll 0
+        Assert.AreEqual("gondor_bel_recruit", result);
     }
 
     [TestMethod]
@@ -269,16 +270,22 @@ public class VolunteerRecruitmentServiceTests
     // --- Weighted random selection ---
 
     [TestMethod]
-    // town_EW1 (Minas Tirith): peasant(6) + ranger(1) + fountain_guard(1) + trainee(2) = total 10
-    [DataRow(0, "gondor_ano_peasant")]       // peasant covers rolls 0..5
-    [DataRow(5, "gondor_ano_peasant")]
-    [DataRow(6, "gondor_ithilien_ranger")]   // ranger at roll 6
-    [DataRow(7, "gondor_mt_fountain_guard")] // fountain_guard at roll 7
-    [DataRow(8, "gondor_mt_trainee")]        // trainee covers rolls 8..9
-    [DataRow(9, "gondor_mt_trainee")]
+    // town_EW1 (Minas Tirith), mirroring gondor.json: five Anorien troops at 7 (70%), mt_trainee +
+    // mt_veteran at 5 (20%), ithilien_ranger at 5 (10%) = total 50.
+    // Cumulative: peasant 0-6, archer_militia 7-13, militia 14-20, footman 21-27, skirmisher 28-34,
+    // mt_trainee 35-39, mt_veteran 40-44, ranger 45-49.
+    [DataRow(0,  "gondor_ano_peasant")]
+    [DataRow(6,  "gondor_ano_peasant")]
+    [DataRow(7,  "gondor_ano_archer_militia")]
+    [DataRow(34, "gondor_ano_skirmisher")]
+    [DataRow(35, "gondor_mt_trainee")]
+    [DataRow(39, "gondor_mt_trainee")]
+    [DataRow(40, "gondor_mt_veteran")]
+    [DataRow(45, "gondor_ithilien_ranger")]
+    [DataRow(49, "gondor_ithilien_ranger")]
     public void GetVolunteerTroopId_MinasTirith_BoundaryRolls_ReturnExpectedTroop(int roll, string expectedTroopId)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(50).Returns(roll);
         var context = new VolunteerContext(
             settlementId: "town_EW1",
             boundSettlementId: null,
@@ -318,20 +325,22 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // castle_EW15 / castle_EW16 (Amonost / Erethir, both owned by clan_empire_west_10 / Methir):
-    // har_conscript(7) + met_noble(3) — total 10
+    // castle_EW15 / castle_EW16 (Amonost / Erethir) sit in gondor.json's "Hýarthulionath holdings except
+    // Methir: Harondor only" group — the Methir noble line is authored for town_EW11 alone, not for these
+    // castles. The hand-written pools used to hand them har_conscript(7) + met_noble(3), which the live
+    // JSON overrode; they now mirror it: the four Harondor troops at equal weight, total 4.
     [DataRow("castle_EW15", 0, "gondor_har_conscript")]
-    [DataRow("castle_EW15", 6, "gondor_har_conscript")]
-    [DataRow("castle_EW15", 7, "gondor_met_noble")]
-    [DataRow("castle_EW15", 9, "gondor_met_noble")]
+    [DataRow("castle_EW15", 1, "gondor_har_militia")]
+    [DataRow("castle_EW15", 2, "gondor_har_footman")]
+    [DataRow("castle_EW15", 3, "gondor_har_skirmisher")]
     [DataRow("castle_EW16", 0, "gondor_har_conscript")]
-    [DataRow("castle_EW16", 6, "gondor_har_conscript")]
-    [DataRow("castle_EW16", 7, "gondor_met_noble")]
-    [DataRow("castle_EW16", 9, "gondor_met_noble")]
-    public void GetVolunteerTroopId_MethirClanCastles_BoundaryRolls_ReturnExpectedTroop(
+    [DataRow("castle_EW16", 1, "gondor_har_militia")]
+    [DataRow("castle_EW16", 2, "gondor_har_footman")]
+    [DataRow("castle_EW16", 3, "gondor_har_skirmisher")]
+    public void GetVolunteerTroopId_HyarthulionathCastles_BoundaryRolls_ReturnExpectedTroop(
         string settlementId, int roll, string expectedTroopId)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(4).Returns(roll);
         var context = new VolunteerContext(
             settlementId: settlementId,
             boundSettlementId: null,
@@ -366,23 +375,25 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // town_EW2 / town_EW3 (West / East Osgiliath): osg_veteran(6) + ano_peasant(4) — total 10.
-    // NOTE: this exercises the HAND-WRITTEN FALLBACK pool (the JSON file isn't on the test bin path,
-    // so the loader returns early). The live JSON pool DOES include gondor_ithilien_ranger at 10% —
-    // see GondorJsonLoader_ProductionJson_PlacesIthilienRangerAtTenPercent. The AreNotEqual below is a
-    // true statement about the fallback pool only, not the live game.
-    [DataRow("town_EW2", 0, "gondor_osg_veteran")]
-    [DataRow("town_EW2", 5, "gondor_osg_veteran")]
-    [DataRow("town_EW2", 6, "gondor_ano_peasant")]
-    [DataRow("town_EW2", 9, "gondor_ano_peasant")]
-    [DataRow("town_EW3", 0, "gondor_osg_veteran")]
-    [DataRow("town_EW3", 5, "gondor_osg_veteran")]
-    [DataRow("town_EW3", 6, "gondor_ano_peasant")]
-    [DataRow("town_EW3", 9, "gondor_ano_peasant")]
+    // town_EW2 / town_EW3 (West / East Osgiliath), mirroring gondor.json: five Anorien troops at 7
+    // (70%), osg_veteran + osg_skirmisher at 5 (20%), ithilien_ranger at 5 (10%) = total 50.
+    // Cumulative: peasant 0-6, archer_militia 7-13, militia 14-20, footman 21-27, skirmisher 28-34,
+    // osg_veteran 35-39, osg_skirmisher 40-44, ranger 45-49. The hand-written pool used to omit the
+    // ranger entirely while the live JSON offered it at 10%; both layers now carry it.
+    [DataRow("town_EW2", 0,  "gondor_ano_peasant")]
+    [DataRow("town_EW2", 34, "gondor_ano_skirmisher")]
+    [DataRow("town_EW2", 35, "gondor_osg_veteran")]
+    [DataRow("town_EW2", 40, "gondor_osg_skirmisher")]
+    [DataRow("town_EW2", 45, "gondor_ithilien_ranger")]
+    [DataRow("town_EW3", 0,  "gondor_ano_peasant")]
+    [DataRow("town_EW3", 34, "gondor_ano_skirmisher")]
+    [DataRow("town_EW3", 35, "gondor_osg_veteran")]
+    [DataRow("town_EW3", 40, "gondor_osg_skirmisher")]
+    [DataRow("town_EW3", 49, "gondor_ithilien_ranger")]
     public void GetVolunteerTroopId_OsgiliathSettlements_BoundaryRolls_ReturnExpectedTroop(
         string settlementId, int roll, string expectedTroopId)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(50).Returns(roll);
         var context = new VolunteerContext(
             settlementId: settlementId,
             boundSettlementId: null,
@@ -391,27 +402,30 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreNotEqual("gondor_ithilien_ranger", result);
         Assert.AreEqual(expectedTroopId, result);
     }
 
     // --- Specific settlement verifications ---
 
     [TestMethod]
+    // Roll 0 always lands on the first entry, which under the 80/20 standard is the settlement's
+    // REGULAR line — the noble / specific line is the trailing 20% share. castle_EW10 moved from a
+    // Harondor pool to Belfalas: gondor.json groups it under "Imrazorionath, Garvirionath, and
+    // Hirilionath holdings ... Belfalas only", and the hand-written pool now agrees.
     [DataRow("town_EW1",    "gondor_ano_peasant")]
-    [DataRow("town_EW4",    "gondor_pel_skirmisher")]
-    [DataRow("town_EW5",    "gondor_da_noble")]
+    [DataRow("town_EW4",    "gondor_leb_militia")]
+    [DataRow("town_EW5",    "gondor_bel_recruit")]
     [DataRow("town_EW6",    "gondor_anf_levy")]
-    [DataRow("town_EW9",    "gondor_cal_noble")]
-    [DataRow("town_EW10",   "gondor_ser_noble")]
-    [DataRow("town_EW11",   "gondor_met_noble")]
+    [DataRow("town_EW9",    "gondor_lam_clansman")]
+    [DataRow("town_EW10",   "gondor_anf_levy")]
+    [DataRow("town_EW11",   "gondor_har_conscript")]
     [DataRow("castle_EW3",  "gondor_bel_recruit")]
-    [DataRow("castle_EW4",  "gondor_ca_noble")]
+    [DataRow("castle_EW4",  "gondor_ano_peasant")]
     [DataRow("castle_EW8",  "gondor_pg_volunteer")]
-    [DataRow("castle_EW10", "gondor_har_conscript")]
+    [DataRow("castle_EW10", "gondor_bel_recruit")]
     [DataRow("castle_EW11", "gondor_bel_recruit")]
-    [DataRow("castle_EW9",  "gondor_tol_arbalest")]
-    [DataRow("castle_EW12", "gondor_lin_noble")]
+    [DataRow("castle_EW9",  "gondor_bel_recruit")]
+    [DataRow("castle_EW12", "gondor_bel_recruit")]
     public void GetVolunteerTroopId_SpecificSettlements_ReturnExpectedRegularTroop(
         string settlementId, string expectedTroopId)
     {
@@ -1782,7 +1796,81 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    public void GondorJsonLoader_ProductionJsonFile_ParsesAndApplies23Groups()
+    // Runtime half of the group-total contract. The suite gates the COMMITTED gondor.json, but a player or
+    // a hotfix can hand-edit the installed file without ever running a test — and an off-100 group never
+    // throws, because PickWeighted normalises cumulatively. That is precisely how one group shipped at
+    // 120%. The group must still LOAD (normalisation keeps it playable; dropping it would fall the
+    // settlement through to a coarser pool over a cosmetic mistake) but it must WARN.
+    public void GondorJsonLoader_GroupTotalNot100_LoadsButWarns()
+    {
+        var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"gondor_total_{System.Guid.NewGuid():N}.json");
+        System.IO.File.WriteAllText(path, @"{
+            ""chance_groups"": [
+                {
+                    ""description"": ""over-weighted group"",
+                    ""settlements"": [""town_EW7""],
+                    ""troops"": { ""gondor_loss_lumberman"": 25.0, ""gondor_loss_woodsman"": 25.0,
+                                  ""gondor_loss_axebearer"": 25.0, ""gondor_loss_skirmisher"": 25.0,
+                                  ""gondor_loss_noble"": 20.0 }
+                }
+            ]
+        }");
+        try
+        {
+            var applied = new List<string>();
+            GondorRecruitmentJsonLoader.LoadFromPath(
+                path: path,
+                addSettlement: (id, _) => applied.Add(id),
+                addSettlementConditional: (_, __, ___) => { },
+                logger: _logger);
+
+            CollectionAssert.AreEqual(new[] { "town_EW7" }, applied,
+                "An off-100 group must still register — normalisation keeps it playable");
+            _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("120") && m.Contains("not 100")));
+        }
+        finally
+        {
+            try { System.IO.File.Delete(path); } catch { /* best-effort */ }
+        }
+    }
+
+    [TestMethod]
+    public void GondorJsonLoader_GroupTotalExactly100_DoesNotWarn()
+    {
+        var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"gondor_ok_{System.Guid.NewGuid():N}.json");
+        // Uses the 4-dp remainder convention the production file relies on (26.6667/26.6667/26.6666) to
+        // prove the 0.01 epsilon absorbs it rather than warning on every well-formed group.
+        System.IO.File.WriteAllText(path, @"{
+            ""chance_groups"": [
+                {
+                    ""description"": ""well-formed group"",
+                    ""settlements"": [""town_EW9""],
+                    ""troops"": { ""gondor_lam_clansman"": 26.6667, ""gondor_lam_footman"": 26.6667,
+                                  ""gondor_lam_swordman"": 26.6666, ""gondor_cal_noble"": 10.0,
+                                  ""gondor_cal_swordsman"": 10.0 }
+                }
+            ]
+        }");
+        try
+        {
+            GondorRecruitmentJsonLoader.LoadFromPath(
+                path: path,
+                addSettlement: (_, __) => { },
+                addSettlementConditional: (_, __, ___) => { },
+                logger: _logger);
+
+            _logger.DidNotReceive().LogWarning(Arg.Is<string>(m => m.Contains("not 100")));
+        }
+        finally
+        {
+            try { System.IO.File.Delete(path); } catch { /* best-effort */ }
+        }
+    }
+
+    [TestMethod]
+    // Name carries no group count on purpose — the previous name said 23 while the file held 24, and the
+    // assertions are deliberately lower bounds, so a number in the name only goes stale again.
+    public void GondorJsonLoader_ProductionJsonFile_ParsesAndAppliesAllGroups()
     {
         // Integration: load the actual gondor.json from the repo and confirm it parses end-to-end.
         // This guards against schema drift between the user's JSON spec and the loader's DTO mapping.
@@ -1802,9 +1890,11 @@ public class VolunteerRecruitmentServiceTests
             addSettlementConditional: (id, _, __) => conditionalsCalled.Add(id),
             logger: _logger);
 
-        // The JSON has 23 chance_groups. Conditional group is "Apply only if town_ES2 is captured by Gondor".
-        // Total settlement entries across all non-conditional groups should be well > 23 (groups list multiple
-        // settlements each). We assert lower bounds rather than exact counts to be tolerant of future JSON edits.
+        // The JSON has 24 chance_groups. Conditional group is "Apply only if town_ES2 is captured by Gondor".
+        // Total settlement entries across all non-conditional groups is far higher (groups list multiple
+        // settlements each — 93 in all). We assert lower bounds rather than exact counts to be tolerant of
+        // future JSON edits; exact per-group integrity is covered by
+        // GondorJsonLoader_ProductionJson_EveryGroupTotals100AndNoSettlementIsListedTwice.
         Assert.IsTrue(settlementsCalled.Count >= 22, $"Expected at least 22 regular settlement entries, got {settlementsCalled.Count}");
         Assert.AreEqual(1, conditionalsCalled.Count, "Exactly one conditional group (Ithil Guard at town_ES2) is expected");
         Assert.AreEqual("town_ES2", conditionalsCalled[0]);
@@ -1852,6 +1942,195 @@ public class VolunteerRecruitmentServiceTests
         Assert.IsTrue(rangerWeight > 0, $"{settlementId} JSON pool must include gondor_ithilien_ranger");
         double share = (double)rangerWeight / total;
         Assert.AreEqual(0.10, share, 1e-4, $"{settlementId}: ranger share {share:P2} should be 10%");
+    }
+
+    [TestMethod]
+    // Anti-drift guard. gondor.json OVERWRITES SettlementMap in-game, so the hand-written pools in
+    // VolunteerRecruitmentService.Gondor.cs are live only in degraded mode (JSON missing/unparseable)
+    // — and in these unit tests. The two layers had silently diverged: the C# side stranded the entire
+    // 7-troop Ithil Guard line and pooled three ids (anf_guardsman, mt_fountain_guard, ser_pikeman) the
+    // JSON never offered, so the suite was asserting behaviour the game never exhibited. A one-time
+    // hand-sync that nothing enforces just diverges again, so this pins it.
+    //
+    // Compares NORMALISED shares, not raw weights: the C# side uses the smallest integers holding each
+    // ratio (8/8/8/3/3) while the JSON carries percentages (26.6667/.../10), so the weights differ by
+    // construction and only the distribution is meaningful. Villages are excluded — by design the C#
+    // layer mirrors the 27 towns/castles only and villages inherit via BoundSettlementId.
+    public void GondorPools_HandWrittenFallback_MatchesProductionJson()
+    {
+        var repoJsonPath = ResolveRepoJsonPath();
+        if (repoJsonPath == null)
+        {
+            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/recruitment_pools/gondor.json relative to test bin");
+            return;
+        }
+
+        var jsonPools = new Dictionary<string, (string troopId, int weight)[]>();
+        var jsonConditional = new HashSet<string>();
+        GondorRecruitmentJsonLoader.LoadFromPath(
+            path: repoJsonPath,
+            addSettlement: (id, entries) => jsonPools[id] = entries,
+            addSettlementConditional: (id, _, entries) => { jsonPools[id] = entries; jsonConditional.Add(id); },
+            logger: _logger);
+
+        Assert.IsTrue(jsonPools.Count > 0, "Loader produced no pools — gondor.json failed to parse");
+
+        static Dictionary<string, double> Shares(IEnumerable<(string troopId, int weight)> entries)
+        {
+            var byTroop = new Dictionary<string, double>();
+            double total = 0;
+            foreach (var (troopId, weight) in entries)
+            {
+                byTroop[troopId] = byTroop.TryGetValue(troopId, out var prior) ? prior + weight : weight;
+                total += weight;
+            }
+            foreach (var key in new List<string>(byTroop.Keys))
+                byTroop[key] /= total;
+            return byTroop;
+        }
+
+        var mismatches = new List<string>();
+        foreach (var kvp in jsonPools)
+        {
+            var settlementId = kvp.Key;
+            // Only the towns/castles are mirrored in C# (see the scope note in Gondor.cs).
+            if (settlementId.StartsWith("village_") || settlementId.StartsWith("castle_village_"))
+                continue;
+
+            var csharpPool = jsonConditional.Contains(settlementId)
+                ? VolunteerRecruitmentService.GetConditionalSettlementPool(settlementId)
+                : VolunteerRecruitmentService.GetSettlementPool(settlementId);
+
+            if (csharpPool == null)
+            {
+                mismatches.Add($"{settlementId}: present in gondor.json, absent from the hand-written pools");
+                continue;
+            }
+
+            var csharpEntries = new List<(string troopId, int weight)>(csharpPool.Count);
+            foreach (var chance in csharpPool)
+                csharpEntries.Add((chance.CharacterId, chance.Weight));
+
+            var expected = Shares(kvp.Value);
+            var actual = Shares(csharpEntries);
+
+            foreach (var troop in expected.Keys)
+                if (!actual.ContainsKey(troop))
+                    mismatches.Add($"{settlementId}: JSON offers '{troop}', hand-written pool does not");
+            foreach (var troop in actual.Keys)
+                if (!expected.ContainsKey(troop))
+                    mismatches.Add($"{settlementId}: hand-written pool offers '{troop}', JSON does not");
+            foreach (var troop in expected.Keys)
+                if (actual.TryGetValue(troop, out var got) && System.Math.Abs(got - expected[troop]) > 1e-4)
+                    mismatches.Add($"{settlementId}/{troop}: JSON {expected[troop]:P2} vs hand-written {got:P2}");
+        }
+
+        mismatches.Sort();
+        Assert.AreEqual(0, mismatches.Count,
+            "The hand-written Gondor fallback pools have drifted from gondor.json. Re-sync "
+            + "VolunteerRecruitmentService.Gondor.cs (ratios, not raw weights):\n  "
+            + string.Join("\n  ", mismatches));
+    }
+
+    [TestMethod]
+    // Typo gate for the JSON pools. AllPooledTroopIds_ResolveToRealTroops_NoTypos covers the
+    // hand-written C# maps only — in the test bin AllPooledTroopIds() never contains a JSON id — and the
+    // reachability guard drops unknown ids through an `if (nodes.Contains(...))` filter. So until this
+    // test existed, a misspelled troop id in gondor.json passed every check: in-game
+    // MBObjectManager.GetObject<CharacterObject> returns null and that troop's whole weight share
+    // silently drops out of the pool. This collects ids UNFILTERED, which is the entire point.
+    // Same failure class as docs/reviews/rca-rhun-gondor-recruitment-2026-05-23.md (wain_cavalry vs
+    // wainrider_cavalry), whose "add a script-level check" follow-up was never built.
+    public void GondorJsonLoader_ProductionJson_EveryTroopIdResolvesToARealTroop()
+    {
+        var repoJsonPath = ResolveRepoJsonPath();
+        var troopsDir = ResolveTroopsDir();
+        if (repoJsonPath == null || troopsDir == null)
+        {
+            Assert.Inconclusive("Could not locate gondor.json and/or the troops dir relative to test bin");
+            return;
+        }
+
+        var (nodes, _) = ParseTroopGraph(troopsDir);
+
+        var jsonIds = new HashSet<string>();
+        void Collect(string _, (string troopId, int weight)[] entries)
+        {
+            foreach (var (troopId, __) in entries)
+                jsonIds.Add(troopId);   // NO nodes.Contains filter — an unknown id must survive to be reported
+        }
+
+        GondorRecruitmentJsonLoader.LoadFromPath(
+            path: repoJsonPath,
+            addSettlement: Collect,
+            addSettlementConditional: (id, _, entries) => Collect(id, entries),
+            logger: _logger);
+
+        Assert.IsTrue(jsonIds.Count > 0, "Loader produced no troop ids — gondor.json failed to parse");
+
+        var missing = new List<string>();
+        foreach (var id in jsonIds)
+            if (!nodes.Contains(id))
+                missing.Add(id);
+        missing.Sort();
+
+        Assert.AreEqual(0, missing.Count,
+            "gondor.json references troop ids that exist in no troops_*.xml (typos?). These resolve to "
+            + "null in-game and their weight share is silently lost:\n  " + string.Join("\n  ", missing));
+    }
+
+    [TestMethod]
+    // Group integrity: gondor.json's own notes state "Percentages total to 100 per settlement group",
+    // but nothing enforced it — the "Bar Melui" group shipped at 120% (4 Lossarnach regulars at 25 plus
+    // a 20% noble). PickWeighted normalises cumulatively so an over-100 group never crashes; it just
+    // silently delivers a different distribution than the design says. This asserts the contract.
+    // A settlement listed in two groups is the sibling failure: the second AddSettlement overwrites the
+    // first, so one of the two authored pools vanishes with no warning.
+    public void GondorJsonLoader_ProductionJson_EveryGroupTotals100AndNoSettlementIsListedTwice()
+    {
+        var repoJsonPath = ResolveRepoJsonPath();
+        if (repoJsonPath == null)
+        {
+            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/recruitment_pools/gondor.json relative to test bin");
+            return;
+        }
+
+        // Percent → weight uses a fixed ×10000 scale, so a group totalling 100% totals 1_000_000 weight.
+        const int ExpectedTotalWeight = 100 * 10000;
+        var seen = new List<string>();
+        var badTotals = new List<string>();
+
+        void Record(string settlementId, (string troopId, int weight)[] entries)
+        {
+            seen.Add(settlementId);
+            int total = 0;
+            foreach (var (_, weight) in entries)
+                total += weight;
+            // Tolerance of 5 absorbs the 4-dp remainder convention (26.6667/26.6667/26.6666), nothing more.
+            if (System.Math.Abs(total - ExpectedTotalWeight) > 5)
+                badTotals.Add($"{settlementId} totals {total / 10000.0:0.####}%");
+        }
+
+        GondorRecruitmentJsonLoader.LoadFromPath(
+            path: repoJsonPath,
+            addSettlement: Record,
+            addSettlementConditional: (id, _, entries) => Record(id, entries),
+            logger: _logger);
+
+        Assert.IsTrue(seen.Count > 0, "Loader applied no settlements — gondor.json failed to parse");
+
+        var duplicates = new List<string>();
+        var unique = new HashSet<string>();
+        foreach (var id in seen)
+            if (!unique.Add(id))
+                duplicates.Add(id);
+
+        Assert.AreEqual(0, badTotals.Count,
+            "Every gondor.json chance_group must total 100% (see the file's own notes):\n  "
+            + string.Join("\n  ", badTotals));
+        Assert.AreEqual(0, duplicates.Count,
+            "These settlements appear in more than one chance_group — the later group silently "
+            + "overwrites the earlier one:\n  " + string.Join("\n  ", duplicates));
     }
 
     private static string ResolveRepoJsonPath()

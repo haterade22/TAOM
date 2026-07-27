@@ -126,6 +126,7 @@ internal static class GondorRecruitmentJsonLoader
     private static (string troopId, int weight)[] BuildEntries(string label, Dictionary<string, double> troops, IModLogger logger)
     {
         var entries = new List<(string, int)>(troops.Count);
+        double totalPercent = 0;
         foreach (var kv in troops)
         {
             var troopId = kv.Key;
@@ -157,6 +158,7 @@ internal static class GondorRecruitmentJsonLoader
             }
 
             entries.Add((troopId, weight));
+            totalPercent += percent;
         }
 
         if (entries.Count == 0)
@@ -164,6 +166,20 @@ internal static class GondorRecruitmentJsonLoader
             logger?.LogWarning($"GondorRecruitmentJsonLoader: {label} produced no valid entries after sanitization; skipping group");
             return null;
         }
+
+        // The file's own notes state "Percentages total to 100 per settlement group". PickWeighted
+        // normalises cumulatively, so an off-100 group never throws — it just silently delivers a
+        // distribution the file does not describe. One group shipped at 120% exactly that way. The unit
+        // tests gate the COMMITTED file; this warns for a hand-edited install that never ran them.
+        // Warn rather than reject: normalisation keeps the pool playable, and dropping a group here would
+        // fall the settlement through to a coarser pool for a mistake that is merely cosmetic in effect.
+        if (Math.Abs(totalPercent - 100.0) > 0.01)
+        {
+            logger?.LogWarning(
+                $"GondorRecruitmentJsonLoader: {label} totals {totalPercent:0.####}%, not 100 — weights still " +
+                "normalise, so the pool works, but the delivered distribution will not match the authored percentages");
+        }
+
         return entries.ToArray();
     }
 

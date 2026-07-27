@@ -200,6 +200,19 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         return ids;
     }
 
+    // Internal accessors for tests — the hand-written fallback pool registered for a settlement, or null.
+    // GondorPools_HandWrittenFallback_MatchesProductionJson uses these to hold the C# safety net in
+    // lockstep with ModuleData/recruitment_pools/gondor.json. Safe in the test bin specifically because
+    // the JSON auto-loader resolves a game-relative path that doesn't exist there, so these still return
+    // the hand-written values; in-game the JSON has already overwritten them.
+    internal static IReadOnlyList<VolunteerChance> GetSettlementPool(string settlementId)
+        => ResolvePool(settlementId, SettlementMap);
+
+    internal static IReadOnlyList<VolunteerChance> GetConditionalSettlementPool(string settlementId)
+        => settlementId != null && ConditionalSettlementMap.TryGetValue(settlementId, out var entry)
+            ? entry.Pool
+            : null;
+
     internal static List<VolunteerChance> BuildPool(string ownerId, (string troopId, int weight)[] entries)
     {
         if (entries == null || entries.Length == 0)
