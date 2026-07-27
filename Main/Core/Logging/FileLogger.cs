@@ -24,18 +24,56 @@ public class FileLogger : IModLogger
     private StreamWriter _logFile;
     private readonly string _logPath;
     private const string LogDirectory = "Logs";
+    private const string LogPattern = "taom_debug_*.log";
+    private const int DefaultRetainedLogs = 10;
 
     public string? LogFilePath => _logPath;
 
-    public FileLogger()
+    public FileLogger() : this(DefaultRetainedLogs) { }
+
+    // retainedLogs: total taom_debug_*.log files to leave on disk INCLUDING the one about to be
+    // opened; <= 0 disables pruning. Parameterised for the tests -- production always uses the
+    // default via the parameterless ctor that IoC resolves.
+    internal FileLogger(int retainedLogs)
     {
         var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         _logPath = Path.Combine(LogDirectory, $"taom_debug_{timestamp}.log");
         Directory.CreateDirectory(LogDirectory);
+        PruneOldLogs(retainedLogs);
         _logFile = new StreamWriter(_logPath, true);
 
         _writerThread = new Thread(ProcessQueue) { IsBackground = true, Name = "TAOM.FileLogger" };
         _writerThread.Start();
+    }
+
+    // Nothing used to prune Logs/, so debug logs accumulated for the life of the install. Runs
+    // BEFORE the new file is opened, so the live log is never a deletion candidate.
+    //
+    // Fail-safe by construction: the whole pass is swallowed, and each delete is swallowed
+    // individually so one locked file (AV scanner, a second game instance) cannot stop the rest.
+    // A logger that throws from its constructor takes the mod's startup down with it.
+    private static void PruneOldLogs(int retainedLogs)
+    {
+        if (retainedLogs <= 0) return;
+
+        try
+        {
+            // Only taom_debug_*.log. Logs/ is shared with crash bundles (taom_crash_*.zip), the
+            // battle-load stall marker and the shader-precompile sentinels -- deleting any of those
+            // would destroy the very evidence this directory exists to hold.
+            var existing = new DirectoryInfo(LogDirectory).GetFiles(LogPattern);
+            if (existing.Length < retainedLogs) return;
+
+            Array.Sort(existing, (a, b) => b.LastWriteTimeUtc.CompareTo(a.LastWriteTimeUtc));
+            for (var i = retainedLogs - 1; i < existing.Length; i++)
+            {
+                try { existing[i].Delete(); } catch { /* locked or already gone -- keep going */ }
+            }
+        }
+        catch
+        {
+            // Directory unreadable. Retention is housekeeping; never let it break logging.
+        }
     }
 
     public void LogInfo(string message) => Enqueue("INFO", message, durable: true);

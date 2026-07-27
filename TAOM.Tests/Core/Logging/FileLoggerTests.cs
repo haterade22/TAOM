@@ -283,6 +283,95 @@ public class FileLoggerTests
             "!_queue.IsEmpty, so a live writer thread would spin at 100% CPU on this state.");
     }
 
+    // --- Retention ---
+    // Nothing ever pruned Logs/, so taom_debug_*.log accumulated for the life of the install. That
+    // matters beyond disk: CrashReportService re-zips the log into every crash bundle.
+
+    private void SeedOldLogs(int count)
+    {
+        var dir = Path.Combine(_testDir, "Logs");
+        Directory.CreateDirectory(dir);
+        for (int i = 0; i < count; i++)
+        {
+            var p = Path.Combine(dir, $"taom_debug_2026-01-{i + 1:00}_12-00-00.log");
+            File.WriteAllText(p, $"old log {i}");
+            File.SetLastWriteTimeUtc(p, new DateTime(2026, 1, i + 1, 12, 0, 0, DateTimeKind.Utc));
+        }
+    }
+
+    private static string[] DebugLogs(string dir) =>
+        Directory.GetFiles(dir, "taom_debug_*.log");
+
+    [TestMethod]
+    public void Ctor_WithRetentionLimit_KeepsOnlyTheNewestLogsIncludingItsOwn()
+    {
+        SeedOldLogs(12);
+
+        using var logger = new FileLogger(retainedLogs: 5);
+
+        var remaining = DebugLogs(Path.Combine(_testDir, "Logs"));
+        Assert.AreEqual(5, remaining.Length, "retention should cap the debug logs at the configured count");
+        StringAssert.Contains(string.Join("|", remaining), Path.GetFileName(logger.LogFilePath),
+            "the log currently being written must never be pruned");
+    }
+
+    [TestMethod]
+    public void Ctor_WithRetentionLimit_DeletesTheOldestFirst()
+    {
+        SeedOldLogs(12);
+
+        using var logger = new FileLogger(retainedLogs: 3);
+
+        var names = DebugLogs(Path.Combine(_testDir, "Logs")).Select(Path.GetFileName).ToList();
+        CollectionAssert.DoesNotContain(names, "taom_debug_2026-01-01_12-00-00.log");
+        CollectionAssert.Contains(names, "taom_debug_2026-01-12_12-00-00.log", "newest survivors are kept");
+    }
+
+    // Logs/ is shared with the crash bundler, the battle-load stall marker and the shader-precompile
+    // sentinels. The prune must be surgical or it would eat a crash report.
+    [TestMethod]
+    public void Ctor_WithRetentionLimit_LeavesNonDebugLogFilesAlone()
+    {
+        var dir = Path.Combine(_testDir, "Logs");
+        SeedOldLogs(12);
+        File.WriteAllText(Path.Combine(dir, "taom_crash_2026-01-01.zip"), "bundle");
+        File.WriteAllText(Path.Combine(dir, "battleload_stall.marker"), "marker");
+
+        using var logger = new FileLogger(retainedLogs: 2);
+
+        Assert.IsTrue(File.Exists(Path.Combine(dir, "taom_crash_2026-01-01.zip")), "crash bundles must survive");
+        Assert.IsTrue(File.Exists(Path.Combine(dir, "battleload_stall.marker")), "stall markers must survive");
+    }
+
+    [TestMethod]
+    public void Ctor_WithRetentionDisabled_KeepsEveryLog()
+    {
+        SeedOldLogs(12);
+
+        using var logger = new FileLogger(retainedLogs: 0);
+
+        Assert.AreEqual(13, DebugLogs(Path.Combine(_testDir, "Logs")).Length);
+    }
+
+    // A prune failure must never take the logger — or the game — down with it.
+    [TestMethod]
+    public void Ctor_WhenALogFileIsLocked_StillConstructsAndLogs()
+    {
+        var dir = Path.Combine(_testDir, "Logs");
+        SeedOldLogs(12);
+        using var held = new FileStream(Path.Combine(dir, "taom_debug_2026-01-01_12-00-00.log"),
+            FileMode.Open, FileAccess.Read, FileShare.None);
+
+        using var logger = new FileLogger(retainedLogs: 2);
+        logger.LogInfo("still works");
+
+        // Read the logger's OWN file by path -- ReadLogWithoutDispose() takes the first file in the
+        // directory, which here is one of the seeded 2026-01-* logs.
+        using var fs = new FileStream(logger.LogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new StreamReader(fs);
+        StringAssert.Contains(reader.ReadToEnd(), "still works");
+    }
+
     // Fault injection: dispose the underlying writer out from under the logger so the next write
     // throws from inside the drain. Reflection is the only seam -- FileLogger owns its StreamWriter
     // and takes no injectable dependency.
