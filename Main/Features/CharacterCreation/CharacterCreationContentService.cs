@@ -134,15 +134,17 @@ public class CharacterCreationContentService : ICharacterCreationContentService
             return;
         }
 
-        RemoveVanillaOptions(menu, menuId);
+        int removed = RemoveVanillaOptions(menu, menuId);
 
         var options = _narrativeDataProvider.LoadMenuOptions(dataFileName);
         int added = builder.AddOptionsToMenu(menu, options);
 
-        _logger.LogInfo($"[{menuId}] Added {added} TAOM narrative options");
+        // One line per menu instead of three (removed / loaded / added were separate INFO lines
+        // across two classes); same three numbers.
+        _logger.LogInfo($"[{menuId}] narrative options: -{removed} vanilla, +{added} TAOM (loaded {options.Count})");
     }
 
-    private void RemoveVanillaOptions(NarrativeMenu menu, string menuId)
+    private int RemoveVanillaOptions(NarrativeMenu menu, string menuId)
     {
         var vanillaOptions = menu.CharacterCreationMenuOptions
             .Where(o => !o.StringId.StartsWith("taom_", StringComparison.OrdinalIgnoreCase))
@@ -153,7 +155,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
             menu.RemoveNarrativeMenuOption(option);
         }
 
-        _logger.LogInfo($"[{menuId}] Removed {vanillaOptions.Count} vanilla narrative options");
+        return vanillaOptions.Count;
     }
 
     public void OnCharacterCreationFinalize(CharacterCreationManager manager)

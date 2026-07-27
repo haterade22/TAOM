@@ -156,9 +156,13 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
                 added++;
         }
 
-        // Log-hygiene: only record a town when a pass actually changed the roster; the
-        // "+0 injected, +0 guaranteed, -0 foreign" no-op case was ~89% of the daily volume.
-        if (added > 0 || topUp > 0 || removed > 0)
+        // Log-hygiene: only record a town when this pass INJECTED something. `removed` is
+        // deliberately not part of the gate — foreign-item strip is steady-state housekeeping, not
+        // an event: vanilla restocks cross-cultural goods every day and the filter strips them
+        // again, forever, at a flat ~3.6/town/day. Including it made the gate inert (83% of the
+        // 45,080 lines in the 2026-07-26 session log were emitted for `removed` alone, with nothing
+        // injected). The count still prints on every line that survives, so no visibility is lost.
+        if (added > 0 || topUp > 0)
             _logger.LogDebug($"[CultureMarketplace] {_townAdapter.GetSettlementId(settlement)} ({cultureId}): rosterCount={rosterCount}, picks={picks.Count}, +{added} injected, +{topUp} guaranteed, -{removed} foreign");
     }
 }

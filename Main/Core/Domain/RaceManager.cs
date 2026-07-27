@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 
@@ -57,8 +58,12 @@ public class RaceManager : IRaceManager
                     var raceName = raceNames[i];
                     idToName[i] = raceName;
                     nameToId[raceName] = i;
-                    _logger?.LogDebug($"  Race ID {i} = '{raceName}'");
                 }
+
+                // One joined line rather than one per race. The id→name ORDER is the thing worth
+                // keeping — it is engine-supplied and shifts between builds, and several bug classes
+                // key on it — but it does not need 15 lines to record.
+                _logger?.LogDebug($"  Race table: {string.Join(", ", raceNames.Select((n, i) => $"{i}={n}"))}");
             }
             else
             {

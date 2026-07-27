@@ -55,7 +55,7 @@ public class NarrativeDataProvider : INarrativeDataProvider
                 options.Add(ParseOption(item));
             }
 
-            _logger.LogInfo($"Loaded {options.Count} narrative options from {menuName}");
+            // Count is reported by the caller's one-line-per-menu summary.
             return options.AsReadOnly();
         }
         catch (Exception ex)

@@ -2,6 +2,93 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-27
+
+### chore(logging): a 4-hour session wrote 6.4 MB — cut it to ~1.2 MB, and fixed two bugs it was hiding
+
+A crash-free 4h12m session produced a **47,365-line** `taom_debug_*.log`. The per-tick tracing added
+during the #331/#339/#360 investigations has done its job, and it isn't free: `IModLogger.LogFilePath`
+bundles this file into every crash ZIP, so the noise degrades the *next* real triage. Every line was
+classified; four buckets account for the whole file.
+
+**95.2% of it (45,080 lines) was one CultureMarketplace line whose gate had been inert since it
+shipped.** `0abe1854` (2026-07-04) already fixed this once, replacing an unconditional per-tick log
+with `if (added > 0 || topUp > 0 || removed > 0)`. The `removed > 0` term defeats it: `removed` counts
+foreign items stripped from a town market, which is steady-state housekeeping, not an event — vanilla
+restocks cross-cultural goods daily and the filter strips them again, forever. 44,553 of the 45,080
+lines (98.8%) had a non-zero foreign count, and **37,512 (83.2%) were emitted for that term alone,
+with nothing injected.** The gate now reads `added > 0 || topUp > 0`; the foreign count still prints
+on every surviving line, so no visibility is lost. **45,080 → 7,568 lines.**
+
+That the first trim under-delivered was invisible because it was verified against *pre-fix* data —
+its own trailer says `Not-tested: log volume itself (verified via frequency analysis of the live 21MB
+session log, not a unit test)`. **A volume gate validated against the log that motivated it is not
+validated.** Checked before suppressing: removals per town per day held flat across the session
+(3.54 → 3.59 → 3.63 → 3.57) and roster counts plateaued rather than diverging, so this is equilibrium
+being narrated, not a runaway being hidden.
+
+**CultureConversion** (1,697 → 565): the `already pending — timer continues` DEBUG existed to prove
+the hold clock wasn't restarting across a **45**-day hold; the shipped default is now **1 day**, so
+there is no clock left to protect — deleted (its guard and early-return stay). `queued for conversion`
+now logs only when `requiredHoldDays > 1`; at the default it duplicates the `converted`/`restored`
+INFO one campaign day later. Both terminal lines stay at INFO — they are real campaign events.
+
+**Startup** (~350 → ~218): the 38 per-pair `Establishing initial alliance` lines (the summary below
+them already reports created/already-allied/silent-noop, and failures are named individually by a
+warning); the 49 `Parsed career` lines and one of the two identical load summaries; the 15 per-race
+`Race ID N` lines folded into one joined line — the id→name *order* is engine-supplied and shifts
+between builds, so it is kept, just not at 15 lines; the 3-line-per-menu character-creation narrative
+logs collapsed to one line each; the `[Diplomacy] EndAlliance blocked` DEBUG twin, a guaranteed 1:1
+duplicate of the INFO immediately above it; and the `[NativeSkinFixes] parked` line.
+
+**Log retention.** Nothing ever pruned `Logs/` — debug logs accumulated for the life of the install.
+`FileLogger` now keeps the 10 most recent `taom_debug_*.log` (constructor-parameterised, `<= 0`
+disables). The prune runs before the new file is opened, matches `taom_debug_*.log` only — `Logs/` is
+shared with crash bundles, the battle-load stall marker and shader sentinels — and is fail-safe at
+both the pass and per-file level, because a logger that throws from its constructor takes startup with
+it.
+
+**Deliberately untouched:** no log-level filter. In this codebase level encodes *crash-durability*,
+not importance — INFO/WARNING/ERROR flush synchronously and survive a native AV, DEBUG is async and
+lost — and 92% of the 1,331 call sites are on the durable path. `[BattleLoad]` is unchanged:
+`tools/triage_battle_load.py` parses its exact format and the tournament-exit hang is still
+cause-unknown. `[MissionDiag]`'s 30 one-shot lines are the best evidence in the file for triaging
+third-party-mod and version-drift crashes.
+
+Projected: **47,365 → ~8,600 lines, 6.4 MB → ~1.2 MB.**
+
+#### fix(race-age): heroes were announced dead a day before they died
+
+222 distinct heroes produced 238 `died of old age` lines — 16 announced **twice**, one campaign day
+apart, at the same age. The behavior logged *before* the kill, and `KillByOldAge` returned `void`, so
+it could not report that nothing had happened. `KillCharacterAction.ApplyInternal` marks-and-defers
+when the victim is in a `MapEvent`/`SiegeEvent` and returns without changing `HeroState`, so the hero
+stayed alive, still matched the age check next tick, and was announced again. The engine's guard is
+`&& victim.DeathMark == KillCharacterActionDetail.None`, so the second call always lands — which is
+why every duplicate appeared exactly twice and never three times.
+
+`IHeroAgeAdapter.KillByOldAge` now returns `bool` (re-reading `IsAlive`, a plain `HeroState`
+comparison, after the action) and the behavior kills first and announces only on a confirmed death.
+This is the correctness fix, not just a dedupe: the mod stops reporting deaths that did not happen —
+the same deferral path also covers the player character and a disabled life/death cycle. +4 tests.
+
+#### fix(race-age): validation was granting Sauron a human fertility window
+
+`RaceAgeConfigProvider` read the authored `"fertilityEnd": 0` on `nazghul` / `saruman` / `sauron` as an
+inverted range and **overwrote the pair with 18/45**, warning three times on every session start.
+Those three are the only entries with a zero fertility window and all three carry `"immortal": true` —
+the value is the deliberate "cannot reproduce" sentinel. The ordering check now skips immortal races.
+Masked downstream by `TaomPregnancyModel`'s `IsImmortal` short-circuit, but `GetFertilityEndAge` is
+public on `IRaceAgeService`, so any future consumer reading it without re-checking `IsImmortal` would
+have seen 45. The pre-existing test used the exact shipped `nazghul` shape but asserted only `Immortal`
+and `FertilityMod` — never `FertilityEnd` — which is why the overwrite went unseen. +3 tests.
+
+Suite 4,474 green (was 4,462). **Not-tested:** the log volume itself — the projections are frequency
+analysis of the live session log, and the real oracle is a comparable session re-measured in-game.
+
+Constraint: `IModLogger` exposes no `IsDebugEnabled`, so gating stays at the call sites.
+Save-compat: none — logging, validation and one adapter return type; no persisted state.
+
 ## 2026-07-26
 
 ### feat(ui): game-menu hyperlinks coloured by faction (Patch64) (#362)

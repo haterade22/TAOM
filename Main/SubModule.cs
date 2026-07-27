@@ -420,8 +420,8 @@ public class SubModule : MBSubModuleBase
         // already saved it ON). Engine rendering is vanilla for everyone.
         // RE-ENABLE: uncomment the install branch below AND flip the MCM default
         // (TaomSettings.EnableNativeSkinFixes) back to true.
-        IoC.Resolve<IModLogger>().LogInfo(
-            "[NativeSkinFixes] parked (disabled at the wiring level) — engine rendering is vanilla");
+        // (No log line — a parked feature announcing itself every session is pure noise; the
+        // commented-out install branch below is the record.)
         // bool nsfEnabled = false;
         // try { nsfEnabled = TaomSettings.Instance?.EnableNativeSkinFixes == true; }
         // catch { /* MCM not ready — fail closed */ }

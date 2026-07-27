@@ -81,7 +81,9 @@ public class CareerConfigProvider : ICareerConfigProvider
         LoadAbilityTemplatesXml();
         LoadAbilityTuningXml();
 
-        _logger.LogInfo($"CareerSystem: Loaded {_careers.Count} careers, {_groups.Count} groups, {_choices.Count} choices, maxPerkPoints={_maxPerkPoints}");
+        // DEBUG, not INFO: CareerRegistry logs the identical four totals once the data has crossed
+        // the provider→registry boundary, which is the more useful of the two.
+        _logger.LogDebug($"CareerSystem: Loaded {_careers.Count} careers, {_groups.Count} groups, {_choices.Count} choices, maxPerkPoints={_maxPerkPoints}");
     }
 
     private void LoadCareersXml()
@@ -144,8 +146,10 @@ public class CareerConfigProvider : ICareerConfigProvider
                         rank2Name: el.Attribute("rank2_name")?.Value ?? "",
                         rank3Name: el.Attribute("rank3_name")?.Value ?? "");
 
+                    // No per-career line: 49 of them restated what the load summary already totals,
+                    // and every field is readable in taom_careers.xml. Parse FAILURES still log
+                    // (catch block below), which is the case worth seeing.
                     _careers.Add(career);
-                    _logger.LogDebug($"CareerSystem: Parsed career '{career.Id}' — cultures=[{string.Join(", ", cultureIds)}], groups=[{string.Join(", ", groupIds)}], rootChoice='{career.RootChoiceId}'");
                 }
                 catch (Exception ex)
                 {

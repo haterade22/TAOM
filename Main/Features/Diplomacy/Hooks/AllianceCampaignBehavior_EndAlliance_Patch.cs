@@ -45,8 +45,10 @@ public static class AllianceCampaignBehavior_EndAlliance_Patch
             // fresh one. The companion AllianceCampaignBehavior_AddAllianceDecision_Patch
             // now provides that gate explicitly so duplicate decisions don't accumulate
             // on Permanent-lore pairs after their alliance's natural EndTime passes.
-            _logger?.LogDebug($"[Diplomacy] EndAlliance blocked: {kingdom1.StringId} ↔ {kingdom2.StringId}. " +
-                              "Companion AddAllianceDecision_Patch will suppress the redundant downstream queuing.");
+            //
+            // No log line here: ShouldPreventAllianceEnd (the `if` above) already emits the
+            // "Alliance end blocked: A <-> B (Permanent)" INFO for exactly this branch, so a DEBUG
+            // twin restating the same two ids plus this comment was a guaranteed 1:1 duplicate.
             return false;
         }
 

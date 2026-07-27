@@ -90,14 +90,17 @@ public class CultureConversionService : ICultureConversionService
         // Without this, a contested frontier fief re-queues forever and never converts
         // (castle_E6 queued 16× with zero completions, play-test 2026-07-07).
         if (record.HasPending && record.PendingTargetCultureId == ownerCulture)
-        {
-            _logger.LogDebug($"CultureConversion: {settlementId} already pending toward {ownerCulture} — timer continues");
             return;
-        }
 
         record.StartPending(nowDays, ownerCulture);
         _store.Put(record);
-        _logger.LogDebug($"CultureConversion: {settlementId} queued for conversion to {ownerCulture} (hold {_settings.RequiredHoldDays}d)");
+
+        // Only worth recording while there is a hold worth watching. At the shipped default of 1 day
+        // the queue is followed by its own "converted"/"restored" INFO one campaign day later, so
+        // this line is pure duplication; at a player-raised hold it is the only record of when the
+        // clock started.
+        if (_settings.RequiredHoldDays > 1)
+            _logger.LogDebug($"CultureConversion: {settlementId} queued for conversion to {ownerCulture} (hold {_settings.RequiredHoldDays}d)");
     }
 
     public void RunDailyChecks(double nowDays)

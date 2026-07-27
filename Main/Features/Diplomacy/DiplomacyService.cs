@@ -129,7 +129,8 @@ public class DiplomacyService : IDiplomacyService
                 alreadyAllied++;
                 continue;
             }
-            _logger.LogInfo($"Establishing initial alliance: {rel.KingdomA} <-> {rel.KingdomB}");
+            // No per-pair line: the pairs are static config, the summary below reports the counts,
+            // and any pair that fails is named individually by the LogWarning in the else branch.
             _allianceAdapter.StartAlliance(rel.KingdomA, rel.KingdomB);
 
             // DR2 diagnostic (2026-05-22): verify the call actually took effect.
