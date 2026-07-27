@@ -68,7 +68,12 @@ public class RaceAgeConfigProvider : IRaceAgeConfigProvider
             // Ordering invariants. Inversions cause negative fertility windows → garbage rates.
             // Swap if obviously reversed (e.g. ComesOfAge=99 vs MaxAge=50); otherwise log + leave
             // (since downstream consumers tolerate small unconventional configurations).
-            if (entry.ComesOfAge >= entry.FertilityEnd)
+            //
+            // Immortals are exempt: `fertilityEnd: 0` on an immortal race is the authored "no
+            // fertility window at all" sentinel (nazghul / saruman / sauron), not an inversion.
+            // Treating it as one overwrote the pair with 18/45 — granting Sauron a human fertility
+            // window — and emitted three WARNINGs on every single session start.
+            if (!entry.Immortal && entry.ComesOfAge >= entry.FertilityEnd)
             {
                 _logger.LogWarning($"RaceAgeConfigProvider: '{name}' ComesOfAge ({entry.ComesOfAge}) >= FertilityEnd ({entry.FertilityEnd}); resetting to defaults (18/45).");
                 entry.ComesOfAge = 18;

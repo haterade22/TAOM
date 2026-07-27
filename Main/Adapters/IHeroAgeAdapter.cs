@@ -19,5 +19,12 @@ public readonly struct HeroAgeInfo
 public interface IHeroAgeAdapter
 {
     IEnumerable<HeroAgeInfo> GetAllAliveHeroAges();
-    void KillByOldAge(string heroId);
+
+    /// <summary>
+    /// Applies an old-age death. Returns true only if the hero is actually dead afterwards —
+    /// the engine's KillCharacterAction silently no-ops while a hero is in a MapEvent/SiegeEvent
+    /// (death is deferred until the battle resolves) and for the player character. Callers must
+    /// not announce a death this returns false for.
+    /// </summary>
+    bool KillByOldAge(string heroId);
 }

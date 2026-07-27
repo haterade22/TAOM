@@ -94,4 +94,64 @@ public class RaceAgeConfigProviderTests
         Assert.IsTrue(config.Races["nazghul"].Immortal);
         Assert.AreEqual(0.0f, config.Races["nazghul"].FertilityMod);
     }
+
+    // An immortal race authors `fertilityEnd: 0` to mean "no fertility window at all" — it is a
+    // deliberate sentinel, not an inverted range. The ordering check used to read it as an inversion
+    // and overwrite the pair with 18/45, silently granting Sauron a human fertility window. Masked
+    // downstream by TaomPregnancyModel's IsImmortal short-circuit, but GetFertilityEndAge is public
+    // on IRaceAgeService, so any future consumer that reads it without re-checking IsImmortal would
+    // have seen 45. (Shipped config: nazghul / saruman / sauron are the only zero-fertilityEnd entries
+    // and all three carry immortal:true.)
+    [TestMethod]
+    public void LoadConfig_ImmortalRaceWithZeroFertilityEnd_PreservesAuthoredValues()
+    {
+        var json = @"{
+            ""defaultRace"": ""human"",
+            ""races"": {
+                ""sauron"": { ""maxAge"": 10000, ""becomeOld"": 9970, ""comesOfAge"": 18, ""middleAge"": 100, ""fertilityEnd"": 0, ""fertilityMod"": 0.0, ""immortal"": true }
+            }
+        }";
+        File.WriteAllText(Path.Combine(_tempDir, "raceage", "race_age_config.json"), json);
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(0, config.Races["sauron"].FertilityEnd, "authored 'no fertility window' sentinel must survive validation");
+        Assert.AreEqual(18, config.Races["sauron"].ComesOfAge);
+    }
+
+    [TestMethod]
+    public void LoadConfig_ImmortalRaceWithZeroFertilityEnd_DoesNotWarn()
+    {
+        var json = @"{
+            ""defaultRace"": ""human"",
+            ""races"": {
+                ""sauron"": { ""maxAge"": 10000, ""becomeOld"": 9970, ""comesOfAge"": 18, ""middleAge"": 100, ""fertilityEnd"": 0, ""fertilityMod"": 0.0, ""immortal"": true }
+            }
+        }";
+        File.WriteAllText(Path.Combine(_tempDir, "raceage", "race_age_config.json"), json);
+
+        _sut.LoadConfig();
+
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("FertilityEnd")));
+    }
+
+    // Guard against over-widening the fix: a MORTAL race with a genuinely inverted window must
+    // still be corrected and still warn.
+    [TestMethod]
+    public void LoadConfig_MortalRaceWithInvertedFertilityWindow_ResetsToDefaultsAndWarns()
+    {
+        var json = @"{
+            ""defaultRace"": ""human"",
+            ""races"": {
+                ""human"": { ""maxAge"": 85, ""becomeOld"": 55, ""comesOfAge"": 60, ""middleAge"": 35, ""fertilityEnd"": 45, ""fertilityMod"": 1.0 }
+            }
+        }";
+        File.WriteAllText(Path.Combine(_tempDir, "raceage", "race_age_config.json"), json);
+
+        var config = _sut.LoadConfig();
+
+        Assert.AreEqual(18, config.Races["human"].ComesOfAge);
+        Assert.AreEqual(45, config.Races["human"].FertilityEnd);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("FertilityEnd")));
+    }
 }

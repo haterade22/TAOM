@@ -33,7 +33,8 @@ public class RaceAgeBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore) { }
 
-    private void OnDailyTick()
+    // internal for TAOM.Tests (InternalsVisibleTo, see TAOM.csproj).
+    internal void OnDailyTick()
     {
         _deathList.Clear();
 
@@ -47,8 +48,12 @@ public class RaceAgeBehavior : CampaignBehaviorBase
 
         foreach (var hero in _deathList)
         {
-            _logger.LogInfo($"RaceAge: Hero {hero.HeroId} (race {hero.Race}) died of old age at {hero.Age:F0}");
-            _heroAgeAdapter.KillByOldAge(hero.HeroId);
+            // Kill first, announce second. The engine defers the death of a hero who is in a
+            // MapEvent/siege, so a pre-kill log announced deaths that hadn't happened — and the
+            // hero, still over max age, was re-announced on the next daily tick (16 duplicate
+            // announcements in the 2026-07-26 session log).
+            if (_heroAgeAdapter.KillByOldAge(hero.HeroId))
+                _logger.LogInfo($"RaceAge: Hero {hero.HeroId} (race {hero.Race}) died of old age at {hero.Age:F0}");
         }
     }
 }
