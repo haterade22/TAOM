@@ -4,6 +4,23 @@
 
 ## 2026-07-28
 
+### feat(gondor): Lond Cirion wall kit started — ploppable L-section with towers
+
+First section of a city-wall kit for **Lond Cirion** (new coastal Gondor city concept), following
+the `minas_tirith_wall_l0.fbx` template format: one kit FBX holding, per section, base mesh +
+`.lod3` + `.lod6` + `bo_` collision twin, pivoted at the plop anchor.
+`blockout/lond_cirion_wall_a.fbx` ships `lond_cirion_wall_01` — a symmetric L (~88 × 85 m):
+6 × `gondor_castle_wall_20m_L1_A` modules and 5 towers (`gondor_castle_wall_tower_L1_A`), arms
+of wall–wall–tower–wall–tower butt-joined in-line, corner tower rotated 45° so its machicolated
+outer face bisects both outward directions (wall ends overlap into its footprint — standard kit
+corner). Tiers: 122k / 50k / 16k tris + 7k bo. Assembled programmatically by
+`tools/oneoff/blender_assemble_lond_cirion_wall.py` from piece bboxes reverse-engineered with the
+new `tools/oneoff/blender_dump_fbx_inventory.py`; verified via four-angle Cycles renders
+(corner-bisector symmetry, plan view, seam continuity). v1 simplifications: tower wood interiors
++ decal meshes skipped; the bo_ is single-slot `stone` (wood top platforms ride under stone
+physics). Owed: Modding Kit import + in-scene snap test; next sections (straight run, gatehouse,
+curved) reuse the same assembler.
+
 ### feat(gondor): three harbor ships from Tripo AI models (1.9M→40k tris each)
 
 Converted three Tripo ship FBXs into Gondor harbor props: `sm_gondor_ship_cog_001` (20 m),
