@@ -70,16 +70,13 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
-**Sections 07–09 — coastline closers (same day):** **07 coastal sweep** (~173 m arc: four
-2-wall runs through three 22.5° kink towers, 67.5° total curvature, merlons on the convex
-side — one plop covers the harbor beach arc; chain with 03/04/05 to follow any shoreline),
-**08 sea-anchor terminus** (the big corner tower with a wall stub each side — ends the line
-where the wall meets water; the 20 m foundations let it stand in the surf), **09 deck-access
-ramp** (two walls + a GENERATED 30 m blockout ramp from ground to the 15 m deck at 26.6°,
-hugging the inner face; the landing wall drops its m6 inner railing so the ramp opens onto the
-walkway. Generated in Blender because the kit's `gd_ramp_large_a1` measured as a dual-lane
-switchback to a 20 m platform — wrong rise for the deck; ray-cast profiling caught this before
-placement). Kit FBX now 36 meshes, 9 sections.
+**Section 07 — coastal sweep (same day):** ~173 m arc: four 2-wall runs through three 22.5°
+kink towers, 67.5° total curvature, merlons on the convex side — one plop covers the harbor
+beach arc; chain with 03/04/05 to follow any shoreline. (Sections 08 sea-anchor and 09
+generated-ramp were built the same day and **deleted at the user's direction** — not needed;
+their code removed, recoverable from git history. Ray-cast finding kept for the record: the
+kit's `gd_ramp_large_a1` is a dual-lane switchback to a 20 m platform, wrong rise for the 15 m
+deck.) Kit FBX: 28 meshes, 7 sections.
 
 **Section 06 — gate front (same day; v3 = the user's TRACED shape, a recessed gate court):**
 wings run along the waterfront line (outer south) and turn north at corner towers (±63 m); a

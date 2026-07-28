@@ -88,12 +88,6 @@ PARTS = {
         "visual": [GATE] + [f"{GATE}_m{i}" for i in range(1, 5)],
         "bo": [f"bo_{GATE}"] + [f"bo_{GATE}_m{i}" for i in range(1, 5)],
     },
-    # wall without the m6 inner railing — used where the access ramp lands
-    # on the deck (the railing would fence the ramp top off the walkway)
-    "wall_no_rail": {
-        "visual": [WALL] + [f"{WALL}_m{i}" for i in range(1, 6)],
-        "bo": [f"bo_{WALL}"] + [f"bo_{WALL}_m{i}" for i in range(1, 6)],
-    },
 }
 TIER_SUFFIX = {"base": "", "lod3": ".lod3", "lod6": ".lod6"}
 
@@ -145,57 +139,6 @@ def _t(x, y=0.0, z=0.0):
 def _u(deg):
     a = math.radians(deg)
     return math.cos(a), math.sin(a)
-
-
-def make_ramp09():
-    """Generated deck-access ramp for section 09: a 30 m incline hugging the
-    wall's inner face (ground z=0 at x=-20 up to deck 15 at x=+10) plus a
-    flat landing to x=+18, 3.6 m wide (y -6.6..-3.0), solid to z=-2. Built
-    from scratch (the kit's gd_ramp_large_a1 is a dual-lane switchback to a
-    20 m platform — wrong rise for the 15 m deck)."""
-    import bmesh
-    mesh = bpy.data.meshes.new("_ramp09")
-    bm = bmesh.new()
-    yN, yF, zB = -3.0, -6.6, -2.0
-    quads = []
-    # incline top: (-20,0.1) -> (10,15); landing top: (10..18, 15)
-    v = {}
-
-    def vert(x, y, z):
-        key = (round(x, 3), round(y, 3), round(z, 3))
-        if key not in v:
-            v[key] = bm.verts.new(key)
-        return v[key]
-
-    def box(x0, x1, z_at):
-        """quad column from zB up to the (possibly sloped) top edge pair."""
-        za, zb = z_at(x0), z_at(x1)
-        a, b = vert(x0, yN, za), vert(x1, yN, zb)
-        c, d = vert(x1, yF, zb), vert(x0, yF, za)
-        ab, bb = vert(x0, yN, zB), vert(x1, yN, zB)
-        cb, db = vert(x1, yF, zB), vert(x0, yF, zB)
-        quads.extend([(a, b, c, d),          # top
-                      (ab, bb, b, a),        # near side
-                      (db, cb, c, d),        # far side
-                      (a, d, db, ab),        # start cap
-                      (b, c, cb, bb)])       # end cap
-
-    slope = lambda x: 0.1 + (x + 20.0) * (14.9 / 30.0)
-    box(-20.0, 10.0, slope)
-    box(10.0, 18.0, lambda x: 15.0)
-    for q in quads:
-        try:
-            bm.faces.new(q)
-        except ValueError:
-            pass  # shared caps between the two boxes
-    bm.to_mesh(mesh)
-    bm.free()
-    obj = bpy.data.objects.new("_ramp09", mesh)
-    mat = (bpy.data.materials.get("gondor_stone_brick_a_mat")
-           or bpy.data.materials.new("gondor_stone_brick_a_mat"))
-    mesh.materials.append(mat)
-    bpy.context.scene.collection.objects.link(obj)
-    return obj
 
 
 def section_plans():
@@ -293,21 +236,6 @@ def section_plans():
             ("wall", _t(V3[0] + d * u3[0], V3[1] + d * u3[1]) @ _rz(-33.75)),
         ]
     plans["lond_cirion_wall_07"] = plan
-
-    # 08 — sea-anchor terminus: the big corner tower with a wall stub each
-    # side; ends the line where the wall meets water (20 m foundations)
-    plans["lond_cirion_wall_08"] = [
-        ("tower_b", _t(0, 0, TWR_B_Z)),
-        ("wall", _t(16.9)), ("wall", _t(-16.9)),
-    ]
-
-    # 09 — deck-access ramp: two walls, the east one railing-free where the
-    # generated 30 m ramp (ground -> deck 15) lands on the walkway
-    plans["lond_cirion_wall_09"] = [
-        ("wall", _t(-10.0)),
-        ("wall_no_rail", _t(10.0)),
-        ("gen_ramp09", Matrix.Identity(4)),
-    ]
     return plans
 
 
@@ -367,19 +295,10 @@ def main():
         tier_stats = {}
         fallbacks = set()
         section_bases = {}
-        gen_templates = {"gen_ramp09": make_ramp09()}
         for section, plan in section_plans().items():
             for tier in ("base", "lod3", "lod6", "bo"):
                 dups = []
                 for kind, mat in plan:
-                    if kind in gen_templates:
-                        tmpl = gen_templates[kind]
-                        gdup = tmpl.copy()
-                        gdup.data = tmpl.data.copy()
-                        gdup.matrix_world = mat
-                        bpy.context.scene.collection.objects.link(gdup)
-                        dups.append(gdup)
-                        continue
                     parts = PARTS[kind]["bo" if tier == "bo" else "visual"]
                     for part in parts:
                         src = resolve(part, tier)
@@ -422,8 +341,6 @@ def main():
                     section_bases[section] = joined
         if fallbacks:
             log(f"[lods] parts without authored LODs (base carried over): {sorted(fallbacks)}")
-        for tmpl in gen_templates.values():
-            bpy.data.objects.remove(tmpl, do_unlink=True)
 
         select_only(outputs)
         bpy.ops.export_scene.fbx(
