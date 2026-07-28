@@ -287,23 +287,35 @@ def section_plans():
 
     KINK_HALF = {"lond_cirion_wall_04": 11.25, "lond_cirion_wall_05": 22.5}
 
-    def walk(cursor, h, seq):
-        """Chain sections from cursor along heading h (deg): 03 advances the
-        line, kinks turn the heading right by their bend; 0.1 m tucks."""
+    def walk(cursor, h, seq, flip=False):
+        """Chain sections from cursor along heading h (deg); 0.1 m tucks.
+        flip=False: outer faces LEFT of travel, kinks turn right (the
+        headland convention — that walk traverses the circuit backward).
+        flip=True: mirrored — outer faces RIGHT of travel, kinks turn left
+        (forward-circuit runs like the east-side north run)."""
         for name in seq:
             ux, uy = _u(h)
             if name in KINK_HALF:
                 half = KINK_HALF[name]
                 ch, sh = _u(half)
-                entry = (-24.2 * ch, -24.2 * sh)
-                exit_ = (24.2 * ch, -24.2 * sh)
+                if flip:
+                    R = _rz(h - 180.0 + half)
+                    entry = (24.2 * ch, -24.2 * sh)
+                    exit_ = (-24.2 * ch, -24.2 * sh)
+                    turn = 2.0 * half
+                else:
+                    R = _rz(h - half)
+                    entry = (-24.2 * ch, -24.2 * sh)
+                    exit_ = (24.2 * ch, -24.2 * sh)
+                    turn = -2.0 * half
                 Ak = (_t(cursor[0] - 0.1 * ux, cursor[1] - 0.1 * uy)
-                      @ _rz(h - half) @ _t(-entry[0], -entry[1]))
+                      @ R @ _t(-entry[0], -entry[1]))
                 plan08.extend((kind, Ak @ mat) for kind, mat in plans[name])
                 cursor = _apply(Ak, exit_)
-                h -= 2.0 * half
+                h += turn
             else:
-                Bk = _t(cursor[0] + 24.8 * ux, cursor[1] + 24.8 * uy) @ _rz(h)
+                Bk = (_t(cursor[0] + 24.8 * ux, cursor[1] + 24.8 * uy)
+                      @ _rz(h + 180.0 if flip else h))
                 plan08.extend((kind, Bk @ mat) for kind, mat in plans[name])
                 cursor = (cursor[0] + 49.7 * ux, cursor[1] + 49.7 * uy)
         return cursor, h
@@ -312,13 +324,14 @@ def section_plans():
          ["lond_cirion_wall_04"] + ["lond_cirion_wall_03"] * 4
          + ["lond_cirion_wall_05"])
 
-    # east-side run NORTH (user correction 2026-07-28: "3, 4, 3, 3" turns
-    # NORTH at the east wing's end tower, not east): chain starts at the
-    # end tower's plain north face (deck dead-ends at the turn, like the
-    # court corners), kinking to heading 67.5 as the land edge bends NE
+    # east-side run NORTH (user corrections 2026-07-28: "3, 4, 3, 3" turns
+    # NORTH at the east wing's end tower, and the run is MIRRORED — outer
+    # east / kink turning left to heading 112.5 NNW, per the user's
+    # placed reference): chain starts at the end tower's plain north face
+    # (deck dead-ends at the turn, like the court corners)
     walk((144.6, 5.4), 90.0,
          ["lond_cirion_wall_03", "lond_cirion_wall_04",
-          "lond_cirion_wall_03", "lond_cirion_wall_03"])
+          "lond_cirion_wall_03", "lond_cirion_wall_03"], flip=True)
     plans["lond_cirion_wall_08"] = plan08
     return plans
 
