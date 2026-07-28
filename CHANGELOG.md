@@ -51,6 +51,13 @@ deck-flush plate (descent spans 2.64–4.52 m in the door lane — holes.json; p
 ±1.2 m, 2 cm proud to avoid z-fighting, `gondor_tiles_a_dirty_mat`, matching collision in bo_).
 Every door now walks flat; the up-flight to the tower top stays usable; only the decorative
 below-deck rooms are sealed. Verified by through-door renders at both bridged doors.
+*(Superseded same day: the bridge approach was replaced by the user's simpler direction — rotate
+each interior so the stairs sit on the window wall, `tower_a` +90° / `tower_b` 180°, no bridges.)*
+
+**Section 01 CONFIRMED WORKING in-editor (user, 2026-07-28)** — materials bind, towers flush,
+doors on the walkway, both arms facing outward, stairs on the window side. Next sections
+(straight run, gatehouse from `walls/gondor_castle_gatehouse_l1_a.fbx`, curved) reuse the
+assembler pattern.
 
 **Arm-B facing fix (in-editor catch):** a fixed-handed wall piece cannot serve both arms of an
 L by rotating with the arm direction — `Rz(−90)@T(s,0,0)` ran arm B south but pointed its merlon
