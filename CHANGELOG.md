@@ -10,7 +10,7 @@ Converted three Tripo ship FBXs into Gondor harbor props: `sm_gondor_ship_cog_00
 `sm_gondor_ship_longship_001` (24 m), `sm_gondor_ship_war_001` (30 m, swan figurehead) — each
 40k tris (from ~1.9M source) + `bo_` twin at 3k with `stone` physics, under
 `AssetSources/Scenes/Gondor/ships/`, with `t_gondor_ship_<name>_{d,n,s}` at 2048² in
-`Scenes/Gondor/textures/`. The throne script was renamed+generalized to
+`Scenes/Gondor/ships/textures/`. The throne script was renamed+generalized to
 `tools/oneoff/blender_prep_tripo_prop.py`: map auto-discovery from the `.fbm` dir,
 `--scale-mode length` (longest horizontal extent rotated to +X — one ship was length-along-Y),
 `--decimate-tris` with the UV layer stripped pre-collapse and the full-res duplicate kept as
