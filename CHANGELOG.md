@@ -70,6 +70,13 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
+**Section 08 headland run (same day, user placement "4, 3, 3, 3, 3, 5"):** the chain continues
+from the second sweep (heading 45°) through a generic **chain walker** in the assembler —
+cursor + heading, kinks turn the heading right by their bend, every joint 0.1 m tucked — adding
+a 22.5° kink, four 03 straights, and a 45° kink exiting heading −22.5° southeast. Section 08:
+**553 × 476 m, 2.29M tris base** (exact sum of embedded pieces), full top-down render verifies
+the continuous bay-hugging circuit.
+
 **Section 08 north-coast extension (same day, user placement "3, 3, 7" beyond the sweep):** the
 chain now continues from the first sweep's far end at heading 112.5° — two embedded 03 straights
 up the shore, then a second sweep attached by its west end (same curl handedness) bending around
