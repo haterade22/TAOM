@@ -70,14 +70,15 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
-**Section 06 — gate front (same day, user direction; v2 layout matches the user's scene
-placement exactly):** gate at centre, one filler wall from each gate end-tower to a **corner
-tower flanking the gate** (~65 m out), L-wings running OUTWARD along the face from the corners,
-return arms behind — 304 × 95 m as one ploppable piece. The corner's gate-facing side is its
-blank face (gate-side deck dead-ends there; wing + arm connect through its two doors, as in
-section 01). Corners/arms carry opposite handedness per side — composites legitimately mix
-chiralities. Tiers 870k / 334k / 159k + 86k bo. (v1 had the corners at the far ends with wings
-inboard — replaced same day after the user showed the intended scene arrangement.)
+**Section 06 — gate front (same day; v3 = the user's TRACED shape, a recessed gate court):**
+wings run along the waterfront line (outer south) and turn north at corner towers (±63 m); a
+leg (the section-01 arm rhythm ending in a tower) runs 86 m back from each corner; the gate
+face — filler wall · tower · wall · GATE · wall · tower · filler wall — spans between the two
+leg end-towers, set back from the waterfront over a walled court. Filler-wall decks dead-end on
+the leg towers' plain faces (established pattern); corner doors serve wing+leg (left Rz180,
+right Rz90). 302 × 95 m, tiers 870k / 334k / 159k + 86k bo. (v1 corners-outboard and v2
+corners-inboard-collinear were both wrong readings of the arrangement — the user's red/green
+trace + ground-level shot settled the true Z-stepped shape.)
 
 **Arm-B facing fix (in-editor catch):** a fixed-handed wall piece cannot serve both arms of an
 L by rotating with the arm direction — `Rz(−90)@T(s,0,0)` ran arm B south but pointed its merlon

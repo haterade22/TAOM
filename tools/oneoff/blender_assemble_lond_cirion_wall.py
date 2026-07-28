@@ -179,31 +179,34 @@ def section_plans():
             ("wall", _rz(-h) @ _t(14.2)),
         ]
 
-    # 06 — gate front, replicating the user's exact scene arrangement
-    # (2026-07-28 v2): gate piece at centre, ONE wall to each of its ends,
-    # then the CORNERS flanking the gate with the L-wings running OUTWARD
-    # along the face and the return arms behind. The corner's gate-facing
-    # side is its BLANK face — the gate-side deck dead-ends there; wing and
-    # arm connect through the corner's two doors (exactly like section 01).
-    # West corner Rz(-90) (doors south/west), east corner unrotated
-    # (doors east/south); wings continue the face outer +Y unrotated.
-    cx = 64.6  # corner centres: gate tower 37.8 + wall 20 + tower_b half 7
-    plan = [("gate", Matrix.Identity(4))]
-    for s in (17.9, 47.7):          # gate-piece walls + the added end walls
-        plan += [("wall", _t(s)), ("wall", _t(-s))]
-    plan += [("tower_a", _t(32.8)), ("tower_a", _t(-32.8))]
-    plan += [("tower_b", _t(cx, 0, TWR_B_Z)),
-             ("tower_b", _t(-cx, 0, TWR_B_Z) @ _rz(-90.0))]
-    for s in (81.5, 101.4, 131.2):  # wing walls outward from the corners
-        plan += [("wall", _t(s)), ("wall", _t(-s))]
-    for s in (116.3, 146.1):        # wing towers (mid + end)
-        plan += [("tower_a", _t(s)), ("tower_a", _t(-s))]
-    for s in ARM_WALL_S:            # return arms south of each corner
-        plan += [("wall", _t(-cx, -s) @ _rz(90.0)),
-                 ("wall", _t(cx, -s) @ _rz(-90.0))]
-    for s in ARM_TWRA_S:
-        plan += [("tower_a", _t(-cx, -s) @ _rz(90.0)),
-                 ("tower_a", _t(cx, -s) @ _rz(-90.0))]
+    # 06 — gate front v3: RECESSED GATE COURT (user's traced shape,
+    # 2026-07-28). Build frame: water/outer = -Y. Wings run along X at y=0
+    # (the waterfront line, outer south); at each wing's inner end a corner
+    # tower turns a LEG north (the section-01 arm rhythm, ending in a
+    # tower); the gate face runs between the two leg end-towers at
+    # y = 81.6, set back from the waterfront, outer south over the court.
+    # Filler walls join each leg end-tower to the gate piece (their deck
+    # dead-ends on the tower's plain face — the established pattern).
+    # Corners: left Rz(180) (doors west+north), right Rz(90) (doors
+    # east+north); leg outer faces west/east, wings+face Rz(180).
+    yF = ARM_TWRA_S[-1]              # 81.6 — gate-face line = leg end-tower centres
+    xC = 63.0                        # corner centres; makes the filler span close
+    plan = [("gate", _t(0, yF) @ _rz(180.0))]
+    for s in (17.9, 47.7):           # face walls + filler walls
+        plan += [("wall", _t(s, yF) @ _rz(180.0)),
+                 ("wall", _t(-s, yF) @ _rz(180.0))]
+    plan += [("tower_a", _t(32.8, yF) @ _rz(180.0)),
+             ("tower_a", _t(-32.8, yF) @ _rz(180.0))]
+    plan += [("tower_b", _t(-xC, 0, TWR_B_Z) @ _rz(180.0)),
+             ("tower_b", _t(xC, 0, TWR_B_Z) @ _rz(90.0))]
+    for kind, dists in (("wall", ARM_WALL_S), ("tower_a", ARM_TWRA_S)):
+        for d in dists:
+            plan += [
+                (kind, _t(-xC - d, 0) @ _rz(180.0)),   # west wing (outer S)
+                (kind, _t(xC + d, 0) @ _rz(180.0)),    # east wing (outer S)
+                (kind, _t(-xC, d) @ _rz(90.0)),        # west leg (outer W)
+                (kind, _t(xC, d) @ _rz(-90.0)),        # east leg (outer E)
+            ]
     plans["lond_cirion_wall_06"] = plan
     return plans
 
