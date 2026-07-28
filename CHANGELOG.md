@@ -2,6 +2,24 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-28
+
+### feat(gondor): three harbor ships from Tripo AI models (1.9M→40k tris each)
+
+Converted three Tripo ship FBXs into Gondor harbor props: `sm_gondor_ship_cog_001` (20 m),
+`sm_gondor_ship_longship_001` (24 m), `sm_gondor_ship_war_001` (30 m, swan figurehead) — each
+40k tris (from ~1.9M source) + `bo_` twin at 3k with `stone` physics, under
+`AssetSources/Scenes/Gondor/ships/`, with `t_gondor_ship_<name>_{d,n,s}` at 2048² in
+`Scenes/Gondor/textures/`. The throne script was renamed+generalized to
+`tools/oneoff/blender_prep_tripo_prop.py`: map auto-discovery from the `.fbm` dir,
+`--scale-mode length` (longest horizontal extent rotated to +X — one ship was length-along-Y),
+`--decimate-tris` with the UV layer stripped pre-collapse and the full-res duplicate kept as
+bake source (true high-to-low bake, cage auto-scaled `max(0.02, 0.005×max_dim)`). Chart re-UV
+at spread 75°: 108–171 islands per ship; fold-over 3.5–9.2%, concentrated in rigging/chain
+cylinders — all three Cycles preview renders clean, which is the deciding check. Still owed:
+Modding Kit import (textures → FBX → editor materials `t_gondor_ship_*`), in-editor
+normal-direction check (`--flip-green` re-run if inverted), harbor scene placement.
+
 ## 2026-07-27
 
 ### fix(recruitment): every Gondor troop was already reachable — but one pool summed to 120%, and nothing checked

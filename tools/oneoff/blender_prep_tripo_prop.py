@@ -1,55 +1,69 @@
 """
-Prep the Tripo-generated Witch-king throne FBX for the Bannerlord Mordor kit.
+Prep a Tripo AI-generated FBX prop for a Bannerlord kit.
 
-One prop, full treatment: scale to 2.5 m, re-pivot to base centre, rename to
-sm_mordor_mm_throne_001 (material slot t_mordor_mm_throne), REPLACE the
-fragmented Tripo auto-UV atlas with a Smart-UV unwrap, and rebake every map
-from the original textures onto the new layout (selected-to-active, identical
-geometry so the cage rays land exactly):
+Full treatment per prop: real-world scale (by height or hull length), pivot to
+bbox bottom-centre, kit renaming, optional decimation for multi-million-tri
+Tripo exports, REPLACEMENT of the fragmented Tripo auto-UV atlas with an
+xatlas-style chart unwrap, and a rebake of every map onto the new layout
+(selected-to-active; with decimation this is a true high-to-low bake — the
+normal map absorbs the lost geometric detail):
 
     basecolor / roughness / metallic  -> EMIT bakes through the source JPEGs
-    normal                            -> tangent NORMAL bake (captures the
-                                         source normal-map perturbation)
+    normal                            -> tangent NORMAL bake (source normal-map
+                                         perturbation + high-poly detail)
     ao                                -> fresh geometry AO bake (Tripo ships none)
 
 Then a bo_ collision twin (decimated, physics slot 'stone' — Erebor
-precedent), one FBX to AssetSources/Scenes/Mordor/, plain baked maps to the
-staging dir (they double as Substance Painter starting layers), and a Cycles
-preview render so the result can be eyeballed without opening the editor.
+precedent), one FBX to the kit dir, plain baked maps to the staging dir (they
+double as Substance Painter starting layers), and a Cycles preview render.
+Texture packing to t_<stem>_{d,n,s} is convert_tripo_prop_textures.py (also
+the Substance round-trip converter).
 
 Blender on this machine is the Microsoft Store app — raw blender.exe is
 ACL-blocked; the launcher DETACHES (no stdout). Completion protocol:
 <staging>\\_report\\DONE.txt (status json), progress in log.txt next to it.
 
-    "%LOCALAPPDATA%\\Microsoft\\WindowsApps\\blender-launcher.exe" -b ^
-        -P e:\\repos\\TAOM\\tools\\oneoff\\blender_prep_witchking_throne.py
+Worked examples ("%LOCALAPPDATA%\\Microsoft\\WindowsApps\\blender-launcher.exe"
+-b -P <this script> -- ...):
 
-Defaults are wired for this asset; --src/--dst/--staging/--height/... override.
-Texture packing to t_mordor_mm_throne_{d,n,s} is the separate
-convert_tripo_prop_textures.py (also the Substance round-trip converter).
+  Witch-king throne (pilot, 2026-07-25, commit 450fb744 — ran pre-rename with
+  these as built-in defaults):
+    --src "C:\\Users\\mikew\\Downloads\\Witch+King+Throne\\tripo_convert_a637c12f-....fbx"
+    --dst "...\\TAOM_Map\\AssetSources\\Scenes\\Mordor"
+    --staging "E:\\LOTRAOMAssets\\_export\\witchking_throne"
+    --name sm_mordor_mm_throne_001 --material t_mordor_mm_throne
+    --scale-mode height --size 2.5
+
+  Gondor harbor ships (2026-07-28: 1.9M tris -> 40k, hull lengths 20-30 m):
+    --scale-mode length --size 24 --decimate-tris 40000 --collision-tris 3000
+    --name sm_gondor_ship_longship_001 --material t_gondor_ship_longship
+
+UV probing (--probe-angles / --probe-spreads) measures island count + UV
+utilization + fold-over per candidate WITHOUT baking; probes run on the
+decimated mesh when --decimate-tris is set. Throne pilot numbers: Smart UV
+Project 1485-2112 islands at 17-24% utilization (unusable on dense organic
+triangulation); chart method at spread 75 = 128 islands / 57% / 1.4%
+fold-over vs the Tripo atlas's 298 / 53%.
 """
 
 import argparse
 import json
 import math
 import os
+import re
 import sys
 import traceback
 
 import bpy
 import bmesh
 
-DEFAULT_SRC = r"C:\Users\mikew\Downloads\Witch+King+Throne\tripo_convert_a637c12f-1377-492f-98d4-6f0f730199f3.fbx"
-DEFAULT_DST = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\AssetSources\Scenes\Mordor"
-DEFAULT_STAGING = r"E:\LOTRAOMAssets\_export\witchking_throne"
-
-# Tripo .fbm texture roles -> bake pass. rm (packed) ignored: separate
-# roughness/metallic JPEGs ship alongside it.
-SOURCE_MAPS = {
-    "basecolor": "Witch_King_Throne_basecolor.JPEG",
-    "normal": "Witch_King_Throne_normal.JPEG",
-    "roughness": "Witch_King_Throne_roughness.JPEG",
-    "metallic": "Witch_King_Throne_metallic.JPEG",
+# .fbm map roles discovered by filename suffix. Tripo's packed "_rm" is
+# ignored: separate roughness/metallic JPEGs ship alongside it.
+MAP_PATTERNS = {
+    "basecolor": r"_(basecolor|base_color|albedo|diffuse)\.",
+    "normal": r"_normal\.",
+    "roughness": r"_roughness\.",
+    "metallic": r"_metallic\.",
 }
 
 LOG_LINES = []
@@ -62,6 +76,21 @@ def log(msg):
     if REPORT_DIR:
         with open(os.path.join(REPORT_DIR, "log.txt"), "w", encoding="utf-8") as f:
             f.write("\n".join(LOG_LINES))
+
+
+def discover_maps(fbm_dir):
+    maps = {}
+    for f in sorted(os.listdir(fbm_dir)):
+        for role, pat in MAP_PATTERNS.items():
+            if role not in maps and re.search(pat, f, re.IGNORECASE):
+                maps[role] = os.path.join(fbm_dir, f)
+    if "basecolor" not in maps:
+        raise FileNotFoundError(f"no basecolor map in {fbm_dir}")
+    missing = [r for r in MAP_PATTERNS if r not in maps]
+    if missing:
+        log(f"[maps] missing roles (their bake is skipped/geometry-only): {missing}")
+    log(f"[maps] {({r: os.path.basename(p) for r, p in maps.items()})}")
+    return maps
 
 
 def select_only(objs):
@@ -93,15 +122,25 @@ def bake_world(objs):
     bpy.context.view_layer.update()
 
 
-def scale_and_pivot(obj, target_height):
-    """Uniform-scale so bbox Z-size == target_height; pivot at bbox
-    bottom-centre (the Tripo export is already there, but derive it — don't
-    trust it)."""
-    from mathutils import Matrix, Vector
+def _extents(obj):
+    from mathutils import Vector
     bpy.context.view_layer.update()
     bb = [Vector(c) for c in obj.bound_box]
-    zsize = max(v[2] for v in bb) - min(v[2] for v in bb)
-    s = target_height / zsize
+    return [max(v[k] for v in bb) - min(v[k] for v in bb) for k in range(3)]
+
+
+def scale_and_pivot(obj, size, mode):
+    """mode 'height': uniform-scale so bbox Z == size. mode 'length': rotate
+    so the longest horizontal extent lies along +X (Tripo props are not
+    consistently oriented), then scale so bbox X == size. Pivot at bbox
+    bottom-centre either way."""
+    from mathutils import Matrix, Vector
+    ext = _extents(obj)
+    if mode == "length" and ext[1] > ext[0]:
+        obj.data.transform(Matrix.Rotation(math.radians(90.0), 4, "Z"))
+        ext = _extents(obj)
+        log("[prep] rotated 90 deg: length axis was Y, now X")
+    s = size / max(ext[0] if mode == "length" else ext[2], 1e-9)
     obj.data.transform(Matrix.Scale(s, 4))
     bpy.context.view_layer.update()
     bb = [Vector(c) for c in obj.bound_box]
@@ -112,9 +151,25 @@ def scale_and_pivot(obj, target_height):
     return s
 
 
+def strip_uvs(obj):
+    while obj.data.uv_layers:
+        obj.data.uv_layers.remove(obj.data.uv_layers[0])
+
+
+def decimate_to(obj, target_tris):
+    tris = tri_count(obj)
+    if tris <= target_tris:
+        return tris
+    select_only([obj])
+    mod = obj.modifiers.new("prep_decimate", "DECIMATE")
+    mod.ratio = target_tris / tris
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+    return tri_count(obj)
+
+
 def count_uv_islands(obj):
     """UV-connectivity island count (faces connected where the shared edge's
-    loop UVs coincide). Reported before/after so the re-UV win is measurable."""
+    loop UVs coincide)."""
     bm = bmesh.new()
     bm.from_mesh(obj.data)
     uv = bm.loops.layers.uv.active
@@ -141,7 +196,6 @@ def count_uv_islands(obj):
         if len(faces) != 2:
             continue
         fa, fb = faces
-        la = [l for l in fa.loops if l.edge == edge or l.link_loop_next.edge == edge]
         uvs_a = sorted((tuple(l[uv].uv) for l in fa.loops if l.vert in edge.verts))
         uvs_b = sorted((tuple(l[uv].uv) for l in fb.loops if l.vert in edge.verts))
         if len(uvs_a) == len(uvs_b) and all(
@@ -155,9 +209,7 @@ def count_uv_islands(obj):
 
 def smart_uv(obj, island_margin, angle_deg):
     select_only([obj])
-    # wipe the Tripo atlas entirely — the new layout replaces it
-    while obj.data.uv_layers:
-        obj.data.uv_layers.remove(obj.data.uv_layers[0])
+    strip_uvs(obj)
     obj.data.uv_layers.new(name="UVMap")
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
@@ -172,16 +224,14 @@ def chart_uv(obj, spread_deg, margin, min_faces=20):
     on angle to the chart's area-weighted average normal, small-fragment
     absorption into the most-shared-boundary neighbor, planar projection per
     chart, per-chart texel-density equalization, then pack. Smart UV Project
-    fragments dense organic triangulation (probe: 1485-2112 islands at 17-24%%
-    utilization vs the Tripo atlas's 298 at 53%%); large-spread region growing
-    + fragment merging is what actually produces paintable islands there.
+    fragments dense organic triangulation; large-spread region growing +
+    fragment merging is what actually produces paintable islands there.
     Returns (chart_count, uv_flipped_faces) — flipped faces are projection
     fold-over telemetry (merged fragments may project through a neighbor's
     basis; tiny counts are cosmetically invisible, big counts mean the spread
     is too aggressive)."""
     from mathutils import Vector
-    while obj.data.uv_layers:
-        obj.data.uv_layers.remove(obj.data.uv_layers[0])
+    strip_uvs(obj)
     bm = bmesh.new()
     bm.from_mesh(obj.data)
     bm.faces.ensure_lookup_table()
@@ -443,12 +493,15 @@ def image_stats(img):
             "mean": round(float(rgb.mean()), 4)}
 
 
-def run_bakes(source, target, fbm_dir, size, staging, ao_samples):
+def run_bakes(source, target, maps, size, staging, ao_samples):
     scene = bpy.context.scene
     scene.render.engine = "CYCLES"
     enable_gpu()
-    scene.render.bake.margin = 16
     scene.cycles.use_denoising = False
+    # a decimated target deviates from the full-res source by real
+    # centimetres on hull-sized props — the cage must clear that gap
+    cage = max(0.02, 0.005 * max(target.dimensions))
+    log(f"[bake] cage_extrusion {cage:.3f} m")
 
     tgt_mat, tgt_tex = make_target_bake_material(target)
     stats = {}
@@ -460,14 +513,19 @@ def run_bakes(source, target, fbm_dir, size, staging, ao_samples):
         ("ao", "AO", "Non-Color", False),
     ]
     for name, bake_type, out_space, from_source in passes:
+        if bake_type == "EMIT" and name not in maps:
+            log(f"[bake] {name}: no source map, skipped")
+            continue
         img = bpy.data.images.new(f"bake_{name}", width=size, height=size,
                                   alpha=False, float_buffer=False)
         img.colorspace_settings.name = out_space
         tgt_tex.image = img
-        if from_source and name in SOURCE_MAPS:
-            src_img = bpy.data.images.load(os.path.join(fbm_dir, SOURCE_MAPS[name]))
+        if from_source and name in maps:
+            src_img = bpy.data.images.load(maps[name])
             build_source_material(source, src_img, is_normal=(bake_type == "NORMAL"),
                                   colorspace="sRGB" if name == "basecolor" else "Non-Color")
+        # NORMAL with no source map: previous pass's material has no normal
+        # chain, so the bake captures pure high-poly geometry normals — valid.
         if bake_type == "AO":
             scene.cycles.samples = ao_samples
             source.hide_render = True  # duplicate shell would self-shadow the AO
@@ -479,7 +537,7 @@ def run_bakes(source, target, fbm_dir, size, staging, ao_samples):
             select_only([source, target])
             bpy.context.view_layer.objects.active = target
             kwargs = dict(type=bake_type, use_selected_to_active=True,
-                          cage_extrusion=0.02, use_clear=True)
+                          cage_extrusion=cage, use_clear=True)
             if bake_type == "NORMAL":
                 kwargs["normal_space"] = "TANGENT"
             bpy.ops.object.bake(**kwargs)
@@ -525,16 +583,19 @@ def build_preview_material(obj, staging):
     obj.data.materials.append(mat)
 
 
-def render_preview(obj, staging, height):
+def render_preview(obj, staging):
     from mathutils import Vector
     scene = bpy.context.scene
     build_preview_material(obj, staging)
+    bpy.context.view_layer.update()
+    dmax = max(obj.dimensions)
+    height = obj.dimensions[2]
     cam_data = bpy.data.cameras.new("preview_cam")
     cam = bpy.data.objects.new("preview_cam", cam_data)
     scene.collection.objects.link(cam)
     scene.camera = cam
-    look_at = Vector((0.0, 0.0, height * 0.45))
-    cam.location = Vector((2.6, -3.4, height * 0.65))
+    look_at = Vector((0.0, 0.0, height * 0.4))
+    cam.location = Vector((dmax * 0.95, -dmax * 1.15, height * 0.55 + dmax * 0.1))
     cam.rotation_euler = (look_at - cam.location).to_track_quat("-Z", "Y").to_euler()
     sun_data = bpy.data.lights.new("preview_sun", type="SUN")
     sun_data.energy = 3.0
@@ -546,8 +607,8 @@ def render_preview(obj, staging, height):
     world.node_tree.nodes["Background"].inputs[0].default_value = (0.12, 0.12, 0.13, 1.0)
     scene.world = world
     scene.cycles.samples = 64
-    scene.render.resolution_x = 900
-    scene.render.resolution_y = 1200
+    scene.render.resolution_x = 1200
+    scene.render.resolution_y = 900
     scene.render.filepath = os.path.join(staging, "preview.png")
     bpy.ops.render.render(write_still=True)
     log(f"[preview] {scene.render.filepath}")
@@ -570,17 +631,23 @@ def main():
     global REPORT_DIR
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     ap = argparse.ArgumentParser()
-    ap.add_argument("--src", default=DEFAULT_SRC)
-    ap.add_argument("--dst", default=DEFAULT_DST)
-    ap.add_argument("--staging", default=DEFAULT_STAGING)
-    ap.add_argument("--name", default="sm_mordor_mm_throne_001")
-    ap.add_argument("--material", default="t_mordor_mm_throne")
-    ap.add_argument("--height", type=float, default=2.5)
+    ap.add_argument("--src", required=True, help="Tripo FBX (sibling .fbm dir expected)")
+    ap.add_argument("--dst", required=True, help="kit dir for the output FBX")
+    ap.add_argument("--staging", required=True, help="bake maps + report dir")
+    ap.add_argument("--name", required=True, help="sm_<kit>_... mesh name")
+    ap.add_argument("--material", required=True, help="material slot name (t_<kit>_...)")
+    ap.add_argument("--size", type=float, required=True, help="target size in metres")
+    ap.add_argument("--scale-mode", default="height", choices=["height", "length"],
+                    help="height: bbox Z == size; length: longest horizontal "
+                         "extent rotated to +X, bbox X == size")
+    ap.add_argument("--decimate-tris", type=int, default=0,
+                    help="decimate the visual to N tris before re-UV (0 = keep); "
+                         "bake source keeps full resolution -> high-to-low bake")
     ap.add_argument("--bake-size", type=int, default=2048)
     ap.add_argument("--island-margin", type=float, default=0.004)
     ap.add_argument("--angle", type=float, default=66.0)
     ap.add_argument("--uv-method", default="chart", choices=["chart", "smart"])
-    ap.add_argument("--spread", type=float, default=60.0,
+    ap.add_argument("--spread", type=float, default=75.0,
                     help="chart method: max angle to the chart average normal")
     ap.add_argument("--probe-angles", default="",
                     help="smart-project probe: comma-separated angle limits — "
@@ -602,10 +669,7 @@ def main():
     summary = {"status": "error"}
     try:
         fbm_dir = os.path.splitext(args.src)[0] + ".fbm"
-        for f in SOURCE_MAPS.values():
-            p = os.path.join(fbm_dir, f)
-            if not os.path.isfile(p):
-                raise FileNotFoundError(p)
+        maps = discover_maps(fbm_dir)
 
         bpy.ops.wm.read_factory_settings(use_empty=True)
         try:
@@ -623,17 +687,33 @@ def main():
         visual = meshes[0]
 
         bake_world([visual])
-        scale = scale_and_pivot(visual, args.height)
+        scale = scale_and_pivot(visual, args.size, args.scale_mode)
         visual.name = visual.data.name = args.name
-        log(f"[prep] scaled x{scale:.4f} -> height {visual.dimensions[2]:.3f} m, "
-            f"tris {tri_count(visual)}")
+        tris_source = tri_count(visual)
+        log(f"[prep] scaled x{scale:.4f} ({args.scale_mode} {args.size} m), "
+            f"tris {tris_source}")
 
-        islands_before = count_uv_islands(visual)
+        # baseline island count is informative on prop-sized meshes but the
+        # pure-python counter is minutes-slow on multi-million-tri sources
+        islands_before = count_uv_islands(visual) if tris_source <= 300_000 else -1
+
+        # bake source keeps the Tripo atlas + full resolution
+        bake_src = visual.copy()
+        bake_src.data = visual.data.copy()
+        bake_src.name = "_bake_src"
+        bpy.context.scene.collection.objects.link(bake_src)
+
+        tris_visual = tris_source
+        if args.decimate_tris and tris_source > args.decimate_tris:
+            strip_uvs(visual)  # UV-boundary preservation fights extreme ratios
+            tris_visual = decimate_to(visual, args.decimate_tris)
+            log(f"[decimate] {tris_source} -> {tris_visual} tris")
 
         if args.probe_angles or args.probe_spreads:
-            probe = {"tripo_atlas": {"islands": islands_before,
-                                     "utilization": round(uv_utilization(visual), 4)}}
-            pristine = visual.data.copy()  # each candidate starts from the original
+            probe = {}
+            if islands_before >= 0:
+                probe["source_atlas"] = {"islands": islands_before}
+            pristine = visual.data.copy()  # each candidate starts from here
             for ang in (float(a) for a in args.probe_angles.split(",") if a):
                 smart_uv(visual, args.island_margin, ang)
                 probe[f"smart_{ang:g}"] = {
@@ -655,12 +735,6 @@ def main():
             log("[done] probe complete")
             return
 
-        # bake source keeps the Tripo atlas; target gets the clean unwrap
-        bake_src = visual.copy()
-        bake_src.data = visual.data.copy()
-        bake_src.name = "_bake_src"
-        bpy.context.scene.collection.objects.link(bake_src)
-
         flipped = 0
         if args.uv_method == "chart":
             _charts, flipped = chart_uv(visual, args.spread, args.island_margin)
@@ -669,7 +743,7 @@ def main():
         islands_after = count_uv_islands(visual)
         log(f"[uv] islands {islands_before} -> {islands_after} (flipped faces: {flipped})")
 
-        stats = run_bakes(bake_src, visual, fbm_dir, args.bake_size,
+        stats = run_bakes(bake_src, visual, maps, args.bake_size,
                           args.staging, args.ao_samples)
         bpy.data.objects.remove(bake_src, do_unlink=True)
 
@@ -681,10 +755,7 @@ def main():
         bo.data = visual.data.copy()
         bo.name = bo.data.name = f"bo_{args.name}"
         bpy.context.scene.collection.objects.link(bo)
-        select_only([bo])
-        mod = bo.modifiers.new("coll_decimate", "DECIMATE")
-        mod.ratio = args.collision_tris / max(tri_count(bo), 1)
-        bpy.ops.object.modifier_apply(modifier=mod.name)
+        decimate_to(bo, args.collision_tris)
         bo.data.materials.clear()
         bo.data.materials.append(bpy.data.materials.new("stone"))
         log(f"[collision] bo_{args.name}: {tri_count(bo)} tris")
@@ -695,12 +766,14 @@ def main():
 
         if not args.skip_preview:
             bo.hide_render = True
-            render_preview(visual, args.staging, args.height)
+            render_preview(visual, args.staging)
 
+        bpy.context.view_layer.update()
         summary = {
             "status": "ok", "out": out_path,
-            "height_m": round(visual.dimensions[2], 3),
-            "tris_visual": tri_count(visual), "tris_bo": tri_count(bo),
+            "dims_m": [round(v, 3) for v in visual.dimensions],
+            "tris_source": tris_source, "tris_visual": tri_count(visual),
+            "tris_bo": tri_count(bo),
             "uv_islands_before": islands_before, "uv_islands_after": islands_after,
             "uv_flipped_faces": flipped,
             "bakes": stats,

@@ -63,13 +63,13 @@ Review record: `docs/reviews/rca-asset-pipeline-tools-2026-07-16.md`; Blender go
 - **Fab vault downloads can be partial**: the tent collection shipped texture zips for only 3 of 6
   tent families; re-download missing "additional files" from the product page before converting.
 
-## Single-prop path — Tripo AI assets (2026-07-25, Witch-king throne)
+## Single-prop path — Tripo AI assets (2026-07-25 throne; 2026-07-28 Gondor ships)
 
 A Tripo-generated FBX (single mesh, embedded `.fbm` JPEG textures: basecolor/normal/roughness/
 metallic, no AO, ~1-unit normalized scale) is a different beast from a UE kit: the batch stages
 above don't apply, but the auto-UV atlas is hundreds of fragmented islands — unpaintable in
-Substance. The path (`tools/oneoff/blender_prep_witchking_throne.py` +
-`convert_tripo_prop_textures.py`):
+Substance. The path (`tools/oneoff/blender_prep_tripo_prop.py` — named
+`blender_prep_witchking_throne.py` for the pilot — + `convert_tripo_prop_textures.py`):
 
 1. Scale to real-world height, pivot to base centre, kit-rename (`sm_mordor_mm_throne_001`).
 2. **Chart re-UV, not Smart UV Project.** Probed on the throne's 42.7k-tri organic
@@ -90,6 +90,18 @@ Substance. The path (`tools/oneoff/blender_prep_witchking_throne.py` +
    and is the **Substance round-trip**: paint on the prepped FBX, export plain PBR PNGs, re-run
    with `--src <export dir>`. Normal-map relief direction stays smoke-test-arbitrated
    (`--flip-green`).
+
+**Multi-million-tri variant (Gondor harbor ships, 2026-07-28):** Tripo "detailed" exports run
+~1.9M tris. `--decimate-tris 40000` decimates the visual AFTER the full-res bake source is
+duplicated and with the UV layer stripped first (UV-boundary preservation fights a 0.02-ratio
+collapse) — the rebake becomes a true high-to-low bake, the normal map absorbing the lost
+geometry; the cage auto-scales (`max(0.02, 0.005 × max_dim)`) to clear the decimation gap on
+hull-sized props. `--scale-mode length` rotates the longest horizontal extent to +X and scales
+it to `--size` (Tripo props are not consistently oriented — one of the three ships was
+length-along-Y). Ship results at spread 75°: 108–171 islands, fold-over 3.5–9.2% — concentrated
+in thin rigging/chain cylinders where mirrored texels are invisible; all three passed the
+preview-render check, so the flipped-face gate is a *prompt to look at the preview*, not an
+auto-fail.
 
 ## Current state / open items
 
