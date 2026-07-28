@@ -87,6 +87,14 @@ ARM_WALL_S = [16.9, 36.9, 66.7]   # wall centres along the arm axis
 ARM_TWRA_S = [51.8, 81.6]         # in-line tower centres
 TWR_B_Z = 5.0                     # corner tower raise: doors z10 -> deck z15
 
+# Tower b's stair flight at door height wraps the +X door and the diagonal
+# between its two doors (angular occupancy measured 2026-07-28,
+# stairs_occupancy.json: sectors +X+Y/+Y/+X-Y). Rotating the interior +90
+# moves the flight onto the two PLAIN faces (+Y/-X), clearing both door
+# approaches and the door-to-door crossing. Tower a's doors measure clear
+# as authored (flight on -Y, doors on +-X) — no rotation.
+INTERIOR_ROT = {"tower_b": 90.0}
+
 LOG_LINES = []
 REPORT_DIR = None
 
@@ -192,7 +200,11 @@ def main():
                         fallbacks.add(part)
                     dup = src.copy()
                     dup.data = src.data.copy()
-                    dup.matrix_world = mat
+                    part_mat = mat
+                    if "_int" in part and kind in INTERIOR_ROT:
+                        part_mat = mat @ Matrix.Rotation(
+                            math.radians(INTERIOR_ROT[kind]), 4, "Z")
+                    dup.matrix_world = part_mat
                     bpy.context.scene.collection.objects.link(dup)
                     dups.append(dup)
             mesh = bpy.data.meshes.new("join_target")

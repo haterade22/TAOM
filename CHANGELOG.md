@@ -35,7 +35,11 @@ at y=0 with threshold exactly z=15 — flush in-line pass-through by design) +
 — an authored corner tower; its doors sit at z=10, so it places at z=+5, which also aligns its
 crown with tower a's). No rotation hacks, no Y-shifts: a player walks arm A's deck through the
 corner tower onto arm B's. Tower interiors (floors + spiral stairs) now included — towers are
-enterable. Tiers: 338k / 130k / 63k tris + 34k bo (up from v1's 122k — interiors + merlons;
+enterable. **Stairs-vs-doors follow-up:** angular occupancy measured at door height showed the
+corner tower's stair flight wrapping its +X door and the diagonal between its two doors; its
+interior (floor + stairs + bo) now rotates +90° so the flight sits on the two plain faces —
+through-door renders confirm open passage at the corner and clean through-tunnel sightlines in
+the in-line towers (whose stairs measured clear as authored and are unchanged). Tiers: 338k / 130k / 63k tris + 34k bo (up from v1's 122k — interiors + merlons;
 proper per-part LOD tiers ship). Verified: plan-view door tunnels + deck-level corner arches in
 renders; 14 base-named material slots, no `.NNN`.
 
