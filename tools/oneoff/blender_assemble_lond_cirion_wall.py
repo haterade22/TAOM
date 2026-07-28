@@ -312,9 +312,11 @@ def section_plans():
          ["lond_cirion_wall_04"] + ["lond_cirion_wall_03"] * 4
          + ["lond_cirion_wall_05"])
 
-    # east-shore run (user recipe 2026-07-28: "3, 4, 3, 3" from the east
-    # wing's end tower, heading east): the wing end face sits at x = 150.0
-    walk((150.0, 0.0), 0.0,
+    # east-side run NORTH (user correction 2026-07-28: "3, 4, 3, 3" turns
+    # NORTH at the east wing's end tower, not east): chain starts at the
+    # end tower's plain north face (deck dead-ends at the turn, like the
+    # court corners), kinking to heading 67.5 as the land edge bends NE
+    walk((144.6, 5.4), 90.0,
          ["lond_cirion_wall_03", "lond_cirion_wall_04",
           "lond_cirion_wall_03", "lond_cirion_wall_03"])
     plans["lond_cirion_wall_08"] = plan08
