@@ -178,6 +178,30 @@ def section_plans():
             ("wall", _rz(h) @ _t(-14.2)),
             ("wall", _rz(-h) @ _t(14.2)),
         ]
+
+    # 06 — gate front (user 2026-07-28: the two Ls + gatehouse straight as
+    # ONE piece, with an extra wall between the gate section and each L).
+    # Face along X with outer +Y like every section; both corner arms run
+    # south. The corners need OPPOSITE handedness — west corner unrotated
+    # (doors +X east / -Y south), east corner Rz(-90) (doors west/south) —
+    # and the arms mirror likewise (west Rz(+90) outer west, east Rz(-90)
+    # outer east): the composite legitimately contains both chiralities.
+    face = [("wall", 17.9), ("tower_a", 32.8), ("wall", 47.7),
+            ("tower_a", 62.6), ("wall", 77.5), ("tower_a", 92.4),
+            ("wall", 107.3), ("wall", 127.2)]
+    cx = 144.1
+    plan = [("gate", Matrix.Identity(4))]
+    for kind, s in face:
+        plan += [(kind, _t(s)), (kind, _t(-s))]
+    plan += [("tower_b", _t(-cx, 0, TWR_B_Z)),
+             ("tower_b", _t(cx, 0, TWR_B_Z) @ _rz(-90.0))]
+    for s in ARM_WALL_S:
+        plan += [("wall", _t(-cx, -s) @ _rz(90.0)),
+                 ("wall", _t(cx, -s) @ _rz(-90.0))]
+    for s in ARM_TWRA_S:
+        plan += [("tower_a", _t(-cx, -s) @ _rz(90.0)),
+                 ("tower_a", _t(cx, -s) @ _rz(-90.0))]
+    plans["lond_cirion_wall_06"] = plan
     return plans
 
 

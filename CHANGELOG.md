@@ -70,6 +70,13 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
+**Section 06 — gate front (same day, user direction):** the two Ls + gatehouse straight fused
+into ONE ploppable piece with an extra wall spliced between the gate section and each L:
+303 × 95 m, gate at centre, 10 walls / 8 in-line towers / 2 corner towers on the face + two
+south-running arms. The corners carry OPPOSITE handedness (west unrotated, east Rz(−90); arms
+mirror likewise) — the composite legitimately contains both chiralities, which is exactly what
+standalone symmetric sections avoid. Tiers 870k / 334k / 159k + 86k bo.
+
 **Arm-B facing fix (in-editor catch):** a fixed-handed wall piece cannot serve both arms of an
 L by rotating with the arm direction — `Rz(−90)@T(s,0,0)` ran arm B south but pointed its merlon
 face into the city (one arm read backwards vs the other). Correct transform: orient the piece
