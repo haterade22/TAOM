@@ -87,23 +87,14 @@ ARM_WALL_S = [16.9, 36.9, 66.7]   # wall centres along the arm axis
 ARM_TWRA_S = [51.8, 81.6]         # in-line tower centres
 TWR_B_Z = 5.0                     # corner tower raise: doors z10 -> deck z15
 
-# Interior rotations + door bridges (entrycells.json / holes.json,
-# measured 2026-07-28): each interior carries TWO hazards 90 deg apart —
-# the descending stairwell and the climbing flight — so with doors 180
-# apart (tower a) or 90 apart (tower b) NO rotation clears every door;
-# these interiors are authored for one "stair door" per tower. Chosen
-# state parks the FALL hazard (not the chest-height flight) on one door
-# and bridges its stairwell with a deck-flush plate: pass-through is safe
-# at every door, the up-flight to the tower top stays usable, and only
-# the decorative below-deck rooms are sealed.
-INTERIOR_ROT = {"tower_b": 90.0}
-# tower-local door frame: (main_lo, main_hi, half_width, top_z, thickness)
-# — the descending treads occupy main 2.64..4.52 (holes.json); the plate
-# overlaps the floor plate and door tunnel by ~0.3 m each side, top 2 cm
-# proud of the deck so coplanar overlap can't z-fight.
-BRIDGES = {"tower_a": (2.3, 4.9, 1.2, 15.02, 0.25),
-           "tower_b": (2.3, 4.8, 1.2, 10.02, 0.25)}
-BRIDGE_MAT = "gondor_tiles_a_dirty_mat"
+# Interior rotations (user direction 2026-07-28: "rotate the piece in the
+# tower so the stairs are on the window side"): put the stairwell descent
+# and flight against the window/plain walls, never the doors. The flight's
+# high end edge-clips one door lane (samples sit at the lane edge,
+# doorzones.json) — walkable, confirmed in-editor by the user's read.
+#   tower_a: rot90  -> descent on +Y window wall, flight edge at +X
+#   tower_b: rot180 -> descent on +Y plain wall, flight edge at -Y
+INTERIOR_ROT = {"tower_a": 90.0, "tower_b": 180.0}
 
 LOG_LINES = []
 REPORT_DIR = None
@@ -127,28 +118,6 @@ def select_only(objs):
 def tri_count(obj):
     obj.data.calc_loop_triangles()
     return len(obj.data.loop_triangles)
-
-
-def make_bridge(kind):
-    """Deck-flush plate over the stairwell descent at the tower's hazardous
-    (+X local) door. Door-anchored: transforms with the tower placement, NOT
-    with the interior rotation."""
-    import bmesh
-    lo, hi, hw, top, th = BRIDGES[kind]
-    mesh = bpy.data.meshes.new(f"_bridge_{kind}")
-    bm = bmesh.new()
-    ret = bmesh.ops.create_cube(bm, size=1.0)
-    for v in bm.verts:
-        v.co.x = lo if v.co.x < 0 else hi
-        v.co.y = -hw if v.co.y < 0 else hw
-        v.co.z = (top - th) if v.co.z < 0 else top
-    bm.to_mesh(mesh)
-    bm.free()
-    obj = bpy.data.objects.new(f"_bridge_{kind}", mesh)
-    mat = bpy.data.materials.get(BRIDGE_MAT) or bpy.data.materials.new(BRIDGE_MAT)
-    mesh.materials.append(mat)
-    bpy.context.scene.collection.objects.link(obj)
-    return obj
 
 
 def placements():
@@ -222,20 +191,12 @@ def main():
             log(f"[warn] source parts not found (skipped): {missing}")
 
         plan = placements()
-        bridge_templates = {k: make_bridge(k) for k in BRIDGES}
         outputs = []
         tier_stats = {}
         fallbacks = set()
         for tier in ("base", "lod3", "lod6", "bo"):
             dups = []
             for kind, mat in plan:
-                if kind in bridge_templates:
-                    tmpl = bridge_templates[kind]
-                    bdup = tmpl.copy()
-                    bdup.data = tmpl.data.copy()
-                    bdup.matrix_world = mat
-                    bpy.context.scene.collection.objects.link(bdup)
-                    dups.append(bdup)
                 parts = PARTS[kind]["bo" if tier == "bo" else "visual"]
                 for part in parts:
                     src = resolve(part, tier)
@@ -276,8 +237,6 @@ def main():
             outputs.append(joined)
         if fallbacks:
             log(f"[lods] parts without authored LODs (base carried over): {sorted(fallbacks)}")
-        for tmpl in bridge_templates.values():
-            bpy.data.objects.remove(tmpl, do_unlink=True)
 
         select_only(outputs)
         bpy.ops.export_scene.fbx(
