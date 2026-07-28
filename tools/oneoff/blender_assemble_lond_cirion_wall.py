@@ -30,6 +30,7 @@ Headless (MS-Store launcher DETACHES; completion = <staging>\\_report\\DONE.txt)
 import json
 import math
 import os
+import re
 import traceback
 
 import bpy
@@ -60,6 +61,13 @@ TIER_SUFFIX = {"base": "", "lod3": ".lod3", "lod6": ".lod6"}
 ARM_WALL_S = [12.5, 32.5, 61.5]   # wall centres along the arm axis
 ARM_TOWER_S = [47.0, 76.0]        # mid + end tower centres
 
+# The tower's walkway-level door is authored OFF the wall line: cap-arch
+# outline on the +-X faces spans y -4.91..-3.09 (centre -4.0) with its
+# threshold at z 9.82..10.06 — exactly the wall walkway floor (z~10.0,
+# y -3.0..+3.09, centre +0.05). Shift every tower +4.05 in its local Y so
+# the door lands centred on the walkway (measured 2026-07-28, measure3.json).
+TOWER_DY = 4.05
+
 LOG_LINES = []
 REPORT_DIR = None
 
@@ -89,13 +97,13 @@ def placements():
     arm B = same distances under Rz(-90) (axis -Y, outer face -X); the
     shared corner tower at Rz(-45)."""
     rz = lambda deg: Matrix.Rotation(math.radians(deg), 4, "Z")
-    out = [("tower", rz(-45.0))]
+    out = [("tower", rz(-45.0) @ Matrix.Translation((0, TOWER_DY, 0)))]
     for s in ARM_WALL_S:
         out.append(("wall", Matrix.Translation((s, 0, 0))))
         out.append(("wall", rz(-90.0) @ Matrix.Translation((s, 0, 0))))
     for s in ARM_TOWER_S:
-        out.append(("tower", Matrix.Translation((s, 0, 0))))
-        out.append(("tower", rz(-90.0) @ Matrix.Translation((s, 0, 0))))
+        out.append(("tower", Matrix.Translation((s, TOWER_DY, 0))))
+        out.append(("tower", rz(-90.0) @ Matrix.Translation((s, TOWER_DY, 0))))
     return out
 
 
@@ -117,6 +125,23 @@ def main():
             except Exception:
                 bpy.ops.import_scene.fbx(filepath=src)
         bpy.context.view_layer.update()
+
+        # the two source FBXs share material names — Blender renames the
+        # second import's copies to <name>.001, which the editor cannot bind
+        # (slots bind by exact name; .001 slots render white). Remap every
+        # .NNN duplicate onto its base-named material.
+        for mat in list(bpy.data.materials):
+            m = re.match(r"^(.*)\.\d{3}$", mat.name)
+            if not m:
+                continue
+            base = bpy.data.materials.get(m.group(1))
+            if base is not None:
+                mat.user_remap(base)
+                bpy.data.materials.remove(mat)
+                log(f"[materials] remapped duplicate -> {m.group(1)}")
+            else:
+                mat.name = m.group(1)
+                log(f"[materials] renamed stray duplicate -> {m.group(1)}")
 
         sources = {}
         needed = set(WALL_TIERS.values())

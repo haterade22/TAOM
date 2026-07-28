@@ -21,6 +21,14 @@ new `tools/oneoff/blender_dump_fbx_inventory.py`; verified via four-angle Cycles
 physics). Owed: Modding Kit import + in-scene snap test; next sections (straight run, gatehouse,
 curved) reuse the same assembler.
 
+**Editor-feedback fixes (same day):** (1) importing both source FBXs into one Blender scene made
+the second import's shared-name materials `.001` duplicates — exported slots the editor can't
+bind (rendered white); the assembler now remaps `.NNN` duplicates onto their base-named
+materials before joining (re-export verified clean). (2) The tower's walkway-level door is
+authored 4 m off the wall line (cap-arch outline y −4.91..−3.09, threshold exactly at walkway
+z≈10); every tower now shifts +4.05 m in local Y (`TOWER_DY`) so the door lands centred on the
+walkway — verified by renders: the walkway runs straight into each door arch.
+
 ### feat(gondor): three harbor ships from Tripo AI models (1.9M→40k tris each)
 
 Converted three Tripo ship FBXs into Gondor harbor props: `sm_gondor_ship_cog_001` (20 m),
