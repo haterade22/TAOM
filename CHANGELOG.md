@@ -70,13 +70,13 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
-**Section 08 — the full harbor front (same day, user direction: "06 and another wall connected
-to 07 as one piece"):** gate court + one connecting wall west of its wing + the coastal sweep
-attached by its east end — `Rz(213.75°)` lands the sweep's last segment collinear with the
-straight run AND flips its outer face south to match the wings, the attach translation computed
-symbolically from the sweep's endpoint with the kit-standard 0.1 m tuck. 321 × 103 m, one plop
-for the entire waterfront; tiers 1.21M / 462k / 222k + 120k bo. (The 08 number is reused from
-the deleted sea-anchor.)
+**Section 08 — the full harbor front (same day; final recipe from the user: west of the court's
+wing, "03 and then 07"):** gate court + an embedded full section 03 straight run + the coastal
+sweep attached by its east end — `Rz(213.75°)` lands the sweep's last segment collinear with
+the run AND flips its outer face south to match the wings; both joints carry the kit-standard
+0.1 m tuck, transforms computed symbolically. 350 × 103 m, one plop for the entire waterfront;
+tiers 1.27M / 486k / 234k + 126k bo. (First cut used a bare 20 m wall instead of the 03 — too
+short; the 08 number is reused from the deleted sea-anchor.)
 
 **Section 07 — coastal sweep (same day):** ~173 m arc: four 2-wall runs through three 22.5°
 kink towers, 67.5° total curvature, merlons on the convex side — one plop covers the harbor

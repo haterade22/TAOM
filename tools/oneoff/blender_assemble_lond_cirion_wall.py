@@ -237,23 +237,21 @@ def section_plans():
         ]
     plans["lond_cirion_wall_07"] = plan
 
-    # 08 — the full harbor front (user 2026-07-28: "06 and another wall
-    # connected to 07"): the gate court + one connecting wall west of its
-    # wing + the coastal sweep attached by its EAST end, collinear with the
-    # straight run and curling north up the west shore. Rz(213.75) turns
-    # the sweep's east segment onto the run's line AND flips its outer
-    # face south to match the wings; the attach translation is computed
-    # symbolically from the sweep's east endpoint.
+    # 08 — the full harbor front (user recipe 2026-07-28: west of the gate
+    # court's wing, "03 and then 07"): a full section 03 straight run, then
+    # the coastal sweep attached by its EAST end — Rz(213.75) lands the
+    # sweep's last segment collinear with the run AND flips its outer face
+    # south to match the wings; attach translation computed symbolically
+    # from the sweep endpoint, kit-standard 0.1 m tucks at both joints.
     wing_far = 63.0 + ARM_TWRA_S[-1] + 5.4          # 06 west wing end face x
-    conn_c = -(wing_far - 0.1 + 10.0)               # connecting wall centre
-    attach = (conn_c - 10.0 + 0.1, 0.0)             # west end, 0.1 m tuck
-                                                    # (kit-standard overlap —
-                                                    # coincident end faces flicker)
+    c03 = -(wing_far - 0.1 + 24.9)                  # embedded 03 centre
+    B = _t(c03) @ _rz(180.0)                        # 03 flipped: outer south
+    attach = (c03 - 24.9 + 0.1, 0.0)                # 03 west end, 0.1 tuck
     e_end = (V3[0] + 44.2 * u3[0], V3[1] + 44.2 * u3[1])  # 07 east endpoint
     A = (_t(attach[0], attach[1]) @ _rz(213.75)
          @ _t(-e_end[0], -e_end[1]))
     plan08 = list(plans["lond_cirion_wall_06"])
-    plan08.append(("wall", _t(conn_c) @ _rz(180.0)))
+    plan08 += [(kind, B @ mat) for kind, mat in plans["lond_cirion_wall_03"]]
     plan08 += [(kind, A @ mat) for kind, mat in plans["lond_cirion_wall_07"]]
     plans["lond_cirion_wall_08"] = plan08
     return plans
