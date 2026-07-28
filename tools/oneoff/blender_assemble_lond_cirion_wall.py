@@ -188,7 +188,10 @@ def section_plans():
     # Filler walls join each leg end-tower to the gate piece (their deck
     # dead-ends on the tower's plain face — the established pattern).
     # Corners: left Rz(180) (doors west+north), right Rz(90) (doors
-    # east+north); leg outer faces west/east, wings+face Rz(180).
+    # east+north); wings+face Rz(180) (outer south). LEG merlons face the
+    # COURT (user fix 2026-07-28: the court is a kill-zone forecourt —
+    # every wall around it defends inward-to-court, so west leg outer
+    # east, east leg outer west; the leg towers flip with them).
     yF = ARM_TWRA_S[-1]              # 81.6 — gate-face line = leg end-tower centres
     xC = 63.0                        # corner centres; makes the filler span close
     plan = [("gate", _t(0, yF) @ _rz(180.0))]
@@ -204,8 +207,8 @@ def section_plans():
             plan += [
                 (kind, _t(-xC - d, 0) @ _rz(180.0)),   # west wing (outer S)
                 (kind, _t(xC + d, 0) @ _rz(180.0)),    # east wing (outer S)
-                (kind, _t(-xC, d) @ _rz(90.0)),        # west leg (outer W)
-                (kind, _t(xC, d) @ _rz(-90.0)),        # east leg (outer E)
+                (kind, _t(-xC, d) @ _rz(-90.0)),       # west leg (outer E = court)
+                (kind, _t(xC, d) @ _rz(90.0)),         # east leg (outer W = court)
             ]
     plans["lond_cirion_wall_06"] = plan
     return plans
