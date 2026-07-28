@@ -257,6 +257,24 @@ def section_plans():
     plan08 = list(plans["lond_cirion_wall_06"])
     plan08 += [(kind, B @ mat) for kind, mat in plans["lond_cirion_wall_03"]]
     plan08 += [(kind, A @ mat) for kind, mat in plans["lond_cirion_wall_07"]]
+
+    # north-coast extension (user placement 2026-07-28: after the sweep,
+    # "3, 3, 7" continuing up the shore): the chain leaves the first sweep
+    # at heading 112.5 (its far segment), runs two 03 straights, then a
+    # second sweep attached by its west end (same curl handedness) bending
+    # around to heading 45 northeast. Cursor computed symbolically from the
+    # first sweep's far endpoint; 0.1 m tucks at every joint.
+    e_end = (V3[0] + 44.2 * u3[0], V3[1] + 44.2 * u3[1])  # 07 east endpoint
+    ca, sa = _u(146.25)
+    dx, dy = e_end[0] - w_end[0], e_end[1] - w_end[1]
+    E1 = (attach[0] + dx * ca - dy * sa, attach[1] + dx * sa + dy * ca)
+    uh = _u(112.5)
+    for c in (24.8, 74.5):                          # two 03 centres
+        Bk = _t(E1[0] + c * uh[0], E1[1] + c * uh[1]) @ _rz(112.5)
+        plan08 += [(kind, Bk @ mat) for kind, mat in plans["lond_cirion_wall_03"]]
+    E2 = (E1[0] + 99.3 * uh[0], E1[1] + 99.3 * uh[1])
+    A2 = _t(E2[0], E2[1]) @ _rz(78.75) @ _t(-w_end[0], -w_end[1])
+    plan08 += [(kind, A2 @ mat) for kind, mat in plans["lond_cirion_wall_07"]]
     plans["lond_cirion_wall_08"] = plan08
     return plans
 

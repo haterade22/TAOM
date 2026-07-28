@@ -70,6 +70,13 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
+**Section 08 north-coast extension (same day, user placement "3, 3, 7" beyond the sweep):** the
+chain now continues from the first sweep's far end at heading 112.5° — two embedded 03 straights
+up the shore, then a second sweep attached by its west end (same curl handedness) bending around
+to heading 45° northeast. All joints keep the 0.1 m tuck, chain cursor computed symbolically.
+Section 08 final: **553 × 361 m**, tiers 1.76M / 662k / 306k + 172k bo — the entire west-harbor
+waterfront from the gate court to the northern headland in one plop.
+
 **Section 08 — the full harbor front (same day; final recipe from the user: west of the court's
 wing, "03 and then 07"):** gate court + an embedded full section 03 straight run + the coastal
 sweep attached by its east end — `Rz(213.75°)` lands the sweep's last segment collinear with
