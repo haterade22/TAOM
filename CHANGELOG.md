@@ -21,13 +21,23 @@ new `tools/oneoff/blender_dump_fbx_inventory.py`; verified via four-angle Cycles
 physics). Owed: Modding Kit import + in-scene snap test; next sections (straight run, gatehouse,
 curved) reuse the same assembler.
 
-**Editor-feedback fixes (same day):** (1) importing both source FBXs into one Blender scene made
-the second import's shared-name materials `.001` duplicates — exported slots the editor can't
+**Editor-feedback fixes (same day):** (1) importing multiple source FBXs into one Blender scene
+made later imports' shared-name materials `.001` duplicates — exported slots the editor can't
 bind (rendered white); the assembler now remaps `.NNN` duplicates onto their base-named
-materials before joining (re-export verified clean). (2) The tower's walkway-level door is
-authored 4 m off the wall line (cap-arch outline y −4.91..−3.09, threshold exactly at walkway
-z≈10); every tower now shifts +4.05 m in local Y (`TOWER_DY`) so the door lands centred on the
-walkway — verified by renders: the walkway runs straight into each door arch.
+materials before joining (re-export verified clean). (2) An interim fix shifted the L1 towers
++4.05 m so their off-axis door met the walkway; superseded the same day by (3).
+
+**Rebuilt on the L3 wall kit (user direction — L1 towers don't sit flush):** section 01 now uses
+`Scenes/Gondor/walls/` pieces: `gondor_castle_wall_20m_l3_a` (deck z=15, outer +Y, merlon
+add-ons m1–m6) + `gondor_castle_wall_tower_l3_a` (10.8 m square, doors on BOTH ±X faces centred
+at y=0 with threshold exactly z=15 — flush in-line pass-through by design) + 
+`gondor_castle_wall_tower_l3_b` as the corner (14.2 m square, doors on the ADJACENT +X/−Y faces
+— an authored corner tower; its doors sit at z=10, so it places at z=+5, which also aligns its
+crown with tower a's). No rotation hacks, no Y-shifts: a player walks arm A's deck through the
+corner tower onto arm B's. Tower interiors (floors + spiral stairs) now included — towers are
+enterable. Tiers: 338k / 130k / 63k tris + 34k bo (up from v1's 122k — interiors + merlons;
+proper per-part LOD tiers ship). Verified: plan-view door tunnels + deck-level corner arches in
+renders; 14 base-named material slots, no `.NNN`.
 
 ### feat(gondor): three harbor ships from Tripo AI models (1.9M→40k tris each)
 
