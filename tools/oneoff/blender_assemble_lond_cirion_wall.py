@@ -51,14 +51,15 @@ SRC_FILES = [
     os.path.join(GONDOR, "walls", "gondor_castle_wall_20m_l3_a.fbx"),
     os.path.join(GONDOR, "walls", "gondor_castle_wall_tower_l3_a.fbx"),
     os.path.join(GONDOR, "walls", "gondor_castle_wall_tower_l3_b.fbx"),
+    os.path.join(GONDOR, "walls", "gondor_castle_gatehouse_l1_a.fbx"),
 ]
 OUT_FBX = os.path.join(GONDOR, "blockout", "lond_cirion_wall_a.fbx")
 STAGING = r"E:\LOTRAOMAssets\_export\lond_cirion\wall_01"
-SECTION = "lond_cirion_wall_01"
 
 WALL = "gondor_castle_wall_20m_l3_a"
 TWR_A = "gondor_castle_wall_tower_l3_a"
 TWR_B = "gondor_castle_wall_tower_l3_b"
+GATE = "gondor_castle_gatehouse_l1_a"
 
 # per piece kind: visual part names + bo part names (tier names resolved at
 # runtime: <part>.lod3/.lod6 when present, else the base part carries over)
@@ -79,6 +80,13 @@ PARTS = {
                   + [f"{TWR_B}_m{i}" for i in range(1, 13)],
         "bo": [f"bo_{TWR_B}", f"bo_{TWR_B}_int"]
               + [f"bo_{TWR_B}_m{i}" for i in range(1, 13)],
+    },
+    # gatehouse: no interior; deck top 15.0 == the L3 wall deck despite the
+    # l1 name (measured 2026-07-28, gatehouse_inv); outer merlons +Y like
+    # the wall; 16.4 m wide, gate tunnel through +-Y at ground level
+    "gate": {
+        "visual": [GATE] + [f"{GATE}_m{i}" for i in range(1, 5)],
+        "bo": [f"bo_{GATE}"] + [f"bo_{GATE}_m{i}" for i in range(1, 5)],
     },
 }
 TIER_SUFFIX = {"base": "", "lod3": ".lod3", "lod6": ".lod6"}
@@ -120,22 +128,57 @@ def tri_count(obj):
     return len(obj.data.loop_triangles)
 
 
-def placements():
-    """Arm A along +X as authored (outer face +Y = north). Arm B along -Y:
-    a fixed-handed wall piece cannot serve both arms of an L by rotating
-    with the arm direction — Rz(-90)@T(s,0,0) runs the arm south but points
-    the merlon face INTO the city (caught in-editor 2026-07-28). The correct
-    transform orients the piece Rz(+90) (outer -X = west, consistent with
-    arm A) and translates it south in world space: T(0,-s)@Rz(90)."""
-    rz = lambda deg: Matrix.Rotation(math.radians(deg), 4, "Z")
-    out = [("tower_b", Matrix.Translation((0, 0, TWR_B_Z)))]
+def _rz(deg):
+    return Matrix.Rotation(math.radians(deg), 4, "Z")
+
+
+def _t(x, y=0.0, z=0.0):
+    return Matrix.Translation((x, y, z))
+
+
+def section_plans():
+    """Section name -> [(kind, world matrix)]. Chirality law: never rotate a
+    handed wall piece with the arm direction — orient outer-consistent first,
+    translate in world space after (the arm-B lesson, 2026-07-28). Kinks keep
+    both walls' +X eastward (outer +Y stays north-ish) rotated +-half the
+    bend angle; wall inner ends tuck 14.2 m from the vertex so their merlon
+    corners stay inside the vertex tower's shell. The L is achiral (identical
+    arms) — mirrored variants are editor rotations, no extra section."""
+    plans = {}
+
+    # 01 — the proven L (arm A east, arm B south, city interior southeast)
+    plan = [("tower_b", _t(0, 0, TWR_B_Z))]
     for s in ARM_WALL_S:
-        out.append(("wall", Matrix.Translation((s, 0, 0))))
-        out.append(("wall", Matrix.Translation((0, -s, 0)) @ rz(90.0)))
+        plan += [("wall", _t(s)), ("wall", _t(0, -s) @ _rz(90.0))]
     for s in ARM_TWRA_S:
-        out.append(("tower_a", Matrix.Translation((s, 0, 0))))
-        out.append(("tower_a", Matrix.Translation((0, -s, 0)) @ rz(90.0)))
-    return out
+        plan += [("tower_a", _t(s)), ("tower_a", _t(0, -s) @ _rz(90.0))]
+    plans["lond_cirion_wall_01"] = plan
+
+    # 02 — gatehouse straight: gate half 8.0; walls at +-(8.0-0.1+10);
+    # end towers at +-(27.9-0.1+5.0); deck runs level across the gate top
+    plans["lond_cirion_wall_02"] = [
+        ("gate", Matrix.Identity(4)),
+        ("wall", _t(17.9)), ("wall", _t(-17.9)),
+        ("tower_a", _t(32.8)), ("tower_a", _t(-32.8)),
+    ]
+
+    # 03 — straight run with a mid tower (~50 m chaining piece)
+    plans["lond_cirion_wall_03"] = [
+        ("tower_a", Matrix.Identity(4)),
+        ("wall", _t(14.9)), ("wall", _t(-14.9)),
+    ]
+
+    # 04/05 — coastal kinks: tower at the vertex (outer window face = the
+    # convex bisector), walls headed east rotated +-half-angle, centred
+    # 14.2 m out along their own heading
+    for name, bend in (("lond_cirion_wall_04", 22.5), ("lond_cirion_wall_05", 45.0)):
+        h = bend / 2.0
+        plans[name] = [
+            ("tower_a", Matrix.Identity(4)),
+            ("wall", _rz(h) @ _t(-14.2)),
+            ("wall", _rz(-h) @ _t(14.2)),
+        ]
+    return plans
 
 
 def main():
@@ -190,51 +233,54 @@ def main():
         if missing:
             log(f"[warn] source parts not found (skipped): {missing}")
 
-        plan = placements()
         outputs = []
         tier_stats = {}
         fallbacks = set()
-        for tier in ("base", "lod3", "lod6", "bo"):
-            dups = []
-            for kind, mat in plan:
-                parts = PARTS[kind]["bo" if tier == "bo" else "visual"]
-                for part in parts:
-                    src = resolve(part, tier)
-                    if src is None:
-                        continue
-                    if tier in ("lod3", "lod6") and src.name == part and \
-                            (part + TIER_SUFFIX[tier]) not in by_name:
-                        fallbacks.add(part)
-                    dup = src.copy()
-                    dup.data = src.data.copy()
-                    part_mat = mat
-                    if "_int" in part and kind in INTERIOR_ROT:
-                        part_mat = mat @ Matrix.Rotation(
-                            math.radians(INTERIOR_ROT[kind]), 4, "Z")
-                    dup.matrix_world = part_mat
-                    bpy.context.scene.collection.objects.link(dup)
-                    dups.append(dup)
-            mesh = bpy.data.meshes.new("join_target")
-            target = bpy.data.objects.new("join_target", mesh)
-            bpy.context.scene.collection.objects.link(target)
-            bpy.context.view_layer.update()  # join must see the fresh matrices
-            select_only(dups + [target])
-            bpy.context.view_layer.objects.active = target
-            bpy.ops.object.join()
-            joined = bpy.context.view_layer.objects.active
-            name = f"bo_{SECTION}" if tier == "bo" else SECTION + TIER_SUFFIX[tier]
-            joined.name = joined.data.name = name
-            if tier == "bo":
-                joined.data.materials.clear()
-                stone = bpy.data.materials.get("stone") or bpy.data.materials.new("stone")
-                joined.data.materials.append(stone)
-            bpy.context.view_layer.update()
-            tier_stats[name] = {
-                "tris": tri_count(joined),
-                "dims_m": [round(v, 2) for v in joined.dimensions],
-            }
-            log(f"[join] {name}: {tier_stats[name]}")
-            outputs.append(joined)
+        section_bases = {}
+        for section, plan in section_plans().items():
+            for tier in ("base", "lod3", "lod6", "bo"):
+                dups = []
+                for kind, mat in plan:
+                    parts = PARTS[kind]["bo" if tier == "bo" else "visual"]
+                    for part in parts:
+                        src = resolve(part, tier)
+                        if src is None:
+                            continue
+                        if tier in ("lod3", "lod6") and src.name == part and \
+                                (part + TIER_SUFFIX[tier]) not in by_name:
+                            fallbacks.add(part)
+                        dup = src.copy()
+                        dup.data = src.data.copy()
+                        part_mat = mat
+                        if "_int" in part and kind in INTERIOR_ROT:
+                            part_mat = mat @ Matrix.Rotation(
+                                math.radians(INTERIOR_ROT[kind]), 4, "Z")
+                        dup.matrix_world = part_mat
+                        bpy.context.scene.collection.objects.link(dup)
+                        dups.append(dup)
+                mesh = bpy.data.meshes.new("join_target")
+                target = bpy.data.objects.new("join_target", mesh)
+                bpy.context.scene.collection.objects.link(target)
+                bpy.context.view_layer.update()  # join must see the fresh matrices
+                select_only(dups + [target])
+                bpy.context.view_layer.objects.active = target
+                bpy.ops.object.join()
+                joined = bpy.context.view_layer.objects.active
+                name = f"bo_{section}" if tier == "bo" else section + TIER_SUFFIX[tier]
+                joined.name = joined.data.name = name
+                if tier == "bo":
+                    joined.data.materials.clear()
+                    stone = bpy.data.materials.get("stone") or bpy.data.materials.new("stone")
+                    joined.data.materials.append(stone)
+                bpy.context.view_layer.update()
+                tier_stats[name] = {
+                    "tris": tri_count(joined),
+                    "dims_m": [round(v, 2) for v in joined.dimensions],
+                }
+                log(f"[join] {name}: {tier_stats[name]}")
+                outputs.append(joined)
+                if tier == "base":
+                    section_bases[section] = joined
         if fallbacks:
             log(f"[lods] parts without authored LODs (base carried over): {sorted(fallbacks)}")
 
@@ -250,19 +296,15 @@ def main():
         )
         log(f"[export] {OUT_FBX}")
 
-        # geometry-only preview (kit materials live editor-side)
+        # geometry-only previews, one per section (kit materials live editor-side)
         scene = bpy.context.scene
         scene.render.engine = "CYCLES"
         scene.cycles.samples = 32
-        for o in outputs:
-            o.hide_render = o.name != SECTION
         from mathutils import Vector
         cam_data = bpy.data.cameras.new("cam")
         cam = bpy.data.objects.new("cam", cam_data)
         scene.collection.objects.link(cam)
         scene.camera = cam
-        cam.location = Vector((95.0, 60.0, 75.0))
-        cam.rotation_euler = (Vector((30.0, -35.0, 10.0)) - cam.location).to_track_quat("-Z", "Y").to_euler()
         sun_data = bpy.data.lights.new("sun", type="SUN")
         sun_data.energy = 3.0
         sun = bpy.data.objects.new("sun", sun_data)
@@ -274,12 +316,24 @@ def main():
         scene.world = world
         scene.render.resolution_x = 1400
         scene.render.resolution_y = 900
-        scene.render.filepath = os.path.join(STAGING, "preview.png")
-        bpy.ops.render.render(write_still=True)
-        log(f"[preview] {scene.render.filepath}")
+        for section, base in section_bases.items():
+            # hide EVERYTHING except this section's base — the imported
+            # source pieces still sit at the origin and z-fight the render
+            # otherwise (the export is unaffected: use_selection)
+            for o in bpy.context.scene.objects:
+                if o.type == "MESH":
+                    o.hide_render = o is not base
+            bpy.context.view_layer.update()
+            d = max(base.dimensions)
+            cam.location = Vector((d * 0.85, -d * 0.75, d * 0.65 + 15.0))
+            look = Vector((0.0, 0.0, 12.0))
+            cam.rotation_euler = (look - cam.location).to_track_quat("-Z", "Y").to_euler()
+            scene.render.filepath = os.path.join(STAGING, f"preview_{section}.png")
+            bpy.ops.render.render(write_still=True)
+            log(f"[preview] {scene.render.filepath}")
 
         summary = {"status": "ok", "out": OUT_FBX, "tiers": tier_stats,
-                   "pieces": {"walls": 6, "towers_a": 4, "towers_b": 1}}
+                   "sections": list(section_bases)}
     except Exception:
         log(traceback.format_exc())
         summary["trace"] = traceback.format_exc(limit=3)

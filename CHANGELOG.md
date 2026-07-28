@@ -55,9 +55,20 @@ below-deck rooms are sealed. Verified by through-door renders at both bridged do
 each interior so the stairs sit on the window wall, `tower_a` +90° / `tower_b` 180°, no bridges.)*
 
 **Section 01 CONFIRMED WORKING in-editor (user, 2026-07-28)** — materials bind, towers flush,
-doors on the walkway, both arms facing outward, stairs on the window side. Next sections
-(straight run, gatehouse from `walls/gondor_castle_gatehouse_l1_a.fbx`, curved) reuse the
-assembler pattern.
+doors on the walkway, both arms facing outward, stairs on the window side.
+
+**Sections 02–05 added (same day):** the kit FBX now ships five ploppable sections —
+**02 gatehouse straight** (78 m: tower–wall–gate–wall–tower around
+`gondor_castle_gatehouse_l1_a`, whose deck tops at exactly 15.0 = the L3 wall deck despite the
+l1 name; own merlons, no interior), **03 straight run** (50 m wall–tower–wall chaining piece),
+**04/05 coastal kinks** (22.5° and 45° bends: walls headed east rotated ±half-angle so outer
+faces stay consistent — no chirality trap — with the vertex tower hiding the bend, wall ends
+tucked 14.2 m out so their merlon corners stay inside the tower shell). Faceted arcs from
+chained kinks + straights replace true curved geometry (the `meshes/gondor_wall_*_curved` bits
+are garden-wall scale, unusable at 15 m). The **backwards L needs no section** — the L has
+identical arms, so it is achiral: every mirrored variant is an editor rotation of section 01.
+Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
+clean — `use_selection`); per-section previews now isolate the section.
 
 **Arm-B facing fix (in-editor catch):** a fixed-handed wall piece cannot serve both arms of an
 L by rotating with the arm direction — `Rz(−90)@T(s,0,0)` ran arm B south but pointed its merlon
