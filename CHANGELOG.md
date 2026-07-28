@@ -70,6 +70,13 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
+**Section 08 east-shore run (same day, user recipe "3, 4, 3, 3" from the east wing's end):**
+the chain walker (now a reusable function; its first nested-closure version hit the classic
+`+=`-rebinding UnboundLocalError — `.extend()` fixes it) continues east from the wing at
+heading 0°, kinking 22.5° south-east after the first straight. Section 08: **741 × 519 m,
+2.64M tris base** (exact embedded sum). Editor-staged bridge/ramp pieces at the run's end were
+deliberately excluded per the user.
+
 **Section 08 headland run (same day, user placement "4, 3, 3, 3, 3, 5"):** the chain continues
 from the second sweep (heading 45°) through a generic **chain walker** in the assembler —
 cursor + heading, kinks turn the heading right by their bend, every joint 0.1 m tucked — adding

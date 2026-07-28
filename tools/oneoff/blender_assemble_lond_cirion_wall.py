@@ -285,26 +285,38 @@ def section_plans():
         v = M @ Vector((p[0], p[1], 0.0))
         return (v.x, v.y)
 
-    cursor = _apply(A2, (V3[0] + 44.2 * u3[0], V3[1] + 44.2 * u3[1]))
-    h = 45.0
     KINK_HALF = {"lond_cirion_wall_04": 11.25, "lond_cirion_wall_05": 22.5}
-    seq = ["lond_cirion_wall_04"] + ["lond_cirion_wall_03"] * 4 + ["lond_cirion_wall_05"]
-    for name in seq:
-        ux, uy = _u(h)
-        if name in KINK_HALF:
-            half = KINK_HALF[name]
-            ch, sh = _u(half)
-            entry = (-24.2 * ch, -24.2 * sh)   # kink west-wall outer end (frame)
-            exit_ = (24.2 * ch, -24.2 * sh)    # kink east-wall outer end (frame)
-            Ak = (_t(cursor[0] - 0.1 * ux, cursor[1] - 0.1 * uy)
-                  @ _rz(h - half) @ _t(-entry[0], -entry[1]))
-            plan08 += [(kind, Ak @ mat) for kind, mat in plans[name]]
-            cursor = _apply(Ak, exit_)
-            h -= 2.0 * half
-        else:
-            Bk = _t(cursor[0] + 24.8 * ux, cursor[1] + 24.8 * uy) @ _rz(h)
-            plan08 += [(kind, Bk @ mat) for kind, mat in plans[name]]
-            cursor = (cursor[0] + 49.7 * ux, cursor[1] + 49.7 * uy)
+
+    def walk(cursor, h, seq):
+        """Chain sections from cursor along heading h (deg): 03 advances the
+        line, kinks turn the heading right by their bend; 0.1 m tucks."""
+        for name in seq:
+            ux, uy = _u(h)
+            if name in KINK_HALF:
+                half = KINK_HALF[name]
+                ch, sh = _u(half)
+                entry = (-24.2 * ch, -24.2 * sh)
+                exit_ = (24.2 * ch, -24.2 * sh)
+                Ak = (_t(cursor[0] - 0.1 * ux, cursor[1] - 0.1 * uy)
+                      @ _rz(h - half) @ _t(-entry[0], -entry[1]))
+                plan08.extend((kind, Ak @ mat) for kind, mat in plans[name])
+                cursor = _apply(Ak, exit_)
+                h -= 2.0 * half
+            else:
+                Bk = _t(cursor[0] + 24.8 * ux, cursor[1] + 24.8 * uy) @ _rz(h)
+                plan08.extend((kind, Bk @ mat) for kind, mat in plans[name])
+                cursor = (cursor[0] + 49.7 * ux, cursor[1] + 49.7 * uy)
+        return cursor, h
+
+    walk(_apply(A2, (V3[0] + 44.2 * u3[0], V3[1] + 44.2 * u3[1])), 45.0,
+         ["lond_cirion_wall_04"] + ["lond_cirion_wall_03"] * 4
+         + ["lond_cirion_wall_05"])
+
+    # east-shore run (user recipe 2026-07-28: "3, 4, 3, 3" from the east
+    # wing's end tower, heading east): the wing end face sits at x = 150.0
+    walk((150.0, 0.0), 0.0,
+         ["lond_cirion_wall_03", "lond_cirion_wall_04",
+          "lond_cirion_wall_03", "lond_cirion_wall_03"])
     plans["lond_cirion_wall_08"] = plan08
     return plans
 
