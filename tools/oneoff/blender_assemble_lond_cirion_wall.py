@@ -247,9 +247,13 @@ def section_plans():
     c03 = -(wing_far - 0.1 + 24.9)                  # embedded 03 centre
     B = _t(c03) @ _rz(180.0)                        # 03 flipped: outer south
     attach = (c03 - 24.9 + 0.1, 0.0)                # 03 west end, 0.1 tuck
-    e_end = (V3[0] + 44.2 * u3[0], V3[1] + 44.2 * u3[1])  # 07 east endpoint
-    A = (_t(attach[0], attach[1]) @ _rz(213.75)
-         @ _t(-e_end[0], -e_end[1]))
+    # attach the sweep by its WEST end: Rz(146.25) lands that segment on the
+    # run's line with outer south, and the chain curls gently NORTHWEST away
+    # from the run (the east-end attach curled it back across the run —
+    # caught by the user's side-by-side 2026-07-28)
+    w_end = (V1[0] - 44.2 * u0[0], V1[1] - 44.2 * u0[1])  # 07 west endpoint
+    A = (_t(attach[0], attach[1]) @ _rz(146.25)
+         @ _t(-w_end[0], -w_end[1]))
     plan08 = list(plans["lond_cirion_wall_06"])
     plan08 += [(kind, B @ mat) for kind, mat in plans["lond_cirion_wall_03"]]
     plan08 += [(kind, A @ mat) for kind, mat in plans["lond_cirion_wall_07"]]
