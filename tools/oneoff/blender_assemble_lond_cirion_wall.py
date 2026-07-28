@@ -120,14 +120,20 @@ def tri_count(obj):
 
 
 def placements():
+    """Arm A along +X as authored (outer face +Y = north). Arm B along -Y:
+    a fixed-handed wall piece cannot serve both arms of an L by rotating
+    with the arm direction — Rz(-90)@T(s,0,0) runs the arm south but points
+    the merlon face INTO the city (caught in-editor 2026-07-28). The correct
+    transform orients the piece Rz(+90) (outer -X = west, consistent with
+    arm A) and translates it south in world space: T(0,-s)@Rz(90)."""
     rz = lambda deg: Matrix.Rotation(math.radians(deg), 4, "Z")
     out = [("tower_b", Matrix.Translation((0, 0, TWR_B_Z)))]
     for s in ARM_WALL_S:
         out.append(("wall", Matrix.Translation((s, 0, 0))))
-        out.append(("wall", rz(-90.0) @ Matrix.Translation((s, 0, 0))))
+        out.append(("wall", Matrix.Translation((0, -s, 0)) @ rz(90.0)))
     for s in ARM_TWRA_S:
         out.append(("tower_a", Matrix.Translation((s, 0, 0))))
-        out.append(("tower_a", rz(-90.0) @ Matrix.Translation((s, 0, 0))))
+        out.append(("tower_a", Matrix.Translation((0, -s, 0)) @ rz(90.0)))
     return out
 
 

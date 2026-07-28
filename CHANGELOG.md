@@ -39,7 +39,14 @@ enterable. **Stairs-vs-doors follow-up:** angular occupancy measured at door hei
 corner tower's stair flight wrapping its +X door and the diagonal between its two doors; its
 interior (floor + stairs + bo) now rotates +90° so the flight sits on the two plain faces —
 through-door renders confirm open passage at the corner and clean through-tunnel sightlines in
-the in-line towers (whose stairs measured clear as authored and are unchanged). Tiers: 338k / 130k / 63k tris + 34k bo (up from v1's 122k — interiors + merlons;
+the in-line towers (whose stairs measured clear as authored and are unchanged).
+
+**Arm-B facing fix (in-editor catch):** a fixed-handed wall piece cannot serve both arms of an
+L by rotating with the arm direction — `Rz(−90)@T(s,0,0)` ran arm B south but pointed its merlon
+face into the city (one arm read backwards vs the other). Correct transform: orient the piece
+`Rz(+90)` (outer −X, consistent with arm A's +Y) and translate south in world space,
+`T(0,−s)@Rz(90)`. Verified from the convex exterior: both arms now present identical
+machicolated outer faces. Tiers: 338k / 130k / 63k tris + 34k bo (up from v1's 122k — interiors + merlons;
 proper per-part LOD tiers ship). Verified: plan-view door tunnels + deck-level corner arches in
 renders; 14 base-named material slots, no `.NNN`.
 
