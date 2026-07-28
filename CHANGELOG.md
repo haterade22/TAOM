@@ -70,12 +70,14 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
-**Section 06 — gate front (same day, user direction):** the two Ls + gatehouse straight fused
-into ONE ploppable piece with an extra wall spliced between the gate section and each L:
-303 × 95 m, gate at centre, 10 walls / 8 in-line towers / 2 corner towers on the face + two
-south-running arms. The corners carry OPPOSITE handedness (west unrotated, east Rz(−90); arms
-mirror likewise) — the composite legitimately contains both chiralities, which is exactly what
-standalone symmetric sections avoid. Tiers 870k / 334k / 159k + 86k bo.
+**Section 06 — gate front (same day, user direction; v2 layout matches the user's scene
+placement exactly):** gate at centre, one filler wall from each gate end-tower to a **corner
+tower flanking the gate** (~65 m out), L-wings running OUTWARD along the face from the corners,
+return arms behind — 304 × 95 m as one ploppable piece. The corner's gate-facing side is its
+blank face (gate-side deck dead-ends there; wing + arm connect through its two doors, as in
+section 01). Corners/arms carry opposite handedness per side — composites legitimately mix
+chiralities. Tiers 870k / 334k / 159k + 86k bo. (v1 had the corners at the far ends with wings
+inboard — replaced same day after the user showed the intended scene arrangement.)
 
 **Arm-B facing fix (in-editor catch):** a fixed-handed wall piece cannot serve both arms of an
 L by rotating with the arm direction — `Rz(−90)@T(s,0,0)` ran arm B south but pointed its merlon
