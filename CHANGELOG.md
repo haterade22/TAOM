@@ -41,6 +41,17 @@ interior (floor + stairs + bo) now rotates +90° so the flight sits on the two p
 through-door renders confirm open passage at the corner and clean through-tunnel sightlines in
 the in-line towers (whose stairs measured clear as authored and are unchanged).
 
+**Stairwell fall-hazard fix (in-editor catch — "someone entering that door will fall down the
+stairs"):** entry-cell measurement proved NO 90° interior rotation can make every door safe —
+each interior carries two hazards 90° apart (descending stairwell + climbing flight), so with
+doors 180° apart (in-line) or 90° apart (corner) one hazard always lands on a door; these
+interiors are authored around one "stair door" per tower. Fix: keep the rotations that park the
+FALL (not the chest-height flight) on one door and bridge that door's stairwell with a generated
+deck-flush plate (descent spans 2.64–4.52 m in the door lane — holes.json; plate 2.3–4.9 m,
+±1.2 m, 2 cm proud to avoid z-fighting, `gondor_tiles_a_dirty_mat`, matching collision in bo_).
+Every door now walks flat; the up-flight to the tower top stays usable; only the decorative
+below-deck rooms are sealed. Verified by through-door renders at both bridged doors.
+
 **Arm-B facing fix (in-editor catch):** a fixed-handed wall piece cannot serve both arms of an
 L by rotating with the arm direction — `Rz(−90)@T(s,0,0)` ran arm B south but pointed its merlon
 face into the city (one arm read backwards vs the other). Correct transform: orient the piece
