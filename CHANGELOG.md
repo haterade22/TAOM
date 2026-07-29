@@ -70,6 +70,16 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
+**Section 08 CIRCUIT CLOSED (2026-07-29):** a closure solver connects the two open ends — it
+intersects the headland end-line (heading −22.5°) with the north run's approach line (−67.5°;
+the difference is exactly one 45° kink), places the 05 kink at the vertex, and fills both legs
+with walls + rhythm towers, spreading each leg's length remainder as extra tuck at every joint
+(hidden in the piece overlaps — no custom pieces needed). Full top-down render verifies one
+continuous, seamless ring: **the complete Lond Cirion wall circuit in a single plop**, 3.22M
+tris base with LOD tiers. The east-side north run also gained the walker's **flip mode** the
+same day (outer right-of-travel + left-turning kinks — a chain recipe needs sequence, heading,
+AND chirality).
+
 **Section 08 east-shore run (same day, user recipe "3, 4, 3, 3" from the east wing's end):**
 the chain walker (now a reusable function; its first nested-closure version hit the classic
 `+=`-rebinding UnboundLocalError — `.extend()` fixes it) continues east from the wing at

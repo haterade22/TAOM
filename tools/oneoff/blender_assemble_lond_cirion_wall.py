@@ -320,18 +320,65 @@ def section_plans():
                 cursor = (cursor[0] + 49.7 * ux, cursor[1] + 49.7 * uy)
         return cursor, h
 
-    walk(_apply(A2, (V3[0] + 44.2 * u3[0], V3[1] + 44.2 * u3[1])), 45.0,
-         ["lond_cirion_wall_04"] + ["lond_cirion_wall_03"] * 4
-         + ["lond_cirion_wall_05"])
+    curA, hA = walk(_apply(A2, (V3[0] + 44.2 * u3[0], V3[1] + 44.2 * u3[1])), 45.0,
+                    ["lond_cirion_wall_04"] + ["lond_cirion_wall_03"] * 4
+                    + ["lond_cirion_wall_05"])
 
     # east-side run NORTH (user corrections 2026-07-28: "3, 4, 3, 3" turns
     # NORTH at the east wing's end tower, and the run is MIRRORED — outer
     # east / kink turning left to heading 112.5 NNW, per the user's
     # placed reference): chain starts at the end tower's plain north face
     # (deck dead-ends at the turn, like the court corners)
-    walk((144.6, 5.4), 90.0,
-         ["lond_cirion_wall_03", "lond_cirion_wall_04",
-          "lond_cirion_wall_03", "lond_cirion_wall_03"], flip=True)
+    curB, hB = walk((144.6, 5.4), 90.0,
+                    ["lond_cirion_wall_03", "lond_cirion_wall_04",
+                     "lond_cirion_wall_03", "lond_cirion_wall_03"], flip=True)
+
+    # ---- circuit closure (2026-07-29): connect the headland end (curA,
+    # exits hA=-22.5) to the north run's end (curB, faces back along
+    # hB-180=-67.5). The net turn is exactly one 05 kink (45 right). The
+    # closing chain: straight leg from A, the kink at the intersection of
+    # the two end-lines, straight leg into B. Wall pitch can't hit an
+    # arbitrary length, so each leg spreads its remainder as extra tuck at
+    # every joint (a few m max, hidden in the piece overlaps).
+    def straight_leg(start, h, L):
+        """Fill L metres from start along h with walls (+ a tower every
+        third piece), outer left of travel; the length remainder spreads as
+        extra tuck at every joint."""
+        pieces = []
+        nat = 0.0
+        while nat < L - 0.5:
+            kind, plen = (("tower_a", 10.8) if len(pieces) % 3 == 2
+                          else ("wall", 20.0))
+            pieces.append((kind, plen))
+            nat += plen
+        tuck = (nat - L) / max(len(pieces), 1)
+        ux, uy = _u(h)
+        cur = 0.0
+        for kind, plen in pieces:
+            cur -= tuck
+            c = cur + plen / 2.0
+            plan08.append((kind, _t(start[0] + c * ux, start[1] + c * uy)
+                           @ _rz(h)))
+            cur += plen
+        print(f"[closure] leg h={h:g} L={L:.2f}: {len(pieces)} pieces, "
+              f"tuck {tuck:.2f}")
+
+    # solve curA + t*dA = curB + s*dB (the kink vertex lies on both
+    # end-lines; t,s must come out positive)
+    dAx, dAy = _u(hA)
+    dBx, dBy = _u(hB)
+    det = dAx * (-dBy) - dAy * (-dBx)
+    rx, ry = curB[0] - curA[0], curB[1] - curA[1]
+    t = (rx * (-dBy) - ry * (-dBx)) / det
+    s = (dAx * ry - dAy * rx) / det
+    KINK_E = 24.2 * math.cos(math.radians(22.5))
+    print(f"[closure] t={t:.2f} s={s:.2f} (both must be > {KINK_E:.1f})")
+    straight_leg(curA, hA, t - KINK_E)
+    kc, kh = walk((curA[0] + (t - KINK_E) * dAx,
+                   curA[1] + (t - KINK_E) * dAy), hA,
+                  ["lond_cirion_wall_05"])
+    straight_leg(kc, kh, s - KINK_E)
+    print(f"[closure] exit h={kh:g} (want {hB - 180.0:g})")
     plans["lond_cirion_wall_08"] = plan08
     return plans
 
