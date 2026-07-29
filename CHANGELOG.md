@@ -15,6 +15,9 @@ merlon pair (m1/m13, world y −9.3..−5.3) crosses the rear tower's south wall
 each fin poked through the tower's interior floor, half clipped out of the wall face (user
 screenshots); the pair is dropped from both wings. Tri deltas exact on all four tiers
 (base +8,144 = 8×2,036 added − 4×2,036 removed; bo +1,080; lod3 +3,040; lod6 +1,512).
+Follow-up (same day): the low caps carry their own short merlons, so cap + chamfer doubled the
+corner merlons — the caps are now dropped from the tower part set (8 × 732 tris off the base
+tier, again exact on all tiers); each corner has only the single tall diagonal run.
 
 ### feat(gondor): gatehouse wings replaced with gondor_castle_wall_tower_l1_d kit instances
 

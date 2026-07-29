@@ -72,11 +72,14 @@ GATE_TIERS = {"base": "minas_tirith_gatehouse_a1",
               "lod3": "minas_tirith_gatehouse_a1.lod3",
               "lod6": "minas_tirith_gatehouse_a1.lod6",
               "bo": "bo_minas_tirith_gatehouse_a1"}
+# m3/m6/m9/m12 (the low corner caps, which carry their own short merlons)
+# are DROPPED: the diagonal m1 chamfer runs replace them — placing both
+# doubled the corner merlons (user screenshot 2026-07-29)
 TWR_PARTS = {
     "visual": [TWR_B, f"{TWR_B}_int.floor", f"{TWR_B}_int.stairs"]
-              + [f"{TWR_B}_m{i}" for i in range(1, 13)],
+              + [f"{TWR_B}_m{i}" for i in (1, 2, 4, 5, 7, 8, 10, 11)],
     "bo": [f"bo_{TWR_B}", f"bo_{TWR_B}_int"]
-          + [f"bo_{TWR_B}_m{i}" for i in range(1, 13)],
+          + [f"bo_{TWR_B}_m{i}" for i in (1, 2, 4, 5, 7, 8, 10, 11)],
 }
 # NB the addon prefix really is "..._l1_d1_m{i}" (d1), not "..._l1_d_m{i}".
 # m1 + m13 (the root-end pair, authored y 6.5..10.5 -> world -9.3..-5.3)
