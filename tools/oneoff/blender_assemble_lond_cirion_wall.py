@@ -380,7 +380,12 @@ def section_plans():
     kc, kh = walk((curA[0] + (t - KINK_E) * dAx,
                    curA[1] + (t - KINK_E) * dAy), hA,
                   ["lond_cirion_wall_05"])
-    straight_leg(kc, kh, s - KINK_E, towers=False)
+    # the long leg is deliberately NOT built (user 2026-07-29: "walls and
+    # towers gone") — the ~222 m stretch stays OPEN as the siege frontage
+    # where the engine's breachable siege-wall entities go; the 05 kink and
+    # short leg form the western shoulder, the north run's end the eastern
+    log(f"[closure] siege gap left open: {s - KINK_E:.1f} m from the kink "
+        f"exit to the north run's end")
     log(f"[closure] exit h={kh:g} (want {hB - 180.0:g})")
     # overlap audit (2026-07-29: the first closure doubled 5 pieces over an
     # existing run — user X-marked them): drop any closure piece whose
