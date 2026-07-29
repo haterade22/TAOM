@@ -4,6 +4,18 @@
 
 ## 2026-07-29
 
+### fix(gondor): gatehouse tower crowns chamfered, wing root merlons dropped
+
+Two in-editor findings on the hybrid gatehouse. (1) tower_l3_b's rim corners ship as LOW caps
+(m3/m6/m9/m12, z 18..21 vs the edge segments' 18..22.9), leaving a notch at every crown corner —
+each is now bridged diagonally with the tower's own tall m1 segment: the chamfer line between
+edge-segment ends, (4.5, 7.67)→(7.67, 4.5), is 4.48 m and m1 is 4.5 m, an exact fit; 8 chamfers
+across both towers turn the crowns into full-height octagons. (2) The l1_d wings' root-end
+merlon pair (m1/m13, world y −9.3..−5.3) crosses the rear tower's south wall at −8.1 — half of
+each fin poked through the tower's interior floor, half clipped out of the wall face (user
+screenshots); the pair is dropped from both wings. Tri deltas exact on all four tiers
+(base +8,144 = 8×2,036 added − 4×2,036 removed; bo +1,080; lod3 +3,040; lod6 +1,512).
+
 ### feat(gondor): gatehouse wings replaced with gondor_castle_wall_tower_l1_d kit instances
 
 The user identified the gatehouse's merged wings as embedded copies of the kit piece

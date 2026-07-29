@@ -78,10 +78,13 @@ TWR_PARTS = {
     "bo": [f"bo_{TWR_B}", f"bo_{TWR_B}_int"]
           + [f"bo_{TWR_B}_m{i}" for i in range(1, 13)],
 }
-# NB the addon prefix really is "..._l1_d1_m{i}" (d1), not "..._l1_d_m{i}"
+# NB the addon prefix really is "..._l1_d1_m{i}" (d1), not "..._l1_d_m{i}".
+# m1 + m13 (the root-end pair, authored y 6.5..10.5 -> world -9.3..-5.3)
+# are DROPPED per user: they cross the rear tower's south wall (-8.1),
+# poking through its interior floor and clipping out of the wall face.
 L1D_PARTS = {
-    "visual": [L1D] + [f"{L1D}1_m{i}" for i in range(1, 14)],
-    "bo": [f"bo_{L1D}"] + [f"bo_{L1D}1_m{i}" for i in range(1, 14)],
+    "visual": [L1D] + [f"{L1D}1_m{i}" for i in range(2, 13)],
+    "bo": [f"bo_{L1D}"] + [f"bo_{L1D}1_m{i}" for i in range(2, 13)],
 }
 TIER_SUFFIX = {"base": "", "lod3": ".lod3", "lod6": ".lod6"}
 
@@ -180,6 +183,21 @@ def main():
             (Matrix.Translation((-L1D_X, L1D_Y, 0.0)), L1D_PARTS),
             (Matrix.Translation((L1D_X, L1D_Y, 0.0)), L1D_PARTS),
         ]
+        # tower-crown corner chamfers: the rim's four corner caps (m3/m6/
+        # m9/m12) are LOW (z 18..21 vs the edge segments' 18..22.9), leaving
+        # a notch at every corner — bridge each diagonally with the tower's
+        # own tall m1 segment: the chamfer line between edge-segment ends,
+        # (4.5, 7.67)->(7.67, 4.5), is 4.48 m and m1 is 4.5 m, an exact fit
+        # (0.01 tuck each end). T pushes m1's outer face (authored y 7.67)
+        # onto that line (origin distance 8.606) and centres it laterally.
+        ch_parts = {"visual": [f"{TWR_B}_m1"], "bo": [f"bo_{TWR_B}_m1"]}
+        chamfer = (Matrix.Translation((-0.929, 2.253, 0.0))
+                   @ Matrix.Rotation(math.radians(-45.0), 4, "Z"))
+        for tower_m in (placements[0][0], placements[1][0]):
+            for k in range(4):
+                placements.append(
+                    (tower_m @ Matrix.Rotation(math.radians(90.0 * k), 4, "Z")
+                     @ chamfer, ch_parts))
 
         outputs = []
         stats = {}
