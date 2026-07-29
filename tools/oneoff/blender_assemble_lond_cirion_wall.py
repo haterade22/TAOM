@@ -340,14 +340,16 @@ def section_plans():
     # the two end-lines, straight leg into B. Wall pitch can't hit an
     # arbitrary length, so each leg spreads its remainder as extra tuck at
     # every joint (a few m max, hidden in the piece overlaps).
-    def straight_leg(start, h, L):
+    def straight_leg(start, h, L, towers=True):
         """Fill L metres from start along h with walls (+ a tower every
-        third piece), outer left of travel; the length remainder spreads as
-        extra tuck at every joint."""
+        third piece unless towers=False — the siege-docking stretch needs
+        unbroken curtain wall, user 2026-07-29), outer left of travel; the
+        length remainder spreads as extra tuck at every joint."""
         pieces = []
         nat = 0.0
         while nat < L - 0.5:
-            kind, plen = (("tower_a", 10.8) if len(pieces) % 3 == 2
+            kind, plen = (("tower_a", 10.8)
+                          if towers and len(pieces) % 3 == 2
                           else ("wall", 20.0))
             pieces.append((kind, plen))
             nat += plen
@@ -378,7 +380,7 @@ def section_plans():
     kc, kh = walk((curA[0] + (t - KINK_E) * dAx,
                    curA[1] + (t - KINK_E) * dAy), hA,
                   ["lond_cirion_wall_05"])
-    straight_leg(kc, kh, s - KINK_E)
+    straight_leg(kc, kh, s - KINK_E, towers=False)
     log(f"[closure] exit h={kh:g} (want {hB - 180.0:g})")
     # overlap audit (2026-07-29: the first closure doubled 5 pieces over an
     # existing run — user X-marked them): drop any closure piece whose
