@@ -59,6 +59,11 @@ L1D = "gondor_castle_wall_tower_l1_d"
 # whole and replaced by a clean kit instance.
 BIG_CUT = (7.9, 24.2, -8.2, 8.2, -99.0)
 WING_CUT = (9.0, 23.8, -35.0, -8.2, -99.0)
+# the old octagons reached inboard to |x| 6.95 (probed) — their crown ring
+# survived BIG_CUT as a floating merlon arc at |x| 6.95..7.9, z 26..32,
+# doubling the new towers' rim rows beside the span. Kill it above the
+# span parapets (top z 18) only.
+SPAN_CUT = (6.5, 8.0, -8.2, 8.2, 19.0)
 
 TWR_X = 15.1          # rear tower centres: inner face 8.0 meets the cut edge
 TWR_Y = -1.0
@@ -128,7 +133,8 @@ def cut_towers(obj):
     for f in bm.faces:
         c = f.calc_center_median()
         for side in (1, -1):
-            if in_region(c, BIG_CUT, side) or in_region(c, WING_CUT, side):
+            if (in_region(c, BIG_CUT, side) or in_region(c, WING_CUT, side)
+                    or in_region(c, SPAN_CUT, side)):
                 doomed.append(f)
                 break
     bmesh.ops.delete(bm, geom=doomed, context="FACES")

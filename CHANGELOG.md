@@ -18,6 +18,11 @@ screenshots); the pair is dropped from both wings. Tri deltas exact on all four 
 Follow-up (same day): the low caps carry their own short merlons, so cap + chamfer doubled the
 corner merlons — the caps are now dropped from the tower part set (8 × 732 tris off the base
 tier, again exact on all tiers); each corner has only the single tall diagonal run.
+Follow-up 2: the real "double merlons" the user kept seeing along the span-facing edges were a
+**floating arc of the OLD octagons' crown ring** — the octagons reached inboard to |x| 6.95,
+BIG_CUT starts at 7.9, so a ~1 m sliver of crown merlons + machicolation survived at z 26..32
+beside each new tower. New `SPAN_CUT` (|x| 6.5..8.0, y ±8.2, z ≥ 19 — above the span parapets)
+excises it: base −6,374 tris across the two junctions, all tiers proportional.
 
 ### feat(gondor): gatehouse wings replaced with gondor_castle_wall_tower_l1_d kit instances
 
