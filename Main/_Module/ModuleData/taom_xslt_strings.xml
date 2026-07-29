@@ -2914,6 +2914,36 @@
 
 	<string id="TAOM_hero_B8_c" text="{=TAOM_hero_B8_c}Heir to the Variag warlord." />
 
+	<!-- ============================================== -->
+
+	<!-- LIEGE TITLES (str_liege_title.* in comment_strings.xslt) -->
+
+	<!-- ============================================== -->
+
+	<string id="TAOM_liege_dunland" text="{=TAOM_liege_dunland}Brenin of Dunland" />
+
+	<string id="TAOM_liege_dunland_female" text="{=TAOM_liege_dunland_female}Brenhines of Dunland" />
+
+	<string id="TAOM_liege_dale" text="{=TAOM_liege_dale}King of Dale" />
+
+	<string id="TAOM_liege_dale_female" text="{=TAOM_liege_dale_female}Queen of Dale" />
+
+	<string id="TAOM_liege_harad" text="{=TAOM_liege_harad}Taskral of Harad" />
+
+	<string id="TAOM_liege_harad_female" text="{=TAOM_liege_harad_female}Taskral of Harad" />
+
+	<string id="TAOM_liege_khand" text="{=TAOM_liege_khand}Khudriag of Khand" />
+
+	<string id="TAOM_liege_khand_female" text="{=TAOM_liege_khand_female}Khudriag of Khand" />
+
+	<string id="TAOM_liege_rohan" text="{=TAOM_liege_rohan}King of the Mark" />
+
+	<string id="TAOM_liege_rohan_female" text="{=TAOM_liege_rohan_female}Queen of the Mark" />
+
+	<string id="TAOM_liege_rhun" text="{=TAOM_liege_rhun}Loke-Kan of Rhun" />
+
+	<string id="TAOM_liege_rhun_female" text="{=TAOM_liege_rhun_female}Loke-Kan of Rhun" />
+
 
 
 </strings>

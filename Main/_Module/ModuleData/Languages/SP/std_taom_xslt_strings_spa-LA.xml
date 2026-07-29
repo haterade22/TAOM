@@ -1437,5 +1437,17 @@
     <string id="TAOM_hero_B8_l" text="Un señor de la guerra variag de las colinas orientales." />
     <string id="TAOM_hero_B8_s" text="Esposa del señor de la guerra variag." />
     <string id="TAOM_hero_B8_c" text="Heredero del señor de la guerra variag." />
+    <string id="TAOM_liege_dunland" text="Brenin of Dunland" />
+    <string id="TAOM_liege_dunland_female" text="Brenhines of Dunland" />
+    <string id="TAOM_liege_dale" text="King of Dale" />
+    <string id="TAOM_liege_dale_female" text="Queen of Dale" />
+    <string id="TAOM_liege_harad" text="Taskral of Harad" />
+    <string id="TAOM_liege_harad_female" text="Taskral of Harad" />
+    <string id="TAOM_liege_khand" text="Khudriag of Khand" />
+    <string id="TAOM_liege_khand_female" text="Khudriag of Khand" />
+    <string id="TAOM_liege_rohan" text="King of the Mark" />
+    <string id="TAOM_liege_rohan_female" text="Queen of the Mark" />
+    <string id="TAOM_liege_rhun" text="Loke-Kan of Rhun" />
+    <string id="TAOM_liege_rhun_female" text="Loke-Kan of Rhun" />
   </strings>
 </base>

@@ -2,6 +2,37 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-29
+
+### fix(dialogue): rulers no longer introduce themselves with Calradian demonyms (#363)
+
+Théoden greeted the player as *"king of the Vlandians"*. The noun comes from
+`str_liege_title.<culture>` in vanilla `SandBox/ModuleData/comment_strings.xml`, picked by
+conversation tag — `VlandianTag.IsApplicableTo` is `Culture.StringId == "vlandia"` — so none of
+TAOM's renames (kingdom `name` / `short_name` / `title` / `ruler_title`, culture `name`) could
+reach it, and `str_liege_title` had never been overridden in the repo. All six vanilla-renamed
+kingdoms leaked, vassals included (`comment_strings.xslt:103` reuses `{LIEGE_TITLE}`).
+
+`comment_strings.xslt` now rewrites all 12 `str_liege_title[_female]` strings: **King of the
+Mark** (Rohan), **Brenin of Dunland**, **King of Dale**, **Taskral of Harad**, **Khudriag of
+Khand**, **Loke-Kan of Rhun** — male forms reusing each kingdom's existing `ruler_title`.
+Each template re-emits `node()`, because the vanilla `<tags>` child is what selects the
+variation: `FindMatchingScore` gives a matching tag +1, a **tagless** variation 0, a
+non-matching tag -2.1e9, so a tag-stripped string would match every culture at once and the six
+titles would collide. 12 `TAOM_liege_*` keys registered in `taom_xslt_strings.xml` and stubbed
+into the 12 language files (English until the LLM pass runs — `ANTHROPIC_API_KEY` isn't set in
+this environment).
+
+Verified by transforming vanilla `comment_strings.xml` offline: 326 string ids in, 326 out, the
+12 targets carrying both the new text and their original tag. New `LiegeTitleOverrideTests`
+(4 tests) guard the texts, the `node()` copy, the absence of Calradian names, and the loc-key
+registration; suite 4488 green.
+
+Two adjacent defects found and filed on #363, not fixed here: the 23 pre-existing overrides in
+the same file drop their `<tags>` child the same way (nobles fall through to whichever variation
+loads first), and TAOM's 16 LOTR kingdoms have no `str_liege_title` variation at all, so their
+rulers say *"I am Thranduil, ."*
+
 ## 2026-07-28
 
 ### feat(gondor): Lond Cirion wall kit started — ploppable L-section with towers

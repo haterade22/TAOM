@@ -174,4 +174,111 @@
 		</xsl:copy>
 	</xsl:template>
 
+	<!-- ============================================================ -->
+	<!-- Liege titles - "I am Théoden, {LIEGE_TITLE}."                -->
+	<!--                                                              -->
+	<!-- The engine picks these by conversation tag (VlandianTag ->   -->
+	<!-- Culture.StringId == "vlandia"), NOT by kingdom name, so the  -->
+	<!-- Rohan rename in spkingdoms.xslt never reaches this line.     -->
+	<!-- Each template MUST re-emit node() - the vanilla <tags> child -->
+	<!-- is what selects the variation, and a tag-stripped one        -->
+	<!-- matches every culture at once.                               -->
+	<!-- ============================================================ -->
+
+	<xsl:template match="string[@id='str_liege_title.empire']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_dunland}Brenin of Dunland</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title_female.empire']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_dunland_female}Brenhines of Dunland</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title.sturgia']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_dale}King of Dale</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title_female.sturgia']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_dale_female}Queen of Dale</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title.aserai']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_harad}Taskral of Harad</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title_female.aserai']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_harad_female}Taskral of Harad</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title.battania']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_khand}Khudriag of Khand</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title_female.battania']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_khand_female}Khudriag of Khand</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title.vlandia']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_rohan}King of the Mark</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title_female.vlandia']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_rohan_female}Queen of the Mark</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title.khuzait']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_rhun}Loke-Kan of Rhun</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_liege_title_female.khuzait']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=TAOM_liege_rhun_female}Loke-Kan of Rhun</xsl:attribute>
+			<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
 </xsl:stylesheet>
