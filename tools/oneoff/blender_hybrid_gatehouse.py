@@ -1,24 +1,28 @@
 """
 Build the Lond Cirion hybrid gatehouse: the minas_tirith_gatehouse_a1 body
-with its four towers cut out — the two big rear octagons replaced by the
-wall kit's corner tower (gondor_castle_wall_tower_l3_b, the tower "we've
-been using on the walls"), the two small front roofed towers removed
-full-height and the wing wall cloned across the gap (the clone brings its
-own crenellated top, so the run stays merloned).
+with the two big rear octagons replaced by the wall kit's corner tower
+(gondor_castle_wall_tower_l3_b, the tower "we've been using on the walls")
+and the two wings — which the user identified as embedded instances of
+gondor_castle_wall_tower_l1_d — cut off whole and replaced by clean kit
+instances of that piece. The front roofed towers stood ON the merged wings,
+so the wing swap removes them too; l1_d brings its own merlons, stairwell
+pit, and machicolated prow.
 
-Measured facts driving the cuts (gatehouse_probe.json + wing_probe/bins.txt,
-2026-07-29):
-    ground z=0 (bbox sinks to -15), wings + bridge deck at z=15 == the wall
-    kit deck; big towers occupy x sign*(6.95..22.85), y -8..+8 beside the
-    central gate span (|x| < 6.95); the front roofed towers are octagons
-    x sign*(14.4..21.6), y -24.0..-14.0 standing ON the wing wall (parapet
-    x sign*(18.2..19.5), top z 17.5); the wing-end turret is y -29..-26.5 —
-    the only clean donor band is NORTH of the tower, y -13.5..-9.5. New rear
-    towers sit at x +-15.1 so their inner faces (half-size 7.1 -> 8.0) meet
-    the cut edge (7.9); +5 z raise puts their doors (authored z10) on the
-    z15 decks; west tower unrotated (doors east to the bridge + south to
-    the wing), east Rz(-90) (doors west + south). INTERIOR_ROT 180 per the
-    kit convention.
+Measured facts driving the build (gatehouse_probe.json + wing_probe/bins.txt
++ l1d_inv/inventory.json, 2026-07-29):
+    ground z=0, decks at z=15 == the wall kit deck; big octagons occupy
+    x sign*(6.95..22.85), y -8..+8 beside the central gate span (|x| < 6.95);
+    the merged wings run y -8.2..-34.36, parapet x sign*(18.28..19.46).
+    l1_d is authored root at +Y (12.1), prow at -Y (-18.558), deck z 15,
+    merlon band |x| 3.485..4.67, main body |x| <= 4.1: T(+-14.79, -15.8, 0)
+    maps its merlon band onto the measured parapet and its prow tip onto
+    the body's -34.36 tip (bo tiers agree to ~1 cm); no rotation — the
+    piece is x-symmetric, root embeds into the rear-tower footprint like it
+    embedded into the octagons. New rear towers sit at x +-15.1 so their
+    inner faces (half-size 7.1 -> 8.0) meet the cut edge (7.9); +5 z raise
+    puts their doors (authored z10) on the z15 decks; west tower unrotated
+    (doors east to the bridge + south to the wing), east Rz(-90) (doors
+    west + south). INTERIOR_ROT 180 per the kit convention.
 
 Output: blockout/lond_cirion_gatehouse_a.fbx (lond_cirion_gatehouse_01 +
 .lod3/.lod6/bo_) + renders in E:\\LOTRAOMAssets\\_export\\lond_cirion\\gatehouse\\
@@ -40,35 +44,29 @@ from mathutils import Matrix, Vector
 GONDOR = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\AssetSources\Scenes\Gondor"
 SRC_GATE = os.path.join(GONDOR, "blockout", "minas_tirith_gatehouse_a1.fbx")
 SRC_TWR = os.path.join(GONDOR, "walls", "gondor_castle_wall_tower_l3_b.fbx")
-SRC_WALL = os.path.join(GONDOR, "walls", "gondor_castle_wall_20m_l3_a.fbx")
+SRC_L1D = os.path.join(GONDOR, "walls", "gondor_castle_wall_tower_l1_d.fbx")
 OUT_FBX = os.path.join(GONDOR, "blockout", "lond_cirion_gatehouse_a.fbx")
 STAGING = r"E:\LOTRAOMAssets\_export\lond_cirion\gatehouse"
 SECTION = "lond_cirion_gatehouse_01"
 
 TWR_B = "gondor_castle_wall_tower_l3_b"
-WALL = "gondor_castle_wall_20m_l3_a"
+L1D = "gondor_castle_wall_tower_l1_d"
 
 # cut regions: (xmin, xmax, ymin, ymax, zmin) — mirrored for both sides.
-# Occupancy-mapped 2026-07-29 (gatehouse_map.txt) + 0.5 m y-bin probe
-# (wing_probe/bins.txt): the big octagons stand at the BACK, centred
-# (+-16, -1), beside the central span (edge x +-8); the front roofed towers
-# are full-height octagons y -24.0..-14.0 straddling the wing wall — cut
-# whole, +-0.05 tuck into the clean wall at each end.
+# The big octagons stand at the BACK, centred (+-16, -1), beside the
+# central span (edge x +-8); everything south of them in the wing band is
+# the merged l1_d wing (plus the front roofed tower standing on it) — cut
+# whole and replaced by a clean kit instance.
 BIG_CUT = (7.9, 24.2, -8.2, 8.2, -99.0)
-FRONT_CUT = (13.9, 22.5, -24.05, -13.95, -99.0)
+WING_CUT = (9.0, 23.8, -35.0, -8.2, -99.0)
 
 TWR_X = 15.1          # rear tower centres: inner face 8.0 meets the cut edge
 TWR_Y = -1.0
 TWR_Z = 5.0
 INT_ROT = 180.0
 
-# the removed front towers leave a 10.1 m gap in the wing run — refill by
-# cloning the clean wall band NORTH of the cut (probed: pure parapet + wall,
-# x 18.2..19.5, top z 17.5; the band south of the cut belongs to the
-# wing-end turret and must NOT be cloned) southward in tile-sized cells,
-# bisecting every copy to its exact cell so the wall's big quads can't
-# overlap neighbours or the intact run. The clone carries its own crenels.
-DONOR = (13.9, 22.5, -13.5, -9.5)    # clean wing band north of the cut
+L1D_X = 14.79         # authored merlon edge 4.67 -> wing parapet 19.46
+L1D_Y = -15.8         # authored prow tip -18.558 -> body tip -34.36
 
 GATE_TIERS = {"base": "minas_tirith_gatehouse_a1",
               "lod3": "minas_tirith_gatehouse_a1.lod3",
@@ -79,6 +77,11 @@ TWR_PARTS = {
               + [f"{TWR_B}_m{i}" for i in range(1, 13)],
     "bo": [f"bo_{TWR_B}", f"bo_{TWR_B}_int"]
           + [f"bo_{TWR_B}_m{i}" for i in range(1, 13)],
+}
+# NB the addon prefix really is "..._l1_d1_m{i}" (d1), not "..._l1_d_m{i}"
+L1D_PARTS = {
+    "visual": [L1D] + [f"{L1D}1_m{i}" for i in range(1, 14)],
+    "bo": [f"bo_{L1D}"] + [f"bo_{L1D}1_m{i}" for i in range(1, 14)],
 }
 TIER_SUFFIX = {"base": "", "lod3": ".lod3", "lod6": ".lod6"}
 
@@ -112,60 +115,17 @@ def in_region(p, region, side):
     return xmin <= x <= xmax and ymin <= p.y <= ymax and p.z >= zmin
 
 
-def with_boundary(faces):
-    """Faces + their verts/edges, the geom set bisect_plane expects."""
-    verts = {v for f in faces for v in f.verts}
-    edges = {e for f in faces for e in f.edges}
-    return list(verts) + list(edges) + list(faces)
-
-
 def cut_towers(obj):
     bm = bmesh.new()
     bm.from_mesh(obj.data)
-    # split faces crossing the wing gap's y-planes AND the donor band's
-    # edges first: the wall's lower body is big quads, and face-center tests
-    # alone would leave slabs intruding into the gap (or over-delete past
-    # it) and drop band content whose parent quad is centred outside it
-    for yplane in (FRONT_CUT[2], FRONT_CUT[3], DONOR[2], DONOR[3]):
-        for side in (1, -1):
-            band = [f for f in bm.faces
-                    if FRONT_CUT[0] <= f.calc_center_median().x * side <= FRONT_CUT[1]
-                    and abs(f.calc_center_median().y - yplane) < 6.0]
-            if band:
-                bmesh.ops.bisect_plane(
-                    bm, geom=with_boundary(band), plane_co=(0.0, yplane, 0.0),
-                    plane_no=(0.0, 1.0, 0.0), clear_outer=False,
-                    clear_inner=False, dist=1e-4)
     doomed = []
     for f in bm.faces:
         c = f.calc_center_median()
         for side in (1, -1):
-            if in_region(c, BIG_CUT, side) or in_region(c, FRONT_CUT, side):
+            if in_region(c, BIG_CUT, side) or in_region(c, WING_CUT, side):
                 doomed.append(f)
                 break
     bmesh.ops.delete(bm, geom=doomed, context="FACES")
-    # refill the wing gap: clone the clean donor band southward cell by cell
-    xmin, xmax, ymin, ymax = DONOR
-    tile = ymax - ymin
-    gap_s, gap_n = FRONT_CUT[2], FRONT_CUT[3]
-    ncells = int(math.ceil((gap_n - gap_s) / tile))
-    for side in (1, -1):
-        donor = [f for f in bm.faces
-                 if xmin <= f.calc_center_median().x * side <= xmax
-                 and ymin <= f.calc_center_median().y <= ymax]
-        for k in range(1, ncells + 1):
-            cell_hi = gap_n - (k - 1) * tile
-            cell_lo = max(cell_hi - tile, gap_s)
-            ret = bmesh.ops.duplicate(bm, geom=donor)
-            geom = ret["geom"]
-            verts = [g for g in geom if isinstance(g, bmesh.types.BMVert)]
-            bmesh.ops.translate(bm, verts=verts, vec=(0.0, cell_hi - ymax, 0.0))
-            for co, no in (((0.0, cell_hi, 0.0), (0.0, 1.0, 0.0)),
-                           ((0.0, cell_lo, 0.0), (0.0, -1.0, 0.0))):
-                r = bmesh.ops.bisect_plane(
-                    bm, geom=geom, plane_co=co, plane_no=no,
-                    clear_outer=True, clear_inner=False, dist=1e-4)
-                geom = r["geom"]
     bm.to_mesh(obj.data)
     bm.free()
     return len(doomed)
@@ -183,7 +143,7 @@ def main():
     summary = {"status": "error"}
     try:
         bpy.ops.wm.read_factory_settings(use_empty=True)
-        for src in (SRC_GATE, SRC_TWR, SRC_WALL):
+        for src in (SRC_GATE, SRC_TWR, SRC_L1D):
             try:
                 bpy.ops.wm.fbx_import(filepath=src)
             except Exception:
@@ -210,16 +170,16 @@ def main():
             cand = by_name.get(part + TIER_SUFFIX[tier])
             return cand if cand is not None else by_name.get(part)
 
-        # tower placements: west unrotated (doors E+S), east Rz(-90) (W+S);
-        # interiors get the kit-standard extra 180
+        # rear towers: west unrotated (doors E+S), east Rz(-90) (W+S),
+        # interiors get the kit-standard extra 180; wings: l1_d unrotated
+        # both sides (x-symmetric piece, prow already faces south)
         placements = [
-            _m for _m in (
-                Matrix.Translation((-TWR_X, TWR_Y, TWR_Z)),
-                Matrix.Translation((TWR_X, TWR_Y, TWR_Z))
-                @ Matrix.Rotation(math.radians(-90.0), 4, "Z"),
-            )
+            (Matrix.Translation((-TWR_X, TWR_Y, TWR_Z)), TWR_PARTS),
+            (Matrix.Translation((TWR_X, TWR_Y, TWR_Z))
+             @ Matrix.Rotation(math.radians(-90.0), 4, "Z"), TWR_PARTS),
+            (Matrix.Translation((-L1D_X, L1D_Y, 0.0)), L1D_PARTS),
+            (Matrix.Translation((L1D_X, L1D_Y, 0.0)), L1D_PARTS),
         ]
-
 
         outputs = []
         stats = {}
@@ -232,9 +192,9 @@ def main():
             bpy.context.scene.collection.objects.link(body)
             removed = cut_towers(body)
             dups.append(body)
-            # 2) replacement rear towers (full kit part set)
-            for M in placements:
-                for part in TWR_PARTS["bo" if tier == "bo" else "visual"]:
+            # 2) replacement kit pieces (full part sets)
+            for M, parts in placements:
+                for part in parts["bo" if tier == "bo" else "visual"]:
                     src = resolve(part, tier)
                     if src is None:
                         continue

@@ -4,6 +4,19 @@
 
 ## 2026-07-29
 
+### feat(gondor): gatehouse wings replaced with gondor_castle_wall_tower_l1_d kit instances
+
+The user identified the gatehouse's merged wings as embedded copies of the kit piece
+`gondor_castle_wall_tower_l1_d` — verified dimensionally: at T(±14.79, −15.8, 0) the authored
+merlon band (|x| 3.485..4.67) lands on the measured wing parapet (18.28..19.46) and the authored
+prow tip (−18.558) on the body's −34.36 tip, bo tiers agreeing to ~1 cm.
+`blender_hybrid_gatehouse.py` now cuts the wings off whole (y −35..−8.2, which also removes the
+front roofed towers standing on them) and places clean l1_d instances — full part set, 4 tiers ×
+(main + 13 merlon addons). This supersedes the same-day donor-clone/bisect refill: the entire
+surgical apparatus is deleted, since the kit piece brings its own merlons, slit windows,
+stairwell pit, and machicolated prow. Composite bbox confirms placement (y-extent 41.03 ⇒ prow
+tip exactly −34.36); renders show uniform merlon rhythm and no seams.
+
 ### fix(gondor): hybrid gatehouse front towers cut full-height, wing wall refilled from measurement
 
 The first gatehouse build cut only the front towers' roofs (user editor check), and its refill
