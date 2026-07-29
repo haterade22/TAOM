@@ -254,8 +254,44 @@ def section_plans():
     w_end = (V1[0] - 44.2 * u0[0], V1[1] - 44.2 * u0[1])  # 07 west endpoint
     A = (_t(attach[0], attach[1]) @ _rz(146.25)
          @ _t(-w_end[0], -w_end[1]))
-    plan08 = list(plans["lond_cirion_wall_06"])
-    plan08 += [(kind, B @ mat) for kind, mat in plans["lond_cirion_wall_03"]]
+    # ring tower thinning (user 2026-07-29: "too many towers"): the RING
+    # keeps towers only at direction changes and junctions — embedded 03s
+    # go towerless, and the court's wing/leg MID towers are stripped
+    # (standalone sections 01-07 keep their original designs)
+    # a removed tower leaves a ~10 m hole (the first thinning pass shipped
+    # exactly that — caught in the top-down): every thinned run REFILLS
+    # with evenly-pitched walls spanning the same endpoints, slack spread
+    # as per-joint tucks
+    plan03_nt = [("wall", _t(-16.6)), ("wall", Matrix.Identity(4)),
+                 ("wall", _t(16.6))]
+
+    def embed(name):
+        return plan03_nt if name == "lond_cirion_wall_03" else plans[name]
+
+    MID_TOWERS = [(114.8, 0.0), (-114.8, 0.0), (63.0, 51.8), (-63.0, 51.8)]
+    OLD_RUN_WALLS = ([(63.0 + s, 0.0) for s in ARM_WALL_S]
+                     + [(-(63.0 + s), 0.0) for s in ARM_WALL_S]
+                     + [(63.0, s) for s in ARM_WALL_S]
+                     + [(-63.0, s) for s in ARM_WALL_S])
+    plan08 = []
+    for k, m in plans["lond_cirion_wall_06"]:
+        c = m.to_translation()
+        if k == "tower_a" and any(abs(c.x - x) < 0.5 and abs(c.y - y) < 0.5
+                                  for x, y in MID_TOWERS):
+            continue
+        if k == "wall" and any(abs(c.x - x) < 0.5 and abs(c.y - y) < 0.5
+                               for x, y in OLD_RUN_WALLS):
+            continue
+        plan08.append((k, m))
+    FILL_S = [15.6, 33.0, 50.5, 67.9]   # 4 walls over the 6.9..76.6 span
+    for s in FILL_S:
+        plan08 += [
+            ("wall", _t(63.0 + s) @ _rz(180.0)),
+            ("wall", _t(-(63.0 + s)) @ _rz(180.0)),
+            ("wall", _t(63.0, s) @ _rz(90.0)),     # east leg (outer W = court)
+            ("wall", _t(-63.0, s) @ _rz(-90.0)),   # west leg (outer E = court)
+        ]
+    plan08 += [(kind, B @ mat) for kind, mat in plan03_nt]
     plan08 += [(kind, A @ mat) for kind, mat in plans["lond_cirion_wall_07"]]
 
     # north-coast extension (user placement 2026-07-28: after the sweep,
@@ -271,7 +307,7 @@ def section_plans():
     uh = _u(112.5)
     for c in (24.8, 74.5):                          # two 03 centres
         Bk = _t(E1[0] + c * uh[0], E1[1] + c * uh[1]) @ _rz(112.5)
-        plan08 += [(kind, Bk @ mat) for kind, mat in plans["lond_cirion_wall_03"]]
+        plan08 += [(kind, Bk @ mat) for kind, mat in plan03_nt]
     E2 = (E1[0] + 99.3 * uh[0], E1[1] + 99.3 * uh[1])
     A2 = _t(E2[0], E2[1]) @ _rz(78.75) @ _t(-w_end[0], -w_end[1])
     plan08 += [(kind, A2 @ mat) for kind, mat in plans["lond_cirion_wall_07"]]
@@ -310,13 +346,13 @@ def section_plans():
                     turn = -2.0 * half
                 Ak = (_t(cursor[0] - 0.1 * ux, cursor[1] - 0.1 * uy)
                       @ R @ _t(-entry[0], -entry[1]))
-                plan08.extend((kind, Ak @ mat) for kind, mat in plans[name])
+                plan08.extend((kind, Ak @ mat) for kind, mat in embed(name))
                 cursor = _apply(Ak, exit_)
                 h += turn
             else:
                 Bk = (_t(cursor[0] + 24.8 * ux, cursor[1] + 24.8 * uy)
                       @ _rz(h + 180.0 if flip else h))
-                plan08.extend((kind, Bk @ mat) for kind, mat in plans[name])
+                plan08.extend((kind, Bk @ mat) for kind, mat in embed(name))
                 cursor = (cursor[0] + 49.7 * ux, cursor[1] + 49.7 * uy)
         return cursor, h
 
@@ -376,7 +412,7 @@ def section_plans():
     KINK_E = 24.2 * math.cos(math.radians(22.5))
     n_pre_closure = len(plan08)
     log(f"[closure] t={t:.2f} s={s:.2f} (both must be > {KINK_E:.1f})")
-    straight_leg(curA, hA, t - KINK_E)
+    straight_leg(curA, hA, t - KINK_E, towers=False)
     kc, kh = walk((curA[0] + (t - KINK_E) * dAx,
                    curA[1] + (t - KINK_E) * dAy), hA,
                   ["lond_cirion_wall_05"])

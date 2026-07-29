@@ -70,6 +70,15 @@ identical arms, so it is achiral: every mirrored variant is an editor rotation o
 Also fixed: previews rendered leftover source pieces z-fighting at the origin (export was always
 clean — `use_selection`); per-section previews now isolate the section.
 
+**Section 08 tower thinning + siege frontage (2026-07-29, user direction):** the ring keeps
+towers only at **direction changes and junctions** — all ~15 rhythm/mid-run towers removed
+(embedded-03 centres, wing and leg mids, closure-leg tower), each thinned run REFILLED with
+evenly-pitched walls spanning the same endpoints (a bare removal pass shipped 10 m holes first —
+caught in the top-down; slack now spreads as 2–3 m per-joint tucks). The closure's long leg
+(~222 m) is **deliberately not built**: it stays open as the siege frontage for the engine's
+breachable wall entities, framed by the 05 kink (west) and the north run's end (east). Standalone
+sections 01–07 keep their original tower rhythm.
+
 **Section 08 CIRCUIT CLOSED (2026-07-29):** a closure solver connects the two open ends — it
 intersects the headland end-line (heading −22.5°) with the north run's approach line (−67.5°;
 the difference is exactly one 45° kink), places the 05 kink at the vertex, and fills both legs
