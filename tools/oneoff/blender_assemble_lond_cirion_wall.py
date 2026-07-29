@@ -360,8 +360,8 @@ def section_plans():
             plan08.append((kind, _t(start[0] + c * ux, start[1] + c * uy)
                            @ _rz(h)))
             cur += plen
-        print(f"[closure] leg h={h:g} L={L:.2f}: {len(pieces)} pieces, "
-              f"tuck {tuck:.2f}")
+        log(f"[closure] leg h={h:g} L={L:.2f}: {len(pieces)} pieces, "
+            f"tuck {tuck:.2f}")
 
     # solve curA + t*dA = curB + s*dB (the kink vertex lies on both
     # end-lines; t,s must come out positive)
@@ -372,13 +372,29 @@ def section_plans():
     t = (rx * (-dBy) - ry * (-dBx)) / det
     s = (dAx * ry - dAy * rx) / det
     KINK_E = 24.2 * math.cos(math.radians(22.5))
-    print(f"[closure] t={t:.2f} s={s:.2f} (both must be > {KINK_E:.1f})")
+    n_pre_closure = len(plan08)
+    log(f"[closure] t={t:.2f} s={s:.2f} (both must be > {KINK_E:.1f})")
     straight_leg(curA, hA, t - KINK_E)
     kc, kh = walk((curA[0] + (t - KINK_E) * dAx,
                    curA[1] + (t - KINK_E) * dAy), hA,
                   ["lond_cirion_wall_05"])
     straight_leg(kc, kh, s - KINK_E)
-    print(f"[closure] exit h={kh:g} (want {hB - 180.0:g})")
+    log(f"[closure] exit h={kh:g} (want {hB - 180.0:g})")
+    # overlap audit (2026-07-29: the first closure doubled 5 pieces over an
+    # existing run — user X-marked them): drop any closure piece whose
+    # centre lands within 12 m of pre-closure geometry
+    existing = [m.to_translation() for _k, m in plan08[:n_pre_closure]]
+    kept = []
+    dropped = 0
+    for k, m in plan08[n_pre_closure:]:
+        c = m.to_translation()
+        if any((c - e).length < 12.0 for e in existing):
+            dropped += 1
+        else:
+            kept.append((k, m))
+    del plan08[n_pre_closure:]
+    plan08.extend(kept)
+    log(f"[closure] overlap audit dropped {dropped} doubled piece(s)")
     plans["lond_cirion_wall_08"] = plan08
     return plans
 
