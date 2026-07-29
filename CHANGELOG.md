@@ -4,6 +4,22 @@
 
 ## 2026-07-29
 
+### fix(gondor): hybrid gatehouse front towers cut full-height, wing wall refilled from measurement
+
+The first gatehouse build cut only the front towers' roofs (user editor check), and its refill
+donor band sat inside the wing-end turret, stamping three extra crown copies up the wall. A
+0.5 m y-bin probe of the wing measured the true tower octagon at y −24.0..−14.0 — the old cut
+(−24.5..−15.5) left a 1 m full-height slice at its north edge — and the only clean wall band at
+y −13.5..−9.5, **north** of the tower (the south band belongs to the turret).
+`blender_hybrid_gatehouse.py` now cuts the measured extent, clones the north band southward in
+4 m cells, and **bisects** faces at the gap planes, the donor edges, and each copy's cell
+borders: the wall's lower body is big quads, so face-center tests alone leave intruding slabs,
+drop band content whose parent quad is centred outside, and coplanar-double-stamp the run.
+Verified on the exported FBX: parapet face bins continuous with exact 4 m periodicity through
+the fill, lower-wall spike pattern matching the intact run, E/W symmetric; height 47.2 → 42.9 m
+(the leftover slice was the old maximum). Renders + probe tables:
+`E:\LOTRAOMAssets\_export\lond_cirion\gatehouse\`.
+
 ### fix(dialogue): rulers no longer introduce themselves with Calradian demonyms (#363)
 
 Théoden greeted the player as *"king of the Vlandians"*. The noun comes from

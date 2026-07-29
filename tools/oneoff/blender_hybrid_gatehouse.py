@@ -2,18 +2,23 @@
 Build the Lond Cirion hybrid gatehouse: the minas_tirith_gatehouse_a1 body
 with its four towers cut out — the two big rear octagons replaced by the
 wall kit's corner tower (gondor_castle_wall_tower_l3_b, the tower "we've
-been using on the walls"), the two small front roofed towers removed and
-their wing ends capped with wall-kit merlon segments + a plug wall.
+been using on the walls"), the two small front roofed towers removed
+full-height and the wing wall cloned across the gap (the clone brings its
+own crenellated top, so the run stays merloned).
 
-Measured facts driving the cuts (gatehouse_probe.json, 2026-07-29):
+Measured facts driving the cuts (gatehouse_probe.json + wing_probe/bins.txt,
+2026-07-29):
     ground z=0 (bbox sinks to -15), wings + bridge deck at z=15 == the wall
-    kit deck; big towers occupy x sign*(6.95..22.85), y -24..+8 (centre
-    +-17.5, -16.2); central gate span |x| < 6.95; front roofed towers
-    x sign*(10.1..21.1), y -30.1..-18.1. New rear towers sit at x +-14.2 so
-    their inner faces (7.1) meet the central span edge (6.95) flush; +5 z
-    raise puts their doors (authored z10) on the z15 decks; west tower
-    unrotated (doors east to the bridge + south to the wing), east Rz(-90)
-    (doors west + south). INTERIOR_ROT 180 per the kit convention.
+    kit deck; big towers occupy x sign*(6.95..22.85), y -8..+8 beside the
+    central gate span (|x| < 6.95); the front roofed towers are octagons
+    x sign*(14.4..21.6), y -24.0..-14.0 standing ON the wing wall (parapet
+    x sign*(18.2..19.5), top z 17.5); the wing-end turret is y -29..-26.5 —
+    the only clean donor band is NORTH of the tower, y -13.5..-9.5. New rear
+    towers sit at x +-15.1 so their inner faces (half-size 7.1 -> 8.0) meet
+    the cut edge (7.9); +5 z raise puts their doors (authored z10) on the
+    z15 decks; west tower unrotated (doors east to the bridge + south to
+    the wing), east Rz(-90) (doors west + south). INTERIOR_ROT 180 per the
+    kit convention.
 
 Output: blockout/lond_cirion_gatehouse_a.fbx (lond_cirion_gatehouse_01 +
 .lod3/.lod6/bo_) + renders in E:\\LOTRAOMAssets\\_export\\lond_cirion\\gatehouse\\
@@ -44,26 +49,26 @@ TWR_B = "gondor_castle_wall_tower_l3_b"
 WALL = "gondor_castle_wall_20m_l3_a"
 
 # cut regions: (xmin, xmax, ymin, ymax, zmin) — mirrored for both sides.
-# Occupancy-mapped 2026-07-29 (gatehouse_map.txt): the big octagons stand at
-# the BACK, centred (+-16, -1), beside the central span (edge x +-8); the
-# wings are ground-level walled yards x sign*(12..20) running to y -30; the
-# front roofed towers sit ON the wing walls at (+-18, -20) — so they cut
-# only above z 14.5, keeping the walls beneath.
+# Occupancy-mapped 2026-07-29 (gatehouse_map.txt) + 0.5 m y-bin probe
+# (wing_probe/bins.txt): the big octagons stand at the BACK, centred
+# (+-16, -1), beside the central span (edge x +-8); the front roofed towers
+# are full-height octagons y -24.0..-14.0 straddling the wing wall — cut
+# whole, +-0.05 tuck into the clean wall at each end.
 BIG_CUT = (7.9, 24.2, -8.2, 8.2, -99.0)
-FRONT_CUT = (13.9, 22.5, -24.5, -15.5, 14.5)
+FRONT_CUT = (13.9, 22.5, -24.05, -13.95, -99.0)
 
-TWR_X = 15.1          # rear tower centres: inner face 8.0 meets the span edge
+TWR_X = 15.1          # rear tower centres: inner face 8.0 meets the cut edge
 TWR_Y = -1.0
 TWR_Z = 5.0
 INT_ROT = 180.0
 
-# merlon caps along the wings' OUTER wall tops where the roofed towers were
-# (m1 segments run along Y, outer facing outward; wall tops ~z15 = +2 vs the
-# piece's authored base 13)
-MERLON_TY = (-22.3, -18.3)
-MERLON_X = 20.6
-MERLON_Z = 2.0
-M1_CENTRE = (8.0, 3.57)          # authored m1 centre (x, y)
+# the removed front towers leave a 10.1 m gap in the wing run — refill by
+# cloning the clean wall band NORTH of the cut (probed: pure parapet + wall,
+# x 18.2..19.5, top z 17.5; the band south of the cut belongs to the
+# wing-end turret and must NOT be cloned) southward in tile-sized cells,
+# bisecting every copy to its exact cell so the wall's big quads can't
+# overlap neighbours or the intact run. The clone carries its own crenels.
+DONOR = (13.9, 22.5, -13.5, -9.5)    # clean wing band north of the cut
 
 GATE_TIERS = {"base": "minas_tirith_gatehouse_a1",
               "lod3": "minas_tirith_gatehouse_a1.lod3",
@@ -107,9 +112,30 @@ def in_region(p, region, side):
     return xmin <= x <= xmax and ymin <= p.y <= ymax and p.z >= zmin
 
 
+def with_boundary(faces):
+    """Faces + their verts/edges, the geom set bisect_plane expects."""
+    verts = {v for f in faces for v in f.verts}
+    edges = {e for f in faces for e in f.edges}
+    return list(verts) + list(edges) + list(faces)
+
+
 def cut_towers(obj):
     bm = bmesh.new()
     bm.from_mesh(obj.data)
+    # split faces crossing the wing gap's y-planes AND the donor band's
+    # edges first: the wall's lower body is big quads, and face-center tests
+    # alone would leave slabs intruding into the gap (or over-delete past
+    # it) and drop band content whose parent quad is centred outside it
+    for yplane in (FRONT_CUT[2], FRONT_CUT[3], DONOR[2], DONOR[3]):
+        for side in (1, -1):
+            band = [f for f in bm.faces
+                    if FRONT_CUT[0] <= f.calc_center_median().x * side <= FRONT_CUT[1]
+                    and abs(f.calc_center_median().y - yplane) < 6.0]
+            if band:
+                bmesh.ops.bisect_plane(
+                    bm, geom=with_boundary(band), plane_co=(0.0, yplane, 0.0),
+                    plane_no=(0.0, 1.0, 0.0), clear_outer=False,
+                    clear_inner=False, dist=1e-4)
     doomed = []
     for f in bm.faces:
         c = f.calc_center_median()
@@ -118,6 +144,28 @@ def cut_towers(obj):
                 doomed.append(f)
                 break
     bmesh.ops.delete(bm, geom=doomed, context="FACES")
+    # refill the wing gap: clone the clean donor band southward cell by cell
+    xmin, xmax, ymin, ymax = DONOR
+    tile = ymax - ymin
+    gap_s, gap_n = FRONT_CUT[2], FRONT_CUT[3]
+    ncells = int(math.ceil((gap_n - gap_s) / tile))
+    for side in (1, -1):
+        donor = [f for f in bm.faces
+                 if xmin <= f.calc_center_median().x * side <= xmax
+                 and ymin <= f.calc_center_median().y <= ymax]
+        for k in range(1, ncells + 1):
+            cell_hi = gap_n - (k - 1) * tile
+            cell_lo = max(cell_hi - tile, gap_s)
+            ret = bmesh.ops.duplicate(bm, geom=donor)
+            geom = ret["geom"]
+            verts = [g for g in geom if isinstance(g, bmesh.types.BMVert)]
+            bmesh.ops.translate(bm, verts=verts, vec=(0.0, cell_hi - ymax, 0.0))
+            for co, no in (((0.0, cell_hi, 0.0), (0.0, 1.0, 0.0)),
+                           ((0.0, cell_lo, 0.0), (0.0, -1.0, 0.0))):
+                r = bmesh.ops.bisect_plane(
+                    bm, geom=geom, plane_co=co, plane_no=no,
+                    clear_outer=True, clear_inner=False, dist=1e-4)
+                geom = r["geom"]
     bm.to_mesh(obj.data)
     bm.free()
     return len(doomed)
@@ -172,7 +220,6 @@ def main():
             )
         ]
 
-        m1_off = Matrix.Translation((-M1_CENTRE[0], -M1_CENTRE[1], 0.0))
 
         outputs = []
         stats = {}
@@ -199,20 +246,7 @@ def main():
                     dup.matrix_world = pm
                     bpy.context.scene.collection.objects.link(dup)
                     dups.append(dup)
-            # 3) merlon caps along the outer wing-wall tops where the
-            # roofed towers were (outer faces outward: west Rz(90), east
-            # Rz(-90))
-            m1 = resolve(f"{WALL}_m1", tier) if tier != "bo" else by_name.get(f"bo_{WALL}_m1")
-            if m1 is not None:
-                for side in (1, -1):
-                    rz = Matrix.Rotation(math.radians(-90.0 * side), 4, "Z")
-                    for ty in MERLON_TY:
-                        dup = m1.copy()
-                        dup.data = m1.data.copy()
-                        dup.matrix_world = (Matrix.Translation(
-                            (side * MERLON_X, ty, MERLON_Z)) @ rz @ m1_off)
-                        bpy.context.scene.collection.objects.link(dup)
-                        dups.append(dup)
+
 
             mesh = bpy.data.meshes.new("join_target")
             target = bpy.data.objects.new("join_target", mesh)
@@ -267,6 +301,7 @@ def main():
             "front": (Vector((0.0, -95.0, 45.0)), Vector((0.0, -10.0, 12.0))),
             "rear": (Vector((0.0, 75.0, 50.0)), Vector((0.0, -5.0, 15.0))),
             "top": (Vector((0.0, -12.0, 130.0)), Vector((0.0, -12.0, 0.0))),
+            "side": (Vector((85.0, -35.0, 30.0)), Vector((0.0, -16.0, 12.0))),
         }
         for nm, (loc, look) in shots.items():
             cam.location = loc
