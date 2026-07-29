@@ -103,6 +103,17 @@ in thin rigging/chain cylinders where mirrored texels are invisible; all three p
 preview-render check, so the flipped-face gate is a *prompt to look at the preview*, not an
 auto-fail.
 
+## Kit-composition path — new pieces from measured existing parts (2026-07-28/29)
+
+The third acquisition path (after UE kits and Tripo props): compose NEW kit pieces
+programmatically from parts already in a TAOM kit. Proven by the **Lond Cirion wall kit** — 8
+ploppable sections up to a full ~600 m city ring, assembled from the Gondor castle L3 pieces by
+`tools/oneoff/blender_assemble_lond_cirion_wall.py`. The discipline: measure every piece
+interface first (`blender_dump_fbx_inventory.py` + vertex/ray probes), compose by matrix,
+verify by tri-sum + render, iterate against the user's in-editor placements. Full catalog,
+registration facts, and the three composition laws (chirality, refill, verification):
+[`docs/kitbash/lond-cirion-walls.md`](../kitbash/lond-cirion-walls.md).
+
 ## Current state / open items
 
 Rivendell modular kit + 204 materials + textures: done and imported-ready. Tents: meshes + 10 sets

@@ -33,6 +33,20 @@ the same file drop their `<tags>` child the same way (nobles fall through to whi
 loads first), and TAOM's 16 LOTR kingdoms have no `str_liege_title` variation at all, so their
 rulers say *"I am Thranduil, ."*
 
+## 2026-07-29
+
+### docs(gondor): Lond Cirion wall kit catalogued
+
+New [`docs/kitbash/lond-cirion-walls.md`](docs/kitbash/lond-cirion-walls.md) consolidates the
+kit's durable knowledge out of session memory into the repo: the 8-section table, measured
+registration facts (L3 deck z=15, tower door geometry, the +5 corner raise, interior rotations,
+material dedup, tuck/kink math), the three composition laws (chirality, refill, tri-sum
+verification), the deliberate ring state (junction-only towers, open siege frontage), and the
+add-a-section workflow. Kitbash README gains the kit row; tools/README's assembler row rewritten;
+the pipeline doc gains the third acquisition path ("kit-composition — new pieces from measured
+existing parts"). Next (approved): a Gondor **building parts catalog** + reverse-engineering one
+shipped building toward composing new buildings the same way.
+
 ## 2026-07-28
 
 ### feat(gondor): Lond Cirion wall kit started — ploppable L-section with towers
