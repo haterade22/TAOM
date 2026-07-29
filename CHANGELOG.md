@@ -23,6 +23,11 @@ Follow-up 2: the real "double merlons" the user kept seeing along the span-facin
 BIG_CUT starts at 7.9, so a ~1 m sliver of crown merlons + machicolation survived at z 26..32
 beside each new tower. New `SPAN_CUT` (|x| 6.5..8.0, y ±8.2, z ≥ 19 — above the span parapets)
 excises it: base −6,374 tris across the two junctions, all tiers proportional.
+Follow-up 3: the octagons' **wall facet** survived the same way below — a full-height 0.5 m
+sheet at |x| 7.4..7.9, z −15..12, standing detached off each new tower face (user editor check;
+junction probe). New `PANEL_CUT` (|x| 7.35..8.0, z ≤ 12) removes it while keeping the span
+deck + parapet ends (z 12.2..19 in the same x window) walkable; cut regions now carry an
+explicit zmax. −1,332 tris per visual tier, exact.
 
 ### feat(gondor): gatehouse wings replaced with gondor_castle_wall_tower_l1_d kit instances
 

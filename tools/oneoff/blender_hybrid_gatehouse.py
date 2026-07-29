@@ -57,13 +57,20 @@ L1D = "gondor_castle_wall_tower_l1_d"
 # central span (edge x +-8); everything south of them in the wing band is
 # the merged l1_d wing (plus the front roofed tower standing on it) — cut
 # whole and replaced by a clean kit instance.
-BIG_CUT = (7.9, 24.2, -8.2, 8.2, -99.0)
-WING_CUT = (9.0, 23.8, -35.0, -8.2, -99.0)
+# cut regions are (xmin, xmax, ymin, ymax, zmin, zmax), x mirrored per side
+BIG_CUT = (7.9, 24.2, -8.2, 8.2, -99.0, 99.0)
+WING_CUT = (9.0, 23.8, -35.0, -8.2, -99.0, 99.0)
 # the old octagons reached inboard to |x| 6.95 (probed) — their crown ring
 # survived BIG_CUT as a floating merlon arc at |x| 6.95..7.9, z 26..32,
 # doubling the new towers' rim rows beside the span. Kill it above the
 # span parapets (top z 18) only.
-SPAN_CUT = (6.5, 8.0, -8.2, 8.2, 19.0)
+SPAN_CUT = (6.5, 8.0, -8.2, 8.2, 19.0, 99.0)
+# ...and their WALL FACET survived below: a full-height 0.5 m sheet at
+# x 7.4..7.9, z -15..12 standing off the new tower faces (junction probe
+# 2026-07-29). Cut it BELOW the span deck only — the deck floor + parapet
+# ends occupy the same x window at z 12.2..19 and must stay walkable; the
+# z 12..14 stub left behind hides inside the parapet thickness.
+PANEL_CUT = (7.35, 8.0, -8.2, 8.2, -99.0, 12.0)
 
 TWR_X = 15.1          # rear tower centres: inner face 8.0 meets the cut edge
 TWR_Y = -1.0
@@ -121,9 +128,10 @@ def tri_count(obj):
 
 
 def in_region(p, region, side):
-    xmin, xmax, ymin, ymax, zmin = region
+    xmin, xmax, ymin, ymax, zmin, zmax = region
     x = p.x * side
-    return xmin <= x <= xmax and ymin <= p.y <= ymax and p.z >= zmin
+    return (xmin <= x <= xmax and ymin <= p.y <= ymax
+            and zmin <= p.z <= zmax)
 
 
 def cut_towers(obj):
@@ -134,7 +142,8 @@ def cut_towers(obj):
         c = f.calc_center_median()
         for side in (1, -1):
             if (in_region(c, BIG_CUT, side) or in_region(c, WING_CUT, side)
-                    or in_region(c, SPAN_CUT, side)):
+                    or in_region(c, SPAN_CUT, side)
+                    or in_region(c, PANEL_CUT, side)):
                 doomed.append(f)
                 break
     bmesh.ops.delete(bm, geom=doomed, context="FACES")
