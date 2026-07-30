@@ -18,9 +18,9 @@ using TAOM.Features.LotrIssues.Domain;
 namespace TAOM.Features.LotrIssues.Templates;
 
 /// <summary>
-/// "Deliver personnel" template: the player hands over N bandit prisoners to the giver (a gang pressing
+/// "Deliver personnel" template: the player hands over N prisoners to the giver (a gang pressing
 /// recruits, or a landlord wanting forced mine labor). Same offer/turn-in shape as DeliverGoods, but the
-/// objective tracks bandit prisoners in the player's <c>PrisonRoster</c> rather than an item. Entry-point
+/// objective tracks captives in the player's <c>PrisonRoster</c> rather than an item. Entry-point
 /// layer (ADR-002) — count/reward/eligibility decisions delegate to <see cref="ILotrIssueService"/>.
 /// </summary>
 public class DeliverPersonnelLotrIssue : IssueBase
@@ -136,7 +136,7 @@ public class DeliverPersonnelLotrIssue : IssueBase
 }
 
 /// <summary>
-/// The quest for <see cref="DeliverPersonnelLotrIssue"/>: track bandit prisoners in the player's prison
+/// The quest for <see cref="DeliverPersonnelLotrIssue"/>: track captives in the player's prison
 /// roster, turn them in at the giver for the reward. The turn-in gate reads live prison-roster count, not
 /// a cached log, so battle/ransom changes can't stale it.
 /// </summary>
@@ -190,7 +190,7 @@ public class DeliverPersonnelLotrIssueQuest : QuestBase
     {
         get
         {
-            var t = new TextObject("{=taom_lotr_issue_pers_accepted}Deliver {COUNT} bandit captives to {QUEST_SETTLEMENT}.");
+            var t = new TextObject("{=taom_lotr_issue_pers_accepted}Deliver {COUNT} captives to {QUEST_SETTLEMENT}.");
             t.SetTextVariable("COUNT", _neededCount);
             if (base.QuestGiver?.CurrentSettlement != null) t.SetTextVariable("QUEST_SETTLEMENT", base.QuestGiver.CurrentSettlement.Name);
             return t;
@@ -228,22 +228,27 @@ public class DeliverPersonnelLotrIssueQuest : QuestBase
         if (mobileParty == MobileParty.MainParty) Refresh();
     }
 
-    private int CountBanditPrisoners()
+    // Projects the live prison roster into the TaleWorlds-free shape the service rules operate on.
+    // A null Character can't be handed over or identified, so it projects as a hero (never deliverable).
+    private LotrCaptiveStack[] ProjectPrisonRoster()
     {
         var roster = PartyBase.MainParty.PrisonRoster;
-        if (roster == null) return 0;
-        int sum = 0;
+        if (roster == null) return new LotrCaptiveStack[0];
+        var stacks = new LotrCaptiveStack[roster.Count];
         for (int i = 0; i < roster.Count; i++)
         {
             var el = roster.GetElementCopyAtIndex(i);
-            if (el.Character != null && el.Character.Occupation == Occupation.Bandit) sum += el.Number;
+            stacks[i] = new LotrCaptiveStack(el.Character == null || el.Character.IsHero, el.Number);
         }
-        return sum <= _neededCount ? sum : _neededCount;
+        return stacks;
     }
+
+    private int CountDeliverableCaptives()
+        => Service.CountDeliverableCaptives(ProjectPrisonRoster(), _neededCount);
 
     private void Refresh()
     {
-        if (_acceptedLog != null) _acceptedLog.UpdateCurrentProgress(CountBanditPrisoners());
+        if (_acceptedLog != null) _acceptedLog.UpdateCurrentProgress(CountDeliverableCaptives());
         CheckReady();
     }
 
@@ -311,7 +316,7 @@ public class DeliverPersonnelLotrIssueQuest : QuestBase
 
     private bool TurnInClickableConditions(out TextObject explanation)
     {
-        if (CountBanditPrisoners() >= _neededCount)
+        if (CountDeliverableCaptives() >= _neededCount)
         {
             explanation = null;
             return true;
@@ -325,32 +330,37 @@ public class DeliverPersonnelLotrIssueQuest : QuestBase
         StartQuest();
         EnsureDef();
         var task = new TextObject(_def == null || string.IsNullOrEmpty(_def.Text.TaskKey)
-            ? "{=taom_lotr_issue_pers_task}Take bandit captives" : _def.Text.TaskKey);
+            ? "{=taom_lotr_issue_pers_task}Take captives" : _def.Text.TaskKey);
         task.SetTextVariable("COUNT", _neededCount);
-        _acceptedLog = AddDiscreteLog(AcceptedLogText, task, CountBanditPrisoners(), _neededCount);
+        _acceptedLog = AddDiscreteLog(AcceptedLogText, task, CountDeliverableCaptives(), _neededCount);
     }
 
     private void Success()
     {
         EnsureDef();
-        RemoveBanditPrisoners(_neededCount);
+        RemoveCaptives(_neededCount);
         if (_def != null)
             Service.ApplyRewards(_def, _difficulty, new LotrIssueRewardAdapter(Hero.MainHero));
         RelationshipChangeWithQuestGiver = 5;
         CompleteQuestWithSuccess();
     }
 
-    private void RemoveBanditPrisoners(int count)
+    // Applies the service's handover plan back onto the live roster. Walked in reverse so a stack that
+    // depletes to zero (AddToCounts removes it) can't shift an index we still have to visit. No
+    // woundedCount argument, matching vanilla's own TroopRoster.RemoveTroop: AddToCountsAtIndex derives
+    // the wounded delta from the count delta alone, clamping WoundedNumber down to the new Number and
+    // decrementing the roster's wounded total before removing a depleted stack.
+    private void RemoveCaptives(int count)
     {
         var roster = PartyBase.MainParty.PrisonRoster;
         if (roster == null) return;
-        for (int i = roster.Count - 1; i >= 0 && count > 0; i--)
+        var plan = Service.PlanCaptiveHandover(ProjectPrisonRoster(), count);
+        for (int i = Math.Min(plan.Count, roster.Count) - 1; i >= 0; i--)
         {
+            if (plan[i] <= 0) continue;
             var el = roster.GetElementCopyAtIndex(i);
-            if (el.Character == null || el.Character.Occupation != Occupation.Bandit) continue;
-            int take = Math.Min(count, el.Number);
-            roster.AddToCounts(el.Character, -take);
-            count -= take;
+            if (el.Character == null) continue;
+            roster.AddToCounts(el.Character, -plan[i]);
         }
     }
 }

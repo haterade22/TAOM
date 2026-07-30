@@ -52,6 +52,10 @@ public class LotrIssueServiceTests
     private void Load(params LotrIssueDefinition[] defs)
         => _config.LoadIssues().Returns(new List<LotrIssueDefinition>(defs));
 
+    private static LotrCaptiveStack Stack(int number) => new LotrCaptiveStack(false, number);
+
+    private static LotrCaptiveStack HeroStack(int number) => new LotrCaptiveStack(true, number);
+
     // ── GetEligibleIssues ────────────────────────────────────────────────────
 
     [TestMethod]
@@ -159,6 +163,89 @@ public class LotrIssueServiceTests
     [TestMethod]
     public void IsObjectiveSatisfied_TargetZero_False()
         => Assert.IsFalse(_sut.IsObjectiveSatisfied(5, 0));
+
+    // ── CountDeliverableCaptives ─────────────────────────────────────────────
+    //
+    // Regression cover for the "Hands for the Mines" report (2026-07-30): the quest counted only
+    // prisoners with Occupation.Bandit, but TAOM declares that occupation on just 8 hideout-boss
+    // troops — every bandit-culture rank-and-file (dunland_peasant, balcoth_volunteer, harad_levy)
+    // is occupation="Soldier". A full prison roster therefore counted as zero. The rule is now
+    // "any non-hero prisoner", expressed here with no troop-type input at all.
+
+    [TestMethod]
+    public void CountDeliverableCaptives_NonHeroTroops_AreCountedRegardlessOfType()
+    {
+        var stacks = new[] { Stack(8), Stack(7), Stack(5) };
+        Assert.AreEqual(20, _sut.CountDeliverableCaptives(stacks, 100));
+    }
+
+    [TestMethod]
+    public void CountDeliverableCaptives_HeroStack_Excluded()
+    {
+        var stacks = new[] { HeroStack(1), Stack(3) };
+        Assert.AreEqual(3, _sut.CountDeliverableCaptives(stacks, 100));
+    }
+
+    [TestMethod]
+    public void CountDeliverableCaptives_MoreThanCap_ClampedToCap()
+        => Assert.AreEqual(6, _sut.CountDeliverableCaptives(new[] { Stack(20) }, 6));
+
+    [TestMethod]
+    public void CountDeliverableCaptives_CapZero_ReturnsZero()
+        => Assert.AreEqual(0, _sut.CountDeliverableCaptives(new[] { Stack(20) }, 0));
+
+    [TestMethod]
+    public void CountDeliverableCaptives_NonPositiveStack_Ignored()
+        => Assert.AreEqual(4, _sut.CountDeliverableCaptives(new[] { Stack(0), Stack(4) }, 100));
+
+    [TestMethod]
+    public void CountDeliverableCaptives_EmptyStacks_ReturnsZero()
+        => Assert.AreEqual(0, _sut.CountDeliverableCaptives(new LotrCaptiveStack[0], 10));
+
+    [TestMethod]
+    public void CountDeliverableCaptives_NullStacks_ReturnsZero()
+        => Assert.AreEqual(0, _sut.CountDeliverableCaptives(null, 10));
+
+    // ── PlanCaptiveHandover ───────────────────────────────────────────────────
+
+    [TestMethod]
+    public void PlanCaptiveHandover_EnoughAcrossStacks_TakesExactlyCount()
+    {
+        var plan = _sut.PlanCaptiveHandover(new[] { Stack(8), Stack(7) }, 10);
+        CollectionAssert.AreEqual(new[] { 8, 2 }, new List<int>(plan));
+    }
+
+    [TestMethod]
+    public void PlanCaptiveHandover_HeroStack_NeverTaken()
+    {
+        var plan = _sut.PlanCaptiveHandover(new[] { HeroStack(1), Stack(5) }, 3);
+        CollectionAssert.AreEqual(new[] { 0, 3 }, new List<int>(plan));
+    }
+
+    [TestMethod]
+    public void PlanCaptiveHandover_HeroOnlyRoster_TakesNothing()
+    {
+        var plan = _sut.PlanCaptiveHandover(new[] { HeroStack(1), HeroStack(1) }, 5);
+        CollectionAssert.AreEqual(new[] { 0, 0 }, new List<int>(plan));
+    }
+
+    [TestMethod]
+    public void PlanCaptiveHandover_FewerAvailableThanRequested_TakesAllNonHero()
+    {
+        var plan = _sut.PlanCaptiveHandover(new[] { Stack(2) }, 5);
+        CollectionAssert.AreEqual(new[] { 2 }, new List<int>(plan));
+    }
+
+    [TestMethod]
+    public void PlanCaptiveHandover_CountZero_TakesNothing()
+    {
+        var plan = _sut.PlanCaptiveHandover(new[] { Stack(4) }, 0);
+        CollectionAssert.AreEqual(new[] { 0 }, new List<int>(plan));
+    }
+
+    [TestMethod]
+    public void PlanCaptiveHandover_NullStacks_ReturnsEmpty()
+        => Assert.AreEqual(0, _sut.PlanCaptiveHandover(null, 5).Count);
 
     // ── ApplyRewards ──────────────────────────────────────────────────────────
 

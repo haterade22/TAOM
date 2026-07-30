@@ -46,19 +46,19 @@
   <string id="taom_lotr_issue_horses_soln" text="{=taom_lotr_issue_horses_soln}I will bring you horses." />
   <string id="taom_lotr_issue_horses_task" text="{=taom_lotr_issue_horses_task}Deliver horses ({COUNT})" />
   <string id="taom_lotr_issue_recruits_title" text="{=taom_lotr_issue_recruits_title}Fresh Blood for the Gang" />
-  <string id="taom_lotr_issue_recruits_desc" text="{=taom_lotr_issue_recruits_desc}A gang leader wants captured outlaws pressed into his service." />
-  <string id="taom_lotr_issue_recruits_brief" text="{=taom_lotr_issue_recruits_brief}A gang is only as strong as its numbers, and mine are thin. Bring me captives with no love for the law and I'll make use of them." />
+  <string id="taom_lotr_issue_recruits_desc" text="{=taom_lotr_issue_recruits_desc}A gang leader wants captives pressed into his service." />
+  <string id="taom_lotr_issue_recruits_brief" text="{=taom_lotr_issue_recruits_brief}A gang is only as strong as its numbers, and mine are thin. Bring me captives, whoever they are, and I'll make use of them." />
   <string id="taom_lotr_issue_recruits_accept" text="{=taom_lotr_issue_recruits_accept}What kind of captives?" />
-  <string id="taom_lotr_issue_recruits_expl" text="{=taom_lotr_issue_recruits_expl}Bring me {COUNT} bandit captives and I'll see them put to work. There's coin in it for you, no questions asked." />
+  <string id="taom_lotr_issue_recruits_expl" text="{=taom_lotr_issue_recruits_expl}Bring me {COUNT} captives and I'll see them put to work. There's coin in it for you, no questions asked." />
   <string id="taom_lotr_issue_recruits_soln" text="{=taom_lotr_issue_recruits_soln}I'll bring you captives." />
-  <string id="taom_lotr_issue_recruits_task" text="{=taom_lotr_issue_recruits_task}Deliver bandit captives ({COUNT})" />
+  <string id="taom_lotr_issue_recruits_task" text="{=taom_lotr_issue_recruits_task}Deliver captives ({COUNT})" />
   <string id="taom_lotr_issue_laborers_title" text="{=taom_lotr_issue_laborers_title}Hands for the Mines" />
-  <string id="taom_lotr_issue_laborers_desc" text="{=taom_lotr_issue_laborers_desc}A landowner needs strong backs for hard labor and will take captured bandits." />
-  <string id="taom_lotr_issue_laborers_brief" text="{=taom_lotr_issue_laborers_brief}The diggings need workers and free men won't go down there. Bring me bandits in chains and they'll earn their keep with a pick." />
+  <string id="taom_lotr_issue_laborers_desc" text="{=taom_lotr_issue_laborers_desc}A landowner needs strong backs for hard labor and will take any captives you have taken." />
+  <string id="taom_lotr_issue_laborers_brief" text="{=taom_lotr_issue_laborers_brief}The diggings need workers and free men won't go down there. Bring me captives in chains and they'll earn their keep with a pick." />
   <string id="taom_lotr_issue_laborers_accept" text="{=taom_lotr_issue_laborers_accept}You want prisoners?" />
-  <string id="taom_lotr_issue_laborers_expl" text="{=taom_lotr_issue_laborers_expl}Bring me {COUNT} bandit captives for the labor gangs and I'll pay you for the trouble of taking them." />
+  <string id="taom_lotr_issue_laborers_expl" text="{=taom_lotr_issue_laborers_expl}Bring me {COUNT} captives for the labor gangs and I'll pay you for the trouble of taking them." />
   <string id="taom_lotr_issue_laborers_soln" text="{=taom_lotr_issue_laborers_soln}I'll bring you captives." />
-  <string id="taom_lotr_issue_laborers_task" text="{=taom_lotr_issue_laborers_task}Deliver bandit captives ({COUNT})" />
+  <string id="taom_lotr_issue_laborers_task" text="{=taom_lotr_issue_laborers_task}Deliver captives ({COUNT})" />
   <string id="taom_lotr_issue_banditbase_title" text="{=taom_lotr_issue_banditbase_title}A Lair Near {ISSUE_SETTLEMENT}" />
   <string id="taom_lotr_issue_banditbase_desc" text="{=taom_lotr_issue_banditbase_desc}A nest of raiders preys on the roads near {ISSUE_SETTLEMENT}." />
   <string id="taom_lotr_issue_banditbase_brief" text="{=taom_lotr_issue_banditbase_brief}There is a foul nest of them in the hills, traveller. They take our goods and our people, and the watch is too few to root them out." />
@@ -297,14 +297,14 @@
   <string id="taom_lotr_issue_common_task" text="{=taom_lotr_issue_common_task}Collect Goods" />
   <string id="taom_lotr_issue_pers_expl" text="{=taom_lotr_issue_pers_expl}Bring me {COUNT} captives and I will pay you well." />
   <string id="taom_lotr_issue_pers_soln" text="{=taom_lotr_issue_pers_soln}I will bring you captives." />
-  <string id="taom_lotr_issue_pers_accepted" text="{=taom_lotr_issue_pers_accepted}Deliver {COUNT} bandit captives to {QUEST_SETTLEMENT}." />
+  <string id="taom_lotr_issue_pers_accepted" text="{=taom_lotr_issue_pers_accepted}Deliver {COUNT} captives to {QUEST_SETTLEMENT}." />
   <string id="taom_lotr_issue_pers_ready" text="{=taom_lotr_issue_pers_ready}You have enough captives. Return to {QUEST_SETTLEMENT} to hand them over." />
   <string id="taom_lotr_issue_pers_timeout" text="{=taom_lotr_issue_pers_timeout}You failed to deliver the captives in time." />
   <string id="taom_lotr_issue_pers_have" text="{=taom_lotr_issue_pers_have}Have you brought the captives?" />
   <string id="taom_lotr_issue_pers_thanks" text="{=taom_lotr_issue_pers_thanks}They'll do nicely. You have my thanks." />
   <string id="taom_lotr_issue_pers_turnin" text="{=taom_lotr_issue_pers_turnin}Yes. Here they are." />
   <string id="taom_lotr_issue_pers_not_enough" text="{=taom_lotr_issue_pers_not_enough}You don't have enough captives yet." />
-  <string id="taom_lotr_issue_pers_task" text="{=taom_lotr_issue_pers_task}Take bandit captives" />
+  <string id="taom_lotr_issue_pers_task" text="{=taom_lotr_issue_pers_task}Take captives" />
   <string id="taom_lotr_issue_combat_expl" text="{=taom_lotr_issue_combat_expl}Deal with our enemies and you will be rewarded." />
   <string id="taom_lotr_issue_combat_soln" text="{=taom_lotr_issue_combat_soln}I will deal with them." />
   <string id="taom_lotr_issue_combat_task_capture" text="{=taom_lotr_issue_combat_task_capture}Capture enemy lords ({COUNT})" />

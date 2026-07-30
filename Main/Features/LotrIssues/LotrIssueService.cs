@@ -62,6 +62,34 @@ public class LotrIssueService : ILotrIssueService
 
     public bool IsObjectiveSatisfied(int progress, int target) => target > 0 && progress >= target;
 
+    public int CountDeliverableCaptives(IReadOnlyList<LotrCaptiveStack> stacks, int cap)
+    {
+        if (stacks == null || cap <= 0) return 0;
+        var sum = 0;
+        for (var i = 0; i < stacks.Count && sum < cap; i++)
+            if (IsDeliverable(stacks[i])) sum += stacks[i].Number;
+        return sum <= cap ? sum : cap;
+    }
+
+    public IReadOnlyList<int> PlanCaptiveHandover(IReadOnlyList<LotrCaptiveStack> stacks, int count)
+    {
+        if (stacks == null) return new int[0];
+        var plan = new int[stacks.Count];
+        var remaining = count > 0 ? count : 0;
+        for (var i = 0; i < stacks.Count && remaining > 0; i++)
+        {
+            if (!IsDeliverable(stacks[i])) continue;
+            var take = Math.Min(remaining, stacks[i].Number);
+            plan[i] = take;
+            remaining -= take;
+        }
+        return plan;
+    }
+
+    // The whole rule, in one place: any non-empty non-hero stack. Heroes are excluded because the
+    // handover removes troops straight off the roster, which would skip EndCaptivityAction for a Hero.
+    private static bool IsDeliverable(LotrCaptiveStack stack) => !stack.IsHero && stack.Number > 0;
+
     public void ApplyRewards(LotrIssueDefinition def, float difficulty, ILotrIssueRewardAdapter hero)
     {
         if (def == null) return;

@@ -80,7 +80,7 @@ that returns null / self-disables (all moot once replaced — see Dependency ris
 | 15 | LandLordCompanyOfTrouble | `SBM:176` | lord | Rare | Y | company_of_trouble_character + random hideout; resolve | N | Replace | Manage troublesome mercenaries, re-sell contract before they turn | all |
 | 16 | LandLordTheArtOfTheTrade | `SBM:177` | rural | VeryCommon | Y | Village PrimaryProduction dynamic; core skills | N | Replace | Sell loaned village surplus at profit, return the price | gondor, rohan, dale, erebor, dunland, harad |
 | 17 | LandlordNeedsAccessToVillageCommons | `SBM:178` | rural | Common | Y | sumpter_horse + culture Villager; all dynamic | N | Replace | Escort herders to disputed pasture, drive off rivals | rohan, gondor, dale, dunland |
-| 18 | LandLordNeedsManualLaborers | `SBM:179` | rural | VeryCommon | Y | Player bandit prisoners + mine village; core traits | N | Replace | Deliver bandit prisoners as forced mine labor | mordor, isengard, dunland, erebor, harad, rhun |
+| 18 | LandLordNeedsManualLaborers | `SBM:179` | rural | VeryCommon | Y | Player bandit prisoners + mine village; core traits | N | Replace | Deliver captives as forced mine labor | mordor, isengard, dunland, erebor, harad, rhun |
 | 19 | LandlordTrainingForRetainers | `SBM:180` | rural | VeryCommon | Y | Grain + borrowed_troop/veteran + culture; resolve | N | Replace | Train lent green retainers in battle into veterans | rohan, gondor, rhun, harad, dunland |
 | 20 | LordNeedsGarrisonTroops | `SBM:181` | lord | Common | Y | Culture basic-troop tree + EliteBasicTroop; dynamic | N | Replace | Bring fresh culture recruits to reinforce a garrison | all |
 | 21 | TheConquestOfSettlement | `SBM:182` | lord | VeryCommon | Y | At-war town/castle target; dynamic tokens | N | Replace | Liege orders you to besiege named enemy stronghold | gondor, rohan, mordor, isengard, erebor, dale, rhun, harad, gundabad, dolguldur |
@@ -304,7 +304,7 @@ Codex pass. Every one of the 43 issues maps onto one of these via XML config —
 | Template (`IssueBase` + paired `QuestBase`) | Mechanic | Issues |
 |---|---|---|
 | **DeliverGoods** | accumulate N of an `item:<id>` trade good, hand in via dialog | 14 (grain/supplies/draught/crafting/tools/horses/herd/artisan×2/offload/revenue/art-of-trade/tutor/special-weapons) |
-| **DeliverPersonnel** | hand over N bandit prisoners from the player's `PrisonRoster` | 2 (gang recruits, mine laborers) |
+| **DeliverPersonnel** | hand over N captives — any non-hero prisoner in the player's `PrisonRoster` | 2 (gang recruits, mine laborers) |
 | **Combat** (`variant=`) | event-driven count, auto-completes on N (no turn-in) | 27 — `DefeatRaids` (24, won battles), `CaptureLords` (1, at-war lord taken prisoner), `WinTournaments` (2, tournament won) |
 
 **Why 3, not 8:** the "Escort-a-moving-party", "EconomicGather", "ConquestMilitary", and "SocialMisc/CraftItem"

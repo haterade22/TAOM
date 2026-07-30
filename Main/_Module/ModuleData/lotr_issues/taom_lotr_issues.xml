@@ -92,31 +92,31 @@
              solution_accept_key="{=taom_lotr_issue_horses_soln}I will bring you horses."
              task_key="{=taom_lotr_issue_horses_task}Deliver horses ({COUNT})" />
 
-  <!-- Wave 1 — DeliverPersonnel (hand over N bandit prisoners; no item/troop source needed). -->
+  <!-- Wave 1 — DeliverPersonnel (hand over N captives; any non-hero prisoner counts). -->
 
   <LotrIssue id="lotr_gang_needs_recruits"
              template="DeliverPersonnel" giver_occupation="GangLeader" frequency="VeryCommon" cultures=""
              count="5" count_per_difficulty="10"
              reward_gold_base="0" reward_gold_per_difficulty="1600" reward_renown="0" relation_min="-10"
              title_key="{=taom_lotr_issue_recruits_title}Fresh Blood for the Gang"
-             description_key="{=taom_lotr_issue_recruits_desc}A gang leader wants captured outlaws pressed into his service."
-             brief_key="{=taom_lotr_issue_recruits_brief}A gang is only as strong as its numbers, and mine are thin. Bring me captives with no love for the law and I'll make use of them."
+             description_key="{=taom_lotr_issue_recruits_desc}A gang leader wants captives pressed into his service."
+             brief_key="{=taom_lotr_issue_recruits_brief}A gang is only as strong as its numbers, and mine are thin. Bring me captives, whoever they are, and I'll make use of them."
              accept_key="{=taom_lotr_issue_recruits_accept}What kind of captives?"
-             explanation_key="{=taom_lotr_issue_recruits_expl}Bring me {COUNT} bandit captives and I'll see them put to work. There's coin in it for you, no questions asked."
+             explanation_key="{=taom_lotr_issue_recruits_expl}Bring me {COUNT} captives and I'll see them put to work. There's coin in it for you, no questions asked."
              solution_accept_key="{=taom_lotr_issue_recruits_soln}I'll bring you captives."
-             task_key="{=taom_lotr_issue_recruits_task}Deliver bandit captives ({COUNT})" />
+             task_key="{=taom_lotr_issue_recruits_task}Deliver captives ({COUNT})" />
 
   <LotrIssue id="lotr_landlord_needs_laborers"
              template="DeliverPersonnel" giver_occupation="RuralNotable" frequency="Common" cultures=""
              count="6" count_per_difficulty="12"
              reward_gold_base="0" reward_gold_per_difficulty="1500" reward_renown="0" relation_min="-10"
              title_key="{=taom_lotr_issue_laborers_title}Hands for the Mines"
-             description_key="{=taom_lotr_issue_laborers_desc}A landowner needs strong backs for hard labor and will take captured bandits."
-             brief_key="{=taom_lotr_issue_laborers_brief}The diggings need workers and free men won't go down there. Bring me bandits in chains and they'll earn their keep with a pick."
+             description_key="{=taom_lotr_issue_laborers_desc}A landowner needs strong backs for hard labor and will take any captives you have taken."
+             brief_key="{=taom_lotr_issue_laborers_brief}The diggings need workers and free men won't go down there. Bring me captives in chains and they'll earn their keep with a pick."
              accept_key="{=taom_lotr_issue_laborers_accept}You want prisoners?"
-             explanation_key="{=taom_lotr_issue_laborers_expl}Bring me {COUNT} bandit captives for the labor gangs and I'll pay you for the trouble of taking them."
+             explanation_key="{=taom_lotr_issue_laborers_expl}Bring me {COUNT} captives for the labor gangs and I'll pay you for the trouble of taking them."
              solution_accept_key="{=taom_lotr_issue_laborers_soln}I'll bring you captives."
-             task_key="{=taom_lotr_issue_laborers_task}Deliver bandit captives ({COUNT})" />
+             task_key="{=taom_lotr_issue_laborers_task}Deliver captives ({COUNT})" />
 
   <!-- Wave 2 — Combat (event-driven count; variant=DefeatRaids counts won battles, CaptureLords counts at-war lord captures). -->
 

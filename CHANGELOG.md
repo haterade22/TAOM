@@ -4,6 +4,37 @@
 
 ## 2026-07-30
 
+### fix(lotrissues): the deliver-captives quests counted a troop type TAOM barely has (#368)
+
+A player carrying 20 prisoners could not hand any of them to Pelendur of Anduinbrethil for **Hands
+for the Mines** — the turn-in option stayed greyed out. Both `DeliverPersonnel` configs counted a
+prisoner only when its `Occupation` was `Bandit`, and TAOM declares that occupation on **8 troops in
+the entire mod**, all hideout bosses. Every bandit-culture rank-and-file (`dunland_peasant`,
+`balcoth_volunteer`, `harad_levy`) is `occupation="Soldier"`, because those are the same entries the
+regular Dunland/Rhûn/Harad factions recruit from. Only vanilla looters ever satisfied the filter.
+
+Culture was no help either — the bandit cultures point at troops owned by *regular* cultures, so a
+roster entry carries no trace of the party it came from. The rule is now **any non-hero prisoner**,
+and it lives in `ILotrIssueService` as `CountDeliverableCaptives` + `PlanCaptiveHandover` over a
+TaleWorlds-free `LotrCaptiveStack`, sharing one predicate so the turn-in gate and the removal can't
+drift apart the way the two duplicated loops could. Heroes stay excluded: pulling one off the roster
+directly would skip `EndCaptivityAction`. The handover passes no `woundedCount` on purpose —
+`AddToCountsAtIndex` already clamps `WoundedNumber` to the new `Number`.
+
+Quest text drops the bandit-only promise it was making, in the two configs and in the feature doc,
+which still described the mechanic as "hand over N bandit prisoners". Existing saves heal on the next
+`Refresh()`; no saveable field moved. +13 service tests (21 → 34), suite 4542 green.
+
+Deep-review found no code defects across five agents; the compatibility pass verified 16 API touch
+points against the installed v1.4.7 DLLs and established that vanilla's own `TroopRoster.RemoveTroop`
+omits `woundedCount` exactly as this does. RCA — including why a right-for-vanilla predicate in a
+test-exempt layer survives 4500 tests, five agents and a Codex pass —
+[`rca-lotr-issues-deliver-personnel-2026-07-30.md`](docs/reviews/rca-lotr-issues-deliver-personnel-2026-07-30.md).
+
+Owed: the 12 translated string files still read "bandit captives" — `translate_with_claude.py` needs
+`ANTHROPIC_API_KEY`, unset here, and a changed default on an existing key needs its cache entry
+purged first (the cache is keyed by string id, not by source text).
+
 ### feat(gondor): Lond Cirion barracks, and panels gripped by their structural body
 
 `lond_cirion_barracks_01` — 18 x 6 m, two 3 m storeys, 26.57 gable, 79,480 tris (22,236 / 7,138 /
