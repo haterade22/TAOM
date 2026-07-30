@@ -4,6 +4,34 @@
 
 ## 2026-07-29
 
+### feat(gondor): two pilot Lond Cirion buildings composed from the Gondor part families
+
+New [`blender_assemble_lond_cirion_buildings.py`](tools/oneoff/blender_assemble_lond_cirion_buildings.py)
+→ `blockout/lond_cirion_buildings_a.fbx`: `lond_cirion_house_01` (6×6 m, two 3 m storeys, 45° gable,
+41,240 tris + lod3/lod6/bo) and `lond_cirion_house_02` (12×6 m arched hall, 26.57° gable, 31,122).
+This is the *forward* composition path — a signature matcher proved shipped Gondor buildings are
+merged component meshes, so the artists' recipes cannot be recovered (0/26 matches).
+
+Part families are trappier than whole kit pieces, and a 16-agent audit (4 finder dimensions → 40
+findings → 12 adversarial verifiers, 9 confirmed / 3 refuted) found why. A part is a *prefix* over
+sub-objects, tiers assemble per sub-object, and the anchor is the group bounding box — so a
+`.decalleak` card hanging 1.474 m below `gondor_wall_trim_6m_a` hijacked the anchor and threw
+house_02's cornice 1.54 m up to ridge level, hiding the roof; and the 45° gable's solid tympanum
+plate, named `.wall.lod` with no plain `.wall` sibling (artist typo), was dropped by the LOD filter,
+leaving both gable ends 50% open and see-through. The user caught both in-editor first.
+Also fixed: eave strips pinned by authored origin, gables seated by plate apex, ridge caps, trims
+flush on the wall centreline (restoring the 3 m module grid), LOD ladder extended to
+`.lod3`/`.lod6`, floors from the previously un-catalogued `gondor_ground_straight_a`, and a 3 m
+below-grade skirt matching 9 of 10 shipped buildings.
+
+Verified on the exported FBX rather than the log: `tris == expected_sum` on all 8 tiers (the
+assembler now asserts it), gable rays 21/21 and 15/15 blocked, floor rays 121/121 and 253/253,
+z_min −3.000 everywhere, coincident triangles 56/32 (panel end-caps, not a doubled skirt). The three
+refuted findings are recorded as deliberate deviations in
+[`docs/kitbash/lond-cirion-buildings.md`](docs/kitbash/lond-cirion-buildings.md) — notably that our
+non-identity export transform is fine (the gatehouse carries it and imports correctly), and that
+trims stay flush per the user's editor check over a verifier's cornice-practice argument.
+
 ### fix(gondor): gatehouse tower crowns chamfered, wing root merlons dropped
 
 Two in-editor findings on the hybrid gatehouse. (1) tower_l3_b's rim corners ship as LOW caps
