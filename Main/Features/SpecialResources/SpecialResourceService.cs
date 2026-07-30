@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.SpecialResources.Domain;
@@ -462,6 +463,28 @@ public class SpecialResourceService : ISpecialResourceService
     {
         var tier = GetCurrentTier(heroId, kingdomId, cultureId);
         return tier?.Level ?? 0;
+    }
+
+    public ResourceGrantResult GrantAmount(string heroId, string kingdomId, string cultureId, float amount)
+    {
+        // Console text is untrusted: float.TryParse accepts "NaN" and "Infinity", and a NaN would
+        // survive AddCapped's Math.Min to poison the saved balance (csharp-architecture.md,
+        // "Engine-Float Decision Gates").
+        if (!FiniteFloatValidator.IsFinite(amount))
+        {
+            _logger.LogWarning($"[SpecRes] GrantAmount rejected non-finite amount ({amount}) for hero '{heroId}'");
+            return ResourceGrantResult.None;
+        }
+
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null) return ResourceGrantResult.None;
+
+        var before = _storage.Get(heroId, resource.Id);
+        AddCapped(heroId, resource, amount);
+        var after = _storage.Get(heroId, resource.Id);
+
+        _logger.LogInfo($"[SpecRes] CHEAT GRANT: {amount:+0.##;-0.##;0} {resource.DisplayName} | {before:F0}→{after:F0} (cap {resource.Cap:F0})");
+        return new ResourceGrantResult(true, resource.Id, resource.DisplayName, before, after, resource.Cap);
     }
 
     private void AddCapped(string heroId, SpecialResource resource, float amount)

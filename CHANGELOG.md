@@ -2,6 +2,44 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-30
+
+### feat(specialresources): `taom.add_special_resources` console cheat (#365)
+
+Testing anything downstream of the resource economy — elite upgrades, the recruit gate, the Elite
+Emissary, tier thresholds, deficit desertion — meant grinding battles or editing a save, because
+there was no gold-cheat equivalent for War Spoils / Gems / Castar / Marks.
+
+`taom.add_special_resources [amount]` (default 1000, negatives deduct and floor at 0) adds to
+whichever resource the player's kingdom→culture resolves to. It clamps to that resource's XML `cap`
+like every legitimate earn path and echoes the real before→after, so a clamp is never silent.
+
+This is TAOM's first console command. `CommandLineFunctionality` reflects over every loaded assembly
+that references `TaleWorlds.Library`, so the attribute alone is the wiring — nothing was added to
+`SubModule.cs` or `IoC.cs`. The command class stays a thin entry point: it parses the console text
+(rejecting `NaN`/`Infinity`, which `float.TryParse` accepts) and delegates to the new
+`ISpecialResourceService.GrantAmount`, which reuses the existing private `AddCapped`. The grant tests
+run against a real `SpecialResourceStorageService` rather than a substitute, since the floor-at-0
+clamp belongs to storage and the cap clamp to the service.
+
+The deep review then caught the command lying about its own effect: the clamp report keyed on the
+sign of the request, so a save whose balance predates a lowered cap clamped on a *negative* grant
+(550 − 10 → 500, not 540) and reported "(cap 500)" as though nothing happened — and the floor-at-0
+was never reported at all. Both now report from the unclamped result, and the formatter was pulled
+out of the `Campaign.Current`-dependent static so all six branches are covered. `ConsoleCommandBindingTests`
+pins the engine reflection contract, because the engine's discovery loop calls `Delegate.CreateDelegate`
+unguarded — a malformed TAOM command would abort discovery for every other command, vanilla's included.
+17 tests total; every guard verified RED by injecting its defect before acceptance.
+
+Known limitation: `CollectCommandLineFunctions` is invoked from `TaleWorlds.Native.dll`, so whether
+discovery runs before or after TAOM's assembly loads is inferred, not proven. At the main menu,
+`taom.add_special_resources` returning "Campaign was not started." confirms discovery; "Could not
+find the command" means it never saw the TAOM assembly.
+
+Research: `TaleWorlds.Library.CommandLineFunctionality`, `CampaignCheats.CheckCheatUsage/CheckHelp/CheckParameters`
+Save-compat: No new save fields — the balance rides the existing `_taom_specialResources` SyncData.
+Not-tested: The static console method itself (needs `Campaign.Current` + cheat mode).
+
 ## 2026-07-29
 
 ### feat(gondor): two pilot Lond Cirion buildings composed from the Gondor part families

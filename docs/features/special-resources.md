@@ -167,6 +167,7 @@ instead, so AI lords are never charged).
 | `Main/Features/SpecialResources/Hooks/IOnRecruitmentResourceGate.cs` | Recruit gate hook interface |
 | `Main/Features/SpecialResources/Hooks/RecruitmentResourceGateHook.cs` | Recruit gate hook implementation |
 | `Main/Features/SpecialResources/Hooks/RecruitmentVM_RecruitGate_Patch.cs` | Patch51: block Done button when recruit cost unaffordable |
+| `Main/Features/SpecialResources/Cheats/SpecialResourceCheats.cs` | `taom.add_special_resources` console command |
 | `Main/Features/SpecialResources/UI/SpecialResourceMapBarMixin.cs` | Map bar UIExtenderEx mixin |
 | `Main/Features/SpecialResources/UI/SpecialResourceSpriteWidget.cs` | Dynamic icon sprite (extends IconBrushWidget) |
 | `Main/Features/SpecialResources/UI/SpecialResourcePrefab.cs` | PrefabExtension: swap widget in BottomInfoBar |
@@ -184,6 +185,46 @@ instead, so AI lords are never charged).
 
 - `SpecialResourceServiceTests.cs` — 60 tests (resolve, earn, spend, validate, daily tick, projected-net deficit warning, pending transaction, desertion, edge cases)
 - `SpecialResourceStorageServiceTests.cs` — 11 tests (get/set/add, clamp, multi-hero, multi-resource, restore-null)
+- `SpecialResourceServiceGrantTests.cs` — 9 tests for `GrantAmount` (cap clamp, floor at 0, already-at-cap, unresolved kingdom/culture, NaN/Infinity rejection, grant during an open party-screen session) against a real storage instance
+- `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
+- `ConsoleCommandBindingTests.cs` — 2 tests pinning the engine reflection contract for every attributed TAOM console command
+
+## Cheat Command
+
+`taom.add_special_resources [amount]` — the Special Resources counterpart to vanilla's
+`campaign.add_gold_to_hero`. Requires cheat mode (`cheat_mode = 1` in
+`Documents/Mount and Blade II Bannerlord/Configs/engine_config.txt`); the in-game console opens with
+<kbd>Alt</kbd>+<kbd>~</kbd>.
+
+| Input | Effect |
+|-------|--------|
+| `taom.add_special_resources` | +1000 to whichever resource your kingdom/culture resolves to |
+| `taom.add_special_resources 500` | +500 |
+| `taom.add_special_resources -300` | −300, floored at 0 (drive it to 0 to exercise the desertion path) |
+| `taom.add_special_resources help` | Usage text |
+
+The grant targets the *resolved* resource only — there is no resource-id argument, because
+`ResolveResource(kingdom, culture)` is the single thing the player's UI, upgrade gate, and recruit
+gate all read. It clamps to that resource's `cap` exactly like every legitimate earn path
+(`AddCapped`), and the console echoes the real before→after so a clamp is never silent.
+
+`SpecialResourceCheats.AddSpecialResources` is a thin entry point: it parses/validates the console
+text (rejecting `NaN` / `Infinity`, which `float.TryParse` otherwise accepts) and delegates to
+`ISpecialResourceService.GrantAmount`. The console echo is built by `FormatResult`, kept `internal`
+so its branches are testable without a running campaign. No registration is needed —
+`CommandLineFunctionality` reflects over every loaded assembly that references `TaleWorlds.Library`
+looking for static `string`-returning methods with the `CommandLineArgumentFunction` attribute.
+
+**Adding a second TAOM console command:** the engine's discovery loop calls
+`Delegate.CreateDelegate(typeof(Func<List<string>, string>), method)` **unguarded**, so a method with
+the attribute but the wrong shape throws and aborts discovery for every other command in the pass —
+including vanilla's `campaign.*` cheats. `ConsoleCommandBindingTests` enforces the shape; keep new
+commands under the `taom` group and the `(List<string>) : string` signature.
+
+**Unproven:** `CollectCommandLineFunctions` is called from `TaleWorlds.Native.dll`, so its timing
+relative to module assembly load could not be verified from the managed DLLs. At the main menu (no
+campaign loaded), `taom.add_special_resources` returning "Campaign was not started." proves discovery
+found it; "Could not find the command" means it did not. See #365.
 
 ## How to Add a New Kingdom's Resource
 
@@ -215,6 +256,7 @@ Edit attributes on the `<Resource>` element. Each resource can have independent 
 
 ## Changelog
 
+- 2026-07-30 — Added the `taom.add_special_resources` console cheat (TAOM's first console command) plus `ISpecialResourceService.GrantAmount`, the only arbitrary-amount grant path in the feature.
 - 2026-06-19 — Gate the war elephant + spider behind recruit cost + daily upkeep via a new `recruit_cost` XML field and `Patch51_RecruitmentResourceGate` (block Done button) + `OnUnitRecruitedEvent` charge.
 - 2026-06-01 — Deficit warning now fires only when the next tick's projected net would push the balance to ≤ 0 (`GetProjectedDailyNet` shared with the real tick math), replacing the low-but-stable `< Cap*0.1` warning.
 - 2026-05-14 — R1-reset of resource state, added desertion grace, and per-resource seeding (closes deferred #133).

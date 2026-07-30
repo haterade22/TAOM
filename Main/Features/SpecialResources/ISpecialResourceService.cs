@@ -88,6 +88,15 @@ public interface ISpecialResourceService
     /// debug logging. Wired to <c>OnNewGameCreatedEvent</c> by the behavior. Phase 9b deferred #133 P2 R1.
     /// </summary>
     void ResetSessionState();
+
+    /// <summary>
+    /// Debug/cheat grant: adds <paramref name="amount"/> (may be negative) to the hero's resolved
+    /// resource, clamped to [0, Cap] exactly like the legitimate earn paths. Returns the outcome so
+    /// the caller can report the real before→after — a cap clamp must never be silent. Returns
+    /// <see cref="ResourceGrantResult.None"/> when the kingdom/culture maps to no resource or the
+    /// amount is non-finite. Backs the <c>taom.add_special_resources</c> console command.
+    /// </summary>
+    ResourceGrantResult GrantAmount(string heroId, string kingdomId, string cultureId, float amount);
 }
 
 public sealed class TroopUpkeepInfo
@@ -142,5 +151,32 @@ public sealed class RecruitGateResult
         Blocked = blocked;
         Required = required;
         ResourceDisplayName = resourceDisplayName;
+    }
+}
+
+/// <summary>Outcome of <see cref="ISpecialResourceService.GrantAmount"/> — which resource was hit and
+/// the balance before/after, so the caller can report a cap clamp instead of swallowing it.</summary>
+public sealed class ResourceGrantResult
+{
+    /// <summary>False when the hero's kingdom/culture maps to no resource, or the amount was
+    /// non-finite. Nothing was written in either case.</summary>
+    public bool Resolved { get; }
+
+    public string ResourceId { get; }
+    public string DisplayName { get; }
+    public float Before { get; }
+    public float After { get; }
+    public float Cap { get; }
+
+    public static readonly ResourceGrantResult None = new(false, null, null, 0f, 0f, 0f);
+
+    public ResourceGrantResult(bool resolved, string resourceId, string displayName, float before, float after, float cap)
+    {
+        Resolved = resolved;
+        ResourceId = resourceId;
+        DisplayName = displayName;
+        Before = before;
+        After = after;
+        Cap = cap;
     }
 }

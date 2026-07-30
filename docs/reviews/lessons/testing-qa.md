@@ -107,6 +107,18 @@ Three test gates shipped in the 2026-07-27 Gondor review (unfiltered JSON id che
 - **Prevent:** for any guard added post-fix (not TDD-first), inject the failure once and read the assertion message before accepting it. Especially when the guard validates work the same author just did.
 - **Source:** docs/reviews/rca-gondor-recruitment-2026-07-27.md ("Preventive actions taken").
 
+### When a method returns a report as well as a state change, test the report — not just the mutation
+The `taom.add_special_resources` cheat clamped balances correctly in all 8 of its original tests, and still lied about it: the console echo keyed "did a clamp fire?" on the *sign of the request* (`After >= Cap && amount > 0f`) rather than on the unclamped result. A save whose balance predates a lowered cap clamps on a NEGATIVE grant too (550 − 10 → 500, not 540) and reported "(cap 500)" as though nothing happened; the floor-at-0 was never reported at all. Every test asserted the resulting balance and none asserted the message.
+- **Why missed:** coverage was measured by *case count* (cap, floor, NaN, unresolved, already-at-cap — all present) rather than by *output surface*. The message was also stranded inside a static console method needing `Campaign.Current`, so "untestable" was accepted instead of being fixed by extracting the pure formatter.
+- **Prevent:** enumerate every branch of a user-facing result string and construct the state each one describes — including states the happy path cannot reach (here: a stored balance above a cap lowered after the save was written). If the formatting is stranded in an untestable entry point, extract it to an `internal static` helper (`InternalsVisibleTo("TAOM.Tests")` is already wired in `Main/TAOM.csproj`) rather than accepting the gap. A debug tool that misreports its own effect is worse than one that does nothing.
+- **Source:** docs/reviews/rca-specialresources-cheat-2026-07-30.md (F1).
+
+### Pin the engine's reflection contract when the engine's discovery loop is unguarded
+`CommandLineFunctionality.CollectCommandLineFunctions` builds every console command with a bare `Delegate.CreateDelegate(typeof(Func<List<string>, string>), method)` — no try/catch. A TAOM method carrying the attribute with the wrong shape throws inside that loop and aborts discovery for *every other command in the same pass*, including vanilla's `campaign.*` cheats. The blast radius of a bad refactor is the whole console, not our one command.
+- **Why missed:** nothing in the changeset was wrong — the compatibility agent surfaced it by reading what the engine *does with* the binding rather than stopping at "the attribute exists." Per-file review cannot see this.
+- **Prevent:** when binding to an engine mechanism that discovers TAOM members by reflection, add a reflection invariant test asserting the required shape and, where possible, performing the engine's own construction call (`ConsoleCommandBindingTests`). Ask of any reflection-based engine binding: *what happens to everything else if mine is malformed?* Note `Assembly.GetTypes()` throws `ReflectionTypeLoadException` in the test host for UI-dependent types — mirror the engine's `GetTypesSafe()` with a catch that keeps the non-null types.
+- **Source:** docs/reviews/rca-specialresources-cheat-2026-07-30.md (F4).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
