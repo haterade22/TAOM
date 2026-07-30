@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="{OWNER.NAME}'in Kervanı" />
     <string id="l4pRw7pO" text="{OWNER.NAME}'in Silahlı Kervanı" />
     <string id="taom_align_desertion" text="{COUNT} asker firar etti — karşıt taraftaki bir lorda hizmet etmeyi reddediyorlar." />
+    <string id="taom_hideout_desc_erebor" text="Doğunun ıssız tepeleri arasında, uzun zaman önce gölgeye ve yıkıma düşmüş bir boy olan Karakâküllerin bir cüce kampına rastlarsın." />
+    <string id="taom_troop_weight_size" text="Ağır askerler" />
   </strings>
 </base>

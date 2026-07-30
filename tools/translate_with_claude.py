@@ -67,9 +67,43 @@ LANGUAGES = {
     "TR":  ("tur-TR", "Turkish"),
 }
 
-MODEL = "claude-sonnet-4-5"  # claude-sonnet-4-5 (decisions from plan)
-PRICE_INPUT_PER_MTOK = 3.0
-PRICE_OUTPUT_PER_MTOK = 15.0
+MODEL = "claude-opus-5"
+PRICE_INPUT_PER_MTOK = 5.0
+PRICE_OUTPUT_PER_MTOK = 25.0
+
+# Opus 5 runs adaptive thinking when the `thinking` field is omitted, and max_tokens caps
+# thinking + response text together — a batch could burn its budget thinking and return
+# truncated JSON, failing every entry in it. Translation is mechanical, so thinking is off
+# (legal at effort "high" or below) and effort is low.
+THINKING = {"type": "disabled"}
+
+# Shape the response with a schema instead of hoping the model returns the prescribed JSON.
+# The installed SDK (0.49.0) predates the typed `output_config` parameter, so both this and
+# `effort` ride in via extra_body.
+TRANSLATION_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "translations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "translated": {"type": "string"},
+                },
+                "required": ["id", "translated"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    "required": ["translations"],
+    "additionalProperties": False,
+}
+
+OUTPUT_CONFIG = {
+    "effort": "low",
+    "format": {"type": "json_schema", "schema": TRANSLATION_SCHEMA},
+}
 
 BATCH_SIZE = 40  # entries per API call — small enough to keep output reliable
 MAX_RETRIES = 3
@@ -292,9 +326,11 @@ CRITICAL RULES — VIOLATIONS BREAK THE GAME:
 
 6. Never add commentary, never translate to a different language, never refuse — if a string can't be translated cleanly, transliterate or copy English as a last resort.
 
+7. Do not include internal or system XML tags in your response.
+
 OUTPUT FORMAT:
-You MUST respond with ONLY a JSON array, no other text. Schema:
-[{{"id": "the_id_from_input", "translated": "your translation"}}, ...]
+You MUST respond with ONLY a JSON object, no other text. Schema:
+{{"translations": [{{"id": "the_id_from_input", "translated": "your translation"}}, ...]}}
 
 Every input entry MUST have an output entry with the SAME id. Do not skip entries."""
 
@@ -334,35 +370,50 @@ def _extract_translations(data) -> dict[str, str]:
     return result
 
 
-def call_claude(client, target_language: str, batch: list[Entry]) -> dict[str, str]:
-    """Translate a batch via the Claude API. Returns {id: translated_text}."""
+def build_request(target_language: str, batch: list[Entry]) -> dict:
+    """The request body for one batch. Sequential and batched paths BOTH build from here —
+    if they diverge, the two paths silently produce different translations."""
     user_payload = [{"id": e.string_id, "text": e.english_text} for e in batch]
     user_msg = (
         f"Translate these {len(batch)} entries to {target_language}. "
-        f"Respond with the JSON array only.\n\n"
+        f"Respond with the JSON object only.\n\n"
         f"INPUT:\n{json.dumps(user_payload, ensure_ascii=False, indent=2)}"
     )
+    return {
+        "model": MODEL,
+        "max_tokens": 8192,
+        "thinking": THINKING,
+        "output_config": OUTPUT_CONFIG,
+        "system": SYSTEM_PROMPT.format(target_language=target_language),
+        "messages": [{"role": "user", "content": user_msg}],
+    }
+
+
+def _parse_response_text(text: str) -> dict[str, str]:
+    """Strip code fences, parse, and map to {id: translated}. Raises json.JSONDecodeError."""
+    text = text.strip()
+    if text.startswith("```"):
+        text = re.sub(r"^```(?:json)?\n?", "", text)
+        text = re.sub(r"\n?```$", "", text)
+    # Tolerate the response shapes the model actually emits (alternate value key,
+    # single-key wrapper, or the bare {id: text} object) — a shape drift used to
+    # wipe an entire 40-entry batch to 0/40 even though the JSON parsed fine.
+    return _extract_translations(json.loads(text))
+
+
+def call_claude(client, target_language: str, batch: list[Entry]) -> dict[str, str]:
+    """Translate a batch via the Claude API. Returns {id: translated_text}."""
+    req = build_request(target_language, batch)
+    # The installed SDK predates the typed output_config parameter — send it via extra_body.
+    output_config = req.pop("output_config")
 
     for attempt in range(MAX_RETRIES):
         try:
             response = client.messages.create(
-                model=MODEL,
-                max_tokens=8192,
-                system=SYSTEM_PROMPT.format(target_language=target_language),
-                messages=[{"role": "user", "content": user_msg}],
-            )
+                **req, extra_body={"output_config": output_config})
             usage = (response.usage.input_tokens, response.usage.output_tokens)
             text = response.content[0].text.strip()
-            # Strip code fences if present
-            if text.startswith("```"):
-                text = re.sub(r"^```(?:json)?\n?", "", text)
-                text = re.sub(r"\n?```$", "", text)
-            data = json.loads(text)
-            # Tolerate the response shapes the model actually emits (alternate value key,
-            # single-key wrapper, or the bare {id: text} object) — a shape drift used to
-            # wipe an entire 40-entry batch to 0/40 even though the JSON parsed fine.
-            result_map = _extract_translations(data)
-            return result_map, usage
+            return _parse_response_text(text), usage
         except json.JSONDecodeError as e:
             if attempt == MAX_RETRIES - 1:
                 # Truncate raw response and stay safe — don't crash the entire run on a malformed batch
@@ -380,15 +431,137 @@ def call_claude(client, target_language: str, batch: list[Entry]) -> dict[str, s
                 raise
 
 
+def call_claude_batched(client, target_language: str, chunks: list[list[Entry]],
+                        poll_seconds: int = 30) -> tuple[dict[int, dict[str, str]], tuple[int, int]]:
+    """Translate many chunks through the Batches API (50% of standard price).
+
+    Returns ({chunk_index: {id: translated}}, (input_tokens, output_tokens)). A chunk that
+    errored, expired, or was canceled comes back absent — the caller marks its entries failed.
+    """
+    requests = [{"custom_id": f"chunk-{i}", "params": build_request(target_language, chunk)}
+                for i, chunk in enumerate(chunks)]
+    batch = client.messages.batches.create(requests=requests)
+    print(f"    Batch submitted: {batch.id} ({len(requests)} requests)", flush=True)
+
+    while True:
+        status = client.messages.batches.retrieve(batch.id)
+        if status.processing_status == "ended":
+            break
+        counts = getattr(status, "request_counts", None)
+        pending = getattr(counts, "processing", "?") if counts else "?"
+        print(f"    {status.processing_status} — {pending} processing...", flush=True)
+        if poll_seconds:
+            time.sleep(poll_seconds)
+
+    per_chunk: dict[int, dict[str, str]] = {}
+    in_tok = out_tok = 0
+    for res in client.messages.batches.results(batch.id):
+        # Results arrive in ANY order — key by custom_id, never by position.
+        idx = int(str(res.custom_id).rsplit("-", 1)[-1])
+        kind = res.result.type
+        if kind != "succeeded":
+            err = getattr(getattr(res.result, "error", None), "type", kind)
+            print(f"    [chunk {idx}] {kind}: {err}", flush=True)
+            continue
+        msg = res.result.message
+        in_tok += msg.usage.input_tokens
+        out_tok += msg.usage.output_tokens
+        try:
+            per_chunk[idx] = _parse_response_text(msg.content[0].text)
+        except json.JSONDecodeError as e:
+            print(f"    [chunk {idx}] json_fail: {e}", flush=True)
+    return per_chunk, (in_tok, out_tok)
+
+
+def absorb_translations(batch: list[Entry], translated_map: dict[str, str],
+                        result: "TranslationResult", cache: dict, queue) -> int:
+    """Validate one batch's translations, cache and queue the good ones, return the OK count.
+
+    Both the sequential and batched paths call this, so a batched translation faces the same
+    placeholder gate — otherwise broken {VARIABLE} markup could reach the game via batching only.
+    """
+    ok_count = 0
+    for e in batch:
+        tr = translated_map.get(e.string_id)
+        if tr is None:
+            result.failed.append(e.string_id)
+            continue
+        ok, why = placeholders_match(e.english_text, tr)
+        if not ok:
+            print(f"    [skip] {e.string_id}: placeholder mismatch ({why})", flush=True)
+            result.failed.append(e.string_id)
+            continue
+        cache[e.string_id] = tr
+        queue(e, tr)
+        result.from_llm += 1
+        ok_count += 1
+    return ok_count
+
+
+# ── Id sync ────────────────────────────────────────────────────────────────────
+
+def sync_missing_ids(source_path: Path, target_path: Path) -> list[str]:
+    """Seed the per-language file with any {=KEY} the English source declares but it lacks.
+
+    write_back substitutes by id, so a key with no <string id="KEY"> element has nowhere to
+    land and its translation is silently discarded. Appending the key with its English text
+    gives the next run somewhere to write. Returns the ids added; idempotent.
+    """
+    if not target_path.exists():
+        return []
+    src_map = _parse_string_xml(source_path, strip_keys=True)
+    tgt_map = _parse_string_xml(target_path, strip_keys=False)
+    missing = [sid for sid in src_map if sid not in tgt_map]
+    if not missing:
+        return []
+
+    raw = target_path.read_text(encoding="utf-8", newline="")
+    nl = "\r\n" if "\r\n" in raw else "\n"
+    lines = raw.split(nl)
+
+    string_lines = [i for i, l in enumerate(lines) if l.lstrip().startswith("<string ")]
+    close = next((i for i, l in enumerate(lines) if "</strings>" in l), None)
+    if close is None:
+        return []
+    if string_lines:
+        anchor = string_lines[-1]
+        indent = re.match(r"\s*", lines[anchor]).group(0)
+        blank_separated = anchor + 1 < len(lines) and lines[anchor + 1].strip() == ""
+        insert_at = anchor + (2 if blank_separated else 1)
+    else:  # empty stub — indent one level past </strings>
+        indent = re.match(r"\s*", lines[close]).group(0) + "  "
+        blank_separated = False
+        insert_at = close
+
+    block = []
+    for sid in missing:
+        text = (src_map[sid].replace("&", "&amp;").replace('"', "&quot;")
+                            .replace("<", "&lt;").replace(">", "&gt;"))
+        block.append(f'{indent}<string id="{sid}" text="{text}" />')
+        if blank_separated:
+            block.append("")
+
+    lines[insert_at:insert_at] = block
+    target_path.write_text(nl.join(lines), encoding="utf-8", newline="")
+    return missing
+
+
 # ── Write back ─────────────────────────────────────────────────────────────────
 
-def write_back(file_path: Path, translations: dict[str, str], language_tag: str) -> int:
+def write_back(file_path: Path, translations: dict[str, str],
+               language_tag: str) -> tuple[int, list[str]]:
     """Update the <string id=X text="..."/> entries in file_path with new translations.
-    Returns number of entries written.
+
+    Returns (entries_written, ids_not_present_in_the_file). Substitution is by id, so an id
+    the file doesn't declare has nowhere to land — those used to vanish silently, discarding a
+    translation we paid for. The caller reports them.
     """
     if not file_path.exists():
-        return 0
-    with open(file_path, encoding="utf-8") as f:
+        return 0, sorted(translations)
+    # newline="" on BOTH handles: without it, universal-newline translation rewrites an
+    # LF-stored file as CRLF on Windows and every line shows as changed — a 6000-line diff
+    # for one edited string.
+    with open(file_path, encoding="utf-8", newline="") as f:
         content = f.read()
     # Update <tag language="..."/> if present
     content = re.sub(
@@ -397,9 +570,9 @@ def write_back(file_path: Path, translations: dict[str, str], language_tag: str)
         content,
     )
     if not translations:
-        with open(file_path, "w", encoding="utf-8") as f:
+        with open(file_path, "w", encoding="utf-8", newline="") as f:
             f.write(content)
-        return 0
+        return 0, []
     # Single-pass replacement: compile ONE regex matching any of the ids we're updating,
     # then resolve each match via dictionary lookup. Was: N-regex compile + N subn calls
     # which scaled badly on large files (1431-entry XSLT file × 12 langs ≈ 5min wasted).
@@ -413,15 +586,17 @@ def write_back(file_path: Path, translations: dict[str, str], language_tag: str)
         r'(<string\s+id=")(' + id_alternation + r')(")(\s+text=")[^"]*(")'
     )
     written = 0
+    placed: set[str] = set()
     def _replace(m):
         nonlocal written
         sid = m.group(2)
         written += 1
+        placed.add(sid)
         return m.group(1) + sid + m.group(3) + m.group(4) + escaped_translations[sid] + m.group(5)
     content = pattern.sub(_replace, content)
-    with open(file_path, "w", encoding="utf-8") as f:
+    with open(file_path, "w", encoding="utf-8", newline="") as f:
         f.write(content)
-    return written
+    return written, sorted(set(escaped_translations) - placed)
 
 
 # ── Main orchestration ────────────────────────────────────────────────────────
@@ -442,6 +617,12 @@ def main():
     p.add_argument("--dry-run", action="store_true", help="Preview without writing")
     p.add_argument("--apply", action="store_true", help="Write translations and call API")
     p.add_argument("--max-entries", type=int, default=None, help="Cap API entries for testing")
+    p.add_argument("--sync-ids", action="store_true",
+                   help="Seed per-language TAOM files with any {=KEY} the English source declares "
+                        "but they lack, so translations for those keys have somewhere to land")
+    p.add_argument("--batch", action="store_true",
+                   help="Submit via the Batches API at 50%% price (async, up to 24h; "
+                        "worth it for bulk runs, not for a handful of entries)")
     args = p.parse_args()
 
     if not args.dry_run and not args.apply:
@@ -457,6 +638,16 @@ def main():
     print(f"  Cache loaded: {len(cache)}")
     print(f"  Module filter: {args.module}")
     print(f"  Mode: {'DRY RUN' if args.dry_run else 'APPLY'}")
+
+    if args.sync_ids:
+        seeded = 0
+        for _, src, tpl in english_source_files("TAOM"):
+            target = TAOM_LANG_DIR / lang / tpl.format(locale=locale)
+            added = sync_missing_ids(src, target)
+            if added:
+                print(f"  +{len(added):>4} ids seeded into {target.name}")
+                seeded += len(added)
+        print(f"  Ids seeded: {seeded}")
 
     entries = discover_entries(lang, args.module)
     print(f"\n  Untranslated entries discovered: {len(entries)}")
@@ -505,51 +696,59 @@ def main():
         import anthropic
         client = anthropic.Anthropic()
 
-        print(f"\n  Calling Claude API ({MODEL}) in batches of {BATCH_SIZE}...")
-        for i in range(0, len(need_llm), BATCH_SIZE):
-            batch = need_llm[i:i + BATCH_SIZE]
-            try:
-                translated_map, (in_tok, out_tok) = call_claude(client, lang_name, batch)
-            except Exception as exc:
-                print(f"    Batch {i // BATCH_SIZE + 1} FAILED: {exc}")
-                for e in batch:
-                    result.failed.append(e.string_id)
-                continue
+        chunks = [need_llm[i:i + BATCH_SIZE] for i in range(0, len(need_llm), BATCH_SIZE)]
 
+        if args.batch:
+            print(f"\n  Calling Claude Batches API ({MODEL}) — "
+                  f"{len(chunks)} requests of up to {BATCH_SIZE} entries (50% price)...")
+            per_chunk, (in_tok, out_tok) = call_claude_batched(client, lang_name, chunks)
             result.api_input_tokens += in_tok
             result.api_output_tokens += out_tok
-
-            batch_ok = 0
-            for e in batch:
-                tr = translated_map.get(e.string_id)
-                if tr is None:
-                    result.failed.append(e.string_id)
-                    continue
-                ok, why = placeholders_match(e.english_text, tr)
-                if not ok:
-                    print(f"    [skip] {e.string_id}: placeholder mismatch ({why})", flush=True)
-                    result.failed.append(e.string_id)
-                    continue
-                cache[e.string_id] = tr
-                queue(e, tr)
-                result.from_llm += 1
-                batch_ok += 1
-            print(f"    Batch {i // BATCH_SIZE + 1}/{(len(need_llm) + BATCH_SIZE - 1) // BATCH_SIZE}: {batch_ok}/{len(batch)} ok  (in={in_tok} out={out_tok})", flush=True)
-            # Save cache after every batch — resumable on interruption
+            for idx, chunk in enumerate(chunks):
+                chunk_ok = absorb_translations(chunk, per_chunk.get(idx, {}), result, cache, queue)
+                print(f"    Chunk {idx + 1}/{len(chunks)}: {chunk_ok}/{len(chunk)} ok", flush=True)
             save_cache(lang, cache)
-        actual_cost = (result.api_input_tokens / 1_000_000 * PRICE_INPUT_PER_MTOK
-                       + result.api_output_tokens / 1_000_000 * PRICE_OUTPUT_PER_MTOK)
+        else:
+            print(f"\n  Calling Claude API ({MODEL}) in batches of {BATCH_SIZE}...")
+            for idx, batch in enumerate(chunks):
+                try:
+                    translated_map, (in_tok, out_tok) = call_claude(client, lang_name, batch)
+                except Exception as exc:
+                    print(f"    Batch {idx + 1} FAILED: {exc}")
+                    for e in batch:
+                        result.failed.append(e.string_id)
+                    continue
+
+                result.api_input_tokens += in_tok
+                result.api_output_tokens += out_tok
+                batch_ok = absorb_translations(batch, translated_map, result, cache, queue)
+                print(f"    Batch {idx + 1}/{len(chunks)}: {batch_ok}/{len(batch)} ok  "
+                      f"(in={in_tok} out={out_tok})", flush=True)
+                # Save cache after every batch — resumable on interruption
+                save_cache(lang, cache)
+
+        rate = 0.5 if args.batch else 1.0  # Batches API bills at 50%
+        actual_cost = rate * (result.api_input_tokens / 1_000_000 * PRICE_INPUT_PER_MTOK
+                              + result.api_output_tokens / 1_000_000 * PRICE_OUTPUT_PER_MTOK)
         print(f"\n  Actual cost: ${actual_cost:.3f} "
-              f"(in={result.api_input_tokens} out={result.api_output_tokens})")
+              f"(in={result.api_input_tokens} out={result.api_output_tokens}"
+              f"{', batched 50%' if args.batch else ''})")
 
     # Write back
     print(f"\n  Writing {sum(len(d) for d in by_file.values())} translations to {len(by_file)} files...")
     total_written = 0
+    all_unplaced: list[str] = []
     for file_path, translations in by_file.items():
-        n = write_back(file_path, translations, lang_name)
+        n, unplaced = write_back(file_path, translations, lang_name)
         total_written += n
+        all_unplaced.extend(unplaced)
         rel = file_path.name
-        print(f"    {rel}: {n} entries")
+        suffix = f"  ({len(unplaced)} ids not in file)" if unplaced else ""
+        print(f"    {rel}: {n} entries{suffix}")
+    if all_unplaced:
+        print(f"  WARNING: {len(all_unplaced)} translation(s) had no matching id in the target "
+              f"file and were discarded — add the id to the per-language file first: "
+              f"{all_unplaced[:10]}")
 
     print(f"\n  Summary:")
     print(f"    Total entries:    {result.total_entries}")
