@@ -121,6 +121,7 @@ tools/validate_all_troop_refs.py      (gate: 0 missing refs)
 | `tools/apply_dolguldur_troop_revamp.py` | Dol Guldur mechanical apply script |
 | `tools/apply_gundabad_troop_revamp.py` | Gundabad mechanical apply script |
 | `tools/apply_erebor_troop_revamp.py` | Erebor mechanical apply script |
+| `tools/apply_erebor_equipment_sweep.py` | Erebor/Iron Hills variety sweep (2026-07-30) — de-duplicates repeated items within a troop's own rosters; idempotent, tier-floor guarded |
 | `tools/cleanup_deleted_troops_212.py` | Sweep deleted IDs from 3 downstream XMLs |
 | `tools/expand_party_templates_212.py` | Insert new troops into `kingdom_hero_party_*` templates |
 | `tools/validate_all_troop_refs.py` | Cross-reference gate (Armory ↔ troops XML) |
@@ -180,6 +181,7 @@ If KEYforce's spec changes and a new troop ID needs to be added to (e.g.) Mordor
 
 ## Changelog
 
+- 2026-07-30 — Erebor/Iron Hills equipment variety sweep (#367) + noble crossbow uplift (#366). `apply_erebor_equipment_sweep.py` made 200 equipment substitutions across `troops_erebor.xml`, rewriting only the second-and-later occurrence of an item within a troop so nothing loses coverage: 15 previously dead items placed, dwarf items referenced 305 → 320, zero lost, armor refs now 247. Roster structure untouched (60 troops / 223 rosters / 1,434 slots, unchanged). Separately, `iron_hills_noble_scout` / `_sharpshooter` / `_veteran_sharpshooter` went to Crossbow 175 / 225 / 275 — off-formula, so they are in `SKIP_TROOP_IDS`. **Read the RCA before running a similar sweep**: `docs/reviews/rca-erebor-equipment-sweep-2026-07-30.md` records why "spread the least-used item" is unsafe without a tier floor (it selects end-tier exclusives, because rarity *is* the tier marker) and why crafted melee weapons need their `CraftingPiece` blade stats compared rather than their absent `<Weapon>` element.
 - 2026-05-25 — Gondor troop polish (#224): delta-style `apply_gondor_polish_224.py` touched 58 troops (94 equipment ops) + added 2 Pinnath Gelin cavalry NPCs and the upgrade-target branch.
 - 2026-05-23 — KEYforce troop tree revamp (#212): 48 new troops, 30 deletions, 113 equipment refits across Mordor/Isengard/Dol Guldur/Gundabad/Erebor via per-culture apply scripts + downstream cleanup/expand/validate pipeline.
 

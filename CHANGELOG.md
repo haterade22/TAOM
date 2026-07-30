@@ -95,6 +95,9 @@ already trusted with it, refuses to place anything below that floor, holds weapo
 within 10%, and requires armour `material_type` to match so mail cannot become plate at equal armour
 value. No item's minimum wearer level drops anywhere in the final diff.
 
+Recorded in `docs/features/troop-tree-revamp.md` (Change History + script table) so the next session
+opening the Erebor tree finds the sweep and its two traps without re-deriving them.
+
 That tier floor is why only 15 of the 38 dead items were placed rather than 33: the rest are genuine
 end-tier gear whose only home is the `iron_hills_noble_*` line, and those 13 troops ship a single
 battle roster apiece, so there is no duplicate to displace without adding rosters. `sm_iron_shield_b_gold`
