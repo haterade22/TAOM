@@ -4,6 +4,31 @@
 
 ## 2026-07-30
 
+### fix(erebor): lift the Iron Hills noble crossbow line above the regulars (#366)
+
+`iron_hills_noble_scout`, `_sharpshooter` and `_veteran_sharpshooter` carried exactly the same
+Crossbow value as their `ironpass_*` counterparts at every tier — 130 / 170 / 205 in both lines —
+so the noble branch had no advantage in the one skill it exists for. It was already ahead on
+One-Handed (+5), Polearm (+10), Bow (+5) and Riding (+10–15), which is what made the Crossbow tie
+read as an oversight rather than a design choice.
+
+Now 175 / 225 / 275, about 1.34× the regular line at each tier so the gap holds all the way up
+rather than appearing only at the top. The `ironpass_*` line is untouched — nothing gets weaker.
+
+These three values are off-formula. `tools/rebalance_troops.py` derives Crossbow from level and
+`CULTURAL_MODS['iron_hills']` alone, and its `--dry-run` wanted all three back at 130 / 170 / 205 —
+so the ids are now in `SKIP_TROOP_IDS` and recorded in `docs/features/troop-skill-balance.md`.
+Without that the next `--apply` would have reverted this silently.
+
+Worth recording, because these are deliberate spikes rather than values fitted under an existing
+ceiling: each of the three becomes the highest-skilled troop at its level, and the ladder now has
+inversions across levels. The level-21 Scout at 175 out-shoots every level-26 archer in the file
+(Bow 170); the level-26 Sharpshooter at 225 beats the level-31 `ironpass_sharpshooter` at 205; and
+at level 31 the noble sits 70 points above its same-level, same-weapon `ironpass` peer, against a
+previous level-31 ceiling of 260 (`erebor_reg_mattock_warrior`, TwoHanded).
+
+Save-compat: skill-only, no save migration. Troop skills live on the shared `CharacterObject`,
+which is rebuilt from XML at every launch, so existing parties pick the new values up on next load.
 ### feat(specialresources): `taom.add_special_resources` console cheat (#365)
 
 Testing anything downstream of the resource economy — elite upgrades, the recruit gate, the Elite

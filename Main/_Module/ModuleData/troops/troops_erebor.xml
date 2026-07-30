@@ -6138,7 +6138,7 @@
                 value="35" />
             <skill
                 id="Crossbow"
-                value="130" />
+                value="175" />
             <skill
                 id="Throwing"
                 value="50" />
@@ -6210,7 +6210,7 @@
                 value="40" />
             <skill
                 id="Crossbow"
-                value="170" />
+                value="225" />
             <skill
                 id="Throwing"
                 value="60" />
@@ -6282,7 +6282,7 @@
                 value="45" />
             <skill
                 id="Crossbow"
-                value="205" />
+                value="275" />
             <skill
                 id="Throwing"
                 value="70" />

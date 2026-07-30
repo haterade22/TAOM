@@ -298,6 +298,15 @@ The convention (`tools/README.md:7-24`) mandates one of two byte-faithful idioms
 
 ---
 
+### Before hand-editing a generated field, check whether a generator owns it
+
+Three Crossbow values were hand-tuned in `troops_erebor.xml` without checking that `tools/rebalance_troops.py` derives that exact field from level + `CULTURAL_MODS`. Its `--dry-run` wanted all three reverted to the formula values; the next `--apply` would have undone the fix with no warning and no diff to review.
+- **Why missed:** the question "does another tool own this field?" is in no per-file review's rule set. The data change was self-consistent, validated, and tested — the conflict lives entirely outside the changed file.
+- **Prevent:** when hand-editing a value in generated or regenerable data, grep `tools/` for a script that writes that field. If one exists, add the id to its skip list AND record the residual in the owning feature doc, in the same commit. A hand-tune with no skip-list entry has a shelf life measured in "until someone regenerates."
+- **Source:** docs/reviews/rca-erebor-equipment-sweep-2026-07-30.md (F5).
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

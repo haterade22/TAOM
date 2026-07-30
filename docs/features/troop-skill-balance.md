@@ -41,6 +41,8 @@ Weapon detection was originally **name-keyword-only** (`crossbow`/`arbalest`/`na
 
 **Known off-formula residuals** a `--dry-run` will always report: the hand-tuned `gondor_loss_noble{,_veteran,_sergeant,_warden,_captain}` line (5 troops, intentional — do not `--apply` over them without deciding their fate, tracked in #343) and 28 Mordor/Morannon partial-skill-block troops that report CHANGED but never produce byte changes (the regex writer only rewrites values already present).
 
+**Hand-tuned, protected via `SKIP_TROOP_IDS`** (these no longer appear as residuals because the tool skips them outright): `iron_hills_noble_scout` / `_sharpshooter` / `_veteran_sharpshooter`, Crossbow 175 / 225 / 275 as of 2026-07-30. The formula derives Crossbow from level and `CULTURAL_MODS['iron_hills']` alone, which gave the noble line exactly the regular `ironpass_*` line's values (130 / 170 / 205) — no edge in the only skill the branch specialises in. If the noble/regular split is ever expressed as a modifier rather than a hand-tune, remove these three ids and let the formula own them again.
+
 **Deferred (#343):** 108 troops carrying only 1H weapons with Polearm strictly top (+46 exact ties) need a 3-way redistribution decision, not a mechanical pair swap.
 
 `tools/analyze_troop_balance.py` **imports these tables verbatim** — it never re-derives the curve, so the "ideal" and the "writer" can never disagree. It compares each troop's actual skills to `calculate_skills(...)` and reports the delta.

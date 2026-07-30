@@ -41,10 +41,18 @@ SKIP_FILES = set()
 # hand-tuned bespoke mount riders whose skills are intentionally off the humanoid curve.
 # (cave_troll = monster; harad_elephant_rider / harad_mumakil_rider = bespoke
 # elephant/mumakil-back riders.)
+#
+# The Iron Hills noble crossbow line is hand-tuned for a different reason: the formula
+# gives it exactly the same Crossbow value as the regular ironpass_* line at every tier
+# (130/170/205), so the noble branch had no edge in the one skill it exists for. Set to
+# 175/225/275 on 2026-07-30. Without these entries a --apply silently reverts that.
 SKIP_TROOP_IDS = {
     'cave_troll',
     'harad_elephant_rider',
     'harad_mumakil_rider',
+    'iron_hills_noble_scout',
+    'iron_hills_noble_sharpshooter',
+    'iron_hills_noble_veteran_sharpshooter',
 }
 
 # =============================================================================
