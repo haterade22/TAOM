@@ -29,5 +29,6 @@
     <string id="taom_wotr_victory_free" text="戰爭結束了。自由人民堅持到了最後，為他們的子孫贏得了未來。自由萬歲！" />
     <string id="taom_wotr_victory_evil" text="人類與精靈的王國已然覆滅。索倫萬歲！" />
     <string id="taom_wotr_continue" text="繼續" />
+    <string id="taom_wotr_desc_kills" text="我軍在戰鬥中斬殺了 {CASUALTIES} 名敵人。" />
   </strings>
 </base>

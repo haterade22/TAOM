@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="Carovana di {OWNER.NAME}" />
     <string id="l4pRw7pO" text="Carovana Armata di {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} truppe hanno disertato — rifiutano di servire un signore dell'allineamento opposto." />
+    <string id="taom_hideout_desc_erebor" text="Tra le desolate colline dell'est ti imbatti in un accampamento nanico dei Ciriniveri, un clan caduto da tempo nell'ombra e nella rovina." />
+    <string id="taom_troop_weight_size" text="Truppe pesanti" />
   </strings>
 </base>

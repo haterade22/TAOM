@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="{OWNER.NAME}的商隊" />
     <string id="l4pRw7pO" text="{OWNER.NAME}的武裝商隊" />
     <string id="taom_align_desertion" text="{COUNT}名士兵逃走了——他們拒絕侍奉立場對立的領主。" />
+    <string id="taom_hideout_desc_erebor" text="在東方荒涼的丘陵之間，你發現了一座黑鬚族矮人的營地——這個氏族早已墮入陰影與衰亡之中。" />
+    <string id="taom_troop_weight_size" text="重裝部隊" />
   </strings>
 </base>

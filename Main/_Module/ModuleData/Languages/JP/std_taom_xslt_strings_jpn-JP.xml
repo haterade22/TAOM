@@ -1437,17 +1437,17 @@
     <string id="TAOM_hero_B8_l" text="東部丘陵地のヴァリアグ軍閥の長。" />
     <string id="TAOM_hero_B8_s" text="ヴァリアグ軍閥の長の妻。" />
     <string id="TAOM_hero_B8_c" text="ヴァリアグ軍閥の長の後継者。" />
-    <string id="TAOM_liege_dunland" text="Brenin of Dunland" />
-    <string id="TAOM_liege_dunland_female" text="Brenhines of Dunland" />
-    <string id="TAOM_liege_dale" text="King of Dale" />
-    <string id="TAOM_liege_dale_female" text="Queen of Dale" />
-    <string id="TAOM_liege_harad" text="Taskral of Harad" />
-    <string id="TAOM_liege_harad_female" text="Taskral of Harad" />
-    <string id="TAOM_liege_khand" text="Khudriag of Khand" />
-    <string id="TAOM_liege_khand_female" text="Khudriag of Khand" />
-    <string id="TAOM_liege_rohan" text="King of the Mark" />
-    <string id="TAOM_liege_rohan_female" text="Queen of the Mark" />
-    <string id="TAOM_liege_rhun" text="Loke-Kan of Rhun" />
-    <string id="TAOM_liege_rhun_female" text="Loke-Kan of Rhun" />
+    <string id="TAOM_liege_dunland" text="ダンランドのブレニン" />
+    <string id="TAOM_liege_dunland_female" text="ダンランドのブレンヒネス" />
+    <string id="TAOM_liege_dale" text="デイルの王" />
+    <string id="TAOM_liege_dale_female" text="デイルの女王" />
+    <string id="TAOM_liege_harad" text="ハラドのタスクラル" />
+    <string id="TAOM_liege_harad_female" text="ハラドのタスクラル" />
+    <string id="TAOM_liege_khand" text="カンドのクドリアグ" />
+    <string id="TAOM_liege_khand_female" text="カンドのクドリアグ" />
+    <string id="TAOM_liege_rohan" text="マークの王" />
+    <string id="TAOM_liege_rohan_female" text="マークの女王" />
+    <string id="TAOM_liege_rhun" text="ルーンのロケ＝カン" />
+    <string id="TAOM_liege_rhun_female" text="ルーンのロケ＝カン" />
   </strings>
 </base>

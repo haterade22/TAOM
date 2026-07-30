@@ -428,7 +428,7 @@
     <string id="FuNbouTu" text="Ein Kurier von {KINGDOM_NAME} ist eingetroffen. Sie rufen Euer Königreich zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Euer Königreich wird darüber abstimmen, ob das Angebot angenommen wird." />
     <string id="G3qGLAeQ" text="{RULER.NAME} hat den Klan {CLAN} gegen den Willen {?RULER.GENDER}ihres{?}seines{\?} Rates aus {KINGDOM} ausgestoßen." />
     <string id="gf2Lje7o" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} nicht zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} zu rufen." />
-    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, commanding an army of {QUEST_GIVER_FACTION}, has told you that they need food supplies for their upcoming military campaign. {?QUEST_GIVER.GENDER}She{?}He{\?} wanted you to deliver {GRAIN_AMOUNT} sacks of grain and although it's not necessary, to provide {LIVESTOCK_AMOUNT} live stocks and {WINE_AMOUNT} barrels of wine {?QUEST_GIVER.GENDER}she{?}he{\?} would appreciate it." />
+    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, Befehlshaber eines Heeres von {QUEST_GIVER_FACTION}, hat dir mitgeteilt, dass Nachschub an Nahrung für den bevorstehenden Feldzug benötigt wird. {?QUEST_GIVER.GENDER}Sie{?}Er{\?} möchte, dass du {GRAIN_AMOUNT} Säcke Getreide lieferst, und obwohl es nicht notwendig ist, würde {?QUEST_GIVER.GENDER}sie{?}er{\?} es zu schätzen wissen, wenn du auch {LIVESTOCK_AMOUNT} Stück Vieh und {WINE_AMOUNT} Fässer Wein beschaffst." />
     <string id="Gj5d9y2g" text="{RULER.NAME} von {KINGDOM} hat beschlossen, ein Handelsabkommen mit {OTHER_KINGDOM} zu unterzeichnen." />
     <string id="gNf0ALKw" text="Ein Kurier von {MAP_FACTION_NAME} ist eingetroffen. Sie bieten Euch einen weißen Frieden an. Euer Königreich wird darüber abstimmen, ob das Angebot angenommen wird." />
     <string id="h5eTEYON" text="{RULER.NAME} hat den Klan {CLAN} aus {KINGDOM} ausgestoßen." />
@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="Karawane von {OWNER.NAME}" />
     <string id="l4pRw7pO" text="Bewaffnete Karawane von {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} Truppen sind desertiert – sie weigern sich, einem Herrn der gegnerischen Gesinnung zu dienen." />
+    <string id="taom_hideout_desc_erebor" text="Zwischen den öden Hügeln des Ostens stößt du auf ein Zwergenlager der Schwarzlocken, einer Sippe, die längst in Schatten und Verderben gefallen ist." />
+    <string id="taom_troop_weight_size" text="Schwere Truppen" />
   </strings>
 </base>

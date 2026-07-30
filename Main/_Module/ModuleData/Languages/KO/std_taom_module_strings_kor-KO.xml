@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="{OWNER.NAME}의 대상" />
     <string id="l4pRw7pO" text="{OWNER.NAME}의 무장 대상" />
     <string id="taom_align_desertion" text="{COUNT}명의 병력이 탈영했습니다 — 그들은 반대 진영의 군주를 섬기기를 거부합니다." />
+    <string id="taom_hideout_desc_erebor" text="동쪽의 황량한 구릉지대에서 당신은 검은자물쇠족 난쟁이들의 야영지를 발견한다. 오래전 어둠과 파멸에 빠져든 씨족이다." />
+    <string id="taom_troop_weight_size" text="중장병" />
   </strings>
 </base>

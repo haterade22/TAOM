@@ -29,5 +29,6 @@
     <string id="taom_wotr_victory_free" text="La guerra ha terminado. Los Pueblos Libres han perseverado y ganado el futuro para sus hijos. ¡Larga vida a la libertad!" />
     <string id="taom_wotr_victory_evil" text="Los reinos de los Hombres y los Elfos por igual han sido aplastados. ¡Larga vida a Sauron!" />
     <string id="taom_wotr_continue" text="Continuar" />
+    <string id="taom_wotr_desc_kills" text="Nuestras fuerzas mataron a {CASUALTIES} enemigos en batalla." />
   </strings>
 </base>

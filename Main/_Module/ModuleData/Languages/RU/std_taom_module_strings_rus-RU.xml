@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="Караван {OWNER.NAME}" />
     <string id="l4pRw7pO" text="Вооружённый караван {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} воинов дезертировало — они отказываются служить лорду противоположной стороны." />
+    <string id="taom_hideout_desc_erebor" text="Среди угрюмых холмов востока вы находите гномий лагерь Черновласых — клана, давно погрузившегося во тьму и запустение." />
+    <string id="taom_troop_weight_size" text="Тяжёлые воины" />
   </strings>
 </base>

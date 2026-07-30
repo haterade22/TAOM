@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="{OWNER.NAME}の隊商" />
     <string id="l4pRw7pO" text="{OWNER.NAME}の武装隊商" />
     <string id="taom_align_desertion" text="{COUNT}名の兵が脱走した――彼らは敵対する陣営の君主に仕えることを拒んだ。" />
+    <string id="taom_hideout_desc_erebor" text="東方の荒涼とした丘陵の只中で、あなたは黒錠族（ブラックロック）のドワーフの野営地に行き当たる。遥か昔に影と滅びに落ちた氏族である。" />
+    <string id="taom_troop_weight_size" text="重装兵" />
   </strings>
 </base>

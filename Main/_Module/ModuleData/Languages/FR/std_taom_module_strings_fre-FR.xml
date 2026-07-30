@@ -495,7 +495,7 @@
     <string id="SR9FC5jH" text="Un messager est arrivé de {MAP_FACTION_NAME} porteur d'une offre de paix. {MAP_FACTION_NAME} paiera {GOLD_AMOUNT} {GOLD_ICON} en tribut chaque jour pour mettre fin à la guerre entre vos royaumes. Votre royaume votera pour accepter ou non l'offre." />
     <string id="syGyjjKE" text="Répondre à l'appel de {CALLING_KINGDOM} et déclarer la guerre à {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} vous offre du travail en tant que mercenaire, payant {GOLD_AMOUNT}{GOLD_ICON} par point d'influence que vous gagneriez en combattant pour eux. Acceptez-vous ?" />
-    <string id="uc4M4bhG" text="Well, there is something I want. There is one {?TARGET_HERO.GENDER}lady{?}lord{\?} of {TARGET_FACTION} with whom I have a long, long relationship. And not a friendly one. Now that we are at war, as long as {?TARGET_HERO.GENDER}she{?}he{\?} is free, I know my life and lands are not safe. As I say, it won't be easy at all. But whoever manages to do that, bring {?TARGET_HERO.GENDER}her{?}him{\?} back alive to me, having my gratitude aside, will be a very rich man indeed.[if:convo_grave][ib:closed2]" />
+    <string id="uc4M4bhG" text="Eh bien, il y a une chose que je désire. Il est {?TARGET_HERO.GENDER}une dame{?}un seigneur{\?} de {TARGET_FACTION} avec qui j'entretiens une longue, très longue relation. Et pas des plus amicales. Maintenant que nous sommes en guerre, tant que {?TARGET_HERO.GENDER}elle{?}il{\?} est libre, je sais que ma vie et mes terres ne sont pas en sûreté. Comme je le dis, ce ne sera pas facile du tout. Mais quiconque parviendra à me {?TARGET_HERO.GENDER}la{?}le{\?} ramener vivant, outre ma gratitude, deviendra un homme fort riche.[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME} a répondu à l'appel de {CALLING_KINGDOM} et a déclaré la guerre à {KINGDOM_TO_CALL_TO_WAR_AGAINST} avec le soutien de la moitié de {?RULER.GENDER}son conseil{?}son conseil{\?}." />
     <string id="UQq4ekeu" text="{RULER.NAME} de {KINGDOM} a choisi de ne pas signer d'accord commercial avec {OTHER_KINGDOM}." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} a appelé {CALLED_KINGDOM_LINK} à déclarer la guerre contre {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="Caravane de {OWNER.NAME}" />
     <string id="l4pRw7pO" text="Caravane armée de {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} troupes ont déserté — elles refusent de servir un seigneur de l'alignement opposé." />
+    <string id="taom_hideout_desc_erebor" text="Parmi les mornes collines de l'est, vous tombez sur un camp de nains des Mèches-Noires, un clan tombé depuis longtemps dans l'ombre et la ruine." />
+    <string id="taom_troop_weight_size" text="Troupes lourdes" />
   </strings>
 </base>

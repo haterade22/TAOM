@@ -2093,5 +2093,7 @@
     <string id="LjUhEJxz" text="Caravana de {OWNER.NAME}" />
     <string id="l4pRw7pO" text="Caravana Armada de {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} tropas desertaram — elas se recusam a servir um senhor do alinhamento oposto." />
+    <string id="taom_hideout_desc_erebor" text="Entre as colinas desoladas do leste, você encontra um acampamento anão dos Tranças-Negras, um clã que há muito caiu na sombra e na ruína." />
+    <string id="taom_troop_weight_size" text="Tropas pesadas" />
   </strings>
 </base>
