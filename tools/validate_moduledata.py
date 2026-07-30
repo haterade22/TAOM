@@ -22,6 +22,8 @@ Checks (each maps to a recurring TAOM bug class):
   DUPLICATE_ROSTER_ID        same EquipmentRoster id defined twice
   INVALID_ENUM               default_group not Infantry/Ranged/Cavalry/HorseArcher
   BROKEN_PARTY_TEMPLATE_REF  PartyTemplate.* points at an undefined template (warning)
+  MISSING_HARNESS_FAMILY_TYPE  HorseHarness with no <Armor family_type> -> silently unequippable
+  HARNESS_FAMILY_MISMATCH    Horse + HorseHarness in one set disagree on family type
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]

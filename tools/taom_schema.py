@@ -67,6 +67,9 @@ class Registries:
     npccharacters: set               # all defined NPCCharacter ids
     cultures: set                    # valid culture StringIds
     party_templates: set             # defined PartyTemplate ids
+    # Optional (defaulted) so existing constructions stay valid.
+    harness_family_types: dict = field(default_factory=dict)  # HorseHarness id -> (family_type|None, def file)
+    mount_family_types: dict = field(default_factory=dict)    # Type="Horse" id -> Monster family_type (None = unknown)
 
 
 # --------------------------------------------------------------------------- #
@@ -177,6 +180,7 @@ class Validator:
         issues += self._schema_checks()
         issues += self._duplicate_item_defs()
         issues += self._education_coverage()
+        issues += self._harness_family_types()
         issues.sort(key=lambda i: i.sort_key())
         return issues
 
@@ -400,6 +404,88 @@ class Validator:
                 ))
         return issues
 
+    # -- pass 5: horse-harness family_type integrity ----------------------- #
+    # A HorseHarness whose <Armor> omits family_type deserializes to FamilyType 0
+    # — the HUMAN family (ArmorComponent.cs:153, monsters.xml legend). The v1.4.7
+    # inventory screen compares it against the equipped mount's
+    # Monster.FamilyType and returns false with NO user-visible message
+    # (SPInventoryVM.IsItemEquipmentPossible, :4112), so the harness is silently
+    # unequippable on every mount; a harness placed by an equipment-set XML (which
+    # bypasses the VM) is force-unequipped on the next inventory transfer (:3923).
+    # Shipped once: starter_cavalry_gondor_horse_armor_a, 2026-05-21 -> 2026-07-29.
+    # Scanned as two independent sweeps, NOT one alternation: a single finditer
+    # pass is non-overlapping, so an outer <EquipmentRoster> match would swallow
+    # its nested <EquipmentSet> blocks and they'd never be checked.
+    _EQSET_BLOCK_RE = re.compile(r"<EquipmentSet\b[^>]*?>(.*?)</EquipmentSet>", re.S)
+    _EQROSTER_BLOCK_RE = re.compile(r"<EquipmentRoster\b[^>]*?>(.*?)</EquipmentRoster>", re.S)
+    _EQ_TAG_RE = re.compile(r"<[Ee]quipment\b[^>]*?/?>", re.S)
+    _SLOT_ATTR_RE = re.compile(r'\bslot="([^"]+)"')
+    _ITEM_REF_ATTR_RE = re.compile(r'\bid="Item\.([A-Za-z0-9_.\-]+)"')
+
+    def _harness_family_types(self) -> list:
+        if not self.reg.harness_family_types:
+            return []  # degraded mode (no game install): registry unavailable
+        issues = []
+        for item_id, (family_type, def_file) in sorted(self.reg.harness_family_types.items()):
+            if family_type is not None:
+                continue
+            issues.append(Issue(
+                severity=Severity.ERROR, code="MISSING_HARNESS_FAMILY_TYPE",
+                file=def_file, line=0, entry_id=item_id,
+                message=(
+                    f'harness "{item_id}" has no <Armor family_type> — it defaults to 0 '
+                    f"(human family), so the inventory screen silently refuses it on every "
+                    f"mount; set it to the mount's Monster.family_type (1 for horses)"
+                ),
+            ))
+        return issues + self._harness_pairings()
+
+    def _harness_pairings(self) -> list:
+        """Every Horse + HorseHarness pair inside one EquipmentSet (or one troop
+        EquipmentRoster) must agree on family type, or the engine strips the
+        harness the first time the player touches the inventory."""
+        if not self.reg.mount_family_types:
+            return []
+        issues = []
+        for path in self._xml_files():
+            raw = self._read(path)
+            # Mask comments but keep newlines so line attribution stays accurate.
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), raw)
+            rel = self._rel(path)
+            blocks = [(m.start(), m.group(1)) for m in self._EQSET_BLOCK_RE.finditer(text)]
+            # A roster is paired as a unit only when it holds equipment directly
+            # (the troop-roster shape); one that wraps EquipmentSets is covered by
+            # the sweep above, and pairing it whole would cross-pair set 1's mount
+            # with set 2's harness.
+            blocks += [(m.start(), m.group(1)) for m in self._EQROSTER_BLOCK_RE.finditer(text)
+                       if "<EquipmentSet" not in m.group(1)]
+            for start, body in blocks:
+                slots = {}
+                for tag in self._EQ_TAG_RE.finditer(body):
+                    ms = self._SLOT_ATTR_RE.search(tag.group(0))
+                    mi = self._ITEM_REF_ATTR_RE.search(tag.group(0))
+                    if ms and mi and ms.group(1) in ("Horse", "HorseHarness"):
+                        slots[ms.group(1)] = mi.group(1)
+                mount_id, harness_id = slots.get("Horse"), slots.get("HorseHarness")
+                if not mount_id or not harness_id:
+                    continue
+                mount_ft = self.reg.mount_family_types.get(mount_id)
+                harness_ft = (self.reg.harness_family_types.get(harness_id) or (None, ""))[0]
+                # None on either side = unknown (undefined item, unresolved or
+                # ambiguous monster, or a harness already reported above).
+                if mount_ft is None or harness_ft is None or mount_ft == harness_ft:
+                    continue
+                issues.append(Issue(
+                    severity=Severity.ERROR, code="HARNESS_FAMILY_MISMATCH",
+                    file=rel, line=_lineno(text, start), entry_id=harness_id,
+                    message=(
+                        f'harness "{harness_id}" (family_type={harness_ft}) is paired with '
+                        f'mount "{mount_id}" (family_type={mount_ft}) — the engine silently '
+                        f"unequips a mismatched harness on the next inventory transfer"
+                    ),
+                ))
+        return issues
+
 
 # --------------------------------------------------------------------------- #
 # Registry builders (real data) — reuse the existing validators' proven logic  #
@@ -549,6 +635,108 @@ def build_item_class_registry(moduledata, game_modules) -> dict:
     return classes
 
 
+# --------------------------------------------------------------------------- #
+# Harness / mount family-type registries                                       #
+# --------------------------------------------------------------------------- #
+# Mount-side family type comes ONLY from the monsters XML: HorseComponent.
+# Deserialize (v1.4.7) never reads family_type off the <Horse> element, so the
+# family_type attributes written on <Horse> in LOTRAOM_horses.xml are dead data —
+# only Monster.<id> family_type (with base_monster inheritance) is authoritative.
+_ITEM_OPEN_ONLY_RE = re.compile(r"<Item\b[^>]*?>")
+_MONSTER_OPEN_RE = re.compile(r"<Monster\b[^>]*?>")
+_ARMOR_OPEN_RE = re.compile(r"<Armor\b[^>]*?>")
+_HORSE_OPEN_RE = re.compile(r"<Horse\b[^>]*?>")
+_ATTR_FAMILY_TYPE_RE = re.compile(r'\bfamily_type="([^"]+)"')
+_ATTR_MONSTER_RE = re.compile(r'\bmonster="(?:Monster\.)?([A-Za-z0-9_.\-]+)"')
+_ATTR_BASE_MONSTER_RE = re.compile(r'\bbase_monster="(?:Monster\.)?([A-Za-z0-9_.\-]+)"')
+
+
+def _as_int(text):
+    try:
+        return int(text)
+    except (TypeError, ValueError):
+        return None
+
+
+def _monster_family_type(mid, decls, memo, seen=()):
+    """Resolve a monster's family_type, following base_monster. Returns None when
+    unknown OR when competing declarations disagree (ADOD_Beasts redeclares ids
+    Native/LOTRLOME also define, and engine resolution is load-order dependent —
+    guessing would emit false mismatches)."""
+    if mid in memo:
+        return memo[mid]
+    if mid in seen or mid not in decls:
+        return None
+    values = set()
+    for family_type, base in decls[mid]:
+        if family_type is not None:
+            values.add(family_type)
+        elif base:
+            inherited = _monster_family_type(base, decls, memo, seen + (mid,))
+            if inherited is not None:
+                values.add(inherited)
+    result = values.pop() if len(values) == 1 else None
+    memo[mid] = result
+    return result
+
+
+def build_harness_registries(item_roots) -> tuple:
+    """(harness id -> (family_type|None, def file), mount item id -> family_type|None)
+
+    A harness with NO family_type registers as None rather than being omitted —
+    that absence is the bug being detected (v1.4.7 defaults it to 0 = human)."""
+    monster_decls = defaultdict(list)
+    harness, mount_monster = {}, {}
+    for root in item_roots:
+        root = Path(root)
+        if not root.exists():
+            continue
+        for xml in sorted(root.rglob("*.xml")):
+            text = _read_stripped(xml)
+            if "<Monster" in text:
+                for m in _MONSTER_OPEN_RE.finditer(text):
+                    tag = m.group(0)
+                    mid = _ATTR_ID_RE.search(tag)
+                    if not mid:
+                        continue
+                    mft = _ATTR_FAMILY_TYPE_RE.search(tag)
+                    mbase = _ATTR_BASE_MONSTER_RE.search(tag)
+                    monster_decls[mid.group(1)].append((
+                        _as_int(mft.group(1)) if mft else None,
+                        mbase.group(1) if mbase else None,
+                    ))
+            if 'Type="HorseHarness"' not in text and 'Type="Horse"' not in text:
+                continue
+            # Walk <Item> opens rather than regexing <Item>...</Item> blocks: a
+            # self-closing <Item ... /> would otherwise swallow a later item's body.
+            opens = list(_ITEM_OPEN_ONLY_RE.finditer(text))
+            for i, m in enumerate(opens):
+                tag = m.group(0)
+                if tag.rstrip().endswith("/>"):
+                    continue
+                mid, mtype = _ATTR_ID_RE.search(tag), _ATTR_TYPE_RE.search(tag)
+                if not mid or not mtype or mtype.group(1) not in ("HorseHarness", "Horse"):
+                    continue
+                limit = opens[i + 1].start() if i + 1 < len(opens) else len(text)
+                close = text.find("</Item>", m.end())
+                body = text[m.end():min(limit, close if close != -1 else limit)]
+                if mtype.group(1) == "HorseHarness":
+                    armor = _ARMOR_OPEN_RE.search(body)
+                    mft = _ATTR_FAMILY_TYPE_RE.search(armor.group(0)) if armor else None
+                    harness.setdefault(mid.group(1),
+                                       (_as_int(mft.group(1)) if mft else None, xml.as_posix()))
+                else:
+                    horse = _HORSE_OPEN_RE.search(body)
+                    mmonster = _ATTR_MONSTER_RE.search(horse.group(0)) if horse else None
+                    if mmonster:
+                        mount_monster.setdefault(mid.group(1), mmonster.group(1))
+
+    memo = {}
+    mounts = {item_id: _monster_family_type(monster_id, monster_decls, memo)
+              for item_id, monster_id in mount_monster.items()}
+    return harness, mounts
+
+
 def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     """Build cross-reference registries from the real game install + TAOM repo.
 
@@ -591,6 +779,8 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     }
     armory_dups = {iid: fs for iid, fs in armory_dups.items() if len(set(fs)) > 1}
 
+    harness_family_types, mount_family_types = build_harness_registries(item_roots)
+
     if game_modules is None:
         # Without the game install the item / troop / party-template registries
         # are TAOM-only and therefore INCOMPLETE — every reference to a vanilla
@@ -599,12 +789,17 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         # the CLI reports the skip. Culture validity, duplicate-id, civilian-type
         # and enum checks remain reliable from TAOM data + the vanilla-culture
         # floor set, so they still run. (deep-review 2026-05-30)
+        # The harness/mount family-type registries need the Armory + monsters XML
+        # from the install, so they are unavailable too.
         items, npccharacters, party_templates, armory_dups = set(), set(), set(), {}
+        harness_family_types, mount_family_types = {}, {}
 
     return Registries(
         items=items, item_def_files=armory_dups,
         npccharacters=npccharacters,
         cultures=cultures, party_templates=party_templates,
+        harness_family_types=harness_family_types,
+        mount_family_types=mount_family_types,
     )
 
 

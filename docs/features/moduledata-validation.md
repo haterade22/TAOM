@@ -17,6 +17,7 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
 - **Stale culture / "wrote rohan instead of vlandia"** — `culture="Culture.X"` where X is not a real StringId. (`UNKNOWN_CULTURE`)
 - **Duplicate item id across Armory folders** — engine silently shadows one. (`DUPLICATE_ITEM_DEF`)
 - **Missing civilian `equipmentType`** — Faramir/Boromir wrong-outfit bug. (`MISSING_CIVILIAN_TYPE`)
+- **Harness with no `family_type`** — defaults to 0 (human family), so the inventory screen refuses it on every mount with no message → "this item is not equipable". (`MISSING_HARNESS_FAMILY_TYPE`, `HARNESS_FAMILY_MISMATCH`)
 - Duplicate NPC/culture/roster ids; invalid `default_group`; broken party-template refs.
 
 "Schemas are the source of truth": field/enum/ref knowledge lives in `tools/schemas/*.json`, not hardcoded in Python.
@@ -84,7 +85,7 @@ The same boundary applies in the other direction — an **extra, XSD-undeclared 
 | `tools/schemas/taom_npccharacter.json` | Troops + characters + wanderers + companions + education templates |
 | `tools/schemas/taom_spcultures.json` | Cultures |
 | `tools/schemas/taom_equipmentsets.json` | Equipment rosters (all `equipmentsets/*.xml`) |
-| `tools/tests/test_validate_moduledata.py` | 24 unittest cases (validator) |
+| `tools/tests/test_validate_moduledata.py` | 42 unittest cases (validator) |
 | `tools/tests/test_taom_query.py` | unittest cases (query API) |
 | `.claude/hooks/check-moduledata-validation.sh` | PreToolUse commit gate (blocks on ERROR; fail-open) |
 | `.claude/rules/moduledata-validation.md` | Auto-loaded rule when editing the covered XML / schemas |
@@ -99,7 +100,7 @@ The **engine + query API + CLI** use the **Python 3 standard library only** (`re
 python -m unittest discover -s tools/tests -p "test_*.py"
 ```
 
-`test_validate_moduledata.py` — 24 cases, one per issue code (positive + negatives) plus edge cases (Item.None allowed, malformed XML doesn't crash, file matching no schema is still swept, fail-fast on unknown rule / missing field, the Codex-fix regressions: culture-registry pollution, comment-stripping, child-template civilian, education-template exclusion). `test_taom_query.py` — the query API (existence checks incl. prefix/sentinel/duplicate, `find_references` with line numbers + comment-stripping, `validate` counts + code filter, listings). `test_taom_mcp_server.py` — in-process MCP tests (`list_tools()` returns all 9 tools; `call_tool()` for culture/schemas/registry/validate; install-independent, skips if the `mcp` SDK is absent). Full suite: **63 tests** (38 for this feature + 25 pre-existing weapon-xml).
+`test_validate_moduledata.py` — 42 cases, one per issue code (positive + negatives) plus edge cases (Item.None allowed, malformed XML doesn't crash, file matching no schema is still swept, fail-fast on unknown rule / missing field, the Codex-fix regressions: culture-registry pollution, comment-stripping, child-template civilian, education-template exclusion, and the harness family-type set: missing attribute, cross-set non-pairing, ambiguous monster ids, degraded mode). `test_taom_query.py` — the query API (existence checks incl. prefix/sentinel/duplicate, `find_references` with line numbers + comment-stripping, `validate` counts + code filter, listings). `test_taom_mcp_server.py` — in-process MCP tests (`list_tools()` returns all 9 tools; `call_tool()` for culture/schemas/registry/validate; install-independent, skips if the `mcp` SDK is absent). Full suite: **81 tests** (56 for this feature + 25 pre-existing weapon-xml).
 
 ## How-To
 

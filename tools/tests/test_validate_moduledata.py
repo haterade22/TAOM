@@ -374,6 +374,141 @@ class ValidatorContractTests(unittest.TestCase):
 """)
         self.assertNotIn("MISSING_EDUCATION_TEMPLATES", self._codes(self._run()))
 
+    # --- harness family_type regression tests (Riding Caparison, 2026-07-29) ---
+
+    def test_harness_missing_family_type_is_error(self):
+        # starter_cavalry_gondor_horse_armor_a shipped with no <Armor family_type>,
+        # so ArmorComponent.FamilyType defaulted to 0 (human) and the inventory
+        # screen silently refused it on every mount (SPInventoryVM.cs:4112).
+        self.registries.harness_family_types = {
+            "bad_barding": (None, "LOTRLOME_items/LOTRAOM_horses.xml"),
+        }
+        issues = self._run()
+        self.assertIn("MISSING_HARNESS_FAMILY_TYPE", self._codes(issues))
+        bad = [i for i in issues if i.code == "MISSING_HARNESS_FAMILY_TYPE"][0]
+        self.assertEqual(bad.severity, ts.Severity.ERROR)
+        self.assertEqual(bad.entry_id, "bad_barding")
+
+    def test_harness_with_family_type_is_clean(self):
+        self.registries.harness_family_types = {
+            "good_barding": (1, "LOTRLOME_items/LOTRAOM_horses.xml"),
+        }
+        self.assertNotIn("MISSING_HARNESS_FAMILY_TYPE", self._codes(self._run()))
+
+    def test_equipment_set_harness_family_mismatch_is_error(self):
+        self.registries.mount_family_types = {"saddle_horse": 1}
+        self.registries.harness_family_types = {"elephant_barding": (10, "x.xml")}
+        _write(self.md / "equipmentsets" / "taom_career_starting_equipment.xml", """<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+  <EquipmentRoster id="career_cavalry_gondor" culture="Culture.gondor">
+    <EquipmentSet>
+      <Equipment slot="Horse" id="Item.saddle_horse" />
+      <Equipment slot="HorseHarness" id="Item.elephant_barding" />
+    </EquipmentSet>
+  </EquipmentRoster>
+</EquipmentRosters>
+""")
+        issues = self._run()
+        self.assertIn("HARNESS_FAMILY_MISMATCH", self._codes(issues))
+        bad = [i for i in issues if i.code == "HARNESS_FAMILY_MISMATCH"][0]
+        self.assertEqual(bad.severity, ts.Severity.ERROR)
+        self.assertIn("elephant_barding", bad.message)
+        self.assertIn("saddle_horse", bad.message)
+        self.assertGreater(bad.line, 0)
+
+    def test_equipment_set_matching_family_types_is_clean(self):
+        self.registries.mount_family_types = {"saddle_horse": 1}
+        self.registries.harness_family_types = {"light_harness": (1, "x.xml")}
+        _write(self.md / "equipmentsets" / "taom_career_starting_equipment.xml", """<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+  <EquipmentRoster id="career_cavalry_gondor" culture="Culture.gondor">
+    <EquipmentSet>
+      <Equipment slot="Horse" id="Item.saddle_horse" />
+      <Equipment slot="HorseHarness" id="Item.light_harness" />
+    </EquipmentSet>
+  </EquipmentRoster>
+</EquipmentRosters>
+""")
+        self.assertNotIn("HARNESS_FAMILY_MISMATCH", self._codes(self._run()))
+
+    def test_troop_equipment_roster_mismatch_is_flagged(self):
+        # Troop rosters use lowercase <equipment slot="..."> with no <EquipmentSet>.
+        self.registries.mount_family_types = {"warg_brown": 1}
+        self.registries.harness_family_types = {"elephant_barding": (10, "x.xml")}
+        _write(self.md / "troops" / "troops_test.xml", """<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <NPCCharacter id="hero_a" default_group="Cavalry" culture="Culture.gondor">
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Horse" id="Item.warg_brown" />
+        <equipment slot="HorseHarness" id="Item.elephant_barding" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+</NPCCharacters>
+""")
+        self.assertIn("HARNESS_FAMILY_MISMATCH", self._codes(self._run()))
+
+    def test_harnesses_in_separate_equipment_sets_are_not_cross_paired(self):
+        # Two sets in one roster: each pairing is internally consistent, so the
+        # roster-level scan must not pair set 1's mount with set 2's harness.
+        self.registries.mount_family_types = {"saddle_horse": 1, "taom_war_elephant": 10}
+        self.registries.harness_family_types = {
+            "light_harness": (1, "x.xml"), "elephant_barding": (10, "x.xml"),
+        }
+        _write(self.md / "equipmentsets" / "taom_equipment_sets_x.xml", """<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+  <EquipmentRoster id="gondor_template" culture="Culture.gondor">
+    <EquipmentSet>
+      <Equipment slot="Horse" id="Item.saddle_horse" />
+      <Equipment slot="HorseHarness" id="Item.light_harness" />
+    </EquipmentSet>
+    <EquipmentSet>
+      <Equipment slot="Horse" id="Item.taom_war_elephant" />
+      <Equipment slot="HorseHarness" id="Item.elephant_barding" />
+    </EquipmentSet>
+  </EquipmentRoster>
+</EquipmentRosters>
+""")
+        self.assertNotIn("HARNESS_FAMILY_MISMATCH", self._codes(self._run()))
+
+    def test_missing_family_type_harness_reported_once_not_as_mismatch(self):
+        # A harness with no family_type is reported at its definition site only;
+        # every equipment set using it must NOT also raise a mismatch.
+        self.registries.mount_family_types = {"saddle_horse": 1}
+        self.registries.harness_family_types = {"bad_barding": (None, "x.xml")}
+        _write(self.md / "equipmentsets" / "taom_equipment_sets_x.xml", """<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+  <EquipmentRoster id="gondor_template" culture="Culture.gondor">
+    <EquipmentSet>
+      <Equipment slot="Horse" id="Item.saddle_horse" />
+      <Equipment slot="HorseHarness" id="Item.bad_barding" />
+    </EquipmentSet>
+  </EquipmentRoster>
+</EquipmentRosters>
+""")
+        codes = self._codes(self._run())
+        self.assertIn("MISSING_HARNESS_FAMILY_TYPE", codes)
+        self.assertNotIn("HARNESS_FAMILY_MISMATCH", codes)
+
+    def test_harness_checks_skipped_without_harness_registry(self):
+        # Degraded mode (no game install): both dicts are empty -> skip, no crash.
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                             cultures={"gondor"}, party_templates=set())
+        _write(self.md / "equipmentsets" / "taom_equipment_sets_x.xml", """<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+  <EquipmentRoster id="gondor_template" culture="Culture.gondor">
+    <EquipmentSet>
+      <Equipment slot="Horse" id="Item.saddle_horse" />
+      <Equipment slot="HorseHarness" id="Item.bad_barding" />
+    </EquipmentSet>
+  </EquipmentRoster>
+</EquipmentRosters>
+""")
+        codes = [i.code for i in ts.Validator(self.md, self.schemas, regs).run()]
+        self.assertNotIn("MISSING_HARNESS_FAMILY_TYPE", codes)
+        self.assertNotIn("HARNESS_FAMILY_MISMATCH", codes)
+
     def test_civilian_rule_checks_all_equipment_sets(self):
         # A civilian roster with a second untagged EquipmentSet must be flagged
         # even when the first set is correctly tagged.
@@ -410,6 +545,75 @@ class BuildRegistriesTests(unittest.TestCase):
         self.assertIn("gondor", regs.cultures)
         self.assertNotIn("empire_w", regs.cultures, "kingdom id from a config file must not become a valid culture")
         self.assertNotIn("empire_s", regs.cultures)
+
+    # --- harness / mount family-type registries (Riding Caparison, 2026-07-29) ---
+
+    def _write_harness_fixture(self, modules: Path) -> None:
+        _write(modules / "Native" / "ModuleData" / "monsters.xml", """<?xml version="1.0"?>
+<Monsters>
+  <Monster id="horse" family_type="1" />
+  <Monster id="elephant_base" family_type="10" />
+  <Monster id="taom_war_elephant" base_monster="Monster.elephant_base" />
+  <Monster id="ambiguous_beast" family_type="1" />
+</Monsters>
+""")
+        _write(modules / "ADOD_Beasts" / "ModuleData" / "adod_beasts.xml", """<?xml version="1.0"?>
+<Monsters>
+  <Monster id="ambiguous_beast" family_type="7" />
+</Monsters>
+""")
+        _write(modules / "LOTRLOME_Armory" / "ModuleData" / "LOTRLOME_items" / "horses.xml", """<?xml version="1.0"?>
+<Items>
+  <Item id="good_barding" Type="HorseHarness">
+    <ItemComponent><Armor body_armor="10" family_type="1" material_type="Leather" /></ItemComponent>
+  </Item>
+  <Item id="bad_barding" Type="HorseHarness">
+    <ItemComponent><Armor body_armor="10" material_type="Leather" /></ItemComponent>
+  </Item>
+  <Item id="saddle_horse" Type="Horse">
+    <ItemComponent><Horse speed="45" monster="Monster.horse" /></ItemComponent>
+  </Item>
+  <Item id="taom_war_elephant" Type="Horse">
+    <ItemComponent><Horse speed="30" monster="Monster.taom_war_elephant" /></ItemComponent>
+  </Item>
+  <Item id="odd_beast" Type="Horse">
+    <ItemComponent><Horse speed="30" monster="Monster.ambiguous_beast" /></ItemComponent>
+  </Item>
+</Items>
+""")
+
+    def test_harness_family_types_registered_with_missing_as_none(self):
+        modules = Path(self._tmp.name) / "Modules"
+        self._write_harness_fixture(modules)
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual(regs.harness_family_types["good_barding"][0], 1)
+        self.assertIsNone(regs.harness_family_types["bad_barding"][0],
+                          "a harness with no family_type must register as None, not be omitted")
+        self.assertIn("horses.xml", regs.harness_family_types["bad_barding"][1])
+        self.assertNotIn("saddle_horse", regs.harness_family_types, "mounts are not harnesses")
+
+    def test_mount_family_types_resolved_through_monster_and_base_monster(self):
+        modules = Path(self._tmp.name) / "Modules"
+        self._write_harness_fixture(modules)
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual(regs.mount_family_types["saddle_horse"], 1)
+        # HorseComponent never reads family_type off <Horse>; the monsters XML is
+        # the only mount-side authority, and base_monster must be followed.
+        self.assertEqual(regs.mount_family_types["taom_war_elephant"], 10)
+
+    def test_conflicting_monster_family_types_resolve_to_none(self):
+        # ADOD_Beasts redeclares ids that Native/LOTRLOME also define; engine
+        # resolution is load-order dependent, so treat it as unknown rather than
+        # guessing and emitting a false mismatch.
+        modules = Path(self._tmp.name) / "Modules"
+        self._write_harness_fixture(modules)
+        regs = ts.build_registries(self.md, modules)
+        self.assertIsNone(regs.mount_family_types["odd_beast"])
+
+    def test_harness_registries_empty_without_game_install(self):
+        regs = ts.build_registries(self.md, None)
+        self.assertEqual(regs.harness_family_types, {})
+        self.assertEqual(regs.mount_family_types, {})
 
     def test_commented_definition_not_registered(self):
         _write(self.md / "taom_spcultures.xml",
