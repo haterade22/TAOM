@@ -55,6 +55,58 @@ previous level-31 ceiling of 260 (`erebor_reg_mattock_warrior`, TwoHanded).
 
 Save-compat: skill-only, no save migration. Troop skills live on the shared `CharacterObject`,
 which is rebuilt from XML at every launch, so existing parties pick the new values up on next load.
+### feat(erebor): spread unused dwarf armor and 2H weapons across troop rosters (#367)
+
+Of 432 dwarf items in `LOTRLOME_Armory`, 127 were referenced nowhere in ModuleData. Most of that is
+reserved by design — 52 clan/lord colourways, 33 spare pieces of Dáin's personal set, tournament and
+lord-tier gear — leaving 38 genuinely dead line-troop items. Separately, 11 of the 27 two-handed
+weapons sat on exactly one troop each while the two spears carried 71 of the 1,368 battle-roster
+slots, and individual troops repeated the same helmet or axe across several of their own rosters,
+wasting the randomisation those rosters exist to provide.
+
+`tools/apply_erebor_equipment_sweep.py` rewrites duplicates in place: where a troop uses the same
+item in the same slot in more than one of its battle rosters, the repeat becomes a sibling item —
+same Armory stem or same visual family, comparable armour value, preferring whatever is used least
+across the file. 200 substitutions, 15 of the 38 dead items now in use, two-handers with two or
+fewer references down from 16 to 15.
+
+Only the second and later occurrence within a troop is ever rewritten, so the displaced item always
+survives in that troop and nothing can fall out of use: 305 dwarf items referenced before, 320 after,
+zero lost. Roster counts, troop ids, levels, skills and upgrade targets are untouched — 60 troops,
+223 rosters, 1,434 equipment slots before and after, and no roster gained a duplicate id.
+
+Most of the work here was in constraining the selection rule, because the naive version was wrong in
+four separate ways that all looked fine on a first read. Weapons and shields keep their stats outside
+`<Armor>`, so the armour-value check cannot police them and a tower shield was being swapped for a
+leather one. Pauldrons with and without a cloak share the Cape slot, so crossing them silently
+stripped a troop's cloak. Ranged gear is tier-ordered on purpose — the sweep wanted to hand the
+level-21 arbalest a 130-damage crossbow while the level-31 sharpshooter kept the 120, the inversion
+`.claude/rules/troops.md` records from the Dale yew-bow case — so bows, crossbows, arrows and bolts
+are excluded outright.
+
+The fourth was the one that mattered. "Prefer whatever is used least" reaches straight for end-tier
+exclusives, because being end-tier is *why* they were rare: an early run put the level-46 royal
+warden's cuirass on a level-11 recruit, gave a level-21 Longbeard the same 2.96-damage axe as the
+level-46 Royal Warden, and handed the level-36 Mountain Guard a 20-unit stub blade while a level-21
+crossbowman's sidearm got the 43-unit one. 25 items dropped ten or more levels. Crafted melee weapons
+have no `<Weapon>` element at all — reach and damage live on the blade crafting piece — so nothing in
+the item was being compared. The rule now derives each item's tier floor from the lowest-level troop
+already trusted with it, refuses to place anything below that floor, holds weapon reach and damage
+within 10%, and requires armour `material_type` to match so mail cannot become plate at equal armour
+value. No item's minimum wearer level drops anywhere in the final diff.
+
+That tier floor is why only 15 of the 38 dead items were placed rather than 33: the rest are genuine
+end-tier gear whose only home is the `iron_hills_noble_*` line, and those 13 troops ship a single
+battle roster apiece, so there is no duplicate to displace without adding rosters. `sm_iron_shield_b_gold`
+has no stem sibling at all, and `sm_dwarf_iron_hammer_e` has 43 units of reach against 18–24 for
+every other dwarf hammer — placing it is a weapon-balance decision about who should carry a
+long-reach hammer, not a variety swap, so it is left for hand-authoring.
+
+Not-tested: in-game render. ModuleData edits do not load until a full game restart, so the new
+helmets, bracers and shields still need a visual check on a fresh launch.
+Constraint: dwarf 2H weapons are `<CraftedItem>`s — reusing shipped ids only. Authoring new ones
+crashes new-campaign load on uncompiled meshes (commit 436a1d05, the reverted Gondor poleaxe).
+Save-compat: equipment-only, no troop id / roster count / upgrade_target change.
 ### feat(specialresources): `taom.add_special_resources` console cheat (#365)
 
 Testing anything downstream of the resource economy — elite upgrades, the recruit gate, the Elite
@@ -121,6 +173,96 @@ refuted findings are recorded as deliberate deviations in
 non-identity export transform is fine (the gatehouse carries it and imports correctly), and that
 trims stay flush per the user's editor check over a verifier's cornice-practice argument.
 
+### fix(diplomacy): War of the Ring phases pushed to Day 30 / Day 44
+
+Isengard and Dunland attacked Rohan on **Day 2** and the whole map went to war on **Day 14** — the
+War of the Ring was over the player before a campaign had any shape. Phase 1 now fires on **Day
+30**, Phase 2 (all `Hostile` pairs at war, peace permanently blocked) on **Day 44**, leaving a
+month of peace to establish yourself and a two-week Rohan/Isengard-only window before the world
+ignites.
+
+The days resolve through four sources and all four were set, since a disagreement between them is
+invisible until a player without MCM loads the mod: shipped `diplomacy/war_of_the_ring.json`, the
+`TaomSettings` MCM defaults (`Phase1TriggerDay` / `Phase2TriggerDay`, hint text included),
+`TaomSettingsProvider`'s null-instance fallbacks, and `WarOfTheRingConfig`'s compiled defaults. No
+logic changed — `WarOfTheRingService.CheckPhaseTransition` already read the values.
+
+`WarOfTheRingConfig.Phase2` no longer inherits `PhaseConfig`'s default day. It shared Phase 1's
+value, and `ValidateConfig` only reverts Phase 2 when it is *strictly* below Phase 1, so equal days
+passed validation and would have fired `IsengardWar` and `FullWar` on the same tick had the JSON
+gone missing. `testMode` (1/3) is untouched.
+
+**Existing players keep Day 2 / Day 14.** MCM persists `TaomSettings` to
+`Configs/ModSettings/Global/TAOM/`, so the new defaults only reach fresh installs — anyone who has
+already launched the mod must move the sliders or delete that folder. Phase state is also saved
+(`WarOfTheRing_CurrentPhase`), so an in-progress campaign resumes at whatever phase it reached; the
+retune is visible on a new campaign.
+
+Docs corrected while there: `war-of-the-ring.md` had documented the MCM defaults as 30/45 since the
+Day-2 retune on 2026-05-22, describing days the mod never shipped, and its in-game test steps cited
+the pre-1/3 `testMode` values. `diplomacy.md` still claimed both days were 1.
+
+### fix(diplomacy): phase days now clamped so the Isengard war can't be skipped
+
+`CheckPhaseTransition`'s two guards are sequential `if`s over an in-place `CurrentPhase` mutation, so
+any equal or inverted `(phase1Day, phase2Day)` pair ran **both** transitions inside one call — Rohan
+was attacked and the entire hostile tier went to full war on the same tick, with `IsengardWar` never
+observable to the map meter, the momentum service, or the save. Both transitions logged normally, so
+nothing looked wrong.
+
+Three of the four value sources could produce such a pair. `ValidateConfig` guarded only the JSON
+pair and used a strictly-`<` check, so equal days passed; it never inspected `testMode` at all; and
+the MCM sliders — the path that governs in-game — were validated by nothing. Phase 1 = 100 with
+Phase 2 = 44 is reachable with two individually-legal slider values. MCM 5.12.1 does not help here:
+`[SettingPropertyInteger]` bounds are UI-only metadata and `BaseSettingsJsonConverter.ReadJson`
+assigns with no range check, so a stale settings file bypasses even the slider range.
+
+`GetEffectivePhaseDays` now clamps `phase1 = max(1, phase1); phase2 = max(phase1 + 1, phase2)` after
+source selection — one clamp at the fan-in covers all four sources, where per-source validation
+would drift. `ValidateConfig` keeps its own pass, tightened to `<=` and extended to `testMode`,
+because a silent clamp cannot warn an author that their edited JSON is wrong.
+
+24 tests added. The MCM branch of `GetEffectivePhaseDays` previously had **zero** coverage — every
+test pinned `IsAvailable = false` in `Setup()`, which is how this survived behind a healthy-looking
+25-test count. `WarOfTheRingConfigProviderTests` is new (none existed). `WarOfTheRingShippedConfigTests`
+pins the shipped JSON so the doc/code drift this review found is caught by the suite next time.
+
+Also: the Test Mode tooltip promised "(2/5 days)" while the shipped JSON has been 1/3 since
+2026-05-22 and JSON wins for every key it contains — tooltip and `TestModeConfig` defaults both now
+read 1/3. RCA: `docs/reviews/rca-wotr-phase-ordering-2026-07-30.md`.
+
+### fix(gondor): Riding Caparison was unequippable — harness had no family_type (#364)
+
+`[Gondor] Riding Caparison` (`starter_cavalry_gondor_horse_armor_a`) refused to go into the
+mount-armor slot with **no error message**, leaving the red `No Saddle!` warning up. Its `<Armor>`
+element carried no `family_type`, which `ArmorComponent.Deserialize` defaults to 0 — the *human*
+family — while every horse is `Monster.horse`, `family_type="1"`. `SPInventoryVM.
+IsItemEquipmentPossible` compares the two and returns false silently (v1.4.7 `:4112`); the same
+comparison at `:3923` strips a pre-placed one, which is why the Gondor cavalry career start
+(whose XML roster bypasses the UI gate) lost the harness on the first inventory transfer.
+
+**The fixed file is OUTSIDE this repo and untracked**, so it is recorded here to survive an Armory
+reinstall: `Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\LOTRAOM_horses.xml`, the
+`starter_cavalry_gondor_horse_armor_a` block gained `family_type="1"`, `mane_cover_type="all"`,
+and `<Flags Civilian="true"/>` — parity with `gondor_horse_armor_1`, which uses the identical
+`lrd_horse_armour_2` mesh. The missing Civilian flag was a second defect (it also barred the item
+from civilian equipment mode, `:4042`); it was the only harness in the Armory lacking either.
+
+Prevention, since 86 harness ids are un-auditable by eye: `tools/taom_schema.py` gained
+`MISSING_HARNESS_FAMILY_TYPE` (a `Type="HorseHarness"` with no `<Armor family_type>`) and
+`HARNESS_FAMILY_MISMATCH` (a `Horse` + `HorseHarness` pair in one `EquipmentSet`/troop
+`EquipmentRoster` whose family types disagree), backed by `harness_family_types` /
+`mount_family_types` registries. Mount-side family type resolves from the monsters XML following
+`base_monster` — `HorseComponent.Deserialize` never reads `family_type` off `<Horse>`, so those
+attributes are dead data — and monster ids declared with conflicting values across modules
+(ADOD_Beasts vs Native/LOTRLOME) resolve to unknown rather than emitting a false mismatch.
+8 new tests (231 in `tools/tests`); `validate_moduledata.py` PASS. Restoring the defect in-memory
+against the real registry reproduces exactly one ERROR, so the rule would have caught the 2026-05-21
+authoring miss. In-game verification still owed — item XML is read at process launch, so it needs a
+full game restart, not a campaign reload.
+
+Research: SPInventoryVM.IsItemEquipmentPossible, ArmorComponent.Deserialize, HorseComponent.Deserialize
+Not-tested: in-game equip (needs a game restart)
 ### fix(gondor): gatehouse tower crowns chamfered, wing root merlons dropped
 
 Two in-editor findings on the hybrid gatehouse. (1) tower_l3_b's rim corners ship as LOW caps

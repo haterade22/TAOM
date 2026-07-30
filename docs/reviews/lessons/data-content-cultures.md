@@ -260,6 +260,22 @@ Gondor recruitment pools exist twice: `ModuleData/recruitment_pools/gondor.json`
 
 ---
 
+### Rarity is a tier signal, not an underuse signal
+
+An equipment-variety sweep over the Erebor/Iron Hills rosters optimised for "spread the least-used items" and reached straight for end-tier exclusives — they are rare precisely BECAUSE only one level-46 troop wears them. 25 items dropped ten or more wearer levels; the royal warden's cuirass landed on a level-11 recruit (−35), and the strongest 1H axe in the culture spread from level-46-only down to level 21.
+- **Why missed:** the objective function was inverted for exactly the items it most wanted to place, and every automated gate passed on the broken file — `validate_moduledata.py` PASS, `validate_all_troop_refs.py` PASS, build clean, 4,529 tests green. Referential integrity and tier sanity are orthogonal, and TAOM validates only the first.
+- **Prevent:** when redistributing game content by usage frequency, derive a tier floor per item from the lowest-level entity already using it and never place below it. In an armoury with no tier field, the existing assignments ARE the tier data. Assert afterwards that no item's minimum wearer level decreased.
+- **Source:** docs/reviews/rca-erebor-equipment-sweep-2026-07-30.md (F1–F4).
+
+### A stat you cannot find on the item may live one indirection away
+
+Dwarf melee weapons are `<CraftedItem>` elements with no `<Weapon>` child; reach and damage come from the referenced `CraftingPiece` `BladeData`. A stat comparison read `<Weapon>`, found nothing for the whole class, and silently compared nothing — so a 20-unit stub blade and a 44-unit greataxe scored identical, and a level-36 specialist was handed the stub while a level-21 crossbowman's sidearm got the greataxe.
+- **Why missed:** the gap was noticed mid-implementation and guessed past — "stats derive from crafting pieces, likely comparable" — rather than looked up. `.claude/rules/troops.md` already mandates grepping weapon stats before tier-ordered picks; the rule was loaded, quoted, applied to ranged weapons, then not applied to melee because the stats were one indirection away instead of on the item.
+- **Prevent:** treat an empty stat lookup across a whole item class as an unfinished lookup, never as "no constraint." Extend the grep-the-stats habit to piece tables for crafted items.
+- **Source:** docs/reviews/rca-erebor-equipment-sweep-2026-07-30.md (F3).
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
