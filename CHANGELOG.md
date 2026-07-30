@@ -4,6 +4,32 @@
 
 ## 2026-07-30
 
+### feat(gondor): Lond Cirion barracks, and panels gripped by their structural body
+
+`lond_cirion_barracks_01` — 18 x 6 m, two 3 m storeys, 26.57 gable, 79,480 tris (22,236 / 7,138 /
+3,562). Parade front to the south with a double-door entry, a deliberately blank north service
+wall, ten buttresses on the bay joints, an external stair to an upper door, decks at both storeys.
+
+Two new part families, two new traps, both caught by rays rather than by eye. The **stair runs
+backwards** if placed unrotated: its high tread is authored at local -Y (y -3.02, z 3.01) and its
+foot at y 0, so the first build had it climbing away from the building — the down-ray profile read
+0.6 m at the wall rising to 3.0 m three metres out. It now descends monotonically from the door to
+grade in both mesh and collision. The **buttress** hangs its body off a mounting plane at y 0 and
+needs the same origin anchoring as the eave strips; measured at +0.51 m projection on both faces.
+
+Also fixed a latent defect the barracks exposed on all three buildings: parts were gripped by
+their whole group's bounding box, but each panel type carries different decorative sub-objects, so
+their structural wall planes landed millimetres apart — measured, two facade planes 5 mm apart
+carrying 111.9 and 39.9 m2. Panels are now gripped by `<prefix>.wall` (else the `<prefix>` object),
+collapsing both onto one plane carrying exactly their sum, 151.8 m2. Invisible in a render;
+z-fights in-game.
+
+Not a defect, recorded so it is not chased again: ~25 black patches on the barracks facade are a
+preview artifact. No kit texture resolves headless (every material reports `file_exists=False`), so
+Blender falls back per material and `gondor_bricks_small_a_normal_mat` falls back to near-black. A
+1,633-ray facade sweep stopped 1,422 rays at the wall and every one of the 211 that passed through
+was a door or window aperture.
+
 ### fix(erebor): lift the Iron Hills noble crossbow line above the regulars (#366)
 
 `iron_hills_noble_scout`, `_sharpshooter` and `_veteran_sharpshooter` carried exactly the same

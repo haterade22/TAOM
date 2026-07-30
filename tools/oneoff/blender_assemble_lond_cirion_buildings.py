@@ -58,7 +58,8 @@ from mathutils import Matrix, Vector
 GONDOR = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\AssetSources\Scenes\Gondor"
 FAMILIES = ["gondor_wall_3m_straight_a.fbx", "gondor_wall_6m_straight_a.fbx",
             "gondor_trims_straight_a.fbx", "gondor_roofs_a.fbx",
-            "gondor_ground_straight_a.fbx"]
+            "gondor_ground_straight_a.fbx", "gondor_buttres_a.fbx",
+            "gondor_stairs_3m_straight_a.fbx"]
 OUT_FBX = os.path.join(GONDOR, "blockout", "lond_cirion_buildings_a.fbx")
 STAGING = r"E:\LOTRAOMAssets\_export\lond_cirion\buildings"
 
@@ -77,9 +78,15 @@ RIDGE_CAP = "gondor_wall_trim_3m_c_clean"
 # 6 m panel at z -3 would span -3..+3 and z-fight the storey at 0..6.
 SKIRT = "gondor_wall_3m_a_clean.wall"
 SKIRT_Z = -3.0
-# parts whose authored origin IS their mounting point (bbox anchor mis-seats)
+# Parts whose authored origin IS their mounting point (the bbox anchor
+# mis-seats them). Measured 2026-07-29:
+#   *_edge_straight   — hangs in -y/-z from its top-inner corner = the eave line
+#   buttress_a_clean  — body hangs in -y from a mounting plane at y=0, z 0..6
+#   stairs_3m_a_clean — runs -y and DOWN from a top landing at local (0, 0, 3)
 ANCHOR_ORIGIN = {"gondor_roof_a_45_3m_edge_straight",
-                 "gondor_roof_a_30_3m_edge_straight"}
+                 "gondor_roof_a_30_3m_edge_straight",
+                 "gondor_buttress_a_clean",
+                 "gondor_stairs_3m_a_clean"}
 GABLE_RIDGE_OVERLAP = 0.03   # mirrored halves cross y=0 so the apex closes
 
 LOG_LINES = []
@@ -151,9 +158,22 @@ def group_bbox(objs):
 
 
 def anchor(prefix):
+    """Where the part is gripped. Origin for ANCHOR_ORIGIN parts; otherwise
+    the STRUCTURAL body's bottom-centre.
+
+    Anchoring on the whole group's bbox is wrong for wall panels: each panel
+    type carries different decorative sub-objects (a window part adds 0.55 m
+    of tracery, a plain part does not), so the group centre — and with it the
+    panel's wall plane — lands a few mm off its neighbour's. Measured on the
+    barracks: two facade planes 5 mm apart, 111.9 m2 at y -3.250 against
+    39.9 m2 at -3.255, which z-fights as black patches across the storey.
+    Gripping the structural body puts every panel's wall plane on exactly
+    the same line regardless of its decoration.
+    """
     if prefix in ANCHOR_ORIGIN:
         return Vector((0.0, 0.0, 0.0))
-    lo, hi = group_bbox(base_set(prefix))
+    body = by_name.get(prefix + ".wall") or by_name.get(prefix)
+    lo, hi = group_bbox([body] if body is not None else base_set(prefix))
     return Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, lo.z))
 
 
@@ -381,6 +401,94 @@ def build_house_02():
                        (-4.5, -1.5, 1.5, 4.5), 6.0, 6.0)
 
 
+def build_barracks():
+    """18x6 barracks: two 3 m storeys, buttressed long walls, an external
+    stair to an upper door, 26.57-degree gable. Ridge along X."""
+    S = "lond_cirion_barracks_01"
+    P_PLAIN = "gondor_wall_3m_a_clean"
+    P_DOOR2 = "gondor_wall_3m_a_door2_a_clean"     # double door, main entry
+    P_DOOR = "gondor_wall_3m_a_door_a_clean"       # single door, stair head
+    P_WIN = "gondor_wall_3m_window_a_clean"
+    P_WIN2 = "gondor_wall_3m_window2_a_clean"
+    P_COL = "gondor_column_3m_a_1x1"
+    P_TRIM = "gondor_wall_trim_3m_b_clean"
+    P_BUTT = "gondor_buttress_a_clean"
+    P_STAIR = "gondor_stairs_3m_a_clean"
+    P_SLOPE = "gondor_roof_a_30_3m_straight"
+    P_GABLE = "gondor_roof_a_30_3m_side_a_clean"
+    P_EDGE = "gondor_roof_a_30_3m_edge_straight"
+
+    BAYS = (-7.5, -4.5, -1.5, 1.5, 4.5, 7.5)       # 6 bays = 18 m
+    END = 9.0                                       # short-face centreline
+    HALF = 3.0                                      # half depth
+    STAIR_X = 4.5                                   # bay carrying the stair
+
+    def face(prefixes, cy, out):
+        return [(p, cx, cy, out) for p, cx in zip(prefixes, BAYS)]
+
+    skirt = (face([P_PLAIN] * 6, -HALF, (0, -1))
+             + face([P_PLAIN] * 6, HALF, (0, 1))
+             + [(P_PLAIN, END, cy, (1, 0)) for cy in (-1.5, 1.5)]
+             + [(P_PLAIN, -END, cy, (-1, 0)) for cy in (-1.5, 1.5)])
+    skirt = [(SKIRT, cx, cy, out) for _, cx, cy, out in skirt]
+
+    # south is the parade front: windows + the double-door main entry
+    story0 = (face([P_WIN, P_WIN, P_DOOR2, P_WIN, P_WIN, P_WIN], -HALF, (0, -1))
+              # north is the deliberate blank service wall (no sightlines)
+              + face([P_PLAIN] * 6, HALF, (0, 1))
+              + [(P_PLAIN, END, cy, (1, 0)) for cy in (-1.5, 1.5)]
+              + [(P_PLAIN, -END, cy, (-1, 0)) for cy in (-1.5, 1.5)])
+    # upper: dormitory rhythm; the single door at STAIR_X is the stair head
+    story1 = (face([P_WIN2, P_WIN2, P_WIN2, P_WIN2, P_DOOR, P_WIN2],
+                   -HALF, (0, -1))
+              + face([P_WIN] * 6, HALF, (0, 1))
+              + [(P_WIN, END, cy, (1, 0)) for cy in (-1.5, 1.5)]
+              + [(P_WIN, -END, cy, (-1, 0)) for cy in (-1.5, 1.5)])
+    for z, panels in ((SKIRT_Z, skirt), (0.0, story0), (3.0, story1)):
+        for prefix, cx, cy, out in panels:
+            wall(S, prefix, cx, cy, out, z)
+
+    for sx in (-END, END):
+        for sy in (-HALF, HALF):
+            for z in (0.0, 3.0):
+                place(S, P_COL, Matrix.Translation((sx, sy, z)))
+
+    # buttresses on the bay joints of both long walls, mounted on the wall
+    # OUTER face (origin-anchored: the body hangs off that plane, z 0..6)
+    for cx in (-6.0, -3.0, 0.0, 3.0, 6.0):
+        wall(S, P_BUTT, cx, -(HALF + 0.25), (0, -1), 0.0)
+        wall(S, P_BUTT, cx, HALF + 0.25, (0, 1), 0.0)
+
+    # External stair up to the upper door. MEASURED: the high tread is at
+    # local -Y (y -3.02, z 3.01) and the foot at y 0 — the opposite of what
+    # the part's bbox suggests, so an unrotated placement makes the stair
+    # climb AWAY from the building. Rz(180) maps the high end to +Y, then
+    # the translation lands it: high -> (STAIR_X, wall face, 3), foot ->
+    # 3 m further out at grade. detail_side() cannot decide this (the whole
+    # part sits on one side of its origin), so the matrix is explicit.
+    place(S, P_STAIR,
+          Matrix.Translation((STAIR_X, -(HALF + 0.25) - 3.0, 0.0))
+          @ Matrix.Rotation(math.pi, 4, "Z"))
+
+    d = detail_side(P_TRIM)
+    th = part_height(P_TRIM)
+    for top in (3.0, 6.0):
+        for cx in BAYS:
+            for cy, out in ((-HALF, (0, -1)), (HALF, (0, 1))):
+                place(S, P_TRIM,
+                      Matrix.Translation((cx, cy, top - th)) @ rot_to(d, out))
+        for cy in (-1.5, 1.5):
+            for cx, out in ((END, (1, 0)), (-END, (-1, 0))):
+                place(S, P_TRIM,
+                      Matrix.Translation((cx, cy, top - th)) @ rot_to(d, out))
+
+    # both decks: unlike house_01 the upper windows here ARE pierced, so the
+    # storey-1 floor is visible from outside and worth placing
+    floors(S, BAYS, (-1.5, 1.5), FLOOR_Z)
+    floors(S, BAYS, (-1.5, 1.5), 3.0 + FLOOR_Z)
+    return gabled_roof(S, P_SLOPE, P_EDGE, P_GABLE, BAYS, END, 6.0)
+
+
 def select_only(objs):
     bpy.ops.object.select_all(action="DESELECT")
     for o in objs:
@@ -483,7 +591,8 @@ def main():
                         if o.type == "MESH"})
 
         ridges = {"lond_cirion_house_01": build_house_01(),
-                  "lond_cirion_house_02": build_house_02()}
+                  "lond_cirion_house_02": build_house_02(),
+                  "lond_cirion_barracks_01": build_barracks()}
         for s, rz in ridges.items():
             log(f"[plan] {s}: ridge z {rz:.3f}, "
                 f"{sum(1 for p in PLACEMENTS if p[0] == s)} placements")
