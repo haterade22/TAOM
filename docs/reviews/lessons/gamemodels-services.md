@@ -173,6 +173,22 @@ A memo keyed on a service method's *input* is only correct if that input determi
 - **Prevent:** before adding a cache, write down what the output depends on and confirm the key covers all of it. A dependency outside the key needs an invalidation signal; with no cheap signal, do not cache. Then ask what the cache actually saves — if the guarded path runs once per UI interaction, delete it rather than fixing it. Any regression test must vary a *dependency* while holding the *key* constant.
 - **Source:** MenuLinkColors deep review 2026-07-26 (HIGH). RCA: `docs/reviews/rca-menu-link-colors-2026-07-26.md`
 
+---
+
+### Clamp a cross-field invariant where the sources converge, not once per source
+`WarOfTheRingService.GetEffectivePhaseDays` selects `(phase1Day, phase2Day)` from four sources — MCM sliders, JSON, JSON test-mode, compiled defaults. Only the JSON pair was validated, so an equal or inverted pair from any other source reached `CheckPhaseTransition`, whose two guards are sequential `if`s over an in-place `CurrentPhase` mutation: both transitions ran in one call and `IsengardWar` was never observable to the map meter, momentum service, or save. Per-source validation scales linearly with sources and drifts — N sources means N chances to forget the N+1th. Clamp once at the fan-in (`phase1 = max(1, phase1); phase2 = max(phase1+1, phase2)`), and keep per-source validation only for the job a silent clamp cannot do: **warning the author their input was wrong**.
+- **Why missed:** **2nd instance of the dual-surface class** (CombatMechanics 2026-07-02 — JSON enforced `autoKnockdownWeightRatio >= neutralWeightRatio`, the MCM slider clamped to a bare `[2,30]` and recreated the exact state the JSON invariant prevented). Here the change was a four-constant retune, so it did not *present* as config-provider work and the validation rule never came to mind — even though all four constants are user-editable config and one is a live in-game slider. The validator's `<` also reads as correct in isolation; it is only wrong because of control flow in a different file. And every existing test pinned `IsAvailable = false` in `Setup()`, leaving the MCM branch at **zero** coverage behind a healthy-looking count of 25 tests.
+- **Prevent:** (1) the config-validation rule is triggered by the **nature of the value**, not the size or shape of the diff — a one-line constant edit to a user-editable value carries it. (2) A guard whose correctness depends on control flow elsewhere must be reviewed with that file open. (3) Verify MCM min/max actually clamp — in MCM 5.12.1 `[SettingPropertyInteger]` bounds are UI-only metadata and `BaseSettingsJsonConverter.ReadJson` assigns with no range check, so a stale settings file bypasses them. (4) When a service selects among N sources, assert a test exercises each branch; test counts do not measure branch coverage.
+- **Source:** WotR phase-day deep review 2026-07-30 (2 HIGH). RCA: `docs/reviews/rca-wotr-phase-ordering-2026-07-30.md`
+
+---
+
+### A doc comment citing a precedent is a claim, not evidence — open the file
+`MomentumSettingsProvider` re-clamps every MCM value it exposes and documents itself as following the "TaomSettingsProvider precedent". `TaomSettingsProvider` implements no such thing — it is four raw pass-through properties. An author reading that comment would conclude the pattern was already established repo-wide and skip the check.
+- **Why missed:** the comment was written by an author who assumed the sibling did what they were doing rather than reading it, and it then sat in the codebase asserting a false fact with the authority of a code comment. Nothing verifies comment claims.
+- **Prevent:** when a comment, doc, or agent report cites a precedent, sibling, or "existing pattern" as justification, open the cited file before relying on it — the same evidence-over-claims discipline applied to review findings. When writing such a comment, cite the specific file and member you actually read.
+- **Source:** WotR phase-day deep review 2026-07-30. RCA: `docs/reviews/rca-wotr-phase-ordering-2026-07-30.md`
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

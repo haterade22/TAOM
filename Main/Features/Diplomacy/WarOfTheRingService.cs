@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -93,7 +94,24 @@ public class WarOfTheRingService : IWarOfTheRingService
         return _config.Enabled;
     }
 
+    // Phase 2 must land strictly after Phase 1. CheckPhaseTransition's two guards are sequential
+    // ifs and TransitionToPhase mutates CurrentPhase in place, so an equal or inverted pair runs
+    // BOTH transitions inside one call — IsengardWar is entered and overwritten by FullWar before
+    // any external reader (map meter, momentum service, save) can observe it, silently collapsing
+    // the phased escalation. Clamping here rather than per-source covers all four inputs at once:
+    // the MCM sliders (validated nowhere — they accept any pair inside [1,365]), the JSON pair,
+    // the TestMode pair, and the compiled defaults. Dual-surface rule, csharp-architecture.md.
     private (int phase1Day, int phase2Day) GetEffectivePhaseDays()
+    {
+        var (phase1Day, phase2Day) = GetRawPhaseDays();
+
+        phase1Day = Math.Max(1, phase1Day);
+        phase2Day = Math.Max(phase1Day + 1, phase2Day);
+
+        return (phase1Day, phase2Day);
+    }
+
+    private (int phase1Day, int phase2Day) GetRawPhaseDays()
     {
         if (_settingsProvider.IsAvailable && _settingsProvider.TestMode)
             return (_config.TestMode.Phase1Day, _config.TestMode.Phase2Day);

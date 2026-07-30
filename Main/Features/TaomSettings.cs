@@ -137,17 +137,17 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring")]
     [SettingPropertyInteger("Phase 1 Start Day", 1, 365, Order = 1,
-        HintText = "Days after campaign start when Isengard and Dunland attack Rohan. Default 2.")]
-    public int Phase1TriggerDay { get; set; } = 2;
+        HintText = "Days after campaign start when Isengard and Dunland attack Rohan. Default 30.")]
+    public int Phase1TriggerDay { get; set; } = 30;
 
     [SettingPropertyGroup("War of the Ring")]
     [SettingPropertyInteger("Phase 2 Start Day", 1, 365, Order = 2,
-        HintText = "Days after campaign start when all hostile kingdoms go to war and peace between hostile tiers is blocked. Default 14.")]
-    public int Phase2TriggerDay { get; set; } = 14;
+        HintText = "Days after campaign start when all hostile kingdoms go to war and peace between hostile tiers is blocked. Default 44.")]
+    public int Phase2TriggerDay { get; set; } = 44;
 
     [SettingPropertyGroup("War of the Ring/Test Mode")]
     [SettingPropertyBool("Enable Test Mode", Order = 0,
-        HintText = "Uses short delays (2/5 days) for rapid testing. Overrides Phase 1/2 days.")]
+        HintText = "Uses the short delays from war_of_the_ring.json (1/3 days) for rapid testing. Overrides Phase 1/2 days.")]
     public bool TestMode { get; set; }
 
     // --- War of the Ring / Momentum (#327) ---

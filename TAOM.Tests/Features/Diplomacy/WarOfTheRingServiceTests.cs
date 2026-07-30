@@ -336,4 +336,113 @@ public class WarOfTheRingServiceTests
         Assert.AreEqual(WarOutcome.FreeVictory, _sut.Outcome);
         Assert.AreEqual(WarPhase.WarEnded, _sut.CurrentPhase);
     }
+
+    // ---- MCM-sourced phase days: ordering invariant ----
+    // CheckPhaseTransition's two guards are sequential ifs and TransitionToPhase mutates
+    // CurrentPhase in place, so an equal or inverted day pair runs BOTH transitions in one
+    // call and IsengardWar is never observable. The MCM sliders accept any pair inside
+    // [1,365] with no cross-field validation, so the service must clamp.
+
+    private void UseMcmPhaseDays(int phase1Day, int phase2Day)
+    {
+        _settingsProvider.IsAvailable.Returns(true);
+        _settingsProvider.WarOfTheRingEnabled.Returns(true);
+        _settingsProvider.TestMode.Returns(false);
+        _settingsProvider.Phase1TriggerDay.Returns(phase1Day);
+        _settingsProvider.Phase2TriggerDay.Returns(phase2Day);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_McmNormalPhaseDays_UsesThemUnchanged()
+    {
+        UseMcmPhaseDays(30, 44);
+        CreateSut();
+
+        _sut.CheckPhaseTransition(29f);
+        Assert.AreEqual(WarPhase.Peace, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(30f);
+        Assert.AreEqual(WarPhase.IsengardWar, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(43f);
+        Assert.AreEqual(WarPhase.IsengardWar, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(44f);
+        Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_McmEqualPhaseDays_DoesNotSkipIsengardWar()
+    {
+        UseMcmPhaseDays(30, 30);
+        CreateSut();
+
+        _sut.CheckPhaseTransition(30f);
+        Assert.AreEqual(WarPhase.IsengardWar, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(31f);
+        Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_McmPhase1AfterPhase2_DoesNotSkipIsengardWar()
+    {
+        UseMcmPhaseDays(100, 44);
+        CreateSut();
+
+        _sut.CheckPhaseTransition(99f);
+        Assert.AreEqual(WarPhase.Peace, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(100f);
+        Assert.AreEqual(WarPhase.IsengardWar, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(101f);
+        Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_McmPhase1BelowOne_ClampsToDayOne()
+    {
+        UseMcmPhaseDays(0, 44);
+        CreateSut();
+
+        _sut.CheckPhaseTransition(0f);
+        Assert.AreEqual(WarPhase.Peace, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(1f);
+        Assert.AreEqual(WarPhase.IsengardWar, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_JsonEqualPhaseDays_DoesNotSkipIsengardWar()
+    {
+        var config = CreateDefaultConfig();
+        config.Phase1.TriggerDay = 30;
+        config.Phase2.TriggerDay = 30;
+        _configProvider.LoadConfig().Returns(config);
+        CreateSut();
+
+        _sut.CheckPhaseTransition(30f);
+        Assert.AreEqual(WarPhase.IsengardWar, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(31f);
+        Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_TestModeEqualDays_DoesNotSkipIsengardWar()
+    {
+        var config = CreateDefaultConfig();
+        config.TestMode.Enabled = true;
+        config.TestMode.Phase1Day = 3;
+        config.TestMode.Phase2Day = 3;
+        _configProvider.LoadConfig().Returns(config);
+        CreateSut();
+
+        _sut.CheckPhaseTransition(3f);
+        Assert.AreEqual(WarPhase.IsengardWar, _sut.CurrentPhase);
+
+        _sut.CheckPhaseTransition(4f);
+        Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+    }
 }

@@ -96,19 +96,19 @@ Controls the scripted war escalation:
 ```json
 {
   "enabled": true,
-  "phase1": { "triggerDay": 1, "wars": [{"attacker":"isengard","defender":"vlandia"}, ...] },
-  "phase2": { "triggerDay": 1, "autoWarBetweenHostileTiers": true, "blockPeaceBetweenHostileTiers": true, "wars": [] },
-  "testMode": { "enabled": false, "phase1Day": 2, "phase2Day": 5 }
+  "phase1": { "triggerDay": 30, "wars": [{"attacker":"isengard","defender":"vlandia"}, ...] },
+  "phase2": { "triggerDay": 44, "autoWarBetweenHostileTiers": true, "blockPeaceBetweenHostileTiers": true, "wars": [] },
+  "testMode": { "enabled": false, "phase1Day": 1, "phase2Day": 3 }
 }
 ```
-Both `triggerDay` values are currently set to 1 (immediate on new game). MCM overrides `phase1TriggerDay` and `phase2TriggerDay` at runtime.
+Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the full War of the Ring) on day 44. MCM overrides `phase1TriggerDay` and `phase2TriggerDay` at runtime and carries the same defaults.
 
 ### MCM Settings (`TaomSettings`)
 | Setting | Default | Description |
 |---------|---------|-------------|
 | Enable War of the Ring | `true` | Master switch for phase transitions |
 | Phase 1 Start Day | `30` | MCM override for Phase 1 trigger (Isengard attacks Rohan) |
-| Phase 2 Start Day | (see TaomSettings.cs) | MCM override for Phase 2 trigger (full war) |
+| Phase 2 Start Day | `44` | MCM override for Phase 2 trigger (full war) |
 
 ## Key Files
 | File | Purpose |
@@ -174,6 +174,7 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 
 - 2026-06-17 — Instrumented player-alliance loss with `[Diplomacy][diag]` logging only; the durability war-block (`DiplomacyService.IsWarAllowed` branch) was reverted after review (it soft-locked the player out of the only alliance-exit path).
 - 2026-06-16 — Let player-founded kingdoms form alliances: player-aware service overloads unblock the vanilla Kingdom→Diplomacy button (Part A) and a new `PlayerAllianceProposalBehavior` dialog lets a kingdom-ruler initiate (Part B); full freedom, AI-vs-AI diplomacy unchanged.
+- 2026-07-30 — Phase days retuned to Day 30 (Phase 1) / Day 44 (Phase 2) across all four sources, and `WarOfTheRingService.GetEffectivePhaseDays` now clamps `phase2 > phase1 >= 1` for every source. Previously only the JSON pair was validated (with a strictly-`<` check that let equal days through) while the MCM sliders — the live in-game path — were unvalidated, so an equal or inverted pair ran both transitions in one tick and the Isengard war was never observable.
 - 2026-05-22 — War of the Ring phase defaults retuned to Day 2 (Phase 1) / Day 14 (Phase 2), both MCM-tunable.
 - 2026-05-22 — Split peace + alliance invariants in `EnforcePermanentAlliances` (Mordor showing in both Wars and Alliances lists); closed Dale↔Isengard gap.
 - 2026-05-22 — Promoted Harad (`empire_s ↔ aserai`) from Natural to Permanent alliance with Mordor + added MakePeace step in alliance enforcement.

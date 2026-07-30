@@ -59,10 +59,26 @@ public class WarOfTheRingConfigProvider : IWarOfTheRingConfigProvider
             _logger.LogWarning($"WarOfTheRing config: Phase1.TriggerDay ({config.Phase1.TriggerDay}) < 1; reverting to 1.");
             config.Phase1.TriggerDay = 1;
         }
-        if (config.Phase2.TriggerDay < config.Phase1.TriggerDay)
+        // Strictly-after, not merely not-before: CheckPhaseTransition's guards are sequential ifs,
+        // so equal days run Peace->IsengardWar->FullWar in a single tick and the Isengard war is
+        // never observable. The service clamps this too (GetEffectivePhaseDays) — this pass exists
+        // to WARN the author that their edited JSON is wrong, which a silent clamp cannot do.
+        if (config.Phase2.TriggerDay <= config.Phase1.TriggerDay)
         {
-            _logger.LogWarning($"WarOfTheRing config: Phase2.TriggerDay ({config.Phase2.TriggerDay}) < Phase1.TriggerDay ({config.Phase1.TriggerDay}); reverting Phase2 to {config.Phase1.TriggerDay + 1}.");
+            _logger.LogWarning($"WarOfTheRing config: Phase2.TriggerDay ({config.Phase2.TriggerDay}) must be after Phase1.TriggerDay ({config.Phase1.TriggerDay}); reverting Phase2 to {config.Phase1.TriggerDay + 1}.");
             config.Phase2.TriggerDay = config.Phase1.TriggerDay + 1;
+        }
+
+        // Same invariant for the test-mode pair — it feeds the identical CheckPhaseTransition path.
+        if (config.TestMode.Phase1Day < 1)
+        {
+            _logger.LogWarning($"WarOfTheRing config: TestMode.Phase1Day ({config.TestMode.Phase1Day}) < 1; reverting to 1.");
+            config.TestMode.Phase1Day = 1;
+        }
+        if (config.TestMode.Phase2Day <= config.TestMode.Phase1Day)
+        {
+            _logger.LogWarning($"WarOfTheRing config: TestMode.Phase2Day ({config.TestMode.Phase2Day}) must be after TestMode.Phase1Day ({config.TestMode.Phase1Day}); reverting to {config.TestMode.Phase1Day + 1}.");
+            config.TestMode.Phase2Day = config.TestMode.Phase1Day + 1;
         }
     }
 }
