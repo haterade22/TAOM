@@ -198,6 +198,51 @@ instance, and the boot matrix itself — all require a running game and a second
 Research: TaleWorlds.Core.MBRandom, Game.RandomGenerator, GameTexts.FindText,
 DefaultClanFinanceModel static initializers, SaveableTypeDefiner._saveBaseId (installed v1.4.7).
 
+### feat(devconsole): the first six read-only `taom.print_*` commands (#369)
+
+Phase 1 of the console suite — the half that replaces the most manual play time. Every one is Tier A
+(read-only, cheat gate only) and every one collapses a check that currently costs an in-game session.
+
+`taom.print_momentum` is the best of them. The momentum save payload corrupts the save when a single
+SyncData string crosses the engine's int16 archive-entry length, and confirming the chunker holds
+means playing a campaign to roughly day 50 with active wars and then saving — the failure only shows
+on the *next* load. The command prints byte count, chunk count and headroom on demand. Its
+`WOULD CORRUPT` branch is unreachable today by construction and is pinned anyway, because a future
+bump to `MaxChunkChars` is exactly the change that makes it reachable.
+
+`taom.print_party_size` prints the whole weight-deflation chain the #337 rework made invisible. The
+load-bearing detail is that a `penalty=0` reading says *why*: `ComputeSizePenalty` returns 0 both when
+the party is light and when `baseLimit < 2` — the guard added after a NaN-poisoned cast defeated the
+clamp — and rendering those two identically would hide the exact failure the guard exists to catch.
+
+`taom.print_town_economy` prints TAOM's and vanilla's daily gold change side by side, which is #317's
+real question. The vanilla column costs nothing: `ComputeTownGoldChange` with a null config computes
+with the vanilla constants, so the report cannot drift from the engine's own numbers the way a
+duplicated formula would. It refuses castles rather than computing a misleading figure — the engine
+only ticks `Town.AllTowns`, so a castle never reaches that model.
+
+`taom.print_patches` reconstructs the declared-vs-applied Harmony registry with no new bookkeeping in
+`SubModule`: declared categories from reflecting the attribute, applied ones from walking
+`GetAllPatchedMethods` back to each patch method's declaring type. It deliberately does not treat
+NOT APPLIED as a fault — manual patches carry no category and some categories are never registered on
+purpose — because a report that cried wolf would be ignored within a week.
+
+`taom.print_special_resources` and `taom.print_races` round it out. The former is deliberately not
+`GrantAmount(..., 0f)`: that would look like a free read but clamps and writes back, so on a save
+whose balance predates a lowered cap a command named "print" would silently mutate it. The latter
+validates the race id before the lookup, because `GetRaceNameFromId` coerces unknown ids to `"human"`
+and a diagnostic that lies is worse than no diagnostic.
+
+The assembly-wide binding tests picked up all six with zero new wiring and confirmed unique names,
+correct shape, the naming convention, and the no-campaign gate — the Phase 0 contract doing its job.
+
+**Tests:** 32 new formatter tests. Three semantic guards (degenerate-vs-light party limit, the
+zero-rate divide-by-zero, tier-0 rendering) were verified RED by defect injection, and each failed on
+exactly its own test.
+
+Not-tested: the command entry points need a live campaign; the formatters they delegate to are fully covered
+Save-compat: no new save fields
+
 ### feat(devconsole): the shared contract every `taom.*` command will route through (#369)
 
 TAOM has one console command (`taom.add_special_resources`, #365) and a backlog of features whose

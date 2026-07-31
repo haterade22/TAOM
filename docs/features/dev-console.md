@@ -274,11 +274,18 @@ answer is conclusive and fails open in every path.
 
 ## Command reference
 
-| Command | Tier | Gate | Owner |
+| Command | Tier | Gate | What it replaces |
 |---|---|---|---|
-| `taom.add_special_resources [amount]` | B | campaign | [special-resources.md](special-resources.md) |
+| `taom.add_special_resources [amount]` | B | campaign | — (see [special-resources.md](special-resources.md)) |
+| `taom.print_special_resources` | A | campaign | Read-only balance/cap/tier. **Not** `GrantAmount(…, 0f)` — that clamps and writes back |
+| `taom.print_momentum [keys]` | A | campaign | ~50 in-game days of play to reach the 32 KB save-corruption threshold |
+| `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit |
+| `taom.print_town_economy [town]` | A | campaign | A 4–8 in-game-day observation for #317, plus the vanilla side-by-side that answers "is the buff doing anything" |
+| `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
+| `taom.print_races` | A | cheat mode | — (registry + the hero's race, validated before lookup) |
 
-*(Phase 1 and 2 commands land here as they ship.)*
+**Still unbuilt from Phase 1:** `print_battle_scene`, `print_mission_scene`, `print_agent_info`,
+`print_town_mercenaries`, `print_banner_bearers`, `print_wotr`. Phases 2 and 3 are untouched.
 
 ## Files
 
@@ -288,6 +295,10 @@ answer is conclusive and fails open in every path.
 | `Main/Features/DevConsole/DevConsoleGuard.cs` | The three cheat gates |
 | `Main/Features/DevConsole/DevConsoleArgs.cs` | Pure argument parsers (invariant culture, finite floats) |
 | `Main/Features/DevConsole/DevConsoleDiscoveryAudit.cs` | Startup self-audit with the vanilla control |
+| `Main/Features/DevConsole/HarmonyPatchInspector.cs` | Reflection walk: declared categories vs what Harmony applied |
+| `Main/Features/DevConsole/PatchReportFormatter.cs` | Pure renderer for `print_patches` |
+| `Main/Features/DevConsole/Cheats/DiagnosticCheats.cs` | `print_patches`, `print_races` |
+| `Main/Features/<X>/Cheats/` | Feature-owned commands (momentum, party size, town economy, special resources) |
 | `Main/SubModule.cs` | Calls the audit from `OnBeforeInitialModuleScreenSetAsRoot`, fail-open |
 
 ## Tests
