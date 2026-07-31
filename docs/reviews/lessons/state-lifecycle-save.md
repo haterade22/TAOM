@@ -79,6 +79,28 @@ For any system that sets timed/stateful data (buffs, tracked dictionaries, sched
 - **Prevent:** For singleton cleanup at campaign teardown: (1) best-effort hook `CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, UnsubscribeMethod)` — covers the death-of-character flow but NOT main-menu-exit (the orphan listener becomes GC-eligible once `CampaignGameStarter` releases). (2) For static event subscriptions on long-lived objects (e.g. `ScreenManager.OnPushScreen += handler`): same pattern, document the limitation inline. (3) For `Reuse.Singleton` service teardown needing campaign-2-in-same-process safety: use `OnNewGameCreatedEvent` on the ENTERING campaign (not OnGameOver on the exiting one) so reset happens just before fresh state is built — pattern shipped in #124 (BannerInjection), #128 (CareerSystem), #130 (HeroRace), #131 (RaceAge), #132 (Siege).
 - **Source:** memory/feedback_campaignbehavior_no_ongameend.md (Phase 9b #133 SpecialResources ScreenManager event-leak fix)
 
+### Pick a lifecycle hook by locating the engine call it must precede — never by copying a neighbour
+
+Startup work with an ordering requirement ("this must run before the engine does X") gets its hook by
+decompiling the engine and finding where X happens, not by matching whatever hook an adjacent guard
+uses. Also establish whether the chosen hook is a one-shot: `OnBeforeInitialModuleScreenSetAsRoot`
+fires on **every** return to the main menu (`Module.OnApplicationTick` → `SetInitialModuleScreenAsRootScreen`,
+installed v1.4.7 line 509 → 758), which is why `_basicTableauGuardApplied` exists; `OnSubModuleLoad`
+runs once per process.
+- **Why missed:** the save-definer collision preflight was wired into `OnBeforeInitialModuleScreenSetAsRoot`
+  by analogy with the `Patch55_BasicTableauRaceGuard` block 18 lines above it. But `Module.Initialize`
+  calls `SaveManager.InitializeGlobalDefinitionContext()` at line 285 — right after `LoadSubModules`
+  (267, which is where every `OnSubModuleLoad` fires) and long before line 758. On the one boot where
+  a definer collision existed the engine had already thrown, so the preflight could only ever run on
+  boots where it had nothing to report. It was also unguarded, so it re-walked every loaded assembly
+  and re-instantiated every `SaveableTypeDefiner` on each quit-to-menu.
+- **Prevent:** this is the non-Harmony sibling of the apply-timing rule the `/deep-review` skill
+  already carries for `_harmony.PatchCategory` (issue #299, `rca-savetableau-2026-06-24.md`).
+  Generalise it: for ANY startup work with an ordering requirement, cite the engine file:line of the
+  call you must precede in a comment at the call site, and state whether the hook is re-entrant. Do
+  not accept "it's registered early" as evidence it runs in time.
+- **Source:** `docs/reviews/rca-coop-interop-2026-07-31.md` findings #1 + #10
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

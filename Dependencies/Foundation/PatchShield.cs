@@ -37,42 +37,14 @@ public static class PatchShield
 
     private static readonly HashSet<MethodBase> _shielded = new();
     private static readonly HashSet<string> _unpatched = new();
+    private static readonly HashSet<string> _withheld = new();
     private static readonly object _lock = new();
 
-    // Codex review 2026-05-27 S1 (HIGH): expanded from "TAOM" prefix only to full
-    // infrastructure-owner allowlist. Vendored BUTR/MCM Harmony IDs ("Bannerlord.ButterLib.SaveSystem",
-    // "MCM.UI.Adapter.MCMv5", etc.) do NOT start with "TAOM" — the prior filter would have
-    // unpatched the entire BUTR stack on the first MissingMethodException, breaking
-    // every dependent mod. This list mirrors the vendored DLLs in
-    // Dependencies/_Module/bin/Win64_Shipping_Client/ + Lib.Harmony's own runtime types.
-    private static readonly string[] ProtectedOwnerPrefixes =
-    {
-        "TAOM",
-        "Bannerlord.ButterLib",
-        "butterlib.",
-        "Bannerlord.UIExtenderEx",
-        "Bannerlord.MBOptionScreen",
-        "Bannerlord.ModuleLoader",
-        "Bannerlord.MCM",
-        "bannerlord.mcm.",
-        "MCM",
-        "MCMv5",
-        "MCM.UI.Adapter",
-        "BUTR.",
-        "HarmonyLib.",
-        "0Harmony",
-    };
-
-    private static bool IsProtectedOwner(string owner)
-    {
-        if (string.IsNullOrEmpty(owner)) return false;
-        foreach (var prefix in ProtectedOwnerPrefixes)
-        {
-            if (owner.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                return true;
-        }
-        return false;
-    }
+    // The protected-owner allowlist and the two decisions that use it live in PatchShieldPolicy so
+    // they can be unit-tested without Harmony or a running game (this class is static and
+    // Harmony-bound). The effective list is the compiled defaults UNIONED with any co-op owner
+    // prefixes from coop-modules.txt — union only, so a bad config edit can never unprotect the
+    // BUTR/MCM stack. Built once per unpatch attempt in TryUnpatchOffendingPatches.
 
     // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
     // A shield finalizer binds __originalMethod, so Harmony's generated wrapper pays a
@@ -121,6 +93,9 @@ public static class PatchShield
 
     public static int ShieldedCount { get { lock (_lock) return _shielded.Count; } }
     public static int UnpatchedCount { get { lock (_lock) return _unpatched.Count; } }
+
+    /// <summary>Targets where the rescue unpatch was suppressed because a co-op module is active.</summary>
+    public static int WithheldCount { get { lock (_lock) return _withheld.Count; } }
     public static long SwallowedMissingMethod => Interlocked.Read(ref _swallowedMissingMethod);
     public static long SwallowedMissingField => Interlocked.Read(ref _swallowedMissingField);
     public static long SwallowedTypeLoad => Interlocked.Read(ref _swallowedTypeLoad);
@@ -203,6 +178,19 @@ public static class PatchShield
                     // finalizer on the Gauntlet prefab system froze tournament exits for
                     // ~107s (#331 round 2). See ExcludedTargetNamespacePrefixes.
                     if (IsExcludedTarget(method))
+                    {
+                        _shielded.Add(method);
+                        skipped++;
+                        continue;
+                    }
+
+                    // Never stack on SaveShield's own targets. Harmony runs every finalizer on a
+                    // method against ONE shared exception slot and the last non-void return wins,
+                    // so our unconditional trinity swallow would override SaveShield's co-op
+                    // SAVE-LOAD rethrow — silently continuing a partially deserialised load, the
+                    // precise failure that rethrow exists to prevent. SaveShield already handles a
+                    // broader exception set on those methods, so we add nothing by shielding them.
+                    if (SaveShield.IsShielding(method))
                     {
                         _shielded.Add(method);
                         skipped++;
@@ -320,10 +308,18 @@ public static class PatchShield
             catch { return; }
         }
 
+        // Two separate sets. `_unpatched` means "we stripped owners here" and backs UnpatchedCount
+        // + the session summary; `_withheld` means "we would have, but co-op is active". Recording
+        // a withheld target as unpatched made the one summary line a triager reads ("unpatched N
+        // target(s)") contradict the "(withheld)" lines above it — bad in a changeset whose whole
+        // purpose is making divergence legible. Both still dedupe once per target.
+        var coopActive = CoopPresence.IsActive;
+        var mayUnpatch = PatchShieldPolicy.ShouldUnpatchForeignOwners(coopActive);
         lock (_lock)
         {
-            if (_unpatched.Contains(targetKey)) return;  // already cleaned
-            _unpatched.Add(targetKey);
+            if (_unpatched.Contains(targetKey) || _withheld.Contains(targetKey)) return;  // already handled
+            if (mayUnpatch) _unpatched.Add(targetKey);
+            else _withheld.Add(targetKey);
         }
 
         try
@@ -337,6 +333,15 @@ public static class PatchShield
             foreach (var p in patches.Transpilers) if (p != null) owners.Add(p.owner ?? string.Empty);
             foreach (var p in patches.Finalizers) if (p != null) owners.Add(p.owner ?? string.Empty);
 
+            // Co-op interop (2026-07-31): when a co-op module is active, observe and log but never
+            // strip. Under a host-authoritative co-op mod, removing one peer's sync patch does not
+            // crash — it silently desynchronises two campaigns, which corrupts both saves and
+            // cannot be diagnosed from a log. The swallow half of the shield still runs, so the
+            // session survives exactly as before; only the irreversible mutation is withheld.
+            // (`mayUnpatch` was decided above, alongside the dedupe bookkeeping.)
+            var protectedPrefixes = PatchShieldPolicy.BuildEffectiveOwnerPrefixes(
+                CoopPresence.ExtraProtectedOwnerPrefixes);
+
             var harmony = new Harmony(HarmonyId);
             foreach (var owner in owners)
             {
@@ -344,9 +349,15 @@ public static class PatchShield
 
                 // Refuse to unpatch protected infrastructure owners (Codex S1 HIGH fix
                 // 2026-05-27). Filter now covers TAOM + vendored BUTR/MCM/Harmony.
-                if (IsProtectedOwner(owner))
+                if (PatchShieldPolicy.IsProtectedOwner(owner, protectedPrefixes))
                 {
                     DiagLog.Log(Tag, $"refusing to unpatch protected owner '{owner}' on {targetKey}");
+                    continue;
+                }
+
+                if (!mayUnpatch)
+                {
+                    DiagLog.Log(Tag, $"co-op active — would unpatch owner '{owner}' on {targetKey} (withheld)");
                     continue;
                 }
 
@@ -391,8 +402,10 @@ public static class PatchShield
                     topOwner = $"{top.Key} ({top.Value})";
                 }
             }
+            var withheld = WithheldCount;
             DiagLog.Log(Tag,
-                $"SESSION SUMMARY: shielded {ShieldedCount} method(s), unpatched {UnpatchedCount} target(s), " +
+                $"SESSION SUMMARY: shielded {ShieldedCount} method(s), unpatched {UnpatchedCount} target(s)" +
+                (withheld > 0 ? $", withheld {withheld} target(s) (co-op active)" : string.Empty) + ", " +
                 $"swallowed {SwallowedTotal} exception(s) " +
                 $"(MissingMethod {SwallowedMissingMethod}, MissingField {SwallowedMissingField}, " +
                 $"TypeLoad {SwallowedTypeLoad}, other {SwallowedOther}). " +

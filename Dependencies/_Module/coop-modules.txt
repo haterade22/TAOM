@@ -1,0 +1,26 @@
+# TAOM co-op interop list
+# ------------------------
+# Read at startup by TAOM.Dependencies (CoopPresence). Entries here are ADDED to TAOM's
+# compiled defaults — nothing in this file can remove a built-in entry, so a bad edit can
+# never unprotect the BUTR/MCM stack. Delete the file to fall back to defaults only.
+#
+# Format: '#' comments, blank lines ignored, one entry per line under a section header.
+# Entries before any header are treated as module ids.
+
+[modules]
+# Launcher module ids that mean "a co-op mod is running". When any of these is active,
+# TAOM stops PatchShield from unpatching third-party Harmony patches and makes SaveShield
+# rethrow save/load failures instead of swallowing them.
+BannerlordTogether
+BattleLinkMPClient
+
+[harmony-owner-prefixes]
+# Harmony owner ids (prefix match, case-insensitive) to add to PatchShield's protected-owner
+# allowlist, so PatchShield never strips their patches.
+#
+# Empty by default: we do not know any co-op mod's Harmony id. TAOM does NOT decompile other
+# mods to find out — the BannerlordTogether package ships an explicit no-decompile policy from
+# its copyright holders, and TAOM respects it. The id is instead read from Harmony's own public
+# runtime registry and printed by the [HarmonyCensus] lines in the TAOM log; add it below if
+# you need belt-and-braces protection. This is normally unnecessary, because the unpatch path is
+# already disabled outright whenever a module above is active.

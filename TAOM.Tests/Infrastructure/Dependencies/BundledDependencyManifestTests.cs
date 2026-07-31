@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -251,5 +252,70 @@ public class BundledDependencyManifestTests
                 $"THIRD-PARTY-LICENSES.txt does not attribute '{label} {expected}' — the version we " +
                 "actually ship. Update the notice when refreshing the vendored/pinned dependency.");
         }
+    }
+
+    // ── Co-op interop ─────────────────────────────────────────────────────────────────────────
+
+    private static string CoopModulesFile =>
+        Path.Combine(RepoRoot, @"Dependencies\_Module\coop-modules.txt");
+
+    private static string DepsSubModule =>
+        Path.Combine(RepoRoot, @"Dependencies\_Module\SubModule.xml");
+
+    [TestMethod]
+    public void ModulesToLoadAfterThis_ContainsEveryCoopModuleIdFromTheShippedConfig()
+    {
+        // Three coupled declarations in three files, so they drift. Load order is what guarantees
+        // TAOM.Dependencies constructs first — installing the shields, CoopPresence and (critically)
+        // the AssemblyResolve redirect that collapses the co-op mod's bundled 0Harmony onto ours —
+        // and TAOM before the co-op layer, which the Priority.High diplomacy prefixes assume.
+        //
+        // BOTH manifests are asserted, not just the Dependencies one. `ModuleInfo.LoadWithFullPath`
+        // (installed v1.4.7) parses <ModulesToLoadAfterThis> but has NO branch for
+        // <DependedModuleMetadatas> — that block is a BUTR/BLSE launcher extension the engine never
+        // reads. A pin expressed only as metadata establishes nothing for a vanilla-launcher user.
+        Assert.IsTrue(File.Exists(CoopModulesFile), $"coop-modules.txt not found: {CoopModulesFile}");
+
+        var configuredIds = ReadCoopModulesSection(CoopModulesFile);
+        Assert.AreNotEqual(0, configuredIds.Count,
+            "coop-modules.txt has no [modules] entries — the shipped defaults should be listed there.");
+
+        foreach (var manifest in new[] { DepsSubModule, MainSubModule })
+        {
+            var pinned = XDocument.Load(manifest).Root?
+                .Element("ModulesToLoadAfterThis")?
+                .Elements("Module")
+                .Select(e => (string?)e.Attribute("Id"))
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .ToList() ?? new List<string?>();
+
+            foreach (var id in configuredIds)
+            {
+                Assert.IsTrue(
+                    pinned.Any(p => string.Equals(p, id, StringComparison.OrdinalIgnoreCase)),
+                    $"coop-modules.txt lists module '{id}' but {Path.GetFileName(Path.GetDirectoryName(manifest))}" +
+                    $"/_Module/SubModule.xml does not pin it in <ModulesToLoadAfterThis>. The engine ignores " +
+                    "<DependedModuleMetadatas>, so metadata alone does not establish the ordering.");
+            }
+        }
+    }
+
+    /// <summary>Minimal reader for the `[modules]` section — mirrors CoopModuleList's format.</summary>
+    private static List<string> ReadCoopModulesSection(string path)
+    {
+        var ids = new List<string>();
+        var inModules = true;   // entries before any header are module ids
+        foreach (var raw in File.ReadAllLines(path))
+        {
+            var line = raw.Trim();
+            if (line.Length == 0 || line.StartsWith("#")) continue;
+            if (line.StartsWith("[") && line.EndsWith("]"))
+            {
+                inModules = string.Equals(line, "[modules]", StringComparison.OrdinalIgnoreCase);
+                continue;
+            }
+            if (inModules) ids.Add(line);
+        }
+        return ids;
     }
 }

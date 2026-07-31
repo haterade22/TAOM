@@ -119,6 +119,37 @@ The `taom.add_special_resources` cheat clamped balances correctly in all 8 of it
 - **Prevent:** when binding to an engine mechanism that discovers TAOM members by reflection, add a reflection invariant test asserting the required shape and, where possible, performing the engine's own construction call (`ConsoleCommandBindingTests`). Ask of any reflection-based engine binding: *what happens to everything else if mine is malformed?* Note `Assembly.GetTypes()` throws `ReflectionTypeLoadException` in the test host for UI-dependent types — mirror the engine's `GetTypesSafe()` with a catch that keeps the non-null types.
 - **Source:** docs/reviews/rca-specialresources-cheat-2026-07-30.md (F4).
 
+### A guard test must be able to FAIL on the change it claims to guard against
+
+Before committing a test whose comment says "regression guard against X", name the concrete edit that
+should turn it red and confirm it would. A test over a hand-maintained literal cannot see a change to
+the real thing.
+- **Why missed:** `Detect_TaomOwnDefinerBaseIds_AreMutuallyDistinct` asserted `Count == Distinct().Count()`
+  over a hardcoded four-element `TaomKnownBaseIds` array, with a comment promising it was a "cheap
+  regression against someone adding a fifth definer by copy-paste". Nothing coupled that array to the
+  real `SaveableTypeDefiner` subclasses, so exactly that scenario left it green. A genuine
+  reflection-based check already existed in another feature's suite
+  (`PresetSaveableTypeDefinerTests.BaseId_UniqueAcrossDiscoverableDefinersInTaomAssembly`), making the
+  literal list pure drift surface. Both were deleted.
+- **Prevent:** for any "these values must stay distinct/in sync" test, reflect over or read the real
+  source of truth. If you cannot, the test is documentation, not a guard — say so in its name and
+  comment rather than claiming coverage that doesn't exist.
+- **Source:** `docs/reviews/rca-coop-interop-2026-07-31.md` finding #13
+
+### An allowlist entry that claims to mirror a dependency must be pinned by a test using that dependency's real value
+
+A protected/exempt list whose comment says "mirrors X" is a claim, and comments do not run.
+- **Why missed:** `PatchShield`'s protected-owner list carried `"Bannerlord.UIExtenderEx"` since
+  2026-05-27, documented as mirroring the vendored DLLs. UIExtenderEx actually registers
+  `bannerlord.uiextender.ex` and `bannerlord.uiextender.ex.viewmodels.<module>` — the real ids put a
+  dot between "uiextender" and "ex", so the prefix matched neither, and PatchShield's rescue path
+  would have unpatched TAOM's OWN UI mixins after an engine bump. The single allowlist test used a
+  ButterLib id, which does match, so it passed while the gap sat next to it.
+- **Prevent:** one test per allowlist entry, asserting against the value the dependency actually
+  produces (grep the vendored source or decompile it). If the entry exists to protect a specific mod,
+  the test must use that mod's real Harmony id / assembly name, not a plausible-looking one.
+- **Source:** `docs/reviews/rca-coop-interop-2026-07-31.md` finding #4
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

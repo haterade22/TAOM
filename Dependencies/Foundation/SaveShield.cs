@@ -130,6 +130,23 @@ public static class SaveShield
     }
 
     public static int ShieldedCount { get { lock (_lock) return _shielded.Count; } }
+
+    /// <summary>
+    /// True when SaveShield has already attached its own finalizer to <paramref name="method"/>.
+    ///
+    /// PatchShield calls this to avoid stacking a second finalizer on the save/mission chain.
+    /// Two finalizers on one method share a single exception slot in Harmony's generated wrapper,
+    /// and whichever runs last wins — so PatchShield's unconditional swallow of the missing-API
+    /// trinity would override SaveShield's co-op SAVE-LOAD rethrow and let a partially
+    /// deserialised campaign load silently, which is the exact outcome that rethrow exists to
+    /// prevent. SaveShield's finalizer already covers a strictly broader exception set on these
+    /// methods, so PatchShield adds nothing here even in a solo session.
+    /// </summary>
+    public static bool IsShielding(MethodBase? method)
+    {
+        if (method == null) return false;
+        lock (_lock) return _shielded.Contains(method);
+    }
     public static long DuplicateKeyHits => Interlocked.Read(ref _duplicateKeyHits);
     public static long OtherFailureHits => Interlocked.Read(ref _otherFailureHits);
     public static long SwallowedCount => Interlocked.Read(ref _swallowedCount);
@@ -232,11 +249,6 @@ public static class SaveShield
     private static Exception? SaveShieldFinalizer(MethodBase __originalMethod, Exception __exception)
     {
         if (__exception == null) return null;
-        if (!IsSwallowEnabled())
-        {
-            // Disabled — re-throw by returning the exception unchanged.
-            return __exception;
-        }
 
         try
         {
@@ -244,15 +256,44 @@ public static class SaveShield
             while (ex is TargetInvocationException && ex.InnerException != null)
                 ex = ex.InnerException;
 
-            var (culpritAsm, culpritFrame) = AttributeCulprit(ex);
             var category = ResolveCategoryFor(__originalMethod);
+
+            // Attribute and record ONCE per exception, not once per shielded frame it passes
+            // through. The save chain nests — LoadResult.InitializeObjects -> SaveManager.Load ->
+            // MBSaveLoad.LoadSaveGameData -> SandBoxSaveHelper.LoadGameAction -> TryLoadSave are
+            // all targets — and a rethrow makes the same exception visit every outer finalizer.
+            // Harmony's generated `throw finalizerResult;` resets the stack trace to the patched
+            // frame (the same effect PatchShield documents), so each outer pass would walk a
+            // truncated stack, resolve "(unknown)" as the culprit, and append another catalog row
+            // blaming nobody — burying the one correct attribution the innermost frame produced.
+            // Only the swallow path used to exist here, which terminated at the first frame; the
+            // co-op rethrow is what made this reachable.
+            if (AlreadyAttributed(ex))
+            {
+                var repeat = SaveShieldPolicy.ShouldSwallow(category, CoopPresence.IsActive, !IsSwallowEnabled());
+                return repeat ? null : __exception;
+            }
+            MarkAttributed(ex);
+
+            var (culpritAsm, culpritFrame) = AttributeCulprit(ex);
+
+            // Co-op interop (2026-07-31): the swallow decision now depends on the category. A
+            // SAVE-LOAD failure during a co-op session must be visible — swallowing it leaves a
+            // partially deserialised campaign that the host then replicates as authoritative.
+            // MISSION-INIT keeps swallowing (local fault, broken battle not corrupted campaign).
+            // The disable flag still dominates both. The failure is recorded either way: the
+            // rethrow path is exactly when we most want the catalog entry.
+            var swallow = SaveShieldPolicy.ShouldSwallow(category, CoopPresence.IsActive, !IsSwallowEnabled());
 
             var isDuplicateKey = ex.GetType().Name == "DuplicateKeyException"
                                 || ex.Message?.IndexOf("duplicate", StringComparison.OrdinalIgnoreCase) >= 0
                                 && ex.Message.IndexOf("key", StringComparison.OrdinalIgnoreCase) >= 0;
             if (isDuplicateKey) Interlocked.Increment(ref _duplicateKeyHits);
             else Interlocked.Increment(ref _otherFailureHits);
-            Interlocked.Increment(ref _swallowedCount);
+
+            // Only count an actual swallow. Codex A2 LOW (2026-05-27) fixed the sibling bug in
+            // PatchShield: counting a rethrow as a swallow misleads the session summary.
+            if (swallow) Interlocked.Increment(ref _swallowedCount);
 
             var rec = new FailureRecord
             {
@@ -275,16 +316,35 @@ public static class SaveShield
             FailedModsCatalog.Append(rec);
 
             DiagLog.Log(Tag,
-                $"swallowed {rec.ExceptionType} in {rec.OwnerType}.{rec.OwnerMethod} " +
+                $"{(swallow ? "swallowed" : "rethrew")} {rec.ExceptionType} in {rec.OwnerType}.{rec.OwnerMethod} " +
                 $"[{category}] culprit={rec.CulpritAssembly}: {rec.Message}");
 
-            return null;  // swallow
+            return swallow ? null : __exception;
         }
         catch (Exception fxEx)
         {
             DiagLog.LogCaught(Tag, "SaveShieldFinalizer/internal", fxEx);
             return __exception;  // re-throw original — internal failure
         }
+    }
+
+    private const string AttributedKey = "TAOM.SaveShield.Attributed";
+
+    /// <summary>
+    /// True when a previous (inner) SaveShield finalizer already attributed and recorded this
+    /// exception. Best-effort: <c>Exception.Data</c> can be read-only or throw on exotic exception
+    /// types, and a false negative only costs a duplicate catalog row.
+    /// </summary>
+    private static bool AlreadyAttributed(Exception ex)
+    {
+        try { return ex.Data.Contains(AttributedKey); }
+        catch { return false; }
+    }
+
+    private static void MarkAttributed(Exception ex)
+    {
+        try { ex.Data[AttributedKey] = true; }
+        catch { /* read-only Data — we just re-attribute, which is the pre-existing behaviour */ }
     }
 
     private static (string assembly, string frame) AttributeCulprit(Exception ex)

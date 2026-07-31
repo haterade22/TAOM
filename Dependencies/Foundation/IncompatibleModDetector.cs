@@ -189,7 +189,16 @@ public static class IncompatibleModDetector
         return ReadInstalledModuleIdsFromFolders();
     }
 
-    private static List<string> TryReadActiveModuleIdsViaReflection()
+    /// <summary>
+    /// Reads the launcher's ACTIVE module ids via
+    /// <c>TaleWorlds.ModuleManager.ModuleHelper.GetActiveModules()</c>. Returns an empty list when
+    /// reflection fails (very early init, before ModuleHelper has populated its internal state) —
+    /// callers must treat empty as "unknown", not as "no modules".
+    ///
+    /// Internal rather than private since 2026-07-31: <see cref="CoopPresence"/> needs the same
+    /// active-module read and must not carry a second copy of this reflection.
+    /// </summary>
+    internal static List<string> TryReadActiveModuleIdsViaReflection()
     {
         var result = new List<string>();
         try

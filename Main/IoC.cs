@@ -76,6 +76,7 @@ public static class IoC
         RegisterCoreServices(container);
         RegisterLoggingServices(container);
 
+        Features.CoopInterop.CoopInteropIoC.RegisterCoopInteropFeature(container);
         HeroRaceIoC.RegisterHeroRaceFeature(container);
         BannerInjectionIoC.RegisterBannerInjectionFeature(container);
         BannerColorPersistenceIoC.RegisterBannerColorPersistenceFeature(container);

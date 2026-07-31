@@ -175,6 +175,13 @@ public class SubModule : MBSubModuleBase
         try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → IncompatibleModDetector.RunEarlyPhase"); IncompatibleModDetector.RunEarlyPhase(); }
         catch (Exception ex) { DiagLog.LogCaught("Dependencies", "IncompatibleModDetector.RunEarlyPhase", ex); }
 
+        // Probe for co-op modules BEFORE the shields install — PatchShield's unpatch path and
+        // SaveShield's swallow policy both read CoopPresence. Refreshed again at
+        // OnGameInitializationFinished, since ModuleHelper's active-module list may not be
+        // populated this early.
+        try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → CoopPresence.Refresh"); CoopPresence.Refresh(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "CoopPresence.Refresh", ex); }
+
         try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → CollectAssemblyTypesShim.Install"); CollectAssemblyTypesShim.Install(); }
         catch (Exception ex) { DiagLog.LogCaught("Dependencies", "CollectAssemblyTypesShim.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] CollectAssemblyTypesShim.Install failed: {ex.Message}"); }
 
@@ -230,6 +237,11 @@ public class SubModule : MBSubModuleBase
 
         // Second PatchShield pass — captures patches registered by mods that hook this
         // lifecycle event (after our OnSubModuleLoad).
+        // Re-probe before pass 2: the launcher's active-module list is reliably populated by now,
+        // so this is the read that actually decides the unpatch/swallow policy for the session.
+        try { DiagLog.Log("Dependencies", "OnGameInitializationFinished: → CoopPresence.Refresh"); CoopPresence.Refresh(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "CoopPresence.Refresh pass2", ex); }
+
         try { DiagLog.Log("Dependencies", "OnGameInitializationFinished: → PatchShield.Install (pass 2)"); PatchShield.Install(); }
         catch (Exception ex) { DiagLog.LogCaught("Dependencies", "PatchShield.Install pass2", ex); EarlyLog.Error($"[TAOM.Dependencies] PatchShield.Install (post-init) failed: {ex.Message}"); }
 

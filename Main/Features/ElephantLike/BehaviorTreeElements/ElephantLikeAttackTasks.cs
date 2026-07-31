@@ -78,8 +78,12 @@ public class ElephantLikeTrampleTask : ElephantLikeAttackTaskBase
 {
     public ElephantLikeTrampleTask(ElephantLikeCombatProfile profile) : base(profile) { }
 
+    // NondeterministicRandomFloat, not RandomFloat: this picks an animation clip and nothing else.
+    // MBRandom's default stream is Game.Current.RandomGenerator — state on the saved Game root — so
+    // a purely visual draw taken from it offsets every subsequent campaign roll. The damage roll in
+    // the base task stays on the normal stream; only the clip choice moves.
     protected override ActionIndexCache GetAttackAction()
-        => MBRandom.RandomFloat < 0.5f ? Profile.Trample : Profile.TrampleAlt;
+        => MBRandom.NondeterministicRandomFloat < 0.5f ? Profile.Trample : Profile.TrampleAlt;
 
     protected override void StampCooldown(DateTime now) => TrampleLastFired.SetValue(now);
 

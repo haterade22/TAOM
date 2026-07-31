@@ -18,7 +18,25 @@
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+    <!-- Co-op interop (2026-07-31). BUTR/BLSE launchers read this block; the VANILLA launcher does
+         not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.4.7) parses only
+         DependedModules, ModulesToLoadAfterThis, IncompatibleModules and SubModules, with no branch
+         for DependedModuleMetadatas at all. The engine-honoured pin is the <ModulesToLoadAfterThis>
+         element below; this line is the BUTR-launcher mirror of it. Deliberately NOT a
+         <DependedModule> — that would make TAOM unlaunchable without the co-op mod installed. -->
+    <DependedModuleMetadata id="BannerlordTogether" order="LoadAfterThis" optional="true" />
+    <DependedModuleMetadata id="BattleLinkMPClient" order="LoadAfterThis" optional="true" />
   </DependedModuleMetadatas>
+  <!-- Engine-honoured load-order pin (vanilla launcher topology-sorts on this + DependedModules).
+       Ordering TAOM before the co-op layer is what the Priority.High on the DeclareWar/MakePeace
+       prefixes assumes: TAOM validates racial enmity / War of the Ring constraints first, and a
+       blocked action is never synced. Unknown ids are ignored by the launcher, so listing a mod the
+       player doesn't have costs nothing. Keep in sync with
+       Dependencies/_Module/coop-modules.txt [modules] — pinned by BundledDependencyManifestTests. -->
+  <ModulesToLoadAfterThis>
+    <Module Id="BannerlordTogether" />
+    <Module Id="BattleLinkMPClient" />
+  </ModulesToLoadAfterThis>
   <SubModules>
     <SubModule>
       <Name value="TAOM" />

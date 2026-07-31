@@ -55,6 +55,19 @@
 		<Module Id="AchievementUnblocker" />
 		<Module Id="CREST" />
 		<Module Id="Crest" />
+		<!-- Co-op interop (2026-07-31). These two must construct AFTER TAOM.Dependencies, for a
+		     sharper reason than the bundling above: BannerlordTogether ships its own 0Harmony.dll
+		     at the SAME version we deploy (2.4.2.0), and HarmonyLib's patch registry is
+		     per-assembly-instance static state. If its copy wins the AppDomain slot we end up with
+		     two Harmony instances, and Harmony.GetAllPatchedMethods() called from ours cannot see
+		     its patches at all — which silently blinds both PatchShield and the [HarmonyCensus]
+		     report that is our only sanctioned way to learn what it patches. Ordering us first
+		     lets the AssemblyResolve redirect in SubModule.cs collapse them onto one instance.
+		     Also guarantees the shields and CoopPresence exist before its PatchAll() runs.
+		     Keep in sync with Dependencies/_Module/coop-modules.txt [modules] — pinned by
+		     BundledDependencyManifestTests. -->
+		<Module Id="BannerlordTogether" />
+		<Module Id="BattleLinkMPClient" />
 	</ModulesToLoadAfterThis>
 	<DependedModuleMetadatas>
 		<DependedModuleMetadata id="Native" order="LoadAfterThis" optional="true" />
