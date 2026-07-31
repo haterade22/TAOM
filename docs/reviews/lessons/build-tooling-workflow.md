@@ -305,6 +305,63 @@ Three Crossbow values were hand-tuned in `troops_erebor.xml` without checking th
 - **Prevent:** when hand-editing a value in generated or regenerable data, grep `tools/` for a script that writes that field. If one exists, add the id to its skip list AND record the residual in the owning feature doc, in the same commit. A hand-tune with no skip-list entry has a shelf life measured in "until someone regenerates."
 - **Source:** docs/reviews/rca-erebor-equipment-sweep-2026-07-30.md (F5).
 
+### `<DependedModuleMetadatas>` is a launcher extension — the vanilla engine never parses it
+
+`TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.4.7) reads exactly four child
+elements of `<Module>`: `DependedModules`, `ModulesToLoadAfterThis`, `IncompatibleModules`,
+`SubModules`. There is no branch for `DependedModuleMetadatas` anywhere in the type — it is a
+BUTR/BLSE launcher extension. Vanilla ordering is a topology sort over `DependedModules` plus any
+module whose `ModulesToLoadAfterThis` names you.
+- **Why missed:** TAOM's manifests already use `DependedModuleMetadata … order="LoadBeforeThis"` rows
+  for Native/SandBoxCore/Sandbox/CustomBattle, and those orderings hold — but only because the same
+  modules are ALSO declared in `<DependedModules>`. Copying the idiom for a new, optional co-op module
+  (which deliberately must not be a hard `<DependedModule>`) carried an implication the element does
+  not have on its own, so the "TAOM loads before the co-op layer" guarantee the adjacent comment
+  relied on was not established for a vanilla-launcher user.
+- **Prevent:** to express "load X after me" in a way the game honours, use `<ModulesToLoadAfterThis>`.
+  Keep the metadata row as the BUTR-launcher mirror if you like, but never as the only mechanism. When
+  a manifest edit is load-bearing, decompile `ModuleInfo.LoadWithFullPath` rather than trusting the
+  BUTR `SubModule.xsd` the file references — the schema describes what launchers accept, not what the
+  engine reads.
+- **Source:** `docs/reviews/rca-coop-interop-2026-07-31.md` finding #5
+
+### If a shipped artifact's identity never changes, "did I ship the new one?" is unanswerable — by you, the user, or the launcher
+
+- **Symptom:** players' characters rendered prone in every UI tableau. Shipping a rebuilt `TAOM.dll`
+  alone did not fix it; shipping `TAOM.dll` **and** `TAOM.Dependencies` did. `Main/TAOM.csproj` has a
+  `ProjectReference` to `TAOM.Dependencies.csproj` and resolves **HarmonyLib and UIExtenderEx through
+  that assembly**, so a stale pairing fails at the member level during patch application — the
+  HeroRace preview patches never apply and the tableau falls back to vanilla resolution.
+- **Why missed:** all three version signals were constant. `Dependencies/_Module/SubModule.xml` had
+  read `v2.0.5` on every release; both assemblies carry frozen assembly/file versions
+  (`TAOM.Dependencies` `0.1.0.0`, `TAOM` `2.0.0.0`) on every build ever made, so .NET binds any pair
+  without complaint and fails later; and `Main/_Module/SubModule.xml` declares **no
+  `DependedModule` for `TAOM.Dependencies` at all**, so the launcher has nothing to check. The only
+  distinguishing evidence was a file timestamp, which does not survive a zip and a download. Hours
+  went into race data, action sets, shader caches and duplicate-BUTR theories before the artifact
+  identities were compared.
+- **Prevent:** a version string that never changes is worse than none, because it reads as
+  information. Stamp real build versions into shipped assemblies; bump the module `<Version>` when
+  the assembly changes; declare inter-module dependencies with a version pin so the **launcher**
+  refuses a mismatched pair; and log the build stamps at startup so any user report answers this in
+  one line.
+- **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
+
+### Build both, ship both — never hand-copy one module out of a working tree
+
+- **Symptom:** same incident. The dev install ran `TAOM.dll` from 07-31 and
+  `TAOM.Dependencies.dll` from 07-31, while the release carried 07-30 and **07-17** respectively —
+  so the exact shipped combination had never been run by anyone. A mid-incident attempt to fix it by
+  copying just the newer `TAOM.Dependencies` into the release produced the *inverse* mismatch.
+- **Why missed:** "works on my machine" was structurally guaranteed, not lucky. The dev machine is
+  the one place where every module is always freshly built from the same tree.
+- **Prevent:** rebuild every coupled module from one source state and ship them together. If a
+  hotfix tempts you to copy a single DLL into the release payload, that is the moment the pairing
+  becomes untested. Also keep runtime artifacts out of the payload — this release shipped the dev's
+  `diag.log`, `failed-mods-catalog.txt` and `last-good-modlist.txt`, so every user's log began with
+  the dev's session history and their own sessions appended to it.
+- **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

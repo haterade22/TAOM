@@ -133,6 +133,60 @@ Patch63's first cut gated reinforcement bearers on `IsFormationGroupAllowed`, wh
 - **Prevent:** any patch that REPLACES an engine method must answer "what does this do when the feature is disabled?" with "exactly what the engine did" — crash guards may stay, policy must not. Fold the toggle at a purpose-built decision method whose disabled branch encodes the caller's parity need (`IsReinforcementBearerAllowed`: disabled ⇒ allowed), never by reusing a policy getter whose `!Enabled` branch means "deny". Deep-review Agent 5's master-toggle-fold check now has a worked prefix-form example.
 - **Source:** docs/reviews/rca-banner-bearers-reinforcement-av-2026-07-25.md (Flow-4, HIGH, fixed in-session).
 
+### When two TAOM components can attach finalizers to the same method, one must yield
+
+Harmony runs every finalizer on a method against ONE shared exception slot; each non-void return
+overwrites it and the wrapper ends `if (ex is not null) throw ex`. So two TAOM-owned finalizers on
+one method do not compose — the last one to run decides, and which one that is depends on Harmony's
+ordering, not on either author's intent.
+- **Why missed:** `PatchShield` (blanket, shields every patched method in the AppDomain) and
+  `SaveShield` (10 named save/mission methods) had always overlapped harmlessly, because both
+  unconditionally swallowed. The 2026-07-31 co-op work made SaveShield's return *conditional*
+  (rethrow on the SAVE-LOAD category during a co-op session) — at which point PatchShield's
+  unconditional swallow of the missing-API trinity silently overrode it on exactly those methods, and
+  a partially deserialised campaign would load with no error. Both shields were reviewed as units;
+  nothing asked what happens where they meet. TAOM now owns five distinct Harmony ids, so this is a
+  class rather than an incident.
+- **Prevent:** when adding or changing a finalizer, enumerate the other TAOM-owned Harmony ids and
+  check target-set overlap. Where two overlap, the broader one skips (`PatchShield.Install` now
+  consults `SaveShield.IsShielding`). Any change that makes a finalizer's return value conditional
+  must re-check every co-located finalizer on the same targets — an unconditional neighbour defeats a
+  conditional one every time.
+- **Source:** `docs/reviews/rca-coop-interop-2026-07-31.md` finding #2 (found by the completeness
+  critic, not by any of the 7 per-component review dimensions)
+
+### Read every patch collection Harmony exposes, not the four you remember
+
+Lib.Harmony 2.4.2's `Patches` has SIX `ReadOnlyCollection<Patch>` fields: `Prefixes`, `Postfixes`,
+`Transpilers`, `Finalizers`, **`InnerPrefixes`, `InnerPostfixes`**.
+- **Why missed:** the Harmony census was modelled on `HarmonyCorrelationCollector`, which reads four,
+  and inherited the assumption. An owner whose only patch on a method is an inner prefix is then
+  absent from the census entirely — and a missing owner is precisely the signal that report tells the
+  reader to interpret as "two 0Harmony instances are loaded", sending them after a load-order problem
+  that does not exist.
+- **Prevent:** when enumerating Harmony patch info, decompile `HarmonyLib.Patches` against the pinned
+  Lib.Harmony version rather than copying an existing call site. `HarmonyCorrelationCollector` still
+  has this gap — under-reporting inner-patch owners in crash reports.
+- **Source:** `docs/reviews/rca-coop-interop-2026-07-31.md` finding #9
+
+### A sequence of unguarded `PatchCategory` calls fails as a group, and the log cannot tell you it did
+
+- **Symptom:** `Main/SubModule.cs` applied the seven categories owning the entire character-preview
+  path (`Patch1_FirstTimeInit` … `Late_ActionSetOverride`) as consecutive bare statements. Any one
+  throwing would silently prevent every later one from applying, leaving the preview on vanilla
+  resolution — a state that produces a prone/bind-pose character and is **indistinguishable, in every
+  log we ship, from all seven applying correctly**.
+- **Why missed:** nothing asserted the outcome. There was no success log, no failure log, and no
+  binding test over the reflection sites those patches depend on, so "patches applied" was an
+  assumption held for the life of the feature. Four `catch` blocks inside the same patches also
+  swallowed exceptions with no trace, so a reflection failure against a drifted engine looked exactly
+  like the patch never running.
+- **Prevent:** when a batch of patch categories backs one user-visible feature, isolate each in its
+  own try/catch and log the outcome per category — a failure must name itself. Treat any `catch` in a
+  patch that exists "so the game keeps booting" as requiring a log line: silence there converts a
+  diagnosable fault into an invisible one, on the machines you cannot reach.
+- **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

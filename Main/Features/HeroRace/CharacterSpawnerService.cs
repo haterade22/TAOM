@@ -51,6 +51,10 @@ public class CharacterSpawnerService : ICharacterSpawnerService
 
     public void InitWithCharacter(CharacterSpawner spawner, CharacterCode characterCode, bool useBodyProperties = false)
     {
+        // Diagnostics 2026-07-31: re-probe at the first REAL tableau construction. If this disagrees
+        // with the startup probe, action sets were still merging after OnGameInitializationFinished.
+        Diagnostics.TableauDiagnostics.ProbeActionSets("first-tableau");
+
         GameEntity agentEntity = ReflectionHelper.GetFieldValue<CharacterSpawner, GameEntity>(spawner, "_agentEntity");
         GameEntity horseEntity = ReflectionHelper.GetFieldValue<CharacterSpawner, GameEntity>(spawner, "_horseEntity");
         AgentVisuals agentVisuals = ReflectionHelper.GetFieldValue<CharacterSpawner, AgentVisuals>(spawner, "_agentVisuals");
@@ -100,12 +104,28 @@ public class CharacterSpawnerService : ICharacterSpawnerService
 
         // 1.3: ActionCode takes in ActionIndexCache
         var idleStart = ActionIndexCache.Create("act_inventory_idle_start");
+
+        // Diagnostics 2026-07-31 ("bendy man"): this method builds the tableau's actual visual, so
+        // it is where a prone character is decided. Hoisted into locals purely so they can be
+        // reported before use — behaviour is unchanged. Two failure modes are visible here:
+        // an INVALID action set, or a pose action that the resolved set does not contain (index -1),
+        // either of which leaves the skeleton sitting in its bind pose.
+        string actionSetSuffix = spawner.ActionSetSuffix;
+        var tableauActionSet = MBGlobals.GetActionSetWithSuffix(baseMonsterFromRace, characterCode.IsFemale, actionSetSuffix);
+        string poseActionName = spawner.PoseAction;
+        var poseAction = ActionIndexCache.Create(poseActionName);
+
+        Diagnostics.TableauDiagnostics.LogSpawnerResolution(
+            characterCode.Race, characterCode.IsFemale, baseMonsterFromRace?.StringId,
+            actionSetSuffix, tableauActionSet, poseActionName, poseAction.Index, idleStart.Index,
+            spawner.AnimationProgress);
+
         agentVisuals = AgentVisuals.Create(new AgentVisualsData().Equipment(characterCode.CalculateEquipment()).BodyProperties(bodyProperties).Race(characterCode.Race)
             .Frame(spawnFrame)
             .Scale(1f)
             .SkeletonType(characterCode.IsFemale ? SkeletonType.Female : SkeletonType.Male)
             .Entity(agentEntity)
-            .ActionSet(MBGlobals.GetActionSetWithSuffix(baseMonsterFromRace, characterCode.IsFemale, spawner.ActionSetSuffix))
+            .ActionSet(tableauActionSet)
             .ActionCode(in idleStart)
             .Scene(spawner.GameEntity.Scene)
             .Monster(baseMonsterFromRace)
@@ -115,7 +135,7 @@ public class CharacterSpawnerService : ICharacterSpawnerService
             .ClothColor2(spawner.ClothColor2)
             .UseMorphAnims(useMorphAnims: true), "TableauCharacterAgentVisuals", isRandomProgress: false, needBatchedVersionForWeaponMeshes: false, forceUseFaceCache: false);
 
-        agentVisuals.SetAction(ActionIndexCache.Create(spawner.PoseAction), MBMath.ClampFloat(spawner.AnimationProgress, 0f, 1f));
+        agentVisuals.SetAction(poseAction, MBMath.ClampFloat(spawner.AnimationProgress, 0f, 1f));
         spawner.GameEntity.AddChild(agentEntity.WeakEntity);
 
         ReflectionHelper.SetFieldValue(spawner, "_agentVisuals", agentVisuals);
@@ -134,6 +154,15 @@ public class CharacterSpawnerService : ICharacterSpawnerService
             frame.origin.z = frame.origin.z + configitem.Vertical;
         }
 
+        // Diagnostics 2026-07-31: the frame is REPLACED with Identity(+offsets) rather than derived
+        // from spawnFrame, so a wrong rotation here would present as a character lying down. Report
+        // the final frame so a broken launch can be compared against a good one.
+        Diagnostics.TableauDiagnostics.Log($"spawn.frame.{raceName}",
+            $"Spawner frame: race='{raceName}' configItem={(configitem == null ? "none" : $"h={configitem.Horizontal} z={configitem.Zoom} v={configitem.Vertical}")} " +
+            $"origin=({frame.origin.x:F3},{frame.origin.y:F3},{frame.origin.z:F3}) " +
+            $"rotF=({frame.rotation.f.x:F3},{frame.rotation.f.y:F3},{frame.rotation.f.z:F3}) " +
+            $"rotU=({frame.rotation.u.x:F3},{frame.rotation.u.y:F3},{frame.rotation.u.z:F3})");
+
         agentVisuals.GetVisuals().SetFrame(ref frame);
 
         if (spawner.HasMount)
@@ -151,6 +180,9 @@ public class CharacterSpawnerService : ICharacterSpawnerService
         }
 
         Skeleton skeleton = agentVisuals.GetVisuals().GetSkeleton();
+        Diagnostics.TableauDiagnostics.Log($"spawn.skeleton.{characterCode.Race}",
+            $"Spawner skeleton stage: race={characterCode.Race} skeletonNull={skeleton == null} " +
+            $"animationProgress={MBMath.ClampFloat(spawner.AnimationProgress, 0f, 1f):F3}");
         skeleton.Freeze(p: false);
         skeleton.TickAnimationsAndForceUpdate(0.001f, agentVisuals.GetVisuals().GetGlobalFrame(), tickAnimsForChildren: false);
         skeleton.SetUptoDate(value: false);
@@ -250,7 +282,12 @@ public class CharacterSpawnerService : ICharacterSpawnerService
 
             step = "AddMountMeshToEntity";
             ItemObject harnessItem = equipment[(EquipmentIndex)11].Item;
-            MountVisualCreator.AddMountMeshToEntity(horse, mountItem, harnessItem, MountCreationKey.GetRandomMountKeyString(mountItem, MBRandom.RandomInt()));
+            // NondeterministicRandomInt, not RandomInt(): MBRandom's default stream is
+            // Game.Current.RandomGenerator, which is state on the saved Game root. This draw only
+            // picks a mount mesh variant for a character-screen tableau, so spending a value from
+            // the campaign's deterministic stream offsets every later campaign roll for no reason.
+            // The engine ships a separate non-deterministic generator for exactly this case.
+            MountVisualCreator.AddMountMeshToEntity(horse, mountItem, harnessItem, MountCreationKey.GetRandomMountKeyString(mountItem, MBRandom.NondeterministicRandomInt));
 
             step = "SetVisibilityExcludeParents";
             horse.SetVisibilityExcludeParents(visible: true);

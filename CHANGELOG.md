@@ -4,6 +4,200 @@
 
 ## 2026-07-31
 
+### diag(herorace): light up the character-preview path after a bug only players could see
+
+Players reported their character rendering flat on its back — Character Customization, the inventory
+doll, the encyclopedia — for every race, on new campaigns. It did not reproduce here, which turned
+out to be the whole story rather than an inconvenience.
+
+The probable cause is a version mismatch: users ran a current `TAOM.dll` against a stale
+`TAOM.Dependencies.dll`. `Main/TAOM.csproj` resolves HarmonyLib and UIExtenderEx *through* that
+assembly, so an old pairing fails at the member level while patches are being applied; the HeroRace
+preview patches never attach, the tableau falls back to vanilla human resolution, and the skeleton
+renders in its bind pose, which in Bannerlord is a body lying down. Shipping a rebuilt `TAOM.dll`
+alone did not fix it. Shipping both modules did.
+
+Nothing could have caught that. `TAOM.Dependencies` has declared `v2.0.5` on every release, both
+assemblies carry frozen versions (`0.1.0.0` and `2.0.0.0`) on every build ever produced so .NET binds
+any pair without complaint, and `Main/_Module/SubModule.xml` declares no dependency on
+`TAOM.Dependencies` at all, so the launcher has nothing to check. The only evidence distinguishing a
+current DLL from a two-week-old one was its file timestamp, which does not survive a download.
+
+Two users' `diag.log` files cleared every layer already instrumented — engine version, PatchShield,
+race registration, duplicate BUTR assemblies — and then stopped, because the preview path emitted
+nothing whatsoever. `TableauDiagnostics` closes that: per-category patch results, an environment dump
+naming the loaded identity and path of every BUTR assembly (flagging duplicates), a one-shot probe of
+the engine's action-set count and every race's `_facegen`/`_warrior` resolution with skeleton and idle
+clip, plus the Character Customization screen's, the tableau's and the spawner's own resolutions. One
+line per distinct situation, errors deduplicated by message, capped at 600 — about 90 lines in a
+healthy session, against the 6.4 MB log a previous unthrottled attempt produced.
+
+Two defects were fixed on the way. The seven patch categories owning the preview path were applied as
+consecutive unguarded statements, so the first to throw silently prevented the rest — a state no
+shipped log could distinguish from success; each is now isolated and reports its outcome. Five `catch`
+blocks that swallowed exceptions without a trace now say so. Separately, the release payload was
+shipping this machine's `diag.log`, `failed-mods-catalog.txt` and `last-good-modlist.txt`, which is
+why both users' logs began with sessions dating to May; they are removed.
+
+Still open: the bug was reported as intermittent per launch, and a version mismatch should be
+deterministic, so the fix is not confirmed until an affected user reports several consecutive clean
+relaunches. `CharacterTableau.GetIdleAction()` poses the doll with `act_inventory_idle_start` while
+Patch2 injects `as_<race>_warrior` — a zero-action stub for uruk — and the snapshot README records
+that the engine does not fall through `base_set` for `act_inventory_*`. A set can be valid and still
+bind no clip. The new `idleStart-anim=` field answers that on the next launch.
+
+RCA: `docs/reviews/rca-prone-character-tableau-2026-07-31.md`.
+Not-tested: patch application and tableau rendering both require a live game.
+
+### chore(armory-snapshot): re-sync `action_sets.xml`, 390 lines behind the live file
+
+The committed mirror had drifted since the 2026-06-25 partial patch, and the missing region was the
+spider-rider partial redefinition of `as_human_warrior` at the top of the file — the block carrying
+the `LOAD-ORDER CRITICAL` comment, added during the June mount work. Any audit run against the mirror
+was auditing data the game never loads. Re-snapshotted (+402 lines, verified byte-identical to live);
+`monsters.xml` and `skins.xml` were already identical and left alone. Both
+`audit_action_set_parity.py` (0 humanoid gaps across 1304 sets) and
+`audit_civilian_action_set_coverage.py` (13 settlement races at full coverage) pass against the live
+files.
+
+### fix(armor): a legendary tier-2 pauldron no longer out-armors a tier-6 one
+
+A player screenshot showed `Legendary [Gondor] Anorien Infantry Pauldron I` — tier 2, 2,929 gold —
+displaying Body 20 / Arm 20 and beating `[Arnor] Noble Elite Pauldrons` at tier 6 and 55,634 gold.
+
+The rebalance curve was not the problem. Bannerlord item modifiers add a **flat** armor bonus
+(`legendary_plate` is +12) and the engine applies it independently to every nonzero armor stat, each
+guarded by `num > 0`. Capes carry two such stats, so one roll lands twice: 9/9 became 21/21. The
+shoulder curve meanwhile spanned 16 points across all six tiers — less than a single roll — so the
+tier ladder had no way to survive contact with the loot system. Nothing in the tooling could see it
+either: `_get_primary_stat` returned only `body_armor` for shoulders, so cape arm armor was invisible
+to every analyzer, and no check compared two items at all.
+
+The curve is now modifier-aware. For every slot, governed stat, tier pair two apart and cultural
+protection value, `base[n]` must exceed `base[n-2]` plus that tier's legendary bonus plus the variant
+cap. Beating the adjacent tier on a lucky roll is intended and still happens; leaping three tiers does
+not. Shoulders widened to 2/5/9/13/19/25 body and 0/3/6/11/17/22 arm, and their loot rolls cap at
+`chain` (+9) rather than `plate` (+12), because the native deltas were sized for 30-60 armor chest
+pieces, not 2-25 armor capes. `material_type` is untouched — it drives hit sounds, and the engine reads
+it separately from the loot table. Civilian cape arm armor is exactly 0, which the `num > 0` guard
+makes modifier-immune and which also matches vanilla, where 39 of 53 capes carry no arm armor at all.
+
+Roman-numeral variants turned out to add up to +17 straight into a stat, uncapped, which would have
+eaten margins that run as thin as +1; they are now capped. Three lord rows moved to break exact ties
+with a `plate` roll (body leg 34→36, arm 32→34, leg 40→42) as constants only — re-stating those slots
+would have touched 1,706 of 2,450 items, and the roster source maps `lord` to `elite` regardless.
+
+Applied to the live armory: 1,143 loot-table retags and 933 material retags across all cultures,
+parse-verified to have moved zero armor or weight values, then the shoulder curve for gondor, rohan,
+arnor, dale, mordor, dunland, mercenary, mirkwood, rivendell and rhun. Keyword tiering was rejected —
+it agrees with the roster map on only 71.5% of shoulders. Running the same check over the pre-fix
+backup tree with the pre-fix constants puts shoulder inversions at 129 → 57 and all-slot at 716 → 574,
+with curve violations 11 → 0. The reported pair now reads legendary Gondor 17/14 against plain
+Arnor 21/18.
+
+Two buckets are deliberately left: 31 inversions in the six cultures whose ceilings sit far above the
+curve (Isengard heavy pauldrons at 38 body against a ~21 elite target) belong to the cross-culture
+normalization PR, and 26 involve items no troop wears, where keyword tiering would take
+`roh_nbl_gorg_tst_6` from 25/25 to 3/2. Both need per-item intent rather than a mechanical pass.
+
+Guards added so this cannot regress: `check_curve_invariant()` is a pure function of the constants and
+exits non-zero, `_check_tier_inversions()` reports the item-level version against the live tree, and
+`test_armor_curve_invariant.py` pins the curve, the native ladder against the shipped
+`item_modifiers.xml`, and the four per-culture generators — all of which still held the pre-fix
+shoulder table and would have silently reverted the fix on their next run.
+
+`--materials-only` and `--keep-materials` are new. The latter matters: freezing materials used to be
+implied by `--no-lower-armor`, which is how roughly a thousand items kept a `plate` loot table they
+never earned.
+
+Rolled modifiers persist in saves by `StringId`, so an already-owned legendary cape keeps its old roll
+until re-looted. Cape prices move on the next launch, since `Value` is recomputed at deserialize.
+
+Not-tested: in-game verification (armor loads only at a full application restart).
+Research: `ItemModifier.ModifyArmor`, `EquipmentElement.GetModified*Armor`, `DefaultItemValueModel.CalculateArmorTier`.
+
+### feat(coopinterop): stop TAOM sabotaging a co-op mod, and make divergence visible (#370)
+
+Reviewed the BannerlordTogether a0.5.3.2 package to see what TAOM would need to change so players
+can run the mod together. It targets v1.4.7 — TAOM's own pin — where the April 2026 pass had only
+seen v0.2.2 and stopped at a startup CTD.
+
+The package ships `AI_USAGE_POLICY_DO_NOT_DECOMPILE.txt` and a proprietary licence forbidding any
+person or automated system from analyzing its binaries. Nothing here reads them. What TAOM needs to
+know about another mod's patches comes instead from HarmonyLib's own public runtime registry, which
+reports owner ids and patched-method metadata for every mod in the process — enough to answer which
+methods both mods patch and where two transpilers meet, without touching their assembly.
+
+The real finding was on our side. TAOM has grown two AppDomain-wide shields since April, and both do
+exactly the wrong thing under host-authoritative co-op. `PatchShield` strips a non-allowlisted
+Harmony owner's patches after a missing-API exception; in singleplayer that turns a crash into a
+survivable degradation, but with a co-op layer it removes one peer's sync patch and produces no
+crash at all — just two campaigns quietly diverging, which corrupts both saves and cannot be
+diagnosed from a log. `SaveShield` swallows everything on the save-load chain, so a failed load
+becomes a partially deserialised campaign that the host then replicates as authoritative. Both now
+invert when a co-op module is active: the unpatch is withheld (and logged as "would unpatch"), and
+`SAVE-LOAD` rethrows while `MISSION-INIT` keeps swallowing, since a mission fault is local. The
+`saveshield-swallow-disabled.flag` still dominates, and now records the failure on the rethrow path
+too — that is precisely when the catalog entry is wanted.
+
+`CoopPresence` decides all of it from the launcher's active-module list, matched against a shipped
+`coop-modules.txt`. Parsing is union-only by construction: the file can add ids but can never remove
+a compiled default, because that list also feeds PatchShield's protected-owner allowlist and a bad
+edit must not be able to unprotect the BUTR/MCM stack.
+
+Load order is pinned rather than left to the launcher, for a sharper reason than patch ordering:
+BannerlordTogether ships its own `0Harmony.dll` at the same 2.4.2.0 TAOM deploys, and HarmonyLib's
+patch registry is per-assembly-instance static state. If its copy wins the AppDomain slot,
+`GetAllPatchedMethods()` from ours cannot see its patches at all — which would blind both PatchShield
+and the census. The census logs how many `0Harmony` assemblies are loaded so that failure is
+visible rather than silent.
+
+Also added the save-definer preflight. The engine registers every `SaveableTypeDefiner` into a
+dictionary keyed by save id and throws in `Module.Initialize` on a duplicate, naming neither mod —
+and TAOM deliberately reuses an upstream mod's base id so CompanionTactics saves import, which makes
+that a guaranteed unattributable crash for anyone running both. It now reports both assemblies by
+name before the engine gets there.
+
+One determinism fix fell out of reading the engine: `MBRandom` draws from
+`Game.Current.RandomGenerator`, which is state on the saved `Game` root, and the engine ships a
+separate `NondeterministicRandom` for values that must not touch it. TAOM's character-tableau mount
+mesh key and elephant trample animation variant were spending campaign RNG on cosmetics. Both moved.
+Correct in singleplayer regardless of co-op; the trample damage roll stays where it was.
+
+The April verdict on the `DefaultClanFinanceModel..cctor()` startup crash survives re-verification,
+and one plausible fix is now ruled out in writing: the type's static field initializers call
+`Game.Current.GameTextManager.FindText`, so the NRE is on `Game.Current` and a guard on
+`GameTexts.FindText` — a different static — intercepts nothing. Whether it still reproduces on
+a0.5.3.2 is unknown; the zero-code boot matrix in the feature doc answers that before anything else
+is built.
+
+A 7-dimension deep review with adversarial verification then caught 18 real defects in the above, all
+fixed here; RCA at `docs/reviews/rca-coop-interop-2026-07-31.md`. Four were consequential enough to
+call out. The save-definer preflight ran too late to ever fire: `Module.Initialize` builds the save
+definition context immediately after loading submodules, long before
+`OnBeforeInitialModuleScreenSetAsRoot`, so on the one boot where a collision existed the engine had
+already thrown — moved to `OnSubModuleLoad`. PatchShield and SaveShield both attach finalizers to the
+save chain, and Harmony gives every finalizer on a method one shared exception slot, so PatchShield's
+unconditional swallow silently overrode the new co-op rethrow; PatchShield now skips SaveShield's
+targets. The protected-owner allowlist entry `Bannerlord.UIExtenderEx` matches neither id UIExtenderEx
+actually registers (the real ones read `bannerlord.uiextender.ex`), so the rescue path could have
+stripped TAOM's own UI mixins — a pre-existing gap inherited when the list moved into
+`PatchShieldPolicy`. And `<DependedModuleMetadata>` turns out to be a BUTR launcher extension the
+engine never parses, so the Main-side load-order pin established nothing until it gained a real
+`<ModulesToLoadAfterThis>`.
+
+Two doc overclaims of my own are also corrected: the feature doc said version parity was "enforced by
+the build stamp" (it is logged, not enforced) and that a unit test pinned the no-decompile boundary
+(it pins the census model, not the writer).
+
+`Dependencies/Foundation/{CoopPresence,CoopModuleList,PatchShieldPolicy,SaveShieldPolicy}.cs`,
+`Main/Features/CoopInterop/**`, both `SubModule.xml` manifests, `coop-modules.txt`. Suite 4617 green.
+
+Not-tested: shield behaviour under a live co-op session, the census against a second Harmony
+instance, and the boot matrix itself — all require a running game and a second player.
+Research: TaleWorlds.Core.MBRandom, Game.RandomGenerator, GameTexts.FindText,
+DefaultClanFinanceModel static initializers, SaveableTypeDefiner._saveBaseId (installed v1.4.7).
+
 ### feat(devconsole): the shared contract every `taom.*` command will route through (#369)
 
 TAOM has one console command (`taom.add_special_resources`, #365) and a backlog of features whose

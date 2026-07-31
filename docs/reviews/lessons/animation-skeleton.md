@@ -94,6 +94,43 @@ A standalone race action set — one with its own `skeleton=` and NO `base_set`,
 - **Prevent:** After every engine bump, run **`python tools/audit_action_set_parity.py`** (wired into `/engine-bump` Phase 4) — it resolves EVERY set's effective surface (own + full `base_set` chain + cross-module merge) and exits non-zero listing any HUMANOID set short of Native's `as_human_warrior`; fix each with `patch_dwarf_action_parity.py --set-id <id> --apply`. **Bound the blast radius by ENUMERATING, not from memory** — the audit found all 1110 humanoid sets complete after the dwarf fix (dwarf was the only gap). The LIVE file has only 5 standalone sets (the `as_human_warrior` merge-partial, `as_dwarf_warrior`, creature mounts spider/elephant/chariot); trolls (`as_cave_troll_warrior`/`as_hill_troll_warrior`) use `base_set="as_human_warrior"` and inherit dive, so are NOT at risk — a "trolls are next" claim written from memory was corrected by the deep-review's enumeration (RCA `docs/reviews/rca-dwarf-action-parity-2026-06-25.md`).
 - **Source:** `tools/patch_dwarf_action_parity.py`, `tools/audit_action_set_parity.py`, `docs/reference/lotrlome-armory-snapshot/README.md`, CHANGELOG 2026-06-25
 
+### The all-races/one-race discriminator has a third branch: all races + INTERMITTENT + only-on-other-machines = build/dependency, not data or engine code
+
+- **Symptom:** every race rendered prone in every UI tableau, on users' machines only, varying
+  per launch. The existing discriminator in this file ("one-race-breaks = LOTRLOME data;
+  all-races-break = vanilla engine/code") correctly pointed away from race data — but its
+  all-races branch says *engine/code*, and the real cause was neither: users were running a current
+  `TAOM.dll` against a stale `TAOM.Dependencies.dll`, which carries HarmonyLib itself, so the
+  preview patches never applied.
+- **Why missed:** the symptom is identical to the documented data failure (bind pose = engine
+  default when no animation resolves), so the whole first phase of the investigation went into
+  `as_<race>_facegen` coverage, action-set parity and the Armory snapshot. All of it came back
+  clean — both audits pass, and the release ships the same race data as the dev machine.
+- **Prevent:** before auditing race data for a prone/T-pose report, establish two facts that cost
+  minutes: **does it reproduce on the dev machine** (if not, suspect the shipped artifacts, not the
+  content), and **is it deterministic per launch** (intermittent rules out static data outright —
+  missing XML entries break identically every boot). Only then open `action_sets.xml`.
+- **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
+
+### A VALID action set is not a posed character — check the clip, not the handle
+
+- **Symptom:** every diagnostic written for the prone-tableau bug stopped at `MBActionSet.IsValid`,
+  and every one passed. But `CharacterTableau.GetIdleAction()` poses the doll with
+  `act_inventory_idle_start`, and TAOM's Patch2 injects `as_<race>_warrior` — which for uruk is a
+  **zero-action stub** inheriting via `base_set="as_human_warrior"`. This file already records that
+  the engine does NOT fall through `base_set` for `act_inventory_*`. A set can therefore resolve
+  valid and still bind no clip, `SetAction` becomes a no-op, and the skeleton stays in bind pose.
+- **Why missed:** `IsValid` only means the set index is ≥ 0. It says nothing about whether the
+  requested action has an animation in that set, which is the thing that actually moves the
+  skeleton.
+- **Prevent:** when diagnosing a pose failure, resolve the animation with
+  `MBActionSet.GetAnimationName(in ActionIndexCache)` and treat an empty result as the failure — an
+  action *index* existing globally (e.g. `idleStartIdx=4008`) is unrelated to that set binding a
+  clip to it. Note also that `CharacterTableau` / `CharacterSpawner` / `BodyGeneratorView` live in
+  `Modules/Native/bin/Win64_Shipping_Client/TaleWorlds.MountAndBlade.View.dll`, which is **absent
+  from the `E:\Decompiled_Bannerlord` dump** — decompile that DLL directly with `ilspycmd`.
+- **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

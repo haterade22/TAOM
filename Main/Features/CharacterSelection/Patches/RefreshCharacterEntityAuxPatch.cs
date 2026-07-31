@@ -7,6 +7,7 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.GauntletUI.BodyGenerator;
 using TAOM.Core.Logging;
+using TAOM.Features.HeroRace.Diagnostics;
 
 namespace TAOM.Features.CharacterSelection.Patches;
 
@@ -18,9 +19,33 @@ public class RefreshCharacterEntityAuxPatch
     {
         var race = bodyGeneratorView.BodyGen.Race;
         var monster = TaleWorlds.Core.FaceGen.GetBaseMonsterFromRace(race);
+        bool fellBackToHuman = false;
         if (monster == null)
+        {
             monster = TaleWorlds.Core.FaceGen.GetBaseMonsterFromRace(0); // fallback to human
-        return MBGlobals.GetActionSetWithSuffix(monster, bodyGeneratorView.BodyGen.IsFemale, "_facegen");
+            fellBackToHuman = true;
+        }
+
+        bool isFemale = bodyGeneratorView.BodyGen.IsFemale;
+        var set = MBGlobals.GetActionSetWithSuffix(monster, isFemale, "_facegen");
+
+        // Diagnostics 2026-07-31 ("bendy man"): this is the Character Customization screen's own
+        // action-set resolution. An invalid set leaves AgentVisualsData without a usable animation
+        // set and the engine falls back to the skeleton's bind pose.
+        if (!set.IsValid)
+        {
+            TableauDiagnostics.LogError(
+                $"CC-screen GetActionSet: race={race} female={isFemale} monster='{monster?.StringId}' " +
+                $"fellBackToHuman={fellBackToHuman} suffix='_facegen' -> INVALID action set. This is the bind-pose condition.");
+        }
+        else
+        {
+            TableauDiagnostics.Log($"cc.getactionset.{race}.{isFemale}",
+                $"CC-screen GetActionSet: race={race} female={isFemale} monster='{monster?.StringId}' " +
+                $"fellBackToHuman={fellBackToHuman} -> {TableauDiagnostics.Describe(set)}");
+        }
+
+        return set;
     }
 
     [HarmonyTranspiler]
@@ -71,6 +96,12 @@ public class RefreshCharacterEntityAuxPatch
             new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(RefreshCharacterEntityAuxPatch), nameof(GetActionSet))),
             new CodeInstruction(OpCodes.Callvirt, actionSetMethod)
         });
+
+        // Diagnostics 2026-07-31: previously this transpiler only spoke up when it FAILED, so a
+        // silent log was ambiguous between "applied cleanly" and "never ran at all". Say so either way.
+        TableauDiagnostics.LogAlways(
+            $"CC-screen transpiler APPLIED to BodyGeneratorView.RefreshCharacterEntityAux at IL index {insertionIndex} " +
+            $"({newInstructions.Count} instructions after injection).");
 
         return newInstructions.AsEnumerable();
     }

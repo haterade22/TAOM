@@ -107,6 +107,31 @@ public class SubModule : MBSubModuleBase
 
         IoC.Configure();
 
+        // Save-definer collision preflight. The engine instantiates every SaveableTypeDefiner in
+        // every loaded assembly and registers each into a dictionary keyed by save id; a duplicate
+        // throws with a message naming neither mod.
+        //
+        // TIMING IS THE WHOLE POINT, and it must be here, not later. Verified against installed
+        // v1.4.7 `TaleWorlds.MountAndBlade.Module`: `Initialize()` calls `LoadSubModules(...)`
+        // (line 267) — which loads every module's assemblies and only then fans out
+        // `OnSubModuleLoad()` (line 1095) — and afterwards, at line 285, calls
+        // `SaveManager.InitializeGlobalDefinitionContext()`, which is where the duplicate-key
+        // throw happens. `OnBeforeInitialModuleScreenSetAsRoot` runs from `OnApplicationTick`
+        // (line 509) LONG after that, so a preflight there would never execute on the one boot
+        // where a collision actually exists. Being in OnSubModuleLoad also makes it a natural
+        // once-per-process run; that hook fires on every return to the main menu, this does not.
+        // By this point every module's assembly is loaded, so the scan sees the full mod set.
+        try
+        {
+            Features.CoopInterop.SaveDefinerCollisionGuard.Run(
+                IoC.Resolve<Features.CoopInterop.ISaveDefinerCollisionDetector>(),
+                IoC.Resolve<IModLogger>());
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning($"[SaveDefiners] preflight wiring failed: {ex.GetType().Name}: {ex.Message}");
+        }
+
         // Codex review #46 (2026-05-25) MED-01: attach Patch37_CrashReport IMMEDIATELY
         // after IoC.Configure() so its Finalizers cover the rest of OnSubModuleLoad
         // (UIExtender init, time-acceleration resolve, downstream PatchCategory calls).
@@ -392,6 +417,7 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<IModLogger>().LogError($"[HeroRace] Patch55_BasicTableauRaceGuard apply failed: {ex.GetType().Name}: {ex.Message}");
             }
         }
+
 
         // BattleLoadDiagnostics collection: a battle/scene load that hung last session left
         // an inflight marker (phase-4 wrote it; phase-6/end never ran to clear it). If it
@@ -840,13 +866,39 @@ public class SubModule : MBSubModuleBase
         if (_gameInitPatchesApplied) return;
         _gameInitPatchesApplied = true;
 
-        _harmony.PatchCategory("Patch1_FirstTimeInit");
-        _harmony.PatchCategory("Patch2_RefreshTableau");
-        _harmony.PatchCategory("Patch3_SetRace");
-        _harmony.PatchCategory("Patch4_CharacterSpawner");
-        _harmony.PatchCategory("Patch5_FaceGen");
-        _harmony.PatchCategory("Late_Transpiler");
-        _harmony.PatchCategory("Late_ActionSetOverride");
+        // Diagnostics 2026-07-31 ("bendy man" / prone tableau): these seven categories own the
+        // entire character-preview path. They were applied unguarded and in sequence, so the FIRST
+        // one to throw silently prevented every later one from applying — a state that is
+        // indistinguishable, from any log we ship, from all seven working correctly. Each is now
+        // isolated and reports its own outcome.
+        foreach (var previewCategory in new[]
+        {
+            "Patch1_FirstTimeInit",
+            "Patch2_RefreshTableau",
+            "Patch3_SetRace",
+            "Patch4_CharacterSpawner",
+            "Patch5_FaceGen",
+            "Late_Transpiler",
+            "Late_ActionSetOverride",
+        })
+        {
+            try
+            {
+                _harmony.PatchCategory(previewCategory);
+                Features.HeroRace.Diagnostics.TableauDiagnostics.LogAlways($"PatchCategory '{previewCategory}' applied OK.");
+            }
+            catch (System.Exception ex)
+            {
+                Features.HeroRace.Diagnostics.TableauDiagnostics.LogError(
+                    $"PatchCategory '{previewCategory}' FAILED — the character preview will fall back to vanilla resolution: {ex}");
+            }
+        }
+
+        // Dump the environment and the full race -> monster -> action-set table once the preview
+        // patches are in place. The defect does not reproduce on the dev machine, so the environment
+        // dump exists to capture what actually differs on an affected one.
+        Features.HeroRace.Diagnostics.TableauDiagnostics.DumpEnvironment();
+        Features.HeroRace.Diagnostics.TableauDiagnostics.ProbeActionSets("OnGameInitializationFinished");
         _harmony.PatchCategory("Patch6_BannerEditor");
         _harmony.PatchCategory("Patch7_FactionMap");
         _harmony.PatchCategory("Patch9_RaceFilter");
@@ -1013,6 +1065,27 @@ public class SubModule : MBSubModuleBase
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
         // ManualPatchApplicator (ADR-002); apply order unchanged, each fail-safes with a warning.
         ManualPatchApplicator.ApplyAll(_harmony);
+
+        // Harmony census — LAST, so it sees every patch TAOM and every other mod has applied.
+        // Only runs when a co-op module is active: it is the substitute for decompiling that mod
+        // (which its licence forbids and TAOM does not do), and solo players should not pay the
+        // registry walk. Reads HarmonyLib's own public registry — owner ids, patch kinds and
+        // reflection metadata — never a method body.
+        try
+        {
+            var coopIds = Dependencies.Foundation.CoopPresence.ActiveCoopModuleIds;
+            if (coopIds.Count > 0)
+            {
+                Features.CoopInterop.Diagnostics.HarmonyCensusWriter.Write(
+                    new Features.CoopInterop.Diagnostics.HarmonyCensusReportBuilder(),
+                    coopIds,
+                    IoC.Resolve<IModLogger>());
+            }
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning($"[HarmonyCensus] wiring failed: {ex.GetType().Name}: {ex.Message}");
+        }
     }
 
     public override void OnMissionBehaviorInitialize(Mission mission)

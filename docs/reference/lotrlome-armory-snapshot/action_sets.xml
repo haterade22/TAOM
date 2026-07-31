@@ -1,5 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <action_sets>
+	<!-- LOAD-ORDER CRITICAL: this partial MUST precede every race set that declares
+	     base_set="as_human_warrior" (as_goblin_warrior @~52k etc.) - base-set inheritance
+	     snapshots the base at definition time, so bindings merged AFTER a race set never reach
+	     it. Alliance.Wargs puts its warg partial FIRST in its file for the same reason. -->
+	<!-- Spider RIDER bindings — partial as_human_warrior merged into the global set (the
+	     Alliance.Wargs precedent: when an agent rides, the engine resolves the MOUNT's usage-set
+	     actions against the RIDER's action set for the rider overlay; unresolved = garbage rider
+	     anim, the "thrust loop"). rider_warg_* clips are global resources (Alliance.Wargs is a
+	     hard dependency) — reused until bespoke spider-rider clips exist. act_horse_* codes
+	     (adders/jumps/canter) are vanilla-covered rider-side already. -->
+	<action_set id="as_human_warrior" skeleton="human_skeleton" movement_system="bipedal">
+		<action type="act_spider_idle" animation="rider_warg_idle" />
+		<action type="act_spider_idle_1" animation="rider_warg_idle" />
+		<action type="act_spider_idle_2" animation="rider_warg_idle_2" />
+		<action type="act_spider_idle_dg" animation="rider_warg_idle" />
+		<action type="act_spider_walk_forward" animation="rider_warg_forward_walk" />
+		<action type="act_spider_walk_left" animation="rider_warg_strafe_left_faster" />
+		<action type="act_spider_walk_right" animation="rider_warg_strafe_right_faster" />
+		<action type="act_spider_run_forward" animation="rider_warg_canter" />
+		<action type="act_spider_turn_left" animation="rider_warg_strafe_left_faster" />
+		<action type="act_spider_turn_right" animation="rider_warg_strafe_right_faster" />
+		<action type="act_spider_jump" animation="rider_warg_dash" />
+		<action type="act_spider_taunt" animation="rider_warg_idle" />
+		<action type="act_spider_attack_front" animation="rider_warg_attack_stand" />
+		<action type="act_spider_attack_back" animation="rider_warg_attack_stand" />
+		<action type="act_spider_attack_left" animation="rider_warg_attack_stand" />
+		<action type="act_spider_attack_right" animation="rider_warg_attack_stand" />
+		<action type="act_spider_attack_top" animation="rider_warg_attack_stand" />
+		<action type="act_spider_attack_bottom" animation="rider_warg_attack_stand" />
+		<action type="act_spider_attack_charge" animation="rider_warg_attack_running" />
+		<action type="act_spider_hit_front" animation="rider_warg_hit_object" />
+		<action type="act_spider_hit_back" animation="rider_warg_hit_object" />
+		<action type="act_spider_hit_left" animation="rider_warg_hit_object" />
+		<action type="act_spider_hit_right" animation="rider_warg_hit_object" />
+				<action type="act_spider_rear" animation="rider_warg_taunt" />
+		<action type="act_spider_rear_damaged" animation="rider_warg_hit_object" />
+		<action type="act_spider_dash" animation="rider_warg_dash" />
+		<action type="act_spider_kick" animation="rider_forward_gallop_right_foot" />
+		<action type="act_spider_quick_stop" animation="rider_warg_quick_stop" />
+		<action type="act_spider_quick_stop_when_fast" animation="rider_warg_quick_stop" />
+		<action type="act_spider_hit_object" animation="rider_warg_hit_object" />
+		<action type="act_spider_hit_object_while_falling" animation="rider_warg_hit_object" />
+		<action type="act_spider_strike_front" animation="rider_warg_hit_object" />
+		<action type="act_spider_strike_back" animation="rider_warg_hit_object" />
+		<action type="act_spider_strike_front_while_moving" animation="rider_warg_hit_object" />
+		<action type="act_spider_strike_back_while_moving" animation="rider_warg_hit_object" />
+		<action type="act_spider_fall_roll" animation="rider_fall_roll" />
+		<action type="act_spider_fall_roll_continue" animation="rider_fall_roll_continue" />
+		<action type="act_spider_fall_backwards" animation="rider_fall_backwards" />
+		<action type="act_spider_fall_backwards_continue" animation="rider_fall_backwards_continue" />
+		<action type="act_spider_fall_right" animation="rider_fall_right" />
+		<action type="act_spider_fall_right_continue" animation="rider_fall_right_continue" />
+		<action type="act_spider_fall_left" animation="rider_fall_left" />
+		<action type="act_spider_fall_left_continue" animation="rider_fall_left_continue" />
+		<action type="act_spider_fall_slow_right" animation="rider_fall_slow_right" />
+		<action type="act_spider_fall_slow_right_continue" animation="rider_fall_slow_right_continue" />
+		<action type="act_spider_fall_slow_left" animation="rider_fall_slow_left" />
+		<action type="act_spider_fall_slow_left_continue" animation="rider_fall_slow_left_continue" />
+	</action_set>
+
 	<action_set
 		id="as_dwarf_warrior"
 		skeleton="dwarf_skeleton_a"
@@ -39159,8 +39219,6 @@
 		<action type="act_run_idle_crossbow_left_stance" animation="stand_mainmap" />
 		<action type="act_run_idle_thrown" animation="stand_mainmap" />
 		<action type="act_run_idle_thrown_left_stance" animation="stand_mainmap" />
-		<action type="act_run_idle_tnazghulh" animation="stand_mainmap" />
-		<action type="act_run_idle_tnazghulh_left_stance" animation="stand_mainmap" />
 		<action type="act_run_idle_heavy_thrown" animation="stand_mainmap" />
 		<action type="act_run_idle_heavy_thrown_left_stance" animation="stand_mainmap" />
 
@@ -39188,8 +39246,6 @@
 		<action type="act_walk_idle_crossbow_left_stance" animation="stand_mainmap" />
 		<action type="act_walk_idle_thrown" animation="stand_mainmap" />
 		<action type="act_walk_idle_thrown_left_stance" animation="stand_mainmap" />
-		<action type="act_walk_idle_tnazghulh" animation="stand_mainmap" />
-		<action type="act_walk_idle_tnazghulh_left_stance" animation="stand_mainmap" />
 		<action type="act_walk_idle_heavy_thrown" animation="stand_mainmap" />
 		<action type="act_walk_idle_heavy_thrown_left_stance" animation="stand_mainmap" />
 
@@ -42458,8 +42514,6 @@
 		<action type="act_run_idle_crossbow_left_stance" animation="stand_mainmap" />
 		<action type="act_run_idle_thrown" animation="stand_mainmap" />
 		<action type="act_run_idle_thrown_left_stance" animation="stand_mainmap" />
-		<action type="act_run_idle_thill_trollh" animation="stand_mainmap" />
-		<action type="act_run_idle_thill_trollh_left_stance" animation="stand_mainmap" />
 		<action type="act_run_idle_heavy_thrown" animation="stand_mainmap" />
 		<action type="act_run_idle_heavy_thrown_left_stance" animation="stand_mainmap" />
 
@@ -42487,8 +42541,6 @@
 		<action type="act_walk_idle_crossbow_left_stance" animation="stand_mainmap" />
 		<action type="act_walk_idle_thrown" animation="stand_mainmap" />
 		<action type="act_walk_idle_thrown_left_stance" animation="stand_mainmap" />
-		<action type="act_walk_idle_thill_trollh" animation="stand_mainmap" />
-		<action type="act_walk_idle_thill_trollh_left_stance" animation="stand_mainmap" />
 		<action type="act_walk_idle_heavy_thrown" animation="stand_mainmap" />
 		<action type="act_walk_idle_heavy_thrown_left_stance" animation="stand_mainmap" />
 
@@ -57969,8 +58021,6 @@
 		<action type="act_run_idle_crossbow_left_stance" animation="stand_mainmap" />
 		<action type="act_run_idle_thrown" animation="stand_mainmap" />
 		<action type="act_run_idle_thrown_left_stance" animation="stand_mainmap" />
-		<action type="act_run_idle_tsarumanh" animation="stand_mainmap" />
-		<action type="act_run_idle_tsarumanh_left_stance" animation="stand_mainmap" />
 		<action type="act_run_idle_heavy_thrown" animation="stand_mainmap" />
 		<action type="act_run_idle_heavy_thrown_left_stance" animation="stand_mainmap" />
 
@@ -57998,8 +58048,6 @@
 		<action type="act_walk_idle_crossbow_left_stance" animation="stand_mainmap" />
 		<action type="act_walk_idle_thrown" animation="stand_mainmap" />
 		<action type="act_walk_idle_thrown_left_stance" animation="stand_mainmap" />
-		<action type="act_walk_idle_tsarumanh" animation="stand_mainmap" />
-		<action type="act_walk_idle_tsarumanh_left_stance" animation="stand_mainmap" />
 		<action type="act_walk_idle_heavy_thrown" animation="stand_mainmap" />
 		<action type="act_walk_idle_heavy_thrown_left_stance" animation="stand_mainmap" />
 
@@ -60833,6 +60881,348 @@
 			type="act_conversation_hip_loop"
 			animation="convo_stand_hip_female1" />
 	</action_set>
+
+	<!-- ==================== SPIDER ====================
+	     Moved here from Animations/action_sets_spider.xml because the engine only loads a
+	     module's TOP-LEVEL ModuleData/action_sets.xml, not the Animations/ subfolder (proven
+	     via rgl_log). The subfolder copy is now unused. -->
+
+	<action_set id="as_spider"
+	            skeleton="spider_skeleton"
+	            movement_system="quadrupedal">
+		<!-- ROOT-CAUSE NOTE (2026-06-11): movement-bound clips (an_spi_walk_2/_left/_right, an_spi_run)
+		     MUST carry the quad_movement tag + step points in their _anm.tpac (elephant-template
+		     byte-patch; originals at *.bak-untagged). A quadrupedal action set measuring untagged
+		     movement clips builds a null native gait structure -> AccessViolation (+0x10) on the
+		     first Skeleton.TickAnimations in EVERY context (thumbnail/inventory tableau/mission).
+		     idle/turn/jump/taunt bindings stay on tagged movement clips until the pose-correct
+		     clips get a tagged recompile in the Kit. -->
+		<action type="act_horse_forward_canter" animation="an_spi_walk_2" />
+		<action type="act_horse_conversation_start" animation="an_spi_walk_2" />
+		<action type="act_horse_jump_forward" animation="an_spi_walk_2" />
+		<action type="act_horse_jump_forward_end" animation="an_spi_walk_2" />
+		<action type="act_horse_jump_forward_end_hard" animation="an_spi_walk_2" />
+		<action type="act_horse_jump_forward_loop" animation="an_spi_walk_2" />
+		<action type="act_horse_jump_high" animation="an_spi_walk_2" />
+		<action type="act_horse_jump_high_end" animation="an_spi_walk_2" />
+		<action type="act_horse_jump_high_end_hard" animation="an_spi_walk_2" />
+		<action type="act_horse_jump_high_loop" animation="an_spi_walk_2" />
+		<action type="act_inventory_idle" animation="an_spi_idle" />
+		<action type="act_inventory_idle_start" animation="an_spi_idle" />
+		<action type="act_spider_attack_back" animation="an_spi_attack_front" />
+		<action type="act_spider_attack_bottom" animation="an_spi_attack_bottom" />
+		<action type="act_spider_attack_charge" animation="an_spi_attack_charge" />
+		<action type="act_spider_attack_front" animation="an_spi_attack_front" />
+		<action type="act_spider_attack_left" animation="an_spi_attack_left" />
+		<action type="act_spider_attack_right" animation="an_spi_attack_right" />
+		<action type="act_spider_attack_top" animation="an_spi_attack_top" />
+						<action type="act_spider_rear" animation="an_spi_attack_front" />
+		<action type="act_spider_rear_damaged" animation="an_spi_hit_front" />
+		<action type="act_spider_dash" animation="an_spi_attack_charge" />
+		<action type="act_spider_kick" animation="an_spi_attack_front" />
+		<action type="act_spider_quick_stop" animation="an_spi_idle" />
+		<action type="act_spider_quick_stop_when_fast" animation="an_spi_idle" />
+		<action type="act_spider_hit_object" animation="an_spi_hit_front" />
+		<action type="act_spider_hit_object_while_falling" animation="an_spi_hit_front" />
+		<action type="act_spider_strike_front" animation="an_spi_attack_front" />
+		<action type="act_spider_strike_back" animation="an_spi_attack_front" />
+		<action type="act_spider_strike_front_while_moving" animation="an_spi_attack_front" />
+		<action type="act_spider_strike_back_while_moving" animation="an_spi_attack_front" />
+		<action type="act_spider_fall_right" animation="an_spi_death_2" />
+		<action type="act_spider_fall_right_continue" animation="an_spi_death_2" />
+		<action type="act_spider_fall_left" animation="an_spi_death_2" />
+		<action type="act_spider_fall_left_continue" animation="an_spi_death_2" />
+		<action type="act_spider_fall_roll" animation="an_spi_death_1" />
+		<action type="act_spider_fall_roll_continue" animation="an_spi_death_1" />
+		<action type="act_spider_fall_backwards" animation="an_spi_death_1" />
+		<action type="act_spider_fall_backwards_continue" animation="an_spi_death_1" />
+		<action type="act_spider_fall_slow_right" animation="an_spi_death_2" />
+		<action type="act_spider_fall_slow_right_continue" animation="an_spi_death_2" />
+		<action type="act_spider_fall_slow_left" animation="an_spi_death_2" />
+		<action type="act_spider_fall_slow_left_continue" animation="an_spi_death_2" />
+		<action type="act_spider_death" animation="an_spi_death_1" />
+		<action type="act_spider_death_2" animation="an_spi_death_2" />
+		<action type="act_spider_hit_back" animation="an_spi_hit_back" />
+		<action type="act_spider_hit_front" animation="an_spi_hit_front" />
+		<action type="act_spider_hit_left" animation="an_spi_hit_left" />
+		<action type="act_spider_hit_right" animation="an_spi_hit_right" />
+		<action type="act_spider_idle" animation="an_spi_idle" />
+		<action type="act_spider_idle_1" animation="an_spi_idle" />
+		<action type="act_spider_idle_2" animation="an_spi_idle" />
+		<action type="act_spider_idle_dg" animation="an_spi_idle" />
+		<action type="act_spider_jump" animation="an_spi_jump" />
+		<action type="act_spider_run_forward" animation="an_spi_run" />
+		<action type="act_spider_taunt" animation="an_spi_walk_2" />
+		<action type="act_spider_turn_left" animation="an_spi_turn_left" />
+		<action type="act_spider_turn_right" animation="an_spi_turn_right" />
+		<action type="act_spider_walk_forward" animation="an_spi_walk_2" />
+		<action type="act_spider_walk_left" animation="an_spi_walk_left" />
+		<action type="act_spider_walk_right" animation="an_spi_walk_right" />
+	</action_set>
+
+	<!-- Spider child action sets (2026-06-10) - REQUIRED for ridden mounts (elephant Crash #4
+	     class): party-screen/encyclopedia thumbnails + campaign-map party icons resolve
+	     <base>_town_and_village / <base>_map; if absent => AV in native Skeleton.TickAnimations /
+	     ForceUpdateBoneFrames (the crash that killed the original spider-mount attempt).
+	     Mirrors as_elephant_town_and_village / as_elephant_map below. Clip choice: an_spi_walk_2 /
+	     an_spi_attack_front are _anm-bearing (an_spi_idle_2 is not - see TEMP-ANM-UNBLOCK above). -->
+	<action_set id="as_spider_town_and_village" skeleton="spider_skeleton" base_set="as_spider">
+		<action type="act_spider_idle" animation="an_spi_idle" />
+	</action_set>
+	<action_set id="as_spider_map" skeleton="spider_skeleton" base_set="as_spider">
+		<action type="act_map_mount_attack_1h" animation="an_spi_attack_front" />
+		<action type="act_map_mount_attack_spear" animation="an_spi_attack_front" />
+		<action type="act_map_mount_attack_swing" animation="an_spi_attack_front" />
+		<action type="act_map_mount_attack_unarmed" animation="an_spi_attack_front" />
+	</action_set>
+
+	<!-- ============================== ELEPHANT ============================== -->
+	<!-- Ported from ADOD_Beasts (MCMv5 conflict prevents ADOD from loading with TAOM).
+	     Pattern mirrors as_spider: merged into this single soln_action_sets file so the
+	     native animation engine registers as_elephant without triggering a second soln_action_sets
+	     MergeElements pass (which causes KNFE on the accumulated action_sets element1). -->
+	<action_set id="as_elephant" skeleton="elephant_skeleton" movement_system="quadrupedal">
+				<action type="act_elephant_stand_for_movement_data" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_stand_1" animation="elephant_stand_2" alternative_group="elephant_stand_alternative_group" />
+				<action type="act_elephant_stand_2" animation="elephant_stand_2" alternative_group="elephant_stand_alternative_group" />
+				<action type="act_elephant_stand_3" animation="elephant_stand_3" alternative_group="elephant_stand_alternative_group" />
+
+				<action type="act_elephant_forward_walk_stand" animation="elephant_stand_2" />
+				<action type="act_elephant_forward_walk" animation="elephant_walk" />
+				<action type="act_elephant_forward_walk_strafe_left" animation="elephant_walk" />
+				<action type="act_elephant_forward_walk_strafe_right" animation="elephant_walk" />
+				<action type="act_elephant_forward_trot_stand" animation="elephant_walk" />
+				<action type="act_elephant_forward_trot" animation="elephant_walk" />
+				<action type="act_elephant_forward_trot_strafe_right" animation="elephant_walk" />
+				<action type="act_elephant_forward_trot_strafe_left" animation="elephant_walk" />
+				<action type="act_elephant_forward_canter_stand" animation="elephant_canter" />
+				<action type="act_elephant_forward_canter" animation="elephant_canter" />
+				<action type="act_elephant_forward_canter_strafe_right" animation="elephant_canter" />
+				<action type="act_elephant_forward_canter_strafe_left" animation="elephant_canter" />
+				<action type="act_elephant_forward_gallop_right_foot_stand" animation="elephant_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot" animation="elephant_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot_strafe_right" animation="elephant_gallop" />
+				<action type="act_elephant_forward_gallop_right_foot_strafe_left" animation="elephant_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_stand" animation="elephant_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot" animation="elephant_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_strafe_right" animation="elephant_gallop" />
+				<action type="act_elephant_forward_gallop_left_foot_strafe_left" animation="elephant_gallop" />
+
+				<action type="act_elephant_backward_walk_stand" animation="elephant_stand_2" />
+				<action type="act_elephant_backward_walk" animation="elephant_walk_backwards" />
+				<action type="act_elephant_backward_walk_strafe_right" animation="elephant_walk_backwards" />
+				<action type="act_elephant_backward_walk_strafe_left" animation="elephant_walk_backwards" />
+
+				<action type="act_elephant_rear" animation="elephant_rear" />
+				<action type="act_elephant_rear_damaged" animation="elephant_rear" />
+				<action type="act_elephant_kick" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_dash" animation="elephant_dash" />
+				<action type="act_elephant_jump_start" animation="elephant_dash" />
+				<action type="act_elephant_quick_stop" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_quick_stop_when_fast" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_hit_object" animation="elephant_hit_object" />
+				<action type="act_elephant_hit_object_while_falling" animation="elephant_hit_object" />
+				<action type="act_horse_jump_high" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_high_loop" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_high_end" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_high_end_hard" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_forward" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_forward_loop" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_forward_end" animation="elephant_stand_for_movement_data" />
+				<action type="act_horse_jump_forward_end_hard" animation="elephant_stand_for_movement_data" />
+				<action type="act_elephant_turn_right" animation="elephant_turn_right" />
+				<action type="act_elephant_turn_left" animation="elephant_turn_left" />
+				<action type="act_elephant_strafe_right" animation="elephant_walk" />
+				<action type="act_elephant_strafe_left" animation="elephant_walk" />
+
+				<action type="act_elephant_turn_right_head" animation="elephant_walk_backwards" />
+				<action type="act_elephant_turn_left_head" animation="elephant_walk_backwards" />
+				<action type="act_elephant_walk_turn_right_head" animation="elephant_walk" />
+				<action type="act_elephant_walk_turn_left_head" animation="elephant_walk" />
+				<action type="act_elephant_trot_turn_right_head" animation="elephant_walk" />
+				<action type="act_elephant_trot_turn_left_head" animation="elephant_walk" />
+				<action type="act_elephant_canter_turn_right_head" animation="elephant_canter_right" />
+				<action type="act_elephant_canter_turn_left_head" animation="elephant_canter_left" />
+				<action type="act_elephant_gallop_turn_right_head" animation="elephant_gallop_right" />
+				<action type="act_elephant_gallop_turn_left_head" animation="elephant_gallop_left" />
+
+				<action type="act_elephant_gallop_acceleration_head" animation="elephant_gallop_acceleration_head" />
+				<action type="act_elephant_strike_back" animation="elephant_hit" />
+				<action type="act_elephant_strike_front" animation="elephant_hit" />
+				<action type="act_elephant_strike_back_while_moving" animation="elephant_hit" />
+				<action type="act_elephant_strike_front_while_moving" animation="elephant_hit" />
+				<action type="act_elephant_fall_right" animation="elephant_death" />
+				<action type="act_elephant_fall_left" animation="elephant_death" />
+				<action type="act_elephant_fall_right_continue" animation="elephant_death" />
+				<action type="act_elephant_fall_left_continue" animation="elephant_death" />
+				<action type="act_elephant_fall_roll" animation="elephant_death" />
+				<action type="act_elephant_fall_roll_continue" animation="elephant_death" />
+				<action type="act_elephant_fall_backwards" animation="elephant_death" />
+				<action type="act_elephant_fall_slow_right" animation="elephant_death" />
+				<action type="act_elephant_fall_slow_right_continue" animation="elephant_death" />
+				<action type="act_elephant_fall_slow_left" animation="elephant_death" />
+				<action type="act_elephant_fall_slow_left_continue" animation="elephant_death" />
+				<action type="act_horse_conversation_start" animation="elephant_stand_3" />
+				<action type="act_inventory_idle_start" animation="elephant_stand_3" />
+				<action type="act_inventory_idle" animation="elephant_stand_3" />
+				<action type="act_elephant_attack_1" animation="elephant_attack_1" />
+				<action type="act_elephant_attack_2" animation="elephant_attack_2" />
+				<action type="act_elephant_attack_3" animation="elephant_attack_3" />
+				<action type="act_elephant_attack_4" animation="elephant_attack_4" />
+	</action_set>
+	<action_set id="as_elephant_town_and_village" skeleton="elephant_skeleton" base_set="as_elephant">
+		<action type="act_elephant_stand_1" animation="elephant_stand_3"/>
+	</action_set>
+	<action_set id="as_elephant_map" skeleton="elephant_skeleton" base_set="as_elephant">
+		<action type="act_map_mount_attack_1h" animation="elephant_stand_3"/>
+		<action type="act_map_mount_attack_spear" animation="elephant_stand_3"/>
+		<action type="act_map_mount_attack_swing" animation="elephant_stand_3"/>
+		<action type="act_map_mount_attack_unarmed" animation="elephant_stand_3"/>
+	</action_set>
+	<!-- ============================== /ELEPHANT ============================== -->
+
+
+	<!-- ============================== WAR CHARIOT (Rhûn Wainriders) ==============================
+	     Ported 1-for-1 from ROT 8.0 ROT-Content/ModuleData/action_sets.xml (issue #279; provenance:
+	     docs/features/chariot.md). skeleton="chariot_skeleton" embeds the full vanilla horse bone set
+	     (A-set, exact names), so the vanilla horse_* anim references genuinely animate horse A.
+	     SUBSTITUTION (10 mappings): ROT mapped rear/strike/fall actions to howdah_hit_from_front /
+	     howdah_death_front / elephant_death_front_continue / elephant_rear — none exist in TAOM's packs
+	     (verified 2026-06-12: 0 hits in LOTRLOME_Armory AssetPackages; elephant_rear exists but is
+	     elephant-skeleton = no matching bones). All 10 → chariot_stand_1. Death-visual polish = follow-up. -->
+<action_set id="as_chariot" skeleton="chariot_skeleton" movement_system="quadrupedal">
+		<action type="act_chariot_stand_for_movement_data" animation="chariot_stand_for_movement_data" />
+		<action type="act_chariot_stand_1" animation="chariot_stand_1" alternative_group="horse_stand_alternative_group" />
+
+		<action type="act_chariot_idle_1" animation="chariot_stand_1" alternative_group="idle_horse" />
+
+		<action type="act_hero_mount_idle_horse" animation="hero_mount_idle_horse" />
+
+		<action type="act_chariot_forward_walk_stand" animation="chariot_gait_walkfast" />
+		<action type="act_chariot_forward_walk" animation="chariot_walkfast" />
+		<action type="act_chariot_forward_walk_strafe_right" animation="chariot_strafe_r_cross_fast" />
+		<action type="act_chariot_forward_walk_strafe_left" animation="chariot_strafe_l_cross_fast" />
+		<action type="act_chariot_forward_trot_stand" animation="chariot_gait_walkfast" />
+		<action type="act_chariot_forward_trot" animation="chariot_walkfast" />
+		<action type="act_chariot_forward_trot_strafe_right" animation="chariot_strafe_r_cross_fast" />
+		<action type="act_chariot_forward_trot_strafe_left" animation="chariot_strafe_l_cross_fast" />
+		<action type="act_chariot_forward_canter_stand" animation="chariot_gait_walkfast" />
+		<action type="act_chariot_forward_canter" animation="chariot_canterfast" />
+		<action type="act_chariot_forward_canter_strafe_right" animation="chariot_strafe_r_cross_fast" />
+		<action type="act_chariot_forward_canter_strafe_left" animation="chariot_strafe_l_cross_fast" />
+		<action type="act_chariot_forward_gallop_right_foot_stand" animation="chariot_gait_walkfast" />
+		<action type="act_chariot_forward_gallop_right_foot" animation="chariot_canterfast" />
+		<action type="act_horse_forward_gallop_right_foot_strafe_right" animation="chariot_strafe_r_cross_fast" />
+		<action type="act_horse_forward_gallop_right_foot_strafe_left" animation="chariot_strafe_l_cross_fast" />
+		<action type="act_chariot_forward_gallop_left_foot_stand" animation="chariot_gait_walkfast" />
+		<action type="act_chariot_forward_gallop_left_foot" animation="chariot_canterfast" />
+		<action type="act_horse_forward_gallop_left_foot_strafe_right" animation="chariot_strafe_r_cross_fast" />
+		<action type="act_horse_forward_gallop_left_foot_strafe_left" animation="chariot_strafe_l_cross_fast" />
+		<action type="act_chariot_backward_walk_stand" animation="chariot_gait_walkbackfast" />
+		<action type="act_chariot_backward_walk" animation="chariot_walkbackfast" />
+		<action type="act_horse_backward_walk_strafe_right" animation="chariot_walkbackfast" />
+		<action type="act_horse_backward_walk_strafe_left" animation="chariot_walkbackfast" />
+		<action type="act_horse_rear" animation="chariot_stand_1" />
+		<action type="act_horse_rear_damaged" animation="chariot_stand_1" />
+		<action type="act_horse_kick" animation="horse_kick" />
+		<action type="act_horse_jump_start" animation="horse_jump_start" />
+		<action type="act_horse_dash" animation="horse_dash" />
+		<action type="act_horse_quick_stop" animation="horse_quick_stop" />
+		<action type="act_horse_quick_stop_when_fast" animation="horse_quick_stop_when_fast" />
+		<action type="act_horse_hit_object" animation="horse_run_collide" />
+		<action type="act_horse_hit_object_while_falling" animation="horse_jump_collide" />
+		<action type="act_horse_jump_high" animation="horse_jump_high" />
+		<action type="act_horse_jump_high_loop" animation="horse_jump_loop" />
+		<action type="act_horse_jump_high_end" animation="horse_jump_high_end" />
+		<action type="act_horse_jump_high_end_hard" animation="horse_jump_high_end_hard" />
+		<!-- deep-review 2026-06-12: ROT shipped animation="horse_jump_forwards" (trailing s) — no such
+		     clip in vanilla packs (ROT's own packs carried it). 1.4.6 strict lookups crash on missing
+		     clip names (spider RCA class). Vanilla's clip is horse_jump_forward. -->
+		<action type="act_horse_jump_forward" animation="horse_jump_forward" />
+		<action type="act_horse_jump_forward_loop" animation="horse_jump_forward_loop" />
+		<action type="act_horse_jump_forward_end" animation="horse_jump_forward_end" />
+		<action type="act_horse_jump_forward_end_hard" animation="horse_jump_forward_end_hard" />
+		<action type="act_chariot_turn_right" animation="chariot_turn_right" />
+		<action type="act_chariot_turn_left" animation="chariot_turn_left" />
+		<action type="act_horse_strafe_right" animation="chariot_turn_right" />
+		<action type="act_horse_strafe_left" animation="chariot_turn_left" />
+
+		<action type="act_horse_turn_right_head" animation="chariot_turn_right_head" />
+		<action type="act_horse_turn_left_head" animation="chariot_turn_left_head" />
+		<action type="act_horse_walk_turn_right_head" animation="chariot_walk_turn_right_head" />
+		<action type="act_horse_walk_turn_left_head" animation="chariot_walk_turn_left_head" />
+		<action type="act_horse_trot_turn_right_head" animation="chariot_walk_turn_right_head" />
+		<action type="act_horse_trot_turn_left_head" animation="chariot_walk_turn_left_head" />
+		<action type="act_horse_canter_turn_right_head" animation="chariot_canter_turn_right_head" />
+		<action type="act_horse_canter_turn_left_head" animation="chariot_canter_turn_left_head" />
+		<action type="act_horse_gallop_turn_right_head" animation="chariot_canter_turn_right_head" />
+		<action type="act_horse_gallop_turn_left_head" animation="chariot_canter_turn_left_head" />
+
+		<action type="act_horse_gallop_acceleration_head" animation="horse_upperbody_gallop" />
+		<action type="act_horse_strike_back" animation="chariot_stand_1" />
+		<action type="act_horse_strike_front" animation="chariot_stand_1" />
+		<action type="act_mount_strike_back_while_moving" animation="chariot_stand_1" />
+		<action type="act_mount_strike_front_while_moving" animation="chariot_stand_1" />
+		<action type="act_horse_fall_right" animation="chariot_stand_1" />
+		<action type="act_horse_fall_left" animation="chariot_stand_1" />
+		<action type="act_horse_fall_roll" animation="chariot_stand_1" />
+		<action type="act_horse_fall_roll_continue" animation="chariot_stand_1" />
+		<!-- parity audit 2026-06-12: vanilla-horse death-path coverage the flat ROT set lacked — the
+		     engine chases each fall action's _continue, and the usage-set fall rows reference
+		     fall_backwards; unmapped death-path actions are the 1.4.6 strict-lookup crash class. -->
+		<action type="act_horse_fall_right_continue" animation="chariot_stand_1" />
+		<action type="act_horse_fall_left_continue" animation="chariot_stand_1" />
+		<action type="act_horse_fall_backwards" animation="chariot_stand_1" />
+		<action type="act_horse_fall_jump_roll" animation="chariot_stand_1" />
+		<action type="act_horse_fall_jump_roll_continue" animation="chariot_stand_1" />
+		<action type="act_horse_conversation_start" animation="horse_conversation_start" />
+		<action type="act_inventory_idle_start" animation="chariot_inventory_start" />
+		<action type="act_inventory_idle" animation="chariot_inventory_idle" />
+
+		<action type="act_horse_story_background_1" animation="anim_horse_story_background_1" />
+		<action type="act_horse_story_background_2" animation="anim_horse_story_background_2" />
+		<action type="act_horse_story_background_3" animation="anim_horse_story_background_3" />
+		<action type="act_horse_story_background_4" animation="anim_horse_story_background_4" />
+		<action type="act_horse_story_background_5" animation="anim_horse_story_background_5" />
+		<action type="act_horse_story_background_6" animation="anim_horse_story_background_6" />
+
+		<action type="act_pose_troop_cavalry_lance" animation="pose_troop_cavalry_lance_horse" />
+
+		<action type="act_aserai_mp_beduin_mount_idle" animation="aserai_mp_beduin_mount_idle" />
+		<action type="act_aserai_mp_mamluke_mount_idle" animation="aserai_mp_mamluke_mount_idle" />
+		<action type="act_battania_mp_mounted_warrior_mount_idle" animation="battania_mp_mounted_warrior_mount_idle" />
+		<action type="act_battania_mp_mounted_warrior_mount_idle_perks" animation="battania_mp_mounted_warrior_mount_idle" />
+		<action type="act_vlandia_mp_vanguard_mount_idle" animation="vlandia_mp_vanguard_mount_idle" />
+		<action type="act_vlandia_mp_vanguard_mount_idle_smallshieldperk" animation="vlandia_mp_vanguard_mount_idle" />
+		<action type="act_vlandia_mp_knight_mount_idle" animation="vlandia_mp_knight_mount_idle" />
+		<action type="act_empire_mp_courser_mount_idle" animation="empire_mp_courser_mount_idle" />
+		<action type="act_empire_mp_courser_mount_smallshieldperk_idle" animation="empire_mp_courser_mount_idle" />
+		<action type="act_empire_mp_cataphract_mount_idle" animation="empire_mp_cataphract_mount_idle" />
+		<action type="act_khuzait_mp_lancer_mount_idle" animation="khuzait_mp_lancer_mount_idle" />
+		<action type="act_khuzait_mp_lancer_mount_idle_shieldperk" animation="khuzait_mp_lancer_mount_idle" />
+		<action type="act_khuzait_mp_nomad_mount_idle" animation="khuzait_mp_nomad_mount_idle" />
+		<action type="act_khuzait_mp_nomad_mount_idle_maceperk" animation="khuzait_mp_nomad_mount_idle" />
+		<action type="act_khuzait_mp_mounted_archer_mount_idle" animation="khuzait_mp_mounted_archer_mount_idle" />
+		<action type="act_sturgia_mp_raider_mount_idle" animation="sturgia_mp_raider_mount_idle" />
+		<action type="act_sturgia_mp_raider_mount_shieldperk_idle" animation="sturgia_mp_raider_mount_shieldperk_idle" />
+		<action type="act_sturgia_mp_druzhina_mount_idle" animation="sturgia_mp_druzhina_mount_idle" />
+		<action type="act_sturgia_mp_druzhina_idle_largeshieldperk" animation="sturgia_mp_druzhina_mount_idle" />
+	</action_set>
+
+	<action_set id="as_chariot_town_and_village" skeleton="chariot_skeleton" base_set="as_chariot">
+		<action type="act_chariot_stand_1" animation="chariot_stand_1" />
+		<action type="act_horse_stand_2" animation="chariot_stand_1" />
+		<action type="act_horse_stand_3" animation="chariot_stand_1" />
+		<action type="act_horse_stand_4" animation="chariot_stand_1" />
+	</action_set>
+	<action_set id="as_chariot_map" skeleton="chariot_skeleton" base_set="as_chariot">
+		<action type="act_map_mount_attack_1h" animation="chariot_stand_1" />
+		<action type="act_map_mount_attack_spear" animation="chariot_stand_1" />
+		<action type="act_map_mount_attack_swing" animation="chariot_stand_1" />
+		<action type="act_map_mount_attack_unarmed" animation="chariot_stand_1" />
+	</action_set>
+	<!-- ============================== /WAR CHARIOT ============================== -->
+
 	<!-- TAOM-CIVILIAN-COVERAGE:START (generated by tools/generate_race_civilian_action_sets.py) -->
 	<!-- elf -->
 	<action_set id="as_elf_barmaid" base_set="as_human_barmaid" />
