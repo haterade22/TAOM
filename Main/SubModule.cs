@@ -406,6 +406,18 @@ public class SubModule : MBSubModuleBase
         }
         catch { /* never block the main menu over a diagnostic */ }
 
+        // DevConsole discovery audit: ask the engine whether it actually registered TAOM's taom.*
+        // console commands. CollectCommandLineFunctions is invoked from TaleWorlds.Native.dll, so its
+        // timing relative to our assembly load is not knowable offline — but HasFunctionForCommand is
+        // public, so we can just ask. Queries a vanilla control command too, which is what makes a
+        // negative reading distinguishable between "too early" and "our command was dropped".
+        // Goes quiet once the answer is conclusive. See docs/features/dev-console.md.
+        try
+        {
+            Features.DevConsole.DevConsoleDiscoveryAudit.Run(IoC.Resolve<IModLogger>());
+        }
+        catch { /* never block the main menu over a diagnostic */ }
+
         // NativeSkinFixes — three native MinHook detours that fix engine bugs
         // TaleWorlds won't: covers_head morph freeze, hair cloth orphan, beard
         // cloth orphan. Loads TAOM.NativeSkinFixes.dll from Main/_Module/bin

@@ -2,6 +2,87 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-07-31
+
+### feat(devconsole): the shared contract every `taom.*` command will route through (#369)
+
+TAOM has one console command (`taom.add_special_resources`, #365) and a backlog of features whose
+smoke tests cost minutes to hours of manual setup — starting a siege and surviving a reinforcement
+wave, playing ~50 in-game days until the momentum payload crosses 32 KB. TOR_Core's
+`TORConsoleCommands.cs` prompted a broader suite. This is Phase 0: the contract, not the commands.
+
+Reading the engine first changed what the contract had to do. `CollectCommandLineFunctions` calls
+`Delegate.CreateDelegate` with no try/catch, and that call sits behind an `[EngineCallback]` invoked
+from `TaleWorlds.Native.dll` through a bare `[MonoPInvokeCallback]` — there is no
+`AppDomain.UnhandledException` handler anywhere in the decompiled managed tree, and
+`Utilities.AddCommandLineFunction` only runs after the collect returns. So a malformed command is
+plausibly a startup hazard, not a degraded console. Dispatch has the same shape, which makes a
+read-only command that walks `Settlement.All` no safer than a mutating one.
+
+`TaomConsole` is the answer: cheat gate, then help, then the body inside a catch-all, with the
+failure printed rather than thrown across the boundary. Three gates rather than one, because
+`CampaignCheats.CheckCheatUsage` demands a campaign and that would lock mission commands out of
+custom battles — TAOM's main venue for testing creatures and mounts. `DevConsoleArgs` holds the
+parsing that would otherwise be re-decided per command: invariant culture, and `NaN`/`Infinity`
+rejected rather than clamped (`float.TryParse` accepts both, and that bug class has shipped five
+times).
+
+`DevConsoleDiscoveryAudit` settles a question carried as "[Likely]" since #365. Whether the engine's
+discovery pass reaches the TAOM assembly is not decidable offline — the call site is native, and
+module load order is data-dependent — but `HasFunctionForCommand` is public, so TAOM asks at startup.
+It queries a vanilla control command alongside our own; without that control, "our command is
+missing" cannot distinguish "too early" from "dropped", and those need opposite reactions. It is also
+the only way a silent duplicate-name drop becomes visible on a player's machine.
+
+Naming settled from evidence rather than taste: across all 130 vanilla commands, `print_` appears 9
+times and `dump_` zero, so `print_` is the read-only verb and `dump_`/`list_`/`get_` fail the build.
+Console output stays raw English — vanilla's `CampaignCheats` strings are English consts that TAOM
+returns verbatim, so localizing ours would give a mixed-language console.
+
+The binding tests moved out of the SpecialResources folder, where they were misfiled as one feature's
+concern despite being an assembly-wide invariant, and gained three checks: unique qualified names,
+the naming convention, and invoking every command with no campaign. That last one proves in a single
+assertion that the gate exists, runs before any campaign access, does not throw, and that no
+declaring type touches engine state from a static initializer — the pattern TOR's command class uses
+and we deliberately do not.
+
+**Files:** `Main/Features/DevConsole/{TaomConsole,DevConsoleGuard,DevConsoleArgs,DevConsoleDiscoveryAudit}.cs`,
+`Main/SubModule.cs`, `Main/Features/SpecialResources/Cheats/SpecialResourceCheats.cs`,
+`TAOM.Tests/Features/DevConsole/*`, `docs/features/dev-console.md`,
+`docs/features/special-resources.md`, `docs/reference/feature-map.md`, `CLAUDE.md`.
+
+`/deep-review` (5 agents) found no functional bug in the C#, and API compatibility re-verified all 8
+engine signatures against the installed v1.4.7 DLLs rather than the dump. What it did find was a
+cluster of claims stated more confidently than the evidence supported — five of nine findings sat in
+comments and the feature doc. One mattered: the vanilla-command inventory had been grepped across the
+whole decompile tree, which carries a dual shipping/editor build, so `mission.list_agent_ids`
+(editor-only, zero occurrences in the shipping client) was written into the doc's "already exists, do
+not reimplement" list, and the `mission.*` group was undercounted as 6 against a real 10. Fixed, with
+the trap now named in the doc and the lesson appended to `lessons/adapters-taleworlds-api.md`.
+
+Also from the review: `TaomConsole` null-coalesced the body result but returned `usage` raw on the
+help branch, so a command authored with a null usage string would return null across the native
+boundary — every return path from the shell is now defended identically. `DevConsoleArgs.TryParseSide`
+was deleted; it had zero callers, written ahead of a `spawn_troops` command that is deferred, and the
+"pin shared sub-problems once" rule it was justified by applies to sub-problems appearing in two or
+more builder briefs, not one. The discovery audit now caches its attributed-command scan, so a build
+declaring zero commands no longer re-reflects over every type on each return to the main menu.
+
+Parse-error wording changed as a side effect of the migration: the messages now name the offending
+input (`Please enter a number — 'abc' is not a number.`) instead of a bare sentence. Nothing asserted
+the old strings.
+
+**Tests:** 24 new — 5 binding-contract, 14 parser, 5 audit-verdict — and the full suite green. The
+five binding guards and the four audit verdicts were each verified RED by injecting their defects
+before acceptance. RCA: `docs/reviews/rca-devconsole-phase0-2026-07-31.md`.
+
+Research: `CommandLineFunctionality`, `ManagedExtensions`, `EngineCallbacksGenerated`, `CampaignCheats`, `Game`, `Mission`
+Constraint: the native call site for `CollectCommandLineFunctions` is not decompilable — discovery timing can only be answered at runtime, hence the startup audit
+Rejected: an IL scan asserting every command routes through `TaomConsole` — the invoke-with-no-campaign test gets ~90% of the enforcement for ~5% of the machinery
+Rejected: porting TOR's `trigger_fatal_crash` — in a released mod it would pollute `CrashReport`'s signal with reports indistinguishable from real ones
+Not-tested: the gates themselves (need a live `Game`) and the audit's engine-querying half; the in-game discovery check at the main menu is still owed
+Save-compat: no new save fields
+
 ## 2026-07-30
 
 ### fix(lotrissues): the deliver-captives quests counted a troop type TAOM barely has (#368)

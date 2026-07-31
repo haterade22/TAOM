@@ -262,6 +262,7 @@ instructions `AGENTS.md`.
 | **Vendored DLLs** | `Main/_Module/bin/Win64_Shipping_Client/` = allowlist (`MinHook.x64.dll`, `TAOM.NativeSkinFixes.dll`). Do NOT vendor `MCMv5.dll`. |
 | **BehaviorTreeMissionLogic** | `: MissionLogic`, NOT `MissionBehavior` — regression rule, `docs/reviews/rca-looter-battle-nre-2026-05-24.md`. |
 | **Armory** | dep is `LOTRLOME_Armory` (NOT `Armory_2`). Item defs under `.../LOTRLOME_Armory/ModuleData/LOTRLOME_items/<folder>/`. |
+| **Console commands** | A `[CommandLineArgumentFunction]` method with the wrong shape throws inside the engine's unguarded discovery loop, past a native boundary with no managed backstop — a startup hazard, not just a broken console. Duplicate names drop silently. Route through `TaomConsole`; `ConsoleCommandBindingTests` pins it. `docs/features/dev-console.md`. |
 
 ## Architecture (One-liner)
 

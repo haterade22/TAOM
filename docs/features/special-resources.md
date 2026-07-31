@@ -187,7 +187,7 @@ instead, so AI lords are never charged).
 - `SpecialResourceStorageServiceTests.cs` — 11 tests (get/set/add, clamp, multi-hero, multi-resource, restore-null)
 - `SpecialResourceServiceGrantTests.cs` — 9 tests for `GrantAmount` (cap clamp, floor at 0, already-at-cap, unresolved kingdom/culture, NaN/Infinity rejection, grant during an open party-screen session) against a real storage instance
 - `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
-- `ConsoleCommandBindingTests.cs` — 2 tests pinning the engine reflection contract for every attributed TAOM console command
+- `TAOM.Tests/Features/DevConsole/ConsoleCommandBindingTests.cs` — 5 tests pinning the engine reflection contract for every attributed TAOM console command (assembly-wide; see [dev-console.md](dev-console.md))
 
 ## Cheat Command
 
@@ -208,23 +208,17 @@ The grant targets the *resolved* resource only — there is no resource-id argum
 gate all read. It clamps to that resource's `cap` exactly like every legitimate earn path
 (`AddCapped`), and the console echoes the real before→after so a clamp is never silent.
 
-`SpecialResourceCheats.AddSpecialResources` is a thin entry point: it parses/validates the console
-text (rejecting `NaN` / `Infinity`, which `float.TryParse` otherwise accepts) and delegates to
-`ISpecialResourceService.GrantAmount`. The console echo is built by `FormatResult`, kept `internal`
-so its branches are testable without a running campaign. No registration is needed —
-`CommandLineFunctionality` reflects over every loaded assembly that references `TaleWorlds.Library`
-looking for static `string`-returning methods with the `CommandLineArgumentFunction` attribute.
+`SpecialResourceCheats.AddSpecialResources` is a thin entry point: it validates the console text and
+delegates to `ISpecialResourceService.GrantAmount`. The console echo is built by `FormatResult`, kept
+`internal` so its branches are testable without a running campaign. The cheat gate, the help branch
+and the exception guard live in `TaomConsole.RunInCampaign` with every other `taom.*` command, and
+`NaN` / `Infinity` rejection (which `float.TryParse` otherwise accepts) is handled by
+`DevConsoleArgs.TryParseAmount`.
 
-**Adding a second TAOM console command:** the engine's discovery loop calls
-`Delegate.CreateDelegate(typeof(Func<List<string>, string>), method)` **unguarded**, so a method with
-the attribute but the wrong shape throws and aborts discovery for every other command in the pass —
-including vanilla's `campaign.*` cheats. `ConsoleCommandBindingTests` enforces the shape; keep new
-commands under the `taom` group and the `(List<string>) : string` signature.
-
-**Unproven:** `CollectCommandLineFunctions` is called from `TaleWorlds.Native.dll`, so its timing
-relative to module assembly load could not be verified from the managed DLLs. At the main menu (no
-campaign loaded), `taom.add_special_resources` returning "Campaign was not started." proves discovery
-found it; "Could not find the command" means it did not. See #365.
+**Adding another TAOM console command:** read [dev-console.md](dev-console.md) first. It owns the
+engine contract — the unguarded `Delegate.CreateDelegate` in the discovery loop, the silent
+duplicate-name drop, the naming convention, the risk tiers, and the unresolved discovery-timing
+question. Do not duplicate any of that here.
 
 ## How to Add a New Kingdom's Resource
 

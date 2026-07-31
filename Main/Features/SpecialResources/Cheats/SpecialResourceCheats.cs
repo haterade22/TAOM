@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.Globalization;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
-using TAOM.Core.Validation;
+using TAOM.Features.DevConsole;
 
 namespace TAOM.Features.SpecialResources.Cheats;
 
@@ -17,6 +16,9 @@ namespace TAOM.Features.SpecialResources.Cheats;
 /// <see cref="ISpecialResourceService.GrantAmount"/>. Service-locator resolution is unavoidable and
 /// intended here — a static console method has no constructor to inject through (same precedent as
 /// <c>SpecialResourceMapBarMixin</c>). Only strings cross into the service, so no adapter is needed.
+///
+/// The cheat gate, the help branch and the catch-all live in <see cref="TaomConsole.RunInCampaign"/>
+/// with every other <c>taom.*</c> command; see <c>docs/features/dev-console.md</c>.
 /// </summary>
 public static class SpecialResourceCheats
 {
@@ -27,37 +29,32 @@ public static class SpecialResourceCheats
         + "If amount is not specified, 1000 is added. Negative amounts deduct (floored at 0).\n"
         + "Adds to the special resource your kingdom/culture currently grants, clamped to its cap.";
 
-    private static string _errorType;
-
     [CommandLineFunctionality.CommandLineArgumentFunction("add_special_resources", "taom")]
-    public static string AddSpecialResources(List<string> strings)
-    {
-        if (!CampaignCheats.CheckCheatUsage(ref _errorType)) return _errorType;
-        if (CampaignCheats.CheckHelp(strings)) return Usage;
-
-        var amount = DefaultAmount;
-        if (!CampaignCheats.CheckParameters(strings, 0))
+    public static string AddSpecialResources(List<string> strings) =>
+        TaomConsole.RunInCampaign(strings, Usage, args =>
         {
-            if (!CampaignCheats.CheckParameters(strings, 1))
-                return "Expected at most one argument.\n" + Usage;
-            if (!float.TryParse(strings[0], NumberStyles.Float, CultureInfo.InvariantCulture, out amount))
-                return "Please enter a number.\n" + Usage;
-            // float.TryParse accepts "NaN" and "Infinity" — both would poison the saved balance.
-            if (!FiniteFloatValidator.IsFinite(amount))
-                return "Amount must be a finite number.\n" + Usage;
-        }
+            var amount = DefaultAmount;
+            if (!CampaignCheats.CheckParameters(args, 0))
+            {
+                if (!CampaignCheats.CheckParameters(args, 1))
+                    return "Expected at most one argument.\n" + Usage;
+                // TryParseAmount rejects "NaN"/"Infinity", which float.TryParse accepts and which
+                // would poison the saved balance.
+                if (!DevConsoleArgs.TryParseAmount(args[0], out amount, out var parseError))
+                    return parseError + "\n" + Usage;
+            }
 
-        var hero = Hero.MainHero;
-        if (hero == null) return "No main hero.";
+            var hero = Hero.MainHero;
+            if (hero == null) return "No main hero.";
 
-        var result = IoC.Resolve<ISpecialResourceService>().GrantAmount(
-            hero.StringId,
-            hero.Clan?.Kingdom?.StringId,
-            hero.Culture?.StringId,
-            amount);
+            var result = IoC.Resolve<ISpecialResourceService>().GrantAmount(
+                hero.StringId,
+                hero.Clan?.Kingdom?.StringId,
+                hero.Culture?.StringId,
+                amount);
 
-        return FormatResult(result, amount);
-    }
+            return FormatResult(result, amount);
+        });
 
     /// <summary>
     /// Builds the console echo. Reports from the UNCLAMPED result (<c>Before + amount</c>) rather
