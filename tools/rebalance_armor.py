@@ -64,7 +64,7 @@ BODY_BASELINES = {
     'medium':   {'body_armor': 32, 'leg_armor': 16, 'weight': 13.0},
     'heavy':    {'body_armor': 42, 'leg_armor': 22, 'weight': 18.0},
     'elite':    {'body_armor': 50, 'leg_armor': 28, 'weight': 22.0},
-    'lord':     {'body_armor': 60, 'leg_armor': 34, 'weight': 24.0},
+    'lord':     {'body_armor': 60, 'leg_armor': 36, 'weight': 24.0},
 }
 
 HEAD_BASELINES = {
@@ -82,7 +82,7 @@ ARM_BASELINES = {
     'medium':   {'arm_armor': 14, 'weight': 1.0},
     'heavy':    {'arm_armor': 20, 'weight': 1.5},
     'elite':    {'arm_armor': 26, 'weight': 2.0},
-    'lord':     {'arm_armor': 32, 'weight': 2.5},
+    'lord':     {'arm_armor': 34, 'weight': 2.5},
 }
 
 LEG_BASELINES = {
@@ -91,16 +91,22 @@ LEG_BASELINES = {
     'medium':   {'leg_armor': 20, 'weight': 2.5},
     'heavy':    {'leg_armor': 28, 'weight': 3.5},
     'elite':    {'leg_armor': 34, 'weight': 4.0},
-    'lord':     {'leg_armor': 40, 'weight': 4.5},
+    'lord':     {'leg_armor': 42, 'weight': 4.5},
 }
 
+# Capes are the modifier-fragile slot: they carry TWO independently-boosted stats and use the
+# game's highest tier multiplier (x1.8). The old curve spanned only 16 points across all six
+# tiers -- less than one legendary_plate roll (+12) -- so a tier-2 pauldron could out-armor a
+# tier-6 one. Widened 2026-07-31 to satisfy the two-tier invariant; see check_curve_invariant().
+# civilian arm_armor=0 is load-bearing: a 0 stat is modifier-immune (the engine guards on
+# `num > 0`), and a nonzero value here trips the max(1,...) clamp for -3 protection cultures.
 SHOULDER_BASELINES = {
-    'civilian': {'body_armor': 2,  'arm_armor': 2,  'weight': 1.0},
-    'light':    {'body_armor': 5,  'arm_armor': 5,  'weight': 3.0},
-    'medium':   {'body_armor': 8,  'arm_armor': 8,  'weight': 5.0},
-    'heavy':    {'body_armor': 12, 'arm_armor': 10, 'weight': 7.0},
-    'elite':    {'body_armor': 15, 'arm_armor': 12, 'weight': 9.0},
-    'lord':     {'body_armor': 18, 'arm_armor': 15, 'weight': 11.0},
+    'civilian': {'body_armor': 2,  'arm_armor': 0,  'weight': 1.0},
+    'light':    {'body_armor': 5,  'arm_armor': 3,  'weight': 3.0},
+    'medium':   {'body_armor': 9,  'arm_armor': 6,  'weight': 5.0},
+    'heavy':    {'body_armor': 13, 'arm_armor': 11, 'weight': 7.0},
+    'elite':    {'body_armor': 19, 'arm_armor': 17, 'weight': 9.0},
+    'lord':     {'body_armor': 25, 'arm_armor': 22, 'weight': 11.0},
 }
 
 SLOT_BASELINES = {
@@ -110,6 +116,55 @@ SLOT_BASELINES = {
     'leg': LEG_BASELINES,
     'shoulder': SHOULDER_BASELINES,
 }
+
+# Armor delta of each `legendary_*` ItemModifier, from Native/ModuleData/item_modifiers.xml.
+# The engine applies it FLAT and INDEPENDENTLY to every nonzero armor stat, so a two-stat cape
+# gets it twice. Pinned by test_legendary_table_matches_shipped_item_modifiers_xml.
+LEGENDARY_ARMOR = {'cloth_unarmoured': 3, 'cloth': 5, 'leather': 7, 'chain': 9, 'plate': 12}
+
+# extract_variant_number() maps roman numerals I..XVIII to +0..+17 and adds straight into the
+# stat. Uncapped it eats the invariant margin (which runs as thin as +1), so cap it.
+VARIANT_CAP = 1
+
+# Per-slot loot-roll magnitude, overriding MATERIAL_MAP's modifier_group. material_type is NOT
+# touched (it drives hit sounds/FX and stays lore-correct) -- the two attributes are read
+# independently by the engine. Capes need this because the native ladder's deltas are calibrated
+# for chest-scale bases (30-60), not cape-scale (2-25): +12 on a 42-armor cuirass is +29%, but
+# +12 on a 12-armor pauldron is +100%.
+SLOT_MODIFIER_GROUPS = {
+    'shoulder': {
+        'civilian': 'cloth_unarmoured',  # +3
+        'light':    'cloth',             # +5
+        'medium':   'leather',           # +7
+        'heavy':    'chain',             # +9 -- naming-safe on Plate (Loose / Rusty)
+        'elite':    'chain',             # +9
+        'lord':     'chain',             # +9
+    },
+}
+
+# Every stat whose ladder must satisfy the two-tier invariant for a slot. Shoulder governs BOTH
+# stats: arm_armor on capes was invisible to every analyzer (_get_primary_stat returned only
+# body_armor), which is the blind spot that let the inversion ship.
+GOVERNED_STATS = {
+    'head':     ['head_armor'],
+    'body':     ['body_armor', 'leg_armor'],
+    'arm':      ['arm_armor'],
+    'leg':      ['leg_armor'],
+    'shoulder': ['body_armor', 'arm_armor'],
+}
+
+# Secondary stats take 60% of the cultural protection mod (see calculate_stats).
+SECONDARY_STATS = {('body', 'leg_armor'), ('shoulder', 'arm_armor')}
+
+
+def modifier_group_for(slot_type, tier):
+    """The modifier_group (loot-roll table) for a slot+tier, honoring SLOT_MODIFIER_GROUPS."""
+    return SLOT_MODIFIER_GROUPS.get(slot_type, {}).get(tier, MATERIAL_MAP[tier]['modifier_group'])
+
+
+def governed_stats(slot_type):
+    """Every stat whose ladder must satisfy the two-tier invariant for this slot."""
+    return GOVERNED_STATS.get(slot_type, [])
 
 # =============================================================================
 # Cultural Modifiers
@@ -357,18 +412,13 @@ def detect_tier(item_id, display_name, current_values, slot_type):
 
 
 def _get_primary_stat(values, slot_type):
-    """Get the primary armor stat for a slot type."""
-    if slot_type == 'head':
-        return values.get('head_armor')
-    elif slot_type == 'body':
-        return values.get('body_armor')
-    elif slot_type == 'arm':
-        return values.get('arm_armor')
-    elif slot_type == 'leg':
-        return values.get('leg_armor')
-    elif slot_type == 'shoulder':
-        return values.get('body_armor')
-    return None
+    """The SINGLE stat used for tier detection, weight laddering and report columns.
+
+    NOT the full governed set -- use governed_stats() for any balance judgment, or shoulder
+    arm_armor stays invisible (the blind spot behind the 2026-07-31 cape inversion).
+    """
+    stats = GOVERNED_STATS.get(slot_type)
+    return values.get(stats[0]) if stats else None
 
 
 def detect_culture(filepath, item_name):
@@ -418,17 +468,24 @@ def calculate_stats(tier, slot_type, culture, variant_num=0):
         else:
             # Protection stats use additive modifier + variant progression
             # Secondary stats (leg on body, arm on shoulder) get 60% of protection mod
-            if (slot_type == 'body' and stat == 'leg_armor') or \
-               (slot_type == 'shoulder' and stat == 'arm_armor'):
+            if (slot_type, stat) in SECONDARY_STATS:
                 prot_mod = int(round(mods['protection'] * 0.6))
             else:
                 prot_mod = mods['protection']
-            result[stat] = max(1, base_val + prot_mod + variant_num)
+            # A baseline of exactly 0 means "this slot does not carry this stat" (cape arm armor
+            # below heavy). It must stay 0 -- the engine's `num > 0` guard makes a 0 stat
+            # modifier-immune, which is what keeps low tiers out of the ladder entirely.
+            # variant_num is capped so a `Pauldron VI` cannot climb out of its own tier.
+            if base_val == 0:
+                result[stat] = 0
+            else:
+                result[stat] = max(1, base_val + prot_mod + min(variant_num, VARIANT_CAP))
 
-    # Material type from tier
+    # Material type from tier. material_type stays on the MATERIAL_MAP ladder (hit sounds/FX);
+    # modifier_group may be re-scoped per slot so the loot roll fits the slot's stat scale.
     mat = MATERIAL_MAP[tier]
     result['material_type'] = mat['material_type']
-    result['modifier_group'] = mat['modifier_group']
+    result['modifier_group'] = modifier_group_for(slot_type, tier)
 
     return result
 
@@ -544,7 +601,8 @@ def parse_current_values(armor_elem, slot_type):
 
 
 def process_file(filepath, slot_type, dry_run=True, weights_only=False,
-                 tier_source='keyword', roster_map=None, no_lower_armor=False):
+                 tier_source='keyword', roster_map=None, no_lower_armor=False,
+                 materials_only=False, keep_materials=False):
     """Process a single armor XML file. Returns list of change records.
 
     tier_source='roster' picks each item's tier from the derive_armor_tiers.py map (authoritative —
@@ -555,6 +613,15 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
     source it ladders by the item's current armor value and is guarded to currently-monolithic slots;
     combined with the roster source it sets weight by the roster tier (no guard needed — roster tiers
     already vary). Default (weights_only=False) is a full re-stat: armor + weight + material.
+
+    materials_only=True writes ONLY material_type + modifier_group — no armor, no weight. This is the
+    zero-combat-impact pass that puts each item on the loot-roll table its tier actually warrants
+    (the flat legendary bonus is what lets a low-tier item out-armor a high-tier one). Hero/boss
+    items are skipped in this mode regardless of tier_source.
+
+    keep_materials=True freezes material_type + modifier_group in a full re-stat. This used to be
+    implied by no_lower_armor, which is how ~1000 items kept a `plate` group they never earned —
+    the 2026-06-30 sweep ran --no-lower-armor across dale/rohan/arnor/mirkwood.
     """
     roster_map = roster_map or {}
     filename = os.path.basename(filepath)
@@ -598,8 +665,21 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
         culture = detect_culture(filepath, item_name)
         variant_num = 0
 
-        # --- pick the tier and the write mode ('skip' | 'weight' | 'full') ---
-        if tier_source == 'roster':
+        # --- pick the tier and the write mode ('skip' | 'weight' | 'material' | 'full') ---
+        if materials_only:
+            # Loot-roll retag only. Never touch hero/boss kit, whose material is hand-authored.
+            if is_excluded(item_id, item_name):
+                tier, mode = 'medium', 'skip'
+            elif tier_source == 'roster':
+                roster_tier = roster_map.get(item_id)
+                if roster_tier is None:
+                    tier, mode = 'medium', 'skip'   # unworn: no authoritative tier
+                else:
+                    tier = 'elite' if roster_tier == 'lord' else roster_tier
+                    mode = 'material'
+            else:
+                tier, mode = detect_tier(item_id, item_name, current_values, slot_type), 'material'
+        elif tier_source == 'roster':
             roster_tier = roster_map.get(item_id)
             if is_excluded(item_id, item_name) or roster_tier is None:
                 tier, mode = 'medium', 'skip'   # hero/boss or unworn: leave untouched
@@ -628,6 +708,11 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
             if mode == 'weight':
                 new_values, new_material, new_modifier = {}, current_material, current_modifier
                 has_change = new_weight != current_weight
+            elif mode == 'material':
+                # Loot-roll retag only: armor and weight are held at their current values.
+                new_values, new_weight = {}, current_weight
+                new_material, new_modifier = new_stats['material_type'], new_stats['modifier_group']
+                has_change = (new_material != current_material or new_modifier != current_modifier)
             else:  # full re-stat: armor + weight + material
                 new_values = {}
                 for s in ['head_armor', 'body_armor', 'arm_armor', 'leg_armor']:
@@ -635,9 +720,10 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                         tgt = new_stats[s]
                         # no_lower_armor: never reduce a stat (raise under-tiered items, keep the rest).
                         new_values[s] = max(tgt, current_values[s]) if no_lower_armor else tgt
-                # no_lower_armor also preserves material (don't downgrade Plate->Leather, which could
-                # affect modifier rolls); material is a separate cosmetic pass for "do not nerf" cultures.
-                if no_lower_armor:
+                # material/modifier is a CURVE-CORRECTNESS attribute, not an armor value, so
+                # no_lower_armor must NOT freeze it — that is how ~1000 items kept an unearned
+                # `plate` group. Use --keep-materials for the explicit opt-out.
+                if keep_materials:
                     new_material, new_modifier = current_material, current_modifier
                 else:
                     new_material, new_modifier = new_stats['material_type'], new_stats['modifier_group']
@@ -672,6 +758,10 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
         if has_change:
             if mode == 'weight':
                 item_changes[item_id] = {'weight': new_weight}
+            elif mode == 'material':
+                # Strictly materials: writing 'weight' here would round-trip weight="5" to "5.0".
+                item_changes[item_id] = {'material_type': new_material,
+                                         'modifier_group': new_modifier}
             else:
                 write_changes = dict(new_values)
                 write_changes['weight'] = new_weight
@@ -753,30 +843,36 @@ def print_report(all_changes):
                 new_primary = _get_primary_stat(c['new_values'], slot)
                 old_str = str(old_primary) if old_primary is not None else '—'
                 new_str = str(new_primary) if new_primary is not None else '—'
-                delta = f"{old_str}->{new_str}"
+                if not c['new_values'] and c['old_modifier'] != c['new_modifier']:
+                    # materials-only pass: the armor columns don't move, the loot table does
+                    delta = f"{c['old_modifier']}->{c['new_modifier']}"
+                else:
+                    delta = f"{old_str}->{new_str}"
 
                 marker = " ***" if c['status'] == 'CHANGED' else ""
                 name_display = c['name'][:50]
+                # modes that write no armor (weight/material) still show the item's real stats
+                shown = c['new_values'] or c['old_values']
 
                 if slot == 'body':
                     print(f"  {name_display:<50} {c['culture']:<12} {c['variant']:>3} "
-                          f"{c['new_values'].get('body_armor','—'):>5} {c['new_values'].get('arm_armor','—'):>5} "
+                          f"{shown.get('body_armor','—'):>5} {shown.get('arm_armor','—'):>5} "
                           f"{c['new_weight']:>6.1f} {c['new_material']:<10} {delta:>20}{marker}")
                 elif slot == 'head':
                     print(f"  {name_display:<50} {c['culture']:<12} {c['variant']:>3} "
-                          f"{c['new_values'].get('head_armor','—'):>5} "
+                          f"{shown.get('head_armor','—'):>5} "
                           f"{c['new_weight']:>6.1f} {c['new_material']:<10} {delta:>20}{marker}")
                 elif slot == 'arm':
                     print(f"  {name_display:<50} {c['culture']:<12} {c['variant']:>3} "
-                          f"{c['new_values'].get('arm_armor','—'):>5} "
+                          f"{shown.get('arm_armor','—'):>5} "
                           f"{c['new_weight']:>6.1f} {c['new_material']:<10} {delta:>20}{marker}")
                 elif slot == 'leg':
                     print(f"  {name_display:<50} {c['culture']:<12} {c['variant']:>3} "
-                          f"{c['new_values'].get('leg_armor','—'):>5} "
+                          f"{shown.get('leg_armor','—'):>5} "
                           f"{c['new_weight']:>6.1f} {c['new_material']:<10} {delta:>20}{marker}")
                 elif slot == 'shoulder':
                     print(f"  {name_display:<50} {c['culture']:<12} {c['variant']:>3} "
-                          f"{c['new_values'].get('body_armor','—'):>5} {c['new_values'].get('arm_armor','—'):>5} "
+                          f"{shown.get('body_armor','—'):>5} {shown.get('arm_armor','—'):>5} "
                           f"{c['new_weight']:>6.1f} {c['new_material']:<10} {delta:>20}{marker}")
 
     # Warnings: items with large changes
@@ -853,7 +949,17 @@ def main():
     parser.add_argument('--no-lower-armor', action='store_true',
                         help='Never reduce an armor stat (raise under-tiered items, keep the rest). '
                              'Use for "do not nerf" cultures (e.g. dunland).')
+    parser.add_argument('--materials-only', action='store_true',
+                        help='Write ONLY material_type + modifier_group (no armor, no weight). '
+                             'Puts each item on the loot-roll table its tier warrants; skips hero kit.')
+    parser.add_argument('--keep-materials', action='store_true',
+                        help='Freeze material_type + modifier_group during a full re-stat. '
+                             '(Used to be implied by --no-lower-armor.)')
     args = parser.parse_args()
+
+    if args.materials_only and args.weights_only:
+        print("ERROR: --materials-only and --weights-only are mutually exclusive.")
+        sys.exit(2)
 
     dry_run = not args.apply
     requested = {c.strip() for c in args.cultures.split(',') if c.strip()}
@@ -918,7 +1024,9 @@ def main():
             print(f"  Processing {culture_dir}/{armor_file}...")
             changes = process_file(filepath, slot_type, dry_run=dry_run, weights_only=args.weights_only,
                                     tier_source=args.tier_source, roster_map=roster_map,
-                                    no_lower_armor=args.no_lower_armor)
+                                    no_lower_armor=args.no_lower_armor,
+                                    materials_only=args.materials_only,
+                                    keep_materials=args.keep_materials)
             all_changes.extend(changes)
             files_processed += 1
 

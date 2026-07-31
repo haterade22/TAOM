@@ -46,11 +46,13 @@ STAT_TIERS = {
         "heavy":  {"body_armor": 42, "leg_armor": 22, "weight": 18.0},
         "elite":  {"body_armor": 50, "leg_armor": 28, "weight": 22.0},
     },
+    # Must mirror rebalance_armor.SHOULDER_BASELINES (pinned by
+    # tools/tests/test_armor_curve_invariant.py::GeneratorCurveSyncTests).
     "shoulder": {
-        "light":  {"body_armor": 5,  "arm_armor": 5,  "weight": 3.0},
-        "medium": {"body_armor": 8,  "arm_armor": 8,  "weight": 5.0},
-        "heavy":  {"body_armor": 12, "arm_armor": 10, "weight": 7.0},
-        "elite":  {"body_armor": 15, "arm_armor": 12, "weight": 9.0},
+        "light":  {"body_armor": 5,  "arm_armor": 3,  "weight": 3.0},
+        "medium": {"body_armor": 9,  "arm_armor": 6,  "weight": 5.0},
+        "heavy":  {"body_armor": 13, "arm_armor": 11, "weight": 7.0},
+        "elite":  {"body_armor": 19, "arm_armor": 17, "weight": 9.0},
     },
     "arm": {
         "light":  {"arm_armor": 8,  "weight": 0.6},

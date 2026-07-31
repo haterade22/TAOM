@@ -36,10 +36,15 @@ Primary-stat baseline (from `SLOT_BASELINES`):
 | Slot | light | medium | heavy | elite | lord |
 |------|------:|-------:|------:|------:|-----:|
 | body (`body_armor`) | 20 | 32 | 42 | 50 | 60 |
+| body (`leg_armor`, secondary) | 10 | 16 | 22 | 28 | 36 |
 | head (`head_armor`) | 15 | 24 | 32 | 40 | 48 |
-| leg (`leg_armor`) | 12 | 20 | 28 | 34 | 40 |
-| arm (`arm_armor`) | 8 | 14 | 20 | 26 | 32 |
-| shoulder (`body_armor`) | 5 | 8 | 12 | 15 | 18 |
+| leg (`leg_armor`) | 12 | 20 | 28 | 34 | 42 |
+| arm (`arm_armor`) | 8 | 14 | 20 | 26 | 34 |
+| shoulder (`body_armor`) | 5 | 9 | 13 | 19 | 25 |
+| shoulder (`arm_armor`, secondary) | 3 | 6 | 11 | 17 | 22 |
+
+Secondary rows were previously undocumented (they exist only in code). Civilian is omitted above but
+is part of the curve; **shoulder civilian `arm_armor` is `0` on purpose** — see the invariant below.
 
 Cultural mods (`CULTURAL_MODS`) express identity — e.g. dwarves high-protection/high-weight, elves high-protection/low-weight, orcs cheap/heavy-for-protection:
 
@@ -57,6 +62,45 @@ Cultural mods (`CULTURAL_MODS`) express identity — e.g. dwarves high-protectio
 | troll | +8 | ×2.00 (boss — excluded) | | lothlorien* | +5 | ×0.70 |
 
 `dale` was **added 2026-06-30** (it was previously absent → ran on the neutral default). `lothlorien*` has a mod but no live folder/troop (reconciliation item).
+
+### The two-tier invariant (modifier-aware curve, 2026-07-31)
+
+The curve above describes **base** stats, but the player never only sees base stats. Bannerlord item
+modifiers add a **flat** armor bonus — `legendary_plate +12`, `chain +9`, `leather +7`, `cloth +5`,
+`cloth_unarmoured +3` — and `EquipmentElement.GetModifiedBodyArmor()` / `GetModifiedArmArmor()` apply
+it **independently to every nonzero stat**, each guarded by `num > 0`. A two-stat cape therefore takes
+the bonus twice, and a stat of exactly `0` is **modifier-immune**.
+
+The old shoulder curve spanned 16 points across all six tiers — less than a single `legendary_plate`
+roll — so a legendary tier-2 pauldron (9/9 → 21/21) out-armored a plain tier-6 one (20/14). The curve
+now satisfies, for every slot, governed stat, tier pair `(n, n-2)` and cultural protection value:
+
+```
+base[n] > base[n-2] + legendary(modifier_group[n-2]) + VARIANT_CAP
+```
+
+Beating the **adjacent** tier on a great roll is intended loot excitement and is never flagged;
+beating one **two or more** tiers up is the defect.
+
+Three constants enforce it, all in `rebalance_armor.py`:
+
+| Constant | Purpose |
+|---|---|
+| `LEGENDARY_ARMOR` | The native ladder, mirrored from `Native/ModuleData/item_modifiers.xml`. Pinned against the live install by a test, so an engine bump can't move it silently. |
+| `SLOT_MODIFIER_GROUPS` | Per-slot loot-roll magnitude. Shoulders cap at `chain` (+9) instead of `plate` (+12): the native deltas are sized for chest-scale bases (30-60), not cape-scale (2-25). **`material_type` is deliberately NOT changed** — it drives hit sounds/FX and stays lore-correct; the engine reads the two attributes independently. |
+| `VARIANT_CAP` | `extract_variant_number()` maps roman numerals to `+0..+17` straight into the stat. Uncapped it eats the invariant margin, which runs as thin as +1. |
+
+`GOVERNED_STATS` replaces the single-stat view: shoulder now governs **both** `body_armor` and
+`arm_armor`. `_get_primary_stat` still returns one scalar (14 call sites depend on it) but reads the
+head of that table; use `governed_stats()` for any balance judgment. Shoulder `arm_armor` being
+invisible to the primary lookup is exactly the blind spot that let the inversion ship.
+
+**Regression guards:** `analyze_armor_balance.check_curve_invariant()` is a pure function of the
+constants (reads no XML), runs before the per-culture loop, and exits non-zero on violation.
+`_check_tier_inversions()` reports the *item-level* version against the live tree, preferring roster
+tiers over the keyword guess and splitting severity (roster-backed = ERROR, keyword-tiered = WARN).
+`tools/tests/test_armor_curve_invariant.py` pins the whole thing, including the four per-culture
+generators, which carry their own copies of the tier table and do **not** import the curve.
 
 ### Tier assignment: roster-derived, not keyword-guessed (the Phase-2 principle)
 
@@ -94,6 +138,10 @@ Reading the map: **UNDER** = the item is weaker than its wearer's level implies 
 3. (open REPORT.html + ROSTER-TIERS.md)                # defects + the re-stat candidates
 4. python tools/rebalance_armor.py --dry-run --cultures <c>   # preview a scoped re-stat
 5. python tools/rebalance_armor.py --apply --cultures <c>     # write (scoped; never blanket)
+   #   --materials-only  writes ONLY material_type + modifier_group (no armor, no weight);
+   #                     safe with --all, skips hero kit. Run it before any curve pass.
+   #   --keep-materials  freezes them during a full re-stat (this used to be implied by
+   #                     --no-lower-armor, which is how ~1000 items kept an unearned `plate`).
 6. python tools/analyze_armor_balance.py               # re-run: confirm the defect cleared
 7. python tools/validate_all_troop_refs.py             # underwear-bug gate (no broken refs)
 ```
@@ -173,6 +221,45 @@ The analyzer is read-only and self-verifying: running it against the live tree m
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Cape modifier-inversion pass (2026-07-31)
+
+User report: `Legendary [Gondor] Anorien Infantry Pauldron I` (tier 2, 2,929g) showed Body 20 / Arm 20
+and beat `[Arnor] Noble Elite Pauldrons` (tier 6, 55,634g) at 20/14. Root cause was not the rebalance
+but the curve's blindness to the flat modifier ladder — see "The two-tier invariant" above.
+
+**Curve.** Shoulder widened to `2/5/9/13/19/25` body and `0/3/6/11/17/22` arm; shoulder loot rolls
+capped at `chain`. Three lord rows raised to break exact ties with a `plate` roll (body `leg_armor`
+34→36, arm 32→34, leg 40→42). These lord rows are **constants only** — no live re-stat of
+head/body/arm/leg was run (that would have touched 1,706 of 2,450 items), and the roster source maps
+`lord`→`elite` anyway, so the row is unreachable from it by construction.
+
+**Applied to the live tree.** `--materials-only --all`: 1,143 `modifier_group` + 933 `material_type`
+retags, verified by parse-diff to have moved **zero** armor or weight values. Then the shoulder curve
+via `--tier-source roster` for gondor, rohan, arnor, dale, mordor, dunland, mercenary, mirkwood,
+rivendell, rhun (10 files). Keyword tiering was rejected for this pass — it agrees with the roster map
+on only **71.5%** of shoulders (the documented Dale case).
+
+Result, measured by running the same check over the pre-fix backup tree with the pre-fix constants:
+shoulder inversions **129 → 57**, all-slot **716 → 574**, curve-invariant violations **11 → 0**.
+`validate_all_troop_refs` + `validate_moduledata` PASS; no item id changed. The reported pair now reads
+legendary Gondor **17/14** vs plain Arnor **21/18** — Arnor wins both rows.
+
+**Two residual buckets, both deliberately NOT fixed here** (each needs authoring judgment, not a
+mechanical pass):
+
+1. **31 inversions in gundabad, harad, iron_hills, erebor, dol_guldur, isengard** — plain overtake with
+   no modifier involved (Isengard heavy pauldrons at 38 body, Dol Guldur at 35, Erebor at 36/27 versus
+   a ~21 elite target). This is the cross-culture ceiling problem; a curve apply would drop them 12-23
+   points. Owner deferred it to its own PR.
+2. **26 inversions involving unworn items** — no troop wears them, so the roster map has no anchor and
+   roster mode skips them. Keyword tiering is *not* a safe fallback here: it would take
+   `roh_nbl_gorg_tst_6` from 25/25 to 3/2, `easterling02_v1_cape` from 20/15 to 5/3, and tier
+   `cts_rohan_shoulder_captain1` as **lord** (14/14 → 23/21). These need per-item intent.
+
+**Save/economy note:** rolled `ItemModifier`s persist in saves by `StringId`, so an already-owned
+legendary cape keeps its old `plate` roll until re-looted (cosmetic-persistent, not corrupting).
+`Value` is recomputed at deserialize, so cape prices move on the next launch.
 
 ## Referenced by
 

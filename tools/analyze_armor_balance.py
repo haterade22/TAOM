@@ -58,8 +58,23 @@ MONOLITHIC_MIN_ITEMS = 4
 EXCLUDE_ID_SUBSTRINGS = (
     'lotr_troll', 'cave_troll',          # boss creature kit (95 by design)
     'glorfindel', 'gf_',                 # rivendell hero
-    'dain_crown',                        # legitimate hero outlier (rest of dain_ is judged for the inversion bug)
+    'crown',                             # any crown is a fixed-display hero outlier (was 'dain_crown';
+                                         # [Gondor] King's Crown keyword-tiers as 'lord' and poisons comparisons)
 )
+
+
+_ROSTER_TIERS = None
+
+
+def _roster_tier_map():
+    """{item_id: roster tier} from derive_armor_tiers.py, loaded once. Empty if the map is absent."""
+    global _ROSTER_TIERS
+    if _ROSTER_TIERS is None:
+        try:
+            _ROSTER_TIERS = ra.load_roster_tier_map()[0] or {}
+        except Exception:
+            _ROSTER_TIERS = {}
+    return _ROSTER_TIERS
 
 
 def is_excluded(item_id, display_name):
@@ -110,6 +125,8 @@ def parse_culture_slot(filepath, slot_type):
             'excluded': is_excluded(item_id, name),
             'primary': primary,
             'weight': weight,
+            'values': values,                                # every governed stat, not just primary
+            'roster_tier': _roster_tier_map().get(item_id),  # None = keyword-tiered (never gates CI)
             'material_type': armor.get('material_type'),
             'modifier_group': armor.get('modifier_group'),
             'hair_cover': armor.get('hair_cover_type'),
@@ -128,6 +145,75 @@ def _baseline_target(slot_type, tier, culture):
     """Primary-stat target = baseline + cultural protection mod (mirrors rebalance_armor)."""
     stats = ra.calculate_stats(tier, slot_type, culture, variant_num=0)
     return ra._get_primary_stat(stats, slot_type)
+
+
+# Boss/creature cultures whose kit is deliberately off-curve and must not constrain the ladder.
+INVARIANT_EXEMPT_CULTURES = {'troll'}
+
+
+def _effective(base_val, protection, slot_type, stat, variant=0, variant_cap=None):
+    """One stat's shipped value for a culture, mirroring rebalance_armor.calculate_stats."""
+    if base_val == 0:
+        return 0
+    cap = ra.VARIANT_CAP if variant_cap is None else variant_cap
+    if (slot_type, stat) in ra.SECONDARY_STATS:
+        prot_mod = int(round(protection * 0.6))
+    else:
+        prot_mod = protection
+    return max(1, base_val + prot_mod + min(variant, cap))
+
+
+def check_curve_invariant(variant_cap=None):
+    """Validate SLOT_BASELINES x modifier ladder x CULTURAL_MODS against the two-tier invariant.
+
+    Bannerlord item modifiers are a FLAT armor bonus applied independently to every nonzero
+    stat, so a great roll on a low-tier item can leap past higher tiers. Beating the ADJACENT
+    tier is intended loot excitement; beating one TWO OR MORE tiers up is the defect.
+
+    For every slot, governed stat, tier pair (n, n-2) and cultural protection value:
+
+        VIOLATION iff  hi > 0  and  hi <= lo + legendary(modifier_group[n-2])
+
+    where hi is tier n at variant 0 (its best case) and lo is tier n-2 at the variant cap (its
+    worst case). `lo == 0` scores no legendary headroom -- the engine's `num > 0` guard makes a
+    0-valued stat modifier-immune.
+
+    Checking only the n-2 pair is sufficient for wider gaps because both the baselines and the
+    legendary ladder are monotone in the same direction (pinned by the tests).
+
+    Pure function of the curve constants -- reads no XML. Returns a list of violation dicts.
+    """
+    cap = ra.VARIANT_CAP if variant_cap is None else variant_cap
+    protections = sorted({
+        mods['protection'] for culture, mods in ra.CULTURAL_MODS.items()
+        if culture not in INVARIANT_EXEMPT_CULTURES
+    } | {0})
+
+    violations = []
+    for slot_type, rows in ra.SLOT_BASELINES.items():
+        for stat in ra.governed_stats(slot_type):
+            for i in range(2, len(ra.TIERS)):
+                hi_tier, lo_tier = ra.TIERS[i], ra.TIERS[i - 2]
+                lego_group = ra.modifier_group_for(slot_type, lo_tier)
+                for protection in protections:
+                    hi = _effective(rows[hi_tier][stat], protection, slot_type, stat,
+                                    variant_cap=cap)
+                    lo = _effective(rows[lo_tier][stat], protection, slot_type, stat,
+                                    variant=cap, variant_cap=cap)
+                    lego = ra.LEGENDARY_ARMOR[lego_group] if lo > 0 else 0
+                    if hi > 0 and hi <= lo + lego:
+                        violations.append({
+                            'slot': slot_type, 'stat': stat,
+                            'hi_tier': hi_tier, 'lo_tier': lo_tier,
+                            'protection': protection,
+                            'hi': hi, 'lo': lo, 'lego': lego,
+                            'modifier_group': lego_group,
+                            'cultures': sorted(
+                                c for c, m in ra.CULTURAL_MODS.items()
+                                if m['protection'] == protection
+                                and c not in INVARIANT_EXEMPT_CULTURES),
+                        })
+    return violations
 
 
 def analyze_slot(culture, slot_type, items, parse_error):
@@ -216,7 +302,79 @@ def analyze_slot(culture, slot_type, items, parse_error):
                              'message': f"CEILING SHORTFALL: top combat {slot_type} armor {analysis['armorMax']} "
                                         f"is well under the elite target {elite_target} (lord {lord_target}) for this culture."})
 
+    # --- Two-tier overtake: a low-tier item whose legendary roll beats a plain high-tier one ---
+    # civilian items are legitimate LOW ends of the ladder, so they belong in the inversion sweep
+    inversions = _check_tier_inversions(combat + civilian, slot_type)
+    analysis['inversions'] = inversions
+    if inversions:
+        roster_backed = [v for v in inversions if v['roster_backed']]
+        ids = [v['low_id'] for v in inversions]
+        findings.append({
+            'severity': 'ERROR' if roster_backed else 'WARN',
+            'slot': slot_type,
+            'message': (f"TIER INVERSION: {len(inversions)} {slot_type} item(s) whose legendary roll "
+                        f"matches or beats a plain item two or more tiers above "
+                        f"({len(roster_backed)} roster-backed): "
+                        f"{', '.join(ids[:6])}{'…' if len(ids) > 6 else ''}")})
+
     return analysis, findings
+
+
+def _check_tier_inversions(items, slot_type):
+    """Find items whose LEGENDARY roll matches/beats a plain item >= 2 tiers above them.
+
+    Adjacent-tier overtake is intended loot excitement and is never reported. Every governed
+    stat is checked, not just the primary -- shoulder arm_armor being invisible to the primary
+    lookup is exactly what hid the 2026-07-31 cape inversion.
+
+    De-duplicated per low-tier item: the pair count scales quadratically and is pure noise.
+    """
+    tier_index = {t: i for i, t in enumerate(ra.TIERS)}
+    stats = ra.governed_stats(slot_type)
+    if not stats:
+        return []
+
+    def eff_tier(it):
+        """Roster tier wins over the keyword guess (the Phase-2 precedence). The keyword
+        detector puts the whole 3-15 armor sk_dg_khml_* set in 'lord', which would make every
+        comparison against it meaningless.
+
+        Roster 'lord' collapses to 'elite' because that is what rebalance_armor actually writes
+        (troops cap at elite; the lord row is hero-only). Comparing against a 'lord' label that
+        carries elite STATS would report a one-tier gap as a two-tier violation.
+        """
+        tier = it.get('roster_tier') or it['tier']
+        return 'elite' if (it.get('roster_tier') and tier == 'lord') else tier
+
+    worst = {}
+    for low in items:
+        li = tier_index.get(eff_tier(low))
+        if li is None:
+            continue
+        lego = ra.LEGENDARY_ARMOR.get(low.get('modifier_group') or '', 0)
+        for high in items:
+            hi = tier_index.get(eff_tier(high))
+            if hi is None or hi - li < 2:
+                continue
+            for stat in stats:
+                lo_val = (low['values'] or {}).get(stat)
+                hi_val = (high['values'] or {}).get(stat)
+                # A 0/absent stat is modifier-immune (engine guards on `num > 0`) and has no ladder.
+                if not lo_val or not hi_val:
+                    continue
+                if lo_val + lego >= hi_val:
+                    rec = {
+                        'low_id': low['id'], 'low_tier': eff_tier(low),
+                        'high_id': high['id'], 'high_tier': eff_tier(high),
+                        'stat': stat, 'low': lo_val, 'high': hi_val, 'lego': lego,
+                        'modifier_group': low.get('modifier_group'),
+                        # Keyword-tiered items misfire often enough that they must not gate CI.
+                        'roster_backed': bool(low.get('roster_tier') and high.get('roster_tier')),
+                    }
+                    prev = worst.get(low['id'])
+                    if prev is None or (lo_val + lego - hi_val) > (prev['low'] + prev['lego'] - prev['high']):
+                        worst[low['id']] = rec
+    return sorted(worst.values(), key=lambda v: -(v['low'] + v['lego'] - v['high']))
 
 
 def analyze_culture(culture, armory_dir):
@@ -270,11 +428,29 @@ def _slot_cell(a):
             f"· w {a.get('weightMin')}-{a.get('weightMax')}{mono}")
 
 
-def render_markdown(cultures, generated_at):
+def render_markdown(cultures, generated_at, curve_violations=None):
     lines = []
     lines.append("# TAOM Armor Balance Overview (read-only)\n")
     lines.append(f"_Generated {generated_at} from the LIVE LOTRLOME_Armory tree by "
                  "`tools/analyze_armor_balance.py`. Curve owned by `tools/rebalance_armor.py`._\n")
+    lines.append("## Curve invariant\n")
+    if curve_violations:
+        lines.append(f"**{len(curve_violations)} VIOLATION(S)** — a legendary roll on the low tier "
+                     "matches or beats the plain high tier two or more tiers up. Every per-culture "
+                     "verdict below is measured against this curve, so fix it first.\n")
+        lines.append("| slot | stat | pair | hi | lo | legendary | group |")
+        lines.append("|---|---|---|--:|--:|--:|---|")
+        seen = set()
+        for v in curve_violations:
+            key = (v['slot'], v['stat'], v['lo_tier'], v['hi_tier'])
+            if key in seen:
+                continue
+            seen.add(key)
+            lines.append(f"| {v['slot']} | {v['stat']} | {v['lo_tier']} → {v['hi_tier']} | "
+                         f"{v['hi']} | {v['lo']} | +{v['lego']} | {v['modifier_group']} |")
+        lines.append("")
+    else:
+        lines.append("PASS — no tier is beatable by a legendary roll from two or more tiers below.\n")
     lines.append("Hero / boss / fixed-display items are excluded from all curve judgments. "
                  "Tiers are APPROX (keyword-based; Phase 2 replaces with roster-derived tiering).\n")
 
@@ -403,15 +579,20 @@ def main():
               + (f" matching --culture {args.culture}" if args.culture else ""))
         sys.exit(1)
 
+    # Curve invariant first: it is a pure property of the constants, so a violation invalidates
+    # every per-culture judgment below (they are all measured against that curve).
+    curve_violations = check_curve_invariant()
+
     cultures = [analyze_culture(c, armory_dir) for c in culture_dirs]
 
     generated_at = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     os.makedirs(REPORT_DIR, exist_ok=True)
     with open(REPORT_JSON, 'w', encoding='utf-8') as f:
-        json.dump({'generatedAt': generated_at, 'armoryDir': armory_dir, 'cultures': cultures},
+        json.dump({'generatedAt': generated_at, 'armoryDir': armory_dir,
+                   'curveInvariant': curve_violations, 'cultures': cultures},
                   f, indent=2)
     with open(REPORT_MD, 'w', encoding='utf-8') as f:
-        f.write(render_markdown(cultures, generated_at))
+        f.write(render_markdown(cultures, generated_at, curve_violations))
     with open(REPORT_HTML, 'w', encoding='utf-8') as f:
         f.write(render_html(cultures, generated_at))
 
@@ -421,6 +602,26 @@ def main():
           f"{sum(c['totalItems'] for c in cultures)} items. "
           f"{total_err} errors, {total_warn} warnings.")
     print(f"Reports: {REPORT_HTML}")
+
+    if curve_violations:
+        print(f"\nCURVE INVARIANT: {len(curve_violations)} VIOLATION(S)")
+        seen = set()
+        for v in curve_violations:
+            key = (v['slot'], v['stat'], v['lo_tier'], v['hi_tier'])
+            if key in seen:
+                continue
+            seen.add(key)
+            print(f"  {v['slot']:9}.{v['stat']:11} {v['lo_tier']:9}->{v['hi_tier']:8} "
+                  f"hi={v['hi']:>3} <= lo={v['lo']:>3} + legendary {v['lego']:>2} ({v['modifier_group']})")
+        print("  A legendary roll on the low tier matches/beats the plain high tier. "
+              "Widen SLOT_BASELINES or lower the modifier group (SLOT_MODIFIER_GROUPS).")
+
+    total_inversions = sum(
+        len(s.get('inversions', []))
+        for c in cultures for s in c['slots'].values() if isinstance(s, dict))
+    if total_inversions:
+        print(f"Item-level tier inversions: {total_inversions} "
+              f"(items whose legendary roll beats a plain item 2+ tiers up)")
 
     if args.stdout:
         print("\n=== EXECUTIVE SUMMARY ===")
@@ -434,6 +635,10 @@ def main():
             for f in c['findings']:
                 if 'MONOLITHIC' in f['message']:
                     print(f"  {c['culture']:<12} {f['slot']:<9} {f['message']}")
+
+    # A broken curve is a hard failure: every per-culture verdict is measured against it.
+    if curve_violations:
+        sys.exit(1)
 
 
 if __name__ == '__main__':
