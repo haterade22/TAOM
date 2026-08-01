@@ -4,6 +4,7 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.RaceAge;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Tests.Features.RaceAge;
 
@@ -19,6 +20,7 @@ public class RaceAgeBehaviorTests
     private IRaceAgeService _raceAgeService;
     private IHeroAgeAdapter _heroAgeAdapter;
     private IModLogger _logger;
+    private ICoopSessionProvider _coopSession;
     private RaceAgeBehavior _sut;
 
     [TestInitialize]
@@ -27,7 +29,11 @@ public class RaceAgeBehaviorTests
         _raceAgeService = Substitute.For<IRaceAgeService>();
         _heroAgeAdapter = Substitute.For<IHeroAgeAdapter>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new RaceAgeBehavior(_raceAgeService, _heroAgeAdapter, _logger);
+        // Authority = true reproduces singleplayer / co-op host, which is what every existing
+        // assertion in this class is about. The client-stands-down path is pinned separately below.
+        _coopSession = Substitute.For<ICoopSessionProvider>();
+        _coopSession.IsAuthority.Returns(true);
+        _sut = new RaceAgeBehavior(_raceAgeService, _heroAgeAdapter, _logger, _coopSession);
     }
 
     private void GivenHero(string id, int race, float age, bool shouldDie, bool killSucceeds)
@@ -82,5 +88,33 @@ public class RaceAgeBehaviorTests
 
         _heroAgeAdapter.DidNotReceive().KillByOldAge(Arg.Any<string>());
         _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    // --- Co-op authority gate (#370 / BannerlordCoop interop) -----------------------------------
+
+    [TestMethod]
+    public void OnDailyTick_CoopClient_DoesNotEvaluateAnyHero()
+    {
+        // BannerlordCoop does NOT suppress the client's global DailyTickEvent (only the per-entity
+        // tickers), so without this gate a client re-runs old-age death evaluation on heroes the
+        // host has already killed and replicated. Assert the behaviour never even READS the roster,
+        // not merely that it kills nobody — an early return is the contract.
+        _coopSession.IsAuthority.Returns(false);
+
+        _sut.OnDailyTick();
+
+        _heroAgeAdapter.DidNotReceive().GetAllAliveHeroAges();
+    }
+
+    [TestMethod]
+    public void OnDailyTick_CoopHostOrSingleplayer_EvaluatesHeroes()
+    {
+        // The complement, so the gate cannot be "fixed" by disabling the feature outright.
+        _coopSession.IsAuthority.Returns(true);
+        _heroAgeAdapter.GetAllAliveHeroAges().Returns(new List<HeroAgeInfo>());
+
+        _sut.OnDailyTick();
+
+        _heroAgeAdapter.Received(1).GetAllAliveHeroAges();
     }
 }

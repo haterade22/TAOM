@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.RaceAge;
 
@@ -12,14 +13,18 @@ public class RaceAgeBehavior : CampaignBehaviorBase
     private readonly IModLogger _logger;
     private readonly List<HeroAgeInfo> _deathList = new List<HeroAgeInfo>();
 
+    private readonly ICoopSessionProvider _coopSession;
+
     public RaceAgeBehavior(
         IRaceAgeService raceAgeService,
         IHeroAgeAdapter heroAgeAdapter,
-        IModLogger logger)
+        IModLogger logger,
+        ICoopSessionProvider coopSession)
     {
         _raceAgeService = raceAgeService;
         _heroAgeAdapter = heroAgeAdapter;
         _logger = logger;
+        _coopSession = coopSession;
     }
 
     public override void RegisterEvents()
@@ -36,6 +41,11 @@ public class RaceAgeBehavior : CampaignBehaviorBase
     // internal for TAOM.Tests (InternalsVisibleTo, see TAOM.csproj).
     internal void OnDailyTick()
     {
+        // CO-OP: host-only. Kills heroes of old age. The global DailyTickEvent DOES fire on a
+        // BannerlordCoop client, so an ungated run kills the same heroes locally a second time and
+        // desyncs the roster against the host that already replicated the deaths.
+        if (!_coopSession.IsAuthority) return;
+
         _deathList.Clear();
 
         foreach (var hero in _heroAgeAdapter.GetAllAliveHeroAges())

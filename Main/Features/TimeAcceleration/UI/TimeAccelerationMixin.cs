@@ -1,5 +1,6 @@
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
+using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapBar;
 using TaleWorlds.Core.ViewModelCollection.Information;
@@ -9,6 +10,7 @@ using TaleWorlds.Localization;
 namespace TAOM.Features.TimeAcceleration.UI;
 
 [ViewModelMixin("RefreshValues")]
+[CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class TimeAccelerationMixin : BaseViewModelMixin<MapTimeControlVM>
 {
     private bool _isExtraFastForwardActive;

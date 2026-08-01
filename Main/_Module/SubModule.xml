@@ -26,6 +26,7 @@
          <DependedModule> — that would make TAOM unlaunchable without the co-op mod installed. -->
     <DependedModuleMetadata id="BannerlordTogether" order="LoadAfterThis" optional="true" />
     <DependedModuleMetadata id="BattleLinkMPClient" order="LoadAfterThis" optional="true" />
+    <DependedModuleMetadata id="Coop" order="LoadAfterThis" optional="true" />
   </DependedModuleMetadatas>
   <!-- Engine-honoured load-order pin (vanilla launcher topology-sorts on this + DependedModules).
        Ordering TAOM before the co-op layer is what the Priority.High on the DeclareWar/MakePeace
@@ -36,6 +37,10 @@
   <ModulesToLoadAfterThis>
     <Module Id="BannerlordTogether" />
     <Module Id="BattleLinkMPClient" />
+    <!-- BannerlordCoop (Workshop 3770450698) — distinct from BannerlordTogether; launcher id is the
+         bare "Coop". Ordering TAOM first matters for the same Priority.High DeclareWar/MakePeace
+         reason as above. Details: docs/research/bannerlordcoop-internals.md -->
+    <Module Id="Coop" />
   </ModulesToLoadAfterThis>
   <SubModules>
     <SubModule>

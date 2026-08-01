@@ -46,6 +46,20 @@ public static class PatchShieldPolicy
         "BUTR.",
         "HarmonyLib.",
         "0Harmony",
+        // BannerlordCoop's four Harmony owner ids, read from its decompiled source 2026-08-01:
+        // "Bannerlord.Coop" (GameInterfaceModule.HarmonyId — carries every explicit patch plus the
+        // whole AutoSync transpiler engine), "Coop.UILoading" (CoopMod.cs:97), "Coop.BootFix"
+        // (BootPatches.cs:58) and "CoopAutoRegistryFactory" (AutoRegistryFactory.cs:18, declared but
+        // never used to patch). Listed explicitly rather than as a bare "Coop" prefix so the entry
+        // stays self-documenting and cannot swallow an unrelated mod whose id merely starts "Coop".
+        //
+        // Belt-and-braces only: ShouldUnpatchForeignOwners already disables the strip path outright
+        // whenever a co-op module is active. This matters for the window where the module-list probe
+        // has not yet succeeded. Internals: docs/research/bannerlordcoop-internals.md
+        "Bannerlord.Coop",
+        "Coop.UILoading",
+        "Coop.BootFix",
+        "CoopAutoRegistryFactory",
     };
 
     /// <summary>

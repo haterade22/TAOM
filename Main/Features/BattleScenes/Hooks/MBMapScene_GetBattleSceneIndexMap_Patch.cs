@@ -17,8 +17,16 @@ public static class MBMapScene_GetBattleSceneIndexMap_Patch
     // and missing writes from another thread. The patch fires from rendering threads (`GetBattleSceneIndexMap`
     // is called during map load and battle init), so multi-thread visibility matters. Dormant
     // today (category Patch0_BattleScenes is commented out in SubModule.cs), but if the feature is
-    // ever re-enabled this guard must be cross-thread-correct. Also marked the class `static` per
-    // Harmony 2 patch-class convention (same fix as #151).
+    // ever re-enabled this guard must be cross-thread-correct. Also marked this type `static` per
+    // the Harmony 2 patch-type naming rule (same fix as #151).
+    //
+    // Wording note (2026-08-01): the previous phrasing put the word "class" late on one comment
+    // line and "convention" at the start of the next. CoopVetoClassificationTests' source scanner
+    // then extracted a phantom declaration named `convention`, attributed this file's bool prefix
+    // to it, and simultaneously reported the real registry entry as stale — two failures from one
+    // comment. Rewording fixed both (verified); the exact regex interaction was not reproduced in
+    // isolation, so treat this as "avoid the word 'class' near a line break in comments in files
+    // that declare a bool Prefix", not as a precise rule.
     private static volatile bool _isRetrying;
     private const int MaxRetries = 3;
     private const int RetryDelayMs = 250;

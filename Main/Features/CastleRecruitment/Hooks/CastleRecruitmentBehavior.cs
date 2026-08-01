@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.CastleRecruitment.Hooks;
 
@@ -27,11 +28,14 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
     private readonly ICastleRecruitmentService _service;
     private readonly CastleNotableMaintainer _maintainer;
     private readonly IModLogger _logger;
+    private readonly ICoopSessionProvider _coopSession;
 
-    public CastleRecruitmentBehavior(ICastleRecruitmentService service, IModLogger logger)
+    public CastleRecruitmentBehavior(ICastleRecruitmentService service, IModLogger logger,
+        ICoopSessionProvider coopSession)
     {
         _service = service;
         _logger = logger;
+        _coopSession = coopSession;
         _maintainer = new CastleNotableMaintainer(service, logger);
     }
 
@@ -89,14 +93,29 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
 
     // --- Notable population + volunteer fill (delegated to the maintainer) ---
 
-    private void OnNewGameCreated(CampaignGameStarter starter)
+    // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
+    internal void OnNewGameCreated(CampaignGameStarter starter)
     {
+        if (!_coopSession.IsAuthority) return;
         if (_service.IsEnabled)
             _maintainer.EnsureAllCastles();
     }
 
-    private void OnGameLoaded(CampaignGameStarter starter)
+    // CO-OP: host-only. This is the one castle-recruitment path a client actually reaches — the
+    // daily work is on DailyTickSettlementEvent, which BannerlordCoop's PartyTickPatch blocks on a
+    // client, but OnGameLoadedEvent fires on every peer because a joining client loads the HOST'S
+    // save through the normal SaveManager pipeline.
+    //
+    // EnsureAllCastles is deficit-based (it spawns only target-minus-existing), so with matching MCM
+    // settings it is a no-op. But MCM settings are per-user and BannerlordCoop syncs none of them, so
+    // a client whose CastleNotablesPerCastle exceeds the host's spawns the difference locally — and
+    // HeroCreator.CreateNotable on a client runs into Coop's MBObjectBase.StringId setter prefix,
+    // which suppresses the write and leaves MBObjectManager's Dictionary<string,T> to throw on a
+    // null key. Either way the notables would be heroes the host never created.
+    // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
+    internal void OnGameLoaded(CampaignGameStarter starter)
     {
+        if (!_coopSession.IsAuthority) return;
         if (_service.IsEnabled)
             _maintainer.EnsureAllCastles();
     }

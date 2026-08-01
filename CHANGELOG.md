@@ -4,6 +4,58 @@
 
 ## 2026-08-01
 
+### feat(coopinterop): TAOM can see BannerlordCoop at all, and stands down on a client
+
+BannerlordTogether and BannerlordCoop are different projects. The interop layer shipped yesterday was
+built for the first; the mod players are installing is the second, whose launcher id is the bare
+string `Coop`. `CoopPresence` matches ids by exact equality, so nothing about `BannerlordTogether`
+matched it — meaning every shield TAOM built was inert against the co-op mod actually in use.
+PatchShield went on stripping foreign Harmony patches, SaveShield went on swallowing save faults, and
+the census never wrote a line.
+
+Adding one id is most of the fix, but it exposed two things the id alone does not solve.
+
+The `AssemblyResolve` redirect matches on simple name and throws the requested version away, which is
+safe only while our copy is the newest in the process. Coop ships five of those names higher —
+`Serilog` 4.2 against our 2.0, `System.Runtime.CompilerServices.Unsafe` 6.0 against our 4.0, and
+three more measured directly rather than assumed. Keeping them meant handing Coop's callers an
+assembly a decade older than the one they compiled against. All five are gone; the BUTR stack that
+motivated the shim stays. Neither a version comparison nor a co-op gate would work here: Coop loads
+one of them by bare partial name, and the handler installs from a static constructor long before any
+module probe can run.
+
+The second is that Coop does not stop a client ticking the campaign. Its patches block the per-entity
+tickers, so `DailyTickSettlementEvent` never reaches a client — but the global `DailyTickEvent` and
+`HourlyTickEvent` fire on both peers, and Coop's own defence is a hand-written allowlist over named
+vanilla types with no hook a third-party mod can register into. Seven TAOM behaviours now consult a
+new `ICoopSessionProvider` and defer to the host: culture conversion, race aging, both War of the Ring
+behaviours, messengers, siege defence, and castle recruitment's load-time notable top-up. The
+authority decision is a two-line policy split out from its reflection binder so it can be tested
+without a running game, and it fails open to singleplayer — a false negative there would quietly
+disable TAOM for solo players, which is worse than the divergence it guards against.
+
+Career quests were audited and deliberately left running on both peers: they key off `Hero.MainHero`,
+which is a legitimately different hero for each player, and gating them would delete the feature for
+clients.
+
+Culture conversion is the one worth calling out. On a client its store holds the same pending records
+as the host, because the client loaded the host's save — so it matures the same conversions locally
+and replaces notables through `HeroCreator.CreateNotable`. Coop suppresses the `MBObjectBase.StringId`
+setter on a client, leaving the id null for a `Dictionary` lookup that does not guard against one.
+Every link in that chain was read in source; none of it has been reproduced in-game, and the code
+comments say so. It is gated regardless, because the alternative outcome is a notable the host never
+created.
+
+Also settled, and worth not re-deriving: there is no save-definer collision (Coop sits ~682 million
+ids away), Coop registers no GameModels so TAOM's ~30 overrides survive untouched, and network
+identity is keyed on `StringId` built per-peer — so TAOM's XML content resolves on both sides with no
+work at all. The analysis behind all of it, including the integration surface for syncing TAOM's own
+state later, is written up rather than left in a transcript.
+
+Not done, and listed in the feature doc rather than implied: no MCM settings parity across peers, no
+ModuleData content hash, no replication of TAOM's own campaign state after the join baseline, and no
+dedicated-server support. End-to-end co-op remains unverified.
+
 ### fix(herorace): characters no longer render lying flat in every UI tableau
 
 The real cause of the "bendy man" reports, and it was not the DLL version mismatch closed in #371 —
@@ -114,8 +166,38 @@ found four prefixes nobody knew were there — it caught its own first two imple
 wrong, once by reflecting over the assembly (four engine-coupled classes came back null in the test
 host) and once by keying on file rather than class (one file holds three patch classes).
 
+The force-flag decision itself was then extracted into `CoopPresencePolicy` — pure, no I/O, 13
+tests — because the first version shipped the branch inside `CoopPresence`, which is static and does
+file plus reflection I/O and therefore has never had a single unit test. Adding an untested branch
+to the one class already flagged for having no tests is how the next gap gets made. The policy pins
+both invariants that matter: an empty module list means *unknown* and fails closed, and the flag
+only ever adds presence — there is deliberately no way to force co-op **off**, since a stray file
+that did so would resurrect the divergence this whole entry is about.
+
+**A `/deep-review` then found that the above was itself half a fix**, three times over. The vetoes
+were gated at the Harmony prefixes; the same three rules are also consumed by
+`TaomKingdomDecisionPermissionModel` (three overrides the engine reaches from
+`DeclareWarDecision.IsAllowed()` — a different call site entirely) and by
+`TaomDiplomacyModel.IsAtConstantWar`. Both were left enforcing, including the `ShouldBlockPeace`
+path this entry already identifies as the *confirmed* divergence. And suppressing the
+time-acceleration button did not suppress the mechanic: E / Space / Ctrl+Space reach
+`TimeAccelerationService` directly and write `Campaign.SpeedUpMultiplier`, a different property from
+`TimeControlMode` and one nothing is known to intercept.
+
+All four sites are now gated, and the UI-registration read — the only `CoopPresence` consumer that
+decided from the earlier, explicitly-uncertain probe rather than a live read — re-probes first and
+logs on both branches, so a co-op session whose detection ran late is distinguishable from a genuine
+solo one.
+
+The durable fix is not the four gates, it is the test: `CoopVetoClassificationTests` now scans the
+**whole source tree** for consumers of the three divergence-prone rules and fails the build on any
+that reads no co-op flag. The review agent that found the first missed the second, because
+`TaomDiplomacyModel` was not in the changeset and the agent's scope was the diff — a review scoped
+to a diff cannot find a bug whose evidence sits outside it. RCA:
+`docs/reviews/rca-coop-veto-surface-2026-08-01.md`.
+
 The boot matrix has still never been run — BT is not installed. Everything above is reasoning from
-source plus 4692 green tests, not from a session.
+source plus 4737 green tests, not from a session.
 
 Not-tested: live co-op behaviour of any kind — the diplomacy deferral and the UI suppression both
 need two peers to demonstrate.

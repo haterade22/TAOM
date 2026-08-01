@@ -13,6 +13,9 @@
 # rethrow save/load failures instead of swallowing them.
 BannerlordTogether
 BattleLinkMPClient
+# BannerlordCoop (Workshop 3770450698) — a DIFFERENT mod from BannerlordTogether. Its launcher id
+# is the bare string "Coop". Internals: docs/research/bannerlordcoop-internals.md
+Coop
 
 [harmony-owner-prefixes]
 # Harmony owner ids (prefix match, case-insensitive) to add to PatchShield's protected-owner

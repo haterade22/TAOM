@@ -290,7 +290,8 @@ Non-obvious statuses worth knowing without opening the registry:
 
 | Category | Status |
 |----------|--------|
-| `Patch0_BattleScenes`, `Patch15_BannerLayerLimit` | DISABLED (`Patch15` is engine-native since v1.4.7) |
+| `Patch15_BannerLayerLimit` | DISABLED (engine-native since v1.4.7; the transpiler self-bails) |
+| `Patch63` | Used by TWO categories — `Patch63_BannerBearerSpawnGuard` + `Patch63_BlowDiagnostics`. Distinct strings, so Harmony is fine; the number is not a unique key |
 | `Patch54_NavalTravelBoatVisual`, `Patch57_NavalAtSeaLandRescueGuard` | PARKED 2026-06-26 (#120/#296) |
 | `Patch_MissionTime_SetMovementOrder` | **Shared deferred category — ANY postfix with `MovementOrder` in its signature MUST route through it** |
 

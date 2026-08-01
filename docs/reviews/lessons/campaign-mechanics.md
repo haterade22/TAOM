@@ -56,6 +56,27 @@ The campaign map scene defines each fortification's siege-engine slots as tagged
 - **Prevent:** after ANY map-icon edit in TAOM_Map, audit per-fortification tag counts against the caps (def ≤ 4, atk ≤ 4, ram + tower ≤ 3): parse `SceneObj/Main_map/scene.xscene`, walk each `town_*`/`castle_*` entity's `<children>` recursively, count the four tag families (audit script pattern: scratchpad `audit_map_siege_slots.py`, 2026-07-12 session; recreate from the CHANGELOG entry if needed). The counts-must-equal-vanilla-shape check (4,4,1,2) is stricter than the caps and catches under-counts too. A defensive C# clamp (Postfix truncating `SettlementVisual`'s frame arrays to the caps, next free category Patch62) was evaluated and declined 2026-07-12 — the map fix + audit discipline is the chosen prevention; revisit if a second scene-count CTD ships.
 - **Source:** player crash bundle `taom_crash_20260712_072448_4d003ae6` + CHANGELOG 2026-07-12 fix(map) + plan `player-provided-the-following-bubbly-narwhal.md`
 
+### Gate the MUTATION, not the EVENT, when standing a co-op client down
+
+A behaviour that must not run on a co-op client usually reaches its world-mutating service method
+from MORE THAN ONE registered handler. Gating the tick handler alone leaves every sibling handler as
+an open bypass to the identical call.
+
+- **Why missed:** the 2026-08-01 co-op work enumerated *global-tick subscribers* and gated those, which
+  is enumerating entry points of one kind rather than paths to the mutation. `WarOfTheRingBehavior`
+  also reaches `CheckPhaseTransition` (→ `DeclareWar`) from `OnSessionLaunched`, which fires on every
+  peer — and a co-op join IS a save-load, so a joining client issued its own war set on connect.
+  `WarOfTheRingMomentumBehavior` had 6 of 8 handlers ungated, one of them (`OnKingdomDestroyed`)
+  reaching the same `CheckAndApplyVictory` → `EndWar`/`MakePeace` as the gated tick. `RegisterEvents`
+  was read in both files while adding the constructor parameter; only the line being visited was gated.
+- **Prevent:** when adding an authority gate, enumerate EVERY handler in the behaviour's
+  `RegisterEvents` and follow each to its service calls; any handler reaching the same mutating method
+  gets the same gate. Prefer gating inside the service where practical, so there is one chokepoint
+  instead of N. Add a client-stands-down test per gated handler — the 2026-08-01 pass shipped 7 gates
+  with 1 test until the completeness agent flagged it.
+- **Source:** `docs/reviews/rca-coop-authority-gating-2026-08-01.md` (data-flow agent HIGH #1 and #2;
+  no other agent found either, despite all five reading the same files)
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

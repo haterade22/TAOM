@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.TimeAcceleration;
 
 namespace TAOM.Tests.Features.TimeAcceleration;
@@ -12,6 +13,7 @@ public class TimeAccelerationServiceTests
     private IMapInputAdapter _input;
     private ITimeControlAdapter _timeControl;
     private ITimeAccelerationSettingsProvider _settings;
+    private ICoopPresenceProvider _coop;
     private TimeAccelerationService _sut;
 
     [TestInitialize]
@@ -32,7 +34,75 @@ public class TimeAccelerationServiceTests
         _settings.ExtraFastForwardMultiplier.Returns(8);
         _settings.CtrlSpaceMultiplier.Returns(16);
 
-        _sut = new TimeAccelerationService(_input, _timeControl, _settings);
+        _coop = Substitute.For<ICoopPresenceProvider>();
+        _coop.IsCoopActive.Returns(false);
+
+        _sut = new TimeAccelerationService(_input, _timeControl, _settings, _coop);
+    }
+
+    // --- Co-op interop (#370) -------------------------------------------------------------
+    // Suppressing the MapBar button did not suppress the mechanic: E / Space / Ctrl+Space reach
+    // this service directly. SpeedUpMultiplier in particular is a different property from
+    // TimeControlMode, and nothing is known to intercept it, so an ungated keypress mutated
+    // campaign tick state locally under co-op.
+
+    [TestMethod]
+    public void OnTick_CoopActive_IgnoresExtraFastForwardKey()
+    {
+        // Arrange
+        _coop.IsCoopActive.Returns(true);
+        _input.IsEKeyPressed.Returns(true);
+
+        // Act
+        _sut.OnTick();
+
+        // Assert
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    [TestMethod]
+    public void OnTick_CoopActive_IgnoresSpace()
+    {
+        _coop.IsCoopActive.Returns(true);
+        _input.IsSpacePressed.Returns(true);
+
+        _sut.OnTick();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+    }
+
+    [TestMethod]
+    public void OnTick_CoopActive_IgnoresCtrlSpaceTurbo()
+    {
+        _coop.IsCoopActive.Returns(true);
+        _input.IsControlDown.Returns(true);
+        _input.IsSpacePressed.Returns(true);
+
+        _sut.OnTick();
+
+        _timeControl.DidNotReceiveWithAnyArgs().SpeedUpMultiplier = default;
+        _timeControl.DidNotReceiveWithAnyArgs().SetTimeSpeed(default);
+    }
+
+    [TestMethod]
+    public void OnTick_CoopBecomesActiveMidTurbo_RestoresSavedSpeedRatherThanLatching()
+    {
+        // Arrange — turbo engaged while solo, then co-op reads active on a later tick. The restore
+        // must still run: a toggle must never latch the engine at a boosted multiplier
+        // (harmony-patches.md "Latches & Toggle Gates" — transition first, gate after).
+        _input.IsControlDown.Returns(true);
+        _input.IsSpacePressed.Returns(true);
+        _sut.OnTick();
+        _timeControl.ClearReceivedCalls();
+
+        // Act
+        _coop.IsCoopActive.Returns(true);
+        _sut.OnTick();
+
+        // Assert — saved values restored, not left boosted.
+        _timeControl.Received().SpeedUpMultiplier = 4f;
+        _timeControl.Received().TimeControlMode = StoppableFastForward;
     }
 
     // --- Guard: inactive campaign ---

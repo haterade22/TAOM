@@ -27,6 +27,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Lets AssemblyRedirectListTests pin SubModule.RedirectedSimpleNames against the names
+		     deliberately excluded for co-op interop (2026-08-01). -->
+		<InternalsVisibleTo Include="TAOM.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Bannerlord.BuildResources" Version="1.1.0.129">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

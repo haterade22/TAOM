@@ -196,3 +196,26 @@ A memo keyed on a service method's *input* is only correct if that input determi
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### Gate the rule, not the call site
+
+When gating a behaviour on an environment flag (co-op presence, feature toggle), grep every caller
+of the underlying service method and every input path that reaches it BEFORE deciding where the
+gate goes. Hand-gating N sites is only correct if you proved N.
+
+**Why missed:** #370 gated TAOM's diplomacy vetoes at the Harmony prefixes. The same three rules
+(`IsWarAllowed` / `ShouldBlockPeace` / `IsAllianceDecisionAllowed`) were also consumed by
+`TaomKingdomDecisionPermissionModel` (3 overrides, reached from `DeclareWarDecision.IsAllowed()`)
+and `TaomDiplomacyModel.IsAtConstantWar` — both left enforcing. The deep-review data-flow agent
+found the first and missed the second, because `TaomDiplomacyModel` was not in the changeset and the
+agent's scope was the diff. Same changeset: the time-acceleration UI was suppressed while the
+E / Space / Ctrl+Space keybinds driving the same service stayed live.
+
+**Prevent:** a caller-enumerating test that scans the whole source tree rather than the diff —
+`CoopVetoClassificationTests.EveryConsumerOfADivergenceProneDiplomacyRule_AlsoReadsTheCoopFlag`.
+Verify it is non-vacuous by confirming it detects the known consumers. Corollary: suppressing a
+widget is not disabling a feature — gate the service, since the UI is one input path among several.
+Corollary 2: when a changeset gates a shared rule, scope at least one review agent to *the rule*,
+not to the changed files.
+
+**Source:** `docs/reviews/rca-coop-veto-surface-2026-08-01.md` (#370, 3 HIGH).

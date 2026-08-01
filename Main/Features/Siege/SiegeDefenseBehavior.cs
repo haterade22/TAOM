@@ -4,6 +4,7 @@ using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Siege;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.Siege;
 
@@ -17,10 +18,13 @@ public class SiegeDefenseBehavior : CampaignBehaviorBase
     // Format: settlementId -> "defenderFactionId|remainingHours|accepted|rewardClaimed"
     private Dictionary<string, string> _activeEventsForSave = new Dictionary<string, string>();
 
-    public SiegeDefenseBehavior(ISiegeDefenseService service, IModLogger logger)
+    private readonly ICoopSessionProvider _coopSession;
+
+    public SiegeDefenseBehavior(ISiegeDefenseService service, IModLogger logger, ICoopSessionProvider coopSession)
     {
         _service = service;
         _logger = logger;
+        _coopSession = coopSession;
     }
 
     public override void RegisterEvents()
@@ -74,5 +78,13 @@ public class SiegeDefenseBehavior : CampaignBehaviorBase
         _service.OnSiegeEnded(settlement.StringId);
     }
 
-    private void OnHourlyTick() => _service.OnHourlyTick();
+    // CO-OP: host-only. Ticks siege-defence timers and, on completion, grants Clan.Influence and
+    // applies global hero relation — both shared campaign state, both driven off Hero.MainHero,
+    // which resolves to a DIFFERENT hero on each peer.
+    // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
+    internal void OnHourlyTick()
+    {
+        if (!_coopSession.IsAuthority) return;
+        _service.OnHourlyTick();
+    }
 }

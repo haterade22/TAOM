@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.CultureConversion.Hooks;
 
@@ -25,6 +26,7 @@ public class CultureConversionBehavior : CampaignBehaviorBase
     private readonly ICultureConversionService _service;
     private readonly ICultureConversionStore _store;
     private readonly IModLogger _logger;
+    private readonly ICoopSessionProvider _coopSession;
 
     private CampaignGameStarter _lastSessionStarter;
     private bool _justLoadedFromSave;
@@ -32,11 +34,13 @@ public class CultureConversionBehavior : CampaignBehaviorBase
     public CultureConversionBehavior(
         ICultureConversionService service,
         ICultureConversionStore store,
-        IModLogger logger)
+        IModLogger logger,
+        ICoopSessionProvider coopSession)
     {
         _service = service;
         _store = store;
         _logger = logger;
+        _coopSession = coopSession;
     }
 
     public override void RegisterEvents()
@@ -78,9 +82,32 @@ public class CultureConversionBehavior : CampaignBehaviorBase
         _service.OnSettlementConquered(settlement.StringId, CampaignTime.Now.ToDays);
     }
 
-    private void OnDailyTick() => _service.RunDailyChecks(CampaignTime.Now.ToDays);
+    // CO-OP: host-only. BannerlordCoop does NOT suppress the client's global DailyTickEvent (only the
+    // per-entity tickers), and the client loads the host's save — so its store holds the SAME pending
+    // records and RunDailyChecks would mature the same conversions locally. That is not a cosmetic
+    // desync: ApplyConversion replaces notables via HeroCreator.CreateNotable, and on a client Coop's
+    // MBObjectBase.StringId setter prefix returns false, leaving StringId null so MBObjectManager's
+    // Dictionary<string,T> lookup throws ArgumentNullException — aborting the rest of that day's tick
+    // dispatch. Verified in source (chain in docs/research/bannerlordcoop-internals.md); not yet
+    // reproduced in-game. Either way the client must not run this: the alternative to the throw is a
+    // notable the host never created.
+    // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
+    internal void OnDailyTick()
+    {
+        if (!_coopSession.IsAuthority) return;
+        _service.RunDailyChecks(CampaignTime.Now.ToDays);
+    }
 
-    private void OnGameLoaded(CampaignGameStarter starter) => _service.ReapplyConvertedCultures();
+    // CO-OP: host-only, for a different reason than the tick. A joining client loads the HOST'S save,
+    // so every converted settlement already carries its converted culture — re-applying is redundant.
+    // Worse, Settlement.Culture is a field BannerlordCoop auto-syncs, so a client write here is either
+    // rejected by the sync policy or echoed back as a spurious change.
+    // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
+    internal void OnGameLoaded(CampaignGameStarter starter)
+    {
+        if (!_coopSession.IsAuthority) return;
+        _service.ReapplyConvertedCultures();
+    }
 
     private void OnNewGameCreated(CampaignGameStarter starter)
     {

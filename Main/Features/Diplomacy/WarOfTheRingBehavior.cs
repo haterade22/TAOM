@@ -1,6 +1,7 @@
 using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy.Models;
 using TaleWorlds.CampaignSystem;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.Diplomacy;
 
@@ -17,10 +18,13 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
     // WotR Momentum #327 — persisted outcome, same int-backed convention as phase.
     private int _persistedOutcome = (int)WarOutcome.None;
 
-    public WarOfTheRingBehavior(IWarOfTheRingService wotrService, IModLogger logger)
+    private readonly ICoopSessionProvider _coopSession;
+
+    public WarOfTheRingBehavior(IWarOfTheRingService wotrService, IModLogger logger, ICoopSessionProvider coopSession)
     {
         _wotrService = wotrService;
         _logger = logger;
+        _coopSession = coopSession;
     }
 
     public override void RegisterEvents()
@@ -55,8 +59,17 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
         }
     }
 
-    private void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
+    // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
+    internal void OnSessionLaunched(CampaignGameStarter campaignGameStarter)
     {
+        // CO-OP: host-only, for the SAME reason as OnDailyTick — this calls the identical
+        // CheckPhaseTransition, which declares wars between arbitrary AI kingdoms. Gating the tick
+        // alone was not enough: OnSessionLaunchedEvent fires on EVERY peer, and a co-op join IS a
+        // save-load, so a joining client would recompute the phase and issue its own DeclareWar set
+        // the instant it connected. The client does not need the recompute anyway — SyncData restores
+        // the phase from the host's save before this runs. (deep-review 2026-08-01, data-flow HIGH #1)
+        if (!_coopSession.IsAuthority) return;
+
         // Eagerly recompute phase on load so diplomacy guards are active
         // before the first daily tick (prevents save/load peace exploit)
         var elapsedDays = Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow;
@@ -64,8 +77,15 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
         _logger.LogInfo($"[WarOfTheRing] Session launched — phase restored at day {elapsedDays:F0}");
     }
 
-    private void OnDailyTick()
+    // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
+    internal void OnDailyTick()
     {
+        // CO-OP: host-only. CheckPhaseTransition declares wars between arbitrary AI kingdoms. Phase
+        // is persisted in TAOM SyncData that no co-op mod replicates, and the client's clock is
+        // slewed rather than identical, so both peers would cross the threshold independently and
+        // issue duplicate DeclareWar calls.
+        if (!_coopSession.IsAuthority) return;
+
         var elapsedDays = Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow;
         _wotrService.CheckPhaseTransition(elapsedDays);
     }

@@ -11,19 +11,6 @@ survive, and tell players when their two installs have drifted apart.
 **Status: TAOM-side interop layer shipped 2026-07-31; end-to-end co-op unverified.** The boot matrix
 below has not been run against BT a0.5.3.2. Do not tell players co-op works until it has.
 
-> ### We do not decompile BannerlordTogether
->
-> The package ships `AI_USAGE_POLICY_DO_NOT_DECOMPILE.txt` and a proprietary `LICENSE.txt` in
-> `bin/Win64_Shipping_Client/`, forbidding any person or automated system from decompiling,
-> disassembling, reverse-engineering or otherwise analyzing the implementation of
-> `BannerlordTogether.dll` / `BattleLinkCommonSvMp.dll`, and stating that no authorization exists.
-> TAOM honours this. Everything we know about BT comes from three legitimate sources: its own
-> shipped manifest and config, HarmonyLib's public runtime registry (see the census below), and
-> asking its authors. Anyone extending this work must keep to those three.
->
-> Third-party libraries BT bundles (`0Harmony`, `LiteNetLib`) are explicitly outside that licence
-> and are version-checked normally.
-
 ## Requirements
 
 | Requirement | Details |
@@ -76,6 +63,8 @@ does today.
 | `SaveShield` on the `SAVE-LOAD` chain | Swallows | **Rethrows**, and still records the failure |
 | `SaveShield` on the `MISSION-INIT` chain | Swallows | Swallows (unchanged) |
 | Harmony census | Not written | Written at the end of `OnGameInitializationFinished` |
+| TAOM diplomacy veto (war / peace / alliance-end) | Enforced | **Off** — host is authoritative (see "Diplomacy ordering") |
+| TAOM time-acceleration UI (`MapBar` extra fast-forward + 4 layout patches + `MapTimeControlVM` mixin) | Registered | **Not registered** — BT owns `Campaign.TimeControlMode` |
 
 **Why unpatching inverts.** In singleplayer, stripping a broken third-party patch converts a crash
 into a survivable degradation. Under host-authoritative co-op it does something worse: removing one
@@ -122,7 +111,9 @@ neither mod. TAOM is unusually exposed: `FormationPresetSaveableTypeDefiner` del
 upstream mod's base id (726900601) so existing CompanionTactics saves import, which makes "enable
 the donor mod alongside TAOM" a guaranteed, unattributable startup crash.
 
-`SaveDefinerCollisionGuard` runs at `OnBeforeInitialModuleScreenSetAsRoot`, groups every definer it
+`SaveDefinerCollisionGuard` runs at `OnSubModuleLoad` (`Main/SubModule.cs`, immediately after
+`IoC.Configure()` — `OnBeforeInitialModuleScreenSetAsRoot` fires from `OnApplicationTick`, long
+after the engine's throw), groups every definer it
 finds by base id, and logs `[SaveDefiners] SAVE ID COLLISION on base id N between: …` naming both
 assemblies — before the engine hits the same constructors. It never repairs anything; it makes the
 crash attributable.
@@ -149,6 +140,102 @@ and the creature behavior-tree cooldowns run on `DateTime.Now` rather than missi
 of it matters depends on whether BT suppresses the client's campaign tick — which the boot matrix
 and a two-peer session will tell us, and nothing else will.
 
+## Time control — BT owns the clock
+
+BT's `TimeControlModePatch` prefixes the `Campaign.TimeControlMode` **setter** and overwrites the
+assigned value outright whenever a co-op session is active (host: `UnstoppablePlay` /
+`UnstoppableFastForward` / `Stop`; hideouts and pending BattleLink force `Stop`). TAOM's
+`TimeControlAdapter` writes the same property.
+
+BT winning is correct — a host-authoritative mod must own campaign time. The problem was purely that
+TAOM kept *advertising* control it no longer had: the `MapBar` extra fast-forward button still
+rendered and still accepted clicks while doing nothing.
+
+**Resolution (2026-08-01):** the five `TimeAcceleration` prefab extensions and the
+`MapTimeControlVM` mixin carry `[CoopSuppressedUi]`, and `SubModule.RegisterUiExtensions` filters
+them out of the UIExtenderEx registration when `CoopPresence.IsActive`. Registration is a one-shot at
+`OnSubModuleLoad`, so this is the only point where a widget can be kept out of the prefab — a
+runtime check inside the mixin cannot un-inject an already-built widget. Solo play is untouched; the
+registered/suppressed counts are logged either way, which is the first thing to check if a TAOM
+widget goes missing.
+
+## Why this lives in TAOM and not in a separate compat module
+
+Asked and answered 2026-08-01. A separate module cannot do the job, and this is a fact about
+UIExtenderEx rather than a preference:
+
+- `UIExtender.Deregister()` guards on `Instances[_moduleName] == this`. A compat module holds a
+  *different* `UIExtender` instance, so it **cannot** touch TAOM's UI registration at all.
+- Module load order puts a later module's `OnSubModuleLoad` *after* TAOM's, which is already too
+  late — registration is a one-shot.
+- It could only reach the diplomacy half, via `Harmony.Unpatch` against TAOM's own patches, which
+  goes stale silently the moment TAOM's patch layout moves. Two release artifacts, one version-skew
+  failure mode, to solve a problem that costs solo players nothing.
+
+**Solo cost of the in-TAOM approach is zero, by construction rather than by care:**
+
+| Mechanism | Solo behaviour |
+|---|---|
+| `CoopPresence.IsActive` | Fails **closed** — unreadable module list ⇒ false ⇒ unmodded behaviour. Solo is the default, not a branch that must be got right. |
+| UI registration | Solo calls `extender.Register(assembly)` — the original UIExtenderEx call, byte-for-byte. The filtered path is reached *only* when a co-op module is present, so our type collection can never affect a solo player's UI. |
+| Diplomacy gates | One bool read on war/peace/alliance-end — a cold path. Deliberately **not** cached: `Refresh()` re-probes twice during startup, so a cached read would risk staleness for no measurable gain. |
+
+## Forcing co-op mode on: `coop-force-active.flag`
+
+Detection matches module **ids**, so it silently fails for a renamed BT build, a fork, or a co-op
+mod nobody has told us about — and that failure is the expensive direction, because TAOM keeps
+enforcing vetoes and UI it should have yielded.
+
+`coop-modules.txt` covers the case where the player knows the new id. For the case where they do
+not, place a file named **`coop-force-active.flag`** in the `TAOM.Dependencies` module directory:
+`CoopPresence.IsActive` then reports true and `ActiveCoopModuleIds` reports the synthetic marker
+`(forced-by-flag)`.
+
+The flag only ever **adds** presence — it can force co-op on when detection found nothing, and can
+never force it off. Same direction-of-safety as `coop-modules.txt`'s union-only parse. It matches
+the `patchshield-disabled.flag` / `saveshield-swallow-disabled.flag` idiom rather than being an MCM
+setting on purpose: MCM persists a saved value over a changed compiled default, which is what forced
+NavalTravel and NativeSkinFixes to be disabled at the wiring level instead.
+
+## Keeping the veto surface from drifting
+
+D1 survived for months because nothing forced anyone to ask the question. `CoopVetoClassificationTests`
+now does, at build time: it scans `Main/` for every class declaring a bool-returning Harmony prefix
+and requires each to carry a disposition — `GatedForCoop`, `ReviewedSafe`, or `Parked` — with a
+written reason. Adding a prefix without classifying it fails the build. 32 classes are currently
+classified; three are gated.
+
+The classification question is: **can this skip a campaign-state mutation the co-op host replicates,
+AND can its condition evaluate differently on two peers?** Both halves matter — `TraitLevelingHelper`
+skips a real campaign mutation but reads a static alignment table, so peers always agree.
+
+Two things about *how* it scans are load-bearing, both found by the test failing on itself:
+
+- It scans **source, not the loaded assembly.** Reflecting over `typeof(SubModule).Assembly`
+  under-reported by four, because a patch class referencing a View/Engine type comes back null from
+  `ReflectionTypeLoadException.Types` in the test host — and those engine-coupled patches are exactly
+  the ones worth classifying. A scan that silently misses the risky half reads as coverage.
+- It keys on **class, not file**, matches prefixes with **no access modifier** (several are
+  implicitly private), and strips comments before parsing. Each of those three was a real miss:
+  `CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs` alone holds three patch classes.
+
+`Registry_HasNoStaleEntries` is the other half — it fails when a registry entry no longer matches a
+real prefix, which is what caught the reflection under-reporting in the first place.
+
+## Verified non-issues
+
+Checked against BT a0.5.3.2 and found safe. Recorded so a later session does not re-litigate them.
+
+| Area | Finding |
+|---|---|
+| **Save-definer collision** | BT declares **no** `SaveableTypeDefiner` at all — it persists through `MBSaveLoad.SaveAsCurrentGame` / `LoadSaveGameData` patches and a serialization gate. TAOM's four base ids, including the reused 726900601, are unthreatened by BT. The preflight guard stays valuable for *other* mods. |
+| **GameModel shadowing** | BT patches vanilla model *methods*; TAOM replaces models via `AddModel`. This is safe wherever TAOM's override calls `base` (or does not override at all), because the inherited body is the Harmony-patched one. Verified for every method BT patches that TAOM also touches: `DefaultPartyWageModel.GetTotalWage` (TAOM overrides, calls base), `DefaultPartySpeedCalculatingModel.CalculateFinalSpeed` (calls base), `.CalculateBaseSpeed` and `DefaultCharacterStatsModel.WoundedHitPointLimit` (not overridden), and all five `DefaultClanFinanceModel` methods (`TaomClanFinanceModel` overrides only `CalculateTownIncomeFromTariffs`, and calls base). |
+| **Weather bounds guard** | Both mods prefix `DefaultMapWeatherModel.GetWeatherEventInPosition`. TAOM's is a void prefix that clamps `ref Vec2 pos` into terrain bounds; BT's takes `pos` by value and short-circuits to `WeatherEvent.Clear` on a client when out of bounds. Either ordering is safe — TAOM-first clamps so BT's check passes; BT-first returns Clear and TAOM's clamp is harmless. Worst case is a cosmetic weather difference on out-of-bounds positions, never a crash. |
+
+**Rule this leaves us with:** a TAOM GameModel override is co-op-safe as long as it calls `base`.
+An override that fully replaces a vanilla body silently deletes any BT patch on that method. Check
+`base` discipline before adding an override to a model BT patches.
+
 ## Known limitations
 
 | Limitation | Impact | Workaround |
@@ -161,15 +248,54 @@ and a two-peer session will tell us, and nothing else will.
 | Race data is host-save-authoritative | Joining client loads races from the host's save | None needed — correct behaviour |
 | BattleLink battles need the separate MP window | Both players need BT's BattleLinkMPClient enabled | Follow BT's battle-server setup |
 
-## Diplomacy ordering
+## Diplomacy ordering — TAOM's veto is OFF under co-op
 
-TAOM and BT both patch `DeclareWarAction.ApplyInternal` and `MakePeaceAction.ApplyInternal`. TAOM's
-prefixes carry `[HarmonyPriority(Priority.High)]` so they run first: TAOM validates racial enmity and
-War of the Ring constraints, and if it blocks the action BT never syncs it. Without that ordering BT
-could broadcast a war declaration that TAOM then blocks on the host, leaving clients desynchronised.
+TAOM and BT both prefix `DeclareWarAction.ApplyInternal` and `MakePeaceAction.ApplyInternal`. TAOM's
+carry `[HarmonyPriority(Priority.High)]` (600); BT's are default `Normal` (400), so **TAOM runs
+first**.
 
-The census's contested-method rows are how to verify this ordering actually holds at runtime rather
-than assuming it.
+An earlier revision of this document treated that ordering as the fix. It is only half the picture,
+and the half it missed is the dangerous one:
+
+- **Host originates a war.** TAOM evaluates first and may block. BT never broadcasts. Both peers
+  agree there is no war. This is the case the ordering does handle, and it is fine.
+- **Client applies a war the host already committed.** BT's `SuppressClientDeclareWarPatch` lets the
+  re-application through via its `KingdomSyncBehavior.IsApplyingSync` guard — but TAOM's prefix runs
+  *ahead* of BT's and re-evaluates `IsWarAllowed` locally. If the client's answer differs, it returns
+  false and the vanilla body never runs: **host at war, client at peace.** No crash, no log, two
+  saves that disagree.
+
+**How much the client's answer can differ depends on which veto**, and the three are not alike. The
+criterion is what the condition reads:
+
+| Veto | Condition reads | Can peers disagree? |
+|---|---|---|
+| `ShouldPreventPeace` | `IsWarOfTheRingActive` → `WarOfTheRingService.CurrentPhase`, persisted as the `WarOfTheRing_CurrentPhase` **`SyncData` key** | **Yes — genuinely.** TAOM campaign-behavior state that BT knows nothing about and never replicates. This is the "join-time-only state, then drifts" limitation below, wired into a gate on a vanilla state change. |
+| `ShouldPreventWarDeclaration` | `GetRelationshipTier` (static `_permanentRelationships` config) + `AreSameAlignment` (static alignment table) | Only on **peer mismatch** — different TAOM versions, or edited diplomacy config. Identical installs compute identical answers. |
+| `ShouldPreventAllianceEnd` | `GetRelationshipTier` — static config | Same as above. |
+
+So the peace veto is a confirmed divergence; the war and alliance-end vetoes are a narrower
+config-mismatch risk. All three are gated anyway: peers running mismatched TAOM builds or edited
+configs is an ordinary co-op scenario, not an exotic one, and a veto that silently applies on one
+machine and not the other is the same failure whatever made the answers differ.
+
+**Resolution (2026-08-01):** under co-op, TAOM defers. `AllianceActionHook.ShouldPreventWarDeclaration`
+/ `.ShouldPreventAllianceEnd` and `PeaceActionHook.ShouldPreventPeace` return false immediately when
+`ICoopPresenceProvider.IsCoopActive`, logging `[Diplomacy][coop] … veto skipped … host is
+authoritative`. One peer's ruleset has to win and TAOM cannot know which peer the session agreed on,
+so it yields the whole decision rather than applying a rule to half of it.
+
+Deliberately gated on TAOM's own `CoopPresence`, **not** on BT's `KingdomSyncBehavior.IsApplyingSync`:
+reflecting into another mod's private field couples us to their internals and breaks silently on
+their next build.
+
+`AllianceCampaignBehavior.AddAllianceDecision` is **not** gated. It is a dedup guard — it skips
+queuing a start-alliance decision for a pair that is already allied — and its condition
+(`IsAllyWith`) is derived from replicated vanilla state, so both peers compute the same answer.
+Gating it would reintroduce the decision-queue saturation it was written to fix.
+`AllianceCampaignBehavior.StartAlliance` is a log-only postfix and needs nothing.
+
+The census's contested-method rows are how to verify the ordering at runtime rather than assuming it.
 
 ## Startup crash: `DefaultClanFinanceModel..cctor()` — status
 
@@ -252,12 +378,24 @@ culprit diff for free.
 | [SaveDefinerCollisionGuard.cs](../../Main/Features/CoopInterop/SaveDefinerCollisionGuard.cs) | Base-id preflight and attribution |
 | [HarmonyCensusReportBuilder.cs](../../Main/Features/CoopInterop/Diagnostics/HarmonyCensusReportBuilder.cs) | The report; pure and tested |
 | [HarmonyCensusWriter.cs](../../Main/Features/CoopInterop/Diagnostics/HarmonyCensusWriter.cs) | The Harmony registry walk |
-| [DeclareWarAction_ApplyInternal_Patch.cs](../../Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs) | `Priority.High` — validate before BT syncs |
+| [ICoopPresenceProvider.cs](../../Main/Features/CoopInterop/ICoopPresenceProvider.cs) | Test seam over the static `CoopPresence` |
+| [CoopUiRegistrationPolicy.cs](../../Main/Features/CoopInterop/CoopUiRegistrationPolicy.cs) | Filters `[CoopSuppressedUi]` types out of UIExtenderEx registration |
+| [CoopSuppressedUiAttribute.cs](../../Main/Features/CoopInterop/CoopSuppressedUiAttribute.cs) | Marks UI the co-op host has taken ownership of |
+| [AllianceActionHook.cs](../../Main/Features/Diplomacy/Hooks/AllianceActionHook.cs) | War / alliance-end veto; `DeferToHost` under co-op |
+| [PeaceActionHook.cs](../../Main/Features/Diplomacy/Hooks/PeaceActionHook.cs) | Peace veto; defers under co-op |
+| [DeclareWarAction_ApplyInternal_Patch.cs](../../Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs) | `Priority.High` prefix — runs ahead of BT's suppression patch |
 | [SiegeDefenseBehavior.cs](../../Main/Features/Siege/) | Host-only; expected not to fire on clients |
 | [RacePersistenceBehavior.cs](../../Main/Features/HeroRace/) | Race data rides the campaign save |
 
 ## Changelog
 
+- 2026-08-01 — Source review of BT a0.5.3.2 under permission granted by Hobohoppy (see Overview).
+  Corrected the diplomacy-ordering section: `Priority.High` handles host origination but leaves the
+  client free to veto a war the host already committed, so TAOM's war / peace / alliance-end vetoes
+  now defer entirely under co-op (`ICoopPresenceProvider`). Suppressed the time-acceleration UI via
+  `[CoopSuppressedUi]` + a UIExtenderEx registration filter, because BT's `TimeControlMode` setter
+  prefix already owns the clock. Recorded three verified non-issues (no BT save definers, GameModel
+  `base`-call safety, complementary weather guards). Boot matrix still unrun.
 - 2026-07-31 — Reviewed BT a0.5.3.2 (targets v1.4.7, TAOM's own pin). Shipped the TAOM-side interop
   layer: `CoopPresence` detection, PatchShield unpatch gate, SaveShield save-load rethrow, load-order
   pins in both manifests, save-definer collision preflight, and the Harmony census. Moved TAOM's two

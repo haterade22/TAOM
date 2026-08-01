@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using System.Xml;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
+using TAOM.Features.CoopInterop;
 using Attr = Bannerlord.UIExtenderEx.Prefabs2.PrefabExtensionSetAttributePatch.Attribute;
 
 namespace TAOM.Features.TimeAcceleration.UI;
 
 // Widen the CenterPanel to make room for the extra fast-forward button.
 [PrefabExtension("MapBar", "descendant::MapCurrentTimeVisualWidget[@Id='CenterPanel']")]
+[CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class PrefabCenterPanel : PrefabExtensionSetAttributePatch
 {
     public override List<Attr> Attributes => new List<Attr>
@@ -18,6 +20,7 @@ internal class PrefabCenterPanel : PrefabExtensionSetAttributePatch
 
 // Shift the vanilla FastForward button left to create space for the new button.
 [PrefabExtension("MapBar", "descendant::ButtonWidget[@Id='FastForwardButton']")]
+[CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class PrefabFastForwardButton : PrefabExtensionSetAttributePatch
 {
     public override List<Attr> Attributes => new List<Attr>
@@ -28,6 +31,7 @@ internal class PrefabFastForwardButton : PrefabExtensionSetAttributePatch
 
 // Shift the vanilla Play button left.
 [PrefabExtension("MapBar", "descendant::ButtonWidget[@Id='PlayButton']")]
+[CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class PrefabPlayButton : PrefabExtensionSetAttributePatch
 {
     public override List<Attr> Attributes => new List<Attr>
@@ -38,6 +42,7 @@ internal class PrefabPlayButton : PrefabExtensionSetAttributePatch
 
 // Shift the vanilla Pause button left.
 [PrefabExtension("MapBar", "descendant::ButtonWidget[@Id='PauseButton']")]
+[CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class PrefabPauseButton : PrefabExtensionSetAttributePatch
 {
     public override List<Attr> Attributes => new List<Attr>
@@ -48,6 +53,7 @@ internal class PrefabPauseButton : PrefabExtensionSetAttributePatch
 
 // Insert the Extra Fast-Forward button after the PauseButton in the CenterPanel children.
 [PrefabExtension("MapBar", "descendant::ButtonWidget[@Id='PauseButton']")]
+[CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")]
 internal class PrefabInsertExtraFastForward : PrefabExtensionInsertPatch
 {
     public override InsertType Type => InsertType.Append;

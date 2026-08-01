@@ -29,24 +29,57 @@ public static class CoopPresence
     private const string ConfigFileName = "coop-modules.txt";
 
     /// <summary>
+    /// Escape hatch for detection failure. Place this file in the TAOM.Dependencies module
+    /// directory to force <see cref="IsActive"/> true regardless of what the launcher reports.
+    ///
+    /// Detection matches module IDs, so it silently fails for a renamed BannerlordTogether build, a
+    /// fork, or a co-op mod we have never heard of — and the failure is the expensive direction:
+    /// TAOM keeps enforcing vetoes and UI it should have yielded, which desyncs a live session
+    /// rather than crashing it. <c>coop-modules.txt</c> already covers the case where the player
+    /// knows the new ID; this covers the case where they do not.
+    ///
+    /// Matches the <c>patchshield-disabled.flag</c> / <c>saveshield-swallow-disabled.flag</c> idiom
+    /// rather than an MCM setting on purpose: MCM persists a saved value over a changed compiled
+    /// default, which is what forced NavalTravel and NativeSkinFixes to be disabled at the wiring
+    /// level instead. A file the player creates has no persistence trap and is invisible to
+    /// everyone who never creates it.
+    /// </summary>
+    private const string ForceActiveFlagName = "coop-force-active.flag";
+
+    /// <summary>
     /// Module ids that identify a co-op mod. Compiled defaults; the shipped
     /// <c>coop-modules.txt</c> can ADD to this but never remove from it.
     /// </summary>
-    private static readonly string[] CompiledModuleDefaults =
+    internal static readonly string[] CompiledModuleDefaults =
     {
         "BannerlordTogether",
         "BattleLinkMPClient",
+        // BannerlordCoop (Steam Workshop 3770450698, upstream Bannerlord-Coop-Team/BannerlordCoop).
+        // A DIFFERENT mod from BannerlordTogether, with its own architecture — the launcher id is
+        // the bare string "Coop" (its SubModule.xml <Id value="Coop"/>), and matching below is exact
+        // equality, so it was invisible to every shield until 2026-08-01.
+        // Internals + evidence: docs/research/bannerlordcoop-internals.md.
+        "Coop",
     };
 
     /// <summary>
     /// Extra Harmony owner-id prefixes to protect from PatchShield's unpatch path.
     ///
-    /// Empty on purpose. We do not know any co-op mod's Harmony id, and we will not decompile one
-    /// to find out — the BannerlordTogether package ships an explicit no-decompile /
-    /// no-AI-analysis policy from its copyright holders. The id is instead obtained at runtime from
-    /// Harmony's own public registry (the census writer) or from the mod's authors, then added to
-    /// <c>coop-modules.txt</c> without a rebuild. Until then the real protection is the unpatch
-    /// gate in PatchShield keyed on <see cref="IsActive"/>, which does not need the id at all.
+    /// Empty on purpose — but no longer because the ids are unknowable.
+    ///
+    /// BannerlordTogether's package ships an explicit no-decompile / no-AI-analysis policy from its
+    /// copyright holders, so its Harmony id is still obtained only at runtime from Harmony's own
+    /// public registry (the census writer) or from its authors, then added to
+    /// <c>coop-modules.txt</c> without a rebuild.
+    ///
+    /// BannerlordCoop is a DIFFERENT mod and carries no such policy (public upstream project, and it
+    /// ships 893 of its own generated .cs files in plaintext), so it was decompiled on 2026-08-01 and
+    /// its four owner ids are now compiled directly into
+    /// <see cref="PatchShieldPolicy.CompiledProtectedOwnerPrefixes"/> — not here, because this list
+    /// exists for ids learned at runtime. See docs/research/bannerlordcoop-internals.md.
+    ///
+    /// Either way the real protection is the unpatch gate in PatchShield keyed on
+    /// <see cref="IsActive"/>, which does not need any id at all.
     /// </summary>
     private static readonly string[] CompiledOwnerDefaults = Array.Empty<string>();
 
@@ -109,33 +142,68 @@ public static class CoopPresence
             var config = LoadConfig();
             _extraProtectedOwnerPrefixes = config.OwnerPrefixes.ToList();
 
-            List<string> active;
-            try
-            {
-                active = IncompatibleModDetector.TryReadActiveModuleIdsViaReflection();
-            }
-            catch (Exception ex)
-            {
-                DiagLog.LogCaught(Tag, "EnsureProbed/TryReadActiveModuleIdsViaReflection", ex);
-                active = new List<string>();
-            }
+            var active = ReadActiveModuleIds();
+            var forced = IsForcedActive();
 
-            if (active.Count == 0)
-            {
-                // Unknown, not "none". Fail closed — behave exactly as an unmodded session.
-                DiagLog.Log(Tag, "EnsureProbed: active module list unavailable; treating co-op as NOT present");
-                _activeCoopModuleIds = new List<string>();
-                return;
-            }
+            // The decision — fail-closed on unknown, flag adds but never removes — lives in
+            // CoopPresencePolicy so it can be unit-tested without file or reflection I/O.
+            _activeCoopModuleIds =
+                CoopPresencePolicy.ResolveActiveIds(active, config.ModuleIds, forced).ToList();
 
-            var known = new HashSet<string>(config.ModuleIds, StringComparer.OrdinalIgnoreCase);
-            _activeCoopModuleIds = active.Where(known.Contains).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-
-            DiagLog.Log(Tag,
-                _activeCoopModuleIds.Count > 0
-                    ? $"EnsureProbed: co-op module(s) ACTIVE: {string.Join(", ", _activeCoopModuleIds)} (scanned {active.Count} active modules)"
-                    : $"EnsureProbed: no co-op module active (scanned {active.Count} active modules)");
+            LogProbeResult(active.Count, forced);
         }
+    }
+
+    private static List<string> ReadActiveModuleIds()
+    {
+        try
+        {
+            return IncompatibleModDetector.TryReadActiveModuleIdsViaReflection();
+        }
+        catch (Exception ex)
+        {
+            DiagLog.LogCaught(Tag, "EnsureProbed/TryReadActiveModuleIdsViaReflection", ex);
+            return new List<string>();
+        }
+    }
+
+    private static void LogProbeResult(int scannedCount, bool forced)
+    {
+        if (scannedCount == 0)
+        {
+            // Unknown, not "none".
+            DiagLog.Log(Tag, "EnsureProbed: active module list unavailable; treating co-op as NOT present");
+        }
+
+        if (_activeCoopModuleIds.Count == 0)
+        {
+            DiagLog.Log(Tag, $"EnsureProbed: no co-op module active (scanned {scannedCount} active modules)");
+            return;
+        }
+
+        if (forced && _activeCoopModuleIds.Contains(CoopPresencePolicy.ForcedMarkerId))
+        {
+            DiagLog.Log(Tag,
+                $"EnsureProbed: {ForceActiveFlagName} present — forcing co-op ACTIVE " +
+                $"(no known co-op module id among {scannedCount} active modules)");
+            return;
+        }
+
+        DiagLog.Log(Tag,
+            $"EnsureProbed: co-op module(s) ACTIVE: {string.Join(", ", _activeCoopModuleIds)} " +
+            $"(scanned {scannedCount} active modules)");
+    }
+
+    /// <summary>Mirrors <c>PatchShield.IsDisabled()</c> — never throws, absent file means false.</summary>
+    private static bool IsForcedActive()
+    {
+        try
+        {
+            var dir = RuntimeLog.ModuleDir;
+            if (string.IsNullOrEmpty(dir)) return false;
+            return File.Exists(Path.Combine(dir, ForceActiveFlagName));
+        }
+        catch { return false; }
     }
 
     private static CoopModuleListResult LoadConfig()

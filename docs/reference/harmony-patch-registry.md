@@ -6,9 +6,9 @@ Full per-category rationale, history, and RCA links for every TAOM Harmony patch
 
 ## Patch0_BattleScenes
 
-**Target:** `Campaign.InitializeScenes`
+**Target:** `Campaign.InitializeScenes`, `MBMapScene.GetBattleSceneIndexMap`, `SandBox.MapScene.Load` (Prefix skip-original)
 
-Battle scenes (DISABLED)
+Battle scenes — **ACTIVE**. Loads TAOM's `sp_battle_scenes.xml` (full 0-255 `map_indices` coverage) so the TAOM_Map `Main_map` grid's extended indices (158-255) resolve to real battle terrains instead of FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01; applied unconditionally from `OnSubModuleLoad` (`Main/SubModule.cs`, alongside the other early categories) — this registry read "DISABLED" until 2026-08-01, three months after the re-enable, so treat the code as ground truth per the caveat at the top of this file. In-game grid validation still pending the `worldmap_battle_scene_grid` re-author. See `docs/reference/worldmap-battle-scene-grid.md`.
 
 ## Patch1_FirstTimeInit
 
@@ -407,6 +407,14 @@ Arena — heap-corruption CTD containment (#339; v2.0.12 player report, signatur
 **Target:** `BannerBearerLogic.SpawnBannerBearer` (public, TaleWorlds.MountAndBlade, Prefix skip-original)
 
 BannerBearers — reinforcement-bearer AV guard (#360; siege of Glad Thaw CTD, signature `67b75cb4`, TAOM v2.0.13). The engine method spawns a reinforcement troop with the formation banner, then **unconditionally** reads the agent's ExtraWeaponSlot native weapon entity through an unvalidated P/Invoke (`Agent.cs:2708`) — a `0xC0000005` when the slot record is absent. The reinforcement path (unlike deployment, which never runs this code) installs the banner via `Mission.SpawnTroop`'s validating gate and wields initial weapons natively; either can leave slot 4 empty (likely trigger: 2H replacement sidearm forcing a native drop of the `DropOnWeaponChange` banner — fixed in data, pinned by `BannerBearerReplacementWeaponDataTests`). The prefix reimplements the engine's five statements (caller discards the return value — declining bookkeeping is always safe) adding: a **toggle-folded** race/formation-group eligibility gate (`IsReinforcementBearerAllowed`; disabled ⇒ allowed ⇒ vanilla parity — the deep-review Flow-4 finding; the engine's reinforcement path consults no per-agent policy, so this also closes the troll-as-bearer gap), a **managed slot-4 check** before the native read (anomaly ⇒ mechanism-naming WARN instead of CTD — the standing Iron-Law confirmation channel), and an **AV-only catch** on the clean-path read (Patch62 precedent). Private members (`GetFormationControllerFromFormation`, nested `FormationBannerController` + `BannerItem`/`Formation`/`OnBannerEntityPickedUp`, `AddBannerEntity`) reached via `BannerBearerLogicReflection` — cached once, fail-open to the original engine method on drift, pinned by `BannerBearersBindingTests`. Applied in `OnSubModuleLoad` inside a try/catch (a guard must never take startup down). Cold path — runs only when a reinforcement wave finds `GetMissingBannerCount > 0`. Known accepted divergence: the deployment gate's agent-level base checks (`IsHuman`, `is CharacterObject`) cannot run pre-spawn; the slot-4 guard is the backstop. RCA: `docs/reviews/rca-banner-bearers-reinforcement-av-2026-07-25.md`. Lives in `Main/Features/BannerBearers/Hooks/`.
+
+## Patch63_BlowDiagnostics
+
+**Target:** `Agent.Die` (public), `Agent.HandleBlowAux` (private), `RangedSiegeWeapon.ShootProjectileAux` (private) — void Prefixes
+
+BlowDiagnostics — toggle-gated (MCM "TAOM — Blow Diagnostics", **OFF by default**) durable `[BlowDiag]` stamps on the three blow-delivery seams. Ships to capture the dwarf-siege native AV (wound + fire-pot impact) that leaves no managed stack: the last durable line written before the process dies names the fatal blow. Diagnostic siblings of Patch47/Patch48 — deliberately separate classes so the spider dismount guards are untouched. Applied in the late `OnGameInitializationFinished` batch. See `docs/features/blow-diagnostics.md`.
+
+> **Category-number collision (documentation only):** `Patch63` prefixes two distinct category strings — `Patch63_BannerBearerSpawnGuard` (above, `OnSubModuleLoad`) and `Patch63_BlowDiagnostics` (this one, late batch). Harmony keys categories by the full string, so both apply independently and correctly; only the human-facing number is ambiguous. Do not "fix" this by renaming without checking both the `[HarmonyPatchCategory]` attributes and the `PatchCategory(...)` calls in `Main/SubModule.cs`.
 
 ## Patch64_MenuLinkColors
 

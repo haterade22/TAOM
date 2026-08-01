@@ -1,5 +1,9 @@
+using System.Linq;
 using Bannerlord.UIExtenderEx;
+using Bannerlord.UIExtenderEx.Attributes;
 using HarmonyLib;
+using TAOM.Dependencies.Foundation;
+using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -158,7 +162,7 @@ public class SubModule : MBSubModuleBase
         }
 
         _uiExtender = UIExtender.Create("TAOM");
-        _uiExtender.Register(typeof(SubModule).Assembly);
+        RegisterUiExtensions(_uiExtender);
         _uiExtender.Enable();
 
         // Patch41_McmLayoutFix — flip MCM's embedded options-screen prefabs from VerticalBottomToTop
@@ -540,6 +544,89 @@ public class SubModule : MBSubModuleBase
         }
     }
 
+    /// <summary>
+    /// #370 — registers TAOM's UIExtenderEx extensions, minus any marked
+    /// <c>[CoopSuppressedUi]</c> when a co-op module is active.
+    ///
+    /// Mirrors UIExtenderEx's own <c>Register(Assembly)</c> type selection (any type carrying an
+    /// attribute derived from <c>BaseUIExtenderAttribute</c>), then filters. Registration is a
+    /// one-shot here in <c>OnSubModuleLoad</c>, so this is the only point at which a widget can be
+    /// kept out of the prefab — a runtime check inside a mixin cannot un-inject one.
+    ///
+    /// Never throws: a failure here would cost every TAOM UI extension, so the fallback is the
+    /// unfiltered assembly registration (solo behaviour).
+    /// </summary>
+    private static void RegisterUiExtensions(UIExtender extender)
+    {
+        var assembly = typeof(SubModule).Assembly;
+
+        // SOLO TAKES THE ORIGINAL PATH, UNTOUCHED. Not an optimisation — a guarantee. Our own type
+        // collection could in principle select a different set than UIExtenderEx's (its per-type
+        // attribute read is tolerant where UIExtenderEx's is not), and a silently short list would
+        // break TAOM's UI with no visible cause. Solo players are the overwhelming majority and must
+        // not be exposed to that risk to serve a co-op path they never load, so the filtered path is
+        // reached ONLY when a co-op module is present.
+        bool coopActive;
+        try
+        {
+            // #370 — re-probe HERE rather than inheriting TAOM.Dependencies' earlier one.
+            //
+            // Every other CoopPresence consumer (PatchShield, SaveShield, both diplomacy hooks)
+            // reads live at DECISION time, which is gameplay — long after the second, authoritative
+            // Refresh() in OnGameInitializationFinished. UI registration cannot: it is a one-shot in
+            // OnSubModuleLoad, and a mixin cannot un-inject a widget that is already built. So it
+            // was the only consumer deciding from the FIRST probe — the one CoopPresence's own docs
+            // flag as possibly running before ModuleHelper's active-module list is populated.
+            //
+            // If that probe were early, the failure is silent: the !coopActive branch is taken, the
+            // ordinary solo registration line runs, and the "[CoopInterop] co-op active" log never
+            // appears — the exact dead-control bug the attribute exists to prevent, with no signal.
+            // Refresh() is a reflection read, not I/O, so paying for it once is cheap insurance.
+            CoopPresence.Refresh();
+            coopActive = CoopPresence.IsActive;
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning(
+                $"[CoopInterop] co-op probe failed ({ex.GetType().Name}: {ex.Message}) — " +
+                "registering UI unfiltered (solo behaviour)");
+            extender.Register(assembly);
+            return;
+        }
+
+        if (!coopActive)
+        {
+            // Logged unconditionally: this line's ABSENCE is the only way to tell a genuine solo
+            // session from a co-op session whose detection ran too late, and the boot matrix has to
+            // be able to tell those apart.
+            IoC.Resolve<IModLogger>().LogInfo(
+                "[CoopInterop] no co-op module detected at UI registration — registering all TAOM UI");
+            extender.Register(assembly);
+            return;
+        }
+
+        try
+        {
+            var candidates = CoopUiRegistrationPolicy.CollectUiExtensionTypes(assembly);
+            var registered = CoopUiRegistrationPolicy.Filter(candidates, coopActive: true);
+            var dropped = CoopUiRegistrationPolicy.Suppressed(candidates);
+
+            IoC.Resolve<IModLogger>().LogInfo(
+                $"[CoopInterop] co-op active — registering {registered.Count} UI extension(s), " +
+                $"suppressing {dropped.Count}" +
+                (dropped.Count > 0 ? ": " + string.Join(", ", dropped.Select(t => t.Name)) : ""));
+
+            extender.Register(registered);
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning(
+                $"[CoopInterop] UI extension filtering failed ({ex.GetType().Name}: {ex.Message}) — " +
+                "registering the full assembly unfiltered");
+            extender.Register(assembly);
+        }
+    }
+
     // Character identity, creation, and troop-progression registrations (ADR-002 extraction of the
     // former OnGameStart inline block — bodies are verbatim, order unchanged).
     private static void RegisterProgressionAndIdentity(
@@ -597,7 +684,8 @@ public class SubModule : MBSubModuleBase
         var raceAgeService = IoC.Resolve<IRaceAgeService>();
         var heroAgeAdapter = IoC.Resolve<IHeroAgeAdapter>();
         var raceAgeLogger = IoC.Resolve<IModLogger>();
-        campaignStarter.AddBehavior(new RaceAgeBehavior(raceAgeService, heroAgeAdapter, raceAgeLogger));
+        campaignStarter.AddBehavior(new RaceAgeBehavior(raceAgeService, heroAgeAdapter, raceAgeLogger,
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
         campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
         campaignStarter.AddModel(new TaomHeroCreationModel());
@@ -618,18 +706,21 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger));
         campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, diplomacyLogger));
         campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
-        campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService));
-        campaignStarter.AddModel(new TaomDiplomacyModel(wotrService));
+        var coopPresence = IoC.Resolve<TAOM.Features.CoopInterop.ICoopPresenceProvider>();
+        campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService, coopPresence));
+        campaignStarter.AddModel(new TaomDiplomacyModel(wotrService, coopPresence));
 
         var wotrLogger = IoC.Resolve<IModLogger>();
-        campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger));
+        campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger,
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         // WotR Momentum #327 — Evil-vs-Good progress tracking + victory; behavior is a
         // Reuse.Singleton (it carries the state store's persistence dict).
         campaignStarter.AddBehavior(IoC.Resolve<Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior>());
 
         var siegeDefenseService = IoC.Resolve<ISiegeDefenseService>();
         var siegeDefenseLogger = IoC.Resolve<IModLogger>();
-        campaignStarter.AddBehavior(new SiegeDefenseBehavior(siegeDefenseService, siegeDefenseLogger));
+        campaignStarter.AddBehavior(new SiegeDefenseBehavior(siegeDefenseService, siegeDefenseLogger,
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         campaignStarter.AddModel(new TaomSiegeEventModel(IoC.Resolve<ISiegeEngineAvailabilityService>()));
 
         var executionRelationService = IoC.Resolve<IExecutionRelationService>();
@@ -816,7 +907,8 @@ public class SubModule : MBSubModuleBase
         // Registered unconditionally so the MCM master toggle takes effect at runtime.
         campaignStarter.AddBehavior(new CastleRecruitmentBehavior(
             IoC.Resolve<ICastleRecruitmentService>(),
-            IoC.Resolve<IModLogger>()));
+            IoC.Resolve<IModLogger>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
 
         // AlignmentDesertion — opposed-alignment troops (Free vs Evil) desert daily from mobile
         // parties and garrisons. Registered unconditionally so the MCM master toggle takes effect
@@ -840,7 +932,8 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddBehavior(new Features.CultureConversion.Hooks.CultureConversionBehavior(
             IoC.Resolve<Features.CultureConversion.ICultureConversionService>(),
             IoC.Resolve<Features.CultureConversion.ICultureConversionStore>(),
-            IoC.Resolve<IModLogger>()));
+            IoC.Resolve<IModLogger>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
 
         // LotrIssues — suppress ALL 43 vanilla procedural issue behaviors (Sandbox registered them
         // before this OnGameStart) and register the single LOTR custom-issue dispatcher in their

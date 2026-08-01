@@ -68,6 +68,12 @@
 		     BundledDependencyManifestTests. -->
 		<Module Id="BannerlordTogether" />
 		<Module Id="BattleLinkMPClient" />
+		<!-- BannerlordCoop (Workshop 3770450698), launcher id "Coop". Same reasoning as the two
+		     above and then some: it bundles 0Harmony 2.4.2.0 (byte-identical to ours), plus
+		     Mono.Cecil / MonoMod / Serilog 4.x. Constructing TAOM.Dependencies first lets the
+		     AssemblyResolve redirect settle before its copies are touched.
+		     Internals: docs/research/bannerlordcoop-internals.md -->
+		<Module Id="Coop" />
 	</ModulesToLoadAfterThis>
 	<DependedModuleMetadatas>
 		<DependedModuleMetadata id="Native" order="LoadAfterThis" optional="true" />

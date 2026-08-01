@@ -12,6 +12,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Messengers.Domain;
 
 namespace TAOM.Features.Messengers;
@@ -44,17 +45,20 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
     // 2026-05-06: prior session's _dialogsRegistered=true would have suppressed dialog registration in campaign 2).
     private CampaignGameStarter _lastSessionStarter;
     private bool _justLoadedFromSave;
+    private readonly ICoopSessionProvider _coopSession;
 
     public MessengerCampaignBehavior(
         IMessengerService service,
         IMessengerStateStore store,
         IMessengerSettingsProvider settings,
-        IModLogger logger)
+        IModLogger logger,
+        ICoopSessionProvider coopSession)
     {
         _service = service;
         _store = store;
         _settings = settings;
         _logger = logger;
+        _coopSession = coopSession;
     }
 
     // --- CampaignBehaviorBase ---
@@ -176,8 +180,15 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
         }
     }
 
-    private void OnHourlyTick()
+    // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
+    internal void OnHourlyTick()
     {
+        // CO-OP: host-only. The messenger store is TAOM SyncData, so a joining client loads the
+        // HOST'S in-flight messengers — and arrival writes MobileParty.MainParty.Position, which on
+        // a client is that player's OWN party. Ungated, a host messenger completing would teleport
+        // the client. Arrival also calls GiveGoldAction, shared campaign state.
+        if (!_coopSession.IsAuthority) return;
+
         // Runtime MCM disable freezes in-flight messengers. Re-enabling resumes processing on the next tick.
         if (!_settings.EnableMessengers) return;
         if (_store.Count == 0)

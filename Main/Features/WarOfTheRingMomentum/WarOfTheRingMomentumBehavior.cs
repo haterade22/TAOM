@@ -10,6 +10,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TAOM.Adapters;
+using TAOM.Features.CoopInterop;
 using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy;
 using TAOM.Features.Diplomacy.Models;
@@ -47,6 +48,7 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
     private const string CountKey = "_taom_wotr_momentum_v3_count";
     private const string ChunkKeyPrefix = "_taom_wotr_momentum_v3_";
     private List<string> _chunks = new();
+    private readonly ICoopSessionProvider _coopSession;
 
     public WarOfTheRingMomentumBehavior(
         IMomentumStateStore stateStore,
@@ -57,7 +59,8 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         IMomentumSettingsProvider settings,
         IWarOfTheRingService wotrService,
         UI.IMomentumUIService uiService,
-        IModLogger logger)
+        IModLogger logger,
+        ICoopSessionProvider coopSession)
     {
         _stateStore = stateStore;
         _eventService = eventService;
@@ -68,6 +71,7 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         _wotrService = wotrService;
         _uiService = uiService;
         _logger = logger;
+        _coopSession = coopSession;
     }
 
     private static double NowHours => CampaignTime.Now.ToHours;
@@ -163,7 +167,10 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
             _wotrService.EndWar(state.Victor);
         }
 
-        if (_settings.MomentumEnabled)
+        // CO-OP: host-only. SweepEnrollment mutates state.Free/Evil.KingdomIds and MarkWarStarted
+        // on the shared momentum store; a client re-running it against the host's save diverges the
+        // enrollment set. (deep-review 2026-08-01, data-flow HIGH #2)
+        if (_settings.MomentumEnabled && _coopSession.IsAuthority)
             _enrollmentService.SweepEnrollment(state);
     }
 
@@ -172,6 +179,13 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         // RefreshMapMeter must run even when disabled so the master toggle can RETRACT an
         // already-shown meter (its wantMeter folds MomentumEnabled). Do it before the guard.
         RefreshMapMeter();
+
+        // CO-OP: host-only for the STATE half, deliberately placed after RefreshMapMeter. The meter
+        // is local UI a client still needs drawn from replicated state; everything below mutates
+        // shared campaign state (enrollment sweep, MakePeace on victory) off momentum totals that
+        // live in TAOM SyncData no co-op mod replicates.
+        if (!_coopSession.IsAuthority)
+            return;
 
         if (!_settings.MomentumEnabled)
             return;
@@ -210,6 +224,10 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     private void OnMapEventEnded(MapEvent mapEvent)
     {
+        // CO-OP: host-only. Mutates the shared MomentumWarState, which rides TAOM's own SyncData and
+        // is NOT replicated by any co-op mod — a client scoring the same battle diverges its totals.
+        if (!_coopSession.IsAuthority) return;
+
         if (!_settings.MomentumEnabled)
             return;
 
@@ -223,6 +241,9 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     private void OnSiegeCompleted(Settlement settlement, MobileParty capturerParty, bool isWin, MapEvent.BattleTypes battleType)
     {
+        // CO-OP: host-only — same shared-state reasoning as OnMapEventEnded.
+        if (!_coopSession.IsAuthority) return;
+
         if (!isWin || !_settings.MomentumEnabled)
             return;
 
@@ -236,6 +257,9 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     private void OnRaidCompleted(BattleSideEnum winnerSide, RaidEventComponent component)
     {
+        // CO-OP: host-only — same shared-state reasoning as OnMapEventEnded.
+        if (!_coopSession.IsAuthority) return;
+
         if (!_settings.MomentumEnabled)
             return;
 
@@ -249,6 +273,9 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     private void OnArmyGathered(Army army, IMapPoint gatheringPoint)
     {
+        // CO-OP: host-only — same shared-state reasoning as OnMapEventEnded.
+        if (!_coopSession.IsAuthority) return;
+
         if (!_settings.MomentumEnabled)
             return;
 
@@ -262,6 +289,10 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     private void OnKingdomDestroyed(Kingdom kingdom)
     {
+        // CO-OP: host-only. Reaches the IDENTICAL _victoryService.CheckAndApplyVictory ->
+        // EndWar + MakePeace path that OnDailyTick is gated to protect.
+        if (!_coopSession.IsAuthority) return;
+
         if (!_settings.MomentumEnabled)
             return;
 

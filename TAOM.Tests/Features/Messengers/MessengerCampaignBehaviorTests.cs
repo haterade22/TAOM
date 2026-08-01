@@ -7,6 +7,7 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.Messengers;
 using TaleWorlds.CampaignSystem;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Tests.Features.Messengers;
 
@@ -72,6 +73,10 @@ public class MessengerCampaignBehaviorTests
         // any feature module runs.
         container.RegisterInstance<IModLogger>(Substitute.For<IModLogger>());
         container.RegisterInstance<IPathService>(Substitute.For<IPathService>());
+        // Cross-cutting since 2026-08-01: the hourly tick is gated on co-op authority so a client
+        // does not replay the host's in-flight messengers. Main/IoC.cs:79 registers the real one via
+        // CoopInteropIoC; substituted here for the same reason IModLogger/IPathService are.
+        container.RegisterInstance<ICoopSessionProvider>(Substitute.For<ICoopSessionProvider>());
         MessengerIoC.RegisterMessengerFeature(container);
 
         var behavior = container.Resolve<MessengerCampaignBehavior>();
@@ -109,7 +114,8 @@ public class MessengerCampaignBehaviorTests
             Substitute.For<IMessengerService>(),
             Substitute.For<IMessengerStateStore>(),
             Substitute.For<IMessengerSettingsProvider>(),
-            Substitute.For<IModLogger>());
+            Substitute.For<IModLogger>(),
+            Substitute.For<ICoopSessionProvider>());
 
         Assert.IsInstanceOfType(behavior, typeof(CampaignBehaviorBase));
     }

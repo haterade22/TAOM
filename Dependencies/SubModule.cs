@@ -36,7 +36,7 @@ public class SubModule : MBSubModuleBase
     /// a consumer mod that ships its own Newtonsoft.Json v12 could shadow ours at JIT
     /// time and break serialisation. List mirrors BetaDeps.Foundation.AssemblyVersionShim.
     /// </summary>
-    private static readonly string[] RedirectedSimpleNames =
+    internal static readonly string[] RedirectedSimpleNames =
     {
         // BUTR stack (original 4)
         "0Harmony",
@@ -51,21 +51,64 @@ public class SubModule : MBSubModuleBase
         "Microsoft.Extensions.Options",
         "Microsoft.Extensions.Primitives",
         // Logging
-        "Serilog",
         "Serilog.Extensions.Logging",
         // Harmony's transitive deps (if they ship as separate DLLs alongside Lib.Harmony 2.4.2)
         "Mono.Cecil",
         "MonoMod.Core",
         "MonoMod.Utils",
         // System.* polyfills (NET 4.7.2 sometimes resolves these differently across mods)
-        "System.Buffers",
-        "System.Memory",
-        "System.Numerics.Vectors",
-        "System.Runtime.CompilerServices.Unsafe",
         "System.Threading.Tasks.Extensions",
         "System.ValueTuple",
         // JSON
         "Newtonsoft.Json",
+
+        // ---------------------------------------------------------------------------------------
+        // DELIBERATELY ABSENT (2026-08-01) — do not re-add without reading this.
+        //
+        //   Serilog, System.Buffers, System.Memory, System.Numerics.Vectors,
+        //   System.Runtime.CompilerServices.Unsafe
+        //
+        // RedirectBundledDependencies below matches on SIMPLE NAME ONLY and returns the first
+        // already-loaded assembly with that name, discarding requested.Version entirely. That is
+        // safe while TAOM's copy is the newest one in the process. BannerlordCoop breaks the
+        // assumption: it ships all five at HIGHER versions than we do (measured 2026-08-01 with
+        // Reflection.AssemblyName over both bin folders):
+        //
+        //   Serilog                                 ours 2.0.0.0  coop 4.2.0.0
+        //   System.Runtime.CompilerServices.Unsafe  ours 4.0.4.1  coop 6.0.1.0
+        //   System.Memory                           ours 4.0.1.1  coop 4.0.2.0
+        //   System.Buffers                          ours 4.0.3.0  coop 4.0.4.0
+        //   System.Numerics.Vectors                 ours 4.1.4.0  coop 4.1.5.0
+        //
+        // Keeping them meant handing Coop's 4.x Serilog callers our 2.0 assembly — a
+        // MissingMethodException at a random later point, attributed to neither mod.
+        //
+        // A version comparison is NOT a valid alternative: GameInterface's AutoSyncBuilder calls
+        // Assembly.Load("System.Numerics.Vectors") with a BARE PARTIAL NAME, so requested.Version
+        // is null and there is nothing to compare against. Nor can this be gated on CoopPresence —
+        // the handler installs from a static cctor, long before any module-list probe can run.
+        //
+        // These five were speculative "BetaDeps parity" additions, never added in response to an
+        // observed failure; the load-bearing original four are the BUTR stack above. Dropping them
+        // restores ordinary CLR resolution, which already handles them (all are strong-named, so
+        // the binder matches on full identity and two versions coexist happily).
+        //
+        // Pinned by AssemblyRedirectListTests. Evidence: docs/research/bannerlordcoop-internals.md
+        // ---------------------------------------------------------------------------------------
+    };
+
+    /// <summary>
+    /// Simple names deliberately excluded from <see cref="RedirectedSimpleNames"/> because a known
+    /// co-op mod ships them at a higher version and our version-blind redirect would down-shim it.
+    /// Exposed for the regression test that stops them being re-added.
+    /// </summary>
+    internal static readonly string[] DeliberatelyNotRedirected =
+    {
+        "Serilog",
+        "System.Buffers",
+        "System.Memory",
+        "System.Numerics.Vectors",
+        "System.Runtime.CompilerServices.Unsafe",
     };
 
     private static int _assemblyResolveInstalled;
