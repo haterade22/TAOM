@@ -128,6 +128,40 @@ The registry said "Battle scenes (DISABLED)"; `SubModule.cs` has applied it unco
 `Patch63` prefixes two distinct category strings — Harmony keys on the full string so both apply
 correctly, but the number is not a unique key and a careless rename would break one.
 
+### feat(devconsole): damage_agent and requeue_settlement, plus six review fixes (#369)
+
+`taom.damage_agent <amount> [name]` applies raw HP damage, mirroring the engine's own
+`KillAgentCheat` blow construction with a configurable magnitude. Its usage string and its output
+both state what it CANNOT do: a synthetic blow goes straight to `HandleBlow`, downstream of where
+`DecideAgentShrugOffBlow` runs, so shrug-off, unstoppable and knockdown models never fire. It is for
+HP attrition and death thresholds; testing the damage models needs a real weapon hit.
+
+`taom.requeue_settlement <settlement>` fires the owner-changed path twice — the capture-then-grant
+double-fire #333 was about — and reports whether the conversion hold timer moved. It refuses
+settlements with no existing conversion record, because there the first fire would ARM a persisted
+timer that a later daily tick completes into a real culture flip, which is a Tier C mutation from a
+command sold as a read-mostly regression guard.
+
+The review over the full twelve-command feature found no HIGH issues but six worth fixing. Two are
+the same failure in different clothes. `damage_agent` omitted `GameNetwork.IsClientOrReplay` from its
+guard while the class comment claimed to model the engine's guard "including its mission-mode guard"
+— and `IsReplay` is not multiplayer-only, it covers the singleplayer replay viewer. That is the third
+round running in which a comment asserted a relationship that was intended rather than read. The
+other: `(int)amount` had no upper bound, so a large finite input would leave `BaseMagnitude` huge
+while `InflictedDamage` went degenerate and read downstream as healing — the float-to-int cast class
+that has now shipped five times in TAOM, caught at a sixth site before it shipped.
+
+Also fixed: `print_town_economy` re-derived the equilibrium target from raw prosperity while the
+service sanitizes non-finite prosperity to zero internally, so a corrupt save would have printed a
+finite daily change beside `target=NaN` in the same block.
+
+**Tests:** 4732 passing. RCA addendum 2: `docs/reviews/rca-devconsole-phase0-2026-07-31.md`.
+
+Research: Mission.KillAgentCheat, AttackCollisionData.GetAttackCollisionDataForDebugPurpose, Blow, GameNetwork.IsClientOrReplay, CampaignCheats.TryGetObject, CultureConversionService
+Constraint: two of FormatRequeue's four branches are unreachable from the live command — both fires are synchronous, so the guard closes after whichever fires first. They stay to catch a future service regression.
+Not-tested: AgentDamageCheats.ApplyBlow has no unit coverage — sealed engine types, no adapter seam; its correctness rests on an argument-by-argument decompile diff
+Save-compat: no new save fields
+
 ### feat(devconsole): mission spawning, agent inspection, and the battle-scene lookup (#369)
 
 `taom.spawn_troops <troopId> <count> [enemy|ally]` is the one that matters. Vanilla ships 80

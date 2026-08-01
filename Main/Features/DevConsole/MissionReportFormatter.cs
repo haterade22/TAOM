@@ -91,6 +91,22 @@ internal static class MissionReportFormatter
         return sb.ToString().TrimEnd();
     }
 
+    /// <summary>
+    /// The trailing caveat is not decoration. The command's name invites the assumption that it
+    /// exercises TAOM's damage models; it does not — a synthetic blow goes straight to
+    /// <c>HandleBlow</c>, downstream of where <c>DecideAgentShrugOffBlow</c> runs. Saying so in the
+    /// output is what stops the next session re-deriving the wrong purpose from the name.
+    /// </summary>
+    internal static string FormatDamage(string agentLabel, float amount, float? before, float? after)
+    {
+        var delta = before.HasValue && after.HasValue
+            ? $"{before.Value:0.#} -> {after.Value:0.#}"
+            : "health unreadable";
+
+        return $"[Damage] {agentLabel}: {amount:0.#} applied ({delta})\n"
+             + "[Damage] NOTE: synthetic blow — shrug-off / unstoppable / knockdown models did NOT run.";
+    }
+
     internal static string FormatMissionScene(string sceneName, float x, float y, float z, bool fromMainAgent)
     {
         var source = fromMainAgent ? "player" : "camera (no live main agent)";

@@ -129,3 +129,43 @@ the change the claim cannot be false, because there is only one expression.
 
 Appended to `docs/reviews/lessons/adapters-taleworlds-api.md` as a scope extension of the existing
 shipping-build lesson.
+
+---
+
+# Addendum 2 — damage_agent + requeue_settlement review, 2026-08-01
+
+Three agents over the full twelve-command feature. No HIGH findings; the engine agent walked
+`GetAttackCollisionDataForDebugPurpose`'s 37 arguments one by one against the installed v1.4.7
+signature and found the positional mapping exact, including a `DamageType=2` literal that is
+deliberately consistent with `DamageTypes.Blunt`.
+
+| # | Sev | Finding | Why missed | Action |
+|---|-----|---------|-----------|--------|
+| B1 | MED | `AgentDamageCheats` omitted `GameNetwork.IsClientOrReplay` from its mode guard while the class comment claimed to model `KillAgentCheat` "including its mission-mode guard". `IsReplay` covers `MBCommon.GameType.SingleReplay` — reachable in singleplayer, not multiplayer-only. | Read the three `Mode` checks in the engine's guard and stopped there, then wrote a comment asserting full parity. **Third instance of this pattern in this feature.** | Full guard ported; comment now enumerates what it does and does not replicate. |
+| B2 | MED | `(int)amount` in the blow had no upper bound. `TryParseAmount` rejects non-finite input but not a large finite float, and the cast is unchecked — `BaseMagnitude` would stay huge while `InflictedDamage` went degenerate/negative, reading downstream as healing. | The float→int cast class is documented in `csharp-architecture.md` with five prior instances; the guard was written as a sign check (`amount <= 0f`) without asking what the cast produces at the top of the range. | `MaxDamage = 100_000f` bound, gate written as a positive requirement. |
+| B3 | MED | `SettlementEconomyCheats` re-derived the equilibrium target from raw `town.Prosperity` while `ComputeTownGoldChange` sanitizes non-finite prosperity to 0 internally. A corrupt save would print a finite `dailyChange` beside `target=NaN` in the same block. | The duplication was noticed in the previous round and judged low-risk; nobody asked what the *service* does to its input before using it. Duplicating a formula also duplicates the obligation to sanitize. | Cheat now sanitizes identically. The formula is still duplicated — a `ComputeEquilibriumTarget` accessor on the service remains the better fix and is not done. |
+| B4 | MED | `requeue_settlement` was documented Tier B "idempotent by the very guard it tests". True for a tracked settlement; **false for a cross-culture-owned settlement with no store record** — there the first internal fire calls `StartPending` + `Put`, arming a real persisted timer that a later daily tick completes into an actual culture flip. Tier C behaviour from a command sold as a read-mostly guard. | Reasoned about the guard's behaviour in the state the command was designed for and never enumerated the state where the record is absent. | The command now refuses when no record exists and says why — it verifies a timer, it does not create one. |
+| B5 | LOW | Two of `FormatRequeue`'s four branches (RESTARTED, second-fire-only) are unreachable from the live command: both fires are synchronous, so the owner culture is identical and the guard closes after whichever fires first. The test docstring implied all four were live outcomes. | — | Docstring states the reachability explicitly. The branches stay — they exist to catch a future service regression. |
+| B6 | LOW | The command table listed `damage_agent` and `requeue_settlement` as "Phase 2 remaining" while both were implemented; `damage_`/`requeue_` were absent from the documented verb list. | **Second time this table has gone stale**, same cause both times: written alongside the code instead of re-read against it. | Table and verb list corrected, plus an inline note requiring the table be edited in the same commit as a new command. |
+
+## The pattern that will not die (B1)
+
+Three rounds, three instances of a comment asserting an engine or code relationship that was
+*intended* rather than *read*: the `Game.CheatMode` mechanism (Phase 0), the momentum "shared helper"
+claim (addendum 1), and now "including its mission-mode guard" when only three of four clauses were
+ported. Writing the lesson down twice did not stop the third.
+
+What has actually caught all three is a review brief naming the specific question — "is this claim
+true?" — rather than a general instruction to check comments. The structural fix used in addendum 1
+(extract the shared thing so the claim cannot be false) does not apply to a claim about *vanilla's*
+code, which cannot be shared with. For that case the only reliable discipline is: **when a comment
+says "including X", enumerate X and check each element**, which is what the engine agent did and what
+the author did not.
+
+## Not fixed, recorded
+
+- `SettlementEconomyCheats` still duplicates the target formula rather than calling a service
+  accessor (B3 fixed the divergence, not the duplication).
+- `AgentDamageCheats.ApplyBlow` has no unit coverage — sealed engine types, no adapter seam. Its
+  correctness rests on this review's argument-by-argument decompile diff, not on a regression test.
+  Extracting a pure `ComputeInflictedDamage(float)` would close the cast half cheaply.

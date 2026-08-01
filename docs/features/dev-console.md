@@ -167,7 +167,7 @@ appears **zero times**.
 | Case | `^[a-z][a-z0-9_]*$` |
 | Order | `<verb>_<object>[_of_<owner>\|_to_<target>]`, matching vanilla |
 | Read-only verb | **`print_` and nothing else.** `dump_`, `list_`, `get_` are banned — admitting synonyms is how the convention drifts |
-| Mutating verbs | `add_ set_ remove_ clear_ give_ toggle_ spawn_` |
+| Mutating verbs | `add_ set_ remove_ clear_ give_ toggle_ spawn_ damage_ requeue_` |
 | `show_` / `hide_` | Reserved for genuine visibility toggles, as in `campaign.show_settlements` |
 | Redundancy | Never put `taom` in the name; the group carries it |
 | Mirroring vanilla | Encouraged — `taom.add_special_resources` deliberately echoes `campaign.add_gold_to_hero` |
@@ -287,9 +287,14 @@ answer is conclusive and fails open in every path.
 | `taom.print_mission_scene` | A | mission | Scene name + player/camera position |
 | `taom.print_agent_info [name\|*]` | A | mission | Race, monster, action set, skeleton, mount/rider, spawn equipment. Pairs with `spawn_troops` |
 | `taom.spawn_troops <id> <n> [enemy\|ally]` | B | mission | Composing a specific fight. **Vanilla ships no mission spawn at all** |
+| `taom.damage_agent <amount> [name]` | B | mission | HP attrition and death thresholds. **Cannot test shrug-off / unstoppable** — a synthetic blow bypasses the hit path those models run on |
+| `taom.requeue_settlement <settlement>` | B | campaign | A siege plus a day's wait to re-check #333. Refuses settlements with no existing record, so it verifies a timer rather than arming one |
 
 **Still unbuilt from Phase 1:** `print_town_mercenaries`, `print_banner_bearers`, `print_wotr`.
-**Phase 2 remaining:** `damage_agent`, `requeue_settlement`, `convert_settlement`. **Phase 3:** untouched.
+**Phase 2 remaining:** `convert_settlement`. **Phase 3:** untouched.
+
+> This table has gone stale twice — both times because it was written alongside the code rather than
+> re-read against it afterwards. When you add a command, edit this table in the same commit.
 
 ## Files
 

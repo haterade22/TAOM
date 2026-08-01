@@ -214,6 +214,40 @@ public class MissionReportFormatterTests
         Assert.IsFalse(report.Contains("0/5 spawned"));
     }
 
+    // ---- damage -----------------------------------------------------------
+
+    [TestMethod]
+    public void FormatDamage_RendersBeforeAndAfterHealth()
+    {
+        var report = MissionReportFormatter.FormatDamage("Gondor Tower Guard", 25f, 80f, 55f);
+
+        StringAssert.Contains(report, "80");
+        StringAssert.Contains(report, "55");
+        StringAssert.Contains(report, "25");
+    }
+
+    /// <summary>
+    /// The caveat must always be present. The command's name invites the assumption that it exercises
+    /// TAOM's damage models; it goes straight to HandleBlow, downstream of where
+    /// DecideAgentShrugOffBlow runs. Without this line the next session re-derives the wrong purpose.
+    /// </summary>
+    [TestMethod]
+    public void FormatDamage_AlwaysStatesThatDamageModelsDidNotRun()
+    {
+        var report = MissionReportFormatter.FormatDamage("Anyone", 1f, 10f, 9f);
+
+        StringAssert.Contains(report, "did NOT run");
+    }
+
+    [TestMethod]
+    public void FormatDamage_UnreadableHealth_SaysSoRatherThanRenderingZero()
+    {
+        var report = MissionReportFormatter.FormatDamage("Anyone", 25f, null, null);
+
+        StringAssert.Contains(report, "unreadable");
+        Assert.IsFalse(report.Contains("0 -> 0"));
+    }
+
     // ---- battle scene -----------------------------------------------------
 
     [TestMethod]

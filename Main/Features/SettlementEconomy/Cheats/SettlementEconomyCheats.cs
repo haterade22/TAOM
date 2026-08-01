@@ -4,6 +4,7 @@ using System.Text;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
+using TAOM.Core.Validation;
 using TAOM.Features.DevConsole;
 
 namespace TAOM.Features.SettlementEconomy.Cheats;
@@ -46,7 +47,13 @@ public static class SettlementEconomyCheats
 
             var taomChange = service.ComputeTownGoldChange(town.Prosperity, town.Gold, config);
             var vanillaChange = service.ComputeTownGoldChange(town.Prosperity, town.Gold, null);
-            var target = config.TownGoldBase + town.Prosperity * config.TownGoldPerProsperity;
+
+            // Sanitize prosperity the same way the service does before re-deriving the target.
+            // ComputeTownGoldChange zeroes a non-finite prosperity internally, so without this the
+            // report would print a finite dailyChange beside a target=NaN computed from the raw
+            // value — two numbers in the same block that contradict each other.
+            var prosperity = FiniteFloatValidator.IsFinite(town.Prosperity) ? town.Prosperity : 0f;
+            var target = config.TownGoldBase + prosperity * config.TownGoldPerProsperity;
 
             return FormatTownEconomy(
                 settlement.StringId, settlement.Name?.ToString() ?? settlement.StringId,
