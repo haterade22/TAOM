@@ -20,6 +20,10 @@ public class CharacterTableau_FirstTimeInit_Patch
     [HarmonyPostfix]
     public static void Postfix()
     {
+        // Earliest tableau-lifecycle hook, and it runs for every race including human — so it is the
+        // first opportunity after game-init to repair the statics vanilla is about to read.
+        ActionIndexCacheRepair.TryEnsureRepaired("tableau-first-time-init");
+
         try
         {
             Config = RacePositionConfig.LoadConfig("CharacterAvatarPatch");
@@ -42,6 +46,15 @@ public class CharacterTableau_RefreshCharacterTableau_Patch
     [HarmonyPrefix]
     public static void Prefix(ref AgentVisuals ____oldAgentVisuals, int ____race, bool ____isFemale)
     {
+        // Repair FIRST, unconditionally, before any early-out. This is the load-bearing call site:
+        // vanilla's RefreshCharacterTableau body calls GetIdleAction() — which returns the static
+        // ActionIndexCache.act_inventory_idle_start — so repairing here means the SAME refresh
+        // consumes the corrected value, and an already-constructed tableau self-corrects on its next
+        // refresh. CharacterSpawnerService cannot serve as the backstop: it resolves its actions with
+        // live Create() calls (so it never reads a poisoned static) and it is skipped entirely for
+        // race 0, which is exactly the human case players reported.
+        ActionIndexCacheRepair.TryEnsureRepaired("tableau-refresh");
+
         try
         {
             if (____oldAgentVisuals == null || ____race < 0)
@@ -77,14 +90,22 @@ public class CharacterTableau_RefreshCharacterTableau_Patch
             else
             {
                 // Vanilla CharacterTableau.GetIdleAction() poses this visual with
-                // act_inventory_idle_start. If the set we just injected has no clip bound to that
-                // action, SetAction is a no-op and the character stays in bind pose — a valid
-                // action set is NOT sufficient, so resolve the clip itself.
-                string idleAnim = TableauDiagnostics.DescribeAction(actionSet, ActionIndexCache.act_inventory_idle_start);
+                // act_inventory_idle_start. A valid action set is NOT sufficient — the set must also
+                // bind a clip to that action. Resolved via Create() (a live native lookup) rather
+                // than the static field: reading the static is what can poison ActionIndexCache if
+                // it happens before action types load, and a diagnostic must never be able to cause
+                // the fault it reports. The static-vs-live comparison itself lives in
+                // TableauDiagnostics.ProbeActionIndexHealth, called from the spawner.
+                var idle = ActionIndexCache.Create("act_inventory_idle_start");
                 string line = $"Patch2 race={____race} female={____isFemale} monster='{monster.StringId}' '{setName}' -> " +
-                              $"{TableauDiagnostics.Describe(actionSet)} idleStart-anim={idleAnim}";
+                              $"{TableauDiagnostics.Describe(actionSet)} " +
+                              $"idleStart-anim={TableauDiagnostics.DescribeAction(actionSet, idle)}";
 
-                if (idleAnim == "<NONE>") TableauDiagnostics.LogError(line + "  <-- NO IDLE CLIP (bind-pose condition)");
+                // Positive predicate, not equality against one of DescribeAction's four markers —
+                // matching only "<NONE>" let "<action-index-(-1)>" (the poisoned-index case) log as
+                // INFO, which is precisely the state this patch exists to surface.
+                if (!TableauDiagnostics.HasAnimation(actionSet, idle))
+                    TableauDiagnostics.LogError(line + "  <-- NO USABLE IDLE CLIP (bind-pose condition)");
                 else TableauDiagnostics.Log(key, line);
             }
 

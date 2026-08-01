@@ -113,7 +113,52 @@ unless the counts changed since startup.
 Verified baseline on the dev machine: all 7 categories `applied OK`, one copy of each assembly,
 **1329 action sets / 15 races** identical at both probes, zero errors.
 
-## Open thread
+## ADDENDUM 2026-08-01 — the open thread below is CLOSED, and it was a second root cause
+
+The version-mismatch finding above stands, but it never explained the reported **intermittency**, and
+the RCA flagged that gap. The diagnostic build answered it. The real mechanism is a **static-initialiser
+race in the engine**, and it is independent of the DLL pairing.
+
+`TaleWorlds.MountAndBlade.ActionIndexCache` declares **215** `static readonly` fields (v1.4.7,
+counted — an earlier draft of this document said "~700", which was wrong) populated by an **explicit**
+static constructor, each via `Create(name)` → `MBAnimation.GetActionCodeWithName(name)`. Because the
+cctor is explicit the type is **not** `beforefieldinit`, so *any* static member access — a field read
+**or** the `Create` method — forces the whole set to initialise. If that happens before the engine has
+loaded action types, every index bakes to `-1` for the life of the process, and `readonly` means the
+cctor never re-runs to correct it.
+
+Vanilla `CharacterTableau.GetIdleAction()` returns `ActionIndexCache.act_inventory_idle_start`
+whenever `SetIdleAction` was never called (its `_idleAction` field initialises to `act_none`, so the
+fallback is the normal path). `SetAction(-1)` is a no-op, so the skeleton never leaves bind pose.
+That accounts for every trait the version-mismatch theory could not: **all races** (it is global, not
+per-race), **intermittent per launch** (it is a load-order race), **works on the dev machine**
+(different timing), **UI-only** (that is where the static is consumed).
+
+Independently corroborated: a community member shipped a patched `TAOM.dll` that fixed the clan-naming
+stage by overwriting the incoming action with a **live** `ActionIndexCache.Create(...)` lookup. Needing
+a live lookup to repair the value is only explicable if the baked value is unusable.
+
+**Fix:** `Main/Features/HeroRace/ActionIndexCacheRepair.cs` re-resolves poisoned fields from live
+lookups and writes them back by reflection (legal for `initonly` statics on net472; the code re-reads
+each field and reports a silent refusal). It is gated on `MBAnimation` — a separate struct with no
+cctor — so it can never trigger the initialisation it exists to detect, and it is a no-op when the
+statics are healthy.
+
+### Deep-review findings on the fix itself (2026-08-01, 5 agents)
+
+The first cut of the repair had three HIGH defects. All are fixed; each is a distinct lesson.
+
+| # | Sev | Finding | Fix |
+|---|---|---|---|
+| F1 | HIGH | "Field names ARE action names" is **false**: the v1.4.7 cctor contains `act_raid_jump = Create("act_raid_jump_1")`, and no action named `act_raid_jump` exists. The field would stay poisoned and be misreported as "unknown to this engine build". Latent worse case: a future build where field `X` maps to action `Y` *and* an unrelated action `X` exists would write a **wrong** animation index — silent, non-crashing corruption | `KnownNameOverrides` map + a **round-trip check** (`Create(name).GetName() == name`) before every write, so an unprovable name is left at `-1` rather than guessed |
+| F2 | HIGH | The retry was wired to `CharacterSpawnerService`, which resolves via live `Create()` (so never reads a poisoned static) **and** is skipped for race 0 — the human case players reported. The paths that actually read the statics had no backstop | Repair now runs first thing in `CharacterTableau_RefreshCharacterTableau_Patch.Prefix` and `FirstTimeInit`, so the same refresh consumes the repaired value and an existing tableau self-corrects |
+| F3 | HIGH | The DEFERRED branch used unthrottled `LogAlways` on a path reachable per tableau init — unbounded log growth on exactly the affected machines. This is the `ae2ed426` 6.4 MB regression, reintroduced | New `LogDeduped`; `LogAlways` now counts against the total cap |
+| F4 | MED | `DescribeAction` has four failure markers but callers compared only `== "<NONE>"`, so `<action-index-(-1)>` — **the poisoned case** — logged as INFO | Restored the positive predicate `HasAnimation` at both call sites |
+| F5 | MED | `MBGlobals.GetActionSet` **throws** on a miss (it does not return an invalid set), so three `!IsValid` branches were dead, a `try` outside the suffix loop halved per-race coverage, and the probe fired an engine `Debug.FailedAssert` per miss at startup | Switched to non-throwing `MBActionSet.GetActionSet`; moved `try` inside the suffix loop |
+| F6 | MED | `_completed = true` was set **before** the work, so a failure inside `RepairFields` permanently disabled retry *and* returned `true` | `_completed` is set only after a clean pass; failures return `false` so a later phase retries |
+| F10 | LOW | "~700 fields" was an unverified figure that shipped into a user-facing log line | Corrected to 215; the log now reports the **actual enumerated count** rather than any literal |
+
+## Open thread (CLOSED — see addendum above)
 
 `CharacterTableau.GetIdleAction()` (decompiled from
 `Modules/Native/bin/Win64_Shipping_Client/TaleWorlds.MountAndBlade.View.dll`, which is **absent from

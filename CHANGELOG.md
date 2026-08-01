@@ -4,6 +4,130 @@
 
 ## 2026-08-01
 
+### fix(herorace): characters no longer render lying flat in every UI tableau
+
+The real cause of the "bendy man" reports, and it was not the DLL version mismatch closed in #371 —
+that finding was correct but never explained why the fault came and went between launches.
+
+`ActionIndexCache` holds 215 static action indices filled by an **explicit** static constructor. That
+detail is the whole bug: an explicit cctor means the type is not `beforefieldinit`, so the first touch
+of *any* static member — a field read or the `Create` method — bakes the entire table at that instant.
+Touch it before the engine has loaded action types and all 215 indices become `-1` for the rest of the
+process, permanently, because the fields are readonly and the constructor never runs twice. Vanilla
+`CharacterTableau.GetIdleAction()` returns one of those statics, so `SetAction(-1)` does nothing and
+the skeleton stays in its bind pose. That explains every part of the report the previous theory
+couldn't: all races, because it is global; intermittent per launch, because it is a load-order race;
+never on the dev machine, because the timing differs. A community member had independently worked
+around it by overwriting the action with a live lookup, which only helps if the baked value is unusable.
+
+`ActionIndexCacheRepair` re-resolves poisoned indices from live lookups and writes them back. It is
+gated on `MBAnimation` — a different type, with no static constructor — so it cannot trigger the
+initialisation it exists to detect, and it does nothing at all when the indices are healthy. It runs
+first thing in the tableau refresh and first-time-init prefixes, so the same refresh consumes the
+corrected value and an already-open inventory doll fixes itself.
+
+Two engine facts made this delicate. Field names are not reliably the action names — v1.4.7 has one
+divergence, `act_raid_jump = Create("act_raid_jump_1")`, found by diffing all 214 constructor call
+sites against their fields — so every write is round-trip verified against the engine and a name that
+cannot be proven is left at `-1` rather than guessed. And `MBGlobals.GetActionSet` throws on a miss
+rather than returning an invalid set, which had made several "invalid set" branches unreachable and
+fired an engine assert per miss during the startup probe; the diagnostics use the non-throwing
+`MBActionSet.GetActionSet` instead.
+
+The instrumentation from 2026-07-31 stays, now correctly polarised: it previously compared against one
+of four failure markers, so the poisoned-index case logged as INFO — the exact state it was written to
+catch. Deferred-path logging is deduplicated after a review caught the `ae2ed426` log-flood pattern
+being reintroduced on a per-tableau path.
+
+RCA: `docs/reviews/rca-prone-character-tableau-2026-07-31.md` (addendum).
+Research: `ActionIndexCache` cctor, `MBAnimation.GetActionCodeWithName`, `CharacterTableau.GetIdleAction`
+Not-tested: reflection writes to initonly statics and tableau rendering both need a live game
+
+### fix(coopinterop): stop TAOM vetoing decisions the co-op host already made (#370)
+
+A source review of BannerlordTogether a0.5.3.2 — run under permission from Hobohoppy, one of its
+creators — found that TAOM's `Priority.High` diplomacy prefixes were half a fix.
+
+The ordering does what the previous entry claimed in one direction: when the host originates a war,
+TAOM evaluates before BT and blocks it, so BT never broadcasts and both peers agree. The other
+direction was never considered. BT's client suppresses locally-originated wars and forwards intent to
+the host; when the host's decision comes back, BT re-applies it behind an `IsApplyingSync` guard —
+and TAOM's prefix, running *ahead* of BT's at priority 600 against 400, re-evaluated `IsWarAllowed`
+locally and could return false. Host at war, client at peace. Not a crash: two campaigns that
+disagree, and the disagreement is invisible until the saves are irreconcilable.
+
+How much the verdicts can differ depends on which veto, and the three are not alike. The peace veto
+reads `IsWarOfTheRingActive` → `WarOfTheRingService.CurrentPhase`, which is persisted as the
+`WarOfTheRing_CurrentPhase` `SyncData` key — TAOM campaign-behavior state BT knows nothing about and
+never replicates, so peers genuinely drift apart. The war and alliance-end vetoes read only static
+shipped config (`_permanentRelationships`, the alignment table), so identical installs compute
+identical answers and they diverge only when peers run mismatched TAOM versions or edited configs.
+That is an ordinary co-op scenario rather than an exotic one, and a veto that applies on one machine
+but not the other is the same failure whatever made the answers differ — so all three are gated.
+
+So under co-op TAOM now defers: war declaration, peace, and alliance-end vetoes all return false
+immediately when a co-op module is active. One peer's ruleset has to win and TAOM cannot know which
+one the session agreed on, so it yields the whole decision rather than applying its rules to half of
+it. Gated on TAOM's own `CoopPresence` through a new `ICoopPresenceProvider` seam, not on BT's
+private `IsApplyingSync` field — reflecting into another mod's internals breaks on their next build.
+`AddAllianceDecision` is deliberately left alone: it dedups against replicated vanilla state, so both
+peers compute the same answer, and gating it would bring back the decision-queue saturation it
+exists to prevent.
+
+Also suppressed TAOM's time-acceleration UI under co-op. BT prefixes the `Campaign.TimeControlMode`
+setter and overwrites the assigned value outright, which is correct — a host-authoritative mod should
+own the clock — but TAOM kept advertising control it no longer had: the injected `MapBar`
+fast-forward button still rendered and still took clicks while doing nothing. The five prefab
+extensions and the `MapTimeControlVM` mixin now carry `[CoopSuppressedUi]`, filtered out at
+registration. It has to happen at registration because that is a one-shot in `OnSubModuleLoad` — a
+runtime check inside a mixin cannot un-inject a widget that is already built.
+
+Three things were checked and found already safe, recorded so nobody re-litigates them: BT declares
+no `SaveableTypeDefiner` at all, so TAOM's four base ids — including the 726900601 that deliberately
+collides with an upstream mod — are unthreatened by it; every vanilla model method BT patches that
+TAOM also overrides calls `base`, so BT's patches still fire through TAOM's subclass; and the two
+weather-bounds guards are complementary in either patch order, costing at worst a cosmetic
+difference on out-of-bounds positions.
+
+**Solo players pay nothing for any of this, and that is structural rather than careful.**
+`CoopPresence` fails closed — an unreadable module list means false, so unmodded behaviour is the
+default rather than a branch someone has to get right. UI registration now takes the original
+`extender.Register(assembly)` call verbatim when no co-op module is present, so our own type
+collection can never affect a solo player's UI; the filtered path exists only for sessions that
+actually have a co-op mod loaded. The diplomacy gate is one bool read on a cold path, deliberately
+uncached because `Refresh()` re-probes during startup and a cached read would trade staleness risk
+for nothing measurable.
+
+A separate compat module was considered and rejected on evidence, not preference:
+`UIExtender.Deregister()` guards on `Instances[_moduleName] == this`, so another module holds a
+different instance and literally cannot touch TAOM's UI registration — and its `OnSubModuleLoad`
+runs after TAOM's anyway, too late for a one-shot. It could only reach the diplomacy half via
+`Harmony.Unpatch`, which goes stale silently when TAOM's patch layout moves.
+
+Two additions keep this from rotting. `coop-force-active.flag` in the TAOM.Dependencies directory
+forces co-op mode on when detection fails — a renamed BT build or an unknown fork — matching the
+existing `patchshield-disabled.flag` idiom rather than an MCM setting, since MCM persists a saved
+value over a changed compiled default. It only ever adds presence, never removes it. And
+`CoopVetoClassificationTests` scans `Main/` for every class declaring a bool-returning prefix and
+fails the build unless each carries a written disposition: 32 classified, three gated. That test
+found four prefixes nobody knew were there — it caught its own first two implementations being
+wrong, once by reflecting over the assembly (four engine-coupled classes came back null in the test
+host) and once by keying on file rather than class (one file holds three patch classes).
+
+The boot matrix has still never been run — BT is not installed. Everything above is reasoning from
+source plus 4692 green tests, not from a session.
+
+Not-tested: live co-op behaviour of any kind — the diplomacy deferral and the UI suppression both
+need two peers to demonstrate.
+Research: BT `SuppressClientDeclareWarPatch`, `TimeControlModePatch`, `ClientWeatherPositionCrashGuardPatch`.
+
+### docs(harmony-registry): `Patch0_BattleScenes` was marked DISABLED for two months while running
+
+The registry said "Battle scenes (DISABLED)"; `SubModule.cs` has applied it unconditionally since the
+2026-06-01 re-enable. Also added the missing `Patch63_BlowDiagnostics` section and documented that
+`Patch63` prefixes two distinct category strings — Harmony keys on the full string so both apply
+correctly, but the number is not a unique key and a careless rename would break one.
+
 ### feat(devconsole): mission spawning, agent inspection, and the battle-scene lookup (#369)
 
 `taom.spawn_troops <troopId> <count> [enemy|ally]` is the one that matters. Vanilla ships 80

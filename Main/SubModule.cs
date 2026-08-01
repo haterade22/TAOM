@@ -899,6 +899,13 @@ public class SubModule : MBSubModuleBase
         // dump exists to capture what actually differs on an affected one.
         Features.HeroRace.Diagnostics.TableauDiagnostics.DumpEnvironment();
         Features.HeroRace.Diagnostics.TableauDiagnostics.ProbeActionSets("OnGameInitializationFinished");
+
+        // Repair ActionIndexCache's static indices if they were baked before action types loaded —
+        // the bind-pose ("bendy man") fault. Self-gating: it checks MBAnimation (never
+        // ActionIndexCache) and defers if action types are not ready, so calling it here cannot
+        // cause the poisoning it exists to fix. CharacterSpawnerService retries on the first
+        // tableau, which is late enough to always succeed.
+        Features.HeroRace.ActionIndexCacheRepair.TryEnsureRepaired("OnGameInitializationFinished");
         _harmony.PatchCategory("Patch6_BannerEditor");
         _harmony.PatchCategory("Patch7_FactionMap");
         _harmony.PatchCategory("Patch9_RaceFilter");

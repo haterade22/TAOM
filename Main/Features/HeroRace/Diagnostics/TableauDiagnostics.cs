@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TAOM.Core.Logging;
 using TaleWorlds.MountAndBlade;
+using ActionSetCode = TaleWorlds.Core.ActionSetCode;
 using FaceGen = TaleWorlds.Core.FaceGen;
 using Monster = TaleWorlds.Core.Monster;
 
@@ -21,7 +22,7 @@ namespace TAOM.Features.HeroRace.Diagnostics;
 ///   - NEVER throws. Every public entry point is wrapped; a diagnostic must not create a bug.
 ///   - Throttled. Tableau refreshes fire per frame in some screens; unthrottled logging produced
 ///     a 6.4 MB session log once already (commit ae2ed426). Each distinct key logs at most
-///     <see cref="MaxLinesPerKey"/> times, and the whole class is capped at
+///     <see cref="MaxLinesPerKey"/> times, and every emitter counts against
 ///     <see cref="MaxTotalLines"/>.
 ///   - Resolves the logger lazily and caches the failure, so a pre-IoC call site is free.
 ///
@@ -40,7 +41,12 @@ public static class TableauDiagnostics
     private const int MaxTotalLines = 600;
 
     private static readonly object _gate = new();
+
+    // Separate key spaces. _seen is keyed by a caller-supplied token ("p2.3.True"); _seenErrors is
+    // keyed by full message text. Sharing one dictionary meant whichever fired first could silently
+    // suppress the other, and a missing ERROR line is invisible by construction.
     private static readonly Dictionary<string, int> _seen = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> _seenErrors = new(StringComparer.Ordinal);
     private static int _total;
     private static IModLogger? _logger;
     private static bool _loggerUnavailable;
@@ -83,10 +89,46 @@ public static class TableauDiagnostics
         catch { /* diagnostics must never surface an exception to the caller */ }
     }
 
-    /// <summary>Unthrottled — for one-shot startup probes only.</summary>
+    /// <summary>
+    /// For ONE-SHOT probe output. Not per-key throttled, but it does count against
+    /// <see cref="MaxTotalLines"/> — an earlier version bypassed the cap entirely, which made the
+    /// class doc's "capped" claim false and left the door open for unbounded growth if a caller on a
+    /// repeatable path ever used it. Anything reachable more than once per session must use
+    /// <see cref="Log"/> or <see cref="LogDeduped"/> instead.
+    /// </summary>
     public static void LogAlways(string message)
     {
-        try { Logger?.LogInfo($"{Tag} {message}"); }
+        try
+        {
+            lock (_gate)
+            {
+                if (_total >= MaxTotalLines) return;
+                _total++;
+            }
+            Logger?.LogInfo($"{Tag} {message}");
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// Informational line emitted at most once per <paramref name="key"/>. For call sites that are
+    /// reachable repeatedly but whose message is only worth stating once (e.g. a repair deferring on
+    /// every preview path while action types are still loading).
+    /// </summary>
+    public static void LogDeduped(string key, string message)
+    {
+        try
+        {
+            lock (_gate)
+            {
+                if (_total >= MaxTotalLines) return;
+                _seen.TryGetValue(key, out int count);
+                if (count > 0) return;
+                _seen[key] = 1;
+                _total++;
+            }
+            Logger?.LogInfo($"{Tag} {message}");
+        }
         catch { }
     }
 
@@ -102,12 +144,8 @@ public static class TableauDiagnostics
             lock (_gate)
             {
                 if (_total >= MaxTotalLines) return;
-                if (!_seen.TryGetValue(message, out int seen) || seen == 0)
-                {
-                    _seen[message] = 1;
-                    _total++;
-                }
-                else return;
+                if (!_seenErrors.Add(message)) return;
+                _total++;
             }
             Logger?.LogError($"{Tag} {message}");
         }
@@ -315,7 +353,8 @@ public static class TableauDiagnostics
     {
         try
         {
-            var set = MBGlobals.GetActionSetWithSuffix(monster, isFemale, suffix);
+            var set = MBActionSet.GetActionSet(
+                ActionSetCode.GenerateActionSetNameWithSuffix(monster, isFemale, suffix));
             string tag = isFemale ? "female" : "male";
             string line = $"  {raceName} {tag}{suffix}: {Describe(set)}";
 
@@ -325,20 +364,141 @@ public static class TableauDiagnostics
                 return;
             }
 
-            // A VALID action set is not sufficient. CharacterTableau.GetIdleAction() falls back to
-            // act_inventory_idle_start, and the LOTRLOME snapshot README records that the engine
-            // does NOT fall through base_set for act_inventory_* — so a race whose set is a thin
-            // base_set stub can resolve fine here and still have no idle animation to play, which
-            // the engine renders as the skeleton's bind pose. Resolve the actual clip to find out.
-            line += "  idleStart-anim=" + DescribeAction(set, ActionIndexCache.act_inventory_idle_start);
-            if (!HasAnimation(set, ActionIndexCache.act_inventory_idle_start))
-                LogError(line + "  <-- NO act_inventory_idle_start CLIP (bind-pose risk)");
-            else
-                LogAlways(line);
+            // NOTE: deliberately does NOT resolve an action here. `ActionIndexCache` has an explicit
+            // static constructor, so the type is not beforefieldinit and ANY static access — field
+            // OR the Create() method — forces 215 fields (v1.4.7) to be populated via
+            // MBAnimation.GetActionCodeWithName. Do that before the engine has loaded action types
+            // and every index is baked to -1 for the process lifetime, because the fields are
+            // readonly and the cctor never re-runs. A diagnostic must not be able to cause that.
+            // The clip check lives in ProbeActionIndexHealth(), called from a late path.
+            LogAlways(line);
         }
         catch (Exception e)
         {
             LogError($"  {raceName} {suffix}: probe threw {e.GetType().Name}: {e.Message}");
+        }
+    }
+
+    private static bool _indexHealthProbed;
+
+    /// <summary>
+    /// The decisive A/B test for the prone-tableau report, and the reason it can be answered without
+    /// reproducing the bug.
+    ///
+    /// `ActionIndexCache.act_inventory_idle_start` is a static readonly field baked ONCE by the type's
+    /// static constructor. `ActionIndexCache.Create(name)` performs a LIVE native lookup on every
+    /// call. Reading both at the same instant therefore separates two states that look identical
+    /// from any single reading:
+    ///
+    ///   static == Create   -> the statics were initialised while action types were loaded. Healthy.
+    ///   static == -1, Create valid -> the cctor ran TOO EARLY and every one of its 215 fields (v1.4.7) is
+    ///                                 permanently -1. Vanilla CharacterTableau.GetIdleAction()
+    ///                                 returns that field, so SetAction(-1) is a no-op and every
+    ///                                 character in every tableau stays in bind pose. This is the
+    ///                                 reported defect, and it is unrecoverable for the session.
+    ///   both -1 -> action types genuinely are not loaded yet at this call site; the call site is
+    ///              too early and must move later (and must not have touched the type at all).
+    ///
+    /// MUST only be called from a late path — first tableau construction or later. Calling it early
+    /// would itself force the initialisation it is trying to detect.
+    /// </summary>
+    public static void ProbeActionIndexHealth(string phase)
+    {
+        try
+        {
+            lock (_gate)
+            {
+                if (_indexHealthProbed) return;
+                _indexHealthProbed = true;
+            }
+
+            // Live lookup FIRST. If the type is still uninitialised this is what triggers the cctor,
+            // and at this call site action types are loaded — so triggering it here is the safe
+            // outcome, not the harmful one.
+            int live = -1;
+            try { live = ActionIndexCache.Create("act_inventory_idle_start").Index; } catch { }
+
+            int baked = -1;
+            try { baked = ActionIndexCache.act_inventory_idle_start.Index; } catch { }
+
+            LogAlways($"===== ACTION-INDEX HEALTH ({phase}) =====");
+            LogAlways($"act_inventory_idle_start: static(baked)={baked}  Create(live)={live}");
+
+            if (baked < 0 && live >= 0)
+            {
+                LogError(
+                    "ActionIndexCache STATICS ARE POISONED — the type's static constructor ran before the " +
+                    "engine loaded action types, so all 215 static action indices are permanently -1 while " +
+                    "live lookups work. Vanilla CharacterTableau.GetIdleAction() returns the static, so " +
+                    "SetAction is a no-op and every tableau character renders in bind pose. Unrecoverable " +
+                    "this session: the fields are readonly and the cctor does not re-run.");
+            }
+            else if (baked < 0 && live < 0)
+            {
+                LogError(
+                    "act_inventory_idle_start is -1 from BOTH the static and a live lookup — action types " +
+                    "are not loaded even at this late call site. Investigate module/ModuleData load order " +
+                    "before drawing conclusions about the statics.");
+            }
+            else
+            {
+                LogAlways("ActionIndexCache statics are healthy (baked index matches a live lookup).");
+            }
+
+            // Now that an index is known good, the per-race clip check is meaningful. This is the
+            // check that distinguishes "action set resolves" from "action set can actually pose".
+            ProbeIdleClipsPerRace();
+
+            LogAlways("===== END ACTION-INDEX HEALTH =====");
+        }
+        catch (Exception e)
+        {
+            LogError($"ProbeActionIndexHealth failed: {e}");
+        }
+    }
+
+    /// <summary>
+    /// Per race, whether the sets the preview paths actually use bind a clip to
+    /// act_inventory_idle_start. A set can be VALID and still bind nothing — the snapshot README
+    /// records that the engine does not fall through base_set for act_inventory_*, and
+    /// `as_&lt;race&gt;_warrior` is a zero-action stub for several races.
+    /// </summary>
+    private static void ProbeIdleClipsPerRace()
+    {
+        string[]? raceNames = null;
+        try { raceNames = FaceGen.GetRaceNames(); } catch { }
+        if (raceNames == null) return;
+
+        var idle = ActionIndexCache.Create("act_inventory_idle_start");
+        for (int race = 0; race < raceNames.Length; race++)
+        {
+            Monster? monster = null;
+            try { monster = FaceGen.GetBaseMonsterFromRace(race); }
+            catch (Exception e) { LogError($"  {raceNames[race]}: monster lookup threw {e.GetType().Name}"); }
+            if (monster == null) continue;
+
+            foreach (var suffix in new[] { "_facegen", "_warrior" })
+            {
+                // try/catch INSIDE the suffix loop: with it outside, a throw while probing _facegen
+                // skipped _warrior entirely and silently halved the coverage for that race.
+                try
+                {
+                    var set = MBActionSet.GetActionSet(
+                        ActionSetCode.GenerateActionSetNameWithSuffix(monster, false, suffix));
+                    string line = $"  {raceNames[race]}{suffix}: idleStart-anim={DescribeAction(set, idle)}";
+
+                    // Positive requirement, not a string match on one sentinel. DescribeAction has
+                    // FOUR failure markers and an earlier version compared only against "<NONE>", so
+                    // "<action-index-(-1)>" — the poisoned-index case this whole feature exists to
+                    // catch — fell into the healthy branch and logged as INFO.
+                    if (!HasAnimation(set, idle)) LogError(line + "  <-- no usable idle clip (bind-pose)");
+                    else LogAlways(line);
+                }
+                catch (Exception e)
+                {
+                    LogError($"  {raceNames[race]}{suffix}: idle-clip probe threw {e.GetType().Name}");
+                }
+            }
         }
     }
 
@@ -355,7 +515,13 @@ public static class TableauDiagnostics
         catch (Exception e) { return "<threw:" + e.GetType().Name + ">"; }
     }
 
-    private static bool HasAnimation(MBActionSet set, ActionIndexCache action)
+    /// <summary>
+    /// Positive predicate for "this set can actually pose a character with this action". Public
+    /// because callers must test THIS rather than string-matching <see cref="DescribeAction"/>'s
+    /// output — that method has four distinct failure markers and matching only one of them lets the
+    /// others through as healthy.
+    /// </summary>
+    public static bool HasAnimation(MBActionSet set, ActionIndexCache action)
     {
         try
         {
