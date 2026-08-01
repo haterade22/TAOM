@@ -92,3 +92,40 @@ should treat engine claims in a feature doc as in-scope.
 No new always-on rule file. `evidence-over-claims.md` §C already covers the root pattern; what it
 lacked was the explicit statement that *explanatory prose and code comments* are covered by it, and
 that belongs as a scope clarification in the lesson, not a new rule competing with an existing one.
+
+---
+
+# Addendum — Phase 1 + spawn_troops review, 2026-08-01
+
+Second `/deep-review` (3 agents: standards, engine API, data flow) over the ten commands built after
+the Phase 0 contract. No crash-class defect shipped — the engine agent re-verified every signature
+against the installed v1.4.7 DLLs and confirmed `spawn_troops` uses **named arguments** for all nine
+bool/int parameters, which is what makes the `isAlarmed`/`wieldInitialWeapons` and
+`formationTroopCount`/`formationTroopIndex` positional-swap class impossible.
+
+| # | Sev | Finding | Why missed | Action |
+|---|-----|---------|-----------|--------|
+| A1 | MED | `AgentSnapshot.Health`/`MaxHealth` defaulted to `0f` on a failed read. Zero is a *plausible* value (a downed agent), so a throwing read renders as `hp=0.0/100.0` — a reader concludes the agent is dead. | The validate-before-lookup rigour was applied to `RaceId` (where the fallback is a *wrong name*) and not generalised to fields whose fallback is a *wrong number*. Same bug class, different data type. | Made both `float?`; the formatter renders `?`. Two tests. |
+| A2 | MED | `IsHuman`/`IsMount` were read at the boundary, carried in the snapshot, set in a test — and never consumed by the formatter. The test `FormatAgent_MountItself_RendersItsRider` asserted only `RiderName`, so it passed against a formatter that ignored both flags. | The CrashReport `frames=null` class exactly. A test that *sets* a field is not a test that the field is *used*. | Formatter now renders `kind=`; test asserts it. |
+| A3 | MED | `MomentumCheats.BuildPayload` was a COPY of `SyncData`'s serialization, while its own doc comment claimed it was "the same helper". | **This is the Phase 0 RCA's root pattern recurring within one day** — prose asserting a code relationship that was intended rather than verified. | Extracted `WarOfTheRingMomentumBehavior.BuildSavePayload`; both call sites now share it, so drift is impossible rather than merely unlikely. |
+| A4 | LOW | The `ally` guard's message could never fire: `GetAgentTeam` falls back to `PlayerTeam` when `PlayerAllyTeam` is null, so `spawn_troops X N ally` in a town spawns onto the player's own team rather than refusing. | Inferred both branches from the enemy branch's shape instead of reading `GetAgentTeam`'s body. | Comment and message corrected to name the enemy case, which is the only one that returns null. |
+| A5 | LOW | `AgentDiagnosticCheats.cs` was 160 lines, over ADR-002's 150. | Not checked before committing. | Boundary conversion extracted to `AgentSnapshotBuilder`; the cheat is now 99 lines. `MissionSpawnCheats` was 152 and is now 132. |
+| A6 | LOW | The equipment block reads `SpawnEquipment` (build-time) but was labelled just "equipment", so a mid-fight reader would take a stale loadout for the live one. | — | Labelled "(at spawn)". |
+| A7 | LOW | `docs/features/dev-console.md` still listed three shipped commands as unbuilt and had no rows for four others; `spawn_` was not in the documented mutating-verb list, and the binding test only *denies* prefixes rather than allow-listing verbs, so nothing caught the drift. | The doc was written before the commands and not re-read after. | Table and verb list corrected. |
+| A8 | LOW | No test covered `Spawned == 0` with no `FailureReason` (every spawn threw). The code handles it correctly; the branch was unpinned. | — | Test added. |
+
+## Root-cause pattern: the Phase 0 lesson recurred in one day (A3)
+
+The Phase 0 RCA's finding was *prose asserting engine or code facts inferred from shape rather than
+read from source*. A3 is the same failure applied to TAOM's own code: a comment claiming two call
+sites shared a helper when they were independent copies. The lesson had been written down; writing it
+down did not prevent the recurrence a day later.
+
+What actually caught it was a review brief that named the specific question — *"is this a shared call
+or a copy, and can they drift?"* — rather than a general instruction to check comments. **The
+durable fix is not another rule; it is that any comment claiming two things are "the same" must be
+made true structurally (extract the shared thing) rather than asserted.** A3's fix does that: after
+the change the claim cannot be false, because there is only one expression.
+
+Appended to `docs/reviews/lessons/adapters-taleworlds-api.md` as a scope extension of the existing
+shipping-build lesson.

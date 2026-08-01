@@ -86,10 +86,18 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
         CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, RefreshMapMeter);
     }
 
+    /// <summary>
+    /// The exact payload <see cref="SyncData"/> chunks on save. Shared with
+    /// <c>MomentumCheats.print_momentum</c> so the diagnostic can never report a size for a shape the
+    /// save does not actually write — if this serialization ever gains settings, both move together.
+    /// </summary>
+    internal static string BuildSavePayload(IMomentumStateStore stateStore) =>
+        JsonConvert.SerializeObject(stateStore.Serialize());
+
     public override void SyncData(IDataStore dataStore)
     {
         if (dataStore.IsSaving)
-            _chunks = MomentumSyncChunker.Split(JsonConvert.SerializeObject(_stateStore.Serialize()));
+            _chunks = MomentumSyncChunker.Split(BuildSavePayload(_stateStore));
 
         // Sync the chunk count first, then that many chunk keys. On load the count comes from
         // the save (absent → 0 → fresh state, the one-time _v2→_v3 migration reset). Every

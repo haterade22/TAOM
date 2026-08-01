@@ -2,6 +2,48 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-01
+
+### feat(devconsole): mission spawning, agent inspection, and the battle-scene lookup (#369)
+
+`taom.spawn_troops <troopId> <count> [enemy|ally]` is the one that matters. Vanilla ships 80
+`campaign.*` and 10 `mission.*` console commands and not one of them spawns anything, so composing a
+specific fight means Custom Battle — which hands you a culture's default roster, not "twenty dwarves
+and one mumakil" — or steering a campaign into the right encounter. It uses the mission gate rather
+than the campaign gate, so it works inside a custom battle, which is where creatures and mounts
+actually get tested.
+
+The spawn path had one crash-class trap and it is guarded. `Mission.SpawnTroop` reads
+`agentTeam.Color` with no null check, and `GetAgentTeam` returns `PlayerEnemyTeam` unguarded — which
+is null in town and village missions. Without pre-resolving the team, the command would hard-crash
+the game rather than print a sentence. Two smaller ones came out of the same read: `SimpleAgentOrigin`
+hard-casts to `CharacterObject` (so the troop is resolved as one, not as a `BasicCharacterObject`),
+and `initialDirection.Value` is dereferenced unconditionally once a position is supplied. Every
+bool/int argument is passed by name, because `isAlarmed`/`wieldInitialWeapons` and
+`formationTroopCount`/`formationTroopIndex` are adjacent same-typed pairs where a positional swap
+compiles silently and misbehaves at runtime.
+
+`taom.print_agent_info` is the other half of that loop: spawn a creature, then read back its race,
+monster, action set, skeleton, mount and rider instead of guessing from the model. `taom.print_battle_scene`
+answers which battle terrain a fight at the party's position would load — and its loudest output is
+the empty one, because a map index no scene declares means a fallback or an assert at battle start,
+which is how an engine bump breaks TAOM's map data silently. `taom.print_mission_scene` rounds it out.
+
+A three-agent review over the batch found no crash-class defect but eight things worth fixing, and
+two are worth naming. `AgentSnapshot.Health` defaulted to `0f` on a failed read — and zero is a
+plausible health value, so a throwing read would have rendered a healthy agent as `hp=0.0/100.0` and
+read as dead. It is nullable now. And `MomentumCheats` duplicated the save serialization while its own
+comment claimed it shared it; that is the previous RCA's root pattern recurring a day later, so the
+fix was to extract `BuildSavePayload` and make the claim structurally true rather than to correct the
+sentence.
+
+**Tests:** 4683 passing, 30 new. RCA addendum: `docs/reviews/rca-devconsole-phase0-2026-07-31.md`.
+
+Research: Mission.SpawnTroop, Mission.GetAgentTeam, SimpleAgentOrigin, MBObjectManager.GetObject, MBActionSet, EquipmentIndex, GameSceneDataManager
+Constraint: `spawn_troops X N ally` in a town spawns onto the player's own team rather than refusing — GetAgentTeam falls back to PlayerTeam when PlayerAllyTeam is null, and only the enemy path can return null
+Not-tested: the command entry points need a live mission; their formatters and the snapshot builder's fallbacks are covered
+Save-compat: no new save fields
+
 ## 2026-07-31
 
 ### diag(herorace): light up the character-preview path after a bug only players could see

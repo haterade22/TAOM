@@ -87,4 +87,28 @@ internal static class DevConsoleArgs
         error = string.Empty;
         return true;
     }
+
+    /// <summary>
+    /// Parses the optional side argument for <c>spawn_troops</c>. Omitted means enemy — when you
+    /// spawn troops mid-battle you almost always want something to fight.
+    ///
+    /// An unrecognised value is an ERROR, never a silent fall-through to the default: a typo'd
+    /// "enemey" quietly spawning allies is the parsed-but-unresolvable trap.
+    /// </summary>
+    internal static bool TryParseSide(string raw, out bool isPlayerSide, out string error)
+    {
+        isPlayerSide = false;
+        error = string.Empty;
+        if (string.IsNullOrWhiteSpace(raw)) return true;
+
+        switch (raw.Trim().ToLowerInvariant())
+        {
+            case "enemy": isPlayerSide = false; return true;
+            case "ally":
+            case "player": isPlayerSide = true; return true;
+            default:
+                error = $"Unknown side '{raw}' — expected 'enemy' or 'ally'.";
+                return false;
+        }
+    }
 }

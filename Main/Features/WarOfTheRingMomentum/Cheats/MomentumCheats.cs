@@ -34,8 +34,13 @@ public static class MomentumCheats
     public static string PrintMomentum(List<string> strings) =>
         TaomConsole.RunInCampaign(strings, Usage, args =>
         {
-            var state = IoC.Resolve<IMomentumStateStore>().Serialize();
-            var payload = BuildPayload(state);
+            var store = IoC.Resolve<IMomentumStateStore>();
+            var state = store.Serialize();
+
+            // The SAME call SyncData makes, not a copy of it — a duplicated expression could drift if
+            // the save serialization ever gained settings, and this command would then cheerfully
+            // report headroom for a payload shape the save no longer writes.
+            var payload = WarOfTheRingMomentumBehavior.BuildSavePayload(store);
             var chunks = MomentumSyncChunker.Split(payload);
 
             var report = FormatPayloadReport(state?.Count ?? 0, payload, chunks);
@@ -43,13 +48,6 @@ public static class MomentumCheats
             var wantsKeys = args.Count > 0 && args[0].Trim().ToLowerInvariant() == "keys";
             return wantsKeys ? report + "\n" + FormatKeyReport(state, TopKeys) : report;
         });
-
-    /// <summary>
-    /// The exact payload `WarOfTheRingMomentumBehavior.SyncData` chunks on save. Shared so the report
-    /// can never drift from the shape actually written to the archive.
-    /// </summary>
-    internal static string BuildPayload(Dictionary<string, string> state) =>
-        JsonConvert.SerializeObject(state ?? new Dictionary<string, string>());
 
     /// <summary>
     /// Pure. Reports chars AND bytes separately — the chunker's cap is a character cap while the

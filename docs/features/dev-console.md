@@ -167,7 +167,7 @@ appears **zero times**.
 | Case | `^[a-z][a-z0-9_]*$` |
 | Order | `<verb>_<object>[_of_<owner>\|_to_<target>]`, matching vanilla |
 | Read-only verb | **`print_` and nothing else.** `dump_`, `list_`, `get_` are banned — admitting synonyms is how the convention drifts |
-| Mutating verbs | `add_ set_ remove_ clear_ give_ toggle_` |
+| Mutating verbs | `add_ set_ remove_ clear_ give_ toggle_ spawn_` |
 | `show_` / `hide_` | Reserved for genuine visibility toggles, as in `campaign.show_settlements` |
 | Redundancy | Never put `taom` in the name; the group carries it |
 | Mirroring vanilla | Encouraged — `taom.add_special_resources` deliberately echoes `campaign.add_gold_to_hero` |
@@ -283,9 +283,13 @@ answer is conclusive and fails open in every path.
 | `taom.print_town_economy [town]` | A | campaign | A 4–8 in-game-day observation for #317, plus the vanilla side-by-side that answers "is the buff doing anything" |
 | `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
 | `taom.print_races` | A | cheat mode | — (registry + the hero's race, validated before lookup) |
+| `taom.print_battle_scene` | A | campaign | Which battle terrain a fight here loads. **Zero candidates is the money output** — the stale-scene-ref class an engine bump introduces silently |
+| `taom.print_mission_scene` | A | mission | Scene name + player/camera position |
+| `taom.print_agent_info [name\|*]` | A | mission | Race, monster, action set, skeleton, mount/rider, spawn equipment. Pairs with `spawn_troops` |
+| `taom.spawn_troops <id> <n> [enemy\|ally]` | B | mission | Composing a specific fight. **Vanilla ships no mission spawn at all** |
 
-**Still unbuilt from Phase 1:** `print_battle_scene`, `print_mission_scene`, `print_agent_info`,
-`print_town_mercenaries`, `print_banner_bearers`, `print_wotr`. Phases 2 and 3 are untouched.
+**Still unbuilt from Phase 1:** `print_town_mercenaries`, `print_banner_bearers`, `print_wotr`.
+**Phase 2 remaining:** `damage_agent`, `requeue_settlement`, `convert_settlement`. **Phase 3:** untouched.
 
 ## Files
 
