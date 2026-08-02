@@ -1573,6 +1573,20 @@ adversarial pass here was high and specific — it was pointed at the two claims
 issue #371 — inferred from cctor size, never counted. Actual: **215**. Corrected everywhere; the log
 now reports the actual enumerated count rather than any literal.
 
+**Follow-through (2026-08-01, `633b87e5` + `e0e4fd57`):** all four preventions from the RCA are now
+implemented — per-build `InformationalVersion` stamps, a `<DependedModule>` pin on TAOM.Dependencies
+(the element the vanilla launcher actually parses), the Dependencies module version bumped to v2.0.6,
+and a startup pairing verdict. Verified end-to-end against the built DLLs: the real 07-31/07-17 pair
+is flagged as a mismatch. The tableau investigation scaffolding was retired (293 lines).
+
+**Two self-inflicted findings from that follow-through, both recorded as lessons.** The stamp parser
+passed six unit tests and failed every real assembly — it asserted the format the code assumed, not
+the one the build emits (`Bannerlord.BuildResources` appends a commit-SHA suffix; `$(Version)` is
+empty in `Directory.Build.props` because it is imported before the csproj `PropertyGroup`). A
+version-mismatch detector that always reports "cannot verify" is worse than none. And that broken
+state reached `origin` because a **parallel session's `git add -A`** swept the in-progress work into
+an unrelated commit — the branch briefly carried a dead detector under a docs commit message.
+
 **Process:** issue #371 REOPENED (the version-mismatch close was correct but incomplete — its own
 closing comment flagged the unexplained intermittency, which this mechanism explains). RCA addendum:
 `docs/reviews/rca-prone-character-tableau-2026-07-31.md`. Lessons: 2 in `lessons/animation-skeleton.md`

@@ -186,18 +186,49 @@ be *valid* and still bind no idle clip — `SetAction` is a no-op and the skelet
 Every check that existed before today stopped at "is the action set valid", and all of them passed.
 The new `idleStart-anim=` field answers this on the next launch.
 
-## Prevention (not yet implemented)
+## Prevention — IMPLEMENTED 2026-08-01 (`633b87e5`, `e0e4fd57`)
 
-1. Stamp real build versions into both assemblies so a DLL identifies itself.
-2. Bump `Dependencies/_Module/SubModule.xml` `<Version>` whenever the assembly changes.
-3. Add `TAOM.Dependencies` to `Main/_Module/SubModule.xml` `DependedModules` with a version pin, so
-   the launcher blocks a mismatched pair instead of the game failing silently.
-4. Log both build stamps at startup, so a future report answers this in one line.
+All four are in. The mismatch that caused half of this incident can no longer ship undetected.
 
-Process changes worth making independently: the dev install ran a **newer build than the one
-shipped** (`TAOM.dll` 07-31 vs released 07-30; `TAOM.Dependencies.dll` 07-31 vs released **07-17**),
-so the exact shipped combination was never tested. **Build both, ship both, never hand-copy one
-module.**
+| # | Prevention | Where |
+|---|---|---|
+| 1 | Per-build `InformationalVersion` stamp (`build.yyyyMMdd-HHmmssZ`) on every TAOM assembly. `AssemblyVersion` deliberately left fixed — changing it alters binding identity for no benefit | `Directory.Build.props` |
+| 2 | `Dependencies` module `<Version>` bumped to `v2.0.6`, with the matching pin in TAOM's metadata block for BUTR/BLSE launchers | `Dependencies/_Module/SubModule.xml`, `Main/_Module/SubModule.xml` |
+| 3 | `<DependedModule Id="TAOM.Dependencies" />` — the element the **vanilla** launcher actually parses (`ModuleInfo.LoadWithFullPath` reads `DependedModules`, never `DependedModuleMetadatas`), so a missing or mis-ordered Dependencies is blocked at the launcher rather than surfacing as bind-posed characters | `Main/_Module/SubModule.xml` |
+| 4 | Both stamps logged at `OnSubModuleLoad` with a verdict; a pairing more than an hour apart reports `MISMATCH … (issue #371)` | `Main/Core/Diagnostics/BuildStampReport.cs` |
+
+Verified end-to-end against the built DLLs, not just unit tests: a matched pair reports `(pair OK)`,
+and the **07-31 / 07-17 pairing that actually shipped** is flagged as a mismatch.
+
+### The detector shipped broken first, and the tests did not notice
+
+Worth recording because it is the same class of error as the bug it guards against. The stamp parser
+searched for `"+build."` and took everything after it, trimming a trailing `Z`. The build emits
+`build.<stamp>Z+<sha>` — no version prefix (`Directory.Build.props` is imported *before* the csproj's
+`PropertyGroup`, so `$(Version)` is empty there) and a commit-SHA suffix appended by
+`Bannerlord.BuildResources`, so the timestamp is not at the end of the string. Every real assembly
+fell through to "cannot verify pairing": the detector reported the absence of a stamp that was
+present in the DLL.
+
+The unit tests passed the whole time, because they asserted the format the code **assumed** rather
+than the one the build **produces**. It was caught by running the parser against the built DLLs.
+There is now a test using the real emitted string verbatim. Lesson recorded in `lessons/testing-qa.md`.
+
+That broken state was also pushed, because a parallel session's `git add -A` swept the in-progress
+work into an unrelated commit (`633b87e5`) — see the build/tooling lesson on concurrent sessions.
+
+### Process change (still worth stating)
+
+The dev install ran a **newer build than the one shipped** (`TAOM.dll` 07-31 vs released 07-30;
+`TAOM.Dependencies.dll` 07-31 vs released **07-17**), so the exact shipped combination was never
+tested. **Build both, ship both, never hand-copy one module.**
+
+## Instrumentation retired 2026-08-01
+
+The per-race action-set probe, the environment dump and the action-index health probe did their job
+— they identified the static-initialiser race — and were removed (293 lines). What remains is the
+repair's own verdict line plus the error paths that fire only when a preview actually resolves badly,
+which is what a user log needs to confirm the fix. The rest comes out once #371 closes in the wild.
 
 ## Related
 

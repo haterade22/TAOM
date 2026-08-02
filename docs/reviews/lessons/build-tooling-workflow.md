@@ -347,6 +347,27 @@ module whose `ModulesToLoadAfterThis` names you.
   one line.
 - **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
 
+### Two concurrent sessions in one worktree: `git add -A` commits the other session's half-finished work
+
+On 2026-08-01 two Claude sessions worked the same clone. The second ran `git add -A` and committed
+`633b87e5 docs(coopinterop): reconcile the record with what shipped` — which swept in the first
+session's in-progress `Directory.Build.props` change, a `SubModule.xml` dependency pin, and a
+`BuildStampReport` call **whose parser was still broken** — then pushed it. For several commits the
+branch carried a version-mismatch detector that silently never fired, under a commit message about
+documentation.
+- **Why missed:** neither session can see the other's working tree, and `git status` looks like your
+  own mess. The staging discipline that protects you (staging named files, never `-A`) protects
+  nothing if the *other* session does not follow it — and the commit message will describe only that
+  session's work, so the sweep is invisible in the log.
+- **Prevent:** when a second session may be running, stage explicit paths, never `git add -A` or
+  `git commit -a`. Before committing, diff the staged set against what you actually touched and drop
+  anything you do not recognise. For genuinely parallel work give one session its own worktree
+  (`isolation: "worktree"` on the Agent call, or `git worktree add`) — shared-tree collisions are
+  already on record here from the 2026-05-06 build-watcher cascade. If a sweep happens anyway, check
+  whether the swept state was *coherent*: the danger is not the wrong commit message, it is shipping
+  a half-finished change that compiles.
+- **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`; commits `633b87e5`, `e0e4fd57`
+
 ### Build both, ship both — never hand-copy one module out of a working tree
 
 - **Symptom:** same incident. The dev install ran `TAOM.dll` from 07-31 and
