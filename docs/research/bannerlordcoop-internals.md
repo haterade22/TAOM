@@ -288,6 +288,11 @@ save whose metadata lists StoryMode from the host picker. Coop itself has zero S
 dropping StoryMode from the module line is safe and is the fix when saves do not appear. Bypass:
 `GameStateInterface.cs:142` `ForceLoadSave` uses an unfiltered `GetSaveFiles()`.
 
+**TAOM-side load order.** `TAOM.Dependencies` must construct before the vanilla stack (`Native`
+included), because its static constructor installs the `AssemblyResolve` redirect every later mod
+resolves BUTR assemblies through; `Coop` goes last so its own bundled `0Harmony` collapses onto that
+same instance. Full order + rationale: `docs/features/coop-interop.md` "Load order".
+
 **`Campaign.TimeControlMode` is unassignable** — two prefixes return `false`; menu/map writes are
 retargeted to an empty method; vanilla's active-state pause is transpiled out of
 `MapState.OnMapModeTick`.

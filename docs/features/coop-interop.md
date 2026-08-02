@@ -84,6 +84,37 @@ All five removed from `RedirectedSimpleNames`; the BUTR stack stays. A version c
 work (Coop calls `Assembly.Load` with a bare partial name — no version to compare) and it cannot be
 gated on co-op presence (the handler installs from a static cctor, long before any probe).
 
+## Load order
+
+`TAOM.Dependencies` goes **above the entire vanilla stack, `Native` included** — not merely above the
+co-op mod:
+
+```
+TAOM.Dependencies → BUTR alias stubs → Native → SandBoxCore → Sandbox → StoryMode → CustomBattle
+                  → TAOM → TAOM_Map → LOTRLOME_Armory → Coop
+```
+
+**Why it is first, and not "after the vanilla modules like every other mod":** `TAOM.Dependencies`
+bundles the whole BUTR stack (0Harmony, ButterLib, UIExtenderEx, MCM) and installs the
+`AssemblyResolve` redirect from its **static constructor**. Everything loaded afterwards resolves
+those assemblies through that hook. If anything constructs before it, a mod shipping its own bundled
+`0Harmony`/`MCMv5` can win the AppDomain slot first — and then TAOM's patches attach to a Harmony
+instance nobody else can see, which fails silently rather than loudly. This is pinned by the
+`<ModulesToLoadAfterThis>` block in `Dependencies/_Module/SubModule.xml`, which lists `Native`,
+`SandBoxCore`, `Sandbox`, `StoryMode` and `CustomBattle` explicitly, plus 20-odd known
+BUTR-bundling consumer mods.
+
+**Why `Coop` is last:** it also ships its own `0Harmony` (2.4.2.0, byte-identical to ours) plus
+Mono.Cecil/MonoMod/Serilog 4.x. Constructing `TAOM.Dependencies` first lets the redirect collapse
+those onto one instance, which is what keeps `Harmony.GetAllPatchedMethods()` — and therefore
+PatchShield and the `[HarmonyCensus]` report — able to see across both mods. Ordering TAOM before the
+co-op layer additionally matters for the `Priority.High` DeclareWar/MakePeace prefixes: TAOM validates
+racial enmity and War of the Ring constraints first, so a blocked action is never synced.
+
+A BUTR/BLSE launcher sorts this from the manifests. The explicit list matters for the vanilla
+launcher and for anyone hand-ordering. Same order applies on **every** peer — Coop's join handshake
+compares module lists and disconnects on a mismatch.
+
 ## Layer 3 — host authority (session-varying)
 
 **BannerlordCoop does not stop a client ticking the campaign.** Its `PartyTickPatch` blocks only the
