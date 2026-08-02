@@ -13,7 +13,7 @@ public class AllianceActionHookTests
 {
     private IDiplomacyService _diplomacyService;
     private IModLogger _logger;
-    private ICoopPresenceProvider _coop;
+    private ICoopSessionProvider _coop;
     private AllianceActionHook _sut;
 
     [TestInitialize]
@@ -21,8 +21,8 @@ public class AllianceActionHookTests
     {
         _diplomacyService = Substitute.For<IDiplomacyService>();
         _logger = Substitute.For<IModLogger>();
-        _coop = Substitute.For<ICoopPresenceProvider>();
-        _coop.IsCoopActive.Returns(false);
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _coop.ShouldDeferToHost.Returns(false);
         _sut = new AllianceActionHook(_diplomacyService, _logger, _coop);
     }
 
@@ -87,7 +87,7 @@ public class AllianceActionHookTests
     public void ShouldPreventWarDeclaration_CoopActive_ReturnsFalseEvenWhenWarDisallowed()
     {
         // Arrange
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
         _diplomacyService.IsWarAllowed("empire_w", "vlandia").Returns(false);
 
         // Act
@@ -101,7 +101,7 @@ public class AllianceActionHookTests
     public void ShouldPreventAllianceEnd_CoopActive_ReturnsFalseEvenWhenPermanent()
     {
         // Arrange
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
         _diplomacyService.GetRelationshipTier("empire_w", "vlandia")
             .Returns(AllianceTier.Permanent);
 
@@ -116,7 +116,7 @@ public class AllianceActionHookTests
     public void ShouldPreventWarDeclaration_CoopActive_DoesNotConsultDiplomacyService()
     {
         // Arrange — the veto is skipped outright, not computed and discarded.
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
 
         // Act
         _sut.ShouldPreventWarDeclaration("empire_w", "vlandia");

@@ -28,4 +28,16 @@ public interface ICoopSessionProvider
 
     /// <summary>A co-op session is live AND this peer is a client. Never true in singleplayer.</summary>
     bool IsCoopClient { get; }
+
+    /// <summary>
+    /// Yield a shared-world decision (diplomacy veto, permanent-alliance enforcement, global time
+    /// change) to the host? Unlike <see cref="IsAuthority"/> this also covers co-op mods TAOM cannot
+    /// probe, where the only safe answer is to yield on every peer. See
+    /// <see cref="CoopSessionPolicy.ShouldDeferToHost"/> for the full truth table.
+    ///
+    /// Use THIS — not <c>ICoopPresenceProvider.IsCoopActive</c> — for anything that changes shared
+    /// world state. Presence alone silently disabled TAOM's diplomacy rules for solo players who
+    /// merely had the Coop module enabled, and for the co-op host itself (Codex review 2026-08-01).
+    /// </summary>
+    bool ShouldDeferToHost { get; }
 }

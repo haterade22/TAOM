@@ -53,6 +53,17 @@ public class CareerQuest : QuestBase
         _logs = new List<JournalLog>();
     }
 
+    /// <summary>
+    /// StringId of the hero this quest belongs to. Survives save/load via
+    /// <c>_heroStringId</c>, unlike <c>QuestGiver</c>, which can be null before objects resolve.
+    ///
+    /// CO-OP: the reason this is exposed. Career quests are per-player, but
+    /// <c>QuestManager.Quests</c> is global and a client loads the HOST's save — so a dedup scan
+    /// that does not filter by owner blocks a client from ever being offered a career quest while
+    /// the host has one running. (Codex P2, 2026-08-01.)
+    /// </summary>
+    public string OwnerHeroStringId => _heroStringId;
+
     /// <summary>The career-quest definition id this quest is tracking (for dedup against active quests).</summary>
     public string CareerQuestDefId => _questDefId;
 

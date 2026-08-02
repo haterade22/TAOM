@@ -30,6 +30,19 @@ public sealed class SaveDefinerCollisionDetector : ISaveDefinerCollisionDetector
         return distinct
             .GroupBy(r => r.BaseId)
             .Where(g => g.Count() > 1)
+            // Only groups a player can ACT on. Base-id equality is a heuristic, not proof: the real
+            // save id is `_saveBaseId + saveId` (SaveableTypeDefiner.AddClassDefinition, v1.4.7), so
+            // two definers can share a base id and never collide if their offsets differ — and
+            // vanilla does exactly that. SaveableCoreTypeDefiner (TaleWorlds.Core) and
+            // SaveableObjectSystemTypeDefiner (TaleWorlds.ObjectSystem) both use 10000 in a game
+            // that starts fine, and because they are in different assemblies the old code took the
+            // cross-assembly branch and told players to "disable one of them" — naming two vanilla
+            // engine types, at the top of every user log we collected.
+            //
+            // A group of purely game-shipped assemblies is never actionable and, as proven above,
+            // not necessarily a fault at all. Requiring one non-engine member keeps every real
+            // mod-vs-mod and mod-vs-vanilla case while removing the false positive.
+            .Where(g => g.Any(r => !IsEngineAssembly(r.AssemblyName)))
             .Select(g => new SaveDefinerCollision(
                 g.Key,
                 g.ToList(),
@@ -38,6 +51,23 @@ public sealed class SaveDefinerCollisionDetector : ISaveDefinerCollisionDetector
                                   .Count() > 1))
             .OrderBy(c => c.BaseId)
             .ToList();
+    }
+
+    /// <summary>
+    /// Assemblies that ship with the game. A player cannot disable any of these, so a collision
+    /// confined to them is noise no matter what it means.
+    /// </summary>
+    private static readonly string[] EngineAssemblyNames =
+    {
+        "Native", "SandBox", "SandBoxCore", "StoryMode", "CustomBattle", "Multiplayer",
+    };
+
+    internal static bool IsEngineAssembly(string? assemblyName)
+    {
+        if (string.IsNullOrWhiteSpace(assemblyName)) return false;
+
+        return assemblyName!.StartsWith("TaleWorlds.", StringComparison.OrdinalIgnoreCase)
+               || EngineAssemblyNames.Any(n => string.Equals(n, assemblyName, StringComparison.OrdinalIgnoreCase));
     }
 
     private static readonly IEqualityComparer<(string AssemblyName, string TypeName)> TupleComparer =

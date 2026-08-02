@@ -93,6 +93,16 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
 
     public void SendMessenger(Hero targetHero)
     {
+        // CO-OP: refuse on a client. Sending charges gold immediately and queues the messenger in
+        // the SyncData-backed store, but OnHourlyTick — the only thing that ever delivers it — is
+        // authority-gated. Ungated, a client pays and the messenger never arrives.
+        // (Codex review 2026-08-01, MEDIUM.)
+        if (!_coopSession.IsAuthority)
+        {
+            _logger.LogInfo("[Messengers][coop] send refused on non-authority peer — delivery is host-side");
+            return;
+        }
+
         // Codex review #34: runtime MCM toggle (Settings.Messengers.EnableMessengers OFF mid-game)
         // must short-circuit dispatch in addition to behavior registration.
         if (!_settings.EnableMessengers) return;

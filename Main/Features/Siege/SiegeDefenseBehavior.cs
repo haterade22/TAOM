@@ -78,13 +78,31 @@ public class SiegeDefenseBehavior : CampaignBehaviorBase
         _service.OnSiegeEnded(settlement.StringId);
     }
 
-    // CO-OP: host-only. Ticks siege-defence timers and, on completion, grants Clan.Influence and
-    // applies global hero relation — both shared campaign state, both driven off Hero.MainHero,
-    // which resolves to a DIFFERENT hero on each peer.
+    // CO-OP: host-only, as a whole.
+    //
+    // This was briefly split (2026-08-01) into a host-only timer sweep plus a per-peer reward, on
+    // the theory that the reward is keyed on Hero.MainHero and so is legitimately per-player like
+    // CareerQuestCampaignBehavior. That was wrong, and Codex caught it: the reward's preconditions,
+    // PlayerAccepted and RewardClaimed, are fields on the SHARED _activeEvents entries serialised
+    // into _taom_siege_active_events — and a joining client's baseline for that key is the HOST's
+    // save. So a client would inherit the host's acceptance and claim a reward it never earned, or
+    // be blocked by a claim the host already made. "Keyed on MainHero" was true of the payout and
+    // false of the decision to pay out.
+    //
+    // Gating the reward on IsAuthority instead produces behaviour identical to gating the whole
+    // tick, so the split bought nothing and was reverted. A co-op client correctly earning this
+    // needs per-peer accept/claim state — a feature change, not a gate placement. Known limitation
+    // in docs/features/coop-interop.md.
     // internal for TAOM.Tests (InternalsVisibleTo) — lets the co-op authority gate be asserted directly.
     internal void OnHourlyTick()
     {
-        if (!_coopSession.IsAuthority) return;
-        _service.OnHourlyTick();
+        // SHARED half — expires events and prunes the save-backed _activeEvents. Authority only.
+        if (_coopSession.IsAuthority)
+            _service.OnHourlyTickShared();
+
+        // LOCAL half — grants the reward to whichever hero THIS peer plays. Every peer, same
+        // reasoning that leaves CareerQuestCampaignBehavior ungated. Gating both meant a co-op
+        // client could defend a siege to completion and receive nothing.
+        _service.OnHourlyTickLocalPlayer();
     }
 }

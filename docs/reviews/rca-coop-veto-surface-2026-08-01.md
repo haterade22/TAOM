@@ -82,3 +82,65 @@ scoped to the diff cannot find a bug whose evidence is a file outside the diff.
   shared rule, at least one agent must be scoped to *the rule*, not to the changed files.
 - **Suppressing a widget is not disabling a feature.** Gate the service; the UI is one input path
   among several.
+
+---
+
+# Addendum — the Codex round (same day, three passes)
+
+After the fixes above, three Codex passes ran: the interop changeset, the BannerlordCoop authority
+layer (which no review had covered), and one narrow engine-timing question. They returned **3 P1,
+5 P2, 1 P3**. Every finding below was re-verified against source before being accepted.
+
+The authority-layer pass — the one aimed at code no reviewer had looked at — produced the most.
+
+## Findings
+
+| # | Sev | Bug | Why missed | Status |
+|---|-----|-----|-----------|--------|
+| 7 | P1 | `DiplomacyBehavior.OnSessionLaunched` → `EnforcePermanentAlliances` → `MakePeace`/`StartAlliance`, ungated, on every peer including a joining client | **The fifth veto path.** The scan test written *for this exact bug class* could not see it: it hunts consumers of the three predicates, and this path consults none — it mutates from config directly | Fixed; scan extended to direct mutators |
+| 8 | P1 | The siege split (finding #3's fix, hours old) let a client claim a reward it never earned | I reasoned that the reward is per-player because it pays `Hero.MainHero`. Its *preconditions* are not: `PlayerAccepted`/`RewardClaimed` live on shared `_activeEvents`, and a joining client's baseline for that save key **is the host's save** | Reverted, then properly fixed in parallel with `_locallyClaimed` per-peer claim state |
+| 9 | P1 | `new CareerQuest` on a client is `MBObjectBase` construction in a live campaign | "Per-player, therefore safe" was treated as sufficient. It is not — Coop suppresses the `StringId` setter | **OPEN** — recorded in `coop-interop.md`; needs a live session |
+| 10 | P2 | `WarOfTheRingMomentumBehavior.OnSessionLaunched` mutated `RestoreFlags`/`EndWar` *above* its authority gate, driven by an unsynced MCM value | Gate was placed at the interesting call (`SweepEnrollment`) rather than at the top of the handler | Fixed |
+| 11 | P2 | `IsAuthority` is Coop-specific and fails **open**, so under BannerlordTogether it reports true on both peers and gates nothing | Two gate concepts (presence vs authority) with no single correct primitive | Fixed in parallel: `ICoopSessionProvider.ShouldDeferToHost` |
+| 12 | P2 | Messenger: a client pays `MessengerGoldCost` and enqueues, but processing is authority-only — the messenger never arrives and **the gold is lost** | Only the processing side was audited. Nobody asked whether the *entry point* was reachable | **OPEN** — needs owner identity on `PendingMessenger` |
+| 13 | P2 | Siege defence: a client can be prompted and accept, but never reaches the reward tick | Same shape as #12 | Partly addressed; prompt path still needs an owner check |
+| 14 | P2 | `CareerQuestCampaignBehavior` dedup scanned `QuestManager.Quests` globally, so the host's active quest blocked the client from ever being offered one | The doc justified leaving this ungated as "keyed entirely on `Hero.MainHero`" — **false when written**, written twice, believed once | Fixed — filters on `CareerQuest.OwnerHeroStringId` |
+| 15 | P3 | The veto scan accepts `IsAuthority` as sufficient and missed `EnforcePermanentAlliances` entirely | See #7 and #11 | Fixed |
+
+**Clean, and worth recording as clean:** `CultureConversionBehavior`, `RaceAgeBehavior`,
+`WarOfTheRingBehavior`, `CastleRecruitmentBehavior`, `CoopSessionProvider`/`CoopSessionPolicy`, the
+assembly-redirect removals, `CoopUiRegistrationPolicy`'s type selection, and
+`coop-force-active.flag`'s additive-only semantics.
+
+**One question settled rather than hedged.** Two passes independently decompiled v1.4.7's
+`Module.Initialize` and confirmed `ModuleHelper`'s `_loadedModules` is populated **before**
+`LoadSubModules` invokes `OnSubModuleLoad`. The UI-registration read is therefore reliable; the
+"may not be populated this early" caution was superstition about the pre-managed native string, and
+the redundant re-probe it motivated has been removed.
+
+## Second root-cause pattern: the gate is on the exit, the entry is still open
+
+Findings #12, #13 and #9 share a shape that is the **inverse** of the divergence the whole layer was
+built to stop. The gate correctly prevents a client mutating shared state — and the entry point in
+front of it is still client-reachable. So nobody desyncs; the client simply starts something it can
+never finish, and in the Messenger case pays for it.
+
+Every audit so far, mine and the agents', asked *"can a client corrupt shared state?"*. None asked
+*"can a client begin a flow the gate later refuses to complete?"* A `RegisterEvents` enumeration
+finds the first question and structurally misses the second, because the offending code is a UI
+prompt or a spend, not an event handler.
+
+**Rule:** when gating a behaviour host-only, enumerate its *player-facing entry points* — inquiries,
+menu options, gold spends, quest offers — and confirm each is either suppressed on a client or
+completes locally. A gate on the processing side alone converts a divergence bug into a silent
+dead-end.
+
+## Third pattern: a claim written down is not a claim verified
+
+Finding #14's justification ("keyed entirely on `Hero.MainHero`") appeared in a code comment, then in
+`coop-interop.md`, then in a review prompt — and was false the whole time. It survived because each
+reader treated the previous writing as evidence. The only reason it broke was that the Codex prompt
+explicitly said *"verify that claim"* rather than restating it as context.
+
+**Rule:** when a design doc asserts why something is safe, the assertion is a hypothesis with a
+citation owed. Carry the *reason* into review prompts as a thing to attack, never as a premise.

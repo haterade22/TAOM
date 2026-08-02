@@ -196,6 +196,36 @@ that reads no co-op flag. The review agent that found the first missed the secon
 to a diff cannot find a bug whose evidence sits outside it. RCA:
 `docs/reviews/rca-coop-veto-surface-2026-08-01.md`.
 
+**Three Codex passes then found nine more (3 P1, 5 P2, 1 P3)**, and the pass aimed at the
+BannerlordCoop authority layer — code no review had covered — produced the most. The fifth veto path
+was real: `DiplomacyBehavior.OnSessionLaunched` calls `EnforcePermanentAlliances`, which reaches
+`MakePeace`/`StartAlliance` from TAOM config on every peer, and the scan test written for exactly
+this bug class could not see it because that path consults no predicate — it mutates directly. The
+scan now covers direct mutators. `CareerQuestCampaignBehavior`'s dedup was scanning the global
+`QuestManager`, so the host's active quest blocked a client from ever being offered one; the doc had
+justified leaving that behaviour ungated as "keyed entirely on `Hero.MainHero`", which was false when
+written and had been restated twice before anyone checked. The momentum reconcile mutated state above
+its own authority gate. And the siege split from earlier in this entry was itself wrong — a client
+would have claimed a reward it never earned, because `PlayerAccepted`/`RewardClaimed` are host-owned
+at join — so it was reverted and rebuilt with per-peer claim state.
+
+Two findings are recorded and NOT fixed, because both are feature changes rather than gate
+placement: a co-op client can still pay for a messenger that never arrives (`PendingMessenger` has no
+owner field, and the arrival path mutates shared state so it cannot simply be ungated), and
+`new CareerQuest` on a client is `MBObjectBase` construction in a live campaign. Both are in
+`docs/features/coop-interop.md`.
+
+They share a shape worth naming, because it is the *inverse* of what this whole layer was built to
+prevent: the gate stops a client corrupting shared state, but the entry point in front of it stays
+client-reachable, so nobody desyncs — the client just starts something it can never finish, and in
+the messenger case pays for it. Every audit so far asked "can a client corrupt shared state?"; none
+asked "can a client begin a flow the gate later refuses to complete?"
+
+One question got settled instead of hedged: two passes independently decompiled v1.4.7's
+`Module.Initialize` and confirmed `ModuleHelper`'s module list is populated before `LoadSubModules`
+invokes `OnSubModuleLoad`. The UI-registration read is reliable, the caution in the code was
+superstition, and the redundant re-probe it motivated is gone.
+
 The boot matrix has still never been run — BT is not installed. Everything above is reasoning from
 source plus 4737 green tests, not from a session.
 

@@ -12,7 +12,7 @@ public class PeaceActionHookTests
 {
     private IWarOfTheRingService _wotrService;
     private IModLogger _logger;
-    private ICoopPresenceProvider _coop;
+    private ICoopSessionProvider _coop;
     private PeaceActionHook _sut;
 
     [TestInitialize]
@@ -20,8 +20,8 @@ public class PeaceActionHookTests
     {
         _wotrService = Substitute.For<IWarOfTheRingService>();
         _logger = Substitute.For<IModLogger>();
-        _coop = Substitute.For<ICoopPresenceProvider>();
-        _coop.IsCoopActive.Returns(false);
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _coop.ShouldDeferToHost.Returns(false);
         _sut = new PeaceActionHook(_wotrService, _logger, _coop);
     }
 
@@ -59,7 +59,7 @@ public class PeaceActionHookTests
     public void ShouldPreventPeace_CoopActive_ReturnsFalseEvenWhenWotRBlocks()
     {
         // Arrange
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
         _wotrService.IsWarOfTheRingActive.Returns(true);
         _wotrService.ShouldBlockPeace("empire_w", "empire_s").Returns(true);
 
@@ -74,7 +74,7 @@ public class PeaceActionHookTests
     public void ShouldPreventPeace_CoopActive_DoesNotConsultWotRService()
     {
         // Arrange
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
 
         // Act
         _sut.ShouldPreventPeace("empire_w", "empire_s");

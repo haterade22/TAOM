@@ -145,6 +145,19 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        // CO-OP: host-only, and the gate must sit ABOVE the load-reconcile below, not just above
+        // SweepEnrollment. Both branches mutate shared state: RestoreFlags writes the momentum store
+        // (SyncData-backed) and EndWar flips WarOfTheRingService.CurrentPhase. Both are driven by
+        // _settings.VictoryEnabled — an MCM value that is per-user and NOT synced between peers, so
+        // a client whose setting differs from the host's would locally un-freeze an ended war or
+        // flip the phase machine on join. (Codex P2, 2026-08-01; the original gate guarded only the
+        // enrollment sweep beneath.)
+        if (!_coopSession.IsAuthority)
+        {
+            _logger.LogInfo("[Momentum][coop] session-launch reconcile skipped on non-authority peer");
+            return;
+        }
+
         var state = _stateStore.State;
 
         if (!_settings.VictoryEnabled)
@@ -167,10 +180,8 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
             _wotrService.EndWar(state.Victor);
         }
 
-        // CO-OP: host-only. SweepEnrollment mutates state.Free/Evil.KingdomIds and MarkWarStarted
-        // on the shared momentum store; a client re-running it against the host's save diverges the
-        // enrollment set. (deep-review 2026-08-01, data-flow HIGH #2)
-        if (_settings.MomentumEnabled && _coopSession.IsAuthority)
+        // Authority already established above — only the feature toggle remains.
+        if (_settings.MomentumEnabled)
             _enrollmentService.SweepEnrollment(state);
     }
 

@@ -219,3 +219,39 @@ Corollary 2: when a changeset gates a shared rule, scope at least one review age
 not to the changed files.
 
 **Source:** `docs/reviews/rca-coop-veto-surface-2026-08-01.md` (#370, 3 HIGH).
+
+### Gating a behaviour host-only? Enumerate its player-facing ENTRY points, not just its processing
+
+A host-only gate stops a client corrupting shared state. It does nothing about the prompt, menu
+option, gold spend or quest offer that sits in front of it — so a client can begin a flow the gate
+later refuses to complete. Nobody desyncs; the client silently gets nothing, and may have paid.
+
+**Why missed:** #370's authority layer gated seven behaviours' tick handlers correctly, and every
+audit — mine, five deep-review agents, and a seam agent — asked only *"can a client corrupt shared
+state?"* Codex asked the other question. A co-op client could pay `MessengerGoldCost` and enqueue a
+messenger whose processing is authority-only (gold lost, no arrival); be prompted to accept a siege
+defence whose reward tick it never reaches; and be blocked from a career quest because the dedup
+scanned the global `QuestManager` rather than filtering by owner. A `RegisterEvents` enumeration
+structurally cannot find these, because the offending code is UI or a spend, not an event handler.
+
+**Prevent:** for each host-only gate, list the feature's player-facing entry points and confirm each
+is either suppressed on a client or completes locally. State which, in the gate's comment. Related:
+per-player state that lives on a SHARED save-backed record is not per-player at join — a client's
+baseline for any TAOM `SyncData` key is the host's save, which is how a "per-player" siege reward
+came to be claimable by someone who never accepted it.
+
+**Source:** `docs/reviews/rca-coop-veto-surface-2026-08-01.md` addendum (#370, Codex 3 P1 / 5 P2).
+
+### A safety claim in a doc is a hypothesis with a citation owed
+
+**Why missed:** `CareerQuestCampaignBehavior` was left ungated because it was "keyed entirely on
+`Hero.MainHero`, a legitimately different hero per peer." That was false when written — its dedup
+scanned every `CareerQuest` in the global `QuestManager`. The claim appeared in a code comment, then
+in `coop-interop.md`, then as context in a review prompt, and each reader treated the previous
+writing as evidence. It broke only because one prompt said *"verify that claim"* instead of
+restating it.
+
+**Prevent:** when a design doc explains why something is safe, carry the reason into review prompts
+as a thing to attack, never as a premise. Rephrase "X is safe because Y" to "verify Y".
+
+**Source:** same RCA addendum.

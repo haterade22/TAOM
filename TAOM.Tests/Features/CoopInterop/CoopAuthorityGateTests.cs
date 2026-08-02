@@ -39,6 +39,38 @@ public class CoopAuthorityGateTests
         s.IsAuthority.Returns(false);
         s.IsCoopClient.Returns(true);
         s.IsSessionActive.Returns(true);
+        s.ShouldDeferToHost.Returns(true);
+        return s;
+    }
+
+    /// <summary>
+    /// Host, or plain singleplayer — both are "authority". Safe to assert against only where the
+    /// behaviour delegates straight to a substituted service rather than reaching
+    /// <c>Campaign.Current</c> (see the class remark above).
+    /// </summary>
+    private static ICoopSessionProvider Authority()
+    {
+        var s = Substitute.For<ICoopSessionProvider>();
+        s.IsAuthority.Returns(true);
+        s.IsCoopClient.Returns(false);
+        s.IsSessionActive.Returns(true);
+        s.ShouldDeferToHost.Returns(false);
+        return s;
+    }
+
+    /// <summary>
+    /// Plain singleplayer — no co-op module in play at all. Distinct from <see cref="Authority"/>,
+    /// which is a co-op HOST. Both keep TAOM's own rules, so both must leave
+    /// <c>ShouldDeferToHost</c> false: gating shared-world decisions on mere co-op PRESENCE was a
+    /// real bug, disabling TAOM's diplomacy for a solo player who merely had the module enabled.
+    /// </summary>
+    private static ICoopSessionProvider Solo()
+    {
+        var s = Substitute.For<ICoopSessionProvider>();
+        s.IsAuthority.Returns(true);
+        s.IsCoopClient.Returns(false);
+        s.IsSessionActive.Returns(false);
+        s.ShouldDeferToHost.Returns(false);
         return s;
     }
 
@@ -93,17 +125,63 @@ public class CoopAuthorityGateTests
 
     // --- Siege defence --------------------------------------------------------------------------
 
+    // Host-only as a whole, and the reasoning matters because a 2026-08-01 change split this and
+    // had to be reverted. The reward looks per-player — it pays Hero.MainHero — but its
+    // PRECONDITIONS (PlayerAccepted, RewardClaimed) live on the shared _activeEvents entries
+    // serialised into _taom_siege_active_events, and a joining client's baseline for that key is
+    // the HOST's save. A client running the reward path would inherit the host's acceptance and
+    // claim something it never earned. "Keyed on MainHero" was true of the payout, false of the
+    // decision to pay out.
+
     [TestMethod]
     public void SiegeDefense_OnHourlyTick_CoopClient_DoesNotTick()
     {
-        // Grants Clan.Influence and applies global hero relation off Hero.MainHero, which resolves
-        // to a different hero on each peer.
         var service = Substitute.For<ISiegeDefenseService>();
         var sut = new SiegeDefenseBehavior(service, Substitute.For<IModLogger>(), Client());
 
         sut.OnHourlyTick();
 
-        service.DidNotReceive().OnHourlyTick();
+        service.DidNotReceive().OnHourlyTickShared();
+    }
+
+    [TestMethod]
+    public void SiegeDefense_OnHourlyTick_Authority_Ticks()
+    {
+        var service = Substitute.For<ISiegeDefenseService>();
+        var sut = new SiegeDefenseBehavior(service, Substitute.For<IModLogger>(), Authority());
+
+        sut.OnHourlyTick();
+
+        service.Received(1).OnHourlyTickShared();
+    }
+
+    // --- Diplomacy load-time enforcement (Codex P1) ----------------------------------------------
+    // The fifth diplomacy path. It consults NO predicate — it calls MakePeace/StartAlliance straight
+    // from TAOM config — which is exactly why the veto scan, which looks for predicate consumers,
+    // could not see it. Gated on ShouldDeferToHost rather than raw IsAuthority: the latter is
+    // Coop-specific and fails open, so under BannerlordTogether it reports true on both peers and
+    // would gate nothing.
+
+    [TestMethod]
+    public void Diplomacy_OnSessionLaunched_CoopActive_DoesNotEnforcePermanentAlliances()
+    {
+        var service = Substitute.For<IDiplomacyService>();
+        var sut = new DiplomacyBehavior(service, Substitute.For<IModLogger>(), Client());
+
+        sut.OnSessionLaunched();
+
+        service.DidNotReceive().EnforcePermanentAlliances();
+    }
+
+    [TestMethod]
+    public void Diplomacy_OnSessionLaunched_Solo_EnforcesPermanentAlliances()
+    {
+        var service = Substitute.For<IDiplomacyService>();
+        var sut = new DiplomacyBehavior(service, Substitute.For<IModLogger>(), Solo());
+
+        sut.OnSessionLaunched();
+
+        service.Received(1).EnforcePermanentAlliances();
     }
 
     // --- Messengers -----------------------------------------------------------------------------

@@ -173,3 +173,28 @@ Fixing a deep-review finding (a completion flag latched before the work, so fail
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### A diagnostic that cries wolf is worse than no diagnostic — prove the rule it asserts
+
+Before shipping a check that tells players something is broken, prove its rule holds on a KNOWN-GOOD
+install. If the check fires on vanilla, it is wrong by construction — and every other line that
+tool emits loses credibility with it.
+
+**Why missed:** `SaveDefinerCollisionGuard` grouped `SaveableTypeDefiner` subclasses by their base
+save id and reported any shared id as a collision, with "the game will fail to start… Disable one of
+them." But the engine keys on `_saveBaseId + saveId` (`SaveableTypeDefiner.AddClassDefinition`,
+v1.4.7), so a shared BASE id is legal whenever per-type offsets differ — and vanilla does exactly
+that: `SaveableCoreTypeDefiner` (TaleWorlds.Core) and `SaveableObjectSystemTypeDefiner`
+(TaleWorlds.ObjectSystem) both use 10000 in a game that starts fine. Being in different assemblies,
+they took the cross-assembly branch, so TAOM told players to disable a vanilla engine DLL. It sat at
+the top of every collected user log. Nobody had run the detector's own rule against an unmodded
+install; the unit tests only exercised synthetic records that obeyed the assumed model.
+
+**Prevent:** (1) for any heuristic check, add a test using REAL values from a known-good baseline —
+here, the actual vanilla pair and base id. (2) Match severity to certainty: a heuristic emits a
+WARNING that says "may" and offers a lead, never an ERROR that says "will" and issues an order.
+(3) Filter to what the user can act on — a fault confined to game-shipped assemblies is noise
+regardless of what it means.
+
+**Source:** reported from user logs 2026-08-01; root cause verified by decompiling v1.4.7 and
+enumerating all 67 vanilla definer base ids (exactly one duplicate pair, both vanilla).

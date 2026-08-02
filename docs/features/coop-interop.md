@@ -92,6 +92,23 @@ per-entity tickers, so `DailyTickSettlementEvent` and friends never reach a clie
 allowlist of ~127 `RegisterEvents` prefixes over *named vanilla* types; there is no generic hook a
 third-party mod can register into, so TAOM authors its own.
 
+**Which predicate to use.** Three, and picking the wrong one has already shipped bugs both ways:
+
+| Use | When |
+|---|---|
+| `IsAuthority` | A world-mutating handler that only BannerlordCoop can gate. Fails open to singleplayer. |
+| `ShouldDeferToHost` | A shared-world DECISION (diplomacy veto, alliance enforcement, global time). Also covers co-op mods TAOM cannot probe. |
+| `MayWriteSaveBackedState` | About to write a field that round-trips through a `SyncData` key. |
+
+Do **not** gate on `ICoopPresenceProvider.IsCoopActive` for anything world-mutating. It is
+process-constant — true whenever the module is merely *enabled* — so it disabled TAOM's diplomacy
+rules for solo players and for the co-op host itself (Codex, 2026-08-01). It is correct only for
+one-shot startup decisions such as UI registration.
+
+`ShouldDeferToHost` keys on whether the ROLE PROBE RESOLVED, which is what makes it safe for
+BannerlordTogether: TAOM cannot read host/client there, so it yields on every peer. Gating those
+decisions on `IsAuthority` instead would fail open and gate nothing.
+
 `CoopSessionPolicy.IsAuthority = !sessionActive || isServer` — **fails open to singleplayer**. Every
 input is best-effort reflection into another mod; a false negative would silently disable TAOM
 features for a solo player, which is worse and far less diagnosable than the divergence it guards.
@@ -121,20 +138,35 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `SiegeDefenseBehavior` | `OnHourlyTick` | `Clan.Influence` + global relation off `Hero.MainHero`, which differs per peer. **Known limitation below.** |
 | `CastleRecruitmentBehavior` | `OnGameLoaded`, `OnNewGameCreated` | The one castle path a client reaches; creates heroes. |
 
-**Known limitation — siege-defence rewards are host-only.** `SiegeDefenseBehavior.OnHourlyTick` is
-gated wholesale, and `GrantReward()` is reachable *only* through it. So a co-op client who accepts a
-siege-defence event never receives the influence/relation reward. This is deliberate but
-inconsistent with how `CareerQuestCampaignBehavior` treats the same `Hero.MainHero`-keyed shape
-(left ungated so each player gets their own). The clean fix is to split the shared timer tick from
-the per-player reward and gate only the former; until then clients silently lose the reward.
-Raised by the 2026-08-01 deep review.
+**Siege defence uses a split gate, not a wholesale one (fixed 2026-08-01).** The hourly tick did two
+unrelated jobs and the first pass gated both, so a co-op client could defend a siege to completion
+and receive no influence, no relation and no message. `ISiegeDefenseService.OnHourlyTick` is now two
+methods:
+
+| Half | Method | Gate | Why |
+|---|---|---|---|
+| Shared | `OnHourlyTickShared()` | **Authority only** | Expires events and prunes `_activeEvents`, which backs the `_taom_siege_active_events` save key. A client pruning a timeline the host owns is the divergence this layer exists to stop. |
+| Local | `OnHourlyTickLocalPlayer()` | **Every peer** | Grants the reward to the hero *this* peer is playing, keyed on `MobileParty.MainParty` / `Hero.MainHero`. Same reasoning that leaves `CareerQuestCampaignBehavior` ungated. |
+
+`GrantReward` sets `RewardClaimed` on the local `_activeEvents` entry. That is a write to a
+save-backed field, but each peer keeps its own TAOM `SyncData` after join (see "What is NOT done"),
+so the flag reads naturally as *this peer's player has claimed it* — which is the intended meaning.
+The consequence to know: on a client the shared sweep never runs, so expired entries linger until
+`OnSiegeEnded` removes them. Harmless — the local half filters on `!Deadline.IsPast`, so a stale
+entry can never pay out. Pinned by three tests in `CoopAuthorityGateTests`.
 
 ### Deliberately NOT gated
 
-`CareerQuestCampaignBehavior` (daily) — keyed entirely on `Hero.MainHero`, a legitimately *different*
-hero per peer. Gating it would strip career quests from clients. Its only object creation
-(`new CareerQuest`) happens on player acceptance and is already try/catch-wrapped.
-**Owed: in-game confirmation that quest start does not trip the `StringId` suppression below.**
+`CareerQuestCampaignBehavior` (daily) — per-player, so gating it would strip career quests from
+clients.
+
+The original justification said "keyed entirely on `Hero.MainHero`", and **that was false when
+written**: the one-quest-at-a-time dedup scanned `QuestManager.Quests` globally, and a client loads
+the host's save — so the host's active career quest blocked the client from ever being offered one.
+Fixed 2026-08-01 by filtering on `CareerQuest.OwnerHeroStringId`; the claim is now true of the scan
+as well as the offer. Codex found it after the claim had already been written down twice and
+believed once. **Still owed: in-game confirmation that quest start does not trip the `StringId`
+suppression** (see the P1 note above).
 
 ## Client-side object creation
 
@@ -145,6 +177,34 @@ when the sync policy disallows the write, so `CreateObject<T>` leaves `StringId`
 Full chain in the internals doc. **Not TAOM-specific** — any mod creating an `MBObjectBase` on a
 client hits it; TAOM merely had two paths in, both now gated.
 
+## Open: client-reachable entry points the gate later blocks
+
+Three findings from the 2026-08-01 Codex authority pass share one shape, and it is the **opposite**
+of the divergence the gates were built for. The gate correctly stops a client mutating shared state
+— but the *entry point* is still client-reachable, so a client can start something it can never
+finish. Nobody desyncs; the client just quietly gets nothing.
+
+| Area | What a client can do | What it never gets | Status |
+|---|---|---|---|
+| Messengers | Pay `MessengerGoldCost` and enqueue a `PendingMessenger` (send path ungated) | Hourly processing is authority-only, so it never advances or arrives — **gold is simply lost** | **Open** |
+| Siege defence | Be prompted, accept, and be tracked | Reward tick is authority-only | Partly addressed by `_locallyClaimed`; the prompt/accept path still needs an owner check |
+| Career quests | Be offered and accept | — (fixed: the dedup scan now filters by owner) | **Fixed 2026-08-01** |
+
+The Messenger case is the sharpest because it costs the player real gold. `PendingMessenger` has no
+owner field (`TargetHeroId`, `DispatchTimeDays`, `Position`, `Arrived`), so processing cannot tell
+whose messenger it is. Two options, neither done: add owner identity and process only the local
+peer's own entries client-side, or suppress the send UI on a client. **Do not simply ungate the
+hourly body** — arrival calls `target.ChangeState(...)` and `EnterSettlementAction.ApplyForCharacterOnly(...)`,
+which are shared-state mutations.
+
+**Also open — `CareerQuest` construction on a client [P1].** `new CareerQuest` on player acceptance
+is client-side `MBObjectBase` construction during a live campaign: Coop's `MBObjectBasePatches`
+prefixes the `StringId` setter and returns false when the sync policy disallows the write, and
+`QuestManager.OnQuestStarted` then adds the object anyway. It does not go through
+`MBObjectManager.CreateObject<T>`, so the exact `TryGetValue(null, …)` chain is not proven for this
+path — but "per-player, therefore safe" is not a sufficient defence, and this needs a live session
+to characterise. The existing try/catch around acceptance is containment, not correctness.
+
 ## What is NOT done
 
 - **No MCM settings parity.** 284 `SettingProperty` entries, mostly gameplay-affecting, per-user and
@@ -154,9 +214,14 @@ client hits it; TAOM merely had two paths in, both now gated.
   bump is a co-op compatibility break.
 - **No sync of TAOM's own campaign state.** Clients get the join-time baseline from the host's save,
   then never hear about WotR momentum or culture-conversion deltas.
-- **Dedicated server unsupported** — its module tree lacks `CustomBattle` (a TAOM dependency) and
-  TAOM itself, and its Coop DLLs are SHA-256 pinned (exit code 4 if modified). Use the listen-host
-  path, which carries TAOM into the spawned server process automatically.
+- **Dedicated server unsupported.** The real obstacle is the runtime: the appliance runs
+  `Win64_Shipping_Server` on `Microsoft.NETCore.App`, while TAOM targets .NET Framework 4.7.2 and
+  tags itself `DedicatedServerType=none`. Its `engine/Modules` also ships no TAOM, and its
+  `default_new_game.sav` bootstrap is a vanilla world. (The missing `CustomBattle` module is *not* a
+  blocker — TAOM declares it as a `DependedModule` but does not need it on a server.) Coop's own
+  DLLs are SHA-256 pinned, but that covers only the `Coop` module, so adding modules alongside is
+  not in itself refused. Use the listen-host path, which carries TAOM into the spawned server
+  process automatically.
 
 ## Verification checklist (none of this has been run)
 

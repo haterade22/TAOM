@@ -90,3 +90,39 @@ than hiding it.
 - The `CultureConversion` client crash is source-verified end-to-end but not reproduced at runtime.
 - Split `SiegeDefenseBehavior`'s shared tick from its per-player reward (finding #5).
 - Issue #370's title still says BannerlordTogether; it now tracks BannerlordCoop work too.
+
+---
+
+## Codex adversarial pass (same day, after the 5-agent review)
+
+`gpt-5.5` at `xhigh`, prompt at `docs/reviews/codex-adversarial-coopinterop-2026-08-01.prompt.md`.
+Verdict: **4 HIGH, 3 MEDIUM, 1 LOW — not safe to ship.** It DISPUTED all four Known Suspects aimed at
+the layer I wrote (fail-open direction, reflection-binder thread safety, the assembly-redirect
+deletion, and the detection-coupling tests), and confirmed the two aimed at its edges.
+
+| # | Sev | Finding | Outcome |
+|---|---|---|---|
+| C1 | HIGH | 8 sites gated on module PRESENCE, disabling TAOM diplomacy for solo-with-Coop-enabled AND the co-op host | **Fixed** — new `ShouldDeferToHost`; see below |
+| C2 | HIGH | Momentum `OnSessionLaunched` mutated before its authority check | Already fixed concurrently |
+| C3 | HIGH | `DiplomacyBehavior` session launch ungated | **FALSE POSITIVE** — quoted `_ => _service.EnforcePermanentAlliances()`; the real line is `_ => OnSessionLaunched()`, which gates |
+| C4 | HIGH | Siege local reward writes save-backed `RewardClaimed` | **Fixed** — client claims go to non-persisted `_locallyClaimed`, gated by `MayWriteSaveBackedState` |
+| C5 | MED | `MessengerCampaignBehavior.SendMessenger` charges gold for a messenger the gated tick never delivers | **Fixed** |
+| C6 | MED | `CultureConversionBehavior.OnSettlementOwnerChanged` ungated | **Fixed** — I had documented this as safe; it was not |
+| C7 | MED | `new CareerQuest(...)` ungated; `QuestBase : MBObjectBase` sets `StringId` in its ctor | **Open** — product decision, gating removes career quests from clients |
+| C8 | LOW | TimeAcceleration disabled by presence | **Fixed** with C1 |
+
+**C1 is the interesting one: neither position was complete.** Codex's proposed fix (use session/role)
+breaks BannerlordTogether, and the code said so in a comment Codex did not engage with — `IsAuthority`
+fails open, so both BT peers report authoritative and nothing gates. The presence gate got the solo
+and host rows wrong; the authority gate gets the BT row wrong. `ShouldDeferToHost` keys on whether the
+ROLE PROBE RESOLVED, which satisfies all five rows, and is pinned by a test per row.
+
+**C6 is a correction to my own reasoning.** I had gated the tick and left the owner-change handler
+alone, documenting that it "only queues a pending timer, so it stays ungated". The store is
+SyncData-backed and the daily processor that maintains it IS gated, so a client accumulates pending
+conversions nothing services. Writing the justification into the doc made it look considered.
+
+**Process note:** three of eight findings needed correction before use (one false positive, one
+already-fixed, one whose proposed fix would have caused a different regression). Verifying each
+against source before implementing — per `.claude/rules/evidence-over-claims.md` — is what caught
+all three.

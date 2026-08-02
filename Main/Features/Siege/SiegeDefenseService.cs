@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Siege.Models;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -27,7 +28,13 @@ public class SiegeDefenseService : ISiegeDefenseService
     private readonly IPlayerContextAdapter _playerContext;
     private readonly IModLogger _logger;
     private readonly SiegeDefenseConfig _config;
+    private readonly ICoopSessionProvider _coopSession;
     private readonly Dictionary<string, ActiveSiegeDefenseEvent> _activeEvents = new Dictionary<string, ActiveSiegeDefenseEvent>();
+
+    // Rewards this PROCESS has already granted to its own player. Deliberately NOT serialized and
+    // NOT cleared by RestoreFromSave: on a co-op client it stands in for evt.RewardClaimed, which
+    // belongs to the host's save record. Reset() clears it with everything else.
+    private readonly HashSet<string> _locallyClaimed = new HashSet<string>();
 
     public IReadOnlyDictionary<string, ActiveSiegeDefenseEvent> ActiveEvents => _activeEvents;
 
@@ -35,8 +42,10 @@ public class SiegeDefenseService : ISiegeDefenseService
         ISiegeDefenseConfigProvider configProvider,
         ISiegeDefenseSettingsProvider settings,
         IPlayerContextAdapter playerContext,
-        IModLogger logger)
+        IModLogger logger,
+        ICoopSessionProvider coopSession)
     {
+        _coopSession = coopSession;
         _settings = settings;
         _playerContext = playerContext;
         _logger = logger;
@@ -151,7 +160,8 @@ public class SiegeDefenseService : ISiegeDefenseService
         }
     }
 
-    public void OnHourlyTick()
+    /// <inheritdoc />
+    public void OnHourlyTickShared()
     {
         var expiredKeys = _activeEvents
             .Where(kvp => kvp.Value.Deadline.IsPast && !kvp.Value.RewardClaimed)
@@ -165,13 +175,21 @@ public class SiegeDefenseService : ISiegeDefenseService
                 UntrackSettlement(key);
             _activeEvents.Remove(key);
         }
+    }
 
+    /// <inheritdoc />
+    public void OnHourlyTickLocalPlayer()
+    {
         var playerSettlementId = MobileParty.MainParty?.CurrentSettlement?.StringId ?? "";
         if (string.IsNullOrEmpty(playerSettlementId))
             return;
 
+        // Reads _activeEvents but never removes from it — pruning is OnHourlyTickShared, which is
+        // authority-gated. _locallyClaimed is the client's stand-in for evt.RewardClaimed, which is
+        // save-backed and belongs to the host.
         foreach (var evt in _activeEvents.Values
-            .Where(e => e.PlayerAccepted && !e.RewardClaimed && !e.Deadline.IsPast)
+            .Where(e => e.PlayerAccepted && !e.RewardClaimed && !e.Deadline.IsPast
+                        && !_locallyClaimed.Contains(e.SettlementId))
             .ToList())
         {
             if (evt.SettlementId != playerSettlementId)
@@ -198,6 +216,7 @@ public class SiegeDefenseService : ISiegeDefenseService
 
     public void Reset()
     {
+        _locallyClaimed.Clear();
         // Phase 9b #132 R1 — clear singleton state on new campaign start (same process).
         // VisualTracker registrations are scoped to Campaign.Current and are released when the
         // campaign tears down; no untrack pass needed here.
@@ -289,7 +308,18 @@ public class SiegeDefenseService : ISiegeDefenseService
 
     private void GrantReward(ActiveSiegeDefenseEvent evt)
     {
-        evt.RewardClaimed = true;
+        // WHERE the claim is recorded depends on who we are, and this is the whole point of the
+        // shared/local split. evt.RewardClaimed is serialized by SnapshotForSave and restored by
+        // RestoreFromSave, so it belongs to the HOST's save record. A co-op client writing it would
+        // push per-peer reward state into shared saved state — the exact leak the split exists to
+        // prevent (Codex review 2026-08-01, HIGH). The client records its claim in _locallyClaimed,
+        // which is never serialized and is consulted by this method's own eligibility filter, so the
+        // reward is still granted exactly once per peer per event.
+        var isCoopClient = _coopSession != null && _coopSession.IsCoopClient;
+        if (CoopSessionPolicy.MayWriteSaveBackedState(isCoopClient))
+            evt.RewardClaimed = true;
+        else
+            _locallyClaimed.Add(evt.SettlementId);
         UntrackSettlement(evt.SettlementId);
 
         Hero.MainHero.Clan.Influence += _config.RewardInfluence;

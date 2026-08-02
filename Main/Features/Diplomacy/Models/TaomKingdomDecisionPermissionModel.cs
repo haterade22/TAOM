@@ -20,12 +20,12 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
 {
     private readonly IDiplomacyService _diplomacyService;
     private readonly IWarOfTheRingService _wotrService;
-    private readonly ICoopPresenceProvider _coop;
+    private readonly ICoopSessionProvider _coop;
 
     public TaomKingdomDecisionPermissionModel(
         IDiplomacyService diplomacyService,
         IWarOfTheRingService wotrService,
-        ICoopPresenceProvider coop)
+        ICoopSessionProvider coop)
     {
         _diplomacyService = diplomacyService;
         _wotrService = wotrService;
@@ -35,7 +35,7 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
     public override bool IsStartAllianceDecisionAllowedBetweenKingdoms(
         Kingdom kingdom1, Kingdom kingdom2, out TextObject reason)
     {
-        if (_coop.IsCoopActive)
+        if (_coop.ShouldDeferToHost)
             return base.IsStartAllianceDecisionAllowedBetweenKingdoms(kingdom1, kingdom2, out reason);
 
         bool involvesPlayer = PlayerKingdomHelper.InvolvesPlayerRuledKingdom(kingdom1, kingdom2);
@@ -53,7 +53,7 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
     public override bool IsWarDecisionAllowedBetweenKingdoms(
         Kingdom kingdom1, Kingdom kingdom2, out TextObject reason)
     {
-        if (!_coop.IsCoopActive
+        if (!_coop.ShouldDeferToHost
             && !_diplomacyService.IsWarAllowed(kingdom1.StringId, kingdom2.StringId))
         {
             reason = new TextObject("{=taom_war_blocked}These kingdoms are bound by an unbreakable alliance.");
@@ -66,7 +66,7 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
     public override bool IsPeaceDecisionAllowedBetweenKingdoms(
         Kingdom kingdom1, Kingdom kingdom2, out TextObject reason)
     {
-        if (!_coop.IsCoopActive
+        if (!_coop.ShouldDeferToHost
             && _wotrService.ShouldBlockPeace(kingdom1.StringId, kingdom2.StringId))
         {
             reason = new TextObject("{=taom_wotr_no_peace}The War of the Ring rages. There can be no peace.");

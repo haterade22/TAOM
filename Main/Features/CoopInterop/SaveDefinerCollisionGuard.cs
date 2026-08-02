@@ -50,11 +50,17 @@ public static class SaveDefinerCollisionGuard
                 var who = string.Join(", ", collision.Records.Select(r => $"{r.AssemblyName}::{r.TypeName}"));
                 if (collision.IsCrossAssembly)
                 {
-                    logger.LogError(
-                        $"[SaveDefiners] SAVE ID COLLISION on base id {collision.BaseId} between: {who}. " +
-                        "Two mods claim the same save-system id range; the game will fail to start with " +
-                        "an 'item with the same key has already been added' error that names neither mod. " +
-                        "Disable one of them.");
+                    // WARNING, not ERROR, and "may" rather than "will" — deliberately. A shared base
+                    // id is not proof of a collision: the engine keys on `_saveBaseId + saveId`, so
+                    // two owners of the same range coexist fine when their offsets differ (vanilla
+                    // does this). Claiming certainty here produced a false positive that sat at the
+                    // top of every user log and named two vanilla types. Say what is actually known.
+                    logger.LogWarning(
+                        $"[SaveDefiners] Shared save-id base {collision.BaseId} between: {who}. " +
+                        "These claim the same save-system id range. That is legal when their " +
+                        "per-type offsets differ, but if the game fails to start with an 'item with " +
+                        "the same key has already been added' error — which names neither mod — " +
+                        "these are the first two to try disabling.");
                 }
                 else
                 {

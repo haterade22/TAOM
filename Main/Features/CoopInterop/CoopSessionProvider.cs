@@ -76,6 +76,26 @@ public sealed class CoopSessionProvider : ICoopSessionProvider
         }
     }
 
+    public bool ShouldDeferToHost
+    {
+        get
+        {
+            // Deliberately reads CoopPresence directly rather than going through Probe()'s early
+            // return, because the two signals differ here: a co-op module can be ACTIVE while the
+            // role probe is unavailable (an unprobeable mod such as BannerlordTogether), and that
+            // combination must defer rather than fall through to "no session, therefore solo".
+            if (!CoopPresence.IsActive)
+                return CoopSessionPolicy.ShouldDeferToHost(false, false, false, false);
+
+            EnsureBound();
+            var roleProbeAvailable = _tryGetContainer != null;
+            var (sessionActive, isServer) = roleProbeAvailable ? Probe() : (false, false);
+
+            return CoopSessionPolicy.ShouldDeferToHost(
+                coopModuleActive: true, roleProbeAvailable, sessionActive, isServer);
+        }
+    }
+
     private (bool sessionActive, bool isServer) Probe()
     {
         // Skip the AppDomain type scan entirely when no co-op module was ever enabled. This is the

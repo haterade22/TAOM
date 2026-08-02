@@ -76,6 +76,12 @@ public class CultureConversionBehavior : CampaignBehaviorBase
         Hero capturerHero,
         ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
     {
+        // CO-OP: host-only. Previously left ungated on the reasoning that queuing a pending timer is
+        // harmless — but the store is SyncData-backed, and the DAILY processing that would mature or
+        // clear these records IS gated. A client therefore accumulates pending conversions nothing
+        // ever services. (Codex review 2026-08-01, MEDIUM.)
+        if (!_coopSession.IsAuthority) return;
+
         // Towns/castles only — bound villages follow their parent (handled inside the service).
         if (settlement == null || !settlement.IsFortification)
             return;

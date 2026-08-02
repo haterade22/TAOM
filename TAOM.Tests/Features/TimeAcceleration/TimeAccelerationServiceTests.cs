@@ -13,7 +13,7 @@ public class TimeAccelerationServiceTests
     private IMapInputAdapter _input;
     private ITimeControlAdapter _timeControl;
     private ITimeAccelerationSettingsProvider _settings;
-    private ICoopPresenceProvider _coop;
+    private ICoopSessionProvider _coop;
     private TimeAccelerationService _sut;
 
     [TestInitialize]
@@ -34,8 +34,8 @@ public class TimeAccelerationServiceTests
         _settings.ExtraFastForwardMultiplier.Returns(8);
         _settings.CtrlSpaceMultiplier.Returns(16);
 
-        _coop = Substitute.For<ICoopPresenceProvider>();
-        _coop.IsCoopActive.Returns(false);
+        _coop = Substitute.For<ICoopSessionProvider>();
+        _coop.ShouldDeferToHost.Returns(false);
 
         _sut = new TimeAccelerationService(_input, _timeControl, _settings, _coop);
     }
@@ -50,7 +50,7 @@ public class TimeAccelerationServiceTests
     public void OnTick_CoopActive_IgnoresExtraFastForwardKey()
     {
         // Arrange
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
         _input.IsEKeyPressed.Returns(true);
 
         // Act
@@ -64,7 +64,7 @@ public class TimeAccelerationServiceTests
     [TestMethod]
     public void OnTick_CoopActive_IgnoresSpace()
     {
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
         _input.IsSpacePressed.Returns(true);
 
         _sut.OnTick();
@@ -75,7 +75,7 @@ public class TimeAccelerationServiceTests
     [TestMethod]
     public void OnTick_CoopActive_IgnoresCtrlSpaceTurbo()
     {
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
         _input.IsControlDown.Returns(true);
         _input.IsSpacePressed.Returns(true);
 
@@ -97,7 +97,7 @@ public class TimeAccelerationServiceTests
         _timeControl.ClearReceivedCalls();
 
         // Act
-        _coop.IsCoopActive.Returns(true);
+        _coop.ShouldDeferToHost.Returns(true);
         _sut.OnTick();
 
         // Assert — saved values restored, not left boosted.

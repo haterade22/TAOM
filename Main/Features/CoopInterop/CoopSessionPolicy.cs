@@ -49,4 +49,57 @@ public static class CoopSessionPolicy
     /// singleplayer, which is the trap <c>ModInformation.IsClient</c> falls into on its own.
     /// </summary>
     public static bool IsCoopClient(bool sessionActive, bool isServer) => sessionActive && !isServer;
+
+    /// <summary>
+    /// Should this peer YIELD a shared-world decision (a diplomacy veto, a permanent-alliance
+    /// enforcement, a global time change) to the host rather than applying its own answer?
+    ///
+    /// Distinct from <see cref="IsAuthority"/> because it must also cover co-op mods TAOM cannot
+    /// probe. The truth table this exists to satisfy:
+    ///
+    /// <code>
+    /// module | probe | session | server | defer? | why
+    /// -------+-------+---------+--------+--------+---------------------------------------------
+    ///  no    |   -   |    -    |   -    |  NO    | plain singleplayer
+    ///  yes   |  no   |    -    |   -    |  YES   | unprobeable co-op mod (BannerlordTogether):
+    ///        |       |         |        |        | cannot tell host from client, so the only safe
+    ///        |       |         |        |        | answer is to yield on every peer
+    ///  yes   |  yes  |   no    |   -    |  NO    | BannerlordCoop installed but playing SOLO
+    ///  yes   |  yes  |  yes    |  yes   |  NO    | BannerlordCoop host — it IS the authority
+    ///  yes   |  yes  |  yes    |  no    |  YES   | BannerlordCoop client
+    /// </code>
+    ///
+    /// Gating these decisions on module PRESENCE alone (the first implementation) got rows 3 and 4
+    /// wrong: a solo player who merely had the Coop module enabled, and the co-op host itself, both
+    /// silently lost TAOM's War of the Ring diplomacy rules. Gating on <see cref="IsAuthority"/>
+    /// alone gets row 2 wrong, because that fails open and would report every BannerlordTogether
+    /// peer as authoritative — no gate at all. Only the pair of signals answers all five rows.
+    /// </summary>
+    /// <param name="coopModuleActive">A co-op module is in the launcher's active set.</param>
+    /// <param name="roleProbeAvailable">
+    /// TAOM can actually read host/client role for the active co-op mod — i.e. its runtime members
+    /// bound. False for any co-op mod TAOM has no probe for.
+    /// </param>
+    public static bool ShouldDeferToHost(
+        bool coopModuleActive, bool roleProbeAvailable, bool sessionActive, bool isServer)
+    {
+        if (!coopModuleActive) return false;
+        if (!roleProbeAvailable) return true;
+        if (!sessionActive) return false;
+        return !isServer;
+    }
+
+    /// <summary>
+    /// May this peer write state that round-trips through a TAOM <c>SyncData</c> key?
+    ///
+    /// A co-op client may not. Its save record is the HOST's — it was shipped over the wire at join
+    /// — so any save-backed field a client writes is per-peer state landing in shared saved state.
+    /// The client keeps such state in non-persisted process memory instead.
+    ///
+    /// Exists as a named predicate rather than an inline <c>!IsCoopClient</c> because the inline
+    /// form is exactly what shipped wrong: <c>SiegeDefenseService.GrantReward</c> set the
+    /// save-serialized <c>RewardClaimed</c> flag on every peer, so a client claiming its own siege
+    /// reward mutated the host's event record (Codex review 2026-08-01, HIGH).
+    /// </summary>
+    public static bool MayWriteSaveBackedState(bool isCoopClient) => !isCoopClient;
 }

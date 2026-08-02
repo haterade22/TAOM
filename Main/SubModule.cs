@@ -569,20 +569,21 @@ public class SubModule : MBSubModuleBase
         bool coopActive;
         try
         {
-            // #370 — re-probe HERE rather than inheriting TAOM.Dependencies' earlier one.
+            // Reading the flag here is SAFE, and that is verified rather than assumed.
             //
-            // Every other CoopPresence consumer (PatchShield, SaveShield, both diplomacy hooks)
-            // reads live at DECISION time, which is gameplay — long after the second, authoritative
-            // Refresh() in OnGameInitializationFinished. UI registration cannot: it is a one-shot in
-            // OnSubModuleLoad, and a mixin cannot un-inject a widget that is already built. So it
-            // was the only consumer deciding from the FIRST probe — the one CoopPresence's own docs
-            // flag as possibly running before ModuleHelper's active-module list is populated.
+            // This is the one CoopPresence consumer that cannot self-correct: UI registration is a
+            // one-shot, and a mixin cannot un-inject a widget that is already built. Everything else
+            // (PatchShield, SaveShield, the diplomacy gates) reads live at gameplay time. So the
+            // worry was that this decided from a probe taken before the launcher had published its
+            // module list — which would silently take the solo branch and log nothing.
             //
-            // If that probe were early, the failure is silent: the !coopActive branch is taken, the
-            // ordinary solo registration line runs, and the "[CoopInterop] co-op active" log never
-            // appears — the exact dead-control bug the attribute exists to prevent, with no signal.
-            // Refresh() is a reflection read, not I/O, so paying for it once is cheap insurance.
-            CoopPresence.Refresh();
+            // Decompiled v1.4.7 settles it (two independent Codex passes, 2026-08-01):
+            // Module.Initialize populates ModuleHelper's _loadedModules from the native module-code
+            // string BEFORE calling LoadSubModules, which is what invokes OnSubModuleLoad. The list
+            // is therefore complete here — even a SubModule constructor already sees it. The
+            // "may not be populated this early" caution in CoopPresence.Refresh's docs is about the
+            // pre-managed native string, not an OnSubModuleLoad race, and no extra Refresh() helps
+            // with that. Removed the redundant re-probe accordingly.
             coopActive = CoopPresence.IsActive;
         }
         catch (System.Exception ex)
@@ -703,12 +704,15 @@ public class SubModule : MBSubModuleBase
         var diplomacyService = IoC.Resolve<IDiplomacyService>();
         var wotrService = IoC.Resolve<IWarOfTheRingService>();
         var diplomacyLogger = IoC.Resolve<IModLogger>();
-        campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger));
+        // ShouldDeferToHost, not raw presence: gating shared-world decisions on "a co-op module is
+        // installed" disabled TAOM's diplomacy for a solo player who merely had it enabled, and for
+        // the co-op host itself. See ICoopSessionProvider.
+        var coopSession = IoC.Resolve<TAOM.Features.CoopInterop.ICoopSessionProvider>();
+        campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger, coopSession));
         campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, diplomacyLogger));
         campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
-        var coopPresence = IoC.Resolve<TAOM.Features.CoopInterop.ICoopPresenceProvider>();
-        campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService, coopPresence));
-        campaignStarter.AddModel(new TaomDiplomacyModel(wotrService, coopPresence));
+        campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService, coopSession));
+        campaignStarter.AddModel(new TaomDiplomacyModel(wotrService, coopSession));
 
         var wotrLogger = IoC.Resolve<IModLogger>();
         campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger,

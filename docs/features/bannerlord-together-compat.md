@@ -159,6 +159,15 @@ runtime check inside the mixin cannot un-inject an already-built widget. Solo pl
 registered/suppressed counts are logged either way, which is the first thing to check if a TAOM
 widget goes missing.
 
+**Is the co-op flag reliable that early? Yes — verified, not assumed.** This is the only
+`CoopPresence` consumer that cannot self-correct later, so it mattered. Decompiled v1.4.7 (two
+independent Codex passes, 2026-08-01): `Module.Initialize` populates `ModuleHelper`'s
+`_loadedModules` from the native module-code string **before** calling `LoadSubModules`, which is
+what invokes `OnSubModuleLoad` — so the list is complete here, and even a `SubModule` constructor
+already sees it. `CoopPresence.Refresh`'s "may not be populated this early" caution refers to the
+pre-managed native string, not an `OnSubModuleLoad` race; an extra re-probe would not help with that
+and was removed.
+
 ## Why this lives in TAOM and not in a separate compat module
 
 Asked and answered 2026-08-01. A separate module cannot do the job, and this is a fact about

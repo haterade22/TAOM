@@ -8,9 +8,9 @@ namespace TAOM.Features.Diplomacy.Models;
 public class TaomDiplomacyModel : DefaultDiplomacyModel
 {
     private readonly IWarOfTheRingService _wotrService;
-    private readonly ICoopPresenceProvider _coop;
+    private readonly ICoopSessionProvider _coop;
 
-    public TaomDiplomacyModel(IWarOfTheRingService wotrService, ICoopPresenceProvider coop)
+    public TaomDiplomacyModel(IWarOfTheRingService wotrService, ICoopSessionProvider coop)
     {
         _wotrService = wotrService;
         _coop = coop;
@@ -25,7 +25,7 @@ public class TaomDiplomacyModel : DefaultDiplomacyModel
     /// </summary>
     public override bool IsAtConstantWar(IFaction faction1, IFaction faction2)
     {
-        if (!_coop.IsCoopActive
+        if (!_coop.ShouldDeferToHost
             && _wotrService.IsWarOfTheRingActive
             && _wotrService.ShouldBlockPeace(faction1.StringId, faction2.StringId))
         {

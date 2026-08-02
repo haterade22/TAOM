@@ -8,10 +8,10 @@ public class AllianceActionHook : IOnAllianceAction
 {
     private readonly IDiplomacyService _diplomacyService;
     private readonly IModLogger _logger;
-    private readonly ICoopPresenceProvider _coop;
+    private readonly ICoopSessionProvider _coop;
 
     public AllianceActionHook(
-        IDiplomacyService diplomacyService, IModLogger logger, ICoopPresenceProvider coop)
+        IDiplomacyService diplomacyService, IModLogger logger, ICoopSessionProvider coop)
     {
         _diplomacyService = diplomacyService;
         _logger = logger;
@@ -55,7 +55,7 @@ public class AllianceActionHook : IOnAllianceAction
     /// </summary>
     private bool DeferToHost(string action, string aId, string bId)
     {
-        if (!_coop.IsCoopActive) return false;
+        if (!_coop.ShouldDeferToHost) return false;
         _logger.LogDebug(
             $"[Diplomacy][coop] TAOM {action} veto skipped for {aId} <-> {bId} — host is authoritative");
         return true;

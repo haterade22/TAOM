@@ -58,7 +58,7 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
         var careerId = _dataService.GetCareerStringId(hero.StringId);
         if (string.IsNullOrEmpty(careerId)) return;
 
-        if (AnyActiveCareerQuest()) return;   // one career quest at a time
+        if (AnyActiveCareerQuestFor(hero)) return;   // one career quest at a time, PER PLAYER
 
         for (int tier = 1; tier <= 3; tier++)
         {
@@ -116,13 +116,24 @@ public class CareerQuestCampaignBehavior : CampaignBehaviorBase
         _logger.LogInfo($"CareerQuest: '{def.Id}' declined by {hero.Name}");
     }
 
-    private bool AnyActiveCareerQuest()
+    /// <summary>
+    /// "One career quest at a time" is a PER-PLAYER rule, but <c>QuestManager.Quests</c> is global.
+    ///
+    /// CO-OP: a client loads the host's save, so the host's in-progress career quest is present in
+    /// the client's quest manager. Scanning unfiltered meant a client could never be offered a
+    /// career quest while the host had one running — and this behaviour is deliberately left
+    /// ungated precisely because career quests ARE per-player, so an unfiltered scan quietly broke
+    /// the justification for leaving it ungated. Filtering by owner is what makes that claim true.
+    /// (Codex P2, 2026-08-01.)
+    /// </summary>
+    private bool AnyActiveCareerQuestFor(Hero hero)
     {
         var qm = Campaign.Current?.QuestManager;
-        if (qm == null) return false;
+        if (qm == null || hero == null) return false;
         foreach (var q in qm.Quests)
         {
-            if (q is CareerQuest cq && cq.IsOngoing) return true;
+            if (q is CareerQuest cq && cq.IsOngoing && cq.OwnerHeroStringId == hero.StringId)
+                return true;
         }
         return false;
     }

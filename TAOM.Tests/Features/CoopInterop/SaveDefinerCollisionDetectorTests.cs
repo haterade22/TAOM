@@ -17,8 +17,11 @@ namespace TAOM.Tests.Features.CoopInterop;
 /// guaranteed, unattributable startup crash.
 ///
 /// The detector groups by base id and reports before the engine crashes on it. Base-id granularity
-/// is the correct level for a warning: reading class ids would require invoking DefineClassTypes()
-/// on third-party definers, which is not safe to do speculatively.
+/// is a HEURISTIC, not proof: the engine keys on `_saveBaseId + saveId`, so two definers sharing a
+/// base id coexist fine when their per-type offsets differ. Reading the real ids would mean invoking
+/// DefineClassTypes() on third-party definers against a synthetic DefinitionContext, which is not
+/// safe to do speculatively — so the heuristic stays, but it is reported as a lead rather than a
+/// verdict, and groups made up entirely of game-shipped assemblies are dropped (see below).
 /// </summary>
 [TestClass]
 public class SaveDefinerCollisionDetectorTests
@@ -27,6 +30,75 @@ public class SaveDefinerCollisionDetectorTests
 
     private static SaveDefinerRecord Record(string assembly, string type, int baseId) =>
         new(assembly, type, baseId);
+
+    // --- Engine-only groups are NOT collisions (false positive, 2026-08-01) --------------------
+    //
+    // Base-id equality is a HEURISTIC, not proof. The real save id is `_saveBaseId + saveId`
+    // (SaveableTypeDefiner.AddClassDefinition, v1.4.7), so two definers can share a base id and
+    // never collide as long as their offsets differ — and vanilla does exactly that:
+    // SaveableCoreTypeDefiner (TaleWorlds.Core) and SaveableObjectSystemTypeDefiner
+    // (TaleWorlds.ObjectSystem) both use base id 10000, in a game that starts fine.
+    //
+    // Because they are in different assemblies, the old detector took the cross-assembly branch and
+    // told players "Two mods claim the same save-system id range... Disable one of them", naming two
+    // vanilla engine types. It sat at the top of every user log we collected. A diagnostic that
+    // cries wolf is worse than no diagnostic: it discredits every other line the guard emits.
+    //
+    // Rule: only report a group that contains at least one NON-engine assembly, because that is the
+    // only thing a player can act on.
+
+    [TestMethod]
+    public void Detect_TwoVanillaDefinersSharingBaseId_ReportsNothing()
+    {
+        // The exact real-world pair, with the real base id.
+        var result = _sut.Detect(new List<SaveDefinerRecord>
+        {
+            Record("TaleWorlds.Core", "TaleWorlds.Core.SaveableCoreTypeDefiner", 10000),
+            Record("TaleWorlds.ObjectSystem", "TaleWorlds.ObjectSystem.SaveableObjectSystemTypeDefiner", 10000),
+        });
+
+        Assert.AreEqual(0, result.Count,
+            "two vanilla definers sharing a base id is legal and must never be reported");
+    }
+
+    [TestMethod]
+    public void Detect_ModSharingBaseIdWithVanilla_IsStillReported()
+    {
+        // Actionable: the player can disable the mod.
+        var result = _sut.Detect(new List<SaveDefinerRecord>
+        {
+            Record("TaleWorlds.Core", "TaleWorlds.Core.SaveableCoreTypeDefiner", 10000),
+            Record("SomeMod", "SomeMod.Definer", 10000),
+        });
+
+        Assert.AreEqual(1, result.Count);
+    }
+
+    [TestMethod]
+    public void Detect_TwoModsSharingBaseId_IsStillReported()
+    {
+        var result = _sut.Detect(new List<SaveDefinerRecord>
+        {
+            Record("TAOM", "TAOM.FormationPresetSaveableTypeDefiner", 726900601),
+            Record("CompanionTactics", "CompanionTactics.Definer", 726900601),
+        });
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsTrue(result[0].IsCrossAssembly);
+    }
+
+    [TestMethod]
+    public void Detect_SandBoxModulesCountAsEngine_NotPlayerActionable()
+    {
+        // SandBox / StoryMode ship with the game; a player cannot disable them either.
+        var result = _sut.Detect(new List<SaveDefinerRecord>
+        {
+            Record("SandBox", "SandBox.Definer", 55000),
+            Record("StoryMode", "StoryMode.Definer", 55000),
+        });
+
+        Assert.AreEqual(0, result.Count);
+    }
 
     [TestMethod]
     public void Detect_EmptyInput_ReturnsNoCollisions()

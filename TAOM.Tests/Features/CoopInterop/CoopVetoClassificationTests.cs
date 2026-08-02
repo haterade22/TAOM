@@ -280,11 +280,24 @@ public class CoopVetoClassificationTests
     // flag. This is a coarse source check on purpose — it cannot prove the gate is CORRECT, only
     // that the author was forced to think about it. Correctness is pinned by the per-hook tests.
 
+    // Predicates a veto CONSULTS...
     private static readonly string[] DivergenceProneRules =
     {
         "IsWarAllowed",
         "ShouldBlockPeace",
         "IsAllianceDecisionAllowed",
+    };
+
+    // ...and mutators a path INVOKES without consulting anything. The first version of this test
+    // scanned only the predicates, and that is precisely how `DiplomacyBehavior` hid: its
+    // OnSessionLaunched calls EnforcePermanentAlliances, which reaches MakePeace/StartAlliance
+    // straight from TAOM config and touches none of the three predicates. Codex found it (P1) after
+    // this test had already passed over it. A divergence surface is not only "decisions that read
+    // drifting state" — it is also "writes that happen on every peer".
+    private static readonly string[] DivergenceProneMutators =
+    {
+        "EnforcePermanentAlliances",
+        "EstablishInitialAlliances",
     };
 
     [TestMethod]
@@ -311,11 +324,16 @@ public class CoopVetoClassificationTests
                 or "WarOfTheRingService" or "IWarOfTheRingService")
                 continue;
 
-            var callsRule = DivergenceProneRules.Any(r =>
-                text.Contains("." + r + "("));
+            var callsRule = DivergenceProneRules.Any(r => text.Contains("." + r + "("))
+                            || DivergenceProneMutators.Any(m => text.Contains("." + m + "("));
             if (!callsRule) continue;
 
-            var readsCoop = text.Contains("IsCoopActive")
+            // ShouldDeferToHost is the CORRECT token for shared-world decisions; IsCoopActive and
+            // IsAuthority are accepted because other call sites legitimately use them, but see
+            // ICoopSessionProvider — presence alone wrongly disables TAOM for a solo player who
+            // merely has a co-op module enabled, and for the host itself.
+            var readsCoop = text.Contains("ShouldDeferToHost")
+                            || text.Contains("IsCoopActive")
                             || text.Contains("CoopPresence")
                             || text.Contains("IsAuthority");
 

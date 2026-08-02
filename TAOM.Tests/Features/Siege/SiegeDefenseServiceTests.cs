@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Siege;
 using TAOM.Features.Siege.Models;
 
@@ -15,6 +16,7 @@ public class SiegeDefenseServiceTests
     private ISiegeDefenseSettingsProvider _settings;
     private IPlayerContextAdapter _playerContext;
     private IModLogger _logger;
+    private ICoopSessionProvider _coopSession;
     private SiegeDefenseService _sut;
 
     [TestInitialize]
@@ -50,7 +52,12 @@ public class SiegeDefenseServiceTests
         };
         _configProvider.LoadConfig().Returns(config);
 
-        _sut = new SiegeDefenseService(_configProvider, _settings, _playerContext, _logger);
+        // Authority by default: every pre-existing assertion in this class describes
+        // singleplayer / host behaviour. The client path is pinned separately.
+        _coopSession = Substitute.For<ICoopSessionProvider>();
+        _coopSession.IsAuthority.Returns(true);
+        _coopSession.IsCoopClient.Returns(false);
+        _sut = new SiegeDefenseService(_configProvider, _settings, _playerContext, _logger, _coopSession);
     }
 
     // --- IsWatchedSiege: player kingdom ---

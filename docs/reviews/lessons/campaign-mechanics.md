@@ -77,6 +77,31 @@ an open bypass to the identical call.
 - **Source:** `docs/reviews/rca-coop-authority-gating-2026-08-01.md` (data-flow agent HIGH #1 and #2;
   no other agent found either, despite all five reading the same files)
 
+### Presence is not authority: pick the co-op predicate by what the code DECIDES
+
+TAOM has three co-op predicates and they are not interchangeable. Gating on module PRESENCE
+(`ICoopPresenceProvider.IsCoopActive`) is correct only for one-shot startup decisions such as UI
+registration. Anything that mutates or decides shared world state must use a session-aware
+predicate.
+
+- **Why missed:** presence is the obvious signal and reads naturally ("a co-op mod is running, so
+  yield"). But it is process-constant — true whenever the module is merely ENABLED. Eight diplomacy
+  and time-acceleration sites used it, which silently disabled TAOM's War of the Ring rules for two
+  populations nobody was thinking about: a SOLO player who happened to have the Coop module enabled,
+  and the co-op HOST, which is precisely the peer that should be enforcing them. The inverse error is
+  just as easy: swapping wholesale to `IsAuthority` breaks BannerlordTogether, because that predicate
+  fails open and reports every BT peer authoritative, so nothing gates at all. One reviewer proposed
+  exactly that fix; the code already carried a comment explaining why it was wrong.
+- **Prevent:** choose by question, not by habit — `IsAuthority` for "may I run this world-mutating
+  handler"; `ShouldDeferToHost` for "should I yield this shared-world DECISION" (keys on whether the
+  role probe resolved, so it stays safe for co-op mods TAOM cannot probe); `MayWriteSaveBackedState`
+  before writing any field that round-trips through a `SyncData` key. That last one exists because
+  `SiegeDefenseService.GrantReward` set the save-serialized `RewardClaimed` on every peer, so a
+  client claiming its own siege reward wrote per-peer state into the host's save record. When adding
+  a co-op gate, state which of the three questions you are answering before writing the condition.
+- **Source:** `docs/reviews/rca-coop-authority-gating-2026-08-01.md` (Codex pass: 4 HIGH, of which
+  the presence/session confusion accounted for two plus the LOW)
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
