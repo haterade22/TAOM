@@ -131,6 +131,41 @@ Not done, and listed in the feature doc rather than implied: no MCM settings par
 ModuleData content hash, no replication of TAOM's own campaign state after the join baseline, and no
 dedicated-server support. End-to-end co-op remains unverified.
 
+### fix(build): make a mismatched TAOM/Dependencies pair impossible to ship silently
+
+The version mismatch behind the first half of #371 could not be detected by anyone. Both assemblies
+carried frozen versions on every build ever produced - TAOM 2.0.0.0, TAOM.Dependencies 0.1.0.0 - and
+the module `<Version>` in `SubModule.xml` was equally static, so .NET bound any pair without
+complaint and failed later at the member level. `Main/_Module/SubModule.xml` did not declare
+TAOM.Dependencies as a dependency at all, so the launcher had nothing to check either. The only thing
+distinguishing a current DLL from a two-week-old one was its file timestamp, which does not survive a
+zip and a download.
+
+Three changes close that. Each assembly now carries a per-build `InformationalVersion` stamp, and
+both modules log theirs at startup with a verdict - a pairing more than an hour apart is reported as
+a mismatch naming #371, which is what the shipped 07-31/07-17 pair would have produced. TAOM now
+declares `<DependedModule Id="TAOM.Dependencies" />`, the element the vanilla launcher actually
+parses, so a missing or wrong-ordered Dependencies is blocked at the launcher instead of surfacing as
+bind-posed characters. And the Dependencies module version moved to v2.0.6 with a matching pin in
+TAOM's metadata block, so BUTR/BLSE launchers can enforce it too.
+
+`AssemblyVersion` is deliberately left fixed - changing it alters binding identity for no benefit
+here, while `InformationalVersion` is free-form and costs nothing.
+
+One thing worth recording, because the tests did not catch it: the stamp parser was written against
+the format the code assumed and passed its unit tests, then failed against every real assembly -
+`Bannerlord.BuildResources` appends its own commit-SHA suffix, so the timestamp is not at the end of
+the string. Caught by running the parser against the actual built DLLs rather than a literal. There
+is now a test using the real emitted string verbatim.
+
+### chore(herorace): retire the tableau investigation scaffolding
+
+The per-race action-set probe, the environment dump and the action-index health probe did their job -
+they identified the `ActionIndexCache` static-initialiser race - and are removed (293 lines). What
+stays is what the repair and the tableau patches need to state in one line whether a session hit the
+fault: the repair's own verdict, and the error paths that fire only when a preview actually resolves
+badly. The rest comes out once #371 is confirmed closed in the wild.
+
 ### fix(herorace): characters no longer render lying flat in every UI tableau
 
 The real cause of the "bendy man" reports, and it was not the DLL version mismatch closed in #371 —

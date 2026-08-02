@@ -20,6 +20,19 @@ public class BuildStampReportTests
     }
 
     [TestMethod]
+    public void TryParseStamp_RealBuildOutput_WithCommitShaSuffix_Parses()
+    {
+        // The ACTUAL string emitted by the build, read back off TAOM.dll with reflection.
+        // Bannerlord.BuildResources appends ".{commit-sha}" of its own accord, so the stamp is NOT
+        // at the end of the string. The first version of this parser did TrimEnd('Z') and failed on
+        // every real assembly while these tests passed — because they asserted the format the code
+        // assumed rather than the one the build produces. This case is that format, verbatim.
+        const string real = "build.20260802-013132Z.46ce6436e1b538a7734a23713ec818a23afec93d";
+        Assert.IsTrue(BuildStampReport.TryParseStamp("+" + real, out var stamp));
+        Assert.AreEqual(new DateTime(2026, 8, 2, 1, 31, 32, DateTimeKind.Utc), stamp);
+    }
+
+    [TestMethod]
     public void TryParseStamp_NoStampMarker_ReturnsFalse()
     {
         // Pre-2026-08-01 assemblies have a bare version and must degrade to "cannot verify",

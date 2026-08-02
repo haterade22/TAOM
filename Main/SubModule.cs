@@ -1004,11 +1004,6 @@ public class SubModule : MBSubModuleBase
             }
         }
 
-        // Dump the environment and the full race -> monster -> action-set table once the preview
-        // patches are in place. The defect does not reproduce on the dev machine, so the environment
-        // dump exists to capture what actually differs on an affected one.
-        Features.HeroRace.Diagnostics.TableauDiagnostics.DumpEnvironment();
-        Features.HeroRace.Diagnostics.TableauDiagnostics.ProbeActionSets("OnGameInitializationFinished");
 
         // Repair ActionIndexCache's static indices if they were baked before action types loaded —
         // the bind-pose ("bendy man") fault. Self-gating: it checks MBAnimation (never

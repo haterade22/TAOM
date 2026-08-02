@@ -14,17 +14,22 @@ namespace TAOM.Core.Diagnostics;
 /// versions (2.0.0.0 / 0.1.0.0) on every build ever produced, so .NET bound any pair without
 /// complaint and nothing on disk could tell a current DLL from a two-week-old one.
 ///
-/// Directory.Build.props now stamps <c>InformationalVersion</c> as
-/// <c>&lt;version&gt;+build.yyyyMMdd-HHmmssZ</c>. Both modules are produced by the same build, so
-/// their stamps should agree to within seconds; a gap of hours means a hand-copied module.
+/// Directory.Build.props stamps <c>InformationalVersion</c> as <c>build.yyyyMMdd-HHmmssZ</c>;
+/// Bannerlord.BuildResources then appends <c>.{commit-sha}</c>, so the stamp is NOT at the end of
+/// the string. Both modules are produced by the same build, so their stamps should agree to within
+/// seconds; a gap of hours means a hand-copied module.
 /// </summary>
 public static class BuildStampReport
 {
     /// <summary>Stamps further apart than this almost certainly come from different builds.</summary>
     public static readonly TimeSpan MismatchTolerance = TimeSpan.FromHours(1);
 
-    private const string StampMarker = "+build.";
+    // "build." not "+build.": the marker must match whether or not a version prefix precedes it,
+    // and the suffix separator the build tooling appends varies ('.' or '+') depending on whether
+    // the string already contains a '+'. Matching the bare token is stable across both.
+    private const string StampMarker = "build.";
     private const string StampFormat = "yyyyMMdd-HHmmss";
+    private const int StampLength = 15;   // yyyyMMdd-HHmmss
 
     /// <summary>
     /// Extracts the build timestamp from an <c>InformationalVersion</c>. Pure, so the parsing and
@@ -38,8 +43,16 @@ public static class BuildStampReport
         int i = informationalVersion!.IndexOf(StampMarker, StringComparison.Ordinal);
         if (i < 0) return false;
 
-        string raw = informationalVersion.Substring(i + StampMarker.Length).TrimEnd('Z');
-        return DateTime.TryParseExact(raw, StampFormat, CultureInfo.InvariantCulture,
+        // Fixed-width slice, NOT a trim. Bannerlord.BuildResources appends its own ".{commit-sha}"
+        // suffix to InformationalVersion, so the real string is "build.20260802-013132Z.46ce6436…".
+        // An earlier version did Substring(marker).TrimEnd('Z'), which left the whole SHA attached
+        // and failed to parse every real assembly — while the unit tests passed, because they
+        // asserted against the format this code ASSUMED rather than the one the build emits.
+        string tail = informationalVersion.Substring(i + StampMarker.Length);
+        if (tail.Length < StampLength) return false;
+
+        return DateTime.TryParseExact(tail.Substring(0, StampLength), StampFormat,
+            CultureInfo.InvariantCulture,
             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out stamp);
     }
 
@@ -81,10 +94,15 @@ public static class BuildStampReport
         if (asm == null) return "<not loaded>";
         try
         {
+            // Report BOTH: Directory.Build.props is imported before the csproj's own
+            // PropertyGroup, so $(Version) is not yet defined there and cannot be folded into the
+            // stamp. The assembly version carries the product version; the informational version
+            // carries the per-build identity.
+            string asmVer = asm.GetName().Version?.ToString() ?? "<unknown>";
             var attr = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
             return string.IsNullOrEmpty(attr?.InformationalVersion)
-                ? asm.GetName().Version?.ToString() ?? "<unknown>"
-                : attr!.InformationalVersion;
+                ? asmVer
+                : $"v{asmVer} {attr!.InformationalVersion}";
         }
         catch { return "<unreadable>"; }
     }

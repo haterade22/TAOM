@@ -21,7 +21,7 @@
 		  question. Set TaomBuildStamp explicitly for a reproducible build.
 		-->
 		<TaomBuildStamp Condition="'$(TaomBuildStamp)' == ''">$([System.DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss'))Z</TaomBuildStamp>
-		<InformationalVersion>$(Version)+build.$(TaomBuildStamp)</InformationalVersion>
+		<InformationalVersion>build.$(TaomBuildStamp)</InformationalVersion>
 
 		<!--
 		  GameFolder resolution order:

@@ -51,19 +51,10 @@ public class CharacterSpawnerService : ICharacterSpawnerService
 
     public void InitWithCharacter(CharacterSpawner spawner, CharacterCode characterCode, bool useBodyProperties = false)
     {
-        // Diagnostics 2026-07-31: re-probe at the first REAL tableau construction. If this disagrees
-        // with the startup probe, action sets were still merging after OnGameInitializationFinished.
-        Diagnostics.TableauDiagnostics.ProbeActionSets("first-tableau");
 
-        // 2026-08-01: the ActionIndexCache static/live comparison. Safe here because this method
-        // already resolves actions, so action types are loaded by definition.
-        //
-        // This is a CONFIRMATION, not the primary evidence: SubModule.OnGameInitializationFinished
-        // and the CharacterTableau patches will normally have repaired already, so a "healthy"
-        // verdict here is expected. The repair's own "REPAIRED n" line is what records that the
-        // fault occurred. Note also that this path never reads a poisoned static itself — it
-        // resolves via live Create() calls below — so it cannot be the backstop for the fault.
-        Diagnostics.TableauDiagnostics.ProbeActionIndexHealth("first-tableau");
+        // Late backstop for the ActionIndexCache repair. This path resolves its own actions via
+        // live Create() calls, so it never reads a poisoned static itself — it cannot be the primary
+        // fix site, only a retry.
         ActionIndexCacheRepair.TryEnsureRepaired("first-tableau");
 
         GameEntity agentEntity = ReflectionHelper.GetFieldValue<CharacterSpawner, GameEntity>(spawner, "_agentEntity");
