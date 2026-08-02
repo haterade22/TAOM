@@ -150,6 +150,20 @@ A protected/exempt list whose comment says "mirrors X" is a claim, and comments 
   the test must use that mod's real Harmony id / assembly name, not a plausible-looking one.
 - **Source:** `docs/reviews/rca-coop-interop-2026-07-31.md` finding #4
 
+### A safety guard needs its own self-test, or it can silently disable the fix it protects
+
+The `ActionIndexCache` repair refused to write any field whose looked-up name the engine did not echo back via `GetName()` — a guard against writing a WRONG animation index into a vanilla static. But nothing verified that native names round-trip exactly. If they did not (different case, a canonical form, or the first of several aliases sharing an index), the guard would reject **every** field, the repair would write nothing, and the pass would then fall through to `_completed = true` and report success. A guard added to make the fix safer could therefore make it a permanent silent no-op — and the log would say "name-mismatched", pointing at the data rather than at the guard.
+- **Why missed:** the guard was added in response to a review finding, and review-driven additions get less scrutiny than original code — it reads as pure risk-reduction, so "what if this rejects everything?" never gets asked. The self-review also framed the guard as the conservative option, which made its failure mode invisible.
+- **Prevent:** any guard that can reject 100% of its inputs needs (a) a **self-test against a known-good input** before it is trusted — if the guard fails its own probe, disable the guard rather than the feature, and log which happened; and (b) a distinct outcome for "rejected everything" versus "nothing needed doing", because latching success on an all-rejected pass converts a recoverable state into a permanent one. Ask of every new guard: *if this returns false for every input, what does the caller do, and is that distinguishable from success?*
+- **Source:** Codex adversarial review S1, `docs/reviews/raw/codex-adversarial-actionindexcache-repair-2026-08-01.md`; `Main/Features/HeroRace/ActionIndexCacheRepair.cs`
+
+### Bounded retries: "return false so a later phase retries" is a per-frame rescan if the caller is a hot path
+
+Fixing a deep-review finding (a completion flag latched before the work, so failures were permanent) introduced the opposite defect: `RepairFields` returned `false` on failure with no attempt cap, while its primary caller was a Harmony **prefix on `CharacterTableau.RefreshCharacterTableau`**. An unrecoverable failure would therefore re-run a 215-field reflection + native scan on every tableau refresh for the rest of the session.
+- **Why missed:** the fix was evaluated against the finding it addressed ("failures must be retryable"), not against the call sites. The reviewer who found the latch bug did not own the call-site placement, and the call site had moved to a hot path in the *same* changeset.
+- **Prevent:** when converting a one-shot to a retryable operation, bound the attempts and check what invokes it — "retry later" is only safe if "later" is rare. Re-read the call sites after any change to a completion/latch flag, especially when the same changeset also moved where the operation is invoked from.
+- **Source:** Codex adversarial review S3, same file
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

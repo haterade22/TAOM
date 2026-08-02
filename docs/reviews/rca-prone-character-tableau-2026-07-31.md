@@ -158,6 +158,22 @@ The first cut of the repair had three HIGH defects. All are fixed; each is a dis
 | F6 | MED | `_completed = true` was set **before** the work, so a failure inside `RepairFields` permanently disabled retry *and* returned `true` | `_completed` is set only after a clean pass; failures return `false` so a later phase retries |
 | F10 | LOW | "~700 fields" was an unverified figure that shipped into a user-facing log line | Corrected to 215; the log now reports the **actual enumerated count** rather than any literal |
 
+### Codex adversarial pass (2026-08-01) — one P1 in the deep-review's own fix
+
+Dispatched specifically at the two things the 5-agent pass could not prove. Raw:
+`docs/reviews/raw/codex-adversarial-actionindexcache-repair-2026-08-01.md`.
+
+| Suspect | Verdict | Outcome |
+|---|---|---|
+| **S1** round-trip guard may reject everything | **CONFIRMED RISK — P1** | `GetName()` is a native call and nothing proved names round-trip exactly. If they don't, the guard rejects every field, the repair writes nothing — **and the pass still fell through to `_completed = true`, reporting success.** A guard added to make the fix safer could have made it a permanent silent no-op. Fixed: the guard now self-tests against a known-good action and disables *itself* (not the repair) if the engine doesn't echo names back; and a repaired-nothing-because-all-rejected pass returns failure instead of latching |
+| **S2** initonly reflection writes | Mostly disputed | net472 full-trust permits it; field access is `ldsfld` not a baked constant, so an already-JITted read observes the write. Residual risk covered by the existing write-then-re-read check |
+| **S3** unbounded retry | **CONFIRMED** | Fixing the deep-review's F6 (latch-before-work) introduced the opposite defect: a permanent failure would re-run the 215-field scan on every tableau refresh, because the call site had moved to a Harmony prefix in the same changeset. Fixed with a 3-attempt cap |
+| **S4** gate could poison the type | Disputed | `MBAnimation` has no cctor and only touches `ActionIndexCache` on the empty-name branch; the gate passes a non-empty literal. The design holds |
+| **S5** re-entrancy | Partly confirmed | `_completed` was checked under the lock, then released while the repair ran — two threads could enter concurrently and both mutate vanilla statics. Fixed by running the pass under the lock |
+| **S6** wrong-index write | Partly disputed | `act_none` is the only intentionally-negative field; `act_raid_jump → act_raid_jump_1` independently re-confirmed (third agent to find it) |
+
+**The lesson worth keeping** is S1's shape: a guard introduced *in response to a review* got less scrutiny than original code, because it reads as pure risk-reduction. Recorded in `lessons/testing-qa.md` — any guard that can reject 100% of its inputs needs a self-test, and "rejected everything" must be distinguishable from "nothing to do".
+
 ## Open thread (CLOSED — see addendum above)
 
 `CharacterTableau.GetIdleAction()` (decompiled from

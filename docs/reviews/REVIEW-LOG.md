@@ -1537,6 +1537,52 @@ Suite 4,386 green + validator PASS + 30/30 tool tests. In-game education-screen 
 
 ---
 
+## Review 78 — ActionIndexCache repair (#371) deep-review + Codex adversarial pass (2026-08-01)
+
+**Scope:** `ActionIndexCacheRepair.cs` (new), `TableauDiagnostics.cs`, the CharacterTableau patches,
+`CharacterSpawnerService.cs`, `SubModule.cs` call site. A fix that writes to VANILLA engine static
+fields by reflection — highest blast radius of any change reviewed here.
+
+**Deep review (5 agents): 18 findings, 4 HIGH, all fixed pre-commit.** The three that mattered:
+(1) the repair's core assumption "field name == action name" is FALSE in v1.4.7 —
+`act_raid_jump = Create("act_raid_jump_1")`, found by an agent diffing all 214 cctor call sites
+programmatically rather than eyeballing; latent risk was writing a WRONG animation index, a silent
+corruption worse than the -1 it replaces. (2) The retry was wired to `CharacterSpawnerService`, which
+resolves via live `Create()` calls (so never reads a poisoned static) and is skipped for race 0 — the
+human case players reported; the readers had no backstop. (3) The deferred path used unthrottled
+`LogAlways` on a per-tableau call site, reintroducing the `ae2ed426` 6.4 MB log-flood on exactly the
+affected machines. Also: `MBGlobals.GetActionSet` THROWS on a miss rather than returning invalid,
+making three `!IsValid` branches dead and firing an engine assert per miss during the startup probe.
+
+**Codex adversarial pass: 1 P1 — in the deep-review's own fix.** S1 CONFIRMED: the round-trip write
+guard (added in response to the deep review) could reject 100% of fields if native names don't echo
+back exactly, and the pass still latched `_completed = true` and reported success — a guard capable of
+turning the fix into a permanent silent no-op. Fixed: the guard self-tests against a known-good action
+and disables *itself* rather than the repair; an all-rejected pass returns failure. S3 CONFIRMED:
+fixing the deep-review's latch-before-work finding introduced an unbounded per-refresh 215-field
+rescan, because the call site had moved to a Harmony prefix in the same changeset (3-attempt cap
+added). S5 partly confirmed (re-entrancy — pass now runs under the lock). S2/S4 disputed with
+evidence; S6 re-confirmed the `act_raid_jump` divergence independently.
+
+**Scoring:** Codex found what a 5-agent panel could not, because the panel had *authored* the guard it
+needed to attack. Both passes independently found `act_raid_jump` (3 agents total). Value of the
+adversarial pass here was high and specific — it was pointed at the two claims the panel had rated
+`[Likely]` rather than proven.
+
+**Self-correction:** "~700 static fields" was asserted in code comments, the RCA, the CHANGELOG and
+issue #371 — inferred from cctor size, never counted. Actual: **215**. Corrected everywhere; the log
+now reports the actual enumerated count rather than any literal.
+
+**Process:** issue #371 REOPENED (the version-mismatch close was correct but incomplete — its own
+closing comment flagged the unexplained intermittency, which this mechanism explains). RCA addendum:
+`docs/reviews/rca-prone-character-tableau-2026-07-31.md`. Lessons: 2 in `lessons/animation-skeleton.md`
+(explicit-cctor trap; wire repairs to the READERS), 2 in `lessons/testing-qa.md` (guards need a
+self-test; bounded retries). Suite 4,748 green. Commit `19ec0e1e` + follow-up. **Root cause confirmed
+as the mechanism, NOT yet confirmed resolved in the wild** — the fault is intermittent, so it needs
+several consecutive clean relaunches from an affected user.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

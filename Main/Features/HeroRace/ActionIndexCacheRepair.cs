@@ -35,6 +35,14 @@ public static class ActionIndexCacheRepair
     private static readonly object _gate = new();
     private static bool _completed;
 
+    /// <summary>
+    /// Bounds retries. The primary call site is a prefix on <c>CharacterTableau.RefreshCharacterTableau</c>,
+    /// so an unrecoverable failure that returned "retry me" would re-run the whole 215-field
+    /// reflection + native scan on every tableau refresh for the rest of the session.
+    /// </summary>
+    private static int _attempts;
+    private const int MaxAttempts = 3;
+
     /// <summary>Sentinel field that is legitimately -1 and must never be "repaired".</summary>
     private const string NoneFieldName = "act_none";
 
@@ -92,6 +100,7 @@ public static class ActionIndexCacheRepair
             lock (_gate)
             {
                 if (_completed) return true;
+                if (_attempts >= MaxAttempts) return false;
             }
 
             // GATE — must not touch ActionIndexCache. MBAnimation is a separate struct with no
@@ -123,7 +132,19 @@ public static class ActionIndexCacheRepair
                 return false;
             }
 
-            return RepairFields(phase);
+            // Whole pass under the lock: the check-then-act above otherwise let two threads into
+            // RepairFields concurrently, both mutating the same vanilla statics. Cheap because the
+            // body runs at most MaxAttempts times per session.
+            lock (_gate)
+            {
+                if (_completed) return true;
+                if (_attempts >= MaxAttempts) return false;
+                _attempts++;
+
+                bool ok = RepairFields(phase, IsRoundTripUsable());
+                if (ok) _completed = true;
+                return ok;
+            }
         }
         catch (Exception e)
         {
@@ -133,10 +154,40 @@ public static class ActionIndexCacheRepair
     }
 
     /// <summary>
+    /// Self-test for the round-trip write guard, run against an action we already know resolves.
+    ///
+    /// The guard rejects any write whose looked-up name the engine does not echo back via
+    /// <c>GetName()</c>. That protects against writing a wrong animation index — but it is only
+    /// meaningful if native names round-trip EXACTLY. If they do not (different case, a canonical
+    /// form, or the first of several aliases sharing an index), the guard would reject every field,
+    /// the repair would write nothing, and the failure would look like "all names mismatched"
+    /// instead of "the guard is broken". Probing it once with a known-good action turns that silent
+    /// total failure into a decision we can log.
+    /// </summary>
+    private static bool IsRoundTripUsable()
+    {
+        try
+        {
+            var probe = ActionIndexCache.Create(GateProbeAction);
+            if (probe.Index < 0) return false;
+            bool usable = string.Equals(probe.GetName(), GateProbeAction, StringComparison.Ordinal);
+            if (!usable)
+            {
+                TableauDiagnostics.LogError(
+                    $"ActionIndexCacheRepair: engine does not round-trip action names " +
+                    $"('{GateProbeAction}' came back as '{probe.GetName()}'), so the write guard is " +
+                    "unusable on this build. Falling back to the field→action name map alone.");
+            }
+            return usable;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
     /// Returns true only when the pass genuinely completed, so a failure can be retried from a later
     /// phase rather than being latched as "done".
     /// </summary>
-    private static bool RepairFields(string phase)
+    private static bool RepairFields(string phase, bool roundTripUsable)
     {
         FieldInfo[] fields;
         try
@@ -182,14 +233,18 @@ public static class ActionIndexCacheRepair
                 // is supposed to hold, so we leave it alone. -1 is recoverable; a wrong animation
                 // index is a silent, non-crashing corruption.
                 var candidate = ActionIndexCache.Create(actionName);
-                string roundTrip;
-                try { roundTrip = candidate.GetName(); } catch { roundTrip = string.Empty; }
+                if (candidate.Index < 0) { unresolved++; continue; }
 
-                if (candidate.Index < 0 || !string.Equals(roundTrip, actionName, StringComparison.Ordinal))
+                if (roundTripUsable)
                 {
-                    mismatched++;
-                    firstMismatch ??= $"{field.Name} (looked up '{actionName}', engine returned '{roundTrip}')";
-                    continue;
+                    string roundTrip;
+                    try { roundTrip = candidate.GetName(); } catch { roundTrip = string.Empty; }
+                    if (!string.Equals(roundTrip, actionName, StringComparison.Ordinal))
+                    {
+                        mismatched++;
+                        firstMismatch ??= $"{field.Name} (looked up '{actionName}', engine returned '{roundTrip}')";
+                        continue;
+                    }
                 }
 
                 field.SetValue(null, candidate);
@@ -241,7 +296,18 @@ public static class ActionIndexCacheRepair
             return false;   // allow a later phase to retry
         }
 
-        lock (_gate) { _completed = true; }
+        // A pass that repaired nothing BECAUSE the write guard rejected everything is not success.
+        // Latching here would leave the fields poisoned for the session while reporting "done" —
+        // the guard silently disabling the fix it exists to protect. Retry is bounded by
+        // MaxAttempts, so this cannot become a per-refresh rescan.
+        if (repaired == 0 && mismatched > 0)
+        {
+            TableauDiagnostics.LogError(
+                $"ActionIndexCacheRepair ({phase}): repaired NOTHING — all {mismatched} candidate field(s) " +
+                "were rejected by the round-trip write guard. Not latching, so a later phase can retry.");
+            return false;
+        }
+
         return true;
     }
 }
