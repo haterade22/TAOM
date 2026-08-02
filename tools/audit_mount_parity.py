@@ -8,12 +8,20 @@ Compares, at the XML level, every surface a mountable creature exposes to the en
      falls / strikes) + the declared TYPE of each referenced action
   D. action_set element attributes + binding coverage for every action the usage set references
   E. rider partial (as_human_warrior) rows: LOTRLOME (spider) vs Alliance.Wargs (warg)
+  F. chariot vs VANILLA HORSE — the chariot is a ridden vehicle with no behaviour tree, so its
+     reference class is the horse, not the warg. Sections A-E are baselined on the spider and
+     deliberately do not cover it.
 
 Read-only. Prints diffs only (parity rows are counted, not listed).
 Usage: python tools/audit_mount_parity.py
 """
+import glob
+import os
+import re
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
+
+from tpac_clipinfo import parse as parse_clip
 
 GAME = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules"
 LOTR = GAME + r"\LOTRLOME_Armory\ModuleData"
@@ -56,6 +64,22 @@ FILES = {
 }
 
 MOUNTS = ["spider", "warg", "elephant", "mumakil"]
+
+# Section F. The chariot rides on its own 60-bone skeleton that embeds the complete vanilla horse
+# bone set by exact name, has no behaviour tree and no TAOM C# at all -- so the horse is its
+# baseline. Comparing it against the warg (as sections A-E do for the BT predators) produced a
+# false-positive HIGH once already; see docs/reviews/lessons/data-content-cultures.md.
+CHARIOT = {
+    "monster": (LOTR + r"\Monsters\LOTR\lotr_monster_chariot.xml", "chariot"),
+    "usage": (LOTR + r"\monster_usage_sets.xml", "chariot"),
+    "action_set": (LOTR + r"\action_sets.xml", "as_chariot"),
+    "clips": LOTR.replace(r"\ModuleData", r"\Assets\creature\chariot\animations"),
+}
+HORSE = {
+    "monster": (NATIVE + r"\monsters.xml", "horse"),
+    "usage": (NATIVE + r"\monster_usage_sets.xml", "horse"),
+    "action_set": (NATIVE + r"\action_sets.xml", "as_horse"),
+}
 
 
 def parse(path):
@@ -283,6 +307,136 @@ def section_e():
         print(f"      anim DIFF '{x}': spider->{s_sfx[x][1]}  warg->{w_sfx[x][1]}")
 
 
+# ---------- F. chariot vs vanilla horse ----------
+# Absent on the chariot AND on the shipped, battle-proven warg, so absence is survivable and
+# reporting it as a defect is noise. Recorded here so the next reader does not re-derive it:
+# checked 2026-08-02 against all 94 Monster definitions in the load order.
+BENIGN_ABSENT = {
+    "fall_blow_damage_bone",            # also absent on warg
+    "body_rotation_reference_bone",     # absent on 81/94, incl. human and dwarf
+    "standing_chest_height",            # absent on elephant/mumakil
+    "standing_pelvis_height",
+}
+
+
+def elem_by_id(path, tag, want):
+    for e in parse(path).iter(tag):
+        if e.get("id") == want:
+            return e
+    return None
+
+
+def chariot_clips():
+    """Deployed clip inventory: internal resource name -> flag list. Filename != resource name."""
+    inv = {}
+    for f in sorted(glob.glob(os.path.join(CHARIOT["clips"], "*_anm.tpac"))):
+        info = parse_clip(f)
+        if info.get("name"):
+            inv[info["name"]] = info.get("flags", [])
+    return inv
+
+
+def section_f(types):
+    print("=" * 72)
+    print("F. CHARIOT vs VANILLA HORSE (ridden vehicle, no BT -- horse is the reference class)")
+
+    cm = elem_by_id(CHARIOT["monster"][0], "Monster", CHARIOT["monster"][1])
+    hm = elem_by_id(HORSE["monster"][0], "Monster", HORSE["monster"][1])
+    if cm is None or hm is None:
+        print("  SKIPPED: chariot or horse Monster not found")
+        return
+
+    # F1. attribute presence
+    only_horse = sorted(set(hm.attrib) - set(cm.attrib))
+    only_chariot = sorted(set(cm.attrib) - set(hm.attrib))
+    flagged = [k for k in only_horse if k not in BENIGN_ABSENT
+               and not k.startswith(("ragdoll_bone_to_check_for_corpses_", "ragdoll_fall_sound_bone_"))]
+    print(f"  F1 attrs: chariot={len(cm.attrib)} horse={len(hm.attrib)}; "
+          f"{len(only_horse)} horse-only, {len(only_chariot)} chariot-only")
+    for k in flagged:
+        print(f"      ON HORSE, ABSENT ON CHARIOT: {k} = {hm.attrib[k]}   <-- REVIEW")
+    if not flagged:
+        print("      no unexplained horse-only attributes (known-benign set is annotated in source)")
+    for k in only_chariot:
+        print(f"      chariot-only: {k} = {cm.attrib[k]}")
+
+    cf = cm.find("Flags")
+    hf = hm.find("Flags")
+    cfa = dict(cf.attrib) if cf is not None else {}
+    hfa = dict(hf.attrib) if hf is not None else {}
+    for k in sorted(set(cfa) | set(hfa)):
+        cv, hv = cfa.get(k, "-"), hfa.get(k, "-")
+        if cv != hv:
+            print(f"      FLAG DIFF {k:18s} chariot={cv:6s} horse={hv}")
+
+    # F2/F3. usage set
+    cs = elem_by_id(CHARIOT["usage"][0], "monster_usage_set", CHARIOT["usage"][1])
+    hs = elem_by_id(HORSE["usage"][0], "monster_usage_set", HORSE["usage"][1])
+    if cs is None or hs is None:
+        print("  F2/F3 SKIPPED: chariot or horse usage set not found")
+        return
+    missing_verbs = sorted(set(hs.attrib) - set(cs.attrib) - {"id"})
+    print(f"  F2 usage verbs: chariot={len(cs.attrib) - 1} horse={len(hs.attrib) - 1}")
+    for v in missing_verbs:
+        print(f"      verb on horse, absent on chariot: {v} = {hs.attrib[v]}")
+
+    print("  F3 usage row coverage:")
+    for table in ROW_KEYS:
+        crows, hrows = rows_of(cs, table), rows_of(hs, table)
+        miss = [k for k in hrows if k not in crows]
+        print(f"      {table.split('/')[0]}: chariot={len(crows)} horse={len(hrows)}"
+              + (f"  ({len(miss)} horse rows unmatched)" if miss else ""))
+
+    # F4. bindings + deployed clips. These are the two shipped-bug classes: an animation target
+    # that does not exist, and a measured gait clip missing quad_movement. Both compile fine and
+    # then AV natively in a live mission -- see docs/reviews/lessons/animation-skeleton.md.
+    aset = elem_by_id(CHARIOT["action_set"][0], "action_set", CHARIOT["action_set"][1])
+    bound = {a.get("type"): a.get("animation") for a in aset.findall("action")} if aset is not None else {}
+    inv = chariot_clips()
+    print(f"  F4 as_chariot: {len(bound)} bound actions; {len(inv)} deployed clips")
+
+    refs = set()
+    for table in ROW_KEYS:
+        refs.update(rows_of(cs, table).values())
+    refs.update(v for k, v in cs.attrib.items() if k != "id")
+
+    # act_run_forward_adder is referenced by the VANILLA horse usage set too and bound nowhere --
+    # a vanilla-tolerated hole, not a chariot defect. Same exemption section D applies.
+    unbound = sorted(r for r in refs if r and r not in bound
+                     and not r.startswith("act_horse_rider") and r != "act_run_forward_adder")
+    for r in unbound:
+        print(f"      usage action NOT bound in as_chariot: {r} (type={types.get(r, '<UNDECLARED>')})")
+
+    # The rider STANDS in the cart, so its clips are injected into as_human_warrior by
+    # action_sets.xslt rather than bound in as_chariot -- count them as referenced.
+    xslt = CHARIOT["action_set"][0].replace("action_sets.xml", "action_sets.xslt")
+    rider_refs = set()
+    if os.path.exists(xslt):
+        with open(xslt, encoding="utf-8", errors="replace") as fh:
+            rider_refs = {m for m in re.findall(r'animation="(chariot[^"]*)"', fh.read())}
+
+    dangling = sorted({a for a in set(bound.values()) | rider_refs
+                       if a and a.startswith("chariot") and a not in inv})
+    for a in dangling:
+        print(f"      ANIMATION TARGET DOES NOT EXIST: {a}   <-- degenerate record, AVs on use")
+
+    # ONLY the base locomotion table. Upper-body overlays (the *_head look clips) and non-gait
+    # clips must NOT carry quad_movement -- tagging them is itself a defect. Measured-gait clips
+    # that lack it build a NULL native gait structure and AV on the first Skeleton.TickAnimations.
+    gait_refs = set(rows_of(cs, "monster_usage_movements/monster_usage_movement").values())
+    untagged = sorted({bound[r] for r in gait_refs
+                       if r in bound and bound[r] in inv and "quad_movement" not in inv[bound[r]]})
+    for a in untagged:
+        print(f"      GAIT CLIP MISSING quad_movement: {a}   <-- Skeleton.TickAnimations AV")
+
+    if not (unbound or dangling or untagged):
+        print("      every usage action bound, every target resolves, every gait clip tagged")
+
+    orphans = sorted(set(inv) - {a for a in bound.values() if a} - rider_refs)
+    if orphans:
+        print(f"      deployed but never referenced ({len(orphans)}): {', '.join(orphans)}")
+
+
 def main():
     types = load_action_types()
     print(f"action_types loaded: {len(types)} declarations")
@@ -290,6 +444,7 @@ def main():
     section_bc(types)
     section_d(types)
     section_e()
+    section_f(types)
     print("=" * 72)
     print("AUDIT COMPLETE")
 

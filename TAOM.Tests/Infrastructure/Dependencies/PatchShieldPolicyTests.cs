@@ -120,4 +120,49 @@ public class PatchShieldPolicyTests
         // Vanilla singleplayer behaviour is unchanged — the rescue path stays armed.
         Assert.IsTrue(PatchShieldPolicy.ShouldUnpatchForeignOwners(coopActive: false));
     }
+
+    // --- ShouldInstall: full flag x coop truth table ---------------------------------------------
+    //
+    // Player-reported 2026-08-02: shielding BannerlordCoop's AutoSync surface collapsed frame rate.
+    // Every declared method of 43 campaign types gets a finalizer that binds __originalMethod, so
+    // Harmony's wrapper pays GetMethodFromHandle + try/catch per call — the #331 mechanism, on the
+    // campaign hot path. These four rows pin the gate so it cannot regress in either direction.
+
+    [TestMethod]
+    public void ShouldInstall_NoCoopNoFlag_ReturnsTrue()
+    {
+        // The row that matters most: ordinary singleplayer must be completely unaffected.
+        Assert.IsTrue(PatchShieldPolicy.ShouldInstall(coopActive: false, disabledByFlag: false));
+    }
+
+    [TestMethod]
+    public void ShouldInstall_CoopActive_ReturnsFalse()
+    {
+        Assert.IsFalse(PatchShieldPolicy.ShouldInstall(coopActive: true, disabledByFlag: false));
+    }
+
+    [TestMethod]
+    public void ShouldInstall_FlagSet_ReturnsFalse()
+    {
+        // patchshield-disabled.flag keeps working on its own, independent of co-op.
+        Assert.IsFalse(PatchShieldPolicy.ShouldInstall(coopActive: false, disabledByFlag: true));
+    }
+
+    [TestMethod]
+    public void ShouldInstall_CoopActiveAndFlagSet_ReturnsFalse()
+    {
+        // Either condition alone suppresses; together they must not cancel out.
+        Assert.IsFalse(PatchShieldPolicy.ShouldInstall(coopActive: true, disabledByFlag: true));
+    }
+
+    [TestMethod]
+    public void ShouldInstall_IsTheOnlyPathThatSuppressesTheSwallowHalf()
+    {
+        // Documents the division of labour, so a future reader does not "simplify" one into the
+        // other: ShouldUnpatchForeignOwners withholds the STRIP under co-op while the shield is
+        // still installed; ShouldInstall withholds the whole shield, which is what removes the
+        // per-call tax. Under co-op both are now false, by different mechanisms.
+        Assert.IsFalse(PatchShieldPolicy.ShouldUnpatchForeignOwners(coopActive: true));
+        Assert.IsFalse(PatchShieldPolicy.ShouldInstall(coopActive: true, disabledByFlag: false));
+    }
 }

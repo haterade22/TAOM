@@ -53,33 +53,35 @@ public sealed class MissionDiagnosticService : IMissionDiagnosticService
             // Save-game context if a campaign is active. Each subfield is independently
             // guarded — OnGameStart runs before CampaignTime model is ready, so reading
             // CampaignTime.Now there NREs even when Campaign.Current is non-null.
+            // The time half routinely fails HERE and that is expected: the snapshot runs before
+            // Campaign.Models is built, so CampaignTime.GetDayOfSeason divides by a still-zero
+            // TimeTicksPerDay. The hero half survives on its own, and LogMissionStartSnapshot
+            // repeats the line once models are up -- that is where the date actually lands.
             if (Campaign.Current != null && Campaign.Current.GameStarted)
-            {
-                string heroLine = "<no hero>";
-                try
-                {
-                    var hero = Campaign.Current.MainParty?.LeaderHero;
-                    if (hero != null)
-                        heroLine = $"MainHero='{hero.Name}', culture='{hero.Culture?.StringId}', kingdom='{hero.Clan?.Kingdom?.StringId ?? "none"}'";
-                }
-                catch (Exception heroEx) { heroLine = $"<hero read failed: {heroEx.GetType().Name}>"; }
-
-                string timeLine = "<time unavailable>";
-                try { timeLine = $"now={CampaignTime.Now}"; }
-                catch (Exception timeEx) { timeLine = $"<time read failed: {timeEx.GetType().Name}>"; }
-
-                _logger.LogInfo($"[MissionDiag] Campaign: {timeLine}, {heroLine}");
-            }
+                LogCampaignContext();
             else
-            {
                 _logger.LogInfo("[MissionDiag] Campaign: not active or not started yet at snapshot time");
-            }
             _logger.LogInfo("[MissionDiag] === /Session snapshot ===");
         }
         catch (Exception ex)
         {
             _logger.LogWarning($"[MissionDiag] LogSessionSnapshot failed: {ex.GetType().Name}: {ex.Message}");
         }
+    }
+
+    private void LogCampaignContext() =>
+        _logger.LogInfo($"[MissionDiag] Campaign: {CampaignContextFormatter.Describe(ReadCampaignTime, ReadMainHero)}");
+
+    // Both readers are handed to the formatter as delegates so it owns the guarding; they must
+    // stay thin enough that the only thing they can do is throw, which the formatter names.
+    private static string ReadCampaignTime() => $"now={CampaignTime.Now}";
+
+    private static string ReadMainHero()
+    {
+        var hero = Campaign.Current?.MainParty?.LeaderHero;
+        return hero == null
+            ? null
+            : $"MainHero='{hero.Name}', culture='{hero.Culture?.StringId}', kingdom='{hero.Clan?.Kingdom?.StringId ?? "none"}'";
     }
 
     public void LogMissionStartSnapshot(
@@ -101,6 +103,12 @@ public sealed class MissionDiagnosticService : IMissionDiagnosticService
             }
 
             _logger.LogInfo($"[MissionDiag] === Mission start: scene='{sceneName}' behaviors={behaviors.Count} missionLogics={missionLogics.Count} nullSlots={nullCount} ===");
+
+            // Repeated here deliberately. A crash bundle is correlated by save + in-game day, and
+            // the session snapshot cannot read the date (see LogSessionSnapshot). Every mission
+            // logs this block, so every crash that happens in a mission now carries the date.
+            if (Campaign.Current != null && Campaign.Current.GameStarted)
+                LogCampaignContext();
 
             // Dump every MissionBehavior with its classification. The line that
             // immediately precedes a null in MissionLogics is the offender (or one

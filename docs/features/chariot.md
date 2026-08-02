@@ -39,9 +39,17 @@ all clips were tagged; an independent re-check found 2 weren't.
 + their `action_sets.xslt` injection; the 7 already-tagged gaits; the `*_head` look overlays; the
 death/rear/strike substitutions → `chariot_stand_1` (intentional — `CanRear=false`, no `CanAttack`).
 
-**Ranked follow-ups (NOT yet done; full plan in [creature-animation-blender-mcp-workflow.md](../ai-includes/creature-animation-blender-mcp-workflow.md)):**
-1. Parameterize `tools/audit_mount_parity.py` to cover the chariot vs the **vanilla-horse** baseline
-   (chariot is absent from its `MOUNTS` list — the RCA's named pending follow-up).
+**Ranked follow-ups (full plan in [creature-animation-blender-mcp-workflow.md](../ai-includes/creature-animation-blender-mcp-workflow.md)):**
+1. ✅ **DONE 2026-08-02** — `tools/audit_mount_parity.py` section F now audits the chariot against
+   the **vanilla-horse** baseline. It re-checks, from the deployed artifacts rather than from this
+   doc's claims, the two failure modes that AV natively: every `animation=` target resolves to a
+   real clip, and every clip bound in `monster_usage_movements` carries `quad_movement` (upper-body
+   `*_head` overlays correctly do NOT — an earlier draft that flagged them was wrong). Current
+   result: clean, 24/24 targets resolve, all 10 gait clips tagged. Ran during the dwarf-vs-Rhûn CTD
+   investigation ([investigation-rhun-dwarf-ctd-2026-08-02.md](../reviews/investigation-rhun-dwarf-ctd-2026-08-02.md)),
+   which is also where the horse-vs-chariot Monster attribute delta is recorded: the chariot ships
+   no `fall_blow_damage_bone` and no ragdoll corpse/fall-sound bones. **Do not "fix" that blind** —
+   the shipped, battle-proven warg lacks the same attributes, so absence alone is survivable.
 2. Horse-team gait naturalness: check whether horse-B's legs are phase-locked to horse-A (unison "toy"
    look); desync horse-B via `phase_shift_bones` if so. Verifiable in Blender.
 3. Cart bounce + rider standing-stability — defer (need art-direction + in-game).

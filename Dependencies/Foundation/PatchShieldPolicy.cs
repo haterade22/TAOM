@@ -108,4 +108,46 @@ public static class PatchShieldPolicy
     /// only the strip is withheld, and the call site still logs what it would have done.
     /// </summary>
     public static bool ShouldUnpatchForeignOwners(bool coopActive) => !coopActive;
+
+    /// <summary>
+    /// Should PatchShield install at all?
+    ///
+    /// NO under co-op, and this is a PERFORMANCE decision, not a correctness one. A shield finalizer
+    /// binds <c>__originalMethod</c>, so Harmony's generated wrapper pays a
+    /// <c>MethodBase.GetMethodFromHandle</c> plus a try/catch on EVERY CALL (~50 µs). That tax is
+    /// what turned a millisecond tournament teardown into a measured 104–109 s freeze in #331, and
+    /// co-op amplifies it far harder: BannerlordCoop's AutoSync transpiles every declared method and
+    /// constructor of 43 campaign types (<c>MobileParty</c>, <c>Hero</c>, <c>Settlement</c>,
+    /// <c>Clan</c>, <c>PartyBase</c>…), and those are the campaign hot path. Coop's <c>PatchAll</c>
+    /// runs on connect, BEFORE TAOM's <c>OnGameInitializationFinished</c> pass, so pass 2 shields
+    /// that entire surface. A player traced a co-op frame-rate collapse to exactly this, which
+    /// answers the open question the 2026-08-01 deep review raised and could not measure.
+    ///
+    /// Extending <c>ExcludedTargetNamespacePrefixes</c> instead would have been wrong: adding
+    /// <c>TaleWorlds.CampaignSystem</c> there excludes nearly everything TAOM shields IN SOLO PLAY
+    /// TOO, because that list is not co-op-scoped.
+    ///
+    /// WHAT THIS GIVES UP: the swallow half — surviving a <c>MissingMethodException</c> /
+    /// <c>MissingFieldException</c> / <c>TypeLoadException</c> from engine drift. Under co-op that
+    /// is the right trade and matches SaveShield, which already RETHROWS save-load faults for the
+    /// same reason: a visible crash beats a silent divergence between two campaigns. The unpatch
+    /// half was already withheld (see <see cref="ShouldUnpatchForeignOwners"/>), so this removes the
+    /// remaining half rather than changing the policy's direction.
+    ///
+    /// KNOWN COST: a player with the co-op module merely ENABLED but playing solo also loses the
+    /// shield, for no benefit — Coop only calls <c>PatchAll</c> on connect. That is unavoidable
+    /// here. Install runs at <c>OnSubModuleLoad</c> / <c>OnGameInitializationFinished</c>, before
+    /// any session can exist, so there is nothing session-scoped to read.
+    /// </summary>
+    /// <param name="coopActive">
+    /// <c>CoopPresence.IsActive</c> — module presence, NOT session/role. Presence is the correct
+    /// signal at a patch-application site and the ONLY co-op fact safe to read there: TAOM's late
+    /// patch batch is a process one-shot and one of its transpilers is non-idempotent, so a gate
+    /// that varied per session could never be undone or re-run. This deliberately does NOT use
+    /// <c>ICoopSessionProvider</c>. The "presence is not authority" rule from the 2026-08-01 Codex
+    /// review governs WORLD-STATE decisions; it does not apply to install-time gating, and the two
+    /// look alike enough that this comment exists to stop the next reader "fixing" it.
+    /// </param>
+    public static bool ShouldInstall(bool coopActive, bool disabledByFlag)
+        => !disabledByFlag && !coopActive;
 }

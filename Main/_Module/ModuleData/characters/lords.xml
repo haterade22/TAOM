@@ -36315,7 +36315,7 @@
 
     <NPCCharacter id="lord_U2_1" name="{=aom_lord_U2_1_name}Azraphel" age="41" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_umbar" />
+            <face_key_template value="BodyProperty.fighter_haradrim" />
         </face>
         <skills>
             <skill id="OneHanded" value="260" />
@@ -36355,7 +36355,7 @@
 
     <NPCCharacter id="lord_U3_1" name="{=aom_lord_U3_1_name}Belkazar" age="34" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_umbar" />
+            <face_key_template value="BodyProperty.fighter_haradrim" />
         </face>
         <skills>
             <skill id="OneHanded" value="240" />
@@ -36395,7 +36395,7 @@
 
     <NPCCharacter id="lord_U4_1" name="{=aom_lord_U4_1_name}Pharakhôn" age="50" voice="softspoken" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_umbar" />
+            <face_key_template value="BodyProperty.fighter_haradrim" />
         </face>
         <skills>
             <skill id="OneHanded" value="260" />
@@ -36435,7 +36435,7 @@
 
     <NPCCharacter id="lord_U5_1" name="{=aom_lord_U5_1_name}Inkaldôr" age="28" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_umbar" />
+            <face_key_template value="BodyProperty.fighter_haradrim" />
         </face>
         <skills>
             <skill id="OneHanded" value="240" />
@@ -36475,7 +36475,7 @@
 
     <NPCCharacter id="lord_U6_1" name="{=aom_lord_U6_1_name}Zimrathôr" age="39" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.umbar" occupation="Lord" face_mesh_cache="true">
         <face>
-            <face_key_template value="BodyProperty.fighter_umbar" />
+            <face_key_template value="BodyProperty.fighter_haradrim" />
         </face>
         <skills>
             <skill id="OneHanded" value="260" />

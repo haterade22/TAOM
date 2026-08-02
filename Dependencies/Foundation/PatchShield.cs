@@ -121,9 +121,18 @@ public static class PatchShield
     /// </summary>
     public static void Install()
     {
-        if (IsDisabled())
+        var coopActive = CoopPresence.IsActive;
+        if (!PatchShieldPolicy.ShouldInstall(coopActive, IsDisabled()))
         {
-            DiagLog.Log(Tag, "patchshield-disabled.flag present — PatchShield install skipped");
+            DiagLog.Log(Tag, coopActive
+                // Player-reported 2026-08-02: this is a frame-rate fix, not a safety change. Coop's
+                // AutoSync transpiles every declared method of 43 campaign types, and shielding that
+                // surface makes every one of them pay the __originalMethod binding tax per call —
+                // the same mechanism as the #331 tournament freeze. Rationale + what it gives up:
+                // PatchShieldPolicy.ShouldInstall.
+                ? $"co-op module(s) active ({string.Join(", ", CoopPresence.ActiveCoopModuleIds)}) — " +
+                  "PatchShield install skipped (finalizer tax on Coop's AutoSync surface)"
+                : "patchshield-disabled.flag present — PatchShield install skipped");
             return;
         }
 

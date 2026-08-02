@@ -2,6 +2,107 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-02
+
+### perf(coopinterop): stop shielding a co-op mod's patch surface
+
+Co-op works. A player got TAOM and BannerlordCoop running together, hit a frame-rate collapse,
+profiled it, and traced it to TAOM's own PatchShield. They were right, and the fix is the one they
+suggested: skip `PatchShield.Install()` when a co-op module is active.
+
+The mechanism is #331 again. A shield finalizer binds `__originalMethod`, so Harmony's generated
+wrapper pays a `GetMethodFromHandle` plus a try/catch on every call. In #331 that turned a
+millisecond tournament teardown into a two-minute freeze. Here it lands somewhere worse: Coop's
+AutoSync transpiles every declared method and constructor of 43 campaign types, and its `PatchAll`
+runs on connect — before TAOM's late pass — so PatchShield wrapped that entire surface. Those methods
+are the campaign hot path, which is why the symptom was frame rate rather than a single stall.
+
+Widening the existing namespace denylist would have been the wrong lever, because it is not
+co-op-scoped: excluding `TaleWorlds.CampaignSystem` would stop shielding nearly everything in solo
+play too.
+
+This gives up the swallow half — surviving a missing method or field after an engine bump. Under
+co-op that is the right trade, and the same one SaveShield already makes when it rethrows save
+faults: a visible crash beats two campaigns drifting apart in silence. The unpatch half was already
+withheld. A player who has the co-op module enabled but plays solo also loses the shield for no
+benefit; that is unavoidable, since install runs before any session exists.
+
+Worth recording that this is the second time this cost has bitten, in a form the first fix's wording
+did not cover. #331 treated it as a property of specific hot namespaces and answered with a curated
+denylist. It is really a property of how many methods *anyone* has patched — a mod that transpiles
+whole types multiplies the tax without TAOM changing a line. The lesson is generalised rather than
+the list extended.
+
+Also retires the "end-to-end co-op UNVERIFIED, do not tell players it works" caveat the docs have
+carried since yesterday. Stated precisely: the pair runs and is playable. Nobody has audited object
+sets between peers, and the client-side culture-conversion crash chain and career-quest creation path
+are still unproven.
+
+
+
+### diag(chariot): the chariot got the mount audit it was never in
+
+A player reported constant crashes fighting Rhûn as dwarves and sent a debug log plus an rgl log.
+Neither contains a root cause: the rgl log stops mid-line and the process is gone. That is a native
+fault, and the reading is not a guess — `FileLogger` drains INFO/WARNING/ERROR synchronously with a
+flush precisely so the tail survives an AV, so the 42 seconds of TAOM silence before the process
+died is evidence rather than a lost buffer. No managed exception, no crash bundle, and the `Patch63`
+banner-bearer guard never fired. Timeline puts the fault ~41s after the AI battle plan, at first
+melee contact, not at spawn.
+
+Rhûn's one non-vanilla field unit is the war chariot, so it drew the attention — and
+`tools/audit_mount_parity.py` turned out to exclude it (`MOUNTS = ["spider", "warg", "elephant",
+"mumakil"]`), which is the follow-up `chariot.md` has listed as pending since June. Section F now
+audits it against the vanilla horse, re-derived from the deployed artifacts rather than from the
+doc's claims about them. It comes back clean: all 24 `animation=` targets resolve, and all 10
+`monster_usage_movements` clips carry `quad_movement`, including the two gait clips whose missing
+tag was the latent AV that doc flagged as never in-game verified.
+
+So the chariot is not exonerated, but it is no longer the obvious suspect, and two theories died on
+controls rather than on argument. A first draft of the tag check also swept the upper-body table and
+flagged seven clips — every one a `*_head` look overlay, which must NOT carry the tag. And the
+chariot Monster ships no `fall_blow_damage_bone` and no ragdoll corpse bones, which reads as damning
+until you notice the shipped, battle-proven warg lacks exactly the same ones. Recorded as
+deliberately-not-fixed: changing it now would be a blind retry.
+
+Root cause is still open, pending artifacts only the reporter has — a crash bundle, and the Windows
+fault offset across two or three crashes, which distinguishes one crash site from several. The
+request and a chariot-in/chariot-out custom-battle repro protocol are written up in
+`docs/reviews/investigation-rhun-dwarf-ctd-2026-08-02.md`.
+
+### fix(moduledata): three IDs the engine was resolving to null
+
+The same rgl log carried `Null object reference found with ID: fighter_umbar / rhun / rohan` —
+`MBObjectManager.UnregisterNonReadyObjects` reporting references that were never defined. All three
+were typos against an overwhelming local majority: `BodyProperty.fighter_umbar` on 5 Umbar lords
+(defined nowhere; the other 102 lords in the file use `fighter_haradrim`), `Culture.rhun` on 22
+Armory head armors (609 items in the same folder already say `khuzait`), and `Culture.rohan` on 6
+horse armors. `.claude/rules/xml-data.md` names those last two as the canonical culture mistake.
+
+Cosmetic in effect — null face templates and null item cultures, not the crash. Two of the files
+live in `LOTRLOME_Armory`, which is not a git repo, so the originals are saved beside them as
+`*.bak-dangling-culture-20260802`.
+
+Not fixed here, and worth knowing: `validate_moduledata.py` has an `UNKNOWN_CULTURE` check, but its
+registry scope is TAOM's own ModuleData and it never sweeps `culture=` on Armory item files — where
+28 of the 33 bad refs lived. `BodyProperty.*` is not cross-checked by anything.
+
+### fix(missiondiag): every crash report was missing the in-game day
+
+`Campaign: <time read failed: DivideByZeroException>`. The session snapshot runs before
+`Campaign.Models` is built, so `CampaignTime.GetDayOfSeason` divides by a `TimeTicksPerDay` that is
+still zero. The guard worked, so this never broke anything — it just quietly cost us the campaign
+day on every crash report, which is what you correlate a save against.
+
+`MapTimeTracker` and `NumTicks` are both `internal`, so there is no earlier readable source and no
+fallback to write. The fix is a second emission instead: `LogMissionStartSnapshot` now logs the
+campaign context as well, where models are always up, so any crash inside a mission carries the
+date. The guard logic moved into a pure `CampaignContextFormatter` with 6 tests pinning the part
+that actually matters — the time and hero halves are guarded independently, so one failing never
+blanks the other.
+
+Suite 4773 green.
+
 ## 2026-08-01
 
 ### fix(coopinterop): TAOM was telling players to disable TaleWorlds.Core

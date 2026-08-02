@@ -3,8 +3,17 @@
 TAOM's side of sharing one campaign with a third-party co-op mod without the two corrupting each
 other's saves.
 
-**Status (2026-08-01): interop layer shipped, end-to-end co-op UNVERIFIED.** Nothing below has run in
-a live two-peer session. Do not tell players co-op works until the checklist at the end is walked.
+**Status (2026-08-02): co-op CONFIRMED WORKING by a player.** A community member completed a real
+TAOM + BannerlordCoop session. That retires the "unverified, do not tell players it works" caveat
+this file carried on 2026-08-01.
+
+Be precise about what that confirms, though: it establishes that the pair **runs and is playable**.
+It does not individually confirm each gate below — nobody has audited object sets between peers, and
+two known-risk paths are still unproven (see [What is NOT done](#what-is-not-done)). Report it as
+"working, with known rough edges", not as "fully verified".
+
+The same session found a **frame-rate collapse caused by TAOM's own PatchShield**, now fixed — see
+[PatchShield is skipped under co-op](#patchshield-is-skipped-under-co-op).
 
 > **Why this file has content now.** It was a deliberate stub pointing at
 > `bannerlord-together-compat.md`, on the sound principle that a second partial copy of the compat
@@ -254,15 +263,51 @@ to characterise. The existing try/catch around acceptance is containment, not co
   not in itself refused. Use the listen-host path, which carries TAOM into the spawned server
   process automatically.
 
-## Verification checklist (none of this has been run)
+## PatchShield is skipped under co-op
 
-1. Launch TAOM + Coop; confirm `[CoopPresence] EnsureProbed: co-op module(s) ACTIVE: Coop` in
-   `Modules/TAOM.Dependencies/diag.log`.
-2. Confirm a `[HarmonyCensus]` block naming `Bannerlord.Coop`; check its `TRANSPILER CONFLICT` rows
-   against TAOM's 7 transpilers.
-3. Confirm TAOM behaves identically **solo** with the Coop module merely enabled — what the
-   `IsAuthority` fail-open direction protects.
-4. Host; confirm the spawned `/server` process starts TAOM cleanly (no blocking UI).
-5. Join as client; confirm no `ArgumentNullException` from `MBObjectManager` on load.
-6. Run several in-game days; use Coop's `coop.debug.hero audit` / `coop.debug.settlements audit` to
+`PatchShield.Install()` is suppressed whenever a co-op module is active
+(`PatchShieldPolicy.ShouldInstall`). This is a **performance** fix, not a safety one.
+
+A shield finalizer binds `__originalMethod`, so Harmony's generated wrapper pays a
+`MethodBase.GetMethodFromHandle` plus a try/catch **on every call** (~50 µs) — the same mechanism
+that turned a millisecond tournament teardown into a measured 104–109 s freeze in #331. Co-op
+amplifies it: Coop's AutoSync transpiles every declared method and constructor of 43 campaign types,
+and Coop's `PatchAll` runs on connect, *before* TAOM's `OnGameInitializationFinished` pass — so pass
+2 shielded that entire surface. Those methods are the campaign hot path, so the symptom was frame
+rate rather than a single stall. A player profiled it and traced it here.
+
+Extending `ExcludedTargetNamespacePrefixes` would have been the wrong lever: adding
+`TaleWorlds.CampaignSystem` there suppresses shielding **in solo play too**, because that list is not
+co-op-scoped.
+
+**What this gives up:** the swallow half — surviving `MissingMethodException` /
+`MissingFieldException` / `TypeLoadException` from engine drift. Under co-op that is the right trade
+and matches SaveShield, which already rethrows save-load faults on the same reasoning: a visible
+crash beats a silent divergence between two campaigns. The unpatch half was already withheld.
+
+**Known cost:** a player with the co-op module merely *enabled* but playing solo also loses the
+shield, for no benefit — Coop only calls `PatchAll` on connect. Unavoidable here, because install
+runs before any session can exist, so there is nothing session-scoped to read. This is the one place
+where **module presence is the correct signal** and `ICoopSessionProvider` is not; `CoopPresence`'s
+class docs explain why a patch-application site needs a process-constant fact.
+
+## Verification status
+
+Confirmed by a player (2026-08-02):
+
+- TAOM + BannerlordCoop launches, connects and plays.
+- The PatchShield frame-rate collapse is fixed by skipping install.
+
+Still unconfirmed — worth walking if you have two machines:
+
+1. `[CoopPresence] EnsureProbed: co-op module(s) ACTIVE: Coop` in `Modules/TAOM.Dependencies/diag.log`,
+   and `[PatchShield] co-op module(s) active … install skipped` alongside it.
+2. A `[HarmonyCensus]` block naming `Bannerlord.Coop`; check its `TRANSPILER CONFLICT` rows against
+   TAOM's 7 transpilers.
+3. TAOM behaves identically **solo** with the Coop module merely enabled — what the `IsAuthority`
+   fail-open direction protects, and now also where the PatchShield cost above lands.
+4. The spawned `/server` process starts TAOM cleanly (no blocking UI).
+5. No `ArgumentNullException` from `MBObjectManager` on a client load — the `CultureConversion`
+   chain, still source-verified only.
+6. Several in-game days, then Coop's `coop.debug.hero audit` / `coop.debug.settlements audit` to
    compare object sets between peers.

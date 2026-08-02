@@ -187,6 +187,30 @@ Lib.Harmony 2.4.2's `Patches` has SIX `ReadOnlyCollection<Patch>` fields: `Prefi
   diagnosable fault into an invisible one, on the machines you cannot reach.
 - **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
 
+### A blanket "shield everything patched" mechanism costs what OTHER mods patch, not what you patch
+
+PatchShield attaches a finalizer to every method Harmony has patched. That finalizer binds
+`__originalMethod`, so Harmony's generated wrapper pays a `MethodBase.GetMethodFromHandle` plus a
+try/catch **per call** (~50 µs). The population it wraps is therefore chosen by whatever else is
+installed — the cost scales with the modlist, not with the mod that owns the shield.
+
+- **Why missed:** #331 fixed this once, for the case that had bitten (the Gauntlet UI layer), with a
+  hand-maintained `ExcludedTargetNamespacePrefixes` denylist. That framing treats the tax as a
+  property of specific hot namespaces. It is not — it is a property of *how many methods anyone has
+  patched*. BannerlordCoop's AutoSync transpiles every declared method and constructor of 43 campaign
+  types, so installing TAOM alongside it multiplied the shielded population enormously without TAOM
+  changing a line, and collapsed frame rate on the campaign hot path. A denylist cannot anticipate
+  the next mod. TAOM's own deep review had raised the question and could not measure it; a player
+  with a profiler answered it.
+- **Prevent:** for any mechanism that instruments a set it does not control, gate on the SIZE or
+  ORIGIN of that set, not on a curated list of members. Here: skip installation entirely when a mod
+  known to patch broadly is present (`PatchShieldPolicy.ShouldInstall`). When adding such a
+  mechanism, ask "who decides how many methods this wraps?" — if the answer is "other mods", it
+  needs a budget or a presence-keyed opt-out from day one.
+- **Source:** `docs/reviews/rca-tournament-exit-hang-2026-07-06.md` (round 2, the original) +
+  player report 2026-08-02 (the recurrence under BannerlordCoop);
+  `docs/reviews/rca-coop-authority-gating-2026-08-01.md` open question #2
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

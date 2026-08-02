@@ -93,7 +93,10 @@ than hiding it.
 
 ## Still owed
 
-- In-game verification of the whole layer (nothing here has run in a live two-peer session).
+- ~~In-game verification of the whole layer.~~ **Done 2026-08-02** — a player completed a real
+  session. It also surfaced what this RCA listed as open question #2: PatchShield's finalizer tax
+  over Coop's AutoSync surface collapsed frame rate. Fixed by skipping install under co-op. What the
+  session did NOT confirm: per-gate behaviour, or an object-set audit between peers.
 - The `CultureConversion` client crash is source-verified end-to-end but not reproduced at runtime.
 - Issue #370's title still says BannerlordTogether; it now tracks BannerlordCoop work too.
 

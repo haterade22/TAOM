@@ -330,7 +330,14 @@ are affected.
 
 1. Does one Harmony registry actually span both mods at runtime? (Byte-identical 0Harmony makes it
    expected; every PatchShield mitigation depends on it.)
-2. What does PatchShield cost when applied over thousands of AutoSync-patched methods?
+2. ~~What does PatchShield cost when applied over thousands of AutoSync-patched methods?~~
+   **ANSWERED 2026-08-02 by a player's profiling capture: enough to collapse frame rate.** Coop's
+   `PatchAll` runs on connect, before TAOM's `OnGameInitializationFinished` pass, so PatchShield
+   shielded the entire AutoSync surface — every declared method of 43 campaign types, each then
+   paying the `__originalMethod` binding tax per call. Same mechanism as the #331 tournament freeze,
+   on the campaign hot path instead of a teardown. TAOM now skips `PatchShield.Install()` whenever a
+   co-op module is active (`PatchShieldPolicy.ShouldInstall`); see
+   `docs/features/coop-interop.md` "PatchShield is skipped under co-op".
 3. Does `FragileDetourGuard` silently drop transpiler-only patches?
 4. Does the native engine fire `Mission.MeleeHitCallback` for a `Controller=None` puppet? If yes,
    *vanilla* melee already double-applies under Coop.
