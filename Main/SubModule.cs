@@ -111,6 +111,19 @@ public class SubModule : MBSubModuleBase
 
         IoC.Configure();
 
+        // Issue #371: report both modules' build stamps and flag a mismatched pair. TAOM resolves
+        // HarmonyLib and UIExtenderEx THROUGH TAOM.Dependencies, so a stale pairing breaks patch
+        // application and renders every character in bind pose — a failure that previously left no
+        // evidence anywhere, because both assemblies carried frozen versions on every build.
+        try
+        {
+            IoC.Resolve<IModLogger>().LogInfo(
+                Core.Diagnostics.BuildStampReport.BuildReport(
+                    typeof(SubModule).Assembly,
+                    typeof(TAOM.Dependencies.Foundation.PatchShield).Assembly));
+        }
+        catch { /* a version report must never be the thing that stops the mod loading */ }
+
         // Save-definer collision preflight. The engine instantiates every SaveableTypeDefiner in
         // every loaded assembly and registers each into a dictionary keyed by save id; a duplicate
         // throws with a message naming neither mod.

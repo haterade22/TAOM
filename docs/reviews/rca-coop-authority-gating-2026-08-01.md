@@ -4,10 +4,17 @@
 colliding assembly redirects, and added host-authority gating so a co-op client stops running
 world-mutating campaign logic.
 
-**Review shape:** 5 parallel deep-review agents (Standards, Compatibility, Efficiency, Completeness,
-Data Flow). 8 findings returned. **2 HIGH confirmed and fixed, 1 HIGH (test gap) confirmed and
-fixed, 1 MEDIUM confirmed and fixed, 1 MEDIUM documented as a known limitation, 1 CRITICAL refuted,
-2 MEDIUM fixes rejected as incorrect.** Suite green at 4,745 after fixes.
+**Review shape:** two passes on the same change set the same day — 5 parallel deep-review agents
+(Standards, Compatibility, Efficiency, Completeness, Data Flow), then a Codex adversarial pass.
+
+*Pass 1 (5 agents), 8 findings:* 2 HIGH confirmed and fixed, 1 HIGH (test gap) confirmed and fixed,
+1 MEDIUM confirmed and fixed, 1 MEDIUM raised as a design asymmetry (siege rewards — later fixed
+properly, see the Codex section), 1 CRITICAL refuted, 2 MEDIUM fixes rejected as incorrect.
+
+*Pass 2 (Codex `gpt-5.5` xhigh), 8 findings:* 3 HIGH + 2 MEDIUM fixed, 1 HIGH false positive, 1 HIGH
+already fixed, 1 MEDIUM left open as a design decision.
+
+**Suite green at 4,759 after both passes.** Commits `0b76d56e` (layer) and `46ce6436` (Codex fixes).
 
 ## Findings
 
@@ -17,7 +24,7 @@ fixed, 1 MEDIUM confirmed and fixed, 1 MEDIUM documented as a known limitation, 
 | 2 | HIGH | `WarOfTheRingMomentumBehavior` — 6 of 8 handlers ungated, incl. `OnKingdomDestroyed` → `CheckAndApplyVictory` → `EndWar`/`MakePeace` | Data flow | Same root cause as #1 | Same |
 | 3 | HIGH | 6 of 7 gates had no test proving a client stands down | Test coverage | Wrote the gate and the policy test; assumed the one-line gate was self-evident | Added `CoopAuthorityGateTests` (7 tests); handlers widened to `internal` per the `RaceAgeBehavior` precedent |
 | 4 | MED | `CoopSessionProvider.EnsureBound` had an unsynchronised `if (_bound) _bound = true` | Concurrency | Wrote it as "benign duplicate work" without tracing the intermediate state | Fixed with double-checked lock + `volatile`; see below — the consequence was worse than duplicate work |
-| 5 | MED | `SiegeDefenseBehavior`'s gate silently disables siege-defence rewards for clients forever, inconsistent with `CareerQuestCampaignBehavior` | Design asymmetry | Gated the whole handler because it mutates shared state, without noticing the reward is per-player | Documented as a known limitation in the feature doc; proper fix is to split shared-timer tick from per-player reward |
+| 5 | MED | `SiegeDefenseBehavior`'s gate silently disables siege-defence rewards for clients forever, inconsistent with `CareerQuestCampaignBehavior` | Design asymmetry | Gated the whole handler because it mutates shared state, without noticing the reward is per-player | **Fixed** — `OnHourlyTickShared` (authority) / `OnHourlyTickLocalPlayer` (every peer). Codex then found the split leaked save-backed state; see C4 below |
 | 6 | MED | Momentum's `_coopSession` field declared after the constructor | Style | Mechanical Python edit inserted at the wrong anchor | Moved; no rule needed |
 | 7 | — | **REFUTED:** "field after ctor will not compile" (rated CRITICAL) | Agent error | — | C# has no field-declaration-order rule. `Build succeeded` disproved it. Verify agent claims against the build before acting |
 | 8 | — | **REJECTED (2):** cache `CoopPresence.IsActive`; share a static `object[]` for `Invoke` | Agent error | — | The first breaks `Refresh()` (freezes a possibly-wrong first probe); the second is a data race — `TryGetContainer(out …)` writes back into the array |
@@ -88,7 +95,6 @@ than hiding it.
 
 - In-game verification of the whole layer (nothing here has run in a live two-peer session).
 - The `CultureConversion` client crash is source-verified end-to-end but not reproduced at runtime.
-- Split `SiegeDefenseBehavior`'s shared tick from its per-player reward (finding #5).
 - Issue #370's title still says BannerlordTogether; it now tracks BannerlordCoop work too.
 
 ---

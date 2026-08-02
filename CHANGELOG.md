@@ -4,6 +4,81 @@
 
 ## 2026-08-01
 
+### fix(coopinterop): TAOM was telling players to disable TaleWorlds.Core
+
+`SaveDefinerCollisionGuard` opened every collected user log with a fatal-sounding save-id collision
+between `SaveableCoreTypeDefiner` and `SaveableObjectSystemTypeDefiner`, and the advice *"Disable one
+of them."* Both are vanilla engine types, in a game that starts fine.
+
+The rule the check asserts is false. It grouped `SaveableTypeDefiner` subclasses by base id and
+treated a shared base as proof of collision, but the engine registers on `_saveBaseId + saveId`
+(`AddClassDefinition`, verified on installed v1.4.7) — so a shared base is legal whenever the
+per-type offsets differ. Enumerating every definer in the v1.4.7 dump gives 67 distinct base ids and
+exactly one duplicated pair: the two above, which sit in different assemblies and therefore took the
+cross-assembly branch, the one carrying the strongest wording and an instruction to disable
+something.
+
+Groups made up entirely of game-shipped assemblies are now dropped — there is nothing a player can do
+about them. What survives logs a WARNING that the shared range *may* collide and names the first two
+things to try disabling, rather than an ERROR asserting the game *will* fail. Four tests added, two
+of which fail against the old code, built from the real vanilla pair rather than synthetic records —
+the previous seven all passed because every fixture obeyed the same assumption the production code
+made, so they confirmed the code matched the theory while the theory was wrong.
+
+Reading the true ids would mean invoking each definer's `Define*` virtuals against a synthetic
+`DefinitionContext`: running arbitrary third-party code speculatively at startup, bound to engine
+internals that drift per version, for a diagnostic that can never beat the engine's own throw moments
+later. Deliberately not done. If the heuristic misfires again it should be deleted, not deepened.
+
+Why it survived two reports is worth recording: it was correctly identified as not caused by whoever
+noticed it, and nothing routes an unowned, non-crashing, cosmetic-looking log line to anybody. The
+cost stayed invisible because it was cosmetic — no crash, no failing test — while it sat at the top
+of every support log discrediting every other line the same guard prints, including the real
+collision it exists to catch.
+
+RCA: `docs/reviews/rca-savedefiner-false-positive-2026-08-01.md`.
+
+Not-tested: the guard's live output on an install that has a genuine cross-mod collision.
+Research: `SaveableTypeDefiner.AddClassDefinition` (v1.4.7); all 67 vanilla definer base ids.
+
+### fix(coopinterop): presence is not authority
+
+A Codex adversarial pass over the interop layer below returned four HIGH findings. It disputed all
+four suspects aimed at the layer itself — the fail-open direction, the reflection binder's locking,
+the assembly-redirect deletion and the detection-coupling tests all held under attack. The problems
+were around it.
+
+The widest one: eight diplomacy and time-acceleration sites gated on module **presence**. That is
+process-constant — true whenever the Coop module is merely enabled — so TAOM's War of the Ring rules
+quietly switched off for a solo player who happened to have it installed, and for the co-op host,
+which is exactly the peer that should be enforcing them.
+
+The obvious fix is wrong too, and the code already said so in a comment: swapping to `IsAuthority`
+breaks BannerlordTogether, because that predicate fails open and reports every BT peer authoritative,
+so nothing gates at all. Presence gets the solo and host cases wrong; authority gets the
+BannerlordTogether case wrong. The predicate that works keys on whether the host/client probe
+actually **resolved**, which answers all five cases, and each is now a test.
+
+Siege rewards leaked the other way. The shared/local split landed earlier so a client could still be
+rewarded for a siege it defended, but the grant set a flag the save serializes — so a client claiming
+its own reward wrote per-peer state into the host's save record. Clients now record the claim in
+process-local state, behind a named predicate rather than an inline negation, because the inline form
+is what shipped wrong.
+
+Two smaller ones. A client could send a messenger, pay for it, and never see it arrive, since
+delivery is host-side. And culture conversion's owner-change handler stayed ungated on the reasoning
+that queuing a pending timer is harmless — it is not: the store is save-backed and the daily
+processor that would mature those records is itself gated, so a client accumulates conversions
+nothing ever services. Writing that justification into the docs had made it look considered.
+
+Three of the eight findings needed correction before use: one quoted code that does not exist, one
+was already fixed, and one proposed a fix that would have caused a different regression. Verifying
+each against source before implementing is what caught them.
+
+Career-quest creation on a client stays open. `QuestBase` sets its id in the constructor, which Coop
+suppresses, but gating it removes career quests from clients entirely — that is a design decision,
+not a mechanical fix. Recorded in the RCA rather than dropped.
+
 ### feat(coopinterop): TAOM can see BannerlordCoop at all, and stands down on a client
 
 BannerlordTogether and BannerlordCoop are different projects. The interop layer shipped yesterday was

@@ -6,6 +6,24 @@
 		<Nullable>enable</Nullable>
 
 		<!--
+		  Build identity (2026-08-01, issue #371). Every TAOM assembly previously carried a frozen
+		  version - TAOM 2.0.0.0 and TAOM.Dependencies 0.1.0.0 on EVERY build ever produced - and the
+		  module <Version> in SubModule.xml was equally static. Nothing on disk distinguished a current
+		  DLL from a two-week-old one, so .NET bound any TAOM.dll to any TAOM.Dependencies.dll without
+		  complaint and failed later at the member level. That shipped: users ran a new TAOM against a
+		  stale Dependencies, TAOM's Harmony/UIExtenderEx types failed to resolve, the HeroRace preview
+		  patches never applied, and every character rendered in bind pose. The only evidence
+		  distinguishing the two builds was a file timestamp, which does not survive a zip.
+
+		  AssemblyVersion stays fixed deliberately - changing it alters binding identity for no benefit
+		  here. InformationalVersion is free-form metadata, so it carries a per-build stamp that both
+		  modules log at startup; a mismatch is then one line in the log instead of an unanswerable
+		  question. Set TaomBuildStamp explicitly for a reproducible build.
+		-->
+		<TaomBuildStamp Condition="'$(TaomBuildStamp)' == ''">$([System.DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss'))Z</TaomBuildStamp>
+		<InformationalVersion>$(Version)+build.$(TaomBuildStamp)</InformationalVersion>
+
+		<!--
 		  GameFolder resolution order:
 		    1. BANNERLORD_OVERRIDE_DIR — opt-in override for verification builds against a
 		       backup install (e.g. 1.3.15 backup at E:\BannerlordBackup\1.3.15\).

@@ -1581,6 +1581,38 @@ self-test; bounded retries). Suite 4,748 green. Commit `19ec0e1e` + follow-up. *
 as the mechanism, NOT yet confirmed resolved in the wild** — the fault is intermittent, so it needs
 several consecutive clean relaunches from an affected user.
 
+## Review 79 — BannerlordCoop interop (#370) deep-review + Codex adversarial pass (2026-08-01)
+
+Two passes on one change set: 5 parallel deep-review agents, then Codex `gpt-5.5` at `xhigh`.
+The change taught TAOM to detect BannerlordCoop (launcher id `Coop`, a DIFFERENT project from
+BannerlordTogether, which the existing interop was built for), removed five colliding assembly
+redirects, and added host-authority gating.
+
+**Pass 1 (5 agents), 8 findings.** Data Flow found 2 HIGH nobody else came close to: sibling
+handlers reaching the SAME mutating service method the tick gate protected (`WarOfTheRingBehavior`
+via `OnSessionLaunched`; `WarOfTheRingMomentumBehavior` with 6 of 8 handlers ungated, one hitting
+the identical `CheckAndApplyVictory` → `EndWar`/`MakePeace`). Completeness found the test gap (6 of
+7 gates unpinned). Standards manufactured a CRITICAL compile error the build disproved; Efficiency's
+two proposed fixes were both wrong (one breaks `Refresh()`, one is a data race).
+
+**Pass 2 (Codex), 8 findings — 4 HIGH / 3 MED / 1 LOW.** Codex DISPUTED all four Known Suspects
+aimed at the new layer (fail-open direction, reflection-binder locking, redirect deletion,
+detection-coupling tests) and confirmed the two aimed at its edges. Its widest catch: 8 sites gated
+on module PRESENCE, which disabled TAOM's diplomacy rules for solo-with-Coop-enabled AND for the
+co-op host. Its own proposed fix would have broken BannerlordTogether — the code carried a comment
+explaining why, which Codex did not engage with. Resolved with a third predicate keyed on whether
+the host/client probe RESOLVED. Also caught a real leak in the siege shared/local split: the local
+reward wrote a save-serialized flag.
+
+**Accuracy:** Codex 5 of 8 usable as written (1 false positive quoting code that does not exist,
+1 already fixed, 1 whose fix would have caused a different regression). All three caught by
+verifying against source before implementing.
+
+RCA: `docs/reviews/rca-coop-authority-gating-2026-08-01.md` (+ `rca-coop-veto-surface-2026-08-01.md`).
+Lessons: 2 in `lessons/campaign-mechanics.md` (gate the mutation not the event; presence is not
+authority). Suite 4,759 green. Commits `0b76d56e` + `46ce6436`. **End-to-end co-op remains
+UNVERIFIED — nothing has run in a live two-peer session.**
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -12,9 +12,22 @@
     <DependedModule Id="SandBoxCore" />
     <DependedModule Id="Sandbox" />
     <DependedModule Id="CustomBattle" />
+    <!-- Issue #371. TAOM does not merely call into TAOM.Dependencies — Main/TAOM.csproj takes a
+         ProjectReference on it and resolves HarmonyLib AND Bannerlord.UIExtenderEx THROUGH that
+         assembly. A missing or stale copy therefore fails at the member level during patch
+         application, the preview patches never attach, and every character renders in bind pose.
+         Until now this hard requirement was declared nowhere, so the launcher had nothing to check
+         and a user could run any TAOM against any Dependencies. <DependedModule> is the
+         engine-honoured element (ModuleInfo.LoadWithFullPath parses it; it does NOT parse
+         DependedModuleMetadatas), so this is what actually blocks a broken pairing. -->
+    <DependedModule Id="TAOM.Dependencies" />
   </DependedModules>
   <DependedModuleMetadatas>
     <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.7.*" />
+    <!-- Version-pinned mirror of the DependedModule above, for BUTR/BLSE launchers (which DO read
+         this block). Bump this alongside Dependencies/_Module/SubModule.xml's <Version> whenever
+         the Dependencies assembly changes — a stale pairing is the #371 failure mode. -->
+    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.6" />
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />

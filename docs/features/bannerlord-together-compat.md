@@ -38,9 +38,12 @@ Pinned in the manifests, not left to the launcher's alphabetical default:
 
 - `Dependencies/_Module/SubModule.xml` lists `BannerlordTogether` and `BattleLinkMPClient` in
   `<ModulesToLoadAfterThis>`.
-- `Main/_Module/SubModule.xml` carries
-  `<DependedModuleMetadata id="BannerlordTogether" order="LoadAfterThis" optional="true"/>` —
-  metadata only, so TAOM stays launchable without BT installed.
+- `Main/_Module/SubModule.xml` carries BOTH the BUTR-launcher mirror
+  (`<DependedModuleMetadata id="BannerlordTogether" order="LoadAfterThis" optional="true"/>`) AND the
+  engine-honoured `<ModulesToLoadAfterThis>` entry. The metadata block alone establishes nothing for
+  a vanilla-launcher user — `ModuleInfo.LoadWithFullPath` has no branch for it. Neither is a
+  `<DependedModule>`, so TAOM stays launchable without BT installed. (Corrected 2026-08-01; this
+  bullet previously said "metadata only", which stopped being true when the pin was added.)
 
 The sharp reason, beyond patch ordering: **BT ships its own `0Harmony.dll` at the same version TAOM
 deploys (2.4.2.0), and HarmonyLib's patch registry is per-assembly-instance static state.** If BT's
@@ -113,10 +116,25 @@ the donor mod alongside TAOM" a guaranteed, unattributable startup crash.
 
 `SaveDefinerCollisionGuard` runs at `OnSubModuleLoad` (`Main/SubModule.cs`, immediately after
 `IoC.Configure()` — `OnBeforeInitialModuleScreenSetAsRoot` fires from `OnApplicationTick`, long
-after the engine's throw), groups every definer it
-finds by base id, and logs `[SaveDefiners] SAVE ID COLLISION on base id N between: …` naming both
-assemblies — before the engine hits the same constructors. It never repairs anything; it makes the
-crash attributable.
+after the engine's throw), groups every definer it finds by base id, and warns before the engine
+hits the same constructors. It never repairs anything; it makes the crash attributable.
+
+**It is a heuristic, and the wording says so.** The engine keys on `_saveBaseId + saveId`
+(`SaveableTypeDefiner.AddClassDefinition`, v1.4.7), not on the base — so two definers can share a
+base id and never collide when their per-type offsets differ. Vanilla does exactly that:
+`SaveableCoreTypeDefiner` (TaleWorlds.Core) and `SaveableObjectSystemTypeDefiner`
+(TaleWorlds.ObjectSystem) both use 10000, in a game that starts fine. Until 2026-08-01 the guard
+reported that pair as a fatal cross-mod collision and told players to *"Disable one of them"* — at
+the top of every collected user log. Now:
+
+- groups made up entirely of game-shipped assemblies are **dropped** (nothing a player can act on);
+- surviving groups log a **WARNING** saying the shared range *may* collide and naming the first two
+  things to try disabling — not an ERROR asserting the game *will* fail.
+
+Reading the true ids would mean invoking each definer's `Define*` virtuals against a synthetic
+`DefinitionContext`, i.e. running arbitrary third-party code speculatively at startup against
+engine internals that drift per version. Deliberately not done. RCA:
+[`../reviews/rca-savedefiner-false-positive-2026-08-01.md`](../reviews/rca-savedefiner-false-positive-2026-08-01.md).
 
 TAOM's own base ids: 726900501 (EquipPresets), 726900601 (CompanionTactics), 726900701
 (CareerSystem), 726900801 (LotrIssues). Next free by the +100 convention: 726900901.
