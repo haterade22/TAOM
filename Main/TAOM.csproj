@@ -159,4 +159,24 @@
 		<Message Importance="high" Text="TAOM: mirrored @(_TaomEditorMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_wEditor in $(GameFolder)\Modules\$(ModuleId)\bin\" />
 	</Target>
 
+	<!-- Same mirror again for Win64_Shipping_Server, so a Bannerlord DEDICATED SERVER loads TAOM.
+	     Without this folder the server boots the TAOM world with none of our code — it logs
+	     "Cannot find: ...\TAOM\bin\Win64_Shipping_Server\TAOM.dll" and then runs a vanilla
+	     simulation over TAOM's map: no race capture, no War of the Ring, no campaign systems at all.
+	     Reported from co-op field testing 2026-08-03 §3, where operators had to hand-copy the DLLs.
+
+	     Mirroring the assembled CLIENT folder (rather than copying build output) is deliberate: it
+	     picks up the vendored natives and NuGet companions that are only present after
+	     PostBuildCopyToModules, which is exactly the file set the field recipe listed by hand. -->
+	<Target Name="MirrorWin64ShippingClientToServer"
+	        AfterTargets="PostBuildCopyToModules"
+	        Condition="$(ModuleId) != '' AND Exists($(GameFolder)) AND $(DisableModuleCopy) != 'true' AND Exists('$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\')">
+		<ItemGroup>
+			<_TaomServerMirrorFiles Include="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\*.*" />
+		</ItemGroup>
+		<MakeDir Directories="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Server\" Condition="!Exists('$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Server\')" />
+		<Copy SourceFiles="@(_TaomServerMirrorFiles)" DestinationFolder="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Server\" SkipUnchangedFiles="true" />
+		<Message Importance="high" Text="TAOM: mirrored @(_TaomServerMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_Server in $(GameFolder)\Modules\$(ModuleId)\bin\" />
+	</Target>
+
 </Project>

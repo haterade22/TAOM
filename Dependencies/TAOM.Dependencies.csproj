@@ -95,4 +95,25 @@
 		<Message Importance="high" Text="TAOM.Dependencies: deployed @(_TaomStubFiles->Count()) stub-module files to $(GameFolder)\Modules\" />
 	</Target>
 
+	<!-- Mirror the assembled Win64_Shipping_Client folder to Win64_Shipping_Server so a Bannerlord
+	     DEDICATED SERVER can load TAOM.Dependencies (and the BUTR/MCM stack it carries). TAOM.dll
+	     alone is not enough: it binds Harmony and the ButterLib/UIExtenderEx assemblies that only
+	     exist in this module. Sibling of the same target in Main/TAOM.csproj; field report
+	     2026-08-03 §3 listed both copies as manual steps.
+
+	     The two opt-out flags that recipe also required are no longer needed: PatchShield now skips
+	     install outright when a co-op module is present (PatchShieldPolicy.ShouldInstall), and
+	     SaveShield rethrows save-load faults under co-op rather than swallowing them
+	     (SaveShieldPolicy.ShouldSwallow). -->
+	<Target Name="MirrorWin64ShippingClientToServer"
+	        AfterTargets="PostBuildCopyToModules"
+	        Condition="$(ModuleId) != '' AND Exists($(GameFolder)) AND $(DisableModuleCopy) != 'true' AND Exists('$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\')">
+		<ItemGroup>
+			<_TaomDepsServerMirrorFiles Include="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\*.*" />
+		</ItemGroup>
+		<MakeDir Directories="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Server\" Condition="!Exists('$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Server\')" />
+		<Copy SourceFiles="@(_TaomDepsServerMirrorFiles)" DestinationFolder="$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Server\" SkipUnchangedFiles="true" />
+		<Message Importance="high" Text="TAOM.Dependencies: mirrored @(_TaomDepsServerMirrorFiles->Count()) files Win64_Shipping_Client -&gt; Win64_Shipping_Server in $(GameFolder)\Modules\$(ModuleId)\bin\" />
+	</Target>
+
 </Project>
