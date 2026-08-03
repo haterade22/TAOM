@@ -9,6 +9,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ScreenSystem;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.TroopWeight;
 
 namespace TAOM.Features.SpecialResources;
@@ -20,19 +21,22 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     private readonly ISpecialResourceConfigProvider _config;
     private readonly IModLogger _logger;
     private readonly ITroopWeightService _troopWeight;
+    private readonly IDedicatedServerProvider _dedicatedServer;
 
     public SpecialResourcesBehavior(
         ISpecialResourceService service,
         ISpecialResourceStorageService storage,
         ISpecialResourceConfigProvider config,
         IModLogger logger,
-        ITroopWeightService troopWeight)
+        ITroopWeightService troopWeight,
+        IDedicatedServerProvider dedicatedServer)
     {
         _service = service;
         _storage = storage;
         _config = config;
         _logger = logger;
         _troopWeight = troopWeight;
+        _dedicatedServer = dedicatedServer;
     }
 
     private PartyScreenLogic _activePartyScreenLogic;
@@ -238,6 +242,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     private void OnMapEventEnded(MapEvent mapEvent)
     {
         if (!mapEvent.IsPlayerMapEvent) return;
+        if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
@@ -245,10 +250,10 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
         if (mapEvent.BattleState == BattleState.AttackerVictory || mapEvent.BattleState == BattleState.DefenderVictory)
         {
-            var isPlayerVictor = (mapEvent.AttackerSide.LeaderParty?.LeaderHero == hero && mapEvent.BattleState == BattleState.AttackerVictory)
-                || (mapEvent.DefenderSide.LeaderParty?.LeaderHero == hero && mapEvent.BattleState == BattleState.DefenderVictory);
-
-            if (!isPlayerVictor) return;
+            // PARTICIPATION, not command — see SpecialResourceEarnPolicy.IsPlayerVictory for why
+            // the old leader-hero gate also broke ordinary single-player armies.
+            if (!SpecialResourceEarnPolicy.IsPlayerVictory(mapEvent.PlayerSide, mapEvent.WinningSide))
+                return;
 
             var enemySide = mapEvent.BattleState == BattleState.AttackerVictory
                 ? mapEvent.DefenderSide : mapEvent.AttackerSide;
@@ -284,6 +289,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         if (side != BattleSideEnum.Attacker) return;
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;
+        if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
@@ -294,6 +300,8 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
     private void OnPrisonerTaken(FlattenedTroopRoster roster)
     {
+        if (!CanEarn()) return;
+
         var hero = Hero.MainHero;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
 
@@ -312,6 +320,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     private void OnTournamentFinished(CharacterObject winner, MBReadOnlyList<CharacterObject> participants, Town town, ItemObject prize)
     {
         if (winner != Hero.MainHero?.CharacterObject) return;
+        if (!CanEarn()) return;
 
         GetHeroIds(Hero.MainHero, out var kingdomId, out var cultureId);
         _service.EarnFromTournament(Hero.MainHero.StringId, kingdomId, cultureId);
@@ -324,6 +333,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         if (winnerSide != BattleSideEnum.Attacker) return;
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;
+        if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
@@ -444,6 +454,34 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         _service.CancelSession();
         _service.BeginPartyScreenSession();
     }
+
+    /// <summary>
+    /// Whether this process may credit <c>Hero.MainHero</c> with earnings at all.
+    ///
+    /// False only on a dedicated server, where MainHero is the idle world-gen hero the campaign was
+    /// created around — not a player. Every earn path below reads MainHero, so without this gate the
+    /// server banks prisoner and raid income against a hero nobody controls while the remote players
+    /// who did the fighting get nothing (field report 2026-08-03 §6, log-proven: dozens of
+    /// <c>[SpecRes] PRISONERS: +N</c> lines on the server for battles fought by other people).
+    ///
+    /// Deliberately not tied to co-op ROLE: a client-hosted session's host also reports IsServer but
+    /// is a real player and must keep earning. Single-player is unaffected in every case.
+    /// </summary>
+    private bool CanEarn()
+    {
+        if (SpecialResourceEarnPolicy.MayCreditMainHero(_dedicatedServer.IsDedicatedServer)) return true;
+
+        if (!_suppressionLogged)
+        {
+            _suppressionLogged = true;
+            _logger.LogInfo(
+                "[SpecRes] Dedicated server — earnings are not credited to the world-gen hero. " +
+                "Players earn on their own clients. Further occurrences are not logged.");
+        }
+        return false;
+    }
+
+    private bool _suppressionLogged;
 
     private static void GetHeroIds(Hero hero, out string kingdomId, out string cultureId)
     {
