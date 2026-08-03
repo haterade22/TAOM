@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -9,20 +8,18 @@ namespace TAOM.Features.CareerSystem.UI;
 public class CareerChoiceGroupObjectVM : ViewModel
 {
     private readonly CareerChoiceGroupDefinition _group;
-    private readonly Action _choiceChangedAction;
     private bool _isExpanded;
     private bool _isLocked;
     private bool _isActive;
     private bool _buttonsVisible;
     private MBBindingList<CareerChoiceObjectVM> _choices;
 
-    public CareerChoiceGroupObjectVM(CareerChoiceGroupDefinition group, bool isLocked, Action choiceChangedAction = null)
+    public CareerChoiceGroupObjectVM(CareerChoiceGroupDefinition group, bool isLocked)
     {
         _group = group;
         _isLocked = isLocked;
         _isActive = !isLocked;
         _buttonsVisible = false;
-        _choiceChangedAction = choiceChangedAction;
         _choices = new MBBindingList<CareerChoiceObjectVM>();
     }
 
@@ -42,8 +39,9 @@ public class CareerChoiceGroupObjectVM : ViewModel
 
         var next = _choices.FirstOrDefault(c => !c.IsTaken);
         if (next == null) return;
+        // SelectChoice routes through the screen VM's TrySelectChoice, which already
+        // refreshes the whole screen on success; no second refresh belongs here.
         next.SelectChoice();
-        _choiceChangedAction?.Invoke();
     }
 
     public void ExecuteClickDecrease()
@@ -53,7 +51,6 @@ public class CareerChoiceGroupObjectVM : ViewModel
         var last = _choices.LastOrDefault(c => c.IsTaken);
         if (last == null) return;
         last.DeSelectChoice();
-        _choiceChangedAction?.Invoke();
     }
 
     [DataSourceProperty]
