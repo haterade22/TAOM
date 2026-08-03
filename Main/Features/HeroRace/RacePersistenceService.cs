@@ -35,10 +35,37 @@ public class RacePersistenceService : IRacePersistenceService
         _logger = logger;
     }
 
+    // A capture is only as trustworthy as the race table it was taken against. Below this many
+    // races the table cannot be TAOM's, so the capture describes a world that does not have our
+    // races rather than a world where nobody has one. Two is the smallest count that can express
+    // "human and something else", which is the minimum a real TAOM load produces.
+    private const int MinimumTrustworthyRaceCount = 2;
+
     public void CaptureHeroRaces()
     {
+        // Multiplayer field report 2026-08-03 §1 — refuse to capture against a degenerate race
+        // table. A co-op host running WITHOUT TAOM's modules has one race ("human") in its FaceGen,
+        // so every hero there reads back as 0. Capturing that writes legend="human" + {all heroes: 0},
+        // which rides the host->client save transfer and makes RestoreHeroRaces force EVERY hero in
+        // the world to human on a full 15-race client — each individual value being perfectly valid,
+        // which is why no per-value validation catches it. The race COUNT is the only tell.
+        //
+        // Skip, don't clear: leaving the prior map and legend intact means a good capture already in
+        // memory survives the bad host, and a genuinely empty state stays empty (RestoreHeroRaces
+        // then takes its "no saved data" path and heroes keep their XML races).
+        var raceNames = _raceManager.GetOrderedRaceNames();
+        var raceCount = raceNames?.Count ?? 0;
+        if (raceCount < MinimumTrustworthyRaceCount)
+        {
+            _logger.LogWarning(
+                $"RacePersistenceService: refusing to capture hero races against a {raceCount}-race table " +
+                "(TAOM's races are not loaded here — a co-op host without our modules looks exactly like this). " +
+                "Keeping the existing race map; capturing now would restore every hero as human on a full client.");
+            return;
+        }
+
         _heroRaceMap = new Dictionary<string, int>();
-        _raceNameLegend = string.Join(";", _raceManager.GetOrderedRaceNames());
+        _raceNameLegend = string.Join(";", raceNames);
 
         var heroes = _heroRosterAdapter.GetAllAliveHeroRaces();
         foreach (var hero in heroes)

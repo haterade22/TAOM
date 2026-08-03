@@ -59,9 +59,41 @@ public class RacePersistenceBehaviorTests
             "OnBeforeSave must capture races so the save snapshot includes the latest live race state. " +
             "Cross-feature contract with CharacterCreation (#171): newly-set race IDs from CC must reach the saved snapshot.");
 
-        StringAssert.Contains(source, "CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, _ => _service.RestoreHeroRaces())",
+        StringAssert.Contains(source, "CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, _ => OnSessionLaunched())",
             "OnSessionLaunched must restore captured races so loaded heroes get their persisted race re-applied. " +
             "Without this subscription, every save-load reverts all heroes to vanilla race=0 (human).");
+    }
+
+    // --- Multiplayer field report 2026-08-03 §1 — session-launch capture ---
+
+    [TestMethod]
+    public void OnSessionLaunched_RestoresThenCaptures()
+    {
+        // A co-op host's save transfer to a joining client never raises OnBeforeSaveEvent, so without
+        // a capture here the race map is empty when the world is serialized and the joiner receives
+        // no race data at all.
+        _sut.OnSessionLaunched();
+
+        Received.InOrder(() =>
+        {
+            _service.RestoreHeroRaces();
+            _service.CaptureHeroRaces();
+        });
+    }
+
+    [TestMethod]
+    public void OnSessionLaunched_DoesNotCaptureBeforeRestoring()
+    {
+        // The inverse of the above, asserted independently: capturing first would snapshot every
+        // hero at their raw XML race and write that over the map the restore is about to apply,
+        // destroying the persisted races on every single load.
+        var callOrder = new System.Collections.Generic.List<string>();
+        _service.When(s => s.RestoreHeroRaces()).Do(_ => callOrder.Add("restore"));
+        _service.When(s => s.CaptureHeroRaces()).Do(_ => callOrder.Add("capture"));
+
+        _sut.OnSessionLaunched();
+
+        CollectionAssert.AreEqual(new[] { "restore", "capture" }, callOrder);
     }
 
     [TestMethod]

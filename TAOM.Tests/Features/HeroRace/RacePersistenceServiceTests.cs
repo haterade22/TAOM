@@ -405,6 +405,127 @@ public class RacePersistenceServiceTests
         Assert.AreEqual("human;dwarf;elf", store.LastSavedLegend);
     }
 
+    // --- Multiplayer field report 2026-08-03 §1 — degenerate-legend capture guard ---
+    //
+    // A headless co-op host running WITHOUT TAOM's modules has exactly one race in its FaceGen:
+    // "human". Every hero there reports race 0, so an unguarded capture writes legend="human" and
+    // {every hero: 0}. That map then rides the host->client save transfer, and RestoreHeroRaces on
+    // a full 15-race client takes the legend path, resolves "human" to a VALID current id 0, and
+    // force-sets every hero in the world to human. The save-time validation cannot catch it: every
+    // value in it is individually well-formed. Only the race COUNT betrays the degenerate source.
+
+    [TestMethod]
+    public void CaptureHeroRaces_OneRaceLegend_DoesNotOverwriteRicherCapturedData()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1),
+            new HeroRaceInfo("hero_elf", 2)
+        });
+        _sut.CaptureHeroRaces();
+        Assert.AreEqual(2, _sut.CapturedRaceCount, "precondition: rich capture succeeded");
+
+        // Now the degenerate host: one race in FaceGen, so every hero reads back as human.
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 0),
+            new HeroRaceInfo("hero_elf", 0)
+        });
+
+        _sut.CaptureHeroRaces();
+
+        // Assert on the PERSISTED legend, not the entry count: the degenerate capture writes the
+        // same NUMBER of entries (all zeroed), so a count assertion passes either way.
+        var store = new RoundTripDataStore { IsSaving = true };
+        _sut.SyncRaceData(store);
+        Assert.AreEqual("human;dwarf;elf", store.LastSavedLegend,
+            "a one-race legend must not replace the richer one — that is the mass-humanize vector");
+    }
+
+    [TestMethod]
+    public void CaptureHeroRaces_OneRaceLegend_ThenRestore_DoesNotMassHumanizeHeroes()
+    {
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1),
+            new HeroRaceInfo("hero_elf", 2)
+        });
+        _sut.CaptureHeroRaces();
+
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 0),
+            new HeroRaceInfo("hero_elf", 0)
+        });
+        _sut.CaptureHeroRaces();
+
+        // Back on a full client: heroes load at 0 and must be restored to their real races.
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human", "dwarf", "elf" });
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_dwarf", 1);
+        _heroRosterAdapter.Received(1).SetHeroRace("hero_elf", 2);
+        _heroRosterAdapter.DidNotReceive().SetHeroRace("hero_dwarf", 0);
+        _heroRosterAdapter.DidNotReceive().SetHeroRace("hero_elf", 0);
+    }
+
+    [TestMethod]
+    public void CaptureHeroRaces_OneRaceLegend_LogsWarning()
+    {
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 0)
+        });
+
+        _sut.CaptureHeroRaces();
+
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("race")));
+    }
+
+    [TestMethod]
+    public void CaptureHeroRaces_OneRaceLegend_EmptyPriorState_StaysEmpty()
+    {
+        // A genuinely one-race world with nothing captured yet: skipping leaves the map empty, so
+        // RestoreHeroRaces takes its "no saved data" path and heroes keep their XML races.
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_a", 0)
+        });
+
+        _sut.CaptureHeroRaces();
+
+        Assert.AreEqual(0, _sut.CapturedRaceCount);
+        _sut.RestoreHeroRaces();
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void CaptureHeroRaces_EmptyRaceList_DoesNotOverwriteRicherCapturedData()
+    {
+        // Same guard, degenerate in the other direction: a race manager that failed to initialise
+        // at all reports zero races. Capturing then would write an EMPTY legend, which RestoreHeroRaces
+        // reads as "pre-#330 save" and falls through to the raw-index path — silently reinterpreting
+        // every saved value against whatever race order the next session happens to have.
+        _heroRosterAdapter.GetAllAliveHeroRaces().Returns(new List<HeroRaceInfo>
+        {
+            new HeroRaceInfo("hero_dwarf", 1)
+        });
+        _sut.CaptureHeroRaces();
+
+        _raceManager.GetOrderedRaceNames().Returns(new string[0]);
+        _sut.CaptureHeroRaces();
+
+        var store = new RoundTripDataStore { IsSaving = true };
+        _sut.SyncRaceData(store);
+        Assert.AreEqual("human;dwarf;elf", store.LastSavedLegend,
+            "an empty race list must not blank the legend — an empty legend silently downgrades " +
+            "restore to the pre-#330 raw-index path");
+    }
+
     // Issue #330 — clear-on-load. SyncData with an absent key leaves the ref value unchanged, so
     // loading an older-format (or pre-TAOM) save after a newer session in the same process would
     // otherwise restore the PREVIOUS campaign's data onto colliding StringIds (#130-R1 bug class,
