@@ -300,6 +300,78 @@ public class CareerScreenVMTests
         Assert.AreEqual("ranger", chosenCareerId);
     }
 
+    // ── Collapse on level-up: taking or refunding a choice refreshes the screen, which rebuilds
+    // every group VM. Fresh VMs start with ButtonsVisible=false and Gauntlet fires no new
+    // HoverBegin for a widget recreated under a stationary cursor, so the +/- strip vanished on
+    // every click. Rebuilds must carry the open state over to the replacement VMs. ──
+
+    [TestMethod]
+    public void ClickIncrease_HoveredGroup_StaysOpenAfterRebuild()
+    {
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+        var group = vm.ChoiceGroupsTier1[0];
+        group.ExecuteBeginHover();
+
+        group.ExecuteClickIncrease();
+
+        Assert.IsTrue(_dataService.GetOrCreateData("hero1").HasChoice("wb_brut_key"),
+            "sanity: the click should take the first untaken choice");
+        Assert.IsTrue(vm.ChoiceGroupsTier1[0].ButtonsVisible,
+            "the rebuilt group VM under the cursor should stay open");
+    }
+
+    [TestMethod]
+    public void ClickDecrease_HoveredGroup_StaysOpenAfterRebuild()
+    {
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        _dataService.TryAddChoice("hero1", "wb_brut_key", 10);
+        var vm = CreateVM();
+        var group = vm.ChoiceGroupsTier1[0];
+        group.ExecuteBeginHover();
+
+        group.ExecuteClickDecrease();
+
+        Assert.IsFalse(_dataService.GetOrCreateData("hero1").HasChoice("wb_brut_key"),
+            "sanity: the click should refund the last taken choice");
+        Assert.IsTrue(vm.ChoiceGroupsTier1[0].ButtonsVisible,
+            "the rebuilt group VM under the cursor should stay open");
+    }
+
+    [TestMethod]
+    public void RefreshValues_NoGroupHovered_GroupsStayClosed()
+    {
+        SetupHeroWithCareer();
+        var vm = CreateVM();
+
+        vm.RefreshValues();
+
+        Assert.IsFalse(vm.ChoiceGroupsTier1[0].ButtonsVisible,
+            "carry-over must not open groups that were closed before the rebuild");
+    }
+
+    [TestMethod]
+    public void ClickIncrease_RebuildsGroupsOnce_NotTwice()
+    {
+        // Keystone already taken so the click lands on the passive choice -- keystone
+        // selection also scans GetChoicesForGroup for the mutual-exclusion check, which
+        // would muddy the rebuild count this test pins down.
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        _dataService.TryAddChoice("hero1", "wb_brut_key", 10);
+        var vm = CreateVM();
+        _registry.ClearReceivedCalls();
+
+        vm.ChoiceGroupsTier1[0].ExecuteClickIncrease();
+
+        // One successful selection = one RefreshValues = one rebuild. The group VM's
+        // choiceChangedAction fired a second, redundant rebuild after TrySelectChoice
+        // had already refreshed the screen.
+        _registry.Received(1).GetChoicesForGroup("wb_brutality");
+    }
+
     [TestMethod]
     public void NormalMode_IsSwitchModeFalse_IsNormalModeTrue()
     {

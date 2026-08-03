@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TAOM.Adapters;
@@ -235,6 +236,15 @@ public class CareerScreenVM : ViewModel
 
     private void RebuildChoiceGroups(CareerDefinition career)
     {
+        // Selecting or deselecting a choice refreshes the screen, which replaces every group VM.
+        // Fresh VMs start with ButtonsVisible=false and Gauntlet fires no new HoverBegin for a
+        // widget recreated under a stationary cursor, so without carrying the open state over,
+        // the +/- strip collapsed on every click.
+        var openGroupIds = new HashSet<string>();
+        CollectOpenGroupIds(_choiceGroupsTier1, openGroupIds);
+        CollectOpenGroupIds(_choiceGroupsTier2, openGroupIds);
+        CollectOpenGroupIds(_choiceGroupsTier3, openGroupIds);
+
         _choiceGroupsTier1.Clear();
         _choiceGroupsTier2.Clear();
         _choiceGroupsTier3.Clear();
@@ -245,7 +255,10 @@ public class CareerScreenVM : ViewModel
             if (group == null) continue;
 
             var isLocked = !IsTierAvail(group.Tier);
-            var groupVM = new CareerChoiceGroupObjectVM(group, isLocked, () => RefreshValues());
+            var groupVM = new CareerChoiceGroupObjectVM(group, isLocked)
+            {
+                ButtonsVisible = openGroupIds.Contains(group.Id)
+            };
 
             var choices = _registry.GetChoicesForGroup(groupId);
             foreach (var choice in choices)
@@ -261,6 +274,16 @@ public class CareerScreenVM : ViewModel
                 case 2: _choiceGroupsTier2.Add(groupVM); break;
                 case 3: _choiceGroupsTier3.Add(groupVM); break;
             }
+        }
+    }
+
+    private static void CollectOpenGroupIds(
+        MBBindingList<CareerChoiceGroupObjectVM> groups, HashSet<string> openGroupIds)
+    {
+        foreach (var groupVM in groups)
+        {
+            if (groupVM.ButtonsVisible)
+                openGroupIds.Add(groupVM.GroupId);
         }
     }
 
