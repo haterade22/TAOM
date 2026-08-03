@@ -4,6 +4,130 @@
 
 ## 2026-08-03
 
+### fix(armory): 168 stray `<action>` elements crashed every dedicated server
+
+`LOTRLOME_Armory/ModuleData/action_sets.xml` carried 168 `<action>` elements parented by
+`<action_sets>` instead of an `<action_set>`. Twelve `as_<race>_female_villager_in_aserai_tavern`
+sets had been authored SELF-CLOSING, which orphaned the 14 female-conversation overrides that belong
+inside each — vanilla's own `as_human_female_villager_in_aserai_tavern` nests exactly those 14, in
+that order, and all twelve TAOM groups matched it byte for byte.
+
+Build 1.4.7.117484 tolerates the malformed file, so nothing surfaced in play. Build 117131 — which
+TaleWorlds' dedicated-server engine ships — throws `KeyNotFoundException` in
+`MBObjectManager.MergeElements` at schema path `/action_sets/action` and dies on boot, which is why
+every server operator had to run the single-player module order to get one started.
+
+Fixed in the live file and the tracked snapshot together (`tools/oneoff/fix_orphaned_tavern_conversation_actions.py`);
+all 34,247 action elements and 1,226 action_sets are preserved, only their parentage changed.
+`tools/audit_action_set_parity.py` now fails on any root-level `<action>`, verified in both
+directions against the pre-fix file.
+
+### fix(herorace): a one-race host used to humanise every hero in the world
+
+A co-op host running without TAOM's modules has one race in its FaceGen, so every hero there reads
+back as 0. `CaptureHeroRaces` wrote that as `legend="human"` + `{all heroes: 0}`, the map rode the
+host→client save transfer, and `RestoreHeroRaces` on a full 15-race client resolved "human" to a
+perfectly valid id and force-set every hero in the world to it. No per-value validation could catch
+it — each individual value was well-formed; the race COUNT was the only tell. Capture now refuses a
+table below two races and keeps whatever map it already had.
+
+Second half of the same failure: capture ran only on `OnBeforeSaveEvent`, which the host→client save
+transfer never raises, so a joiner received a world with no race data at all. It now also runs at
+session launch — after the restore, an ordering the tests pin, because capturing first would
+snapshot every hero at their raw XML race and overwrite the map the restore is about to apply.
+
+### feat(possession): re-apply what character creation granted to the hero you actually get
+
+Every multiplayer base discards the character-creation hero at the join hand-off and substitutes a
+host-authored one. TAOM's CC grants all ran against the discarded hero, so joiners arrived with the
+wrong race and none of their culture's package — a Mirkwood player got the native 1000 gold instead
+of 1000+4000, with the +4000 grant visible in the client log immediately before the hero it applied
+to ceased to exist.
+
+`Main/Features/PlayerPossession/` records the choices at CC-finalize, watches for
+`Hero.MainHero` becoming a different hero, and re-invokes the existing grant paths — `SetHeroRace`,
+`GrantPlayerStartupGold`, `OnCareerSelected`, `InitializeHero` — against the right one. No co-op
+assembly is referenced: the detection is pure engine state, so it works the same under BannerlordCoop,
+Bannerlord Together, or something that does not exist yet.
+
+The guards matter more than the feature. `Hero.MainHero` ALSO changes in single-player on heir
+succession, so a naive version would hand every heir a fresh starting package. It is gated on co-op
+presence (solo never reaches it), consumed once, and marked per hero in `SyncData` so a reconnect
+cannot re-grant. Each grant is independently guarded — a joiner losing their career because the gold
+grant threw would be worse than the bug being fixed.
+
+### fix(specres): you had to COMMAND the winning side to earn anything
+
+The earn gate asked whether the player is the winning side's `LeaderParty.LeaderHero`. Join any
+lord's army and you are not — so in ordinary single-player, every victory fought under someone
+else's command paid zero. Multiplayer made it total rather than different: under a client/server
+split no player leads the authoritative side either, which is how a session with 33 fought missions
+produced one `MapEventEnded`, with `state=None`.
+
+Now keyed on `MapEvent.PlayerSide == MapEvent.WinningSide` — participation, not command — extracted
+into `SpecialResourceEarnPolicy` so the AI-led-army case is pinned by a test that fails on the old
+logic.
+
+Separately, a dedicated server no longer credits `Hero.MainHero`. That hero is the idle world-gen
+character the campaign was created around, and the server was banking prisoner and raid income
+against it while the remote players who fought those battles earned nothing. Detected from the
+binaries folder this assembly loaded from, which is a fact about the process rather than a guess:
+notably NOT from co-op role, because a client-hosted session's host also reports `IsServer` and is a
+real player who must keep earning.
+
+### fix(emissary): the shop no longer takes payment for troops that evaporate
+
+On a non-authoritative peer the special-resource charge persisted while the purchased elite went
+into a client-side roster the next resync overwrote — pay real, get phantom. The sale is now declined
+before the charge, with a message saying why. Granting it properly needs a message TAOM cannot send
+without a compile-time dependency on one specific co-op mod, so declining is the honest behaviour
+rather than a placeholder.
+
+### fix(momentum): capturing a fief inside an ally's army counted for nothing
+
+`SiegeOutcomeSnapshot.PlayerInvolved` required the player's own party to BE the captor, while the
+battle snapshot beside it already counted any party in the player's kingdom. So the normal way a
+vassal takes a settlement — inside someone else's army — recorded no player event, and the War of
+the Ring victory requirement quietly failed to advance. Sieges now use the same test as battles.
+
+This is the single-player half. Crediting remote players in OTHER kingdoms still needs a co-op seam
+TAOM does not have, and is not claimed as fixed.
+
+### feat(build): dedicated servers get TAOM binaries without a hand-copy
+
+Neither module shipped a `Win64_Shipping_Server` folder, so a dedicated server logged
+`Cannot find: ...\TAOM\bin\Win64_Shipping_Server\TAOM.dll` and then ran a vanilla simulation over
+TAOM's map — no race capture, no War of the Ring, no campaign systems at all. Both csprojs now mirror
+the assembled client folder to it, the same way `Main/TAOM.csproj` already mirrors to
+`Win64_Shipping_wEditor`. Verified: 10 files for TAOM, 42 for TAOM.Dependencies, covering every DLL
+server operators were copying by hand.
+
+The two opt-out flags that recipe also needed are already obsolete — PatchShield skips install
+outright under co-op presence, and SaveShield rethrows save-load faults there instead of swallowing.
+
+### feat(devconsole): `taom.audit_settlement_entrances` finds unreachable settlement gates
+
+Three settlement destinations were reported as wedging AI parties: `town_MM2`'s gate,
+`hideout_desert_7`, and `castle_village_MM1_2`. All three coordinates match the live map data
+exactly, and none of the faces is off-mesh — `PathFaceRecord.IsValid()` is true for every one, which
+is why nothing cheaper than an island comparison detects them. They sit on navmesh islands the rest
+of the map cannot path to, so every AI tick targeting them fails its path query and the engine says
+so only through a repeating assert.
+
+The command walks every settlement's entrance, derives the main landmass from the island index most
+settlements agree on, and reports each disagreement with a replacement coordinate from
+`GetAccessiblePointNearPosition` — the engine's own navmesh answering, not a guess. Needs one
+in-game run to produce the numbers; applying them is a separate step against the live
+`TAOM_Map/ModuleData/settlements.xml`.
+
+### fix(mainmenu): 4,803 log lines per headless boot
+
+`CustomizeMenu` runs on every screen-root set and warned unconditionally when an option was missing.
+A dedicated server sets that root thousands of times per boot with StoryMode and SandBox absent, so
+both warnings fired every time. The warnings are now once per option and the applied-line once per
+session; the customization itself still runs every call, because the engine can rebuild the
+initial-state options between sets and skipping it would silently drop the rename on a real client.
+
 ### docs(armory): the shield grip split is fine, two "typos" in it are load-bearing
 
 Audited all 226 shields in `LOTRAOM_shields.xml` against vanilla 1.4.7 after the `hand_shield` /

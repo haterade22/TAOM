@@ -59,6 +59,27 @@ def load(path: str) -> dict:
     return d
 
 
+def root_level_actions(path: str) -> list:
+    """`<action>` elements parented by `<action_sets>` instead of an `<action_set>`.
+
+    Structurally illegal, but build 1.4.7.117484 tolerates it silently, so it only surfaces
+    somewhere else entirely: build 117131 -- which TaleWorlds' DEDICATED SERVER engine ships --
+    throws KeyNotFoundException in MBObjectManager.MergeElements at schema path
+    /action_sets/action and takes the server down on boot. Reported from multiplayer field
+    testing 2026-08-03; 168 such elements existed at the time, from twelve
+    `as_<race>_female_villager_in_aserai_tavern` sets authored SELF-CLOSING, which orphaned the
+    14 female-conversation overrides that belong nested inside each (vanilla's own
+    `as_human_female_villager_in_aserai_tavern` nests exactly those 14).
+
+    Returns the orphaned `type` values so the report can name them.
+    """
+    try:
+        root = ET.parse(path).getroot()
+    except (ET.ParseError, OSError) as exc:
+        sys.exit(f"ERROR: cannot read {path}: {exc}")
+    return [a.get("type") or "?" for a in root.findall("action")]
+
+
 def merge(*universes: dict) -> dict:
     """Field-merge same-id sets across modules (the engine's behavior)."""
     out: dict = {}
@@ -109,6 +130,8 @@ def main() -> None:
     live = load(args.live)
     universe = merge(native, live)
 
+    orphans = root_level_actions(args.live)
+
     if "as_human_warrior" not in native:
         sys.exit("ERROR: as_human_warrior not found in Native")
     reference = set(native["as_human_warrior"]["own"])  # the parity target (active, comment-free)
@@ -152,6 +175,15 @@ def main() -> None:
     else:
         print("OK: every humanoid set has the full Native as_human_warrior surface (0 gaps).")
 
+    if orphans:
+        print()
+        print(f"!! {len(orphans)} root-level <action> element(s) in {args.live}:")
+        print("   These are parented by <action_sets>, not an <action_set>. Build 117131 (the")
+        print("   DEDICATED SERVER engine) throws KeyNotFoundException on this file at boot.")
+        print("   Fix: nest each under the action_set it belongs to (make that set non-self-closing).")
+        for t in sorted(set(orphans))[:14]:
+            print(f"   {t}")
+
     if missing_base:
         print()
         print(f"WARN: {len(missing_base)} set(s) reference a base_set that doesn't exist in the merged universe:")
@@ -174,8 +206,10 @@ def main() -> None:
         for sid in humanoid_ok:
             print(f"   {sid}")
 
-    # exit non-zero if a real humanoid gap exists, so the engine-bump check can gate on it
-    sys.exit(1 if humanoid_gaps else 0)
+    # exit non-zero if a real humanoid gap OR a root-level <action> exists, so the engine-bump
+    # check can gate on both. The orphan check is cheap and catches a server-only boot crash that
+    # no single-player test run can reproduce.
+    sys.exit(1 if (humanoid_gaps or orphans) else 0)
 
 
 if __name__ == "__main__":

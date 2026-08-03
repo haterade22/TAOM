@@ -17872,49 +17872,50 @@
 	</action_set>
 	<action_set
 		id="as_dwarf_female_villager_in_aserai_tavern"
-		base_set="as_dwarf_villager_in_aserai_tavern" />
-	<action
+		base_set="as_dwarf_villager_in_aserai_tavern">
+		<action
 		type="act_conversation_normal_start"
 		animation="convo_start_normal_female1" />
-	<action
+		<action
 		type="act_conversation_normal_loop"
 		animation="convo_stand_normal_female1" />
-	<action
+		<action
 		type="act_conversation_normal2_start"
 		animation="convo_start_normal_female2" />
-	<action
+		<action
 		type="act_conversation_normal2_loop"
 		animation="convo_stand_normal_female2" />
-	<action
+		<action
 		type="act_conversation_closed_start"
 		animation="convo_start_closed_female1" />
-	<action
+		<action
 		type="act_conversation_closed_loop"
 		animation="convo_stand_closed_female1" />
-	<action
+		<action
 		type="act_conversation_closed2_start"
 		animation="convo_start_closed_female2" />
-	<action
+		<action
 		type="act_conversation_closed2_loop"
 		animation="convo_stand_closed_female2" />
-	<action
+		<action
 		type="act_conversation_confident_start"
 		animation="convo_start_confident_female1" />
-	<action
+		<action
 		type="act_conversation_confident_loop"
 		animation="convo_stand_confident_female1" />
-	<action
+		<action
 		type="act_conversation_confident2_start"
 		animation="convo_start_confident_female2" />
-	<action
+		<action
 		type="act_conversation_confident2_loop"
 		animation="convo_stand_confident_female2" />
-	<action
+		<action
 		type="act_conversation_hip_start"
 		animation="convo_start_hip_female1" />
-	<action
+		<action
 		type="act_conversation_hip_loop"
 		animation="convo_stand_hip_female1" />
+	</action_set>
 	<action_set
 		id="as_dwarf_warrior_in_aserai_tavern"
 		base_set="as_dwarf_villager_in_aserai_tavern" />
@@ -25735,25 +25736,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_uruk_female_villager_in_aserai_tavern" base_set="as_uruk_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_uruk_female_villager_in_aserai_tavern" base_set="as_uruk_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_uruk_warrior_in_aserai_tavern" base_set="as_uruk_villager_in_aserai_tavern" />
 	<action_set id="as_uruk_female_warrior_in_aserai_tavern" base_set="as_uruk_warrior_in_aserai_tavern">
@@ -28959,25 +28957,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_uruk_hai_female_villager_in_aserai_tavern" base_set="as_uruk_hai_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_uruk_hai_female_villager_in_aserai_tavern" base_set="as_uruk_hai_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_uruk_hai_warrior_in_aserai_tavern" base_set="as_uruk_hai_villager_in_aserai_tavern" />
 	<action_set id="as_uruk_hai_female_warrior_in_aserai_tavern" base_set="as_uruk_hai_warrior_in_aserai_tavern">
@@ -32261,25 +32256,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_berserker_female_villager_in_aserai_tavern" base_set="as_berserker_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_berserker_female_villager_in_aserai_tavern" base_set="as_berserker_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_berserker_warrior_in_aserai_tavern" base_set="as_berserker_villager_in_aserai_tavern" />
 	<action_set id="as_berserker_female_warrior_in_aserai_tavern" base_set="as_berserker_warrior_in_aserai_tavern">
@@ -35564,25 +35556,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_orc_female_villager_in_aserai_tavern" base_set="as_orc_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_orc_female_villager_in_aserai_tavern" base_set="as_orc_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_orc_warrior_in_aserai_tavern" base_set="as_orc_villager_in_aserai_tavern" />
 	<action_set id="as_orc_female_warrior_in_aserai_tavern" base_set="as_orc_warrior_in_aserai_tavern">
@@ -38863,25 +38852,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_nazghul_female_villager_in_aserai_tavern" base_set="as_nazghul_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_nazghul_female_villager_in_aserai_tavern" base_set="as_nazghul_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_nazghul_warrior_in_aserai_tavern" base_set="as_nazghul_villager_in_aserai_tavern" />
 	<action_set id="as_nazghul_female_warrior_in_aserai_tavern" base_set="as_nazghul_warrior_in_aserai_tavern">
@@ -42158,25 +42144,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_hill_troll_female_villager_in_aserai_tavern" base_set="as_hill_troll_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_hill_troll_female_villager_in_aserai_tavern" base_set="as_hill_troll_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_hill_troll_warrior_in_aserai_tavern" base_set="as_hill_troll_villager_in_aserai_tavern" />
 	<action_set id="as_hill_troll_female_warrior_in_aserai_tavern" base_set="as_hill_troll_warrior_in_aserai_tavern">
@@ -45453,25 +45436,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_pale_uruk_female_villager_in_aserai_tavern" base_set="as_pale_uruk_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_pale_uruk_female_villager_in_aserai_tavern" base_set="as_pale_uruk_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_pale_uruk_warrior_in_aserai_tavern" base_set="as_pale_uruk_villager_in_aserai_tavern" />
 	<action_set id="as_pale_uruk_female_warrior_in_aserai_tavern" base_set="as_pale_uruk_warrior_in_aserai_tavern">
@@ -48428,25 +48408,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_cave_troll_female_villager_in_aserai_tavern" base_set="as_cave_troll_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_cave_troll_female_villager_in_aserai_tavern" base_set="as_cave_troll_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_cave_troll_warrior_in_aserai_tavern" base_set="as_cave_troll_villager_in_aserai_tavern" />
 	<action_set id="as_cave_troll_female_warrior_in_aserai_tavern" base_set="as_cave_troll_warrior_in_aserai_tavern">
@@ -51485,25 +51462,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_dg_uruk_female_villager_in_aserai_tavern" base_set="as_dg_uruk_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_dg_uruk_female_villager_in_aserai_tavern" base_set="as_dg_uruk_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_dg_uruk_warrior_in_aserai_tavern" base_set="as_dg_uruk_villager_in_aserai_tavern" />
 	<action_set id="as_dg_uruk_female_warrior_in_aserai_tavern" base_set="as_dg_uruk_warrior_in_aserai_tavern">
@@ -54460,25 +54434,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_goblin_female_villager_in_aserai_tavern" base_set="as_goblin_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_goblin_female_villager_in_aserai_tavern" base_set="as_goblin_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_goblin_warrior_in_aserai_tavern" base_set="as_goblin_villager_in_aserai_tavern" />
 	<action_set id="as_goblin_female_warrior_in_aserai_tavern" base_set="as_goblin_warrior_in_aserai_tavern">
@@ -57665,25 +57636,22 @@
 
 		<!--<action type="act_sit_on_floor_talk_to_barmaid_left_side" animation="tavern_customer_conversation_b" />-->
 	</action_set>
-	<action_set id="as_saruman_female_villager_in_aserai_tavern" base_set="as_saruman_villager_in_aserai_tavern" />
-
-	<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
-	<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
-	<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
-	<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
-
-	<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
-	<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
-	<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
-	<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
-
-	<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
-	<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
-	<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
-	<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
-
-	<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
-	<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	<action_set id="as_saruman_female_villager_in_aserai_tavern" base_set="as_saruman_villager_in_aserai_tavern">
+		<action type="act_conversation_normal_start" animation="convo_start_normal_female1" />
+		<action type="act_conversation_normal_loop" animation="convo_stand_normal_female1" />
+		<action type="act_conversation_normal2_start" animation="convo_start_normal_female2" />
+		<action type="act_conversation_normal2_loop" animation="convo_stand_normal_female2" />
+		<action type="act_conversation_closed_start" animation="convo_start_closed_female1" />
+		<action type="act_conversation_closed_loop" animation="convo_stand_closed_female1" />
+		<action type="act_conversation_closed2_start" animation="convo_start_closed_female2" />
+		<action type="act_conversation_closed2_loop" animation="convo_stand_closed_female2" />
+		<action type="act_conversation_confident_start" animation="convo_start_confident_female1" />
+		<action type="act_conversation_confident_loop" animation="convo_stand_confident_female1" />
+		<action type="act_conversation_confident2_start" animation="convo_start_confident_female2" />
+		<action type="act_conversation_confident2_loop" animation="convo_stand_confident_female2" />
+		<action type="act_conversation_hip_start" animation="convo_start_hip_female1" />
+		<action type="act_conversation_hip_loop" animation="convo_stand_hip_female1" />
+	</action_set>
 
 	<action_set id="as_saruman_warrior_in_aserai_tavern" base_set="as_saruman_villager_in_aserai_tavern" />
 	<action_set id="as_saruman_female_warrior_in_aserai_tavern" base_set="as_saruman_warrior_in_aserai_tavern">
