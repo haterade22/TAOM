@@ -54,9 +54,11 @@ public sealed class MissionDiagnosticService : IMissionDiagnosticService
             // guarded — OnGameStart runs before CampaignTime model is ready, so reading
             // CampaignTime.Now there NREs even when Campaign.Current is non-null.
             // The time half routinely fails HERE and that is expected: the snapshot runs before
-            // Campaign.Models is built, so CampaignTime.GetDayOfSeason divides by a still-zero
-            // TimeTicksPerDay. The hero half survives on its own, and LogMissionStartSnapshot
-            // repeats the line once models are up -- that is where the date actually lands.
+            // Campaign.Models is built, so CampaignTime.ToString() hits GetYear, which divides by
+            // a still-zero TimeTicksPerYear. The hero half survives on its own, and
+            // LogMissionStartSnapshot repeats the line once models are up -- that is where the
+            // date actually lands. On a save-load Campaign.GameStarted is ALREADY true here, so
+            // the guard below does not protect this call (see CampaignContextFormatter).
             if (Campaign.Current != null && Campaign.Current.GameStarted)
                 LogCampaignContext();
             else

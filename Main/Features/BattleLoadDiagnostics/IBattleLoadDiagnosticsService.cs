@@ -57,6 +57,11 @@ public interface IBattleLoadDiagnosticsService
     void LogAgentEquipBegin(EquipmentSnapshot snapshot);
     void LogAgentEquipOk(int agentIndex, string agentName);
 
+    // Phase 5b — Mission.BuildAgent returned. AgentEquipOk only proves the equip call came back;
+    // the engine then does ~14 more lines of native work on the same agent (Mission.cs:4035-4049).
+    // An Ok with no BuildDone puts the fault in that tail rather than between two agents.
+    void LogAgentBuildDone(int agentIndex, string agentName);
+
     // Phase 6 — first OnMissionTick reached: the battle is playable (load succeeded).
     void LogBattlePlayable(string sceneName, int agentCount);
 

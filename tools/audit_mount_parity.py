@@ -395,6 +395,17 @@ def section_f(types):
     inv = chariot_clips()
     print(f"  F4 as_chariot: {len(bound)} bound actions; {len(inv)} deployed clips")
 
+    # An empty inventory means the clips path is wrong, NOT that the data is clean.
+    # The `dangling` check would flood (every target "missing"), but `untagged` tests
+    # `bound[r] in inv` FIRST, so it silently reports nothing regardless of ground
+    # truth -- a false clean on the one probe that guards against the shipped
+    # quad_movement AV. Refuse to report either result rather than mislead.
+    if not inv:
+        print(f"      WARNING: 0 clips found under {CHARIOT['clips']}")
+        print("      F4 target-resolution and quad_movement checks SKIPPED - path is wrong,")
+        print("      not the data. Fix the path before trusting this section.")
+        return
+
     refs = set()
     for table in ROW_KEYS:
         refs.update(rows_of(cs, table).values())

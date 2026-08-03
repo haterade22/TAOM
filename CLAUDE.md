@@ -444,6 +444,7 @@ shadowing** (e.g. `sk_dwarf_iron_*` lives in `iron_hills/`, not `erebor/`). Full
 table + Gondor prefixes + CC facegen rule: **`/author-armor`** +
 [`docs/reference/armory-guide.md`](docs/reference/armory-guide.md).
 Validation: `python tools/validate_all_troop_refs.py` (missing item IDs → characters in underwear).
+**Shields:** `item_usage="hand_shield"` requires `ForceAttachOffHandPrimaryItemBone`, `item_usage="shield"` requires `ForceAttachOffHandSecondaryItemBone` — never both. Two `body_name`s in `LOTRAOM_shields.xml` look mistyped and must NOT be "fixed" (the asset is packaged under the misspelling): [`docs/reference/armory-shield-audit.md`](docs/reference/armory-shield-audit.md).
 
 ## Rebalancing & Data Tools
 

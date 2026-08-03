@@ -2,7 +2,300 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-03
+
+### docs(armory): the shield grip split is fine, two "typos" in it are load-bearing
+
+Audited all 226 shields in `LOTRAOM_shields.xml` against vanilla 1.4.7 after the `hand_shield` /
+`shield` mix looked suspect. The mix is not the problem: the invariant that matters —
+`hand_shield` ⇒ `ForceAttachOffHandPrimaryItemBone`, `shield` ⇒ `ForceAttachOffHandSecondaryItemBone`
+— holds 226/226, matching vanilla's 135/135 across `shields.xml`, `tournament_weapons.xml` and
+`mpitems.xml`. Every TAOM race animates both grips (`audit_action_set_parity.py`: 0 gaps over 1304
+humanoid sets), and `weapon_class` is uninformative because vanilla ships no `SmallShield` either.
+
+What does diverge is shape versus grip: 56 kite-holstered shields are held centre-grip where vanilla
+does that for three. That costs block coverage — `hand_shield` caps the cross-body arc at ±0.55 on
+foot and horseback, `shield` at ±0.8/±0.6. Which of the 56 are wrong is a visual call, so
+[`docs/reference/armory-shield-audit.md`](docs/reference/armory-shield-audit.md) tables them by mesh
+family and changes none.
+
+Two entries in that file look like plain typos and must stay. `wm_isengard_shield_a04` references
+`bo_capwm_isengard_shield_a02_clean` with the underscore missing — but the asset is packaged under
+that exact misspelling and the corrected spelling exists in no `.tpac`, so correcting the XML would
+manufacture the missing-collision-body hang from #352. `gond_shld4` uses its full body as its own
+capsule because no `bo_cap_wm_gondor_shield_a` was ever built. Both are now recorded as
+deliberate-looking-wrong, with the TOC evidence.
+
+One real fix: `wm_boromir_shield` was borrowing a round Rohirrim shield's capsule while its own
+`bo_cap_wm_boromir_shield` sat packaged and unwired, so its block geometry did not track its mesh.
+That file is outside any git repo — the audit doc is the only record if a dependency refresh reverts it.
+
+The generalizable half is now a lesson in
+[`lessons/data-content-cultures.md`](docs/reviews/lessons/data-content-cultures.md) and a second
+warning box in [`mesh-ref-validation.md`](docs/features/mesh-ref-validation.md). #352 was a good
+ref/asset pair broken on the *ref* side, and stating it that way trains "malformed name ⇒ fix the
+name." It runs both directions, so a `validate_mesh_refs.py` PASS on a name that looks wrong is
+positive evidence the name is right — only `MISSING_BODY` names are safe to rewrite. The
+usage↔offhand-bone invariant is now stated in CLAUDE.md and `armory-guide.md` where authoring
+actually happens.
+
+### perf(diagnostics): 93% of the log was two blocks saying the same thing
+
+The clean tournament repro (`taom_debug_2026-08-03_12-08-46.log`) came to 644 KB / 4,536 lines for
+37 minutes of play. Reading it by tag: the `[BattleLoad]` equipment dump was 1,146 `slot=` lines
+describing **18 distinct loadouts**, and `[CultureMarketplace]` was 1,687 lines running at a
+sustained ~30/min with no ceiling. That matters because this file's job right now is crash forensics
+from user machines, and an unbounded steady-state stream buries the evidence a reporter uploads.
+
+The dump was per-agent but its content is per-loadout — 429 arena spectators drawn from 9 character
+kits. Each distinct loadout is now dumped once and later agents carry a `loadout=#N` token. The key
+is the rendered rows plus `race`/`monster`/`actionSet`, deliberately **not** the character id: it
+has to mean "what the engine is about to assemble", so a mid-load `MatchEquipment` rewrite surfaces
+as a new id with a fresh dump instead of being swallowed by an earlier twin. Crash durability
+improves rather than degrades — a deduped agent's block was flushed far earlier in the load, behind
+hundreds of subsequent synchronous INFO writes.
+
+`[CultureMarketplace]` now rolls a whole in-game day into one line. The 2026-07-27 gate was correct
+and still not enough. Two things survive the roll-up that the per-town line could not give you: the
+foreign-strip total across every town, and a picks-vs-injections divergence that previously meant
+diffing two tokens by eye across the whole session.
+
+**All three per-agent phase stamps are unchanged.** `AgentEquipOk` without `AgentBuildDone` is what
+separates an equip-phase death from a `Mission.BuildAgent` native-tail death — the distinction both
+open tournament CTDs turn on — and the measured cost is 145 ms for 429 agents.
+
+Constraint: `triage_battle_load.py` attaches slot dumps to the immediately-preceding
+`AgentEquipBegin`, so the dedupe would have left its `EQUIPMENT` verdict with no suspects at all. It
+now resolves `loadout=#N` back to the block that carries it, clearing the map at `MissionInitialize`
+because ids restart per load. Fixing that surfaced a live bug alongside it: a lazy
+`culture='(.*?)'` had been swallowing the `race`/`monster`/`actionSet` tokens added the day before,
+reporting the whole run as the town's culture.
+
+Measured by replaying the real log through the shipped key rather than estimated from it: the slot
+block goes 186,345 B → 8,432 B against 5,148 B of added tokens, and the projected file is
+644,215 B → 240,832 B (63 %). The first pass wrote "11 lines" here, from the count of distinct
+*rows*; a loadout is a *set* of rows, and the real figure is 18 loadouts / 52 lines.
+
+Not-tested: the in-game numbers (the above is a replay of an old-format log, not a fresh run).
+
+### feat(validate): the two ref classes nothing was checking
+
+The 2026-08-02 crash log carried three `Null object reference found with ID` lines that
+`validate_moduledata.py` had no chance of catching. Two independent gaps.
+
+`BodyProperty.*` was cross-checked by nothing — the feature doc listed it under "out of scope for
+v1". It is now a `BROKEN_BODY_PROPERTY_REF` ref kind, resolved against a registry built from the
+four authoritative `*_bodyproperties.xml` files (121 ids: 30 TAOM, 91 vanilla). An explicit file
+list, not a directory walk, for the same reason cultures use one — a walk sweeps config files that
+reuse the element shape.
+
+The sweep also only ever walked TAOM's own ModuleData, while 28 of the 33 bad refs sat on
+`LOTRLOME_Armory` item files. TAOM authors into that module directly, so it is TAOM's to keep
+correct even though it lives outside this repo and outside git. `Validator` now takes
+`extra_ref_roots` and sweeps it for **cross-references only** — the schema contracts (duplicate ids,
+civilian `equipmentType`, enums) describe TAOM's files and are not applied to a foreign module.
+
+Proven against the real registries rather than fixtures: reintroducing both original defects in a
+temp tree yields `UNKNOWN_CULTURE` at `LOTRLOME_Armory/LOTRLOME_items/rhun/head_armors.xml:2` and
+`BROKEN_BODY_PROPERTY_REF` at `characters/lords.xml:3`.
+
+### fix(validate): a missing Armory folder used to print PASS
+
+Found by the deep review, in the change directly above. The new sweep filtered its roots with
+`if Path(r).exists()` and reported only the ones it found. A renamed or missing `LOTRLOME_Armory`
+therefore dropped the entire Armory sweep silently and the run still printed `PASS` — output
+identical to a genuinely clean run, and a silent revert to the exact under-coverage state the sweep
+was built to end. `Validator` now records `missing_ref_roots` and the CLI says so loudly.
+
+Same class one layer up: no registry had a size floor, so a renamed vanilla `*_bodyproperties.xml`
+would shrink the set with no tell — to zero it trips the empty-registry guard and skips the check
+entirely (quiet), partway it floods false positives (loud). Both now warn.
+
+`tools/audit_mount_parity.py` had the same shape. If the chariot clip path resolved to nothing, the
+`quad_movement` probe tested `bound[r] in inv` first and so reported nothing regardless of ground
+truth — a false clean on the one check guarding the shipped gait-clip AV. Section F now refuses to
+report target-resolution or tagging results at all when the inventory is empty.
+
+Also from the review: `_read`/`_read_stripped` moved to `utf-8-sig` per the repo's own XML I/O
+convention, since the Armory sweep newly routes 382 files through them and 2 carry a BOM.
+
+### fix(missiondiag): the divide-by-zero was attributed to the wrong getter
+
+The API-compatibility pass decompiled installed v1.4.7 and caught that the code comments, the
+investigation doc and yesterday's CHANGELOG entry all named `GetDayOfSeason` / `TimeTicksPerDay` as
+the throw site. `CampaignTime.ToString()` evaluates `GetYear` first, so `TimeTicksPerYear` is what
+actually divides by zero. That was inferred from grepping for a division instead of reading the
+method — the conclusion held, the cited mechanism did not.
+
+The same pass established two things worth more than the correction. The window is structural, not a
+race: `Campaign.OnInitialize` invokes `GameManager.OnGameStart` — which calls TAOM's
+`SubModule.OnGameStart` — three lines before `CampaignTime.Initialize()`. And `Campaign.GameStarted`
+is already `true` there on a save-load but `false` on a new campaign, which is why the existing guard
+never closed the window and why this only ever surfaced on save-load.
+
+Known limitation: `MissionDiagnosticService.LogCampaignContext` has no unit test. It reads
+`Campaign.Current` statics that cannot be substituted, and the service has never had a test file.
+The pure formatter it delegates to has 6.
+
+RCA: `docs/reviews/rca-validator-silent-scope-2026-08-03.md`.
+
+## 2026-08-03
+
+### diag(siege): make an unusable rock pile say why
+
+The reporter later clarified the failure happened on a **vanilla** siege map while defending, on
+foot. That rules out the scene-data gap found yesterday — vanilla town and castle scenes carry 3–21
+working piles, `boulder` resolves, and the audit finds no dead item id in any of them.
+
+Three more candidates went the same way, each on evidence rather than reasoning. TAOM's
+`BehaviorTreeMissionLogic.OnObjectUsed` is a pure notifier and blocks nothing. The boulder pickup
+animations exist for both humanoid roots that matter: `act_pickup_boulder_begin`/`_end` are declared
+in Native's `as_human_warrior` and LOTRLOME's `as_dwarf_warrior`, and every LOTR race derives from
+one of them. LOTRLOME's duplicate `as_human_warrior` looked alarming until its contents turned out
+to be 47 spider-rider actions — an additive fragment relying on merge-by-union, not a replacement.
+
+What remains needs runtime state, so `SiegePropDiagnostics` reads it. Every candidate cause in the
+differential fails silently — the engine writes nothing when a prop is unusable, and the interaction
+system quietly keeps focus on the machine root, where `StonePile.GetDescriptionText` returns null for
+anything not tagged `ammopickup`. Blank prompt, dead key, empty log.
+
+The behavior sweeps `Mission.MissionObjects` — not `GetActiveEntitiesWithScriptComponentOfType`,
+which omits `SetDisabled` objects and would hide one of the causes being tested for — and records
+per prop: whether `GivenItemID` resolves, ammo remaining, machine disabled/deactivated state,
+standing-point and `ammopickup`-point counts, how many points are deactivated, occupied, or disabled
+for the player, and the decisive `GetValidVacantReachableStandingPointForAgent(Agent.Main).IsValid`
+verdict, plus the nearest point's distance and ground-height delta. Classification into one of
+thirteen named causes is pure logic over primitive snapshots, so it is unit-tested without a Mission.
+
+Two false positives are designed out, both from the barrel/pile asymmetry: only `StonePile` requires
+`ammopickup`-tagged points and a resolvable item, because `AmmoBarrelBase` iterates every standing
+point and hands out no item at all — vanilla's `arrow_barrel` prefab tags nothing. Flagging either on
+a barrel would have buried the real fault. The geometry gates are written as positive requirements so
+a NaN from the engine fails them instead of passing.
+
+Off by default under `Battle Tactics/Siege Prop Diagnostics`. Diagnostic only — it changes no
+gameplay.
+
 ## 2026-08-02
+
+### tools(siege): find the sieges where the rock piles are scenery
+
+A player reported not being able to interact with throwable rock piles or arrow baskets in sieges,
+and that the AI never threw rocks either. `tools/audit_siege_props.py` answers that statically, for
+every town and castle at once, without launching the game.
+
+A prop only works if it carries the engine script — `StonePile`, `ArrowBarrel`, `JavelinBarrel`. A
+scene can hold dozens of pile-shaped meshes that render identically and do nothing, and the engine
+says nothing about it: `MissionMainAgentInteractionComponent.FocusTick` finds no usable standing
+point, focus falls back to the machine root, and `StonePile.GetDescriptionText` returns null for any
+entity not tagged `ammopickup`. Blank prompt, dead interact key, no log line.
+
+The count has to be per entity, not per string match. A scene entity can reference the prefab *and*
+re-declare the script inline to override a variable, so counting the two forms separately
+double-counts — that mistake produced a wrong pile count during the investigation before the tool
+existed. The "looks like a usable pile" mesh set is derived from the prefabs that actually carry
+`StonePile` rather than hand-written, which is what keeps scenery rubble (`stone_pile_desert_*`,
+`stone_pile_wall_*`) and siege-engine debris out of the count.
+
+Result across the 221 towns and castles in the live `TAOM_Map` settlements file: 206 have usable rock
+piles, **15 have none**, and all 15 are on TAOM-authored scenes. Ten are Gondor castles sharing
+`taom_gondor_castle_002`/`_003`, which have no rock piles and no barrels at all. Helm's Deep is the
+one that reproduces the report exactly — 8 `stone_pile_a` meshes that look usable, zero that are.
+
+The tool also checks every `GivenItemID` against the item registry, because an id that does not
+resolve leaves `_givenItem` null and `StandingPointWithWeaponRequirement.IsDisabledForAgent` then
+falls through to `return true`, silently disabling the pile for player and AI alike. No audited
+settlement hits that. Vanilla's `stone_pile_l_usable` prefab does — it asks for `boulder_carry`,
+which is defined nowhere in the install — but no town or castle scene references that prefab.
+
+### perf(battle-load): a race lookup that cloned an array per agent (#372)
+
+Deep review of the agent-build instrumentation, six agents. Two findings, both mine.
+
+`FaceGen.GetRaceNames()` returns `(string[])_raceNamesArray.Clone()` — a fresh fifteen-element array
+on every call. The adapter called it once per agent to read a single element, so an arena load with
+648 agents allocated 648 arrays and discarded 648. `GetBaseMonsterNameFromRace(int)` sits next to it
+in the same class, indexes the same array, and allocates nothing. Neither name says which is which;
+only the bodies do, and I used the one whose name matched what I wanted.
+
+The second was a comment: I labelled `Mission.cs:4041` "action-set resolution", but
+`SetActionChannel(0, GetCurrentAction(0))` plays an action on channel 0 and resolves no action set.
+The wrong label had already been copied into the feature doc.
+
+A third finding was raised as HIGH and is wrong. The claim was 1944 synchronous disk flushes per
+load, "2-20+ seconds", with a recommendation to move `AgentBuildDone` to DEBUG. `_logFile` is a
+`StreamWriter`; its `Flush()` reaches the OS file cache and never calls `FlushFileBuffers`. Measured
+on the live log, 1287 durable stamps took 145 ms — about half a percent of a 9.3 second load. Taking
+the advice would have moved a crash-localisation stamp onto the async queue that a native crash
+drops, which is the one thing it must never be.
+
+Worth keeping: the agent that decompiled found a real defect, and the agent that reasoned from
+plausibility deferred the real one and invented the other. `/deep-review`'s efficiency agent now
+carries the instruction to decompile an engine method before costing it, and to report an unverified
+cost as UNVERIFIED rather than HIGH.
+
+RCA: `docs/reviews/rca-battleload-agentbuild-2026-08-03.md`
+
+### diag(battle-load): the agent-build tail was never stamped (#372)
+
+A player crashed to desktop entering a tournament in the Dunland town of Carreglyn. The log ends on
+`AgentEquipOk agent#0 'Musician'` and nothing follows — no watchdog line either, so the process died
+outright rather than hanging.
+
+That tail was as far as the log could go, and the reason is a gap in our own instrumentation.
+`AgentEquipOk` brackets one call, `Agent.EquipItemsFromSpawnEquipment`. `Mission.BuildAgent` then does
+six more things to the same agent — `InitializeAgentRecord`, `BatchLastLodMeshes`,
+`PreloadForRendering`, `SetActionChannel`, `InitializeComponents`, `_activeAgents.Add` — all native,
+none stamped. A death in there and a death between two agents produce byte-identical logs.
+`AgentBuildDone` is a postfix on `BuildAgent`, so they no longer do.
+
+The `AgentEquipBegin` line now also carries `race=`, `monster=` and `actionSet=`. Those have to ride
+the line written *before* the engine touches the agent, because a mismatch between them is the shape
+that access-violates in native mesh assembly with nothing logged, and a stamp that fires afterwards
+is worthless for a crash.
+
+`from=` is the part that came directly from this report. The agent was `char='musician_dunland'`, and
+no known code path puts a musician in a `TournamentFight`: the mission's 13 behaviors carry no
+`MissionAgentHandler`, and `FightTournamentGame.GetParticipantCharacters` picks only heroes, tier 3–5
+garrison troops, and `BasicTroop` upgrade targets. There was exactly one mission in the whole session,
+so it is not a leftover from a town scene. The loadout dump could not name what built it; a bounded
+managed stack can. Bounded to `Agent.Index <= 2` — the capture is not free and the answer is only
+interesting at the head of the spawn sequence.
+
+Root cause is still open. This is the instrumentation that will let the next log settle it.
+
+Research: Mission.BuildAgent, FightTournamentGame.GetParticipantCharacters, TournamentMissionStarter
+Not-tested: Harmony patch invocation and the live stack capture (require a running game)
+
+### fix(battle-load): from= named our own prefix and nothing else (#372)
+
+The first run proved the stamps and broke the token. 648 agents, every `AgentEquipBegin` matched by
+an `AgentEquipOk` and an `AgentBuildDone` — and three `from=` lines that said only this:
+
+```
+from=Agent_..._Patch.CaptureSpawnOrigin <- Agent_..._Patch.Prefix
+     <- .TaleWorlds.MountAndBlade.Agent.EquipItemsFromSpawnEquipment_Patch2
+     <- .TaleWorlds.MountAndBlade.Mission.BuildAgent_Patch1
+```
+
+Four frames, four noise. The patch built each frame from `DeclaringType.Name` while the formatter
+filtered on namespaces, so every filter was dead on arrival; our own prefix and Harmony's generated
+wrappers then ate the whole budget and pushed the real caller off the end.
+
+Full names now, and the `_PatchN` wrappers are normalised rather than skipped — a wrapper *replaces*
+the frame it stands for on the stack, so dropping it would lose the method the token exists to name.
+Consecutive duplicates collapse, since the wrapper and the original both appear. Budget raised to
+six frames because Harmony adds one per patched method in the chain.
+
+Worth stating plainly: had this worked on the first run it would have printed
+`MissionAudienceHandler.SpawnAudienceAgents` and ended a day of speculation about how a
+`musician_dunland` agent reached a tournament. It is an arena spectator — the audience is a weighted
+draw over the settlement culture's location characters, and `Culture.Musician` sits in it at 0.1.
+The agent was never strange; three analyses called it impossible because all three read the
+13-behavior `InitializeMissionBehaviorsDelegate` instead of the 65-behavior list the mission actually
+runs, which `MissionDiagnosticBehavior` had already dumped into the same log.
+
+Research: MissionAudienceHandler.SpawnAudienceAgents (SandBox.View), Harmony wrapper frame naming
 
 ### perf(coopinterop): stop shielding a co-op mod's patch surface
 
@@ -90,9 +383,9 @@ registry scope is TAOM's own ModuleData and it never sweeps `culture=` on Armory
 ### fix(missiondiag): every crash report was missing the in-game day
 
 `Campaign: <time read failed: DivideByZeroException>`. The session snapshot runs before
-`Campaign.Models` is built, so `CampaignTime.GetDayOfSeason` divides by a `TimeTicksPerDay` that is
-still zero. The guard worked, so this never broke anything — it just quietly cost us the campaign
-day on every crash report, which is what you correlate a save against.
+`Campaign.Models` is built, so `CampaignTime.ToString()` hits `GetYear`, which integer-divides by a
+`TimeTicksPerYear` that is still zero. The guard worked, so this never broke anything — it just
+quietly cost us the campaign day on every crash report, which is what you correlate a save against.
 
 `MapTimeTracker` and `NumTicks` are both `internal`, so there is no earlier readable source and no
 fallback to write. The fix is a second emission instead: `LogMissionStartSnapshot` now logs the

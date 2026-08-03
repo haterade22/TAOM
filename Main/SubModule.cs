@@ -1129,6 +1129,10 @@ public class SubModule : MBSubModuleBase
         Features.BattleLoadDiagnostics.Hooks.BattleSceneSelection_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.Mission_Initialize_BattleLoad_Patch.Initialize(battleLoadSvc, battleLoadStallMarker);
         Features.BattleLoadDiagnostics.Hooks.Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch.Initialize(battleLoadSvc, equipSnapshotAdapter);
+        // AgentEquipOk only proves the equip call returned; Mission.BuildAgent keeps working on the
+        // same agent for another ~14 native lines. This stamps its return, so an Ok with no
+        // BuildDone localizes a CTD to that tail (2026-08-02 Dunland tournament).
+        Features.BattleLoadDiagnostics.Hooks.Mission_BuildAgent_BattleLoad_Patch.Initialize(battleLoadSvc);
         // OpenNew->Initialize window probes (2026-07-16 Nan Angren player CTD): the OpenNew stamp
         // is a Prefix, so a crash in OpenNew's body, in LoadMission, or in the native resource
         // clear all produced an identical log tail. These name the segment that died.
@@ -1143,7 +1147,7 @@ public class SubModule : MBSubModuleBase
         Features.BattleLoadDiagnostics.Hooks.MissionState_OnFinalize_ExitPhase_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.MapState_OnActivate_ExitPhase_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.MapState_OnTick_ExitPhase_Patch.Initialize(battleLoadSvc);
-        // Guarded like Patch60/61/62: this category binds four engine targets by string (one of
+        // Guarded like Patch60/61/62: this category binds several engine targets by string (two of
         // them private), so an engine bump can throw here. A DIAGNOSTICS category must never take
         // startup down with it — losing the stamps is survivable, losing the game is not.
         try { _harmony.PatchCategory("Patch43_BattleLoadDiagnostics"); }
@@ -1249,6 +1253,8 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.Elephant.ElephantMissionBehavior());
         AddTaomBehavior(new Features.Mumakil.MumakilMissionBehavior());
         AddTaomBehavior(new SiegeDismountMissionBehavior());
+        // Registered unconditionally; gates internally on its MCM toggle (off by default).
+        AddTaomBehavior(new Features.SiegePropDiagnostics.Hooks.SiegePropDiagnosticsMissionBehavior());
         AddTaomBehavior(new MixedFormationsMissionBehavior());
         AddTaomBehavior(new SmartCavalryAIMissionBehavior());
         // Added unconditionally per TAOM convention; gates internally on

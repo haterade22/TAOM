@@ -280,6 +280,13 @@ Dwarf melee weapons are `<CraftedItem>` elements with no `<Weapon>` child; reach
 - **Prevent:** treat an empty stat lookup across a whole item class as an unfinished lookup, never as "no constraint." Extend the grep-the-stats habit to piece tables for crafted items.
 - **Source:** docs/reviews/rca-erebor-equipment-sweep-2026-07-30.md (F3).
 
+### A ref that looks like a typo may be the asset's real name — check the TOC before correcting it
+
+`wm_isengard_shield_a04` names `body_name="bo_capwm_isengard_shield_a02_clean"`, missing the underscore that all 224 sibling shields have. #352 makes a malformed `body_name` a hang, so the reflex is to correct it. The packaged PhysicsShape TOC says otherwise: `bo_capwm_isengard_shield_a02_clean` exists, and the corrected `bo_cap_wm_isengard_shield_a02_clean` exists in no `.tpac`. "Fixing" the XML would have created the exact infinite mission-load hang #352 documents. The same audit found `gond_shld4` using its full body as its own capsule — also unfixable, because no `bo_cap_wm_gondor_shield_a` was ever built.
+- **Why missed:** #352's lesson is stated one-directionally — "the assets shipped fine, the refs were a suffix off" — which trains the reflex "malformed ref ⇒ fix the ref." A ref and its asset are a pair, and either half can be the odd one. `validate_mesh_refs.py` reported PASS on the misspelled name, which reads like a tool gap and is actually the answer.
+- **Prevent:** before rewriting any `body_name` / `mesh` that looks wrong, query the TOC for BOTH spellings (`build_present_set(...).physicsshapes`). A PASS from `validate_mesh_refs.py` on a suspicious name is positive evidence the name is correct. Only names it flags `MISSING_BODY` are safe to rewrite — and when neither spelling resolves, the fix is to build the asset, not to guess a sibling's.
+- **Source:** docs/reference/armory-shield-audit.md (shield `item_usage` audit, 2026-08-03).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

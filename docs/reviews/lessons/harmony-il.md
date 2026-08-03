@@ -211,6 +211,30 @@ installed — the cost scales with the modlist, not with the mod that owns the s
   player report 2026-08-02 (the recurrence under BannerlordCoop);
   `docs/reviews/rca-coop-authority-gating-2026-08-01.md` open question #2
 
+### A mission's behavior list is not its `InitializeMissionBehaviorsDelegate`
+
+`OpenTournamentFightMission` returns 13 behaviors. The live mission runs **65** — `MissionView`s are
+registered by the view system, separately, and never appear in that delegate. Reasoning about what a
+mission can and cannot do from the initializer alone will be wrong by a factor of five.
+
+- **Why missed:** a player CTD logged `agent#0 'Musician' char='musician_dunland'` in a
+  `TournamentFight`. Three independent analyses — two subagents and the orchestrator — each read the
+  13-behavior delegate, confirmed it has no `MissionAgentHandler`, separately confirmed that
+  `FightTournamentGame.GetParticipantCharacters` cannot select a musician, and concluded the agent
+  had no code path. Every one of those facts is true. The agent is an arena **spectator**:
+  `MissionAudienceHandler` (`SandBox.View`) draws the crowd from the settlement culture's location
+  characters with `Culture.Musician` at weight 0.1. Three analyses agreeing did not make the
+  conclusion less wrong — they shared one unexamined premise, which is what agreement between agents
+  reasoning from the same starting document buys you.
+  `MissionDiagnosticBehavior` had already dumped all 65 behaviors into **the same log file** being
+  analysed.
+- **Prevent:** when a mission-scoped question turns on "what is in this mission", read the live dump
+  (`[MissionDiag] === Mission start: … behaviors=N ===`) before the engine source. If no dump exists,
+  say the list is unknown rather than substituting the initializer for it. Corollary for
+  orchestration: when parallel agents converge on a conclusion, check whether they were handed the
+  same premise — convergence is only evidence when the paths were independent.
+- **Source:** `docs/reviews/investigation-dunland-tournament-ctd-2026-08-02.md`
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

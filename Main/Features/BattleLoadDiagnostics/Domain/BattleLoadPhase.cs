@@ -14,6 +14,15 @@ public enum BattleLoadPhase
     BattlePlayable,
     StallWatchdog,
 
+    // AgentEquipOk -> the next AgentEquipBegin used to be a blind window: our bracket wraps
+    // Agent.EquipItemsFromSpawnEquipment, but Mission.BuildAgent keeps working afterwards
+    // (InitializeAgentRecord, AgentVisuals.BatchLastLodMeshes, PreloadForRendering,
+    // SetActionChannel, InitializeComponents, _activeAgents.Add — Mission.cs:4035-4049), so a
+    // death in that native tail looked identical to a death between two agents. AgentBuildDone
+    // is a postfix on Mission.BuildAgent: an AgentEquipOk with no matching AgentBuildDone means
+    // the fault is inside that tail. (2026-08-02 Dunland tournament CTD.)
+    AgentBuildDone,
+
     // MissionOpenNew -> MissionInitialize used to be one dark window spanning a tick boundary:
     // the OpenNew stamp is a Prefix, so a crash anywhere in OpenNew's body, in LoadMission, or in
     // the native resource clear looked identical (2026-07-16 Nan Angren player CTD). These split

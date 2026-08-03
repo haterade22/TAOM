@@ -1629,6 +1629,41 @@ UNVERIFIED — nothing has run in a live two-peer session.**
 
 ---
 
+## Review 80 — BattleLoadDiagnostics agent-build instrumentation (#372) deep-review (2026-08-03)
+
+6 agents (Standards, API Compatibility, Efficiency, Completeness, Data Flow, Tooling) over the
+`AgentBuildDone` phase, the `race=`/`monster=`/`actionSet=`/`from=` tokens, and the `from=` formatter
+fix.
+
+**2 confirmed findings, both authored-in defects, both fixed in-session.** (1) MED —
+`FaceGen.GetRaceNames()` returns `(string[])_raceNamesArray.Clone()`, one fresh array per agent
+(648 in an observed arena load) to read one element; swapped for the non-allocating
+`GetBaseMonsterNameFromRace` + `GetRaceCount()`. (2) LOW — a comment mislabelled `Mission.cs:4041`
+as "action-set resolution" when `SetActionChannel` plays an action on channel 0; fixed in the patch
+and the feature doc.
+
+**1 HIGH refuted.** The Efficiency agent claimed 1944 synchronous disk flushes adding "2–20+
+seconds" per load and recommended downgrading `AgentBuildDone` to DEBUG. Refuted mechanically —
+`_logFile` is a `StreamWriter`, whose `Flush()` reaches the OS file cache and never calls
+`FlushFileBuffers`, which the agent assumed without reading — and empirically: 1287 durable stamps
+in **145 ms** (~0.11 ms each, ≈0.5 % of a 9.3 s load) in `taom_debug_2026-08-03_12-08-46.log`.
+Acting on it would have moved the stamp to the async queue a native CTD drops, destroying the exact
+durability the stamp exists for.
+
+**Accuracy:** the agent that decompiled (Data Flow, 10 flows, 0 gaps) found a real defect; the agent
+that reasoned from plausibility deferred the real finding as "INVESTIGATE" and produced the false
+HIGH. API Compatibility verified 11/11 against installed v1.4.7 DLLs including the private
+`Mission.BuildAgent` postfix parameter binding. Standards and Data Flow each surfaced one
+pre-existing, out-of-scope issue (ADR-007 surface on `IMissionDiagnosticService`, unmodified since
+2026-05-24; latch closer-gate timing at `SubModule.cs:1280`).
+
+RCA: `docs/reviews/rca-battleload-agentbuild-2026-08-03.md`. Lessons: 2 in
+`lessons/adapters-taleworlds-api.md` (engine-method cost is a decompile question; a log-level
+downgrade is a feature change). Preventive: `/deep-review` Agent 3 prompt now carries the
+decompile-before-costing instruction and the FileLogger durability contract. Suite 4,795 green.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

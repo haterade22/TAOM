@@ -22,6 +22,7 @@ Checks (each maps to a recurring TAOM bug class):
   DUPLICATE_ROSTER_ID        same EquipmentRoster id defined twice
   INVALID_ENUM               default_group not Infantry/Ranged/Cavalry/HorseArcher
   BROKEN_PARTY_TEMPLATE_REF  PartyTemplate.* points at an undefined template (warning)
+  BROKEN_BODY_PROPERTY_REF   face_key_template points at an undefined BodyProperty -> null face
   MISSING_HARNESS_FAMILY_TYPE  HorseHarness with no <Armor family_type> -> silently unequippable
   HARNESS_FAMILY_MISMATCH    Horse + HorseHarness in one set disagree on family type
 
@@ -89,9 +90,32 @@ def main() -> int:
     print(f"Registry: {len(registries.items):,} items, "
           f"{len(registries.npccharacters):,} NPCCharacters, "
           f"{len(registries.cultures)} cultures, "
-          f"{len(registries.party_templates):,} party templates", file=sys.stderr)
+          f"{len(registries.party_templates):,} party templates, "
+          f"{len(registries.body_properties)} body properties", file=sys.stderr)
 
-    issues = ts.Validator(moduledata, schemas, registries).run()
+    # TAOM authors item XML directly into LOTRLOME_Armory (see /author-armor), so
+    # its files are TAOM's to keep correct even though they live outside this repo
+    # and outside git. Sweeping only Main/_Module/ModuleData missed 28 of the 33
+    # dangling refs the engine reported on 2026-08-02. Cross-references only --
+    # TAOM's schema contracts are not applied to a foreign module.
+    extra_roots = []
+    if game_modules.exists():
+        extra_roots.append(game_modules / "LOTRLOME_Armory" / "ModuleData")
+
+    validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots)
+    for root in validator.extra_ref_roots:
+        print(f"Also sweeping refs in: {root}", file=sys.stderr)
+    # Never let a vanished root pass as a clean run. Silence here would revert the
+    # sweep to TAOM-only and still print PASS -- the exact state that hid 28 of the
+    # 33 dangling refs the engine reported on 2026-08-02.
+    for root in validator.missing_ref_roots:
+        print(f"WARNING: extra ref root NOT FOUND — Armory sweep SKIPPED: {root}\n"
+              f"         Cross-references in that module were NOT checked this run.",
+              file=sys.stderr)
+    for warning in registries.suspect_registries:
+        print(f"WARNING: {warning}", file=sys.stderr)
+
+    issues = validator.run()
 
     if args.code:
         wanted = set(args.code)

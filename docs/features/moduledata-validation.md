@@ -19,6 +19,9 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
 - **Missing civilian `equipmentType`** — Faramir/Boromir wrong-outfit bug. (`MISSING_CIVILIAN_TYPE`)
 - **Harness with no `family_type`** — defaults to 0 (human family), so the inventory screen refuses it on every mount with no message → "this item is not equipable". (`MISSING_HARNESS_FAMILY_TYPE`, `HARNESS_FAMILY_MISMATCH`)
 - Duplicate NPC/culture/roster ids; invalid `default_group`; broken party-template refs.
+- **`face_key_template` pointing at an undefined `BodyProperty`** — not an XML error: the engine
+  registers a placeholder, `MBObjectManager.UnregisterNonReadyObjects` drops it, and the character
+  silently loses its authored face. (`BROKEN_BODY_PROPERTY_REF`)
 
 "Schemas are the source of truth": field/enum/ref knowledge lives in `tools/schemas/*.json`, not hardcoded in Python.
 
@@ -29,10 +32,12 @@ tools/schemas/*.json   (declarative source of truth: entry element, id, enums, s
         │  load_schemas()
         ▼
 tools/taom_schema.py   ── build_registries(moduledata, game_modules)
-   Registries (items, item_def_files, npccharacters, cultures, party_templates)   ← injected (testable)
+   Registries (items, item_def_files, npccharacters, cultures, party_templates,
+               body_properties, suspect_registries)                              ← injected (testable)
    REF_KINDS (prefix-based, attribute-agnostic)
    Validator.run():
-     pass 1  global cross-reference sweep  (every *.xml under ModuleData)
+     pass 1  global cross-reference sweep  (every *.xml under ModuleData
+                                           + every extra_ref_root, e.g. LOTRLOME_Armory)
      pass 2  per-schema: duplicate-id, enum, civilian-type rule
      pass 3  duplicate item definitions across Armory folders
         │
@@ -149,14 +154,55 @@ The server resolves data paths from its own location, so it is cwd-independent; 
 
 ## Performance
 
-One pass over `Main/_Module/ModuleData/**/*.xml` (regex, line-numbered) + a registry build that scans the game-module item/character/culture/party-template XML once. Full live run completes in a few seconds; ~27k item refs + ~2.9k troop refs resolved per run.
+One pass over `Main/_Module/ModuleData/**/*.xml` **plus every `extra_ref_root`** (regex,
+line-numbered) + a registry build that scans the game-module item/character/culture/party-template/
+body-property XML once. 239 TAOM files + 382 Armory files = 621, each read once, patterns
+pre-compiled. Full live run completes in a few seconds; ~27k item refs + ~2.9k troop refs resolved
+per run.
 
 ## Known Scope (intentional)
 
-Out of scope for v1 (documented as coverage gaps, not bugs): armor `covers_legs`/`covers_hands` (Armory-side schema), `BodyProperty.` refs, weapon-craft piece refs, scene refs (covered by `audit_scene_names.py`), and inline `EquipmentSet`-by-id refs to vanilla rosters.
+Out of scope (documented as coverage gaps, not bugs): armor `covers_legs`/`covers_hands`
+(Armory-side schema), weapon-craft piece refs, scene refs (covered by `audit_scene_names.py`), and
+inline `EquipmentSet`-by-id refs to vanilla rosters. `BodyProperty.` refs **were** on this list and
+are now checked (2026-08-03).
+
+### Foreign-module sweep (`extra_ref_roots`)
+
+The CLI passes `LOTRLOME_Armory/ModuleData` as an extra ref root. TAOM authors item XML directly
+into that module (see `/author-armor`), so it is TAOM's to keep correct even though it lives
+outside this repo and outside git. Extra roots are swept for **cross-references only** — the schema
+contracts (duplicate ids, civilian `equipmentType`, enums) describe TAOM's own files and must not
+report defects against a module this validator does not own.
+
+Today that sweep is load-bearing for `Culture.` refs (104 Armory files carry them) and effectively
+vacuous for the other four kinds — Armory XML currently contains no live `NPCCharacter.`,
+`PartyTemplate.` or `BodyProperty.` refs, and its single `Item.` hit is inside a comment. The
+wiring is correct and will catch a real dangling ref if one is introduced; just don't read a PASS
+as proof those kinds were stress-tested against the Armory.
+
+### Silent-scope guards
+
+Two failure modes make an under-scoped run indistinguishable from a clean one, so both are reported
+rather than inferred from the numbers:
+- A **missing extra ref root** (renamed/moved Armory) is recorded in `Validator.missing_ref_roots`
+  and the CLI prints a WARNING naming the skipped module. Silently dropping it would revert the
+  sweep to TAOM-only while still printing PASS.
+- A **shrunken registry** (a renamed vanilla `*_bodyproperties.xml`, a typo'd `--game-modules` that
+  still resolves to a real directory) is flagged via `Registries.suspect_registries`. Floors are set
+  far below real counts (121 body properties, 38 cultures) — they catch "the file list broke", not
+  "the data changed a bit". Full shrinkage would otherwise trip the empty-registry guard and skip
+  the check entirely.
 
 NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companions/`, `taom_wanderers.xml`, and `taom_education_character_templates.xml` (the `taom_npccharacter.json` `applies_to` set — **add any new `<NPCCharacter>`-defining file there** or its dup/enum checks won't run; Codex review 2026-05-30 caught three uncovered files). The civilian-type rule treats `_civ*` and `child_template_*` rosters as civilian and checks every `<EquipmentSet>`, but **deliberately excludes** `child_education_*` education templates (0/784 are `Civilian`-tagged in real data — an unconfirmed convention; flagging them would be 784 false positives — confirm the convention before extending the rule).
 
 ## Changelog
 
+- 2026-08-03 — Added `BROKEN_BODY_PROPERTY_REF` (registry from the 4 authoritative
+  `*_bodyproperties.xml` files, 121 ids) and the `extra_ref_roots` foreign-module sweep, wired to
+  `LOTRLOME_Armory/ModuleData`. Both came out of the dwarf-vs-Rhûn crash investigation, whose log
+  showed three dangling refs this validator could not have caught
+  (`docs/reviews/investigation-rhun-dwarf-ctd-2026-08-02.md`). The deep review then found the new
+  sweep could skip silently and print PASS; `missing_ref_roots` + `suspect_registries` close that
+  (`docs/reviews/rca-validator-silent-scope-2026-08-03.md`).
 - 2026-05-30 — Initial schema-driven ModuleData cross-reference validator: unified `taom_schema.py` engine + `validate_moduledata.py` CLI + 3 schemas catching the recurring bug classes (broken item/troop/culture/party-template refs, duplicate ids, missing civilian type, invalid enum); wired in as an auto-loaded scoped rule + a commit-blocking PreToolUse hook. Same dated entry covers the 2026-05-31 follow-up: the `taom_query.py` query API + `taom_mcp_server.py` MCP server (9 tools) and a second deep-review pass. See repo-root `CHANGELOG.md` for full detail.

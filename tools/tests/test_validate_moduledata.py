@@ -523,6 +523,110 @@ class ValidatorContractTests(unittest.TestCase):
         self.assertIn("MISSING_CIVILIAN_TYPE", self._codes(self._run()))
 
 
+    # ----------------------------------------------------------------- #
+    # BodyProperty refs + the foreign-module sweep. Both gaps let the three
+    # "Null object reference found with ID" entries in the 2026-08-02
+    # dwarf-vs-Rhun crash log ship: BodyProperty.* was cross-checked by
+    # nothing, and the sweep walked only TAOM's ModuleData while 28 of the 33
+    # bad refs sat on LOTRLOME_Armory item files. The engine unregisters such
+    # refs, so every consumer downstream reads null.
+    # ----------------------------------------------------------------- #
+    def test_broken_body_property_ref_is_reported(self):
+        self.registries.body_properties = {"fighter_haradrim"}
+        _write(self.md / "characters" / "lords.xml", """<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <NPCCharacter id="hero_a" default_group="Infantry" culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_umbar" />
+    </face>
+  </NPCCharacter>
+</NPCCharacters>
+""")
+        issues = [i for i in self._run() if i.code == "BROKEN_BODY_PROPERTY_REF"]
+        self.assertEqual(len(issues), 1, f"expected exactly one, got {self._codes(self._run())}")
+        self.assertIn("fighter_umbar", issues[0].message)
+        self.assertIs(issues[0].severity, ts.Severity.ERROR)
+
+    def test_resolving_body_property_ref_is_clean(self):
+        self.registries.body_properties = {"fighter_haradrim"}
+        _write(self.md / "characters" / "lords.xml", """<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <NPCCharacter id="hero_a" default_group="Infantry" culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_haradrim" />
+    </face>
+  </NPCCharacter>
+</NPCCharacters>
+""")
+        self.assertEqual([i for i in self._run() if i.code == "BROKEN_BODY_PROPERTY_REF"], [])
+
+    def test_body_property_check_skipped_when_registry_unavailable(self):
+        # Same empty-registry guard every other kind uses: without the game
+        # install the registry is incomplete, and every ref would false-positive.
+        self.registries.body_properties = set()
+        _write(self.md / "characters" / "lords.xml", """<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+  <NPCCharacter id="hero_a" default_group="Infantry" culture="Culture.gondor">
+    <face><face_key_template value="BodyProperty.anything" /></face>
+  </NPCCharacter>
+</NPCCharacters>
+""")
+        self.assertEqual([i for i in self._run() if i.code == "BROKEN_BODY_PROPERTY_REF"], [])
+
+    def test_extra_ref_roots_are_swept_and_reported_with_module_prefix(self):
+        armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
+        _write(armory / "LOTRLOME_items" / "rhun" / "head_armors.xml",
+               '<?xml version="1.0"?>\n<Items>\n  <Item id="hat" culture="Culture.rhun" />\n</Items>\n')
+        issues = ts.Validator(self.md, self.schemas, self.registries,
+                              extra_ref_roots=[armory]).run()
+        broken = [i for i in issues if i.code == "UNKNOWN_CULTURE"]
+        self.assertEqual(len(broken), 1)
+        # The report must name the module -- "LOTRLOME_items/rhun/head_armors.xml"
+        # alone reads as a TAOM path and sends the reader to the wrong repo.
+        self.assertTrue(broken[0].file.startswith("LOTRLOME_Armory/"), broken[0].file)
+        self.assertIn("rhun", broken[0].message)
+
+    def test_extra_ref_roots_clean_when_refs_resolve(self):
+        armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
+        _write(armory / "LOTRLOME_items" / "rhun" / "head_armors.xml",
+               '<?xml version="1.0"?>\n<Items>\n  <Item id="hat" culture="Culture.gondor" />\n</Items>\n')
+        issues = ts.Validator(self.md, self.schemas, self.registries,
+                              extra_ref_roots=[armory]).run()
+        self.assertEqual([i for i in issues if i.code == "UNKNOWN_CULTURE"], [])
+
+    def test_missing_extra_ref_root_is_recorded_not_silently_dropped(self):
+        # THE failure this whole sweep exists to prevent. A renamed/missing Armory
+        # folder must not make the tool print a clean PASS that is indistinguishable
+        # from a real one -- that is exactly the under-coverage state that hid 28 of
+        # the 33 dangling refs the engine reported on 2026-08-02.
+        gone = Path(self._tmp.name) / "NoSuchModule" / "ModuleData"
+        v = ts.Validator(self.md, self.schemas, self.registries, extra_ref_roots=[gone])
+        v.run()
+        self.assertEqual([Path(p) for p in v.missing_ref_roots], [gone])
+
+    def test_present_extra_ref_root_is_not_reported_missing(self):
+        armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
+        _write(armory / "LOTRLOME_items" / "x.xml", '<Items>\n  <Item id="a" culture="Culture.gondor" />\n</Items>\n')
+        v = ts.Validator(self.md, self.schemas, self.registries, extra_ref_roots=[armory])
+        v.run()
+        self.assertEqual(v.missing_ref_roots, [])
+
+    def test_extra_ref_roots_do_not_run_taom_only_schema_checks(self):
+        # Duplicate-id / civilian-type / enum rules are TAOM schema contracts.
+        # Applying them to a foreign module would report defects against a repo
+        # this validator does not own.
+        armory = Path(self._tmp.name) / "LOTRLOME_Armory" / "ModuleData"
+        _write(armory / "troops" / "troops_foreign.xml", """<?xml version="1.0"?>
+<NPCCharacters>
+  <NPCCharacter id="dupe" default_group="NotAGroup" culture="Culture.gondor" />
+  <NPCCharacter id="dupe" default_group="NotAGroup" culture="Culture.gondor" />
+</NPCCharacters>
+""")
+        issues = ts.Validator(self.md, self.schemas, self.registries,
+                              extra_ref_roots=[armory]).run()
+        self.assertEqual([i for i in issues if i.code in ("DUPLICATE_NPC_ID", "INVALID_ENUM")], [])
+
+
 class BuildRegistriesTests(unittest.TestCase):
     """Codex review 2026-05-30: culture registry must come ONLY from authoritative
     culture-definition files, and XML comments must never pollute any registry."""
@@ -614,6 +718,49 @@ class BuildRegistriesTests(unittest.TestCase):
         regs = ts.build_registries(self.md, None)
         self.assertEqual(regs.harness_family_types, {})
         self.assertEqual(regs.mount_family_types, {})
+
+    def test_shrunken_body_property_registry_warns(self):
+        # A renamed vanilla *_bodyproperties.xml silently shrinks the registry. Full
+        # shrinkage would trip the empty-registry guard and skip the check entirely
+        # (silent PASS); partial shrinkage floods false positives. Neither is
+        # distinguishable from a healthy run without a floor.
+        modules = Path(self._tmp.name) / "Modules"
+        _write(self.md / "TAOM_bodyproperties.xml",
+               '<?xml version="1.0"?>\n<BodyProperties>\n  <BodyProperty id="only_one" />\n</BodyProperties>\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertTrue(regs.suspect_registries,
+                        "a 1-entry body_properties registry with a game install must be flagged")
+        self.assertIn("body_properties", " ".join(regs.suspect_registries))
+
+    def test_healthy_registry_is_not_flagged_suspect(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "SandBoxCore" / "ModuleData" / "sandboxcore_bodyproperties.xml",
+               '<?xml version="1.0"?>\n<BodyProperties>\n'
+               + "".join(f'  <BodyProperty id="v{i}" />\n' for i in range(120))
+               + '</BodyProperties>\n')
+        _write(self.md / "TAOM_bodyproperties.xml",
+               '<?xml version="1.0"?>\n<BodyProperties>\n  <BodyProperty id="fighter_haradrim" />\n</BodyProperties>\n')
+        regs = ts.build_registries(self.md, modules)
+        self.assertEqual([s for s in regs.suspect_registries if "body_properties" in s], [])
+
+    def test_no_game_install_does_not_flag_registries_suspect(self):
+        # Empty-by-design, already reported by the CLI. Flagging it here would cry
+        # wolf on every run without the game install.
+        regs = ts.build_registries(self.md, None)
+        self.assertEqual(regs.suspect_registries, [])
+
+    def test_body_properties_registry_built_from_bodyproperties_files(self):
+        modules = Path(self._tmp.name) / "Modules"
+        _write(modules / "SandBoxCore" / "ModuleData" / "sandboxcore_bodyproperties.xml",
+               '<?xml version="1.0"?>\n<BodyProperties>\n  <BodyProperty id="fighter_empire" />\n</BodyProperties>\n')
+        _write(self.md / "TAOM_bodyproperties.xml",
+               '<?xml version="1.0"?>\n<BodyProperties>\n  <BodyProperty\n\t\tid="fighter_haradrim">\n  </BodyProperty>\n</BodyProperties>\n')
+        regs = ts.build_registries(self.md, modules)
+        # TAOM authors the id on its OWN line after a newline+tabs; an id-on-the-
+        # same-line regex silently registers nothing and every lord goes broken.
+        self.assertIn("fighter_haradrim", regs.body_properties)
+        self.assertIn("fighter_empire", regs.body_properties)
+        self.assertNotIn("fighter_umbar", regs.body_properties)
 
     def test_commented_definition_not_registered(self):
         _write(self.md / "taom_spcultures.xml",

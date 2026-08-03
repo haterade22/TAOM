@@ -459,4 +459,127 @@ public class BattleLoadDiagnosticsServiceTests
         _sut.LogResourceClearOldBegin();
         StringAssert.Contains(_sut.CurrentStatusLine, "phase=ResourceClearOldBegin");
     }
+
+    // ---- Per-loadout dedupe of the equipment dump (2026-08-03) --------------------------------
+    // An arena audience of 429 agents drew from 9 character kits and produced 1,146 slot lines
+    // encoding 11 distinct rows. The dump is per-LOADOUT; only the phase stamps are per-agent.
+
+    // Distinct item id per snapshot so each loadout renders a distinct body.
+    private void FormatterEchoesItemId() =>
+        _formatter.Format(Arg.Any<EquipmentSnapshot>()).Returns(ci =>
+        {
+            var s = (EquipmentSnapshot)ci[0];
+            var id = s.Slots.Count > 0 ? s.Slots[0].ItemId : "<none>";
+            return new List<string> { $"slot=Weapon1 id={id}" };
+        });
+
+    private static EquipmentSnapshot Snap(int agentIndex, string itemId, string? race = null) =>
+        new EquipmentSnapshot(agentIndex, $"Agent{agentIndex}", "mordor_orc", "mordor",
+            new[] { new EquipmentSlotSnapshot("Weapon1", itemId, null, null, null, null, "Shield") },
+            race);
+
+    [TestMethod]
+    public void LogAgentEquipBegin_IdenticalLoadout_WritesBodyOnlyOnce()
+    {
+        FormatterEchoesItemId();
+
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a"));
+        _sut.LogAgentEquipBegin(Snap(1, "shield_a"));
+
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("id=shield_a")));
+    }
+
+    [TestMethod]
+    public void LogAgentEquipBegin_IdenticalLoadout_BothBeginLinesCarrySameLoadoutId()
+    {
+        FormatterEchoesItemId();
+
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a"));
+        _sut.LogAgentEquipBegin(Snap(1, "shield_a"));
+
+        _logger.Received(2).LogInfo(Arg.Is<string>(s =>
+            s.Contains("phase=AgentEquipBegin") && s.Contains("loadout=#1")));
+    }
+
+    // Every agent still gets its own durable stamp — the dedupe compresses the body, never
+    // the per-agent evidence that the agent existed.
+    [TestMethod]
+    public void LogAgentEquipBegin_IdenticalLoadout_StillEmitsOneBeginLinePerAgent()
+    {
+        FormatterEchoesItemId();
+
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a"));
+        _sut.LogAgentEquipBegin(Snap(1, "shield_a"));
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("agent#0")));
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("agent#1")));
+    }
+
+    // The suspect-#1 case: TaomTournamentModel.GetParticipantArmor rewrites MatchEquipment
+    // mid-load. A divergent loadout must surface as a NEW id + a fresh dump, never be swallowed.
+    [TestMethod]
+    public void LogAgentEquipBegin_DifferentLoadout_WritesNewBodyUnderNewId()
+    {
+        FormatterEchoesItemId();
+
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a"));
+        _sut.LogAgentEquipBegin(Snap(1, "shield_b"));
+
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("id=shield_a")));
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("id=shield_b")));
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("agent#1") && s.Contains("loadout=#2")));
+    }
+
+    // Skeleton identity is part of the key: identical gear on a different race is a different
+    // thing for the engine to assemble, and that mismatch is the shape that access-violates.
+    [TestMethod]
+    public void LogAgentEquipBegin_SameSlotsDifferentRace_WritesNewBody()
+    {
+        FormatterEchoesItemId();
+
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a", race: "human"));
+        _sut.LogAgentEquipBegin(Snap(1, "shield_a", race: "dwarf"));
+
+        _logger.Received(2).LogDebug(Arg.Is<string>(s => s.Contains("id=shield_a")));
+    }
+
+    [TestMethod]
+    public void LogMissionInitialize_ClearsLoadoutCache_NextLoadReDumps()
+    {
+        FormatterEchoesItemId();
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a"));
+
+        _sut.LogMissionInitialize("next_scene");
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a"));
+
+        _logger.Received(2).LogDebug(Arg.Is<string>(s => s.Contains("id=shield_a")));
+    }
+
+    [TestMethod]
+    public void ResetLifecycle_ClearsLoadoutCache_NextLoadReDumps()
+    {
+        FormatterEchoesItemId();
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a"));
+
+        _sut.ResetLifecycle();
+        _sut.LogAgentEquipBegin(Snap(0, "shield_a"));
+
+        _logger.Received(2).LogDebug(Arg.Is<string>(s => s.Contains("id=shield_a")));
+    }
+
+    // The map sits on the hot agent-spawn path. Past the cap it must degrade to always-dump
+    // rather than grow without bound.
+    [TestMethod]
+    public void LogAgentEquipBegin_BeyondLoadoutCap_StillWritesBody()
+    {
+        FormatterEchoesItemId();
+        for (var i = 0; i < BattleLoadDiagnosticsService.MaxTrackedLoadouts; i++)
+            _sut.LogAgentEquipBegin(Snap(i, $"item_{i}"));
+        _logger.ClearReceivedCalls();
+
+        _sut.LogAgentEquipBegin(Snap(9001, "overflow_item"));
+        _sut.LogAgentEquipBegin(Snap(9002, "overflow_item"));
+
+        _logger.Received(2).LogDebug(Arg.Is<string>(s => s.Contains("id=overflow_item")));
+    }
 }

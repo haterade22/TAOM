@@ -41,6 +41,11 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
     // rather than on every daily tick.
     private readonly HashSet<string> _warnedNoOwnerCulture = new(StringComparer.OrdinalIgnoreCase);
 
+    // Log-hygiene, round 2: even gated, the per-town line ran at ~30/min for the life of a
+    // session. DailyTickSettlementEvent is staggered across the in-game day, so the digest's
+    // window is simply "since the last DailyTickEvent" — no alignment assumption needed.
+    private readonly MarketplaceDailyDigest _digest = new();
+
     public CultureMarketplaceBehavior(
         ICultureItemPoolService poolService,
         ICultureMarketplaceInjectionService injection,
@@ -63,6 +68,13 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
         CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, OnNewGameCreated);
         CampaignEvents.OnNewGameCreatedPartialFollowUpEvent.AddNonSerializedListener(this, OnNewGameCreatedPartialFollowUp);
         CampaignEvents.DailyTickSettlementEvent.AddNonSerializedListener(this, OnDailyTickSettlement);
+        CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
+    }
+
+    private void OnDailyTick()
+    {
+        var summary = _digest.Flush();
+        if (summary != null) _logger.LogDebug($"[CultureMarketplace] {summary}");
     }
 
     public override void SyncData(IDataStore dataStore)
@@ -156,13 +168,9 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
                 added++;
         }
 
-        // Log-hygiene: only record a town when this pass INJECTED something. `removed` is
-        // deliberately not part of the gate — foreign-item strip is steady-state housekeeping, not
-        // an event: vanilla restocks cross-cultural goods every day and the filter strips them
-        // again, forever, at a flat ~3.6/town/day. Including it made the gate inert (83% of the
-        // 45,080 lines in the 2026-07-26 session log were emitted for `removed` alone, with nothing
-        // injected). The count still prints on every line that survives, so no visibility is lost.
-        if (added > 0 || topUp > 0)
-            _logger.LogDebug($"[CultureMarketplace] {_townAdapter.GetSettlementId(settlement)} ({cultureId}): rosterCount={rosterCount}, picks={picks.Count}, +{added} injected, +{topUp} guaranteed, -{removed} foreign");
+        // Accumulate; OnDailyTick renders the whole day as one line. The old per-town gate
+        // (`added > 0 || topUp > 0`, which cut a 45,080-line session) now lives inside the digest,
+        // which decides both whether the day is worth a line and which towns are worth naming.
+        _digest.Record(_townAdapter.GetSettlementId(settlement), picks.Count, added, topUp, removed);
     }
 }

@@ -63,9 +63,17 @@ def _mission_init(scene="battle_terrain_b"):
 
 
 def _equip_begin(seq, idx, name="Gondor Soldier", char="gondor_x", culture="gondor",
-                 slots=2):
+                 slots=2, identity=False, loadout=None):
+    """One AgentEquipBegin line.
+
+    `identity` adds the race/monster/actionSet tokens (shipped 2026-08-02) and `loadout`
+    the dedupe id (2026-08-03); both default off so the older log shapes stay covered.
+    """
+    ident = (" race='human' monster='human' actionSet='as_human_warrior'" if identity else "")
+    tail = f" loadout=#{loadout}" if loadout is not None else ""
     return _line("INFO", f"[BattleLoad] seq={seq} t=+100ms phase=AgentEquipBegin "
-                         f"agent#{idx} '{name}' char='{char}' culture='{culture}' slots={slots}")
+                         f"agent#{idx} '{name}' char='{char}' culture='{culture}'"
+                         f"{ident} slots={slots}{tail}")
 
 
 def _slot(slot, item_id, bo="<null>", shield_bo="<null>", holster_bo="<null>",
@@ -161,6 +169,92 @@ class ParseTests(unittest.TestCase):
         tl = tb.parse_battle_load_log(text)
         self.assertEqual(tl.events[-1].phase, "MissionInitialize")
         self.assertEqual(tl.events[-1].slots, [])
+
+    # --- loadout dedupe (2026-08-03) --------------------------------------- #
+    # The dump is emitted once per distinct loadout; every later agent wearing it carries
+    # only `loadout=#N`. The stuck agent is usually one of the deduped ones, so without
+    # re-attachment the EQUIPMENT verdict would name no suspect at all.
+
+    def test_resolves_deduped_loadout_from_the_earlier_dump(self):
+        text = _log(
+            _mission_init(),
+            _equip_begin(5, 0, slots=2, loadout=1),
+            _slot("Weapon0", "gondor_sword_a", bo="bo_gondor_sword_a", kind="Weapon"),
+            _slot("Body", "sk_gd_ano_body_a", mesh="sk_gd_ano_body_a", kind="BodyArmor"),
+            _equip_ok(6, 0),
+            _equip_begin(7, 1, slots=2, loadout=1),  # same kit — no dump of its own
+        )
+        tl = tb.parse_battle_load_log(text)
+        begin = tl.events[-1]
+        self.assertEqual(begin.phase, "AgentEquipBegin")
+        self.assertEqual([s.item_id for s in begin.slots],
+                         ["gondor_sword_a", "sk_gd_ano_body_a"])
+
+    def test_deduped_loadout_still_names_suspects_in_the_verdict(self):
+        text = _log(
+            _mission_init(),
+            _equip_begin(5, 0, slots=1, loadout=1),
+            _slot("Weapon0", "gondor_sword_a", bo="bo_gondor_sword_a", kind="Weapon"),
+            _equip_ok(6, 0),
+            _equip_begin(7, 57, slots=1, loadout=1),
+        )
+        v = tb.classify(tb.parse_battle_load_log(text))
+        self.assertEqual(v.kind, "EQUIPMENT")
+        self.assertIn("bo_gondor_sword_a", v.suspect_names)
+
+    def test_loadout_ids_do_not_leak_across_missions(self):
+        # The service clears its map at Mission.Initialize, so ids restart at #1 each load.
+        # Resolving mission B's #1 against mission A's block would name the wrong item.
+        text = _log(
+            _mission_init(scene="battle_terrain_b"),
+            _equip_begin(5, 0, slots=1, loadout=1),
+            _slot("Weapon0", "mission_a_sword", bo="bo_mission_a", kind="Weapon"),
+            _equip_ok(6, 0),
+            _mission_init(scene="arena_empire_a"),
+            _equip_begin(7, 0, slots=1, loadout=1),
+        )
+        tl = tb.parse_battle_load_log(text)
+        self.assertEqual(tl.events[-1].slots, [])
+
+    def test_earlier_missions_resolve_against_their_own_blocks(self):
+        # Ids restart per load, so resolving in one global pass would match every mission's
+        # #1 against the LAST mission's block. Each segment must resolve against its own.
+        text = _log(
+            _mission_init(scene="battle_terrain_b"),
+            _equip_begin(5, 0, slots=1, loadout=1),
+            _slot("Weapon0", "mission_a_sword", bo="bo_mission_a", kind="Weapon"),
+            _equip_ok(6, 0),
+            _equip_begin(7, 1, slots=1, loadout=1),      # deduped inside mission A
+            _equip_ok(8, 1),
+            _mission_init(scene="arena_empire_a"),
+            _equip_begin(9, 0, slots=1, loadout=1),
+            _slot("Weapon0", "mission_b_sword", bo="bo_mission_b", kind="Weapon"),
+            _equip_ok(10, 0),
+            _equip_begin(11, 1, slots=1, loadout=1),     # deduped inside mission B
+        )
+        tl = tb.parse_battle_load_log(text)
+        by_seq = {e.seq: e for e in tl.events}
+        self.assertEqual([s.item_id for s in by_seq[7].slots], ["mission_a_sword"])
+        self.assertEqual([s.item_id for s in by_seq[11].slots], ["mission_b_sword"])
+
+    def test_equip_begin_without_loadout_token_still_parses(self):
+        # Logs from before the dedupe shipped must keep working unchanged.
+        text = _log(_mission_init(), _equip_begin(5, 57, slots=1),
+                    _slot("Weapon0", "old_format_sword", bo="bo_old", kind="Weapon"))
+        tl = tb.parse_battle_load_log(text)
+        self.assertEqual([s.item_id for s in tl.events[-1].slots], ["old_format_sword"])
+
+    def test_identity_tokens_do_not_bleed_into_the_culture_field(self):
+        # race/monster/actionSet sit between culture= and slots=. A lazy culture group
+        # swallowed all of them, so the reported culture was the whole run of tokens.
+        text = _log(_mission_init(),
+                    _equip_begin(5, 57, char="townsman_dunland", culture="empire",
+                                 slots=2, identity=True, loadout=3))
+        tl = tb.parse_battle_load_log(text)
+        agent = tb._parse_equip_begin(tl.events[-1].detail)
+        self.assertEqual(agent["culture"], "empire")
+        self.assertEqual(agent["char"], "townsman_dunland")
+        self.assertEqual(agent["slots"], "2")
 
 
 # --------------------------------------------------------------------------- #

@@ -83,9 +83,15 @@ _WATCHDOG_RE = re.compile(
 # sentinel `phase=<none>` still yields a last_phase; seq is optional for the same reason.
 _STATUS_RE = re.compile(r"phase=(\S+)(?:\s+seq=(\d+))?\s*(.*)$")
 
-# Per-phase detail parsers
+# Per-phase detail parsers.
+# char/culture are [^']* — ids never contain an apostrophe, and a lazy `.*?` swallowed the
+# race/monster/actionSet tokens that sit between culture= and slots= (shipped 2026-08-02),
+# reporting the whole run as the culture. The agent NAME keeps its lazy group because names
+# legitimately contain apostrophes ('Sauron's Lieutenant') and `char='` anchors it.
 _EQUIP_BEGIN_RE = re.compile(
-    r"agent#(\d+)\s+'(.*?)'\s+char='(.*?)'\s+culture='(.*?)'\s+slots=(\d+)")
+    r"agent#(\d+)\s+'(.*?)'\s+char='([^']*)'\s+culture='([^']*)'.*?\bslots=(\d+)")
+# Optional: absent in logs predating the per-loadout dedupe (2026-08-03).
+_LOADOUT_RE = re.compile(r"\bloadout=#(\d+)")
 # Greedy + end-anchored so an apostrophe in the name (e.g. 'Sauron's Lieutenant') is kept,
 # not truncated at the first inner quote (AgentEquipOk has no trailing token to anchor on).
 _EQUIP_OK_RE = re.compile(r"agent#(\d+)\s+'(.*)'\s*$")
@@ -155,8 +161,19 @@ def parse_battle_load_log(text: str) -> Timeline:
     """Extract the ordered [BattleLoad] phase events + slot dumps + watchdog line.
 
     Tolerates lines with or without the FileLogger `[ts] [LEVEL]` prefix. Slot
-    dumps attach to the most recent AgentEquipBegin event."""
+    dumps attach to the most recent AgentEquipBegin event.
+
+    Since 2026-08-03 the dump is written once per DISTINCT loadout and later agents
+    wearing it carry only `loadout=#N` (a 429-agent arena emitted 1,146 slot lines
+    encoding 11 rows). The stuck agent is usually one of the deduped ones, so an agent
+    citing an id gets the earlier block re-attached — otherwise the EQUIPMENT verdict
+    would name no suspect at all. Resolution happens as the Begin line is read, against
+    only the blocks seen since the last MissionInitialize: ids restart per load, so a
+    single global pass would resolve every mission against the last one's map. Logs
+    predating the dedupe carry no id and are unaffected."""
     tl = Timeline()
+    loadouts: dict = {}
+    collecting = None  # loadout id whose block is currently being read, if any
     for raw in text.splitlines():
         line = _PREFIX_RE.sub("", raw)
         if _TAG not in line:
@@ -177,14 +194,35 @@ def parse_battle_load_log(text: str) -> Timeline:
             slot = Slot(*m.groups())
             if tl.events and tl.events[-1].phase == "AgentEquipBegin":
                 tl.events[-1].slots.append(slot)
+                if collecting is not None:
+                    loadouts.setdefault(collecting, []).append(slot)
             continue
 
         m = _PHASE_RE.search(line)
         if m:
-            tl.events.append(PhaseEvent(
-                seq=int(m.group(1)), ms=int(m.group(2)),
-                phase=m.group(3), detail=m.group(4).strip()))
+            phase = m.group(3)
+            # The service clears its map here, so ids restart at #1 for the next load.
+            if phase == "MissionInitialize":
+                loadouts.clear()
+            event = PhaseEvent(seq=int(m.group(1)), ms=int(m.group(2)),
+                               phase=phase, detail=m.group(4).strip())
+            tl.events.append(event)
+
+            collecting = None
+            if phase == "AgentEquipBegin":
+                lid = _loadout_id(event.detail)
+                if lid is None:
+                    pass                              # pre-dedupe log: block follows, no id to key
+                elif lid in loadouts:
+                    event.slots = list(loadouts[lid])  # deduped: block was written earlier
+                else:
+                    collecting = lid                   # this agent carries the block
     return tl
+
+
+def _loadout_id(detail: str):
+    m = _LOADOUT_RE.search(detail)
+    return int(m.group(1)) if m else None
 
 
 def _parse_equip_begin(detail: str) -> dict:

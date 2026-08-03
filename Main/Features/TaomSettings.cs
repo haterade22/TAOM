@@ -341,6 +341,20 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Show diagnostic [SiegeDismount] messages on the in-game HUD. Off = file log only.")]
     public bool SiegeDismountDebug { get; set; } = false;
 
+    // --- Battle Tactics / Siege Prop Diagnostics ---
+    // Diagnostic only, no gameplay effect. The engine reports NOTHING when a rock pile or ammo
+    // barrel is unusable, so this turns that silence into one log line per prop.
+
+    [SettingPropertyGroup("Battle Tactics/Siege Prop Diagnostics", GroupOrder = 23)]
+    [SettingPropertyBool("Enable Siege Prop Diagnostics", Order = 0,
+        HintText = "Log why rock piles and arrow barrels can or cannot be used in the current mission. Diagnostic only — changes no gameplay. Off by default.")]
+    public bool EnableSiegePropDiagnostics { get; set; } = false;
+
+    [SettingPropertyGroup("Battle Tactics/Siege Prop Diagnostics")]
+    [SettingPropertyBool("Siege Prop Diagnostics Verbose", Order = 1,
+        HintText = "Log every prop, including working ones. Off = log only props that are unusable, plus the summary.")]
+    public bool SiegePropDiagnosticsVerbose { get; set; } = false;
+
     // --- Messengers ---
 
     [SettingPropertyGroup("Messengers", GroupOrder = 25)]

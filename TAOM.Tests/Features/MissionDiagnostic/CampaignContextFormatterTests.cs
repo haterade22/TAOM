@@ -7,9 +7,9 @@ namespace TAOM.Tests.Features.MissionDiagnostic;
 // The campaign-context line is the correlation key on every crash report we receive: which save,
 // which hero, which in-game day. Its two halves read different engine subsystems and fail
 // independently -- reading CampaignTime before Campaign.Models is up throws DivideByZeroException
-// (CampaignTime.GetDayOfSeason divides by the static TimeTicksPerDay, still 0 pre-init), which is
-// exactly what the 2026-08-02 dwarf-vs-Rhun crash log shows. One half failing must never blank the
-// other, and neither may propagate into engine code.
+// (ToString() evaluates GetYear first, which divides by the static TimeTicksPerYear, still 0
+// pre-init), which is exactly what the 2026-08-02 dwarf-vs-Rhun crash log shows. One half failing
+// must never blank the other, and neither may propagate into engine code.
 [TestClass]
 public class CampaignContextFormatterTests
 {

@@ -14,6 +14,8 @@ When a Bannerlord item names an asset that the engine can't resolve, the failure
 
 > **The scope lesson (#352).** This tool caught both live typos at the exact line — but only once pointed at the right directory. Its `--items` default was `ModuleData/LOTRLOME_items/`, while crafting pieces live in `ModuleData/LOTRLOME_crafting_pieces.xml`, one level up. For a year the tool built to catch this class never read the file that contained it, and reported PASS. **A clean run means "clean within `--items` scope", never "the hang isn't a missing body".** The default is now `ModuleData/`; widen it further for any module whose body-naming XML lives elsewhere.
 
+> **The inverse trap (2026-08-03).** #352 was a good ref-vs-asset pair broken on the *ref* side, which trains the reflex "malformed name ⇒ fix the name." It runs the other way too. `wm_isengard_shield_a04` references `bo_capwm_isengard_shield_a02_clean` — underscore missing, unlike all 224 sibling shields — and the asset is packaged under **that exact misspelling**, while the corrected spelling exists in no `.tpac`. Correcting it would manufacture the #352 hang. **A PASS on a name that looks wrong is positive evidence the name is right, not a tool gap.** Only names this tool flags `MISSING_BODY` are safe to rewrite; query `build_present_set(...).physicsshapes` for both spellings before touching either half of the pair. Full case: [armory-shield-audit.md](../reference/armory-shield-audit.md).
+
 - Which items reference which meshes/bodies, and at what `file:line`?
 - Does each referenced visual mesh exist in a packaged `.tpac`?
 - Does each referenced collision body exist (as a `PhysicsShape` entry in a `.tpac` table-of-contents)?

@@ -119,6 +119,41 @@ When a diagnostic reports on what another code path does — a save payload's si
 - **Prevent:** when you are about to write "the same X as Y" in a comment, extract X so the sentence cannot become false — one expression, two callers. Contrast with the safe case in the same changeset: `TroopWeightCheats` recomputes `ComputeSizePenalty` in its formatter, which is fine precisely because it calls the service's own `public static` method rather than re-deriving the arithmetic. Duplicated *formulas* (the `SettlementEconomy` equilibrium target, re-derived in the cheat from two config floats) carry the same drift risk and want a service accessor.
 - **Source:** `docs/reviews/rca-devconsole-phase0-2026-07-31.md` addendum finding A3 (2026-08-01).
 
+### An engine method's COST is a decompile question, never an inference from its name
+
+`FaceGen.GetRaceNames()` returns `(string[])_raceNamesArray.Clone()` — a fresh 15-element array on
+every call. `FaceGen.GetBaseMonsterNameFromRace(int)` indexes the same array and allocates nothing.
+The names give no hint which is which, and on an agent-spawn path the difference is 648 allocations
+per battle load versus zero.
+
+- **Why missed:** the API whose *name* matched the intent ("I want race names") was used without
+  opening its three-line body. Reviewing it, the Efficiency agent asked the right question and then
+  marked it *"INVESTIGATE — implementation not visible in this codebase"* rather than decompiling —
+  while spending its confidence on a different, unverified HIGH. The agent that decompiled
+  (Data Flow) found a real defect; the agent that reasoned from plausibility found none and invented
+  one.
+- **Prevent:** when writing OR reviewing an engine call on a per-agent / per-tick / per-frame path,
+  read the method body (`pwsh tools/taom-src.ps1 path <Type>`) before asserting or deferring on its
+  cost. Look specifically for `.Clone()`, `.ToArray()`, `new`, and string building inside what looks
+  like a plain accessor. An unverified cost claim is reported UNVERIFIED, never HIGH.
+- **Source:** `docs/reviews/rca-battleload-agentbuild-2026-08-03.md` finding #1.
+
+### Moving a diagnostic stamp from INFO to DEBUG is a feature change, not a perf tweak
+
+TAOM's `FileLogger` drains INFO synchronously with a flush on the calling thread and leaves DEBUG on
+an async queue — precisely so a hard native CTD preserves the tail. A crash-localisation stamp
+downgraded to DEBUG disappears from exactly the logs it exists to produce.
+
+- **Why missed:** a deep-review Efficiency agent recommended downgrading `AgentBuildDone` to DEBUG
+  on the strength of an unverified disk-cost estimate (it assumed `StreamWriter.Flush()` calls
+  `FlushFileBuffers`; it does not — it flushes to the OS file cache). Measured on the live log:
+  1287 durable stamps in **145 ms**, ~0.11 ms each, ≈0.5 % of a 9.3 s load. Acting on the finding
+  would have silently destroyed the feature while appearing to optimise it.
+- **Prevent:** any proposal to change a `[BattleLoad]` / `[MissionDiag]` stamp's log level must
+  state what happens to that stamp in a hard CTD. Second time this contract has needed defending —
+  `LogTaomBehaviorAdded` carries a code comment for the same reason.
+- **Source:** `docs/reviews/rca-battleload-agentbuild-2026-08-03.md` (refuted-HIGH section).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

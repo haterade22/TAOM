@@ -70,6 +70,7 @@
 - [dale](features/dale.md) — Dale culture authoring (armor, troops, Lake-Town recruitment override) — proof-of-life for full-culture authoring
 - [tournament-armor-assignment](features/tournament-armor-assignment.md) — per-participant culture armor in TaomTournamentModel
 - [starting-equipment-tuning](features/starting-equipment-tuning.md) — keep CC starter gear cheap to resell: how item value actually works (`DefaultItemValueModel` exponential `2.75^tier` + explicit `value=` override), the per-culture `starter_*` clone-with-low-stats pattern (5/7/9 anchors), the generator + roster-wirer tools
+- [armory-shield-audit](reference/armory-shield-audit.md) — shield `item_usage` reference: `hand_shield` vs `shield` grip, the offhand-bone flag each requires, block-arc cost, and the two `body_name`s that look mistyped but must not be corrected
 - See also: CLAUDE.md "Equipment & Armory" for canonical-folder table per item-ID prefix
 
 ### Sieges

@@ -393,3 +393,50 @@ documentation.
 - [docs/reviews/rca-butr-dependency-update-2026-07-16.md](../rca-butr-dependency-update-2026-07-16.md)
 
 <!-- backlinks-end -->
+
+### A tool that widens its own coverage must report the DEGRADED path, not just the success path
+
+When a validator/audit gains a new data-dependent scope (an extra sweep root, a registry built from
+an explicit file list, a globbed asset inventory), the run must be LOUD when that scope resolves to
+nothing. Three instances shipped in one sitting: a missing `LOTRLOME_Armory` root printed `PASS`, a
+shrunken body-property registry tripped the empty-registry guard and skipped its check, and an empty
+chariot clip inventory made the `quad_movement` probe vacuous (`bound[r] in inv` is false for every
+`r`). All three produced output indistinguishable from a healthy run — in a changeset whose entire
+purpose was fixing an earlier silent under-scoping.
+
+- **Why missed:** the existence filter and the success message get written in the same breath and
+  nobody asks what the negative branch prints. An empty-input guard designed for one benign cause
+  ("no game install", already reported) gets silently reused for a malignant one ("the file list
+  broke"). All five deep-review core agents passed it; only the conditional tooling agent — the one
+  that ran the tool with a deliberately wrong path instead of reasoning about it — caught them.
+- **Prevent:** write the "resolved to nothing" branch in the SAME edit as the filter, and add a test
+  asserting the tool says so (`missing_ref_roots`, `suspect_registries`). Set registry floors far
+  below real counts so they catch a broken file list, not data drift. Ask of every new check: *if
+  its input were empty, would this still report clean?* If yes, it is not a check yet.
+- **Source:** `docs/reviews/rca-validator-silent-scope-2026-08-03.md`
+
+### Read the enclosing method before naming a specific throw site
+
+`CampaignTime.ToString()` was documented in 5 places (2 code comments, a test comment, an
+investigation doc, a CHANGELOG entry) as throwing `DivideByZeroException` in `GetDayOfSeason`
+(`/ TimeTicksPerDay`). It evaluates `GetYear` (`/ TimeTicksPerYear`) FIRST, and that is what throws.
+The attribution came from grepping the class for a division and taking the first hit.
+
+- **Why missed:** a grep hit *consistent* with the symptom reads as confirmation of it. Same
+  exception type, same root cause, same fix — so nothing downstream ever contradicted the wrong
+  detail. Caught only by decompiling installed v1.4.7 and reading the method body.
+- **Prevent:** when naming a line/getter as the failure site, read the enclosing method's evaluation
+  order. "A division exists in this class" is not "this division is the one that ran."
+- **Source:** same RCA; `.claude/rules/evidence-over-claims.md` §C
+
+### A majority-non-C# changeset needs the tooling agent, not just the core 5
+
+The 5 core `/deep-review` agents are C#-centric. On a changeset that is mostly Python tooling they
+will pass it while having reviewed the minority of the diff — here they returned clean or
+quality-only findings while the conditional tooling agent found all five real defects.
+
+- **Prevent:** treat the Step 2c tooling-agent trigger as mandatory whenever `tools/**/*.py|ps1` is
+  more than a trivial slice of the changeset — **including read-only tools**, which the trigger's
+  current wording ("scripts that WRITE files") does not cover. All three silent-scope findings above
+  were in read-only tools.
+- **Source:** same RCA

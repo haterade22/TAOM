@@ -45,6 +45,7 @@ using TAOM.Features.BanditManagement;
 using TAOM.Features.CastleRecruitment;
 using TAOM.Features.EliteEmissary;
 using TAOM.Features.SiegeDismount;
+using TAOM.Features.SiegePropDiagnostics;
 using TAOM.Features.MixedFormations;
 using TAOM.Features.SmartCavalryAI;
 using TAOM.Features.QuickActions;
@@ -122,6 +123,7 @@ public static class IoC
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
         EliteEmissaryIoC.RegisterEliteEmissaryFeature(container);
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
+        SiegePropDiagnosticsIoC.RegisterSiegePropDiagnosticsFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
         BannerBearersIoC.RegisterBannerBearersFeature(container);

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using TAOM.Core.Logging;
 using TAOM.Features.BattleLoadDiagnostics.Domain;
@@ -20,6 +22,17 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     private volatile bool _exitWindowActive;
     private long _exitWindowOpenedUtcTicks; // 0 = closed; read via Interlocked (feeds ExitStallSampler)
 
+    // A 429-agent arena audience drawn from 9 character kits produced 1,146 slot lines encoding
+    // 11 distinct rows (2026-08-03 tournament repro). The dump is per-LOADOUT; only the phase
+    // stamps are per-agent, so each distinct loadout is dumped once and every later agent wearing
+    // it just cites `loadout=#N`. Locked because a torn Dictionary can spin the game thread
+    // forever, and a diagnostic must never be the thing that hangs the game.
+    private readonly object _loadoutLock = new object();
+    private readonly Dictionary<string, int> _loadoutIds = new Dictionary<string, int>(StringComparer.Ordinal);
+    private int _nextLoadoutId;
+
+    internal const int MaxTrackedLoadouts = 512;
+
     public BattleLoadDiagnosticsService(
         IModLogger logger,
         IBattleLoadDiagnosticsSettingsProvider settings,
@@ -39,6 +52,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         // while the master toggle is off, or a mid-window toggle-off latches it and the next
         // map activation emits spurious Exit* lines (deep-review data-flow finding, 2026-07-06).
         CloseExitWindow();
+        ResetLoadoutCache();
         if (!IsEnabled) return;
         try
         {
@@ -100,6 +114,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         // A mission starting means any still-open exit window is stale (chained mission
         // without map activation) — close it unconditionally before entry-phase logging.
         CloseExitWindow();
+        ResetLoadoutCache();
         if (!IsEnabled) return;
         Emit(BattleLoadPhase.MissionInitialize, $"scene='{sceneName}'");
     }
@@ -110,17 +125,70 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         if (snapshot == null) return;
         try
         {
-            Emit(BattleLoadPhase.AgentEquipBegin,
-                $"agent#{snapshot.AgentIndex} '{snapshot.AgentName}' char='{snapshot.CharacterId}' culture='{snapshot.CultureId}' slots={snapshot.Slots?.Count ?? 0}");
-
+            // Formatted before the Begin line because the rendered rows ARE the loadout key.
             var lines = _formatter.Format(snapshot);
-            if (lines != null)
-            {
-                foreach (var line in lines)
-                    _logger.LogDebug($"{Tag}   {line}");
-            }
+            bool isNewLoadout = TryClaimLoadout(snapshot, lines, out int loadoutId);
+
+            Emit(BattleLoadPhase.AgentEquipBegin,
+                $"agent#{snapshot.AgentIndex} '{snapshot.AgentName}' char='{snapshot.CharacterId}' culture='{snapshot.CultureId}'" +
+                Opt(" race=", snapshot.Race) + Opt(" monster=", snapshot.MonsterId) + Opt(" actionSet=", snapshot.ActionSetName) +
+                $" slots={snapshot.Slots?.Count ?? 0} loadout=#{loadoutId}" +
+                OptRaw(" from=", snapshot.SpawnOrigin));
+
+            if (!isNewLoadout || lines == null) return;
+            foreach (var line in lines)
+                _logger.LogDebug($"{Tag}   {line}");
         }
         catch (Exception ex) { SafeWarn("LogAgentEquipBegin", ex); }
+    }
+
+    // True when this loadout has not been dumped yet in the current load. The key is gear +
+    // skeleton identity and deliberately NOT the character id: it must mean "what the engine is
+    // about to assemble", which is the thing that can fault. So a mid-load MatchEquipment rewrite
+    // (TaomTournamentModel.GetParticipantArmor) surfaces as a NEW id with a fresh dump rather than
+    // being swallowed by the agent's earlier twin.
+    private bool TryClaimLoadout(EquipmentSnapshot snapshot, IReadOnlyList<string>? lines, out int loadoutId)
+    {
+        var key = BuildLoadoutKey(snapshot, lines);
+        lock (_loadoutLock)
+        {
+            if (_loadoutIds.TryGetValue(key, out loadoutId)) return false;
+
+            loadoutId = ++_nextLoadoutId;
+            // Past the cap the map stops growing and every agent dumps in full again. A load with
+            // >512 distinct loadouts is already pathological, and the verbose log is the right
+            // output for it — unbounded growth on the spawn path is the worse failure.
+            if (_loadoutIds.Count < MaxTrackedLoadouts) _loadoutIds[key] = loadoutId;
+            return true;
+        }
+    }
+
+    // ASCII unit separator: no item id, mesh name or action-set name can contain it, so two
+    // different loadouts cannot concatenate into the same key.
+    private const char KeySep = '\u001f';
+
+    private static string BuildLoadoutKey(EquipmentSnapshot snapshot, IReadOnlyList<string>? lines)
+    {
+        var sb = new StringBuilder()
+            .Append(snapshot.Race).Append(KeySep)
+            .Append(snapshot.MonsterId).Append(KeySep)
+            .Append(snapshot.ActionSetName);
+        if (lines != null)
+        {
+            foreach (var line in lines) sb.Append(KeySep).Append(line);
+        }
+        return sb.ToString();
+    }
+
+    // Unconditional, like CloseExitWindow: gating this on IsEnabled would let a mid-load
+    // toggle-off strand a stale cache, and the next load would silently skip dumps it owes.
+    private void ResetLoadoutCache()
+    {
+        lock (_loadoutLock)
+        {
+            _loadoutIds.Clear();
+            _nextLoadoutId = 0;
+        }
     }
 
     public void LogAgentEquipOk(int agentIndex, string agentName)
@@ -128,6 +196,22 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         if (!IsEnabled) return;
         Emit(BattleLoadPhase.AgentEquipOk, $"agent#{agentIndex} '{agentName}'");
     }
+
+    // Must Emit (LogInfo), never LogDebug — DEBUG is the async path and a native crash drops it,
+    // which is the exact failure this stamp exists to survive. Pinned by a test.
+    public void LogAgentBuildDone(int agentIndex, string agentName)
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.AgentBuildDone, $"agent#{agentIndex} '{agentName}'");
+    }
+
+    // Optional log tokens: an absent value drops its key entirely rather than emitting a bare
+    // `race=` or a `<null>` that would read as a real engine value in a user-uploaded log.
+    private static string Opt(string key, string? value) =>
+        string.IsNullOrEmpty(value) ? string.Empty : $"{key}'{value}'";
+
+    private static string OptRaw(string key, string? value) =>
+        string.IsNullOrEmpty(value) ? string.Empty : $"{key}{value}";
 
     public void LogMissionAfterStartBegin()
     {

@@ -135,9 +135,27 @@ saved beside them as `*.bak-dangling-culture-20260802`.
 
 **S3. MissionDiag could not read the campaign time.**
 `Campaign: <time read failed: DivideByZeroException>` — the session snapshot runs before
-`Campaign.Models` is built, so `CampaignTime.GetDayOfSeason` divides by the static
-`TimeTicksPerDay` while it is still `0` (`CampaignTime.cs:152` / assigned at `:194`). Every crash
+`Campaign.Models` is built. `CampaignTime.ToString()` (`CampaignTime.cs:357`) evaluates `GetYear`
+first, which integer-divides by the static `TimeTicksPerYear` while it is still `0`; the constants
+are assigned in `CampaignTime.Initialize()` (`:178-198`) from `CampaignTimeModel`. Every crash
 report we receive therefore lacked the in-game day, which is a routine correlation key.
+
+The window is **structural, not a race**, and the existing `GameStarted` guard does not close it —
+both established by decompiling installed v1.4.7 during the deep review:
+- `Campaign.OnInitialize` calls `GameManager.OnGameStart` (`Campaign.cs:1391`), which is what
+  invokes TAOM's `SubModule.OnGameStart`, **three lines before** `CampaignTime.Initialize()` at
+  `:1394`. Every session start hits this ordering.
+- On a **save-load**, `Campaign.GameStarted` is already `true` at that point (set by
+  `SetLoadingParameters`), so the guard passes and the read is attempted. On a **new campaign**
+  `GameStarted` is still `false`, so the guard blocks it. That asymmetry is why this is a
+  save-load-only symptom.
+
+> Correction (deep review, 2026-08-02): the first draft of this section — and the shipped code
+> comments and CHANGELOG entry — named `GetDayOfSeason` / `TimeTicksPerDay` as the throw site.
+> That was inferred from grepping for a division rather than tracing `ToString()`'s evaluation
+> order, and it is wrong: `GetYear` is evaluated first and throws first. The conclusion (guard and
+> catch; there is no public non-dividing tick accessor) is unaffected. Recorded rather than quietly
+> overwritten, per `.claude/rules/evidence-over-claims.md` §C.
 
 `MapTimeTracker` and `NumTicks` are both `internal`, so there is no earlier readable source — the
 fix is not a fallback but a second emission: `LogMissionStartSnapshot` now logs the campaign

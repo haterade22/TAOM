@@ -182,6 +182,7 @@ same session; when authoring a script you expect to rerun, keep it in `tools/` a
 | Script | Purpose | CLI Flags |
 |--------|---------|-----------|
 | `merge_settlements.py` | Merge settlement names/owners from repo into map file, preserving positional data | `--dry-run`, `--apply` |
+| `audit_siege_props.py` | **Siege resupply-prop audit** (read-only). For every town/castle in the LIVE `TAOM_Map/ModuleData/settlements.xml`, resolves the `Location id="center"` scene and counts *usable* rock piles / ammo barrels — entities carrying `StonePile`/`ArrowBarrel`/`JavelinBarrel`, whether declared inline or inherited from a prefab (counting one form only double-counts). Flags "looks usable, isn't" scenes (pile-shaped meshes, zero usable piles) and dead `GivenItemID` refs — an unresolvable id silently disables a pile for player *and* AI. | `--game`, `--all`, `--scene` |
 
 ---
 

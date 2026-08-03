@@ -59,8 +59,65 @@ Verified engine seams (v1.4.7): `MissionState.cs:302` (`OpenNew`) · `:235` (`pr
 
 The prefix builds an `EquipmentSnapshot` (via `IEquipmentSnapshotAdapter`, reading `Agent.SpawnEquipment` — the *full* `Equipment` incl. armor + horse, NOT `Agent.Equipment` which is weapons-only) and logs the full loadout **before** the engine equips the agent. The postfix logs `AgentEquipOk` only **after** the engine returns. So:
 
-- **`AgentEquipBegin` with a matching `AgentEquipOk`** → that agent equipped fine.
+- **`AgentEquipBegin` with a matching `AgentEquipOk`** → that agent's *equip call* returned fine.
 - **`AgentEquipBegin` with NO matching `AgentEquipOk` (log ends here)** → the freeze is inside that agent's equipment spawn, and the dumped slots name the suspect — look for `bo=<null>` / `shieldBo=<null>`.
+- **`AgentEquipOk` with NO matching `AgentBuildDone` (log ends here)** → the fault is in `Mission.BuildAgent`'s native tail. See phase 5b.
+
+#### Phase 5c — the dump is per-loadout, the stamps are per-agent (2026-08-03)
+
+A 429-agent arena audience drawn from 9 character kits emitted **1,146 `slot=` lines** — 186 KB, 29 % of a 644 KB session log — describing **18 distinct loadouts** (only 11 distinct *rows*; a loadout is a set of rows, so the two counts differ). The stamps have to be per-agent (they are the crash discriminator); the *dump* does not. So each distinct loadout is dumped once and every later agent wearing it carries only a `loadout=#N` token on its `AgentEquipBegin` line.
+
+The key is the rendered slot rows **plus `race` / `monster` / `actionSet`** — deliberately *not* the character id. It has to mean "what the engine is about to assemble", because that is the thing that faults. Two consequences worth knowing before you read a log:
+
+- **Divergence surfaces, it does not hide.** A mid-load `MatchEquipment` rewrite (`TaomTournamentModel.GetParticipantArmor`) yields a **new** id and a fresh dump mid-sequence, rather than being swallowed by an earlier agent in the same character.
+- **Crash durability improves.** The DEBUG slot lines only ever reached disk because a following INFO flushed them. A deduped agent's block was written and flushed far *earlier* in the load, behind hundreds of subsequent synchronous flushes — strictly safer than the per-agent version.
+
+The map is cleared at `Mission.Initialize` and `ResetLifecycle`, both **unconditionally** (gating the clear on `IsEnabled` would let a mid-load toggle-off strand a stale cache into the next load). Past `MaxTrackedLoadouts` (512) it stops growing and every agent dumps in full again — a load with that many distinct loadouts is already pathological, and unbounded growth on the spawn path is the worse failure.
+
+#### Phase 5b — `AgentBuildDone`, and why `AgentEquipOk` was never enough (the 2026-08-02 blind window)
+
+`AgentEquipOk` brackets one call. `Mission.BuildAgent` (`Mission.cs:4015`) keeps working on the same agent afterwards, all of it native, none of it stamped:
+
+```csharp
+agent.EquipItemsFromSpawnEquipment(...);   // :4034  ← the AgentEquipBegin/Ok bracket
+agent.InitializeAgentRecord();             // :4035
+agent.AgentVisuals.BatchLastLodMeshes();   // :4036   mesh/GPU batching
+agent.PreloadForRendering();               // :4037
+agent.SetActionChannel(0, ...);            // :4041   plays GetCurrentAction(0) on channel 0
+agent.InitializeComponents();              // :4043
+_activeAgents.Add(agent);                  // :4048
+```
+
+A CTD anywhere in there produced a log ending on `AgentEquipOk agent#N` — **indistinguishable from a death between two agents.** A Dunland tournament CTD (reporter FESTERLITTLE, `mission='TournamentFight' scene='arena_empire_a'`) ended exactly that way, and the 14-line range was as far as the log could narrow it. `Mission_BuildAgent_BattleLoad_Patch` is a postfix on `BuildAgent` (private in v1.4.7 — bound by string), so the two cases now read differently.
+
+The `AgentEquipBegin` line also carries `race=`, `monster=` and `actionSet=`. A race/monster/action-set mismatch is the shape that access-violates in native mesh assembly with nothing logged, and it must sit on the line written *before* the engine touches the agent — a stamp that only fires afterwards is worthless for a crash.
+
+`from=` names the engine method that built the agent, captured from a managed stack and bounded to `Agent.Index <= 2` (a stack capture is not free; the answer is only interesting at the head of the spawn sequence). Live output:
+
+```
+from=Agent.EquipItemsFromSpawnEquipment <- Mission.BuildAgent <- Mission.SpawnAgent
+     <- MissionAudienceHandler.SpawnAudienceAgents <- MissionAudienceHandler.OnInit
+     <- MissionAudienceHandler.EarlyStart
+```
+
+**Reading it:** frames are fully qualified on capture and shortened to `Type.Method`; Harmony's generated `_PatchN` wrappers are *normalised, not dropped* (a wrapper replaces the frame it stands for, so dropping it loses the method you want); consecutive duplicates collapse, because the wrapper and the original both appear once Harmony is in the chain. Budget is 6 frames — Harmony adds one per patched method in the chain.
+
+> **The first cut of `from=` shipped useless, and the failure is instructive.** The patch built each frame from `DeclaringType.Name` (short) while the formatter filtered on namespaces, so *every* filter was inert; our own prefix plus two Harmony wrappers then ate all four slots and the real caller fell off the end. If you extend this token, keep the capture and the filter speaking the same vocabulary — pinned by `SpawnOriginFormatterTests`.
+
+#### What `from=` answered first: there is no mystery agent
+
+`agent#0 'Musician' char='musician_dunland'` in a `TournamentFight` looked impossible. `OpenTournamentFightMission` (`TournamentMissionStarter.cs:61-102`) builds 13 behaviors with no `MissionAgentHandler`; musicians are `LocationCharacter`s made by `TavernEmployeesCampaignBehavior` for `"tavern"`/`"center"` only; and `FightTournamentGame.GetParticipantCharacters` picks only heroes, tier 3–5 garrison troops and `BasicTroop` upgrade targets.
+
+All of that is true and all of it is beside the point. **`MissionView`s are registered separately from the initializer delegate — the live mission holds 65 behaviors, not 13.** `MissionAudienceHandler` (`SandBox.View`) spawns the arena crowd:
+
+```
+Townswoman 0.2 · Townsman 0.2 · Armorer 0.1 · Merchant 0.1 · Musician 0.1
+Weaponsmith 0.1 · RansomBroker 0.1 · Barber 0.05 · FemaleDancer 0.05
+```
+
+A Musician spectator is a 1-in-10 draw. In-house repros produced `townsman_dunland`, `armorer_dunland`, `merchant_dunland` and `ransom_broker_dunland` in the same slots.
+
+**Rule this bought:** never infer what a mission contains from `InitializeMissionBehaviorsDelegate`. `MissionDiagnosticBehavior` already dumps the live behavior list into the same log — read that.
 
 `FileLogger` writes every `[BattleLoad]` line (INFO) **synchronously on the calling thread**, so the begin line is on disk the moment the call returns — before the engine can freeze *or* crash inside the equip. Until 2026-07-16 it was queued to a background writer with a 50 ms poll, which was adequate for a **hang** (main thread frozen, writer thread alive to drain) but lost the queue outright on a **hard crash**. See "Crash-durability caveat" under *Read a hang log*.
 
@@ -147,7 +204,7 @@ Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` — `OnGameInitializat
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
 - `BattleLoadStallWatchdogTests` — `ShouldFire` at/above/below threshold, already-fired, window-closed.
-- `BattleLoadDiagnosticsServiceTests` — disabled = no writes, scene/index/summary in markers, formatter delegation, begin-before-body ordering, status-line update, and **every phase method swallows a throwing logger** (the feature must never crash the game). The blind-window stamps add: enabled/disabled per phase, `LogTaomBehaviorAdded_UsesDurableLogInfo_NotLogDebug` (a "it's just noise, make it DEBUG" refactor would silently reopen the window with every test green), and `NewPhaseMethods_DoNotAlterExitWindowState` (the new stamps are pure probes, not latch closers).
+- `BattleLoadDiagnosticsServiceTests` — disabled = no writes, scene/index/summary in markers, formatter delegation, begin-before-body ordering, status-line update, and **every phase method swallows a throwing logger** (the feature must never crash the game). The phase-5c dedupe adds 8: body written once per distinct loadout, one `AgentEquipBegin` still emitted per agent, a differing loadout getting a new id + fresh dump, race alone forcing a new dump, cache cleared by both `Mission.Initialize` and `ResetLifecycle`, and the past-the-cap fallback to always-dump. The blind-window stamps add: enabled/disabled per phase, `LogTaomBehaviorAdded_UsesDurableLogInfo_NotLogDebug` (a "it's just noise, make it DEBUG" refactor would silently reopen the window with every test green), and `NewPhaseMethods_DoNotAlterExitWindowState` (the new stamps are pure probes, not latch closers).
 - `BattleLoadStallMarkerTests` — `Format`/`Parse` round-trip (scene + UTC + **absolute** log path), write→consume→delete lifecycle, consume-once, `ClearInflight`, missing-directory creation, and a locked/undeletable marker still surfacing its parsed info (parse-before-delete).
 
 Hooks and the `MissionLogic` are game-only (ADR-008) and verified in-game.
@@ -183,7 +240,7 @@ Verdicts: `EQUIPMENT` (ends at `AgentEquipBegin`, names the stuck agent's items)
 
 Open the user's `Modules/.../Logs/taom_debug_<timestamp>.log` and find the last `[BattleLoad]` line:
 
-- ends at `phase=AgentEquipBegin agent#57 …` (no `AgentEquipOk`) → equipment hang; the indented `slot=… bo=<null>/shieldBo=<null>` lines name the item. Cross-check with `python tools/validate_mesh_refs.py` and the troop rosters.
+- ends at `phase=AgentEquipBegin agent#57 …` (no `AgentEquipOk`) → equipment hang. **Read the `loadout=#N` token on that line and scroll UP to the first `AgentEquipBegin` carrying the same id — the indented `slot=… bo=<null>/shieldBo=<null>` lines are under *that* one.** Since 2026-08-03 the dump is written once per distinct loadout, so the stuck agent usually has no block directly beneath it (see phase 5c). `triage_battle_load.py` does this resolution for you. Cross-check the named items with `python tools/validate_mesh_refs.py` and the troop rosters.
 - ends at `phase=BattleSceneSelected` (no `MissionInitialize`) → scene-load hang, not equipment.
 - a `WATCHDOG STILL LOADING after Ns — last phase=…` line → the watchdog fired; the `last phase` is the freeze point, and a `taom_crash_*.zip` bundle was written alongside.
 - ends at `phase=BattlePlayable` → the load completed; the hang is elsewhere.
@@ -209,6 +266,8 @@ Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a
 ## Performance
 
 - Outside the loading window, the phase-5 prefix is a two-bool read (`IsEnabled && IsOpen`) and returns. Inside, it does ~12 resident-property slot reads + one DTO alloc per spawning agent, only until the first tick.
+- **The per-loadout dedupe (phase 5c) is the log's main size control, not a speed one.** Replaying the 2026-08-03 tournament repro through the real key takes the equipment dump from **1,146 lines / 186,345 B to 52 lines / 8,432 B**, against 5,148 B of added `loadout=#N` tokens — a net 172 KB on one 37-minute session. It adds one string build + one dictionary probe per agent under a lock — the lock is there because a torn `Dictionary` can spin the game thread forever, and a diagnostic must never be the thing that hangs the game.
+- **Measured cost of the per-agent stamps, from the same run: 145 ms for all 429 agents** (`seq=30` @ +8137 ms → `seq=1316` @ +8282 ms), i.e. ~0.11 ms/agent for three synchronous INFO flushes. That is the honest figure for why the triplet is not worth trimming.
 - Master toggle off → every hook early-outs immediately.
 - The watchdog is one thread-pool timer ticking every 5 s; negligible.
 - `seq` uses `Interlocked` and the status line is a `volatile` reference, so the off-thread watchdog reads are torn-free.
@@ -224,6 +283,7 @@ Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a
 
 ## Changelog
 
+- 2026-08-03 — **Deduped the equipment dump per loadout** (phase 5c). The 2026-08-03 tournament repro spent 1,146 slot lines on 18 distinct loadouts; each is now dumped once and later agents cite `loadout=#N` (measured by replay: 186,345 B → 8,432 B, +5,148 B of tokens). All three per-agent stamps are unchanged — they are the crash discriminator and cost 145 ms for 429 agents. `triage_battle_load.py` learned to resolve `loadout=#N` back to its block (without which the EQUIPMENT verdict would name no suspect), and its `_EQUIP_BEGIN_RE` was fixed: a lazy `culture='(.*?)'` had been swallowing the `race`/`monster`/`actionSet` tokens added on 2026-08-02 and reporting the whole run as the culture.
 - 2026-07-16 — **Split the `MissionOpenNew` → `MissionInitialize` blind window** (#350) after a player CTD at Nan Angren left a log that could not be localized. Added an `OpenNew` Postfix, the private `MissionState.LoadMission`, the native `Utilities.ClearOldResourcesAndObjects` bracket, and the `Mission.AfterStart` bracket (which lets a log *exonerate* TAOM, not just accuse it), plus per-behavior `TaomBehaviorAdded` stamps. Patch43 went 11 → 14 hooks and its apply is now try/catch-guarded. Registry correction: `Mission.Initialize` is **public** (`Mission.cs:1798`), not private as claimed since this feature shipped.
 - 2026-07-16 — **Made the stamps survive a hard crash.** `FileLogger` queued every line to a background writer (`IsBackground`, 50 ms idle sleep), so a dying process took the undrained queue with it — the forensics instrument systematically lost the lines it exists to capture, which is *why* the Nan Angren log was unlocalizable. INFO/WARNING/ERROR now drain synchronously; DEBUG stays async. Deep review then found 2 MED defects in that fix itself (a post-`Dispose` writer-thread hot-spin; a write fault that failed silently) — both fixed, both pinned by tests. RCA: [rca-battle-load-blind-window-2026-07-16.md](../reviews/rca-battle-load-blind-window-2026-07-16.md).
 - 2026-06-17 — Added the `IBattleLoadStallMarker` / next-session notice: phase 4 writes `Logs/battle-load-inflight.marker`, a surviving marker on next launch surfaces a soft `StallReportNotifier` inquiry with an Open-log-folder button (plus a `battle-load-hang.md` issue template).

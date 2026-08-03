@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import fnmatch
 import glob
+import itertools
 import json
 import os
 import re
@@ -70,6 +71,8 @@ class Registries:
     # Optional (defaulted) so existing constructions stay valid.
     harness_family_types: dict = field(default_factory=dict)  # HorseHarness id -> (family_type|None, def file)
     mount_family_types: dict = field(default_factory=dict)    # Type="Horse" id -> Monster family_type (None = unknown)
+    body_properties: set = field(default_factory=set)         # defined BodyProperty ids (face_key_template targets)
+    suspect_registries: list = field(default_factory=list)    # human-readable "this registry looks too small" warnings
 
 
 # --------------------------------------------------------------------------- #
@@ -157,6 +160,12 @@ REF_KINDS = [
             "cultures", Severity.ERROR, "UNKNOWN_CULTURE", "culture", "Culture."),
     RefKind("party_template", re.compile(r'="PartyTemplate\.([A-Za-z0-9_.\-]+)"'),
             "party_templates", Severity.WARNING, "BROKEN_PARTY_TEMPLATE_REF", "party template", "PartyTemplate."),
+    # face_key_template targets. An undefined one is not an XML error: the engine
+    # registers a placeholder, MBObjectManager.UnregisterNonReadyObjects drops it
+    # ("Null object reference found with ID: fighter_umbar"), and the character
+    # silently loses its authored face. Nothing else cross-checked these.
+    RefKind("body_property", re.compile(r'="BodyProperty\.([A-Za-z0-9_.\-]+)"'),
+            "body_properties", Severity.ERROR, "BROKEN_BODY_PROPERTY_REF", "body property", "BodyProperty."),
 ]
 
 
@@ -168,10 +177,22 @@ def _lineno(text: str, pos: int) -> int:
 # Validator                                                                    #
 # --------------------------------------------------------------------------- #
 class Validator:
-    def __init__(self, moduledata, schemas: list, registries: Registries):
+    # extra_ref_roots: ModuleData folders of OTHER modules TAOM authors into
+    # (LOTRLOME_Armory). They are swept for broken cross-references ONLY -- the
+    # schema contracts (duplicate ids, civilian equipmentType, enums) describe
+    # TAOM's own files, and applying them to a foreign module would report
+    # defects against a repo this validator does not own.
+    def __init__(self, moduledata, schemas: list, registries: Registries, extra_ref_roots=None):
         self.moduledata = Path(moduledata)
         self.schemas = schemas
         self.reg = registries
+        requested = [Path(r) for r in (extra_ref_roots or [])]
+        self.extra_ref_roots = [r for r in requested if r.exists()]
+        # A root that silently vanished is the dangerous case: the sweep quietly
+        # shrinks back to TAOM-only and the run still prints PASS, which is exactly
+        # the under-coverage state this sweep was added to end. Record it so the
+        # caller can say so out loud -- never drop it on the floor.
+        self.missing_ref_roots = [str(r) for r in requested if not r.exists()]
 
     # -- public ----------------------------------------------------------- #
     def run(self) -> list:
@@ -188,11 +209,28 @@ class Validator:
     def _xml_files(self):
         yield from sorted(self.moduledata.rglob("*.xml"))
 
+    def _extra_ref_files(self):
+        for root in self.extra_ref_roots:
+            yield from sorted(root.rglob("*.xml"))
+
     def _rel(self, path: Path) -> str:
         try:
             return path.relative_to(self.moduledata).as_posix()
         except ValueError:
-            return str(path)
+            pass
+        # Foreign module: prefix with the module name. A bare
+        # "LOTRLOME_items/rhun/head_armors.xml" reads as a TAOM path and sends
+        # the reader to the wrong repo -- and that file is not even in git.
+        for root in self.extra_ref_roots:
+            try:
+                inner = path.relative_to(root).as_posix()
+            except ValueError:
+                continue
+            # `or root.name` covers a root sitting at a drive root, where
+            # pathlib gives the parent an empty name and the label would
+            # degrade to a bare "/inner/path" naming no module at all.
+            return f"{root.parent.name or root.name}/{inner}"
+        return str(path)
 
     def _schema_for(self, rel: str):
         for s in self.schemas:
@@ -202,13 +240,17 @@ class Validator:
 
     @staticmethod
     def _read(path: Path) -> str:
-        return path.read_text(encoding="utf-8", errors="ignore")
+        # utf-8-sig, not utf-8: the Armory sweep newly reads files authored by
+        # other tools, 2 of which carry a BOM. Per tools/README.md "XML I/O
+        # convention". Harmless on non-BOM files; keeps a stray U+FEFF out of
+        # the first match for any future anchored pattern.
+        return path.read_text(encoding="utf-8-sig", errors="ignore")
 
     # -- pass 1: cross-reference sweep ------------------------------------ #
     def _ref_sweep(self) -> list:
         issues = []
         active = [k for k in REF_KINDS if getattr(self.reg, k.registry_attr)]
-        for path in self._xml_files():
+        for path in itertools.chain(self._xml_files(), self._extra_ref_files()):
             rel = self._rel(path)
             text = self._read(path)
             schema = self._schema_for(rel)
@@ -497,6 +539,10 @@ _CULTURE_DEF_RE = re.compile(r'<Culture\b[^>]*?\bid="([^"]+)"', re.S)
 # SandBoxCore) — NOT <PartyTemplate>; the container is <partyTemplates>. Match
 # both MBPartyTemplate and any legacy PartyTemplate element, never the container.
 _PARTYTEMPLATE_DEF_RE = re.compile(r'<(?:MB)?PartyTemplate\b[^>]*?\bid="([^"]+)"', re.S)
+# TAOM_bodyproperties.xml puts the id on its OWN line after the element name, so
+# this must span newlines (re.S + \b[^>]*?) exactly like the others — an
+# id-on-the-same-line pattern registers nothing and turns every lord broken.
+_BODYPROP_DEF_RE = re.compile(r'<BodyProperty\b[^>]*?\bid="([^"]+)"', re.S)
 
 # Vanilla culture StringIds that exist at runtime but are produced via XSLT /
 # live only in vanilla SandBoxCore (kept as a floor so refs to them never
@@ -517,7 +563,9 @@ _COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
 
 def _read_stripped(xml: Path) -> str:
     try:
-        text = xml.read_text(encoding="utf-8", errors="ignore")
+        # utf-8-sig per tools/README.md "XML I/O convention" — a BOM'd definition
+        # file must not leave a stray U+FEFF glued to the first captured id.
+        text = xml.read_text(encoding="utf-8-sig", errors="ignore")
     except OSError:
         return ""
     return _COMMENT_RE.sub("", text)
@@ -765,10 +813,22 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         for name in ("SandBoxCore", "SandBox"):
             culture_files.append(game_modules / name / "ModuleData" / "spcultures.xml")
 
+    # Body properties come from the *_bodyproperties.xml files only, for the same
+    # reason cultures do: a directory rglob would sweep character-creation and
+    # feature configs that reuse the <BodyProperty> shape for non-referenceable
+    # entries, polluting the registry and masking the broken refs we want caught.
+    bodyprop_files = [moduledata / "TAOM_bodyproperties.xml"]
+    if game_modules:
+        for name, fname in (("SandBoxCore", "sandboxcore_bodyproperties.xml"),
+                            ("SandBox", "sandbox_bodyproperties.xml"),
+                            ("NavalDLC", "naval_bodyproperties.xml")):
+            bodyprop_files.append(game_modules / name / "ModuleData" / fname)
+
     items, item_def_files = _scan(item_roots, _ITEM_DEF_RE, want_files=True)
     npccharacters = _scan(npc_roots, _NPC_DEF_RE)
     cultures = _scan_files(culture_files, _CULTURE_DEF_RE) | VANILLA_CULTURES
     party_templates = _scan(pt_roots, _PARTYTEMPLATE_DEF_RE)
+    body_properties = _scan_files(bodyprop_files, _BODYPROP_DEF_RE)
 
     # Only flag duplicate item defs inside the LOTRLOME_Armory item folders,
     # where the multi-folder duplicate-id bug actually occurs.
@@ -793,6 +853,25 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         # from the install, so they are unavailable too.
         items, npccharacters, party_templates, armory_dups = set(), set(), set(), {}
         harness_family_types, mount_family_types = {}, {}
+        # TAOM's 30 body properties are only a quarter of the 121 defined; the
+        # rest are vanilla, and TAOM characters reference them freely.
+        body_properties = set()
+
+    # Size floors. A registry built from an explicit file list shrinks silently when
+    # a source file is renamed (a game patch, a typo'd --game-modules that still
+    # points at a real directory). Full shrinkage trips the empty-registry guard and
+    # SKIPS the check -- a clean-looking PASS; partial shrinkage floods false
+    # positives. Neither is distinguishable from a healthy run without a floor, so
+    # say so rather than letting the number speak for itself. Floors are deliberately
+    # far below today's real counts (121 body properties, 38 cultures) -- this catches
+    # "the file list broke", not "the data changed a bit".
+    suspect = []
+    if game_modules:
+        for label, value, floor in (("body_properties", body_properties, 50),
+                                    ("cultures", cultures, 20)):
+            if len(value) < floor:
+                suspect.append(f"{label} registry has only {len(value)} entries "
+                               f"(expected >={floor}) - a source path may be wrong")
 
     return Registries(
         items=items, item_def_files=armory_dups,
@@ -800,6 +879,8 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         cultures=cultures, party_templates=party_templates,
         harness_family_types=harness_family_types,
         mount_family_types=mount_family_types,
+        body_properties=body_properties,
+        suspect_registries=suspect,
     )
 
 

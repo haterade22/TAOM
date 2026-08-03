@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Diagnostics;
 using HarmonyLib;
 using TaleWorlds.MountAndBlade;
 using TAOM.Adapters;
@@ -23,6 +25,15 @@ public static class Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch
         _adapter = adapter;
     }
 
+    // Capturing a managed stack costs real time, so it is bounded to the first few agents of a
+    // load by engine index — no counter, no reset, and the answer is only ever interesting for
+    // the agents at the head of the spawn sequence. Agent.Index is mission-assigned from 0.
+    private const int MaxAgentIndexForSpawnOrigin = 2;
+
+    // Harmony inserts a generated wrapper per patched method in the chain, so the useful callers
+    // sit deeper than the raw frame count suggests.
+    private const int MaxSpawnOriginFrames = 6;
+
     [HarmonyPrefix]
     public static void Prefix(Agent __instance)
     {
@@ -31,10 +42,40 @@ public static class Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch
         if (!BattleLoadLoadingWindow.IsOpen) return;
         try
         {
-            var snapshot = _adapter?.Capture(__instance);
+            var snapshot = _adapter?.Capture(__instance, CaptureSpawnOrigin(__instance));
             if (snapshot != null) svc.LogAgentEquipBegin(snapshot);
         }
         catch { /* diagnostic only — never break agent spawn */ }
+    }
+
+    // Names the engine method that built this agent. A `musician_dunland` agent turned up inside a
+    // TournamentFight mission whose 13 behaviors contain no MissionAgentHandler and whose roster
+    // (FightTournamentGame.GetParticipantCharacters) cannot select a musician — the loadout dump
+    // could not say who spawned it, and the caller's name can.
+    private static string? CaptureSpawnOrigin(Agent? agent)
+    {
+        try
+        {
+            if ((agent?.Index ?? int.MaxValue) > MaxAgentIndexForSpawnOrigin) return null;
+
+            var trace = new StackTrace(fNeedFileInfo: false);
+            var names = new List<string?>(trace.FrameCount);
+            for (int i = 0; i < trace.FrameCount; i++)
+            {
+                var method = trace.GetFrame(i)?.GetMethod();
+                if (method == null) continue;
+
+                // FULL name — the formatter filters on namespaces, and passing Type.Name instead
+                // silently disabled every one of its filters on the first cut. Harmony's generated
+                // wrappers have no declaring type and carry the whole path in the method name.
+                var declaring = method.DeclaringType?.FullName;
+                names.Add(string.IsNullOrEmpty(declaring) ? method.Name : $"{declaring}.{method.Name}");
+            }
+
+            var formatted = SpawnOriginFormatter.Format(names, MaxSpawnOriginFrames);
+            return string.IsNullOrEmpty(formatted) ? null : formatted;
+        }
+        catch { return null; }
     }
 
     [HarmonyPostfix]

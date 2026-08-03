@@ -8,5 +8,10 @@ namespace TAOM.Adapters;
 // the sealed Agent type. Returns null when the argument is not an Agent.
 public interface IEquipmentSnapshotAdapter
 {
-    EquipmentSnapshot? Capture(object agent);
+    /// <param name="spawnOrigin">
+    /// Pre-formatted caller chain from the patch boundary, or null. Passed through rather than
+    /// captured here: a managed <c>StackTrace</c> is not a TaleWorlds type and does not belong
+    /// behind the engine-adapter boundary.
+    /// </param>
+    EquipmentSnapshot? Capture(object agent, string? spawnOrigin = null);
 }

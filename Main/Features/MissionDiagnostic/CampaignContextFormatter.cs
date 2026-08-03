@@ -7,9 +7,16 @@ namespace TAOM.Features.MissionDiagnostic;
 // testable without a live campaign.
 //
 // Both halves are guarded INDEPENDENTLY and neither may propagate. Reading CampaignTime before
-// Campaign.Models is up throws DivideByZeroException (CampaignTime.GetDayOfSeason divides by the
-// static TimeTicksPerDay, which Campaign only assigns once the CampaignTimeModel is built), and a
-// session snapshot taken that early must still report the hero rather than losing the whole line.
+// Campaign.Models is up throws DivideByZeroException: CampaignTime.ToString() evaluates GetYear
+// first, which integer-divides by the static TimeTicksPerYear, and Campaign only assigns the tick
+// constants (from CampaignTimeModel) in CampaignTime.Initialize(). A session snapshot taken that
+// early must still report the hero rather than losing the whole line.
+//
+// The window is structural, not a race: Campaign.OnInitialize calls GameManager.OnGameStart --
+// which is what invokes TAOM's SubModule.OnGameStart -- three lines BEFORE CampaignTime.Initialize()
+// (verified against installed v1.4.7). And on a save-game load Campaign.GameStarted is already true
+// by then (SetLoadingParameters sets it), so the GameStarted guard does not close this window --
+// which is exactly why the failure shows up on save-load and not on a new campaign.
 public static class CampaignContextFormatter
 {
     public static string Describe(Func<string> readTime, Func<string> readHero) =>

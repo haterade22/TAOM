@@ -12,6 +12,31 @@ Replaces vanilla's tournament model with a culture-aware, race-aware variant. Fi
 
 Tournament start/end timing constants are also exposed for tuning.
 
+## The arena crowd is not TAOM's, and it is not a bug
+
+Every agent in a tournament with a townsfolk id — `musician_dunland`, `townsman_dunland`,
+`armorer_dunland`, `merchant_dunland`, `ransom_broker_dunland` — is a **spectator**, spawned by the
+engine's `MissionAudienceHandler` (`SandBox.View`) from a weighted draw over the settlement culture's
+location characters:
+
+```
+Townswoman 0.2 · Townsman 0.2 · Armorer 0.1 · Merchant 0.1 · Musician 0.1
+Weaponsmith 0.1 · RansomBroker 0.1 · Barber 0.05 · FemaleDancer 0.05
+```
+
+They arrive early — `EarlyStart` → `OnInit` → `SpawnAudienceAgents` → `Mission.SpawnAgent` — so they
+occupy the **first agent indices** of the load, ahead of any tournament participant. A crash log
+whose last line names `agent#0` in an arena is naming a spectator, not a fighter.
+
+This is worth stating because the opposite conclusion is easy to reach and was reached, three times
+independently, during the 2026-08-02 Dunland tournament CTD: `OpenTournamentFightMission` returns 13
+behaviors with no `MissionAgentHandler`, so a townsfolk agent looks impossible — until you notice
+`MissionView`s are registered separately and the live mission holds **65** behaviors. `#295`
+(arena-stand spectators rendering naked) was the same population seen from the art side.
+
+Read the live list from `[MissionDiag] === Mission start: … behaviors=N ===`, never the initializer
+delegate. Investigation: [investigation-dunland-tournament-ctd-2026-08-02.md](../reviews/investigation-dunland-tournament-ctd-2026-08-02.md).
+
 ## Why This Exists
 
 - **Vanilla behavior:** [DefaultTournamentModel](E:\Decompiled_Bannerlord\Campaign\TaleWorlds.CampaignSystem\TaleWorlds\CampaignSystem\GameComponents\DefaultTournamentModel.cs) returns participant-agnostic armor — every participant in a town tournament wears the host culture's kit regardless of their own. Reward items come from a global pool with no cultural filtering. And the tournament *weapon* templates (`CultureObject.TournamentTeamTemplatesFor{One,Two,Four}Participant`, or the `tournament_template_empire_*` fallback) include mounted loadouts, so some participants are spawned on horseback.
