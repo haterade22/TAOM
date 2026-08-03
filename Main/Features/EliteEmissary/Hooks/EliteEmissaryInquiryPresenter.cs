@@ -8,6 +8,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.EliteEmissary.Domain;
 
 namespace TAOM.Features.EliteEmissary.Hooks;
@@ -22,12 +23,18 @@ public sealed class EliteEmissaryInquiryPresenter
 {
     private readonly IEliteEmissaryService _service;
     private readonly ISettlementOwnerAdapter _ownerAdapter;
+    private readonly ICoopSessionProvider _coopSession;
     private readonly IModLogger _logger;
 
-    public EliteEmissaryInquiryPresenter(IEliteEmissaryService service, ISettlementOwnerAdapter ownerAdapter, IModLogger logger)
+    public EliteEmissaryInquiryPresenter(
+        IEliteEmissaryService service,
+        ISettlementOwnerAdapter ownerAdapter,
+        ICoopSessionProvider coopSession,
+        IModLogger logger)
     {
         _service = service;
         _ownerAdapter = ownerAdapter;
+        _coopSession = coopSession;
         _logger = logger;
     }
 
@@ -183,6 +190,21 @@ public sealed class EliteEmissaryInquiryPresenter
 
     private void ExecutePurchase(SettlementOwnerInfo owner, string heroId, string troopId, int qty)
     {
+        // Refuse BEFORE charging. On a non-authoritative peer the resource deduction persists
+        // (TAOM's own SyncData carries it) but the troop is added to a client-side roster the next
+        // resync overwrites — the player pays and gets nothing, which field testing confirmed as
+        // "pay-real-get-phantom" (report 2026-08-03 §9.1). Granting it properly needs a message
+        // TAOM cannot send without taking a compile-time dependency on a specific co-op mod, so the
+        // honest behaviour is to decline the sale and say why.
+        if (_coopSession.ShouldDeferToHost)
+        {
+            _logger.LogInfo(
+                $"[EliteEmissary] Purchase of {qty}x '{troopId}' declined — not the authority. " +
+                "Charging here would persist while the troops evaporate on the next roster resync.");
+            Notify("{=taom_emissary_coop_guest}The emissary only deals with the host of this campaign.", Colors.Red);
+            return;
+        }
+
         var result = _service.Purchase(heroId, owner.OwnerKingdomId, owner.OwnerCultureId, troopId, qty);
         var character = MBObjectManager.Instance?.GetObject<CharacterObject>(troopId);
         var troopName = character?.Name?.ToString() ?? troopId;

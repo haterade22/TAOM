@@ -38,6 +38,7 @@ public sealed class EliteEmissaryBehavior : CampaignBehaviorBase
         IEliteEmissarySettingsProvider settings,
         IEliteEmissaryConfigProvider config,
         ISettlementOwnerAdapter ownerAdapter,
+        TAOM.Features.CoopInterop.ICoopSessionProvider coopSession,
         IModLogger logger)
     {
         _service = service;
@@ -45,7 +46,7 @@ public sealed class EliteEmissaryBehavior : CampaignBehaviorBase
         _config = config;
         _ownerAdapter = ownerAdapter;
         _logger = logger;
-        _presenter = new EliteEmissaryInquiryPresenter(service, ownerAdapter, logger);
+        _presenter = new EliteEmissaryInquiryPresenter(service, ownerAdapter, coopSession, logger);
     }
 
     public override void RegisterEvents()
