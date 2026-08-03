@@ -80,7 +80,13 @@ public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
             return new SiegeOutcomeSnapshot
             {
                 CaptorFactionId = faction?.StringId,
-                PlayerInvolved = capturerParty?.IsMainParty == true,
+                // Same participation test as FromMapEvent above, which this was inconsistent with:
+                // sieges counted ONLY when the player's own party was the captor, so taking a fief
+                // inside an ally's army — the normal way a vassal captures anything — recorded no
+                // player event at all. That gap is the War of the Ring victory requirement quietly
+                // failing to advance, and it predates multiplayer (field report 2026-08-03 §9.4
+                // found the multiplayer half of the same shortfall).
+                PlayerInvolved = IsPlayerRelated(capturerParty?.Party, _playerContext.GetPlayerKingdomId()),
                 CaptorFactionName = faction?.Name?.ToString() ?? "",
                 CaptorLeaderName = capturerParty?.LeaderHero?.Name?.ToString() ?? "",
                 SettlementName = settlement?.Name?.ToString() ?? "",
