@@ -659,6 +659,14 @@ public class SubModule : MBSubModuleBase
         var ccLogger = IoC.Resolve<IModLogger>();
         campaignStarter.AddBehavior(new CharacterCreationRegistrationBehavior(ccContentService, ccLogger));
 
+        // Re-applies the character-creation package when a multiplayer join swaps the controlled
+        // hero out from under it. Inert in single-player. Field report 2026-08-03 §1 + §7.
+        campaignStarter.AddBehavior(new TAOM.Features.PlayerPossession.PlayerPossessionBehavior(
+            IoC.Resolve<TAOM.Features.PlayerPossession.IPlayerPossessionService>(),
+            IoC.Resolve<TAOM.Features.PlayerPossession.IJoinReconciliationService>(),
+            IoC.Resolve<ICareerMenuService>(),
+            ccLogger));
+
         campaignStarter.RemoveBehaviors<InitialChildGenerationCampaignBehavior>();
         var childGenService = IoC.Resolve<IInitialChildGenerationService>();
         campaignStarter.AddBehavior(new TaomInitialChildGenerationBehavior(childGenService));
@@ -803,7 +811,8 @@ public class SubModule : MBSubModuleBase
         var specialResourceLogger = IoC.Resolve<IModLogger>();
         var specialResourceBehavior = new SpecialResourcesBehavior(
             specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger,
-            IoC.Resolve<ITroopWeightService>());
+            IoC.Resolve<ITroopWeightService>(),
+            IoC.Resolve<TAOM.Features.CoopInterop.IDedicatedServerProvider>());
         campaignStarter.AddBehavior(specialResourceBehavior);
         PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
 
@@ -941,6 +950,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.EliteEmissary.IEliteEmissarySettingsProvider>(),
             IoC.Resolve<Features.EliteEmissary.IEliteEmissaryConfigProvider>(),
             IoC.Resolve<ISettlementOwnerAdapter>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
             IoC.Resolve<IModLogger>()));
 
         // CultureConversion — conquered cross-culture fiefs gradually adopt the new owner's culture
