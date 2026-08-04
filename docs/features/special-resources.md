@@ -41,6 +41,7 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 - **XML-driven config:** Resource definitions with nested `<Kingdom>` and `<Culture>` child elements for many-to-one mappings
 - **Culture fallback:** Resolves via kingdom first, then culture — supports kingdomless players
 - **CampaignBehavior:** Hooks 8 events (DailyTick, MapEventEnded, RaidCompleted, PrisonerTaken, TournamentFinished, HideoutCompleted, NewGameCreated, SessionLaunched)
+- **Earn policy:** `SpecialResourceEarnPolicy` — participation (not command) decides a battle payout, and a dedicated server credits nobody. See [Earning Rules](#earning-rules)
 - **Harmony Patch26:** 3 patches — InitializeUpgrades (grey out + hint), AddCommand prefix (clamp count), UpgradeTroop postfix (queue spend)
 - **Pending transaction:** Upgrades queue during party screen, commit on close, revert on cancel
 - **Desertion:** At 0 balance, 10% of each upkeep-troop type deserts daily (min 1 per type)
@@ -156,6 +157,7 @@ instead, so AI lords are never charged).
 | `Main/Features/SpecialResources/ISpecialResourceConfigProvider.cs` | Config interface (GetByKingdomId, GetByCultureId) |
 | `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with multi-key indexing |
 | `Main/Features/SpecialResources/SpecialResourcesBehavior.cs` | CampaignBehavior (8 events, desertion, notifications) |
+| `Main/Features/SpecialResources/SpecialResourceEarnPolicy.cs` | The two pure earn gates: participation victory + dedicated-server suppression |
 | `Main/Features/SpecialResources/SpecialResourcesIoC.cs` | DryIoc registrations |
 | `Main/Features/SpecialResources/Domain/SpecialResource.cs` | Resource definition (KingdomIds/CultureIds lists) |
 | `Main/Features/SpecialResources/Domain/TroopResourceCostEntry.cs` | Per-troop cost record |
@@ -178,6 +180,7 @@ instead, so AI lords are never charged).
 
 - `IPathService` (Core) — module data path resolution
 - `IModLogger` (Core) — logging (`[SpecRes]` prefix)
+- `IDedicatedServerProvider` (CoopInterop) — suppresses every earn path on a headless dedicated server
 - UIExtenderEx — map bar mixin + prefab extension
 - Harmony 2.x — Patch26_SpecialResources (3 patches)
 
@@ -186,6 +189,7 @@ instead, so AI lords are never charged).
 - `SpecialResourceServiceTests.cs` — 60 tests (resolve, earn, spend, validate, daily tick, projected-net deficit warning, pending transaction, desertion, edge cases)
 - `SpecialResourceStorageServiceTests.cs` — 11 tests (get/set/add, clamp, multi-hero, multi-resource, restore-null)
 - `SpecialResourceServiceGrantTests.cs` — 9 tests for `GrantAmount` (cap clamp, floor at 0, already-at-cap, unresolved kingdom/culture, NaN/Infinity rejection, grant during an open party-screen session) against a real storage instance
+- `SpecialResourceEarnPolicyTests.cs` — 8 tests: the AI-led-army regression, player-led still earns, losing side, unresolved battle, player on no side, neither side resolved, and both `MayCreditMainHero` cases
 - `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
 - `TAOM.Tests/Features/DevConsole/ConsoleCommandBindingTests.cs` — 5 tests pinning the engine reflection contract for every attributed TAOM console command (assembly-wide; see [dev-console.md](dev-console.md))
 
@@ -232,6 +236,42 @@ question. Do not duplicate any of that here.
 
 Edit attributes on the `<Resource>` element. Each resource can have independent rates. Current values are identical across all 11 resources.
 
+## Earning Rules
+
+*Who* qualifies to earn is two decisions, both in `SpecialResourceEarnPolicy`. They are pure statics
+so they can be tested without a running campaign (`MapEvent` is sealed and unconstructible in a unit
+test) — the behavior keeps the plumbing, the policy keeps the verdict, the same split as
+`PatchShieldPolicy` / `CoopSessionPolicy`.
+
+**Participation, not command.** A battle pays out when `MapEvent.PlayerSide == MapEvent.WinningSide`.
+The gate this replaced asked whether the player *is* the winning side's `LeaderParty.LeaderHero`,
+which conflated fighting with commanding — and **in ordinary single-player, joining any AI lord's army
+makes you stop being the leader party's hero, so every victory you fought inside that army paid
+zero.** Players who campaign as a vassal will notice earnings they never used to get.
+
+`BattleSideEnum.None` on **either** side fails the gate. An unresolved battle state is the routine
+reading on a co-op client — the server is authoritative and never re-broadcasts `BattleState` — and
+treating it as a win would pay out for defeats.
+
+**A dedicated server credits nobody.** `Hero.MainHero` exists on a headless server, but it is the idle
+world-gen hero the campaign was created around, not anybody's character. `SpecialResourcesBehavior.CanEarn()`
+therefore suppresses all five earn paths — `OnMapEventEnded`, `OnRaidCompleted`, `OnPrisonerTaken`,
+`OnHideoutCompleted`, `OnTournamentFinished` — when `IDedicatedServerProvider.IsDedicatedServer` is
+true, logging one `[SpecRes]` line and staying quiet after. Without it the server banks income nobody
+can spend while the remote players who fought the battles earn nothing.
+
+That gate keys off the **process**, not the co-op role: `DedicatedServerProvider` reads whether this
+assembly loaded from `Win64_Shipping_Server`. A client-hosted session's host also reports `IsServer`
+but is a real player at a real keyboard and must keep earning — which is why the provider exists
+instead of reusing `ICoopSessionProvider`. It fails to "not a server", because these gates only ever
+suppress.
+
+**Which hero gets the starting seed after a multiplayer join.** `ISpecialResourceService.InitializeHero`
+has a caller beyond `OnCharacterCreationIsOver` / `OnGameLoaded`: when a co-op join replaces the
+character-creation hero with a host-authored one,
+[player-possession.md](player-possession.md) re-invokes the seed against the hero the player actually
+ends up controlling, resolving it from the character-creation culture and the live kingdom.
+
 ## Desertion Mechanics
 
 - Triggers daily when resource balance is 0 and party has upkeep-costing troops
@@ -250,6 +290,7 @@ Edit attributes on the `<Resource>` element. Each resource can have independent 
 
 ## Changelog
 
+- 2026-08-03 — Earning is keyed on participation (`MapEvent.PlayerSide == WinningSide`) instead of commanding the winning side, which also fixes single-player: fighting inside an AI lord's army used to pay nothing. Added `SpecialResourceEarnPolicy` (pure, 8 tests) and a dedicated-server gate that suppresses all five earn paths.
 - 2026-07-30 — Added the `taom.add_special_resources` console cheat (TAOM's first console command) plus `ISpecialResourceService.GrantAmount`, the only arbitrary-amount grant path in the feature.
 - 2026-06-19 — Gate the war elephant + spider behind recruit cost + daily upkeep via a new `recruit_cost` XML field and `Patch51_RecruitmentResourceGate` (block Done button) + `OnUnitRecruitedEvent` charge.
 - 2026-06-01 — Deficit warning now fires only when the next tick's projected net would push the balance to ≤ 0 (`GetProjectedDailyNet` shared with the real tick math), replacing the low-but-stable `< Cap*0.1` warning.

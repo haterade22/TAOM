@@ -9,6 +9,7 @@ How to rename map settlements (towns, castles, villages) safely. Covers the dual
 - **NEVER rename a settlement ID** (`castle_village_DG1_1` etc.) — IDs are referenced by save files, bound-village relationships, and party-template/recruitment XML.
 - Display names live in two layers: the `name="{=key}DEFAULT"` fallback in `settlements.xml`, and the per-language `<string id="..." text="..."/>` in each `loc_settlements.xml`. Both must be updated.
 - For bulk renames, use [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py). It does 13 files in one pass, preserves UTF-8 + CRLF, idempotent.
+- **Entrance coordinates** (`posX`/`posY`, `gate_posX`/`gate_posY`) are a separate edit class from names. An entrance on a disconnected navmesh island wedges AI pathfinding with no crash and no log line. Never hand-pick a replacement — run `taom.audit_settlement_entrances` for an engine-computed one. See "Correcting Entrance Coordinates" below.
 
 ## The Two-File Shadow Problem
 
@@ -141,6 +142,24 @@ Ownership is the `owner="Faction.clan_<culture>_N"` attribute on each `<Settleme
 
 This is **save-safe** for the same reason renames are: only the `owner=` text attribute changes; IDs and `bound=` relationships are untouched.
 
+## Correcting Entrance Coordinates (distinct from renaming)
+
+The third edit class on the same `<Settlement>` tag: the position AI parties actually path to. `posX`/`posY` is the map position; `gate_posX`/`gate_posY` overrides it for the entrance, and 221 of the live file's settlements carry it. `Settlement.Deserialize` (v1.4.7) sets `GatePosition` from `posX`/`posY` first and replaces it only when a `gate_posX` attribute exists — so a settlement with no gate attributes is entered at its map position.
+
+**The failure this fixes is silent.** An entrance can sit on a navmesh *island* the rest of the map cannot path to. Nothing crashes and nothing is written to the log: AI parties targeting that settlement simply fail their path query every tick, which the engine surfaces only as a repeating "Path finding target is not valid" assert. `PathFaceRecord.IsValid()` returns **true** for such faces, so an off-mesh check finds nothing — only comparing `FaceIslandIndex` against the rest of the map does.
+
+**Never hand-pick a replacement coordinate.** Run `taom.audit_settlement_entrances` in a loaded campaign (see [dev-console.md](../features/dev-console.md)). It resolves every settlement's entrance to a `PathFaceRecord`, derives the main landmass as the island index the most settlements agree on, and prints a replacement from `GetAccessiblePointNearPosition` for each disagreement — the engine's own navmesh answering, not a guess. The output names the attribute to edit: `gate_posX`/`gate_posY` for towns and castles, `posX`/`posY` for everything else. If it names the gate attributes on a settlement that has none, add them.
+
+**Reported, not yet corrected.** Three destinations were reported wedging AI parties in 2026-08-03 field testing. The values below are the current live coordinates, verified byte-exact against `TAOM_Map/ModuleData/settlements.xml`. The replacements do not exist yet — producing them takes one in-game campaign run of the audit.
+
+| Settlement ID | Display name | Attribute to correct | Current live value |
+|---|---|---|---|
+| `town_MM2` | Western Moria | `gate_posX`/`gate_posY` | `676.8127, 994.5818` |
+| `hideout_desert_7` | Haradrim Raider's Camp | `posX`/`posY` | `1072.412, 374.593` |
+| `castle_village_MM1_2` | Throk-gûl | `posX`/`posY` | `725.024, 1032.055` |
+
+Apply corrections to the **LIVE** `TAOM_Map/ModuleData/settlements.xml`. The repo copy is the stale shadow described above; the audit repeats that warning in its own output. Save impact is covered under "Save Compatibility" below — coordinates are re-read from XML on every load, so a correction reaches existing saves too.
+
 ## Validation Checks
 
 Always run these after a bulk rename. They take seconds and catch the entire class of "I forgot a file" bugs.
@@ -197,6 +216,8 @@ The display-name change documented here is **save-safe** because:
 - Bound-village relationships (`bound="Settlement.castle_DG1"`) untouched
 - Engine resolves saved settlement references by ID; display name is purely cosmetic
 
+**Entrance-coordinate edits are save-safe too, and additionally apply retroactively.** `Position`, `GatePosition` and `PortPosition` carry no `[SaveableProperty]` or `[SaveableField]` (verified against the v1.4.7 `Settlement` decompile) and are assigned only in `Settlement.Deserialize`, so the engine re-reads them from XML on every load. A corrected entrance therefore fixes an **existing** save — unlike a prosperity rebaseline, which only affects a new campaign.
+
 ## Glyph Compatibility
 
 Bannerlord's default font (LiberationSans-derived) supports:
@@ -218,6 +239,7 @@ Bannerlord's default font (LiberationSans-derived) supports:
 | [`tools/Apply-SettlementNames.ps1`](../../tools/Apply-SettlementNames.ps1) | Older PowerShell tool — targets the STALE TAOM-repo snapshot |
 | [`tools/Generate-Settlements.ps1`](../../tools/Generate-Settlements.ps1) | Regenerates settlements.xml from scene data (TAOM-repo snapshot only) |
 | [`tools/Settlement-Breakdown.ps1`](../../tools/Settlement-Breakdown.ps1) | Reports settlement counts by region |
+| `Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs` | `taom.audit_settlement_entrances` — navmesh-island check over every settlement entrance, with an engine-computed replacement coordinate per failure ([dev-console.md](../features/dev-console.md)) |
 | `E:\Steam\…\Modules\TAOM_Map\SubModule.xml` | Registers settlements.xml as the engine's Settlements source |
 | `Main/_Module/SubModule.xml` | TAOM's own SubModule — does NOT register Settlements |
 

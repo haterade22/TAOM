@@ -212,7 +212,7 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 
 ## Doc Lookup
 
-**Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map across all 90 feature docs,
+**Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map across the feature docs,
 ADRs, reviews, ai-includes, and migration docs. Topology queries: `/doc-graph`. Knowledge-base
 architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
 
@@ -229,8 +229,9 @@ architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
 | Add a rideable creature mount | [creature-mount-authoring.md](./docs/ai-includes/creature-mount-authoring.md) |
 | Migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
 
-Full task-oriented lookup (all ~40 rows — lord skills, weapon creation, armory pipeline, scene
-refs, lord perks, settlement economy, mesh-ref validation, every engine-process doc):
+Full task-oriented lookup (all 46 rows — lord skills, weapon creation, armory pipeline, scene
+refs, lord perks, settlement economy, mesh-ref validation, co-op + dedicated server, every
+engine-process doc):
 **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
 
 ## Localization
@@ -245,7 +246,7 @@ Full file/path map (source XMLs, per-language files, tools, cache, validation te
 
 ## Key Paths
 
-Full feature/component map (72 rows): **[`docs/reference/feature-map.md`](docs/reference/feature-map.md)**.
+Full feature/component map (74 rows): **[`docs/reference/feature-map.md`](docs/reference/feature-map.md)**.
 Layout: `Main/` (.NET Framework 4.7.2) · `Main/Features/<Name>/` · `TAOM.Tests/` ·
 `Main/_Module/ModuleData/<feature>/` · adapters `Main/Adapters/` · core `Main/Core/`.
 `.claude/` tree: `skills/`, `rules/`, `agents/`, `hooks/`; Codex config `.codex/config.toml`,
@@ -261,7 +262,8 @@ instructions `AGENTS.md`.
 | **Elephant howdah / bone-tracking** | DEFERRED-disabled (slide sources). |
 | **Vendored DLLs** | `Main/_Module/bin/Win64_Shipping_Client/` = allowlist (`MinHook.x64.dll`, `TAOM.NativeSkinFixes.dll`). Do NOT vendor `MCMv5.dll`. |
 | **BehaviorTreeMissionLogic** | `: MissionLogic`, NOT `MissionBehavior` — regression rule, `docs/reviews/rca-looter-battle-nre-2026-05-24.md`. |
-| **Armory** | dep is `LOTRLOME_Armory` (NOT `Armory_2`). Item defs under `.../LOTRLOME_Armory/ModuleData/LOTRLOME_items/<folder>/`. |
+| **Armory** | dep is `LOTRLOME_Armory` (NOT `Armory_2`). Item defs under `.../LOTRLOME_Armory/ModuleData/LOTRLOME_items/<folder>/`. A root-level `<action>` (parented by `<action_sets>`, not an `<action_set>`) loads on the client but kills a dedicated server on boot — gate with `tools/audit_action_set_parity.py`. |
+| **Co-op gating** | Three different questions, never interchangeable: `ICoopPresenceProvider.IsCoopActive` (a co-op mod is loaded), `ICoopSessionProvider.IsAuthority`/`ShouldDeferToHost` (may this peer mutate shared state), `IDedicatedServerProvider.IsDedicatedServer` (our binaries folder). `docs/features/coop-interop.md`. |
 | **Console commands** | A `[CommandLineArgumentFunction]` method with the wrong shape throws inside the engine's unguarded discovery loop, past a native boundary with no managed backstop — a startup hazard, not just a broken console. Duplicate names drop silently. Route through `TaomConsole`; `ConsoleCommandBindingTests` pins it. `docs/features/dev-console.md`. |
 
 ## Architecture (One-liner)
@@ -317,7 +319,7 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 | Doc | When to update | Path |
 |-----|---------------|------|
 | **CHANGELOG.md** | Every session | `CHANGELOG.md` |
-| **CLAUDE.md** | New features add ONE <=400-char Key Paths row + registry/table rows; prose goes in the feature doc, never the table (linter-enforced budget) | `CLAUDE.md` |
+| **CLAUDE.md** | New features add their row to `docs/reference/feature-map.md` (Key Paths holds no per-feature rows since the Tier-2 restructure) — here, only a Traps/registry row a crash-triage reader needs, <=400 chars; prose goes in the feature doc (linter-enforced budget) | `CLAUDE.md` |
 | **ADRs** | Architectural decisions | `docs/adrs/` |
 | **Migration tracking** | Migration tasks | `docs/migration/TRACKING.md` |
 | **GitHub Issues** | Every feature, bug, crash, system fix | `gh issue create/close` |

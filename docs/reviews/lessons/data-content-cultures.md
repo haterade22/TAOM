@@ -287,6 +287,66 @@ Dwarf melee weapons are `<CraftedItem>` elements with no `<Weapon>` child; reach
 - **Prevent:** before rewriting any `body_name` / `mesh` that looks wrong, query the TOC for BOTH spellings (`build_present_set(...).physicsshapes`). A PASS from `validate_mesh_refs.py` on a suspicious name is positive evidence the name is correct. Only names it flags `MISSING_BODY` are safe to rewrite — and when neither spelling resolves, the fix is to build the asset, not to guess a sibling's.
 - **Source:** docs/reference/armory-shield-audit.md (shield `item_usage` audit, 2026-08-03).
 
+### A ModuleData file the CLIENT engine tolerates can still be FATAL to the DEDICATED-SERVER engine
+
+`LOTRLOME_Armory/ModuleData/action_sets.xml` carried 168 `<action>` elements parented by
+`<action_sets>` instead of by an `<action_set>`. Twelve `as_<race>_female_villager_in_aserai_tavern`
+sets — dwarf, uruk, uruk_hai, berserker, orc, nazghul, hill_troll, pale_uruk, cave_troll, dg_uruk,
+goblin, saruman — were authored SELF-CLOSING, which orphaned the 14 female-conversation overrides
+that belong nested inside each (vanilla's own `as_human_female_villager_in_aserai_tavern` nests
+exactly those 14, in that order; all twelve TAOM groups matched it). Build **1.4.7.117484**, the
+game client, tolerates the file in silence. Build **117131**, which TaleWorlds' dedicated-server
+engine ships, throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at schema path
+`/action_sets/action` and dies on boot — which is why server operators had to fall back to the
+single-player module order (Alliance.Wargs before LOTRLOME_Armory) or crash.
+- **Why missed:** malformed structure that produces no symptom in play is not validated by playing,
+  and every hour this file had ever received was on the client build. `audit_action_set_parity.py`
+  asked whether each humanoid set carries the full `as_human_warrior` surface — a COVERAGE question —
+  and had no opinion about parentage, so a file 168 elements structurally wrong passed it clean.
+  Note the generator did **not** produce these: the broken sets sit outside
+  `tools/generate_race_civilian_action_sets.py`'s `TAOM-CIVILIAN-COVERAGE:START/END` marker block and
+  were hand-authored. Grepping for a generator is the obvious first move and it accuses the wrong
+  component — sibling entry "A review finding's stated CAUSE can be wrong even when the finding is
+  right" in [build-tooling-workflow.md](build-tooling-workflow.md).
+- **Prevent:** a structural validator must assert the schema SHAPE, not merely that the file parses,
+  and must exit non-zero so a gate can consume it — `audit_action_set_parity.py` now reports
+  root-level `<action>` elements and exits 1 on them as well as on humanoid gaps. Repair with a fixer
+  that is idempotent and updates the LIVE file and the tracked snapshot together
+  (`tools/oneoff/fix_orphaned_tavern_conversation_actions.py` →
+  `docs/reference/lotrlome-armory-snapshot/action_sets.xml`); 34,247 action elements and 1,226
+  action_sets survived unchanged, only parentage moved. Generalise: when a data file feeds more than
+  one engine BUILD, "it works in game" is evidence about one of them. A dedicated-server boot
+  verifying this fix is still owed.
+- **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit c9455ec8
+
+### A per-entity validity check cannot see a set-relative defect — a settlement entrance can be VALID and unreachable
+
+`PathFaceRecord.IsValid()` returns **true** for all three settlement destinations reported wedging AI
+parties in 2026-08-03 field testing: town_MM2's gate (676.8127, 994.5818, face 17541),
+hideout_desert_7 (1072.412, 374.593, face 3928), castle_village_MM1_2 (725.024, 1032.055, face
+17014) — all three byte-exact against the live `TAOM_Map/ModuleData/settlements.xml`. Nothing is
+off-mesh. Each face simply belongs to a navmesh ISLAND the rest of the map has no path to, so every
+AI tick targeting one fails its path query and the engine's only report is a repeating "Path finding
+target is not valid" assert that names no settlement. This is the quiet cousin of the orphan-scene-
+entity entry above: that one is an ABSENT entity producing a hard NRE for everyone, this one is a
+PRESENT, well-formed entity producing a silent AI wedge.
+- **Why missed:** every check available operates on one face at a time, and each of the three faces
+  passes. Reachability is not a property of a face — it is a property of a face RELATIVE to the rest
+  of the mesh — so no per-entity validator can express it, and the failure signal (an engine assert
+  with no id in it) never reaches a log anyone reads.
+- **Prevent:** compare against the SET. `PathFaceRecord.FaceIslandIndex` is the engine's own
+  connected-component id — two faces with different indices have no path between them at any cost —
+  so the main landmass is the island index the most settlements agree on, and any settlement
+  disagreeing is unreachable. `taom.audit_settlement_entrances`
+  (`Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs`) walks every settlement's entrance
+  (`GatePosition` for towns/castles, else `Position`), flags the disagreements, and emits an
+  engine-computed replacement from `IMapScene.GetAccessiblePointNearPosition` at widening radii
+  1/2/4/8/16/32. **Status: the auditor ships, the corrected coordinates do not exist yet** — one
+  in-game campaign run is needed to produce them, and they then go into the LIVE
+  `TAOM_Map/ModuleData/settlements.xml`, never the repo's stale shadow at
+  `Main/_Module/ModuleData/settlements.xml`.
+- **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 31405eb1
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

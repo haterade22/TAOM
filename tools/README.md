@@ -36,6 +36,7 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 | `validate_all_troop_refs.py` | Per-task: `sk_*/ar_*/clo_urukscout_*/urukscout_*` refs across all 7 culture troop XMLs vs LOTRLOME_Armory — the "underwear bug" gate (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`; kept for now). | (none) |
 | `validate_gondor_refs.py` | Legacy Gondor-only predecessor of the above (`sk_gd_*` in `troops_gondor.xml`). Superseded — prefer `validate_moduledata.py`. | (none) |
 | `audit_item_refs.py` | Per-task: every `Item.X` ref vs the multi-module item registry (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`). | `--show-locations`, `--limit` |
+| `audit_action_set_parity.py` | **action_set completeness + structure audit** (read-only). Two independent failure classes, both gated: (a) a HUMANOID set short of Native's `as_human_warrior` surface — the effective surface is the set's own actions + its full `base_set` chain + the cross-module field-merge, so a standalone set like `as_dwarf_warrior` is the one at real risk (the dwarf water-CTD, #300; fixer `patch_dwarf_action_parity.py`); (b) any root-level `<action>` element, i.e. one parented by `<action_sets>` instead of an `<action_set>`. **Exits non-zero on either.** The structural check exists because the game client tolerates root-level `<action>` silently while the dedicated-server engine throws `KeyNotFoundException` at boot — no single-player run can reproduce it (fixer: `oneoff/fix_orphaned_tavern_conversation_actions.py`). Re-run after every engine bump (wired into `/engine-bump`). | `--native`, `--live`, `--show-complete` |
 | `validate_mesh_refs.py` | **Mesh/collision-body ref validator** (read-only, pure stdlib). Extracts every `mesh`/`body_name`/`shield_body_name`/`holster_mesh`/`holster_mesh_with_weapon`/`flying_mesh` ref from item + crafting-piece XML and checks existence across 3 tiers: A) rgl_log content warnings (authoritative), B) `.tpac` Metamesh TOC (visual meshes), C) `.tpac` PhysicsShape TOC (collision bodies, exact; coarse byte-scan only as a fallback for unparsable packs). **A missing `bo_` body is a CONFIRMED cause of infinite mission-load hangs** (#352) — `PreloadHelper.WaitForMeshesToBeLoaded` spins forever on a name that never resolves. Run it after any weapon/armor/crafting authoring. A clean PASS only means "clean within `--items` scope" — scoping too narrow is what let #352 ship. Owns body validation (don't add body checks to `Audit-MeshRefs.ps1`). See `docs/features/mesh-ref-validation.md`. | `--scan-bodies`, `--rgl-log`, `--no-rgl-log`, `--no-tier-b`, `--items`, `--game`, `--tpac-modules`, `--json`, `--code`, `--warnings-as-errors` |
 
 `validate_moduledata.py` schemas live in `tools/schemas/`. The declarative JSON is the source of truth — add fields/enums/rules there, not in Python.
@@ -161,6 +162,13 @@ doc (per-culture clan/lord authors, `fix_v1_4_5_item_ids.py`-class migration fix
 builders, dao-rock scene one-offs, `md_to_html.py`) plus the 11 legacy lords-migration scripts at
 `tools/oneoff/lords-migration/`. When a new script finishes its one job, `git mv` it here in the
 same session; when authoring a script you expect to rerun, keep it in `tools/` and add a README row.
+
+The directory is not indexed exhaustively — a row below means the script has a named condition under
+which it should be re-run.
+
+| Script | Purpose |
+|--------|---------|
+| `fix_orphaned_tavern_conversation_actions.py` | Nests the 168 orphaned female-tavern `<action>` elements back inside their twelve `as_<race>_female_villager_in_aserai_tavern` sets, which had been authored self-closing. Rewrites the LIVE `LOTRLOME_Armory/ModuleData/action_sets.xml` and the tracked snapshot together — they must not drift. Root-level `<action>` is tolerated by the game client and fatal to the dedicated-server engine at boot (2026-08-03 field report). `--apply` writes; dry run is the default. Idempotent: an already-nested file reports `0 stray action(s) before, 0/12 group(s) nested` and is left byte-identical. **Re-run condition:** any LOTRLOME_Armory update, which overwrites the live file. |
 
 ## Review analytics
 

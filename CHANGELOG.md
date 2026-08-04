@@ -4,6 +4,38 @@
 
 ## 2026-08-03
 
+### docs: bring the knowledge base up to the multiplayer changeset
+
+32 files. The load-bearing part is not the feature docs — it is that three of the changes taught
+rules that generalize past the bug that produced them, and those went into the places a future
+session actually reads.
+
+`vanilla-data-comparison.md` gained two failure shapes its stale-name framing did not cover: data
+that is structurally illegal in a way one engine build tolerates and another refuses to boot on, and
+data that is well-formed yet unreachable relative to the rest of the set. It also records that
+`generate_race_civilian_action_sets.py` is **not** the suspect for the orphaned elements — grepping
+for a generator is the obvious first move and it accuses the wrong component, which is exactly the
+mistake made while fixing this. `engine-bump` now documents `audit_action_set_parity.py` as two
+independent gates, because a bump is precisely when a byte-identical file one build accepted gets
+rejected by the next. `moduledata-validation.md` records that the armory `action_sets.xml` sits
+outside both the validator and the commit hook.
+
+`AGENTS.md` gained the two patterns a Codex review would otherwise flag as bugs: `PlayerPossession`
+gating a hero mutation on co-op *presence* rather than authority (it is the heir-succession
+discriminator, not a world-state decision), and `DedicatedServerProvider` reading its own binaries
+folder rather than co-op role (a client-hosted host reports `IsServer` while being a real player).
+
+Also corrected two things this changeset would otherwise have left wrong: the War of the Ring doc
+now states that the field report's "only the authority's MainHero can satisfy it" premise was
+already inaccurate — battles were satisfiable by any party in that hero's *kingdom* — and CLAUDE.md's
+own documentation rule no longer tells new features to add a Key Paths row, a section that has held
+no per-feature rows since the Tier-2 restructure. The 13 per-category lesson counts were re-derived
+by counting headings rather than trusting the index; the true total is 302, not the 291 and 243 two
+places claimed.
+
+Linter: orphan feature docs 3 → 2 (`player-possession.md` is now linked), no new dead links,
+CLAUDE.md still inside its eager-load budget at 44.0 KB.
+
 ### fix(armory): 168 stray `<action>` elements crashed every dedicated server
 
 `LOTRLOME_Armory/ModuleData/action_sets.xml` carried 168 `<action>` elements parented by

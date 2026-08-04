@@ -45,6 +45,15 @@ when it later differs, the hand-off has happened. No co-op assembly is reference
 makes it base-agnostic. (This seam was proven in the field first — the reporters' own compatibility
 module used the same MainHero-id comparison successfully across three configurations.)
 
+The current hero must differ from **both** the session baseline and `_choices.HeroId`, not just the
+baseline. The second comparison stops the detector firing while the player is still on the
+character-creation hero: with a baseline pointing at some other hero, the baseline check alone would
+read that as a switch and re-run the grants against the hero that already received them
+(`TryConsumePossession_CurrentHeroIsTheCharacterCreationHero_DoesNotFire` pins it). A baseline
+recorded AFTER the hand-off is a separate problem, and `RecordBaselineHero`'s "first value wins" rule
+is what handles it — a second call landing post-switch must not become the baseline, or the switch
+stays undetectable for the rest of the session.
+
 **Lifetime is solved with a process-lifetime singleton**, not statics: DryIoc singletons live for the
 process because `IoC.Configure()` runs once in `OnSubModuleLoad`, so `IPlayerPossessionService`
 survives the campaign switch while staying injectable and unit-testable.
@@ -127,7 +136,9 @@ with a non-zero startup-gold grant, and confirms race, gold, career and resource
 
 ## Related
 
-- Field report: `C:\Users\mikew\Downloads\TAOM-Report-Bundle-2026-08-03` §1 and §7
+- Field report 2026-08-03, §1 and §7
+- [character-creation.md](character-creation.md) — the feature that owns the grants being re-applied
+  (`OnCharacterCreationFinalize`, `ICareerMenuService`, the startup-gold and equipment paths)
 - [coop-interop.md](coop-interop.md) — the presence/authority signals this builds on
 - [hero-race.md](hero-race.md) — `RacePersistenceService`, whose degenerate-legend guard fixes the
   other half of the race loss

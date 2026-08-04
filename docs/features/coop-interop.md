@@ -15,6 +15,13 @@ two known-risk paths are still unproven (see [What is NOT done](#what-is-not-don
 The same session found a **frame-rate collapse caused by TAOM's own PatchShield**, now fixed — see
 [PatchShield is skipped under co-op](#patchshield-is-skipped-under-co-op).
 
+**Field report (2026-08-03).** A testing group ran TAOM v2.0.16 on Bannerlord 1.4.7.117484 across
+three configurations — BannerlordCoop v0.1.1 client-hosted, a BannerlordCoop dedicated server, and
+Bannerlord Together a0.5.3.1 — and filed nine sections of findings. Most of what this file gained on
+that date traces to it. It does not upgrade the framing above: the group ran a server and two
+clients, not a peer-to-peer object-set audit, so "nobody has audited object sets between peers"
+still stands.
+
 > **Why this file has content now.** It was a deliberate stub pointing at
 > `bannerlord-together-compat.md`, on the sound principle that a second partial copy of the compat
 > rules would drift. That held while there was one co-op mod. There are now two, with different
@@ -27,6 +34,8 @@ The same session found a **frame-rate collapse caused by TAOM's own PatchShield*
 |---|---|
 | BannerlordTogether specifics, its no-decompile policy, its boot matrix | [`bannerlord-together-compat.md`](bannerlord-together-compat.md) |
 | BannerlordCoop internals — Harmony ids, tick model, policies, object identity, integration surface | [`../research/bannerlordcoop-internals.md`](../research/bannerlordcoop-internals.md) |
+| What happens to the hero a joiner created, and how TAOM's character-creation grants get re-applied | [`player-possession.md`](player-possession.md) |
+| Why a TAOM-less host can corrupt every hero's race on a full client | [`hero-race.md`](hero-race.md) — the degenerate-legend capture guard |
 | Raw analysis evidence (133 findings, 30 adversarial verdicts) | [`../raw/bannerlordcoop/`](../raw/bannerlordcoop/) |
 
 ## The two co-op mods are different projects
@@ -48,6 +57,7 @@ own `0Harmony`.
 |---|---|
 | `ICoopPresenceProvider` / `CoopPresenceProvider` | Test seam over static `CoopPresence`. **Process-constant**: "is a co-op module enabled". |
 | `ICoopSessionProvider` / `CoopSessionProvider` | **Session-varying**: "is a session live, and do I own the simulation". Reflection-bound, no compile-time reference to Coop. |
+| `IDedicatedServerProvider` / `DedicatedServerProvider` | **Process-constant**: "is there a real player in this process at all". Reads the binaries folder this assembly loaded from, NOT co-op role. |
 | `CoopSessionPolicy` | The pure authority decision, split out so it is testable without a game — same pattern as `PatchShieldPolicy` / `SaveShieldPolicy`. |
 | `CoopSuppressedUiAttribute` / `CoopUiRegistrationPolicy` | Marks and filters UIExtenderEx types a co-op host has taken ownership of. |
 | `SaveDefinerCollisionDetector` / `Guard` / `SaveDefinerRecord` | Base-id preflight and crash attribution. **Heuristic** — the engine keys on `_saveBaseId + saveId`, so a shared base is legal; engine-only groups are dropped and the rest warn rather than assert. [RCA](../reviews/rca-savedefiner-false-positive-2026-08-01.md). |
@@ -132,6 +142,27 @@ per-entity tickers, so `DailyTickSettlementEvent` and friends never reach a clie
 allowlist of ~127 `RegisterEvents` prefixes over *named vanilla* types; there is no generic hook a
 third-party mod can register into, so TAOM authors its own.
 
+**Three signals, not one.** The predicates below all come out of the session/role probe. Two other
+facts are process-constant and answer different questions. Both directions have cost TAOM a real
+bug: presence read where session/role was needed (the diplomacy vetoes, 2026-08-01), and no signal
+at all where the dedicated-server question was the one being asked (special-resource earning,
+2026-08-03).
+
+| Signal | Question it answers | Constant for the process? | Read it at |
+|---|---|---|---|
+| `ICoopPresenceProvider.IsCoopActive` | Is a co-op module enabled? | Yes | Patch-application and other one-shot startup decisions — PatchShield install, UI registration |
+| `ICoopSessionProvider` (the predicates below) | Is a session live, and do I own the simulation? | No | Anything that mutates shared world state |
+| `IDedicatedServerProvider.IsDedicatedServer` | Is there a real player in this process at all? | Yes | Anything that credits, charges or rewards `Hero.MainHero` |
+
+**`IsDedicatedServer` is deliberately NOT derived from co-op role**, and that distinction is the
+whole reason the type exists. A client-hosted session's host also reports `IsServer`, but it is a
+real player at a real keyboard who must keep earning normally; only on a headless server is
+`Hero.MainHero` the idle world-gen hero the campaign was created around. So the provider reads the
+binaries folder this assembly was loaded from — `Assembly.GetExecutingAssembly().Location`
+containing `Win64_Shipping_Server` — which is a fact about the process rather than a probe of
+another mod's state, and cannot change mid-session. An unreadable location reports "not a server",
+because every gate built on it only ever suppresses behaviour.
+
 **Which predicate to use.** Three, and picking the wrong one has already shipped bugs both ways:
 
 | Use | When |
@@ -144,6 +175,15 @@ Do **not** gate on `ICoopPresenceProvider.IsCoopActive` for anything world-mutat
 process-constant — true whenever the module is merely *enabled* — so it disabled TAOM's diplomacy
 rules for solo players and for the co-op host itself (Codex, 2026-08-01). It is correct only for
 one-shot startup decisions such as UI registration.
+
+**One consumer breaks that shape and is not a violation.**
+`PlayerPossessionService.TryConsumePossession` gates on `IsCoopActive`, and what follows it is a
+hero mutation. Presence is used there as an **heir-succession discriminator**, not as an authority
+decision: `Hero.MainHero` also changes in ordinary solo play when the player continues as an heir,
+and the presence gate is what keeps a solo heir out of the re-grant path entirely. It is one of
+three independent guards, any one of which suffices — presence, single consumption, and a
+`SyncData`-persisted per-hero marker (`_taom_possessionReconciledHeroes`) so a reconnect cannot
+re-grant. See [player-possession.md](player-possession.md).
 
 `ShouldDeferToHost` keys on whether the ROLE PROBE RESOLVED, which is what makes it safe for
 BannerlordTogether: TAOM cannot read host/client there, so it yields on every peer. Gating those
@@ -170,13 +210,25 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 
 | Behaviour | Gated handlers | Why |
 |---|---|---|
-| `CultureConversionBehavior` | `OnDailyTick`, `OnGameLoaded` | Replaces notables via `HeroCreator.CreateNotable`. Client's store holds the same pending records — it loaded the host's save. (`OnSettlementOwnerChanged` only queues a pending timer, so it stays ungated.) |
+| `CultureConversionBehavior` | **`OnSettlementOwnerChanged`**, `OnDailyTick`, `OnGameLoaded` | Replaces notables via `HeroCreator.CreateNotable`. Client's store holds the same pending records — it loaded the host's save. `OnSettlementOwnerChanged` was left ungated on the reasoning that queuing a pending timer is harmless; but the store is `SyncData`-backed and the daily processor that would mature or clear those records is itself gated, so a client accumulated conversions nothing ever services (Codex, 2026-08-01). |
 | `RaceAgeBehavior` | `OnDailyTick` | Re-kills locally what the host already replicated. |
 | `WarOfTheRingBehavior` | `OnDailyTick`, **`OnSessionLaunched`** | Both call the identical `CheckPhaseTransition` → `DeclareWar`. `OnSessionLaunchedEvent` fires on every peer, and a co-op join *is* a save-load, so an ungated client issued its own war set on connect. |
 | `WarOfTheRingMomentumBehavior` | `OnDailyTick`, **`OnKingdomDestroyed`, `OnMapEventEnded`, `OnSiegeCompleted`, `OnRaidCompleted`, `OnArmyGathered`, `OnSessionLaunched`** | `MomentumWarState` rides TAOM `SyncData` that nothing replicates. `OnKingdomDestroyed` reached the same `CheckAndApplyVictory` → `EndWar`/`MakePeace` as the tick. Daily gate sits **after** `RefreshMapMeter` — local UI a client still needs drawn. |
 | `MessengerCampaignBehavior` | `OnHourlyTick` | Arrival writes `MobileParty.MainParty.Position` — on a client, *its own* party. |
 | `SiegeDefenseBehavior` | `OnHourlyTick` | `Clan.Influence` + global relation off `Hero.MainHero`, which differs per peer. **Known limitation below.** |
 | `CastleRecruitmentBehavior` | `OnGameLoaded`, `OnNewGameCreated` | The one castle path a client reaches; creates heroes. |
+| `SpecialResourcesBehavior` | `OnMapEventEnded`, `OnRaidCompleted`, `OnPrisonerTaken`, `OnHideoutCompleted`, `OnTournamentFinished` | **A dedicated-server gate, not an authority gate.** All five earn paths run through a private `CanEarn()` → `SpecialResourceEarnPolicy.MayCreditMainHero(IDedicatedServerProvider.IsDedicatedServer)`, which logs once and then stays quiet. A headless server was banking prisoner and raid income against the idle world-gen hero — dozens of `[SpecRes] PRISONERS: +N` lines — while the remote players who fought those battles earned nothing. |
+
+**What makes any peer earn at all is the participation fix in the same change.** The victory gate
+used to ask whether the player IS the winning side's `LeaderParty.LeaderHero`, conflating
+participating with commanding. That was never multiplayer-only: in ordinary single-player, joining
+any lord's army stops you being the leader party's hero, so every victory you fought paid zero.
+Multiplayer made it total rather than different — under a client/server split no player leads the
+authoritative side either, and one reported session produced a single `MapEventEnded` out of 33
+fought missions, with `state=None`. The gate is now
+`SpecialResourceEarnPolicy.IsPlayerVictory(mapEvent.PlayerSide, mapEvent.WinningSide)`, with
+`BattleSideEnum.None` on either side failing it, because a client routinely observes an unresolved
+battle the server has already decided.
 
 **Siege defence uses a split gate, not a wholesale one (fixed 2026-08-01).** The hourly tick did two
 unrelated jobs and the first pass gated both, so a co-op client could defend a siege to completion
@@ -217,25 +269,33 @@ when the sync policy disallows the write, so `CreateObject<T>` leaves `StringId`
 Full chain in the internals doc. **Not TAOM-specific** — any mod creating an `MBObjectBase` on a
 client hits it; TAOM merely had two paths in, both now gated.
 
-## Open: client-reachable entry points the gate later blocks
+## Client-reachable entry points the gate later blocks
 
-Three findings from the 2026-08-01 Codex authority pass share one shape, and it is the **opposite**
-of the divergence the gates were built for. The gate correctly stops a client mutating shared state
-— but the *entry point* is still client-reachable, so a client can start something it can never
-finish. Nobody desyncs; the client just quietly gets nothing.
+These share one shape, and it is the **opposite** of the divergence the gates were built for. The
+gate correctly stops a client mutating shared state — but the *entry point* is still
+client-reachable, so a client can start something it can never finish, and pay for it. Nobody
+desyncs; the client just quietly gets nothing.
 
-| Area | What a client can do | What it never gets | Status |
+| Area | What a client could do | What it never got | Status |
 |---|---|---|---|
-| Messengers | Pay `MessengerGoldCost` and enqueue a `PendingMessenger` (send path ungated) | Hourly processing is authority-only, so it never advances or arrives — **gold is simply lost** | **Open** |
+| Messengers | Pay `MessengerGoldCost` and enqueue a `PendingMessenger` | Hourly processing is authority-only, so it never advanced or arrived — gold simply lost | **Fixed 2026-08-01** — the send refuses on a non-authority peer and logs `[Messengers][coop] send refused on non-authority peer — delivery is host-side` |
+| Elite emissary | Pay special resources for an elite troop | The troop landed in a client-side roster the next resync overwrote — pay real, get phantom | **Fixed 2026-08-03** — `ExecutePurchase` refuses before charging when `ShouldDeferToHost` |
 | Siege defence | Be prompted, accept, and be tracked | Reward tick is authority-only | Partly addressed by `_locallyClaimed`; the prompt/accept path still needs an owner check |
 | Career quests | Be offered and accept | — (fixed: the dedup scan now filters by owner) | **Fixed 2026-08-01** |
 
-The Messenger case is the sharpest because it costs the player real gold. `PendingMessenger` has no
-owner field (`TargetHeroId`, `DispatchTimeDays`, `Position`, `Arrived`), so processing cannot tell
-whose messenger it is. Two options, neither done: add owner identity and process only the local
-peer's own entries client-side, or suppress the send UI on a client. **Do not simply ungate the
-hourly body** — arrival calls `target.ChangeState(...)` and `EnterSettlementAction.ApplyForCharacterOnly(...)`,
-which are shared-state mutations.
+**Both fixes decline rather than forward, and that is the ceiling here.** Granting either
+authoritatively would need TAOM to send a message across the co-op layer, which it cannot do without
+a compile-time dependency on one specific co-op mod. Declining is the honest behaviour, not a
+placeholder for a forwarding path that is coming.
+
+The emissary decline shows the player `{=taom_emissary_coop_guest}` *"The emissary only deals with
+the host of this campaign."* **That string is not yet localized** — it appears only at
+`EliteEmissaryInquiryPresenter.cs`, in no localization XML, so `/localize` is owed for it.
+
+**Do not simply ungate the messenger hourly body** if the send is ever re-opened: arrival calls
+`target.ChangeState(...)` and `EnterSettlementAction.ApplyForCharacterOnly(...)`, which are
+shared-state mutations, and `PendingMessenger` still has no owner field (`TargetHeroId`,
+`DispatchTimeDays`, `Position`, `Arrived`) for processing to filter on.
 
 **Also open — `CareerQuest` construction on a client [P1].** `new CareerQuest` on player acceptance
 is client-side `MBObjectBase` construction during a live campaign: Coop's `MBObjectBasePatches`
@@ -254,14 +314,35 @@ to characterise. The existing try/catch around acceptance is containment, not co
   bump is a co-op compatibility break.
 - **No sync of TAOM's own campaign state.** Clients get the join-time baseline from the host's save,
   then never hear about WotR momentum or culture-conversion deltas.
-- **Dedicated server unsupported.** The real obstacle is the runtime: the appliance runs
-  `Win64_Shipping_Server` on `Microsoft.NETCore.App`, while TAOM targets .NET Framework 4.7.2 and
-  tags itself `DedicatedServerType=none`. Its `engine/Modules` also ships no TAOM, and its
-  `default_new_game.sav` bootstrap is a vanilla world. (The missing `CustomBattle` module is *not* a
-  blocker — TAOM declares it as a `DependedModule` but does not need it on a server.) Coop's own
-  DLLs are SHA-256 pinned, but that covers only the `Coop` module, so adding modules alongside is
-  not in itself refused. Use the listen-host path, which carries TAOM into the spawned server
-  process automatically.
+- **War of the Ring participation credits one kingdom, not one session.**
+  `WarEventSnapshotAdapter.FromSiege` now applies the same `IsPlayerRelated` test as the battle
+  snapshot beside it (fixed 2026-08-03), so taking a fief inside an ally's army finally records a
+  player event — that was a single-player bug too, and it is the half that is fixed.
+  `IsPlayerRelated` resolves to "the main party, or any party whose `MapFaction.StringId` equals the
+  player kingdom id", and that kingdom comes from the LOCAL player context. So a remote player in a
+  DIFFERENT kingdom is still never credited, and on a dedicated server the reference kingdom is the
+  idle world-gen hero's. Crediting across peers needs a seam TAOM does not have. (The field report
+  stated the requirement "can only be satisfied by the authority's MainHero" — that was inaccurate
+  even before the fix: any party in that MainHero's kingdom already satisfied it.)
+- **Dedicated server: no longer "unsupported", but not supported either.** The 2026-08-03 field
+  group ran TAOM on a BannerlordCoop dedicated server by hand-copying the client binaries into
+  `bin/Win64_Shipping_Server/`, and that session is the evidence source for the race-capture,
+  SpecialResources and `action_sets.xml` findings on this page. The build now does that copy: both
+  `Main/TAOM.csproj` and `Dependencies/TAOM.Dependencies.csproj` carry a
+  `MirrorWin64ShippingClientToServer` target modelled on the existing `…ToEditor` mirror. It
+  mirrors the **assembled** client folder rather than build output, deliberately — the vendored
+  natives and NuGet companions only exist there, after `PostBuildCopyToModules`. A verified
+  deploying build mirrored 10 files for TAOM and 42 for TAOM.Dependencies. A server that boots also
+  needs the `LOTRLOME_Armory` `action_sets.xml` fix: build 117131, which the dedicated-server engine
+  ships, throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at schema path
+  `/action_sets/action` on data that 1.4.7.117484 tolerates. What is still true: both manifests tag
+  `DedicatedServerType=none` (`Main/_Module/SubModule.xml`, four entries in
+  `Dependencies/_Module/SubModule.xml`), the appliance's `engine/Modules` ships no TAOM, and its
+  `default_new_game.sav` bootstrap is a vanilla world. An earlier revision of this bullet also said
+  the appliance runs on `Microsoft.NETCore.App` against TAOM's .NET Framework 4.7.2; that is
+  **unverified and now in tension with the field evidence** — treat it as a claim to re-check, not
+  as the reason not to try. The listen-host path remains the one that carries TAOM into the spawned
+  server process with no copying at all.
 
 ## PatchShield is skipped under co-op
 
@@ -291,6 +372,15 @@ runs before any session can exist, so there is nothing session-scoped to read. T
 where **module presence is the correct signal** and `ICoopSessionProvider` is not; `CoopPresence`'s
 class docs explain why a patch-application site needs a process-constant fact.
 
+**This makes two steps in community dedicated-server recipes redundant.** Those recipes tell
+operators to drop `patchshield-disabled.flag` and `saveshield-swallow-disabled.flag` into
+`Modules/TAOM.Dependencies/`. Under co-op both are already the default:
+`PatchShieldPolicy.ShouldInstall(coopActive, disabledByFlag) => !disabledByFlag && !coopActive`
+skips install outright, and `SaveShieldPolicy.ShouldSwallow` already returns false for the
+`SAVE-LOAD` category. The flags still work — and `saveshield-swallow-disabled.flag` still does
+strictly more, because it also rethrows the `MISSION-INIT` chain, which co-op deliberately leaves
+swallowing (that fault is local: one broken battle, not a corrupted campaign).
+
 ## Verification status
 
 Confirmed by a player (2026-08-02):
@@ -311,3 +401,14 @@ Still unconfirmed — worth walking if you have two machines:
    chain, still source-verified only.
 6. Several in-game days, then Coop's `coop.debug.hero audit` / `coop.debug.settlements audit` to
    compare object sets between peers.
+
+Owed by the 2026-08-03 work specifically, none of it run:
+
+7. A dedicated-server boot against the mirrored `Win64_Shipping_Server` binaries **and** the fixed
+   `action_sets.xml` — the two together are what a server needs to start with TAOM's simulation.
+8. A two-client join where the joiner keeps their character-creation race, culture startup gold,
+   career and special-resource seed. The line to look for is
+   `[Possession] Controlled hero changed 'X' -> 'Y'`.
+9. An emissary purchase attempted on a guest: it must decline, and no resources may be deducted.
+10. A server log carrying the one-shot `[SpecRes] Dedicated server —` line, with the remote players
+    earning on their own clients instead.

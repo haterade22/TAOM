@@ -166,7 +166,7 @@ appears **zero times**.
 | Group | `taom`, always |
 | Case | `^[a-z][a-z0-9_]*$` |
 | Order | `<verb>_<object>[_of_<owner>\|_to_<target>]`, matching vanilla |
-| Read-only verb | **`print_` and nothing else.** `dump_`, `list_`, `get_` are banned — admitting synonyms is how the convention drifts |
+| Read-only verb | **`print_` by default.** `audit_` is the single admitted alternative, for a command that returns a verdict plus a computed replacement value rather than printing current state (`audit_settlement_entrances`). `dump_`, `list_`, `get_` stay banned — they are pure synonyms for `print_`, and admitting synonyms is how the convention drifts |
 | Mutating verbs | `add_ set_ remove_ clear_ give_ toggle_ spawn_ damage_ requeue_` |
 | `show_` / `hide_` | Reserved for genuine visibility toggles, as in `campaign.show_settlements` |
 | Redundancy | Never put `taom` in the name; the group carries it |
@@ -175,6 +175,10 @@ appears **zero times**.
 `print_` also sorts adjacent to `campaign.print_*` in console autocomplete, which is a real
 discoverability win.
 
+`ConsoleCommandBindingTests` enforces the ban list literally — `dump_`, `list_`, `get_` — not the
+`print_`-first rule, so any other new read-only verb compiles and passes the suite. It has to be
+argued into the table above first; that argument is the only gate there is.
+
 ### Risk tiers — apply ceremony only where it is earned
 
 Cheat mode is a per-install flag in `engine_config.txt`, not a per-command intent signal. A player who
@@ -182,7 +186,7 @@ enabled it to add gold has not consented to an irreversible mutation of persiste
 
 | Tier | Definition | Safeguard |
 |---|---|---|
-| **A** | Read-only (`print_*`) | Cheat gate only. Nothing else. |
+| **A** | Read-only (`print_*`, `audit_*`) | Cheat gate only. Nothing else. |
 | **B** | Reversible, clamped mutation | Cheat gate + an honest before→after echo |
 | **C** | Mutates **persisted** state, not undoable from the console | Cheat gate + dry-run default + a literal positional `confirm` token + validate-before-lookup + an Entity State Matrix (`.claude/rules/csharp-architecture.md`) |
 
@@ -284,6 +288,7 @@ answer is conclusive and fails open in every path.
 | `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
 | `taom.print_races` | A | cheat mode | — (registry + the hero's race, validated before lookup) |
 | `taom.print_battle_scene` | A | campaign | Which battle terrain a fight here loads. **Zero candidates is the money output** — the stale-scene-ref class an engine bump introduces silently |
+| `taom.audit_settlement_entrances` | A | campaign | Nothing — an unreachable settlement entrance never crashes and never logs, it only makes AI parties fail their path query every tick. Three were caught in the field solely because the testers had written their own pathfinding instrumentation. See below |
 | `taom.print_mission_scene` | A | mission | Scene name + player/camera position |
 | `taom.print_agent_info [name\|*]` | A | mission | Race, monster, action set, skeleton, mount/rider, spawn equipment. Pairs with `spawn_troops` |
 | `taom.spawn_troops <id> <n> [enemy\|ally]` | B | mission | Composing a specific fight. **Vanilla ships no mission spawn at all** |
@@ -296,6 +301,28 @@ answer is conclusive and fails open in every path.
 > This table has gone stale twice — both times because it was written alongside the code rather than
 > re-read against it afterwards. When you add a command, edit this table in the same commit.
 
+### `taom.audit_settlement_entrances`
+
+The one command with no feature doc to link out to — no single feature owns settlement navmesh — so it
+is documented here.
+
+Each settlement's entrance (`GatePosition` for towns and castles, `Position` otherwise) is resolved to
+a `PathFaceRecord` through `IMapScene.GetFaceIndex`. **`IsValid()` returns true for every face the
+field report named**, so an off-mesh check finds nothing: those faces sit on navmesh *islands* the rest
+of the map cannot path to. `FaceIslandIndex` is the engine's own connected-component id — two faces
+with different island indices have no path between them at any cost — so the main landmass is derived
+as the island index the most settlements agree on rather than hardcoded, which keeps the audit correct
+across map edits and engine bumps. Every disagreeing settlement is then probed with
+`GetAccessiblePointNearPosition` at radii 1, 2, 4, 8, 16, 32, and the first hit on the main island is
+printed as a replacement coordinate the engine computed rather than a value to guess at.
+
+**The corrected coordinates do not exist yet.** The auditor ships; producing them takes one in-game
+campaign run, and applying them is a separate edit against the LIVE
+`TAOM_Map/ModuleData/settlements.xml` — the repo's `Main/_Module/ModuleData/settlements.xml` is a stale
+shadow, which the command's own output says. The three destinations reported as wedging AI parties are
+`town_MM2` (the only one of the three with a gate position), `hideout_desert_7` and
+`castle_village_MM1_2`; all three ids resolve in the live map file.
+
 ## Files
 
 | File | Role |
@@ -307,6 +334,7 @@ answer is conclusive and fails open in every path.
 | `Main/Features/DevConsole/HarmonyPatchInspector.cs` | Reflection walk: declared categories vs what Harmony applied |
 | `Main/Features/DevConsole/PatchReportFormatter.cs` | Pure renderer for `print_patches` |
 | `Main/Features/DevConsole/Cheats/DiagnosticCheats.cs` | `print_patches`, `print_races` |
+| `Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs` | `audit_settlement_entrances` — navmesh-island check over every settlement entrance. DevConsole-owned because no feature owns settlement navmesh |
 | `Main/Features/<X>/Cheats/` | Feature-owned commands (momentum, party size, town economy, special resources) |
 | `Main/SubModule.cs` | Calls the audit from `OnBeforeInitialModuleScreenSetAsRoot`, fail-open |
 
@@ -330,8 +358,17 @@ engine-querying half (the *interpretation* is tested), and `TaomConsole`'s help 
 host the gate always fails first, so the `usage ?? string.Empty` guard on that path is defensive code
 with no reachable test. Adding a seam purely to reach it would be ceremony; it is one line.
 
+`audit_settlement_entrances` has **no dedicated test**. Unlike `print_patches` (`PatchReportFormatter`)
+and `print_agent_info` (`MissionReportFormatter`), its island derivation and output formatting are
+inline in the cheat class with no pure formatter extracted, so the assembly-wide binding tests are its
+only coverage.
+
 ## Changelog
 
+- **2026-08-03** — Added `taom.audit_settlement_entrances` (Tier A, campaign gate) after field testers
+  reported three settlement entrances wedging AI pathfinding. Not part of any phase plan. Admitted
+  `audit_` as the second read-only verb, in the naming table and the Tier A definition; the binding
+  test's ban list already permitted it.
 - **2026-07-31** (#369) — Phase 0: shared contract (`TaomConsole`, `DevConsoleGuard`, `DevConsoleArgs`),
   startup discovery audit, hardened + relocated binding tests, `add_special_resources` migrated onto
   the shell. Naming convention, risk tiers and the localization exemption settled. Reviewed by a

@@ -54,6 +54,14 @@ Victory is **opt-in**: `MomentumVictoryService.CheckAndApplyVictory` returns `No
 
 Load reconcile in `OnSessionLaunched`: with victory **disabled**, a war that ended under a prior victory-enabled build is **un-frozen** (its momentum/kingdoms/stats kept, only the ended flags reset) so the meter and tracking resume — this is how an already-ended save becomes endless again. With victory **enabled**, it instead calls `EndWar` if the save says the momentum war ended but the phase machine hasn't caught up (idempotent).
 
+### What counts as player participation
+
+Both the ×1.5 `participationMultiplier` and the victory gate's event count key off one flag per event: `PlayerInvolved`, computed on the snapshot the adapter builds. The test is **the player's main party, or any party in the player's kingdom** (`WarEventSnapshotAdapter.IsPlayerRelated`) — plus `MapEvent.IsPlayerMapEvent` for battles.
+
+Sieges used to be narrower. `PlayerInvolved` was `capturerParty?.IsMainParty == true`, so the player's own party had to *be* the captor. Capturing a fief inside an ally's army — the normal way a vassal takes anything — recorded no player event at all, costing both the multiplier and a credit toward `minimumPlayerEventsForVictory`, so the victory requirement quietly failed to advance. Sieges now use the identical `IsPlayerRelated` test as battles. **This was a single-player gap that predates any co-op work**; the 2026-08-03 field report found the multiplayer half of the same shortfall (see Known limitations).
+
+That report also stated the victory requirement "can only be satisfied by the authority's MainHero". That was already inaccurate before the siege fix — battles were satisfiable by any party in the authority MainHero's *kingdom*. Worth knowing so the wrong premise isn't re-derived from the report.
+
 ## UI & display
 
 **On-map bar** (`MomentumMapIndicator.xml` + `MomentumIndicatorMapView` — a `MapView` hosting a `GauntletLayer`): a persistent "War of the Ring" slider on the campaign map, added at FullWar and removed on victory (or when either MCM toggle is off). Its value is `IMomentumQueryService.SliderValue` — a **relative-balance ratio** `(free − evil) / (free + evil)` mapped to −100..+100, **positive = Free ahead** (the handle fills rightward toward the green end; negative = Evil, toward red). It is deliberately NOT a victory-threshold fraction: in a long war the accumulated momentum grows many times past the threshold, so a threshold-normalized value clamped to one end and the bar never moved. The ratio stays readable at any magnitude.
@@ -89,7 +97,7 @@ Kingdoms are resolved by StringId with `Kingdom.All.FirstOrDefault(k => k.String
 | `events.killMomentumPerHundred` | 10 | **new 2026-07-05** — momentum per 100 enemies killed in battle, RAW attrition (not strength-normalized like battle-won, which stays tiny). Displayed = kills × this ÷ 100. Accrues for both sides on every war battle (mirrors the kill stat). Shows as an "Enemies Killed" breakdown row. 0 disables |
 | `durationsHours.*` | 504/504/504/168/12/504 | decay windows (battle/siege/raid/army/strength/**enemiesKilled**) |
 | `player.requireParticipationForVictory` | true | war can't end until the player has fought enough |
-| `player.participationMultiplier` | 1.5 | momentum ×1.5 when the player takes part |
+| `player.participationMultiplier` | 1.5 | momentum ×1.5 when the player takes part — see [What counts as player participation](#what-counts-as-player-participation) |
 | `player.minimumPlayerEventsForVictory` | 5 | player events needed before either side can win |
 | `strengthRatioForMaxMomentum` | 4.0 | how many × stronger a side must be for the max daily award |
 
@@ -162,6 +170,7 @@ Defaults equal LOTRAOM's shipped `momentum_config.xml`, so the out-of-box balanc
 
 - **The war is endless by default (`victoryEnabled = false`, user decision 2026-07-04).** Victory is turned OFF at the toggle, so no side ever wins — the momentum is tracked open-endedly. This is the chosen behaviour; **do NOT "fix" it as an oversight.** The victory machinery is fully wired and tested — flip `victoryEnabled` / the MCM "Enable Victory" toggle to turn it on.
 - **Momentum accumulates without bound.** Events trimmed at the per-type cap (100) never subtract back out (LOTRAOM parity), and the player-participation gate can hold the war open, so `InternalMomentum` grows far past the victory threshold in a long campaign. This is *why* victory was made opt-in: with runaway momentum an enabled threshold-victory fires almost immediately once the player has ~5 events (anticlimactic). Before enabling victory for a real playthrough, pair it with a bounded-momentum rebalance — make cap-trim subtract (bounding momentum to the decaying event window) so the threshold is meaningful. The map bar and popup Total use the bounded balance *ratio*, not the raw magnitude, so the runaway value is never shown to the player.
+- **A remote co-op player in another kingdom earns no participation credit.** `OnSiegeCompleted` and `OnMapEventEnded` are `IsAuthority`-gated, and `IPlayerContextAdapter.GetPlayerKingdomId()` resolves the LOCAL peer's clan — so on a client the event is never scored at all, and on the host the participation test runs against the *host's* kingdom. Closing that needs a co-op seam TAOM does not have. The 2026-08-03 siege-participation fix is the single-player half only and is **not** a multiplayer fix.
 - Event descriptions freeze in the write-time language (stored resolved in the save).
 - A battle resolving earlier in the campaign day than the daily enrollment sweep on the exact day FullWar first triggers is dropped (war "begins" that tick).
 - **Momentum persistence is bounded per synced string, not per total** — the chunker caps each `SyncData` string, but the total serialized log still grows with the campaign (bounded by the 100/type event cap). This is fine (~9 chunks at the observed day-52 max) and cannot corrupt a save; it just means the momentum section of a very long save is a handful of KB.

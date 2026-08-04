@@ -255,3 +255,37 @@ restating it.
 as a thing to attack, never as a premise. Rephrase "X is safe because Y" to "verify Y".
 
 **Source:** same RCA addendum.
+
+### Detect a foreign system's effect from engine state you already own — then enumerate what ELSE produces that state
+
+Every multiplayer base discards the character-creation hero at the join hand-off and hands the player
+a host-authored one, which is why TAOM's CC grants (`SetPlayerRace`, `AssignCareer`,
+`GrantPlayerStartupGold`, the special-resource seed) all ran against a hero the player never controls
+— field-confirmed by a Mirkwood player receiving the native 1000 gold instead of 1000+4000.
+`PlayerPossession` detects the hand-off from **pure engine state**: record `Hero.MainHero.StringId` at
+session launch and game load, and when it later differs, the switch happened. No co-op assembly is
+referenced, so it behaves identically under BannerlordCoop, Bannerlord Together, or a base that does
+not exist yet.
+
+**The interesting half is the second question, not the first.** `Hero.MainHero` ALSO changes in
+single-player, on HEIR SUCCESSION — so the naive version of this detector hands every heir a fresh
+starting package. One observable, two causes, opposite required responses. Three independent guards
+separate them: `ICoopPresenceProvider.IsCoopActive` (solo never reaches the re-grant at all), single
+consumption (a co-op player's heir inheriting later finds the choices already consumed), and a
+`SyncData`-persisted per-hero marker `_taom_possessionReconciledHeroes` (a reconnect cannot re-grant).
+Each individual grant is independently try/catch'd, and the CC-CHOSEN culture drives the grants while
+the LIVE hero's kingdom seeds the special resource — only the host knows the latter.
+
+**Why this shape:** referencing a specific co-op assembly would have bought a precise signal at the
+cost of a compile-time dependency on one mod, and would have gone stale the moment a second base
+appeared. An engine-state signal is weaker — it cannot tell you WHY MainHero changed — and that
+weakness is what forces the useful question.
+
+**Prevent:** when detecting that a foreign system did something, prefer a signal derived from engine
+state TAOM already owns over probing the foreign assembly. Then immediately enumerate every OTHER
+cause of that same state and write a guard per cause, not a single "is the other thing running"
+check. Reflex test: name a vanilla single-player path that produces the same observable — if you
+cannot name one within a minute, look harder rather than concluding there isn't one.
+
+**Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 3c222e46;
+feature doc `docs/features/player-possession.md`.

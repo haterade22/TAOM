@@ -11,6 +11,11 @@ survive, and tell players when their two installs have drifted apart.
 **Status: TAOM-side interop layer shipped 2026-07-31; end-to-end co-op unverified.** The boot matrix
 below has not been run against BT a0.5.3.2. Do not tell players co-op works until it has.
 
+A 2026-08-03 field report did exercise TAOM against BT **a0.5.3.1** — one build behind the version
+reviewed here — alongside two BannerlordCoop configurations, and several of the corrections below
+came out of it. It is not the boot matrix and it is not a0.5.3.2, so the status above is unchanged.
+Keep the two version numbers apart when reading anything sourced from that report.
+
 ## Requirements
 
 | Requirement | Details |
@@ -61,19 +66,31 @@ does today.
 
 | Behaviour | Solo | Co-op module active |
 |---|---|---|
-| `PatchShield` unpatching a non-allowlisted Harmony owner after a `MissingMethod`/`MissingField`/`TypeLoad` | Strips the owner's patches (the rescue path) | **Withheld** — logs `would unpatch owner 'X' … (withheld)` instead |
-| `PatchShield` swallowing those exceptions | Swallows | Swallows (unchanged) |
+| `PatchShield` installing its finalizers at all | Installs | **Skipped** — `PatchShieldPolicy.ShouldInstall(coopActive, disabledByFlag)` is `!disabledByFlag && !coopActive`, and `Install()` returns early logging `co-op module(s) active (…) — PatchShield install skipped` |
+| `PatchShield` unpatching a non-allowlisted Harmony owner after a `MissingMethod`/`MissingField`/`TypeLoad` | Strips the owner's patches (the rescue path) | **Unreachable** — nothing is shielded. The `would unpatch owner 'X' … (withheld)` line now only describes the window where the module-list probe had not resolved at install time |
+| `PatchShield` swallowing those exceptions | Swallows | **Unreachable** — same reason |
 | `SaveShield` on the `SAVE-LOAD` chain | Swallows | **Rethrows**, and still records the failure |
 | `SaveShield` on the `MISSION-INIT` chain | Swallows | Swallows (unchanged) |
 | Harmony census | Not written | Written at the end of `OnGameInitializationFinished` |
 | TAOM diplomacy veto (war / peace / alliance-end) | Enforced | **Off** — host is authoritative (see "Diplomacy ordering") |
 | TAOM time-acceleration UI (`MapBar` extra fast-forward + 4 layout patches + `MapTimeControlVM` mixin) | Registered | **Not registered** — BT owns `Campaign.TimeControlMode` |
 
-**Why unpatching inverts.** In singleplayer, stripping a broken third-party patch converts a crash
-into a survivable degradation. Under host-authoritative co-op it does something worse: removing one
-peer's copy of a sync patch produces no crash at all, it silently desynchronises two campaigns — and
-a desync corrupts both saves undiagnosably, while a crash is visible and recoverable. The swallow
-half of the shield, which is what actually keeps the session alive, is untouched.
+**Why the shield is skipped outright (2026-08-02).** This is a **performance** decision, not a
+safety one. A shield finalizer binds `__originalMethod`, so Harmony's generated wrapper pays a
+`MethodBase.GetMethodFromHandle` plus a try/catch on every call — the same mechanism that turned a
+millisecond tournament teardown into a measured 104–109 s freeze in #331. A co-op mod that
+transpiles the whole campaign surface converts that per-call tax into a frame-rate collapse; a
+player profiled one and traced it here. The two rows above are therefore now historical for
+`PatchShield`, though the reasoning still governs `SaveShield`.
+
+**Why unpatching inverted, and why the principle outlives the skip.** In singleplayer, stripping a
+broken third-party patch converts a crash into a survivable degradation. Under host-authoritative
+co-op it does something worse: removing one peer's copy of a sync patch produces no crash at all, it
+silently desynchronises two campaigns — and a desync corrupts both saves undiagnosably, while a
+crash is visible and recoverable. That reasoning produced the withhold-the-unpatch design and kept
+the swallow half; the 2026-08-02 skip removed both, for the performance reason above. The principle
+still governs `SaveShield` and any future shield: under co-op, a visible crash beats a silent
+divergence.
 
 **Why the save-load swallow inverts.** Swallowing inside `SaveManager.Load` /
 `LoadResult.InitializeObjects` leaves a partially deserialised campaign that keeps running and looks
@@ -81,9 +98,13 @@ fine. A host then replicates that half-built state as authoritative. A loud load
 cheaper than two silently-corrupted saves. `MISSION-INIT` keeps swallowing because that fault is
 local — the cost is one broken battle, not a corrupted campaign.
 
-Both are still overridden by the blunt flag files in `<game>/Modules/TAOM.Dependencies/`:
-`patchshield-disabled.flag` (skips the shield install entirely) and
-`saveshield-swallow-disabled.flag` (rethrow everything, read live per call).
+Both flag files still function: `patchshield-disabled.flag` (skips the shield install entirely) and
+`saveshield-swallow-disabled.flag` (rethrow everything, read live per call), placed in
+`<game>/Modules/TAOM.Dependencies/`. **Under co-op they buy almost nothing** — the shield already
+skips install and SaveShield already rethrows `SAVE-LOAD` — which matters because community
+dedicated-server recipes still list both as required setup steps. The one thing that still differs:
+`saveshield-swallow-disabled.flag` also rethrows the `MISSION-INIT` chain, which co-op deliberately
+leaves swallowing.
 
 ## The Harmony census — our substitute for decompiling
 
@@ -270,9 +291,9 @@ An override that fully replaces a vanilla body silently deletes any BT patch on 
 | **No settings parity check** | TAOM's ~135 MCM settings live in a per-user file outside the save and are read live by ~30 providers. Two players with different values simulate differently — battle autocalc, bandit spawn density, AI army targeting, desertion rates — with no warning | Compare settings manually before playing. A fingerprint handshake through save metadata is designed but not built |
 | **Detection reflects what the player enabled, not what constructed** | `CoopPresence` reads the launcher's active-module list. If the co-op mod's SubModule constructor throws, `SubModuleConstructionGuard` swallows it and the module still reads as active — so TAOM spends the session in co-op mode (PatchShield withholding its rescue, SaveShield rethrowing save-load faults) for a co-op layer that never came up | Check the log for the co-op mod's own init lines. Closing this needs the construction guard to map a failing assembly back to its module id plus a suppression set that survives re-probing |
 | **PatchShield still swallows the missing-API trinity everywhere it shields** | The co-op SAVE-LOAD rethrow covers SaveShield's own targets (PatchShield now skips those), but on any other method a `MissingMethod`/`MissingField`/`TypeLoad` exception is still swallowed | Intended: that swallow is what keeps a stale third-party mod from killing the session |
-| **TAOM state that mutates mid-session is join-time-only** | War of the Ring momentum, culture-conversion progress, messenger fleet, career progression and caravan memory reach the client through the host's save at join and then drift. BT has no schema for these fields, so its replication cannot correct them | None yet. Needs an "am I the simulation authority" signal from BT |
+| **TAOM state that mutates mid-session is join-time-only** | War of the Ring momentum, culture-conversion progress, messenger fleet, career progression and caravan memory reach the client through the host's save at join and then drift. BT has no schema for these fields, so its replication cannot correct them | None yet. Needs an "am I the simulation authority" signal from BT. One exception: the character-creation package (race, culture gold, career, resource seed) is re-applied on **detection** rather than replicated, so a joiner keeps it even though nothing syncs it |
 | Siege defense rewards fire on the host only | Client players don't trigger `SiegeDefenseBehavior` rewards | Host handles siege events; client still fights |
-| Race data is host-save-authoritative | Joining client loads races from the host's save | None needed — correct behaviour |
+| Race data is host-save-authoritative | Joining client loads races from the host's save | **Two mechanisms, both needed.** A TAOM-less or one-race host would ship a degenerate race map that force-set every hero on a full client to human — `CaptureHeroRaces` now refuses a table below two races ([hero-race.md](hero-race.md)). Separately the joining player's OWN character-creation race is discarded with the hero at the hand-off, and `PlayerPossession` re-applies it ([player-possession.md](player-possession.md)) |
 | BattleLink battles need the separate MP window | Both players need BT's BattleLinkMPClient enabled | Follow BT's battle-server setup |
 
 ## Diplomacy ordering — TAOM's veto is OFF under co-op
@@ -385,7 +406,11 @@ culprit diff for free.
 - [ ] No `[SaveDefiners] SAVE ID COLLISION` line
 - [ ] Both players load with TAOM + BT, no startup crash
 - [ ] TAOM factions and culture names visible on the map for the client
-- [ ] Client hero has the correct race after joining
+- [ ] Client hero has the correct race after joining — look for `[Possession] Controlled hero changed
+      'X' -> 'Y'`, and for the `RacePersistenceService: refusing to capture hero races against a
+      N-race table` warning if the host is running without TAOM's modules
+- [ ] Joining client receives their OWN culture's startup gold and career, not the host's
+- [ ] An elite-emissary purchase on a guest is declined, with no special resources deducted
 - [ ] Racial enmity blocks invalid war declarations (e.g. elves vs elves)
 - [ ] War of the Ring forced wars trigger on host; client mirrors state
 - [ ] Shared field battle: both peers finish, casualty counts agree
@@ -412,10 +437,20 @@ culprit diff for free.
 | [PeaceActionHook.cs](../../Main/Features/Diplomacy/Hooks/PeaceActionHook.cs) | Peace veto; defers under co-op |
 | [DeclareWarAction_ApplyInternal_Patch.cs](../../Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs) | `Priority.High` prefix — runs ahead of BT's suppression patch |
 | [SiegeDefenseBehavior.cs](../../Main/Features/Siege/) | Host-only; expected not to fire on clients |
-| [RacePersistenceBehavior.cs](../../Main/Features/HeroRace/) | Race data rides the campaign save |
+| [RacePersistenceBehavior.cs](../../Main/Features/HeroRace/) | Race data rides the campaign save; capture refuses a degenerate one-race table, which is what a TAOM-less host looks like |
+| [PlayerPossessionBehavior.cs](../../Main/Features/PlayerPossession/PlayerPossessionBehavior.cs) | Re-applies the character-creation package after a join hand-off. Detection is a pure `Hero.MainHero.StringId` comparison and references no co-op assembly, so it was built to work under BT exactly as under BannerlordCoop |
+| [DedicatedServerProvider.cs](../../Main/Features/CoopInterop/DedicatedServerProvider.cs) | "Is there a real player in this process at all" — reads the binaries folder this assembly loaded from, deliberately not co-op role |
 
 ## Changelog
 
+- 2026-08-03 — Corrected the PatchShield rows: under co-op the shield does not install at all (a
+  2026-08-02 performance fix for the `__originalMethod` finalizer tax), so neither the withheld
+  unpatch nor the swallow is reachable, and the two flag-file steps community dedicated-server
+  recipes list are redundant except for `MISSION-INIT`. Recorded the two mechanisms that now protect
+  a joiner's race — `CaptureHeroRaces` refusing a degenerate one-race table, and `PlayerPossession`
+  re-applying the character-creation package, whose `Hero.MainHero.StringId` detection was written
+  to be base-agnostic. Field data came from BT a0.5.3.1; the boot matrix against a0.5.3.2 is still
+  unrun.
 - 2026-08-01 — Source review of BT a0.5.3.2 under permission granted by Hobohoppy (see Overview).
   Corrected the diplomacy-ordering section: `Priority.High` handles host origination but leaves the
   client free to veto a war the host already committed, so TAOM's war / peace / alliance-end vetoes

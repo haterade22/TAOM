@@ -99,8 +99,71 @@ predicate.
   `SiegeDefenseService.GrantReward` set the save-serialized `RewardClaimed` on every peer, so a
   client claiming its own siege reward wrote per-peer state into the host's save record. When adding
   a co-op gate, state which of the three questions you are answering before writing the condition.
+  **A fourth predicate joined the roster on 2026-08-03, on a different axis:**
+  `IDedicatedServerProvider.IsDedicatedServer` answers *what KIND of process am I* rather than *what
+  ROLE do I hold in this session*, and the two are independent — a client-hosted session's host holds
+  the authority role while being an ordinary game client, and must keep earning and deciding
+  normally. Do not fold it into the role predicates; ask the process question separately.
 - **Source:** `docs/reviews/rca-coop-authority-gating-2026-08-01.md` (Codex pass: 4 HIGH, of which
-  the presence/session confusion accounted for two plus the LOW)
+  the presence/session confusion accounted for two plus the LOW); fourth predicate added from the
+  2026-08-03 multiplayer field report (commit c3ee2e22)
+
+### A player-eligibility gate written as "the player COMMANDS X" silently excludes every case where the player is subordinate
+
+Two unrelated features shipped the same mistake and it was found twice in one changeset.
+(a) SpecialResources gated earning on the player being the winning side's `LeaderParty.LeaderHero`.
+That is a commanding test, not a participating test — join any lord's army and you are not the leader
+party's hero, so **every victory you fought in paid nothing, in ordinary single-player**. Multiplayer
+only made it total: under a client/server split nobody leads the authoritative side either (one
+session logged 33 fought missions producing a single `MapEventEnded`, with state `None`). Replaced by
+`SpecialResourceEarnPolicy.IsPlayerVictory`, over the engine's own `MapEvent.PlayerSide` /
+`MapEvent.WinningSide`, with `BattleSideEnum.None` on either side failing the gate.
+(b) `WarEventSnapshotAdapter.FromSiege` set `PlayerInvolved = capturerParty?.IsMainParty == true`
+while the BATTLE snapshot in the same file already used `IsPlayerRelated(party, playerKingdomId)` —
+main party OR any party in the player's kingdom. Taking a settlement the normal way, inside someone
+else's army, therefore recorded no player event and the War of the Ring victory requirement quietly
+failed to advance. Sieges now use the same `IsPlayerRelated` test as battles.
+- **Why missed:** "the player did X" reads as one idea and quietly resolves to the narrowest of its
+  several meanings, because the case in the author's head is the solo player leading their own party.
+  The siege half is worse than an oversight: the correct predicate was already written, in the same
+  file, twenty lines above — so consistency-within-a-file was never checked against the file's own
+  contents. Both gates also fail SILENTLY (no reward, no event) rather than throwing, so no report
+  ever names them.
+- **Prevent:** when writing a player-eligibility gate, say out loud what happens when the player is
+  subordinate — in an army, in an allied siege, in a party someone else leads. Prefer the engine's own
+  participation properties (`MapEvent.PlayerSide`, `IsPlayerMapEvent`) over reconstructing
+  participation from leadership. If a sibling snapshot/handler in the same file already answers the
+  same question, use ITS predicate rather than writing a second one.
+- **Honesty clauses (both still true).** The siege fix is the **single-player half only** — crediting
+  remote players in OTHER kingdoms needs a co-op seam TAOM does not have and is not claimed as fixed.
+  And the field report's claim that the requirement "can only be satisfied by the authority's
+  MainHero" was **inaccurate**: it was already satisfiable by any party in the authority MainHero's
+  KINGDOM. Recording the corrected claim, not the reported one, is what makes this entry usable the
+  next time a field report arrives.
+- **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commits c3ee2e22,
+  1554de16
+
+### On a headless/dedicated host `Hero.MainHero` EXISTS but is nobody's character
+
+A dedicated server runs a full campaign, so `Hero.MainHero` resolves to a hero — the idle world-gen
+hero the campaign was created around. Any logic that reads MainHero to mean "the player" therefore
+acts on that hero there. SpecialResources did: dozens of `[SpecRes] PRISONERS: +N` lines banked
+against the server hero while the remote players who fought the battles earned nothing.
+`SpecialResourceEarnPolicy.MayCreditMainHero(isDedicatedServer)` now gates all five earn paths
+(`OnMapEventEnded`, `OnRaidCompleted`, `OnPrisonerTaken`, `OnHideoutCompleted`,
+`OnTournamentFinished`) through a private `CanEarn()` with a log-once.
+- **Why missed:** MainHero is non-null and looks entirely healthy on a server, so nothing fails —
+  the value is simply meaningless. The mistake is one level below the co-op predicates: those all ask
+  what ROLE this peer holds, and the answer here is "authority", which is correct and does not tell
+  you there is no local player.
+- **Prevent:** treat "is there a local player" and "am I the authority" as different questions with
+  different answers — a client-hosted host answers yes to both, a dedicated server answers no then
+  yes. Derive the process kind from a fact about THIS process rather than by probing another mod:
+  `DedicatedServerProvider` reads `Assembly.GetExecutingAssembly().Location` for
+  `Win64_Shipping_Server`, because Bannerlord loads a module's binaries from the folder matching the
+  running engine build. It fails to "not a server" on any error, which is safe only because every
+  gate built on it purely SUPPRESSES behaviour — check that property before copying the pattern.
+- **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit c3ee2e22
 
 ---
 

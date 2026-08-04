@@ -25,7 +25,7 @@
 - [character-creation-body-properties](features/character-creation-body-properties.md) — per-culture default body properties on CC screen (Patch29)
 - [character-selection](features/character-selection.md) — transpiler-driven race fallback in CC
 - [race-age-system](features/race-age-system.md) — race-appropriate lifespans (elven immortality, dwarf/hobbit aging) via TaomAgeModel + TaomPregnancyModel
-- [hero-race](features/hero-race.md) — race assignment + persistence on Hero
+- [hero-race](features/hero-race.md) — race assignment + persistence on Hero; capture refuses to run when the FaceGen registry holds fewer than 2 races, because a co-op host without TAOM's modules reads every hero back as race 0 and that map rides the save transfer to fully-raced clients
 - [offspring-race-inheritance](features/offspring-race-inheritance.md) — child race from parent races, race-aware hero creation defaults
 - [initial-child-generation](features/initial-child-generation.md) — campaign-start child rolls
 - [no-mount-cultures](features/no-mount-cultures.md) — suppress narrative horse crash on no-mount cultures (Patch20)
@@ -80,7 +80,8 @@
 - [siege-dismount](features/siege-dismount.md) — player dismount on siege entry; modifier-preserving horse storage
 
 ### Economy, settlements, resources
-- [special-resources](features/special-resources.md) — 11 resources × 18 kingdoms, troop costs, save-compat (Patch26)
+- [special-resources](features/special-resources.md) — 11 resources × 18 kingdoms, troop costs, save-compat (Patch26); earning is keyed on `MapEvent.PlayerSide == WinningSide` (participation, not command — the old leader-hero gate paid nothing to a player fighting inside another lord's army) and suppressed on a dedicated server
+- [elite-emissary](features/elite-emissary.md) — buy a faction's elite troops at its capital for that faction's special resource; the sale is declined before charging on a non-authoritative co-op peer, where the resource charge would persist but the purchased troops would not survive the next resync
 - [culture-marketplace](features/culture-marketplace.md) — daily LOTRLOME item injection by owner culture
 - [settlement-guards](features/settlement-guards.md) — per-settlement guard pools, clan/culture fallback (Patch28)
 - [settlement-nameplate-fade](features/settlement-nameplate-fade.md) — distance-based nameplate fade (Patch38)
@@ -126,6 +127,14 @@
 - [mcm](features/mcm.md) — MCM options-screen top-to-bottom layout fix (Patch41 on UIExtenderEx `WidgetFactoryManager.CreateAndRegister`; #252)
 - [save-load-diagnostics](features/save-load-diagnostics.md) — always-on `[SaveLoad]` lifecycle logging (Patch61, 15 hooks) — stamps the exact failing type/SaveId/chunk the engine's generic load-error dialog swallows; root-caused the v2.0.9 momentum save corruption
 
+### Multiplayer & co-op
+
+TAOM ships no multiplayer of its own; these cover behaving correctly when a third-party co-op mod (BannerlordCoop, Bannerlord Together) or a Bannerlord dedicated server is driving the campaign.
+
+- [coop-interop](features/coop-interop.md) — the detection + authority seam every other feature gates on: presence (a co-op module is loaded) vs session authority (`IsAuthority` / `ShouldDeferToHost`) vs dedicated server (which binaries folder we loaded from) are three different questions; also assembly resolution, load order, client-side object creation, and why PatchShield skips install under co-op
+- [player-possession](features/player-possession.md) — every co-op base discards the character-creation hero at the join hand-off, so TAOM's CC grants (race, culture gold, career, resource seed) all landed on a hero about to be thrown away; re-applies them to the hero the player actually controls, detected from `Hero.MainHero.StringId` alone so no co-op assembly is referenced
+- [bannerlord-together-compat](features/bannerlord-together-compat.md) — multiplayer mod compat surface
+
 ### Infrastructure & tooling
 - **Claude-config security auditor** — `tools/audit_claude_config.py` (behind `/security-scan`): scans `.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md` for secrets / over-broad permissions / hook-exfil / MCP risk / prompt-injection, plus SkillSpector-derived skill-threat categories + Python-AST + clean-room YARA. Run on TAOM's own config before `/ship` or after a hook/permission/MCP change; run `--root <repo> --external` (full severity) to vet a FOREIGN skill BEFORE adopting it via `/adopt-external`. Adoption review: [adopt-skillspector](reviews/adopt-skillspector-2026-06-22.md).
 - [bannerlord-engine-and-toolchain](reference/bannerlord-engine-and-toolchain.md) — **the whole engine/toolchain**: shipping-vs-editor builds, managed-vs-native DLL split, verified tech stack (Mono, PhysX, Granite, DX11, DLSS), the managed↔native bridge, FBX→tpac pipeline, custom-creature workflow. `tools/decompile_bannerlord.ps1` (dual-build decompile) + `tools/pe_inspect.py` (see into native DLLs)
@@ -155,11 +164,11 @@
 - [bannerlord-animation-clip-flags](reference/bannerlord-animation-clip-flags.md) — the `AnimFlags` clip-flag system + per-clip-type recipe + full per-flag reference (all ~60); flags are baked into the `_anm.tpac`, NOT `action_types.xml`; the spider's clips ship with zero flags (= broken locomotion)
 - [editor-cache-rebuild](features/editor-cache-rebuild.md) — parallel + incremental + resumable settlement distance cache rebuild
 - [scene-scripts](features/scene-scripts.md) — engine-discovered ScriptComponentBehavior subclasses (CS_Road, etc.)
+- [dev-console](features/dev-console.md) — the `taom.*` console command contract (`TaomConsole` dispatch, three guards, discovery audit) plus the command reference. Includes `taom.audit_settlement_entrances`, which flags settlements whose entrance sits on a navmesh island nothing can path to — `PathFaceRecord.IsValid()` is true for all of them, so only an island comparison finds them. **The auditor ships; the corrected coordinates do not exist yet** — they need one in-game campaign run, then apply to the LIVE `TAOM_Map/ModuleData/settlements.xml`
 - [crash-report](features/crash-report.md) — crash report enrichment
 - [mission-diagnostic](features/mission-diagnostic.md) — first-tick MissionBehavior dump + action-set capture for mod-conflict diagnostics
 - [battle-load-diagnostics](features/battle-load-diagnostics.md) — phase-stamped battle-load lifecycle log + stall watchdog + next-session stall marker/notice; offline `tools/triage_battle_load.py` gives an equipment-vs-code verdict (#262)
 - [mesh-ref-validation](features/mesh-ref-validation.md) — `tools/validate_mesh_refs.py`: does every `mesh=` / `body_name=` in item + crafting-piece XML resolve to a packaged asset? A missing `bo_` body is a **confirmed** infinite-mission-load hang (#352) — run it after any weapon/armor authoring. A clean PASS only means "clean within `--items` scope"
-- [bannerlord-together-compat](features/bannerlord-together-compat.md) — multiplayer mod compat surface
 - [doc-graph](features/doc-graph.md) — query + audit *this* knowledge graph (`/doc-graph` skill + `tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). [ADR-010](adrs/010-knowledge-base-architecture.md) Phase 5; adopted from [graphify](reviews/adopt-graphify-2026-06-08.md)
 
 ## Architecture Decision Records (canonical project rules)

@@ -161,14 +161,14 @@ When building/changing TAOM behavior whose correctness can only be confirmed liv
 A log-hygiene gate must be re-measured on a FRESH session after it ships. Commit `0abe1854` (2026-07-04) cut a 21 MB / 169,676-line session log by adding `if (added > 0 || topUp > 0 || removed > 0)` to CultureMarketplace's per-town daily line and claimed "~170k → ~2k lines per session." The next measured session (2026-07-26) still had **45,080** of them — 95.2% of the whole file. The gate had been inert since the day it shipped.
 - **Why:** the `removed` term counts foreign items stripped from a town market. That is a **steady-state quantity**, not an event — vanilla restocks cross-cultural goods every day and the filter strips them again, forever, so `removed > 0` was true on 98.8% of ticks and 83.2% of all emitted lines existed for that term alone. This is the same "**gate on the event, not the tick**" rule as the lesson above, one level subtler: the gate *looked* event-shaped because it was phrased as a delta, but a delta that is non-zero every tick is a tick.
 - **Why missed:** the fix was validated by re-running frequency analysis over the **pre-fix** 21 MB log, filtering it by the new predicate — data in which the pathological case (nothing injected, foreign strip alone) was indistinguishable from the healthy one. The commit's own trailer says so: `Not-tested: log volume itself (verified via frequency analysis of the live 21MB session log, not a unit test)`. No unit test can catch this (nothing asserts a per-tick DEBUG line), so the *only* oracle is a fresh session — and nobody re-measured for three weeks.
-- **Prevent:** (1) For every term in a volume gate, ask *"is this non-zero in the boring steady state?"* — if yes it does not belong in the gate, though it can stay **in the message** (the foreign count still prints on every surviving line, so no visibility was lost). (2) A log-volume change is not done until a fresh post-fix session log has been frequency-analysed; treat the pre-fix log as a hypothesis generator, never as verification. (3) Before suppressing a high-volume line, confirm it is narrating equilibrium and not a runaway — here, removals/town/day were flat across the session (3.54 → 3.59 → 3.63 → 3.57) and roster counts plateaued, so nothing real was being hidden. A subagent read the same data as "the filter is losing the race, investigate before silencing"; the hour-over-hour trend refuted it.
-- **Source:** CHANGELOG 2026-07-27 (`chore(logging)`), superseding the volume claim in the 2026-07-04 entry.
+- **Prevent:** (1) For every term in a volume gate, ask *"is this non-zero in the boring steady state?"* — if yes it does not belong in the gate, though it can stay **in the message** (the foreign count still prints on every surviving line, so no visibility was lost). (2) A log-volume change is not done until a fresh post-fix session log has been frequency-analysed; treat the pre-fix log as a hypothesis generator, never as verification. (3) Before suppressing a high-volume line, confirm it is narrating equilibrium and not a runaway — here, removals/town/day were flat across the session (3.54 → 3.59 → 3.63 → 3.57) and roster counts plateaued, so nothing real was being hidden. A subagent read the same data as "the filter is losing the race, investigate before silencing"; the hour-over-hour trend refuted it. (4) **Latch the LOG, never the WORK.** `MainMenuCustomizer.CustomizeMenu` runs on every screen-root set, and a headless dedicated server sets that root thousands of times per boot with StoryMode and SandBox absent — so both "option not found" warnings fired every time, 4,803 `MainMenuCustomizer` lines in one server log. The fix latches the warnings (a `HashSet` gives one line per option, plus one applied-line per session) while the customization itself still runs on every call, because the engine can rebuild the initial-state options between sets and skipping the work would silently drop the rename on a real client. The tempting one-line fix — an `if (_alreadyRan) return;` at the top — trades a log problem for a correctness one.
+- **Source:** CHANGELOG 2026-07-27 (`chore(logging)`), superseding the volume claim in the 2026-07-04 entry; the latch-the-log clause from the 2026-08-03 multiplayer field report (commit 9758fada).
 
 ### Log the outcome, not the intent — an engine action that returns `void` cannot tell you it did nothing
 When announcing the result of a TaleWorlds action (`KillCharacterAction`, `ChangeOwnerOfSettlementAction`, any `Apply*` that returns `void`), log AFTER the action and only on a re-read of the state it was supposed to change. A pre-action log states an intent as if it were a fact, and if the caller re-evaluates the same population on a timer, the false statement repeats.
 - **Symptom:** `RaceAge` logged `Hero X died of old age` then called `KillByOldAge`. 238 death lines for 222 heroes — 16 announced twice, one campaign day apart. `KillCharacterAction.ApplyInternal` marks-and-defers when the victim is in a `MapEvent`/`SiegeEvent` and returns without touching `HeroState`, so the hero stayed alive, matched the daily age check again, and was re-announced. (Its guard is `&& victim.DeathMark == KillCharacterActionDetail.None`, so the second call always lands — hence exactly two lines, never three. The same method also silently refuses the player character and any hero when the life/death cycle is disabled.)
-- **Prevent:** give the adapter a `bool` return that re-reads the state after the action (`return !hero.IsAlive;`) and gate the log on it. Verify the re-read property is a plain field comparison, not a computed getter that could throw (`Hero.IsAlive => !IsDead => HeroState == CharacterStates.Dead` — safe). More generally: **an adapter wrapping a `void` engine action that can silently no-op should return whether it took effect**, or its callers cannot tell success from silence.
-- **Source:** CHANGELOG 2026-07-27; `TAOM.Tests/Features/RaceAge/RaceAgeBehaviorTests.cs`.
+- **Prevent:** give the adapter a `bool` return that re-reads the state after the action (`return !hero.IsAlive;`) and gate the log on it. Verify the re-read property is a plain field comparison, not a computed getter that could throw (`Hero.IsAlive => !IsDead => HeroState == CharacterStates.Dead` — safe). More generally: **an adapter wrapping a `void` engine action that can silently no-op should return whether it took effect**, or its callers cannot tell success from silence. There is a second reason to shape it that way, beyond the caller's need to know: an adapter that touches static engine state (`ModuleMenuAdapter` reads `Module.CurrentModule`) cannot be unit-tested, so any judgement it makes — including "is this miss worth a log line?" — is untestable by construction. `IModuleMenuAdapter.HideOption`/`RenameOption` now report a miss as `false` and the service owns the logging and its dedupe; the adapter's injected `IModLogger` became dead and was deleted. Push decisions down to the layer that has tests.
+- **Source:** CHANGELOG 2026-07-27; `TAOM.Tests/Features/RaceAge/RaceAgeBehaviorTests.cs`; the untestable-adapter clause from the 2026-08-03 multiplayer field report (commit 9758fada).
 
 ### Grep the whole file for a symbol before commenting it out on an Explore agent's "used only by X" claim
 Before commenting out (or disabling) any field/symbol an Explore agent flagged as "used only by <one method>," run a `Grep` for that symbol across the file (or repo) FIRST. Phase 1 inventories miss secondary call sites that only the compiler catches.
@@ -440,3 +440,56 @@ quality-only findings while the conditional tooling agent found all five real de
   current wording ("scripts that WRITE files") does not cover. All three silent-scope findings above
   were in read-only tools.
 - **Source:** same RCA
+
+### A review finding's stated CAUSE can be wrong even when the finding itself is right
+
+The 2026-08-03 field report's armory finding was correct to the element: 168 `<action>` elements in
+`LOTRLOME_Armory/ModuleData/action_sets.xml` were parented by `<action_sets>` rather than by an
+`<action_set>`, and they really did kill every dedicated server on boot. The attribution was not.
+`tools/generate_race_civilian_action_sets.py` is the obvious suspect — it is the tool that writes
+race action sets into that file — but the broken sets sit OUTSIDE its
+`TAOM-CIVILIAN-COVERAGE:START/END` marker block and were hand-authored. Editing the generator would
+have changed correct code, left the data untouched, and degraded every future run.
+- **Why missed:** a plausible mechanism reads as an explanation. "This generator writes elements of
+  this shape into this file, and elements of this shape are broken" is a syllogism with a missing
+  premise (that these particular elements came from it), and the missing premise is the cheap thing
+  to check — marker boundaries are right there in the file. This is a third shape distinct from the
+  two review-attribution entries above: "when two review agents disagree, the narrower + more
+  confident one is usually the wrong one" is agent-vs-agent premise scope, and "read the enclosing
+  method before naming a specific throw site" is a mis-attributed line inside a correctly-identified
+  method. Here the symptom is real and the accused COMPONENT is innocent.
+- **Prevent:** verify the cause independently of the symptom before editing the accused component.
+  For generated data specifically, check the generator's own marker/ownership boundaries before
+  assuming it produced the region you are looking at — a generator is exactly the kind of component
+  where a wrong fix is silent and compounds on every future run.
+- **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit c9455ec8
+
+### A deployment TARGET that never existed: the engine logs one line and runs degraded
+
+Neither `Main/TAOM.csproj` nor `Dependencies/TAOM.Dependencies.csproj` ever produced a
+`Win64_Shipping_Server` folder. A Bannerlord dedicated server therefore logged
+`Cannot find: ...\TAOM\bin\Win64_Shipping_Server\TAOM.dll` and carried on — running a **vanilla
+simulation over TAOM's map**: no race capture, no War of the Ring, no campaign systems at all. This
+is a different failure from the two shipped-artifact entries above ("If a shipped artifact's identity
+never changes…", "Build both, ship both…"), which are both about a mismatched pair of artifacts that
+do exist; here the destination is absent and the engine runs past it.
+- **Why missed:** the missing folder is invisible from every surface a developer looks at. The build
+  succeeds, the client install is complete and correct, and the only evidence is one line in a log
+  produced by a machine nobody on the project runs.
+- **Prevent:** enumerate the engine BUILDS your artifact must be present for, not just the
+  configurations you build. `MirrorWin64ShippingClientToServer` (both csprojs, `AfterTargets="PostBuildCopyToModules"`,
+  same `$(ModuleId) != ''` condition family as the `-p:ModuleId=` entry above) mirrors the **assembled**
+  client folder — `$(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\*.*`, not build output,
+  because the vendored natives and NuGet companions only exist there after `PostBuildCopyToModules`.
+  It is modelled on the pre-existing `MirrorWin64ShippingClientToEditor` target; the same absent-target
+  question applies to any future build folder. A real deploying build mirrored 10 files for TAOM
+  (incl. `TAOM.dll`, `DryIoc.dll`, `MinHook.x64.dll`, `TAOM.NativeSkinFixes.dll`) and 42 for
+  TAOM.Dependencies (incl. `TAOM.Dependencies.dll`, `Bannerlord.UIExtenderEx.dll`, `0Harmony.dll`,
+  `MCMv5.dll`).
+- **Owed, and a second hazard:** a dedicated-server boot verifying both this deploy and the
+  `action_sets.xml` fix has not happened. Separately, the two opt-out flag files the field reporters'
+  recipe required are now obsolete — `PatchShieldPolicy.ShouldInstall` already skips install under
+  co-op presence and `SaveShieldPolicy.ShouldSwallow` already rethrows save-load faults under co-op.
+  A documented workaround that outlives its cause is a maintenance hazard: it keeps being applied,
+  and the next reader cannot tell whether it is load-bearing.
+- **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 5f373df9

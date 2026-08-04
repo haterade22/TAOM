@@ -42,14 +42,27 @@ moved → all gameplay changes were NATIVE-internal.
 1. **`/verify-bindings`** — every Harmony patch / GameModel / reflection site.
 2. **`python tools/audit_mount_parity.py`** — creature data vs the (possibly re-schema'd)
    vanilla baselines.
-3. **`python tools/audit_action_set_parity.py`** — resolves EVERY action_set's effective surface
-   (own actions + `base_set` chain + cross-module field-merge) and flags any HUMANOID set missing
-   part of Native's `as_human_warrior` (exit 1 if any). A new engine version can add action types to
-   `as_human_warrior` that a standalone set won't inherit → CTD on first use (the 1.3→1.4.6 dwarf
-   water-CTD: 423 types had drifted). For each gap the audit reports, fix with
-   `python tools/patch_dwarf_action_parity.py --set-id <id> --apply` (writes both the live LOTRLOME file
-   and the snapshot). The audit confirmed `as_dwarf_warrior` was the only humanoid gap (1110 humanoid
-   sets, 0 others). Creature mounts (spider/elephant/chariot) use a separate surface → `audit_mount_parity.py`.
+3. **`python tools/audit_action_set_parity.py`** — two independent gates, **exit 1 on either**, so
+   read the report before assuming which one fired:
+   - **Humanoid surface.** Resolves EVERY action_set's effective surface (own actions + `base_set`
+     chain + cross-module field-merge) and flags any HUMANOID set missing part of Native's
+     `as_human_warrior`. A new engine version can add action types to `as_human_warrior` that a
+     standalone set won't inherit → CTD on first use (the 1.3→1.4.6 dwarf water-CTD: 423 types had
+     drifted). For each gap, fix with
+     `python tools/patch_dwarf_action_parity.py --set-id <id> --apply` (writes both the live LOTRLOME
+     file and the snapshot). The audit confirmed `as_dwarf_warrior` was the only humanoid gap (1110
+     humanoid sets, 0 others). Creature mounts (spider/elephant/chariot) use a separate surface →
+     `audit_mount_parity.py`.
+   - **Structure.** Flags any root-level `<action>` — one parented by `<action_sets>` instead of an
+     `<action_set>`. Build 1.4.7.117484 tolerates these silently; build 117131, which TaleWorlds'
+     DEDICATED SERVER engine ships, throws `KeyNotFoundException` in
+     `MBObjectManager.MergeElements` at schema path `/action_sets/action` and dies on boot. A bump is
+     exactly when this bites — the byte-identical file one build accepts, the next can reject, with
+     no change of ours in between, and no single-player run reproduces it. Fix with
+     `python tools/oneoff/fix_orphaned_tavern_conversation_actions.py --apply` (idempotent; rewrites
+     the live Armory file and the tracked snapshot together). Found live at 168 stray elements —
+     twelve `as_<race>_female_villager_in_aserai_tavern` sets authored self-closing, orphaning the 14
+     female-conversation overrides that belong nested inside each.
 4. Vanilla data rescan per `.claude/rules/vanilla-data-comparison.md` (scene renames/removals,
    XML re-schemas) + check which vanilla `ModuleData` XMLs the update actually touched
    (timestamp filter).

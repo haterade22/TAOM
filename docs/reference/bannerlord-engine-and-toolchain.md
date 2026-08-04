@@ -6,16 +6,19 @@
 > 2026-06-06. Pairs with [bannerlord-animation-clip-flags.md](bannerlord-animation-clip-flags.md),
 > [scene-reference-audit.md](scene-reference-audit.md), and `docs/tools/spider-skeleton-tpac-tools.md`.
 
-## 1. The two builds (this is the key distinction)
+## 1. The builds (this is the key distinction)
 
-Bannerlord ships **two** native+managed builds under `<game>/bin/`:
+Bannerlord ships **two** native+managed builds under `<game>/bin/`, plus **two more** in a separate
+Steam app (*Mount & Blade II Dedicated Server*):
 
-| Build dir | What it is | DLLs | Editor code? |
-|---|---|---|---|
-| `Win64_Shipping_Client` | The game players run. | 85 | **stripped** |
-| `Win64_Shipping_wEditor` | The **Modding Kit** build (run via `Bannerlord.exe` from the launcher's "Modding Kit"). | 108 | **present** |
+| Build dir | What it is | DLLs | Editor code? | Install |
+|---|---|---|---|---|
+| `Win64_Shipping_Client` | The game players run. | 85 | **stripped** | `<game>/bin/` |
+| `Win64_Shipping_wEditor` | The **Modding Kit** build (run via `Bannerlord.exe` from the launcher's "Modding Kit"). | 108 | **present** | `<game>/bin/` |
+| `Win64_Shipping_Server` | Dedicated-server host, Windows. | 80 | n/a | *Dedicated Server* app |
+| `Linux64_Shipping_Server` | Dedicated-server host, Linux. | 63 | n/a | *Dedicated Server* app |
 
-The TaleWorlds.* DLLs have the **same names** in both builds but **different content**: the wEditor versions
+The TaleWorlds.* DLLs have the **same names** in the two `<game>/bin/` builds but **different content**: the wEditor versions
 have editor-only types compiled in. Confirmed editor-only managed types (in wEditor `TaleWorlds.MountAndBlade.dll`,
 absent from shipping): `MBEditor`, `EditorGame : GameType`, `EditorGameManager`, `EditorState : GameState`,
 `MBUnusedResourceManager`, **`AnimalSpawnSettings : ScriptComponentBehavior`** (creature spawn authoring),
@@ -25,6 +28,57 @@ absent from shipping): `MBEditor`, `EditorGame : GameType`, `EditorGameManager`,
 client** — it does NOT contain editor-only code. Some knowledge (how the Animation Clip Inspector applies
 `AnimFlags`, FBX import, tpac asset authoring) lives only in the editor build (and much of it in *native* editor
 code — see §3). When you can't find an editor concept in the shipping decompile, check the editor build.
+
+### 1.1 The dedicated-server build — and why a whole class of failures is server-only
+
+**The engine that runs a dedicated server is a different build from the one that runs the client**, and
+it is **stricter about ModuleData structure**. That single fact explains bugs that no single-player
+session can reproduce: the client loads a malformed XML file silently while the server throws on it at
+boot. The 2026-08-03 case was 168 root-level `<action>` elements in LOTRLOME_Armory's `action_sets.xml`
+— tolerated by build 1.4.7.117484, fatal on build 117131 (`KeyNotFoundException` in
+`MBObjectManager.MergeElements` at `/action_sets/action`). Both build numbers come from the co-op field
+report; they are **not** locally verifiable — the installed client's `bin/Win64_Shipping_Client/Version.xml`
+carries only `<Singleplayer Value="v1.4.7"/>` and every exe/DLL reports FileVersion `1.0.0.0`.
+
+What *is* verifiable on disk is that the two installs ship different schema sets: `<game>/XmlSchemas/`
+has 51 `.xsd`, the Dedicated Server app 45 — it lacks the single-player/naval set (`SPCultures.xsd`,
+`partyTemplates.xsd`, `MissionShips.xsd`, `ShipHulls.xsd`, `ShipPhysicsReferences.xsd`,
+`ShipUpgradePieces.xsd`). `soln_action_sets.xsd` is byte-identical between them, so the divergence that
+bit us is in the loader, not the schema.
+
+**Don't misidentify the Steam app.** *Mount & Blade II Dedicated Server* is a **multiplayer appliance,
+not a campaign host**: its `Modules/` are `BattleLinkServer`, `ExampleSoundMod`, `FastMode`,
+`Multiplayer`, `Native`, `SandBoxCore`, `SandBoxCoreMP` — no `SandBox`, no `StoryMode` — and its `bin/`
+ships **no `TaleWorlds.CampaignSystem.dll`** at all. It is a .NET-Core host (`TaleWorlds.Starter.DotNetCore.exe`,
+`Rgl.dll` / `Game.dll` / `FairyTale.{DotNet,Library,ModuleManager}.dll`, plus an ASP.NET
+`DedicatedCustomServer.WebPanel`). It is therefore **not** the campaign co-op server the 2026-08-03 field
+report used. What is established for our purposes is narrower: a server resolves a module's binaries from
+`<module>/bin/Win64_Shipping_Server/`, which is the folder named in the `Cannot find: ...` log line that
+motivated the mirror below.
+
+### 1.2 Module-side `bin/` folders — what TAOM ships
+
+Distinct from the engine builds above: each module carries its **own** `bin/<build>/` folders, and the
+engine loads the one matching the build it is running. TAOM populates them from the assembled client
+folder via mirror targets:
+
+| Target | csproj | Mirrors into | Deployed file count |
+|---|---|---|---|
+| `MirrorWin64ShippingClientToEditor` | `Main/TAOM.csproj` | `Modules/TAOM/bin/Win64_Shipping_wEditor/` | 12 |
+| `MirrorWin64ShippingClientToServer` | `Main/TAOM.csproj` | `Modules/TAOM/bin/Win64_Shipping_Server/` | 10 (same set as Client) |
+| `MirrorWin64ShippingClientToServer` | `Dependencies/TAOM.Dependencies.csproj` | `Modules/TAOM.Dependencies/bin/Win64_Shipping_Server/` | 42 (same set as Client) |
+
+Both server targets run `AfterTargets="PostBuildCopyToModules"`, gated on `$(DisableModuleCopy) != 'true'`
+and on the assembled client folder existing. **Mirroring the assembled folder rather than the build output
+is deliberate** — it picks up the vendored natives (`MinHook.x64.dll`, `TAOM.NativeSkinFixes.dll`) and NuGet
+companions that only exist after `PostBuildCopyToModules`. There is no editor mirror in
+`TAOM.Dependencies.csproj`, so `Modules/TAOM.Dependencies/bin/Win64_Shipping_wEditor/` being empty is
+expected, not a bug.
+
+Two honesty caveats on the server mirror: **no dedicated server has been booted against these binaries**
+(commit 5f373df9 carries `Not-tested:` to that effect), and `Main/_Module/SubModule.xml` still declares
+`<Tag key="DedicatedServerType" value="none" />` — shipping the binaries does not by itself mark TAOM
+server-capable.
 
 ## 2. Decompiled-source layout (`E:\Decompiled_Bannerlord\`)
 

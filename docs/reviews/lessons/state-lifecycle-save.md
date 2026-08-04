@@ -5,7 +5,7 @@
 ### A process-singleton per-campaign cache must clear on `OnSessionLaunchedEvent` — "no SyncData / ephemeral" ≠ "reset between campaigns"
 A DryIoc `Reuse.Singleton` service is created once in `OnSubModuleLoad` and lives for the whole game process — it is shared by EVERY campaign in that session. "No SyncData — ephemeral, rebuilds as it goes" correctly means *not written to the save*, but it does NOT mean *reset between campaigns*. CaravanTrade's `CaravanVisitMemory` (a singleton keyed by `MobileParty.StringId`) was never cleared on new-game/load, so a stale ring from campaign A survived an in-process switch and — because `MobileParty.StringId` is reused across campaigns — mis-penalized a fresh caravan's first hops in campaign B (self-heals within 4 town visits; Codex MED, #335).
 - **Why missed:** the design reasoned about the *within-campaign* rebuild and the *save-load one-hop* cost, but never enumerated the *new/loaded campaign in the SAME process* state. Two deep-review agents (Completeness, Data Flow) both read "no SyncData — ephemeral" and accepted it; the data-flow "Lifecycle State Matrix" check lists entity states (alive/killed/removed/session-end) for entity mutations but doesn't name "process-singleton survives a campaign switch" as a state to enumerate for a shared cache.
-- **Prevent:** any behavior fronting a process-singleton runtime cache subscribes `CampaignEvents.OnSessionLaunchedEvent` (fires on both new game and load) → `ClearAll()`, so no state leaks from campaign A into campaign B. Whenever a cache is a `Reuse.Singleton` keyed by a campaign-reused id (`*.StringId`), enumerate the cross-campaign-same-process state, not only the within-campaign and save-load states. Distinct from the `OnGameLoaded` entity-mutation matrix — this is about a shared cache outliving the campaign, not about mutating a loaded entity.
+- **Prevent:** any behavior fronting a process-singleton runtime cache subscribes `CampaignEvents.OnSessionLaunchedEvent` (fires on both new game and load) → `ClearAll()`, so no state leaks from campaign A into campaign B. Whenever a cache is a `Reuse.Singleton` keyed by a campaign-reused id (`*.StringId`), enumerate the cross-campaign-same-process state, not only the within-campaign and save-load states. Distinct from the `OnGameLoaded` entity-mutation matrix — this is about a shared cache outliving the campaign, not about mutating a loaded entity. **Carve-out — cross-campaign hand-off is a legitimate use:** the rule targets caches keyed on a campaign-reused `StringId`, not every singleton. `PlayerPossession` registers both its services `Reuse.Singleton` precisely so the character-creation choices survive into the campaign that REPLACES the one that recorded them (a multiplayer join discards the CC hero), and its `ResetForNewCampaign` deliberately clears the baseline hero id while keeping `_choices`. Before applying the clear-on-session-launch reflex, ask whether the state is a per-campaign cache or a payload the next campaign is meant to consume.
 - **Source:** docs/reviews/rca-caravan-trade-recency-2026-07-11.md (#335; Codex adversarial pass).
 
 ### An engine bump can regress a feature whose managed bindings are unchanged — behavior-only changes in an engine method the feature drives unusually
@@ -100,6 +100,50 @@ runs once per process.
   call you must precede in a comment at the call site, and state whether the hook is re-entrant. Do
   not accept "it's registered early" as evidence it runs in time.
 - **Source:** `docs/reviews/rca-coop-interop-2026-07-31.md` findings #1 + #10
+
+### Persisted data is only as trustworthy as the ENVIRONMENT that captured it — validate the SHAPE of the source, not just each value
+
+`RacePersistenceService.CaptureHeroRaces` used to snapshot every hero's FaceGen race index
+unconditionally. A co-op host running WITHOUT TAOM's modules has exactly one race ("human") in its
+FaceGen table, so on that host every hero reads back as **0** — and the capture wrote
+`legend="human"` plus `{every hero: 0}`. That map rode the host→client save transfer, and
+`RestoreHeroRaces` on a full 15-race client resolved "human" to a genuinely valid id 0 and force-set
+every hero in the world to human. The guard now refuses to capture below
+`MinimumTrustworthyRaceCount = 2` (`_raceManager.GetOrderedRaceNames().Count`), keeping the existing
+map and legend rather than clearing them, so a good capture already in memory survives the bad host.
+- **Why missed:** per-value validation is structurally incapable of catching this. Every entry was
+  individually well-formed — a valid hero id mapped to a valid race index, translated through a
+  legend naming a race that really exists — and the existing validators (`IsValidRaceId`,
+  `IsValidRaceName`, the legend range check) all pass on it. The corruption lives in the
+  RELATIONSHIP between the capture environment and the restore environment, which no single value
+  encodes. Two is the smallest count that can express "human and something else", so the race COUNT
+  is the only tell available.
+- **Prevent:** when a snapshot is taken in one process and applied in another (save transfer, save
+  file, config export), the capture side needs a plausibility check on the SHAPE of the source it is
+  reading — table size, expected id set, module presence — not only per-field validation. Skip the
+  capture rather than clearing on failure: an empty state at least degrades to "no saved data" and
+  lets entities keep their authored values, whereas a written-but-degenerate state overwrites them.
+- **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 7cf5be28
+
+### Two operations on one lifecycle event where one consumes the other's output: pin the ORDER with a test
+
+`RacePersistenceBehavior.OnSessionLaunched()` runs `RestoreHeroRaces()` and then
+`CaptureHeroRaces()`. The capture half is there because a host→client save transfer never raises
+`OnBeforeSaveEvent`, which was the only capture trigger — so a joining player received a world with
+no race data at all. But putting capture FIRST would snapshot the pre-restore state (every hero at
+whatever race the raw XML gave them) and write it over the good map the restore is about to apply,
+which is a worse bug than the one being fixed and leaves no trace. Two tests pin the ordering:
+`OnSessionLaunched_RestoresThenCaptures` (NSubstitute `Received.InOrder`) and
+`OnSessionLaunched_DoesNotCaptureBeforeRestoring` (explicit call-order list).
+- **Why missed:** nothing about the ordering is visible in either method's own behaviour — each is
+  correct in isolation and the wrong order still produces a green suite of per-method tests. The
+  existing lifecycle rules in this file cover which EVENT to subscribe and which CLEAR paths exist;
+  neither asks about the relative order of two handlers sharing one event.
+- **Prevent:** whenever two operations run on a single lifecycle event and one consumes what the
+  other produces, state the dependency in a comment at the call site and pin it with an order-asserting
+  test. Ordering that only exists as the sequence of two statements is one careless reorder from
+  silently inverting, and the failure mode is data loss rather than an exception.
+- **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 7cf5be28
 
 ---
 

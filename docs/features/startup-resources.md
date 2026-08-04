@@ -78,7 +78,7 @@ NPC-lord gold/influence values are tuning knobs and may drift; consult `startup_
 | `Main/Features/StartupResources/Config/StartupResourcesConfig.cs` | Config POCOs |
 | `Main/Features/StartupResources/StartupResourcesIoC.cs` | DryIoc registration |
 | `Main/Features/StartupResources/IPlayerStartupGoldService.cs` | Interface — `GrantPlayerStartupGold(cultureId, playerHeroId)` |
-| `Main/Features/StartupResources/PlayerStartupGoldService.cs` | Looks up `PlayerGold` from config; calls `IGoldGiftAdapter.GiveGoldToHero` |
+| `Main/Features/StartupResources/PlayerStartupGoldService.cs` | Looks up `PlayerGold` from config; calls `IGoldGiftAdapter.GiveGoldToHero`. Not idempotent — second caller is PlayerPossession |
 | `Main/Adapters/IPlayerEquipmentAdapter.cs` | Interface — `ApplyRosterToPlayer(rosterId, playerHeroId)` returning a `PlayerEquipmentApplyResult` |
 | `Main/Adapters/PlayerEquipmentAdapter.cs` | Wraps `MBEquipmentRoster.AllEquipments` filter + `Hero.BattleEquipment.FillFrom` / `CivilianEquipment.FillFrom` |
 | `Main/Features/CharacterCreation/IPlayerEquipmentService.cs` | Interface — `ApplyPlayerStartingEquipment(cultureId, titleType, isFemale, playerHeroId)` |
@@ -131,6 +131,30 @@ The `titleType` is sourced from `manager.CharacterCreationContent.SelectedTitleT
 3. No code changes needed — `PlayerEquipmentService` builds the roster ID at runtime and `PlayerEquipmentAdapter.ApplyRosterToPlayer` looks it up via `MBObjectManager`.
 4. Missing rosters log a warning and the player keeps the vanilla default equipment (no crash).
 
+## Re-granting After a Multiplayer Join
+
+`IPlayerStartupGoldService.GrantPlayerStartupGold` has a second caller. Every co-op base discards the
+character-creation hero at the join hand-off and gives the joining player a host-authored one, so the
+grant that ran at CC finalize landed on a hero that no longer exists — field-confirmed as a Mirkwood
+player receiving the native 1,000 gold instead of 1,000 + 4,000. [player-possession.md](player-possession.md)
+detects the hand-off and re-invokes the grant against the hero the player actually ends up with, keyed
+on the **character-creation** culture rather than whatever culture the host's hero carries.
+
+**`GrantPlayerStartupGold` is not idempotent — do not add a third caller casually.** It validates its
+arguments, looks up the culture entry, skips a non-positive `playerGold`, and otherwise calls
+`IGoldGiftAdapter.GiveGoldToHero` unconditionally; there is no already-granted guard. Nothing
+double-grants today only because the two callers target different hero ids. All duplicate protection
+lives in PlayerPossession — the co-op presence gate, single consumption, and a `SyncData` marker per
+hero id.
+
+**Youth-option equipment is NOT re-applied.** The reconciliation re-invokes exactly four grants: race,
+startup gold, career, and the special-resource seed. `IPlayerEquipmentService.ApplyPlayerStartingEquipment`
+is not among them, so a joiner keeps whatever equipment the host's hero came with. That is a stated
+limitation, not something the 2026-08-03 work fixed.
+
+The NPC-lord gold and clan-influence half is unaffected: `StartupResourcesBehavior` fires at
+`OnNewGameCreatedPartialFollowUpEvent` index 1 against world state, not player state.
+
 ## TaleWorlds API Notes
 
 - `GiveGoldAction.ApplyBetweenCharacters(null, hero, amount, disableNotification: true)` — null source is safe when `disableNotification: true` (short-circuits the `giverHero == Hero.MainHero` check)
@@ -139,6 +163,7 @@ The `titleType` is sourced from `manager.CharacterCreationContent.SelectedTitleT
 
 ## Changelog
 
+- 2026-08-03 — The player gold grant is re-invoked after a multiplayer join hand-off, against the hero the join actually hands the player and with the character-creation culture (see [player-possession.md](player-possession.md)). Wiring only — no config, tuning or data change; the youth-option equipment is not re-applied.
 - 2026-07-03 — Retuned NPC-lord `gold` + clan `influence`: elves (rivendell/lothlorien/mirkwood) influence 1,000 → 1,250 (gold stays 600k); erebor 50k → 800k / 150 → 1,000; gondor 50k → 100k / 500 → 1,000; khuzait gold 50k → 75k; isengard/dolguldur 200k → 75k / 2,000 → 500; gundabad 200k → 75k / 2,000 → 1,000; umbar influence 500 → 1,000 (gold stays 200k). All `playerGold` values unchanged. Data-only edit to `startup_resources_config.xml`.
 - 2026-06-30 — Rebalanced `playerGold` downward across all cultures: Elves (rivendell/lothlorien/mirkwood) 4,000, erebor 3,500, every other culture 2,000 (previously 4,000–10,000). NPC `gold`/`influence` unchanged. Data-only edit to `startup_resources_config.xml`.
 - 2026-05-13 — Added `ParseGold`/`ParseInfluence` validation to the config provider (TryParse + range/finite checks, matching `ParsePlayerGold`); negative gold and NaN influence now revert with a warning instead of flowing through (closes #136).
