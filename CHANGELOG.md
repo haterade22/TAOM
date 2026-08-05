@@ -4,6 +4,24 @@
 
 ## 2026-08-05
 
+### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
+
+Second-round diet of the eager context load (round 1: 174 KB → 91 KB → 42 KB, July 2026).
+CLAUDE.md had regrown to 44,681 B — over its own 44,000 B warn threshold — and the always-load
+rules (48,794 B) had quietly become a bigger eager block than CLAUDE.md itself. This entry is
+built incrementally across the diet's commits (the July 18 pass shipped without one and its
+rationale nearly vanished).
+
+**Phase 0 — the warn threshold was hard-gating commits.** `lint_docs.py --fail-on-drift` failed
+on ANY budget finding, including `size-warn` — contrary to the `CLAUDE_MD_WARN_BYTES` constant's
+own "report-only early warning" comment. In practice 44,000 B, not 46,000 B, was the commit
+gate, and AGENTS.md (39,441 B) sat 559 B from tripping the same way. Warn findings now report
+without gating; only hard violations (size / table-row / prose-line) block. Also corrected the
+`check-doc-config-drift.sh` deny message, which still claimed a "60KB" cap (real: 46 KB).
+Measured before/after: rc=1 → rc=0 with the size-warn still printed. A prior audit's claim that
+CLAUDE.md L166 breaks the 400-char row cap was false — 400 chars exactly (408 *bytes*; the
+auditor counted bytes, em-dashes are 3 in UTF-8).
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one

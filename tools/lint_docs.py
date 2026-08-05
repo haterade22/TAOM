@@ -672,10 +672,13 @@ def main(argv: list[str]) -> int:
 
     if args.fail_on_dead and report.dead_links:
         return 1
+    # size-warn findings are report-only early warnings (per the WARN_BYTES constants);
+    # only hard violations (size / table-row / prose-line) gate the pre-commit hook.
+    gating_budget = [b for b in report.budget if b[2] != "size-warn"]
     if args.fail_on_drift and (
         report.config_drift
         or report.version_mismatches
-        or (CLAUDE_MD_BUDGET_ENFORCE and report.budget)
+        or (CLAUDE_MD_BUDGET_ENFORCE and gating_budget)
     ):
         return 1
     return 0

@@ -91,7 +91,7 @@ lines = [l for l in sys.stdin.read().splitlines() if l.strip()][:36]
 print(json.dumps(
     "[check-doc-config-drift] git commit BLOCKED: a documented config example / version "
     "marker drifted from the source of truth, or CLAUDE.md broke its eager-load budget "
-    "(60KB file / 400-char table rows / 600-char prose lines — CLAUDE.md is an index; move "
+    "(46KB file / 400-char table rows / 600-char prose lines — CLAUDE.md is an index; move "
     "detail to the linked doc). Sync the doc example to the shipped ModuleData config, the "
     "version marker to .claude/pinned-game-version.txt, or thin the CLAUDE.md row, then "
     "re-stage. Details: python tools/lint_docs.py\n\n" + "\n".join(lines)))
