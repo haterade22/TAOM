@@ -91,6 +91,20 @@ set" rule. Now mirrors `check-verification-evidence.sh`: `.changelog-reminded` o
 cleared when CHANGELOG becomes dirty/staged or the streak ends. Tested live: reminds once,
 silent on repeat, re-arms on revert.
 
+**Post-compaction rehydration pointed at 5-month-stale memory — root cause: a silently-ignored
+settings key.** `settings.json` set `"autoMemoryDirectory": ".claude/memory"`, but the key
+accepts ONLY absolute or `~/`-prefixed paths (doc-verified: code.claude.com settings + memory
+docs) — a relative value is silently ignored and the harness uses the default
+`~/.claude/projects/e--repos-TAOM/memory/`. So the live memory accrued at the default path while
+the tracked `.claude/memory/` copy froze in March, and `post-compact.sh` told every
+post-compaction session to rehydrate from the frozen copy. Fixed three ways: the invalid key
+removed; `post-compact.sh` now derives the live path (slug derivation + basename fallback,
+fail-open) — live test resolves the real 58-line index; the tracked copy deleted after verifying
+all six of its facts exist in live memory or repo rules (the live `user-profile.md` even carries
+a `<!-- source: user_profile.md -->` ingest marker from the June reorg). Fact table updated in
+`harness-facts.md` FIRST per its own §1 rule. `/security-scan` clean at HIGH+ after the settings
+edit (1 pre-existing MED: unpinned `npx -y` filesystem MCP).
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one

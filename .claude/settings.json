@@ -199,6 +199,5 @@
     "playwright@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "codex@openai-codex": true
-  },
-  "autoMemoryDirectory": ".claude/memory"
+  }
 }
