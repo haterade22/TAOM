@@ -4,6 +4,21 @@
 
 ## 2026-08-05
 
+### chore(repo): leftover sweep — executed
+
+A 15-agent verified sweep (7 finder modalities, adversarial verification per finding, completeness
+critic) found 90 leftovers; the confirmed set is executed in the commits that follow. This entry
+is built incrementally per commit.
+
+**RuntimeDataCache untracked and removed (5.1 GB).** 116 engine-generated `.rdc`/`.rdc.rtemp`
+files (18 of them interrupted-write temp files, one 67 MB) had been committed by a game→repo sync
+(last touch 2026-07-07). Bannerlord regenerates the cache in the game module folder; nothing in
+the build references the repo copy (grep over build.ps1/csproj/props: zero hits). Removed from
+index and disk; `Main/_Module/RuntimeDataCache/` gitignored. The `__pycache__`/`*.pyc` ignore
+also went repo-global (was tools/-scoped) and `.taom-src/` is now ignored (the live cache is
+`~/.taom-src/`). The `.git` store still holds the historical blobs (~3.2 GiB) — reclaiming that
+needs a history rewrite, deliberately not done.
+
 ### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
 
 Second-round diet of the eager context load (round 1: 174 KB → 91 KB → 42 KB, July 2026).

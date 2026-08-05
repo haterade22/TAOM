@@ -106,9 +106,17 @@ tools/node_modules/
 .codex-temp/
 .dotnet-cli-home/
 
-# Python bytecode caches (anywhere under tools/)
-tools/**/__pycache__/
-tools/**/*.pyc
+# Python bytecode caches (anywhere in the repo)
+__pycache__/
+*.pyc
+
+# Engine-generated runtime cache — Bannerlord regenerates these in the game
+# module folder; 5.4 GB of .rdc got committed by a game->repo sync (untracked
+# + removed 2026-08-05, leftover sweep)
+Main/_Module/RuntimeDataCache/
+
+# taom-src decompile cache lives at ~/.taom-src/<version>/ — never in-repo
+.taom-src/
 
 # Audit-MeshRefs.ps1 report output (regenerated per run)
 tools/reports/
