@@ -357,6 +357,10 @@ except Exception as e:
     #   git:         HEURISTIC ~14 git-operation tools — mcp-server-git
     #   ilspy:       EXACT 4 — counted from server.py (decompile_assembly,
     #                list_types, generate_diagrammer, get_assembly_info)
+    #   taom-moduledata: EXACT 9 — counted 2026-08-05 from tools/taom_mcp_server.py
+    #                (grep -c "@mcp.tool")
+    #   imagine:     HEURISTIC ~5 — HTTP server (mcp.imagine.art); unauthenticated
+    #                sessions load no tools, so this is a when-authed estimate
     declare -A SERVER_TOOLS=(
         [serena]=25
         [github]=30
@@ -366,6 +370,8 @@ except Exception as e:
         [sequential-thinking]=1
         [context7]=2
         [playwright]=24
+        [taom-moduledata]=9
+        [imagine]=5
     )
     local total=0
     while IFS= read -r srv; do
@@ -395,6 +401,56 @@ except Exception as e:
     fi
 }
 
+scan_plugins() {
+    # Enabled plugins add their skill/command DESCRIPTIONS to the eager load,
+    # exactly like project skills — previously invisible to this scan (the
+    # 2026-07-12 baseline's biggest blind spot). Reads enabledPlugins from
+    # .claude/settings.json, then measures each plugin's commands/*.md +
+    # skills/*/SKILL.md frontmatter descriptions from the local plugin cache
+    # (~/.claude/plugins/cache/<marketplace>/<plugin>/<ver>/). HEURISTIC:
+    # description words * 1.3, same as project skills. Fail-open: a plugin
+    # missing from the cache is counted as unmeasured, never an error.
+    PLUGINS_COUNT=0
+    PLUGINS_SKILLS=0
+    PLUGINS_TOKENS=0
+    local settings="$REPO_ROOT/.claude/settings.json"
+    [[ ! -f "$settings" ]] && return
+    local cache="$HOME/.claude/plugins/cache"
+    local unmeasured=()
+    while IFS= read -r entry; do
+        entry="${entry%$'\r'}"   # Windows python prints \r\n on pipes
+        [[ -z "$entry" ]] && continue
+        PLUGINS_COUNT=$(( PLUGINS_COUNT + 1 ))
+        local pname="${entry%%@*}" market="${entry#*@}"
+        local pdir
+        pdir=$(find "$cache/$market/$pname" -maxdepth 1 -mindepth 1 -type d 2>/dev/null | head -1)
+        if [[ -z "$pdir" ]]; then
+            unmeasured+=("$entry")
+            continue
+        fi
+        local f words
+        while IFS= read -r f; do
+            [[ -z "$f" ]] && continue
+            PLUGINS_SKILLS=$(( PLUGINS_SKILLS + 1 ))
+            words=$(grep -m1 '^description:' "$f" 2>/dev/null | wc -w | tr -d ' ')
+            PLUGINS_TOKENS=$(( PLUGINS_TOKENS + words * 13 / 10 ))
+            [[ $VERBOSE -eq 1 ]] && printf "  plugin %-39s %s\n" "$pname" "$(basename "$f")"
+        done < <(find "$pdir/commands" -maxdepth 1 -name '*.md' 2>/dev/null; \
+                 find "$pdir/skills" -maxdepth 2 -name 'SKILL.md' 2>/dev/null)
+    done < <(python3 - "$settings" <<'PYEOF' 2>/dev/null
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+    for k, v in d.get("enabledPlugins", {}).items():
+        if v:
+            print(k)
+except Exception:
+    pass
+PYEOF
+)
+    [[ ${#unmeasured[@]} -gt 0 ]] && ISSUES+=("Plugins not in local cache (eager cost unmeasured): ${unmeasured[*]}")
+}
+
 # --- main ---
 
 ISSUES=()
@@ -414,6 +470,7 @@ scan_skills
 scan_rules
 scan_hooks
 scan_mcp
+scan_plugins
 scan_memory
 
 [[ $VERBOSE -eq 1 ]] && echo
@@ -421,23 +478,25 @@ scan_memory
 # EAGER total — what Claude Code actually loads at conversation start.
 # Counts: CLAUDE.md (full), agent FRONTMATTER only, skill FRONTMATTER only,
 # rules (full — most are conditional via paths: but counted at worst case),
-# MCP tool schemas + per-server overhead, MEMORY.md (capped to first ~25KB).
+# MCP tool schemas + per-server overhead, enabled-plugin skill/command
+# descriptions, MEMORY.md (capped to first ~25KB).
 # Excludes: skill bodies (lazy, on invocation), agent bodies (lazy, on Task spawn),
 # hook scripts (run by harness, never in model context), Claude Code's own system
 # prompt boilerplate (~3-5K, fixed per-version).
-TOTAL=$(( CLAUDE_TOKENS + AGENTS_TOKENS + SKILLS_TOKENS + RULES_TOKENS + MCP_TOKENS + MEMORY_TOKENS ))
+TOTAL=$(( CLAUDE_TOKENS + AGENTS_TOKENS + SKILLS_TOKENS + RULES_TOKENS + MCP_TOKENS + PLUGINS_TOKENS + MEMORY_TOKENS ))
 
 # LAZY total — eager + worst-case if every skill and agent were invoked.
 LAZY_DELTA=$(( (SKILLS_LAZY_TOKENS - SKILLS_TOKENS) + (AGENTS_LAZY_TOKENS - AGENTS_TOKENS) ))
 WORST_CASE=$(( TOTAL + LAZY_DELTA ))
 
-# Opus 4.7 with 1M context window per CLAUDE.md notes
+# 1M-class window assumed; session models vary (the label no longer names one —
+# the pre-2026-08-05 script claimed "Opus 4.7" regardless of the actual model).
 WINDOW=1000000
 HEADROOM=$(( WINDOW - TOTAL ))
 PCT_USED=$(( TOTAL * 100 / WINDOW ))
 
 cat <<EOF
-Context model:                    Claude Opus 4.7 (1M window)
+Context model:                    session model (1M-class window assumed)
 Eager (startup) baseline:         ~${TOTAL} tokens
 Effective available:              ~${HEADROOM} tokens (~$(( 100 - PCT_USED ))% headroom)
 Baseline as % of window:          ${PCT_USED}%
@@ -453,6 +512,7 @@ printf "| %-16s | %6d | %9d | %12d |\n" "Agents"        "$AGENTS_COUNT"      "$A
 printf "| %-16s | %6d | %9d | %12d |\n" "Skills"        "$SKILLS_COUNT"      "$SKILLS_TOKENS" "$SKILLS_LAZY_TOKENS"
 printf "| %-16s | %6d | %9d | %12d |\n" "Rules"         "$RULES_COUNT"       "$RULES_TOKENS" "$RULES_COND_TOKENS"
 printf "| %-16s | %6d | %9d | %12s |\n" "MCP servers"   "$MCP_SERVERS"       "$MCP_TOKENS" "—"
+printf "| %-16s | %6d | %9d | %12s |\n" "Plugins"       "$PLUGINS_COUNT"     "$PLUGINS_TOKENS" "—"
 printf "| %-16s | %6d | %9d | %12s |\n" "MEMORY.md"     1                    "$MEMORY_TOKENS" "—"
 printf "| %-16s | %6d | %9s | %12s |\n" "Hooks (.sh)"   "$HOOKS_COUNT"       "(not in ctx)" "—"
 echo "+------------------+--------+-----------+--------------+"

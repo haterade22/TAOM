@@ -123,6 +123,14 @@ delete-install-PNGs / duplicate-key-crash fact existed nowhere else. Recovered i
 old-repo-path `cp` rule, and the orphaned claude-code-templates marketplace directory grant.
 `/security-scan` clean at HIGH+ after both settings edits.
 
+**context-budget scan.sh: plugins were invisible; the MCP table was stale.** New `scan_plugins()`
+reads `enabledPlugins` and measures each plugin's command/skill descriptions from the local
+plugin cache (7 plugins, ~259 tok — previously uncounted; a trailing-`\r` from Windows python on
+pipes initially broke every cache lookup). `SERVER_TOOLS` gains `taom-moduledata` (EXACT 9,
+counted from `taom_mcp_server.py`) and `imagine` (HEURISTIC ~5, when-authed). The report header
+no longer hardcodes "Claude Opus 4.7" as the context model. The memory locator needed no fix —
+the July audit's failure prediction assumed the fallback path; the derived slug hits directly.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
