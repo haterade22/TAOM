@@ -290,6 +290,7 @@ answer is conclusive and fails open in every path.
 | `taom.print_battle_scene` | A | campaign | Which battle terrain a fight here loads. **Zero candidates is the money output** — the stale-scene-ref class an engine bump introduces silently |
 | `taom.audit_settlement_entrances` | A | campaign | Nothing — an unreachable settlement entrance never crashes and never logs, it only makes AI parties fail their path query every tick. Three were caught in the field solely because the testers had written their own pathfinding instrumentation. See below |
 | `taom.print_mission_scene` | A | mission | Scene name + player/camera position |
+| `taom.print_hud_layout [maxNodes]` | A | cheat mode | Widget-tree dump of the top screen with real on-screen rectangles (`Logs/taom_hud_layout.log`, bounded, collapsed-tree warning). Ported from the career-UX reference module's diagnostic, whose dumps found three UI bugs code reading did not (#384) |
 | `taom.print_agent_info [name\|*]` | A | mission | Race, monster, action set, skeleton, mount/rider, spawn equipment. Pairs with `spawn_troops` |
 | `taom.spawn_troops <id> <n> [enemy\|ally]` | B | mission | Composing a specific fight. **Vanilla ships no mission spawn at all** |
 | `taom.damage_agent <amount> [name]` | B | mission | HP attrition and death thresholds. **Cannot test shrug-off / unstoppable** — a synthetic blow bypasses the hit path those models run on |
