@@ -347,6 +347,79 @@ PRESENT, well-formed entity producing a silent AI wedge.
   `Main/_Module/ModuleData/settlements.xml`.
 - **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 31405eb1
 
+### A culture that owns no settlement is a latent CTD, not a cosmetic gap
+
+`HeroSpawnCampaignBehavior.SpawnLordParty` (v1.4.7, lines 252-260) ends its spawn-settlement fallback
+chain on `Settlement.All.First(x => x.Culture == hero.Culture)` — an unguarded `First`, not
+`FirstOrDefault`. Reaching it needs two independent faults at once: the hero's map faction has no
+`InitialHomeSettlement` (`GetBestSettlementToSpawnAround` weights own-faction settlements 10,000×
+higher, so the mismatch branch above only fires for a landless faction), **and** the hero's culture
+owns zero settlements. TAOM supplies the second fault at scale: `TAOM_Map/ModuleData/settlements.xslt`
+deletes all 494 vanilla settlements and TAOM_Map's 988 replacements cover 27 of the 38 defined
+cultures. Of the 11 landless cultures, five can sit on an `Occupation.Lord` hero — `battania` (TAOM's
+Variag), `darshi`, `nord`, `vakken`, `neutral_culture`; the six bandit cultures are landless but
+unreachable, because `GetBestAvailableCommander` filters on `Occupation.Lord` and bandit heroes are
+`Occupation.Bandit`.
+- **Why missed:** nothing fails at load, at validation, or for weeks of play — crash bundle
+  `099f650c` is Summer 2 / 1084, past 90 in-game days. When it does fire it arrives from
+  `CampaignEvents.DailyTickClan` with **no TAOM frame in the stack** (the bundle's own Harmony
+  correlation shows no patch, TAOM's or any other mod's, on frames 0-11), so it reads as an engine or
+  third-party bug rather than a TAOM data defect. The landless culture is not the whole cause either
+  — it is one of two halves, and the other half (a faction with no `InitialHomeSettlement`) is
+  contributed by a runtime clan-creating mod, which is why the same data sat harmless in every
+  campaign that did not run one.
+- **Prevent:** `tools/taom_schema.py` `_landless_cultures()` (pass 4b) now ERRORs `LANDLESS_CULTURE`
+  for any culture used by an `occupation="Lord"` NPCCharacter, a `<Faction>` or a `<Kingdom>` in
+  TAOM's ModuleData that owns no settlement. Treat "which settlements carry `culture="Culture.X"`?"
+  as an authoring gate for every culture with lords, not a cosmetic question. The engine-side
+  backstop is `Patch65_LandlessCultureSpawnGuard`, which repairs the *other* half of the
+  precondition — data validation cannot cover a faction that a third-party mod creates at runtime.
+- **Source:** #374 + [lord-spawn-guard.md](../../features/lord-spawn-guard.md) (crash bundle
+  `099f650c`, 2026-08-04)
+
+### A culture can be fully authored and still own nothing — "it validates" is not "it is usable"
+
+TAOM's `battania` is the Variag/Khand culture: `{=TAOM_battania_culture}Variag`, a 7,297-char template
+in `spcultures.xslt`, 26 `notable_templates`, 68 `NPCCharacter.*_khand` bindings that ALL resolve
+against the full `NPCCharacter` registry, a kingdom, `clan_battania_1`..`_8`, `wolfskins`, plus 41 surviving
+vanilla `Lord` characters and 18 TAOM-authored ones. It owned **zero settlements**: all 27 K-series
+settlements carried `Culture.khuzait` (Easterlings) while Variag clans held ten of them, so Khand
+produced Easterling notables, volunteer pools, guards and marketplace stock. Retagging 26 of them to
+`Culture.battania` then activated bindings that had been dormant precisely *because* nothing carried
+the culture — `basic_troop` was still vanilla `battanian_volunteer`, an id TAOM redefines nowhere, so
+Sturlurtsa Khand would have garrisoned Calradian Battanian militia (fixed by repointing the five
+militia/basic bindings + `default_party_template` at the Rhun roster those settlements already
+produced).
+- **Why missed:** every per-file check passes. `validate_moduledata` proves the 68 refs resolve; no
+  check asks whether the culture is ever instantiated. `CultureConversion` could not repair it either
+  — `CultureConversionService.RunDailyChecks` drains only records already in the store, and the store
+  is seeded exclusively by `OnSettlementConquered`, so a settlement whose culture never matched its
+  owner *from day 1* is never enqueued (the crash log confirms it: 90+ days, zero conversion lines).
+  A `[CultureMarketplace] town_K1 (battania)` debug line read as proof conversion had already run;
+  `TownRosterAdapter.GetCurrentCultureId` returns `settlement?.OwnerClan?.Culture?.StringId` — the
+  OWNER's culture, not the settlement's. The diagnostic's label names a different field than its name
+  implies.
+- **Prevent:** the acceptance question for an authored culture is which settlements carry it, not
+  whether its refs resolve. When a culture goes from 0 settlements to N, re-audit every element the
+  clone left at vanilla values BEFORE shipping the retag — this is the deferred-detonation form of
+  "A culture block cloned from vanilla ships vanilla CONTENT in every element nobody re-authored"
+  above, where the vanilla leftovers stayed invisible for years because no settlement ever asked for
+  them. Retag with an explicit id allowlist, never a prefix sweep: `castle_K4` is a genuine Easterling
+  holding inside the K-series and a `town_K*`/`castle_K*` sweep would have taken it
+  (`tools/oneoff/retag_khand_to_variag.py` — dry-run default, asserts the current culture before
+  writing, idempotent).
+- **Source:** #374 + [lord-spawn-guard.md](../../features/lord-spawn-guard.md)
+
+---
+
+---
+
+### Derive a settlement id set from the relationship graph, never from an id-prefix convention
+Migrating or retagging a settlement cluster (culture change, rebellion, map expansion) must enumerate its members from `<Village bound="Settlement.X">` / `owner=` — the actual graph — not from a naming convention like `village_K*`. TAOM's map uses TWO village naming schemes: `village_KN_M` hangs off town `town_KN`, and `castle_village_KN_M` hangs off castle `castle_KN`. A prefix-derived set silently drops the second family.
+- **Why missed:** the Khand retag (#374, 2026-08-04) enumerated 26 ids from the `village_K*` convention and missed 18 `castle_village_K*`, splitting every Khand fief group across two cultures — a Variag castle whose villages spawn Easterling headmen (`NotablesCampaignBehavior` -> `settlement.Culture.NotableTemplates`) and draw the Easterling villager party template. Nothing enforced the village-culture ↔ bound-parent-culture relationship, so nothing complained. This is the shape the "you have verified a coincidence with good hygiene, not an invariant" entry above warns about: the property held 607/607 across the whole map purely by authoring discipline.
+- **Prevent:** parse the settlement graph (`./Components/Village[@bound]` — it is nested under `<Components>`, NOT a direct child of `<Settlement>`, which is its own trap) and derive the id set from it. Then run a pre/post audit asserting village culture == bound-parent culture across ALL 607 bound villages; it takes ten lines and it is what proved both the break and the fix. Land the invariant as a `validate_moduledata.py` check in the same PR so the next retag cannot reintroduce it.
+- **Source:** `docs/reviews/rca-landless-culture-spawn-2026-08-04.md` (deep-review M1, 2026-08-04)
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

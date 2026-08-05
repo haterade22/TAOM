@@ -97,6 +97,7 @@
 ### Faction, kingdom, & diplomacy
 - [diplomacy](features/diplomacy.md) — TaomDiplomacyModel for LOTR faction relationships
 - [kingdom-creation](features/kingdom-creation.md) — TAOM kingdom + clan + lord authoring
+- [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick
 - [faction-map](features/faction-map.md) — campaign map faction rendering
 - [minor-factions](features/minor-factions.md) — minor factions catalog + rules
 - [alignment-aware-execution](features/alignment-aware-execution.md) — race/alignment-aware execution penalties

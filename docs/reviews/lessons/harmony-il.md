@@ -235,6 +235,52 @@ mission can and cannot do from the initializer alone will be wrong by a factor o
   same premise — convergence is only evidence when the paths were independent.
 - **Source:** `docs/reviews/investigation-dunland-tournament-ctd-2026-08-02.md`
 
+### Guard a vanilla crash by REPAIRING ITS PRECONDITION, not by reimplementing the method
+
+`HeroSpawnCampaignBehavior.SpawnLordParty` throws `InvalidOperationException` at an unguarded
+`Settlement.All.First(x => x.Culture == hero.Culture)` — reached only when the hero's faction has no
+`InitialHomeSettlement`. The obvious guard is a prefix returning `false` that computes the spawn
+settlement itself, and it would have had to carry the spawn position, the `isNewGame` roster fill and
+`GiveInitialItemsToParty` forward by hand, then track them across every engine bump.
+Patch65_LandlessCultureSpawnGuard's prefix instead gives the faction an `InitialHomeSettlement` so
+vanilla takes the branch **above** the throwing line: every downstream side effect stays vanilla and
+the patch owns exactly one property write. The repair also persists — `Clan.InitialHomeSettlement` is
+`[SaveableProperty(114)]`, so it is one write per broken faction on existing saves, not a per-tick
+patch-up. (`Clan.SetInitialHomeSettlement` is public; `Kingdom.InitialHomeSettlement` has a private
+setter reached through a statically-cached `AccessTools.PropertySetter`, never per call.)
+- **Why missed:** "vanilla throws on line N" routes by reflex to skip-original — the most expensive
+  and most drift-prone shape, and the one whose full cost the sibling entry "When a Prefix returns
+  false, decompile the FULL call chain and replicate every safety gate" exists to police. The cheaper
+  question is which *input* put vanilla on the throwing branch, and whether a patch can supply it.
+- **Prevent:** before writing a skip-original prefix, read the lines ABOVE the throw for a branch
+  vanilla would rather have taken and ask what state would make it take it. Order the anchor search
+  deterministically with no RNG (`hero.HomeSettlement` → `hero.BornSettlement` → clan leader's
+  settlement → nearest non-hostile → nearest of any allegiance, lazily evaluated), and order the
+  guard's gates by cost with a test pinning the order — `FactionHasInitialHomeSettlement` is one
+  property read and clears every healthy faction, while the culture check walks all 988 settlements.
+- **Source:** #374 + [lord-spawn-guard.md](../../features/lord-spawn-guard.md) +
+  `docs/reference/harmony-patch-registry.md` § Patch65_LandlessCultureSpawnGuard
+
+### Scope a backstop finalizer to the exception it was written for, and make it say what it suppressed
+
+A finalizer that swallows broadly and silently converts a crash into an invisible bug — the game
+keeps running and the defect now reports as "a lord never showed up", six months later, on a machine
+you cannot reach. Patch65's finalizer sits under the prefix as a backstop and does three things
+deliberately: it catches `InvalidOperationException` ONLY (everything else propagates untouched), it
+nulls `__result` only because `ConsiderSpawningLordParties` already null-checks before
+`GiveInitialItemsToParty` so the lord simply raises no party that day, and it names the hero it
+suppressed for once per hero rather than swallowing quietly.
+- **Why missed:** the swallow is written to keep the game booting and the log line feels like noise at
+  the moment you type it, so it gets dropped — the same failure the sibling entry "A sequence of
+  unguarded `PatchCategory` calls fails as a group" documents from the other direction. The narrowing
+  is skipped for the same reason: a bare `catch` is shorter, and it looks identical to a scoped one
+  right up until it eats an unrelated fault.
+- **Prevent:** three questions before shipping any backstop finalizer — which exception TYPE is this
+  written for (catch that, rethrow the rest); what does the caller do with the neutralized result
+  (read the caller, and record the answer in the code comment); and what does the log say when it
+  fires (name the subject, once per subject, not per tick).
+- **Source:** #374 + [lord-spawn-guard.md](../../features/lord-spawn-guard.md)
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

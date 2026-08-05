@@ -4,57 +4,45 @@
 
 ## 2026-08-04
 
-### feat(enlistment): service content, duties, equipment + battlefield promotions (#375, #376)
+### feat(validate): the mesh validator can now ask which packaged art has no item
 
-Checkpoint 2 turns the enlistment shell into a playable service term and lands the
-FieldCommission port beside it.
+Players reported that not all the Gondor helmets are in the game — specifically that they cannot
+buy them. The obvious suspect was an XML gap: helmet meshes shipped in `LOTRLOME_Armory`'s asset
+packages with no matching `<Item>` entry. `validate_mesh_refs.py` could not answer that, because
+all three of its tiers ask the same direction — *does every referenced mesh exist?* — and the
+question here is the reverse.
 
-**Service content.** A day of service now advances a day counter, pays a wage, trains you,
-and can promote you. Wages come out of the commander's own purse when he can afford it —
-below a solvency floor the pay defers into capped arrears that clear when the column is
-flush again, and an honorable discharge settles what's still owed while desertion forfeits
-it. The donor minted every coin from nothing at ten call sites. Promotion is evaluated at
-exactly two points (daily tick, battle end) through one shared chokepoint rather than the
-donor's twelve, and rank/assignment/trust/reputation/arrears persist in their own SyncData
-section so a corrupt content record costs progression, never the service state itself.
+`--unreferenced` runs that reverse pass over the Tier B present-set, with `--prefix` to narrow the
+candidate side to one culture. It emits `UNREFERENCED_MESH` at INFO, so the exit code is unchanged
+and the mode can't turn an audit into a red build. Two details are load-bearing rather than
+cosmetic. `_slim` female body variants are suppressed when their base mesh is referenced — the
+engine resolves them by appending the suffix, so they never appear in item XML, and without the
+suppression the Gondor set alone reports 100 false positives. And matching is case-insensitive
+here, unlike Tier B's exact lookup: in this direction casing drift should make a mesh look
+referenced, never manufacture an orphan.
 
-**Duties.** Thirteen field duties collapse onto five mechanics — hunt a spawned band, carry
-a message, deliver food, forage, stand a watch — with all thirteen flavors, eleven
-interactive skill-check duties and three camp incidents living in
-`ModuleData/enlistment/enlistment_duties.json` behind a validator that skips a malformed row
-with a warning instead of silently taking a default branch. An hourly-cached army-rhythm
-snapshot decides what the column needs; the donor recomputed it from two full party sweeps
-at eleven call sites.
+The audit falsified the hypothesis. Gondor is **0 orphans of 418 packaged meshes** — 318
+referenced, 100 `_slim` — and no Gondor item references a mesh that isn't packaged, across all
+five armor slots. Helmets are 109 meshes to 109 references, exactly 1:1. There are 0 duplicate
+item ids among the 3297 armory items, every item is `is_merchandise="true"`, and the six
+`gondor/` files all load via the directory-path `XmlNode`.
 
-**Equipment from our own armoury.** 68 authored rosters (16 cultures × 4 ranks, plus a
-culture-neutral fallback set) seeded from each culture's own troop tree by
-`tools/generate_enlistment_rosters.py`, so a dwarf draws dwarf kit and no one is handed
-Calradian gear. Drawn once per rank from the quartermaster into your baggage.
+The real cause is reachability, not data. `CultureMarketplace` injects 6 items per town per day
+from a flat pool holding the whole Gondor catalogue, so any one specific helmet is roughly a 1%
+daily chance in a given town — the "probabilistic design vs deterministic expectation" gap that
+feature's own RCA already named. Levers exist (`min_stock` routing, a weight boost) and none were
+pulled; this pass is report-only.
 
-**Battlefield promotions (#376).** A troop that earns its keep in a fair fight can be raised
-into a named companion. Eight donor bugs fixed on the way in — merit is now spent only when
-the promotion actually happens (declining, quitting or a full retinue no longer burns it),
-the rename box is pre-filled again, foreign map events can't wipe your battle tracking, and
-`Clan.Heroes` is never mutated raw. New gates: a race allow-list, a companion cap that
-defers rather than discards the offer, level-budgeted skills instead of a verbatim copy that
-produced instant elites, and full suppression while enlisted (the donor's fairness ratio
-inverted to always-on inside a lord's army).
+Armory-wide the same scan finds 549 unreferenced meshes, none of them Gondor armor. 276 are
+`clo_*` cloth variants (201 with an item-referenced base, so likely a naming convention like
+`_slim` — unconfirmed, do not act on it yet) and 69 are `sm_*` crafting pieces, including the
+Gondor poleaxe that was deliberately removed after it crashed new-campaign load. Also corrected
+`armory-guide.md`, which listed 5 of the 17 Gondor region prefixes. +13 tests (33 → 46).
 
-Also fixes three leader-keyed attribution bugs found by a repo-wide audit: an enlisted
-player's sieges now count toward the War of the Ring victory gate, and commander-party
-captures credit the player's career quests.
+Audit: `docs/reviews/audit-gondor-armory-2026-08-04.md`.
 
-394 Enlistment + 111 FieldCommission tests; full suite 5415 green; ModuleData validation
-clean. Deep-review findings (9, all fixed in-session):
-`docs/reviews/rca-enlistment-content-2026-08-05.md`.
-
-Research: MobileParty.SetMovePatrolAroundSettlement/NavigationType (nested enum),
-BanditPartyComponent.CreateLooterParty, HeroDeveloper, TextInquiryData, CampaignEvents
-prisoner events (installed 1.4.7 via taom-src)
-Not-tested: in-game duty spawn/completion loop, equipment visuals, promotion popups
-Save-compat: new `_taom_enlistment_content` + `_taom_fc_*` SyncData sections; absent keys
-load as a fresh record. Known limitation: the equipment issue-ledger is in-memory, so a
-full game restart re-allows one draw per rank.
+Not-tested: the marketplace explanation is read from source and config, not from a live session —
+the confirming evidence is the `[CultureMarketplace] gondor: N items` boot log line.
 
 ### feat(enlistment): core service loop for serving in a lord's party (#375, checkpoint 1 of N)
 
@@ -88,6 +76,100 @@ PlayerEncounter, MobileParty, CampaignEvents (installed 1.4.7 via taom-src)
 Not-tested: Harmony patch invocation + wait-menu rendering (requires live game)
 Save-compat: New feature — primitive-dict SyncData under `_taom_enlistment`, versioned, no
 SaveableTypeDefiner; absent keys load as not-enlisted.
+
+### feat(validate): dwarves can no longer be authored as cavalry
+
+The ask was to check the lords XML and make every dwarven lord Infantry or Ranged. The audit says
+they already are: all 36 Erebor lords are `default_group="Infantry"`, none of their equipment
+rosters carries a mount, `lords.xslt` never touches a dwarf, and across every installed module all
+185 `race="dwarf"` characters come out Infantry or Ranged. Nothing to fix — so the work became
+making it stay that way.
+
+`MOUNTED_DWARF` fires on a dwarf tagged `Cavalry`/`HorseArcher`, and on a dwarf who can reach a
+`slot="Horse"` item through their own inline roster or a standalone roster they name. Both halves
+are load-bearing, which decompiling v1.4.7 settled: `CharacterObject.GetFormationClass()` overrides
+the base and, when `IsHero`, ignores `default_group` entirely — it reads `BattleEquipment` and
+returns Cavalry for any `HasHorseComponent` item in the Horse slot. So `default_group="Infantry"` on
+a lord holding a horse buys nothing, and an enum-only check would have waved him through. For a
+troop the enum *is* the formation, and for a hero it still drives the party-screen icon, so both
+remain worth checking.
+
+This is the data-layer half of an invariant TAOM already enforced at runtime in exactly one place:
+`Patch46_TournamentDwarfDismount` strips Horse and HorseHarness from dwarf tournament participants
+because the dwarf skeleton's rider bone is misaligned and a mounted dwarf spawns inside the horse
+mesh.
+
+Player character-creation and career-starter rosters are deliberately out of scope — no
+`NPCCharacter` references them, and all 12 custom cultures ship the same sumpter-horse template, so
+gating them would flag shared vanilla parity rather than a dwarf defect.
+
+Also dropped `"erebor"` from `HORSE_CULTURES` in `tools/fix_lord_cultures_and_mounts.py`. That
+script is already dead — it points `SPLORDS_XSLT` at a `splords.xslt` that does not exist and
+crashes in step 1 — but repairing it later would have injected `Item.charger` into the Erebor lord
+battle rosters and recreated the exact defect this check now blocks.
+
+Research: `CharacterObject.GetFormationClass`, `BasicCharacterObject.Deserialize`, `EquipmentIndex`
+Not-tested: nothing — the check is covered by 11 unit tests plus a seeded-defect control run
+
+### fix(campaign): a culture with no settlements crashed the daily clan tick
+
+Crash report `099f650c` — `InvalidOperationException: Sequence contains no matching element`, out
+of `Campaign.Tick`, with no TAOM patch anywhere on the stack. Vanilla
+`HeroSpawnCampaignBehavior.SpawnLordParty` ends with
+`Settlement.All.First(x => x.Culture == hero.Culture)` — a `First`, not a `FirstOrDefault` — reached
+whenever the hero's faction has no `InitialHomeSettlement`. That is safe in Calradia because every
+culture owns land. It is not safe here: `TAOM_Map/settlements.xslt` deletes every vanilla
+settlement, and the 988 replacements covered 27 of the 38 defined cultures.
+
+`Patch65_LandlessCultureSpawnGuard` repairs the precondition rather than reimplementing the method
+— it hands the faction a home settlement so vanilla takes the branch above the throwing line, and
+everything downstream stays vanilla. The anchor is picked deterministically (hero home → born
+settlement → clan leader's settlement → nearest non-hostile → nearest), and
+`Clan.InitialHomeSettlement` is a `[SaveableProperty]`, so it is one write per broken faction
+rather than a per-tick patch-up. An `InvalidOperationException`-only finalizer backstops anything
+that cannot be anchored; the caller already null-checks the result, so the lord raises no party
+that day instead of ending the campaign.
+
+The other half of the trigger is a faction with no initial home settlement, which a mod creates by
+calling `Clan.CreateClan` without `SetInitialHomeSettlement`. `Warlord` v1.1.6.1 is the only
+clan-creating mod in the reporter's load order, but it is not installed here and was never
+decompiled — that attribution is unconfirmed, and the guard does not depend on it. Issue #374.
+
+### fix(khand): the Variags owned the map's Khand and none of its culture
+
+`battania` is TAOM's **Variag** culture — 7.3 KB of culture XSLT, 26 notable templates, 68
+`*_khand` NPCCharacter bindings, a kingdom, 8 clans, 18 TAOM-authored lords. The settlements were never migrated
+with it. All 27 K-series settlements stayed `Culture.khuzait` while the Variag clans held ten of
+them, Sturlurtsa Khand included, so Khand produced Easterling notables, volunteers, guards and
+marketplace stock and the Variag culture owned nothing. `CultureConversion` could not repair it:
+its timers are seeded by `OnSettlementOwnerChangedEvent`, so a fief whose culture never matched its
+owner from day 1 is never enqueued — 90 in-game days in the crash log, zero conversion lines.
+
+26 settlements retagged (`castle_K4` is `clan_khuzait_1`'s and stays Easterling). That woke the
+Variag culture's troop bindings, which were still vanilla precisely because nothing had ever
+carried the culture — left alone it would have garrisoned Khand with Calradian
+`battanian_militia_*`, ids TAOM redefines nowhere. They now point at the Rhun roster, which is what
+those settlements produced before the retag. `CultureMap["battania"]` was added for the same
+reason: the volunteer cascade ends at the culture pool and the K-series has no per-settlement
+pools, so the retag would otherwise have silently dropped Khand's volunteers. It also makes Variag
+a valid conversion target for the first time — `HasCulturePool` gates that, and the test that
+documented the gap has been retired.
+
+Applies to EXISTING SAVES too, not just new campaigns. `Settlement.Culture` is a bare
+`public CultureObject Culture;` (v1.4.7 `Settlement.cs:70`) with no `[SaveableField]`, has no entry
+in `AutoGeneratedSaveManager`'s Settlement member set, and is re-read from XML on every load
+(`Settlement.cs:961`) — which is precisely why TAOM's CultureConversion has to re-apply converted
+cultures on load. Contrast `Hero.Culture`, also a bare public field, which DOES get an
+auto-generated accessor and so does persist. Every player loading a save after this update gets
+Variag Khand immediately.
+
+### feat(validate): the culture check that would have caught it before it shipped
+
+`LANDLESS_CULTURE` — every culture on a `Lord`-occupation character, a `<Faction>` or a `<Kingdom>`
+must own at least one settlement, or be listed in `_LANDLESS_BY_DESIGN` with a reason. The
+settlement registry honours an unconditional `<xsl:template match="Settlement"/>` strip, which is
+the part that matters: counting the vanilla settlements TAOM_Map deletes would have reported every
+culture as landed while the game crashed. 18 errors before the retag, PASS after.
 
 ## 2026-08-03
 

@@ -50,7 +50,15 @@ Symptom: "fighting battles near specific places crashes" / entering certain town
 When TAOM XSLT overrides a vanilla element (e.g. `<xsl:template match="Culture[@id='sturgia']">`), `<xsl:apply-templates select="@*"/>` preserves EVERY vanilla attribute except the ones explicitly overridden — and vanilla XML may bind attributes you don't realize exist, so your "passthrough" silently inherits them and your new TAOM templates become dead code.
 - **Why missed:** Codex Review #227 (Dale culture, 2026-05-26, P1) — Dale's XSLT set 9 military attributes but missed 6 others (`militia_party_template`, `rebels_party_template`, `vassal_reward_party_template`, `settlement_patrol_template_level_1/2/3`); vanilla `spcultures.xml` declares all 6 with sturgia-prefixed values, so passthrough preserved them and Dale's new `militia_dale_template` etc. became dead code. 5 prior `/deep-review` agents missed it because they checked "what we DID is correct" not "what we DIDN'T set, was that intentional." Repeat-offender risk: Rohan (vlandia) has the same gap — `militia_rohan_template` declared but not bound.
 - **Prevent:** Before authoring an XSLT culture override, decompile the engine deserializer (`taom-src path TaleWorlds.CampaignSystem.CultureObject`) and enumerate every attribute it reads; read the vanilla XML; for each engine-readable attribute explicitly classify BIND / PASSTHROUGH / N/A and code-comment the decision. Symptom in the wild: a new template/roster/NPC declared but grep finds zero consumers → likely dead because the XSLT binding is missing. Same pattern for heroes.xslt, spclans.xslt, spkingdoms.xslt, spnpccharacters.xslt.
-- **Source:** memory/feedback_xslt_passthrough_unintended_inheritance.md + feedback_enumerate_from_source_of_truth.md + .claude/rules/troops.md
+- **THIRD INSTANCE 2026-08-04 (Khand/battania, #374) — the trigger was too narrow.** This entry said "before *authoring* an XSLT culture override". The Khand work was framed as "point Khand's troops at the Rhun roster" — an *edit* to an existing template — so neither this rule nor `/new-culture` was consulted, and the same bug landed a third time (Dale → Rohan → Khand). It bound 6 attributes and let the passthrough inherit **7 more engine-read ones** on Calradian values: `elite_basic_troop`, `villager_party_template`, `militia_party_template`, `rebels_party_template`, `settlement_patrol_template_level_1/2/3`. **The BIND / PASSTHROUGH / N-A enumeration is required for ANY edit to a `Culture[@id=...]` template, including a one-attribute re-point.**
+- **Mechanical form (stop relying on judgement):** transform with lxml and diff the emitted element against a sibling already re-themed the same way — `ET.XSLT(...)(vanilla)`, then flag every attribute whose value still matches the vanilla culture id. That is a 10-line script and it found all 7 in one pass. Also check the deserializer before binding: `caravan_party_template` / `elite_caravan_party_template` look bindable but `CultureObject.Deserialize` (v1.4.7) reads only the plural child elements, so binding them is dead markup.
+- **Source:** memory/feedback_xslt_passthrough_unintended_inheritance.md + feedback_enumerate_from_source_of_truth.md + .claude/rules/troops.md; third instance `docs/reviews/rca-landless-culture-spawn-2026-08-04.md`
+
+### A grep over ModuleData that becomes a factual claim must be comment-aware
+XML comment spans are invisible to line-oriented greps. `SandBox/ModuleData/spclans.xml` contains three commented-out `<Faction>` blocks (`guardians`, `chosen_of_the_sky`, `freemen`); a raw-text regex finds 98 factions, an `ElementTree` parse finds 95 live ones. The commented three are the ONLY ones lacking `initial_home_settlement`, so a comment-blind grep produces the exact false claim "vanilla ships three clans without a home settlement" — which then propagated into a patch comment, a service comment, a feature doc, a patch-registry entry and an RCA before anyone parsed the file.
+- **Why missed:** the three commented entries are single-line while live factions are multi-line, so `grep -c '<Faction id='` returns a plausible-looking small number and reads as a discovery rather than an artifact.
+- **Prevent:** any grep over ModuleData whose result becomes a factual claim in a comment, doc, validator or commit message must be re-run with comment spans stripped, or via a parser. `tools/taom_schema.py:_read_stripped` is the reference implementation and exists for exactly this; one-off scripts and investigative greps are where it keeps getting skipped.
+- **Source:** `docs/reviews/rca-landless-culture-spawn-2026-08-04.md` (deep-review L5, 2026-08-04)
 
 ### After renaming any entity, grep ALL of ModuleData for the OLD name
 When renaming a TAOM entity (NPC, settlement, item, faction, kingdom), grepping only the defining file + structurally-linked files (heroes.xslt, lords.xslt, `Languages/**/std_*.xml`) is NOT enough. Human-authored lore/flavor text mentions characters by literal name and lives in `settlements.xml` `text="..."` blurbs, `taom_*_strings.xml`, quest/dialog/`cs_*.xml` narratives, etc., and goes stale silently (and player-visibly).
@@ -99,6 +107,47 @@ When building a matcher for prefixed references (`Item.`, `NPCCharacter.`, `Cult
 - **Why missed:** `starter_cavalry_gondor_horse_armor_a` ("[Gondor] Riding Caparison") was hand-authored 2026-05-21 by copying stats — not the full attribute set — from an existing harness, shipped with `Not-tested:`, and stayed broken until a player bought one on 2026-07-29 (#364). The failure is invisible by construction: no error, no crash, and the career start *looks* correct in the character-creation preview. It was the only one of 86 harness ids missing the attribute, and also the only one missing `<Flags Civilian="true"/>` — a second silent gate (`:4042`, civilian mode only).
 - **Prevent:** `python tools/validate_moduledata.py` now emits `MISSING_HARNESS_FAMILY_TYPE` (harness with no `family_type`) and `HARNESS_FAMILY_MISMATCH` (a `Horse` + `HorseHarness` pair in one `EquipmentSet`/troop `EquipmentRoster` whose family types disagree) as ERRORs; the pre-commit gate blocks on them. When authoring any harness, copy a *complete* sibling block that uses the same mesh rather than transcribing stats — the mesh sibling also carries the right `mane_cover_type` and Civilian flag. Family types: 1 horse/warg/spider, 4 chariot, 10 elephant/mûmakil.
 - **Source:** #364 + [armory-guide.md](../../reference/armory-guide.md) "Harness rule" + [moduledata-validation.md](../../features/moduledata-validation.md)
+
+### An unconditional `<xsl:template match="X"/>` deletes a whole earlier contribution — model the strip or you reason about a world the game never builds
+
+`<game>/Modules/TAOM_Map/ModuleData/settlements.xslt` contains `<xsl:template match="Settlement"/>` —
+one empty template, no test, which DELETES every vanilla `<Settlement>` (494 of them). TAOM_Map's own
+988 replace them wholesale. Any tool reasoning about merged ModuleData must therefore walk the
+contributing modules in load order (`Native`, `SandBoxCore`, `SandBox`, `CustomBattle`, `TAOM_Map`)
+and RESET the accumulated set when a module strips everything before it. `build_settled_cultures`
+without that reset counts vanilla's 494 deleted settlements, reports every culture as landed, and
+prints PASS while the game crashes on a landless culture (`HeroSpawnCampaignBehavior.SpawnLordParty`
+— see [data-content-cultures.md](data-content-cultures.md)).
+- **Why missed:** an empty template is a single self-closing line that reads as a no-op, and the
+  deletion leaves no marker anywhere in the merged result — the "before" state is simply absent. Every
+  other XSLT lesson in this file is about a transform that changes an element; this one is about a
+  transform that makes 494 of them stop existing, which no amount of reading the OUTPUT will tell you
+  about.
+- **Prevent:** before writing any tool over merged ModuleData, grep the module's XSLT for empty-body
+  templates (`<xsl:template match="[^"]*"\s*/>`) and model each one explicitly in the merge. State the
+  merge semantics in the builder — append, replace, or strip-then-append — rather than assuming the
+  additive case.
+- **Source:** #374 (`tools/taom_schema.py` `build_settled_cultures`)
+
+### The attribute-exclusion trap: `@*[local-name() != 'x']` drops an inherited attribute the template may or may not restore
+
+`spclans.xslt` and `spkingdoms.xslt` copy attributes with `@*[local-name() != 'initial_home_settlement']`
+— dropping the inherited attribute — and then re-add it further down with `<xsl:attribute>`. Reading
+the vanilla XML alone therefore answers a question about the wrong document, and it is wrong in BOTH
+directions: a first pass that modelled the vanilla attribute reported 23 dangling
+`initial_home_settlement` refs including the whole `clan_battania_*` set; a second pass that ignored
+the exclusion filter reported zero. Neither number was real. This is the mirror of the passthrough
+lesson above — passthrough silently KEEPS what you didn't intend, exclusion silently DROPS what you
+assumed was kept.
+- **Why missed:** the exclusion is one predicate inside an `@*` select that reads as a passthrough at
+  a glance, and the `<xsl:attribute>` that restores it sits far enough down the template body that
+  neither half is visible from the other. Both wrong answers were internally consistent, so nothing
+  in either analysis contradicted itself.
+- **Prevent:** run the transform and read the attribute off the OUTPUT — the Variag culture check did
+  exactly this (lxml against vanilla `spcultures.xml`) and is the only step that produced a number
+  worth quoting. Before trusting any inherited attribute, grep the template for `local-name() !=` and
+  for a matching `<xsl:attribute name="…">`; presence of one without the other changes the answer.
+- **Source:** #374 investigation, 2026-08-04
 
 ---
 

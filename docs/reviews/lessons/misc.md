@@ -28,6 +28,15 @@ When CC/rendering breaks for one race, check XML config references before invest
 
 ---
 
+### A log line names the field its author intended, not the field its name suggests
+
+`[CultureMarketplace] town_K1 (battania)` was read as "the settlement's culture is battania" and sent the investigation down a wrong branch — it looked like proof that TAOM's culture conversion had already retagged the town, which would have ruled out the actual root cause. The line is fed by `ITownRosterAdapter.GetCurrentCultureId(Settlement)` → `settlement?.OwnerClan?.Culture?.StringId` — the **owner's** culture. Worse, `ICultureConversionAdapter.GetCurrentCultureId(string)` is a same-named method on a sibling adapter that returns the settlement's *own* culture, so reading either one in isolation confirms whichever reading you started with.
+- **Why missed:** the diagnostic was trusted at face value because its name (`GetCurrentCultureId`, printed next to a settlement id) matched the hypothesis under test. A same-named sibling with different semantics made the mistake self-confirming.
+- **Prevent:** read the getter before reasoning from a diagnostic — especially when that line is the *only* evidence contradicting a hypothesis. When two adapters expose the same method name, check which one the log call site actually holds.
+- **Source:** `docs/reviews/rca-landless-culture-spawn-2026-08-04.md` (#374, landless-culture CTD)
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

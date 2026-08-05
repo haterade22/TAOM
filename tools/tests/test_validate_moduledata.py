@@ -770,5 +770,296 @@ class BuildRegistriesTests(unittest.TestCase):
         self.assertNotIn("ghost_example", regs.cultures, "a commented-out def must not enter the registry")
 
 
+class LandlessCultureTests(unittest.TestCase):
+    """LANDLESS_CULTURE (crash 099f650c, 2026-08-04). Vanilla SpawnLordParty ends with an unguarded
+    Settlement.All.First(x => x.Culture == hero.Culture), so a Lord whose culture owns no settlement
+    CTDs the daily clan tick as soon as his faction has no InitialHomeSettlement. TAOM_Map deletes
+    every vanilla settlement, so 'every culture owns land' does not hold here."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.registries = ts.Registries(
+            items={"None"},
+            item_def_files={},
+            npccharacters=set(),
+            cultures={"gondor", "battania", "looters", "darshi"},
+            party_templates=set(),
+            settled_cultures={"gondor"},   # battania/looters/darshi own nothing
+        )
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _landless(self, registries=None):
+        issues = ts.Validator(self.md, self.schemas, registries or self.registries).run()
+        return [i for i in issues if i.code == "LANDLESS_CULTURE"]
+
+    def test_lord_in_landless_culture_is_reported(self):
+        _write(self.md / "characters" / "lords.xml",
+               '<?xml version="1.0"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="lord_5_1" occupation="Lord" culture="Culture.battania" />\n'
+               '</NPCCharacters>\n')
+        found = self._landless()
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].entry_id, "lord_5_1")
+        self.assertIn("battania", found[0].message)
+
+    def test_lord_in_landed_culture_is_clean(self):
+        _write(self.md / "characters" / "lords.xml",
+               '<?xml version="1.0"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="lord_1_1" occupation="Lord" culture="Culture.gondor" />\n'
+               '</NPCCharacters>\n')
+        self.assertEqual(self._landless(), [])
+
+    def test_clan_and_kingdom_in_landless_culture_are_reported(self):
+        _write(self.md / "characters" / "clans.xml",
+               '<?xml version="1.0"?>\n<Factions>\n'
+               '  <Faction id="clan_battania_1" culture="Culture.battania" />\n'
+               '</Factions>\n')
+        _write(self.md / "taom_spkingdoms.xml",
+               '<?xml version="1.0"?>\n<Kingdoms>\n'
+               '  <Kingdom id="battania" culture="Culture.battania" />\n'
+               '</Kingdoms>\n')
+        self.assertEqual(
+            sorted(i.entry_id for i in self._landless()), ["battania", "clan_battania_1"])
+
+    def test_non_lord_occupation_is_ignored(self):
+        # Bandit heroes never reach the throwing line: GetBestAvailableCommander filters on
+        # Occupation.Lord.
+        _write(self.md / "characters" / "bandits.xml",
+               '<?xml version="1.0"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="looter_boss" occupation="Bandit" culture="Culture.looters" />\n'
+               '  <NPCCharacter id="a_wanderer" occupation="Wanderer" culture="Culture.battania" />\n'
+               '</NPCCharacters>\n')
+        self.assertEqual(self._landless(), [])
+
+    def test_allowlisted_cultures_are_not_reported(self):
+        # darshi/looters are landless by design and listed in _LANDLESS_BY_DESIGN with reasons.
+        _write(self.md / "characters" / "minor.xml",
+               '<?xml version="1.0"?>\n<Factions>\n'
+               '  <Faction id="ghilman" culture="Culture.darshi" />\n'
+               '  <Faction id="looters" culture="Culture.looters" />\n'
+               '</Factions>\n')
+        self.assertEqual(self._landless(), [])
+
+    def test_check_skipped_when_settlement_registry_unavailable(self):
+        # Degraded mode (no game install): an empty settled_cultures must SKIP the check, not
+        # report every culture in TAOM as landless.
+        _write(self.md / "characters" / "lords.xml",
+               '<?xml version="1.0"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="lord_5_1" occupation="Lord" culture="Culture.battania" />\n'
+               '</NPCCharacters>\n')
+        degraded = ts.Registries(
+            items={"None"}, item_def_files={}, npccharacters=set(),
+            cultures={"battania"}, party_templates=set(), settled_cultures=set())
+        self.assertEqual(self._landless(degraded), [])
+
+
+class SettledCultureRegistryTests(unittest.TestCase):
+    """build_settled_cultures must model the world the GAME builds, not the union of every module's
+    settlements.xml. TAOM_Map ships `<xsl:template match="Settlement"/>`, which deletes all 494
+    vanilla settlements; a registry that ignored the strip would report every vanilla culture as
+    landed and print PASS while the game crashed."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.modules = Path(self._tmp.name) / "Modules"
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _write_module(self, name, cultures, strip=False):
+        md = self.modules / name / "ModuleData"
+        _write(md / "settlements.xml",
+               '<?xml version="1.0"?>\n<Settlements>\n' + "".join(
+                   f'  <Settlement id="s_{name}_{i}" culture="Culture.{c}" />\n'
+                   for i, c in enumerate(cultures)) + "</Settlements>\n")
+        if strip:
+            _write(md / "settlements.xslt",
+                   '<?xml version="1.0"?>\n'
+                   '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">\n'
+                   '  <xsl:template match="Settlement"/>\n'
+                   '</xsl:stylesheet>\n')
+
+    def test_unconditional_strip_discards_earlier_modules(self):
+        self._write_module("SandBox", ["battania", "khuzait", "sturgia"])
+        self._write_module("TAOM_Map", ["gondor", "mordor"], strip=True)
+        settled = ts.build_settled_cultures(self.modules)
+        self.assertEqual(settled, {"gondor", "mordor"})
+        self.assertNotIn("battania", settled,
+                         "vanilla settlements are deleted by TAOM_Map's strip - counting them is "
+                         "exactly the bug this registry exists to avoid")
+
+    def test_without_a_strip_modules_merge(self):
+        self._write_module("SandBox", ["battania"])
+        self._write_module("TAOM_Map", ["gondor"])
+        self.assertEqual(ts.build_settled_cultures(self.modules), {"battania", "gondor"})
+
+    def test_no_game_install_yields_empty_registry(self):
+        self.assertEqual(ts.build_settled_cultures(None), set())
+
+    def test_registry_is_wired_into_build_registries_and_floored(self):
+        md = Path(self._tmp.name) / "ModuleData"
+        _write(md / "taom_spcultures.xml",
+               '<?xml version="1.0"?>\n<SPCultures>\n  <Culture id="gondor" />\n</SPCultures>\n')
+        self._write_module("TAOM_Map", ["gondor", "mordor"], strip=True)
+        regs = ts.build_registries(md, self.modules)
+        self.assertEqual(regs.settled_cultures, {"gondor", "mordor"})
+        # Two entries is far below the floor: a broken source path must say so out loud rather
+        # than skipping the check and printing a clean PASS.
+        self.assertTrue(any("settled_cultures" in s for s in regs.suspect_registries))
+
+
+class MountedDwarfTests(unittest.TestCase):
+    """MOUNTED_DWARF. Dwarves use a custom, shorter skeleton whose rider bone is misaligned,
+    so a mounted dwarf spawns INSIDE the horse mesh. TAOM already strips the mount for dwarf
+    tournament participants (Patch46_TournamentDwarfDismount) — this is the data-layer half of
+    the same invariant: no dwarf is ever authored as cavalry, and none is handed a mount.
+
+    Both halves are needed. `default_group` and the Horse slot are independent knobs, so a lord
+    left as Infantry but given a horse in his roster still spawns mounted."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.registries = ts.Registries(
+            items={"None", "good_sword", "saddle_horse"},
+            item_def_files={},
+            npccharacters=set(),
+            cultures={"erebor", "vlandia"},
+            party_templates=set(),
+        )
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _mounted(self):
+        issues = ts.Validator(self.md, self.schemas, self.registries).run()
+        return [i for i in issues if i.code == "MOUNTED_DWARF"]
+
+    def _write_lord(self, group="Infantry", race="dwarf", body=""):
+        _write(self.md / "characters" / "lords.xml",
+               '<?xml version="1.0"?>\n<NPCCharacters>\n'
+               f'  <NPCCharacter id="lord_E1_1" race="{race}" occupation="Lord" '
+               f'culture="Culture.erebor" default_group="{group}">\n{body}'
+               '  </NPCCharacter>\n</NPCCharacters>\n')
+
+    # -- rule A: default_group ------------------------------------------- #
+    def test_dwarf_cavalry_is_reported(self):
+        self._write_lord(group="Cavalry")
+        found = self._mounted()
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].entry_id, "lord_E1_1")
+        self.assertEqual(found[0].severity, ts.Severity.ERROR)
+        self.assertIn("Cavalry", found[0].message)
+
+    def test_dwarf_horse_archer_is_reported(self):
+        self._write_lord(group="HorseArcher")
+        found = self._mounted()
+        self.assertEqual(len(found), 1)
+        self.assertIn("HorseArcher", found[0].message)
+
+    def test_dwarf_infantry_is_clean(self):
+        self._write_lord(group="Infantry")
+        self.assertEqual(self._mounted(), [])
+
+    def test_dwarf_ranged_is_clean(self):
+        self._write_lord(group="Ranged")
+        self.assertEqual(self._mounted(), [])
+
+    # -- rule B: a mount in reachable battle equipment --------------------- #
+    def test_dwarf_with_inline_horse_roster_is_reported(self):
+        # Troop shape: equipment sits directly inside the NPCCharacter.
+        self._write_lord(body=(
+            '    <Equipments>\n'
+            '      <EquipmentRoster>\n'
+            '        <Equipment slot="Horse" id="Item.saddle_horse" />\n'
+            '      </EquipmentRoster>\n'
+            '    </Equipments>\n'))
+        found = self._mounted()
+        self.assertEqual(len(found), 1)
+        self.assertIn("saddle_horse", found[0].message)
+
+    def test_dwarf_referencing_a_mounted_equipmentset_is_reported(self):
+        # Lord shape: the NPCCharacter names a standalone roster defined elsewhere.
+        self._write_lord(body=(
+            '    <Equipments>\n'
+            '      <EquipmentSet id="erebor_bat_a" />\n'
+            '    </Equipments>\n'))
+        _write(self.md / "equipmentsets" / "taom_equipment_sets_erebor.xml",
+               '<?xml version="1.0"?>\n<EquipmentRosters>\n'
+               '  <EquipmentRoster id="erebor_bat_a" culture="Culture.erebor">\n'
+               '    <EquipmentSet>\n'
+               '      <Equipment slot="Horse" id="Item.saddle_horse" />\n'
+               '    </EquipmentSet>\n'
+               '  </EquipmentRoster>\n</EquipmentRosters>\n')
+        found = self._mounted()
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].entry_id, "lord_E1_1")
+        self.assertIn("erebor_bat_a", found[0].message)
+
+    def test_dwarf_referencing_a_footed_equipmentset_is_clean(self):
+        self._write_lord(body=(
+            '    <Equipments>\n'
+            '      <EquipmentSet id="erebor_bat_a" />\n'
+            '    </Equipments>\n'))
+        _write(self.md / "equipmentsets" / "taom_equipment_sets_erebor.xml",
+               '<?xml version="1.0"?>\n<EquipmentRosters>\n'
+               '  <EquipmentRoster id="erebor_bat_a" culture="Culture.erebor">\n'
+               '    <EquipmentSet>\n'
+               '      <Equipment slot="Item0" id="Item.good_sword" />\n'
+               '    </EquipmentSet>\n'
+               '  </EquipmentRoster>\n</EquipmentRosters>\n')
+        self.assertEqual(self._mounted(), [])
+
+    # -- positive controls: the check must be dwarf-scoped ----------------- #
+    def test_non_dwarf_cavalry_with_a_horse_is_clean(self):
+        # Guards against a matcher that fires on everything. A broken scan that
+        # silently matches nothing is caught by the reported-cases above; this
+        # catches the opposite failure.
+        self._write_lord(group="Cavalry", race="human", body=(
+            '    <Equipments>\n'
+            '      <EquipmentRoster>\n'
+            '        <Equipment slot="Horse" id="Item.saddle_horse" />\n'
+            '      </EquipmentRoster>\n'
+            '    </Equipments>\n'))
+        self.assertEqual(self._mounted(), [])
+
+    def test_race_attribute_absent_defaults_to_human_and_is_clean(self):
+        # Omitting race= means human (the engine default), never dwarf.
+        _write(self.md / "characters" / "lords.xml",
+               '<?xml version="1.0"?>\n<NPCCharacters>\n'
+               '  <NPCCharacter id="lord_1_1" occupation="Lord" '
+               'culture="Culture.vlandia" default_group="Cavalry" />\n'
+               '</NPCCharacters>\n')
+        self.assertEqual(self._mounted(), [])
+
+    def test_lowercase_equipment_tag_is_still_caught(self):
+        # TAOM ships both <Equipment> and <equipment> spellings. A case-sensitive
+        # matcher reads one of them as "no horses at all" — the exact false-clean
+        # this check exists to prevent.
+        self._write_lord(body=(
+            '    <Equipments>\n'
+            '      <EquipmentRoster>\n'
+            '        <equipment slot="Horse" id="Item.saddle_horse" />\n'
+            '      </EquipmentRoster>\n'
+            '    </Equipments>\n'))
+        self.assertEqual(len(self._mounted()), 1)
+
+    def test_commented_out_horse_is_ignored(self):
+        self._write_lord(body=(
+            '    <Equipments>\n'
+            '      <EquipmentRoster>\n'
+            '        <!-- <Equipment slot="Horse" id="Item.saddle_horse" /> -->\n'
+            '      </EquipmentRoster>\n'
+            '    </Equipments>\n'))
+        self.assertEqual(self._mounted(), [])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

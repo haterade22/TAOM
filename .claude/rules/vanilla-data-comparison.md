@@ -18,7 +18,7 @@ TAOM ships many XML files that **mirror, extend, or transform vanilla Bannerlord
 
 **Rule:** before authoring or relying on any value that mirrors/references vanilla, diff it against the **currently installed** vanilla version. Don't trust that "it worked before" — the previous version may have had a name that no longer exists.
 
-**Two failure shapes the stale-name case doesn't cover**, both found on 2026-08-03 and both invisible to a per-value check: the data can be structurally illegal in a way one engine build tolerates and another refuses to boot on (see "`action_sets.xml`: the shape is part of the comparison, and so is the BUILD" below), and it can be perfectly well-formed yet unreachable relative to the rest of the data (see "Settlement entrances: a valid face can still be unreachable").
+**Three failure shapes the stale-name case doesn't cover**, all invisible to a per-value check: the data can be structurally illegal in a way one engine build tolerates and another refuses to boot on (see "`action_sets.xml`: the shape is part of the comparison, and so is the BUILD" below), it can be perfectly well-formed yet unreachable relative to the rest of the data (see "Settlement entrances: a valid face can still be unreachable"), and it can be complete and self-consistent yet orphaned relative to a *different module's* file (see "Authored data can be complete and still be orphaned"). The first two were found on 2026-08-03, the third on 2026-08-04.
 
 ## What to check, and how
 
@@ -28,6 +28,7 @@ TAOM ships many XML files that **mirror, extend, or transform vanilla Bannerlord
 | `sp_battle_scenes.xml` Scene ids / map_indices | vanilla `SandBox`/`NavalDLC` `sp_battle_scenes.xml` + SceneObj | `python tools/audit_battle_scenes.py` |
 | settlement entrance coordinates (`posX/posY`, `gate_posX/gate_posY`) | the navmesh island every OTHER settlement sits on — set-relative, not vanilla | `taom.audit_settlement_entrances` (needs a loaded campaign); see "Settlement entrances" below |
 | `action_sets.xml` — structure as much as content | vanilla `Native/ModuleData/action_sets.xml` (the engine field-merges same-id sets across modules) | `python tools/audit_action_set_parity.py` — **exits non-zero** on any root-level `<action>`; see "`action_sets.xml`" below |
+| a culture / kingdom / clan you authored in `Main/_Module/ModuleData/` | whether any settlement in `TAOM_Map` actually carries that culture | `python tools/validate_moduledata.py` — `LANDLESS_CULTURE` (ERROR); see "Authored data can be complete and still be orphaned" below |
 | any `scene_name=` that no longer resolves | — | `python tools/remap_stale_scene_names.py --dry-run` |
 | TaleWorlds API signatures | installed DLLs | `pwsh tools/taom-src.ps1 path <Type>` (NOT the decompiled dump) |
 | culture/clan/kingdom IDs | vanilla `SandBoxCore` XML | grep + `xml-data.md` ID table |
@@ -43,6 +44,7 @@ TAOM ships many XML files that **mirror, extend, or transform vanilla Bannerlord
 - **Before editing — or after a version bump touching — any TAOM GUI prefab that is a CLONE of a vanilla prefab** — diff it against installed vanilla first (see "GUI prefab clones" below). v1.4.5 silently broke every troop thumbnail this way (2026-05-31).
 - **Before committing any `action_sets.xml` edit** — run `audit_action_set_parity.py`. It now fails on a structural defect the client build loads without complaint and the dedicated-server build dies on (2026-08-03).
 - **When adding a settlement, or moving one's `posX/posY` or `gate_posX/gate_posY`** — a coordinate can be on-mesh and still unreachable. Only an island comparison finds that, and only in a loaded campaign.
+- **After authoring or re-theming a culture, kingdom or clan** — run `python tools/validate_moduledata.py` and read any `LANDLESS_CULTURE` error. A culture whose own files are all valid can still own nothing, because the settlements that would carry it live in a different module (2026-08-04, Khand).
 - **When diagnosing a "crash near a specific place" report** — it is almost always a stale data reference (scene, item, troop, culture), not an engine-internals bug. Audit the references first. The non-crashing variant of the same report — **AI parties wedging near a specific place, no log, no crash** — is the navmesh-island case below.
 
 ## GUI prefab clones go stale across versions
@@ -89,6 +91,18 @@ On 2026-08-03 the file carried 168 `<action>` elements parented directly by `<ac
 
 **Status (2026-08-03): the auditor ships; the corrected coordinates do not exist yet.** Producing them needs one in-game campaign run. When they exist they go into the LIVE `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` — the repo's `Main/_Module/ModuleData/settlements.xml` is a stale shadow, and edits there never reach the game.
 
+## Authored data can be complete and still be orphaned
+
+The shapes above are all *this file is wrong*. This one is *this file is right and nothing points at it*. TAOM's Variag culture (`battania`) is authored end-to-end in `Main/_Module/ModuleData/` — a 7,297-char `spcultures.xslt` template, 26 `notable_templates`, 68 `NPCCharacter.*_khand` bindings that all resolve, a kingdom, `clan_battania_1..8`, 18 TAOM-authored lords. Every id in it is valid. It owned **zero settlements**, because the settlement set does not live in that module: `TAOM_Map/ModuleData/settlements.xml` tagged all 27 K-series settlements `Culture.khuzait` (TAOM's Easterlings) while Variag clans owned ten of them. No per-file check can see that — each file is internally consistent; only the *pair* is wrong.
+
+It is not cosmetic. Khand produced Easterling notables, volunteer pools, guards and market stock, and the landless culture crashed the campaign: vanilla `HeroSpawnCampaignBehavior.SpawnLordParty` falls through to an unguarded `Settlement.All.First(x => x.Culture == hero.Culture)` for a hero whose faction also has no `InitialHomeSettlement` (crash `099f650c`, 2026-08-04). Fixed by retagging 26 of the 27 settlements in the LIVE `TAOM_Map` file — `castle_K4` is a genuine Easterling holding and stayed — plus a guard on the engine path. Write-up: `docs/features/lord-spawn-guard.md`, issue #374.
+
+**Detection:** `python tools/validate_moduledata.py`. The `LANDLESS_CULTURE` check (ERROR) fires when a culture used by an `occupation="Lord"` `NPCCharacter`, a `<Faction>` or a `<Kingdom>` in TAOM's ModuleData owns no settlement. Cultures that are landless by design — the six bandit cultures, `neutral_culture`, and the vanilla minor factions `darshi` / `nord` / `vakken` — are allowlisted in `_LANDLESS_BY_DESIGN` with a stated reason each.
+
+**Merge-order caveat: any cross-module check must replay the strip-XSLT.** `TAOM_Map/ModuleData/settlements.xslt` carries `<xsl:template match="Settlement"/>`, an unconditional empty template that deletes all 494 vanilla settlements before TAOM_Map's 988 load. A checker that simply unions every module's `settlements.xml` counts those deleted 494, concludes every culture is landed, and reports a clean run while the game crashes. `build_settled_cultures` in `tools/taom_schema.py` walks the contributing modules in load order (`Native`, `SandBoxCore`, `SandBox`, `CustomBattle`, `TAOM_Map`) and **resets** the accumulated set when a module strips everything before it.
+
+Generalize the question, not the check: when you author a culture, faction or kingdom in one module, ask which *other* module's file has to agree with it. Completeness within a file proves nothing about the pair.
+
 ## Why this rule exists
 
 2026-05-28 session: "fighting battles near specific places crashes" after the v1.3.15→v1.4.5 bump. Root causes were ALL stale-vs-vanilla references:
@@ -100,3 +114,5 @@ Full write-up: `docs/reference/scene-reference-audit.md`. Memory: `feedback_scen
 2026-05-31 session: the **GUI-prefab instance** of the same failure — every Party-screen troop thumbnail stuck on the loading spinner because TAOM's stale prefab clones bound the v1.4.5-renamed `ImageTypeCode` instead of `TextureProviderName`. Full write-up: `docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md`. Memory: `feedback_gui_prefab_clones_stale_across_versions.md`. (Prompted the "GUI prefab clones" section + `GUI/PreFabs` globs above.)
 
 2026-08-03 multiplayer field report: two shapes that are not name-staleness at all. `LOTRLOME_Armory`'s `action_sets.xml` carried 168 structurally illegal root-level `<action>` elements — loaded without complaint by the client build, fatal on boot for the dedicated-server build (commit `c9455ec8`). Three settlement entrances sat on unreachable navmesh islands while passing every per-face validity check, visible only because the reporters had written their own pathfinding instrumentation (commit `31405eb1`). Both were reached by comparing against something the file itself cannot show you — vanilla's nesting in the first case, the other settlements' island index in the second. Lessons: `docs/reviews/lessons/data-content-cultures.md`. (Prompted the two sections above + the `**/action_sets.xml` glob.)
+
+2026-08-04 campaign CTD `099f650c`: a third thing the file cannot show you — whether any *other* module points at it. TAOM's fully-authored Variag culture owned zero settlements because the Khand settlements sat in `TAOM_Map` under the Easterling culture id, and vanilla's unguarded `Settlement.All.First(x => x.Culture == hero.Culture)` threw on the daily clan tick. Mechanized as the `LANDLESS_CULTURE` validator check. Full write-up: `docs/features/lord-spawn-guard.md`, issue #374. (Prompted the "Authored data can be complete and still be orphaned" section above.)

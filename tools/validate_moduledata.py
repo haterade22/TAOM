@@ -25,6 +25,8 @@ Checks (each maps to a recurring TAOM bug class):
   BROKEN_BODY_PROPERTY_REF   face_key_template points at an undefined BodyProperty -> null face
   MISSING_HARNESS_FAMILY_TYPE  HorseHarness with no <Armor family_type> -> silently unequippable
   HARNESS_FAMILY_MISMATCH    Horse + HorseHarness in one set disagree on family type
+  MOUNTED_DWARF              race="dwarf" tagged Cavalry/HorseArcher, or handed a mount
+                             -> dwarf spawns inside the horse mesh (misaligned rider bone)
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]

@@ -72,6 +72,7 @@ class Registries:
     harness_family_types: dict = field(default_factory=dict)  # HorseHarness id -> (family_type|None, def file)
     mount_family_types: dict = field(default_factory=dict)    # Type="Horse" id -> Monster family_type (None = unknown)
     body_properties: set = field(default_factory=set)         # defined BodyProperty ids (face_key_template targets)
+    settled_cultures: set = field(default_factory=set)        # cultures owning >=1 settlement in the live world
     suspect_registries: list = field(default_factory=list)    # human-readable "this registry looks too small" warnings
 
 
@@ -201,7 +202,9 @@ class Validator:
         issues += self._schema_checks()
         issues += self._duplicate_item_defs()
         issues += self._education_coverage()
+        issues += self._landless_cultures()
         issues += self._harness_family_types()
+        issues += self._mounted_dwarves()
         issues.sort(key=lambda i: i.sort_key())
         return issues
 
@@ -446,6 +449,80 @@ class Validator:
                 ))
         return issues
 
+    # -- pass 4b: cultures whose lords have nowhere to spawn ---------------- #
+    # Vanilla HeroSpawnCampaignBehavior.SpawnLordParty ends with an unguarded
+    #     if (settlement == null) settlement = Settlement.All.First(x => x.Culture == hero.Culture);
+    # reached whenever the hero's map faction has no InitialHomeSettlement. Vanilla
+    # is safe there because every Calradian culture owns land; TAOM is not, because
+    # TAOM_Map/settlements.xslt deletes every vanilla settlement and its 988
+    # replacements do not cover all 38 defined cultures. A landless culture on a
+    # Lord-occupation hero is therefore a latent CTD on the daily clan tick
+    # (crash 099f650c, 2026-08-04). Patch65 catches it at runtime; this catches it
+    # before it ships.
+    #
+    # Scope is TAOM's own ModuleData, matching the validator's stated contract.
+    # Vanilla-inherited factions are Patch65's problem, not a TAOM data defect.
+    _LORD_OCCUPATIONS = ("Lord",)
+    # Landless by design — every entry is unreachable through the crash path, or
+    # known-and-accepted. Adding to this list is a deliberate act: state why.
+    _LANDLESS_BY_DESIGN = {
+        # Bandit heroes are Occupation.Bandit, and GetBestAvailableCommander filters
+        # on Occupation.Lord — they can never reach the throwing line.
+        "looters", "sea_raiders", "mountain_bandits", "forest_bandits",
+        "desert_bandits", "steppe_bandits",
+        # Vanilla placeholder culture; carried by no TAOM lord or clan.
+        "neutral_culture",
+        # Vanilla minor-faction cultures TAOM inherits but never re-cultured
+        # (ghilman/darshi, skolderbrotva/nord, forest_people/vakken). All three
+        # clans keep a valid initial_home_settlement, so vanilla never reaches the
+        # First(); Patch65 covers them if a mod ever re-parents their lords.
+        "darshi", "nord", "vakken",
+    }
+    _FACTION_DEF_RE = re.compile(r"<(?:Faction|Kingdom)\b([^>]*?)/?>", re.S)
+    _NPC_DEF_ATTRS_RE = re.compile(r"<NPCCharacter\b([^>]*?)/?>", re.S)
+    _CULTURE_REF_ATTR_RE = re.compile(r'\bculture="Culture\.([A-Za-z0-9_.\-]+)"')
+    _OCCUPATION_ATTR_RE = re.compile(r'\boccupation="([A-Za-z]+)"')
+
+    def _landless_cultures(self) -> list:
+        if not self.reg.settled_cultures:
+            return []  # degraded mode (no game install): registry unavailable
+
+        issues = []
+        for path in self._xml_files():
+            text = self._read(path)
+            rel = self._rel(path)
+            for pattern, is_lord_gated in ((self._FACTION_DEF_RE, False),
+                                           (self._NPC_DEF_ATTRS_RE, True)):
+                for m in pattern.finditer(text):
+                    attrs = m.group(1)
+                    if is_lord_gated:
+                        occ = self._OCCUPATION_ATTR_RE.search(attrs)
+                        if not occ or occ.group(1) not in self._LORD_OCCUPATIONS:
+                            continue
+                    ref = self._CULTURE_REF_ATTR_RE.search(attrs)
+                    if not ref:
+                        continue
+                    culture = ref.group(1)
+                    if culture in self.reg.settled_cultures:
+                        continue
+                    if culture in self._LANDLESS_BY_DESIGN:
+                        continue
+                    idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                    issues.append(Issue(
+                        severity=Severity.ERROR, code="LANDLESS_CULTURE",
+                        file=rel, line=_lineno(text, m.start()),
+                        entry_id=idm.group(1) if idm else "(unnamed)",
+                        message=(
+                            f'culture "{culture}" owns no settlement in the world — vanilla '
+                            f"SpawnLordParty's unguarded Settlement.All.First(culture) throws "
+                            f"InvalidOperationException on the daily clan tick for any lord of "
+                            f"this culture whose faction has no InitialHomeSettlement "
+                            f"(crash 099f650c). Give the culture a settlement, retag the entry, "
+                            f"or add it to _LANDLESS_BY_DESIGN with a reason"
+                        ),
+                    ))
+        return issues
+
     # -- pass 5: horse-harness family_type integrity ----------------------- #
     # A HorseHarness whose <Armor> omits family_type deserializes to FamilyType 0
     # — the HUMAN family (ArmorComponent.cs:153, monsters.xml legend). The v1.4.7
@@ -528,6 +605,116 @@ class Validator:
                 ))
         return issues
 
+    # -- pass 6: dwarves never fight mounted ------------------------------- #
+    # The dwarf skeleton is shorter than human and its rider bone is misaligned,
+    # so a mounted dwarf spawns INSIDE the horse mesh. TAOM strips the mount for
+    # dwarf tournament participants at runtime (Patch46_TournamentDwarfDismount,
+    # keyed on race); this is the data-layer half of the same invariant, so a
+    # troop revamp or a copy-pasted roster cannot reintroduce the defect.
+    #
+    # The two knobs are NOT interchangeable, and for a LORD the mount is the only
+    # one that matters (decompiled v1.4.7, 2026-08-04):
+    #   * CharacterObject.GetFormationClass() (:818-839) overrides the base and,
+    #     when IsHero, ignores DefaultFormationClass entirely -- it derives the
+    #     formation from live BattleEquipment: a HasHorseComponent item in slot
+    #     EquipmentIndex.Horse (== ArmorItemEndSlot, 10) means Cavalry, plus a
+    #     bow/crossbow means HorseArcher. So default_group="Infantry" on a lord
+    #     holding a horse buys nothing; the mount alone spawns him mounted.
+    #   * BasicCharacterObject.GetFormationClass() (:543) returns
+    #     DefaultFormationClass, so for a TROOP (non-hero) default_group IS the
+    #     battlefield formation.
+    #   * For heroes default_group still drives party-screen icons, tooltips and
+    #     CharacterCode previews, so a Cavalry-tagged dwarf lord is a visible lie
+    #     even when he fights on foot.
+    # Hence both are checked: the mount rule is the one that prevents the mesh
+    # defect, the default_group rule keeps troops and the UI honest.
+    #
+    # Scope is a mount a DWARF CHARACTER can reach: their own inline rosters, or a
+    # standalone roster they name. Culture-selected player rosters (character
+    # creation, career starters) are deliberately out of scope -- no NPCCharacter
+    # references them, and every culture ships the same sumpter-horse template.
+    _DWARF_RACE = "dwarf"
+    _MOUNTED_GROUPS = ("Cavalry", "HorseArcher")
+    _NPC_BLOCK_RE = re.compile(r"<NPCCharacter\b([^>]*?)(?:/>|>(.*?)</NPCCharacter>)", re.S)
+    _RACE_ATTR_RE = re.compile(r'\brace="([A-Za-z0-9_.\-]+)"')
+    _GROUP_ATTR_RE = re.compile(r'\bdefault_group="([A-Za-z]+)"')
+    _EQSET_REF_RE = re.compile(r'<EquipmentSet\b[^>]*?\bid="([^"]+)"')
+
+    def _first_mount(self, body: str):
+        """The first Horse-slot item in this block, or None if it is footed.
+        Matches both <Equipment> and <equipment> -- TAOM ships both spellings, and
+        a case-sensitive matcher reads one of them as 'no horses anywhere', which
+        is a false CLEAN rather than a false alarm."""
+        for tag in self._EQ_TAG_RE.finditer(body):
+            slot = self._SLOT_ATTR_RE.search(tag.group(0))
+            if not slot or slot.group(1) != "Horse":
+                continue
+            item = self._ITEM_REF_ATTR_RE.search(tag.group(0))
+            return item.group(1) if item else "(unnamed mount)"
+        return None
+
+    def _mounted_rosters(self) -> dict:
+        """Standalone EquipmentRoster id -> the mount it equips. Footed rosters are
+        omitted, so membership alone answers 'does this roster mount its wearer'."""
+        mounted = {}
+        for path in self._xml_files():
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            for m in self._ROSTER_RE.finditer(text):
+                mount = self._first_mount(m.group(2))
+                if mount is not None:
+                    mounted[m.group(1)] = mount
+        return mounted
+
+    def _mounted_dwarves(self) -> list:
+        mounted_rosters = self._mounted_rosters()
+        issues = []
+        for path in self._xml_files():
+            raw = self._read(path)
+            # Mask comments but keep newlines so line attribution stays accurate.
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), raw)
+            rel = self._rel(path)
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                race = self._RACE_ATTR_RE.search(attrs)
+                # An absent race attribute means human (the engine default).
+                if not race or race.group(1) != self._DWARF_RACE:
+                    continue
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                entry_id = idm.group(1) if idm else "(unnamed)"
+                line = _lineno(text, m.start())
+
+                group = self._GROUP_ATTR_RE.search(attrs)
+                if group and group.group(1) in self._MOUNTED_GROUPS:
+                    issues.append(Issue(
+                        severity=Severity.ERROR, code="MOUNTED_DWARF",
+                        file=rel, line=line, entry_id=entry_id,
+                        message=(
+                            f'dwarf is default_group="{group.group(1)}" — for a troop that IS the '
+                            f"battlefield formation; for a hero it drives the party-screen icon and "
+                            f"tooltips while GetFormationClass reads equipment instead. Either way "
+                            f"it declares a dwarf as cavalry. Use Infantry or Ranged"
+                        ),
+                    ))
+
+                mount, source = self._first_mount(body), "its own equipment"
+                if mount is None:
+                    for ref in self._EQSET_REF_RE.findall(body):
+                        if ref in mounted_rosters:
+                            mount, source = mounted_rosters[ref], f'roster "{ref}"'
+                            break
+                if mount is not None:
+                    issues.append(Issue(
+                        severity=Severity.ERROR, code="MOUNTED_DWARF",
+                        file=rel, line=line, entry_id=entry_id,
+                        message=(
+                            f'dwarf is given mount "{mount}" via {source} — for a hero this alone '
+                            f"decides the formation (GetFormationClass ignores default_group when "
+                            f"IsHero), and the dwarf skeleton's rider bone is misaligned, so he "
+                            f"spawns inside the horse mesh. Clear the Horse and HorseHarness slots"
+                        ),
+                    ))
+        return issues
+
 
 # --------------------------------------------------------------------------- #
 # Registry builders (real data) — reuse the existing validators' proven logic  #
@@ -543,6 +730,15 @@ _PARTYTEMPLATE_DEF_RE = re.compile(r'<(?:MB)?PartyTemplate\b[^>]*?\bid="([^"]+)"
 # this must span newlines (re.S + \b[^>]*?) exactly like the others — an
 # id-on-the-same-line pattern registers nothing and turns every lord broken.
 _BODYPROP_DEF_RE = re.compile(r'<BodyProperty\b[^>]*?\bid="([^"]+)"', re.S)
+_SETTLEMENT_CULTURE_RE = re.compile(r'<Settlement\b[^>]*?\bculture="Culture\.([^"]+)"', re.S)
+# An XSLT template with an empty body and an unqualified `match="Settlement"`
+# deletes EVERY settlement contributed by earlier modules (TAOM_Map does exactly
+# this). Detecting it is what keeps settled_cultures honest: without it the
+# registry would count vanilla's 494 stripped settlements and report every
+# culture as landed.
+_SETTLEMENT_STRIP_RE = re.compile(
+    r'<xsl:template\s+match="Settlement"\s*/>|'
+    r'<xsl:template\s+match="Settlement"\s*>\s*</xsl:template>', re.S)
 
 # Vanilla culture StringIds that exist at runtime but are produced via XSLT /
 # live only in vanilla SandBoxCore (kept as a floor so refs to them never
@@ -785,6 +981,33 @@ def build_harness_registries(item_roots) -> tuple:
     return harness, mounts
 
 
+def build_settled_cultures(game_modules) -> set:
+    """Cultures that own at least one settlement in the world the game actually builds.
+
+    Walks the settlement-contributing modules in load order and honours an
+    unconditional `<xsl:template match="Settlement"/>` strip: TAOM_Map ships one,
+    so vanilla's 494 settlements are deleted and only TAOM_Map's 988 survive. Any
+    culture outside the resulting set is landless, which is what makes vanilla's
+    unguarded `Settlement.All.First(x => x.Culture == hero.Culture)` in
+    `HeroSpawnCampaignBehavior.SpawnLordParty` throw (crash 099f650c, Patch65)."""
+    if not game_modules:
+        return set()
+    game_modules = Path(game_modules)
+    cultures = set()
+    # Settlement-contributing modules, in SubModule load order.
+    for name in ("Native", "SandBoxCore", "SandBox", "CustomBattle", "TAOM_Map"):
+        moduledata_dir = game_modules / name / "ModuleData"
+        if not moduledata_dir.exists():
+            continue
+        xslt = moduledata_dir / "settlements.xslt"
+        if xslt.exists() and _SETTLEMENT_STRIP_RE.search(_read_stripped(xslt)):
+            cultures = set()  # this module deletes everything contributed so far
+        xml = moduledata_dir / "settlements.xml"
+        if xml.exists():
+            cultures |= set(_SETTLEMENT_CULTURE_RE.findall(_read_stripped(xml)))
+    return cultures
+
+
 def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     """Build cross-reference registries from the real game install + TAOM repo.
 
@@ -829,6 +1052,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     cultures = _scan_files(culture_files, _CULTURE_DEF_RE) | VANILLA_CULTURES
     party_templates = _scan(pt_roots, _PARTYTEMPLATE_DEF_RE)
     body_properties = _scan_files(bodyprop_files, _BODYPROP_DEF_RE)
+    settled_cultures = build_settled_cultures(game_modules)
 
     # Only flag duplicate item defs inside the LOTRLOME_Armory item folders,
     # where the multi-folder duplicate-id bug actually occurs.
@@ -868,7 +1092,8 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     suspect = []
     if game_modules:
         for label, value, floor in (("body_properties", body_properties, 50),
-                                    ("cultures", cultures, 20)):
+                                    ("cultures", cultures, 20),
+                                    ("settled_cultures", settled_cultures, 15)):
             if len(value) < floor:
                 suspect.append(f"{label} registry has only {len(value)} entries "
                                f"(expected >={floor}) - a source path may be wrong")
@@ -880,6 +1105,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         harness_family_types=harness_family_types,
         mount_family_types=mount_family_types,
         body_properties=body_properties,
+        settled_cultures=settled_cultures,
         suspect_registries=suspect,
     )
 

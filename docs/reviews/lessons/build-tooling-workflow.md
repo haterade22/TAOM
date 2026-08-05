@@ -493,3 +493,45 @@ do exist; here the destination is absent and the engine runs past it.
   A documented workaround that outlives its cause is a maintenance hazard: it keeps being applied,
   and the next reader cannot tell whether it is load-bearing.
 - **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 5f373df9
+
+### A registry built from the wrong merge order prints PASS while the game crashes
+
+The new `LANDLESS_CULTURE` check is worth exactly what `build_settled_cultures` is worth. That builder
+walks the settlement-contributing modules in load order (`Native`, `SandBoxCore`, `SandBox`,
+`CustomBattle`, `TAOM_Map`) and must honour TAOM_Map's unconditional strip-XSLT, which deletes all 494
+vanilla `<Settlement>` elements before contributing its own 988. Skip the strip and those 494 count:
+every culture reads as landed, the check reports clean, and the game still CTDs on the landless one.
+This is the inverse of the silent-scope entry above — that one catches a scope resolving to NOTHING,
+which at least has a tell; a scope that resolves to TOO MUCH produces the output shape everyone is
+hoping for and has no tell at all.
+- **Why missed:** a merged-data registry is assembled once at the top of the run and then trusted by
+  every check downstream. Nothing re-derives it, nothing compares it against what the engine actually
+  loads, and an over-broad registry never trips an empty-input guard.
+- **Prevent:** state the merge SEMANTICS in the builder (append / replace / strip-then-append) rather
+  than assuming the additive case, and assert the result against counts measured independently — 988
+  settlements, 28 distinct cultures after the Khand retag. Then run the new check against a KNOWN-BAD
+  state before wiring it in: 18 `LANDLESS_CULTURE` errors before the retag, `PASS: no validation
+  issues found.` after. A check nobody has seen go red is not a check yet.
+- **Source:** #374 (`tools/taom_schema.py` `build_settled_cultures` / `_landless_cultures`)
+
+### A permanently-red gate is a broken gate — put known exceptions in an allowlist with stated reasons
+
+`_landless_cultures` fires on any culture used by an `occupation="Lord"` NPCCharacter, a `<Faction>` or
+a `<Kingdom>` that owns no settlement — and TAOM ships ten such cultures on purpose or by inheritance.
+Left unlisted, an ERROR-severity check in a pre-commit path would be red forever on TAOM's own data,
+which teaches people to route around it. `_LANDLESS_BY_DESIGN` names each with its reason in-code: the
+six bandit cultures are unreachable because `GetBestAvailableCommander` filters on `Occupation.Lord`
+and bandit heroes are `Occupation.Bandit`; `neutral_culture` carries no lords; `darshi` / `nord` /
+`vakken` are vanilla minor factions TAOM inherits and never re-cultured, all three still holding a
+valid `initial_home_settlement`.
+- **Why missed:** the cheap alternative to an allowlist is narrowing the predicate until it only fires
+  on the case you already found — which passes, looks clean, and is silent on the next instance. An
+  allowlist keeps the check wide and makes every exception an auditable claim someone can later
+  disprove: the `darshi` / `nord` / `vakken` entries are exactly that, and they carry no TAOM content
+  at all, a follow-up nobody would ever see if the predicate had been narrowed instead.
+- **Prevent:** when a new check fires on shipped data, decide per case — fix the data or allowlist it
+  with a written reason. Never narrow the predicate to dodge them. Keep the allowlist in the tool
+  where the check can be read against it, not in a doc. Keep the check's SCOPE honest too: this one
+  covers TAOM's own ModuleData, matching the validator's documented contract, so a vanilla-inherited
+  faction is the engine guard's problem (`Patch65_LandlessCultureSpawnGuard`), not a TAOM data defect.
+- **Source:** #374 (`tools/taom_schema.py` `_LANDLESS_BY_DESIGN`)

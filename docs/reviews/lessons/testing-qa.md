@@ -174,6 +174,16 @@ Fixing a deep-review finding (a completion flag latched before the work, so fail
 
 ---
 
+---
+
+### A negative assertion is vacuous unless the ARRANGE makes the guard load-bearing
+The existing "a test must be able to fail" entry bans vacuous *assertions* syntactically (`or True`, `!= <one-of-many>`). This is the arrange-side form, and it is invisible to that check: `DidNotReceive()` / `IsNull` / `AreEqual(0, ...)` is syntactically normal but pins nothing when the arrange leaves the system unable to produce the effect anyway.
+- **Why missed:** two `LordSpawnGuard` guard tests (#374, 2026-08-04) asserted `DidNotReceive().SetFactionInitialHomeSettlement(...)` without stubbing any anchor candidate — so `FindAnchor` returned null and the service wrote nothing whether the guard under test existed or not. Both assertions held in both worlds. A differently-named sibling test (`..._DoesNotScanSettlementsForTheCulture`) was the only real mutation kill, so after a regression the failure list would have named the wrong thing. Third instance of a test-that-cannot-fail (skillspector 2026-06-22, `rca-validator-silent-scope-2026-08-03`, now this).
+- **Prevent:** for every guard-named test, name the ONE production line whose deletion turns it red — if you cannot, the arrange is incomplete. Mechanically: put the SUT in a state where removing the guard changes the outcome, then assert the negative. Worth making a required `/deep-review` completeness-agent output ("for each new test, name the line whose deletion reddens it") rather than another prose paragraph.
+- **Source:** `docs/reviews/rca-landless-culture-spawn-2026-08-04.md` (deep-review M4/L4, 2026-08-04)
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
@@ -212,3 +222,26 @@ enumerating all 67 vanilla definer base ids (exactly one duplicate pair, both va
 - **Why missed:** cardinality is the cheapest observable and reads as a proxy for correctness ("it captured everything, so it worked"). It is a real proxy for LOSS — a dropped hero, a filter that over-matched — and no proxy at all for CORRUPTION, where the shape is preserved and the contents are replaced. The two failure modes look identical at the count and opposite at the value.
 - **Prevent:** ask which failure mode the test is guarding — if the bug preserves cardinality, demote the count to a stated precondition and assert the persisted state. `RacePersistenceServiceTests` does exactly that: `Assert.AreEqual(2, _sut.CapturedRaceCount, "precondition: rich capture succeeded")` sets the stage, then `Assert.AreEqual("human;dwarf;elf", store.LastSavedLegend, …)` makes the real claim through a round-trip data store, and `CaptureHeroRaces_OneRaceLegend_ThenRestore_DoesNotMassHumanizeHeroes` drives capture → degenerate capture → restore and asserts `DidNotReceive().SetHeroRace("hero_dwarf", 0)`. Same family as the vacuous-assertion and guard-must-be-able-to-fail entries above, with a sharper trigger: an assertion that is true in both the fixed and broken states is vacuous even when the number in it is correct.
 - **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 7cf5be28
+
+### An audit query that reports "zero found" needs a positive control before you believe it
+
+Auditing whether any dwarf equipment roster carried a horse, an XPath of
+`.//equipment[@slot='Horse']` returned **0 hits across every culture**. The element is `<Equipment>`;
+XPath is case-sensitive. The query was incapable of matching anything, and its output — a clean zero —
+is indistinguishable from the answer you were hoping for. It was caught only because a subagent
+independently reported two rosters that *did* carry horses, contradicting the scan.
+
+- **Why missed:** a search that finds nothing produces no error, no empty-file warning, no stack trace.
+  Every other failure in an audit announces itself; this one renders as success, and it renders as
+  success in exactly the direction that ends the investigation early.
+- **Prevent:** before trusting any negative result, run the same query against a case you know is
+  positive. The dwarf scan was re-run counting non-dwarf rosters with a horse in the same pass — 582 —
+  which proves the matcher works before the zero for dwarves means anything. Cheap enough to be
+  unconditional: one extra counter in the same loop. The `MOUNTED_DWARF` unit tests encode the same
+  discipline with `test_non_dwarf_cavalry_with_a_horse_is_clean`, which fails if the check ever degrades
+  into matching everything, and `test_lowercase_equipment_tag_is_still_caught`, which pins the exact
+  case-sensitivity trap that caused this.
+- **Generalises to:** grep sweeps for "no remaining references", validator runs reporting PASS, and any
+  "I checked, it's clean" claim. `evidence-over-claims.md` §C already forbids inventing a result; this is
+  the adjacent failure of *believing a real result produced by a broken instrument*.
+- **Source:** dwarf-lord formation audit, 2026-08-04.

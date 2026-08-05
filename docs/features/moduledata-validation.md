@@ -22,6 +22,12 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
 - **`face_key_template` pointing at an undefined `BodyProperty`** — not an XML error: the engine
   registers a placeholder, `MBObjectManager.UnregisterNonReadyObjects` drops it, and the character
   silently loses its authored face. (`BROKEN_BODY_PROPERTY_REF`)
+- **A lord's culture owns no settlement** — vanilla `SpawnLordParty` ends with an unguarded
+  `Settlement.All.First(x => x.Culture == hero.Culture)`, so a landless culture on an
+  `Occupation.Lord` hero is a latent `InvalidOperationException` on the daily clan tick.
+  (`LANDLESS_CULTURE`)
+- **A dwarf authored as cavalry, or handed a mount** — the dwarf skeleton's rider bone is
+  misaligned, so a mounted dwarf spawns inside the horse mesh. (`MOUNTED_DWARF`)
 
 "Schemas are the source of truth": field/enum/ref knowledge lives in `tools/schemas/*.json`, not hardcoded in Python.
 
@@ -33,13 +39,14 @@ tools/schemas/*.json   (declarative source of truth: entry element, id, enums, s
         ▼
 tools/taom_schema.py   ── build_registries(moduledata, game_modules)
    Registries (items, item_def_files, npccharacters, cultures, party_templates,
-               body_properties, suspect_registries)                              ← injected (testable)
+               body_properties, settled_cultures, suspect_registries)            ← injected (testable)
    REF_KINDS (prefix-based, attribute-agnostic)
    Validator.run():
      pass 1  global cross-reference sweep  (every *.xml under ModuleData
                                            + every extra_ref_root, e.g. LOTRLOME_Armory)
      pass 2  per-schema: duplicate-id, enum, civilian-type rule
      pass 3  duplicate item definitions across Armory folders
+     pass 4b landless cultures (Lord NPCs / Factions / Kingdoms vs settled_cultures)
         │
         ├──▶ tools/validate_moduledata.py                  (CLI: batch report, --json, --code, exit 1 on ERROR)
         ├──▶ .claude/hooks/check-moduledata-validation.sh  (PreToolUse gate: blocks commits on ERROR)
@@ -78,11 +85,105 @@ Concretely, `characters/clans.xml` has **no validator schema** (`tools/schemas/`
 
 The same boundary applies in the other direction — an **extra, XSD-undeclared attribute** — even for files the validator *does* schema. `validate_moduledata.py` checks declared field types, enums, and cross-refs but does not reject unknown attributes; the engine's `NPCCharacters.xsd` does. So `npcs_rohan.xml` passed the validator (all 4,522 NPCCharacters parse) while the editor flagged a bogus `child_monster="…"` on its 10 child-template blocks (`Error: The 'child_monster' attribute is not declared`, fixed 2026-06-22). A clean `validate_moduledata.py` is necessary but not sufficient — the Bannerlord editor / an engine load is the authority for the XSD layer (both required-attribute presence *and* no-undeclared-attributes). Decide a flagged attribute via the decompiled deserializer + vanilla usage: bogus → remove (`child_monster`), real-but-XSD-incomplete → keep (`family_type` on horses, which `Items.xsd` likewise fails to declare).
 
+## Landless-culture check (`LANDLESS_CULTURE`)
+
+**Severity ERROR.** Fires when a culture carried by an `NPCCharacter` with `occupation="Lord"`, a
+`<Faction>` or a `<Kingdom>` owns **no settlement in the world the game actually builds**.
+
+Vanilla `HeroSpawnCampaignBehavior.SpawnLordParty` ends with an unguarded
+`Settlement.All.First(x => x.Culture == hero.Culture)`, reached whenever the hero's map faction has
+no `InitialHomeSettlement`. Vanilla never throws there because every Calradian culture owns land;
+TAOM can, because `TAOM_Map/ModuleData/settlements.xslt` deletes every vanilla settlement and its
+988 replacements cover only part of the 38 defined cultures (27 before the Khand retag, 28 after).
+That is crash `099f650c` (2026-08-04) — `InvalidOperationException: Sequence contains no matching
+element` out of `Campaign.Tick`'s daily clan tick. `Patch65_LandlessCultureSpawnGuard` catches it at
+runtime; this check catches it before it ships. Full analysis:
+[`lord-spawn-guard.md`](./lord-spawn-guard.md) (#374).
+
+Evidence: **18** `LANDLESS_CULTURE` errors before the retag (the 18 TAOM-authored Variag lords in
+`characters/lords.xml`), `PASS: no validation issues found.` after.
+
+## Mounted-dwarf check (`MOUNTED_DWARF`)
+
+**Severity ERROR.** Fires on an `NPCCharacter` with `race="dwarf"` that is either tagged
+`default_group="Cavalry"`/`"HorseArcher"`, or can reach a mount — a `slot="Horse"` entry in its own
+inline `<EquipmentRoster>`, or in a standalone `<EquipmentRoster>` it names via
+`<EquipmentSet id="…"/>`.
+
+Dwarves use a custom, shorter skeleton whose rider bone is misaligned, so a mounted dwarf spawns
+*inside* the horse mesh. `Patch46_TournamentDwarfDismount` already strips Horse + HorseHarness from
+dwarf tournament participants at runtime, keyed on race; this check is the data-layer half of the
+same invariant, so a troop revamp or a copy-pasted roster cannot reintroduce the defect.
+
+**The two halves are not interchangeable** (decompiled v1.4.7, 2026-08-04):
+
+| | Troop (non-hero) | Lord / hero |
+|---|---|---|
+| `default_group` | **is** the battlefield formation (`BasicCharacterObject.GetFormationClass():543` returns `DefaultFormationClass`) | ignored for formation; drives party-screen icons, tooltips, `CharacterCode` previews |
+| Horse in the equipment slot | the actual mount | **decides the formation on its own** — `CharacterObject.GetFormationClass():818-839` overrides the base and, when `IsHero`, reads only `BattleEquipment` (a `HasHorseComponent` item in `EquipmentIndex.Horse` → Cavalry; plus a bow/crossbow → HorseArcher) |
+
+So `default_group="Infantry"` on a lord holding a horse buys nothing — the mount alone spawns him
+mounted. Checking only the enum would have missed exactly that case.
+
+**Scope.** Only mounts a dwarf *character* can reach. Culture-selected player rosters (character
+creation, career starters) are deliberately out of scope: no `NPCCharacter` references them, and all
+12 custom cultures ship the same 16-of-55 sumpter-horse template, so gating them would flag a shared
+vanilla-parity pattern rather than a dwarf defect.
+
+Evidence at introduction: **0** `MOUNTED_DWARF` issues across all 185 `race="dwarf"` characters
+(169 Infantry, 16 Ranged) — the data already complied. Negative control: flipping `lord_E1_1` to
+`default_group="Cavalry"` produced `1 error(s)` at `characters/lords.xml:9829`, then reverted.
+
+### The `settled_cultures` registry (`build_settled_cultures`)
+
+`build_settled_cultures(game_modules)` walks the settlement-contributing modules in SubModule load
+order — `Native`, `SandBoxCore`, `SandBox`, `CustomBattle`, `TAOM_Map` — collecting every
+`<Settlement … culture="Culture.X">` from each module's `settlements.xml` (`_SETTLEMENT_CULTURE_RE`).
+
+**It honours the unconditional strip, and that is the load-bearing detail.** When a module's
+`settlements.xslt` carries an empty `<xsl:template match="Settlement"/>` (TAOM_Map ships exactly
+one), everything accumulated so far is discarded before that module's own settlements are added.
+A registry built without that models a world the game never builds: it counts vanilla's 494 deleted
+settlements, reports every culture as landed, and prints PASS while the game crashes. Both spellings
+of the empty template (self-closing and empty-body) are matched by `_SETTLEMENT_STRIP_RE`.
+
+Two guards match the other registries' behaviour: an **empty** `settled_cultures` (no game install)
+skips the check entirely rather than reporting everything broken, and a **size floor of 15** feeds
+`Registries.suspect_registries`, so a shrunken registry is named out loud instead of passing quietly.
+
+### `_LANDLESS_BY_DESIGN` allowlist
+
+The ten cultures still landless after the Khand retag are allowlisted, each with its reason in-code.
+Adding an entry is a deliberate act — state why:
+
+| Cultures | Why they cannot reach the throwing line |
+|---|---|
+| `looters`, `sea_raiders`, `mountain_bandits`, `forest_bandits`, `desert_bandits`, `steppe_bandits` | Bandit heroes are `Occupation.Bandit`; `GetBestAvailableCommander` filters on `Occupation.Lord`. |
+| `neutral_culture` | Vanilla placeholder culture, carried by no TAOM lord or clan. |
+| `darshi`, `nord`, `vakken` | Vanilla minor-faction cultures (ghilman / skolderbrotva / forest_people) TAOM inherits but never re-cultured. All three clans keep a valid `initial_home_settlement`, so vanilla never reaches the `First()`; Patch65 covers them if a mod re-parents their lords. |
+
+### Scope: TAOM's own ModuleData only
+
+The sweep reads `Main/_Module/ModuleData/**/*.xml`, matching the validator's documented contract. A
+vanilla-inherited faction whose `InitialHomeSettlement` is null at runtime is Patch65's problem, not
+a TAOM data defect — nothing in the files this validator owns is wrong in that case.
+
+**Tests:** `tools/tests/test_validate_moduledata.py` carries two classes for this check.
+`LandlessCultureTests` — `test_lord_in_landless_culture_is_reported`,
+`test_lord_in_landed_culture_is_clean`, `test_clan_and_kingdom_in_landless_culture_are_reported`,
+`test_non_lord_occupation_is_ignored`, `test_allowlisted_cultures_are_not_reported`,
+`test_check_skipped_when_settlement_registry_unavailable`.
+`SettledCultureRegistryTests` — `test_unconditional_strip_discards_earlier_modules`,
+`test_without_a_strip_modules_merge`, `test_no_game_install_yields_empty_registry`,
+`test_registry_is_wired_into_build_registries_and_floored`. The strip and merge cases differ only
+by the presence of `settlements.xslt` and expect different sets, so they fail if the strip handling
+regresses.
+
 ## Key Files
 
 | File | Purpose |
 |---|---|
-| `tools/taom_schema.py` | Engine (issue model, registries, schema model, `Validator`, `build_registries`, report) |
+| `tools/taom_schema.py` | Engine (issue model, registries, schema model, `Validator`, `build_registries`, `build_settled_cultures`, report) |
 | `tools/taom_query.py` | Query API over the engine (`item_exists` / `troop_exists` / `culture_exists` / `find_references` / `validate` / listings) — backs the MCP server, pure stdlib |
 | `tools/validate_moduledata.py` | CLI front-end (batch report) |
 | `tools/taom_mcp_server.py` | MCP stdio server front-end (9 tools via the `mcp` SDK / FastMCP) |
@@ -90,7 +191,7 @@ The same boundary applies in the other direction — an **extra, XSD-undeclared 
 | `tools/schemas/taom_npccharacter.json` | Troops + characters + wanderers + companions + education templates |
 | `tools/schemas/taom_spcultures.json` | Cultures |
 | `tools/schemas/taom_equipmentsets.json` | Equipment rosters (all `equipmentsets/*.xml`) |
-| `tools/tests/test_validate_moduledata.py` | 42 unittest cases (validator) |
+| `tools/tests/test_validate_moduledata.py` | 75 unittest cases (validator) |
 | `tools/tests/test_taom_query.py` | unittest cases (query API) |
 | `.claude/hooks/check-moduledata-validation.sh` | PreToolUse commit gate (blocks on ERROR; fail-open) |
 | `.claude/rules/moduledata-validation.md` | Auto-loaded rule when editing the covered XML / schemas |
@@ -105,7 +206,7 @@ The **engine + query API + CLI** use the **Python 3 standard library only** (`re
 python -m unittest discover -s tools/tests -p "test_*.py"
 ```
 
-`test_validate_moduledata.py` — 42 cases, one per issue code (positive + negatives) plus edge cases (Item.None allowed, malformed XML doesn't crash, file matching no schema is still swept, fail-fast on unknown rule / missing field, the Codex-fix regressions: culture-registry pollution, comment-stripping, child-template civilian, education-template exclusion, and the harness family-type set: missing attribute, cross-set non-pairing, ambiguous monster ids, degraded mode). `test_taom_query.py` — the query API (existence checks incl. prefix/sentinel/duplicate, `find_references` with line numbers + comment-stripping, `validate` counts + code filter, listings). `test_taom_mcp_server.py` — in-process MCP tests (`list_tools()` returns all 9 tools; `call_tool()` for culture/schemas/registry/validate; install-independent, skips if the `mcp` SDK is absent). Full suite: **81 tests** (56 for this feature + 25 pre-existing weapon-xml).
+`test_validate_moduledata.py` — 75 cases, one per issue code (positive + negatives) plus edge cases (Item.None allowed, malformed XML doesn't crash, file matching no schema is still swept, fail-fast on unknown rule / missing field, the Codex-fix regressions: culture-registry pollution, comment-stripping, child-template civilian, education-template exclusion, the harness family-type set: missing attribute, cross-set non-pairing, ambiguous monster ids, degraded mode, and the mounted-dwarf set: both rules, an absent `race`, the lowercase `<equipment>` spelling, and a non-dwarf positive control). `test_taom_query.py` — the query API (existence checks incl. prefix/sentinel/duplicate, `find_references` with line numbers + comment-stripping, `validate` counts + code filter, listings). `test_taom_mcp_server.py` — in-process MCP tests (`list_tools()` returns all 9 tools; `call_tool()` for culture/schemas/registry/validate; install-independent, skips if the `mcp` SDK is absent). Full suite: **297 tests** across 12 files in `tools/tests/`.
 
 ## How-To
 
@@ -198,6 +299,22 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 
 ## Changelog
 
+- 2026-08-04 — Added `MOUNTED_DWARF` (pass 6). Asked to confirm no dwarven lord is cavalry, the
+  audit found the data already compliant — 185 `race="dwarf"` characters, all Infantry or Ranged,
+  no lord roster carrying a mount — so the work became pinning the invariant rather than fixing it.
+  Checks both the `default_group` enum and reachable Horse slots, because decompiling v1.4.7 showed
+  `CharacterObject.GetFormationClass()` ignores `default_group` for heroes and reads equipment
+  instead: an enum-only check would pass a lord who still spawns mounted. `"erebor"` also dropped
+  from `HORSE_CULTURES` in `tools/fix_lord_cultures_and_mounts.py`, which would otherwise have
+  injected `Item.charger` into the Erebor lord rosters if that (currently broken) script were repaired.
+- 2026-08-04 — Added `LANDLESS_CULTURE` (pass 4b) and the `settled_cultures` registry
+  (`build_settled_cultures` — load-order walk that honours TAOM_Map's unconditional
+  `<xsl:template match="Settlement"/>` strip, size floor 15). Came out of crash `099f650c`: TAOM's
+  `battania` is the authored Variag culture, its K-series settlements were never migrated with it,
+  and vanilla `SpawnLordParty`'s unguarded `Settlement.All.First(culture)` threw on the daily clan
+  tick. 18 errors before the Khand settlement retag
+  (`tools/oneoff/retag_khand_to_variag.py`), PASS after. Runtime guard:
+  [`lord-spawn-guard.md`](./lord-spawn-guard.md) (#374).
 - 2026-08-03 — Added `BROKEN_BODY_PROPERTY_REF` (registry from the 4 authoritative
   `*_bodyproperties.xml` files, 121 ids) and the `extra_ref_roots` foreign-module sweep, wired to
   `LOTRLOME_Armory/ModuleData`. Both came out of the dwarf-vs-Rhûn crash investigation, whose log
