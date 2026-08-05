@@ -265,6 +265,7 @@ instructions `AGENTS.md`.
 | **Armory** | dep is `LOTRLOME_Armory` (NOT `Armory_2`). Item defs under `.../LOTRLOME_Armory/ModuleData/LOTRLOME_items/<folder>/`. A root-level `<action>` (parented by `<action_sets>`, not an `<action_set>`) loads on the client but kills a dedicated server on boot — gate with `tools/audit_action_set_parity.py`. |
 | **Co-op gating** | Three different questions, never interchangeable: `ICoopPresenceProvider.IsCoopActive` (a co-op mod is loaded), `ICoopSessionProvider.IsAuthority`/`ShouldDeferToHost` (may this peer mutate shared state), `IDedicatedServerProvider.IsDedicatedServer` (our binaries folder). `docs/features/coop-interop.md`. |
 | **Console commands** | A `[CommandLineArgumentFunction]` method with the wrong shape throws inside the engine's unguarded discovery loop, past a native boundary with no managed backstop — a startup hazard, not just a broken console. Duplicate names drop silently. Route through `TaomConsole`; `ConsoleCommandBindingTests` pins it. `docs/features/dev-console.md`. |
+| **Landless cultures** | A culture owning no settlement makes vanilla `SpawnLordParty`'s unguarded `Settlement.All.First(culture)` throw on the daily clan tick — CTD, no TAOM frame. Reachable: `TAOM_Map/settlements.xslt` strips ALL vanilla settlements. `Patch65_LandlessCultureSpawnGuard` guards it, `validate_moduledata.py`'s `LANDLESS_CULTURE` gates it. `docs/features/lord-spawn-guard.md`. |
 
 ## Architecture (One-liner)
 

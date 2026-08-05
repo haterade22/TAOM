@@ -61,6 +61,7 @@ using TAOM.Features.CrashReport;
 using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.SettlementNameplateFade;
 using TAOM.Features.MenuLinkColors;
+using TAOM.Features.LordSpawnGuard;
 
 namespace TAOM;
 
@@ -145,6 +146,7 @@ public static class IoC
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
+        LordSpawnGuardIoC.RegisterLordSpawnGuardFeature(container);
         Features.Enlistment.EnlistmentIoC.RegisterEnlistmentFeature(container);
         Features.Enlistment.Duties.DutiesIoC.RegisterEnlistmentDutiesFeature(container);
         // AFTER Enlistment: FieldCommission registers a NullEnlistmentStateQuery with

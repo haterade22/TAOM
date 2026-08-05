@@ -962,7 +962,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>(),
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
 
-
         // Enlistment (#375) — serve as a soldier in a lord's party. Registered unconditionally so
         // SyncData round-trips the service record and load normalization can rescue an ownerless
         // hidden MainParty even when the feature is later toggled off. World mutations are
@@ -1066,10 +1065,20 @@ public class SubModule : MBSubModuleBase
         // Patch64 — retints game-menu hyperlinks by faction. GameMenuVM is constructed when the
         // map/menu state opens, well after initialization, so the standard batch is early enough.
         _harmony.PatchCategory("Patch64_MenuLinkColors");
-        // Patch66 — enlistment menu guard (SetNextMenu redirect + EnterMenuMode recovery) and
-        // the four LordConversations condition suppressions. All campaign-runtime targets; menus
-        // first open well after this batch. Fail-open prefixes gated on IEnlistmentStateQuery —
-        // inert while not enlisted.
+        // Patch65 — guards vanilla's unguarded Settlement.All.First(culture) in
+        // HeroSpawnCampaignBehavior.SpawnLordParty. TWO listeners reach that target, and the
+        // tighter of the two is what constrains this placement: DailyTickClanEvent (the daily
+        // clan tick) AND OnNewGameCreatedPartialFollowUpEvent -> TrySpawnHeroesAndParties(
+        // isNewGame: true) -> SpawnLordParty. The standard batch is still correct — this method
+        // runs as the last statement of Campaign.OnInitialize, and the new-game dispatch runs
+        // later from PostInitializeFourthState — but do NOT re-batch this to a lazier hook on the
+        // strength of "it only fires on the daily tick": the new-game path would then be
+        // unguarded.
+        _harmony.PatchCategory("Patch65_LandlessCultureSpawnGuard");
+        // Patch66 — enlistment menu guard (SetNextMenu redirect + EnterMenuMode recovery) and,
+        // as the battle layer lands, the four LordConversations condition suppressions. All
+        // campaign-runtime targets; menus first open well after this batch. Fail-open prefixes
+        // gated on IEnlistmentStateQuery — inert while not enlisted.
         _harmony.PatchCategory("Patch66_Enlistment");
         _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
         // Patch47 RE-ENABLED 2026-06-12 after full exoneration: its 06-12 morning indictment
