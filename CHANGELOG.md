@@ -131,6 +131,12 @@ counted from `taom_mcp_server.py`) and `imagine` (HEURISTIC ~5, when-authed). Th
 no longer hardcodes "Claude Opus 4.7" as the context model. The memory locator needed no fix —
 the July audit's failure prediction assumed the fallback path; the derived slug hits directly.
 
+**Baseline re-recorded** (`docs/context-budget-baseline.md`): eager-excl-MCP **~26.1K → ~16.8K
+tokens (−35%)**. CLAUDE.md 4,717 tok / 28.4 KB (the July doc still said 14,173 / 91 KB — 3×
+overstated after two undocumented restructures); always-load rules 43.5 KB incl. the CLAUDE.md
+move-in; plugins measured for the first time (7, ~259 tok). MCP deferral behind ToolSearch
+re-confirmed empirically this session.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
