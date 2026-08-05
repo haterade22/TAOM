@@ -19,10 +19,6 @@
       "Read(//tmp/**)",
       "Skill(codex:rescue)",
       "Bash(node:*)",
-      "Bash(sed -i 's/argument-hint: \\\\[doc-type\\\\]/argument-hint: \"[doc-type]/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/documentation/update-docs.md\")",
-      "Bash(sed -i 's/--sync | --validate$/--sync | --validate\"/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/documentation/update-docs.md\")",
-      "Bash(sed -i 's/argument-hint: \\\\[target-area\\\\]/argument-hint: \"[target-area]/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/performance/performance-audit.md\")",
-      "Bash(sed -i 's/--backend | --full$/--backend | --full\"/' \"C:/Users/mikew/.claude/plugins/marketplaces/claude-code-templates/cli-tool/components/commands/performance/performance-audit.md\")",
       "Read(//c/Users/mikew/**)",
       "Edit(/.claude/skills/context-budget/**)",
       "Edit(/.claude/skills/freeze/**)",
@@ -37,7 +33,6 @@
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/**)",
       "Read(//c/ProgramData/Mount and Blade II Bannerlord/logs/**)",
       "Read(//e/Steam/steamapps/common/Mount & Blade II Bannerlord/bin/Win64_Shipping_Client/Logs/**)",
-      "Bash(cp \"c:/Users/mikew/source/repos/TAOM/CHANGELOG.md\" \"c:/Users/mikew/source/repos/TAOM/CHANGELOG.md.full\")",
       "Bash(git checkout *)",
       "PowerShell(./build.ps1 -RunTests 2>&1)",
       "PowerShell(dotnet build Main/TAOM.csproj -c Debug -p:DisableModuleCopy=true --verbosity quiet 2>&1)",
@@ -47,8 +42,7 @@
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData",
-      "E:\\LOTRAOMAssets\\LOTRAOM_Jan_1_Patreon\\Modules\\LOTRAOM\\ModuleData",
-      "C:\\Users\\mikew\\.claude\\plugins\\marketplaces\\claude-code-templates\\.claude-plugin"
+      "E:\\LOTRAOMAssets\\LOTRAOM_Jan_1_Patreon\\Modules\\LOTRAOM\\ModuleData"
     ]
   },
   "enabledMcpjsonServers": [

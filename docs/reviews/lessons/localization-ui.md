@@ -90,6 +90,12 @@ In a `BaseBrush` chain, `BrushFactory.cs:560` assigns `style.DefaultStyle = brus
 - **Prevent:** when overriding an inherited style, state **every** attribute you depend on, even ones you expect to inherit; never mix "rely on the fallback" and "override explicitly" in one block. Pin it with a test asserting the attribute is present in the shipped XML.
 - **Source:** MenuLinkColors deep review 2026-07-26 (MEDIUM). RCA: `docs/reviews/rca-menu-link-colors-2026-07-26.md`
 
+### Moving sprites between atlas categories — delete the old PNGs from the GAME INSTALL, not just the repo
+When migrating sprites from one atlas category to another (e.g. `ui_taom` → `ui_taom_career_system`): (1) move in repo, (2) delete the old category folder from the game install (`E:\Steam\...\Modules\TAOM\GUI\SpriteParts\<old_category>\...`), (3) then run the sprite generator. The build only copies new files — it never deletes removed ones — and the generator scans ALL category folders on disk, so duplicate PNGs across categories crash `AddSpritePart` with "duplicate key".
+- **Why missed:** 3 commits spent debugging a clean repo — the stale PNGs lived only in the game install, invisible to git.
+- **Prevent:** Treat a category move as a three-step (repo move → install delete → regen); the repo being clean proves nothing about the install.
+- **Source:** memory/feedback_sprite_atlas_cleanup.md (recovered 2026-08-05 from the stale pre-move project slug — the only fact in it not already migrated)
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

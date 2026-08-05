@@ -111,6 +111,18 @@ row; the `/freeze` skill-inline hook is now noted; `suggest-compact.sh`'s bounda
 the new muting/live-memory behaviors are documented; header carries the audited count (24
 scripts / 24 registrations / 9 events).
 
+**Cruft + plugin cleanup.** Deleted (gitignored, no history impact): the 2.8 MB pre-rotation
+`session-log.md.1`, `agent-audit.log.1`, and a June 12 `/context-save` snapshot whose state lives
+in the `improve` feature memory. The "empty" stale pre-move project slug dir
+(`.claude/projects/c--Users-mikew-source-repos-TAOM/`) turned out to hold one TRACKED memory file
+the audit missed — `feedback_sprite_atlas_cleanup.md`, whose move-between-atlas-categories /
+delete-install-PNGs / duplicate-key-crash fact existed nowhere else. Recovered into
+`docs/reviews/lessons/localization-ui.md` (now 15 lessons) before deleting the dir.
+`code-simplifier` plugin disabled (user decision — `/deslop` covers it; `code-review` stays for
+`/code-review ultra`); settings.local.json dropped 4 dead one-off `sed` rules, the
+old-repo-path `cp` rule, and the orphaned claude-code-templates marketplace directory grant.
+`/security-scan` clean at HIGH+ after both settings edits.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
