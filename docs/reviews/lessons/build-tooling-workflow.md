@@ -535,3 +535,21 @@ valid `initial_home_settlement`.
   covers TAOM's own ModuleData, matching the validator's documented contract, so a vanilla-inherited
   faction is the engine guard's problem (`Patch65_LandlessCultureSpawnGuard`), not a TAOM data defect.
 - **Source:** #374 (`tools/taom_schema.py` `_LANDLESS_BY_DESIGN`)
+
+### A binary-format parser's negative tests must cover TRUNCATION — and struct.error is not a ValueError
+
+**Why missed:** `native_crash_triage.py --dump` (#387) caught `ValueError` around the minidump
+parse, but every truncated-file `struct.unpack` raises `struct.error`, which subclasses `Exception`
+directly — so a torn dump (the exact artifact class the tool exists to meet: crash bundles) produced
+a raw traceback. The negative tests covered bad-signature and missing-file, never truncation; the
+stream header's `szentry` was also trusted blindly. Five graceful-degradation paths existed in code
+with zero tests.
+
+**Prevent:** For any binary-format parser: (1) enumerate the parsing library's REAL exception types
+(`struct.error`, `OSError`) at every catch site instead of assuming taxonomy; (2) write one
+truncation test per stream/section boundary (header, directory, per-entry short read) asserting a
+message, not a traceback; (3) validate size/count fields from the file before trusting them in
+reads; (4) one test per graceful-degradation path — "degrades correctly by inspection" is how a
+refactor silently turns degrade into crash.
+
+**Source:** deep-review 2026-08-05 (tooling agent), `docs/reviews/rca-memsample-telemetry-2026-08-05.md` finding #2.

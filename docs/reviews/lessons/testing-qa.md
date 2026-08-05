@@ -244,3 +244,22 @@ independently reported two rosters that *did* carry horses, contradicting the sc
   "I checked, it's clean" claim. `evidence-over-claims.md` §C already forbids inventing a result; this is
   the adjacent failure of *believing a real result produced by a broken instrument*.
 - **Source:** dwarf-lord formation audit, 2026-08-04.
+
+### A cross-language decision mirror is pinned by a boundary VALUE, not by mirroring its constants
+
+**Why missed:** The [MemSample] contract (#386) pinned the log-line FORMAT with twin literal tests
+(C# formatter ↔ Python fixture) and mirrored the threshold constants (2048/10/512) with a
+"numerically identical" comment — but the ARITHMETIC diverged: C# `limit * 10 / 100` floors
+(long division), Python `headroom * 100 < limit * percent` compares exactly. They disagree in the
+~1 MB band below the true 10% line on any commit limit not divisible by 10 — essentially every real
+machine. Every pre-existing test used round limits or cases decided by the floor rule, so both
+suites were green around a live drift. Two review agents caught it independently with different
+counterexamples.
+
+**Prevent:** When a decision function is mirrored across languages (or across a game↔tool boundary),
+add a boundary pin at a NON-ROUND input in BOTH implementations — a value where truncation,
+rounding, or clamp semantics can differ (e.g. `limit=31646` → threshold 3164 floored from 3164.6;
+assert headroom 3164 healthy / 3163 low on both sides). When briefing parallel lanes on a shared
+contract, pin boundary VALUES alongside the literal strings.
+
+**Source:** deep-review 2026-08-05, `docs/reviews/rca-memsample-telemetry-2026-08-05.md` finding #1.
