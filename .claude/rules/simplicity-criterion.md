@@ -2,14 +2,7 @@
 description: Yes/No matrix for evaluating whether a change is worth keeping. Tiny gain + ugly code is rejected; deletions that hold parity always win.
 ---
 
-<!--
-This rule has NO `paths:` field intentionally. Per Claude Code memory loader:
-  - Rules WITHOUT `paths:` load at conversation start (always-on).
-  - Rules WITH `paths:` (any glob, including `**/*`) load only when a matching
-    file is opened — they are conditional, not unconditional.
-This rule is meant to apply universally, so `paths:` is omitted.
--->
-
+<!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
 
 # The Simplicity Criterion
 
@@ -31,17 +24,6 @@ When evaluating your own change, or when reviewing inside `/deep-review` / `/rev
 2. State the cost in one sentence ("adds an interface", "adds 30 lines", "adds a config knob").
 3. Match against the table. If the verdict is **Reject**, the change does not ship — even if it's "technically correct" or "more idiomatic."
 
-## Why this rule exists
+> The "deletion that holds parity" test asks *is this code redundant?* — NOT the same as `/improve`'s deepening deletion test (*is this abstraction shallow?*). Don't conflate the lenses.
 
-The recurring failure mode in `/deep-review` agents (caught across multiple Codex review cycles, e.g. EquipPresets review #5 on 2026-05-06) is preserving scaffolding "just in case": unused enum values, never-populated status fields, "reserved for future" plumbing. This rule turns the existing CLAUDE.md "no over-engineering" guidance into a deterministic Yes/No matrix that an agent can apply without judgment calls drifting toward keep-everything.
-
-It also gives `/deep-review` a concrete handle for the deletion-win case. A reviewer who finds a 50-line helper that nothing actually uses should not need to argue for its removal — the rule is "deletion that holds parity = always keep," full stop.
-
-## Relationship to other rules
-
-- `think-before-coding.md`'s **reuse ladder** is the *reuse-before-write* companion: it fires *before* a change exists (don't write what the engine or an existing service already provides); this rule judges a change *after* it exists (keep or reject). `/deslop` + `/deep-review` enforce both on finished code.
-- This rule's "deletion that holds parity" test asks *is this code redundant?* It is NOT the same as `/improve`'s **deepening deletion test** (audit-playbook § Tech Debt & Architecture), which asks *is this abstraction shallow?* — would inlining a module *concentrate* complexity (deepen) or *scatter* it (keep). Redundant-code deletion vs shallow-abstraction deepening are different lenses; don't conflate them.
-
-## Source
-
-Imported from karpathy/autoresearch `program.md` "Simplicity criterion" paragraph (March 2026). The original framing was for ML hyperparameter changes ("a 0.001 val_bpb improvement that adds 20 lines of hacky code? Probably not worth it. An improvement of ~0 but much simpler code? Keep."); this rule generalizes it to any TAOM code change.
+_Provenance (why this rule exists, relationships, sources): [docs/reference/rule-provenance.md](../../docs/reference/rule-provenance.md)._

@@ -2,13 +2,7 @@
 description: Evidence over performance — verify a review finding before implementing it, never sycophantically agree, and make no "done" claim without fresh verification output.
 ---
 
-<!--
-This rule has NO `paths:` field intentionally. Per the Claude Code memory loader
-(see harness-facts.md): rules WITHOUT `paths:` load at conversation start
-(always-on); rules WITH any `paths:` glob load only when a matching file is
-opened. This discipline must fire on every turn — how we respond to review
-findings, user corrections, and our own "done" claims — so `paths:` is omitted.
--->
+<!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
 
 # Evidence Over Claims
 
@@ -58,17 +52,4 @@ The cheapest thing an LLM can produce is a confident, plausible-sounding fact th
 
 **When you catch yourself about to state a fact you have not verified this turn: stop.** Run the proving step and state it with evidence, or say "I don't know yet — checking." Both are fine. The plausible guess is not.
 
-## Why this rule exists
-
-Unverified agreement, unverified success, and invented facts are the three cheapest things an LLM produces and the three most expensive things a user discovers later: a "confirmed" finding that breaks a working path, a "done" feature that never compiled, a findings doc whose every detail was made up. All three come from optimizing for the appearance of progress over the fact of it. TAOM's workflow is review-heavy and auto-applies findings, which multiplies the cost of getting any of them wrong. The fabrication facet (C) was added 2026-05-30 after a hotfix-review doc + CHANGELOG were authored before the proving `diff` output was read — the *conclusion* was right but the *evidence* was invented (wrong changed-type list, a "fix" that never happened, a "47 broken refs" count when the real count was 0). RCA-in-memory: `feedback_no_write_before_reading_tool_output.md`.
-
-## Relationship to other rules
-
-- `think-before-coding.md` fires *before* the change (is this the right change?); this rule fires *around feedback and completion* (is this finding real? is this actually done?).
-- `simplicity-criterion.md` is a legitimate basis for pushing back on a finding ("rejecting: adds an abstraction for a tiny win").
-- `/investigate`, `/verify`, `/deep-review`, `/review-codex` are the command-form workflows; this rule is the always-on behavior underneath them.
-- **Fork-discipline (`.claude/rules/working-discipline.md`) forbids fabricating *subagent* results; facet C extends the same prohibition to *your own* tool results and to every fact you state.** "Don't fabricate or predict fork results" and "never invent a count/diff/hash" are one rule applied to two sources. `feedback_no_write_before_reading_tool_output.md` is the worked example.
-
-## Source
-
-Sections A + B imported from obra/superpowers (`receiving-code-review` + `verification-before-completion` skills, reviewed 2026-05-29), combined into one rule because both encode "evidence over performance." Adapted to TAOM's review-heavy, auto-implementing pipeline; the verify-the-finding-first emphasis is TAOM-specific, grounded in `feedback_audit_findings_not_always_correct.md` and `feedback_codex_caught_api_misread.md`. We did NOT adopt superpowers' wholesale plugin (prompt-injection-by-design + context tax) — only the reviewed text. **Section C is TAOM-originated (2026-05-30), written from a live fabrication failure in this codebase** (`feedback_no_write_before_reading_tool_output.md`) rather than ported — the user's standing instruction is that not-knowing is fine and must be met with research, never with invention.
+_Provenance (why this rule exists, relationships, sources): [docs/reference/rule-provenance.md](../../docs/reference/rule-provenance.md)._

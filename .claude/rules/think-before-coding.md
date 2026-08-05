@@ -2,24 +2,11 @@
 description: Surface load-bearing assumptions before the first Edit. Ask if uncertain. Don't ask on trivial/mechanical work — that's the opposite failure mode.
 ---
 
-<!--
-This rule has NO `paths:` field intentionally. Per Claude Code memory loader:
-  - Rules WITHOUT `paths:` load at conversation start (always-on).
-  - Rules WITH `paths:` (any glob, including `**/*`) load only when a matching
-    file is opened — they are conditional, not unconditional.
-This rule is meant to apply universally, so `paths:` is omitted.
--->
-
+<!-- NO paths: intentionally — always-load. See harness-facts.md "Rule loader (memory) semantics". -->
 
 # Think Before Coding
 
 Before writing code for a non-trivial request, state the load-bearing assumptions you're making in one sentence each. If any assumption is *both load-bearing and uncertain*, use `AskUserQuestion` BEFORE the first Edit/Write. If they're load-bearing but obvious-from-context, state and proceed.
-
-## Why this rule exists
-
-LLMs default to *silent assumption* — pick one of several plausible interpretations of the request, commit to it, ship the diff. The user discovers the wrong path 30 minutes later, when the diff is already big enough that backing out is expensive and the right answer requires partial rework rather than a fresh start.
-
-Karpathy's observation across LLM coding sessions: this is one of four recurring failure modes that prompt sophistication does not fix. Behavioral discipline does.
 
 ## When the rule fires
 
@@ -78,16 +65,4 @@ At the start of a non-trivial task, before the first Edit/Write, say in one line
 
 If the assumption is uncertain enough that picking wrong wastes meaningful work (more than a few lines / a few minutes), use `AskUserQuestion` instead of stating-and-proceeding.
 
-## Relationship to other rules
-
-- `simplicity-criterion.md` decides *whether* to keep a change. This rule decides *whether the change you're about to write is actually the one the user asked for.*
-- `/scope-check` evaluates whether a proposed addition fits the current PR. This rule fires earlier — before the addition exists.
-- `/investigate` Phase 1 ("symptom + repro") is the debugging-specific instance of this rule. The general form applies to features and refactors too.
-
-## Source
-
-Imported from https://github.com/forrestchang/andrej-karpathy-skills (which packages karpathy/autoresearch behavioral principles). Original framing: *"State your assumptions explicitly. If uncertain, ask."* The "when NOT to ask" section is a TAOM-specific guard — the upstream rule does not address the opposite failure mode of over-questioning, which is a known LLM bug we've hit in past sessions.
-
-The "lightweight design pass" section was added 2026-05-29 from obra/superpowers' `brainstorming` skill — we took its "one question at a time, multiple-choice / propose 2-3 approaches" core but deliberately dropped its mandatory per-feature design-doc-commit + multi-stage approval gate as too heavy for TAOM's workflow.
-
-The "reuse ladder" section was added 2026-06-18 from [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) (MIT) — its YAGNI "decision ladder" (need it? → stdlib → native → reuse dep → one-liner → build), TAOM-translated to the TaleWorlds/ADR domain (engine API → existing service or adapter → one-line delegation → minimal new code). The rest of ponytail was evaluated and consciously not adopted — already covered harder by `simplicity-criterion.md` / `/deslop` / `/deep-review` / `/improve`; full novel-vs-duplicative map + skip reasons in `docs/reviews/adopt-ponytail-2026-06-18.md`.
+_Provenance (why this rule exists, relationships, sources): [docs/reference/rule-provenance.md](../../docs/reference/rule-provenance.md)._

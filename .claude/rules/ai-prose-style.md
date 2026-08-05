@@ -26,12 +26,4 @@ Governs prose Claude *produces*: commit bodies, CHANGELOG entries, GitHub issue 
 
 Em-dashes, **boldface**, inline-`**Label:**` headers, markdown tables, and backticked paths/code are **deliberate TAOM semantic markers** — keep them. The upstream humanizer cuts em-dashes and boldface; TAOM does not. (`/humanizer` carries the full carve-out + the complete 33-pattern reference for deep cleaning.)
 
-## Relationship to other rules
-
-- `response-style.md` — reply openings + confidence tags + the anti-sycophancy reflex. That's *chat*; this is *artifacts*.
-- `evidence-over-claims.md` §C — never invent the facts you write into a doc. Concrete-and-fabricated is worse than vague-and-honest.
-- `/humanizer` skill — the on-demand deep-clean tool and full pattern catalogue.
-
-## Source
-
-Imported from [blader/humanizer](https://github.com/blader/humanizer) (MIT), whose patterns derive from Wikipedia's "Signs of AI writing". This rule is the high-value, TAOM-carve-out subset applied always-on; the skill is the full reference.
+_Provenance (relationships, sources): [docs/reference/rule-provenance.md](../../docs/reference/rule-provenance.md)._

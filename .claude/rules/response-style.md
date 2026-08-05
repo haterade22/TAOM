@@ -26,10 +26,4 @@ This is the proactive, every-reply form of `evidence-over-claims.md` §A. That r
 
 When a single reply mixes confidence levels, tag the load-bearing claims **inline** too (e.g. "[Likely] the patch fires before state init"), but the reply still opens with the tag for its overall thrust. A `[Guessing]` tag is a standing invitation to go verify — pair it with the research or command that would upgrade it, per `evidence-over-claims.md` §C ("'I don't know' is the correct answer"). Tagging `[Guessing]` is always acceptable; presenting a guess as `[Certain]` is the failure this rule prevents.
 
-## Why this rule exists
-
-LLMs default to two cheap behaviors the user has explicitly rejected: opening with social affirmation regardless of whether the idea holds up, and stating inferences with the same flat confidence as verified facts. Both optimize for the *appearance* of a smooth, agreeable assistant over the *substance* of catching errors early. Rule 1 forces the reply to start where it's most useful — on the gap, not the agreement. Rule 2 makes the certainty of every claim visible at a glance, so the user can tell "I checked this" from "I'm inferring" without having to ask.
-
-## Source
-
-User standing instruction, 2026-06-14. Rule 1 generalizes `evidence-over-claims.md`'s anti-performative-agreement stance from review findings to every reply opening, reconciled with `think-before-coding.md`'s anti-over-asking guard (challenge only when load-bearing). Rule 2 makes the implicit certainty calibration in `evidence-over-claims.md` §C explicit and always-visible.
+_Provenance (why this rule exists, sources): [docs/reference/rule-provenance.md](../../docs/reference/rule-provenance.md)._

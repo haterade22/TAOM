@@ -2,17 +2,8 @@
 description: Verified Claude Code load semantics, hook lifecycle, and frontmatter schema. Pinned source-of-truth so future skill/rule/agent edits don't recreate already-fixed bugs.
 ---
 
-<!--
-This rule has NO `paths:` field intentionally — see scoped-rules convention
-in CLAUDE.md. It is loaded at every conversation start.
-
-Each fact below is sourced from official Claude Code docs (URLs provided)
-or from a specific TAOM bug we shipped and fixed. When you see "verified
-2026-04-26" that means a Codex review pass cited the upstream doc by URL
-and the assertion held up against current behavior. If Claude Code changes,
-update this file as the FIRST step — never let other harness files drift
-ahead of this one.
--->
+<!-- NO paths: intentionally — always-load. Every fact cites a doc URL or an empirical context;
+     if Claude Code changes, update THIS file first — never let other harness files drift ahead. -->
 
 # Claude Code Harness Facts (verified)
 

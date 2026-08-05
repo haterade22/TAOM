@@ -59,6 +59,14 @@ load-bearing "Documentation Requirements (MANDATORY)" heading (issue-body templa
 `armory-shield-audit.md`). Corrected two stale counts: "42 skills load eagerly" → 40 of 42
 (two are `disable-model-invocation`), "25 hooks" → 24 registrations across 9 events.
 
+**Always-load rules: provenance stripped to `docs/reference/rule-provenance.md`.** The "Why this
+rule exists" / "Relationship to other rules" / "Source" sections of five always-load rules
+(evidence-over-claims, simplicity-criterion, think-before-coding, response-style, ai-prose-style)
+are import history and cross-rule commentary — zero runtime behavior, paid on every turn. Moved
+verbatim; each rule keeps a one-line pointer (simplicity-criterion also keeps its don't-conflate
+guard inline). The five identical ~6-line "no `paths:` intentionally" comment blocks collapsed to
+one line each.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
