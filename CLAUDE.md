@@ -38,10 +38,10 @@ RCA: `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md`.
 
 ## Skills (Slash Commands)
 
-All 42 skill **descriptions already load eagerly** into every conversation (that is the
-skill-listing you see) — so a table of them here is a second, drifting copy. Invoke a skill with
-`/name`; the routing table below ("Skill Routing") says *when*. Full per-skill workflow lives in
-each `SKILL.md`.
+40 of the 42 skill **descriptions load eagerly** into every conversation (that is the
+skill-listing you see; 2 are `disable-model-invocation: true`) — so a table of them here is a
+second, drifting copy. Invoke a skill with `/name`; the routing table below ("Skill Routing")
+says *when*. Full per-skill workflow lives in each `SKILL.md`.
 
 ### Workflow → Skill convention
 
@@ -138,27 +138,11 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 
 ## Doc Lookup
 
-**Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map across the feature docs,
-ADRs, reviews, ai-includes, and migration docs. Topology queries: `/doc-graph`. Knowledge-base
-architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
-
-| Need to... | Read |
-|------------|------|
-| Write tests / TDD workflow | [tdd-enforcement.md](./docs/ai-includes/tdd-enforcement.md) |
-| Understand architecture / patterns | [architecture.md](./docs/ai-includes/architecture.md) · [patterns.md](./docs/ai-includes/patterns.md) |
-| Research TaleWorlds mechanics | [taleworlds-research-guide.md](./docs/ai-includes/taleworlds-research-guide.md) |
-| Engine process ("how does X work") | [docs/reference/engine/](./docs/reference/engine/) — 19 subsystems |
-| Brief / spawn a subagent | [agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) |
-| Lessons-learned (read before touching a subsystem; append after every RCA) | [LESSONS-LEARNED.md](./docs/reviews/LESSONS-LEARNED.md) → `docs/reviews/lessons/<category>.md` |
-| Add/update translations | [TRANSLATOR_GUIDE.md](./docs/localization/TRANSLATOR_GUIDE.md) |
-| Author culture armor / troop tree | [new-culture-authoring.md](./docs/ai-includes/new-culture-authoring.md) |
-| Add a rideable creature mount | [creature-mount-authoring.md](./docs/ai-includes/creature-mount-authoring.md) |
-| Migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
-
-Full task-oriented lookup (all 46 rows — lord skills, weapon creation, armory pipeline, scene
-refs, lord perks, settlement economy, mesh-ref validation, co-op + dedicated server, every
-engine-process doc):
-**[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
+**Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map. Task-oriented "Need
+to… / Read" lookup (all 46 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
+Topology queries: `/doc-graph`; architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
+Lessons-learned: read the relevant `docs/reviews/lessons/<category>.md` BEFORE touching a
+subsystem; append after every RCA ([index](./docs/reviews/LESSONS-LEARNED.md)).
 
 ## Localization
 
@@ -244,21 +228,10 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 
 ## Documentation Requirements (MANDATORY)
 
-| Doc | When to update | Path |
-|-----|---------------|------|
-| **CHANGELOG.md** | Every session | `CHANGELOG.md` |
-| **CLAUDE.md** | New features add their row to `docs/reference/feature-map.md` (Key Paths holds no per-feature rows since the Tier-2 restructure) — here, only a Traps/registry row a crash-triage reader needs, <=400 chars; prose goes in the feature doc (linter-enforced budget) | `CLAUDE.md` |
-| **ADRs** | Architectural decisions | `docs/adrs/` |
-| **Migration tracking** | Migration tasks | `docs/migration/TRACKING.md` |
-| **GitHub Issues** | Every feature, bug, crash, system fix | `gh issue create/close` |
-| **Feature docs** | Every completed feature | `docs/features/<name>.md` |
-
-## GitHub Issue & Knowledge Base Requirements (MANDATORY)
-
-- **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair). Exhaustive bodies — bug: Problem/Analysis/Solution/Files/Testing; feature: Motivation/Design/Implementation/Testing. Label, reference in commits, `gh issue close` when verified.
-- **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md), detailed enough that a future session needs ZERO decompilation or re-analysis for conceptual understanding.
-- **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix (HIGH in-session) -> `/review-codex` (auto-dispatch) + verify/fix -> `/review-codex` self-review pass -> final `/verify` -> issue (must exist BEFORE the closing commit) + feature doc + CHANGELOG. `/ship` orchestrates it; full templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md).
-- **Process docs:** `docs/reviews/REVIEW-GUIDE.md` (prompt templates), `docs/reviews/REVIEW-LOG.md` (scoring history).
+- **CHANGELOG.md every session.** ADRs for architectural decisions (`docs/adrs/`); migration tasks in `docs/migration/TRACKING.md`.
+- **CLAUDE.md:** new features add their row to `docs/reference/feature-map.md`, NOT here — here only a Traps/registry row a crash-triage reader needs, <=400 chars; prose goes in the feature doc (linter-enforced budget).
+- **Every feature/bug/crash gets a GitHub issue**, created BEFORE implementation (retroactive only as repair); exhaustive body, labeled, closed when verified. **Every completed feature gets `docs/features/<name>.md`** (from TEMPLATE.md) — detailed enough that a future session needs ZERO re-decompilation.
+- **Completion workflow (every C# feature, no exceptions):** `/verify` -> `/deep-review` + fix -> `/review-codex` + verify/fix -> self-review pass -> final `/verify` -> issue + feature doc + CHANGELOG. `/ship` orchestrates it; issue-body templates + 13-step sequence: [completion-workflow.md](docs/ai-includes/completion-workflow.md); process docs `docs/reviews/REVIEW-GUIDE.md` + `REVIEW-LOG.md`.
 
 ## Commits
 
@@ -301,7 +274,7 @@ Full detail (compose examples, dual-build layout, DLL paths, configuration): [`d
 
 ## Hooks
 
-25 hooks across 9 events. Full catalog (hook → event → purpose):
+24 hook registrations across 9 events (+ the `/freeze` inline hook). Full catalog (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".
@@ -342,15 +315,12 @@ Opt-in preview (v2.1.78+): runs PowerShell natively instead of via Git Bash. Ena
 
 ## Equipment & Armory
 
-Armory dependency is **`LOTRLOME_Armory`** (NOT `Armory_2`). Item defs live under
-`.../LOTRLOME_Armory/ModuleData/LOTRLOME_items/<folder>/`.
-**Before authoring an item: grep ALL `LOTRLOME_items/*/` for the id prefix — the first folder
-that already holds that prefix is the canonical home; a different folder = silent duplicate-ID
-shadowing** (e.g. `sk_dwarf_iron_*` lives in `iron_hills/`, not `erebor/`). Full canonical-folder
-table + Gondor prefixes + CC facegen rule: **`/author-armor`** +
-[`docs/reference/armory-guide.md`](docs/reference/armory-guide.md).
-Validation: `python tools/validate_all_troop_refs.py` (missing item IDs → characters in underwear).
-**Shields:** `item_usage="hand_shield"` requires `ForceAttachOffHandPrimaryItemBone`, `item_usage="shield"` requires `ForceAttachOffHandSecondaryItemBone` — never both. Two `body_name`s in `LOTRAOM_shields.xml` look mistyped and must NOT be "fixed" (the asset is packaged under the misspelling): [`docs/reference/armory-shield-audit.md`](docs/reference/armory-shield-audit.md).
+Dependency is **`LOTRLOME_Armory`** (NOT `Armory_2`). **Before authoring an item: grep ALL
+`LOTRLOME_items/*/` for the id prefix — a different folder = silent duplicate-ID shadowing.**
+Canonical-folder table + validation + CC facegen rule: **`/author-armor`** +
+[`docs/reference/armory-guide.md`](docs/reference/armory-guide.md); shield `item_usage`/offhand-bone
+rules (+ the two misspelled `body_name`s that must NOT be "fixed"):
+[`docs/reference/armory-shield-audit.md`](docs/reference/armory-shield-audit.md).
 
 ## Rebalancing & Data Tools
 

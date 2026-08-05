@@ -1,6 +1,6 @@
 # Doc Lookup (task -> doc)
 
-> Task-oriented index of TAOM docs. Extracted from CLAUDE.md 2026-07-18 (Tier 2 restructure). The 12 highest-traffic rows stay inline in CLAUDE.md "Doc Lookup"; `docs/INDEX.md` is the fuller curated topical map.
+> Task-oriented index of TAOM docs. Extracted from CLAUDE.md 2026-07-18 (Tier 2 restructure); since 2026-08-05 (diet round 2) CLAUDE.md "Doc Lookup" is a pointer only — this file is the complete task table. `docs/INDEX.md` is the fuller curated topical map.
 
 
 **Start here for any doc question:** [docs/INDEX.md](../../docs/INDEX.md) — curated topical map across the feature docs, ADRs, reviews, ai-includes, and migration docs. Knowledge-base architecture: [ADR-010](../../docs/adrs/010-knowledge-base-architecture.md).

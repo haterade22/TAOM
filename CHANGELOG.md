@@ -50,6 +50,15 @@ per-row "what it does" halves (each skill's eager description already says it), 
 and confidence gates; the Soft-suggest and Never-auto-invoke tables became compact lists with the
 same semantics.
 
+**Final thinning + factual fixes.** Doc Lookup → 4-line pointer (the 10 inline rows all
+grep-verified present in `doc-lookup.md`, whose provenance note now says no rows stay inline);
+Documentation Requirements + GitHub Issue & KB Requirements merged into one block under the
+load-bearing "Documentation Requirements (MANDATORY)" heading (issue-body templates verified in
+`completion-workflow.md:14-27`); Equipment & Armory → 6 lines (canonical-folder example,
+`validate_all_troop_refs.py`, and shield-bone rules verified in `armory-guide.md` /
+`armory-shield-audit.md`). Corrected two stale counts: "42 skills load eagerly" → 40 of 42
+(two are `disable-model-invocation`), "25 hooks" → 24 registrations across 9 events.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
