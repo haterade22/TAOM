@@ -42,6 +42,14 @@ what was a 4-way duplicate (research-guide, engine-and-toolchain, taom-src SKILL
 manual). The new doc also carries a plugin-overlap routing table (deep-review vs code-review,
 deslop vs the now-disabled code-simplifier).
 
+**Custom Agents collapsed; Skill Routing trimmed.** The 5-row agent table duplicated the agents'
+eagerly-loaded descriptions — replaced by one paragraph that keeps the 6-point briefing convention
+imperative (subagents don't inherit CLAUDE.md; the full checklist lives in
+agent-operating-manual.md + harness-facts "Parallel builder briefs"). Skill Routing dropped the
+per-row "what it does" halves (each skill's eager description already says it), keeping triggers
+and confidence gates; the Soft-suggest and Never-auto-invoke tables became compact lists with the
+same semantics.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one

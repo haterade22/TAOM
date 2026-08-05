@@ -49,20 +49,20 @@ each `SKILL.md`.
 
 ## Skill Routing (when to invoke what)
 
-When the user's message matches one of these patterns, **proactively invoke** the listed skill via the Skill tool. The skill has structured workflows, gates, and TAOM-specific patterns that produce better results than ad-hoc help. (Note: invoking the Skill tool still respects the user's tool-permission settings — the user may see a confirmation prompt unless allowlisted.)
+When the user's message matches one of these patterns, **proactively invoke** the listed skill via the Skill tool — the skill's structured workflow beats ad-hoc help. (What each skill *does* is in its eagerly-loaded description; this table only routes.)
 
 ### Strong proactive-invoke triggers
 
 | User intent / phrase | Invoke | Confidence gate |
 |----------------------|--------|-----------------|
-| "this is broken", "why isn't this working", "it was working yesterday", crash logs, stack traces, exceptions from a TAOM patch or service | **`/investigate`** — never debug ad-hoc; the Iron Law is non-negotiable | None — always |
-| Native CTD: `0xC0000005` / `AccessViolationException` with the stack dying in `TaleWorlds.Native.dll` (or any native module), "crashed to desktop" with no managed culprit | **`/native-crash-triage`** — Event Log offsets discriminate sites across runs; never blind-retry a native AV | None — always. `/investigate` hands off here when the trail goes native |
-| "add a new creature", "make X rideable", "new mount", a creature troop/mount feature kickoff | **`/new-creature-mount`** — warg parity is law; parity-audit-first beats per-crash debugging | Skip if the user is just sketching aloud — invoke when they say "do it" |
-| Session-start hook prints "GAME VERSION DRIFT", Steam updated Bannerlord, "the game updated", deliberate engine migration | **`/engine-bump`** — preserve the decompile baseline BEFORE regenerating; compare Event Log offsets before attributing crashes to your changes | None — always, and BEFORE trusting any test run |
+| "this is broken", "why isn't this working", "it was working yesterday", crash logs, stack traces, exceptions from a TAOM patch or service | **`/investigate`** — never debug ad-hoc | None — always |
+| Native CTD: `0xC0000005` / `AccessViolationException` with the stack dying in `TaleWorlds.Native.dll` (or any native module), "crashed to desktop" with no managed culprit | **`/native-crash-triage`** — never blind-retry a native AV | None — always. `/investigate` hands off here when the trail goes native |
+| "add a new creature", "make X rideable", "new mount", a creature troop/mount feature kickoff | **`/new-creature-mount`** | Skip if the user is just sketching aloud — invoke when they say "do it" |
+| Session-start hook prints "GAME VERSION DRIFT", Steam updated Bannerlord, "the game updated", deliberate engine migration | **`/engine-bump`** | None — always, and BEFORE trusting any test run |
 | "the build won't compile", `error CS####` output, dotnet build failure | **`/build-fix`** | None — always. If error mentions a missing/renamed TaleWorlds type, hand off to `/research` first; if `/build-fix` retry budget triggers, hand off to `/investigate`. |
 | "scaffold a feature", "new feature for X", "add a system that does Y" | **`/new-feature`** then offer `/freeze` to scope-lock during implementation | Skip if the user is just sketching aloud — only invoke when they say "do it" |
 | "review this", "is this ready to merge", "before commit" on C# changes | **`/deep-review`** (or `/deep-review --codex` if user wants both) | **Only for C# changes touching ≥2 files OR any feature module.** For one-line fixes, XML/config/docs, skip — running 5+ agents is wasteful. |
-| "I need to override DefaultXxxModel", "what's the signature of", "before touching a TaleWorlds class" | **`/research`** before editing — never guess signatures | None — always |
+| "I need to override DefaultXxxModel", "what's the signature of", "before touching a TaleWorlds class" | **`/research`** before editing | None — always |
 | "create an issue for", "open a bug", "log this crash" | **`/issue`** | None — always |
 | "check XSLT", new `.xslt` edit, "did the transform pass through correctly" | **`/xslt-check`** | None — always |
 | "I'm wondering if X is in scope", "is this a side quest", "should I tackle Y in this PR" | **`/scope-check`** | None — always |
@@ -84,23 +84,17 @@ When the user's message matches one of these patterns, **proactively invoke** th
 
 ### Soft suggest (offer, don't auto-invoke)
 
-| Situation | Suggest |
-|-----------|---------|
-| User says "only fix this", "don't touch X", "stay in this folder", "I'm starting a refactor across many files", or starting a focused fix on one feature | Offer **`/freeze`**: *"Want me to scope-lock edits to `<dir>` so I can't drift?"* |
-| User starts a long debug session manually (multi-step trace, repro attempts) without invoking `/investigate` | Suggest **`/investigate`**: *"This looks like root-cause debugging — want to use `/investigate`? It auto-locks scope and enforces the Iron Law."* |
-| Done with the focused fix; freeze boundary still active. Triggers: "I'm done with that", "release the boundary", "let me work elsewhere now", "remove the freeze" | Offer **`/unfreeze`**: *"Boundary still set to `<dir>`. Release it?"* |
-| About to ship a feature, "let's get this merged", "ready to PR", "send it" | Offer the ship sequence: **`/verify`** → (`/codex-verify` or `/review-codex`) → close issue → update CHANGELOG |
-| User asks "what's the migration status" or mentions v1.2 → v1.3 work | Offer **`/migration-status`** |
-| Finishing a user-facing doc / README / longform issue or PR body, or the user asks to "humanize" / "clean up the writing" on a finished artifact | Offer **`/humanizer`**: *"Want me to deep-clean the AI-writing tells out of this? (keeps the em-dash/boldface house style)"* — soft offer only; `ai-prose-style.md` already governs new prose as you write |
+- **`/freeze`** on "only fix this" / "don't touch X" / "stay in this folder" / a many-file refactor or focused one-feature fix; **`/unfreeze`** when they're done and the boundary is still set.
+- **`/investigate`** when a long manual debug session (multi-step trace, repro attempts) starts without it.
+- **Ship sequence** on "let's get this merged" / "ready to PR": `/verify` → (`/codex-verify` or `/review-codex`) → close issue → update CHANGELOG.
+- **`/migration-status`** on "what's the migration status" / v1.2 → v1.3 mentions.
+- **`/humanizer`** when finishing a user-facing doc/issue/PR or on "humanize" — soft offer only; `ai-prose-style.md` already governs new prose as you write.
 
 ### Never auto-invoke
 
-| Skill | Why |
-|-------|-----|
-| `/codex-verify`, `/review-codex` | Cost real money — explicit user intent only (or via the ship-sequence offer above) |
-| `/issue` | Creates a public artifact — explicit user intent only |
-| `/migration-status` | Read-only diagnostic — only when user asks |
-| `/context-budget` | Diagnostic — only when user asks or after a major harness change |
+`/codex-verify`, `/review-codex` (cost real money — explicit user intent or the ship-sequence offer);
+`/issue` (creates a public artifact); `/migration-status`, `/context-budget` (read-only diagnostics —
+on request, or `/context-budget` after a major harness change).
 
 ### When the user invokes a skill explicitly
 
@@ -116,28 +110,19 @@ full text is already in context every session; the path-scoped ones load when yo
 
 ## Custom Agents
 
-| Agent | Purpose |
-|-------|---------|
-| `taleworlds-researcher` | Decompile and analyze TaleWorlds DLLs |
-| `feature-builder` | Build features following TAOM architecture |
-| `debugger` | Generic debugging for non-TAOM-specific issues (tooling, scripts, CI). Use `/investigate` for TAOM C# bugs. |
-| `error-detective` | Cross-system error correlation when one root cause manifests as multiple symptoms across features. |
-| `refactoring-specialist` | Behavior-preserving structural refactoring (extract/rename/move). Use `/deslop` for redundant-code deletion. |
-
-### Briefing subagents (spawn-prompt convention)
-
-A subagent runs in its own context with a **strict tool allowlist** and does NOT reliably inherit this CLAUDE.md, the `.claude/rules`, or skill descriptions (the Claude Code docs don't guarantee it). The 5 custom agents above carry their own "Execution model" block; **ad-hoc agents (`Explore` / `Plan` / `general-purpose`) have no body — so YOU, the orchestrator, must put the briefing in the spawn prompt.** Every non-trivial Task/Agent prompt should include:
-
-1. **"Read [docs/ai-includes/agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) first"** — the execution model + tool/skill catalog.
-2. **"You cannot invoke skills or spawn agents — recommend them in your report; the orchestrator runs them."** (No subagent has the `Skill`/`Task` tool.)
-3. **The relevant tool reminder** — e.g. "for TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>`"; "build/test with `dotnet … -p:DisableModuleCopy=true`, not `./build.ps1`".
-4. **Explicit scope** — which dirs/files are in bounds; `Main/IoC.cs` / `Main/SubModule.cs` are single-owner (recommend edits, don't make them).
-5. **Which convention docs to read** — point at the specific `docs/ai-includes/*` or `.claude/rules/*` for the task, since they may not have auto-loaded.
-6. **For PARALLEL builders: pin shared sub-problems once.** Any sub-problem appearing in ≥2 briefs (id normalization, NaN handling, validation invariants, hot-path patterns) gets ONE prescribed solution in the shared contracts — per-builder judgment diverges at the seams. Rule: `.claude/rules/harness-facts.md` "Parallel builder briefs"; the CombatMechanics seam findings behind it: `docs/ai-includes/agent-teams.md` "Case studies".
-
-Pure read-only research agents (`Explore`, `Plan`) need only items 1–2 + scope; building/editing agents need all five (six when fanning out in parallel).
-
-When you dispatch a subagent to **implement then review** work, follow the two-stage review ordering (spec compliance before code quality) in [agent-teams.md](./docs/ai-includes/agent-teams.md#subagent-review-ordering-verify-spec-before-quality).
+5 custom agents in `.claude/agents/` (taleworlds-researcher, feature-builder, debugger,
+error-detective, refactoring-specialist — descriptions load eagerly; each body carries its own
+execution model). **Briefing convention, MANDATORY for every non-trivial spawn prompt** (subagents
+do NOT reliably inherit CLAUDE.md or the rules): include **(1)** "Read
+[docs/ai-includes/agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) first",
+**(2)** "you cannot invoke skills or spawn agents — recommend them in your report", **(3)** the
+relevant tool reminder (`pwsh tools/taom-src.ps1 path <Type>` for signatures;
+`dotnet … -p:DisableModuleCopy=true`, not `./build.ps1`), **(4)** explicit scope
+(`Main/IoC.cs` / `Main/SubModule.cs` are single-owner — recommend, don't edit), **(5)** which
+convention docs to read, **(6)** for PARALLEL builders: pin shared sub-problems once
+(`.claude/rules/harness-facts.md` "Parallel builder briefs"). Read-only agents (`Explore`/`Plan`)
+need 1–2 + scope. Implement-then-review dispatch follows the two-stage ordering in
+[agent-teams.md](./docs/ai-includes/agent-teams.md#subagent-review-ordering-verify-spec-before-quality).
 
 ## Model Routing
 
