@@ -105,6 +105,12 @@ a `<!-- source: user_profile.md -->` ingest marker from the June reorg). Fact ta
 `harness-facts.md` FIRST per its own §1 rule. `/security-scan` clean at HIGH+ after the settings
 edit (1 pre-existing MED: unpinned `npx -y` filesystem MCP).
 
+**hooks-catalog.md re-synced with reality.** `session-stop.sh` was listed under Stop but has been
+wired to SessionEnd since 2026-07-18; `notify-test-results.sh` (wired in settings.json) had no
+row; the `/freeze` skill-inline hook is now noted; `suggest-compact.sh`'s boundary-aware half and
+the new muting/live-memory behaviors are documented; header carries the audited count (24
+scripts / 24 registrations / 9 events).
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
