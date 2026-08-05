@@ -1,10 +1,12 @@
 # Enlistment — serve as a soldier in a lord's party
 
-> **STATUS: FEATURE-COMPLETE, AWAITING IN-GAME VERIFICATION** (#375, checkpoints 1-2:
-> `25a3340c` + `b1852a7a`). Core, dialogs, content systems, duties and equipment are all
-> built and unit-tested (394 tests). Nothing has run in a live game yet — the in-game
-> checklist at the bottom is the remaining gate, along with `/localize` for the new
-> player-facing strings.
+> **STATUS: FEATURE-COMPLETE, AWAITING IN-GAME VERIFICATION** (#375; commits `25a3340c` →
+> `b1852a7a` → `554b6993` → `d905cb36` → `6557a202`). Core, dialogs, content systems, duties
+> and equipment are built and unit-tested. Nothing has run in a live game — the checklist at
+> the bottom is the remaining gate, along with `/localize` for the 36 English keys in
+> `taom_enlistment_strings.xml`. Reviews: two internal `/deep-review` cycles plus an
+> independent Codex pass (`docs/reviews/rca-enlistment-core-2026-08-04.md`,
+> `docs/reviews/rca-enlistment-content-2026-08-05.md`).
 
 **Issue:** #375 · **Donor (reference only, never installed):**
 `C:\Users\mikew\Downloads\TAOM-Enlistment-Promoted-Source\` (Realms Forgotten RF_Enlistment)
@@ -144,16 +146,38 @@ The issue-ledger is monotonic (covering a rank covers every rank below, so a dem
 re-issues) and persists in the content record, so a full game restart cannot re-allow a
 free draw.
 
+## Interactions with the rest of TAOM
+
+**Leader-keyed attribution is the recurring hazard.** For months of game time the player fights
+inside someone else's army, so any system that asks "was the player the winning party's leader?"
+silently pays them nothing. `SpecialResources` hit this before enlistment existed and moved to
+`MapEvent.PlayerSide == WinningSide` participation. The #375 audit swept every remaining
+`CareerPassiveHero.ResolveId` / `LeaderHero == MainHero` site and fixed three more: enlisted
+sieges now advance the War of the Ring victory gate (`WarEventSnapshotAdapter.FromSiege`), and
+commander-party captures credit the `DefeatEnemyLords` and `SettlementsCaptured` career-quest
+objectives. **Before adding any new leader-keyed reward, ask what it does during someone else's
+siege.** Consumers read enlisted state through `IEnlistmentStateQuery` (cross-feature seam;
+FieldCommission and the Patch36 F6 gate use it too).
+
+**Deliberately unpaid while parked.** A commander victory the player sits out pays nothing
+anywhere — renown, special resources, momentum. That is participation-consistent and intended.
+
+**Co-op.** Every world-mutating handler is host-only. The Codex pass found the one exception (the
+wait-menu leave option) after our own review passed, which is worth remembering: a menu *option
+consequence* is a world-mutating entry point even though it doesn't pattern-match like one.
+
 ## Testing
 
-394 tests in `TAOM.Tests/Features/Enlistment/` (full suite 5415 green): transition-table
+The Enlistment suite (`TAOM.Tests/Features/Enlistment/`, full suite 5448 green): transition-table
 matrix, discharge invariants, Entity-State-Matrix load rows, reconciler policy (grace,
 captivity, prisoner-commander-with-live-party), record round-trip incl. NaN/forward-compat,
 menu redirect policy + cap, battle ordering/rollback/loot-guard, binding pins, config
 semantic validation (one test per rule), wage orchestration (solvency × arrears × channel,
 incl. regression tests for the mint-mode double-payment and shortfall-overcount bugs),
 promotion thresholds at both evaluation points, merit scoring/bands incl. NaN ratios, duty
-gating/rotation/lifecycle per mechanic, equipment resolver fallback + payoff math.
+gating/rotation/lifecycle per mechanic, equipment resolver fallback + payoff math, the persisted
+issue-ledger across a save round-trip, role-fit bands per assignment, and one regression test per
+Codex finding (`CodexFindingRegressionTests`).
 
 **Owed at ship (in-game gates — nothing below has run in a live game):**
 SetNextMenu timing vs EncounterGameMenuBehavior; encounter join from parked state; camera

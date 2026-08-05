@@ -1,5 +1,12 @@
 # Field Commission (Battlefield Promotions)
 
+> **STATUS: CODE-COMPLETE AND WIRED, AWAITING IN-GAME VERIFICATION** (#376, committed in
+> `b1852a7a`). Registered in `Main/IoC.cs` (after Enlistment — the `NullEnlistmentStateQuery`
+> fallback uses `IfAlreadyRegistered.Keep`, so the real query must already be in the container)
+> and in `Main/SubModule.cs` (campaign behaviour + `FieldCommissionMissionLogic` in the
+> unconditional `AddTaomBehavior` block). Nothing has run in a live game. Reviews:
+> `docs/reviews/rca-enlistment-content-2026-08-05.md`.
+
 ## Overview
 
 Troops that rack up kills in fair-fight battles the player WINS can be promoted into named
@@ -217,10 +224,13 @@ ever fielded — not a concern at any realistic party size.
 ## Changelog
 
 - 2026-08-04 — Initial build (#376): merit service, offer-flow service, 3 adapters, JSON config,
-  cheats, 111 tests. Awaiting `Main/IoC.cs`/`Main/SubModule.cs` wiring (single-owner, done by the
-  orchestrator) and an in-game smoke test.
+  cheats, 111 tests.
+- 2026-08-05 — Wired into `Main/IoC.cs` + `Main/SubModule.cs` and committed (`b1852a7a`).
+  Registering the four `LordConversations` prefixes of the sibling Enlistment feature also
+  required dispositions in `CoopVetoClassificationTests` — that suite fails the build on any
+  skip-original prefix with no recorded co-op stance, and it caught them.
 
 ## GitHub Issue
 
 - **Issue:** #376 — Battlefield Promotions (Field Commission native rewrite)
-- **Status:** Open (build complete, integration + in-game smoke pending)
+- **Status:** Open (code complete + wired; in-game smoke and `/localize` for the 13 strings pending)

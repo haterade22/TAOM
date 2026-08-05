@@ -59,6 +59,8 @@
 - [prisoner-recruitment](features/prisoner-recruitment.md) — no morale lost recruiting a prisoner of your own faction or alignment side (TaomPrisonerRecruitmentCalculationModel)
 - [equip-presets](features/equip-presets.md) — save/load equipment preset overlay on inventory
 - [lord-skills](features/lord-skills.md) — lore-driven SkillSets for every TAOM lord (~880 NPCs, 17 cultures, 35 archetypes); authoring guide [lord-skills-authoring.md](ai-includes/lord-skills-authoring.md)
+- [enlistment](features/enlistment.md) — serve as a common soldier under a lord (#375): persisted service state machine (party presence is an OUTPUT, never state), single discharge pipeline that always restores presence, commander-funded wages with arrears, ranks/trust/reputation, 13 field duties over 5 mechanics + 11 interactive + 3 incidents, per-culture-per-rank issued armour. Patch66 menu guard
+- [field-commission](features/field-commission.md) — promote a proven troop into a named companion (#376): fair-fight merit per troop type, spent only on a completed promotion, race allow-list, deferring companion cap, level-budgeted skills, suppressed while enlisted
 
 ### Equipment & armor authoring
 - [gondor-armor-revamp](features/gondor-armor-revamp.md) — Gondor armor authoring + roster swap (issue #99)

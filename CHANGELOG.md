@@ -2,6 +2,40 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-05
+
+### fix(enlistment): four seam bugs an independent review found after ours passed
+
+A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
+of the four sat at a seam that no single-file read covers — which is the argument for running an
+independent pass at all, since ours had just finished clean.
+
+An honorable discharge **erased the wages it was meant to settle**: the pipeline clears the
+service record before raising its ended-event, so the final settlement paid a null hero id and
+the gold adapter silently no-oped on the failed lookup. A player who served through a stretch
+where the commander could not pay lost every deferred coin at the exact moment they were owed it.
+
+Food deliveries **completed for free**. The count read `ItemRoster.TotalFood`, which folds
+livestock in via `HorseComponent.MeatCount`, while the consume step only removed `IsFood` stacks —
+so a player driving cattle satisfied the requirement and handed over nothing. The count now ranges
+over exactly what consumption can take, and consumption reports what it actually moved so
+completion keys on the handover rather than on the promise.
+
+The wait-menu leave option had **no co-op authority gate**, unlike every other discharge path; a
+client could clear its own service while the host stayed enlisted. And **NaN campaign days failed
+open in the duty scheduler** — cooldown comparisons went false, offering duties straight through
+the cooldown, while the expiry check went false forever, stranding a duty and the party it spawned.
+
+Also this session: the merit sampler now scores whether you fought the way your assignment asks
+(archers hold an 18-50m line, cavalry work the flanks, support stays with the commander, infantry
+holds formation *and* stays in contact) — that config knob previously could never fire. And the
+equipment issue-ledger moved into the save, so a full game restart no longer re-allows a free kit
+draw per rank.
+
+Research: ItemRoster.TotalFood vs Item.IsFood (installed 1.4.7 via taom-src)
+Not-tested: in-game delivery with livestock aboard; merit scoring across a real battle
+Save-compat: two additive keys in the existing `_taom_enlistment_content` section
+
 ## 2026-08-04
 
 ### feat(validate): the mesh validator can now ask which packaged art has no item
