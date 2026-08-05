@@ -82,26 +82,15 @@ When you write or modify any skill, agent, rule, or hook in `.claude/`:
 
 5. **When writing facts in this file** (or any rule that asserts behavior) — every fact must explicitly cite either a doc URL (DOC-BACKED) or an observation context (EMPIRICAL: where, when, by whom). Vague "verified" claims without source attribution age into wrong assumptions. Example: the project-slug derivation rule was originally presented as fact; Codex caught that the Claude Code memory docs only say `<project>` "is derived from the git repository" — the exact format is empirical-on-Windows, not doc-backed.
 
-## Parallel-port build watcher (EMPIRICAL: TAOM 2026-05-06)
+## Parallel-agent case studies → `docs/ai-includes/agent-teams.md` "Case studies"
 
-An external watcher auto-comments a feature's csproj includes + `SubModule.cs`/`IoC.cs` integration (`// TEMP-SMARTCAVALRY-EXCLUDE` markers) after ANY build failure mentioning it, without distinguishing which parallel port actually broke — cascading across features. **Prevention: pass `isolation: "worktree"` on parallel Agent calls that may edit single-owner files** (see the rule below). Full symptom table + integration workaround + detection signature: `docs/ai-includes/agent-teams.md` "Case studies"; RCA `docs/reviews/rca-companiontactics-2026-05-06.md` (~2 hours lost).
+The build-watcher cascade (2026-05-06), the parallel-builder-brief seam rule (2026-07-02,
+CombatMechanics), and worktree isolation for parallel agent runs moved there 2026-08-05 — they
+fire only when spawning parallel agents, not on every turn. The operative one-liner stays here:
+**parallel Agent calls that may edit single-owner files (csproj / `IoC.cs` / `SubModule.cs` /
+`Directory.Build.props`) pass `isolation: "worktree"`, and any sub-problem appearing in >=2
+builder briefs gets ONE pinned solution in the shared contracts.**
 
-## Parallel builder briefs: shared sub-problems get ONE prescribed solution (EMPIRICAL: TAOM 2026-07-02, CombatMechanics)
-
-When fanning a feature out to parallel builder agents against shared contracts, any sub-problem that appears in MORE THAN ONE brief (id normalization, NaN handling, validation invariants, hot-path allocation patterns) must be solved once in the shared contract/foundation files — never left to per-builder judgment; independently-correct builders diverge at the seams, and per-component review structurally cannot catch it.
-
-**Pre-dispatch checklist:** (1) list sub-problems appearing in >=2 briefs; (2) pin one solution in the shared contracts or a shared helper; (3) after integration, run a cross-consistency review over the seams (data-flow + efficiency agents), not only per-file checks. The four CombatMechanics seam findings behind this rule: `docs/ai-includes/agent-teams.md` "Case studies"; RCA `docs/reviews/rca-combat-mechanics-2026-07-02.md`.
-
-## Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
-
-**Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call — each agent gets its own git worktree on a temporary branch, so the shared tree is never touched in parallel and the build-watcher cascade cannot fire.
-
-**When to apply:** always for parallel edits to the files above, "parallel ports"/"multiple features in flight" requests, or parallel feature scaffolding (`feature-builder`, `/new-feature`).
-**When NOT needed:** read-only agents (`Explore`, research `Plan`); a single Agent call; agents on provably disjoint feature folders that don't touch csproj/IoC/SubModule (rare — audit the file set before assuming).
-**After they return:** merge each worktree branch's diff back sequentially; prune stale checkouts under `.claude/worktrees/` once merged/abandoned (4 forgotten trees cost 22 GB by 2026-07-11).
-
-Evidence table + invocation example: `docs/ai-includes/agent-teams.md` "Case studies".
-
-## Last verified: 2026-07-12
+## Last verified: 2026-08-05
 
 This file is the source of truth for harness behavior in TAOM. Update the "Last verified" date and add new facts whenever a Codex review or experiment confirms something not yet captured here. Authoring-time conventions live in their scoped rules (`hook-authoring.md`, `external-skill-ports.md`); incident write-ups live in `docs/ai-includes/agent-teams.md` + the RCAs.

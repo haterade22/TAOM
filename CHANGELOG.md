@@ -45,7 +45,7 @@ deslop vs the now-disabled code-simplifier).
 **Custom Agents collapsed; Skill Routing trimmed.** The 5-row agent table duplicated the agents'
 eagerly-loaded descriptions — replaced by one paragraph that keeps the 6-point briefing convention
 imperative (subagents don't inherit CLAUDE.md; the full checklist lives in
-agent-operating-manual.md + harness-facts "Parallel builder briefs"). Skill Routing dropped the
+agent-operating-manual.md + agent-teams.md "Case studies"). Skill Routing dropped the
 per-row "what it does" halves (each skill's eager description already says it), keeping triggers
 and confidence gates; the Soft-suggest and Never-auto-invoke tables became compact lists with the
 same semantics.
@@ -66,6 +66,14 @@ are import history and cross-rule commentary — zero runtime behavior, paid on 
 verbatim; each rule keeps a one-line pointer (simplicity-criterion also keeps its don't-conflate
 guard inline). The five identical ~6-line "no `paths:` intentionally" comment blocks collapsed to
 one line each.
+
+**harness-facts' parallel-agent sections → agent-teams.md "Case studies" — a section that did not
+exist.** Three harness-facts pointers (and CLAUDE.md's briefing item 6) cited agent-teams.md
+"Case studies"; agent-teams.md had no such heading. The move creates it: build-watcher cascade,
+parallel-builder-brief seam rule, and worktree isolation now live there verbatim, turning three
+dangling references into real ones. harness-facts keeps the operative one-liner (worktree
+isolation for single-owner files, one pinned solution per shared sub-problem) + a pointer;
+"Last verified" bumped to 2026-08-05.
 
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 

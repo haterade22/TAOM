@@ -120,7 +120,7 @@ relevant tool reminder (`pwsh tools/taom-src.ps1 path <Type>` for signatures;
 `dotnet … -p:DisableModuleCopy=true`, not `./build.ps1`), **(4)** explicit scope
 (`Main/IoC.cs` / `Main/SubModule.cs` are single-owner — recommend, don't edit), **(5)** which
 convention docs to read, **(6)** for PARALLEL builders: pin shared sub-problems once
-(`.claude/rules/harness-facts.md` "Parallel builder briefs"). Read-only agents (`Explore`/`Plan`)
+([agent-teams.md](./docs/ai-includes/agent-teams.md) "Case studies"). Read-only agents (`Explore`/`Plan`)
 need 1–2 + scope. Implement-then-review dispatch follows the two-stage ordering in
 [agent-teams.md](./docs/ai-includes/agent-teams.md#subagent-review-ordering-verify-spec-before-quality).
 

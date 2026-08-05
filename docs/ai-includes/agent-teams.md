@@ -330,6 +330,32 @@ Agent teams multiply token usage. Use this decision framework:
 
 ---
 
+## Case studies
+
+> Moved verbatim from `.claude/rules/harness-facts.md` 2026-08-05 (eager-context diet round 2) —
+> these fire only when spawning parallel agents, so they belong here, not in the every-turn load.
+> harness-facts keeps a one-row pointer. This is the section its pointers cite.
+
+### Parallel-port build watcher (EMPIRICAL: TAOM 2026-05-06)
+
+An external watcher auto-comments a feature's csproj includes + `SubModule.cs`/`IoC.cs` integration (`// TEMP-SMARTCAVALRY-EXCLUDE` markers) after ANY build failure mentioning it, without distinguishing which parallel port actually broke — cascading across features. **Prevention: pass `isolation: "worktree"` on parallel Agent calls that may edit single-owner files** (see "Worktree isolation" below). RCA `docs/reviews/rca-companiontactics-2026-05-06.md` (~2 hours lost).
+
+### Parallel builder briefs: shared sub-problems get ONE prescribed solution (EMPIRICAL: TAOM 2026-07-02, CombatMechanics)
+
+When fanning a feature out to parallel builder agents against shared contracts, any sub-problem that appears in MORE THAN ONE brief (id normalization, NaN handling, validation invariants, hot-path allocation patterns) must be solved once in the shared contract/foundation files — never left to per-builder judgment; independently-correct builders diverge at the seams, and per-component review structurally cannot catch it.
+
+**Pre-dispatch checklist:** (1) list sub-problems appearing in >=2 briefs; (2) pin one solution in the shared contracts or a shared helper; (3) after integration, run a cross-consistency review over the seams (data-flow + efficiency agents), not only per-file checks. RCA `docs/reviews/rca-combat-mechanics-2026-07-02.md` (the four CombatMechanics seam findings).
+
+### Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
+
+**Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call — each agent gets its own git worktree on a temporary branch, so the shared tree is never touched in parallel and the build-watcher cascade cannot fire.
+
+**When to apply:** always for parallel edits to the files above, "parallel ports"/"multiple features in flight" requests, or parallel feature scaffolding (`feature-builder`, `/new-feature`).
+**When NOT needed:** read-only agents (`Explore`, research `Plan`); a single Agent call; agents on provably disjoint feature folders that don't touch csproj/IoC/SubModule (rare — audit the file set before assuming).
+**After they return:** merge each worktree branch's diff back sequentially; prune stale checkouts under `.claude/worktrees/` once merged/abandoned (4 forgotten trees cost 22 GB by 2026-07-11).
+
+---
+
 ## Related Guides
 
 - [architecture.md](./architecture.md) — Layer architecture and patterns
