@@ -19,6 +19,29 @@ also went repo-global (was tools/-scoped) and `.taom-src/` is now ignored (the l
 `~/.taom-src/`). The `.git` store still holds the historical blobs (~3.2 GiB) — reclaiming that
 needs a history rewrite, deliberately not done.
 
+**Tracked junk removed** (each verified unreferenced by the sweep's adversarial pass):
+`_mine.patch` (merge-conflict scratch that rode into a docs commit), `.taom-src/` (v1.3.15
+decompile cache accidentally committed — the live cache is `~/.taom-src/`), the repo's only
+tracked `.pyc` (source never committed), four vestigial `.gitkeep` files in directories holding
+15–1,376 tracked files, `taom_career_starting_equipment.xml.bak-startergear` (tool backup whose
+suffix evaded the `*.bak` ignore; rollback lives in git history), four spent `issue-body-*.md`
+staging files (all four verified as real GitHub issues — #110/#111/#115/#117), the v1.3.12
+map-marker research note (zero inbound references, three engine versions stale), and
+`MORNING-QUEUE.md` (the one creature-pipeline morning file with no live reference — the other
+three are append targets of the active autonomous-loop prompt and STAY).
+
+**Gitignored disk cruft deleted (no history impact, ~625 MB):** `tools/runes/preview/` (602 MB
+of preview renders — user call; `raw_ai/` inputs + pipeline scripts untouched), the four
+extracted `.vendor-source/` trees (~65 MB — the six pinned tarballs stay and re-extract
+losslessly), stale `Dependencies/bin/x64/` + the orphaned `Dependencies/ThirdParty/NativeSkinFixes/`
+artifact dir, both TestResults dirs, two empty root dirs (`BehaviorTreeWrapper/`, `.localappdata/`),
+the stale `/freeze` boundary file (pointed at the pre-move repo path), a dead-PID
+`scheduled_tasks.lock`, the diverged education-templates `.bak`, the April `SP.zip` localization
+snapshot, and the NativeSkinFixes `.exp`/`.lib` linker byproducts — the `.pdb` STAYS (only
+symbolization of the exact shipped parked binary). The one disk-only April codex `.log` moved
+into `docs/reviews/raw/` (the sanctioned transcript home) instead of dying in a tracked dir it
+was never committed to.
+
 ### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
 
 Second-round diet of the eager context load (round 1: 174 KB → 91 KB → 42 KB, July 2026).
