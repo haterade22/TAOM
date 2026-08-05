@@ -7,7 +7,11 @@ namespace TAOM.Features.CareerSystem.Abilities;
 // TaleWorlds statics.
 public interface IAbilityActivationController
 {
-    AbilityActivationResult Tick(float dt, string heroStringId, bool hasCareer);
+    // isControllingCareerHero (Issue #377): false while the player controls another agent
+    // (co-op, or a soldier after being wounded). The cooldown still ticks, but V-presses are
+    // ignored (no wasted activation, no charging toast) and the ready toast is deferred
+    // until control returns.
+    AbilityActivationResult Tick(float dt, string heroStringId, bool hasCareer, bool isControllingCareerHero);
     void Reset();
 }
 

@@ -10,6 +10,7 @@ public class CareerChoiceObjectVM : ViewModel
     private readonly CareerChoiceDefinition _choice;
     private readonly Func<string, bool> _selectChoice;
     private readonly Func<string, bool> _deselectChoice;
+    private readonly string _keystoneIconSprite;
     private bool _isTaken;
     private bool _isFreeToTake;
 
@@ -18,13 +19,15 @@ public class CareerChoiceObjectVM : ViewModel
         bool isTaken,
         bool isFreeToTake,
         Func<string, bool> selectChoice = null,
-        Func<string, bool> deselectChoice = null)
+        Func<string, bool> deselectChoice = null,
+        string keystoneIconSprite = "")
     {
         _choice = choice;
         _isTaken = isTaken;
         _isFreeToTake = isFreeToTake && !isTaken;
         _selectChoice = selectChoice;
         _deselectChoice = deselectChoice;
+        _keystoneIconSprite = keystoneIconSprite ?? "";
     }
 
     public void SelectChoice()
@@ -50,6 +53,16 @@ public class CareerChoiceObjectVM : ViewModel
 
     [DataSourceProperty]
     public bool IsKeystone => _choice.Type == ChoiceType.Keystone;
+
+    // Issue #380 — the career's keystone medallion glyph (a banner-icon id, which doubles
+    // as its bare-number sprite name). Career-level, so every keystone node of one career
+    // shows the same glyph. Empty when the career has no keystone_icon authored — the
+    // medallion simply doesn't render (no fallback by design).
+    [DataSourceProperty]
+    public string KeystoneIconSprite => _keystoneIconSprite;
+
+    [DataSourceProperty]
+    public bool HasKeystoneIcon => IsKeystone && !string.IsNullOrEmpty(_keystoneIconSprite);
 
     // Effect-scope badge shown next to each keystone bullet so the player can distinguish
     // always-active passives from effects that fire only while the career ability is active.

@@ -838,6 +838,9 @@
 	<string id="taom_career_tier_requirement" text="{=taom_career_tier_requirement}Requires Level {LEVEL}" />
 	<!-- Choice tree effect-scope badges (passive vs ability-bound) -->
 	<string id="taom_career_choice_while_active" text="{=taom_career_choice_while_active}While active" />
+	<!-- Issue #383 — in-battle ability damage attribution (combat log) -->
+	<string id="taom_career_dmg_attrib" text="{=taom_career_dmg_attrib}{TARGET}: {DMG} damage (+{BONUS} from ability)" />
+	<string id="taom_career_dmg_none" text="{=taom_career_dmg_none}Career ability active — this ability boosts something other than damage." />
 	<!-- Career-switch screen (opened from "I wish to discuss my career path" dialogue) -->
 	<string id="taom_career_switch_title" text="{=taom_career_switch_title}Choose Your Path" />
 	<string id="taom_career_switch_choose" text="{=taom_career_switch_choose}Choose" />

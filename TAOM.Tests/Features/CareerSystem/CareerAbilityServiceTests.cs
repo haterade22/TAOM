@@ -169,4 +169,56 @@ public class CareerAbilityServiceTests
 
         Assert.AreEqual(29f, _sut.GetCooldownRemaining(HeroId), 0.01f);
     }
+
+    // ── Issue #377 — BeginActiveWindow pass-through ─────────────────────────
+
+    [TestMethod]
+    public void BeginActiveWindow_KnownHero_StartsActiveWindowOnAbility()
+    {
+        var ability = _sut.GetOrCreateAbility(HeroId, _registry, _dataService);
+
+        _sut.BeginActiveWindow(HeroId, 8f);
+
+        Assert.IsTrue(ability.IsActive);
+        Assert.AreEqual(8f, ability.ActiveRemaining, 0.001f);
+    }
+
+    [TestMethod]
+    public void BeginActiveWindow_UnknownHero_NoOps()
+    {
+        _sut.BeginActiveWindow("nobody", 8f);
+        // No throw, no entry created.
+        Assert.IsFalse(_sut.IsAbilityReady("nobody"));
+    }
+
+    [TestMethod]
+    public void Tick_DrainsActiveWindowAlongsideCooldown()
+    {
+        var ability = _sut.GetOrCreateAbility(HeroId, _registry, _dataService);
+        _sut.ActivateAbility(HeroId);
+        _sut.BeginActiveWindow(HeroId, 8f);
+
+        _sut.Tick(HeroId, 8f);
+
+        Assert.IsFalse(ability.IsActive);
+        Assert.AreEqual(22f, _sut.GetCooldownRemaining(HeroId), 0.001f);
+    }
+
+    [TestMethod]
+    public void IsAbilityActive_TracksWindowLifecycle()
+    {
+        _sut.GetOrCreateAbility(HeroId, _registry, _dataService);
+
+        Assert.IsFalse(_sut.IsAbilityActive(HeroId));
+        _sut.BeginActiveWindow(HeroId, 8f);
+        Assert.IsTrue(_sut.IsAbilityActive(HeroId));
+        _sut.Tick(HeroId, 8f);
+        Assert.IsFalse(_sut.IsAbilityActive(HeroId));
+    }
+
+    [TestMethod]
+    public void IsAbilityActive_UnknownHero_False()
+    {
+        Assert.IsFalse(_sut.IsAbilityActive("nobody"));
+    }
 }

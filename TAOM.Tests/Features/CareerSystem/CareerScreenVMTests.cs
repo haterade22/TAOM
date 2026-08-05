@@ -58,6 +58,11 @@ public class CareerScreenVMTests
         _registry.GetChoice("wb_brut_p1").Returns(PassiveChoice);
         _registry.GetChoicesForGroup("wb_brutality").Returns(new List<CareerChoiceDefinition> { KeystoneChoice, PassiveChoice });
         _registry.GetMaxChoicesForHero(5).Returns(6);
+        // Issue #379 — the VM reads unspent points through the registry's single-source
+        // helper; mirror the real formula so per-test GetMaxChoicesForHero overrides flow
+        // through without each test re-stubbing the derived method.
+        _registry.GetUnspentPoints(Arg.Any<int>(), Arg.Any<int>())
+            .Returns(ci => System.Math.Max(0, _registry.GetMaxChoicesForHero(ci.ArgAt<int>(0)) - ci.ArgAt<int>(1)));
         _registry.IsTierAvailable(5, 1).Returns(true);
         _registry.IsTierAvailable(5, 2).Returns(false);
         _registry.IsTierAvailable(5, 3).Returns(false);

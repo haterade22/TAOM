@@ -145,6 +145,29 @@ public class CareerRegistryTests
         Assert.AreEqual(31, _registry.GetMaxChoicesForHero(50));
     }
 
+    // ── Issue #379 — unspent-points computation (single source for the badge + screen) ──
+
+    [TestMethod]
+    public void GetUnspentPoints_TakenBelowMax_ReturnsDifference()
+    {
+        // Level 5 → max 6; 4 taken → 2 free.
+        Assert.AreEqual(2, _registry.GetUnspentPoints(5, 4));
+    }
+
+    [TestMethod]
+    public void GetUnspentPoints_TakenEqualsMax_ReturnsZero()
+    {
+        Assert.AreEqual(0, _registry.GetUnspentPoints(5, 6));
+    }
+
+    [TestMethod]
+    public void GetUnspentPoints_OverTaken_ClampsToZero()
+    {
+        // A save from a higher max (e.g. after a rebalance) can hold more choices than the
+        // current budget — the badge must clamp, not go negative.
+        Assert.AreEqual(0, _registry.GetUnspentPoints(5, 10));
+    }
+
     [TestMethod]
     public void IsTierAvailable_Tier1_AlwaysTrue()
     {

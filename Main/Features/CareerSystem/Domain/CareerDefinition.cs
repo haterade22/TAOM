@@ -23,6 +23,13 @@ public sealed class CareerDefinition
     public string Rank2Name { get; }
     public string Rank3Name { get; }
 
+    /// <summary>
+    /// Issue #380 — banner-icon id rendered as this career's keystone medallion (banner
+    /// icons register as bare-number sprite names, so this doubles as the sprite name).
+    /// Empty when unset: no medallion renders — deliberately no culture fallback.
+    /// </summary>
+    public string KeystoneIcon { get; }
+
     public CareerDefinition(
         string id,
         string displayName,
@@ -35,7 +42,8 @@ public sealed class CareerDefinition
         IReadOnlyList<string> choiceGroupIds,
         string rank1Name = "",
         string rank2Name = "",
-        string rank3Name = "")
+        string rank3Name = "",
+        string keystoneIcon = "")
     {
         Id = id;
         DisplayName = displayName;
@@ -49,5 +57,6 @@ public sealed class CareerDefinition
         Rank1Name = rank1Name ?? "";
         Rank2Name = rank2Name ?? "";
         Rank3Name = rank3Name ?? "";
+        KeystoneIcon = keystoneIcon ?? "";
     }
 }

@@ -6,4 +6,8 @@ namespace TAOM.Features.CareerSystem.Abilities;
 public interface IAbilityInputAdapter
 {
     bool IsActivationKeyPressed();
+
+    // Issue #382 — display name of the activation key for the energy bar's key chip.
+    // Single-sourced with the polled key so a future rebind changes both together.
+    string ActivationKeyName { get; }
 }

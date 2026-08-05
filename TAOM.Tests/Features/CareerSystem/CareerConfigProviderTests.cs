@@ -504,6 +504,48 @@ public class CareerConfigProviderTests
         _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("phantom")));
     }
 
+    // ── Issue #380 — keystone_icon attribute (per-career keystone medallion glyph) ──
+
+    [TestMethod]
+    public void LoadCareers_WithKeystoneIcon_ParsesIt()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?>
+<Careers max_perk_points=""30"">
+  <Career id=""warboss"" display_name=""Warboss"" description=""A brute.""
+          portrait_sprite=""wb_sprite"" ability_template_id=""rally_horde""
+          min_clan_tier=""0"" root_choice_id=""wb_root"" keystone_icon=""19001"">
+    <EligibleCultures><Culture id=""mordor"" /></EligibleCultures>
+    <ChoiceGroups><Group id=""wb_brutality"" /></ChoiceGroups>
+  </Career>
+</Careers>");
+
+        var careers = _provider.LoadCareers();
+
+        Assert.AreEqual("19001", careers[0].KeystoneIcon);
+    }
+
+    [TestMethod]
+    public void LoadCareers_MissingKeystoneIcon_EmptyAndWarns()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?>
+<Careers max_perk_points=""30"">
+  <Career id=""warboss"" display_name=""Warboss"" description=""A brute.""
+          portrait_sprite=""wb_sprite"" ability_template_id=""rally_horde""
+          min_clan_tier=""0"" root_choice_id=""wb_root"">
+    <EligibleCultures><Culture id=""mordor"" /></EligibleCultures>
+    <ChoiceGroups><Group id=""wb_brutality"" /></ChoiceGroups>
+  </Career>
+</Careers>");
+
+        var careers = _provider.LoadCareers();
+
+        // No silent fallback glyph — a missing attribute means no medallion renders (the
+        // reference module's culture fallback regressed Rivendell straight back to the
+        // clan-sigil ring it existed to avoid). A warning surfaces the authoring gap.
+        Assert.AreEqual("", careers[0].KeystoneIcon);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("keystone_icon") && s.Contains("warboss")));
+    }
+
     private void WriteCareersXml(string content)
     {
         File.WriteAllText(Path.Combine(_tempDir, "career_system", "taom_careers.xml"), content);

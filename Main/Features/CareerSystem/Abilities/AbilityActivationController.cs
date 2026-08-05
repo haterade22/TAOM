@@ -30,7 +30,7 @@ public class AbilityActivationController : IAbilityActivationController
         _time = time;
     }
 
-    public AbilityActivationResult Tick(float dt, string heroStringId, bool hasCareer)
+    public AbilityActivationResult Tick(float dt, string heroStringId, bool hasCareer, bool isControllingCareerHero)
     {
         var result = default(AbilityActivationResult);
         if (!hasCareer) return result;
@@ -43,9 +43,21 @@ public class AbilityActivationController : IAbilityActivationController
         // #31 caught a single-bucket accumulator dropping elapsed time on long frames).
         _abilityService.Tick(heroStringId, dt);
 
+        // Issue #377 — controlled-agent gate. The cooldown above keeps draining in mission
+        // time, but while the player controls a different agent no prompt fires (deferring
+        // _abilityReadyNotified makes the ready toast fire when control returns) and V-presses
+        // fall through (pre-fix, a V-press here consumed the cooldown while ApplyAoeBuff
+        // early-returned on the missing agent — a silently wasted activation).
+        if (!isControllingCareerHero) return result;
+
         // Deep-review #102 LOW — hoist a single isReady local. Two IsAbilityReady calls per
         // activation frame is sub-microsecond waste but trivially deduplicated.
-        var isReady = _abilityService.IsAbilityReady(heroStringId);
+        // Codex review 2026-08-05 P2 — a live active window blocks re-activation: duration
+        // mutations can push the window past the cooldown floor (olog_hai reaches a 16s
+        // window vs a 15s cooldown), and a recast inside the window would double-stack
+        // buff contributions for the overlap. "Ready" therefore also means "window closed".
+        var isReady = _abilityService.IsAbilityReady(heroStringId)
+            && !_abilityService.IsAbilityActive(heroStringId);
 
         if (isReady && !_abilityReadyNotified)
         {

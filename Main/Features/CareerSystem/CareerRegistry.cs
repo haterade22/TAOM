@@ -115,6 +115,9 @@ public class CareerRegistry : ICareerRegistry
         return Math.Min(effectiveLevel + 1, _maxPerkPoints + 1);
     }
 
+    public int GetUnspentPoints(int heroLevel, int takenChoiceCount)
+        => Math.Max(0, GetMaxChoicesForHero(heroLevel) - takenChoiceCount);
+
     public bool IsTierAvailable(int heroLevel, int tier)
     {
         if (tier < 1 || tier > 3) return false;

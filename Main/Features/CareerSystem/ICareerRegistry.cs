@@ -13,6 +13,13 @@ public interface ICareerRegistry
     IReadOnlyList<CareerChoiceDefinition> GetChoicesForGroup(string groupStringId);
     bool IsEligible(string careerStringId, ICareerHeroAdapter hero);
     int GetMaxChoicesForHero(int heroLevel);
+
+    /// <summary>
+    /// Issue #379 — unspent career points: max(0, budget-for-level − taken). The single
+    /// source for the character-screen badge and the career screen's "Free Points" readout;
+    /// clamps for saves whose taken count exceeds the current budget (post-rebalance).
+    /// </summary>
+    int GetUnspentPoints(int heroLevel, int takenChoiceCount);
     bool IsTierAvailable(int heroLevel, int tier);
 
     /// <summary>Hero level at which the given tier (1-3) unlocks. Returns int.MaxValue for unknown tiers.</summary>

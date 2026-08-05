@@ -144,7 +144,14 @@ public class CareerConfigProvider : ICareerConfigProvider
                         choiceGroupIds: groupIds,
                         rank1Name: el.Attribute("rank1_name")?.Value ?? "",
                         rank2Name: el.Attribute("rank2_name")?.Value ?? "",
-                        rank3Name: el.Attribute("rank3_name")?.Value ?? "");
+                        rank3Name: el.Attribute("rank3_name")?.Value ?? "",
+                        keystoneIcon: el.Attribute("keystone_icon")?.Value ?? "");
+
+                    // Issue #380 — no fallback glyph by design (the reference module's culture
+                    // fallback regressed Rivendell to its clan-sigil ring). Missing attr =
+                    // no medallion + this warning, so the authoring gap is visible.
+                    if (string.IsNullOrEmpty(career.KeystoneIcon))
+                        _logger.LogWarning($"CareerConfig: career '{career.Id}' has no keystone_icon — keystone medallion will not render");
 
                     // No per-career line: 49 of them restated what the load summary already totals,
                     // and every field is readable in taom_careers.xml. Parse FAILURES still log
@@ -476,7 +483,15 @@ public class CareerConfigProvider : ICareerConfigProvider
                 minSeconds = parsedMin;
         }
 
-        return new GlobalTuning(seconds, minSeconds);
+        // Issue #383 — optional attribution threshold; ParseFloat already rejects NaN/Infinity.
+        var minReportable = ParseFloat(globalEl, "min_reportable_bonus_damage", GlobalTuning.Default.MinReportableBonusDamage);
+        if (minReportable < 0f)
+        {
+            _logger.LogWarning($"CareerConfig: <Global min_reportable_bonus_damage=\"{minReportable}\"> must be >= 0 — falling back to {GlobalTuning.Default.MinReportableBonusDamage}");
+            minReportable = GlobalTuning.Default.MinReportableBonusDamage;
+        }
+
+        return new GlobalTuning(seconds, minSeconds, minReportable);
     }
 
     private static int ParseInt(XElement el, string attrName, int defaultValue)
@@ -493,8 +508,9 @@ public class CareerConfigProvider : ICareerConfigProvider
         if (val == null) return defaultValue;
         // Phase 9b #128 P2 — reject NaN/Infinity. Pre-fix only CooldownSeconds had this guard
         // (Career #31 fix); generic ParseFloat fed Duration/Radius/MaxCharge/DamageBonus etc.
-        // NaN propagates: ExpiresAt = currentTime + NaN → IsExpired always false; NaN Radius →
-        // all distance comparisons false. See feedback_clamp_nan_infinity_propagates.md.
+        // NaN propagates: a NaN Duration makes PendingRestore.ExpiresAt NaN → the restore never
+        // fires (>= NaN is always false); NaN Radius → all distance comparisons false.
+        // See feedback_clamp_nan_infinity_propagates.md.
         if (!float.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
             return defaultValue;
         if (float.IsNaN(result) || float.IsInfinity(result))

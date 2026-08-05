@@ -101,10 +101,9 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
             return;
         }
 
-        var maxChoices = _registry.GetMaxChoicesForHero(hero.Level);
-        var currentChoices = _dataService.GetChoiceCount(hero.StringId);
-        if (maxChoices > currentChoices)
-            _logger.LogInfo($"CareerSystem: {hero.Name} leveled up — {maxChoices - currentChoices} career choice(s) available");
+        var unspent = _registry.GetUnspentPoints(hero.Level, _dataService.GetChoiceCount(hero.StringId));
+        if (unspent > 0)
+            _logger.LogInfo($"CareerSystem: {hero.Name} leveled up — {unspent} career choice(s) available");
     }
 
     private void OnHeroKilled(Hero victim, Hero killer, KillCharacterAction.KillCharacterActionDetail detail, bool showNotification)

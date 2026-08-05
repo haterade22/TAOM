@@ -12,6 +12,16 @@ public class CareerAbility
     public float CooldownDuration { get; }
     public float CooldownRemaining { get; private set; }
 
+    // Issue #377 — the active window (how long the cast buff is still live). Set by
+    // BeginActiveWindow with the SAME (possibly mutation-extended) duration that schedules
+    // the buff restores, so the HUD and the buff expire on the same tick. Runs alongside
+    // the cooldown, which starts at Activate() and does not pause during the window.
+    public float ActiveDuration { get; private set; }
+    public float ActiveRemaining { get; private set; }
+
+    public bool IsActive => ActiveRemaining > 0f;
+    public float ActiveProgress01 => ActiveDuration > 0f ? ActiveRemaining / ActiveDuration : 0f;
+
     public bool IsOnCooldown => CooldownRemaining > 0f;
     public bool IsReady => ChargeType == ChargeType.CooldownOnly
         ? !IsOnCooldown
@@ -49,6 +59,20 @@ public class CareerAbility
     {
         if (CooldownRemaining > 0f)
             CooldownRemaining = Math.Max(0f, CooldownRemaining - dt);
+        if (ActiveRemaining > 0f)
+            ActiveRemaining = Math.Max(0f, ActiveRemaining - dt);
+    }
+
+    // Issue #377 — start the active window. Guards mirror AdjustCooldown: a non-finite or
+    // non-positive duration (poisoned config) must not produce a stuck "always active" state
+    // (NaN-gate rule, csharp-architecture.md — positive requirement, NaN fails it).
+    public void BeginActiveWindow(float durationSeconds)
+    {
+        if (float.IsNaN(durationSeconds) || float.IsInfinity(durationSeconds)) return;
+        if (!(durationSeconds > 0f)) return;
+
+        ActiveDuration = durationSeconds;
+        ActiveRemaining = durationSeconds;
     }
 
     public void SetMaxCharge(float newMax)

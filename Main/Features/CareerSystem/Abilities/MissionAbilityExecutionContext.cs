@@ -119,10 +119,9 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
             if (ally == null || !ally.IsHuman || !ally.IsActive()) continue;
             if (ally == _agent) continue; // MUST exclude caster — hero buff path handles them
 
-            var existing = CareerAbilityBuffTracker.GetAllyBuff(ally.Index) ?? new ActiveBuffs();
-            ActiveBuffsAlgebra.Accumulate(existing, buffTemplate);
-            existing.ExpiresAt = Math.Max(existing.ExpiresAt, CurrentTime() + duration);
-            CareerAbilityBuffTracker.SetAllyBuff(ally.Index, existing);
+            // Issue #377 — contribution-counted add/remove: the tracker retires the entry
+            // when the last restore fires, so GetAllyBuff means "buffed right now".
+            CareerAbilityBuffTracker.AddAllyContribution(ally.Index, buffTemplate);
             ally.UpdateAgentProperties();
 
             var allyIndex = ally.Index;
@@ -130,27 +129,20 @@ public sealed class MissionAbilityExecutionContext : IAbilityExecutionContext
             var deltasCopy = ActiveBuffsAlgebra.Clone(buffTemplate);
             ScheduleRestore(() =>
             {
-                var current = CareerAbilityBuffTracker.GetAllyBuff(allyIndex);
-                if (current == null) return;
-                ActiveBuffsAlgebra.Subtract(current, deltasCopy);
+                CareerAbilityBuffTracker.RemoveAllyContribution(allyIndex, deltasCopy);
                 if (allyRef.IsActive())
                     allyRef.UpdateAgentProperties();
             }, duration);
         }
 
-        // Apply to the caster via the hero buff path (also uses accumulate-and-subtract)
-        var heroBuff = CareerAbilityBuffTracker.GetBuff(HeroStringId) ?? new ActiveBuffs();
-        ActiveBuffsAlgebra.Accumulate(heroBuff, buffTemplate);
-        heroBuff.ExpiresAt = Math.Max(heroBuff.ExpiresAt, CurrentTime() + duration);
-        CareerAbilityBuffTracker.SetBuff(HeroStringId, heroBuff);
+        // Apply to the caster via the hero buff path (also contribution-counted)
+        CareerAbilityBuffTracker.AddContribution(HeroStringId, buffTemplate);
         _agent.UpdateAgentProperties();
 
         var heroDeltasCopy = ActiveBuffsAlgebra.Clone(buffTemplate);
         ScheduleRestore(() =>
         {
-            var current = CareerAbilityBuffTracker.GetBuff(HeroStringId);
-            if (current == null) return;
-            ActiveBuffsAlgebra.Subtract(current, heroDeltasCopy);
+            CareerAbilityBuffTracker.RemoveContribution(HeroStringId, heroDeltasCopy);
             _agent?.UpdateAgentProperties();
         }, duration);
     }

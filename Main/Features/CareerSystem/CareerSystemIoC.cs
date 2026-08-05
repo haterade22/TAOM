@@ -29,13 +29,14 @@ public static class CareerSystemIoC
         container.Register<Abilities.ICareerAbilityService, Abilities.CareerAbilityService>(Reuse.Singleton);
         container.Register<IMutationService, MutationService>(Reuse.Singleton);
 
-        // Issue #102 — CareerPerkMissionBehavior decomposition. Three controllers extracted
-        // from the legacy 302-line mission behavior so the V-key + HUD + effect-execution
-        // state machines are independently unit-testable.
+        // Issue #102 — CareerPerkMissionBehavior decomposition. Controllers extracted from
+        // the legacy 302-line mission behavior so the V-key + effect-execution state machines
+        // are independently unit-testable. (The #102 HUD controller was retired by #382 — the
+        // in-battle career UI is now the energy bar injected into AgentStatus via
+        // MissionAgentStatusCareerMixin + CareerEnergyBarPrefab, registered with UIExtenderEx.)
         container.Register<Abilities.IAbilityInputAdapter, Abilities.AbilityInputAdapter>(Reuse.Singleton);
         container.Register<Abilities.IMissionTimeProvider, Abilities.MissionTimeProvider>(Reuse.Singleton);
         container.Register<Abilities.IAbilityActivationController, Abilities.AbilityActivationController>(Reuse.Singleton);
-        container.Register<UI.IAbilityHudController, UI.AbilityHudController>(Reuse.Singleton);
         container.Register<Abilities.IAbilityEffectExecutor, Abilities.AbilityEffectExecutor>(Reuse.Singleton);
 
         // Phase 9b #142 — agent-stat service extracted out of TaomAgentStatCalculateModel /

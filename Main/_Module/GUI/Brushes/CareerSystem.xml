@@ -1,0 +1,77 @@
+<Brushes>
+
+  <!-- Issue #378 — Gauntlet derives pressed/hovered visuals ONLY from a Brush; a bare
+       Sprite= on a ButtonWidget has no press state at all (BrushWidget.Sprite writes only
+       the Default style's Default layer). These brushes reuse the existing baked sprites
+       with per-style ColorFactor variants, so no new art / sprite-bake pass is needed. -->
+
+  <Brush Name="CareerSystem.CareerButton">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="CareerSystem\career_button_placeholder" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" ColorFactor="1.0" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.25" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.75" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" ColorFactor="0.5" />
+      </Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.PlusButton">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="CareerSystem\plus_sign_icon" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" ColorFactor="1.0" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.25" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.75" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" ColorFactor="0.5" />
+      </Style>
+    </Styles>
+  </Brush>
+
+  <!-- Issue #379 badge count. Deep-review 2026-08-05: the previously-referenced
+       "ButtonBrush1.Text" does not exist in any brush file (BrushFactory returns null
+       silently for unregistered names) — the badge needs a REAL registered text brush. -->
+  <Brush Name="CareerSystem.Badge.Text" Font="minionpro" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#FFFFFFFF" TextOutlineColor="#000000FF" TextOutlineAmount="0.15" FontSize="24" />
+    </Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.MinusButton">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="CareerSystem\minus_sign_icon" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" ColorFactor="1.0" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.25" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.75" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" ColorFactor="0.5" />
+      </Style>
+    </Styles>
+  </Brush>
+
+</Brushes>

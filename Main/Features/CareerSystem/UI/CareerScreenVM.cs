@@ -155,9 +155,7 @@ public class CareerScreenVM : ViewModel
         AbilitySpriteName = $"CareerSystem\\Abilities\\{career.AbilityTemplateId}";
         HasAbilitySprite = !string.IsNullOrEmpty(career.AbilityTemplateId);
 
-        var maxChoices = _registry.GetMaxChoicesForHero(_heroLevel);
-        var currentChoices = _dataService.GetChoiceCount(_heroStringId);
-        FreeCareerPoints = System.Math.Max(0, maxChoices - currentChoices);
+        FreeCareerPoints = _registry.GetUnspentPoints(_heroLevel, _dataService.GetChoiceCount(_heroStringId));
         FreeCareerPointsText = new TextObject("{=taom_career_free_points}Free Points: {COUNT}")
             .SetTextVariable("COUNT", FreeCareerPoints).ToString();
 
@@ -263,9 +261,13 @@ public class CareerScreenVM : ViewModel
             var choices = _registry.GetChoicesForGroup(groupId);
             foreach (var choice in choices)
             {
-                var isTaken = _dataService.GetOrCreateData(_heroStringId).HasChoice(choice.Id);
-                var isFreeToTake = FreeCareerPoints > 0 && !isLocked;
-                groupVM.Choices.Add(new CareerChoiceObjectVM(choice, isTaken, isFreeToTake, TrySelectChoice, TryDeselectChoice));
+                var heroData = _dataService.GetOrCreateData(_heroStringId);
+                var isTaken = heroData.HasChoice(choice.Id);
+                // Issue #381 — a keystone closed by exclusivity dims (pip + no + button)
+                // instead of silently rejecting the click at select time.
+                var isFreeToTake = FreeCareerPoints > 0 && !isLocked
+                    && !KeystoneExclusivityRule.IsLocked(career, choice, _registry, heroData);
+                groupVM.Choices.Add(new CareerChoiceObjectVM(choice, isTaken, isFreeToTake, TrySelectChoice, TryDeselectChoice, career.KeystoneIcon));
             }
 
             switch (group.Tier)
@@ -301,26 +303,10 @@ public class CareerScreenVM : ViewModel
             if (group != null && !IsTierAvail(group.Tier))
                 return;
 
-            if (choice.Type == Domain.ChoiceType.Keystone && group != null)
-            {
-                var heroData = _dataService.GetOrCreateData(_heroStringId);
-                var careerId = _dataService.GetCareerStringId(_heroStringId);
-                var career = careerId != null ? _registry.GetCareer(careerId) : null;
-                if (career != null)
-                {
-                    foreach (var gId in career.ChoiceGroupIds)
-                    {
-                        var otherGroup = _registry.GetGroup(gId);
-                        if (otherGroup == null || otherGroup.Tier != group.Tier) continue;
-                        var otherChoices = _registry.GetChoicesForGroup(gId);
-                        foreach (var oc in otherChoices)
-                        {
-                            if (oc.Type == Domain.ChoiceType.Keystone && heroData.HasChoice(oc.Id))
-                                return;
-                        }
-                    }
-                }
-            }
+            // Issue #381 — one keystone per tier, tier-3-completion exemption, grandfathered.
+            if (KeystoneExclusivityRule.IsLocked(CurrentCareer(), choice, _registry,
+                    _dataService.GetOrCreateData(_heroStringId)))
+                return;
         }
 
         var maxChoices = _registry.GetMaxChoicesForHero(_heroLevel);
@@ -329,6 +315,12 @@ public class CareerScreenVM : ViewModel
             _passiveService.RefreshCache(_dataService, _registry);
             RefreshValues();
         }
+    }
+
+    private Domain.CareerDefinition CurrentCareer()
+    {
+        var careerId = _dataService.GetCareerStringId(_heroStringId);
+        return careerId != null ? _registry.GetCareer(careerId) : null;
     }
 
     // Invoked by CareerChoiceObjectVM.SelectChoice via callback (+ button in UI)
@@ -345,26 +337,10 @@ public class CareerScreenVM : ViewModel
             if (group != null && !IsTierAvail(group.Tier))
                 return false;
 
-            // Enforce one Keystone per tier
-            if (choice.Type == Domain.ChoiceType.Keystone && group != null)
-            {
-                var heroData = _dataService.GetOrCreateData(_heroStringId);
-                var careerId = _dataService.GetCareerStringId(_heroStringId);
-                var career = careerId != null ? _registry.GetCareer(careerId) : null;
-                if (career != null)
-                {
-                    foreach (var gId in career.ChoiceGroupIds)
-                    {
-                        var otherGroup = _registry.GetGroup(gId);
-                        if (otherGroup == null || otherGroup.Tier != group.Tier) continue;
-                        foreach (var oc in _registry.GetChoicesForGroup(gId))
-                        {
-                            if (oc.Type == Domain.ChoiceType.Keystone && heroData.HasChoice(oc.Id))
-                                return false;
-                        }
-                    }
-                }
-            }
+            // Issue #381 — one keystone per tier, tier-3-completion exemption, grandfathered.
+            if (KeystoneExclusivityRule.IsLocked(CurrentCareer(), choice, _registry,
+                    _dataService.GetOrCreateData(_heroStringId)))
+                return false;
         }
 
         var maxChoices = _registry.GetMaxChoicesForHero(_heroLevel);

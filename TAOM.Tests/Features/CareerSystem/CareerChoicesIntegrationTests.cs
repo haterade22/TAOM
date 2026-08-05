@@ -44,6 +44,13 @@ public class CareerChoicesIntegrationTests
             "real taom_career_choices.xml should load the full career choice set");
     }
 
+    // NOTE (Codex review 2026-08-05): a worst-case-cooldown-vs-duration XML invariant test
+    // briefly lived here, but it summed only CooldownReduction mutations — Duration
+    // mutations push olog_hai's window to 16s against a 15s cooldown, so the invariant is
+    // genuinely violated by shipped data. The runtime gate in AbilityActivationController
+    // (activation blocked while the window is live, covered by its unit tests) is the real
+    // protection; a data invariant here would either miss the case or fail on valid data.
+
     [TestMethod]
     public void RealChoicesXml_EveryPassiveChoice_ParsesNonNullPassive()
     {

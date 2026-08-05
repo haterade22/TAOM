@@ -171,4 +171,122 @@ public class CareerAbilityTests
         var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 0f);
         Assert.AreEqual(1f, ability.ReadyProgress01, 0.001f);
     }
+
+    // ── Issue #377 — active-window state (BeginActiveWindow / ActiveRemaining) ──
+    // Before the fix the model was cooldown-only: the template's duration drove the buff
+    // restore timers but never reached this state machine, so a HUD had to guess the
+    // active window (the external reference module hardcoded 8s wall-clock and documents
+    // the resulting drain oscillation).
+
+    [TestMethod]
+    public void BeginActiveWindow_SetsDurationAndRemaining()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+
+        ability.BeginActiveWindow(8f);
+
+        Assert.AreEqual(8f, ability.ActiveDuration, 0.001f);
+        Assert.AreEqual(8f, ability.ActiveRemaining, 0.001f);
+        Assert.IsTrue(ability.IsActive);
+        Assert.AreEqual(1f, ability.ActiveProgress01, 0.001f);
+    }
+
+    [TestMethod]
+    public void IsActive_BeforeAnyActivation_False()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+
+        Assert.IsFalse(ability.IsActive);
+        Assert.AreEqual(0f, ability.ActiveProgress01, 0.001f);
+    }
+
+    [TestMethod]
+    public void Tick_DecrementsActiveRemaining()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+        ability.BeginActiveWindow(8f);
+
+        ability.Tick(2f);
+
+        Assert.AreEqual(6f, ability.ActiveRemaining, 0.001f);
+        Assert.AreEqual(0.75f, ability.ActiveProgress01, 0.001f);
+        Assert.IsTrue(ability.IsActive);
+    }
+
+    [TestMethod]
+    public void Tick_ActiveWindowExpires_IsActiveFalseAndClampedAtZero()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+        ability.BeginActiveWindow(8f);
+
+        ability.Tick(10f);
+
+        Assert.AreEqual(0f, ability.ActiveRemaining, 0.001f);
+        Assert.IsFalse(ability.IsActive);
+        Assert.AreEqual(0f, ability.ActiveProgress01, 0.001f);
+    }
+
+    [TestMethod]
+    public void Tick_ActiveWindowAndCooldownAdvanceTogether()
+    {
+        // The cooldown starts at Activate() and keeps running through the active window
+        // (measured live: ReadyProgress01 0.13 at cast -> 0.40 eight seconds later). The
+        // active window is independent state, not a pause on the cooldown.
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+        ability.Activate();
+        ability.BeginActiveWindow(8f);
+
+        ability.Tick(8f);
+
+        Assert.AreEqual(0f, ability.ActiveRemaining, 0.001f);
+        Assert.AreEqual(22f, ability.CooldownRemaining, 0.001f);
+    }
+
+    [TestMethod]
+    public void BeginActiveWindow_ReActivation_RestartsWindow()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+        ability.BeginActiveWindow(8f);
+        ability.Tick(5f);
+
+        ability.BeginActiveWindow(10f);
+
+        Assert.AreEqual(10f, ability.ActiveDuration, 0.001f);
+        Assert.AreEqual(10f, ability.ActiveRemaining, 0.001f);
+    }
+
+    [TestMethod]
+    public void BeginActiveWindow_NaN_Rejected()
+    {
+        // NaN-gate rule (csharp-architecture.md): a poisoned config float must not produce
+        // a frozen "always active" state machine. Same guard family as AdjustCooldown.
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+
+        ability.BeginActiveWindow(float.NaN);
+
+        Assert.IsFalse(ability.IsActive);
+        Assert.AreEqual(0f, ability.ActiveRemaining, 0.001f);
+    }
+
+    [TestMethod]
+    public void BeginActiveWindow_Infinity_Rejected()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+
+        ability.BeginActiveWindow(float.PositiveInfinity);
+
+        Assert.IsFalse(ability.IsActive);
+    }
+
+    [TestMethod]
+    public void BeginActiveWindow_ZeroOrNegative_Rejected()
+    {
+        var ability = new CareerAbility("test", ChargeType.CooldownOnly, 0f, 30f);
+
+        ability.BeginActiveWindow(0f);
+        Assert.IsFalse(ability.IsActive);
+
+        ability.BeginActiveWindow(-3f);
+        Assert.IsFalse(ability.IsActive);
+    }
 }

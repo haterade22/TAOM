@@ -28,13 +28,18 @@ public sealed class GlobalTuning
     // sum to a 30s+ reduction; clamp ensures the global cooldown is still observed at minimum 5s).
     public float MinCooldownSeconds { get; }
 
-    public GlobalTuning(float cooldownSeconds, float minCooldownSeconds = 5f)
+    // Issue #383 — combat-log damage attribution suppresses "+N from ability" lines whose
+    // bonus share is below this many hit points (sub-1 shares read as noise).
+    public float MinReportableBonusDamage { get; }
+
+    public GlobalTuning(float cooldownSeconds, float minCooldownSeconds = 5f, float minReportableBonusDamage = 0.5f)
     {
         CooldownSeconds = cooldownSeconds;
         MinCooldownSeconds = minCooldownSeconds;
+        MinReportableBonusDamage = minReportableBonusDamage;
     }
 
-    public static GlobalTuning Default => new GlobalTuning(30f, 5f);
+    public static GlobalTuning Default => new GlobalTuning(30f, 5f, 0.5f);
 }
 
 public sealed class InfantryTuning

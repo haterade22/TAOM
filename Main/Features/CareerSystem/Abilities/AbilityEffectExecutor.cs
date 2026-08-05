@@ -74,6 +74,12 @@ public class AbilityEffectExecutor : IAbilityEffectExecutor
         var executor = _effectRegistry.GetExecutor(careerId);
         executor.Execute(context);
 
+        // Issue #377 — start the ability's active window with the SAME duration that just
+        // scheduled the buff restores, so CareerAbility.IsActive/ActiveProgress01 and the
+        // buff expire on the same tick. Placed after executor.Execute (same rationale as the
+        // cooldown adjustment below): if the effect throws, no active window is reported.
+        _abilityService.BeginActiveWindow(heroStringId, duration);
+
         // Issue #104 Option B — apply per-activation CooldownReduction (from designer choice
         // mutations) AFTER executor.Execute. Floored at GlobalTuning.MinCooldownSeconds. Order
         // matters: if executor.Execute throws above, we never shorten the cooldown for an

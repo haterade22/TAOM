@@ -59,6 +59,11 @@ public class CareerAbilityService : ICareerAbilityService
         return _abilities.TryGetValue(heroStringId, out var ability) && ability.IsReady;
     }
 
+    public bool IsAbilityActive(string heroStringId)
+    {
+        return _abilities.TryGetValue(heroStringId, out var ability) && ability.IsActive;
+    }
+
     public float GetCooldownRemaining(string heroStringId)
     {
         return _abilities.TryGetValue(heroStringId, out var ability) ? ability.CooldownRemaining : 0f;
@@ -74,6 +79,18 @@ public class CareerAbilityService : ICareerAbilityService
         else
         {
             _logger.LogWarning($"CareerSystem: ActivateAbility — no ability found for hero '{heroStringId}'");
+        }
+    }
+
+    public void BeginActiveWindow(string heroStringId, float durationSeconds)
+    {
+        if (_abilities.TryGetValue(heroStringId, out var ability))
+        {
+            ability.BeginActiveWindow(durationSeconds);
+        }
+        else
+        {
+            _logger.LogWarning($"CareerSystem: BeginActiveWindow — no ability found for hero '{heroStringId}'");
         }
     }
 
