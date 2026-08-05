@@ -90,6 +90,24 @@ v1.3.15 RVAs, port narratives, the ADR-010 context). settings.local.json drops t
 never-again-matchable `C:/non/existent/path` test rule and a doubled-slash duplicate read grant;
 `/security-scan` clean at HIGH+ after the edit.
 
+**Git objects.** Deleted: `bannerlord-1.3.15` + `fix/troll-guard-exclusion` (local refs, fully
+merged + pushed — remote archives remain) and `verify-improve` (pure merge scaffolding over the
+kept `impl-*` branches); pruned the gone `origin/fix/career-screen-collapse-on-levelup` tracking
+ref; dropped the career-passive stash (strict subset of commit 9034e5dc) and the deleted-worktree
+stash (May permissions delta). **KEPT pending user review:** the taom-troopweight stash — its
+untracked component holds three OffspringDiagnostics files that exist nowhere in git history, and
+its Patch49 number now collides with trunk's `Patch49_ArmyGatheringNreGuard`. Also kept:
+`feature/dependencies-audit` + `fix/lotr-issues-sandbox-suppression` (unmerged unique work — one
+commit holds a 12-language translation-backlog emit), `origin/bannerlord-1.3.15` (archive),
+collaborator branches, the NativeSkinFixes `.pdb`, the 8 `REMOVED_REGIONS`-era unique-art files,
+and `docs/issues-drafts/` (live generator + erratum content not on GitHub — the sweep's verifier
+refuted its deletion).
+
+**Verification:** full suite green after everything — build 0 errors, tests 5,448 passed / 0
+failed / 2 skipped (same counts as pre-sweep); `lint_docs --fail-on-drift` rc=0 with dead_links
+0, orphan_features 0; backlinks re-swept. Working-tree recovery this sweep: ~5.1 GB
+(RuntimeDataCache) + 545.7 MB (FactionMap dupes) tracked, ~690 MB gitignored disk.
+
 ### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
 
 Second-round diet of the eager context load (round 1: 174 KB → 91 KB → 42 KB, July 2026).

@@ -288,5 +288,7 @@ suppressed for once per hero rather than swallowing quietly.
 ## Referenced by
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/rca-castle-recruitment-2026-05-31.md](../rca-castle-recruitment-2026-05-31.md)
+- [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../rca-tournament-dwarf-dismount-2026-06-09.md)
 
 <!-- backlinks-end -->

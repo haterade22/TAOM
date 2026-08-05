@@ -72,3 +72,13 @@ Registration: IoC at `Main/IoC.cs` (with the other diagnostics features); patch 
 - `docs/features/spider.md` — Patch47/48, the mounted-death/hit native-AV fault family this diagnostic is hunting a dwarf-side analog of.
 - `docs/features/battle-load-diagnostics.md`, `save-load-diagnostics.md` — the durable-appender precedent (`Main/Core/Logging/FileLogger.cs`).
 - `.claude/skills/native-crash-triage/SKILL.md` — the fallback path (Event Log fault offset) when the diagnostic points at a pre-blow native impact effect.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

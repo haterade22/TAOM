@@ -192,3 +192,13 @@ not stamped onto a base PBR. A separate tool entry-point is a likely follow-up.
   later via emission texture, not in this round
 - Lore-correct Cirth/Angerthas glyph semantics — visual read at gameplay
   distance matters more
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/kitbash/erebor/README.md](./README.md)
+
+<!-- backlinks-end -->

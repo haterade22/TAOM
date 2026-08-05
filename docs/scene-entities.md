@@ -92,3 +92,12 @@ Extracted from `E:\LOTRAOMAssets\scene.xscene`
 
 No anomalies detected.
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](./INDEX.md)
+
+<!-- backlinks-end -->

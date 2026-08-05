@@ -119,5 +119,8 @@ confirmed in-game.
 - [docs/INDEX.md](../../INDEX.md)
 - [docs/reference/adod-beasts-architecture-and-taom-port.md](../../reference/adod-beasts-architecture-and-taom-port.md)
 - [docs/reference/bannerlord-engine-and-toolchain.md](../../reference/bannerlord-engine-and-toolchain.md)
+- [docs/reference/engine/mount-and-rider-runtime.md](../../reference/engine/mount-and-rider-runtime.md)
+- [docs/reference/engine/scene-gameentity-scriptcomponent.md](../../reference/engine/scene-gameentity-scriptcomponent.md)
+- [docs/reference/engine/usable-machines.md](../../reference/engine/usable-machines.md)
 
 <!-- backlinks-end -->

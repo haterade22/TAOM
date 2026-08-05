@@ -86,3 +86,13 @@ Start Bannerlord with the **exact same mods enabled** as when the save was made,
 ---
 
 *Technical details of the bug and fix: `docs/reviews/rca-momentum-save-corruption-2026-07-07.md`. To prevent it going forward, update to the current TAOM version — new saves stay safe automatically.*
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](./INDEX.md)
+
+<!-- backlinks-end -->
