@@ -80,7 +80,16 @@ one concern (chat replies vs written artifacts), cross-referenced each other fou
 re-listed the same banned phrases. Now one rule: Part 1 (reply openings + confidence tags),
 Part 2 (AI-prose tells + the TAOM house-style carve-out) — operative text verbatim, one
 banned-phrase deferral, sources already in the provenance doc. Referrers updated (`/humanizer`
-×5, CLAUDE.md soft-suggest, rules-catalog, rule-provenance headings).
+×5, CLAUDE.md soft-suggest, rules-catalog, rule-provenance headings). Size-neutral (+0.4 KB) —
+the projected saving landed in the provenance strip; the merge's win is one banned-phrase list
+and one less cross-referenced file.
+
+**`check-changelog-updated.sh` finally mutes.** The last Stop hook without muting re-injected its
+~45-word reminder on every turn of any session with dirty source and no CHANGELOG edit (~3.5K
+tokens over a long session). It predated the hook-authoring "mirror the sibling's FULL convention
+set" rule. Now mirrors `check-verification-evidence.sh`: `.changelog-reminded` one-shot marker,
+cleared when CHANGELOG becomes dirty/staged or the streak ends. Tested live: reminds once,
+silent on repeat, re-arms on revert.
 
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
