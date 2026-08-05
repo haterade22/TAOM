@@ -37,7 +37,7 @@ CRITICAL: N | HIGH: N | MEDIUM: N | LOW: N
 VERDICT: CLEAN / ISSUES FOUND
 ```
 
-### Lessons From Prior Reviews (79 reviews, 160+ bugs found) — distilled
+### Lessons From Prior Reviews (81 reviews, 165+ bugs found) — distilled
 
 Full worked-example catalog — every rolling essay + the complete "bugs Codex misses / false
 positives / what Codex does well / run-mode caveats" lists: **[`docs/reviews/codex-track-record.md`](docs/reviews/codex-track-record.md)**

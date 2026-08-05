@@ -96,6 +96,12 @@ When migrating sprites from one atlas category to another (e.g. `ui_taom` → `u
 - **Prevent:** Treat a category move as a three-step (repo move → install delete → regen); the repo being clean proves nothing about the install.
 - **Source:** memory/feedback_sprite_atlas_cleanup.md (recovered 2026-08-05 from the stale pre-move project slug — the only fact in it not already migrated)
 
+### Verify `Brush="X"` names like `Sprite="X"` names — BrushFactory nulls silently
+`BrushFactory.GetBrush(name)` returns null for an unregistered brush name with no exception, no assert, no log (verified `TaleWorlds.GauntletUI.BrushFactory.cs:934-940`, installed v1.4.7) — the widget renders with default styling and nothing tells you. `Brush="ButtonBrush1.Text"` shipped in `AbilityHUD.xml`, was copy-inherited into the #379 badge, and `CharacterDeveloper.SkillNameText`/`.DescriptionText` (14 uses in `CareerScreen.xml`) have been silently unregistered since May — the vanilla `"<X>.Text"` pattern requires each `.Text` brush to be its OWN `<Brush Name=...>` declaration, never auto-derived from `X`.
+- **Why missed:** `gui-ui.md` mandated verifying every `Sprite=` against the sprite registry but said nothing about `Brush=` — the rule scope was one asset category narrower than the failure class (the NaN-gate scope-gap shape, again). A shipped prefab using the bad name made it look legitimate.
+- **Prevent:** before writing any `Brush="X"`, grep `Main/_Module/GUI/Brushes/*.xml` + the relevant vanilla `Modules/*/GUI/Brushes/*.xml` for `<Brush Name="X"`. Rule widened in `gui-ui.md` "Sprite References" (now sprites AND brushes).
+- **Source:** career UX arc deep review 2026-08-05 (compatibility agent). RCA: `docs/reviews/rca-career-ux-arc-2026-08-05.md`
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

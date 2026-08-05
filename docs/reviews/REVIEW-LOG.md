@@ -1672,3 +1672,26 @@ decompile-before-costing instruction and the FileLogger durability contract. Sui
 - [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 
 <!-- backlinks-end -->
+## Review 81 — Career UX arc (#377–#384) deep-review + Codex adversarial pass (2026-08-05)
+
+5 Claude agents (Standards, API Compatibility, Efficiency, Completeness, Data Flow) + a parallel
+Codex xhigh pass over the adopted-external career UX arc (8 issues, ~50 changed files). Full RCA:
+`rca-career-ux-arc-2026-08-05.md`.
+
+**Claude pass: 7 findings, 5 fixed / 1 rejected-with-verdict / 1 deferred-with-record.** The
+compatibility agent decompile-verified the entire first-ever mission-screen PrefabExtension
+architecture (datasource chain, ViewModelMixin("Tick") mechanism, filename-keyed prefab patching)
+and caught 2 silent unregistered-brush names; the data-flow agent caught the hero-death path
+clearing ally buffs without recomputing engine-side stats, plus an identity-predicate drift.
+
+**Codex pass: 0 P1 / 2 P2, all six architecture Known Suspects DISPUTED with decompiled evidence
+(independently agreeing with the Claude compat agent).** C1a CONFIRMED+fixed (`isSiegeEngineHit`
+unfiltered — false attribution on player siege hits); C1b DISPUTED (its quoted vanilla mount→rider
+normalization does not exist in installed Mission.cs); C2 CONFIRMED+fixed (Olog Hai Duration
+mutations reach a 16s window vs 15s cooldown — recast double-stack; fixed with an
+IsAbilityActive activation gate, replacing a same-session Claude invariant test that had summed
+only CooldownReduction mutations — the "one category narrower" motif appearing INSIDE a
+freshly-written test).
+
+Suite: 5509 green after all fixes. Lessons: brush-name verification (localization-ui), clear-path
+agent refresh (state-lifecycle-save), callback-parameter enumeration (adapters-taleworlds-api).

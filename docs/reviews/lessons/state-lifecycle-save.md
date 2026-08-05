@@ -165,6 +165,16 @@ which is a worse bug than the one being fixed and leaves no trace. Two tests pin
 
 **Source:** `docs/reviews/rca-enlistment-core-2026-08-04.md` finding #6 (deep-review data-flow agent, event-coverage trace).
 
+---
+
+### Clearing cached agent-stat state is NOT an engine-side refresh — recompute every agent that baked it in, on EVERY clear path
+
+**Why missed:** The #377 buff-lifecycle rework asked "when does the tracker ENTRY die?" and covered every clear path (expiry, death, agent delete, mission end). But the entry's side effect — buff values baked into `AgentDrivenProperties` — lives engine-side, and `Agent.UpdateAgentProperties()` is event-triggered (ammo/weapon/mount changes), never per-tick (decompile-verified). The expiry restores refreshed their agents; the hero-DEATH path cleared the dictionary AND `_activeContexts` (killing those restores) without refreshing anyone, so allies kept the buffed stats for the rest of the mission. A state matrix that only tracks the CACHE misses the CONSUMER.
+
+**Prevent:** for every cached value that flows into `AgentDrivenProperties` (or any engine-side recomputed stat), every clear path must either (a) call `UpdateAgentProperties()` on each affected agent, or (b) provably leave the scheduled refresh alive. Snapshot the affected agent set BEFORE the clear (`GetBuffedAllyIndices()` pattern) — a cleared dictionary can't tell you who to refresh.
+
+**Source:** `docs/reviews/rca-career-ux-arc-2026-08-05.md` finding #1 (deep-review data-flow agent, lifecycle trace).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

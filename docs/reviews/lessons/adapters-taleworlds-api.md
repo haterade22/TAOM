@@ -205,3 +205,21 @@ silently blocks a legitimate action. Where practical, make the writer return wha
 gate completion on that return value rather than on the earlier read — then the two can't disagree.
 
 **Source:** `docs/reviews/rca-enlistment-content-2026-08-05.md` Codex finding C2.
+
+### Pinning an engine callback's SIGNATURE is not understanding its PARAMETERS — state what each flag means for your feature
+
+**Why missed:** The career damage-attribution override pinned `MissionBehavior.OnScoreHit` against
+the installed DLL character-for-character (the two `in` params silently no-op a wrong override, so
+the signature got real scrutiny) — but `isSiegeEngineHit` rode through unexamined. The dispatch site
+(`Mission.OnAgentHit`) sets it for siege-engine missiles whose affector IS the operating player, so
+the un-filtered override would have printed "+N from ability" on ballista hits the agent-stat buff
+never touched. Signature verification answered "will this override bind?"; nobody asked "what does
+each parameter mean for THIS feature?"
+
+**Prevent:** when overriding any engine callback, enumerate its parameters and write one line per
+flag/edge parameter stating how the feature handles it (act on it, ignore it deliberately, or
+return early). A parameter you can't classify is research owed before shipping. Counterpart caution
+from the same review: do NOT blind-adopt a reviewer's "vanilla normalizes X" claim — the quoted
+mount→rider normalization did not exist in the installed `Mission.cs` (Codex C1b, disputed).
+
+**Source:** `docs/reviews/rca-career-ux-arc-2026-08-05.md` Codex finding C1a.

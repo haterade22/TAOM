@@ -86,3 +86,13 @@ Testing promotions without grinding out battles — two dev-console commands:
 `taom.fc_grant_merit [troopId] [amount]` and `taom.fc_status`.
 
 > **Caveats, plainly.** Config is cached for the whole process — retuning needs a **full game restart**, not a save-load. The in-camp duty prompts (titles and body text) are still **hardcoded in C#**, so the JSON controls a duty's gates, deadline and rewards but not its wording. Khand and Lothlórien have no per-culture kit yet and draw the neutral set. **Neither feature has MCM sliders yet:** Battlefield Promotions can at least be switched off with `"enabled": false` in its JSON, but **Enlistment currently has no off switch at all** — it's always registered.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

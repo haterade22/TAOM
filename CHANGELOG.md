@@ -4,6 +4,93 @@
 
 ## 2026-08-05
 
+### feat(career): career UX arc — 3 runtime fixes + 5 features from a vetted external submission (#377–#384)
+
+An external contributor delivered a working reference module (`TAOM-Career-UX-Upstream-2026-08-05`)
+prototyping a career-UX overhaul, with an upstream plan written in terms of TAOM's own files.
+Adopted via `/adopt-external`: security pass clean (zero network/exec/exfil; DLL never run),
+three verification agents checked every load-bearing claim against TAOM source, the 1.4.7
+decompile, and ModuleData before anything was built. Full verdict + findings:
+`~/.claude/plans/review-this-and-identify-bubbly-moon.md`. Suite 5502 green.
+
+- **#377 ability runtime:** buff-tracker entries are contribution-counted and retire on the last
+  restore (pre-fix a zeroed entry lingered all mission — "buff present" was meaningless);
+  `CareerAbility` gained the active window (`BeginActiveWindow` fed the same mutation-extended
+  duration that schedules the restores); a controlled-agent identity gate stops the HUD showing —
+  and a V-press silently WASTING — the hero's ability while the player controls a soldier
+  (co-op / after-wounded).
+- **#378 button feel:** career button got an `Id`, a real Brush (Gauntlet derives press/hover
+  states ONLY from a Brush — a bare `Sprite=` has none, decompile-verified), and a click sound.
+  CareerScreen's `+`/`−` buttons had the same defect — same treatment, no new art (per-style
+  ColorFactor on the existing sprites).
+- **#379 unspent-points badge** on the character-screen button — service-level computation
+  (`ICareerRegistry.GetUnspentPoints`, single-sourced with the career screen), deliberately
+  independent of career-screen state.
+- **#380 per-career keystone glyphs:** data-driven `keystone_icon` on all 50 `<Career>` rows
+  (contributor's 49-entry banner-icon table, verified id-by-id + sprite-registered; +1 for the
+  disabled `far_harad_halftroll`), rendered as a tinted medallion on keystone nodes. NO culture
+  fallback by design (the reference's fallback regressed Rivendell to its live clan sigil).
+  Art curation pass deferred — caveats in #380.
+- **#381 keystone branch exclusivity (deliberate design adoption):** one keystone per tier;
+  a completed tier-3 group reopens all; taken stones are grandfathered + refundable. Extracted
+  to `KeystoneExclusivityRule` — the same rule now also DIMS closed keystones instead of
+  silently eating the click. (Core one-per-tier predated this arc; exemption + display gating
+  are new. The reference module carried this rule UNDOCUMENTED — flagged, then adopted on
+  explicit decision.)
+- **#382 energy bar:** the 130×166 square ability panel (which sat on the tournament prize lane)
+  is retired — controller/VM/prefab deleted. Replaced by a slim bar docked in the AgentStatus
+  cluster via TAOM's first mission-screen PrefabExtension (container-safety verified against the
+  installed DLLs: the view does zero child traversal) + a `[ViewModelMixin("Tick")]` on
+  `MissionAgentStatusVM`, using the native ShieldHealthBar brushes and a derived refill rescale
+  that kills the measured empty→40% snap. Key chip reads the bound key from the input adapter.
+- **#383 damage attribution:** combat-log `+N from ability` per qualifying hit, computed from
+  TAOM's own applied buff state (never reflection; exact while the ability buff is the sole
+  multiplicative term). Utility abilities say so once per activation instead of staying silent.
+  `OnScoreHit` signature pinned against the installed v1.4.7 DLL first (two `in` params silently
+  no-op a wrong override).
+- **#384 diagnostics:** `taom.print_hud_layout` — on-demand, bounded widget-tree dump with real
+  rectangles (the reference's layout dumps found three bugs code reading did not), with its
+  collapsed-tree warning ported.
+
+Rejected from the submission: the module itself (prefab shadow-clones, blanked AbilityHUD, an
+undisclosed full CareerScreen rewrite), the hardcoded-8s wall-clock window, static hand-off
+state, the sibling-widget button hack, the unbounded logger, and a private-member Harmony
+binding. Kill-switch audit found 2 of its 6 advertised flags dead/fictional.
+
+**Deep review (5 agents) + fixes, same session** (RCA: `docs/reviews/rca-career-ux-arc-2026-08-05.md`):
+the compatibility agent verified the entire energy-bar architecture against the installed DLLs
+(movie datasource chain, UIExtenderEx filename-keyed prefab patching, InsertType semantics) and
+caught two silent unregistered-brush references; the data-flow agent caught a hero-death path
+that cleared ally buffs without recomputing their engine-side stats. Fixed: ally refresh via
+`GetBuffedAllyIndices` snapshot + `FindAgentWithIndex` loop; badge brush registered as
+`CareerSystem.Badge.Text`; the three copies of the career-hero identity predicate extracted to
+`CareerHeroIdentityGate` (one had already drifted); `OnScoreHit` body extracted to
+`AbilityDamageAttributionReporter` (ADR-002 thinning); a real-XML invariant test now pins
+worst-case cooldown ≥ ability duration (the 5s floor sits below the 8–10s durations — currently
+unreachable, future retunes fail CI). `gui-ui.md` sprite-verification rule widened to Brush names.
+Suite 5506 green after fixes.
+
+Known limitation: `CharacterDeveloper.SkillNameText`/`.DescriptionText` (CareerScreen.xml ×14,
+pre-existing since May) and `ButtonBrush1.Text` (PresetsOverlay.xml) are unregistered brush names
+rendering with default styling — deliberately deferred (the career screen was visually approved
+in that state); cleanup needs its own in-game pass. RCA finding #3.
+
+**Codex adversarial pass (gpt-5.5 xhigh): 0 P1 / 2 P2; all six architecture Known Suspects
+DISPUTED with decompiled evidence** — independently confirming the energy-bar design (Review 81,
+`docs/reviews/raw/codex-adversarial-career-ux-arc-2026-08-05.md`). Fixed: `isSiegeEngineHit` now
+filtered in `OnScoreHit` (siege missiles arrive with the operating player as affector; attributing
+ability bonus there would be a false claim), and activation is blocked while the active window is
+live (`IsAbilityActive` gate) — Codex proved the overlap reachable via olog_hai's Duration
+mutations (16s window vs 15s cooldown floor), a case both the Claude data-flow agent and this
+session's own invariant test missed by summing only CooldownReduction mutations; that test was
+replaced by the structural gate + its unit tests. Codex's mount→rider normalization suggestion was
+DISPUTED (its quoted vanilla code does not exist in the installed Mission.cs). Suite 5509 green.
+
+Not-tested: in-game render/behavior (bar visuals, medallions, badge, sounds, attribution lines —
+static review cannot certify a sprite renders); smoke checklist in the plan file + #377–#384.
+Owed: 12-language `/localize` for the two new strings (English registered; translation gated on
+`ANTHROPIC_API_KEY`), keystone art curation.
+
 ### chore(repo): leftover sweep — executed
 
 A 15-agent verified sweep (7 finder modalities, adversarial verification per finding, completeness

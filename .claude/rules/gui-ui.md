@@ -10,7 +10,7 @@ paths:
 
 # GUI / UI / Sprite Rules
 
-## Sprite References (MANDATORY)
+## Sprite AND Brush References (MANDATORY)
 
 Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
 
@@ -20,6 +20,15 @@ Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
 4. **Verify the PNG exists** — check `GUI/SpriteParts/ui_taom/<subfolder>/` before referencing
 
 **Why:** Sprite="TAOM\CareerSystem\career_button_placeholder" failed silently (blank button, no crash, no log) because the registered name was "CareerSystem\career_button_placeholder". This class of bug is invisible without in-game testing.
+
+**The same rule applies to `Brush="X"` (added 2026-08-05).** `BrushFactory.GetBrush(name)` returns
+null SILENTLY for an unregistered name (verified `BrushFactory.cs:934-940`, installed v1.4.7) —
+the widget renders with default styling, no crash, no log. Before writing any `Brush="X"`, grep
+`Main/_Module/GUI/Brushes/*.xml` AND the relevant vanilla `Modules/{Native,SandBox}/GUI/Brushes/*.xml`
+for `<Brush Name="X"`. The vanilla `"<X>.Text"` naming pattern is NOT auto-derived — each `.Text`
+brush is its own declaration. Shipped instances of this bug: `ButtonBrush1.Text` (AbilityHUD,
+PresetsOverlay), `CharacterDeveloper.SkillNameText`/`.DescriptionText` (CareerScreen.xml ×14 —
+deferred cleanup, see `docs/reviews/rca-career-ux-arc-2026-08-05.md` finding #3).
 
 ### Adding a NEW sprite (not just referencing an existing one)
 
@@ -65,7 +74,7 @@ mapInfo.SecondaryInfoItems.Add(new MapInfoItemVM(...))  // NEVER DO THIS
 
 When adding a custom `GauntletLayer` overlay that contains interactive widgets (buttons, click bindings, drag handles) to **either** a `ScreenBase` (via Harmony postfix on `OnInitialize`) **or** a `MissionScreen` (via `MissionView.OnMissionScreenInitializeFirstTime`, `MissionLogic` overlay attach, or any other feature-overlay attach path), the layer MUST call `_layer.InputRestrictions.SetInputRestrictions()` after construction or it paints but never registers with the screen's input dispatcher — mouse clicks pass through. Pair with `_layer.InputRestrictions.ResetInputRestrictions()` in the teardown path before `RemoveLayer`.
 
-The v1.4.5 input dispatcher does NOT distinguish between `ScreenBase` and `MissionScreen` hosts for this purpose. Both require explicit input registration. Display-only overlays with zero interactive widgets (no `ButtonWidget`, no `Command.Click`, no `AcceptEvents` — e.g., the CareerSystem `AbilityHUD`) are the only exception; verify with grep before claiming it.
+The v1.4.5 input dispatcher does NOT distinguish between `ScreenBase` and `MissionScreen` hosts for this purpose. Both require explicit input registration. Display-only overlays with zero interactive widgets (no `ButtonWidget`, no `Command.Click`, no `AcceptEvents`) are the only exception; verify with grep before claiming it. (The CareerSystem `AbilityHUD` was the canonical display-only example until #382 retired it — the career energy bar now rides inside Native's AgentStatus movie via PrefabExtension, which needs no input wiring at all.)
 
 **Correct pattern (ScreenBase overlay via Harmony):**
 ```csharp
