@@ -2,6 +2,41 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-04
+
+### feat(enlistment): core service loop for serving in a lord's party (#375, checkpoint 1 of N)
+
+The Serve-as-Soldier rewrite's foundation: a persisted 8-state machine (petition → oath →
+attached service, with battle, captivity, commander-grace and discharge states) replaces the
+donor mod's visibility-flags-as-state hack. Party presence flags are now OUTPUTS asserted from
+state; a single fixed-order discharge pipeline is the only exit and unconditionally restores the
+party BEFORE clearing the record — the donor's commission-exit softlock (record cleared, party
+hidden forever) is unrepresentable, and `DischargePipelineInvariantTests` pins that for all 8
+discharge reasons. A captured commander now grants a 7-day grace window with the player freed to
+roam, replacing the donor's split policy where the wait menu discharged instantly but the daily
+tick didn't.
+
+Ships as: 4 new adapters (commander snapshot, party attachment/presence, encounter, game menu —
+positions are `CampaignVec2` on 1.4.7, camera-follow lives on `PartyBase`), the hourly reconciler
+as sole terminal authority, an Entity-State-Matrix load normalizer (never leaves an ownerless
+hidden MainParty — including rescuing foreign saves), the service wait menu with a config-driven
+fail-open redirect guard, battle interception that joins the commander's side (state flips before
+any menu push, so the guard can't eat battle menus), and `Patch66_Enlistment`: a
+`GameMenuManager.SetNextMenu` prefix, a `MapState.EnterMenuMode` recovery postfix, and four
+`LordConversationsCampaignBehavior` condition suppressions — all six targets pinned by
+binding-drift tests against the installed DLLs. The donor's `MapState.OnMapConversationOver`
+patch is replaced by the `ConversationEnded` campaign event.
+
+158 feature tests; suite 5030 green. Not yet player-reachable — the enlist dialog chain is the
+next checkpoint. Deep-review findings (7, all fixed in-session):
+`docs/reviews/rca-enlistment-core-2026-08-04.md`.
+
+Research: GameMenuManager.SetNextMenu, MapState, LordConversationsCampaignBehavior,
+PlayerEncounter, MobileParty, CampaignEvents (installed 1.4.7 via taom-src)
+Not-tested: Harmony patch invocation + wait-menu rendering (requires live game)
+Save-compat: New feature — primitive-dict SyncData under `_taom_enlistment`, versioned, no
+SaveableTypeDefiner; absent keys load as not-enlisted.
+
 ## 2026-08-03
 
 ### docs: bring the knowledge base up to the multiplayer changeset

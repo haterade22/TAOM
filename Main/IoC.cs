@@ -145,6 +145,7 @@ public static class IoC
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
+        Features.Enlistment.EnlistmentIoC.RegisterEnlistmentFeature(container);
 
         _container = container;
 

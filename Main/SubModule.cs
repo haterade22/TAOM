@@ -962,6 +962,15 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>(),
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
 
+
+        // Enlistment (#375) — serve as a soldier in a lord's party. Registered unconditionally so
+        // SyncData round-trips the service record and load normalization can rescue an ownerless
+        // hidden MainParty even when the feature is later toggled off. World mutations are
+        // host-only inside the behavior.
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentMenuBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentBattleBehavior>());
+
         // LotrIssues — suppress ALL 43 vanilla procedural issue behaviors (Sandbox registered them
         // before this OnGameStart) and register the single LOTR custom-issue dispatcher in their
         // place. New-campaign feature: a pre-suppression save keeps in-flight vanilla issues until
@@ -1041,6 +1050,11 @@ public class SubModule : MBSubModuleBase
         // Patch64 — retints game-menu hyperlinks by faction. GameMenuVM is constructed when the
         // map/menu state opens, well after initialization, so the standard batch is early enough.
         _harmony.PatchCategory("Patch64_MenuLinkColors");
+        // Patch66 — enlistment menu guard (SetNextMenu redirect + EnterMenuMode recovery) and
+        // the four LordConversations condition suppressions. All campaign-runtime targets; menus
+        // first open well after this batch. Fail-open prefixes gated on IEnlistmentStateQuery —
+        // inert while not enlisted.
+        _harmony.PatchCategory("Patch66_Enlistment");
         _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
         // Patch47 RE-ENABLED 2026-06-12 after full exoneration: its 06-12 morning indictment
         // ("post-sever tick AV") was actually the CanAttack charge crash at set_attack_entity
