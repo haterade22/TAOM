@@ -105,7 +105,13 @@ STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS = (
     # 2026-07-18; review-lessons-archive.md holds the rolled-out older essays.
     "codex-track-record",
     "review-lessons-archive",
+    # Historical review records added 2026-08-05 (leftover sweep): REVIEW-LOG rows and the
+    # audit-* snapshots are point-in-time facts about the reviews/audits that ran, exactly like
+    # rca-*; the lessons/ dir quotes old versions as the historical context of each lesson.
+    "REVIEW-LOG",
+    "audit-",
 )
+STALE_VERSION_EXEMPT_DIR_PARTS = ("docs/reviews/lessons",)
 # Codex review *transcripts* (prompts + results) are external-tool snapshots, not curated docs.
 # We don't lint their internal links either — they capture historical state and we don't edit them.
 DEAD_LINK_EXEMPT_FILENAME_SUBSTRINGS = (
@@ -245,6 +251,8 @@ def check_stale_versions(files: list[Path]) -> list[tuple[Path, int, str, str]]:
         if any(f_posix.startswith(prefix) for prefix in STALE_VERSION_EXEMPT_PREFIXES):
             continue
         if any(sub in f.name for sub in STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS):
+            continue
+        if any(part in f_posix for part in STALE_VERSION_EXEMPT_DIR_PARTS):
             continue
         try:
             text = f.read_text(encoding="utf-8", errors="replace")

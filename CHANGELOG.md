@@ -80,7 +80,15 @@ never existed in this repo and its sections are hardcoded line ranges — so it 
 the convention (equipment-type 1.4.3 migration pair, roster-suggestion + culture-coverage pair,
 bandit-hideout pair, Rhun settlement owners, career-name singularizer, the xslt equipment tool) —
 each verified: zero README mentions (except the retired one), last touched 2.5+ months ago,
-referenced only by history/archive docs.
+referenced only by history/archive docs. Five of those historical references were markdown LINKS
+that broke on the move — caught by the lint gate, repointed to `tools/oneoff/`.
+
+**Linter exemptions + settings.** `REVIEW-LOG`, `audit-*`, and `docs/reviews/lessons/` joined the
+stale-version exemptions (they quote old versions as historical record, same class as `rca-*`) —
+stale-version noise 62 → 29, and the remainder is deliberate history (native-skin-fixes' pinned
+v1.3.15 RVAs, port narratives, the ADR-010 context). settings.local.json drops the
+never-again-matchable `C:/non/existent/path` test rule and a doubled-slash duplicate read grant;
+`/security-scan` clean at HIGH+ after the edit.
 
 ### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
 

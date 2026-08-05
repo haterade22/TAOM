@@ -143,7 +143,7 @@ These are dedicated troops (not edited in place) because the original `bandit_bo
 
 The 99 existing hideouts in `TAOM_Map/ModuleData/settlements.xml` (external module) had their `culture=` attribute swapped to the new LOTR cultures and their display names rewritten from "Hideout" to "Dunlending Raider's Camp" / "Gundabad Orc Raider's Camp" / "Haradrim Raider's Camp" / "Rhûn Raider's Camp" / "Corsair's Cove". Settlement IDs (`hideout_forest_N`, etc.) were intentionally **left unchanged** to preserve save compatibility — a save started before this migration will load fine and just see the renamed hideouts.
 
-Migration is driven by [`tools/migrate_hideouts_to_lotr.py`](../../tools/migrate_hideouts_to_lotr.py). Safe to re-run idempotently. `--backup` flag writes `.bak` copies of each modified file before overwriting.
+Migration is driven by [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py). Safe to re-run idempotently. `--backup` flag writes `.bak` copies of each modified file before overwriting.
 
 ### Hideout scenes (scene_name) — must exist on disk
 
@@ -188,7 +188,7 @@ The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleDa
 | [`Main/_Module/ModuleData/taom_spcultures.xml`](../../Main/_Module/ModuleData/taom_spcultures.xml) | 5 LOTR bandit culture entries (appended) |
 | [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml) | 10 raider + boss party templates (appended) |
 | [`Main/_Module/ModuleData/taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml) | Culture display names + male/female names (~80 keys) |
-| [`tools/migrate_hideouts_to_lotr.py`](../../tools/migrate_hideouts_to_lotr.py) | TAOM_Map hideout culture + name swap |
+| [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py) | TAOM_Map hideout culture + name swap |
 | [`TAOM.Tests/Features/BanditManagement/`](../../TAOM.Tests/Features/BanditManagement/) | 50 unit tests (service, config provider, density-model helpers, hideout descriptions) |
 
 ## Dependencies
@@ -267,7 +267,7 @@ The GameModel properties (`NumberOfMaximumHideoutsAtEachBanditFaction` etc.) are
 
 Culture display names, male/female names, and the 5 hideout encounter descriptions (`taom_hideout_desc_*`) live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). English defaults are baked into the `text="{=KEY}default"` attribute pattern, so non-English players see English text until translations are produced. To localize, run `python tools/translate_with_claude.py` after authoring; the new keys are picked up automatically.
 
-The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` were set to the English LOTR camp names by [`tools/migrate_hideouts_to_lotr.py`](../../tools/migrate_hideouts_to_lotr.py). Future hand-translation per language is straightforward (each language file has 99 entries with consistent text patterns).
+The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` were set to the English LOTR camp names by [`tools/migrate_hideouts_to_lotr.py`](../../tools/oneoff/migrate_hideouts_to_lotr.py). Future hand-translation per language is straightforward (each language file has 99 entries with consistent text patterns).
 
 ## Save Compatibility
 
