@@ -8,14 +8,14 @@ argument-hint: [culture]
 
 Author or revamp a culture's `LOTRLOME_Armory` armor items and re-point troop equipment rosters. This is the **armor-only** flow (revamps like #99 / #211 / #212 / #224). For a brand-new culture (armor + troops + recruitment + culture wiring), use `/new-culture` instead.
 
-Reference: CLAUDE.md "Equipment & Armory" table + tools/README.md (Content Generation / Rebalancing sections).
+Reference: [docs/reference/armory-guide.md](../../../docs/reference/armory-guide.md) (canonical-folder table) + tools/README.md (Content Generation / Rebalancing sections).
 
 ## Step 0 — Find the canonical folder (MANDATORY, the recurring bug)
 Before authoring ANY item, grep **all** `LOTRLOME_items/*/` subfolders for the item-id prefix:
 ```bash
 grep -rl 'sk_<prefix>_' "<armory>/ModuleData/LOTRLOME_items/"
 ```
-The first folder that already contains that prefix is the canonical home. Authoring into a different folder creates runtime duplicate-ID warnings (the engine silently shadows one). Even when the spec is named for culture X, the home may be a sub-culture — e.g. `sk_dwarf_iron_*` lives in `iron_hills/`, NOT `erebor/` (caught in #211). CLAUDE.md has the full per-prefix → folder table. Memory: `feedback_multi_folder_id_uniqueness.md`.
+The first folder that already contains that prefix is the canonical home. Authoring into a different folder creates runtime duplicate-ID warnings (the engine silently shadows one). Even when the spec is named for culture X, the home may be a sub-culture — e.g. `sk_dwarf_iron_*` lives in `iron_hills/`, NOT `erebor/` (caught in #211). `docs/reference/armory-guide.md` has the full per-prefix → folder table (moved out of CLAUDE.md 2026-07-18). Memory: `feedback_multi_folder_id_uniqueness.md`.
 
 ## Step 1 — Author the armor items
 - Use/clone the matching generator: `tools/generate_<culture>_armor.py` (`--dry-run` then `--apply`; `--armory-path` to target the Steam install).

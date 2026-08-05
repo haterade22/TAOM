@@ -2,7 +2,7 @@
 
 > **One process, traced from the decompile** (v1.4.5): the usable-mission-object hierarchy — how agents occupy +
 > operate scene objects (siege engines, ladders, the howdah crew platform). Generalizes
-> [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md) into the reusable engine pattern for any
+> [howdah-crew-mechanism.md](../../features/elephant/howdah-crew-mechanism.md) into the reusable engine pattern for any
 > future TAOM usable machine. Part of the phased engine study; builds on Phase 8 (these ARE `ScriptComponentBehavior`s).
 
 ## WHAT it is
@@ -64,7 +64,7 @@ in the Kit with no code.
 ## TAOM relevance + gotchas
 - **The howdah** (`ADODHowdah : UsableMachine`, `ADODHowdahStandingPoint : StandingPoint`) is the worked example —
   full line-level port spec + the moving-machine "manual per-tick frame-copy to the elephant neck" pattern are in
-  [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md). Any future TAOM usable machine (deployable,
+  [howdah-crew-mechanism.md](../../features/elephant/howdah-crew-mechanism.md). Any future TAOM usable machine (deployable,
   siege-defense object, ridden platform) follows this hierarchy.
 - **v1.4.5 drifts** (the upstream pack is 1.2.12 — confirmed): `OnUse(Agent)` → **`OnUse(Agent, sbyte agentBoneIndex)`**
   (UsableMissionObject.cs:360 — add the param or the override is dead); `MissionObject.SetDisabled(bool)` — the bool is
@@ -85,7 +85,7 @@ C#), running on `GameEntity`s whose transforms/physics are native (Phase 8). The
 ## Evidence (file:line, v1.4.5)
 - `MissionObject.cs`:10 (`abstract : ScriptComponentBehavior`); `UsableMissionObject.cs`:360 (`OnUse(Agent, sbyte)`); `StandingPoint.cs`:11 (`: UsableMissionObject`) + subtypes (`StandingPointWith{TeamLimit,AgentLimit,WeaponRequirement,VolumeBox}`, `StandingPointForRangedArea`).
 - `UsableMachine.cs`:13 (`: SynchedMissionObject, IFocusable, IOrderable, IDetachment`), 55 (`StandingPoints` MBList); `UsableMachineAIBase.cs`:12 (the AI driver); `SiegeWeapon.cs`:11 (`: UsableMachine, ITargetable` — vanilla template).
-- Worked example + drift table: [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md).
+- Worked example + drift table: [howdah-crew-mechanism.md](../../features/elephant/howdah-crew-mechanism.md).
 
 ---
 

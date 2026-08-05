@@ -42,6 +42,15 @@ symbolization of the exact shipped parked binary). The one disk-only April codex
 into `docs/reviews/raw/` (the sanctioned transcript home) instead of dying in a tracked dir it
 was never committed to.
 
+**Dead links 11 → 0; stale pointers fixed.** The five howdah links were one directory level
+short; the ten pre-move-memory-slug links (two RCAs, faction-map.md, and four in live
+`/deep-review` skill text) de-linked to plain citations with lessons-file pointers;
+`/author-armor` + `/new-culture` no longer send readers to a CLAUDE.md table that moved to
+`armory-guide.md` in July; `/freeze`'s example and the ARP-retarget exec path (doc + script
+header) and the substance-painter project key lose the dead pre-move repo path;
+`native-skin-fixes.md` no longer claims "TAOM is on v1.4.5"; AGENTS.md's Harmony table gets the
+header row whose absence broke its markdown rendering.
+
 ### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
 
 Second-round diet of the eager context load (round 1: 174 KB → 91 KB → 42 KB, July 2026).

@@ -428,6 +428,7 @@ Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.c
 
 These are all registered, intentional patches — do not flag them as unauthorized modifications. Current-as-of 2026-07-12; per-patch rationale/history/RCAs: `docs/reference/harmony-patch-registry.md` (single maintained source — this table is a routing snapshot).
 
+| Category | Feature | Target | Status |
 |----------|---------|--------|--------|
 | `Patch0_BattleScenes` | Battle scenes | `Campaign.InitializeScenes` | DISABLED |
 | `Patch1_FirstTimeInit` | First-time initialization | Various | active |

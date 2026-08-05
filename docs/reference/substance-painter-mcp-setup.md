@@ -33,7 +33,7 @@ to it and returns JSON. The MCP server itself speaks stdio only (no listening so
 | Component | Path | Notes |
 |---|---|---|
 | Server package | `C:\Users\mikew\substance_painter_mcp\` | Copied from the purchased v1.2.1 archive (kept off the E: asset folder). `uv` builds its `.venv` here on first run. |
-| MCP registration | `C:\Users\mikew\.claude.json` → `projects["c:/Users/mikew/source/repos/TAOM"].mcpServers."substance-painter"` | Machine-local, sibling to `blender`. `uv run --directory … painter-mcp --mode full`. **Not** in the repo — no `.mcp.json` / `settings.local.json` change. |
+| MCP registration | `C:\Users\mikew\.claude.json` → `projects["e:/repos/TAOM"].mcpServers."substance-painter"` | Machine-local, sibling to `blender`. `uv run --directory … painter-mcp --mode full`. **Not** in the repo — no `.mcp.json` / `settings.local.json` change. |
 | Painter launcher | `C:\Users\mikew\substance_painter_mcp\launch-painter-remote.bat` | Starts Painter 12.0.3 with `--enable-remote-scripting`. |
 | Painter | `C:\Program Files\Adobe\Adobe Substance 3D Painter\` | v12.0.3 (Python API 0.3.5), standalone Adobe install. |
 

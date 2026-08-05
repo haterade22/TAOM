@@ -98,7 +98,7 @@ The hook is silent on success and verbose only when blocking, so freeze adds zer
 ```
 User: /freeze
 Skill: Asks "Which directory?" → user answers "Main/Features/CareerSystem/"
-       Sets boundary to C:/Users/mikew/source/repos/TAOM/Main/Features/CareerSystem/
+       Sets boundary to E:/repos/TAOM/Main/Features/CareerSystem/
        
 User: Edit Main/Features/CareerSystem/Services/CareerService.cs
        → ALLOWED (inside boundary)

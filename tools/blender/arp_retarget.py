@@ -1,5 +1,5 @@
 # Auto-Rig Pro retarget driver for TAOM humanoid races (Blender 5.1.2).
-# Re-exec'd each Blender-MCP call:  exec(open(r'C:\Users\mikew\source\repos\TAOM\tools\blender\arp_retarget.py').read(), globals())
+# Re-exec'd each Blender-MCP call:  exec(open(r'E:\repos\TAOM\tools\blender\arp_retarget.py').read(), globals())
 #
 # PURPOSE: retarget Bannerlord human_skeleton animation clips onto an Auto-Rig Pro
 # authoring rig (e.g. the troll's "rig"), so a humanoid RACE can be given a full

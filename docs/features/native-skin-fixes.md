@@ -54,8 +54,9 @@ calls — Harmony doesn't reach C++ code.
 
 The upstream NativeSkinFixes mod uses hardcoded RVAs (`0x617B50` etc.) inside
 `TaleWorlds.Native.dll`. Every Bannerlord patch changes those offsets, so the
-mod ships a v1.3.15-only DLL. TAOM is on v1.4.5 and wants the hooks to keep
-working across `v1.4.x → v1.5.x` patches without C++ rebuilds.
+mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.4.7 as of
+2026-08-05) and wants the hooks to keep working across `v1.4.x → v1.5.x`
+patches without C++ rebuilds.
 
 ### Solution Approach
 

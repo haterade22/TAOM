@@ -100,7 +100,7 @@ Workflow when editing content:
 5. Validate: `dotnet test TAOM.Tests --filter FactionMap` covers JSON parse, key coverage, per-playable-faction shape; `LanguageDataXmlTests` covers per-language file parse.
 
 Cross-references:
-- Standing instruction: when adding/changing a cultural feat, also update factions.json — see [`feedback_faction_map_update_with_cultural_feats`](../../memory) memory.
+- Standing instruction: when adding/changing a cultural feat, also update factions.json — see `feedback_faction_map_update_with_cultural_feats` (memory; distilled in [lessons/data-content-cultures.md](../reviews/lessons/data-content-cultures.md)).
 - Helper resolution: `Main/Features/FactionMap/FactionDisplayHelper.cs::Localize`.
 - Harvester: `tools/harvest_factionmap_strings.py`.
 - XSLT inheritance audit (mandatory for vlandia/empire/sturgia/battania/aserai/khuzait factions): see [`docs/reviews/rca-faction-map-phase2-codex-2026-06-01.md`](../reviews/rca-faction-map-phase2-codex-2026-06-01.md) — paraphrasing an inventory summary instead of decompiling `DefaultCulturalFeats` was the root cause of 3 HIGH findings (Dale fabricated "forest speed", Khand/Dunland wrong Battanian numbers, Harad/Rhûn vague + missed negatives).

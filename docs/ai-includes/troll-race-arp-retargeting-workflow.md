@@ -120,7 +120,7 @@ movement — pick by how different the motion must be:
 ### B. Retarget human → troll  *(PROVEN — scriptable)*
 Use `tools/blender/arp_retarget.py`:
 ```python
-exec(open(r'C:\Users\mikew\source\repos\TAOM\tools\blender\arp_retarget.py').read(), globals())
+exec(open(r'E:\repos\TAOM\tools\blender\arp_retarget.py').read(), globals())
 src = import_source_fbx(r'...\some_human_clip.fbx')          # -> 'human_skeleton'
 act = retarget(src, 'rig', frame_start=1, frame_end=62)     # bakes onto the troll rig
 ```

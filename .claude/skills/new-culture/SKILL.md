@@ -24,7 +24,7 @@ If creating a **net-new `taom_spcultures.xml` Culture object**, read [docs/cultu
 
 ## Gotchas (cost rework if skipped)
 - **Mesh typos are load-bearing** — the engine binds by exact mesh name; preserve Solus's typos verbatim (Dale's `chivlary`/`infrantry`).
-- **Canonical Armory folder** — grep ALL `LOTRLOME_items/*/` for the item prefix before authoring; first folder with that prefix wins (CLAUDE.md per-prefix table). Wrong folder = duplicate-ID shadowing.
+- **Canonical Armory folder** — grep ALL `LOTRLOME_items/*/` for the item prefix before authoring; first folder with that prefix wins (`docs/reference/armory-guide.md` per-prefix table). Wrong folder = duplicate-ID shadowing.
 - **Cover attributes** — leg items need `covers_legs="true"`, gloves `covers_hands="true"`, or the mesh doesn't render (bare legs/hands).
 - **`<Flags UseTeamColor="true" />`** on every armor item for banner tint.
 - Run `/xslt-check` after editing `spcultures.xslt`.
