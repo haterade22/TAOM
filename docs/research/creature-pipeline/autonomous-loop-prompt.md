@@ -24,7 +24,7 @@ Build, prove, and continuously refine a **reusable pipeline + toolkit + knowledg
 ### MUST-READ before your first iteration (ground yourself — do not skip)
 1. `C:\Users\mikew\.claude\plans\claude-code-and-blender-hazy-flurry.md` (plan + Phase 0 findings + A/B integration fork).
 2. `docs/features/spider.md` and `docs/tools/spider-skeleton-tpac-tools.md`.
-3. `.claude/rules/evidence-over-claims.md`, `.claude/rules/simplicity-criterion.md`, `.claude/rules/think-before-coding.md`, and CLAUDE.md "Working Discipline → Autonomous-loop stewardship".
+3. `.claude/rules/evidence-over-claims.md`, `.claude/rules/simplicity-criterion.md`, `.claude/rules/think-before-coding.md`, and `.claude/rules/working-discipline.md` "Autonomous-loop stewardship".
 4. `MEMORY.md` in the project memory dir for any spider/skeleton/animation feedback.
 
 ### The cycle — one iteration, repeated until a stop condition

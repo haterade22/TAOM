@@ -67,7 +67,7 @@ Unverified agreement, unverified success, and invented facts are the three cheap
 - `think-before-coding.md` fires *before* the change (is this the right change?); this rule fires *around feedback and completion* (is this finding real? is this actually done?).
 - `simplicity-criterion.md` is a legitimate basis for pushing back on a finding ("rejecting: adds an abstraction for a tiny win").
 - `/investigate`, `/verify`, `/deep-review`, `/review-codex` are the command-form workflows; this rule is the always-on behavior underneath them.
-- **Fork-discipline (CLAUDE.md "Working Discipline") forbids fabricating *subagent* results; facet C extends the same prohibition to *your own* tool results and to every fact you state.** "Don't fabricate or predict fork results" and "never invent a count/diff/hash" are one rule applied to two sources. `feedback_no_write_before_reading_tool_output.md` is the worked example.
+- **Fork-discipline (`.claude/rules/working-discipline.md`) forbids fabricating *subagent* results; facet C extends the same prohibition to *your own* tool results and to every fact you state.** "Don't fabricate or predict fork results" and "never invent a count/diff/hash" are one rule applied to two sources. `feedback_no_write_before_reading_tool_output.md` is the worked example.
 
 ## Source
 

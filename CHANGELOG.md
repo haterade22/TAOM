@@ -27,6 +27,13 @@ auditor counted bytes, em-dashes are 3 in UTF-8).
 rules whose *full text* is already in context every session, a pure double-charge. CLAUDE.md
 keeps the `paths:`-convention note + a stub.
 
+**Working Discipline → `.claude/rules/working-discipline.md`.** Fork discipline, autonomous-loop
+stewardship, the TodoWrite bar, inline-hook activation, and edit-scope discipline existed nowhere
+but CLAUDE.md — moved verbatim into a new always-load rule (grep-verified: 0 of 20 moved lines
+missing). Eager-budget-neutral, but CLAUDE.md stays an index. Three referrers updated
+(evidence-over-claims, autonomous-loop-prompt, karpathy-autoresearch notes); the heading survives
+in CLAUDE.md as a pointer.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one

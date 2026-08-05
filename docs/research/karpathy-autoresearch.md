@@ -23,7 +23,7 @@ This node captures **everything** in the repo (README, program.md, train.py, pre
 - [reviews/REVIEW-GUIDE.md](../reviews/REVIEW-GUIDE.md), [reviews/REVIEW-LOG.md](../reviews/REVIEW-LOG.md) — the adversarial-review loop is the closest TAOM analogue to autoresearch's experiment loop
 - [ai-includes/agent-teams.md](../ai-includes/agent-teams.md) — when to spawn parallel agents; autoresearch's `worktrees/` + `queue/` pattern is the more disciplined version
 - CLAUDE.md "Autonomous-loop stewardship" — already cites `program.md` for the NEVER STOP rule
-- CLAUDE.md "Working Discipline" — already cites `program.md` for crash judgment
+- `.claude/rules/working-discipline.md` (ex-CLAUDE.md "Working Discipline") — already cites `program.md` for crash judgment
 - `.claude/rules/simplicity-criterion.md` — already imported the "0.001 improvement + 20 lines of hacky code? No." rule
 - `.claude/rules/think-before-coding.md` — imported from karpathy-skills repo (sister project)
 - `.claude/rules/harness-facts.md` — already cites autoresearch's `.gitignore` for worktree isolation
