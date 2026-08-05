@@ -27,10 +27,16 @@ SPLORDS_XSLT = MODULE_DATA / "splords.xslt"
 LORDS_XSLT = MODULE_DATA / "lords.xslt"
 LORDS_XML = MODULE_DATA / "characters" / "lords.xml"
 
-# Mount configurations per culture
+# Mount configurations per culture.
+# erebor is deliberately absent: the dwarf skeleton's rider bone is misaligned, so
+# a mounted dwarf spawns inside the horse mesh. Adding it back injects Item.charger
+# into the Erebor lord battle rosters, which validate_moduledata.py then rejects
+# with MOUNTED_DWARF. Same invariant Patch46_TournamentDwarfDismount enforces at
+# runtime; the "dain - no horse (dwarves don't ride)" skip below is the older,
+# narrower version of this rule.
 HORSE_CULTURES = {
     "gondor", "rohan", "dale", "dunland", "harad", "rhun",
-    "mirkwood", "rivendell", "lothlorien", "erebor", "mordor",
+    "mirkwood", "rivendell", "lothlorien", "mordor",
 }
 WARG_CULTURES = {"isengard", "dolguldur", "gundabad"}
 

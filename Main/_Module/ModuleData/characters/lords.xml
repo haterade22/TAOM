@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TAOM Additional Lords - New lords from LOTRAOM not in vanilla Bannerlord 
-     NOT registered in SubModule.xml - staged for future activation -->
+<!-- TAOM Additional Lords - New lords from LOTRAOM not in vanilla Bannerlord.
+     REGISTERED and live: SubModule.xml line 159, <XmlName id="NPCCharacters" path="characters/lords"/>.
+     (The old "staged for future activation" note here was stale; corrected 2026-08-04.)
+     1184 Occupation.Lord entries across 20 cultures. Vanilla-reused-culture lords are overlaid
+     separately by lords.xslt (SubModule.xml line 98) - that file does not touch the custom cultures.
+     Dwarves must never be Cavalry/HorseArcher nor carry a Horse slot; validate_moduledata.py
+     enforces it as MOUNTED_DWARF. -->
 <NPCCharacters>
     <!-- Culture.aserai -->
     <NPCCharacter id="lord_3_3_1" name="{=aom_lord_3_3_1_name}Tariq" age="19" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.aserai" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_young_lord_skills">

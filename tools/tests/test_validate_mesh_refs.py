@@ -455,6 +455,111 @@ class ReportTests(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------- #
+# Reverse audit: packaged meshes with no item (--unreferenced / --prefix)       #
+# --------------------------------------------------------------------------- #
+class ReverseAuditTests(unittest.TestCase):
+    def _refs(self, *mesh_names):
+        xml = "".join(f'<Item id="it{i}" mesh="{m}" />\n'
+                      for i, m in enumerate(mesh_names))
+        return vm.extract_refs_from_text(xml, "gondor/head_armors.xml")
+
+    def test_packaged_mesh_with_no_item_is_reported(self):
+        refs = self._refs("sk_gd_used")
+        present = vm.PresentSet(metameshes={"sk_gd_used", "sk_gd_orphan"},
+                                tpac_paths=["fake.tpac"])
+        audit = vm.reverse_audit(present, refs)
+        self.assertEqual(audit.orphans, ["sk_gd_orphan"])
+        self.assertEqual(audit.referenced, 1)
+
+    def test_referenced_mesh_is_not_reported(self):
+        refs = self._refs("sk_gd_used")
+        present = vm.PresentSet(metameshes={"sk_gd_used"}, tpac_paths=["fake.tpac"])
+        self.assertEqual(vm.reverse_audit(present, refs).orphans, [])
+
+    def test_slim_variant_of_referenced_mesh_is_suppressed(self):
+        # The engine resolves the female body variant by appending `_slim`, so it
+        # is never named in item XML. Reporting it would be a false positive —
+        # 100 of them for the Gondor set alone.
+        refs = self._refs("sk_gd_chest")
+        present = vm.PresentSet(metameshes={"sk_gd_chest", "sk_gd_chest_slim"},
+                                tpac_paths=["fake.tpac"])
+        audit = vm.reverse_audit(present, refs)
+        self.assertEqual(audit.orphans, [])
+        self.assertEqual(audit.slim_suppressed, 1)
+
+    def test_slim_variant_with_no_referenced_base_is_still_an_orphan(self):
+        # Suppression is conditional on the base being referenced — a `_slim`
+        # whose base nothing uses is genuinely unreferenced art.
+        refs = self._refs("sk_gd_other")
+        present = vm.PresentSet(metameshes={"sk_gd_lonely_slim", "sk_gd_other"},
+                                tpac_paths=["fake.tpac"])
+        audit = vm.reverse_audit(present, refs)
+        self.assertEqual(audit.orphans, ["sk_gd_lonely_slim"])
+        self.assertEqual(audit.slim_suppressed, 0)
+
+    def test_prefix_filters_candidates_only_never_the_referenced_set(self):
+        # sk_md_orphan is out of prefix scope; sk_gd_used is referenced by an item
+        # in a DIFFERENT prefix family and must still count as referenced.
+        refs = self._refs("sk_gd_used")
+        present = vm.PresentSet(
+            metameshes={"sk_gd_used", "sk_gd_orphan", "sk_md_orphan"},
+            tpac_paths=["fake.tpac"])
+        audit = vm.reverse_audit(present, refs, prefix="sk_gd_")
+        self.assertEqual(audit.orphans, ["sk_gd_orphan"])
+        self.assertEqual(audit.considered, 2)
+        self.assertEqual(audit.prefix, "sk_gd_")
+
+    def test_lod_entries_collapse_to_the_base_name(self):
+        refs = self._refs("sk_gd_used")
+        present = vm.PresentSet(
+            metameshes={"sk_gd_used", "sk_gd_used.lod1", "sk_gd_used.lod5"},
+            tpac_paths=["fake.tpac"])
+        self.assertEqual(vm.reverse_audit(present, refs).orphans, [])
+
+    def test_case_mismatch_counts_as_referenced_not_as_a_false_orphan(self):
+        # Conservative direction: TOC casing drift must never manufacture an orphan.
+        refs = self._refs("SK_GD_Used")
+        present = vm.PresentSet(metameshes={"sk_gd_used"}, tpac_paths=["fake.tpac"])
+        self.assertEqual(vm.reverse_audit(present, refs).orphans, [])
+
+    def test_issues_are_info_and_carry_the_mesh_name(self):
+        refs = self._refs("sk_gd_used")
+        present = vm.PresentSet(metameshes={"sk_gd_used", "sk_gd_orphan"},
+                                tpac_paths=["fake.tpac"])
+        issues = vm.reverse_audit_issues(vm.reverse_audit(present, refs))
+        self.assertEqual(_codes(issues), ["UNREFERENCED_MESH"])
+        self.assertEqual(issues[0].severity, vm.Severity.INFO)
+        self.assertEqual(issues[0].entry_id, "sk_gd_orphan")
+
+    def test_report_block_renders_counts(self):
+        refs = self._refs("sk_gd_used")
+        present = vm.PresentSet(
+            metameshes={"sk_gd_used", "sk_gd_orphan", "sk_gd_used_slim"},
+            tpac_paths=["fake.tpac"])
+        audit = vm.reverse_audit(present, refs)
+        report = vm.format_report(vm.reverse_audit_issues(audit), refs, present,
+                                  rgl=None, scan_bodies=False, reverse=audit)
+        self.assertIn("Reverse audit (--unreferenced)", report)
+        self.assertIn("_slim variants suppressed : 1", report)
+        self.assertIn("UNREFERENCED (no item)    : 1", report)
+
+    def test_clean_reverse_report_points_at_reachability_not_data(self):
+        refs = self._refs("sk_gd_used")
+        present = vm.PresentSet(metameshes={"sk_gd_used"}, tpac_paths=["fake.tpac"])
+        audit = vm.reverse_audit(present, refs)
+        report = vm.format_report([], refs, present, rgl=None, scan_bodies=False,
+                                  reverse=audit)
+        self.assertIn("NOT a data gap", report)
+
+    def test_omitting_reverse_leaves_the_report_unchanged(self):
+        # The mode is additive: without it, no reverse text may appear.
+        refs = self._refs("sk_gd_used")
+        present = vm.PresentSet(metameshes={"sk_gd_used"}, tpac_paths=["fake.tpac"])
+        report = vm.format_report([], refs, present, rgl=None, scan_bodies=False)
+        self.assertNotIn("Reverse audit", report)
+
+
+# --------------------------------------------------------------------------- #
 # CLI: exit codes, --code filter, --warnings-as-errors                         #
 # --------------------------------------------------------------------------- #
 class CliTests(unittest.TestCase):
@@ -514,6 +619,21 @@ class CliTests(unittest.TestCase):
         self.assertIn("PREFAB_REF", r.stdout)
         # Only PREFAB_REF should appear in the issue listing summary.
         self.assertNotIn("MISSING_MESH", r.stdout)
+
+    def test_prefix_without_unreferenced_warns(self):
+        self._write("gondor/head_armors.xml", '<Item id="x" mesh="m" />\n')
+        r = self._run("--prefix", "sk_gd_")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("no effect without --unreferenced", r.stderr)
+
+    def test_unreferenced_without_tier_b_warns_and_still_exits_0(self):
+        # --no-tier-b means no present-set, so the reverse audit cannot run; it
+        # must degrade with a warning rather than crash.
+        self._write("gondor/head_armors.xml", '<Item id="x" mesh="m" />\n')
+        r = self._run("--unreferenced")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("--unreferenced needs the Tier B present-set", r.stderr)
+        self.assertNotIn("Reverse audit (--unreferenced)", r.stdout)
 
     def test_warnings_as_errors_flips_exit(self):
         # An rgl_log with only a missing-material (WARNING) -> exit 0 normally,

@@ -41,11 +41,21 @@ ISSUE CODES
                                               we needed could not be parsed
   UNPARSED_TPAC           (WARNING)          a .tpac soft-failed to parse
   PREFAB_REF              (INFO)             prefab="X" (not a mesh; recorded only)
+  UNREFERENCED_MESH       (INFO,   reverse)  packaged mesh no item XML references
+
+REVERSE AUDIT (--unreferenced)
+  Tiers A/B/C all ask "does every REFERENCED mesh exist?". --unreferenced asks the
+  opposite: "does every PACKAGED mesh have an item?" — the check that answers a
+  'the art shipped but it's not in the game' report. It reuses the same present-set
+  and ref extraction, so it costs nothing extra once Tier B has run. INFO severity:
+  an unreferenced mesh is an audit signal, not a failure, so the exit code is
+  unaffected.
 
 Usage:
   python tools/validate_mesh_refs.py [--scan-bodies] [--rgl-log <path>]
   python tools/validate_mesh_refs.py --items <dir> --tpac-modules LOTRLOME_Armory Native SandBoxCore
   python tools/validate_mesh_refs.py --json report.json --code MISSING_BODY
+  python tools/validate_mesh_refs.py --unreferenced --prefix sk_gd_   (per-culture reverse audit)
 
 Exit code (mirrors validate_moduledata.py): 1 if any ERROR (or any WARNING with
 --warnings-as-errors), 2 if an input path is bad, else 0.
@@ -397,6 +407,77 @@ def _base_mesh_name(name: str) -> str:
     return re.sub(r"\.lod\d+$", "", name, flags=re.IGNORECASE)
 
 
+# --------------------------------------------------------------------------- #
+# Reverse audit: packaged meshes that NO item XML references                    #
+# --------------------------------------------------------------------------- #
+# The engine resolves a female body variant by appending `_slim` to the mesh
+# name, so `<mesh>_slim` is never named in item XML and is NOT an orphan when its
+# base mesh is referenced. Without this suppression the Gondor armour set alone
+# reports 100 false positives.
+_SLIM_SUFFIX = "_slim"
+
+
+@dataclass
+class ReverseAudit:
+    """Result of the --unreferenced pass."""
+    orphans: list = field(default_factory=list)   # sorted packaged mesh names
+    slim_suppressed: int = 0
+    referenced: int = 0        # candidates an item does reference
+    considered: int = 0        # packaged meshes after the --prefix filter
+    prefix: str = ""
+
+
+def reverse_audit(present: PresentSet, refs: list, prefix: str = "") -> ReverseAudit:
+    """Find packaged Metameshes that no scanned item XML references.
+
+    `prefix` filters the CANDIDATE (packaged) side only — the referenced set is
+    always built from every scanned ref, so restricting to one culture can never
+    invent an orphan that some other culture's item actually references.
+
+    Matching is case-insensitive here, unlike Tier B's exact lookup. That is
+    deliberate and conservative in this direction: a casing mismatch makes a mesh
+    look REFERENCED (silently dropped from the report) rather than manufacturing a
+    false orphan.
+    """
+    referenced = {
+        _base_mesh_name(r.name).casefold()
+        for r in refs if r.kind == "visual_mesh"
+    }
+    pfx = prefix.casefold()
+
+    candidates = set()
+    for raw in present.metameshes:
+        base = _base_mesh_name(raw)
+        if pfx and not base.casefold().startswith(pfx):
+            continue
+        candidates.add(base)
+
+    result = ReverseAudit(prefix=prefix, considered=len(candidates))
+    for base in candidates:
+        folded = base.casefold()
+        if folded in referenced:
+            result.referenced += 1
+            continue
+        if folded.endswith(_SLIM_SUFFIX) and folded[: -len(_SLIM_SUFFIX)] in referenced:
+            result.slim_suppressed += 1
+            continue
+        result.orphans.append(base)
+
+    result.orphans.sort(key=str.casefold)
+    return result
+
+
+def reverse_audit_issues(audit: ReverseAudit) -> list:
+    """One INFO Issue per orphan, so --json and --code work on them like any other."""
+    return [
+        Issue(Severity.INFO, "UNREFERENCED_MESH", "(asset packages)", 0, name,
+              f'packaged mesh "{name}" is referenced by no scanned item XML '
+              f'— shipped art with no item entry, or an intentional variant/'
+              f'scene-only mesh')
+        for name in audit.orphans
+    ]
+
+
 # Bytes that can legally continue an asset name. A real token boundary is one
 # where the byte AFTER the needle is NOT one of these (NUL, length prefix, etc.).
 _NAMEBYTE = set(b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-")
@@ -680,7 +761,8 @@ def classify(refs: list,
 # Reporting (mirrors taom_schema.format_report + adds the tier/grouping body)  #
 # --------------------------------------------------------------------------- #
 def format_report(issues: list, refs: list, present: PresentSet | None,
-                  rgl: RglFindings | None, scan_bodies: bool) -> str:
+                  rgl: RglFindings | None, scan_bodies: bool,
+                  reverse: ReverseAudit | None = None) -> str:
     out = []
     out.append("=== MESH REFERENCE VALIDATION ===")
 
@@ -734,6 +816,22 @@ def format_report(issues: list, refs: list, present: PresentSet | None,
     out.append(f"    Tier A runtime-missing bodies (item-referenced): {n_runtime_body}")
     out.append(f"    Tier B missing visual meshes: {n_missing_mesh}")
     out.append(f"    Tier C missing collision bodies: {n_missing_body}")
+
+    # -- reverse audit: packaged meshes with no item ------------------------- #
+    if reverse is not None:
+        out.append("")
+        out.append("Reverse audit (--unreferenced):")
+        out.append(f"  prefix filter             : {reverse.prefix or '(none)'}")
+        out.append(f"  packaged meshes considered: {reverse.considered:,}")
+        out.append(f"  referenced by an item     : {reverse.referenced:,}")
+        out.append(f"  _slim variants suppressed : {reverse.slim_suppressed:,}")
+        out.append(f"  UNREFERENCED (no item)    : {len(reverse.orphans):,}")
+        if present is not None and len(present.tpac_paths) > 20 and not reverse.prefix:
+            out.append("  NOTE: the candidate side spans every module in "
+                       "--tpac-modules, so vanilla's scene/prop/weapon meshes count "
+                       "as 'unreferenced' against mod item XML and swamp the result. "
+                       "For a modded-art audit pass --tpac-modules LOTRLOME_Armory "
+                       "(or narrow with --prefix).")
 
     # -- the issue list -- #
     out.append("")
@@ -819,6 +917,20 @@ def format_report(issues: list, refs: list, present: PresentSet | None,
                    "Check each ref for a near-match in bodies-present first — both "
                    "real cases were suffix typos with the correct body shipped and "
                    "sitting one character away; fix the ref, don't delete the item.")
+    if reverse is not None:
+        if reverse.orphans:
+            out.append(f"  Reverse audit: {len(reverse.orphans)} packaged mesh(es) "
+                       "are referenced by no item XML. That is 'art shipped, no item "
+                       "entry' — the shape behind a 'this armour isn't in the game' "
+                       "report. Rule out the benign cases first: scene/prefab-only "
+                       "meshes, crafting-piece meshes outside --items, and variant "
+                       "meshes the engine resolves by name convention (the `_slim` "
+                       "female variants are already suppressed).")
+        else:
+            out.append("  Reverse audit: every packaged mesh in scope is referenced "
+                       "by an item. 'Missing in game' reports for this scope are NOT "
+                       "a data gap — look at reachability instead (does any troop "
+                       "wear it, does any market stock it).")
     if rgl is None:
         out.append("  Tier A did not run (no rgl_log). The OFFLINE tiers cannot "
                    "observe the running engine — for the authoritative check, "
@@ -868,6 +980,14 @@ def main() -> int:
                     help="Write the full issue list to this JSON file")
     ap.add_argument("--code", action="append", default=None,
                     help="Only report this issue code (repeatable)")
+    ap.add_argument("--unreferenced", action="store_true",
+                    help="Reverse audit: also report packaged meshes that NO item "
+                         "XML references (INFO — does not affect the exit code). "
+                         "Requires Tier B.")
+    ap.add_argument("--prefix", default="",
+                    help="With --unreferenced, restrict the packaged-mesh candidates "
+                         "to this id prefix (e.g. sk_gd_ for Gondor). The referenced "
+                         "set is never filtered.")
     ap.add_argument("--warnings-as-errors", action="store_true",
                     help="Exit non-zero if any WARNING is found, not just ERROR")
     args = ap.parse_args()
@@ -935,11 +1055,28 @@ def main() -> int:
 
     issues = classify(refs, present, rgl, scan_bodies, body_tpac_paths=tpac_paths or None)
 
+    # -- reverse audit (opt-in; needs the Tier B present-set) -- #
+    reverse = None
+    if args.unreferenced:
+        if present is None:
+            print("WARNING: --unreferenced needs the Tier B present-set — skipped "
+                  "(no .tpac scanned)", file=sys.stderr)
+        else:
+            reverse = reverse_audit(present, refs, args.prefix)
+            issues.extend(reverse_audit_issues(reverse))
+            issues.sort(key=lambda i: i.sort_key())
+            print(f"Reverse audit: {len(reverse.orphans)} unreferenced of "
+                  f"{reverse.considered} packaged mesh(es) in scope "
+                  f"({reverse.slim_suppressed} _slim suppressed)", file=sys.stderr)
+    elif args.prefix:
+        print("WARNING: --prefix has no effect without --unreferenced",
+              file=sys.stderr)
+
     if args.code:
         wanted = set(args.code)
         issues = [i for i in issues if i.code in wanted]
 
-    print(format_report(issues, refs, present, rgl, scan_bodies))
+    print(format_report(issues, refs, present, rgl, scan_bodies, reverse))
 
     if args.json_out:
         payload = [{

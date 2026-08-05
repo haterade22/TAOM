@@ -97,6 +97,24 @@ Lesson reinforced: the build/tests passing said nothing about the patch *applyin
 - **Memory:** [`feedback_tournament_horse_from_weapon_template_not_armor`](../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_tournament_horse_from_weapon_template_not_armor.md) — the tournament mount is sourced from the culture weapon template via `PrepareForMatch`, not from `GetParticipantArmor`; to gate it, postfix `PrepareForMatch` and clear slots 10/11. Generalises the "enumerate every producer of an assembled value" lesson. Linked to [[nonhumanoid-creature-troop-not-mount]] (the broad custom-skeleton-can't-be-mounted principle) and [[dwarf-race-npc-needs-dwarf-skeleton-armor]] (sibling custom-skeleton equipment trap).
 - **No new rule file** — the existing data-flow review remit already covers "trace every producer"; this is a fresh instance, not a gap in the rules.
 
+### Follow-up 2026-08-04 — the data-layer half
+
+Patch46 gates the mount at *runtime*, in *one* mission type. Nothing stopped a dwarf being **authored**
+as cavalry in the first place, so the same "inside the horse" render was one troop revamp or copied
+roster away from returning outside the arena. `validate_moduledata.py` now carries `MOUNTED_DWARF`,
+which rejects a `race="dwarf"` character tagged `Cavalry`/`HorseArcher` *or* able to reach a
+`slot="Horse"` item. Audit at introduction: clean — all 185 dwarf characters were already Infantry or
+Ranged, so the check pins an invariant that held rather than fixing a live defect.
+
+The decompile behind it corrects an assumption worth stating plainly, because it is the opposite of the
+intuitive one: **`default_group` does not control a lord's battlefield formation.**
+`CharacterObject.GetFormationClass()` overrides the base and, when `IsHero`, ignores
+`DefaultFormationClass` entirely — it reads live `BattleEquipment`. That is *why* Patch46 clears
+equipment slots 10/11 rather than rewriting an attribute, and why the data check had to gate the mount
+and not just the enum. Full process trace:
+[`formations-and-team-ai.md`](../reference/engine/formations-and-team-ai.md) "Which formation a spawned
+agent joins"; gate: [`moduledata-validation.md`](../features/moduledata-validation.md).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

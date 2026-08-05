@@ -56,8 +56,72 @@ is a detachment off its formation). **Setting `Formation = null` makes the agent
 formation orders). The spider spawns with `BuildAgent(agent, null)` → `Formation == null` → a free agent the team-AI
 won't slot into a line.
 
+### Which formation a spawned agent joins (`GetFormationClass`) — v1.4.7
+
+The sections above describe formations once they exist. This is the step *before*: how the engine decides
+**which** of the 8 formations a spawning agent belongs to. The answer is different for troops and for heroes,
+and the difference is easy to get backwards.
+
+**`default_group` (XML) → `DefaultFormationClass`.** `BasicCharacterObject.Deserialize` sets
+`DefaultFormationGroup = 0` unconditionally (`:478`), then overwrites it only if the attribute is present
+(`:489-492`) — so **an absent `default_group` means Infantry**. An unparseable value is worse than absent:
+`FetchDefaultFormationGroup` (`:534`) returns **`-1`** on a `TryParse` miss, producing an undefined enum value that
+every downstream `switch` silently falls through. `Enum.TryParse` is case-insensitive and accepts *any* of the 15
+`FormationClass` member names (plus bare integers), so `Skirmisher`, `General` and `Unset` all parse — TAOM's
+`INVALID_ENUM` check narrowing this to the four regular classes is doing real work.
+
+**Then two different resolvers:**
+
+| | Troop (non-hero) | Lord / hero |
+|---|---|---|
+| Resolver | `BasicCharacterObject.GetFormationClass()` (`:543-546`) | `CharacterObject.GetFormationClass()` (`:818-839`) — `override`, and `CharacterObject` is `sealed` (`:16`), so this is final |
+| Reads | `DefaultFormationClass`, i.e. `default_group` | **`Equipment` only — `default_group` is never consulted** |
+| Rule | the XML value *is* the formation | horse in `EquipmentIndex.Horse` → Cavalry; `+` a Bow/Crossbow → HorseArcher; no horse → Infantry / Ranged |
+
+```csharp
+// CharacterObject.cs:818 — the hero branch never touches DefaultFormationClass
+public override FormationClass GetFormationClass() {
+    if (IsHero && Equipment != null) {
+        bool num  = Equipment[EquipmentIndex.ArmorItemEndSlot].Item?.HasHorseComponent ?? false;
+        bool flag = Equipment.HasWeaponOfClass(WeaponClass.Bow) || Equipment.HasWeaponOfClass(WeaponClass.Crossbow);
+        ...
+    }
+    return base.GetFormationClass();   // non-hero only: DefaultFormationClass
+}
+```
+
+Three details that make this bite:
+- **`EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are the same value, `10`** (`EquipmentIndex.cs:21,23`) — the slot read above *is* the horse slot, despite the name.
+- **`CharacterObject.Equipment` is itself overridden** (`:100-109`): for a hero it returns `HeroObject.BattleEquipment`, the *live* equipment, not the XML template roster. A horse acquired at runtime counts; no static XML audit can see it.
+- `IsHero => _heroObject != null` (`:294`) — true for every spawned lord, so lords always take the equipment branch.
+
+**Consumer chain to the actual `Agent`:** `Mission.SpawnTroop` (`:4442`) does
+`agentTeam.GetFormation(GetAgentTroopClass(agentTeam.Side, troop))` — unless an explicit `formationIndex` was passed,
+which wins. `Mission.GetAgentTroopClass` (`:2539-2551`) calls `GetFormationClass()` and then, **for siege / naval /
+naval-raid / sally-out-attacker only**, collapses it through `.DismountedClass()` (Cavalry→Infantry,
+HorseArcher→Ranged). So mount-derived cavalry status only expresses itself in field battles.
+
+**Extension point:** `Mission.GetAgentTroopClass_Override` (`:1555`,
+`Func<BattleSideEnum, BasicCharacterObject, FormationClass>`) is checked **first** and short-circuits everything above.
+Verified 2026-08-04: **no subscriber in vanilla or in TAOM** — a clean, patch-free hook for overriding formation
+assignment from a `MissionBehavior`.
+
+**What still reads the raw `DefaultFormationClass`** (so it stays meaningful for heroes even though battle doesn't use
+it): party-screen composition/sorting and formation icons, tooltips, `CharacterCode` (`:62` — the character-preview
+mannequin), `DefaultMapVisibilityModel` (`:71` — the Mounted Scouts perk, counting *regular troops* at ≥50% Cavalry),
+and the banner-morale check in `CustomBattleMoraleModel`/`SandboxBattleMoraleModel`. A hero whose `default_group`
+disagrees with his equipment therefore shows one class on the party screen and fights as another.
+**Not** a consumer: `DefaultMilitaryPowerModel` (no formation reference at all).
+
 ### Runtime flow
 ```
+Character spawn → Mission.GetAgentTroopClass(side, character)
+  ├─ GetAgentTroopClass_Override, if subscribed → wins outright
+  ├─ hero?  → CharacterObject.GetFormationClass()  → from live BattleEquipment (horse / bow)
+  ├─ troop? → BasicCharacterObject.GetFormationClass() → DefaultFormationClass (default_group)
+  └─ siege / naval / sally-out attacker → .DismountedClass() collapse
+     → Team.GetFormation(class) → Agent placed in that Formation
+
 Mission start → each Team gets up to 8 Formations + (AI side) a TeamAIComponent
   TeamAIComponent.Tick → pick max-weight TacticComponent → BehaviorComponents → Formation.SetMovementOrder/SetPositioning
     Formation → Arrangement.GetLocalPositionOfUnitOrDefault(unit) per agent → native per-frame agent positioning (AutoGenerated.dll)
@@ -73,6 +137,16 @@ per-agent positions. Always-8 `FormationsIncludingEmpty` gives every `FormationC
 agents temporarily leave the grid (skirmish, man a siege engine) without leaving the formation.
 
 ## TAOM relevance + gotchas
+- **`default_group` does not keep a lord off a horse** (2026-08-04). Because `CharacterObject.GetFormationClass()`
+  ignores it for heroes, the only thing that decides a lord's battlefield class is what sits in his Horse slot.
+  This is why the `MOUNTED_DWARF` validator check gates **both** the enum and the reachable mount rather than the
+  enum alone — an enum-only gate passes a lord tagged `Infantry` who still spawns mounted and, on the dwarf
+  skeleton's misaligned rider bone, renders inside the horse. Data-side check:
+  [`moduledata-validation.md`](../../features/moduledata-validation.md); runtime twin:
+  `Patch46_TournamentDwarfDismount`, which strips Horse + HorseHarness for dwarf tournament entrants.
+  Corollary for any future "race X never rides" rule: audit the **equipment**, not the attribute — and note that a
+  hero's `Equipment` is live `BattleEquipment`, so a runtime-acquired mount escapes static XML validation entirely.
+  `Mission.GetAgentTroopClass_Override` is the unused, patch-free hook if that runtime hole ever needs closing.
 - **Three TAOM features patch this system:** **SmartCavalryAI** (`Patch31` — coordinated charge state machine, a
   `Formation.SetMovementOrder` Postfix), **MixedFormations** (`Patch30` — arrangement/position math), **CompanionTactics**
   (`Patch35` — a `SetMovementOrder` Postfix). The two `SetMovementOrder` postfixes share the **deferred
@@ -133,6 +207,14 @@ exception.
 - `IFormationArrangement.cs`:8-124 (`Width`/`Depth`/`UnitCount`/`RankCount`/multipliers/`GetLocalPositionOfUnitOrDefault`/`CreateNewPosition`).
 - `TeamAIComponent.cs`:12 (`abstract`), :36/:48 (tactics list + current), :301 (max-weight pick), :129 (`AddTacticOption`).
 - `Agent.cs`:1098 (`Formation` setter), :1014 (`Detachment`/`IDetachment` — Phase 12 link).
+- **Formation-class assignment (v1.4.7, re-verified 2026-08-04 against the installed DLLs via `taom-src`):**
+  `TaleWorlds.CampaignSystem.CharacterObject.cs`:16 (`sealed`), :100-109 (`Equipment` → `HeroObject.BattleEquipment`
+  for heroes), :294 (`IsHero`), :818-839 (`GetFormationClass` override — equipment-derived, ignores
+  `DefaultFormationClass`); `TaleWorlds.Core.BasicCharacterObject.cs`:478/:489-492 (`default_group` deserialize,
+  Infantry default), :534 (`FetchDefaultFormationGroup` → `-1` on a parse miss), :543-546 (base
+  `GetFormationClass`); `TaleWorlds.Core.EquipmentIndex.cs`:21,23 (`ArmorItemEndSlot` == `Horse` == 10);
+  `TaleWorlds.MountAndBlade.Mission.cs`:1555 (`GetAgentTroopClass_Override`, no subscriber), :2539-2551
+  (`GetAgentTroopClass` + `DismountedClass` collapse), :4442 (`SpawnTroop` → `Team.GetFormation`).
 - TAOM patches: `Patch31_SmartCavalryAI`, `Patch30` MixedFormations, `Patch35` CompanionTactics, shared `Patch_MissionTime_SetMovementOrder` (CLAUDE.md). Gotcha memories: `feedback_movementorder_cctor_mission_current`, `feedback_taleworlds_invariant_check_explicit`, `feedback_detect_engine_threading_via_mt_suffix`, `feedback_cross_feature_handshake_via_shared_adapter`, `feedback_replicate_vanilla_safety_gates_in_prefix`.
 
 ---

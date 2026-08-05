@@ -49,6 +49,33 @@ Issue[]  ──▶ format_report()  (tiers run, counts, grouped missing, interpr
 
 Plus `PREFAB_REF` (INFO) — `prefab="X"` is recorded but is not a mesh.
 
+### The reverse audit (`--unreferenced`, added 2026-08-04)
+
+All three tiers ask the same direction: *does every **referenced** mesh exist?* That direction
+cannot answer the complaint "this armour shipped but it isn't in the game", which is the
+opposite question: *does every **packaged** mesh have an item?* `--unreferenced` runs that pass
+over the Tier B present-set and emits `UNREFERENCED_MESH` (INFO — the exit code is unaffected,
+since unreferenced art is an audit signal, not a failure).
+
+- `--prefix <p>` filters the **candidate** (packaged) side only, e.g. `--prefix sk_gd_` for a
+  per-culture audit. The referenced set is never filtered, so narrowing to one culture can
+  never invent an orphan that another culture's item actually references.
+- **`_slim` suppression is mandatory, not cosmetic.** The engine resolves the female body
+  variant by appending `_slim` to the mesh name, so those meshes are never named in item XML.
+  Without the suppression the Gondor set alone reports 100 false positives.
+- Matching is **case-insensitive** here, unlike Tier B's exact lookup. That is deliberate and
+  conservative in this direction: casing drift makes a mesh look *referenced* (dropped from the
+  report) rather than manufacturing a false orphan.
+- **Scope matters more than in the forward tiers.** At the default `--tpac-modules`, vanilla's
+  entire scene/prop/weapon mesh library counts as "unreferenced" against mod item XML — 12,483
+  hits, useless. Pass `--tpac-modules LOTRLOME_Armory` for a modded-art audit; the report prints
+  a NOTE when the candidate side is that wide and no prefix is set.
+
+First run (2026-08-04): Gondor **0 orphans of 418 packaged meshes**; armory-wide **549**, of
+which 276 are `clo_*` cloth variants (201 with an item-referenced base) and 69 are `sm_*`
+crafting pieces including the deliberately-removed Gondor poleaxe. Full write-up:
+[`audit-gondor-armory-2026-08-04.md`](../reviews/audit-gondor-armory-2026-08-04.md).
+
 **Key design decisions (mirrors `taom_schema.py` patterns):**
 - **Engine importable separately from CLI.** `extract_refs_from_text`, `classify`, `scan_tpac_metameshes`, `bodies_present_in_tpacs`, `parse_rgl_text` are pure functions the unit tests call directly with synthetic data — no game install needed (the present-set is injectable, analogous to `Registries` in the ModuleData validator).
 - **Attribute-exact extraction, not "ends-with."** The include set is the exact names `mesh`, `body_name`, `shield_body_name`, `holster_mesh`, `holster_mesh_with_weapon`, `flying_mesh` (derived by grepping the LOTRLOME_Armory + SandBoxCore item XML). This deliberately excludes the look-alike traps `mesh_maturity_type` (enum), `holster_mesh_length` (numeric), `recalculate_body` / `covers_body` (bool). Defensive support for `multi_mesh` / `<meshes>`/`<Mesh name>` is included (0× in the Armory today).
@@ -73,6 +100,11 @@ python tools/validate_mesh_refs.py --scan-bodies --json report.json --code MISSI
 
 # On a machine without the asset packages (Tier B/C skip; ref extraction + Tier A still run)
 python tools/validate_mesh_refs.py --no-tier-b
+
+# Reverse audit — packaged meshes that NO item references. Narrow the candidate
+# side, or vanilla's whole mesh library drowns the result.
+python tools/validate_mesh_refs.py --unreferenced --prefix sk_gd_
+python tools/validate_mesh_refs.py --unreferenced --tpac-modules LOTRLOME_Armory --code UNREFERENCED_MESH
 ```
 
 **Interpreting the result:**
@@ -100,7 +132,7 @@ Tier A against `rgl_log_errors_77136.txt`: 1 INFO (`bo_gondor_brick_rubble_c`, a
 | File | Purpose |
 |------|---------|
 | `tools/validate_mesh_refs.py` | Engine (extract / present-set / rgl parse / classify / report) + CLI front-end |
-| `tools/tests/test_validate_mesh_refs.py` | 30 unittest cases (pure stdlib, synthetic fixtures, injectable present-set) |
+| `tools/tests/test_validate_mesh_refs.py` | 46 unittest cases (pure stdlib, synthetic fixtures, injectable present-set) |
 | `tools/tpac_skeleton_scan.py` | The proven `.tpac` TOC parser the Tier-B/`scan_tpac_metameshes` loop was lifted from |
 | `tools/Audit-MeshRefs.ps1` | The C#-DLL-dependent predecessor (visual-mesh only, no collision bodies) — design precedent |
 
@@ -120,7 +152,7 @@ python -m unittest discover -s tools/tests -p "test_*.py"     # full tools suite
 python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 ```
 
-30 cases covering: extraction of all 6 attrs with correct kind + line numbers; exclusion of the 3 false-positive attrs + `prefab` → `PREFAB_REF`; defensive `multi_mesh`/`<Mesh>`; comment-stripping; malformed-XML tolerance; Tier B present-vs-missing + `.lodN` base-name matching; unparsed-tpac → `UNVERIFIED_MESH` + `UNPARSED_TPAC` (no false ERROR); Tier C body byte-scan present/absent + prefix-no-false-match; Tier A `get_object failed` → `RUNTIME_MISSING_BODY` (ERROR when item-referenced, INFO when a scene body) + missing-material WARN + duplicate-line WARN; a **hand-built minimal TOC byte buffer** (magic `0x43415054`, version 2, one Metamesh item) proving the Tier-B struct offsets, plus its non-Metamesh / drifted-`udep_count` / non-magic soft-fail variants; CLI exit codes (0 / 1 / 2), `--code` filter, `--warnings-as-errors`; culture grouping in the report.
+46 cases covering: extraction of all 6 attrs with correct kind + line numbers; exclusion of the 3 false-positive attrs + `prefab` → `PREFAB_REF`; defensive `multi_mesh`/`<Mesh>`; comment-stripping; malformed-XML tolerance; Tier B present-vs-missing + `.lodN` base-name matching; unparsed-tpac → `UNVERIFIED_MESH` + `UNPARSED_TPAC` (no false ERROR); Tier C body byte-scan present/absent + prefix-no-false-match; Tier A `get_object failed` → `RUNTIME_MISSING_BODY` (ERROR when item-referenced, INFO when a scene body) + missing-material WARN + duplicate-line WARN; a **hand-built minimal TOC byte buffer** (magic `0x43415054`, version 2, one Metamesh item) proving the Tier-B struct offsets, plus its non-Metamesh / drifted-`udep_count` / non-magic soft-fail variants; CLI exit codes (0 / 1 / 2), `--code` filter, `--warnings-as-errors`; culture grouping in the report; and the reverse audit — orphan reported, referenced not reported, `_slim` suppressed only when its base is referenced, `--prefix` filtering candidates but never the referenced set, `.lodN` collapse, case-drift counting as referenced rather than as a false orphan, `UNREFERENCED_MESH` being INFO, the report block rendering, the report staying byte-identical when the mode is off, and both CLI degradations (`--prefix` without `--unreferenced`, `--unreferenced` without Tier B).
 
 ## Known Scope (intentional)
 
@@ -131,6 +163,7 @@ python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 
 ## Changelog
 
+- 2026-08-04 — **Added the reverse audit (`--unreferenced` / `--prefix`).** All three tiers only ever asked "does every referenced mesh exist?", so the tool could not answer a "this armour shipped but isn't in the game" report, which asks the opposite. The new pass reuses the Tier B present-set and the same ref extraction, emits `UNREFERENCED_MESH` (INFO, exit code unaffected), and suppresses `_slim` female variants whose base mesh is referenced — without that suppression the Gondor set alone reports 100 false positives. Prompted by a player report about missing Gondor helmets, which the audit falsified: 0 orphans of 418 packaged Gondor meshes, the cause being marketplace reachability instead ([audit](../reviews/audit-gondor-armory-2026-08-04.md)). Two stale `30`s in this doc corrected to the real count. +13 tests (33 → 46).
 - 2026-07-16 (#352) — **Hypothesis CONFIRMED, and the tool's two blind spots fixed.** A user field report tied a permanent siege-load hang to a missing `bo_` body, so this is now a demonstrated cause rather than a suspect. (1) **Scope:** `--items` defaulted to `ModuleData/LOTRLOME_items/`, but the two live typos sat in `ModuleData/LOTRLOME_crafting_pieces.xml` — the tool never read the file containing the bug it was built for. Default widened to `ModuleData/`. (2) **Tier C:** was a coarse byte-scan because the code asserted bodies "are NOT in the .tpac TOC"; they are (`PhysicsShape`, 382 in `pack1.tpac`, confirmed independently against TpacTool's `PhysicsShape.TYPE_GUID`). Tier C now matches the exact TOC set, byte-scanning only as a fallback for unparsable packs. The clean-run footer no longer claims the hypothesis is "WEAKENED" — it can only ever support "clean within `--items` scope". +3 tests (30 → 33).
 - 2026-06-01 — Added `tools/validate_mesh_refs.py`, a pure-stdlib three-tier mesh / collision-body existence validator (Tier A authoritative `rgl_log` cross-ref, Tier B offline `.tpac` TOC for visual meshes, Tier C coarse `bo_` byte-scan); first run found 3 real Armory data bugs and 30 new tests were added.
 
