@@ -22,6 +22,7 @@ Contract under test (one verdict class per block):
   - FileLogger prefix is stripped (lines parse with and without it)
   - CLI exit codes (0 completed / 1 hang / 2 bad path)
 """
+import json
 import os
 import subprocess
 import sys
@@ -36,6 +37,17 @@ import triage_battle_load as tb  # noqa: E402
 import validate_mesh_refs as vm  # noqa: E402
 
 TOOL = Path(__file__).resolve().parent.parent / "triage_battle_load.py"
+
+# The pinned [MemSample] log-line contract (issue #386). These literals are the
+# cross-language twin pin: MemoryPressureSamplerTests.FormatSample_KnownValues_
+# MatchesContractLine asserts the C# sampler emits EXACTLY these message bodies.
+PINNED_MEM_SESSION = "[MemSample] session totalPhysMB=16296 sysCommitLimitMB=31646"
+PINNED_MEM_PERIODIC = ("[MemSample] privMB=4211 wsMB=3900 heapMB=654 "
+                       "sysCommitUsedMB=14003 sysCommitLimitMB=31646 "
+                       "availPhysMB=6200 memLoad=61%")
+PINNED_MEM_WARN = ("[MemSample] WARN LOW COMMIT HEADROOM headroomMB=1799 "
+                   "privMB=4211 wsMB=3900 heapMB=654 sysCommitUsedMB=29847 "
+                   "sysCommitLimitMB=31646 availPhysMB=310 memLoad=97%")
 
 
 def _line(level, payload, ts="2026-06-17 12:00:00"):
@@ -95,6 +107,22 @@ def _playable(scene="battle_terrain_b", agents=120):
 def _watchdog(elapsed, last_phase, detail=""):
     tail = f"phase={last_phase} seq=5 {detail}".strip()
     return _line("ERROR", f"[BattleLoad] WATCHDOG STILL LOADING after {elapsed}s — last {tail}")
+
+
+def _mem(priv=4211, ws=3900, heap=654, used=14003, limit=31646, avail=6200,
+         load=61, warn=False, prefix=True, ts="2026-06-17 12:00:00"):
+    """One [MemSample] periodic line per the pinned contract; warn=True prepends the
+    WARN LOW COMMIT HEADROOM prefix (headroomMB computed like the C# sampler)."""
+    warn_part = (f"WARN LOW COMMIT HEADROOM headroomMB={max(0, limit - used)} "
+                 if warn else "")
+    payload = (f"[MemSample] {warn_part}privMB={priv} wsMB={ws} heapMB={heap} "
+               f"sysCommitUsedMB={used} sysCommitLimitMB={limit} "
+               f"availPhysMB={avail} memLoad={load}%")
+    return _line("WARNING" if warn else "INFO", payload, ts=ts) if prefix else payload
+
+
+def _mem_session(total=16296, limit=31646):
+    return _line("INFO", f"[MemSample] session totalPhysMB={total} sysCommitLimitMB={limit}")
 
 
 def _log(*lines):
@@ -389,6 +417,149 @@ class RglCrossCheckTests(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------- #
+# [MemSample] memory telemetry (issue #386) — parse                            #
+# --------------------------------------------------------------------------- #
+class MemSampleParseTests(unittest.TestCase):
+    def test_periodic_line_parses_with_filelogger_prefix(self):
+        tl = tb.parse_battle_load_log(_log(_mem()))
+        self.assertEqual(len(tl.mem_samples), 1)
+        s = tl.mem_samples[0]
+        self.assertEqual(s.priv_mb, 4211)
+        self.assertEqual(s.ts, "2026-06-17 12:00:00")
+        self.assertFalse(s.warned)
+        self.assertFalse(tl.mem_warned)
+
+    def test_bare_line_without_prefix_parses_with_ts_none(self):
+        tl = tb.parse_battle_load_log(_log(_mem(prefix=False)))
+        self.assertEqual(len(tl.mem_samples), 1)
+        self.assertIsNone(tl.mem_samples[0].ts)
+
+    def test_pinned_periodic_literal_parses_to_pinned_numbers(self):
+        # Cross-language twin pin — the C# side asserts it emits exactly this line
+        # (MemoryPressureSamplerTests.FormatSample_KnownValues_MatchesContractLine);
+        # this side asserts the tool reads exactly these numbers back out of it.
+        tl = tb.parse_battle_load_log(_log(_line("INFO", PINNED_MEM_PERIODIC)))
+        s = tl.mem_samples[0]
+        self.assertEqual((s.priv_mb, s.ws_mb, s.heap_mb, s.commit_used_mb,
+                          s.commit_limit_mb, s.avail_phys_mb, s.mem_load),
+                         (4211, 3900, 654, 14003, 31646, 6200, 61))
+        self.assertEqual(s.headroom_mb, 31646 - 14003)
+        self.assertFalse(s.warned)
+
+    def test_pinned_warn_literal_sets_warned_and_mem_warned(self):
+        tl = tb.parse_battle_load_log(_log(_line("WARNING", PINNED_MEM_WARN)))
+        s = tl.mem_samples[0]
+        self.assertTrue(s.warned)
+        self.assertTrue(tl.mem_warned)
+        self.assertEqual(s.commit_used_mb, 29847)
+        self.assertEqual(s.headroom_mb, 1799)
+        self.assertEqual(s.mem_load, 97)
+
+    def test_pinned_session_literal_parses(self):
+        tl = tb.parse_battle_load_log(_log(_line("INFO", PINNED_MEM_SESSION)))
+        self.assertEqual(tl.mem_session,
+                         {"total_phys_mb": 16296, "commit_limit_mb": 31646})
+        self.assertEqual(tl.mem_samples, [])
+
+    def test_mem_lines_do_not_become_phase_events(self):
+        # Inertness pin: [MemSample] lines never touch the phase timeline.
+        text = _log(_mem_session(), _mem(), _mission_init(), _mem(warn=True))
+        tl = tb.parse_battle_load_log(text)
+        self.assertEqual([e.phase for e in tl.events], ["MissionInitialize"])
+        self.assertEqual(tl.events[0].seq, 4)
+
+    def test_mem_sample_between_equip_begin_and_slots_keeps_attachment(self):
+        # Inertness pin: a MemSample interleaved inside a slot-dump block must not
+        # break attachment to the owning AgentEquipBegin.
+        text = _log(
+            _mission_init(),
+            _equip_begin(5, 57, slots=2),
+            _mem(),
+            _slot("Weapon0", "gondor_sword_a", bo="bo_gondor_sword_a", kind="Weapon"),
+            _mem(warn=True),
+            _slot("Body", "sk_gd_ano_body_a", mesh="sk_gd_ano_body_a", kind="BodyArmor"),
+        )
+        tl = tb.parse_battle_load_log(text)
+        begin = tl.events[-1]
+        self.assertEqual(begin.phase, "AgentEquipBegin")
+        self.assertEqual([s.item_id for s in begin.slots],
+                         ["gondor_sword_a", "sk_gd_ano_body_a"])
+        self.assertEqual(len(tl.mem_samples), 2)
+        self.assertTrue(tl.mem_warned)
+
+    def test_mem_sample_after_last_phase_event_does_not_change_verdict(self):
+        text = _log(_mission_init(), _equip_begin(5, 57, slots=1),
+                    _slot("Body", "sk_gd_ano_body_a", mesh="sk_gd_ano_body_a"),
+                    _mem(warn=True))
+        v = tb.triage(text)
+        self.assertEqual(v.kind, "EQUIPMENT")
+
+
+# --------------------------------------------------------------------------- #
+# [MemSample] memory telemetry (issue #386) — classify_memory                  #
+# --------------------------------------------------------------------------- #
+class MemClassifyTests(unittest.TestCase):
+    def _tl(self, *lines):
+        return tb.parse_battle_load_log(_log(*lines))
+
+    def test_no_samples_returns_none_for_old_logs(self):
+        # Old logs (pre-#386) carry no [MemSample] lines — memory stays None and the
+        # rest of the pipeline is byte-identical.
+        tl = self._tl(_mission_init(), _equip_begin(5, 57, slots=1),
+                      _slot("Body", "sk_gd_ano_body_a", mesh="sk_gd_ano_body_a"))
+        self.assertIsNone(tb.classify_memory(tl))
+
+    def test_healthy_last_sample_no_warn_is_not_pressure(self):
+        tl = self._tl(_playable(), _mem())  # headroom 17643 >= 2048 and >= 10%
+        mem = tb.classify_memory(tl)
+        self.assertFalse(mem["pressure"])
+        self.assertFalse(mem["warn_seen"])
+        self.assertEqual(mem["headroom_mb"], 31646 - 14003)
+
+    def test_low_floor_on_last_sample_is_pressure(self):
+        tl = self._tl(_playable(), _mem(used=30000))  # headroom 1646 < 2048
+        self.assertTrue(tb.classify_memory(tl)["pressure"])
+
+    def test_percent_rule_fires_above_the_floor(self):
+        # headroom 3460 clears the 2048 floor but is < 10% of 40960 (4096) — low.
+        tl = self._tl(_playable(), _mem(used=37500, limit=40960))
+        self.assertTrue(tb.classify_memory(tl)["pressure"])
+
+    def test_warn_seen_earlier_is_pressure_even_if_last_sample_healthy(self):
+        tl = self._tl(_playable(), _mem(used=30000, warn=True), _mem())
+        mem = tb.classify_memory(tl)
+        self.assertTrue(mem["pressure"])
+        self.assertTrue(mem["warn_seen"])
+
+    def test_garbage_inputs_never_report_low(self):
+        # Polarity pin: limit <= 0 or used < 0 is garbage — never report pressure.
+        for used, limit in ((14003, 0), (14003, -1), (-5, 31646)):
+            tl = self._tl(_playable(), _mem(used=used, limit=limit))
+            self.assertFalse(tb.classify_memory(tl)["pressure"], (used, limit))
+
+    def test_used_above_limit_clamps_headroom_and_is_low(self):
+        # used > limit is allowed (not garbage) — headroom clamps at 0 and IS low.
+        tl = self._tl(_playable(), _mem(used=32000, limit=31646))
+        mem = tb.classify_memory(tl)
+        self.assertEqual(mem["headroom_mb"], 0)
+        self.assertTrue(mem["pressure"])
+
+    def test_floor_override(self):
+        # headroom 3000 with limit 20000: >= 2048 and >= 10% (2000) — healthy by
+        # default; a raised floor flips it.
+        tl = self._tl(_playable(), _mem(used=17000, limit=20000))
+        self.assertFalse(tb.classify_memory(tl)["pressure"])
+        self.assertTrue(tb.classify_memory(tl, floor_mb=4096)["pressure"])
+
+    def test_peak_first_and_last(self):
+        tl = self._tl(_playable(), _mem(used=10000), _mem(used=19000), _mem(used=14003))
+        mem = tb.classify_memory(tl)
+        self.assertEqual(mem["peak_commit_used_mb"], 19000)
+        self.assertEqual(mem["first"]["commit_used_mb"], 10000)
+        self.assertEqual(mem["last"]["commit_used_mb"], 14003)
+
+
+# --------------------------------------------------------------------------- #
 # Reporting + CLI                                                              #
 # --------------------------------------------------------------------------- #
 class ReportTests(unittest.TestCase):
@@ -399,6 +570,88 @@ class ReportTests(unittest.TestCase):
         report = tb.format_report(v, tb.parse_battle_load_log(text), None)
         self.assertIn("VERDICT:", report)
         self.assertIn("EQUIPMENT", report)
+
+
+class MemReportTests(unittest.TestCase):
+    def test_report_memory_trend_and_pressure_note(self):
+        text = _log(_mem_session(), _mission_init(), _equip_begin(5, 57, slots=1),
+                    _slot("Body", "sk_gd_ano_body_a", mesh="sk_gd_ano_body_a"),
+                    _mem(), _mem(used=29847, avail=310, load=97, warn=True))
+        tl = tb.parse_battle_load_log(text)
+        v = tb.classify(tl)
+        report = tb.format_report(v, tl, None)
+        self.assertIn("Memory trend", report)
+        self.assertIn("totalPhysMB=16296", report)
+        self.assertIn("MEMORY PRESSURE", report)
+        self.assertIn("may be a symptom, not the cause", report)
+
+    def test_report_no_pressure_note_when_healthy(self):
+        text = _log(_mission_init(), _equip_begin(5, 57, slots=1),
+                    _slot("Body", "sk_gd_ano_body_a", mesh="sk_gd_ano_body_a"),
+                    _mem())
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None)
+        self.assertIn("Memory trend", report)
+        self.assertNotIn("MEMORY PRESSURE", report)
+
+    def test_report_omits_memory_section_when_no_samples(self):
+        text = _log(_mission_init(), _equip_begin(5, 57, slots=1),
+                    _slot("Body", "sk_gd_ano_body_a", mesh="sk_gd_ano_body_a"))
+        tl = tb.parse_battle_load_log(text)
+        report = tb.format_report(tb.classify(tl), tl, None)
+        self.assertNotIn("Memory trend", report)
+        self.assertNotIn("MEMORY PRESSURE", report)
+
+
+class MemCliTests(unittest.TestCase):
+    def _run(self, args):
+        return subprocess.run([sys.executable, str(TOOL), *args],
+                              capture_output=True, text=True)
+
+    def test_cli_json_carries_memory_block_and_exit_code_is_untouched(self):
+        # COMPLETED + pressure: memory is additive decoration — exit stays 0.
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(_log(_mem_session(), _mission_init(), _equip_begin(5, 0),
+                              _equip_ok(6, 0), _playable(),
+                              _mem(used=29847, avail=310, load=97, warn=True)),
+                         encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            r = self._run([str(p), "--json", str(out)])
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            payload = json.loads(out.read_text(encoding="utf-8"))
+            self.assertEqual(payload["kind"], "COMPLETED")
+            self.assertTrue(payload["memory"]["pressure"])
+            self.assertTrue(payload["memory"]["warn_seen"])
+            self.assertEqual(payload["memory"]["headroom_mb"], 31646 - 29847)
+
+    def test_cli_json_memory_none_when_no_samples(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(_log(_mission_init(), _equip_begin(5, 0), _equip_ok(6, 0),
+                              _playable()), encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            r = self._run([str(p), "--json", str(out)])
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            payload = json.loads(out.read_text(encoding="utf-8"))
+            self.assertIsNone(payload["memory"])
+
+    def test_cli_mem_threshold_flag_overrides_floor(self):
+        # headroom 3000 (limit 20000) is healthy at the default 2048 floor but low
+        # under --mem-threshold-mb 4096.
+        log_text = _log(_mission_init(), _equip_begin(5, 0), _equip_ok(6, 0),
+                        _playable(), _mem(used=17000, limit=20000, load=85))
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(log_text, encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            r = self._run([str(p), "--json", str(out)])
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            self.assertFalse(json.loads(out.read_text(encoding="utf-8"))["memory"]["pressure"])
+            r = self._run([str(p), "--json", str(out), "--mem-threshold-mb", "4096"])
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            self.assertTrue(json.loads(out.read_text(encoding="utf-8"))["memory"]["pressure"])
+            self.assertIn("MEMORY PRESSURE", r.stdout)
 
 
 class PickerTests(unittest.TestCase):
@@ -469,6 +722,69 @@ class CliTests(unittest.TestCase):
     def test_cli_bad_path_exit_2(self):
         r = self._run([str(Path("does_not_exist_xyz.log"))])
         self.assertEqual(r.returncode, 2)
+
+
+class MemThresholdTruncationTests(unittest.TestCase):
+    """Pins the INTEGER-FLOOR percent threshold against the C# twin
+    (MemoryPressureSamplerTests' truncation-boundary tests): threshold =
+    max(floor, limit * percent // 100), exactly like C# long division.
+    Deep-review 2026-08-05 caught the mirrors disagreeing in the ~1 MB band
+    below the true 10% line on any limit not divisible by 10."""
+
+    def test_headroom_exactly_at_floored_percent_threshold_is_not_low(self):
+        # limit=31646 -> threshold = max(2048, 3164 [floored from 3164.6]); headroom 3164
+        self.assertFalse(tb._headroom_low(28482, 31646, 2048, 10))
+
+    def test_one_mb_below_floored_percent_threshold_is_low(self):
+        self.assertTrue(tb._headroom_low(28483, 31646, 2048, 10))
+
+    def test_headroom_exactly_at_floor_on_odd_limit_is_not_low(self):
+        # limit=20481 -> threshold = max(2048, 2048 [floored from 2048.1]); headroom 2048
+        self.assertFalse(tb._headroom_low(18433, 20481, 2048, 10))
+
+
+class MemStatsPhaseTokenTests(unittest.TestCase):
+    """Since #386 five phase lines carry trailing ' gc=... heapMB=... privMB=... wsMB='
+    tokens (service MemStats). _EQUIP_BEGIN_RE broke once from a near-identical
+    trailing-token addition (2026-08-02, noted in-source) — these fixtures pin that
+    the phase parsers tolerate the suffix."""
+
+    MEMSTATS = " gc=12/4/1 heapMB=654 privMB=4211 wsMB=3900"
+
+    def _suffixed_log(self):
+        return _log(
+            _line("INFO", "[BattleLoad] seq=1 t=+0ms phase=EncounterStart mainPartySize=42"
+                          + self.MEMSTATS),
+            _open_new(),
+            _scene_selected(),
+            _line("INFO", "[BattleLoad] seq=4 t=+56ms phase=MissionInitialize "
+                          "scene='battle_terrain_b'" + self.MEMSTATS),
+            _line("INFO", "[BattleLoad] seq=99 t=+8000ms phase=BattlePlayable "
+                          "scene='battle_terrain_b' agents=120" + self.MEMSTATS),
+        )
+
+    def test_verdict_kind_identical_with_and_without_memstats_suffix(self):
+        plain = _log(_encounter(), _open_new(), _scene_selected(),
+                     _mission_init(), _playable())
+        v_plain = tb.classify(tb.parse_battle_load_log(plain))
+        v_suffixed = tb.classify(tb.parse_battle_load_log(self._suffixed_log()))
+        self.assertEqual(v_plain.kind, v_suffixed.kind)
+
+    def test_phase_events_and_scene_survive_memstats_suffix(self):
+        tl = tb.parse_battle_load_log(self._suffixed_log())
+        self.assertEqual([e.phase for e in tl.events],
+                         ["EncounterStart", "MissionOpenNew", "BattleSceneSelected",
+                          "MissionInitialize", "BattlePlayable"])
+        # the lazy quote-anchored scene regex must not be confused by the suffix
+        self.assertIn("scene='battle_terrain_b'", tl.events[3].detail)
+
+
+class MemSampleMalformedLineTests(unittest.TestCase):
+    def test_torn_memsample_line_is_skipped_without_crash_or_count(self):
+        # A torn write at crash time can truncate the final line mid-token.
+        torn = _line("INFO", "[MemSample] privMB=4211 wsMB=39")
+        tl = tb.parse_battle_load_log(_log(_mem(), torn))
+        self.assertEqual(len(tl.mem_samples), 1)  # only the well-formed line counted
 
 
 if __name__ == "__main__":

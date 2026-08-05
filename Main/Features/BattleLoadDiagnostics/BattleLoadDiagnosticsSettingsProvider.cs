@@ -34,4 +34,25 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
                 : DefaultWatchdogSeconds;
         }
     }
+
+    public bool MemorySamplerEnabled =>
+        BattleLoadDiagnosticsSettings.Instance?.EnableMemorySampler ?? true;
+
+    public double MemorySampleIntervalSeconds
+    {
+        get
+        {
+            double raw = BattleLoadDiagnosticsSettings.Instance?.MemorySampleIntervalSeconds
+                ?? (int)MemoryPressureSampler.DefaultSampleIntervalSeconds;
+            return ValidateSampleIntervalSeconds(raw);
+        }
+    }
+
+    // Pure seam (StallWatchdogSeconds pattern, testable without the MCM static). Bounds and
+    // default live on MemoryPressureSampler — the single source of truth for the contract.
+    internal static double ValidateSampleIntervalSeconds(double raw) =>
+        FiniteFloatValidator.IsFiniteInRange(
+            raw, MemoryPressureSampler.MinSampleIntervalSeconds, MemoryPressureSampler.MaxSampleIntervalSeconds)
+            ? raw
+            : MemoryPressureSampler.DefaultSampleIntervalSeconds;
 }

@@ -142,13 +142,14 @@ public class BattleLoadDiagnosticsServiceTests
     // ---- Mission-exit phase lifecycle (issue #331 — tournament-exit hang localization) ----
 
     [TestMethod]
-    public void LogExitBegin_WhenEnabled_EmitsMissionSceneAgentsAndGcStats()
+    public void LogExitBegin_WhenEnabled_EmitsMissionSceneAgentsAndMemStats()
     {
         _sut.LogExitBegin("TournamentFight", "arena_sturgia_a", 24, 234);
         _logger.Received().LogInfo(Arg.Is<string>(s =>
             s.Contains("ExitBegin") && s.Contains("mission='TournamentFight'") &&
             s.Contains("scene='arena_sturgia_a'") && s.Contains("agents=24/234") &&
-            s.Contains("gc=") && s.Contains("heapMB=")));
+            s.Contains("gc=") && s.Contains("heapMB=") &&
+            s.Contains("privMB=") && s.Contains("wsMB=")));
     }
 
     [TestMethod]
@@ -217,13 +218,47 @@ public class BattleLoadDiagnosticsServiceTests
     }
 
     [TestMethod]
-    public void LogMapResumed_InWindow_IncludesGcStatsAndSavingFlag()
+    public void LogMapResumed_InWindow_IncludesMemStatsAndSavingFlag()
     {
         _sut.LogExitBegin("m", "s", 1, 1);
         _sut.LogMapResumed(true);
         _logger.Received().LogInfo(Arg.Is<string>(s =>
             s.Contains("MapResumed") && s.Contains("isSaving=True") &&
-            s.Contains("gc=") && s.Contains("heapMB=")));
+            s.Contains("gc=") && s.Contains("heapMB=") &&
+            s.Contains("privMB=") && s.Contains("wsMB=")));
+    }
+
+    // ---- [MemSample] phase-line tokens (#386): the entry-side memory anchors ----------------
+    // EncounterStart / MissionInitialize / BattlePlayable carry MemStats so a crash log shows
+    // the process footprint at the load's start, scene-init, and playable points.
+
+    [TestMethod]
+    public void LogEncounterStart_WhenEnabled_IncludesMemStats()
+    {
+        _sut.LogEncounterStart(10);
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("EncounterStart") && s.Contains("gc=") && s.Contains("heapMB=") &&
+            s.Contains("privMB=") && s.Contains("wsMB=")));
+    }
+
+    [TestMethod]
+    public void LogMissionInitialize_WhenEnabled_IncludesMemStats()
+    {
+        _sut.LogMissionInitialize("scene_x");
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("MissionInitialize") && s.Contains("scene='scene_x'") &&
+            s.Contains("gc=") && s.Contains("heapMB=") &&
+            s.Contains("privMB=") && s.Contains("wsMB=")));
+    }
+
+    [TestMethod]
+    public void LogBattlePlayable_WhenEnabled_IncludesMemStats()
+    {
+        _sut.LogBattlePlayable("scene_x", 42);
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("BattlePlayable") && s.Contains("agents=42") &&
+            s.Contains("gc=") && s.Contains("heapMB=") &&
+            s.Contains("privMB=") && s.Contains("wsMB=")));
     }
 
     [TestMethod]

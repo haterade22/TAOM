@@ -39,4 +39,14 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyBool("Enable Exit Stall Sampler", Order = 0,
         HintText = "If a mission exit stalls past 15s, briefly suspends the game's main thread (at +15/+30/+60s) to photograph its call stack into the TAOM debug log — this is what root-caused the tournament-exit freeze (#331). Tiny residual risk: a suspension landing mid-GC can freeze the game harder than the stall itself. Turn OFF to keep the other diagnostics without any thread suspension. Default ON.")]
     public bool EnableExitStallSampler { get; set; } = true;
+
+    [SettingPropertyGroup("Memory Sampler")]
+    [SettingPropertyBool("Enable Memory Sampler", Order = 0, RequireRestart = false,
+        HintText = "Writes a periodic [MemSample] line (process private/working-set MB, managed heap, system commit use/limit, available RAM) to the TAOM debug log, plus a one-shot WARN when system commit headroom runs low — the memory trajectory before an out-of-memory crash. Independent of the master Battle Load Diagnostics toggle: this is session-wide crash forensics, not battle-load phase logging. Default ON.")]
+    public bool EnableMemorySampler { get; set; } = true;
+
+    [SettingPropertyGroup("Memory Sampler")]
+    [SettingPropertyInteger("Sample Interval (seconds)", 10, 120, Order = 1, RequireRestart = false,
+        HintText = "Seconds between [MemSample] lines. Default 30s (~120 lines per hour of play). Takes effect on the next sample — no restart needed.")]
+    public int MemorySampleIntervalSeconds { get; set; } = 30;
 }

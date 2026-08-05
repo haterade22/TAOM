@@ -68,7 +68,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         // Encounter is the lifecycle origin — make sure the clock is running even if a
         // mission opened without PlayerEncounter.Start (e.g. arena/custom paths).
         try { if (!_stopwatch.IsRunning) _stopwatch.Restart(); } catch { /* clock best-effort */ }
-        Emit(BattleLoadPhase.EncounterStart, $"mainPartySize={mainPartySize}");
+        Emit(BattleLoadPhase.EncounterStart, $"mainPartySize={mainPartySize} {MemStats()}");
     }
 
     public void LogMissionOpenNew(string missionName, string sceneName, string? encounterSummary)
@@ -116,7 +116,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         CloseExitWindow();
         ResetLoadoutCache();
         if (!IsEnabled) return;
-        Emit(BattleLoadPhase.MissionInitialize, $"scene='{sceneName}'");
+        Emit(BattleLoadPhase.MissionInitialize, $"scene='{sceneName}' {MemStats()}");
     }
 
     public void LogAgentEquipBegin(EquipmentSnapshot snapshot)
@@ -248,7 +248,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     public void LogBattlePlayable(string sceneName, int agentCount)
     {
         if (!IsEnabled) return;
-        Emit(BattleLoadPhase.BattlePlayable, $"scene='{sceneName}' agents={agentCount}");
+        Emit(BattleLoadPhase.BattlePlayable, $"scene='{sceneName}' agents={agentCount} {MemStats()}");
     }
 
     // ---- Mission-exit lifecycle (issue #331) ----
@@ -267,7 +267,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
             _exitWindowActive = true;
             Interlocked.Exchange(ref _exitWindowOpenedUtcTicks, DateTime.UtcNow.Ticks);
             Emit(BattleLoadPhase.ExitBegin,
-                $"mission='{missionName}' scene='{sceneName}' agents={agentCount}/{allAgentCount} {GcStats()}");
+                $"mission='{missionName}' scene='{sceneName}' agents={agentCount}/{allAgentCount} {MemStats()}");
         }
         catch (Exception ex) { SafeWarn("LogExitBegin", ex); }
     }
@@ -311,7 +311,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     public void LogMapResumed(bool isSaving)
     {
         if (!IsExitPhaseLoggable()) return;
-        Emit(BattleLoadPhase.MapResumed, $"isSaving={isSaving} {GcStats()}");
+        Emit(BattleLoadPhase.MapResumed, $"isSaving={isSaving} {MemStats()}");
     }
 
     public void LogFirstMapTick(bool isSaving)
@@ -331,16 +331,24 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         Interlocked.Exchange(ref _exitWindowOpenedUtcTicks, 0L);
     }
 
-    // gen0/gen1/gen2 collection counts + managed heap size. Deltas between ExitBegin and
-    // MapResumed expose a mission-end full GC (Common.MemoryCleanupGC) as the time sink.
-    private static string GcStats()
+    // gen0/gen1/gen2 collection counts + managed heap size, plus the process footprint
+    // (privMB/wsMB via one GetProcessMemoryInfo syscall — #386). Deltas between ExitBegin and
+    // MapResumed expose a mission-end full GC (Common.MemoryCleanupGC) as the time sink; the
+    // process tokens anchor the phase line against the periodic [MemSample] trajectory. On
+    // reader failure both process tokens are omitted (never a fabricated 0 in a user log).
+    private static string MemStats()
     {
+        string gcStats;
         try
         {
             long heapMb = GC.GetTotalMemory(forceFullCollection: false) / (1024 * 1024);
-            return $"gc={GC.CollectionCount(0)}/{GC.CollectionCount(1)}/{GC.CollectionCount(2)} heapMB={heapMb}";
+            gcStats = $"gc={GC.CollectionCount(0)}/{GC.CollectionCount(1)}/{GC.CollectionCount(2)} heapMB={heapMb}";
         }
-        catch { return "gc=<unavailable>"; }
+        catch { gcStats = "gc=<unavailable>"; }
+
+        return MemorySampleReader.TryReadProcess(out long privMb, out long wsMb)
+            ? $"{gcStats} privMB={privMb} wsMB={wsMb}"
+            : gcStats;
     }
 
     // Single choke point: increment the sequence, stamp elapsed ms, update the status line

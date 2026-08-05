@@ -1217,6 +1217,12 @@ public class SubModule : MBSubModuleBase
         exitStallSampler.SetMainThread(System.Threading.Thread.CurrentThread);
         exitStallSampler.Start();
 
+        // Session-wide memory telemetry (#386): periodic [MemSample] lines + low-commit-headroom
+        // WARN so a native OOM CTD self-identifies from the log tail (#385 was only diagnosable
+        // by parsing the 1.3 GB dump). Gating lives inside Poll on its OWN MCM toggle — the
+        // master battle-load toggle must not silently kill session-wide crash forensics.
+        IoC.Resolve<Features.BattleLoadDiagnostics.MemoryPressureSampler>().Start();
+
         // Patch60 — release the tournament UI movie/layer at OnEndMission time. The engine's
         // MissionGauntletTournamentView leaks both (nulls without release, unlike the practice
         // view), deferring the Tournament-movie teardown into ScreenBase.HandleFinalize under

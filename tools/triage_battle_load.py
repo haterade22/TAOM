@@ -34,6 +34,14 @@ mesh-ref validator uses) rather than re-implementing it. For offline "missing fr
 shipped Armory vs present (player-install problem)" confirmation, run
 `tools/validate_mesh_refs.py` on the suspect item ids.
 
+Since #386 the same log also carries `[MemSample]` memory-telemetry lines (periodic
+commit/working-set samples + one session line + WARN LOW COMMIT HEADROOM markers).
+The tool parses them into a "Memory trend" report section and a `memory` JSON block.
+This is additive decoration only: the verdict lattice, kinds, and exit codes are
+untouched. For logs without [MemSample] lines the report text is byte-identical;
+the --json payload always carries a `memory` key (null when no samples), so JSON
+output for old logs differs by exactly that one key.
+
 Usage:
   python tools/triage_battle_load.py <taom_debug.log>
   python tools/triage_battle_load.py <taom_debug.log> --rgl-log <rgl_log_errors_*.txt>
@@ -98,6 +106,29 @@ _EQUIP_OK_RE = re.compile(r"agent#(\d+)\s+'(.*)'\s*$")
 _SCENE_ID_RE = re.compile(r"sceneId='(.*?)'")
 _SCENE_RE = re.compile(r"scene='(.*?)'")
 
+# [MemSample] memory telemetry (#386). Token order, names, separators, and the %
+# suffix are the pinned cross-language contract with the C# sampler; the WARN prefix
+# is optional (present only on low-headroom lines, emitted at WARNING level).
+#   [MemSample] session totalPhysMB=N sysCommitLimitMB=N
+#   [MemSample] [WARN LOW COMMIT HEADROOM headroomMB=N ]privMB=N wsMB=N heapMB=N
+#               sysCommitUsedMB=N sysCommitLimitMB=N availPhysMB=N memLoad=N%
+_MEM_TAG = "[MemSample]"
+_MEMSAMPLE_RE = re.compile(
+    r"\[MemSample\]\s+(?:WARN LOW COMMIT HEADROOM headroomMB=(-?\d+)\s+)?"
+    r"privMB=(-?\d+)\s+wsMB=(-?\d+)\s+heapMB=(-?\d+)\s+sysCommitUsedMB=(-?\d+)\s+"
+    r"sysCommitLimitMB=(-?\d+)\s+availPhysMB=(-?\d+)\s+memLoad=(-?\d+)%")
+_MEMSESSION_RE = re.compile(
+    r"\[MemSample\]\s+session\s+totalPhysMB=(-?\d+)\s+sysCommitLimitMB=(-?\d+)")
+# Capture the FileLogger timestamp (same shape _PREFIX_RE strips) for sample ts.
+_TS_RE = re.compile(r"^\[(\d{4}-\d\d-\d\d[ T]\d\d:\d\d:\d\d)\]")
+
+# Low-commit-headroom thresholds. Single source of truth is the C# sampler:
+# Main/Features/BattleLoadDiagnostics/MemoryPressureSampler.cs (WarnHeadroomFloorMb,
+# WarnHeadroomPercent; its RearmHysteresisMb only governs C#-side WARN re-arming and
+# has no triage-side mirror). Keep these numerically identical to that class.
+MEM_WARN_HEADROOM_FLOOR_MB = 2048
+MEM_WARN_HEADROOM_PERCENT = 10
+
 NULL = "<null>"
 HANG_KINDS = {"EQUIPMENT", "EQUIPMENT_CONFIRMED", "SCENE", "PRE_SCENE", "POST_EQUIP"}
 
@@ -138,9 +169,31 @@ class Watchdog:
 
 
 @dataclass
+class MemSample:
+    """One periodic [MemSample] line. ts comes from the FileLogger prefix (None on
+    bare lines); warned marks the WARN LOW COMMIT HEADROOM variant."""
+    ts: str | None
+    priv_mb: int
+    ws_mb: int
+    heap_mb: int
+    commit_used_mb: int
+    commit_limit_mb: int
+    avail_phys_mb: int
+    mem_load: int
+    warned: bool = False
+
+    @property
+    def headroom_mb(self) -> int:
+        return max(0, self.commit_limit_mb - self.commit_used_mb)
+
+
+@dataclass
 class Timeline:
     events: list = field(default_factory=list)
     watchdog: Watchdog | None = None
+    mem_samples: list = field(default_factory=list)
+    mem_session: dict | None = None
+    mem_warned: bool = False
 
 
 @dataclass
@@ -176,6 +229,27 @@ def parse_battle_load_log(text: str) -> Timeline:
     collecting = None  # loadout id whose block is currently being read, if any
     for raw in text.splitlines():
         line = _PREFIX_RE.sub("", raw)
+        # [MemSample] telemetry (#386) rides the same log but is inert to the phase
+        # timeline: no PhaseEvent, no slot/loadout attachment, no seq/terminal impact.
+        if _MEM_TAG in line:
+            m = _MEMSAMPLE_RE.search(line)
+            if m:
+                tm = _TS_RE.match(raw)
+                sample = MemSample(
+                    ts=tm.group(1) if tm else None,
+                    priv_mb=int(m.group(2)), ws_mb=int(m.group(3)),
+                    heap_mb=int(m.group(4)), commit_used_mb=int(m.group(5)),
+                    commit_limit_mb=int(m.group(6)), avail_phys_mb=int(m.group(7)),
+                    mem_load=int(m.group(8)), warned=m.group(1) is not None)
+                tl.mem_samples.append(sample)
+                if sample.warned:
+                    tl.mem_warned = True
+            else:
+                m = _MEMSESSION_RE.search(line)
+                if m:
+                    tl.mem_session = {"total_phys_mb": int(m.group(1)),
+                                      "commit_limit_mb": int(m.group(2))}
+            continue
         if _TAG not in line:
             continue
 
@@ -327,6 +401,48 @@ def _equip_summary(agent: dict) -> str:
             "missing mesh / `bo_` collision body on this player's install.")
 
 
+def _headroom_low(used_mb: int, limit_mb: int, floor_mb: int, percent: int) -> bool:
+    """Low-commit-headroom test, mirroring the C# decision in
+    Main/Features/BattleLoadDiagnostics/MemoryPressureSampler.cs: low if
+    headroom < floor OR headroom < percent% of the limit. Garbage inputs
+    (limit <= 0, used < 0) never report low; used > limit is a legitimate
+    state whose headroom clamps at 0 (and IS low)."""
+    if limit_mb <= 0 or used_mb < 0:
+        return False
+    headroom = max(0, limit_mb - used_mb)
+    # Mirror C#'s INTEGER-FLOOR threshold exactly: Math.Max(floor, limit * percent / 100)
+    # with C# long division. An exact cross-multiplied comparison (headroom*100 < limit*percent)
+    # disagrees with the sampler in the ~1 MB band below the true 10% line whenever the limit
+    # isn't a multiple of 10 — i.e. on essentially every real machine (deep-review 2026-08-05).
+    return headroom < max(floor_mb, limit_mb * percent // 100)
+
+
+def _sample_dict(s: MemSample) -> dict:
+    return {"ts": s.ts, "priv_mb": s.priv_mb, "ws_mb": s.ws_mb, "heap_mb": s.heap_mb,
+            "commit_used_mb": s.commit_used_mb, "commit_limit_mb": s.commit_limit_mb,
+            "avail_phys_mb": s.avail_phys_mb, "mem_load": s.mem_load,
+            "headroom_mb": s.headroom_mb, "warned": s.warned}
+
+
+def classify_memory(tl: Timeline, floor_mb: int = MEM_WARN_HEADROOM_FLOOR_MB,
+                    percent: int = MEM_WARN_HEADROOM_PERCENT) -> dict | None:
+    """Summarize the [MemSample] trend (#386). None when the log carries no samples
+    (pre-#386 logs — everything else stays byte-identical). Additive decoration
+    only: never touches the verdict lattice, kinds, or exit codes."""
+    if not tl.mem_samples:
+        return None
+    first, last = tl.mem_samples[0], tl.mem_samples[-1]
+    low = _headroom_low(last.commit_used_mb, last.commit_limit_mb, floor_mb, percent)
+    return {
+        "pressure": tl.mem_warned or low,
+        "headroom_mb": last.headroom_mb,
+        "peak_commit_used_mb": max(s.commit_used_mb for s in tl.mem_samples),
+        "first": _sample_dict(first),
+        "last": _sample_dict(last),
+        "warn_seen": tl.mem_warned,
+    }
+
+
 def cross_check_rgl(verdict: Verdict, rgl) -> Verdict:
     """Upgrade an EQUIPMENT verdict to EQUIPMENT_CONFIRMED when the engine's own log
     names one of the suspect assets. Reuses validate_mesh_refs.RglFindings."""
@@ -413,7 +529,7 @@ _NEXT_STEPS = {
 }
 
 
-def format_report(verdict: Verdict, tl: Timeline, rgl) -> str:
+def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None) -> str:
     out = []
     out.append("=== BATTLE LOAD TRIAGE ===")
     out.append("")
@@ -444,6 +560,28 @@ def format_report(verdict: Verdict, tl: Timeline, rgl) -> str:
         out.append("")
         out.append(f"Stall watchdog fired after {tl.watchdog.elapsed_seconds}s — "
                    f"last phase={tl.watchdog.last_phase} {tl.watchdog.last_detail}".rstrip())
+
+    if tl.mem_samples:
+        if mem is None:  # callers that computed with a custom floor pass their own
+            mem = classify_memory(tl)
+        warn_count = sum(1 for s in tl.mem_samples if s.warned)
+        first, last = mem["first"], mem["last"]
+        out.append("")
+        out.append(f"Memory trend ({len(tl.mem_samples)} samples):")
+        if tl.mem_session:
+            out.append(f"  session: totalPhysMB={tl.mem_session['total_phys_mb']} "
+                       f"sysCommitLimitMB={tl.mem_session['commit_limit_mb']}")
+        out.append(f"  first: commitUsed={first['commit_used_mb']}/"
+                   f"{first['commit_limit_mb']}MB headroom={first['headroom_mb']}MB "
+                   f"load={first['mem_load']}%")
+        out.append(f"  peak:  commitUsed={mem['peak_commit_used_mb']}MB")
+        out.append(f"  last:  commitUsed={last['commit_used_mb']}/"
+                   f"{last['commit_limit_mb']}MB headroom={last['headroom_mb']}MB "
+                   f"load={last['mem_load']}%")
+        out.append(f"  WARN LOW COMMIT HEADROOM lines: {warn_count}")
+        if mem["pressure"]:
+            out.append("  MEMORY PRESSURE: commit headroom was critically low — "
+                       "the phase verdict above may be a symptom, not the cause.")
 
     if verdict.suspect_names:
         out.append("")
@@ -528,6 +666,10 @@ def main() -> int:
     ap.add_argument("--rgl-log", help="Path to the player's newest "
                                       "rgl_log_errors_*.txt for the engine cross-check")
     ap.add_argument("--json", dest="json_out", help="Write the verdict to this JSON file")
+    ap.add_argument("--mem-threshold-mb", type=int, default=None,
+                    help="Override the low-commit-headroom floor for the memory-"
+                         f"pressure call (default {MEM_WARN_HEADROOM_FLOOR_MB} MB, "
+                         "mirroring MemoryPressureSampler.WarnHeadroomFloorMb)")
     args = ap.parse_args()
 
     log_text = None
@@ -570,8 +712,11 @@ def main() -> int:
     rgl = vm.parse_rgl_text(rgl_text) if rgl_text else None
     if rgl is not None:
         verdict = cross_check_rgl(verdict, rgl)
+    floor_mb = (args.mem_threshold_mb if args.mem_threshold_mb is not None
+                else MEM_WARN_HEADROOM_FLOOR_MB)
+    mem = classify_memory(tl, floor_mb=floor_mb)
 
-    print(format_report(verdict, tl, rgl))
+    print(format_report(verdict, tl, rgl, mem))
 
     if args.json_out:
         payload = {
@@ -584,6 +729,7 @@ def main() -> int:
             "notes": verdict.notes,
             "terminal_phase": tl.events[-1].phase if tl.events else None,
             "watchdog_fired": tl.watchdog is not None,
+            "memory": mem,
         }
         Path(args.json_out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
         print(f"\nWrote verdict to {args.json_out}", file=sys.stderr)

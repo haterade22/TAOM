@@ -14,5 +14,6 @@ public static class BattleLoadDiagnosticsIoC
         container.Register<IBattleLoadStallMarker, BattleLoadStallMarker>(Reuse.Singleton);
         container.Register<BattleLoadStallWatchdog>(Reuse.Singleton);
         container.Register<ExitStallSampler>(Reuse.Singleton);
+        container.Register<MemoryPressureSampler>(Reuse.Singleton);
     }
 }
