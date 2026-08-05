@@ -255,6 +255,14 @@ LLM-compiled wiki nodes derived from `docs/raw/`. See [research/README.md](resea
 - [karpathy-autoresearch](research/karpathy-autoresearch.md) — full review of Karpathy's autoresearch repo (10 files, 52 patterns extracted) + Tier-1/2/3 adoption map for TAOM. Source: `docs/raw/ai-research/karpathy-autoresearch/`.
 - [reference/external-resources.md](reference/external-resources.md) — verified external resources to improve TAOM (official-vs-community Bannerlord docs hierarchy, BUTR deps, Harmony, LOTR/Tolkien lore + naming generators, comparable total-conversion mods, save-compat versioning). Cite this instead of re-searching the web.
 
+## Player-facing copy (Discord)
+
+Written for players, not developers — these are the posts that go out to the community. Keep the
+engineering detail in `features/` and link outward from here.
+
+- [releases/v2.0.15-discord.md](releases/v2.0.15-discord.md) — v2.0.15 release notes (Gondor overhaul, banner bearers, crash fixes, Polish first pass)
+- [releases/enlistment-discord.md](releases/enlistment-discord.md) — Enlistment + Battlefield Promotions feature announcement (#375/#376). Every number in it is quoted from the shipped config; re-verify against `enlistment_config.json` / `field_commission_config.json` before posting if either has been retuned since
+
 ## Conventions
 
 - File links use markdown `[text](relative/path.md)` syntax. No Obsidian `[[wikilinks]]`. See [ADR-010](adrs/010-knowledge-base-architecture.md) for rationale.

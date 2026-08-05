@@ -129,7 +129,7 @@ and non-finite inputs fail closed — no free bonus.
 costs a 7-day cooldown and a point of trust (the donor allowed free swaps in any
 conversation, which made the choice weightless).
 
-**Duties.** 13 field duties collapse onto 5 mechanics — `HuntSpawnedParty` (4 flavors),
+**Duties.** 13 field duties collapse onto 5 mechanics — `HuntSpawnedParty` (5 flavors),
 `VisitSettlement` (5), `DeliverFood`, `CollectFood`, `WaitHours` — with the flavor,
 targets, deadlines, gates and rewards as data rows in `enlistment_duties.json`, plus 11
 interactive skill-check duties and 3 camp incidents through one presenter. Rows failing
