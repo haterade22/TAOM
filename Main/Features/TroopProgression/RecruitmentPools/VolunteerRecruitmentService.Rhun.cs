@@ -125,5 +125,16 @@ public partial class VolunteerRecruitmentService
             // Reachability fix (mirror the mixed pool): easterling line entry for converted fiefs.
             new VolunteerChance("easterling_recruit",   2),
         };
+
+        // Variag (battania) shares the Rhun pool. The Khand cluster recruited exactly this until
+        // 2026-08-04, when the 26 K-series settlements were retagged from khuzait to battania so
+        // the Variag culture would stop being landless (crash 099f650c — vanilla SpawnLordParty
+        // calls Settlement.All.First(x => x.Culture == hero.Culture) with no guard). Without an
+        // entry here the retag would have silently dropped Khand's volunteers: the cascade ends at
+        // ResolvePool(CultureId, CultureMap) and the K-series settlements have no per-settlement
+        // pools. It also makes battania a valid CultureConversion target — HasCulturePool gates
+        // that, so a fief taken by a Variag clan could never convert before.
+        // Khand has no roster of its own; re-theme here if one is ever authored.
+        CultureMap["battania"] = new List<VolunteerChance>(CultureMap["khuzait"]);
     }
 }

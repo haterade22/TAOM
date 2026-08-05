@@ -1264,6 +1264,53 @@
 			<xsl:attribute name="name">{=TAOM_battania_culture}Variag</xsl:attribute>
 			<!-- Vassal reward: Khand has no native LOTR roster; the Variags serve Mordor -->
 			<xsl:attribute name="vassal_reward_party_template">PartyTemplate.vassal_reward_troops_mordor</xsl:attribute>
+
+			<!-- Troop bindings. These stayed vanilla until 2026-08-04 because no settlement carried
+			     Culture.battania, so they were dormant: the Khand cluster was tagged Culture.khuzait
+			     and drew Rhun militia through the khuzait template below. Retagging the 26 K-series
+			     settlements to Variag (crash 099f650c — a landless culture makes vanilla
+			     SpawnLordParty's Settlement.All.First(culture) throw) activated them, which would
+			     have garrisoned Sturlurtsa Khand with Calradian battanian_militia_* — TAOM does not
+			     redefine those ids anywhere. Pointing them at the Rhun roster keeps Khand recruiting
+			     and garrisoning exactly what it did before the retag; Khand still has no roster of
+			     its own to point at.
+
+			     MANDATORY when editing ANY Culture[@id=...] template, including a partial re-point
+			     like this one: enumerate every attribute CultureObject.Deserialize reads and
+			     classify each BIND / PASSTHROUGH / N-A. The first cut of this block bound six
+			     attributes and left elite_basic_troop plus five party templates inheriting vanilla
+			     Calradian values through the @* passthrough — the same failure as the Dale culture
+			     (Codex #227, 2026-05-26), whose lesson prescribes exactly this enumeration.
+			     Mechanical check: transform with lxml and diff the emitted Culture element against
+			     an already-re-themed sibling (khuzait) for any value still matching /battania/i. -->
+			<xsl:attribute name="basic_troop">NPCCharacter.loke_rim_initiate</xsl:attribute>
+			<xsl:attribute name="elite_basic_troop">NPCCharacter.loke_rim_cavalry</xsl:attribute>
+			<xsl:attribute name="melee_militia_troop">NPCCharacter.rhun_militia_spearman</xsl:attribute>
+			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rhun_militia_archer</xsl:attribute>
+			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rhun_militia_veteran_spearman</xsl:attribute>
+			<xsl:attribute name="ranged_elite_militia_troop">NPCCharacter.rhun_militia_veteran_archer</xsl:attribute>
+			<xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_rhun_template</xsl:attribute>
+
+			<!-- Party templates. These are the remaining engine-READ attributes that the
+			     `<xsl:apply-templates select="@*"/>` passthrough above would otherwise inherit from
+			     vanilla battania, i.e. Calradian. Verified against CultureObject.Deserialize (v1.4.7):
+			     all six below ARE read; `caravan_party_template` / `elite_caravan_party_template`
+			     are NOT read as attributes (the deserializer reads only the plural child elements),
+			     so binding them would be dead markup — deliberately omitted.
+
+			     These mirror khuzait's values, which restores EXACT pre-retag parity: the K-series
+			     settlements were Culture.khuzait until 2026-08-04 and resolved through precisely
+			     these templates. Note that khuzait's own party templates still resolve to vanilla
+			     Calradian troops (villager_khuzait -> vanilla, khuzait_militia_* -> vanilla) — that
+			     is a pre-existing TAOM gap affecting Rhun equally, NOT something this binding
+			     introduces or is able to fix. Re-theming both cultures' party templates is separate
+			     content work. -->
+			<xsl:attribute name="villager_party_template">PartyTemplate.villager_khuzait_template</xsl:attribute>
+			<xsl:attribute name="militia_party_template">PartyTemplate.militia_khuzait_template</xsl:attribute>
+			<xsl:attribute name="rebels_party_template">PartyTemplate.rebels_khuzait_template</xsl:attribute>
+			<xsl:attribute name="settlement_patrol_template_level_1">PartyTemplate.patrol_party_khuzait_template_level_1</xsl:attribute>
+			<xsl:attribute name="settlement_patrol_template_level_2">PartyTemplate.patrol_party_khuzait_template_level_2</xsl:attribute>
+			<xsl:attribute name="settlement_patrol_template_level_3">PartyTemplate.patrol_party_khuzait_template_level_3</xsl:attribute>
 			<xsl:attribute name="text">{=TAOM_battania_desc}The Variags of Khand are a fierce and warlike people, hailing from the dry and rugged lands east of Mordor. Known for their mercenary prowess and loyalty to Sauron, the Variags fight with unmatched ferocity. They ride swift warhorses into battle, wielding curved blades and long spears with deadly precision. Their bronze and crimson armor, adorned with intricate designs, reflects their proud and martial heritage. Divided into tribes and clans, the Variags unite under powerful warlords, bringing fear and chaos to the enemies of the Dark Lord.</xsl:attribute>
 
 			<!-- NPC references -->

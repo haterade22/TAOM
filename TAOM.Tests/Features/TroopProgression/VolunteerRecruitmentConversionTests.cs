@@ -72,22 +72,19 @@ public class VolunteerRecruitmentConversionTests
     [DataRow("mistymountainorcs")]
     [DataRow("mirkwood")]  // wired 2026-06-10: mirkwood_recruit culture pool (recruitment-reachability fix)
     [DataRow("umbar")]     // wired 2026-06-10: aux_basic + umbar_elite culture pool (recruitment-reachability fix)
+    [DataRow("battania")]  // Variag/Khand -- wired 2026-08-04: shares the Rhun pool (see below)
     public void HasCulturePool_PlayableCultureWithTroops_ReturnsTrue(string cultureId)
     {
         Assert.IsTrue(_sut.HasCulturePool(cultureId),
             $"Playable culture '{cultureId}' must have a recruitment pool so its conquests can convert.");
     }
 
-    // KNOWN GAP (documented, not a bug): battania (Khand) is a fief-owning kingdom but has no recruitable
-    // basic-troop set authored (no troops_khand.xml). Conversion to it is intentionally gated off until a
-    // recruitment pool exists. (mirkwood + umbar were wired 2026-06-10 and moved to the covered test above.)
-    [TestMethod]
-    [DataRow("battania")]  // Khand -- no troop set authored
-    public void HasCulturePool_PlayableCultureWithoutTroopSet_ReturnsFalse_KnownGap(string cultureId)
-    {
-        Assert.IsFalse(_sut.HasCulturePool(cultureId),
-            $"'{cultureId}' has no recruitable troop set yet -- conversion is intentionally gated off (known gap).");
-    }
+    // The battania (Variag/Khand) gap closed 2026-08-04. Khand still has no roster of its own, but the
+    // K-series settlements were retagged from khuzait to battania so the Variag culture would stop being
+    // landless -- vanilla SpawnLordParty calls Settlement.All.First(x => x.Culture == hero.Culture) with
+    // no guard, so a landless culture on a homeless lord CTDs the daily clan tick (crash 099f650c). The
+    // retag moved those settlements' volunteer lookups onto CultureMap["battania"], which now aliases the
+    // Rhun pool -- exactly what Khand recruited before. (mirkwood + umbar were wired 2026-06-10 the same way.)
 
     [TestMethod]
     [DataRow("vlandia", "rohan_wold_recruit")]
