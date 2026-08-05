@@ -88,7 +88,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 - **`/investigate`** when a long manual debug session (multi-step trace, repro attempts) starts without it.
 - **Ship sequence** on "let's get this merged" / "ready to PR": `/verify` → (`/codex-verify` or `/review-codex`) → close issue → update CHANGELOG.
 - **`/migration-status`** on "what's the migration status" / v1.2 → v1.3 mentions.
-- **`/humanizer`** when finishing a user-facing doc/issue/PR or on "humanize" — soft offer only; `ai-prose-style.md` already governs new prose as you write.
+- **`/humanizer`** when finishing a user-facing doc/issue/PR or on "humanize" — soft offer only; `output-style.md` Part 2 already governs new prose as you write.
 
 ### Never auto-invoke
 

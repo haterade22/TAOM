@@ -14,6 +14,8 @@ the rule loader. Doc-backed facts: `.claude/rules/harness-facts.md` "Rule loader
 
 ## Always-load rules (no `paths:` — full text in context every session)
 
+_(8 rules since 2026-08-05: `working-discipline.md` joined from CLAUDE.md; `response-style.md` + `ai-prose-style.md` merged into `output-style.md`.)_
+
 | Rule | Content |
 |------|---------|
 | `environment-failures.md` | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
@@ -21,8 +23,8 @@ the rule loader. Doc-backed facts: `.claude/rules/harness-facts.md` "Rule loader
 | `simplicity-criterion.md` | Yes/No matrix for evaluating whether a change is worth keeping. Tiny gain + ugly code is rejected; deletions that hold parity always win. |
 | `think-before-coding.md` | Surface load-bearing assumptions before the first Edit; ask if uncertain. Don't ask on trivial/mechanical work. Lightweight design pass (one question at a time, propose 2-3 approaches) for open-ended work. Reuse-before-write ladder (engine API → existing service/adapter → one-line delegation → minimal new code) before writing new code. |
 | `evidence-over-claims.md` | Verify a review finding before implementing it; never sycophantically agree; no "done" claim without fresh verification output (subagent self-reports don't count). |
-| `response-style.md` | Open every reply with scrutiny, not agreement (challenge / name the gap when load-bearing); tag every response `[Certain]`/`[Likely]`/`[Guessing]`. |
-| `ai-prose-style.md` | Keep AI-writing tells (significance inflation, vague attributions, rule-of-three, filler, generic conclusions) out of produced prose (commits, CHANGELOG, issues, docs, RCAs). Carves out TAOM's em-dash/boldface house style. Full reference + deep-clean: `/humanizer`. |
+| `working-discipline.md` | Fork discipline (never fabricate/peek at fork results), autonomous-loop stewardship (continue established work, never stop to ask permission), TodoWrite quality bar, inline-hook activation, edit-scope discipline. Moved from CLAUDE.md "Working Discipline" 2026-08-05. |
+| `output-style.md` | Merged 2026-08-05 from `response-style.md` + `ai-prose-style.md`. Part 1 (chat replies): open with scrutiny, not agreement; tag every response `[Certain]`/`[Likely]`/`[Guessing]`. Part 2 (artifacts): keep AI-writing tells out of produced prose; TAOM em-dash/boldface house style carved out. Deep-clean: `/humanizer`. |
 
 ## Path-scoped rules (load when a matching file is opened)
 

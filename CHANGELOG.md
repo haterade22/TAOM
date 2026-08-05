@@ -75,6 +75,13 @@ dangling references into real ones. harness-facts keeps the operative one-liner 
 isolation for single-owner files, one pinned solution per shared sub-problem) + a pointer;
 "Last verified" bumped to 2026-08-05.
 
+**`response-style.md` + `ai-prose-style.md` merged into `output-style.md`.** The two rules split
+one concern (chat replies vs written artifacts), cross-referenced each other four times, and
+re-listed the same banned phrases. Now one rule: Part 1 (reply openings + confidence tags),
+Part 2 (AI-prose tells + the TAOM house-style carve-out) — operative text verbatim, one
+banned-phrase deferral, sources already in the provenance doc. Referrers updated (`/humanizer`
+×5, CLAUDE.md soft-suggest, rules-catalog, rule-provenance headings).
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one

@@ -61,7 +61,7 @@ The "lightweight design pass" section was added 2026-05-29 from obra/superpowers
 
 The "reuse ladder" section was added 2026-06-18 from [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) (MIT) — its YAGNI "decision ladder" (need it? → stdlib → native → reuse dep → one-liner → build), TAOM-translated to the TaleWorlds/ADR domain (engine API → existing service or adapter → one-line delegation → minimal new code). The rest of ponytail was evaluated and consciously not adopted — already covered harder by `simplicity-criterion.md` / `/deslop` / `/deep-review` / `/improve`; full novel-vs-duplicative map + skip reasons in `docs/reviews/adopt-ponytail-2026-06-18.md`.
 
-## response-style.md
+## response-style.md _(merged into `output-style.md` Part 1, 2026-08-05)_
 
 ### Why this rule exists
 
@@ -71,7 +71,7 @@ LLMs default to two cheap behaviors the user has explicitly rejected: opening wi
 
 User standing instruction, 2026-06-14. Rule 1 generalizes `evidence-over-claims.md`'s anti-performative-agreement stance from review findings to every reply opening, reconciled with `think-before-coding.md`'s anti-over-asking guard (challenge only when load-bearing). Rule 2 makes the implicit certainty calibration in `evidence-over-claims.md` §C explicit and always-visible.
 
-## ai-prose-style.md
+## ai-prose-style.md _(merged into `output-style.md` Part 2, 2026-08-05)_
 
 ### Relationship to other rules
 

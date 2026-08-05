@@ -14,7 +14,7 @@ allowed-tools:
 
 Rewrite a piece of prose so it reads as deliberate human writing instead of generic LLM output. Ported from [blader/humanizer](https://github.com/blader/humanizer) (MIT), whose pattern list derives from Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing). Adapted for TAOM: the em-dash / boldface / inline-header patterns are **carved out** because TAOM uses them deliberately (see the carve-out below).
 
-The everyday, always-on form of this discipline is `.claude/rules/ai-prose-style.md` (a short always-load rule that keeps the worst tells out of new prose as you write it). This skill is the **deep-clean tool** — invoke it to pass an already-written artifact through the full pattern list.
+The everyday, always-on form of this discipline is `.claude/rules/output-style.md` Part 2 (an always-load rule that keeps the worst tells out of new prose as you write it). This skill is the **deep-clean tool** — invoke it to pass an already-written artifact through the full pattern list.
 
 ## Core insight
 
@@ -32,7 +32,7 @@ The diagnostic strength is in **clusters**, not isolated instances. One em-dash 
 - The user hands you a block of AI-generated text and asks to humanize it
 - Voice-matching: the user provides a writing sample and wants the rewrite in their voice
 
-For day-to-day writing, you don't need to invoke this — `ai-prose-style.md` already governs new prose. Reach for the skill when you want a thorough, pattern-by-pattern pass over a finished artifact.
+For day-to-day writing, you don't need to invoke this — `output-style.md` Part 2 already governs new prose. Reach for the skill when you want a thorough, pattern-by-pattern pass over a finished artifact.
 
 ## TAOM house-style carve-out (READ FIRST)
 
@@ -136,7 +136,7 @@ These are not AI tells. Leave them alone:
 |---|---------|----------------|
 | 20 | Chatbot artifacts | "I hope this helps! Let me know if…" / offer-to-continue closers → remove |
 | 21 | Cutoff / speculative gap-filling | "While details are limited in available sources…", "maintains a low profile" → find sources or remove |
-| 22 | Sycophantic tone | "Great question! You're absolutely right!" → respond directly (see `response-style.md` Rule 1) |
+| 22 | Sycophantic tone | "Great question! You're absolutely right!" → respond directly (see `output-style.md` Part 1 Rule 1) |
 
 ### Filler and hedging
 
@@ -148,10 +148,9 @@ These are not AI tells. Leave them alone:
 
 ## Relationship to other rules
 
-- `.claude/rules/ai-prose-style.md` — the always-load companion: the high-value subset of this list applied automatically to new prose. This skill is the on-demand deep-clean.
-- `.claude/rules/response-style.md` — owns **reply openings + confidence tags + the anti-sycophancy reflex** (pattern #22). Don't duplicate that here; it governs chat replies, this governs produced artifacts.
+- `.claude/rules/output-style.md` — the always-load companion (merged 2026-08-05 from `response-style.md` + `ai-prose-style.md`): Part 1 owns **reply openings + confidence tags + the anti-sycophancy reflex** (pattern #22); Part 2 is the high-value subset of this list applied automatically to new prose. This skill is the on-demand deep-clean.
 - `.claude/rules/evidence-over-claims.md` §C — never invent the "facts" you write into a humanized doc.
 
 ## Source
 
-Ported from [blader/humanizer](https://github.com/blader/humanizer) (MIT license), version 2.8.0, whose 33-pattern catalogue is drawn from Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup). TAOM adaptations: dropped upstream `version:`/`compatibility:`/`license:` frontmatter (not Claude Code fields); carved out em-dashes (#14), boldface (#15), and inline-headers (#16) as deliberate TAOM conventions; removed the "zero em-dashes" hard constraint from the audit pass; pointed sycophancy (#22) at `response-style.md` to avoid duplication.
+Ported from [blader/humanizer](https://github.com/blader/humanizer) (MIT license), version 2.8.0, whose 33-pattern catalogue is drawn from Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup). TAOM adaptations: dropped upstream `version:`/`compatibility:`/`license:` frontmatter (not Claude Code fields); carved out em-dashes (#14), boldface (#15), and inline-headers (#16) as deliberate TAOM conventions; removed the "zero em-dashes" hard constraint from the audit pass; pointed sycophancy (#22) at `output-style.md` Part 1 to avoid duplication.
