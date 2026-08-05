@@ -157,3 +157,16 @@ Neither tool checks shield *attributes*: `validate_mesh_refs.py` owns `body_name
 `shield_body_name` existence only, and `validate_all_troop_refs.py` skips shields by design (its
 `ARMOR_PREFIX_RE` matches `sk_*`/`ar_*` only, never `wm_*`/`sm_*`). The usage↔offhand-bone invariant
 above has no automated check — it was verified by ad-hoc parse for this audit.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/mesh-ref-validation.md](../features/mesh-ref-validation.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/armory-guide.md](./armory-guide.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
+
+<!-- backlinks-end -->

@@ -191,7 +191,6 @@ The existing "a test must be able to fail" entry bans vacuous *assertions* synta
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
-
 ### A diagnostic that cries wolf is worse than no diagnostic — prove the rule it asserts
 
 Before shipping a check that tells players something is broken, prove its rule holds on a KNOWN-GOOD

@@ -234,3 +234,15 @@ ever fielded — not a concern at any realistic party size.
 
 - **Issue:** #376 — Battlefield Promotions (Field Commission native rewrite)
 - **Status:** Open (code complete + wired; in-game smoke and `/localize` for the 13 strings pending)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

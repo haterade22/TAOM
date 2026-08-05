@@ -82,3 +82,13 @@ User standing instruction, 2026-06-14. Rule 1 generalizes `evidence-over-claims.
 ### Source
 
 Imported from [blader/humanizer](https://github.com/blader/humanizer) (MIT), whose patterns derive from Wikipedia's "Signs of AI writing". This rule is the high-value, TAOM-carve-out subset applied always-on; the skill is the full reference.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

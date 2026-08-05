@@ -166,3 +166,13 @@ The Gondor item XML lives in the **game install** (`…\Modules\LOTRLOME_Armory\
 is in **no git repository**. Nothing in this audit modified it. Backups there must not use a
 `.xml` extension — the loader globs `*.xml` and a `foo_backup.xml` becomes a silent duplicate-id
 shadow.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/mesh-ref-validation.md](../features/mesh-ref-validation.md)
+
+<!-- backlinks-end -->

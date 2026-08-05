@@ -244,5 +244,6 @@ constants as knobs, shipping base 25000. See
 - [docs/features/settlement-economy.md](../../features/settlement-economy.md)
 - [docs/features/settlement-food.md](../../features/settlement-food.md)
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 
 <!-- backlinks-end -->

@@ -128,3 +128,15 @@ Worth doing before the next culture weapon pass.
 - Audit deltas: swing-only heads missing `excluded=thrust` **20 → 0**; exclusion-vs-damage contradictions **1 → 0**; effective (piece × description) pairs **31 → 51**; invalid usage-set names **0 → 0**.
 - Save compatibility: crafted items recompose from their piece list every load (`ItemObject.cs:469` → `Crafting.CreatePreCraftedWeaponOnDeserialize`, `Crafting.cs:1066`); ids unchanged, so existing saves pick this up with no migration.
 - **Owed:** in-game smoke — craft or spawn a Gundabad/Mordor/Dol Guldur mace and confirm the thrust attack is gone and the item card shows swing only. GitHub issue still to file.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/item-usage-features.md](../reference/item-usage-features.md)
+- [docs/reviews/lessons/build-tooling-workflow.md](lessons/build-tooling-workflow.md)
+- [docs/reviews/lessons/xslt-moduledata.md](lessons/xslt-moduledata.md)
+
+<!-- backlinks-end -->

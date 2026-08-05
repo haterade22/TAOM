@@ -113,3 +113,13 @@ so a future re-sync audit doesn't silently undo them.
 - **Follow-up candidates:** the male-elf defects above; a `skins.xml` asset-reference validator;
   re-evaluating `TableauSafeRaceNames` in `Main/Features/HeroRace/BasicTableauRaceGuard.cs` now that
   female elves sit on vanilla morph-bearing heads.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/lotrlome-armory-snapshot/README.md](../reference/lotrlome-armory-snapshot/README.md)
+
+<!-- backlinks-end -->

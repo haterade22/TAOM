@@ -203,3 +203,15 @@ mercenary path.
 | Date | Change |
 |------|--------|
 | 2026-07-26 | Feature created. 21 `_merc` troops, 14 culture blocks repointed off vanilla's Calradian list. Player report: "Hired Pike" in Minas Morgul. |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reviews/lessons/data-content-cultures.md](../reviews/lessons/data-content-cultures.md)
+
+<!-- backlinks-end -->

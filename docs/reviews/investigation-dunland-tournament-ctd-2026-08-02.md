@@ -232,3 +232,13 @@ either.
 - **The reporter's build opens every log with a `[SaveDefiners]` ERROR** naming two *vanilla*
   assemblies and telling the user to disable a mod. Fixed at HEAD by `46ce6436`, which softened it
   to a warning; worth knowing when reading anything they send.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/arena.md](../features/arena.md)
+
+<!-- backlinks-end -->

@@ -438,5 +438,6 @@ practice (only `CoversHeadHook` writes, and only during AgentVisuals init).
 
 - [docs/INDEX.md](../INDEX.md)
 - [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

@@ -306,6 +306,7 @@ A save from before this feature loads cleanly; the player sees renamed hideouts 
 
 ## Referenced by
 
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reviews/rca-bandit-management-2026-05-27.md](../reviews/rca-bandit-management-2026-05-27.md)
 
 <!-- backlinks-end -->

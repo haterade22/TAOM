@@ -143,3 +143,21 @@ with a non-zero startup-gold grant, and confirms race, gold, career and resource
 - [hero-race.md](hero-race.md) — `RacePersistenceService`, whose degenerate-legend guard fixes the
   other half of the race loss
 - [startup-resources.md](startup-resources.md) — the gold grant being re-invoked
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/bannerlord-together-compat.md](./bannerlord-together-compat.md)
+- [docs/features/character-creation.md](./character-creation.md)
+- [docs/features/coop-interop.md](./coop-interop.md)
+- [docs/features/hero-race.md](./hero-race.md)
+- [docs/features/special-resources.md](./special-resources.md)
+- [docs/features/startup-resources.md](./startup-resources.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

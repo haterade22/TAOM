@@ -56,3 +56,13 @@ Each override follows the established TAOM pattern (feature module + service + a
 
 - All new overrides follow the pattern in `.claude/rules/gamemodels.md`
 - Research the `Default*` base class before implementing each override
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/doc-lookup.md](reference/doc-lookup.md)
+
+<!-- backlinks-end -->

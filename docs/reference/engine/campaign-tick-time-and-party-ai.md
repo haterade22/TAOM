@@ -104,6 +104,7 @@ battle the player watches actually loads.
 ## Referenced by
 
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 - [docs/reference/engine/issue-and-quest-system.md](./issue-and-quest-system.md)
 - [docs/reference/engine/settlement-economy-food-prosperity.md](./settlement-economy-food-prosperity.md)
 

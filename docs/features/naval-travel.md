@@ -266,3 +266,13 @@ release the key and click land while at sea — it disembarks on the coast.
 - 2026-06-24 — Fix: caravans showed `ERROR: Text with id str_convoy_party_name doesn't exist!` because the naval-name branch in `CaravanPartyComponent.CacheName` resolves NavalDLC-only strings. Re-provided both convoy ids in `taom_module_strings.xml` mirroring the vanilla caravan text + keys (no patch, free localization). See "Known interactions".
 - 2026-06-26 — **PARKED (disabled).** TAOM_Map's navmesh isn't set up for naval travel (#120), so the feature is disabled at the wiring level: `TaomPartyNavigationModel` + `Patch54`/`Patch57` registrations commented out in `SubModule.cs`, `enabled` defaulted false (JSON/DTO/MCM). Vanilla model/navmesh used regardless of any persisted MCM toggle. All code + 57 tests preserved; re-enable = uncomment the 3 blocks + flip defaults. See the Status banner at the top.
 - 2026-06-25 — In-game iteration #2 (two fixes): (1) **Set-sail key never registered** — `Input.IsKeyDown(LeftAlt)` returns false polled from the model (outside the map input layer, which consumes key routing); switched to `Input.IsKeyDownImmediate` (raw device state), accepting either source. (2) **Native AV CTD** (`0xC0000005` reading `0x4`) on the hourly AI tick — an at-sea party activates the dormant vanilla `AIMoveToNearestLandBehavior`, whose native cross-region land-pathfind dereferences TAOM_Map's missing naval region navmesh (#120). Added `Patch57_NavalAtSeaLandRescueGuard` (Prefix skip while enabled; native AV ≠ Finalizer-catchable, so prevent-the-call like Patch47/48). +2 tests (57 total). Crash report 2026-06-25, #296. Decompile-confirmed root cause; in-game verification of the fix still pending.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

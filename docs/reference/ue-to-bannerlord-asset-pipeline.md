@@ -129,5 +129,6 @@ unification — see the RCA).
 ## Referenced by
 
 - [docs/kitbash/README.md](../kitbash/README.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
 
 <!-- backlinks-end -->

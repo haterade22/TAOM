@@ -100,6 +100,7 @@ layer is where TAOM features live precisely because it's pure managed simulation
 ## Referenced by
 
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 - [docs/reference/engine/settlement-economy-food-prosperity.md](./settlement-economy-food-prosperity.md)
 
 <!-- backlinks-end -->

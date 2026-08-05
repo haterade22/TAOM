@@ -103,5 +103,6 @@ Service: 20 tests (seq/reset semantics, Aggregate/TargetInvocation flattening in
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

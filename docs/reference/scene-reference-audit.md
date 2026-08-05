@@ -63,6 +63,7 @@ Full machine output: [`docs/reviews/scene-name-audit-2026-05-28.txt`](../reviews
 
 - [docs/features/bandit-management.md](../features/bandit-management.md)
 - [docs/reference/bannerlord-engine-and-toolchain.md](./bannerlord-engine-and-toolchain.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
 - [docs/reference/worldmap-battle-scene-grid.md](./worldmap-battle-scene-grid.md)
 
 <!-- backlinks-end -->

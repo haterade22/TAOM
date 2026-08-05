@@ -201,5 +201,6 @@ The `Patch31` Postfix runs on every `SetMovementOrder` call but bails on non-cav
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

@@ -372,6 +372,7 @@ When fanning a feature out to parallel builder agents against shared contracts, 
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 
 <!-- backlinks-end -->

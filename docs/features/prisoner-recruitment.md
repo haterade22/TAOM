@@ -197,5 +197,6 @@ the Mordor prisoner reverts to `-1`.
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

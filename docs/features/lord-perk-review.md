@@ -114,5 +114,6 @@ is actually run (a separate later pass).
 
 - [docs/features/armor-balance.md](./armor-balance.md)
 - [docs/features/nazgul-family.md](./nazgul-family.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

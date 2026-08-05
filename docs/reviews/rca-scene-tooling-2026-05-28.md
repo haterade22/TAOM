@@ -34,3 +34,13 @@ The 5 standard deep-review agents are C#-centric (adapter pattern, TaleWorlds AP
 ## Verdict
 
 Data Flow PASS, Docs PASS, Tooling PASS (post-hardening). Ready for commit. No HIGH findings; the 2 confirmed findings (1 MED, 1 LOW) are fixed.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/lessons/build-tooling-workflow.md](lessons/build-tooling-workflow.md)
+
+<!-- backlinks-end -->

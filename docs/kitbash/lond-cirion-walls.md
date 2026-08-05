@@ -79,3 +79,15 @@ Superseded approaches kept in git history: generated door bridges (rejected for 
 rotation, `6d601808`), sea-anchor + generated ramp sections (deleted per user, recoverable at
 `52b600dc`; the kit's `gd_ramp_large_a1` is a dual-lane switchback to a 20 m platform — wrong
 rise for the 15 m deck).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/kitbash/lond-cirion-buildings.md](./lond-cirion-buildings.md)
+- [docs/kitbash/README.md](./README.md)
+- [docs/reference/ue-to-bannerlord-asset-pipeline.md](../reference/ue-to-bannerlord-asset-pipeline.md)
+
+<!-- backlinks-end -->

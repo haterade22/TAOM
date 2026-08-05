@@ -119,3 +119,13 @@ the same reason.
   the new private `Mission.BuildAgent` target)
 - Live in-game: two tournament loads (648 and 429 agents) with `AgentEquipBegin` / `AgentEquipOk` /
   `AgentBuildDone` balanced 1:1:1 and `from=` printing the real caller chain
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/investigation-dunland-tournament-ctd-2026-08-02.md](./investigation-dunland-tournament-ctd-2026-08-02.md)
+
+<!-- backlinks-end -->

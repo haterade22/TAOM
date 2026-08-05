@@ -181,5 +181,6 @@ If you re-snapshot later (e.g., after a LOTRLOME update we want to track), bump 
 ## Referenced by
 
 - [docs/features/character-creation.md](../../features/character-creation.md)
+- [docs/reference/armory-guide.md](../armory-guide.md)
 
 <!-- backlinks-end -->

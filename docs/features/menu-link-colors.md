@@ -219,3 +219,13 @@ glow and contrast guards.
 - TAOM's `GameMenu.xml` is a 573-line clone of Native's 634-line file — it predates newer vanilla
   brushes, which currently fall through to `DefaultBrush`. Same class as
   `rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

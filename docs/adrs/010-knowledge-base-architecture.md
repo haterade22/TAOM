@@ -162,6 +162,7 @@ A `tools/search_docs.py` (Karpathy's "naive search engine") is **deferred indefi
 - [docs/features/doc-graph.md](../features/doc-graph.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/raw/README.md](../raw/README.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 - [docs/research/README.md](../research/README.md)
 - [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)

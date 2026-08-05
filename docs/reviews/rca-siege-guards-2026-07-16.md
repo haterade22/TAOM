@@ -61,3 +61,13 @@ This generalizes the existing deep-review Agent 5 "MCM toggle coverage / master-
 - #5 — **refuted**.
 - Verification: `dotnet test TAOM.Tests` → **4220 passed, 0 failed, 2 skipped**.
 - Owed: GitHub issue (Agent 4, confirmed genuine gap), and the in-game siege smoke test once Beau supplies the Event Log offset.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/rca-banner-bearers-siege-ctd-2026-07-23.md](./rca-banner-bearers-siege-ctd-2026-07-23.md)
+
+<!-- backlinks-end -->

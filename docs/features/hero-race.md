@@ -213,7 +213,11 @@ Becoming the **ruler of a kingdom** crashed to desktop. Two crash logs (2026-06-
 
 - [docs/features/arena.md](./arena.md)
 - [docs/features/banner-bearers.md](./banner-bearers.md)
+- [docs/features/bannerlord-together-compat.md](./bannerlord-together-compat.md)
+- [docs/features/coop-interop.md](./coop-interop.md)
+- [docs/features/player-possession.md](./player-possession.md)
 - [docs/features/troll-race.md](./troll-race.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

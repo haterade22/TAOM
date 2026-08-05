@@ -55,3 +55,15 @@ The **original** native CTD (not the fix) was missed by the feature's own review
 - #4 LOW — **rejected with reason** (pre-existing, out of scope).
 - Verification: `dotnet test TAOM.Tests` → **4410 passed, 0 failed, 2 skipped**.
 - Owed: **in-game siege smoke at Stranding** (the fix is not yet game-verified — the native precondition is confirmed by decompile, not by a live repro run), then close #349.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/banner-bearers.md](../features/banner-bearers.md)
+- [docs/reviews/rca-banner-bearers-reinforcement-av-2026-07-25.md](./rca-banner-bearers-reinforcement-av-2026-07-25.md)
+- [docs/reviews/rca-siege-guards-2026-07-16.md](./rca-siege-guards-2026-07-16.md)
+
+<!-- backlinks-end -->

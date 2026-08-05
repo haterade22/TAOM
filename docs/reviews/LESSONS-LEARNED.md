@@ -35,6 +35,7 @@ This document **is the index** of the per-category lesson files under `lessons/`
 ## Referenced by
 
 - [docs/features/race-age-system.md](../features/race-age-system.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reviews/lessons/adapters-taleworlds-api.md](lessons/adapters-taleworlds-api.md)
 - [docs/reviews/lessons/animation-skeleton.md](lessons/animation-skeleton.md)
 - [docs/reviews/lessons/build-tooling-workflow.md](lessons/build-tooling-workflow.md)

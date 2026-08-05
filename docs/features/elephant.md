@@ -786,6 +786,7 @@ bump as of 2026-06-12.
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/adod-beasts-architecture-and-taom-port.md](../reference/adod-beasts-architecture-and-taom-port.md)
 - [docs/reference/bannerlord-engine-and-toolchain.md](../reference/bannerlord-engine-and-toolchain.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 - [docs/reviews/rca-spider-troop-2026-06-04.md](../reviews/rca-spider-troop-2026-06-04.md)
 
 <!-- backlinks-end -->

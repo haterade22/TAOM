@@ -251,5 +251,6 @@ implementation [lotr-issues.md](../../features/lotr-issues.md) (shipped 2026-06-
 
 - [docs/features/lotr-issues.md](../../features/lotr-issues.md)
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 
 <!-- backlinks-end -->

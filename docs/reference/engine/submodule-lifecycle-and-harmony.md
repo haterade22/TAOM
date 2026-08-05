@@ -83,6 +83,7 @@ TAOM crosses that boundary only via **MinHook** (NativeSkinFixes byte-pattern ho
 
 - [docs/features/lotr-issues.md](../../features/lotr-issues.md)
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 - [docs/reference/engine/issue-and-quest-system.md](./issue-and-quest-system.md)
 
 <!-- backlinks-end -->

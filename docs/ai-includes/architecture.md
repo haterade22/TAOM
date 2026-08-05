@@ -530,5 +530,6 @@ public class MyAdapter : IMyAdapter
 - [docs/ai-includes/testing-guide.md](./testing-guide.md)
 - [docs/features/alignment-aware-execution.md](../features/alignment-aware-execution.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

@@ -434,5 +434,6 @@ We chose Approach [X] because [specific reasons].
 - [docs/ai-includes/iterative-problem-solving.md](./iterative-problem-solving.md)
 - [docs/ai-includes/research-workflow.md](./research-workflow.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

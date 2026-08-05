@@ -352,3 +352,13 @@ are affected.
 - [`docs/features/bannerlord-together-compat.md`](../features/bannerlord-together-compat.md) — the
   *other* co-op mod; no-decompile policy applies there
 - [`docs/raw/bannerlordcoop/`](../raw/bannerlordcoop/) — raw dimension reports + verifier verdicts
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/coop-interop.md](../features/coop-interop.md)
+
+<!-- backlinks-end -->

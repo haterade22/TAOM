@@ -414,3 +414,13 @@ gap) · a `castle_village` culture-invariant check in `validate_moduledata.py` �
 the `.xml` lord path caught all 18 real cases) · `Patch65`'s statics not reset on
 `OnSubModuleUnloaded` · a repo-wide issue for the unguarded `OnGameInitializationFinished`
 `PatchCategory` batch.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/lord-spawn-guard.md](../features/lord-spawn-guard.md)
+
+<!-- backlinks-end -->

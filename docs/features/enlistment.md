@@ -186,3 +186,15 @@ MainParty; save-load inside the wait menu; TimeAcceleration interplay; the duty
 spawn→hunt→complete loop and its target-party cleanup; equipment visuals per race
 (erebor, goblin, the four orc cultures); promotion/merit/incident popups; and the
 FieldCommission offer flow with enlisted suppression.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

@@ -571,5 +571,6 @@ Example:
 - [docs/ai-includes/tdd-enforcement.md](./tdd-enforcement.md)
 - [docs/ai-includes/testing-guide.md](./testing-guide.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

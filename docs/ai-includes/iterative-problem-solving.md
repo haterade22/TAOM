@@ -396,5 +396,6 @@ This builds institutional knowledge for future debugging sessions.
 - [docs/ai-includes/multi-approach-validation.md](./multi-approach-validation.md)
 - [docs/ai-includes/research-workflow.md](./research-workflow.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

@@ -283,5 +283,6 @@ crash. Keep the previous decompile as `_shipping_build_vX.Y.Z` (the 1.4.5 baseli
 - [docs/features/elephant.md](../features/elephant.md)
 - [docs/features/spider.md](../features/spider.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

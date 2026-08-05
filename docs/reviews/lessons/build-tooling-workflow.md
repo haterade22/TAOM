@@ -390,10 +390,10 @@ documentation.
 ## Referenced by
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/lessons/data-content-cultures.md](./data-content-cultures.md)
 - [docs/reviews/rca-butr-dependency-update-2026-07-16.md](../rca-butr-dependency-update-2026-07-16.md)
 
 <!-- backlinks-end -->
-
 ### A tool that widens its own coverage must report the DEGRADED path, not just the success path
 
 When a validator/audit gains a new data-dependent scope (an extra sweep root, a registry built from

@@ -80,5 +80,6 @@ Don't assume these reached you — read the relevant one when your task touches 
 ## Referenced by
 
 - [docs/ai-includes/agent-teams.md](./agent-teams.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

@@ -251,6 +251,7 @@ References: [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanis
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/adod-beasts-architecture-and-taom-port.md](./adod-beasts-architecture-and-taom-port.md)
 - [docs/reference/engine/agent-spawn-and-render-pipeline.md](engine/agent-spawn-and-render-pipeline.md)
+- [docs/reference/mcp-servers.md](./mcp-servers.md)
 
 <!-- backlinks-end -->
 ## Decompiled-source folder layout (E:\Decompiled_Bannerlord\ category tree)

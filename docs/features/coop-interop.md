@@ -412,3 +412,19 @@ Owed by the 2026-08-03 work specifically, none of it run:
 9. An emissary purchase attempted on a guest: it must decline, and no resources may be deducted.
 10. A server log carrying the one-shot `[SpecRes] Dedicated server —` line, with the remote players
     earning on their own clients instead.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/hero-race.md](./hero-race.md)
+- [docs/features/player-possession.md](./player-possession.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/research/bannerlordcoop-internals.md](../research/bannerlordcoop-internals.md)
+
+<!-- backlinks-end -->

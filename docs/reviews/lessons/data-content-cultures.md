@@ -427,5 +427,6 @@ Migrating or retagging a settlement cluster (culture change, rebellion, map expa
 ## Referenced by
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/lessons/xslt-moduledata.md](./xslt-moduledata.md)
 
 <!-- backlinks-end -->

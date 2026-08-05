@@ -105,3 +105,13 @@ mount-site shape) if caravan animals should match.
 ## Changelog
 
 - 2026-06-24 — Added MCM-configurable party-icon figure scale (default `0.15`, half vanilla `0.30`): `Patch53_PartyIconScale` transpiler rewrites both `0.3f` literals (leader figure + mount) in `MobilePartyVisual.AddCharacterToPartyIcon` to `PartyIconScaleConfig.GetScale()`, reading the new "Map Figure Scale" MCM slider. Issue #297.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

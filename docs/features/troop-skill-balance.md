@@ -150,5 +150,6 @@ Save-compat: troop skills are read from XML at agent spawn, so a rebaseline appl
 
 - [docs/features/armor-balance.md](./armor-balance.md)
 - [docs/features/lord-perk-review.md](./lord-perk-review.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

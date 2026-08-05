@@ -141,6 +141,7 @@ spider's fix lives in the **mesh asset** (tpac), not in C#.
 
 - [docs/features/banner-bearers.md](../../features/banner-bearers.md)
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 - [docs/reference/engine/animation-binding-and-playback.md](./animation-binding-and-playback.md)
 - [docs/reference/engine/monster-model.md](./monster-model.md)
 

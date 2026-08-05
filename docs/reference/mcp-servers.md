@@ -51,3 +51,13 @@ Enabled plugins add their own skills alongside TAOM's and the MCP servers. Where
 | Pre-commit C# review | `/deep-review` (+ `/review-codex`) | `code-review` plugin (`/code-review` — kept for `/code-review ultra` cloud review) |
 | GitHub issues/PRs | `gh` CLI (per CLAUDE.md MCP Usage Guide: GitHub MCP when authenticated) | `github` plugin, `github` MCP server |
 | Redundant-code deletion | `/deslop` | `code-simplifier` plugin (`/simplify`) — disabled 2026-08-05 |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

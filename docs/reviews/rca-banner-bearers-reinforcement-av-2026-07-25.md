@@ -47,3 +47,13 @@ The feature shipped with both reviews clean because: the reinforcement path is e
 - Build green, suite 4426/4428 (2 pre-existing skips), `validate_moduledata` PASS, binding pins resolve against installed v1.4.7.
 - **In-game siege smoke owed:** the crash save belongs to the reporter — reproduce with a comparable siege (Mirkwood-defender garrison with reinforcements flowing, or request the reporter's `UnstoppablePlay` .sav) past a reinforcement wave — expect no CTD, bearers with 1H sidearm + banner; any `[BannerBearers] Patch63 ANOMALY` WARN in `Logs/taom_debug_*.log` confirms the drop mechanism in the wild (either outcome is signal — record it here). Also: field battle both sides; a Mordor battle for the troll gate; feature-off battle for vanilla parity.
 - **Reporter follow-up:** ship the fix in the next release build and confirm the reporter's siege survives the reinforcement phase; close #360 on that confirmation (or on local smoke + anomaly-log evidence).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/banner-bearers.md](../features/banner-bearers.md)
+
+<!-- backlinks-end -->

@@ -128,5 +128,6 @@ Boundary classes (`CastleRecruitmentBehavior`, `CastleNotableMaintainer`, the `P
 ## Referenced by
 
 - [docs/features/culture-conversion.md](./culture-conversion.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

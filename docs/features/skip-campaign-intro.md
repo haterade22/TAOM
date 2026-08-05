@@ -104,3 +104,13 @@ Remove (or comment out) the `Features.SkipCampaignIntro.Hooks.Patch58_SkipCampai
 
 - **Issue:** [#303](https://github.com/haterade22/TAOM/issues/303) — Skip the campaign intro video on new game
 - **Status:** Open
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

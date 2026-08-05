@@ -306,6 +306,7 @@ ends up controlling, resolving it from the character-creation culture and the li
 
 ## Referenced by
 
+- [docs/features/dev-console.md](./dev-console.md)
 - [docs/features/elite-emissary.md](./elite-emissary.md)
 - [docs/INDEX.md](../INDEX.md)
 

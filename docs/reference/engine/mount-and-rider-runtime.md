@@ -93,5 +93,6 @@ actually sitting on the bone* is native — which is why `Mount` only flags inte
 
 - [docs/ai-includes/creature-mount-authoring.md](../../ai-includes/creature-mount-authoring.md)
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 
 <!-- backlinks-end -->

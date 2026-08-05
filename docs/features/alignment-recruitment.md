@@ -114,5 +114,6 @@ The `TaomVolunteerModel` override is a thin boundary (GameModel) and is validate
 ## Referenced by
 
 - [docs/features/prisoner-recruitment.md](./prisoner-recruitment.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

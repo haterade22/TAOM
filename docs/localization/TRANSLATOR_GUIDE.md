@@ -324,5 +324,7 @@ Open an issue on GitHub or reach out on the mod's Discord channel.
 
 - [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/localization-map.md](../reference/localization-map.md)
 
 <!-- backlinks-end -->

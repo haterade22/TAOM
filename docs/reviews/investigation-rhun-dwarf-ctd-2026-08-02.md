@@ -170,3 +170,14 @@ Both are real gaps that let S2 ship; neither is a one-liner, so each wants its o
    `Main/_Module/ModuleData` — it does not sweep `culture=` on **Armory item** files, which is
    where 28 of the 33 dangling refs lived.
 2. `BodyProperty.*` references are not cross-checked at all by any validator.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/chariot.md](../features/chariot.md)
+- [docs/reviews/investigation-dunland-tournament-ctd-2026-08-02.md](./investigation-dunland-tournament-ctd-2026-08-02.md)
+
+<!-- backlinks-end -->

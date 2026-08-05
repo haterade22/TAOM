@@ -372,6 +372,8 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 - [docs/features/special-resources.md](./special-resources.md)
 - [docs/features/war-of-the-ring-momentum.md](./war-of-the-ring-momentum.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->
 ## Changelog

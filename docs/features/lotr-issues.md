@@ -415,6 +415,8 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/engine/issue-and-quest-system.md](../reference/engine/issue-and-quest-system.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

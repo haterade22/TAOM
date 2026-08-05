@@ -137,6 +137,16 @@ overstated after two undocumented restructures); always-load rules 43.5 KB incl.
 move-in; plugins measured for the first time (7, ~259 tok). MCP deferral behind ToolSearch
 re-confirmed empirically this session.
 
+**Net effect (measured):** CLAUDE.md 44,681 → 28,384 B (−36.5%, fourth restructure: 174 → 91 →
+42 → 28 KB); always-load rules' original content 48,794 → 38,871 B (−20%); the every-turn
+CHANGELOG nag muted (~3.5K tok/long session); post-compaction rehydration reads live memory
+instead of a March snapshot; one unmigrated lesson recovered from a dir two audits called empty.
+Three new reference docs (rules-catalog, mcp-servers, rule-provenance), one new always-load rule
+(working-discipline), one merged rule (output-style), two rules deleted. Every move
+grep-verified against its destination before the source was deleted (Track C4/C5); `--fail-on-drift`
+rc=0 and dead-links held at 11 after every commit. Caps stay 46K/44K by user decision — regrowth
+is watched, not gated, below 44 KB.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one

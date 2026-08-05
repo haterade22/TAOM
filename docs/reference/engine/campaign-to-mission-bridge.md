@@ -111,5 +111,6 @@ the single point where the all-managed campaign layer (Phase 16) hands off to th
 ## Referenced by
 
 - [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/doc-lookup.md](../doc-lookup.md)
 
 <!-- backlinks-end -->

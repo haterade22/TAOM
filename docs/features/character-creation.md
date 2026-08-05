@@ -433,7 +433,9 @@ The Postfix's scope is deliberately limited to the age-30 code path. Vanilla ref
 
 ## Referenced by
 
+- [docs/features/player-possession.md](./player-possession.md)
 - [docs/features/race-age-system.md](./race-age-system.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/armory-guide.md](../reference/armory-guide.md)
 
 <!-- backlinks-end -->

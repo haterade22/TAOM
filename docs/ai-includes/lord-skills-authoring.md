@@ -549,5 +549,6 @@ GitHub issues: #228-#245 (one per culture).
 - [docs/features/lord-perk-review.md](../features/lord-perk-review.md)
 - [docs/features/lord-skills.md](../features/lord-skills.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

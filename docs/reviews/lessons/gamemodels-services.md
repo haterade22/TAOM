@@ -196,7 +196,6 @@ A memo keyed on a service method's *input* is only correct if that input determi
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
-
 ### Gate the rule, not the call site
 
 When gating a behaviour on an environment flag (co-op presence, feature toggle), grep every caller

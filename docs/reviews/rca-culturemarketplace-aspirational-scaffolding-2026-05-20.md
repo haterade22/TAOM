@@ -334,6 +334,7 @@ D1, D2 share a shape: the previous review-and-ship cycles (3 of them) didn't not
 
 ## Referenced by
 
+- [docs/reviews/audit-gondor-armory-2026-08-04.md](./audit-gondor-armory-2026-08-04.md)
 - [docs/reviews/rca-crash-report-2026-05-25.md](./rca-crash-report-2026-05-25.md)
 
 <!-- backlinks-end -->

@@ -243,3 +243,20 @@ or a debug console command that calls `Clan.CreateClan` without `SetInitialHomeS
 `<game>/Modules/TAOM_Map/ModuleData/settlements.xml`. The repo's
 `Main/_Module/ModuleData/settlements.xml` is a stale shadow — editing it changes nothing
 (CLAUDE.md Traps).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/culture-conversion.md](./culture-conversion.md)
+- [docs/features/moduledata-validation.md](./moduledata-validation.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reviews/lessons/data-content-cultures.md](../reviews/lessons/data-content-cultures.md)
+- [docs/reviews/lessons/harmony-il.md](../reviews/lessons/harmony-il.md)
+- [docs/reviews/rca-landless-culture-spawn-2026-08-04.md](../reviews/rca-landless-culture-spawn-2026-08-04.md)
+
+<!-- backlinks-end -->

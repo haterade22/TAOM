@@ -149,3 +149,13 @@ preview colour** — and if a render looks wrong, check the material fallback be
   would need per-corner rotation plus an origin anchor — 4.3× the tris for a blockout.
 * The parts catalog covers 15 of the 24 mesh families. `gondor_ground_straight_a` (floors) had to be
   added to the assembler directly; re-running the catalog pass with the other nine would close it.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/kitbash/README.md](./README.md)
+
+<!-- backlinks-end -->

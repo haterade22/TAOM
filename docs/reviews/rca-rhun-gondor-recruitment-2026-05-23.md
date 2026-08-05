@@ -57,3 +57,14 @@ I will NOT codify the missing feature doc (F3) as a feedback memory — it's doc
 ## Verdict
 
 READY FOR COMMIT after applying the one-line fix above. Feature doc + logger improvement deferred as follow-ups.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/volunteer-recruitment.md](../features/volunteer-recruitment.md)
+- [docs/reviews/rca-gondor-recruitment-2026-07-27.md](./rca-gondor-recruitment-2026-07-27.md)
+
+<!-- backlinks-end -->

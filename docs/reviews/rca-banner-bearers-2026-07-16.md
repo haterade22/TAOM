@@ -150,5 +150,6 @@ The disagreement rate was zero: every Codex finding verified true on first read.
 ## Referenced by
 
 - [docs/features/banner-bearers.md](../features/banner-bearers.md)
+- [docs/reviews/rca-banner-bearers-reinforcement-av-2026-07-25.md](./rca-banner-bearers-reinforcement-av-2026-07-25.md)
 
 <!-- backlinks-end -->

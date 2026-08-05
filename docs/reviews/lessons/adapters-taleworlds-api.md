@@ -185,9 +185,9 @@ attribute is authoritative for one kind of character and inert for the other.
 ## Referenced by
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/rca-banner-bearers-siege-ctd-2026-07-23.md](../rca-banner-bearers-siege-ctd-2026-07-23.md)
 
 <!-- backlinks-end -->
-
 ### Prove a count/consume adapter pair ranges over the same set — decompile BOTH members
 
 **Why missed:** Enlistment's food-delivery duty (2026-08-05) paired `CountPlayerFood()` →

@@ -269,6 +269,7 @@ LLM-compiled wiki nodes derived from `docs/raw/`. See [research/README.md](resea
 
 - [docs/adrs/010-knowledge-base-architecture.md](adrs/010-knowledge-base-architecture.md)
 - [docs/features/doc-graph.md](features/doc-graph.md)
+- [docs/reference/doc-lookup.md](reference/doc-lookup.md)
 - [docs/reviews/adopt-graphify-2026-06-08.md](reviews/adopt-graphify-2026-06-08.md)
 
 <!-- backlinks-end -->

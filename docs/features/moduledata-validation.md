@@ -323,3 +323,16 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
   sweep could skip silently and print PASS; `missing_ref_roots` + `suspect_registries` close that
   (`docs/reviews/rca-validator-silent-scope-2026-08-03.md`).
 - 2026-05-30 — Initial schema-driven ModuleData cross-reference validator: unified `taom_schema.py` engine + `validate_moduledata.py` CLI + 3 schemas catching the recurring bug classes (broken item/troop/culture/party-template refs, duplicate ids, missing civilian type, invalid enum); wired in as an auto-loaded scoped rule + a commit-blocking PreToolUse hook. Same dated entry covers the 2026-05-31 follow-up: the `taom_query.py` query API + `taom_mcp_server.py` MCP server (9 tools) and a second deep-review pass. See repo-root `CHANGELOG.md` for full detail.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/engine/formations-and-team-ai.md](../reference/engine/formations-and-team-ai.md)
+- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
+- [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../reviews/rca-tournament-dwarf-dismount-2026-06-09.md)
+
+<!-- backlinks-end -->

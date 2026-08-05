@@ -188,7 +188,6 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
-- [docs/reviews/LESSONS-LEARNED.md](../reviews/LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
 ## Changelog

@@ -373,3 +373,17 @@ only coverage.
   startup discovery audit, hardened + relocated binding tests, `add_special_resources` migrated onto
   the shell. Naming convention, risk tiers and the localization exemption settled. Reviewed by a
   5-agent `/deep-review`; RCA at `docs/reviews/rca-devconsole-phase0-2026-07-31.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/special-resources.md](./special-resources.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md)
+
+<!-- backlinks-end -->

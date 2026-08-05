@@ -162,3 +162,13 @@ roster from turn one, start a new campaign.
 
 - [lord-perk-review.md](lord-perk-review.md) — the lord stats/SkillSet review tooling.
 - `docs/reference/engine/campaign-object-graph.md` — Hero/Clan family relationships.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

@@ -226,3 +226,13 @@ an offer scan. The config is `Reuse.Singleton`, loaded once per process (edits n
 ## GitHub Issue
 
 TBD (create on ship).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

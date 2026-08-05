@@ -222,45 +222,6 @@ The analyzer is read-only and self-verifying: running it against the live tree m
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
-## Cape modifier-inversion pass (2026-07-31)
-
-User report: `Legendary [Gondor] Anorien Infantry Pauldron I` (tier 2, 2,929g) showed Body 20 / Arm 20
-and beat `[Arnor] Noble Elite Pauldrons` (tier 6, 55,634g) at 20/14. Root cause was not the rebalance
-but the curve's blindness to the flat modifier ladder — see "The two-tier invariant" above.
-
-**Curve.** Shoulder widened to `2/5/9/13/19/25` body and `0/3/6/11/17/22` arm; shoulder loot rolls
-capped at `chain`. Three lord rows raised to break exact ties with a `plate` roll (body `leg_armor`
-34→36, arm 32→34, leg 40→42). These lord rows are **constants only** — no live re-stat of
-head/body/arm/leg was run (that would have touched 1,706 of 2,450 items), and the roster source maps
-`lord`→`elite` anyway, so the row is unreachable from it by construction.
-
-**Applied to the live tree.** `--materials-only --all`: 1,143 `modifier_group` + 933 `material_type`
-retags, verified by parse-diff to have moved **zero** armor or weight values. Then the shoulder curve
-via `--tier-source roster` for gondor, rohan, arnor, dale, mordor, dunland, mercenary, mirkwood,
-rivendell, rhun (10 files). Keyword tiering was rejected for this pass — it agrees with the roster map
-on only **71.5%** of shoulders (the documented Dale case).
-
-Result, measured by running the same check over the pre-fix backup tree with the pre-fix constants:
-shoulder inversions **129 → 57**, all-slot **716 → 574**, curve-invariant violations **11 → 0**.
-`validate_all_troop_refs` + `validate_moduledata` PASS; no item id changed. The reported pair now reads
-legendary Gondor **17/14** vs plain Arnor **21/18** — Arnor wins both rows.
-
-**Two residual buckets, both deliberately NOT fixed here** (each needs authoring judgment, not a
-mechanical pass):
-
-1. **31 inversions in gundabad, harad, iron_hills, erebor, dol_guldur, isengard** — plain overtake with
-   no modifier involved (Isengard heavy pauldrons at 38 body, Dol Guldur at 35, Erebor at 36/27 versus
-   a ~21 elite target). This is the cross-culture ceiling problem; a curve apply would drop them 12-23
-   points. Owner deferred it to its own PR.
-2. **26 inversions involving unworn items** — no troop wears them, so the roster map has no anchor and
-   roster mode skips them. Keyword tiering is *not* a safe fallback here: it would take
-   `roh_nbl_gorg_tst_6` from 25/25 to 3/2, `easterling02_v1_cape` from 20/15 to 5/3, and tier
-   `cts_rohan_shoulder_captain1` as **lord** (14/14 → 23/21). These need per-item intent.
-
-**Save/economy note:** rolled `ItemModifier`s persist in saves by `StringId`, so an already-owned
-legendary cape keeps its old `plate` roll until re-looted (cosmetic-persistent, not corrupting).
-`Value` is recomputed at deserialize, so cape prices move on the next launch.
-
 ## Referenced by
 
 - [docs/features/starting-equipment-tuning.md](./starting-equipment-tuning.md)

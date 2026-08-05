@@ -795,5 +795,6 @@ Before implementing ANY TaleWorlds-related code, verify:
 - [docs/ai-includes/new-culture-authoring.md](./new-culture-authoring.md)
 - [docs/ai-includes/research-workflow.md](./research-workflow.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 
 <!-- backlinks-end -->

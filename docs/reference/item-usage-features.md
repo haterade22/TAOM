@@ -132,3 +132,17 @@ Through the generator path, the attribute passes through from the manifest: put
 - [weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md) — the manual authoring walkthrough
 - [weapon-xml-pipeline.md](../features/weapon-xml-pipeline.md) — the generator
 - [rca-crafting-usage-features-2026-07-26.md](../reviews/rca-crafting-usage-features-2026-07-26.md) — how the 20 mace heads shipped unexcluded
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
+- [docs/features/weapon-xml-pipeline.md](../features/weapon-xml-pipeline.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
+- [docs/reviews/rca-crafting-usage-features-2026-07-26.md](../reviews/rca-crafting-usage-features-2026-07-26.md)
+
+<!-- backlinks-end -->

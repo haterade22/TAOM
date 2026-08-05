@@ -100,3 +100,14 @@ labelled. If it ever produces another false positive, delete it rather than deep
 
 Same feature, same day, different root cause: `rca-coop-veto-surface-2026-08-01.md` (gating the call
 site rather than the rule; entry points reachable behind a gated exit).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/bannerlord-together-compat.md](../features/bannerlord-together-compat.md)
+- [docs/features/coop-interop.md](../features/coop-interop.md)
+
+<!-- backlinks-end -->
