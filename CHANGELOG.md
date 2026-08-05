@@ -34,6 +34,14 @@ missing). Eager-budget-neutral, but CLAUDE.md stays an index. Three referrers up
 (evidence-over-claims, autonomous-loop-prompt, karpathy-autoresearch notes); the heading survives
 in CLAUDE.md as a pointer.
 
+**MCP Servers → `docs/reference/mcp-servers.md`.** The server table, full research lookup-order,
+dual-build layout, and configuration moved out; the `imagine` server — enabled in `.mcp.json`
+since it was added but absent from the CLAUDE.md table — is now documented. CLAUDE.md keeps the
+Usage Guide (which tool for which task) + a 4-line lookup-order summary, the one eager copy of
+what was a 4-way duplicate (research-guide, engine-and-toolchain, taom-src SKILL, operating
+manual). The new doc also carries a plugin-overlap routing table (deep-review vs code-review,
+deslop vs the now-disabled code-simplifier).
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
