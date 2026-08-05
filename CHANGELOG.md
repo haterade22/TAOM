@@ -51,6 +51,12 @@ header) and the substance-painter project key lose the dead pre-move repo path;
 `native-skin-fixes.md` no longer claims "TAOM is on v1.4.5"; AGENTS.md's Harmony table gets the
 header row whose absence broke its markdown rendering.
 
+**Doc graph reconnected.** The two orphaned-but-live feature docs (blow-diagnostics,
+clan-heraldry) plus `SAVE-REPAIR-GUIDE.md`, `scene-entities.md`, and the `docs/archive/` README
+now have INDEX.md rows (orphan_features 2 → 0); the erebor kitbash `runes.md` joins its README's
+coverage table; the completed `SESSION-S5a-S5b-PROMPT.md` migration prompt moved to
+`docs/archive/` with its artifact-class siblings.
+
 ### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
 
 Second-round diet of the eager context load (round 1: 174 KB → 91 KB → 42 KB, July 2026).

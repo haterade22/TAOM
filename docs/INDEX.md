@@ -101,6 +101,7 @@
 - [kingdom-creation](features/kingdom-creation.md) — TAOM kingdom + clan + lord authoring
 - [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick
 - [faction-map](features/faction-map.md) — campaign map faction rendering
+- [clan-heraldry](features/clan-heraldry.md) — per-clan banner colours/sigils (192 clans, 176 party templates) via `clan_heraldry/*.json` + `tools/generate_clan_heraldry.py`
 - [minor-factions](features/minor-factions.md) — minor factions catalog + rules
 - [alignment-aware-execution](features/alignment-aware-execution.md) — race/alignment-aware execution penalties
 - [execution](features/execution.md) — TaomExecutionRelationModel + Patch14
@@ -172,6 +173,9 @@ TAOM ships no multiplayer of its own; these cover behaving correctly when a thir
 - [crash-report](features/crash-report.md) — crash report enrichment
 - [mission-diagnostic](features/mission-diagnostic.md) — first-tick MissionBehavior dump + action-set capture for mod-conflict diagnostics
 - [battle-load-diagnostics](features/battle-load-diagnostics.md) — phase-stamped battle-load lifecycle log + stall watchdog + next-session stall marker/notice; offline `tools/triage_battle_load.py` gives an equipment-vs-code verdict (#262)
+- [blow-diagnostics](features/blow-diagnostics.md) — opt-in `[Blow]` combat-blow logging (Patch63_BlowDiagnostics) for damage/knockback triage
+- [SAVE-REPAIR-GUIDE.md](SAVE-REPAIR-GUIDE.md) — save-file repair walkthrough (pairs with the save-repair tools in `tools/README.md`)
+- [scene-entities.md](scene-entities.md) — scene game-entity inventory reference (regenerate via `tools/Generate-SceneEntitiesDoc.ps1`)
 - [mesh-ref-validation](features/mesh-ref-validation.md) — `tools/validate_mesh_refs.py`: does every `mesh=` / `body_name=` in item + crafting-piece XML resolve to a packaged asset? A missing `bo_` body is a **confirmed** infinite-mission-load hang (#352) — run it after any weapon/armor authoring. A clean PASS only means "clean within `--items` scope"
 - [doc-graph](features/doc-graph.md) — query + audit *this* knowledge graph (`/doc-graph` skill + `tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). [ADR-010](adrs/010-knowledge-base-architecture.md) Phase 5; adopted from [graphify](reviews/adopt-graphify-2026-06-08.md)
 
@@ -193,6 +197,7 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 - Per-feature RCAs live as `reviews/rca-<feature>-<date>.md` — read these BEFORE re-implementing related behaviour. Filename convention is grep-friendly.
 - Auto-detected reviews: `reviews/codex-adversarial-<feature>-<date>.md` (prompt + output pairs).
 - Balance/data audits (machine-generated, distinct from RCAs): `reviews/<topic>-audit-<date>.md`. Current: [reviews/cc-bonus-audit-2026-05-30.md](reviews/cc-bonus-audit-2026-05-30.md) — per-culture character-creation skill/attribute/focus totals vs vanilla budget; regenerate with `tools/audit_cc_bonuses.py`.
+- Historical prompt/review archives (pre-convention material, kept verbatim): [archive/README.md](archive/README.md).
 - External adoption reviews (one outside source folded into TAOM, distinct from RCAs): `reviews/adopt-<source>-<date>.md`. Current: [adopt-graphify](reviews/adopt-graphify-2026-06-08.md), [adopt-ponytail](reviews/adopt-ponytail-2026-06-18.md), [adopt-skillspector](reviews/adopt-skillspector-2026-06-22.md) (NVIDIA SkillSpector → 6 deterministic skill-threat categories + Python-AST + clean-room YARA in `tools/audit_claude_config.py`, plus the `--external` foreign-skill vet). Executable procedure: [ai-includes/external-repo-adoption.md](ai-includes/external-repo-adoption.md).
 
 ## Migration history (v1.2 → v1.3 → v1.4.5)

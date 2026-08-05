@@ -12,6 +12,7 @@ Reference for the erebor dwarven kit under
 | [materials.md](materials.md) | `m_dw_*` materials — what textures each one binds and what it's used for |
 | [meshes.md](meshes.md) | `sm_dw_*` meshes — every piece with shape, intended use, and family membership |
 | [design-patterns.md](design-patterns.md) | Composition rules, confirmed calibration data, and ready-to-use building templates |
+| [runes.md](runes.md) | Dwarven rune pieces — carved wall/trim meshes and their texture pipeline |
 
 ## Quick-reference: the A1 / B1 / C1 system
 
