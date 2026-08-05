@@ -1,9 +1,10 @@
 # Enlistment — serve as a soldier in a lord's party
 
-> **STATUS: IN PROGRESS** (#375, core checkpoint 1). This doc covers the shipped core
-> (state machine, attachment, discharge, menus, battle interception, Patch66). Content
-> systems (ranks/wages/duties/merit), equipment issuance, dialogs, and FieldCommission
-> (#376) land in later checkpoints — see the approved plan in the issue.
+> **STATUS: FEATURE-COMPLETE, AWAITING IN-GAME VERIFICATION** (#375, checkpoints 1-2:
+> `25a3340c` + `b1852a7a`). Core, dialogs, content systems, duties and equipment are all
+> built and unit-tested (394 tests). Nothing has run in a live game yet — the in-game
+> checklist at the bottom is the remaining gate, along with `/localize` for the new
+> player-facing strings.
 
 **Issue:** #375 · **Donor (reference only, never installed):**
 `C:\Users\mikew\Downloads\TAOM-Enlistment-Promoted-Source\` (Realms Forgotten RF_Enlistment)
@@ -94,14 +95,68 @@ spatial search = `MobileParty.StartFindingLocatablesAroundPosition(Vec2, float)`
 `FindNextLocatable` iterator; `EncounterGameMenuBehavior` pushes 43 distinct menu ids
 (redirect-list seed). Compatibility review: 37 verified / 0 incompatible / 0 unverified.
 
+## Content systems (checkpoint 2)
+
+**The service day.** `EnlistmentDailyService` counts the day, pays the wage, grants daily
+service XP + the assignment's signature skill + Leadership + one context skill
+(priority-exclusive: siege > naval > blockade > army — the donor stacked all four), then
+evaluates promotion. Config: `ModuleData/enlistment/enlistment_config.json`.
+
+**Wages.** `WagePolicy` is pure: the commander pays from his own gold above a solvency
+floor; the shortfall defers into arrears capped at 60. `ServiceRewardService.PayDailyWage`
+spends that plan through exactly ONE channel (commander transfer or mint, per config) and
+derives the new debt by conservation — owed minus delivered — rather than patching the
+plan's fields. An honorable discharge settles remaining arrears; desertion forfeits them.
+
+**Ranks + promotion.** Four ranks, thresholds in JSON (days / service XP / Leadership /
+duty successes / trust), evaluated at exactly two points — the daily tick and the battle
+payout — both through `IPromotionService`. The donor evaluated at twelve sites including
+mid-mission per kill.
+
+**Battle merit.** `EnlistmentMeritMissionBehavior` (`: MissionLogic`, registered
+unconditionally, self-filtering) samples cohesion, commander proximity, engagement and
+survival every 2s and counts your kills, submitting ONE sample at mission end.
+`EnlistmentBattlePayoutService` scores it 0-100, resolves a reward band, and pays
+everything at once — base win/loss XP, capped kill XP, band rewards — then re-evaluates
+promotion. `MeritScoringConfig.RoleFitBonus` is currently inert (the sampler always
+reports `RoleFit = false`); the role-fit heuristic is a deliberate later refinement.
+
+**Assignments.** Infantry / Archer / Cavalry / Support, changed by asking the commander;
+costs a 7-day cooldown and a point of trust (the donor allowed free swaps in any
+conversation, which made the choice weightless).
+
+**Duties.** 13 field duties collapse onto 5 mechanics — `HuntSpawnedParty` (4 flavors),
+`VisitSettlement` (5), `DeliverFood`, `CollectFood`, `WaitHours` — with the flavor,
+targets, deadlines, gates and rewards as data rows in `enlistment_duties.json`, plus 11
+interactive skill-check duties and 3 camp incidents through one presenter. Rows failing
+validation are SKIPPED with a warning (never silently defaulted). `IArmyRhythmSnapshotService`
+caches the world read once per game hour.
+
+**Equipment.** `enlist_{runtimeCultureId}_{rank}` rosters in
+`equipmentsets/taom_enlistment_equipment.xml` (68: 16 cultures × 4 ranks + 4
+culture-neutral defaults), seeded from each culture's own troop tree by
+`tools/generate_enlistment_rosters.py`, so kit is race-correct by construction. Drawn from
+the quartermaster once per rank into party inventory (not auto-equipped). Fallback chain:
+exact → lower rank → default → nothing-and-warn.
+The issue-ledger is monotonic (covering a rank covers every rank below, so a demotion never
+re-issues) and persists in the content record, so a full game restart cannot re-allow a
+free draw.
+
 ## Testing
 
-158 tests in `TAOM.Tests/Features/Enlistment/` (suite 5030 green): transition-table
+394 tests in `TAOM.Tests/Features/Enlistment/` (full suite 5415 green): transition-table
 matrix, discharge invariants, Entity-State-Matrix load rows, reconciler policy (grace,
 captivity, prisoner-commander-with-live-party), record round-trip incl. NaN/forward-compat,
-menu redirect policy + cap, battle ordering/rollback/loot-guard, binding pins.
+menu redirect policy + cap, battle ordering/rollback/loot-guard, binding pins, config
+semantic validation (one test per rule), wage orchestration (solvency × arrears × channel,
+incl. regression tests for the mint-mode double-payment and shortfall-overcount bugs),
+promotion thresholds at both evaluation points, merit scoring/bands incl. NaN ratios, duty
+gating/rotation/lifecycle per mechanic, equipment resolver fallback + payoff math.
 
-**Owed at ship (in-game gates):** SetNextMenu timing vs EncounterGameMenuBehavior,
-encounter join from parked state, camera handoff, captivity entry/exit mid-service,
-food/wage/morale ticks for the inactive MainParty, save-load inside the wait menu,
-TimeAcceleration interplay.
+**Owed at ship (in-game gates — nothing below has run in a live game):**
+SetNextMenu timing vs EncounterGameMenuBehavior; encounter join from parked state; camera
+handoff; captivity entry/exit mid-service; food/wage/morale ticks for the inactive
+MainParty; save-load inside the wait menu; TimeAcceleration interplay; the duty
+spawn→hunt→complete loop and its target-party cleanup; equipment visuals per race
+(erebor, goblin, the four orc cultures); promotion/merit/incident popups; and the
+FieldCommission offer flow with enlisted suppression.

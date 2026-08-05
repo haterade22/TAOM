@@ -36,7 +36,9 @@ public static class EnlistmentIoC
         container.Register<IEquipmentRosterCatalogAdapter, EquipmentRosterCatalogAdapter>(Reuse.Singleton);
         container.Register<IPartyItemRosterAdapter, PartyItemRosterAdapter>(Reuse.Singleton);
         container.Register<IItemPoolAdapter, ItemPoolAdapter>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
-        container.Register<Equipment.IEquipmentIssueLedger, Equipment.InMemoryEquipmentIssueLedger>(Reuse.Singleton);
+        // Persisted via the content record's SyncData section — the in-memory ledger let a
+        // full game restart re-allow one free kit draw per rank.
+        container.Register<Equipment.IEquipmentIssueLedger, Equipment.PersistedEquipmentIssueLedger>(Reuse.Singleton);
         container.Register<Equipment.IEnlistmentEquipmentService, Equipment.EnlistmentEquipmentService>(Reuse.Singleton);
 
         // Content layer (#375 Phase 3): daily loop, wages, promotion, rhythm snapshot.

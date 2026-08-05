@@ -289,3 +289,23 @@ cannot name one within a minute, look harder rather than concluding there isn't 
 
 **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit 3c222e46;
 feature doc `docs/features/player-possession.md`.
+
+### Test the code that SPENDS a pure function's output, not just the function
+
+**Why missed:** Enlistment's wage system (2026-08-05) split cleanly into a pure `WagePolicy.ComputeDaily`
+(fully unit-tested, correct) and a ~20-line `ServiceRewardService.PayDailyWage` that spent its output.
+All the tests followed the purity boundary; the orchestration had none. Two bugs lived there: it
+inferred the payment channel from `Minted > 0` instead of the config flag that produced it — so in
+mint mode it paid the arrears through BOTH the commander transfer and the mint (player got ~1.67× and
+the lord was drained gold the config said not to touch) — and it patched the plan's fields after a
+partial transfer, overstating the debt by the shortfall. A pure-function test suite can never see
+either one.
+
+**Prevent:** any service that MOVES value (gold, XP, items, troops) gets orchestration tests with
+mocked adapters, even when its decision logic is a separately-tested pure function. Write the test
+matrix over the *channels and failure modes* (which adapter was called, with what, how many times),
+not over the arithmetic the pure function already covers. And prefer deriving state from conservation
+(owed − delivered = new debt) over incrementally patching the fields that feed it — the conservation
+form made both bugs unrepresentable.
+
+**Source:** `docs/reviews/rca-enlistment-content-2026-08-05.md` findings 1-2 (deep-review data-flow agent).
