@@ -10,11 +10,13 @@ Usage:
     python tools/assign_lord_equipment.py --apply      # Apply changes
 """
 
+import os
 import re
 import sys
 from collections import defaultdict
 
-LORDS_XML = r'c:\Users\mikew\source\repos\TAOM\Main\_Module\ModuleData\characters\lords.xml'
+LORDS_XML = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         'Main', '_Module', 'ModuleData', 'characters', 'lords.xml')
 
 # Vanilla prefixes that should be replaced
 VANILLA_PREFIXES = ('emp_', 'stu_', 'ase_', 'vla_', 'bat_', 'khu_')

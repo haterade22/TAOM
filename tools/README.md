@@ -100,7 +100,6 @@ Offline `.sav` triage — stdlib only, no game required. Both understand the v1.
 | Script | Purpose | CLI Flags |
 |--------|---------|-----------|
 | `assign_lord_equipment.py` | Replace vanilla equipment template refs with TAOM culture-specific templates in `lords.xml` | `--dry-run`, `--apply` |
-| `assign_xslt_lord_equipment.py` | Assign LOTR equipment to XSLT-transformed lords in `lords.xslt` | `--dry-run`, `--apply` |
 | `complete_lords_xslt.py` | Make all vanilla lord attributes explicit in `lords.xslt` (no passthrough) | `--dry-run`, `--apply`, `--export-csv` |
 | `fix_lord_cultures_and_mounts.py` | Fix lord cultures + add mounts to battle equipment templates | `--dry-run`, `--apply` |
 | `apply_culture_skills_traits.py` | **Lord SkillSet generator** — source of truth for `taom_lord_skill_sets.xml` (**never hand-edit the XML**; 74 archetypes incl. per-culture balance variants, canonical overrides, `archetype_alias` ×6 cultures). Pre-flight: regen on a clean tree must diff empty before any `--apply` (the 1f7a7a9a drift lesson); per-culture `--culture X --apply` re-resolution is UNSAFE on drifted cultures — use `repoint_evil_lord_skillsets.py` instead. See `docs/ai-includes/lord-skills-authoring.md`. | `--skillsets-only`, `--culture <key>`, `--all-cultures`, `--apply` |

@@ -8,7 +8,8 @@ import os
 
 random.seed(42)  # Reproducible output
 
-BASE_DIR = r"c:\Users\mikew\source\repos\TAOM\Main\_Module\ModuleData"
+BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "Main", "_Module", "ModuleData")
 
 # Kingdom configurations
 KINGDOMS = {

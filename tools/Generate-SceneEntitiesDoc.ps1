@@ -1,6 +1,6 @@
 param(
     [string]$SceneFile = 'E:\LOTRAOMAssets\scene.xscene',
-    [string]$OutputFile = 'c:\Users\mikew\source\repos\TAOM\docs\scene-entities.md'
+    [string]$OutputFile = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs\scene-entities.md')
 )
 
 Write-Host "Reading scene file: $SceneFile"

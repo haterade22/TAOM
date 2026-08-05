@@ -13,12 +13,14 @@ Usage:
     python tools/assign_xslt_lord_equipment.py --apply      # Apply changes
 """
 
+import os
 import re
 import sys
 from collections import defaultdict
 
-LORDS_XSLT = r'c:\Users\mikew\source\repos\TAOM\Main\_Module\ModuleData\lords.xslt'
-SPLORDS_XSLT = r'c:\Users\mikew\source\repos\TAOM\Main\_Module\ModuleData\splords.xslt'
+_REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LORDS_XSLT = os.path.join(_REPO, 'Main', '_Module', 'ModuleData', 'lords.xslt')
+SPLORDS_XSLT = os.path.join(_REPO, 'Main', '_Module', 'ModuleData', 'splords.xslt')
 
 # Faction -> (template_family, has_default_in_civ_name)
 FACTION_EQUIPMENT = {

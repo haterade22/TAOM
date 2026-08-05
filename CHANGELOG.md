@@ -71,6 +71,17 @@ archival call, not a dedup). The borderline `banner_kingdom_of_gondor.png` went 
 reference is a string assertion in a mocked test that opens no file, and the id is unreachable
 at runtime.
 
+**tools/ triage.** Five scripts hardcoded the dead pre-move repo path and could not run: four
+fixed to script-relative paths (verified resolving — `assign_lord_equipment`,
+`generate_batch2_wanderers`, `extract_wanderers`, `Generate-SceneEntitiesDoc.ps1`);
+`assign_xslt_lord_equipment.py` turned out dead beyond a path fix — its `splords.xslt` target
+never existed in this repo and its sections are hardcoded line ranges — so it retired to
+`tools/oneoff/` and left the README. Nine finished one-offs total moved to `tools/oneoff/` per
+the convention (equipment-type 1.4.3 migration pair, roster-suggestion + culture-coverage pair,
+bandit-hideout pair, Rhun settlement owners, career-name singularizer, the xslt equipment tool) —
+each verified: zero README mentions (except the retired one), last touched 2.5+ months ago,
+referenced only by history/archive docs.
+
 ### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
 
 Second-round diet of the eager context load (round 1: 174 KB → 91 KB → 42 KB, July 2026).

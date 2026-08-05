@@ -15,7 +15,8 @@ import copy
 from collections import defaultdict
 
 LOTRAOM_BASE = r"E:\LOTRAOMAssets\LOTRAOM_Jan_1_Patreon\Modules\LOTRAOM\ModuleData"
-TAOM_BASE = r"c:\Users\mikew\source\repos\TAOM\Main\_Module\ModuleData"
+TAOM_BASE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "Main", "_Module", "ModuleData")
 
 # LOTRAOM source files
 LOTRAOM_SPECIAL = os.path.join(LOTRAOM_BASE, "spspecialcharacters.xml")
