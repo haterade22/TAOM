@@ -4,6 +4,44 @@
 
 ## 2026-08-05
 
+### feat(diagnostics): [MemSample] memory telemetry + minidump triage — a tester's OOM CTD now self-identifies from the log (#385, #386, #387)
+
+A tester CTD (16 GB machine, mid-battle) took a 1.3 GB dump parse to attribute: `0xC0000005`
+near-null read at `TaleWorlds.Native.dll+0x58232c` — the facegen static-morph path on an engine
+worker thread (null morph-index array), with the process at **20.3 GB commit** (15.65 GB private;
+managed heap only 654 MB) and system commit at 23 GB of a 31.6 GB limit. Filed as #385; not the
+#360 signature (the tester's v2.0.15 already contains Patch63). Three shipped responses:
+
+- **`[MemSample]` telemetry (#386):** `MemoryPressureSampler` writes a durable INFO line every 30 s
+  (MCM 10–120 s) — `privMB/wsMB/heapMB/sysCommitUsedMB/sysCommitLimitMB/availPhysMB/memLoad` — plus
+  a session-capacity one-shot and a latched `WARN LOW COMMIT HEADROOM` (< 2 GB or < 10 % of limit,
+  512 MB re-arm hysteresis). Reader is direct P/Invoke (`GlobalMemoryStatusEx` +
+  `GetProcessMemoryInfo`): measured 84 µs vs 7,711 µs for net472 `Process.PrivateMemorySize64`.
+  Gates on its OWN MCM toggle, not the master (phase logging off must not kill crash forensics).
+  Phase lines `EncounterStart/MissionInitialize/BattlePlayable/ExitBegin/MapResumed` gained
+  ` privMB= wsMB=` tokens (`GcStats()`→`MemStats()`). 26 new C# tests; full suite 5,546 green.
+- **Triage tool:** `tools/triage_battle_load.py` parses `[MemSample]`, renders a Memory-trend
+  section and a `MEMORY PRESSURE` note ("the phase verdict above may be a symptom, not the
+  cause"); verdict lattice/exit codes unchanged; old logs byte-identical; `--mem-threshold-mb`;
+  `--json` gains a `memory` block. Twin literal tests pin the C#↔Python line contract. 23 new tests.
+- **`native_crash_triage.py --dump` (#387):** decodes TW CrashDumper minidumps directly from a
+  player bundle — exception, faulting module+RVA, commit split (image/private/mapped), and a
+  return-address stack scan (with the observed per-thread `Rva=0` MemoryList fallback) — then
+  chains into the existing RVA disassembly pipeline. Smoke-verified against the #385 dump
+  (reproduces module+RVA, thread, 20.33 GB split, and both confirmed stack frames). 14 new tests;
+  `/native-crash-triage` skill documents the no-Event-Log path.
+
+Audit side: `docs/investigations/native-commit-audit-2026-08.md` written (Phase 0 ledger) — static
+inventory puts ~2.7–4.5 GB of the private commit on statically-verified levers (41 always-loaded
+4096² banner-icon atlases from 369 icons authored at 1024²; FactionMap textures loaded and never
+freed; RuntimeDataCache readability is the decisive open question, runbook Phases 1–2).
+
+Deep review (6 agents): 2 HIGH fixed same-session — the C#↔Python percent-threshold mirrors
+disagreed in the ~1 MB band below the 10% line (integer-floor vs exact comparison; boundary pins
+added both sides), and truncated dumps crashed `--dump` with a traceback (`struct.error` is not a
+`ValueError`; broadened catches + 8 negative/degradation tests). Post-fix: C# 5,550 / Python 361
+green. RCA: `docs/reviews/rca-memsample-telemetry-2026-08-05.md`.
+
 ### feat(career): career UX arc — 3 runtime fixes + 5 features from a vetted external submission (#377–#384)
 
 An external contributor delivered a working reference module (`TAOM-Career-UX-Upstream-2026-08-05`)

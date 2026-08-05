@@ -28,16 +28,24 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
    The `Fault offset` IS the RVA. **Compare offsets across runs** — identical offset = same
    site (discriminates "my fix didn't work" from "a different crash"); this is how Patch47 was
    exonerated. Caveat: a crash held by a debugger never reaches WER — no Event Log entry.
-2. Game-side timeline: newest `Logs/taom_debug_*.log` (game bin) + newest
+2. **Player crash bundles (no reporter Event Log):** TW's CrashDumper drops a minidump
+   (`dump.dmp`) in the crash-report bundle. `python tools/native_crash_triage.py --dump
+   <bundle>/dump.dmp` names the faulting module + RVA and the commit split (total / image /
+   private / mapped) directly from the bundle — no Event Log needed — and chains into Phase 2's
+   disassembly when the faulting module is the local `--dll`. **Build-version caveat:** RVAs
+   transfer to a local disassembly only when the reporter's Build Source matches the installed
+   build — compare the bundle's build line against the local install; the tool prints both the
+   dump-side module path and the local `--dll` it disassembles, so a mismatch is visible.
+3. Game-side timeline: newest `Logs/taom_debug_*.log` (game bin) + newest
    `C:\ProgramData\Mount and Blade II Bannerlord\logs\rgl_log_*.txt` — last lines date the
    crash relative to gameplay events (charge orders, scene loads).
-3. **Map an implicated patch to its owner.** If a `[BattleLoad]` / `[SaveLoad]` / `_PatchN`
+4. **Map an implicated patch to its owner.** If a `[BattleLoad]` / `[SaveLoad]` / `_PatchN`
    marker in those logs, or the last managed frame before the native transition, names a TAOM
    patch, grep it in [`docs/reference/harmony-patch-registry.md`](../../../docs/reference/harmony-patch-registry.md)
    — it maps the patch to its exact target method + status, so you know whether a TAOM hook sits
    on the crashing path before blaming the engine. (This is where CLAUDE.md's former "Harmony
    Patch Categories" table now lives.)
-4. **Assertion dialogs (engine asserts, not AVs):** the dialog is a PAUSED pre-crash state —
+5. **Assertion dialogs (engine asserts, not AVs):** the dialog is a PAUSED pre-crash state —
    before clicking anything, copy the session's `rgl_log_<pid>`/`watchdog_log_<pid>` AND take a
    full dump (Task Manager → Create dump file, or `rundll32 comsvcs.dll, MiniDump <pid> <path> full`).
    Very early asserts (module scan) leave a 0-byte watchdog log and NO rgl_log — the dump is then
@@ -53,11 +61,18 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
 python tools/native_crash_triage.py --rva 0x<fault_offset>
 # or, from a live debugger IP + module base:
 python tools/native_crash_triage.py --ip 0x<RIP> --base 0x<module_base> --callers 2
+# or, from a player bundle's minidump (no Event Log needed):
+python tools/native_crash_triage.py --dump <bundle>/dump.dmp
 ```
 
 Output: exact `.pdata` function bounds, annotated hexdump, **every string the function
 references** (shipping builds keep assert/trace text — functions frequently self-identify),
-and the caller chain with each caller's strings. Hand-decode the few instructions around the
+and the caller chain with each caller's strings. `--dump` first prints the exception
+(code / thread / parameters), faulting module + RVA, the commit summary from MemoryInfoList,
+and a return-address stack scan of the faulting thread (locating the stack through MemoryList
+when the per-thread descriptor Rva is 0, which is what TW's CrashDumper writes), then chains
+into this same pipeline when the faulting module matches `--dll` — otherwise it prints the
+module + RVA and the rerun hint (`--dll` pointing at a local copy of that module). Hand-decode the few instructions around the
 crash row (the tool shows them); the common patterns:
 - `cmp [reg+disp], imm` with reg=0 → **null + field-offset** (missing data surface)
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss
