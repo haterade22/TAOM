@@ -57,6 +57,20 @@ now have INDEX.md rows (orphan_features 2 → 0); the erebor kitbash `runes.md` 
 coverage table; the completed `SESSION-S5a-S5b-PROMPT.md` migration prompt moved to
 `docs/archive/` with its artifact-class siblings.
 
+**FactionMap duplicate sprites: 61 files / 545.7 MB deleted (1.0 GB → 412 MB).** An id-flow audit
+proved the deletion safe in the strongest form available: the image id travels VERBATIM from
+`factions.json`/`regions.json` through `FactionConfigProvider` → `FactionSelectionService` →
+`FactionImageWidget` — never composed from campaign objects, never serialized — so the reference
+universe is closed. Every deleted file is a byte-identical duplicate of a kept sibling AND has
+zero literal hits across 3,552 repo text files, both staging JSONs, the CC prefab's RegionName
+set, the map-assembly tools, and the live deployed factions.json (repo/live parity verified).
+Each of the 54 duplicate groups keeps ≥1 copy. Missing ids fail SOFT (`_loadFailed` + log, no
+crash) — already the live condition for 27 referenced ids that never had art (pre-existing gap,
+noted, untouched). Eight `REMOVED_REGIONS`-era unique-content files kept (sole copies of art —
+archival call, not a dedup). The borderline `banner_kingdom_of_gondor.png` went too: its only
+reference is a string assertion in a mocked test that opens no file, and the id is unreachable
+at runtime.
+
 ### refactor(harness): eager-context diet round 2 — CLAUDE.md prune + always-load rules + hook fixes
 
 Second-round diet of the eager context load (round 1: 174 KB → 91 KB → 42 KB, July 2026).
