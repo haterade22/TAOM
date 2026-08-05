@@ -1,0 +1,64 @@
+{
+  "progression": {
+    "dailyWageByRank": [5, 8, 14, 22],
+    "dailyServiceXpByRank": [10, 12, 16, 20],
+    "dailyLeadershipXp": 10,
+    "dailyAssignmentXp": 10,
+    "siegeContextXp": 8,
+    "navalContextXp": 7,
+    "blockadeContextXp": 5,
+    "armyContextXp": 6,
+    "trainingSessionXp": 20,
+    "xpPerKill": 25,
+    "killXpCap": 10,
+    "battleWinXp": 40,
+    "battleLossXp": 15,
+    "assignmentSwapCooldownDays": 7,
+    "assignmentSwapTrustCost": 1
+  },
+  "wagePolicy": {
+    "payFromCommanderGold": true,
+    "commanderGoldFloor": 500,
+    "maxDeferredWages": 60
+  },
+  "meritScoring": {
+    "killWeight": 5,
+    "killCountCap": 6,
+    "survivalWeight": 25,
+    "cohesionWeight": 15,
+    "commanderProximityWeight": 10,
+    "engagementWeight": 10,
+    "roleFitBonus": 10,
+    "fellEarlyPenalty": 10,
+    "sampleIntervalSeconds": 2.0,
+    "cohesionDistance": 25.0,
+    "commanderDistance": 40.0,
+    "engagementDistance": 35.0
+  },
+  "meritBands": [
+    { "minScore": 80, "serviceXp": 30, "gold": 20, "trust": 2, "repDomain": "Field", "repAmount": 2, "gradeKey": "distinguished" },
+    { "minScore": 60, "serviceXp": 20, "gold": 10, "trust": 1, "repDomain": "Field", "repAmount": 1, "gradeKey": "strong" },
+    { "minScore": 40, "serviceXp": 12, "gold": 5, "trust": 0, "repDomain": "Field", "repAmount": 1, "gradeKey": "solid" },
+    { "minScore": 0, "serviceXp": 4, "gold": 0, "trust": 0, "repDomain": "None", "repAmount": 0, "gradeKey": "rough" }
+  ],
+  "scheduler": {
+    "trustMin": -10,
+    "trustMax": 20,
+    "reputationMax": 50,
+    "minDaysBeforeFirstOffer": 3,
+    "offerCooldownDaysQuiet": 4,
+    "offerCooldownDaysPressure": 2,
+    "guaranteedOfferDaysQuiet": 7,
+    "guaranteedOfferDaysPressure": 4,
+    "baseOfferChance": 0.06,
+    "maxOfferChance": 0.45,
+    "antiRepeatDays": 5,
+    "incidentMinDaysServed": 7,
+    "incidentCooldownDays": 3
+  },
+  "promotions": [
+    { "toRank": "Soldier", "minDaysServed": 7, "minServiceXp": 100, "minLeadershipSkill": 0, "minDutySuccesses": 0, "minTrust": -10 },
+    { "toRank": "Veteran", "minDaysServed": 25, "minServiceXp": 350, "minLeadershipSkill": 20, "minDutySuccesses": 2, "minTrust": 0 },
+    { "toRank": "Sergeant", "minDaysServed": 60, "minServiceXp": 800, "minLeadershipSkill": 50, "minDutySuccesses": 5, "minTrust": 6 }
+  ]
+}

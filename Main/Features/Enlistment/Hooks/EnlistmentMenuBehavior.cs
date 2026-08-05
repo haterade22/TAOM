@@ -22,6 +22,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
     private readonly IEnlistmentStore _store;
     private readonly IServiceAttachmentService _attachment;
     private readonly IEnlistmentService _service;
+    private readonly IEnlistmentDialogGateService _gate;
     private readonly IEnlistmentWaitMenuPresenter _presenter;
     private readonly IGameMenuAdapter _gameMenu;
     private readonly ICoopSessionProvider _coopSession;
@@ -32,6 +33,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         IEnlistmentStore store,
         IServiceAttachmentService attachment,
         IEnlistmentService service,
+        IEnlistmentDialogGateService gate,
         IEnlistmentWaitMenuPresenter presenter,
         IGameMenuAdapter gameMenu,
         ICoopSessionProvider coopSession)
@@ -39,6 +41,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         _store = store;
         _attachment = attachment;
         _service = service;
+        _gate = gate;
         _presenter = presenter;
         _gameMenu = gameMenu;
         _coopSession = coopSession;
@@ -105,9 +108,11 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
 
     private void OnLeaveServiceSelected()
     {
-        // Terminal decision routed through the single discharge pipeline; consequences
-        // (desertion pricing vs honorable release) are the consequence layer's concern.
-        if (_service.RequestDischarge(DischargeReason.PlayerRequest))
+        // Terminal decision routed through the single discharge pipeline. Leaving before
+        // the contract day classifies as desertion (arrears forfeit + relation cost in
+        // the consequence layer); at/after it, an honorable release.
+        var reason = _gate.ClassifyLeaveReason(CampaignTime.Now.ToDays);
+        if (_service.RequestDischarge(reason))
             _gameMenu.ExitToLast();
     }
 

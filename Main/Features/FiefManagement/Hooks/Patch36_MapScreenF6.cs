@@ -18,6 +18,7 @@ public static class Patch36_MapScreenF6
     private static IFiefManagementSettingsProvider _settings;
     private static IMapScreenInputAdapter _input;
     private static IFiefHubService _service;
+    private static Features.Enlistment.IEnlistmentStateQuery _enlistment;
     private static IModLogger _logger;
     private static bool _exceptionLogged;
 
@@ -45,6 +46,12 @@ public static class Patch36_MapScreenF6
             if (__instance.IsMapIncidentActive) return;
             if (__instance.IsOverlayContextMenuEnabled) return;
             if (__instance.EncyclopediaScreenManager?.IsEncyclopediaOpen == true) return;
+
+            // Enlisted-attached service is a modal state of its own (parked at the wait menu;
+            // the menu guard owns transitions) — F6 must not push fief_hub into it. The other
+            // service states (duty/grace/captive) are free-roam and keep F6.
+            var enlistment = _enlistment ??= IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>();
+            if (enlistment != null && enlistment.State == Features.Enlistment.Domain.EnlistmentState.EnlistedAttached) return;
 
             var input = _input ??= IoC.Resolve<IMapScreenInputAdapter>();
             if (input == null || !input.IsF6Pressed) return;

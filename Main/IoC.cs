@@ -146,6 +146,10 @@ public static class IoC
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
         Features.Enlistment.EnlistmentIoC.RegisterEnlistmentFeature(container);
+        Features.Enlistment.Duties.DutiesIoC.RegisterEnlistmentDutiesFeature(container);
+        // AFTER Enlistment: FieldCommission registers a NullEnlistmentStateQuery with
+        // IfAlreadyRegistered.Keep — the real query must already be in the container.
+        Features.FieldCommission.FieldCommissionIoC.RegisterFieldCommissionFeature(container);
 
         _container = container;
 

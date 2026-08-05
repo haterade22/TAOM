@@ -146,6 +146,22 @@ public class CoopVetoClassificationTests
             "and writes only CharacterCreationManager cursor state, and preserves vanilla's " +
             "ModifyMenuCharacters side effect. No campaign object involved."),
 
+        // Enlistment (#375, Patch66). All four suppress a vanilla CONVERSATION LINE for the local
+        // player while enlisted. The condition is IEnlistmentStateQuery.IsEnlisted — TAOM SyncData
+        // state that BannerlordCoop does not replicate — but it is inherently per-peer: only the
+        // enlisted player's own dialogue options change, and a conversation is a local UI flow, not
+        // a replicated campaign mutation. Gating them under co-op would let an enlisted client be
+        // recruited into a second army mid-service, which is the state-shatter they exist to prevent.
+        ["LordConversationsJoinArmyConditionPatch"] = new(CoopVeto.ReviewedSafe,
+            "Hides 'join my army' for the enlisted player. Local dialogue option; per-peer by design."),
+        ["LordConversationsJoinArmyClickableConditionPatch"] = new(CoopVeto.ReviewedSafe,
+            "Same line's clickable/hint variant. Local dialogue option; per-peer by design."),
+        ["LordConversationsAllyThanksMeetConditionPatch"] = new(CoopVeto.ReviewedSafe,
+            "Suppresses the post-battle ally-thanks line that would fire after every commander " +
+            "battle during service. Local dialogue only."),
+        ["LordConversationsAllyThanksConditionPatch"] = new(CoopVeto.ReviewedSafe,
+            "Second ally-thanks variant. Local dialogue only."),
+
         // --- Parked --------------------------------------------------------------------------
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,
             "NavalTravel is PARKED (#120/#296) and the category is commented out in SubModule.cs. " +

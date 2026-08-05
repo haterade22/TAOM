@@ -970,6 +970,22 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentMenuBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentBattleBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentDialogBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentContentBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentQuartermasterBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentDutyBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentAssignmentDialogBehavior>());
+
+        // FieldCommission (#376) — battlefield promotion of ranked troops into companions.
+        // Registered unconditionally; merit accrual/offers gate internally on config, co-op
+        // authority, and enlisted-state suppression via IEnlistmentStateQuery.
+        campaignStarter.AddBehavior(new Features.FieldCommission.Hooks.FieldCommissionBehavior(
+            IoC.Resolve<Features.FieldCommission.IFieldCommissionMeritService>(),
+            IoC.Resolve<Features.FieldCommission.IFieldCommissionOfferFlowService>(),
+            IoC.Resolve<Features.FieldCommission.IFieldCommissionConfigProvider>(),
+            IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
+            IoC.Resolve<Adapters.IHeroCommissionAdapter>()));
 
         // LotrIssues — suppress ALL 43 vanilla procedural issue behaviors (Sandbox registered them
         // before this OnGameStart) and register the single LOTR custom-issue dispatcher in their
@@ -1281,6 +1297,15 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.SiegePropDiagnostics.Hooks.SiegePropDiagnosticsMissionBehavior());
         AddTaomBehavior(new MixedFormationsMissionBehavior());
         AddTaomBehavior(new SmartCavalryAIMissionBehavior());
+        // Registered unconditionally per TAOM convention; self-filters in AfterStart on
+        // Campaign.Current + enlisted battle state (the donor's mission.Mode gate at init
+        // time never fired — Mode is still StartUp there).
+        AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentMeritMissionBehavior(
+            IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
+            IoC.Resolve<Features.Enlistment.Content.IBattleMeritAccumulator>(),
+            IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentConfigProvider>().GetConfig().MeritScoring));
+        // Registered unconditionally; self-filters internally on Campaign.Current and co-op authority.
+        AddTaomBehavior(new Features.FieldCommission.Hooks.FieldCommissionMissionLogic());
         // Added unconditionally per TAOM convention; gates internally on
         // Mission.Mode == Deployment (the bearer-freeze guard) and on a live BannerBearerLogic.
         AddTaomBehavior(new Features.BannerBearers.Hooks.BannerBearerAssignmentMissionLogic());

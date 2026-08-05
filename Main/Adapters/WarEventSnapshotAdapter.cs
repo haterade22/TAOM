@@ -20,11 +20,16 @@ namespace TAOM.Adapters;
 public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
 {
     private readonly IPlayerContextAdapter _playerContext;
+    private readonly Features.Enlistment.IEnlistmentStateQuery _enlistment;
     private readonly IModLogger _logger;
 
-    public WarEventSnapshotAdapter(IPlayerContextAdapter playerContext, IModLogger logger)
+    public WarEventSnapshotAdapter(
+        IPlayerContextAdapter playerContext,
+        Features.Enlistment.IEnlistmentStateQuery enlistment,
+        IModLogger logger)
     {
         _playerContext = playerContext;
+        _enlistment = enlistment;
         _logger = logger;
     }
 
@@ -85,8 +90,11 @@ public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
                 // inside an ally's army — the normal way a vassal captures anything — recorded no
                 // player event at all. That gap is the War of the Ring victory requirement quietly
                 // failing to advance, and it predates multiplayer (field report 2026-08-03 §9.4
-                // found the multiplayer half of the same shortfall).
-                PlayerInvolved = IsPlayerRelated(capturerParty?.Party, _playerContext.GetPlayerKingdomId()),
+                // found the multiplayer half of the same shortfall). The enlisted clause covers the
+                // kingdom-less freelancer assaulting inside the commander's column — without it the
+                // WotR victory gate starves for the whole service term (#375 attribution audit, HIGH).
+                PlayerInvolved = IsPlayerRelated(capturerParty?.Party, _playerContext.GetPlayerKingdomId())
+                                 || (_enlistment.IsEnlisted && _enlistment.IsCommanderParty(capturerParty?.StringId)),
                 CaptorFactionName = faction?.Name?.ToString() ?? "",
                 CaptorLeaderName = capturerParty?.LeaderHero?.Name?.ToString() ?? "",
                 SettlementName = settlement?.Name?.ToString() ?? "",

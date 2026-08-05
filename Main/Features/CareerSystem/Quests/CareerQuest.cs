@@ -157,7 +157,12 @@ public class CareerQuest : QuestBase
     private void OnSettlementOwnerChanged(Settlement settlement, bool openToClaim, Hero newOwner, Hero oldOwner,
         Hero capturerHero, ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
     {
-        if (capturerHero != Hero.MainHero) return;
+        // Enlisted service (#375 attribution audit, MED): a siege the player assaults inside the
+        // commander's column is captured BY the commander — credit it, or the objective is frozen
+        // for the whole service term.
+        var credited = capturerHero == Hero.MainHero
+            || (EnlistQuery?.IsEnlisted == true && capturerHero?.StringId == EnlistQuery.CommanderHeroId);
+        if (!credited) return;
         Bump(CareerQuestObjectiveType.SettlementsCaptured, null);
     }
 
@@ -168,13 +173,35 @@ public class CareerQuest : QuestBase
     }
 
     // Defeat = capture in battle (NOT execute/kill). Fires when the player's party takes a lord
-    // prisoner; gated to ENEMY lords (at war), excluding allies / own-faction.
+    // prisoner; gated to ENEMY lords (at war), excluding allies / own-faction. Enlisted service
+    // (#375 attribution audit, MED): commander-party captures count, and the war check falls back
+    // to the capturer's faction for the kingdom-less freelancer.
     private void OnHeroPrisonerTaken(PartyBase capturer, Hero prisoner)
     {
-        if (capturer != PartyBase.MainParty || prisoner == null || !prisoner.IsLord) return;
-        var playerFaction = Hero.MainHero.MapFaction;
+        var playersCapture = capturer == PartyBase.MainParty
+            || (EnlistQuery?.IsEnlisted == true
+                && capturer?.MobileParty?.StringId != null
+                && EnlistQuery.IsCommanderParty(capturer.MobileParty.StringId));
+        if (!playersCapture || prisoner == null || !prisoner.IsLord) return;
+        var playerFaction = Hero.MainHero.MapFaction ?? capturer?.MapFaction;
         if (playerFaction == null || prisoner.MapFaction == null || !prisoner.MapFaction.IsAtWarWith(playerFaction)) return;
         Bump(CareerQuestObjectiveType.DefeatEnemyLords, null);
+    }
+
+    // Lazy service-locator (QuestBase has no ctor injection — same pattern as Service/Logger
+    // below); null when resolution fails so every consumer stays fail-open.
+    private Features.Enlistment.IEnlistmentStateQuery _enlistQuery;
+    private Features.Enlistment.IEnlistmentStateQuery EnlistQuery
+    {
+        get
+        {
+            if (_enlistQuery == null)
+            {
+                try { _enlistQuery = IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(); }
+                catch { /* fail open — vanilla attribution */ }
+            }
+            return _enlistQuery;
+        }
     }
 
     private void OnSettlementEntered(MobileParty party, Settlement settlement, Hero hero)

@@ -13,4 +13,13 @@ public interface ICommanderLordAdapter
 
     /// <summary>Live culture StringId of the commander, or null. Read at issuance/decision time only.</summary>
     string GetCultureId(string heroId);
+
+    /// <summary>True when the hero resolves and is a lord (dialog-gate check).</summary>
+    bool IsLord(string heroId);
+
+    /// <summary>True when the hero's map faction is currently at war with the given faction id.</summary>
+    bool IsAtWarWithFaction(string heroId, string factionId);
+
+    /// <summary>Adjust the player's relation with the hero (quiet — no toast).</summary>
+    bool ApplyPlayerRelation(string heroId, int delta);
 }

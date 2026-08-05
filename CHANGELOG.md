@@ -4,6 +4,58 @@
 
 ## 2026-08-04
 
+### feat(enlistment): service content, duties, equipment + battlefield promotions (#375, #376)
+
+Checkpoint 2 turns the enlistment shell into a playable service term and lands the
+FieldCommission port beside it.
+
+**Service content.** A day of service now advances a day counter, pays a wage, trains you,
+and can promote you. Wages come out of the commander's own purse when he can afford it —
+below a solvency floor the pay defers into capped arrears that clear when the column is
+flush again, and an honorable discharge settles what's still owed while desertion forfeits
+it. The donor minted every coin from nothing at ten call sites. Promotion is evaluated at
+exactly two points (daily tick, battle end) through one shared chokepoint rather than the
+donor's twelve, and rank/assignment/trust/reputation/arrears persist in their own SyncData
+section so a corrupt content record costs progression, never the service state itself.
+
+**Duties.** Thirteen field duties collapse onto five mechanics — hunt a spawned band, carry
+a message, deliver food, forage, stand a watch — with all thirteen flavors, eleven
+interactive skill-check duties and three camp incidents living in
+`ModuleData/enlistment/enlistment_duties.json` behind a validator that skips a malformed row
+with a warning instead of silently taking a default branch. An hourly-cached army-rhythm
+snapshot decides what the column needs; the donor recomputed it from two full party sweeps
+at eleven call sites.
+
+**Equipment from our own armoury.** 68 authored rosters (16 cultures × 4 ranks, plus a
+culture-neutral fallback set) seeded from each culture's own troop tree by
+`tools/generate_enlistment_rosters.py`, so a dwarf draws dwarf kit and no one is handed
+Calradian gear. Drawn once per rank from the quartermaster into your baggage.
+
+**Battlefield promotions (#376).** A troop that earns its keep in a fair fight can be raised
+into a named companion. Eight donor bugs fixed on the way in — merit is now spent only when
+the promotion actually happens (declining, quitting or a full retinue no longer burns it),
+the rename box is pre-filled again, foreign map events can't wipe your battle tracking, and
+`Clan.Heroes` is never mutated raw. New gates: a race allow-list, a companion cap that
+defers rather than discards the offer, level-budgeted skills instead of a verbatim copy that
+produced instant elites, and full suppression while enlisted (the donor's fairness ratio
+inverted to always-on inside a lord's army).
+
+Also fixes three leader-keyed attribution bugs found by a repo-wide audit: an enlisted
+player's sieges now count toward the War of the Ring victory gate, and commander-party
+captures credit the player's career quests.
+
+394 Enlistment + 111 FieldCommission tests; full suite 5415 green; ModuleData validation
+clean. Deep-review findings (9, all fixed in-session):
+`docs/reviews/rca-enlistment-content-2026-08-05.md`.
+
+Research: MobileParty.SetMovePatrolAroundSettlement/NavigationType (nested enum),
+BanditPartyComponent.CreateLooterParty, HeroDeveloper, TextInquiryData, CampaignEvents
+prisoner events (installed 1.4.7 via taom-src)
+Not-tested: in-game duty spawn/completion loop, equipment visuals, promotion popups
+Save-compat: new `_taom_enlistment_content` + `_taom_fc_*` SyncData sections; absent keys
+load as a fresh record. Known limitation: the equipment issue-ledger is in-memory, so a
+full game restart re-allows one draw per rank.
+
 ### feat(enlistment): core service loop for serving in a lord's party (#375, checkpoint 1 of N)
 
 The Serve-as-Soldier rewrite's foundation: a persisted 8-state machine (petition → oath →
