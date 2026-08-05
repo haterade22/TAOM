@@ -11,7 +11,8 @@
           portrait_sprite="career_ranger_of_ithilien_portrait"
           ability_template_id="ranger_of_ithilien_ability"
           min_clan_tier="0"
-          root_choice_id="ranger_of_ithilien_root">
+          root_choice_id="ranger_of_ithilien_root"
+          keystone_icon="10003">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
@@ -32,7 +33,8 @@
           portrait_sprite="career_captain_of_osgiliath_portrait"
           ability_template_id="captain_of_osgiliath_ability"
           min_clan_tier="0"
-          root_choice_id="captain_of_osgiliath_root">
+          root_choice_id="captain_of_osgiliath_root"
+          keystone_icon="10004">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
@@ -53,7 +55,8 @@
           portrait_sprite="career_knight_of_belfalas_portrait"
           ability_template_id="knight_of_belfalas_ability"
           min_clan_tier="0"
-          root_choice_id="knight_of_belfalas_root">
+          root_choice_id="knight_of_belfalas_root"
+          keystone_icon="10005">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
@@ -78,7 +81,8 @@
           portrait_sprite="career_black_uruk_captain_portrait"
           ability_template_id="black_uruk_captain_ability"
           min_clan_tier="0"
-          root_choice_id="black_uruk_captain_root">
+          root_choice_id="black_uruk_captain_root"
+          keystone_icon="19001">
     <EligibleCultures>
       <Culture id="mordor" />
       <Culture id="empire_s" />
@@ -99,7 +103,8 @@
           portrait_sprite="career_mulkerhili_cultist_portrait"
           ability_template_id="mulkerhili_cultist_ability"
           min_clan_tier="0"
-          root_choice_id="mulkerhili_cultist_root">
+          root_choice_id="mulkerhili_cultist_root"
+          keystone_icon="19002">
     <EligibleCultures>
       <Culture id="mordor" />
       <Culture id="empire_s" />
@@ -120,7 +125,8 @@
           portrait_sprite="career_snaga_rider_portrait"
           ability_template_id="snaga_rider_ability"
           min_clan_tier="0"
-          root_choice_id="snaga_rider_root">
+          root_choice_id="snaga_rider_root"
+          keystone_icon="19003">
     <EligibleCultures>
       <Culture id="mordor" />
       <Culture id="empire_s" />
@@ -141,7 +147,8 @@
           portrait_sprite="career_olog_hai_warchief_portrait"
           ability_template_id="olog_hai_warchief_ability"
           min_clan_tier="0"
-          root_choice_id="olog_hai_warchief_root">
+          root_choice_id="olog_hai_warchief_root"
+          keystone_icon="19004">
     <EligibleCultures>
       <Culture id="mordor" />
       <Culture id="empire_s" />
@@ -166,7 +173,8 @@
           portrait_sprite="career_marksman_of_aldburg_portrait"
           ability_template_id="marksman_of_aldburg_ability"
           min_clan_tier="0"
-          root_choice_id="marksman_of_aldburg_root">
+          root_choice_id="marksman_of_aldburg_root"
+          keystone_icon="21004">
     <EligibleCultures>
       <Culture id="vlandia" />
     </EligibleCultures>
@@ -186,7 +194,8 @@
           portrait_sprite="career_eotheod_windrider_portrait"
           ability_template_id="eotheod_windrider_ability"
           min_clan_tier="0"
-          root_choice_id="eotheod_windrider_root">
+          root_choice_id="eotheod_windrider_root"
+          keystone_icon="21005">
     <EligibleCultures>
       <Culture id="vlandia" />
     </EligibleCultures>
@@ -206,7 +215,8 @@
           portrait_sprite="career_watchman_of_stangard_portrait"
           ability_template_id="watchman_of_stangard_ability"
           min_clan_tier="0"
-          root_choice_id="watchman_of_stangard_root">
+          root_choice_id="watchman_of_stangard_root"
+          keystone_icon="21006">
     <EligibleCultures>
       <Culture id="vlandia" />
     </EligibleCultures>
@@ -230,7 +240,8 @@
           portrait_sprite="career_avanc_luth_raider_portrait"
           ability_template_id="avanc_luth_raider_ability"
           min_clan_tier="0"
-          root_choice_id="avanc_luth_raider_root">
+          root_choice_id="avanc_luth_raider_root"
+          keystone_icon="26004">
     <EligibleCultures>
       <Culture id="empire" />
     </EligibleCultures>
@@ -250,7 +261,8 @@
           portrait_sprite="career_wolfskin_hunter_portrait"
           ability_template_id="wolfskin_hunter_ability"
           min_clan_tier="0"
-          root_choice_id="wolfskin_hunter_root">
+          root_choice_id="wolfskin_hunter_root"
+          keystone_icon="26005">
     <EligibleCultures>
       <Culture id="empire" />
     </EligibleCultures>
@@ -270,7 +282,8 @@
           portrait_sprite="career_clanguard_rider_portrait"
           ability_template_id="clanguard_rider_ability"
           min_clan_tier="0"
-          root_choice_id="clanguard_rider_root">
+          root_choice_id="clanguard_rider_root"
+          keystone_icon="26006">
     <EligibleCultures>
       <Culture id="empire" />
     </EligibleCultures>
@@ -294,7 +307,8 @@
           portrait_sprite="career_blademaster_of_ren_portrait"
           ability_template_id="blademaster_of_ren_ability"
           min_clan_tier="0"
-          root_choice_id="blademaster_of_ren_root">
+          root_choice_id="blademaster_of_ren_root"
+          keystone_icon="13003">
     <EligibleCultures>
       <Culture id="battania" />
     </EligibleCultures>
@@ -314,7 +328,8 @@
           portrait_sprite="career_steppe_bowmaster_portrait"
           ability_template_id="steppe_bowmaster_ability"
           min_clan_tier="0"
-          root_choice_id="steppe_bowmaster_root">
+          root_choice_id="steppe_bowmaster_root"
+          keystone_icon="13004">
     <EligibleCultures>
       <Culture id="battania" />
     </EligibleCultures>
@@ -334,7 +349,8 @@
           portrait_sprite="career_chariot_warlord_portrait"
           ability_template_id="chariot_warlord_ability"
           min_clan_tier="0"
-          root_choice_id="chariot_warlord_root">
+          root_choice_id="chariot_warlord_root"
+          keystone_icon="13002">
     <EligibleCultures>
       <Culture id="battania" />
     </EligibleCultures>
@@ -358,7 +374,8 @@
           portrait_sprite="career_tribesman_of_jelut_portrait"
           ability_template_id="tribesman_of_jelut_ability"
           min_clan_tier="0"
-          root_choice_id="tribesman_of_jelut_root">
+          root_choice_id="tribesman_of_jelut_root"
+          keystone_icon="13000">
     <EligibleCultures>
       <Culture id="aserai" />
     </EligibleCultures>
@@ -378,7 +395,8 @@
           portrait_sprite="career_pezarsani_javelineer_portrait"
           ability_template_id="pezarsani_javelineer_ability"
           min_clan_tier="0"
-          root_choice_id="pezarsani_javelineer_root">
+          root_choice_id="pezarsani_javelineer_root"
+          keystone_icon="13001">
     <EligibleCultures>
       <Culture id="aserai" />
     </EligibleCultures>
@@ -398,7 +416,8 @@
           portrait_sprite="career_mahud_beast_rider_portrait"
           ability_template_id="mahud_beast_rider_ability"
           min_clan_tier="0"
-          root_choice_id="mahud_beast_rider_root">
+          root_choice_id="mahud_beast_rider_root"
+          keystone_icon="25015">
     <EligibleCultures>
       <Culture id="aserai" />
     </EligibleCultures>
@@ -419,7 +438,8 @@
           portrait_sprite="career_far_harad_halftroll_portrait"
           ability_template_id="far_harad_halftroll_ability"
           min_clan_tier="0"
-          root_choice_id="far_harad_halftroll_root">
+          root_choice_id="far_harad_halftroll_root"
+          keystone_icon="25013">
     <EligibleCultures>
       <Culture id="aserai" />
     </EligibleCultures>
@@ -444,7 +464,8 @@
           portrait_sprite="career_codyan_legionaire_portrait"
           ability_template_id="codyan_legionaire_ability"
           min_clan_tier="0"
-          root_choice_id="codyan_legionaire_root">
+          root_choice_id="codyan_legionaire_root"
+          keystone_icon="14010">
     <EligibleCultures>
       <Culture id="khuzait" />
     </EligibleCultures>
@@ -464,7 +485,8 @@
           portrait_sprite="career_lokhas_drus_marksman_portrait"
           ability_template_id="lokhas_drus_marksman_ability"
           min_clan_tier="0"
-          root_choice_id="lokhas_drus_marksman_root">
+          root_choice_id="lokhas_drus_marksman_root"
+          keystone_icon="14011">
     <EligibleCultures>
       <Culture id="khuzait" />
     </EligibleCultures>
@@ -484,7 +506,8 @@
           portrait_sprite="career_balchoth_kan_portrait"
           ability_template_id="balchoth_kan_ability"
           min_clan_tier="0"
-          root_choice_id="balchoth_kan_root">
+          root_choice_id="balchoth_kan_root"
+          keystone_icon="14012">
     <EligibleCultures>
       <Culture id="khuzait" />
     </EligibleCultures>
@@ -508,7 +531,8 @@
           portrait_sprite="career_dale_guardsman_portrait"
           ability_template_id="dale_guardsman_ability"
           min_clan_tier="0"
-          root_choice_id="dale_guardsman_root">
+          root_choice_id="dale_guardsman_root"
+          keystone_icon="27000">
     <EligibleCultures>
       <Culture id="sturgia" />
     </EligibleCultures>
@@ -528,7 +552,8 @@
           portrait_sprite="career_dale_marksman_portrait"
           ability_template_id="dale_marksman_ability"
           min_clan_tier="0"
-          root_choice_id="dale_marksman_root">
+          root_choice_id="dale_marksman_root"
+          keystone_icon="27001">
     <EligibleCultures>
       <Culture id="sturgia" />
     </EligibleCultures>
@@ -548,7 +573,8 @@
           portrait_sprite="career_dale_outrider_portrait"
           ability_template_id="dale_outrider_ability"
           min_clan_tier="0"
-          root_choice_id="dale_outrider_root">
+          root_choice_id="dale_outrider_root"
+          keystone_icon="27500">
     <EligibleCultures>
       <Culture id="sturgia" />
     </EligibleCultures>
@@ -572,7 +598,8 @@
           portrait_sprite="career_ironguard_portrait"
           ability_template_id="ironguard_ability"
           min_clan_tier="0"
-          root_choice_id="ironguard_root">
+          root_choice_id="ironguard_root"
+          keystone_icon="24019">
     <EligibleCultures>
       <Culture id="erebor" />
     </EligibleCultures>
@@ -592,7 +619,8 @@
           portrait_sprite="career_crossbow_master_portrait"
           ability_template_id="crossbow_master_ability"
           min_clan_tier="0"
-          root_choice_id="crossbow_master_root">
+          root_choice_id="crossbow_master_root"
+          keystone_icon="24020">
     <EligibleCultures>
       <Culture id="erebor" />
     </EligibleCultures>
@@ -612,7 +640,8 @@
           portrait_sprite="career_ram_rider_portrait"
           ability_template_id="ram_rider_ability"
           min_clan_tier="0"
-          root_choice_id="ram_rider_root">
+          root_choice_id="ram_rider_root"
+          keystone_icon="24021">
     <EligibleCultures>
       <Culture id="erebor" />
     </EligibleCultures>
@@ -636,7 +665,8 @@
           portrait_sprite="career_blade_dancer_portrait"
           ability_template_id="blade_dancer_ability"
           min_clan_tier="0"
-          root_choice_id="blade_dancer_root">
+          root_choice_id="blade_dancer_root"
+          keystone_icon="15000">
     <EligibleCultures>
       <Culture id="rivendell" />
     </EligibleCultures>
@@ -656,7 +686,8 @@
           portrait_sprite="career_elven_archer_portrait"
           ability_template_id="elven_archer_ability"
           min_clan_tier="0"
-          root_choice_id="elven_archer_root">
+          root_choice_id="elven_archer_root"
+          keystone_icon="15001">
     <EligibleCultures>
       <Culture id="rivendell" />
     </EligibleCultures>
@@ -676,7 +707,8 @@
           portrait_sprite="career_rivendell_knight_portrait"
           ability_template_id="rivendell_knight_ability"
           min_clan_tier="0"
-          root_choice_id="rivendell_knight_root">
+          root_choice_id="rivendell_knight_root"
+          keystone_icon="15002">
     <EligibleCultures>
       <Culture id="rivendell" />
     </EligibleCultures>
@@ -700,7 +732,8 @@
           portrait_sprite="career_warden_portrait"
           ability_template_id="warden_ability"
           min_clan_tier="0"
-          root_choice_id="warden_root">
+          root_choice_id="warden_root"
+          keystone_icon="16008">
     <EligibleCultures>
       <Culture id="lothlorien" />
     </EligibleCultures>
@@ -720,7 +753,8 @@
           portrait_sprite="career_galadhrim_archer_portrait"
           ability_template_id="galadhrim_archer_ability"
           min_clan_tier="0"
-          root_choice_id="galadhrim_archer_root">
+          root_choice_id="galadhrim_archer_root"
+          keystone_icon="16000">
     <EligibleCultures>
       <Culture id="lothlorien" />
     </EligibleCultures>
@@ -740,7 +774,8 @@
           portrait_sprite="career_sentinel_portrait"
           ability_template_id="sentinel_ability"
           min_clan_tier="0"
-          root_choice_id="sentinel_root">
+          root_choice_id="sentinel_root"
+          keystone_icon="16001">
     <EligibleCultures>
       <Culture id="lothlorien" />
     </EligibleCultures>
@@ -764,7 +799,8 @@
           portrait_sprite="career_shadow_walker_portrait"
           ability_template_id="shadow_walker_ability"
           min_clan_tier="0"
-          root_choice_id="shadow_walker_root">
+          root_choice_id="shadow_walker_root"
+          keystone_icon="17003">
     <EligibleCultures>
       <Culture id="mirkwood" />
     </EligibleCultures>
@@ -784,7 +820,8 @@
           portrait_sprite="career_silvan_archer_portrait"
           ability_template_id="silvan_archer_ability"
           min_clan_tier="0"
-          root_choice_id="silvan_archer_root">
+          root_choice_id="silvan_archer_root"
+          keystone_icon="17000">
     <EligibleCultures>
       <Culture id="mirkwood" />
     </EligibleCultures>
@@ -804,7 +841,8 @@
           portrait_sprite="career_elk_rider_portrait"
           ability_template_id="elk_rider_ability"
           min_clan_tier="0"
-          root_choice_id="elk_rider_root">
+          root_choice_id="elk_rider_root"
+          keystone_icon="17001">
     <EligibleCultures>
       <Culture id="mirkwood" />
     </EligibleCultures>
@@ -828,7 +866,8 @@
           portrait_sprite="career_uruk_berserker_portrait"
           ability_template_id="uruk_berserker_ability"
           min_clan_tier="0"
-          root_choice_id="uruk_berserker_root">
+          root_choice_id="uruk_berserker_root"
+          keystone_icon="23000">
     <EligibleCultures>
       <Culture id="isengard" />
     </EligibleCultures>
@@ -848,7 +887,8 @@
           portrait_sprite="career_uruk_crossbow_portrait"
           ability_template_id="uruk_crossbow_ability"
           min_clan_tier="0"
-          root_choice_id="uruk_crossbow_root">
+          root_choice_id="uruk_crossbow_root"
+          keystone_icon="23001">
     <EligibleCultures>
       <Culture id="isengard" />
     </EligibleCultures>
@@ -868,7 +908,8 @@
           portrait_sprite="career_warg_scout_portrait"
           ability_template_id="warg_scout_ability"
           min_clan_tier="0"
-          root_choice_id="warg_scout_root">
+          root_choice_id="warg_scout_root"
+          keystone_icon="23002">
     <EligibleCultures>
       <Culture id="isengard" />
     </EligibleCultures>
@@ -892,7 +933,8 @@
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="cave_troll_master_ability"
           min_clan_tier="0"
-          root_choice_id="cave_troll_master_root">
+          root_choice_id="cave_troll_master_root"
+          keystone_icon="22000">
     <EligibleCultures>
       <Culture id="gundabad" />
     </EligibleCultures>
@@ -912,7 +954,8 @@
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="goblin_sniper_ability"
           min_clan_tier="0"
-          root_choice_id="goblin_sniper_root">
+          root_choice_id="goblin_sniper_root"
+          keystone_icon="22001">
     <EligibleCultures>
       <Culture id="gundabad" />
     </EligibleCultures>
@@ -932,7 +975,8 @@
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="warg_pack_leader_ability"
           min_clan_tier="0"
-          root_choice_id="warg_pack_leader_root">
+          root_choice_id="warg_pack_leader_root"
+          keystone_icon="22002">
     <EligibleCultures>
       <Culture id="gundabad" />
     </EligibleCultures>
@@ -956,7 +1000,8 @@
           portrait_sprite="career_shadow_warrior_portrait"
           ability_template_id="shadow_warrior_ability"
           min_clan_tier="0"
-          root_choice_id="shadow_warrior_root">
+          root_choice_id="shadow_warrior_root"
+          keystone_icon="18002">
     <EligibleCultures>
       <Culture id="dolguldur" />
     </EligibleCultures>
@@ -976,7 +1021,8 @@
           portrait_sprite="career_necromancer_acolyte_portrait"
           ability_template_id="necromancer_acolyte_ability"
           min_clan_tier="0"
-          root_choice_id="necromancer_acolyte_root">
+          root_choice_id="necromancer_acolyte_root"
+          keystone_icon="18000">
     <EligibleCultures>
       <Culture id="dolguldur" />
     </EligibleCultures>
@@ -996,7 +1042,8 @@
           portrait_sprite="career_fell_rider_portrait"
           ability_template_id="fell_rider_ability"
           min_clan_tier="0"
-          root_choice_id="fell_rider_root">
+          root_choice_id="fell_rider_root"
+          keystone_icon="18001">
     <EligibleCultures>
       <Culture id="dolguldur" />
     </EligibleCultures>
@@ -1020,7 +1067,8 @@
           portrait_sprite="career_corsair_boarder_portrait"
           ability_template_id="corsair_boarder_ability"
           min_clan_tier="0"
-          root_choice_id="corsair_boarder_root">
+          root_choice_id="corsair_boarder_root"
+          keystone_icon="12000">
     <EligibleCultures>
       <Culture id="umbar" />
     </EligibleCultures>
@@ -1040,7 +1088,8 @@
           portrait_sprite="career_corsair_crossbow_portrait"
           ability_template_id="corsair_crossbow_ability"
           min_clan_tier="0"
-          root_choice_id="corsair_crossbow_root">
+          root_choice_id="corsair_crossbow_root"
+          keystone_icon="12001">
     <EligibleCultures>
       <Culture id="umbar" />
     </EligibleCultures>
@@ -1060,7 +1109,8 @@
           portrait_sprite="career_corsair_captain_portrait"
           ability_template_id="corsair_captain_ability"
           min_clan_tier="0"
-          root_choice_id="corsair_captain_root">
+          root_choice_id="corsair_captain_root"
+          keystone_icon="12002">
     <EligibleCultures>
       <Culture id="umbar" />
     </EligibleCultures>
