@@ -22,6 +22,11 @@ Measured before/after: rc=1 → rc=0 with the size-warn still printed. A prior a
 CLAUDE.md L166 breaks the 400-char row cap was false — 400 chars exactly (408 *bytes*; the
 auditor counted bytes, em-dashes are 3 in UTF-8).
 
+**Scoped Rules → `docs/reference/rules-catalog.md`.** The 22-row rule table moved out verbatim
+(nothing deleted — relocated). The 7 always-load rows were the worst offenders: they summarized
+rules whose *full text* is already in context every session, a pure double-charge. CLAUDE.md
+keeps the `paths:`-convention note + a stub.
+
 ### fix(enlistment): four seam bugs an independent review found after ours passed
 
 A Codex adversarial pass over the finished enlistment work came back 0 P1 / 4 P2, and every one
