@@ -13,6 +13,7 @@ public class ServiceRewardService : IServiceRewardService
     private readonly IGoldGiftAdapter _goldGift;
     private readonly IGoldTransferAdapter _goldTransfer;
     private readonly ICommanderLordAdapter _commander;
+    private readonly IPlayerPartyAdapter _playerParty;
     private readonly IModLogger _logger;
 
     public ServiceRewardService(
@@ -23,8 +24,10 @@ public class ServiceRewardService : IServiceRewardService
         IGoldGiftAdapter goldGift,
         IGoldTransferAdapter goldTransfer,
         ICommanderLordAdapter commander,
+        IPlayerPartyAdapter playerParty,
         IModLogger logger)
     {
+        _playerParty = playerParty;
         _store = store;
         _contentStore = contentStore;
         _config = config;
@@ -41,7 +44,11 @@ public class ServiceRewardService : IServiceRewardService
             return;
 
         var record = _contentStore.Record;
-        var playerId = _store.Record.EnlistedHeroId;
+        // The final-settlement grant runs AFTER the discharge pipeline cleared the core
+        // record, so EnlistedHeroId is null by then — pay the player hero directly rather
+        // than dropping the arrears into a null id (Codex P2-1: honorable discharge
+        // silently erased what the column still owed).
+        var playerId = _store.Record.EnlistedHeroId ?? _playerParty.GetMainHeroId();
 
         if (reward.ServiceXp > 0)
             record.ServiceXp += reward.ServiceXp;

@@ -154,6 +154,30 @@ downgraded to DEBUG disappears from exactly the logs it exists to produce.
   `LogTaomBehaviorAdded` carries a code comment for the same reason.
 - **Source:** `docs/reviews/rca-battleload-agentbuild-2026-08-03.md` (refuted-HIGH section).
 
+### A hero's battlefield formation ignores `default_group` — the mount decides
+
+`CharacterObject.GetFormationClass()` (`:818-839`, v1.4.7) overrides the base and, when `IsHero`, never
+reads `DefaultFormationClass` at all: it returns Cavalry for any `HasHorseComponent` item in
+`EquipmentIndex.Horse`, HorseArcher if that hero also carries a Bow/Crossbow. For a **troop**, the base
+`BasicCharacterObject.GetFormationClass()` (`:543`) *does* return `DefaultFormationClass`. So the same XML
+attribute is authoritative for one kind of character and inert for the other.
+
+- **Why it matters:** the obvious way to enforce "these lords never fight mounted" is to audit
+  `default_group`. On lords that check is decorative — it governs the party-screen icon and tooltips, not
+  the battle. A lord tagged `Infantry` holding a horse still spawns mounted, in the Cavalry formation.
+- **Prevent:** for any never-mounted rule, audit the **equipment** (Horse slot), and treat the enum as a
+  separate, UI-level concern worth fixing but never sufficient. Two further traps in the same code path:
+  `EquipmentIndex.ArmorItemEndSlot` and `EquipmentIndex.Horse` are both `10` (the innocuous-looking armor
+  read *is* the horse read), and `CharacterObject.Equipment` resolves to live `HeroObject.BattleEquipment`
+  for heroes — so a mount acquired at runtime is invisible to any static XML validator. `Mission`'s unused
+  `GetAgentTroopClass_Override` event (`:1555`) is the patch-free hook if that hole must be closed.
+- **Also worth knowing:** an unparseable `default_group` deserializes to `-1`, not to the Infantry default
+  (`BasicCharacterObject.cs:534`) — an undefined enum every downstream `switch` falls through silently.
+  This is what the validator's `INVALID_ENUM` check is actually protecting against.
+- **Source:** dwarf-lord formation audit, 2026-08-04 — decompile via `taom-src` against installed v1.4.7.
+  Process doc: `docs/reference/engine/formations-and-team-ai.md` "Which formation a spawned agent joins";
+  resulting gate: `MOUNTED_DWARF` in `docs/features/moduledata-validation.md`.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
@@ -163,3 +187,21 @@ downgraded to DEBUG disappears from exactly the logs it exists to produce.
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### Prove a count/consume adapter pair ranges over the same set — decompile BOTH members
+
+**Why missed:** Enlistment's food-delivery duty (2026-08-05) paired `CountPlayerFood()` →
+`ItemRoster.TotalFood` with `ConsumePlayerFood()` → removes `Item.IsFood` stacks. The names look
+symmetrical and both call real engine members, so every review that checked "do these APIs exist and
+are they used correctly" passed. But vanilla's `TotalFood` folds livestock in via
+`item.HorseComponent.MeatCount` (`ItemRoster.cs:452`) while the consume side can only touch `IsFood`
+items — so a player driving cattle satisfied the requirement and handed over nothing, completing the
+duty for free. Caught by the Codex pass, which decompiled the property instead of the method calling it.
+
+**Prevent:** when an adapter exposes a count/consume, read/write, or check/apply pair over the same
+engine collection, decompile BOTH members and prove they range over the same set. A reader that is a
+SUPERSET of what the writer can act on is a silent free-completion bug; a reader that is a subset
+silently blocks a legitimate action. Where practical, make the writer return what it actually did and
+gate completion on that return value rather than on the earlier read — then the two can't disagree.
+
+**Source:** `docs/reviews/rca-enlistment-content-2026-08-05.md` Codex finding C2.

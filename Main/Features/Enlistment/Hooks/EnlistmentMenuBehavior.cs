@@ -108,6 +108,12 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
 
     private void OnLeaveServiceSelected()
     {
+        // CO-OP: host-only, like every other discharge path. A client running this locally
+        // would restore its own presence and clear its record while the host stayed
+        // enlisted (Codex P2-3).
+        if (!_coopSession.IsAuthority)
+            return;
+
         // Terminal decision routed through the single discharge pipeline. Leaving before
         // the contract day classifies as desertion (arrears forfeit + relation cost in
         // the consequence layer); at/after it, an honorable release.

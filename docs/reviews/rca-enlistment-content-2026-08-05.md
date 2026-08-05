@@ -62,3 +62,28 @@ passing, `validate_moduledata.py` PASS, every entry point within ADR-002.
   computes the new debt from *what actually moved*, so a partial transfer, a config flip,
   or a future third payment channel can't desync the ledger. Prefer recomputing an
   invariant to incrementally adjusting the fields that feed it.
+
+## Codex adversarial pass (same day, after the fixes above)
+
+Verdict: **0 P1, 4 P2, 0 P3** — "not safe to put in front of players before live-game
+testing," which matches our own position. All four verified against the code and fixed;
+each carries a regression test in `CodexFindingRegressionTests` or the duty suite.
+
+| # | Sev | Bug | Why the internal review missed it |
+|---|-----|-----|-----------------------------------|
+| C1 | P2 | Honorable discharge **erased the arrears it was meant to settle**: `DischargeService` resets the core record BEFORE raising `EnlistmentEnded`, so the consequence layer's final-settlement `Grant` read a null `EnlistedHeroId` and `GoldGiftAdapter` silently no-oped on the failed hero lookup | The internal pass re-derived the wage arithmetic but stopped at the service boundary — it never followed the discharge event ORDERING down into the concrete gold adapter. Cross-service ordering is invisible to both per-file review and per-service tests |
+| C2 | P2 | `DeliverFood` duties **completed for free**: `CountPlayerFood` returned `ItemRoster.TotalFood`, which folds in livestock via `item.HorseComponent.MeatCount` (ItemRoster.cs:452), while `ConsumePlayerFood` only removed `IsFood` stacks. A player driving cattle satisfied the check and handed over nothing | Symmetrical-looking adapter names ("count"/"consume") hid an asymmetric engine property. Nobody decompiled `TotalFood` — the internal review verified the APIs it *called*, not the semantics of the value one *returned* |
+| C3 | P2 | The wait-menu leave option had **no co-op authority gate**, unlike every other discharge path — a client could clear its own service while the host stayed enlisted | Grep-level authority checks look clean because the ticks and dialogues are all gated; a menu-option *consequence* is a world-mutating entry point that doesn't pattern-match as one |
+| C4 | P2 | **NaN campaign days failed open in the duty scheduler**: cooldown comparisons went false (offering duties through the cooldown) and the expiry check went false forever (stranding a duty and its spawned party permanently) | Our NaN sweep covered the high-profile services named in the review prompt; the duty engine arrived from a parallel agent after that sweep and inherited no equivalent audit |
+
+**Pattern across C1-C4:** every one lives at a *seam* — between two services (C1), between an
+adapter's name and the engine's semantics (C2), between a UI entry point and the mutation it
+triggers (C3), or between a subsystem that got audited and one that arrived later (C4). None
+would be caught by reading any single file carefully. The internal data-flow agent found the
+same class of bug within the code it was pointed at; Codex's value was arriving with no
+knowledge of which parts had "already been reviewed."
+
+**Lesson (added to `docs/reviews/lessons/adapters-taleworlds-api.md`):** when an adapter
+exposes a count/consume or read/write pair, decompile BOTH engine members and prove they
+range over the same set. A count that is a superset of what the writer can act on is a
+silent free-completion bug.

@@ -20,6 +20,12 @@ public class DutyRotationPolicy : IDutyRotationPolicy
 
     public bool ShouldOfferDuty(SchedulerConfig scheduler, int daysServed, int trust, bool pressure, double nowDays, double? lastOfferDay)
     {
+        // A non-finite campaign day makes every `daysSince < cooldown` comparison false,
+        // which would fail OPEN and offer duties straight through the cooldown. Reject it
+        // outright: no offer is the safe branch.
+        if (double.IsNaN(nowDays) || double.IsInfinity(nowDays))
+            return false;
+
         if (scheduler == null || daysServed < scheduler.MinDaysBeforeFirstOffer)
             return false;
 
@@ -46,6 +52,10 @@ public class DutyRotationPolicy : IDutyRotationPolicy
 
     public bool ShouldRollIncident(SchedulerConfig scheduler, int daysServed, double nowDays, double? lastIncidentDay)
     {
+        // Same NaN polarity trap as ShouldOfferDuty: the cooldown comparison fails open.
+        if (double.IsNaN(nowDays) || double.IsInfinity(nowDays))
+            return false;
+
         if (scheduler == null || daysServed < scheduler.IncidentMinDaysServed)
             return false;
 

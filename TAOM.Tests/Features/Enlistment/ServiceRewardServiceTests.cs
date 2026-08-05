@@ -42,8 +42,10 @@ public class ServiceRewardServiceTests
         _goldGift = Substitute.For<IGoldGiftAdapter>();
         _goldTransfer = Substitute.For<IGoldTransferAdapter>();
         _commander = Substitute.For<ICommanderLordAdapter>();
+        var playerParty = Substitute.For<IPlayerPartyAdapter>();
+        playerParty.GetMainHeroId().Returns("main_hero");
         _service = new ServiceRewardService(
-            _store, _contentStore, _config, _skillXp, _goldGift, _goldTransfer, _commander, _logger);
+            _store, _contentStore, _config, _skillXp, _goldGift, _goldTransfer, _commander, playerParty, _logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";

@@ -37,7 +37,8 @@ public interface IDutyWorldAdapter
     int CountPlayerFood();
 
     /// <summary>Removes up to <paramref name="amount"/> food, cheapest items first. No-op for amount &lt;= 0.</summary>
-    void ConsumePlayerFood(int amount);
+    /// <summary>Removes up to <paramref name="amount"/> deliverable food; returns how much it actually took.</summary>
+    int ConsumePlayerFood(int amount);
 
     /// <summary>Grants food (as grain) to the player's main party. No-op for amount &lt;= 0.</summary>
     void GrantPlayerFood(int amount);

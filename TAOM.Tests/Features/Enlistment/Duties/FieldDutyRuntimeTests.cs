@@ -458,12 +458,33 @@ public class FieldDutyRuntimeTests
         _contentStore.Record.ActiveDutySettlementId = "town_1";
         _contentStore.Record.ActiveDutyFoodRequired = 6;
         _world.CountPlayerFood().Returns(10);
+        // Consumption reports what it actually took; completion keys on that, not on the count.
+        _world.ConsumePlayerFood(6).Returns(6);
 
         _runtime.OnSettlementEntered("town_1", 100.0);
 
         _world.Received(1).ConsumePlayerFood(6);
         Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
         Assert.IsFalse(_contentStore.Record.HasActiveDuty);
+    }
+
+    [TestMethod]
+    public void OnSettlementEntered_DeliverFoodCountLiesAboutDeliverableFood_StaysActive()
+    {
+        // Codex P2-2: the count once included livestock that consumption could never
+        // remove, so the delivery completed for free. Completion now needs real handover.
+        var duty = DeliverFoodDuty("supply_delivery");
+        ConfigureDuties(duty);
+        _contentStore.Record.ActiveDutyId = "supply_delivery";
+        _contentStore.Record.ActiveDutySettlementId = "town_1";
+        _contentStore.Record.ActiveDutyFoodRequired = 6;
+        _world.CountPlayerFood().Returns(10);
+        _world.ConsumePlayerFood(6).Returns(2);
+
+        _runtime.OnSettlementEntered("town_1", 100.0);
+
+        Assert.AreEqual(0, _contentStore.Record.DutySuccesses);
+        Assert.IsTrue(_contentStore.Record.HasActiveDuty);
     }
 
     [TestMethod]

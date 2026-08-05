@@ -126,6 +126,15 @@ public class FieldDutyRuntime : IFieldDutyRuntime
             return;
         }
 
+        // A non-finite day would make BOTH the shift-complete and the expiry comparison
+        // false forever, stranding the duty (and its spawned party) permanently. Skip the
+        // tick — the duty resumes on the next finite one.
+        if (double.IsNaN(nowDays) || double.IsInfinity(nowDays))
+        {
+            _logger?.LogError($"[Enlistment.Duties] non-finite campaign day ({nowDays}) — skipping duty update for '{record.ActiveDutyId}'");
+            return;
+        }
+
         var duty = FindDuty(record.ActiveDutyId);
         if (duty == null)
         {
@@ -190,8 +199,12 @@ public class FieldDutyRuntime : IFieldDutyRuntime
             case DutyMechanic.DeliverFood:
                 if (_world.CountPlayerFood() >= record.ActiveDutyFoodRequired)
                 {
-                    _world.ConsumePlayerFood(record.ActiveDutyFoodRequired);
-                    Complete(duty, "delivered");
+                    // Complete on what was actually handed over, not what the count
+                    // promised — the two used to disagree (livestock counted, never
+                    // consumed), which completed the delivery for free.
+                    var delivered = _world.ConsumePlayerFood(record.ActiveDutyFoodRequired);
+                    if (delivered >= record.ActiveDutyFoodRequired)
+                        Complete(duty, "delivered");
                 }
                 break;
             case DutyMechanic.CollectFood:

@@ -97,11 +97,28 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
     public string FindNearestAllySettlement(string commanderHeroId)
         => FindNearestSettlement(commanderHeroId, requireSameFaction: false, villageOnly: false, _logger);
 
+    /// <summary>
+    /// Counts exactly what <see cref="ConsumePlayerFood"/> can remove — deliverable
+    /// <c>IsFood</c> stacks. Deliberately NOT <c>ItemRoster.TotalFood</c>: vanilla's
+    /// property also folds in livestock via <c>item.HorseComponent.MeatCount</c>
+    /// (ItemRoster.cs:452), so a player driving cattle read as "has enough food", the
+    /// consume step removed nothing, and the delivery completed for free (Codex P2-2).
+    /// </summary>
     public int CountPlayerFood()
     {
         try
         {
-            return MobileParty.MainParty?.ItemRoster?.TotalFood ?? 0;
+            var roster = MobileParty.MainParty?.ItemRoster;
+            if (roster == null)
+                return 0;
+
+            var total = 0;
+            foreach (var element in roster)
+            {
+                if (element.EquipmentElement.Item?.IsFood == true && element.Amount > 0)
+                    total += element.Amount;
+            }
+            return total;
         }
         catch (Exception ex)
         {
@@ -110,15 +127,16 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
         }
     }
 
-    public void ConsumePlayerFood(int amount)
+    /// <summary>Removes up to <paramref name="amount"/> food and returns how much it actually took.</summary>
+    public int ConsumePlayerFood(int amount)
     {
         if (amount <= 0)
-            return;
+            return 0;
         try
         {
             var roster = MobileParty.MainParty?.ItemRoster;
             if (roster == null)
-                return;
+                return 0;
 
             // Cheapest food first. Deviation from the donor's fixed grain->fish->meat->cheese
             // chain: vanilla DefaultItems only defines Grain/Meat as food (no fish/cheese) —
@@ -137,10 +155,12 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
                 roster.AddToCounts(element.EquipmentElement, -take);
                 remaining -= take;
             }
+            return amount - remaining;
         }
         catch (Exception ex)
         {
             _logger?.LogError($"[Enlistment.Duties] ConsumePlayerFood({amount}) failed: {ex.Message}");
+            return 0;
         }
     }
 
