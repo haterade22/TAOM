@@ -1303,6 +1303,7 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentMeritMissionBehavior(
             IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
             IoC.Resolve<Features.Enlistment.Content.IBattleMeritAccumulator>(),
+            IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentConfigProvider>().GetConfig().MeritScoring));
         // Registered unconditionally; self-filters internally on Campaign.Current and co-op authority.
         AddTaomBehavior(new Features.FieldCommission.Hooks.FieldCommissionMissionLogic());

@@ -14,6 +14,53 @@ public sealed class MeritSample
     public float EngagementRatio { get; set; }
     public bool FellEarly { get; set; }
     public bool RoleFit { get; set; }
+
+    /// <summary>Mean distance to the nearest enemy across samples; negative when never measured.</summary>
+    public float AverageEnemyDistance { get; set; } = -1f;
+}
+
+/// <summary>
+/// Did the player fight the way their assignment asks? Archers are rewarded for holding a
+/// shooting line, cavalry for working the flanks at speed, support for staying with the
+/// commander, infantry for holding formation while engaged. Donor parity, expressed as a
+/// pure function so it can be unit-tested per assignment.
+/// </summary>
+public static class RoleFitEvaluator
+{
+    public static bool Evaluate(ServiceAssignment assignment, MeritSample sample)
+    {
+        if (sample == null)
+            return false;
+
+        var distance = sample.AverageEnemyDistance;
+        var measured = !float.IsNaN(distance) && !float.IsInfinity(distance) && distance >= 0f;
+
+        switch (assignment)
+        {
+            case ServiceAssignment.Archer:
+                // A shooting line: engaged, but not swallowed by the melee.
+                return measured && distance >= 18f && distance <= 50f;
+
+            case ServiceAssignment.Cavalry:
+                // Riding the flanks — closing and breaking off, never parked in the press.
+                return measured && distance >= 10f && distance <= 28f;
+
+            case ServiceAssignment.Support:
+                // Where the commander is.
+                return Ratio(sample.CommanderProximityRatio) >= 0.5f;
+
+            default:
+                // Infantry: in formation AND in contact.
+                return Ratio(sample.CohesionRatio) >= 0.5f && Ratio(sample.EngagementRatio) >= 0.5f;
+        }
+    }
+
+    private static float Ratio(float value)
+    {
+        if (float.IsNaN(value) || float.IsInfinity(value))
+            return 0f;
+        return value;
+    }
 }
 
 /// <summary>

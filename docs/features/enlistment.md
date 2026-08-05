@@ -118,8 +118,10 @@ unconditionally, self-filtering) samples cohesion, commander proximity, engageme
 survival every 2s and counts your kills, submitting ONE sample at mission end.
 `EnlistmentBattlePayoutService` scores it 0-100, resolves a reward band, and pays
 everything at once — base win/loss XP, capped kill XP, band rewards — then re-evaluates
-promotion. `MeritScoringConfig.RoleFitBonus` is currently inert (the sampler always
-reports `RoleFit = false`); the role-fit heuristic is a deliberate later refinement.
+promotion. Role fit (`RoleFitEvaluator`) asks whether you fought the way your assignment
+wants: archers hold an 18-50m shooting line, cavalry work the flanks at 10-28m, support
+stays near the commander, infantry holds formation *and* stays in contact. Never-measured
+and non-finite inputs fail closed — no free bonus.
 
 **Assignments.** Infantry / Archer / Cavalry / Support, changed by asking the commander;
 costs a 7-day cooldown and a point of trust (the donor allowed free swaps in any

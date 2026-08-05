@@ -20,6 +20,7 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
 {
     private readonly IEnlistmentStateQuery _query;
     private readonly IBattleMeritAccumulator _accumulator;
+    private readonly IEnlistmentContentStore _contentStore;
     private readonly MeritScoringConfig _scoring;
 
     private bool _active;
@@ -29,6 +30,8 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
     private int _commanderHits;
     private int _engagementHits;
     private int _kills;
+    private float _enemyDistanceSum;
+    private int _enemyDistanceSamples;
     private float _downSince = -1f;
     private float _missionStart = -1f;
     private bool _fellEarly;
@@ -36,10 +39,12 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
     public EnlistmentMeritMissionBehavior(
         IEnlistmentStateQuery query,
         IBattleMeritAccumulator accumulator,
+        IEnlistmentContentStore contentStore,
         MeritScoringConfig scoring)
     {
         _query = query;
         _accumulator = accumulator;
+        _contentStore = contentStore;
         _scoring = scoring;
     }
 
@@ -93,7 +98,7 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
         _active = false;
 
         var survival = _downSince < 0f ? 1f : 0f;
-        _accumulator.Submit(new MeritSample
+        var sample = new MeritSample
         {
             Kills = _kills,
             SurvivalRatio = survival,
@@ -101,8 +106,12 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
             CommanderProximityRatio = Ratio(_commanderHits),
             EngagementRatio = Ratio(_engagementHits),
             FellEarly = _fellEarly,
-            RoleFit = false, // role-fit heuristics are a later refinement; scored neutral
-        });
+            AverageEnemyDistance = _enemyDistanceSamples > 0
+                ? _enemyDistanceSum / _enemyDistanceSamples
+                : -1f,
+        };
+        sample.RoleFit = RoleFitEvaluator.Evaluate(_contentStore.Record.Assignment, sample);
+        _accumulator.Submit(sample);
     }
 
     private float Ratio(int hits) => _samples <= 0 ? 0f : (float)hits / _samples;
@@ -122,22 +131,33 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
         }
 
         var commanderNear = false;
-        var enemyNear = false;
+        var nearestEnemySq = float.MaxValue;
         foreach (var agent in Mission.Agents)
         {
             if (agent == main || !agent.IsHuman || !agent.IsActive() || agent.Team == null)
                 continue;
             var distanceSq = agent.Position.DistanceSquared(position);
-            if (!commanderNear && agent.IsHero && !agent.Team.IsEnemyOf(main.Team) && distanceSq <= commanderSq)
+            if (agent.Team.IsEnemyOf(main.Team))
+            {
+                if (distanceSq < nearestEnemySq)
+                    nearestEnemySq = distanceSq;
+            }
+            else if (!commanderNear && agent.IsHero && distanceSq <= commanderSq)
+            {
                 commanderNear = true;
-            else if (!enemyNear && agent.Team.IsEnemyOf(main.Team) && distanceSq <= engagementSq)
-                enemyNear = true;
-            if (commanderNear && enemyNear)
-                break;
+            }
         }
+
         if (commanderNear)
             _commanderHits++;
-        if (enemyNear)
+        if (nearestEnemySq <= engagementSq)
             _engagementHits++;
+        if (nearestEnemySq < float.MaxValue)
+        {
+            // Mean nearest-enemy distance drives the role-fit bands (archers hold a line,
+            // cavalry work the flanks) — measured, not inferred from the engagement flag.
+            _enemyDistanceSum += (float)System.Math.Sqrt(nearestEnemySq);
+            _enemyDistanceSamples++;
+        }
     }
 }
