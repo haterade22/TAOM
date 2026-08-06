@@ -32,8 +32,8 @@
 | **TaleWorlds signature / decompile** | `pwsh tools/taom-src.ps1 path <FullTypeName>` | **PRIMARY for signature verification.** Decompiles the installed DLL (auto-detected version, currently **v1.4.7**) on cache miss, prints an absolute `.cs` path. Compose: `rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)` |
 | Browse engine source for patterns | `Read`/`Grep` under `E:\Decompiled_Bannerlord\` | **v1.4.7** dump. Fine for browsing; for authoritative signatures still prefer `taom-src`. ⚠️ SHIPPING-CLIENT build — editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX toolchain) only exist in `_editor_build\`. "Absent from dump" ≠ "doesn't exist." |
 | Decompile fallback | `ilspycmd "<dll>" -t "<Type>"` or the `ilspy` MCP | Only if `taom-src` fails. |
-| **Build** | `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` | Use this, NOT `./build.ps1`, during agent work (avoids `out/` contention). |
-| **Test** | `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true` | Add `--filter "FullyQualifiedName~X"` to narrow. |
+| **Build** | `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` | Use this, NOT `./build.ps1`, during agent work (avoids `out/` contention). ⚠️ See the caveat below — this flag does **not** actually stop deployment. |
+| **Test** | `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true` | Add `--filter "FullyQualifiedName~X"` to narrow. Same caveat. |
 | Engine-binding gate | `dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"` | Verifies patch/GameModel/reflection bindings resolve against the installed engine. |
 | Troop equipment refs | `python tools/validate_all_troop_refs.py` | Underwear-bug gate across all 7 culture troop XMLs. Proves refs resolve **on disk** — NOT that the engine loaded a NEW item file (those load only at a full game restart; naked-in-game with a green gate = new-file-not-loaded, not a data defect). |
 | API signature snapshot | `pwsh tools/snapshot_api_surface.ps1 [-Check]` | Regenerate / verify the committed signature snapshot (self-labels the installed version, currently v1.4.7). |
@@ -45,6 +45,10 @@
 | Full tool list | see [`tools/README.md`](../../tools/README.md) | Generators, rebalancers, localization, faction-map, etc. |
 
 **Target engine version is Bannerlord v1.4.7.** Anything in an agent prompt or doc that still names "v1.3.15" / "v1.4.5" / "v1.4.6" as the *current* target is stale — trust the installed DLLs + `taom-src` (which auto-detects the version).
+
+> **⚠️ `-p:DisableModuleCopy=true` does NOT prevent deployment to the game install** (verified 2026-08-06 against `bannerlord.buildresources` 1.1.0.129). In that package's `build/Basic.targets`, only the `PostBuildCopyToModules` *wrapper* is gated on the flag; `CopyBinariesWindows` (L53) and `CopyModule` (L64) each carry their own `AfterTargets="PostBuildEvent"` with conditions that omit it, so they fire regardless. Every "safe" agent build has in fact been writing to `<game>\Modules\`. This is invisible while Bannerlord is closed and becomes a hard `UnauthorizedAccessException` / `IOException` build failure the moment it is **running**, because the game holds `0Harmony.dll` and `Bannerlord.ButterLib.dll`.
+>
+> **If a build fails on `CopyFolder` with "used by another process", the game is open — do not kill it** (the user may be mid-repro). Add `-p:ModuleId=` to genuinely skip all three copy targets while leaving assembly references intact: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`. That only skips `SubModule.xml` token replacement, which matters for deployment, not for compiling or running tests.
 
 ---
 

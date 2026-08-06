@@ -109,3 +109,23 @@ When migrating sprites from one atlas category to another (e.g. `ui_taom` → `u
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+### A Gauntlet screen with fixed-width children must be FIXED WIDTH and CENTRED, never StretchToParent
+
+A container set to `StretchToParent` becomes as wide as the player's monitor. Every fixed-width
+child inside it then clusters at the left and the remainder is dead space — invisible at 16:9,
+where the numbers were tuned, and severe at 32:9. The career screen (#388) showed all three
+failure shapes at once on an ultrawide: the header bar ran off into empty space, its ability
+description drifted past centre and clipped mid-sentence, and the right-hand summary column
+stranded far from the grid it belonged to.
+
+- **Why missed:** every width was chosen while looking at one 16:9 screenshot, so the layout
+  was correct *at that width* and the reviews (which read markup, not pixels) had nothing to
+  catch. Aspect ratio is a dimension no static check and no unit test covers.
+- **Prevent:** give any screen whose children are fixed-width a `WidthSizePolicy="Fixed"` root
+  with `HorizontalAlignment="Center"`, sized to the sum of its columns, and write that sum in a
+  comment next to it so the next person changing a column width knows the budget they are
+  spending. Reserve `StretchToParent` for children that genuinely fill their parent. Sibling
+  case: the retired AbilityHUD had to be right-anchored for the same reason — a `Center`-anchored
+  panel drifted unreachable on ultrawide.
+- **Source:** career UX arc 2026-08-06 (user report with three stitched ultrawide screenshots);
+  fix `9284a5e8`, feature doc `docs/features/career-system.md`.

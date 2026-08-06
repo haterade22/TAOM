@@ -4,6 +4,111 @@
 
 ## 2026-08-06
 
+### fix(career): diamond screen layout rework + ultrawide centring (#388)
+
+Two follow-ups after seeing the first diamond pass in-game.
+
+**Layout rework.** The career info was a full-height left column, which ate the width the grid
+needed; it is now a header bar across the top (name + description | portrait | ability icon,
+name and effect lines). Diamonds went 90px → 70px, the boxed group panels are gone entirely
+(a group is now just its lore name above its row on the open background), and each diamond
+carries the bronze border sprite tinted by state — dim when locked, bronze when available,
+bright gold when taken. The rank title and its "Requires Level N" moved onto one line above
+the groups, where they no longer collide with group names, and Free Points / Active Effects
+became a proper right-hand column. The hover tooltip is anchored above its diamond and renders
+late so it draws over neighbouring rows instead of under their chrome.
+
+Removing the +/− button column left no way to refund a pick, so the diamond click became a
+toggle (`ExecuteToggleChoice`): take an untaken choice, refund a taken one. Both directions
+were already guarded — free points, tier locks and keystone exclusivity going in, a no-op on an
+untaken id coming out — and a regression test pins it, because without it every taken choice is
+stranded. `CareerNodePanel`'s VisualDefinition went with the boxed panel it sized.
+
+**Ultrawide centring.** On a 32:9 monitor the screen came apart: the header bar stretched into
+dead space, its ability description drifted past centre and clipped mid-sentence, and the
+Active Effects column stranded far from the grid. Cause was `StretchToParent` plus margins on
+the outer container — the layout was as wide as the monitor, so every fixed-width child
+clustered left and the rest was void. Widths tuned against a 16:9 canvas had silently stopped
+meaning anything. The container is now Fixed 1720 and centred, sized to hold the body
+(1330 + 20 + 340) and the header (700 + 290 + 24 + 92 + 16 + 560), so it reads as one centred
+block at any aspect ratio.
+
+Suite 5566 green. Not-tested: in-game render at ultrawide — needs a reopen.
+
+### feat(diagnostics): Patch67 makes the character tableau report its own resource residency (#389)
+
+The black-silhouette investigation had no instrument: the encyclopedia render path emitted nothing,
+so the only available evidence was a human comparing pixels between troops. `Patch67_TableauResidencyDiag`
+makes the path state its outcome per troop.
+
+The signal is vanilla's own `_agentVisualLoadingCounter`. `CharacterTableau.OnTick` decrements it only
+when `GetEntity().CheckResources(true, true)` returns true, and shows the refreshed visual only once
+it reaches zero — so "never reaches zero" is an exact proxy for "this character's meshes/materials
+never became resident", **at zero extra native cost**, because vanilla already made the call whose
+answer we read. The patch deliberately never calls `CheckResources` itself: that would add a per-frame
+round-trip and queue resources as a side effect, which is a diagnostic changing what it measures.
+
+- **Keyed on `_charStringId`, not race.** A race-level key would collapse all 37 `uruk_hai` troops into
+  one verdict and lose the exact comparison the instrument exists for. `Residency STUCK` logs at ERROR,
+  `RESOLVED after N tick(s)` at INFO. **A double-RESOLVED result is as decisive as a STUCK one** — it
+  exonerates residency and moves the fault downstream.
+- **Its own category, not folded into Patch2.** The #389 experiment disables `Patch2_RefreshTableau` +
+  `Patch3_SetRace` to test whether TAOM's patches cause the fault; the instrument must survive that A/B.
+- Verdict logic is a pure `TableauResidencyTracker` (16 tests, TDD) so the patch stays thin — capped at
+  64 tracked characters, one verdict each, because the failing state repeats every frame. All six
+  private-field injections and both targets pinned by `Patch67TableauResidencyBindingTests`; without
+  that gate an engine rename would make the instrument silently dead, since the isolated preview batch
+  logs a category failure rather than crashing. Suite 5586 green.
+
+Scaffolding — delete the category once #389 is root-caused.
+
+### fix(docs): `-p:DisableModuleCopy=true` does not actually disable the module copy
+
+Verified against `bannerlord.buildresources` 1.1.0.129: only the `PostBuildCopyToModules` wrapper is
+gated on the flag, while `CopyBinariesWindows` and `CopyModule` each carry their own
+`AfterTargets="PostBuildEvent"` with conditions that omit it. So every "safe" agent build has been
+writing to `<game>\Modules\` regardless — invisible with the game closed, a hard build failure with it
+running (it holds `0Harmony.dll`). Five docs assert the flag works. The operating manual now carries
+the caveat and the actual workaround (`-p:ModuleId=`), which skips all three copy targets while
+leaving references intact.
+
+### fix(tools): `taom-src` can now reach engine types that ship inside a module (#389 fallout)
+
+`pwsh tools/taom-src.ps1 path <Type>` searched only `<game>\bin\Win64_Shipping_Client` and threw
+"not found in any DLL" for every type living under a module. That is not an edge case:
+`TaleWorlds.MountAndBlade.View.dll` — owner of `CharacterTableau`, `BasicCharacterTableau` and
+`AgentVisuals`, i.e. the entire tableau/encyclopedia render path — exists **only** in
+`Modules\Native\bin\` and is absent from `bin\` outright. So does every `SandBox.*` type. Every agent
+investigating #389 hit the same wall and fell back to raw `ilspycmd`.
+
+Search order is now the primary bin dir, then each `Modules\<Name>\bin\Win64_Shipping_Client` holding
+DLLs — modules shipping `TaleWorlds.*` assemblies before third-party ones, so an engine type never
+loses a probe race to a mod vendoring the same type name. 18 dirs on this install.
+
+- `dll-index.json` now records a **full path**; a bare filename cannot address a module-dir assembly.
+  Legacy bare-filename entries still resolve (verified against the pre-existing `TaleWorlds.Library`
+  entry), so the cache does not need clearing.
+- Verified across all six paths: module-dir type, non-`TaleWorlds`-prefixed module type
+  (`SandBox.ViewModelCollection`), fresh primary-bin namespace probe, legacy index entry, cache-hit
+  short-circuit, and that the cached output is real C#.
+
+### fix(docs): armory snapshot was described as byte-identical to live; it is not
+
+`docs/reference/lotrlome-armory-snapshot/README.md` claimed `skins.xml` and `monsters.xml` were
+"verified byte-identical to live". Both are stored CRLF here against LF live — `skins.xml` is
+5,899,564 bytes vs 5,678,589, `monsters.xml` 69,267 vs 67,296. They are identical **after newline
+normalisation** (md5 equal via `tr -d '\r'`, checked this session). A hash check taken at face value
+would have reported spurious drift and triggered a pointless re-snapshot.
+
+### docs: two defects filed from the #389 investigation
+
+- **#389** — Isengard `uruk_hai`/`berserker` render as black silhouettes in the encyclopedia tableau.
+  Root cause **not** determined; 12 candidates refuted with evidence, 2 hypotheses standing, and a
+  3-factor in-game experiment matrix (race × body-property × armour family) recorded to settle it.
+- **#390** — 42 crafting-piece/shield meta-meshes referenced by `LOTRLOME_Armory` but absent from the
+  install (18 uruk weapon parts, 18 Mordor weapon parts, 5 Mordor shields, 1 Gondor shield). Long-
+  shipping, invisible because they are `CONTENT WARNING`s rather than errors.
+
 ### feat(career): diamond career screen with per-choice icons and Active Effects (#388)
 
 Replaces the May pip-strip layout after comparing both in-game. Each choice is now a diamond
