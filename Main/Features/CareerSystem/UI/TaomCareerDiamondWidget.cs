@@ -83,7 +83,14 @@ public class TaomCareerDiamondWidget : Widget
             _tooltipWidget = FindById(this, "DiamondTooltip");
             _iconTaken = FindById(this, "IconTaken");
             _iconFree = FindById(this, "IconFree");
-            _childrenResolved = true;
+
+            // Latch ONLY once the tree actually produced the children. This runs on the first
+            // OnLateUpdate, which for a widget built from a ListPanel ItemTemplate can fire
+            // before the template has populated its children — latching unconditionally then
+            // pinned _glowWidget at null for the widget's whole life, so a taken diamond never
+            // got its bright rim (and, since the locked/available layers hide when taken, it
+            // lost its rim entirely). Keep retrying until they resolve.
+            _childrenResolved = _glowWidget != null && _tooltipWidget != null;
         }
 
         if (_isKeystoneState && !_keystoneTintApplied)
