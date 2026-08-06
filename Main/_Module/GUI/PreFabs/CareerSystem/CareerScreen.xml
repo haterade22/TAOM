@@ -25,7 +25,12 @@
         <!--Middle Area (Normal mode: perk tree)-->
         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsNormalMode">
           <Children>
-            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" MarginTop="150" MarginLeft="60" MarginRight="60" StackLayout.LayoutMethod="VerticalTopToBottom">
+            <!-- FIXED WIDTH, CENTRED (#388 ultrawide fix). StretchToParent made the whole
+                 screen as wide as the monitor: on a 32:9 the header bar ran off into dead
+                 space, its ability text drifted past centre and clipped, and the Active
+                 Effects column sat far from the grid. 1720 holds the body exactly
+                 (1330 tiers + 20 + 340 column + padding) and centres on any aspect ratio. -->
+            <ListPanel WidthSizePolicy="Fixed" SuggestedWidth="1720" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="150" StackLayout.LayoutMethod="VerticalTopToBottom">
               <Children>
 
                 <!-- HEADER BAR: career name + description | portrait | ability -->
@@ -58,7 +63,7 @@
                                 <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
                               </Children>
                             </Widget>
-                            <Widget WidthSizePolicy="Fixed" SuggestedWidth="600" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="16">
+                            <Widget WidthSizePolicy="Fixed" SuggestedWidth="560" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="16">
                               <Children>
                                 <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <Children>
