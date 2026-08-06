@@ -106,8 +106,12 @@ public class TaomCareerDiamondWidget : Widget
         if (_glowWidget != null)
         {
             // Steady luminescence, no pulse — an animated breath read as distracting in play.
+            // Full alpha for EVERY taken choice: at 0.8 the non-keystone rims read as "not
+            // brightened at all" next to a keystone's 1.0, so the taken state looked like it
+            // only applied to keystones. Keystones already stand apart by their silver-white
+            // icon tint, so the rim does not need to carry that distinction too.
             _glowWidget.IsVisible = _isTakenState;
-            _glowWidget.AlphaFactor = _isKeystoneState ? 1.0f : 0.8f;
+            _glowWidget.AlphaFactor = 1.0f;
         }
     }
 
