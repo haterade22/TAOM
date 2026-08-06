@@ -44,14 +44,15 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
     public override float GetEffectiveMaxHealth(Agent agent)
     {
         var baseHealth = base.GetEffectiveMaxHealth(agent);
-        // Hero → flat Health passive; mount whose rider is a hero → multiplicative MountHealth.
+        // Mount whose rider is a hero → multiplicative MountHealth. The hero's own Health passive is
+        // NOT applied here (#388) — base's hero branch returns agent.Character.MaxHitPoints(), which
+        // already carries it via TaomCharacterStatsModel. Adding it again doubles the pip in battle.
         // Primitive extraction only; the decision lives in the service (gamemodels.md rule 4).
-        var heroId = agent.IsHero ? (agent.Character as CharacterObject)?.HeroObject?.StringId : null;
         var rider = agent.IsMount ? agent.RiderAgent : null;
         var riderHeroId = (rider != null && rider.IsHero)
             ? (rider.Character as CharacterObject)?.HeroObject?.StringId
             : null;
-        return _agentStatService.ApplyMaxHealthPassives(heroId, riderHeroId, baseHealth);
+        return _agentStatService.ApplyMountHealthPassives(riderHeroId, baseHealth);
     }
 
     public override void UpdateAgentStats(Agent agent, AgentDrivenProperties agentDrivenProperties)

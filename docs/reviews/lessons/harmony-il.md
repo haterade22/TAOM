@@ -311,6 +311,7 @@ patch in it, not just the offending method.
 ## Referenced by
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/lessons/testing-qa.md](./testing-qa.md)
 - [docs/reviews/rca-castle-recruitment-2026-05-31.md](../rca-castle-recruitment-2026-05-31.md)
 - [docs/reviews/rca-isengard-black-tableau-2026-08-06.md](../rca-isengard-black-tableau-2026-08-06.md)
 - [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../rca-tournament-dwarf-dismount-2026-06-09.md)

@@ -36,33 +36,48 @@ public class CareerAgentStatService : ICareerAgentStatService
         ApplyAllyBuff(agentIndex, props);
     }
 
-    public float ApplyMaxHealthPassives(string? heroId, string? mountRiderHeroId, float baseHealth)
+    // #388 — the hero `Health` passive is deliberately ABSENT here. It is applied campaign-side by
+    // TaomCharacterStatsModel.MaxHitpoints, and SandboxAgentStatCalculateModel.GetEffectiveMaxHealth
+    // starts with `if (agent.IsHero) return agent.Character.MaxHitPoints();` — which routes through
+    // that same model. Re-adding it on this path double-counts (a +75 pip becomes +150 in battle).
+    // Mounts have no CharacterStatsModel route, so MountHealth stays here.
+    public float ApplyMountHealthPassives(string? mountRiderHeroId, float baseHealth)
     {
-        if (!string.IsNullOrEmpty(heroId))
-            return baseHealth + _passives.GetPassiveMagnitude(heroId!, PassiveEffectType.Health);
+        if (string.IsNullOrEmpty(mountRiderHeroId)) return baseHealth;
 
-        if (!string.IsNullOrEmpty(mountRiderHeroId))
-        {
-            var MountHealth = _passives.GetPassiveMagnitude(mountRiderHeroId!, PassiveEffectType.MountHealth);
-            if (MountHealth != 0f) return baseHealth * (1f + MountHealth);
-        }
-
-        return baseHealth;
+        var mountHealth = _passives.GetPassiveMagnitude(mountRiderHeroId!, PassiveEffectType.MountHealth);
+        return mountHealth != 0f ? baseHealth * (1f + mountHealth) : baseHealth;
     }
 
-    public float CalculateDamageAmplification(string? attackerHeroId, AttackTypeMask hitMask, float baseResult)
+    public float CalculateDamageAmplification(string? attackerHeroId, string? attackerTroopLeaderHeroId, AttackTypeMask hitMask, float baseResult)
     {
-        if (string.IsNullOrEmpty(attackerHeroId)) return baseResult;
-
         var result = baseResult;
 
-        var armorPen = _passives.GetPassiveMagnitude(attackerHeroId!, PassiveEffectType.ArmorPenetration);
-        if (armorPen != 0f) result *= (1f + armorPen);
+        if (!string.IsNullOrEmpty(attackerHeroId))
+        {
+            var armorPen = _passives.GetPassiveMagnitude(attackerHeroId!, PassiveEffectType.ArmorPenetration);
+            if (armorPen != 0f) result *= (1f + armorPen);
 
-        // Damage is attack-type-specific (a melee or ranged pip), so it applies here on the hit
-        // path (gated by hitMask) rather than as a flat DamageMultiplierBonus.
-        var damage = _passives.GetMaskedMagnitude(attackerHeroId!, PassiveEffectType.Damage, hitMask);
-        if (damage != 0f) result *= (1f + damage);
+            // Damage is attack-type-specific (a melee or ranged pip), so it applies here on the hit
+            // path (gated by hitMask) rather than as a flat DamageMultiplierBonus.
+            var damage = _passives.GetMaskedMagnitude(attackerHeroId!, PassiveEffectType.Damage, hitMask);
+            if (damage != 0f) result *= (1f + damage);
+        }
+
+        // TroopDamage — the attacker is a non-hero troop whose party leader took the passive. The
+        // exact mirror of TroopResistance on the reduction path, and mutually exclusive with the
+        // hero Damage above (the boundary returns null here for a hero attacker). NOT mask-gated:
+        // the shipped pips carry no attack_type_mask, so it is a flat army-wide multiplier.
+        //
+        // #388 — before this, TroopDamage's only consumer was TaomRaidModel.CalculateHitDamage,
+        // i.e. how fast a village burns, so 105 pips promising "+N% troop damage" were inert in
+        // every battle. The raid consumer is deliberately KEPT; these are different systems, not a
+        // double-count.
+        if (!string.IsNullOrEmpty(attackerTroopLeaderHeroId))
+        {
+            var troopDamage = _passives.GetPassiveMagnitude(attackerTroopLeaderHeroId!, PassiveEffectType.TroopDamage);
+            if (troopDamage != 0f) result *= (1f + troopDamage);
+        }
 
         return result;
     }

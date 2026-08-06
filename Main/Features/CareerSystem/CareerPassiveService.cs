@@ -115,8 +115,16 @@ public class CareerPassiveService : ICareerPassiveService
 
         if (!snapshot.TryGetValue(heroStringId, out var effectMap)) return 0f;
         if (!effectMap.TryGetValue(type, out var magnitude)) return 0f;
-        if (magnitude != 0f)
-            _logger.LogDebug($"CareerSystem: GetPassiveMagnitude hero='{heroStringId}' type={type} = {magnitude}");
+        // NO per-lookup logging here. This is a hot path: since 2026-08-06 it is reached from
+        // TaomCharacterStatsModel.MaxHitpoints (every agent spawn, every tooltip, the daily heal
+        // tick) and from CalculateDamageAmplification PER BLOW for every non-hero troop whose
+        // leader holds a TroopDamage pip. The old `if (magnitude != 0f) LogDebug($"...")` line
+        // allocated on EVERY such call — interpolation is eager, so the string is built before
+        // LogDebug is entered, and FileLogger has no level gate (LogDebug -> Enqueue does a
+        // DateTime.Now.ToString + a second interpolation + an unbounded queue push). A large
+        // battle turned that into thousands of allocations and log lines per minute, which also
+        // buries the crash-triage log TAOM relies on for native CTDs.
+        // The cache CONTENTS are still recoverable: RefreshCache logs them per hero (rarely).
         return magnitude;
     }
 

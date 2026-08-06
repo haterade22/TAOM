@@ -1,10 +1,18 @@
 # Settlement economy: food, prosperity, hearth, caravans
 
-How a town/castle's food balance, prosperity, and village hearth actually compute in Bannerlord
-v1.4.5, what feeds each into the others, and where TAOM's `TaomSettlementFoodModel` intervenes. All
-formulas below are read from the v1.4.5 decompile (file:line cited), not inferred.
+How a town/castle's food balance, prosperity, hearth, market gold and caravan movement actually
+compute, what feeds each into the others, and where TAOM intervenes. Every formula below is read
+from a decompile with the file:line cited, never inferred.
 
-Companion feature doc: [docs/features/settlement-food.md](../../features/settlement-food.md).
+**Verification baseline per section** — the food, prosperity and hearth math was read from the
+**v1.4.5** decompile and has not been re-verified since; the town-gold and caravan sections were read
+from installed **v1.4.6** (#317) and **v1.4.7** (#391) and are marked as such inline. Treat the
+older sections as accurate-but-unrefreshed: re-verify with `taom-src` before relying on an exact
+constant after an engine bump.
+
+Companion feature docs: [settlement-food.md](../../features/settlement-food.md),
+[settlement-economy.md](../../features/settlement-economy.md),
+[economy-diagnostics.md](../../features/economy-diagnostics.md).
 
 ## TL;DR
 
@@ -111,12 +119,54 @@ which **excludes garrisons, militia, caravans, villagers, bandits**. Consequence
 
 ## Caravans — `DefaultCaravanModel`
 
+
 Caravans are trade parties: they buy/sell goods in town markets for money. (`TaomCaravanModel` tweaks
 Umbar's forming cost + CaravanTrade's initial-trade-gold / per-category buy caps, and `Patch59_CaravanTrade`
 reshapes caravan destination ranging, war-time trade, and basket breadth — see
 [caravan-trade](../../features/caravan-trade.md).) They **do not deliver food to a garrison or town**. Food enters a town
 only as marketplace sales of `BonusToFoodStores` items (food a caravan happens to sell counts there,
 like any seller). If towns are food-starved, caravans are not the lever.
+
+### Why a caravan parks in a town (verified v1.4.7, #391)
+
+`CaravansCampaignBehavior.HourlyTickParty` (:617-683) is the **sole** source of movement orders for a
+caravan — every generic AI behavior early-returns on `IsCaravan` (`AiVisitSettlementBehavior.cs:140-143`,
+`AiMilitaryBehavior.cs:489`, `AiPatrollingBehavior.cs:74`, `AiEngagePartyBehavior.cs:36`). If it issues
+no order, nothing else will, and `MobileParty.CheckExitingSettlementParallel` (:4085-4104) will not
+release a party whose `ShortTermTargetSettlement` is its current settlement. Every way a caravan gets
+stuck is a **silent early-return** — no log, no event.
+
+Inside a fortification it only re-decides when all of :631 holds (not besieged; `ShortTermBehavior !=
+FleeToPoint`; `!Ai.IsAlerted`; and `IsCurrentlyUsedByAQuest || randomFloat < 1/3`), then rolls the
+wounded ladder (:633-659):
+
+| Wounded | Chance to re-decide |
+|---|---|
+| ≥ 40% | **0 — never** |
+| ≥ 20% / 10% / 5% / 2.5% | 0.1 / 0.2 / 0.3 / 0.4 |
+| < 2.5% | 1.0 |
+
+**The boundaries are inclusive, not exclusive**, despite being written `(double)num > 0.4`: `num` is a
+`float`, widening puts the nearest float to 0.4 at `0.40000000596…` — above the double — and the same
+holds at every band edge. So exactly 40% wounded means *never leaves*.
+
+Two gates are easy to miss. `Ai.IsAlerted` is set **only** in the flee branch (`MobilePartyAi.cs:557-560`)
+and recomputed each think, so a caravan sheltering from a nearby battle stays alerted indefinitely.
+`ShortTermBehavior == Hold` — applied by `OnSiegeEventStarted` (:317-326) to every caravan in a
+besieged settlement — is the second disjunct of the exit guard; it outlives the siege and clears only
+on the next re-decide.
+
+Even when it re-decides it can fail to leave: `FindNextDestinationForCaravan` (:911-939) requires a
+**strictly positive** score, and `GetTradeScoreForTown`'s buy half is capped at
+`(int)(0.5 × PartyTradeGold)` (:1022). A caravan with ~0 gold and no cargo scores exactly 0 at every
+town, `ThinkNextDestination` returns null, and it is parked permanently.
+
+**How a broke town causes this indirectly.** Town gold appears nowhere in the caravan decision path;
+it only clamps sale volume to `town.Gold / itemPrice` (:1179-1182, :1191-1194), which at a near-zero
+pool rounds to zero quantity. But `HourlyTickParty` calls `BuyGoods` (:672) *before*
+`ThinkNextDestination` (:677) with no broke-check, so a caravan that cannot sell spends its purse
+anyway — and lands in the zero-score trap above. Diagnose with `taom.print_caravans`
+([economy-diagnostics](../../features/economy-diagnostics.md)).
 
 ## TAOM intervention — `TaomSettlementFoodModel`
 
@@ -180,9 +230,28 @@ knobs exist for exactly that.
 
 ## Town gold — the market wallet (`Town.Gold`)
 
-Verified on installed v1.4.6 (taom-src) during the #317 investigation. Town market gold is a
-separate pool from food/prosperity — it is what the player sees as the merchant's money in the
-trade screen (`InventoryScreenHelper.cs:123-128`).
+Verified on installed v1.4.6 (taom-src) during the #317 investigation; re-verified against v1.4.7
+during #391. Town market gold is a separate pool from food/prosperity — it is what the player sees as
+the merchant's money in the trade screen (`InventoryScreenHelper.cs:123-128`).
+
+**`SettlementComponent.ChangeGold(int)` is the pool's SOLE mutator.** `Gold` has a private setter
+(`SettlementComponent.cs:23-24`) and every writer routes through `ChangeGold` (:117-124), which also
+**hard-floors the pool at zero**:
+
+```csharp
+public void ChangeGold(int changeAmount)
+{
+    Gold += changeAmount;
+    if (Gold < 0) Gold = 0;
+}
+```
+
+Two consequences worth holding on to. A payment larger than the balance is **silently truncated** —
+the excess vanishes rather than creating debt, so a naive read of a caller's intended amount
+overstates the real drain. And because there is exactly one write path, a single instrumentation
+point observes 100% of movement with no possibility of a missed site — which is what makes
+`Patch68_EconomyDiagnostics` ([economy-diagnostics](../../features/economy-diagnostics.md))
+trustworthy enough to act on.
 
 ### Daily regeneration (the only minting source besides resident consumption)
 

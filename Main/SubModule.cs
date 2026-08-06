@@ -346,6 +346,21 @@ public class SubModule : MBSubModuleBase
         // range past the local town cluster instead of shuttling. Campaign-behavior target, so applied
         // in this campaign-phase block alongside the other AI patches.
         _harmony.PatchCategory("Patch59_CaravanTrade");
+        // Patch68: EconomyDiagnostics — read-only town-gold telemetry. One prefix/postfix recorder on
+        // SettlementComponent.ChangeGold (the pool's sole mutator, so no flow site can be missed)
+        // plus four flow-tag pairs naming the caller. Answers "where does a town's daily mint go",
+        // which no engine code logs. Campaign-behavior + action targets, so this block.
+        // Guarded like Patch60/61/62/63: this is DIAGNOSTIC-ONLY, and an unguarded throw here would
+        // abort the rest of this block — taking Patch30_MixedFormations and everything after it down
+        // with it. A read-only instrument must never be able to disable gameplay patches.
+        try
+        {
+            _harmony.PatchCategory("Patch68_EconomyDiagnostics");
+        }
+        catch (System.Exception ex)
+        {
+            logger.LogWarning($"[EconomyDiagnostics] Patch68 failed to apply: {ex.Message}");
+        }
         _harmony.PatchCategory("Patch30_MixedFormations");
         // Patch63 — guarded reimplementation of BannerBearerLogic.SpawnBannerBearer (issue #360):
         // the engine's reinforcement bearer spawn reads the new agent's ExtraWeaponSlot native
@@ -680,7 +695,7 @@ public class SubModule : MBSubModuleBase
         var recruitmentService = IoC.Resolve<IVolunteerRecruitmentService>();
         var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
         var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
-        campaignStarter.AddModel(new TaomCharacterStatsModel());
+        campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives));
         campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
         campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
 
@@ -927,6 +942,8 @@ public class SubModule : MBSubModuleBase
         // (fixes caravans shuttling between the nearest two towns). Registered unconditionally so a
         // mid-session master-toggle-on works immediately; no SyncData (ephemeral, rebuilds as caravans move).
         campaignStarter.AddBehavior(IoC.Resolve<Features.CaravanTrade.CaravanVisitMemoryBehavior>());
+        // Rolls the town-gold ledger onto a fresh day and clears it between campaigns (#317 follow-up).
+        campaignStarter.AddBehavior(IoC.Resolve<Features.EconomyDiagnostics.EconomyDiagnosticsBehavior>());
 
         // CastleRecruitment (Patch42) — castle notable population + maintenance + volunteer fill +
         // player "Recruit troops" castle menu + issue/quest suppression for castle notables.
@@ -1010,11 +1027,17 @@ public class SubModule : MBSubModuleBase
         if (_gameInitPatchesApplied) return;
         _gameInitPatchesApplied = true;
 
-        // Diagnostics 2026-07-31 ("bendy man" / prone tableau): these seven categories own the
-        // entire character-preview path. They were applied unguarded and in sequence, so the FIRST
-        // one to throw silently prevented every later one from applying — a state that is
-        // indistinguishable, from any log we ship, from all seven working correctly. Each is now
-        // isolated and reports its own outcome.
+        // Diagnostics 2026-07-31 ("bendy man" / prone tableau): these categories own the entire
+        // character-preview path. They were applied unguarded and in sequence, so the FIRST one to
+        // throw silently prevented every later one from applying — a state that is indistinguishable,
+        // from any log we ship, from all of them working correctly. Each is now isolated and reports
+        // its own outcome.
+        //
+        // Patch67 (2026-08-06, issue #389) is listed here for the same error isolation but is
+        // deliberately its OWN category: the black-silhouette investigation calls for disabling
+        // Patch2/Patch3 to test whether TAOM's own patches cause the fault, and the instrument has to
+        // keep reporting while that A/B runs. Remove the entry to silence it; do not fold it into
+        // Patch2.
         foreach (var previewCategory in new[]
         {
             "Patch1_FirstTimeInit",
@@ -1024,6 +1047,7 @@ public class SubModule : MBSubModuleBase
             "Patch5_FaceGen",
             "Late_Transpiler",
             "Late_ActionSetOverride",
+            "Patch67_TableauResidencyDiag",
         })
         {
             try
@@ -1411,5 +1435,6 @@ public class SubModule : MBSubModuleBase
         // the new IoC container. Without this, Finalizers fire against a disposed
         // FileLogger after reload and silently drop every log line.
         TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.ResetForUnload();
+        TAOM.Features.EconomyDiagnostics.Hooks.SettlementComponent_ChangeGold_Patch.ResetForUnload();
     }
 }

@@ -35,7 +35,16 @@ Progress goes to stderr, path goes to stdout — safe in `$(...)`.
 
 1. **DLL index cache** — `~/.taom-src/dll-index.json` remembers `type → dll` from prior lookups. Instant hit.
 2. **Namespace heuristic** — `TaleWorlds.CampaignSystem.X.Y` probes `TaleWorlds.CampaignSystem.X.dll`, then `TaleWorlds.CampaignSystem.dll`, then `TaleWorlds.dll`. Catches ~99% of cases on the first probe.
-3. **Brute-force iteration** — Last resort: probes every `*.dll` in `bin/Win64_Shipping_Client` alphabetically. ~30 probes max.
+3. **Brute-force iteration** — Last resort: probes every `*.dll` across all search dirs, alphabetically within each.
+
+**Search dirs (all three steps):** the primary `bin/Win64_Shipping_Client` first, then every
+`Modules/<Name>/bin/Win64_Shipping_Client` that holds DLLs — modules shipping `TaleWorlds.*`
+assemblies before third-party ones. **This is not optional trivia:** several engine assemblies ship
+ONLY under a module. `TaleWorlds.MountAndBlade.View.dll` — which owns `CharacterTableau`,
+`BasicCharacterTableau` and `AgentVisuals`, i.e. the whole tableau/encyclopedia render path — lives in
+`Modules/Native/bin/` and is absent from `bin/` entirely. Likewise `SandBox.*` types live in
+`Modules/SandBox/bin/`. Before 2026-08-06 the tool searched `bin/` only and threw "not found in any
+DLL" for all of them.
 
 ## When to use
 

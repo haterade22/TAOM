@@ -11,6 +11,12 @@
     Bin dir resolution order:
       1. $env:BANNERLORD_OVERRIDE_DIR\bin\Win64_Shipping_Client (if set)
       2. $env:BANNERLORD_GAME_DIR\bin\Win64_Shipping_Client (default)
+
+    Assembly SEARCH order is wider than the bin dir: the primary bin dir first, then every
+    <root>\Modules\<Name>\bin\Win64_Shipping_Client (engine modules shipping TaleWorlds.*
+    assemblies before third-party ones). This matters because several engine assemblies ship
+    ONLY under a module — TaleWorlds.MountAndBlade.View.dll, which owns CharacterTableau and
+    AgentVisuals, lives in Modules\Native\bin and is absent from bin\ entirely.
 .EXAMPLE
     # Cache from current $env:BANNERLORD_GAME_DIR (whatever version it is)
     pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel
@@ -38,6 +44,7 @@ $CacheRoot  = Join-Path $env:USERPROFILE '.taom-src'
 # $Version and $VersionDir are resolved lazily once Get-BinDir runs (needs Version.xml).
 $script:Version    = $null
 $script:VersionDir = $null
+$script:SearchDirs = $null
 $SourcesPath = Join-Path $CacheRoot 'sources.json'
 $IndexPath   = Join-Path $CacheRoot 'dll-index.json'
 
@@ -64,6 +71,49 @@ function Get-BinDir {
         throw "Bannerlord bin dir not found: $bin"
     }
     return $bin
+}
+
+function Get-SearchDirs {
+    # Every directory that may hold a managed assembly, in probe order.
+    #
+    # The primary bin dir alone is NOT sufficient: TaleWorlds ships several engine assemblies
+    # only under a module. TaleWorlds.MountAndBlade.View.dll — which owns CharacterTableau,
+    # AgentVisuals and the whole tableau render path — exists solely at
+    # Modules\Native\bin\Win64_Shipping_Client and is absent from bin\. Searching bin\ only made
+    # `taom-src path <those types>` fail with "not found in any DLL", sending readers to raw
+    # ilspycmd. Module dirs that ship TaleWorlds.* assemblies probe before third-party mod dirs
+    # so an engine type never loses a race to a mod that happens to vendor the same type name.
+    param([string]$BinDir)
+    if ($script:SearchDirs) { return $script:SearchDirs }
+
+    $dirs = @($BinDir)
+    $gameRoot    = Split-Path (Split-Path $BinDir -Parent) -Parent
+    $modulesRoot = Join-Path $gameRoot 'Modules'
+
+    if (Test-Path $modulesRoot) {
+        $engine = @()
+        $other  = @()
+        foreach ($moduleDir in (Get-ChildItem -Path $modulesRoot -Directory -ErrorAction SilentlyContinue | Sort-Object Name)) {
+            $moduleBin = Join-Path $moduleDir.FullName 'bin\Win64_Shipping_Client'
+            if (-not (Test-Path $moduleBin)) { continue }
+            $hasDlls = Get-ChildItem -Path $moduleBin -Filter '*.dll' -ErrorAction SilentlyContinue | Select-Object -First 1
+            if (-not $hasDlls) { continue }
+            $isEngine = Get-ChildItem -Path $moduleBin -Filter 'TaleWorlds.*.dll' -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($isEngine) { $engine += $moduleBin } else { $other += $moduleBin }
+        }
+        $dirs += $engine
+        $dirs += $other
+    }
+
+    $script:SearchDirs = $dirs
+    # Label each dir by the module that owns it (…\Modules\<Name>\bin\Win64_Shipping_Client →
+    # "<Name>"); the primary dir has no module and is reported as "bin".
+    $labels = $dirs | ForEach-Object {
+        $owner = Split-Path (Split-Path (Split-Path $_ -Parent) -Parent) -Leaf
+        if ($_ -eq $BinDir) { 'bin' } else { $owner }
+    }
+    Write-Progress2 "search dirs: $($dirs.Count) ($($labels -join ', '))"
+    return $script:SearchDirs
 }
 
 function Resolve-Version {
@@ -114,20 +164,40 @@ function Write-JsonFile {
 }
 
 function Get-CandidateDlls {
-    param([string]$TypeFqn, [string]$BinDir)
+    param([string]$TypeFqn, [string[]]$SearchDirs)
     # Namespace-based guess: walk from longest namespace prefix down to shortest.
     # E.g. TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel →
     #   TaleWorlds.CampaignSystem.GameComponents.dll, TaleWorlds.CampaignSystem.dll, TaleWorlds.dll
+    # Namespace length is the OUTER loop so the most specific assembly name still wins even when
+    # it lives in a module dir and a shorter-named one sits in bin\.
     $clean = $TypeFqn -replace '`\d+$', ''
     $parts = $clean -split '\.'
     if ($parts.Count -lt 2) { return @() }
     $candidates = @()
     for ($i = $parts.Count - 2; $i -ge 0; $i--) {
         $name = (($parts[0..$i]) -join '.') + '.dll'
-        $full = Join-Path $BinDir $name
-        if (Test-Path $full) { $candidates += $full }
+        foreach ($dir in $SearchDirs) {
+            $full = Join-Path $dir $name
+            if (Test-Path $full) { $candidates += $full }
+        }
     }
     return $candidates
+}
+
+function Resolve-IndexedDll {
+    # dll-index.json historically stored a bare filename (resolved against the bin dir).
+    # It now stores a full path so module-dir hits survive. Accept both.
+    param([string]$Recorded, [string[]]$SearchDirs)
+    if ([string]::IsNullOrWhiteSpace($Recorded)) { return $null }
+    if ([System.IO.Path]::IsPathRooted($Recorded)) {
+        if (Test-Path $Recorded) { return $Recorded }
+        return $null
+    }
+    foreach ($dir in $SearchDirs) {
+        $full = Join-Path $dir $Recorded
+        if (Test-Path $full) { return $full }
+    }
+    return $null
 }
 
 function Try-Decompile {
@@ -180,20 +250,23 @@ function Invoke-Path {
     $dllPath = $null
     $dllName = $null
 
+    $searchDirs = Get-SearchDirs -BinDir $bin
+
     if ($explicitDll) {
-        $dllPath = Join-Path $bin $explicitDll
-        if (-not (Test-Path $dllPath)) {
-            throw "Explicit DLL not found: $dllPath"
+        # An explicit -Dll may be a bare filename (resolved across every search dir) or a path.
+        $dllPath = Resolve-IndexedDll -Recorded $explicitDll -SearchDirs $searchDirs
+        if (-not $dllPath) {
+            throw "Explicit DLL '$explicitDll' not found in any search dir ($($searchDirs -join '; '))"
         }
-        $dllName = $explicitDll
+        $dllName = [System.IO.Path]::GetFileName($dllPath)
     } else {
         # 1. Check DLL index cache (type → dll mapping from prior lookups)
         $index = Read-Json -Path $IndexPath -Default ([ordered]@{})
         if ($index.Contains($typeFqn)) {
-            $cached = Join-Path $bin $index[$typeFqn]
-            if (Test-Path $cached) {
+            $cached = Resolve-IndexedDll -Recorded $index[$typeFqn] -SearchDirs $searchDirs
+            if ($cached) {
                 $dllPath = $cached
-                $dllName = $index[$typeFqn]
+                $dllName = [System.IO.Path]::GetFileName($cached)
                 Write-Progress2 "index hit → $dllName"
             }
         }
@@ -201,7 +274,7 @@ function Invoke-Path {
 
     if (-not $dllPath) {
         # 2. Try namespace-derived candidates (fast path for the common case)
-        $candidates = Get-CandidateDlls -TypeFqn $typeFqn -BinDir $bin
+        $candidates = Get-CandidateDlls -TypeFqn $typeFqn -SearchDirs $searchDirs
         foreach ($cand in $candidates) {
             Write-Progress2 "probing $([System.IO.Path]::GetFileName($cand))"
             $output = Try-Decompile -DllPath $cand -TypeFqn $typeFqn
@@ -214,22 +287,24 @@ function Invoke-Path {
     }
 
     if (-not $dllPath) {
-        # 3. Fallback: iterate every DLL alphabetically
-        Write-Progress2 "namespace probes missed; scanning all DLLs"
-        $all = Get-ChildItem -Path $bin -Filter '*.dll' | Sort-Object Name
-        foreach ($dll in $all) {
-            Write-Progress2 "probing $($dll.Name)"
-            $output = Try-Decompile -DllPath $dll.FullName -TypeFqn $typeFqn
-            if ($output) {
-                $dllPath = $dll.FullName
-                $dllName = $dll.Name
-                break
+        # 3. Fallback: iterate every DLL in every search dir (bin first, then engine modules,
+        #    then third-party module dirs — see Get-SearchDirs for why the order matters).
+        Write-Progress2 "namespace probes missed; scanning all DLLs across $($searchDirs.Count) dirs"
+        :scan foreach ($dir in $searchDirs) {
+            foreach ($dll in (Get-ChildItem -Path $dir -Filter '*.dll' -ErrorAction SilentlyContinue | Sort-Object Name)) {
+                Write-Progress2 "probing $($dll.Name)"
+                $output = Try-Decompile -DllPath $dll.FullName -TypeFqn $typeFqn
+                if ($output) {
+                    $dllPath = $dll.FullName
+                    $dllName = $dll.Name
+                    break scan
+                }
             }
         }
     }
 
     if (-not $dllPath) {
-        throw "Type '$typeFqn' not found in any DLL under $bin"
+        throw "Type '$typeFqn' not found in any DLL under: $($searchDirs -join '; ')"
     }
 
     # Decompile once more (or reuse output) and cache.
@@ -251,8 +326,10 @@ function Invoke-Path {
     Write-JsonFile -Path $SourcesPath -Obj $sources
 
     # Update dll-index.json (type → dll, used as fast path on the NEXT cache miss).
+    # Stores the FULL path, not a bare filename: a module-dir assembly is unresolvable from the
+    # name alone. Resolve-IndexedDll still accepts legacy bare-filename entries.
     $index = Read-Json -Path $IndexPath -Default ([ordered]@{})
-    $index[$typeFqn] = $dllName
+    $index[$typeFqn] = $dllPath
     Write-JsonFile -Path $IndexPath -Obj $index
 
     Write-Output $cacheFile

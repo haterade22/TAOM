@@ -8,24 +8,24 @@ This document **is the index** of the per-category lesson files under `lessons/`
 
 ## How to use
 
-- **Before touching a subsystem**, read its category file below. Each file is the accumulated trap list for that area — `lessons/gamemodels-services.md` before overriding a model, `lessons/harmony-il.md` before writing a transpiler, `lessons/xslt-moduledata.md` before editing a `*.xslt`, and so on. Reading the relevant file is cheaper than re-deriving the trap from a crash — and far cheaper than reading all 320 lessons at once, which is why the record is split per category (split 2026-07-12; every count below re-derived 2026-08-05 with `grep -c '^### '`, which is the only way to get them right — the per-file totals had drifted by up to 3 because entries appended below a file's generated backlinks block are easy to miss on a manual recount).
+- **Before touching a subsystem**, read its category file below. Each file is the accumulated trap list for that area — `lessons/gamemodels-services.md` before overriding a model, `lessons/harmony-il.md` before writing a transpiler, `lessons/xslt-moduledata.md` before editing a `*.xslt`, and so on. Reading the relevant file is cheaper than re-deriving the trap from a crash — and far cheaper than reading all 341 lessons at once, which is why the record is split per category (split 2026-07-12; every count below re-derived 2026-08-06 with `grep -c '^### '`, which is the only way to get them right — the per-file totals had drifted by up to 3 because entries appended below a file's generated backlinks block are easy to miss on a manual recount).
 - **`/deep-review` and `/review-codex` read-before / append-after.** Both review skills consult the matching category file before they start (so an agent knows the known blindspots for the code under review) and append any newly-confirmed lesson there after the RCA (Phase 3e) completes. A confirmed bug's root-cause table is not done until its lesson is in the category file.
 - **One entry = one lesson.** Mirror the existing shape: a `### ` rule title, then `**Why missed:**`, `**Prevent:**`, and `**Source:**`. Append to the CATEGORY FILE, not here — this file is the index. Keep `MEMORY.md` thin — it points here, and here points at the category files.
 
 ## Categories
 
-- [GameModels & Services](lessons/gamemodels-services.md) — 35 lessons
-- [Adapters & TaleWorlds API](lessons/adapters-taleworlds-api.md) — 24 lessons
-- [Build, Tooling & Workflow](lessons/build-tooling-workflow.md) — 61 lessons
+- [GameModels & Services](lessons/gamemodels-services.md) — 36 lessons
+- [Adapters & TaleWorlds API](lessons/adapters-taleworlds-api.md) — 25 lessons
+- [Build, Tooling & Workflow](lessons/build-tooling-workflow.md) — 66 lessons
 - [Misc](lessons/misc.md) — 5 lessons
-- [Testing & QA](lessons/testing-qa.md) — 29 lessons
-- [Data, Content & Cultures](lessons/data-content-cultures.md) — 49 lessons
-- [Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)](lessons/harmony-il.md) — 29 lessons
-- [Animation & Skeleton](lessons/animation-skeleton.md) — 20 lessons
-- [State, Lifecycle & Save](lessons/state-lifecycle-save.md) — 18 lessons
+- [Testing & QA](lessons/testing-qa.md) — 33 lessons
+- [Data, Content & Cultures](lessons/data-content-cultures.md) — 51 lessons
+- [Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)](lessons/harmony-il.md) — 30 lessons
+- [Animation & Skeleton](lessons/animation-skeleton.md) — 21 lessons
+- [State, Lifecycle & Save](lessons/state-lifecycle-save.md) — 19 lessons
 - [XSLT & ModuleData](lessons/xslt-moduledata.md) — 20 lessons
 - [Campaign Mechanics](lessons/campaign-mechanics.md) — 13 lessons
-- [Localization & UI](lessons/localization-ui.md) — 15 lessons
+- [Localization & UI](lessons/localization-ui.md) — 19 lessons
 - [Native C++ Port](lessons/native-cpp-port.md) — 3 lessons
 
 ---

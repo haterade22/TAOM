@@ -93,6 +93,7 @@
 - [settlement-economy](features/settlement-economy.md) — tunable town market-gold regen (drained markets recover), TaomSettlementEconomyModel (#317)
 - [settlement-building-levels](features/settlement-building-levels.md) — lore+role starting building levels for all 221 towns/castles (data pass on the LIVE settlements.xml; author/dump/apply tooling)
 - [caravan-trade](features/caravan-trade.md) — AI/player caravans range further, trade across the war, carry fuller baskets; 4 postfixes (Patch59) + TaomCaravanModel (#329)
+- [economy-diagnostics](features/economy-diagnostics.md) — read-only instruments for the "broke town / parked caravan" pair: `taom.print_town_ledger` attributes a town's market-gold movement by flow (one `Patch68` recorder on `ChangeGold`, the pool's sole mutator, + 4 outermost-wins tags), `taom.print_caravans` names which engine gate holds each caravan. No gameplay change (#391)
 - [startup-resources](features/startup-resources.md) — per-culture player startup gold/items
 - [cultural-feats](features/cultural-feats.md) — 16 culture-feat GameModel overrides (Patch18)
 

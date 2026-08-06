@@ -146,3 +146,14 @@ NaN/Infinity literals and the rate-0 accepted extreme).
 - [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
 
 <!-- backlinks-end -->
+## Attributing the drain (#391)
+
+This feature fixed the **regen** side: the mint recovers 25% of the deficit toward
+`base + Prosperity×12` daily. It did not touch the drain, and field reports show towns still
+pinned near zero — Minas Tirith at 173 denars with ~19,242/day owed.
+
+`taom.print_town_ledger [town]` attributes where that money goes, by day and by flow
+(`Patch68_EconomyDiagnostics`, read-only). Use it before changing any constant here: the
+suspected culprit is villager deliveries, which spend `min(qty, town.Gold / price)` across a
+villager's whole roster with **no reserve**. See
+[economy-diagnostics.md](economy-diagnostics.md).

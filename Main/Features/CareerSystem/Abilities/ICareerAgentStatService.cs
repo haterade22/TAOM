@@ -29,19 +29,27 @@ public interface ICareerAgentStatService
     void ApplyAgentStatModifiers(string? heroId, int agentIndex, bool isHuman, bool isHero, AgentDrivenProperties props);
 
     /// <summary>
-    /// Returns the agent's adjusted max health. A hero gets a flat <c>Health</c> career-passive
-    /// add; a MOUNT whose rider is a hero gets a multiplicative <c>MountHealth</c> bonus. Exactly
-    /// one of <paramref name="heroId"/> / <paramref name="mountRiderHeroId"/> is expected to be
-    /// non-null (the boundary never sets both — an agent is a hero or a mount, not both).
+    /// Returns a MOUNT's adjusted max health — a multiplicative <c>MountHealth</c> bonus when the
+    /// mount's rider is a hero carrying that passive. Pass null for any non-mount agent.
+    /// <para>
+    /// The hero <c>Health</c> passive is NOT handled here (#388): it is applied campaign-side by
+    /// <c>TaomCharacterStatsModel.MaxHitpoints</c>, and <c>SandboxAgentStatCalculateModel</c>'s
+    /// hero branch returns <c>agent.Character.MaxHitPoints()</c>, which already routes through that
+    /// model. Adding it on this path too would double-count it in battle.
+    /// </para>
     /// </summary>
-    float ApplyMaxHealthPassives(string? heroId, string? mountRiderHeroId, float baseHealth);
+    float ApplyMountHealthPassives(string? mountRiderHeroId, float baseHealth);
 
     /// <summary>
     /// Returns the post-amplification damage value. Applies the attacker's ArmorPenetration
     /// career passive and the attacker's <c>Damage</c> passive for the hit's delivery type
-    /// (<paramref name="hitMask"/> — a melee or ranged Damage pip only fires on the matching hit).
+    /// (<paramref name="hitMask"/> — a melee or ranged Damage pip only fires on the matching hit),
+    /// plus the <c>TroopDamage</c> passive of the attacker's party leader when the attacker is a
+    /// non-hero troop (the offensive mirror of <c>TroopResistance</c>, not mask-gated).
+    /// <paramref name="attackerHeroId"/> and <paramref name="attackerTroopLeaderHeroId"/> are
+    /// mutually exclusive — the boundary returns null for the latter when the attacker is a hero.
     /// </summary>
-    float CalculateDamageAmplification(string? attackerHeroId, AttackTypeMask hitMask, float baseResult);
+    float CalculateDamageAmplification(string? attackerHeroId, string? attackerTroopLeaderHeroId, AttackTypeMask hitMask, float baseResult);
 
     /// <summary>
     /// Returns the post-reduction damage value. Applies the victim's Resistance career passive

@@ -1,8 +1,72 @@
 # Investigation: Isengard Uruk-Hai render as black silhouettes in the encyclopedia (#389)
 
-**Status: OPEN — root cause not confirmed.** This records an investigation still in progress, not a
-fix. It is written now because the session produced several durable results, two instrument defects
-worth never repeating, and a framing correction that invalidates most of the first day's hypotheses.
+**Status: ROOT CAUSE IDENTIFIED (2026-08-06, from runtime census). Fix not yet applied.**
+
+## Root cause
+
+`m_uruk_hai_hands_a1` is authored to require the shader flag that **team-colouring** adds. Items that
+are not team-coloured never get it, and the material renders black.
+
+`AgentVisuals.AddTeamColorToMesh` (v1.4.7) is the only thing that adds it:
+
+```csharp
+meshAtIndex.Color = color1;  meshAtIndex.Color2 = color2;
+Material val = meshAtIndex.GetMaterial().CreateCopy();          // <-- hence the "(copy)" suffix
+val.AddMaterialShaderFlag("use_double_colormap_with_mask_texture", false);
+meshAtIndex.SetMaterial(val);
+```
+
+and it is called only when the **item** carries `UseTeamColor="true"`. Measured shader flags from the
+live census:
+
+| meshes | material as bound at runtime | flags | renders |
+|---|---|---|---|
+| `sk_uruk_hai_bracer_*` / `pauldron_*` / `helmet_*` (Isengard, `UseTeamColor="false"`) | `m_uruk_hai_hands_a1` | **`0x480090`** | **BLACK** |
+| `sk_is_orc_*_helmet_*` (Isengard, `UseTeamColor="true"`) | `m_uruk_hai_hands_a1(copy)` | `0x4C0090` | fine |
+
+The delta is exactly **`0x40000`** — `use_double_colormap_with_mask_texture`. Same material, same
+shader, same texture; the only difference is whether team-colouring copied it and set that bit.
+
+**Perfect correlation across all 11 censused troops:** every troop carrying the raw `0x480090`
+variant is black (`urukhai_fighter`, `_warrior`, `_swordman`, `_infantry`); every troop that either
+lacks the material (`urukhai_recruit`, `main_hero`, `isengard_orc_ravager`, `_berserker`) or gets the
+team-coloured copy (`isengard_orc_warrior`, `_butcher`, `_marauder`) renders correctly.
+
+This also explains the two facts that had looked contradictory: `urukhai_recruit` renders because its
+gear (tunic, gloves, shoes) never pulls in the hands sub-mesh; and the near-black Isengard culture
+colour `0xFF2B2B2B` is harmless — **the absence of team colour is the bug, not its presence.** The
+earlier elimination of "cloth/team colour" had the arrow exactly backwards.
+
+### The fix
+
+92 items bind a mesh carrying `m_uruk_hai_hands_a1`. 13 (`isengard/head_armors.xml`) are already
+`UseTeamColor="true"` and render fine. The remaining **79 are `false` or absent** and are the black
+set:
+
+| count | file (under `LOTRLOME_Armory/ModuleData/LOTRLOME_items/isengard/`) |
+|---|---|
+| 43 | `head_armors.xml` |
+| 12 | `arm_armors.xml` |
+| 10 | `body_armors.xml` |
+| 8 | `shoulder_armors.xml` |
+| 6 | `leg_armors.xml` |
+
+Setting `UseTeamColor="true"` on those 79 makes the engine copy the material and add the mask flag,
+exactly as it already does for the 13 that work. Side effect: those meshes also receive
+`Color = 0xFF2B2B2B` / `Color2 = 0xFF8C8C8C` (Isengard culture colours) — which is what the 13 working
+items and every orc item already do, so it is the established look, not a new one.
+
+**Alternative** (cleaner but needs the Modding Kit): re-author `m_uruk_hai_hands_a1` so it does not
+depend on the mask flag — or fix the upstream defect that the hand/glove sub-meshes are bundled into
+helmet, bracer, greave and pauldron MetaMeshes at all.
+
+Either way this is **data in `LOTRLOME_Armory`, a dependency module outside this repo** — see the
+dual-tree trap at the end of this document.
+
+---
+
+Everything below is the investigation record that led here, retained because the process lessons are
+the transferable part.
 
 **Date:** 2026-08-06 · **Issue:** [#389](https://github.com/haterade22/TAOM/issues/389) ·
 **Engine:** v1.4.7 · **Related:** [#390](https://github.com/haterade22/TAOM/issues/390) (separate
@@ -125,6 +189,24 @@ names, shader names, shader flags, per-mesh `Mesh.Color`/`Color2` and bound diff
 by material so two troops diff on one screen. Plus context: race, cloth colours, body-property
 default-ness, both loading counters, `isEnabled`, and both buffers' visibility.
 
+**Shape after the deep review** (Review 82b — the pre-review shape had a per-frame allocation, a slot
+leak and a hash-identity collision; see the findings table below):
+
+| File | Role |
+|---|---|
+| `Hooks/CharacterTableau_OnTick_ResidencyCensus_Patch.cs` | the census postfix — thin, holds no state |
+| `Hooks/CharacterTableau_ResidencyReset_Patches.cs` | `SetRace` + `OnFinalize` resets |
+| `Diagnostics/TableauCensusSession.cs` | per-tableau identity keys + the shared tracker |
+| `Diagnostics/TableauResidencyTracker.cs` | the report trigger (pure, 17 tests) |
+| `Diagnostics/TableauRenderCensus.cs` | reads `Skeleton.GetAllMeshes()`, groups by material |
+
+`TableauCensusSession` keys on `object` rather than `CharacterTableau`, which keeps it free of an
+engine dependency and makes it unit-testable (8 tests, including reference-equality assertions that
+prove the no-per-frame-allocation guarantee — `AreEqual` would pass on a rebuilt duplicate). Keys live
+in a `ConditionalWeakTable` so a finalised tableau's entry is collected rather than pinning an engine
+object, and each tableau gets a monotonic serial rather than `RuntimeHelpers.GetHashCode`, which is
+reused after GC.
+
 ## Open questions
 
 1. **Which meshes are actually black at runtime** — needs the census from a relaunch with
@@ -150,3 +232,60 @@ It is a **dependency module outside this repo**. Three traps:
 variant-count map** for every compiled asset. It is the cheapest way to answer "what material does this
 mesh actually use" without a tpac parser, and it is what exposed the helmet bundling. Grep the mesh
 name; do not use `-m1`, since one mesh legitimately has several material rows.
+
+---
+
+# Deep review (Review 82b) — findings and Phase 3e RCA
+
+Six agents (Standards, API Compatibility, Efficiency, Completeness, Data Flow, Tooling Correctness)
+over the Patch67 instrumentation, its tests, and the two scripts. Completeness and Compatibility
+returned clean (47/48 engine members verified, 0 incompatible). All findings below are FIXED.
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 1 | **HIGH** | `BuildKey` rebuilt a key string on EVERY rendered frame per live tableau, before the early-out | Hot-path allocation | The earlier adversarial pass explicitly checked for closure/lambda allocation on the steady-state path and correctly found none — but never asked what ran *before* the early return. The allocation was in the first statement. | New lesson (testing-qa): in a per-frame hook, the cheapest possible early-out must be the FIRST statement; audit what precedes it, not just what follows |
+| 2 | **GAP** (confirmed) | `Forget` fired only from `SetRace`; nothing hooked `OnFinalize`, so closed tableaus held tracked slots for the session — after 64 characters the instrument goes quiet | Lifecycle completeness | The lifecycle matrix was applied to the *value* (the loading counters, where the sentinel collision was correctly caught) but never to the *container* (the tracker's own entries) | Added `CharacterTableau_OnFinalize_ResidencyReset_Patch`; binding test now pins `OnFinalize` |
+| 3 | MED | `RuntimeHelpers.GetHashCode` keys can be reused after GC, so a recycled hash + repeat troop could silently suppress a new tableau's census | Identity collision | "Instance identity" was assumed to mean "hash", which is identity-ish but not unique over time | Monotonic serial per tableau via `ConditionalWeakTable`; serials are never reissued |
+| 4 | MED | Two Harmony patch classes in one file, against the `{TargetClass}{TargetMethod}Patch.cs` convention | Standards | Convention not re-read while iterating fast on scaffolding | Split into `CharacterTableau_OnTick_ResidencyCensus_Patch.cs` + `CharacterTableau_ResidencyReset_Patches.cs` |
+| 5 | MED | `fix_uruk_hai_hands_teamcolor.py` used plain `utf-8` text read + text write — the forbidden mixed shape | Tooling / XML I/O | **THIRD instance.** The convention lives in `tools/README.md`, which nothing auto-loads, and `moduledata-validation.md` was paths-scoped to *repo* ModuleData only — so authoring a script that edits the game install loaded no rule at all | **Rule scope extended to `tools/**/*.py` + `tools/**/*.ps1`** with the two sanctioned idioms inline. A blocking lint was evaluated and rejected (92/124 existing scripts trip the heuristic) |
+| 6 | MED | The `added-flags` branch spliced bare `\n` into CRLF files (dormant — fired on 0 items) | Tooling / line endings | Only the branch that actually ran was reasoned about | Branch now takes the file's detected `eol` |
+| 7 | LOW/MED | Target-set derivation used substring containment (`TARGET_MATERIAL in line`), which a future `_a10`/`_a1b` material would false-match | Tooling / matching | "It returns the right 92 today" was treated as correctness | Exact token compare on the Material column |
+| 8 | LOW | A comment attributed AV-catchability to `legacyCorruptedStateExceptionsPolicy`, which is set next to the *launcher* exe, not the gameplay process | Comment accuracy | Copied the reasoning from a sibling file's comment without re-verifying | `[HandleProcessCorruptedStateExceptions]` is self-sufficient; noted for the next touch of either file |
+
+## Root-cause pattern
+
+Findings 1, 5, 6 and 7 share one shape: **the code was verified against the path that actually ran,
+and the paths that did not run were never examined.** The steady-state early-out was checked for what
+follows it but not what precedes it; the tooling was checked on files that happen to have no BOM, on
+the branch that happened to fire, and against a material set that happens not to collide today. Each
+is correct on today's data and wrong on tomorrow's.
+
+The counter-discipline is to ask, for every check that passes: *what input would make this fail, and
+is that input reachable?* That is the same question that killed the original residency hypothesis
+earlier in this investigation — and it is now recorded as a testing-qa lesson in its own right.
+
+## Why each agent missed what it missed
+
+- **Standards** caught #4 and correctly exonerated the static tracker and the lazy `IoC.Resolve` for a
+  diagnostics boundary class. It has no rule about per-frame cost, so #1 was out of scope.
+- **Compatibility** verified all 48 members and caught #8. It does not reason about allocation or
+  lifecycle, so #1 and #2 were out of scope.
+- **Efficiency** found #1 — the highest-value finding of the pass — but proposed a fix
+  (`Dictionary<CharacterTableau, string>`) that would have pinned engine objects for the process
+  lifetime, trading a bounded allocation for an unbounded leak. **An agent's diagnosis and its
+  prescription need separate verification.**
+- **Completeness** returned COMPLETE and was right to; every owed artifact existed.
+- **Data Flow** found #2 and #3 by enumerating destruction paths from the decompiled `OnFinalize` —
+  exactly the cross-file reasoning the other five structurally cannot do.
+- **Tooling Correctness** (Step 2c, launched because the changeset writes outside the repo) found
+  #5–#7. None of the five core agents review scripts; without it these ship silently.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/lotrlome-armory-snapshot/README.md](../reference/lotrlome-armory-snapshot/README.md)
+
+<!-- backlinks-end -->

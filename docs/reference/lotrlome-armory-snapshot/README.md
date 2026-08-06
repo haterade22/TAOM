@@ -161,6 +161,78 @@ at lines ~17.9k / ~54.4k / ~57.6k, the markers at 61194-61401), and the generato
 the region between `TAOM-CIVILIAN-COVERAGE:START` and `:END`. A future audit that "fixes" the
 generator for this will be fixing the wrong file.
 
+## Known asset defects in LOTRLOME_Armory (not fixed here)
+
+These are defects in the dependency module's **binary assets**, which this snapshot does not cover —
+it holds XML only. Recorded so a future session does not re-derive them.
+
+### ⚠️ APPLIED EDIT — `UseTeamColor="true"` on 79 Isengard items (#389 fix, 2026-08-06)
+
+**This is a live edit to `LOTRLOME_items/isengard/` that a future Armory update WILL silently revert.**
+Re-apply with `python tools/oneoff/fix_uruk_hai_hands_teamcolor.py --apply`
+(`--revert` restores from the `.bak-teamcolor` backups beside each file).
+
+**Root cause.** `m_uruk_hai_hands_a1` is authored to require the shader flag
+`use_double_colormap_with_mask_texture`. The only thing that adds it is
+`AgentVisuals.AddTeamColorToMesh`, which the engine calls **only when the item carries
+`UseTeamColor="true"`** — it does `GetMaterial().CreateCopy()` (hence the `(copy)` suffix seen in the
+Patch67 render census) then `AddMaterialShaderFlag(...)`. Measured at runtime:
+
+| item flag | material as bound | shader flags | result |
+|---|---|---|---|
+| `UseTeamColor="false"` | `m_uruk_hai_hands_a1` | `0x480090` | **black** |
+| `UseTeamColor="true"` | `m_uruk_hai_hands_a1(copy)` | `0x4C0090` | correct |
+
+Delta is exactly `0x40000` — the mask flag. 13 Isengard head items already had it and rendered fine;
+79 did not and were black. Every mesh binding that material now team-colours (92/92).
+
+Changed: 43 `head_armors.xml`, 12 `arm_armors.xml`, 10 `body_armors.xml`, 8 `shoulder_armors.xml`,
+6 `leg_armors.xml`. 158-line diff, CRLF preserved, item counts unchanged, `validate_moduledata.py` PASS.
+
+**Backups use `.bak-teamcolor`, deliberately NOT `.xml`** — Bannerlord globs `*.xml` in these
+registered folders, so an `.xml` backup injects duplicate item ids.
+**Item XML loads at process launch**, so testing requires a full game restart, not a save-load.
+
+The cleaner upstream fix is below: the hand/glove sub-meshes should not be bundled into helmet,
+bracer, greave and pauldron MetaMeshes in the first place.
+
+### Uruk-Hai helmets bundle glove/hand sub-meshes (the upstream cause of #389)
+
+Every `sk_uruk_hai_helmet_*` MetaMesh carries three materials where the equivalent orc helmet carries
+one. From `LOTRLOME_Armory/Shaders/D3D11/shader_compile_report.log` (`mesh material shader variants`):
+
+```
+sk_uruk_hai_helmet_sword_light_a2 -> m_uruk_hai_gloves_a1(120), m_uruk_hai_hands_a1(888), m_uruk_hai_helmet_a1(120)
+sk_uruk_hai_helmet_spear_light_a3 -> m_uruk_hai_gloves_a1(120), m_uruk_hai_hands_a1(888), m_uruk_hai_helmet_a1(120)
+sk_uruk_hai_helmet_bers_a2        -> m_uruk_hai_gloves_a1(120), m_uruk_hai_hands_a1(888), m_uruk_hai_helmet_a2(120)
+sk_uruk_hai_helmet_skir_a2        -> m_uruk_hai_gloves_a1(120), m_uruk_hai_hands_a1(888), m_uruk_hai_helmet_a1(120)
+sk_uruk_hai_helmet_sword_light_a4 -> m_uruk_hai_gloves_a1(120),                           m_uruk_hai_helmet_a1(120)
+
+sk_gn_orc_mrd_helmet_light_a      -> m_md_orc_helmets_b(120)     <-- working control: ONE material
+```
+
+A helmet should not contain glove or hand geometry, and the **888 variant count** on
+`m_uruk_hai_hands_a1` is the signature of a *skin* material (skin/morph permutations) rather than an
+armour one. Every troop wearing one of these renders as a black silhouette in the encyclopedia;
+`urukhai_recruit`, the only Uruk-Hai troop with no Head item, renders correctly. Source geometry:
+`Assets/Isengard/isengard_armors/SK_Uruk_Hai_Helmets_{A,B}_geo.tpac`. All referenced materials and
+`_d`/`_n`/`_s` textures exist — nothing is missing, the bundling itself is the anomaly.
+
+**Not yet confirmed as the cause.** Investigation: [`docs/reviews/rca-isengard-black-tableau-2026-08-06.md`](../../reviews/rca-isengard-black-tableau-2026-08-06.md), issue #389.
+
+### 42 meta-meshes referenced but absent from the packages (#390)
+
+`CONTENT WARNING: Meta mesh with name <X> cannot be found!` for 18 `sm_uruk_*` weapon parts, 18
+`wm_mordor_set1_*` weapon parts, 5 `sm_mordor_shield_*` and `wm_gondor_shield_dd`. All are referenced
+by crafting-piece / item definitions in `ModuleData/LOTRLOME_items/` and exist nowhere in the install.
+Long-shipping and invisible because they are warnings rather than errors.
+
+### The dual-tree trap (applies to any binary fix)
+
+A dev machine with a Modding Kit `Assets/` directory loads the **loose** tree; a player install loads
+`AssetPackages/pack*.tpac`. Confirm which by grepping a session's `rgl_log` for `Loading packages`.
+**Any asset fix must land in both**, or it works for the developer and not for players.
+
 ## Snapshot date
 
 2026-08-03 — `action_sets.xml` **patched in place (LIVE + this snapshot)**: 168 root-level `<action>` elements re-parented back into the twelve `as_<race>_female_villager_in_aserai_tavern` sets that had been authored SELF-CLOSING (61434 → 61402 lines; 192 insertions / 224 deletions). This is a **reparenting, not a re-snapshot** — no action was added or removed: the file still holds 1226 `action_set` and 34247 `action` elements, and now 0 root-level `<action>`. Each group's 14 female-conversation overrides matched vanilla's own `as_human_female_villager_in_aserai_tavern` byte for byte, in order, which is what made a mechanical fix safe. Motivation: the game client tolerates the malformed file, the dedicated-server engine does not — it throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at `/action_sets/action` and dies on boot, which is why server operators had to run the single-player module order. Fixer `tools/oneoff/fix_orphaned_tavern_conversation_actions.py` (rewrites both copies in one pass); guard `tools/audit_action_set_parity.py`, which now exits non-zero on any root-level `<action>`. **LIVE and this snapshot are in sync as of this date** — both 3,902,345 bytes, sha256 prefix `ad6675f49b12ad74`. `monsters.xml` and `skins.xml` untouched. Not yet verified in the engine: no dedicated server has been booted against the corrected file.

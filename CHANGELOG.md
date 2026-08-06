@@ -4,7 +4,133 @@
 
 ## 2026-08-06
 
-### balance(career): max-health pips cut from 25-100 HP to a 5-10 band (#390)
+### feat(diagnostics): attribute town-gold drains and name why each caravan is parked (#391)
+
+A player reported caravans sitting inside Minas Tirith while the merchant held 173 denars, and read
+the two as cause and effect. Reading v1.4.7 shows both are real problems, the causal link runs the
+other way, and neither is observable in-game — so this ships the instruments rather than a guess.
+
+**The town's regen is not the fault.** `GetTownGoldChange` mean-reverts toward `base + Prosperity×12`
+at 25% of the deficit, once per day. At TAOM's shipped base of 25000 and Minas Tirith's prosperity of
+4345 the target is ~77,000, so at 173 gold the mint owes **~19,242/day**. Roughly 19k/day is leaving.
+#317 raised the ceiling and never touched the drain — and the unbounded one is
+`SellGoodsForTradeAction` (:52-57), which buys `min(qty, town.Gold / price)` across a villager's whole
+roster with no reserve and can legally spend a town to zero daily.
+
+**Town gold does not park a caravan.** Nothing in the caravan decision path reads `Town.Gold`; its
+only effect is clamping sale volume to `town.Gold / itemPrice`, which at 173 denars silently rounds
+to zero. What it does instead is *starve* them into the parked state: `HourlyTickParty` calls
+`BuyGoods` before `ThinkNextDestination` with no broke-check, so a caravan that cannot sell spends
+its purse anyway, drops to `PartyTradeGold ≈ 0`, and zeroes the buy half of its trade score for every
+town in the world. With no cargo either, every candidate scores exactly 0, the strictly-greater-than-
+zero test never passes, no AI action is set, and it is parked permanently — with no fallback, because
+every generic AI behavior early-returns on `IsCaravan`.
+
+`Patch68_EconomyDiagnostics` — one Prefix/Postfix recorder on `SettlementComponent.ChangeGold` plus
+four outermost-wins flow-tag pairs. `ChangeGold` is the pool's **sole** mutator (private setter), so
+one recorder sees 100% of flows and no site can be missed; it reads the before/after delta rather
+than the argument because the engine hard-floors at zero and would otherwise hide that clamp.
+
+`taom.print_town_ledger [town]` reports movement by day and by flow, naming the largest **drain**
+rather than the largest flow — the mint is usually the biggest number and is income.
+`taom.print_caravans [settlement]` reports which gate holds each caravan, with a histogram
+(five caravans reading `Alerted` says "battle nearby"; no single line does).
+
+Also recorded: the wounded ladder's thresholds are written `(double)num > 0.4` but `num` is a
+`float`, and widening puts the nearest float to 0.4 at `0.40000000596…` — above the double. Every
+band boundary is therefore **inclusive**, so exactly 40% wounded means *never leaves*. Verified
+against IEEE-754 semantics, not assumed, and pinned by a data-driven test.
+
+Also refuted, because it was the leading hypothesis: caravans are not a net drain. Selling to a town
+pays out, but buying from one credits the **full** price and only skims the tax back.
+
+Read-only, no gameplay change. Binding tests pin all five targets, two of them private
+`ItemConsumptionBehavior` methods where a rename would silently attribute the town's whole income to
+`Other` — plausible-looking and useless, which is worse than a crash. Feature doc:
+`docs/features/economy-diagnostics.md`.
+
+### fix(review): deep review of the career effect work — 1 CRITICAL, 1 HIGH fixed (#388)
+
+Six-agent deep review (5 core + the mandated tooling agent, since the changeset adds a file-writing
+Python tool). Standards PASS, API compatibility 6/6 verified against the installed v1.4.7 DLLs,
+Completeness COMPLETE, Data Flow 38 flows / 0 gaps. Two findings, both fixed here.
+
+**CRITICAL — `tools/retune_career_health.py` was not idempotent for `troopdamage`.** The per-pip
+"already retuned" guard keys on the OLD magnitude, which only works while a mapping's keys and
+values are disjoint. `health` (25-100 → 5-10) is disjoint; `troopdamage` (0.03-0.20 → 0.02-0.08)
+overlaps on {0.03, 0.05, 0.06, 0.08}, so an already-converted 0.05 was indistinguishable from a raw
+0.05 and a second `--apply` would have silently re-shifted **71 of 105** pips across magnitude,
+description, source string, 12 language files and 12 caches. The dry-run had been printing "71 pips
+found" in plain text. Replaced with a file-level `already_applied()` guard — decidable where per-pip
+is not — plus an `overlapping_values()` warning and 14 unit tests that pin idempotency for every
+profile off the config table, so a new profile cannot skip the check. The tool now exits with
+ALREADY APPLIED for both effects and writes nothing.
+
+**HIGH — hot-path allocation this work created.** `CareerPassiveService.GetPassiveMagnitude`
+interpolated a `LogDebug` string on every non-zero lookup. Interpolation is eager and `FileLogger`
+has no level gate, so each call cost the message string plus a `DateTime.Now.ToString`, a second
+interpolation and an unbounded queue push — regardless of whether anyone reads DEBUG. Harmless while
+lookups were rare; this changeset made the method hot from both ends (`MaxHitpoints` on every agent
+spawn, tooltip and heal tick; `TroopDamage` per blow for every non-hero troop whose leader holds the
+pip). Line removed — `RefreshCache` still logs each hero's cached passives, so nothing diagnostic is
+lost, and the crash-triage log stops being buried during battles.
+
+Also corrected: four documents asserted "re-running is a no-op" on the strength of the unsound
+per-pip reasoning, and the tool's lack of `.bak` writes is now a recorded deviation (every target is
+git-tracked, unlike the sibling scripts that mutate the live game install) rather than a silent one.
+
+RCA: `docs/reviews/rca-career-effect-layer-audit-2026-08-06.md`.
+
+### fix(career): troop-damage pips only made villages burn faster (#388)
+
+Second instance of the max-health bug class, found by re-auditing every career effect with the lens
+that actually catches it: not *"is anything reading this"* but *"is it read where the description
+promises"*. `PassiveEffectType.TroopDamage` — 105 pips, the second-most-used effect in the system —
+promises combat: *"+5% troop damage"*, *"Your troops smash through enemy lines with brutal
+efficiency"*. Its only consumer was `TaomRaidModel.CalculateHitDamage`, which vanilla defines as
+`(√TroopCount + 5)/900 × deltaHours` and `RaidEventComponent` accumulates into `_nextSettlementDamage`.
+That is village raid progress. Troops hit exactly as hard as they always did, in every battle.
+
+Wired as the exact mirror of `TroopResistance`, which was already doing the defensive half correctly:
+`GetAttackerTroopLeaderHeroId` resolves the attacker's party leader — off the RIDER's origin for a
+mount hit, since a struck mount's own `Origin` is null, the same trap the victim-side helper already
+documents — and `CalculateDamageAmplification` applies the leader's `TroopDamage` to their non-hero
+troops' hits. Not mask-gated: the shipped pips carry no `attack_type_mask`, so it is a flat army-wide
+multiplier. The hero and troop paths are mutually exclusive, pinned by a test.
+
+The raid consumer is deliberately **kept**. Raid progress is a fair reading of "troop damage", it is
+behaviour players already have, and the two are different systems — not a double-count.
+
+`PassiveEffectConsumers` now records both misses in its header. Membership in that set is necessary,
+never sufficient: it answers "is anything reading it", and it stayed green through both bugs.
+
+### balance(career): troop-damage pips cut from 3-20% to a 2-8% band (#388)
+
+Turning 105 pips on at their authored magnitudes would have been a large, sudden combat swing — and
+those magnitudes were authored while the effect did nothing in battle, exactly the situation the
+max-health pips were in. An army-wide multiplier compounds across every soldier, so the band now sits
+below the hero's own `Damage` pips (5-18%) rather than above them.
+
+| old | 3% | 5% | 6% | 8% | 10% | 12% | 15% | 20% |
+|-----|----|----|----|----|-----|-----|-----|-----|
+| new | 2% | 3% | 3% | 4% | 5%  | 6%  | 7%  | 8%  |
+
+Per tier: t1 2-3%, t2 3-6%, t3 5-8%.
+
+`tools/retune_career_health.py` grew an `--effect` flag and an `EFFECTS` profile table rather than
+being copied — the four-surface machinery is identical, only the type, mapping, wording anchor and
+number scale differ. `scale` is the new piece: Health authors a flat count and prints it as-is,
+TroopDamage authors a fraction and prints a percentage, so `0.05` must render as "5%".
+
+Verified: 105 pips rewritten, 105 descriptions + 105 source strings + 1,260 translations + 1,260
+cache entries synced, 0 description/magnitude mismatches, 0 cache/language mismatches, every other
+effect type's range byte-identical, symmetric 6,455/6,455 diff with the `\r\r\n` line endings intact,
+`validate_moduledata.py` PASS, suite 5594 green (+4 tests).
+
+Not-tested: in-game feel of army-wide troop damage.
+Research: DefaultRaidModel.CalculateHitDamage, RaidEventComponent, AttackInformation attacker-side origins
+
+### balance(career): max-health pips cut from 25-100 HP to a 5-10 band (#388)
 
 Direct consequence of the fix below. While `Health` only moved a mission agent's health bar, +75 was
 a battle-only number nobody read on the character sheet. Now that it is the campaign max HP, +75 on
@@ -35,8 +161,9 @@ Touching the translations diverges from `retune_phantom_descriptions.py`, which 
 `translate_with_claude.py`. That script changed the text's shape (flat count → percentage, needing
 per-language re-wording); this one changes a digit, and a digit is a digit in every language. Each
 translated health string was verified to carry exactly one number, so the swap is unambiguous, keeps
-the hand-translated PL wording, and needs no re-translation run. It is keyed on the old magnitude, so
-re-running is a no-op rather than a double-shift.
+the hand-translated PL wording, and needs no re-translation run. Re-running is a no-op — enforced by a
+file-level `already_applied()` guard, NOT by keying on the old magnitude, which the deep review proved
+unsound for any mapping whose old and new value sets overlap (see the #391-class note below).
 
 One pip is deliberately untouched: `far_harad_halftroll_root` reads "Vile Brutality grants massive
 health bonus" with no number, so there was nothing to sync (its magnitude still moved 40 → 7).
@@ -51,7 +178,7 @@ whole-file rewrite (lesson recorded in `docs/reviews/lessons/build-tooling-workf
 
 Not-tested: in-game feel of the new band.
 
-### fix(career): the max-health pip only applied in battle (#390)
+### fix(career): the max-health pip only applied in battle (#388)
 
 A "+75 max health" career choice left the character screen reading `Max. Hit Points 100 / Base +100`.
 `PassiveEffectType.Health` had exactly one consumer — `TaomAgentStatCalculateModel.GetEffectiveMaxHealth`,
@@ -132,6 +259,112 @@ meaning anything. The container is now Fixed 1720 and centred, sized to hold the
 block at any aspect ratio.
 
 Suite 5566 green. Not-tested: in-game render at ultrawide — needs a reopen.
+
+### fix(diagnostics): deep review of the #389 instrumentation — 8 findings, all fixed
+
+Six agents (Standards, Compatibility, Efficiency, Completeness, Data Flow, Tooling Correctness) over
+Patch67, its tests, and the two scripts. Compatibility verified 47/48 engine members with zero
+incompatibilities; Completeness returned clean.
+
+- **HIGH — per-frame allocation.** `BuildKey` rebuilt a key string on every rendered frame per live
+  tableau, *before* the early-out. An earlier adversarial pass had cleared the steady-state path by
+  checking everything that ran AFTER the early return and never asking what ran before it. Replaced
+  with `TableauCensusSession`: a `ConditionalWeakTable` keyed on the tableau instance, so the
+  steady-state path is a weak lookup plus one ordinal compare. Note the efficiency agent's proposed
+  fix (a plain `Dictionary<CharacterTableau, string>`) would have pinned engine objects for the
+  process lifetime — an agent's prescription needs verifying separately from its diagnosis.
+- **GAP — tracked slots leaked on teardown.** `Forget` fired only from `SetRace`; nothing hooked
+  `OnFinalize`, so closed tableaus held slots and the census went quiet after 64 characters. Added
+  `CharacterTableau_OnFinalize_ResidencyReset_Patch`; the binding test now pins `OnFinalize`.
+- **MED — identity collisions.** `RuntimeHelpers.GetHashCode` is reused after GC, so a recycled hash
+  plus a repeat troop could silently suppress a new tableau's census. Now a monotonic serial that is
+  never reissued.
+- **MED — file layout.** Split two patch classes out of one file per the `{TargetClass}{TargetMethod}Patch.cs`
+  convention. The census logic moved behind an `object`-keyed seam, which also made it unit-testable —
+  8 new tests, including reference-equality assertions that prove the no-allocation guarantee.
+- **Tooling (3 findings) in `fix_uruk_hai_hands_teamcolor.py`:** the forbidden mixed `utf-8` text
+  read + text write (**third instance** of a lesson dating to 2026-05-28), a dormant branch splicing
+  bare `
+` into CRLF files, and substring rather than exact-token matching when deriving the target
+  set. All fixed; the live edit was re-verified byte-identical afterwards (CRLF and item counts
+  unchanged, dry run still reports 92 meshes / 0 pending changes).
+
+**The repeat offender got a scope fix, not another lesson.** The XML I/O convention lives in
+`tools/README.md`, which nothing auto-loads, and `moduledata-validation.md` was paths-scoped to *repo*
+ModuleData — so authoring a script that edits the game install loaded no rule at all. That rule now
+loads on `tools/**/*.py` and `tools/**/*.ps1` with both sanctioned idioms inline. A blocking lint was
+evaluated and rejected: 92 of 124 XML-writing scripts trip a naive heuristic, so a gate would fail on
+pre-existing debt.
+
+Suite 5680 green; 95 BindingVerification tests pass against the installed engine. Findings table,
+root-cause pattern and per-agent miss analysis in
+`docs/reviews/rca-isengard-black-tableau-2026-08-06.md`; Review 82b in `docs/reviews/REVIEW-LOG.md`.
+
+### fix(render): Isengard Uruk-Hai black silhouettes — root-caused and a test fix applied (#389)
+
+`m_uruk_hai_hands_a1` is authored to require the shader flag `use_double_colormap_with_mask_texture`.
+The only thing that adds it is `AgentVisuals.AddTeamColorToMesh`, which the engine calls **only when
+the item carries `UseTeamColor="true"`** — it does `GetMaterial().CreateCopy()` then
+`AddMaterialShaderFlag(...)`. Isengard uruk armour was `UseTeamColor="false"`, so the material rendered
+with the mask path unbound: black.
+
+Measured by the Patch67 render census, same material on both sides:
+
+| item flag | material as bound | shader flags | result |
+|---|---|---|---|
+| `false` (uruk armour) | `m_uruk_hai_hands_a1` | `0x480090` | **black** |
+| `true` (orc armour) | `m_uruk_hai_hands_a1(copy)` | `0x4C0090` | correct |
+
+Delta is exactly `0x40000`. Correlation held across all 11 censused troops: black iff carrying the raw
+variant. `urukhai_recruit` renders because its tunic/gloves/shoes never pull in the hands sub-mesh, and
+the Isengard orc troops render because their items *are* team-coloured — using the very same uruk hands
+material. **The absence of team colour was the bug, not its presence** — this investigation had that
+arrow backwards twice.
+
+- **Test fix applied to the live dependency module:** `UseTeamColor="true"` on the 79 Isengard items
+  whose mesh binds that material (43 head, 12 arm, 10 body, 8 shoulder, 6 leg). 13 already had it.
+  Reversible via `tools/oneoff/fix_uruk_hai_hands_teamcolor.py --revert`; target set is derived live
+  from the armory's own `shader_compile_report.log`, never a hardcoded id list.
+- 158-line diff, CRLF preserved byte-for-byte, item counts unchanged, XML well-formed,
+  `validate_moduledata.py` PASS. Backups are `.bak-teamcolor` — **not** `.xml`, since these folders are
+  globbed and an `.xml` backup injects duplicate ids. Needs a full game restart to test.
+- Recorded in the armory snapshot README as an APPLIED EDIT: an Armory update will silently revert it.
+  The cleaner upstream fix is that hand/glove sub-meshes should not be bundled into helmet, bracer,
+  greave and pauldron MetaMeshes at all.
+
+### docs(review): #389 investigation record — the discriminator is the helmet, not the race
+
+Reporter observed that `urukhai_recruit` renders correctly. It is race `uruk_hai`, uses
+`BodyProperty.fighter_uruk_hai`, wears an `sk_uruk_hai_*` body mesh — and is the only Uruk-Hai troop
+with **no Head item**. That single observation exonerates the race, the body-property template, the
+race base-body meshes and the whole `sk_uruk_hai_*` body-armour family at once. Every hypothesis from
+the first day was scoped to the race because the *report* was phrased in race terms; the roster had
+contained the disproof the whole time.
+
+Current lead: every `sk_uruk_hai_helmet_*` MetaMesh bundles glove and hand sub-meshes
+(`m_uruk_hai_gloves_a1` + the 888-shader-variant skin material `m_uruk_hai_hands_a1`) alongside its
+helmet material, where the working `sk_gn_orc_mrd_helmet_light_a` control carries exactly one. Not
+proven — the warrior's `_a4` helmet lacks the skin material yet is still black, and it does not
+obviously explain the *whole* figure going black. All referenced materials and textures exist, so this
+is a structural/authoring anomaly, not a missing asset.
+
+Also settled this session, with evidence: resource residency is dead as a mechanism (measured
+`agentLoading=0 mountLoading=0 agentVisible=True` on the black troop), cloth/team colour is dead
+(byte-identical `0xFF2B2B2B` between the fine orc and the black uruk), and the engine's content-warning
+channel was **completely empty** during a session where the bug was on screen.
+
+- **Census now reads the SKELETON.** `AgentVisuals` attaches skin and armour through `GetSkeleton()`,
+  so `GameEntity.MultiMeshComponentCount` is 0 on a character tableau — the first revision reported
+  `metaMeshCount=0` for every character *including ones that render correctly*, which only a
+  known-good control made legible as an instrument fault.
+- New: [`docs/reviews/rca-isengard-black-tableau-2026-08-06.md`](docs/reviews/rca-isengard-black-tableau-2026-08-06.md)
+  (open investigation, 12 eliminations with evidence). Five lessons appended across
+  `animation-skeleton`, `data-content-cultures`, `testing-qa` and `harmony-il`; index recounted
+  320 -> 337 (several categories had drifted independently). Armory snapshot README gained a
+  "Known asset defects" section covering the helmet bundling, #390's 42 missing meta-meshes, and the
+  dual-tree trap.
+- Corrected two career entries below that cited **#390** — that number is the meta-mesh content issue;
+  they belong to the #388 career arc.
 
 ### feat(diagnostics): Patch67 dumps a per-troop render census for the black-silhouette bug (#389)
 

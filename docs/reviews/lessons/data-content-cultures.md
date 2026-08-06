@@ -420,6 +420,43 @@ Migrating or retagging a settlement cluster (culture change, rebellion, map expa
 - **Prevent:** parse the settlement graph (`./Components/Village[@bound]` — it is nested under `<Components>`, NOT a direct child of `<Settlement>`, which is its own trap) and derive the id set from it. Then run a pre/post audit asserting village culture == bound-parent culture across ALL 607 bound villages; it takes ten lines and it is what proved both the break and the fix. Land the invariant as a `validate_moduledata.py` check in the same PR so the next retag cannot reintroduce it.
 - **Source:** `docs/reviews/rca-landless-culture-spawn-2026-08-04.md` (deep-review M1, 2026-08-04)
 
+### The troop roster is already a controlled experiment — read it as one before theorising
+
+A visual defect reported as "all the X troops look wrong" arrives described in whatever vocabulary the
+reporter had. That vocabulary silently becomes the investigation's scope. Before forming hypotheses,
+tabulate the affected and unaffected troops against **every** factor that varies independently —
+race, `face_key_template`, armour family, per-slot items — and look for a row that breaks the reported
+correlation.
+
+- **Why missed:** #389 was reported as "Uruk-Hai and berserkers", which maps cleanly onto two
+  `skins.xml` race entries, so a 21-agent sweep with adversarial verification spent a day scoped to
+  the race. The roster already contained the disproof: `urukhai_recruit` is race `uruk_hai`, uses
+  `BodyProperty.fighter_uruk_hai`, wears an `sk_uruk_hai_*` body mesh — and renders correctly. It is
+  the only Uruk-Hai troop with **no Head item**. One observation exonerated the race, the
+  body-property template, the base-body meshes and the whole body-armour family at once.
+- **Prevent:** build the factor matrix FIRST and name the troop that isolates each factor
+  (in Isengard: `orc_warg_scout` = uruk race + orc body-property + non-uruk armour;
+  `isengard_militia_*` = uruk race + human body-property; `isengard_orc_berserker` = orc race +
+  berserker body-property; `urukhai_recruit` = uruk race, no helmet). Ask the reporter to open those
+  specific troops rather than accepting the reported set as the true set.
+- **Source:** #389 / `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`
+
+### `shader_compile_report.log` is a free mesh → material map (and one mesh has many rows)
+
+`LOTRLOME_Armory/Shaders/D3D11/shader_compile_report.log` is plain text listing every compiled asset as
+`mesh  material  shader  variantCount`. It answers "what material does this mesh actually use" without
+a `.tpac` parser, and a **variant count far above the norm** (888 vs the usual 120) marks a *skin*
+material, because skin materials compile the morph/skin permutations.
+
+- **Why missed:** every prior asset sweep in #389 checked base-body meshes and never the equipment,
+  and reached for binary tpac scans when a grep of this file would have answered it.
+- **Prevent:** grep this file before decompiling or byte-scanning packages. **Never use `grep -m1`** —
+  one mesh legitimately carries several material rows (a bracer includes hand geometry), and the first
+  row alone is actively misleading. It is what exposed that every `sk_uruk_hai_helmet_*` bundles
+  `m_uruk_hai_gloves_a1` + `m_uruk_hai_hands_a1` (888) alongside its helmet material, where the
+  working `sk_gn_orc_mrd_helmet_light_a` control carries exactly one.
+- **Source:** #389 / `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

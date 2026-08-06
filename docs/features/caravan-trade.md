@@ -109,7 +109,11 @@ All 4 hooks lazy-cache their `IoC.Resolve` (`??=`); the `CanTradeWith` hook lazy
 - Deep-review RCA: `docs/reviews/rca-caravan-trade-2026-07-04.md` (HIGH war-gate Neutral-inversion caught + fixed).
 - Codex adversarial review (2026-07-04): 4 MED findings, all fixed.
 - GitHub issue: #329.
-- Engine background: `docs/reference/engine/settlement-economy-food-prosperity.md` §Caravans.
+- Engine background: `docs/reference/engine/settlement-economy-food-prosperity.md` §Caravans — including
+  "Why a caravan parks in a town", the full gate list behind `HourlyTickParty`.
+- **Diagnosing a parked caravan:** `taom.print_caravans [settlement]` names the blocking gate —
+  [economy-diagnostics.md](economy-diagnostics.md) (#391). This feature governs *where* caravans go;
+  that one answers whether they can move at all, which is a separate failure.
 
 ---
 

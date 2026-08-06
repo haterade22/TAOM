@@ -182,6 +182,61 @@ The existing "a test must be able to fail" entry bans vacuous *assertions* synta
 - **Prevent:** for every guard-named test, name the ONE production line whose deletion turns it red — if you cannot, the arrange is incomplete. Mechanically: put the SUT in a state where removing the guard changes the outcome, then assert the negative. Worth making a required `/deep-review` completeness-agent output ("for each new test, name the line whose deletion reddens it") rather than another prose paragraph.
 - **Source:** `docs/reviews/rca-landless-culture-spawn-2026-08-04.md` (deep-review M4/L4, 2026-08-04)
 
+### Before building a diagnostic, prove the state it measures is REACHABLE given the symptom
+
+A diagnostic whose only reachable outcome is "fine" is worse than none: it converts a foregone
+conclusion into apparent evidence and burns a build/deploy/repro cycle doing it. Ask, of the
+instrument's positive result, "what would the screen look like if this fired?" — and if that does not
+match the reported symptom, the instrument is aimed wrong.
+
+- **Why missed:** the #389 instrument reported "resource loading counter never cleared ⇒ black
+  silhouette". But vanilla `CharacterTableau` hides the freshly-refreshed buffer and only shows a
+  visual once **both** loading counters clear, so a character whose resources never load renders
+  **blank**, not black. Correct geometry on screen therefore proved the counters had already cleared —
+  the instrument could only ever log "fine". The author then reasoned that a double-"fine" result
+  would still be informative ("it exonerates residency"), which is the specific trap: a negative from
+  a test that cannot produce a positive carries no information. Caught by adversarial review.
+- **Prevent:** write the expected log line for BOTH outcomes before writing the code, and check each
+  against the observed symptom. Include a **known-good control** in every census/dump — the second
+  #389 instrument reported `metaMeshCount=0` for every character *including ones that render
+  correctly*, and only the control made that legible as an instrument fault rather than a finding.
+- **Source:** #389 / `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`
+
+### On a per-frame hook, audit what runs BEFORE the early-out, not just what runs after it
+
+A hot-path hook is only as cheap as its first statement. Reviewing the code that follows the early
+return proves nothing about steady-state cost if work happens before it.
+
+- **Why missed:** Patch67's OnTick postfix was adversarially reviewed for hot-path cost and cleared —
+  the reviewer correctly established that every lambda and every reflected field read sat *after* the
+  `if (result.Verdict == None) return;` and that the lock was uncontended. Nobody asked what the two
+  statements *above* it did: the first built a key string via interpolation, so the "allocation-free
+  steady state" allocated once per frame per live tableau. A later deep-review pass caught it as HIGH.
+- **Prevent:** for any `OnTick`/per-frame/per-hit postfix, read the method top-down and mark the exact
+  statement where the cheap early-out fires; everything above it is the true steady-state cost and must
+  be allocation-free. Prefer a weak-table/identity lookup plus an ordinal compare over rebuilding a
+  key. **Also verify an agent's proposed fix separately from its diagnosis** — the efficiency agent's
+  suggested `Dictionary<CharacterTableau, string>` cache would have traded a bounded per-frame
+  allocation for an unbounded leak of pinned engine objects.
+- **Source:** #389 deep review (Review 82b), 2026-08-06 / `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`
+
+### A binding test that resolves a NAME does not test the CONVENTION that consumes it
+
+`AccessTools.Field(type, "_race") != null` passes whether the Harmony parameter is spelled `___race`
+(broken) or `____race` (correct) — it proves the field exists, never that the patch can bind it.
+
+- **Why missed:** Patch67 shipped with three underscores, passed four dedicated binding tests and all
+  5588 suite tests, and failed only at runtime — where TAOM's isolated patch batch *logs and swallows*
+  the category failure, so the symptom was a patch that silently never ran. Found by reading the live
+  game log after an in-game repro.
+- **Prevent:** when a framework consumes a string/naming convention, test the **convention**, not the
+  target. Gate: `TAOM.Tests/Migration/HarmonyFieldInjectionNamingTests.cs` scans every
+  `[HarmonyPatch]` class, strips exactly three underscores from each `___` parameter, and asserts the
+  remainder resolves — with a non-zero-coverage assertion so a broken scan cannot go vacuously green.
+  Verified red-then-green by reintroducing the defect. Full rule in
+  [`lessons/harmony-il.md`](harmony-il.md).
+- **Source:** #389 / `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

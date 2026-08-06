@@ -1695,3 +1695,164 @@ freshly-written test).
 
 Suite: 5509 green after all fixes. Lessons: brush-name verification (localization-ui), clear-path
 agent refresh (state-lifecycle-save), callback-parameter enumeration (adapters-taleworlds-api).
+
+## Review 82 — Patch67 render-census diagnostic, adversarial pass (#389) (2026-08-06)
+
+2 independent Claude agents (correctness/safety, diagnostic value) over a newly-written diagnostic
+Harmony patch before it shipped to the reporter. Full investigation record:
+`rca-isengard-black-tableau-2026-08-06.md`.
+
+**The review refuted the instrument's premise, not just its implementation.** v1 reported "resource
+loading counter never cleared ⇒ black silhouette". Against the v1.4.7 decompile that state is
+unreachable given the symptom: `RefreshCharacterTableau` hides the refreshed buffer and `OnTick` shows
+a visual only once **both** loading counters clear, so a character whose resources never load renders
+*blank*, not black — the instrument could only ever have logged "fine". The second agent additionally
+established that `AddArmorMultiMeshesToAgentEntity` never consults `RaceData`, so no per-race residency
+story can explain black *armour* at all. Both findings killed hypothesis H-A outright, which had been
+the leading theory for a day.
+
+**Defects found and fixed:** sentinel collision (counter reads 0 both before the first refresh arms it
+and after loading completes — the exact trap `.claude/rules/harmony-patches.md` documents, and it was
+reintroduced anyway); only the agent counter checked where vanilla gates on the mount counter too;
+capacity exhaustion going silently dark; an inverted boolean label printing the negation of its own
+name; per-frame string allocation and a 76-byte struct copied per frame past the early-out.
+
+**Clean exonerations worth recording:** the per-frame postfix is not a perf problem (uncontended lock,
+one dictionary lookup, zero closure allocation on the steady path — every lambda sits past the
+early-out); all six Harmony field injections resolve; `BodyProperties != Default` is real and cheap.
+
+**Two further defects the review did NOT catch, both found in-game:** three underscores where Harmony
+needs four (category threw at apply time, swallowed by the isolated batch — passed 4 binding tests and
+5588 suite tests), and reading `GameEntity.MultiMeshComponentCount` instead of
+`Skeleton.GetAllMeshes()` (reported `metaMeshCount=0` for every character including working controls).
+Both are now gated: `HarmonyFieldInjectionNamingTests` repo-wide, and a known-good control in every
+census. Suite 5590 green. Lessons: instrument-reachability + convention-vs-name testing (testing-qa),
+skeleton-not-components (animation-skeleton), four-underscore injection (harmony-il), roster-as-
+experiment + `shader_compile_report.log` as a mesh→material map (data-content-cultures).
+
+## Review 82b — Patch67 + #389 tooling, full deep-review (2026-08-06)
+
+6 agents (Standards, API Compatibility, Efficiency, Completeness, Data Flow, Tooling Correctness) over
+the render-census instrumentation, its 3 test files, and the two scripts — including
+`fix_uruk_hai_hands_teamcolor.py`, which had already mutated live `LOTRLOME_Armory` XML. Full findings
+table + per-agent miss analysis: `rca-isengard-black-tableau-2026-08-06.md`.
+
+**8 findings, all fixed. 1 HIGH, 1 confirmed data-flow gap, 4 MED, 2 LOW.** Compatibility verified
+47/48 engine members with 0 incompatibilities (and confirmed `GetTextureWithSlot(0)` really is
+`DiffuseMap` by decompiling the enum); Completeness returned clean.
+
+The HIGH is the instructive one: a per-frame postfix had already been cleared for hot-path cost by an
+earlier adversarial pass, which correctly verified that every lambda and reflected read sat AFTER the
+early-out — and never asked what ran *before* it. The first statement built a key string by
+interpolation. **Read a hot-path hook top-down to the early-out; everything above it is the real
+steady-state cost.** Equally instructive: the efficiency agent's proposed fix would have replaced a
+bounded per-frame allocation with an unbounded leak of pinned engine objects, so the diagnosis was
+right and the prescription wrong — they need separate verification.
+
+The Tooling Correctness agent (Step 2c, triggered because the changeset writes outside the repo) found
+3 defects none of the five core agents can see, including the **third instance** of the byte-faithful
+XML I/O convention being violated. Preventive action was a scope fix rather than a fourth lesson:
+`moduledata-validation.md` now loads on `tools/**/*.py` + `tools/**/*.ps1`, because the convention
+lived only in the never-auto-loaded `tools/README.md`. A blocking lint was evaluated and rejected —
+92 of 124 XML-writing scripts trip a naive heuristic.
+
+Suite 5680 green, 95 BindingVerification. Lessons: hot-path early-out ordering + convention-vs-name
+testing (testing-qa), skeleton-not-components (animation-skeleton), four-underscore injection
+(harmony-il), roster-as-experiment + `shader_compile_report.log` as a mesh→material map
+(data-content-cultures), 3rd-instance root cause appended to the XML I/O lesson
+(build-tooling-workflow).
+
+## Review 83 — Career effect layer audit (Health + TroopDamage) full deep-review (2026-08-06)
+
+6 agents (Standards, API Compatibility, Efficiency, Completeness, Data Flow, Tooling Correctness) over
+two career-effect wiring fixes, two balance retunes touching four data surfaces each, and the new
+multi-effect retune tool. Full findings table + per-agent miss analysis:
+`rca-career-effect-layer-audit-2026-08-06.md`.
+
+**The bug class: a live consumer on the wrong layer.** A player reported a "+75 max health" pip doing
+nothing. `Health` had a consumer, correct units, and a green phantom gate — and only ever ran on the
+mission layer, while the character sheet, `Hero.MaxHitPoints`, the daily heal cap and the wounded
+threshold all read `CharacterStatsModel.MaxHitpoints`, which nothing touched. Fixing it exposed the
+same class again: `TroopDamage` (105 pips, 2nd-most-used effect) promised *"your troops smash through
+enemy lines"* while its only consumer was `TaomRaidModel.CalculateHitDamage` — village burn speed.
+
+**The instructive miss is mine, not an agent's.** After fixing `Health` I audited the other 22 types
+and reported all clear — using *the gate's own question* (does a read site exist, are the units
+right). `TroopDamage` passes both while being completely broken. The question that finds this class is
+different: **read the pip's description, read the consumer's method body — not its name — and ask
+whether they describe the same system.** `TaomRaidModel` sounds like it governs troops fighting; it
+governs how fast a settlement's hit points drain. One decompile answers it; no amount of read-site
+analysis does. A canonical effect→consumer→**layer** table now exists in `career-system.md` so the
+audit is one pass instead of a re-derivation.
+
+**2 findings, both fixed. 1 CRITICAL, 1 HIGH.** The CRITICAL was in the *tool*, caught only by the
+Step 2c Tooling agent: a value-remapping script is idempotent per item only while its old keys and new
+values are disjoint. `health` (25-100→5-10) is; `troopdamage` (0.03-0.20→0.02-0.08) overlaps on
+{0.03,0.05,0.06,0.08}, so a second `--apply` would have silently re-shifted **71 of 105** pips across
+magnitude + description + source string + 12 languages + 12 caches. The dry-run had been printing
+"71 pips found" in plain text all along. Now decided at file level (`already_applied`), with 14 unit
+tests driven off the config table so a new profile cannot skip the check.
+
+**The HIGH the Efficiency agent looked at and cleared:** a `LogDebug` in `GetPassiveMagnitude`
+dismissed as "conditional, async, doesn't block" — true of the write, false of the allocation.
+Interpolation is eager and `FileLogger` has no level gate, so every non-zero lookup cost ~4
+allocations regardless of whether anyone reads DEBUG. Harmless while lookups were rare; this
+changeset made the method hot from both ends (`MaxHitpoints` per agent spawn/tooltip/heal tick,
+`TroopDamage` per blow per troop). **Both findings the agents missed or under-rated were caught by
+spot-verifying a subagent's load-bearing claim against the source** — `evidence-over-claims` §A.4.
+
+**Clean exonerations worth recording:** API Compatibility decompiled the installed v1.4.7 DLLs and
+CONFIRMED the chain the whole health fix rests on (`GetEffectiveMaxHealth` hero branch →
+`CharacterObject.MaxHitPoints()` → `CharacterStatsModel.MaxHitpoints`), and proved both models
+register in lockstep inside one `CampaignGameStarter` block — closing the "hero silently gets zero
+bonus in battle" risk. Data Flow traced 38 flows for 0 gaps, decompiling `RaidEventComponent` to
+*prove* the two `TroopDamage` consumers are temporally disjoint (raid damage only accrues once
+`DefenderSide.TroopCount == 0`) rather than asserting it, and found no third instance of the class.
+
+Also corrected: four documents asserted "re-running is a no-op" on the unsound per-pip reasoning; the
+tool's missing `.bak` is now a recorded deviation (targets are git-tracked, unlike the live-install
+scripts); and `#390`/`#391` were fabricated issue numbers I never verified — #390 is the armory
+meta-mesh issue and #391 did not exist, so all 24 references were corrected to #388 and dedicated
+issues remain owed. Suite 5672 green + 14 new tool tests. Lessons: layer-not-existence
+(gamemodels-services), disjoint-value-sets idempotency (build-tooling-workflow).
+
+## Review 83 — EconomyDiagnostics + caravan-gate diagnostics (#391), workflow deep-review (2026-08-06)
+
+6 parallel dimension agents (Standards, API Compatibility, Efficiency, Completeness, Data Flow,
+Harmony/Lifecycle) over `Patch68_EconomyDiagnostics`, the caravan gate verdict service, both console
+commands and their tests — then one adversarial skeptic per deduped finding, each instructed to
+default to *refuted*. Full findings table + per-agent miss analysis:
+`rca-economy-diagnostics-2026-08-06.md`.
+
+**The review's most important result is what it missed.** All six dimensions and every skeptic passed
+the changeset; the only crash was found by the user launching the build mid-review. `TownGoldLedger`
+shipped with two public constructors, so DryIoc threw
+`UnableToSelectSinglePublicConstructorFromMultiple` at *registration* — a hard CTD in
+`SubModule.OnSubModuleLoad`, before the main menu, with a green suite and a clean build. Every test
+`new`ed the ledger directly, and the repo's existing `*WiringTests` pattern asserts on `IoC.cs`
+**source text**, which structurally cannot see a constructor-selection failure. The gap is
+structural: no dimension owned *"does this survive startup?"* — all six reason about code already
+running. Lesson filed in `lessons/build-tooling-workflow.md`.
+
+**Confirmed and fixed:** player trade-screen gold lands in `Other`, not `Trade` (HIGH —
+`InventoryScreenHelper.SetGold` :128 calls `ChangeGold` directly, bypassing the `SellItemsAction` I
+tagged; four shipped docs claimed otherwise); a test class doc asserting the **opposite** of its own
+boundary tests after the float-widening discovery inverted the assumption; `CaravanGate` missing
+`ShortTermBehavior == Hold`, the second disjunct of the same exit guard `AiDisabled` was modelled
+from; `Patch68` applied unguarded mid-chain where a throw would have aborted `Patch30` and every
+category after it; and fabricated counts across seven files ("six targets" for five, "Six binding
+tests" for four, "seven gates" for ten).
+
+**Refuted, recorded so they are not re-litigated:** the "`CaravanGateDiagnosticsService` has no
+interface, no repo precedent" finding rested on a circular search (`rg "new [A-Z]*Service\("` filters
+by name suffix); the module-unload `_ledger` leak (`OnSubModuleUnloaded` is process teardown). Also
+**disproved**: my own pre-registered suspicion that rolling the ledger on `DailyTickEvent` smears
+attribution across towns — `_campaignPeriodicEventManager.OnTick` runs before the daily dispatch, so
+it is the correct roll point. Two skeptics disagreed on whether `Hold` persists; resolved directly
+against the engine (outlives the siege by hours, self-clears on the next re-decide, permanent only in
+combination with a zero trade score) and both the verdict text and gate table now say exactly that.
+
+**Root-cause pattern:** components verified, inherited seams not. The one seam that *was* verified —
+Harmony discovering the nested patch classes, the only nested `[HarmonyPatch]` classes in TAOM — was
+verified precisely because it felt unprecedented, and it turned out fine. The boring seam that runs
+first took the game down. Novelty is a bad predictor of risk. Suite 5686 green.

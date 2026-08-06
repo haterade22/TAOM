@@ -214,7 +214,7 @@
     <string id="taom_roi_t1a_p4" text="+5% zdobywanego rozgłosu z bitew." />
     <string id="taom_roi_t1b_key" text="Wydłużony czas trwania Zasadzki, dający dodatkowy unik." />
     <string id="taom_roi_t1b_p1" text="+5% odporności." />
-    <string id="taom_roi_t1b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_roi_t1b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_roi_t1b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_roi_t1b_p4" text="+5% stealth bonus." />
     <string id="taom_roi_t2a_key" text="Zmniejszony wymagany ładunek Zasadzki — aktywuje się częściej." />
@@ -225,27 +225,27 @@
     <string id="taom_roi_t2b_key" text="Zasadzka zwiększa także obrażenia dystansowe żołnierzy, gdy jest aktywna." />
     <string id="taom_roi_t2b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_roi_t2b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_roi_t2b_p3" text="+50 maksymalnego zdrowia." />
-    <string id="taom_roi_t2b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_roi_t2b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_roi_t2b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_roi_t3a_key" text="Znacznie zwiększony promień Zasadzki; niszczycielskie salwy strzał." />
     <string id="taom_roi_t3a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_roi_t3a_p2" text="+15% przebicia pancerza." />
     <string id="taom_roi_t3a_p3" text="+15% zdobywanego rozgłosu z bitew." />
-    <string id="taom_roi_t3a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_roi_t3a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_roi_t3b_key" text="Znacznie zmniejszony ładunek Zasadzki — niemal zawsze dostępna." />
     <string id="taom_roi_t3b_p1" text="+15% premii do skradania." />
     <string id="taom_roi_t3b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_roi_t3b_p3" text="+75 maksymalnego zdrowia." />
+    <string id="taom_roi_t3b_p3" text="+9 maksymalnego zdrowia." />
     <string id="taom_roi_t3b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_cop_root_desc" text="Zdolność kariery daje +5% obrażeń w walce wręcz i poprawia morale żołnierzy w pobliżu rzek i wybrzeży." />
     <string id="taom_cop_t1a_key" text="Zwiększony promień Zdolności kariery — panujesz nad szerszymi podejściami do rzeki." />
     <string id="taom_cop_t1a_p1" text="+8% obrażeń w walce wręcz." />
     <string id="taom_cop_t1a_p2" text="+10% szybkości zamachu." />
-    <string id="taom_cop_t1a_p3" text="+5% obrażeń żołnierzy." />
+    <string id="taom_cop_t1a_p3" text="+3% obrażeń żołnierzy." />
     <string id="taom_cop_t1a_p4" text="+5% zdobywanego rozgłosu z bitew." />
     <string id="taom_cop_t1b_key" text="Wydłużony czas trwania Zdolności kariery — dłużej utrzymujesz linię portu." />
     <string id="taom_cop_t1b_p1" text="+5% odporności." />
-    <string id="taom_cop_t1b_p2" text="+30 do maksymalnego zdrowia." />
+    <string id="taom_cop_t1b_p2" text="+6 do maksymalnego zdrowia." />
     <string id="taom_cop_t1b_p3" text="+5% morale oddziałów." />
     <string id="taom_cop_t1b_p4" text="-5% żołdu oddziałów." />
     <string id="taom_cop_t2a_key" text="Zmniejszone wymagania naładowania zdolności kariery, co pozwala na częstsze aktywowanie." />
@@ -257,7 +257,7 @@
     <string id="taom_cop_t2b_p1" text="+12% obrażeń w walce wręcz." />
     <string id="taom_cop_t2b_p2" text="+8% przebijania pancerza." />
     <string id="taom_cop_t2b_p3" text="+15% szybkości zamachu." />
-    <string id="taom_cop_t2b_p4" text="+35 do maksymalnego zdrowia." />
+    <string id="taom_cop_t2b_p4" text="+6 do maksymalnego zdrowia." />
     <string id="taom_cop_t3a_key" text="Zdolność kariery daje oddziałom odporność, gdy jest aktywna, umacniając flotę." />
     <string id="taom_cop_t3a_p1" text="+15% morale oddziałów." />
     <string id="taom_cop_t3a_p2" text="+4 do liczebności drużyny." />
@@ -267,16 +267,16 @@
     <string id="taom_cop_t3b_p1" text="+15% obrażeń w walce wręcz." />
     <string id="taom_cop_t3b_p2" text="+10% odporności." />
     <string id="taom_cop_t3b_p3" text="+15% przebijania pancerza." />
-    <string id="taom_cop_t3b_p4" text="+50 do maksymalnego zdrowia." />
+    <string id="taom_cop_t3b_p4" text="+8 do maksymalnego zdrowia." />
     <string id="taom_knight_of_belfalas_root_desc" text="Tętent daje +5% obrażeń w walce wręcz i rośnie wraz z siłą konnej szarży." />
     <string id="taom_kob_t1a_key" text="Zwiększony zasięg zdolności Tętent — zmiata szersze formacje wroga." />
     <string id="taom_kob_t1a_p1" text="+8% obrażeń w walce wręcz." />
     <string id="taom_kob_t1a_p2" text="+10% obrażeń szarży konia." />
-    <string id="taom_kob_t1a_p3" text="+5% obrażeń oddziałów." />
+    <string id="taom_kob_t1a_p3" text="+3% obrażeń oddziałów." />
     <string id="taom_kob_t1a_p4" text="+5% zdobywanej sławy w bitwach." />
     <string id="taom_kob_t1b_key" text="Wydłużony czas trwania Tętentu — szarża utrzymuje się dłużej." />
     <string id="taom_kob_t1b_p1" text="+8% odporności." />
-    <string id="taom_kob_t1b_p2" text="+40 do maksymalnego zdrowia." />
+    <string id="taom_kob_t1b_p2" text="+7 do maksymalnego zdrowia." />
     <string id="taom_kob_t1b_p3" text="+10% zdrowia konia." />
     <string id="taom_kob_t1b_p4" text="+5% troop resistance." />
     <string id="taom_kob_t2a_key" text="Zmniejszone wymagania naładowania Tętentu — częstsze gromkie szarże." />
@@ -286,7 +286,7 @@
     <string id="taom_kob_t2a_p4" text="+10% zdobywanej sławy w bitwach." />
     <string id="taom_kob_t2b_key" text="Tętent zwiększa również odporność oddziałów, gdy jest aktywny." />
     <string id="taom_kob_t2b_p1" text="+10% odporności." />
-    <string id="taom_kob_t2b_p2" text="+50 do maksymalnego zdrowia." />
+    <string id="taom_kob_t2b_p2" text="+8 do maksymalnego zdrowia." />
     <string id="taom_kob_t2b_p3" text="+15% horse health." />
     <string id="taom_kob_t2b_p4" text="+8% troop resistance." />
     <string id="taom_kob_t3a_key" text="Szarża daje morale wojskom, gdy jest aktywna, natchnąc zastępy Belfalas." />
@@ -296,10 +296,10 @@
     <string id="taom_kob_t3a_p4" text="-10% kosztu awansu za surowce specjalne." />
     <string id="taom_kob_t3b_key" text="Zasięg i czas trwania Szarży zmaksymalizowane — natarcie Dol Amroth jest nie do zatrzymania." />
     <string id="taom_kob_t3b_p1" text="+15% odporności." />
-    <string id="taom_kob_t3b_p2" text="+75 maksymalnego zdrowia." />
+    <string id="taom_kob_t3b_p2" text="+9 maksymalnego zdrowia." />
     <string id="taom_kob_t3b_p3" text="+20% horse charge damage." />
     <string id="taom_kob_t3b_p4" text="+12% troop resistance." />
-    <string id="taom_buc_root_desc" text="Mroczny Hart daje +30 zdrowia i podsyca bojowy szał Czarnych Uruków." />
+    <string id="taom_buc_root_desc" text="Mroczny Hart daje +6 zdrowia i podsyca bojowy szał Czarnych Uruków." />
     <string id="taom_buc_t1_a_key" text="Żelazna Skóra" />
     <string id="taom_buc_t1_a_key_desc" text="Zahartowana w kuźni i wojnie, twoja skóra odbija ostrza. Zasięg Krwawego Szału +3." />
     <string id="taom_buc_t1_a_p1" text="Brutalna Szarża" />
@@ -309,13 +309,13 @@
     <string id="taom_buc_t1_a_p3" text="Pieśń Wojenna" />
     <string id="taom_buc_t1_a_p3_desc" text="Twój gardłowy ryk hartuje wojska Mordoru. +3% morale wojsk." />
     <string id="taom_buc_t1_a_p4" text="Pokryty Bliznami Weteran" />
-    <string id="taom_buc_t1_a_p4_desc" text="Stare rany uczą twardych lekcji. +25 zdrowia." />
+    <string id="taom_buc_t1_a_p4_desc" text="Stare rany uczą twardych lekcji. +5 zdrowia." />
     <string id="taom_buc_t1_b_key" text="Krwawy Amok" />
     <string id="taom_buc_t1_b_key_desc" text="Ból tylko wyostrza twój głód. Czas trwania Krwawego Szału +4 s." />
     <string id="taom_buc_t1_b_p1" text="Łupacz Zbroi" />
     <string id="taom_buc_t1_b_p1_desc" text="Przebijasz się przez płyty czystą przemocą. +5% przebicia pancerza." />
     <string id="taom_buc_t1_b_p2" text="Niezłomny" />
-    <string id="taom_buc_t1_b_p2_desc" text="Nawet w przewadze wroga nie padasz łatwo. +30 zdrowia." />
+    <string id="taom_buc_t1_b_p2_desc" text="Nawet w przewadze wroga nie padasz łatwo. +6 zdrowia." />
     <string id="taom_buc_t1_b_p3" text="Żelazna Dyscyplina" />
     <string id="taom_buc_t1_b_p3_desc" text="Twoja obecność zmniejsza dezercję. -4% żołdu wojsk." />
     <string id="taom_buc_t1_b_p4" text="Kruszyciel Tarcz" />
@@ -325,11 +325,11 @@
     <string id="taom_buc_t2_a_p1" text="Dziki Rozpęd" />
     <string id="taom_buc_t2_a_p1_desc" text="Zabijanie napędza twoje natarcie. +8% obrażeń w walce wręcz." />
     <string id="taom_buc_t2_a_p2" text="Obecność Wodza Wojny" />
-    <string id="taom_buc_t2_a_p2_desc" text="Wojska Mordoru walczą zacieklej pod twoim dowództwem. +6% obrażeń wojsk." />
+    <string id="taom_buc_t2_a_p2_desc" text="Wojska Mordoru walczą zacieklej pod twoim dowództwem. +3% obrażeń wojsk." />
     <string id="taom_buc_t2_a_p3" text="Zbroja Zbroczona Krwią" />
     <string id="taom_buc_t2_a_p3_desc" text="Krew wrogów chroni od dalszych ran. +8% odporności na cięcia." />
     <string id="taom_buc_t2_a_p4" text="Burzyciel Oblężeń" />
-    <string id="taom_buc_t2_a_p4_desc" text="Rozbijasz umocnione szeregi. +35 zdrowia." />
+    <string id="taom_buc_t2_a_p4_desc" text="Rozbijasz umocnione szeregi. +6 zdrowia." />
     <string id="taom_buc_t2_b_key" text="Wydłużony Szał" />
     <string id="taom_buc_t2_b_key_desc" text="Krwawy szał trwa dłużej. Czas trwania Krwawego Szału +2 s." />
     <string id="taom_buc_t2_b_p1" text="Szalejąca Groza" />
@@ -339,21 +339,21 @@
     <string id="taom_buc_t2_b_p3" text="Bat Nadzorcy" />
     <string id="taom_buc_t2_b_p3_desc" text="Strach przed twoim gniewem pędzi zastępy naprzód. -5% żołdu wojsk." />
     <string id="taom_buc_t2_b_p4" text="Płyty i Kolczugi" />
-    <string id="taom_buc_t2_b_p4_desc" text="Warstwy zbroi odbijają najostrzejsze ciosy. +40 zdrowia." />
+    <string id="taom_buc_t2_b_p4_desc" text="Warstwy zbroi odbijają najostrzejsze ciosy. +7 zdrowia." />
     <string id="taom_buc_t3_a_key" text="Oko Saurona" />
     <string id="taom_buc_t3_a_key_desc" text="Czarna wola Saurona sprawia, że szał ogarnia wszystkich wokół. Promień Krwawego Szału +5." />
     <string id="taom_buc_t3_a_p1" text="Gniew Czarnego Dowódcy" />
     <string id="taom_buc_t3_a_p1_desc" text="Twoje ciosy niosą furię Czarnego Władcy. +12% obrażeń w walce wręcz." />
     <string id="taom_buc_t3_a_p2" text="Nieśmiertelna Furia" />
-    <string id="taom_buc_t3_a_p2_desc" text="Nawet ciężko ranny walczysz dalej. +75 zdrowia." />
+    <string id="taom_buc_t3_a_p2_desc" text="Nawet ciężko ranny walczysz dalej. +9 zdrowia." />
     <string id="taom_buc_t3_a_p3" text="Dowódca Zastępów" />
     <string id="taom_buc_t3_a_p3_desc" text="Twoje zastępy rosną wraz z twoją legendą. +4 do liczebności drużyny." />
     <string id="taom_buc_t3_a_p4" text="Miażdżący Natarcie" />
-    <string id="taom_buc_t3_a_p4_desc" text="Twoi żołnierze rozbijają linie wroga z brutalną skutecznością. +10% obrażeń wojsk." />
+    <string id="taom_buc_t3_a_p4_desc" text="Twoi żołnierze rozbijają linie wroga z brutalną skutecznością. +5% obrażeń wojsk." />
     <string id="taom_buc_t3_b_key" text="Niezłomny" />
     <string id="taom_buc_t3_b_key_desc" text="Nie musisz niemal uwalniać szału — jest zawsze obecny. Koszt naładowania Krwawego Szału -30." />
     <string id="taom_buc_t3_b_p1" text="Czarna Fala" />
-    <string id="taom_buc_t3_b_p1_desc" text="Twoje zastępy zalewają wroga bez litości. +12% obrażeń wojsk." />
+    <string id="taom_buc_t3_b_p1_desc" text="Twoje zastępy zalewają wroga bez litości. +6% obrażeń wojsk." />
     <string id="taom_buc_t3_b_p2" text="Nieustępliwy Marsz" />
     <string id="taom_buc_t3_b_p2_desc" text="Twoje zastępy maszerują bez wytchnienia. +5% szybkości marszu drużyny." />
     <string id="taom_buc_t3_b_p3" text="Czarna Sława" />
@@ -368,7 +368,7 @@
     <string id="taom_mc_t1_a_p2" text="Pewne Oko" />
     <string id="taom_mc_t1_a_p2_desc" text="Cierpliwie i precyzyjnie. +6% obrażeń dystansowych." />
     <string id="taom_mc_t1_a_p3" text="Kultowy Zapał" />
-    <string id="taom_mc_t1_a_p3_desc" text="Błogosławieństwo Jedynego chroni wiernych. +25 zdrowia." />
+    <string id="taom_mc_t1_a_p3_desc" text="Błogosławieństwo Jedynego chroni wiernych. +5 zdrowia." />
     <string id="taom_mc_t1_a_p4" text="Krok w Cieniu" />
     <string id="taom_mc_t1_a_p4_desc" text="You move unseen between salvos. +5% stealth bonus." />
     <string id="taom_mc_t1_b_key" text="Szept Saurona" />
@@ -376,7 +376,7 @@
     <string id="taom_mc_t1_b_p1" text="Kołczan Ciemności" />
     <string id="taom_mc_t1_b_p1_desc" text="You carry more black-shafted bolts. +3 ammo." />
     <string id="taom_mc_t1_b_p2" text="Rytualne Blizny" />
-    <string id="taom_mc_t1_b_p2_desc" text="Ochrona przed bólem z rytuałów Mulkerhili. +30 zdrowia." />
+    <string id="taom_mc_t1_b_p2_desc" text="Ochrona przed bólem z rytuałów Mulkerhili. +6 zdrowia." />
     <string id="taom_mc_t1_b_p3" text="Krok Proroka" />
     <string id="taom_mc_t1_b_p3_desc" text="Sauron's grace keeps you swift and hidden. +4% stealth bonus." />
     <string id="taom_mc_t1_b_p4" text="Czarne Błogosławieństwo" />
@@ -384,11 +384,11 @@
     <string id="taom_mc_t2_a_key" text="Zgromadzenie Grozy" />
     <string id="taom_mc_t2_a_key_desc" text="Więcej wiernych odpowiada na twe wezwanie. Koszt ładunku Głosu Jedynego -20." />
     <string id="taom_mc_t2_a_p1" text="Salwa Wiernych" />
-    <string id="taom_mc_t2_a_p1_desc" text="Wojownicy twego kultu wypuszczają zabójcze salwy. +8% obrażeń oddziałów." />
+    <string id="taom_mc_t2_a_p1_desc" text="Wojownicy twego kultu wypuszczają zabójcze salwy. +4% obrażeń oddziałów." />
     <string id="taom_mc_t2_a_p2" text="Sobolowa Strzała" />
     <string id="taom_mc_t2_a_p2_desc" text="Czarno kute grociki wnikają głębiej. +8% przebijania pancerza." />
     <string id="taom_mc_t2_a_p3" text="Determinacja Fanatyka" />
-    <string id="taom_mc_t2_a_p3_desc" text="Śmierć nic nie znaczy dla prawdziwie wierzących. +35 zdrowia." />
+    <string id="taom_mc_t2_a_p3_desc" text="Śmierć nic nie znaczy dla prawdziwie wierzących. +6 zdrowia." />
     <string id="taom_mc_t2_a_p4" text="Logistyka Kultu" />
     <string id="taom_mc_t2_a_p4_desc" text="The cult's network keeps the host provisioned. +5 ammo." />
     <string id="taom_mc_t2_b_key" text="Ciemne Kazanie" />
@@ -400,13 +400,13 @@
     <string id="taom_mc_t2_b_p3" text="Sieć Cieni" />
     <string id="taom_mc_t2_b_p3_desc" text="Kultyści przemykają w ciemności niezauważeni. +6% zasięgu wypatrywania drużyny." />
     <string id="taom_mc_t2_b_p4" text="Fanatyczne Oddanie" />
-    <string id="taom_mc_t2_b_p4_desc" text="Prawdziwie wierzący oddają wszystko. +40 zdrowia." />
+    <string id="taom_mc_t2_b_p4_desc" text="Prawdziwie wierzący oddają wszystko. +7 zdrowia." />
     <string id="taom_mc_t3_a_key" text="Spojrzenie Saurona" />
     <string id="taom_mc_t3_a_key_desc" text="Oko Czarnego Władcy przeczesuje pole bitwy. Promień Głosu +5." />
     <string id="taom_mc_t3_a_p1" text="Apokaliptyczny Ostrzał" />
     <string id="taom_mc_t3_a_p1_desc" text="Twoje salwy zasłaniają słońce. +12% obrażeń dystansowych." />
     <string id="taom_mc_t3_a_p2" text="Ostatnie Objawienie" />
-    <string id="taom_mc_t3_a_p2_desc" text="Nawet śmierć nie zatrzyma wiernych. +75 zdrowia." />
+    <string id="taom_mc_t3_a_p2_desc" text="Nawet śmierć nie zatrzyma wiernych. +9 zdrowia." />
     <string id="taom_mc_t3_a_p3" text="Armia Zgromadzenia" />
     <string id="taom_mc_t3_a_p3_desc" text="Wierni gromadzą się pod twym sztandarem. +4 do liczebności drużyny." />
     <string id="taom_mc_t3_a_p4" text="Błogosławiony Kołczan" />
@@ -414,7 +414,7 @@
     <string id="taom_mc_t3_b_key" text="Ciemne Przymierze" />
     <string id="taom_mc_t3_b_key_desc" text="Głos wymaga mniejszej ofiary, by go przywołać. Koszt ładunku Głosu -30." />
     <string id="taom_mc_t3_b_p1" text="Kult Oka" />
-    <string id="taom_mc_t3_b_p1_desc" text="Armie Mordoru walczą w imię Saurona. +12% obrażeń oddziałów." />
+    <string id="taom_mc_t3_b_p1_desc" text="Armie Mordoru walczą w imię Saurona. +6% obrażeń oddziałów." />
     <string id="taom_mc_t3_b_p2" text="Niezmęczona Krucjata" />
     <string id="taom_mc_t3_b_p2_desc" text="Wierni maszerują bez znużenia. +5% szybkości marszu drużyny." />
     <string id="taom_mc_t3_b_p3" text="Nagroda męczennika" />
@@ -429,7 +429,7 @@
     <string id="taom_sr_t1_a_p2" text="Skradający się oskrzydlacz" />
     <string id="taom_sr_t1_a_p2_desc" text="You appear where least expected. +5% stealth bonus." />
     <string id="taom_sr_t1_a_p3" text="Twarda jazda" />
-    <string id="taom_sr_t1_a_p3_desc" text="Twoje ciało znosi najcięższe rajdy. +25 zdrowia." />
+    <string id="taom_sr_t1_a_p3_desc" text="Twoje ciało znosi najcięższe rajdy. +5 zdrowia." />
     <string id="taom_sr_t1_a_p4" text="Uderz i zniknij" />
     <string id="taom_sr_t1_a_p4_desc" text="Uderzaj szybko i znikaj. +5% obrażeń w walce wręcz na koniu." />
     <string id="taom_sr_t1_b_key" text="Nocny jeździec" />
@@ -439,9 +439,9 @@
     <string id="taom_sr_t1_b_p2" text="Szybkość łupieżcy" />
     <string id="taom_sr_t1_b_p2_desc" text="Wyprzedzasz każdą pogoń. +5% prędkości ruchu." />
     <string id="taom_sr_t1_b_p3" text="Taktyka watahy" />
-    <string id="taom_sr_t1_b_p3_desc" text="Jeźdźcy snagi atakują w watahach. +3% obrażeń żołnierzy." />
+    <string id="taom_sr_t1_b_p3_desc" text="Jeźdźcy snagi atakują w watahach. +2% obrażeń żołnierzy." />
     <string id="taom_sr_t1_b_p4" text="Wytrzymałość w siodle" />
-    <string id="taom_sr_t1_b_p4_desc" text="Jazda w Mordorze hartuje ciało. +30 zdrowia." />
+    <string id="taom_sr_t1_b_p4_desc" text="Jazda w Mordorze hartuje ciało. +6 zdrowia." />
     <string id="taom_sr_t2_a_key" text="Napór z zasadzki" />
     <string id="taom_sr_t2_a_key_desc" text="Uderzasz, zanim wróg cię dostrzeże. Koszt skradania -20." />
     <string id="taom_sr_t2_a_p1" text="Zabójczy rozpęd" />
@@ -451,7 +451,7 @@
     <string id="taom_sr_t2_a_p3" text="Zdobycz łupieżcy" />
     <string id="taom_sr_t2_a_p3_desc" text="Udane rajdy przynoszą wielką sławę. +8% zdobywanej sławy z bitew." />
     <string id="taom_sr_t2_a_p4" text="Wytrwałość wargów" />
-    <string id="taom_sr_t2_a_p4_desc" text="Twój wierzchowiec wytrzymuje więcej niż zwykłe bestie. +35 zdrowia." />
+    <string id="taom_sr_t2_a_p4_desc" text="Twój wierzchowiec wytrzymuje więcej niż zwykłe bestie. +6 zdrowia." />
     <string id="taom_sr_t2_b_key" text="Widmowy jeździec" />
     <string id="taom_sr_t2_b_key_desc" text="Cień trzyma się ciebie dłużej. Czas skradania +2s." />
     <string id="taom_sr_t2_b_p1" text="Wrzaskliwa szarża" />
@@ -461,7 +461,7 @@
     <string id="taom_sr_t2_b_p3" text="Udział grabieżcy" />
     <string id="taom_sr_t2_b_p3_desc" text="Dzielony łup utrzymuje wierność watahy. -5% żołdu." />
     <string id="taom_sr_t2_b_p4" text="Żelazne siodło" />
-    <string id="taom_sr_t2_b_p4_desc" text="Mordorska skóra i żelazne kółka chronią jeźdźca i bestię. +40 zdrowia." />
+    <string id="taom_sr_t2_b_p4_desc" text="Mordorska skóra i żelazne kółka chronią jeźdźca i bestię. +7 zdrowia." />
     <string id="taom_sr_t3_a_key" text="Cieniste Tratowanie" />
     <string id="taom_sr_t3_a_key_desc" text="Armia jeźdźców wyłania się z mroku. Promień Skradania +5." />
     <string id="taom_sr_t3_a_p1" text="Śmiertelna Szarża" />
@@ -469,20 +469,20 @@
     <string id="taom_sr_t3_a_p2" text="Rozkaz Władcy Wargów" />
     <string id="taom_sr_t3_a_p2_desc" text="Ogromne stado pędzi pod twoim sztandarem. +4 do liczebności drużyny." />
     <string id="taom_sr_t3_a_p3" text="Nieustępliwy Cień" />
-    <string id="taom_sr_t3_a_p3_desc" text="Nawet śmiertelne rany cię nie spowalniają. +75 zdrowia." />
+    <string id="taom_sr_t3_a_p3_desc" text="Nawet śmiertelne rany cię nie spowalniają. +9 zdrowia." />
     <string id="taom_sr_t3_a_p4" text="Groza Mordoru" />
     <string id="taom_sr_t3_a_p4_desc" text="Twoje najazdy budzą wielki strach i sławę. +12% zdobywanej sławy z bitew." />
     <string id="taom_sr_t3_b_key" text="Straż Przednia Mordoru" />
     <string id="taom_sr_t3_b_key_desc" text="Zawsze uderzasz pierwszy. Koszt szarży Skradania -30." />
     <string id="taom_sr_t3_b_p1" text="Fala Wargów" />
-    <string id="taom_sr_t3_b_p1_desc" text="Setki jeźdźców wbijają się w szeregi wroga. +12% obrażeń oddziałów." />
+    <string id="taom_sr_t3_b_p1_desc" text="Setki jeźdźców wbijają się w szeregi wroga. +6% obrażeń oddziałów." />
     <string id="taom_sr_t3_b_p2" text="Niekończący się Marsz Mroku" />
     <string id="taom_sr_t3_b_p2_desc" text="Zastępy Mordoru pokonują drogę bez wytchnienia. +8% szybkości marszu drużyny." />
     <string id="taom_sr_t3_b_p3" text="Legiony Cienia" />
     <string id="taom_sr_t3_b_p3_desc" text="Twoja horda rośnie nad wszelką rachubę. +5 do liczebności drużyny." />
     <string id="taom_sr_t3_b_p4" text="Sława Jeźdźca" />
     <string id="taom_sr_t3_b_p4_desc" text="Czyny cienistej jazdy są legendarne. +14% zdobywanej sławy z bitew." />
-    <string id="taom_ohw_root_desc" text="Młot w Dół daje +35 zdrowia. Sama masa Ologa rozprasza piechotę." />
+    <string id="taom_ohw_root_desc" text="Młot w Dół daje +6 zdrowia. Sama masa Ologa rozprasza piechotę." />
     <string id="taom_ohw_t1_a_key" text="Wstrząsający Ziemią" />
     <string id="taom_ohw_t1_a_key_desc" text="Twoje tupnięcie wstrząsa ziemią. Promień Młota w Dół +3." />
     <string id="taom_ohw_t1_a_p1" text="Łamacz Kości" />
@@ -492,7 +492,7 @@
     <string id="taom_ohw_t1_a_p3" text="Gromowa Obecność" />
     <string id="taom_ohw_t1_a_p3_desc" text="Twoje przybycie umacnia zastępy. +3% morale oddziałów." />
     <string id="taom_ohw_t1_a_p4" text="Kondycja Trolla" />
-    <string id="taom_ohw_t1_a_p4_desc" text="Nie zważasz na rany, które zwaliłyby pomniejsze istoty. +30 zdrowia." />
+    <string id="taom_ohw_t1_a_p4_desc" text="Nie zważasz na rany, które zwaliłyby pomniejsze istoty. +6 zdrowia." />
     <string id="taom_ohw_t1_b_key" text="Nieustanne Miażdżenie" />
     <string id="taom_ohw_t1_b_key_desc" text="Młócenie nie ustaje. Czas trwania Młota w Dół +4s." />
     <string id="taom_ohw_t1_b_p1" text="Skóra Wojennego Bębna" />
@@ -502,7 +502,7 @@
     <string id="taom_ohw_t1_b_p3" text="Żelazna Wola" />
     <string id="taom_ohw_t1_b_p3_desc" text="Rozkaz Saurona napędza twoją wolę. -4% żołdu oddziałów." />
     <string id="taom_ohw_t1_b_p4" text="Górska Masa" />
-    <string id="taom_ohw_t1_b_p4_desc" text="Jesteś kroczącą górą. +35 zdrowia." />
+    <string id="taom_ohw_t1_b_p4_desc" text="Jesteś kroczącą górą. +6 zdrowia." />
     <string id="taom_ohw_t2_a_key" text="Szalejący Kolos" />
     <string id="taom_ohw_t2_a_key_desc" text="Nie potrzebujesz powodu, by szaleć. Koszt naładowania Młota w Dół -20." />
     <string id="taom_ohw_t2_a_p1" text="Titaniczne Uderzenie" />
@@ -512,27 +512,27 @@
     <string id="taom_ohw_t2_a_p3" text="Taran" />
     <string id="taom_ohw_t2_a_p3_desc" text="Rozbijasz bramy i ludzi jednakowo. +10% przebicia pancerza." />
     <string id="taom_ohw_t2_a_p4" text="Trollowa Wytrzymałość" />
-    <string id="taom_ohw_t2_a_p4_desc" text="Zrastasz rany, które okaleczyłyby ludzi. +50 zdrowia." />
+    <string id="taom_ohw_t2_a_p4_desc" text="Zrastasz rany, które okaleczyłyby ludzi. +8 zdrowia." />
     <string id="taom_ohw_t2_b_key" text="Przedłużony Szał" />
     <string id="taom_ohw_t2_b_key_desc" text="Miażdżenie trwa dalej. Czas trwania Młota w Dół +2s." />
     <string id="taom_ohw_t2_b_p1" text="Groza Zastępu" />
-    <string id="taom_ohw_t2_b_p1_desc" text="Wrogowie uciekają przed twoim zastępem. +10% obrażeń wojsk." />
+    <string id="taom_ohw_t2_b_p1_desc" text="Wrogowie uciekają przed twoim zastępem. +5% obrażeń wojsk." />
     <string id="taom_ohw_t2_b_p2" text="Skóra jak Machina Oblężnicza" />
     <string id="taom_ohw_t2_b_p2_desc" text="Nawet bełty oblężnicze odbijają się od twojej skóry. +10% odporności na broń strzelecką." />
     <string id="taom_ohw_t2_b_p3" text="Mroczne Pożywienie" />
     <string id="taom_ohw_t2_b_p3_desc" text="Potęga Saurona żywi zastęp. -5% żołdu wojsk." />
     <string id="taom_ohw_t2_b_p4" text="Pradawny Kamień" />
-    <string id="taom_ohw_t2_b_p4_desc" text="Twoja skóra jest starsza niż Era Ludzi. +50 zdrowia." />
+    <string id="taom_ohw_t2_b_p4_desc" text="Twoja skóra jest starsza niż Era Ludzi. +8 zdrowia." />
     <string id="taom_ohw_t3_a_key" text="Wstrząsający Światem" />
     <string id="taom_ohw_t3_a_key_desc" text="Uderzenie twojego młota czuć na całym polu bitwy. Promień Młota w Dół +5." />
     <string id="taom_ohw_t3_a_p1" text="Kataklizmiczny Cios" />
     <string id="taom_ohw_t3_a_p1_desc" text="Twój cios przekształca pole bitwy. +14% obrażeń w walce wręcz." />
     <string id="taom_ohw_t3_a_p2" text="Śmierć Nie Zatrzyma" />
-    <string id="taom_ohw_t3_a_p2_desc" text="Nawet ciężkie rany nie zatrzymają Ologa. +75 zdrowia." />
+    <string id="taom_ohw_t3_a_p2_desc" text="Nawet ciężkie rany nie zatrzymają Ologa. +9 zdrowia." />
     <string id="taom_ohw_t3_a_p3" text="Horda Wodza Wojennego" />
     <string id="taom_ohw_t3_a_p3_desc" text="Dziesiątki tysięcy maszerują pod twoim sztandarem. +5 do wielkości drużyny." />
     <string id="taom_ohw_t3_a_p4" text="Młot Mordoru" />
-    <string id="taom_ohw_t3_a_p4_desc" text="Twój zastęp łamie wszystkich, którzy stają mu na drodze. +12% obrażeń wojsk." />
+    <string id="taom_ohw_t3_a_p4_desc" text="Twój zastęp łamie wszystkich, którzy stają mu na drodze. +6% obrażeń wojsk." />
     <string id="taom_ohw_t3_b_key" text="Wieczny Szał" />
     <string id="taom_ohw_t3_b_key_desc" text="Ledwie potrzebujesz powodu, by miażdżyć. Koszt naładowania Młota w Dół -30." />
     <string id="taom_ohw_t3_b_p1" text="Groza Mrocznej Ery" />
@@ -551,7 +551,7 @@
     <string id="taom_moa_t1_a_p2" text="Szukacz Szczelin" />
     <string id="taom_moa_t1_a_p2_desc" text="Znajdujesz spojenia w każdej zbroi. +5% przebicia pancerza." />
     <string id="taom_moa_t1_a_p3" text="Szkolenie z Aldburga" />
-    <string id="taom_moa_t1_a_p3_desc" text="Łucznicy z Aldburga są najlepsi w Marchii. +25 zdrowia." />
+    <string id="taom_moa_t1_a_p3_desc" text="Łucznicy z Aldburga są najlepsi w Marchii. +5 zdrowia." />
     <string id="taom_moa_t1_a_p4" text="Pełny Kołczan" />
     <string id="taom_moa_t1_a_p4_desc" text="You carry more white-feathered shafts than any other. +3 ammo." />
     <string id="taom_moa_t1_b_key" text="Niezłomne Napięcie" />
@@ -559,7 +559,7 @@
     <string id="taom_moa_t1_b_p1" text="Szybkie Nałożenie" />
     <string id="taom_moa_t1_b_p1_desc" text="Twoje dłonie poruszają się szybciej, niż oko nadąży. +5% obrażeń dystansowych." />
     <string id="taom_moa_t1_b_p2" text="Wytrzymałość Łucznika" />
-    <string id="taom_moa_t1_b_p2_desc" text="Napinasz i strzelasz godzinami bez zmęczenia. +30 zdrowia." />
+    <string id="taom_moa_t1_b_p2_desc" text="Napinasz i strzelasz godzinami bez zmęczenia. +6 zdrowia." />
     <string id="taom_moa_t1_b_p3" text="Zwiadowca Otwartych Pól" />
     <string id="taom_moa_t1_b_p3_desc" text="Czytasz równiny Rohanu jak księgę. +5% zasięgu wypatrywania drużyny." />
     <string id="taom_moa_t1_b_p4" text="Dyscyplina Rohirrimów" />
@@ -577,19 +577,19 @@
     <string id="taom_moa_t2_b_key" text="Nieustanny Ostrzał" />
     <string id="taom_moa_t2_b_key_desc" text="Deszcz strzał nie ustaje. Czas trwania Lekkich Lotek +2 s." />
     <string id="taom_moa_t2_b_p1" text="Ogień Osłonowy" />
-    <string id="taom_moa_t2_b_p1_desc" text="Twoi łucznicy osłaniają każdy natarcie. +8% obrażeń oddziałów." />
+    <string id="taom_moa_t2_b_p1_desc" text="Twoi łucznicy osłaniają każdy natarcie. +4% obrażeń oddziałów." />
     <string id="taom_moa_t2_b_p2" text="Wykuci w Cieniu Fangornu" />
-    <string id="taom_moa_t2_b_p2_desc" text="Wojownicy z Aldburga zahartowani są bliskością Fangornu. +35 zdrowia." />
+    <string id="taom_moa_t2_b_p2_desc" text="Wojownicy z Aldburga zahartowani są bliskością Fangornu. +6 zdrowia." />
     <string id="taom_moa_t2_b_p3" text="Oko Eorla" />
     <string id="taom_moa_t2_b_p3_desc" text="Równiny nie mają przed tobą tajemnic. +8% zasięgu wypatrywania drużyny." />
     <string id="taom_moa_t2_b_p4" text="Wyszkoleni w Precyzji" />
-    <string id="taom_moa_t2_b_p4_desc" text="Twoi łucznicy strzelają z mechaniczną perfekcją. +8% obrażeń oddziałów." />
+    <string id="taom_moa_t2_b_p4_desc" text="Twoi łucznicy strzelają z mechaniczną perfekcją. +4% obrażeń oddziałów." />
     <string id="taom_moa_t3_a_key" text="Legendarny Strzał" />
     <string id="taom_moa_t3_a_key_desc" text="O twej biegłości będą śpiewać pieśni. Promień Lekkich Lotek +5." />
     <string id="taom_moa_t3_a_p1" text="Strzała Marchii" />
     <string id="taom_moa_t3_a_p1_desc" text="Jedna strzała, jeden trup — za każdym razem. +12% obrażeń dystansowych." />
     <string id="taom_moa_t3_a_p2" text="Mistrz Aldburga" />
-    <string id="taom_moa_t3_a_p2_desc" text="Jesteś najlepszym strzelcem w całym Rohanie. +75 zdrowia." />
+    <string id="taom_moa_t3_a_p2_desc" text="Jesteś najlepszym strzelcem w całym Rohanie. +9 zdrowia." />
     <string id="taom_moa_t3_a_p3" text="Łucznicy zastępu wojennego" />
     <string id="taom_moa_t3_a_p3_desc" text="Twoja legenda przyciąga najlepszych łuczników. +4 do wielkości drużyny." />
     <string id="taom_moa_t3_a_p4" text="Niewyczerpane strzały" />
@@ -597,7 +597,7 @@
     <string id="taom_moa_t3_b_key" text="Odruchowy strzał" />
     <string id="taom_moa_t3_b_key_desc" text="Nałożenie strzały i wypuszczenie to czysta pamięć mięśniowa. Koszt ładunku Lekkiego Pierzenia -30." />
     <string id="taom_moa_t3_b_p1" text="Deszcz strzał" />
-    <string id="taom_moa_t3_b_p1_desc" text="Twoi łucznicy zaciemniają niebo. +12% obrażeń żołnierzy." />
+    <string id="taom_moa_t3_b_p1_desc" text="Twoi łucznicy zaciemniają niebo. +6% obrażeń żołnierzy." />
     <string id="taom_moa_t3_b_p2" text="Szybki marsz" />
     <string id="taom_moa_t3_b_p2_desc" text="Lekka piechota przemierza Marchię szybkim krokiem. +5% szybkości ruchu drużyny." />
     <string id="taom_moa_t3_b_p3" text="Sława Marchii" />
@@ -612,7 +612,7 @@
     <string id="taom_ew_t1_a_p2" text="Urodzony jeździec" />
     <string id="taom_ew_t1_a_p2_desc" text="Horse and rider are one. +5% horse health." />
     <string id="taom_ew_t1_a_p3" text="Wytrzymałość stepu" />
-    <string id="taom_ew_t1_a_p3_desc" text="Jazda po równinach Marchii cię zahartowała. +25 zdrowia." />
+    <string id="taom_ew_t1_a_p3_desc" text="Jazda po równinach Marchii cię zahartowała. +5 zdrowia." />
     <string id="taom_ew_t1_a_p4" text="Okrzyk zagrzewający" />
     <string id="taom_ew_t1_a_p4_desc" text="Twój okrzyk dodaje otuchy zastępowi. +3% morale żołnierzy." />
     <string id="taom_ew_t1_b_key" text="Przeciągły okrzyk wojenny" />
@@ -620,9 +620,9 @@
     <string id="taom_ew_t1_b_p1" text="Rącze równiny" />
     <string id="taom_ew_t1_b_p1_desc" text="Éothéodowie dosiadają samego wiatru. +5% szybkości ruchu." />
     <string id="taom_ew_t1_b_p2" text="Drużyna wojenna Rohanu" />
-    <string id="taom_ew_t1_b_p2_desc" text="Éothéodowie jadą w zwartym szyku. +3% obrażeń żołnierzy." />
+    <string id="taom_ew_t1_b_p2_desc" text="Éothéodowie jadą w zwartym szyku. +2% obrażeń żołnierzy." />
     <string id="taom_ew_t1_b_p3" text="Hart jeźdźca" />
-    <string id="taom_ew_t1_b_p3_desc" text="Nie łamiesz się, bez względu na przewagę wroga. +30 zdrowia." />
+    <string id="taom_ew_t1_b_p3_desc" text="Nie łamiesz się, bez względu na przewagę wroga. +6 zdrowia." />
     <string id="taom_ew_t1_b_p4" text="Niezłomny wierzchowiec" />
     <string id="taom_ew_t1_b_p4_desc" text="Your horse is battle-hardened. +6% horse health." />
     <string id="taom_ew_t2_a_key" text="Dziedzictwo Eorla" />
@@ -634,7 +634,7 @@
     <string id="taom_ew_t2_a_p3" text="Morale Rohirrimów" />
     <string id="taom_ew_t2_a_p3_desc" text="Okrzyk Rohanu dodaje otuchy wszystkim, którzy go słyszą. +8% morale żołnierzy." />
     <string id="taom_ew_t2_a_p4" text="Jeździec dalekich szlaków" />
-    <string id="taom_ew_t2_a_p4_desc" text="Przemierzasz wielkie odległości bez zmęczenia. +35 zdrowia." />
+    <string id="taom_ew_t2_a_p4_desc" text="Przemierzasz wielkie odległości bez zmęczenia. +6 zdrowia." />
     <string id="taom_ew_t2_b_key" text="Pieśń jeźdźca" />
     <string id="taom_ew_t2_b_key_desc" text="Pieśń Eotheodów niesie jeźdźców naprzód. Czas trwania okrzyku wojennego +2 s." />
     <string id="taom_ew_t2_b_p1" text="Krew Mearas" />
@@ -644,13 +644,13 @@
     <string id="taom_ew_t2_b_p3" text="Wierny honorowi" />
     <string id="taom_ew_t2_b_p3_desc" text="Rohirrimowie nie potrzebują złota, by pozostać wierni. -5% żołdu wojsk." />
     <string id="taom_ew_t2_b_p4" text="Żelazne strzemiona" />
-    <string id="taom_ew_t2_b_p4_desc" text="Twoja jazda jest pewna nawet w najzaciętszym starciu. +40 zdrowia." />
+    <string id="taom_ew_t2_b_p4_desc" text="Twoja jazda jest pewna nawet w najzaciętszym starciu. +7 zdrowia." />
     <string id="taom_ew_t3_a_key" text="Szarża Rohirrimów" />
     <string id="taom_ew_t3_a_key_desc" text="Największa szarża w wieku ludzi. Promień okrzyku wojennego +5." />
     <string id="taom_ew_t3_a_p1" text="Grzmot Pelennoru" />
     <string id="taom_ew_t3_a_p1_desc" text="As at the Fields of the Pelennor, your charge is unstoppable. +14% horse charge damage." />
     <string id="taom_ew_t3_a_p2" text="Pan Marchii" />
-    <string id="taom_ew_t3_a_p2_desc" text="Najlepsi jeźdźcy idą za tobą. +75 zdrowia." />
+    <string id="taom_ew_t3_a_p2_desc" text="Najlepsi jeźdźcy idą za tobą. +9 zdrowia." />
     <string id="taom_ew_t3_a_p3" text="Dowódca eoredu" />
     <string id="taom_ew_t3_a_p3_desc" text="Wielki eored jedzie za tobą. +5 do wielkości drużyny." />
     <string id="taom_ew_t3_a_p4" text="Chwała Rohanu" />
@@ -658,7 +658,7 @@
     <string id="taom_ew_t3_b_key" text="Zawsze gotów" />
     <string id="taom_ew_t3_b_key_desc" text="Okrzyk wojenny nigdy nie schodzi z twoich ust. Koszt naładowania okrzyku -30." />
     <string id="taom_ew_t3_b_p1" text="Fala jeźdźców" />
-    <string id="taom_ew_t3_b_p1_desc" text="Rohirrimowie uderzają na wroga jak fala. +12% obrażeń wojsk." />
+    <string id="taom_ew_t3_b_p1_desc" text="Rohirrimowie uderzają na wroga jak fala. +6% obrażeń wojsk." />
     <string id="taom_ew_t3_b_p2" text="Chyży jak wiatr" />
     <string id="taom_ew_t3_b_p2_desc" text="Eotheodowie są szybsi niż legendy. +8% szybkości marszu drużyny." />
     <string id="taom_ew_t3_b_p3" text="Pieśni Marchii Jeźdźców" />
@@ -671,7 +671,7 @@
     <string id="taom_ws_t1_a_p1" text="Tarcza i włócznia" />
     <string id="taom_ws_t1_a_p1_desc" text="Klasyczna dyscyplina piechoty Rohirrimów. +5% obrażeń w walce wręcz." />
     <string id="taom_ws_t1_a_p2" text="Hart strażnicy" />
-    <string id="taom_ws_t1_a_p2_desc" text="Lata na odludnych posterunkach hartują cię jak żelazo. +25 zdrowia." />
+    <string id="taom_ws_t1_a_p2_desc" text="Lata na odludnych posterunkach hartują cię jak żelazo. +5 zdrowia." />
     <string id="taom_ws_t1_a_p3" text="Oczy pogranicza" />
     <string id="taom_ws_t1_a_p3_desc" text="Nic nie przejdzie Entulugi niedostrzeżone przez ciebie. +5% zasięgu wykrywania drużyny." />
     <string id="taom_ws_t1_a_p4" text="Wytrzymałość mokradeł" />
@@ -681,7 +681,7 @@
     <string id="taom_ws_t1_b_p1" text="Pływak Entulwy" />
     <string id="taom_ws_t1_b_p1_desc" text="Rzeka nie budzi w tobie lęku. +5% szybkości ruchu." />
     <string id="taom_ws_t1_b_p2" text="Krzepa strażnika" />
-    <string id="taom_ws_t1_b_p2_desc" text="Lata samotnej służby na warcie czynią cię twardym jak stare drewno. +30 zdrowia." />
+    <string id="taom_ws_t1_b_p2_desc" text="Lata samotnej służby na warcie czynią cię twardym jak stare drewno. +6 zdrowia." />
     <string id="taom_ws_t1_b_p3" text="Wierny gwardzista" />
     <string id="taom_ws_t1_b_p3_desc" text="Twoi ludzie potrzebują niewielkiej zapłaty — wystarcza im obowiązek. -4% żołdu wojsk." />
     <string id="taom_ws_t1_b_p4" text="Dyscyplina Władcy Rzeki" />
@@ -695,7 +695,7 @@
     <string id="taom_ws_t2_a_p3" text="Ostrzeżenie Fangornu" />
     <string id="taom_ws_t2_a_p3_desc" text="Las uczy cię wcześnie wyczuwać niebezpieczeństwo. +10% zasięgu wypatrywania drużyny." />
     <string id="taom_ws_t2_a_p4" text="Umocniona wola" />
-    <string id="taom_ws_t2_a_p4_desc" text="Odosobnienie Stangardu rodzi żelazną determinację. +35 zdrowia." />
+    <string id="taom_ws_t2_a_p4_desc" text="Odosobnienie Stangardu rodzi żelazną determinację. +6 zdrowia." />
     <string id="taom_ws_t2_b_key" text="Niezmordowany patrol" />
     <string id="taom_ws_t2_b_key_desc" text="Patrolujesz bez przerwy i bez wytchnienia. Czas działania Nawigatora Rzecznego +2 s." />
     <string id="taom_ws_t2_b_p1" text="Twierdza Entulwy" />
@@ -705,13 +705,13 @@
     <string id="taom_ws_t2_b_p3" text="Znawca brodów" />
     <string id="taom_ws_t2_b_p3_desc" text="Poruszasz się chyżo po terenie, w którym inni grzęzną. +6% szybkości ruchu drużyny." />
     <string id="taom_ws_t2_b_p4" text="Żelazo pogranicza" />
-    <string id="taom_ws_t2_b_p4_desc" text="Ciężka służba na granicy uczyniła cię niezniszczalnym. +45 zdrowia." />
+    <string id="taom_ws_t2_b_p4_desc" text="Ciężka służba na granicy uczyniła cię niezniszczalnym. +7 zdrowia." />
     <string id="taom_ws_t3_a_key" text="Bastion Stangardu" />
     <string id="taom_ws_t3_a_key_desc" text="Jesteś ostatnią linią między cywilizacją a ciemnością. Promień Nawigatora Rzecznego +5." />
     <string id="taom_ws_t3_a_p1" text="Niezłomna linia" />
     <string id="taom_ws_t3_a_p1_desc" text="Your shieldwall has never broken. +12% troop resistance." />
     <string id="taom_ws_t3_a_p2" text="Nieśmiertelna straż" />
-    <string id="taom_ws_t3_a_p2_desc" text="Warta nigdy się nie kończy. +75 zdrowia." />
+    <string id="taom_ws_t3_a_p2_desc" text="Warta nigdy się nie kończy. +9 zdrowia." />
     <string id="taom_ws_t3_a_p3" text="Dowódca garnizonu" />
     <string id="taom_ws_t3_a_p3_desc" text="Twój garnizon pęcznieje od ochotników. +4 do liczebności drużyny." />
     <string id="taom_ws_t3_a_p4" text="Chwała obrońcy" />
@@ -719,7 +719,7 @@
     <string id="taom_ws_t3_b_key" text="Wiecznie czujny" />
     <string id="taom_ws_t3_b_key_desc" text="Straż trwa nieprzerwanie. Koszt ładunku Nawigatora Rzecznego -30." />
     <string id="taom_ws_t3_b_p1" text="Mur Rohirrimów" />
-    <string id="taom_ws_t3_b_p1_desc" text="Twoja piechota walczy jak jeden mąż. +12% obrażeń oddziałów." />
+    <string id="taom_ws_t3_b_p1_desc" text="Twoja piechota walczy jak jeden mąż. +6% obrażeń oddziałów." />
     <string id="taom_ws_t3_b_p2" text="Rychli na wezwanie" />
     <string id="taom_ws_t3_b_p2_desc" text="Twoi ludzie reagują natychmiast na każde zagrożenie. +6% szybkości marszu drużyny." />
     <string id="taom_ws_t3_b_p3" text="Stróż Marchii" />
@@ -736,13 +736,13 @@
     <string id="taom_alr_t1_a_p3" text="Duma Klanu" />
     <string id="taom_alr_t1_a_p3_desc" text="Walczysz, by dowieść wartości swojego klanu. +3% morale oddziałów." />
     <string id="taom_alr_t1_a_p4" text="Wigor Łupieżcy" />
-    <string id="taom_alr_t1_a_p4_desc" text="Grabisz od zmierzchu do świtu bez zmęczenia. +25 zdrowia." />
+    <string id="taom_alr_t1_a_p4_desc" text="Grabisz od zmierzchu do świtu bez zmęczenia. +5 zdrowia." />
     <string id="taom_alr_t1_b_key" text="Nieustająca Furia" />
     <string id="taom_alr_t1_b_key_desc" text="Wściekłość płonie w twej piersi dłużej. Czas trwania Dzikiego Szału +4s." />
     <string id="taom_alr_t1_b_p1" text="Miotacz Toporów" />
     <string id="taom_alr_t1_b_p1_desc" text="Ciskasz toporem ze zabójczą precyzją. +5% obrażeń dystansowych." />
     <string id="taom_alr_t1_b_p2" text="Dunlandzka Krzepa" />
-    <string id="taom_alr_t1_b_p2_desc" text="Górski lud jest twardszy, niż się zdaje. +30 zdrowia." />
+    <string id="taom_alr_t1_b_p2_desc" text="Górski lud jest twardszy, niż się zdaje. +6 zdrowia." />
     <string id="taom_alr_t1_b_p3" text="Rączy Łupieżca" />
     <string id="taom_alr_t1_b_p3_desc" text="Zawsze uderzasz pierwszy i pierwszy znikasz. +5% szybkości ruchu." />
     <string id="taom_alr_t1_b_p4" text="Wierność Klanowi" />
@@ -752,11 +752,11 @@
     <string id="taom_alr_t2_a_p1" text="Wrzaskliwa Szarża" />
     <string id="taom_alr_t2_a_p1_desc" text="Twoja wojenna szarża przeraża piechotę. +8% obrażeń w walce wręcz." />
     <string id="taom_alr_t2_a_p2" text="Zaprzysiężony Klanowi" />
-    <string id="taom_alr_t2_a_p2_desc" text="Twoi zaprzysiężeni pobratymcy walczą z najwyższą zaciekłością. +8% obrażeń oddziałów." />
+    <string id="taom_alr_t2_a_p2_desc" text="Twoi zaprzysiężeni pobratymcy walczą z najwyższą zaciekłością. +4% obrażeń oddziałów." />
     <string id="taom_alr_t2_a_p3" text="Dunlandzka Skóra" />
     <string id="taom_alr_t2_a_p3_desc" text="Twoja skóra stwardniała jak rzemień po latach w dziczy. +8% odporności na ostrzał." />
     <string id="taom_alr_t2_a_p4" text="Zahartowany w Bitwach" />
-    <string id="taom_alr_t2_a_p4_desc" text="Przeżyłeś sto najazdów. +40 zdrowia." />
+    <string id="taom_alr_t2_a_p4_desc" text="Przeżyłeś sto najazdów. +7 zdrowia." />
     <string id="taom_alr_t2_b_key" text="Przedłużona Rzeź" />
     <string id="taom_alr_t2_b_key_desc" text="Furia nie słabnie. Czas trwania Dzikiego Szału +2s." />
     <string id="taom_alr_t2_b_p1" text="Pieśń wojenna wzgórz" />
@@ -766,13 +766,13 @@
     <string id="taom_alr_t2_b_p3" text="Podział łupów" />
     <string id="taom_alr_t2_b_p3_desc" text="Sprawiedliwy podział łupów utrzymuje wierność klanu. -5% żołdu wojsk." />
     <string id="taom_alr_t2_b_p4" text="Pokryty bliznami i dumny" />
-    <string id="taom_alr_t2_b_p4_desc" text="Każda blizna opowiada o przetrwanym zwycięstwie. +45 zdrowia." />
+    <string id="taom_alr_t2_b_p4_desc" text="Każda blizna opowiada o przetrwanym zwycięstwie. +7 zdrowia." />
     <string id="taom_alr_t3_a_key" text="Krew Avanc-luth" />
     <string id="taom_alr_t3_a_key_desc" text="Furia starożytnego klanu ogarnia całe pole bitwy. Promień Dzikiego Szturmu +5." />
     <string id="taom_alr_t3_a_p1" text="Wojenna furia klanu" />
     <string id="taom_alr_t3_a_p1_desc" text="Każdy Dunlending walczy w twoim imieniu jak berserk. +12% obrażeń w walce wręcz." />
     <string id="taom_alr_t3_a_p2" text="Nieugięty dzikus" />
-    <string id="taom_alr_t3_a_p2_desc" text="Żadna rana nie zatrzyma cię na długo. +75 zdrowia." />
+    <string id="taom_alr_t3_a_p2_desc" text="Żadna rana nie zatrzyma cię na długo. +9 zdrowia." />
     <string id="taom_alr_t3_a_p3" text="Zgromadzenie klanu" />
     <string id="taom_alr_t3_a_p3_desc" text="Wszystkie klany wzgórz odpowiadają na twoje wezwanie do wojny. +4 do liczebności drużyny." />
     <string id="taom_alr_t3_a_p4" text="Sława najeźdźcy" />
@@ -780,7 +780,7 @@
     <string id="taom_alr_t3_b_key" text="Nieustanna wściekłość" />
     <string id="taom_alr_t3_b_key_desc" text="Wściekłość nie potrzebuje wielkiej zachęty. Koszt naładowania Dzikiego Szturmu -30." />
     <string id="taom_alr_t3_b_p1" text="Zastęp wojenny Dunlendingów" />
-    <string id="taom_alr_t3_b_p1_desc" text="Zjednoczone klany są nie do zatrzymania. +12% obrażeń wojsk." />
+    <string id="taom_alr_t3_b_p1_desc" text="Zjednoczone klany są nie do zatrzymania. +6% obrażeń wojsk." />
     <string id="taom_alr_t3_b_p2" text="Rączy klan" />
     <string id="taom_alr_t3_b_p2_desc" text="Dunlendingowie poruszają się jak górskie kozice. +8% szybkości marszu drużyny." />
     <string id="taom_alr_t3_b_p3" text="Legenda wzgórz" />
@@ -795,7 +795,7 @@
     <string id="taom_wh_t1_a_p2" text="Tropiciel wzgórz" />
     <string id="taom_wh_t1_a_p2_desc" text="You move without sound through the Dunlending hills. +5% stealth bonus." />
     <string id="taom_wh_t1_a_p3" text="Wytrzymałość łowcy" />
-    <string id="taom_wh_t1_a_p3_desc" text="Tropisz zdobycz całymi dniami bez odpoczynku. +25 zdrowia." />
+    <string id="taom_wh_t1_a_p3_desc" text="Tropisz zdobycz całymi dniami bez odpoczynku. +5 zdrowia." />
     <string id="taom_wh_t1_a_p4" text="Kościany kołczan" />
     <string id="taom_wh_t1_a_p4_desc" text="Dunlending fletching traditions fill your quiver. +3 ammo." />
     <string id="taom_wh_t1_b_key" text="Wydłużone łowy" />
@@ -803,7 +803,7 @@
     <string id="taom_wh_t1_b_p1" text="Szybkie nakładanie strzały" />
     <string id="taom_wh_t1_b_p1_desc" text="Nakładasz strzałę i naciągasz cięciwę jednym płynnym ruchem. +5% obrażeń dystansowych." />
     <string id="taom_wh_t1_b_p2" text="Wilcza skóra" />
-    <string id="taom_wh_t1_b_p2_desc" text="Wilcze futro daje ciepło i ukrycie. +30 zdrowia." />
+    <string id="taom_wh_t1_b_p2_desc" text="Wilcze futro daje ciepło i ukrycie. +6 zdrowia." />
     <string id="taom_wh_t1_b_p3" text="Czytający tropy" />
     <string id="taom_wh_t1_b_p3_desc" text="Czytasz ziemię jak księgę. +5% zasięgu wykrywania drużyny." />
     <string id="taom_wh_t1_b_p4" text="Wierność watahy" />
@@ -813,9 +813,9 @@
     <string id="taom_wh_t2_a_p1" text="Strzał w gardło" />
     <string id="taom_wh_t2_a_p1_desc" text="Celujesz w szczeliny w każdej zbroi. +10% przebicia pancerza." />
     <string id="taom_wh_t2_a_p2" text="Wilczy krąg" />
-    <string id="taom_wh_t2_a_p2_desc" text="Twoi łowcy okrążają i nękają wroga. +8% obrażeń wojsk." />
+    <string id="taom_wh_t2_a_p2_desc" text="Twoi łowcy okrążają i nękają wroga. +4% obrażeń wojsk." />
     <string id="taom_wh_t2_a_p3" text="Ocalały z dziczy" />
-    <string id="taom_wh_t2_a_p3_desc" text="Dzicz nauczyła cię przetrwać wszystko. +35 zdrowia." />
+    <string id="taom_wh_t2_a_p3_desc" text="Dzicz nauczyła cię przetrwać wszystko. +6 zdrowia." />
     <string id="taom_wh_t2_a_p4" text="Głęboki kołczan" />
     <string id="taom_wh_t2_a_p4_desc" text="Your clan supplies enough arrows for a siege. +5 ammo." />
     <string id="taom_wh_t2_b_key" text="Trwały znak" />
@@ -827,13 +827,13 @@
     <string id="taom_wh_t2_b_p3" text="Niewidzialna ścieżka" />
     <string id="taom_wh_t2_b_p3_desc" text="Twoi zwiadowcy nie zostawiają śladów. +8% zasięgu wykrywania drużyny." />
     <string id="taom_wh_t2_b_p4" text="Żelazna wola łowów" />
-    <string id="taom_wh_t2_b_p4_desc" text="Żadna rana nie zatrzyma łowcy. +40 zdrowia." />
+    <string id="taom_wh_t2_b_p4_desc" text="Żadna rana nie zatrzyma łowcy. +7 zdrowia." />
     <string id="taom_wh_t3_a_key" text="Szczytowy drapieżnik" />
     <string id="taom_wh_t3_a_key_desc" text="Znak Wilczej Skóry nie pozostawia ocalałych. Promień Naznaczonej Zdobyczy +5." />
     <string id="taom_wh_t3_a_p1" text="Zabójczy kołczan" />
     <string id="taom_wh_t3_a_p1_desc" text="Każdy grot jest śmiertelny. +14% obrażeń dystansowych." />
     <string id="taom_wh_t3_a_p2" text="Dusza łowcy" />
-    <string id="taom_wh_t3_a_p2_desc" text="Dla ciebie łowy nigdy się nie kończą. +75 zdrowia." />
+    <string id="taom_wh_t3_a_p2_desc" text="Dla ciebie łowy nigdy się nie kończą. +9 zdrowia." />
     <string id="taom_wh_t3_a_p3" text="Legion Wilczych Skór" />
     <string id="taom_wh_t3_a_p3_desc" text="Każdy łowca w Dunlandzie odpowiada na twoje wezwanie. +4 do liczebności drużyny." />
     <string id="taom_wh_t3_a_p4" text="Postrach za brodami" />
@@ -841,7 +841,7 @@
     <string id="taom_wh_t3_b_key" text="Niekończąca się pogoń" />
     <string id="taom_wh_t3_b_key_desc" text="Zdobycz nigdy nie umknie twojemu znakowi. Koszt naładowania Naznaczonej Zdobyczy -30." />
     <string id="taom_wh_t3_b_p1" text="Wataha nadchodzi" />
-    <string id="taom_wh_t3_b_p1_desc" text="Twoi łowcy są nieustępliwi i zgrani. +12% obrażeń wojsk." />
+    <string id="taom_wh_t3_b_p1_desc" text="Twoi łowcy są nieustępliwi i zgrani. +6% obrażeń wojsk." />
     <string id="taom_wh_t3_b_p2" text="Widmowy trop" />
     <string id="taom_wh_t3_b_p2_desc" text="Twoi łowcy nie zostawiają śladów i przybywają bez ostrzeżenia. +8% prędkości marszu drużyny." />
     <string id="taom_wh_t3_b_p3" text="Zbieracz trofeów" />
@@ -858,15 +858,15 @@
     <string id="taom_cr_t1_a_p3" text="Eskorta klanu" />
     <string id="taom_cr_t1_a_p3_desc" text="Your riders guard the clan from harm. +3% troop resistance." />
     <string id="taom_cr_t1_a_p4" text="Wytrwałość w siodle" />
-    <string id="taom_cr_t1_a_p4_desc" text="Jedziesz całymi dniami, nie zsiadając z konia. +25 zdrowia." />
+    <string id="taom_cr_t1_a_p4_desc" text="Jedziesz całymi dniami, nie zsiadając z konia. +5 zdrowia." />
     <string id="taom_cr_t1_b_key" text="Nieustająca szarża" />
     <string id="taom_cr_t1_b_key_desc" text="Wataha się nie męczy. Czas trwania Szarży watahy +4 s." />
     <string id="taom_cr_t1_b_p1" text="Chyżość górskiego kucyka" />
     <string id="taom_cr_t1_b_p1_desc" text="Wierzchowce Dunlendingów są szybsze na nierównym terenie. +5% prędkości poruszania." />
     <string id="taom_cr_t1_b_p2" text="Drużyna wojenna klanu" />
-    <string id="taom_cr_t1_b_p2_desc" text="Twoja drużyna walczy jak bracia. +3% obrażeń żołnierzy." />
+    <string id="taom_cr_t1_b_p2_desc" text="Twoja drużyna walczy jak bracia. +2% obrażeń żołnierzy." />
     <string id="taom_cr_t1_b_p3" text="Hart jeźdźca" />
-    <string id="taom_cr_t1_b_p3_desc" text="Wzgórza hartują cię niczym żelazo. +30 zdrowia." />
+    <string id="taom_cr_t1_b_p3_desc" text="Wzgórza hartują cię niczym żelazo. +6 zdrowia." />
     <string id="taom_cr_t1_b_p4" text="Więzy krwi" />
     <string id="taom_cr_t1_b_p4_desc" text="Twój klan walczy dla honoru, nie dla złota. -4% żołdu." />
     <string id="taom_cr_t2_a_key" text="Spuszczona wataha" />
@@ -878,7 +878,7 @@
     <string id="taom_cr_t2_a_p3" text="Sława z łupów" />
     <string id="taom_cr_t2_a_p3_desc" text="Udane najazdy budują groźną reputację. +8% zdobywanej sławy z bitew." />
     <string id="taom_cr_t2_a_p4" text="Żelazny kucyk" />
-    <string id="taom_cr_t2_a_p4_desc" text="Twój wierzchowiec wytrzymuje więcej niż zwykłe zwierzęta. +40 zdrowia." />
+    <string id="taom_cr_t2_a_p4_desc" text="Twój wierzchowiec wytrzymuje więcej niż zwykłe zwierzęta. +7 zdrowia." />
     <string id="taom_cr_t2_b_key" text="Niekończąca się wataha" />
     <string id="taom_cr_t2_b_key_desc" text="Za każdym razem do szarży dołącza więcej jeźdźców. Czas trwania Szarży watahy +2 s." />
     <string id="taom_cr_t2_b_p1" text="Morale watahy" />
@@ -888,13 +888,13 @@
     <string id="taom_cr_t2_b_p3" text="Danina klanu" />
     <string id="taom_cr_t2_b_p3_desc" text="Klan dba o swoich. -5% żołdu." />
     <string id="taom_cr_t2_b_p4" text="Krzepa górskiego jeźdźca" />
-    <string id="taom_cr_t2_b_p4_desc" text="Siła kucyka staje się twoją własną. +45 zdrowia." />
+    <string id="taom_cr_t2_b_p4_desc" text="Siła kucyka staje się twoją własną. +7 zdrowia." />
     <string id="taom_cr_t3_a_key" text="Klan Jeźdźców" />
     <string id="taom_cr_t3_a_key_desc" text="Każdy jeździec w Dunlandzie jedzie pod twoim sztandarem. Promień Szarży Wojennej Sfory +5." />
     <string id="taom_cr_t3_a_p1" text="Lawinowa Szarża" />
     <string id="taom_cr_t3_a_p1_desc" text="Your charge cannot be stopped. +14% horse charge damage." />
     <string id="taom_cr_t3_a_p2" text="Zrodzony w Górach" />
-    <string id="taom_cr_t3_a_p2_desc" text="Urodziłeś się w tym siodle. +75 zdrowia." />
+    <string id="taom_cr_t3_a_p2_desc" text="Urodziłeś się w tym siodle. +9 zdrowia." />
     <string id="taom_cr_t3_a_p3" text="Wielka Wojenna Sfora" />
     <string id="taom_cr_t3_a_p3_desc" text="Setki jeźdźców rusza na twój znak. +5 do wielkości drużyny." />
     <string id="taom_cr_t3_a_p4" text="Legenda Dunlandu" />
@@ -902,7 +902,7 @@
     <string id="taom_cr_t3_b_key" text="Wieczna Szarża" />
     <string id="taom_cr_t3_b_key_desc" text="Wojenna sfora zawsze płonie pełną furią. Koszt Szarży Wojennej Sfory -30." />
     <string id="taom_cr_t3_b_p1" text="Furia Klanu" />
-    <string id="taom_cr_t3_b_p1_desc" text="Klany pędzą jako jedna nieprzeparta siła. +12% do obrażeń żołnierzy." />
+    <string id="taom_cr_t3_b_p1_desc" text="Klany pędzą jako jedna nieprzeparta siła. +6% do obrażeń żołnierzy." />
     <string id="taom_cr_t3_b_p2" text="Niezliczeni Jeźdźcy" />
     <string id="taom_cr_t3_b_p2_desc" text="Wojenna sfora pokrywa ziemię od horyzontu do horyzontu. +6 do wielkości drużyny." />
     <string id="taom_cr_t3_b_p3" text="Sława Łupieżcy" />
@@ -918,7 +918,7 @@
     <string id="taom_bor_t1b_key" text="Wydłużony czas trwania Bliźniaczego Ciosu, nieprzerwana nawałnica pojedynku." />
     <string id="taom_bor_t1b_p1" text="+6% do odporności." />
     <string id="taom_bor_t1b_p2" text="+5% do przebijania pancerza." />
-    <string id="taom_bor_t1b_p3" text="+30 do maksymalnego zdrowia." />
+    <string id="taom_bor_t1b_p3" text="+6 do maksymalnego zdrowia." />
     <string id="taom_bor_t1b_p4" text="+5% do szybkości ruchu." />
     <string id="taom_bor_t2a_key" text="Skrócone ładowanie Bliźniaczego Ciosu, nieustępliwe precyzyjne uderzenia." />
     <string id="taom_bor_t2a_p1" text="+12% do szybkości zamachu." />
@@ -927,9 +927,9 @@
     <string id="taom_bor_t2a_p4" text="+3 do wielkości drużyny." />
     <string id="taom_bor_t2b_key" text="Bliźniaczy Cios wydłuża okno precyzji, maksymalne obrażenia przy pierwszym uderzeniu." />
     <string id="taom_bor_t2b_p1" text="+10% do obrażeń w walce wręcz." />
-    <string id="taom_bor_t2b_p2" text="+50 do maksymalnego zdrowia." />
+    <string id="taom_bor_t2b_p2" text="+8 do maksymalnego zdrowia." />
     <string id="taom_bor_t2b_p3" text="+10% do odporności." />
-    <string id="taom_bor_t2b_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_bor_t2b_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_bor_t3a_key" text="Znacznie zwiększony promień Bliźniaczego Ciosu — śmierć ze wszystkich stron." />
     <string id="taom_bor_t3a_p1" text="+15% obrażeń w walce wręcz." />
     <string id="taom_bor_t3a_p2" text="+15% szybkości zamachu." />
@@ -937,8 +937,8 @@
     <string id="taom_bor_t3a_p4" text="+15% zdobywanej sławy z bitew." />
     <string id="taom_bor_t3b_key" text="Znacznie skrócone ładowanie Bliźniaczego Ciosu — klinga jest zawsze gotowa." />
     <string id="taom_bor_t3b_p1" text="+15% odporności." />
-    <string id="taom_bor_t3b_p2" text="+75 maks. zdrowia." />
-    <string id="taom_bor_t3b_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_bor_t3b_p2" text="+9 maks. zdrowia." />
+    <string id="taom_bor_t3b_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_bor_t3b_p4" text="+5 do liczebności drużyny." />
     <string id="taom_steppe_bowmaster_root_desc" text="Burza Strzał daje +5% obrażeń dystansowych i poprawia ciągłość ostrzału." />
     <string id="taom_sb_t1a_key" text="Zwiększony promień Burzy Strzał — salwy obejmują większy obszar." />
@@ -948,8 +948,8 @@
     <string id="taom_sb_t1a_p4" text="+5% zasięgu obserwacji drużyny." />
     <string id="taom_sb_t1b_key" text="Wydłużony czas trwania Burzy Strzał — nieustępliwy grad." />
     <string id="taom_sb_t1b_p1" text="+5% odporności." />
-    <string id="taom_sb_t1b_p2" text="+25 maks. zdrowia." />
-    <string id="taom_sb_t1b_p3" text="+5% obrażeń żołnierzy." />
+    <string id="taom_sb_t1b_p2" text="+5 maks. zdrowia." />
+    <string id="taom_sb_t1b_p3" text="+3% obrażeń żołnierzy." />
     <string id="taom_sb_t1b_p4" text="+5% zdobywanej sławy z bitew." />
     <string id="taom_sb_t2a_key" text="Skrócone ładowanie Burzy Strzał — niewyczerpany kołczan." />
     <string id="taom_sb_t2a_p1" text="+4 ammo." />
@@ -958,8 +958,8 @@
     <string id="taom_sb_t2a_p4" text="+10% zasięgu obserwacji drużyny." />
     <string id="taom_sb_t2b_key" text="Burza Strzał wzmacnia ostrzał wspierający żołnierzy, gdy jest aktywna." />
     <string id="taom_sb_t2b_p1" text="+12% obrażeń dystansowych." />
-    <string id="taom_sb_t2b_p2" text="+50 maks. zdrowia." />
-    <string id="taom_sb_t2b_p3" text="+10% obrażeń żołnierzy." />
+    <string id="taom_sb_t2b_p2" text="+8 maks. zdrowia." />
+    <string id="taom_sb_t2b_p3" text="+5% obrażeń żołnierzy." />
     <string id="taom_sb_t2b_p4" text="+10% zdobywanej sławy z bitew." />
     <string id="taom_sb_t3a_key" text="Znacznie zwiększony promień Burzy Strzał — deszcz, przed którym nie ma ucieczki." />
     <string id="taom_sb_t3a_p1" text="+15% obrażeń dystansowych." />
@@ -968,18 +968,18 @@
     <string id="taom_sb_t3a_p4" text="+15% zasięgu obserwacji drużyny." />
     <string id="taom_sb_t3b_key" text="Znacznie skrócone ładowanie Burzy Strzał — nieustanne salwy." />
     <string id="taom_sb_t3b_p1" text="+15% szybkości ruchu." />
-    <string id="taom_sb_t3b_p2" text="+75 maks. zdrowia." />
-    <string id="taom_sb_t3b_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_sb_t3b_p2" text="+9 maks. zdrowia." />
+    <string id="taom_sb_t3b_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_sb_t3b_p4" text="+5 do liczebności drużyny." />
     <string id="taom_chariot_warlord_root_desc" text="Scything Charge grants +5% horse charge damage and inspires mounted warriors." />
     <string id="taom_cw_t1a_key" text="Zwiększony promień Kosiarskiej Szarży — ostrza tną szerszym łukiem." />
     <string id="taom_cw_t1a_p1" text="+7% horse charge damage." />
     <string id="taom_cw_t1a_p2" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_cw_t1a_p3" text="+5% obrażeń żołnierzy." />
+    <string id="taom_cw_t1a_p3" text="+3% obrażeń żołnierzy." />
     <string id="taom_cw_t1a_p4" text="+5% szybkości marszu drużyny." />
     <string id="taom_cw_t1b_key" text="Wydłużony czas trwania Kosiarskiej Szarży, rozpęd zostaje utrzymany." />
     <string id="taom_cw_t1b_p1" text="+30 horse health." />
-    <string id="taom_cw_t1b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_cw_t1b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_cw_t1b_p3" text="+5% morale żołnierzy." />
     <string id="taom_cw_t1b_p4" text="+5% zdobywanego rozgłosu w bitwie." />
     <string id="taom_cw_t2a_key" text="Skrócone ładowanie Kosiarskiej Szarży, koła nigdy nie przestają się obracać." />
@@ -990,12 +990,12 @@
     <string id="taom_cw_t2b_key" text="Kosiarska Szarża zwiększa wytrzymałość wierzchowca w czasie szarży." />
     <string id="taom_cw_t2b_p1" text="+10% obrażeń w walce wręcz." />
     <string id="taom_cw_t2b_p2" text="+60 horse health." />
-    <string id="taom_cw_t2b_p3" text="+12% obrażeń żołnierzy." />
+    <string id="taom_cw_t2b_p3" text="+6% obrażeń żołnierzy." />
     <string id="taom_cw_t2b_p4" text="+10% zdobywanego rozgłosu w bitwie." />
     <string id="taom_cw_t3a_key" text="Znacznie zwiększony promień Kosiarskiej Szarży — niepowstrzymany obszarowy zamach." />
     <string id="taom_cw_t3a_p1" text="+18% horse charge damage." />
     <string id="taom_cw_t3a_p2" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_cw_t3a_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_cw_t3a_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_cw_t3a_p4" text="+15% zdobywanego rozgłosu w bitwie." />
     <string id="taom_cw_t3b_key" text="Znacznie skrócone ładowanie Kosiarskiej Szarży, koła mielą bez ustanku." />
     <string id="taom_cw_t3b_p1" text="+100 horse health." />
@@ -1005,33 +1005,33 @@
     <string id="taom_tribesman_of_jelut_root_desc" text="Zatrute Ostrza dają +5% obrażeń w walce wręcz i nakładają efekty wyniszczenia." />
     <string id="taom_toj_t1a_key" text="Zwiększony promień Zatrutych Ostrzy — trucizna rozprzestrzenia się szerzej." />
     <string id="taom_toj_t1a_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_toj_t1a_p2" text="+5% obrażeń żołnierzy." />
+    <string id="taom_toj_t1a_p2" text="+3% obrażeń żołnierzy." />
     <string id="taom_toj_t1a_p3" text="+7% szybkości zamachu." />
     <string id="taom_toj_t1a_p4" text="+5% zdobywanego rozgłosu w bitwie." />
     <string id="taom_toj_t1b_key" text="Wydłużony czas trwania Zatrutych Ostrzy — trucizna nie ustępuje." />
     <string id="taom_toj_t1b_p1" text="+6% odporności." />
-    <string id="taom_toj_t1b_p2" text="+30 maksymalnego zdrowia." />
+    <string id="taom_toj_t1b_p2" text="+6 maksymalnego zdrowia." />
     <string id="taom_toj_t1b_p3" text="+5% szybkości ruchu." />
     <string id="taom_toj_t1b_p4" text="+5% morale żołnierzy." />
     <string id="taom_toj_t2a_key" text="Skrócone ładowanie Zatrutych Ostrzy — uderzaj częściej." />
-    <string id="taom_toj_t2a_p1" text="+10% obrażeń żołnierzy." />
+    <string id="taom_toj_t2a_p1" text="+5% obrażeń żołnierzy." />
     <string id="taom_toj_t2a_p2" text="+10% obrażeń w walce wręcz." />
     <string id="taom_toj_t2a_p3" text="+10% zdobywanego rozgłosu w bitwie." />
     <string id="taom_toj_t2a_p4" text="+3 do liczebności drużyny." />
     <string id="taom_toj_t2b_key" text="Zatrute Ostrza wzmagają wyniszczenie, odbierając wrogom wolę walki." />
     <string id="taom_toj_t2b_p1" text="+10% szybkości ciosu." />
-    <string id="taom_toj_t2b_p2" text="+50 maks. zdrowia." />
+    <string id="taom_toj_t2b_p2" text="+8 maks. zdrowia." />
     <string id="taom_toj_t2b_p3" text="+10% odporności." />
     <string id="taom_toj_t2b_p4" text="+10% morale oddziałów." />
     <string id="taom_toj_t3a_key" text="Zatrute Ostrza mają znacznie większy zasięg — chmura trucizny." />
     <string id="taom_toj_t3a_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_toj_t3a_p2" text="+75 maks. zdrowia." />
-    <string id="taom_toj_t3a_p3" text="+15% obrażeń oddziałów." />
+    <string id="taom_toj_t3a_p2" text="+9 maks. zdrowia." />
+    <string id="taom_toj_t3a_p3" text="+7% obrażeń oddziałów." />
     <string id="taom_toj_t3a_p4" text="+15% zdobywanej sławy w bitwie." />
     <string id="taom_toj_t3b_key" text="Czas ładowania Zatrutych Ostrzy znacznie skrócony — nieustanne wyniszczanie." />
     <string id="taom_toj_t3b_p1" text="+15% odporności." />
     <string id="taom_toj_t3b_p2" text="+20% morale oddziałów." />
-    <string id="taom_toj_t3b_p3" text="+20% obrażeń oddziałów." />
+    <string id="taom_toj_t3b_p3" text="+8% obrażeń oddziałów." />
     <string id="taom_toj_t3b_p4" text="+5 liczebności drużyny." />
     <string id="taom_pezarsani_javelineer_root_desc" text="Salwa Słonecznego Ognia daje +5% obrażeń dystansowych i przyspiesza rzuty oszczepem." />
     <string id="taom_pj_t1a_key" text="Zasięg Salwy Słonecznego Ognia zwiększony — oszczepy pokrywają szerszy obszar." />
@@ -1041,8 +1041,8 @@
     <string id="taom_pj_t1a_p4" text="+5% zdobywanej sławy w bitwie." />
     <string id="taom_pj_t1b_key" text="Czas trwania Salwy Słonecznego Ognia wydłużony — nieprzerwany ostrzał nękający." />
     <string id="taom_pj_t1b_p1" text="+5% odporności." />
-    <string id="taom_pj_t1b_p2" text="+25 maks. zdrowia." />
-    <string id="taom_pj_t1b_p3" text="+5% obrażeń oddziałów." />
+    <string id="taom_pj_t1b_p2" text="+5 maks. zdrowia." />
+    <string id="taom_pj_t1b_p3" text="+3% obrażeń oddziałów." />
     <string id="taom_pj_t1b_p4" text="+5% zasięgu obserwacji drużyny." />
     <string id="taom_pj_t2a_key" text="Czas ładowania Salwy Słonecznego Ognia skrócony — oszczepów nigdy nie brakuje." />
     <string id="taom_pj_t2a_p1" text="+4 ammo." />
@@ -1051,8 +1051,8 @@
     <string id="taom_pj_t2a_p4" text="+10% zdobywanej sławy w bitwie." />
     <string id="taom_pj_t2b_key" text="Salwa Słonecznego Ognia zwiększa skuteczność osłony, gdy jest aktywna." />
     <string id="taom_pj_t2b_p1" text="+12% obrażeń dystansowych." />
-    <string id="taom_pj_t2b_p2" text="+50 maks. zdrowia." />
-    <string id="taom_pj_t2b_p3" text="+10% obrażeń oddziałów." />
+    <string id="taom_pj_t2b_p2" text="+8 maks. zdrowia." />
+    <string id="taom_pj_t2b_p3" text="+5% obrażeń oddziałów." />
     <string id="taom_pj_t2b_p4" text="+10% zasięgu obserwacji drużyny." />
     <string id="taom_pj_t3a_key" text="Zasięg Salwy Słonecznego Ognia znacznie zwiększony — ostrzał, przed którym nie ma ucieczki." />
     <string id="taom_pj_t3a_p1" text="+15% obrażeń dystansowych." />
@@ -1061,8 +1061,8 @@
     <string id="taom_pj_t3a_p4" text="+15% szybkości ruchu." />
     <string id="taom_pj_t3b_key" text="Czas ładowania Salwy Słonecznego Ognia znacznie skrócony — nieustępliwe nękanie." />
     <string id="taom_pj_t3b_p1" text="+15% obrażeń dystansowych." />
-    <string id="taom_pj_t3b_p2" text="+75 maks. zdrowia." />
-    <string id="taom_pj_t3b_p3" text="+15% obrażeń oddziałów." />
+    <string id="taom_pj_t3b_p2" text="+9 maks. zdrowia." />
+    <string id="taom_pj_t3b_p3" text="+7% obrażeń oddziałów." />
     <string id="taom_pj_t3b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_mahud_beast_rider_root_desc" text="Echoes of Mûmakan grants +5% horse charge damage and spreads fear." />
     <string id="taom_mbr_t1a_key" text="Zwiększony promień Echa Mûmakanu, strach sięga dalej." />
@@ -1072,13 +1072,13 @@
     <string id="taom_mbr_t1a_p4" text="+5% szybkości drużyny." />
     <string id="taom_mbr_t1b_key" text="Wydłużony czas trwania Echa Mûmakanu, strach nie ustępuje." />
     <string id="taom_mbr_t1b_p1" text="+30 horse health." />
-    <string id="taom_mbr_t1b_p2" text="+5% obrażeń oddziałów." />
+    <string id="taom_mbr_t1b_p2" text="+3% obrażeń oddziałów." />
     <string id="taom_mbr_t1b_p3" text="+5% zdobywanej sławy w bitwie." />
     <string id="taom_mbr_t1b_p4" text="+5% odporności." />
     <string id="taom_mbr_t2a_key" text="Skrócone ładowanie Echa Mûmakanu, groza zawsze bliska." />
     <string id="taom_mbr_t2a_p1" text="+12% horse charge damage." />
     <string id="taom_mbr_t2a_p2" text="+10% morale oddziałów." />
-    <string id="taom_mbr_t2a_p3" text="+10% obrażeń oddziałów." />
+    <string id="taom_mbr_t2a_p3" text="+5% obrażeń oddziałów." />
     <string id="taom_mbr_t2a_p4" text="+10% zdobywanej sławy w bitwie." />
     <string id="taom_mbr_t2b_key" text="Echo Mûmakanu zwiększa wytrzymałość bestii podczas szarży." />
     <string id="taom_mbr_t2b_p1" text="+12% obrażeń w walce wręcz." />
@@ -1093,48 +1093,48 @@
     <string id="taom_mbr_t3b_key" text="Znacznie skrócone ładowanie Echa Mûmakanu, niekończąca się trwoga." />
     <string id="taom_mbr_t3b_p1" text="+100 horse health." />
     <string id="taom_mbr_t3b_p2" text="+15% szybkości drużyny." />
-    <string id="taom_mbr_t3b_p3" text="+15% obrażeń oddziałów." />
-    <string id="taom_mbr_t3b_p4" text="+75 do maksymalnego zdrowia." />
+    <string id="taom_mbr_t3b_p3" text="+7% obrażeń oddziałów." />
+    <string id="taom_mbr_t3b_p4" text="+9 do maksymalnego zdrowia." />
     <string id="taom_far_harad_halftroll_root_desc" text="Nikczemna Brutalność daje ogromny bonus do zdrowia i budzi grozę." />
     <string id="taom_fhh_t1a_key" text="Zwiększony promień Nikczemnej Brutalności, groza sięga dalej." />
-    <string id="taom_fhh_t1a_p1" text="+35 do maksymalnego zdrowia." />
+    <string id="taom_fhh_t1a_p1" text="+6 do maksymalnego zdrowia." />
     <string id="taom_fhh_t1a_p2" text="+8% odporności." />
     <string id="taom_fhh_t1a_p3" text="+8% obrażeń w walce wręcz." />
     <string id="taom_fhh_t1a_p4" text="+5% morale oddziałów." />
     <string id="taom_fhh_t1b_key" text="Wydłużony czas trwania Nikczemnej Brutalności, wściekłość trolla trwa dłużej." />
     <string id="taom_fhh_t1b_p1" text="+8% troop resistance." />
-    <string id="taom_fhh_t1b_p2" text="+5% obrażeń oddziałów." />
+    <string id="taom_fhh_t1b_p2" text="+3% obrażeń oddziałów." />
     <string id="taom_fhh_t1b_p3" text="+5% zdobywanej sławy w bitwie." />
-    <string id="taom_fhh_t1b_p4" text="+25 do maksymalnego zdrowia." />
+    <string id="taom_fhh_t1b_p4" text="+5 do maksymalnego zdrowia." />
     <string id="taom_fhh_t2a_key" text="Skrócone ładowanie Nikczemnej Brutalności, wściekłość wybucha szybciej." />
     <string id="taom_fhh_t2a_p1" text="+12% odporności." />
-    <string id="taom_fhh_t2a_p2" text="+50 do maksymalnego zdrowia." />
+    <string id="taom_fhh_t2a_p2" text="+8 do maksymalnego zdrowia." />
     <string id="taom_fhh_t2a_p3" text="+12% troop resistance." />
     <string id="taom_fhh_t2a_p4" text="+10% morale oddziałów." />
     <string id="taom_fhh_t2b_key" text="Nikczemna Brutalność czyni półtrolla jeszcze bardziej przerażającym." />
-    <string id="taom_fhh_t2b_p1" text="+60 maks. zdrowia." />
+    <string id="taom_fhh_t2b_p1" text="+8 maks. zdrowia." />
     <string id="taom_fhh_t2b_p2" text="+10% obrażeń w walce wręcz." />
-    <string id="taom_fhh_t2b_p3" text="+10% obrażeń żołnierzy." />
+    <string id="taom_fhh_t2b_p3" text="+5% obrażeń żołnierzy." />
     <string id="taom_fhh_t2b_p4" text="+10% zdobywanej renomy z bitew." />
     <string id="taom_fhh_t3a_key" text="Znacznie zwiększony zasięg Nikczemnej Brutalności — wszyscy drżą." />
-    <string id="taom_fhh_t3a_p1" text="+75 maks. zdrowia." />
+    <string id="taom_fhh_t3a_p1" text="+9 maks. zdrowia." />
     <string id="taom_fhh_t3a_p2" text="+15% odporności." />
     <string id="taom_fhh_t3a_p3" text="+15% odporności żołnierzy." />
     <string id="taom_fhh_t3a_p4" text="+20% morale żołnierzy." />
     <string id="taom_fhh_t3b_key" text="Znacznie skrócone ładowanie Nikczemnej Brutalności — wściekłość nigdy nie gaśnie." />
     <string id="taom_fhh_t3b_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_fhh_t3b_p2" text="+15% obrażeń żołnierzy." />
+    <string id="taom_fhh_t3b_p2" text="+7% obrażeń żołnierzy." />
     <string id="taom_fhh_t3b_p3" text="+15% zdobywanej renomy z bitew." />
     <string id="taom_fhh_t3b_p4" text="+5 do liczebności drużyny." />
     <string id="taom_cl_root_desc" text="Mur Tarcz daje +5% odporności, a twoja formacja trwa niewzruszona wbrew wszystkiemu." />
     <string id="taom_cl_t1_a_key" text="Zwiększony zasięg Muru Tarcz, chroniący szerszą formację." />
     <string id="taom_cl_t1_a_p1" text="+8% odporności." />
     <string id="taom_cl_t1_a_p2" text="+5% troop resistance." />
-    <string id="taom_cl_t1_a_p3" text="+30 maks. zdrowia." />
+    <string id="taom_cl_t1_a_p3" text="+6 maks. zdrowia." />
     <string id="taom_cl_t1_a_p4" text="+5% morale żołnierzy." />
     <string id="taom_cl_t1_b_key" text="Wydłużony czas trwania Muru Tarcz — przetrwa najdłuższe natarcia." />
     <string id="taom_cl_t1_b_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_cl_t1_b_p2" text="+25 maks. zdrowia." />
+    <string id="taom_cl_t1_b_p2" text="+5 maks. zdrowia." />
     <string id="taom_cl_t1_b_p3" text="+5% troop resistance." />
     <string id="taom_cl_t1_b_p4" text="+7% szybkości zamachu." />
     <string id="taom_cl_t2_a_key" text="Skrócone ładowanie Muru Tarcz — częstsze zwieranie szeregów." />
@@ -1144,12 +1144,12 @@
     <string id="taom_cl_t2_a_p4" text="-10% żołdu żołnierzy." />
     <string id="taom_cl_t2_b_key" text="Mur Tarcz wzmacnia pancerz żołnierzy, dopóki mur trwa." />
     <string id="taom_cl_t2_b_p1" text="+12% odporności." />
-    <string id="taom_cl_t2_b_p2" text="+60 maks. zdrowia." />
-    <string id="taom_cl_t2_b_p3" text="+10% obrażeń żołnierzy." />
+    <string id="taom_cl_t2_b_p2" text="+8 maks. zdrowia." />
+    <string id="taom_cl_t2_b_p3" text="+5% obrażeń żołnierzy." />
     <string id="taom_cl_t2_b_p4" text="+10% morale żołnierzy." />
     <string id="taom_cl_t3_a_key" text="Znacznie zwiększony zasięg Muru Tarcz — nieprzenikniona linia." />
     <string id="taom_cl_t3_a_p1" text="+15% odporności." />
-    <string id="taom_cl_t3_a_p2" text="+75 maks. zdrowia." />
+    <string id="taom_cl_t3_a_p2" text="+9 maks. zdrowia." />
     <string id="taom_cl_t3_a_p3" text="+15% odporności żołnierzy." />
     <string id="taom_cl_t3_a_p4" text="+4 do liczebności drużyny." />
     <string id="taom_cl_t3_b_key" text="Znacznie skrócone ładowanie Muru Tarcz — legion nigdy nie ustępuje." />
@@ -1161,32 +1161,32 @@
     <string id="taom_ldm_t1_a_key" text="Zwiększony promień Przeszywającej Salwy, obejmujący szersze cele." />
     <string id="taom_ldm_t1_a_p1" text="+8% obrażeń dystansowych." />
     <string id="taom_ldm_t1_a_p2" text="+5% przebicia pancerza." />
-    <string id="taom_ldm_t1_a_p3" text="+5% obrażeń żołnierzy." />
+    <string id="taom_ldm_t1_a_p3" text="+3% obrażeń żołnierzy." />
     <string id="taom_ldm_t1_a_p4" text="+5% zdobywanej sławy w bitwie." />
     <string id="taom_ldm_t1_b_key" text="Wydłużony czas trwania Przeszywającej Salwy, nieustanne salwy." />
     <string id="taom_ldm_t1_b_p1" text="+5% przebicia pancerza." />
-    <string id="taom_ldm_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_ldm_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_ldm_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_ldm_t1_b_p4" text="+5% odporności." />
     <string id="taom_ldm_t2_a_key" text="Skrócone ładowanie Przeszywającej Salwy, nieprzerwany grad bełtów." />
     <string id="taom_ldm_t2_a_p1" text="+10% przebicia pancerza." />
-    <string id="taom_ldm_t2_a_p2" text="+10% obrażeń żołnierzy." />
+    <string id="taom_ldm_t2_a_p2" text="+5% obrażeń żołnierzy." />
     <string id="taom_ldm_t2_a_p3" text="+10% zdobywanej sławy w bitwie." />
     <string id="taom_ldm_t2_a_p4" text="+2 do liczebności drużyny." />
     <string id="taom_ldm_t2_b_key" text="Przeszywająca Salwa rozdziera pancerz przebijającą siłą." />
     <string id="taom_ldm_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_ldm_t2_b_p2" text="+12% przebicia pancerza." />
-    <string id="taom_ldm_t2_b_p3" text="+50 maksymalnego zdrowia." />
-    <string id="taom_ldm_t2_b_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_ldm_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_ldm_t2_b_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_ldm_t3_a_key" text="Znacznie zwiększony promień Przeszywającej Salwy, nie ma ucieczki przed burzą." />
     <string id="taom_ldm_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_ldm_t3_a_p2" text="+18% przebicia pancerza." />
     <string id="taom_ldm_t3_a_p3" text="+15% zdobywanej sławy w bitwie." />
-    <string id="taom_ldm_t3_a_p4" text="+15% obrażeń żołnierzy." />
+    <string id="taom_ldm_t3_a_p4" text="+7% obrażeń żołnierzy." />
     <string id="taom_ldm_t3_b_key" text="Znacznie skrócone ładowanie Przeszywającej Salwy, salwy nigdy nie ustają." />
     <string id="taom_ldm_t3_b_p1" text="+20% przebicia pancerza." />
     <string id="taom_ldm_t3_b_p2" text="+15% obrażeń dystansowych." />
-    <string id="taom_ldm_t3_b_p3" text="+75 maksymalnego zdrowia." />
+    <string id="taom_ldm_t3_b_p3" text="+9 maksymalnego zdrowia." />
     <string id="taom_ldm_t3_b_p4" text="+10% zasięgu wykrywania drużyny." />
     <string id="taom_bk_root_desc" text="Unyielding grants +5% horse charge damage as your warband rides without mercy." />
     <string id="taom_bk_t1_a_key" text="Zwiększony promień Niezłomności, porywający szerszą falę jeźdźców." />
@@ -1196,7 +1196,7 @@
     <string id="taom_bk_t1_a_p4" text="+5% obrażeń w walce wręcz." />
     <string id="taom_bk_t1_b_key" text="Wydłużony czas trwania Niezłomności, podtrzymujący nieustraszoną szarżę." />
     <string id="taom_bk_t1_b_p1" text="+7% odporności." />
-    <string id="taom_bk_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_bk_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_bk_t1_b_p3" text="+5% szybkości poruszania się drużyny." />
     <string id="taom_bk_t1_b_p4" text="+5% morale żołnierzy." />
     <string id="taom_bk_t2_a_key" text="Skrócone ładowanie Niezłomności — kompania nigdy nie zwalnia." />
@@ -1218,12 +1218,12 @@
     <string id="taom_bk_t3_b_p1" text="+15% obrażeń od szarży konia." />
     <string id="taom_bk_t3_b_p2" text="+20% morale żołnierzy." />
     <string id="taom_bk_t3_b_p3" text="+15% szybkości poruszania się drużyny." />
-    <string id="taom_bk_t3_b_p4" text="+75 do maksymalnego zdrowia." />
+    <string id="taom_bk_t3_b_p4" text="+9 do maksymalnego zdrowia." />
     <string id="taom_dale_guardsman_root_desc" text="Obrona Bramy daje +5% odporności i uspokaja obrońców." />
     <string id="taom_dg2_t1_a_key" text="Zwiększony zasięg Obrony Bramy — wzmacnia więcej wojowników." />
     <string id="taom_dg2_t1_a_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_dg2_t1_a_p2" text="+5% obrażeń żołnierzy." />
-    <string id="taom_dg2_t1_a_p3" text="+30 do maksymalnego zdrowia." />
+    <string id="taom_dg2_t1_a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_dg2_t1_a_p3" text="+6 do maksymalnego zdrowia." />
     <string id="taom_dg2_t1_a_p4" text="+7% szybkości zamachu." />
     <string id="taom_dg2_t1_b_key" text="Wydłużony czas trwania Obrony Bramy — umocniona obrona." />
     <string id="taom_dg2_t1_b_p1" text="+8% odporności." />
@@ -1237,13 +1237,13 @@
     <string id="taom_dg2_t2_a_p4" text="-10% żołdu żołnierzy." />
     <string id="taom_dg2_t2_b_key" text="Obrona Bramy daje dodatkowe premie obronne, gdy jest aktywna." />
     <string id="taom_dg2_t2_b_p1" text="+12% odporności." />
-    <string id="taom_dg2_t2_b_p2" text="+60 do maksymalnego zdrowia." />
+    <string id="taom_dg2_t2_b_p2" text="+8 do maksymalnego zdrowia." />
     <string id="taom_dg2_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_dg2_t2_b_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_dg2_t2_b_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_dg2_t3_a_key" text="Znacznie zwiększony zasięg Obrony Bramy — niszczycielska moc." />
     <string id="taom_dg2_t3_a_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_dg2_t3_a_p2" text="+100 do maksymalnego zdrowia." />
-    <string id="taom_dg2_t3_a_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_dg2_t3_a_p2" text="+10 do maksymalnego zdrowia." />
+    <string id="taom_dg2_t3_a_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_dg2_t3_a_p4" text="+4 do liczebności drużyny." />
     <string id="taom_dg2_t3_b_key" text="Znacznie skrócone ładowanie Obrony Wrót, niemal zawsze dostępna." />
     <string id="taom_dg2_t3_b_p1" text="+18% odporności." />
@@ -1258,7 +1258,7 @@
     <string id="taom_dm_t1_a_p4" text="+5% zdobywanej sławy z bitew." />
     <string id="taom_dm_t1_b_key" text="Wydłużony czas trwania Czarnej Strzały, nieprzerwany ostrzał." />
     <string id="taom_dm_t1_b_p1" text="+5% odporności." />
-    <string id="taom_dm_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_dm_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_dm_t1_b_p3" text="+5% zasięgu wypatrywania drużyny." />
     <string id="taom_dm_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_dm_t2_a_key" text="Skrócone ładowanie Czarnej Strzały, stała presja." />
@@ -1269,17 +1269,17 @@
     <string id="taom_dm_t2_b_key" text="Czarna Strzała zyskuje dodatkowe przebicie, gdy jest aktywna." />
     <string id="taom_dm_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_dm_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_dm_t2_b_p3" text="+50 maksymalnego zdrowia." />
-    <string id="taom_dm_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_dm_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_dm_t2_b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_dm_t3_a_key" text="Znacznie zwiększony promień Czarnej Strzały, salwy, przed którymi nie ma ucieczki." />
     <string id="taom_dm_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_dm_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_dm_t3_a_p3" text="+15% zdobywanej sławy z bitew." />
-    <string id="taom_dm_t3_a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_dm_t3_a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_dm_t3_b_key" text="Znacznie skrócone ładowanie Czarnej Strzały, nieustanny ostrzał." />
     <string id="taom_dm_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_dm_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_dm_t3_b_p3" text="+75 maksymalnego zdrowia." />
+    <string id="taom_dm_t3_b_p3" text="+9 maksymalnego zdrowia." />
     <string id="taom_dm_t3_b_p4" text="+15% zasięgu wypatrywania drużyny." />
     <string id="taom_dale_outrider_root_desc" text="Szarża Kupieckiego Szlaku daje +5% obrażeń w walce wręcz, a twój koń przyspiesza." />
     <string id="taom_dor_t1_a_key" text="Zwiększony promień Szarży Kupieckiego Szlaku, obejmuje szersze formacje." />
@@ -1289,7 +1289,7 @@
     <string id="taom_dor_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_dor_t1_b_key" text="Wydłużony czas trwania Szarży Kupieckiego Szlaku, utrzymanie rozpędu." />
     <string id="taom_dor_t1_b_p1" text="+30 horse health." />
-    <string id="taom_dor_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_dor_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_dor_t1_b_p3" text="-5% płac żołnierzy." />
     <string id="taom_dor_t1_b_p4" text="+5% odporności." />
     <string id="taom_dor_t2_a_key" text="Krótsze ładowanie Pędu Kupieckiego Szlaku, szybsza aktywacja." />
@@ -1306,17 +1306,17 @@
     <string id="taom_dor_t3_a_p1" text="+18% obrażeń w walce wręcz." />
     <string id="taom_dor_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_dor_t3_a_p3" text="+15% szybkości zamachu." />
-    <string id="taom_dor_t3_a_p4" text="+15% obrażeń żołnierzy." />
+    <string id="taom_dor_t3_a_p4" text="+7% obrażeń żołnierzy." />
     <string id="taom_dor_t3_b_key" text="Znacznie krótsze ładowanie Pędu Kupieckiego Szlaku — jedź bez wytchnienia." />
     <string id="taom_dor_t3_b_p1" text="+100 horse health." />
     <string id="taom_dor_t3_b_p2" text="-15% płac żołnierzy." />
     <string id="taom_dor_t3_b_p3" text="+15% szybkości ruchu drużyny." />
-    <string id="taom_dor_t3_b_p4" text="+75 maksymalnego zdrowia." />
-    <string id="taom_ironguard_root_desc" text="Mithrilowa Warownia daje +25 zdrowia — krasnoludzkie rzemiosło chroni cię." />
+    <string id="taom_dor_t3_b_p4" text="+9 maksymalnego zdrowia." />
+    <string id="taom_ironguard_root_desc" text="Mithrilowa Warownia daje +5 zdrowia — krasnoludzkie rzemiosło chroni cię." />
     <string id="taom_ig_t1_a_key" text="Zwiększony promień Mithrilowej Warowni, wzmacnia więcej wojowników." />
     <string id="taom_ig_t1_a_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_ig_t1_a_p2" text="+5% obrażeń żołnierzy." />
-    <string id="taom_ig_t1_a_p3" text="+30 maksymalnego zdrowia." />
+    <string id="taom_ig_t1_a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_ig_t1_a_p3" text="+6 maksymalnego zdrowia." />
     <string id="taom_ig_t1_a_p4" text="+7% szybkości zamachu." />
     <string id="taom_ig_t1_b_key" text="Wydłużony czas trwania Mithrilowej Warowni, umacnia obronę." />
     <string id="taom_ig_t1_b_p1" text="+8% odporności." />
@@ -1330,13 +1330,13 @@
     <string id="taom_ig_t2_a_p4" text="-10% płac żołnierzy." />
     <string id="taom_ig_t2_b_key" text="Mithrilowa Warownia daje dodatkowe wzmocnienia obronne, gdy jest aktywna." />
     <string id="taom_ig_t2_b_p1" text="+12% odporności." />
-    <string id="taom_ig_t2_b_p2" text="+60 maksymalnego zdrowia." />
+    <string id="taom_ig_t2_b_p2" text="+8 maksymalnego zdrowia." />
     <string id="taom_ig_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_ig_t2_b_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_ig_t2_b_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_ig_t3_a_key" text="Znacznie zwiększony promień Mithrilowej Warowni, niszczycielska moc." />
     <string id="taom_ig_t3_a_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_ig_t3_a_p2" text="+100 maksymalnego zdrowia." />
-    <string id="taom_ig_t3_a_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_ig_t3_a_p2" text="+10 maksymalnego zdrowia." />
+    <string id="taom_ig_t3_a_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_ig_t3_a_p4" text="+4 do liczebności drużyny." />
     <string id="taom_ig_t3_b_key" text="Znacznie skrócone ładowanie Mithrilowego Bastionu, niemal zawsze dostępny." />
     <string id="taom_ig_t3_b_p1" text="+18% odporności." />
@@ -1351,7 +1351,7 @@
     <string id="taom_cbm_t1_a_p4" text="+5% zdobywanego rozgłosu z bitew." />
     <string id="taom_cbm_t1_b_key" text="Wydłużony czas trwania Precyzyjnego Ostrzału, nieprzerwana nawała." />
     <string id="taom_cbm_t1_b_p1" text="+5% odporności." />
-    <string id="taom_cbm_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_cbm_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_cbm_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_cbm_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_cbm_t2_a_key" text="Skrócone ładowanie Precyzyjnego Ostrzału, stały nacisk." />
@@ -1362,17 +1362,17 @@
     <string id="taom_cbm_t2_b_key" text="Precyzyjny Ostrzał zyskuje dodatkowe przebicie, gdy jest aktywny." />
     <string id="taom_cbm_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_cbm_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_cbm_t2_b_p3" text="+50 maksymalnego zdrowia." />
-    <string id="taom_cbm_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_cbm_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_cbm_t2_b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_cbm_t3_a_key" text="Znacznie zwiększony promień Precyzyjnego Ostrzału, salwy, przed którymi nie ma ucieczki." />
     <string id="taom_cbm_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_cbm_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_cbm_t3_a_p3" text="+15% zdobywanego rozgłosu z bitew." />
-    <string id="taom_cbm_t3_a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_cbm_t3_a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_cbm_t3_b_key" text="Znacznie skrócone ładowanie Precyzyjnego Ostrzału, nieustanny ogień." />
     <string id="taom_cbm_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_cbm_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_cbm_t3_b_p3" text="+75 maksymalnego zdrowia." />
+    <string id="taom_cbm_t3_b_p3" text="+9 maksymalnego zdrowia." />
     <string id="taom_cbm_t3_b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_ram_rider_root_desc" text="Górska Szarża daje +5% obrażeń w walce wręcz — baran opuszcza rogi." />
     <string id="taom_rr_t1_a_key" text="Zwiększony promień Górskiej Szarży, zmiata szersze formacje." />
@@ -1382,7 +1382,7 @@
     <string id="taom_rr_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_rr_t1_b_key" text="Wydłużony czas trwania Górskiej Szarży, utrzymany rozpęd." />
     <string id="taom_rr_t1_b_p1" text="+30 horse health." />
-    <string id="taom_rr_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_rr_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_rr_t1_b_p3" text="-5% do żołdu wojsk." />
     <string id="taom_rr_t1_b_p4" text="+5% do odporności." />
     <string id="taom_rr_t2_a_key" text="Górska Szarża ma krótsze ładowanie i szybszą aktywację." />
@@ -1399,17 +1399,17 @@
     <string id="taom_rr_t3_a_p1" text="+18% do obrażeń w walce wręcz." />
     <string id="taom_rr_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_rr_t3_a_p3" text="+15% do szybkości zamachu." />
-    <string id="taom_rr_t3_a_p4" text="+15% do obrażeń wojsk." />
+    <string id="taom_rr_t3_a_p4" text="+7% do obrażeń wojsk." />
     <string id="taom_rr_t3_b_key" text="Ładowanie Górskiej Szarży znacznie skrócone — jedź bez wytchnienia." />
     <string id="taom_rr_t3_b_p1" text="+100 horse health." />
     <string id="taom_rr_t3_b_p2" text="-15% do żołdu wojsk." />
     <string id="taom_rr_t3_b_p3" text="+15% do szybkości marszu drużyny." />
-    <string id="taom_rr_t3_b_p4" text="+75 do maksymalnego zdrowia." />
+    <string id="taom_rr_t3_b_p4" text="+9 do maksymalnego zdrowia." />
     <string id="taom_blade_dancer_root_desc" text="Splot Światła Gwiazd daje +5% do odporności i elficką zwinność." />
     <string id="taom_bd_t1_a_key" text="Zwiększony promień Splotu Światła Gwiazd — wzmacnia więcej wojowników." />
     <string id="taom_bd_t1_a_p1" text="+8% do obrażeń w walce wręcz." />
-    <string id="taom_bd_t1_a_p2" text="+5% do obrażeń wojsk." />
-    <string id="taom_bd_t1_a_p3" text="+30 do maksymalnego zdrowia." />
+    <string id="taom_bd_t1_a_p2" text="+3% do obrażeń wojsk." />
+    <string id="taom_bd_t1_a_p3" text="+6 do maksymalnego zdrowia." />
     <string id="taom_bd_t1_a_p4" text="+7% do szybkości zamachu." />
     <string id="taom_bd_t1_b_key" text="Wydłużony czas trwania Splotu Światła Gwiazd — umacnia obronę." />
     <string id="taom_bd_t1_b_p1" text="+8% do odporności." />
@@ -1423,13 +1423,13 @@
     <string id="taom_bd_t2_a_p4" text="-10% do żołdu wojsk." />
     <string id="taom_bd_t2_b_key" text="Splot Światła Gwiazd daje dodatkowe wzmocnienia obronne, gdy jest aktywny." />
     <string id="taom_bd_t2_b_p1" text="+12% do odporności." />
-    <string id="taom_bd_t2_b_p2" text="+60 do maksymalnego zdrowia." />
+    <string id="taom_bd_t2_b_p2" text="+8 do maksymalnego zdrowia." />
     <string id="taom_bd_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_bd_t2_b_p4" text="+10% do obrażeń wojsk." />
+    <string id="taom_bd_t2_b_p4" text="+5% do obrażeń wojsk." />
     <string id="taom_bd_t3_a_key" text="Znacznie zwiększony promień Splotu Światła Gwiazd — niszczycielska moc." />
     <string id="taom_bd_t3_a_p1" text="+15% do obrażeń w walce wręcz." />
-    <string id="taom_bd_t3_a_p2" text="+100 do maksymalnego zdrowia." />
-    <string id="taom_bd_t3_a_p3" text="+15% do obrażeń wojsk." />
+    <string id="taom_bd_t3_a_p2" text="+10 do maksymalnego zdrowia." />
+    <string id="taom_bd_t3_a_p3" text="+7% do obrażeń wojsk." />
     <string id="taom_bd_t3_a_p4" text="+4 do liczebności drużyny." />
     <string id="taom_bd_t3_b_key" text="Znacznie skrócone ładowanie Splotu Światła Gwiazd, dostępny niemal zawsze." />
     <string id="taom_bd_t3_b_p1" text="+18% odporności." />
@@ -1444,7 +1444,7 @@
     <string id="taom_elar_t1_a_p4" text="+5% zdobywanej sławy z bitew." />
     <string id="taom_elar_t1_b_key" text="Wydłużony czas trwania Elfiego Wzroku, nieprzerwany ostrzał." />
     <string id="taom_elar_t1_b_p1" text="+5% odporności." />
-    <string id="taom_elar_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_elar_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_elar_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_elar_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_elar_t2_a_key" text="Skrócone ładowanie Elfiego Wzroku, stała presja." />
@@ -1455,17 +1455,17 @@
     <string id="taom_elar_t2_b_key" text="Elfi Wzrok daje dodatkowe przebicie, gdy jest aktywny." />
     <string id="taom_elar_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_elar_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_elar_t2_b_p3" text="+50 maksymalnego zdrowia." />
-    <string id="taom_elar_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_elar_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_elar_t2_b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_elar_t3_a_key" text="Znacznie powiększony promień Elfiego Wzroku, salwy, przed którymi nie ma ucieczki." />
     <string id="taom_elar_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_elar_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_elar_t3_a_p3" text="+15% zdobywanej sławy z bitew." />
-    <string id="taom_elar_t3_a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_elar_t3_a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_elar_t3_b_key" text="Znacznie skrócone ładowanie Elfiego Wzroku, nieustanny ostrzał." />
     <string id="taom_elar_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_elar_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_elar_t3_b_p3" text="+75 maksymalnego zdrowia." />
+    <string id="taom_elar_t3_b_p3" text="+9 maksymalnego zdrowia." />
     <string id="taom_elar_t3_b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_rivendell_knight_root_desc" text="Ostatni Sojusz daje +5% obrażeń w walce wręcz i inspiruje twoich sojuszników." />
     <string id="taom_rvk_t1_a_key" text="Powiększony promień Ostatniego Sojuszu, obejmuje szersze formacje." />
@@ -1475,7 +1475,7 @@
     <string id="taom_rvk_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_rvk_t1_b_key" text="Wydłużony czas trwania Ostatniego Sojuszu, utrzymanie rozpędu." />
     <string id="taom_rvk_t1_b_p1" text="+30 horse health." />
-    <string id="taom_rvk_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_rvk_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_rvk_t1_b_p3" text="-5% do żołdu wojsk." />
     <string id="taom_rvk_t1_b_p4" text="+5% do odporności." />
     <string id="taom_rvk_t2_a_key" text="Krótsze ładowanie Ostatniego Przymierza, szybsza aktywacja." />
@@ -1492,17 +1492,17 @@
     <string id="taom_rvk_t3_a_p1" text="+18% do obrażeń w walce wręcz." />
     <string id="taom_rvk_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_rvk_t3_a_p3" text="+15% do szybkości zamachu." />
-    <string id="taom_rvk_t3_a_p4" text="+15% do obrażeń wojsk." />
+    <string id="taom_rvk_t3_a_p4" text="+7% do obrażeń wojsk." />
     <string id="taom_rvk_t3_b_key" text="Znacznie krótsze ładowanie Ostatniego Przymierza, jedź bez wytchnienia." />
     <string id="taom_rvk_t3_b_p1" text="+100 horse health." />
     <string id="taom_rvk_t3_b_p2" text="-15% do żołdu wojsk." />
     <string id="taom_rvk_t3_b_p3" text="+15% do szybkości marszu drużyny." />
-    <string id="taom_rvk_t3_b_p4" text="+75 do maksymalnego zdrowia." />
+    <string id="taom_rvk_t3_b_p4" text="+9 do maksymalnego zdrowia." />
     <string id="taom_warden_root_desc" text="Błogosławieństwo Nimrodeli daje +5% do odporności, a jej wody cię uzdrawiają." />
     <string id="taom_wdn_t1_a_key" text="Zwiększony promień Błogosławieństwa Nimrodeli, wzmacnia więcej wojowników." />
     <string id="taom_wdn_t1_a_p1" text="+8% do obrażeń w walce wręcz." />
-    <string id="taom_wdn_t1_a_p2" text="+5% do obrażeń wojsk." />
-    <string id="taom_wdn_t1_a_p3" text="+30 do maksymalnego zdrowia." />
+    <string id="taom_wdn_t1_a_p2" text="+3% do obrażeń wojsk." />
+    <string id="taom_wdn_t1_a_p3" text="+6 do maksymalnego zdrowia." />
     <string id="taom_wdn_t1_a_p4" text="+7% do szybkości zamachu." />
     <string id="taom_wdn_t1_b_key" text="Wydłużony czas trwania Błogosławieństwa Nimrodeli, umacnia obronę." />
     <string id="taom_wdn_t1_b_p1" text="+8% do odporności." />
@@ -1516,13 +1516,13 @@
     <string id="taom_wdn_t2_a_p4" text="-10% do żołdu wojsk." />
     <string id="taom_wdn_t2_b_key" text="Błogosławieństwo Nimrodeli daje dodatkowe premie obronne, gdy jest aktywne." />
     <string id="taom_wdn_t2_b_p1" text="+12% do odporności." />
-    <string id="taom_wdn_t2_b_p2" text="+60 do maksymalnego zdrowia." />
+    <string id="taom_wdn_t2_b_p2" text="+8 do maksymalnego zdrowia." />
     <string id="taom_wdn_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_wdn_t2_b_p4" text="+10% do obrażeń wojsk." />
+    <string id="taom_wdn_t2_b_p4" text="+5% do obrażeń wojsk." />
     <string id="taom_wdn_t3_a_key" text="Znacznie powiększony promień Błogosławieństwa Nimrodeli, niszczycielska moc." />
     <string id="taom_wdn_t3_a_p1" text="+15% do obrażeń w walce wręcz." />
-    <string id="taom_wdn_t3_a_p2" text="+100 do maksymalnego zdrowia." />
-    <string id="taom_wdn_t3_a_p3" text="+15% do obrażeń wojsk." />
+    <string id="taom_wdn_t3_a_p2" text="+10 do maksymalnego zdrowia." />
+    <string id="taom_wdn_t3_a_p3" text="+7% do obrażeń wojsk." />
     <string id="taom_wdn_t3_a_p4" text="+4 do liczebności drużyny." />
     <string id="taom_wdn_t3_b_key" text="Znacznie skrócone ładowanie Błogosławieństwa Nimrodeli — niemal zawsze dostępne." />
     <string id="taom_wdn_t3_b_p1" text="+18% odporności." />
@@ -1537,7 +1537,7 @@
     <string id="taom_gar_t1_a_p4" text="+5% zdobywanej sławy w bitwie." />
     <string id="taom_gar_t1_b_key" text="Wydłużony czas trwania Srebrnego Deszczu — nieprzerwany ostrzał." />
     <string id="taom_gar_t1_b_p1" text="+5% odporności." />
-    <string id="taom_gar_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_gar_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_gar_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_gar_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_gar_t2_a_key" text="Skrócone ładowanie Srebrnego Deszczu — stała presja." />
@@ -1548,17 +1548,17 @@
     <string id="taom_gar_t2_b_key" text="Srebrny Deszcz zyskuje dodatkowe przebicie, gdy jest aktywny." />
     <string id="taom_gar_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_gar_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_gar_t2_b_p3" text="+50 maksymalnego zdrowia." />
-    <string id="taom_gar_t2_b_p4" text="+5% obrażeń wojsk." />
+    <string id="taom_gar_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_gar_t2_b_p4" text="+3% obrażeń wojsk." />
     <string id="taom_gar_t3_a_key" text="Znacznie rozszerzony promień Srebrnego Deszczu — salwy, przed którymi nie ma ucieczki." />
     <string id="taom_gar_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_gar_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_gar_t3_a_p3" text="+15% zdobywanej sławy w bitwie." />
-    <string id="taom_gar_t3_a_p4" text="+10% obrażeń wojsk." />
+    <string id="taom_gar_t3_a_p4" text="+5% obrażeń wojsk." />
     <string id="taom_gar_t3_b_key" text="Znacznie skrócone ładowanie Srebrnego Deszczu — nieustanny ostrzał." />
     <string id="taom_gar_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_gar_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_gar_t3_b_p3" text="+75 maksymalnego zdrowia." />
+    <string id="taom_gar_t3_b_p3" text="+9 maksymalnego zdrowia." />
     <string id="taom_gar_t3_b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_sentinel_root_desc" text="Chyżość Elanoru daje +5% obrażeń w walce wręcz i elficką grację." />
     <string id="taom_snt_t1_a_key" text="Zwiększony promień Chyżości Elanoru — obejmuje szersze formacje." />
@@ -1568,7 +1568,7 @@
     <string id="taom_snt_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_snt_t1_b_key" text="Wydłużony czas trwania Chyżości Elanoru — utrzymanie rozpędu." />
     <string id="taom_snt_t1_b_p1" text="+30 horse health." />
-    <string id="taom_snt_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_snt_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_snt_t1_b_p3" text="-5% żołdu żołnierzy." />
     <string id="taom_snt_t1_b_p4" text="+5% odporności." />
     <string id="taom_snt_t2_a_key" text="Skrócone ładowanie Rączości Elanor, szybsza aktywacja." />
@@ -1585,17 +1585,17 @@
     <string id="taom_snt_t3_a_p1" text="+18% obrażeń w walce wręcz." />
     <string id="taom_snt_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_snt_t3_a_p3" text="+15% szybkości zamachu." />
-    <string id="taom_snt_t3_a_p4" text="+15% obrażeń żołnierzy." />
+    <string id="taom_snt_t3_a_p4" text="+7% obrażeń żołnierzy." />
     <string id="taom_snt_t3_b_key" text="Znacznie skrócone ładowanie Rączości Elanor, jedź bez wytchnienia." />
     <string id="taom_snt_t3_b_p1" text="+100 horse health." />
     <string id="taom_snt_t3_b_p2" text="-15% żołdu żołnierzy." />
     <string id="taom_snt_t3_b_p3" text="+15% szybkości ruchu drużyny." />
-    <string id="taom_snt_t3_b_p4" text="+75 maksymalnego zdrowia." />
+    <string id="taom_snt_t3_b_p4" text="+9 maksymalnego zdrowia." />
     <string id="taom_shadow_walker_root_desc" text="Leśny Płaszcz daje +5% odporności, a cienie cię skrywają." />
     <string id="taom_shw_t1_a_key" text="Zwiększony promień Leśnego Płaszcza, wzmacnia więcej wojowników." />
     <string id="taom_shw_t1_a_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_shw_t1_a_p2" text="+5% obrażeń żołnierzy." />
-    <string id="taom_shw_t1_a_p3" text="+30 maksymalnego zdrowia." />
+    <string id="taom_shw_t1_a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_shw_t1_a_p3" text="+6 maksymalnego zdrowia." />
     <string id="taom_shw_t1_a_p4" text="+7% szybkości zamachu." />
     <string id="taom_shw_t1_b_key" text="Wydłużony czas trwania Leśnego Płaszcza, umocnienie obrony." />
     <string id="taom_shw_t1_b_p1" text="+8% odporności." />
@@ -1609,13 +1609,13 @@
     <string id="taom_shw_t2_a_p4" text="-10% żołdu żołnierzy." />
     <string id="taom_shw_t2_b_key" text="Leśny Płaszcz daje dodatkowe wzmocnienia obronne, gdy jest aktywny." />
     <string id="taom_shw_t2_b_p1" text="+12% odporności." />
-    <string id="taom_shw_t2_b_p2" text="+60 maksymalnego zdrowia." />
+    <string id="taom_shw_t2_b_p2" text="+8 maksymalnego zdrowia." />
     <string id="taom_shw_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_shw_t2_b_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_shw_t2_b_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_shw_t3_a_key" text="Znacznie zwiększony promień Leśnego Płaszcza, niszczycielska moc." />
     <string id="taom_shw_t3_a_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_shw_t3_a_p2" text="+100 maksymalnego zdrowia." />
-    <string id="taom_shw_t3_a_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_shw_t3_a_p2" text="+10 maksymalnego zdrowia." />
+    <string id="taom_shw_t3_a_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_shw_t3_a_p4" text="+4 do liczebności drużyny." />
     <string id="taom_shw_t3_b_key" text="Ładowanie Leśnego Płaszcza znacznie skrócone, niemal zawsze dostępne." />
     <string id="taom_shw_t3_b_p1" text="+18% odporności." />
@@ -1630,7 +1630,7 @@
     <string id="taom_sva_t1_a_p4" text="+5% zdobywanej sławy w bitwie." />
     <string id="taom_sva_t1_b_key" text="Wydłużony czas trwania Ciosu z Korony, nieprzerwany ostrzał." />
     <string id="taom_sva_t1_b_p1" text="+5% odporności." />
-    <string id="taom_sva_t1_b_p2" text="+25 do maksymalnego zdrowia." />
+    <string id="taom_sva_t1_b_p2" text="+5 do maksymalnego zdrowia." />
     <string id="taom_sva_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_sva_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_sva_t2_a_key" text="Skrócone ładowanie Ciosu z Korony, utrzymuje stały nacisk." />
@@ -1641,17 +1641,17 @@
     <string id="taom_sva_t2_b_key" text="Cios z Korony zyskuje dodatkowe przebicie, gdy jest aktywny." />
     <string id="taom_sva_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_sva_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_sva_t2_b_p3" text="+50 do maksymalnego zdrowia." />
-    <string id="taom_sva_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_sva_t2_b_p3" text="+8 do maksymalnego zdrowia." />
+    <string id="taom_sva_t2_b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_sva_t3_a_key" text="Promień Ciosu z Korony znacznie powiększony, salwy, przed którymi nie ma ucieczki." />
     <string id="taom_sva_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_sva_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_sva_t3_a_p3" text="+15% zdobywanej sławy w bitwie." />
-    <string id="taom_sva_t3_a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_sva_t3_a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_sva_t3_b_key" text="Ładowanie Ciosu z Korony znacznie skrócone, nieustanny ostrzał." />
     <string id="taom_sva_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_sva_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_sva_t3_b_p3" text="+75 do maksymalnego zdrowia." />
+    <string id="taom_sva_t3_b_p3" text="+9 do maksymalnego zdrowia." />
     <string id="taom_sva_t3_b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_elk_rider_root_desc" text="Uderzenie Rogów daje +5% obrażeń w walce wręcz, wielki łoś szarżuje." />
     <string id="taom_elk_t1_a_key" text="Zwiększony promień Uderzenia Rogów, zmiata szersze formacje." />
@@ -1661,7 +1661,7 @@
     <string id="taom_elk_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_elk_t1_b_key" text="Wydłużony czas trwania Uderzenia Rogów, utrzymuje rozpęd." />
     <string id="taom_elk_t1_b_p1" text="+30 horse health." />
-    <string id="taom_elk_t1_b_p2" text="+25 do maksymalnego zdrowia." />
+    <string id="taom_elk_t1_b_p2" text="+5 do maksymalnego zdrowia." />
     <string id="taom_elk_t1_b_p3" text="-5% płac żołnierzy." />
     <string id="taom_elk_t1_b_p4" text="+5% odporności." />
     <string id="taom_elk_t2_a_key" text="Krótszy czas naładowania Uderzenia Rogów, szybsza aktywacja." />
@@ -1678,17 +1678,17 @@
     <string id="taom_elk_t3_a_p1" text="+18% obrażeń w walce wręcz." />
     <string id="taom_elk_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_elk_t3_a_p3" text="+15% szybkości zamachu." />
-    <string id="taom_elk_t3_a_p4" text="+15% obrażeń żołnierzy." />
+    <string id="taom_elk_t3_a_p4" text="+7% obrażeń żołnierzy." />
     <string id="taom_elk_t3_b_key" text="Znacznie krótszy czas naładowania Uderzenia Rogów — jedź bez wytchnienia." />
     <string id="taom_elk_t3_b_p1" text="+100 horse health." />
     <string id="taom_elk_t3_b_p2" text="-15% płac żołnierzy." />
     <string id="taom_elk_t3_b_p3" text="+15% szybkości ruchu drużyny." />
-    <string id="taom_elk_t3_b_p4" text="+75 maksymalnego zdrowia." />
-    <string id="taom_uruk_berserker_root_desc" text="Krwawy Szał daje +25 zdrowia — ból napędza twoją wściekłość." />
+    <string id="taom_elk_t3_b_p4" text="+9 maksymalnego zdrowia." />
+    <string id="taom_uruk_berserker_root_desc" text="Krwawy Szał daje +5 zdrowia — ból napędza twoją wściekłość." />
     <string id="taom_ub_t1_a_key" text="Zwiększony zasięg Krwawego Szału, wzmacnia więcej wojowników." />
     <string id="taom_ub_t1_a_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_ub_t1_a_p2" text="+5% obrażeń żołnierzy." />
-    <string id="taom_ub_t1_a_p3" text="+30 maksymalnego zdrowia." />
+    <string id="taom_ub_t1_a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_ub_t1_a_p3" text="+6 maksymalnego zdrowia." />
     <string id="taom_ub_t1_a_p4" text="+7% szybkości zamachu." />
     <string id="taom_ub_t1_b_key" text="Wydłużony czas trwania Krwawego Szału, wzmacnia obronę." />
     <string id="taom_ub_t1_b_p1" text="+8% odporności." />
@@ -1702,13 +1702,13 @@
     <string id="taom_ub_t2_a_p4" text="-10% płac żołnierzy." />
     <string id="taom_ub_t2_b_key" text="Krwawy Szał daje dodatkowe premie obronne, gdy jest aktywny." />
     <string id="taom_ub_t2_b_p1" text="+12% odporności." />
-    <string id="taom_ub_t2_b_p2" text="+60 maksymalnego zdrowia." />
+    <string id="taom_ub_t2_b_p2" text="+8 maksymalnego zdrowia." />
     <string id="taom_ub_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_ub_t2_b_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_ub_t2_b_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_ub_t3_a_key" text="Znacznie zwiększony zasięg Krwawego Szału, niszczycielska moc." />
     <string id="taom_ub_t3_a_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_ub_t3_a_p2" text="+100 maksymalnego zdrowia." />
-    <string id="taom_ub_t3_a_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_ub_t3_a_p2" text="+10 maksymalnego zdrowia." />
+    <string id="taom_ub_t3_a_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_ub_t3_a_p4" text="+4 do liczebności drużyny." />
     <string id="taom_ub_t3_b_key" text="Czas ładowania Krwawego Szału znacznie skrócony, niemal zawsze dostępny." />
     <string id="taom_ub_t3_b_p1" text="+18% odporności." />
@@ -1723,7 +1723,7 @@
     <string id="taom_ucb_t1_a_p4" text="+5% zdobywanego rozgłosu za bitwy." />
     <string id="taom_ucb_t1_b_key" text="Wydłużony czas trwania Żelaznego Deszczu, nieustanny ostrzał." />
     <string id="taom_ucb_t1_b_p1" text="+5% odporności." />
-    <string id="taom_ucb_t1_b_p2" text="+25 do maksymalnego zdrowia." />
+    <string id="taom_ucb_t1_b_p2" text="+5 do maksymalnego zdrowia." />
     <string id="taom_ucb_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_ucb_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_ucb_t2_a_key" text="Skrócony czas ładowania Żelaznego Deszczu, stały nacisk." />
@@ -1734,17 +1734,17 @@
     <string id="taom_ucb_t2_b_key" text="Żelazny Deszcz zyskuje dodatkowe przebicie, gdy jest aktywny." />
     <string id="taom_ucb_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_ucb_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_ucb_t2_b_p3" text="+50 do maksymalnego zdrowia." />
-    <string id="taom_ucb_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_ucb_t2_b_p3" text="+8 do maksymalnego zdrowia." />
+    <string id="taom_ucb_t2_b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_ucb_t3_a_key" text="Znacznie zwiększony promień Żelaznego Deszczu, salwy, przed którymi nie ma ucieczki." />
     <string id="taom_ucb_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_ucb_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_ucb_t3_a_p3" text="+15% zdobywanego rozgłosu za bitwy." />
-    <string id="taom_ucb_t3_a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_ucb_t3_a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_ucb_t3_b_key" text="Czas ładowania Żelaznego Deszczu znacznie skrócony, nieustępliwy ostrzał." />
     <string id="taom_ucb_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_ucb_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_ucb_t3_b_p3" text="+75 do maksymalnego zdrowia." />
+    <string id="taom_ucb_t3_b_p3" text="+9 do maksymalnego zdrowia." />
     <string id="taom_ucb_t3_b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_warg_scout_root_desc" text="Wycie Watahy daje +5% obrażeń w walce wręcz i przeraża pobliskich wrogów." />
     <string id="taom_wsc_t1_a_key" text="Zwiększony promień Wycia Watahy, ogarnia szersze formacje." />
@@ -1754,7 +1754,7 @@
     <string id="taom_wsc_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_wsc_t1_b_key" text="Wydłużony czas trwania Wycia Watahy, utrzymuje rozpęd." />
     <string id="taom_wsc_t1_b_p1" text="+30 horse health." />
-    <string id="taom_wsc_t1_b_p2" text="+25 do maksymalnego zdrowia." />
+    <string id="taom_wsc_t1_b_p2" text="+5 do maksymalnego zdrowia." />
     <string id="taom_wsc_t1_b_p3" text="-5% płac żołnierzy." />
     <string id="taom_wsc_t1_b_p4" text="+5% odporności." />
     <string id="taom_wsc_t2_a_key" text="Krótszy czas ładowania Wycia Watahy, szybsza aktywacja." />
@@ -1771,17 +1771,17 @@
     <string id="taom_wsc_t3_a_p1" text="+18% obrażeń w walce wręcz." />
     <string id="taom_wsc_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_wsc_t3_a_p3" text="+15% szybkości zamachu." />
-    <string id="taom_wsc_t3_a_p4" text="+15% obrażeń żołnierzy." />
+    <string id="taom_wsc_t3_a_p4" text="+7% obrażeń żołnierzy." />
     <string id="taom_wsc_t3_b_key" text="Znacznie krótszy czas ładowania Wycia Watahy, jedź bez wytchnienia." />
     <string id="taom_wsc_t3_b_p1" text="+100 horse health." />
     <string id="taom_wsc_t3_b_p2" text="-15% płac żołnierzy." />
     <string id="taom_wsc_t3_b_p3" text="+15% szybkości ruchu drużyny." />
-    <string id="taom_wsc_t3_b_p4" text="+75 maksymalnego zdrowia." />
-    <string id="taom_cave_troll_master_root_desc" text="Troll Frenzy grants +25 health and drives your trolls berserk." />
+    <string id="taom_wsc_t3_b_p4" text="+9 maksymalnego zdrowia." />
+    <string id="taom_cave_troll_master_root_desc" text="Troll Frenzy grants +5 health and drives your trolls berserk." />
     <string id="taom_ctm_t1_a_key" text="Troll Frenzy radius increased, empowering more warriors." />
     <string id="taom_ctm_t1_a_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_ctm_t1_a_p2" text="+5% obrażeń żołnierzy." />
-    <string id="taom_ctm_t1_a_p3" text="+30 maksymalnego zdrowia." />
+    <string id="taom_ctm_t1_a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_ctm_t1_a_p3" text="+6 maksymalnego zdrowia." />
     <string id="taom_ctm_t1_a_p4" text="+7% szybkości zamachu." />
     <string id="taom_ctm_t1_b_key" text="Troll Frenzy duration extended, fortifying the defense." />
     <string id="taom_ctm_t1_b_p1" text="+8% odporności." />
@@ -1795,13 +1795,13 @@
     <string id="taom_ctm_t2_a_p4" text="-10% płac żołnierzy." />
     <string id="taom_ctm_t2_b_key" text="Troll Frenzy grants additional defensive buffs while active." />
     <string id="taom_ctm_t2_b_p1" text="+12% odporności." />
-    <string id="taom_ctm_t2_b_p2" text="+60 maksymalnego zdrowia." />
+    <string id="taom_ctm_t2_b_p2" text="+8 maksymalnego zdrowia." />
     <string id="taom_ctm_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_ctm_t2_b_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_ctm_t2_b_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_ctm_t3_a_key" text="Troll Frenzy radius greatly expanded, devastating power." />
     <string id="taom_ctm_t3_a_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_ctm_t3_a_p2" text="+100 maksymalnego zdrowia." />
-    <string id="taom_ctm_t3_a_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_ctm_t3_a_p2" text="+10 maksymalnego zdrowia." />
+    <string id="taom_ctm_t3_a_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_ctm_t3_a_p4" text="+4 do wielkości drużyny." />
     <string id="taom_ctm_t3_b_key" text="Troll Frenzy charge greatly reduced, nearly always available." />
     <string id="taom_ctm_t3_b_p1" text="+18% odporności." />
@@ -1816,7 +1816,7 @@
     <string id="taom_gbs_t1_a_p4" text="+5% zdobywanej renomy z bitew." />
     <string id="taom_gbs_t1_b_key" text="Wydłużony czas trwania Zatrutej Strzałki, nieustanna nawała." />
     <string id="taom_gbs_t1_b_p1" text="+5% odporności." />
-    <string id="taom_gbs_t1_b_p2" text="+25 maks. zdrowia." />
+    <string id="taom_gbs_t1_b_p2" text="+5 maks. zdrowia." />
     <string id="taom_gbs_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_gbs_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_gbs_t2_a_key" text="Skrócone ładowanie Zatrutej Strzałki, stała presja." />
@@ -1827,17 +1827,17 @@
     <string id="taom_gbs_t2_b_key" text="Zatruta Strzałka zyskuje dodatkowe przebicie, gdy jest aktywna." />
     <string id="taom_gbs_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_gbs_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_gbs_t2_b_p3" text="+50 maks. zdrowia." />
-    <string id="taom_gbs_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_gbs_t2_b_p3" text="+8 maks. zdrowia." />
+    <string id="taom_gbs_t2_b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_gbs_t3_a_key" text="Znacznie powiększony promień Zatrutej Strzałki, salwy, przed którymi nie ma ucieczki." />
     <string id="taom_gbs_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_gbs_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_gbs_t3_a_p3" text="+15% zdobywanej renomy z bitew." />
-    <string id="taom_gbs_t3_a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_gbs_t3_a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_gbs_t3_b_key" text="Znacznie skrócone ładowanie Zatrutej Strzałki, nieustający ostrzał." />
     <string id="taom_gbs_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_gbs_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_gbs_t3_b_p3" text="+75 maks. zdrowia." />
+    <string id="taom_gbs_t3_b_p3" text="+9 maks. zdrowia." />
     <string id="taom_gbs_t3_b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_warg_pack_leader_root_desc" text="Wycie Przewodnika daje +5% obrażeń w walce wręcz, a wataha rusza na łowy." />
     <string id="taom_wpl_t1_a_key" text="Powiększony promień Wycia Przewodnika, obejmuje szersze formacje." />
@@ -1847,7 +1847,7 @@
     <string id="taom_wpl_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_wpl_t1_b_key" text="Wydłużony czas trwania Wycia Przewodnika, utrzymanie rozpędu." />
     <string id="taom_wpl_t1_b_p1" text="+30 horse health." />
-    <string id="taom_wpl_t1_b_p2" text="+25 maks. zdrowia." />
+    <string id="taom_wpl_t1_b_p2" text="+5 maks. zdrowia." />
     <string id="taom_wpl_t1_b_p3" text="-5% żołdu żołnierzy." />
     <string id="taom_wpl_t1_b_p4" text="+5% odporności." />
     <string id="taom_wpl_t2_a_key" text="Skrócone ładowanie Wycia Przewodnika, szybsza aktywacja." />
@@ -1864,17 +1864,17 @@
     <string id="taom_wpl_t3_a_p1" text="+18% obrażeń w walce wręcz." />
     <string id="taom_wpl_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_wpl_t3_a_p3" text="+15% szybkości zamachu." />
-    <string id="taom_wpl_t3_a_p4" text="+15% obrażeń żołnierzy." />
+    <string id="taom_wpl_t3_a_p4" text="+7% obrażeń żołnierzy." />
     <string id="taom_wpl_t3_b_key" text="Znacznie skrócone ładowanie Wycia Przywódcy, jedź bez wytchnienia." />
     <string id="taom_wpl_t3_b_p1" text="+100 horse health." />
     <string id="taom_wpl_t3_b_p2" text="-15% żołdu żołnierzy." />
     <string id="taom_wpl_t3_b_p3" text="+15% szybkości marszu drużyny." />
-    <string id="taom_wpl_t3_b_p4" text="+75 maksymalnego zdrowia." />
-    <string id="taom_shadow_warrior_root_desc" text="Wysysanie Duszy daje +25 zdrowia i wysysa siły życiowe wrogów." />
+    <string id="taom_wpl_t3_b_p4" text="+9 maksymalnego zdrowia." />
+    <string id="taom_shadow_warrior_root_desc" text="Wysysanie Duszy daje +5 zdrowia i wysysa siły życiowe wrogów." />
     <string id="taom_swr_t1_a_key" text="Zwiększony zasięg Wysysania Duszy, wzmacnia więcej wojowników." />
     <string id="taom_swr_t1_a_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_swr_t1_a_p2" text="+5% obrażeń żołnierzy." />
-    <string id="taom_swr_t1_a_p3" text="+30 maksymalnego zdrowia." />
+    <string id="taom_swr_t1_a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_swr_t1_a_p3" text="+6 maksymalnego zdrowia." />
     <string id="taom_swr_t1_a_p4" text="+7% szybkości zamachu." />
     <string id="taom_swr_t1_b_key" text="Wydłużony czas trwania Wysysania Duszy, wzmacnia obronę." />
     <string id="taom_swr_t1_b_p1" text="+8% odporności." />
@@ -1888,13 +1888,13 @@
     <string id="taom_swr_t2_a_p4" text="-10% żołdu żołnierzy." />
     <string id="taom_swr_t2_b_key" text="Wysysanie Duszy daje dodatkowe premie obronne, gdy jest aktywne." />
     <string id="taom_swr_t2_b_p1" text="+12% odporności." />
-    <string id="taom_swr_t2_b_p2" text="+60 maksymalnego zdrowia." />
+    <string id="taom_swr_t2_b_p2" text="+8 maksymalnego zdrowia." />
     <string id="taom_swr_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_swr_t2_b_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_swr_t2_b_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_swr_t3_a_key" text="Znacznie zwiększony zasięg Wysysania Duszy, niszczycielska moc." />
     <string id="taom_swr_t3_a_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_swr_t3_a_p2" text="+100 maksymalnego zdrowia." />
-    <string id="taom_swr_t3_a_p3" text="+15% obrażeń żołnierzy." />
+    <string id="taom_swr_t3_a_p2" text="+10 maksymalnego zdrowia." />
+    <string id="taom_swr_t3_a_p3" text="+7% obrażeń żołnierzy." />
     <string id="taom_swr_t3_a_p4" text="+4 do wielkości drużyny." />
     <string id="taom_swr_t3_b_key" text="Znacznie skrócone ładowanie Wysysania Duszy, dostępne niemal zawsze." />
     <string id="taom_swr_t3_b_p1" text="+18% odporności." />
@@ -1909,7 +1909,7 @@
     <string id="taom_nca_t1_a_p4" text="+5% zdobywanej renomy z bitew." />
     <string id="taom_nca_t1_b_key" text="Wydłużony czas trwania Ciemnego Pocisku, nieustanny ostrzał." />
     <string id="taom_nca_t1_b_p1" text="+5% odporności." />
-    <string id="taom_nca_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_nca_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_nca_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_nca_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_nca_t2_a_key" text="Skrócone ładowanie Ciemnego Pocisku, utrzymuje stały nacisk." />
@@ -1920,17 +1920,17 @@
     <string id="taom_nca_t2_b_key" text="Ciemny Pocisk zyskuje dodatkowe przebicie, gdy jest aktywny." />
     <string id="taom_nca_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_nca_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_nca_t2_b_p3" text="+50 maksymalnego zdrowia." />
-    <string id="taom_nca_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_nca_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_nca_t2_b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_nca_t3_a_key" text="Znacznie zwiększony promień Ciemnego Pocisku, salwy, których nie da się uniknąć." />
     <string id="taom_nca_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_nca_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_nca_t3_a_p3" text="+15% zdobywanej renomy z bitew." />
-    <string id="taom_nca_t3_a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_nca_t3_a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_nca_t3_b_key" text="Znacznie skrócone ładowanie Ciemnego Pocisku, nieprzerwany ostrzał." />
     <string id="taom_nca_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_nca_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_nca_t3_b_p3" text="+75 maksymalnego zdrowia." />
+    <string id="taom_nca_t3_b_p3" text="+9 maksymalnego zdrowia." />
     <string id="taom_nca_t3_b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_fell_rider_root_desc" text="Szarża Grozy daje +5% obrażeń w walce wręcz, a cień otacza twojego rumaka." />
     <string id="taom_flr_t1_a_key" text="Zwiększony promień Szarży Grozy, obejmuje szersze formacje." />
@@ -1940,7 +1940,7 @@
     <string id="taom_flr_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_flr_t1_b_key" text="Wydłużony czas trwania Szarży Grozy, utrzymuje rozpęd." />
     <string id="taom_flr_t1_b_p1" text="+30 horse health." />
-    <string id="taom_flr_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_flr_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_flr_t1_b_p3" text="-5% żołdu żołnierzy." />
     <string id="taom_flr_t1_b_p4" text="+5% odporności." />
     <string id="taom_flr_t2_a_key" text="Skrócone ładowanie Szarży Grozy, szybsze uruchomienie." />
@@ -1957,17 +1957,17 @@
     <string id="taom_flr_t3_a_p1" text="+18% obrażeń w walce wręcz." />
     <string id="taom_flr_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_flr_t3_a_p3" text="+15% szybkości zamachu." />
-    <string id="taom_flr_t3_a_p4" text="+15% obrażeń oddziałów." />
+    <string id="taom_flr_t3_a_p4" text="+7% obrażeń oddziałów." />
     <string id="taom_flr_t3_b_key" text="Znacznie skrócone ładowanie Groźnej Szarży, jedź bez wytchnienia." />
     <string id="taom_flr_t3_b_p1" text="+100 horse health." />
     <string id="taom_flr_t3_b_p2" text="-15% żołdu oddziałów." />
     <string id="taom_flr_t3_b_p3" text="+15% szybkości marszu drużyny." />
-    <string id="taom_flr_t3_b_p4" text="+75 maksymalnego zdrowia." />
+    <string id="taom_flr_t3_b_p4" text="+9 maksymalnego zdrowia." />
     <string id="taom_corsair_boarder_root_desc" text="Abordaż daje +5% odporności w zwarciu." />
     <string id="taom_crb_t1_a_key" text="Zwiększony promień Abordażu, wzmacnia więcej wojowników." />
     <string id="taom_crb_t1_a_p1" text="+8% obrażeń w walce wręcz." />
-    <string id="taom_crb_t1_a_p2" text="+5% obrażeń oddziałów." />
-    <string id="taom_crb_t1_a_p3" text="+30 maksymalnego zdrowia." />
+    <string id="taom_crb_t1_a_p2" text="+3% obrażeń oddziałów." />
+    <string id="taom_crb_t1_a_p3" text="+6 maksymalnego zdrowia." />
     <string id="taom_crb_t1_a_p4" text="+7% szybkości zamachu." />
     <string id="taom_crb_t1_b_key" text="Wydłużony czas trwania Abordażu, umacnia obronę." />
     <string id="taom_crb_t1_b_p1" text="+8% odporności." />
@@ -1981,13 +1981,13 @@
     <string id="taom_crb_t2_a_p4" text="-10% żołdu oddziałów." />
     <string id="taom_crb_t2_b_key" text="Abordaż daje dodatkowe premie obronne, gdy jest aktywny." />
     <string id="taom_crb_t2_b_p1" text="+12% odporności." />
-    <string id="taom_crb_t2_b_p2" text="+60 maksymalnego zdrowia." />
+    <string id="taom_crb_t2_b_p2" text="+8 maksymalnego zdrowia." />
     <string id="taom_crb_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_crb_t2_b_p4" text="+10% obrażeń oddziałów." />
+    <string id="taom_crb_t2_b_p4" text="+5% obrażeń oddziałów." />
     <string id="taom_crb_t3_a_key" text="Znacznie zwiększony promień Abordażu, niszczycielska moc." />
     <string id="taom_crb_t3_a_p1" text="+15% obrażeń w walce wręcz." />
-    <string id="taom_crb_t3_a_p2" text="+100 maksymalnego zdrowia." />
-    <string id="taom_crb_t3_a_p3" text="+15% obrażeń oddziałów." />
+    <string id="taom_crb_t3_a_p2" text="+10 maksymalnego zdrowia." />
+    <string id="taom_crb_t3_a_p3" text="+7% obrażeń oddziałów." />
     <string id="taom_crb_t3_a_p4" text="+4 do liczebności drużyny." />
     <string id="taom_crb_t3_b_key" text="Znacznie skrócone ładowanie Abordażu, niemal zawsze dostępny." />
     <string id="taom_crb_t3_b_p1" text="+18% odporności." />
@@ -2002,7 +2002,7 @@
     <string id="taom_crc_t1_a_p4" text="+5% zdobywanej sławy w bitwie." />
     <string id="taom_crc_t1_b_key" text="Wydłużony czas trwania Strzału w Olinowanie, nieustanny ostrzał." />
     <string id="taom_crc_t1_b_p1" text="+5% odporności." />
-    <string id="taom_crc_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_crc_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_crc_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
     <string id="taom_crc_t1_b_p4" text="+5% stealth bonus." />
     <string id="taom_crc_t2_a_key" text="Skrócone ładowanie Strzału w Olinowanie, stała presja." />
@@ -2013,17 +2013,17 @@
     <string id="taom_crc_t2_b_key" text="Strzał w Olinowanie zyskuje dodatkowe przebicie, gdy jest aktywny." />
     <string id="taom_crc_t2_b_p1" text="+12% obrażeń dystansowych." />
     <string id="taom_crc_t2_b_p2" text="+10% przebicia pancerza." />
-    <string id="taom_crc_t2_b_p3" text="+50 maksymalnego zdrowia." />
-    <string id="taom_crc_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_crc_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_crc_t2_b_p4" text="+3% obrażeń żołnierzy." />
     <string id="taom_crc_t3_a_key" text="Znacznie zwiększony promień Strzału w Olinowanie, salwy, przed którymi nie ma ucieczki." />
     <string id="taom_crc_t3_a_p1" text="+18% obrażeń dystansowych." />
     <string id="taom_crc_t3_a_p2" text="+15% przebicia pancerza." />
     <string id="taom_crc_t3_a_p3" text="+15% zdobywanej sławy w bitwie." />
-    <string id="taom_crc_t3_a_p4" text="+10% obrażeń żołnierzy." />
+    <string id="taom_crc_t3_a_p4" text="+5% obrażeń żołnierzy." />
     <string id="taom_crc_t3_b_key" text="Znacznie skrócone ładowanie Strzału w Olinowanie, nieprzerwany ogień." />
     <string id="taom_crc_t3_b_p1" text="+15% premii do skradania." />
     <string id="taom_crc_t3_b_p2" text="+15% szybkości ruchu." />
-    <string id="taom_crc_t3_b_p3" text="+75 maksymalnego zdrowia." />
+    <string id="taom_crc_t3_b_p3" text="+9 maksymalnego zdrowia." />
     <string id="taom_crc_t3_b_p4" text="+15% zasięgu wykrywania drużyny." />
     <string id="taom_corsair_captain_root_desc" text="Grabież daje +5% obrażeń w walce wręcz i podnosi morale twojej załogi." />
     <string id="taom_crca_t1_a_key" text="Zwiększony promień Grabieży, obejmuje szersze formacje." />
@@ -2033,7 +2033,7 @@
     <string id="taom_crca_t1_a_p4" text="+5% szybkości ruchu drużyny." />
     <string id="taom_crca_t1_b_key" text="Wydłużony czas trwania Grabieży, utrzymanie rozpędu." />
     <string id="taom_crca_t1_b_p1" text="+30 horse health." />
-    <string id="taom_crca_t1_b_p2" text="+25 maksymalnego zdrowia." />
+    <string id="taom_crca_t1_b_p2" text="+5 maksymalnego zdrowia." />
     <string id="taom_crca_t1_b_p3" text="-5% płac żołnierzy." />
     <string id="taom_crca_t1_b_p4" text="+5% odporności." />
     <string id="taom_crca_t2_a_key" text="Skrócone ładowanie Grabieży, szybsza aktywacja." />
@@ -2050,11 +2050,11 @@
     <string id="taom_crca_t3_a_p1" text="+18% obrażeń w walce wręcz." />
     <string id="taom_crca_t3_a_p2" text="+18% horse charge damage." />
     <string id="taom_crca_t3_a_p3" text="+15% szybkości zamachu." />
-    <string id="taom_crca_t3_a_p4" text="+15% obrażeń zadawanych przez żołnierzy." />
+    <string id="taom_crca_t3_a_p4" text="+7% obrażeń zadawanych przez żołnierzy." />
     <string id="taom_crca_t3_b_key" text="Znacznie krótsze ładowanie grabieży — jedź bez wytchnienia." />
     <string id="taom_crca_t3_b_p1" text="+100 horse health." />
     <string id="taom_crca_t3_b_p2" text="-15% żołdu żołnierzy." />
     <string id="taom_crca_t3_b_p3" text="+15% szybkości marszu drużyny." />
-    <string id="taom_crca_t3_b_p4" text="+75 maksymalnego zdrowia." />
+    <string id="taom_crca_t3_b_p4" text="+9 maksymalnego zdrowia." />
   </strings>
 </base>

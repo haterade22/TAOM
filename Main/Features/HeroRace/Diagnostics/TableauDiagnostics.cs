@@ -205,6 +205,62 @@ public static class TableauDiagnostics
 
 
 
+    /// <summary>
+    /// Reports one character's tableau resource-residency verdict (issue #389, black silhouettes).
+    ///
+    /// A STUCK verdict is the smoking gun: vanilla's <c>OnTick</c> decrements
+    /// <c>_agentVisualLoadingCounter</c> only when <c>CheckResources</c> returns true, and only shows
+    /// the refreshed visual once that counter hits zero. A counter that never reaches zero therefore
+    /// means the character's meshes/materials never became resident — while the previous buffer was
+    /// already made visible by <c>RefreshCharacterTableau</c> with no resource gate at all. Against
+    /// <c>SetSceneUsesSkybox(false)</c> + <c>SetClearColor(0u)</c> that renders as an opaque black
+    /// silhouette.
+    ///
+    /// Read the log by comparing troops: if <c>urukhai_fighter</c> reports STUCK while
+    /// <c>isengard_orc_ravager</c> reports RESOLVED, the fault is per-race resource residency and the
+    /// asset hypothesis is confirmed. If BOTH resolve, residency is not the mechanism and the black
+    /// render is happening downstream of it.
+    /// </summary>
+    public static void LogRenderCensus(
+        string? characterKey,
+        TableauResidencyVerdict verdict,
+        int ticks,
+        string context,
+        System.Collections.Generic.IReadOnlyList<string>? census)
+    {
+        try
+        {
+            if (verdict == TableauResidencyVerdict.CapacityReached)
+            {
+                LogError(
+                    "Render census tracker is FULL — further characters will produce no line at all. " +
+                    "A missing troop below this point means 'not measured', NOT 'nothing wrong'. " +
+                    "Restart and open the troop of interest first.");
+                return;
+            }
+
+            string head = verdict == TableauResidencyVerdict.Timeout
+                ? $"Render census (visual NEVER became ready in {ticks} ticks — the tableau is most likely " +
+                  $"BLANK rather than black; census below is partial): {context}"
+                : $"Render census (ready after {ticks} tick(s)): {context}";
+
+            // Deliberately reported at INFO even for Timeout. This instrument states observations; the
+            // reader draws the conclusion. An earlier version asserted "this is the black-silhouette
+            // condition", which was refuted against the v1.4.7 decompile.
+            var sb = new System.Text.StringBuilder(head);
+            if (census != null)
+            {
+                foreach (var line in census)
+                {
+                    sb.Append(Environment.NewLine).Append("    ").Append(line);
+                }
+            }
+
+            Log($"census.{characterKey}", sb.ToString());
+        }
+        catch { }
+    }
+
     /// <summary>Animation clip bound to <paramref name="action"/> in <paramref name="set"/>, or a marker.</summary>
     public static string DescribeAction(MBActionSet set, ActionIndexCache action)
     {

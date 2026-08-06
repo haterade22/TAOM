@@ -5,7 +5,7 @@
 
 | GameModel | Overrides | Purpose |
 |-----------|-----------|---------|
-| `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) + career `Health` passive on `MaxHitpoints` — the ONLY campaign-side consumer of that pip (character screen, `Hero.MaxHitPoints`, daily heal cap), and via `SandboxAgentStatCalculateModel`'s hero branch it feeds in-battle health too, so nothing else may add `Health` (#390) |
+| `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) + career `Health` passive on `MaxHitpoints` — the ONLY campaign-side consumer of that pip (character screen, `Hero.MaxHitPoints`, daily heal cap), and via `SandboxAgentStatCalculateModel`'s hero branch it feeds in-battle health too, so nothing else may add `Health` (#388) |
 | `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) + culture wage/garrison/Rohan mounted feats + career TroopWages passive |
 | `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) + alignment-gated recruitment (`MaximumIndexHeroCanRecruitFromHero` returns -1 to block recruiting at an enemy-aligned settlement — AlignmentRecruitment feature) |
 | `TaomArmyManagementModel` | `DefaultArmyManagementCalculationModel` | Culture army influence award/cost feats |
@@ -24,7 +24,7 @@
 | `TaomPartyMoraleModel` | `DefaultPartyMoraleModel` | Party morale feats (Gondor, Rohan, Erebor, elves) + career TroopMorale passive |
 | `TaomSmithingModel` | `DefaultSmithingModel` | Smithing energy cost feats (Erebor, Isengard) + career EnchantmentCostReduction passive |
 | `TaomClanFinanceModel` | `DefaultClanFinanceModel` | Tariff income feat (Umbar) |
-| `TaomRaidModel` | `DefaultRaidModel` | Raid damage feats (Mordor, Gundabad, Isengard) + career TroopDamage passive |
+| `TaomRaidModel` | `DefaultRaidModel` | Raid damage feats (Mordor, Gundabad, Isengard) + career TroopDamage passive. **`CalculateHitDamage` is settlement raid SPEED, not combat damage** — it drains `SettlementHitPoints`. It was `TroopDamage`'s only consumer until 2026-08-06, which made 105 pips promising "+N% troop damage" inert in every battle; the battle half now lives on `CalculateDamageAmplification`. Both consumers are intentional |
 | `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | Configurable T7-T10 troop power (MCM + JSON) |
 | `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | Configurable blunt/cut damage ratio per battle type (MCM) |
 | `TaomPartyHealingModel` | `DefaultPartyHealingModel` | Cultural survival bonuses (JSON per-faction death chance multiplier) |
@@ -42,7 +42,7 @@
 | `TaomPartyNavigationModel` | `DefaultPartyNavigationModel` | **PARKED 2026-06-26 — NOT registered** (#120/#296; vanilla model in use). Naval travel: naval capability + water-navigable terrain, player-initiated sailing. Re-enable steps + design: `docs/features/naval-travel.md` |
 | `TaomMarriageModel` | `DefaultMarriageModel` | NazgulFamily: the 9 Ringwraiths are marriage-ineligible (`IsSuitableForMarriage` + `IsCoupleSuitableForMarriage` false for wraiths); non-wraiths fall through to vanilla. See `docs/features/nazgul-family.md` |
 | `TaomSettlementEconomyModel` | `DefaultSettlementEconomyModel` | Tunable town market-gold regen, ONLY `GetTownGoldChange` (#317 — shipped base 25000 vs vanilla 10000 so drained markets recover; castles never reach it). See `docs/features/settlement-economy.md` |
-| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (abstract) → `SandboxAgentApplyDamageModel` | CombatMechanics feel pack in the one `AgentApplyDamageModel` slot: crush-through-block, cleave, stagger immunity, charge knockdown, shield pen, per-race modifiers; career damage passives inherited. See `docs/features/combat-mechanics.md` |
+| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (abstract) → `SandboxAgentApplyDamageModel` | CombatMechanics feel pack in the one `AgentApplyDamageModel` slot: crush-through-block, cleave, stagger immunity, charge knockdown, shield pen, per-race modifiers; career damage passives inherited — including, since 2026-08-06, `TroopDamage` for the attacker's non-hero troops via `GetAttackerTroopLeaderHeroId` (the offensive mirror of the existing `TroopResistance` plumbing; resolves off `AttackerRiderAgentOrigin` on a mount hit, since a struck mount's own `Origin` is null). See `docs/features/combat-mechanics.md` |
 | `TaomPrisonerRecruitmentCalculationModel` | `DefaultPrisonerRecruitmentCalculationModel` | PrisonerRecruitment: no morale lost recruiting a prisoner of your own faction (same culture) or own non-Neutral alignment side — Isengard absorbing Mordor/Gundabad/Dunland troops. Covers AI + party screen + cost label in one override. See `docs/features/prisoner-recruitment.md` |
 | `TaomBattleBannerBearersModel` | `SandboxBattleBannerBearersModel` | BannerBearers: bearers-per-formation scales with size per class (vanilla hardcodes 1) + JSON race gate. **Disabled path must `return base.X()`** — a computed "off" suppresses vanilla's own banner path. Subclass, NOT `BaseModel`-decorate. See `docs/features/banner-bearers.md` |
 

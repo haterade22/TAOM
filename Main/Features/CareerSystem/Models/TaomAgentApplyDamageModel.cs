@@ -29,6 +29,7 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
         var baseResult = base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage);
         return _agentStatService.CalculateDamageAmplification(
             attackerHeroId: GetAttackerHeroId(in attackInformation),
+            attackerTroopLeaderHeroId: GetAttackerTroopLeaderHeroId(in attackInformation),
             hitMask: HitMask(in collisionData),
             baseResult: baseResult);
     }
@@ -74,6 +75,20 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
         var agent = GetVictimAgent(in info);
         if (agent == null || !agent.IsHero) return null;
         return (agent.Character as CharacterObject)?.HeroObject?.StringId;
+    }
+
+    // TroopDamage applies to the attacker's party LEADER's non-hero troops — the exact mirror of
+    // GetVictimTroopLeaderHeroId below. A hero attacker is covered by the Damage pip instead, so
+    // return null for heroes and the two never stack on one blow. Same mount caveat: for a couched
+    // /charge hit the AttackerAgent can be the mount, whose own Origin is null, so the leader must
+    // resolve off the RIDER's origin or every cavalry impact silently loses the bonus (#388).
+    private static string GetAttackerTroopLeaderHeroId(in AttackInformation info)
+    {
+        if (info.IsAttackerAgentNull) return null;
+        var agent = info.IsAttackerAgentMount ? info.AttackerAgent?.RiderAgent : info.AttackerAgent;
+        if (agent == null || agent.IsHero) return null;
+        var origin = info.IsAttackerAgentMount ? info.AttackerRiderAgentOrigin : info.AttackerAgentOrigin;
+        return (origin?.BattleCombatant as PartyBase)?.LeaderHero?.StringId;
     }
 
     // TroopResistance applies to the victim's party LEADER's non-hero troops. A hero victim is

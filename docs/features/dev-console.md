@@ -285,6 +285,8 @@ answer is conclusive and fails open in every path.
 | `taom.print_momentum [keys]` | A | campaign | ~50 in-game days of play to reach the 32 KB save-corruption threshold |
 | `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit |
 | `taom.print_town_economy [town]` | A | campaign | A 4–8 in-game-day observation for #317, plus the vanilla side-by-side that answers "is the buff doing anything" |
+| `taom.print_town_ledger [town]` | A | campaign | Where the town's gold actually went, by day and by flow. **No engine code logs a gold movement at all** — the alternative is inferring the drain from a balance that changes once a day. See [economy-diagnostics.md](economy-diagnostics.md) |
+| `taom.print_caravans [settlement]` | A | campaign | Which engine gate is holding each parked caravan. Every one of them is a silent early-return, and four of them have different fixes — the gate histogram is the money output |
 | `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
 | `taom.print_races` | A | cheat mode | — (registry + the hero's race, validated before lookup) |
 | `taom.print_battle_scene` | A | campaign | Which battle terrain a fight here loads. **Zero candidates is the money output** — the stale-scene-ref class an engine bump introduces silently |

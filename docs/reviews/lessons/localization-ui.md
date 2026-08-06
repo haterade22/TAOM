@@ -148,3 +148,32 @@ grey next to bronze and gold, until the ramp moved to `#6E767E / #E8EFF7 / #FFFF
   nothing — use a plain `Widget`.
 - **Source:** career UX arc 2026-08-06, commits `060e65e9` (per-tier metals) and `dee4d12f`
   (brightened silver); `docs/features/career-system.md`.
+
+### Editing an existing English string does not invalidate its cached translation
+
+**Trap:** `tools/translate_with_claude.py` resolves each entry override → cache → LLM → English, and
+the cache step is `elif e.string_id in cache` — it matches on the **key alone** and never compares the
+English source the cached translation was made from. So changing the *text* of an already-translated
+key leaves the cache authoritative: the next `/localize` run writes the OLD translation back into all
+12 language files, silently reverting the edit. Nothing warns, and at edit time the language files
+look correct — the revert only lands on the next translation run, which may be weeks later and in
+someone else's session.
+
+Found 2026-08-06 (#388): 165 career health strings went from "+75 max health" to "+9 max health".
+The English sources, the 12 language files and the descriptions were all updated correctly — and
+1,967 cache entries still said "+75 points de vie maximum.", primed to undo the whole retune.
+
+**Prevent:** any change that rewrites EXISTING English source text must also update (or delete) those
+keys in `tools/translation_cache/<lang>.json` in the same commit — deleting forces a re-translation,
+updating preserves the human wording when only a number or placeholder changed. Adding a NEW key is
+unaffected: a key absent from the cache always reaches the API. Worked example of the update path:
+`tools/retune_career_health.py`'s third pass (`sync_cache`), which points each cached entry at the
+language file's post-edit text.
+
+**Generalises to:** any key-addressed memo cache over content that can change — the cache key must
+either include a hash of the input or the writer must invalidate explicitly. TAOM's does neither, so
+the burden is on the caller until that changes.
+
+**Source:** #388 career health retune, 2026-08-06; full write-up in
+`lessons/build-tooling-workflow.md` (same entry covers the `\r\r\n` line-ending trap in the language
+XMLs) and `docs/reference/localization-map.md`.

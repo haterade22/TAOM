@@ -159,7 +159,7 @@ python tools/translate_with_claude.py --lang PL --module TAOM --max-entries 50 -
 > translation — the next run serves the old wording back into all 12 language files and silently
 > undoes your edit. Whenever you change existing English source text (not just add a new key), update
 > or delete those keys in `tools/translation_cache/<lang>.json` in the same change.
-> Found 2026-08-06 (#390), where 165 career health strings changed "+75" to "+9"; worked example:
+> Found 2026-08-06 (#388), where 165 career health strings changed "+75" to "+9"; worked example:
 > `tools/retune_career_health.py`. New keys are unaffected — an absent key always reaches the API.
 
 After running the API translator, run the rebuild step to inject the cached translations into the actual XML files:

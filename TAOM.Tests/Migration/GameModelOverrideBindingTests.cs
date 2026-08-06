@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TaleWorlds.CampaignSystem;
+using TAOM.Features.TroopProgression.Models;
 
 namespace TAOM.Tests.Migration;
 
@@ -103,6 +105,47 @@ public class GameModelOverrideBindingTests
             foreach (var p in problems) sb.AppendLine("  " + p);
             Assert.Fail(sb.ToString());
         }
+    }
+
+    /// <summary>
+    /// #388 regression pin. The career <c>Health</c> passive is applied campaign-side by
+    /// <c>TaomCharacterStatsModel.MaxHitpoints</c> — that override is the ONLY thing that puts a
+    /// "max health" pip into the character-screen tooltip, <c>Hero.MaxHitPoints</c>, and the
+    /// daily heal cap. It shipped missing, so the pip was invisible and inert outside a mission.
+    ///
+    /// The two generic gates above cannot catch its removal: the model still declares
+    /// <c>MaxCharacterTier</c>, so "declares no override" stays green while the health limb is gone.
+    /// This test also pins the exact v1.4.7 signature — the second parameter is
+    /// <c>bool includeDescriptions</c>, NOT a StatExplainer — so an engine-bump rewrite that guesses
+    /// wrong fails here instead of silently binding to nothing.
+    /// </summary>
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TaomCharacterStatsModel_DeclaresMaxHitpointsOverride_ForCareerHealthPassive()
+    {
+        var declared = typeof(TaomCharacterStatsModel)
+            .GetMethods(DeclaredMembers)
+            .Where(m => m.Name == "MaxHitpoints")
+            .ToList();
+
+        if (declared.Count == 0)
+            Assert.Fail(
+                "TaomCharacterStatsModel declares no MaxHitpoints override, so nothing applies the " +
+                "career Health passive on the campaign layer: the character screen, Hero.MaxHitPoints " +
+                "and the daily heal cap all fall through to DefaultCharacterStatsModel's flat 100. " +
+                "A 'max health' career pip is then invisible and inert outside a mission (#388).");
+
+        var method = declared[0];
+        Assert.IsTrue(IsOverride(method),
+            "TaomCharacterStatsModel.MaxHitpoints does not carry 'override' — it shadows the base " +
+            "virtual, so the engine calls DefaultCharacterStatsModel and the career Health passive never runs.");
+
+        var parameters = method.GetParameters();
+        CollectionAssert.AreEqual(
+            new[] { typeof(CharacterObject), typeof(bool) },
+            parameters.Select(p => p.ParameterType).ToArray(),
+            "MaxHitpoints signature drifted from the v1.4.7 engine's " +
+            "(CharacterObject character, bool includeDescriptions = false).");
     }
 
     // --- helpers ---

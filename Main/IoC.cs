@@ -62,6 +62,7 @@ using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.SettlementNameplateFade;
 using TAOM.Features.MenuLinkColors;
 using TAOM.Features.LordSpawnGuard;
+using TAOM.Features.EconomyDiagnostics;
 
 namespace TAOM;
 
@@ -121,6 +122,7 @@ public static class IoC
         SettlementFoodIoC.RegisterSettlementFoodFeature(container);
         SettlementEconomyIoC.RegisterSettlementEconomyFeature(container);
         CaravanTradeIoC.RegisterCaravanTradeFeature(container);
+        EconomyDiagnosticsIoC.RegisterEconomyDiagnosticsFeature(container);
         BanditManagementIoC.RegisterBanditManagementFeature(container);
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
         EliteEmissaryIoC.RegisterEliteEmissaryFeature(container);

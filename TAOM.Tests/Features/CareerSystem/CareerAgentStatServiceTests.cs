@@ -243,46 +243,56 @@ public class CareerAgentStatServiceTests
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // ApplyMaxHealthPassives — hero Health (flat) + mount MountHealth (multiplicative)
+    // ApplyMountHealthPassives — mount MountHealth only (multiplicative).
+    // The hero `Health` passive lives on TaomCharacterStatsModel.MaxHitpoints (#388); see the
+    // double-count pin at the end of this block for why it must never come back here.
     // ──────────────────────────────────────────────────────────────────────────
 
     [TestMethod]
-    public void ApplyMaxHealthPassives_Hero_AddsHealthFlat()
-    {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Health).Returns(50f);
-
-        var result = _sut.ApplyMaxHealthPassives(heroId: "hero1", mountRiderHeroId: null, baseHealth: 100f);
-
-        Assert.AreEqual(150f, result, 0.01f);
-    }
-
-    [TestMethod]
-    public void ApplyMaxHealthPassives_MountWithHeroRider_ScalesMountHealthMultiplicatively()
+    public void ApplyMountHealthPassives_MountWithHeroRider_ScalesMountHealthMultiplicatively()
     {
         _passives.GetPassiveMagnitude("rider1", PassiveEffectType.MountHealth).Returns(0.15f);
 
-        var result = _sut.ApplyMaxHealthPassives(heroId: null, mountRiderHeroId: "rider1", baseHealth: 200f);
+        var result = _sut.ApplyMountHealthPassives(mountRiderHeroId: "rider1", baseHealth: 200f);
 
         Assert.AreEqual(230f, result, 0.01f);
     }
 
     [TestMethod]
-    public void ApplyMaxHealthPassives_MountWithZeroMountHealth_ReturnsBase()
+    public void ApplyMountHealthPassives_MountWithZeroMountHealth_ReturnsBase()
     {
         _passives.GetPassiveMagnitude("rider1", PassiveEffectType.MountHealth).Returns(0f);
 
-        var result = _sut.ApplyMaxHealthPassives(heroId: null, mountRiderHeroId: "rider1", baseHealth: 200f);
+        var result = _sut.ApplyMountHealthPassives(mountRiderHeroId: "rider1", baseHealth: 200f);
 
         Assert.AreEqual(200f, result, 0.01f);
     }
 
     [TestMethod]
-    public void ApplyMaxHealthPassives_NeitherHeroNorMountRider_ReturnsBaseAndDoesNotQuery()
+    public void ApplyMountHealthPassives_NoMountRider_ReturnsBaseAndDoesNotQuery()
     {
-        var result = _sut.ApplyMaxHealthPassives(heroId: null, mountRiderHeroId: null, baseHealth: 100f);
+        var result = _sut.ApplyMountHealthPassives(mountRiderHeroId: null, baseHealth: 100f);
 
         Assert.AreEqual(100f, result, 0.01f);
         _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    /// <summary>
+    /// #388 double-count pin. SandboxAgentStatCalculateModel.GetEffectiveMaxHealth opens with
+    /// `if (agent.IsHero) return agent.Character.MaxHitPoints();`, and CharacterObject.MaxHitPoints()
+    /// resolves through TaomCharacterStatsModel — which already adds the Health passive. If this
+    /// service ever reads Health again, a +75 pip becomes +150 in battle (100 → 175 → 250).
+    /// </summary>
+    [TestMethod]
+    public void ApplyMountHealthPassives_NeverReadsHeroHealthPassive_SoBattleHealthIsNotDoubleCounted()
+    {
+        _passives.GetPassiveMagnitude(Arg.Any<string>(), PassiveEffectType.Health).Returns(75f);
+
+        var result = _sut.ApplyMountHealthPassives(mountRiderHeroId: "rider1", baseHealth: 200f);
+
+        Assert.AreEqual(200f, result, 0.01f,
+            "Health leaked into the agent-stat path — it is already applied by TaomCharacterStatsModel.");
+        _passives.DidNotReceive().GetPassiveMagnitude(Arg.Any<string>(), PassiveEffectType.Health);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -290,12 +300,69 @@ public class CareerAgentStatServiceTests
     // ──────────────────────────────────────────────────────────────────────────
 
     [TestMethod]
-    public void CalculateDamageAmplification_NullAttackerHeroId_ReturnsBaseUnchanged()
+    public void CalculateDamageAmplification_NoAttackerHeroAndNoTroopLeader_ReturnsBaseUnchanged()
     {
-        var result = _sut.CalculateDamageAmplification(attackerHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification(
+            attackerHeroId: null, attackerTroopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
         _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
         _passives.DidNotReceiveWithAnyArgs().GetMaskedMagnitude(default!, default, default);
+    }
+
+    // ── TroopDamage — the offensive mirror of TroopResistance (#388) ──────────
+    // The passive belongs to the party LEADER but applies to their non-hero troops' hits. Until
+    // #388 the only consumer was TaomRaidModel.CalculateHitDamage — settlement raid progress — so
+    // 105 pips promising "+N% troop damage" did nothing in any battle.
+
+    [TestMethod]
+    public void CalculateDamageAmplification_NonHeroTroopWhoseLeaderHasTroopDamage_MultipliesBase()
+    {
+        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopDamage).Returns(0.05f);
+
+        var result = _sut.CalculateDamageAmplification(
+            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", AttackTypeMask.Melee, baseResult: 100f);
+
+        Assert.AreEqual(105f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_TroopDamageIsNotMaskGated_AppliesOnRangedHitToo()
+    {
+        // Unlike the hero Damage passive, TroopDamage carries no attack_type_mask in the shipped
+        // XML — it is a flat army-wide multiplier, so a ranged hit gets it just like a melee one.
+        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopDamage).Returns(0.08f);
+
+        var result = _sut.CalculateDamageAmplification(
+            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", AttackTypeMask.Ranged, baseResult: 100f);
+
+        Assert.AreEqual(108f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_ZeroTroopDamage_ReturnsBaseUnchanged()
+    {
+        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopDamage).Returns(0f);
+
+        var result = _sut.CalculateDamageAmplification(
+            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", AttackTypeMask.Melee, baseResult: 100f);
+
+        Assert.AreEqual(100f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_HeroAttacker_DoesNotAlsoTakeTroopDamage()
+    {
+        // The boundary returns null for a hero attacker's troop-leader id (a hero's own hits are
+        // covered by the Damage pip), so the two never stack on one blow. Pinned because the
+        // mirror-image bug — a leader's own swings getting both — would be invisible in play.
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0.10f);
+        _passives.GetPassiveMagnitude(Arg.Any<string>(), PassiveEffectType.TroopDamage).Returns(0.05f);
+
+        var result = _sut.CalculateDamageAmplification(
+            attackerHeroId: "hero1", attackerTroopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+
+        Assert.AreEqual(110f, result, 0.01f);
+        _passives.DidNotReceive().GetPassiveMagnitude(Arg.Any<string>(), PassiveEffectType.TroopDamage);
     }
 
     [TestMethod]
@@ -303,7 +370,7 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0f);
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0f);
-        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
     }
 
@@ -311,7 +378,7 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageAmplification_NonZeroArmorPen_MultipliesBase()
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.25f);
-        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(125f, result, 0.01f);
     }
 
@@ -319,7 +386,7 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageAmplification_MeleeDamagePassiveOnMeleeHit_MultipliesBase()
     {
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0.15f);
-        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(115f, result, 0.01f);
     }
 
@@ -329,7 +396,7 @@ public class CareerAgentStatServiceTests
         // The masked lookup returns 0 for a ranged hit when only a melee Damage pip is held; verify
         // the service forwards the hit mask and does not boost the wrong delivery type.
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Ranged).Returns(0f);
-        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Ranged, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Ranged, baseResult: 100f);
         Assert.AreEqual(100f, result, 0.01f);
     }
 
@@ -338,7 +405,7 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.20f);
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0.10f);
-        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, baseResult: 100f);
         // 100 * 1.20 * 1.10 = 132
         Assert.AreEqual(132f, result, 0.01f);
     }

@@ -308,3 +308,35 @@ not over the arithmetic the pure function already covers. And prefer deriving st
 form made both bugs unrepresentable.
 
 **Source:** `docs/reviews/rca-enlistment-content-2026-08-05.md` findings 1-2 (deep-review data-flow agent).
+
+### A career effect can have a live consumer and still be broken — check the LAYER, not the existence
+
+**Trap:** `PassiveEffectConsumers` answers *"is anything reading this magnitude"*. That is necessary
+and never sufficient, and it stayed green through two separate shipped bugs where the consumer
+existed, the units were right, and the effect still did nothing the player could see:
+
+| Effect | Sole consumer | What the pips promised | Reality |
+|---|---|---|---|
+| `Health` (165 pips) | `TaomAgentStatCalculateModel.GetEffectiveMaxHealth` | "+75 max health" | mission only — character sheet, `Hero.MaxHitPoints` and the daily heal cap all read `CharacterStatsModel.MaxHitpoints`, which nothing touched |
+| `TroopDamage` (105 pips) | `TaomRaidModel.CalculateHitDamage` | "Your troops smash through enemy lines" | village raid tick speed — `(sqrt(TroopCount)+5)/900 * deltaHours` into `_nextSettlementDamage`. Inert in every battle |
+
+**Why the first audit missed the second.** After fixing `Health` I audited the remaining types by
+asking the same question the gate asks — does a read site exist, are the units right — and reported
+all clear. Both checks passed for `TroopDamage`. The question that finds these is different: **read
+the pip's own description, then read the consumer's method, and ask whether they describe the same
+system.** Doing that across all 23 shipped types took one pass and found it immediately.
+
+**Prevent:** when wiring a new `PassiveEffectType`, write down (a) the exact engine method the
+consumer overrides, (b) what that method actually governs — decompile it, do not infer from the
+model's name, and (c) the sentence the pip shows the player. If (b) and (c) are not the same system,
+the pip lies. `TaomRaidModel` sounds like it governs troops raiding; it governs how fast a settlement's
+hit points drain. An effect may legitimately need consumers on BOTH the mission and campaign layers
+(`Health` needed campaign, and inherits mission for free through
+`SandboxAgentStatCalculateModel`'s `agent.Character.MaxHitPoints()` hero branch — so adding it to both
+would have double-counted it; check for that too).
+
+**Also worth knowing:** `TroopDamage` deliberately keeps TWO consumers (raid speed + battle damage).
+Two consumers is not automatically a double-count — these are separate systems that never compose on
+one calculation, unlike the `Health` case where the mission path resolved through the campaign model.
+
+**Source:** career effect layer audit, 2026-08-06.

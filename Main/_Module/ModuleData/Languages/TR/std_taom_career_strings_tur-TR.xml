@@ -214,7 +214,7 @@
     <string id="taom_roi_t1a_p4" text="+%5 savaş şöhret kazanımı." />
     <string id="taom_roi_t1b_key" text="Pusu süresi uzatıldı, ek kaçınma sağlar." />
     <string id="taom_roi_t1b_p1" text="+%5 direnç." />
-    <string id="taom_roi_t1b_p2" text="+25 maksimum can." />
+    <string id="taom_roi_t1b_p2" text="+5 maksimum can." />
     <string id="taom_roi_t1b_p3" text="+%5 birlik keşif menzili." />
     <string id="taom_roi_t1b_p4" text="+%5 gizlilik bonusu." />
     <string id="taom_roi_t2a_key" text="Pusu dolum gereksinimi azaltıldı, daha sık etkinleşir." />
@@ -225,27 +225,27 @@
     <string id="taom_roi_t2b_key" text="Pusu ayrıca aktifken birlik menzilli hasarını artırır." />
     <string id="taom_roi_t2b_p1" text="+%12 menzilli hasar." />
     <string id="taom_roi_t2b_p2" text="+%10 zırh delme." />
-    <string id="taom_roi_t2b_p3" text="+50 maksimum can." />
-    <string id="taom_roi_t2b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_roi_t2b_p3" text="+8 maksimum can." />
+    <string id="taom_roi_t2b_p4" text="+%3 birlik hasarı." />
     <string id="taom_roi_t3a_key" text="Pusu yarıçapı büyük ölçüde arttırıldı, yıkıcı ok yağmurları." />
     <string id="taom_roi_t3a_p1" text="+%18 menzilli hasar." />
     <string id="taom_roi_t3a_p2" text="+%15 zırh delme." />
     <string id="taom_roi_t3a_p3" text="+%15 savaş şöhret kazanımı." />
-    <string id="taom_roi_t3a_p4" text="+%10 birlik hasarı." />
+    <string id="taom_roi_t3a_p4" text="+%5 birlik hasarı." />
     <string id="taom_roi_t3b_key" text="Pusu dolumu büyük ölçüde azaltıldı, neredeyse her zaman kullanılabilir hale gelir." />
     <string id="taom_roi_t3b_p1" text="+%15 gizlilik bonusu." />
     <string id="taom_roi_t3b_p2" text="+%15 hareket hızı." />
-    <string id="taom_roi_t3b_p3" text="+75 maksimum can." />
+    <string id="taom_roi_t3b_p3" text="+9 maksimum can." />
     <string id="taom_roi_t3b_p4" text="+%15 birlik keşif menzili." />
     <string id="taom_cop_root_desc" text="Kariyer Yeteneği, +%5 yakın dövüş hasarı verir ve nehirler ile kıyılara yakın birlik moralini iyileştirir." />
     <string id="taom_cop_t1a_key" text="Kariyer Yeteneği yarıçapı arttırıldı, daha geniş nehir geçitlerinde komuta eder." />
     <string id="taom_cop_t1a_p1" text="+%8 yakın dövüş hasarı." />
     <string id="taom_cop_t1a_p2" text="+%10 sallanma hızı." />
-    <string id="taom_cop_t1a_p3" text="+%5 birlik hasarı." />
+    <string id="taom_cop_t1a_p3" text="+%3 birlik hasarı." />
     <string id="taom_cop_t1a_p4" text="+%5 savaş şöhret kazanımı." />
     <string id="taom_cop_t1b_key" text="Kariyer Yeteneği süresi uzatıldı, liman hattını daha uzun tutar." />
     <string id="taom_cop_t1b_p1" text="+%5 direnç." />
-    <string id="taom_cop_t1b_p2" text="+30 maksimum can." />
+    <string id="taom_cop_t1b_p2" text="+6 maksimum can." />
     <string id="taom_cop_t1b_p3" text="+%5 birlik morali." />
     <string id="taom_cop_t1b_p4" text="-%5 birlik maaşları." />
     <string id="taom_cop_t2a_key" text="Kariyer Yeteneği şarj gereksinimi azaltıldı, daha sık aktivasyon sağlanıyor." />
@@ -257,7 +257,7 @@
     <string id="taom_cop_t2b_p1" text="+%12 yakın dövüş hasarı." />
     <string id="taom_cop_t2b_p2" text="+%8 zırh delme." />
     <string id="taom_cop_t2b_p3" text="+%15 savurma hızı." />
-    <string id="taom_cop_t2b_p4" text="+35 maksimum can." />
+    <string id="taom_cop_t2b_p4" text="+6 maksimum can." />
     <string id="taom_cop_t3a_key" text="Kariyer Yeteneği aktifken birlik direnci sağlayarak filoyu güçlendirir." />
     <string id="taom_cop_t3a_p1" text="+%15 birlik morali." />
     <string id="taom_cop_t3a_p2" text="+4 grup boyutu." />
@@ -267,16 +267,16 @@
     <string id="taom_cop_t3b_p1" text="+%15 yakın dövüş hasarı." />
     <string id="taom_cop_t3b_p2" text="+%10 direnç." />
     <string id="taom_cop_t3b_p3" text="+%15 zırh delme." />
-    <string id="taom_cop_t3b_p4" text="+50 maksimum can." />
+    <string id="taom_cop_t3b_p4" text="+8 maksimum can." />
     <string id="taom_knight_of_belfalas_root_desc" text="Çiğneme, +%5 yakın dövüş hasarı verir ve atlı bir hücumun gücüyle orantılı artar." />
     <string id="taom_kob_t1a_key" text="Çiğneme yeteneği menzili artırıldı, daha geniş düşman dizilişlerini süpürüyor." />
     <string id="taom_kob_t1a_p1" text="+%8 yakın dövüş hasarı." />
     <string id="taom_kob_t1a_p2" text="+%10 at hücum hasarı." />
-    <string id="taom_kob_t1a_p3" text="+%5 birlik hasarı." />
+    <string id="taom_kob_t1a_p3" text="+%3 birlik hasarı." />
     <string id="taom_kob_t1a_p4" text="+%5 savaş şöhret kazancı." />
     <string id="taom_kob_t1b_key" text="Çiğneme süresi uzatıldı, hücum daha uzun süre korunuyor." />
     <string id="taom_kob_t1b_p1" text="+%8 direnç." />
-    <string id="taom_kob_t1b_p2" text="+40 maksimum can." />
+    <string id="taom_kob_t1b_p2" text="+7 maksimum can." />
     <string id="taom_kob_t1b_p3" text="+%10 at canı." />
     <string id="taom_kob_t1b_p4" text="+%5 birlik direnci." />
     <string id="taom_kob_t2a_key" text="Çiğneme şarj gereksinimi azaltıldı, daha sık gürleyen hücumlar için." />
@@ -286,7 +286,7 @@
     <string id="taom_kob_t2a_p4" text="+%10 savaş şöhret kazancı." />
     <string id="taom_kob_t2b_key" text="Çiğneme aktifken birlik direncini de artırır." />
     <string id="taom_kob_t2b_p1" text="+%10 direnç." />
-    <string id="taom_kob_t2b_p2" text="+50 maksimum sağlık." />
+    <string id="taom_kob_t2b_p2" text="+8 maksimum sağlık." />
     <string id="taom_kob_t2b_p3" text="+%15 at sağlığı." />
     <string id="taom_kob_t2b_p4" text="+%8 birlik direnci." />
     <string id="taom_kob_t3a_key" text="Çiğneme, aktifken birlik moralini artırır ve Belfalas ordusuna ilham verir." />
@@ -296,10 +296,10 @@
     <string id="taom_kob_t3a_p4" text="-%10 özel kaynak yükseltme maliyeti." />
     <string id="taom_kob_t3b_key" text="Çiğneme yarıçapı ve süresi maksimize edildi — Dol Amroth'un hücumu durdurulamaz." />
     <string id="taom_kob_t3b_p1" text="+%15 direnç." />
-    <string id="taom_kob_t3b_p2" text="+75 maksimum sağlık." />
+    <string id="taom_kob_t3b_p2" text="+9 maksimum sağlık." />
     <string id="taom_kob_t3b_p3" text="+%20 at hücum hasarı." />
     <string id="taom_kob_t3b_p4" text="+%12 birlik direnci." />
-    <string id="taom_buc_root_desc" text="Karanlık Metanet +30 sağlık verir ve Kara Uruk savaş öfkesini güçlendirir." />
+    <string id="taom_buc_root_desc" text="Karanlık Metanet +6 sağlık verir ve Kara Uruk savaş öfkesini güçlendirir." />
     <string id="taom_buc_t1_a_key" text="Demir Deri" />
     <string id="taom_buc_t1_a_key_desc" text="Demirhanede ve savaşta pişmiş, derin kılıçları geri çevirir. Kan Öfkesi yarıçapı +3." />
     <string id="taom_buc_t1_a_p1" text="Acımasız Hücum" />
@@ -309,13 +309,13 @@
     <string id="taom_buc_t1_a_p3" text="Savaş Nakarası" />
     <string id="taom_buc_t1_a_p3_desc" text="Boğuk kükremelerın Mordor birliklerini güçlendirir. +%3 birlik morali." />
     <string id="taom_buc_t1_a_p4" text="Yara İzli Gazi" />
-    <string id="taom_buc_t1_a_p4_desc" text="Eski yaralar sert dersler öğretir. +25 sağlık." />
+    <string id="taom_buc_t1_a_p4_desc" text="Eski yaralar sert dersler öğretir. +5 sağlık." />
     <string id="taom_buc_t1_b_key" text="Kan Çılgınlığı" />
     <string id="taom_buc_t1_b_key_desc" text="Acı sadece açlığını keskinleştirir. Kan Öfkesi süresi +4sn." />
     <string id="taom_buc_t1_b_p1" text="Zırh Kırıcı" />
     <string id="taom_buc_t1_b_p1_desc" text="Saf şiddetle zırhı delersin. +%5 zırh delme." />
     <string id="taom_buc_t1_b_p2" text="Kırılmaz" />
-    <string id="taom_buc_t1_b_p2_desc" text="Sayıca az olsan bile kolay düşmezsin. +30 sağlık." />
+    <string id="taom_buc_t1_b_p2_desc" text="Sayıca az olsan bile kolay düşmezsin. +6 sağlık." />
     <string id="taom_buc_t1_b_p3" text="Demir Disiplin" />
     <string id="taom_buc_t1_b_p3_desc" text="Varlığın firarı azaltır. -%4 birlik ücreti." />
     <string id="taom_buc_t1_b_p4" text="Kalkan Kırıcı" />
@@ -325,11 +325,11 @@
     <string id="taom_buc_t2_a_p1" text="Vahşi Momentum" />
     <string id="taom_buc_t2_a_p1_desc" text="Öldürmek ilerleyişini besler. +%8 yakın dövüş hasarı." />
     <string id="taom_buc_t2_a_p2" text="Savaş Beyi Heybeti" />
-    <string id="taom_buc_t2_a_p2_desc" text="Mordor birlikleri komutan altında daha sert savaşır. +%6 birlik hasarı." />
+    <string id="taom_buc_t2_a_p2_desc" text="Mordor birlikleri komutan altında daha sert savaşır. +%3 birlik hasarı." />
     <string id="taom_buc_t2_a_p3" text="Kana Bulanmış Zırh" />
     <string id="taom_buc_t2_a_p3_desc" text="Düşman kanı daha fazla zarara karşı korur. +%8 kesme direnci." />
     <string id="taom_buc_t2_a_p4" text="Kuşatma Kırıcı" />
-    <string id="taom_buc_t2_a_p4_desc" text="Tahkim edilmiş hatları paramparça edersiniz. +35 sağlık." />
+    <string id="taom_buc_t2_a_p4_desc" text="Tahkim edilmiş hatları paramparça edersiniz. +6 sağlık." />
     <string id="taom_buc_t2_b_key" text="Uzatılmış Öfke" />
     <string id="taom_buc_t2_b_key_desc" text="Kan çılgınlığı daha uzun sürer. Kan öfkesi süresi +2s." />
     <string id="taom_buc_t2_b_p1" text="Azgın Dehşet" />
@@ -339,21 +339,21 @@
     <string id="taom_buc_t2_b_p3" text="Gözetmenin Kırbacı" />
     <string id="taom_buc_t2_b_p3_desc" text="Gazabınızın korkusu orduyu ileriye sürer. -%5 birlik ücreti." />
     <string id="taom_buc_t2_b_p4" text="Plaka ve Zincir" />
-    <string id="taom_buc_t2_b_p4_desc" text="Katmanlı zırh en keskin darbeleri saptırır. +40 sağlık." />
+    <string id="taom_buc_t2_b_p4_desc" text="Katmanlı zırh en keskin darbeleri saptırır. +7 sağlık." />
     <string id="taom_buc_t3_a_key" text="Sauron'un Gözü" />
     <string id="taom_buc_t3_a_key_desc" text="Sauron'un karanlık iradesi öfkeyi yakındakileri de sarması için güçlendirir. Kan öfkesi yarıçapı +5." />
     <string id="taom_buc_t3_a_p1" text="Kara Kaptanın Gazabı" />
     <string id="taom_buc_t3_a_p1_desc" text="Darbeleriniz Karanlık Lordu'nun öfkesini taşır. +%12 yakın dövüş hasarı." />
     <string id="taom_buc_t3_a_p2" text="Ölümsüz Hiddet" />
-    <string id="taom_buc_t3_a_p2_desc" text="Ağır yaralı bile olsanız savaşmaya devam edersiniz. +75 sağlık." />
+    <string id="taom_buc_t3_a_p2_desc" text="Ağır yaralı bile olsanız savaşmaya devam edersiniz. +9 sağlık." />
     <string id="taom_buc_t3_a_p3" text="Savaş Ordusu Komutanı" />
     <string id="taom_buc_t3_a_p3_desc" text="Efsaneniz yayıldıkça savaş ordunuz büyür. +4 takım boyutu." />
     <string id="taom_buc_t3_a_p4" text="Ezici İlerleme" />
-    <string id="taom_buc_t3_a_p4_desc" text="Birlikleriniz düşman hatlarını acımasız bir verimlilikle paramparça eder. +%10 birlik hasarı." />
+    <string id="taom_buc_t3_a_p4_desc" text="Birlikleriniz düşman hatlarını acımasız bir verimlilikle paramparça eder. +%5 birlik hasarı." />
     <string id="taom_buc_t3_b_key" text="Yılmaz" />
     <string id="taom_buc_t3_b_key_desc" text="Öfkeyi serbest bırakmanıza neredeyse gerek yok -- her zaman orada. Kan öfkesi dolum maliyeti -30." />
     <string id="taom_buc_t3_b_p1" text="Kara Gelgit" />
-    <string id="taom_buc_t3_b_p1_desc" text="Savaş ordunuz düşmanın üzerine acımasızca çöker. +%12 birlik hasarı." />
+    <string id="taom_buc_t3_b_p1_desc" text="Savaş ordunuz düşmanın üzerine acımasızca çöker. +%6 birlik hasarı." />
     <string id="taom_buc_t3_b_p2" text="Durmak Bilmeyen İlerleme" />
     <string id="taom_buc_t3_b_p2_desc" text="Savaş ordunuz dinlenmeden yürür. +%5 takım hareket hızı." />
     <string id="taom_buc_t3_b_p3" text="Karanlık Ün" />
@@ -368,7 +368,7 @@
     <string id="taom_mc_t1_a_p2" text="Sabit Nişan" />
     <string id="taom_mc_t1_a_p2_desc" text="Sabırlı ve hassas. +%6 menzilli hasar." />
     <string id="taom_mc_t1_a_p3" text="Kült Coşkusu" />
-    <string id="taom_mc_t1_a_p3_desc" text="Tek'in bereketi inananları korur. +25 sağlık." />
+    <string id="taom_mc_t1_a_p3_desc" text="Tek'in bereketi inananları korur. +5 sağlık." />
     <string id="taom_mc_t1_a_p4" text="Gölge Adımı" />
     <string id="taom_mc_t1_a_p4_desc" text="Salvolar arasında görünmeden hareket edersin. +%5 gizlilik bonusu." />
     <string id="taom_mc_t1_b_key" text="Sauron'un Fısıltısı" />
@@ -376,7 +376,7 @@
     <string id="taom_mc_t1_b_p1" text="Karanlık Sadağı" />
     <string id="taom_mc_t1_b_p1_desc" text="Daha fazla kara şaftlı cıvata taşırsın. +3 mühimmat." />
     <string id="taom_mc_t1_b_p2" text="Ritüel Yaraları" />
-    <string id="taom_mc_t1_b_p2_desc" text="Mulkerhili ayinlerinden acı koruması. +30 sağlık." />
+    <string id="taom_mc_t1_b_p2_desc" text="Mulkerhili ayinlerinden acı koruması. +6 sağlık." />
     <string id="taom_mc_t1_b_p3" text="Peygamber Adımı" />
     <string id="taom_mc_t1_b_p3_desc" text="Sauron'un lütfu seni çevik ve gizli tutar. +%4 gizlilik bonusu." />
     <string id="taom_mc_t1_b_p4" text="Karanlık Bereket" />
@@ -384,11 +384,11 @@
     <string id="taom_mc_t2_a_key" text="Dehşet Cemaati" />
     <string id="taom_mc_t2_a_key_desc" text="Daha fazla inanan çağrına yanıt verir. Tek'in Sesi yükleme maliyeti -20." />
     <string id="taom_mc_t2_a_p1" text="İnananların Salvası" />
-    <string id="taom_mc_t2_a_p1_desc" text="Kült savaşçıların yıkıcı salvolar salar. +%8 birlik hasarı." />
+    <string id="taom_mc_t2_a_p1_desc" text="Kült savaşçıların yıkıcı salvolar salar. +%4 birlik hasarı." />
     <string id="taom_mc_t2_a_p2" text="Simsiyah Ok" />
     <string id="taom_mc_t2_a_p2_desc" text="Kara dövülmüş uçlar daha derin deler. +%8 zırh delme." />
     <string id="taom_mc_t2_a_p3" text="Fanatik Kararlılık" />
-    <string id="taom_mc_t2_a_p3_desc" text="Ölüm gerçek inananlar için hiçbir şeydir. +35 sağlık." />
+    <string id="taom_mc_t2_a_p3_desc" text="Ölüm gerçek inananlar için hiçbir şeydir. +6 sağlık." />
     <string id="taom_mc_t2_a_p4" text="Kült Lojistiği" />
     <string id="taom_mc_t2_a_p4_desc" text="Kültün ağı orduyu ikmalli tutar. +5 mühimmat." />
     <string id="taom_mc_t2_b_key" text="Karanlık Vaaz" />
@@ -400,13 +400,13 @@
     <string id="taom_mc_t2_b_p3" text="Gölge Ağı" />
     <string id="taom_mc_t2_b_p3_desc" text="Kültistler karanlıkta rahatsız edilmeden süzülür. +%6 grup tespit menzili." />
     <string id="taom_mc_t2_b_p4" text="Fanatik Bağlılık" />
-    <string id="taom_mc_t2_b_p4_desc" text="Gerçek inananlar her şeyini verir. +40 sağlık." />
+    <string id="taom_mc_t2_b_p4_desc" text="Gerçek inananlar her şeyini verir. +7 sağlık." />
     <string id="taom_mc_t3_a_key" text="Sauron'un Bakışı" />
     <string id="taom_mc_t3_a_key_desc" text="Kara Lord'un gözü alanı tarar. Ses yarıçapı +5." />
     <string id="taom_mc_t3_a_p1" text="Kıyamet Yağmuru" />
     <string id="taom_mc_t3_a_p1_desc" text="Salvolarınız güneşi kararttı. +%12 menzilli hasar." />
     <string id="taom_mc_t3_a_p2" text="Son Vahiy" />
-    <string id="taom_mc_t3_a_p2_desc" text="Ölüm bile sadık olanları durduramaz. +75 can." />
+    <string id="taom_mc_t3_a_p2_desc" text="Ölüm bile sadık olanları durduramaz. +9 can." />
     <string id="taom_mc_t3_a_p3" text="Cemaatin Ordusu" />
     <string id="taom_mc_t3_a_p3_desc" text="Müminler sancağına akın eder. +4 grup büyüklüğü." />
     <string id="taom_mc_t3_a_p4" text="Kutsanmış Sadak" />
@@ -414,7 +414,7 @@
     <string id="taom_mc_t3_b_key" text="Karanlık Ahit" />
     <string id="taom_mc_t3_b_key_desc" text="Ses daha az fedakarlık gerektirir. Ses yükü maliyeti -30." />
     <string id="taom_mc_t3_b_p1" text="Göz Tarikatı" />
-    <string id="taom_mc_t3_b_p1_desc" text="Mordor'un orduları Sauron'un adına savaşır. +12% asker hasarı." />
+    <string id="taom_mc_t3_b_p1_desc" text="Mordor'un orduları Sauron'un adına savaşır. +6% asker hasarı." />
     <string id="taom_mc_t3_b_p2" text="Yorulmaz Haçlı Seferi" />
     <string id="taom_mc_t3_b_p2_desc" text="Sadık olanlar yorgunluk bilmeden yürür. +5% grup hareket hızı." />
     <string id="taom_mc_t3_b_p3" text="Şehitliğin Mükafatı" />
@@ -429,7 +429,7 @@
     <string id="taom_sr_t1_a_p2" text="Sürünen Kanatlayıcı" />
     <string id="taom_sr_t1_a_p2_desc" text="En az beklenen yerde belirirsin. +5% gizlilik bonusu." />
     <string id="taom_sr_t1_a_p3" text="Sert Binicilik" />
-    <string id="taom_sr_t1_a_p3_desc" text="Vücudun en zorlu yolculuklara dayanır. +25 can." />
+    <string id="taom_sr_t1_a_p3_desc" text="Vücudun en zorlu yolculuklara dayanır. +5 can." />
     <string id="taom_sr_t1_a_p4" text="Vur ve Kaç" />
     <string id="taom_sr_t1_a_p4_desc" text="Hızlı vur ve kaybol. +5% atlı yakın dövüş hasarı." />
     <string id="taom_sr_t1_b_key" text="Gece Binicisi" />
@@ -439,9 +439,9 @@
     <string id="taom_sr_t1_b_p2" text="Akıncı Hızı" />
     <string id="taom_sr_t1_b_p2_desc" text="Her takipten hızlısın. +5% hareket hızı." />
     <string id="taom_sr_t1_b_p3" text="Sürü Taktiği" />
-    <string id="taom_sr_t1_b_p3_desc" text="Snaga binicileri sürüler halinde saldırır. +3% asker hasarı." />
+    <string id="taom_sr_t1_b_p3_desc" text="Snaga binicileri sürüler halinde saldırır. +2% asker hasarı." />
     <string id="taom_sr_t1_b_p4" text="Eyer Dayanıklılığı" />
-    <string id="taom_sr_t1_b_p4_desc" text="Mordor'da binmek bedeni sertleştirir. +30 can." />
+    <string id="taom_sr_t1_b_p4_desc" text="Mordor'da binmek bedeni sertleştirir. +6 can." />
     <string id="taom_sr_t2_a_key" text="Pusu Atılımı" />
     <string id="taom_sr_t2_a_key_desc" text="Düşman seni fark etmeden vurursun. Gizli Sürünme yükü maliyeti -20." />
     <string id="taom_sr_t2_a_p1" text="Momentum Kırıcı" />
@@ -451,7 +451,7 @@
     <string id="taom_sr_t2_a_p3" text="Akıncının Ganimetı" />
     <string id="taom_sr_t2_a_p3_desc" text="Başarılı baskınlar büyük şöhret getirir. +8% savaş şöhreti kazancı." />
     <string id="taom_sr_t2_a_p4" text="Warg Dayanıklılığı" />
-    <string id="taom_sr_t2_a_p4_desc" text="Bineğin normal yaratıkların ötesinde dayanır. +35 can." />
+    <string id="taom_sr_t2_a_p4_desc" text="Bineğin normal yaratıkların ötesinde dayanır. +6 can." />
     <string id="taom_sr_t2_b_key" text="Hayalet Binici" />
     <string id="taom_sr_t2_b_key_desc" text="Gölge sana daha uzun süre yapışır. Gizli-Sürünme süresi +2sn." />
     <string id="taom_sr_t2_b_p1" text="Çığlık Atan İniş" />
@@ -461,7 +461,7 @@
     <string id="taom_sr_t2_b_p3" text="Yağmacının Payı" />
     <string id="taom_sr_t2_b_p3_desc" text="Paylaşılan ganimet sürüyü sadık tutar. -5% birlik ücreti." />
     <string id="taom_sr_t2_b_p4" text="Demir Eyer" />
-    <string id="taom_sr_t2_b_p4_desc" text="Mordor derisi ve demir halkalar binici ve yaratığı korur. +40 can." />
+    <string id="taom_sr_t2_b_p4_desc" text="Mordor derisi ve demir halkalar binici ve yaratığı korur. +7 can." />
     <string id="taom_sr_t3_a_key" text="Gölge Çiğnemesi" />
     <string id="taom_sr_t3_a_key_desc" text="Bir binici ordusu karanlıktan beliriyor. Gizli-Sürünme yarıçapı +5." />
     <string id="taom_sr_t3_a_p1" text="Ölüm Hücumu" />
@@ -469,20 +469,20 @@
     <string id="taom_sr_t3_a_p2" text="Warg-Lordu'nun Emri" />
     <string id="taom_sr_t3_a_p2_desc" text="Devasa bir sürü senin sancağın altında sürer. +4 grup boyutu." />
     <string id="taom_sr_t3_a_p3" text="Kalıcı Gölge" />
-    <string id="taom_sr_t3_a_p3_desc" text="Ölümcül yaralar bile seni yavaşlatmaz. +75 can." />
+    <string id="taom_sr_t3_a_p3_desc" text="Ölümcül yaralar bile seni yavaşlatmaz. +9 can." />
     <string id="taom_sr_t3_a_p4" text="Mordor'un Dehşeti" />
     <string id="taom_sr_t3_a_p4_desc" text="Baskınların büyük korku ve şöhret getirir. +12% savaş şöhreti kazancı." />
     <string id="taom_sr_t3_b_key" text="Mordor'un Öncüsü" />
     <string id="taom_sr_t3_b_key_desc" text="Her zaman ilk sen vurursun. Gizli-Sürünme hücum maliyeti -30." />
     <string id="taom_sr_t3_b_p1" text="Warg Dalgası" />
-    <string id="taom_sr_t3_b_p1_desc" text="Yüzlerce binici düşmanın üzerine çöker. +12% birlik hasarı." />
+    <string id="taom_sr_t3_b_p1_desc" text="Yüzlerce binici düşmanın üzerine çöker. +6% birlik hasarı." />
     <string id="taom_sr_t3_b_p2" text="Sonsuz Karanlık Yürüyüşü" />
     <string id="taom_sr_t3_b_p2_desc" text="Mordor'un ordusu dinlenmeden mesafe kat eder. +8% grup hareket hızı." />
     <string id="taom_sr_t3_b_p3" text="Gölge Lejyonları" />
     <string id="taom_sr_t3_b_p3_desc" text="Ordun hesapsız kitapsız büyüyor. +5 grup büyüklüğü." />
     <string id="taom_sr_t3_b_p4" text="Binicinin Şöhreti" />
     <string id="taom_sr_t3_b_p4_desc" text="Gölge süvarisinin işleri efsanevi. +14% savaş şöhreti kazancı." />
-    <string id="taom_ohw_root_desc" text="Çekiç İnişi +35 can verir. Olog'un devasa kütlesi piyadeleri dağıtır." />
+    <string id="taom_ohw_root_desc" text="Çekiç İnişi +6 can verir. Olog'un devasa kütlesi piyadeleri dağıtır." />
     <string id="taom_ohw_t1_a_key" text="Yer Sarsıcı" />
     <string id="taom_ohw_t1_a_key_desc" text="Ayak vuruşun dünyayı sarsar. Çekiç İnişi yarıçapı +3." />
     <string id="taom_ohw_t1_a_p1" text="Kemik Kırıcı" />
@@ -492,7 +492,7 @@
     <string id="taom_ohw_t1_a_p3" text="Gök Gürültüsü Varlığı" />
     <string id="taom_ohw_t1_a_p3_desc" text="Gelişin savaş ordusunu sakinleştiriyor. +%3 birlik morali." />
     <string id="taom_ohw_t1_a_p4" text="Troll Yapısı" />
-    <string id="taom_ohw_t1_a_p4_desc" text="Daha zayıf varlıkları yıkacak yaraları hafife alıyorsun. +30 sağlık." />
+    <string id="taom_ohw_t1_a_p4_desc" text="Daha zayıf varlıkları yıkacak yaraları hafife alıyorsun. +6 sağlık." />
     <string id="taom_ohw_t1_b_key" text="Sürekli Parçalama" />
     <string id="taom_ohw_t1_b_key_desc" text="Çekiçleme durmak bilmiyor. Çekiç İndirme süresi +4sn." />
     <string id="taom_ohw_t1_b_p1" text="Savaş Davulu Derisi" />
@@ -502,7 +502,7 @@
     <string id="taom_ohw_t1_b_p3" text="Demir İrade" />
     <string id="taom_ohw_t1_b_p3_desc" text="Sauron'un emri iraden besliyor. -%4 birlik ücreti." />
     <string id="taom_ohw_t1_b_p4" text="Dağ Kütlesi" />
-    <string id="taom_ohw_t1_b_p4_desc" text="Yürüyen bir dağsın. +35 sağlık." />
+    <string id="taom_ohw_t1_b_p4_desc" text="Yürüyen bir dağsın. +6 sağlık." />
     <string id="taom_ohw_t2_a_key" text="Azgın Dev" />
     <string id="taom_ohw_t2_a_key_desc" text="Azgınlık için büyük bir nedene ihtiyacın yok. Çekiç İndirme yükleme maliyeti -20." />
     <string id="taom_ohw_t2_a_p1" text="Titanik Vuruş" />
@@ -512,27 +512,27 @@
     <string id="taom_ohw_t2_a_p3" text="Koçbaşı" />
     <string id="taom_ohw_t2_a_p3_desc" text="Kapıları ve insanları bir arada parçalıyorsun. +%10 zırh delme." />
     <string id="taom_ohw_t2_a_p4" text="Troll Dayanıklılığı" />
-    <string id="taom_ohw_t2_a_p4_desc" text="İnsanları sakat bırakacak yaraları yeniliyorsun. +50 sağlık." />
+    <string id="taom_ohw_t2_a_p4_desc" text="İnsanları sakat bırakacak yaraları yeniliyorsun. +8 sağlık." />
     <string id="taom_ohw_t2_b_key" text="Uzatılmış Azgınlık" />
     <string id="taom_ohw_t2_b_key_desc" text="Parçalama devam ediyor. Çekiç İndirme süresi +2sn." />
     <string id="taom_ohw_t2_b_p1" text="Savaş Ordusu Dehşeti" />
-    <string id="taom_ohw_t2_b_p1_desc" text="Düşmanlar savaş ordunun önünde kaçıyor. +%10 birlik hasarı." />
+    <string id="taom_ohw_t2_b_p1_desc" text="Düşmanlar savaş ordunun önünde kaçıyor. +%5 birlik hasarı." />
     <string id="taom_ohw_t2_b_p2" text="Kuşatma Makinesi Derisi" />
     <string id="taom_ohw_t2_b_p2_desc" text="Kuşatma oklarını bile sektiyor. +%10 menzilli saldırı direnci." />
     <string id="taom_ohw_t2_b_p3" text="Karanlık Besleme" />
     <string id="taom_ohw_t2_b_p3_desc" text="Sauron'un gücü savaş ordusunu besliyor. -%5 birlik ücreti." />
     <string id="taom_ohw_t2_b_p4" text="Kadim Taş" />
-    <string id="taom_ohw_t2_b_p4_desc" text="Derin insanlar çağından daha eski. +50 sağlık." />
+    <string id="taom_ohw_t2_b_p4_desc" text="Derin insanlar çağından daha eski. +8 sağlık." />
     <string id="taom_ohw_t3_a_key" text="Dünya Sarsıcı" />
     <string id="taom_ohw_t3_a_key_desc" text="Çekiç darben tüm savaş alanında hissediliyor. Çekiç İndirme yarıçapı +5." />
     <string id="taom_ohw_t3_a_p1" text="Felaket Darbesi" />
     <string id="taom_ohw_t3_a_p1_desc" text="Darben savaş alanını yeniden şekillendirir. +14% yakın dövüş hasarı." />
     <string id="taom_ohw_t3_a_p2" text="Ölüm Tutamaz" />
-    <string id="taom_ohw_t3_a_p2_desc" text="Ağır yaralar bile Olog'u durduramaz. +75 sağlık." />
+    <string id="taom_ohw_t3_a_p2_desc" text="Ağır yaralar bile Olog'u durduramaz. +9 sağlık." />
     <string id="taom_ohw_t3_a_p3" text="Savaş Şefi'nin Hordası" />
     <string id="taom_ohw_t3_a_p3_desc" text="On binlerce kişi senin sancağın altında yürüyor. +5 grup büyüklüğü." />
     <string id="taom_ohw_t3_a_p4" text="Mordor'un Çekici" />
-    <string id="taom_ohw_t3_a_p4_desc" text="Savaş ordun önünde duran herkesi kırar. +12% birlik hasarı." />
+    <string id="taom_ohw_t3_a_p4_desc" text="Savaş ordun önünde duran herkesi kırar. +6% birlik hasarı." />
     <string id="taom_ohw_t3_b_key" text="Sürekli Öfkeli" />
     <string id="taom_ohw_t3_b_key_desc" text="Paramparça etmek için bir sebebe bile ihtiyacın yok. Hammer Down yükü maliyeti -30." />
     <string id="taom_ohw_t3_b_p1" text="Karanlık Çağ Dehşeti" />
@@ -551,7 +551,7 @@
     <string id="taom_moa_t1_a_p2" text="Aralık Bulucu" />
     <string id="taom_moa_t1_a_p2_desc" text="Her zırhın eklemlerini bulursun. +5% zırh delme." />
     <string id="taom_moa_t1_a_p3" text="Aldburg Eğitimi" />
-    <string id="taom_moa_t1_a_p3_desc" text="Aldburg okçuları Mark'taki en iyileridir. +25 sağlık." />
+    <string id="taom_moa_t1_a_p3_desc" text="Aldburg okçuları Mark'taki en iyileridir. +5 sağlık." />
     <string id="taom_moa_t1_a_p4" text="Dolu Sadak" />
     <string id="taom_moa_t1_a_p4_desc" text="Diğerlerinden daha fazla beyaz tüylü ok taşırsın. +3 cephane." />
     <string id="taom_moa_t1_b_key" text="Sağlam Çekiş" />
@@ -559,7 +559,7 @@
     <string id="taom_moa_t1_b_p1" text="Hızlı Yerleştirme" />
     <string id="taom_moa_t1_b_p1_desc" text="Ellerin gözün görebileceğinden daha hızlı hareket eder. +5% menzilli hasar." />
     <string id="taom_moa_t1_b_p2" text="Okçunun Dayanıklılığı" />
-    <string id="taom_moa_t1_b_p2_desc" text="Yorulmadan saatlerce çeker ve ateş edersin. +30 sağlık." />
+    <string id="taom_moa_t1_b_p2_desc" text="Yorulmadan saatlerce çeker ve ateş edersin. +6 sağlık." />
     <string id="taom_moa_t1_b_p3" text="Açık Alan İzcisi" />
     <string id="taom_moa_t1_b_p3_desc" text="Rohan ovalarını bir kitap gibi okursun. +5% grup keşif menzili." />
     <string id="taom_moa_t1_b_p4" text="Rohirrim Disiplini" />
@@ -577,19 +577,19 @@
     <string id="taom_moa_t2_b_key" text="Sürekli Bombardıman" />
     <string id="taom_moa_t2_b_key_desc" text="Ok yağmuru dinmez. Hafif Tüyleme süresi +2sn." />
     <string id="taom_moa_t2_b_p1" text="Örtü Ateşi" />
-    <string id="taom_moa_t2_b_p1_desc" text="Okçularınız her ilerleyişi korur. +%8 birlik hasarı." />
+    <string id="taom_moa_t2_b_p1_desc" text="Okçularınız her ilerleyişi korur. +%4 birlik hasarı." />
     <string id="taom_moa_t2_b_p2" text="Fangorn'un Gölgesinde Dövülmüş" />
-    <string id="taom_moa_t2_b_p2_desc" text="Aldburg'un savaşçıları Fangorn'a yakınlıkla güçlenmiştir. +35 sağlık." />
+    <string id="taom_moa_t2_b_p2_desc" text="Aldburg'un savaşçıları Fangorn'a yakınlıkla güçlenmiştir. +6 sağlık." />
     <string id="taom_moa_t2_b_p3" text="Eorl'un Gözü" />
     <string id="taom_moa_t2_b_p3_desc" text="Ovalar senden sır saklamaz. +%8 grup keşif menzili." />
     <string id="taom_moa_t2_b_p4" text="Hassas Eğitimli" />
-    <string id="taom_moa_t2_b_p4_desc" text="Okçuların mekanik mükemmellikle ateş eder. +%8 birlik hasarı." />
+    <string id="taom_moa_t2_b_p4_desc" text="Okçuların mekanik mükemmellikle ateş eder. +%4 birlik hasarı." />
     <string id="taom_moa_t3_a_key" text="Efsanevi Atış" />
     <string id="taom_moa_t3_a_key_desc" text="Yeteneğin hakkında türküler söylenecek. Hafif Tüyleme yarıçapı +5." />
     <string id="taom_moa_t3_a_p1" text="İsabet Oku" />
     <string id="taom_moa_t3_a_p1_desc" text="Bir ok, bir ölüm -- her seferinde. +%12 menzilli hasar." />
     <string id="taom_moa_t3_a_p2" text="Aldburg'un Şampiyonu" />
-    <string id="taom_moa_t3_a_p2_desc" text="Tüm Rohan'ın en iyi atıcısısın. +75 sağlık." />
+    <string id="taom_moa_t3_a_p2_desc" text="Tüm Rohan'ın en iyi atıcısısın. +9 sağlık." />
     <string id="taom_moa_t3_a_p3" text="Savaş Ordusu Okçuları" />
     <string id="taom_moa_t3_a_p3_desc" text="Efsanen en iyi okçuları çeker. +4 grup boyutu." />
     <string id="taom_moa_t3_a_p4" text="Sonsuz Oklar" />
@@ -597,7 +597,7 @@
     <string id="taom_moa_t3_b_key" text="İçgüdüsel Atış" />
     <string id="taom_moa_t3_b_key_desc" text="Kirişe yerleştirme ve salma saf kas hafızasıdır. Hafif Tüyleme şarj maliyeti -30." />
     <string id="taom_moa_t3_b_p1" text="Ok Yağmuru" />
-    <string id="taom_moa_t3_b_p1_desc" text="Okçuların gökyüzünü karartır. +%12 birlik hasarı." />
+    <string id="taom_moa_t3_b_p1_desc" text="Okçuların gökyüzünü karartır. +%6 birlik hasarı." />
     <string id="taom_moa_t3_b_p2" text="Hızlı Yürüyüş" />
     <string id="taom_moa_t3_b_p2_desc" text="Hafif piyade Mark boyunca hızla hareket eder. +%5 grup hareket hızı." />
     <string id="taom_moa_t3_b_p3" text="Mark'ın Şöhreti" />
@@ -612,7 +612,7 @@
     <string id="taom_ew_t1_a_p2" text="Biniciliğe Doğmuş" />
     <string id="taom_ew_t1_a_p2_desc" text="At ve binici tek vücut. +5% at sağlığı." />
     <string id="taom_ew_t1_a_p3" text="Otlak Dayanıklılığı" />
-    <string id="taom_ew_t1_a_p3_desc" text="Mark ovalarında sürmek seni güçlendirdi. +25 sağlık." />
+    <string id="taom_ew_t1_a_p3_desc" text="Mark ovalarında sürmek seni güçlendirdi. +5 sağlık." />
     <string id="taom_ew_t1_a_p4" text="Toparlanma Çığlığı" />
     <string id="taom_ew_t1_a_p4_desc" text="Çığlığın orduya cesaret veriyor. +3% birlik morali." />
     <string id="taom_ew_t1_b_key" text="Sürekli Savaş Çığlığı" />
@@ -620,9 +620,9 @@
     <string id="taom_ew_t1_b_p1" text="Hızlı Ovalar" />
     <string id="taom_ew_t1_b_p1_desc" text="Eotheod rüzgarın kendisine biniyor. +5% hareket hızı." />
     <string id="taom_ew_t1_b_p2" text="Rohan Savaş Grubu" />
-    <string id="taom_ew_t1_b_p2_desc" text="Eotheod sıkı bir düzende ilerliyor. +3% birlik hasarı." />
+    <string id="taom_ew_t1_b_p2_desc" text="Eotheod sıkı bir düzende ilerliyor. +2% birlik hasarı." />
     <string id="taom_ew_t1_b_p3" text="Binicinin Kararlılığı" />
-    <string id="taom_ew_t1_b_p3_desc" text="Şanslar ne olursa olsun, sen kırılmazsın. +30 sağlık." />
+    <string id="taom_ew_t1_b_p3_desc" text="Şanslar ne olursa olsun, sen kırılmazsın. +6 sağlık." />
     <string id="taom_ew_t1_b_p4" text="Sadık Binek" />
     <string id="taom_ew_t1_b_p4_desc" text="Atın savaşta sertleşmiş. +6% at sağlığı." />
     <string id="taom_ew_t2_a_key" text="Eorl'un Mirası" />
@@ -634,7 +634,7 @@
     <string id="taom_ew_t2_a_p3" text="Rohirrim Morali" />
     <string id="taom_ew_t2_a_p3_desc" text="Rohan'ın çığlığı onu duyan herkese cesaret veriyor. +8% birlik morali." />
     <string id="taom_ew_t2_a_p4" text="Uzun Süvari" />
-    <string id="taom_ew_t2_a_p4_desc" text="Yorulmadan büyük mesafeler kat ediyorsun. +35 sağlık." />
+    <string id="taom_ew_t2_a_p4_desc" text="Yorulmadan büyük mesafeler kat ediyorsun. +6 sağlık." />
     <string id="taom_ew_t2_b_key" text="Süvari Türküsü" />
     <string id="taom_ew_t2_b_key_desc" text="Eotheod'un türküsü süvarileri ileriye taşıyor. Savaş Çığlığı süresi +2sn." />
     <string id="taom_ew_t2_b_p1" text="Mearas Soylu" />
@@ -644,13 +644,13 @@
     <string id="taom_ew_t2_b_p3" text="Şerefe Bağlı" />
     <string id="taom_ew_t2_b_p3_desc" text="Rohirrim'in sadık kalması için paraya ihtiyacı yok. -5% birlik maaşı." />
     <string id="taom_ew_t2_b_p4" text="Demir Üzengiler" />
-    <string id="taom_ew_t2_b_p4_desc" text="En şiddetli yakın dövüşte bile sürüşün güvenli. +40 sağlık." />
+    <string id="taom_ew_t2_b_p4_desc" text="En şiddetli yakın dövüşte bile sürüşün güvenli. +7 sağlık." />
     <string id="taom_ew_t3_a_key" text="Rohirrim'in Hücumu" />
     <string id="taom_ew_t3_a_key_desc" text="İnsanlar çağının en büyük hücumu. Savaş çığlığı yarıçapı +5." />
     <string id="taom_ew_t3_a_p1" text="Pelennor'un Gök Gürültüsü" />
     <string id="taom_ew_t3_a_p1_desc" text="Pelennor Ovaları'ndaki gibi, hücumunuz durdurulamaz. +14% at hücum hasarı." />
     <string id="taom_ew_t3_a_p2" text="Mark Lordu" />
-    <string id="taom_ew_t3_a_p2_desc" text="En büyük atlılar size tabi. +75 sağlık." />
+    <string id="taom_ew_t3_a_p2_desc" text="En büyük atlılar size tabi. +9 sağlık." />
     <string id="taom_ew_t3_a_p3" text="Eored Komutanı" />
     <string id="taom_ew_t3_a_p3_desc" text="Büyük bir eored arkanda sürüyor. +5 grup büyüklüğü." />
     <string id="taom_ew_t3_a_p4" text="Rohan'ın Şanı" />
@@ -658,7 +658,7 @@
     <string id="taom_ew_t3_b_key" text="Her Zaman Hazır" />
     <string id="taom_ew_t3_b_key_desc" text="Savaş çığlığı her zaman dudaklarınızda. Savaş çığlığı yük maliyeti -30." />
     <string id="taom_ew_t3_b_p1" text="Atlı Dalgası" />
-    <string id="taom_ew_t3_b_p1_desc" text="Rohirrim düşmanın üzerine dalga gibi çöker. +12% birlik hasarı." />
+    <string id="taom_ew_t3_b_p1_desc" text="Rohirrim düşmanın üzerine dalga gibi çöker. +6% birlik hasarı." />
     <string id="taom_ew_t3_b_p2" text="Rüzgar Kadar Çevik" />
     <string id="taom_ew_t3_b_p2_desc" text="Eotheod efsanelerden daha hızlıdır. +8% grup hareket hızı." />
     <string id="taom_ew_t3_b_p3" text="Riddermark Türküleri" />
@@ -671,7 +671,7 @@
     <string id="taom_ws_t1_a_p1" text="Kalkan ve Mızrak" />
     <string id="taom_ws_t1_a_p1_desc" text="Klasik Rohirrim piyade disiplini. +5% yakın dövüş hasarı." />
     <string id="taom_ws_t1_a_p2" text="Gözetleme Noktası Sertleşmesi" />
-    <string id="taom_ws_t1_a_p2_desc" text="İzole karakollarda geçen yıllar sizi demir gibi güçlendirir. +25 sağlık." />
+    <string id="taom_ws_t1_a_p2_desc" text="İzole karakollarda geçen yıllar sizi demir gibi güçlendirir. +5 sağlık." />
     <string id="taom_ws_t1_a_p3" text="Sınır Gözleri" />
     <string id="taom_ws_t1_a_p3_desc" text="Entwash'ı sizden gizli geçen hiçbir şey yoktur. +5% grup keşif menzili." />
     <string id="taom_ws_t1_a_p4" text="Sulak Dayanıklılığı" />
@@ -681,7 +681,7 @@
     <string id="taom_ws_t1_b_p1" text="Entwash Yüzücüsü" />
     <string id="taom_ws_t1_b_p1_desc" text="Nehir sizin için korku kaynağı değildir. +5% hareket hızı." />
     <string id="taom_ws_t1_b_p2" text="Muhafızın Dayanıklılığı" />
-    <string id="taom_ws_t1_b_p2_desc" text="Yıllar süren yalnız nöbet hizmeti sizi eski ağaç kadar sert yapar. +30 sağlık." />
+    <string id="taom_ws_t1_b_p2_desc" text="Yıllar süren yalnız nöbet hizmeti sizi eski ağaç kadar sert yapar. +6 sağlık." />
     <string id="taom_ws_t1_b_p3" text="Sadık Muhafız" />
     <string id="taom_ws_t1_b_p3_desc" text="Adamlarınız az maaş ister -- görev yeterlidir. -4% asker maaşı." />
     <string id="taom_ws_t1_b_p4" text="Nehir Lordu'nun Disiplini" />
@@ -695,7 +695,7 @@
     <string id="taom_ws_t2_a_p3" text="Fangorn'un Uyarısı" />
     <string id="taom_ws_t2_a_p3_desc" text="Orman sana tehlikeyi erken sezmeyi öğretir. +10% birlik keşif menzili." />
     <string id="taom_ws_t2_a_p4" text="Güçlendirilmiş İrade" />
-    <string id="taom_ws_t2_a_p4_desc" text="Stangard'ın izolasyonu demir gibi bir azim yaratır. +35 sağlık." />
+    <string id="taom_ws_t2_a_p4_desc" text="Stangard'ın izolasyonu demir gibi bir azim yaratır. +6 sağlık." />
     <string id="taom_ws_t2_b_key" text="Yorulmaz Devriye" />
     <string id="taom_ws_t2_b_key_desc" text="Duraksamadan ve dinlenmeden devriye geziyorsun. Nehir Navigatörü süresi +2sn." />
     <string id="taom_ws_t2_b_p1" text="Entwash Muhafızı" />
@@ -705,13 +705,13 @@
     <string id="taom_ws_t2_b_p3" text="Sığ Su Uzmanı" />
     <string id="taom_ws_t2_b_p3_desc" text="Başkalarını batağa saplayan arazilerde hızla ilerlersin. +6% birlik hareket hızı." />
     <string id="taom_ws_t2_b_p4" text="Sınır Demiri" />
-    <string id="taom_ws_t2_b_p4_desc" text="Sınırdaki ağır hizmet seni yok edilemez kıldı. +45 sağlık." />
+    <string id="taom_ws_t2_b_p4_desc" text="Sınırdaki ağır hizmet seni yok edilemez kıldı. +7 sağlık." />
     <string id="taom_ws_t3_a_key" text="Stangard'ın Kalesi" />
     <string id="taom_ws_t3_a_key_desc" text="Uygarlık ile karanlık arasındaki son savunma hattısın. Nehir Navigatörü yarıçapı +5." />
     <string id="taom_ws_t3_a_p1" text="Kırılmaz Hat" />
     <string id="taom_ws_t3_a_p1_desc" text="Kalkan duvarın asla kırılmadı. +12% asker direnci." />
     <string id="taom_ws_t3_a_p2" text="Ölümsüz Muhafız" />
-    <string id="taom_ws_t3_a_p2_desc" text="Nöbet asla bitmez. +75 sağlık." />
+    <string id="taom_ws_t3_a_p2_desc" text="Nöbet asla bitmez. +9 sağlık." />
     <string id="taom_ws_t3_a_p3" text="Garnizon Komutanı" />
     <string id="taom_ws_t3_a_p3_desc" text="Garnizonun gönüllülerle dolup taşar. +4 birlik boyutu." />
     <string id="taom_ws_t3_a_p4" text="Savunucunun Şerefi" />
@@ -719,7 +719,7 @@
     <string id="taom_ws_t3_b_key" text="Her Zaman Tetikte" />
     <string id="taom_ws_t3_b_key_desc" text="Nöbet her zaman sürdürülür. Nehir Navigatörü yüklenme maliyeti -30." />
     <string id="taom_ws_t3_b_p1" text="Rohirrim Duvarı" />
-    <string id="taom_ws_t3_b_p1_desc" text="Piyadeleriniz tek vücut halinde savaşır. +12% asker hasarı." />
+    <string id="taom_ws_t3_b_p1_desc" text="Piyadeleriniz tek vücut halinde savaşır. +6% asker hasarı." />
     <string id="taom_ws_t3_b_p2" text="Çağrıya Hızlı Cevap" />
     <string id="taom_ws_t3_b_p2_desc" text="Adamların her tehdide anında karşılık verir. +6% birlik hareket hızı." />
     <string id="taom_ws_t3_b_p3" text="Mark'ın Muhafızı" />
@@ -736,13 +736,13 @@
     <string id="taom_alr_t1_a_p3" text="Klan Onuru" />
     <string id="taom_alr_t1_a_p3_desc" text="Klanının değerini kanıtlamak için savaşıyorsun. +%3 birlik morali." />
     <string id="taom_alr_t1_a_p4" text="Akıncı Canlılığı" />
-    <string id="taom_alr_t1_a_p4_desc" text="Alacakaranlıktan şafağa kadar yorulmadan akın yapıyorsun. +25 sağlık." />
+    <string id="taom_alr_t1_a_p4_desc" text="Alacakaranlıktan şafağa kadar yorulmadan akın yapıyorsun. +5 sağlık." />
     <string id="taom_alr_t1_b_key" text="Sürekli Öfke" />
     <string id="taom_alr_t1_b_key_desc" text="Öfke göğsünde daha uzun süre yanıyor. Vahşi돌진süresi +4sn." />
     <string id="taom_alr_t1_b_p1" text="Balta Fırlatıcı" />
     <string id="taom_alr_t1_b_p1_desc" text="Baltanı ölümcül bir isabetle fırlatıyorsun. +%5 menzilli hasar." />
     <string id="taom_alr_t1_b_p2" text="Dunlending Yapısı" />
-    <string id="taom_alr_t1_b_p2_desc" text="Tepe halkı göründüğünden daha dayanıklıdır. +30 sağlık." />
+    <string id="taom_alr_t1_b_p2_desc" text="Tepe halkı göründüğünden daha dayanıklıdır. +6 sağlık." />
     <string id="taom_alr_t1_b_p3" text="Çevik Akıncı" />
     <string id="taom_alr_t1_b_p3_desc" text="Her zaman ilk vuran ve ilk kaybolan sensin. +%5 hareket hızı." />
     <string id="taom_alr_t1_b_p4" text="Klan Sadakati" />
@@ -752,11 +752,11 @@
     <string id="taom_alr_t2_a_p1" text="Çığlık Hücumu" />
     <string id="taom_alr_t2_a_p1_desc" text="Savaş hücumun piyadeleri korkutuyor. +%8 yakın dövüş hasarı." />
     <string id="taom_alr_t2_a_p2" text="Klan Yemini" />
-    <string id="taom_alr_t2_a_p2_desc" text="Yemin etmiş klan kardeşlerin en yüksek yoğunlukta savaşıyor. +%8 birlik hasarı." />
+    <string id="taom_alr_t2_a_p2_desc" text="Yemin etmiş klan kardeşlerin en yüksek yoğunlukta savaşıyor. +%4 birlik hasarı." />
     <string id="taom_alr_t2_a_p3" text="Dunlending Derisi" />
     <string id="taom_alr_t2_a_p3_desc" text="Tenin yıllarca vahşi yaşamdan deri gibi. Menzilliye karşı +%8 direnç." />
     <string id="taom_alr_t2_a_p4" text="Savaş Pişkinliği" />
-    <string id="taom_alr_t2_a_p4_desc" text="Yüzlerce akından sağ çıktın. +40 sağlık." />
+    <string id="taom_alr_t2_a_p4_desc" text="Yüzlerce akından sağ çıktın. +7 sağlık." />
     <string id="taom_alr_t2_b_key" text="Uzatılmış Şiddet" />
     <string id="taom_alr_t2_b_key_desc" text="Öfke azalmıyor. Vahşi돌진süresi +2sn." />
     <string id="taom_alr_t2_b_p1" text="Tepelerin Savaş İlahisi" />
@@ -766,13 +766,13 @@
     <string id="taom_alr_t2_b_p3" text="Ganimet Paylaşımı" />
     <string id="taom_alr_t2_b_p3_desc" text="Ganimetin adil paylaşımı klanı sadık tutuyor. -%5 birlik maaşları." />
     <string id="taom_alr_t2_b_p4" text="Yaralar ve Gurur" />
-    <string id="taom_alr_t2_b_p4_desc" text="Her yara, atlatılan bir zaferin hikayesini anlatır. +45 sağlık." />
+    <string id="taom_alr_t2_b_p4_desc" text="Her yara, atlatılan bir zaferin hikayesini anlatır. +7 sağlık." />
     <string id="taom_alr_t3_a_key" text="Avanc-luth'un Kanı" />
     <string id="taom_alr_t3_a_key_desc" text="Kadim klanın öfkesi tüm savaş alanını sarar. Vahşi돌진 yarıçapı +5." />
     <string id="taom_alr_t3_a_p1" text="Klan Savaş Öfkesi" />
     <string id="taom_alr_t3_a_p1_desc" text="Her Dunlending senin adına bir berserker gibi savaşır. +12% yakın dövüş hasarı." />
     <string id="taom_alr_t3_a_p2" text="Yılmaz Yaban Adamı" />
-    <string id="taom_alr_t3_a_p2_desc" text="Hiçbir yara seni uzun süre durduramaz. +75 sağlık." />
+    <string id="taom_alr_t3_a_p2_desc" text="Hiçbir yara seni uzun süre durduramaz. +9 sağlık." />
     <string id="taom_alr_t3_a_p3" text="Klan Toplanışı" />
     <string id="taom_alr_t3_a_p3_desc" text="Tüm tepe klanları senin savaş çağrına yanıt verir. +4 grup büyüklüğü." />
     <string id="taom_alr_t3_a_p4" text="Akıncının Şöhreti" />
@@ -780,7 +780,7 @@
     <string id="taom_alr_t3_b_key" text="Sonsuz Öfke" />
     <string id="taom_alr_t3_b_key_desc" text="Öfke kışkırtılmaya pek ihtiyaç duymaz. Vahşi돌진 hücum maliyeti -30." />
     <string id="taom_alr_t3_b_p1" text="Dunlending Savaş Ordusu" />
-    <string id="taom_alr_t3_b_p1_desc" text="Birleşmiş klanlar durdurulamaz. +12% asker hasarı." />
+    <string id="taom_alr_t3_b_p1_desc" text="Birleşmiş klanlar durdurulamaz. +6% asker hasarı." />
     <string id="taom_alr_t3_b_p2" text="Hızlı Ayaklı Klan" />
     <string id="taom_alr_t3_b_p2_desc" text="Dunlendingler dağ keçileri gibi hareket eder. +8% grup hareket hızı." />
     <string id="taom_alr_t3_b_p3" text="Tepelerin Efsanesi" />
@@ -795,7 +795,7 @@
     <string id="taom_wh_t1_a_p2" text="Tepe Avcısı" />
     <string id="taom_wh_t1_a_p2_desc" text="Dunlending tepelerinde sessizce hareket edersin. +5% gizlilik bonusu." />
     <string id="taom_wh_t1_a_p3" text="Avcının Dayanıklılığı" />
-    <string id="taom_wh_t1_a_p3_desc" text="Avı günlerce dinlenmeden takip edersin. +25 sağlık." />
+    <string id="taom_wh_t1_a_p3_desc" text="Avı günlerce dinlenmeden takip edersin. +5 sağlık." />
     <string id="taom_wh_t1_a_p4" text="Kemik Sadak" />
     <string id="taom_wh_t1_a_p4_desc" text="Dunlending ok yapımı gelenekleri sadağını doldurur. +3 cephane." />
     <string id="taom_wh_t1_b_key" text="Uzatılmış Av" />
@@ -803,7 +803,7 @@
     <string id="taom_wh_t1_b_p1" text="Hızlı Germe" />
     <string id="taom_wh_t1_b_p1_desc" text="Oku yerleştirip tek akıcı harekette çekersin. +5% menzilli hasar." />
     <string id="taom_wh_t1_b_p2" text="Kurt Derisi Pelerin" />
-    <string id="taom_wh_t1_b_p2_desc" text="Kurt postu seni sıcak ve görünmez tutar. +30 sağlık." />
+    <string id="taom_wh_t1_b_p2_desc" text="Kurt postu seni sıcak ve görünmez tutar. +6 sağlık." />
     <string id="taom_wh_t1_b_p3" text="İz Okuyucu" />
     <string id="taom_wh_t1_b_p3_desc" text="Araziyi bir kitap gibi okursun. +5% grup keşif menzili." />
     <string id="taom_wh_t1_b_p4" text="Sürü Sadakati" />
@@ -813,9 +813,9 @@
     <string id="taom_wh_t2_a_p1" text="Boğaz Atışı" />
     <string id="taom_wh_t2_a_p1_desc" text="Her düşmanın zırhındaki boşluklara nişan alırsın. +10% zırh delme." />
     <string id="taom_wh_t2_a_p2" text="Kurt Çemberi" />
-    <string id="taom_wh_t2_a_p2_desc" text="Avcıların düşmanı kuşatıp taciz eder. +8% birlik hasarı." />
+    <string id="taom_wh_t2_a_p2_desc" text="Avcıların düşmanı kuşatıp taciz eder. +4% birlik hasarı." />
     <string id="taom_wh_t2_a_p3" text="Vahşi Doğada Hayatta Kalan" />
-    <string id="taom_wh_t2_a_p3_desc" text="Vahşi doğa sana her şeyden kurtulmayı öğretti. +35 can." />
+    <string id="taom_wh_t2_a_p3_desc" text="Vahşi doğa sana her şeyden kurtulmayı öğretti. +6 can." />
     <string id="taom_wh_t2_a_p4" text="Derin Sadak" />
     <string id="taom_wh_t2_a_p4_desc" text="Klanın bir kuşatmaya yetecek kadar ok sağlar. +5 cephane." />
     <string id="taom_wh_t2_b_key" text="Kalıcı İşaret" />
@@ -827,13 +827,13 @@
     <string id="taom_wh_t2_b_p3" text="Görünmez Patika" />
     <string id="taom_wh_t2_b_p3_desc" text="İzcilerin iz bırakmadan hareket eder. +8% grup keşif menzili." />
     <string id="taom_wh_t2_b_p4" text="Avın Demir İradesi" />
-    <string id="taom_wh_t2_b_p4_desc" text="Hiçbir yara avcıyı durduramaz. +40 can." />
+    <string id="taom_wh_t2_b_p4_desc" text="Hiçbir yara avcıyı durduramaz. +7 can." />
     <string id="taom_wh_t3_a_key" text="Zirve Yırtıcısı" />
     <string id="taom_wh_t3_a_key_desc" text="Kurt Derisi'nin işareti hiç sağ bırakmaz. İşaretli Av yarıçapı +5." />
     <string id="taom_wh_t3_a_p1" text="Ölümcül Sadak" />
     <string id="taom_wh_t3_a_p1_desc" text="Her ok ölümcüldür. +14% menzilli hasar." />
     <string id="taom_wh_t3_a_p2" text="Avcının Ruhu" />
-    <string id="taom_wh_t3_a_p2_desc" text="Senin için av asla bitmez. +75 can." />
+    <string id="taom_wh_t3_a_p2_desc" text="Senin için av asla bitmez. +9 can." />
     <string id="taom_wh_t3_a_p3" text="Kurt Derisi Lejyonu" />
     <string id="taom_wh_t3_a_p3_desc" text="Dunland'daki her avcı çağrına cevap verir. +4 grup boyutu." />
     <string id="taom_wh_t3_a_p4" text="Geçitlerde Korkulan" />
@@ -841,7 +841,7 @@
     <string id="taom_wh_t3_b_key" text="Sonsuz Kovalamaca" />
     <string id="taom_wh_t3_b_key_desc" text="Av asla işaretinden kaçamaz. İşaretli Av hücum maliyeti -30." />
     <string id="taom_wh_t3_b_p1" text="Sürü Saldırıyor" />
-    <string id="taom_wh_t3_b_p1_desc" text="Avcıların acımasız ve koordineli. +12% birlik hasarı." />
+    <string id="taom_wh_t3_b_p1_desc" text="Avcıların acımasız ve koordineli. +6% birlik hasarı." />
     <string id="taom_wh_t3_b_p2" text="Hayalet İzi" />
     <string id="taom_wh_t3_b_p2_desc" text="Avcıların iz bırakmaz ve uyarı vermeden gelir. +8% grup hareket hızı." />
     <string id="taom_wh_t3_b_p3" text="Ganimet Toplayıcı" />
@@ -858,15 +858,15 @@
     <string id="taom_cr_t1_a_p3" text="Klan Muhafızı" />
     <string id="taom_cr_t1_a_p3_desc" text="Atlıların klanı tehlikelerden korur. +3% asker direnci." />
     <string id="taom_cr_t1_a_p4" text="Eyer Dayanıklılığı" />
-    <string id="taom_cr_t1_a_p4_desc" text="Günlerce inmeden sürersin. +25 sağlık." />
+    <string id="taom_cr_t1_a_p4_desc" text="Günlerce inmeden sürersin. +5 sağlık." />
     <string id="taom_cr_t1_b_key" text="Sürekli Hücum" />
     <string id="taom_cr_t1_b_key_desc" text="Savaş sürüsü yorulmaz. Savaş Sürüsü Hücumu süresi +4sn." />
     <string id="taom_cr_t1_b_p1" text="Tepe Midillisi Hızı" />
     <string id="taom_cr_t1_b_p1_desc" text="Dunlending binekleri engebeli arazide daha hızlıdır. +5% hareket hızı." />
     <string id="taom_cr_t1_b_p2" text="Klan Savaş Grubu" />
-    <string id="taom_cr_t1_b_p2_desc" text="Savaş grubun kardeşler gibi savaşır. +3% asker hasarı." />
+    <string id="taom_cr_t1_b_p2_desc" text="Savaş grubun kardeşler gibi savaşır. +2% asker hasarı." />
     <string id="taom_cr_t1_b_p3" text="Atlının Metaneti" />
-    <string id="taom_cr_t1_b_p3_desc" text="Tepeler seni demir gibi döver. +30 sağlık." />
+    <string id="taom_cr_t1_b_p3_desc" text="Tepeler seni demir gibi döver. +6 sağlık." />
     <string id="taom_cr_t1_b_p4" text="Kan Bağı" />
     <string id="taom_cr_t1_b_p4_desc" text="Klanın altın için değil, şeref için savaşır. -4% asker maaşları." />
     <string id="taom_cr_t2_a_key" text="Salıverilmiş Savaş Sürüsü" />
@@ -878,7 +878,7 @@
     <string id="taom_cr_t2_a_p3" text="Yağma Şöhreti" />
     <string id="taom_cr_t2_a_p3_desc" text="Başarılı akınlar korkunç bir itibar inşa eder. +8% savaş şöhret kazancı." />
     <string id="taom_cr_t2_a_p4" text="Demir Midilli" />
-    <string id="taom_cr_t2_a_p4_desc" text="Bineğin normal hayvanların ötesinde dayanır. +40 sağlık." />
+    <string id="taom_cr_t2_a_p4_desc" text="Bineğin normal hayvanların ötesinde dayanır. +7 sağlık." />
     <string id="taom_cr_t2_b_key" text="Sonsuz Savaş Sürüsü" />
     <string id="taom_cr_t2_b_key_desc" text="Her seferinde daha fazla atlı hücuma katılır. Savaş Sürüsü Hücumu süresi +2sn." />
     <string id="taom_cr_t2_b_p1" text="Sürü Morali" />
@@ -888,13 +888,13 @@
     <string id="taom_cr_t2_b_p3" text="Klan Öşrü" />
     <string id="taom_cr_t2_b_p3_desc" text="Klan kendi halkına bakar. Asker ücreti -%5." />
     <string id="taom_cr_t2_b_p4" text="Tepe Atlısının Gücü" />
-    <string id="taom_cr_t2_b_p4_desc" text="Midillinin gücü senin gücün olur. +45 sağlık." />
+    <string id="taom_cr_t2_b_p4_desc" text="Midillinin gücü senin gücün olur. +7 sağlık." />
     <string id="taom_cr_t3_a_key" text="Atlılar Klanı" />
     <string id="taom_cr_t3_a_key_desc" text="Dunland'daki her atlı senin sancağın altında sürer. Savaş Sürüsü Hücumu yarıçapı +5." />
     <string id="taom_cr_t3_a_p1" text="Çığ Hücumu" />
     <string id="taom_cr_t3_a_p1_desc" text="Hücumun durdurulamaz. At hücum hasarı +%14." />
     <string id="taom_cr_t3_a_p2" text="Dağlardan Doğan" />
-    <string id="taom_cr_t3_a_p2_desc" text="Bu eyer için doğdun. +75 sağlık." />
+    <string id="taom_cr_t3_a_p2_desc" text="Bu eyer için doğdun. +9 sağlık." />
     <string id="taom_cr_t3_a_p3" text="Büyük Savaş Sürüsü" />
     <string id="taom_cr_t3_a_p3_desc" text="Yüzlerce atlı işaretinde arkandan geliyor. +5 grup büyüklüğü." />
     <string id="taom_cr_t3_a_p4" text="Dunlending Efsanesi" />
@@ -902,7 +902,7 @@
     <string id="taom_cr_t3_b_key" text="Durmak Bilmeyen Hücum" />
     <string id="taom_cr_t3_b_key_desc" text="Savaş sürüsü her zaman tam öfkededir. Savaş Sürüsü Hücumu maliyeti -30." />
     <string id="taom_cr_t3_b_p1" text="Klanın Öfkesi" />
-    <string id="taom_cr_t3_b_p1_desc" text="Klanlar tek bir durdurulamaz güç olarak sürer. Asker hasarı +%12." />
+    <string id="taom_cr_t3_b_p1_desc" text="Klanlar tek bir durdurulamaz güç olarak sürer. Asker hasarı +%6." />
     <string id="taom_cr_t3_b_p2" text="Sonsuz Atlılar" />
     <string id="taom_cr_t3_b_p2_desc" text="Savaş sürüsü ufuktan ufuğa kadar araziyi kaplıyor. +6 grup büyüklüğü." />
     <string id="taom_cr_t3_b_p3" text="Akıncının Şöhreti" />
@@ -918,7 +918,7 @@
     <string id="taom_bor_t1b_key" text="İkiz Vuruş süresi uzatıldı, sürekli düello saldırısı." />
     <string id="taom_bor_t1b_p1" text="Direnç +%6." />
     <string id="taom_bor_t1b_p2" text="Zırh delme +%5." />
-    <string id="taom_bor_t1b_p3" text="Maksimum sağlık +30." />
+    <string id="taom_bor_t1b_p3" text="Maksimum sağlık +6." />
     <string id="taom_bor_t1b_p4" text="Hareket hızı +%5." />
     <string id="taom_bor_t2a_key" text="İkiz Vuruş dolumu azaltıldı, amansız hassas vuruşlar." />
     <string id="taom_bor_t2a_p1" text="Savurma hızı +%12." />
@@ -927,9 +927,9 @@
     <string id="taom_bor_t2a_p4" text="Birlik büyüklüğü +3." />
     <string id="taom_bor_t2b_key" text="İkiz Vuruş hassasiyet penceresini artırır, ilk vuruşta maksimum hasar." />
     <string id="taom_bor_t2b_p1" text="+%10 yakın dövüş hasarı." />
-    <string id="taom_bor_t2b_p2" text="+50 maksimum can." />
+    <string id="taom_bor_t2b_p2" text="+8 maksimum can." />
     <string id="taom_bor_t2b_p3" text="+%10 direnç." />
-    <string id="taom_bor_t2b_p4" text="+%10 birlik hasarı." />
+    <string id="taom_bor_t2b_p4" text="+%5 birlik hasarı." />
     <string id="taom_bor_t3a_key" text="İkiz Vuruş yarıçapı büyük ölçüde genişletildi, her yanda ölüm." />
     <string id="taom_bor_t3a_p1" text="+%15 yakın dövüş hasarı." />
     <string id="taom_bor_t3a_p2" text="+%15 savurma hızı." />
@@ -937,8 +937,8 @@
     <string id="taom_bor_t3a_p4" text="+%15 savaş şöhreti kazanımı." />
     <string id="taom_bor_t3b_key" text="İkiz Vuruş dolum süresi büyük ölçüde azaltıldı, kılıç her zaman hazır." />
     <string id="taom_bor_t3b_p1" text="+%15 direnç." />
-    <string id="taom_bor_t3b_p2" text="+75 maksimum can." />
-    <string id="taom_bor_t3b_p3" text="+%15 birlik hasarı." />
+    <string id="taom_bor_t3b_p2" text="+9 maksimum can." />
+    <string id="taom_bor_t3b_p3" text="+%7 birlik hasarı." />
     <string id="taom_bor_t3b_p4" text="+5 grup büyüklüğü." />
     <string id="taom_steppe_bowmaster_root_desc" text="Ok Fırtınası +%5 menzilli hasar verir ve sürekli ateşi geliştirir." />
     <string id="taom_sb_t1a_key" text="Ok Fırtınası yarıçapı arttırıldı, salvo ateşi daha geniş alanı kaplar." />
@@ -948,8 +948,8 @@
     <string id="taom_sb_t1a_p4" text="+%5 grup gözetleme menzili." />
     <string id="taom_sb_t1b_key" text="Ok Fırtınası süresi uzatıldı, amansız bir dolu." />
     <string id="taom_sb_t1b_p1" text="+%5 direnç." />
-    <string id="taom_sb_t1b_p2" text="+25 maksimum can." />
-    <string id="taom_sb_t1b_p3" text="+%5 birlik hasarı." />
+    <string id="taom_sb_t1b_p2" text="+5 maksimum can." />
+    <string id="taom_sb_t1b_p3" text="+%3 birlik hasarı." />
     <string id="taom_sb_t1b_p4" text="+%5 savaş şöhreti kazanımı." />
     <string id="taom_sb_t2a_key" text="Ok Fırtınası dolum süresi azaltıldı, bitmeyen sadak." />
     <string id="taom_sb_t2a_p1" text="+4 cephane." />
@@ -958,8 +958,8 @@
     <string id="taom_sb_t2a_p4" text="+%10 grup gözetleme menzili." />
     <string id="taom_sb_t2b_key" text="Ok Fırtınası aktifken birlik ateş desteğini artırır." />
     <string id="taom_sb_t2b_p1" text="+%12 menzilli hasar." />
-    <string id="taom_sb_t2b_p2" text="+50 maksimum can." />
-    <string id="taom_sb_t2b_p3" text="+%10 birlik hasarı." />
+    <string id="taom_sb_t2b_p2" text="+8 maksimum can." />
+    <string id="taom_sb_t2b_p3" text="+%5 birlik hasarı." />
     <string id="taom_sb_t2b_p4" text="+%10 savaş şöhreti kazanımı." />
     <string id="taom_sb_t3a_key" text="Ok Fırtınası yarıçapı büyük ölçüde genişletildi, kaçınılmaz bir yağmur." />
     <string id="taom_sb_t3a_p1" text="+%15 menzilli hasar." />
@@ -968,18 +968,18 @@
     <string id="taom_sb_t3a_p4" text="+%15 grup gözetleme menzili." />
     <string id="taom_sb_t3b_key" text="Ok Fırtınası şarj yükü büyük ölçüde azaltıldı, durmaksızın yaylar." />
     <string id="taom_sb_t3b_p1" text="+%15 hareket hızı." />
-    <string id="taom_sb_t3b_p2" text="+75 maksimum sağlık." />
-    <string id="taom_sb_t3b_p3" text="+%15 birlik hasarı." />
+    <string id="taom_sb_t3b_p2" text="+9 maksimum sağlık." />
+    <string id="taom_sb_t3b_p3" text="+%7 birlik hasarı." />
     <string id="taom_sb_t3b_p4" text="+5 grup boyutu." />
     <string id="taom_chariot_warlord_root_desc" text="Tırpanlayan Hücum +%5 at hücum hasarı verir ve atlı savaşçılara ilham verir." />
     <string id="taom_cw_t1a_key" text="Tırpanlayan Hücum yarıçapı genişletildi, bıçaklar daha geniş bir iz keser." />
     <string id="taom_cw_t1a_p1" text="+%7 at hücum hasarı." />
     <string id="taom_cw_t1a_p2" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_cw_t1a_p3" text="+%5 birlik hasarı." />
+    <string id="taom_cw_t1a_p3" text="+%3 birlik hasarı." />
     <string id="taom_cw_t1a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_cw_t1b_key" text="Tırpanlayan Hücum süresi uzatıldı, momentum sürdürüldü." />
     <string id="taom_cw_t1b_p1" text="+30 at sağlığı." />
-    <string id="taom_cw_t1b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_cw_t1b_p2" text="+5 maksimum sağlık." />
     <string id="taom_cw_t1b_p3" text="+%5 birlik morali." />
     <string id="taom_cw_t1b_p4" text="+%5 savaş şöhret kazancı." />
     <string id="taom_cw_t2a_key" text="Tırpanlayan Hücum şarj yükü azaltıldı, tekerlekler hiç durmaz." />
@@ -990,12 +990,12 @@
     <string id="taom_cw_t2b_key" text="Tırpanlayan Hücum, hücum sırasında bineğin dayanıklılığını artırır." />
     <string id="taom_cw_t2b_p1" text="+%10 yakın dövüş hasarı." />
     <string id="taom_cw_t2b_p2" text="+60 at sağlığı." />
-    <string id="taom_cw_t2b_p3" text="+%12 birlik hasarı." />
+    <string id="taom_cw_t2b_p3" text="+%6 birlik hasarı." />
     <string id="taom_cw_t2b_p4" text="+%10 savaş şöhret kazancı." />
     <string id="taom_cw_t3a_key" text="Tırpanlayan Hücum yarıçapı büyük ölçüde genişletildi, durdurulamaz bir alan süpürüşü." />
     <string id="taom_cw_t3a_p1" text="+%18 at hücum hasarı." />
     <string id="taom_cw_t3a_p2" text="+%15 yakın dövüş hasarı." />
-    <string id="taom_cw_t3a_p3" text="+%15 birlik hasarı." />
+    <string id="taom_cw_t3a_p3" text="+%7 birlik hasarı." />
     <string id="taom_cw_t3a_p4" text="+%15 savaş şöhret kazancı." />
     <string id="taom_cw_t3b_key" text="Tırpanlayan Hücum şarj yükü büyük ölçüde azaltıldı, tekerlekler durmaksızın öğütür." />
     <string id="taom_cw_t3b_p1" text="+100 at sağlığı." />
@@ -1005,33 +1005,33 @@
     <string id="taom_tribesman_of_jelut_root_desc" text="Zehirli Bıçaklar +%5 yakın dövüş hasarı verir ve yıpratma etkileri uygular." />
     <string id="taom_toj_t1a_key" text="Zehirli Bıçaklar yarıçapı artırıldı, toksin daha geniş yayılır." />
     <string id="taom_toj_t1a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_toj_t1a_p2" text="+%5 birlik hasarı." />
+    <string id="taom_toj_t1a_p2" text="+%3 birlik hasarı." />
     <string id="taom_toj_t1a_p3" text="+7% savurma hızı." />
     <string id="taom_toj_t1a_p4" text="+5% savaş şöhret kazancı." />
     <string id="taom_toj_t1b_key" text="Zehirli Bıçaklar süresi uzatıldı, toksin oyalanıyor." />
     <string id="taom_toj_t1b_p1" text="+6% direnç." />
-    <string id="taom_toj_t1b_p2" text="+30 maksimum sağlık." />
+    <string id="taom_toj_t1b_p2" text="+6 maksimum sağlık." />
     <string id="taom_toj_t1b_p3" text="+5% hareket hızı." />
     <string id="taom_toj_t1b_p4" text="+5% birlik morali." />
     <string id="taom_toj_t2a_key" text="Zehirli Bıçaklar dolum süresi azaltıldı, daha sık vurun." />
-    <string id="taom_toj_t2a_p1" text="+10% birlik hasarı." />
+    <string id="taom_toj_t2a_p1" text="+5% birlik hasarı." />
     <string id="taom_toj_t2a_p2" text="+10% yakın dövüş hasarı." />
     <string id="taom_toj_t2a_p3" text="+10% savaş şöhret kazancı." />
     <string id="taom_toj_t2a_p4" text="+3 grup boyutu." />
     <string id="taom_toj_t2b_key" text="Zehirli Bıçaklar yıpratmayı artırır, düşman savaşma iradesini tüketir." />
     <string id="taom_toj_t2b_p1" text="+10% savurma hızı." />
-    <string id="taom_toj_t2b_p2" text="+50 maksimum sağlık." />
+    <string id="taom_toj_t2b_p2" text="+8 maksimum sağlık." />
     <string id="taom_toj_t2b_p3" text="+10% direnç." />
     <string id="taom_toj_t2b_p4" text="+10% birlik morali." />
     <string id="taom_toj_t3a_key" text="Zehirli Bıçaklar yarıçapı büyük ölçüde genişletildi, bir toksin bulutu." />
     <string id="taom_toj_t3a_p1" text="+15% yakın dövüş hasarı." />
-    <string id="taom_toj_t3a_p2" text="+75 maksimum sağlık." />
-    <string id="taom_toj_t3a_p3" text="+15% birlik hasarı." />
+    <string id="taom_toj_t3a_p2" text="+9 maksimum sağlık." />
+    <string id="taom_toj_t3a_p3" text="+7% birlik hasarı." />
     <string id="taom_toj_t3a_p4" text="+15% savaş şöhret kazancı." />
     <string id="taom_toj_t3b_key" text="Zehirli Bıçaklar dolum süresi büyük ölçüde azaltıldı, sürekli yıpratma." />
     <string id="taom_toj_t3b_p1" text="+15% direnç." />
     <string id="taom_toj_t3b_p2" text="+20% birlik morali." />
-    <string id="taom_toj_t3b_p3" text="+20% birlik hasarı." />
+    <string id="taom_toj_t3b_p3" text="+8% birlik hasarı." />
     <string id="taom_toj_t3b_p4" text="+5 grup boyutu." />
     <string id="taom_pezarsani_javelineer_root_desc" text="Güneş Ateşi Yağmuru +5% menzilli hasar verir ve cirit atışlarını hızlandırır." />
     <string id="taom_pj_t1a_key" text="Güneş Ateşi Yağmuru yarıçapı artırıldı, ciritler daha geniş alanı kaplar." />
@@ -1041,8 +1041,8 @@
     <string id="taom_pj_t1a_p4" text="+5% savaş şöhret kazancı." />
     <string id="taom_pj_t1b_key" text="Güneş Ateşi Yağmuru süresi uzatıldı, sürekli taciz ateşi." />
     <string id="taom_pj_t1b_p1" text="+5% direnç." />
-    <string id="taom_pj_t1b_p2" text="+25 maksimum sağlık." />
-    <string id="taom_pj_t1b_p3" text="+5% birlik hasarı." />
+    <string id="taom_pj_t1b_p2" text="+5 maksimum sağlık." />
+    <string id="taom_pj_t1b_p3" text="+3% birlik hasarı." />
     <string id="taom_pj_t1b_p4" text="+5% grup keşif menzili." />
     <string id="taom_pj_t2a_key" text="Güneş Ateşi Yağmuru dolum süresi azaltıldı, ciritler asla bitmiyor." />
     <string id="taom_pj_t2a_p1" text="+4 mühimmat." />
@@ -1051,8 +1051,8 @@
     <string id="taom_pj_t2a_p4" text="+%10 savaş şöhreti kazanımı." />
     <string id="taom_pj_t2b_key" text="Güneş Ateşi Yağmuru aktifken perdeleme etkinliğini artırır." />
     <string id="taom_pj_t2b_p1" text="+%12 menzilli hasar." />
-    <string id="taom_pj_t2b_p2" text="+50 maksimum sağlık." />
-    <string id="taom_pj_t2b_p3" text="+%10 birlik hasarı." />
+    <string id="taom_pj_t2b_p2" text="+8 maksimum sağlık." />
+    <string id="taom_pj_t2b_p3" text="+%5 birlik hasarı." />
     <string id="taom_pj_t2b_p4" text="+%10 grup tespit menzili." />
     <string id="taom_pj_t3a_key" text="Güneş Ateşi Yağmuru yarıçapı büyük ölçüde genişletildi, kaçınılmaz bir bombardıman." />
     <string id="taom_pj_t3a_p1" text="+%15 menzilli hasar." />
@@ -1061,8 +1061,8 @@
     <string id="taom_pj_t3a_p4" text="+%15 hareket hızı." />
     <string id="taom_pj_t3b_key" text="Güneş Ateşi Yağmuru şarjı büyük ölçüde azaltıldı, amansız taciz." />
     <string id="taom_pj_t3b_p1" text="+%15 menzilli hasar." />
-    <string id="taom_pj_t3b_p2" text="+75 maksimum sağlık." />
-    <string id="taom_pj_t3b_p3" text="+%15 birlik hasarı." />
+    <string id="taom_pj_t3b_p2" text="+9 maksimum sağlık." />
+    <string id="taom_pj_t3b_p3" text="+%7 birlik hasarı." />
     <string id="taom_pj_t3b_p4" text="+%15 grup tespit menzili." />
     <string id="taom_mahud_beast_rider_root_desc" text="Mûmakan'ın Yankıları +%5 at hücum hasarı verir ve korku yayar." />
     <string id="taom_mbr_t1a_key" text="Mûmakan'ın Yankıları yarıçapı genişletildi, korku daha uzağa yayılır." />
@@ -1072,13 +1072,13 @@
     <string id="taom_mbr_t1a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_mbr_t1b_key" text="Mûmakan'ın Yankıları süresi uzatıldı, korku kalıcı olur." />
     <string id="taom_mbr_t1b_p1" text="+30 at sağlığı." />
-    <string id="taom_mbr_t1b_p2" text="+%5 birlik hasarı." />
+    <string id="taom_mbr_t1b_p2" text="+%3 birlik hasarı." />
     <string id="taom_mbr_t1b_p3" text="+%5 savaş şöhreti kazanımı." />
     <string id="taom_mbr_t1b_p4" text="+%5 direnç." />
     <string id="taom_mbr_t2a_key" text="Mûmakan'ın Yankıları şarjı azaltıldı, dehşet her zaman yakın." />
     <string id="taom_mbr_t2a_p1" text="+%12 at hücum hasarı." />
     <string id="taom_mbr_t2a_p2" text="+%10 birlik morali." />
-    <string id="taom_mbr_t2a_p3" text="+%10 birlik hasarı." />
+    <string id="taom_mbr_t2a_p3" text="+%5 birlik hasarı." />
     <string id="taom_mbr_t2a_p4" text="+%10 savaş şöhreti kazanımı." />
     <string id="taom_mbr_t2b_key" text="Mûmakan'ın Yankıları hücum sırasında canavar dayanıklılığını artırır." />
     <string id="taom_mbr_t2b_p1" text="+%12 yakın dövüş hasarı." />
@@ -1093,48 +1093,48 @@
     <string id="taom_mbr_t3b_key" text="Mûmakan'ın Yankıları dolumu büyük ölçüde azaltıldı, sonsuz korku." />
     <string id="taom_mbr_t3b_p1" text="+100 at sağlığı." />
     <string id="taom_mbr_t3b_p2" text="+%15 grup hareket hızı." />
-    <string id="taom_mbr_t3b_p3" text="+%15 birlik hasarı." />
-    <string id="taom_mbr_t3b_p4" text="+75 maksimum sağlık." />
+    <string id="taom_mbr_t3b_p3" text="+%7 birlik hasarı." />
+    <string id="taom_mbr_t3b_p4" text="+9 maksimum sağlık." />
     <string id="taom_far_harad_halftroll_root_desc" text="Alçak Vahşet devasa sağlık bonusu verir ve korku salар." />
     <string id="taom_fhh_t1a_key" text="Alçak Vahşet yarıçapı artırıldı, korku daha geniş yayılıyor." />
-    <string id="taom_fhh_t1a_p1" text="+35 maksimum sağlık." />
+    <string id="taom_fhh_t1a_p1" text="+6 maksimum sağlık." />
     <string id="taom_fhh_t1a_p2" text="+%8 direnç." />
     <string id="taom_fhh_t1a_p3" text="+%8 yakın dövüş hasarı." />
     <string id="taom_fhh_t1a_p4" text="+%5 birlik morali." />
     <string id="taom_fhh_t1b_key" text="Alçak Vahşet süresi uzatıldı, trollün öfkesi daha uzun sürer." />
     <string id="taom_fhh_t1b_p1" text="+%8 birlik direnci." />
-    <string id="taom_fhh_t1b_p2" text="+%5 birlik hasarı." />
+    <string id="taom_fhh_t1b_p2" text="+%3 birlik hasarı." />
     <string id="taom_fhh_t1b_p3" text="+%5 savaş şöhreti kazanımı." />
-    <string id="taom_fhh_t1b_p4" text="+25 maksimum sağlık." />
+    <string id="taom_fhh_t1b_p4" text="+5 maksimum sağlık." />
     <string id="taom_fhh_t2a_key" text="Alçak Vahşet dolumu azaltıldı, öfke daha hızlı tutuşur." />
     <string id="taom_fhh_t2a_p1" text="+%12 direnç." />
-    <string id="taom_fhh_t2a_p2" text="+50 maksimum sağlık." />
+    <string id="taom_fhh_t2a_p2" text="+8 maksimum sağlık." />
     <string id="taom_fhh_t2a_p3" text="+%12 birlik direnci." />
     <string id="taom_fhh_t2a_p4" text="+%10 birlik morali." />
     <string id="taom_fhh_t2b_key" text="Alçak Vahşet yarı-trollü daha da korkutucu yapıyor." />
-    <string id="taom_fhh_t2b_p1" text="+60 maksimum sağlık." />
+    <string id="taom_fhh_t2b_p1" text="+8 maksimum sağlık." />
     <string id="taom_fhh_t2b_p2" text="+%10 yakın dövüş hasarı." />
-    <string id="taom_fhh_t2b_p3" text="+%10 birlik hasarı." />
+    <string id="taom_fhh_t2b_p3" text="+%5 birlik hasarı." />
     <string id="taom_fhh_t2b_p4" text="+%10 savaş şöhreti kazanımı." />
     <string id="taom_fhh_t3a_key" text="Alçak Vahşet yarıçapı büyük ölçüde genişletildi, herkes titriyor." />
-    <string id="taom_fhh_t3a_p1" text="+75 maksimum sağlık." />
+    <string id="taom_fhh_t3a_p1" text="+9 maksimum sağlık." />
     <string id="taom_fhh_t3a_p2" text="+%15 direnç." />
     <string id="taom_fhh_t3a_p3" text="+%15 birlik direnci." />
     <string id="taom_fhh_t3a_p4" text="+%20 birlik morali." />
     <string id="taom_fhh_t3b_key" text="Alçak Vahşet dolumu büyük ölçüde azaltıldı, öfke asla solmuyor." />
     <string id="taom_fhh_t3b_p1" text="+%15 yakın dövüş hasarı." />
-    <string id="taom_fhh_t3b_p2" text="+%15 birlik hasarı." />
+    <string id="taom_fhh_t3b_p2" text="+%7 birlik hasarı." />
     <string id="taom_fhh_t3b_p3" text="+%15 savaş şöhreti kazanımı." />
     <string id="taom_fhh_t3b_p4" text="+5 grup boyutu." />
     <string id="taom_cl_root_desc" text="Kalkan Duvarı +%5 direnç sağlar ve dizilişiniz her türlü zorluğa karşı sağlam kalır." />
     <string id="taom_cl_t1_a_key" text="Kalkan Duvarı yarıçapı genişletildi, daha geniş bir dizilişi koruyor." />
     <string id="taom_cl_t1_a_p1" text="+%8 direnç." />
     <string id="taom_cl_t1_a_p2" text="+%5 birlik direnci." />
-    <string id="taom_cl_t1_a_p3" text="+30 maksimum can." />
+    <string id="taom_cl_t1_a_p3" text="+6 maksimum can." />
     <string id="taom_cl_t1_a_p4" text="+%5 birlik morali." />
     <string id="taom_cl_t1_b_key" text="Kalkan Duvarı süresi uzatıldı, en uzun saldırılara dayanıyor." />
     <string id="taom_cl_t1_b_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_cl_t1_b_p2" text="+25 maksimum can." />
+    <string id="taom_cl_t1_b_p2" text="+5 maksimum can." />
     <string id="taom_cl_t1_b_p3" text="+%5 birlik direnci." />
     <string id="taom_cl_t1_b_p4" text="+%7 vuruş hızı." />
     <string id="taom_cl_t2_a_key" text="Kalkan Duvarı dolum süresi azaltıldı, duvarı daha sık toparlanıyor." />
@@ -1144,12 +1144,12 @@
     <string id="taom_cl_t2_a_p4" text="-%10 birlik ücreti." />
     <string id="taom_cl_t2_b_key" text="Kalkan Duvarı duvar ayakta iken birlik zırhını güçlendiriyor." />
     <string id="taom_cl_t2_b_p1" text="+%12 direnç." />
-    <string id="taom_cl_t2_b_p2" text="+60 maksimum can." />
-    <string id="taom_cl_t2_b_p3" text="+%10 birlik hasarı." />
+    <string id="taom_cl_t2_b_p2" text="+8 maksimum can." />
+    <string id="taom_cl_t2_b_p3" text="+%5 birlik hasarı." />
     <string id="taom_cl_t2_b_p4" text="+%10 birlik morali." />
     <string id="taom_cl_t3_a_key" text="Kalkan Duvarı yarıçapı büyük ölçüde genişletildi, aşılmaz bir hat." />
     <string id="taom_cl_t3_a_p1" text="+%15 direnç." />
-    <string id="taom_cl_t3_a_p2" text="+75 maksimum can." />
+    <string id="taom_cl_t3_a_p2" text="+9 maksimum can." />
     <string id="taom_cl_t3_a_p3" text="+%15 birlik direnci." />
     <string id="taom_cl_t3_a_p4" text="+4 grup büyüklüğü." />
     <string id="taom_cl_t3_b_key" text="Kalkan Duvarı dolum süresi büyük ölçüde azaltıldı, lejyon asla teslim olmaz." />
@@ -1161,32 +1161,32 @@
     <string id="taom_ldm_t1_a_key" text="Delici Yağmur yarıçapı genişletildi, daha geniş hedefleri kaplıyor." />
     <string id="taom_ldm_t1_a_p1" text="+%8 menzilli hasar." />
     <string id="taom_ldm_t1_a_p2" text="+%5 zırh delme." />
-    <string id="taom_ldm_t1_a_p3" text="+%5 birlik hasarı." />
+    <string id="taom_ldm_t1_a_p3" text="+%3 birlik hasarı." />
     <string id="taom_ldm_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
     <string id="taom_ldm_t1_b_key" text="Delici Yağmur süresi uzatıldı, amansız yağmurlar." />
     <string id="taom_ldm_t1_b_p1" text="+%5 zırh delme." />
-    <string id="taom_ldm_t1_b_p2" text="+25 maksimum can." />
+    <string id="taom_ldm_t1_b_p2" text="+5 maksimum can." />
     <string id="taom_ldm_t1_b_p3" text="+%5 grup keşif menzili." />
     <string id="taom_ldm_t1_b_p4" text="+%5 direnç." />
     <string id="taom_ldm_t2_a_key" text="Delici Yaylım Ateşi yükü azaltıldı, kesintisiz cıvata yağmuru." />
     <string id="taom_ldm_t2_a_p1" text="+%10 zırh delme." />
-    <string id="taom_ldm_t2_a_p2" text="+%10 birlik hasarı." />
+    <string id="taom_ldm_t2_a_p2" text="+%5 birlik hasarı." />
     <string id="taom_ldm_t2_a_p3" text="+%10 savaş şöhret kazanımı." />
     <string id="taom_ldm_t2_a_p4" text="+2 grup büyüklüğü." />
     <string id="taom_ldm_t2_b_key" text="Delici Yaylım Ateşi, delici güçle zırhı parçalar." />
     <string id="taom_ldm_t2_b_p1" text="+%12 menzilli hasar." />
     <string id="taom_ldm_t2_b_p2" text="+%12 zırh delme." />
-    <string id="taom_ldm_t2_b_p3" text="+50 maksimum sağlık." />
-    <string id="taom_ldm_t2_b_p4" text="+%10 birlik hasarı." />
+    <string id="taom_ldm_t2_b_p3" text="+8 maksimum sağlık." />
+    <string id="taom_ldm_t2_b_p4" text="+%5 birlik hasarı." />
     <string id="taom_ldm_t3_a_key" text="Delici Yaylım Ateşi yarıçapı büyük ölçüde genişletildi, fırtınadan kaçış yok." />
     <string id="taom_ldm_t3_a_p1" text="+%18 menzilli hasar." />
     <string id="taom_ldm_t3_a_p2" text="+%18 zırh delme." />
     <string id="taom_ldm_t3_a_p3" text="+%15 savaş şöhret kazanımı." />
-    <string id="taom_ldm_t3_a_p4" text="+%15 birlik hasarı." />
+    <string id="taom_ldm_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_ldm_t3_b_key" text="Delici Yaylım Ateşi yükü büyük ölçüde azaltıldı, yaylım ateşi asla durmuyor." />
     <string id="taom_ldm_t3_b_p1" text="+%20 zırh delme." />
     <string id="taom_ldm_t3_b_p2" text="+%15 menzilli hasar." />
-    <string id="taom_ldm_t3_b_p3" text="+75 maksimum sağlık." />
+    <string id="taom_ldm_t3_b_p3" text="+9 maksimum sağlık." />
     <string id="taom_ldm_t3_b_p4" text="+%10 grup keşif menzili." />
     <string id="taom_bk_root_desc" text="Yılmaz Kararlılık, savaş grubun merhametsizce sürerken +%5 at hücum hasarı verir." />
     <string id="taom_bk_t1_a_key" text="Yılmaz Kararlılık yarıçapı genişletildi, daha geniş bir binici dalgasını topluyor." />
@@ -1196,7 +1196,7 @@
     <string id="taom_bk_t1_a_p4" text="+%5 yakın dövüş hasarı." />
     <string id="taom_bk_t1_b_key" text="Yılmaz Kararlılık süresi uzatıldı, korkusuz hücumu sürdürüyor." />
     <string id="taom_bk_t1_b_p1" text="+%7 direnç." />
-    <string id="taom_bk_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_bk_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_bk_t1_b_p3" text="+%5 grup hareket hızı." />
     <string id="taom_bk_t1_b_p4" text="+%5 birlik morali." />
     <string id="taom_bk_t2_a_key" text="Yılmaz Kararlılık yükü azaltıldı, savaş grubu asla yavaşlamaz." />
@@ -1218,12 +1218,12 @@
     <string id="taom_bk_t3_b_p1" text="+%15 at hücum hasarı." />
     <string id="taom_bk_t3_b_p2" text="+%20 birlik morali." />
     <string id="taom_bk_t3_b_p3" text="+%15 grup hareket hızı." />
-    <string id="taom_bk_t3_b_p4" text="+75 maksimum sağlık." />
+    <string id="taom_bk_t3_b_p4" text="+9 maksimum sağlık." />
     <string id="taom_dale_guardsman_root_desc" text="Kapı Savunması +%5 direnç verir ve savunucuları güçlendirir." />
     <string id="taom_dg2_t1_a_key" text="Kapı Savunması yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_dg2_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_dg2_t1_a_p2" text="+%5 birlik hasarı." />
-    <string id="taom_dg2_t1_a_p3" text="+30 maksimum sağlık." />
+    <string id="taom_dg2_t1_a_p2" text="+%3 birlik hasarı." />
+    <string id="taom_dg2_t1_a_p3" text="+6 maksimum sağlık." />
     <string id="taom_dg2_t1_a_p4" text="+%7 sallanma hızı." />
     <string id="taom_dg2_t1_b_key" text="Kapı Savunması süresi uzatıldı, savunmayı sağlamlaştırıyor." />
     <string id="taom_dg2_t1_b_p1" text="+%8 direnç." />
@@ -1237,13 +1237,13 @@
     <string id="taom_dg2_t2_a_p4" text="-%10 birlik maaşları." />
     <string id="taom_dg2_t2_b_key" text="Kapı Savunması aktifken ek savunma güçlendirmeleri verir." />
     <string id="taom_dg2_t2_b_p1" text="+%12 direnç." />
-    <string id="taom_dg2_t2_b_p2" text="+60 maksimum sağlık." />
+    <string id="taom_dg2_t2_b_p2" text="+8 maksimum sağlık." />
     <string id="taom_dg2_t2_b_p3" text="+%10 birlik direnci." />
-    <string id="taom_dg2_t2_b_p4" text="+%10 birlik hasarı." />
+    <string id="taom_dg2_t2_b_p4" text="+%5 birlik hasarı." />
     <string id="taom_dg2_t3_a_key" text="Kapı Savunması yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_dg2_t3_a_p1" text="+%15 yakın dövüş hasarı." />
-    <string id="taom_dg2_t3_a_p2" text="+100 maksimum sağlık." />
-    <string id="taom_dg2_t3_a_p3" text="+%15 birlik hasarı." />
+    <string id="taom_dg2_t3_a_p2" text="+10 maksimum sağlık." />
+    <string id="taom_dg2_t3_a_p3" text="+%7 birlik hasarı." />
     <string id="taom_dg2_t3_a_p4" text="+4 grup büyüklüğü." />
     <string id="taom_dg2_t3_b_key" text="Kapı Savunması dolumu büyük ölçüde azaltıldı, neredeyse her zaman kullanılabilir." />
     <string id="taom_dg2_t3_b_p1" text="+18% direnç." />
@@ -1258,7 +1258,7 @@
     <string id="taom_dm_t1_a_p4" text="+5% savaş şöhret kazanımı." />
     <string id="taom_dm_t1_b_key" text="Kara Ok süresi uzatıldı, sürekli bombardıman." />
     <string id="taom_dm_t1_b_p1" text="+5% direnç." />
-    <string id="taom_dm_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_dm_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_dm_t1_b_p3" text="+5% grup keşif menzili." />
     <string id="taom_dm_t1_b_p4" text="+5% gizlilik bonusu." />
     <string id="taom_dm_t2_a_key" text="Kara Ok dolum süresi azaldı, sürekli baskı koruyor." />
@@ -1269,17 +1269,17 @@
     <string id="taom_dm_t2_b_key" text="Kara Ok aktifken ek delme gücü kazanır." />
     <string id="taom_dm_t2_b_p1" text="+12% menzilli hasar." />
     <string id="taom_dm_t2_b_p2" text="+10% zırh delme." />
-    <string id="taom_dm_t2_b_p3" text="+50 maksimum sağlık." />
-    <string id="taom_dm_t2_b_p4" text="+5% birlik hasarı." />
+    <string id="taom_dm_t2_b_p3" text="+8 maksimum sağlık." />
+    <string id="taom_dm_t2_b_p4" text="+3% birlik hasarı." />
     <string id="taom_dm_t3_a_key" text="Kara Ok yarıçapı büyük ölçüde genişletildi, kaçınılmaz yaylım ateşi." />
     <string id="taom_dm_t3_a_p1" text="+18% menzilli hasar." />
     <string id="taom_dm_t3_a_p2" text="+15% zırh delme." />
     <string id="taom_dm_t3_a_p3" text="+15% savaş şöhret kazanımı." />
-    <string id="taom_dm_t3_a_p4" text="+10% birlik hasarı." />
+    <string id="taom_dm_t3_a_p4" text="+5% birlik hasarı." />
     <string id="taom_dm_t3_b_key" text="Kara Ok dolum süresi büyük ölçüde azaldı, amansız ateş." />
     <string id="taom_dm_t3_b_p1" text="+15% gizlilik bonusu." />
     <string id="taom_dm_t3_b_p2" text="+15% hareket hızı." />
-    <string id="taom_dm_t3_b_p3" text="+75 maksimum sağlık." />
+    <string id="taom_dm_t3_b_p3" text="+9 maksimum sağlık." />
     <string id="taom_dm_t3_b_p4" text="+15% grup keşif menzili." />
     <string id="taom_dale_outrider_root_desc" text="Ticaret Yolu Koşusu +5% yakın dövüş hasarı sağlar ve atınız hızlanır." />
     <string id="taom_dor_t1_a_key" text="Ticaret Yolu Koşusu yarıçapı genişletildi, daha geniş oluşumları süpürüyor." />
@@ -1289,7 +1289,7 @@
     <string id="taom_dor_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_dor_t1_b_key" text="Ticaret Yolu Atılımı süresi uzatıldı, ivme korunuyor." />
     <string id="taom_dor_t1_b_p1" text="+30 at sağlığı." />
-    <string id="taom_dor_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_dor_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_dor_t1_b_p3" text="-%5 asker ücreti." />
     <string id="taom_dor_t1_b_p4" text="+%5 direnç." />
     <string id="taom_dor_t2_a_key" text="Ticaret Yolu Atılımı dolum süresi azaltıldı, daha hızlı etkinleşme." />
@@ -1306,17 +1306,17 @@
     <string id="taom_dor_t3_a_p1" text="+%18 yakın dövüş hasarı." />
     <string id="taom_dor_t3_a_p2" text="+%18 at돌진 hasarı." />
     <string id="taom_dor_t3_a_p3" text="+%15 savurma hızı." />
-    <string id="taom_dor_t3_a_p4" text="+%15 asker hasarı." />
+    <string id="taom_dor_t3_a_p4" text="+%7 asker hasarı." />
     <string id="taom_dor_t3_b_key" text="Ticaret Yolu Atılımı dolum süresi büyük ölçüde azaltıldı, dinmeden sür." />
     <string id="taom_dor_t3_b_p1" text="+100 at sağlığı." />
     <string id="taom_dor_t3_b_p2" text="-%15 asker ücreti." />
     <string id="taom_dor_t3_b_p3" text="+%15 grup hareket hızı." />
-    <string id="taom_dor_t3_b_p4" text="+75 maksimum sağlık." />
-    <string id="taom_ironguard_root_desc" text="Mithril Kalesi +25 sağlık verir, cüce işçiliği seni koruyor." />
+    <string id="taom_dor_t3_b_p4" text="+9 maksimum sağlık." />
+    <string id="taom_ironguard_root_desc" text="Mithril Kalesi +5 sağlık verir, cüce işçiliği seni koruyor." />
     <string id="taom_ig_t1_a_key" text="Mithril Kalesi yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_ig_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_ig_t1_a_p2" text="+%5 asker hasarı." />
-    <string id="taom_ig_t1_a_p3" text="+30 maksimum sağlık." />
+    <string id="taom_ig_t1_a_p2" text="+%3 asker hasarı." />
+    <string id="taom_ig_t1_a_p3" text="+6 maksimum sağlık." />
     <string id="taom_ig_t1_a_p4" text="+%7 savurma hızı." />
     <string id="taom_ig_t1_b_key" text="Mithril Kalesi süresi uzatıldı, savunmayı tahkim ediyor." />
     <string id="taom_ig_t1_b_p1" text="+%8 direnç." />
@@ -1330,13 +1330,13 @@
     <string id="taom_ig_t2_a_p4" text="-10% asker maaşları." />
     <string id="taom_ig_t2_b_key" text="Mithril Kalesi aktifken ek savunma bonusları sağlar." />
     <string id="taom_ig_t2_b_p1" text="+12% direnç." />
-    <string id="taom_ig_t2_b_p2" text="+60 maksimum sağlık." />
+    <string id="taom_ig_t2_b_p2" text="+8 maksimum sağlık." />
     <string id="taom_ig_t2_b_p3" text="+10% asker direnci." />
-    <string id="taom_ig_t2_b_p4" text="+10% asker hasarı." />
+    <string id="taom_ig_t2_b_p4" text="+5% asker hasarı." />
     <string id="taom_ig_t3_a_key" text="Mithril Kalesi yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_ig_t3_a_p1" text="+15% yakın dövüş hasarı." />
-    <string id="taom_ig_t3_a_p2" text="+100 maksimum sağlık." />
-    <string id="taom_ig_t3_a_p3" text="+15% asker hasarı." />
+    <string id="taom_ig_t3_a_p2" text="+10 maksimum sağlık." />
+    <string id="taom_ig_t3_a_p3" text="+7% asker hasarı." />
     <string id="taom_ig_t3_a_p4" text="+4 grup boyutu." />
     <string id="taom_ig_t3_b_key" text="Mithril Kalesi dolum süresi büyük ölçüde azaltıldı, neredeyse her zaman kullanılabilir." />
     <string id="taom_ig_t3_b_p1" text="+18% direnç." />
@@ -1351,7 +1351,7 @@
     <string id="taom_cbm_t1_a_p4" text="+5% savaş şöhreti kazancı." />
     <string id="taom_cbm_t1_b_key" text="Hassas Bombardıman süresi uzatıldı, sürekli bombardıman." />
     <string id="taom_cbm_t1_b_p1" text="+5% direnç." />
-    <string id="taom_cbm_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_cbm_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_cbm_t1_b_p3" text="+5% grup keşif menzili." />
     <string id="taom_cbm_t1_b_p4" text="+5% gizlilik bonusu." />
     <string id="taom_cbm_t2_a_key" text="Hassas Bombardıman dolum süresi azaltıldı, sürekli baskı sağlar." />
@@ -1362,17 +1362,17 @@
     <string id="taom_cbm_t2_b_key" text="Hassas Bombardıman aktifken ek delme gücü kazanır." />
     <string id="taom_cbm_t2_b_p1" text="+12% menzilli hasar." />
     <string id="taom_cbm_t2_b_p2" text="+10% zırh delme." />
-    <string id="taom_cbm_t2_b_p3" text="+50 maksimum sağlık." />
-    <string id="taom_cbm_t2_b_p4" text="+5% asker hasarı." />
+    <string id="taom_cbm_t2_b_p3" text="+8 maksimum sağlık." />
+    <string id="taom_cbm_t2_b_p4" text="+3% asker hasarı." />
     <string id="taom_cbm_t3_a_key" text="Hassas Bombardıman yarıçapı büyük ölçüde genişletildi, kaçınılmaz salvolar." />
     <string id="taom_cbm_t3_a_p1" text="+18% menzilli hasar." />
     <string id="taom_cbm_t3_a_p2" text="+%15 zırh delme." />
     <string id="taom_cbm_t3_a_p3" text="+%15 savaş şöhreti kazanımı." />
-    <string id="taom_cbm_t3_a_p4" text="+%10 birlik hasarı." />
+    <string id="taom_cbm_t3_a_p4" text="+%5 birlik hasarı." />
     <string id="taom_cbm_t3_b_key" text="Hassas Barikat şarjı büyük ölçüde azaltıldı, amansız ateş." />
     <string id="taom_cbm_t3_b_p1" text="+%15 gizlilik bonusu." />
     <string id="taom_cbm_t3_b_p2" text="+%15 hareket hızı." />
-    <string id="taom_cbm_t3_b_p3" text="+75 maksimum sağlık." />
+    <string id="taom_cbm_t3_b_p3" text="+9 maksimum sağlık." />
     <string id="taom_cbm_t3_b_p4" text="+%15 grup keşif menzili." />
     <string id="taom_ram_rider_root_desc" text="Dağ Hücumu +%5 yakın dövüş hasarı verir, koç boynuzlarını indirir." />
     <string id="taom_rr_t1_a_key" text="Dağ Hücumu yarıçapı genişletildi, daha geniş dizilimleri kapsıyor." />
@@ -1382,7 +1382,7 @@
     <string id="taom_rr_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_rr_t1_b_key" text="Dağ Hücumu süresi uzatıldı, ivmeyi koruyor." />
     <string id="taom_rr_t1_b_p1" text="+30 at sağlığı." />
-    <string id="taom_rr_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_rr_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_rr_t1_b_p3" text="-%5 birlik maaşları." />
     <string id="taom_rr_t1_b_p4" text="+%5 direnç." />
     <string id="taom_rr_t2_a_key" text="Dağ Hücumu şarjı azaltıldı, daha hızlı aktivasyon." />
@@ -1399,17 +1399,17 @@
     <string id="taom_rr_t3_a_p1" text="+%18 yakın dövüş hasarı." />
     <string id="taom_rr_t3_a_p2" text="+%18 at hücum hasarı." />
     <string id="taom_rr_t3_a_p3" text="+%15 savurma hızı." />
-    <string id="taom_rr_t3_a_p4" text="+%15 birlik hasarı." />
+    <string id="taom_rr_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_rr_t3_b_key" text="Dağ Hücumu şarjı büyük ölçüde azaltıldı, durmadan sür." />
     <string id="taom_rr_t3_b_p1" text="+100 at sağlığı." />
     <string id="taom_rr_t3_b_p2" text="-%15 birlik maaşları." />
     <string id="taom_rr_t3_b_p3" text="+%15 grup hareket hızı." />
-    <string id="taom_rr_t3_b_p4" text="+75 maksimum sağlık." />
+    <string id="taom_rr_t3_b_p4" text="+9 maksimum sağlık." />
     <string id="taom_blade_dancer_root_desc" text="Yıldız Işığı Dokuma +%5 direnç ve elf çevikliği verir." />
     <string id="taom_bd_t1_a_key" text="Yıldız Işığı Örgüsü yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_bd_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_bd_t1_a_p2" text="+%5 birlik hasarı." />
-    <string id="taom_bd_t1_a_p3" text="+30 maksimum sağlık." />
+    <string id="taom_bd_t1_a_p2" text="+%3 birlik hasarı." />
+    <string id="taom_bd_t1_a_p3" text="+6 maksimum sağlık." />
     <string id="taom_bd_t1_a_p4" text="+%7 savurma hızı." />
     <string id="taom_bd_t1_b_key" text="Yıldız Işığı Örgüsü süresi uzatıldı, savunmayı güçlendiriyor." />
     <string id="taom_bd_t1_b_p1" text="+%8 direnç." />
@@ -1423,13 +1423,13 @@
     <string id="taom_bd_t2_a_p4" text="-%10 birlik maaşı." />
     <string id="taom_bd_t2_b_key" text="Yıldız Işığı Örgüsü aktifken ek savunma bonusları sağlıyor." />
     <string id="taom_bd_t2_b_p1" text="+%12 direnç." />
-    <string id="taom_bd_t2_b_p2" text="+60 maksimum sağlık." />
+    <string id="taom_bd_t2_b_p2" text="+8 maksimum sağlık." />
     <string id="taom_bd_t2_b_p3" text="+%10 birlik direnci." />
-    <string id="taom_bd_t2_b_p4" text="+%10 birlik hasarı." />
+    <string id="taom_bd_t2_b_p4" text="+%5 birlik hasarı." />
     <string id="taom_bd_t3_a_key" text="Yıldız Işığı Örgüsü yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_bd_t3_a_p1" text="+%15 yakın dövüş hasarı." />
-    <string id="taom_bd_t3_a_p2" text="+100 maksimum sağlık." />
-    <string id="taom_bd_t3_a_p3" text="+%15 birlik hasarı." />
+    <string id="taom_bd_t3_a_p2" text="+10 maksimum sağlık." />
+    <string id="taom_bd_t3_a_p3" text="+%7 birlik hasarı." />
     <string id="taom_bd_t3_a_p4" text="+4 grup boyutu." />
     <string id="taom_bd_t3_b_key" text="Yıldız Işığı Örgüsü dolum süresi büyük ölçüde azaltıldı, neredeyse her zaman kullanılabilir." />
     <string id="taom_bd_t3_b_p1" text="+%18 direnç." />
@@ -1444,7 +1444,7 @@
     <string id="taom_elar_t1_a_p4" text="+%5 savaş şöhret kazanımı." />
     <string id="taom_elar_t1_b_key" text="Elf Görüşü süresi uzatıldı, sürekli bombardıman." />
     <string id="taom_elar_t1_b_p1" text="+%5 direnç." />
-    <string id="taom_elar_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_elar_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_elar_t1_b_p3" text="+%5 grup keşif menzili." />
     <string id="taom_elar_t1_b_p4" text="+%5 gizlilik bonusu." />
     <string id="taom_elar_t2_a_key" text="Elf Görüşü dolum süresi azaldı, sürekli baskı sağlanıyor." />
@@ -1455,17 +1455,17 @@
     <string id="taom_elar_t2_b_key" text="Elf Görüşü aktifken ek delme gücü kazanır." />
     <string id="taom_elar_t2_b_p1" text="+%12 menzilli hasar." />
     <string id="taom_elar_t2_b_p2" text="+%10 zırh delme." />
-    <string id="taom_elar_t2_b_p3" text="+50 maksimum can." />
-    <string id="taom_elar_t2_b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_elar_t2_b_p3" text="+8 maksimum can." />
+    <string id="taom_elar_t2_b_p4" text="+%3 birlik hasarı." />
     <string id="taom_elar_t3_a_key" text="Elf Görüşü yarıçapı büyük ölçüde genişletildi, kaçınılmaz yaylım ateşi." />
     <string id="taom_elar_t3_a_p1" text="+%18 menzilli hasar." />
     <string id="taom_elar_t3_a_p2" text="+%15 zırh delme." />
     <string id="taom_elar_t3_a_p3" text="+%15 savaş şöhret kazancı." />
-    <string id="taom_elar_t3_a_p4" text="+%10 birlik hasarı." />
+    <string id="taom_elar_t3_a_p4" text="+%5 birlik hasarı." />
     <string id="taom_elar_t3_b_key" text="Elf Görüşü dolum süresi büyük ölçüde azaldı, amansız ateş." />
     <string id="taom_elar_t3_b_p1" text="+%15 gizlilik bonusu." />
     <string id="taom_elar_t3_b_p2" text="+%15 hareket hızı." />
-    <string id="taom_elar_t3_b_p3" text="+75 maksimum can." />
+    <string id="taom_elar_t3_b_p3" text="+9 maksimum can." />
     <string id="taom_elar_t3_b_p4" text="+%15 grup görüş menzili." />
     <string id="taom_rivendell_knight_root_desc" text="Son İttifak +%5 yakın dövüş hasarı verir ve müttefiklerinize ilham verir." />
     <string id="taom_rvk_t1_a_key" text="Son İttifak yarıçapı genişletildi, daha geniş dizilişleri kapsıyor." />
@@ -1475,7 +1475,7 @@
     <string id="taom_rvk_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_rvk_t1_b_key" text="Son İttifak süresi uzatıldı, momentum korunuyor." />
     <string id="taom_rvk_t1_b_p1" text="+30 at canı." />
-    <string id="taom_rvk_t1_b_p2" text="+25 maksimum can." />
+    <string id="taom_rvk_t1_b_p2" text="+5 maksimum can." />
     <string id="taom_rvk_t1_b_p3" text="-%5 birlik ücreti." />
     <string id="taom_rvk_t1_b_p4" text="+%5 direnç." />
     <string id="taom_rvk_t2_a_key" text="Son İttifak dolum süresi azaldı, daha hızlı aktivasyon." />
@@ -1492,17 +1492,17 @@
     <string id="taom_rvk_t3_a_p1" text="+18% yakın dövüş hasarı." />
     <string id="taom_rvk_t3_a_p2" text="+18% at hücum hasarı." />
     <string id="taom_rvk_t3_a_p3" text="+15% sallanma hızı." />
-    <string id="taom_rvk_t3_a_p4" text="+15% birlik hasarı." />
+    <string id="taom_rvk_t3_a_p4" text="+7% birlik hasarı." />
     <string id="taom_rvk_t3_b_key" text="Son İttifak şarjı büyük ölçüde azaltıldı, durmaksızın sür." />
     <string id="taom_rvk_t3_b_p1" text="+100 at sağlığı." />
     <string id="taom_rvk_t3_b_p2" text="-15% birlik maaşları." />
     <string id="taom_rvk_t3_b_p3" text="+15% grup hareket hızı." />
-    <string id="taom_rvk_t3_b_p4" text="+75 maksimum sağlık." />
+    <string id="taom_rvk_t3_b_p4" text="+9 maksimum sağlık." />
     <string id="taom_warden_root_desc" text="Nimrodel Kutsaması +5% direnç verir ve sular seni iyileştirir." />
     <string id="taom_wdn_t1_a_key" text="Nimrodel Kutsaması yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_wdn_t1_a_p1" text="+8% yakın dövüş hasarı." />
-    <string id="taom_wdn_t1_a_p2" text="+5% birlik hasarı." />
-    <string id="taom_wdn_t1_a_p3" text="+30 maksimum sağlık." />
+    <string id="taom_wdn_t1_a_p2" text="+3% birlik hasarı." />
+    <string id="taom_wdn_t1_a_p3" text="+6 maksimum sağlık." />
     <string id="taom_wdn_t1_a_p4" text="+7% sallanma hızı." />
     <string id="taom_wdn_t1_b_key" text="Nimrodel Kutsaması süresi uzatıldı, savunmayı güçlendiriyor." />
     <string id="taom_wdn_t1_b_p1" text="+8% direnç." />
@@ -1516,13 +1516,13 @@
     <string id="taom_wdn_t2_a_p4" text="-10% birlik maaşları." />
     <string id="taom_wdn_t2_b_key" text="Nimrodel Kutsaması aktifken ek savunma güçlendirmeleri sağlar." />
     <string id="taom_wdn_t2_b_p1" text="+12% direnç." />
-    <string id="taom_wdn_t2_b_p2" text="+60 maksimum sağlık." />
+    <string id="taom_wdn_t2_b_p2" text="+8 maksimum sağlık." />
     <string id="taom_wdn_t2_b_p3" text="+10% birlik direnci." />
-    <string id="taom_wdn_t2_b_p4" text="+10% birlik hasarı." />
+    <string id="taom_wdn_t2_b_p4" text="+5% birlik hasarı." />
     <string id="taom_wdn_t3_a_key" text="Nimrodel Kutsaması yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_wdn_t3_a_p1" text="+15% yakın dövüş hasarı." />
-    <string id="taom_wdn_t3_a_p2" text="+100 maksimum sağlık." />
-    <string id="taom_wdn_t3_a_p3" text="+15% birlik hasarı." />
+    <string id="taom_wdn_t3_a_p2" text="+10 maksimum sağlık." />
+    <string id="taom_wdn_t3_a_p3" text="+7% birlik hasarı." />
     <string id="taom_wdn_t3_a_p4" text="+4 grup boyutu." />
     <string id="taom_wdn_t3_b_key" text="Nimrodel Kutsaması şarjı büyük ölçüde azaltıldı, neredeyse her zaman mevcut." />
     <string id="taom_wdn_t3_b_p1" text="+18% direnç." />
@@ -1537,7 +1537,7 @@
     <string id="taom_gar_t1_a_p4" text="+%5 savaş şöhret kazanımı." />
     <string id="taom_gar_t1_b_key" text="Gümüş Yağmur süresi uzatıldı, sürekli bombardıman." />
     <string id="taom_gar_t1_b_p1" text="+%5 direnç." />
-    <string id="taom_gar_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_gar_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_gar_t1_b_p3" text="+%5 grup keşif menzili." />
     <string id="taom_gar_t1_b_p4" text="+%5 gizlilik bonusu." />
     <string id="taom_gar_t2_a_key" text="Gümüş Yağmur dolum süresi azaltıldı, sürekli baskı uygulanıyor." />
@@ -1548,17 +1548,17 @@
     <string id="taom_gar_t2_b_key" text="Gümüş Yağmur aktifken ek delme kazanır." />
     <string id="taom_gar_t2_b_p1" text="+%12 menzilli hasar." />
     <string id="taom_gar_t2_b_p2" text="+%10 zırh delme." />
-    <string id="taom_gar_t2_b_p3" text="+50 maksimum sağlık." />
-    <string id="taom_gar_t2_b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_gar_t2_b_p3" text="+8 maksimum sağlık." />
+    <string id="taom_gar_t2_b_p4" text="+%3 birlik hasarı." />
     <string id="taom_gar_t3_a_key" text="Gümüş Yağmur yarıçapı büyük ölçüde genişletildi, kaçınılmaz yaylım ateşi." />
     <string id="taom_gar_t3_a_p1" text="+%18 menzilli hasar." />
     <string id="taom_gar_t3_a_p2" text="+%15 zırh delme." />
     <string id="taom_gar_t3_a_p3" text="+%15 savaş şöhret kazanımı." />
-    <string id="taom_gar_t3_a_p4" text="+%10 birlik hasarı." />
+    <string id="taom_gar_t3_a_p4" text="+%5 birlik hasarı." />
     <string id="taom_gar_t3_b_key" text="Gümüş Yağmur dolum süresi büyük ölçüde azaltıldı, amansız ateş." />
     <string id="taom_gar_t3_b_p1" text="+%15 gizlilik bonusu." />
     <string id="taom_gar_t3_b_p2" text="+%15 hareket hızı." />
-    <string id="taom_gar_t3_b_p3" text="+75 maksimum sağlık." />
+    <string id="taom_gar_t3_b_p3" text="+9 maksimum sağlık." />
     <string id="taom_gar_t3_b_p4" text="+%15 grup keşif menzili." />
     <string id="taom_sentinel_root_desc" text="Elanor Çevikliği +%5 yakın dövüş hasarı ve elf zarafeti verir." />
     <string id="taom_snt_t1_a_key" text="Elanor Çevikliği yarıçapı genişletildi, daha geniş düzenleri kapsıyor." />
@@ -1568,7 +1568,7 @@
     <string id="taom_snt_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_snt_t1_b_key" text="Elanor Çevikliği süresi uzatıldı, momentum korunuyor." />
     <string id="taom_snt_t1_b_p1" text="+30 at sağlığı." />
-    <string id="taom_snt_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_snt_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_snt_t1_b_p3" text="-5% asker maaşı." />
     <string id="taom_snt_t1_b_p4" text="+5% direnç." />
     <string id="taom_snt_t2_a_key" text="Elanor Çevikliği dolum süresi azaltıldı, daha hızlı aktivasyon." />
@@ -1585,17 +1585,17 @@
     <string id="taom_snt_t3_a_p1" text="+18% yakın dövüş hasarı." />
     <string id="taom_snt_t3_a_p2" text="+18% at hücum hasarı." />
     <string id="taom_snt_t3_a_p3" text="+15% sallanma hızı." />
-    <string id="taom_snt_t3_a_p4" text="+15% asker hasarı." />
+    <string id="taom_snt_t3_a_p4" text="+7% asker hasarı." />
     <string id="taom_snt_t3_b_key" text="Elanor Çevikliği dolum süresi büyük ölçüde azaltıldı, durmaksızın sür." />
     <string id="taom_snt_t3_b_p1" text="+100 at sağlığı." />
     <string id="taom_snt_t3_b_p2" text="-15% asker maaşı." />
     <string id="taom_snt_t3_b_p3" text="+15% grup hareket hızı." />
-    <string id="taom_snt_t3_b_p4" text="+75 maksimum sağlık." />
+    <string id="taom_snt_t3_b_p4" text="+9 maksimum sağlık." />
     <string id="taom_shadow_walker_root_desc" text="Orman Pelerini +5% direnç verir ve gölgeler seni gizler." />
     <string id="taom_shw_t1_a_key" text="Orman Pelerini yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_shw_t1_a_p1" text="+8% yakın dövüş hasarı." />
-    <string id="taom_shw_t1_a_p2" text="+5% asker hasarı." />
-    <string id="taom_shw_t1_a_p3" text="+30 maksimum sağlık." />
+    <string id="taom_shw_t1_a_p2" text="+3% asker hasarı." />
+    <string id="taom_shw_t1_a_p3" text="+6 maksimum sağlık." />
     <string id="taom_shw_t1_a_p4" text="+7% sallanma hızı." />
     <string id="taom_shw_t1_b_key" text="Orman Pelerini süresi uzatıldı, savunmayı sağlamlaştırıyor." />
     <string id="taom_shw_t1_b_p1" text="+8% direnç." />
@@ -1609,13 +1609,13 @@
     <string id="taom_shw_t2_a_p4" text="-10% birlik maaşları." />
     <string id="taom_shw_t2_b_key" text="Orman Pelerini aktifken ek savunma bonusları sağlar." />
     <string id="taom_shw_t2_b_p1" text="+12% direnç." />
-    <string id="taom_shw_t2_b_p2" text="+60 maksimum sağlık." />
+    <string id="taom_shw_t2_b_p2" text="+8 maksimum sağlık." />
     <string id="taom_shw_t2_b_p3" text="+10% birlik direnci." />
-    <string id="taom_shw_t2_b_p4" text="+10% birlik hasarı." />
+    <string id="taom_shw_t2_b_p4" text="+5% birlik hasarı." />
     <string id="taom_shw_t3_a_key" text="Orman Pelerini yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_shw_t3_a_p1" text="+15% yakın dövüş hasarı." />
-    <string id="taom_shw_t3_a_p2" text="+100 maksimum sağlık." />
-    <string id="taom_shw_t3_a_p3" text="+15% birlik hasarı." />
+    <string id="taom_shw_t3_a_p2" text="+10 maksimum sağlık." />
+    <string id="taom_shw_t3_a_p3" text="+7% birlik hasarı." />
     <string id="taom_shw_t3_a_p4" text="+4 grup büyüklüğü." />
     <string id="taom_shw_t3_b_key" text="Orman Pelerini dolum süresi büyük ölçüde azaltıldı, neredeyse her zaman kullanılabilir." />
     <string id="taom_shw_t3_b_p1" text="+18% direnç." />
@@ -1630,7 +1630,7 @@
     <string id="taom_sva_t1_a_p4" text="+5% savaş şöhret kazancı." />
     <string id="taom_sva_t1_b_key" text="Gölgelik Vuruşu süresi uzatıldı, sürekli yaylım ateşi." />
     <string id="taom_sva_t1_b_p1" text="+5% direnç." />
-    <string id="taom_sva_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_sva_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_sva_t1_b_p3" text="+5% grup görüş menzili." />
     <string id="taom_sva_t1_b_p4" text="+5% gizlilik bonusu." />
     <string id="taom_sva_t2_a_key" text="Gölgelik Vuruşu dolum süresi azaltıldı, sürekli baskı sağlanıyor." />
@@ -1641,17 +1641,17 @@
     <string id="taom_sva_t2_b_key" text="Gölgelik Vuruşu aktifken ek delme gücü kazanır." />
     <string id="taom_sva_t2_b_p1" text="+12% menzilli hasar." />
     <string id="taom_sva_t2_b_p2" text="+10% zırh delme." />
-    <string id="taom_sva_t2_b_p3" text="+50 maksimum sağlık." />
-    <string id="taom_sva_t2_b_p4" text="+5% birlik hasarı." />
+    <string id="taom_sva_t2_b_p3" text="+8 maksimum sağlık." />
+    <string id="taom_sva_t2_b_p4" text="+3% birlik hasarı." />
     <string id="taom_sva_t3_a_key" text="Gölgelik Vuruşu yarıçapı büyük ölçüde genişletildi, kaçınılmaz yaylım ateşi." />
     <string id="taom_sva_t3_a_p1" text="+18% menzilli hasar." />
     <string id="taom_sva_t3_a_p2" text="+15% zırh delme." />
     <string id="taom_sva_t3_a_p3" text="+%15 savaş şöhret kazancı." />
-    <string id="taom_sva_t3_a_p4" text="+%10 birlik hasarı." />
+    <string id="taom_sva_t3_a_p4" text="+%5 birlik hasarı." />
     <string id="taom_sva_t3_b_key" text="Gölgelik Saldırısı şarjı büyük ölçüde azaldı, durmaksızın ateş." />
     <string id="taom_sva_t3_b_p1" text="+%15 gizlilik bonusu." />
     <string id="taom_sva_t3_b_p2" text="+%15 hareket hızı." />
-    <string id="taom_sva_t3_b_p3" text="+75 maksimum can." />
+    <string id="taom_sva_t3_b_p3" text="+9 maksimum can." />
     <string id="taom_sva_t3_b_p4" text="+%15 parti keşif menzili." />
     <string id="taom_elk_rider_root_desc" text="Boynuz Çarpışması +%5 yakın dövüş hasarı verir, büyük geyik돌진eder." />
     <string id="taom_elk_t1_a_key" text="Boynuz Çarpışması yarıçapı genişletildi, daha geniş dizilimleri kapsıyor." />
@@ -1661,7 +1661,7 @@
     <string id="taom_elk_t1_a_p4" text="+%5 parti hareket hızı." />
     <string id="taom_elk_t1_b_key" text="Boynuz Çarpışması süresi uzatıldı, ivmeyi koruyor." />
     <string id="taom_elk_t1_b_p1" text="+30 at canı." />
-    <string id="taom_elk_t1_b_p2" text="+25 maksimum can." />
+    <string id="taom_elk_t1_b_p2" text="+5 maksimum can." />
     <string id="taom_elk_t1_b_p3" text="-%5 birlik maaşları." />
     <string id="taom_elk_t1_b_p4" text="+%5 direnç." />
     <string id="taom_elk_t2_a_key" text="Boynuz Çarpışması şarjı azaldı, daha hızlı aktivasyon." />
@@ -1678,17 +1678,17 @@
     <string id="taom_elk_t3_a_p1" text="+%18 yakın dövüş hasarı." />
     <string id="taom_elk_t3_a_p2" text="+%18 at돌진 hasarı." />
     <string id="taom_elk_t3_a_p3" text="+%15 savurma hızı." />
-    <string id="taom_elk_t3_a_p4" text="+%15 birlik hasarı." />
+    <string id="taom_elk_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_elk_t3_b_key" text="Boynuz Çarpışması şarjı büyük ölçüde azaldı, durmaksızın süvari." />
     <string id="taom_elk_t3_b_p1" text="+100 at canı." />
     <string id="taom_elk_t3_b_p2" text="-%15 birlik maaşları." />
     <string id="taom_elk_t3_b_p3" text="+%15 parti hareket hızı." />
-    <string id="taom_elk_t3_b_p4" text="+75 maksimum can." />
-    <string id="taom_uruk_berserker_root_desc" text="Kan Öfkesi +25 can verir, acı öfkeni besler." />
+    <string id="taom_elk_t3_b_p4" text="+9 maksimum can." />
+    <string id="taom_uruk_berserker_root_desc" text="Kan Öfkesi +5 can verir, acı öfkeni besler." />
     <string id="taom_ub_t1_a_key" text="Kan Öfkesi yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_ub_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_ub_t1_a_p2" text="+%5 birlik hasarı." />
-    <string id="taom_ub_t1_a_p3" text="+30 maksimum can." />
+    <string id="taom_ub_t1_a_p2" text="+%3 birlik hasarı." />
+    <string id="taom_ub_t1_a_p3" text="+6 maksimum can." />
     <string id="taom_ub_t1_a_p4" text="+%7 savurma hızı." />
     <string id="taom_ub_t1_b_key" text="Kan Öfkesi süresi uzatıldı, savunma güçlendirildi." />
     <string id="taom_ub_t1_b_p1" text="+%8 direnç." />
@@ -1702,13 +1702,13 @@
     <string id="taom_ub_t2_a_p4" text="-%10 birlik ücreti." />
     <string id="taom_ub_t2_b_key" text="Kan Öfkesi aktifken ek savunma bonusları sağlar." />
     <string id="taom_ub_t2_b_p1" text="+%12 direnç." />
-    <string id="taom_ub_t2_b_p2" text="+60 maksimum can." />
+    <string id="taom_ub_t2_b_p2" text="+8 maksimum can." />
     <string id="taom_ub_t2_b_p3" text="+%10 birlik direnci." />
-    <string id="taom_ub_t2_b_p4" text="+%10 birlik hasarı." />
+    <string id="taom_ub_t2_b_p4" text="+%5 birlik hasarı." />
     <string id="taom_ub_t3_a_key" text="Kan Öfkesi yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_ub_t3_a_p1" text="+%15 yakın dövüş hasarı." />
-    <string id="taom_ub_t3_a_p2" text="+100 maksimum can." />
-    <string id="taom_ub_t3_a_p3" text="+%15 birlik hasarı." />
+    <string id="taom_ub_t3_a_p2" text="+10 maksimum can." />
+    <string id="taom_ub_t3_a_p3" text="+%7 birlik hasarı." />
     <string id="taom_ub_t3_a_p4" text="+4 grup boyutu." />
     <string id="taom_ub_t3_b_key" text="Kan Öfkesi yüklemesi büyük ölçüde azaltıldı, neredeyse her zaman hazır." />
     <string id="taom_ub_t3_b_p1" text="+%18 direnç." />
@@ -1723,7 +1723,7 @@
     <string id="taom_ucb_t1_a_p4" text="+%5 savaş şöhret kazancı." />
     <string id="taom_ucb_t1_b_key" text="Demir Yağmur süresi uzatıldı, sürekli baskın ateşi." />
     <string id="taom_ucb_t1_b_p1" text="+%5 direnç." />
-    <string id="taom_ucb_t1_b_p2" text="+25 maksimum can." />
+    <string id="taom_ucb_t1_b_p2" text="+5 maksimum can." />
     <string id="taom_ucb_t1_b_p3" text="+%5 grup keşif menzili." />
     <string id="taom_ucb_t1_b_p4" text="+%5 gizlilik bonusu." />
     <string id="taom_ucb_t2_a_key" text="Demir Yağmuru şarjı azaltıldı, sürekli baskı sağlanıyor." />
@@ -1734,17 +1734,17 @@
     <string id="taom_ucb_t2_b_key" text="Demir Yağmuru aktifken ek delici hasar kazanır." />
     <string id="taom_ucb_t2_b_p1" text="+%12 menzilli hasar." />
     <string id="taom_ucb_t2_b_p2" text="+%10 zırh delme." />
-    <string id="taom_ucb_t2_b_p3" text="+50 maksimum can." />
-    <string id="taom_ucb_t2_b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_ucb_t2_b_p3" text="+8 maksimum can." />
+    <string id="taom_ucb_t2_b_p4" text="+%3 birlik hasarı." />
     <string id="taom_ucb_t3_a_key" text="Demir Yağmuru yarıçapı büyük ölçüde genişletildi, kaçınılmaz yaylım ateşi." />
     <string id="taom_ucb_t3_a_p1" text="+%18 menzilli hasar." />
     <string id="taom_ucb_t3_a_p2" text="+%15 zırh delme." />
     <string id="taom_ucb_t3_a_p3" text="+%15 savaş şöhret kazancı." />
-    <string id="taom_ucb_t3_a_p4" text="+%10 birlik hasarı." />
+    <string id="taom_ucb_t3_a_p4" text="+%5 birlik hasarı." />
     <string id="taom_ucb_t3_b_key" text="Demir Yağmuru şarjı büyük ölçüde azaltıldı, amansız ateş." />
     <string id="taom_ucb_t3_b_p1" text="+%15 gizlilik bonusu." />
     <string id="taom_ucb_t3_b_p2" text="+%15 hareket hızı." />
-    <string id="taom_ucb_t3_b_p3" text="+75 maksimum can." />
+    <string id="taom_ucb_t3_b_p3" text="+9 maksimum can." />
     <string id="taom_ucb_t3_b_p4" text="+%15 grup keşif menzili." />
     <string id="taom_warg_scout_root_desc" text="Sürü Uluması +%5 yakın dövüş hasarı verir ve yakındaki düşmanları dehşete düşürür." />
     <string id="taom_wsc_t1_a_key" text="Sürü Uluması yarıçapı genişletildi, daha geniş dizilimleri kapsıyor." />
@@ -1754,7 +1754,7 @@
     <string id="taom_wsc_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_wsc_t1_b_key" text="Sürü Uluması süresi uzatıldı, momentum korunuyor." />
     <string id="taom_wsc_t1_b_p1" text="+30 at canı." />
-    <string id="taom_wsc_t1_b_p2" text="+25 maksimum can." />
+    <string id="taom_wsc_t1_b_p2" text="+5 maksimum can." />
     <string id="taom_wsc_t1_b_p3" text="-%5 birlik maaşı." />
     <string id="taom_wsc_t1_b_p4" text="+%5 direnç." />
     <string id="taom_wsc_t2_a_key" text="Sürü Uluması şarjı azaltıldı, daha hızlı aktivasyon." />
@@ -1771,17 +1771,17 @@
     <string id="taom_wsc_t3_a_p1" text="+%18 yakın dövüş hasarı." />
     <string id="taom_wsc_t3_a_p2" text="+%18 at돌진 hasarı." />
     <string id="taom_wsc_t3_a_p3" text="+%15 sallanma hızı." />
-    <string id="taom_wsc_t3_a_p4" text="+%15 birlik hasarı." />
+    <string id="taom_wsc_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_wsc_t3_b_key" text="Sürü Uluması dolumu büyük ölçüde azaltıldı, durmaksızın sür." />
     <string id="taom_wsc_t3_b_p1" text="+100 at sağlığı." />
     <string id="taom_wsc_t3_b_p2" text="-%15 birlik maaşları." />
     <string id="taom_wsc_t3_b_p3" text="+%15 birlik hareket hızı." />
-    <string id="taom_wsc_t3_b_p4" text="+75 maksimum sağlık." />
-    <string id="taom_cave_troll_master_root_desc" text="Troll Çılgınlığı +25 sağlık verir ve trollerinizi çıldırtır." />
+    <string id="taom_wsc_t3_b_p4" text="+9 maksimum sağlık." />
+    <string id="taom_cave_troll_master_root_desc" text="Troll Çılgınlığı +5 sağlık verir ve trollerinizi çıldırtır." />
     <string id="taom_ctm_t1_a_key" text="Troll Çılgınlığı yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_ctm_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_ctm_t1_a_p2" text="+%5 birlik hasarı." />
-    <string id="taom_ctm_t1_a_p3" text="+30 maksimum sağlık." />
+    <string id="taom_ctm_t1_a_p2" text="+%3 birlik hasarı." />
+    <string id="taom_ctm_t1_a_p3" text="+6 maksimum sağlık." />
     <string id="taom_ctm_t1_a_p4" text="+%7 sallanma hızı." />
     <string id="taom_ctm_t1_b_key" text="Troll Çılgınlığı süresi uzatıldı, savunmayı güçlendiriyor." />
     <string id="taom_ctm_t1_b_p1" text="+%8 direnç." />
@@ -1795,13 +1795,13 @@
     <string id="taom_ctm_t2_a_p4" text="-%10 birlik maaşları." />
     <string id="taom_ctm_t2_b_key" text="Troll Çılgınlığı aktifken ek savunma bonusları verir." />
     <string id="taom_ctm_t2_b_p1" text="+%12 direnç." />
-    <string id="taom_ctm_t2_b_p2" text="+60 maksimum sağlık." />
+    <string id="taom_ctm_t2_b_p2" text="+8 maksimum sağlık." />
     <string id="taom_ctm_t2_b_p3" text="+%10 birlik direnci." />
-    <string id="taom_ctm_t2_b_p4" text="+%10 birlik hasarı." />
+    <string id="taom_ctm_t2_b_p4" text="+%5 birlik hasarı." />
     <string id="taom_ctm_t3_a_key" text="Troll Çılgınlığı yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_ctm_t3_a_p1" text="+%15 yakın dövüş hasarı." />
-    <string id="taom_ctm_t3_a_p2" text="+100 maksimum sağlık." />
-    <string id="taom_ctm_t3_a_p3" text="+%15 birlik hasarı." />
+    <string id="taom_ctm_t3_a_p2" text="+10 maksimum sağlık." />
+    <string id="taom_ctm_t3_a_p3" text="+%7 birlik hasarı." />
     <string id="taom_ctm_t3_a_p4" text="+4 birlik boyutu." />
     <string id="taom_ctm_t3_b_key" text="Troll Çılgınlığı dolumu büyük ölçüde azaltıldı, neredeyse her zaman kullanılabilir." />
     <string id="taom_ctm_t3_b_p1" text="+%18 direnç." />
@@ -1816,7 +1816,7 @@
     <string id="taom_gbs_t1_a_p4" text="+5% savaş şöhreti kazanımı." />
     <string id="taom_gbs_t1_b_key" text="Zehirli Ok süresi uzatıldı, sürekli baraj." />
     <string id="taom_gbs_t1_b_p1" text="+5% direnç." />
-    <string id="taom_gbs_t1_b_p2" text="+25 maksimum can." />
+    <string id="taom_gbs_t1_b_p2" text="+5 maksimum can." />
     <string id="taom_gbs_t1_b_p3" text="+5% müfreze keşif menzili." />
     <string id="taom_gbs_t1_b_p4" text="+5% gizlilik bonusu." />
     <string id="taom_gbs_t2_a_key" text="Zehirli Ok dolum süresi azaltıldı, sürekli baskı korunuyor." />
@@ -1827,17 +1827,17 @@
     <string id="taom_gbs_t2_b_key" text="Zehirli Ok aktifken ek delme gücü kazanıyor." />
     <string id="taom_gbs_t2_b_p1" text="+12% menzilli hasar." />
     <string id="taom_gbs_t2_b_p2" text="+10% zırh delme." />
-    <string id="taom_gbs_t2_b_p3" text="+50 maksimum can." />
-    <string id="taom_gbs_t2_b_p4" text="+5% birlik hasarı." />
+    <string id="taom_gbs_t2_b_p3" text="+8 maksimum can." />
+    <string id="taom_gbs_t2_b_p4" text="+3% birlik hasarı." />
     <string id="taom_gbs_t3_a_key" text="Zehirli Ok yarıçapı büyük ölçüde genişletildi, kaçınılmaz salvolar." />
     <string id="taom_gbs_t3_a_p1" text="+18% menzilli hasar." />
     <string id="taom_gbs_t3_a_p2" text="+15% zırh delme." />
     <string id="taom_gbs_t3_a_p3" text="+15% savaş şöhreti kazanımı." />
-    <string id="taom_gbs_t3_a_p4" text="+10% birlik hasarı." />
+    <string id="taom_gbs_t3_a_p4" text="+5% birlik hasarı." />
     <string id="taom_gbs_t3_b_key" text="Zehirli Ok dolum süresi büyük ölçüde azaltıldı, amansız ateş." />
     <string id="taom_gbs_t3_b_p1" text="+15% gizlilik bonusu." />
     <string id="taom_gbs_t3_b_p2" text="+15% hareket hızı." />
-    <string id="taom_gbs_t3_b_p3" text="+75 maksimum can." />
+    <string id="taom_gbs_t3_b_p3" text="+9 maksimum can." />
     <string id="taom_gbs_t3_b_p4" text="+15% müfreze keşif menzili." />
     <string id="taom_warg_pack_leader_root_desc" text="Alfa Uluması +5% yakın dövüş hasarı sağlar ve sürü avlanır." />
     <string id="taom_wpl_t1_a_key" text="Alfa Uluması yarıçapı genişletildi, daha geniş dizilimleri kapsıyor." />
@@ -1847,7 +1847,7 @@
     <string id="taom_wpl_t1_a_p4" text="+5% müfreze hareket hızı." />
     <string id="taom_wpl_t1_b_key" text="Alfa Uluması süresi uzatıldı, ivme korunuyor." />
     <string id="taom_wpl_t1_b_p1" text="+30 at sağlığı." />
-    <string id="taom_wpl_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_wpl_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_wpl_t1_b_p3" text="-5% asker ücreti." />
     <string id="taom_wpl_t1_b_p4" text="+5% direnç." />
     <string id="taom_wpl_t2_a_key" text="Alfa Uluması dolum süresi azaltıldı, daha hızlı etkinleşme." />
@@ -1864,17 +1864,17 @@
     <string id="taom_wpl_t3_a_p1" text="+18% yakın dövüş hasarı." />
     <string id="taom_wpl_t3_a_p2" text="+18% atlı돌격 hasarı." />
     <string id="taom_wpl_t3_a_p3" text="+15% sallanma hızı." />
-    <string id="taom_wpl_t3_a_p4" text="+15% asker hasarı." />
+    <string id="taom_wpl_t3_a_p4" text="+7% asker hasarı." />
     <string id="taom_wpl_t3_b_key" text="Alfa Uluması dolum süresi büyük ölçüde azaltıldı, durmaksızın süvari saldırısı." />
     <string id="taom_wpl_t3_b_p1" text="+100 at sağlığı." />
     <string id="taom_wpl_t3_b_p2" text="-15% asker ücreti." />
     <string id="taom_wpl_t3_b_p3" text="+15% grup hareket hızı." />
-    <string id="taom_wpl_t3_b_p4" text="+75 maksimum sağlık." />
-    <string id="taom_shadow_warrior_root_desc" text="Ruh Yutma +25 sağlık verir ve düşman yaşam gücünü emer." />
+    <string id="taom_wpl_t3_b_p4" text="+9 maksimum sağlık." />
+    <string id="taom_shadow_warrior_root_desc" text="Ruh Yutma +5 sağlık verir ve düşman yaşam gücünü emer." />
     <string id="taom_swr_t1_a_key" text="Ruh Yutma yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_swr_t1_a_p1" text="+8% yakın dövüş hasarı." />
-    <string id="taom_swr_t1_a_p2" text="+5% asker hasarı." />
-    <string id="taom_swr_t1_a_p3" text="+30 maksimum sağlık." />
+    <string id="taom_swr_t1_a_p2" text="+3% asker hasarı." />
+    <string id="taom_swr_t1_a_p3" text="+6 maksimum sağlık." />
     <string id="taom_swr_t1_a_p4" text="+7% sallanma hızı." />
     <string id="taom_swr_t1_b_key" text="Ruh Yutma süresi uzatıldı, savunmayı güçlendiriyor." />
     <string id="taom_swr_t1_b_p1" text="+8% direnç." />
@@ -1888,13 +1888,13 @@
     <string id="taom_swr_t2_a_p4" text="-10% asker ücreti." />
     <string id="taom_swr_t2_b_key" text="Ruh Tükenmesi aktifken ek savunma güçlendirmeleri sağlar." />
     <string id="taom_swr_t2_b_p1" text="+%12 direnç." />
-    <string id="taom_swr_t2_b_p2" text="+60 maksimum sağlık." />
+    <string id="taom_swr_t2_b_p2" text="+8 maksimum sağlık." />
     <string id="taom_swr_t2_b_p3" text="+%10 birlik direnci." />
-    <string id="taom_swr_t2_b_p4" text="+%10 birlik hasarı." />
+    <string id="taom_swr_t2_b_p4" text="+%5 birlik hasarı." />
     <string id="taom_swr_t3_a_key" text="Ruh Tükenmesi yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_swr_t3_a_p1" text="+%15 yakın dövüş hasarı." />
-    <string id="taom_swr_t3_a_p2" text="+100 maksimum sağlık." />
-    <string id="taom_swr_t3_a_p3" text="+%15 birlik hasarı." />
+    <string id="taom_swr_t3_a_p2" text="+10 maksimum sağlık." />
+    <string id="taom_swr_t3_a_p3" text="+%7 birlik hasarı." />
     <string id="taom_swr_t3_a_p4" text="+4 birlik boyutu." />
     <string id="taom_swr_t3_b_key" text="Ruh Tükenmesi şarjı büyük ölçüde azaltıldı, neredeyse her zaman kullanılabilir." />
     <string id="taom_swr_t3_b_p1" text="+%18 direnç." />
@@ -1909,7 +1909,7 @@
     <string id="taom_nca_t1_a_p4" text="+%5 savaş şöhret kazanımı." />
     <string id="taom_nca_t1_b_key" text="Karanlık Şimşek süresi uzatıldı, sürekli bombardıman." />
     <string id="taom_nca_t1_b_p1" text="+%5 direnç." />
-    <string id="taom_nca_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_nca_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_nca_t1_b_p3" text="+%5 birlik keşif menzili." />
     <string id="taom_nca_t1_b_p4" text="+%5 gizlilik bonusu." />
     <string id="taom_nca_t2_a_key" text="Karanlık Şimşek şarjı azaltıldı, sürekli baskı sağlıyor." />
@@ -1920,17 +1920,17 @@
     <string id="taom_nca_t2_b_key" text="Karanlık Şimşek aktifken ek delme kazanır." />
     <string id="taom_nca_t2_b_p1" text="+%12 menzilli hasar." />
     <string id="taom_nca_t2_b_p2" text="+%10 zırh delme." />
-    <string id="taom_nca_t2_b_p3" text="+50 maksimum sağlık." />
-    <string id="taom_nca_t2_b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_nca_t2_b_p3" text="+8 maksimum sağlık." />
+    <string id="taom_nca_t2_b_p4" text="+%3 birlik hasarı." />
     <string id="taom_nca_t3_a_key" text="Karanlık Şimşek yarıçapı büyük ölçüde genişletildi, kaçınılmaz salvolar." />
     <string id="taom_nca_t3_a_p1" text="+%18 menzilli hasar." />
     <string id="taom_nca_t3_a_p2" text="+%15 zırh delme." />
     <string id="taom_nca_t3_a_p3" text="+%15 savaş şöhret kazanımı." />
-    <string id="taom_nca_t3_a_p4" text="+%10 birlik hasarı." />
+    <string id="taom_nca_t3_a_p4" text="+%5 birlik hasarı." />
     <string id="taom_nca_t3_b_key" text="Karanlık Şimşek dolumu büyük ölçüde azaltıldı, amansız ateş." />
     <string id="taom_nca_t3_b_p1" text="+%15 gizlilik bonusu." />
     <string id="taom_nca_t3_b_p2" text="+%15 hareket hızı." />
-    <string id="taom_nca_t3_b_p3" text="+75 maksimum sağlık." />
+    <string id="taom_nca_t3_b_p3" text="+9 maksimum sağlık." />
     <string id="taom_nca_t3_b_p4" text="+%15 grup keşif menzili." />
     <string id="taom_fell_rider_root_desc" text="Korku Hücumu, bineğinizi gölgeyle sararak +%5 yakın dövüş hasarı verir." />
     <string id="taom_flr_t1_a_key" text="Korku Hücumu yarıçapı genişletildi, daha geniş düzenleri kapsıyor." />
@@ -1940,7 +1940,7 @@
     <string id="taom_flr_t1_a_p4" text="+%5 grup hareket hızı." />
     <string id="taom_flr_t1_b_key" text="Korku Hücumu süresi uzatıldı, momentumu koruyor." />
     <string id="taom_flr_t1_b_p1" text="+30 at sağlığı." />
-    <string id="taom_flr_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_flr_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_flr_t1_b_p3" text="-%5 birlik maaşı." />
     <string id="taom_flr_t1_b_p4" text="+%5 direnç." />
     <string id="taom_flr_t2_a_key" text="Korku Hücumu dolumu azaltıldı, daha hızlı aktivasyon." />
@@ -1957,17 +1957,17 @@
     <string id="taom_flr_t3_a_p1" text="+%18 yakın dövüş hasarı." />
     <string id="taom_flr_t3_a_p2" text="+%18 at돌격 hasarı." />
     <string id="taom_flr_t3_a_p3" text="+%15 sallanma hızı." />
-    <string id="taom_flr_t3_a_p4" text="+%15 birlik hasarı." />
+    <string id="taom_flr_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_flr_t3_b_key" text="Korku Hücumu dolumu büyük ölçüde azaltıldı, durmaksızın sür." />
     <string id="taom_flr_t3_b_p1" text="+100 at sağlığı." />
     <string id="taom_flr_t3_b_p2" text="-%15 birlik maaşı." />
     <string id="taom_flr_t3_b_p3" text="+%15 grup hareket hızı." />
-    <string id="taom_flr_t3_b_p4" text="+75 maksimum sağlık." />
+    <string id="taom_flr_t3_b_p4" text="+9 maksimum sağlık." />
     <string id="taom_corsair_boarder_root_desc" text="Baskın Eylemi, yakın çarpışmada +%5 direnç verir." />
     <string id="taom_crb_t1_a_key" text="Baskın Eylemi yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
     <string id="taom_crb_t1_a_p1" text="+%8 yakın dövüş hasarı." />
-    <string id="taom_crb_t1_a_p2" text="+%5 birlik hasarı." />
-    <string id="taom_crb_t1_a_p3" text="+30 maksimum can." />
+    <string id="taom_crb_t1_a_p2" text="+%3 birlik hasarı." />
+    <string id="taom_crb_t1_a_p3" text="+6 maksimum can." />
     <string id="taom_crb_t1_a_p4" text="+%7 savurma hızı." />
     <string id="taom_crb_t1_b_key" text="Baskın Harekâtı süresi uzatıldı, savunmayı güçlendiriyor." />
     <string id="taom_crb_t1_b_p1" text="+%8 direnç." />
@@ -1981,13 +1981,13 @@
     <string id="taom_crb_t2_a_p4" text="-%10 birlik ücreti." />
     <string id="taom_crb_t2_b_key" text="Baskın Harekâtı aktifken ek savunma bonusları sağlıyor." />
     <string id="taom_crb_t2_b_p1" text="+%12 direnç." />
-    <string id="taom_crb_t2_b_p2" text="+60 maksimum can." />
+    <string id="taom_crb_t2_b_p2" text="+8 maksimum can." />
     <string id="taom_crb_t2_b_p3" text="+%10 birlik direnci." />
-    <string id="taom_crb_t2_b_p4" text="+%10 birlik hasarı." />
+    <string id="taom_crb_t2_b_p4" text="+%5 birlik hasarı." />
     <string id="taom_crb_t3_a_key" text="Baskın Harekâtı yarıçapı büyük ölçüde genişletildi, yıkıcı güç." />
     <string id="taom_crb_t3_a_p1" text="+%15 yakın dövüş hasarı." />
-    <string id="taom_crb_t3_a_p2" text="+100 maksimum can." />
-    <string id="taom_crb_t3_a_p3" text="+%15 birlik hasarı." />
+    <string id="taom_crb_t3_a_p2" text="+10 maksimum can." />
+    <string id="taom_crb_t3_a_p3" text="+%7 birlik hasarı." />
     <string id="taom_crb_t3_a_p4" text="+4 grup büyüklüğü." />
     <string id="taom_crb_t3_b_key" text="Baskın Harekâtı dolum süresi büyük ölçüde azaltıldı, neredeyse her zaman hazır." />
     <string id="taom_crb_t3_b_p1" text="+%18 direnç." />
@@ -2002,7 +2002,7 @@
     <string id="taom_crc_t1_a_p4" text="+%5 savaş şöhret kazanımı." />
     <string id="taom_crc_t1_b_key" text="Arma Atışı süresi uzatıldı, sürekli baraj." />
     <string id="taom_crc_t1_b_p1" text="+%5 direnç." />
-    <string id="taom_crc_t1_b_p2" text="+25 maksimum can." />
+    <string id="taom_crc_t1_b_p2" text="+5 maksimum can." />
     <string id="taom_crc_t1_b_p3" text="+%5 grup keşif menzili." />
     <string id="taom_crc_t1_b_p4" text="+%5 gizlilik bonusu." />
     <string id="taom_crc_t2_a_key" text="Arma Atışı dolum süresi azaltıldı, sürekli baskı uyguluyor." />
@@ -2013,17 +2013,17 @@
     <string id="taom_crc_t2_b_key" text="Halatçı Atışı aktifken ek delme gücü kazanır." />
     <string id="taom_crc_t2_b_p1" text="+12% menzilli hasar." />
     <string id="taom_crc_t2_b_p2" text="+10% zırh delme." />
-    <string id="taom_crc_t2_b_p3" text="+50 maksimum sağlık." />
-    <string id="taom_crc_t2_b_p4" text="+5% birlik hasarı." />
+    <string id="taom_crc_t2_b_p3" text="+8 maksimum sağlık." />
+    <string id="taom_crc_t2_b_p4" text="+3% birlik hasarı." />
     <string id="taom_crc_t3_a_key" text="Halatçı Atışı yarıçapı büyük ölçüde genişledi, kaçınılmaz yaylım ateşi." />
     <string id="taom_crc_t3_a_p1" text="+18% menzilli hasar." />
     <string id="taom_crc_t3_a_p2" text="+15% zırh delme." />
     <string id="taom_crc_t3_a_p3" text="+15% savaş şöhret kazancı." />
-    <string id="taom_crc_t3_a_p4" text="+10% birlik hasarı." />
+    <string id="taom_crc_t3_a_p4" text="+5% birlik hasarı." />
     <string id="taom_crc_t3_b_key" text="Halatçı Atışı dolum süresi büyük ölçüde azaldı, amansız ateş." />
     <string id="taom_crc_t3_b_p1" text="+15% gizlilik bonusu." />
     <string id="taom_crc_t3_b_p2" text="+15% hareket hızı." />
-    <string id="taom_crc_t3_b_p3" text="+75 maksimum sağlık." />
+    <string id="taom_crc_t3_b_p3" text="+9 maksimum sağlık." />
     <string id="taom_crc_t3_b_p4" text="+15% grup keşif menzili." />
     <string id="taom_corsair_captain_root_desc" text="Yağma +5% yakın dövüş hasarı verir ve mürettebatını toparlar." />
     <string id="taom_crca_t1_a_key" text="Yağma yarıçapı genişledi, daha geniş dizilimleri kapsıyor." />
@@ -2033,7 +2033,7 @@
     <string id="taom_crca_t1_a_p4" text="+5% grup hareket hızı." />
     <string id="taom_crca_t1_b_key" text="Yağma süresi uzatıldı, ivme korunuyor." />
     <string id="taom_crca_t1_b_p1" text="+30 at sağlığı." />
-    <string id="taom_crca_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_crca_t1_b_p2" text="+5 maksimum sağlık." />
     <string id="taom_crca_t1_b_p3" text="-5% birlik maaşları." />
     <string id="taom_crca_t1_b_p4" text="+5% direnç." />
     <string id="taom_crca_t2_a_key" text="Yağma dolum süresi azaldı, daha hızlı aktivasyon." />
@@ -2050,11 +2050,11 @@
     <string id="taom_crca_t3_a_p1" text="+%18 yakın dövüş hasarı." />
     <string id="taom_crca_t3_a_p2" text="+%18 at돌격 hasarı." />
     <string id="taom_crca_t3_a_p3" text="+%15 savurma hızı." />
-    <string id="taom_crca_t3_a_p4" text="+%15 birlik hasarı." />
+    <string id="taom_crca_t3_a_p4" text="+%7 birlik hasarı." />
     <string id="taom_crca_t3_b_key" text="Yağma şarjı büyük ölçüde azaltıldı, durmaksızın sür." />
     <string id="taom_crca_t3_b_p1" text="+100 at sağlığı." />
     <string id="taom_crca_t3_b_p2" text="-%15 birlik maaşları." />
     <string id="taom_crca_t3_b_p3" text="+%15 grup hareket hızı." />
-    <string id="taom_crca_t3_b_p4" text="+75 maksimum sağlık." />
+    <string id="taom_crca_t3_b_p4" text="+9 maksimum sağlık." />
   </strings>
 </base>

@@ -25,9 +25,10 @@
 - **Diamond rims are per-tier metals** (2026-08-06): tier 1 bronze → tier 2 silver → tier 3 gold, so the tree reads as a progression at a glance. Each tier owns three border colours — dim (locked) / mid (available) / bright (taken glow) — and they are deliberately NOT shared between tiers, so changing one tier's metal means editing all three of its values. The full hex table is in a comment above the body block in `CareerScreen.xml`. The taken glow is shown by `TaomCareerDiamondWidget` rather than a binding, so it is a plain colour on the widget's `DiamondGlow` child.
 - **Selection is a toggle, and that is load-bearing.** Dropping the +/− button column left no way to refund a pick, so the diamond click calls `CareerChoiceObjectVM.ExecuteToggleChoice` — take an untaken choice, refund a taken one. Both directions were already guarded (free points, tier locks and keystone exclusivity going in; a no-op on an untaken id coming out). A regression test pins it: without the toggle every taken choice is permanently stranded.
 - **The screen is FIXED WIDTH (1720) and CENTRED — do not restore `StretchToParent`.** On a 32:9 monitor a stretching container made the layout as wide as the display, so every fixed-width child clustered left, the header bar ran into dead space, its ability text drifted past centre and clipped, and the Active Effects column stranded far from the grid. 1720 is sized to hold the body (1330 tiers + 20 + 340 column) and the header (700 + 290 + 24 + 92 + 16 + 560 = 1682); changing any of those widths means re-checking that sum. Lesson: `lessons/localization-ui.md`.
-- **Owed:** in-game smoke checklist (plan `review-this-and-identify-bubbly-moon.md` §Verification), 12-language `/localize` for `taom_career_dmg_attrib`/`taom_career_dmg_none` (English registered; translation env-gated on `ANTHROPIC_API_KEY`), keystone-icon art curation pass, pre-existing `CharacterDeveloper.SkillNameText`/`.DescriptionText` brush cleanup (RCA finding #3).
+- **Reviewed 2026-08-06 (Review 83).** 6-agent deep review of both effect fixes, both retunes and the retune tool: Standards PASS, API Compatibility 6/6 verified against the installed v1.4.7 DLLs (it CONFIRMED the `GetEffectiveMaxHealth` hero branch -> `CharacterObject.MaxHitPoints()` -> `MaxHitpoints` chain the health fix rests on, and that both models register in lockstep), Completeness COMPLETE, Data Flow 38 flows / 0 gaps / no third instance of the bug class. 2 findings, both fixed: a CRITICAL idempotency bug in the retune tool (a second `--apply` would have double-shifted 71 of 105 TroopDamage pips) and a HIGH hot-path allocation this work created in `CareerPassiveService.GetPassiveMagnitude`. RCA: [rca-career-effect-layer-audit-2026-08-06.md](../reviews/rca-career-effect-layer-audit-2026-08-06.md).
+- **Owed:** in-game verification of the two 2026-08-06 effect fixes — max health now reads on the character sheet (CONFIRMED working in-game 2026-08-06) and army-wide troop damage at the new 2-8% band (NOT yet checked); dedicated GitHub issues for both wiring bugs (they are recorded under the #388 career arc because the numbers first used, #390/#391, were wrong — #390 is the armory meta-mesh issue and #391 did not exist); in-game smoke checklist (plan `review-this-and-identify-bubbly-moon.md` §Verification), 12-language `/localize` for `taom_career_dmg_attrib`/`taom_career_dmg_none` (English registered; translation env-gated on `ANTHROPIC_API_KEY`), keystone-icon art curation pass, pre-existing `CharacterDeveloper.SkillNameText`/`.DescriptionText` brush cleanup (RCA finding #3).
 
-**2026-08-06 — #390: the `Health` pip only ever worked in battle.** A player took a "+75 max health"
+**2026-08-06 — #388: the `Health` pip only ever worked in battle.** A player took a "+75 max health"
 choice and the character screen still read `Max. Hit Points 100 / Base +100`. `PassiveEffectType.Health`
 had exactly one consumer, `TaomAgentStatCalculateModel.GetEffectiveMaxHealth` — the **mission**
 `AgentStatCalculateModel` slot. Everything the player reads on the campaign layer (the tooltip,
@@ -69,8 +70,41 @@ So the pip applied in battle and was invisible + inert everywhere else.
   four surfaces and a retune that moves only the first makes the other three lie. It swaps translations
   directly rather than deferring to `translate_with_claude.py` (the `retune_phantom_descriptions.py`
   precedent) because only a digit changes and every translated health string was verified to carry
-  exactly one number; keyed on the old magnitude, so re-running is a no-op. `far_harad_halftroll_root`
+  exactly one number. Re-running is a no-op via a file-level `already_applied()` guard (per-pip detection is impossible when a mapping's old and new values overlap — deep review 2026-08-06). `far_harad_halftroll_root`
   says "massive health bonus" with no number and is deliberately left alone.
+
+**2026-08-06 — TroopDamage was wired to village raiding, not battle.** The second instance of the
+same bug class, found by re-auditing every effect with the lens that catches it: not *"is anything
+reading this"* but *"is it read where the description promises"*. `TroopDamage` (105 pips, the
+second-most-used effect) promises *"+5% troop damage"* and *"Your troops smash through enemy lines"*,
+but its only consumer was `TaomRaidModel.CalculateHitDamage` — vanilla's
+`(sqrt(TroopCount) + 5)/900 * deltaHours`, accumulated by `RaidEventComponent` into
+`_nextSettlementDamage`. That is how fast a village burns. Troops hit exactly as hard as ever.
+
+- **Fixed as the mirror of `TroopResistance`,** which was already doing the defensive half correctly.
+  `GetAttackerTroopLeaderHeroId` resolves the attacker's party leader and
+  `CalculateDamageAmplification` applies the leader's `TroopDamage` to their non-hero troops' hits.
+  Mount caveat inherited from the victim-side helper: for a couched/charge hit the AttackerAgent can
+  BE the mount, whose own `Origin` is null, so the leader must resolve off `AttackerRiderAgentOrigin`
+  or every cavalry impact silently loses the bonus. Not mask-gated — the shipped pips carry no
+  `attack_type_mask`, so it is a flat army-wide multiplier. Hero and troop paths are mutually
+  exclusive (the boundary returns null for a hero attacker), pinned by a test.
+- **The raid consumer is deliberately KEPT** — raid progress is a fair reading of "troop damage", it
+  is behaviour players already have, and the two are different systems, so this is not the
+  double-count the health fix had to avoid. `TroopDamage` is the one type with two consumers.
+- **Retuned 3-20% -> 2-8% before going live** (t1 2-3%, t2 3-6%, t3 5-8%), same reasoning as the
+  health pips: the magnitudes were authored while the effect did nothing in battle. An army-wide
+  multiplier compounds across every soldier, so the band sits below the hero's own `Damage` pips
+  (5-18%). `tools/retune_career_health.py --effect troopdamage` does all four surfaces; it grew an
+  `EFFECTS` profile table rather than being copied, the new axis being `scale` (Health prints its
+  flat magnitude, TroopDamage prints magnitude x100 as a percentage).
+- **What the audit cleared.** Every other shipped effect is consumed at the layer its text promises:
+  `TroopMorale`->`GetEffectivePartyMorale`, `TroopSurvival`->`GetSurvivalChance`,
+  `HeroHealing`->`GetDailyHealingHpForHeroes`, `TroopWages`/`TroopUpgradeCost`->campaign economy,
+  `RenownGain`->`TaomBattleRewardModel`, the map effects->visibility/size/speed models, and the
+  hero/mount combat effects->the mission models. One cosmetic gap remains: 49 Keystone pips grant a
+  passive their description never mentions (they describe only their ability mutation) — those work,
+  they are just undisclosed.
 
 ## Overview
 
@@ -154,7 +188,58 @@ Defines standalone root choices and choice groups. Each group has a tier (1/2/3)
 
 **attack_type_mask (Damage + Resistance).** `Damage` and `Resistance` honor the mask — a "+X% ranged damage" pip fires only on ranged hits. The damage path derives the hit's delivery type (`IsMissile ? Ranged : Melee`) and `GetMaskedMagnitude` sums every authored-mask bucket that intersects it (an `All`-masked entry applies to both). `Damage` is applied multiplicatively on the per-hit **amplification** path (`CareerAgentStatService.CalculateDamageAmplification`), NOT as a flat `DamageMultiplierBonus`, so the mask can gate it. `Blunt`/`Cut` masks (5 shipped Resistance pips) aren't representable in the `[Flags]` enum and deliberately degrade to `All` (every hit).
 
-**Effect-type consumers.** Every `PassiveEffectType` used by a shipped pip now has a runtime consumer — `PassiveEffectConsumers` is the compiled source of truth. The six historically-dead/phantom types — `Ammo`, `HorseChargeDamage`, `HorseHealth`, `TroopResistance`, `StealthBonus`, `HealthRegeneration` — were wired 2026-06-25 (HorseHealth + Ammo are multiplicative; consumers span `CareerAgentStatService`, `TaomAgentStatCalculateModel`, `TaomAgentApplyDamageModel`, `TaomMapVisibilityModel`, `TaomPartyHealingModel`, `CareerPerkMissionBehavior.OnAgentBuild`), and their ~211 magnitudes re-tuned to a uniform 10–15% band via `tools/retune_phantom_passives.py`. A load-time gate (`CareerConfigProvider.ValidatePassiveConsumers`) + a shipped-XML regression test (`CareerChoicesIntegrationTests`) now prevent a new phantom type from shipping silently. Pure arithmetic for the Ammo + StealthBonus consumers lives in the testable `CareerPassiveMath`.
+**Effect-type consumers — the canonical map.** `PassiveEffectConsumers` is the compiled source of
+truth for *whether* a type is read; the table below is the source of truth for *where*. Both bugs of
+2026-08-06 (`Health`, `TroopDamage`) passed the compiled gate and still did nothing the player could
+see, because the gate cannot ask the only question that matters: **does the consumer govern the same
+system the pip's text promises?** Keep this table in step with the code — it is what makes that audit
+repeatable in one pass instead of a re-derivation.
+
+Counts are shipped pips in `taom_career_choices.xml` (1,310 passives across 23 types; a 0 means the
+type is wired but unused by any shipped pip, which is fine — it is the reverse, a used type with no
+consumer, that the load gate and `CareerChoicesIntegrationTests` reject).
+
+| Effect | Shipped pips | Consumer | Layer | Notes |
+|---|---:|---|---|---|
+| `Health` | 165 | `TaomCharacterStatsModel.MaxHitpoints` | campaign + mission | mission inherits it free via SandboxAgentStatCalculateModel's hero branch — never add it on the agent path too |
+| `Damage` | 190 | `CareerAgentStatService.CalculateDamageAmplification` | mission | hero only; mask-gated by attack_type_mask |
+| `Resistance` | 107 | `CareerAgentStatService.CalculateDamageReduction` | mission | hero only; mask-gated |
+| `ArmorPenetration` | 49 | `CareerAgentStatService.CalculateDamageAmplification` | mission | hero only |
+| `SwingSpeed` | 45 | `CareerAgentStatService.ApplyAgentStatModifiers` | mission | props.SwingSpeedMultiplier |
+| `MovementSpeed` | 45 | `CareerAgentStatService.ApplyAgentStatModifiers` | mission | props.MaxSpeedMultiplier |
+| `Ammo` | 14 | `CareerPerkMissionBehavior.OnAgentBuild` | mission | multiplicative refill |
+| `ShrugOff` | 0 | `CareerAgentStatService.ShouldShrugOffBlow` | mission | hero victim only |
+| `MountHealth` | 43 | `CareerAgentStatService.ApplyMountHealthPassives` | mission | the MOUNT, keyed on its rider; multiplicative |
+| `MountChargeDamage` | 72 | `CareerAgentStatService.ApplyAgentStatModifiers` | mission | props.MountChargeDamage |
+| `TroopDamage` | 105 | `CareerAgentStatService.CalculateDamageAmplification` **+** `TaomRaidModel.CalculateHitDamage` | mission + campaign | TWO consumers on purpose: battle damage for the leader's non-hero troops, plus settlement raid speed |
+| `TroopResistance` | 36 | `CareerAgentStatService.CalculateDamageReduction` | mission | the leader's non-hero troops |
+| `PartyMovementSpeed` | 50 | `TaomPartySpeedModel` | campaign map |  |
+| `PartySpottingRange` | 46 | `TaomMapVisibilityModel.GetPartySpottingRange` | campaign map |  |
+| `StealthBonus` | 37 | `TaomMapVisibilityModel.GetPartySpottingRatioForMainPartySeeingRange` | campaign map | lower ratio = harder to spot |
+| `PartySize` | 54 | `TaomPartySizeModel` | campaign | flat |
+| `CompanionLimit` | 0 | `TaomClanTierModel` | campaign |  |
+| `InventoryCapacity` | 0 | `TaomInventoryCapacityModel.CalculateInventoryCapacity` | campaign |  |
+| `TroopMorale` | 74 | `TaomPartyMoraleModel.GetEffectivePartyMorale` | campaign |  |
+| `TroopWages` | 52 | `TaomPartyWageModel` | campaign | negative magnitudes |
+| `TroopUpgradeCost` | 1 | `TaomPartyTroopUpgradeModel` | campaign | negative |
+| `TroopSurvival` | 18 | `TaomPartyHealingModel.GetSurvivalChance` | post-battle | raw float, not ExplainedNumber |
+| `HeroHealing` | 9 | `TaomPartyHealingModel.GetDailyHealingHpForHeroes` | campaign daily |  |
+| `RenownGain` | 96 | `TaomBattleRewardModel` | post-battle |  |
+| `SmithingCostReduction` | 0 | `TaomSmithingModel` | campaign |  |
+| `SpecialResourceGain` | 1 | `SpecialResourceService` | campaign |  |
+| `SpecialResourceUpkeepModifier` | 0 | `SpecialResourceService` | campaign |  |
+| `SpecialResourceUpgradeCostModifier` | 1 | `SpecialResourceService` | campaign |  |
+| `BuffDuration` | 0 | `— none —` | n/a | reserved; deliberately unconsumed, and the phantom-gate test's exemplar |
+| `Special` | 0 | `— none —` | n/a | parse fallback sentinel |
+
+History: the six historically-dead "phantom" types — `Ammo`, `MountChargeDamage`, `MountHealth`,
+`TroopResistance`, `StealthBonus`, `HeroHealing` — were wired 2026-06-25 and their ~211 magnitudes
+re-tuned to a uniform 10-15% band via `tools/retune_phantom_passives.py` (`MountHealth` and `Ammo`
+became multiplicative). A load-time gate (`CareerConfigProvider.ValidatePassiveConsumers`) plus a
+shipped-XML regression test prevent a *fully* unconsumed type from shipping. Pure arithmetic for the
+Ammo + StealthBonus consumers lives in the testable `CareerPassiveMath`. (Those six were previously
+listed here under their pre-rename names `HorseChargeDamage` / `HorseHealth` / `HealthRegeneration`,
+which no longer exist in `PassiveEffectType` — corrected 2026-08-06.)
 
 ### Ability Templates (`Main/_Module/ModuleData/career_system/taom_ability_templates.xml`)
 

@@ -206,6 +206,9 @@ Bannerlord's engine surfaces GPU device-loss as "File read failed! Please try to
 - **Source:** memory/feedback_bannerlord_async_load_check_gpu_first.md (RCA 2026-05-20 + 2026-05-21 follow-up; see feedback_shader_cache_invisible_cc, reference_bannerlord_slow_load, environment-failures.md)
 
 ### Data-mutating XML scripts must round-trip byte-faithfully (BOM + encoding) and compare ids case-insensitively
+**THIRD INSTANCE 2026-08-06 — the rule was right, its LOADING was the defect.** `tools/oneoff/fix_uruk_hai_hands_teamcolor.py` shipped with the forbidden mixed shape (plain `utf-8` text read + text write) despite this lesson existing since 2026-05-28. Root cause of the recurrence: the convention lives in `tools/README.md`, which **nothing auto-loads**, and `.claude/rules/moduledata-validation.md` was paths-scoped to *repo* ModuleData only — so authoring a script that edits the game install loaded no rule at all. Fixed by extending that rule's `paths:` to `tools/**/*.py` + `tools/**/*.ps1` and inlining both sanctioned idioms there, so writing any tool now surfaces the convention. A blocking lint was evaluated and **rejected**: 92 of 124 XML-writing scripts trip a naive mixed-shape heuristic, so a build gate would fail on pre-existing debt and false-positive on read-only analyzers. Two sibling defects in the same script, same root: a dormant branch spliced bare `
+` into CRLF files, and the target set was derived by substring containment rather than exact-token compare. **When a lesson recurs, check whether the rule is reachable from where the code is written before writing the lesson a third time.**
+
 Any TAOM script that EDITS Bannerlord ModuleData XML (`tools/*.py`, `*.ps1`) must round-trip byte-faithfully: detect the BOM via `read_bytes`, decode `utf-8-sig`, write `write_bytes` with an explicit `b"\xef\xbb\xbf"` prefix re-prepended only if the file had one. Bannerlord XML is UTF-8 — some files carry a BOM (`TAOM_Map/settlements.xml`), most repo files don't — with CRLF and non-ASCII (û, é, î, ñ). Scene/asset/id membership checks must be case-insensitive (Windows resolves `HART_ISENGARD` → `HART_isengard`) — lowercase both sides.
 - **Why missed:** `/deep-review` 2026-05-28 (scene tooling). A family of scripts (`audit_scene_names`, `audit_battle_scenes`, `remap_stale_scene_names`, `add_bandit_faction_banner_keys`, `add_bandit_hideouts`, `migrate_hideouts_to_lotr`) grew across many turns with no shared I/O convention → each reinvented file IO and drifted. No live corruption occurred but it was fragile. The 5 core deep-review agents are C#-centric and do NOT review Python/PowerShell tooling — a script bug can corrupt live data silently with zero C# signal.
 - **Prevent:** the canonical pattern (also in `tools/README.md` "XML I/O convention"): `had_bom = path.read_bytes().startswith(b"\xef\xbb\xbf"); text = path.read_text(encoding="utf-8-sig"); ...edits...; path.write_bytes((b"\xef\xbb\xbf" if had_bom else b"") + text.encode("utf-8"))` + `.bak` backup before destructive write. Anti-patterns: writing the BOM as a U+FEFF string literal (fragile if the `.py` is re-saved), reading a BOM file with plain `utf-8` (leaves a stray U+FEFF at pos 0), case-sensitive id checks. When a changeset includes data-mutating scripts (especially ones writing OUTSIDE the repo to the `TAOM_Map` game install), launch a dedicated Tooling Correctness agent (`.claude/skills/deep-review/SKILL.md` Step 2c).
@@ -611,4 +614,69 @@ back into all 12 language files and silently reverts the edit. Any tool that rew
 text must also re-point `tools/translation_cache/<lang>.json`, or the change has a delayed fuse.
 `tools/retune_career_health.py` does this in its third pass.
 
-**Source:** #390 career health retune, 2026-08-06.
+**Source:** #388 career health retune, 2026-08-06.
+
+### A value-remapping tool is only idempotent if its old and new value sets are disjoint
+
+**Trap:** the natural way to make a retune script re-runnable is to key the swap on the OLD value —
+`if current not in MAPPING: skip  # already retuned`. That is correct only while the mapping's keys
+and values do not overlap. The moment they do, an already-converted pip sits on a value that is
+still a mapping KEY, the skip branch becomes unreachable for it, and a second `--apply` shifts it
+again.
+
+Caught by the tooling agent in deep review 2026-08-06 as CRITICAL. `tools/retune_career_health.py`
+started with one profile (`health`, 25-100 → 5-10, disjoint, guard sound). A second profile was
+added (`troopdamage`, 0.03-0.20 → 0.02-0.08) whose keys and values overlap on
+{0.03, 0.05, 0.06, 0.08}. A re-run would have silently double-shifted **71 of 105** pips across four
+data surfaces — magnitude, English description, source string, 12 language files and 12 translation
+caches. The tool's own docstring, `tools/README.md`, the CHANGELOG and the feature doc all asserted
+"re-running is a no-op"; all four were wrong, and the dry-run's own "71 pips found" was the tell.
+
+**Why missed:** the guard was written and verified against the profile it was born with, then a
+second profile was added without re-checking that the guard's *precondition* still held. The
+precondition was never written down, so there was nothing to re-check against.
+
+**Prevent:**
+- Decide idempotency at FILE level, not per item: if every item already sits on a target value and
+  none sits on a key that is not also a target, the transform has run. That is decidable even when
+  per-item detection is not (`already_applied()` in that tool).
+- Assert or warn on the precondition explicitly (`overlapping_values()`), so a future profile with
+  an overlapping mapping announces itself instead of silently disarming the guard.
+- Unit-test idempotency **per profile**, driven off the config table rather than a hand-written
+  list, so adding a profile cannot skip the test (`tools/tests/test_retune_career_health.py`).
+- Treat "re-running is a no-op" as a claim requiring proof — run the dry-run twice and read the
+  count. It reported 71 in plain text the whole time.
+
+**Generalises to:** any migration, renamer, or unit-converter with an old→new table — ID
+remappings, tier shifts, percentage rescales. Ask first: *can old and new values collide?*
+
+**Source:** deep review of the career effect layer audit, 2026-08-06;
+`docs/reviews/rca-career-effect-layer-audit-2026-08-06.md` finding #3.
+
+### A feature is not verified until a real container has resolved it
+
+Unit tests that `new` a service directly, and wiring tests that assert on `IoC.cs`/`SubModule.cs`
+**source text**, both pass happily while DryIoc cannot construct the type at all. DryIoc validates
+constructor selection at `Register` time, not first resolve — so two public constructors on a
+registered class throw `UnableToSelectSinglePublicConstructorFromMultiple` inside `IoC.Configure()`,
+called from `SubModule.OnSubModuleLoad()`: a hard crash to desktop **before the main menu**, with a
+green test suite and a clean build.
+
+**Why missed:** all six `/deep-review` dimensions reason about code that is already running —
+standards checks that a registration *exists*, completeness checks that a test file exists per
+class, API-compatibility scopes to TaleWorlds signatures, and performance/data-flow/lifecycle all
+presuppose a live campaign. No dimension owned the question *"does this feature survive startup?"*.
+The repo's existing `*WiringTests` pattern reinforced the blind spot by asserting on source text,
+which structurally cannot see a constructor-selection failure.
+
+**Prevent:** every IoC-registered feature gets one test that builds a real `Container`, calls the
+feature's `Register…Feature(container)`, and resolves each registration — plus an invariant that
+every registered implementation exposes exactly one public constructor (make extra overloads
+`internal`; `InternalsVisibleTo` keeps them reachable from tests). Add the container round-trip to
+the review checklist for any changeset touching `Main/IoC.cs`.
+
+**Generalises to:** any DI-registered type, and any framework that validates at registration rather
+than at resolve.
+
+**Source:** `docs/reviews/rca-economy-diagnostics-2026-08-06.md` finding #1 — found by the user
+launching the game mid-review, not by the review.

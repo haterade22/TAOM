@@ -145,6 +145,24 @@ The first cut of the `ActionIndexCache` repair retried from `CharacterSpawnerSer
   from the `E:\Decompiled_Bannerlord` dump** — decompile that DLL directly with `ilspycmd`.
 - **Source:** `docs/reviews/rca-prone-character-tableau-2026-07-31.md`
 
+### A character's meshes live on the SKELETON, not on the entity's MetaMesh components
+
+`AgentVisuals` attaches skin and armour through `_data.AgentVisuals.GetSkeleton()`, so
+`GameEntity.MultiMeshComponentCount` / `GetMetaMesh(i)` return **0 / nothing** for a character
+tableau or agent. To enumerate what a character actually draws, use
+`entity.Skeleton.GetAllMeshes()` (`IEnumerable<Mesh>`), then `Mesh.GetMaterial()` →
+`Material.Name` / `GetShader().Name` / `GetShaderFlags()` / `GetTextureWithSlot(0).Name`, plus
+`Mesh.Color` / `Color2` (which is where `AddTeamColorToMesh` writes).
+
+- **Why missed:** the entity-component API is the obvious one and compiles fine; it simply returns
+  an empty set here. A render census built on it reported `metaMeshCount=0` for **every** character —
+  including `main_hero` and a troop known to render correctly — and that only surfaced in-game.
+- **Prevent:** always include a **known-good control** in any census or dump, and treat "the control
+  returned nothing" as an instrument fault rather than a finding. Zero for everything is never data.
+- **Note:** `MBTextureType` is not visible from `Main`'s reference set; use
+  `Material.GetTextureWithSlot(0)` (slot 0 == `DiffuseMap`) instead of `GetTexture(MBTextureType.DiffuseMap)`.
+- **Source:** #389 / `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
