@@ -49,7 +49,7 @@ Read-only, no gameplay change. Binding tests pin all five targets, two of them p
 `Other` — plausible-looking and useless, which is worse than a crash. Feature doc:
 `docs/features/economy-diagnostics.md`.
 
-### fix(review): deep review of the career effect work — 1 CRITICAL, 1 HIGH fixed (#388)
+### fix(review): deep review of the career effect work — 1 CRITICAL, 1 HIGH fixed (#394, #395)
 
 Six-agent deep review (5 core + the mandated tooling agent, since the changeset adds a file-writing
 Python tool). Standards PASS, API compatibility 6/6 verified against the installed v1.4.7 DLLs,
@@ -81,7 +81,7 @@ git-tracked, unlike the sibling scripts that mutate the live game install) rathe
 
 RCA: `docs/reviews/rca-career-effect-layer-audit-2026-08-06.md`.
 
-### fix(career): troop-damage pips only made villages burn faster (#388)
+### fix(career): troop-damage pips only made villages burn faster (#395)
 
 Second instance of the max-health bug class, found by re-auditing every career effect with the lens
 that actually catches it: not *"is anything reading this"* but *"is it read where the description
@@ -104,7 +104,7 @@ behaviour players already have, and the two are different systems — not a doub
 `PassiveEffectConsumers` now records both misses in its header. Membership in that set is necessary,
 never sufficient: it answers "is anything reading it", and it stayed green through both bugs.
 
-### balance(career): troop-damage pips cut from 3-20% to a 2-8% band (#388)
+### balance(career): troop-damage pips cut from 3-20% to a 2-8% band (#395)
 
 Turning 105 pips on at their authored magnitudes would have been a large, sudden combat swing — and
 those magnitudes were authored while the effect did nothing in battle, exactly the situation the
@@ -130,7 +130,7 @@ effect type's range byte-identical, symmetric 6,455/6,455 diff with the `\r\r\n`
 Not-tested: in-game feel of army-wide troop damage.
 Research: DefaultRaidModel.CalculateHitDamage, RaidEventComponent, AttackInformation attacker-side origins
 
-### balance(career): max-health pips cut from 25-100 HP to a 5-10 band (#388)
+### balance(career): max-health pips cut from 25-100 HP to a 5-10 band (#394)
 
 Direct consequence of the fix below. While `Health` only moved a mission agent's health bar, +75 was
 a battle-only number nobody read on the character sheet. Now that it is the campaign max HP, +75 on
@@ -178,7 +178,7 @@ whole-file rewrite (lesson recorded in `docs/reviews/lessons/build-tooling-workf
 
 Not-tested: in-game feel of the new band.
 
-### fix(career): the max-health pip only applied in battle (#388)
+### fix(career): the max-health pip only applied in battle (#394)
 
 A "+75 max health" career choice left the character screen reading `Max. Hit Points 100 / Base +100`.
 `PassiveEffectType.Health` had exactly one consumer — `TaomAgentStatCalculateModel.GetEffectiveMaxHealth`,
@@ -300,13 +300,20 @@ Suite 5680 green; 95 BindingVerification tests pass against the installed engine
 root-cause pattern and per-agent miss analysis in
 `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`; Review 82b in `docs/reviews/REVIEW-LOG.md`.
 
-### fix(render): Isengard Uruk-Hai black silhouettes — root-caused and a test fix applied (#389)
+### fix(render): Isengard Uruk-Hai black silhouettes — FIXED and confirmed in-game (#389)
 
 `m_uruk_hai_hands_a1` is authored to require the shader flag `use_double_colormap_with_mask_texture`.
 The only thing that adds it is `AgentVisuals.AddTeamColorToMesh`, which the engine calls **only when
 the item carries `UseTeamColor="true"`** — it does `GetMaterial().CreateCopy()` then
 `AddMaterialShaderFlag(...)`. Isengard uruk armour was `UseTeamColor="false"`, so the material rendered
 with the mask path unbound: black.
+
+**CONFIRMED IN-GAME 2026-08-06.** `[Isengard] Uruk-Hai Swordman` renders with full armour detail and
+the White Hand of Saruman legible on helmet and chest — that white-on-dark insignia is the
+double-colormap mask path itself working. Verified in the log rather than only on screen: the post-fix
+census shows every affected troop (`urukhai_fighter`, `_warrior`, `_swordman`, `_feller`, `_spearman`,
+`_pavise`, `_nazg_hai`) now binding `m_uruk_hai_hands_a1(copy)` at `0x4C0090`, with **zero** remaining
+occurrences of the raw `0x480090`. Exactly the transition predicted, on exactly the troops named.
 
 Measured by the Patch67 render census, same material on both sides:
 

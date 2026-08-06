@@ -70,14 +70,14 @@ CACHE_DIR = Path("tools/translation_cache")   # <lang>.json, lowercase of the La
 EFFECTS = {
     "health": {
         "type": "Health",
-        # Maintainer-chosen 2026-08-06 ("even spread"). Flat HP; #388.
+        # Maintainer-chosen 2026-08-06 ("even spread"). Flat HP; #394.
         "mapping": {25: 5, 30: 6, 35: 6, 40: 7, 45: 7, 50: 8, 60: 8, 75: 9, 100: 10},
         "phrase": r'(max\s+)?health',
         "scale": 1,
     },
     "troopdamage": {
         "type": "TroopDamage",
-        # Maintainer-chosen 2026-08-06: 3-20% -> 2-8%; #388. Army-wide, so it sits BELOW the hero's
+        # Maintainer-chosen 2026-08-06: 3-20% -> 2-8%; #395. Army-wide, so it sits BELOW the hero's
         # own Damage band (5-18%) — a troop multiplier compounds across every soldier.
         "mapping": {0.03: 0.02, 0.05: 0.03, 0.06: 0.03, 0.08: 0.04,
                     0.10: 0.05, 0.12: 0.06, 0.15: 0.07, 0.20: 0.08},

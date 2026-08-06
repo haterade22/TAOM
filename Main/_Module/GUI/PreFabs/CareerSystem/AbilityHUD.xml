@@ -1,0 +1,18 @@
+<Prefab>
+  <Window>
+    <!--
+      Deliberately empty. This overrides TAOM's own AbilityHUD prefab (this
+      module loads after TAOM, so it wins by load order) to retire the
+      130x166 square ability panel, which sat 330px clear of the health
+      cluster in open screen space and landed on top of the tournament prize
+      at MarginRight=480.
+
+      The replacement is the CareerEnergyBarWidget inside this module's
+      AgentStatus.xml override, docked above the native health cluster.
+      TAOM's controller still loads this movie and still drives its VM - we
+      postfix that VM to feed the new bar - so nothing on the TAOM side
+      needs to change and removing this module restores the original panel.
+    -->
+    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="0" SuggestedHeight="0" IsVisible="false" />
+  </Window>
+</Prefab>

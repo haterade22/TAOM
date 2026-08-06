@@ -1,6 +1,24 @@
 # Investigation: Isengard Uruk-Hai render as black silhouettes in the encyclopedia (#389)
 
-**Status: ROOT CAUSE IDENTIFIED (2026-08-06, from runtime census). Fix not yet applied.**
+**Status: RESOLVED — root cause identified from the runtime census, fix applied and CONFIRMED
+in-game 2026-08-06.**
+
+`[Isengard] Uruk-Hai Swordman` now renders with full armour detail and the White Hand of Saruman
+legible on both helmet and chest — that white-on-dark insignia *is* the
+`use_double_colormap_with_mask_texture` path working, which is the most direct visual confirmation of
+the mechanism available.
+
+Verified in the log, not just on screen. Post-fix census (`taom_debug_2026-08-06_16-49-38.log`), every
+affected troop:
+
+```
+urukhai_fighter / _warrior / _swordman / _feller / _spearman / _pavise / _nazg_hai
+    mat='m_uruk_hai_hands_a1(copy)'  flags=0x4C0090   <-- was 'm_uruk_hai_hands_a1' 0x480090
+```
+
+**Zero occurrences of the raw `0x480090` variant remain.** The `(copy)` suffix is the engine having
+run `GetMaterial().CreateCopy()` inside `AddTeamColorToMesh`, and `0x4C0090` is that copy carrying the
+mask flag — exactly the transition the diagnosis predicted, on exactly the troops it named.
 
 ## Root cause
 
@@ -58,7 +76,9 @@ items and every orc item already do, so it is the established look, not a new on
 
 **Alternative** (cleaner but needs the Modding Kit): re-author `m_uruk_hai_hands_a1` so it does not
 depend on the mask flag — or fix the upstream defect that the hand/glove sub-meshes are bundled into
-helmet, bracer, greave and pauldron MetaMeshes at all.
+helmet, bracer, greave and pauldron MetaMeshes at all. **That upstream defect is now tracked as
+[#398](https://github.com/haterade22/TAOM/issues/398) and remains open** — the applied fix is a
+workaround that makes the existing assets render, not a correction of them.
 
 Either way this is **data in `LOTRLOME_Armory`, a dependency module outside this repo** — see the
 dual-tree trap at the end of this document.

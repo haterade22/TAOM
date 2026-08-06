@@ -218,7 +218,10 @@ armour one. Every troop wearing one of these renders as a black silhouette in th
 `Assets/Isengard/isengard_armors/SK_Uruk_Hai_Helmets_{A,B}_geo.tpac`. All referenced materials and
 `_d`/`_n`/`_s` textures exist — nothing is missing, the bundling itself is the anomaly.
 
-**Not yet confirmed as the cause.** Investigation: [`docs/reviews/rca-isengard-black-tableau-2026-08-06.md`](../../reviews/rca-isengard-black-tableau-2026-08-06.md), issue #389.
+**Confirmed as the cause and worked around, not corrected.** #389 is closed by setting
+`UseTeamColor="true"` on the 92 affected items (see the APPLIED EDIT above); the bundling itself is
+still wrong and is tracked as **[#398](https://github.com/haterade22/TAOM/issues/398)**. Investigation:
+[`docs/reviews/rca-isengard-black-tableau-2026-08-06.md`](../../reviews/rca-isengard-black-tableau-2026-08-06.md).
 
 ### 42 meta-meshes referenced but absent from the packages (#390)
 

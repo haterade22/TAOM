@@ -244,7 +244,7 @@ public class CareerAgentStatServiceTests
 
     // ──────────────────────────────────────────────────────────────────────────
     // ApplyMountHealthPassives — mount MountHealth only (multiplicative).
-    // The hero `Health` passive lives on TaomCharacterStatsModel.MaxHitpoints (#388); see the
+    // The hero `Health` passive lives on TaomCharacterStatsModel.MaxHitpoints (#394); see the
     // double-count pin at the end of this block for why it must never come back here.
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -278,7 +278,7 @@ public class CareerAgentStatServiceTests
     }
 
     /// <summary>
-    /// #388 double-count pin. SandboxAgentStatCalculateModel.GetEffectiveMaxHealth opens with
+    /// #394 double-count pin. SandboxAgentStatCalculateModel.GetEffectiveMaxHealth opens with
     /// `if (agent.IsHero) return agent.Character.MaxHitPoints();`, and CharacterObject.MaxHitPoints()
     /// resolves through TaomCharacterStatsModel — which already adds the Health passive. If this
     /// service ever reads Health again, a +75 pip becomes +150 in battle (100 → 175 → 250).
@@ -309,9 +309,9 @@ public class CareerAgentStatServiceTests
         _passives.DidNotReceiveWithAnyArgs().GetMaskedMagnitude(default!, default, default);
     }
 
-    // ── TroopDamage — the offensive mirror of TroopResistance (#388) ──────────
+    // ── TroopDamage — the offensive mirror of TroopResistance (#395) ──────────
     // The passive belongs to the party LEADER but applies to their non-hero troops' hits. Until
-    // #388 the only consumer was TaomRaidModel.CalculateHitDamage — settlement raid progress — so
+    // #395 the only consumer was TaomRaidModel.CalculateHitDamage — settlement raid progress — so
     // 105 pips promising "+N% troop damage" did nothing in any battle.
 
     [TestMethod]

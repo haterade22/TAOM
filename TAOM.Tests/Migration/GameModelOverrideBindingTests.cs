@@ -108,7 +108,7 @@ public class GameModelOverrideBindingTests
     }
 
     /// <summary>
-    /// #388 regression pin. The career <c>Health</c> passive is applied campaign-side by
+    /// #394 regression pin. The career <c>Health</c> passive is applied campaign-side by
     /// <c>TaomCharacterStatsModel.MaxHitpoints</c> — that override is the ONLY thing that puts a
     /// "max health" pip into the character-screen tooltip, <c>Hero.MaxHitPoints</c>, and the
     /// daily heal cap. It shipped missing, so the pip was invisible and inert outside a mission.
@@ -133,7 +133,7 @@ public class GameModelOverrideBindingTests
                 "TaomCharacterStatsModel declares no MaxHitpoints override, so nothing applies the " +
                 "career Health passive on the campaign layer: the character screen, Hero.MaxHitPoints " +
                 "and the daily heal cap all fall through to DefaultCharacterStatsModel's flat 100. " +
-                "A 'max health' career pip is then invisible and inert outside a mission (#388).");
+                "A 'max health' career pip is then invisible and inert outside a mission (#394).");
 
         var method = declared[0];
         Assert.IsTrue(IsOverride(method),

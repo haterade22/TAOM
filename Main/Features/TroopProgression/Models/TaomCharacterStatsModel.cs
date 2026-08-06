@@ -6,7 +6,7 @@ using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.TroopProgression.Models;
 
-// #388 — this model owns the career `Health` passive for the WHOLE game, mission included.
+// #394 — this model owns the career `Health` passive for the WHOLE game, mission included.
 // `SandboxAgentStatCalculateModel.GetEffectiveMaxHealth` opens with
 // `if (agent.IsHero) return agent.Character.MaxHitPoints();`, and CharacterObject.MaxHitPoints()
 // is this model, so a hero's in-battle health limit already flows from here. Do NOT also add the

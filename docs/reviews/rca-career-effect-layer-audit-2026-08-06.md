@@ -1,8 +1,9 @@
 # RCA — career effect layer audit (Health + TroopDamage), 2026-08-06
 
 **Scope:** two career-effect wiring bugs of the same class, the balance retunes that followed, and
-the 6-agent deep review of that changeset. Filed under the #388 career arc — see "Issue numbering"
-below for why, which is itself one of the findings.
+the 6-agent deep review of that changeset. Issues [#394](https://github.com/haterade22/TAOM/issues/394) and
+[#395](https://github.com/haterade22/TAOM/issues/395), both closed 2026-08-06 — see "Issue
+numbering" below, which is itself one of the findings.
 
 ## Top-line
 
@@ -87,9 +88,20 @@ Findings 6 exists because I referenced `#390` and `#391` without checking. `gh` 
 whole time; one command would have caught it. A concurrent session noticed the collision and
 renumbered my CHANGELOG entries before I did.
 
-All 24 references now read `#388`. That is accurate but imprecise — #388 is the diamond-screen
-issue, and these are two distinct wiring bugs plus a tooling bug that warrant their own issues.
-**Dedicated issues are still owed** and are recorded as owed in `docs/features/career-system.md`.
+References were first corrected to `#388`, which was accurate but imprecise — #388 is the
+diamond-screen issue. **Resolved 2026-08-06:** dedicated issues
+[#394](https://github.com/haterade22/TAOM/issues/394) (max health) and
+[#395](https://github.com/haterade22/TAOM/issues/395) (troop damage) were filed with full
+root-cause bodies and closed with verification records, and every code and doc reference was
+retargeted — `#388` now remains only on the diamond-screen UI work it actually describes.
+
+The tooling CRITICAL (finding 3) is deliberately NOT a separate issue: it never reached shipped
+data, and it is fully captured here, in REVIEW-LOG Review 83, in
+`lessons/build-tooling-workflow.md`, and by 14 unit tests that pin it per profile.
+
+#395 was closed on the maintainer's instruction rather than on in-game evidence — the max-health
+half was confirmed in-game by the reporter, the troop-damage band has not been played yet. That
+caveat is recorded in the closing comment on the issue itself, not only here.
 
 ## Lessons codified
 

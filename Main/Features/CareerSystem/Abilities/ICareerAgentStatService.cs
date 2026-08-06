@@ -32,7 +32,7 @@ public interface ICareerAgentStatService
     /// Returns a MOUNT's adjusted max health — a multiplicative <c>MountHealth</c> bonus when the
     /// mount's rider is a hero carrying that passive. Pass null for any non-mount agent.
     /// <para>
-    /// The hero <c>Health</c> passive is NOT handled here (#388): it is applied campaign-side by
+    /// The hero <c>Health</c> passive is NOT handled here (#394): it is applied campaign-side by
     /// <c>TaomCharacterStatsModel.MaxHitpoints</c>, and <c>SandboxAgentStatCalculateModel</c>'s
     /// hero branch returns <c>agent.Character.MaxHitPoints()</c>, which already routes through that
     /// model. Adding it on this path too would double-count it in battle.

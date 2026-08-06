@@ -1812,8 +1812,9 @@ bonus in battle" risk. Data Flow traced 38 flows for 0 gaps, decompiling `RaidEv
 Also corrected: four documents asserted "re-running is a no-op" on the unsound per-pip reasoning; the
 tool's missing `.bak` is now a recorded deviation (targets are git-tracked, unlike the live-install
 scripts); and `#390`/`#391` were fabricated issue numbers I never verified — #390 is the armory
-meta-mesh issue and #391 did not exist, so all 24 references were corrected to #388 and dedicated
-issues remain owed. Suite 5672 green + 14 new tool tests. Lessons: layer-not-existence
+meta-mesh issue and #391 did not exist. Dedicated issues #394 (max health) and #395 (troop damage)
+were subsequently filed and closed, and every reference retargeted — #388 now remains only on the
+diamond-screen UI work it describes. Suite 5672 green + 14 new tool tests. Lessons: layer-not-existence
 (gamemodels-services), disjoint-value-sets idempotency (build-tooling-workflow).
 
 ## Review 83 — EconomyDiagnostics + caravan-gate diagnostics (#391), workflow deep-review (2026-08-06)

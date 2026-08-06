@@ -81,7 +81,7 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
     // GetVictimTroopLeaderHeroId below. A hero attacker is covered by the Damage pip instead, so
     // return null for heroes and the two never stack on one blow. Same mount caveat: for a couched
     // /charge hit the AttackerAgent can be the mount, whose own Origin is null, so the leader must
-    // resolve off the RIDER's origin or every cavalry impact silently loses the bonus (#388).
+    // resolve off the RIDER's origin or every cavalry impact silently loses the bonus (#395).
     private static string GetAttackerTroopLeaderHeroId(in AttackInformation info)
     {
         if (info.IsAttackerAgentNull) return null;

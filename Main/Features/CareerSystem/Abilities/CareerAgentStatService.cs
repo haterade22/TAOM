@@ -36,7 +36,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         ApplyAllyBuff(agentIndex, props);
     }
 
-    // #388 — the hero `Health` passive is deliberately ABSENT here. It is applied campaign-side by
+    // #394 — the hero `Health` passive is deliberately ABSENT here. It is applied campaign-side by
     // TaomCharacterStatsModel.MaxHitpoints, and SandboxAgentStatCalculateModel.GetEffectiveMaxHealth
     // starts with `if (agent.IsHero) return agent.Character.MaxHitPoints();` — which routes through
     // that same model. Re-adding it on this path double-counts (a +75 pip becomes +150 in battle).
@@ -69,7 +69,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         // hero Damage above (the boundary returns null here for a hero attacker). NOT mask-gated:
         // the shipped pips carry no attack_type_mask, so it is a flat army-wide multiplier.
         //
-        // #388 — before this, TroopDamage's only consumer was TaomRaidModel.CalculateHitDamage,
+        // #395 — before this, TroopDamage's only consumer was TaomRaidModel.CalculateHitDamage,
         // i.e. how fast a village burns, so 105 pips promising "+N% troop damage" were inert in
         // every battle. The raid consumer is deliberately KEPT; these are different systems, not a
         // double-count.
