@@ -177,3 +177,27 @@ the burden is on the caller until that changes.
 **Source:** #388 career health retune, 2026-08-06; full write-up in
 `lessons/build-tooling-workflow.md` (same entry covers the `\r\r\n` line-ending trap in the language
 XMLs) and `docs/reference/localization-map.md`.
+
+### Need a tintable shape and the art is the wrong colour? Layer an already-baked NEUTRAL sprite instead of adding a new one
+
+Gauntlet tints multiplicatively, so a coloured sprite can never be tinted to a different hue —
+and adding a neutral replacement means the full sprite-bake pipeline (generator + texture
+compile), which can fail in ways that are invisible until you look in-game. The career screen's
+per-tier diamond rims (#388) were blocked exactly there: `clan_diamond_border` is bronze art, and
+its desaturated replacement registered in the manifest but never packed into the atlas (#392).
+
+The fix used no new asset at all. `clan_diamond_mask` was already baked and neutral grey
+(`#707070`), so the rim was rebuilt by layering it: the mask at 78px tinted the tier metal, then
+the mask again at 70px tinted the dark fill, covering the centre. The ~4px of the first layer
+still visible IS the rim, in any colour. Children draw in document order, so the coloured layer
+must come first and the centre second.
+
+- **Why missed:** the instinct on "this sprite is the wrong colour" is to author a new sprite,
+  which quietly commits you to a bake. Two sessions went into the generator before anyone asked
+  whether an existing neutral sprite could be composed into the same shape.
+- **Prevent:** before adding a sprite purely to get a tintable version of a shape you already
+  have, check the atlas for a neutral one you can layer (a filled shape can become an outline by
+  drawing a larger tinted copy behind a smaller fill). Zero bake risk, instant iteration. Reserve
+  new art for genuinely new geometry.
+- **Source:** career UX arc 2026-08-06, commit `505bb6e1`; confirmed in-game (bronze/silver/gold
+  rendering distinctly). Underlying packer bug remains open as #392.
