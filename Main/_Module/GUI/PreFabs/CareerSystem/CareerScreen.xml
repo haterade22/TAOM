@@ -92,7 +92,7 @@
                      tier 1 bronze -> tier 2 silver -> tier 3 gold. Each tier's three border
                      colours are (dim = locked, mid = available, bright = taken glow):
                        tier 1  #5A4A38 / #B08D57 / #E8B87A
-                       tier 2  #565B61 / #AEB6BE / #EAF2FA
+                       tier 2  #6E767E / #E8EFF7 / #FFFFFF
                        tier 3  #6E5C22 / #C9A227 / #FFD98C
                      The taken glow is shown by TaomCareerDiamondWidget, not by a binding, so
                      changing a tier's metal means editing all three of ITS values; they are
@@ -189,9 +189,9 @@
                                       <Children>
                                         <TaomCareerDiamondWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="70" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Encyclopedia\clan_diamond_mask" Color="#3A3630FF" IsTakenState="@IsTaken" IsKeystoneState="@IsKeystone">
                                           <Children>
-                                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="76" SuggestedHeight="76" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Encyclopedia\clan_diamond_border" Color="#565B61FF" IsVisible="@IsUnavailable" />
-                                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="76" SuggestedHeight="76" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Encyclopedia\clan_diamond_border" Color="#AEB6BEFF" IsVisible="@IsFreeToTake" />
-                                            <Widget Id="DiamondGlow" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="80" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Encyclopedia\clan_diamond_border" Color="#EAF2FAFF" IsVisible="false" />
+                                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="76" SuggestedHeight="76" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Encyclopedia\clan_diamond_border" Color="#6E767EFF" IsVisible="@IsUnavailable" />
+                                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="76" SuggestedHeight="76" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Encyclopedia\clan_diamond_border" Color="#E8EFF7FF" IsVisible="@IsFreeToTake" />
+                                            <Widget Id="DiamondGlow" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="80" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="TAOM\Encyclopedia\clan_diamond_border" Color="#FFFFFFFF" IsVisible="false" />
                                             <Widget Id="IconLocked" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="34" SuggestedHeight="34" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="@IconSprite" Color="#FFFFFF33" IsVisible="@IsUnavailable" />
                                             <Widget Id="IconFree" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="34" SuggestedHeight="34" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="@IconSprite" Color="#F2EBDCF0" IsVisible="@IsFreeToTake" />
                                             <Widget Id="IconTaken" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="34" SuggestedHeight="34" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="@IconSprite" Color="#FFD24AFF" IsVisible="@IsTaken" />

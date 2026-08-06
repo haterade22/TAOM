@@ -27,6 +27,40 @@
 - **The screen is FIXED WIDTH (1720) and CENTRED — do not restore `StretchToParent`.** On a 32:9 monitor a stretching container made the layout as wide as the display, so every fixed-width child clustered left, the header bar ran into dead space, its ability text drifted past centre and clipped, and the Active Effects column stranded far from the grid. 1720 is sized to hold the body (1330 tiers + 20 + 340 column) and the header (700 + 290 + 24 + 92 + 16 + 560 = 1682); changing any of those widths means re-checking that sum. Lesson: `lessons/localization-ui.md`.
 - **Owed:** in-game smoke checklist (plan `review-this-and-identify-bubbly-moon.md` §Verification), 12-language `/localize` for `taom_career_dmg_attrib`/`taom_career_dmg_none` (English registered; translation env-gated on `ANTHROPIC_API_KEY`), keystone-icon art curation pass, pre-existing `CharacterDeveloper.SkillNameText`/`.DescriptionText` brush cleanup (RCA finding #3).
 
+**2026-08-06 — #390: the `Health` pip only ever worked in battle.** A player took a "+75 max health"
+choice and the character screen still read `Max. Hit Points 100 / Base +100`. `PassiveEffectType.Health`
+had exactly one consumer, `TaomAgentStatCalculateModel.GetEffectiveMaxHealth` — the **mission**
+`AgentStatCalculateModel` slot. Everything the player reads on the campaign layer (the tooltip,
+`Hero.MaxHitPoints`, `MapInfoVM`, the daily heal cap, the wounded threshold) goes through
+`CharacterStatsModel.MaxHitpoints`, and `TaomCharacterStatsModel` overrode only `MaxCharacterTier`.
+So the pip applied in battle and was invisible + inert everywhere else.
+
+- **Fixed by moving the add, not copying it.** `TaomCharacterStatsModel` now takes
+  `ICareerPassiveService` and applies `Health` via `ApplyFlat` on `MaxHitpoints`, and the hero branch
+  was **deleted** from `CareerAgentStatService` (`ApplyMaxHealthPassives` → `ApplyMountHealthPassives`,
+  mount-only). The trap: `SandboxAgentStatCalculateModel.GetEffectiveMaxHealth` opens with
+  `if (agent.IsHero) return agent.Character.MaxHitPoints();`, which *is*
+  `CharacterStatsModel.MaxHitpoints`. Keeping both adds turns a +75 pip into +150 in battle
+  (100 → 175 → 250). A unit test pins that the agent-stat path never reads `Health` again.
+- **Engine signature, verified on the installed v1.4.7 DLL:**
+  `MaxHitpoints(CharacterObject character, bool includeDescriptions = false)` — the second parameter
+  is a `bool`, **not** a `StatExplainer`. A binding test in `GameModelOverrideBindingTests` pins both
+  the override's existence and that signature; the two generic gates in that file cannot catch its
+  removal, because `MaxCharacterTier` alone keeps "declares an override" green.
+- **The phantom gate could not have caught this.** `PassiveEffectConsumers` answers "is anything
+  reading it", not "is it read on the layer the player sees" — `Health` was listed as consumed for
+  the whole life of the feature. The blind spot is now documented in that file's header.
+- **Audit of the other effects (2026-08-06, same session):** all 22 other shipped `PassiveEffect`
+  types have a live read site at a layer that matches their wording, and magnitudes are unit-correct
+  (fractions for the `ApplyFactor` types, flat counts for `Health`/`PartySize` — no `is_percentage`
+  mismatch, despite that attribute being parsed and never read). All 302 keystone `<Mutation>` entries
+  resolve: 3 distinct properties (`Duration`/`Radius`/`CooldownReduction`), all present as floats on
+  `AbilityTemplateData`, and all 50 `target_id`s match a real ability template. `Health` was the only
+  broken effect.
+- **Out of scope, flagged:** `WoundedHitPointLimit` stays at vanilla's flat 20, so a 175-HP hero is
+  proportionally harder to wound — a balance question, not a bug. Current `HitPoints` is stored state
+  and stays where it was on an existing save; the hero heals up to the new maximum over campaign days.
+
 ## Overview
 
 Career/class progression system where each hero can have a career that provides passive bonuses, an active ability, and a 3-tier choice tree. 50 LOTR-themed careers across 16 factions, fully XML-driven. Each career has 31 choices (1 root + 6 groups x 5 choices) with keystones, passives, and ability mutations.
