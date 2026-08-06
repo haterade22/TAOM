@@ -281,6 +281,29 @@ suppressed for once per hero rather than swallowing quietly.
   fires (name the subject, once per subject, not per tick).
 - **Source:** #374 + [lord-spawn-guard.md](../../features/lord-spawn-guard.md)
 
+### Injected-field parameters need FOUR underscores, and a field-resolution binding test cannot catch it
+
+Harmony strips **exactly three** underscores from an injected parameter name and looks the remainder
+up as a field. Engine fields carry a leading underscore, so binding `_race` requires `____race`.
+Writing `___race` asks for a field literally named `race`, and Harmony throws
+`ArgumentException("No such field defined in class …")` while applying the **whole category** — every
+patch in it, not just the offending method.
+
+- **The trap is that the obvious test does not cover it.** Per-patch binding tests assert
+  `AccessTools.Field(type, "_race") != null`. That resolves identically whether the parameter is
+  spelled with three underscores or four, so it exercises the *field name* and never the *parameter
+  naming convention*. Patch67 shipped with three underscores, passed its own four binding tests and
+  the full 5588-test suite, and failed only at runtime.
+- **It fails silently in-game.** TAOM's isolated preview/patch batches catch a category failure and
+  log it rather than crash, so the symptom is a patch that simply never runs. It was found only by
+  reading the live `taom_debug_*.log` after an in-game repro — a green build proves nothing here.
+- **Gate:** `TAOM.Tests/Migration/HarmonyFieldInjectionNamingTests.cs` now scans every
+  `[HarmonyPatch]` class in the TAOM assembly, strips exactly three underscores from any `___`-prefixed
+  parameter, and asserts the remainder resolves on the patch target — suggesting the four-underscore
+  form when `_<name>` exists. It carries a non-zero-coverage assertion so a broken scan cannot go
+  vacuously green. Verified red-then-green by reintroducing the defect.
+- **Source:** #389 (Patch67 render census), 2026-08-06.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
@@ -289,6 +312,7 @@ suppressed for once per hero rather than swallowing quietly.
 
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 - [docs/reviews/rca-castle-recruitment-2026-05-31.md](../rca-castle-recruitment-2026-05-31.md)
+- [docs/reviews/rca-isengard-black-tableau-2026-08-06.md](../rca-isengard-black-tableau-2026-08-06.md)
 - [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../rca-tournament-dwarf-dismount-2026-06-09.md)
 
 <!-- backlinks-end -->

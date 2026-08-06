@@ -129,3 +129,22 @@ stranded far from the grid it belonged to.
   panel drifted unreachable on ultrawide.
 - **Source:** career UX arc 2026-08-06 (user report with three stitched ultrawide screenshots);
   fix `9284a5e8`, feature doc `docs/features/career-system.md`.
+
+### Gauntlet tints sprites MULTIPLICATIVELY — a mid-tone colour darkens, only a near-white one highlights
+
+A plain `Widget` multiplies its `Sprite` by its `Color` (an `ImageWidget` ignores `Color`
+entirely — a separate trap). So a tint is a *filter*, not a paint: `#AEB6BE` on a light sprite
+does not produce "silver", it produces a dimmed version of whatever the sprite already was. The
+career screen's tier-2 diamond rims (#388) were authored at that value and read as washed-out
+grey next to bronze and gold, until the ramp moved to `#6E767E / #E8EFF7 / #FFFFFF`.
+
+- **Why missed:** the hexes were picked as if choosing a paint colour — a plausible "silver" on
+  a colour wheel. Nothing in the markup says the value will be multiplied, and the result only
+  looks wrong next to the other tiers, which is a comparison no static review performs.
+- **Prevent:** when tinting a sprite to read as a bright material, start from near-white and
+  pull back, rather than starting from the material's mid-tone. Anything below roughly `#C0C0C0`
+  will read as "darker sprite", not "brighter metal". Related durable fact worth keeping in the
+  same breath: `ImageWidget` ignores `Color` outright, so a state tint on one silently does
+  nothing — use a plain `Widget`.
+- **Source:** career UX arc 2026-08-06, commits `060e65e9` (per-tier metals) and `dee4d12f`
+  (brightened silver); `docs/features/career-system.md`.

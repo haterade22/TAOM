@@ -5,7 +5,7 @@
 
 | GameModel | Overrides | Purpose |
 |-----------|-----------|---------|
-| `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) |
+| `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) + career `Health` passive on `MaxHitpoints` — the ONLY campaign-side consumer of that pip (character screen, `Hero.MaxHitPoints`, daily heal cap), and via `SandboxAgentStatCalculateModel`'s hero branch it feeds in-battle health too, so nothing else may add `Health` (#390) |
 | `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) + culture wage/garrison/Rohan mounted feats + career TroopWages passive |
 | `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) + alignment-gated recruitment (`MaximumIndexHeroCanRecruitFromHero` returns -1 to block recruiting at an enemy-aligned settlement — AlignmentRecruitment feature) |
 | `TaomArmyManagementModel` | `DefaultArmyManagementCalculationModel` | Culture army influence award/cost feats |

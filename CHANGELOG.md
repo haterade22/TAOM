@@ -4,6 +4,104 @@
 
 ## 2026-08-06
 
+### balance(career): max-health pips cut from 25-100 HP to a 5-10 band (#390)
+
+Direct consequence of the fix below. While `Health` only moved a mission agent's health bar, +75 was
+a battle-only number nobody read on the character sheet. Now that it is the campaign max HP, +75 on
+vanilla's flat 100 base is a +75% swing that also raises the daily heal cap and the wounded threshold.
+All 165 pips drop into a 5-10 band.
+
+Mapping (maintainer-chosen "even spread" — every authored rank distinction survives, and the curve is
+non-decreasing so a bigger old pip is never a smaller new one):
+
+| old | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 75 | 100 |
+|-----|----|----|----|----|----|----|----|----|-----|
+| new | 5  | 6  | 6  | 7  | 7  | 8  | 8  | 9  | 10  |
+
+Per-tier result: root/t1 5-7, t2 6-8, t3 8-10.
+
+`tools/retune_career_health.py` rewrites every surface the number appears on, so none of them states
+a value the effect does not deliver: the `magnitude=`/`value=` on each Health `<PassiveEffect>` (both
+authoring schemas), the English default in `description="{=key}..."` plus its source string in
+`taom_career_strings.xml`, the 1,968 translated strings across all 12 languages, and 1,967
+`tools/translation_cache/<lang>.json` entries.
+
+That last pass is load-bearing, not housekeeping. `translate_with_claude.py` looks the cache up by
+`string_id` alone and never checks that the English source still matches, so leaving it stale means
+the next `/localize` run serves "+75 points de vie maximum." back into all 12 language files and
+silently undoes the retune — a delayed fuse rather than a visible failure.
+
+Touching the translations diverges from `retune_phantom_descriptions.py`, which deferred to
+`translate_with_claude.py`. That script changed the text's shape (flat count → percentage, needing
+per-language re-wording); this one changes a digit, and a digit is a digit in every language. Each
+translated health string was verified to carry exactly one number, so the swap is unambiguous, keeps
+the hand-translated PL wording, and needs no re-translation run. It is keyed on the old magnitude, so
+re-running is a no-op rather than a double-shift.
+
+One pip is deliberately untouched: `far_harad_halftroll_root` reads "Vile Brutality grants massive
+health bonus" with no number, so there was nothing to sync (its magnitude still moved 40 → 7).
+
+Verified: 165 pips rewritten, 164 descriptions + 164 source strings + 1,968 translations + 1,967
+cache entries synced, 0 description/magnitude mismatches, 0 cache/language mismatches, every other
+effect type's magnitude range byte-identical, all 14 XML files well-formed, 12 caches valid JSON,
+`validate_moduledata.py` PASS, suite 5590 green. The data diff is symmetric (3,935 insertions /
+3,935 deletions) — the tool uses the binary round-trip `tools/README.md` mandates, because these
+language files are committed with `\r\r\n` and text-mode I/O turns the edit into a 6,180-line
+whole-file rewrite (lesson recorded in `docs/reviews/lessons/build-tooling-workflow.md`).
+
+Not-tested: in-game feel of the new band.
+
+### fix(career): the max-health pip only applied in battle (#390)
+
+A "+75 max health" career choice left the character screen reading `Max. Hit Points 100 / Base +100`.
+`PassiveEffectType.Health` had exactly one consumer — `TaomAgentStatCalculateModel.GetEffectiveMaxHealth`,
+in the **mission** `AgentStatCalculateModel` slot. The tooltip, `Hero.MaxHitPoints`, the daily heal cap
+and the wounded threshold all read `CharacterStatsModel.MaxHitpoints` instead, and `TaomCharacterStatsModel`
+overrode only `MaxCharacterTier`. The pip worked in battle and was invisible + inert on the campaign layer.
+
+`TaomCharacterStatsModel` now takes `ICareerPassiveService` and applies `Health` via `ApplyFlat` on
+`MaxHitpoints`, so the tooltip shows a named career row beside `Base +100`.
+
+The hero add was **moved, not copied**: `SandboxAgentStatCalculateModel.GetEffectiveMaxHealth` opens with
+`if (agent.IsHero) return agent.Character.MaxHitPoints();`, which resolves to that same model, so the
+mission path inherits the bonus for free. `CareerAgentStatService.ApplyMaxHealthPassives` became
+`ApplyMountHealthPassives` (mount-only) — keeping both adds would have made a +75 pip +150 in battle
+(100 → 175 → 250). A unit test pins that the agent-stat path never reads `Health` again, and a binding
+test pins the override plus its v1.4.7 signature (`CharacterObject`, `bool includeDescriptions` — not a
+`StatExplainer`); the generic GameModel gates cannot catch its removal because `MaxCharacterTier` alone
+keeps "declares an override" green.
+
+Audited every other career effect while here: the 22 other shipped passive types all have a live read
+site at a layer matching their wording with correct magnitude units, and all 302 keystone mutations
+resolve (3 properties, all float on `AbilityTemplateData`; all 50 target ids match a template).
+`Health` was the only broken one. `PassiveEffectConsumers` now documents why its phantom gate stayed
+green — it answers "is anything reading it", not "on the layer the player sees".
+
+Not-tested: in-game verification of the tooltip and the in-battle health cap.
+Research: DefaultCharacterStatsModel.MaxHitpoints, SandboxAgentStatCalculateModel.GetEffectiveMaxHealth, Agent.BaseHealthLimit
+Save-compat: No new fields — the bonus is computed from existing career choice data on every read.
+
+### feat(career): per-tier diamond metals — bronze, silver, gold (#388)
+
+Tier 1 bronze → tier 2 silver → tier 3 gold, so the choice tree reads as a progression at a
+glance instead of three identical rows. Each tier owns its own three border colours (dim =
+locked, mid = available, bright = taken glow) and they are deliberately not shared, so changing
+one tier's metal means editing three values; the hex table lives in a comment above the body
+block in `CareerScreen.xml`. The taken glow is shown by `TaomCareerDiamondWidget` rather than by
+a binding, so per-tier glow needed no widget change.
+
+The first silver ramp was then brightened: `#AEB6BE` for the available state is a mid grey, and
+because the border sprite is tinted **multiplicatively**, a mid-tone tint darkens the sprite
+instead of highlighting it — tier 2 read as washed out rather than as the step between bronze
+and gold. Now `#6E767E / #E8EFF7 / #FFFFFF`, making a taken tier-2 diamond the brightest rim on
+the screen.
+
+Also fixed en route: an XML comment containing `--`, which the spec forbids and which stopped
+the prefab parsing. Caught by the parse check before it reached the install — the same trap the
+deep-review skill's "XML Parse Smoke Test" exists for.
+
+Not-tested: in-game render of the three palettes.
+
 ### fix(career): diamond screen layout rework + ultrawide centring (#388)
 
 Two follow-ups after seeing the first diamond pass in-game.
@@ -35,30 +133,54 @@ block at any aspect ratio.
 
 Suite 5566 green. Not-tested: in-game render at ultrawide — needs a reopen.
 
-### feat(diagnostics): Patch67 makes the character tableau report its own resource residency (#389)
+### feat(diagnostics): Patch67 dumps a per-troop render census for the black-silhouette bug (#389)
 
-The black-silhouette investigation had no instrument: the encyclopedia render path emitted nothing,
-so the only available evidence was a human comparing pixels between troops. `Patch67_TableauResidencyDiag`
-makes the path state its outcome per troop.
+The investigation had no instrument — the encyclopedia render path emits nothing, so the only evidence
+was a human comparing pixels. `Patch67_TableauResidencyDiag` dumps one census per character on the
+frame its visual becomes ready: mesh names, material names, shader names and flags, per-mesh
+`Mesh.Color`/`Color2`, and the bound diffuse texture. Diff `urukhai_fighter` against
+`isengard_orc_ravager` and the difference names the cause.
 
-The signal is vanilla's own `_agentVisualLoadingCounter`. `CharacterTableau.OnTick` decrements it only
-when `GetEntity().CheckResources(true, true)` returns true, and shows the refreshed visual only once
-it reaches zero — so "never reaches zero" is an exact proxy for "this character's meshes/materials
-never became resident", **at zero extra native cost**, because vanilla already made the call whose
-answer we read. The patch deliberately never calls `CheckResources` itself: that would add a per-frame
-round-trip and queue resources as a side effect, which is a diagnostic changing what it measures.
+**The first version of this was aimed at the wrong thing, and adversarial review caught it before it
+shipped.** It reported "loading counter never cleared ⇒ black silhouette". Against the v1.4.7
+decompile that is impossible: `RefreshCharacterTableau` hides the refreshed buffer outright, and
+`OnTick` makes a visual visible only once *both* loading counters clear — so a character whose
+counters never clear renders **blank, not black**. For a symptom of "correct geometry, black pixels"
+the counters must already have cleared, meaning the instrument could only ever have logged "fine".
+Compounding it, armour is race-independent (`AddArmorMultiMeshesToAgentEntity` never reads `RaceData`),
+so no per-race residency story explains a black helmet or shield at all. The counters are now used
+only as a *timing trigger* for the census, and the registry entry carries a do-not-reinstate note.
 
-- **Keyed on `_charStringId`, not race.** A race-level key would collapse all 37 `uruk_hai` troops into
-  one verdict and lose the exact comparison the instrument exists for. `Residency STUCK` logs at ERROR,
-  `RESOLVED after N tick(s)` at INFO. **A double-RESOLVED result is as decisive as a STUCK one** — it
-  exonerates residency and moves the fault downstream.
+Three defects the same review caught, all now fixed and pinned by tests: the counter reads 0 both
+before the first refresh arms it and after loading completes, so treating 0 as "ready" reported
+characters that had nothing attached (the sentinel collision `.claude/rules/harmony-patches.md`
+already documents — requiring an observed non-zero first); only the agent counter was checked when
+vanilla gates on the mount counter too; and capacity exhaustion went silently dark, so a missing troop
+was indistinguishable from a clean one. An inverted boolean label (`bodyPropsDefault` printing the
+negation of what it said) went with them.
+
 - **Its own category, not folded into Patch2.** The #389 experiment disables `Patch2_RefreshTableau` +
-  `Patch3_SetRace` to test whether TAOM's patches cause the fault; the instrument must survive that A/B.
-- Verdict logic is a pure `TableauResidencyTracker` (16 tests, TDD) so the patch stays thin — capped at
-  64 tracked characters, one verdict each, because the failing state repeats every frame. All six
-  private-field injections and both targets pinned by `Patch67TableauResidencyBindingTests`; without
-  that gate an engine rename would make the instrument silently dead, since the isolated preview batch
-  logs a category failure rather than crashing. Suite 5586 green.
+  `Patch3_SetRace` to test whether TAOM's own patches cause the fault; the instrument must survive it.
+- Keyed on `{instanceHash}/{_charStringId}` — the troop id makes the comparison readable, the instance
+  hash stops the tick budget accumulating across every screen that ever showed that troop.
+- Trigger logic is a pure `TableauResidencyTracker` (17 tests, TDD) so the patch stays thin; the
+  per-frame postfix injects only two counters and the char id, with everything else read through cached
+  reflection on the single reporting frame. Every field it touches plus both targets are pinned by
+  `Patch67TableauResidencyBindingTests` — a renamed injected field makes Harmony throw, a renamed
+  reflected field silently degrades every value to `<unreadable>`. Suite 5588 green.
+
+**Caught in-game, not by the suite: the patch used three underscores where Harmony needs four.**
+Harmony strips exactly three from an injected parameter and looks the remainder up as a field, so
+`___agentVisualLoadingCounter` asked for a field named `agentVisualLoadingCounter` and the whole
+category threw `ArgumentException("No such field")` at apply time. It passed its own four binding
+tests and the full 5588-test suite, because `AccessTools.Field(type, "_agentVisualLoadingCounter")`
+resolves regardless of how the *parameter* is spelled. The isolated preview batch logs a category
+failure rather than crashing, so the only symptom was a patch that never ran — found by reading the
+live `taom_debug_*.log` after an in-game repro. New repo-wide gate
+`TAOM.Tests/Migration/HarmonyFieldInjectionNamingTests.cs` scans every `[HarmonyPatch]` class, strips
+exactly three underscores from each `___` parameter and asserts the remainder resolves on the target,
+suggesting the four-underscore form; verified red-then-green by reintroducing the defect. Lesson
+recorded in `docs/reviews/lessons/harmony-il.md`. Suite 5589 green.
 
 Scaffolding — delete the category once #389 is root-caused.
 

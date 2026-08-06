@@ -182,5 +182,6 @@ If you re-snapshot later (e.g., after a LOTRLOME update we want to track), bump 
 
 - [docs/features/character-creation.md](../../features/character-creation.md)
 - [docs/reference/armory-guide.md](../armory-guide.md)
+- [docs/reviews/rca-isengard-black-tableau-2026-08-06.md](../../reviews/rca-isengard-black-tableau-2026-08-06.md)
 
 <!-- backlinks-end -->

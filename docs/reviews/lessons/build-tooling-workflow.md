@@ -582,3 +582,33 @@ evaluation and then look like ours. Before trusting anything about in-game behav
 installed file's byte size against the repo's — identical-to-the-package is the tell.
 
 **Source:** career UX arc post-commit install audit 2026-08-06; RCA `docs/reviews/rca-career-ux-arc-2026-08-05.md`.
+
+### The career language XMLs use `\r\r\n` — text-mode Python I/O silently doubles every line
+
+**Trap:** `Main/_Module/ModuleData/Languages/*/std_taom_career_strings_*.xml` are committed with
+`\r\r\n` line endings (verify: `git show HEAD:<file> | head -c 80`). Python's universal-newline text
+mode reads `\r\r\n` as TWO line breaks and `write_text` emits them back as `\r\n\r\n`. The content
+stays correct and the file still parses, so nothing fails — but a 164-string edit lands as a
+**6,180-line whole-file diff** with a blank line inserted between every original line, ×12 files.
+Caught on 2026-08-06 only by noticing `git diff --stat` was asymmetric (51,407 insertions vs 26,687
+deletions); a symmetric diff would have hidden it.
+
+**Prevent:** `tools/README.md` already mandates the binary round-trip for ModuleData XML —
+`read_bytes()` / `decode` / regex / `encode` / `write_bytes()`. This file family is the reason the
+rule is not merely cosmetic: for ordinary CRLF files text-mode happens to round-trip, so a script
+can violate the convention for years and look fine, then destroy these twelve. Never
+`read_text`/`write_text` a ModuleData XML, even when the edit is "just one attribute".
+
+**Diagnostic that generalises:** after any bulk data edit, check `git diff --stat` for
+insertion/deletion asymmetry before reading the diff itself. Equal counts mean you changed lines;
+unequal means you changed the file's *shape*, which is almost never intended.
+
+**Second trap in the same change (different mechanism):** `tools/translate_with_claude.py` looks its
+translation cache up by `string_id` alone (`elif e.string_id in cache`) and never checks that the
+English source still matches. So editing an English string in `taom_career_strings.xml` does NOT
+invalidate its cached translation — the next `/localize` run serves the OLD translation straight
+back into all 12 language files and silently reverts the edit. Any tool that rewrites English source
+text must also re-point `tools/translation_cache/<lang>.json`, or the change has a delayed fuse.
+`tools/retune_career_health.py` does this in its third pass.
+
+**Source:** #390 career health retune, 2026-08-06.

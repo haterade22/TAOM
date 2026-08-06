@@ -153,6 +153,15 @@ python tools/translate_with_claude.py --lang PL --module TAOM --max-entries 50 -
 3. **Claude API** — Sonnet 4.5 with strict prompt about preserving placeholders
 4. **English fallback** — if all else fails or translation breaks placeholder structure, keep English so the game text stays valid
 
+> **Trap — the cache does not notice that the English changed.** Tier 2 matches on `string_id` alone
+> (`elif e.string_id in cache`); it never compares the English source it was translated from. Editing
+> the text of a key that has already been translated therefore does **not** invalidate its cached
+> translation — the next run serves the old wording back into all 12 language files and silently
+> undoes your edit. Whenever you change existing English source text (not just add a new key), update
+> or delete those keys in `tools/translation_cache/<lang>.json` in the same change.
+> Found 2026-08-06 (#390), where 165 career health strings changed "+75" to "+9"; worked example:
+> `tools/retune_career_health.py`. New keys are unaffected — an absent key always reaches the API.
+
 After running the API translator, run the rebuild step to inject the cached translations into the actual XML files:
 
 ```bash
