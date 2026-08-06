@@ -458,6 +458,24 @@ public class CareerScreenVMTests
     }
 
     [TestMethod]
+    public void ToggleChoice_UntakenThenTaken_SelectsThenRefunds()
+    {
+        // #388 — the diamond is the whole click target, so one command serves both
+        // directions. Losing this would strand every taken choice as unrefundable.
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+        var choice = vm.ChoiceGroupsTier1[0].Choices.First(c => c.ChoiceId == "wb_brut_p1");
+
+        choice.ExecuteToggleChoice();
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count, "first click takes the choice");
+
+        var taken = vm.ChoiceGroupsTier1[0].Choices.First(c => c.ChoiceId == "wb_brut_p1");
+        taken.ExecuteToggleChoice();
+        Assert.AreEqual(0, vm.PassiveEffectLines.Count, "second click refunds it");
+    }
+
+    [TestMethod]
     public void ActiveEffects_Deselect_RemovesTheLine()
     {
         SetupHeroWithCareer();

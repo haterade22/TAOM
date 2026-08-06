@@ -42,6 +42,19 @@ public class CareerChoiceObjectVM : ViewModel
             IsTaken = false;
     }
 
+    /// <summary>
+    /// Issue #388 — the diamond is the whole click target, so one command has to serve both
+    /// directions: take an untaken choice, refund a taken one. (The old screen had a separate
+    /// +/- button column per group; the diamond grid has no room for it and image-3 parity
+    /// has none.) Both halves already gate themselves — TrySelectChoice enforces free points,
+    /// tier locks and keystone exclusivity; TryDeselectChoice no-ops on an untaken id.
+    /// </summary>
+    public void ExecuteToggleChoice()
+    {
+        if (IsTaken) DeSelectChoice();
+        else SelectChoice();
+    }
+
     [DataSourceProperty]
     public string Name => new TextObject(_choice.Id).ToString();
 
