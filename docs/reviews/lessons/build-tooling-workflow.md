@@ -553,3 +553,32 @@ reads; (4) one test per graceful-degradation path — "degrades correctly by ins
 refactor silently turns degrade into crash.
 
 **Source:** deep-review 2026-08-05 (tooling agent), `docs/reviews/rca-memsample-telemetry-2026-08-05.md` finding #2.
+
+---
+
+### The module deploy NEVER deletes — a file removed from the repo lives on in the game install forever
+
+**Why missed:** `Bannerlord.BuildResources.targets:33` mirrors `$(ProjectDir)/_Module` into
+`Modules/$(ModuleName)` with `Clean="false"`. Deleting a prefab/brush/XML from the repo therefore
+does nothing to the installed copy — it just stops being refreshed. Compounding it: the standard
+agent-briefing build (`dotnet build … -p:DisableModuleCopy=true`) skips the deploy entirely, so a
+whole session's GUI edits can be green in tests, committed, and still not present in the running
+game. On 2026-08-05 the career arc deleted `AbilityHUD.xml` from the repo and edited
+`CareerScreen.xml`; the install kept a *foreign* `CareerScreen.xml` (a contributor's rewrite,
+byte-identical to their package) plus their blanked `AbilityHUD.xml` and a clone of vanilla's
+`Mission/AgentStatus.xml` referencing a widget class no installed DLL defines — a broken-HUD
+hybrid that no test could see.
+
+**Prevent:** after any session that ADDS, EDITS or DELETES files under `Main/_Module/`, run a plain
+`./build.ps1` (no `DisableModuleCopy`) and then verify the install directly — `ls -la` the changed
+paths and grep one new binding/brush name in the DEPLOYED file, not the repo file. For deletions,
+remove the installed copy by hand; the build cannot. Same family as the sprite-atlas lesson in
+`lessons/localization-ui.md` ("delete the old PNGs from the GAME INSTALL, not just the repo") —
+the install is not a mirror of the repo, it is an accumulation of every build ever run.
+
+**Corollary for evaluated third-party packages:** a reference module laid out as `source/_Module/`
+mirrors OUR module structure, so its files can be hand-copied into `Modules/TAOM/` during
+evaluation and then look like ours. Before trusting anything about in-game behaviour, diff the
+installed file's byte size against the repo's — identical-to-the-package is the tell.
+
+**Source:** career UX arc post-commit install audit 2026-08-06; RCA `docs/reviews/rca-career-ux-arc-2026-08-05.md`.
