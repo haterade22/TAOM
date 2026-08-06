@@ -48,8 +48,23 @@ public class CareerChoiceObjectVM : ViewModel
     [DataSourceProperty]
     public string Description => new TextObject(_choice.Description).ToString();
 
+    // Issue #388 — the diamond icon. The per-choice sprites authored in taom_career_choices.xml
+    // (career_choice_*) were never drawn (zero PNGs, zero atlas entries), which is why this
+    // property was dead data bound by no prefab. It now resolves to an already-baked banner
+    // icon: keystones show their career's own sigil (#380's keystone_icon), passives show an
+    // icon for their effect type.
     [DataSourceProperty]
-    public string IconSprite => _choice.IconSprite;
+    public string IconSprite
+    {
+        get
+        {
+            if (IsKeystone && !string.IsNullOrEmpty(_keystoneIconSprite))
+                return _keystoneIconSprite;
+            if (_choice.Passive != null)
+                return CareerEffectDisplayMap.IconFor(_choice.Passive.EffectType);
+            return _keystoneIconSprite ?? "";
+        }
+    }
 
     [DataSourceProperty]
     public bool IsKeystone => _choice.Type == ChoiceType.Keystone;

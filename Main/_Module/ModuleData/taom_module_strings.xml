@@ -838,6 +838,8 @@
 	<string id="taom_career_tier_requirement" text="{=taom_career_tier_requirement}Requires Level {LEVEL}" />
 	<!-- Choice tree effect-scope badges (passive vs ability-bound) -->
 	<string id="taom_career_choice_while_active" text="{=taom_career_choice_while_active}While active" />
+	<!-- Issue #388 — diamond career screen: Active Effects summary panel -->
+	<string id="taom_career_active_effects" text="{=taom_career_active_effects}Active Effects" />
 	<!-- Issue #383 — in-battle ability damage attribution (combat log) -->
 	<string id="taom_career_dmg_attrib" text="{=taom_career_dmg_attrib}{TARGET}: {DMG} damage (+{BONUS} from ability)" />
 	<string id="taom_career_dmg_none" text="{=taom_career_dmg_none}Career ability active — this ability boosts something other than damage." />

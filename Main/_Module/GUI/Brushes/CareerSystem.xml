@@ -54,6 +54,26 @@
     </Styles>
   </Brush>
 
+  <!-- #388 Active Effects panel. Keystone lines gold (they change the ability), passive
+       totals parchment-cream (they are always on). -->
+  <Brush Name="CareerSystem.Effects.Keystone" Font="minionpro">
+    <Styles>
+      <Style Name="Default" FontColor="#F2C14EFF" TextOutlineColor="#000000FF" TextOutlineAmount="0.1" FontSize="18" />
+    </Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.Effects.Passive" Font="minionpro">
+    <Styles>
+      <Style Name="Default" FontColor="#FDF3DEFF" TextOutlineColor="#000000FF" TextOutlineAmount="0.1" FontSize="18" />
+    </Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.Effects.Title" Font="minionpro" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C6AC8DFF" TextOutlineColor="#000000FF" TextOutlineAmount="0.1" FontSize="22" />
+    </Styles>
+  </Brush>
+
   <Brush Name="CareerSystem.MinusButton">
     <Layers>
       <BrushLayer Name="Default" Sprite="CareerSystem\minus_sign_icon" />

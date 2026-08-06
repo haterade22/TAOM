@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -374,6 +375,10 @@ public class CareerScreenVMTests
         // One successful selection = one RefreshValues = one rebuild. The group VM's
         // choiceChangedAction fired a second, redundant rebuild after TrySelectChoice
         // had already refreshed the screen.
+        //
+        // Still exactly one call after #388: the Active Effects panel is accumulated from
+        // THIS walk rather than a second pass of its own, precisely so this guard keeps
+        // meaning "one rebuild".
         _registry.Received(1).GetChoicesForGroup("wb_brutality");
     }
 
@@ -387,6 +392,84 @@ public class CareerScreenVMTests
 
         Assert.IsFalse(vm.IsSwitchMode);
         Assert.IsTrue(vm.IsNormalMode);
+    }
+
+    // ── Issue #388 — Active Effects panel (right-hand summary on the diamond screen) ──
+    // Keystone lines are the taken keystones' descriptions; passive lines are the SUM of every
+    // taken passive of the same effect type, so two +5% damage picks read as one "+10% damage".
+
+    [TestMethod]
+    public void ActiveEffects_NoChoicesTaken_BothListsEmpty()
+    {
+        SetupHeroWithCareer();
+        var vm = CreateVM();
+
+        Assert.AreEqual(0, vm.KeystoneEffectLines.Count);
+        Assert.AreEqual(0, vm.PassiveEffectLines.Count);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_TakenPassive_ListsFormattedTotal()
+    {
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+
+        vm.ExecuteSelectChoice("wb_brut_p1"); // Damage 0.1
+
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+10% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_TakenKeystone_ListsItsDescription()
+    {
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+
+        vm.ExecuteSelectChoice("wb_brut_key");
+
+        Assert.AreEqual(1, vm.KeystoneEffectLines.Count);
+        Assert.AreEqual("Keystone", vm.KeystoneEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_SameEffectTakenTwice_SumsIntoOneLine()
+    {
+        // Two separate +10% Damage passives must read as a single "+20% damage", not two lines.
+        var second = new CareerChoiceDefinition(
+            id: "wb_brut_p2", groupId: "wb_brutality", type: ChoiceType.Passive,
+            description: "Passive2", iconSprite: "icon",
+            passive: new PassiveEffect(PassiveEffectType.Damage, 0.1f), mutations: null);
+        _registry.GetChoice("wb_brut_p2").Returns(second);
+        _registry.GetChoicesForGroup("wb_brutality").Returns(
+            new List<CareerChoiceDefinition> { KeystoneChoice, PassiveChoice, second });
+
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+
+        vm.ExecuteSelectChoice("wb_brut_p1");
+        vm.ExecuteSelectChoice("wb_brut_p2");
+
+        Assert.AreEqual(1, vm.PassiveEffectLines.Count);
+        Assert.AreEqual("+20% damage", vm.PassiveEffectLines[0].LineText);
+    }
+
+    [TestMethod]
+    public void ActiveEffects_Deselect_RemovesTheLine()
+    {
+        SetupHeroWithCareer();
+        _registry.GetMaxChoicesForHero(5).Returns(10);
+        var vm = CreateVM();
+        vm.ExecuteSelectChoice("wb_brut_p1");
+
+        // The real user path: the choice VM's "−" callback into TryDeselectChoice.
+        var taken = vm.ChoiceGroupsTier1[0].Choices.First(c => c.ChoiceId == "wb_brut_p1");
+        taken.DeSelectChoice();
+
+        Assert.AreEqual(0, vm.PassiveEffectLines.Count);
     }
 
     private void SetupHeroWithCareer()

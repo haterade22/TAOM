@@ -2,6 +2,37 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-06
+
+### feat(career): diamond career screen with per-choice icons and Active Effects (#388)
+
+Replaces the May pip-strip layout after comparing both in-game. Each choice is now a diamond
+carrying an icon — five per group, two groups per tier — with a persistent Active Effects
+column showing taken keystones (gold) above passive totals summed per effect type, so two +5%
+Damage picks read as one "+10% damage". Rank titles and lore group names are kept.
+
+Ported as TAOM-owned code from the reference module's prototype, dropping ~800 of its ~940
+lines: its state patch Harmony-scraped our own ViewModel from outside and its effects panel
+polled a static because it could not bind — from inside, the VM simply publishes the lists,
+accumulated during the group walk that already runs rather than a second registry pass.
+
+- **No sprite bake needed.** The per-choice sprites authored in `taom_career_choices.xml`
+  (`career_choice_*`) were never drawn — zero PNGs, zero atlas entries — which is why
+  `IconSprite` was dead data bound by no prefab. Diamonds use already-baked banner icons:
+  keystones show their career's own sigil (#380), passives an icon for their effect type.
+- **Percent vs flat is keyed on effect type, not magnitude size** — the reference's
+  "under 1 means percent" rule prints a 1.0 magnitude (100%) as "+1" and a +1 companion limit
+  as "+100%". TAOM authors damage/ammo/speed as fractions and health/party size as counts.
+- Custom widget registration turns out to be automatic: the engine collects every `Widget`
+  subclass from any loaded assembly referencing GauntletUI. The `Taom` prefix on the widget is
+  load-bearing — the factory keys on the simple type name across assemblies, ignoring
+  namespace, so an unprefixed name would collide with the reference module's class.
+
+Prefab bindings machine-checked against the ViewModel members (zero unbound). Suite 5565 green.
+
+Not-tested: in-game render — static review cannot certify that a sprite draws or that a layout
+lands where intended.
+
 ## 2026-08-05
 
 ### feat(diagnostics): [MemSample] memory telemetry + minidump triage — a tester's OOM CTD now self-identifies from the log (#385, #386, #387)

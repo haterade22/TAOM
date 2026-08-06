@@ -45,6 +45,8 @@ public class CareerScreenVM : ViewModel
     private MBBindingList<CareerChoiceGroupObjectVM> _choiceGroupsTier2;
     private MBBindingList<CareerChoiceGroupObjectVM> _choiceGroupsTier3;
     private MBBindingList<CareerAbilityEffectVM> _abilityEffects;
+    private MBBindingList<CareerAbilityEffectVM> _keystoneEffectLines;
+    private MBBindingList<CareerAbilityEffectVM> _passiveEffectLines;
 
     // Switch-mode wiring -- when isSwitchMode is true the screen renders a list of eligible
     // alternative careers (current career excluded) instead of the normal-mode choice tree.
@@ -99,6 +101,8 @@ public class CareerScreenVM : ViewModel
         _choiceGroupsTier2 = new MBBindingList<CareerChoiceGroupObjectVM>();
         _choiceGroupsTier3 = new MBBindingList<CareerChoiceGroupObjectVM>();
         _abilityEffects = new MBBindingList<CareerAbilityEffectVM>();
+        _keystoneEffectLines = new MBBindingList<CareerAbilityEffectVM>();
+        _passiveEffectLines = new MBBindingList<CareerAbilityEffectVM>();
         _eligibleSwitchTargets = new MBBindingList<CareerSwitchTargetVM>();
 
         RefreshValues();
@@ -224,6 +228,33 @@ public class CareerScreenVM : ViewModel
         }
     }
 
+    // Issue #388 — publish the Active Effects panel from the taken choices RebuildChoiceGroups
+    // already walked. Keystone lines are the taken keystones' own descriptions (what changes
+    // about the ability); passive lines are every taken passive SUMMED per effect type, so two
+    // +5% Damage picks read as one "+10% damage" rather than two lines the player adds up.
+    //
+    // Fed by the existing group walk rather than a second pass of its own: the screen rebuilds
+    // on every click, and a duplicate registry walk per rebuild is pure waste (it also broke
+    // ClickIncrease_RebuildsGroupsOnce_NotTwice, which counts registry queries to prove exactly
+    // one rebuild ran).
+    private void PublishActiveEffects(
+        List<string> keystoneDescriptions,
+        Dictionary<Domain.PassiveEffectType, float> passiveTotals)
+    {
+        _keystoneEffectLines.Clear();
+        _passiveEffectLines.Clear();
+
+        foreach (var description in keystoneDescriptions)
+            _keystoneEffectLines.Add(new CareerAbilityEffectVM(new TextObject(description).ToString()));
+
+        foreach (var kvp in passiveTotals)
+        {
+            var line = CareerEffectDisplayMap.Format(kvp.Key, kvp.Value);
+            if (!string.IsNullOrEmpty(line))
+                _passiveEffectLines.Add(new CareerAbilityEffectVM(line));
+        }
+    }
+
     // Hybrid tier gate: a tier is available when the hero meets the level threshold OR has completed
     // that tier's career quest. Falls back to the registry's level-only gate when no quest service
     // was supplied (unit tests / legacy callers).
@@ -242,6 +273,10 @@ public class CareerScreenVM : ViewModel
         CollectOpenGroupIds(_choiceGroupsTier1, openGroupIds);
         CollectOpenGroupIds(_choiceGroupsTier2, openGroupIds);
         CollectOpenGroupIds(_choiceGroupsTier3, openGroupIds);
+
+        // Issue #388 — filled by the choice walk below, published once at the end.
+        var takenKeystoneDescriptions = new List<string>();
+        var takenPassiveTotals = new Dictionary<Domain.PassiveEffectType, float>();
 
         _choiceGroupsTier1.Clear();
         _choiceGroupsTier2.Clear();
@@ -263,6 +298,21 @@ public class CareerScreenVM : ViewModel
             {
                 var heroData = _dataService.GetOrCreateData(_heroStringId);
                 var isTaken = heroData.HasChoice(choice.Id);
+
+                // Issue #388 — accumulate the Active Effects panel from this same walk.
+                if (isTaken)
+                {
+                    if (choice.Type == Domain.ChoiceType.Keystone)
+                    {
+                        if (!string.IsNullOrEmpty(choice.Description))
+                            takenKeystoneDescriptions.Add(choice.Description);
+                    }
+                    else if (choice.Passive != null)
+                    {
+                        takenPassiveTotals.TryGetValue(choice.Passive.EffectType, out var running);
+                        takenPassiveTotals[choice.Passive.EffectType] = running + choice.Passive.Magnitude;
+                    }
+                }
                 // Issue #381 — a keystone closed by exclusivity dims (pip + no + button)
                 // instead of silently rejecting the click at select time.
                 var isFreeToTake = FreeCareerPoints > 0 && !isLocked
@@ -277,6 +327,8 @@ public class CareerScreenVM : ViewModel
                 case 3: _choiceGroupsTier3.Add(groupVM); break;
             }
         }
+
+        PublishActiveEffects(takenKeystoneDescriptions, takenPassiveTotals);
     }
 
     private static void CollectOpenGroupIds(
@@ -524,6 +576,41 @@ public class CareerScreenVM : ViewModel
     {
         get => _choiceGroupsTier3;
         set { if (_choiceGroupsTier3 != value) { _choiceGroupsTier3 = value; OnPropertyChangedWithValue(value, nameof(ChoiceGroupsTier3)); } }
+    }
+
+    /// <summary>Issue #388 — header above the Active Effects panel.</summary>
+    [DataSourceProperty]
+    public string ActiveEffectsLabel =>
+        new TextObject("{=taom_career_active_effects}Active Effects").ToString();
+
+    /// <summary>Issue #388 — taken keystones' descriptions, shown gold in the Active Effects panel.</summary>
+    [DataSourceProperty]
+    public MBBindingList<CareerAbilityEffectVM> KeystoneEffectLines
+    {
+        get => _keystoneEffectLines;
+        set
+        {
+            if (_keystoneEffectLines != value)
+            {
+                _keystoneEffectLines = value;
+                OnPropertyChangedWithValue(value, nameof(KeystoneEffectLines));
+            }
+        }
+    }
+
+    /// <summary>Issue #388 — taken passives summed per effect type, e.g. "+20% damage".</summary>
+    [DataSourceProperty]
+    public MBBindingList<CareerAbilityEffectVM> PassiveEffectLines
+    {
+        get => _passiveEffectLines;
+        set
+        {
+            if (_passiveEffectLines != value)
+            {
+                _passiveEffectLines = value;
+                OnPropertyChangedWithValue(value, nameof(PassiveEffectLines));
+            }
+        }
     }
 
     [DataSourceProperty]
