@@ -49,6 +49,7 @@ public class NamedCompanionService : INamedCompanionService
 
             try
             {
+                _companionAdapter.EnsureHomeSettlement(companion.CharacterId, companion.SpawnSettlement);
                 _companionAdapter.PlaceInSettlement(companion.CharacterId, companion.SpawnSettlement);
                 _companionAdapter.MarkAsMet(companion.CharacterId);
 
@@ -70,12 +71,23 @@ public class NamedCompanionService : INamedCompanionService
     public void EnsureCompanionsPlaced()
     {
         var companions = _configProvider.GetCompanions();
+        var repaired = 0;
 
         foreach (var companion in companions)
         {
             if (!companion.Enabled) continue;
             if (!_companionAdapter.HeroExists(companion.CharacterId)) continue;
             if (!_companionAdapter.IsHeroAlive(companion.CharacterId)) continue;
+
+            // Crash d7d9f7d3 — deliberately ahead of every placement-state guard below. A companion
+            // in an existing save is already in a settlement, recruited, imprisoned or on the run,
+            // so all of those short-circuit; the null BornSettlement would never be repaired if this
+            // sat with the placement call. The null is a property of the hero, not of where it is.
+            if (_companionAdapter.EnsureHomeSettlement(companion.CharacterId, companion.SpawnSettlement))
+            {
+                repaired++;
+            }
+
             if (_companionAdapter.IsRecruitedOrInParty(companion.CharacterId)) continue;
             // #127 P1 — Entity State Matrix completion. Prisoner / Fugitive companions previously
             // slipped through ALL guards (PartyBelongedTo=null, CurrentSettlement=null,
@@ -95,6 +107,12 @@ public class NamedCompanionService : INamedCompanionService
                 _logger.LogError(
                     $"[NamedCompanions] Failed to re-place '{companion.CharacterId}': {ex.Message}");
             }
+        }
+
+        if (repaired > 0)
+        {
+            _logger.LogInfo(
+                $"[NamedCompanions] Repaired a missing home settlement on {repaired} named companion(s)");
         }
     }
 

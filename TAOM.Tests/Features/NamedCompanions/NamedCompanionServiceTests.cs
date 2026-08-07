@@ -324,6 +324,153 @@ public class NamedCompanionServiceTests
         _companionAdapter.DidNotReceive().MarkAsMet(Arg.Any<string>());
     }
 
+    // ── Null MapFaction repair (crash d7d9f7d3) ──
+    // Named companions are XML heroes with faction="Faction.neutral"; Hero.Deserialize skips the
+    // Clan assignment for that id, and XML deserialization never sets BornSettlement. Clan +
+    // HomeSettlement + PartyBelongedTo all null makes Hero.MapFaction return null, and the engine
+    // dereferences it unguarded — TournamentVM.OnTournamentEnd reads MapFaction.Color on the winner,
+    // so any Erebor tournament won by one of the four companions living in town_E1 took the game
+    // down. Repair runs before the placement-state guards so already-placed companions in existing
+    // saves are fixed too, not just freshly placed ones.
+
+    [TestMethod]
+    public void SpawnCompanions_EnabledCompanion_RepairsHomeSettlementBeforePlacing()
+    {
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_a",
+            SpawnSettlement = "town_1",
+            Race = "dwarf",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_a").Returns(true);
+        _raceManager.GetRaceIdFromName("dwarf").Returns(1);
+
+        _sut.SpawnCompanions();
+
+        Received.InOrder(() =>
+        {
+            _companionAdapter.EnsureHomeSettlement("nc_a", "town_1");
+            _companionAdapter.PlaceInSettlement("nc_a", "town_1");
+        });
+    }
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_AlreadyPlaced_StillRepairsHomeSettlement()
+    {
+        // The load-path regression that matters: an existing save has the companion already sitting
+        // in the tavern, so every placement guard short-circuits. The repair must run anyway.
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_gimli",
+            SpawnSettlement = "town_E1",
+            Race = "dwarf",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_gimli").Returns(true);
+        _companionAdapter.IsHeroAlive("nc_gimli").Returns(true);
+        _companionAdapter.IsPlacedInSettlement("nc_gimli").Returns(true);
+
+        _sut.EnsureCompanionsPlaced();
+
+        _companionAdapter.Received(1).EnsureHomeSettlement("nc_gimli", "town_E1");
+        _companionAdapter.DidNotReceive().PlaceInSettlement(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_RecruitedCompanion_StillRepairsHomeSettlement()
+    {
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_a",
+            SpawnSettlement = "town_1",
+            Race = "human",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_a").Returns(true);
+        _companionAdapter.IsHeroAlive("nc_a").Returns(true);
+        _companionAdapter.IsRecruitedOrInParty("nc_a").Returns(true);
+
+        _sut.EnsureCompanionsPlaced();
+
+        _companionAdapter.Received(1).EnsureHomeSettlement("nc_a", "town_1");
+    }
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_DeadHero_DoesNotRepairHomeSettlement()
+    {
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_a",
+            SpawnSettlement = "town_1",
+            Race = "human",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_a").Returns(true);
+        _companionAdapter.IsHeroAlive("nc_a").Returns(false);
+
+        _sut.EnsureCompanionsPlaced();
+
+        _companionAdapter.DidNotReceive().EnsureHomeSettlement(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_DisabledCompanion_DoesNotRepairHomeSettlement()
+    {
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_a",
+            SpawnSettlement = "town_1",
+            Race = "human",
+            Enabled = false
+        });
+
+        _sut.EnsureCompanionsPlaced();
+
+        _companionAdapter.DidNotReceive().EnsureHomeSettlement(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_RepairsApplied_LogsCount()
+    {
+        SetupCompanions(
+            new NamedCompanionDefinition { CharacterId = "nc_a", SpawnSettlement = "town_E1", Race = "dwarf", Enabled = true },
+            new NamedCompanionDefinition { CharacterId = "nc_b", SpawnSettlement = "town_E1", Race = "dwarf", Enabled = true }
+        );
+        foreach (var id in new[] { "nc_a", "nc_b" })
+        {
+            _companionAdapter.HeroExists(id).Returns(true);
+            _companionAdapter.IsHeroAlive(id).Returns(true);
+            _companionAdapter.IsPlacedInSettlement(id).Returns(true);
+        }
+        _companionAdapter.EnsureHomeSettlement("nc_a", "town_E1").Returns(true);
+        _companionAdapter.EnsureHomeSettlement("nc_b", "town_E1").Returns(false);
+
+        _sut.EnsureCompanionsPlaced();
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("home settlement") && s.Contains("1")));
+    }
+
+    [TestMethod]
+    public void EnsureCompanionsPlaced_NoRepairsNeeded_LogsNothing()
+    {
+        SetupCompanions(new NamedCompanionDefinition
+        {
+            CharacterId = "nc_a",
+            SpawnSettlement = "town_1",
+            Race = "human",
+            Enabled = true
+        });
+        _companionAdapter.HeroExists("nc_a").Returns(true);
+        _companionAdapter.IsHeroAlive("nc_a").Returns(true);
+        _companionAdapter.IsPlacedInSettlement("nc_a").Returns(true);
+        _companionAdapter.EnsureHomeSettlement("nc_a", "town_1").Returns(false);
+
+        _sut.EnsureCompanionsPlaced();
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
     [TestMethod]
     public void ResetSession_AllowsSpawnCompanionsAgainInSameProcess()
     {
