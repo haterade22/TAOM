@@ -14,9 +14,16 @@ TROOPS_FILE = os.path.join(
     "Main", "_Module", "ModuleData", "troops", "troops_gondor.xml"
 )
 
-ARMORY_BASE = (
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-    r"\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\gondor"
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+# (tools/.env.example also documents a narrower TAOM_ARMORY_BASE, but only
+# cleanup_deleted_gondor_items.py reads it; the game root is the consistent knob here.)
+ARMORY_BASE = os.path.join(
+    os.environ.get(
+        "BANNERLORD_GAME_DIR",
+        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
+    ),
+    "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items", "gondor",
 )
 
 REF_RE = re.compile(r'Item\.((?:sk_gd|sk_dg)_[A-Za-z0-9_]+)')

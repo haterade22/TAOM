@@ -13,10 +13,16 @@ Outputs:
   4. Vanilla-vs-TAOM diff (scenes TAOM uses that vanilla doesn't, and vice versa).
 """
 from __future__ import annotations
+import os
 import re
 from pathlib import Path
 
-GAME = Path(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+GAME = Path(os.environ.get(
+    "BANNERLORD_GAME_DIR",
+    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
+))
 MODULES = GAME / "Modules"
 
 SETTLEMENT_FILES = {
