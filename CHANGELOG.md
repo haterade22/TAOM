@@ -174,6 +174,35 @@ of report we were chasing — and records the character id and resolved Monster 
 emits `as_human<suffix>` when the Monster is null, and that fallback is now logged (deduped per
 sex+suffix) instead of silently turning a non-human into a human.
 
+### perf(enlistment): a per-tick adapter surface that does not scan the world
+
+Batch 2 of the remediation plan. Behaviour-neutral groundwork for the real-time service pump —
+nothing here is player-visible, and that is the point: the pump is unaffordable until the reads it
+depends on stop being linear scans.
+
+`CampaignObjectManager.Find<T>` is unindexed. `Find<Hero>` walks the dead-or-disabled list and then
+every living hero; `Find<MobileParty>` walks every mobile party in the world — lords, villagers,
+caravans, militia, garrisons, bandits. Every existing enlistment read paid one, and `GetSnapshot`
+additionally rendered `hero.Name.ToString()` and walked Culture / Clan.MapFaction / CurrentSettlement
+for fields no tick consumer reads.
+
+New `CommanderTickSnapshot` + `GetTickSnapshot` make exactly ONE `Find<Hero>` and allocate nothing;
+`SyncPositionCached` costs zero lookups on the steady path, revalidating a cached party handle O(1)
+against the party id from the same pass. The rule is now stated in the XML docs of all three:
+**a pump may make at most one `Find<Hero>` per pass and zero `Find<MobileParty>`**, and `GetSnapshot`
+is marked forbidden on any per-frame path.
+
+Map events have no engine identity to compare — `MapEvent` derives from `MBObjectBase` but every
+instance is `new`'d and never registered, so `StringId`/`Id` are unset. The adapter mints a token
+from a one-slot reference cache so the pump can tell "a different battle" from "the same battle".
+
+Also hardens the park/restore paths with a shared `ClearArmyAttachment`, carved out so an army the
+player LEADS is never cleared (that would disband it under its members), and pins the
+never-attach decision with a source-scanning test so it cannot be re-derived.
+
+Suite 5751 green (+20).
+
+Research: CampaignObjectManager.Find<T> registered types, MapEvent/MBObjectBase identity
 ### fix(enlistment): settlements were never resolvable, and party attachment is settled as a no
 
 `CampaignObjectManager.Find<Settlement>` returns null **unconditionally** on 1.4.7. The manager

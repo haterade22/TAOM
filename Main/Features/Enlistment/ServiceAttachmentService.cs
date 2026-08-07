@@ -56,4 +56,13 @@ public class ServiceAttachmentService : IServiceAttachmentService
     public bool SyncPosition(string commanderHeroId) => _attachment.SyncPositionTo(commanderHeroId);
 
     public bool RestorePresence() => _attachment.RestorePresence();
+
+    public bool SyncPositionCached(string commanderHeroId, string expectedCommanderPartyId) =>
+        _attachment.SyncPositionCached(commanderHeroId, expectedCommanderPartyId);
+
+    public PlayerPresenceFlags GetPresenceFlags() => _attachment.GetPresenceFlags();
+
+    public void InvalidateCommanderCache() => _attachment.InvalidateCommanderCache();
+
+    public bool ClearArmyAttachment() => _attachment.ClearArmyAttachment();
 }

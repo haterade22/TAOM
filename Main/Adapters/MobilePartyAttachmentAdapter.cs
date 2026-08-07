@@ -45,8 +45,7 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
             }
 
             var before = DescribeParty(main);
-            if (main.AttachedTo != null)
-                main.AttachedTo = null;
+            ClearArmyAttachment();
             main.SetMoveModeHold();
             main.Position = commanderParty.Position;
             main.IsVisible = false;
@@ -75,6 +74,7 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
             }
 
             var before = DescribeParty(main);
+            ClearArmyAttachment();
             main.IsActive = true;
             main.IsVisible = true;
             main.SetMoveModeHold();
@@ -119,6 +119,98 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
         catch (Exception ex)
         {
             _logger?.LogError($"[EnlistDiag] SYNC THREW for '{commanderHeroId}': {ex.Message}");
+            return false;
+        }
+    }
+
+    // Cached commander-party handle so the pump costs zero lookups on the steady path. Revalidated
+    // O(1) against the party id from the SAME pass's tick snapshot. Survives campaign switches
+    // within one process, so it MUST be invalidated on discharge, session launch and game load.
+    private MobileParty _cachedCommanderParty;
+
+    public bool SyncPositionCached(string commanderHeroId, string expectedCommanderPartyId)
+    {
+        try
+        {
+            var main = MobileParty.MainParty;
+            if (main == null)
+                return false;
+
+            var party = _cachedCommanderParty;
+            var cacheHit = party != null
+                && party.IsActive
+                && !string.IsNullOrEmpty(expectedCommanderPartyId)
+                && party.StringId == expectedCommanderPartyId;
+
+            if (!cacheHit)
+            {
+                party = FindCommanderParty(commanderHeroId);   // the one allowed Find<Hero>
+                _cachedCommanderParty = party;
+            }
+
+            if (party == null)
+                return false;
+
+            main.Position = party.Position;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[EnlistDiag] SyncPositionCached('{commanderHeroId}') failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    public void InvalidateCommanderCache() => _cachedCommanderParty = null;
+
+    public PlayerPresenceFlags GetPresenceFlags()
+    {
+        try
+        {
+            var main = MobileParty.MainParty;
+            if (main == null)
+                return new PlayerPresenceFlags(mainPartyExists: false);
+
+            return new PlayerPresenceFlags(
+                mainPartyExists: true,
+                isCaptive: PlayerCaptivity.IsCaptive,
+                isActive: main.IsActive,
+                isVisible: main.IsVisible,
+                isInMapEvent: main.MapEvent != null,
+                hasPlayerEncounter: PlayerEncounter.Current != null,
+                settlementId: main.CurrentSettlement?.StringId);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] GetPresenceFlags failed: {ex.Message}");
+            return new PlayerPresenceFlags(mainPartyExists: false);
+        }
+    }
+
+    public bool ClearArmyAttachment()
+    {
+        try
+        {
+            var main = MobileParty.MainParty;
+            if (main == null)
+                return false;
+
+            if (main.AttachedTo != null)
+            {
+                _logger?.LogWarning("[EnlistDiag] main party had AttachedTo set — clearing it. Enlistment never sets this; see the feature doc for why attaching is a campaign CTD.");
+                main.AttachedTo = null;
+            }
+
+            // Leader carve-out: clearing Army while we LEAD one would disband it out from under
+            // its members. Only detach from an army we merely belong to.
+            if (main.Army != null && main.Army.LeaderParty != main)
+                main.Army = null;
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[EnlistDiag] ClearArmyAttachment failed: {ex.Message}");
             return false;
         }
     }

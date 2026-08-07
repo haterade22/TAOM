@@ -19,4 +19,16 @@ public interface IServiceAttachmentService
     bool SyncPosition(string commanderHeroId);
 
     bool RestorePresence();
+
+    /// <summary>Pump-cadence position sync. Zero lookups on the steady path; see the adapter member.</summary>
+    bool SyncPositionCached(string commanderHeroId, string expectedCommanderPartyId);
+
+    /// <summary>Allocation-free presence read for the pump.</summary>
+    PlayerPresenceFlags GetPresenceFlags();
+
+    /// <summary>Drop the cached commander handle — discharge, session launch, game load.</summary>
+    void InvalidateCommanderCache();
+
+    /// <summary>Clear AttachedTo / non-led Army so the main party is a free agent again.</summary>
+    bool ClearArmyAttachment();
 }

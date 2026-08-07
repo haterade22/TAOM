@@ -9,7 +9,23 @@ namespace TAOM.Adapters;
 public interface ICommanderLordAdapter
 {
     /// <summary>Never null — returns <see cref="CommanderSnapshot.Missing"/> when the hero doesn't resolve.</summary>
+    /// <summary>
+    /// The full commander read. FORBIDDEN on any per-frame path: it renders
+    /// <c>hero.Name.ToString()</c> and walks Culture / Clan.MapFaction / CurrentSettlement.
+    /// Pumps use <see cref="GetTickSnapshot"/>; this is for the hourly reconciler, the load
+    /// normalizer and the duty runtime.
+    /// </summary>
     CommanderSnapshot GetSnapshot(string heroId);
+    /// <summary>
+    /// The cheap per-tick read: exactly ONE <c>Find&lt;Hero&gt;</c>, no allocation, no TextObject
+    /// render. This is the only commander read permitted on a pump.
+    ///
+    /// A pump may make at most one <c>Find&lt;Hero&gt;</c> per expensive pass and ZERO
+    /// <c>Find&lt;MobileParty&gt;</c> — both are unindexed linear scans over every hero / every
+    /// mobile party in the world.
+    /// </summary>
+    CommanderTickSnapshot GetTickSnapshot(string heroId);
+
 
     /// <summary>Live culture StringId of the commander, or null. Read at issuance/decision time only.</summary>
     string GetCultureId(string heroId);

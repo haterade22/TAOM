@@ -1,6 +1,7 @@
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TAOM.Core.Logging;
 
 namespace TAOM.Adapters;
@@ -40,6 +41,54 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
         {
             _logger?.LogError($"[Enlistment] CommanderLordAdapter.GetSnapshot('{heroId}') failed: {ex.Message}");
             return CommanderSnapshot.Missing;
+        }
+    }
+
+    // One-slot cache used only to mint a stable-within-a-battle identity for a MapEvent. The engine
+    // gives map events no identity of its own: MapEvent derives from MBObjectBase but every
+    // instance is `new`'d and never registered with MBObjectManager, so StringId/Id are unset.
+    // One slot suffices because a pass asks about exactly one party (the commander), so A->B->A
+    // alternation cannot occur inside a pass. The single retained finished-MapEvent reference is
+    // the accepted cost; MapEvent never crosses the adapter boundary, only the int.
+    private MapEvent _lastSeenMapEvent;
+    private int _lastMapEventToken;
+    private int _nextMapEventToken = 1;
+
+    private int TokenFor(MapEvent mapEvent)
+    {
+        if (mapEvent == null)
+            return 0;
+        if (!ReferenceEquals(mapEvent, _lastSeenMapEvent))
+        {
+            _lastSeenMapEvent = mapEvent;
+            _lastMapEventToken = _nextMapEventToken++;
+        }
+        return _lastMapEventToken;
+    }
+
+    public CommanderTickSnapshot GetTickSnapshot(string heroId)
+    {
+        try
+        {
+            var hero = FindHero(heroId);
+            if (hero == null)
+                return CommanderTickSnapshot.Missing;
+
+            var party = hero.PartyBelongedTo;
+            return new CommanderTickSnapshot(
+                exists: true,
+                isAlive: hero.IsAlive,
+                isPrisoner: hero.IsPrisoner,
+                partyId: party?.StringId,
+                partyIsActive: party?.IsActive ?? false,
+                partyIsInMapEvent: party?.MapEvent != null,
+                partySettlementId: party?.CurrentSettlement?.StringId,
+                mapEventToken: TokenFor(party?.MapEvent));
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] GetTickSnapshot('{heroId}') failed: {ex.Message}");
+            return CommanderTickSnapshot.Missing;
         }
     }
 
