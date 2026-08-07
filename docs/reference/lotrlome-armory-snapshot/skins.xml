@@ -1777,7 +1777,7 @@
 			legs_mesh="sk_dwarf_bm_f1_legs"
 			hands_mesh="sk_dwarf_bm_f1_arms"
 			face_meta_mesh="sk_dwarf_bm_f1_head"
-			underwear_bottom_mesh="sk_dwarf_underwear_female"
+			underwear_bottom_mesh="sk_dwarf_underwear_female_a"
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
