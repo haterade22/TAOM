@@ -157,6 +157,9 @@ logged rather than guarded. If a bundle arrives carrying that dump, the slot is 
 
 **Not-tested:** Harmony invocation and the in-game path; the eligibility logic has 13 unit tests.
 
+Full review record — 6 agents, an independent Codex pass, 8 findings and why each was
+missed: `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` and REVIEW-LOG Review 85.
+
 ### fix(diagnostics): the action-set census now says which dwarf, and why
 
 The reporter's log showed `ActionSet 'as_human_warrior' used by race='dwarf'` with no way to act on

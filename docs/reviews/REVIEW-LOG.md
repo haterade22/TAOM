@@ -1908,3 +1908,68 @@ combination with a zero trade score) and both the verdict text and gate table no
 Harmony discovering the nested patch classes, the only nested `[HarmonyPatch]` classes in TAOM — was
 verified precisely because it felt unprecedented, and it turned out fine. The boring seam that runs
 first took the game down. Novelty is a bad predictor of risk. Suite 5686 green.
+
+## Review 85 — Female-dwarf mesh CTD (#403) + Patch69 tournament guard (#407), full deep-review + Codex adversarial pass (2026-08-07)
+
+6 Claude agents (5 core + a tooling-correctness agent) then an independent Codex pass. Full record:
+`rca-patch69-tournament-guard-2026-08-07.md`.
+
+**Two unrelated crashes arrived as one report, and the artifact did not describe the complaint.** The
+reporter said female dwarves crash on sight and attached a *tournament* bundle from a dwarf campaign.
+Triaging the attachment found a real managed NRE in vanilla `TournamentVM.OnTournamentEnd`
+(`hero.MapFaction.Color`, unguarded; `Hero.MapFaction` genuinely returns null for a clanless hero with
+no home settlement and no party). The complaint itself was a different defect entirely: one unresolved
+mesh name in `skins.xml` — `sk_dwarf_underwear_female`, where the armory ships
+`sk_dwarf_underwear_female_a` — faulting natively with no managed exception and therefore **no crash
+bundle at all**. Neither would have been found by investigating the other.
+
+**The headline finding is a review-process failure, not a code one.** Both new Harmony files breached
+ADR-002's hard `<150`-line limit (175 and 161). The Standards agent **measured it and granted its own
+exemption** — "slightly exceeds 150 lines but patch methods are thin", a carve-out that is not in the
+rule — and the orchestrator accepted that without checking the exemption against the rule text. The
+count then drifted further over while responding to *other* review findings, with nothing re-measuring.
+Codex, given the same files, rated the identical fact P1 CRITICAL, twice. Extracted
+`TournamentBracketFormatter` and `TournamentEntrantMapper` as boundary classes; now 86 and 133.
+An agent that reports a violation and then excuses it is worse than a miss — it launders the finding.
+
+**Codex's third finding was a containment finalizer swallowing every exception class**, not just the
+NRE it exists for. `OnTournamentEnd` opens with `Round4.Matches.Last(m => m.IsValid)`, and
+`Last(predicate)` throws `InvalidOperationException` — already identified during triage and still let
+through, which would have turned a real bracket bug into a silent half-drawn screen with no bundle.
+Now swallows `NullReferenceException` only, matching `PatchShield.ShouldSwallow`'s existing discipline.
+
+**Three findings were errors in prose I had written**: a durable synchronously-flushed log claiming
+"once per tournament" that actually fired on every arena-menu open (four call sites, two reached from
+`game_menu_tournament_join_on_init`); a doc comment that said `AddParticipant` reads `participant.Team`
+"with no null check" when `.Team` *is* checked and `participant` is not — ambiguous enough that it
+misled an agent into reporting the design premise refuted; and a `newline='
+'` write that turned a
+one-row `tools/README.md` edit into a 297-line whole-file diff, the ModuleData XML I/O convention's
+failure mode landing one file type outside the rule's stated scope.
+
+**Clean exonerations, all from the data-flow and API agents:** the save/load bypass hypothesis is dead
+— `TournamentBehavior` is a `MissionLogic` with zero `Saveable*` attributes in its entire object graph,
+so a bracket cannot survive a save/load and the guard cannot be sidestepped by one;
+`GetParticipantCharacters` is the sole producer with a single override; all 9 API claims and both
+design premises verified against installed DLLs; and a full data sweep cleared every plausible
+alternative cause — 5,166 `<NPCCharacter>` entries all carry `culture=` bar two multiplayer-only rows,
+`as_dwarf_*` action sets are at 90/90 parity with `as_human_*`, and all 13 TAOM female dwarf lords
+carry a `faction=`. Two dwarf-skin divergences from vanilla were checked and are deliberately NOT
+defects: `uses_stitching="false"` (22 skins, 8 races) and `body_mesh_suffix=""` on the adult female.
+
+**Recorded as residual rather than guarded:** a `Safe` verdict does not guarantee `Hero.ClanBanner` is
+non-null — it survives only because `BannerImageIdentifier`'s ctor null-checks independently — and
+`TournamentBehavior.EndCurrentMatch` dereferences `Winner.Character` upstream of both hooks. Neither
+was reproducible; guarding them would mean patching on speculation.
+
+**Preventive work beyond the fixes:** `validate_mesh_refs.py` now covers `skins.xml` body meshes. That
+file was **always** inside its scan root — only the eight attribute names were missing, so the tool
+walked it for a year and found nothing. Verified red on the pre-fix backup, green after. Plus
+`tools/oneoff/fix_dwarf_female_underwear_mesh.py`, because the snapshot README itself says an Armory
+update silently reverts these live edits and nothing would have re-applied it.
+
+Suite 5720 green; ADR-002 compliance re-measured post-fix. **Nothing verified in a live game** — a
+female dwarf in an Erebor keep interior and a tournament "Skip All Rounds" remain the real gates.
+Lessons: review-finding-with-its-own-exemption (testing-qa), containment-finalizer-scope (harmony-il),
+enumerate-call-sites-before-durable-logging and binary-IO-is-not-just-XML (build-tooling-workflow),
+artifact-may-not-be-the-reported-crash (misc).
