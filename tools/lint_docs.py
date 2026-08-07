@@ -67,6 +67,9 @@ AGENTS_MD_WARN_BYTES = 40_000      # report-only early warning
 CHANGELOG_ARCHIVE_DIR = DOCS_DIR / "changelog-archive"
 # Gitignored raw Codex transcripts (docs/reviews/raw/): on-disk reference only, never curated.
 REVIEWS_RAW_DIR = DOCS_DIR / "reviews" / "raw"
+# Architecture Decision Records: point-in-time by definition — an ADR names the versions that were
+# current when the decision was taken, and rewriting them falsifies the record.
+ADRS_DIR = DOCS_DIR / "adrs"
 MAIN_FEATURES_DIR = REPO_ROOT / "Main" / "Features"
 
 LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
@@ -85,6 +88,10 @@ STALE_VERSION_EXEMPT_PREFIXES = (
     str(AUDITS_DIR).replace("\\", "/"),
     str(CHANGELOG_ARCHIVE_DIR).replace("\\", "/"),
     str(REVIEWS_RAW_DIR).replace("\\", "/"),
+    # The comment above already claimed "ADRs that name old versions historically" were exempt,
+    # but docs/adrs/ was never in this tuple — so adrs/010, the ADR that recorded THIS very
+    # problem, was itself reported as rot. Implementing the intent that was already documented.
+    str(ADRS_DIR).replace("\\", "/"),
 )
 DEAD_LINK_EXEMPT_PREFIXES = (
     str(ARCHIVE_DIR).replace("\\", "/"),
@@ -112,6 +119,22 @@ STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS = (
     "audit-",
 )
 STALE_VERSION_EXEMPT_DIR_PARTS = ("docs/reviews/lessons",)
+# The exemptions above are all whole-FILE switches (directory, filename, path part). That is the
+# wrong granularity and is why #397 stayed at 29 findings after the 2026-08-05 exemption sweep:
+# the remaining sites live in docs that must stay linted (native-skin-fixes.md alone holds 10),
+# and the real distinction is per LINE — "is this naming the CURRENT target, or recording history?"
+# So the model flips: a version string alone is not rot; a version string presented as current is.
+# Measured against the 29: this clears 26. The wording-marker approach from the issue clears 16.
+CURRENT_TARGET_RE = re.compile(
+    r"\b(current(ly)?|target(s|ed|ing)?|now|active|supported|"
+    r"builds? against|building against|pinned to)\b", re.I)
+# Residue after that flip: contrast lines that name an old version AND a present-tense word, where
+# the present-tense word belongs to the CURRENT version, also named on the same line — e.g.
+# "that mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.4.7)", and the rule text
+# in agent-operating-manual.md that defines staleness. A line that states the pin is not claiming
+# an older version is the target; it is comparing the two. Resolved in the checker, so no doc is
+# edited (issue #397: "Do not 'fix' the 29 by editing the docs. They are accurate; the check is
+# wrong."). Trade-off: prose that names the pin AND wrongly calls an old version current is missed.
 # Codex review *transcripts* (prompts + results) are external-tool snapshots, not curated docs.
 # We don't lint their internal links either — they capture historical state and we don't edit them.
 DEAD_LINK_EXEMPT_FILENAME_SUBSTRINGS = (
@@ -214,6 +237,22 @@ def is_dead_link_exempt(f: Path) -> bool:
     return False
 
 
+def is_never_committed_target(p: Path) -> bool:
+    """True for link targets under docs/reviews/raw/, which is gitignored (.gitignore:157 — the
+    raw Codex transcripts are 2-4 MB each and stay on the reviewing machine).
+
+    Those files exist for whoever ran the review and for nobody else, so the same rca-*/REVIEW-LOG
+    links that resolve on the authoring machine are dead on every fresh clone — 14 of them today.
+    That asymmetry is why this check reads as clean locally while every other contributor sees it
+    dirty, and it is a property of the TARGET, not of the linking file: exempting the linking files
+    instead (they are already exempt from the stale-version check) would switch off dead-link
+    coverage for REVIEW-LOG.md's several hundred other links."""
+    try:
+        return p.is_relative_to(REVIEWS_RAW_DIR)
+    except (OSError, ValueError):
+        return False
+
+
 def looks_like_path_target(target: str) -> bool:
     """Heuristic: real path targets don't have unescaped whitespace.
     Filters out things like `[xml](Get-Content $versionXml -Raw)` (PowerShell type accelerator
@@ -239,13 +278,28 @@ def check_dead_links(files: list[Path]) -> list[tuple[Path, int, str, str]]:
                 resolved = resolve_link(f, target)
                 if resolved is None:
                     continue
+                if is_never_committed_target(resolved):
+                    continue
                 if not resolved.exists():
                     findings.append((f, lineno, target, label))
     return findings
 
 
+def _read_pin() -> str:
+    """The pinned game version exactly as committed ('v1.4.7'); '' if absent or unreadable.
+
+    Returned raw, not normalised: check_version_consistency quotes it verbatim in its findings.
+    """
+    try:
+        return (REPO_ROOT / ".claude" / "pinned-game-version.txt").read_text(encoding="utf-8").strip()
+    except OSError:
+        return ""
+
+
 def check_stale_versions(files: list[Path]) -> list[tuple[Path, int, str, str]]:
     findings: list[tuple[Path, int, str, str]] = []
+    pin = _norm_ver(_read_pin())
+    pin_re = re.compile(r"\bv?" + re.escape(pin) + r"\b") if pin else None
     for f in files:
         f_posix = str(f).replace("\\", "/")
         if any(f_posix.startswith(prefix) for prefix in STALE_VERSION_EXEMPT_PREFIXES):
@@ -262,6 +316,19 @@ def check_stale_versions(files: list[Path]) -> list[tuple[Path, int, str, str]]:
             for pattern, label in STALE_VERSION_PATTERNS:
                 m = pattern.search(line)
                 if m:
+                    # Rot is a present-tense claim, not a mention (#397). A line that merely
+                    # records when something happened ("ported for TAOM v1.3.15", "v1.3.15
+                    # reference RVA, informational only") is correct as written.
+                    # Test that on the line with inline code stripped: a present-tense word inside
+                    # backticks is an identifier, not a claim — `CampaignTime.Now` in an API-break
+                    # note (messengers.md:23) is the whole reason this is scrubbed. The version
+                    # match above stays on the raw line, where a `1.3.15` in backticks still counts.
+                    if not CURRENT_TARGET_RE.search(INLINE_CODE_RE.sub("", line)):
+                        break
+                    # ...and a line that also names the pin is contrasting the two, not claiming
+                    # the old one is current.
+                    if pin_re and pin_re.search(line):
+                        break
                     findings.append((f, lineno, label, line.strip()[:140]))
                     break  # one finding per line is enough
     return findings
@@ -363,13 +430,7 @@ def _norm_ver(s: str) -> str:
 
 def check_version_consistency() -> list[tuple[Path, int, str, str]]:
     findings: list[tuple[Path, int, str, str]] = []
-    pin_file = REPO_ROOT / ".claude" / "pinned-game-version.txt"
-    if not pin_file.exists():
-        return findings
-    try:
-        pin_raw = pin_file.read_text(encoding="utf-8").strip()
-    except OSError:
-        return findings
+    pin_raw = _read_pin()
     pin = _norm_ver(pin_raw)
     if not pin:
         return findings
