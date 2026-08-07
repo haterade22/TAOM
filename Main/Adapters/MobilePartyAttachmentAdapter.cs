@@ -172,9 +172,10 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
         try
         {
             var main = MobileParty.MainParty;
-            var settlement = string.IsNullOrEmpty(settlementId)
-                ? null
-                : Campaign.Current?.CampaignObjectManager?.Find<Settlement>(settlementId);
+            // Settlement.Find, NOT CampaignObjectManager.Find<Settlement> — the latter returns null
+            // unconditionally on 1.4.7 (CampaignObjectManager registers no Settlement type), which
+            // is why MoveIntoSettlement could never have worked.
+            var settlement = string.IsNullOrEmpty(settlementId) ? null : Settlement.Find(settlementId);
             if (main == null || settlement == null)
                 return false;
             if (main.CurrentSettlement == settlement)

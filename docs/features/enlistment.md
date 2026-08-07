@@ -80,6 +80,26 @@ including foreign/corrupt saves.
   raised when the commander is in a map event and the player is not. The recovery path covers
   a missed edge (save-load mid-battle, a throw, enlisting into a running fight).
 
+### Why the player's party is NOT attached to the commander (settled 2026-08-07 — do not re-derive)
+
+The obvious design — `MobileParty.MainParty.AttachedTo = commanderParty`, letting the engine carry
+the player along — is **rejected**. It is not a better architecture we decline on cost; its naive
+form is a guaranteed campaign crash. Verified against the installed 1.4.7 assemblies:
+
+| Finding | Evidence |
+|---|---|
+| **Attaching without an Army is an unavoidable NRE** | `DefaultEncounterGameMenuModel.GetGenericStateMenu()` (`:230-232`) dereferences `mainParty.Army.LeaderParty` **unguarded**, immediately inside `if (mainParty.AttachedTo != null)`. `Campaign.Tick()` (`Campaign.cs:992-994`) calls it on every tick where the active state is `MapState` and not at a menu — i.e. every frame on the open map. |
+| **Attaching WITH an Army means actually joining the army** | `Army.AddPartyInternal` is the engine's only writer of `AttachedTo`. That brings kingdom membership, faction/AI/cohesion semantics and the army UI, and undoes `LordConversationsJoinArmyConditionPatch`, which TAOM added deliberately. |
+| **Even then, a parked attached party poisons everyone's battles** | `PartyBase.MapEventSide`'s setter cascades to `AttachedParties` (`PartyBase.cs:322-325`), and `MapEvent.CanPartyJoinBattle` (`:1436-1443`) requires `IsActive` for **every** party on **both** sides. One inactive attached party makes reinforcement joins fail for every AI lord on either side. |
+
+The wins attachment appeared to offer are delivered elsewhere: settlement following through
+`EnterSettlementAction`/`LeaveSettlementAction`; battle participation through the encounter path.
+And it would **not** have fixed the ~1.8-unit position drift at all — leader-relative movement runs
+through `IsAttachedArmyMember`, which requires `Army != null && AttachedTo != null`. That drift is a
+tick-ORDERING problem, not a throttle or attachment one.
+
+`ParkNear` and `RestorePresence` therefore clear `AttachedTo` rather than setting it.
+
 ### Service-lifecycle rules learned in live play (2026-08-07 — read before touching this path)
 
 The first shipped build never joined a battle and left the player unable to interact with the world.

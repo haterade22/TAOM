@@ -266,9 +266,10 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
 
     private static Settlement FindSettlement(string settlementId)
     {
-        return string.IsNullOrEmpty(settlementId)
-            ? null
-            : Campaign.Current?.CampaignObjectManager?.Find<Settlement>(settlementId);
+        // Settlement.Find, NOT CampaignObjectManager.Find<Settlement>: CampaignObjectManager
+        // registers only MobileParty/Hero/Clan/Kingdom, so Find<Settlement> returns null
+        // UNCONDITIONALLY on 1.4.7. This silently broke every spawned hunt duty.
+        return string.IsNullOrEmpty(settlementId) ? null : Settlement.Find(settlementId);
     }
 
     private static MobileParty FindParty(string partyId)
