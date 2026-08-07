@@ -4,6 +4,25 @@
 
 ## 2026-08-07
 
+### fix(tools): five audits honour BANNERLORD_GAME_DIR instead of one machine's install path (#400, #401)
+
+`audit_battle_scenes`, `audit_mount_parity`, `audit_scene_names`, `validate_all_troop_refs` and
+`validate_gondor_refs` resolved the game from a literal `E:\Steam\steamapps\common\Mount & Blade II
+Bannerlord` and took no path flag, so on any other install they exited on the first missing path — not
+degraded, unrunnable. Each now reads `BANNERLORD_GAME_DIR`, the variable `README.md` already lists as a
+prerequisite and `setup-dev-env.ps1` already sets, keeping the literal as the fallback. The shape is
+copied from `verify_mount_assets.py` rather than invented.
+
+Verified in both directions before merge: all five produce byte-identical output to the previous
+versions with the variable set and with it unset, and all five change behaviour when pointed at a
+nonexistent root — so the variable is load-bearing, not decorative.
+
+Thirteen top-level `tools/*.py` still carry the literal with no override at all, nine of which write, and
+the knob has drifted into four different variable names — filed as #404. This closes the five that could
+not run at all.
+
+Credit: found and fixed by @davrodwconnections in #401, verified independently here before merge.
+
 ### fix(namedcompanions): give named companions a home settlement so MapFaction resolves
 
 A player reported the Erebor tournament crashing over and over. Crash bundle `d7d9f7d3`
