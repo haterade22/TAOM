@@ -789,3 +789,26 @@ change.
 
 **Source:** verified 2026-08-07 while adding the `lint_docs.py` row (#399 doc pass); corrects the
 scope of the `newline=` lesson above.
+
+### A hardcoded path with no flag is not a degraded tool, it is an unrunnable one
+
+**Symptom:** five `tools/` diagnostics — `audit_battle_scenes`, `audit_mount_parity`,
+`audit_scene_names`, `validate_all_troop_refs`, `validate_gondor_refs` — resolved the game from a
+literal `E:\Steam\steamapps\common\Mount & Blade II Bannerlord` and accepted no path argument. On
+the author's machine they were fine; on any other install they exited on the first missing path. An
+outside contributor could not run them at all, and nobody noticed for as long as they had existed.
+
+**Why missed:** `BANNERLORD_GAME_DIR` was already a documented prerequisite in `README.md`, already
+set by `setup-dev-env.ps1`, and already read by `verify_mount_assets.py`. The convention existed and
+was simply not applied here — the kind of gap that is invisible from inside the environment where the
+default happens to be correct. Every local run passed.
+
+**Prevent:** two things. A tool that resolves an external path takes an override — env var, flag, or
+both — and the literal is only ever the fallback. And the test that proves such a fix is **pointing it
+at a nonexistent root**, not running it where the default already works: on the author's machine a
+decorative change and a real one produce identical output. Verify in both directions — identical
+output with the variable set and unset, changed behaviour when it points somewhere absent.
+
+**Source:** #400 → #401 (`fe145207`). The remaining tail is #404: thirteen top-level tools still carry
+the literal with no override, nine of which write rather than read, and the knob has drifted into four
+variable names (`BANNERLORD_GAME_DIR`, `BANNERLORD_GAME_MODULES`, `TAOM_ARMORY_BASE`, `TAOM_MAP_FILE`).

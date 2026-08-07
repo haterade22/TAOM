@@ -33,8 +33,8 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 | `taom_schema.py` | Engine behind the validator (registries + schema model + `Validator` + `build_registries`). Importable; unit-tested (`tools/tests/test_validate_moduledata.py`). | (library) |
 | `taom_query.py` | Query API over the engine — `item_exists` / `troop_exists` / `culture_exists` / `find_references` / `validate` / listings. Pure stdlib; backs the MCP server; unit-tested (`tools/tests/test_taom_query.py`). | (library) |
 | `taom_mcp_server.py` | **MCP stdio server** exposing the query API as 9 tools so Claude agents query mod-data integrity interactively (registered in `.mcp.json` as `taom-moduledata`; needs the `mcp` SDK; restart Claude to load). See `docs/features/moduledata-validation.md` "MCP server". | `python tools/taom_mcp_server.py` (smoke-test) |
-| `validate_all_troop_refs.py` | Per-task: `sk_*/ar_*/clo_urukscout_*/urukscout_*` refs across all 7 culture troop XMLs vs LOTRLOME_Armory — the "underwear bug" gate (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`; kept for now). | (none) |
-| `validate_gondor_refs.py` | Legacy Gondor-only predecessor of the above (`sk_gd_*` in `troops_gondor.xml`). Superseded — prefer `validate_moduledata.py`. | (none) |
+| `validate_all_troop_refs.py` | Per-task: `sk_*/ar_*/clo_urukscout_*/urukscout_*` refs across all 7 culture troop XMLs vs LOTRLOME_Armory — the "underwear bug" gate (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`; kept for now). | (none; reads `$BANNERLORD_GAME_DIR`) |
+| `validate_gondor_refs.py` | Legacy Gondor-only predecessor of the above (`sk_gd_*` in `troops_gondor.xml`). Superseded — prefer `validate_moduledata.py`. | (none; reads `$BANNERLORD_GAME_DIR`) |
 | `audit_item_refs.py` | Per-task: every `Item.X` ref vs the multi-module item registry (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`). | `--show-locations`, `--limit` |
 | `audit_action_set_parity.py` | **action_set completeness + structure audit** (read-only). Two independent failure classes, both gated: (a) a HUMANOID set short of Native's `as_human_warrior` surface — the effective surface is the set's own actions + its full `base_set` chain + the cross-module field-merge, so a standalone set like `as_dwarf_warrior` is the one at real risk (the dwarf water-CTD, #300; fixer `patch_dwarf_action_parity.py`); (b) any root-level `<action>` element, i.e. one parented by `<action_sets>` instead of an `<action_set>`. **Exits non-zero on either.** The structural check exists because the game client tolerates root-level `<action>` silently while the dedicated-server engine throws `KeyNotFoundException` at boot — no single-player run can reproduce it (fixer: `oneoff/fix_orphaned_tavern_conversation_actions.py`). Re-run after every engine bump (wired into `/engine-bump`). | `--native`, `--live`, `--show-complete` |
 | `validate_mesh_refs.py` | **Mesh/collision-body ref validator** (read-only, pure stdlib). **Also covers `skins.xml` body meshes since 2026-08-07 (#403)** — the eight `body_meta_mesh`/`face_meta_mesh`/`hands_mesh`/`legs_mesh`/`underwear_*` attributes. That file was always inside the scan root, so the female-dwarf CTD (`sk_dwarf_underwear_female`, a strict prefix of the shipped `sk_dwarf_underwear_female_a`) was one attribute name away from being caught for a year; an unresolved skin mesh faults natively with no managed exception and no crash bundle, so nothing else would have found it. Extracts every `mesh`/`body_name`/`shield_body_name`/`holster_mesh`/`holster_mesh_with_weapon`/`flying_mesh` ref from item + crafting-piece XML and checks existence across 3 tiers: A) rgl_log content warnings (authoritative), B) `.tpac` Metamesh TOC (visual meshes), C) `.tpac` PhysicsShape TOC (collision bodies, exact; coarse byte-scan only as a fallback for unparsable packs). **A missing `bo_` body is a CONFIRMED cause of infinite mission-load hangs** (#352) — `PreloadHelper.WaitForMeshesToBeLoaded` spins forever on a name that never resolves. Run it after any weapon/armor/crafting authoring. A clean PASS only means "clean within `--items` scope" — scoping too narrow is what let #352 ship. Owns body validation (don't add body checks to `Audit-MeshRefs.ps1`). **Also runs the reverse direction** — `--unreferenced` reports packaged meshes that NO item XML references (INFO; the "art shipped, no item entry" check), `--prefix sk_gd_` narrows it per culture. Narrow `--tpac-modules` to the mod for that mode or vanilla's whole mesh library counts as unreferenced. See `docs/features/mesh-ref-validation.md`. | `--scan-bodies`, `--rgl-log`, `--no-rgl-log`, `--no-tier-b`, `--items`, `--game`, `--tpac-modules`, `--json`, `--code`, `--warnings-as-errors`, `--unreferenced`, `--prefix` |
@@ -291,10 +291,23 @@ See `docs/localization/TRANSLATOR_GUIDE.md` for the translator-facing workflow +
 **Image processing (faction map only):** `Pillow`, `numpy`
 **AI translation (translate_with_claude.py only):** `anthropic` SDK
 
-**Hardcoded paths** (update if your environment differs):
-- TAOM repo: `c:\Users\mikew\source\repos\TAOM\`
+**Game install — set `BANNERLORD_GAME_DIR`.** `README.md` lists it as a prerequisite and
+`setup-dev-env.ps1` sets it. 18 tools honour it: 14 read it directly, and `analyze_armor_balance.py`,
+`apply_settlement_buildings.py`, `derive_armor_tiers.py` and `generate_enlistment_rosters.py` inherit it
+by importing one that does. Every one falls back to `E:\Steam\steamapps\common\Mount & Blade II Bannerlord`, so leaving it unset changes
+nothing on a machine where that literal is correct.
+
+Three narrower variables are **not** derived from it — set them separately if you use those tools:
+`BANNERLORD_GAME_MODULES` (`taom_mcp_server.py`), `TAOM_ARMORY_BASE` (`cleanup_deleted_gondor_items.py`),
+`TAOM_MAP_FILE` (`merge_settlements.py`). `tools/.env.example` documents the `TAOM_*` pair but not
+`BANNERLORD_GAME_DIR`.
+
+**Thirteen top-level tools still have no override at all**, nine of which write rather than read — read
+the source before pointing one at a non-default install (#404).
+
+**Other hardcoded paths** (update if your environment differs):
+- TAOM repo: `c:\Users\mikew\source\repos\TAOM\` — `generate_xslt.py`, `blender/rebuild_anim_from_json.py`
 - LOTRAOM assets: `E:\LOTRAOMAssets\`
-- Bannerlord: `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\`
 
 ---
 
