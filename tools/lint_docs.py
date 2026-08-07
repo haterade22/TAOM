@@ -286,16 +286,19 @@ def check_dead_links(files: list[Path]) -> list[tuple[Path, int, str, str]]:
 
 
 def _read_pin() -> str:
-    """The pinned game version, normalised and without the leading v ('1.4.7'); '' if unreadable."""
+    """The pinned game version exactly as committed ('v1.4.7'); '' if absent or unreadable.
+
+    Returned raw, not normalised: check_version_consistency quotes it verbatim in its findings.
+    """
     try:
-        return _norm_ver((REPO_ROOT / ".claude" / "pinned-game-version.txt").read_text(encoding="utf-8"))
+        return (REPO_ROOT / ".claude" / "pinned-game-version.txt").read_text(encoding="utf-8").strip()
     except OSError:
         return ""
 
 
 def check_stale_versions(files: list[Path]) -> list[tuple[Path, int, str, str]]:
     findings: list[tuple[Path, int, str, str]] = []
-    pin = _read_pin()
+    pin = _norm_ver(_read_pin())
     pin_re = re.compile(r"\bv?" + re.escape(pin) + r"\b") if pin else None
     for f in files:
         f_posix = str(f).replace("\\", "/")
@@ -427,13 +430,7 @@ def _norm_ver(s: str) -> str:
 
 def check_version_consistency() -> list[tuple[Path, int, str, str]]:
     findings: list[tuple[Path, int, str, str]] = []
-    pin_file = REPO_ROOT / ".claude" / "pinned-game-version.txt"
-    if not pin_file.exists():
-        return findings
-    try:
-        pin_raw = pin_file.read_text(encoding="utf-8").strip()
-    except OSError:
-        return findings
+    pin_raw = _read_pin()
     pin = _norm_ver(pin_raw)
     if not pin:
         return findings
