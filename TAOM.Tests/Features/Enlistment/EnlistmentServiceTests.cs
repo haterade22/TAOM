@@ -15,6 +15,7 @@ public class EnlistmentServiceTests
     private EnlistmentStateMachine _machine = null!;
     private ICommanderLordAdapter _commander = null!;
     private IMobilePartyAttachmentAdapter _attachment = null!;
+    private IEncounterAdapter _encounter = null!;
     private DischargeService _discharge = null!;
     private EnlistmentService _service = null!;
 
@@ -28,9 +29,11 @@ public class EnlistmentServiceTests
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
         _attachment.RestorePresence().Returns(true);
         _attachment.ParkNear(Arg.Any<string>()).Returns(true);
-        _discharge = new DischargeService(_store, _machine, _attachment, _logger);
+        _discharge = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), _logger);
+        _encounter = Substitute.For<IEncounterAdapter>();
+        _encounter.Finish(Arg.Any<bool>()).Returns(true);
         _service = new EnlistmentService(
-            _store, _machine, _discharge, _commander, _attachment,
+            _store, _machine, _discharge, _commander, _attachment, _encounter,
             new EnlistmentConfigProvider(_logger), _logger);
 
         _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
@@ -176,4 +179,36 @@ public class EnlistmentServiceTests
         Assert.AreEqual(EnlistmentState.NotEnlisted, _store.Record.State);
         _attachment.Received(1).RestorePresence();
     }
+
+    [TestMethod]
+    public void CompleteOath_ClosesTheConversationEncounterBeforeParking()
+    {
+        // Regression (in-game 2026-08-07): the oath is sworn inside a conversation, which runs
+        // inside a PlayerEncounter. Parking without closing it left PlayerEncounter.Current live
+        // for the whole term — observed on 93 of 93 ticks — and EncounterManager refuses EVERY
+        // main-party encounter while it is set, so the player could not click a lord again.
+        // The donor closes it at the same point (FinalizeEnlistmentConversation).
+        _encounter.HasCurrent.Returns(true);
+        _service.SubmitPetition("lord_1_1");
+
+        _service.CompleteOath("lord_1_1", "main_hero", 100.0);
+
+        Received.InOrder(() =>
+        {
+            _encounter.Finish(false);
+            _attachment.ParkNear("lord_1_1");
+        });
+    }
+
+    [TestMethod]
+    public void CompleteOath_NoEncounterOpen_DoesNotCallFinish()
+    {
+        _encounter.HasCurrent.Returns(false);
+        _service.SubmitPetition("lord_1_1");
+
+        _service.CompleteOath("lord_1_1", "main_hero", 100.0);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
 }

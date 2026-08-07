@@ -80,6 +80,23 @@ including foreign/corrupt saves.
   raised when the commander is in a map event and the player is not. The recovery path covers
   a missed edge (save-load mid-battle, a throw, enlisting into a running fight).
 
+### Service-lifecycle rules learned in live play (2026-08-07 — read before touching this path)
+
+The first shipped build never joined a battle and left the player unable to interact with the world.
+Four causes, all found by instrumenting a live session rather than by reading code:
+
+| Rule | Why |
+|---|---|
+| **Close the conversation's `PlayerEncounter` when the oath is sworn** | The oath happens inside a conversation, which runs inside a `PlayerEncounter`. Parking without closing it left `PlayerEncounter.Current` live for the whole term — measured at `playerEncounter=True` on **93 of 93** ticks — and `EncounterManager` refuses EVERY main-party encounter while it is set. That single leak made the player unable to click any lord or settlement, and it survived into discharge. The donor closes it at the same point (`FinalizeEnlistmentConversation`: `Finish()` then attach). Discharge closes it too, and the hourly reconciler self-heals saves already stuck in that state. |
+| **Every return to parked service owes the player a menu** | Re-parking alone leaves them on the open map with no menu and no way to act — reported as "after battle I was left behind and the option menu isn't here". The only re-assert was `OnConversationEnded`, which never fires on the battle path. Both battle paths (normal end, failed-join rollback) now call `ReassertServiceMenu`. |
+| **Never anchor world spawns on the commander's CURRENT settlement** | `CommanderSnapshot.SettlementId` is empty whenever the column is marching — nearly always — so hunt duties could only start while the commander sat in a town. Every `recon_sweep` failed with `SpawnLooterParty: settlement=''`. Falls back to `FindNearestFriendlySettlement`. |
+| **Calibrate diagnostic thresholds against a real session, not a guess** | The drift warning used `> 1f`; ordinary inter-tick drift while marching is ~1.8, so it fired on essentially every sync — **291 of one session's 299 warnings**. A per-world-map-event INFO line produced another 3674. Both are now DEBUG / properly thresholded. A diagnostic that fires constantly is indistinguishable from no diagnostic. |
+
+**Verified in live play 2026-08-07:** field battle join (instant, via `MapEventStarted`), siege assault
+join, hourly-recovery join when the immediate edge is missed, return to parked service after battle,
+and config load without reverting. The measured steady-state drift while following is ~1.8 map units —
+the player is teleport-chased rather than genuinely attached, which is what "dragged along" describes.
+
 ### Battle-join rules learned the hard way (2026-08-07 — read before touching this path)
 
 The first shipped version never joined a single battle. Five separate defects, all on one path:
@@ -196,14 +213,20 @@ gating/rotation/lifecycle per mechanic, equipment resolver fallback + payoff mat
 issue-ledger across a save round-trip, role-fit bands per assignment, and one regression test per
 Codex finding (`CodexFindingRegressionTests`).
 
-**Owed at ship (in-game gates — nothing below has run in a live game):**
-**Encounter join from parked state is the top priority — it shipped broken and its fix is still
-unverified in a live game.** Confirm all four cases: a field battle with the commander solo, a
-field battle with the commander in an army, a siege assault, and a save-load mid-service followed
-by a battle. The log tells you which branch ran: `[Enlistment] joined commander battle on side …`
-on success, versus `not in a map event` / `already finalized` / `no resolvable side leaders` /
-`did not put the main party into a map event` on each distinct failure.
-Also: SetNextMenu timing vs EncounterGameMenuBehavior; camera
+**Verified in live play (2026-08-07):** field-battle join with the commander solo (instant, via
+`MapEventStarted`); siege-assault join; hourly-recovery join when the immediate edge is missed;
+return to parked service after a battle; enlistment config loading without silently reverting;
+the conversation encounter being closed at swear-in. Log lines that prove each:
+`joined commander battle on side …`, `closed the enlistment conversation's PlayerEncounter`,
+`service wait menu re-opened after …`.
+
+**Still owed (in-game gates that have NOT run):**
+A field battle with the commander **in an army** — the one case that could still fail, because
+`FindCommanderPartyIdIn` matches only the commander's own party in `InvolvedParties`, and an
+attached army member may not appear there. **Leaving service and immediately clicking a lord** —
+the save-breaker fix is written but never exercised; the line that would indict it is
+`DISCHARGE(…) LEFT THE PLAYER UNABLE TO START ENCOUNTERS`. **Save-load mid-service, then a
+battle.** Also: SetNextMenu timing vs EncounterGameMenuBehavior; camera
 handoff; captivity entry/exit mid-service; food/wage/morale ticks for the inactive
 MainParty; save-load inside the wait menu; TimeAcceleration interplay; the duty
 spawn→hunt→complete loop and its target-party cleanup; equipment visuals per race

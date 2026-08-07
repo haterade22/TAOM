@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -141,6 +142,24 @@ public class EnlistmentContentConfigProviderTests
 
         Assert.AreEqual(15, config.Progression.DailyLeadershipXp);
         _logger.DidNotReceive().LogError(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_ValidRankTables_AppliedNotAppendedToDefaults()
+    {
+        // Regression (in-game 2026-08-07): the model initializes these lists, and Newtonsoft's
+        // default ObjectCreationHandling.Auto APPENDS file entries onto that existing collection.
+        // A valid 4-entry table deserialized to 8, failed the "exactly 4" check, and silently
+        // reverted to the compiled defaults — so every retune was discarded with only a warning.
+        // Values here deliberately differ from the defaults so a revert cannot pass this test.
+        WriteConfig("{\"progression\":{\"dailyWageByRank\":[9,11,13,17],\"dailyServiceXpByRank\":[1,2,3,4]}}");
+
+        var config = Provider().GetConfig();
+
+        CollectionAssert.AreEqual(new[] { 9, 11, 13, 17 }, config.Progression.DailyWageByRank.ToArray());
+        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4 }, config.Progression.DailyServiceXpByRank.ToArray());
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("dailyWageByRank")));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("dailyServiceXpByRank")));
     }
 
     [TestMethod]

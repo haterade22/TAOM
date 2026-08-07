@@ -68,12 +68,27 @@ public class FieldDutyRuntime : IFieldDutyRuntime
 
         if (duty.TargetKind == DutyTargetKind.SpawnedLooterParty)
         {
+            // Anchor on the commander's CURRENT settlement only when they are actually inside one.
+            // CommanderSnapshot.SettlementId is empty whenever the column is in the field — which
+            // is nearly always — so using it alone meant hunt duties could only ever start while
+            // the commander sat in a town. Observed in-game 2026-08-07: "SpawnLooterParty:
+            // settlement='' or looters clan unresolved" followed by every recon_sweep failing.
             var commanderSnapshot = _commander.GetSnapshot(commanderId);
+            var anchorSettlementId = string.IsNullOrEmpty(commanderSnapshot.SettlementId)
+                ? _world.FindNearestFriendlySettlement(commanderId)
+                : commanderSnapshot.SettlementId;
+
+            if (string.IsNullOrEmpty(anchorSettlementId))
+            {
+                _logger?.LogWarning($"[Enlistment.Duties] Start '{duty.Id}' failed — no settlement to anchor the hunt target near (commander '{commanderId}' is not in one and none was found nearby)");
+                return false;
+            }
+
             targetPartyId = _world.SpawnLooterParty(
-                "taom_enlist_duty", commanderSnapshot.SettlementId, patrolNotEngage: duty.TargetAi != DutyTargetAi.EngagePlayer);
+                "taom_enlist_duty", anchorSettlementId, patrolNotEngage: duty.TargetAi != DutyTargetAi.EngagePlayer);
             if (string.IsNullOrEmpty(targetPartyId))
             {
-                _logger?.LogWarning($"[Enlistment.Duties] Start '{duty.Id}' failed — could not spawn hunt target");
+                _logger?.LogWarning($"[Enlistment.Duties] Start '{duty.Id}' failed — could not spawn hunt target near '{anchorSettlementId}'");
                 return false;
             }
         }

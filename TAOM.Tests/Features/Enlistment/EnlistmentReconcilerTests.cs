@@ -41,7 +41,7 @@ public class EnlistmentReconcilerTests
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
         _attachment = new ServiceAttachmentService(_partyAdapter, _logger);
-        _discharge = new DischargeService(_store, _machine, _partyAdapter, _logger);
+        _discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
         _reconciler = new EnlistmentReconciler(
             _store, _machine, _attachment, _commander, _discharge,

@@ -19,19 +19,22 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
     private readonly IServiceBattleService _battle;
     private readonly IEnlistmentReconciler _reconciler;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly TAOM.Core.Logging.IModLogger _diag;
 
     public EnlistmentBattleBehavior(
         IEnlistmentStore store,
         ICommanderLordAdapter commander,
         IServiceBattleService battle,
         IEnlistmentReconciler reconciler,
-        ICoopSessionProvider coopSession)
+        ICoopSessionProvider coopSession,
+        TAOM.Core.Logging.IModLogger diag)
     {
         _store = store;
         _commander = commander;
         _battle = battle;
         _reconciler = reconciler;
         _coopSession = coopSession;
+        _diag = diag;
     }
 
     public override void RegisterEvents()
@@ -68,7 +71,21 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
 
         var commanderPartyId = FindCommanderPartyIdIn(mapEvent);
         if (commanderPartyId == null)
+        {
+            // DEBUG, not INFO: this fires for EVERY map event in the world, and at accelerated
+            // campaign speed that was 3674 lines in one 32-minute session — 61% of the whole log,
+            // each one synchronously flushed. It stays available for diagnosis (it is what proved
+            // the commander was in 0 of 456 events) without drowning the signal.
+            _diag?.LogDebug(
+                $"[EnlistDiag] map event started, commander NOT in it — commanderHero='{_store.Record.CommanderHeroId}' " +
+                $"resolvedParty='{_commander.GetPartyId(_store.Record.CommanderHeroId) ?? "NONE"}' " +
+                $"attacker='{attackerParty?.MobileParty?.StringId ?? attackerParty?.Name?.ToString() ?? "?"}' " +
+                $"defender='{defenderParty?.MobileParty?.StringId ?? defenderParty?.Name?.ToString() ?? "?"}' " +
+                $"involved={CountInvolved(mapEvent)}");
             return;
+        }
+
+        _diag?.LogInfo($"[EnlistDiag] map event started WITH the commander ('{commanderPartyId}') — entering join pipeline");
 
         // attackerParty/defenderParty are deliberately NOT forwarded: for a siege the defender is
         // a settlement PartyBase with no MobileParty, so its id is null and the encounter could
@@ -88,6 +105,13 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         {
             _battle.OnCommanderBattleEnded();
         }
+    }
+
+    private static int CountInvolved(MapEvent mapEvent)
+    {
+        var n = 0;
+        foreach (var _ in mapEvent.InvolvedParties) n++;
+        return n;
     }
 
     private string FindCommanderPartyIdIn(MapEvent mapEvent)

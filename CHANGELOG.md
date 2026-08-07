@@ -174,6 +174,47 @@ of report we were chasing — and records the character id and resolved Monster 
 emits `as_human<suffix>` when the Monster is null, and that fallback is now logged (deduped per
 sex+suffix) instead of silently turning a non-human into a human.
 
+### fix(enlistment): the service loop actually works in a live game (#406)
+
+Play-testing the shipped feature found it broken in ways no unit test could see. Instrumenting
+the live session — rather than reading more code — found the cause of three reports at once.
+
+**A `PlayerEncounter` stayed open for the entire term of service.** The oath is sworn inside a
+conversation, and a conversation runs inside a `PlayerEncounter`; we parked the player's party but
+never closed it. Measured at `playerEncounter=True` on **93 of 93** hourly ticks. `EncounterManager`
+refuses every main-party encounter while that is set, so the player was engine-blocked from
+interacting with anything for the whole term — and the state survived into discharge, which is why
+lords could not be clicked after leaving service. The donor closes it at exactly this point
+(`FinalizeEnlistmentConversation`: finish, then attach); the rewrite had dropped that ordering.
+Now closed at swear-in and at discharge, with an hourly self-heal so saves already stuck recover.
+
+**Nothing re-opened the wait menu after a battle.** The only re-assert was `OnConversationEnded`,
+which never fires on the battle path, so the player came out of a fight parked and menuless on the
+open map — reported as "after battle I was left behind and the option menu isn't here". Both
+battle return paths now re-assert it.
+
+**Hunt duties could never start in the field.** The spawn anchored on the commander's *current*
+settlement, which is empty whenever the column is marching, so every `recon_sweep` failed with
+`SpawnLooterParty: settlement=''`. Falls back to the nearest friendly settlement.
+
+**`enlistment_config.json` was silently discarding every retune.** Newtonsoft's default
+`ObjectCreationHandling.Auto` *appends* to a collection that already has an initializer, so a valid
+4-entry rank table deserialized to 8, failed the "exactly 4" check, and reverted to compiled
+defaults with only a warning. Fixed with `Replace` on both loaders.
+
+Diagnostics were also recalibrated against the live log: the drift warning fired on essentially
+every sync (291 of one session's 299 warnings) because ordinary inter-tick drift is ~1.8 and the
+threshold was 1.0; a per-world-map-event line added another 3674. A diagnostic that fires
+constantly is indistinguishable from no diagnostic.
+
+**Confirmed working in live play:** field-battle join (instant), siege-assault join, hourly-recovery
+join when the immediate edge is missed, return to parked service, and config load. Suite 5729 green.
+
+Still unverified in game: a battle with the commander inside an army, discharge-then-click-a-lord,
+and save-load mid-service. Recorded in `docs/features/enlistment.md`.
+
+Research: PlayerEncounter/EncounterManager gating, MapEvent.AddInvolvedPartyInternal, GameMenu.SwitchToMenu vs ActivateGameMenu
+Not-tested: army-battle join, post-discharge interaction, save-load mid-service
 ### fix(enlistment): the enlisted player can actually join the commander's battles (#406)
 
 A player enlisted under a Mirkwood lord and never joined a single fight — the lord marched in an

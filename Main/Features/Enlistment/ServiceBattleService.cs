@@ -109,6 +109,7 @@ public class ServiceBattleService : IServiceBattleService
         }
 
         _attachment.EnsureParked(_store.Record.CommanderHeroId);
+        ReassertServiceMenu("a failed join");
     }
 
     public void OnCommanderBattleEnded()
@@ -124,5 +125,28 @@ public class ServiceBattleService : IServiceBattleService
 
         _machine.TryTransition(EnlistmentState.EnlistedAttached);
         _attachment.EnsureParked(_store.Record.CommanderHeroId);
+        ReassertServiceMenu("battle ended");
+    }
+
+    /// <summary>
+    /// Put the player back in the service wait menu after any return to parked service.
+    /// Re-parking alone leaves them on the open map with no menu and no way to act — reported
+    /// in-game 2026-08-07 as "after battle I was left behind and the option menu isn't here".
+    /// The donor re-activates its wait menu on every return-to-service path; TAOM previously did
+    /// so only after a conversation (EnlistmentMenuBehavior.OnConversationEnded), which never
+    /// fires on the battle path.
+    /// </summary>
+    private void ReassertServiceMenu(string trigger)
+    {
+        if (_store.Record.State != EnlistmentState.EnlistedAttached)
+            return;
+
+        if (_gameMenu.CurrentMenuId == EnlistmentMenuService.ServiceWaitMenuId)
+            return;
+
+        if (_gameMenu.EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId))
+            _logger?.LogInfo($"[EnlistDiag] service wait menu re-opened after {trigger}");
+        else
+            _logger?.LogError($"[EnlistDiag] could not re-open the service wait menu after {trigger} — the player is parked on the map with no menu");
     }
 }

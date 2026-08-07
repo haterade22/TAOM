@@ -21,6 +21,9 @@ public interface IMobilePartyAttachmentAdapter
     /// <summary>Teleport the parked main party to the commander's position. False when the commander party is gone.</summary>
     bool SyncPositionTo(string commanderHeroId);
 
+    /// <summary>Distance from the main party to the commander's party, or -1 when unresolvable. Diagnostics only.</summary>
+    float GetDistanceToCommander(string commanderHeroId);
+
     /// <summary>Presence + captivity snapshot for diagnostics and load-time rescue.</summary>
     PlayerPresenceSnapshot GetPresence();
 

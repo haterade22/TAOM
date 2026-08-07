@@ -315,6 +315,48 @@ public class ServiceBattleServiceTests
     }
 
     [TestMethod]
+    public void BattleEnded_ReopensTheServiceWaitMenu()
+    {
+        // Regression (in-game 2026-08-07): "after battle I was left behind and the option menu
+        // isn't here". Re-parking alone leaves the player on the open map with no menu and no way
+        // to act. The only wait-menu re-assert was OnConversationEnded, which never fires on the
+        // battle path. The donor re-activates its wait menu on every return-to-service path.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.HasCurrent.Returns(false);
+        _gameMenu.CurrentMenuId.Returns("encounter");
+
+        _service.OnCommanderBattleEnded();
+
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _gameMenu.Received(1).EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
+    [TestMethod]
+    public void BattleEnded_AlreadyOnWaitMenu_DoesNotReopenIt()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.HasCurrent.Returns(false);
+        _gameMenu.CurrentMenuId.Returns(EnlistmentMenuService.ServiceWaitMenuId);
+
+        _service.OnCommanderBattleEnded();
+
+        _gameMenu.DidNotReceive().EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
+    [TestMethod]
+    public void BattleStarted_JoinFails_ReopensTheServiceWaitMenu()
+    {
+        // The rollback returns to parked service too, so it owes the player a menu as well.
+        MakeEnlisted();
+        _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
+        _gameMenu.CurrentMenuId.Returns((string)null);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _gameMenu.Received(1).EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
+    [TestMethod]
     public void BattleEnded_EncounterStillOpen_LeavesBattleStateForLootFlow()
     {
         // Loot/aftermath menus run inside the still-open encounter; flipping to Attached

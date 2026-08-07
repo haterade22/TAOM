@@ -12,6 +12,7 @@ public class EnlistmentService : IEnlistmentService
     private readonly IDischargeService _discharge;
     private readonly ICommanderLordAdapter _commander;
     private readonly IMobilePartyAttachmentAdapter _attachment;
+    private readonly IEncounterAdapter _encounter;
     private readonly IEnlistmentConfigProvider _config;
     private readonly IModLogger _logger;
 
@@ -21,6 +22,7 @@ public class EnlistmentService : IEnlistmentService
         IDischargeService discharge,
         ICommanderLordAdapter commander,
         IMobilePartyAttachmentAdapter attachment,
+        IEncounterAdapter encounter,
         IEnlistmentConfigProvider config,
         IModLogger logger)
     {
@@ -29,6 +31,7 @@ public class EnlistmentService : IEnlistmentService
         _discharge = discharge;
         _commander = commander;
         _attachment = attachment;
+        _encounter = encounter;
         _config = config;
         _logger = logger;
     }
@@ -80,6 +83,21 @@ public class EnlistmentService : IEnlistmentService
         _store.Record.ContractEndDay = nowDays + _config.GetConfig().ContractDays;
         _store.Record.PetitionCommanderId = null;
         _machine.TryTransition(EnlistmentState.EnlistedAttached);
+
+        // The oath is sworn inside a conversation, which runs inside a PlayerEncounter. Parking
+        // without closing it leaves PlayerEncounter.Current live for the whole term, and
+        // EncounterManager refuses EVERY main-party encounter while that is set — so the player
+        // cannot click a lord or settlement again, and the state survives into discharge.
+        // Observed in-game 2026-08-07: playerEncounter=True on 93 of 93 ticks. The donor closes it
+        // here too (RFEnlistmentCampaignBehavior.FinalizeEnlistmentConversation: Finish() then
+        // attach) — ordering matters, the encounter must go before the park.
+        if (_encounter.HasCurrent)
+        {
+            if (_encounter.Finish(false))
+                _logger?.LogInfo($"[EnlistDiag] closed the enlistment conversation's PlayerEncounter before parking on {commanderHeroId}");
+            else
+                _logger?.LogError($"[EnlistDiag] could not close the enlistment conversation's PlayerEncounter — the player may be unable to interact with anything while enlisted");
+        }
 
         if (!_attachment.ParkNear(commanderHeroId))
             _logger?.LogWarning($"[Enlistment] ParkNear failed right after the oath with {commanderHeroId} — reconciler will re-park");

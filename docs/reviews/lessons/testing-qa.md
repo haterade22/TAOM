@@ -415,3 +415,38 @@ returns `true` for "no exception" is a lie generator, and every caller inherits 
 **Source:** deep-review + Codex pass on #406, 2026-08-07. Full incident:
 `docs/reviews/rca-enlistment-battle-join-2026-08-07.md`. Sibling lesson above ("A mocked adapter
 cannot test the engine precondition behind it") covers why the test suite could not see any of it.
+
+### Instrument the live system when unit tests keep passing and the feature keeps failing
+
+**Symptom:** TAOM's Enlistment feature shipped, was fixed twice against a green 5700-test suite, and
+still failed in play — the player joined no battles, was stranded after the ones they did join, and
+could not click any lord after leaving service. Three more rounds of code reading produced good
+theories and no confirmation.
+
+**What broke the deadlock:** adding loud, greppable runtime diagnostics that printed the exact
+engine values the decision depended on, then reading one live session's log. The answer was visible
+in a single line — `playerEncounter=True` on 93 of 93 ticks — and it explained three separate
+reports at once. No amount of further reading would have produced it, because the defect was a
+*state that accumulated at runtime*, not a wrong branch in a method.
+
+**Why missed:** every prior pass reasoned about what the code *does*, and the bug was about what the
+engine *holds*. The oath conversation's `PlayerEncounter` was never closed; nothing in our code was
+wrong to read, something was merely absent. Absence is close to invisible in code review and glaring
+in a state dump.
+
+**Prevent:**
+- When a feature fails in play but passes in test, stop reading and **print the engine's state at
+  the decision points**. Dump the exact fields the engine gates on — for encounters that is
+  `IsActive` / `AttachedTo` / `MapEventSide` / `PlayerEncounter.Current` — not your own derived
+  booleans, which are the thing under suspicion.
+- **Log the observable outcome of every state mutation**, before and after. `PARK ok | before: … |
+  after: …` proved parking worked and moved suspicion elsewhere in one line.
+- **Make failure branches say which branch ran.** Silent early-returns are why "I never joined a
+  battle" stayed unexplained for three rounds.
+- **Then calibrate against a real session and turn the volume down.** First-pass thresholds are
+  guesses: `drift > 1f` fired on 291 of 299 warnings because true drift is ~1.8, and a
+  per-world-map-event INFO line contributed 3674 lines to a 6001-line log. Diagnostics that fire
+  constantly bury the signal they were added to surface, and INFO flushes synchronously.
+
+**Source:** live play-test 2026-08-07 against #406. Sibling lessons above cover why the test suite
+could not see any of it (mocked adapters) and why checking return values was not enough.

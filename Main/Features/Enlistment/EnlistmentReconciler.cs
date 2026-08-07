@@ -148,15 +148,49 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         }
 
         var assessment = _attachment.Assess(record.State, snapshot, presence);
+
+        // DEBUG: the hourly tick fires many times per real second at accelerated campaign speed
+        // (576 lines in one 32-minute session). The anomaly branches below stay at WARNING/ERROR,
+        // so a genuine fault is still loud without this routine line flushing on every tick.
+        _logger?.LogDebug(
+            $"[EnlistDiag] TICK state={record.State} verdict={assessment.Status}" +
+            (assessment.Status == AttachmentStatus.Blocked ? $"({assessment.BlockReason})" : "") +
+            $" | player: {presence.Describe()}" +
+            $" | commander '{record.CommanderHeroId}': exists={snapshot.Exists} alive={snapshot.IsAlive} " +
+            $"party={snapshot.PartyId ?? "NONE"} partyActive={snapshot.PartyIsActive} inMapEvent={snapshot.PartyIsInMapEvent} prisoner={snapshot.IsPrisoner}");
+
+        // Self-heal a stranded conversation encounter. While EnlistedAttached and out of any map
+        // event there is no legitimate reason for a live PlayerEncounter: the oath conversation's
+        // encounter should have been closed at swear-in. Left open it blocks every main-party
+        // encounter for the whole term and survives into discharge. Saves made before that fix
+        // are already in this state, so heal it here rather than only at the source.
+        if (record.State == EnlistmentState.EnlistedAttached
+            && presence.HasPlayerEncounter
+            && !presence.IsInMapEvent
+            && !snapshot.PartyIsInMapEvent)
+        {
+            _logger?.LogWarning("[EnlistDiag] a PlayerEncounter is open while parked with no battle in progress — closing it (it would block every future encounter)");
+            if (!_encounter.Finish(false))
+                _logger?.LogError("[EnlistDiag] failed to close the stranded PlayerEncounter — the player cannot start encounters until this clears");
+        }
+
         switch (assessment.Status)
         {
             case AttachmentStatus.Attached:
                 if (record.State == EnlistmentState.EnlistedAttached && presence.LooksParked)
-                    _attachment.SyncPosition(record.CommanderHeroId);
+                {
+                    if (!_attachment.SyncPosition(record.CommanderHeroId))
+                        _logger?.LogError("[EnlistDiag] hourly SYNC failed — the player will keep drifting from the commander");
+                }
+                else if (record.State == EnlistmentState.EnlistedAttached && !presence.LooksParked)
+                {
+                    _logger?.LogWarning($"[EnlistDiag] verdict=Attached but the party is NOT parked ({presence.Describe()}) — no sync will run this tick");
+                }
                 return;
 
             case AttachmentStatus.AttachRequired:
-                _attachment.EnsureParked(record.CommanderHeroId);
+                if (!_attachment.EnsureParked(record.CommanderHeroId))
+                    _logger?.LogError($"[EnlistDiag] hourly PARK failed for commander '{record.CommanderHeroId}' — player is loose on the map while still enlisted");
                 return;
 
             case AttachmentStatus.BattleJoinRequired:

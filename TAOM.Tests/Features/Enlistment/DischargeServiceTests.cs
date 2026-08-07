@@ -32,7 +32,7 @@ public class DischargeServiceTests
         _machine = new EnlistmentStateMachine(_store, _logger);
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
         _attachment.RestorePresence().Returns(true);
-        _service = new DischargeService(_store, _machine, _attachment, _logger);
+        _service = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)

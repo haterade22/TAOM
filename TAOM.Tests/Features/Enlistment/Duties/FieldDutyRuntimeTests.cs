@@ -137,6 +137,48 @@ public class FieldDutyRuntimeTests
     }
 
     [TestMethod]
+    public void Start_HuntSpawnedParty_CommanderInTheField_AnchorsOnTheNearestSettlement()
+    {
+        // Regression (in-game 2026-08-07): the anchor used CommanderSnapshot.SettlementId, which is
+        // empty whenever the column is marching — i.e. nearly always. Every recon_sweep failed with
+        // "SpawnLooterParty: settlement=''". Hunt duties could only start while the commander sat
+        // inside a town, which is the rarer state.
+        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, settlementId: null));
+        _world.FindNearestFriendlySettlement("lord_1_1").Returns("town_nearby");
+        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("taom_enlist_duty_abc123");
+
+        var result = _runtime.Start(HuntDuty("recon_sweep"), 100.0);
+
+        Assert.IsTrue(result);
+        _world.Received(1).SpawnLooterParty(Arg.Any<string>(), "town_nearby", Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void Start_HuntSpawnedParty_CommanderInSettlement_PrefersThatSettlement()
+    {
+        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, settlementId: "town_1"));
+        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("taom_enlist_duty_abc123");
+
+        _runtime.Start(HuntDuty("recon_sweep"), 100.0);
+
+        _world.Received(1).SpawnLooterParty(Arg.Any<string>(), "town_1", Arg.Any<bool>());
+        _world.DidNotReceive().FindNearestFriendlySettlement(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Start_HuntSpawnedParty_NoAnchorAnywhere_FailsWithoutSpawning()
+    {
+        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, settlementId: null));
+        _world.FindNearestFriendlySettlement(Arg.Any<string>()).Returns((string)null);
+
+        var result = _runtime.Start(HuntDuty("recon_sweep"), 100.0);
+
+        Assert.IsFalse(result);
+        _world.DidNotReceive().SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>());
+        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
+    }
+
+    [TestMethod]
     public void Start_HuntSpawnedParty_Success_SetsActiveDutyTransitionsAndRestoresPresence()
     {
         _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("taom_enlist_duty_abc123");

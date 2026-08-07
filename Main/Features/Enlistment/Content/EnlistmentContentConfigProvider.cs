@@ -90,7 +90,16 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         EnlistmentContentConfig parsed;
         try
         {
-            parsed = JsonConvert.DeserializeObject<EnlistmentContentConfig>(File.ReadAllText(path));
+            // ObjectCreationHandling.Replace is REQUIRED, not a preference. The config model gives
+            // its list properties initializers (e.g. DailyWageByRank = { 5, 8, 14, 22 }), and
+            // Newtonsoft's default (Auto) APPENDS the JSON entries to that existing collection
+            // instead of replacing it. A well-formed 4-entry table therefore deserialized to 8
+            // entries, failed the "exactly 4" rank-table check, and silently reverted to the
+            // compiled defaults — so every retune of these tables was discarded with only a
+            // warning. Observed in-game 2026-08-07.
+            parsed = JsonConvert.DeserializeObject<EnlistmentContentConfig>(
+                File.ReadAllText(path),
+                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
         }
         catch (Exception ex)
         {
@@ -171,7 +180,7 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
     {
         if (table != null && table.Count == 4 && table.All(v => v >= 0))
             return false;
-        _logger.LogWarning($"EnlistmentContentConfigProvider: {name} must be 4 non-negative entries (one per rank), reverting to defaults");
+        _logger.LogWarning($"EnlistmentContentConfigProvider: {name} must be 4 non-negative entries (one per rank) but was [{(table == null ? "null" : string.Join(",", table))}] (count {table?.Count ?? 0}) — reverting to defaults");
         assign(new List<int>(defaultTable));
         return true;
     }
@@ -230,7 +239,11 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         EnlistmentDutiesConfig parsed;
         try
         {
-            parsed = JsonConvert.DeserializeObject<EnlistmentDutiesConfig>(File.ReadAllText(path));
+            // Same Replace requirement as the config loader above — any list property with an
+            // initializer would otherwise accumulate the file's entries on top of the defaults.
+            parsed = JsonConvert.DeserializeObject<EnlistmentDutiesConfig>(
+                File.ReadAllText(path),
+                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
         }
         catch (Exception ex)
         {

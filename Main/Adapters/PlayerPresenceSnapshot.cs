@@ -15,8 +15,35 @@ public sealed class PlayerPresenceSnapshot
     public string SettlementId { get; }
     public bool IsInMapEvent { get; }
 
+    /// <summary>True when MainParty.AttachedTo is set. Blocks encounters (EncounterManager:38).</summary>
+    public bool IsAttachedToParty { get; }
+
+    /// <summary>True when a PlayerEncounter is live. Blocks ALL further main-party encounters (EncounterManager:38).</summary>
+    public bool HasPlayerEncounter { get; }
+
+    /// <summary>Distance to the commander's party, or -1 when either is unresolvable. Makes "left behind" measurable.</summary>
+    public float DistanceToCommander { get; }
+
     /// <summary>Hidden + inactive — the parked shape. With no enlistment record, this is an anomaly to rescue.</summary>
     public bool LooksParked => MainPartyExists && !IsActive && !IsVisible;
+
+    /// <summary>
+    /// True when the engine would refuse to start ANY encounter for the main party. Mirrors the
+    /// blocking clauses of EncounterManager.HandleEncounterForMobileParty. If this is true after a
+    /// discharge, the player can no longer talk to anyone — the state must be cleared, not just logged.
+    /// </summary>
+    public bool EncountersBlocked =>
+        MainPartyExists && (!IsActive || IsAttachedToParty || IsInMapEvent || HasPlayerEncounter);
+
+    /// <summary>One-line dump for the diagnostic log. Order matches the engine's gate.</summary>
+    public string Describe() =>
+        !MainPartyExists
+            ? "mainParty=MISSING"
+            : $"active={IsActive} visible={IsVisible} attachedTo={IsAttachedToParty} " +
+              $"inMapEvent={IsInMapEvent} playerEncounter={HasPlayerEncounter} " +
+              $"settlement={SettlementId ?? "-"} captive={IsCaptive} " +
+              $"distToCommander={(DistanceToCommander < 0 ? "?" : DistanceToCommander.ToString("F1"))} " +
+              $"=> parked={LooksParked} encountersBlocked={EncountersBlocked}";
 
     public PlayerPresenceSnapshot(
         bool mainPartyExists,
@@ -24,7 +51,10 @@ public sealed class PlayerPresenceSnapshot
         bool isActive = false,
         bool isVisible = false,
         string settlementId = null,
-        bool isInMapEvent = false)
+        bool isInMapEvent = false,
+        bool isAttachedToParty = false,
+        bool hasPlayerEncounter = false,
+        float distanceToCommander = -1f)
     {
         MainPartyExists = mainPartyExists;
         IsCaptive = isCaptive;
@@ -32,5 +62,8 @@ public sealed class PlayerPresenceSnapshot
         IsVisible = isVisible;
         SettlementId = settlementId;
         IsInMapEvent = isInMapEvent;
+        IsAttachedToParty = isAttachedToParty;
+        HasPlayerEncounter = hasPlayerEncounter;
+        DistanceToCommander = distanceToCommander;
     }
 }
