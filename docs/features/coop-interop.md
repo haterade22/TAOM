@@ -307,8 +307,26 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity.** 284 `SettingProperty` entries, mostly gameplay-affecting, per-user and
-  outside the save; BannerlordCoop syncs none. Divergent settings defeat everything above.
+- **No MCM settings parity — reported, not yet exchanged.** TAOM ships **159** settings (the 284
+  here counted `[SettingPropertyGroup]` lines alongside the properties; the split is 144 in
+  `TaomSettings` plus 15 across the four diagnostics files). **106 of them are
+  simulation-relevant** — traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch. The 53 excluded are
+  instrumentation, player-local inventory convenience, presentation, and the three
+  time-acceleration knobs whose UI co-op already suppresses; the list with its reasons is
+  `Main/Features/CoopInterop/CoopSettingsRelevance.cs`, and a test fails if a new setting is added
+  without being classified.
+
+  `SettingsFingerprint` hashes those 106 — one code per MCM group plus a global, culture-invariant
+  so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
+  to each peer's log under the co-op gate. That makes the "compare settings manually" workaround a
+  comparison of a few short strings instead of 106 values read off two screens.
+
+  **Still not done:** peers do not exchange them. Putting the fingerprint in save metadata and
+  comparing on join is the remaining step, and it cannot be verified without two machines in a
+  session — `FingerprintReport.DivergentGroups` is already there for it. BannerlordCoop still
+  syncs no setting, so divergent settings continue to defeat everything above; they are now
+  visible rather than silent.
 - **No ModuleData content hash.** Coop's handshake compares module ids and version strings only, and
   disconnects on mismatch — so identical TAOM versions on all peers are mandatory, and a TAOM version
   bump is a co-op compatibility break.
