@@ -24,6 +24,7 @@ public static class EnlistmentIoC
         container.Register<IEnlistmentService, EnlistmentService>(Reuse.Singleton);
         container.Register<IEnlistmentStateQuery, EnlistmentStateQuery>(Reuse.Singleton);
         container.Register<IEnlistmentReconciler, EnlistmentReconciler>(Reuse.Singleton);
+        container.Register<IServiceMaintenanceService, ServiceMaintenanceService>(Reuse.Singleton);
         container.Register<IEnlistmentLoadNormalizer, EnlistmentLoadNormalizer>(Reuse.Singleton);
         container.Register<IEnlistmentMenuService, EnlistmentMenuService>(Reuse.Singleton);
         container.Register<IServiceBattleService, ServiceBattleService>(Reuse.Singleton);
@@ -62,6 +63,7 @@ public static class EnlistmentIoC
         container.Register<EnlistmentBehavior>(Reuse.Singleton);
         container.Register<EnlistmentMenuBehavior>(Reuse.Singleton);
         container.Register<EnlistmentBattleBehavior>(Reuse.Singleton);
+        container.Register<EnlistmentMaintenanceBehavior>(Reuse.Singleton);
         container.Register<EnlistmentDialogBehavior>(Reuse.Singleton);
         container.Register<EnlistmentContentBehavior>(Reuse.Singleton);
         container.Register<EnlistmentQuartermasterBehavior>(Reuse.Singleton);

@@ -24,6 +24,15 @@ public class EnlistmentMenuService : IEnlistmentMenuService
             config.GetConfig().RedirectMenuIds ?? new List<string>(), StringComparer.Ordinal);
     }
 
+    /// <summary>
+    /// Is this a menu enlistment may take over? Id-only — no state check — because the maintenance
+    /// pump asks a different question from <see cref="TryRedirectMenu"/>: not "should I rewrite
+    /// this push?" but "am I entitled to replace what is already on screen?". A settlement or
+    /// encounter menu the player legitimately owns must never be closed out from under them.
+    /// </summary>
+    public bool IsRedirectable(string menuId) =>
+        !string.IsNullOrEmpty(menuId) && _redirectIds.Contains(menuId);
+
     public bool TryRedirectMenu(string requestedMenuId, out string redirectedMenuId)
     {
         redirectedMenuId = null;

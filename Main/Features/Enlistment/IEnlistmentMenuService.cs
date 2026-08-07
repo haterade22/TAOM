@@ -11,4 +11,11 @@ public interface IEnlistmentMenuService
 {
     /// <summary>True when the requested native menu must be rewritten to the service wait menu.</summary>
     bool TryRedirectMenu(string requestedMenuId, out string redirectedMenuId);
+
+    /// <summary>
+    /// True when the given menu id is one enlistment is entitled to take over. Used by the
+    /// maintenance pump so it never closes a settlement or encounter menu the player legitimately
+    /// owns; unlike <see cref="TryRedirectMenu"/> this asks only about the id, not about state.
+    /// </summary>
+    bool IsRedirectable(string menuId);
 }

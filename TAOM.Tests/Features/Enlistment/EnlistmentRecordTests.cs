@@ -217,4 +217,70 @@ public class EnlistmentRecordTests
         Assert.IsTrue(EnlistmentRecord.TryParse(serialized, out var record), $"TryParse failed for: {serialized}");
         return record;
     }
+
+    [TestMethod]
+    public void RoundTrip_PendingAttachmentAndRetryBudget_Survive()
+    {
+        var record = new EnlistmentRecord
+        {
+            State = EnlistmentState.EnlistedAttached,
+            EnlistedHeroId = "main_hero",
+            CommanderHeroId = "lord_1_1",
+            PendingCommanderAttachment = true,
+            NextAttachRetryAtHours = 3301.5,
+        };
+
+        Assert.IsTrue(EnlistmentRecord.TryParse(record.Serialize(), out var parsed));
+        Assert.IsTrue(parsed.PendingCommanderAttachment);
+        Assert.AreEqual(3301.5, parsed.NextAttachRetryAtHours.Value, 1e-9);
+    }
+
+    [TestMethod]
+    public void TryParse_LegacyRecordWithoutNewKeys_DefaultsToFalseAndNull()
+    {
+        // Saves written before the pump existed must load and behave as 'retry immediately'.
+        Assert.IsTrue(EnlistmentRecord.TryParse("state=2;heroId=main_hero;commanderId=lord_1_1", out var parsed));
+
+        Assert.IsFalse(parsed.PendingCommanderAttachment);
+        Assert.IsNull(parsed.NextAttachRetryAtHours);
+    }
+
+    [TestMethod]
+    public void Serialize_OmitsTheNewKeysWhenUnset()
+    {
+        var record = new EnlistmentRecord
+        {
+            State = EnlistmentState.EnlistedAttached,
+            EnlistedHeroId = "main_hero",
+            CommanderHeroId = "lord_1_1",
+        };
+
+        var serialized = record.Serialize();
+
+        StringAssert.DoesNotMatch(serialized, new System.Text.RegularExpressions.Regex("pendingAttach"));
+        StringAssert.DoesNotMatch(serialized, new System.Text.RegularExpressions.Regex("nextAttachHour"));
+    }
+
+    [TestMethod]
+    public void TryParse_NonFiniteRetryStamp_DropsToNullRatherThanFreezingEveryRetry()
+    {
+        // A NaN stamp would compare false against every future hour and freeze attach retries for
+        // the rest of the campaign — the field-level NaN gate must drop it.
+        Assert.IsTrue(EnlistmentRecord.TryParse(
+            "state=2;heroId=main_hero;commanderId=lord_1_1;nextAttachHour=NaN", out var parsed));
+
+        Assert.IsNull(parsed.NextAttachRetryAtHours);
+    }
+
+    [TestMethod]
+    public void Reset_ClearsTheRetryBudget()
+    {
+        var record = new EnlistmentRecord { PendingCommanderAttachment = true, NextAttachRetryAtHours = 10.0 };
+
+        record.Reset();
+
+        Assert.IsFalse(record.PendingCommanderAttachment);
+        Assert.IsNull(record.NextAttachRetryAtHours);
+    }
+
 }

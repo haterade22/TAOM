@@ -174,6 +174,45 @@ of report we were chasing — and records the character id and resolved Monster 
 emits `as_human<suffix>` when the Monster is null, and that fallback is now logged (deduped per
 sex+suffix) instead of silently turning a non-human into a human.
 
+### feat(enlistment): a real-time service loop, and the edge that sees a commander join a running fight
+
+Batch 3 — the foundational one. The donor drove its entire service loop from a ~4 Hz tick; the
+rewrite drove it from one event edge plus an hourly reconcile. That single difference is behind
+most of the reported symptoms.
+
+**The edge that could not exist.** `CampaignEventDispatcher.OnMapEventStarted` is dispatched exactly
+once, as the last statement of `MapEvent.Initialize` — it announces battle CREATION only. Every way
+the commander joins an ALREADY-RUNNING fight was structurally invisible. `OnPartyAddedToMapEventEvent`,
+dispatched from `MapEvent.AddInvolvedPartyInternal`, sees exactly that, and neither TAOM nor the
+donor subscribed to it. It fires for every party joining every battle in the world, so the handler
+is one bool and one ordinal compare against a cached id, with no logging on the non-match path.
+
+**`ServiceMaintenanceService`** is the continuous half of the loop, with an explicit ownership split:
+the hourly reconciler remains the ONLY terminal authority (discharge, grace, captivity, the stranded-
+encounter sweep), and the pump asserts continuous invariants while making exactly ONE state
+transition — breaking a stale `EnlistedBattle` latch that would otherwise block every future join.
+A reflection test asserts the pump cannot even *inject* `IDischargeService`.
+
+Two sources (campaign tick, wait-menu tick) share ONE budget, so adding the second cannot double the
+work rate, and a cheap tier (cached position sync, zero lookups) runs every pass while the expensive
+tier is throttled to one `Find<Hero>` at 4 Hz. The NaN gate is a positive requirement, because a
+single NaN `dt` would otherwise poison the accumulator permanently — NaN propagates through every
+later addition and every comparison against it is false.
+
+Two contracts are written into the class docs so they are not re-litigated: the pump structurally
+**cannot** reach `encounter` / `town` / `castle` or a map conversation, because the menu system sets
+`TimeControlMode = Stop` and `Campaign.Tick()` gates its dispatcher on `_dt > 0f`; and the
+`EnlistedAttached` gate on the menu assertion is load-bearing, not defensive, since `encounter` and
+`join_encounter` are both in the redirect list.
+
+The join retry budget is persisted (`pendingAttach`, `nextAttachHour`) and SHARED with the hourly
+path. It is stored in campaign hours; the reconciler is handed days and converts. That equivalence
+has its own assertion rather than a comment — if it ever drifts, the budget check silently
+suppresses hourly recovery entirely and restores exactly the never-joins-a-battle bug.
+
+Suite 5793 green (+42).
+
+Research: CampaignEvents.TickEvent/OnPartyAddedToMapEventEvent, MapEvent.AddInvolvedPartyInternal dispatch, Campaign.Tick _dt gating, GameMenu TimeControlMode
 ### perf(enlistment): a per-tick adapter surface that does not scan the world
 
 Batch 2 of the remediation plan. Behaviour-neutral groundwork for the real-time service pump —

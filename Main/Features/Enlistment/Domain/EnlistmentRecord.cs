@@ -32,6 +32,19 @@ public sealed class EnlistmentRecord
     /// <summary>End of the CommanderUnavailable grace window, or null when not in grace.</summary>
     public double? GraceEndsAtDay { get; set; }
 
+    /// <summary>
+    /// A join/attach was requested and has not been satisfied. Persisted so a save taken mid-battle
+    /// resumes the retry instead of waiting for the next edge that may never come.
+    /// </summary>
+    public bool PendingCommanderAttachment { get; set; }
+
+    /// <summary>
+    /// Campaign-hours stamp before which no further attach/join attempt is made. ONE budget shared
+    /// by the real-time pump and the hourly reconciler, so adding the pump cannot multiply the
+    /// attempt rate. Null means 'retry immediately'.
+    /// </summary>
+    public double? NextAttachRetryAtHours { get; set; }
+
     public bool IsEnlisted =>
         State == EnlistmentState.EnlistedAttached
         || State == EnlistmentState.EnlistedBattle
@@ -48,6 +61,8 @@ public sealed class EnlistmentRecord
         EnlistedAtDay = null;
         ContractEndDay = null;
         GraceEndsAtDay = null;
+        PendingCommanderAttachment = false;
+        NextAttachRetryAtHours = null;
     }
 
     public void CopyFrom(EnlistmentRecord other)
@@ -61,6 +76,8 @@ public sealed class EnlistmentRecord
         EnlistedAtDay = other.EnlistedAtDay;
         ContractEndDay = other.ContractEndDay;
         GraceEndsAtDay = other.GraceEndsAtDay;
+        PendingCommanderAttachment = other.PendingCommanderAttachment;
+        NextAttachRetryAtHours = other.NextAttachRetryAtHours;
     }
 
     public string Serialize()
@@ -82,6 +99,10 @@ public sealed class EnlistmentRecord
             parts.Add("contractEndDay=" + ContractEndDay.Value.ToString("R", inv));
         if (GraceEndsAtDay.HasValue)
             parts.Add("graceEndDay=" + GraceEndsAtDay.Value.ToString("R", inv));
+        if (PendingCommanderAttachment)
+            parts.Add("pendingAttach=1");
+        if (NextAttachRetryAtHours.HasValue)
+            parts.Add("nextAttachHour=" + NextAttachRetryAtHours.Value.ToString("R", inv));
         return string.Join(";", parts);
     }
 
@@ -100,6 +121,7 @@ public sealed class EnlistmentRecord
 
         string stateRaw = null, heroId = null, commanderId = null, petitionId = null;
         string enlistedDayRaw = null, contractEndRaw = null, graceEndRaw = null;
+        string pendingAttachRaw = null, nextAttachHourRaw = null;
 
         foreach (var part in serialized.Split(';'))
         {
@@ -117,6 +139,8 @@ public sealed class EnlistmentRecord
                 case "enlistedDay": enlistedDayRaw = value; break;
                 case "contractEndDay": contractEndRaw = value; break;
                 case "graceEndDay": graceEndRaw = value; break;
+                case "pendingAttach": pendingAttachRaw = value; break;
+                case "nextAttachHour": nextAttachHourRaw = value; break;
                 // Unknown keys: additive fields from a newer same-major build — ignore.
             }
         }
@@ -139,6 +163,10 @@ public sealed class EnlistmentRecord
             EnlistedAtDay = ParseFiniteDayOrNull(enlistedDayRaw),
             ContractEndDay = ParseFiniteDayOrNull(contractEndRaw),
             GraceEndsAtDay = ParseFiniteDayOrNull(graceEndRaw),
+            PendingCommanderAttachment = pendingAttachRaw == "1",
+            // ParseFiniteDayOrNull, not a bare parse: a non-finite stamp would compare false
+            // against every future hour and freeze EVERY retry for the rest of the campaign.
+            NextAttachRetryAtHours = ParseFiniteDayOrNull(nextAttachHourRaw),
         };
 
         if (parsed.IsEnlisted

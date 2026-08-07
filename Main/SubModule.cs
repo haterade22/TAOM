@@ -986,6 +986,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentMenuBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentBattleBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentMaintenanceBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentDialogBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentContentBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentQuartermasterBehavior>());

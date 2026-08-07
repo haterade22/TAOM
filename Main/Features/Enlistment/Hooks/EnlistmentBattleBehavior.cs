@@ -18,6 +18,7 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
     private readonly ICommanderLordAdapter _commander;
     private readonly IServiceBattleService _battle;
     private readonly IEnlistmentReconciler _reconciler;
+    private readonly IServiceMaintenanceService _maintenance;
     private readonly ICoopSessionProvider _coopSession;
     private readonly TAOM.Core.Logging.IModLogger _diag;
 
@@ -26,6 +27,7 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         ICommanderLordAdapter commander,
         IServiceBattleService battle,
         IEnlistmentReconciler reconciler,
+        IServiceMaintenanceService maintenance,
         ICoopSessionProvider coopSession,
         TAOM.Core.Logging.IModLogger diag)
     {
@@ -33,6 +35,7 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         _commander = commander;
         _battle = battle;
         _reconciler = reconciler;
+        _maintenance = maintenance;
         _coopSession = coopSession;
         _diag = diag;
     }
@@ -46,6 +49,11 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         // detach first — otherwise a second session double-subscribes and joins twice.
         _reconciler.BattleJoinRequested -= OnBattleJoinRequested;
         _reconciler.BattleJoinRequested += OnBattleJoinRequested;
+
+        // The pump raises the SAME event shape, so there remains exactly one hero-id -> party-id ->
+        // TryJoinCommanderBattle implementation rather than two that can drift apart.
+        _maintenance.BattleJoinRequested -= OnBattleJoinRequested;
+        _maintenance.BattleJoinRequested += OnBattleJoinRequested;
     }
 
     // Hourly recovery path. The reconciler only knows the commander HERO id; the battle service

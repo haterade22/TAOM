@@ -68,6 +68,11 @@ public class DischargeService : IDischargeService
         if (!_machine.TryTransition(EnlistmentState.NotEnlisted))
             _store.Record.State = EnlistmentState.NotEnlisted;
 
+        // The adapter caches a commander-party handle across passes and it outlives a campaign
+        // switch within one process. Dropping it here is the reviewable guard; the id
+        // revalidation makes a stale hit near-impossible but not provably so.
+        _attachment.InvalidateCommanderCache();
+
         _store.Record.Reset();
 
         try

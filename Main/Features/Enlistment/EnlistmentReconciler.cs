@@ -194,6 +194,16 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 return;
 
             case AttachmentStatus.BattleJoinRequired:
+                // ONE retry budget shared with the real-time pump, so adding the pump cannot
+                // multiply the attempt rate. The budget is stored in campaign HOURS; the
+                // reconciler is handed days, so it converts here. That equivalence is pinned by
+                // a test — if it ever drifts, this check silently suppresses hourly recovery
+                // entirely and restores exactly the bug this whole effort exists to fix.
+                var nowHours = nowDays * 24.0;
+                if (record.NextAttachRetryAtHours.HasValue && nowHours < record.NextAttachRetryAtHours.Value)
+                    return;
+                record.NextAttachRetryAtHours = nowHours + 1.0;
+                record.PendingCommanderAttachment = true;
                 try
                 {
                     BattleJoinRequested?.Invoke(record.CommanderHeroId);

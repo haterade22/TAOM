@@ -17,7 +17,8 @@ namespace TAOM.Features.Enlistment.Hooks;
 /// </summary>
 public class EnlistmentMenuBehavior : CampaignBehaviorBase
 {
-    private const int PositionSyncTickInterval = 5;
+    /// <summary>Nominal seconds per wait-menu frame; the pump's shared budget does the real throttling.</summary>
+    private const float WaitMenuFrameSeconds = 1f / 30f;
 
     private readonly IEnlistmentStore _store;
     private readonly IServiceAttachmentService _attachment;
@@ -26,8 +27,8 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
     private readonly IEnlistmentWaitMenuPresenter _presenter;
     private readonly IGameMenuAdapter _gameMenu;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly IServiceMaintenanceService _maintenance;
 
-    private int _tickCounter;
 
     public EnlistmentMenuBehavior(
         IEnlistmentStore store,
@@ -36,7 +37,8 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         IEnlistmentDialogGateService gate,
         IEnlistmentWaitMenuPresenter presenter,
         IGameMenuAdapter gameMenu,
-        ICoopSessionProvider coopSession)
+        ICoopSessionProvider coopSession,
+        IServiceMaintenanceService maintenance)
     {
         _store = store;
         _attachment = attachment;
@@ -45,6 +47,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         _presenter = presenter;
         _gameMenu = gameMenu;
         _coopSession = coopSession;
+        _maintenance = maintenance;
     }
 
     public override void RegisterEvents()
@@ -91,7 +94,6 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
     {
         // Post-battle closure: the loot flow ends with a redirected menu push landing
         // here — re-assert the park event-driven instead of waiting for the hourly tick.
-        _tickCounter = 0;
         if (_coopSession.IsAuthority && _store.Record.State == EnlistmentState.EnlistedAttached)
             _attachment.EnsureParked(_store.Record.CommanderHeroId);
         _presenter.RefreshWaitText();
@@ -99,11 +101,14 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
 
     private void OnWaitMenuTick(MenuCallbackArgs args, CampaignTime dt)
     {
-        // Parked position sync, throttled (the donor burned a 4 Hz global tick on this).
-        if (!_coopSession.IsAuthority || ++_tickCounter % PositionSyncTickInterval != 0)
+        // Second source for the SAME pump, sharing its budget — adding it cannot double the work
+        // rate. It exists because CampaignEvents.TickEvent is gated on `_dt > 0f` and the menu
+        // system sets TimeControlMode = Stop, so while the player sits on the wait menu the
+        // campaign tick can be silent. The pump owns the throttle now; this behaviour owns none.
+        if (!_coopSession.IsAuthority)
             return;
-        if (_store.Record.State == EnlistmentState.EnlistedAttached)
-            _attachment.SyncPosition(_store.Record.CommanderHeroId);
+
+        _maintenance.Pump(WaitMenuFrameSeconds, CampaignTime.Now.ToHours);
     }
 
     private void OnLeaveServiceSelected()
