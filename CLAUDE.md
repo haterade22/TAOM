@@ -247,6 +247,27 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 | `Research:` | What was decompiled to inform this change | `Research: DefaultPartyWageModel.GetCharacterWage` |
 | `Save-compat:` | Save file impact | `Save-compat: New field — safe, defaults to 0 on load` |
 
+### Multi-session git safety (MANDATORY — a rebase can destroy another session's work)
+
+**Commit your work BEFORE any `git pull --rebase`, and never leave an auto-stash unrestored.**
+`pull --rebase` auto-stashes the WHOLE working tree — including files another session is mid-edit
+on — and if the stash is not popped afterwards, that session's changes silently revert to HEAD
+with no error. 2026-08-07: a session did exactly this, committed over the top, and left
+`stash@{0}: colleague in-flight enlistment/tools work (auto-stashed by Claude for rebase)`. The
+owning session next saw its own source reverted to the pre-fix version and nearly committed the
+original bug over its own fix, with a message describing a fix that was no longer there.
+
+| Rule | Why |
+|------|-----|
+| **Commit (or stash deliberately) before rebasing** | Anything uncommitted is fair game for the auto-stash, including files you don't own |
+| **`git stash list` after any rebase; restore what it took** | An unpopped auto-stash is invisible data loss — no error, no conflict, just reverted files |
+| **`git stash apply`, never `pop`, when recovering** | Keeps the stash as a safety net until the recovery is verified green |
+| **Verify your own markers survived before committing** | `git grep <marker> HEAD -- <path>` after any rebase/stash event. The tree compiling is NOT proof your change is still in it |
+| **Stage explicitly (`git add <paths>`), never `git add -A`** | A shared file (CHANGELOG.md especially) routinely holds two sessions' edits; commit only your own hunks, hand-building the blob if needed |
+
+If the working tree contains another session's edits, leave them unstaged and say so — do not
+commit, revert, or "tidy" them.
+
 ## MCP Servers
 
 9 servers (7 project via `.mcp.json` incl. `imagine`, 2 user). Full server table, configuration,

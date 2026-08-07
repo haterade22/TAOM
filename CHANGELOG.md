@@ -174,6 +174,23 @@ of report we were chasing — and records the character id and resolved Monster 
 emits `as_human<suffix>` when the Monster is null, and that fallback is now logged (deduped per
 sex+suffix) instead of silently turning a non-human into a human.
 
+### docs(claude): require committing before a rebase, after a session lost another's work
+
+`git pull --rebase` auto-stashes the WHOLE working tree, including files a concurrent session is
+mid-edit on. If the stash is not restored afterwards, those files silently revert to HEAD with no
+error, no conflict, and nothing in the log.
+
+2026-08-07: a session did exactly that, committed over the top, and left `stash@{0}: colleague
+in-flight enlistment/tools work (auto-stashed by Claude for rebase)`. The owning session next saw
+its own source reverted to the pre-fix version and came within one command of committing the
+original bug over its own fix, with a message describing a fix that was no longer present. It was
+caught only because the reverted file still contained a symbol that had been deleted hours earlier.
+
+Five rules in CLAUDE.md > Commits: commit before rebasing; check `git stash list` after any rebase
+and restore what it took; recover with `apply` not `pop` so the stash survives as a safety net;
+verify your own markers are in HEAD (`git grep <marker> HEAD`) after any stash event, because a
+tree that compiles is not proof your change is still in it; and stage explicit paths rather than
+`git add -A`, since shared files like CHANGELOG.md routinely hold two sessions' edits.
 ### fix(enlistment): the service loop actually works in a live game (#406)
 
 Play-testing the shipped feature found it broken in ways no unit test could see. Instrumenting
