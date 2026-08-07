@@ -1666,6 +1666,57 @@ decompile-before-costing instruction and the FileLogger durability contract. Sui
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
+## Review 84 — Enlistment battle-join (#406), full deep-review + Codex adversarial pass (2026-08-07)
+
+5 Claude agents then an independent Codex pass, over a player-reported bug and its fix. Full record:
+`rca-enlistment-battle-join-2026-08-07.md`.
+
+**The bug being fixed was itself a review-process failure.** Enlistment shipped with a battle-join
+that never joined a single battle, past a green 5448-test suite, because `ServiceBattleServiceTests`
+mocked `IEncounterAdapter` and stubbed the failing engine precondition to `true`. The feature doc
+already listed "encounter join from parked state" under *nothing below has run in a live game* — the
+entry was accurate and was treated as informational rather than as a ship blocker.
+
+**Root cause:** the join was gated on `MapEvent.CanPartyJoinBattle`, which reads mechanical and is
+diplomatic — it requires every party on the opposing side to be at war with the joiner's `MapFaction`.
+An enlisted player keeps their own clan and is normally at war with nobody, so it returned `false` for
+every battle. Four siblings behind it: a `BattleJoinRequested` event with **zero subscribers** (the
+only recovery path did nothing); sieges unseedable because a settlement defender has no `MobileParty`
+to resolve an id from; `JoinBattle` reporting success because it did not throw, when
+`JoinBattleInternal` silently `Finish()`es on a null `EncounteredBattle`; and a rollback that leaked
+the `PlayerEncounter`, which blocks all future encounters and can freeze a map event permanently.
+
+**The review found two more defects IN THE FIX, one per reviewer, each after the previous had
+supposedly taught the lesson.** The data-flow agent found a discarded `SwitchTo` return — a verified
+join with no encounter menu freezes the map event, and the hourly recovery goes blind because
+`Assess` then reports `Attached` rather than `BattleJoinRequired`. Codex then found that the *fix for
+that* was also wrong: `GameMenu.SwitchToMenu` no-ops silently without a menu context (only a
+`Debug.FailedAssert`, inert in release), so checking its return still reported a menu that never
+opened. Codex's second P1: `LeaveSettlementIfUnderSiege` ran before every join, but
+`MapEvent.AddInvolvedPartyInternal` rewrites a siege **assault** to `SiegeOutside` when a defender
+joins with no `CurrentSettlement` — corrupting the battle type for every participant. It also
+correctly called the original siege test a false green that would have passed straight through it.
+
+**Four instances of one pattern in a single changeset**, three of them introduced while fixing the
+previous one: an engine call's success inferred from its name, from the absence of an exception, from
+the previous line succeeding, and from a returned bool whose producer had not been read. The rule that
+actually holds is to assert against observable state (`CurrentMenuId`, `MainParty.MapEvent`), never
+against a bool our own adapter computed.
+
+**Clean exonerations:** `RestartPlayerEncounter(defender, attacker)` parameter order correct as
+called; `IsFinalized` a better joinability test than `HasWinner` (catches `DiplomaticallyFinished`,
+which finalizes with no winner); `PlayerEncounter.Finish` genuinely does clear `MainParty.MapEventSide`,
+so the rollback never strands a parked party inside a live event; the singleton `-=`/`+=` event
+subscription is correct and an `OnFinalize` unsubscribe would *break* the session handoff. One agent
+false positive, disputed and not actioned: `_logger?.LogInfo($"…")` was claimed to build its string
+before the null check — the null-conditional operator short-circuits argument evaluation.
+
+**Deferred with reasoning:** unbounded hourly retry can pop the player's open menu via
+`Finish`→`ExitToLast` (#408). Suite 5720 green. Nothing verified in a live game — the four in-game
+cases in #406 remain the real gate, and unit tests are precisely the evidence class that missed this
+bug four times. Lessons: mocked-adapter-hides-the-engine-seam and return-values-are-not-verification
+(both testing-qa).
+
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
