@@ -174,6 +174,36 @@ of report we were chasing — and records the character id and resolved Monster 
 emits `as_human<suffix>` when the Monster is null, and that fallback is now logged (deduped per
 sex+suffix) instead of silently turning a non-human into a human.
 
+### fix(enlistment): settlements were never resolvable, and party attachment is settled as a no
+
+`CampaignObjectManager.Find<Settlement>` returns null **unconditionally** on 1.4.7. The manager
+registers exactly five object types — MobileParty, two Hero lists, Clan, Kingdom — and `Find<T>`
+only descends into a bucket when `typeof(T)` matches one, so a Settlement lookup can never hit.
+Two adapters used it. `MoveIntoSettlement` could never have worked (nothing called it, so nothing
+surfaced it), and `DutyWorldAdapter` silently failed every spawned hunt duty — including after the
+fix earlier the same day, which corrected WHICH settlement to anchor on while still resolving it
+through the broken lookup. Both now use `Settlement.Find`, the form already used elsewhere in the
+repo. A source-level binding test fails the build if `Find<Settlement>` reappears in an adapter,
+because no runtime test can catch a lookup that throws nothing and always returns null.
+
+**Party attachment is rejected, with evidence.** The natural design — set
+`MobileParty.MainParty.AttachedTo` and let the engine carry the player along — is a guaranteed
+campaign crash in its naive form: `DefaultEncounterGameMenuModel.GetGenericStateMenu()` dereferences
+`mainParty.Army.LeaderParty` unguarded inside `if (mainParty.AttachedTo != null)`, and
+`Campaign.Tick()` calls it on every tick while on the open map. Attaching *with* an army means
+genuinely joining it (kingdom membership, army UI, undoing our own join-army suppression), and even
+then a parked attached party fails `MapEvent.CanPartyJoinBattle` for every AI lord trying to
+reinforce either side. It would also not have fixed the position drift, which is a tick-ordering
+problem. Recorded in `docs/features/enlistment.md` so it is not re-derived.
+
+Also lands the sequenced remediation plan: 44 specs across six design clusters, each adversarially
+reviewed (44 kept, 0 dropped), ordered into 13 file-disjoint batches —
+`docs/reviews/enlistment-remediation-plan-2026-08-07.md`.
+
+Suite 5731 green.
+
+Research: CampaignObjectManager.Find<T>/registered types, Settlement.Find, DefaultEncounterGameMenuModel.GetGenericStateMenu, Campaign.Tick
+Rejected: MobileParty.AttachedTo as the park mechanism — unguarded Army dereference on every map tick
 ### fix(enlistment): stop calling an honourable release desertion, and stop stranding the player (#406)
 
 Three confirmed findings from the donor diff, chosen because no architectural decision changes
