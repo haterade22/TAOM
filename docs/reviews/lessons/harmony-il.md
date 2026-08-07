@@ -317,3 +317,23 @@ patch in it, not just the offending method.
 - [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../rca-tournament-dwarf-dismount-2026-06-09.md)
 
 <!-- backlinks-end -->
+
+### A containment finalizer must swallow only the exception class it exists for
+
+**Symptom:** `Patch69_TournamentEndGuard` was written to contain a known `NullReferenceException` in
+vanilla `TournamentVM.OnTournamentEnd`, but returned `null` (swallow) for *every* exception class once
+logging succeeded.
+
+**Why missed:** the patch was framed as "contain the crash" rather than "contain THIS crash", so the
+question "what else can this method throw?" was never asked — even though the same triage had already
+established that `OnTournamentEnd` opens with `Round4.Matches.Last(m => m.IsValid)`, and
+`Last(predicate)` throws **InvalidOperationException**, not NRE, when nothing qualifies. A real
+bracket-construction bug would have become a silently half-drawn screen with no crash bundle: strictly
+worse than the crash, and invisible.
+
+**Prevent:** enumerate the target method's throwable classes before writing a finalizer, then gate on
+the specific one(s) and `return __exception` for the rest so they still reach the crash reporter.
+TAOM's own `PatchShield.ShouldSwallow` is the reference implementation — it eats only
+MissingMethod/MissingField/TypeLoad and rethrows everything else, deliberately.
+
+**Source:** `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` finding 8 (Codex P3, #407).

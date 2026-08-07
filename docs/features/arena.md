@@ -1,8 +1,8 @@
-# Arena (Tournament Model + Dwarf Dismount + Exit-Hang Fix)
+# Arena (Tournament Model + Dwarf Dismount + Exit-Hang Fix + Winner-Panel Guard)
 
 ## Overview
 
-Replaces vanilla's tournament model with a culture-aware, race-aware variant. Five concerns:
+Replaces vanilla's tournament model with a culture-aware, race-aware variant. Six concerns:
 
 1. **Per-participant culture armor** — participants wear armor matching their *own* culture (a dwarf gets dwarf gear, not the host town's human kit), preventing skeleton-clipping. Data-driven via `gear_practice_dummy_<culture>` NPCs — see [tournament-armor-assignment.md](tournament-armor-assignment.md).
 2. **Culture-filtered prize pools** — rewards are drawn from the host town's culture across two tiers (Tierf 2–4 regular, Tierf 4+ elite).
@@ -10,7 +10,30 @@ Replaces vanilla's tournament model with a culture-aware, race-aware variant. Fi
 4. **Tournament-exit hang fix (Patch60 + PatchShield exclusion, 2026-07-06→10, #331)** — exiting any tournament froze the exit 30s–2min (measured 104–109s, three times). **Round 1 (Patch60):** engine defect — `MissionGauntletTournamentView.OnMissionScreenFinalize` nulls its `_gauntletMovie`/`_gauntletLayer` **without releasing them** (the practice view releases correctly). [Patch60_TournamentExitMovieRelease](../../Main/Features/Arena/Hooks/Patch60_TournamentExitMovieRelease.cs) captures the layer/movie in a Prefix (the original body nulls the fields) and, in a Postfix — after the body has dropped focus + finalized the VM, so `TryLoseFocus` can't NRE — replicates the practice view's `ReleaseMovie` → `RemoveLayer` sequence at `OnEndMission` time. Fail-safe → vanilla leak; drift-guard tests pin the bindings; its per-exit `ReleaseMovie=Nms` log line is the permanent regression canary. **Necessary but not sufficient:** the ~107s moved WITH the relocated release, proving the release itself was the sink. **Round 2 (the real fix):** the `ExitStallSampler` stack-sampled the frozen main thread and named a three-factor interaction — the tournament UI's per-round template re-instantiation accumulates `WidgetTemplate._customTypeChildren` into a ~10^6-call release recursion; UIExtenderEx legitimately patches `WidgetFactory.IsCustomType`/`WidgetTemplate.OnRelease`; and TAOM.Dependencies' **PatchShield** stacked a `__originalMethod`-binding finalizer on every patched method, adding ~50µs of reflection per call. Fix: `PatchShield.ExcludedTargetNamespacePrefixes` never shields `TaleWorlds.GauntletUI`/`TaleWorlds.TwoDimension`. **Measured: 105–109s → 9.5s** (residual = UIExtenderEx's legitimate wrapper at ~10^6 calls; accepted). Full chain: [rca-tournament-exit-hang-2026-07-06.md](../reviews/rca-tournament-exit-hang-2026-07-06.md) round-2 section.
 5. **Exit AV containment (Patch62, 2026-07-13, #339)** — a v2.0.12 player CTD'd exiting a won tournament: heap-corruption `AccessViolationException` inside `WidgetFactory.IsCustomType` → `Dictionary.FindEntry` during the Tournament movie's `WidgetTemplate.OnRelease` walk (corrupt template-tree string; prize tableau render in flight at exit). Patch60's fail-safe caught the first AV, but "fall back to the vanilla leak" meant `GauntletLayer.ClearContext` re-walked the same corrupt tree at `ScreenManager.PopScreen`, uncaught. [GauntletMovie_Release_AvGuard_Patch](../../Main/Features/Arena/Hooks/GauntletMovie_Release_AvGuard_Patch.cs) is an AV-only Finalizer on `GauntletMovie.Release` — the shared chokepoint both attempts flow through — converting the crash into one logged leaked movie; suppression on the first attempt also removes the movie from the layer so the re-walk never happens. Root cause is engine/native territory; this is containment. Registry: [harmony-patch-registry.md](../reference/harmony-patch-registry.md) § Patch62.
 
+6. **Winner-panel null guard (Patch69, 2026-08-07, #407)** — vanilla `TournamentVM.OnTournamentEnd` sets the winner's armour colours via `hero.MapFaction.Color` (hero branch) or `character.Culture.Color` (troop branch), neither guarded. `Hero.MapFaction` genuinely returns null for a clanless, non-special hero with no home settlement and no party, so such a winner NREs the panel — reported as a crash after "Skip All Rounds" at Erebor (bundle `d7d9f7d3`, v2.0.18.0). [Patch69_TournamentRosterGuard](../../Main/Features/Arena/Hooks/Patch69_TournamentRosterGuard.cs) **substitutes** offending entrants with the culture's elite/basic troop at `GetParticipantCharacters`. It must never *remove* one: vanilla pads the roster to exactly 16 and `TournamentMatch.AddParticipant` reads `participant.Team` unguarded, so a short roster crashes on entry instead — see the registry entry for the full chain. [Patch69_TournamentEndGuard](../../Main/Features/Arena/Hooks/Patch69_TournamentEndGuard.cs) is a finalizer that dumps the bracket and swallows, covering the two further null sites we could not reproduce (`TournamentParticipantVM.Refresh(null, …)` nulls `Participant` but never clears `IsValid`).
+
 Tournament start/end timing constants are also exposed for tuning.
+
+## A tournament crash is not automatically a tournament bug
+
+The `d7d9f7d3` triage is worth remembering as a shape. The reporter's stated theory was "female
+dwarves crash my game", and the artifact they sent was a tournament crash from a dwarf campaign — two
+different bugs that looked like one:
+
+- The **tournament** crash was a managed NRE in a vanilla view model, unrelated to sex or race, and is
+  what Patch69 addresses.
+- The **female dwarf** crashes were a native access violation from a single unresolved mesh name in
+  `LOTRLOME_Armory/ModuleData/skins.xml` (`sk_dwarf_underwear_female` vs the shipped
+  `sk_dwarf_underwear_female_a`) — no managed exception, therefore no crash bundle at all. Fixed
+  separately (#403); gate: `python tools/validate_mesh_refs.py --no-rgl-log`.
+
+The data sweep that preceded the fix is worth not repeating: every `<NPCCharacter>` in the load order
+(5,166 across TAOM, TAOM_Map, SandBoxCore, SandBox, Native, LOTRLOME_Armory) carries a `culture=`
+attribute except two multiplayer-only entries; `as_dwarf_*` action sets are at 90/90 parity with
+`as_human_*`; and all 13 TAOM female dwarf lords carry a `faction=` in `heroes.xml`, so their
+`MapFaction` is non-null. None of those was the cause. **A reporter's theory names the symptom they
+noticed, not the defect** — and one bundle does not necessarily describe the crash they were
+complaining about.
 
 ## The arena crowd is not TAOM's, and it is not a bug
 

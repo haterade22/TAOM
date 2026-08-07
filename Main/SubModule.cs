@@ -1256,6 +1256,19 @@ public class SubModule : MBSubModuleBase
         try { _harmony.PatchCategory("Patch60_TournamentExitMovieRelease"); }
         catch (System.Exception ex) { tournamentExitLogger.LogWarning($"[Arena] Patch60 tournament-exit movie release failed to apply: {ex.Message}"); }
 
+        // Patch69 — winner-panel crash guard. Vanilla TournamentVM.OnTournamentEnd dereferences
+        // hero.MapFaction.Color / character.Culture.Color without a null check; a clanless hero
+        // with no home settlement and no party has a null MapFaction, so winning a tournament
+        // NREs the panel (bundle d7d9f7d3, Erebor, 2026-08-06). The roster guard substitutes such
+        // entrants at GetParticipantCharacters — never removes them, because vanilla's own
+        // TournamentMatch.AddParticipant NREs on a short roster. The end guard is containment plus
+        // the bracket dump that names any null site the roster guard does not cover.
+        // Both categories fail independently: a diagnostic must never cost a working tournament.
+        try { _harmony.PatchCategory("Patch69_TournamentRosterGuard"); }
+        catch (System.Exception ex) { tournamentExitLogger.LogWarning($"[Arena] Patch69 tournament roster guard failed to apply: {ex.Message}"); }
+        try { _harmony.PatchCategory("Patch69_TournamentEndGuard"); }
+        catch (System.Exception ex) { tournamentExitLogger.LogWarning($"[Arena] Patch69 tournament end guard failed to apply: {ex.Message}"); }
+
         // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
         // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
         // ManualPatchApplicator (ADR-002); apply order unchanged, each fail-safes with a warning.
@@ -1436,5 +1449,7 @@ public class SubModule : MBSubModuleBase
         // FileLogger after reload and silently drop every log line.
         TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.ResetForUnload();
         TAOM.Features.EconomyDiagnostics.Hooks.SettlementComponent_ChangeGold_Patch.ResetForUnload();
+        TAOM.Features.Arena.Hooks.Patch69_TournamentRosterGuard.ResetForUnload();
+        TAOM.Features.Arena.Hooks.Patch69_TournamentEndGuard.ResetForUnload();
     }
 }

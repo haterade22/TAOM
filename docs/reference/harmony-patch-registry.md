@@ -492,6 +492,36 @@ Thread-safety is deliberately absent: every periodic ticker reaching this path i
 
 All five targets pinned by `EconomyDiagnosticsBindingTests` (`TestCategory=BindingVerification`). The two private `ItemConsumptionBehavior` targets are the load-bearing ones: a rename would leave the tag unset and silently attribute the town's entire income to `Other` — a ledger that still looks plausible while being useless, which is worse than a crash. Read via `taom.print_town_ledger [town]`. Issue #391; docs: `docs/features/economy-diagnostics.md`; RCA: `docs/reviews/rca-economy-diagnostics-2026-08-06.md`.
 
+## Patch69_TournamentRosterGuard
+
+**Target:** `FightTournamentGame.GetParticipantCharacters(Settlement, bool)` (public override, Postfix)
+
+**Feature:** Arena — `Main/Features/Arena/Hooks/Patch69_TournamentRosterGuard.cs`. **Status:** ACTIVE.
+
+Vanilla `TournamentVM.OnTournamentEnd` (v1.4.7) sets the winner's armour colours through two unguarded dereferences — `hero.MapFaction.Color` on the hero branch, `character.Culture.Color` on the troop branch. `Hero.MapFaction` returns **null** for a clanless, non-special hero with neither a home settlement nor a party (`TaleWorlds.CampaignSystem.Hero.MapFaction`, verified v1.4.7), so such a hero winning a tournament NREs the winner panel. Player-visible as a `TargetInvocationException` out of `ViewModel.ExecuteCommand` (crash bundle `d7d9f7d3`, Erebor, 2026-08-06, TAOM v2.0.18.0 — the player clicked "Skip All Rounds" while not participating).
+
+**It substitutes offenders in place and never removes them — this is load-bearing, not stylistic.** Vanilla's own `GetParticipantCharacters` tail pads the list to exactly `MaximumParticipantCount` (16), and `TournamentBehavior.CreateParticipants` then fills a fixed 16-slot array which `FillParticipants` feeds to `TournamentMatch.AddParticipant`, whose team loop reads `participant.Team` with **no null check**. A short roster therefore NREs during bracket construction, before the tournament even opens. Dropping an entrant would trade a rare end-of-tournament crash for a reliable entry crash. The replacement is `culture.EliteBasicTroop ?? culture.BasicTroop` — vanilla's own filler — and is itself re-checked for a non-null `Culture`; if no filler resolves, the roster is left untouched (fail-safe to vanilla).
+
+Decision logic is in `ITournamentRosterGuardService`, pure over a `TournamentEntrant` struct, 13 unit tests, no engine types. Sealed-type conversion and filler selection live in `TournamentEntrantMapper` (boundary class, extracted 2026-08-07 so the patch stays under ADR-002's <150 lines — a Codex pass rated the pre-extraction 175-line file P1 CRITICAL after the deep-review Standards agent had excused it as an 'acceptable margin'). Every roster is logged once under `[TournamentDiag]` with each entrant's kind, sex, race, clan and MapFaction/Culture nullity. Sibling: `Patch69_TournamentEndGuard`. Docs: `docs/features/arena.md`.
+
+**Call frequency — verified, because the postfix emits a durable (synchronously flushed) INFO line and that would be a real cost on a hot path.** `GetParticipantCharacters` has three callers in v1.4.7 and none is per-frame: `TournamentBehavior.CreateParticipants` (once per tournament), and `FightTournamentGame.GetMenuText` + `UpdateTournamentPrize`, both reached only from `TournamentCampaignBehavior.game_menu_tournament_join_on_init` — a menu **on_init** callback that fires when the player opens the join menu, not on a tick. So the line is menu-open frequency. Do not "optimise" it to DEBUG: `FileLogger` drains INFO synchronously *by design* so the tail survives a native CTD, which is exactly the situation this diagnostic exists for.
+
+**Known and accepted:** because `GetMenuText` counts `p.IsHero` for the "{NOBLE_COUNT} lords are competing" line, substituting an unsafe hero shifts that count down by one. That is correct rather than a defect — a substituted hero genuinely does not compete — but it is a user-visible consequence of patching this method, so it is recorded here rather than discovered later.
+
+## Patch69_TournamentEndGuard
+
+**Target:** `TournamentVM.OnTournamentEnd()` (**private**, Finalizer)
+
+**Feature:** Arena — `Main/Features/Arena/Hooks/Patch69_TournamentEndGuard.cs`. **Status:** ACTIVE, containment + diagnostic.
+
+Dumps the whole bracket (every round × match × team × participant slot: `IsValid`, whether `Participant` is null, character id, hero/troop, sex, race, clan, MapFaction and Culture nullity) via `TournamentBracketFormatter`, then **swallows `NullReferenceException` only** — the tournament screen survives with an incomplete winner panel instead of dying mid-input.
+
+**Every other exception class is rethrown after the dump.** This matters concretely: `OnTournamentEnd` opens with `Round4.Matches.Last(m => m.IsValid)`, and `Last(predicate)` throws **InvalidOperationException**, not NRE, when no match qualifies. Swallowing that would convert a real bracket-construction bug into a silently half-drawn screen with no crash bundle — strictly worse than the crash. Same discipline as `PatchShield.ShouldSwallow`, which eats only the engine-drift trinity and rethrows the rest. (Codex P3, 2026-08-07.)
+
+Exists because `Patch69_TournamentRosterGuard` covers only the two null sites provable from the decompile. Two more remain reachable in principle: `OnTournamentEnd` selects participant view models by their `IsValid` flag, and `TournamentParticipantVM.Refresh(null, …)` nulls `Participant` while **never** resetting `IsValid` back to `false` — so a stale-valid slot would NRE at the `IsPlayerCharacter` checks. That state could not be produced from a full 16-entrant bracket, so it is logged rather than guarded. A bundle carrying this dump names the offending slot outright.
+
+Runs at the throw site, where the bracket is still reachable — TAOM's CrashReport finalizer on `ScreenManager.Update` would otherwise be first to see it and records only the managed stack.
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

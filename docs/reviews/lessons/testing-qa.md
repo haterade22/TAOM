@@ -318,3 +318,60 @@ assert headroom 3164 healthy / 3163 low on both sides). When briefing parallel l
 contract, pin boundary VALUES alongside the literal strings.
 
 **Source:** deep-review 2026-08-05, `docs/reviews/rca-memsample-telemetry-2026-08-05.md` finding #1.
+
+### A review finding that comes with its own exemption is worse than a miss
+
+**Symptom:** two new Harmony patch files shipped at 175 and 161 lines against ADR-002's hard `<150`
+limit, through a full six-agent `/deep-review`. The Standards agent *measured them* (154/153 at the
+time) and reported them under "ACCEPTABLE MARGIN CASES" — "file size slightly exceeds 150 lines but
+patch methods are thin". The independent Codex pass, given the same files, rated the identical fact
+**P1 CRITICAL**. Codex was right: `CLAUDE.md` states the limit with no method-thinness carve-out.
+
+**Why missed:** a miss leaves a finding un-reported and a later reader may still catch it. An
+exemption launders the finding as considered-and-cleared, so nobody looks again — and the orchestrator
+(me) accepted it without checking the exemption against the rule text. The count then drifted further
+over while responding to *other* review findings, with nothing re-measuring it.
+
+**Prevent:** treat "technically over, but acceptable because…" as an UNRESOLVED finding unless the
+exemption is written into the rule being applied. Re-measure any numeric limit after a review-response
+edit — doc comments count toward line limits. And where a hard numeric rule exists, prefer a mechanical
+check over an agent's judgement.
+
+**Source:** `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` findings 6/7 (#407).
+
+### Checking a return value is not verification unless you have read what produces it
+
+**Symptom:** the same defect class shipped FOUR times inside one changeset — the enlistment
+battle-join fix, 2026-08-07. Each instance was found by a different independent reviewer, each after
+the previous instance had supposedly taught the lesson.
+
+1. The join was gated on `MapEvent.CanPartyJoinBattle`, assumed mechanical from its name; it is a
+   diplomacy test that is false for every battle an enlisted player could join.
+2. `PlayerEncounter.JoinBattle` was treated as successful because it did not throw; the engine
+   silently calls `Finish()` and does nothing when `EncounteredBattle` is null.
+3. The fix for (2) added outcome-verification to `JoinBattle`, then discarded the return of
+   `SwitchTo` on the very next line — in the same function, in the same sitting.
+4. The fix for (3) checked `SwitchTo`'s return — but never asked whether `SwitchTo` could lie. It
+   can: `GameMenu.SwitchToMenu` no-ops silently when `Campaign.Current.CurrentMenuContext` is null
+   (only a `Debug.FailedAssert`, inert in release), so the adapter returned `true` after doing
+   nothing and the bug survived a fix written specifically to kill it.
+
+**Why missed:** each fix corrected the layer that had just been shown to be wrong and trusted the
+next one down. "I checked the return value" feels like verification; it is only verification if the
+thing computing that return value was itself read. An adapter that wraps a `void` engine call and
+returns `true` for "no exception" is a lie generator, and every caller inherits the lie.
+
+**Prevent:**
+- **Assert against observable state, not a returned bool.** `EnsureMenuOpen` verifies
+  `CurrentMenuId == menuId`; `JoinBattle` verifies `MainParty.MapEvent != null`. Both survive an
+  engine method that silently does nothing. A `bool` computed by our own adapter does not.
+- **When an adapter wraps a `void` engine method, the adapter's `bool` MUST mean "the observable
+  effect happened", never "nothing threw."** Read the engine body before writing the return.
+- **Treat a fix to this class as suspect until the layer beneath it is read too.** Three of the four
+  instances above were introduced *while fixing the previous one*.
+- Engine methods that report failure via `Debug.FailedAssert` are silent in release builds. Grep the
+  body for `FailedAssert` before trusting a `void` call's success.
+
+**Source:** deep-review + Codex pass on #406, 2026-08-07. Full incident:
+`docs/reviews/rca-enlistment-battle-join-2026-08-07.md`. Sibling lesson above ("A mocked adapter
+cannot test the engine precondition behind it") covers why the test suite could not see any of it.

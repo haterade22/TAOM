@@ -98,6 +98,31 @@ present in the packages, as a prefix, so a substring search reports it fine and 
 Scans 251 packages / 50 GB in seconds by handing one pattern file to `grep`'s DFA. Verified both
 ways: red on the pre-fix backup, green on all 89 references across all 12 races after the fix.
 
+actually shipped in the asset packages and loose asset trees, and exits non-zero on any that does not
+resolve. This is the second time a single wrong mesh string in that file has cost a debugging session
+(the first: the elf female skins, 2026-07-23), and both times the game gave no managed signal.
+
+The check that matters is the **trailing token boundary** — `sk_dwarf_underwear_female` really is
+present in the packages, as a prefix, so a substring search reports it fine and the bug survives.
+Scans 251 packages / 50 GB in seconds by handing one pattern file to `grep`'s DFA. Verified both
+ways: red on the pre-fix backup, green on all 89 references across all 12 races after the fix.
+
+### fix(arena): guard the tournament winner panel against a null faction or culture (#407)
+
+Separate defect, found while triaging the same reporter's crash bundle `d7d9f7d3` (Erebor, TAOM
+v2.0.18.0). Clicking "Skip All Rounds" threw a `NullReferenceException` out of vanilla
+`TournamentVM.OnTournamentEnd`, surfacing as a `TargetInvocationException` from
+`ViewModel.ExecuteCommand`. Nothing in TAOM patches that method — the winner panel reads
+`hero.MapFaction.Color` for a hero winner and `character.Culture.Color` for a troop winner, neither
+guarded, and `Hero.MapFaction` genuinely returns null for a clanless, non-special hero with no home
+settlement and no party.
+
+`Patch69_TournamentRosterGuard` substitutes such entrants at `GetParticipantCharacters` with the
+culture's elite/basic troop — vanilla's own padding choice. It **substitutes and never removes**, and
+that is load-bearing: vanilla pads the roster to exactly `MaximumParticipantCount` (16) and
+`TournamentMatch.AddParticipant` dereferences `participant.Team` with no null check, so a short
+roster is its own NRE during bracket construction. Trading one crash for another is not a fix.
+
 ## 2026-08-06
 
 ### feat(diagnostics): attribute town-gold drains and name why each caravan is parked (#391)
