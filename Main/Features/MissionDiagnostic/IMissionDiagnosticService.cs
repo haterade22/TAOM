@@ -21,7 +21,7 @@ public interface IMissionDiagnosticService
     // Called from the same boundary for each unique action_set name seen on an
     // agent in the first 5 seconds. Service deduplicates internally — no need
     // to gate per-agent at the boundary.
-    void LogActionSetSeen(string actionSetName, string raceName, string agentName);
+    void LogActionSetSeen(string actionSetName, string raceName, bool isFemale, string agentName, string characterId, string monsterId);
 
     // Resets per-mission state (action-set dedup set, first-tick flag).
     void ResetForNewMission();

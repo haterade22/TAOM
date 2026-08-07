@@ -680,3 +680,112 @@ than at resolve.
 
 **Source:** `docs/reviews/rca-economy-diagnostics-2026-08-06.md` finding #1 — found by the user
 launching the game mid-review, not by the review.
+
+### Enumerate a patch target's call sites before writing a durable log in it
+
+**Symptom:** the Patch69 roster postfix wrote a durable, synchronously-flushed INFO line claiming to
+run "once per tournament". `FightTournamentGame.GetParticipantCharacters` has four call sites; two
+(`GetMenuText`, `GetTournamentPrize`) run from the arena join menu's `on_init`, so every menu open hit
+the disk.
+
+**Why missed:** the call frequency was checked only against "is this per-frame?" — it is not — and that
+answer was treated as sufficient. Not-per-frame is not once-per-event.
+
+**Prevent:** enumerate the target's callers before costing any logging in a postfix. Reserve durable
+levels (INFO+, which `FileLogger` flushes synchronously so a native CTD preserves the tail) for events
+that genuinely happen once; put the common case on DEBUG.
+
+**Source:** `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` finding 1 (#407).
+
+### Read-binary/write-binary applies to any tracked file, not just ModuleData XML
+
+**Symptom:** a one-row edit to `tools/README.md` produced a 297-line whole-file diff. The file is
+committed CRLF; the edit was written with `newline='
+'`.
+
+**Why missed:** `.claude/rules/moduledata-validation.md` scopes its XML I/O convention to *ModuleData
+XML*. This was a `.md`, so the convention was not applied — the identical failure mode, one file type
+outside the rule's stated scope.
+
+**Prevent:** the discipline is about any tracked file whose line endings or BOM you did not author.
+Read bytes, replace bytes, write bytes. Check with `git diff --numstat` vs
+`git diff --ignore-all-space --numstat` — a large gap between them is line-ending churn.
+
+**Source:** `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` finding 5 (#407).
+
+### A check that is 100% false positives is a deleted check — repair the checker, not the docs
+
+**Symptom:** `lint_docs.py`'s stale-version check reported 29 findings and every one was a legitimate
+historical reference ("Ported for TAOM v1.3.15", "v1.3.15 reference RVA, informational only"). One
+was the rule text in `agent-operating-manual.md` that *defines* staleness; another was `adrs/010`,
+the ADR that recorded this very problem, reporting itself.
+
+**Why missed:** the check's model was "a version string older than the pin is rot", which is not what
+rot is. The tempting repair — edit the 29 docs — would have falsified accurate history to satisfy a
+wrong check. The 2026-08-05 exemption sweep had already tried the other tempting repair and failed:
+its exemptions were whole-FILE switches (directory, filename, path part), and the remaining sites
+lived in docs that must stay linted (`native-skin-fixes.md` alone held 10).
+
+**Prevent:** when a check is mostly false positives, fix its *definition* at the granularity the
+distinction actually lives at. Here that was per-LINE — "is this naming the current target, or
+recording history?" — so the model became "a version string **presented as the current target** is
+rot". Measured: the line-granular flip cleared 26 of 29; the wording-marker approach proposed in the
+issue cleared 16. Measure competing repairs before picking one.
+
+**Source:** #397 → #399 (`fa7ba39b`), external contribution reviewed 2026-08-07.
+
+### A checker reporting zero is indistinguishable from a checker that is dead
+
+**Symptom:** #399 took the doc linter from 43 findings to 0. A silent check and a broken check produce
+byte-identical output.
+
+**Why missed:** nothing in the repo distinguished the two states. The 29 false positives had already
+survived months precisely because a noisy check trains readers to skip it — the failure mode is
+symmetric, and a quiet one invites nobody to look at all.
+
+**Prevent:** any change that narrows a check ships with a fixture proving it still fires — here
+`test_naming_an_old_version_as_the_current_target_is_still_reported`. Treat that test as
+load-bearing: a later exemption pass that deletes it converts the check into decoration with no
+visible signal. Write the narrowing's blind spots down where the *reader of a clean run* will see
+them (skill body, tool README), not only in the PR description, which stops being visible on merge.
+
+**Source:** #397 → #399, review by @Sternab; gaps carried forward as #405.
+
+### Exempt a link check by target, not by linking file — and watch for author-clean/contributor-dirty checks
+
+**Symptom:** 14 dead links, all pointing into `docs/reviews/raw/`, which is gitignored (`.gitignore:157`
+— the transcripts are 2-4 MB each). They resolve on the machine that ran the review and are dead on
+every fresh clone, so the check read clean for its author and dirty for everyone else.
+
+**Why missed:** the existing exemptions were all keyed on the *linking* file, and `rca-*` /
+`REVIEW-LOG` were already exempt from the stale-version check, which made "exempt them here too" look
+consistent. It would have switched off dead-link coverage for `REVIEW-LOG.md`'s several hundred other
+links.
+
+**Prevent:** two rules. Exempt on the property that actually causes the exemption — here the target's
+location, not the linker's name. And whenever a check's input includes untracked or gitignored paths,
+assume its output differs per machine; verify against a fresh clone (or simulate the absent dir)
+before trusting a clean local run.
+
+**Source:** #397 → #399 (`fa7ba39b`).
+
+### `tools/README.md`'s whole-file diff is `core.autocrlf` vs a CRLF blob, not the write mode
+
+**Symptom:** a byte-preserving 11-line insert into `tools/README.md` still produced
+`git diff --numstat` = 307/296, i.e. the whole file, while `--ignore-all-space --numstat` = 12/1.
+
+**Why missed:** the sibling lesson above attributes this file's churn to writing with `newline='\n'`.
+That is one cause, but fixing it does not clear this one. `core.autocrlf=true`, there is no
+`.gitattributes`, and the HEAD **blob** for `tools/README.md` contains CRLF (296 of them) — so git
+cleans the working copy CRLF→LF for the comparison and every line reads as changed no matter how the
+edit was written. `docs/ai-includes/agent-operating-manual.md` is also CRLF on disk and diffs 1/1,
+because its blob is LF; the disk encoding is not the discriminator.
+
+**Prevent:** diagnose with `git cat-file -p HEAD:<path>` and count `\r\n` in the **blob** before
+blaming the editor. A CRLF blob under `autocrlf=true` normalizes on the next commit regardless, so
+the churn is a repo-state decision (normalize the file, or add a `.gitattributes`), not something an
+individual edit can avoid. Raise it; don't silently normalize a file as a side effect of an unrelated
+change.
+
+**Source:** verified 2026-08-07 while adding the `lint_docs.py` row (#399 doc pass); corrects the
+scope of the `newline=` lesson above.

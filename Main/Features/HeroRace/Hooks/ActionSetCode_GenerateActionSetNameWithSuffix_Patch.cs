@@ -20,6 +20,13 @@ public static class ActionSetCode_GenerateActionSetNameWithSuffix_Patch
             if (monster == null)
             {
                 __result = "as_human" + (isFemale ? "_female" : "") + suffix;
+
+                // This fallback silently turns a non-human into a human. It is the only way a
+                // dwarf/elf/orc agent can end up running `as_human_warrior`, which is exactly
+                // what a player's mission census showed in the Erebor arena (crash bundle
+                // d7d9f7d3, 2026-08-06) with no way to tell why. Unlike the success path below
+                // this is rare, so logging it costs nothing and names the caller.
+                LogNullMonsterOnce(isFemale, suffix);
                 return false;
             }
 
@@ -43,5 +50,20 @@ public static class ActionSetCode_GenerateActionSetNameWithSuffix_Patch
             Diagnostics.TableauDiagnostics.LogError($"GenerateActionSetName THREW, deferring to vanilla: {e}");
             return true;
         }
+    }
+
+    /// <summary>
+    /// Deduped per (sex, suffix): the null-monster fallback repeats for every agent on the same
+    /// broken spawn path, and an unthrottled line here would flood the log of exactly the player
+    /// whose log we need to read.
+    /// </summary>
+    private static void LogNullMonsterOnce(bool isFemale, string suffix)
+    {
+        var key = $"nullmonster.{isFemale}.{suffix}";
+        Diagnostics.TableauDiagnostics.LogDeduped(
+            key,
+            $"GenerateActionSetName: monster was NULL for suffix='{suffix}' isFemale={isFemale} " +
+            $"-> falling back to 'as_human{(isFemale ? "_female" : "")}{suffix}'. " +
+            "Any non-human agent on this path renders and animates as a human.");
     }
 }

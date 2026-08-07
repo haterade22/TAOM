@@ -123,6 +123,15 @@ that is load-bearing: vanilla pads the roster to exactly `MaximumParticipantCoun
 `TournamentMatch.AddParticipant` dereferences `participant.Team` with no null check, so a short
 roster is its own NRE during bracket construction. Trading one crash for another is not a fix.
 
+`Patch69_TournamentEndGuard` is a finalizer on `OnTournamentEnd` that dumps the entire bracket —
+every round, match, team and slot with `IsValid`, participant nullity, clan, MapFaction and culture —
+then swallows, so the screen degrades instead of dying mid-input. Two further null sites in that
+method remain reachable in principle (`TournamentParticipantVM.Refresh(null, …)` nulls `Participant`
+without ever resetting `IsValid`); they could not be reproduced from a full bracket, so they are
+logged rather than guarded. If a bundle arrives carrying that dump, the slot is named outright.
+
+**Not-tested:** Harmony invocation and the in-game path; the eligibility logic has 13 unit tests.
+
 ## 2026-08-06
 
 ### feat(diagnostics): attribute town-gold drains and name why each caravan is parked (#391)

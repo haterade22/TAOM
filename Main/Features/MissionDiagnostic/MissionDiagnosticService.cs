@@ -166,14 +166,20 @@ public sealed class MissionDiagnosticService : IMissionDiagnosticService
         }
     }
 
-    public void LogActionSetSeen(string actionSetName, string raceName, string agentName)
+    public void LogActionSetSeen(string actionSetName, string raceName, bool isFemale, string agentName, string characterId, string monsterId)
     {
         if (string.IsNullOrEmpty(actionSetName)) return;
-        // Dedup by (actionSet, race) so we log once per unique combo per mission —
-        // a `as_human_warrior` used by elf agents is the diagnostic signal.
-        var key = $"{actionSetName}|{raceName}";
+        // Dedup by (actionSet, race, sex) so we log once per unique combo per mission —
+        // a `as_human_warrior` used by elf agents is the diagnostic signal. Sex is part of the
+        // key because the whole female-vs-male action-set divergence lives in
+        // ActionSetCode.GenerateActionSetNameWithSuffix; folding the sexes together hid it, and
+        // player reports of race-specific breakage that only affects one sex are what we are
+        // chasing (crash bundle d7d9f7d3 follow-up, 2026-08-06).
+        var key = $"{actionSetName}|{raceName}|{isFemale}";
         if (!_seenActionSets.Add(key)) return;
-        _logger.LogInfo($"[MissionDiag] ActionSet '{actionSetName}' used by race='{raceName}' (first agent: '{agentName}')");
+        _logger.LogInfo(
+            $"[MissionDiag] ActionSet '{actionSetName}' used by race='{raceName}' female={isFemale} " +
+            $"monster='{monsterId ?? "<null>"}' (first agent: '{agentName}' char='{characterId ?? "<none>"}')");
     }
 
     public void ResetForNewMission()

@@ -44,3 +44,28 @@ When CC/rendering breaks for one race, check XML config references before invest
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### The artifact a reporter attaches may not be the crash they are reporting
+
+**Symptom:** a player reported *"every instance that I attempt to find a female dwarf in a
+settlement/battle/tournament, if my camera looks at them it crashes my game, but it will not crash if
+I interact with them in dialogue"* and attached a tournament crash bundle from a dwarf campaign. The
+bundle and the complaint were **two unrelated defects**:
+
+| | Tournament NRE (#407) | Female dwarves (#403) |
+|---|---|---|
+| Kind | Managed `NullReferenceException` in a vanilla VM | Native AV `0xC0000005` |
+| Evidence | Full crash bundle, clean managed stack | **No bundle at all** |
+| Cause | Unguarded `hero.MapFaction.Color` | One unresolved mesh name in `skins.xml` |
+| Sex/race relevance | None | Entirely |
+
+**Why missed:** the attachment was treated as evidence *for the stated complaint*. It was evidence for
+a different, real bug that happened to be in the same save.
+
+**Prevent:** when a report's symptom and its artifact do not obviously describe the same event, treat
+them as two investigations until one is shown to explain the other. And read "no crash bundle" as
+positive evidence of a native fault, not as absence of evidence — TAOM's CrashReport finalizers only
+see exceptions that cross a managed boundary. Corroborating record:
+`investigation-rhun-dwarf-ctd-2026-08-02.md` Established #3.
+
+**Source:** `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` (#403 / #407).

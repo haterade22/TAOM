@@ -81,7 +81,14 @@ public sealed class MissionDiagnosticBehavior : MissionLogic
                 var raceId = agent.Character?.Race ?? -1;
                 var raceName = raceId >= 0 ? (_raceManager.GetRaceNameFromId(raceId) ?? $"id={raceId}") : "<none>";
                 var agentName = agent.Name ?? "<unnamed>";
-                _service.LogActionSetSeen(actionSetName, raceName, agentName);
+                // Character id + Monster id turn "a dwarf is running as_human_warrior" into an
+                // actionable line. TAOM's GenerateActionSetNameWithSuffix prefix emits exactly
+                // "as_human<suffix>" when the Monster is null, so a null monster here IS the
+                // explanation — without it the census names a symptom and nothing else.
+                var isFemale = agent.Character?.IsFemale ?? false;
+                var characterId = agent.Character?.StringId;
+                var monsterId = agent.Monster?.StringId;
+                _service.LogActionSetSeen(actionSetName, raceName, isFemale, agentName, characterId, monsterId);
             }
         }
         catch (System.Exception ex)
