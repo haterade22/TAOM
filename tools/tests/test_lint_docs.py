@@ -160,5 +160,103 @@ class NormVerTests(unittest.TestCase):
         self.assertEqual(ld._norm_ver("1.4.7"), "1.4.7")
 
 
+class _PathConstantRepo(_TempRepo):
+    """_TempRepo + the path constants derived from DOCS_DIR at import time.
+
+    lint_docs computes ADRS_DIR / REVIEWS_RAW_DIR / the exempt prefixes once at module load,
+    so repointing DOCS_DIR alone leaves them aimed at the real repo. Repoint them too, or the
+    synthetic tree is linted against the real repo's exemptions.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self._orig_consts = (ld.ADRS_DIR, ld.REVIEWS_RAW_DIR, ld.STALE_VERSION_EXEMPT_PREFIXES)
+        ld.ADRS_DIR = ld.DOCS_DIR / "adrs"
+        ld.REVIEWS_RAW_DIR = ld.DOCS_DIR / "reviews" / "raw"
+        ld.STALE_VERSION_EXEMPT_PREFIXES = (str(ld.ADRS_DIR).replace("\\", "/"),)
+
+    def tearDown(self):
+        (ld.ADRS_DIR, ld.REVIEWS_RAW_DIR, ld.STALE_VERSION_EXEMPT_PREFIXES) = self._orig_consts
+        super().tearDown()
+
+    def _doc(self, rel: str, body: str) -> Path:
+        p = self.root / "docs" / rel
+        _write(p, body)
+        return p
+
+
+class StaleVersionRotTests(_PathConstantRepo):
+    """#397: the check reported 29 findings, all historical references, and no real rot.
+
+    Its model was "a version string older than the pin is rot". The model here is "a version
+    string PRESENTED AS THE CURRENT TARGET is rot", so these tests pin both directions: real
+    rot must still fire (or the fix is indistinguishable from deleting the check), and each
+    shape of legitimate historical reference must not.
+    """
+
+    def setUp(self):
+        super().setUp()
+        _write(self.root / ".claude" / "pinned-game-version.txt", "v1.4.7\n")
+
+    def _stale(self, rel: str, body: str):
+        return ld.check_stale_versions([self._doc(rel, body)])
+
+    def test_naming_an_old_version_as_the_current_target_is_still_reported(self):
+        """The fixture #397 asks for: the check must still fire on genuine rot."""
+        found = self._stale("features/rotten.md", "The current target is Bannerlord 1.3.15.\n")
+        self.assertEqual(len(found), 1, "genuine rot must still be reported")
+        self.assertEqual(found[0][1], 1)
+
+    def test_port_note_recording_when_it_happened_is_not_reported(self):
+        # docs/features/companion-tactics.md:11 shape
+        self.assertEqual(
+            self._stale("features/port.md", "Ported from the 1.3 template for TAOM v1.3.15.\n"), [])
+
+    def test_self_labelled_historical_baseline_is_not_reported(self):
+        # docs/features/native-skin-fixes.md:123 shape — 10 of the original 29 were this file
+        self.assertEqual(
+            self._stale("features/rva.md", "| `historicalRva` | v1.3.15 reference RVA, informational only |\n"), [])
+
+    def test_line_that_also_names_the_pin_is_a_contrast_not_a_claim(self):
+        # docs/features/native-skin-fixes.md:57 shape: "current" belongs to the pin on the same line
+        self.assertEqual(
+            self._stale("features/contrast.md",
+                        "That mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.4.7).\n"), [])
+
+    def test_present_tense_word_inside_inline_code_is_not_a_claim(self):
+        # docs/features/messengers.md:23 shape: `CampaignTime.Now` is an identifier, not "now"
+        self.assertEqual(
+            self._stale("features/api.md",
+                        "- Bannerlord 1.3.15 introduced API breaks: use `CampaignTime.Now` for elapsed math.\n"), [])
+
+    def test_adrs_are_exempt_as_point_in_time_records(self):
+        # The exemption comment already claimed ADRs were covered; the tuple never included them,
+        # so adrs/010 — the ADR that recorded this very problem — reported itself as rot.
+        self.assertEqual(
+            self._stale("adrs/010-thing.md", "Stale refs (`Bannerlord 1.3.15` when the current target is 1.4.5).\n"), [])
+
+
+class DeadLinkNeverCommittedTests(_PathConstantRepo):
+    """#397 follow-on: 14 dead links, all pointing into the gitignored docs/reviews/raw/.
+
+    Those transcripts exist only on the machine that ran the review, so the check read clean
+    for the author and dirty on every fresh clone. Exempting by TARGET keeps dead-link coverage
+    for the linking files' other links.
+    """
+
+    def test_link_into_the_gitignored_raw_dir_is_not_reported(self):
+        doc = self._doc("reviews/rca-thing.md", "See [review](raw/codex-adversarial-thing.md).\n")
+        self.assertEqual(ld.check_dead_links([doc]), [])
+
+    def test_a_genuinely_missing_target_is_still_reported(self):
+        doc = self._doc("reviews/rca-thing.md", "See [notes](../features/gone.md).\n")
+        self.assertEqual(len(ld.check_dead_links([doc])), 1, "real dead links must still be reported")
+
+    def test_an_existing_target_is_not_reported(self):
+        self._doc("features/here.md", "# here\n")
+        doc = self._doc("reviews/rca-thing.md", "See [notes](../features/here.md).\n")
+        self.assertEqual(ld.check_dead_links([doc]), [])
+
+
 if __name__ == "__main__":
     unittest.main()
