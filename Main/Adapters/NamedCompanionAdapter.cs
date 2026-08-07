@@ -51,6 +51,23 @@ public class NamedCompanionAdapter : INamedCompanionAdapter
         return hero.HeroState == Hero.CharacterStates.Fugitive;
     }
 
+    public bool EnsureHomeSettlement(string characterId, string settlementId)
+    {
+        var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == characterId);
+        if (hero == null || hero.BornSettlement != null) return false;
+
+        var settlement = Settlement.Find(settlementId);
+        if (settlement == null) return false;
+
+        // Hero.UpdateHomeSettlement falls all the way through to _bornSettlement for a companion
+        // with no clan, no CompanionOf and no governor relatives, so this is the field that decides
+        // whether MapFaction resolves. The setter clears the cached _homeSettlement for us. This is
+        // what HeroCreator.InitializeHeroFromSettings does for every runtime-created wanderer —
+        // XML heroes are the only ones that miss it.
+        hero.BornSettlement = settlement;
+        return true;
+    }
+
     public void PlaceInSettlement(string characterId, string settlementId)
     {
         var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == characterId);

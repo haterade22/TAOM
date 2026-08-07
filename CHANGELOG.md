@@ -2,6 +2,50 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-07
+
+### fix(namedcompanions): give named companions a home settlement so MapFaction resolves
+
+A player reported the Erebor tournament crashing over and over. Crash bundle `d7d9f7d3`
+(TAOM v2.0.18.0, Bannerlord v1.4.7.117484) is a `NullReferenceException` in
+`SandBox.ViewModelCollection.Tournament.TournamentVM.OnTournamentEnd`, reached from
+`ExecuteSkipRound` → `TournamentBehavior.SkipMatch` → `EndCurrentMatch` → the `TournamentEnd` event.
+The line is `TournamentWinner.Character.ArmorColor1 = heroObject.MapFaction.Color` — the winner's
+`MapFaction` is null.
+
+**Named companions have no map faction at all, and never have.** `Hero.MapFaction` returns null when
+`Clan`, `HomeSettlement` and `PartyBelongedTo` are all null, and all eighteen named companions hit
+every branch:
+
+- `characters/heroes.xml` gives each of them `faction="Faction.neutral"`, and `Hero.Deserialize`
+  reads the reference then does `if (clan.StringId != "neutral") this.Clan = clan;` — so `Clan`
+  stays null by design.
+- `Hero.Deserialize` never assigns `BornSettlement`; only `HeroCreator.InitializeHeroFromSettings`
+  does, via `HeroCreationModel.GetBornSettlement`. XML heroes never go through it.
+  `Hero.UpdateHomeSettlement` then falls through governor / spouse / children / parents / siblings /
+  clan / `CompanionOf` / notable and lands on `_bornSettlement` — null.
+- A companion waiting in a tavern has `StayingInSettlement`, not `PartyBelongedTo`.
+
+`NamedCompanionAdapter.PlaceInSettlement` only called `EnterSettlementAction.ApplyForCharacterOnly`,
+which sets `StayingInSettlement` and nothing else, so placement never closed the gap.
+
+**Why Erebor, and why the tournament.** `FightTournamentGame.CanNpcJoinTournament` admits
+`hero.IsLord || hero.IsWanderer`, and named companions are `occupation="Wanderer"` sitting in
+`settlement.HeroesWithoutParty`, so they enter. Their skills run 250-350, so they win. Four of the
+eighteen — Gimli, Thanor, Whitegoat and Hatérade — spawn in `town_E1`, more than any other town, so
+Erebor produced a clanless winner nearly every time. `TournamentManager.GivePrizeToWinner` guards
+this two frames earlier (`if (winner.Clan != null)`); the view model does not.
+
+`INamedCompanionAdapter.EnsureHomeSettlement` sets `BornSettlement` to the companion's configured
+spawn settlement when it is null — the same field `HeroCreator` fills for every runtime-created
+wanderer. `SpawnCompanions` calls it before placing; `EnsureCompanionsPlaced` calls it **ahead of the
+placement-state guards**, because a companion in an existing save is already placed, recruited,
+imprisoned or a fugitive and every one of those guards short-circuits. `_bornSettlement` is
+`[SaveableField(630)]`, so the repair persists and runs once per save.
+
+Not a tournament fix. The null was reachable from anything that dereferences `MapFaction` on these
+heroes; the tournament is just where it landed hardest.
+
 ## 2026-08-06
 
 ### feat(diagnostics): attribute town-gold drains and name why each caravan is parked (#391)
