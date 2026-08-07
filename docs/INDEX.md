@@ -178,6 +178,7 @@ TAOM ships no multiplayer of its own; these cover behaving correctly when a thir
 - [SAVE-REPAIR-GUIDE.md](SAVE-REPAIR-GUIDE.md) — save-file repair walkthrough (pairs with the save-repair tools in `tools/README.md`)
 - [scene-entities.md](scene-entities.md) — scene game-entity inventory reference (regenerate via `tools/Generate-SceneEntitiesDoc.ps1`)
 - [mesh-ref-validation](features/mesh-ref-validation.md) — `tools/validate_mesh_refs.py`: does every `mesh=` / `body_name=` in item + crafting-piece XML resolve to a packaged asset? A missing `bo_` body is a **confirmed** infinite-mission-load hang (#352) — run it after any weapon/armor authoring. A clean PASS only means "clean within `--items` scope"
+- [doc-health-linter](features/doc-health-linter.md) — `tools/lint_docs.py` + `/lint-docs`: seven checks over `docs/` (dead links, stale version refs, orphan/missing feature docs, config-example drift, pin-vs-doc version mismatch, CLAUDE.md/AGENTS.md eager budget). Three of the seven block a commit. **A clean run is not proof of no rot** — the stale-version check's blind spots are listed in the doc and tracked as [#405](https://github.com/haterade22/TAOM/issues/405)
 - [doc-graph](features/doc-graph.md) — query + audit *this* knowledge graph (`/doc-graph` skill + `tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). [ADR-010](adrs/010-knowledge-base-architecture.md) Phase 5; adopted from [graphify](reviews/adopt-graphify-2026-06-08.md)
 
 ## Architecture Decision Records (canonical project rules)
@@ -267,9 +268,9 @@ engineering detail in `features/` and link outward from here.
 ## Conventions
 
 - File links use markdown `[text](relative/path.md)` syntax. No Obsidian `[[wikilinks]]`. See [ADR-010](adrs/010-knowledge-base-architecture.md) for rationale.
-- Auto-generated "Referenced by:" footers will appear at the bottom of feature docs once Phase 3 of the knowledge-base buildout ships. They are bot-edited only — do not hand-author them.
-- Source materials (papers, web clippings, decompiled notes) go in `docs/raw/` (Phase 4, not yet present). Compiled wiki nodes derived from raw go in `docs/research/`.
-- This file is hand-curated. When a new feature doc is added, also add it here, in the right topical section. The doc-health linter (Phase 2, not yet present) will flag orphan feature docs that aren't referenced from INDEX, CLAUDE.md, or another doc.
+- Auto-generated "Referenced by:" footers sit at the bottom of most feature docs (117 of 120 as of 2026-08-07), written by `tools/build_backlinks.py`. They are bot-edited only — do not hand-author them.
+- Source materials (papers, web clippings, decompiled notes) go in `docs/raw/`. Compiled wiki nodes derived from raw go in `docs/research/` — `/knowledge-compile` does that pass.
+- This file is hand-curated. When a new feature doc is added, also add it here, in the right topical section. `python tools/lint_docs.py` flags orphan feature docs that no other doc references, plus dead links, stale version refs, missing feature docs, config-example drift, and CLAUDE.md/snapshot-vs-pin mismatches. **A clean run is not proof of no rot** — the stale-version check fires only on marker-word phrasing and does not match v1.4.5/v1.4.6 at all ([#405](https://github.com/haterade22/TAOM/issues/405)); see `.claude/skills/lint-docs/SKILL.md`.
 
 ---
 

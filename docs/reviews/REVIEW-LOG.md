@@ -1907,7 +1907,7 @@ combination with a zero trade score) and both the verdict text and gate table no
 **Root-cause pattern:** components verified, inherited seams not. The one seam that *was* verified —
 Harmony discovering the nested patch classes, the only nested `[HarmonyPatch]` classes in TAOM — was
 verified precisely because it felt unprecedented, and it turned out fine. The boring seam that runs
-first took the game down. Novelty is a bad predictor of risk. Suite 5686 green.
+first took the game down. Novelty is a bad predictor of risk. Suite 5686 green.
 
 ## Review 85 — Female-dwarf mesh CTD (#403) + Patch69 tournament guard (#407), full deep-review + Codex adversarial pass (2026-08-07)
 

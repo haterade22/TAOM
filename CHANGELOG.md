@@ -93,7 +93,15 @@ Docs brought in line with the new semantics: `.claude/skills/lint-docs/SKILL.md`
 the blind spots stated where a reader of a clean run will see them), `docs/ai-includes/agent-operating-manual.md`
 (the staleness rule is broader than the checker that enforces it — v1.4.5/v1.4.6 are not matched at
 all), `tools/README.md` (new **Docs & knowledge base** section — `lint_docs.py` had never been listed),
-and 4 lessons in `docs/reviews/lessons/build-tooling-workflow.md`. `docs/adrs/010` deliberately left
+4 lessons in `docs/reviews/lessons/build-tooling-workflow.md`, a lookup row in
+`docs/reference/doc-lookup.md`, and `docs/INDEX.md`'s Conventions block — which still described the
+linter, the backlinks footers and `docs/raw/` as unshipped future phases when all three have been in
+place for months. New **`docs/features/doc-health-linter.md`** is now the reference the other five
+point at — the tool had no feature doc while all three sibling validators did.
+
+Writing it corrected a miscount the skill had carried since the config-drift checks landed: the
+linter runs **seven** checks, not six (the CLAUDE.md/AGENTS.md eager-load budget was never listed),
+and **three** of them gate a commit, not two. `docs/adrs/010` deliberately left
 alone: it is a point-in-time record, and it is now exempt from the check rather than rewritten to
 satisfy it. Lesson-index counts re-derived while there — 352 across 13 categories, five of which had
 drifted low.
@@ -156,9 +164,6 @@ without ever resetting `IsValid`); they could not be reproduced from a full brac
 logged rather than guarded. If a bundle arrives carrying that dump, the slot is named outright.
 
 **Not-tested:** Harmony invocation and the in-game path; the eligibility logic has 13 unit tests.
-
-Full review record — 6 agents, an independent Codex pass, 8 findings and why each was
-missed: `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` and REVIEW-LOG Review 85.
 
 ### fix(diagnostics): the action-set census now says which dwarf, and why
 

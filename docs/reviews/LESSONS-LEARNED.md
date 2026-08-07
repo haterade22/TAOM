@@ -18,7 +18,7 @@ This document **is the index** of the per-category lesson files under `lessons/`
 - [Adapters & TaleWorlds API](lessons/adapters-taleworlds-api.md) — 25 lessons
 - [Build, Tooling & Workflow](lessons/build-tooling-workflow.md) — 72 lessons
 - [Misc](lessons/misc.md) — 6 lessons
-- [Testing & QA](lessons/testing-qa.md) — 35 lessons
+- [Testing & QA](lessons/testing-qa.md) — 36 lessons
 - [Data, Content & Cultures](lessons/data-content-cultures.md) — 51 lessons
 - [Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)](lessons/harmony-il.md) — 31 lessons
 - [Animation & Skeleton](lessons/animation-skeleton.md) — 21 lessons

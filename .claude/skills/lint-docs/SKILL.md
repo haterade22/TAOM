@@ -19,14 +19,18 @@ Runs `tools/lint_docs.py` and presents the findings inline. Backs [ADR-010](../.
 3. **Orphan feature docs** — files in `docs/features/` that no other doc references. Either link them into `docs/INDEX.md` / a feature doc / an RCA, or delete them.
 4. **Missing feature docs** — `Main/Features/<X>/` directories with no matching `docs/features/<x>.md` (PascalCase→kebab-case + fuzzy match, same algorithm as `.claude/hooks/detect-docs-gaps.sh`).
 5. **Config-example drift** — a `docs/features/*.md` `json` example whose values disagree with the shipped `Main/_Module/ModuleData/**/*.json` config it mirrors (shared keys only — a partial example showing a subset is fine), or a doc key the shipped config no longer has. Historical docs (migration/archive/reviews) exempt. The v1.4.7 case: flipping a config default left the feature doc's example showing the old value, invisibly. **Blocks commits** via `.claude/hooks/check-doc-config-drift.sh`.
-6. **Version mismatch** — CLAUDE.md's "Target: Bannerlord X" line(s) or an API-snapshot header that disagrees with `.claude/pinned-game-version.txt`. Catches "pin bumped but a doc/snapshot left stale" (run `/engine-bump` if the pin itself is behind the installed game). Also gated by the same hook.
+6. **Version mismatch** — CLAUDE.md's "Target: Bannerlord X", AGENTS.md's "mod for Bannerlord X", or an API-snapshot header that disagrees with `.claude/pinned-game-version.txt`. Catches "pin bumped but a doc/snapshot left stale" (run `/engine-bump` if the pin itself is behind the installed game). Also gated by the same hook.
+7. **CLAUDE.md / AGENTS.md eager-load budget** — both files load into every session and every agent spawn, so bytes here are a permanent per-turn tax. Size caps (CLAUDE.md warn 44 KB / hard 46 KB; AGENTS.md warn 40 KB / hard 44 KB — the guard against Codex truncating the review rules past `project_doc_max_bytes`), plus CLAUDE.md per-line caps: table rows ≤400 chars, prose lines ≤600, fenced code exempt. Gated by the same hook, except `size-warn` which is report-only.
+
+Full reference — exemption surface, the #399 model, blind spots: [docs/features/doc-health-linter.md](../../../docs/features/doc-health-linter.md).
 
 ## Modes
 
-- `$ARGUMENTS` empty or `--full` → run all six checks.
+- `$ARGUMENTS` empty or `--full` → run all seven checks.
 - `$ARGUMENTS` contains `--quick` → only check dead links (fastest; suitable for tight loops).
 - `$ARGUMENTS` contains `--write-report` → write to `docs/reviews/doc-lint-<YYYY-MM-DD>.md` instead of streaming inline.
-- `--fail-on-drift` → exit 1 if any config-example drift OR version mismatch is found. This is the mode the `check-doc-config-drift.sh` pre-commit hook runs; the other four checks never block a commit.
+- `--fail-on-drift` → exit 1 on config-example drift, version mismatch, OR a hard budget violation. This is the mode the `check-doc-config-drift.sh` pre-commit hook runs; checks 1-4 never block a commit.
+- `--fail-on-dead` → exit 1 if any dead links are found (CI-oriented; not wired into a hook).
 
 ## Steps
 
