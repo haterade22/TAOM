@@ -16,9 +16,14 @@ import os
 import sys
 import glob
 
-ARMORY_ROOT = (
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-    r"\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items"
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+ARMORY_ROOT = os.path.join(
+    os.environ.get(
+        "BANNERLORD_GAME_DIR",
+        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
+    ),
+    "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items",
 )
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
