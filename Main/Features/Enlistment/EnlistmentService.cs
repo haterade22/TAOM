@@ -91,12 +91,21 @@ public class EnlistmentService : IEnlistmentService
         // Observed in-game 2026-08-07: playerEncounter=True on 93 of 93 ticks. The donor closes it
         // here too (RFEnlistmentCampaignBehavior.FinalizeEnlistmentConversation: Finish() then
         // attach) — ordering matters, the encounter must go before the park.
-        if (_encounter.HasCurrent)
+        // Only ever finish the encounter we are actually standing in — the one with the commander.
+        // Finishing blind destroys encounters that belong to the player: a settlement they are
+        // visiting, a fight they started, someone else's conversation. The donor gates every
+        // finish the same way (FinalizeEnlistmentConversation).
+        var commanderPartyId = _commander.GetSnapshot(commanderHeroId).PartyId;
+        if (_encounter.IsEncounterOwnedBy(commanderPartyId))
         {
             if (_encounter.Finish(false))
                 _logger?.LogInfo($"[EnlistDiag] closed the enlistment conversation's PlayerEncounter before parking on {commanderHeroId}");
             else
                 _logger?.LogError($"[EnlistDiag] could not close the enlistment conversation's PlayerEncounter — the player may be unable to interact with anything while enlisted");
+        }
+        else if (_encounter.HasCurrent)
+        {
+            _logger?.LogInfo($"[EnlistDiag] left the live PlayerEncounter alone at swear-in — it is not the commander's; the reconciler will sweep it if it turns out to be stranded");
         }
 
         if (!_attachment.ParkNear(commanderHeroId))

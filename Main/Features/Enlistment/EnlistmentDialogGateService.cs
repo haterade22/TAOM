@@ -52,13 +52,22 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
             && _store.Record.CommanderHeroId == partnerHeroId;
     }
 
-    public Domain.DischargeReason ClassifyLeaveReason(double nowDays)
-    {
-        var contractEnd = _store.Record.ContractEndDay;
-        // Positive-requirement polarity: a NaN nowDays fails the comparison and classifies
-        // as desertion — the strict outcome, never the generous one.
-        if (!contractEnd.HasValue || nowDays >= contractEnd.Value)
-            return Domain.DischargeReason.PlayerRequest;
-        return Domain.DischargeReason.Desertion;
-    }
+    /// <summary>
+    /// Classify a leave the COMMANDER GRANTS. Always honourable.
+    ///
+    /// This used to return Desertion whenever the player left before `ContractEndDay`, and the
+    /// contract defaults to 365 days — so every realistic exit was desertion, forfeiting the
+    /// player's arrears and calling them a deserter for asking their lord's leave and being
+    /// given it. Reported in-game 2026-08-07 after two short services both ended "Desertion".
+    ///
+    /// The donor mod has no desertion concept for discharge at all. Desertion should mean walking
+    /// away WITHOUT asking; every path that reaches this method is the player asking and the
+    /// commander agreeing, which is a release, not a betrayal. `DischargeReason.Desertion` is kept
+    /// for a genuinely unilateral abandonment path, which no dialog currently offers.
+    ///
+    /// If an early-exit cost is wanted later, make it a RELATION cost on its own reason — not an
+    /// arrears forfeit, which punishes the player with wages the commander already owed them.
+    /// </summary>
+    public Domain.DischargeReason ClassifyLeaveReason(double nowDays) =>
+        Domain.DischargeReason.PlayerRequest;
 }

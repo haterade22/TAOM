@@ -29,7 +29,7 @@ public class EnlistmentServiceTests
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
         _attachment.RestorePresence().Returns(true);
         _attachment.ParkNear(Arg.Any<string>()).Returns(true);
-        _discharge = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), _logger);
+        _discharge = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
         _service = new EnlistmentService(
@@ -189,6 +189,7 @@ public class EnlistmentServiceTests
         // main-party encounter while it is set, so the player could not click a lord again.
         // The donor closes it at the same point (FinalizeEnlistmentConversation).
         _encounter.HasCurrent.Returns(true);
+        _encounter.IsEncounterOwnedBy("lord_party_1").Returns(true);
         _service.SubmitPetition("lord_1_1");
 
         _service.CompleteOath("lord_1_1", "main_hero", 100.0);
@@ -210,5 +211,22 @@ public class EnlistmentServiceTests
 
         _encounter.DidNotReceive().Finish(Arg.Any<bool>());
     }
+
+    [TestMethod]
+    public void CompleteOath_EncounterIsNotTheCommanders_LeavesItAlone()
+    {
+        // Regression (donor diff, CRITICAL): finishing blind destroys encounters that are the
+        // PLAYER'S own business — a settlement they are visiting, a fight they started, someone
+        // else's conversation. Only the encounter with the commander is ours to close.
+        _encounter.HasCurrent.Returns(true);
+        _encounter.IsEncounterOwnedBy(Arg.Any<string>()).Returns(false);
+        _service.SubmitPetition("lord_1_1");
+
+        _service.CompleteOath("lord_1_1", "main_hero", 100.0);
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _attachment.Received(1).ParkNear("lord_1_1");
+    }
+
 
 }

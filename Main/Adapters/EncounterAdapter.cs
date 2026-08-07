@@ -59,6 +59,46 @@ public sealed class EncounterAdapter : IEncounterAdapter
         }
     }
 
+    public bool IsEncounterOwnedBy(string partyId)
+    {
+        try
+        {
+            if (PlayerEncounter.Current == null || string.IsNullOrEmpty(partyId))
+                return false;
+
+            // Never tear an encounter down mid-conversation — the dialogue is running inside it,
+            // and finishing here drops the player out of their own conversation.
+            if (Campaign.Current?.ConversationManager?.IsConversationInProgress == true)
+            {
+                _logger?.LogInfo($"[EnlistDiag] not finishing the encounter for '{partyId}' — a conversation is in progress");
+                return false;
+            }
+
+            // A settlement encounter has no encountered MOBILE party. That single check is what
+            // keeps us from destroying the player's own town visit, so it is load-bearing rather
+            // than defensive.
+            var encountered = PlayerEncounter.EncounteredMobileParty;
+            if (encountered == null)
+            {
+                _logger?.LogInfo($"[EnlistDiag] not finishing the encounter for '{partyId}' — it has no encountered mobile party (a settlement visit, not ours)");
+                return false;
+            }
+
+            if (encountered.StringId != partyId)
+            {
+                _logger?.LogInfo($"[EnlistDiag] not finishing the encounter for '{partyId}' — it is against '{encountered.StringId}', which is the player's own business");
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] IsEncounterOwnedBy('{partyId}') failed: {ex.Message}");
+            return false;
+        }
+    }
+
     public bool IsMainPartyInMapEvent
     {
         get

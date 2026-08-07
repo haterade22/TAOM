@@ -20,6 +20,18 @@ public interface IEncounterAdapter
     /// <summary>StringId of the encountered mobile party, or null.</summary>
     string EncounteredPartyId { get; }
 
+    /// <summary>
+    /// True when the live encounter is one enlistment may safely finish — i.e. it exists, it is
+    /// against the given party, and no conversation is in progress.
+    ///
+    /// Finishing blind destroys encounters that are the PLAYER'S own business. A settlement visit,
+    /// a battle they started, or a conversation with someone else all live in
+    /// `PlayerEncounter.Current`, and tearing one down strands them. The donor guards every finish
+    /// this way (`RFEnlistmentCampaignBehavior.FinalizeEnlistmentConversation` +
+    /// `TryClearStaleEncounterForCommanderBattle`); the native rewrite dropped the guard.
+    /// </summary>
+    bool IsEncounterOwnedBy(string partyId);
+
     /// <summary>Side of the given party in its current map event, or null when not in one.</summary>
     PartyBattleSide? GetPartyBattleSide(string partyId);
 

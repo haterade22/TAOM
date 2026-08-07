@@ -174,6 +174,34 @@ of report we were chasing — and records the character id and resolved Monster 
 emits `as_human<suffix>` when the Monster is null, and that fallback is now logged (deduped per
 sex+suffix) instead of silently turning a non-human into a human.
 
+### fix(enlistment): stop calling an honourable release desertion, and stop stranding the player (#406)
+
+Three confirmed findings from the donor diff, chosen because no architectural decision changes
+whether they are right.
+
+**A granted release is no longer desertion.** `ClassifyLeaveReason` returned `Desertion` whenever
+the player left before `ContractEndDay`, and the contract defaults to **365 days** — so every
+realistic exit was desertion, which forfeits the player's arrears. Asking your lord for leave and
+being given it was being treated as betrayal, and it cost you wages he already owed you. The donor
+has no desertion concept for discharge at all. `Desertion` is kept for a genuinely unilateral
+abandonment path, which no dialog currently offers.
+
+**Discharge now leaves the wait menu on every path.** Only the menu-button route called
+`ExitToLast`, so any AUTOMATIC discharge — commander dies, grace expires, contract ends, identity
+mismatch — left the player in a menu whose options were gone, with no Escape. The donor names this
+exact symptom in its own source: "left the player frozen in the wait menu with an orphaned camera".
+
+**The oath no longer destroys encounters that are not ours.** The `PlayerEncounter.Finish` added
+earlier today fired blind, so swearing an oath while visiting a settlement, mid-fight, or in another
+conversation tore down the player's own encounter. New `IEncounterAdapter.IsEncounterOwnedBy` gates
+it on three conditions the donor also checks: no conversation in progress, an encountered MOBILE
+party exists (a settlement visit has none — that check is what protects town visits), and it is the
+commander's. Regression test asserts we leave a foreign encounter alone.
+
+Suite 5730 green.
+
+Research: ConversationManager.IsConversationInProgress, PlayerEncounter.EncounteredMobileParty
+Not-tested: in-game discharge-then-interact, oath sworn inside a settlement
 ### docs(claude): require committing before a rebase, after a session lost another's work
 
 `git pull --rebase` auto-stashes the WHOLE working tree, including files a concurrent session is

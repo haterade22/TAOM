@@ -11,6 +11,7 @@ public class DischargeService : IDischargeService
     private readonly IEnlistmentStateMachine _machine;
     private readonly IMobilePartyAttachmentAdapter _attachment;
     private readonly IEncounterAdapter _encounter;
+    private readonly IGameMenuAdapter _gameMenu;
     private readonly IModLogger _logger;
 
     public DischargeService(
@@ -18,12 +19,14 @@ public class DischargeService : IDischargeService
         IEnlistmentStateMachine machine,
         IMobilePartyAttachmentAdapter attachment,
         IEncounterAdapter encounter,
+        IGameMenuAdapter gameMenu,
         IModLogger logger)
     {
         _store = store;
         _machine = machine;
         _attachment = attachment;
         _encounter = encounter;
+        _gameMenu = gameMenu;
         _logger = logger;
     }
 
@@ -74,6 +77,19 @@ public class DischargeService : IDischargeService
         catch (Exception ex)
         {
             _logger?.LogError($"DischargeService: EnlistmentEnded subscriber threw for {reason}: {ex.Message}");
+        }
+
+        // Leave the service wait menu on EVERY discharge path, not just the menu button. An
+        // automatic discharge (commander dies, grace expires, contract ends, identity mismatch)
+        // otherwise strands the player in a menu whose only options are gone, with no Escape —
+        // the donor names this exact symptom in its own code ("left the player frozen in the wait
+        // menu with an orphaned camera") and exits at the tail of every release path.
+        if (_gameMenu.CurrentMenuId == EnlistmentMenuService.ServiceWaitMenuId)
+        {
+            if (_gameMenu.ExitToLast())
+                _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) left the service wait menu");
+            else
+                _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not leave the service wait menu — the player may be stuck in an optionless menu");
         }
 
         var after = _attachment.GetPresence();
