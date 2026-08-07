@@ -235,6 +235,42 @@ class StaleVersionRotTests(_PathConstantRepo):
         self.assertEqual(
             self._stale("adrs/010-thing.md", "Stale refs (`Bannerlord 1.3.15` when the current target is 1.4.5).\n"), [])
 
+    # --- #405 gap 1: rot phrased without a marker word --------------------------------------
+    # Each of these named a current target and was silent before the marker set was widened.
+    # One test per shape, so a later narrowing of the regex says WHICH phrasing it gave up.
+
+    def test_built_for_is_a_current_target_claim(self):
+        self.assertEqual(
+            len(self._stale("features/a.md", "TAOM is built for Bannerlord 1.3.15.\n")), 1)
+
+    def test_requires_is_a_current_target_claim(self):
+        self.assertEqual(
+            len(self._stale("features/b.md", "This feature requires Bannerlord 1.3.15.\n")), 1)
+
+    def test_runs_on_is_a_current_target_claim(self):
+        self.assertEqual(
+            len(self._stale("features/c.md", "TAOM runs on Bannerlord 1.3.15.\n")), 1)
+
+    def test_compatible_with_is_a_current_target_claim(self):
+        self.assertEqual(
+            len(self._stale("features/d.md", "Compatible with Bannerlord 1.3.15.\n")), 1)
+
+    def test_bare_engine_label_is_a_current_target_claim(self):
+        # `Engine\s*:` has to live outside the \b group — a word boundary after a colon needs a
+        # following word character, so this shape is silently missed if it is written inside it.
+        self.assertEqual(
+            len(self._stale("features/e.md", "Engine: 1.3.15\n")), 1)
+
+    def test_widening_did_not_swallow_the_historical_shapes(self):
+        # The four shapes #399 exists to keep quiet must stay quiet after the widening.
+        for name, line in [
+            ("features/h1.md", "Ported from the 1.3 template for TAOM v1.3.15.\n"),
+            ("features/h2.md", "| `historicalRva` | v1.3.15 reference RVA, informational only |\n"),
+            ("features/h3.md", "Pinned v1.3.15 ilspycmd outputs live in docs/scene-scripts/sigs/.\n"),
+            ("features/h4.md", "- Bannerlord 1.3.15 introduced API breaks: use `CampaignTime.Now`.\n"),
+        ]:
+            self.assertEqual(self._stale(name, line), [], f"{line.strip()!r} should stay silent")
+
 
 class DeadLinkNeverCommittedTests(_PathConstantRepo):
     """#397 follow-on: 14 dead links, all pointing into the gitignored docs/reviews/raw/.

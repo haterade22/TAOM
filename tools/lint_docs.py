@@ -125,9 +125,20 @@ STALE_VERSION_EXEMPT_DIR_PARTS = ("docs/reviews/lessons",)
 # and the real distinction is per LINE — "is this naming the CURRENT target, or recording history?"
 # So the model flips: a version string alone is not rot; a version string presented as current is.
 # Measured against the 29: this clears 26. The wording-marker approach from the issue clears 16.
+# The marker set IS the detection surface, so rot phrased outside it is silent (#405). Widened with
+# four verb phrases and the bare `Engine:` label — all of them name a current target without using a
+# marker word. Measured on the real tree: still 0 findings, so this buys detection at no
+# false-positive cost, which is why it lands now rather than behind an exemption pass.
+# `Engine\s*:` sits OUTSIDE the \b group deliberately: a word boundary after a colon needs a word
+# character next, so `Engine: 1.3.15` can never match from inside it.
 CURRENT_TARGET_RE = re.compile(
     r"\b(current(ly)?|target(s|ed|ing)?|now|active|supported|"
-    r"builds? against|building against|pinned to)\b", re.I)
+    r"builds? against|building against|pinned to|"
+    r"built for|requires?|compatible with)\b"
+    # `runs on` is ordinary technical English — doc-health-linter.md:69 says a regex "still runs on
+    # the raw line" — so it only counts as a target claim when a version follows it.
+    r"|\bruns? on\s+(?:Bannerlord\b|v?\d)"
+    r"|\bEngine\s*:", re.I)
 # Residue after that flip: contrast lines that name an old version AND a present-tense word, where
 # the present-tense word belongs to the CURRENT version, also named on the same line — e.g.
 # "that mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.4.7)", and the rule text
