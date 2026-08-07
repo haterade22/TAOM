@@ -13,6 +13,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     private readonly ICommanderLordAdapter _commander;
     private readonly IDischargeService _discharge;
     private readonly IEnlistmentConfigProvider _config;
+    private readonly IEncounterAdapter _encounter;
     private readonly IModLogger _logger;
 
     public EnlistmentReconciler(
@@ -22,6 +23,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         ICommanderLordAdapter commander,
         IDischargeService discharge,
         IEnlistmentConfigProvider config,
+        IEncounterAdapter encounter,
         IModLogger logger)
     {
         _store = store;
@@ -30,6 +32,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _commander = commander;
         _discharge = discharge;
         _config = config;
+        _encounter = encounter;
         _logger = logger;
     }
 
@@ -132,10 +135,14 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         var snapshot = _commander.GetSnapshot(record.CommanderHeroId);
 
         // A battle state with no map event on either side is stale (event resolved while
-        // we weren't looking) — return to attached before assessing.
+        // we weren't looking) — return to attached before assessing. An OPEN encounter means
+        // the battle is still live (loot/aftermath runs inside it, and the map event reads as
+        // gone before the encounter closes), so demoting here would re-park mid-battle and
+        // hand the menu guard the aftermath menus.
         if (record.State == EnlistmentState.EnlistedBattle
             && !presence.IsInMapEvent
-            && !snapshot.PartyIsInMapEvent)
+            && !snapshot.PartyIsInMapEvent
+            && !_encounter.HasCurrent)
         {
             _machine.TryTransition(EnlistmentState.EnlistedAttached);
         }

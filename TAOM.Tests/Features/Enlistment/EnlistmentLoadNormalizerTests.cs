@@ -40,7 +40,7 @@ public class EnlistmentLoadNormalizerTests
         var discharge = new DischargeService(_store, _machine, _partyAdapter, _logger);
         var reconciler = new EnlistmentReconciler(
             _store, _machine, attachment, _commander, discharge,
-            new EnlistmentConfigProvider(_logger), _logger);
+            new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(), _logger);
         _normalizer = new EnlistmentLoadNormalizer(
             _store, _machine, reconciler, _partyAdapter, discharge, _logger);
     }

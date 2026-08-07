@@ -29,46 +29,85 @@ public class ServiceBattleService : IServiceBattleService
         _logger = logger;
     }
 
-    public void OnCommanderBattleStarted(string commanderPartyId, string attackerPartyId, string defenderPartyId)
+    public void OnCommanderBattleStarted(string commanderPartyId) =>
+        TryJoin(commanderPartyId, "MapEventStarted");
+
+    // Hourly recovery: the reconciler saw the commander fighting while the player was not in the
+    // event. Without this the single MapEventStarted edge is the only chance to ever join, so a
+    // miss (save-load mid-battle, a throw, enlisting into an already-running fight) stranded the
+    // player in the column permanently.
+    public void TryJoinCommanderBattle(string commanderPartyId) =>
+        TryJoin(commanderPartyId, "hourly recovery");
+
+    private void TryJoin(string commanderPartyId, string trigger)
     {
         if (_store.Record.State != EnlistmentState.EnlistedAttached)
+        {
+            _logger?.LogInfo($"[Enlistment] commander battle ({trigger}) ignored — state is {_store.Record.State}, not EnlistedAttached");
             return;
+        }
 
         var side = _encounter.GetPartyBattleSide(commanderPartyId);
         if (side == null)
-            return;
-
-        if (!_encounter.CanMainPartyJoinBattleOf(commanderPartyId, side.Value))
         {
-            _logger?.LogInfo($"[Enlistment] commander battle at {commanderPartyId} not joinable by the main party — staying parked");
+            _logger?.LogInfo($"[Enlistment] commander battle ({trigger}) ignored — no battle side for '{commanderPartyId}'");
             return;
         }
 
-        // State first (redirect-exempt), then presence, then encounter/menu work.
+        if (!_encounter.IsCommanderBattleJoinable(commanderPartyId, side.Value))
+            return;
+
+        // Ordering is load-bearing and mirrors the donor's proven sequence:
+        //   state (redirect-exempt) -> presence -> position -> encounter -> join -> menu.
+        // Presence must be restored BEFORE any encounter work: the engine skips inactive parties
+        // in encounter detection, and a party that acquires a MapEventSide without a live
+        // PlayerEncounter + open "encounter" menu freezes its map event permanently (the engine
+        // ticks every map event EXCEPT the player's, which only advances via PlayerEncounter).
         _machine.TryTransition(EnlistmentState.EnlistedBattle);
         _attachment.RestorePresence();
+        _attachment.SyncPosition(_store.Record.CommanderHeroId);
 
-        if (_encounter.HasCurrent && _encounter.EncounteredPartyId != commanderPartyId)
-            _encounter.Finish(false);
-
-        if (!_encounter.HasCurrent
-            && !string.IsNullOrEmpty(defenderPartyId)
-            && !string.IsNullOrEmpty(attackerPartyId))
+        if (_encounter.EnsureEncounterAgainst(commanderPartyId))
         {
-            _encounter.RestartBattle(defenderPartyId, attackerPartyId);
+            // Attacker only. MapEvent.AddInvolvedPartyInternal converts a siege ASSAULT to
+            // SiegeOutside when a defender joins with CurrentSettlement == null — so leaving the
+            // settlement before a defender join would rewrite the battle type for every
+            // participant, turning an assault on the walls into a field fight outside them.
+            if (side.Value == PartyBattleSide.Attacker)
+                _encounter.LeaveSettlementIfUnderSiege();
+
+            if (_encounter.JoinBattle(side.Value))
+            {
+                // The menu is not cosmetic: the engine ticks every map event EXCEPT the player's,
+                // which advances only through PlayerEncounter.Update, driven from this menu. A
+                // verified join with no menu freezes the event permanently — and the hourly
+                // recovery cannot rescue it, because the player IS in a map event by then, so
+                // Assess reports Attached rather than BattleJoinRequired. Roll back instead.
+                if (_gameMenu.EnsureMenuOpen("encounter"))
+                {
+                    _logger?.LogInfo($"[Enlistment] joined commander battle on side {side.Value} ({trigger})");
+                    return;
+                }
+
+                _logger?.LogError("[Enlistment] joined the battle but could not open the encounter menu — rolling back to avoid freezing the map event");
+            }
         }
 
-        if (_encounter.JoinBattle(side.Value))
+        // Rollback (the donor's wasHiddenServiceMode contract): never strand a visible, active
+        // main party in battle state after a failed join. Finish() first — leaving an orphaned
+        // PlayerEncounter behind blocks the main party from ever entering another encounter.
+        _logger?.LogWarning($"[Enlistment] could not join commander battle ({trigger}) — rolling back to parked service mode");
+        _encounter.Finish(false);
+
+        // Load-bearing for recovery: if this transition were ever rejected, state would stay
+        // EnlistedBattle while the party is parked, and the entry guard above would block every
+        // future join with no runtime signal. Force it rather than fail silently.
+        if (!_machine.TryTransition(EnlistmentState.EnlistedAttached))
         {
-            _gameMenu.SwitchTo("encounter");
-            _logger?.LogInfo($"[Enlistment] joined commander battle on side {side.Value}");
-            return;
+            _logger?.LogError("[Enlistment] rollback transition to EnlistedAttached was rejected — forcing state to avoid stranding service");
+            _store.Record.State = EnlistmentState.EnlistedAttached;
         }
 
-        // Rollback (the donor's wasHiddenServiceMode contract): never strand a visible,
-        // active main party in battle state after a failed join.
-        _logger?.LogWarning("[Enlistment] JoinBattle failed — rolling back to parked service mode");
-        _machine.TryTransition(EnlistmentState.EnlistedAttached);
         _attachment.EnsureParked(_store.Record.CommanderHeroId);
     }
 

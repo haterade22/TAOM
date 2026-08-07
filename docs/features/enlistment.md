@@ -70,10 +70,27 @@ including foreign/corrupt saves.
   `port_menu`/`naval_town_outside`), fail-open with a once-per-id diagnostic funnel.
 - Battle: `EnlistmentBattleBehavior` (MapEventStarted/Ended boundary) →
   `ServiceBattleService`. Ordering contract: state flips to `EnlistedBattle`
-  (redirect-exempt) BEFORE any encounter/menu push. Failed joins roll back to
-  parked-attached. Post-battle, the state stays `EnlistedBattle` while the loot encounter
-  is open (so the guard can't eat aftermath menus); wait-menu init + reconciler close the
-  loop.
+  (redirect-exempt) BEFORE any encounter/menu push, then presence → position →
+  encounter → join → menu. Failed joins roll back to parked-attached, finishing any
+  encounter they created first. Post-battle, the state stays `EnlistedBattle` while the loot
+  encounter is open (so the guard can't eat aftermath menus); wait-menu init + reconciler
+  close the loop.
+- **Two join paths, both live.** The `MapEventStarted` edge, plus an hourly recovery:
+  `IEnlistmentReconciler.BattleJoinRequested` → `ServiceBattleService.TryJoinCommanderBattle`,
+  raised when the commander is in a map event and the player is not. The recovery path covers
+  a missed edge (save-load mid-battle, a throw, enlisting into a running fight).
+
+### Battle-join rules learned the hard way (2026-08-07 — read before touching this path)
+
+The first shipped version never joined a single battle. Five separate defects, all on one path:
+
+| Rule | Why |
+|---|---|
+| **Never gate the join on `MapEvent.CanPartyJoinBattle`** | It requires every party on the opposing side to be at war with the joining party's `MapFaction` — "may this free agent lawfully intervene?". An enlisted soldier keeps their own clan and is normally at war with nobody, so it is `false` for every battle. It also demands every party on both sides be `IsActive`. The donor mod hit this and explicitly tolerated a false result while parked. Use the mechanical `IsCommanderBattleJoinable` (event exists, not finalized, side resolves). |
+| **Restore presence BEFORE any encounter work** | The engine skips inactive parties in encounter detection (`EncounterManager` line 38). Checking joinability while parked is a chicken-and-egg. |
+| **Seed the encounter from `MapEvent.AttackerSide/DefenderSide.LeaderParty`** | Those are `PartyBase`, so a besieged settlement is representable. Resolving through the `MapEventStarted` arguments drops sieges silently — a settlement defender has no `MobileParty`, so its id is null. |
+| **Verify the join actually landed** | `PlayerEncounter.JoinBattleInternal` silently calls `Finish()` when `EncounteredBattle` is null. A non-throwing call proves nothing; check `MainParty.MapEvent != null`. A false success left state at `EnlistedBattle`, which then blocked every later battle. |
+| **Never leave an orphaned `PlayerEncounter`** | `EncounterManager` gates the main party on `PlayerEncounter.Current == null`. A leaked encounter stops the player entering any future one. Worse: a `MapEventSide` acquired without a live encounter + open `encounter` menu freezes that map event forever (`MapEventManager.Tick` skips the player's event; only `PlayerEncounter.Update` advances it), which leaves the commander permanently unable to start battles. |
 
 ## Patch66_Enlistment (see harmony-patch-registry.md)
 
@@ -180,7 +197,13 @@ issue-ledger across a save round-trip, role-fit bands per assignment, and one re
 Codex finding (`CodexFindingRegressionTests`).
 
 **Owed at ship (in-game gates — nothing below has run in a live game):**
-SetNextMenu timing vs EncounterGameMenuBehavior; encounter join from parked state; camera
+**Encounter join from parked state is the top priority — it shipped broken and its fix is still
+unverified in a live game.** Confirm all four cases: a field battle with the commander solo, a
+field battle with the commander in an army, a siege assault, and a save-load mid-service followed
+by a battle. The log tells you which branch ran: `[Enlistment] joined commander battle on side …`
+on success, versus `not in a map event` / `already finalized` / `no resolvable side leaders` /
+`did not put the main party into a map event` on each distinct failure.
+Also: SetNextMenu timing vs EncounterGameMenuBehavior; camera
 handoff; captivity entry/exit mid-service; food/wage/morale ticks for the inactive
 MainParty; save-load inside the wait menu; TimeAcceleration interplay; the duty
 spawn→hunt→complete loop and its target-party cleanup; equipment visuals per race

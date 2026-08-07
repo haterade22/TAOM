@@ -23,6 +23,7 @@ public class EnlistmentReconcilerTests
     private IMobilePartyAttachmentAdapter _partyAdapter = null!;
     private ServiceAttachmentService _attachment = null!;
     private DischargeService _discharge = null!;
+    private IEncounterAdapter _encounter = null!;
     private EnlistmentReconciler _reconciler = null!;
 
     private const double Now = 200.0;
@@ -41,9 +42,10 @@ public class EnlistmentReconcilerTests
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
         _attachment = new ServiceAttachmentService(_partyAdapter, _logger);
         _discharge = new DischargeService(_store, _machine, _partyAdapter, _logger);
+        _encounter = Substitute.For<IEncounterAdapter>();
         _reconciler = new EnlistmentReconciler(
             _store, _machine, _attachment, _commander, _discharge,
-            new EnlistmentConfigProvider(_logger), _logger);
+            new EnlistmentConfigProvider(_logger), _encounter, _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
@@ -292,10 +294,44 @@ public class EnlistmentReconcilerTests
         MakeEnlisted(EnlistmentState.EnlistedBattle);
         CommanderHealthy(inMapEvent: false);
         PlayerPresence(parked: true, inMapEvent: false);
+        _encounter.HasCurrent.Returns(false);
 
         _reconciler.ReconcileHourly(Now);
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void Reconcile_BattleStateWithOpenEncounter_StaysInBattle()
+    {
+        // Regression (2026-08-07): the map event reads as gone while the loot/aftermath encounter
+        // is still open. Demoting here re-parked the player mid-battle and handed the aftermath
+        // menus to the redirect guard — an hourly tick could undo a successful join.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: false, inMapEvent: false);
+        _encounter.HasCurrent.Returns(true);
+
+        _reconciler.ReconcileHourly(Now);
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void Reconcile_CommanderFightingPlayerIsNot_RaisesBattleJoinRequested()
+    {
+        // Regression (2026-08-07): this event had NO subscriber, so the only recovery path for a
+        // missed MapEventStarted did nothing at all. The wiring lives in EnlistmentBattleBehavior;
+        // this pins that the reconciler still raises it with the commander hero id.
+        MakeEnlisted();
+        CommanderHealthy(inMapEvent: true);
+        PlayerPresence(parked: true, inMapEvent: false);
+        string requestedFor = null;
+        _reconciler.BattleJoinRequested += id => requestedFor = id;
+
+        _reconciler.ReconcileHourly(Now);
+
+        Assert.AreEqual("lord_1_1", requestedFor);
     }
 
     [TestMethod]

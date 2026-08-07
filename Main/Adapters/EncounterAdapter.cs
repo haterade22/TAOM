@@ -34,7 +34,9 @@ public sealed class EncounterAdapter : IEncounterAdapter
             {
                 case BattleSideEnum.Defender: return PartyBattleSide.Defender;
                 case BattleSideEnum.Attacker: return PartyBattleSide.Attacker;
-                default: return null;
+                default:
+                    _logger?.LogWarning($"[Enlistment] '{partyId}' is in a map event but on side {party.Party.Side}");
+                    return null;
             }
         }
         catch (Exception ex)
@@ -57,18 +59,98 @@ public sealed class EncounterAdapter : IEncounterAdapter
         }
     }
 
-    public bool CanMainPartyJoinBattleOf(string partyId, PartyBattleSide side)
+    public bool IsMainPartyInMapEvent
+    {
+        get
+        {
+            try
+            {
+                return PartyBase.MainParty?.MapEvent != null;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError($"[Enlistment] IsMainPartyInMapEvent failed: {ex.Message}");
+                return false;
+            }
+        }
+    }
+
+    // Mechanical joinability only — see IEncounterAdapter for why MapEvent.CanPartyJoinBattle
+    // must NOT be reinstated here.
+    public bool IsCommanderBattleJoinable(string partyId, PartyBattleSide side)
+    {
+        try
+        {
+            var mapEvent = FindParty(partyId)?.MapEvent;
+            if (mapEvent == null)
+            {
+                _logger?.LogInfo($"[Enlistment] '{partyId}' is not in a map event — nothing to join");
+                return false;
+            }
+
+            if (mapEvent.IsFinalized)
+            {
+                _logger?.LogInfo($"[Enlistment] map event of '{partyId}' is already finalized — too late to join");
+                return false;
+            }
+
+            if (mapEvent.GetMapEventSide(ToEngineSide(side)) == null)
+            {
+                _logger?.LogWarning($"[Enlistment] map event of '{partyId}' has no {side} side");
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] IsCommanderBattleJoinable('{partyId}', {side}) failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    public bool EnsureEncounterAgainst(string partyId)
     {
         try
         {
             var mapEvent = FindParty(partyId)?.MapEvent;
             if (mapEvent == null)
                 return false;
-            return mapEvent.CanPartyJoinBattle(PartyBase.MainParty, ToEngineSide(side));
+
+            if (PlayerEncounter.Current != null && PlayerEncounter.EncounteredBattle == mapEvent)
+                return true;
+
+            if (PlayerEncounter.Current != null)
+                PlayerEncounter.Finish(false);
+
+            // Side LEADER parties, not the MapEventStarted arguments: leaders are PartyBase, so a
+            // besieged settlement resolves. Going through MobileParty ids drops sieges silently.
+            //
+            // PRECONDITION (verified against 1.4.7): passing two FOREIGN parties here — vanilla
+            // always passes MainParty as one of them — is only safe because
+            // MobileParty.MainParty.AttachedTo is null. PlayerEncounter.SetupFields picks
+            // _encounteredParty by excluding MainParty and MainParty.AttachedTo, so with
+            // AttachedTo set it could resolve to neither leader and EncounteredBattle would not
+            // match this event. Enlistment tracks the player via IsActive/IsVisible/position sync
+            // and ParkNear explicitly clears AttachedTo — if that ever changes, revisit this.
+            var attackerLeader = mapEvent.AttackerSide?.LeaderParty;
+            var defenderLeader = mapEvent.DefenderSide?.LeaderParty;
+            if (attackerLeader == null || defenderLeader == null)
+            {
+                _logger?.LogWarning($"[Enlistment] map event of '{partyId}' has no resolvable side leaders");
+                return false;
+            }
+
+            PlayerEncounter.RestartPlayerEncounter(defenderLeader, attackerLeader, forcePlayerOutFromSettlement: false);
+
+            var seeded = PlayerEncounter.Current != null && PlayerEncounter.EncounteredBattle == mapEvent;
+            if (!seeded)
+                _logger?.LogWarning($"[Enlistment] encounter seeded for '{partyId}' but EncounteredBattle is not its map event");
+            return seeded;
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"[Enlistment] CanMainPartyJoinBattleOf('{partyId}', {side}) failed: {ex.Message}");
+            _logger?.LogError($"[Enlistment] EnsureEncounterAgainst('{partyId}') failed: {ex.Message}");
             return false;
         }
     }
@@ -78,30 +160,43 @@ public sealed class EncounterAdapter : IEncounterAdapter
         try
         {
             PlayerEncounter.JoinBattle(ToEngineSide(side));
-            return true;
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"[Enlistment] JoinBattle({side}) failed: {ex.Message}");
+            _logger?.LogError($"[Enlistment] JoinBattle({side}) threw: {ex.Message}");
             return false;
         }
+
+        // A non-throwing call proves nothing: JoinBattleInternal silently calls Finish() and
+        // returns when EncounteredBattle is null. Verify the party actually landed in the event,
+        // otherwise the caller would leave state at EnlistedBattle with the player outside the
+        // fight — which then blocks every subsequent battle.
+        var joined = IsMainPartyInMapEvent;
+        if (!joined)
+            _logger?.LogWarning($"[Enlistment] JoinBattle({side}) did not put the main party into a map event");
+        return joined;
     }
 
-    public bool RestartBattle(string defenderPartyId, string attackerPartyId)
+    public bool LeaveSettlementIfUnderSiege()
     {
         try
         {
-            var defender = FindParty(defenderPartyId);
-            var attacker = FindParty(attackerPartyId);
-            if (defender == null || attacker == null)
+            // The InsideSettlement check is load-bearing, not defensive: LeaveSettlement() calls
+            // LeaveSettlementAction.ApplyForParty, which dereferences MainParty.CurrentSettlement
+            // unguarded and NREs when the party is not in a settlement. Do not reorder or drop it.
+            if (PlayerEncounter.Current == null || !PlayerEncounter.InsideSettlement)
                 return false;
 
-            PlayerEncounter.RestartPlayerEncounter(defender.Party, attacker.Party, forcePlayerOutFromSettlement: false);
+            var settlement = PlayerEncounter.EncounterSettlement;
+            if (settlement == null || !settlement.IsUnderSiege)
+                return false;
+
+            PlayerEncounter.LeaveSettlement();
             return true;
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"[Enlistment] RestartBattle('{defenderPartyId}', '{attackerPartyId}') failed: {ex.Message}");
+            _logger?.LogError($"[Enlistment] LeaveSettlementIfUnderSiege failed: {ex.Message}");
             return false;
         }
     }

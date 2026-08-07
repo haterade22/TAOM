@@ -132,6 +132,83 @@ logged rather than guarded. If a bundle arrives carrying that dump, the slot is 
 
 **Not-tested:** Harmony invocation and the in-game path; the eligibility logic has 13 unit tests.
 
+### fix(enlistment): the enlisted player can actually join the commander's battles (#406)
+
+A player enlisted under a Mirkwood lord and never joined a single fight — the lord marched in an
+army, stormed a town and fought in the field while the player's party trailed alongside, then left
+the army and appeared unable to start battles at all. One bug wearing three faces: **the join never
+worked, under any circumstance.** Army membership and the siege were coincidences.
+
+The gate was `MapEvent.CanPartyJoinBattle`, used as the join precondition. It is not a mechanical
+check — it requires **every party on the opposing side to be at war with the joining party's
+`MapFaction`**, i.e. "may this free agent lawfully intervene in someone else's war?". Enlistment
+deliberately leaves the player in their own clan, and a typical player is at war with nobody, so it
+returned `false` for every battle and the service logged "staying parked" and went home. The donor
+mod hit the same wall and worked around it by explicitly tolerating a false result while parked.
+
+Four more defects sat behind it on the same path, each independently sufficient to break the feature:
+
+- **The recovery path was a dead event.** `IEnlistmentReconciler.BattleJoinRequested` — raised hourly
+  when the commander is fighting and the player is not — had no subscriber anywhere. The single
+  `MapEventStarted` edge was the only chance to ever join, with no retry after a miss.
+- **Sieges could never be seeded.** The encounter was built from the `MapEventStarted` arguments via
+  `MobileParty` ids; a settlement defender has no `MobileParty`, so the id was null, the encounter
+  was skipped, and `JoinBattle` then threw on a null `PlayerEncounter.Current`. Now seeded from
+  `MapEvent.AttackerSide/DefenderSide.LeaderParty`, which are `PartyBase` and cover settlements.
+- **A failed join reported success.** `PlayerEncounter.JoinBattleInternal` silently calls `Finish()`
+  when `EncounteredBattle` is null, so a non-throwing call proved nothing. The adapter now verifies
+  `MainParty.MapEvent != null`. The false success left state at `EnlistedBattle`, which blocked
+  every subsequent battle at the entry guard.
+- **Rollback leaked the encounter.** `EncounterManager` gates the main party on
+  `PlayerEncounter.Current == null`, so an orphan blocked all future encounters — and a `MapEventSide`
+  acquired without a live encounter freezes that map event permanently (`MapEventManager.Tick` skips
+  the player's event; only `PlayerEncounter.Update` advances it), stranding the commander with
+  `MapEventSide != null` and unable to start anything. That is the reported tail state.
+
+Also: presence is now restored and position synced *before* any encounter work (the engine skips
+inactive parties in encounter detection, so checking joinability while parked was chicken-and-egg);
+the hourly reconciler no longer demotes `EnlistedBattle` while an encounter is open, which could
+undo a good join; and every silent early-return on the path now logs which branch it took.
+
+`/deep-review` then caught a **sixth defect, introduced by the fix itself**: the return of
+`SwitchTo("encounter")` was discarded. A verified join gives MainParty a real `MapEventSide`, so a
+failed menu switch freezes the map event — and the hourly recovery goes blind to it, because the
+player genuinely IS in a map event and `Assess` reports `Attached` rather than `BattleJoinRequired`.
+The same review pass also replaced a per-map-event `GetSnapshot` (which walked
+Culture/Clan/MapFaction/Settlement and allocated through `Name.ToString()` for a caller that reads
+only the party id) with a new `ICommanderLordAdapter.GetPartyId`.
+
+An independent Codex pass then found **two P1s the five Claude agents had just cleared**, one of
+them in the fix above:
+
+- `GameMenu.SwitchToMenu` silently no-ops when there is no current menu context (it only
+  `Debug.FailedAssert`s, inert in release), so checking `SwitchTo`'s return still reported success
+  for a menu that never opened — the freeze survived the fix written to prevent it. Replaced with
+  `IGameMenuAdapter.EnsureMenuOpen`, which switches, falls back to activating, and verifies against
+  the observable `CurrentMenuId` rather than a returned bool.
+- `LeaveSettlementIfUnderSiege` ran before *every* join. `MapEvent.AddInvolvedPartyInternal`
+  rewrites a siege **assault** to `SiegeOutside` when a defender joins with `CurrentSettlement ==
+  null`, so leaving first would have converted the battle type for every participant — an assault
+  on the walls becoming a field fight outside them. Now attacker-only.
+
+Tests: one regression test per defect, plus a DryIoc `Validate()` guard on the two constructors on
+this path — the original bug compiled and passed every test because `IEncounterAdapter` was mocked,
+so the engine precondition was never exercised. Suite 5713 green.
+
+Known limitation: a joinable battle that repeatedly fails to seed retries hourly with no bound, and
+each retry's `PlayerEncounter.Finish` pops the player's open menu via `ExitToLast`. Deferred with
+reasoning to #408 — adding per-battle retry state to a just-restructured path is riskier than the
+narrow exposure until in-game verification shows whether join failures recur at all.
+
+RCA: `docs/reviews/rca-enlistment-battle-join-2026-08-07.md`
+
+**Not yet verified in a live game.** The in-game gate list in `docs/features/enlistment.md` now leads
+with this path and names the log line for each distinct failure branch.
+
+Research: MapEvent.CanPartyJoinBattle, PlayerEncounter.JoinBattleInternal/RestartPlayerEncounter,
+EncounterManager.HandleEncounterForMobileParty, MapEventManager.Tick
+Not-tested: live encounter join (requires a running campaign)
+
 ## 2026-08-06
 
 ### feat(diagnostics): attribute town-gold drains and name why each caravan is parked (#391)

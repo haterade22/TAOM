@@ -14,6 +14,14 @@ public interface ICommanderLordAdapter
     /// <summary>Live culture StringId of the commander, or null. Read at issuance/decision time only.</summary>
     string GetCultureId(string heroId);
 
+    /// <summary>
+    /// StringId of the hero's current party, or null. Cheap counterpart to
+    /// <see cref="GetSnapshot"/> for callers that only need the party id — the full snapshot
+    /// walks Culture/Clan/MapFaction/Settlement and allocates via Name.ToString(), which is
+    /// wasteful on a path that runs for every map event in the world.
+    /// </summary>
+    string GetPartyId(string heroId);
+
     /// <summary>True when the hero resolves and is a lord (dialog-gate check).</summary>
     bool IsLord(string heroId);
 

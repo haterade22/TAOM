@@ -43,6 +43,19 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
         }
     }
 
+    public string GetPartyId(string heroId)
+    {
+        try
+        {
+            return FindHero(heroId)?.PartyBelongedTo?.StringId;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] CommanderLordAdapter.GetPartyId('{heroId}') failed: {ex.Message}");
+            return null;
+        }
+    }
+
     public string GetCultureId(string heroId)
     {
         try

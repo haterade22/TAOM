@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -29,14 +30,18 @@ public class ServiceBattleServiceTests
         _partyAdapter = Substitute.For<IMobilePartyAttachmentAdapter>();
         _partyAdapter.RestorePresence().Returns(true);
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
+        _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
         _attachment = new ServiceAttachmentService(_partyAdapter, _logger);
         _gameMenu = Substitute.For<IGameMenuAdapter>();
+        // Default to a working menu switch — the service now treats a failed switch as a join
+        // failure and rolls back, so an unstubbed (false) default would fail every happy path.
+        _gameMenu.EnsureMenuOpen(Arg.Any<string>()).Returns(true);
         _service = new ServiceBattleService(_store, _machine, _encounter, _attachment, _gameMenu, _logger);
 
         _encounter.GetPartyBattleSide("lord_party_1").Returns(PartyBattleSide.Defender);
-        _encounter.CanMainPartyJoinBattleOf("lord_party_1", PartyBattleSide.Defender).Returns(true);
+        _encounter.IsCommanderBattleJoinable("lord_party_1", PartyBattleSide.Defender).Returns(true);
+        _encounter.EnsureEncounterAgainst("lord_party_1").Returns(true);
         _encounter.JoinBattle(PartyBattleSide.Defender).Returns(true);
-        _encounter.RestartBattle(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
     }
 
@@ -52,7 +57,7 @@ public class ServiceBattleServiceTests
     {
         MakeEnlisted(EnlistmentState.EnlistedDetachedOnDuty);
 
-        _service.OnCommanderBattleStarted("lord_party_1", "attacker_p", "defender_p");
+        _service.OnCommanderBattleStarted("lord_party_1");
 
         Assert.AreEqual(EnlistmentState.EnlistedDetachedOnDuty, _store.Record.State);
         _encounter.DidNotReceive().JoinBattle(Arg.Any<PartyBattleSide>());
@@ -71,7 +76,7 @@ public class ServiceBattleServiceTests
             return true;
         });
 
-        _service.OnCommanderBattleStarted("lord_party_1", "attacker_p", "defender_p");
+        _service.OnCommanderBattleStarted("lord_party_1");
 
         Assert.AreEqual(EnlistmentState.EnlistedBattle, stateAtJoin);
         Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
@@ -82,35 +87,112 @@ public class ServiceBattleServiceTests
     {
         MakeEnlisted();
 
-        _service.OnCommanderBattleStarted("lord_party_1", "attacker_p", "defender_p");
+        _service.OnCommanderBattleStarted("lord_party_1");
 
         _partyAdapter.Received(1).RestorePresence();
         _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
-        _gameMenu.Received(1).SwitchTo("encounter");
+        _gameMenu.Received(1).EnsureMenuOpen("encounter");
     }
 
     [TestMethod]
-    public void BattleStarted_NoCurrentEncounter_RestartsAgainstEventParties()
+    public void BattleStarted_RestoresPresenceBeforeTouchingTheEncounter()
+    {
+        // Regression (2026-08-07): the engine skips inactive parties in encounter detection, and
+        // a party that gains a MapEventSide without a live encounter freezes its map event for
+        // good. Presence must be live before any encounter work, never after.
+        MakeEnlisted();
+        var presenceRestoredFirst = false;
+        _encounter.EnsureEncounterAgainst("lord_party_1").Returns(_ =>
+        {
+            presenceRestoredFirst = _partyAdapter.ReceivedCalls().Any(c => c.GetMethodInfo().Name == nameof(IMobilePartyAttachmentAdapter.RestorePresence));
+            return true;
+        });
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Assert.IsTrue(presenceRestoredFirst, "presence must be restored before the encounter is seeded");
+    }
+
+    [TestMethod]
+    public void BattleStarted_SyncsPositionToCommanderBeforeJoining()
+    {
+        // The restored party must sit on the commander to be inside the encounter radius.
+        MakeEnlisted();
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _partyAdapter.Received(1).SyncPositionTo("lord_1_1");
+    }
+
+    [TestMethod]
+    public void BattleStarted_SeedsEncounterAgainstCommanderEvent()
     {
         MakeEnlisted();
-        _encounter.HasCurrent.Returns(false);
 
-        _service.OnCommanderBattleStarted("lord_party_1", "attacker_p", "defender_p");
+        _service.OnCommanderBattleStarted("lord_party_1");
 
-        _encounter.Received(1).RestartBattle("defender_p", "attacker_p");
+        _encounter.Received(1).EnsureEncounterAgainst("lord_party_1");
         _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
     }
 
     [TestMethod]
-    public void BattleStarted_StaleForeignEncounter_FinishedFirst()
+    public void BattleStarted_EncounterCannotBeSeeded_RollsBackWithoutJoining()
+    {
+        // Siege case: if the encounter cannot be pointed at the commander's map event there is
+        // nothing to join, and JoinBattle would NRE on a null PlayerEncounter.Current.
+        MakeEnlisted();
+        _encounter.EnsureEncounterAgainst("lord_party_1").Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.DidNotReceive().JoinBattle(Arg.Any<PartyBattleSide>());
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _partyAdapter.Received(1).ParkNear("lord_1_1");
+    }
+
+    [TestMethod]
+    public void BattleStarted_AttackerSide_LeavesBesiegedSettlementBeforeJoining()
+    {
+        // Siege assault as an attacker: the player can be held inside a settlement the encounter
+        // is against, and must leave it before joining.
+        MakeEnlisted();
+        _encounter.GetPartyBattleSide("lord_party_1").Returns(PartyBattleSide.Attacker);
+        _encounter.IsCommanderBattleJoinable("lord_party_1", PartyBattleSide.Attacker).Returns(true);
+        _encounter.JoinBattle(PartyBattleSide.Attacker).Returns(true);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Received.InOrder(() =>
+        {
+            _encounter.EnsureEncounterAgainst("lord_party_1");
+            _encounter.LeaveSettlementIfUnderSiege();
+            _encounter.JoinBattle(PartyBattleSide.Attacker);
+        });
+    }
+
+    [TestMethod]
+    public void BattleStarted_DefenderSide_DoesNotLeaveTheSettlement()
+    {
+        // Regression (Codex P1, 2026-08-07): MapEvent.AddInvolvedPartyInternal rewrites a siege
+        // ASSAULT to SiegeOutside when a defender is added with CurrentSettlement == null. Leaving
+        // before a defender join would convert the battle type for every participant.
+        MakeEnlisted();
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
+        _encounter.DidNotReceive().LeaveSettlementIfUnderSiege();
+    }
+
+    [TestMethod]
+    public void BattleStarted_EncounterNotSeeded_DoesNotTryToLeaveSettlement()
     {
         MakeEnlisted();
-        _encounter.HasCurrent.Returns(true);
-        _encounter.EncounteredPartyId.Returns("some_other_party");
+        _encounter.EnsureEncounterAgainst("lord_party_1").Returns(false);
 
-        _service.OnCommanderBattleStarted("lord_party_1", "attacker_p", "defender_p");
+        _service.OnCommanderBattleStarted("lord_party_1");
 
-        _encounter.Received(1).Finish(false);
+        _encounter.DidNotReceive().LeaveSettlementIfUnderSiege();
     }
 
     [TestMethod]
@@ -119,21 +201,22 @@ public class ServiceBattleServiceTests
         MakeEnlisted();
         _encounter.GetPartyBattleSide("lord_party_1").Returns((PartyBattleSide?)null);
 
-        _service.OnCommanderBattleStarted("lord_party_1", "attacker_p", "defender_p");
+        _service.OnCommanderBattleStarted("lord_party_1");
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
         _partyAdapter.DidNotReceive().RestorePresence();
     }
 
     [TestMethod]
-    public void BattleStarted_MainPartyCannotJoin_NoOpStaysAttached()
+    public void BattleStarted_BattleNotJoinable_NoOpStaysAttached()
     {
         MakeEnlisted();
-        _encounter.CanMainPartyJoinBattleOf("lord_party_1", PartyBattleSide.Defender).Returns(false);
+        _encounter.IsCommanderBattleJoinable("lord_party_1", PartyBattleSide.Defender).Returns(false);
 
-        _service.OnCommanderBattleStarted("lord_party_1", "attacker_p", "defender_p");
+        _service.OnCommanderBattleStarted("lord_party_1");
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _partyAdapter.DidNotReceive().RestorePresence();
     }
 
     [TestMethod]
@@ -144,11 +227,79 @@ public class ServiceBattleServiceTests
         MakeEnlisted();
         _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
 
-        _service.OnCommanderBattleStarted("lord_party_1", "attacker_p", "defender_p");
+        _service.OnCommanderBattleStarted("lord_party_1");
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
         _partyAdapter.Received(1).ParkNear("lord_1_1");
-        _gameMenu.DidNotReceive().SwitchTo("encounter");
+        _gameMenu.DidNotReceive().EnsureMenuOpen("encounter");
+    }
+
+    [TestMethod]
+    public void BattleStarted_MenuSwitchFails_RollsBackInsteadOfFreezingTheMapEvent()
+    {
+        // Regression (deep-review 2026-08-07, HIGH): a verified join gives MainParty a real
+        // MapEventSide, but the engine only advances the PLAYER's map event through
+        // PlayerEncounter.Update, which runs from the "encounter" menu. If that menu never opens
+        // the event freezes forever — and the hourly recovery cannot see it, because Assess reads
+        // player.IsInMapEvent as true and reports Attached rather than BattleJoinRequired.
+        MakeEnlisted();
+        _gameMenu.EnsureMenuOpen("encounter").Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _encounter.Received(1).Finish(false);
+        _partyAdapter.Received(1).ParkNear("lord_1_1");
+    }
+
+    [TestMethod]
+    public void BattleStarted_MenuSwitchSucceeds_StaysInBattle()
+    {
+        MakeEnlisted();
+        _gameMenu.EnsureMenuOpen("encounter").Returns(true);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void BattleStarted_JoinFails_FinishesTheOrphanedEncounter()
+    {
+        // Regression (2026-08-07): a PlayerEncounter left behind by a failed join blocks the main
+        // party from ever entering another encounter (EncounterManager gates on Current == null),
+        // which is how the commander ended up unable to start any battle at all.
+        MakeEnlisted();
+        _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.Received(1).Finish(false);
+    }
+
+    [TestMethod]
+    public void TryJoinCommanderBattle_RecoveryPath_JoinsLikeTheEventPath()
+    {
+        // Regression (2026-08-07): IEnlistmentReconciler.BattleJoinRequested had no subscriber at
+        // all, so the hourly "commander is fighting and the player is not" recovery did nothing.
+        MakeEnlisted();
+
+        _service.TryJoinCommanderBattle("lord_party_1");
+
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
+        _gameMenu.Received(1).EnsureMenuOpen("encounter");
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void TryJoinCommanderBattle_AlreadyInBattleState_NoOp()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+
+        _service.TryJoinCommanderBattle("lord_party_1");
+
+        _encounter.DidNotReceive().JoinBattle(Arg.Any<PartyBattleSide>());
     }
 
     [TestMethod]

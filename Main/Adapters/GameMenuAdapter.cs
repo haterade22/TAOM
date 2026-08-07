@@ -48,6 +48,36 @@ public sealed class GameMenuAdapter : IGameMenuAdapter
         }
     }
 
+    public bool EnsureMenuOpen(string menuId)
+    {
+        if (string.IsNullOrEmpty(menuId))
+            return false;
+
+        try
+        {
+            if (CurrentMenuId == menuId)
+                return true;
+
+            // Switch works only when a menu context already exists; it no-ops silently otherwise.
+            GameMenu.SwitchToMenu(menuId);
+            if (CurrentMenuId == menuId)
+                return true;
+
+            // Activate is the complement — it acts only when there is no current context.
+            GameMenu.ActivateGameMenu(menuId);
+            if (CurrentMenuId == menuId)
+                return true;
+
+            _logger?.LogError($"[Enlistment] EnsureMenuOpen('{menuId}') — menu is still '{CurrentMenuId}' after switch and activate");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] EnsureMenuOpen('{menuId}') failed: {ex.Message}");
+            return false;
+        }
+    }
+
     public bool ExitToLast()
     {
         try

@@ -319,6 +319,46 @@ contract, pin boundary VALUES alongside the literal strings.
 
 **Source:** deep-review 2026-08-05, `docs/reviews/rca-memsample-telemetry-2026-08-05.md` finding #1.
 
+### A mocked adapter cannot test the engine precondition behind it
+
+**Symptom:** TAOM's Enlistment feature shipped with a battle-join path that never joined a single
+battle in a live game, while `ServiceBattleServiceTests` was fully green. A player reported enlisting
+under a lord and trailing his column through an army march, a siege and several field battles without
+ever being pulled in.
+
+**What happened:** the service gated the join on `IEncounterAdapter.CanMainPartyJoinBattleOf`, which
+delegated to `MapEvent.CanPartyJoinBattle`. That engine method is a *diplomacy* test — it requires
+every party on the opposing side to be at war with the joining party's `MapFaction`. An enlisted
+player keeps their own clan and is normally at war with nobody, so it returned `false` every time.
+The test suite stubbed `CanMainPartyJoinBattleOf(...).Returns(true)`, so every assertion about
+ordering, rollback and the loot guard passed correctly — around a precondition that was always false
+in the real game. Four further defects on the same path (a dead recovery event, siege seeding through
+a null `MobileParty` id, a join that reported success without joining, and a leaked `PlayerEncounter`)
+were invisible for the same reason.
+
+**The general shape:** mocking an adapter is exactly right for testing *our* logic, and exactly
+useless for testing *the engine's* answer. The adapter boundary is where the mock stops and the
+untested seam begins. Any behavior whose correctness depends on what the engine returns — not on what
+we do with the return — is structurally unreachable by unit tests, and a green suite says nothing
+about it.
+
+**Prevent:**
+1. When an adapter method's whole job is to ask the engine a question, read the decompiled engine
+   method before writing the caller, and record *what question it actually answers* in the interface
+   doc-comment. `CanPartyJoinBattle` sounds mechanical and is diplomatic; the name misled.
+2. Treat every mocked adapter call as an explicit in-game verification item, not a covered one. The
+   feature doc's unverified list already named "encounter join from parked state" — that entry was
+   correct and the feature shipped anyway.
+3. Prefer verifying an engine call's *observable outcome* over trusting its return or its silence:
+   `PlayerEncounter.JoinBattle` throws nothing when it does nothing, so the adapter now checks
+   `MainParty.MapEvent != null` instead of "no exception".
+4. Add a DI `Validate()` guard for constructors on a critical path. Wiring that compiles and is never
+   exercised (the dead `BattleJoinRequested` event had no subscriber at all) fails only in-game.
+
+**Source:** player report 2026-08-07 against #375; fix in `ServiceBattleService` / `EncounterAdapter`;
+sibling lesson in the vendor drop where both donor mods gated mission-behavior registration on
+`mission.Mode` at `OnMissionBehaviorInitialize`, when the mode is still `StartUp`.
+
 ### A review finding that comes with its own exemption is worse than a miss
 
 **Symptom:** two new Harmony patch files shipped at 175 and 161 lines against ADR-002's hard `<150`
