@@ -23,6 +23,9 @@ public class DischargeServiceTests
     private EnlistmentStateMachine _machine = null!;
     private IMobilePartyAttachmentAdapter _attachment = null!;
     private DischargeService _service = null!;
+    private IEncounterAdapter _encounter = null!;
+    private ICommanderLordAdapter _commanderAdapter = null!;
+    private IGameMenuAdapter _gameMenu = null!;
 
     [TestInitialize]
     public void Setup()
@@ -32,7 +35,14 @@ public class DischargeServiceTests
         _machine = new EnlistmentStateMachine(_store, _logger);
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
         _attachment.RestorePresence().Returns(true);
-        _service = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
+        _encounter = Substitute.For<IEncounterAdapter>();
+        _commanderAdapter = Substitute.For<ICommanderLordAdapter>();
+        _gameMenu = Substitute.For<IGameMenuAdapter>();
+        _gameMenu.ExitToLast().Returns(true);
+        _gameMenu.EnsureMenuOpen(Arg.Any<string>()).Returns(true);
+        _attachment.MoveIntoSettlement(Arg.Any<string>()).Returns(true);
+        _service = new DischargeService(_store, _machine, _attachment, _encounter,
+            new EncounterOwnershipPolicy(), _commanderAdapter, _gameMenu, _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
@@ -170,4 +180,118 @@ public class DischargeServiceTests
         Assert.AreEqual(EnlistmentState.NotEnlisted, _store.Record.State);
         _logger.Received().LogError(Arg.Is<string>(s => s.Contains("EnlistmentEnded")));
     }
+
+    // ---- INV-D1: the hand-back invariant, for EVERY reason ------------------------------
+
+    [TestMethod]
+    public void Execute_EveryReason_LeavesTheServiceWaitMenu()
+    {
+        // THE pin for this batch. Only the menu-button path used to call ExitToLast, so any
+        // AUTOMATIC discharge — commander dies, grace expires, contract ends, identity mismatch —
+        // left the player in a menu whose options were all condition-gated to false, with no
+        // Escape. The donor names the symptom in its own source: frozen in the wait menu with an
+        // orphaned camera.
+        foreach (DischargeReason reason in System.Enum.GetValues(typeof(DischargeReason)))
+        {
+            Setup();
+            MakeEnlisted();
+            _gameMenu.CurrentMenuId.Returns(EnlistmentMenuService.ServiceWaitMenuId);
+
+            Assert.IsTrue(_service.Execute(reason), $"{reason} should discharge");
+            _gameMenu.Received(1).ExitToLast();
+        }
+    }
+
+    [TestMethod]
+    public void Execute_EveryReason_ClearsArmyAttachment()
+    {
+        foreach (DischargeReason reason in System.Enum.GetValues(typeof(DischargeReason)))
+        {
+            Setup();
+            MakeEnlisted();
+
+            _service.Execute(reason);
+            _attachment.Received(1).ClearArmyAttachment();
+        }
+    }
+
+    [TestMethod]
+    public void Execute_NotOnTheWaitMenu_DoesNotCallExitToLast()
+    {
+        // GameMenu.ExitToLast sets TimeControlMode = Stop UNCONDITIONALLY before delegating to a
+        // null-guarded manager, so an ungated call freezes campaign time with nothing on screen.
+        MakeEnlisted();
+        _gameMenu.CurrentMenuId.Returns("town");
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        _gameMenu.DidNotReceive().ExitToLast();
+    }
+
+    [TestMethod]
+    public void Execute_CommanderInSettlement_ReleasesThePlayerIntoIt()
+    {
+        MakeEnlisted();
+        _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
+            settlementId: "town_A1", settlementMenuId: "town"));
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        _attachment.Received(1).MoveIntoSettlement("town_A1");
+        _gameMenu.Received(1).EnsureMenuOpen("town");
+    }
+
+    [TestMethod]
+    public void Execute_SettlementMenuFailsToOpen_LeavesSettlementRatherThanStrandingThePlayer()
+    {
+        // A player inside a settlement with no settlement menu is the same soft-lock one layer
+        // deeper, so the placement must roll itself back.
+        MakeEnlisted();
+        _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
+            settlementId: "town_A1", settlementMenuId: "town"));
+        _attachment.MoveIntoSettlement(Arg.Any<string>()).Returns(true);
+        _gameMenu.EnsureMenuOpen("town").Returns(false);
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        _attachment.Received(1).LeaveSettlement();
+    }
+
+    [TestMethod]
+    public void Execute_LoadNormalizationReason_NeverMovesThePlayer()
+    {
+        // The SAVED position is authoritative on a load path; moving them would teleport the
+        // player on every load.
+        MakeEnlisted();
+        _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
+            settlementId: "town_A1", settlementMenuId: "town"));
+
+        _service.Execute(DischargeReason.HeirSuccessionOrPossessionMismatch);
+
+        _attachment.DidNotReceive().MoveIntoSettlement(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Execute_RaisesEnlistmentEnded_BeforePlacingThePlayer()
+    {
+        // The content layer cancels the active duty in the subscriber, and placement dispatches
+        // OnSettlementEntered, which the duty runtime treats as a COMPLETION trigger. Reversed,
+        // a cancelled duty would complete.
+        MakeEnlisted();
+        _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
+            settlementId: "town_A1", settlementMenuId: "town"));
+        var subscriberRanBeforePlacement = false;
+        _service.EnlistmentEnded += _ =>
+            subscriberRanBeforePlacement = _attachment.ReceivedCalls()
+                .All(c => c.GetMethodInfo().Name != nameof(IMobilePartyAttachmentAdapter.MoveIntoSettlement));
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        Assert.IsTrue(subscriberRanBeforePlacement);
+    }
+
 }

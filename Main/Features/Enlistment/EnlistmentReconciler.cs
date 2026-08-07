@@ -15,6 +15,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     private readonly IEnlistmentConfigProvider _config;
     private readonly IEncounterAdapter _encounter;
     private readonly IEncounterOwnershipPolicy _ownership;
+    private readonly IEnlistmentDiagnosticsSettingsProvider _diag;
     private readonly IModLogger _logger;
 
     public EnlistmentReconciler(
@@ -26,6 +27,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         IEnlistmentConfigProvider config,
         IEncounterAdapter encounter,
         IEncounterOwnershipPolicy ownership,
+        IEnlistmentDiagnosticsSettingsProvider diag,
         IModLogger logger)
     {
         _store = store;
@@ -36,6 +38,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _config = config;
         _encounter = encounter;
         _ownership = ownership;
+        _diag = diag;
         _logger = logger;
     }
 
@@ -152,15 +155,26 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
         var assessment = _attachment.Assess(record.State, snapshot, presence);
 
+        // GATE SHAPE RULE (every [EnlistDiag] gate in this feature): the gate is an
+        // `if (_diag?.IsEnabled == true)` wrapping EXACTLY ONE logging statement. Never a block,
+        // never guarding a `return`, never placed above a call to _encounter / _attachment /
+        // _machine / _store / _discharge. `?.` + `== true` so a null provider fails quiet.
+        //
+        // THIS METHOD IS WHY THE RULE EXISTS: the logging below is interleaved with the stranded-
+        // encounter self-heal, the re-park and the position sync. An `if (!enabled) return;` here
+        // would disable the enlistment self-heal for every player on the default-OFF setting
+        // rather than just silencing a log line. Pinned by EnlistmentDiagnosticsGateTests group B1.
+        //
         // DEBUG: the hourly tick fires many times per real second at accelerated campaign speed
-        // (576 lines in one 32-minute session). The anomaly branches below stay at WARNING/ERROR,
-        // so a genuine fault is still loud without this routine line flushing on every tick.
-        _logger?.LogDebug(
-            $"[EnlistDiag] TICK state={record.State} verdict={assessment.Status}" +
-            (assessment.Status == AttachmentStatus.Blocked ? $"({assessment.BlockReason})" : "") +
-            $" | player: {presence.Describe()}" +
-            $" | commander '{record.CommanderHeroId}': exists={snapshot.Exists} alive={snapshot.IsAlive} " +
-            $"party={snapshot.PartyId ?? "NONE"} partyActive={snapshot.PartyIsActive} inMapEvent={snapshot.PartyIsInMapEvent} prisoner={snapshot.IsPrisoner}");
+        // (576 lines in one 32-minute session). The anomaly branches below stay at WARNING/ERROR
+        // and are NOT gated, so a genuine fault is still loud with the toggle off.
+        if (_diag?.IsEnabled == true)
+            _logger?.LogDebug(
+                $"[EnlistDiag] TICK state={record.State} verdict={assessment.Status}" +
+                (assessment.Status == AttachmentStatus.Blocked ? $"({assessment.BlockReason})" : "") +
+                $" | player: {presence.Describe()}" +
+                $" | commander '{record.CommanderHeroId}': exists={snapshot.Exists} alive={snapshot.IsAlive} " +
+                $"party={snapshot.PartyId ?? "NONE"} partyActive={snapshot.PartyIsActive} inMapEvent={snapshot.PartyIsInMapEvent} prisoner={snapshot.IsPrisoner}");
 
         // Self-heal a stranded conversation encounter. While EnlistedAttached and out of any map
         // event there is no legitimate reason for a live PlayerEncounter: the oath conversation's

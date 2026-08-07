@@ -43,7 +43,7 @@ public class EnlistmentPumpAuthorityTests
         menuService.IsRedirectable(Arg.Any<string>()).Returns(true);
 
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
-            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), _logger);
+            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(), _logger);
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, menu, menuService, _logger);
 

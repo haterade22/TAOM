@@ -56,7 +56,12 @@ public interface IMobilePartyAttachmentAdapter
 
 
     /// <summary>Presence + captivity snapshot for diagnostics and load-time rescue.</summary>
-    PlayerPresenceSnapshot GetPresence();
+    /// <summary>
+    /// Full presence read. Pass the commander hero id to populate DistanceToCommander; the
+    /// parameterless form leaves it at -1. Callers on a discharge path MUST capture the id before
+    /// the record is reset, or the distance silently reads as unknown.
+    /// </summary>
+    PlayerPresenceSnapshot GetPresence(string commanderHeroId = null);
 
     bool MoveIntoSettlement(string settlementId);
 

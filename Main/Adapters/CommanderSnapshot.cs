@@ -15,6 +15,9 @@ public sealed class CommanderSnapshot
     public bool PartyIsInMapEvent { get; }
     public bool PartyIsInSettlement { get; }
     public string SettlementId { get; }
+
+    /// <summary>Which vanilla menu a discharge into this settlement should open: town / castle / village.</summary>
+    public string SettlementMenuId { get; }
     public string CultureId { get; }
     public string FactionId { get; }
     public string Name { get; }
@@ -30,6 +33,7 @@ public sealed class CommanderSnapshot
         bool partyIsInMapEvent = false,
         bool partyIsInSettlement = false,
         string settlementId = null,
+        string settlementMenuId = null,
         string cultureId = null,
         string factionId = null,
         string name = null)
@@ -42,6 +46,7 @@ public sealed class CommanderSnapshot
         PartyIsInMapEvent = partyIsInMapEvent;
         PartyIsInSettlement = partyIsInSettlement;
         SettlementId = settlementId;
+        SettlementMenuId = settlementMenuId;
         CultureId = cultureId;
         FactionId = factionId;
         Name = name;

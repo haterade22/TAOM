@@ -22,6 +22,9 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
     private readonly ICoopSessionProvider _coopSession;
     private readonly TAOM.Core.Logging.IModLogger _diag;
 
+    // Named _diagSettings, not _diag: _diag above is already this class's IModLogger.
+    private readonly IEnlistmentDiagnosticsSettingsProvider _diagSettings;
+
     public EnlistmentBattleBehavior(
         IEnlistmentStore store,
         ICommanderLordAdapter commander,
@@ -29,6 +32,7 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         IEnlistmentReconciler reconciler,
         IServiceMaintenanceService maintenance,
         ICoopSessionProvider coopSession,
+        IEnlistmentDiagnosticsSettingsProvider diagSettings,
         TAOM.Core.Logging.IModLogger diag)
     {
         _store = store;
@@ -37,6 +41,7 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         _reconciler = reconciler;
         _maintenance = maintenance;
         _coopSession = coopSession;
+        _diagSettings = diagSettings;
         _diag = diag;
     }
 
@@ -80,16 +85,28 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         var commanderPartyId = FindCommanderPartyIdIn(mapEvent);
         if (commanderPartyId == null)
         {
+            // GATE SHAPE RULE (every [EnlistDiag] gate in this feature): the gate is an
+            // `if (_diagSettings?.IsEnabled == true)` wrapping EXACTLY ONE logging statement. Never a
+            // block, never guarding a `return`, never above a state mutation. `?.` + `== true` so a
+            // null provider fails quiet. The `return` below is CONTROL FLOW and stays OUTSIDE the gate.
+            //
             // DEBUG, not INFO: this fires for EVERY map event in the world, and at accelerated
             // campaign speed that was 3674 lines in one 32-minute session — 61% of the whole log,
             // each one synchronously flushed. It stays available for diagnosis (it is what proved
             // the commander was in 0 of 456 events) without drowning the signal.
-            _diag?.LogDebug(
-                $"[EnlistDiag] map event started, commander NOT in it — commanderHero='{_store.Record.CommanderHeroId}' " +
-                $"resolvedParty='{_commander.GetPartyId(_store.Record.CommanderHeroId) ?? "NONE"}' " +
-                $"attacker='{attackerParty?.MobileParty?.StringId ?? attackerParty?.Name?.ToString() ?? "?"}' " +
-                $"defender='{defenderParty?.MobileParty?.StringId ?? defenderParty?.Name?.ToString() ?? "?"}' " +
-                $"involved={CountInvolved(mapEvent)}");
+            //
+            // Gating the STATEMENT (not just the log level) is what removes CountInvolved's full
+            // InvolvedParties walk when the toggle is off — C# never evaluates the arguments of a
+            // statement that does not execute. Honest limit: FindCommanderPartyIdIn above ALSO
+            // enumerates InvolvedParties and runs unconditionally because it is load-bearing, so
+            // this removes one of the two enumerations, not both.
+            if (_diagSettings?.IsEnabled == true)
+                _diag?.LogDebug(
+                    $"[EnlistDiag] map event started, commander NOT in it — commanderHero='{_store.Record.CommanderHeroId}' " +
+                    $"resolvedParty='{_commander.GetPartyId(_store.Record.CommanderHeroId) ?? "NONE"}' " +
+                    $"attacker='{attackerParty?.MobileParty?.StringId ?? attackerParty?.Name?.ToString() ?? "?"}' " +
+                    $"defender='{defenderParty?.MobileParty?.StringId ?? defenderParty?.Name?.ToString() ?? "?"}' " +
+                    $"involved={CountInvolved(mapEvent)}");
             return;
         }
 

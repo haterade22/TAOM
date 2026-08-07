@@ -242,6 +242,52 @@ never-attach decision with a source-scanning test so it cannot be re-derived.
 Suite 5751 green (+20).
 
 Research: CampaignObjectManager.Find<T> registered types, MapEvent/MBObjectBase identity
+### fix(enlistment): one policy decides whether an encounter is ours to close
+
+Batch 4. Five places finished a `PlayerEncounter`, each with its own ad-hoc reasoning or none.
+They now route through a single PURE policy — no adapters, no logger, no engine types — with five
+intents and two universal rules, so a decision that either destroys the player's own business or
+strands them permanently is testable as a table.
+
+Rule R1 is the one that matters: if the player is in their OWN map event, no intent finishes
+anything — not even a discharge deletes a battle they are fighting.
+
+A settlement encounter has no encountered MOBILE party. That fact separates "visiting a town" from
+"meeting a lord", and it is why swearing an oath in a keep no longer ends the town visit.
+
+**`Finish`'s default parameter is deleted.** The engine defaults to `true`; ours defaulted to
+`false`, an inverted polarity every call site silently inherited. `PlayerEncounter.Finish` only
+calls `LeaveSettlement()` when the flag is true, so `false` left `CurrentSettlement` set — and
+`EncounterManager` refuses every main-party encounter while a party is inside a settlement. That is
+a second, independent contributor to "cannot click a lord", distinct from the stuck-encounter bug.
+
+`EnsureEncounterAgainst` also stops force-clearing blind; it refuses with a warning instead. That
+surfaces as `could not join commander battle` lines in play — correct, not a new fault.
+
+Research: PlayerEncounter.Finish forcePlayerOutFromSettlement, EncounterManager settlement gate
+
+### fix(enlistment): every discharge hands the player back usable (INV-D1)
+
+Batch 5, closing the frozen-menu soft-lock. `Execute` is a fixed-order pipeline and every step is
+ordered for a reason now written beside it: presence before the army detach (`SetAttachedToInternal`
+only tears down the inherited `MapEventSide` while active); detach before the encounter work
+(`PlayerEncounter.Finish` branches on `Army`/`AttachedTo`); subscribers before placement (the
+content layer cancels the active duty in its handler, while placement dispatches
+`OnSettlementEntered`, which the duty runtime treats as a COMPLETION trigger — reversed, a
+cancelled duty would complete itself).
+
+The player is released into the commander's settlement with the right menu, with a mandatory
+rollback: if the menu will not open we leave the settlement rather than strand them inside one.
+`ExitToLast` is gated on actually being on the wait menu, because it sets `TimeControlMode = Stop`
+unconditionally before delegating to a null-guarded manager.
+
+The alarm stops crying wolf: `EncountersBlocked` gained the settlement clause it was missing from
+`EncounterManager`'s real gate, a release inside a town is now a WARNING rather than an ERROR, and
+`distToCommander` finally prints a number because the commander id is captured before `Reset()`.
+
+Suite 5849 green.
+
+Research: GameMenu.ExitToLast TimeControlMode, MobileParty.SetAttachedToInternal, PlayerEncounter.Finish branches
 ### fix(enlistment): settlements were never resolvable, and party attachment is settled as a no
 
 `CampaignObjectManager.Find<Settlement>` returns null **unconditionally** on 1.4.7. The manager

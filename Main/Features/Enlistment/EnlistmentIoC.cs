@@ -19,6 +19,7 @@ public static class EnlistmentIoC
         container.Register<IEnlistmentStore, EnlistmentStore>(Reuse.Singleton);
         container.Register<IEnlistmentStateMachine, EnlistmentStateMachine>(Reuse.Singleton);
         container.Register<IEnlistmentConfigProvider, EnlistmentConfigProvider>(Reuse.Singleton);
+        container.Register<IEnlistmentDiagnosticsSettingsProvider, EnlistmentDiagnosticsSettingsProvider>(Reuse.Singleton);
         container.Register<IServiceAttachmentService, ServiceAttachmentService>(Reuse.Singleton);
         container.Register<IDischargeService, DischargeService>(Reuse.Singleton);
         container.Register<IEnlistmentService, EnlistmentService>(Reuse.Singleton);

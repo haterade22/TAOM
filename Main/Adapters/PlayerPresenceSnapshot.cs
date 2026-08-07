@@ -28,12 +28,14 @@ public sealed class PlayerPresenceSnapshot
     public bool LooksParked => MainPartyExists && !IsActive && !IsVisible;
 
     /// <summary>
-    /// True when the engine would refuse to start ANY encounter for the main party. Mirrors the
-    /// blocking clauses of EncounterManager.HandleEncounterForMobileParty. If this is true after a
-    /// discharge, the player can no longer talk to anyone — the state must be cleared, not just logged.
+    /// Inside a settlement and not a garrison — EncounterManager's own clause. Split out because
+    /// after a discharge INTO a settlement this is the expected, benign shape, whereas any other
+    /// blocker is a genuine fault. Folding them together made the discharge alarm cry wolf.
     /// </summary>
+    public bool IsHeldInsideSettlement => MainPartyExists && !string.IsNullOrEmpty(SettlementId);
+
     public bool EncountersBlocked =>
-        MainPartyExists && (!IsActive || IsAttachedToParty || IsInMapEvent || HasPlayerEncounter);
+        MainPartyExists && (!IsActive || IsAttachedToParty || IsInMapEvent || HasPlayerEncounter || IsHeldInsideSettlement);
 
     /// <summary>One-line dump for the diagnostic log. Order matches the engine's gate.</summary>
     public string Describe() =>

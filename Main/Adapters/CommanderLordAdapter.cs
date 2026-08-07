@@ -2,6 +2,7 @@ using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.MapEvents;
+using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Core.Logging;
 
 namespace TAOM.Adapters;
@@ -33,6 +34,7 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 partyIsInMapEvent: party?.MapEvent != null,
                 partyIsInSettlement: party?.CurrentSettlement != null,
                 settlementId: hero.CurrentSettlement?.StringId,
+                settlementMenuId: MenuIdFor(hero.CurrentSettlement),
                 cultureId: hero.Culture?.StringId,
                 factionId: hero.Clan?.MapFaction?.StringId,
                 name: hero.Name?.ToString());
@@ -170,6 +172,16 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
             _logger?.LogError($"[Enlistment] ApplyPlayerRelation('{heroId}', {delta}) failed: {ex.Message}");
             return false;
         }
+    }
+
+    /// <summary>The vanilla menu id for a settlement, so a discharge lands the player somewhere usable.</summary>
+    private static string MenuIdFor(Settlement settlement)
+    {
+        if (settlement == null) return null;
+        if (settlement.IsTown) return "town";
+        if (settlement.IsCastle) return "castle";
+        if (settlement.IsVillage) return "village";
+        return null;
     }
 
     private static Hero FindHero(string heroId)

@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Core.Logging;
+using TAOM.Features.Enlistment;
 
 namespace TAOM.Adapters;
 
@@ -17,10 +18,12 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
     private const float DriftWarningThreshold = 15f;
 
     private readonly IModLogger _logger;
+    private readonly IEnlistmentDiagnosticsSettingsProvider _diag;
 
-    public MobilePartyAttachmentAdapter(IModLogger logger)
+    public MobilePartyAttachmentAdapter(IModLogger logger, IEnlistmentDiagnosticsSettingsProvider diag)
     {
         _logger = logger;
+        _diag = diag;
     }
 
     public bool ParkNear(string commanderHeroId)
@@ -44,7 +47,19 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
                 return false;
             }
 
-            var before = DescribeParty(main);
+            // GATE SHAPE RULE (every [EnlistDiag] gate in this feature): the gate is an
+            // `if (_diag?.IsEnabled == true)` wrapping EXACTLY ONE logging statement. Never a
+            // block, never guarding a `return`, never placed above a mutation of a MobileParty
+            // property. `?.` + `== true` so a null provider fails quiet.
+            //
+            // The toggle is read ONCE per call so a mid-method MCM flip cannot make `before` and
+            // the log line disagree. `before` is a read-only description whose ONLY consumer is
+            // the gated line, so skipping its allocation skips no mutation. The FAILURE paths
+            // above (:PARK FAILED) and the catch below are NOT gated — they are the reason the
+            // [EnlistDiag] tag stays greppable when the toggle is off.
+            var diag = _diag?.IsEnabled == true;
+            var before = diag ? DescribeParty(main) : null;
+
             ClearArmyAttachment();
             main.SetMoveModeHold();
             main.Position = commanderParty.Position;
@@ -52,7 +67,8 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
             main.IsActive = false;
             commanderParty.Party.SetAsCameraFollowParty();
 
-            _logger?.LogInfo($"[EnlistDiag] PARK ok on '{commanderHeroId}' | before: {before} | after: {DescribeParty(main)}");
+            if (diag)
+                _logger?.LogInfo($"[EnlistDiag] PARK ok on '{commanderHeroId}' | before: {before} | after: {DescribeParty(main)}");
             return true;
         }
         catch (Exception ex)
@@ -73,14 +89,19 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
                 return false;
             }
 
-            var before = DescribeParty(main);
+            // Same shape as ParkNear: toggle read once, `before` is a gated read-only snapshot,
+            // every mutation below runs unconditionally, `return` sits outside the gate.
+            var diag = _diag?.IsEnabled == true;
+            var before = diag ? DescribeParty(main) : null;
+
             ClearArmyAttachment();
             main.IsActive = true;
             main.IsVisible = true;
             main.SetMoveModeHold();
             main.Party.SetAsCameraFollowParty();
 
-            _logger?.LogInfo($"[EnlistDiag] RESTORE ok | before: {before} | after: {DescribeParty(main)}");
+            if (diag)
+                _logger?.LogInfo($"[EnlistDiag] RESTORE ok | before: {before} | after: {DescribeParty(main)}");
             return true;
         }
         catch (Exception ex)
@@ -110,9 +131,12 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
             // produced 291 of that session's 299 warnings — burying real signal. Only a drift far
             // beyond one tick's travel means the player genuinely fell behind (a missed sync
             // window, a teleporting commander, a stalled tick).
+            // The WARNING stays always-on: the 72a77b9c threshold raise (1f -> 15f) exists precisely
+            // so that this line means something when it fires. Only the routine "SYNC ok" else-branch
+            // (~291 lines/session) is gated. The position mutation is above both branches.
             if (drift > DriftWarningThreshold)
                 _logger?.LogWarning($"[EnlistDiag] SYNC closed a drift of {drift:F1} to '{commanderHeroId}' — the player had genuinely fallen behind");
-            else
+            else if (_diag?.IsEnabled == true)
                 _logger?.LogDebug($"[EnlistDiag] SYNC ok (drift {drift:F2}) to '{commanderHeroId}'");
             return true;
         }
@@ -234,7 +258,7 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
     private static string DescribeParty(MobileParty p) =>
         $"active={p.IsActive} visible={p.IsVisible} attachedTo={(p.AttachedTo != null)} mapEvent={(p.MapEvent != null)} settlement={p.CurrentSettlement?.StringId ?? "-"}";
 
-    public PlayerPresenceSnapshot GetPresence()
+    public PlayerPresenceSnapshot GetPresence(string commanderHeroId = null)
     {
         try
         {
@@ -250,7 +274,8 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
                 settlementId: main.CurrentSettlement?.StringId,
                 isInMapEvent: main.MapEvent != null,
                 isAttachedToParty: main.AttachedTo != null,
-                hasPlayerEncounter: PlayerEncounter.Current != null);
+                hasPlayerEncounter: PlayerEncounter.Current != null,
+                distanceToCommander: string.IsNullOrEmpty(commanderHeroId) ? -1f : GetDistanceToCommander(commanderHeroId));
         }
         catch (Exception ex)
         {

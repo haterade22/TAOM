@@ -38,38 +38,48 @@ public class DischargeService : IDischargeService
 
     public event Action<DischargeReason> EnlistmentEnded;
 
+    /// <summary>
+    /// The single exit from service. Every step is ordered for a reason; see the inline notes
+    /// before moving one. INV-D1 (pinned by tests) holds after this returns true, for EVERY reason.
+    /// </summary>
     public bool Execute(DischargeReason reason)
     {
+        // 1 — guard
         if (!_store.Record.IsEnlisted)
         {
             _logger?.LogWarning($"DischargeService: Execute({reason}) ignored — not enlisted (state {_store.Record.State})");
             return false;
         }
 
+        // 2 — atomic state
         if (!_machine.TryTransition(EnlistmentState.Discharging))
-        {
-            // Cannot happen for enlisted-family states per the transition table; if it
-            // ever does, the pipeline still runs — presence restoration outranks purity.
             _logger?.LogError($"DischargeService: transition to Discharging failed from {_store.Record.State}; forcing pipeline");
-        }
 
-        var before = _attachment.GetPresence();
+        // 3 — CAPTURE before anything clears the record. Step 8 wipes CommanderHeroId, so reading
+        // it later silently yields nothing — which is exactly how distToCommander printed "?" in
+        // every discharge line.
+        var commanderHeroId = _store.Record.CommanderHeroId;
+        // Never let a null snapshot throw here: this pipeline must complete for EVERY reason,
+        // including ones raised precisely because the commander is gone.
+        var commander = _commander.GetSnapshot(commanderHeroId) ?? CommanderSnapshot.Missing;
+
+        // 4 — begin
+        var before = _attachment.GetPresence(commanderHeroId);
         _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) begin | {before?.Describe() ?? "presence unavailable"}");
 
+        // 5 — presence FIRST. SetAttachedToInternal only tears down the inherited MapEventSide
+        // while the party is active, so step 6 has to follow this rather than precede it.
         if (!_attachment.RestorePresence())
             _logger?.LogError($"DischargeService: RestorePresence failed during discharge ({reason}) — continuing pipeline");
 
-        // Restoring IsActive/IsVisible is not enough to hand the player back. EncounterManager
-        // refuses to start ANY encounter for the main party while a PlayerEncounter is live or a
-        // MapEventSide is attached, so a discharge that leaves either set silently ends the
-        // player's ability to talk to anyone, permanently, for that save. Reported in-game
-        // 2026-08-07: "cannot click on a lord after leaving the service of another."
-        // Discharge OUTRANKS ownership: service is ending and the player must be handed back able
-        // to interact. Only a running conversation defers it (finishing mid-dialogue would drop
-        // them out of their own conversation, and the hourly sweep clears it moments later).
-        var commanderPartyIdForFinish = _commander.GetPartyId(_store.Record.CommanderHeroId);
+        // 6 — detach BEFORE the encounter work: PlayerEncounter.Finish branches on Army/AttachedTo.
+        _attachment.ClearArmyAttachment();
+
+        // 7 — encounter, per the ownership policy. Discharge outranks ownership: leaving one live
+        // is the save-breaker, because EncounterManager refuses every main-party encounter while
+        // PlayerEncounter.Current is set.
         var verdict = _ownership.Evaluate(
-            EncounterFinishIntent.Discharge, _encounter.GetOwnership(commanderPartyIdForFinish));
+            EncounterFinishIntent.Discharge, _encounter.GetOwnership(commander.PartyId));
         if (verdict == EncounterFinishVerdict.Finish)
         {
             _logger?.LogWarning($"[EnlistDiag] DISCHARGE({reason}) finishing a live PlayerEncounter — otherwise the player could never interact again");
@@ -81,16 +91,15 @@ public class DischargeService : IDischargeService
             _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) left the live encounter alone: {verdict}");
         }
 
+        // 8 — clear
+        _attachment.InvalidateCommanderCache();
         if (!_machine.TryTransition(EnlistmentState.NotEnlisted))
             _store.Record.State = EnlistmentState.NotEnlisted;
-
-        // The adapter caches a commander-party handle across passes and it outlives a campaign
-        // switch within one process. Dropping it here is the reviewable guard; the id
-        // revalidation makes a stale hit near-impossible but not provably so.
-        _attachment.InvalidateCommanderCache();
-
         _store.Record.Reset();
 
+        // 9 — subscribers BEFORE placement. The content layer cancels the active duty here, and
+        // step 10's EnterSettlementAction dispatches OnSettlementEntered, which the duty runtime
+        // treats as a COMPLETION trigger. Reversing these two would complete a cancelled duty.
         try
         {
             EnlistmentEnded?.Invoke(reason);
@@ -100,32 +109,83 @@ public class DischargeService : IDischargeService
             _logger?.LogError($"DischargeService: EnlistmentEnded subscriber threw for {reason}: {ex.Message}");
         }
 
-        // Leave the service wait menu on EVERY discharge path, not just the menu button. An
-        // automatic discharge (commander dies, grace expires, contract ends, identity mismatch)
-        // otherwise strands the player in a menu whose only options are gone, with no Escape —
-        // the donor names this exact symptom in its own code ("left the player frozen in the wait
-        // menu with an orphaned camera") and exits at the tail of every release path.
-        if (_gameMenu.CurrentMenuId == EnlistmentMenuService.ServiceWaitMenuId)
-        {
-            if (_gameMenu.ExitToLast())
-                _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) left the service wait menu");
-            else
-                _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not leave the service wait menu — the player may be stuck in an optionless menu");
-        }
+        // 10 — hand the player back somewhere they can act
+        RestoreCampaignContext(reason, commander);
 
-        var after = _attachment.GetPresence();
+        // 11 — verify, and distinguish the benign shape from the save-breaker
+        var after = _attachment.GetPresence(commanderHeroId);
         _logger?.LogInfo($"[Enlistment] service ended: {reason}");
         _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) end | {after?.Describe() ?? "presence unavailable"}");
 
-        // The check that matters: if this fires, the player is out of service but cannot interact
-        // with anything, and the save is effectively broken for them.
         if (after != null && after.EncountersBlocked)
         {
-            _logger?.LogError(
-                $"[EnlistDiag] DISCHARGE({reason}) LEFT THE PLAYER UNABLE TO START ENCOUNTERS — {after?.Describe() ?? "presence unavailable"}. " +
-                "They will not be able to click lords or settlements. This is a bug; report this line.");
+            var settlementOnly = after.IsHeldInsideSettlement
+                && after.IsActive && !after.IsInMapEvent && !after.HasPlayerEncounter && !after.IsAttachedToParty;
+
+            if (settlementOnly)
+            {
+                // Expected after a release INSIDE a town: the player has a settlement menu and can
+                // walk out normally. Not the stranded shape.
+                _logger?.LogWarning($"[EnlistDiag] DISCHARGE({reason}) left the player inside '{after.SettlementId}' — normal for a release in a settlement, they can leave from the menu.");
+            }
+            else
+            {
+                _logger?.LogError(
+                    $"[EnlistDiag] DISCHARGE({reason}) LEFT THE PLAYER UNABLE TO START ENCOUNTERS — {after.Describe()}. " +
+                    "They will not be able to click lords or settlements. This is a bug; report this line.");
+            }
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Put the player somewhere usable. The donor releases them into the commander's settlement;
+    /// simply un-hiding them wherever the park left them is how a discharge produced a player
+    /// standing on the map with no menu.
+    /// </summary>
+    private void RestoreCampaignContext(DischargeReason reason, CommanderSnapshot commander)
+    {
+        // Load-path reasons never move the player — the SAVED position is authoritative, and moving
+        // them during normalization would teleport them on every load.
+        if (reason == DischargeReason.HeirSuccessionOrPossessionMismatch)
+        {
+            ExitServiceMenuIfOpen(reason);
+            return;
+        }
+
+        var settlementId = commander.SettlementId;
+        var menuId = commander.SettlementMenuId;
+        if (!string.IsNullOrEmpty(settlementId) && !string.IsNullOrEmpty(menuId))
+        {
+            if (_attachment.MoveIntoSettlement(settlementId) && _gameMenu.EnsureMenuOpen(menuId))
+            {
+                _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) released the player into '{settlementId}' ({menuId})");
+                return;
+            }
+
+            // MANDATORY rollback: a player inside a settlement with no settlement menu is the same
+            // soft-lock one layer deeper. Back them out rather than leave them stuck inside.
+            _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not open '{menuId}' for '{settlementId}' — leaving the settlement rather than stranding the player inside it");
+            _attachment.LeaveSettlement();
+        }
+
+        ExitServiceMenuIfOpen(reason);
+    }
+
+    /// <summary>
+    /// Leave the service wait menu — GATED, because <c>GameMenu.ExitToLast</c> sets
+    /// <c>TimeControlMode = Stop</c> unconditionally before delegating to a null-guarded manager.
+    /// Calling it with no menu open freezes campaign time with nothing on screen.
+    /// </summary>
+    private void ExitServiceMenuIfOpen(DischargeReason reason)
+    {
+        if (_gameMenu.CurrentMenuId != EnlistmentMenuService.ServiceWaitMenuId)
+            return;
+
+        if (_gameMenu.ExitToLast())
+            _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) left the service wait menu");
+        else
+            _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not leave the service wait menu — the player may be stuck in an optionless menu");
     }
 }
