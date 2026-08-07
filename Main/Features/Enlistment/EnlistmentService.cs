@@ -13,6 +13,7 @@ public class EnlistmentService : IEnlistmentService
     private readonly ICommanderLordAdapter _commander;
     private readonly IMobilePartyAttachmentAdapter _attachment;
     private readonly IEncounterAdapter _encounter;
+    private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IEnlistmentConfigProvider _config;
     private readonly IModLogger _logger;
 
@@ -23,6 +24,7 @@ public class EnlistmentService : IEnlistmentService
         ICommanderLordAdapter commander,
         IMobilePartyAttachmentAdapter attachment,
         IEncounterAdapter encounter,
+        IEncounterOwnershipPolicy ownership,
         IEnlistmentConfigProvider config,
         IModLogger logger)
     {
@@ -32,6 +34,7 @@ public class EnlistmentService : IEnlistmentService
         _commander = commander;
         _attachment = attachment;
         _encounter = encounter;
+        _ownership = ownership;
         _config = config;
         _logger = logger;
     }
@@ -90,22 +93,23 @@ public class EnlistmentService : IEnlistmentService
         // cannot click a lord or settlement again, and the state survives into discharge.
         // Observed in-game 2026-08-07: playerEncounter=True on 93 of 93 ticks. The donor closes it
         // here too (RFEnlistmentCampaignBehavior.FinalizeEnlistmentConversation: Finish() then
-        // attach) — ordering matters, the encounter must go before the park.
-        // Only ever finish the encounter we are actually standing in — the one with the commander.
-        // Finishing blind destroys encounters that belong to the player: a settlement they are
-        // visiting, a fight they started, someone else's conversation. The donor gates every
-        // finish the same way (FinalizeEnlistmentConversation).
+        // attach) — ordering matters, the encounter must go before the park. The ownership policy
+        // decides WHETHER it is ours: a settlement visit or someone else's business is left alone.
         var commanderPartyId = _commander.GetSnapshot(commanderHeroId).PartyId;
-        if (_encounter.IsEncounterOwnedBy(commanderPartyId))
+        var verdict = _ownership.Evaluate(EncounterFinishIntent.OathHandoff, _encounter.GetOwnership(commanderPartyId));
+        if (verdict == EncounterFinishVerdict.Finish)
         {
-            if (_encounter.Finish(false))
+            // forcePlayerOutFromSettlement: true — leaving CurrentSettlement set would keep the
+            // player settlement-bound, and EncounterManager refuses every main-party encounter
+            // while that is so.
+            if (_encounter.Finish(true))
                 _logger?.LogInfo($"[EnlistDiag] closed the enlistment conversation's PlayerEncounter before parking on {commanderHeroId}");
             else
-                _logger?.LogError($"[EnlistDiag] could not close the enlistment conversation's PlayerEncounter — the player may be unable to interact with anything while enlisted");
+                _logger?.LogError("[EnlistDiag] could not close the enlistment conversation's PlayerEncounter — the player may be unable to interact with anything while enlisted");
         }
-        else if (_encounter.HasCurrent)
+        else if (verdict != EncounterFinishVerdict.NothingToFinish)
         {
-            _logger?.LogInfo($"[EnlistDiag] left the live PlayerEncounter alone at swear-in — it is not the commander's; the reconciler will sweep it if it turns out to be stranded");
+            _logger?.LogInfo($"[EnlistDiag] oath left the live encounter alone: {verdict}");
         }
 
         if (!_attachment.ParkNear(commanderHeroId))

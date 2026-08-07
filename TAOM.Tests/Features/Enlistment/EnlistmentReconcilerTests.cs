@@ -41,11 +41,10 @@ public class EnlistmentReconcilerTests
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
         _attachment = new ServiceAttachmentService(_partyAdapter, _logger);
-        _discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
+        _discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
-        _reconciler = new EnlistmentReconciler(
-            _store, _machine, _attachment, _commander, _discharge,
-            new EnlistmentConfigProvider(_logger), _encounter, _logger);
+        _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
+            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)

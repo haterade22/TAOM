@@ -36,13 +36,17 @@ public class ServiceBattleServiceTests
         // Default to a working menu switch — the service now treats a failed switch as a join
         // failure and rolls back, so an unstubbed (false) default would fail every happy path.
         _gameMenu.EnsureMenuOpen(Arg.Any<string>()).Returns(true);
-        _service = new ServiceBattleService(_store, _machine, _encounter, _attachment, _gameMenu, _logger);
+        _service = new ServiceBattleService(_store, _machine, _encounter, _attachment, _gameMenu, new EncounterOwnershipPolicy(), _logger);
 
         _encounter.GetPartyBattleSide("lord_party_1").Returns(PartyBattleSide.Defender);
         _encounter.IsCommanderBattleJoinable("lord_party_1", PartyBattleSide.Defender).Returns(true);
         _encounter.EnsureEncounterAgainst("lord_party_1").Returns(true);
         _encounter.JoinBattle(PartyBattleSide.Defender).Returns(true);
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
+        // Default shape: the live encounter is the commander's, so the rollback owns it.
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true,
+            encounteredPartyId: "lord_party_1", encounteredPartyIsCommanderRelated: true));
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
@@ -248,7 +252,7 @@ public class ServiceBattleServiceTests
         _service.OnCommanderBattleStarted("lord_party_1");
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
-        _encounter.Received(1).Finish(false);
+        _encounter.Received(1).Finish(true);
         _partyAdapter.Received(1).ParkNear("lord_1_1");
     }
 
@@ -275,7 +279,7 @@ public class ServiceBattleServiceTests
 
         _service.OnCommanderBattleStarted("lord_party_1");
 
-        _encounter.Received(1).Finish(false);
+        _encounter.Received(1).Finish(true);
     }
 
     [TestMethod]
@@ -380,4 +384,25 @@ public class ServiceBattleServiceTests
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
         _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
     }
+
+    [TestMethod]
+    public void TryJoin_RollbackWhenEncounterIsNotOurs_SkipsFinishButStillReparksAndReassertsMenu()
+    {
+        // The rollback's Finish is now conditional on ownership, but everything AFTER it is not:
+        // whatever the verdict, the player must end up parked, in Attached, with a menu. A
+        // conditional cleanup must never make the recovery itself conditional.
+        MakeEnlisted();
+        _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: false));   // a settlement visit — not ours
+        _gameMenu.CurrentMenuId.Returns((string)null);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _partyAdapter.Received(1).ParkNear("lord_1_1");
+        _gameMenu.Received(1).EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
 }

@@ -29,11 +29,11 @@ public class EnlistmentServiceTests
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
         _attachment.RestorePresence().Returns(true);
         _attachment.ParkNear(Arg.Any<string>()).Returns(true);
-        _discharge = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
+        _discharge = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
         _service = new EnlistmentService(
-            _store, _machine, _discharge, _commander, _attachment, _encounter,
+            _store, _machine, _discharge, _commander, _attachment, _encounter, new EncounterOwnershipPolicy(),
             new EnlistmentConfigProvider(_logger), _logger);
 
         _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
@@ -189,14 +189,16 @@ public class EnlistmentServiceTests
         // main-party encounter while it is set, so the player could not click a lord again.
         // The donor closes it at the same point (FinalizeEnlistmentConversation).
         _encounter.HasCurrent.Returns(true);
-        _encounter.IsEncounterOwnedBy("lord_party_1").Returns(true);
+        _encounter.GetOwnership("lord_party_1").Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true,
+            encounteredPartyId: "lord_party_1", encounteredPartyIsCommanderRelated: true));
         _service.SubmitPetition("lord_1_1");
 
         _service.CompleteOath("lord_1_1", "main_hero", 100.0);
 
         Received.InOrder(() =>
         {
-            _encounter.Finish(false);
+            _encounter.Finish(true);
             _attachment.ParkNear("lord_1_1");
         });
     }
@@ -219,7 +221,10 @@ public class EnlistmentServiceTests
         // PLAYER'S own business — a settlement they are visiting, a fight they started, someone
         // else's conversation. Only the encounter with the commander is ours to close.
         _encounter.HasCurrent.Returns(true);
-        _encounter.IsEncounterOwnedBy(Arg.Any<string>()).Returns(false);
+        // A settlement visit: an encounter with NO encountered mobile party. This is the shape
+        // that must survive the oath — swear in a keep and keep your town visit.
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: false));
         _service.SubmitPetition("lord_1_1");
 
         _service.CompleteOath("lord_1_1", "main_hero", 100.0);

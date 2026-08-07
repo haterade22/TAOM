@@ -11,6 +11,7 @@ public class ServiceBattleService : IServiceBattleService
     private readonly IEncounterAdapter _encounter;
     private readonly IServiceAttachmentService _attachment;
     private readonly IGameMenuAdapter _gameMenu;
+    private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IModLogger _logger;
 
     public ServiceBattleService(
@@ -19,6 +20,7 @@ public class ServiceBattleService : IServiceBattleService
         IEncounterAdapter encounter,
         IServiceAttachmentService attachment,
         IGameMenuAdapter gameMenu,
+        IEncounterOwnershipPolicy ownership,
         IModLogger logger)
     {
         _store = store;
@@ -26,6 +28,7 @@ public class ServiceBattleService : IServiceBattleService
         _encounter = encounter;
         _attachment = attachment;
         _gameMenu = gameMenu;
+        _ownership = ownership;
         _logger = logger;
     }
 
@@ -97,7 +100,15 @@ public class ServiceBattleService : IServiceBattleService
         // main party in battle state after a failed join. Finish() first — leaving an orphaned
         // PlayerEncounter behind blocks the main party from ever entering another encounter.
         _logger?.LogWarning($"[Enlistment] could not join commander battle ({trigger}) — rolling back to parked service mode");
-        _encounter.Finish(false);
+
+        // Only clean up an encounter that is OURS. Everything after this runs on every rollback
+        // path regardless of the verdict — the player must always end up parked with a menu.
+        var rollbackVerdict = _ownership.Evaluate(
+            EncounterFinishIntent.JoinRollback, _encounter.GetOwnership(commanderPartyId));
+        if (rollbackVerdict == EncounterFinishVerdict.Finish)
+            _encounter.Finish(true);
+        else if (rollbackVerdict != EncounterFinishVerdict.NothingToFinish)
+            _logger?.LogInfo($"[EnlistDiag] rollback left the live encounter alone: {rollbackVerdict}");
 
         // Load-bearing for recovery: if this transition were ever rejected, state would stay
         // EnlistedBattle while the party is parked, and the entry guard above would block every

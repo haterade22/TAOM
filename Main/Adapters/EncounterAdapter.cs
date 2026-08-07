@@ -59,44 +59,50 @@ public sealed class EncounterAdapter : IEncounterAdapter
         }
     }
 
-    public bool IsEncounterOwnedBy(string partyId)
+    public EncounterOwnershipSnapshot GetOwnership(string commanderPartyId)
     {
-        try
-        {
-            if (PlayerEncounter.Current == null || string.IsNullOrEmpty(partyId))
-                return false;
+        // Each field is read in its OWN try. A wholesale catch here would report "nothing live"
+        // on any single throw, and the oath would then stop closing the encounter it genuinely
+        // owns — silently reintroducing the bug that made the player unable to interact at all.
+        var readFailed = false;
 
-            // Never tear an encounter down mid-conversation — the dialogue is running inside it,
-            // and finishing here drops the player out of their own conversation.
-            if (Campaign.Current?.ConversationManager?.IsConversationInProgress == true)
-            {
-                _logger?.LogInfo($"[EnlistDiag] not finishing the encounter for '{partyId}' — a conversation is in progress");
-                return false;
-            }
+        bool hasEncounter;
+        try { hasEncounter = PlayerEncounter.Current != null; }
+        catch (Exception ex) { readFailed = true; hasEncounter = false; _logger?.LogError($"[Enlistment] GetOwnership: PlayerEncounter.Current threw: {ex.Message}"); }
 
-            // A settlement encounter has no encountered MOBILE party. That single check is what
-            // keeps us from destroying the player's own town visit, so it is load-bearing rather
-            // than defensive.
-            var encountered = PlayerEncounter.EncounteredMobileParty;
-            if (encountered == null)
-            {
-                _logger?.LogInfo($"[EnlistDiag] not finishing the encounter for '{partyId}' — it has no encountered mobile party (a settlement visit, not ours)");
-                return false;
-            }
+        if (!hasEncounter)
+            return new EncounterOwnershipSnapshot(hasEncounter: false, readFailed: readFailed);
 
-            if (encountered.StringId != partyId)
-            {
-                _logger?.LogInfo($"[EnlistDiag] not finishing the encounter for '{partyId}' — it is against '{encountered.StringId}', which is the player's own business");
-                return false;
-            }
+        bool conversation;
+        try { conversation = Campaign.Current?.ConversationManager?.IsConversationInProgress == true; }
+        catch (Exception ex) { readFailed = true; conversation = false; _logger?.LogError($"[Enlistment] GetOwnership: conversation read threw: {ex.Message}"); }
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError($"[Enlistment] IsEncounterOwnedBy('{partyId}') failed: {ex.Message}");
-            return false;
-        }
+        MobileParty encountered = null;
+        try { encountered = PlayerEncounter.EncounteredMobileParty; }
+        catch (Exception ex) { readFailed = true; _logger?.LogError($"[Enlistment] GetOwnership: EncounteredMobileParty threw: {ex.Message}"); }
+
+        bool playerInMapEvent;
+        try { playerInMapEvent = PartyBase.MainParty?.MapEvent != null; }
+        catch (Exception ex) { readFailed = true; playerInMapEvent = false; _logger?.LogError($"[Enlistment] GetOwnership: MainParty.MapEvent threw: {ex.Message}"); }
+
+        bool insideSettlement;
+        try { insideSettlement = MobileParty.MainParty?.CurrentSettlement != null; }
+        catch (Exception ex) { readFailed = true; insideSettlement = false; _logger?.LogError($"[Enlistment] GetOwnership: CurrentSettlement threw: {ex.Message}"); }
+
+        var encounteredId = encountered?.StringId;
+        var related = !string.IsNullOrEmpty(encounteredId)
+            && !string.IsNullOrEmpty(commanderPartyId)
+            && string.Equals(encounteredId, commanderPartyId, StringComparison.Ordinal);
+
+        return new EncounterOwnershipSnapshot(
+            hasEncounter: true,
+            conversationInProgress: conversation,
+            hasEncounteredMobileParty: encountered != null,
+            encounteredPartyId: encounteredId,
+            encounteredPartyIsCommanderRelated: related,
+            playerInMapEvent: playerInMapEvent,
+            playerInsideSettlement: insideSettlement,
+            readFailed: readFailed);
     }
 
     public bool IsMainPartyInMapEvent
@@ -160,8 +166,14 @@ public sealed class EncounterAdapter : IEncounterAdapter
             if (PlayerEncounter.Current != null && PlayerEncounter.EncounteredBattle == mapEvent)
                 return true;
 
+            // Do NOT force-clear blind. A live encounter that is not the commander's belongs to
+            // the player; the caller owns the ownership decision, so refuse and say why rather
+            // than tearing down their business to make room for ours.
             if (PlayerEncounter.Current != null)
-                PlayerEncounter.Finish(false);
+            {
+                _logger?.LogWarning($"[Enlistment] cannot seed an encounter for '{partyId}': one is already live and is not this battle. Refusing to clear it blind.");
+                return false;
+            }
 
             // Side LEADER parties, not the MapEventStarted arguments: leaders are PartyBase, so a
             // besieged settlement resolves. Going through MobileParty ids drops sieges silently.

@@ -14,6 +14,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     private readonly IDischargeService _discharge;
     private readonly IEnlistmentConfigProvider _config;
     private readonly IEncounterAdapter _encounter;
+    private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IModLogger _logger;
 
     public EnlistmentReconciler(
@@ -24,6 +25,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         IDischargeService discharge,
         IEnlistmentConfigProvider config,
         IEncounterAdapter encounter,
+        IEncounterOwnershipPolicy ownership,
         IModLogger logger)
     {
         _store = store;
@@ -33,6 +35,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _discharge = discharge;
         _config = config;
         _encounter = encounter;
+        _ownership = ownership;
         _logger = logger;
     }
 
@@ -169,9 +172,18 @@ public class EnlistmentReconciler : IEnlistmentReconciler
             && !presence.IsInMapEvent
             && !snapshot.PartyIsInMapEvent)
         {
-            _logger?.LogWarning("[EnlistDiag] a PlayerEncounter is open while parked with no battle in progress — closing it (it would block every future encounter)");
-            if (!_encounter.Finish(false))
-                _logger?.LogError("[EnlistDiag] failed to close the stranded PlayerEncounter — the player cannot start encounters until this clears");
+            var sweepVerdict = _ownership.Evaluate(
+                EncounterFinishIntent.ParkedSweep, _encounter.GetOwnership(snapshot.PartyId));
+            if (sweepVerdict == EncounterFinishVerdict.Finish)
+            {
+                _logger?.LogWarning("[EnlistDiag] a PlayerEncounter is open while parked with no battle in progress — closing it (it would block every future encounter)");
+                if (!_encounter.Finish(true))
+                    _logger?.LogError("[EnlistDiag] failed to close the stranded PlayerEncounter — the player cannot start encounters until this clears");
+            }
+            else if (sweepVerdict != EncounterFinishVerdict.NothingToFinish)
+            {
+                _logger?.LogInfo($"[EnlistDiag] parked sweep left the live encounter alone: {sweepVerdict}");
+            }
         }
 
         switch (assessment.Status)

@@ -11,6 +11,8 @@ public class DischargeService : IDischargeService
     private readonly IEnlistmentStateMachine _machine;
     private readonly IMobilePartyAttachmentAdapter _attachment;
     private readonly IEncounterAdapter _encounter;
+    private readonly IEncounterOwnershipPolicy _ownership;
+    private readonly ICommanderLordAdapter _commander;
     private readonly IGameMenuAdapter _gameMenu;
     private readonly IModLogger _logger;
 
@@ -19,6 +21,8 @@ public class DischargeService : IDischargeService
         IEnlistmentStateMachine machine,
         IMobilePartyAttachmentAdapter attachment,
         IEncounterAdapter encounter,
+        IEncounterOwnershipPolicy ownership,
+        ICommanderLordAdapter commander,
         IGameMenuAdapter gameMenu,
         IModLogger logger)
     {
@@ -26,6 +30,8 @@ public class DischargeService : IDischargeService
         _machine = machine;
         _attachment = attachment;
         _encounter = encounter;
+        _ownership = ownership;
+        _commander = commander;
         _gameMenu = gameMenu;
         _logger = logger;
     }
@@ -58,11 +64,21 @@ public class DischargeService : IDischargeService
         // MapEventSide is attached, so a discharge that leaves either set silently ends the
         // player's ability to talk to anyone, permanently, for that save. Reported in-game
         // 2026-08-07: "cannot click on a lord after leaving the service of another."
-        if (_encounter.HasCurrent)
+        // Discharge OUTRANKS ownership: service is ending and the player must be handed back able
+        // to interact. Only a running conversation defers it (finishing mid-dialogue would drop
+        // them out of their own conversation, and the hourly sweep clears it moments later).
+        var commanderPartyIdForFinish = _commander.GetPartyId(_store.Record.CommanderHeroId);
+        var verdict = _ownership.Evaluate(
+            EncounterFinishIntent.Discharge, _encounter.GetOwnership(commanderPartyIdForFinish));
+        if (verdict == EncounterFinishVerdict.Finish)
         {
-            _logger?.LogWarning($"[EnlistDiag] DISCHARGE({reason}) found a live PlayerEncounter — finishing it, otherwise the player could never interact again");
-            if (!_encounter.Finish(false))
+            _logger?.LogWarning($"[EnlistDiag] DISCHARGE({reason}) finishing a live PlayerEncounter — otherwise the player could never interact again");
+            if (!_encounter.Finish(true))
                 _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not finish the lingering PlayerEncounter — the player may be unable to talk to anyone");
+        }
+        else if (verdict != EncounterFinishVerdict.NothingToFinish)
+        {
+            _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) left the live encounter alone: {verdict}");
         }
 
         if (!_machine.TryTransition(EnlistmentState.NotEnlisted))

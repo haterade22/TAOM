@@ -23,6 +23,7 @@ public static class EnlistmentIoC
         container.Register<IDischargeService, DischargeService>(Reuse.Singleton);
         container.Register<IEnlistmentService, EnlistmentService>(Reuse.Singleton);
         container.Register<IEnlistmentStateQuery, EnlistmentStateQuery>(Reuse.Singleton);
+        container.Register<IEncounterOwnershipPolicy, EncounterOwnershipPolicy>(Reuse.Singleton);
         container.Register<IEnlistmentReconciler, EnlistmentReconciler>(Reuse.Singleton);
         container.Register<IServiceMaintenanceService, ServiceMaintenanceService>(Reuse.Singleton);
         container.Register<IEnlistmentLoadNormalizer, EnlistmentLoadNormalizer>(Reuse.Singleton);

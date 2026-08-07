@@ -21,16 +21,11 @@ public interface IEncounterAdapter
     string EncounteredPartyId { get; }
 
     /// <summary>
-    /// True when the live encounter is one enlistment may safely finish — i.e. it exists, it is
-    /// against the given party, and no conversation is in progress.
-    ///
-    /// Finishing blind destroys encounters that are the PLAYER'S own business. A settlement visit,
-    /// a battle they started, or a conversation with someone else all live in
-    /// `PlayerEncounter.Current`, and tearing one down strands them. The donor guards every finish
-    /// this way (`RFEnlistmentCampaignBehavior.FinalizeEnlistmentConversation` +
-    /// `TryClearStaleEncounterForCommanderBattle`); the native rewrite dropped the guard.
+    /// One flat read of everything the ownership policy needs. Fields are read independently so a
+    /// single throw cannot blank the rest into a false "nothing live" — that failure mode would
+    /// make the oath stop closing the encounter it genuinely owns.
     /// </summary>
-    bool IsEncounterOwnedBy(string partyId);
+    EncounterOwnershipSnapshot GetOwnership(string commanderPartyId);
 
     /// <summary>Side of the given party in its current map event, or null when not in one.</summary>
     PartyBattleSide? GetPartyBattleSide(string partyId);
@@ -77,5 +72,13 @@ public interface IEncounterAdapter
     /// <summary>Leave the settlement when the player is held inside one that is under siege.</summary>
     bool LeaveSettlementIfUnderSiege();
 
-    bool Finish(bool forcePlayerOutFromSettlement = false);
+    /// <summary>
+    /// Finish the current encounter. NO DEFAULT on purpose: the engine's own default is
+    /// <c>true</c> and TAOM's was <c>false</c>, an inverted polarity that every call site silently
+    /// inherited. <c>PlayerEncounter.Finish</c> only calls <c>LeaveSettlement()</c> when this is
+    /// true, so <c>false</c> leaves <c>CurrentSettlement</c> set — and
+    /// <c>EncounterManager.HandleEncounterForMobileParty</c> refuses every main-party encounter
+    /// while a party is inside a settlement. Each site must now state its intent.
+    /// </summary>
+    bool Finish(bool forcePlayerOutFromSettlement);
 }
