@@ -161,6 +161,61 @@ at lines ~17.9k / ~54.4k / ~57.6k, the markers at 61194-61401), and the generato
 the region between `TAOM-CIVILIAN-COVERAGE:START` and `:END`. A future audit that "fixes" the
 generator for this will be fixing the wrong file.
 
+### ⚠️ APPLIED EDIT — female dwarf `underwear_bottom_mesh` in `skins.xml` (#403 fix, 2026-08-07)
+
+**Live edit to `LOTRLOME_Armory/ModuleData/skins.xml` that an Armory update WILL silently revert.**
+Live backup: `skins.xml.bak-dwarf-female-underwear` (true pre-change state). LIVE and this snapshot
+are both patched and in sync.
+
+```diff
+ <race id="dwarf">   <skin gender="1" name="woman" …>
+-      underwear_bottom_mesh="sk_dwarf_underwear_female"
++      underwear_bottom_mesh="sk_dwarf_underwear_female_a"
+```
+
+The bare name is not a shipped resource — the armory ships `sk_dwarf_underwear_female_a` (8
+occurrences), and the short form appears **only as a prefix of it**. That prefix relationship is the
+trap: any substring search reports the mesh present. Check with a trailing-boundary match, or just
+run the audit below.
+
+Two players hit it as a hard CTD whenever a female dwarf came into view in a settlement, battle or
+tournament — never in dialogue, because the facegen path does not draw underwear. Native access
+violation (`0xC0000005` at `TaleWorlds.Native.dll+0x58232C`, faulting address `0x24C` = a 16-bit
+index read at a null base), no managed exception, therefore **no TAOM crash bundle** — which is why
+it went unattributed for so long. It was the only unresolved mesh reference in the file, and the
+adult female dwarf is the only dwarf skin with a non-empty `underwear_bottom_mesh` (males and every
+child entry are `""`), so it touched female dwarves and nothing else. Found by @Sternab (#403).
+
+**Gate for this whole defect class — run after any Armory update or `skins.xml` edit:**
+
+```bash
+# Exit 0 == every mesh name resolves to a real .tpac entry. skins.xml was ALWAYS in this
+# tool's scan root; it simply did not know the eight skin mesh attribute names until 2026-08-07.
+python tools/validate_mesh_refs.py --no-rgl-log
+```
+
+Verified both ways on 2026-08-07: **red** on the pre-fix backup (`MISSING_MESH … skins.xml:1780`),
+**green** afterwards — 0 errors across the whole Armory ModuleData (items, crafting pieces, skins).
+
+### Two dwarf-skin divergences from vanilla that are NOT defects
+
+Checked against `Native/ModuleData/skins.xml` on 2026-08-07 while validating the fix above. Both look
+wrong at a glance and neither should be "fixed":
+
+- **`uses_stitching="false"`** — diverges from vanilla's `true`, but so do **22 skins across 8
+  LOTRLOME races** (berserker, dg_uruk, dwarf, elf, goblin, pale_uruk, sauron, uruk_hai). It is the
+  house convention for custom-mesh races, not a dwarf defect.
+- **`body_mesh_suffix=""` on the adult female dwarf** — this one IS a genuine one-of-a-kind outlier:
+  across all 14 races the pattern is uniform (adult `woman` = `_fem`, the three kid rows = `_fem`,
+  `toddler_female` = `""`), and `dwarf/woman` is the **only** adult female in the file set to `""`.
+  It is still very likely deliberate: she is also the only skin in the file with a dedicated female
+  body-mesh family (`sk_dwarf_bm_f1_*`), whereas every other race's `woman` reuses the male/base
+  meshes and needs `_fem` to pick up female armour variants. There are no `_fem` dwarf armour meshes
+  in the module at all, so setting `_fem` here would point every armour slot at something that does
+  not ship. **Do not change it without a symptom.** (Note the corollary: the other races carry `_fem`
+  with no `_fem` armour variants either and do not crash, so a missing *suffix* variant is evidently
+  survivable — unlike a missing *skin* mesh, which is the CTD fixed above.)
+
 ## Known asset defects in LOTRLOME_Armory (not fixed here)
 
 These are defects in the dependency module's **binary assets**, which this snapshot does not cover —
@@ -238,7 +293,14 @@ A dev machine with a Modding Kit `Assets/` directory loads the **loose** tree; a
 
 ## Snapshot date
 
-2026-08-03 — `action_sets.xml` **patched in place (LIVE + this snapshot)**: 168 root-level `<action>` elements re-parented back into the twelve `as_<race>_female_villager_in_aserai_tavern` sets that had been authored SELF-CLOSING (61434 → 61402 lines; 192 insertions / 224 deletions). This is a **reparenting, not a re-snapshot** — no action was added or removed: the file still holds 1226 `action_set` and 34247 `action` elements, and now 0 root-level `<action>`. Each group's 14 female-conversation overrides matched vanilla's own `as_human_female_villager_in_aserai_tavern` byte for byte, in order, which is what made a mechanical fix safe. Motivation: the game client tolerates the malformed file, the dedicated-server engine does not — it throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at `/action_sets/action` and dies on boot, which is why server operators had to run the single-player module order. Fixer `tools/oneoff/fix_orphaned_tavern_conversation_actions.py` (rewrites both copies in one pass); guard `tools/audit_action_set_parity.py`, which now exits non-zero on any root-level `<action>`. **LIVE and this snapshot are in sync as of this date** — both 3,902,345 bytes, sha256 prefix `ad6675f49b12ad74`. `monsters.xml` and `skins.xml` untouched. Not yet verified in the engine: no dedicated server has been booted against the corrected file.
+2026-08-07 — `skins.xml` **patched in place (LIVE + this snapshot)**: one attribute, the adult female
+dwarf's `underwear_bottom_mesh`, `sk_dwarf_underwear_female` → `sk_dwarf_underwear_female_a` (#403).
+See the APPLIED EDIT section above for the evidence and the audit that gates it. Both copies still
+parse; line endings preserved on each side (live LF, snapshot CRLF — compare with
+`tr -d '\r' < file | md5sum`, never a raw byte or hash comparison). `action_sets.xml` and
+`monsters.xml` untouched. **Not yet verified in the engine** — the reporters' repro (walk into an
+Erebor keep interior with a female dwarf present) has not been re-run against the corrected file.
+Previous: 2026-08-03 — `action_sets.xml` **patched in place (LIVE + this snapshot)**: 168 root-level `<action>` elements re-parented back into the twelve `as_<race>_female_villager_in_aserai_tavern` sets that had been authored SELF-CLOSING (61434 → 61402 lines; 192 insertions / 224 deletions). This is a **reparenting, not a re-snapshot** — no action was added or removed: the file still holds 1226 `action_set` and 34247 `action` elements, and now 0 root-level `<action>`. Each group's 14 female-conversation overrides matched vanilla's own `as_human_female_villager_in_aserai_tavern` byte for byte, in order, which is what made a mechanical fix safe. Motivation: the game client tolerates the malformed file, the dedicated-server engine does not — it throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at `/action_sets/action` and dies on boot, which is why server operators had to run the single-player module order. Fixer `tools/oneoff/fix_orphaned_tavern_conversation_actions.py` (rewrites both copies in one pass); guard `tools/audit_action_set_parity.py`, which now exits non-zero on any root-level `<action>`. **LIVE and this snapshot are in sync as of this date** — both 3,902,345 bytes, sha256 prefix `ad6675f49b12ad74`. `monsters.xml` and `skins.xml` untouched. Not yet verified in the engine: no dedicated server has been booted against the corrected file.
 Previous: 2026-07-31 — `action_sets.xml` **fully re-snapshotted** from the live install (61044 → 61434 lines). The mirror had drifted 390 lines behind since the 2026-06-25 partial patch, and the missing region was the spider-rider partial redefinition of `as_human_warrior` at the top of the file — the block carrying the `LOAD-ORDER CRITICAL: this partial MUST precede every race set that declares base_set="as_human_warrior"` comment, added during the June 2026 mount work. Any audit run against the mirror before this date was auditing data the game never loads. `monsters.xml` and `skins.xml` were verified identical to live **after newline normalisation** and left untouched — they are NOT byte-identical: this snapshot stores both with CRLF while the live files are LF, so `skins.xml` is 5,899,564 bytes here vs 5,678,589 live, and `monsters.xml` 69,267 vs 67,296. Compare with `tr -d '\r' < file | md5sum` on both sides (verified equal 2026-08-06); a raw byte or hash comparison will report a spurious difference. Both `tools/audit_action_set_parity.py` (0 humanoid gaps across 1304 sets) and `tools/audit_civilian_action_set_coverage.py` (all 13 settlement races 43/43 male, 39/39 female) pass against the live files as of this date.
 Previous: 2026-07-23 — `skins.xml` patched in place (LIVE + this snapshot): all 5 **female** `<skin>` blocks of `<race id="elf">` re-pointed off the male `sk_elf_basemesh_a1_*` set onto the vanilla human female set, attribute-for-attribute identical to Native's own female skins at each maturity. Face assets follow the mesh: `<face_textures>` → `head_female_a/b/c/e` + `lod_material="head_female_a.lod"` + `color="0xFFCAD3E0"` (the elf's wider `face_texture1..10` tag coverage is kept deliberately, so saved keys referencing tags 5-10 still resolve); `<mouth_textures>` → the `mouth_mat*` family (was the **dwarf** `m_dwarf_basemesh_mouth_a`); `<eyebrow_meshes>` → the vanilla `female_eyebrow_*` set (was a single `name=""` — female elves had no eyebrows). Adult female `<tattoo_materials>` gained the leading nameless `Cleanface` entry vanilla has, restoring index parity (33 → 34); `zero_probability="85"` deliberately left alone (LOTRLOME design choice governing random-NPC tattoo frequency, not part of the indexing bug). **Two traps for a future audit:** (a) the female toddler's `body_meta_mesh_shoulders="body_male_a_sh"` is CORRECT — vanilla's own `toddler_female` uses the male shoulders mesh; do not "fix" it. (b) **Male** elf skins are untouched and still carry the same class of defect (`toddler_male` pairs `sk_elf_basemesh_a1_shoulders` with a vanilla toddler body; `kid_3_male` wears `sk_elf_underwear_male_a` on a vanilla kid body; elf males still lack the nameless tattoo index-0) — deliberately out of scope, not an oversight. Backups beside the live file: `skins.xml.bak-elf-female` is the true pre-change state — **restore from that one**; `skins.xml.bak-elf-face` is a mid-session intermediate holding the KNOWN-BROKEN garbled-face state — **never restore from it**. RCA: [`docs/reviews/rca-elf-female-skins-2026-07-23.md`](../../reviews/rca-elf-female-skins-2026-07-23.md).
 Previous: 2026-07-11 — `action_sets.xml` patched in place (LIVE + this snapshot): +194 civilian action-set aliases (208 lines) giving every settlement race the full townsfolk idle family — elf + sauron the full 82 each (they had only facegen), the other non-human races the 3 prop-carry sets they lacked. Additions-only, between `TAOM-CIVILIAN-COVERAGE` markers, generated by `tools/generate_race_civilian_action_sets.py` (audit: `tools/audit_civilian_action_set_coverage.py`). Fixes the "all elves do the same idle in every town" report. See "Civilian action-set family coverage" above.

@@ -64,6 +64,39 @@ imprisoned or a fugitive and every one of those guards short-circuits. `_bornSet
 
 Not a tournament fix. The null was reachable from anything that dereferences `MapFaction` on these
 heroes; the tournament is just where it landed hardest.
+### fix(dwarf): female dwarves crashed on sight — one wrong mesh name (#403)
+
+> "every instance that I attempt to find a female dwarf in a settlement/battle/tournament, if my
+> camera looks at them it crashes my game, but it will not crash if I interact with them in dialogue"
+
+A native access violation with no managed exception, so no crash bundle was ever produced:
+`0xC0000005` READ at `TaleWorlds.Native.dll+0x58232C`, faulting address `0x24C` — a 16-bit index
+read at a null base, i.e. geometry that failed to resolve. Reported independently by two players.
+
+The adult female dwarf skin asked for `underwear_bottom_mesh="sk_dwarf_underwear_female"`. The
+armory ships **`sk_dwarf_underwear_female_a`**; the bare name occurs only as a prefix of it, never as
+a complete resource. Two facts make it fit the symptom exactly: it is the only unresolved mesh
+reference in the whole 89-reference file, and the adult female dwarf is the **only** dwarf skin with
+a non-empty `underwear_bottom_mesh` (males and all four child entries are `""`). Underwear draws only
+when clothing leaves the slot visible, which is why keeps and battles crashed while dialogue — the
+facegen path — did not.
+
+Fixed in the live `LOTRLOME_Armory/ModuleData/skins.xml` **and** the tracked snapshot (one attribute,
+both copies, line endings preserved; live backup at `skins.xml.bak-dwarf-female-underwear`).
+Credit: the defect and its evidence were found by @Sternab in #403; every claim was independently
+re-verified here before the edit landed.
+
+### feat(tools): audit skin mesh references so this class of crash is caught, not stumbled on
+
+`python tools/validate_mesh_refs.py --no-rgl-log` resolves every mesh name in a `skins.xml` against the meshes
+actually shipped in the asset packages and loose asset trees, and exits non-zero on any that does not
+resolve. This is the second time a single wrong mesh string in that file has cost a debugging session
+(the first: the elf female skins, 2026-07-23), and both times the game gave no managed signal.
+
+The check that matters is the **trailing token boundary** — `sk_dwarf_underwear_female` really is
+present in the packages, as a prefix, so a substring search reports it fine and the bug survives.
+Scans 251 packages / 50 GB in seconds by handing one pattern file to `grep`'s DFA. Verified both
+ways: red on the pre-fix backup, green on all 89 references across all 12 races after the fix.
 
 ## 2026-08-06
 

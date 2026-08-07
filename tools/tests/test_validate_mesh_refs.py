@@ -101,6 +101,67 @@ class ExtractRefsTests(unittest.TestCase):
         self.assertEqual(len(refs), 1)
         self.assertEqual(refs[0].name, "real_mesh")
 
+    def test_extracts_skin_body_meshes_from_skins_xml(self):
+        """skins.xml body meshes are in scope (#403, 2026-08-07).
+
+        skins.xml has always sat inside the default scan root (ModuleData/), so this file
+        was walked for a year and reported nothing purely because these eight attribute
+        names were not registered. The gap cost two players a hard CTD: an unresolved skin
+        mesh faults natively with a null geometry base, producing no managed exception and
+        therefore no TAOM crash bundle to triage.
+        """
+        xml = (
+            '<skin gender="1" name="woman" skeleton="dwarf_skeleton_a"\n'
+            '      body_meta_mesh="sk_dwarf_bm_f1_body"\n'
+            '      body_meta_mesh_shoulders="sk_dwarf_bm_f1_shoulder"\n'
+            '      body_meta_mesh_upperbody="box_a"\n'
+            '      face_meta_mesh="sk_dwarf_bm_f1_head"\n'
+            '      hands_mesh="sk_dwarf_bm_f1_arms"\n'
+            '      legs_mesh="sk_dwarf_bm_f1_legs"\n'
+            '      underwear_bottom_mesh="sk_dwarf_underwear_female_a"\n'
+            '      underwear_top_mesh="" />\n'
+        )
+        refs = vm.extract_refs_from_text(xml, "skins.xml")
+        by_attr = {r.attr: r for r in refs}
+
+        for attr in ("body_meta_mesh", "body_meta_mesh_shoulders", "body_meta_mesh_upperbody",
+                     "face_meta_mesh", "hands_mesh", "legs_mesh", "underwear_bottom_mesh"):
+            self.assertIn(attr, by_attr, f"{attr} must be extracted from skins.xml")
+            self.assertEqual(by_attr[attr].kind, "visual_mesh")
+
+        self.assertEqual(by_attr["underwear_bottom_mesh"].name, "sk_dwarf_underwear_female_a")
+        # Empty values are skipped by the attr regex, so the empty top slot yields no ref.
+        self.assertNotIn("underwear_top_mesh", by_attr)
+
+    def test_excludes_body_mesh_suffix_which_is_not_a_mesh_name(self):
+        """body_mesh_suffix holds "_fem", a suffix appended to ARMOUR mesh names at render
+        time — not a mesh. Registering it would raise MISSING_MESH on every female skin."""
+        xml = '<skin name="woman" body_mesh_suffix="_fem" body_meta_mesh="real_body" />\n'
+        refs = vm.extract_refs_from_text(xml, "skins.xml")
+        attrs = {r.attr for r in refs}
+        self.assertIn("body_meta_mesh", attrs)
+        self.assertNotIn("body_mesh_suffix", attrs)
+        self.assertEqual(len(refs), 1)
+
+    def test_skin_mesh_missing_from_present_set_is_an_error(self):
+        """The #403 regression, end to end through classify().
+
+        `sk_dwarf_underwear_female` is a strict PREFIX of the shipped
+        `sk_dwarf_underwear_female_a`, so any substring check calls it present. Tier B
+        compares against exact .tpac TOC names, which is the whole reason it catches this.
+        """
+        xml = ('<skin name="woman" '
+               'underwear_bottom_mesh="sk_dwarf_underwear_female" />\n')
+        refs = vm.extract_refs_from_text(xml, "skins.xml")
+        present = vm.PresentSet(metameshes={"sk_dwarf_underwear_female_a"},
+                                tpac_paths=["fake.tpac"])
+
+        issues = vm.classify(refs, present, None, scan_bodies=False)
+        missing = [i for i in issues if i.code == "MISSING_MESH"]
+
+        self.assertEqual(len(missing), 1, "the prefix-only name must NOT count as present")
+        self.assertIn("sk_dwarf_underwear_female", missing[0].message)
+
     def test_prefab_is_recorded_as_prefab_kind_not_mesh(self):
         xml = '<Item id="x" prefab="some_prefab" mesh="real_mesh" />\n'
         refs = vm.extract_refs_from_text(xml, "gondor/body_armors.xml")

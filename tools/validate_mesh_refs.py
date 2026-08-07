@@ -122,6 +122,20 @@ class Issue:
 # kind ∈ {visual_mesh, collision_body, prefab}
 VISUAL_MESH_ATTRS = {
     "mesh", "holster_mesh", "holster_mesh_with_weapon", "flying_mesh",
+    # skins.xml body meshes (added 2026-08-07, #403). This file was ALREADY in the
+    # scan root — DEFAULT_ITEMS is the ModuleData root — so the tool walked it for
+    # a year and found nothing purely because these eight attribute names were not
+    # listed here. The miss cost two players a hard CTD and a long triage: the adult
+    # female dwarf's `underwear_bottom_mesh="sk_dwarf_underwear_female"` names a mesh
+    # that does not ship (the real one is `sk_dwarf_underwear_female_a`), and an
+    # unresolved skin mesh faults NATIVELY with a null geometry base — 0xC0000005, no
+    # managed exception, so no TAOM crash bundle is written at all.
+    # Note the near-miss shape: the bad name is a strict PREFIX of the shipped one, so
+    # any substring check reports it present. Tier B compares against exact .tpac TOC
+    # names, which is why it catches this and a grep does not.
+    "body_meta_mesh", "body_meta_mesh_shoulders", "body_meta_mesh_upperbody",
+    "face_meta_mesh", "hands_mesh", "legs_mesh",
+    "underwear_bottom_mesh", "underwear_top_mesh",
 }
 COLLISION_BODY_ATTRS = {
     "body_name", "shield_body_name",
@@ -130,6 +144,9 @@ COLLISION_BODY_ATTRS = {
 #   mesh_maturity_type (enum), holster_mesh_length (numeric), recalculate_body
 #   (bool), covers_body (bool). These are excluded by the exact-name allowlists
 #   above (we match exact attribute names, never an "ends-with" heuristic).
+#   `body_mesh_suffix` (skins.xml) is deliberately absent for the same reason: it
+#   holds a SUFFIX appended to armour mesh names at render time ("_fem"), not a
+#   mesh name, so resolving it against the present-set would fail on every skin.
 
 # Defensive support for multi-mesh container forms (0× in the Armory today, but
 # present in some vanilla / future item XML): `multi_mesh="X"`, and child
