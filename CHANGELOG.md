@@ -64,6 +64,40 @@ imprisoned or a fugitive and every one of those guards short-circuits. `_bornSet
 
 Not a tournament fix. The null was reachable from anything that dereferences `MapFaction` on these
 heroes; the tournament is just where it landed hardest.
+### fix(tools): lint_docs reports only real rot in the version and link checks (#397, #399)
+
+`python tools/lint_docs.py` reported 43 findings on a fresh clone and not one was rot: 29 stale
+version refs, all legitimate historical references, and 14 dead links, all pointing into the
+gitignored `docs/reviews/raw/`. A check that is wrong every time is a check nobody reads.
+
+The stale-version model flips from "a version string older than the pin is rot" to "a version string
+**presented as the current target** is rot" — the definition `agent-operating-manual.md` already
+states. Three refinements carry the rest: the present-tense test runs on the line with inline code
+stripped (so `` `CampaignTime.Now` `` in an API-break note is an identifier, not a claim), a line that
+also names the pin is contrasting two versions rather than calling the old one current, and
+`docs/adrs/` joins the exempt prefixes — which the comment above that tuple already claimed was the
+case, so `adrs/010`, the ADR that recorded this very problem, had been reporting itself as rot. Dead
+links are skipped by **target** under `docs/reviews/raw/`, not by linking file, so `REVIEW-LOG.md`'s
+several hundred other links stay covered.
+
+43 → 0 with no doc content edited; `tools/lint_docs.py` and its tests are the only files touched.
+9 tests added, 23 total. **The trade:** detection now requires marker-word phrasing, so present-tense
+rot worded as "built for" / "requires" / a bare "Engine:" label is missed — filed as #405 with the
+measured list. `> **Target: Bannerlord …**`, the CLAUDE.md header shape, is still caught, and
+`check_version_consistency` checks that line against the pin independently.
+
+External contribution from @davrodwconnections, review table from @Sternab. Every number was
+re-measured here before merge.
+
+Docs brought in line with the new semantics: `.claude/skills/lint-docs/SKILL.md` (checks 1-2 rewritten,
+the blind spots stated where a reader of a clean run will see them), `docs/ai-includes/agent-operating-manual.md`
+(the staleness rule is broader than the checker that enforces it — v1.4.5/v1.4.6 are not matched at
+all), `tools/README.md` (new **Docs & knowledge base** section — `lint_docs.py` had never been listed),
+and 4 lessons in `docs/reviews/lessons/build-tooling-workflow.md`. `docs/adrs/010` deliberately left
+alone: it is a point-in-time record, and it is now exempt from the check rather than rewritten to
+satisfy it. Lesson-index counts re-derived while there — 352 across 13 categories, five of which had
+drifted low.
+
 ### fix(dwarf): female dwarves crashed on sight — one wrong mesh name (#403)
 
 > "every instance that I attempt to find a female dwarf in a settlement/battle/tournament, if my
@@ -98,15 +132,6 @@ present in the packages, as a prefix, so a substring search reports it fine and 
 Scans 251 packages / 50 GB in seconds by handing one pattern file to `grep`'s DFA. Verified both
 ways: red on the pre-fix backup, green on all 89 references across all 12 races after the fix.
 
-actually shipped in the asset packages and loose asset trees, and exits non-zero on any that does not
-resolve. This is the second time a single wrong mesh string in that file has cost a debugging session
-(the first: the elf female skins, 2026-07-23), and both times the game gave no managed signal.
-
-The check that matters is the **trailing token boundary** — `sk_dwarf_underwear_female` really is
-present in the packages, as a prefix, so a substring search reports it fine and the bug survives.
-Scans 251 packages / 50 GB in seconds by handing one pattern file to `grep`'s DFA. Verified both
-ways: red on the pre-fix backup, green on all 89 references across all 12 races after the fix.
-
 ### fix(arena): guard the tournament winner panel against a null faction or culture (#407)
 
 Separate defect, found while triaging the same reporter's crash bundle `d7d9f7d3` (Erebor, TAOM
@@ -131,6 +156,15 @@ without ever resetting `IsValid`); they could not be reproduced from a full brac
 logged rather than guarded. If a bundle arrives carrying that dump, the slot is named outright.
 
 **Not-tested:** Harmony invocation and the in-game path; the eligibility logic has 13 unit tests.
+
+### fix(diagnostics): the action-set census now says which dwarf, and why
+
+The reporter's log showed `ActionSet 'as_human_warrior' used by race='dwarf'` with no way to act on
+it. The census now keys on sex as well as race — the entire male/female divergence lives in
+`ActionSetCode.GenerateActionSetNameWithSuffix`, and folding the sexes together hid exactly the class
+of report we were chasing — and records the character id and resolved Monster id. TAOM's own override
+emits `as_human<suffix>` when the Monster is null, and that fallback is now logged (deduped per
+sex+suffix) instead of silently turning a non-human into a human.
 
 ### fix(enlistment): the enlisted player can actually join the commander's battles (#406)
 
