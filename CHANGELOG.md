@@ -4,6 +4,51 @@
 
 ## 2026-08-07
 
+### fix(troopweight): shed-on-upgrade was deleting every settlement's militia down to ~20
+
+A player reported that every settlement held between 20 and 26 militia and stayed there, while the
+settlement overlay kept showing a healthy `+5/day`. Both numbers were honest. The model really did
+compute +5, and the militia really was being removed again the same day.
+
+`Patch17_TroopWeight`'s shed-on-upgrade postfix hangs off
+`PartyUpgraderCampaignBehavior.UpgradeReadyTroops`, which vanilla drives from `DailyTickPartyEvent` —
+and `CampaignPeriodicEventManager` initialises that ticker over `MobileParty.All`, not over lord
+parties. Militia parties are in `MobileParty.All`, so the postfix ran on all of them. A militia party
+has no `LeaderHero`, so `DefaultPartySizeLimitModel.CalculateMobilePartyMemberSizeLimit` skips the
+leader/clan/steward branch and returns its flat `ExplainedNumber(20f, ...)` base; `TaomPartySizeModel`
+layers the culture factors on top, which is where 20 / 21 / 24 / 26 come from. Militia troops are
+unlisted in `troop_weights.xml` so they weigh 1.0, `weighted == raw`, and `PlanShed` trimmed the raw
+headcount straight down to that number. `Town.DailyTick` added `MilitiaChange`; the shed took it back
+before the day was out.
+
+The hook's own one-shot diagnostic had been recording it in session logs since 2026-08-03:
+
+```
+Shed 2 bodies from 'Militia of Orthanc'        (weighted 26 > limit 24)
+Shed 8 bodies from 'Militia of Caras Galadhon' (weighted 28 > limit 20)
+Shed 1 bodies from 'Militia of Bar-noss'       (weighted 21 > limit 20)
+```
+
+Militia settles where `MilitiaChange` reaches zero, at `40 × (2 + prosperity/1000 + buildings)`, so
+Minas Tirith at 5303 prosperity should hold around 266 and was holding 26 — a tenth of its defenders,
+in every fief on the map. `OnUpgradeReadyTroops` now returns early when `party.LeaderHero` is null,
+beside the `MainParty` / `!IsActive` guards it already mirrors from vanilla.
+
+That closes two quieter cases with it. Bandit parties are leaderless and drew the same flat 20, which
+undid `Patch39_BanditPartySize` — that scales bandit spawn rosters toward their template maximum, up
+to 50, and the next daily tick cut them back. Garrison parties were being trimmed to
+`CalculateGarrisonPartySizeLimit`, which vanilla computes but never enforces as a hard cap; this
+feature's own doc already called garrisons "not party-size-budgeted" when it deferred weighting their
+tooltip. A settlement's own `PartyBase` reaches the hook through `MapEventEnded` and scores 0 from
+`GetPartyMemberSizeLimit`, which would have made every non-hero in it sheddable.
+
+Lord parties, the case the shed exists for, are untouched — the same logs show `Calemir's Party` still
+trimming 234 bodies at weighted 465 against limit 231.
+
+Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
+guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
+equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+
 ### fix(tools): five audits honour BANNERLORD_GAME_DIR instead of one machine's install path (#400, #401)
 
 `audit_battle_scenes`, `audit_mount_parity`, `audit_scene_names`, `validate_all_troop_refs` and

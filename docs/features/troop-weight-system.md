@@ -116,14 +116,32 @@ the weight budget should allow. Investigation (decompile-verified) found:
 
 A postfix on `UpgradeReadyTroops` (`Patch17_TroopWeight`) runs once per party *after* all its upgrades
 (so the roster mutation happens outside vanilla's loop). The hook re-guards `MainParty`/`!IsActive`
-(vanilla's own guard), early-outs when `CalculateWeightedMemberCount(party) <= PartySizeLimit`, then
-reads the roster into engine-free `WeightedTroopEntry` rows and calls the pure planner:
+(vanilla's own guard), skips leaderless parties (see below), early-outs when
+`CalculateWeightedMemberCount(party) <= PartySizeLimit`, then reads the roster into engine-free
+`WeightedTroopEntry` rows and calls the pure planner:
 
 `ITroopWeightService.PlanShed(entries, limit)` sheds the lowest-value bodies first (ascending Tier,
 then Weight; never heroes/leader) until the weighted total is back within the limit — "fewer, better
 troops." Removals apply via `MemberRoster.AddToCounts(character, -count)`. Side benefit: over-cap
 *legacy* parties trim on their next upgrade tick too. Gated on `EnableTroopWeight`; event-gated
 `[TroopWeight][diag]` logging fires only when a shed happens (strip after in-game sign-off).
+
+### Scope: leader-run parties only (2026-08-07)
+
+Vanilla drives `UpgradeReadyTroops` from `DailyTickPartyEvent`, and `CampaignPeriodicEventManager`
+tickers that over **`MobileParty.All`** — so the postfix sees militia, garrison, villager, caravan and
+bandit parties, not just lord parties. Only a leader-run party has a limit worth enforcing:
+`CalculateMobilePartyMemberSizeLimit` skips the leader/clan/steward branch when `LeaderHero` is null
+and returns a flat 20-body base, and `GetPartyMemberSizeLimit` returns 0 for a settlement's own
+`PartyBase` (which reaches the hook via `MapEventEnded`). Shedding to those numbers is deletion, not
+enforcement, so the hook returns early on `party.LeaderHero == null`.
+
+Shipped 2026-06-16 without that guard, it capped **every settlement's militia at ~20** regardless of
+prosperity for three weeks — the overlay kept reporting the model's `MilitiaChange` because the model
+never sees the shed. It also undid `Patch39_BanditPartySize` (bandit parties are leaderless, so their
+scaled-up spawn rosters were cut back on the next daily tick) and trimmed garrisons to
+`CalculateGarrisonPartySizeLimit`, a limit vanilla computes but never enforces as a hard cap — which
+is the same reason the garrison tooltip below is deferred as "not party-size-budgeted".
 
 ### Auto-resolve is power-driven, NOT count-driven (why weight can't touch it)
 
