@@ -122,7 +122,7 @@ The six byte patterns scanned at boot. Each entry has:
 | `byteOffsetFromMatch` | `int` | Usually `0`. Non-zero when the pattern anchors a unique caller and we offset to the callee. |
 | `historicalRva` | `long long` | v1.3.15 reference RVA, informational only (helps IDA navigation when re-authoring) |
 
-### Current values (Bannerlord v1.4.6 — authored 2026-06-30)
+### Shipped values (authored 2026-06-30 against Bannerlord v1.4.6)
 
 All 7 signatures are authored + statically verified against the installed v1.4.6
 `TaleWorlds.Native.dll` (each is a single match at the RVA below). See the

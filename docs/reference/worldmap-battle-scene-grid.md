@@ -22,7 +22,7 @@ Middle-earth map**. Companion to [scene-reference-audit.md](scene-reference-audi
 > also wrong (over-inferred from a crash). The grid is **not** baked into `Main_map`/`terrain.bin`; it is a
 > runtime `Assets/world_map/` texture. The authoritative source is
 > [BannerlordModding.LT › Battle Scene Grid](https://docs.bannerlordmodding.lt/editor/battle_scene_grid/) (1.2.12,
-> now confirmed to still apply on 1.4.5).
+> confirmed to still apply as of 1.4.5).
 
 > ## ⚠️ A mis-imported grid CRASHES campaign load
 >

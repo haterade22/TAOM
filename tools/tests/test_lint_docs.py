@@ -261,6 +261,96 @@ class StaleVersionRotTests(_PathConstantRepo):
         self.assertEqual(
             len(self._stale("features/e.md", "Engine: 1.3.15\n")), 1)
 
+    # --- #405 gap 2: 1.4.5 / 1.4.6, and the shapes that made them noisy -----------------------
+    # agent-operating-manual.md names both stale alongside 1.3.15, but the patterns never looked
+    # for them. They are one and two steps back rather than five, so they appear all over ordinary
+    # prose — 24 raw hits, of which 22 were noise. Each test below pins one reason a hit was noise.
+
+    def test_a_current_claim_about_145_is_reported(self):
+        self.assertEqual(len(self._stale("features/v1.md", "The current target is Bannerlord 1.4.5.\n")), 1)
+
+    def test_a_current_claim_about_146_is_reported(self):
+        self.assertEqual(len(self._stale("features/v2.md", "TAOM currently builds against v1.4.6.\n")), 1)
+
+    def test_the_branch_name_is_not_a_version_claim(self):
+        # The active branch IS `bannerlord-1.4.5`, quoted 53 times across 21 docs. This sentence is
+        # correct, current prose and says "currently" — no wording rule could separate the two.
+        self.assertEqual(
+            self._stale("localization/g.md",
+                        "Open a PR targeting the active branch (currently `bannerlord-1.4.5`).\n"), [])
+
+    def test_a_hyphenated_compound_is_not_a_version_claim(self):
+        # spider.md:262 — "(2026-06-12, post-1.4.6 campaign)" says WHEN the campaign ran.
+        self.assertEqual(
+            self._stale("features/hy.md",
+                        "## Current state & known issues (2026-06-12, post-1.4.6 campaign)\n"), [])
+
+    # The claim/silence pairs below exist because a guard that only ever has a negative test can
+    # be over-broad without anything noticing. Each silence above has a firing counterpart.
+
+    def test_the_copula_form_of_target_is_still_a_claim(self):
+        # Caught by the pre-#405 checker with a bare marker; narrowing to "marker immediately
+        # before a version" dropped it, which is a worse defect than the noise it removed.
+        for line in ("The target is Bannerlord 1.3.15.\n",
+                     "Our target version is 1.3.15.\n",
+                     "Our target remains 1.3.15.\n"):
+            self.assertEqual(len(self._stale(f"features/c{hash(line) & 0xffff}.md", line)), 1, line)
+
+    def test_the_copula_form_of_active_is_still_a_claim(self):
+        for line in ("The active version is 1.3.15.\n",
+                     "Bannerlord 1.3.15 is the active engine.\n"):
+            self.assertEqual(len(self._stale(f"features/a{hash(line) & 0xffff}.md", line)), 1, line)
+
+    def test_a_marker_in_a_different_sentence_does_not_pair(self):
+        # castle-recruitment.md:117 shape — "Current" opens a new sentence, about the data.
+        self.assertEqual(
+            self._stale("features/two.md",
+                        "The engine throws rather than returning null on v1.4.6. "
+                        "Current dev data has full coverage.\n"), [])
+
+    def test_a_marker_in_a_different_table_cell_does_not_pair(self):
+        self.assertEqual(
+            self._stale("features/tbl.md",
+                        "| Patch targets exist in v1.4.5 | the current pin is elsewhere |\n"), [])
+
+    def test_a_cross_reference_aside_is_not_a_claim(self):
+        # native-skin-fixes.md:322 — `(see "v1.4.6 native port")` names a section.
+        self.assertEqual(
+            self._stale("features/see.md",
+                        'The fastest path is now `tools/x.py` (see "v1.4.6 native port" below).\n'), [])
+
+    def test_an_explicitly_negated_version_is_not_a_claim(self):
+        # elephant.md:117 — "built for Bannerlord ~1.2.12, NOT 1.4.5".
+        self.assertEqual(
+            self._stale("features/neg.md",
+                        "The upstream pack is built for Bannerlord ~1.2.12, NOT 1.4.5.\n"), [])
+
+    def test_target_as_a_noun_is_not_a_claim(self):
+        # "hook targets", "patch targets" — the thing a patch points at, next to a version in
+        # exactly the docs that discuss porting.
+        self.assertEqual(
+            self._stale("features/noun.md", "The v1.4.6 hook targets remain authored + verified.\n"), [])
+
+    def test_target_as_a_verb_before_a_version_is_a_claim(self):
+        self.assertEqual(len(self._stale("features/verb.md", "TAOM targets Bannerlord 1.4.5.\n")), 1)
+
+    def test_target_as_a_label_is_a_claim(self):
+        # The CLAUDE.md header shape — the highest-value site this check exists for.
+        self.assertEqual(len(self._stale("features/lbl.md", "> **Target: Bannerlord 1.4.6**\n")), 1)
+
+    def test_active_as_an_adjective_is_not_a_claim(self):
+        # lotrlome-armory-snapshot/README.md:99 — "423 missing active action types".
+        self.assertEqual(
+            self._stale("features/adj.md",
+                        "By Native 1.4.6 it had drifted to 423 missing active action types.\n"), [])
+
+    def test_engine_label_counts_but_engine_mid_sentence_does_not(self):
+        self.assertEqual(len(self._stale("features/lab.md", "Engine: 1.4.6\n")), 1)
+        # elephant.md:309 — "verified against the engine:" is punctuation, not a label.
+        self.assertEqual(
+            self._stale("features/mid.md",
+                        "Bearing verified against the engine: `Vec2.LeftVec()` in the v1.4.5 decompile.\n"), [])
+
     def test_widening_did_not_swallow_the_historical_shapes(self):
         # The four shapes #399 exists to keep quiet must stay quiet after the widening.
         for name, line in [

@@ -78,6 +78,24 @@ STALE_VERSION_PATTERNS = [
     (re.compile(r"\bv?1\.3\.15\b"), "1.3.15"),
     (re.compile(r"\bBannerlord\s+1\.3\b(?!\.)"), "Bannerlord 1.3"),
     (re.compile(r"\bv1\.3\.x\b"), "v1.3.x"),
+    # agent-operating-manual.md names v1.4.5 and v1.4.6 stale alongside v1.3.15; the checker
+    # never looked for them, so the rule and its enforcement disagreed (#405 gap 2).
+    #
+    # `(?<![-\w.])` keeps the branch name out. The active branch IS `bannerlord-1.4.5`, quoted 53
+    # times across 21 docs — "the active branch (currently `bannerlord-1.4.5`)" in
+    # TRANSLATOR_GUIDE.md:229 is correct, current prose that a bare \b pattern reads as rot, and no
+    # wording rule can tell the two apart because the sentence genuinely says "currently".
+    # `(?<![-\w.])` covers two distinct hyphen cases, both real in this tree:
+    #   - the branch name. The active branch IS `bannerlord-1.4.5`, quoted 53 times across 21
+    #     docs; TRANSLATOR_GUIDE.md:229 — "the active branch (currently `bannerlord-1.4.5`)" — is
+    #     correct, current prose that no wording rule can separate from a claim.
+    #   - hyphenated compound modifiers. spider.md:262 heads a dated section "(2026-06-12,
+    #     post-1.4.6 campaign)"; "post-1.4.6" describes when the campaign ran.
+    # Narrowing this to `(?<!bannerlord-)` was tried and re-admitted spider.md:262, so the broad
+    # form stays. The cost is disclosed: a claim spelled with a hyphen before the digits is not
+    # seen. `test_a_current_claim_about_145_is_reported` pins that the ordinary spelling still is.
+    (re.compile(r"(?<![-\w.])v?1\.4\.5\b"), "1.4.5"),
+    (re.compile(r"(?<![-\w.])v?1\.4\.6\b"), "1.4.6"),
 ]
 # Paths where v1.3 refs are intentional (migration docs, archived material, ADRs that name old versions historically).
 # docs/audits/ is the v1.3.15 migration audit record — every "v1.3.15-unverified" flag and
@@ -117,6 +135,12 @@ STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS = (
     # rca-*; the lessons/ dir quotes old versions as the historical context of each lesson.
     "REVIEW-LOG",
     "audit-",
+    # The docs that DESCRIBE this checker have to quote rot to explain it: doc-health-linter.md
+    # lists the shapes it catches, doc-lookup.md summarises the marker set. Same self-reference
+    # as agent-operating-manual.md — the rule text that defines staleness reads as stale — and
+    # the same reason `doc-lint-` is already here.
+    "doc-health-linter",
+    "doc-lookup",
 )
 STALE_VERSION_EXEMPT_DIR_PARTS = ("docs/reviews/lessons",)
 # The exemptions above are all whole-FILE switches (directory, filename, path part). That is the
@@ -131,14 +155,39 @@ STALE_VERSION_EXEMPT_DIR_PARTS = ("docs/reviews/lessons",)
 # false-positive cost, which is why it lands now rather than behind an exemption pass.
 # `Engine\s*:` sits OUTSIDE the \b group deliberately: a word boundary after a colon needs a word
 # character next, so `Engine: 1.3.15` can never match from inside it.
+# How far from the version string a marker still counts as describing it. See the call site in
+# check_stale_versions for the measurement this number comes from.
+MARKER_WINDOW = 60
 CURRENT_TARGET_RE = re.compile(
-    r"\b(current(ly)?|target(s|ed|ing)?|now|active|supported|"
+    r"\b(current(ly)?|now|supported|"
     r"builds? against|building against|pinned to|"
     r"built for|requires?|compatible with)\b"
-    # `runs on` is ordinary technical English — doc-health-linter.md:69 says a regex "still runs on
-    # the raw line" — so it only counts as a target claim when a version follows it.
+    # `target` carries two senses and only one is a claim. "hook targets remain authored",
+    # "All 7 targets were re-derived", "Patch targets exist in v1.4.5" are NOUNS — the thing a
+    # patch points at — and they sit next to a version in exactly the docs that discuss porting.
+    # The claim sense is either the label form (`Target: Bannerlord X`, the CLAUDE.md header this
+    # check exists to catch) or the verb followed by a version.
+    r"|\bTargets?\s*:"
+    r"|\btarget(s|ed|ing)?\s+(?:Bannerlord\b|v?\d)"
+    # …and the copula form. "Our target version IS 1.3.15", "the active version IS 1.3.15",
+    # "our target REMAINS 1.3.15" are claims the pre-#405 checker caught with a bare marker;
+    # narrowing to "marker immediately before a version" dropped them. What separates them from
+    # the noun senses is that a version follows the verb: "hook targets REMAIN authored" and
+    # "All 7 targets WERE re-derived" do not.
+    r"|\b(?:target|active)\w*\s+(?:\w+\s+){0,2}(?:is|are|was|were|remains?)\s+"
+    r"(?:the\s+|Bannerlord\s+)*v?\d"
+    # Same two senses: `runs on` is ordinary technical English — doc-health-linter.md:69 says a
+    # regex "still runs on the raw line".
     r"|\bruns? on\s+(?:Bannerlord\b|v?\d)"
-    r"|\bEngine\s*:", re.I)
+    # `active` has the same noun/adjective split as `target`: "423 missing active action types"
+    # (lotrlome-armory-snapshot/README.md:99) is a category of animation, not a claim about an
+    # engine version. Only the version-facing sense counts.
+    r"|\bactive\s+(?:Bannerlord\b|v?\d)"
+    # Reverse order: "Bannerlord 1.3.15 is the active engine."
+    r"|\bv?[\d.]+\s+is\s+(?:the\s+)?(?:active|current|target)\b"
+    # `Engine:` as a LABEL — line start, table cell, bullet or heading. Mid-sentence it is just
+    # punctuation: elephant.md:309 says "verified against the engine: `Vec2.LeftVec()` …".
+    r"|(?:^|[|>#*-]\s*)Engine\s*:", re.I | re.M)
 # Residue after that flip: contrast lines that name an old version AND a present-tense word, where
 # the present-tense word belongs to the CURRENT version, also named on the same line — e.g.
 # "that mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.4.7)", and the rule text
@@ -307,6 +356,39 @@ def _read_pin() -> str:
         return ""
 
 
+CLAUSE_BREAK_RE = re.compile(
+    r"(?<=[.!?])\s"          # sentence end
+    r"|\s\|\s|\|"            # table cell
+    r"|\(see\b",             # cross-reference aside: "(see \"v1.4.6 native port\")" names a
+                             # section, it does not claim a target
+    re.I)
+# A version the sentence explicitly rules OUT is not a claim that it is current:
+# elephant.md:117 says the donor pack is "built for Bannerlord ~1.2.12, NOT 1.4.5".
+NEGATED_VERSION_RE = re.compile(r"\b(not|never|isn't|is not|rather than|instead of)\s*$", re.I)
+
+
+def clause_around(line: str, match: re.Match) -> str:
+    """The clause the version sits in: same sentence, same table cell, bounded by MARKER_WINDOW.
+
+    A markdown line is a whole paragraph — castle-recruitment.md:117 runs 1,450 characters — so
+    "a marker somewhere on this line" pairs words that have nothing to do with each other. Two
+    bounds, and both are needed:
+
+    - **Clause.** castle-recruitment.md:117 reads "… returning null on v1.4.6). Current dev data
+      has full coverage" — "Current" opens a new sentence about the DATA. Splitting on sentence
+      ends and table-cell pipes keeps a marker with the version it actually describes.
+    - **Distance.** A clause can still be long; MARKER_WINDOW caps how far the search reaches.
+      Measured over the 1.4.5/1.4.6 candidates, real pairs sit within ~51 characters and the
+      nearest unrelated one was at 71, so the cap sits in that gap.
+    """
+    lo = max(0, match.start() - MARKER_WINDOW)
+    hi = min(len(line), match.end() + MARKER_WINDOW)
+    for b in CLAUSE_BREAK_RE.finditer(line, lo, match.start()):
+        lo = b.end()                       # last break before the version wins
+    right = CLAUSE_BREAK_RE.search(line, match.end(), hi)
+    return line[lo:right.start() if right else hi]
+
+
 def check_stale_versions(files: list[Path]) -> list[tuple[Path, int, str, str]]:
     findings: list[tuple[Path, int, str, str]] = []
     pin = _norm_ver(_read_pin())
@@ -334,7 +416,17 @@ def check_stale_versions(files: list[Path]) -> list[tuple[Path, int, str, str]]:
                     # backticks is an identifier, not a claim — `CampaignTime.Now` in an API-break
                     # note (messengers.md:23) is the whole reason this is scrubbed. The version
                     # match above stays on the raw line, where a `1.3.15` in backticks still counts.
-                    if not CURRENT_TARGET_RE.search(INLINE_CODE_RE.sub("", line)):
+                    #
+                    # The marker must also be NEAR the version. A markdown line here is a whole
+                    # paragraph — castle-recruitment.md:117 runs 1,450 characters — so "somewhere on
+                    # the same line" pairs a marker with a version that has nothing to do with it.
+                    # Measured over the 1.4.5/1.4.6 candidate set: 11 findings have the marker within
+                    # 51 characters of the version, the next is at 71, and the tail reaches 1,228.
+                    # The window sits in that gap. Widening it re-admits paragraph noise; narrowing
+                    # it starts dropping ordinary prose like "TAOM is built for Bannerlord 1.3.15."
+                    if NEGATED_VERSION_RE.search(line[max(0, m.start() - 24):m.start()]):
+                        break
+                    if not CURRENT_TARGET_RE.search(INLINE_CODE_RE.sub("", clause_around(line, m))):
                         break
                     # ...and a line that also names the pin is contrasting the two, not claiming
                     # the old one is current.
