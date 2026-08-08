@@ -110,12 +110,49 @@ Four causes, all found by instrumenting a live session rather than by reading co
 | **Close the conversation's `PlayerEncounter` when the oath is sworn** | The oath happens inside a conversation, which runs inside a `PlayerEncounter`. Parking without closing it left `PlayerEncounter.Current` live for the whole term — measured at `playerEncounter=True` on **93 of 93** ticks — and `EncounterManager` refuses EVERY main-party encounter while it is set. That single leak made the player unable to click any lord or settlement, and it survived into discharge. The donor closes it at the same point (`FinalizeEnlistmentConversation`: `Finish()` then attach). Discharge closes it too, and the hourly reconciler self-heals saves already stuck in that state. |
 | **Every return to parked service owes the player a menu** | Re-parking alone leaves them on the open map with no menu and no way to act — reported as "after battle I was left behind and the option menu isn't here". The only re-assert was `OnConversationEnded`, which never fires on the battle path. Both battle paths (normal end, failed-join rollback) now call `ReassertServiceMenu`. |
 | **Never anchor world spawns on the commander's CURRENT settlement** | `CommanderSnapshot.SettlementId` is empty whenever the column is marching — nearly always — so hunt duties could only start while the commander sat in a town. Every `recon_sweep` failed with `SpawnLooterParty: settlement=''`. Falls back to `FindNearestFriendlySettlement`. |
-| **Calibrate diagnostic thresholds against a real session, not a guess** | The drift warning used `> 1f`; ordinary inter-tick drift while marching is ~1.8, so it fired on essentially every sync — **291 of one session's 299 warnings**. A per-world-map-event INFO line produced another 3674. Both are now DEBUG / properly thresholded. A diagnostic that fires constantly is indistinguishable from no diagnostic. |
+| **Calibrate diagnostic thresholds against a real session, not a guess** | The drift warning used `> 1f`; ordinary inter-tick drift while marching is ~1.8, so it fired on essentially every sync — **291 of one session's 299 warnings**. A per-world-map-event line produced another 3674. The threshold is now `15f`, and the routine lines sit behind the toggle described below. A diagnostic that fires constantly is indistinguishable from no diagnostic. |
 
 **Verified in live play 2026-08-07:** field battle join (instant, via `MapEventStarted`), siege assault
 join, hourly-recovery join when the immediate edge is missed, return to parked service after battle,
 and config load without reverting. The measured steady-state drift while following is ~1.8 map units —
 the player is teleport-chased rather than genuinely attached, which is what "dragged along" describes.
+
+### The `[EnlistDiag]` volume toggle (MCM: Enlistment/Diagnostics)
+
+`FileLogger` has **no level filter**. Every call builds its string caller-side, timestamps it, and the
+writer thread puts it on disk — so a `LogDebug` downgrade changes durability, never volume. In one
+32-minute session `[EnlistDiag]` was **4,856 of 6,001 lines (81%)**, 3,674 of them from the single
+"map event started, commander NOT in it" line. The gate therefore had to go at the **call site**, and
+`Main/Core/Logging/FileLogger.cs` is deliberately untouched.
+
+**`TaomSettings.EnableEnlistmentDiagnostics`** (MCM group `Enlistment/Diagnostics`, `RequireRestart =
+false`) reaches the call sites through `IEnlistmentDiagnosticsSettingsProvider`, whose singleton reads
+the static on every call — which is what makes "takes effect immediately" true rather than aspirational.
+
+**It ships ON** while the enlisted-service loop is under active diagnosis, and the provider's
+MCM-absent fallback is `?? true` to match. Those are two independent literals encoding one decision;
+`CompiledDefault_AndProviderFallback_Agree` fails if either moves alone, so a player without MCM never
+gets different logging from a player at the shipped default.
+
+**Gated lines emit at INFO, not DEBUG.** DEBUG is `FileLogger`'s async queue and a hard native CTD
+discards whatever is still in it — under a DEBUG design the trace you switched on to catch a crash is
+exactly what the crash destroys. Volume is the toggle's job; durability is the level's.
+
+| Gated (routine, ~93.5% of measured volume) | Always-on (faults + forensic controls) |
+|---|---|
+| `TICK` (reconciler), `SYNC ok`, `PARK ok`, `RESTORE ok`, "map event started, commander NOT in it" | every `PARK/SYNC/RESTORE FAILED`/`THREW`, the drift WARNING above `15f`, the stranded-`PlayerEncounter` sweep + its failure, "verdict=Attached but the party is NOT parked", and every `DischargeService` line — including `LEFT THE PLAYER UNABLE TO START ENCOUNTERS`, which is never gated under any circumstance |
+
+**"Toggle off" does NOT mean "zero `[EnlistDiag]` lines"** — the toggle gates volume, not the tag,
+because `[EnlistDiag]` is the grep handle a bug reporter needs. Fault lines keep it. Expect a support
+question about this.
+
+**The trap, for anyone editing a gate:** in `EnlistmentReconciler.ReconcileAttached` the logging is
+*interleaved* with `_encounter.Finish()`, `EnsureParked()` and `SyncPosition()`. A gate is
+`if (_diag?.IsEnabled == true)` around **exactly one logging statement** — never a block, never
+guarding a `return`, never above a mutation. `EnlistmentDiagnosticsGateTests` group B1 runs the
+reconciler with the toggle off and asserts each mutation still happens; a source-scan guard in the
+same file rejects `IsEnabled) return` and `if (!… IsEnabled` across all three gated files.
+`DischargeService` takes no provider at all, which is what makes its lines structurally ungateable.
 
 ### Battle-join rules learned the hard way (2026-08-07 — read before touching this path)
 
@@ -139,6 +176,65 @@ hint`; ally-thanks pair is PUBLIC on 1.4.7). All fail open. All six targets pinn
 `Patch66EnlistmentBindingTests` against the installed DLLs. The donor's
 `MapState.OnMapConversationOver` patch was replaced by `CampaignEvents.ConversationEnded`.
 
+## The remediation arc (2026-08-07, batches 0-10)
+
+The shipped feature had a defect that made the whole fantasy inert: **the enlisted player never
+joined a single one of their commander's battles.** `ServiceBattleService` gated joining on
+`MapEvent.CanPartyJoinBattle`, which is a *diplomacy* test — it requires every party on the
+opposing side to be at war with the joiner's `MapFaction`. An enlisted player keeps their own clan
+identity and is typically at war with nobody, so it returned false for every battle that has ever
+existed. Unit tests mocked `IEncounterAdapter`, so all of them passed. Three rounds of code review
+missed it; instrumenting the live game found it in one session.
+
+### What each batch changed
+
+| Batch | Change | Why it mattered |
+|---|---|---|
+| 0 | `Settlement.Find` replaces `CampaignObjectManager.Find<Settlement>` | `Find<Settlement>` returns null **unconditionally** — Settlement is never registered with it. Every duty settlement lookup was silently failing. |
+| 1 | A granted release is never desertion | `ClassifyLeaveReason` returned Desertion before `ContractEndDay`, and the contract defaults to 365 days — so every realistic exit forfeited the player's arrears and called them a deserter for asking leave and being given it. |
+| 2 | Cheap per-tick adapter surface | `GetSnapshot` renders `Name.ToString()` and walks Culture/Clan/Settlement; it is forbidden on a pump. `GetTickSnapshot` + `PlayerPresenceFlags` are the allocation-free reads. |
+| 3 | Real-time service pump | The engine dispatches `OnMapEventStarted` exactly once, as the last statement of `MapEvent.Initialize` — so a commander joining an ALREADY-RUNNING fight is invisible to it. `OnPartyAddedToMapEventEvent` is the only edge that sees a late join. |
+| 4 | One encounter-ownership policy | Five places finished a `PlayerEncounter` with their own ad-hoc reasoning. A settlement encounter has no encountered MOBILE party — that fact is what separates "visiting a town" from "meeting a lord". |
+| 5 | Discharge hand-back invariant (INV-D1) | Every discharge must leave the player able to act. Ordering is load-bearing at three points; each is documented in place. |
+| 6 | Informed leave choice | Asking to leave now states its price with a real day count. Desertion has exactly ONE producer: a branch the player picked after being told the cost. |
+| 7 | Settlement following | The player enters the town with the column instead of standing invisibly outside the gate for the whole stop. |
+| 8 | Dialog agency + MCM master switch | Reassignment, the quartermaster and in-person discharge were shipped, tested, and unreachable — nothing could open a conversation. |
+| 9 | Live status board | The wait menu said one unchanging sentence from oath to discharge. |
+| 10 | Two re-attach edges + re-entrancy guard | The reconciler calls `LeaveSettlementAction`, which dispatches the edge it now subscribes. |
+
+### Design decisions worth not re-litigating
+
+**Attaching the player to the commander's party (`MobileParty.AttachedTo`) was considered and
+rejected.** `DefaultEncounterGameMenuModel.GetGenericStateMenu` dereferences
+`mainParty.Army.LeaderParty` unguarded inside `if (mainParty.AttachedTo != null)`, and
+`Campaign.cs` calls it every tick on the open map. `AttachedTo` set without an `Army` is therefore
+a guaranteed CTD, not a style question.
+
+**Settlement following places the player inside but holds them in the TAOM wait menu.** Letting
+them actually *use* the town is a separate feature: every in-settlement affordance routes through
+`PlayerEncounter.LocationEncounter`, and a live `PlayerEncounter` while `EnlistedAttached` is
+precisely what the reconciler's stranded-encounter sweeper destroys. That needs its own
+`EnlistedOnLeave` state with its own save-compat and transition work.
+
+**The release refusal is keyed to `MinimumServiceDays` (21), deliberately NOT `ContractDays`
+(365).** Keying it to the contract would refuse every realistic request and leave desertion as the
+only exit — Batch 1's bug wearing a different hat.
+
+**Four of the donor's six re-attach edges are DECLINED, on purpose.** Subscribed:
+`OnSettlementLeftEvent`, `OnPartyLeftArmyEvent`. Declined: player-battle-end, army-joined,
+siege-joined, siege-left, siege-completed. The pump re-derives everything within 250 ms, and the
+declined edges only re-arm a flag whose own retry budget is an hour anyway — so they buy nothing
+the hourly pass does not already give. **The honest caveat:** `CampaignEvents.TickEvent` does not
+fire inside encounter/settlement menus or a map conversation, and the wait-menu tick only runs on
+our own menu, so in those windows a declined edge does fall back to the hourly reconciler. The two
+that WERE subscribed are exactly the ones that fire in that gap.
+
+### The lesson
+
+Mocking the adapter meant no test ever exercised the seam between adapter and engine — which is
+the one place unit tests structurally cannot reach, and where this bug lived. `docs/features/`
+listed "encounter join from parked state" under *owed at ship, never run in a live game*, and that
+gate is precisely the one that failed. Recorded in `docs/reviews/lessons/testing-qa.md`.
 ## Engine facts verified on installed 1.4.7 (Phase 0.2 sweep)
 
 `MobileParty.Position` is `CampaignVec2` (no `Position2D`; `GetPosition2D` is get-only);
