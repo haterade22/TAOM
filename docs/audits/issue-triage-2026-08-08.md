@@ -2,20 +2,14 @@
 
 HEAD at verification: `828bf941` on `bannerlord-1.4.5`. Engine pin **v1.4.7**. 147 open issues against 260 closed, zero open pull requests.
 
-> **HEAD moved during the run.** A concurrent session landed `e0f4f21d` (enlistment localization) and
-> `0e06834c` (a CLAUDE.md note on unpopped auto-stashes) while triage was in flight, so the branch tip
-> is now `0e06834c`. Every verdict and every closing comment cites `828bf941`, which is the commit the
-> evidence was actually read at. Only #418 sits near the new work, and `e0f4f21d` strengthens rather
-> than contradicts its closure.
-
 Every open issue was checked against the repository at HEAD to answer one question: **is this still an issue?** The tracker had drifted into a work log — most bodies are past-tense engineering reports written when work was planned or finished, so for a large share the real question was not "is this broken?" but "did anyone press close?"
 
 ## Outcome
 
 | | Count |
 |---|---|
-| Closed | **74** |
-| Kept open | 67 |
+| Closed | **81** |
+| Kept open | 60 |
 | Escalated (needs a decision from you) | 6 |
 | — status comment posted | 52 |
 | — labelled only, no comment | 21 |
@@ -26,11 +20,11 @@ Comments were posted where something had genuinely changed. Issues whose situati
 
 | Reason | Count | Disposition |
 |---|---|---|
-| `shipped-and-verified` | 69 | CLOSE |
+| `shipped-and-verified` | 76 | CLOSE |
 | `blocked-ingame` | 29 | KEEP / ESCALATE |
 | `partial` | 16 | KEEP / ESCALATE |
-| `blocked-external` | 11 | KEEP / ESCALATE |
 | `valid-unstarted` | 9 | KEEP / ESCALATE |
+| `blocked-external` | 4 | KEEP / ESCALATE |
 | `obsolete-premise` | 4 | CLOSE |
 | `blocked-decision` | 4 | KEEP / ESCALATE |
 | `parked-by-design` | 3 | KEEP / ESCALATE |
@@ -69,7 +63,7 @@ Each of these had already produced a wrong answer in this repo at least once.
 
 | Trap | The case that proves it |
 |---|---|
-| **The fix lives in another repository** | #352 and #364: the commit is on trunk with a CHANGELOG entry, and players do not get the fix until `LOTRLOME_Armory` is released. Structurally ineligible to close. |
+| **The fix lives in another repository** | #352, #364, #390, #300, #338, #342, #358 all cite paths in `LOTRLOME_Armory` or `TAOM_Map`, which this repo does not track. **The first pass drew the wrong conclusion from this** — see the correction below. |
 | **An author-declared exit criterion outranks the project close bar** | #346's "Remaining before close — in-game smoke: 1…4", and the two closures the refuters killed. 42 issues carry such a gate. |
 | **Both CHANGELOG files are newest-first** | #82's archive entry says "port all 7 native hooks **+ activate**"; a *later* entry disables it at the wiring level. Grep the archive alone and you close a parked feature. |
 | **Culture ids are aliased** | `culture="Culture.rohan"` returns zero rows. Rohan's 68 NPCs are `Culture.vlandia`. The obvious grep says the data is missing. |
@@ -81,6 +75,37 @@ Each of these had already produced a wrong answer in this repo at least once.
 | **Closing X can orphan Y's blocker** | #393 and #396 are both blocked on #391's in-game run. |
 | **Absence of a citation proves nothing** | 1433 commits; ~100 ever used a `Closes` trailer, abandoned in June. ~35% of CHANGELOG headings name an issue. |
 | **A commit can be entirely off-trunk** | #275 reads as fully shipped; its whole implementation is on an unmerged branch and `Main/Features/Music/` does not exist at HEAD. |
+
+## Correction: "untracked here" is not "unfixed"
+
+The first pass held 11 issues open as `blocked-external` because their fix lives in `LOTRLOME_Armory`
+or `TAOM_Map`. That test was wrong. *Can this repo ship the fix* and *does the fix exist* are
+different questions, and only the second one decides whether an issue is still an issue — a player
+does not care which module a correction landed in.
+
+Re-checked against the installed modules, **seven were already applied** and are now closed:
+
+| # | Verified in the live module |
+|---|---|
+| #352 | Both bad `body_name` forms return zero; `..._2h_a` and `..._a02_head` each present once |
+| #364 | `family_type="1"` on the Gondor caparison's `<Armor>` |
+| #300 | `as_dwarf_warrior` carries 4,842 `<action>` entries — the parity patch is applied |
+| #390 | Packages repacked 2026-08-07; `validate_mesh_refs.py` → 3959/3959 present, 0 missing, PASS |
+| #338 | `town_LN1` down to one `map_siege_ram`; all 221 fortifications on the identical `(4,4,1,2)` shape |
+| #342 | The fix script's dry-run reports 0 Mordor changes; 0 inversions across 20 slot × tier cells |
+| #358 | 106/106 item defs present, 0 cross-folder duplicates, all 106 ids in the recompiled `pack5.tpac` |
+
+**Four remain genuinely external:** #398 and #385 need asset re-exports that have not happened
+(#398's source geo is still dated 2025); #62's fix is inside BannerlordTogether, a third-party mod;
+and #359 turned out to have *regressed* — the prefab split shipped and was then reverted, and
+`tools/check_prefab_budget.py` reports `OK` at 99% of the engine's hard cap because it counts one
+module where the engine assert is global.
+
+Two verification lessons, both self-inflicted this session. A regex of `<action ` misses
+`<action\n  type=…` and undercounted 4,842 as 134. And a sprite path guess of `ui_taom/` instead of
+`ui_taom_career_system/` reported 0 PNGs where 49 exist. **Both times the shallow grep was wrong and
+the original verdict was right** — resolve by parse, and confirm a path exists before concluding
+absence.
 
 ## Escalated — these need a decision from you
 
@@ -199,7 +224,7 @@ Verified true and completely untouched at HEAD -- every culture's `civ_template`
 | [#291](https://github.com/haterade22/TAOM/issues/291) | feat(lotr-issues): replace all 43 vanilla procedural issues with LOTR-authored… | KEEP | `blocked-ingame` | comment |
 | [#296](https://github.com/haterade22/TAOM/issues/296) | feat: naval travel — sail across water without the Naval DLC | KEEP | `parked-by-design` | comment |
 | [#299](https://github.com/haterade22/TAOM/issues/299) | fix(ui): save-load hero preview CTD (AccessViolation) on custom-race saves | **CLOSED** | `shipped-and-verified` | close |
-| [#300](https://github.com/haterade22/TAOM/issues/300) | Crash: dwarf falling into water → CTD (standalone as_dwarf_warrior missing 423… | KEEP | `blocked-external` | comment |
+| [#300](https://github.com/haterade22/TAOM/issues/300) | Crash: dwarf falling into water → CTD (standalone as_dwarf_warrior missing 423… | **CLOSED** | `shipped-and-verified` | comment |
 | [#301](https://github.com/haterade22/TAOM/issues/301) | fix(faction-map): NRE in GenerateClanName on Rohan (vlandia) character-creatio… | **CLOSED** | `shipped-and-verified` | close |
 | [#302](https://github.com/haterade22/TAOM/issues/302) | feat(custom-battles): curated per-faction commander lists in Custom Battle | KEEP | `blocked-ingame` | comment |
 | [#303](https://github.com/haterade22/TAOM/issues/303) | Skip the campaign intro video on new game | **CLOSED** | `shipped-and-verified` | close |
@@ -218,11 +243,11 @@ Verified true and completely untouched at HEAD -- every culture's `civ_template`
 | [#335](https://github.com/haterade22/TAOM/issues/335) | fix(caravan-trade): caravans leave a town and immediately return (home rubber-… | KEEP | `blocked-ingame` | comment |
 | [#336](https://github.com/haterade22/TAOM/issues/336) | crash/hang: shader precompile stuck on 1.4.7 — DeploymentMissionController.Set… | KEEP | `partial` | comment |
 | [#337](https://github.com/haterade22/TAOM/issues/337) | refactor(troop-weight): weight the party-size limit instead of the member coun… | KEEP | `blocked-ingame` | comment |
-| [#338](https://github.com/haterade22/TAOM/issues/338) | CTD: IndexOutOfRangeException in siege map tick — town_LN1 (Rivendell) had an … | KEEP | `blocked-external` | comment |
+| [#338](https://github.com/haterade22/TAOM/issues/338) | CTD: IndexOutOfRangeException in siege map tick — town_LN1 (Rivendell) had an … | **CLOSED** | `shipped-and-verified` | comment |
 | [#339](https://github.com/haterade22/TAOM/issues/339) | CTD: AccessViolationException releasing tournament UI movie at exit (v2.0.12 p… | KEEP | `partial` | comment |
 | [#340](https://github.com/haterade22/TAOM/issues/340) | Crossbow-armed troops generated with Bow-top skills (12 troops) + naffatun mis… | KEEP | `blocked-ingame` | comment |
 | [#341](https://github.com/haterade22/TAOM/issues/341) | Two-hander troops generated with Polearm-top skills (59 troops across 12 cultu… | KEEP | `blocked-ingame` | comment |
-| [#342](https://github.com/haterade22/TAOM/issues/342) | Mordor armor beats Gondor per tier (Black Uruk set over-curve + Gondor at base… | KEEP | `blocked-external` | comment |
+| [#342](https://github.com/haterade22/TAOM/issues/342) | Mordor armor beats Gondor per tier (Black Uruk set over-curve + Gondor at base… | **CLOSED** | `shipped-and-verified` | comment |
 | [#343](https://github.com/haterade22/TAOM/issues/343) | Follow-up: 1H-only troops with Polearm-top skills (108 strict / 46 ties) + off… | ESCALATE | `valid-unstarted` | comment |
 | [#344](https://github.com/haterade22/TAOM/issues/344) | Troop names promise weapons their equipment lacks (Balcoth Axemen with scimita… | KEEP | `blocked-ingame` | comment |
 | [#345](https://github.com/haterade22/TAOM/issues/345) | CTD on vanilla 'daughter found' quest — LotrIssues SandBox suppression silentl… | ESCALATE | `blocked-decision` | comment |
@@ -230,15 +255,15 @@ Verified true and completely untouched at HEAD -- every culture's `civ_template`
 | [#347](https://github.com/haterade22/TAOM/issues/347) | Author a Mordor settlement guard pool (content follow-up to #346) | KEEP | `valid-unstarted` | label-only |
 | [#349](https://github.com/haterade22/TAOM/issues/349) | CTD: native crash during siege OrderOfBattle formation distribution (engine v1… | KEEP | `blocked-ingame` | comment |
 | [#351](https://github.com/haterade22/TAOM/issues/351) | feat(banner-bearers): formations raise their faction standard, bearers keep th… | KEEP | `blocked-ingame` | comment |
-| [#352](https://github.com/haterade22/TAOM/issues/352) | fix(armory): siege load hangs forever on two physics-body typos in crafting pi… | KEEP | `blocked-external` | label-only |
+| [#352](https://github.com/haterade22/TAOM/issues/352) | fix(armory): siege load hangs forever on two physics-body typos in crafting pi… | **CLOSED** | `shipped-and-verified` | label-only |
 | [#353](https://github.com/haterade22/TAOM/issues/353) | feat(prisoner-recruitment): no morale lost recruiting prisoners of your own fa… | KEEP | `blocked-ingame` | label-only |
 | [#354](https://github.com/haterade22/TAOM/issues/354) | Age-8 child education CTD: missing stage_2 education character templates (loth… | KEEP | `blocked-ingame` | comment |
 | [#355](https://github.com/haterade22/TAOM/issues/355) | LotrIssues: 7 SandBox vanilla issues escape suppression in-game — CTD acceptin… | KEEP | `blocked-ingame` | label-only |
 | [#357](https://github.com/haterade22/TAOM/issues/357) | Career pips mislabeled "troop regeneration" — map to TroopSurvival (die→wounde… | KEEP | `partial` | comment |
-| [#358](https://github.com/haterade22/TAOM/issues/358) | feat(gondor): incorporate KEYforce noble armor item defs (2026-07-21 drop) — 1… | KEEP | `blocked-external` | comment |
+| [#358](https://github.com/haterade22/TAOM/issues/358) | feat(gondor): incorporate KEYforce noble armor item defs (2026-07-21 drop) — 1… | **CLOSED** | `shipped-and-verified` | comment |
 | [#359](https://github.com/haterade22/TAOM/issues/359) | Modding Kit editor asserts at startup: rglConcurrentQueue overflow — TAOM_Map … | KEEP | `blocked-external` | comment |
 | [#360](https://github.com/haterade22/TAOM/issues/360) | Siege CTD: AV in reinforcement banner-bearer spawn (unguarded slot-4 read + 2H… | KEEP | `blocked-ingame` | comment |
-| [#364](https://github.com/haterade22/TAOM/issues/364) | [Gondor] Riding Caparison unequippable: harness missing <Armor family_type> de… | KEEP | `blocked-external` | comment |
+| [#364](https://github.com/haterade22/TAOM/issues/364) | [Gondor] Riding Caparison unequippable: harness missing <Armor family_type> de… | **CLOSED** | `shipped-and-verified` | comment |
 | [#365](https://github.com/haterade22/TAOM/issues/365) | feat(specialresources): taom.add_special_resources console cheat | **CLOSED** | `shipped-and-verified` | close |
 | [#369](https://github.com/haterade22/TAOM/issues/369) | feat(devconsole): taom.* developer console — shared contract + command suite | KEEP | `partial` | comment |
 | [#370](https://github.com/haterade22/TAOM/issues/370) | feat(coopinterop): stop TAOM sabotaging BannerlordTogether, and make install d… | KEEP | `blocked-ingame` | label-only |
@@ -255,7 +280,7 @@ Verified true and completely untouched at HEAD -- every culture's `civ_template`
 | [#385](https://github.com/haterade22/TAOM/issues/385) | Native CTD: facegen static-morph null-deref (TaleWorlds.Native.dll+0x58232c) —… | KEEP | `blocked-external` | label-only |
 | [#386](https://github.com/haterade22/TAOM/issues/386) | [MemSample] periodic process+system memory telemetry in BattleLoadDiagnostics | KEEP | `partial` | label-only |
 | [#387](https://github.com/haterade22/TAOM/issues/387) | native_crash_triage.py: --dump mode (minidump parse: faulting module, RVA, com… | **CLOSED** | `shipped-and-verified` | close |
-| [#390](https://github.com/haterade22/TAOM/issues/390) | fix(content): 42 crafting-piece/shield meta-meshes referenced but missing from… | KEEP | `blocked-external` | label-only |
+| [#390](https://github.com/haterade22/TAOM/issues/390) | fix(content): 42 crafting-piece/shield meta-meshes referenced but missing from… | **CLOSED** | `shipped-and-verified` | label-only |
 | [#391](https://github.com/haterade22/TAOM/issues/391) | feat(diagnostics): attribute town-gold drains and name why each caravan is par… | **CLOSED** | `shipped-and-verified` | close |
 | [#392](https://github.com/haterade22/TAOM/issues/392) | Sprite generator registers clan_diamond_border_neutral but never packs it into… | KEEP | `partial` | comment |
 | [#393](https://github.com/haterade22/TAOM/issues/393) | fix(economy): town market gold drains to ~0 daily — villager deliveries spend … | KEEP | `blocked-ingame` | comment |
@@ -281,11 +306,11 @@ Verified true and completely untouched at HEAD -- every culture's `civ_template`
 | Enlistment + FieldCommission | 6 | 1 | 5 |
 | CareerSystem + sprite atlas + deploy | 12 | 8 | 4 |
 | Facegen / morph / tableau | 7 | 3 | 4 |
-| Race, creature data, food, troop weight | 6 | 2 | 4 |
-| Lords / culture / equipment rosters | 9 | 6 | 3 |
-| Troop skills + balance | 5 | 0 | 5 |
-| Battle-load / shader / external assets | 8 | 2 | 6 |
-| Siege / banner-bearer CTDs | 5 | 0 | 5 |
+| Race, creature data, food, troop weight | 6 | 4 | 2 |
+| Lords / culture / equipment rosters | 9 | 7 | 2 |
+| Troop skills + balance | 5 | 1 | 4 |
+| Battle-load / shader / external assets | 8 | 4 | 4 |
+| Siege / banner-bearer CTDs | 5 | 1 | 4 |
 | Mounts + combat mechanics | 6 | 3 | 3 |
 | Settlement guards + tournament | 5 | 1 | 4 |
 | New-campaign start + character creation | 7 | 4 | 3 |
