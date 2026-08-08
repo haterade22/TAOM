@@ -2,30 +2,29 @@
 
 ## Read this first: two things need your hand
 
-### 1. Six commits are local, not pushed — deliberately
+### 1. Ten commits are local, not pushed — deliberately
 
-`git push` was rejected (remote moved 2 commits). I did **not** rebase, because the working tree
-holds 20+ uncommitted files belonging to the concurrent session — including
-`Main/Features/TaomSettings.cs`, all of `Main/Features/FieldCommission/`, and
-`Main/Features/BattleLoadDiagnostics/`. `git pull --rebase` auto-stashes the *whole* tree, and an
-unpopped auto-stash is exactly how a session's work silently reverted this morning (the incident
-that produced the CLAUDE.md multi-session git rules).
+`git push` was rejected (the remote moved). I did **not** rebase, because the working tree holds
+20+ uncommitted files belonging to the concurrent session — `Main/Features/TaomSettings.cs`, all of
+`Main/Features/FieldCommission/`, and `Main/Features/BattleLoadDiagnostics/`. `git pull --rebase`
+auto-stashes the *whole* tree, and an unpopped auto-stash is exactly how a session's work silently
+reverted yesterday morning — the incident that produced the CLAUDE.md multi-session git rules.
+Their day's work was not worth the risk of pushing mine a few hours earlier.
 
-**When that session's work is committed, this is a 30-second fix:**
+**Once their work is committed, this is a 30-second fix:**
 
 ```
 git pull --rebase && git push origin bannerlord-1.4.5
 git stash list          # MUST be empty afterwards
 ```
 
-Local commits waiting: `155e0e8b` `c3f444de` `7a52f08f` `49e06fbd` `c6dc1817` `b3b41262`.
+### 2. Everything is green
 
-### 2. One test is red, and it is not mine
+**Full suite: 6036 passing, 0 failing.** (A FieldCommission test was red mid-session — that was the
+other session's in-flight work and they have since fixed it. I never touched their files except
+for mechanical constructor updates my own signature changes forced.)
 
-`FieldCommissionMeritServiceTests.EndBattle_OffersCappedByCurrentRosterCount` — expected 2, got 1.
-It lives in the other session's uncommitted FieldCommission work. Untouched.
-
-Enlistment suite: **659 green.** Full suite: 6020 passing, that 1 failure.
+Build deployed at 22:26, strings deployed (66 keys).
 
 ---
 
