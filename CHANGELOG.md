@@ -48,6 +48,49 @@ trimming 234 bodies at weighted 465 against limit 231.
 Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
 guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
 equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+### feat(enlistment): follow the column into town instead of standing outside the gate
+
+Batch 7. When the commander's column entered a settlement the player stayed parked outside it,
+invisible, for the entire stop — `MoveIntoSettlement`/`LeaveSettlement` existed on the adapter and
+`CommanderSnapshot` carried the settlement fields, but nothing had ever called them. Two new
+attachment verdicts wire them up: follow him in, and leave when he leaves.
+
+**The player is placed inside, but held in the TAOM wait menu throughout** — never handed to
+vanilla town flow. Actually *using* the town while enlisted is a different feature: every
+in-settlement affordance routes through `PlayerEncounter.LocationEncounter`, and a live
+`PlayerEncounter` while `EnlistedAttached` is precisely what the reconciler's sweeper destroys.
+That needs its own state. `town`/`castle`/`village` join the redirect list, gated on
+`EnlistedAttached` — so discharge restores normal town access with no teardown, and duties, which
+run detached, can still send the player into a settlement to do a thing.
+
+**Exit is checked ABOVE the battle branch, and that ordering is the point.** Joining a map event
+while `CurrentSettlement` still points at another settlement puts the party in two places at once,
+and `MapEvent.AddInvolvedPartyInternal` rewrites a siege ASSAULT to `SiegeOutside` off exactly that
+field for a joining defender — turning an assault on the walls into a field fight for everyone in
+it. Being inside the settlement the commander is DEFENDING is the correct state and is exempt,
+which is why this batch improves siege joins rather than risking them.
+
+`FollowCommanderIntoSettlement` is one transaction — presence, move, menu — and rolls back out if
+the menu will not open. A settlement placement without our menu IS the donor's crash state:
+`game_menu_settlement_wait_on_init` opens by dereferencing `PlayerEncounter.EncounterSettlement`.
+
+Two exemptions ship alongside, or a correct settlement stop reads as a fault every hour: the
+reconciler skips both the position sync and the "NOT parked" warning while the player is inside a
+settlement (they are deliberately active and visible, and the engine owns placement), and
+`OnWaitMenuInit` stops unconditionally re-parking — which would have yanked the player straight
+back out of the town they just followed him into, on the very menu the follow asserts.
+`_AttachedNotParkedOutsideSettlement_StillWarns` proves the exemption did not swallow the real
+anomaly.
+
+Two gaps found while wiring rather than from the plan: the maintenance pump gated its wait-menu
+assertion on `LooksParked` alone, so it would have abandoned the menu for the whole settlement
+stop; and a duty starting while inside the commander's town left the player detached but still
+held at the gate, since a detached state is `Blocked` in `Assess` and never reaches the exit
+verdict.
+
+Suite 5946 green.
+
+Research: MapEvent.AddInvolvedPartyInternal siege rewrite, EnterSettlementAction.ApplyForParty pushes no menu
 ### feat(enlistment): asking to leave is a choice you can see the price of
 
 Batch 6. "Ask to be released" used to discharge you the instant you clicked it, with no

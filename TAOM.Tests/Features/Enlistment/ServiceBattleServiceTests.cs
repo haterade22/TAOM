@@ -31,7 +31,7 @@ public class ServiceBattleServiceTests
         _partyAdapter.RestorePresence().Returns(true);
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
-        _attachment = new ServiceAttachmentService(_partyAdapter, _logger);
+        _attachment = new ServiceAttachmentService(_partyAdapter, Substitute.For<IGameMenuAdapter>(), _logger);
         _gameMenu = Substitute.For<IGameMenuAdapter>();
         // Default to a working menu switch — the service now treats a failed switch as a join
         // failure and rolls back, so an unstubbed (false) default would fail every happy path.

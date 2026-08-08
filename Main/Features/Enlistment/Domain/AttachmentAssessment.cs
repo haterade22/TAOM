@@ -13,6 +13,21 @@ public enum AttachmentStatus
 
     /// <summary>No attachment action may run; see <see cref="AttachmentBlockReason"/>.</summary>
     Blocked = 3,
+
+    /// <summary>
+    /// The commander's column has entered a settlement and the player is still outside it.
+    /// Follow him in — standing invisibly at the gate for the whole stop is what service
+    /// looked like before this existed.
+    /// </summary>
+    SettlementFollowRequired = 4,
+
+    /// <summary>
+    /// The player is inside a settlement the commander is not in. Leave BEFORE anything else
+    /// happens: a party whose <c>CurrentSettlement</c> points at one place while it joins a
+    /// battle somewhere else is in two places at once, and for a joining defender the engine
+    /// rewrites a siege assault off exactly that field.
+    /// </summary>
+    SettlementExitRequired = 5,
 }
 
 public enum AttachmentBlockReason

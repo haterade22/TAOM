@@ -36,7 +36,7 @@ public class EnlistmentLoadNormalizerTests
         _partyAdapter.RestorePresence().Returns(true);
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
-        var attachment = new ServiceAttachmentService(_partyAdapter, _logger);
+        var attachment = new ServiceAttachmentService(_partyAdapter, Substitute.For<IGameMenuAdapter>(), _logger);
         var discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
         var reconciler = new EnlistmentReconciler(_store, _machine, attachment, _commander, discharge,
             new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(), _logger);

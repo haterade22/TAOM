@@ -17,9 +17,14 @@ namespace TAOM.Tests.Features.Enlistment;
 /// The hazard the gate creates is specific: in <see cref="EnlistmentReconciler.ReconcileAttached"/>
 /// the logging sits INTERLEAVED with the encounter self-heal, the re-park and the position sync. A
 /// naive `if (!enabled) return;` at the top of that method would silently disable the enlistment
-/// self-heal for every player who leaves the toggle at its default OFF. Group B1 exists to make
-/// that mistake impossible to ship: each of those tests runs with the toggle OFF and asserts a
-/// MUTATION still happens.
+/// self-heal for anyone who turns the toggle off. Group B1 exists to make that mistake impossible
+/// to ship: each of those tests runs with the toggle OFF and asserts a MUTATION still happens.
+///
+/// NOTE ON THE DEFAULT: the toggle ships ON (`TaomSettings.EnableEnlistmentDiagnostics = true`, and
+/// the provider resolves a missing MCM setting with `?? true`) because the enlistment service loop
+/// is under active diagnosis. These tests deliberately run the OFF path anyway — that is the path
+/// where a mis-shaped gate does damage, and it is the path every player lands on once the default
+/// flips. Do not "correct" the substitute to true.
 /// </summary>
 [TestClass]
 public class EnlistmentDiagnosticsGateTests
@@ -48,14 +53,16 @@ public class EnlistmentDiagnosticsGateTests
         _partyAdapter.RestorePresence().Returns(true);
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
-        _attachment = new ServiceAttachmentService(_partyAdapter, _logger);
+        _attachment = new ServiceAttachmentService(_partyAdapter, Substitute.For<IGameMenuAdapter>(), _logger);
         _discharge = new DischargeService(_store, _machine, _partyAdapter,
             Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(),
             Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
 
-        // An NSubstitute bool defaults to false, which IS the shipping default — every test in
-        // this class therefore runs "toggle off" unless it opts in explicitly.
+        // An NSubstitute bool defaults to false, so every test in this class runs the "toggle off"
+        // path unless it opts in explicitly. That is NOT the shipping default (which is ON — see the
+        // class doc); it is the path chosen deliberately, because OFF is where a mis-shaped gate
+        // silently disables the self-heal.
         _diag = Substitute.For<IEnlistmentDiagnosticsSettingsProvider>();
 
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
@@ -263,6 +270,9 @@ public class EnlistmentDiagnosticsGateTests
 
         _reconciler.ReconcileHourly(Now);
 
+        // Asserted across BOTH levels: the gate must suppress the line outright, not merely
+        // demote it. A future "just make it DEBUG again" edit has to fail here.
+        _logger.DidNotReceive().LogInfo(Arg.Is<string>(s => s.Contains("[EnlistDiag] TICK")));
         _logger.DidNotReceive().LogDebug(Arg.Is<string>(s => s.Contains("[EnlistDiag] TICK")));
     }
 
@@ -276,7 +286,10 @@ public class EnlistmentDiagnosticsGateTests
 
         _reconciler.ReconcileHourly(Now);
 
-        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("[EnlistDiag] TICK")));
+        // INFO, not DEBUG: FileLogger flushes INFO/WARN/ERROR synchronously and leaves DEBUG in an
+        // async queue that a hard native CTD discards. A trace the player deliberately switched on
+        // to catch a crash must survive that crash.
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("[EnlistDiag] TICK")));
     }
 
     // ---------------------------------------------------------------------------------------
@@ -293,10 +306,69 @@ public class EnlistmentDiagnosticsGateTests
         Path.Combine("Main", "Features", "Enlistment", "Hooks", "EnlistmentBattleBehavior.cs"),
     };
 
+    /// <summary>
+    /// Collects every identifier that carries the toggle's value in a file: the property itself, plus
+    /// any local it is aliased into. MobilePartyAttachmentAdapter reads the toggle ONCE per method
+    /// (`var diag = _diag?.IsEnabled == true;`) so the value cannot change mid-method, and then gates
+    /// on the bare local (`if (diag)`). A regression written in that file's own idiom —
+    /// `if (!diag) return;` — contains no `IsEnabled` token at all, so a scan that only looks for
+    /// `IsEnabled` is blind to it in the one file the class doc says cannot be unit-tested.
+    /// </summary>
+    private static string[] CollectToggleTokens(string[] lines)
+    {
+        var tokens = new System.Collections.Generic.List<string> { "IsEnabled" };
+        var alias = new Regex(@"\bvar\s+(\w+)\s*=\s*[^;]*\bIsEnabled\b");
+        foreach (var line in lines)
+        {
+            var m = alias.Match(line);
+            if (m.Success)
+                tokens.Add(m.Groups[1].Value);
+        }
+        return tokens.ToArray();
+    }
+
+    /// <summary>
+    /// True when the line short-circuits control flow on a toggle token — the shape that would
+    /// disable the enlistment self-heal rather than only the logging.
+    /// </summary>
+    private static bool IsControlFlowGate(string line, string[] toggleTokens)
+    {
+        foreach (var t in toggleTokens)
+        {
+            var e = Regex.Escape(t);
+            // `if (!diag)` / `if ( ! _diag.IsEnabled )` — a negated test on the toggle.
+            if (Regex.IsMatch(line, $@"if\s*\(\s*!\s*{e}\b")) return true;
+            // `... IsEnabled) return;` / `if (diag) return;` — a toggle guarding a return.
+            if (Regex.IsMatch(line, $@"\b{e}\b[^;]*\)\s*return\b")) return true;
+        }
+        return false;
+    }
+
+    [TestMethod]
+    public void GateShape_Detector_FlagsKnownBadShapes_AndSparesGoodOnes()
+    {
+        // POSITIVE CONTROL. Without this, GateShape_NoEnlistmentFileUsesANegatedEarlyOut passes
+        // whenever the detector is broken — an audit that reports "zero found" is worthless until
+        // something proves it can find one.
+        var tokens = CollectToggleTokens(new[] { "        var diag = _diag?.IsEnabled == true;" });
+        CollectionAssert.Contains(tokens, "diag", "the alias `var diag = _diag?.IsEnabled == true;` must be tracked");
+        CollectionAssert.Contains(tokens, "IsEnabled");
+
+        // Known-bad — every one of these must be caught.
+        Assert.IsTrue(IsControlFlowGate("            if (!diag) return;", tokens), "aliased negated early-out");
+        Assert.IsTrue(IsControlFlowGate("            if (!_diag.IsEnabled) return;", tokens), "direct negated early-out");
+        Assert.IsTrue(IsControlFlowGate("            if ( ! diag ) return false;", tokens), "spacing variant");
+        Assert.IsTrue(IsControlFlowGate("            if (_diag?.IsEnabled != true) return;", tokens), "IsEnabled guarding a return");
+
+        // Known-good — the sanctioned shape must NOT be flagged, or the guard is unusable.
+        Assert.IsFalse(IsControlFlowGate("            if (diag)", tokens), "the sanctioned aliased gate");
+        Assert.IsFalse(IsControlFlowGate("            if (_diag?.IsEnabled == true)", tokens), "the sanctioned direct gate");
+        Assert.IsFalse(IsControlFlowGate("            var diag = _diag?.IsEnabled == true;", tokens), "the alias assignment itself");
+    }
+
     [TestMethod]
     public void GateShape_NoEnlistmentFileUsesANegatedEarlyOut()
     {
-        var negatedGate = new Regex(@"if\s*\(\s*!.*IsEnabled");
         var filesScanned = 0;
 
         foreach (var relative in GatedFiles)
@@ -306,16 +378,16 @@ public class EnlistmentDiagnosticsGateTests
                 Assert.Fail($"{relative} not found — the scan must never pass by not finding its inputs.");
             filesScanned++;
 
+            var tokens = CollectToggleTokens(lines);
+
             for (var i = 0; i < lines.Length; i++)
             {
-                StringAssert.DoesNotMatch(lines[i], new Regex(Regex.Escape("IsEnabled) return")),
-                    $"{relative}:{i + 1} gates a `return` on the diagnostics toggle. The toggle must " +
-                    "gate LOGGING ONLY — a return-shaped gate disables the enlistment self-heal for " +
-                    "every player on the default-OFF setting.");
-
-                StringAssert.DoesNotMatch(lines[i], negatedGate,
-                    $"{relative}:{i + 1} uses a negated early-out on the diagnostics toggle. Write " +
-                    "`if (_diag?.IsEnabled == true) <one logging statement>;` instead.");
+                Assert.IsFalse(IsControlFlowGate(lines[i], tokens),
+                    $"{relative}:{i + 1} short-circuits control flow on the diagnostics toggle:\n" +
+                    $"    {lines[i].Trim()}\n" +
+                    "The toggle must gate LOGGING ONLY. A return-shaped gate disables the enlistment " +
+                    "self-heal (the encounter close, the re-park, the position sync) for anyone who " +
+                    "turns diagnostics off. Write `if (_diag?.IsEnabled == true) <one logging statement>;`.");
             }
         }
 
@@ -334,10 +406,39 @@ public class EnlistmentDiagnosticsGateTests
 
         Assert.IsTrue(gateIndex >= 0, "the map-event gate is missing entirely");
         Assert.IsTrue(callIndex >= 0, "CountInvolved(mapEvent) call site not found");
-        Assert.IsTrue(callIndex > gateIndex,
-            $"CountInvolved(mapEvent) is at line {callIndex + 1} but the gate is at line {gateIndex + 1}. " +
-            "The full InvolvedParties walk must sit inside the gated statement's argument list, or " +
-            "turning the toggle off saves the write but not the enumeration.");
+
+        // Containment, not ordering. `callIndex > gateIndex` is satisfied by ANY line below the gate,
+        // including one after the gated statement has closed — which is exactly the regression this
+        // test exists to catch (the walk would then run unconditionally). Walk the parenthesis balance
+        // from the gate's own statement to find where it actually ends, and require the call inside it.
+        var depth = 0;
+        var started = false;
+        var statementEnd = -1;
+        for (var i = gateIndex; i < lines.Length; i++)
+        {
+            foreach (var c in lines[i])
+            {
+                if (c == '(') { depth++; started = true; }
+                else if (c == ')') depth--;
+            }
+            // The gate line closes its own condition; the guarded statement follows and closes at
+            // the first point where every parenthesis opened since the gate is balanced AND the
+            // line terminates a statement.
+            if (started && depth <= 0 && i > gateIndex && lines[i].TrimEnd().EndsWith(";"))
+            {
+                statementEnd = i;
+                break;
+            }
+        }
+
+        Assert.IsTrue(statementEnd > gateIndex,
+            $"could not find the end of the gated statement starting at line {gateIndex + 1}");
+        Assert.IsTrue(callIndex > gateIndex && callIndex <= statementEnd,
+            $"CountInvolved(mapEvent) is at line {callIndex + 1}, outside the gated statement " +
+            $"(lines {gateIndex + 1}-{statementEnd + 1}). The full InvolvedParties walk must sit inside " +
+            "the gated statement's argument list — C# does not evaluate the arguments of a statement " +
+            "that does not execute. Outside it, turning the toggle off saves the disk write but still " +
+            "pays the enumeration on every map event in the world.");
     }
 
     private static string[] ReadProjectSourceLines(string relativePath)

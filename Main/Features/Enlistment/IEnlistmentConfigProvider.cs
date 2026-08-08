@@ -39,6 +39,18 @@ public sealed class EnlistmentCoreConfig
         "encounter",
         "port_menu",
         "naval_town_outside",
+
+        // The settlement menus themselves. Needed from the moment the player is actually placed
+        // INSIDE a settlement (settlement following): vanilla would otherwise open the town/castle/
+        // village menu and hand a serving soldier the full run of the place — recruiting, trading,
+        // the keep. Held in the TAOM wait menu instead. Letting the player USE the town while
+        // enlisted is a separate feature needing its own state; see the feature doc.
+        //
+        // These are only redirected WHILE enlisted, so a discharge restores normal town access
+        // with no extra teardown — pinned by TryRedirectMenu_VanillaSettlementMenus_NotRedirectedWhenNotEnlisted.
+        "town",
+        "castle",
+        "village",
     };
 }
 

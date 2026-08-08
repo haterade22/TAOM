@@ -162,14 +162,17 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         //
         // THIS METHOD IS WHY THE RULE EXISTS: the logging below is interleaved with the stranded-
         // encounter self-heal, the re-park and the position sync. An `if (!enabled) return;` here
-        // would disable the enlistment self-heal for every player on the default-OFF setting
-        // rather than just silencing a log line. Pinned by EnlistmentDiagnosticsGateTests group B1.
+        // would disable the enlistment self-heal for anyone who turned the toggle off, rather than
+        // just silencing a log line. Pinned by EnlistmentDiagnosticsGateTests group B1.
         //
-        // DEBUG: the hourly tick fires many times per real second at accelerated campaign speed
-        // (576 lines in one 32-minute session). The anomaly branches below stay at WARNING/ERROR
-        // and are NOT gated, so a genuine fault is still loud with the toggle off.
+        // INFO, not DEBUG: the hourly tick fires many times per real second at accelerated campaign
+        // speed (576 lines in one 32-minute session), but DEBUG is FileLogger's async queue and a
+        // hard native CTD drops whatever is still queued — which would lose this trace at exactly
+        // the moment it matters. The toggle, not the level, is what controls the volume. The anomaly
+        // branches below stay at WARNING/ERROR and are NOT gated, so a genuine fault is still loud
+        // with the toggle off.
         if (_diag?.IsEnabled == true)
-            _logger?.LogDebug(
+            _logger?.LogInfo(
                 $"[EnlistDiag] TICK state={record.State} verdict={assessment.Status}" +
                 (assessment.Status == AttachmentStatus.Blocked ? $"({assessment.BlockReason})" : "") +
                 $" | player: {presence.Describe()}" +
@@ -203,6 +206,15 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         switch (assessment.Status)
         {
             case AttachmentStatus.Attached:
+                // Inside the commander's settlement the party is deliberately active, visible and
+                // pinned to the gate — so it is legitimately NOT parked, and there is no position
+                // to sync (the engine owns placement while CurrentSettlement is set). Without this
+                // exemption the settlement stop logs an anomaly every hour and calls a correct
+                // state a fault. The `else if` below still fires for a genuinely unparked party
+                // OUTSIDE any settlement, which is the real anomaly.
+                if (presence.IsHeldInsideSettlement)
+                    return;
+
                 if (record.State == EnlistmentState.EnlistedAttached && presence.LooksParked)
                 {
                     if (!_attachment.SyncPosition(record.CommanderHeroId))
@@ -212,6 +224,14 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 {
                     _logger?.LogWarning($"[EnlistDiag] verdict=Attached but the party is NOT parked ({presence.Describe()}) — no sync will run this tick");
                 }
+                return;
+
+            case AttachmentStatus.SettlementFollowRequired:
+                _attachment.FollowCommanderIntoSettlement(record.CommanderHeroId, snapshot.SettlementId);
+                return;
+
+            case AttachmentStatus.SettlementExitRequired:
+                _attachment.ExitSettlementForService(record.CommanderHeroId);
                 return;
 
             case AttachmentStatus.AttachRequired:

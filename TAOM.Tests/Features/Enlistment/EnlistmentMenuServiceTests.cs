@@ -125,4 +125,45 @@ public class EnlistmentMenuServiceTests
         _service.TryRedirectMenu("generated_menu_0", out _);
         _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("generated_menu_0")));
     }
+
+    // ---- settlement menus (Batch 7: settlement following) --------------------------------
+
+    [DataTestMethod]
+    [DataRow("town")]
+    [DataRow("castle")]
+    [DataRow("village")]
+    public void TryRedirectMenu_VanillaSettlementMenus_RedirectedWhileAttached(string menuId)
+    {
+        // Settlement following places the player INSIDE the settlement, so vanilla will try to
+        // open the real town menu — which would hand a serving soldier the keep, the market and
+        // the recruiter. Held in the service menu instead.
+        MakeEnlisted();
+
+        Assert.IsTrue(_service.TryRedirectMenu(menuId, out var redirected));
+        Assert.AreEqual(EnlistmentMenuService.ServiceWaitMenuId, redirected);
+    }
+
+    [DataTestMethod]
+    [DataRow("town")]
+    [DataRow("castle")]
+    [DataRow("village")]
+    public void TryRedirectMenu_VanillaSettlementMenus_NotRedirectedWhenNotEnlisted(string menuId)
+    {
+        // The proof that discharge restores town access with no extra teardown: the redirect is
+        // gated on state, so the moment service ends the player's own town flow is back.
+        Assert.IsFalse(_service.TryRedirectMenu(menuId, out var redirected));
+        Assert.IsNull(redirected);
+    }
+
+    [DataTestMethod]
+    [DataRow("town")]
+    [DataRow("village")]
+    public void TryRedirectMenu_SettlementMenus_NotRedirectedWhileOnDuty(string menuId)
+    {
+        // Duties send the player to visit settlements on their own. Redirecting there would
+        // make the objective unreachable — the whole point is that they walk in and do a thing.
+        MakeEnlisted(EnlistmentState.EnlistedDetachedOnDuty);
+
+        Assert.IsFalse(_service.TryRedirectMenu(menuId, out _));
+    }
 }

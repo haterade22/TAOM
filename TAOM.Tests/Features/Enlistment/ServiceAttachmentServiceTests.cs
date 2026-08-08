@@ -17,7 +17,7 @@ public class ServiceAttachmentServiceTests
     public void Setup()
     {
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
-        _service = new ServiceAttachmentService(_attachment, Substitute.For<IModLogger>());
+        _service = new ServiceAttachmentService(_attachment, Substitute.For<IGameMenuAdapter>(), Substitute.For<IModLogger>());
     }
 
     private static CommanderSnapshot HealthyCommander(bool inMapEvent = false, bool inSettlement = false)

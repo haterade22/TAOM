@@ -87,8 +87,18 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
     {
         // Post-battle closure: the loot flow ends with a redirected menu push landing
         // here — re-assert the park event-driven instead of waiting for the hourly tick.
-        if (_coopSession.IsAuthority && _store.Record.State == EnlistmentState.EnlistedAttached)
+        //
+        // NOT while inside a settlement. Parking is "hide outside next to the commander", so an
+        // unconditional park here yanks the player straight back out of the town they just
+        // followed him into — and this menu is asserted BY the follow transaction, so it would
+        // undo itself on the very next frame.
+        if (_coopSession.IsAuthority
+            && _store.Record.State == EnlistmentState.EnlistedAttached
+            && !_attachment.GetPresenceFlags().IsInSettlement)
+        {
             _attachment.EnsureParked(_store.Record.CommanderHeroId);
+        }
+
         _presenter.RefreshWaitText();
     }
 

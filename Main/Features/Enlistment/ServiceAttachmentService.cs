@@ -7,11 +7,16 @@ namespace TAOM.Features.Enlistment;
 public class ServiceAttachmentService : IServiceAttachmentService
 {
     private readonly IMobilePartyAttachmentAdapter _attachment;
+    private readonly IGameMenuAdapter _gameMenu;
     private readonly IModLogger _logger;
 
-    public ServiceAttachmentService(IMobilePartyAttachmentAdapter attachment, IModLogger logger)
+    public ServiceAttachmentService(
+        IMobilePartyAttachmentAdapter attachment,
+        IGameMenuAdapter gameMenu,
+        IModLogger logger)
     {
         _attachment = attachment;
+        _gameMenu = gameMenu;
         _logger = logger;
     }
 
@@ -32,6 +37,22 @@ public class ServiceAttachmentService : IServiceAttachmentService
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.CommanderPartyMissing);
         }
 
+        var playerSettlement = player.SettlementId;
+        var commanderSettlement = commander.PartyIsInSettlement ? commander.SettlementId : null;
+        var playerIsSomewhere = !string.IsNullOrEmpty(playerSettlement);
+        var sameSettlement = playerIsSomewhere
+            && !string.IsNullOrEmpty(commanderSettlement)
+            && string.Equals(playerSettlement, commanderSettlement, System.StringComparison.Ordinal);
+
+        // ORDER IS LOAD-BEARING: above the battle branch, deliberately. Joining a map event while
+        // CurrentSettlement still points at some OTHER settlement puts the party in two places at
+        // once, and MapEvent.AddInvolvedPartyInternal rewrites a siege ASSAULT to SiegeOutside off
+        // that field for a joining defender — turning an assault on the walls into a field fight
+        // for every participant. Being inside the settlement the commander is defending is the
+        // CORRECT state and is exempt; being inside a different one is not.
+        if (playerIsSomewhere && !sameSettlement)
+            return new AttachmentAssessment(AttachmentStatus.SettlementExitRequired);
+
         if (commander.PartyIsInMapEvent)
         {
             // Same-event verification is the battle service's job; here "player is in some
@@ -43,6 +64,15 @@ public class ServiceAttachmentService : IServiceAttachmentService
 
         if (player.IsInMapEvent)
             return new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.PlayerInForeignMapEvent);
+
+        // Already inside with him: correct, and NOT parked — the party is deliberately active and
+        // visible, pinned to the gate. Returning AttachRequired here would re-park the player back
+        // outside every hour, which is the same "standing at the gate" bug with extra steps.
+        if (sameSettlement)
+            return new AttachmentAssessment(AttachmentStatus.Attached);
+
+        if (!string.IsNullOrEmpty(commanderSettlement))
+            return new AttachmentAssessment(AttachmentStatus.SettlementFollowRequired);
 
         return player.LooksParked
             ? new AttachmentAssessment(AttachmentStatus.Attached)
@@ -65,4 +95,61 @@ public class ServiceAttachmentService : IServiceAttachmentService
     public void InvalidateCommanderCache() => _attachment.InvalidateCommanderCache();
 
     public bool ClearArmyAttachment() => _attachment.ClearArmyAttachment();
+
+    /// <summary>
+    /// ONE transaction, never separable: restore presence, move in, then assert the wait menu.
+    /// A settlement placement WITHOUT the wait menu is the donor's crash state — the player
+    /// reaches a vanilla settlement menu with no <c>PlayerEncounter</c>, and
+    /// <c>game_menu_settlement_wait_on_init</c> opens by dereferencing
+    /// <c>PlayerEncounter.EncounterSettlement</c>. Any step failing rolls the move back out.
+    /// </summary>
+    public bool FollowCommanderIntoSettlement(string commanderHeroId, string settlementId)
+    {
+        if (string.IsNullOrEmpty(settlementId))
+            return false;
+
+        // The engine skips inactive parties in settlement placement, so presence comes first —
+        // the same ordering the battle path needs, for the same reason.
+        if (!_attachment.RestorePresence())
+        {
+            _logger?.LogError($"[EnlistDiag] FOLLOW into '{settlementId}' aborted — could not restore presence first");
+            return false;
+        }
+
+        if (!_attachment.MoveIntoSettlement(settlementId))
+        {
+            _logger?.LogError($"[EnlistDiag] FOLLOW into '{settlementId}' failed — re-parking outside instead");
+            _attachment.ParkNear(commanderHeroId);
+            return false;
+        }
+
+        if (!_gameMenu.EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId))
+        {
+            // MANDATORY rollback. Inside a settlement with no menu of ours is exactly the state
+            // that crashes on the next vanilla settlement-menu init.
+            _logger?.LogError($"[EnlistDiag] FOLLOW into '{settlementId}' could not open the service menu — leaving rather than sitting in a settlement with no menu");
+            _attachment.LeaveSettlement();
+            _attachment.ParkNear(commanderHeroId);
+            return false;
+        }
+
+        _logger?.LogInfo($"[EnlistDiag] FOLLOW: entered '{settlementId}' with the commander's column");
+        return true;
+    }
+
+    /// <summary>
+    /// Leave a settlement the commander is not in, and go back to following. Runs before any
+    /// battle join — see <see cref="AttachmentStatus.SettlementExitRequired"/>.
+    /// </summary>
+    public bool ExitSettlementForService(string commanderHeroId)
+    {
+        if (!_attachment.LeaveSettlement())
+        {
+            _logger?.LogError("[EnlistDiag] EXIT failed — the player is stuck inside a settlement the commander has left");
+            return false;
+        }
+
+        _logger?.LogInfo("[EnlistDiag] EXIT: left the settlement to rejoin the column");
+        return _attachment.ParkNear(commanderHeroId);
+    }
 }

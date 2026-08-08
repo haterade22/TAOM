@@ -40,7 +40,7 @@ public class EnlistmentReconcilerTests
         _partyAdapter.RestorePresence().Returns(true);
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
-        _attachment = new ServiceAttachmentService(_partyAdapter, _logger);
+        _attachment = new ServiceAttachmentService(_partyAdapter, Substitute.For<IGameMenuAdapter>(), _logger);
         _discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,

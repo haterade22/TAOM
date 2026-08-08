@@ -124,7 +124,16 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         record.ShiftEndDay = staysAttached ? nowDays + ShiftDurationDays : (double?)null;
 
         if (!staysAttached)
+        {
             _attachment.RestorePresence();
+
+            // Settlement following can leave the player INSIDE the commander's town when a duty
+            // starts. Restoring presence alone would send them off on a duty while still held at
+            // the gate — and nothing walks them out afterwards, because a detached duty state is
+            // Blocked in Assess, so the reconciler's settlement-exit verdict never runs for it.
+            if (_attachment.GetPresenceFlags().IsInSettlement)
+                _attachment.ExitSettlementForService(_store.Record.CommanderHeroId);
+        }
 
         return true;
     }

@@ -31,4 +31,14 @@ public interface IServiceAttachmentService
 
     /// <summary>Clear AttachedTo / non-led Army so the main party is a free agent again.</summary>
     bool ClearArmyAttachment();
+
+    /// <summary>
+    /// Follow the commander's column into a settlement, holding the player in the TAOM wait menu
+    /// throughout — they are INSIDE, but never handed to vanilla town flow. One transaction;
+    /// see the implementation for why it cannot be split.
+    /// </summary>
+    bool FollowCommanderIntoSettlement(string commanderHeroId, string settlementId);
+
+    /// <summary>Leave a settlement the commander is not in and resume parked following.</summary>
+    bool ExitSettlementForService(string commanderHeroId);
 }

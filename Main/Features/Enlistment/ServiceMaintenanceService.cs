@@ -168,7 +168,12 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // EnlistedBattle would eat the battle, loot and aftermath menus.
         if (record.State != EnlistmentState.EnlistedAttached)
             return;
-        if (!presence.LooksParked)
+
+        // Two shapes are legitimate service now: parked outside the column, or INSIDE the
+        // commander's settlement — where the party is deliberately active and visible, so
+        // LooksParked is false. Gating on parked alone would abandon the menu for the whole
+        // settlement stop, which is the one place a stray vanilla town menu can appear.
+        if (!presence.LooksParked && !presence.IsInSettlement)
             return;
         if (_menuFailures >= MaxMenuFailures)
             return;
