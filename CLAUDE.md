@@ -264,9 +264,16 @@ original bug over its own fix, with a message describing a fix that was no longe
 | **`git stash apply`, never `pop`, when recovering** | Keeps the stash as a safety net until the recovery is verified green |
 | **Verify your own markers survived before committing** | `git grep <marker> HEAD -- <path>` after any rebase/stash event. The tree compiling is NOT proof your change is still in it |
 | **Stage explicitly (`git add <paths>`), never `git add -A`** | A shared file (CHANGELOG.md especially) routinely holds two sessions' edits; commit only your own hunks, hand-building the blob if needed |
+| **`git status --porcelain` BEFORE editing a shared file** | An unpopped auto-stash can leave a path `UU` with everything already staged. 2026-08-08: a session appended a CHANGELOG entry into a file carrying live `<<<<<<<` markers and never saw them; a plain `git commit` would have swept both sessions into one commit |
+| **Prove a stash is redundant before trusting the tree — normalise line endings** | `git show stash@{0}:<f>` emits LF against a CRLF worktree, so a raw `diff` calls every line changed and looks like total divergence. Use `diff --strip-trailing-cr`. Doing so turned "35 files diverged" into "the stash is a strict subset, nothing lost" |
+| **Re-read `HEAD` immediately before `--amend`, not before the edit** | If another session commits in between, your amend rewrites THEIR commit. 2026-08-08 a CHANGELOG fix landed inside another session's docs commit. Recovery: `git reset --mixed <their-sha>`, confirm `git diff <their-sha> HEAD` is empty, re-commit yours separately |
+| **Stage an edit in the same command that makes it** | An unstaged edit in a shared tree is fair game for the other session's next git operation. 2026-08-08 a 9-line CHANGELOG paragraph survived a reset, then vanished to a concurrent operation before it could be staged |
 
 If the working tree contains another session's edits, leave them unstaged and say so — do not
-commit, revert, or "tidy" them.
+commit, revert, or "tidy" them. **If the user explicitly asks for both sessions' work to land**,
+commit theirs as its OWN commit, attributed in the message and verified green first — never folded
+into yours. Watch for the inverse tell: a CHANGELOG entry in `HEAD` whose code is absent means the
+documentation half of a change committed and the code half did not.
 
 ## MCP Servers
 

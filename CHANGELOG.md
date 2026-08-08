@@ -100,6 +100,24 @@ right — `analyze_armor_balance.py`, `apply_settlement_buildings.py`, `derive_a
 `generate_enlistment_rosters.py` name the variable only in help and error text, and genuinely get
 their resolution from a tool they import.
 
+### docs(claude): four rules from a night two sessions shared one working tree
+
+The existing multi-session section covered the unpopped auto-stash. It did not cover what that stash
+leaves behind, or the three ways the recovery itself can lose work — all four hit in one session:
+
+- A stale auto-stash can leave a path `UU` with **everything already staged**, so a file gets edited
+  with live `<<<<<<<` markers in it and a plain `git commit` sweeps both sessions into one commit.
+- `git show stash@{0}:<f>` emits LF against a CRLF worktree, so a raw `diff` reports every line
+  changed. That reads as total divergence; `--strip-trailing-cr` showed the stash was a strict
+  subset and nothing had been lost.
+- `--amend` run after another session commits rewrites **their** commit, not yours.
+- An unstaged edit is fair game for the other session's next git operation — a CHANGELOG paragraph
+  survived a reset and then vanished before it could be staged.
+
+Also records the carve-out actually used: when the user asks for both sessions' work to land, commit
+theirs as its own attributed commit rather than folding it into yours, and treat a CHANGELOG entry
+whose code is absent as the tell that a change committed in halves.
+
 ### docs(localization): the enlistment strings file has 76 keys, not 36
 
 `localization-map.md` recorded the count from when the file was created. Enlistment and Battlefield
