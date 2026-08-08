@@ -1202,4 +1202,24 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<!-- Lord templates. Referenced from taom_spcultures.xml <lord_templates> and
+	     <rebellion_hero_templates>; both lists previously held vanilla's Culture.empire
+	     leaders, and a hero keeps its TEMPLATE's culture. Equipment comes from the
+	     already-authored taom_erebor_lord_* rosters. -->
+	<NPCCharacter id="spc_erebor_lord_1" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.erebor" name="{=aom_erebor_lord_1}Bold dwarven lord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_erebor_lord_battle_male" />
+			<EquipmentSet id="taom_erebor_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_erebor_lord_2" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.erebor" name="{=aom_erebor_lord_2}Cautious dwarven lord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_erebor_lord_battle_male" />
+			<EquipmentSet id="taom_erebor_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
 </NPCCharacters>

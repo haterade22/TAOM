@@ -310,40 +310,12 @@
       <template name="NPCCharacter.spc_erebor_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_erebor_lord_1" />
+      <template name="NPCCharacter.spc_erebor_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_erebor_lord_1" />
+      <template name="NPCCharacter.spc_erebor_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -678,40 +650,12 @@
       <template name="NPCCharacter.spc_rivendell_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_rivendell_lord_1" />
+      <template name="NPCCharacter.spc_rivendell_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_rivendell_lord_1" />
+      <template name="NPCCharacter.spc_rivendell_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -1037,40 +981,12 @@
       <template name="NPCCharacter.spc_mirkwood_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_mirkwood_lord_1" />
+      <template name="NPCCharacter.spc_mirkwood_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_mirkwood_lord_1" />
+      <template name="NPCCharacter.spc_mirkwood_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -1397,40 +1313,12 @@
       <template name="NPCCharacter.spc_lothlorien_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_lothlorien_lord_1" />
+      <template name="NPCCharacter.spc_lothlorien_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_lothlorien_lord_1" />
+      <template name="NPCCharacter.spc_lothlorien_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -1772,40 +1660,12 @@
       <template name="NPCCharacter.spc_isengard_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_isengard_lord_1" />
+      <template name="NPCCharacter.spc_isengard_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_isengard_lord_1" />
+      <template name="NPCCharacter.spc_isengard_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -2138,40 +1998,12 @@
       <template name="NPCCharacter.spc_gundabad_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_gundabad_lord_1" />
+      <template name="NPCCharacter.spc_gundabad_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_gundabad_lord_1" />
+      <template name="NPCCharacter.spc_gundabad_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -2499,40 +2331,12 @@
       <template name="NPCCharacter.spc_umbar_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_umbar_lord_1" />
+      <template name="NPCCharacter.spc_umbar_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_umbar_lord_1" />
+      <template name="NPCCharacter.spc_umbar_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -2872,40 +2676,12 @@
       <template name="NPCCharacter.spc_dolguldur_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_dolguldur_lord_1" />
+      <template name="NPCCharacter.spc_dolguldur_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_dolguldur_lord_1" />
+      <template name="NPCCharacter.spc_dolguldur_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -3240,40 +3016,12 @@
       <template name="NPCCharacter.spc_gondor_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_gondor_lord_1" />
+      <template name="NPCCharacter.spc_gondor_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_gondor_lord_1" />
+      <template name="NPCCharacter.spc_gondor_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -3618,40 +3366,12 @@
       <template name="NPCCharacter.spc_mordor_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_mordor_lord_1" />
+      <template name="NPCCharacter.spc_mordor_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_mordor_lord_1" />
+      <template name="NPCCharacter.spc_mordor_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -3907,18 +3627,12 @@
       <template name="NPCCharacter.spc_shaghana_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_shaghana_lord_1" />
+      <template name="NPCCharacter.spc_shaghana_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_shaghana_lord_1" />
+      <template name="NPCCharacter.spc_shaghana_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_aserai_one_participant_set_v1" />
@@ -4168,18 +3882,12 @@
       <template name="NPCCharacter.spc_abanissa_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
+      <template name="NPCCharacter.spc_abanissa_lord_1" />
+      <template name="NPCCharacter.spc_abanissa_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
+      <template name="NPCCharacter.spc_abanissa_lord_1" />
+      <template name="NPCCharacter.spc_abanissa_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_aserai_one_participant_set_v1" />
@@ -4854,40 +4562,12 @@
       <template name="NPCCharacter.spc_goblin_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_goblin_lord_1" />
+      <template name="NPCCharacter.spc_goblin_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_goblin_lord_1" />
+      <template name="NPCCharacter.spc_goblin_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
@@ -5214,40 +4894,12 @@
       <template name="NPCCharacter.spc_mistymountainorcs_headman_3" />
     </notable_templates>
     <lord_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_mistymountainorcs_lord_1" />
+      <template name="NPCCharacter.spc_mistymountainorcs_lord_2" />
     </lord_templates>
     <rebellion_hero_templates>
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_0" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_1" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_2" />
-      <template name="NPCCharacter.spc_legion_of_the_betrayed_leader_3" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_0" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_1" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_2" />
-      <template name="NPCCharacter.spc_hidden_hand_leader_3" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_0" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_1" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_2" />
-      <template name="NPCCharacter.spc_embers_of_flame_leader_3" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_0" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_1" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_2" />
-      <template name="NPCCharacter.spc_eleftheroi_leader_3" />
+      <template name="NPCCharacter.spc_mistymountainorcs_lord_1" />
+      <template name="NPCCharacter.spc_mistymountainorcs_lord_2" />
     </rebellion_hero_templates>
     <tournament_team_templates_one_participant>
       <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
