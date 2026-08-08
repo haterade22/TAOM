@@ -21,6 +21,14 @@ Motivated by the Messengers crash on 2026-05-13: commit `03a41b6` shipped the Me
 
 Each phase is intended to fit a single Claude Code session. Inside a phase, parallel subagents fan out across features or feature batches.
 
+## Other audits filed here
+
+Not part of the phase series — same directory, different subject.
+
+| Doc | Scope | Outcome |
+|---|---|---|
+| [issue-triage-2026-08-08.md](issue-triage-2026-08-08.md) | All 147 then-open GitHub issues re-checked against HEAD `828bf941` to answer one question: is this still an issue? | **81 closed, 66 left open** (60 kept + 6 escalated for a decision). Per-issue verdict + evidence, the three-stage method (evidence index → 18 cluster agents → 12 adversarial refuters, which killed 2 proposed closures), and the failure-mode table — each trap in it had already produced a wrong answer in this repo at least once. |
+
 ## Conventions
 
 - **Source of truth** for "what features exist": top-level directories under `Main/Features/` (43 features as of 2026-05-13). `TaomSettings.cs` at that level is a file, not a feature.

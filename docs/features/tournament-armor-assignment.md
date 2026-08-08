@@ -111,7 +111,7 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 ## GitHub Issue
 
 - **Issue:** [#52 — feat: TaomTournamentModel — per-participant culture armor assignment](https://github.com/haterade22/TAOM/issues/52)
-- **Status:** Open (close after in-game verification)
+- **Status:** Closed
 
 ---
 

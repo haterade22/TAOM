@@ -228,7 +228,7 @@ Restart Bannerlord (the config is `Reuse.Singleton` and cached for the process l
 ## GitHub Issue
 
 - **Issue:** [#207 — feat(marketplace): culture-aware item injection for town markets](https://github.com/haterade22/TAOM/issues/207)
-- **Status:** Open (closes with completion-workflow Phase 4)
+- **Status:** Closed
 
 ---
 

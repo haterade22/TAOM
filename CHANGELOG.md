@@ -4,6 +4,40 @@
 
 ## 2026-08-08
 
+### docs: bring every documentation surface in line with the tracker sweep
+
+The triage closed 81 issues, which falsified a status claim wherever one was written down. Swept
+four surfaces against the authoritative closed/open lists rather than against each doc's own prose:
+13 feature docs carrying `**Status:** Open` for an issue that is closed; the auto-memory tree, where
+MEMORY.md and three feature files still listed `gh issue close #N` obligations that were discharged
+(the index is now 61 lines / 12 KB, shorter than before, since the work was removal); `TRACKING.md`,
+which records #210's closure as `obsolete-premise` without ticking a single S6–S12 box that was never
+actually run; and `docs/audits/README.md` + `docs/INDEX.md`, from which `docs/audits/` had been
+unreachable entirely.
+
+Six lessons appended to `lessons/build-tooling-workflow.md` (75 → 79) and `lessons/xslt-moduledata.md`
+(20 → 22), counts re-derived by counting `^### ` headings rather than trusting the index. The two that
+cost the most time: a regex of `<tag ` misses `<tag\n  attr=…`, which undercounted an action set as
+134 entries when it holds 4,842 and nearly shipped as a public claim; and `grep -r` over a live
+ModuleData directory reads `.bak*` files the engine never loads. Both times the shallow grep was wrong
+and the careful verdict was right, which is itself the lesson.
+
+`REVIEW-LOG.md`'s header claimed `COMPLETE: 25/25 features reviewed, 2026-04-05/06` while its rows ran
+to #408; it now describes what the file holds, counted. That file also has mixed line endings in its
+committed blob — 1,924 CRLF against 51 lone-LF — so an ordinary editor write turns a one-line change
+into a 3,848-line whitespace diff. The header edit was rebuilt from HEAD's exact bytes to keep it at
+`1 1`. Normalising the file wants its own whitespace-only commit.
+
+Two CLAUDE.md Traps rows: the engine's 131,072-entity `rglConcurrentQueue` assert is global across
+loaded modules while `tools/check_prefab_budget.py` counts only `TAOM_Map/Prefabs`, so it prints `OK`
+at 99% of the ceiling (130,151 measured, ~921 spare, #359); and a fix landed in `LOTRLOME_Armory` or
+`TAOM_Map` is real but unversioned, so a module reinstall silently reverts it — which is why the
+in-repo validator gate matters more than the external edit. `check_prefab_budget.py` was undocumented
+and now has a `tools/README.md` row carrying that caveat.
+
+Not-tested: nothing in the game. Documentation only; `python tools/lint_docs.py --summary` reports 0
+findings across all eight checks.
+
 ### perf(ui): 4.8 GB of resident texture memory freed by sizing art to what the screen shows
 
 Two sets of images were authored at source resolutions that no widget could ever display, and both

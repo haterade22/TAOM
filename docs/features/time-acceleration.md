@@ -106,7 +106,7 @@ UIExtenderEx:
 ## GitHub Issue
 
 - **Issue:** #181 — Time acceleration feature
-- **Status:** Open
+- **Status:** Closed
 
 ---
 

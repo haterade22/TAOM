@@ -116,7 +116,7 @@ No C# code changed — no unit tests applicable. Verified via:
 ## GitHub Issue
 
 - **Issue:** #71 — feat: LOTR-themed minor factions (mercenaries, mafias, sects, nomads)
-- **Status:** Open
+- **Status:** Closed (2026-08-08 issue triage)
 
 ---
 

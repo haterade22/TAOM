@@ -236,7 +236,7 @@ To fix a flagged siege: look at the kingdom's fortification census + the leader/
 ## GitHub Issue
 
 - **Issue:** [#64 — feat: AI Strategic Intelligence — army commitment stickiness + faction priority target lists](https://github.com/haterade22/TAOM/issues/64)
-- **Status:** Open
+- **Status:** Closed
 
 ---
 

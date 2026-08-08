@@ -143,8 +143,47 @@ mid-battle plus `taom.print_memory rdcoff` mid-battle. Restore with the inverse 
 | zero reads, OFF run identical | editor-only | **exclude unconditionally — 42.2 GB off the install** |
 | zero reads but OFF run breaks | contradiction — the reads went through a path the filter missed | re-run Procmon filtering on process name ONLY |
 
-**Result (fill in):** _pending_ — replace with the table above filled, the Procmon CSV row count, and
-the rgl grep output verbatim.
+**Result — 2026-08-08, step 1.1 run. Q1 IS SETTLED: the shipping client READS RuntimeDataCache.**
+
+Procmon capture (Mike's machine, config B, shipping client, launch → menu → one battle → quit),
+exported with the `Path contains RuntimeDataCache` filter applied:
+
+| Metric | Value |
+|---|---:|
+| RDC operations | **23,329** |
+| `ReadFile` | **13,795** |
+| `CreateFile` | 5,281 |
+| `CloseFile` | 4,253 |
+| `WriteFile` / `*.rtemp` | **0** |
+| Distinct `.rdc` files touched | **5,036** |
+| Result `SUCCESS` / `NAME NOT FOUND` | 22,386 / 943 |
+
+Per module: TAOM_Map 13,577 · LOTRLOME_Armory 7,658 · TAOM 1,801 · **`Alliance.Wargs` 293**.
+
+**So the row that applies is "reads present" — NOT the 42.2 GB free win.** RDC cannot simply be
+excluded on the strength of "no vanilla module ships one". Three consequences:
+
+1. **Step 1.2 (the OFF rename) is still required** to decide between "reads it but does not need it"
+   and "depends on it". It has NOT been run.
+2. **943 `NAME NOT FOUND` results mean the client already probes for `.rdc` entries that do not
+   exist and carries on.** That is a graceful-fallback signature, so the OFF run will most likely
+   boot and degrade rather than break — but degrade *by how much* is the open number, and it is a
+   per-load cost paid by every player forever if the folder ships absent and never regenerates
+   (zero writes were observed, so there is no evidence it rebuilds itself).
+3. **`Alliance.Wargs` ships RDC too** and is not in the install-weight ledger above. Re-measure the
+   42.2 GB total including it before quoting a download-size saving.
+
+**Priority note:** RDC is a *disk* cache. The 2026-08-08 battle-load measurement (see
+`docs/features/battle-load-diagnostics.md`) showed load time is bound by *physical memory* — 97 %
+memLoad and page eviction, not disk. Removing RDC plausibly makes loading **worse** while doing
+nothing for commit. Treat this as a release-packaging question, not a performance one.
+
+**Method caveat worth repeating:** the first capture attempt produced zero RDC rows because the
+capture was started and stopped without the game ever running. A mis-scoped or mis-timed capture is
+indistinguishable from "editor-only" on the RDC row count alone. **Always corroborate that Bannerlord
+appears in the capture** (or that a fresh `taom_debug_*.log` covers the window) before reading a zero
+as an answer. `tools/`-adjacent helper used for this run: `phase1-rdc.ps1` / `phase1-analyze.py`
+(session scratchpad; promote to `tools/` if Phase 1 is ever re-run).
 
 ### Phase 2 — commit attribution matrix, ~2–3 h in-game on Mike's machine
 Configs {A vanilla-only · B TAOM-full · C TAOM+lever-under-test} × stations {menu 60 s · campaign map (fixed save)
@@ -271,11 +310,18 @@ is the named-mapped-files split, and it names the offending tpac/atlas *by file*
 
 ### Phase 3 — ranked levers (each becomes an issue AFTER Phases 1–2 put numbers behind it)
 
+> **Status 2026-08-08: L1 and the FactionMap half of L3 are DONE and measured** — see the two rows
+> below. They did not wait for Phase 2 because both were arithmetic on verified numbers (source
+> pixels vs the widget's rendered size), not estimates needing a matrix. The rest still wait.
+
 | # | Lever | Est. saving | Key risk / gate |
 |---|---|---|---|
 | L1 | Banner icons 1024²→256² (41 sheets → ~2) | **~2.4–2.5 GB commit** | Rebake via editor flow (`banner-icon-generation.md` — bare CLI silently no-ops); re-apply import flags; `tools/sync_sprite_bake.ps1`; restart law |
+| **L1 — DONE 2026-08-08, in-game confirmed** | 369 sources 1024²→256², rebaked | **2,624 MB → 128 MB resident (−2.44 GB)** | Banner icons visually confirmed correct in game after the rebake + restart (Mike, 2026-08-08) — the manifest check below proves the bake landed, this proves the art survived it. Verified in BOTH manifests: `SpriteSheetCount` 41→**2**, every `SpritePart` **256×256**, 369 parts, `<AlwaysLoad/>` retained, `_tex.tpac` present. Target chosen from measurement, not guesswork: the widest consumer is 110 Gauntlet design units (`BannerEditor.xml`), Gauntlet scales by screen **height** vs a 1080 reference, so on the 5120×1440 test display it renders **147 px** and at 4K height 220 px — 256 covers both. Sigils are white-on-alpha (368/369 have RGB=255 everywhere), so a plain LANCZOS resize is exact; only `15009.png` carries colour and needed premultiplied resampling. **Left behind:** ~39 stale `ui_taom_bannericons_3..41` atlas PNGs + `_tex.tpac` in the install — harmless at runtime (`SpriteCategory.Load` loops `1..SpriteSheetCount`) but dead install weight; fold into L5. |
+| **L3a — DONE 2026-08-08** | 35 oversized `faction_*.png` capped at 1024 on the long side | **2,474 MB → 78 MB decoded (−2.40 GB worst case)**; on disk 932 MB → 32 MB | These are **loose PNGs, NOT baked sprites** — `FactionImageWidget` builds the path itself and calls `EngineTexture.LoadTextureFromPath`, so no bake and no restart law applies (see `gui-sprite-system.md`). 34 files were 5504×3072 into a **429×240** design-unit widget (858×480 at 4K) — a 36× area oversample; 36 sibling files were already ≤340×200. Saving is a **worst case, not a flat win**: the textures load per faction viewed during character creation and are never released, so a player who loads a save pays 0 and one who browses all 72 paid the full 2.4 GB. |
 | L2 | Drop `<AlwaysLoad/>`: bannericons+career OFF; fonts KEEP; ui_loading verify-first; ui_taom after consumer enum | ~0.2 GB on top of L1 (overlaps) | Needs TAOM-side `UIResourceManager.LoadSpriteCategory`/`Unload` call sites; a missed consumer renders blank **silently** — in-game verify every touched screen |
-| L3 | FactionMap texture cache + dispose on CC exit | 0.3–1.2 GB session-dependent | Verify release API via `taom-src path TaleWorlds.Engine.Texture` |
+| L3b | FactionMap texture cache + dispose on CC exit | ~34 MB after L3a (was 0.3–1.2 GB) | The leak is real and verified — five `EngineTexture.LoadTextureFromPath` sites in `Main/Features/FactionMap/Widgets/`, and **zero** `Release`/`Dispose`/`Unload` calls anywhere in the feature, so every viewed faction stays resident for the process. L3a shrank the prize by ~97 %, so do this as correctness hygiene, not as a memory lever. `PolygonWidget`'s `_emblemSprite`/`_emblemLoaded` are **static** — reset them too or a second character creation in the same process draws from a released texture. |
+| L3c | `region_*` map art sizing (47 files, ~640 MB decoded) | unquantified | **Deliberately excluded from L3a.** `PolygonWidget.cs:323` sizes these as `ScaledSuggestedWidth = _bboxW * parentW` against a `StretchToParent` container, so they scale with the whole map surface rather than a fixed panel, and `region_map_boundary.png` covers the entire map. Capping them at 1024 would visibly soften the culture-stage map. Needs its own per-region rendered-size analysis first. |
 | L4 | Author `tools/package_release.ps1` (include-list; exclude RDC pending P1, AssetSources, Race Test, naval art, Prefabs_Unused, `.bak`, NSF pdbs) | install ≤ ~44 GB lighter | `.bak` exclusion changes the loaded XML set — gate with `validate_moduledata.py` + a load test |
 | L5 | Delete 61 orphan install sprites + scoped deploy-prune step | install 546 MB | Prune scoped to TAOM-owned dirs only |
 | L6 | Action-set / skins rationalization | unknown (0.1–0.5 GB?) | ONLY after the Phase-2 menu delta isolates it; #385 says skin/morph data is hot |

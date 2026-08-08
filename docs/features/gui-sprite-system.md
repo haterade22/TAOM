@@ -41,6 +41,7 @@ GUI/
 │       ├── CareerScreen.xml          ← Main career screen prefab
 │       └── AbilityHUD.xml            ← Battle HUD for active ability
 ├── SpriteData/                       ← Compiled sprite sheets (auto-generated)
+│   └── FactionMap/                   ← ⚠ NOT sprites — loose PNGs, see the trap below
 ├── SpriteParts/                      ← Source PNGs (organized by category)
 │   ├── Config.xml                    ← Sprite compiler config
 │   └── ui_taom/                      ← TAOM's sprite category
@@ -54,6 +55,33 @@ GUI/
 │       └── ... (other subfolders)
 └── TAOMSpriteData.xml                ← Master sprite category declaration
 ```
+
+### ⚠ Trap — `GUI/SpriteData/FactionMap/` is NOT part of the sprite system
+
+The name is actively misleading: `SpriteData/` is where the generator writes compiled sheets, but
+the `FactionMap/` subfolder under it holds **loose runtime-loaded PNGs that never touch the bake**.
+
+`Main/Features/FactionMap/Widgets/FactionImageWidget.cs` builds the path itself —
+`Path.Combine(modPath, "GUI", "SpriteData", "FactionMap", $"{_imageId}.png")` — and hands it to
+`EngineTexture.LoadTextureFromPath(fileName, folder)`. Verified 2026-08-08: **zero** references to
+FactionMap in `TAOMSpriteData.xml`, and it is **not** declared in `SpriteParts/Config.xml`, so it is
+not a sprite category at all. `PolygonWidget` and `BannerWidget` load the same way (five
+`LoadTextureFromPath` sites in total).
+
+Consequences, all the opposite of the baked path:
+
+| | Baked sprites (`SpriteParts/<category>/`) | FactionMap (`SpriteData/FactionMap/`) |
+|---|---|---|
+| Change a PNG | **must** rerun the generator + texture compile | just copy the file |
+| Restart law | applies (rebake moves every atlas rect) | does not apply |
+| Manifest entry | required, else renders blank | none exists |
+| Memory | resident per category, `AlwaysLoad` honoured | resident per **image actually viewed**, and **never released** |
+
+Two things follow that have bitten already: editing these PNGs in the repo alone changes nothing in
+game (the widget reads `FactionMapPaths.ModulePath`, i.e. the **install**), and nothing in the
+feature ever calls `Release`/`Dispose`/`Unload`, so every faction the player views during character
+creation stays in memory for the rest of the process. See the L3a/L3b rows in
+[`docs/investigations/native-commit-audit-2026-08.md`](../investigations/native-commit-audit-2026-08.md).
 
 ### TAOMSpriteData.xml
 

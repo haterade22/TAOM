@@ -173,7 +173,7 @@ The NPC-lord gold and clan-influence half is unaffected: `StartupResourcesBehavi
 ## GitHub Issue
 
 - **Issue:** #42 — [feat: culture-based startup gold and influence distribution](https://github.com/haterade22/TAOM/issues/42)
-- **Status:** Open
+- **Status:** Closed
 
 ---
 

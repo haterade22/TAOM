@@ -167,6 +167,8 @@ instructions `AGENTS.md`.
 | Trap | Detail |
 |------|--------|
 | **TAOM_Map settlements** | `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` is LIVE; the repo's `Main/_Module/ModuleData/settlements.xml` is a **STALE SHADOW** (edits don't reach the game). Live renames: `tools/Apply-MapVillageNames.py`. |
+| **Prefab entity cap** | The engine's `rglConcurrentQueue` assert (131,072) is a **global** queue across every loaded module, but `tools/check_prefab_budget.py` counts only `TAOM_Map/Prefabs` — so it prints `OK` at 99% of the cap. Measured 2026-08-08: 130,151 total, ~921 spare (#359). Sum all modules before trusting it. |
+| **A fix in a dependency module** | `LOTRLOME_Armory` / `TAOM_Map` fixes are real but **unversioned** — a module reinstall silently reverts them, and "untracked here" is not "unfixed" (7 issues closed on this in the 2026-08-08 triage). Always land an in-repo validator gate alongside the external edit. |
 | **NavalTravel** | PARKED 2026-06-26, DISABLED at the wiring level (#120/#296). Re-enable = 3 `SubModule.cs` blocks. |
 | **NativeSkinFixes** | PARKED 2026-07-08, DISABLED at the wiring level. |
 | **Elephant howdah / bone-tracking** | DEFERRED-disabled (slide sources). |

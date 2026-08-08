@@ -195,5 +195,5 @@ may delete this one.
 - [#397](https://github.com/haterade22/TAOM/issues/397) — stale-version check was ~100% false
   positives (closed by #399)
 - [#399](https://github.com/haterade22/TAOM/pull/399) — the fix
-- [#405](https://github.com/haterade22/TAOM/issues/405) — open: marker-word narrowing + v1.4.5/v1.4.6
+- [#405](https://github.com/haterade22/TAOM/issues/405) — closed: marker-word narrowing + v1.4.5/v1.4.6
   never matched

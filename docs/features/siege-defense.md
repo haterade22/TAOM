@@ -150,7 +150,7 @@ Changes take effect on next game load (config is loaded at construction).
 ## GitHub Issue
 
 - **Issue:** haterade22/TAOM#67 — feat: Siege Defense — timed settlement defense events for player kingdom
-- **Status:** Open
+- **Status:** Closed (2026-08-08 issue triage)
 
 ---
 

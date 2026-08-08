@@ -5,6 +5,8 @@
 
 **Subsequent minor engine bumps (tracked engine, no schema migration):** v1.4.5 → v1.4.6 (spider/elephant native-crash line) → **v1.4.7 (2026-07-08, current)**. Each was handled via `/engine-bump` (preserve baseline → regen decompile → `/verify-bindings` → parity audits → snapshot refresh) rather than a fresh migration.
 
+**Tracker issue #210 closed 2026-08-08 as `obsolete-premise`** (issue-triage pass, [`docs/audits/issue-triage-2026-08-08.md`](../audits/issue-triage-2026-08-08.md)). The premise it tracked no longer holds: the code and data migration landed, and the engine is pinned two bumps past its target at v1.4.7. The S6–S12 gates it listed were never run as discrete steps — they were rolled into ongoing feature work (see the S6–S12 section below) — so closing the issue performed no validation. The residual in-game checks stay open and unticked in [`s6-runtime-punchlist.md`](./s6-runtime-punchlist.md); nothing in this file was ticked on account of the close.
+
 For detailed analysis see:
 - [v1.4.7-impact.md](v1.4.7-impact.md) — **v1.4.7 changelog→surface→verdict impact matrix + code changes (current bump)**
 - [v1.4.x-overview.md](v1.4.x-overview.md) — executive summary + session map
@@ -49,7 +51,7 @@ Plan file: `C:\Users\mikew\.claude\plans\we-did-this-on-crystalline-piglet.md`
 | Generate `docs/migration/api-diff-1.3.15-to-1.4.5.md` | ✅ Complete (15 classes, top 3 risks flagged) | 2026-05-22 |
 | Audit `VerticalTopToBottom`/`VerticalBottomToTop` in TAOM prefabs | ✅ Complete — 5 prefab + 1 C# site found; may need swap | 2026-05-22 |
 | Author per-XML-type template docs (`docs/migration/templates/`) from vanilla 1.4.5 | ✅ Complete — 4 docs (README + characters + equipment-rosters + troops-and-parties) | 2026-05-22 |
-| Open GitHub tracking issue | ⏳ Pending | |
+| Open GitHub tracking issue | ✅ Complete — #210; closed 2026-08-08 as `obsolete-premise` (see header) | |
 
 ### S0 — Key findings (from parallel agents)
 

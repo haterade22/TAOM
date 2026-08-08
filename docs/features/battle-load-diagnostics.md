@@ -401,6 +401,52 @@ mission inherits the first's origin): read **gaps between consecutive lines**, n
 
 Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a thin hook in `Hooks/` with `[HarmonyPatchCategory("Patch43_BattleLoadDiagnostics")]`, and an `Initialize(...)` call in `SubModule.OnGameInitializationFinished`. Keep the hook thin and exception-swallowing.
 
+## First real measurement of the new gap markers (2026-08-08)
+
+The `MissionInitializeDone` / `FinishMissionLoadingBegin` / `FinishMissionLoadingDone` markers were
+added to attribute a **measured 11.9 s** dark window between `MissionInitialize` and
+`MissionAfterStartBegin`. Their first live run (`taom_debug_2026-08-08_09-32-00.log`,
+`battle_terrain_biome_028`) did attribute it — and moved the problem somewhere else entirely.
+
+```
+MissionInitialize          +4413ms
+MissionInitializeDone      +4415ms   native InitializeMission ..........     2 ms
+FinishMissionLoadingBegin  +5318ms   async wait, polls=28 ..............   903 ms
+MissionAfterStartBegin     +6900ms   SetOwnerThread + warm-up ticks ....  1582 ms
+TaomBehaviorsBegin         +7746ms   OTHER MODS' behaviours ............   846 ms
+TaomBehaviorsDone          +7801ms   ALL of TAOM's behaviours ..........    55 ms
+FinishMissionLoadingDone   +8280ms
+BattlePlayable            +27792ms   ← 19,512 ms, and agents=0
+```
+
+**Three findings, in order of how much they change what to do next:**
+
+1. **The gap the markers were built for is now 2.5 s, and TAOM's share of it is 55 ms.** The
+   original 11.9 s figure bundled work that these markers now separate. TAOM behaviour registration
+   is not, and never was, the cost.
+2. **`polls=28` over `waitMs=903` is ~32 ms per poll — genuine multi-frame async streaming, main
+   thread healthy.** This is the reading the token exists for: it *refutes* the blocking-native-spin
+   hypothesis (the #352 `WaitForMeshesToBeLoaded` shape) for this load, which would have been the
+   obvious thing to chase.
+3. **The dominant cost is 19.5 s AFTER loading finishes — 70 % of a 27.8 s load — on a battle with
+   `agents=0`.** Nothing logs in that window except one `[MemSample]`, and that sample is the answer:
+
+```
+privMB=13531  wsMB=7271  availPhysMB=1468  memLoad=97%
+sysCommitUsedMB=108915 / 128662
+```
+
+97 % physical memory, 1.4 GB free, and the working set collapsing across samples
+(`7430 → 5351 → 2447 MB`) — the OS evicting the process's pages while it loads. **Load time and
+memory pressure are ONE problem here, which is exactly what stamping `MemStats()` on these markers
+was designed to decide.** Anything that lowers resident commit (L1/L3a, done) should shorten loads
+too.
+
+Caveat kept deliberately: ~95 GB of that 108 GB system commit was **not** Bannerlord. A clean-boot
+repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSample]` recorded a
+**menu baseline of `privMB=9238` for the first time** — that station did not exist before the
+`MemoryPressureSampler.Start()` relocation.
+
 ## Performance
 
 - Outside the loading window, the phase-5 prefix is a two-bool read (`IsEnabled && IsOpen`) and returns. Inside, it does ~12 resident-property slot reads + one DTO alloc per spawning agent, only until the first tick.

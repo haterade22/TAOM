@@ -1,6 +1,6 @@
 # Codex Adversarial Review Log
 
-Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-05/06.**
+Running scorecard of all reviews. **Reviews 1–85, 2026-04-05 → 2026-08-07.** 79 of those numbers have an entry below; 37, 46, 48, 63, 64 and 73 do not. The number is not a unique key — the Summary and Gap Reviews tables both carry #17–#22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06" — a claim about the April 2026 sweep that the log outgrew.)
 
 ## Summary
 

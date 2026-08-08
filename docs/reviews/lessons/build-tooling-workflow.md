@@ -851,3 +851,80 @@ Also learned: hash mismatches against the snapshot are NOT automatically data lo
 session writing between the snapshot and the autostash produces exactly that signature, and the
 stash then holds their NEWER content. Distinguish the two by diffing the tree against the stash
 blob (`git diff stash@{0} -- <path>`), not by trusting the hash comparison alone.
+
+### "Untracked in this repo" is not "unfixed" — read the installed module before holding an issue open (2026-08-08)
+
+Eleven issues were parked as `blocked-external` on the first triage pass because their fix lives in
+`LOTRLOME_Armory` or `TAOM_Map`, neither of which this repo tracks. Re-checked against the installed
+modules on a second pass, **seven were already applied** and closed: #352, #364, #300, #390, #338,
+#342, #358. *Can this repo ship it* and *does the fix exist* are different questions, and only the
+second one decides whether an issue is still an issue. The four that survived the recheck did so for
+reasons unrelated to tracking — #398 and #385 wait on asset re-exports that have not happened, #62's
+fix is inside a third-party mod, and #359 shipped and then regressed.
+
+- **Why missed:** a triage driven off the repo's own diff and history never sees the external edit,
+  so "no commit touches this" reads as "nobody fixed it". The label then makes the mistake durable —
+  `blocked-external` describes where a file lives, not what state it is in.
+- **Prevent:** an issue whose fix lands outside the repo is verified by reading the installed module,
+  the same way any other issue is verified by reading the code. **The corollary is the more important
+  half:** an external fix has no version control, so a module reinstall silently reverts it with no
+  diff and no crash. The durable part of such a fix is the in-repo check that would catch the
+  regression — `tools/validate_mesh_refs.py` for #390, `validate_moduledata.py`'s
+  `MISSING_HARNESS_FAMILY_TYPE` for a harness like #364's — not the data edit. Close the issue on the
+  data, but do not close it *without* the check.
+- **Source:** `docs/audits/issue-triage-2026-08-08.md` (`62abaeb6`)
+
+### When a quick re-check contradicts a well-evidenced verdict, suspect the re-check (2026-08-08)
+
+Two shallow greps were run to spot-check careful agent verdicts during the issue triage. **Both were
+wrong; the verdict was right both times.** One counted `<action ` inside `as_dwarf_warrior` and
+reported 134 where `<action[\s>]` finds **4,842**. The other guessed `ui_taom/` for a sprite root that
+is actually `ui_taom_career_system/CareerSystem/Abilities/` and reported **0** PNGs where 49 exist —
+the guessed directory does not exist at all. Either one, believed, would have put a false number in a
+public issue comment.
+
+- **Why missed:** a cheap check that contradicts an expensive one feels like the cheap check caught
+  something, because finding a hole is the outcome you are looking for. Neither failure looks like a
+  failure: a wrong-path `find` and an under-matching regex both return cleanly, and `0` and `134` are
+  perfectly plausible answers.
+- **Prevent:** hold the re-check to the standard of the finding it contradicts *before* believing it.
+  `ls -d` the directory before writing "0 files" — a path that does not exist and a path that is empty
+  produce the same count. Point the pattern at one known-present instance and confirm it matches.
+  Then compare.
+- **Source:** #300, `docs/audits/issue-triage-2026-08-08.md` (`62abaeb6`)
+
+### Both CHANGELOG files are newest-first — order the entries, never take the first grep hit (2026-08-08)
+
+`CHANGELOG.md` and `docs/changelog-archive/CHANGELOG-2026-H1.md` are both strictly descending by date
+(the live file opens on 2026-08-08 and ends on 2026-07-01; the archive opens on 2026-06-30 and ends
+on 2026-01-24), and the `###` entries inside a single day run newest-first too. So
+`grep -n … | head -1` returns the **most recent** mention, not the original one — the inverse of what
+a log that appends at the bottom trains you to expect.
+
+- **Why missed:** "first hit" and "first in time" are the same thing in an append-at-the-bottom file,
+  and most tooling output is one. The changelogs prepend, so the line number silently inverts the
+  chronology while still looking like an ordering.
+- **Prevent:** anything reasoning about supersession — *was this reverted? which entry is current?* —
+  collects every hit and sorts by the enclosing `## <date>` heading rather than reading one match.
+  To find the ORIGINAL mention, take the **last** hit in the live file, then check the archive.
+- **Source:** `docs/audits/issue-triage-2026-08-08.md` (`62abaeb6`)
+
+### A tool that measures a subset of a global limit will report OK at 99% of it (2026-08-08)
+
+`tools/check_prefab_budget.py` guards the editor's native prefab queue (`CAP = 131_072`,
+`WARN = 120_000`). Its docstring states the constraint correctly — "every `<game_entity>` across all
+loaded Prefabs folders" — and its `DEFAULT_DIR` then measures exactly one of them,
+`TAOM_Map/Prefabs`. That folder holds **93,407** entities across 138 files, so the tool prints
+`TOTAL: 93407 … OK` and exits 0. Counted the way the engine counts, across every installed module's
+`Prefabs/`, the real figure is **130,151 of 131,072 — 99%, with 921 entities of headroom.** Dropping
+the modules that need not load together (`NavalDLC` plus three third-party map/beast modules) still
+leaves 120,178, already past the tool's own warn line.
+
+- **Why missed:** the default scope encodes the folder we own rather than the resource the cap covers,
+  and every run since has been green. A green gate over the wrong denominator is indistinguishable
+  from a green gate.
+- **Prevent:** when a check guards a shared or global resource, the *default* measurement is the whole
+  resource and the part you own is a filter on the report, never the denominator. Write the constraint
+  out as a sentence and confirm the measured set is that set — this tool's own docstring already said
+  it and the code still did not.
+- **Source:** #359, `docs/audits/issue-triage-2026-08-08.md` (`62abaeb6`)

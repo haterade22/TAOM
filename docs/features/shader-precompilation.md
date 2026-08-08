@@ -192,8 +192,8 @@ If a culture's characters are not getting compiled, verify:
 
 ## GitHub Issues
 
-- [#57 — feat: Shader Pre-compilation at Main Menu](https://github.com/haterade22/TAOM/issues/57) — original feature, OPEN
-- [#106 — fix: silent character drop + premature 120s abort + stale latch on retry/abort](https://github.com/haterade22/TAOM/issues/106) — 2026-05-04 stability fix, OPEN until in-game verification
+- [#57 — feat: Shader Pre-compilation at Main Menu](https://github.com/haterade22/TAOM/issues/57) — original feature, CLOSED
+- [#106 — fix: silent character drop + premature 120s abort + stale latch on retry/abort](https://github.com/haterade22/TAOM/issues/106) — 2026-05-04 stability fix, CLOSED
 - [#287 — Battle-load CTD/hang: scenes lack precompiled shader caches](https://github.com/haterade22/TAOM/issues/287) — 2026-06-17 re-enable + scene-walk, OPEN until in-game verification
 - [#336 — crash/hang: shader precompile stuck on 1.4.7 (DeploymentMissionController.SetupTeams NRE on headless battle)](https://github.com/haterade22/TAOM/issues/336) — 2026-07-11, in-game confirmed (13/13 items, 0 NRE, 0 hang); OPEN pending optional cold-cache validation of the force-finish path
 

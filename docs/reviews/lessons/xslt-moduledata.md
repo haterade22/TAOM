@@ -149,6 +149,45 @@ assumed was kept.
   for a matching `<xsl:attribute name="…">`; presence of one without the other changes the answer.
 - **Source:** #374 investigation, 2026-08-04
 
+### A regex of `<tag ` misses `<tag\n  attr=…` — this project's XML wraps attributes onto continuation lines
+
+Counting the actions inside `as_dwarf_warrior` in the live
+`<game>\Modules\LOTRLOME_Armory\ModuleData\action_sets.xml` with `<action ` returns **134**. The same
+slice matched with `<action[\s>]` returns **4,842**. The generated blocks put the element name on one
+line and its attributes on the next, so a pattern anchored on a trailing space only ever sees the
+handful of single-line entries — a 36× undercount that reads as a plausible figure rather than as a
+broken query. It was one step away from going into an issue comment as evidence that the dwarf action
+set had never been populated.
+- **Why missed:** `<action ` is the obvious pattern and it is correct on every hand-authored XML in
+  the repo. The failure surfaces only in machine-generated or reformatted files, and a partial match
+  count is indistinguishable from a real one.
+- **Prevent:** match `<tag[\s>]`, or parse the file. `tools/check_prefab_budget.py` already uses
+  `rb"<game_entity[\s>]"` for exactly this reason — copy that shape instead of re-deriving it. Before
+  any element count goes into a doc, an issue, or a CHANGELOG, reproduce it by a second method (lxml
+  `findall`, or a count of the closing tag) and confirm the two agree.
+- **Source:** #300, `docs/audits/issue-triage-2026-08-08.md`
+
+### `grep -r` over a live ModuleData folder reads `.bak` files the engine never loads
+
+The installed `LOTRLOME_Armory/ModuleData/` holds **40** backup files sitting beside the live ones —
+`action_sets.xml.bak`, `action_sets.xml.bak_actionfix_20260803`, four `skins.xml.bak-*`,
+`monsters.xml.bak-sauron`, more under `Animations/` and `LOTRLOME_items/`. A recursive grep reads all
+of them and reports values from an arbitrary past snapshot as the current state of the data. Worked
+example: `grep -rl "Culture\.rohan"` over that folder returns two hits
+(`LOTRAOM_horses.xml.bak-dangling-culture-20260802` and `…bak-startergear-20260630`); the same grep
+with `--include='*.xml'` returns **zero**, which is the true live answer. Reading the first result
+would have reopened a culture-alias regression that was fixed on 2026-08-02.
+- **Why missed:** this is the flip side of the backup-extension rule elsewhere in this file. Those
+  files are deliberately named so the engine's `*.xml` glob cannot see them — which is precisely what
+  removes them from your mental model when a grep hands back a real path with a real value. Nothing
+  signals that the directory being searched is now largely history.
+- **Prevent:** search the exact file the engine loads, not the directory. Resolve it through the
+  module's `SubModule.xml` `<XmlName id="…" path="…"/>` first, then grep that one path. Where a
+  directory sweep is genuinely wanted, `--include='*.xml'` filters the current `.bak-*` naming, but
+  that is a convention rather than a guarantee — read the matched paths before drawing a conclusion
+  from a count.
+- **Source:** `docs/audits/issue-triage-2026-08-08.md`, 2026-08-08
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

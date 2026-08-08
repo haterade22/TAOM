@@ -153,7 +153,7 @@ Alliance.Wargs (XML: monster, items, animations)
 ## GitHub Issue
 
 - **Issue:** #44 — [feat: Port warg combat system from LOTRAOM](https://github.com/haterade22/TAOM/issues/44)
-- **Status:** Open
+- **Status:** Closed (2026-08-08 issue triage)
 
 ---
 

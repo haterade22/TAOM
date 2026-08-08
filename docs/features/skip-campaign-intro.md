@@ -103,7 +103,7 @@ Remove (or comment out) the `Features.SkipCampaignIntro.Hooks.Patch58_SkipCampai
 ## GitHub Issue
 
 - **Issue:** [#303](https://github.com/haterade22/TAOM/issues/303) — Skip the campaign intro video on new game
-- **Status:** Open
+- **Status:** Closed (2026-08-08 issue triage)
 
 ---
 
