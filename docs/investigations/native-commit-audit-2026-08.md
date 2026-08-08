@@ -80,7 +80,71 @@ folders (does a tester install even carry them?).
 3. Decision rule: reads+fine → exclude from release, measure first-run rebuild cost · reads+broken → client depends
    on it, escalate to repack · no reads → editor-only, exclude unconditionally.
 
-**Result (fill in):** _pending_
+#### Runbook — Phase 1, step by step
+
+**P0. Prerequisites (once, before any run).**
+
+```powershell
+# Sysinternals: check first, install only if absent.
+Get-Command vmmap64.exe, procmon64.exe, handle64.exe -ErrorAction SilentlyContinue
+winget install --id Microsoft.Sysinternals.VMMap            --accept-source-agreements --accept-package-agreements
+winget install --id Microsoft.Sysinternals.ProcessMonitor   --accept-source-agreements --accept-package-agreements
+# Fallback if the winget ids drift: https://download.sysinternals.com/files/SysinternalsSuite.zip -> C:\Sysinternals
+# CONFIRM the CLI form before trusting it — it is NOT verified here:
+vmmap64.exe -?      # check the [-p <pid>] [outputfile] shape and which extensions it accepts
+```
+
+`cheat_mode = 1` must be set in `Configs\engine_config.txt` for `taom.print_memory`. Run the game
+**windowed/borderless** for the whole matrix — VMMap and Procmon need alt-tab. Set the module set in
+the **launcher UI** (never hand-edit; the launcher rewrites the file), then snapshot it per config:
+
+```powershell
+$cfg = "$env:USERPROFILE\OneDrive\Documents\Mount and Blade II Bannerlord\Configs"
+Copy-Item "$cfg\LauncherData.xml" "$cfg\LauncherData.CONFIG_A.xml"   # after selecting config A
+```
+
+**Step 1.1 — Procmon capture (config B).**
+
+1. `Procmon64.exe /AcceptEula`. **Ctrl+E** to stop capture, **Ctrl+X** to clear.
+2. **Ctrl+L** → Filter. Add (all Include): `Process Name` begins with `Bannerlord`; `Path` contains
+   `RuntimeDataCache`; `Operation` is `CreateFile`; `Operation` is `ReadFile`; `Operation` is `WriteFile`.
+3. Toolbar: **File System Activity only** (Registry / Network / Process / Profiling off).
+4. **Ctrl+E** to start. Launch config B → main menu → **one 250v250 custom battle** → quit.
+5. **Ctrl+E** to stop. `File > Save… > All events > CSV` → `Desktop\rdc-procmon.csv`.
+
+| Observation | Conclusion |
+|---|---|
+| `ReadFile` on any `*.rdc` | the shipping client **reads** RDC |
+| `CreateFile` on `*.rtemp`, or any `WriteFile` under `RuntimeDataCache` | the client **regenerates** it |
+| **Zero** operations | RDC is editor-only for this client |
+
+Corroborate while the battle is loaded: `handle64.exe -accepteula -p Bannerlord RuntimeDataCache`.
+
+**Step 1.2 — the decisive A/B rename (config B).** With the game **closed**:
+
+```powershell
+$m = "E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules"
+foreach ($mod in 'TAOM','TAOM_Map','LOTRLOME_Armory') {
+  if (Test-Path "$m\$mod\RuntimeDataCache") { Rename-Item "$m\$mod\RuntimeDataCache" 'RuntimeDataCache.OFF' }
+}
+```
+
+Launch → menu (60 s) → the standard 250v250 custom battle → quit. Record **(a)** the newest
+`…\Mount and Blade II Bannerlord\Logs\rgl_log_errors_*.txt`, grepped for `RDC cache path is not valid`,
+`Unable to decompress data`, `partial read on compressed asset`; **(b)** menu→playable time from
+`[BattleLoad] t=+` on `BattlePlayable`, **and which bucket moved** (see the phase-load correlation in
+Phase 2); **(c)** whether any `RuntimeDataCache` folder regenerated; **(d)** `[MemSample]` at menu and
+mid-battle plus `taom.print_memory rdcoff` mid-battle. Restore with the inverse rename.
+
+| Result | Conclusion | Action |
+|---|---|---|
+| reads present, OFF run fine (no new rgl errors, load time within ~10 %) | client reads it but does not need it | exclude from release; measure first-run rebuild cost |
+| reads present, OFF run broken (rgl errors, missing assets, or load time blows up) | client **depends** on it | escalate to repack; RDC stays in the release |
+| zero reads, OFF run identical | editor-only | **exclude unconditionally — 42.2 GB off the install** |
+| zero reads but OFF run breaks | contradiction — the reads went through a path the filter missed | re-run Procmon filtering on process name ONLY |
+
+**Result (fill in):** _pending_ — replace with the table above filled, the Procmon CSV row count, and
+the rgl grep output verbatim.
 
 ### Phase 2 — commit attribution matrix, ~2–3 h in-game on Mike's machine
 Configs {A vanilla-only · B TAOM-full · C TAOM+lever-under-test} × stations {menu 60 s · campaign map (fixed save)
@@ -89,15 +153,121 @@ Configs {A vanilla-only · B TAOM-full · C TAOM+lever-under-test} × stations {
 (`vmmap.exe -accepteula <pid>`, save .mmp + CSV) — the named-mapped-files split is the measurement that most
 tightens attribution. Key derived number: the **A-vs-B menu delta** (isolates AlwaysLoad atlases + registration
 surface from battle content).
-Optional instrument: a `TaomConsole` command dumping `TaleWorlds.Engine.Utilities.GetApplicationMemoryStatistics()` /
-`GetNativeMemoryStatistics()` / `GetMemoryUsageOfCategory(i)` / `DumpGPUMemoryStatistics(path)` — engine-category
-attribution of the private commit (route through TaomConsole per the console-command trap in CLAUDE.md).
+**The instrument now exists: `taom.print_memory [label] [gpu]`** (Tier A, cheat gate; shipped
+2026-08-07). It reads `GetApplicationMemoryStatistics()`, `GetNativeMemoryStatistics()`,
+`GetCurrentEstimatedGPUMemoryCostMB()` and — only with the `gpu` keyword —
+`DumpGPUMemoryStatistics(path)`. Its output is also mirrored into `taom_debug` under `[MemProbe]`, a
+tag `tools/triage_battle_load.py` deliberately does not parse, so a matrix run is self-recording.
+
+`GetMemoryUsageOfCategory(int)` is **deliberately NOT called.** There is no category-count API, no
+category-name API, no enum, and no managed caller in either the shipping or the editor build; the
+index goes straight to native with no validation, so a blind index walk is an access-violation risk
+inside a diagnostic. Step 2.0 below settles empirically whether a numeric probe is needed at all.
+
+#### Runbook — Phase 2, step by step
+
+**Step 2.0 — settle the category question first (5 min, config B).** At the campaign map run
+`taom.print_memory step0` and read the `application:` / `native:` blocks.
+
+- They contain a category breakdown ⇒ **a numeric probe is not needed. Do not build it.** Record the
+  category names here.
+- They render `<unavailable>` (native reported failure) or carry no breakdown ⇒ build a *separately
+  named* opt-in `taom.print_memory_categories <n>` with **no default** (a bare invocation prints the
+  hazard and refuses), `n` clamped to `[1,64]`, and a usage string stating that `n` is a raw native
+  index. Walk `n` up from 8 and record the first index whose value stops being plausible. **That is
+  the empirical bound; it cannot be derived any other way.**
+
+**Configs.** Everything not listed is **off** — this install also carries `ADOD_Beasts`,
+`Alliance.Wargs`, `DOTS`, `ServeAsSoldier`, `BattleLinkMPClient`, `FastMode`, `Palantir.Debugger`,
+`BirthAndDeath`, `NavalDLC`, `TAOM_Online`; any one of them left on invalidates the delta.
+
+| Config | Modules ON |
+|---|---|
+| **A** vanilla | `Native`, `SandBoxCore`, `Sandbox`, `StoryMode`, `CustomBattle` |
+| **A+** vanilla + armory | A **+** `LOTRLOME_Armory` — isolates the 3,297-item / 1,260-action-set / 140-skin registration surface |
+| **B** TAOM-full | A **+** `TAOM.Dependencies`, `LOTRLOME_Armory`, `TAOM_Map`, `TAOM` (dependencies before TAOM) |
+
+**Stations** — identical every run, or the deltas are noise. **menu:** cold launch → main menu →
+wait 60 s untouched. **map:** load the same fixed save → sit unpaused 60 s, camera untouched.
+**battle:** Custom Battle, same scene, 250v250, same two cultures, same season/time-of-day → 2 min
+into the fight, camera on the melee.
+
+Matrix: {A, A+, B} × {menu, map, battle} × 2 runs. Config A has no TAOM instrumentation, so use the
+`Get-Station` fallback for every A cell; A+ and B use `[MemSample]` + `taom.print_memory <label>` as
+primary with `Get-Station` as a cross-check (they should agree within a few MB — a large
+disagreement means the wrong process was read).
+
+```powershell
+function Get-Station($label) {
+  $p  = Get-Process Bannerlord -ErrorAction SilentlyContinue | Select-Object -First 1
+  $os = Get-CimInstance Win32_OperatingSystem
+  [pscustomobject]@{
+    label = $label; ts = (Get-Date -Format 'HH:mm:ss'); pid = $p.Id
+    privMB        = [int]($p.PrivateMemorySize64/1MB)
+    wsMB          = [int]($p.WorkingSet64/1MB)
+    commitUsedMB  = [int](($os.TotalVirtualMemorySize - $os.FreeVirtualMemory)/1KB)
+    commitLimitMB = [int]($os.TotalVirtualMemorySize/1KB)
+  }
+}
+# Get-Station 'B-battle-2min' | Tee-Object -Append -FilePath "$env:USERPROFILE\Desktop\commit-matrix.csv"
+```
+
+> **A's map and battle stations are NOT like-for-like with B's** — they need a vanilla save and the
+> vanilla custom-battle scene (a TAOM save will not load). Record the vanilla scene/culture choices
+> explicitly and label the A-vs-B battle comparison as different content. The **menu** delta *is*
+> like-for-like, and it is the one this document calls decisive.
+
+**VMMap — one snapshot per station for A and B (6 total).** Reach the station, let it settle,
+alt-tab, then attach. If the CLI form differs from what `-?` reported, use the GUI
+(`File > Attach to Process`, then `File > Save As` for both `.mmp` and `.csv`).
+
+```powershell
+$id = (Get-Process Bannerlord).Id
+vmmap64.exe -accepteula -p $id "$env:USERPROFILE\Desktop\vmmap-B-battle.mmp"
+vmmap64.exe -accepteula -p $id "$env:USERPROFILE\Desktop\vmmap-B-battle.csv"
+```
+
+From each snapshot record **Private Bytes**, **Mapped File** (committed), **Image**, **Shareable**,
+**Heap**, **Managed Heap**, and the **top 15 rows of the Mapped-File view by size** — that last one
+is the named-mapped-files split, and it names the offending tpac/atlas *by file*.
 
 **Results table (fill in):**
 
-| Config | Station | privMB | wsMB | sysCommitUsedMB | notes |
-|---|---|---|---|---|---|
-| _pending_ | | | | | |
+| Config | Station | Run | privMB | wsMB | sysCommitUsedMB | VMMap privateMB | VMMap mappedMB | Top mapped file (MB) | GPU cost MB | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| _pending_ | | | | | | | | | | |
+
+**Derived numbers to compute and record:**
+
+| Derived | Formula | What it proves / refutes |
+|---|---|---|
+| **A-vs-B menu delta** | `privMB(B,menu) − privMB(A,menu)` | isolates AlwaysLoad atlases + registration surface from all battle content. **≥ ~3 GB** confirms the banner-atlas hypothesis (L1/L2 are the right levers); **< ~1 GB** refutes it and re-points at battle content (L6/L7) |
+| **A+-vs-A menu delta** | `privMB(A+,menu) − privMB(A,menu)` | the Armory's registration surface alone. Large ⇒ **L6 is a real lever**; near-zero ⇒ L6 is dead, drop it |
+| **B-vs-A+ menu delta** | | what TAOM + TAOM_Map add on top of the Armory — the atlas/UI ledger specifically |
+| **battle − menu, per config** | | per-battle content cost. Compare B's to the 20.3 GB #385 death: if `B,battle ≈ 15 GB` on a 32 GB machine, a 16 GB machine dies exactly as reported |
+| **mapped vs private split** (VMMap, B, battle) | | mapped-dominant ⇒ **L7 pack splitting** (paging granularity, TAOM_Map's 6 monolithic tpacs); private-dominant ⇒ decoded/uncompressed residency ⇒ **L1/L2/L3**. This single number chooses between two very different multi-week workstreams |
+
+**Phase-load correlation — the new load markers' payload.** For every config-B battle load, run
+`python tools/triage_battle_load.py <newest taom_debug_*.log>` and record `bucket1Ms`
+(MissionInitialize→MissionInitializeDone), `bucket2Ms` + `polls` + `waitMs`, `bucket3aMs`,
+`bucket3bMs`, `bucket3cMs`, `bucket4Ms`, plus `privMB` at each of the four MemStats-bearing markers.
+
+| Reading | Proves / refutes |
+|---|---|
+| bucket 1 dominant | the time is in native `InitializeMission` — scene/physics/terrain construction. Not agent equipment, not TAOM behaviors |
+| bucket 2 dominant **and `polls=1`** | a **blocking native spin inside one frame** — the #352 `WaitForMeshesToBeLoaded` shape. Escalate to live stack sampling; it is a mesh/physics-body preload problem and it is TAOM-DATA driven |
+| bucket 2 dominant **and `polls` ≈ `waitMs`/16** | genuine async streaming, main thread healthy. Correlate with the 1,163 "partial read on compressed asset data" lines ⇒ I/O / pack granularity ⇒ **L7**, and Phase 1's RDC answer becomes load-bearing |
+| bucket 3b dominant | it is `Mission.AfterStart` — the AgentEquip burst. Already instrumented per-agent; read the existing equip stamps |
+| bucket 3a or 3c dominant | warm-up ticks / `ResumeLoadingRenderings`. **Then and only then** split 3a further — deliberately not built now, because there is no managed seam between the two warm-up ticks and patching `Mission.Tick` would hook the hottest method in the game |
+| **`privMB` rises steeply across the dominant bucket** | **memory and stall are ONE problem** — resource residency. L1/L2/L3 shrink load time as well as commit; give the umbrella issue a load-time acceptance criterion alongside the ≤ 14 GB one |
+| **`privMB` flat across the dominant bucket** | **they are TWO problems.** The stall is I/O or CPU, not allocation. Do not expect L1/L2/L3 to fix load times — say so in the umbrella issue before anyone assumes otherwise |
+
+> **Sanity gate before trusting any cell:** confirm the run's `taom_debug` contains a
+> `[MemSample] session totalPhysMB=… sysCommitLimitMB=…` line **at the menu**. If it does not, the
+> `MemoryPressureSampler.Start()` relocation did not ship and every menu cell is unmeasured.
+>
+> **Second gate:** confirm `polls=` on the `FinishMissionLoadingBegin` line is non-zero. `polls=0`
+> means the `MissionState.TickLoading` binding failed — it does **not** mean there was no wait.
 
 ### Phase 3 — ranked levers (each becomes an issue AFTER Phases 1–2 put numbers behind it)
 

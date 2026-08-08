@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
@@ -616,5 +619,262 @@ public class BattleLoadDiagnosticsServiceTests
         _sut.LogAgentEquipBegin(Snap(9002, "overflow_item"));
 
         _logger.Received(2).LogDebug(Arg.Is<string>(s => s.Contains("id=overflow_item")));
+    }
+
+    // ---- Three-bucket split of the MissionInitialize -> MissionAfterStartBegin gap (2026-08-07) ----
+    // A measured ~11.9 s sat unattributed between Mission.Initialize's prefix and Mission.AfterStart.
+    // MissionState.cs:221-350 says it is exactly three things: the native InitializeMission call,
+    // the IsLoadingFinished poll loop, and FinishMissionLoading's pre-AfterStart work.
+
+    private IEnumerable<string> InfoLines() =>
+        _logger.ReceivedCalls()
+            .Where(c => c.GetMethodInfo().Name == nameof(IModLogger.LogInfo))
+            .Select(c => (string)c.GetArguments()[0]);
+
+    private string LineFor(string phase) =>
+        InfoLines().FirstOrDefault(s => s.Contains($"phase={phase} "))
+        ?? InfoLines().FirstOrDefault(s => s.Contains($"phase={phase}"));
+
+    private static readonly Regex ElapsedRe = new Regex(@"t=\+(\d+)ms");
+
+    private static long ElapsedOf(string line)
+    {
+        Assert.IsNotNull(line, "expected a [BattleLoad] line to parse t=+ from");
+        var m = ElapsedRe.Match(line);
+        Assert.IsTrue(m.Success, $"line carried no t=+Nms token: {line}");
+        return long.Parse(m.Groups[1].Value);
+    }
+
+    // THE headline guard for the counter design: TickLoading runs every frame of the load, and a
+    // 12 s wait at 60 fps is 720 frames. A per-frame log line is why this is a counter, not a marker.
+    [TestMethod]
+    public void NoteLoadingPoll_CalledOneThousandTimes_WritesNoLogLine()
+    {
+        for (var i = 0; i < 1000; i++) _sut.NoteLoadingPoll();
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+        _logger.DidNotReceive().LogDebug(Arg.Any<string>());
+    }
+
+    // Latch rules 2/3: the counter is STATE, not I/O. A mid-load toggle-off must not corrupt the
+    // count the next FinishMissionLoadingBegin reports.
+    [TestMethod]
+    public void NoteLoadingPoll_WhenDisabled_StillCounts()
+    {
+        _settings.IsEnabled.Returns(false);
+        for (var i = 0; i < 5; i++) _sut.NoteLoadingPoll();
+        _sut.LogMissionInitializeDone("scene_a");
+        for (var i = 0; i < 3; i++) _sut.NoteLoadingPoll();
+
+        _settings.IsEnabled.Returns(true);
+        _sut.LogFinishMissionLoadingBegin();
+
+        StringAssert.Contains(LineFor("FinishMissionLoadingBegin"), "polls=3");
+    }
+
+    [TestMethod]
+    public void LogMissionInitializeDone_ResetsPollCounter()
+    {
+        for (var i = 0; i < 7; i++) _sut.NoteLoadingPoll();
+        _sut.LogMissionInitializeDone("scene_a");
+        _sut.NoteLoadingPoll();
+
+        _sut.LogFinishMissionLoadingBegin();
+
+        StringAssert.Contains(LineFor("FinishMissionLoadingBegin"), "polls=1");
+    }
+
+    [TestMethod]
+    public void ResetLifecycle_ResetsPollCounter()
+    {
+        for (var i = 0; i < 7; i++) _sut.NoteLoadingPoll();
+        _sut.ResetLifecycle();
+
+        _sut.LogFinishMissionLoadingBegin();
+
+        StringAssert.Contains(LineFor("FinishMissionLoadingBegin"), "polls=0");
+    }
+
+    // Covers a postfix that never ran (a throw inside Mission.Initialize): the prefix still
+    // has to zero the counter, or the next load reports the previous one's frames.
+    [TestMethod]
+    public void LogMissionInitialize_ResetsPollCounter()
+    {
+        for (var i = 0; i < 7; i++) _sut.NoteLoadingPoll();
+        _sut.LogMissionInitialize("scene_a");
+
+        _sut.LogFinishMissionLoadingBegin();
+
+        StringAssert.Contains(LineFor("FinishMissionLoadingBegin"), "polls=0");
+    }
+
+    // polls=0 is a real, meaningful reading — it means the TickLoading binding failed, NOT
+    // "there was no wait". The feature doc's read-a-hang-log table says so; this pins it.
+    [TestMethod]
+    public void LogFinishMissionLoadingBegin_NoPollsRecorded_EmitsPollsZero()
+    {
+        _sut.LogMissionInitializeDone("scene_a");
+        _sut.LogFinishMissionLoadingBegin();
+
+        StringAssert.Contains(LineFor("FinishMissionLoadingBegin"), "polls=0");
+    }
+
+    [TestMethod]
+    public void LogMissionInitializeDone_WhenDisabled_WritesNothing()
+    {
+        _settings.IsEnabled.Returns(false);
+        _sut.LogMissionInitializeDone("scene_a");
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void LogMissionInitializeDone_IncludesSceneAndPhase()
+    {
+        _sut.LogMissionInitializeDone("battle_terrain_a");
+
+        _logger.Received().LogInfo(Arg.Is<string>(s =>
+            s.Contains("phase=MissionInitializeDone") && s.Contains("scene='battle_terrain_a'")));
+    }
+
+    [TestMethod]
+    public void LogFinishMissionLoadingBegin_WhenDisabled_WritesNothing()
+    {
+        _settings.IsEnabled.Returns(false);
+        _sut.LogFinishMissionLoadingBegin();
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void LogFinishMissionLoadingBegin_IncludesPollsAndWaitMs()
+    {
+        _sut.LogMissionInitializeDone("scene_a");
+        for (var i = 0; i < 3; i++) _sut.NoteLoadingPoll();
+
+        _sut.LogFinishMissionLoadingBegin();
+
+        var line = LineFor("FinishMissionLoadingBegin");
+        StringAssert.Contains(line, "polls=3");
+        StringAssert.Contains(line, "waitMs=");
+    }
+
+    // Never a fabricated 0 — same contract as MemStats()'s absent-process-tokens rule. Without a
+    // MissionInitializeDone stamp there is no wait ORIGIN, so there is no wait to report.
+    [TestMethod]
+    public void LogFinishMissionLoadingBegin_WithoutInitializeDone_OmitsWaitMs()
+    {
+        _sut.NoteLoadingPoll();
+        _sut.LogFinishMissionLoadingBegin();
+
+        var line = LineFor("FinishMissionLoadingBegin");
+        StringAssert.Contains(line, "polls=1");
+        Assert.IsFalse(line.Contains("waitMs="), $"waitMs must be omitted, not fabricated: {line}");
+    }
+
+    [TestMethod]
+    public void LogFinishMissionLoadingDone_WhenDisabled_WritesNothing()
+    {
+        _settings.IsEnabled.Returns(false);
+        _sut.LogFinishMissionLoadingDone();
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void LogFinishMissionLoadingDone_EmitsPhase()
+    {
+        _sut.LogFinishMissionLoadingDone();
+        _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("phase=FinishMissionLoadingDone")));
+    }
+
+    // The whole point of stamping memory on these three: privMB across the stall is the only
+    // reading that can say whether the load stall and the commit growth are ONE problem.
+    // gc= is asserted rather than privMB= because the process read is environment-dependent.
+    [TestMethod]
+    public void NewLoadPhases_CarryMemStatsTokens()
+    {
+        _sut.LogMissionInitializeDone("scene_a");
+        _sut.LogFinishMissionLoadingBegin();
+        _sut.LogFinishMissionLoadingDone();
+
+        StringAssert.Contains(LineFor("MissionInitializeDone"), "gc=");
+        StringAssert.Contains(LineFor("FinishMissionLoadingBegin"), "gc=");
+        StringAssert.Contains(LineFor("FinishMissionLoadingDone"), "gc=");
+    }
+
+    [TestMethod]
+    public void NewLoadPhaseMethods_SwallowThrowingLogger()
+    {
+        _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(_ => throw new InvalidOperationException("boom"));
+
+        _sut.LogMissionInitializeDone("scene_a");
+        _sut.NoteLoadingPoll();
+        _sut.LogFinishMissionLoadingBegin();
+        _sut.LogFinishMissionLoadingDone();
+    }
+
+    // These are pure probes: the exit-window latch (#331) has its own opener/closer contract and
+    // a load stamp that silently closed it would strand the exit diagnostics.
+    [TestMethod]
+    public void NewLoadPhaseMethods_DoNotAlterExitWindowState()
+    {
+        _sut.LogExitBegin("m", "s", 1, 1);
+
+        _sut.LogMissionInitializeDone("scene_a");
+        _sut.NoteLoadingPoll();
+        _sut.LogFinishMissionLoadingBegin();
+        _sut.LogFinishMissionLoadingDone();
+
+        Assert.IsTrue(_sut.IsExitWindowActive);
+    }
+
+    // ---- Twin literal pin, half A. Half B is the fixture in tools/tests/test_triage_battle_load.py.
+    // The Python triage reader parses these tokens; the two halves must stay byte-identical.
+
+    [TestMethod]
+    public void FormatFinishWaitDetail_WithWait_ProducesPinnedLiteral()
+        => Assert.AreEqual("polls=87 waitMs=1449",
+            BattleLoadDiagnosticsService.FormatFinishWaitDetail(87, 1449L));
+
+    [TestMethod]
+    public void FormatFinishWaitDetail_WithoutWait_ProducesPinnedLiteral()
+        => Assert.AreEqual("polls=87",
+            BattleLoadDiagnosticsService.FormatFinishWaitDetail(87, null));
+
+    // ---- The stopwatch blocker (2026-08-07) ---------------------------------------------------
+    // _stopwatch was started ONLY from LogEncounterStart / ResetLifecycle, both reachable only
+    // from PlayerEncounter_Start_Patch — which is campaign-only. In a CUSTOM BATTLE the clock
+    // never ran, so every [BattleLoad] line read t=+0ms and the new markers would have been
+    // worthless in the exact station the measurement matrix uses.
+
+    [TestMethod]
+    public void LogMissionOpenNew_WithStoppedClock_StartsIt()
+    {
+        _sut.LogMissionOpenNew("Battle", "scene_a", null);
+        Thread.Sleep(30);
+        _sut.LogLoadMissionBegin();
+
+        Assert.IsTrue(ElapsedOf(LineFor("LoadMissionBegin")) >= 5,
+            "the clock must be running after MissionOpenNew — otherwise every custom-battle line reads t=+0ms");
+    }
+
+    [TestMethod]
+    public void LogMissionOpenNew_WithRunningClock_DoesNotRestartIt()
+    {
+        _sut.LogEncounterStart(10);
+        Thread.Sleep(30);
+        _sut.LogMissionOpenNew("Battle", "scene_a", null);
+
+        Assert.IsTrue(ElapsedOf(LineFor("MissionOpenNew")) >= 5,
+            "an already-running clock must not be restarted — the campaign path's deltas depend on it");
+    }
+
+    [TestMethod]
+    public void LogMissionInitialize_WithStoppedClock_StartsIt()
+    {
+        _sut.LogMissionInitialize("scene_a");
+        Thread.Sleep(30);
+        _sut.LogMissionInitializeDone("scene_a");
+
+        Assert.IsTrue(ElapsedOf(LineFor("MissionInitializeDone")) >= 5,
+            "the clock must be running after MissionInitialize");
     }
 }

@@ -19,11 +19,13 @@ VERDICT classes (the phase the log ENDS on discriminates the hang)
                       engine stalled equipping that agent; the dumped slots name the
                       suspect item + its declared mesh/`bo_` collision names.
   EQUIPMENT_CONFIRMED + the rgl_log says `get_object failed for body: <suspect>`.
-  POST_EQUIP          ends at AgentEquipOk — the agent equipped fine but the battle
-                      never became playable; NOT an equipment-resolution hang (look
-                      at non-equip spawn steps / scene / script init).
-  SCENE               ends at MissionInitialize / BattleSceneSelected — froze during
-                      scene load before any agent equipped; a code/scene issue.
+  POST_EQUIP          ends at AgentEquipOk or FinishMissionLoadingDone — the agents
+                      equipped fine but the battle never became playable; NOT an
+                      equipment-resolution hang (look at non-equip spawn steps / scene /
+                      script init / the first OnMissionTick).
+  SCENE               ends at MissionInitialize / BattleSceneSelected /
+                      MissionInitializeDone / FinishMissionLoadingBegin — froze during
+                      mission construction before any agent equipped; a code/scene issue.
   PRE_SCENE           ends at EncounterStart / MissionOpenNew — froze in mission setup.
   COMPLETED           a BattlePlayable phase exists — the load finished; the hang (if
                       any) is not in the battle-load path.
@@ -41,6 +43,17 @@ This is additive decoration only: the verdict lattice, kinds, and exit codes are
 untouched. For logs without [MemSample] lines the report text is byte-identical;
 the --json payload always carries a `memory` key (null when no samples), so JSON
 output for old logs differs by exactly that one key.
+
+Since 2026-08-07 three more phase markers split the previously-dark
+MissionInitialize -> MissionAfterStartBegin window (an 11.9 s measured blind spot):
+MissionInitializeDone, FinishMissionLoadingBegin (carrying `polls=` / `waitMs=`) and
+FinishMissionLoadingDone. They give the "Load timing" report section + a `timings` JSON
+block reporting the six named buckets the Phase-2 runbook consumes
+(docs/investigations/native-commit-audit-2026-08.md). Timings are **gap-based**: the
+service's stopwatch is IsRunning-guarded, so a second mission in the same process
+inherits the first's origin — absolutes keep growing while gaps stay valid. Same additive
+contract as [MemSample]: no new verdict kinds, no exit-code change, no report section for
+a log without those markers, and one extra `timings` JSON key (null when absent).
 
 Usage:
   python tools/triage_battle_load.py <taom_debug.log>
@@ -106,6 +119,16 @@ _EQUIP_OK_RE = re.compile(r"agent#(\d+)\s+'(.*)'\s*$")
 _SCENE_ID_RE = re.compile(r"sceneId='(.*?)'")
 _SCENE_RE = re.compile(r"scene='(.*?)'")
 
+# FinishMissionLoadingBegin's wait pair + the MemStats process token. The C# twin is
+# BattleLoadDiagnosticsService.FormatFinishWaitDetail, pinned character-for-character on
+# both sides: "polls=87 waitMs=1449" and — when MissionInitializeDone was not observed —
+# "polls=87" with waitMs OMITTED. An absent waitMs must stay None here; reading it as 0
+# would claim an instantaneous wait that was never measured. privMB is likewise absent
+# (not 0) whenever the process read failed.
+_POLLS_RE = re.compile(r"\bpolls=(\d+)\b")
+_WAIT_MS_RE = re.compile(r"\bwaitMs=(\d+)\b")
+_PRIV_MB_RE = re.compile(r"\bprivMB=(-?\d+)\b")
+
 # [MemSample] memory telemetry (#386). Token order, names, separators, and the %
 # suffix are the pinned cross-language contract with the C# sampler; the WARN prefix
 # is optional (present only on low-headroom lines, emitted at WARNING level).
@@ -131,6 +154,58 @@ MEM_WARN_HEADROOM_PERCENT = 10
 
 NULL = "<null>"
 HANG_KINDS = {"EQUIPMENT", "EQUIPMENT_CONFIRMED", "SCENE", "PRE_SCENE", "POST_EQUIP"}
+
+# Terminal phases that mean "mission construction, before any agent equipped". The two
+# 2026-08-07 additions belong here and NOT in the PRE_SCENE fall-through: a log ending at
+# MissionInitializeDone died in the native async load wait, which is the opposite end of
+# the lifecycle from "froze before scene selection".
+SCENE_TERMINALS = {"MissionInitialize", "BattleSceneSelected",
+                   "MissionInitializeDone", "FinishMissionLoadingBegin"}
+
+# Per-phase tail of the SCENE summary. The first two keep the original wording verbatim.
+_SCENE_HINTS = {
+    "MissionInitialize":
+        "Audit the scene ref with tools/audit_battle_scenes.py / tools/audit_scene_names.py.",
+    "BattleSceneSelected":
+        "Audit the scene ref with tools/audit_battle_scenes.py / tools/audit_scene_names.py.",
+    "MissionInitializeDone":
+        "Mission.Initialize returned, so the native InitializeMission survived — the "
+        "async load wait never completed (native Mission.IsLoadingFinished never returned "
+        "true). Read polls=/waitMs= on the FinishMissionLoadingBegin line of a run that "
+        "got further to tell a blocking native spin from genuine streaming.",
+    "FinishMissionLoadingBegin":
+        "The load wait completed; the freeze is in Scene.SetOwnerThread, one of the two "
+        "warm-up Mission.Tick(0.001f) calls, or Handler.OnMissionAfterStarting.",
+}
+
+# The bucket ledger the Phase-2 runbook records (native-commit-audit-2026-08.md). Spans
+# are GAPS between markers, never absolute t=+ values: the service stopwatch is
+# IsRunning-guarded, so a chained second mission inherits the first mission's origin.
+_BUCKETS = (
+    ("bucket1", "MissionInitialize", "MissionInitializeDone",
+     "native MBAPI.IMBMission.InitializeMission — scene / physics / terrain"),
+    ("bucket2", "MissionInitializeDone", "FinishMissionLoadingBegin",
+     "N x TickLoading polling native Mission.IsLoadingFinished"),
+    ("bucket3a", "FinishMissionLoadingBegin", "MissionAfterStartBegin",
+     "Scene.SetOwnerThread + 2 warm-up Mission.Tick(0.001f) + OnMissionAfterStarting"),
+    ("bucket3b", "MissionAfterStartBegin", "MissionAfterStartDone",
+     "Mission.AfterStart — the AgentEquip burst"),
+    ("bucket3c", "MissionAfterStartDone", "FinishMissionLoadingDone",
+     "OnMissionLoadingFinished + Scene.ResumeLoadingRenderings"),
+    ("bucket4", "FinishMissionLoadingDone", "BattlePlayable",
+     "first OnMissionTick — the battle became playable"),
+)
+
+# The four markers in this window that carry MemStats(). Their privMB trajectory is what
+# decides whether the stall and the commit growth are ONE problem (rises across the
+# dominant bucket) or TWO (flat across it).
+_MEMSTATS_MARKERS = ("MissionInitialize", "MissionInitializeDone",
+                     "FinishMissionLoadingBegin", "FinishMissionLoadingDone")
+
+# The section exists only for logs that actually carry the 2026-08-07 markers, so older
+# logs keep a byte-identical report.
+_BUCKET_SPLIT_MARKERS = frozenset(
+    ("MissionInitializeDone", "FinishMissionLoadingBegin", "FinishMissionLoadingDone"))
 
 
 # --------------------------------------------------------------------------- #
@@ -371,13 +446,30 @@ def classify(tl: Timeline) -> Verdict:
             "steps (skin/skeleton mesh build) or scene/script post-spawn init.",
             stuck_agent=agent)
 
-    if ph in ("MissionInitialize", "BattleSceneSelected"):
+    if ph == "FinishMissionLoadingDone":
+        # Everything loaded — Mission.AfterStart returned, so the whole AgentEquip burst
+        # completed — and the first OnMissionTick never arrived. There is no stuck agent
+        # here, so the summary must not invent one the way the AgentEquipOk arm can.
+        v = Verdict(
+            "POST_EQUIP",
+            "The mission finished loading (phase=FinishMissionLoadingDone) but never "
+            "reached its first tick, so the battle never became playable — NOT an "
+            "equipment-resolution hang: every agent equipped and Mission.AfterStart "
+            "returned.")
+        v.notes.append(
+            "The remaining span is OnMissionLoadingFinished -> the first "
+            "MissionLogic.OnMissionTick (BattleLoadPhaseBehavior). Suspect a MissionLogic "
+            "/ MissionBehavior added by TAOM or another mod, or Scene."
+            "ResumeLoadingRenderings — read the TaomBehaviorAdded stamps above.")
+        return v
+
+    if ph in SCENE_TERMINALS:
         scene = _parse_scene(terminal)
+        scene_part = f", scene='{scene}'" if scene else ""
         return Verdict(
             "SCENE",
-            f"Froze during scene load (phase={ph}, scene='{scene}') before any agent "
-            "equipped — a code/scene issue, not equipment. Audit the scene ref with "
-            "tools/audit_battle_scenes.py / tools/audit_scene_names.py.",
+            f"Froze during scene load (phase={ph}{scene_part}) before any agent "
+            "equipped — a code/scene issue, not equipment. " + _SCENE_HINTS[ph],
             scene=scene)
 
     # EncounterStart / MissionOpenNew / anything earlier.
@@ -440,6 +532,75 @@ def classify_memory(tl: Timeline, floor_mb: int = MEM_WARN_HEADROOM_FLOOR_MB,
         "first": _sample_dict(first),
         "last": _sample_dict(last),
         "warn_seen": tl.mem_warned,
+    }
+
+
+def _last_mission_segment(events: list) -> list:
+    """Events from the LAST MissionInitialize onward — the load actually being triaged.
+
+    Buckets must never span two missions: the service stopwatch is IsRunning-guarded, so a
+    chained second mission inherits the first's origin and its absolute t=+ values keep
+    climbing. Scoping to one segment is what makes the gaps comparable across runs."""
+    start = None
+    for i, e in enumerate(events):
+        if e.phase == "MissionInitialize":
+            start = i
+    return list(events[start:]) if start is not None else []
+
+
+def _first_event(seg: list, phase: str):
+    for e in seg:
+        if e.phase == phase:
+            return e
+    return None
+
+
+def _span_ms(seg: list, start_phase: str, end_phase: str):
+    """Gap between two markers, or None when either is missing / the clock went backwards.
+    None means "not measured" and must never be rendered as 0."""
+    a, b = _first_event(seg, start_phase), _first_event(seg, end_phase)
+    if a is None or b is None or a.ms is None or b.ms is None or b.ms < a.ms:
+        return None
+    return b.ms - a.ms
+
+
+def classify_phase_timings(tl: Timeline) -> dict | None:
+    """Gap-based bucket ledger for the 2026-08-07 marker split. None for a log without
+    those markers (older logs keep a byte-identical report) or without a MissionInitialize
+    to anchor the segment. Additive decoration only — never touches the verdict lattice,
+    kinds, or exit codes."""
+    seg = _last_mission_segment(tl.events)
+    if not seg or not any(e.phase in _BUCKET_SPLIT_MARKERS for e in seg):
+        return None
+
+    buckets = [{"name": name, "from": a, "to": b, "ms": _span_ms(seg, a, b), "what": what}
+               for name, a, b, what in _BUCKETS]
+    measured = [b for b in buckets if b["ms"] is not None and b["ms"] > 0]
+    dominant = max(measured, key=lambda b: b["ms"])["name"] if measured else None
+
+    polls = wait_ms = None
+    begin = _first_event(seg, "FinishMissionLoadingBegin")
+    if begin is not None:
+        m = _POLLS_RE.search(begin.detail)
+        polls = int(m.group(1)) if m else None
+        m = _WAIT_MS_RE.search(begin.detail)
+        wait_ms = int(m.group(1)) if m else None
+
+    priv_mb = {}
+    for phase in _MEMSTATS_MARKERS:
+        e = _first_event(seg, phase)
+        m = _PRIV_MB_RE.search(e.detail) if e is not None else None
+        priv_mb[phase] = int(m.group(1)) if m else None
+
+    return {
+        "buckets": buckets,
+        "dominant": dominant,
+        "polls": polls,
+        "wait_ms": wait_ms,
+        # polls=0 means the MissionState.TickLoading binding FAILED — NOT "there was no
+        # wait". Distinguishing those two is the whole reason the counter exists.
+        "tick_binding_failed": polls == 0,
+        "priv_mb": priv_mb,
     }
 
 
@@ -529,7 +690,40 @@ _NEXT_STEPS = {
 }
 
 
-def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None) -> str:
+def _format_timings(t: dict) -> list:
+    out = ["",
+           "Load timing (GAPS between markers — t=+ is absolute and a chained mission "
+           "inherits the clock):"]
+    for b in t["buckets"]:
+        ms = f"{b['ms']}ms" if b["ms"] is not None else "?"
+        out.append(f"  {b['name']:<8} {b['from']:<25} -> {b['to']:<25} "
+                   f"{ms:>9}  {b['what']}")
+    if t["dominant"]:
+        dom = next(b for b in t["buckets"] if b["name"] == t["dominant"])
+        out.append(f"  dominant: {dom['name']} ({dom['ms']}ms) — {dom['what']}")
+    if t["polls"] is not None:
+        wait = (f"waitMs={t['wait_ms']}" if t["wait_ms"] is not None
+                else "waitMs=<not observed>")
+        out.append(f"  TickLoading: polls={t['polls']} {wait}")
+        if t["tick_binding_failed"]:
+            out.append("  polls=0 — the MissionState.TickLoading binding FAILED. This is "
+                       "NOT 'there was no wait': check the top of the log for "
+                       "'Patch43 diagnostics failed to apply'.")
+        elif t["polls"] == 1 and (t["wait_ms"] or 0) > 1000:
+            out.append("  polls=1 with a large wait — the main thread BLOCKED inside one "
+                       "frame (a native spin, the #352 WaitForMeshesToBeLoaded shape), "
+                       "not async streaming.")
+        if t["wait_ms"] is None:
+            out.append("  waitMs was omitted by the game (MissionInitializeDone not "
+                       "observed) — it is unmeasured, not zero.")
+    out.append("  privMB at MemStats markers: "
+               + " ".join(f"{k}={'?' if v is None else v}"
+                          for k, v in t["priv_mb"].items()))
+    return out
+
+
+def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None,
+                  timings: dict | None = None) -> str:
     out = []
     out.append("=== BATTLE LOAD TRIAGE ===")
     out.append("")
@@ -555,6 +749,11 @@ def format_report(verdict: Verdict, tl: Timeline, rgl, mem: dict | None = None) 
                        f"mesh={s.mesh} kind={s.kind}")
     if not tl.events:
         out.append("  (none)")
+
+    if timings is None:
+        timings = classify_phase_timings(tl)
+    if timings is not None:
+        out.extend(_format_timings(timings))
 
     if tl.watchdog:
         out.append("")
@@ -715,8 +914,9 @@ def main() -> int:
     floor_mb = (args.mem_threshold_mb if args.mem_threshold_mb is not None
                 else MEM_WARN_HEADROOM_FLOOR_MB)
     mem = classify_memory(tl, floor_mb=floor_mb)
+    timings = classify_phase_timings(tl)
 
-    print(format_report(verdict, tl, rgl, mem))
+    print(format_report(verdict, tl, rgl, mem, timings))
 
     if args.json_out:
         payload = {
@@ -730,6 +930,7 @@ def main() -> int:
             "terminal_phase": tl.events[-1].phase if tl.events else None,
             "watchdog_fired": tl.watchdog is not None,
             "memory": mem,
+            "timings": timings,
         }
         Path(args.json_out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
         print(f"\nWrote verdict to {args.json_out}", file=sys.stderr)

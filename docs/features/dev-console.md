@@ -121,7 +121,16 @@ reached through [`TaomConsole`](../../Main/Features/DevConsole/TaomConsole.cs):
 | `TaomConsole.RunAnywhere` | cheat mode only | config, registries, the Harmony patch table |
 
 All three answer `"Campaign was not started."` at the main menu, which is what lets the binding test
-assert a single value — but note they do not check the *same* thing to get there. `RunInCampaign`
+assert a single value.
+
+> **Consequence worth stating once: no console command can serve the main-menu station.** `RunAnywhere`
+> is the loosest gate there is and it still refuses before a game loads, so a diagnostic that needs a
+> main-menu reading cannot be a console command at all — it has to be a timer or a hook. That is why
+> `taom.print_memory` is paired with `[MemSample]` (started from
+> `OnBeforeInitialModuleScreenSetAsRoot`) rather than replacing it: the sampler covers the menu, the
+> command covers map and battle. See [battle-load-diagnostics.md](battle-load-diagnostics.md).
+
+But note the three gates do not check the *same* thing to get there. `RunInCampaign`
 delegates to vanilla's gate, which keys off `Campaign.Current`; the other two key off `Game.Current`.
 Those two states coincide at the main menu and nowhere else is currently reachable, so the gates agree
 in practice rather than by construction. A hypothetical live-Campaign-with-torn-down-Game state would
@@ -288,6 +297,7 @@ answer is conclusive and fails open in every path.
 | `taom.print_town_ledger [town]` | A | campaign | Where the town's gold actually went, by day and by flow. **No engine code logs a gold movement at all** — the alternative is inferring the drain from a balance that changes once a day. See [economy-diagnostics.md](economy-diagnostics.md) |
 | `taom.print_caravans [settlement]` | A | campaign | Which engine gate is holding each parked caravan. Every one of them is a silent early-return, and four of them have different fixes — the gate histogram is the money output |
 | `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
+| `taom.print_memory [label] [gpu]` | A | cheat mode | Nothing — **no TAOM or vanilla surface exposed the engine's own memory accounting at all.** `[MemSample]` reports OS totals on a timer; this asks the engine what those bytes are *for*, on demand, per station. Optional `label` names the station in the log; `gpu` also writes a GPU dump. Mirrored into `taom_debug` under `[MemProbe]`. See [battle-load-diagnostics.md](battle-load-diagnostics.md) |
 | `taom.print_races` | A | cheat mode | — (registry + the hero's race, validated before lookup) |
 | `taom.print_battle_scene` | A | campaign | Which battle terrain a fight here loads. **Zero candidates is the money output** — the stale-scene-ref class an engine bump introduces silently |
 | `taom.audit_settlement_entrances` | A | campaign | Nothing — an unreachable settlement entrance never crashes and never logs, it only makes AI parties fail their path query every tick. Three were caught in the field solely because the testers had written their own pathfinding instrumentation. See below |
@@ -337,6 +347,7 @@ shadow, which the command's own output says. The three destinations reported as 
 | `Main/Features/DevConsole/HarmonyPatchInspector.cs` | Reflection walk: declared categories vs what Harmony applied |
 | `Main/Features/DevConsole/PatchReportFormatter.cs` | Pure renderer for `print_patches` |
 | `Main/Features/DevConsole/Cheats/DiagnosticCheats.cs` | `print_patches`, `print_races` |
+| `Main/Features/BattleLoadDiagnostics/Cheats/MemoryProbeCheats.cs` | `print_memory` — thin entry point over `IEngineMemoryStatsReader` + `MemoryProbeReportFormatter`. No static fields at all, deliberately: a `.cctor` touching engine or IoC state runs during the engine's own discovery pass |
 | `Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs` | `audit_settlement_entrances` — navmesh-island check over every settlement entrance. DevConsole-owned because no feature owns settlement navmesh |
 | `Main/Features/<X>/Cheats/` | Feature-owned commands (momentum, party size, town economy, special resources) |
 | `Main/SubModule.cs` | Calls the audit from `OnBeforeInitialModuleScreenSetAsRoot`, fail-open |
@@ -368,6 +379,12 @@ only coverage.
 
 ## Changelog
 
+- **2026-08-07** — Added `taom.print_memory [label] [gpu]` (Tier A, cheat gate) for the commit-attribution
+  matrix in `docs/investigations/native-commit-audit-2026-08.md`. Recorded above that **`RunAnywhere`
+  structurally cannot serve the main-menu station** — a fact that shapes instrument design, not just
+  this one command. The station label is validated (`A-Z a-z 0-9 _ . : -`, ≤32) because it is echoed
+  into `taom_debug`, which `tools/triage_battle_load.py` parses line by line; an unvalidated label is
+  a log-forgery vector. 19 tests on the pure formatter, including the control-character rejection.
 - **2026-08-03** — Added `taom.audit_settlement_entrances` (Tier A, campaign gate) after field testers
   reported three settlement entrances wedging AI pathfinding. Not part of any phase plan. Admitted
   `audit_` as the second read-only verb, in the naming table and the Tier A definition; the binding

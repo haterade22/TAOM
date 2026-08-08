@@ -2,6 +2,24 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-08
+
+### chore(battleload): land the code for an entry that was already written
+
+`feat(battleload): split the 11.9-second load gap into three named buckets, and add engine memory
+attribution` was committed as a CHANGELOG entry while its implementation stayed uncommitted in a
+shared working tree — so `HEAD` documented a feature whose code was not there. The code lands here
+unchanged: the `EngineMemoryStatsReader` / `MemoryProbeReportFormatter` pair, the two
+`MissionState` load-phase patches, the `Cheats/` folder, the `BattleLoadPhase` split, and the
+`triage_battle_load.py` work, with their tests (C# suite 6052 green, 92 python tests green).
+
+The split happened because a `pull --rebase` auto-stashed a tree two sessions were working in and
+its restore left `CHANGELOG.md` conflicted, so the documentation half of the change committed and
+the code half did not. `stash@{0}` was verified to be a strict subset of the working tree before
+anything was staged, and is kept as a safety net rather than dropped. This is the second incident
+of the class recorded in this file; the discipline that prevents it is in CLAUDE.md under
+"Multi-session git safety".
+
 ## 2026-08-07
 
 ### fix(troopweight): shed-on-upgrade was deleting every settlement's militia down to ~20

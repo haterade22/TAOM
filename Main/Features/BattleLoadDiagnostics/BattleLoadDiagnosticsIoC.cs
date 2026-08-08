@@ -12,6 +12,8 @@ public static class BattleLoadDiagnosticsIoC
         container.Register<IBattleLoadDiagnosticsService, BattleLoadDiagnosticsService>(Reuse.Singleton);
         container.Register<IEquipmentSnapshotAdapter, EquipmentSnapshotAdapter>(Reuse.Singleton);
         container.Register<IBattleLoadStallMarker, BattleLoadStallMarker>(Reuse.Singleton);
+        // Stateless boundary over the engine's memory statics — singleton like its siblings.
+        container.Register<IEngineMemoryStatsReader, EngineMemoryStatsReader>(Reuse.Singleton);
         container.Register<BattleLoadStallWatchdog>(Reuse.Singleton);
         container.Register<ExitStallSampler>(Reuse.Singleton);
         container.Register<MemoryPressureSampler>(Reuse.Singleton);

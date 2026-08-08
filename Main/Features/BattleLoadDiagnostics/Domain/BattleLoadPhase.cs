@@ -46,6 +46,24 @@ public enum BattleLoadPhase
     TaomBehaviorsDone,
     MissionAfterStartDone,
 
+    // MissionInitialize -> MissionAfterStartBegin was a MEASURED ~11.9 s blind window (2026-08-07).
+    // MissionState.cs:221-350 says it is exactly three things, and these three markers name them:
+    //   bucket 1  MissionInitialize        -> MissionInitializeDone      native MBAPI.IMBMission.InitializeMission
+    //                                                                    (the whole body of Mission.Initialize)
+    //   bucket 2  MissionInitializeDone    -> FinishMissionLoadingBegin  N x TickLoading polling the native
+    //                                                                    Mission.IsLoadingFinished
+    //   bucket 3a MissionAfterStartBegin is reached from inside FinishMissionLoading: Scene.SetOwnerThread,
+    //             two warm-up Mission.Tick(0.001f) calls, then Handler.OnMissionAfterStarting
+    //   bucket 3b MissionAfterStartBegin   -> MissionAfterStartDone      Mission.AfterStart (the AgentEquip burst)
+    //   bucket 3c MissionAfterStartDone    -> FinishMissionLoadingDone   OnMissionLoadingFinished +
+    //                                                                    Scene.ResumeLoadingRenderings
+    // FinishMissionLoadingBegin carries `polls=N` (TickLoading frames since Initialize returned) and
+    // `waitMs=N`. polls=1 with a large waitMs means the block was INSIDE one frame — a blocking native
+    // spin, not async waiting. polls=0 means the TickLoading binding FAILED, not "there was no wait".
+    MissionInitializeDone,
+    FinishMissionLoadingBegin,
+    FinishMissionLoadingDone,
+
     // Mission-exit lifecycle (issue #331). Order mirrors the engine's teardown flow:
     // Mission.EndMission -> EndMissionInternal -> MissionState.OnFinalize -> MapState.OnActivate.
     // ResourceClear (MemoryCleanupGC + native ClearResources) runs NESTED INSIDE

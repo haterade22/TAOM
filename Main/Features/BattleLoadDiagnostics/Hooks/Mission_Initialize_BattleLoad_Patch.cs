@@ -43,4 +43,22 @@ public static class Mission_Initialize_BattleLoad_Patch
         try { svc.LogMissionInitialize(scene); }
         catch { /* diagnostic only */ }
     }
+
+    // Phase 4a — Mission.Initialize returned. The prefix above and this postfix bracket the single
+    // native MBAPI.IMBMission.InitializeMission call that is Initialize's entire body
+    // (Mission.cs:1798-1809), which is the first of the three buckets the 11.9-second
+    // MissionInitialize -> MissionAfterStartBegin gap decomposes into.
+    //
+    // Unconditional, like the prefix's LogMissionInitialize call: this zeroes the loading-poll
+    // counter and arms the wait clock (state transitions), and self-gates its own logging on
+    // IsEnabled. A hook-level gate here would let a mid-load toggle-off strand a stale counter.
+    [HarmonyPostfix]
+    public static void Postfix(Mission __instance)
+    {
+        var svc = _service;
+        if (svc == null) return;
+
+        try { svc.LogMissionInitializeDone(__instance?.SceneName ?? "<null>"); }
+        catch { /* diagnostic only */ }
+    }
 }

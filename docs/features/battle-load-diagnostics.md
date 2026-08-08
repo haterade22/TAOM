@@ -33,7 +33,11 @@ Each phase is a thin Harmony hook (or `MissionLogic`) that delegates one call to
 | 2d | `ResourceClearOldBegin` / `Done` | `Utilities_ClearOldResourcesAndObjects_BattleLoad_Patch` (Prefix + Postfix) | `Utilities.ClearOldResourcesAndObjects()` — **the one native call in the window** |
 | 3 | `BattleSceneSelected` | `BattleSceneSelection_Patch` (Postfix) | `DefaultSceneModel.GetBattleSceneForMapPatch(MapPatchData, bool)` — logs `mapIndex → sceneId`. Fires BEFORE phase 2, and only for map-patch terrain — absent on village/town scenes |
 | 4 | `MissionInitialize` | `Mission_Initialize_BattleLoad_Patch` (Prefix) | `Mission.Initialize` (public) — opens the loading window |
-| 4b | `MissionAfterStartBegin` / `Done` | `Mission_AfterStart_BattleLoad_Patch` (Prefix + Postfix) | `Mission.AfterStart()` — runs `OnMissionBehaviorInitialize` for **every** submodule |
+| 4a | `MissionInitializeDone` | `Mission_Initialize_BattleLoad_Patch` (**Postfix**) | `Mission.Initialize` returned — brackets the native `MBAPI.IMBMission.InitializeMission`, which is the *whole* body (`Mission.cs:1798-1809`) |
+| — | *(no line)* | `MissionState_TickLoading_BattleLoad_Patch` (Prefix) | `MissionState.TickLoading(float)` (**private**) — a **counter, never a marker**. See below |
+| 4d | `FinishMissionLoadingBegin` | `MissionState_FinishMissionLoading_BattleLoad_Patch` (Prefix) | `MissionState.FinishMissionLoading()` (**private**) — the native `IsLoadingFinished` poll finally returned true. Carries `polls=` / `waitMs=` |
+| 4b | `MissionAfterStartBegin` / `Done` | `Mission_AfterStart_BattleLoad_Patch` (Prefix + Postfix) | `Mission.AfterStart()` — runs `OnMissionBehaviorInitialize` for **every** submodule. Called from *inside* `FinishMissionLoading` |
+| 4e | `FinishMissionLoadingDone` | `MissionState_FinishMissionLoading_BattleLoad_Patch` (**Postfix**) | `FinishMissionLoading` returned — `OnMissionLoadingFinished` + `Scene.ResumeLoadingRenderings` done |
 | 4c | `TaomBehaviorsBegin` / `TaomBehaviorAdded` / `TaomBehaviorsDone` | `AddTaomBehavior` helper in `SubModule.OnMissionBehaviorInitialize` (no patch) | TAOM's own behaviors, each stamped by name |
 | 5 | `AgentEquipBegin` / `AgentEquipOk` | `Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch` (Prefix + Postfix) | `Agent.EquipItemsFromSpawnEquipment(bool,bool,bool,int)` — **the money hook** |
 | 6 | `BattlePlayable` | `BattleLoadPhaseBehavior : MissionLogic` (first `OnMissionTick`) | closes the loading window — load succeeded |
@@ -54,6 +58,69 @@ MissionOpenNew → MissionOpenNewDone → [tick] → LoadMissionBegin →
 Two of these earn their keep for a specific reason. `ResourceClearOld*` brackets the only **native** call in the window — the shape that access-violates, e.g. when a previous mission's exit left the native heap corrupt (cf. Patch62 / #339); it has exactly one caller in the shipping build, so it adds no noise. And `MissionAfterStartBegin` is what makes the TAOM stamps **exonerating**: `Mission.AfterStart` iterates every loaded submodule, so the gap between it and `TaomBehaviorsBegin` is *other mods'* behavior construction. Without it, "died after Initialize" could be pinned on nobody.
 
 Verified engine seams (v1.4.7): `MissionState.cs:302` (`OpenNew`) · `:235` (`private void LoadMission()`) · `:241` (native clear) · `:243` (`Initialize`) · `:345` → `Mission.cs:3799` (`AfterStart`) → `:3815` (`OnMissionBehaviorInitialize` per submodule).
+
+#### Why 4a/4d/4e exist — the 11.9-second bucket split (2026-08-07)
+
+`MissionInitialize → MissionAfterStartBegin` was itself a blind window, and on an instrumented
+29-second load it held **11.9 s** — the single largest unattributed span in the whole lifecycle. The
+engine decomposes it into exactly three things (`MissionState.cs:221-350`, verified against the
+installed v1.4.7):
+
+| Bucket | Span | What runs in it |
+|---|---|---|
+| **1** | `MissionInitialize` → `MissionInitializeDone` | the native `MBAPI.IMBMission.InitializeMission` call — scene, physics, terrain construction |
+| **2** | `MissionInitializeDone` → `FinishMissionLoadingBegin` | N × `TickLoading` frames polling the native `Mission.IsLoadingFinished` |
+| **3a** | `FinishMissionLoadingBegin` → `MissionAfterStartBegin` | `Scene.SetOwnerThread` + two warm-up `Mission.Tick(0.001f)` calls + `Handler.OnMissionAfterStarting` |
+| **3b** | `MissionAfterStartBegin` → `MissionAfterStartDone` | `Mission.AfterStart` — including the whole `AgentEquip` burst |
+| **3c** | `MissionAfterStartDone` → `FinishMissionLoadingDone` | `OnMissionLoadingFinished` + `Scene.ResumeLoadingRenderings` |
+
+There is now **no unattributed span** between `MissionInitialize` and `BattlePlayable`.
+
+**`TickLoading` is a counter hook that never logs, and that is the design.** It fires once per frame
+while the mission loads; at 60 fps a 12-second wait is ~720 calls, so a marker there would produce
+far more noise than the blind spot it closes. Its prefix does one `Interlocked.Increment` and
+deliberately does **not** read `IsEnabled` (that resolves MCM's static `Instance` every frame, and
+the count is *state*, not I/O — it must survive a mid-load toggle). The result rides one token pair
+on the `FinishMissionLoadingBegin` line. Reading that pair is the whole point:
+
+| Reading | Meaning |
+|---|---|
+| `polls=1`, `waitMs` large | the block was **inside one frame** — a blocking native spin, the #352 `WaitForMeshesToBeLoaded` shape. Not "async waiting": a stalled main thread |
+| `polls` ≈ `waitMs`/16 | genuine multi-frame async streaming at ~60 fps; the main thread is healthy and the engine waits on disk / worker threads |
+| `polls` ≫ 1 but `waitMs`/`polls` ≫ 16 ms | frames are running but each is long — per-frame work inside the load |
+| **`polls=0`** | **the `TickLoading` binding FAILED.** It does *not* mean "there was no wait." Pinned by `Patch43LoadPhaseBindingTests` |
+
+`waitMs` is **omitted entirely** — never a fabricated `0` — when `MissionInitializeDone` was not
+observed, the same never-invent-a-zero rule the `MemStats()` process tokens follow.
+
+All three new markers carry `MemStats()`, which is what makes them answer a question no other
+instrument can: whether the load stall and the process-commit growth are **one** problem. A `privMB`
+curve that rises steeply across the dominant bucket means the stall *is* resource residency; a flat
+`privMB` across an 11.9-second wait means the stall is I/O or CPU and the memory work is separate.
+The refutation is as valuable as the confirmation.
+
+`FinishMissionLoading` and `TickLoading` are both **private**, bound by string exactly like the
+sibling `MissionState.LoadMission` / `Mission.BuildAgent` / `MissionState.OnFinalize` patches in this
+category. `AccessTools.Method` searches non-public, so `HarmonyPatchBindingTests` covers them with no
+wiring; `Patch43LoadPhaseBindingTests` adds named checks so a drift failure says *which* engine
+method moved.
+
+#### The stopwatch was dead in custom battles (fixed 2026-08-07)
+
+`_stopwatch` was started **only** by `LogEncounterStart` / `ResetLifecycle`, and both are reachable
+only from `PlayerEncounter_Start_Patch` — which is campaign-only. So in a **custom battle** the clock
+never ran and *every* `[BattleLoad]` line read `t=+0ms`. Custom battle is the primary station for
+creature, mount and equipment testing and for the commit-attribution matrix, so the timing instrument
+was dead exactly where it was most needed.
+
+The fix adds the existing `if (!_stopwatch.IsRunning) _stopwatch.Restart();` idiom to
+`LogMissionOpenNew` (the universal funnel — it fires for campaign, custom battle and arena alike) and
+to `LogMissionInitialize`. `IsRunning`-guarded, so the campaign path keeps `EncounterStart` as its
+origin and every existing delta is unchanged.
+
+**Residual, documented rather than fixed:** a second mission in the same process inherits the running
+clock, so the `t=+` *absolute* keeps growing across chained missions. **Gaps stay valid** — read
+deltas, never absolutes.
 
 ### The money hook (phase 5)
 
@@ -210,13 +277,36 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `Main/Features/BattleLoadDiagnostics/BattleLoadStallWatchdog.cs` | Background `Timer` + pure `ShouldFire` predicate; triggers the bundle |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadStallException.cs` | Synthetic exception for the watchdog's bundle call (never thrown into the game) |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` + `…SettingsProvider.cs` | MCM page + the interface-wrapped provider |
-| `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase` DTOs |
-| `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 8 load-phase hooks + `BattleLoadPhaseBehavior` + the 6 exit-phase hooks (`*_ExitPhase_Patch`, issue #331) — 14 patch classes total |
+| `Main/Features/BattleLoadDiagnostics/Domain/*` | `EquipmentSnapshot`, `EquipmentSlotSnapshot`, `BattleLoadPhase`, `MemorySample`, `EngineMemoryStats` DTOs |
+| `Main/Features/BattleLoadDiagnostics/Hooks/*` | The 10 load-phase hooks + `BattleLoadPhaseBehavior` + the 6 exit-phase hooks (`*_ExitPhase_Patch`, issue #331) — 17 patch classes total |
+| `Main/Features/BattleLoadDiagnostics/IEngineMemoryStatsReader.cs` / `EngineMemoryStatsReader.cs` | ADR-007 boundary over the four `TaleWorlds.Engine.Utilities` memory statics. Each call guarded separately — one unavailable native surface must not blank the other three. **Deliberately does not call `GetMemoryUsageOfCategory(int)`**: no category-count/name API exists, so a blind index walk is an AV risk |
+| `Main/Features/BattleLoadDiagnostics/MemoryProbeReportFormatter.cs` | Pure `EngineMemoryStats + MemorySample? + label → string` for `taom.print_memory`. Owns the `[MemProbe]` tag and the station-label validator (the log-forgery guard) |
+| `Main/Features/BattleLoadDiagnostics/Cheats/MemoryProbeCheats.cs` | `taom.print_memory [label] [gpu]` — Tier A, cheat gate (`RunAnywhere`). See [dev-console.md](dev-console.md) |
 | `Main/Adapters/IEquipmentSnapshotAdapter.cs` / `EquipmentSnapshotAdapter.cs` | ADR-007 boundary: `Agent`/`Equipment`/`ItemObject` → `EquipmentSnapshot` |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsIoC.cs` | DryIoc registrations |
 | `Main/Core/Logging/FileLogger.cs` | **Not part of this feature, but load-bearing for its contract** — INFO/WARNING/ERROR drain synchronously so a stamp survives a hard crash; DEBUG stays async. Changing that reopens the blind window (#350) |
 
-Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` — `OnGameInitializationFinished` `Initialize(...)`s all 14 hooks then applies `Patch43` (try/catch-guarded: the category binds a private method by string, and a diagnostics category must never break startup); `OnMissionBehaviorInitialize` adds `BattleLoadPhaseBehavior` and brackets TAOM's own behaviors via the local `AddTaomBehavior` helper, which stamps each by name.
+Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` — `OnGameInitializationFinished` `Initialize(...)`s all 17 hooks then applies `Patch43` (try/catch-guarded: the category binds **four** private engine methods by string, and a diagnostics category must never break startup); `OnMissionBehaviorInitialize` adds `BattleLoadPhaseBehavior` and brackets TAOM's own behaviors via the local `AddTaomBehavior` helper, which stamps each by name.
+
+`MemoryPressureSampler.Start()` runs from **`OnBeforeInitialModuleScreenSetAsRoot`**, not
+`OnGameInitializationFinished`. That hook only fires once a game is loading, so no `[MemSample]` line
+was ever written at the main menu — and the main-menu A-vs-B delta is the measurement
+[`native-commit-audit-2026-08.md`](../investigations/native-commit-audit-2026-08.md) calls decisive.
+`taom.print_memory` cannot fill that gap either: its `RunAnywhere` gate returns
+`"Campaign was not started."` before a game loads, so the two instruments are complementary by
+construction — `[MemSample]` covers the menu, `print_memory` covers map and battle. Safe this early
+because `MemorySampleReader` is pure kernel32/psapi P/Invoke with no engine state and the settings
+provider fails open when MCM has not registered yet. The hook re-fires on **every** return to the
+main menu, so the relocation rests entirely on `Start()` being idempotent — pinned by
+`MemoryPressureSamplerTests.Start_CalledTwice_ReusesTheSameTimer`.
+
+`BattleLoadPhaseBehavior` is registered **unconditionally** (no `IsEnabled` check at the
+`AddTaomBehavior` call). It is the loading window's only closer while the opener runs in
+`Mission.Initialize`'s prefix, and the two evaluations are separated by a tick boundary and a
+measured ~11.9 s native load — so a toggle flipped inside that window used to latch the window open
+until the next `Mission.Initialize`, after which the stall watchdog fired at 300 s and wrote a
+spurious bundle. Latch rule 3 (`.claude/rules/harmony-patches.md`): verify "unconditional" at the
+OUTERMOST gate.
 
 ## Dependencies
 
@@ -227,15 +317,21 @@ Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` — `OnGameInitializat
 
 ## Tests
 
-`TAOM.Tests/Features/BattleLoadDiagnostics/` (72 tests, all green — 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests) — see *Crash-durability caveat*:
+`TAOM.Tests/Features/BattleLoadDiagnostics/` (182 tests, all green — 13 cover the exit-phase lifecycle: window open/close gating, seq restart, GC/isSaving line tokens, silent-outside-window, plus 3 review-hardening regressions pinning that window-close state transitions run even when the master toggle is off and that `Mission.Initialize` closes a stale window). The feature's durability contract is pinned separately in `TAOM.Tests/Core/Logging/FileLoggerTests.cs` (14 tests) — see *Crash-durability caveat*:
 
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
 - `BattleLoadStallWatchdogTests` — `ShouldFire` at/above/below threshold, already-fired, window-closed.
 - `BattleLoadDiagnosticsServiceTests` — disabled = no writes, scene/index/summary in markers, formatter delegation, begin-before-body ordering, status-line update, and **every phase method swallows a throwing logger** (the feature must never crash the game). The phase-5c dedupe adds 8: body written once per distinct loadout, one `AgentEquipBegin` still emitted per agent, a differing loadout getting a new id + fresh dump, race alone forcing a new dump, cache cleared by both `Mission.Initialize` and `ResetLifecycle`, and the past-the-cap fallback to always-dump. The blind-window stamps add: enabled/disabled per phase, `LogTaomBehaviorAdded_UsesDurableLogInfo_NotLogDebug` (a "it's just noise, make it DEBUG" refactor would silently reopen the window with every test green), and `NewPhaseMethods_DoNotAlterExitWindowState` (the new stamps are pure probes, not latch closers).
 - `BattleLoadStallMarkerTests` — `Format`/`Parse` round-trip (scene + UTC + **absolute** log path), write→consume→delete lifecycle, consume-once, `ClearInflight`, missing-directory creation, and a locked/undeletable marker still surfacing its parsed info (parse-before-delete).
+- `BattleLoadDiagnosticsServiceTests`, bucket-split additions (21, 2026-08-07) — the headline guard is `NoteLoadingPoll_CalledOneThousandTimes_WritesNoLogLine`, which asserts `DidNotReceive()` on **both** `LogInfo` and `LogDebug`: it is the entire reason a per-frame hook is acceptable. Then `NoteLoadingPoll_WhenDisabled_StillCounts` (the counter is state, not I/O), one reset test per reset point (`ResetLifecycle` / `LogMissionInitialize` / `LogMissionInitializeDone`), `polls=0` emitted rather than suppressed, `waitMs` omitted rather than fabricated when the origin was never observed, `MemStats` tokens on all three new lines, and the twin literal pins `FormatFinishWaitDetail_With{,out}Wait_ProducesPinnedLiteral` (half A of the C#↔Python contract). The stopwatch blocker gets three: clock starts from `MissionOpenNew` and from `MissionInitialize`, and an already-running clock is **not** restarted.
+- `MemoryProbeReportFormatterTests` (19) — `<unavailable>` for null *and* empty engine strings, per-line tagging of the multi-line blobs, CRLF normalisation, process tokens omitted wholesale on a failed read, GPU cost omitted rather than printed as 0, and the label validator: control characters rejected (the log-forgery guard — a newline in a label could inject a fake `[BattleLoad]` line into the file `triage_battle_load.py` parses), brackets/quotes rejected, and an accepted/rejected boundary pair either side of the 32-character limit.
+- `Patch43LoadPhaseBindingTests` (3, `[TestCategory("BindingVerification")]`) — named resolution of the two new **private** targets plus a not-overloaded assertion on `TickLoading`, so a drift failure names the engine method instead of the generic "did not resolve".
+- `MemoryPressureSamplerTests.Start_CalledTwice_ReusesTheSameTimer` — pins the idempotency the `OnBeforeInitialModuleScreenSetAsRoot` relocation depends on (that hook re-fires on every return to the main menu).
 
-Hooks and the `MissionLogic` are game-only (ADR-008) and verified in-game.
+Hooks and the `MissionLogic` are game-only (ADR-008) and verified in-game. The four
+`TaleWorlds.Engine.Utilities` memory statics are native and likewise untested by design — everything
+downstream of them was extracted into `MemoryProbeReportFormatter` precisely so it *could* be.
 
 ### Reaching the dev: the stall marker + next-session notice
 
@@ -262,7 +358,11 @@ python tools/triage_battle_load.py <taom_debug_*.log> --rgl-log <rgl_log_errors_
 python tools/triage_battle_load.py --bundle <taom_crash_*.zip>
 ```
 
-Verdicts: `EQUIPMENT` (ends at `AgentEquipBegin`, names the stuck agent's items), `EQUIPMENT_CONFIRMED` (+ the rgl_log's `get_object failed for body:` matches a suspect — reuses `validate_mesh_refs.parse_rgl_text`), `POST_EQUIP` (equipped fine, froze before playable → not equipment), `SCENE` / `PRE_SCENE` (froze during/before scene load → code), `COMPLETED`, `UNKNOWN` (diagnostics were off). Exit code is 1 for any diagnosed hang, 0 for COMPLETED/UNKNOWN, 2 for a bad path. Tests: `tools/tests/test_triage_battle_load.py`. The player-facing collection path (which files to ask for) is `.github/ISSUE_TEMPLATE/battle-load-hang.md`.
+Verdicts: `EQUIPMENT` (ends at `AgentEquipBegin`, names the stuck agent's items), `EQUIPMENT_CONFIRMED` (+ the rgl_log's `get_object failed for body:` matches a suspect — reuses `validate_mesh_refs.parse_rgl_text`), `POST_EQUIP` (ends at `AgentEquipOk` **or `FinishMissionLoadingDone`** — everything equipped and the first `OnMissionTick` never came → not equipment), `SCENE` (ends at `MissionInitialize` / `BattleSceneSelected` / **`MissionInitializeDone`** / **`FinishMissionLoadingBegin`** — froze during mission construction before any agent equipped → code), `PRE_SCENE` (froze before scene selection → code), `COMPLETED`, `UNKNOWN` (diagnostics were off). Exit code is 1 for any diagnosed hang, 0 for COMPLETED/UNKNOWN, 2 for a bad path. Tests: `tools/tests/test_triage_battle_load.py`. The player-facing collection path (which files to ask for) is `.github/ISSUE_TEMPLATE/battle-load-hang.md`.
+
+> **The three 2026-08-07 markers are load-bearing for the verdict, not just the timing.** Before they were mapped, `classify()` knew only `MissionInitialize`/`BattleSceneSelected` as `SCENE` and let every other phase fall through to `PRE_SCENE` — so a log that died in the native async load wait was reported as *"froze very early … before scene selection"*, pointing triage at the opposite end of the lifecycle.
+
+A log carrying those markers also gets a **`Load timing`** report section (and a `timings` block in `--json`) with the six buckets the Phase-2 runbook records — `bucket1`, `bucket2`, `bucket3a`, `bucket3b`, `bucket3c`, `bucket4` (`FinishMissionLoadingDone` → `BattlePlayable`) — plus the dominant bucket, the `polls=`/`waitMs=` pair, and the `privMB` trajectory across the four `MemStats()`-bearing markers. Two rules the tool enforces so the numbers stay honest: spans are **gaps between markers, never absolute `t=+` values** (the stopwatch is `IsRunning`-guarded, so a chained second mission inherits the first's origin — the tool scopes to the last `MissionInitialize` segment), and an unmeasured value is **absent, never zero** — an omitted `waitMs` renders as `waitMs=<not observed>` and an unreached bucket as `?`. `polls=0` gets its own explicit "the binding FAILED, this is not 'there was no wait'" line. The section is omitted entirely for logs predating the markers, so old-log output is unchanged.
 
 ### Read a hang log
 
@@ -282,8 +382,18 @@ Within the OpenNew→Initialize window, the last stamp names the segment:
 | `LoadMissionBegin` (no `ResourceClearOldBegin`) | a behavior's `OnMissionScreenPreLoad` |
 | `ResourceClearOldBegin` (no `Done`) | **native** resource teardown — suspect heap corruption inherited from the previous mission's exit (cf. Patch62 / #339) |
 | `ResourceClearOldDone` (no `MissionInitialize`) | between the clear and `Mission.Initialize` |
+| `MissionInitialize` (no `MissionInitializeDone`) | the native `MBAPI.IMBMission.InitializeMission` — scene / physics / terrain construction |
+| `MissionInitializeDone` (no `FinishMissionLoadingBegin`) | the async load wait never completed — native `Mission.IsLoadingFinished` never returned true. Read `polls=` on the *next* run to tell a spin from genuine streaming |
+| `FinishMissionLoadingBegin` (no `MissionAfterStartBegin`) | `Scene.SetOwnerThread`, one of the two warm-up `Mission.Tick(0.001f)` calls, or `OnMissionAfterStarting` |
 | `MissionAfterStartBegin` (no `TaomBehaviorsBegin`) | **another mod's** `OnMissionBehaviorInitialize` — not TAOM |
 | `TaomBehaviorAdded behavior='X'` (no further stamp) | registering TAOM's `X` |
+| `MissionAfterStartDone` (no `FinishMissionLoadingDone`) | `OnMissionLoadingFinished` or `Scene.ResumeLoadingRenderings` |
+
+**Two reading traps on the new tokens.** `polls=0` on a `FinishMissionLoadingBegin` line means the
+`MissionState.TickLoading` **binding failed**, not that there was no wait — check for a
+`Patch43 diagnostics failed to apply` warning near the top of the log. And `t=+` is an *absolute*
+that survives across chained missions in one process (the clock is `IsRunning`-guarded, so a second
+mission inherits the first's origin): read **gaps between consecutive lines**, never the absolute.
 
 **Crash-durability caveat.** `[BattleLoad]`/`[SaveLoad]` lines are INFO and, since 2026-07-16, written synchronously — so the last INFO line is a true record of how far execution got. `[DEBUG]` lines are still async and a hard crash drops whatever is queued, so **do not read the last DEBUG line as the stopping point**. Before that change every level was async, which is why the Nan Angren log could not be localized: `MissionInitialize` might have been reached and merely never written.
 
@@ -311,6 +421,10 @@ Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a
 
 ## Changelog
 
+- 2026-08-07 — **Split the 11.9-second `MissionInitialize` → `MissionAfterStartBegin` gap into three named buckets.** Added `MissionInitializeDone` (a Postfix on the existing `Mission.Initialize` patch) plus `FinishMissionLoadingBegin`/`Done` (Prefix + Postfix on the **private** `MissionState.FinishMissionLoading`), and a `MissionState.TickLoading` prefix that is a **counter and never logs** — 720 lines in a 12-second wait at 60 fps is not an acceptable instrument, so the frame count rides one `polls=`/`waitMs=` token pair on `FinishMissionLoadingBegin`. That pair is what separates a blocking native spin (`polls=1`, large `waitMs`) from genuine async streaming (`polls ≈ waitMs/16`) — opposite diagnoses that were previously indistinguishable. All three markers carry `MemStats()`, so the `privMB` curve *across the stall* can say whether the load stall and the commit growth are one problem or two. Patch43 went 14 → 17 hooks.
+  - **Fixed: the stopwatch was dead in custom battles.** `_stopwatch` was only ever started from `LogEncounterStart`/`ResetLifecycle`, both reachable only from the campaign-only `PlayerEncounter_Start_Patch` — so every `[BattleLoad]` line in a custom battle read `t=+0ms`. Added the existing `IsRunning`-guarded restart idiom to `LogMissionOpenNew` (the universal funnel) and `LogMissionInitialize`. Pre-existing defect, unrecorded anywhere, and load-bearing for the measurement work above.
+  - **Fixed: `BattleLoadPhaseBehavior` was registered only while enabled.** It is the loading window's only closer and the opener is `Mission.Initialize`'s prefix, so a toggle flipped across that window (now known to span a tick boundary and ~11.9 s) latched the window open and the stall watchdog wrote a spurious bundle at 300 s. Registered unconditionally; it already self-gates its logging. The 2026-07-06 RCA had deferred this as "the same synchronous call chain" — the bucket measurement disproves that premise.
+- 2026-08-07 — **Added `taom.print_memory [label] [gpu]`** (Tier A, cheat gate) and the `IEngineMemoryStatsReader` boundary over `TaleWorlds.Engine.Utilities`' four memory statics, for the per-station rows of [`native-commit-audit-2026-08.md`](../investigations/native-commit-audit-2026-08.md)'s commit-attribution matrix. Output is mirrored into `taom_debug` under `[MemProbe]` — deliberately a tag `triage_battle_load.py` does *not* parse, so a matrix run self-records without creating a third cross-language contract. `GetMemoryUsageOfCategory(int)` is **not** called: no category-count or category-name API exists in either build and the index goes straight to native unvalidated, so a blind walk is an access-violation risk; the two statistics strings are read first and a numeric probe is built only if they turn out not to carry the breakdown. Also relocated `MemoryPressureSampler.Start()` from `OnGameInitializationFinished` to `OnBeforeInitialModuleScreenSetAsRoot` so a **main-menu** `[MemSample]` baseline exists — the A-vs-B menu delta is the audit's decisive measurement, and neither instrument could produce it before (`print_memory`'s gate returns "Campaign was not started." at the menu).
 - 2026-08-05 — **Added `[MemSample]` session-wide memory telemetry** (#386, motivated by #385: a facegen CTD at 20.3 GB process commit on a 16 GB machine, diagnosable only by hand-parsing the dump). `MemoryPressureSampler` (own toggle, NOT the master), `MemorySampleReader` (P/Invoke, not `System.Diagnostics.Process` — 7,711 µs vs 84 µs measured), `MemStats()` phase-line tokens, and the triage tool's Memory-trend section + `MEMORY PRESSURE` note. The `[MemSample]` tag is a second cross-language log contract, pinned by twin literal tests (C# ↔ `tools/tests/test_triage_battle_load.py`).
 - 2026-08-03 — **Deduped the equipment dump per loadout** (phase 5c). The 2026-08-03 tournament repro spent 1,146 slot lines on 18 distinct loadouts; each is now dumped once and later agents cite `loadout=#N` (measured by replay: 186,345 B → 8,432 B, +5,148 B of tokens). All three per-agent stamps are unchanged — they are the crash discriminator and cost 145 ms for 429 agents. `triage_battle_load.py` learned to resolve `loadout=#N` back to its block (without which the EQUIPMENT verdict would name no suspect), and its `_EQUIP_BEGIN_RE` was fixed: a lazy `culture='(.*?)'` had been swallowing the `race`/`monster`/`actionSet` tokens added on 2026-08-02 and reporting the whole run as the culture.
 - 2026-07-16 — **Split the `MissionOpenNew` → `MissionInitialize` blind window** (#350) after a player CTD at Nan Angren left a log that could not be localized. Added an `OpenNew` Postfix, the private `MissionState.LoadMission`, the native `Utilities.ClearOldResourcesAndObjects` bracket, and the `Mission.AfterStart` bracket (which lets a log *exonerate* TAOM, not just accuse it), plus per-behavior `TaomBehaviorAdded` stamps. Patch43 went 11 → 14 hooks and its apply is now try/catch-guarded. Registry correction: `Mission.Initialize` is **public** (`Mission.cs:1798`), not private as claimed since this feature shipped.

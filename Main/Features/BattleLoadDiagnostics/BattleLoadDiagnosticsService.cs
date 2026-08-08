@@ -17,6 +17,15 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     private readonly IEquipmentDumpFormatter _formatter;
 
     private readonly Stopwatch _stopwatch = new Stopwatch();
+
+    // MissionState.TickLoading frames observed since Mission.Initialize returned, and the clock
+    // reading at that return. Together they turn the previously-dark async wait into a number:
+    // polls=1 with a large waitMs means the main thread was BLOCKED inside one frame (a native
+    // spin, the #352 WaitForMeshesToBeLoaded shape); polls ~ waitMs/16 means healthy multi-frame
+    // streaming. Those are opposite diagnoses. -1 means "origin not observed" -> waitMs omitted.
+    // Interlocked because TickLoading and the phase hooks are not guaranteed the same thread.
+    private int _loadingPolls;
+    private long _waitStartMs = -1L;
     private int _seq;
     private volatile string _currentStatusLine = "phase=<none>";
     private volatile bool _exitWindowActive;
@@ -53,6 +62,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         // map activation emits spurious Exit* lines (deep-review data-flow finding, 2026-07-06).
         CloseExitWindow();
         ResetLoadoutCache();
+        ResetLoadingPollCounter();
         if (!IsEnabled) return;
         try
         {
@@ -74,6 +84,15 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     public void LogMissionOpenNew(string missionName, string sceneName, string? encounterSummary)
     {
         if (!IsEnabled) return;
+        // The clock was previously started ONLY by LogEncounterStart/ResetLifecycle, both reachable
+        // only from PlayerEncounter_Start_Patch — which is campaign-only. A CUSTOM BATTLE therefore
+        // never started it, so every [BattleLoad] line in one read t=+0ms and all phase deltas were
+        // lost. That is precisely the station the commit-attribution matrix uses for its battle
+        // numbers, so the instrument was dead where it was most needed. MissionState.OpenNew is the
+        // universal funnel (it fires for campaign, custom battle and arena alike), so the clock
+        // starts here too. IsRunning-guarded, so the campaign path keeps EncounterStart as its
+        // origin and existing deltas are unchanged.
+        try { if (!_stopwatch.IsRunning) _stopwatch.Restart(); } catch { /* clock best-effort */ }
         var detail = $"mission='{missionName}' scene='{sceneName}'";
         if (!string.IsNullOrEmpty(encounterSummary)) detail += " " + encounterSummary;
         Emit(BattleLoadPhase.MissionOpenNew, detail);
@@ -115,8 +134,71 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
         // without map activation) — close it unconditionally before entry-phase logging.
         CloseExitWindow();
         ResetLoadoutCache();
+        // Reset the loading-poll counter BEFORE the toggle gate: it is state, not I/O, so a
+        // mid-load toggle-off must not leave a stale count for the next FinishMissionLoadingBegin
+        // to report (latch rule 2, .claude/rules/harmony-patches.md).
+        ResetLoadingPollCounter();
         if (!IsEnabled) return;
+        // Belt-and-braces clock start for any path that reaches Initialize without OpenNew's
+        // prefix having run (see the LogMissionOpenNew comment for why this matters).
+        try { if (!_stopwatch.IsRunning) _stopwatch.Restart(); } catch { /* clock best-effort */ }
         Emit(BattleLoadPhase.MissionInitialize, $"scene='{sceneName}' {MemStats()}");
+    }
+
+    public void LogMissionInitializeDone(string sceneName)
+    {
+        // State first, gate second. Arming the wait clock and zeroing the poll counter are the
+        // measurement's origin: if a toggle-off skipped them, the next FinishMissionLoadingBegin
+        // would report a wait spanning the previous load.
+        ResetLoadingPollCounter();
+        try { Interlocked.Exchange(ref _waitStartMs, _stopwatch.ElapsedMilliseconds); }
+        catch { Interlocked.Exchange(ref _waitStartMs, -1L); }
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.MissionInitializeDone, $"scene='{sceneName}' {MemStats()}");
+    }
+
+    // Counter ONLY — never logs. One call per MissionState.TickLoading frame; at 60fps a 12-second
+    // wait is 720 frames, so a log line here would be worse than the blind spot it closes. Also
+    // deliberately does NOT read IsEnabled: that would hit MCM's static Instance every frame, and
+    // the count is state rather than I/O so it must survive a mid-load toggle.
+    public void NoteLoadingPoll() => Interlocked.Increment(ref _loadingPolls);
+
+    public void LogFinishMissionLoadingBegin()
+    {
+        var polls = Interlocked.CompareExchange(ref _loadingPolls, 0, 0);
+        var startedAt = Interlocked.Read(ref _waitStartMs);
+        if (!IsEnabled) return;
+
+        long? waitMs = null;
+        if (startedAt >= 0)
+        {
+            try
+            {
+                var now = _stopwatch.ElapsedMilliseconds;
+                if (now >= startedAt) waitMs = now - startedAt;
+            }
+            catch { /* clock best-effort — omit rather than fabricate */ }
+        }
+
+        Emit(BattleLoadPhase.FinishMissionLoadingBegin, $"{FormatFinishWaitDetail(polls, waitMs)} {MemStats()}");
+    }
+
+    // Pure seam so the twin literal can be pinned character-for-character on both sides of the
+    // C#/Python contract. waitMs is OMITTED, never rendered as 0, when the origin was not observed
+    // — the same never-fabricate-a-zero rule MemStats() follows for its process tokens.
+    internal static string FormatFinishWaitDetail(int polls, long? waitMs) =>
+        waitMs.HasValue ? $"polls={polls} waitMs={waitMs.Value}" : $"polls={polls}";
+
+    public void LogFinishMissionLoadingDone()
+    {
+        if (!IsEnabled) return;
+        Emit(BattleLoadPhase.FinishMissionLoadingDone, MemStats());
+    }
+
+    private void ResetLoadingPollCounter()
+    {
+        Interlocked.Exchange(ref _loadingPolls, 0);
+        Interlocked.Exchange(ref _waitStartMs, -1L);
     }
 
     public void LogAgentEquipBegin(EquipmentSnapshot snapshot)

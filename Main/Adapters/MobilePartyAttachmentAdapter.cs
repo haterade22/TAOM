@@ -137,7 +137,9 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
             if (drift > DriftWarningThreshold)
                 _logger?.LogWarning($"[EnlistDiag] SYNC closed a drift of {drift:F1} to '{commanderHeroId}' — the player had genuinely fallen behind");
             else if (_diag?.IsEnabled == true)
-                _logger?.LogDebug($"[EnlistDiag] SYNC ok (drift {drift:F2}) to '{commanderHeroId}'");
+                // INFO, not DEBUG — the toggle controls the volume, the level controls durability,
+                // and a trace you deliberately switched on must survive a hard CTD.
+                _logger?.LogInfo($"[EnlistDiag] SYNC ok (drift {drift:F2}) to '{commanderHeroId}'");
             return true;
         }
         catch (Exception ex)

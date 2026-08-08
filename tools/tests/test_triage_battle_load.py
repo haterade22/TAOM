@@ -49,6 +49,14 @@ PINNED_MEM_WARN = ("[MemSample] WARN LOW COMMIT HEADROOM headroomMB=1799 "
                    "privMB=4211 wsMB=3900 heapMB=654 sysCommitUsedMB=29847 "
                    "sysCommitLimitMB=31646 availPhysMB=310 memLoad=97%")
 
+# The pinned FinishMissionLoadingBegin wait-token contract (2026-08-07). Cross-language
+# twin pin: BattleLoadDiagnosticsService.FormatFinishWaitDetail is asserted
+# character-for-character on the C# side by
+# FormatFinishWaitDetail_WithWait_ProducesPinnedLiteral / ..._WithoutWait_...  — waitMs is
+# OMITTED when MissionInitializeDone was not observed, never rendered as a fabricated 0.
+PINNED_WAIT_WITH_MS = "polls=87 waitMs=1449"
+PINNED_WAIT_NO_MS = "polls=87"
+
 
 def _line(level, payload, ts="2026-06-17 12:00:00"):
     """One FileLogger line: [ts] [LEVEL] <payload>."""
@@ -102,6 +110,48 @@ def _equip_ok(seq, idx, name="Gondor Soldier"):
 def _playable(scene="battle_terrain_b", agents=120):
     return _line("INFO", f"[BattleLoad] seq=99 t=+8000ms phase=BattlePlayable "
                          f"scene='{scene}' agents={agents}")
+
+
+# --- the 2026-08-07 bucket-split markers ----------------------------------- #
+# Emit() writes `[BattleLoad] seq=N t=+Nms phase=<P> <detail>`; _phase() reproduces that
+# shape verbatim so a fixture is the real line, not an approximation of it.
+def _phase(seq, ms, phase, detail=""):
+    return _line("INFO", f"[BattleLoad] seq={seq} t=+{ms}ms phase={phase} {detail}".rstrip())
+
+
+def _memstats(gc="44/19/6", heap=655, priv=14002, ws=11540):
+    """The MemStats() suffix. priv=None drops BOTH process tokens, which is exactly what
+    the C# does when the process read fails (never a fabricated 0)."""
+    head = f"gc={gc} heapMB={heap}"
+    return head if priv is None else f"{head} privMB={priv} wsMB={ws}"
+
+
+def _init(seq=4, ms=1000, scene="battle_terrain_b", mem=None):
+    tail = f" {mem}" if mem else ""
+    return _phase(seq, ms, "MissionInitialize", f"scene='{scene}'{tail}")
+
+
+def _init_done(seq=5, ms=2000, scene="battle_terrain_b", mem=None):
+    tail = f" {mem}" if mem else ""
+    return _phase(seq, ms, "MissionInitializeDone", f"scene='{scene}'{tail}")
+
+
+def _finish_begin(seq=6, ms=5000, polls=87, wait_ms=1449, mem=None):
+    """FinishMissionLoadingBegin. wait_ms=None reproduces the omitted-waitMs shape."""
+    detail = f"polls={polls}" if wait_ms is None else f"polls={polls} waitMs={wait_ms}"
+    return _phase(seq, ms, "FinishMissionLoadingBegin", detail + (f" {mem}" if mem else ""))
+
+
+def _finish_done(seq=9, ms=8200, mem=None):
+    return _phase(seq, ms, "FinishMissionLoadingDone", mem or "")
+
+
+def _after_start_begin(seq=7, ms=5500):
+    return _phase(seq, ms, "MissionAfterStartBegin")
+
+
+def _after_start_done(seq=8, ms=8000):
+    return _phase(seq, ms, "MissionAfterStartDone")
 
 
 def _watchdog(elapsed, last_phase, detail=""):
@@ -785,6 +835,338 @@ class MemSampleMalformedLineTests(unittest.TestCase):
         torn = _line("INFO", "[MemSample] privMB=4211 wsMB=39")
         tl = tb.parse_battle_load_log(_log(_mem(), torn))
         self.assertEqual(len(tl.mem_samples), 1)  # only the well-formed line counted
+
+
+class NewLoadPhaseVerdictTests(unittest.TestCase):
+    """The three markers added 2026-08-07 (the 11.9 s bucket split), one fixture each,
+    WITH and WITHOUT the MemStats suffix — the exact shape of the two #386 tests, because
+    RCA gap #8 records that a trailing token already broke a near-identical regex once
+    (2026-08-02) and the mitigation is a FIXTURE, not reasoning about the regex.
+
+    Before this, classify() knew only MissionInitialize/BattleSceneSelected as SCENE and
+    let everything else fall through to PRE_SCENE, so a log that died in the native
+    mission build was reported as 'froze very early ... before scene selection'."""
+
+    MEM = _memstats()
+
+    def _head(self):
+        return [_encounter(), _open_new(), _scene_selected(), _init()]
+
+    # --- MissionInitializeDone: bucket 1 closed, the async wait never finished ----- #
+    def test_mission_initialize_done_is_scene_with_and_without_memstats(self):
+        plain = tb.triage(_log(*self._head(), _init_done()))
+        suffixed = tb.triage(_log(*self._head(), _init_done(mem=self.MEM)))
+        self.assertEqual(plain.kind, "SCENE")
+        self.assertEqual(suffixed.kind, "SCENE")
+        self.assertEqual(plain.kind, suffixed.kind)
+
+    def test_mission_initialize_done_scene_extraction_survives_memstats(self):
+        plain = tb.triage(_log(*self._head(), _init_done(scene="battle_terrain_158")))
+        suffixed = tb.triage(
+            _log(*self._head(), _init_done(scene="battle_terrain_158", mem=self.MEM)))
+        self.assertEqual(plain.scene, "battle_terrain_158")
+        self.assertEqual(suffixed.scene, "battle_terrain_158")
+
+    # --- FinishMissionLoadingBegin: froze in the warm-up ticks, pre-equip ---------- #
+    def test_finish_begin_is_scene_with_and_without_memstats(self):
+        plain = tb.triage(_log(*self._head(), _init_done(), _finish_begin()))
+        suffixed = tb.triage(
+            _log(*self._head(), _init_done(mem=self.MEM), _finish_begin(mem=self.MEM)))
+        self.assertEqual(plain.kind, "SCENE")
+        self.assertEqual(suffixed.kind, "SCENE")
+
+    def test_finish_begin_carries_no_scene_token_either_way(self):
+        # The line has no scene='…'; the suffix must not make one appear (a greedy or
+        # mis-anchored regex could pull one out of the MemStats tokens).
+        plain = tb.triage(_log(*self._head(), _init_done(), _finish_begin()))
+        suffixed = tb.triage(
+            _log(*self._head(), _init_done(mem=self.MEM), _finish_begin(mem=self.MEM)))
+        self.assertIsNone(plain.scene)
+        self.assertIsNone(suffixed.scene)
+
+    # --- FinishMissionLoadingDone: fully loaded, first tick never came ------------- #
+    def test_finish_done_is_post_equip_with_and_without_memstats(self):
+        tail = [_init_done(), _finish_begin(), _after_start_begin(), _after_start_done()]
+        plain = tb.triage(_log(*self._head(), *tail, _finish_done()))
+        suffixed = tb.triage(_log(*self._head(), *tail, _finish_done(mem=self.MEM)))
+        self.assertEqual(plain.kind, "POST_EQUIP")
+        self.assertEqual(suffixed.kind, "POST_EQUIP")
+
+    def test_finish_done_names_no_stuck_agent(self):
+        # POST_EQUIP normally carries the agent from an AgentEquipOk terminal. This
+        # terminal has no agent at all — the summary must not invent one.
+        v = tb.triage(_log(*self._head(), _init_done(), _finish_begin(),
+                           _after_start_begin(), _after_start_done(),
+                           _finish_done(mem=self.MEM)))
+        self.assertEqual(v.kind, "POST_EQUIP")
+        self.assertIsNone(v.stuck_agent)
+        self.assertNotIn("agent#", v.summary)
+
+    # --- lifecycle tail ----------------------------------------------------------- #
+    def test_new_phases_appear_in_the_lifecycle_tail(self):
+        text = _log(*self._head(), _init_done(mem=self.MEM), _finish_begin(mem=self.MEM),
+                    _after_start_begin(), _after_start_done(),
+                    _finish_done(mem=self.MEM))
+        tl = tb.parse_battle_load_log(text)
+        self.assertEqual([e.phase for e in tl.events][-3:],
+                         ["MissionAfterStartBegin", "MissionAfterStartDone",
+                          "FinishMissionLoadingDone"])
+        # Assert against the LIFECYCLE BLOCK only. A bare `assertIn(phase, report)` is
+        # vacuous now that the Load-timing table names every bucket boundary: it survived
+        # a mutation shrinking the tail slice to events[-2:].
+        report = tb.format_report(tb.classify(tl), tl, None)
+        lines = report.splitlines()
+        start = lines.index("Lifecycle (last phases seen):")
+        block = []
+        for line in lines[start + 1:]:
+            if not line.strip():
+                break
+            block.append(line)
+        block_text = "\n".join(block)
+        for phase in ("MissionInitializeDone", "FinishMissionLoadingBegin",
+                      "FinishMissionLoadingDone"):
+            self.assertIn(phase, block_text, f"{phase} missing from the lifecycle tail")
+
+    def test_pre_scene_still_owns_the_genuinely_early_phases(self):
+        # Guard the other side of the mapping: widening SCENE must not swallow the
+        # phases PRE_SCENE legitimately owns.
+        self.assertEqual(tb.triage(_log(_encounter(), _open_new())).kind, "PRE_SCENE")
+        self.assertEqual(tb.triage(_log(_encounter())).kind, "PRE_SCENE")
+
+
+class NewLoadPhaseInertnessTests(unittest.TestCase):
+    """Inertness pins, copied from the #386 [MemSample] block: the new lines must not be
+    mis-read as agent-equip lines and must not disturb slot/loadout attachment."""
+
+    def test_new_phase_lines_are_not_read_as_agent_equip_lines(self):
+        text = _log(_init(), _init_done(mem=_memstats()),
+                    _finish_begin(mem=_memstats()), _finish_done(mem=_memstats()))
+        tl = tb.parse_battle_load_log(text)
+        for e in tl.events[1:]:
+            self.assertEqual(tb._parse_equip_begin(e.detail), {"raw": e.detail})
+            self.assertEqual(tb._parse_equip_ok(e.detail), {"raw": e.detail})
+            self.assertEqual(e.slots, [])
+
+    def test_new_phase_lines_do_not_break_slot_attachment(self):
+        # Real emit order: the bucket markers bracket the equip burst. Slots must still
+        # land on their owning AgentEquipBegin and nowhere else.
+        text = _log(
+            _init(), _init_done(mem=_memstats()), _finish_begin(mem=_memstats()),
+            _after_start_begin(),
+            _equip_begin(10, 57, slots=2),
+            _slot("Weapon0", "gondor_sword_a", bo="bo_gondor_sword_a", kind="Weapon"),
+            _slot("Body", "sk_gd_ano_body_a", mesh="sk_gd_ano_body_a", kind="BodyArmor"),
+            _equip_ok(11, 57),
+            _after_start_done(), _finish_done(mem=_memstats()),
+            # A stray trailing slot (truncated/interleaved log). Without it the arrange
+            # could not redden: deleting the `tl.events[-1].phase == "AgentEquipBegin"`
+            # guard in parse_battle_load_log would leave every assertion below true.
+            _slot("Body", "stray_after_the_block", mesh="stray_mesh"),
+        )
+        tl = tb.parse_battle_load_log(text)
+        by_phase = {e.phase: e for e in tl.events}
+        self.assertEqual([s.item_id for s in by_phase["AgentEquipBegin"].slots],
+                         ["gondor_sword_a", "sk_gd_ano_body_a"])
+        for phase in ("MissionInitializeDone", "FinishMissionLoadingBegin",
+                      "FinishMissionLoadingDone", "MissionAfterStartDone"):
+            self.assertEqual(by_phase[phase].slots, [], phase)
+
+    def test_mission_initialize_done_does_not_clear_the_loadout_map(self):
+        # Regression guard on the ONE line `if phase == "MissionInitialize":
+        # loadouts.clear()`. Loosening that `==` to a startswith/prefix test would make
+        # MissionInitializeDone wipe the map and the deduped agent would name no suspect.
+        text = _log(
+            _init(),
+            _equip_begin(5, 0, slots=1, loadout=1),
+            _slot("Weapon0", "gondor_sword_a", bo="bo_gondor_sword_a", kind="Weapon"),
+            _equip_ok(6, 0),
+            _init_done(mem=_memstats()),
+            _equip_begin(7, 57, slots=1, loadout=1),
+        )
+        v = tb.classify(tb.parse_battle_load_log(text))
+        self.assertEqual(v.kind, "EQUIPMENT")
+        self.assertIn("bo_gondor_sword_a", v.suspect_names)
+
+
+class LoadTimingBucketTests(unittest.TestCase):
+    """The gap-based bucket report the Phase-2 runbook consumes
+    (docs/investigations/native-commit-audit-2026-08.md: bucket1Ms .. bucket4Ms)."""
+
+    def _mission(self, base=0, priv=(9331, 9400, 14002, 15880)):
+        """One full mission at `base` ms. A chained second mission INHERITS the running
+        clock, so its absolutes are offset while every gap is unchanged."""
+        p1, p2, p3, p4 = priv
+        return [
+            _init(seq=4, ms=base + 1000, mem=_memstats(priv=p1)),
+            _init_done(seq=5, ms=base + 2000, mem=_memstats(priv=p2)),
+            _finish_begin(seq=6, ms=base + 5000, mem=_memstats(priv=p3)),
+            _after_start_begin(seq=7, ms=base + 5500),
+            _after_start_done(seq=8, ms=base + 8000),
+            _finish_done(seq=9, ms=base + 8200, mem=_memstats(priv=p4)),
+            _phase(10, base + 8500, "BattlePlayable", "scene='battle_terrain_b' agents=120"),
+        ]
+
+    def _timings(self, *lines):
+        return tb.classify_phase_timings(tb.parse_battle_load_log(_log(*lines)))
+
+    def _ms(self, timings):
+        return {b["name"]: b["ms"] for b in timings["buckets"]}
+
+    def test_buckets_are_computed_from_the_marker_gaps(self):
+        ms = self._ms(self._timings(_encounter(), *self._mission()))
+        self.assertEqual(ms, {"bucket1": 1000, "bucket2": 3000, "bucket3a": 500,
+                              "bucket3b": 2500, "bucket3c": 200, "bucket4": 300})
+
+    def test_gaps_survive_a_chained_missions_inherited_clock(self):
+        # THE reason the report is gap-based: mission B's absolutes are +100 s but its
+        # buckets are identical. An absolute-based reading would report 101000 ms.
+        single = self._ms(self._timings(*self._mission()))
+        chained = self._ms(self._timings(*self._mission(), *self._mission(base=100000)))
+        self.assertEqual(chained, single)
+        self.assertEqual(chained["bucket1"], 1000)
+
+    def test_dominant_bucket_is_the_largest_gap(self):
+        t = self._timings(*self._mission())
+        self.assertEqual(t["dominant"], "bucket2")
+
+    def test_unreached_buckets_are_none_not_zero(self):
+        # A log that dies at MissionInitializeDone knows bucket1 and nothing else.
+        ms = self._ms(self._timings(_init(ms=1000), _init_done(ms=2000)))
+        self.assertEqual(ms["bucket1"], 1000)
+        for name in ("bucket2", "bucket3a", "bucket3b", "bucket3c", "bucket4"):
+            self.assertIsNone(ms[name], name)
+
+    def test_polls_and_waitms_parse_from_the_pinned_literal(self):
+        t = self._timings(_init(), _init_done(),
+                          _phase(6, 5000, "FinishMissionLoadingBegin",
+                                 PINNED_WAIT_WITH_MS + " " + _memstats()))
+        self.assertEqual(t["polls"], 87)
+        self.assertEqual(t["wait_ms"], 1449)
+
+    def test_waitms_absent_is_none_and_never_a_fabricated_zero(self):
+        # The C# OMITS waitMs when MissionInitializeDone was not observed. Reading it as
+        # 0 would claim an instantaneous wait that was never measured.
+        t = self._timings(_init(), _phase(6, 5000, "FinishMissionLoadingBegin",
+                                          PINNED_WAIT_NO_MS + " " + _memstats()))
+        self.assertEqual(t["polls"], 87)
+        self.assertIsNone(t["wait_ms"])
+
+    def test_polls_zero_is_flagged_as_a_binding_failure(self):
+        t = self._timings(_init(), _init_done(), _finish_begin(polls=0, wait_ms=11900))
+        self.assertEqual(t["polls"], 0)
+        self.assertTrue(t["tick_binding_failed"])
+        self.assertFalse(self._timings(_init(), _init_done(),
+                                       _finish_begin())["tick_binding_failed"])
+
+    def test_priv_mb_trajectory_is_captured_per_memstats_marker(self):
+        t = self._timings(*self._mission())
+        self.assertEqual(t["priv_mb"], {"MissionInitialize": 9331,
+                                        "MissionInitializeDone": 9400,
+                                        "FinishMissionLoadingBegin": 14002,
+                                        "FinishMissionLoadingDone": 15880})
+
+    def test_priv_mb_is_none_when_the_process_read_failed(self):
+        # MemStats drops BOTH process tokens on reader failure — never a 0.
+        t = self._timings(_init(mem=_memstats(priv=None)),
+                          _init_done(mem=_memstats(priv=None)))
+        self.assertIsNone(t["priv_mb"]["MissionInitialize"])
+        self.assertIsNone(t["priv_mb"]["MissionInitializeDone"])
+
+    def test_timings_are_none_for_logs_without_the_new_markers(self):
+        # Pre-2026-08-07 logs stay byte-identical through the whole pipeline.
+        self.assertIsNone(self._timings(_encounter(), _open_new(), _scene_selected(),
+                                        _mission_init(), _equip_begin(5, 0),
+                                        _equip_ok(6, 0), _playable()))
+
+    def test_timings_are_none_when_there_is_no_mission_initialize(self):
+        self.assertIsNone(self._timings(_encounter(), _open_new()))
+
+
+class LoadTimingReportTests(unittest.TestCase):
+    def _report(self, *lines):
+        tl = tb.parse_battle_load_log(_log(*lines))
+        return tb.format_report(tb.classify(tl), tl, None)
+
+    def test_report_renders_the_bucket_table_and_dominant(self):
+        r = self._report(_init(ms=1000, mem=_memstats(priv=9331)),
+                         _init_done(ms=2000, mem=_memstats(priv=9400)),
+                         _finish_begin(ms=5000, mem=_memstats(priv=14002)),
+                         _after_start_begin(ms=5500), _after_start_done(ms=8000),
+                         _finish_done(ms=8200, mem=_memstats(priv=15880)))
+        self.assertIn("Load timing", r)
+        self.assertIn("bucket1", r)
+        self.assertIn("bucket3c", r)
+        self.assertIn("dominant: bucket2", r)
+        self.assertIn("polls=87 waitMs=1449", r)
+        self.assertIn("privMB", r)
+
+    def test_report_never_prints_a_zero_for_an_absent_waitms(self):
+        r = self._report(_init(ms=1000),
+                         _phase(6, 5000, "FinishMissionLoadingBegin",
+                                PINNED_WAIT_NO_MS + " " + _memstats()))
+        self.assertIn("polls=87", r)
+        self.assertNotIn("waitMs=0", r)
+        self.assertIn("waitMs=<not observed>", r)
+
+    def test_report_warns_when_polls_is_zero(self):
+        r = self._report(_init(ms=1000), _init_done(ms=2000),
+                         _finish_begin(ms=5000, polls=0, wait_ms=11900))
+        self.assertIn("TickLoading binding FAILED", r)
+
+    def test_report_omits_load_timing_for_old_logs(self):
+        r = self._report(_mission_init(), _equip_begin(5, 0), _equip_ok(6, 0), _playable())
+        self.assertNotIn("Load timing", r)
+
+
+class LoadTimingCliTests(unittest.TestCase):
+    def _run(self, args):
+        return subprocess.run([sys.executable, str(TOOL), *args],
+                              capture_output=True, text=True)
+
+    def test_cli_json_carries_the_timings_block(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(_log(_init(ms=1000, mem=_memstats(priv=9331)),
+                              _init_done(ms=2000, mem=_memstats(priv=9400)),
+                              _finish_begin(ms=5000, mem=_memstats(priv=14002)),
+                              _after_start_begin(ms=5500), _after_start_done(ms=8000),
+                              _finish_done(ms=8200, mem=_memstats(priv=15880)),
+                              _phase(10, 8500, "BattlePlayable",
+                                     "scene='battle_terrain_b' agents=120")),
+                         encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            r = self._run([str(p), "--json", str(out)])
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            payload = json.loads(out.read_text(encoding="utf-8"))
+            self.assertEqual(payload["kind"], "COMPLETED")
+            self.assertEqual(payload["timings"]["dominant"], "bucket2")
+            self.assertEqual(payload["timings"]["wait_ms"], 1449)
+            self.assertEqual(payload["timings"]["priv_mb"]["FinishMissionLoadingDone"],
+                             15880)
+
+    def test_cli_json_timings_none_for_old_logs(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(_log(_mission_init(), _equip_begin(5, 0), _equip_ok(6, 0),
+                              _playable()), encoding="utf-8")
+            out = Path(d) / "verdict.json"
+            r = self._run([str(p), "--json", str(out)])
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            self.assertIsNone(json.loads(out.read_text(encoding="utf-8"))["timings"])
+
+    def test_cli_exit_code_is_unchanged_by_the_new_terminal_phases(self):
+        # SCENE and POST_EQUIP are both pre-existing HANG_KINDS -> exit 1. The lattice
+        # and the exit contract are untouched by the new mapping.
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "taom_debug.log"
+            p.write_text(_log(_init(ms=1000), _init_done(ms=2000, mem=_memstats())),
+                         encoding="utf-8")
+            r = self._run([str(p)])
+            self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+            # "VERDICT: SCENE", not a bare "SCENE" — PRE_SCENE contains it as a substring,
+            # so the loose form passed against the exact bug this test exists to catch.
+            self.assertIn("VERDICT: SCENE", r.stdout)
+            self.assertNotIn("VERDICT: PRE_SCENE", r.stdout)
 
 
 if __name__ == "__main__":

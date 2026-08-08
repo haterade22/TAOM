@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
@@ -252,5 +253,39 @@ public class MemoryPressureSamplerTests
 
         // Not throwing IS the assertion — a diagnostic must never crash the game.
         _sut.PollOnce(T0);
+    }
+
+    /// <summary>
+    /// Start() moved to <c>OnBeforeInitialModuleScreenSetAsRoot</c> (2026-08-07) so a main-menu
+    /// baseline exists — <c>OnGameInitializationFinished</c> only runs once a game is loading, so no
+    /// [MemSample] line was ever written at the menu, which is the A-vs-B delta the native-commit
+    /// audit calls decisive. That hook fires on EVERY return to the main menu, so the relocation
+    /// rests entirely on Start() being idempotent. This pins it.
+    /// </summary>
+    [TestMethod]
+    public void Start_CalledTwice_ReusesTheSameTimer()
+    {
+        var field = typeof(MemoryPressureSampler)
+            .GetField("_timer", BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.IsNotNull(field, "MemoryPressureSampler._timer was renamed; this guard no longer sees the timer.");
+
+        try
+        {
+            Assert.IsNull(field.GetValue(_sut), "precondition: no timer before Start()");
+
+            _sut.Start();
+            var first = field.GetValue(_sut);
+            Assert.IsNotNull(first, "Start() must create the timer");
+
+            _sut.Start();
+
+            Assert.AreSame(first, field.GetValue(_sut),
+                "a second Start() must reuse the existing timer — the main-menu hook re-fires on every "
+                + "return to the menu, and a fresh Timer per return leaks one poller per visit.");
+        }
+        finally
+        {
+            _sut.Dispose();
+        }
     }
 }

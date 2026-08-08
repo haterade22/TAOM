@@ -42,6 +42,25 @@ public interface IBattleLoadDiagnosticsService
     // Phase 4 — Mission.Initialize entered.
     void LogMissionInitialize(string sceneName);
 
+    // Phase 4a — Mission.Initialize RETURNED. MissionInitialize -> MissionInitializeDone brackets
+    // the native MBAPI.IMBMission.InitializeMission call, which is the only work in Initialize's
+    // body (Mission.cs:1798-1809). Also zeroes the poll counter and arms the wait clock, so it must
+    // be called even while the toggle is off — the hook calls it unconditionally.
+    void LogMissionInitializeDone(string sceneName);
+
+    // Counter only — NEVER logs. One call per MissionState.TickLoading frame while the mission is
+    // loading; at 60fps a 12-second wait is 720 frames. Unconditional by design (state, not I/O).
+    void NoteLoadingPoll();
+
+    // Phase 4d — MissionState.FinishMissionLoading entered, i.e. native IsLoadingFinished finally
+    // returned true. Carries polls= and waitMs=: polls=1 with a large waitMs means the main thread
+    // was blocked INSIDE one frame rather than waiting across many.
+    void LogFinishMissionLoadingBegin();
+
+    // Phase 4e — FinishMissionLoading returned (OnMissionLoadingFinished + ResumeLoadingRenderings
+    // done). Everything from here to BattlePlayable is remaining frames, not load work.
+    void LogFinishMissionLoadingDone();
+
     // Phase 4b — Mission.AfterStart brackets EVERY submodule's OnMissionBehaviorInitialize, so the
     // AfterStartBegin -> TaomBehaviorsBegin gap is other mods. TaomBehaviorAdded names each TAOM
     // behavior as it is added, so a death inside our own 11 identifies the culprit.
