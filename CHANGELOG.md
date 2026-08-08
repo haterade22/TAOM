@@ -15,6 +15,23 @@ every file missing instead of the root being wrong. `game_dir` treats blank as u
 covering that case fail against the old shape, which is how we know they test something:
 `'' != 'E:\\Steam\\...'`.
 
+Point 4 has an inverse the issue does not name, and it is the more expensive half: a wrong root that
+makes a tool invent a catastrophe rather than hide one. Three reference validators build their
+registry from the install and treat "not defined" as "broken", so an absent root registers nothing
+and condemns everything:
+
+| tool | wrong root | true answer |
+|---|---|---|
+| `audit_item_refs.py` | `Total broken refs: 35443 sites across 2897 item IDs`, exit 0 | `0 sites across 0 item IDs` |
+| `validate_all_troop_refs.py` | `FAIL: 1488 armor refs do not resolve`, exit 1 | `PASS` |
+| `validate_gondor_refs.py` | `FAIL: missing references will cause underwear bug in-game`, exit 1 | `PASS` |
+
+The two that exit 1 are worse than the one that exits 0: exit 1 means "the data is broken", and
+`validate_all_troop_refs.py` is the underwear-bug gate `tools/README.md` points at. A fabricated
+failure there costs as much as a missed one. All three now exit 2 naming the folder they could not
+read. (`validate_mesh_refs.py` shares the shape but not the bug — its root is absent here too and it
+already exits 2 saying so; it takes `--items` / `--game` rather than the variable.)
+
 `ensure_exists` went to the four places measured to end on a clean-looking result against a root that
 is not there. All four exited 0 before; they exit 2 with the path named now. `rollback_erebor_iron_misfile.py`
 printed five `SKIP: <file> not found` lines and `Total removed: 0`. `cleanup_deleted_gondor_armor.py`

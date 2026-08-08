@@ -14,7 +14,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from _gamedir import game_dir
+from _gamedir import ensure_exists, game_dir
 
 ROOT = Path(__file__).resolve().parent.parent
 TAOM_MODULEDATA = ROOT / "Main/_Module/ModuleData"
@@ -88,6 +88,14 @@ def main():
     ap.add_argument("--limit", type=int, default=40,
                     help="Max broken refs to print (default 40; --limit 0 = all)")
     args = ap.parse_args()
+
+    # Nine of the ten registry roots hang off GAME_MODULES; the tenth is TAOM's
+    # own ModuleData in the repo. With the root wrong they are each skipped with
+    # a notice, only TAOM-authored items get registered, and every reference to
+    # a vanilla or Armory item is then reported broken — 35,443 sites against a
+    # true count of 0, at exit 0. The inverse of #404 point 4: not a clean result
+    # that hides a wrong root, a catastrophic one invented by it.
+    ensure_exists(GAME_MODULES, what="the Bannerlord Modules folder")
 
     print("Building v1.4.5 item registry from modules...", file=sys.stderr)
     defined = collect_defined_ids(ITEM_REGISTRY_ROOTS)

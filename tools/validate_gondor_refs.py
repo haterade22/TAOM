@@ -8,7 +8,7 @@ import os
 import re
 import sys
 import glob
-from _gamedir import game_dir
+from _gamedir import ensure_exists, game_dir
 
 TROOPS_FILE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -42,6 +42,11 @@ def collect_ids() -> set:
 
 
 def main():
+    # An absent Armory root collects zero ids, so every sk_gd_* / sk_dg_*
+    # reference is reported missing and the run exits 1 predicting the underwear
+    # bug in-game — from a folder it never read.
+    ensure_exists(ARMORY_BASE, what="the Gondor item folder")
+
     refs = collect_refs()
     ids = collect_ids()
     missing = sorted(refs - ids)

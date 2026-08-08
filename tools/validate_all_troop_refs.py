@@ -15,7 +15,7 @@ import re
 import os
 import sys
 import glob
-from _gamedir import game_dir
+from _gamedir import ensure_exists, game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
@@ -62,6 +62,12 @@ def validate_culture(culture: str, armory_ids: set) -> int:
 
 
 def main():
+    # An absent Armory root collects zero ids, so every armor ref in every
+    # culture is reported missing and the run exits 1 — "1488 armor refs do not
+    # resolve" against a true count of 0. This is the underwear-bug gate, so a
+    # fabricated failure here is as costly as a missed one.
+    ensure_exists(ARMORY_ROOT, what="the LOTRLOME_Armory item folder")
+
     cultures = [
         "gondor", "mordor", "isengard", "dolguldur",
         "gundabad", "erebor", "rhun_new", "dale",
