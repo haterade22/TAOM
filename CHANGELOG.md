@@ -4,6 +4,44 @@
 
 ## 2026-08-08
 
+### feat(coopinterop): report the settings that can diverge two co-op peers
+
+TAOM's MCM settings live in a per-user file outside the save, no co-op mod syncs them, and nothing
+on the wire corrects a mismatch — so two peers holding different values quietly compute different
+battle autocalc, bandit density, AI army targeting and desertion rates. `SettingsFingerprint` hashes
+the 112 simulation-relevant settings (of 167 across four MCM classes) and writes one short code per
+MCM group to each peer's log, under the same co-op gate as the Harmony census. Solo sessions compute
+nothing. It reports; peers still do not exchange the codes, which is the remaining step and needs
+two machines to verify.
+
+A per-group code rather than one number, because a single global hash answers "something differs"
+and sends a player through 112 checkboxes, where "Battle Tactics differs" is one screen. Values go
+through `InvariantCulture`, or two peers with identical settings would hash differently on any
+machine with a comma decimal separator.
+
+**Three corrections applied on merge.**
+
+The pinned counts were measured at the fork point and nine settings had landed since — Enlistment's
+two and Battlefield Promotions' seven. `TaomSettings` is 153, not 144. Both new `*Diagnostics`
+toggles are classified as instrumentation (each is read by one provider that gates a trace, while
+its feature switch stays relevant — the log/gameplay pair is exactly the trap that list exists for),
+and `RebuildDistanceCacheAction` gets a fourth exclusion category: a `[SettingPropertyButton]` is a
+`System.Action` that satisfies the get/set test and was being counted as a setting two peers could
+hold differently. They cannot; one of them presses it. Final split: 167 / 112 / 55, re-pinned from a
+measured run rather than arithmetic.
+
+The read guard covered the get but not the render, and the render reflects too. MCM's
+`Dropdown<T>.SelectedValue` is an unchecked `List<T>` indexer over a persisted `SelectedIndex`, and
+`CaravanWarTradePolicy` is a live `Dropdown<string>` on no exclusion list — an index left stale by a
+removed option threw from inside the render and took down the entire fingerprint, reducing the
+feature to a warning line. Now one property costs one line, which is what the guard already claimed.
+Pinned by a test confirmed to fail with the guard narrowed back.
+
+Floats rendered through `"R"`, which .NET Framework does not round-trip reliably — and
+`Directory.Build.props` pins `net472`. Now `"G9"` and `"G17"`. This one cannot raise a false alarm,
+since both peers run the same framework; it can only let two genuinely different values collapse
+onto the same text, which is a *missed* divergence — the thing the feature exists to catch.
+
 ### fix(tools): the GameModel catalogues drifted, and nothing could say so (#417)
 
 Two files catalogue TAOM's GameModel overrides and both were wrong. 47 classes exist.

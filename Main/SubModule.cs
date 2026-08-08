@@ -1311,6 +1311,24 @@ public class SubModule : MBSubModuleBase
                     new Features.CoopInterop.Diagnostics.HarmonyCensusReportBuilder(),
                     coopIds,
                     IoC.Resolve<IModLogger>());
+
+                // Same gate, same reason. MCM settings live in a per-user file outside the save
+                // and no co-op mod syncs them, so two peers can hold different values and
+                // simulate differently with nothing said — the "No MCM settings parity" entry in
+                // docs/features/coop-interop.md. One code per group in each peer's log turns the
+                // documented "compare settings manually" workaround into comparing a few short
+                // strings. Never throws; see SettingsFingerprintLog.
+                //
+                // All four settings classes, not just TaomSettings: every property on the three
+                // diagnostics pages is excluded today so this changes no hash, but it means a
+                // simulation-affecting setting added to one of them later is covered the day it
+                // lands instead of silently missing from every peer's fingerprint.
+                Features.CoopInterop.SettingsFingerprintLog.WriteAcross(
+                    IoC.Resolve<IModLogger>(),
+                    Features.TaomSettings.Instance,
+                    Features.BattleLoadDiagnostics.BattleLoadDiagnosticsSettings.Instance,
+                    Features.BlowDiagnostics.BlowDiagnosticsSettings.Instance,
+                    Features.CrashReport.CrashReportSettings.Instance);
             }
         }
         catch (System.Exception ex)

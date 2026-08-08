@@ -1,0 +1,135 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+namespace TAOM.Features.CoopInterop;
+
+/// <summary>
+/// Which MCM settings can make two co-op peers simulate differently.
+/// </summary>
+/// <remarks>
+/// TAOM's settings live in a per-user file outside the save and are read live by the feature
+/// providers. No co-op mod syncs them, so two peers holding different values compute different
+/// outcomes — battle autocalc, bandit density, AI army targeting, desertion — with nothing said.
+/// <see cref="SettingsFingerprint"/> exists to say it; this type decides what it looks at.
+///
+/// <para>Names here are matched across all four settings classes TAOM ships — <c>TaomSettings</c>
+/// plus the <c>BattleLoadDiagnostics</c>, <c>BlowDiagnostics</c> and <c>CrashReport</c> pages —
+/// because <see cref="SettingsFingerprint.ComputeAcross"/> reads all four. Every property on the
+/// three diagnostics pages is excluded today, so they contribute nothing to any hash; naming them
+/// is what makes a simulation-affecting setting added to one of them later show up instead of
+/// being silently invisible. <c>SettingsFingerprintTests</c> fails if a name here stops matching
+/// a real property, so this list cannot rot into decoration.</para>
+///
+/// <para><b>Include by default.</b> A property is relevant unless it is named here. A new
+/// gameplay knob is therefore covered the day it is added, which is the safe direction: the
+/// cost of a missing exclusion is one spurious mismatch line, the cost of a missing inclusion
+/// is a silent divergence, and only the second one corrupts a campaign.</para>
+///
+/// <para><b>Four reasons to exclude, and no others.</b> Instrumentation changes what is
+/// written to a log, never what is computed. Player-local convenience is invoked BY a player —
+/// the co-op layer replicates the result of the click, so two thresholds do not diverge two
+/// simulations. Presentation is pixels. An action button is a click, not a value two peers can
+/// hold differently. Anything that survives those four tests stays in, including knobs that look
+/// cosmetic: a nameplate is presentation, a party-size divisor is not, and the boundary is
+/// whether a peer's campaign or battle math reads it.</para>
+///
+/// <para>Derived by tracing every setting to the feature that consumes it and asking whether
+/// that feature ships a GameModel, a CampaignBehavior, a MissionBehavior or a Harmony patch.
+/// The <c>*Debug</c> / <c>*Diagnostics</c> entries below are the ones that trap: most are filed
+/// inside gameplay groups — <c>SmartCavalryDebug</c> sits under Battle Tactics — so tracing by
+/// group would count them as simulation because their feature computes. They gate log lines.</para>
+/// </remarks>
+public static class CoopSettingsRelevance
+{
+    /// <summary>MCM base-class members: settings identity, not settings.</summary>
+    private static readonly HashSet<string> Infrastructure = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "Id", "DisplayName", "FolderName", "FormatType", "SubFolder", "SubGroupDelimiter",
+    };
+
+    /// <summary>Instrumentation — gates a log line, never a computation.</summary>
+    private static readonly HashSet<string> Instrumentation = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "BattleActionBarDebug", "CompanionRolesDebug", "EnableSiegePropDiagnostics",
+        "FormationPresetsDebug", "MixedFormationsDebug", "SiegeDismountDebug",
+        "SiegePropDiagnosticsVerbose", "SmartCavalryDebug", "FiefManagementDebug",
+        "EquipPresetsDebug", "QuickActionsDebug",
+        "EnableBattleLoadDiagnostics", "EnableBlowDiagnostics", "EnableCrashCapture",
+        "EnableNativeToManagedCapture", "SuspendButterLibHandler", "WriteCrashBundle",
+        "EnableMemorySampler", "MemorySampleIntervalSeconds",
+        "EnableStallWatchdog", "EnableStallWatchdogBundle", "StallWatchdogSeconds",
+        "EnableExitStallSampler", "ThrowOnNextApplicationTick", "ThrowOnNextMissionTick",
+        // Each is read by exactly one *DiagnosticsSettingsProvider whose only job is gating a
+        // trace — [EnlistDiag] and [FieldCommission] respectively. Their feature switches
+        // (EnableEnlistment, EnableFieldCommission) are gameplay and stay relevant; these two
+        // are the log half of the same pair, which is the trap this list exists for.
+        "EnableEnlistmentDiagnostics", "EnableFieldCommissionDiagnostics",
+    };
+
+    /// <summary>
+    /// Action buttons: a click, not a value.
+    ///
+    /// A <c>[SettingPropertyButton]</c> is a <c>System.Action</c> that MCM renders as a button. It
+    /// satisfies the get/set test, so include-by-default counts it as a simulation-relevant
+    /// setting, and it renders through <c>Object.ToString()</c> as the constant "System.Action" —
+    /// deterministic, so it never moves a hash, but it is not a setting and inflates the count by
+    /// pretending to be one. Two peers cannot hold different values for it; one of them presses it.
+    /// </summary>
+    private static readonly HashSet<string> ActionButtons = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "RebuildDistanceCacheAction",
+    };
+
+    /// <summary>Player-local convenience: the player acts, the co-op layer replicates the result.</summary>
+    private static readonly HashSet<string> PlayerLocal = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "EnableQuickActions", "EnableInventorySearch", "QuickActionsShowConfirmation",
+        "QuickActionsPlaySounds", "DamagedQualityDropdown", "DamagedThreshold",
+        "UseCustomThreshold", "SellDamagedEquipped", "ExcludeDamagedHorses",
+        "LowValueThreshold", "SellLowValueEquipped", "ExcludeLowValueFood",
+        "ExcludeLowValueHorses", "ExcludeLowValueTradeGoods",
+        "EnableEquipmentPresets", "MaxPresetsPerCharacter",
+    };
+
+    /// <summary>Presentation, and the clock BT already owns.</summary>
+    private static readonly HashSet<string> Presentation = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "ShowAllEncyclopediaCharacters", "EnableNameplateFade", "MapFigureScale",
+        "NameplateFadeFarDistance", "NameplateFadeNearDistance",
+        "EnableScenePassPrecompilation", "EnableShaderPrecompilation",
+        "EnableNativeSkinFixes",
+        // Already suppressed under co-op — TimeAcceleration's UI carries
+        // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].
+        "FastForwardMultiplier", "ExtraFastForwardMultiplier", "CtrlSpaceMultiplier",
+    };
+
+    /// <summary>True when a difference in this property can make two peers simulate differently.</summary>
+    public static bool IsSimulationRelevant(PropertyInfo property)
+    {
+        if (property == null) return false;
+        // A setting round-trips through the MCM file; a computed member does not.
+        if (!property.CanRead || !property.CanWrite) return false;
+        if (property.GetIndexParameters().Length != 0) return false;
+        return !IsExcluded(property.Name);
+    }
+
+    /// <summary>True when the name is on one of the four exclusion lists.</summary>
+    public static bool IsExcluded(string propertyName) =>
+        propertyName != null
+        && (Infrastructure.Contains(propertyName)
+            || Instrumentation.Contains(propertyName)
+            || PlayerLocal.Contains(propertyName)
+            || Presentation.Contains(propertyName)
+            || ActionButtons.Contains(propertyName));
+
+    /// <summary>Every excluded name, for the coverage test and for the docs table.</summary>
+    public static IEnumerable<string> ExcludedNames()
+    {
+        foreach (var n in Infrastructure) yield return n;
+        foreach (var n in Instrumentation) yield return n;
+        foreach (var n in PlayerLocal) yield return n;
+        foreach (var n in Presentation) yield return n;
+        foreach (var n in ActionButtons) yield return n;
+    }
+}
