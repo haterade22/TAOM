@@ -29,6 +29,29 @@ Enlistment suite: **659 green.** Full suite: 6020 passing, that 1 failure.
 
 ---
 
+
+## The reviews found four things that would have reached you
+
+Five deep-review agents plus an adversarial Codex pass ran over batches 0–10. Twelve findings, all
+fixed and committed. Four are worth knowing about because they were **terminal or invisible** —
+nothing would have told you they had happened except the symptom:
+
+| What | Would have looked like |
+|---|---|
+| **Discharge inside a settlement the commander is not in** | You're released, and you can never leave the town. Not a stuck menu — the engine refuses to move a party with `CurrentSettlement` set, won't auto-exit the main party, and the Leave option it offers no-ops without an encounter. Survives save/reload. |
+| **Save mid-battle, reload** | The battle never resolves. Ever. The redirect swallowed the `encounter` menu, and that menu is the only thing that advances *your* map event — the engine deliberately skips it in its own tick. |
+| **Duty assigned while inside the commander's town** | You go invisible for four to six days, fail the duty, then reappear. Nothing un-hides a detached party. |
+| **Three failed menu opens, ever** | The wait menu stops re-asserting itself for the rest of the session — and the next campaign too. The back-off check sat above its own reset. |
+
+Plus: a NaN in one config value would have frozen you in "commander unavailable" permanently (the
+sixth time that bug class has appeared here); a commander handle cached across a load would have
+dragged you to a dead campaign's position at frame rate; the pump's throttle scaled with frame
+rate, so at 144 fps it ran ~5× faster than designed; and deferred duty popups paid out without
+re-checking that you were still enlisted.
+
+**None of these were caught by tests.** All four came from reading the code against the decompiled
+engine. That is the same lesson as the original bug: the adapter/engine seam is where these live,
+and unit tests mock exactly that seam.
 ## What to test in-game
 
 The build is deployed (21:52) and the strings are in the game's ModuleData (66 keys). A **new
