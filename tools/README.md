@@ -292,12 +292,12 @@ See `docs/localization/TRANSLATOR_GUIDE.md` for the translator-facing workflow +
 **AI translation (translate_with_claude.py only):** `anthropic` SDK
 
 **Game install — set `BANNERLORD_GAME_DIR`.** `README.md` lists it as a prerequisite and
-`setup-dev-env.ps1` sets it. 28 tools honour it: 24 resolve it themselves, and `analyze_armor_balance.py`,
+`setup-dev-env.ps1` sets it. 29 tools honour it: 25 resolve it themselves, and `analyze_armor_balance.py`,
 `apply_settlement_buildings.py`, `derive_armor_tiers.py` and `generate_enlistment_rosters.py` inherit it
 by importing one that does. Every one falls back to `E:\Steam\steamapps\common\Mount & Blade II Bannerlord`, so leaving it unset changes
 nothing on a machine where that literal is correct.
 
-**Resolve it through `tools/_gamedir.py`** — 21 of the 24 do. `game_dir(default)` treats a set-but-blank
+**Resolve it through `tools/_gamedir.py`** — 22 of the 25 do. `game_dir(default)` treats a set-but-blank
 variable as unset, which `os.environ.get(VAR, default)` does not: it returns `""`, `Path("")` is `.`, and
 the tool then reports every file missing rather than the root being wrong. `game_modules(default)` adds
 the `BANNERLORD_GAME_MODULES` precedence, and `ensure_exists(path, what=...)` exits 2 naming the path,

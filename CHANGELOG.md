@@ -4,6 +4,16 @@
 
 ## 2026-08-08
 
+### docs(tools): three counts in the game-dir paragraph, corrected by counting
+
+`tools/README.md`'s `BANNERLORD_GAME_DIR` paragraph advertises counted numbers, and all three were
+off after #416 landed. Counting the actual imports: 22 tools resolve through `tools/_gamedir.py`
+(not 21), 25 resolve the variable themselves (22 via the helper plus the three that keep inline
+resolution), and 29 honour it once the four that inherit by import are added. The categories were
+right — `analyze_armor_balance.py`, `apply_settlement_buildings.py`, `derive_armor_tiers.py` and
+`generate_enlistment_rosters.py` name the variable only in help and error text, and genuinely get
+their resolution from a tool they import.
+
 ### docs(localization): the enlistment strings file has 76 keys, not 36
 
 `localization-map.md` recorded the count from when the file was created. Enlistment and Battlefield
