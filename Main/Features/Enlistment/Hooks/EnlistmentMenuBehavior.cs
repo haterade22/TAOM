@@ -26,6 +26,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
     private readonly IGameMenuAdapter _gameMenu;
     private readonly ICoopSessionProvider _coopSession;
     private readonly IServiceMaintenanceService _maintenance;
+    private readonly IEnlistmentPlayerActionService _actions;
 
     public EnlistmentMenuBehavior(
         IEnlistmentStore store,
@@ -33,7 +34,8 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         IEnlistmentWaitMenuPresenter presenter,
         IGameMenuAdapter gameMenu,
         ICoopSessionProvider coopSession,
-        IServiceMaintenanceService maintenance)
+        IServiceMaintenanceService maintenance,
+        IEnlistmentPlayerActionService actions)
     {
         _store = store;
         _attachment = attachment;
@@ -41,6 +43,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         _gameMenu = gameMenu;
         _coopSession = coopSession;
         _maintenance = maintenance;
+        _actions = actions;
     }
 
     public override void RegisterEvents()
@@ -73,6 +76,33 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
             args => { args.optionLeaveType = GameMenuOption.LeaveType.Manage; return true; },
             _ => _presenter.ShowServiceStatus(),
             false, 0);
+
+        // isLeave stays FALSE (the default) on both options below, and that is load-bearing, not
+        // tidiness: GameMenu.RunMenuOptionConsequence calls EndWait() BEFORE the consequence when
+        // an option is marked isLeave on a wait menu. EndWait sets IsWaitActive = false and
+        // TimeControlMode = Stop — so the wait-menu tick that drives our position sync would be
+        // torn down before the conversation ever opened. It would also make the option a candidate
+        // for the Escape/back slot. Verified against installed v1.4.7.
+        starter.AddGameMenuOption(
+            EnlistmentMenuService.ServiceWaitMenuId,
+            "taom_enlist_menu_talk",
+            "{=taom_enlist_menu_talk}Speak with your commander",
+            args =>
+            {
+                args.optionLeaveType = GameMenuOption.LeaveType.Conversation;
+                return _actions.CanTalkToCommander() == TalkToCommanderResult.Opened;
+            },
+            _ => _actions.TalkToCommander(),
+            false, 2);
+
+        starter.AddGameMenuOption(
+            EnlistmentMenuService.ServiceWaitMenuId,
+            "taom_enlist_menu_duty",
+            "{=taom_enlist_menu_duty}Ask your sergeant for work",
+            args => { args.optionLeaveType = GameMenuOption.LeaveType.Manage; return true; },
+            _ => _presenter.ReportDutyRequest(
+                _actions.RequestDutyNow(CampaignTime.Now.ToDays, CampaignTime.Now.GetHourOfDay)),
+            false, 3);
 
         starter.AddGameMenuOption(
             EnlistmentMenuService.ServiceWaitMenuId,

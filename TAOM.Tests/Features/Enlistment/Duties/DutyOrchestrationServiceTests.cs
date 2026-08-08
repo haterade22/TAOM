@@ -253,4 +253,103 @@ public class DutyOrchestrationServiceTests
 
         _runtime.Received(1).CancelActive("discharge");
     }
+
+    // ---- RequestDutyNow (Batch 8: asking the commander for work) ------------------------
+
+    private void OfferReady(DutyOfferSelection selection, bool rotationAllows = true)
+    {
+        _rotation.ShouldRollIncident(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double?>()).Returns(false);
+        _rotation.ShouldOfferDuty(Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<double>(), Arg.Any<double?>()).Returns(rotationAllows);
+        _selector.SelectOffer(Arg.Any<EnlistmentDutiesConfig>(), Arg.Any<ServiceProgressSnapshot>(), Arg.Any<ArmyRhythmSnapshot>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<bool>())
+            .Returns(selection);
+    }
+
+    [TestMethod]
+    public void RequestDutyNow_NotEnlisted_ReturnsNotEnlisted()
+    {
+        _store.Record.State = EnlistmentState.NotEnlisted;
+
+        Assert.AreEqual(DutyRequestResult.NotEnlisted, _service.RequestDutyNow(100.0, 12.0));
+        _selector.DidNotReceiveWithAnyArgs().SelectOffer(default, default, default, default, default);
+    }
+
+    [TestMethod]
+    public void RequestDutyNow_AlreadyOnDuty_ReturnsAlreadyOnDuty()
+    {
+        _contentStore.Record.ActiveDutyId = "recon_sweep";
+
+        Assert.AreEqual(DutyRequestResult.AlreadyOnDuty, _service.RequestDutyNow(100.0, 12.0));
+        _selector.DidNotReceiveWithAnyArgs().SelectOffer(default, default, default, default, default);
+    }
+
+    [TestMethod]
+    public void RequestDutyNow_RotationSaysNo_ReturnsNoWork_AndAssignsNothing()
+    {
+        // Asking is free, but it cannot conjure work the rotation would not have given — the
+        // whole point of sharing ONE cadence rather than adding a second cooldown.
+        OfferReady(DutyOfferSelection.None, rotationAllows: false);
+
+        Assert.AreEqual(DutyRequestResult.NoWorkAvailable, _service.RequestDutyNow(100.0, 12.0));
+        _runtime.DidNotReceiveWithAnyArgs().Start(default, default);
+        Assert.IsNull(_contentStore.Record.LastOfferDay);
+    }
+
+    [TestMethod]
+    public void RequestDutyNow_FieldDutyAvailable_StartsItAndReportsAssigned()
+    {
+        var duty = new DutyDefinition { Id = "recon_sweep" };
+        OfferReady(new DutyOfferSelection { FieldDuty = duty });
+        _runtime.Start(duty, 100.0).Returns(true);
+
+        Assert.AreEqual(DutyRequestResult.DutyAssigned, _service.RequestDutyNow(100.0, 12.0));
+        _runtime.Received(1).Start(duty, 100.0);
+        CollectionAssert.Contains(_contentStore.Record.RecentDutyIds, "recon_sweep");
+    }
+
+    [TestMethod]
+    public void RequestDutyNow_FieldDutyFailsToStart_ReportsNoWorkRatherThanSuccess()
+    {
+        // The runtime refuses when it cannot find an anchor settlement or spawn a target. Telling
+        // the player they were assigned work that does not exist is worse than telling them there
+        // is none.
+        var duty = new DutyDefinition { Id = "recon_sweep" };
+        OfferReady(new DutyOfferSelection { FieldDuty = duty });
+        _runtime.Start(duty, 100.0).Returns(false);
+
+        Assert.AreEqual(DutyRequestResult.NoWorkAvailable, _service.RequestDutyNow(100.0, 12.0));
+    }
+
+    [TestMethod]
+    public void RequestDutyNow_InteractiveDuty_PresentsItAndReportsAssigned()
+    {
+        var duty = new InteractiveDutyDefinition { Id = "quartermaster_count" };
+        OfferReady(new DutyOfferSelection { InteractiveDuty = duty });
+
+        Assert.AreEqual(DutyRequestResult.DutyAssigned, _service.RequestDutyNow(100.0, 12.0));
+        _presenter.Received(1).PresentInteractiveDuty(duty, Arg.Any<ServiceProgressSnapshot>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void RequestDutyNow_AndDailyOfferTick_ShareTheSameOfferPath()
+    {
+        // ANTI-DRIFT PIN. Two offer implementations is how the donor ended up with a wait menu
+        // that made terminal decisions under a different policy than its daily tick. Both callers
+        // must consult the same rotation gate and the same selector, with the same arguments.
+        var duty = new DutyDefinition { Id = "recon_sweep" };
+        OfferReady(new DutyOfferSelection { FieldDuty = duty });
+        _runtime.Start(duty, Arg.Any<double>()).Returns(true);
+
+        _service.DailyOfferTick(100.0, 12.0);
+        _contentStore.Record.ActiveDutyId = null;
+        _contentStore.Record.LastOfferDay = null;
+        _service.RequestDutyNow(100.0, 12.0);
+
+        _rotation.Received(2).ShouldOfferDuty(
+            Arg.Any<SchedulerConfig>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(),
+            Arg.Any<double>(), Arg.Any<double?>());
+        _selector.Received(2).SelectOffer(
+            Arg.Any<EnlistmentDutiesConfig>(), Arg.Any<ServiceProgressSnapshot>(),
+            Arg.Any<ArmyRhythmSnapshot>(), Arg.Any<IReadOnlyList<string>>(), Arg.Any<bool>());
+        _runtime.Received(2).Start(duty, 100.0);
+    }
 }

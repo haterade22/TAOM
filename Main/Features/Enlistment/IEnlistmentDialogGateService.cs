@@ -8,6 +8,9 @@ public enum EnlistGateResult
     UnderMercenaryContract = 3,
     CommanderUnavailable = 4,
     AtWarWithYourKingdom = 5,
+
+    /// <summary>The whole feature is switched off in MCM.</summary>
+    FeatureDisabled = 6,
 }
 
 /// <summary>

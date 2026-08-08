@@ -75,25 +75,66 @@ public class DutyOrchestrationService : IDutyOrchestrationService
             }
         }
 
-        if (!_rotation.ShouldOfferDuty(scheduler, record.DaysServed, record.Trust, pressure, nowDays, record.LastOfferDay))
-            return;
+        TryOffer(nowDays, hourOfDay);
+    }
+
+    /// <summary>
+    /// Ask the commander for work. Deliberately routes through the SAME <see cref="TryOffer"/> the
+    /// daily tick uses, and reuses the existing rotation cadence rather than inventing a second
+    /// cooldown: asking is free, but the commander only has work when the rotation says so.
+    /// A separate cooldown here would let a player farm duties by spamming the menu option.
+    /// </summary>
+    public DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay)
+    {
+        if (!_store.Record.IsEnlisted)
+            return DutyRequestResult.NotEnlisted;
+        if (_contentStore.Record.HasActiveDuty)
+            return DutyRequestResult.AlreadyOnDuty;
+
+        return TryOffer(nowDays, hourOfDay);
+    }
+
+    /// <summary>
+    /// The one offer path. Both the daily tick and an explicit request land here, so a change to
+    /// how duties are chosen cannot apply to one caller and not the other.
+    /// </summary>
+    private DutyRequestResult TryOffer(double nowDays, double hourOfDay)
+    {
+        var record = _contentStore.Record;
+        var config = _config.GetConfig();
+        var rhythm = _rhythm.GetSnapshot(nowDays, hourOfDay);
+        var leadership = _skillXp.GetSkillValue(_store.Record.EnlistedHeroId, "Leadership");
+        var progress = record.ToProgressSnapshot(leadership);
+        var pressure = rhythm.SiegePressure || rhythm.Naval || rhythm.Blockade || rhythm.PreBattle;
+
+        if (!_rotation.ShouldOfferDuty(
+                config.Scheduler, record.DaysServed, record.Trust, pressure, nowDays, record.LastOfferDay))
+        {
+            return DutyRequestResult.NoWorkAvailable;
+        }
 
         var offer = _selector.SelectOffer(_config.GetDuties(), progress, rhythm, record.RecentDutyIds, pressure);
         if (!offer.HasOffer)
-            return;
+            return DutyRequestResult.NoWorkAvailable;
 
         record.LastOfferDay = nowDays;
 
         if (offer.FieldDuty != null)
         {
             RememberOffered(record, offer.FieldDuty.Id);
-            _runtime.Start(offer.FieldDuty, nowDays);
+            return _runtime.Start(offer.FieldDuty, nowDays)
+                ? DutyRequestResult.DutyAssigned
+                : DutyRequestResult.NoWorkAvailable;
         }
-        else if (offer.InteractiveDuty != null)
+
+        if (offer.InteractiveDuty != null)
         {
             RememberOffered(record, offer.InteractiveDuty.Id);
             _presenter.PresentInteractiveDuty(offer.InteractiveDuty, progress, record.Trust);
+            return DutyRequestResult.DutyAssigned;
         }
+
+        return DutyRequestResult.NoWorkAvailable;
     }
 
     public void OnSettlementEntered(string settlementId, double nowDays)

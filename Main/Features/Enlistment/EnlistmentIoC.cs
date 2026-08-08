@@ -20,6 +20,9 @@ public static class EnlistmentIoC
         container.Register<IEnlistmentStateMachine, EnlistmentStateMachine>(Reuse.Singleton);
         container.Register<IEnlistmentConfigProvider, EnlistmentConfigProvider>(Reuse.Singleton);
         container.Register<IEnlistmentDiagnosticsSettingsProvider, EnlistmentDiagnosticsSettingsProvider>(Reuse.Singleton);
+        container.Register<IEnlistmentFeatureSettingsProvider, EnlistmentFeatureSettingsProvider>(Reuse.Singleton);
+        container.Register<TAOM.Adapters.IMapConversationAdapter, TAOM.Adapters.MapConversationAdapter>(Reuse.Singleton);
+        container.Register<IEnlistmentPlayerActionService, EnlistmentPlayerActionService>(Reuse.Singleton);
         container.Register<IServiceAttachmentService, ServiceAttachmentService>(Reuse.Singleton);
         container.Register<IDischargeService, DischargeService>(Reuse.Singleton);
         container.Register<IEnlistmentService, EnlistmentService>(Reuse.Singleton);
@@ -67,6 +70,7 @@ public static class EnlistmentIoC
         container.Register<EnlistmentBattleBehavior>(Reuse.Singleton);
         container.Register<EnlistmentMaintenanceBehavior>(Reuse.Singleton);
         container.Register<EnlistmentDialogBehavior>(Reuse.Singleton);
+        container.Register<EnlistmentReleaseDialogBehavior>(Reuse.Singleton);
         container.Register<EnlistmentContentBehavior>(Reuse.Singleton);
         container.Register<EnlistmentQuartermasterBehavior>(Reuse.Singleton);
         container.Register<EnlistmentDutyBehavior>(Reuse.Singleton);

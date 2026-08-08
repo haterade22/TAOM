@@ -464,6 +464,25 @@ public class SubModule : MBSubModuleBase
         }
         catch { /* never block the main menu over a diagnostic */ }
 
+        // Session-wide memory telemetry (#386): periodic [MemSample] lines + low-commit-headroom
+        // WARN so a native OOM CTD self-identifies from the log tail (#385 was only diagnosable by
+        // parsing the 1.3 GB dump). Gating lives inside Poll on its OWN MCM toggle — the master
+        // battle-load toggle must not silently kill session-wide crash forensics.
+        //
+        // Started HERE, not in OnGameInitializationFinished: that hook only runs once a game is
+        // loading, so no [MemSample] line was EVER written at the main menu — and the A-vs-B menu
+        // delta is what docs/investigations/native-commit-audit-2026-08.md calls the measurement
+        // that most tightens attribution. taom.print_memory cannot fill that gap either, because its
+        // RunAnywhere gate returns "Campaign was not started." before a game loads.
+        //
+        // Safe this early: MemorySampleReader is pure kernel32/psapi P/Invoke with no engine state,
+        // the settings provider fails open when MCM has not registered yet, and IoC + FileLogger are
+        // both live by here (the block above uses them). Start() is idempotent, which matters
+        // because this hook fires on EVERY return to the main menu — pinned by
+        // MemoryPressureSamplerTests.Start_CalledTwice_ReusesTheSameTimer.
+        try { IoC.Resolve<Features.BattleLoadDiagnostics.MemoryPressureSampler>().Start(); }
+        catch { /* never block the main menu over a diagnostic */ }
+
         // DevConsole discovery audit: ask the engine whether it actually registered TAOM's taom.*
         // console commands. CollectCommandLineFunctions is invoked from TaleWorlds.Native.dll, so its
         // timing relative to our assembly load is not knowable offline — but HasFunctionForCommand is
@@ -988,6 +1007,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentBattleBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentMaintenanceBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentDialogBehavior>());
+        campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentReleaseDialogBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentContentBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentQuartermasterBehavior>());
         campaignStarter.AddBehavior(IoC.Resolve<Features.Enlistment.Hooks.EnlistmentDutyBehavior>());
@@ -1213,6 +1233,14 @@ public class SubModule : MBSubModuleBase
         Features.BattleLoadDiagnostics.Hooks.MissionState_LoadMission_BattleLoad_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.Utilities_ClearOldResourcesAndObjects_BattleLoad_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.Mission_AfterStart_BattleLoad_Patch.Initialize(battleLoadSvc);
+        // The MissionInitialize -> MissionAfterStartBegin gap measured 11.9 s of a 29 s load with no
+        // instrumentation inside it. MissionState.cs:221-350 splits it into exactly three buckets:
+        // the native InitializeMission call, the async IsLoadingFinished wait, and
+        // FinishMissionLoading's pre-AfterStart work. FinishMissionLoading and TickLoading are both
+        // PRIVATE — bound by string like the sibling LoadMission/BuildAgent patches. TickLoading is
+        // a COUNTER hook only and never logs (720 lines in a 12 s wait at 60fps).
+        Features.BattleLoadDiagnostics.Hooks.MissionState_FinishMissionLoading_BattleLoad_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.MissionState_TickLoading_BattleLoad_Patch.Initialize(battleLoadSvc);
         // Exit-phase probes (issue #331 — 30s-2min hang exiting tournaments): stamp the
         // mission end -> map resume window so the dominant phase gap names the time sink.
         Features.BattleLoadDiagnostics.Hooks.Mission_EndMission_ExitPhase_Patch.Initialize(battleLoadSvc);
@@ -1241,12 +1269,6 @@ public class SubModule : MBSubModuleBase
         var exitStallSampler = IoC.Resolve<Features.BattleLoadDiagnostics.ExitStallSampler>();
         exitStallSampler.SetMainThread(System.Threading.Thread.CurrentThread);
         exitStallSampler.Start();
-
-        // Session-wide memory telemetry (#386): periodic [MemSample] lines + low-commit-headroom
-        // WARN so a native OOM CTD self-identifies from the log tail (#385 was only diagnosable
-        // by parsing the 1.3 GB dump). Gating lives inside Poll on its OWN MCM toggle — the
-        // master battle-load toggle must not silently kill session-wide crash forensics.
-        IoC.Resolve<Features.BattleLoadDiagnostics.MemoryPressureSampler>().Start();
 
         // Patch60 — release the tournament UI movie/layer at OnEndMission time. The engine's
         // MissionGauntletTournamentView leaks both (nulls without release, unlike the practice
@@ -1382,7 +1404,23 @@ public class SubModule : MBSubModuleBase
 
         // BattleLoadDiagnostics phase-6: "battle playable" marker on first tick + closes
         // the loading window so the stall watchdog stands down and phase-5 stops logging.
-        if (battleLoadDiagSvc != null && battleLoadDiagSvc.IsEnabled)
+        //
+        // Registered UNCONDITIONALLY (TAOM convention, and latch rule 3 in
+        // .claude/rules/harmony-patches.md — verify "unconditional" at the OUTERMOST gate). This
+        // behavior is the loading window's ONLY closer; the opener runs in Mission.Initialize's
+        // prefix. The 2026-07-06 RCA deferred this one as "the same synchronous call chain", and
+        // the three-bucket measurement disproves that premise: the two evaluations are separated by
+        // a tick boundary AND a measured ~11.9 s native load (MissionState.cs:221-350). A toggle
+        // flipped inside that window latched the loading window open until the next
+        // Mission.Initialize, and the stall watchdog then fired at 300 s and wrote a spurious
+        // bundle. This changeset makes toggling MCM mid-session an EXPECTED operator action during
+        // the commit-attribution matrix, so the window is no longer theoretical.
+        //
+        // Safe to register while disabled: BattleLoadPhaseBehavior already self-gates its logging
+        // (LogBattlePlayable returns early when disabled) while Close()/ClearInflight() are
+        // unconditional state transitions. Steady-state cost is one `if (_playableLogged) return;`
+        // per mission tick.
+        if (battleLoadDiagSvc != null)
             AddTaomBehavior(new Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior(
                 battleLoadDiagSvc, IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>()));
 

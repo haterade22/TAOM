@@ -44,7 +44,8 @@ public class EnlistmentReconcilerTests
         _discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
-            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(), _logger);
+            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
+            EnlistmentTestDoubles.FeatureOn(), _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)

@@ -8,21 +8,28 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
     private readonly ICommanderLordAdapter _commander;
     private readonly IPlayerContextAdapter _playerContext;
     private readonly IEnlistmentConfigProvider _config;
+    private readonly IEnlistmentFeatureSettingsProvider _feature;
 
     public EnlistmentDialogGateService(
         IEnlistmentStore store,
         ICommanderLordAdapter commander,
         IPlayerContextAdapter playerContext,
-        IEnlistmentConfigProvider config)
+        IEnlistmentConfigProvider config,
+        IEnlistmentFeatureSettingsProvider feature)
     {
         _store = store;
         _commander = commander;
         _playerContext = playerContext;
         _config = config;
+        _feature = feature;
     }
 
     public EnlistGateResult CanEnlistWith(string partnerHeroId)
     {
+        // First gate: a disabled feature offers no enlistment at all.
+        if (_feature?.IsEnabled == false)
+            return EnlistGateResult.FeatureDisabled;
+
         if (_store.Record.IsEnlisted)
             return EnlistGateResult.AlreadyEnlisted;
         if (string.IsNullOrEmpty(partnerHeroId) || !_commander.IsLord(partnerHeroId))

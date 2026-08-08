@@ -25,6 +25,9 @@ public interface IEnlistmentWaitMenuPresenter
     /// and the discharge itself — so the menu behaviour stays a registration shell.
     /// </summary>
     void RequestRelease(double nowDays);
+
+    /// <summary>Tell the player what asking for work produced. "Nothing right now" is an answer.</summary>
+    void ReportDutyRequest(Duties.DutyRequestResult result);
 }
 
 public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
@@ -121,7 +124,10 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
             "taom_enlist_release_refused_title", "Your term is not served",
             "taom_enlist_release_refused_body",
             "Your commander holds you to your oath — {DAYS} more days are owed. Leaving now is desertion: you forfeit the pay still owed to you, and your commander will not forget it.",
-            "taom_enlist_release_desert", "Desert the company",
+            // NOT taom_enlist_release_desert — that key belongs to the in-person dialog line and
+            // carries different words. One key with two English strings translates to whichever
+            // one happened to be registered, in both places.
+            "taom_enlist_release_desert_option", "Desert the company",
             "taom_enlist_release_stay", "Stay and serve",
             ConfirmDesertion,
             null,
@@ -139,5 +145,22 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
             return;
 
         _service.RequestDischarge(DischargeReason.Desertion);
+    }
+
+    public void ReportDutyRequest(Duties.DutyRequestResult result)
+    {
+        // DutyAssigned deliberately says nothing: the duty runtime already shows its own popup or
+        // toast, and a second 'you got work' message on top of it reads as a double-fire.
+        switch (result)
+        {
+            case Duties.DutyRequestResult.AlreadyOnDuty:
+                _inquiry.ShowMessage("taom_enlist_duty_already",
+                    "You already have your orders. See them done first.", null, null);
+                return;
+            case Duties.DutyRequestResult.NoWorkAvailable:
+                _inquiry.ShowMessage("taom_enlist_duty_none",
+                    "Nothing for you at present. Stay sharp — that changes.", null, null);
+                return;
+        }
     }
 }

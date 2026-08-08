@@ -1,5 +1,17 @@
 namespace TAOM.Features.Enlistment.Duties;
 
+/// <summary>Why an explicit "any work for me?" request did or did not produce a duty.</summary>
+public enum DutyRequestResult
+{
+    NotEnlisted = 0,
+    AlreadyOnDuty = 1,
+
+    /// <summary>The rotation has nothing right now. A normal answer, not a failure.</summary>
+    NoWorkAvailable = 2,
+
+    DutyAssigned = 3,
+}
+
 /// <summary>
 /// Thin router the campaign behavior wires into: hourly/daily ticks, the two completion
 /// triggers (settlement entered, target party destroyed), and the discharge hygiene call.
@@ -14,6 +26,12 @@ public interface IDutyOrchestrationService
 
     /// <summary>Rolls an incident, else a duty offer, when no duty is active. No-op when not enlisted.</summary>
     void DailyOfferTick(double nowDays, double hourOfDay);
+
+    /// <summary>
+    /// Ask the commander for work now. Shares ONE offer path with <see cref="DailyOfferTick"/> and
+    /// the same rotation cadence — asking cannot conjure work the rotation would not have given.
+    /// </summary>
+    DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay);
 
     void OnSettlementEntered(string settlementId, double nowDays);
 

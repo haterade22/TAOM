@@ -31,7 +31,7 @@ public class ReleaseRequestGateTests
         _config = Substitute.For<IEnlistmentConfigProvider>();
         _config.GetConfig().Returns(new EnlistmentCoreConfig { MinimumServiceDays = 21.0 });
         _store.Record.Returns(new EnlistmentRecord());
-        _sut = new EnlistmentDialogGateService(_store, _commander, _playerContext, _config);
+        _sut = new EnlistmentDialogGateService(_store, _commander, _playerContext, _config, null);
     }
 
     private void Enlist(double atDay, EnlistmentState state = EnlistmentState.EnlistedAttached)

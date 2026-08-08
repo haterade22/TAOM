@@ -24,7 +24,7 @@ public class EnlistmentDialogGateServiceTests
         _playerContext = Substitute.For<IPlayerContextAdapter>();
         _config = Substitute.For<IEnlistmentConfigProvider>();
         _config.GetConfig().Returns(new EnlistmentCoreConfig());
-        _gate = new EnlistmentDialogGateService(_store, _commander, _playerContext, _config);
+        _gate = new EnlistmentDialogGateService(_store, _commander, _playerContext, _config, null);
 
         _commander.IsLord("lord_1_1").Returns(true);
         _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(

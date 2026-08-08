@@ -48,6 +48,54 @@ trimming 234 bodies at weighted 465 against limit 231.
 Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
 guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
 equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+### feat(enlistment): make the enlisted dialog surface reachable, and add a master off switch
+
+Batch 8. Reassignment, the quartermaster and in-person discharge were all shipped, all tested, and
+all unreachable — nothing in the feature could open a conversation with your commander, so no
+player had ever seen any of them. The wait menu now has *Speak with your commander* and *Ask your
+sergeant for work*.
+
+`isLeave` stays false on both, and that is load-bearing rather than tidy:
+`GameMenu.RunMenuOptionConsequence` calls `EndWait()` **before** the consequence when an option is
+marked `isLeave` on a wait menu, and `EndWait` sets `IsWaitActive = false` and
+`TimeControlMode = Stop` — tearing down the tick that drives our position sync before the
+conversation ever opened. It would also make the option a candidate for the Escape slot.
+
+`ConversationManager.OpenMapConversation` opens with
+`(GameStateManager.Current?.ActiveState as MapState).OnMapConversationStarts(...)` — an `as` cast
+dereferenced with no null check, so it throws when the state manager is null, when the state stack
+is empty, or when the active state is anything other than a MapState. Three routes to one NRE,
+none guarded; `CampaignMapConversation.OpenConversation` adds a fourth on `Campaign.Current`. The
+adapter carries that guard itself, because one guard in one place is the only version of it that
+cannot be forgotten at a new call site.
+
+`TalkToCommander` re-checks its own gate. A menu option's condition and its consequence are a
+frame apart, and a commander battle starting in that gap is exactly when acting on the stale
+answer costs the player the fight.
+
+Asking for work shares ONE offer path with the daily tick and the same rotation cadence — asking
+cannot conjure work the rotation would not have given, so the option cannot be farmed.
+
+**MCM: Enlistment can now be switched off entirely.** Off removes the enlist option, and anyone
+already serving is released honourably on the next tick rather than left parked. That release is
+not politeness: an enlisted player is hidden and inactive, and the code that restores them is the
+code being switched off, so halting in place would strand them invisible on the map with no menu —
+a soft-lock produced by a settings toggle. Fails open when MCM is absent.
+
+**Reassignment fix (reported in-game):** there was no cavalry option. Each option is hidden when it
+is your current role, and nothing told you what that was — so a player already in the horse saw
+three choices and concluded cavalry was missing. The commander now answers first and names your
+section. That also restores the player → NPC → player alternation every working dialog chain in
+this feature has and reassignment did not.
+
+**Two defects of my own, found by audit and fixed here:** `EnlistmentDialogBehavior` had reached
+218 lines against ADR-002's 150 ceiling after Batch 6 — the release chain is now its own behavior;
+and `taom_enlist_release_desert` was being used for two different English strings, which would
+have translated to whichever one happened to be registered, in both places.
+
+Suite 5977 green.
+
+Research: ConversationManager.OpenMapConversation, GameMenu.RunMenuOptionConsequence, ConversationCharacterData ctor
 ### feat(enlistment): follow the column into town instead of standing outside the gate
 
 Batch 7. When the commander's column entered a settlement the player stayed parked outside it,

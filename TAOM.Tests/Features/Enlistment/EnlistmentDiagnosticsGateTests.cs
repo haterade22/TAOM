@@ -66,7 +66,8 @@ public class EnlistmentDiagnosticsGateTests
         _diag = Substitute.For<IEnlistmentDiagnosticsSettingsProvider>();
 
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
-            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), _diag, _logger);
+            new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), _diag,
+            EnlistmentTestDoubles.FeatureOn(), _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)

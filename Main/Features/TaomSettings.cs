@@ -355,6 +355,36 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Log every prop, including working ones. Off = log only props that are unusable, plus the summary.")]
     public bool SiegePropDiagnosticsVerbose { get; set; } = false;
 
+    // --- Enlistment ---
+    // Master switch for the whole serve-as-a-soldier feature. OFF removes the enlist dialog line,
+    // so no new service can start. Turning it off MID-SERVICE does not simply freeze the feature:
+    // the enlisted player is parked hidden and inactive next to their commander, and the code that
+    // un-hides them is the same code this switch disables — so a plain "stop running" would strand
+    // them invisible on the map with no menu and no way out. The reconciler therefore performs one
+    // honourable discharge on the next tick and hands the player back properly.
+
+    [SettingPropertyGroup("Enlistment", GroupOrder = 41)]
+    [SettingPropertyBool("Enable Enlistment", Order = 0, RequireRestart = false,
+        HintText = "Serve as a soldier in a lord's party — enlist, take a rank, draw wages, follow the column into battle. Turn OFF to remove the feature: the option to enlist disappears, and if you are already serving you are released honourably (you keep your pay and your gear) rather than being left parked on the map. Takes effect immediately; no restart. Default ON.")]
+    public bool EnableEnlistment { get; set; } = true;
+
+    // --- Enlistment / Diagnostics ---
+    // Diagnostic only, no gameplay effect. ON by default while the service loop is being diagnosed:
+    // with it on, [EnlistDiag] was 4,856 of 6,001 lines (81%) of a 32-minute log — 3,674 of them from
+    // one per-map-event line — so turn it off for a quieter log once enlistment is not the subject.
+    // Genuine faults (park/sync/restore failure, a stranded PlayerEncounter, a discharge that leaves
+    // the player unable to start encounters) are NOT gated and log regardless of this setting.
+    //
+    // The gated lines emit at INFO, which FileLogger flushes synchronously, so the trace survives a
+    // hard native CTD. Measured cost ~0.11 ms/flush (rca-battleload-agentbuild-2026-08-03: 1,287
+    // stamps = 145 ms), i.e. ~0.5 s across a 32-minute session. The default here MUST match
+    // EnlistmentDiagnosticsSettingsProvider.ResolveEnabled's `?? true` fallback; a test pins each.
+
+    [SettingPropertyGroup("Enlistment/Diagnostics", GroupOrder = 42)]
+    [SettingPropertyBool("Enable Enlistment Diagnostics", Order = 0, RequireRestart = false,
+        HintText = "Log the routine enlistment trace ([EnlistDiag] TICK, SYNC ok, PARK ok, and a line for every map event in the world) to the TAOM debug log. ON by default while the enlisted-service loop is being diagnosed — it produces thousands of lines per session, so turn it OFF for a quieter log once you are not chasing an enlistment problem. Real faults are always logged regardless of this setting, so [EnlistDiag] lines will still appear when it is off. Takes effect immediately; no restart. Default ON.")]
+    public bool EnableEnlistmentDiagnostics { get; set; } = true;
+
     // --- Messengers ---
 
     [SettingPropertyGroup("Messengers", GroupOrder = 25)]

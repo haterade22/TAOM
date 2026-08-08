@@ -16,6 +16,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     private readonly IEncounterAdapter _encounter;
     private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IEnlistmentDiagnosticsSettingsProvider _diag;
+    private readonly IEnlistmentFeatureSettingsProvider _feature;
     private readonly IModLogger _logger;
 
     public EnlistmentReconciler(
@@ -28,6 +29,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         IEncounterAdapter encounter,
         IEncounterOwnershipPolicy ownership,
         IEnlistmentDiagnosticsSettingsProvider diag,
+        IEnlistmentFeatureSettingsProvider feature,
         IModLogger logger)
     {
         _store = store;
@@ -39,6 +41,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _encounter = encounter;
         _ownership = ownership;
         _diag = diag;
+        _feature = feature;
         _logger = logger;
     }
 
@@ -49,6 +52,19 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         var record = _store.Record;
         if (!record.IsEnlisted)
             return;
+
+        // MCM master switch, checked before any other reconciliation. Turning the feature off
+        // mid-service cannot simply stop the loop: the player is parked HIDDEN and INACTIVE,
+        // and the code that restores them is the code being switched off — halting in place
+        // would strand them invisible on the map with no menu, a soft-lock caused by a
+        // settings toggle. One honourable discharge through the normal pipeline instead, which
+        // restores presence, closes any encounter and hands them back somewhere they can act.
+        if (_feature?.IsEnabled == false)
+        {
+            _logger?.LogInfo("[Enlistment] feature disabled in settings while serving — releasing the player honourably");
+            _discharge.Execute(DischargeReason.PlayerRequest);
+            return;
+        }
 
         var presence = _attachment.GetPresence();
 

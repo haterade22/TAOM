@@ -294,4 +294,49 @@ public class DischargeServiceTests
         Assert.IsTrue(subscriberRanBeforePlacement);
     }
 
+    // ---- Always-on discharge diagnostics: NEVER gated by the [EnlistDiag] volume toggle -----
+    // These two lines were entirely unpinned before the toggle work. They must stay reachable
+    // with EnableEnlistmentDiagnostics OFF, because they are the only signal that a discharge
+    // broke the save. DischargeService takes no IEnlistmentDiagnosticsSettingsProvider at all,
+    // which is what makes that structural rather than a matter of discipline — if someone ever
+    // adds one, these tests are the tripwire.
+
+    [TestMethod]
+    public void Execute_LeavesEncountersBlocked_LogsUnableToStartEncountersError()
+    {
+        // A live PlayerEncounter that survives the pipeline is the save-breaker: EncounterManager
+        // then refuses every main-party encounter, so the player can never click a lord again.
+        // Deliberately NOT the settlement shape — that one is benign and logs a warning instead.
+        MakeEnlisted();
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
+            mainPartyExists: true, isActive: true, isVisible: true,
+            hasPlayerEncounter: true, settlementId: null));
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        _logger.Received().LogError(Arg.Is<string>(s =>
+            s.Contains("LEFT THE PLAYER UNABLE TO START ENCOUNTERS")));
+    }
+
+    [TestMethod]
+    public void Execute_LiveEncounter_FinishesItAndRestoresPresence()
+    {
+        // Discharge outranks ownership: the encounter is closed AND presence is restored, both
+        // unconditionally. Presence restoration is the softlock invariant; the finish is the
+        // can't-interact-again invariant. One discharge must satisfy both.
+        MakeEnlisted();
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true,
+            conversationInProgress: false,
+            hasEncounteredMobileParty: true,
+            encounteredPartyId: "lord_party_1",
+            encounteredPartyIsCommanderRelated: true,
+            playerInMapEvent: false));
+        _encounter.Finish(true).Returns(true);
+
+        Assert.IsTrue(_service.Execute(DischargeReason.PlayerRequest));
+
+        _encounter.Received(1).Finish(true);
+        _attachment.Received(1).RestorePresence();
+    }
 }

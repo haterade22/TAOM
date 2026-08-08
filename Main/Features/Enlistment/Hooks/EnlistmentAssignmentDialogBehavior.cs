@@ -1,4 +1,5 @@
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Localization;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
@@ -45,6 +46,23 @@ public class EnlistmentAssignmentDialogBehavior : CampaignBehaviorBase
             null,
             109);
 
+        // The commander answers before the options are listed. Two reasons, both real:
+        //
+        // 1. It names your CURRENT section. Each option below is hidden when it IS your current
+        //    role, so a player already in the horse asks to change section, sees no cavalry line,
+        //    and concludes cavalry is unavailable. Reported in-game 2026-08-07 as exactly that.
+        //    Hiding the redundant option is right; hiding it with no explanation was not.
+        // 2. Every dialog chain in this feature that works alternates player -> NPC -> player
+        //    (see the oath chain). Reassignment went player -> player with nothing between.
+        starter.AddDialogLine(
+            "taom_enlist_reassign_pick",
+            "taom_enlist_reassign_pick",
+            "taom_enlist_reassign_choose",
+            "{=taom_enlist_reassign_pick}You march with the {CURRENT_SECTION} at present. Where would you rather stand?",
+            SetCurrentSectionName,
+            null,
+            109);
+
         AddOption(starter, "inf", ServiceAssignment.Infantry, "{=taom_enlist_reassign_inf}Put me in the shield line.");
         AddOption(starter, "arc", ServiceAssignment.Archer, "{=taom_enlist_reassign_arc}I shoot better than I stab.");
         AddOption(starter, "cav", ServiceAssignment.Cavalry, "{=taom_enlist_reassign_cav}I can ride. Give me a horse.");
@@ -64,11 +82,41 @@ public class EnlistmentAssignmentDialogBehavior : CampaignBehaviorBase
     {
         starter.AddPlayerLine(
             "taom_enlist_reassign_" + suffix,
-            "taom_enlist_reassign_pick",
+            "taom_enlist_reassign_choose",
             "taom_enlist_reassign_done",
             text,
             () => _assignments.Current != assignment,
             () => { if (_coopSession.IsAuthority) _assignments.Swap(assignment, CampaignTime.Now.ToDays); },
             109);
+    }
+
+    /// <summary>
+    /// Condition AND text setup — the condition is the only hook that runs before the line
+    /// renders, so the section name has to be pushed here or it renders as a raw token.
+    /// </summary>
+    private bool SetCurrentSectionName()
+    {
+        MBTextManager.SetTextVariable("CURRENT_SECTION", SectionName(_assignments.Current));
+        return true;
+    }
+
+    /// <summary>
+    /// Localized section names. The enum's own <c>ToString()</c> is an internal identifier and
+    /// must never reach the player — it cannot be translated, and "Support" is not what a soldier
+    /// would call the baggage train.
+    /// </summary>
+    private static TextObject SectionName(ServiceAssignment assignment)
+    {
+        switch (assignment)
+        {
+            case ServiceAssignment.Archer:
+                return new TextObject("{=taom_enlist_section_arc}bowmen");
+            case ServiceAssignment.Cavalry:
+                return new TextObject("{=taom_enlist_section_cav}horse");
+            case ServiceAssignment.Support:
+                return new TextObject("{=taom_enlist_section_sup}baggage train");
+            default:
+                return new TextObject("{=taom_enlist_section_inf}shield line");
+        }
     }
 }
