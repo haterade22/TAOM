@@ -12,7 +12,8 @@ public interface IServiceAttachmentService
 {
     AttachmentAssessment Assess(EnlistmentState state, CommanderSnapshot commander, PlayerPresenceSnapshot player);
 
-    PlayerPresenceSnapshot GetPresence();
+    /// <summary>Pass the commander id or distToCommander reads -1 and the drift line prints '?'.</summary>
+    PlayerPresenceSnapshot GetPresence(string commanderHeroId = null);
 
     bool EnsureParked(string commanderHeroId);
 

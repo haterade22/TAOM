@@ -4,14 +4,27 @@
 
 ## 2026-08-08
 
-### chore(triage): 147 open issues checked against HEAD — 74 closed, 67 kept, 6 escalated
+### chore(triage): 147 open issues checked against HEAD — 81 closed, 60 kept, 6 escalated
 
 The tracker had stopped being a queue and become a work log. Most open issues were past-tense
 engineering reports written when the work was planned or already done, so for a large share the
 question was never "is this broken?" but "did anyone press close?" All 147 were checked against
-`828bf941`: 74 closed with a comment citing the evidence, 52 kept open with a status comment, 21
+`828bf941`: 81 closed with a comment citing the evidence, 52 kept open with a status comment, 21
 labelled without a comment, 6 escalated as needing a decision. Full per-issue evidence in
 [`docs/audits/issue-triage-2026-08-08.md`](docs/audits/issue-triage-2026-08-08.md).
+
+Seven of those closures came from a second pass that corrected the first one's test. Eleven issues
+had been held open as `blocked-external` because their fix lives in `LOTRLOME_Armory` or `TAOM_Map`,
+which this repo does not track — but "this repo cannot ship it" answers a different question from
+"does the fix exist". Checked against the installed modules, seven were already applied: #352 (both
+`body_name` typos corrected), #364 (`family_type="1"` on the caparison), #300 (`as_dwarf_warrior` at
+4,842 actions), #390 (packages repacked 2026-08-07, `validate_mesh_refs.py` 3959/3959 clean), #338
+(`town_LN1` down to one `map_siege_ram`, all 221 fortifications on the identical shape), #342 (the
+Mordor cap idempotent, zero inversions across 20 slot-by-tier cells) and #358 (106/106 item defs, all
+present in `pack5.tpac`). Four remain genuinely external: #398 and #385 need asset re-exports, #62
+needs a change inside BannerlordTogether, and #359 turned out to have regressed — the prefab split
+shipped and was then reverted, and `check_prefab_budget.py` reports `OK` at 99% of the engine's hard
+cap because it counts one module where the assert is global.
 
 Agents produced verdicts and never called a `gh` write command — every mutation came from one paced,
 ledgered script driven by a verdict file that was read first, so a confident wrong answer could not
@@ -478,6 +491,38 @@ without MCM reads the JSON, a player with MCM at default reads the literal, and 
 describe the same game. A test fails the build if they drift, which is the kind of split that is
 otherwise invisible because the test host never has MCM loaded.
 
+### fix(enlistment): stop teleporting the player between towns when the commander is in an army
+
+Reported in-game as "still being left behind". The log said otherwise — `SYNC ok (drift 0.00)` on
+every one of 126 syncs, so the player was sitting exactly on the commander's position the whole
+time. What was actually happening was worse: **the player was being teleported between three
+different towns, seconds apart** — `FOLLOW town_EW1` → `EXIT` → `FOLLOW town_EW2` → `EXIT` →
+`FOLLOW town_EW3` → `EXIT`, repeatedly.
+
+`CommanderSnapshot` was reading settlement identity from two different sources:
+`partyIsInSettlement` from the commander's **party**, but `settlementId` / `settlementName` /
+`settlementMenuId` from the **hero**. `Hero.CurrentSettlement` resolves through `PartyBelongedTo`,
+so the moment a commander joins an ARMY it reports the ARMY's settlement while his own party is
+elsewhere. `Assess` then followed the player into the hero's town, compared the two ids on the next
+tick, found them different, ordered an exit — and repeated. All four fields now come from the party,
+which is the thing that has a position and therefore the thing being followed.
+
+**The diagnostic built to answer this question was itself blind.** `GetPresence` takes
+`commanderHeroId` with a default of `null`, and `distanceToCommander` is hard-wired to `-1` when it
+is absent — but the reconciler called the parameterless overload, so `distToCommander=?` printed on
+every line of the first live session. It now passes the id, and the commander's settlement joins the
+trace, so the next report of this shape is a grep rather than an investigation.
+
+Two regression tests: one pins that every settlement field in `GetSnapshot` reads the party and
+never `hero.CurrentSettlement`; one pins that following into the commander's settlement TERMINATES
+rather than oscillating.
+
+Also: the wait menu's lowest trust band said *"in poor odour"* — a real English idiom, and a poor
+choice for a game UI. Now "badly thought of".
+
+Suite 6081 green.
+
+Research: Hero.CurrentSettlement resolves via PartyBelongedTo
 ### fix(enlistment): put "ask to be released" last, where a terminal action belongs
 
 First live look at the finished wait menu (2026-08-08) confirmed three batches at once — the player

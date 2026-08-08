@@ -80,7 +80,7 @@ public class EnlistmentReconcilerTests
 
     private void PlayerPresence(bool parked = true, bool captive = false, bool inMapEvent = false)
     {
-        _partyAdapter.GetPresence().Returns(new PlayerPresenceSnapshot(
+        _partyAdapter.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isCaptive: captive,
             isActive: !parked, isVisible: !parked, isInMapEvent: inMapEvent));
     }

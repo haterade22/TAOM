@@ -87,7 +87,7 @@ public class EnlistmentPumpAuthorityTests
         _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
             partyIsInMapEvent: commanderInMapEvent));
-        _attachment.GetPresence().Returns(new PlayerPresenceSnapshot(
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isInMapEvent: playerInMapEvent, hasPlayerEncounter: encounterOpen));
         _encounter.HasCurrent.Returns(encounterOpen);
         _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
@@ -117,7 +117,7 @@ public class EnlistmentPumpAuthorityTests
         _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
             partyIsInMapEvent: true));
-        _attachment.GetPresence().Returns(new PlayerPresenceSnapshot(mainPartyExists: true, isActive: false, isVisible: false));
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true, isActive: false, isVisible: false));
         _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
             .Returns(new AttachmentAssessment(AttachmentStatus.BattleJoinRequired));
         var raised = 0;
@@ -139,7 +139,7 @@ public class EnlistmentPumpAuthorityTests
         _store.Record.NextAttachRetryAtHours = null;
         _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true, partyIsInMapEvent: true));
-        _attachment.GetPresence().Returns(new PlayerPresenceSnapshot(mainPartyExists: true, isActive: false, isVisible: false));
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true, isActive: false, isVisible: false));
         _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
             .Returns(new AttachmentAssessment(AttachmentStatus.BattleJoinRequired));
         var raised = 0;

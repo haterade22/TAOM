@@ -32,11 +32,19 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 partyId: party?.StringId,
                 partyIsActive: party?.IsActive ?? false,
                 partyIsInMapEvent: party?.MapEvent != null,
+                // ALL FOUR settlement fields come from the commander's own PARTY, never the
+                // hero. Hero.CurrentSettlement resolves through PartyBelongedTo, so once the
+                // commander joins an ARMY it reports the ARMY's settlement while his own
+                // party is somewhere else. Mixing the two (the flag from the party, the id
+                // from the hero) made settlement following teleport the player into the
+                // army's town, disagree with itself on the next tick, walk them back out,
+                // and repeat — observed in-game 2026-08-08 cycling EW1 -> EW2 -> EW3 seconds
+                // apart. The party is what has a position, so the party is the truth.
                 partyIsInSettlement: party?.CurrentSettlement != null,
-                settlementId: hero.CurrentSettlement?.StringId,
-                settlementName: hero.CurrentSettlement?.Name?.ToString(),
+                settlementId: party?.CurrentSettlement?.StringId,
+                settlementName: party?.CurrentSettlement?.Name?.ToString(),
                 partyIsBesieging: party?.BesiegedSettlement != null,
-                settlementMenuId: MenuIdFor(hero.CurrentSettlement),
+                settlementMenuId: MenuIdFor(party?.CurrentSettlement),
                 cultureId: hero.Culture?.StringId,
                 factionId: hero.Clan?.MapFaction?.StringId,
                 name: hero.Name?.ToString());

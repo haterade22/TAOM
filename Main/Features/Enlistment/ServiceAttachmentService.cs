@@ -79,7 +79,7 @@ public class ServiceAttachmentService : IServiceAttachmentService
             : new AttachmentAssessment(AttachmentStatus.AttachRequired);
     }
 
-    public PlayerPresenceSnapshot GetPresence() => _attachment.GetPresence();
+    public PlayerPresenceSnapshot GetPresence(string commanderHeroId = null) => _attachment.GetPresence(commanderHeroId);
 
     public bool EnsureParked(string commanderHeroId) => _attachment.ParkNear(commanderHeroId);
 

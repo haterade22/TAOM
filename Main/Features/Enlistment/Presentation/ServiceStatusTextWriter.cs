@@ -110,6 +110,6 @@ public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
         if (trust >= 8) return new TextObject("{=taom_enlist_trust_solid}well regarded");
         if (trust >= 3) return new TextObject("{=taom_enlist_trust_known}known");
         if (trust >= 0) return new TextObject("{=taom_enlist_trust_new}unproven");
-        return new TextObject("{=taom_enlist_trust_poor}in poor odour");
+        return new TextObject("{=taom_enlist_trust_poor}badly thought of");
     }
 }

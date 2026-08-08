@@ -102,7 +102,10 @@ public class EnlistmentReconciler : IEnlistmentReconciler
             return;
         }
 
-        var presence = _attachment.GetPresence();
+        // WITH the commander id: without it distanceToCommander is hard-wired to -1 and the
+        // TICK line prints 'distToCommander=?', which is the one number that answers
+        // "am I actually being left behind". It printed '?' for the whole first live session.
+        var presence = _attachment.GetPresence(record.CommanderHeroId);
 
         switch (record.State)
         {
@@ -229,7 +232,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 (assessment.Status == AttachmentStatus.Blocked ? $"({assessment.BlockReason})" : "") +
                 $" | player: {presence.Describe()}" +
                 $" | commander '{record.CommanderHeroId}': exists={snapshot.Exists} alive={snapshot.IsAlive} " +
-                $"party={snapshot.PartyId ?? "NONE"} partyActive={snapshot.PartyIsActive} inMapEvent={snapshot.PartyIsInMapEvent} prisoner={snapshot.IsPrisoner}");
+                $"party={snapshot.PartyId ?? "NONE"} partyActive={snapshot.PartyIsActive} inMapEvent={snapshot.PartyIsInMapEvent} prisoner={snapshot.IsPrisoner} settlement={snapshot.SettlementId ?? "-"}");
 
         // Self-heal a stranded conversation encounter. While EnlistedAttached and out of any map
         // event there is no legitimate reason for a live PlayerEncounter: the oath conversation's

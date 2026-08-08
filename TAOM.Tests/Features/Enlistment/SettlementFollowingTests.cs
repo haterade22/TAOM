@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -271,7 +272,7 @@ public class SettlementFollowingReconcilerTests
 
     private void Presence(string settlementId = null, bool parked = true)
     {
-        _attachment.GetPresence().Returns(new PlayerPresenceSnapshot(
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isActive: !parked, isVisible: !parked, settlementId: settlementId));
     }
 
@@ -346,5 +347,66 @@ public class SettlementFollowingReconcilerTests
         _sut.ReconcileHourly(Now);
 
         _attachment.Received(1).SyncPosition("lord_1_1");
+    }
+}
+
+/// <summary>
+/// The 2026-08-08 in-game thrash: the player was teleported EW1 -> out -> EW2 -> out -> EW3,
+/// seconds apart, because CommanderSnapshot mixed two sources of settlement truth.
+/// </summary>
+[TestClass]
+public class CommanderSettlementIdentityTests
+{
+    /// <summary>
+    /// `Hero.CurrentSettlement` resolves through `PartyBelongedTo`, so once a commander joins an
+    /// ARMY it reports the ARMY's settlement while his own party is elsewhere. Reading the flag
+    /// from the party and the id from the hero made Assess follow into one town and then
+    /// immediately demand an exit from it. Both must come from the party.
+    /// </summary>
+    [TestMethod]
+    public void GetSnapshot_ReadsEverySettlementFieldFromTheParty_NeverTheHero()
+    {
+        var src = System.IO.File.ReadAllText("../../../../Main/Adapters/CommanderLordAdapter.cs");
+        var snapshotCall = src.Substring(src.IndexOf("return new CommanderSnapshot("));
+        snapshotCall = snapshotCall.Substring(0, snapshotCall.IndexOf("        }"));
+
+        foreach (var field in new[] { "partyIsInSettlement:", "settlementId:", "settlementName:", "settlementMenuId:" })
+        {
+            var line = snapshotCall.Split('\n').FirstOrDefault(l => l.Contains(field));
+            Assert.IsNotNull(line, $"{field} vanished from GetSnapshot");
+            StringAssert.Contains(line, "party", $"{field} must be derived from the commander's PARTY");
+            Assert.IsFalse(line.Contains("hero.CurrentSettlement"),
+                $"{field} reads hero.CurrentSettlement — that resolves through PartyBelongedTo and " +
+                "reports the ARMY's settlement, which is what caused the follow/exit teleport thrash");
+        }
+    }
+
+    /// <summary>
+    /// Assess compares the two ids with ordinal equality, so a snapshot that disagrees with itself
+    /// produces SettlementExitRequired for the settlement it just told us to enter.
+    /// </summary>
+    [TestMethod]
+    public void Assess_FollowThenSameSettlement_SettlesInsteadOfOscillating()
+    {
+        var attachment = new ServiceAttachmentService(
+            Substitute.For<IMobilePartyAttachmentAdapter>(),
+            Substitute.For<IGameMenuAdapter>(),
+            Substitute.For<IModLogger>());
+
+        var commander = new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party", partyIsActive: true,
+            partyIsInSettlement: true, settlementId: "town_EW1");
+
+        // 1) outside -> follow in
+        var outside = new PlayerPresenceSnapshot(mainPartyExists: true);
+        Assert.AreEqual(AttachmentStatus.SettlementFollowRequired,
+            attachment.Assess(EnlistmentState.EnlistedAttached, commander, outside).Status);
+
+        // 2) now inside the SAME settlement -> must settle, not demand an exit
+        var inside = new PlayerPresenceSnapshot(
+            mainPartyExists: true, isActive: true, isVisible: true, settlementId: "town_EW1");
+        Assert.AreEqual(AttachmentStatus.Attached,
+            attachment.Assess(EnlistmentState.EnlistedAttached, commander, inside).Status,
+            "following into the commander's settlement must terminate — an Exit verdict here is the teleport loop");
     }
 }

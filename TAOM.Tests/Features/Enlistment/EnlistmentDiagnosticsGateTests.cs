@@ -95,7 +95,7 @@ public class EnlistmentDiagnosticsGateTests
 
     private void PlayerPresence(bool parked = true, bool inMapEvent = false, bool hasEncounter = false)
     {
-        _partyAdapter.GetPresence().Returns(new PlayerPresenceSnapshot(
+        _partyAdapter.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isCaptive: false,
             isActive: !parked, isVisible: !parked, isInMapEvent: inMapEvent,
             hasPlayerEncounter: hasEncounter));

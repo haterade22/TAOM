@@ -35,7 +35,7 @@ public class EnlistmentFeatureToggleTests
         _discharge = Substitute.For<IDischargeService>();
         _commander = Substitute.For<ICommanderLordAdapter>();
         _attachment = Substitute.For<IServiceAttachmentService>();
-        _attachment.GetPresence().Returns(new PlayerPresenceSnapshot(mainPartyExists: true));
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true));
         _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
             .Returns(new AttachmentAssessment(AttachmentStatus.Attached));
         _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
@@ -190,7 +190,7 @@ public class EnlistmentReviewGuardTests
         _commander = Substitute.For<ICommanderLordAdapter>();
         _attachment = Substitute.For<IServiceAttachmentService>();
 
-        _attachment.GetPresence().Returns(new PlayerPresenceSnapshot(mainPartyExists: true));
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(mainPartyExists: true));
         _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
             .Returns(new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.CommanderPartyMissing));
         // Commander captured: alive, but party-less — the shape that starts a grace window.
@@ -253,7 +253,7 @@ public class EnlistmentReviewGuardTests
         // mutating.
         _config.GetConfig().Returns(new EnlistmentCoreConfig());
         var reentered = 0;
-        _attachment.When(a => a.GetPresence()).Do(_ =>
+        _attachment.When(a => a.GetPresence(Arg.Any<string>())).Do(_ =>
         {
             if (reentered++ == 0)
                 _reconciler.ReconcileNow(200.0, "reentrant edge");

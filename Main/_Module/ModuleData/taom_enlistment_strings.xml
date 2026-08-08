@@ -72,7 +72,7 @@
 	<string id="taom_enlist_section_sup" text="{=taom_enlist_section_sup}baggage train" />
 	<string id="taom_enlist_trust_known" text="{=taom_enlist_trust_known}known" />
 	<string id="taom_enlist_trust_new" text="{=taom_enlist_trust_new}unproven" />
-	<string id="taom_enlist_trust_poor" text="{=taom_enlist_trust_poor}in poor odour" />
+	<string id="taom_enlist_trust_poor" text="{=taom_enlist_trust_poor}badly thought of" />
 	<string id="taom_enlist_trust_solid" text="{=taom_enlist_trust_solid}well regarded" />
 	<string id="taom_enlist_trust_trusted" text="{=taom_enlist_trust_trusted}trusted" />
 	<string id="taom_enlist_wait_board" text="{=taom_enlist_wait_board}{ACTIVITY}{NEWLINE}{NEWLINE}Rank: {RANK} · {SECTION}{NEWLINE}Days served: {DAYS} · Standing: {TRUST}{ARREARS}{DUTY}" />

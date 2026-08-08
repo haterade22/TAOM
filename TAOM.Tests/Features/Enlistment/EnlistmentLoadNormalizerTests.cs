@@ -60,7 +60,7 @@ public class EnlistmentLoadNormalizerTests
 
     private void Presence(bool parked, bool captive = false)
     {
-        _partyAdapter.GetPresence().Returns(new PlayerPresenceSnapshot(
+        _partyAdapter.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isCaptive: captive, isActive: !parked, isVisible: !parked));
     }
 
