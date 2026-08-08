@@ -1403,4 +1403,24 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<!-- Lord templates. Referenced from taom_spcultures.xml <lord_templates> and
+	     <rebellion_hero_templates>; both lists previously held vanilla's Culture.empire
+	     leaders, and a hero keeps its TEMPLATE's culture. Equipment comes from the
+	     already-authored taom_dolguldur_lord_* rosters. -->
+	<NPCCharacter id="spc_dolguldur_lord_1" race="dg_uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.dolguldur" name="{=aom_dolguldur_lord_1}Bold Dol Guldur captain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_dolguldur_lord_battle_male" />
+			<EquipmentSet id="taom_dolguldur_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_dolguldur_lord_2" race="dg_uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.dolguldur" name="{=aom_dolguldur_lord_2}Cautious Dol Guldur captain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_dolguldur_lord_battle_male" />
+			<EquipmentSet id="taom_dolguldur_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
 </NPCCharacters>

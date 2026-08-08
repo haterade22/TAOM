@@ -2,6 +2,51 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-08
+
+### fix(cultures): every culture's lord templates were Dunlendings
+
+A player granted a fief to a dwarf companion in Ered Luin and got a clan called Firebeard —
+correctly Erebor — whose two new members were named Graldor and Dunric. Both names come out of
+`taom_xslt_strings.xml`: `aom_dunland_male_name_29` and `aom_dunland_male_name_2`.
+
+All fourteen of TAOM's own cultures shipped the vanilla `empire` block verbatim for
+`<lord_templates>` **and** `<rebellion_hero_templates>` — the same sixteen
+`spc_legion_of_the_betrayed` / `spc_hidden_hand` / `spc_embers_of_flame` / `spc_eleftheroi`
+leaders, every one of them `culture="Culture.empire"` in `SandBox/ModuleData/spspecialcharacters.xml`.
+`spcultures.xslt` renames empire to the Dunlendings, so those two lists resolved to Dunlendings
+for Erebor, Rivendell, Gondor, Mordor and everywhere else. `notable_templates` had been done
+properly per culture; these two were missed.
+
+The engine never gets a second chance to correct it. `HeroCreator.CreateSpecialHero` leaves
+`Culture` unset, so `InitializeHeroFromSettings` falls through to
+`DefaultHeroCreationModel.GetCulture`, which returns
+`hero.CharacterObject.OriginalCharacter.Culture` — the template's culture. The born settlement is
+passed in and ignored. Whatever the template is, the hero is.
+
+Two code paths read the lists, and both are player-visible:
+
+- `CompanionRolesCampaignBehavior.SpawnNewHeroesForNewCompanionClan` builds two lords from
+  `companionHero.Culture.LordTemplates` every time a companion is granted a fief.
+- `RebellionsCampaignBehavior` builds rebel leaders from `settlement.Culture.RebelliousHeroTemplates`,
+  so a rising in a dwarf or Gondorian town was led by Dunlendings too.
+
+Each culture now has `spc_<culture>_lord_1` and `spc_<culture>_lord_2` in its own
+`characters/npcs_<culture>.xml`, carrying the culture's race and `BodyProperty.fighter_<culture>`
+face template, split by trait profile the way the headman templates are — bold versus cautious.
+The equipment was already written: `equipmentsets/taom_lord_template_equipment.xml` has held
+`taom_<culture>_lord_battle_male` and `_civilian_male` for all twenty cultures, reachable until now
+only through the engine's culture-and-flag search for child and coming-of-age equipment. The new
+templates reference those rosters directly.
+
+`CultureLordTemplateTests` pins the invariant: every template a culture lists must be defined by
+TAOM and carry that culture, and neither list may be empty — `MBReadOnlyList.GetRandomElement`
+indexes straight into the list and throws on an empty one. Landless cultures are exempt; neither
+code path reaches them.
+
+Heroes already in a save keep the culture they were built with. This changes what spawns from here
+on, not what has spawned.
+
 ## 2026-08-07
 
 ### fix(troopweight): shed-on-upgrade was deleting every settlement's militia down to ~20
