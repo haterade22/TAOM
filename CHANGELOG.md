@@ -4,6 +4,15 @@
 
 ## 2026-08-08
 
+### docs(localization): the enlistment strings file has 76 keys, not 36
+
+`localization-map.md` recorded the count from when the file was created. Enlistment and Battlefield
+Promotions have both grown since: 66 `taom_enlist_*` plus 10 `taom_fc_*`. The "source-only" half of
+the note was still true — no language has a `std_taom_enlistment_strings_*.xml` — and that gap now
+has its own issue (#418) rather than living as a parenthetical in a reference table. The note also
+records why the gap degrades gracefully: both features build text as `{=key}fallback`, so an
+untranslated key renders English rather than blank.
+
 ### chore(battleload): land the code for an entry that was already written
 
 `feat(battleload): split the 11.9-second load gap into three named buckets, and add engine memory
