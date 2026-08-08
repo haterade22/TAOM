@@ -361,6 +361,39 @@ class StaleVersionRotTests(_PathConstantRepo):
         ]:
             self.assertEqual(self._stale(name, line), [], f"{line.strip()!r} should stay silent")
 
+    def test_a_mention_of_one_version_does_not_silence_a_claim_about_another(self):
+        """The guards must `continue`, not `break`, or the pattern list retires on the mention.
+
+        1.3.15 sorts before 1.4.5 in STALE_VERSION_PATTERNS, so a line carrying both a historical
+        mention and a live claim gets its mention evaluated first. If failing that guard abandoned
+        the whole list, the claim after it would never be tested and real rot would read as clean —
+        the one failure mode worse than a false positive, because a check that stops reporting says
+        nothing about having stopped.
+        """
+        found = self._stale(
+            "features/mixed.md",
+            "Historical: v1.3.15 shipped. The current target is Bannerlord 1.4.5.\n")
+        self.assertEqual(len(found), 1, "the 1.4.5 claim must survive the 1.3.15 mention")
+        self.assertEqual(found[0][2], "1.4.5")
+
+    def test_a_negated_version_does_not_silence_a_claim_after_it(self):
+        """Same defect in the negation guard: `NOT 1.4.5` must not retire the 1.4.6 pattern."""
+        found = self._stale(
+            "features/negated.md",
+            "Built for ~1.2.12, NOT 1.4.5. The current target is 1.4.6.\n")
+        self.assertEqual(len(found), 1, "the 1.4.6 claim must survive the negated 1.4.5")
+        self.assertEqual(found[0][2], "1.4.6")
+
+    def test_the_pin_guard_still_retires_the_whole_line(self):
+        """The contrast guard is per-line, not per-match, so it correctly keeps using `break`.
+
+        Naming the pin is a property of the sentence, not of one version in it — a line that
+        contrasts two old versions against the pin is one contrast, and must stay silent for both.
+        """
+        self.assertEqual(
+            self._stale("features/pinned.md",
+                        "We shipped on 1.4.5 and then 1.4.6; TAOM now targets v1.4.7.\n"), [])
+
 
 class DeadLinkNeverCommittedTests(_PathConstantRepo):
     """#397 follow-on: 14 dead links, all pointing into the gitignored docs/reviews/raw/.

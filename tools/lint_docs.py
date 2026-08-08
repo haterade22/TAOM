@@ -183,6 +183,12 @@ CURRENT_TARGET_RE = re.compile(
     # (lotrlome-armory-snapshot/README.md:99) is a category of animation, not a claim about an
     # engine version. Only the version-facing sense counts.
     r"|\bactive\s+(?:Bannerlord\b|v?\d)"
+    # NOTE: `installed` is deliberately NOT a marker yet. It is the strongest present-tense claim
+    # in this vocabulary, and adding it reports 8 findings across the tree — every one genuine.
+    # They are not prose defects though: reflection-sites.md:66 ("all 32 resolve against installed
+    # v1.4.5") and battle-scenes.md:7 are binding-verification claims that need re-deriving against
+    # the pin, not rewording. Adding the marker without that work would invite the wrong fix.
+    # Tracked separately; add the marker with the re-verification, not before it.
     # Reverse order: "Bannerlord 1.3.15 is the active engine."
     r"|\bv?[\d.]+\s+is\s+(?:the\s+)?(?:active|current|target)\b"
     # `Engine:` as a LABEL — line start, table cell, bullet or heading. Mid-sentence it is just
@@ -426,10 +432,18 @@ def check_stale_versions(files: list[Path]) -> list[tuple[Path, int, str, str]]:
                     # 51 characters of the version, the next is at 71, and the tail reaches 1,228.
                     # The window sits in that gap. Widening it re-admits paragraph noise; narrowing
                     # it starts dropping ordinary prose like "TAOM is built for Bannerlord 1.3.15."
+                    #
+                    # These two guards `continue`, not `break`: both judge THIS version match, not
+                    # the line. A line can carry a mention of one stale version and a live claim
+                    # about another — "Historical: v1.3.15 shipped. The current target is Bannerlord
+                    # 1.4.5." — and 1.3.15 sorts first in STALE_VERSION_PATTERNS. Breaking here
+                    # retires the whole pattern list on the mention and never evaluates 1.4.5, so
+                    # real rot goes silent. The pin guard below is different: naming the pin is a
+                    # property of the line, so it correctly retires all patterns.
                     if NEGATED_VERSION_RE.search(line[max(0, m.start() - 24):m.start()]):
-                        break
+                        continue
                     if not CURRENT_TARGET_RE.search(INLINE_CODE_RE.sub("", clause_around(line, m))):
-                        break
+                        continue
                     # ...and a line that also names the pin is contrasting the two, not claiming
                     # the old one is current.
                     if pin_re and pin_re.search(line):

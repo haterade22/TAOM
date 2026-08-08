@@ -4,6 +4,34 @@
 
 ## 2026-08-08
 
+### fix(tools): a version mention on a line was silencing a real claim on the same line
+
+`check_stale_versions` walks `STALE_VERSION_PATTERNS` in order and, when a match failed either the
+negation guard or the present-tense-marker guard, `break`-ed out of the whole list. Both guards
+judge *that version match*, not the line — so once #410 appended 1.4.5 and 1.4.6 after 1.3.15, a
+line carrying a historical mention and a live claim had the claim retired by the mention.
+
+`Historical: v1.3.15 shipped. The current target is Bannerlord 1.4.5.` reported nothing. Neither did
+`Built for ~1.2.12, NOT 1.4.5. The current target is 1.4.6.` Both now report. The pin guard keeps
+its `break` — naming the pin is a property of the sentence, so one contrast covers every version in
+it.
+
+This is the failure mode worth more than a false positive: a check that stops reporting says nothing
+about having stopped. Three regression tests, each confirmed to fail with the `continue` reverted.
+
+### docs(nativeskinfixes): the shipped signatures are v1.4.6 provenance, not a live binding
+
+`native-skin-fixes.md` claimed all 7 signatures were "statically verified against the installed
+v1.4.6 `TaleWorlds.Native.dll`". The installed engine is v1.4.7. #410 rewrote the heading one line
+above this into provenance and left the stronger, present-tense claim standing — where the widened
+checker could not see it, because `installed` is not one of its markers.
+
+Adding that marker was tried and deliberately not shipped. It reports 8 findings, all genuine, but
+`reflection-sites.md:66` ("all 32 resolve against installed v1.4.5") and `battle-scenes.md:7` are
+binding-verification claims that want re-deriving against the pin, not rewording — `/verify-bindings`
+work, not prose. Shipping the marker first would invite the wrong fix. The reasoning sits at the
+marker site so the next reader does not re-derive it.
+
 ### docs(tools): three counts in the game-dir paragraph, corrected by counting
 
 `tools/README.md`'s `BANNERLORD_GAME_DIR` paragraph advertises counted numbers, and all three were

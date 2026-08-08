@@ -124,9 +124,14 @@ The six byte patterns scanned at boot. Each entry has:
 
 ### Shipped values (authored 2026-06-30 against Bannerlord v1.4.6)
 
-All 7 signatures are authored + statically verified against the installed v1.4.6
-`TaleWorlds.Native.dll` (each is a single match at the RVA below). See the
+All 7 signatures were authored + statically verified against Bannerlord v1.4.6's
+`TaleWorlds.Native.dll` (each was a single match at the RVA below). See the
 "v1.4.6 native port" section below for the method and the RVA/verification map.
+
+**They have not been re-verified since; the engine has moved to v1.4.7.** The feature is PARKED and
+disabled at the wiring level (2026-07-08), so nothing loads these signatures today. Treat every RVA
+and pattern below as provenance from that port, not as a live binding, and re-derive them against
+the engine in `.claude/pinned-game-version.txt` before re-enabling.
 
 | Signature | v1.4.6 RVA | How pinned |
 |-----------|-----------|-----------|
