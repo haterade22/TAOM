@@ -13,13 +13,17 @@ Usage: python tools/rebuild_translation_files.py --lang RU
 
 import argparse
 import json
+import os
 import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-GAME_ROOT = Path(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules")
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+GAME_ROOT = Path(GAME) / "Modules"
 
 LANGUAGES = {
     "BR":  ("por-BR", "Portuguese (Brazilian)"),

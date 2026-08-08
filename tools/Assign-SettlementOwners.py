@@ -36,7 +36,10 @@ import re
 import sys
 from collections import Counter
 
-ROOT = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\ModuleData"
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+ROOT = GAME + r"\Modules\TAOM_Map\ModuleData"
 SETTLEMENTS = os.path.join(ROOT, "settlements.xml")
 
 # ---------------------------------------------------------------------------

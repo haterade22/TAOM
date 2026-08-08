@@ -499,7 +499,10 @@ if len(set(NAMES.values())) != len(NAMES.values()):
     raise SystemExit("Duplicate names; aborting")
 print("All names unique.")
 
-ROOT = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\ModuleData"
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+ROOT = GAME + r"\Modules\TAOM_Map\ModuleData"
 LANGS = ["BR", "CNs", "CNt", "DE", "FR", "IT", "JP", "KO", "PL", "RU", "SP", "TR"]
 
 

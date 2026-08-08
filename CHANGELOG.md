@@ -31,6 +31,43 @@ of the class recorded in this file; the discipline that prevents it is in CLAUDE
 
 ## 2026-08-07
 
+### fix(tools): the ten tools that write into the game install now honour BANNERLORD_GAME_DIR (#404)
+
+#401 fixed the five diagnostics that only read. The tools that *write* are the sharper edge: with the
+literal wrong they do not fail, they edit whichever install
+`E:\Steam\steamapps\common\Mount & Blade II Bannerlord` happens to name. Seven of them write under
+`TAOM_Map`, where the repo copy is a stale shadow and the live module is authoritative, so a write to
+the wrong root is silent.
+
+Each now resolves `os.environ.get("BANNERLORD_GAME_DIR") or <existing literal>` and derives its path
+from that. The `or` form rather than #401's `get(VAR, default)` because an exported-but-blank variable
+returns `""` and `Path("")` is `.` — #404 point 4. The literal stays as the fallback, so behaviour is
+unchanged where the variable is unset.
+
+The read/write split in the issue is 9/4; resolving every write call to its target root makes it
+10/3. `clan_registry.py` only reads the game (vanilla `spclans.xml`, line 87) and writes to
+`docs/reviews/_clan_registry.json` inside the repo, so it moves out of the writers.
+`rebuild_translation_files.py` and `remap_stale_scene_names.py`, both listed as readers, move in:
+the first writes `loc_settlements.xml` and the Armory `loc_*.xml` files straight into the install with
+no `--apply` gate, the second rewrites the live `settlements.xml` under `--apply`. Of the four listed
+readers only `audit_item_refs.py` (no write calls at all) and `apply_erebor_equipment_sweep.py` (reads
+the install, writes `Main/_Module/.../troops_erebor.xml` in the repo) actually are ones.
+
+Verified against a throwaway `Modules` tree holding copies of the two affected `ModuleData` folders
+(515 files), with an MD5 manifest of the real install taken before and after every round: unchanged
+throughout. Output is identical to the previous version both unset and with the variable
+set to the tool's own literal — the only diffs were traceback line numbers, shifted by the added
+lines. The control run matters more than the pass: with the fix reverted and the variable pointing at
+the throwaway tree, none of the ten touch it; with the fix in place, seven write there (the other
+three no-op for their own reasons — idempotent, nothing to roll back, and assets absent from this
+install).
+
+One pre-existing behaviour left alone as out of scope for this change: pointed at a root that does not
+exist, `rebuild_translation_files.py` creates the whole
+`Modules/LOTRLOME_Armory/ModuleData/Languages/<lang>` chain there and exits 0.
+`rollback_erebor_iron_misfile.py` and `cleanup_deleted_gondor_armor.py` also exit 0 on a wrong root
+while doing nothing. That is the case #404 point 4 wants a shared helper for.
+
 ### fix(troopweight): shed-on-upgrade was deleting every settlement's militia down to ~20
 
 A player reported that every settlement held between 20 and 26 militia and stayed there, while the
