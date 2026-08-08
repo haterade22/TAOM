@@ -10,13 +10,18 @@ Usage:
 """
 
 import argparse
+import os
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+# The E:/repos asset-repo entry is a different concept and keeps its own literal.
+GAME = os.environ.get("BANNERLORD_GAME_DIR") or "E:/Steam/steamapps/common/Mount & Blade II Bannerlord"
 ARMORY_PATHS = [
     Path("E:/repos/lotraom-assets/shared/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor"),
-    Path("E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor"),
+    Path(GAME) / "Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor",
 ]
 
 # Item IDs to remove, grouped by source XML file

@@ -17,10 +17,10 @@ import os
 import re
 import sys
 
-EREBOR_DIR = (
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-    r"\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\erebor"
-)
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+EREBOR_DIR = GAME + r"\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\erebor"
 
 # Section header inserted by generate_erebor_armor.py
 SECTION_RE = re.compile(

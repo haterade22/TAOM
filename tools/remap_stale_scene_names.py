@@ -18,10 +18,14 @@ Usage:
 """
 from __future__ import annotations
 import argparse
+import os
 import re
 from pathlib import Path
 
-GAME = Path(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
+# BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
+# The literal stays as the fallback so behaviour is unchanged where it is not set.
+GAME = Path(os.environ.get("BANNERLORD_GAME_DIR")
+            or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 MODULES = GAME / "Modules"
 LIVE = MODULES / "TAOM_Map" / "ModuleData" / "settlements.xml"
 SHADOW = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "settlements.xml"
