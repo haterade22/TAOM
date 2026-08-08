@@ -18,6 +18,9 @@ public sealed class PlayerPresenceSnapshot
     /// <summary>True when MainParty.AttachedTo is set. Blocks encounters (EncounterManager:38).</summary>
     public bool IsAttachedToParty { get; }
 
+    /// <summary>Leader party of the army the PLAYER belongs to, or null. Compared against the commander's.</summary>
+    public string ArmyLeaderPartyId { get; }
+
     /// <summary>True when a PlayerEncounter is live. Blocks ALL further main-party encounters (EncounterManager:38).</summary>
     public bool HasPlayerEncounter { get; }
 
@@ -56,7 +59,7 @@ public sealed class PlayerPresenceSnapshot
             ? "mainParty=MISSING"
             : $"active={IsActive} visible={IsVisible} attachedTo={IsAttachedToParty} " +
               $"inMapEvent={IsInMapEvent} playerEncounter={HasPlayerEncounter} " +
-              $"settlement={SettlementId ?? "-"} captive={IsCaptive} " +
+              $"settlement={SettlementId ?? "-"} army={ArmyLeaderPartyId ?? "-"} captive={IsCaptive} " +
               $"distToCommander={(DistanceToCommander < 0 ? "?" : DistanceToCommander.ToString("F1"))} " +
               $"=> parked={LooksParked} encountersBlocked={EncountersBlocked}";
 
@@ -69,7 +72,8 @@ public sealed class PlayerPresenceSnapshot
         bool isInMapEvent = false,
         bool isAttachedToParty = false,
         bool hasPlayerEncounter = false,
-        float distanceToCommander = -1f)
+        float distanceToCommander = -1f,
+        string armyLeaderPartyId = null)
     {
         MainPartyExists = mainPartyExists;
         IsCaptive = isCaptive;
@@ -80,5 +84,6 @@ public sealed class PlayerPresenceSnapshot
         IsAttachedToParty = isAttachedToParty;
         HasPlayerEncounter = hasPlayerEncounter;
         DistanceToCommander = distanceToCommander;
+        ArmyLeaderPartyId = armyLeaderPartyId;
     }
 }

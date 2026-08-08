@@ -491,6 +491,26 @@ without MCM reads the JSON, a player with MCM at default reads the literal, and 
 describe the same game. A test fails the build if they drift, which is the kind of split that is
 otherwise invisible because the test host never has MCM loaded.
 
+### fix(enlistment): the commander feeds his soldiers — enlisted players were starving
+
+Reported in-game at 19% HP and not recovering. `DefaultPartyHealingModel` explains it exactly: a
+mobile party heals its heroes **+11 HP/day**, *but*
+`if (party.IsStarving && CurrentSettlement == null) return -19f` — a starving hero **loses** 19 HP a
+day. An enlisted player is a single hero parked in the field for days with whatever food they
+happened to be carrying. When it runs out they stop healing and start dying.
+
+Mechanically the player is not in the commander's party, so the baggage train that feeds every
+other soldier in the column does not feed them. The daily tick now tops their rations back up to a
+three-day floor. A floor rather than a handout, so it cannot be farmed as a supply source, and a
+discharge leaves a couple of days' food rather than a full larder.
+
+This was a KNOWN unresolved question, not a surprise: `docs/features/enlistment.md`'s in-game
+checklist listed *"food/wage/morale ticks for inactive MainParty"* as owed and never run. It has
+now been run, by a player, at 19% health.
+
+Suite 6084 green.
+
+Research: DefaultPartyHealingModel.GetDailyHealingHpForHeroes starving branch
 ### fix(enlistment): stop teleporting the player between towns when the commander is in an army
 
 Reported in-game as "still being left behind". The log said otherwise — `SYNC ok (drift 0.00)` on

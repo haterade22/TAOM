@@ -22,6 +22,13 @@ public sealed class CommanderSnapshot
     /// <summary>The commander's party is besieging something — distinct from being in a battle.</summary>
     public bool PartyIsBesieging { get; }
 
+    /// <summary>
+    /// StringId of the leader party of the army the commander belongs to, or null when he has
+    /// none. Identity, not a flag: joining requires knowing WHICH army, and leaving requires
+    /// knowing whether the one we are in is still his.
+    /// </summary>
+    public string ArmyLeaderPartyId { get; }
+
     /// <summary>Which vanilla menu a discharge into this settlement should open: town / castle / village.</summary>
     public string SettlementMenuId { get; }
     public string CultureId { get; }
@@ -41,6 +48,7 @@ public sealed class CommanderSnapshot
         string settlementId = null,
         string settlementName = null,
         bool partyIsBesieging = false,
+        string armyLeaderPartyId = null,
         string settlementMenuId = null,
         string cultureId = null,
         string factionId = null,
@@ -56,6 +64,7 @@ public sealed class CommanderSnapshot
         SettlementId = settlementId;
         SettlementName = settlementName;
         PartyIsBesieging = partyIsBesieging;
+        ArmyLeaderPartyId = armyLeaderPartyId;
         SettlementMenuId = settlementMenuId;
         CultureId = cultureId;
         FactionId = factionId;

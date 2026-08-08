@@ -277,7 +277,8 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
                 isInMapEvent: main.MapEvent != null,
                 isAttachedToParty: main.AttachedTo != null,
                 hasPlayerEncounter: PlayerEncounter.Current != null,
-                distanceToCommander: string.IsNullOrEmpty(commanderHeroId) ? -1f : GetDistanceToCommander(commanderHeroId));
+                distanceToCommander: string.IsNullOrEmpty(commanderHeroId) ? -1f : GetDistanceToCommander(commanderHeroId),
+                armyLeaderPartyId: main.Army?.LeaderParty?.StringId);
         }
         catch (Exception ex)
         {

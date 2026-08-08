@@ -20,6 +20,7 @@ public class EnlistmentDailyServiceTests
     private IArmyRhythmSnapshotService _rhythm = null!;
     private IHeroSkillXpAdapter _skillXp = null!;
     private PromotionService _promotion = null!;
+    private IDutyWorldAdapter _world = null!;
     private EnlistmentDailyService _service = null!;
 
     [TestInitialize]
@@ -36,7 +37,8 @@ public class EnlistmentDailyServiceTests
         _rhythm.GetSnapshot(Arg.Any<double>(), Arg.Any<double>()).Returns(new ArmyRhythmSnapshot());
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
         _promotion = new PromotionService(_contentStore, _config, _skillXp, _store, _logger);
-        _service = new EnlistmentDailyService(_store, _contentStore, _config, _rewards, _rhythm, _skillXp, _promotion, _logger);
+        _world = Substitute.For<IDutyWorldAdapter>();
+        _service = new EnlistmentDailyService(_store, _contentStore, _config, _rewards, _rhythm, _skillXp, _promotion, _world, _logger);
     }
 
     private void MakeEnlisted(double contractEnd = 465.0)
@@ -132,5 +134,76 @@ public class EnlistmentDailyServiceTests
         Assert.AreEqual((int)ServiceRank.Soldier, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Soldier);
         Assert.AreEqual((int)ServiceRank.Veteran, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Veteran);
         Assert.AreEqual((int)ServiceRank.Sergeant, (int)TAOM.Features.Enlistment.Equipment.EnlistmentRank.Sergeant);
+    }
+}
+
+/// <summary>
+/// The commander feeds his soldiers. Reported in-game 2026-08-08: the player sat at 19% HP and
+/// would not recover.
+/// </summary>
+[TestClass]
+public class EnlistmentProvisioningTests
+{
+    private IDutyWorldAdapter _world = null!;
+    private EnlistmentStore _store = null!;
+    private EnlistmentContentStore _content = null!;
+    private EnlistmentDailyService _service = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        var logger = Substitute.For<IModLogger>();
+        _world = Substitute.For<IDutyWorldAdapter>();
+        _store = new EnlistmentStore(logger);
+        _content = new EnlistmentContentStore(logger);
+        var config = Substitute.For<IEnlistmentContentConfigProvider>();
+        config.GetConfig().Returns(EnlistmentContentConfigProvider.BuildDefaults());
+        var promotion = Substitute.For<IPromotionService>();
+        promotion.EvaluateAndApply().Returns(new PromotionOutcome());
+        var rhythm = Substitute.For<IArmyRhythmSnapshotService>();
+        rhythm.GetSnapshot(Arg.Any<double>(), Arg.Any<double>()).Returns(new ArmyRhythmSnapshot());
+
+        _service = new EnlistmentDailyService(
+            _store, _content, config, Substitute.For<IServiceRewardService>(), rhythm,
+            Substitute.For<IHeroSkillXpAdapter>(), promotion, _world, logger);
+
+        _store.Record.State = EnlistmentState.EnlistedAttached;
+        _store.Record.EnlistedHeroId = "main_hero";
+        _store.Record.CommanderHeroId = "lord_1";
+        _store.Record.EnlistedAtDay = 0.0;
+    }
+
+    [TestMethod]
+    public void RunDailyTick_OutOfFood_IsProvisioned()
+    {
+        // DefaultPartyHealingModel: a mobile party heals heroes +11 HP/day, BUT a STARVING party
+        // with no settlement returns -19f — the hero loses health every day instead of recovering.
+        // An enlisted player is one hero parked in the field; nothing else feeds them.
+        _world.CountPlayerFood().Returns(0);
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.Received(1).GrantPlayerFood(3);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_AlreadyFed_GrantsNothing()
+    {
+        // Not a daily handout: it tops up to a floor, so it cannot be farmed as a supply source.
+        _world.CountPlayerFood().Returns(5);
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.DidNotReceiveWithAnyArgs().GrantPlayerFood(default);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_PartiallyFed_ToppedUpToTheFloorOnly()
+    {
+        _world.CountPlayerFood().Returns(1);
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.Received(1).GrantPlayerFood(2);
     }
 }
