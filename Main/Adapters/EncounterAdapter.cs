@@ -253,7 +253,10 @@ public sealed class EncounterAdapter : IEncounterAdapter
         }
     }
 
-    public bool Finish(bool forcePlayerOutFromSettlement = false)
+    // NO DEFAULT, deliberately. The engine's own default is TRUE; this once defaulted to false,
+    // the exact inverted polarity that let call sites silently skip LeaveSettlement(). Every
+    // caller states its intent.
+    public bool Finish(bool forcePlayerOutFromSettlement)
     {
         try
         {

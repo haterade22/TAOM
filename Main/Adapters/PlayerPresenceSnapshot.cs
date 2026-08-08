@@ -34,6 +34,19 @@ public sealed class PlayerPresenceSnapshot
     /// </summary>
     public bool IsHeldInsideSettlement => MainPartyExists && !string.IsNullOrEmpty(SettlementId);
 
+    /// <summary>
+    /// A DIAGNOSTIC approximation of EncounterManager.HandleEncounterForMobileParty's refusal
+    /// gate — deliberately not an exact mirror, and never a decision input.
+    ///
+    /// Verified against installed v1.4.7, the engine's real gate has two clauses this cannot see:
+    /// a BESIEGING party is also refused unless its ShortTermBehavior is AssaultSettlement, and
+    /// the `MainParty && PlayerEncounter.Current != null` term is nested under
+    /// `!IsCurrentlyEngagingParty && !IsCurrentlyEngagingSettlement` rather than standing alone.
+    /// So this under-reports the siege case and can over-report the encounter case.
+    ///
+    /// That is acceptable ONLY because nothing branches on it — it exists to make a log line
+    /// legible. Promoting it to a real gate requires fixing both gaps first.
+    /// </summary>
     public bool EncountersBlocked =>
         MainPartyExists && (!IsActive || IsAttachedToParty || IsInMapEvent || HasPlayerEncounter || IsHeldInsideSettlement);
 
