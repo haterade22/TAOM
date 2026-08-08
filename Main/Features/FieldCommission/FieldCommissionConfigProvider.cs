@@ -77,6 +77,8 @@ public class FieldCommissionConfigProvider : IFieldCommissionConfigProvider
             MeritPerKill = parsed.MeritPerKill,
             MeritThreshold = parsed.MeritThreshold,
             RetainerAllowance = parsed.RetainerAllowance,
+            MaxOffersPerBattle = parsed.MaxOffersPerBattle,
+            Diagnostics = parsed.Diagnostics,
             SkillPointsPerLevel = parsed.SkillPointsPerLevel,
             AllowedRaceNames = parsed.AllowedRaceNames,
         };
@@ -116,6 +118,15 @@ public class FieldCommissionConfigProvider : IFieldCommissionConfigProvider
         {
             _logger.LogWarning($"FieldCommissionConfigProvider: retainerAllowance={sanitized.RetainerAllowance} must be >= 0, reverting to default {defaults.RetainerAllowance}");
             sanitized.RetainerAllowance = defaults.RetainerAllowance;
+            rejected = true;
+        }
+
+        // 0 would read as "promotions are on" while silently queueing nothing — a setting that lies
+        // about what it does. The master toggle is the honest way to turn the feature off.
+        if (sanitized.MaxOffersPerBattle < 1)
+        {
+            _logger.LogWarning($"FieldCommissionConfigProvider: maxOffersPerBattle={sanitized.MaxOffersPerBattle} must be >= 1, reverting to default {defaults.MaxOffersPerBattle}");
+            sanitized.MaxOffersPerBattle = defaults.MaxOffersPerBattle;
             rejected = true;
         }
 

@@ -45,7 +45,16 @@ public class FieldCommissionOfferFlowService : IFieldCommissionOfferFlowService
             return;
 
         IsShowingOffer = true;
-        _presenter.ShowPromotionOffer(offer.TroopName, () => OnAccepted(offer), () => Close());
+        _presenter.ShowPromotionOffer(offer.TroopName, () => OnAccepted(offer), () => OnDeclined(offer));
+    }
+
+    private void OnDeclined(PendingPromotionOffer offer)
+    {
+        // Merit is untouched (bug fix (a)) — but the refusal is remembered, so this troop type has to
+        // distinguish itself again before it asks a second time. Otherwise the bank still clears the
+        // threshold after the next won battle and the same prompt returns, indefinitely.
+        _merit.RecordDeclinedOffer(offer.TroopId);
+        Close();
     }
 
     private void OnAccepted(PendingPromotionOffer offer)
@@ -85,11 +94,19 @@ public class FieldCommissionOfferFlowService : IFieldCommissionOfferFlowService
             return;
         }
 
-        _roster.RemoveOneFromRoster(offer.TroopId);
+        // The adapter refuses to build a hero unless the troop is still in the roster, so a false
+        // here means the roster changed underneath a completed promotion. Nothing can be rolled back
+        // at this point — the hero exists — but it must not pass silently, because the symptom
+        // players see is a companion who appeared without a soldier disappearing.
+        if (!_roster.RemoveOneFromRoster(offer.TroopId))
+            _logger?.LogWarning($"[FieldCommission] promoted {offer.TroopId} but the roster decrement failed — party count is now one too high");
+
         _merit.CompleteOffer(offer.TroopId);
         _merit.RecordPromotedHero(heroId);
         Close();
     }
+
+    public void Reset() => IsShowingOffer = false;
 
     private void Close() => IsShowingOffer = false;
 }

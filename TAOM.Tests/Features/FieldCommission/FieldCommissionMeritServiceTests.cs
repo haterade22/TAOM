@@ -32,6 +32,10 @@ public class FieldCommissionMeritServiceTests
         {
             MeritPerKill = 1,
             MeritThreshold = 8,
+            // Deliberately far above the shipped default of 1. Most tests here are about merit
+            // arithmetic and the per-troop roster cap; leaving the battle cap at 1 would mask those
+            // by truncating every result to a single offer. The cap has its own tests below.
+            MaxOffersPerBattle = 99,
             AllowedRaceNames = new List<string> { "human", "dwarf", "elf" },
         };
         _configProvider.GetConfig().Returns(_config);
@@ -213,6 +217,306 @@ public class FieldCommissionMeritServiceTests
         var offers = _sut.EndBattle(true);
 
         Assert.AreEqual(2, offers.Count);
+    }
+
+    // --- Offers-per-battle cap ---
+
+    [TestMethod]
+    public void EndBattle_MoreOffersEarnedThanCapAllows_QueuesOnlyTheCap()
+    {
+        // The defect this pins: every queued offer is a separate game-pausing modal inquiry, and the
+        // tick pump shows them back to back. Uncapped, one big won battle reads to the player as the
+        // game locking up behind a wall of dialogs.
+        _config.MaxOffersPerBattle = 2;
+        _roster.GetRosterSnapshot().Returns(new Dictionary<string, int> { ["troop_a"] = 10 });
+        _sut.BeginBattle(true);
+        for (var i = 0; i < 80; i++) // 80 merit / 8 = 10 possible offers
+            _sut.RegisterKill("troop_a");
+
+        SetupHumanTroop("troop_a");
+        _roster.GetTroopCount("troop_a").Returns(10);
+
+        var offers = _sut.EndBattle(true);
+
+        Assert.AreEqual(2, offers.Count);
+    }
+
+    [TestMethod]
+    public void EndBattle_CapReached_MeritAboveTheCapStaysBanked()
+    {
+        // The cap throttles presentation, it must never destroy earned merit — otherwise capping
+        // would quietly be a nerf rather than a pacing fix.
+        _config.MaxOffersPerBattle = 1;
+        _roster.GetRosterSnapshot().Returns(new Dictionary<string, int> { ["troop_a"] = 10 });
+        _sut.BeginBattle(true);
+        for (var i = 0; i < 80; i++)
+            _sut.RegisterKill("troop_a");
+
+        SetupHumanTroop("troop_a");
+        _roster.GetTroopCount("troop_a").Returns(10);
+
+        _sut.EndBattle(true);
+
+        Assert.AreEqual(80, _sut.GetMerit("troop_a"));
+    }
+
+    [TestMethod]
+    public void EndBattle_CapReachedOnFirstTroop_LaterTroopsStillBankTheirMerit()
+    {
+        // The donor mod's hard-won lesson, re-pinned: the scan must keep RUNNING once the offer
+        // budget is spent. An early return here would silently discard the kills of every troop type
+        // ordered after the first promotable one.
+        _config.MaxOffersPerBattle = 1;
+        _roster.GetRosterSnapshot().Returns(new Dictionary<string, int> { ["troop_a"] = 10, ["troop_b"] = 10 });
+        _sut.BeginBattle(true);
+        for (var i = 0; i < 40; i++)
+            _sut.RegisterKill("troop_a"); // highest kills — scanned first
+        for (var i = 0; i < 16; i++)
+            _sut.RegisterKill("troop_b");
+
+        SetupHumanTroop("troop_a");
+        SetupHumanTroop("troop_b");
+        _roster.GetTroopCount("troop_a").Returns(10);
+        _roster.GetTroopCount("troop_b").Returns(10);
+
+        var offers = _sut.EndBattle(true);
+
+        Assert.AreEqual(1, offers.Count, "budget is one offer for the whole battle");
+        Assert.AreEqual("troop_a", offers[0].TroopId);
+        Assert.AreEqual(16, _sut.GetMerit("troop_b"), "troop_b earned no offer but must keep its merit");
+    }
+
+    [TestMethod]
+    public void EndBattle_CapBelowOne_TreatedAsOne()
+    {
+        // Defence in depth. The config provider and the MCM clamp both reject < 1, so this can only
+        // arrive from a future caller — and a 0 here would read as "promotions on" while queueing
+        // nothing, which is the one failure mode a master toggle exists to make impossible.
+        _config.MaxOffersPerBattle = 0;
+        _roster.GetRosterSnapshot().Returns(new Dictionary<string, int> { ["troop_a"] = 10 });
+        _sut.BeginBattle(true);
+        for (var i = 0; i < 8; i++)
+            _sut.RegisterKill("troop_a");
+
+        SetupHumanTroop("troop_a");
+        _roster.GetTroopCount("troop_a").Returns(10);
+
+        var offers = _sut.EndBattle(true);
+
+        Assert.AreEqual(1, offers.Count);
+    }
+
+    // --- Declining suppresses the re-offer ---
+
+    /// <summary>
+    /// Wins one eligible battle in which <paramref name="troopId"/> scores <paramref name="kills"/>
+    /// kills, with <paramref name="rosterCount"/> of that type still standing afterwards.
+    /// </summary>
+    private IReadOnlyList<PendingPromotionOffer> WinBattle(string troopId, int kills, int rosterCount = 10)
+    {
+        _roster.GetRosterSnapshot().Returns(new Dictionary<string, int> { [troopId] = rosterCount });
+        _sut.BeginBattle(true);
+        for (var i = 0; i < kills; i++)
+            _sut.RegisterKill(troopId);
+
+        SetupHumanTroop(troopId);
+        _roster.GetTroopCount(troopId).Returns(rosterCount);
+        return _sut.EndBattle(true);
+    }
+
+    [TestMethod]
+    public void EndBattle_AfterDecline_DoesNotReOfferUntilAnotherThresholdIsEarned()
+    {
+        // Merit is never spent on a refusal, and merit only ever grows — so without a decline mark
+        // the queue condition (bank >= threshold) stays true forever and the same soldier is
+        // proposed again after every won battle. That is the nag the player cannot switch off.
+        WinBattle("troop_a", 8);          // 8 merit -> 1 offer
+        _sut.TryDequeueOffer(out var offer);
+        _sut.RecordDeclinedOffer(offer.TroopId);
+
+        var second = WinBattle("troop_a", 4);   // now 12 merit: still under 8 + 8
+
+        Assert.AreEqual(0, second.Count);
+        Assert.AreEqual(12, _sut.GetMerit("troop_a"), "merit keeps accruing — declining costs nothing");
+    }
+
+    [TestMethod]
+    public void EndBattle_AfterDecline_OffersAgainOnceAnotherThresholdIsEarned()
+    {
+        // The other half of the contract: the refusal delays the ask, it must not end it.
+        // Pinned at the shipped cap of 1 so this measures the decline mark, not the batch budget —
+        // 16 merit at a threshold of 8 genuinely backs two promotions.
+        _config.MaxOffersPerBattle = 1;
+        WinBattle("troop_a", 8);
+        _sut.TryDequeueOffer(out var offer);
+        _sut.RecordDeclinedOffer(offer.TroopId);
+
+        var second = WinBattle("troop_a", 8);   // 16 merit >= 8 + 8
+
+        Assert.AreEqual(1, second.Count);
+    }
+
+    [TestMethod]
+    public void CompleteOffer_ClearsAnEarlierDeclineMark()
+    {
+        // Accepting means the player changed their mind about this troop type; the next soldier who
+        // distinguishes themselves should be judged on their own merit, not against a stale refusal.
+        WinBattle("troop_a", 8);
+        _sut.TryDequeueOffer(out var declined);
+        _sut.RecordDeclinedOffer(declined.TroopId);
+        _sut.CompleteOffer("troop_a"); // -8 -> 0 merit, mark cleared
+
+        var next = WinBattle("troop_a", 8); // back to 8
+
+        Assert.AreEqual(1, next.Count);
+    }
+
+    [TestMethod]
+    public void RecordDeclinedOffer_NullOrEmptyTroopId_IsANoOp()
+    {
+        _sut.RecordDeclinedOffer(null);
+        _sut.RecordDeclinedOffer(string.Empty);
+
+        Assert.AreEqual(0, _sut.ExportDeclinedMarks().Count);
+    }
+
+    [TestMethod]
+    public void ImportDeclinedMarks_RoundTripsThroughExport()
+    {
+        _sut.ImportDeclinedMarks(new Dictionary<string, int> { ["troop_a"] = 16 });
+
+        CollectionAssert.AreEqual(
+            new Dictionary<string, int> { ["troop_a"] = 16 },
+            _sut.ExportDeclinedMarks());
+    }
+
+    [TestMethod]
+    public void ImportDeclinedMarks_Null_ClearsMarks()
+    {
+        // A save written before the decline mark existed leaves SyncData's ref null. That must read
+        // as "nothing declined", not throw and not keep the previous campaign's marks.
+        _sut.ImportDeclinedMarks(new Dictionary<string, int> { ["troop_a"] = 16 });
+
+        _sut.ImportDeclinedMarks(null);
+
+        Assert.AreEqual(0, _sut.ExportDeclinedMarks().Count);
+    }
+
+    [TestMethod]
+    public void EndBattle_MeritTransferredToHeir_DropsTheSourceTypesDeclineMark()
+    {
+        // A decline mark is an ABSOLUTE merit level. When the bank behind it is emptied or moved to
+        // an upgraded heir, a surviving mark measures the next offer against a total the type no
+        // longer has — and marks are only cleared by a completed promotion, so that type could never
+        // be offered again. Bought by re-recruiting the old tier after upgrading a stack.
+        WinBattle("troop_a", 24, rosterCount: 5);
+        _sut.TryDequeueOffer(out var offer);
+        _sut.RecordDeclinedOffer(offer.TroopId);        // mark at 24
+        Assert.AreEqual(24, _sut.ExportDeclinedMarks()["troop_a"]);
+
+        // troop_a upgrades out of the party entirely; its merit moves to troop_b.
+        _roster.GetRosterSnapshot().Returns(new Dictionary<string, int> { ["troop_a"] = 5 });
+        _sut.BeginBattle(true);
+        _sut.RegisterKill("troop_a");
+        SetupHumanTroop("troop_a");
+        SetupHumanTroop("troop_b");
+        _roster.GetTroopCount("troop_a").Returns(0);
+        _roster.GetTroopCount("troop_b").Returns(5);
+        _roster.GetUpgradeTargetIds("troop_a").Returns(new[] { "troop_b" });
+        _sut.EndBattle(true);
+
+        CollectionAssert.DoesNotContain(_sut.ExportDeclinedMarks().Keys.ToList(), "troop_a");
+        Assert.AreEqual(0, _sut.GetMerit("troop_a"));
+        Assert.AreEqual(25, _sut.GetMerit("troop_b"), "the merit itself must still reach the heir");
+    }
+
+    // --- Outstanding offers are debited against the bank ---
+
+    [TestMethod]
+    public void EndBattle_OffersStillQueued_DoesNotIssueMoreThanTheBankCanBack()
+    {
+        // Two won eligible battles inside one uninterrupted encounter (siege sally-outs do this) both
+        // score before the tick pump gets to show anything. Reading the raw bank twice would issue two
+        // offers backed by one threshold's worth of merit, and CompleteOffer's Math.Max(0, ...) would
+        // hide the shortfall by charging the second one nothing.
+        _config.MaxOffersPerBattle = 99;
+        WinBattle("troop_a", 8);              // 8 merit -> 1 offer queued, NOT dequeued
+        Assert.IsTrue(_sut.HasPendingOffers);
+
+        var second = WinBattle("troop_a", 1); // 9 merit, but 8 of it is already spoken for
+
+        Assert.AreEqual(0, second.Count);
+    }
+
+    [TestMethod]
+    public void EndBattle_OffersQueuedButBankCoversBoth_IssuesTheSecond()
+    {
+        // The mirror: the debit must not become a blanket "never queue while anything is pending".
+        _config.MaxOffersPerBattle = 99;
+        WinBattle("troop_a", 8);
+        Assert.IsTrue(_sut.HasPendingOffers);
+
+        var second = WinBattle("troop_a", 8); // 16 merit backs two offers
+
+        Assert.AreEqual(1, second.Count);
+    }
+
+    // --- Diagnostics gate ---
+
+    [TestMethod]
+    public void Trace_DiagnosticsOff_WritesNothing()
+    {
+        _config.Diagnostics = false;
+
+        WinBattle("troop_a", 8);
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Trace_DiagnosticsOn_LogsBattleAndMeritAndOffer()
+    {
+        // The switch exists so a player's next log answers "did this battle count, did the troop earn
+        // merit, was an offer raised" without another round trip. Assert all three actually appear.
+        _config.Diagnostics = true;
+
+        WinBattle("troop_a", 8);
+
+        _logger.Received().LogInfo(Arg.Is<string>(m => m.Contains("battle started")));
+        _logger.Received().LogInfo(Arg.Is<string>(m => m.Contains("merit banked")));
+        _logger.Received().LogInfo(Arg.Is<string>(m => m.Contains("offer queued")));
+    }
+
+    // --- Pending-offer queue lifetime ---
+
+    [TestMethod]
+    public void ClearPendingOffers_QueuedOffers_QueueIsEmptiedAndMeritKept()
+    {
+        // The queue is un-persisted state on a process-lifetime singleton. Loading a second save
+        // without restarting must not inherit the first save's offers — but the merit bank is
+        // persisted per-save and must not be collateral damage.
+        _roster.GetRosterSnapshot().Returns(new Dictionary<string, int> { ["troop_a"] = 10 });
+        _sut.BeginBattle(true);
+        for (var i = 0; i < 8; i++)
+            _sut.RegisterKill("troop_a");
+        SetupHumanTroop("troop_a");
+        _roster.GetTroopCount("troop_a").Returns(10);
+        _sut.EndBattle(true);
+        Assert.IsTrue(_sut.HasPendingOffers, "precondition: an offer must actually be queued");
+
+        _sut.ClearPendingOffers();
+
+        Assert.IsFalse(_sut.HasPendingOffers);
+        Assert.IsFalse(_sut.TryDequeueOffer(out _));
+        Assert.AreEqual(8, _sut.GetMerit("troop_a"));
+    }
+
+    [TestMethod]
+    public void ClearPendingOffers_NothingQueued_IsANoOp()
+    {
+        _sut.ClearPendingOffers();
+
+        Assert.IsFalse(_sut.HasPendingOffers);
     }
 
     [TestMethod]

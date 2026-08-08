@@ -36,12 +36,29 @@ public interface IFieldCommissionMeritService
 
     bool HasPendingOffers { get; }
 
+    /// <summary>
+    /// Drops every queued-but-unshown offer. The queue is process-lifetime state on a singleton and
+    /// is deliberately NOT persisted, so it must be emptied whenever the campaign underneath it
+    /// changes — otherwise an offer earned in one save surfaces in the next one loaded in the same
+    /// session, promoting a troop the player does not have. Banked merit is untouched.
+    /// </summary>
+    void ClearPendingOffers();
+
     bool TryDequeueOffer(out PendingPromotionOffer offer);
 
     /// <summary>Deducts exactly one MeritThreshold's worth of banked merit for
     /// <paramref name="troopId"/>. Call ONLY after a promotion has actually completed (hero
     /// created) — never for a declined, cancelled, or deferred offer.</summary>
     void CompleteOffer(string troopId);
+
+    /// <summary>
+    /// Records that the player said "not yet" to this troop type at its current merit. It must then
+    /// earn another full <c>MeritThreshold</c> before it may be offered again. Merit is NOT deducted
+    /// — declining costs the soldiers nothing, it only delays the next ask. Without this the offer
+    /// re-queues after every won battle, because merit only ever grows and the queue condition is
+    /// simply "bank >= threshold".
+    /// </summary>
+    void RecordDeclinedOffer(string troopId);
 
     int GetMerit(string troopId);
 
@@ -65,6 +82,10 @@ public interface IFieldCommissionMeritService
     Dictionary<string, int> ExportMerits();
 
     void ImportMerits(Dictionary<string, int> merits);
+
+    Dictionary<string, int> ExportDeclinedMarks();
+
+    void ImportDeclinedMarks(Dictionary<string, int> marks);
 
     List<string> ExportPromotedHeroIds();
 

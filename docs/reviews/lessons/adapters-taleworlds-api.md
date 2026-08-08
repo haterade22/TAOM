@@ -223,3 +223,24 @@ from the same review: do NOT blind-adopt a reviewer's "vanilla normalizes X" cla
 mount→rider normalization did not exist in the installed `Mission.cs` (Codex C1b, disputed).
 
 **Source:** `docs/reviews/rca-career-ux-arc-2026-08-05.md` Codex finding C1a.
+
+### `MBObjectManager.GetObject<Hero>` cannot resolve a hero built by `HeroCreator` at runtime
+
+`HeroCreator.CreateSpecialHero` ends in `new Hero(stringId, character, birthDay, deathDay)`, whose
+constructor calls `Campaign.Current.CampaignObjectManager.AddHero(this)`. `AddHero` hand-assigns
+`hero.Id = new MBGUID(32u, GetNextUniqueObjectIdOfType<Hero>())` and appends to
+`CampaignObjectManager`'s own `_aliveHeroes` list. It never calls `MBObjectManager.RegisterObject`,
+which is the only thing that populates the `StringId`-keyed dictionary `GetObject<T>(string)` walks.
+So the lookup compiles, reads correctly, and returns null for every runtime-created hero, forever.
+
+**Why missed:** the call site was a validity predicate (`IsHeroAliveAndValid`) whose failure mode is
+silence — it just reported every promoted companion invalid, and the load-time prune obediently
+emptied the list. Every OTHER hero-lookup adapter in the repo uses `Hero.AllAliveHeroes`; this one
+was the outlier and nobody diffed it against its siblings.
+
+**Prevent:** for any lookup of an entity your own code created at runtime, ask which registry the
+CREATION path wrote to, not which registry has the convenient API. When a repo has several adapters
+doing the same lookup, an inconsistent one is the finding — grep for the siblings before writing a
+new one. `Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == id)` is TAOM's convention.
+
+**Source:** `docs/reviews/rca-field-commission-2026-08-07.md` finding 5.

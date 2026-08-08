@@ -49,6 +49,8 @@ public class FieldCommissionConfigProviderTests
   ""meritPerKill"": 2,
   ""meritThreshold"": 10,
   ""retainerAllowance"": 3,
+  ""maxOffersPerBattle"": 4,
+  ""diagnostics"": true,
   ""skillPointsPerLevel"": 8,
   ""allowedRaceNames"": [""human""]
 }");
@@ -60,8 +62,26 @@ public class FieldCommissionConfigProviderTests
         Assert.AreEqual(2, config.MeritPerKill);
         Assert.AreEqual(10, config.MeritThreshold);
         Assert.AreEqual(3, config.RetainerAllowance);
+        Assert.AreEqual(4, config.MaxOffersPerBattle);
+        // Validate() rebuilds the config field-by-field, so a field added to the POCO but forgotten
+        // in that copy is silently dropped no matter what the file says. This assertion is the guard
+        // for that whole class of omission — it caught exactly that for `diagnostics`.
+        Assert.IsTrue(config.Diagnostics);
         Assert.AreEqual(8, config.SkillPointsPerLevel);
         CollectionAssert.AreEqual(new[] { "human" }, config.AllowedRaceNames);
+    }
+
+    [TestMethod]
+    public void GetConfig_MaxOffersPerBattleBelowOne_RevertsToDefaultAndWarns()
+    {
+        // 0 would read as "promotions enabled" while queueing nothing — the one state the master
+        // toggle exists to make explicit.
+        WriteConfig(@"{ ""maxOffersPerBattle"": 0 }");
+
+        var config = _sut.GetConfig();
+
+        Assert.AreEqual(1, config.MaxOffersPerBattle);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("maxOffersPerBattle=0")));
     }
 
     [TestMethod]

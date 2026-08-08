@@ -4,6 +4,8 @@
   "meritPerKill": 1,
   "meritThreshold": 8,
   "retainerAllowance": 0,
+  "maxOffersPerBattle": 1,
   "skillPointsPerLevel": 5,
+  "diagnostics": false,
   "allowedRaceNames": ["human", "dwarf", "elf"]
 }

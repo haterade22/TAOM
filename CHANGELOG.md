@@ -48,6 +48,82 @@ trimming 234 bodies at weighted 465 against limit 231.
 Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
 guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
 equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+### fix(fieldcommission): promotions asked once, remembered a refusal, and stopped following you between campaigns
+
+Players reported trouble with promoted companions. A 28-agent adversarial pass over the feature and
+the 1.4.7 decompile could **not** reproduce either reported symptom — it confirmed the opposite for
+the one that was checkable: a promoted companion does take the `MainPartyCompanion` branch of
+`DefaultHeroAgentLocationModel.GetLocationForHero`, and `AddCompanionAction` sets `CompanionOf`, so
+`Hero.Clan`, `MapFaction` and `IsPlayerCompanion` all resolve. They are talkable. What the pass did
+find was a pile of real defects around the offer flow, and the most likely thing a player would
+describe as "I can't deal with my promoted companions" is the first one below.
+
+**One won battle could raise dozens of prompts, and there was no cap.** `EndBattle` queued
+`min(rosterCount, merit / threshold)` offers for *every* troop type that scored a kill, and the tick
+pump shows each one as a separate modal inquiry with the game paused. A large winning battle with a
+mixed party therefore produced a queue of dialogs with no way to dismiss them in bulk. The donor mod
+capped this at one per battle; the port dropped the cap. `maxOffersPerBattle` (default 1) restores
+it, capping the battle rather than the troop, and the scan deliberately keeps running once the budget
+is spent so later troop types still bank their kills.
+
+**Declining did nothing.** Merit is never spent on a refusal — correct, and a deliberate fix to a
+donor bug — but merit only ever grows and the queue condition is just `bank >= threshold`, so the
+same soldier was proposed again after every won battle, forever. A per-troop decline mark now
+requires another full threshold before that type may ask again. It costs the soldiers nothing, and
+accepting clears it. The mark travels with the merit: when a stack upgrades and its bank moves to the
+heir, the mark goes too, or the old type could never be offered again.
+
+**The offer queue outlived the campaign.** It lives on a `Reuse.Singleton` service, is not persisted,
+and was cleared nowhere — so an offer still queued when you left a campaign surfaced in the next save
+loaded in the same session, proposing a soldier you do not have. The "an offer is on screen" latch
+had the same lifetime and only ever came down inside an inquiry callback, so any path that skipped
+one wedged the pump for the rest of the process. Both are now cleared at every session boundary,
+ahead of the load guard, while the persisted bank is left alone.
+
+**A promotion could conjure a companion from nobody.** `CreateCompanionFromTroop` never checked the
+troop was still in the roster, so if the last of that type died between the offer and the answer, the
+hero was created anyway, merit was deducted, and `RemoveOneFromRoster` returned `false` into a
+discarded variable. The precondition is back where the donor had it, and the decrement result is
+logged if it ever fails.
+
+**The promoted-hero list emptied itself on every load.** `IsHeroAliveAndValid` resolved through
+`MBObjectManager.GetObject<Hero>`, which cannot resolve these heroes at all —
+`CampaignObjectManager.AddHero` hand-assigns `hero.Id` and never calls `MBObjectManager.RegisterObject`,
+so every hero `HeroCreator` builds at runtime looks invalid to that lookup. The load-time prune
+therefore dropped all of them. Now `Hero.AllAliveHeroes`, matching every other adapter in the repo.
+
+Also: born settlement falls back through the player's settlement, then a town of the soldier's own
+culture, then any town, instead of leaving it null on the world map for the engine to pick at random;
+troops with no civilian equipment set (about 60, including every Dale troop) wear their own battle
+kit in town instead of vanilla's Calradian peasant tunic; focus points are clamped to
+`MaxFocusPerSkill`; upgrade-target walks skip heroes so merit cannot be parked under a hero id and
+stranded; and the offer pump waits while the player is a prisoner.
+
+**Not found, and worth stating plainly:** no cause for "no dialogue" or "crash on interaction" was
+proven in this feature. Eleven further hypotheses were refuted against the decompile. The new
+`[FieldCommission]` diagnostic trace (MCM: Battlefield Promotions → Promotion Diagnostics, off by
+default) exists so the next report arrives with the answer in the log rather than another round trip.
+
+### feat(fieldcommission): an MCM group, and an off switch that actually turns it off
+
+"Battlefield Promotions" (GroupOrder 43): a master toggle plus offers-per-battle, fair-fight ratio,
+merit per kill, merit to promote, companions-over-the-limit, and the diagnostics switch. Off is fully
+inert — no merit accrues, no offer is queued or shown — and fully reversible: banked merit stays in
+the save and companions already promoted are untouched.
+
+`FieldCommissionSettingsProvider` implements `IFieldCommissionConfigProvider` and decorates the JSON
+provider rather than exposing a parallel scalar surface like TAOM's other settings providers. Two
+reasons, both load-bearing: every consumer already reads several fields off one config object, so no
+constructor changes; and `GetConfig()` runs on the campaign tick, so the merged config is cached
+against a `FieldCommissionMcmSnapshot` value-equality key and allocates nothing while the sliders are
+still. Registration goes through `RegisterDelegate` with the dependency spelled out, so the decorator
+cannot resolve to itself.
+
+Every compiled MCM default has to equal its `field_commission_config.json` counterpart — a player
+without MCM reads the JSON, a player with MCM at default reads the literal, and those two must
+describe the same game. A test fails the build if they drift, which is the kind of split that is
+otherwise invisible because the test host never has MCM loaded.
+
 ### fix(enlistment): two terminal soft-locks, a frozen battle, and a latch that never recovered
 
 A five-agent deep review plus an adversarial Codex pass over batches 0–10. Twelve findings, all

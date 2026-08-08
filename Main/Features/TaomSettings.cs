@@ -385,6 +385,52 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Log the routine enlistment trace ([EnlistDiag] TICK, SYNC ok, PARK ok, and a line for every map event in the world) to the TAOM debug log. ON by default while the enlisted-service loop is being diagnosed — it produces thousands of lines per session, so turn it OFF for a quieter log once you are not chasing an enlistment problem. Real faults are always logged regardless of this setting, so [EnlistDiag] lines will still appear when it is off. Takes effect immediately; no restart. Default ON.")]
     public bool EnableEnlistmentDiagnostics { get; set; } = true;
 
+    // --- Battlefield Promotions (Field Commission) ---
+    // Every default here MUST equal its counterpart in
+    // Main/_Module/ModuleData/field_commission/field_commission_config.json — a player without MCM
+    // reads the JSON, a player with MCM at its shipped default reads these literals, and the two must
+    // describe the same game. FieldCommissionSettingsProviderTests.CompiledMcmDefaults_MatchShippedJsonDefaults
+    // fails the build if they drift.
+    //
+    // Turning the master switch OFF is fully inert and fully reversible: no merit accrues, no offer is
+    // queued or shown, and already-banked merit stays in the save. Companions already promoted are
+    // ordinary companions and are unaffected — nothing is taken back.
+
+    [SettingPropertyGroup("Battlefield Promotions", GroupOrder = 43)]
+    [SettingPropertyBool("Enable Battlefield Promotions", Order = 0, RequireRestart = false,
+        HintText = "Soldiers who do the killing in a hard-won battle can be promoted into named companions. Turn OFF to stop it entirely: no merit is earned, no promotion is ever offered. Companions you already promoted stay exactly as they are, and banked merit is kept in case you turn it back on. Takes effect immediately; no restart. Default ON.")]
+    public bool EnableFieldCommission { get; set; } = true;
+
+    [SettingPropertyGroup("Battlefield Promotions")]
+    [SettingPropertyInteger("Offers Per Battle", 1, 20, Order = 1, RequireRestart = false,
+        HintText = "The most promotion prompts a single won battle may raise. Each prompt pauses the game, so a large number after a large battle means a long queue of dialogs. Merit above the cap is not lost — it carries to the next battle. Default: 1.")]
+    public int FieldCommissionMaxOffersPerBattle { get; set; } = 1;
+
+    [SettingPropertyGroup("Battlefield Promotions")]
+    [SettingPropertyFloatingInteger("Fair-Fight Ratio", 0.1f, 3.0f, "#0.00", Order = 2, RequireRestart = false,
+        HintText = "How outnumbered you must be for a battle to count. Your party's healthy troops divided by the whole enemy side must come in UNDER this. 1.00 = only fights where you are outnumbered; higher = easier fights still earn merit. Default: 1.30.")]
+    public float FieldCommissionRatioThreshold { get; set; } = 1.3f;
+
+    [SettingPropertyGroup("Battlefield Promotions")]
+    [SettingPropertyInteger("Merit Per Kill", 1, 10, Order = 3, RequireRestart = false,
+        HintText = "Merit a troop type banks for each enemy its soldiers kill in a qualifying battle. Higher = faster promotions. Default: 1.")]
+    public int FieldCommissionMeritPerKill { get; set; } = 1;
+
+    [SettingPropertyGroup("Battlefield Promotions")]
+    [SettingPropertyInteger("Merit To Promote", 1, 100, Order = 4, RequireRestart = false,
+        HintText = "Merit a troop type must bank before it earns a promotion offer. Higher = rarer promotions. Default: 8.")]
+    public int FieldCommissionMeritThreshold { get; set; } = 8;
+
+    [SettingPropertyGroup("Battlefield Promotions")]
+    [SettingPropertyInteger("Companions Over The Limit", 0, 10, Order = 5, RequireRestart = false,
+        HintText = "How many promoted companions you may take beyond your clan tier's companion limit. 0 = the limit is strict and an offer waits until you have room. Default: 0.")]
+    public int FieldCommissionRetainerAllowance { get; set; } = 0;
+
+    [SettingPropertyGroup("Battlefield Promotions")]
+    [SettingPropertyBool("Promotion Diagnostics", Order = 6, RequireRestart = false,
+        HintText = "Write a detailed [FieldCommission] trace to the TAOM debug log — which battles counted, which troops earned merit, which offers were raised, and every completed promotion. Turn this on before reproducing a promotion problem so the log you send answers it. Real faults are logged regardless of this setting. Off by default.")]
+    public bool EnableFieldCommissionDiagnostics { get; set; } = false;
+
     // --- Messengers ---
 
     [SettingPropertyGroup("Messengers", GroupOrder = 25)]

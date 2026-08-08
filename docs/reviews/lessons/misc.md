@@ -69,3 +69,24 @@ see exceptions that cross a managed boundary. Corroborating record:
 `investigation-rhun-dwarf-ctd-2026-08-02.md` Established #3.
 
 **Source:** `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` (#403 / #407).
+
+### Dropping a donor setting drops the behaviour of its DEFAULT value
+
+Porting a donor mod, three separate behaviours were removed as YAGNI because they were expressed as
+config knobs nobody wanted to carry: `AllowMultiplePromotions`, a roster precondition, and an
+`IsHero` filter on an upgrade walk. In each case the knob was genuinely not worth porting — but the
+value it defaulted to WAS the donor's shipped behaviour. Deleting the knob silently deleted the
+default. `AllowMultiplePromotions=false` was the only thing capping promotion offers at one per
+battle; without it a won battle could raise dozens of consecutive game-pausing modal prompts.
+
+The mirror case, from the same port: FIXING a donor bug can remove an unnamed side effect. The donor
+deducted merit when an offer was queued (a real bug — declining destroyed earned merit). Fixing it
+correctly also removed the only thing suppressing the re-ask, so the same soldier was proposed after
+every won battle forever.
+
+**Prevent:** when dropping a donor setting, write down what its DEFAULT value did and either keep that
+behaviour as a constant or record explicitly that you are changing it. When fixing a donor bug,
+enumerate what the buggy behaviour was incidentally providing before removing it. "The knob is YAGNI"
+and "the behaviour is YAGNI" are different claims and need separate answers.
+
+**Source:** `docs/reviews/rca-field-commission-2026-08-07.md` findings 1, 3, 6, 10.

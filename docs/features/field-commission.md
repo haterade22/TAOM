@@ -126,17 +126,69 @@ FieldCommissionBehavior (CampaignBehaviorBase)   FieldCommissionMissionLogic (Mi
 | `meritPerKill` | int | Merit banked per kill of a troop type in an eligible, won battle. Must be ≥ 1. |
 | `meritThreshold` | int | Merit required before a promotion offer is queued. Must be ≥ 1. |
 | `retainerAllowance` | int | Extra companions allowed beyond the clan-tier limit before offers defer. Must be ≥ 0. |
+| `maxOffersPerBattle` | int | Hard ceiling on promotion offers queued by ONE won battle, across all troop types. Must be ≥ 1. Default 1 (the donor mod's shipped behaviour). Merit above the cap is kept and re-queues after the next won battle. |
 | `skillPointsPerLevel` | int | Skill-value budget granted per hero level (see Commission Skill Budget above). Must be ≥ 1. |
 | `allowedRaceNames` | string[] | Race names (matched via `IRaceManager`) eligible for promotion. Blank/whitespace entries are sanitized out; a missing/null field defaults to `["human","dwarf","elf"]`. |
 
 ### Current Values
 
-Defaults mirror the donor mod's tuning (`RatioThreshold=1.3`, `MeritPerKill=1`, `MeritThreshold=8`)
-except `AllowMultiplePromotions`/`PromotedCompanionsIncreaseLimit`/`EnableBonusCompanionLimit`
-(donor-only knobs) — dropped as YAGIN in favor of the single `retainerAllowance` int, and
-`AlwaysPromote` (donor's manual-testing flag) — dropped in favor of the `taom.fc_grant_merit` cheat.
+Defaults mirror the donor mod's tuning (`RatioThreshold=1.3`, `MeritPerKill=1`, `MeritThreshold=8`,
+and `maxOffersPerBattle=1`, which is what the donor's `AllowMultiplePromotions=false` amounted to).
+Dropped donor knobs: `PromotedCompanionsIncreaseLimit`/`EnableBonusCompanionLimit`/
+`BonusCompanionLimitValue` — all three were **dead code in the donor itself**
+(`PromotedHelper.GetAdditionalCompanionLimit` has no caller anywhere in the donor tree), replaced by
+the single `retainerAllowance` int; and `AlwaysPromote` (the donor's manual-testing flag) — replaced
+by the `taom.fc_grant_merit` cheat.
 
-**Reload scope:** `Reuse.Singleton` — changes require a full game restart, not a save-load.
+**Reload scope:** the JSON file is read by a `Reuse.Singleton` `Lazy<T>` provider, so **JSON edits
+need a full application restart**. The MCM knobs below do not — they are re-read on every access.
+
+### MCM: "Battlefield Promotions" (GroupOrder 43)
+
+| Property | Range | Default | JSON field it overrides |
+|----------|-------|---------|-------------------------|
+| `EnableFieldCommission` | bool | `true` | `enabled` |
+| `FieldCommissionMaxOffersPerBattle` | 1–20 | `1` | `maxOffersPerBattle` |
+| `FieldCommissionRatioThreshold` | 0.1–3.0 | `1.3` | `ratioThreshold` |
+| `FieldCommissionMeritPerKill` | 1–10 | `1` | `meritPerKill` |
+| `FieldCommissionMeritThreshold` | 1–100 | `8` | `meritThreshold` |
+| `FieldCommissionRetainerAllowance` | 0–10 | `0` | `retainerAllowance` |
+
+`skillPointsPerLevel` and `allowedRaceNames` stay JSON-only (advanced / pack-author territory).
+
+**Precedence, and its one sharp edge.** MCM has no "unset" state — once MCM is loaded, every property
+reads back a value, so for the six exposed knobs the MCM value always wins over the JSON one, even
+when the player has never touched the slider. That is TAOM's house behaviour (every
+`*SettingsProvider` works this way) and it is the right default: the player outranks the pack author
+on tuning they can see. The consequence a pack author needs to know is that customising an
+MCM-exposed field in `field_commission_config.json` only takes effect for players running without
+MCM. Fields that must hold regardless belong in the JSON-only set above.
+
+**The clamp bounds the player's input, not the pack author's.** `Merge` applies the slider ranges only
+when the MCM value is present; a JSON value passes through untouched, because the JSON provider has
+already validated it on its own, stricter terms. Without that split, `ratioThreshold: 0` — explicitly
+legal in the JSON provider, meaning "never eligible" — came back out of the 0.1-floored slider clamp
+as `0.1` and quietly re-enabled the thing the pack author had turned off. Two tests pin both
+directions.
+
+**Turning the master switch off is fully inert and reversible.** `enabled` is read at
+`OnMapEventStarted` (no battle is tracked, so no kill is ever registered) and at `OnTick` (no offer
+is pumped). Banked merit stays in the save, and companions already promoted are ordinary companions —
+nothing is taken back.
+
+**Wiring.** `FieldCommissionSettingsProvider` implements `IFieldCommissionConfigProvider` and
+*decorates* the JSON `FieldCommissionConfigProvider`, rather than exposing a parallel scalar surface
+like TAOM's other `*SettingsProvider` classes. Two reasons: every consumer already reads several
+fields off one `FieldCommissionConfig`, so no constructor changes; and `GetConfig()` is called from
+`CampaignEvents.TickEvent`, so the merged config is cached against a
+`FieldCommissionMcmSnapshot` value-equality key and allocates nothing while the sliders are still.
+IoC registers the JSON provider as a concrete type and the interface via `RegisterDelegate`, so the
+decorator cannot resolve to itself.
+
+Every compiled MCM default must equal its JSON counterpart —
+`FieldCommissionSettingsProviderTests.CompiledMcmDefaults_MatchShippedJsonDefaults` fails the build
+if they drift, because a player without MCM reads the JSON and a player with MCM at default reads the
+literal, and those two must describe the same game.
 
 ## Key Files
 
@@ -145,6 +197,8 @@ except `AllowMultiplePromotions`/`PromotedCompanionsIncreaseLimit`/`EnableBonusC
 | `Main/Features/FieldCommission/FieldCommissionMeritService.cs` / `IFieldCommissionMeritService.cs` | Eligibility, kill-tracking, merit banking, orphan-merit consolidation, promotability gate, offer queue |
 | `Main/Features/FieldCommission/FieldCommissionOfferFlowService.cs` / `IFieldCommissionOfferFlowService.cs` | Inquiry chain orchestration: promote? → companion-room → rename → hero creation → completion |
 | `Main/Features/FieldCommission/FieldCommissionConfigProvider.cs` / `IFieldCommissionConfigProvider.cs` | JSON config load + validation |
+| `Main/Features/FieldCommission/FieldCommissionSettingsProvider.cs` | MCM-over-JSON merge; decorates the above behind the same interface |
+| `Main/Features/FieldCommission/Domain/FieldCommissionMcmSnapshot.cs` | Value-equality read of the six MCM knobs; the merged config's cache key |
 | `Main/Features/FieldCommission/NullEnlistmentStateQuery.cs` | Null-object fallback for `IEnlistmentStateQuery` |
 | `Main/Features/FieldCommission/FieldCommissionIoC.cs` | DryIoc registration |
 | `Main/Features/FieldCommission/Domain/*.cs` | Pure POCOs + `CommissionSkillBudget` + `TroopUpgradeGraph` |
@@ -171,11 +225,21 @@ except `AllowMultiplePromotions`/`PromotedCompanionsIncreaseLimit`/`EnableBonusC
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionConfigProviderTests.cs` — valid parse, missing file, malformed JSON, every field's validation rule (incl. NaN), race-name sanitization, append-merge defense.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionMeritServiceTests.cs` — ratio/NaN gate, deduct-on-completion, decline-keeps-merit, orphan-merit consolidation, promotability gate (fail-closed), promoted-hero pruning, SyncData round-trip.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionOfferFlowServiceTests.cs` — full inquiry chain, no-room deferral + retainer allowance, hero-creation failure leaves state untouched.
+- `TAOM.Tests/Features/FieldCommission/FieldCommissionSettingsProviderTests.cs` — the MCM-over-JSON
+  merge (per-knob override, NaN/infinity revert, both clamp directions), snapshot value equality, the
+  tick-path caching contract, and the compiled-default-vs-JSON-default pin.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionCheatsTests.cs` — pure formatter output.
 - `TAOM.Tests/Features/FieldCommission/NullEnlistmentStateQueryTests.cs` — null-object contract.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionBindingTests.cs` (`TestCategory=BindingVerification`) — every TaleWorlds signature this feature depends on, most load-bearing being the `TextInquiryData` 12-parameter ctor order (bug fix (b)).
 
-**111 tests total, all passing** (`dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~FieldCommission"` → `Passed! - Failed: 0, Passed: 111, Skipped: 0, Total: 111`).
+**152 tests total, all passing** (`dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~FieldCommission"` → `Passed! - Failed: 0, Passed: 152, Skipped: 0, Total: 152`).
+
+**Deliberately untested:** the three guards at the top of `FieldCommissionBehavior.OnTick`
+(co-op authority / enlisted / master toggle; `PlayerEncounter.Current` and `MapEvent.PlayerMapEvent`;
+`Hero.MainHero.IsPrisoner` and `MobileParty.MainParty`). They read TaleWorlds statics that the MSTest
+host cannot construct, and ADR-008 does not require entry-point coverage for exactly this reason.
+Everything they gate is tested on the service behind them. If one of these ever needs pinning, the
+honest route is an adapter over the statics, not a mock of the engine.
 
 ## How to Add a New Config Knob
 
@@ -183,36 +247,11 @@ except `AllowMultiplePromotions`/`PromotedCompanionsIncreaseLimit`/`EnableBonusC
 2. Add per-field validation in `FieldCommissionConfigProvider.Validate` (revert-to-default + warn on invalid).
 3. Add the default to `field_commission_config.json`.
 4. Add a test per validation rule (valid value, invalid value, NaN if it's a float) in `FieldCommissionConfigProviderTests`.
-5. If the value should also be MCM-editable, see "Proposed MCM Properties" below — wiring that in is deferred to the orchestrator (`TaomSettings.cs` is single-owner).
-
-## Proposed MCM Properties (not yet wired — `TaomSettings.cs` is single-owner)
-
-```csharp
-[SettingPropertyGroup("Battlefield Promotions")]
-[SettingPropertyBool("Enable Battlefield Promotions", Order = 0, ...)]
-public bool EnableFieldCommission { get; set; } = true;
-
-[SettingPropertyGroup("Battlefield Promotions")]
-[SettingPropertyFloatingInteger("Fair-Fight Ratio Threshold", 0.5f, 3.0f, "0.00", Order = 1, ...)]
-public float FieldCommissionRatioThreshold { get; set; } = 1.3f;
-
-[SettingPropertyGroup("Battlefield Promotions")]
-[SettingPropertyInteger("Merit Per Kill", 1, 10, Order = 2, ...)]
-public int FieldCommissionMeritPerKill { get; set; } = 1;
-
-[SettingPropertyGroup("Battlefield Promotions")]
-[SettingPropertyInteger("Merit Threshold", 1, 100, Order = 3, ...)]
-public int FieldCommissionMeritThreshold { get; set; } = 8;
-
-[SettingPropertyGroup("Battlefield Promotions")]
-[SettingPropertyInteger("Retainer Allowance", 0, 10, Order = 4, ...)]
-public int FieldCommissionRetainerAllowance { get; set; } = 0;
-```
-
-Wiring these requires a `FieldCommissionSettingsProvider` bridging class (mirroring
-`Main/Features/Diplomacy/TaomSettingsProvider.cs`) that the JSON `FieldCommissionConfigProvider`
-would need to consult — deferred, since the JSON config alone is a complete, working config surface
-today.
+5. If the value should also be MCM-editable, add the property to `TaomSettings.cs` under the
+   "Battlefield Promotions" group, add a nullable field to `FieldCommissionMcmSnapshot` (equality
+   AND hash — a field left out of equality makes its slider look dead until a restart), read it in
+   `FieldCommissionSettingsProvider.Capture`, clamp it in `Merge`, and extend
+   `CompiledMcmDefaults_MatchShippedJsonDefaults` with the new default pair.
 
 ## Performance
 

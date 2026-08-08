@@ -80,7 +80,11 @@ public class TroopRosterQueryAdapter : ITroopRosterQueryAdapter
         var ids = new List<string>(troop.UpgradeTargets.Length);
         foreach (var target in troop.UpgradeTargets)
         {
-            if (target != null)
+            // Heroes are excluded (donor parity): a hero sitting in the member roster has a count
+            // above zero, so the orphan-merit walk would happily park a dead troop's merit under a
+            // hero id — where CanPromote rejects it forever and the consolidation pass never
+            // reclaims it, because the count check says it is still present. A silent merit sink.
+            if (target != null && !target.IsHero)
                 ids.Add(target.StringId);
         }
         return ids;

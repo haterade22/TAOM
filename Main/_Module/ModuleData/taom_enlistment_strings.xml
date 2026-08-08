@@ -29,7 +29,7 @@
 	<string id="taom_enlist_wait_text" text="{=taom_enlist_wait_text}You serve in {COMMANDER}&#x27;s company. The column moves at your commander&#x27;s pace." />
 	<string id="taom_enlist_welcome" text="{=taom_enlist_welcome}Welcome to the column, soldier. Fall in." />
 
-	<!-- FieldCommission (#376): promotion offer, path choice, rename -->
+	<!-- FieldCommission (#376): promotion offer, no-room deferral, rename -->
 	<string id="taom_fc_accept" text="{=taom_fc_accept}Promote" />
 	<string id="taom_fc_acknowledge" text="{=taom_fc_acknowledge}Understood" />
 	<string id="taom_fc_confirm_name" text="{=taom_fc_confirm_name}Confirm" />

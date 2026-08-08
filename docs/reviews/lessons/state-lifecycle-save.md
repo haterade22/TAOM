@@ -182,3 +182,25 @@ which is a worse bug than the one being fixed and leaves no trace. Two tests pin
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### Un-persisted state on a `Reuse.Singleton` service outlives the campaign — clear it at the session boundary
+
+TAOM services are registered `Reuse.Singleton`, and `IoC.Configure()` runs once in `OnSubModuleLoad`,
+so a service field lives for the whole Bannerlord PROCESS. Any field that is neither persisted by
+`SyncData` nor cleared on a session boundary therefore survives quit-to-menu and reappears in the next
+campaign loaded without restarting. FieldCommission's pending-offer queue did exactly that: an offer
+earned in one save popped in the next, proposing a soldier the player did not have. Its sibling latch
+(`IsShowingOffer`), lowered only from inside an inquiry callback, could stay raised for the rest of
+the process and silently suppress every later offer.
+
+**Why missed:** `ClearState()` was written against the fields that appear in `SyncData` — the mental
+model was "reset what we persist". Transient state is invisible to that framing precisely because it
+is not in the save file.
+
+**Prevent:** enumerate EVERY instance field on a singleton service and classify each as save-scoped or
+process-scoped. Save-scoped clears on a new campaign only; process-scoped clears on EVERY session
+boundary, unconditionally and ahead of any `justLoadedFromSave` guard — gating it on the load flag is
+what lets the previous campaign's state through. Naming the split in code (TAOM uses
+`FieldCommissionSessionReset.ClearAll` vs `.ClearCarriedOverOffers`) makes the next edit pick a side.
+
+**Source:** `docs/reviews/rca-field-commission-2026-08-07.md` findings 2 and 14.

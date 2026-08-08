@@ -450,3 +450,22 @@ in a state dump.
 
 **Source:** live play-test 2026-08-07 against #406. Sibling lessons above cover why the test suite
 could not see any of it (mocked adapters) and why checking return values was not enough.
+
+### A config POCO rebuilt field-by-field needs a test asserting EVERY field survives a full parse
+
+TAOM's config providers validate by constructing a fresh POCO and copying each field across by name
+(`sanitized = new XConfig { A = parsed.A, B = parsed.B, ... }`). A field added to the POCO but not to
+that copy is silently dropped no matter what the JSON says — the compiler is happy, the field keeps
+its compiled default, and the feature behaves as if the file did not mention it. This shipped twice in
+one changeset (`maxOffersPerBattle` caught in review, `diagnostics` caught only because the
+"parses all fields" test was extended).
+
+**Why missed:** per-field validation tests cover the fields someone remembered to validate. The
+omission is in the copy, not the validation, and nothing fails.
+
+**Prevent:** every config provider needs one test that writes a JSON file setting EVERY field to a
+non-default value and asserts every field reads back. Extend it in the same edit that adds a field —
+and put a comment on the assertion naming the trap, so the next person extends it rather than
+copying a per-field test.
+
+**Source:** `docs/reviews/rca-field-commission-2026-08-07.md` finding 8.

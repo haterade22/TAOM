@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -13,13 +12,11 @@ namespace TAOM.Features.FieldCommission.Hooks;
 /// Thin event router (ADR-002) for Battlefield Promotions — converts sealed TaleWorlds types to
 /// primitives at the boundary; all decisions live in the merit/offer services. Bug fix (c): gates
 /// <c>IsPlayerMapEvent</c> FIRST and tracks the SPECIFIC <see cref="MapEvent"/> instance, so a
-/// foreign world event elsewhere never resets or completes our tracking.
+/// foreign world event never resets or completes our tracking. Persistence lives in
+/// <see cref="FieldCommissionSaveData"/>, session teardown in <see cref="FieldCommissionSessionReset"/>.
 /// </summary>
 public class FieldCommissionBehavior : CampaignBehaviorBase
 {
-    private const string MeritsKey = "_taom_fc_merits";
-    private const string PromotedKey = "_taom_fc_promotedHeroes";
-
     private readonly IFieldCommissionMeritService _merit;
     private readonly IFieldCommissionOfferFlowService _offerFlow;
     private readonly IFieldCommissionConfigProvider _configProvider;
@@ -61,21 +58,12 @@ public class FieldCommissionBehavior : CampaignBehaviorBase
     {
         if (dataStore.IsSaving)
         {
-            var merits = _merit.ExportMerits();
-            var promoted = _merit.ExportPromotedHeroIds();
-            dataStore.SyncData(MeritsKey, ref merits);
-            dataStore.SyncData(PromotedKey, ref promoted);
+            FieldCommissionSaveData.Save(dataStore, _merit);
+            return;
         }
-        else
-        {
-            Dictionary<string, int> merits = null;
-            List<string> promoted = null;
-            dataStore.SyncData(MeritsKey, ref merits);
-            dataStore.SyncData(PromotedKey, ref promoted);
-            _merit.ImportMerits(merits);
-            _merit.ImportPromotedHeroIds(promoted);
-            _justLoadedFromSave = true; // tells OnSessionLaunched NOT to clear the freshly-loaded state
-        }
+
+        FieldCommissionSaveData.Load(dataStore, _merit);
+        _justLoadedFromSave = true; // tells OnSessionLaunched NOT to clear the freshly-loaded state
     }
 
     private void OnMapEventStarted(MapEvent mapEvent, PartyBase attackerParty, PartyBase defenderParty)
@@ -105,7 +93,13 @@ public class FieldCommissionBehavior : CampaignBehaviorBase
         _trackedMapEvent = null;
         if (!_coopSession.IsAuthority)
             return;
-        _merit.EndBattle(mapEvent.WinningSide == mapEvent.PlayerSide);
+
+        // The master toggle is re-read at the CLOSE of the window, not only at its start: the player
+        // can reach Mod Options mid-battle, and BeginBattle already latched `_eligible`. Folded into
+        // `won` it takes the score-nothing path — no merit, no offer — while the `finally` still
+        // clears the window.
+        var won = _configProvider.GetConfig().Enabled && mapEvent.WinningSide == mapEvent.PlayerSide;
+        _merit.EndBattle(won);
     }
 
     private void OnTick(float dt)
@@ -113,6 +107,11 @@ public class FieldCommissionBehavior : CampaignBehaviorBase
         if (!_coopSession.IsAuthority || _enlistment.IsEnlisted || !_configProvider.GetConfig().Enabled)
             return;
         if (PlayerEncounter.Current != null || MapEvent.PlayerMapEvent != null)
+            return;
+
+        // Captivity clears PlayerEncounter.Current, so the gates above go quiet exactly when the
+        // player can least act on a promotion — in a cell, with no roster to promote from.
+        if (Hero.MainHero == null || Hero.MainHero.IsPrisoner || MobileParty.MainParty == null)
             return;
         _offerFlow.PumpNextOffer();
     }
@@ -134,6 +133,12 @@ public class FieldCommissionBehavior : CampaignBehaviorBase
         if (_lastSessionStarter != starter)
         {
             _lastSessionStarter = starter;
+
+            // Unconditional, ahead of the load guard: the persisted bank must survive a load, but the
+            // un-persisted offer queue and latch must not survive ANY session boundary. Gating this
+            // on `!_justLoadedFromSave` is what would let a previous campaign's offers through.
+            FieldCommissionSessionReset.ClearCarriedOverOffers(_merit, _offerFlow);
+
             if (!_justLoadedFromSave)
                 ClearState();
         }
@@ -141,9 +146,5 @@ public class FieldCommissionBehavior : CampaignBehaviorBase
         _justLoadedFromSave = false;
     }
 
-    private void ClearState()
-    {
-        _merit.ImportMerits(null);
-        _merit.ImportPromotedHeroIds(null);
-    }
+    private void ClearState() => FieldCommissionSessionReset.ClearAll(_merit, _offerFlow);
 }

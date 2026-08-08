@@ -30,7 +30,14 @@ internal static class FieldCommissionIoC
         // Cross-feature fallback — see the class doc on registration order.
         container.Register<IEnlistmentStateQuery, NullEnlistmentStateQuery>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
 
-        container.Register<IFieldCommissionConfigProvider, FieldCommissionConfigProvider>(Reuse.Singleton);
+        // Two-layer config: the JSON provider is registered as a CONCRETE type and the interface
+        // resolves to the MCM-merging decorator around it, so every consumer reads live MCM values
+        // without a constructor change. RegisterDelegate rather than DryIoc's Setup.Decorator — the
+        // dependency is spelled out, so it cannot silently resolve to itself and recurse.
+        container.Register<FieldCommissionConfigProvider>(Reuse.Singleton);
+        container.RegisterDelegate<IFieldCommissionConfigProvider>(
+            r => new FieldCommissionSettingsProvider(r.Resolve<FieldCommissionConfigProvider>()),
+            Reuse.Singleton);
         container.Register<IFieldCommissionMeritService, FieldCommissionMeritService>(Reuse.Singleton);
         container.Register<IFieldCommissionOfferFlowService, FieldCommissionOfferFlowService>(Reuse.Singleton);
     }
