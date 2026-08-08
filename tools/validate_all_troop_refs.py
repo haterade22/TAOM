@@ -15,14 +15,12 @@ import re
 import os
 import sys
 import glob
+from _gamedir import game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
 ARMORY_ROOT = os.path.join(
-    os.environ.get(
-        "BANNERLORD_GAME_DIR",
-        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
-    ),
+    game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"),
     "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items",
 )
 

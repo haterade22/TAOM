@@ -27,15 +27,17 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import taom_schema as ts
 import taom_query as tq
+from _gamedir import game_modules
 from mcp.server.fastmcp import FastMCP
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
-GAME_MODULES = Path(
-    os.environ.get("BANNERLORD_GAME_MODULES",
-                   r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules")
-)
+# $BANNERLORD_GAME_MODULES still wins when set, but the folder is otherwise
+# derived from $BANNERLORD_GAME_DIR like every other tool: setting the install
+# root correctly and still having this server answer against the old install is
+# the trap #404 removes.
+GAME_MODULES = game_modules(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 
 
 def _build_query() -> tq.ModuleDataQuery:

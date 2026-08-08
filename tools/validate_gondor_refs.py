@@ -8,6 +8,7 @@ import os
 import re
 import sys
 import glob
+from _gamedir import game_dir
 
 TROOPS_FILE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -19,10 +20,7 @@ TROOPS_FILE = os.path.join(
 # (tools/.env.example also documents a narrower TAOM_ARMORY_BASE, but only
 # cleanup_deleted_gondor_items.py reads it; the game root is the consistent knob here.)
 ARMORY_BASE = os.path.join(
-    os.environ.get(
-        "BANNERLORD_GAME_DIR",
-        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
-    ),
+    game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"),
     "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items", "gondor",
 )
 

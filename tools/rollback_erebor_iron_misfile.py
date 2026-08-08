@@ -17,9 +17,11 @@ import os
 import re
 import sys
 
+from _gamedir import ensure_exists, game_dir
+
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 EREBOR_DIR = GAME + r"\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\erebor"
 
 # Section header inserted by generate_erebor_armor.py
@@ -74,6 +76,9 @@ def main():
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
+    # Without this, a wrong root prints five "SKIP: <file> not found" lines,
+    # "Total removed: 0" and exits 0 — which reads as "nothing to roll back".
+    ensure_exists(EREBOR_DIR, what="the Erebor item folder")
     if args.dry_run:
         rollback(dry_run=True)
     elif args.apply:

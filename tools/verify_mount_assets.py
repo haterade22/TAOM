@@ -27,11 +27,9 @@ import os
 import re
 import struct
 import sys
+from _gamedir import game_dir
 
-DEFAULT_GAME = os.environ.get(
-    "BANNERLORD_GAME_DIR",
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
-)
+DEFAULT_GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 SKELETON_GUID = bytes.fromhex('d5a335c6bbeadd45883eaa57e4196113')
 MAGIC = 0x43415054
 

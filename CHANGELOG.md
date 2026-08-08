@@ -4,6 +4,49 @@
 
 ## 2026-08-07
 
+### feat(tools): one place answers "where is the install", and a wrong root says so (#404)
+
+Completes #404 on top of the writers. `tools/_gamedir.py` holds `game_dir(default)`,
+`game_modules(default)` and `ensure_exists(path, what=...)`; 21 tools resolve through it.
+
+`os.environ.get("BANNERLORD_GAME_DIR", default)` — the shape #401 established and seven tools still
+carried — returns `""` for an exported-but-blank variable, and `Path("")` is `.`, so the tool reports
+every file missing instead of the root being wrong. `game_dir` treats blank as unset. The two tests
+covering that case fail against the old shape, which is how we know they test something:
+`'' != 'E:\\Steam\\...'`.
+
+`ensure_exists` went to the four places measured to end on a clean-looking result against a root that
+is not there. All four exited 0 before; they exit 2 with the path named now. `rollback_erebor_iron_misfile.py`
+printed five `SKIP: <file> not found` lines and `Total removed: 0`. `cleanup_deleted_gondor_armor.py`
+printed `Grand total: 0`. `remap_stale_scene_names.py` printed `0 of 13 remaps match the live file`,
+which reads as "already done". `rebuild_translation_files.py` was the worst of them: `mkdir(parents=True)`
+built the whole `Modules/LOTRLOME_Armory/ModuleData/Languages/<lang>` chain under the bogus root,
+found no `loc_*.xml` to read, and still finished on `Done.`
+
+`taom_mcp_server.py` now derives its Modules folder from `BANNERLORD_GAME_DIR` and keeps
+`BANNERLORD_GAME_MODULES` as an explicit override, so one variable is enough for a correct setup —
+a server answering `item_exists` against the previous install is hard to notice. `tools/.env.example`
+gains both `BANNERLORD_*` names.
+
+`dump_settlement_buildings.py`, `rebalance_armor.py` and `rebalance_settlement_prosperity.py` were
+left on their own inline resolution on purpose: they already use the `or` form, so they do not have
+the blank-variable defect, and two of them define a local `game_dir()` the import would shadow. The
+win would have been uniformity alone, against renames in files this work does not otherwise touch.
+
+Six of the ten from the previous entry kept their inline `or` until this pass converted them too —
+two forms inside one change is the drift the issue is about. Their output is unchanged: the six that
+gained nothing but the helper are byte-identical to the previous version with the variable unset, and
+the four that gained `ensure_exists` change exactly where they were meant to. Python suite: 400 tests,
+up from 387, green on 3.14.
+
+Running it first on 3.11 gave 3 errors in `test_translate_batching`, which looked pre-existing and
+unrelated — it is both, but the reason is worth recording. `Path.read_text(newline=)` landed in 3.13,
+so the suite is red on any older interpreter, and `python` on PATH here is 3.11.9 while the `py`
+launcher defaults to 3.14. Four tools use the same keyword outside the tests
+(`generate_lord_template_equipment.py`, two under `oneoff/`), so the floor for parts of `tools/` is
+genuinely 3.13, while the docs still say 3.9+ / 3.10+ / 3.11+ in different places. Not this change's
+to fix; noted so the next person does not read the red as breakage.
+
 ### fix(tools): the ten tools that write into the game install now honour BANNERLORD_GAME_DIR (#404)
 
 #401 fixed the five diagnostics that only read. The tools that *write* are the sharper edge: with the

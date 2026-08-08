@@ -7,16 +7,13 @@ exists on disk (v1.4.5 removed/renamed it), a FIELD BATTLE on a cell with that i
 crashes. Also checks map_indices coverage 0-255 (an uncovered index = no battle scene).
 """
 from __future__ import annotations
-import os
 import re
 from pathlib import Path
+from _gamedir import game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = Path(os.environ.get(
-    "BANNERLORD_GAME_DIR",
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
-))
+GAME = Path(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"))
 MODULES = GAME / "Modules"
 FILES = {
     "TAOM": MODULES / "TAOM" / "ModuleData" / "sp_battle_scenes.xml",

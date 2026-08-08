@@ -14,10 +14,12 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+from _gamedir import game_dir
+
 ROOT = Path(__file__).resolve().parent.parent
 TAOM_MODULEDATA = ROOT / "Main/_Module/ModuleData"
 
-GAME_MODULES = Path("E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules")
+GAME_MODULES = Path(game_dir("E:/Steam/steamapps/common/Mount & Blade II Bannerlord")) / "Modules"
 
 # Modules whose Item XMLs build the runtime registry. TAOM's own XMLs are
 # included so TAOM-authored items count as valid.

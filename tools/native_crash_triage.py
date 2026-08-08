@@ -32,11 +32,10 @@ import os
 import re
 import struct
 import sys
+from _gamedir import game_dir
 
-DEFAULT_DLL = os.environ.get(
-    "BANNERLORD_GAME_DIR",
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
-) + r"\bin\Win64_Shipping_Client\TaleWorlds.Native.dll"
+DEFAULT_DLL = (game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
+               + r"\bin\Win64_Shipping_Client\TaleWorlds.Native.dll")
 
 
 class Pe:
