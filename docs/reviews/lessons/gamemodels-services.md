@@ -340,3 +340,25 @@ Two consumers is not automatically a double-count — these are separate systems
 one calculation, unlike the `Health` case where the mission path resolved through the campaign model.
 
 **Source:** career effect layer audit, 2026-08-06.
+
+### NaN-gate, sixth instance: a config value that feeds a DEADLINE (Enlistment grace window, 2026-08-08)
+
+`record.GraceEndsAtDay = nowDays + config.CommanderGraceDays;` with no validation anywhere — not at
+load (the provider is a stub that returns compiled defaults), not at use. A NaN there makes
+`nowDays >= record.GraceEndsAtDay.Value` **false forever**, so the commander-unavailable grace window
+never expires and the player sits in that state permanently with no auto-discharge. A negative value
+is the mirror failure: grace expires instantly and discharges the player the moment their commander
+blinks.
+
+This is the sixth appearance of the class `csharp-architecture.md` documents, and it arrived through
+a category the rule's existing three (config floats at load, engine floats at runtime gates,
+float→int casts) do not quite name: **a finite-looking config value that becomes a future timestamp
+by addition.** The poison is not compared directly — it is added to a clock first, and the comparison
+that fails is against the sum.
+
+**The rule:** when a config value is added to a clock to form a deadline, sanitise it AT THE POINT OF
+USE with a positive requirement (`if (!(days > 0.0) || double.IsInfinity(days))`), fall back to the
+compiled default, and log. Write the test as "does this still EXPIRE", not "is the number right" —
+the failure is a window that never closes, not a wrong number.
+
+Caught before shipping this time, by a review rather than a player.

@@ -235,6 +235,132 @@ Mocking the adapter meant no test ever exercised the seam between adapter and en
 the one place unit tests structurally cannot reach, and where this bug lived. `docs/features/`
 listed "encounter join from parked state" under *owed at ship, never run in a live game*, and that
 gate is precisely the one that failed. Recorded in `docs/reviews/lessons/testing-qa.md`.
+## Player-facing surfaces (what exists, and where it lives)
+
+| Surface | Owner | Notes |
+|---|---|---|
+| Service wait menu + its four options | `Presentation/EnlistmentWaitMenuOptions.cs` | **Every option is `isLeave: false`, and that is load-bearing.** `GameMenu.RunMenuOptionConsequence` calls `EndWait()` BEFORE the consequence for an `isLeave` option on a wait menu, which sets `IsWaitActive = false` and `TimeControlMode = Stop` — tearing down the tick that drives the position sync before the consequence runs. It also makes the option a candidate for the Escape slot. |
+| Live status board | `ServiceStatusService` + `Presentation/ServiceStatusTextWriter.cs` | Rebuilt on the pump's 2 s budget, pushed only when the model differs. **The value equality IS the throttle**, so a field omitted from `Equals` is a status line that never updates — one `DataRow` per field guards it. |
+| "Speak with your commander" | `EnlistmentPlayerActionService` + `IMapConversationAdapter` | The adapter carries the game-state guard itself: `ConversationManager.OpenMapConversation` opens with `(GameStateManager.Current?.ActiveState as MapState).OnMapConversationStarts(...)` — an `as` cast dereferenced with no null check, so it throws when the state manager is null, the state stack is empty, OR the active state is anything else. `CampaignMapConversation.OpenConversation` adds a fourth route via `Campaign.Current`. |
+| "Ask your sergeant for work" | `DutyOrchestrationService.RequestDutyNow` | Shares ONE offer path with the daily tick and the same rotation cadence, so asking cannot conjure work the rotation would not have given. Host-only. |
+| Release / desertion | `Presentation/EnlistmentWaitMenuPresenter` + `Hooks/EnlistmentReleaseDialogBehavior` | Keyed to `MinimumServiceDays` (21), deliberately NOT `ContractDays` (365) — see below. |
+| Reassignment | `Hooks/EnlistmentAssignmentDialogBehavior` | The commander names your CURRENT section first. Each option hides when it is your current role; without the naming line a player already in the horse saw no cavalry option and reasonably concluded it was missing (reported in-game 2026-08-07). |
+| Enum → player words | `Presentation/ServiceVocabulary.cs` | The single place a `ServiceRank`/`ServiceAssignment`/merit grade becomes text. Section names had been written twice over the same localization keys; two copies of one key set drift silently. |
+| **MCM master switch** | `TaomSettings.EnableEnlistment` + `IEnlistmentFeatureSettingsProvider` | Fails open when MCM is absent. **Turning it off mid-service performs one honourable discharge** rather than halting: an enlisted player is parked hidden and inactive, and the code that restores them is the code being switched off — stopping in place would strand them invisible with no menu, a soft-lock produced by a settings toggle. |
+
+### `Presentation/` vs `Hooks/`
+
+`Hooks/` is Harmony patches and `CampaignBehaviorBase` entry points, and carries the ADR-002
+150-line ceiling. `Presentation/` holds registered singleton services that legitimately own
+`TextObject` / `InformationManager` (ADR-007 keeps those out of the service layer) but are not entry
+points. The presenter and text writer were originally in `Hooks/`, which made them read as ceiling
+breaches when they were really misfiled.
+
+### Why the release refusal is not keyed to the contract
+
+`ContractDays` is 365. Keying "days still owed" to it would refuse every realistic release request
+and leave desertion as the only exit — which is the bug fixed in batch 1 (`ClassifyLeaveReason`
+returning `Desertion` before `ContractEndDay`, forfeiting the player's arrears and calling them a
+deserter for asking their lord's leave and being given it). `MinimumServiceDays` (21) is a term a
+player can actually serve, which is what makes "leave now and forfeit your pay" a choice rather
+than a trap. `ClassifyLeaveReason` still returns `PlayerRequest` unconditionally, pinned by a test.
+
+**Desertion has exactly one producer** — the dialog branch the player picks after being told the
+cost. Nothing classifies a leave as desertion behind their back.
+
+---
+## The review pass (2026-08-08) — four terminal defects the tests could not see
+
+A five-agent deep review plus an adversarial Codex pass ran over batches 0-10, against a suite that
+was already 668-green. **Twelve findings; the suite caught none of them.** Four were terminal or
+invisible, and all four lived in the seam between our code and the engine — the seam a mock is
+precisely a decision to stop testing at.
+
+### 1. Discharge could strand the player inside a settlement, permanently
+
+`RestoreCampaignContext` chose placement from `CommanderSnapshot.SettlementId` and never asked where
+the PLAYER was. Commander dead / marching / in a hideout while the player stood in a town → the
+settlement branch was skipped, then the wait menu was closed. `CurrentSettlement` set, no menu.
+
+Why it is terminal rather than annoying — all verified on installed 1.4.7:
+
+| Engine fact | Consequence |
+|---|---|
+| `MobileParty.DoUpdatePosition` returns early when `CurrentSettlement != null` | the party cannot move |
+| `CheckExitingSettlementParallel` early-returns on `IsMainParty` | the engine never auto-exits you |
+| `game_menu_castle_outside_leave_on_consequence` = `PlayerEncounter.Finish(); SetMoveModeHold();` and `Finish` returns immediately when `Current == null` | the Leave option is a no-op |
+| `DefaultEncounterGameMenuModel.GetGenericStateMenu` returns `null` for a village | no menu appears at all |
+
+It survives save/reload, because the record now reads `NotEnlisted` and every recovery loop in the
+feature early-returns on that. **Fix:** the settlement exit is now on EVERY path that did not just
+open a real settlement menu, driven by the player's own presence.
+
+### 2. A save taken mid-battle froze that battle forever
+
+`ToPersistedState` coerces `EnlistedBattle` → `EnlistedAttached` on the stated grounds that battle
+reality is re-derived at load. **That re-derivation was never written.** On reload the engine
+restores `MapStateData.GameMenuId = "encounter"`, and the redirect — gated on `EnlistedAttached`,
+which the coercion had just made true — swallowed it. `MapEventManager.Tick` deliberately SKIPS
+`MainParty.MapEvent`; the player's own event advances only through `PlayerEncounter.Update`, driven
+from that menu. The wait menu has no `isLeave` option, so it never closes on its own either.
+
+**Fix:** `encounter` / `join_encounter` are exempt from redirect whenever the player is genuinely in
+a map event. The coercion stays (a transient state has no business in a save), but it no longer
+depends on a re-derivation that does not exist.
+
+### 3. A duty starting inside a settlement made the player invisible for days
+
+The settlement exit ended in `ParkNear` — correct while following the column, catastrophic on a
+duty: parking hides and deactivates the party, and NOTHING un-hides it while the state is
+`EnlistedDetachedOnDuty` (`Assess` returns `Blocked/NotInAttachableState` for that state, so neither
+the reconciler nor the pump ever restores presence). Invisible and immobile for the deadline — four
+to six days — then the duty fails.
+
+**Fix:** `ExitSettlementForDuty()` — leaves, then restores presence. Deliberately a separate member
+from `ExitSettlementForService()`, with the difference documented at both, because the two look
+identical and differ only in how they end.
+
+### 4. The wait-menu guard could switch itself off for the rest of the process
+
+`EnsureServiceMenu`'s `_menuFailures >= MaxMenuFailures` check sat ABOVE both reset sites, on a
+`Reuse.Singleton`. Three transient failures disabled the invariant for the whole process — across
+re-enlistment and across campaigns. **Fix:** state transition before gate; plus
+`ResetSessionCaches()` on game load.
+
+### Also fixed
+
+- **A NaN `CommanderGraceDays` never expired.** `nowDays >= GraceEndsAtDay` is false forever against
+  NaN, so the player sat in `CommanderUnavailable` permanently with no auto-discharge. Sixth
+  instance of that bug class in this codebase; first one caught before shipping.
+- **A commander-party handle cached across a game load** matched by `StringId` (lord-party ids are
+  stable across a reload of the same campaign) and drove the position sync from a destroyed
+  campaign's party, at frame rate.
+- **The pump's real-time budget was frame-rate dependent.** The wait-menu tick is a FRAME tick and
+  was fed a constant `1f/30f`, fabricating ~4.8s of budget per real second at 144 fps — running the
+  "4 Hz" expensive tier at ~19 Hz and the status board (which uses the forbidden `GetSnapshot`) at
+  ~2.4 Hz. It now measures real elapsed time, clamped so a stall cannot burst it.
+- **Deferred duty callbacks** granted rewards and mutated the record without re-checking authority
+  or enlistment — the same stale-authorisation shape as the desertion confirmation.
+- **`RestorePresence`'s result was discarded** immediately before encounter work its own comment
+  calls a hard precondition.
+- **`StaleBeforeCommanderBattle` was defined but never called**, so a leftover encounter burned the
+  immediate join and the retry budget then delayed the next attempt by an hour — long enough to
+  miss a short battle.
+
+### What this says about testing this feature
+
+668 green tests proved none of the above. The technique that found all twelve was reading our code
+against the decompiled engine and asking *what does the engine do if this value is what my code
+allows*. Recorded in `docs/reviews/lessons/testing-qa.md`; the practical rules that came out of it:
+
+1. A test that stubs an adapter proves the SERVICE, never the adapter contract. Any comment saying
+   "the engine will X" needs a decompiled quote beside it — that quote is the only verification.
+2. Every guard needs the test that proves it RELEASES: back-off/recovery, latch/reset,
+   park/restore. A one-sided test on a two-sided mechanism is how #4 shipped.
+3. A property no test ever stubs makes every branch behind it unreachable in the suite. That is how
+   #3 shipped — `FieldDutyRuntimeTests` never stubbed `GetPresenceFlags()`.
+
+---
 ## Engine facts verified on installed 1.4.7 (Phase 0.2 sweep)
 
 `MobileParty.Position` is `CampaignVec2` (no `Position2D`; `GetPosition2D` is get-only);
@@ -318,7 +444,7 @@ consequence* is a world-mutating entry point even though it doesn't pattern-matc
 
 ## Testing
 
-The Enlistment suite (`TAOM.Tests/Features/Enlistment/`, full suite 5448 green): transition-table
+The Enlistment suite (`TAOM.Tests/Features/Enlistment/`, 668 enlistment tests; full repo suite 6052 green): transition-table
 matrix, discharge invariants, Entity-State-Matrix load rows, reconciler policy (grace,
 captivity, prisoner-commander-with-live-party), record round-trip incl. NaN/forward-compat,
 menu redirect policy + cap, battle ordering/rollback/loot-guard, binding pins, config
@@ -352,6 +478,36 @@ FieldCommission offer flow with enlisted suppression.
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+
+**NOT verified — and the review pass is why this list matters.** Nothing in the 2026-08-08 batch
+(settlement following, the status board, dialog agency, the MCM switch, and every fix in the review
+section above) has run in a live game. The four terminal defects that pass found were all invisible
+to 668 green tests; the in-game list is
+[`docs/reviews/enlistment-morning-handoff-2026-08-08.md`](../reviews/enlistment-morning-handoff-2026-08-08.md).
+
+Specifically owed, because each is a state a test structurally cannot reach:
+
+1. Field battle with the commander **in an army** (the original report).
+2. Commander riding into an **already-running** fight (`OnPartyAddedToMapEventEvent` edge).
+3. A **settlement stop** — you inside it, leaving with the column.
+4. **Discharge while inside a settlement the commander is not in** (defect 1 above).
+5. **Save mid-battle, reload** (defect 2 above).
+6. A **duty assigned while inside the commander's town** (defect 3 above).
+7. The **MCM switch flipped off mid-service**.
+
+### Still owed beyond testing
+
+- **Batch 11 (content beats)** — not started.
+- **12-language translation.** All 66 keys are registered, but `taom_enlistment_strings.xml` is not
+  in `translate_with_claude.py`'s file list and `LanguageDataXmlTests` pins 10 language files per
+  directory, so `/localize` currently translates nothing here. English fallbacks work.
+- **~84 runtime-built duty keys** (`taom_enlist_duty_{id}_{title|body|opta|optb|success|failure}`)
+  are assembled from data-row ids, so a literal `{=key}` grep cannot find them and none are
+  registered. Needs a generator, or those 14 duties/incidents ship English-only.
+- **Two entry points remain over the ADR-002 ceiling**, both pre-dating this arc:
+  `EnlistmentMeritMissionBehavior` (163 — it holds a 44-line geometric scoring algorithm inline that
+  wants to be a testable engine) and `EnlistmentBattleBehavior` (157).
 
 ## Referenced by
 

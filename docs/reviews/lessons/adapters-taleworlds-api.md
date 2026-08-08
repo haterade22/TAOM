@@ -244,3 +244,43 @@ doing the same lookup, an inconsistent one is the finding — grep for the sibli
 new one. `Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == id)` is TAOM's convention.
 
 **Source:** `docs/reviews/rca-field-commission-2026-08-07.md` finding 5.
+
+### A plausible engine root cause is still a hypothesis — the fix built on it can be pure waste (Enlistment status board, 2026-08-08)
+
+A design doc explained a frozen wait-menu sentence like this: `GameMenuVM.IsMenuTextChanged`
+compares the menu `TextObject`'s `Attributes`; `MBTextManager.SetTextVariable` writes a GLOBAL that
+never lands there; therefore the text is structurally frozen and raising the refresh cadence cannot
+help. Every individual claim in that chain is TRUE — and the conclusion is wrong.
+
+The method's second check is `_menuTextAttributes.Count` (an `int`) against
+`_menuText?.Attributes?.Count` (an `int?`). Our menu text is `new TextObject(text)` with no
+attributes, so that comparison is `0 != null` — **always true** under C#'s lifted equality (verified
+by compiling and running it, not by reasoning about it). `IsMenuTextChanged` therefore returns true
+on every call, the menu re-renders every frame, and `.ToString()` re-resolves the global each time.
+
+Nothing was frozen. The sentence never changed because `RefreshWaitText` ran only at menu init and
+its one token was the commander's name. The proposed fix —
+`args.MenuContext.GameMenu.GetText().SetTextVariable(...)` — is real, compiles, targets the right
+instance, and would have changed nothing.
+
+**The rule:** when a root cause is a chain of engine facts, verify the CONCLUSION against the
+installed DLLs, not just the links. Degradation direction is the usual trap: "this comparison can't
+see my change" and "this comparison always reports a change" produce opposite fixes from the same
+premise. If the answer turns on a language rule (nullable lifting, NaN comparison, integer
+overflow), compile it and run it — that is cheaper than a batch of wasted work.
+
+### An approximation of an engine gate must say so, or it becomes a false authority (Enlistment, 2026-08-08)
+
+`PlayerPresenceSnapshot.EncountersBlocked` reproduced `EncounterManager.HandleEncounterForMobileParty`'s
+refusal conditions and cited the engine line number — but omitted a whole disjunct (a BESIEGING
+party is refused unless `ShortTermBehavior == AssaultSettlement`) and flattened another (the
+`MainParty && PlayerEncounter.Current != null` term is nested under
+`!IsCurrentlyEngagingParty && !IsCurrentlyEngagingSettlement`, not top-level). It under-reports
+sieges and over-reports encounters.
+
+Harmless while nothing branches on it — it exists to make a log line legible — but the line-number
+citation makes it read as authoritative, and the next person to need a real gate will reach for it.
+
+**The rule:** a deliberate approximation of engine logic states that it is one, names what it
+omits, and says what must be fixed before promotion to a decision input. A precise-looking citation
+on an imprecise copy is worse than no citation.

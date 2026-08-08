@@ -469,3 +469,35 @@ and put a comment on the assertion naming the trap, so the next person extends i
 copying a per-field test.
 
 **Source:** `docs/reviews/rca-field-commission-2026-08-07.md` finding 8.
+
+### Twelve defects, zero caught by 668 green tests — and four of them were terminal (Enlistment, 2026-08-08)
+
+After the battle-join fix, a five-agent deep review plus an adversarial Codex pass ran over ten
+batches of remediation that already carried 668 passing tests. Twelve findings. **The suite was
+green throughout and caught none of them.** Four were terminal or invisible:
+
+| Defect | Why no test saw it |
+|---|---|
+| Discharge stranding the player inside a settlement forever | The strand is an ENGINE state (`CurrentSettlement` + no menu). Mocks return whatever the test says; the engine's refusal to move such a party is not in the mock. |
+| A save mid-battle freezing that battle permanently | Requires save→coerce→reload→menu-restore→redirect, across four systems. No unit test spans that. |
+| A duty leaving the player invisible for 4–6 days | `FieldDutyRuntimeTests` never stubbed `GetPresenceFlags()`, so `IsInSettlement` was false in every test — the branch could not be reached. |
+| A back-off latch that never recovered | The test pinned the back-off and stopped. Absence of a recovery assertion reads as coverage. |
+
+The pattern in all four: **the bug lives in the seam between our code and the engine, and a mock is
+exactly a decision to stop testing at that seam.** This is the same lesson as the original
+never-joins bug (`CanPartyJoinBattle`), which survived three review rounds for the same reason —
+recorded above. It recurred because the fix for it was a code change, not a testing change.
+
+**What actually found them:** reading our code against the DECOMPILED ENGINE, method by method,
+asking "what does the engine do if this value is what my code allows". That is not something a test
+suite can be made to do; it is a review activity with a specific technique.
+
+**Practical consequences for this codebase:**
+
+1. A test that stubs an adapter method proves the SERVICE logic, never the adapter contract. When a
+   comment says "the engine will X", that sentence needs a decompiled quote beside it, and the quote
+   is the only verification that exists.
+2. When you add a guard, add the test that proves the guard RELEASES — back-off/recovery,
+   latch/reset, park/restore. A one-sided test on a two-sided mechanism is how #3 and #4 shipped.
+3. If a test never stubs a property, every branch behind that property is unreachable in the suite.
+   Grep for `DidNotReceive`/unstubbed reads when a class has state-dependent branching.

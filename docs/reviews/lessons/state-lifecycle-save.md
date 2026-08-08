@@ -204,3 +204,51 @@ what lets the previous campaign's state through. Naming the split in code (TAOM 
 `FieldCommissionSessionReset.ClearAll` vs `.ClearCarriedOverOffers`) makes the next edit pick a side.
 
 **Source:** `docs/reviews/rca-field-commission-2026-08-07.md` findings 2 and 14.
+
+### A hand-back that reads only the OTHER actor's position will strand the player (Enlistment, 2026-08-08)
+
+`DischargeService.RestoreCampaignContext` decided where to put the player entirely from
+`CommanderSnapshot.SettlementId` — and never asked where the **player** was. When the commander had
+no settlement (dead, marching, in a hideout) while the player stood inside one, the whole settlement
+branch was skipped and the wait menu was then closed. Result: `CurrentSettlement` set, no menu.
+
+That is terminal, and the engine offers no way out:
+`MobileParty.DoUpdatePosition` returns early for any party with `CurrentSettlement != null`;
+`CheckExitingSettlementParallel` explicitly skips `IsMainParty`; the menu the engine re-pushes for a
+fortification is `town_outside`, whose Leave calls `PlayerEncounter.Finish()` — which returns
+immediately when `Current` is null and never reaches its own `LeaveSettlement()`. For a village it
+pushes nothing at all. And it survives save/reload, because the record now reads `NotEnlisted` and
+every recovery loop early-returns on that.
+
+**The rule:** a placement/cleanup step must be driven by the state of the actor it is placing, not
+by the state of whatever it is placing them relative to. Ask "where is the player *now*" before
+"where should they go". Where a teardown can leave an actor in a container, exiting that container
+belongs on EVERY path, not inside the success branch of the happy path.
+
+### Coercing a transient state at save time silently breaks its own re-derivation contract (Enlistment, 2026-08-08)
+
+`EnlistmentRecord.ToPersistedState` coerces `EnlistedBattle` to `EnlistedAttached`, on the stated
+grounds that "battle reality is re-derived from the engine at load". That re-derivation was never
+implemented: `Assess` returns `Attached` when both parties are already in the map event, and nothing
+else produces `EnlistedBattle`.
+
+The consequence was worse than a wrong enum. On reload the engine restores
+`MapStateData.GameMenuId = "encounter"`, and the menu redirect — gated on `EnlistedAttached`, which
+the coercion had just made true — swallowed it. `MapEventManager.Tick` deliberately SKIPS
+`MainParty.MapEvent`; the player's own event advances only via `PlayerEncounter.Update`, driven from
+that menu. The battle could never resolve, and the wait menu has no `isLeave` option to escape by.
+
+**The rule:** if you coerce a state on save because "it will be re-derived on load", write the
+re-derivation in the same change and test the round trip. A coercion whose counterpart does not
+exist is a silent data-loss bug that only manifests through a third system.
+
+### A latch check placed above its own reset can never recover (Enlistment, 2026-08-08)
+
+`ServiceMaintenanceService.EnsureServiceMenu` returned early on `_menuFailures >= MaxMenuFailures`
+**before** the two lines that reset the counter to zero. Three transient failures therefore disabled
+the wait-menu invariant for the rest of the process — on a `Reuse.Singleton`, so across
+re-enlistment and across campaigns. The existing test pinned the back-off and stopped there; it
+never asserted recovery.
+
+This is `harmony-patches.md` "Latches & Toggle Gates" rule 2 in a new costume: **state transitions
+come first, gates second.** When you add a back-off, add the test that proves it un-backs-off.

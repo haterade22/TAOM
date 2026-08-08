@@ -812,3 +812,42 @@ output with the variable set and unset, changed behaviour when it points somewhe
 **Source:** #400 → #401 (`fe145207`). The remaining tail is #404: thirteen top-level tools still carry
 the literal with no override, nine of which write rather than read, and the knob has drifted into four
 variable names (`BANNERLORD_GAME_DIR`, `BANNERLORD_GAME_MODULES`, `TAOM_ARMORY_BASE`, `TAOM_MAP_FILE`).
+
+### `grep -c` exits non-zero on zero matches, so `&& next-step` silently skips (2026-08-07)
+
+`dotnet build … | grep -cE "error CS" && python - <<'PY' …` — the changelog step never ran, because a
+CLEAN build makes `grep -c` print `0` and exit **1**, short-circuiting the `&&`. The commit went
+through without its entry, and the failure was reported to the user as success because "0" looked
+like the expected output.
+
+Same shape twice in one session: later, `grep -oE "error CS…"` printing nothing was read as "build
+succeeded" when the build had actually failed with `MSB4018` (a locked file), which that pattern
+does not match.
+
+**The rule:** verify a command's success from its **exit code**, never from a grep's silence. Grep
+output is evidence of what matched, not evidence of what happened. `echo "exit=$?"` immediately
+after the command, and pattern-match the output only to summarise it.
+
+### Never `pull --rebase` while another session's work is uncommitted — and verify the autostash popped (2026-08-08)
+
+`git pull --rebase --autostash` with 49 dirty files belonging to a concurrent session: the rebase hit
+a CHANGELOG conflict on the first of eleven commits, and when it completed the autostash was **still
+in the stash list, unapplied**. The working tree had none of that session's work in it. This is the
+same failure that lost a session's work the previous morning, arriving through the flag that is
+supposed to prevent it.
+
+**The protocol that made it safe:**
+
+1. `md5sum` every dirty file to a snapshot file BEFORE starting.
+2. Rebase.
+3. `git stash list` — an autostash entry surviving the rebase means it did NOT pop.
+4. `git stash apply` (never `pop`) so the stash remains a net.
+5. Compare every file against the snapshot, and diff the tree against the stash blob to confirm the
+   restore is exact.
+6. Build + full test run before pushing.
+7. Leave the stash. It is redundant once verified, but it is the other session's net, not yours.
+
+Also learned: hash mismatches against the snapshot are NOT automatically data loss — a concurrent
+session writing between the snapshot and the autostash produces exactly that signature, and the
+stash then holds their NEWER content. Distinguish the two by diffing the tree against the stash
+blob (`git diff stash@{0} -- <path>`), not by trusting the hash comparison alone.

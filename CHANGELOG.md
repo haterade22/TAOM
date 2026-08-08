@@ -142,6 +142,34 @@ without MCM reads the JSON, a player with MCM at default reads the literal, and 
 describe the same game. A test fails the build if they drift, which is the kind of split that is
 otherwise invisible because the test host never has MCM loaded.
 
+### docs(enlistment): record the review pass, the surfaces, and what is still owed
+
+`docs/features/enlistment.md` now carries the 2026-08-08 review pass — the four terminal defects
+with the engine facts that make each terminal, not just the fix — plus a table of every
+player-facing surface and where it lives, and why `Presentation/` exists separately from `Hooks/`.
+
+Six lessons appended across four categories, and the index recounted: **368**, up from a printed
+352 that had drifted. The counts were re-derived with `grep -c '^### '` rather than incremented,
+which is what the index's own note says to do.
+
+The lessons worth reading even if you never touch this feature:
+
+- **A plausible engine root cause is still a hypothesis.** Every link in the frozen-menu-text chain
+  was true and the conclusion was backwards — the comparison it blamed returns `0 != null`, which is
+  always TRUE, so the menu was re-rendering every frame rather than never. Verify the conclusion,
+  not just the links, and compile the language rule when one is load-bearing.
+- **`grep -c` exits 1 on zero matches**, so `build | grep -c error && next-step` silently skips the
+  next step on a CLEAN build. Check exit codes; a grep's silence is not evidence.
+- **Never `pull --rebase` over another session's uncommitted work** — and when you must, snapshot
+  hashes first, `apply` (never `pop`), and verify. The autostash did not pop here, which is the same
+  failure that lost work the previous morning, arriving through the flag meant to prevent it.
+- **Twelve defects, zero caught by 668 green tests.** A mock at the adapter boundary is a decision
+  to stop testing at exactly the seam where engine-contract bugs live.
+
+CLAUDE.md's Enlisted-service trap row now routes two soft-lock symptoms (stuck in a settlement, a
+battle that never resolves) to their causes, within the 400-char row budget. The feature-map row
+and the testing section list what has and has not run in a live game — the seven in-game cases
+owed are each a state a test structurally cannot reach.
 ### fix(enlistment): two terminal soft-locks, a frozen battle, and a latch that never recovered
 
 A five-agent deep review plus an adversarial Codex pass over batches 0–10. Twelve findings, all
