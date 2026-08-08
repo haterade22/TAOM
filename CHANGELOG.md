@@ -4,6 +4,43 @@
 
 ## 2026-08-08
 
+### docs: record the Serve as Soldier comparison with its engine facts already resolved
+
+Three fixes from the comparison shipped earlier today (`97d6b6e6`, `2a6b3061`). What remains is
+blocked on decisions that are the user's, so this writes down the research instead of guessing at
+them — every 1.4.7 signature resolved via `taom-src` against the installed DLLs, so acting on any of
+it later costs no re-decompilation.
+
+The two candidates worth building both turned out to be blocked on architecture, not signatures.
+**Sergeant command** — SAS lets an enlisted soldier command a formation by rigging vanilla's own
+Sergeant mechanic, and all three of their targets exist unchanged in 1.4.7 — but `IsPlayerSergeant()`
+requires `MobileParty.MainParty.Army != null`, and our parked player joins battle through
+`PlayerEncounter.JoinBattle`, which never touches `Army`. Rigging the score alone does nothing for us.
+Both routes out (transient battle-only army join, or a postfix on `IsPlayerSergeant`) are recorded
+with the influence question already answered: `Army.OnAddPartyInternal` guards its charge with
+`mobileParty != MobileParty.MainParty`, so a transient join costs the commander nothing — the
+objection that killed *permanent* army membership does not apply.
+**Duty→effective party role** — our duties pay the player and reach the column not at all, which is a
+real gap, but the four `Effective*` getters SAS patches are read for every party in the world on
+campaign ticks. The effects flow through GameModels we can own instead, so that is a feature design
+rather than a port. The public `SetParty*` setters cannot substitute: every getter guards with
+`PartyBelongedTo != this`, which an enlisted player fails by construction.
+
+Also recorded: five SAS patches that are already dead against 1.4.7 (`DoLootParty` split into three
+methods, `Mission.SpawnTroop`'s `forceDismounted` parameter gone, `TournamentBehavior` moved
+assemblies *and* changed base class, `ArmyDispersionReason` now nested, one patch that is an
+unconditional `return true`), so nobody ports them assuming they work. The `TournamentBehavior` case
+is a live argument for TAOM's per-category patch isolation — SAS applies everything through one
+`PatchAll()`, where a single stale `typeof` can abort `Assembly.GetTypes()` and silently disable
+unrelated patches. Zero collisions with our own registry; three same-class, disjoint-method
+adjacencies are harmless.
+
+One earlier recommendation is reversed by reading their following code: SAS's *normal* following is
+the same technique TAOM already uses, and army membership is transient even there. Permanent army
+membership is now explicitly rejected.
+
+`docs/reviews/sas-comparative-analysis-2026-08-08.md`.
+
 ### docs: bring every documentation surface in line with the tracker sweep
 
 The triage closed 81 issues, which falsified a status claim wherever one was written down. Swept
