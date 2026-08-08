@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
@@ -46,7 +47,13 @@ public class InteractiveDutyPresenterTests
                 _capturedOptionB = call.ArgAt<System.Action>(9);
             });
 
-        _presenter = new InteractiveDutyPresenter(_inquiry, _skillCheck, _skillXp, _rewards, _store, _contentStore);
+        _presenter = new InteractiveDutyPresenter(_inquiry, _skillCheck, _skillXp, _rewards, _store, _contentStore, Coop());
+
+        // A duty only resolves while the player is actually serving — the callbacks fire a
+        // frame after the popup, so a discharge in that window must not pay out.
+        _store.Record.State = TAOM.Features.Enlistment.Domain.EnlistmentState.EnlistedAttached;
+        _store.Record.EnlistedHeroId = "main_hero";
+        _store.Record.CommanderHeroId = "lord_1";
     }
 
     private static ServiceProgressSnapshot Progress(ServiceRank rank = ServiceRank.Recruit) => new ServiceProgressSnapshot { Rank = rank };
@@ -244,5 +251,12 @@ public class InteractiveDutyPresenterTests
         _capturedOptionA();
 
         Assert.AreEqual(0, _contentStore.Record.DeferredWages, "min(arrears, max(floor, arrears/2)) caps at the arrears themselves");
+    }
+
+    private static ICoopSessionProvider Coop()
+    {
+        var coop = Substitute.For<ICoopSessionProvider>();
+        coop.IsAuthority.Returns(true);
+        return coop;
     }
 }

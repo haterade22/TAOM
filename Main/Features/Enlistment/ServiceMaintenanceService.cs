@@ -79,9 +79,6 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         if (!record.IsEnlisted)
             return;
 
-        // Positive requirement, so a NaN dt contributes NOTHING rather than poisoning the budget
-        // into never firing again (NaN propagates through every subsequent addition, and every
-        // comparison against it is false).
         // BRACES ARE LOAD-BEARING. Both accumulators must sit INSIDE the guard: NaN propagates
         // through every subsequent addition and every comparison against it is false, so one
         // unguarded `+= dt` permanently wedges that budget below its threshold and the tier it
@@ -130,6 +127,23 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _status?.RefreshIfChanged();
     }
 
+    /// <summary>
+    /// Drop per-session caches. MUST be called on game load and session launch: the cached party
+    /// id is matched by StringId, and lord-party ids are identical across a reload of the same
+    /// campaign — so a stale handle from a destroyed campaign HITS the cache test and the cheap
+    /// position sync then drives the player from a dead party's position at frame rate.
+    /// </summary>
+    public void ResetSessionCaches()
+    {
+        _cachedCommanderPartyId = null;
+        _lastJoinRequestedForMapEventToken = 0;
+        _menuFailures = 0;
+        _budget = 0f;
+        _statusBudget = 0f;
+        _attachment.InvalidateCommanderCache();
+        _status?.Invalidate();
+    }
+
     public void OnPartyJoinedRunningMapEvent(string partyId)
     {
         // Fires for EVERY party joining EVERY battle in the world. Stay near-free on the
@@ -173,6 +187,13 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         if (!commander.IsFollowable)
             return;
 
+        // A save taken mid-battle resumes the retry here. _lastJoinRequestedForMapEventToken is
+        // a private field that resets to 0 on load, so without this the persisted flag was
+        // write-only and its documented purpose — surviving a reload — was not implemented.
+        // Clearing the token forces one immediate attempt for the battle still in progress.
+        if (record.PendingCommanderAttachment && _lastJoinRequestedForMapEventToken == 0)
+            record.NextAttachRetryAtHours = null;
+
         // Dedupe on the map-event token so a battle we already tried and failed is not retried
         // every pass — only once per battle, then on the shared hourly budget.
         var sameBattleAlreadyTried = commander.MapEventToken != 0
@@ -213,15 +234,20 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // settlement stop, which is the one place a stray vanilla town menu can appear.
         if (!presence.LooksParked && !presence.IsInSettlement)
             return;
-        if (_menuFailures >= MaxMenuFailures)
-            return;
-
+        // STATE TRANSITION BEFORE THE GATE. This check used to sit ABOVE the reset below, so
+        // once the counter hit the cap it returned on every subsequent pass and neither reset
+        // was ever reachable — three transient failures disabled the wait-menu invariant for
+        // the rest of the PROCESS, on a singleton, across re-enlistment and across campaigns.
+        // That is the latch failure mode the harmony-patches rule exists to prevent.
         var current = _gameMenu.CurrentMenuId;
         if (current == EnlistmentMenuService.ServiceWaitMenuId)
         {
             _menuFailures = 0;
             return;
         }
+
+        if (_menuFailures >= MaxMenuFailures)
+            return;
 
         // Only take over a menu we are entitled to take over. A settlement or encounter menu the
         // player legitimately owns is not ours to close.

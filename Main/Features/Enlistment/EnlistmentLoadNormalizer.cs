@@ -42,7 +42,12 @@ public class EnlistmentLoadNormalizer : IEnlistmentLoadNormalizer
             if (presence.LooksParked && !presence.IsCaptive)
             {
                 _logger?.LogWarning("[Enlistment] load rescue: main party was hidden+inactive with no service record (ownerless) — restoring presence");
-                _partyAdapter.RestorePresence();
+                // ONE SHOT. Normalize runs only from OnGameLoaded, and the hourly reconciler
+            // early-returns when the record says NotEnlisted — so nothing ever retries this.
+            // A silent failure here leaves the player hidden and inactive for the whole
+            // session with no way to act.
+            if (!_partyAdapter.RestorePresence())
+                _logger?.LogError("[Enlistment] load rescue FAILED — the main party is hidden and inactive with no service record, and nothing will retry. The player cannot act until this is resolved.");
             }
             return;
         }

@@ -116,6 +116,13 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
         if (!(served < minimum))
             return Domain.ReleaseRequest.Granted;
 
-        return Domain.ReleaseRequest.TooSoon((int)System.Math.Ceiling(minimum - served));
+        // Clamped BEFORE the narrowing conversion. NaN/infinity are already rejected above, but
+        // a merely huge finite config value overflows the cast and can surface as a negative
+        // day count — the float->int trap the architecture rules call out separately from NaN.
+        var owed = System.Math.Ceiling(minimum - served);
+        if (owed >= int.MaxValue)
+            return Domain.ReleaseRequest.TooSoon(int.MaxValue);
+
+        return Domain.ReleaseRequest.TooSoon((int)owed);
     }
 }

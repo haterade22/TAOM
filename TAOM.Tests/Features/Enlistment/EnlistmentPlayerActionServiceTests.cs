@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TAOM.Features.Enlistment.Domain;
 using TAOM.Features.Enlistment.Duties;
@@ -40,7 +41,7 @@ public class EnlistmentPlayerActionServiceTests
         _store.Record.EnlistedHeroId = "main_hero";
         _store.Record.CommanderHeroId = "lord_1";
 
-        _sut = new EnlistmentPlayerActionService(_store, _commander, _conversation, _duties, logger);
+        _sut = new EnlistmentPlayerActionService(_store, _commander, _conversation, _duties, Coop(), logger);
     }
 
     [TestMethod]
@@ -133,5 +134,12 @@ public class EnlistmentPlayerActionServiceTests
 
         Assert.AreEqual(DutyRequestResult.DutyAssigned, _sut.RequestDutyNow(10.0, 12.0));
         _duties.Received(1).RequestDutyNow(10.0, 12.0);
+    }
+
+    private static ICoopSessionProvider Coop()
+    {
+        var coop = Substitute.For<ICoopSessionProvider>();
+        coop.IsAuthority.Returns(true);
+        return coop;
     }
 }

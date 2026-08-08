@@ -164,10 +164,28 @@ public class DischargeService : IDischargeService
                 return;
             }
 
-            // MANDATORY rollback: a player inside a settlement with no settlement menu is the same
-            // soft-lock one layer deeper. Back them out rather than leave them stuck inside.
             _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not open '{menuId}' for '{settlementId}' — leaving the settlement rather than stranding the player inside it");
-            _attachment.LeaveSettlement();
+        }
+
+        // EVERY path that did not just open a real settlement menu must walk the player OUT of
+        // whatever settlement they are standing in. This used to live inside the branch above,
+        // keyed on where the COMMANDER is — so a discharge while the player was inside a settlement
+        // and the commander was NOT (dead, in the field, in a hideout) skipped it entirely and then
+        // closed the wait menu, leaving them with CurrentSettlement set and no menu at all.
+        //
+        // That is terminal, not cosmetic. MobileParty.DoUpdatePosition refuses to move a party with
+        // CurrentSettlement set; CheckExitingSettlementParallel explicitly skips the main party; and
+        // the menu the engine re-pushes for a fortification is "town_outside", whose Leave option
+        // calls PlayerEncounter.Finish() — which returns immediately when Current is null and never
+        // reaches its own LeaveSettlement(). For a village the engine pushes nothing at all. It
+        // survives save/reload, because the record now reads NotEnlisted and every recovery loop in
+        // this feature early-returns on exactly that.
+        var presence = _attachment.GetPresenceFlags();
+        if (presence.IsInSettlement)
+        {
+            _logger?.LogWarning($"[EnlistDiag] DISCHARGE({reason}) is leaving '{presence.SettlementId}' — the player was inside it and no settlement menu was opened for them");
+            if (!_attachment.LeaveSettlement())
+                _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) COULD NOT leave '{presence.SettlementId}' — the player is immobile inside a settlement with no menu. This is a soft-lock; report this line.");
         }
 
         ExitServiceMenuIfOpen(reason);

@@ -43,11 +43,16 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
         _duties = duties;
         _discharge = discharge;
         _coopSession = coopSession;
-        _discharge.EnlistmentEnded += OnEnlistmentEnded;
     }
 
     public override void RegisterEvents()
     {
+        // Idempotent pair (see EnlistmentBattleBehavior): both this and DischargeService are
+        // singletons, so a second campaign in one process would otherwise run every discharge
+        // consequence twice — and they are not all idempotent.
+        _discharge.EnlistmentEnded -= OnEnlistmentEnded;
+        _discharge.EnlistmentEnded += OnEnlistmentEnded;
+
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
         CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -79,7 +84,7 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
     private static void AnnouncePromotion(Content.Domain.ServiceRank rank)
     {
         var text = new TextObject("{=taom_enlist_promoted}You have been promoted to {RANK}.");
-        text.SetTextVariable("RANK", rank.ToString());
+        text.SetTextVariable("RANK", Presentation.ServiceVocabulary.RankName(rank));
         InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
     }
 

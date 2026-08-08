@@ -46,4 +46,11 @@ public interface IServiceMaintenanceService
     /// it is dispatched exactly once, as the last statement of <c>MapEvent.Initialize</c>.
     /// </summary>
     void OnPartyJoinedRunningMapEvent(string partyId);
+
+    /// <summary>
+    /// Drop every per-session cache. Call on game load and session launch — a commander-party
+    /// handle cached from a previous campaign matches by StringId and would drive the position
+    /// sync from a destroyed party.
+    /// </summary>
+    void ResetSessionCaches();
 }

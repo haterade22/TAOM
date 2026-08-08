@@ -165,3 +165,102 @@ public class EnlistmentFeatureToggleTests
             EnlistmentFeatureSettingsProvider.ResolveEnabled(null));
     }
 }
+
+/// <summary>
+/// Guards added by the overnight review pass. Each pins a defect that was found by reading rather
+/// than by a failing test — which is precisely why they need tests now.
+/// </summary>
+[TestClass]
+public class EnlistmentReviewGuardTests
+{
+    private IEnlistmentConfigProvider _config;
+    private IDischargeService _discharge;
+    private ICommanderLordAdapter _commander;
+    private IServiceAttachmentService _attachment;
+    private EnlistmentStore _store;
+    private EnlistmentReconciler _reconciler;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        var logger = Substitute.For<IModLogger>();
+        _store = new EnlistmentStore(logger);
+        _config = Substitute.For<IEnlistmentConfigProvider>();
+        _discharge = Substitute.For<IDischargeService>();
+        _commander = Substitute.For<ICommanderLordAdapter>();
+        _attachment = Substitute.For<IServiceAttachmentService>();
+
+        _attachment.GetPresence().Returns(new PlayerPresenceSnapshot(mainPartyExists: true));
+        _attachment.Assess(Arg.Any<EnlistmentState>(), Arg.Any<CommanderSnapshot>(), Arg.Any<PlayerPresenceSnapshot>())
+            .Returns(new AttachmentAssessment(AttachmentStatus.Blocked, AttachmentBlockReason.CommanderPartyMissing));
+        // Commander captured: alive, but party-less — the shape that starts a grace window.
+        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, isPrisoner: true, partyId: null));
+
+        _store.Record.State = EnlistmentState.EnlistedAttached;
+        _store.Record.EnlistedHeroId = "main_hero";
+        _store.Record.CommanderHeroId = "lord_1";
+
+        _reconciler = new EnlistmentReconciler(
+            _store, new EnlistmentStateMachine(_store, logger), _attachment, _commander, _discharge,
+            _config, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(),
+            Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
+            EnlistmentTestDoubles.FeatureOn(), logger);
+    }
+
+    [DataTestMethod]
+    [DataRow(double.NaN)]
+    [DataRow(double.PositiveInfinity)]
+    [DataRow(double.NegativeInfinity)]
+    [DataRow(0.0)]
+    [DataRow(-5.0)]
+    public void GraceDeadline_DegenerateConfig_StillProducesAnExpiringWindow(double graceDays)
+    {
+        // The sixth instance of the NaN-gate bug class, caught before shipping. `nowDays >=
+        // GraceEndsAtDay` is FALSE FOREVER against a NaN deadline, so grace would never expire and
+        // the player would sit in CommanderUnavailable permanently with no auto-discharge — a
+        // soft-lock produced by one bad config number. A negative value is the opposite failure:
+        // instant discharge the moment the commander blinks.
+        _config.GetConfig().Returns(new EnlistmentCoreConfig { CommanderGraceDays = graceDays });
+
+        _reconciler.ReconcileHourly(200.0);
+
+        Assert.AreEqual(EnlistmentState.CommanderUnavailable, _store.Record.State);
+        Assert.IsTrue(_store.Record.GraceEndsAtDay.HasValue, "a grace window must have been opened");
+
+        var deadline = _store.Record.GraceEndsAtDay.Value;
+        Assert.IsFalse(double.IsNaN(deadline), "a NaN deadline never expires — the player is stuck forever");
+        Assert.IsFalse(double.IsInfinity(deadline), "an infinite deadline never expires either");
+        Assert.IsTrue(deadline > 200.0, "the window must be in the FUTURE, or service ends the moment it starts");
+    }
+
+    [TestMethod]
+    public void GraceDeadline_UsableConfig_IsHonoured()
+    {
+        _config.GetConfig().Returns(new EnlistmentCoreConfig { CommanderGraceDays = 3.0 });
+
+        _reconciler.ReconcileHourly(200.0);
+
+        Assert.AreEqual(203.0, _store.Record.GraceEndsAtDay.Value, 0.0001);
+    }
+
+    [TestMethod]
+    public void ReconcileNow_ReentrantCall_DoesNotRecurse()
+    {
+        // The hazard is live, not theoretical: settlement following makes the reconciler call
+        // LeaveSettlementAction, which dispatches OnSettlementLeft, which is now subscribed and
+        // routes straight back to ReconcileNow — on a record the outer pass is mid-way through
+        // mutating.
+        _config.GetConfig().Returns(new EnlistmentCoreConfig());
+        var reentered = 0;
+        _attachment.When(a => a.GetPresence()).Do(_ =>
+        {
+            if (reentered++ == 0)
+                _reconciler.ReconcileNow(200.0, "reentrant edge");
+        });
+
+        _reconciler.ReconcileHourly(200.0);
+
+        Assert.AreEqual(1, reentered, "the inner call must have been refused by the in-flight guard");
+    }
+}

@@ -67,10 +67,39 @@ public class ServiceBattleService : IServiceBattleService
         // PlayerEncounter + open "encounter" menu freezes its map event permanently (the engine
         // ticks every map event EXCEPT the player's, which only advances via PlayerEncounter).
         _machine.TryTransition(EnlistmentState.EnlistedBattle);
-        _attachment.RestorePresence();
+
+        // The comment above is a HARD precondition, not advice: the engine skips inactive
+        // parties in encounter detection, and a party that acquires a MapEventSide without a
+        // live PlayerEncounter freezes its map event PERMANENTLY (the engine ticks every map
+        // event except the player's). Proceeding on a failed restore is how that happens, so
+        // fall through to the rollback instead of joining half-present.
+        if (!_attachment.RestorePresence())
+        {
+            _logger?.LogError($"[Enlistment] cannot join commander battle ({trigger}) — presence restore failed; rolling back rather than joining a battle half-present");
+        }
+        else
+        {
         _attachment.SyncPosition(_store.Record.CommanderHeroId);
 
-        if (_encounter.EnsureEncounterAgainst(commanderPartyId))
+        // EnsureEncounterAgainst refuses to seed while a DIFFERENT PlayerEncounter.Current
+        // exists. Rather than burning the immediate join and waiting out the retry budget — long
+        // enough to miss a short battle — clear a stale encounter that is OURS and try once more
+        // in the same pass. Only on the refusal path: on the happy path there is nothing stale,
+        // and finishing the encounter we are about to use would be pure churn.
+        // This is what EncounterFinishIntent.StaleBeforeCommanderBattle was defined for.
+        var encounterReady = _encounter.EnsureEncounterAgainst(commanderPartyId);
+        if (!encounterReady)
+        {
+            var staleVerdict = _ownership.Evaluate(
+                EncounterFinishIntent.StaleBeforeCommanderBattle, _encounter.GetOwnership(commanderPartyId));
+            if (staleVerdict == EncounterFinishVerdict.Finish && _encounter.Finish(true))
+            {
+                _logger?.LogInfo($"[Enlistment] cleared a stale encounter and retried the join ({trigger})");
+                encounterReady = _encounter.EnsureEncounterAgainst(commanderPartyId);
+            }
+        }
+
+        if (encounterReady)
         {
             // Attacker only. MapEvent.AddInvolvedPartyInternal converts a siege ASSAULT to
             // SiegeOutside when a defender joins with CurrentSettlement == null — so leaving the
@@ -94,6 +123,8 @@ public class ServiceBattleService : IServiceBattleService
 
                 _logger?.LogError("[Enlistment] joined the battle but could not open the encounter menu — rolling back to avoid freezing the map event");
             }
+        }
+
         }
 
         // Rollback (the donor's wasHiddenServiceMode contract): never strand a visible, active

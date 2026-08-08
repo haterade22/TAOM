@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment;
 using TAOM.Features.Enlistment.Domain;
@@ -18,7 +19,7 @@ public class EnlistmentMenuServiceTests
     {
         _logger = Substitute.For<IModLogger>();
         _store = new EnlistmentStore(_logger);
-        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(_logger), _logger);
+        _service = new EnlistmentMenuService(_store, new EnlistmentConfigProvider(_logger), Substitute.For<IMobilePartyAttachmentAdapter>(), _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)

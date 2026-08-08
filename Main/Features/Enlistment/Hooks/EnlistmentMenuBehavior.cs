@@ -18,8 +18,20 @@ namespace TAOM.Features.Enlistment.Hooks;
 /// </summary>
 public class EnlistmentMenuBehavior : CampaignBehaviorBase
 {
-    /// <summary>Nominal seconds per wait-menu frame; the pump's shared budget does the real throttling.</summary>
-    private const float WaitMenuFrameSeconds = 1f / 30f;
+    /// <summary>
+    /// REAL elapsed time between wait-menu frames, measured rather than assumed.
+    ///
+    /// This used to feed the pump a constant 1/30s per callback. But the wait-menu tick is a
+    /// FRAME tick (GameMenuManager.OnFrameTick -> GameMenu.RunOnTick), so at 144 fps it fabricated
+    /// ~4.8 seconds of budget per real second — driving the "4 Hz" expensive tier at ~19 Hz and
+    /// the status board, which uses the explicitly forbidden GetSnapshot, at ~2.4 Hz. At 240 fps
+    /// the board hit exactly the 4 Hz its own doc calls forbidden. The throttle was frame-rate
+    /// dependent, which is the one thing a real-time budget must not be.
+    /// </summary>
+    private readonly System.Diagnostics.Stopwatch _waitMenuClock = System.Diagnostics.Stopwatch.StartNew();
+
+    /// <summary>Largest real-time step one wait-menu frame may contribute, so a stall cannot burst the budget.</summary>
+    private const float MaxWaitMenuStepSeconds = 0.5f;
 
     private readonly IEnlistmentStore _store;
     private readonly IServiceAttachmentService _attachment;
@@ -101,7 +113,15 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         if (!_coopSession.IsAuthority)
             return;
 
-        _maintenance.Pump(WaitMenuFrameSeconds, CampaignTime.Now.ToHours);
+        var elapsed = (float)_waitMenuClock.Elapsed.TotalSeconds;
+        _waitMenuClock.Restart();
+
+        // Clamp: a frame after a long stall (alt-tab, load) would otherwise dump seconds of budget
+        // in at once and fire every tier on the same pass.
+        if (elapsed > MaxWaitMenuStepSeconds)
+            elapsed = MaxWaitMenuStepSeconds;
+
+        _maintenance.Pump(elapsed, CampaignTime.Now.ToHours);
     }
 
     // Asking to leave is a DECISION with a cost the player must see first, so the whole thing —

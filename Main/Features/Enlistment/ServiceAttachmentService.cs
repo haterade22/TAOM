@@ -152,4 +152,26 @@ public class ServiceAttachmentService : IServiceAttachmentService
         _logger?.LogInfo("[EnlistDiag] EXIT: left the settlement to rejoin the column");
         return _attachment.ParkNear(commanderHeroId);
     }
+
+    /// <summary>
+    /// Leave a settlement and stay VISIBLE — the detached-duty exit.
+    ///
+    /// Distinct from <see cref="ExitSettlementForService"/> on purpose. That one ends in a park,
+    /// which is correct while following the column and catastrophic on a duty: parking hides and
+    /// deactivates the party, and NOTHING un-hides it while the state is EnlistedDetachedOnDuty
+    /// (Assess returns Blocked/NotInAttachableState for that state, so neither the reconciler nor
+    /// the pump ever restores presence). The player would be invisible and immobile for the whole
+    /// duty deadline — four to six days — then fail it.
+    /// </summary>
+    public bool ExitSettlementForDuty()
+    {
+        if (!_attachment.LeaveSettlement())
+        {
+            _logger?.LogError("[EnlistDiag] duty EXIT failed — the player is starting a duty while stuck inside a settlement");
+            return false;
+        }
+
+        // Presence LAST and unconditional: a duty is performed out in the world.
+        return _attachment.RestorePresence();
+    }
 }

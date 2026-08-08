@@ -10,16 +10,8 @@ using TAOM.Features.Enlistment.Domain;
 namespace TAOM.Features.Enlistment.Hooks;
 
 /// <summary>
-/// Thin event router (ADR-002) for the enlistment core. All decisions live in the
-/// services: the hourly reconciler is the single terminal-decision authority and the load
-/// normalizer owns the Entity State Matrix. This class wires campaign events + SyncData.
-///
-/// Entity State Matrix: load-path mutations are delegated to
-/// <see cref="IEnlistmentLoadNormalizer"/> (restore-direction always safe; park-direction
-/// fully precondition-checked; never leaves an ownerless hidden MainParty — see its tests).
-///
-/// CO-OP: every world-mutating handler is host-only. A client that reconciled locally
-/// would park/restore the shared MainParty and run discharges the host never made.
+/// Thin lifecycle boundary (ADR-002): SyncData, load normalization, the hourly reconcile
+/// tick, and captivity edges. All decisions live in the services; this class only routes.
 /// </summary>
 public class EnlistmentBehavior : CampaignBehaviorBase
 {
@@ -31,6 +23,7 @@ public class EnlistmentBehavior : CampaignBehaviorBase
     private readonly IEnlistmentLoadNormalizer _normalizer;
     private readonly IPlayerPartyAdapter _playerParty;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly IServiceMaintenanceService _maintenance;
     private readonly IModLogger _logger;
 
     private CampaignGameStarter _lastSessionStarter;
@@ -43,6 +36,7 @@ public class EnlistmentBehavior : CampaignBehaviorBase
         IEnlistmentLoadNormalizer normalizer,
         IPlayerPartyAdapter playerParty,
         ICoopSessionProvider coopSession,
+        IServiceMaintenanceService maintenance,
         IModLogger logger)
     {
         _store = store;
@@ -51,6 +45,7 @@ public class EnlistmentBehavior : CampaignBehaviorBase
         _normalizer = normalizer;
         _playerParty = playerParty;
         _coopSession = coopSession;
+        _maintenance = maintenance;
         _logger = logger;
     }
 
@@ -120,6 +115,9 @@ public class EnlistmentBehavior : CampaignBehaviorBase
     internal void OnGameLoaded(CampaignGameStarter starter)
     {
         if (!_coopSession.IsAuthority) return;
+
+        // BEFORE normalizing: a stale cached commander party matches by StringId.
+        _maintenance.ResetSessionCaches();
         _normalizer.Normalize(_playerParty.GetMainHeroId(), CampaignTime.Now.ToDays);
     }
 

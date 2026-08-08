@@ -27,6 +27,9 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     /// </summary>
     private bool _reconcileInFlight;
 
+    /// <summary>Fallback when the configured grace window is unusable. Matches EnlistmentCoreConfig.</summary>
+    private const double DefaultGraceDays = 7.0;
+
     public EnlistmentReconciler(
         IEnlistmentStore store,
         IEnlistmentStateMachine machine,
@@ -154,7 +157,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
         if (!record.GraceEndsAtDay.HasValue)
         {
-            record.GraceEndsAtDay = nowDays + _config.GetConfig().CommanderGraceDays;
+            record.GraceEndsAtDay = GraceDeadline(nowDays);
             return;
         }
 
@@ -181,7 +184,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         {
             // Player is already free-roaming on duty — grace starts with no presence change.
             _machine.TryTransition(EnlistmentState.CommanderUnavailable);
-            record.GraceEndsAtDay = nowDays + _config.GetConfig().CommanderGraceDays;
+            record.GraceEndsAtDay = GraceDeadline(nowDays);
         }
     }
 
@@ -280,7 +283,11 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 return;
 
             case AttachmentStatus.SettlementExitRequired:
-                _attachment.ExitSettlementForService(record.CommanderHeroId);
+                // Checked, not discarded: a persistently failing LeaveSettlement would return
+                // SettlementExitRequired again every hour forever, silently, with the player
+                // stuck inside a settlement the commander has left.
+                if (!_attachment.ExitSettlementForService(record.CommanderHeroId))
+                    _logger?.LogError($"[EnlistDiag] hourly EXIT failed — the player is stuck inside a settlement '{presence.SettlementId}' the commander has left");
                 return;
 
             case AttachmentStatus.AttachRequired:
@@ -335,7 +342,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 // transition is retried after the battle resolves back to attached.
                 if (_machine.TryTransition(EnlistmentState.CommanderUnavailable))
                 {
-                    record.GraceEndsAtDay = nowDays + _config.GetConfig().CommanderGraceDays;
+                    record.GraceEndsAtDay = GraceDeadline(nowDays);
                     _attachment.RestorePresence();
                     _logger?.LogInfo($"[Enlistment] commander {record.CommanderHeroId} lost their party — grace until day {record.GraceEndsAtDay:F1}");
                 }
@@ -351,5 +358,28 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 _logger?.LogError($"[Enlistment] unhandled attachment block reason {reason} in reconciler");
                 return;
         }
+    }
+
+    /// <summary>
+    /// Grace deadline, with the config value sanitised at the point of use.
+    ///
+    /// NaN is the failure that matters: `nowDays >= GraceEndsAtDay` is FALSE forever against a
+    /// NaN deadline, so grace would never expire and the player would sit in CommanderUnavailable
+    /// permanently with no auto-discharge — a soft-lock produced by one bad number. A negative
+    /// value is the opposite failure: grace expires instantly and discharges the player the moment
+    /// their commander so much as blinks. Both fall back to the compiled default.
+    /// </summary>
+    private double GraceDeadline(double nowDays)
+    {
+        var days = _config?.GetConfig()?.CommanderGraceDays ?? DefaultGraceDays;
+
+        // Positive requirement: NaN and infinity both fail this and take the default.
+        if (!(days > 0.0) || double.IsInfinity(days))
+        {
+            _logger?.LogWarning($"[Enlistment] CommanderGraceDays is not a usable number ({days}) — using {DefaultGraceDays} days instead");
+            days = DefaultGraceDays;
+        }
+
+        return nowDays + days;
     }
 }

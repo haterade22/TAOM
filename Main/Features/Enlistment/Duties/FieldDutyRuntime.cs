@@ -132,7 +132,7 @@ public class FieldDutyRuntime : IFieldDutyRuntime
             // the gate — and nothing walks them out afterwards, because a detached duty state is
             // Blocked in Assess, so the reconciler's settlement-exit verdict never runs for it.
             if (_attachment.GetPresenceFlags().IsInSettlement)
-                _attachment.ExitSettlementForService(_store.Record.CommanderHeroId);
+                _attachment.ExitSettlementForDuty();
         }
 
         return true;
@@ -277,7 +277,16 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         if (wasDetached)
         {
             _stateMachine.TryTransition(EnlistmentState.EnlistedAttached);
-            _attachment.EnsureParked(_store.Record.CommanderHeroId);
+
+            // Leave first if the duty ended inside a settlement. Parking hides and deactivates the
+            // party WITHOUT leaving, producing hidden-and-inactive-inside-a-settlement — the exact
+            // state the reconciler's Attached branch documents as impossible, and which it then
+            // skips over because it treats "inside a settlement" as legitimately unparked. The
+            // symmetric guard already exists in Start; it was missing here.
+            if (_attachment.GetPresenceFlags().IsInSettlement)
+                _attachment.ExitSettlementForService(_store.Record.CommanderHeroId);
+            else
+                _attachment.EnsureParked(_store.Record.CommanderHeroId);
         }
     }
 

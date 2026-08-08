@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Adapters;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
 
@@ -38,6 +39,7 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
     private readonly IServiceRewardService _rewards;
     private readonly IEnlistmentStore _store;
     private readonly IEnlistmentContentStore _contentStore;
+    private readonly ICoopSessionProvider _coopSession;
 
     public InteractiveDutyPresenter(
         IInquiryAdapter inquiry,
@@ -45,7 +47,8 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
         IHeroSkillXpAdapter skillXp,
         IServiceRewardService rewards,
         IEnlistmentStore store,
-        IEnlistmentContentStore contentStore)
+        IEnlistmentContentStore contentStore,
+        ICoopSessionProvider coopSession)
     {
         _inquiry = inquiry;
         _skillCheck = skillCheck;
@@ -53,6 +56,7 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
         _rewards = rewards;
         _store = store;
         _contentStore = contentStore;
+        _coopSession = coopSession;
     }
 
     public void PresentInteractiveDuty(InteractiveDutyDefinition duty, ServiceProgressSnapshot progress, int trust)
@@ -85,14 +89,29 @@ public class InteractiveDutyPresenter : IInteractiveDutyPresenter
             () => ResolveIncidentOption(incident, incident.OptionB, progress, trust));
     }
 
+    /// <summary>
+    /// Both option callbacks run on a LATER frame than the popup that offered them, so neither the
+    /// authority check nor the enlisted check made when the duty was PRESENTED still covers the
+    /// moment rewards are granted and the record is mutated. Same stale-authorisation shape as the
+    /// desertion confirmation. A discharge landing in that window would otherwise pay out a duty
+    /// for a service that has ended.
+    /// </summary>
+    private bool CanResolveNow() => _coopSession?.IsAuthority != false && _store.Record.IsEnlisted;
+
     private void ResolveOption(string dutyId, DutyOptionSpec option, ServiceProgressSnapshot progress, int trust)
     {
+        if (!CanResolveNow())
+            return;
+
         var passed = ResolveCheckAndReward(dutyId, "duty", option, progress, trust);
         ShowResultToast(dutyId, passed);
     }
 
     private void ResolveIncidentOption(IncidentDefinition incident, DutyOptionSpec option, ServiceProgressSnapshot progress, int trust)
     {
+        if (!CanResolveNow())
+            return;
+
         var passed = ResolveCheckAndReward(incident.Id, "incident", option, progress, trust);
 
         if (passed && incident.Effect == "ReleaseDeferredPay")

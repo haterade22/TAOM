@@ -1,5 +1,6 @@
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment.Domain;
 using TAOM.Features.Enlistment.Duties;
 
@@ -11,6 +12,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
     private readonly ICommanderLordAdapter _commander;
     private readonly IMapConversationAdapter _conversation;
     private readonly IDutyOrchestrationService _duties;
+    private readonly ICoopSessionProvider _coopSession;
     private readonly IModLogger _logger;
 
     public EnlistmentPlayerActionService(
@@ -18,12 +20,14 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         ICommanderLordAdapter commander,
         IMapConversationAdapter conversation,
         IDutyOrchestrationService duties,
+        ICoopSessionProvider coopSession,
         IModLogger logger)
     {
         _store = store;
         _commander = commander;
         _conversation = conversation;
         _duties = duties;
+        _coopSession = coopSession;
         _logger = logger;
     }
 
@@ -76,6 +80,17 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         return TalkToCommanderResult.CommanderUnavailable;
     }
 
-    public DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay) =>
-        _duties.RequestDutyNow(nowDays, hourOfDay);
+    /// <summary>
+    /// CO-OP: host-only. The daily duty tick is already host-gated; this explicit menu path
+    /// reaches the same orchestration — starting field duties, spawning target parties,
+    /// presenting reward-bearing inquiries and mutating the content record — so a client
+    /// running it locally would fork shared campaign state.
+    /// </summary>
+    public DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay)
+    {
+        if (!_coopSession.IsAuthority)
+            return DutyRequestResult.NoWorkAvailable;
+
+        return _duties.RequestDutyNow(nowDays, hourOfDay);
+    }
 }

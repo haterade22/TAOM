@@ -48,6 +48,57 @@ trimming 234 bodies at weighted 465 against limit 231.
 Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
 guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
 equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+### fix(enlistment): two terminal soft-locks, a frozen battle, and a latch that never recovered
+
+A five-agent deep review plus an adversarial Codex pass over batches 0–10. Twelve findings, all
+fixed. The two that mattered most were both terminal and both survived save/reload.
+
+**Discharge could strand the player inside a settlement, permanently.** Placement was decided
+purely from where the COMMANDER is, and never asked where the PLAYER is — so a discharge while the
+player stood in a town and the commander did not (dead, in the field, in a hideout) skipped the
+settlement branch entirely and then closed the wait menu. That leaves `CurrentSettlement` set with
+no menu at all, and it does not recover: `DoUpdatePosition` refuses to move a party in that state,
+`CheckExitingSettlementParallel` explicitly skips the main party, and the menu the engine
+re-pushes for a fortification is `town_outside`, whose Leave calls `PlayerEncounter.Finish()` —
+which returns immediately when `Current` is null and never reaches its own `LeaveSettlement()`.
+For a village the engine pushes nothing. Every recovery loop in the feature early-returns on
+`NotEnlisted`, which the record now says.
+
+**A save taken mid-battle could freeze that battle forever.** `EnlistedBattle` is coerced to
+`EnlistedAttached` at save time, so on reload the state says "attached" while the engine still has
+the player in the map event and restores `GameMenuId = "encounter"` — which the menu redirect then
+swallowed. `MapEventManager.Tick` deliberately skips the player's own map event; it advances only
+through `PlayerEncounter.Update`, driven from that menu. Battle menus are now exempt from redirect
+whenever the player is actually in a map event.
+
+**A duty starting from inside a settlement made the player invisible for days.** The exit path
+ended in a park — correct while following the column, catastrophic on a duty, because nothing
+un-hides a party while the state is `EnlistedDetachedOnDuty` (`Assess` returns Blocked for it, so
+neither the reconciler nor the pump ever restores presence). Duties now have their own exit that
+ends visible.
+
+**The wait-menu guard could switch itself off for the rest of the process.** The back-off check sat
+ABOVE both of its reset sites, so once three transient failures hit the cap neither reset was
+reachable again — on a singleton, across re-enlistment and across campaigns.
+
+**The real-time budget was frame-rate dependent.** The wait-menu tick is a FRAME tick, and it was
+feeding the pump a constant 1/30s per callback — fabricating ~4.8 seconds of budget per real
+second at 144 fps, running the "4 Hz" expensive tier at ~19 Hz and the status board, which uses
+the explicitly forbidden `GetSnapshot`, at ~2.4 Hz. It now measures real elapsed time, clamped so
+a stall cannot burst the budget.
+
+Also: a NaN `CommanderGraceDays` made `nowDays >= GraceEndsAtDay` false forever, so grace never
+expired and the player sat in `CommanderUnavailable` with no auto-discharge — the sixth instance of
+that bug class, caught before shipping this time. A commander-party handle cached across a game
+load matched by StringId and drove the position sync from a destroyed campaign's party. Deferred
+duty callbacks granted rewards without re-checking authority or enlistment. `RestorePresence`'s
+result was discarded before encounter work that its own comment called a hard precondition.
+`StaleBeforeCommanderBattle` was defined but never called, so a leftover encounter burned the
+immediate join. And the promotion toast still printed a raw enum name.
+
+Suite 668 green.
+
+Research: MobileParty.DoUpdatePosition, CheckExitingSettlementParallel, MapEventManager.Tick, GameMenuManager.OnFrameTick
 ### refactor(enlistment): put the presentation layer where it belongs, and stop duplicating strings
 
 A standards pass found six entry points at or over ADR-002's 150-line ceiling — three of them

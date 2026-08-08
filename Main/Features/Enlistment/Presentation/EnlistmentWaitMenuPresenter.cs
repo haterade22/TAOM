@@ -110,9 +110,11 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
                 return;
 
             default:
-                // Term served — an honourable release. DischargeService owns the menu exit and
-                // the settlement hand-back (INV-D1), so there is nothing to do here afterwards.
-                _service.RequestDischarge(DischargeReason.PlayerRequest);
+                // Term served — an honourable release. Routed through the gate rather than
+                // hardcoding PlayerRequest: the in-person dialog path already asks the gate,
+                // and if an early-exit cost is ever added there this path would silently
+                // bypass it. DischargeService owns the menu exit and settlement hand-back.
+                _service.RequestDischarge(_gate.ClassifyLeaveReason(nowDays));
                 return;
         }
     }

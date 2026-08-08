@@ -253,6 +253,10 @@ public class DischargeServiceTests
             settlementId: "town_A1", settlementMenuId: "town"));
         _attachment.MoveIntoSettlement(Arg.Any<string>()).Returns(true);
         _gameMenu.EnsureMenuOpen("town").Returns(false);
+        // The move succeeded, so the player really is inside — that is the precondition for
+        // backing them out again.
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
+            mainPartyExists: true, isActive: true, isVisible: true, settlementId: "town_A1"));
 
         _service.Execute(DischargeReason.PlayerRequest);
 
@@ -338,5 +342,38 @@ public class DischargeServiceTests
 
         _encounter.Received(1).Finish(true);
         _attachment.Received(1).RestorePresence();
+    }
+
+    [TestMethod]
+    public void Execute_PlayerInsideASettlementTheCommanderIsNotIn_StillLeavesIt()
+    {
+        // F1, the terminal soft-lock. Placement is decided from where the COMMANDER is, so when
+        // he has no settlement (dead, in the field, in a hideout) the whole settlement branch was
+        // skipped — and the wait menu was then closed, leaving the player with CurrentSettlement
+        // set and no menu. The engine will not move a party in that state, will not auto-exit the
+        // main party, and the menu it re-pushes for a fortification has a Leave that no-ops
+        // without an encounter. It survives save/reload.
+        MakeEnlisted();
+        _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: false));
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
+            mainPartyExists: true, isActive: true, isVisible: true, settlementId: "town_A1"));
+
+        _service.Execute(DischargeReason.CommanderDead);
+
+        _attachment.Received(1).LeaveSettlement();
+    }
+
+    [TestMethod]
+    public void Execute_PlayerNotInAnySettlement_DoesNotCallLeaveSettlement()
+    {
+        MakeEnlisted();
+        _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: false));
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(mainPartyExists: true));
+
+        _service.Execute(DischargeReason.CommanderDead);
+
+        _attachment.DidNotReceive().LeaveSettlement();
     }
 }
