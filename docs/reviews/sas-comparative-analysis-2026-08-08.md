@@ -34,9 +34,64 @@ Healing was deliberately left **below** SAS's ~28.8 HP/day field rate. SAS has n
 all, so their number is partly compensation for out-healing vanilla's `-19/day` starvation branch.
 TAOM provisions the enlisted player instead, removing the cause rather than out-running it.
 
+## CORRECTION (added after the 13-agent comparative workflow returned)
+
+**The premise of §1 below is inverted, and the real finding is more serious than the gap it
+describes.** The section was written from the fact that `IsPlayerSergeant()` is unreachable for us.
+That fact is correct; the conclusion drawn from it — "TAOM lacks battlefield command" — is not.
+Follow the chain one step further, into what the engine does when the answer is *false*:
+
+```csharp
+// SandBox.SandBoxMissions, four call sites (OpenBattleMission :661/:732 among them)
+bool isPlayerSergeant = MobileParty.MainParty.MapEvent.IsPlayerSergeant();
+...
+new AssignPlayerRoleInTeamMissionController(!isPlayerSergeant, isPlayerSergeant, isPlayerInArmy, …)
+//                                          ^^^^^^^^^^^^^^^^^ isPlayerGeneral
+
+// TaleWorlds.MountAndBlade.Team.SetPlayerRole
+IsPlayerGeneral = isPlayerGeneral;
+foreach (Formation item in FormationsIncludingSpecialAndEmpty)
+    item.SetControlledByAI(this != Mission.PlayerTeam || !IsPlayerGeneral);
+```
+
+`ClearArmyAttachment()` runs in **both** `MobilePartyAttachmentAdapter.ParkNear` (`:63`) and
+`RestorePresence` (`:97`), so `Army == null` holds in every enlistment regime, so
+`IsPlayerSergeant()` is permanently false, so `isPlayerGeneral` is permanently **true**, so every
+formation on the player's side gets `SetControlledByAI(false)`.
+
+**A rank-1 enlisted private commands the entire battle line, and the lord he serves commands
+nothing.** That is the precise inverse of the feature's fantasy, and it is not a missing feature —
+it is a live defect. The work is to *remove* command, not to grant it.
+
+Two candidate shapes, both needing the in-game check first (see below):
+
+- **(a)** `Mission.PlayerTeam.SetPlayerRole(false, false)` from a `MissionLogic` while enlisted —
+  public API, no Harmony patch. But "neither general nor sergeant" is a state vanilla never
+  produces in a campaign battle (exactly one is always true), so it is untested engine ground.
+- **(b)** Transient battle-only army join → `IsPlayerSergeant()` becomes true → the player commands
+  one formation as a sergeant, which is both vanilla-supported and the better fantasy for a
+  senior rank. This is what SAS actually does.
+
+`ClearArmyAttachment` is itself load-bearing — `DefaultEncounterGameMenuModel.GetGenericStateMenu`
+dereferences `mainParty.Army` unguarded inside its `AttachedTo != null` branch — so the open
+question is whether `Army != null` with `AttachedTo == null` is a stable state. Unverified.
+
+**The one check that settles it:** start any enlisted battle and look at whether the F1–F8 order UI
+is live and all formations are selectable. Do that before any mission-layer work. Filed as **#424**
+with the full chain, both candidate fixes, and the unresolved `Army != null` / `AttachedTo == null`
+sub-question.
+
+Note also that `GetCharacterSergeantScore` feeds `DefaultEncounterModel.GetLeadingScore →
+GetLeaderOfMapEvent`, so SAS's score-rigging is not cosmetic — it changes *who leads the battle* at
+campaign level (sally-out menu, `PlayerEncounter.LeaveBattle`). Making a private outrank his
+commander there is a campaign-state mutation, not a UI tweak. Do not copy it.
+
 ## Blocked on a design decision — do not build without the user
 
 ### 1. Sergeant / formation command at max rank
+
+> Superseded by the correction above — retained because its engine facts are accurate and still
+> needed. Read the correction first.
 
 SAS lets an enlisted soldier command a formation in battle. It is **not** custom order UI — they rig
 vanilla's own Sergeant mechanic with three patches:

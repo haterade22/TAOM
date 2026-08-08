@@ -1,4 +1,4 @@
-# CHANGELOG — TAOM (Tales From the Age of Men)
+﻿# CHANGELOG — TAOM (Tales From the Age of Men)
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
@@ -44,6 +44,30 @@ dimension concluded the prose was trapped in C# and unlocalized when it has been
 `GameText` in 12 languages for some time.
 
 Suite 6094 passing / 0 failing; `validate_moduledata.py` PASS.
+
+### docs: correct the SAS analysis — the enlisted player is already the general (#424)
+
+The comparison doc committed earlier today concluded that TAOM "lacks battlefield command" because
+`MapEvent.IsPlayerSergeant()` is unreachable for a parked player. The fact is right; the conclusion
+was inverted. Following the chain one step further, into what the engine does when that answer is
+*false*, gives the real finding: `SandBoxMissions` passes `!isPlayerSergeant` positionally as
+`isPlayerGeneral`, and `Team.SetPlayerRole` then calls `SetControlledByAI(false)` on every formation
+of the player's team. Because `ClearArmyAttachment()` runs in both `ParkNear` and `RestorePresence`,
+`Army == null` in every enlistment regime, so this is permanent.
+
+**A rank-1 enlisted private commands the entire battle line and the lord he serves commands
+nothing.** Not a missing feature — a live defect, and the work is to remove command rather than
+grant it. Filed as #424 with both candidate fixes (a `SetPlayerRole(false, false)` call from a
+MissionLogic, or a transient battle-only army join) and the unresolved sub-question of whether
+`Army != null` with `AttachedTo == null` is stable — `ClearArmyAttachment` is itself a verified CTD
+guard, so it cannot simply be dropped.
+
+Also recorded: SAS's sergeant-score rigging must NOT be copied. That score feeds
+`GetLeadingScore → GetLeaderOfMapEvent`, so it changes who leads the battle at campaign level
+(sally-out menu, `PlayerEncounter.LeaveBattle`) — a campaign-state mutation, not a UI tweak.
+
+Nothing landed in the mission layer. #406's owed in-game verification comes first; layering a role
+correction on an auto-join never observed working is how #406 got through four review passes.
 
 ### docs: record the Serve as Soldier comparison with its engine facts already resolved
 
