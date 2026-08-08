@@ -165,5 +165,10 @@
 	<string id="taom_enlist_duty_treat_wounded_optb" text="{=taom_enlist_duty_treat_wounded_optb}Fetch Carry" />
 	<string id="taom_enlist_duty_treat_wounded_success" text="{=taom_enlist_duty_treat_wounded_success}It went well." />
 	<string id="taom_enlist_duty_treat_wounded_failure" text="{=taom_enlist_duty_treat_wounded_failure}It didn&#x27;t go as planned." />
+	<string id="taom_enlist_talk_no_battle" text="{=taom_enlist_talk_no_battle}Not in the middle of a battle." />
+	<string id="taom_enlist_talk_no_duty" text="{=taom_enlist_talk_no_duty}You are away on orders — ride to him yourself." />
+	<string id="taom_enlist_talk_no_commander" text="{=taom_enlist_talk_no_commander}Your commander cannot be reached." />
+	<string id="taom_enlist_talk_no_map" text="{=taom_enlist_talk_no_map}Not from here." />
+	<string id="taom_enlist_talk_no_generic" text="{=taom_enlist_talk_no_generic}You cannot speak with him just now." />
 
 </strings>

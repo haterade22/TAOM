@@ -166,5 +166,10 @@
     <string id="taom_enlist_duty_treat_wounded_optb" text="Zuträger sein" />
     <string id="taom_enlist_duty_treat_wounded_success" text="Es lief gut." />
     <string id="taom_enlist_duty_treat_wounded_failure" text="Es lief nicht wie geplant." />
+    <string id="taom_enlist_talk_no_battle" text="Nicht mitten in einer Schlacht." />
+    <string id="taom_enlist_talk_no_duty" text="Du bist mit Befehlen unterwegs — reite selbst zu ihm." />
+    <string id="taom_enlist_talk_no_commander" text="Dein Befehlshaber ist nicht erreichbar." />
+    <string id="taom_enlist_talk_no_map" text="Nicht von hier aus." />
+    <string id="taom_enlist_talk_no_generic" text="Du kannst gerade nicht mit ihm sprechen." />
   </strings>
 </base>

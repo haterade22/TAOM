@@ -596,6 +596,29 @@ without MCM reads the JSON, a player with MCM at default reads the literal, and 
 describe the same game. A test fails the build if they drift, which is the kind of split that is
 otherwise invisible because the test host never has MCM loaded.
 
+### fix(enlistment): wait-menu options grey out with a reason instead of vanishing
+
+From a comparative read of the *Serve as Soldier* mod, whose changelog records this as a fix for a
+problem they SHIPPED and then hit in play:
+
+> changed the travelling menu options to always display, but become greyed out if they can't be
+> performed; should stop aggravation from menu options constantly shifting position, particularly at
+> higher game speeds.
+
+TAOM had the same bug. "Speak with your commander" returned `false` when unavailable, which REMOVES
+the row — so every option below it slid up under the player's cursor, worst at high game speed where
+availability flips constantly. It now stays in place, greys out, and says why: not mid-battle, not
+while away on orders, not when the commander is unreachable, not from off the map.
+
+A disabled option that explains itself teaches the rule. A vanished one just looks broken.
+
+`MenuCallbackArgs.IsEnabled` and `Tooltip` verified as public fields on installed 1.4.7 before relying
+on them. Five reason strings registered and translated into all 12 languages (165 keys each,
+verified per language rather than assumed).
+
+Suite 6087 green.
+
+Research: MenuCallbackArgs.IsEnabled/Tooltip
 ### feat(enlistment): the company looks after its own — food, morale and a surgeon
 
 Extends today's starvation fix into the whole bargain of enlisting: while you serve, your keep is

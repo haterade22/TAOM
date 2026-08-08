@@ -166,5 +166,10 @@
     <string id="taom_enlist_duty_treat_wounded_optb" text="搬运物资" />
     <string id="taom_enlist_duty_treat_wounded_success" text="一切顺利。" />
     <string id="taom_enlist_duty_treat_wounded_failure" text="事情并未如愿。" />
+    <string id="taom_enlist_talk_no_battle" text="战斗之中不行。" />
+    <string id="taom_enlist_talk_no_duty" text="你正奉命在外——自己骑马去找他吧。" />
+    <string id="taom_enlist_talk_no_commander" text="无法联系上你的指挥官。" />
+    <string id="taom_enlist_talk_no_map" text="不能在此处。" />
+    <string id="taom_enlist_talk_no_generic" text="此刻你无法与他交谈。" />
   </strings>
 </base>

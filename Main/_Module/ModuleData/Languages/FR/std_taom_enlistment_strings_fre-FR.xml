@@ -166,5 +166,10 @@
     <string id="taom_enlist_duty_treat_wounded_optb" text="Aller chercher et porter" />
     <string id="taom_enlist_duty_treat_wounded_success" text="Cela s'est bien passé." />
     <string id="taom_enlist_duty_treat_wounded_failure" text="Cela ne s'est pas passé comme prévu." />
+    <string id="taom_enlist_talk_no_battle" text="Pas en pleine bataille." />
+    <string id="taom_enlist_talk_no_duty" text="Vous êtes en mission — allez le rejoindre vous-même." />
+    <string id="taom_enlist_talk_no_commander" text="Votre commandant est injoignable." />
+    <string id="taom_enlist_talk_no_map" text="Pas d'ici." />
+    <string id="taom_enlist_talk_no_generic" text="Vous ne pouvez pas lui parler pour l'instant." />
   </strings>
 </base>

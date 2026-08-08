@@ -50,7 +50,19 @@ public sealed class EnlistmentWaitMenuOptions : IEnlistmentWaitMenuOptions
             args =>
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Conversation;
-                return _actions.CanTalkToCommander() == TalkToCommanderResult.Opened;
+
+                // SHOWN-AND-DISABLED, never hidden. Returning false here would remove the row and
+                // shuffle every option below it under the player's cursor — worst at high game
+                // speed, where availability flips often. Greying it out keeps the list stable AND
+                // teaches the rule, which a vanished option cannot.
+                var verdict = _actions.CanTalkToCommander();
+                if (verdict != TalkToCommanderResult.Opened)
+                {
+                    args.IsEnabled = false;
+                    args.Tooltip = ServiceVocabulary.TalkUnavailableReason(verdict);
+                }
+
+                return true;
             },
             _ => _actions.TalkToCommander(),
             false, 1);

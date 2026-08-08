@@ -55,4 +55,31 @@ public static class ServiceVocabulary
             default: return new TextObject("{=taom_enlist_grade_rough}rough, but you held");
         }
     }
+
+    /// <summary>
+    /// Why "speak with your commander" is unavailable, as words for the greyed-out tooltip.
+    ///
+    /// The option is SHOWN and disabled rather than hidden. A hidden option makes the list shuffle
+    /// under the player's cursor — the reference mod shipped that, hit it in play, and recorded the
+    /// fix in its changelog: "changed the travelling menu options to always display, but become
+    /// greyed out if they can't be performed; should stop aggravation from menu options constantly
+    /// shifting position, particularly at higher game speeds." A disabled option that says WHY also
+    /// teaches the rule; a vanished one just looks broken.
+    /// </summary>
+    public static TextObject TalkUnavailableReason(TalkToCommanderResult verdict)
+    {
+        switch (verdict)
+        {
+            case TalkToCommanderResult.InBattle:
+                return new TextObject("{=taom_enlist_talk_no_battle}Not in the middle of a battle.");
+            case TalkToCommanderResult.OnDuty:
+                return new TextObject("{=taom_enlist_talk_no_duty}You are away on orders — ride to him yourself.");
+            case TalkToCommanderResult.CommanderUnavailable:
+                return new TextObject("{=taom_enlist_talk_no_commander}Your commander cannot be reached.");
+            case TalkToCommanderResult.NotOnMap:
+                return new TextObject("{=taom_enlist_talk_no_map}Not from here.");
+            default:
+                return new TextObject("{=taom_enlist_talk_no_generic}You cannot speak with him just now.");
+        }
+    }
 }

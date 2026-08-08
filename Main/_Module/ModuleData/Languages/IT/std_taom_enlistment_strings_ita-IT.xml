@@ -166,5 +166,10 @@
     <string id="taom_enlist_duty_treat_wounded_optb" text="Recuperare e trasportare" />
     <string id="taom_enlist_duty_treat_wounded_success" text="È andata bene." />
     <string id="taom_enlist_duty_treat_wounded_failure" text="Non è andata come previsto." />
+    <string id="taom_enlist_talk_no_battle" text="Non nel mezzo di una battaglia." />
+    <string id="taom_enlist_talk_no_duty" text="Sei in missione per ordini ricevuti — raggiungilo tu stesso a cavallo." />
+    <string id="taom_enlist_talk_no_commander" text="Il tuo comandante non è raggiungibile." />
+    <string id="taom_enlist_talk_no_map" text="Non da qui." />
+    <string id="taom_enlist_talk_no_generic" text="Non puoi parlare con lui in questo momento." />
   </strings>
 </base>

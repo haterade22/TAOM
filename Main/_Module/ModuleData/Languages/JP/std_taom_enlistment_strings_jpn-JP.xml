@@ -166,5 +166,10 @@
     <string id="taom_enlist_duty_treat_wounded_optb" text="物資の運搬" />
     <string id="taom_enlist_duty_treat_wounded_success" text="うまくいった。" />
     <string id="taom_enlist_duty_treat_wounded_failure" text="思い通りにはいかなかった。" />
+    <string id="taom_enlist_talk_no_battle" text="戦闘の最中にはできない。" />
+    <string id="taom_enlist_talk_no_duty" text="命令を受けて離れている――自ら彼のもとへ赴くのだ。" />
+    <string id="taom_enlist_talk_no_commander" text="指揮官と連絡が取れない。" />
+    <string id="taom_enlist_talk_no_map" text="ここからはできない。" />
+    <string id="taom_enlist_talk_no_generic" text="今は彼と話すことはできない。" />
   </strings>
 </base>
