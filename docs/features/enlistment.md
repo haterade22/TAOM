@@ -480,9 +480,21 @@ FieldCommission offer flow with enlisted suppression.
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 
-**NOT verified — and the review pass is why this list matters.** Nothing in the 2026-08-08 batch
-(settlement following, the status board, dialog agency, the MCM switch, and every fix in the review
-section above) has run in a live game. The four terminal defects that pass found were all invisible
+**Verified in live play (2026-08-08):** settlement following — the player is INSIDE the
+commander's settlement, not parked outside the gate; the live status board — the wait text changed
+to *"The column rests inside Minas Tirith."*, naming the settlement, which is the proof line for
+batch 9 (the old build showed one identical sentence from oath to discharge); rank and section
+rendering through `ServiceVocabulary` rather than as raw enum names; **"Speak with your
+commander"**, and through it the **quartermaster** issuing service gear — a shipped, tested
+behaviour that had never once fired for a player, because nothing in the feature could open a
+conversation. No token leakage (`{COMMANDER}`, `{SETTLEMENT}`, `{NEWLINE}` all resolved).
+
+One defect found by that session and fixed: the wait menu listed *Ask to be released from service*
+SECOND, directly above the two options a serving player uses constantly, carrying the back-arrow
+icon that reads as "back" rather than "end my career". It is now last, as vanilla does it.
+
+**Still NOT verified — and the review pass is why this list matters.** The rest of the 2026-08-08 batch
+(the MCM switch, and every fix in the review section above) has run in a live game. The four terminal defects that pass found were all invisible
 to 668 green tests; the in-game list is
 [`docs/reviews/enlistment-morning-handoff-2026-08-08.md`](../reviews/enlistment-morning-handoff-2026-08-08.md).
 

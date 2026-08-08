@@ -4,6 +4,41 @@
 
 ## 2026-08-08
 
+### chore(triage): 147 open issues checked against HEAD — 74 closed, 67 kept, 6 escalated
+
+The tracker had stopped being a queue and become a work log. Most open issues were past-tense
+engineering reports written when the work was planned or already done, so for a large share the
+question was never "is this broken?" but "did anyone press close?" All 147 were checked against
+`828bf941`: 74 closed with a comment citing the evidence, 52 kept open with a status comment, 21
+labelled without a comment, 6 escalated as needing a decision. Full per-issue evidence in
+[`docs/audits/issue-triage-2026-08-08.md`](docs/audits/issue-triage-2026-08-08.md).
+
+Agents produced verdicts and never called a `gh` write command — every mutation came from one paced,
+ledgered script driven by a verdict file that was read first, so a confident wrong answer could not
+reach the tracker on its own. Eighteen cluster agents triaged; twelve more were paired to *failure
+modes* rather than to issues, handed each claim without the first pass's evidence and told to refute
+it. That produced 174 independent claim-checks over 76 proposed closures and killed two of them
+(#285, #370), both for the same reason: an author-declared exit criterion that the first pass had
+overridden. Thirty-seven more closures carry a caveat in their closing comment.
+
+Six traps decided more verdicts than any amount of reading would have. The two CHANGELOG files are
+newest-first, so a grep's first hit is the *older* entry — #82's archive line says "port all 7 native
+hooks **+ activate**" and a later line disables it at the wiring level, and closing on the first hit
+buries a parked feature whose issue is the park's only durable record. Three issues' fixes live in
+`LOTRLOME_Armory`, which this repo cannot ship, so merging here delivers nothing to a player.
+`culture="Culture.rohan"` returns zero rows because Rohan's 68 NPCs carry `Culture.vlandia`. PRs #80,
+#271 and #403 are closed-unmerged, so a reference to one is evidence work did *not* ship. #275 reads
+as fully shipped and its entire implementation sits on an unmerged branch. And a shipped fix is not a
+solved problem: #317 landed, was celebrated, and a later entry records that it fixed the wrong half of
+the loop.
+
+Comments went only where something had actually changed. An issue whose situation had not moved got a
+`triage-*` label instead — "nothing has changed since January" is a notification with no payload, and
+the 32 issues touched in the last week already carry a human comment more current than triage could
+write. That turned ~90 near-identical public comments into 52 that each state a delta.
+
+Not-tested: nothing in the game. This is a tracker operation, no mod code changed.
+
 ### feat(coopinterop): report the settings that can diverge two co-op peers
 
 TAOM's MCM settings live in a per-user file outside the save, no co-op mod syncs them, and nothing
@@ -443,6 +478,18 @@ without MCM reads the JSON, a player with MCM at default reads the literal, and 
 describe the same game. A test fails the build if they drift, which is the kind of split that is
 otherwise invisible because the test host never has MCM loaded.
 
+### fix(enlistment): put "ask to be released" last, where a terminal action belongs
+
+First live look at the finished wait menu (2026-08-08) confirmed three batches at once — the player
+standing INSIDE Minas Tirith rather than outside its gate, the status text naming the settlement
+instead of repeating one sentence for the whole term, and the conversation option reaching the
+quartermaster, who had never issued a single kit to a player because nothing could open a
+conversation with the commander.
+
+It also showed an ordering mistake: *Ask to be released from service* sat SECOND, directly above the
+two options a serving soldier uses constantly, and it carries the back-arrow icon — which reads as
+"back", not "end my career". Moved to last, where vanilla puts its own leave option, with the
+reason recorded beside it so it does not get tidied back.
 ### feat(localization): enlistment ships in 12 languages, including the 84 keys a grep cannot find
 
 The enlistment strings were registered but not in the pipeline: `taom_enlistment_strings.xml` was

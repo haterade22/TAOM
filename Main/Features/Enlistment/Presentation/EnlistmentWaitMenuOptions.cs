@@ -53,7 +53,7 @@ public sealed class EnlistmentWaitMenuOptions : IEnlistmentWaitMenuOptions
                 return _actions.CanTalkToCommander() == TalkToCommanderResult.Opened;
             },
             _ => _actions.TalkToCommander(),
-            false, 2);
+            false, 1);
 
         starter.AddGameMenuOption(
             EnlistmentMenuService.ServiceWaitMenuId,
@@ -62,14 +62,18 @@ public sealed class EnlistmentWaitMenuOptions : IEnlistmentWaitMenuOptions
             args => { args.optionLeaveType = GameMenuOption.LeaveType.Manage; return true; },
             _ => _presenter.ReportDutyRequest(
                 _actions.RequestDutyNow(CampaignTime.Now.ToDays, CampaignTime.Now.GetHourOfDay)),
-            false, 3);
+            false, 2);
 
+        // LAST, deliberately. Leaving service is rare and terminal; it sat second in the first
+        // build (seen in-game 2026-08-08) directly above the two options a serving player uses
+        // constantly, and it carries the back-arrow icon, which reads as "back" rather than
+        // "end my career". Vanilla puts its leave option last for the same reason.
         starter.AddGameMenuOption(
             EnlistmentMenuService.ServiceWaitMenuId,
             "taom_enlist_menu_leave",
             "{=taom_enlist_menu_leave}Ask to be released from service",
             args => { args.optionLeaveType = GameMenuOption.LeaveType.Leave; return true; },
             _ => _presenter.RequestRelease(CampaignTime.Now.ToDays),
-            false, 1);
+            false, 3);
     }
 }
