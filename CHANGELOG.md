@@ -4,6 +4,26 @@
 
 ## 2026-08-08
 
+### fix(tools): the GameModel catalogues drifted, and nothing could say so (#417)
+
+Two files catalogue TAOM's GameModel overrides and both were wrong. 47 classes exist.
+`.claude/rules/gamemodels.md` listed 35 and claimed 34 in two places; `docs/reference/gamemodel-registry.md`
+listed 41. Neither had a checker, so neither could be wrong out loud.
+
+The rules file is the one that costs something: it carries `paths: Main/Features/**/Models/*.cs`, so
+that table *is* the briefing the next person gets when they edit a model. `TaomMapVisibilityModel`
+returns a per-party spotting range — exactly the shape rule 9 (cross-entity propagation, written
+after the NavalTravel #296 RCA) exists for — and it was not in the table, so the rule written for it
+never reached it. Same for five others.
+
+`check_model_registry` in `lint_docs.py` now reports unlisted models, phantom rows naming a class
+that no longer exists, and prose counts that disagree with reality. It also reports finding nothing
+under `Main/` as a failure, because a broken checker that reads clean is worse than no checker.
+
+Merged from a fork, so the CHANGELOG gate in `check-changelog-changed.sh` never ran for it — this
+entry is that gate applied after the fact. Break-tested before merging: renaming a real model
+produced both `unlisted-model` and `phantom-model`, and corrupting the count produced `model-count`.
+
 ### fix(tools): a version mention on a line was silencing a real claim on the same line
 
 `check_stale_versions` walks `STALE_VERSION_PATTERNS` in order and, when a match failed either the
