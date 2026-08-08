@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Content;
@@ -135,6 +135,19 @@ public class FieldDutyRuntime : IFieldDutyRuntime
                 _attachment.ExitSettlementForDuty();
         }
 
+        // Duty START, logged. Fail / complete / cancel all had a line and this did not, so when a
+        // tester reported being unable to move immediately after accepting a duty (#375), the state
+        // at onset could not be reconstructed from the log at all — the first evidence of the duty
+        // existing was its outcome. Presence and attachment are in here because "detached but still
+        // parked" and "detached inside a settlement" are the two shapes that produce that symptom.
+        var flags = _attachment.GetPresenceFlags();
+        _logger?.LogInfo(
+            $"[Enlistment.Duties] duty '{duty.Id}' started — mechanic={duty.Mechanic} " +
+            $"state={_stateMachine.State} staysAttached={staysAttached} " +
+            $"target={(string.IsNullOrEmpty(targetPartyId) ? targetSettlementId ?? "none" : targetPartyId)} " +
+            $"deadlineDay={record.ActiveDutyDeadlineDay:F2} " +
+            $"parked={flags.LooksParked} inSettlement={flags.IsInSettlement}");
+
         return true;
     }
 
@@ -197,8 +210,15 @@ public class FieldDutyRuntime : IFieldDutyRuntime
             return;
         }
 
-        // The party is already gone at the engine level — FinishActive()'s DestroyParty
-        // call is a defensive no-op (the adapter checks IsActive before acting).
+        // Reached re-entrantly: the engine raises MobilePartyDestroyed from inside our own
+        // DestroyParty call. The guard above is what stops that becoming infinite recursion, and
+        // it only works because FinishActive clears the record BEFORE destroying — see its doc.
+        //
+        // An earlier comment here claimed "the party is already gone at the engine level, so
+        // FinishActive's DestroyParty is a defensive no-op (the adapter checks IsActive)". Both
+        // halves are false: DestroyPartyAction dispatches the event before RemoveParty(), so the
+        // party still reads IsActive, and the adapter guard passes straight through. That false
+        // premise is what let the #375 stack overflow ship.
         Complete(duty, "target-destroyed");
     }
 
@@ -265,14 +285,37 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         _logger?.LogInfo($"[Enlistment.Duties] duty '{duty.Id}' failed ({reason})");
     }
 
+    /// <summary>
+    /// CLEAR-BEFORE-DESTROY, and the order is load-bearing — reversing it kills the process.
+    ///
+    /// Destroying the target raises <c>CampaignEvents.MobilePartyDestroyed</c>, which routes
+    /// straight back into <see cref="OnTargetPartyDestroyed"/>. That handler's only exit is
+    /// <c>!record.HasActiveDuty</c>, so while the record still names the duty the callback runs
+    /// <c>Complete → Grant → FinishActive → DestroyParty</c> and re-enters. Nothing breaks the
+    /// cycle: the engine dispatches the event BEFORE it deactivates the party
+    /// (<c>DestroyPartyAction.ApplyInternal</c> — <c>OnMobilePartyDestroyed</c> on line 23,
+    /// <c>RemoveParty()</c> on line 25), so the adapter's <c>!IsActive</c> guard still reads the
+    /// party as alive and calls <c>Apply</c> again, and <c>Debug.FailedAssert</c> does not throw
+    /// in a shipping build.
+    ///
+    /// Observed in a live session 2026-08-08 (#375): 7,482 reward grants inside one wall-clock
+    /// second, ~336k XP and ~450k gold granted, then a <c>StackOverflowException</c> — uncatchable,
+    /// so the process died with no crash report. Clearing first makes the re-entrant call return at
+    /// the guard on its first frame.
+    ///
+    /// If <c>DestroyParty</c> throws after the clear, the target party leaks on the map. That is
+    /// the deliberate trade: a stray looter party is recoverable, a dead process is not.
+    /// </summary>
     private void FinishActive()
     {
         var record = _contentStore.Record;
-        if (!string.IsNullOrEmpty(record.ActiveDutyTargetPartyId))
-            _world.DestroyParty(record.ActiveDutyTargetPartyId);
-
+        var targetPartyId = record.ActiveDutyTargetPartyId;
         var wasDetached = _stateMachine.State == EnlistmentState.EnlistedDetachedOnDuty;
+
         record.ClearActiveDuty();
+
+        if (!string.IsNullOrEmpty(targetPartyId))
+            _world.DestroyParty(targetPartyId);
 
         if (wasDetached)
         {

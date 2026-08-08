@@ -36,6 +36,41 @@ nothing wider — not the ModuleData configs behind those 33 fallbacks, not the 
 Not verified in a running game: reproducing it needs a co-op install and MCM's provider induced to
 fail at the gate.
 
+### fix(enlistment): a completed hunt duty killed the process (#375)
+
+An independent tester ran a `recon_sweep`, won the fight it spawned, and the game died instantly
+with no crash report. Their log pinned the mechanism before I touched anything: 7,482 identical
+reward grants stamped inside one wall-clock second, `duty completed` logged zero times, and the file
+ending mid-second. ~336k service XP, ~450k gold and +14,964 trust granted on the way down. No crash
+report because a `StackOverflowException` is uncatchable.
+
+`FinishActive` destroyed the duty's target party BEFORE clearing the duty record. Destroying raises
+`MobilePartyDestroyed`, which routes back into `OnTargetPartyDestroyed`, which found the record still
+naming the duty and ran the whole completion path again.
+
+Nothing broke the cycle, and the comment explaining why was wrong on both halves. It claimed the
+party is already gone at engine level so the destroy is a no-op guarded by `!IsActive`. Verified
+against 1.4.7: `DestroyPartyAction.ApplyInternal` dispatches `OnMobilePartyDestroyed` on line 23 and
+calls `RemoveParty()` on line 25 — the event fires BEFORE deactivation, so the party still reads
+`IsActive` during the callback, the adapter guard passes, and `Apply` re-enters.
+`Debug.FailedAssert` does not throw in a shipping build, so nothing interrupted it.
+
+Fixed by clearing the record before the destroy, so re-entry dies at its own guard on the first
+frame — the same clear-before-side-effect ordering as the #408 latch. A second, independent guard
+in `DutyWorldAdapter` refuses a re-entrant destroy of the id already in flight; one guard is not
+enough when the failure mode is uncatchable. The regression test drives the engine's real ordering
+by calling the handler back from inside a mocked `DestroyParty`, and was confirmed RED against the
+old ordering.
+
+Two smaller items from the same session. The `map event started, commander NOT in it` diagnostic
+fired for **every map event in the world** — 1,276 lines, over 10% of the session's log — describing
+the ordinary case that most battles are not yours. It proved the original never-joins defect and
+that job is finished, so it now fires only when the commander's party fails to RESOLVE, which is the
+actual failure signature. And field-duty START was never logged while fail/complete/cancel all were,
+so a report of being unable to move right after accepting a duty had no reconstructable onset state.
+
+Player saves cannot carry the inflated rewards: no save ran inside that second.
+
 ### fix(enlistment): stop double-healing on detached duty, and stop showing players raw duty ids
 
 Both found by the adversarially-verified SAS comparison — not in the reference mod, in our code.

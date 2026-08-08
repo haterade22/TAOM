@@ -95,14 +95,28 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
             // statement that does not execute. Honest limit: FindCommanderPartyIdIn above ALSO
             // enumerates InvolvedParties and runs unconditionally because it is load-bearing, so
             // this removes one of the two enumerations, not both.
-            // INFO, not DEBUG — the toggle controls the volume, the level controls durability. This
-            // is the highest-volume line in the feature (3,674 of 4,856 in one session), but it is
-            // also the one that proved the commander was in 0 of 456 events, so when it is on it has
-            // to survive a hard CTD rather than sit in FileLogger's async queue.
-            if (_diagSettings?.IsEnabled == true)
+            // INFO, not DEBUG — the toggle controls the volume, the level controls durability. When
+            // this fires it has to survive a hard CTD rather than sit in FileLogger's async queue.
+            //
+            // NARROWED 2026-08-08 to the case where the commander's party will not RESOLVE. This
+            // line originally fired for every world map event the commander was absent from, which
+            // is how it proved the real defect (the commander was in 0 of 456 events). That job is
+            // finished: an independent tester confirmed four clean joins in play on 016490cc, and
+            // the same session showed the line had become 1,276 hits — over 10% of every log line
+            // written — describing the ordinary case that most battles in the world are not yours.
+            //
+            // A diagnostic that fires on the healthy path stops being evidence and starts being
+            // noise you have to filter past to find the unhealthy one. `resolvedParty == NONE` is
+            // the actual failure signature — commander alive, id held, party unfindable — so that
+            // is what survives. The healthy "not your battle" case is now silent.
+            // Still EXACTLY ONE logging statement under the gate, per the shape rule above. The
+            // resolve check joins the gate condition rather than becoming a nested block, and the
+            // `&&` short-circuit keeps BOTH GetPartyId and CountInvolved off the toggle-off path.
+            if (_diagSettings?.IsEnabled == true
+                && string.IsNullOrEmpty(_commander.GetPartyId(_store.Record.CommanderHeroId)))
                 _diag?.LogInfo(
-                    $"[EnlistDiag] map event started, commander NOT in it — commanderHero='{_store.Record.CommanderHeroId}' " +
-                    $"resolvedParty='{_commander.GetPartyId(_store.Record.CommanderHeroId) ?? "NONE"}' " +
+                    $"[EnlistDiag] map event started and the commander's party did NOT resolve — " +
+                    $"commanderHero='{_store.Record.CommanderHeroId}' resolvedParty='NONE' " +
                     $"attacker='{attackerParty?.MobileParty?.StringId ?? attackerParty?.Name?.ToString() ?? "?"}' " +
                     $"defender='{defenderParty?.MobileParty?.StringId ?? defenderParty?.Name?.ToString() ?? "?"}' " +
                     $"involved={CountInvolved(mapEvent)}");

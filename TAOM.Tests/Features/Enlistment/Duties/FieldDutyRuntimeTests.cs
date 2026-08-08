@@ -429,6 +429,40 @@ public class FieldDutyRuntimeTests
     }
 
     [TestMethod]
+    public void OnTargetPartyDestroyed_EngineReentersDuringDestroy_GrantsExactlyOnce()
+    {
+        // REGRESSION, #375 — this killed the process in a live session on 2026-08-08.
+        //
+        // The engine raises MobilePartyDestroyed from INSIDE DestroyPartyAction.Apply, before it
+        // deactivates the party (OnMobilePartyDestroyed line 23, RemoveParty line 25). So our own
+        // destroy call re-enters our own handler. While FinishActive cleared the duty record AFTER
+        // destroying, that re-entry found HasActiveDuty still true and ran the whole completion
+        // path again: 7,482 grants in one wall-clock second, ~336k XP and ~450k gold, then an
+        // uncatchable StackOverflowException with no crash report.
+        //
+        // The mock reproduces the engine's ordering exactly — DestroyParty calls the handler back.
+        // Without clear-before-destroy this test does not fail, it hangs the runner until the
+        // stack dies, which is itself the point: this class of bug has no graceful failure.
+        ConfigureDuties(HuntDuty("recon_sweep"));
+        _contentStore.Record.ActiveDutyId = "recon_sweep";
+        _contentStore.Record.ActiveDutyTargetPartyId = "party_1";
+
+        var reentries = 0;
+        _world.When(w => w.DestroyParty("party_1")).Do(_ =>
+        {
+            // Bounded so a regression fails the assert instead of overflowing the test host.
+            if (++reentries <= 5)
+                _runtime.OnTargetPartyDestroyed("party_1");
+        });
+
+        _runtime.OnTargetPartyDestroyed("party_1");
+
+        _rewards.Received(1).Grant(Arg.Any<RewardSpec>(), Arg.Any<string>());
+        Assert.AreEqual(1, reentries, "DestroyParty must be called exactly once, not once per re-entry");
+        Assert.IsFalse(_contentStore.Record.HasActiveDuty, "the record must be cleared before the destroy");
+    }
+
+    [TestMethod]
     public void OnTargetPartyDestroyed_NonMatchingPartyId_NoOp()
     {
         ConfigureDuties(HuntDuty("recon_sweep"));

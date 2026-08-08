@@ -73,6 +73,25 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
         }
     }
 
+    /// <summary>
+    /// Party ids currently inside a <see cref="DestroyPartyAction.Apply"/> call on this thread.
+    ///
+    /// <c>!party.IsActive</c> below CANNOT serve as the re-entrancy guard, though it reads like one.
+    /// <c>DestroyPartyAction.ApplyInternal</c> raises <c>OnMobilePartyDestroyed</c> (line 23) BEFORE
+    /// <c>RemoveParty()</c> (line 25), so any handler that calls back in during the event still sees
+    /// <c>IsActive == true</c>, passes the guard, and re-enters <c>Apply</c>. Its
+    /// <c>Debug.FailedAssert</c> does not throw in a shipping build, so nothing stops it.
+    ///
+    /// #375 hit exactly that: the duty runtime's own destroy handler recursed 7,482 deep in one
+    /// second and killed the process with an uncatchable <c>StackOverflowException</c> — no crash
+    /// report, no managed frame to blame. The root fix is ordering in <c>FieldDutyRuntime</c>
+    /// (clear the record before destroying); this is the second, independent guard, because a
+    /// stack overflow cannot be caught and recovered from the way an ordinary bug can.
+    ///
+    /// Campaign code is single-threaded, so a plain field is sufficient and cheaper than a set.
+    /// </summary>
+    private string _destroyingPartyId;
+
     public void DestroyParty(string partyId)
     {
         try
@@ -80,7 +99,24 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
             var party = FindParty(partyId);
             if (party == null || !party.IsActive)
                 return;
-            DestroyPartyAction.Apply(null, party);
+
+            if (string.Equals(_destroyingPartyId, partyId, StringComparison.Ordinal))
+            {
+                _logger?.LogInfo(
+                    $"[Enlistment.Duties] DestroyParty('{partyId}') re-entered from its own " +
+                    "MobilePartyDestroyed handler — ignoring the inner call (see #375)");
+                return;
+            }
+
+            _destroyingPartyId = partyId;
+            try
+            {
+                DestroyPartyAction.Apply(null, party);
+            }
+            finally
+            {
+                _destroyingPartyId = null;
+            }
         }
         catch (Exception ex)
         {
