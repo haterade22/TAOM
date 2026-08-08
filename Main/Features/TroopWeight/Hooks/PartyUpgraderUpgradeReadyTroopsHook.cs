@@ -32,6 +32,17 @@ public class PartyUpgraderUpgradeReadyTroopsHook : IOnPartyUpgraderUpgradeReadyT
             if (party == null || party == PartyBase.MainParty || !party.IsActive)
                 return;
 
+            // Only a LEADER-RUN party has a size limit worth enforcing. DefaultPartySizeLimitModel's
+            // CalculateMobilePartyMemberSizeLimit skips the leader/clan/steward branch when LeaderHero is
+            // null and returns its flat 20-body base — a placeholder for parties it does not otherwise
+            // size, not a recruiting budget — and GetPartyMemberSizeLimit returns 0 for a settlement's own
+            // PartyBase (which arrives here via MapEventEnded). Shedding to those is deletion, not
+            // enforcement: vanilla drives UpgradeReadyTroops from DailyTickPartyEvent, which
+            // CampaignPeriodicEventManager tickers over MobileParty.All, so this postfix was trimming every
+            // settlement's militia back to ~20 the same day Town.DailyTick added MilitiaChange.
+            if (party.LeaderHero == null)
+                return;
+
             var roster = party.MemberRoster;
             if (roster == null || roster.Count <= 0)
                 return;
