@@ -14,7 +14,7 @@ namespace TAOM.Features.CoopInterop;
 /// </summary>
 /// <remarks>
 /// <para><b>Per group, not one number.</b> A single global hash answers "something differs",
-/// which sends a player through 105 checkboxes. A hash per MCM group answers "Battle Tactics
+/// which sends a player through 106 checkboxes. A hash per MCM group answers "Battle Tactics
 /// differs", which is one screen. The global hash is kept as the cheap equality test.</para>
 ///
 /// <para><b>Culture is the trap.</b> <c>0.25f.ToString()</c> is <c>"0,25"</c> on a Spanish
@@ -41,28 +41,57 @@ public static class SettingsFingerprint
     public static FingerprintReport Compute(object settings)
     {
         if (settings == null) throw new ArgumentNullException(nameof(settings));
+        return ComputeAcross(new[] { settings });
+    }
 
-        var relevant = settings.GetType()
-            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Where(CoopSettingsRelevance.IsSimulationRelevant)
+    /// <summary>Hash across every settings class TAOM ships, not just <c>TaomSettings</c>.</summary>
+    /// <remarks>
+    /// <para>TAOM's settings are spread over four MCM classes — <c>TaomSettings</c> plus the three
+    /// diagnostics pages. A fingerprint computed from one of them covers what it can see and says
+    /// nothing about the rest, which is the exact failure mode this type exists to prevent. Every
+    /// property on the three diagnostics classes is excluded today, so passing them changes no
+    /// hash; what it buys is that a simulation-affecting setting added to one of them later is
+    /// covered on the day it is added, the same way it already is on <c>TaomSettings</c>.</para>
+    ///
+    /// <para>Null entries are skipped rather than fatal: MCM may not have constructed a page yet,
+    /// and a partial fingerprint with an honest <see cref="FingerprintReport.Covered"/> is worth
+    /// more than an exception on a diagnostic path.</para>
+    ///
+    /// <para>The canonical text keys on the property name alone, so a single-object call hashes
+    /// identically to before this overload existed. That is only sound while no two settings
+    /// classes share a property name in the same group; <c>SettingsFingerprintTests</c> fails if
+    /// one ever does, rather than letting two settings quietly share a line.</para>
+    /// </remarks>
+    public static FingerprintReport ComputeAcross(params object[] settingsObjects)
+    {
+        if (settingsObjects == null) throw new ArgumentNullException(nameof(settingsObjects));
+
+        var relevant = settingsObjects
+            .Where(o => o != null)
+            .SelectMany(o => o.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(CoopSettingsRelevance.IsSimulationRelevant)
+                .Select(p => new PropertyOnOwner(p, o)))
             // Ordinal, and group first: the canonical text must not depend on the order
-            // reflection happens to return members in, which is not specified.
-            .OrderBy(GroupOf, StringComparer.Ordinal)
-            .ThenBy(p => p.Name, StringComparer.Ordinal)
+            // reflection happens to return members in, which is not specified, nor on the order
+            // the caller happened to list the settings objects in.
+            .OrderBy(x => GroupOf(x.Property), StringComparer.Ordinal)
+            .ThenBy(x => x.Property.Name, StringComparer.Ordinal)
+            .ThenBy(x => x.Property.DeclaringType?.FullName ?? string.Empty, StringComparer.Ordinal)
             .ToList();
 
         var perGroup = new Dictionary<string, StringBuilder>(StringComparer.Ordinal);
         var counts = new Dictionary<string, int>(StringComparer.Ordinal);
 
-        foreach (var p in relevant)
+        foreach (var x in relevant)
         {
-            var group = GroupOf(p);
+            var group = GroupOf(x.Property);
             if (!perGroup.TryGetValue(group, out var sb))
             {
                 perGroup[group] = sb = new StringBuilder();
                 counts[group] = 0;
             }
-            sb.Append(p.Name).Append('=').Append(Render(Read(p, settings))).Append('\n');
+            sb.Append(x.Property.Name).Append('=').Append(Render(Read(x.Property, x.Owner))).Append('\n');
             counts[group]++;
         }
 
@@ -75,6 +104,19 @@ public static class SettingsFingerprint
                                                   .Select(kv => kv.Key + ":" + kv.Value + "\n"));
 
         return new FingerprintReport(Sha256(globalText), groupHashes, counts, relevant.Count);
+    }
+
+    /// <summary>A property paired with the settings instance it must be read from.</summary>
+    private readonly struct PropertyOnOwner
+    {
+        internal PropertyOnOwner(PropertyInfo property, object owner)
+        {
+            Property = property;
+            Owner = owner;
+        }
+
+        internal PropertyInfo Property { get; }
+        internal object Owner { get; }
     }
 
     /// <summary>A property read must never take the session down; an unreadable one hashes as unreadable.</summary>

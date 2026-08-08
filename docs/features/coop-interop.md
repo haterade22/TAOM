@@ -307,20 +307,30 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity — reported, not yet exchanged.** TAOM ships **159** settings (the 284
-  here counted `[SettingPropertyGroup]` lines alongside the properties; the split is 144 in
-  `TaomSettings` plus 15 across the four diagnostics files). **106 of them are
+- **No MCM settings parity — reported, not yet exchanged.** TAOM ships **158** settings across
+  four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
+  the split is 144 in `TaomSettings`, 7 in `BattleLoadDiagnosticsSettings`, 6 in
+  `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`). **106 of them are
   simulation-relevant** — traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch. The 53 excluded are
-  instrumentation, player-local inventory convenience, presentation, and the three
-  time-acceleration knobs whose UI co-op already suppresses; the list with its reasons is
-  `Main/Features/CoopInterop/CoopSettingsRelevance.cs`, and a test fails if a new setting is added
-  without being classified.
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 106 are in
+  `TaomSettings`. The 52 excluded are instrumentation, player-local inventory convenience,
+  presentation, and the three time-acceleration knobs whose UI co-op already suppresses; the list
+  with its reasons is `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.
+
+  Those numbers are pinned per class in `SettingsFingerprintTests`, which is the guard that a new
+  setting cannot arrive unclassified: "relevant or excluded" is true of everything by construction
+  — classification is include-by-default — so only the count can fail, and adding a setting
+  anywhere moves one and forces the decision. Two further tests keep the list itself honest: no
+  excluded name may stop matching a real property, and no two settings classes may share a
+  property name.
 
   `SettingsFingerprint` hashes those 106 — one code per MCM group plus a global, culture-invariant
   so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
-  to each peer's log under the co-op gate. That makes the "compare settings manually" workaround a
-  comparison of a few short strings instead of 106 values read off two screens.
+  to each peer's log under the co-op gate. It reads all four classes, not just `TaomSettings`:
+  every diagnostics property is excluded so this moves no hash today (a test asserts exactly
+  that), and it means a simulation-affecting setting added to a diagnostics page later is covered
+  the day it lands. That makes the "compare settings manually" workaround a comparison of a few
+  short strings instead of 106 values read off two screens.
 
   **Still not done:** peers do not exchange them. Putting the fingerprint in save metadata and
   comparing on join is the remaining step, and it cannot be verified without two machines in a

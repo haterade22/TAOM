@@ -10,7 +10,7 @@ namespace TAOM.Features.CoopInterop;
 /// <remarks>
 /// <para>This is the whole feature today, and deliberately so. The documented workaround for
 /// settings divergence is "compare settings manually before playing", which means two people
-/// reading 105 values off two screens — nobody does it. One line per group in each peer's log
+/// reading 106 values off two screens — nobody does it. One line per group in each peer's log
 /// turns that into comparing a handful of short codes, and it needs no save-format change, no
 /// handshake and no UI.</para>
 ///
@@ -33,9 +33,19 @@ public static class SettingsFingerprintLog
     public static void Write(object settings, IModLogger logger)
     {
         if (settings == null || logger == null) return;
+        WriteAcross(logger, settings);
+    }
+
+    /// <summary>
+    /// Log the fingerprint taken across every settings class TAOM ships. Never throws, for the
+    /// reason above. Logger first because the settings list is variadic.
+    /// </summary>
+    public static void WriteAcross(IModLogger logger, params object[] settingsObjects)
+    {
+        if (logger == null || settingsObjects == null) return;
         try
         {
-            var report = SettingsFingerprint.Compute(settings);
+            var report = SettingsFingerprint.ComputeAcross(settingsObjects);
             logger.LogInfo(
                 $"{Tag} global={report.ShortGlobal} over {report.Covered} simulation-relevant setting(s). " +
                 "Compare this line with the other peer's — a difference means the two campaigns " +

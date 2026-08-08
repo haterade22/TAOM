@@ -13,6 +13,14 @@ namespace TAOM.Features.CoopInterop;
 /// outcomes — battle autocalc, bandit density, AI army targeting, desertion — with nothing said.
 /// <see cref="SettingsFingerprint"/> exists to say it; this type decides what it looks at.
 ///
+/// <para>Names here are matched across all four settings classes TAOM ships — <c>TaomSettings</c>
+/// plus the <c>BattleLoadDiagnostics</c>, <c>BlowDiagnostics</c> and <c>CrashReport</c> pages —
+/// because <see cref="SettingsFingerprint.ComputeAcross"/> reads all four. Every property on the
+/// three diagnostics pages is excluded today, so they contribute nothing to any hash; naming them
+/// is what makes a simulation-affecting setting added to one of them later show up instead of
+/// being silently invisible. <c>SettingsFingerprintTests</c> fails if a name here stops matching
+/// a real property, so this list cannot rot into decoration.</para>
+///
 /// <para><b>Include by default.</b> A property is relevant unless it is named here. A new
 /// gameplay knob is therefore covered the day it is added, which is the safe direction: the
 /// cost of a missing exclusion is one spurious mismatch line, the cost of a missing inclusion
@@ -27,9 +35,9 @@ namespace TAOM.Features.CoopInterop;
 ///
 /// <para>Derived by tracing every setting to the feature that consumes it and asking whether
 /// that feature ships a GameModel, a CampaignBehavior, a MissionBehavior or a Harmony patch.
-/// The nine <c>*Debug</c> / <c>*Diagnostics</c> entries below sit inside gameplay groups —
-/// <c>SmartCavalryDebug</c> is filed under Battle Tactics — and would otherwise be counted as
-/// simulation because their feature computes. They gate log lines.</para>
+/// The <c>*Debug</c> / <c>*Diagnostics</c> entries below are the ones that trap: most are filed
+/// inside gameplay groups — <c>SmartCavalryDebug</c> sits under Battle Tactics — so tracing by
+/// group would count them as simulation because their feature computes. They gate log lines.</para>
 /// </remarks>
 public static class CoopSettingsRelevance
 {
@@ -86,7 +94,7 @@ public static class CoopSettingsRelevance
         return !IsExcluded(property.Name);
     }
 
-    /// <summary>True when the name is on one of the three exclusion lists.</summary>
+    /// <summary>True when the name is on one of the four exclusion lists.</summary>
     public static bool IsExcluded(string propertyName) =>
         propertyName != null
         && (Infrastructure.Contains(propertyName)

@@ -5,7 +5,10 @@ using System.Reflection;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features;
+using TAOM.Features.BattleLoadDiagnostics;
+using TAOM.Features.BlowDiagnostics;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.CrashReport;
 
 namespace TAOM.Tests.Features.CoopInterop;
 
@@ -16,15 +19,17 @@ namespace TAOM.Tests.Features.CoopInterop;
 //   1. Same settings -> same code, every time. Reflection does not guarantee member order, so the
 //      canonical text is sorted; without that the hash would drift between runs.
 //   2. Different settings -> different code, and the RIGHT GROUP named. A global-only answer sends
-//      a player through 105 checkboxes.
+//      a player through 106 checkboxes.
 //   3. A locale must not fake a mismatch. 0.25f renders "0,25" under es-ES: two peers with identical
 //      settings would diverge on the decimal separator alone. This is the failure that would have
 //      made the feature worse than nothing.
 //   4. An excluded setting must not move the hash — otherwise the warning fires on a nameplate
 //      distance and gets ignored, which is the doc linter's 29-false-positives failure again.
-//   5. Every property on the REAL TaomSettings is classified. That test fails when someone adds a
-//      setting without deciding whether it is simulation-relevant, which is the only way this stays
-//      correct after today.
+//   5. Every property on every REAL settings class is accounted for. Classification is
+//      include-by-default, so "is it relevant or excluded?" is true of everything and answers
+//      nothing — the guard that can actually fail is the pinned per-class count: adding a setting
+//      anywhere moves a number here and forces whoever added it to decide, and the docs quote the
+//      same numbers.
 [TestClass]
 public class SettingsFingerprintTests
 {
@@ -62,6 +67,21 @@ public class SettingsFingerprintTests
 
         // Read-only: computed, not a setting. Must never enter the hash.
         public string DisplayName => "TAOM";
+    }
+
+    /// <summary>
+    /// A second settings class contributing to the SAME groups as <see cref="FakeSettings"/>.
+    /// Order-independence is only testable when two objects both put properties in one group —
+    /// pairing TaomSettings with a diagnostics class proves nothing, because the diagnostics class
+    /// contributes none.
+    /// </summary>
+    private sealed class SecondFakeSettings
+    {
+        [SettingPropertyGroup("Battle Tactics")]
+        public bool EnableSkirmishers { get; set; } = true;
+
+        [SettingPropertyGroup("World")]
+        public int CaravanCount { get; set; } = 7;
     }
 
     private static SettingsFingerprint.FingerprintReport Of(Action<FakeSettings> mutate = null)
@@ -179,23 +199,118 @@ public class SettingsFingerprintTests
     // ------------------------------------------------------------------ 5. coverage on the real type
 
     [TestMethod]
-    public void EveryRealSetting_IsEitherRelevantOrExplicitlyExcluded()
+    public void EverySettingsClass_HasItsSplitPinned()
     {
-        // The guard that keeps this correct after today: adding a setting to TaomSettings without
-        // deciding its co-op relevance fails here rather than shipping a silent divergence.
-        var props = typeof(TaomSettings)
-            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Where(p => p.CanRead && p.CanWrite && p.GetIndexParameters().Length == 0)
+        // "Relevant OR excluded" is true of every property by construction — classification is
+        // include-by-default, so that assertion passes for a setting nobody has ever looked at and
+        // guards nothing. The count is the guard that can fail: add a setting anywhere below and
+        // one of these numbers moves, which is the moment to decide what it is. The same numbers
+        // are quoted in docs/features/coop-interop.md.
+        AssertSplit(typeof(TaomSettings), reflected: 144, covered: 106);
+        AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 7, covered: 0);
+        AssertSplit(typeof(BlowDiagnosticsSettings), reflected: 1, covered: 0);
+        AssertSplit(typeof(CrashReportSettings), reflected: 6, covered: 0);
+    }
+
+    private static void AssertSplit(Type settingsType, int reflected, int covered)
+    {
+        var props = SettableProperties(settingsType).ToList();
+        Assert.AreEqual(reflected, props.Count,
+            $"{settingsType.Name} exposes {props.Count} settings, not {reflected} — a setting was "
+            + "added or removed; classify it in CoopSettingsRelevance and update this number and "
+            + "docs/features/coop-interop.md");
+        Assert.AreEqual(covered, props.Count(CoopSettingsRelevance.IsSimulationRelevant),
+            $"{settingsType.Name}'s simulation-relevant count changed");
+        Assert.AreEqual(reflected - covered, props.Count(p => CoopSettingsRelevance.IsExcluded(p.Name)),
+            $"{settingsType.Name}: covered + excluded must account for every setting");
+    }
+
+    private static System.Collections.Generic.IEnumerable<PropertyInfo> SettableProperties(Type t) =>
+        t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.CanRead && p.CanWrite && p.GetIndexParameters().Length == 0);
+
+    [TestMethod]
+    public void NoExcludedName_IsDead()
+    {
+        // An exclusion list is silent when it is wrong: a typo'd or removed name excludes nothing
+        // and reads as though someone considered that setting. Every name must still name a real
+        // property on one of the four classes.
+        var classes = new[]
+        {
+            typeof(TaomSettings), typeof(BattleLoadDiagnosticsSettings),
+            typeof(BlowDiagnosticsSettings), typeof(CrashReportSettings),
+        };
+
+        var dead = CoopSettingsRelevance.ExcludedNames()
+            .Where(n => classes.All(t =>
+                t.GetProperty(n, BindingFlags.Public | BindingFlags.Instance) == null))
             .ToList();
 
-        Assert.IsTrue(props.Count > 100, $"expected TaomSettings to expose 100+ settings, saw {props.Count}");
+        Assert.AreEqual(0, dead.Count,
+            "excluded names that match no property on any settings class: " + string.Join(", ", dead));
+    }
 
-        foreach (var p in props)
-        {
-            var classified = CoopSettingsRelevance.IsSimulationRelevant(p)
-                             || CoopSettingsRelevance.IsExcluded(p.Name);
-            Assert.IsTrue(classified, $"'{p.Name}' is unclassified for co-op relevance");
-        }
+    [TestMethod]
+    public void NoTwoSettingsClasses_ShareAPropertyName()
+    {
+        // ComputeAcross keys the canonical text on the property name alone, which is what keeps a
+        // single-object fingerprint byte-identical to before that overload existed. Two classes
+        // sharing a name inside one group would put two settings on indistinguishable lines. This
+        // fails first so the decision is made deliberately rather than discovered as a collision.
+        var byName = new[]
+            {
+                typeof(TaomSettings), typeof(BattleLoadDiagnosticsSettings),
+                typeof(BlowDiagnosticsSettings), typeof(CrashReportSettings),
+            }
+            .SelectMany(t => SettableProperties(t).Select(p => new { t, p.Name }))
+            .GroupBy(x => x.Name, StringComparer.Ordinal)
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key + " on " + string.Join("/", g.Select(x => x.t.Name)))
+            .ToList();
+
+        Assert.AreEqual(0, byName.Count, "settings names shared across classes: " + string.Join(", ", byName));
+    }
+
+    [TestMethod]
+    public void AddingTheDiagnosticsClasses_ChangesNoHash()
+    {
+        // The whole justification for widening the call site: every diagnostics property is
+        // excluded, so covering those classes is a pure safety-net addition. If this ever fails,
+        // one of them became simulation-relevant and every peer's fingerprint just changed.
+        var settingsOnly = SettingsFingerprint.Compute(new TaomSettings());
+        var allFour = SettingsFingerprint.ComputeAcross(
+            new TaomSettings(), new BattleLoadDiagnosticsSettings(),
+            new BlowDiagnosticsSettings(), new CrashReportSettings());
+
+        Assert.AreEqual(settingsOnly.Global, allFour.Global, "the three diagnostics classes moved the hash");
+        Assert.AreEqual(settingsOnly.Covered, allFour.Covered, "the three diagnostics classes added coverage");
+    }
+
+    [TestMethod]
+    public void ComputeAcross_IgnoresArgumentOrder()
+    {
+        // Two objects both contributing to "Battle Tactics" and "World" — without the sort, the
+        // canonical text would follow the argument order and the two peers' codes would differ
+        // over nothing. Real settings classes cannot show this: only TaomSettings contributes.
+        var forwards = SettingsFingerprint.ComputeAcross(new FakeSettings(), new SecondFakeSettings());
+        var backwards = SettingsFingerprint.ComputeAcross(new SecondFakeSettings(), new FakeSettings());
+
+        Assert.AreEqual(forwards.Global, backwards.Global, "argument order changed the fingerprint");
+        Assert.AreEqual(forwards.Covered, backwards.Covered);
+        // FakeSettings: EnableFlanking, ChargeDistance, BanditDensity, Ungrouped (MapFigureScale
+        // and SmartCavalryDebug are excluded, DisplayName is read-only). Plus the second class's 2.
+        Assert.AreEqual(6, forwards.Covered, "expected 4 relevant on FakeSettings + 2 on the second");
+    }
+
+    [TestMethod]
+    public void ComputeAcross_SkipsNulls()
+    {
+        // MCM may not have constructed a diagnostics page when the co-op gate fires. A null must
+        // neither throw on a diagnostic path nor cost the coverage of the objects that are there.
+        var report = SettingsFingerprint.ComputeAcross(new TaomSettings(), null, new CrashReportSettings());
+
+        Assert.AreEqual(106, report.Covered, "a null entry cost coverage");
+        Assert.AreEqual(SettingsFingerprint.Compute(new TaomSettings()).Global, report.Global);
     }
 
     [TestMethod]
