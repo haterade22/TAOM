@@ -206,4 +206,39 @@ public class EnlistmentProvisioningTests
 
         _world.Received(1).GrantPlayerFood(2);
     }
+
+    [TestMethod]
+    public void RunDailyTick_LowMorale_LiftedToTheServiceFloor()
+    {
+        // Below 25 an attached party counts as "low morale" in CalculateCohesionChangeInternal and
+        // drags the whole army's cohesion — so this is upkeep for the commander, not just comfort.
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.Received(1).RaisePlayerMoraleTo(40f);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_HealsThePlayerEveryDay()
+    {
+        // Serving must never be worse for your health than marching alone. Vanilla gives a mobile
+        // party's heroes +11/day; an enlisted player is a hidden, inactive, one-man party that the
+        // engine's healing path was never written for — a real player reached 19% HP with no
+        // recovery. The surgeon is explicit rather than a side effect.
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.Received(1).HealPlayerHero(11);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_NotEnlisted_NoUpkeepAtAll()
+    {
+        // The company only feeds its own. A discharged player is on their own again.
+        _store.Record.State = EnlistmentState.NotEnlisted;
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.DidNotReceiveWithAnyArgs().GrantPlayerFood(default);
+        _world.DidNotReceiveWithAnyArgs().RaisePlayerMoraleTo(default);
+        _world.DidNotReceiveWithAnyArgs().HealPlayerHero(default);
+    }
 }

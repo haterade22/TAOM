@@ -285,4 +285,59 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
         var offset = new Vec2((float)Math.Cos(angle) * radius, (float)Math.Sin(angle) * radius);
         return origin + offset;
     }
+
+    public float GetPlayerMorale()
+    {
+        try
+        {
+            return MobileParty.MainParty?.Morale ?? -1f;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] GetPlayerMorale failed: {ex.Message}");
+            return -1f;
+        }
+    }
+
+    /// <summary>
+    /// Raises only. A serving soldier in a fed, paid company does not brood — but a player who has
+    /// EARNED high morale must not be dragged down to a floor by the same call.
+    /// </summary>
+    public bool RaisePlayerMoraleTo(float floor)
+    {
+        try
+        {
+            var main = MobileParty.MainParty;
+            if (main == null || !(floor > 0f) || float.IsInfinity(floor))
+                return false;
+            if (!(main.Morale < floor))
+                return false;
+
+            main.RecentEventsMorale += floor - main.Morale;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] RaisePlayerMoraleTo failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    public bool HealPlayerHero(int hitPoints)
+    {
+        try
+        {
+            var hero = Hero.MainHero;
+            if (hero == null || hitPoints <= 0 || hero.HitPoints >= hero.MaxHitPoints)
+                return false;
+
+            hero.Heal(hitPoints);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] HealPlayerHero failed: {ex.Message}");
+            return false;
+        }
+    }
 }

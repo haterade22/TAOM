@@ -46,6 +46,22 @@ public class EnlistmentDailyService : IEnlistmentDailyService
     private const int ProvisionedFoodDays = 3;
 
     /// <summary>
+    /// Morale floor while serving. Below 25 an attached party counts as "low morale" in
+    /// `CalculateCohesionChangeInternal`, dragging the whole army's cohesion — so a miserable
+    /// enlisted player is a burden on the commander as well as on themselves. Set clear of that
+    /// line: a fed, paid soldier in a functioning company is not on the edge of desertion.
+    /// Raises only — a player who has EARNED higher morale is never pulled down to it.
+    /// </summary>
+    private const float ServiceMoraleFloor = 40f;
+
+    /// <summary>
+    /// HP the company surgeon restores per day. Matches vanilla's baseline for a mobile party
+    /// (`DefaultPartyHealingModel` adds 11) so serving is never WORSE for your health than running
+    /// your own party — which is the whole bargain of enlisting.
+    /// </summary>
+    private const int ServiceDailyHealing = 11;
+
+    /// <summary>
     /// Feed the soldier. Verified against DefaultPartyHealingModel: a mobile party heals its heroes
     /// +11 HP/day, BUT `if (party.IsStarving && CurrentSettlement == null) return -19f` — a starving
     /// hero LOSES 19 HP a day. An enlisted player is a single hero parked in the field for days
@@ -58,15 +74,32 @@ public class EnlistmentDailyService : IEnlistmentDailyService
     /// </summary>
     private void ProvisionFromCommander()
     {
-        if (_world == null)
+        // The company feeds its OWN. Guarded here rather than trusting the caller, because
+        // every line below grants a resource — food, morale, health — and a discharged player
+        // drawing rations from a lord they no longer serve is a supply exploit, not a bug you
+        // would notice.
+        if (_world == null || !_store.Record.IsEnlisted)
             return;
 
         var held = _world.CountPlayerFood();
-        if (held >= ProvisionedFoodDays)
-            return;
+        if (held < ProvisionedFoodDays)
+        {
+            _world.GrantPlayerFood(ProvisionedFoodDays - held);
+            _logger?.LogInfo($"[Enlistment] commander's baggage topped the player's rations up to {ProvisionedFoodDays} (held {held})");
+        }
 
-        _world.GrantPlayerFood(ProvisionedFoodDays - held);
-        _logger?.LogInfo($"[Enlistment] commander's baggage topped the player's rations up to {ProvisionedFoodDays} (held {held})");
+        // Morale second: it depends on being fed, and a low-morale attached party also drags the
+        // army's cohesion, so this is upkeep for the commander as much as comfort for the player.
+        if (_world.RaisePlayerMoraleTo(ServiceMoraleFloor))
+            _logger?.LogInfo($"[Enlistment] company morale lifted the player to the service floor ({ServiceMoraleFloor})");
+
+        // Healing LAST and unconditional. Vanilla heals heroes in a mobile party +11/day, but an
+        // enlisted player is a hidden, inactive, one-man party parked in a field — a shape the
+        // engine's own healing path was never written for, and one a player reached at 19% HP with
+        // no recovery. Serving under a lord must never be worse for your health than marching
+        // alone, so the company surgeon tends you explicitly rather than by side effect.
+        if (_world.HealPlayerHero(ServiceDailyHealing))
+            _logger?.LogInfo($"[Enlistment] the company surgeon tended the player (+{ServiceDailyHealing} HP)");
     }
 
     public DailySummary RunDailyTick(double nowDays, double hourOfDay)

@@ -43,6 +43,21 @@ public interface IDutyWorldAdapter
     /// <summary>Grants food (as grain) to the player's main party. No-op for amount &lt;= 0.</summary>
     void GrantPlayerFood(int amount);
 
+    /// <summary>Current morale of the player's main party, or -1 when it cannot be read.</summary>
+    float GetPlayerMorale();
+
+    /// <summary>
+    /// Raise the player's party morale to <paramref name="floor"/> if it is below. Never lowers it,
+    /// and never touches a party that is already content. Returns true when it actually raised.
+    /// </summary>
+    bool RaisePlayerMoraleTo(float floor);
+
+    /// <summary>
+    /// Heal the player hero by <paramref name="hitPoints"/>. Returns false when there is no hero
+    /// or nothing to heal. Clamped by the engine at max HP.
+    /// </summary>
+    bool HealPlayerHero(int hitPoints);
+
     /// <summary>True when a hostile party is within <paramref name="radius"/> of the player's main party (locator-grid bounded scan, not a full MobileParty.All sweep).</summary>
     bool IsEnemyNearPlayer(float radius);
 }

@@ -4,6 +4,77 @@
 
 ## 2026-08-08
 
+### perf(ui): 4.8 GB of resident texture memory freed by sizing art to what the screen shows
+
+Two sets of images were authored at source resolutions that no widget could ever display, and both
+were paid for permanently rather than while visible.
+
+**Banner icons (L1) — 2,624 MB → 128 MB.** 369 sigils authored at 1024×1024 packed 9-per-sheet into
+41 atlases of 4096² uncompressed RGBA8, and the category carries `<AlwaysLoad/>`, so the engine held
+all of it from startup to exit — at the menu, on the map, in every battle — whether or not the
+banner editor was ever opened. The widest widget that consumes them is 110 Gauntlet design units;
+Gauntlet scales by screen *height* against a 1080 reference, so on the 5120×1440 test display they
+render at 147 px and at 4K height 220 px. Rebaked at 256², which covers both: 41 sheets → **2**.
+Vanilla authors its own equivalents at 100×100. Quality improves rather than degrades — the old path
+minified 1024 → 147 px with no mipmaps. Confirmed in game after the restart.
+
+**Faction culture art (L3a) — 2,474 MB → 78 MB decoded, 932 MB → 32 MB on disk.** 34 files were
+5504×3072 and one 6227×11825, rendering into a 429×240 design-unit panel — a 36× area oversample —
+while 36 sibling files already sat at ≤340×200. Capped at 1024 on the long side, preserving aspect.
+The saving is a **worst case, not a flat win**: these load per faction viewed during character
+creation and are never released, so a player who loads a save pays nothing and one who browsed all
+72 paid the full amount.
+
+`region_*` map art was deliberately left alone. `PolygonWidget.cs:323` sizes those as
+`_bboxW * parentW` against a `StretchToParent` container, so they scale with the whole map surface
+rather than a fixed panel — capping them at 1024 would visibly soften the culture-stage map.
+
+Also documented a trap that cost time here: `GUI/SpriteData/FactionMap/` sits under the compiled
+sprite directory but is **not** part of the sprite system. Those PNGs are read at runtime by
+`EngineTexture.LoadTextureFromPath`, appear in no manifest, and are declared in no category — so
+they need no bake and no restart, while the banner icons need both.
+
+Not-tested: memory savings are computed from source dimensions and the atlas packer's arithmetic
+(`SpriteSheetCount` 41→2 verified in both manifests), not from a before/after `[MemSample]` pair.
+Research: `BannerEditor.xml`, `CharacterCreationCultureStage.xml`, `PolygonWidget.cs`,
+`FactionImageWidget.cs`, `TAOMSpriteData.xml`.
+
+### fix(docs): RuntimeDataCache is read by the shipping client — the 42 GB is not free to drop
+
+Open question Q1 of the native-commit audit is settled, and against the hoped-for answer. A Procmon
+capture of the shipping client (launch → menu → one battle) recorded **23,329 RuntimeDataCache
+operations: 13,795 `ReadFile` across 5,036 distinct `.rdc` files, and zero writes** — TAOM_Map
+13,577, LOTRLOME_Armory 7,658, TAOM 1,801, and `Alliance.Wargs` 293, a module the install-weight
+ledger did not list. So RDC cannot be excluded from a release on the strength of "no vanilla module
+ships one"; the rename A/B is still needed to decide whether the client *needs* it.
+
+943 of the lookups returned `NAME NOT FOUND`, so the client already tolerates missing entries and
+will most likely degrade rather than break — but with zero writes observed there is no evidence it
+regenerates, which would make the slow path permanent for anyone who shipped without it.
+
+A method note worth more than the result: the first capture produced zero RDC rows because it was
+started and stopped without the game ever running, which is indistinguishable from "editor-only" if
+you read the row count alone. Corroborate that Bannerlord actually appears in the capture before
+reading a zero as an answer.
+
+### fix(diagnostics): the 11.9-second battle-load gap was attributed, and it moved the problem
+
+The gap markers added yesterday produced their first live reading, and it relocated the cost. The
+window they were built to explain is now **2.5 s**, of which all of TAOM's behaviour registration is
+**55 ms**. `polls=28` over `waitMs=903` — ~32 ms per poll — showed genuine multi-frame streaming
+with a healthy main thread, refuting the blocking-native-spin hypothesis that would otherwise have
+been the obvious thing to chase.
+
+The dominant cost is **19.5 s after loading finishes**, 70% of a 27.8 s load, on a battle with
+`agents=0`. The single `[MemSample]` inside that window explains it: `memLoad=97%`,
+`availPhysMB=1468`, and the working set collapsing `7430 → 5351 → 2447 MB` as the OS evicted pages.
+**Load time and memory pressure are one problem**, which is precisely what stamping `MemStats()` on
+those markers was designed to decide. `[MemSample]` also captured a menu baseline (`privMB=9238`)
+for the first time — that station did not exist before the sampler was moved.
+
+Caveat recorded rather than glossed: ~95 GB of the 108 GB system commit was not Bannerlord, so a
+clean-boot repeat is owed before attributing the 19.5 s wholly to TAOM.
+
 ### chore(triage): 147 open issues checked against HEAD — 81 closed, 60 kept, 6 escalated
 
 The tracker had stopped being a queue and become a work log. Most open issues were past-tense
@@ -491,6 +562,44 @@ without MCM reads the JSON, a player with MCM at default reads the literal, and 
 describe the same game. A test fails the build if they drift, which is the kind of split that is
 otherwise invisible because the test host never has MCM loaded.
 
+### feat(enlistment): the company looks after its own — food, morale and a surgeon
+
+Extends today's starvation fix into the whole bargain of enlisting: while you serve, your keep is
+the commander's problem, not yours.
+
+| Upkeep | Why |
+|---|---|
+| Rations topped to a 3-day floor | `DefaultPartyHealingModel` returns **-19 HP/day** for a starving hero with no settlement. A one-man party parked in a field runs out, and a player hit 19% HP with no recovery. |
+| Morale raised to 40 (never lowered) | Below 25 an attached party counts as "low morale" in `CalculateCohesionChangeInternal` and drags the whole army's cohesion. This is upkeep for the COMMANDER as much as comfort for the player. |
+| Surgeon heals +11 HP/day | Matches vanilla's mobile-party baseline, so serving is never worse for your health than marching alone. Explicit rather than a side effect, because the engine's healing path was never written for a hidden, inactive, one-man party. |
+
+All three are gated on actually being enlisted — guarded in the service rather than trusting the
+caller, since every one of them grants a resource and a discharged player drawing rations from a
+lord they no longer serve is a supply exploit nobody would notice. A test caught exactly that.
+
+Morale RAISES only. A player who has earned high morale is never pulled down to the floor.
+
+### The influence question, answered
+
+Ahead of real army membership: an enlisted player joining the commander's army costs the commander
+**nothing in influence**. `Army.OnAddPartyInternal` guards the charge with
+`mobileParty != MobileParty.MainParty`, so the call-to-arms cost is skipped outright for the player
+— the same-clan exemption that makes companion parties free never even needs to fire.
+
+The real cost is **cohesion**, and two of its four drivers are things we can remove: starving
+parties and low-morale parties. Both are now handled above. What remains is structural — a
+one-man party always trips the "10 or fewer healthy members" term, and every party costs one point
+of party-count — for roughly -0.375 cohesion/day on an AI-led army. Documented rather than
+accepted silently; a join gate that skips armies already near the dispersion threshold is the
+next step if that proves to matter in play.
+
+**Unverified:** `DailyBeingAtArmyInfluenceAward` computes an influence award for army members, but
+its consumer is not in the CampaignSystem decompile. If it pays out, serving earns influence that
+partly offsets the cohesion drag — not relied upon until confirmed.
+
+Suite 6087 green.
+
+Research: Army.OnAddPartyInternal main-party guard, CalculateCohesionChangeInternal drivers
 ### fix(enlistment): the commander feeds his soldiers — enlisted players were starving
 
 Reported in-game at 19% HP and not recovering. `DefaultPartyHealingModel` explains it exactly: a
