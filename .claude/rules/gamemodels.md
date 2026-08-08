@@ -6,7 +6,7 @@ paths:
 
 # GameModel Override Rules
 
-TAOM has 34 GameModel overrides. All follow the same pattern.
+TAOM has 47 GameModel overrides. All follow the same pattern.
 
 ## Pattern
 
@@ -59,10 +59,22 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 }
 ```
 
-## Existing Overrides (34 total)
+## Existing Overrides (47 total)
 
 | Model | Base | Feature |
 |-------|------|---------|
+| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | `CareerSystem` |
+| `TaomClanTierModel` | `DefaultClanTierModel` | `CareerSystem` |
+| `TaomInventoryCapacityModel` | `DefaultInventoryCapacityModel` | `CareerSystem` |
+| `TaomMapVisibilityModel` | `DefaultMapVisibilityModel` | `CareerSystem` |
+| `TaomBanditDensityModel` | `DefaultBanditDensityModel` | `BanditManagement` |
+| `TaomNotableSpawnModel` | `DefaultNotableSpawnModel` | `CulturalFeats` |
+| `TaomMarriageModel` | `DefaultMarriageModel` | `NazgulFamily` |
+| `TaomSettlementEconomyModel` | `DefaultSettlementEconomyModel` | `SettlementEconomy` |
+| `TaomSettlementFoodModel` | `DefaultSettlementFoodModel` | `SettlementFood` |
+| `TaomSiegeEventModel` | `DefaultSiegeEventModel` | `Siege` |
+| `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | `ArmyTargeting` |
+| `TaomPartyNavigationModel` | `DefaultPartyNavigationModel` | `NavalTravel` — **not registered**; the `AddModel` call in `SubModule.cs` is commented out, so these overrides do not run |
 | `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `TroopProgression` |
 | `TaomPartyWageModel` | `DefaultPartyWageModel` | `CulturalFeats` |
 | `TaomVolunteerModel` | `DefaultVolunteerModel` | `TroopProgression` |

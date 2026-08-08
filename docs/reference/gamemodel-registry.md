@@ -5,6 +5,12 @@
 
 | GameModel | Overrides | Purpose |
 |-----------|-----------|---------|
+| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | Career passives on effective max health and agent stats + the mount-lock gate: elephant, spider and Mumakil monsters are never rideable (`CanAgentRideMount` returns false before `base`). The Rhun war chariot is deliberately EXEMPT — remountable mid-battle, gated only by the item's riding difficulty (#279) |
+| `TaomClanTierModel` | `DefaultClanTierModel` | Career `CompanionLimit` passive applied on top of the vanilla clan-tier limit |
+| `TaomInventoryCapacityModel` | `DefaultInventoryCapacityModel` | Career `InventoryCapacity` passive applied on top of the vanilla capacity |
+| `TaomMapVisibilityModel` | `DefaultMapVisibilityModel` | Career `PartySpottingRange` passive, plus the StealthBonus ratio for how easily OTHERS spot the party (a lower ratio is better) |
+| `TaomBanditDensityModel` | `DefaultBanditDensityModel` | Player-progress-scaled hideout and bandit-party counts (BanditManagement). Every property returns `base` verbatim when scaling is disabled |
+| `TaomNotableSpawnModel` | `DefaultNotableSpawnModel` | Culture notable-count feats applied to `GetTargetNotableCountForSettlement`; falls through to `base` when the settlement has no notables of that occupation |
 | `TaomCharacterStatsModel` | `DefaultCharacterStatsModel` | `MaxCharacterTier => 10` (vanilla 6) + career `Health` passive on `MaxHitpoints` — the ONLY campaign-side consumer of that pip (character screen, `Hero.MaxHitPoints`, daily heal cap), and via `SandboxAgentStatCalculateModel`'s hero branch it feeds in-battle health too, so nothing else may add `Health` (#394) |
 | `TaomPartyWageModel` | `DefaultPartyWageModel` | Extended tier wages (T0-T10) + culture wage/garrison/Rohan mounted feats + career TroopWages passive |
 | `TaomVolunteerModel` | `DefaultVolunteerModel` | `MaxVolunteerTier => 6` (vanilla 4) + alignment-gated recruitment (`MaximumIndexHeroCanRecruitFromHero` returns -1 to block recruiting at an enemy-aligned settlement — AlignmentRecruitment feature) |
