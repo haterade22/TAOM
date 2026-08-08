@@ -48,6 +48,21 @@ trimming 234 bodies at weighted 465 against limit 231.
 Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
 guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
 equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+### fix(enlistment): register the 40 strings that would have shipped untranslatable
+
+An audit of every `{=key}` literal and every `IInquiryAdapter` key/fallback pair against
+`taom_enlistment_strings.xml` found 36 keys used in code and registered nowhere — the entire
+release/desertion flow, the status board, rank and section names, trust bands, and both new menu
+options. A key that is never registered cannot be translated into any of the 12 languages; it ships
+as its English fallback forever, silently, with no error anywhere.
+
+Also fixed a live English-language defect this audit turned up. Merit bands carry a `GradeKey` that
+is an internal id, and it was being substituted into the after-battle toast raw — so the player
+read *"The sergeants noted your conduct: distinguished"*, lower-cased engine data dropped into the
+middle of a sentence. Four localized grades now, with an unknown key falling back to the mildest
+real grade rather than echoing the id.
+
+62 enlistment keys registered, XML validated.
 ### feat(enlistment): a wait menu that tells you what is happening, and two edges that beat the tick
 
 Batches 9 and 10. The wait menu showed one sentence — *"You serve in X's company"* — unchanged from

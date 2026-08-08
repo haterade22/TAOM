@@ -40,5 +40,45 @@
 	<string id="taom_fc_offer_title" text="{=taom_fc_offer_title}Battlefield Promotion" />
 	<string id="taom_fc_rename_body" text="{=taom_fc_rename_body}Give {TROOP_NAME} a name, or keep the one they carried into battle." />
 	<string id="taom_fc_rename_title" text="{=taom_fc_rename_title}Name the New Companion" />
+	<string id="taom_enlist_act_battle" text="{=taom_enlist_act_battle}{COMMANDER} is engaged. Hold your place in the line." />
+	<string id="taom_enlist_act_lost" text="{=taom_enlist_act_lost}You have lost the column. Await word of your commander." />
+	<string id="taom_enlist_act_march" text="{=taom_enlist_act_march}You march with {COMMANDER}&#x27;s company, at your commander&#x27;s pace." />
+	<string id="taom_enlist_act_settlement" text="{=taom_enlist_act_settlement}The column rests inside {SETTLEMENT}." />
+	<string id="taom_enlist_act_siege" text="{=taom_enlist_act_siege}You are camped before the walls with {COMMANDER}&#x27;s company." />
+	<string id="taom_enlist_board_arrears" text="{=taom_enlist_board_arrears}{NEWLINE}Pay owed to you: {GOLD}{GOLD_ICON}" />
+	<string id="taom_enlist_board_duty" text="{=taom_enlist_board_duty}{NEWLINE}You have orders: {DUTY_NAME}" />
+	<string id="taom_enlist_duty_already" text="{=taom_enlist_duty_already}You already have your orders. See them done first." />
+	<string id="taom_enlist_duty_none" text="{=taom_enlist_duty_none}Nothing for you at present. Stay sharp — that changes." />
+	<string id="taom_enlist_menu_duty" text="{=taom_enlist_menu_duty}Ask your sergeant for work" />
+	<string id="taom_enlist_menu_talk" text="{=taom_enlist_menu_talk}Speak with your commander" />
+	<string id="taom_enlist_rank_recruit" text="{=taom_enlist_rank_recruit}Recruit" />
+	<string id="taom_enlist_rank_sergeant" text="{=taom_enlist_rank_sergeant}Sergeant" />
+	<string id="taom_enlist_rank_soldier" text="{=taom_enlist_rank_soldier}Soldier" />
+	<string id="taom_enlist_rank_veteran" text="{=taom_enlist_rank_veteran}Veteran" />
+	<string id="taom_enlist_reassign_pick" text="{=taom_enlist_reassign_pick}You march with the {CURRENT_SECTION} at present. Where would you rather stand?" />
+	<string id="taom_enlist_release_battle" text="{=taom_enlist_release_battle}Not while there is fighting to be done. Ask me again when the field is quiet." />
+	<string id="taom_enlist_release_desert" text="{=taom_enlist_release_desert}Then I am done with your company. I take my leave, oath or no." />
+	<string id="taom_enlist_release_desert_answer" text="{=taom_enlist_release_desert_answer}Then you are an oathbreaker, and every man here knows it. Get out of my sight." />
+	<string id="taom_enlist_release_desert_option" text="{=taom_enlist_release_desert_option}Desert the company" />
+	<string id="taom_enlist_release_in_battle" text="{=taom_enlist_release_in_battle}There is fighting to be done. Ask again once the field is quiet." />
+	<string id="taom_enlist_release_refused_body" text="{=taom_enlist_release_refused_body}Your commander holds you to your oath — {DAYS} more days are owed. Leaving now is desertion: you forfeit the pay still owed to you, and your commander will not forget it." />
+	<string id="taom_enlist_release_refused_title" text="{=taom_enlist_release_refused_title}Your term is not served" />
+	<string id="taom_enlist_release_relent" text="{=taom_enlist_release_relent}As you say. I will hold the line." />
+	<string id="taom_enlist_release_soon" text="{=taom_enlist_release_soon}You swore to serve, and {DAYS} days of that oath are still owed. I hold you to it." />
+	<string id="taom_enlist_release_stay" text="{=taom_enlist_release_stay}Stay and serve" />
+	<string id="taom_enlist_section_arc" text="{=taom_enlist_section_arc}bowmen" />
+	<string id="taom_enlist_section_cav" text="{=taom_enlist_section_cav}horse" />
+	<string id="taom_enlist_section_inf" text="{=taom_enlist_section_inf}shield line" />
+	<string id="taom_enlist_section_sup" text="{=taom_enlist_section_sup}baggage train" />
+	<string id="taom_enlist_trust_known" text="{=taom_enlist_trust_known}known" />
+	<string id="taom_enlist_trust_new" text="{=taom_enlist_trust_new}unproven" />
+	<string id="taom_enlist_trust_poor" text="{=taom_enlist_trust_poor}in poor odour" />
+	<string id="taom_enlist_trust_solid" text="{=taom_enlist_trust_solid}well regarded" />
+	<string id="taom_enlist_trust_trusted" text="{=taom_enlist_trust_trusted}trusted" />
+	<string id="taom_enlist_wait_board" text="{=taom_enlist_wait_board}{ACTIVITY}{NEWLINE}{NEWLINE}Rank: {RANK} · {SECTION}{NEWLINE}Days served: {DAYS} · Standing: {TRUST}{ARREARS}{DUTY}" />
+	<string id="taom_enlist_grade_distinguished" text="{=taom_enlist_grade_distinguished}distinguished" />
+	<string id="taom_enlist_grade_strong" text="{=taom_enlist_grade_strong}strong" />
+	<string id="taom_enlist_grade_solid" text="{=taom_enlist_grade_solid}steady" />
+	<string id="taom_enlist_grade_rough" text="{=taom_enlist_grade_rough}rough, but you held" />
 
 </strings>
