@@ -77,7 +77,7 @@
     <string id="taom_enlist_trust_poor" text="in cattiva fama" />
     <string id="taom_enlist_trust_solid" text="ben considerato" />
     <string id="taom_enlist_trust_trusted" text="fidato" />
-    <string id="taom_enlist_wait_board" text="{ACTIVITY}{NEWLINE}{NEWLINE}Grado: {RANK} · {SECTION}{NEWLINE}Giorni di servizio: {DAYS} · Reputazione: {TRUST}{ARREARS}{DUTY}" />
+
     <string id="taom_enlist_grade_distinguished" text="distinto" />
     <string id="taom_enlist_grade_strong" text="forte" />
     <string id="taom_enlist_grade_solid" text="saldo" />
@@ -183,6 +183,20 @@
     <string id="taom_enlist_duty_supply_delivery_title" text="una consegna di rifornimenti" />
     <string id="taom_enlist_duty_forage_title" text="foraggiamento per la compagnia" />
     <string id="taom_enlist_duty_hideout_strike_title" text="un assalto a un covo" />
-    <string id="taom_enlist_duty_service_shift_title" text="servizio all'accampamento" />
+    <string id="taom_enlist_duty_service_shift_title" text="servizio all'accampamento" />
+    <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}Grado: {RANK} · {SECTION}{NEWLINE}Giorni di servizio: {DAYS} · Reputazione: {TRUST}{NEWLINE}Foglio di servizio: {XP} PE · Paga: {WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
+    <string id="taom_enlist_board_ladder" text="{NEWLINE}Verso {NEXT_RANK}: {REQUIREMENT}" />
+    <string id="taom_enlist_req_days" text="{COUNT} giorni di servizio" />
+    <string id="taom_enlist_req_xp" text="{COUNT} PE di servizio" />
+    <string id="taom_enlist_req_leadership" text="Comando {COUNT}" />
+    <string id="taom_enlist_req_duties" text="{COUNT} incarichi portati a termine" />
+    <string id="taom_enlist_req_trust" text="la fiducia del tuo comandante" />
+    <string id="taom_enlist_req_other" text="altro servizio" />
+    <string id="taom_enlist_no_at_war" text="Il tuo regno è in guerra con il suo. Non puoi prendere il suo denaro e mantenere il tuo giuramento." />
+    <string id="taom_enlist_no_generic" text="Non puoi arruolarti ai suoi ordini in questo momento." />
+    <string id="taom_enlist_reassign_no_cooldown" text="Hai cambiato reparto troppo di recente. Richiedilo fra {DAYS} giorni." />
+    <string id="taom_enlist_reassign_no_cooldown_one" text="Hai cambiato reparto troppo di recente. Richiedilo domani." />
+    <string id="taom_enlist_reassign_no_generic" text="Non puoi cambiare reparto in questo momento." />
+    <string id="taom_enlist_kit_reclaimed" text="Il furiere si riprende il tuo equipaggiamento di servizio: {COUNT} pezzi." />
   </strings>
 </base>

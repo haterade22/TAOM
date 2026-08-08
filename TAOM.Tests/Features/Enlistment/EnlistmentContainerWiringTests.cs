@@ -2,6 +2,7 @@ using System.Linq;
 using DryIoc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
@@ -32,6 +33,11 @@ public class EnlistmentContainerWiringTests
         container.RegisterInstance(Substitute.For<IModLogger>());
         container.RegisterInstance(Substitute.For<ICoopSessionProvider>());
         container.RegisterInstance(Substitute.For<ICoopPresenceProvider>());
+        // IPathService is registered by Main/IoC.cs, not by RegisterEnlistmentFeature. It entered
+        // this graph when the status board started reading the promotion ladder and the wage table:
+        // EnlistmentBattleBehavior -> IServiceMaintenanceService -> IServiceStatusService ->
+        // IPromotionService / IEnlistmentContentConfigProvider -> IPathService.
+        container.RegisterInstance(Substitute.For<IPathService>());
 
         EnlistmentIoC.RegisterEnlistmentFeature(container);
         return container;

@@ -77,7 +77,7 @@
     <string id="taom_enlist_trust_poor" text="de mala fama" />
     <string id="taom_enlist_trust_solid" text="bien considerado" />
     <string id="taom_enlist_trust_trusted" text="de confianza" />
-    <string id="taom_enlist_wait_board" text="{ACTIVITY}{NEWLINE}{NEWLINE}Rango: {RANK} · {SECTION}{NEWLINE}Días servidos: {DAYS} · Reputación: {TRUST}{ARREARS}{DUTY}" />
+
     <string id="taom_enlist_grade_distinguished" text="distinguido" />
     <string id="taom_enlist_grade_strong" text="sólido" />
     <string id="taom_enlist_grade_solid" text="firme" />
@@ -183,6 +183,20 @@
     <string id="taom_enlist_duty_supply_delivery_title" text="una entrega de suministros" />
     <string id="taom_enlist_duty_forage_title" text="forrajeo para la compañía" />
     <string id="taom_enlist_duty_hideout_strike_title" text="un asalto a una guarida" />
-    <string id="taom_enlist_duty_service_shift_title" text="servicio de campamento" />
+    <string id="taom_enlist_duty_service_shift_title" text="servicio de campamento" />
+    <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}Rango: {RANK} · {SECTION}{NEWLINE}Días servidos: {DAYS} · Reputación: {TRUST}{NEWLINE}Hoja de servicio: {XP} XP · Paga diaria: {WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
+    <string id="taom_enlist_board_ladder" text="{NEWLINE}Hacia {NEXT_RANK}: {REQUIREMENT}" />
+    <string id="taom_enlist_req_days" text="{COUNT} días de servicio" />
+    <string id="taom_enlist_req_xp" text="{COUNT} XP de servicio" />
+    <string id="taom_enlist_req_leadership" text="Liderazgo {COUNT}" />
+    <string id="taom_enlist_req_duties" text="{COUNT} encargos cumplidos" />
+    <string id="taom_enlist_req_trust" text="la confianza de tu comandante" />
+    <string id="taom_enlist_req_other" text="más servicio" />
+    <string id="taom_enlist_no_at_war" text="Tu reino está en guerra con el suyo. No puedes tomar su paga y mantener tu juramento." />
+    <string id="taom_enlist_no_generic" text="No puedes alistarte a sus órdenes ahora mismo." />
+    <string id="taom_enlist_reassign_no_cooldown" text="Cambiaste de sección hace muy poco. Vuelve a pedirlo en {DAYS} días." />
+    <string id="taom_enlist_reassign_no_cooldown_one" text="Cambiaste de sección hace muy poco. Vuelve a pedirlo mañana." />
+    <string id="taom_enlist_reassign_no_generic" text="No puedes cambiar de sección ahora mismo." />
+    <string id="taom_enlist_kit_reclaimed" text="El intendente recupera tu equipo de servicio: {COUNT} objeto(s)." />
   </strings>
 </base>

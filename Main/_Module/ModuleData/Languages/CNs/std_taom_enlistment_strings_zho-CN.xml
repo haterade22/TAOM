@@ -77,7 +77,7 @@
     <string id="taom_enlist_trust_poor" text="声名不佳" />
     <string id="taom_enlist_trust_solid" text="颇受敬重" />
     <string id="taom_enlist_trust_trusted" text="深受信任" />
-    <string id="taom_enlist_wait_board" text="{ACTIVITY}{NEWLINE}{NEWLINE}军阶：{RANK} · {SECTION}{NEWLINE}服役天数：{DAYS} · 声望：{TRUST}{ARREARS}{DUTY}" />
+
     <string id="taom_enlist_grade_distinguished" text="卓越" />
     <string id="taom_enlist_grade_strong" text="出色" />
     <string id="taom_enlist_grade_solid" text="稳健" />
@@ -183,6 +183,20 @@
     <string id="taom_enlist_duty_supply_delivery_title" text="运送补给" />
     <string id="taom_enlist_duty_forage_title" text="为连队征粮" />
     <string id="taom_enlist_duty_hideout_strike_title" text="突袭匪巢" />
-    <string id="taom_enlist_duty_service_shift_title" text="营中值勤" />
+    <string id="taom_enlist_duty_service_shift_title" text="营中值勤" />
+    <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}军阶：{RANK} · {SECTION}{NEWLINE}服役天数：{DAYS} · 声望：{TRUST}{NEWLINE}服役记录：{XP} 经验 · 日饷：{WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
+    <string id="taom_enlist_board_ladder" text="{NEWLINE}晋升{NEXT_RANK}还需：{REQUIREMENT}" />
+    <string id="taom_enlist_req_days" text="服役 {COUNT} 天" />
+    <string id="taom_enlist_req_xp" text="{COUNT} 点服役经验" />
+    <string id="taom_enlist_req_leadership" text="领导力 {COUNT}" />
+    <string id="taom_enlist_req_duties" text="完成 {COUNT} 项差事" />
+    <string id="taom_enlist_req_trust" text="指挥官的信任" />
+    <string id="taom_enlist_req_other" text="更多的服役" />
+    <string id="taom_enlist_no_at_war" text="你的王国正与他交战。你不能既拿他的军饷，又守自己的誓言。" />
+    <string id="taom_enlist_no_generic" text="你现在无法投效于他麾下。" />
+    <string id="taom_enlist_reassign_no_cooldown" text="你不久前才换过编制。请在 {DAYS} 天后再问。" />
+    <string id="taom_enlist_reassign_no_cooldown_one" text="你不久前才换过编制。明日再问吧。" />
+    <string id="taom_enlist_reassign_no_generic" text="你现在无法更换编制。" />
+    <string id="taom_enlist_kit_reclaimed" text="军需官收回你的配发装备：{COUNT} 件。" />
   </strings>
 </base>

@@ -1,4 +1,4 @@
-# Lessons — Testing & QA
+﻿# Lessons — Testing & QA
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Testing & QA lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -501,3 +501,38 @@ suite can be made to do; it is a review activity with a specific technique.
    latch/reset, park/restore. A one-sided test on a two-sided mechanism is how #3 and #4 shipped.
 3. If a test never stubs a property, every branch behind that property is unreachable in the suite.
    Grep for `DidNotReceive`/unstubbed reads when a class has state-dependent branching.
+
+### A comment asserting engine behaviour is a claim — hold it to commit-message standards
+
+Code gets checked by a compiler and the suite. The comment above it gets checked by nobody, and is
+trusted longest. When the two disagree, the comment wins in the reader's head.
+
+**This killed the game on 2026-08-08.** `OnTargetPartyDestroyed` carried:
+*"the party is already gone at the engine level — FinishActive's DestroyParty call is a defensive
+no-op (the adapter checks IsActive before acting)."* Both halves false.
+`DestroyPartyAction.ApplyInternal` dispatches `OnMobilePartyDestroyed` on line 23 and calls
+`RemoveParty()` on line 25 — the event fires BEFORE deactivation, so the party still reads
+`IsActive` during the callback and the adapter guard passes straight through. Unbounded recursion,
+7,482 frames, uncatchable `StackOverflowException`, no crash report. Review had read that comment
+and stopped checking, which is precisely what a false safety property buys.
+
+The same day, a 6-agent deep review plus a Codex pass over a 25-file changeset returned **six
+confirmed findings and zero behavioural defects** — all six were comments, docs, or test-assertion
+messages asserting something untrue. The changeset was written by six parallel agents with builds
+forbidden; an agent that cannot compile compensates with careful prose, and that prose reads as
+verified while being produced by the same unverified reasoning as the code.
+
+Test-assertion messages are the same surface. Twelve tests asserted `WagePolicy.ComputeDaily`'s
+forfeit figure with messages saying it *"must be reported"* — while production reports a
+different value re-derived elsewhere. The assertions pass, so nothing fails, and the message
+quietly promises coverage that does not exist.
+
+- **Why missed:** no review agent owns comments. All of them — standards, efficiency, data flow,
+  API, completeness, Codex — are scoped to code correctness. The one comment-defect that WAS
+  caught was caught incidentally, because an API agent happened to be verifying an engine claim
+  that was written in a comment.
+- **Prevent:** a comment asserting engine behaviour either cites what was read
+  (`DestroyPartyAction.ApplyInternal:23-25`) or is phrased as an assumption. Same rule for a test
+  message claiming what a test covers. When reviewing, treat an unusually confident comment as a
+  claim to verify, not as evidence — it is most load-bearing exactly where it is most wrong.
+- **Source:** #375 duty-recursion crash + `rca-enlistment-survivors-2026-08-08.md`, both 2026-08-08.

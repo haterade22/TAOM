@@ -11,6 +11,9 @@ public sealed class WageDecision
     public int NewlyDeferred { get; set; }
     public int ArrearsReleased { get; set; }
 
+    /// <summary>Gold owed today that the arrears cap destroyed. Non-zero means the player lost pay.</summary>
+    public int Forfeited { get; set; }
+
     public int TotalPaidToPlayer => PaidFromCommander + Minted + ArrearsReleased;
 }
 
@@ -22,6 +25,22 @@ public sealed class WageDecision
 /// </summary>
 public static class WagePolicy
 {
+    /// <summary>
+    /// Ceiling on outstanding arrears, in gold: <c>MaxDeferredWageDays × dailyWage</c>. Denominated
+    /// in DAYS so the cap tracks the wage it caps — the old flat 60-gold cap was 12 days of a
+    /// Recruit's pay but 2.7 days of a Sergeant's, and silently destroyed everything past it.
+    /// Widened to <c>long</c> before the multiply so a hand-edited day count cannot overflow into a
+    /// negative (and therefore zero) cap.
+    /// </summary>
+    public static int ArrearsCap(int dailyWage, WagePolicyConfig config)
+    {
+        if (config == null)
+            return 0;
+
+        var cap = (long)Math.Max(0, config.MaxDeferredWageDays) * Math.Max(0, dailyWage);
+        return cap > int.MaxValue ? int.MaxValue : (int)cap;
+    }
+
     public static WageDecision ComputeDaily(int dailyWage, int commanderGold, int currentArrears, WagePolicyConfig config)
     {
         var decision = new WageDecision();
@@ -42,8 +61,9 @@ public static class WagePolicy
         decision.PaidFromCommander = Math.Min(wage, available);
 
         var shortfall = wage - decision.PaidFromCommander;
-        var arrearsRoom = Math.Max(0, Math.Max(0, config.MaxDeferredWages) - arrears);
+        var arrearsRoom = Math.Max(0, ArrearsCap(wage, config) - arrears);
         decision.NewlyDeferred = Math.Min(shortfall, arrearsRoom);
+        decision.Forfeited = shortfall - decision.NewlyDeferred;
 
         var remaining = available - decision.PaidFromCommander;
         decision.ArrearsReleased = Math.Min(arrears, remaining);

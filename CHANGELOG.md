@@ -36,6 +36,81 @@ nothing wider — not the ModuleData configs behind those 33 fallbacks, not the 
 Not verified in a running game: reproducing it needs a co-op install and MCM's provider induced to
 fail at the gate.
 
+### feat(enlistment): the six surviving proposals from the SAS comparison
+
+Nineteen proposals survived adversarial verification; ten were ranked adopt-now. These are the six
+that earned the cost, implemented by six parallel agents and reviewed afterwards.
+
+**The promotion ladder was invisible.** `PromotionEvaluation.UnmetRequirementKeys` was documented
+in-source as "one data source for logic AND UI" and had zero production readers, so a player facing
+five simultaneous gates (60 days / 800 XP / Leadership 50 / 5 duty successes / trust 6 for Sergeant)
+saw none of them and read the whole ladder as broken. The board now shows service XP, today's wage,
+and the single most-binding unmet requirement, via a new non-mutating `IPromotionService.Peek()`.
+"Most binding" is the largest shortfall relative to its own threshold, compared by integer
+cross-multiplication so there is no division, no float, and no divide-by-zero when a threshold is
+negative (MinTrust defaults to -10).
+
+Two traps handled deliberately. The requirement is stored as a single `string`, never a
+`List<string>`, because `ServiceStatusModel`'s value equality IS the wait menu's refresh throttle and
+a collection's reference equality would make `Equals` false every call — turning a rare re-render
+into a per-frame one. And the board template moved to a NEW key `taom_enlist_wait_board_v2`: a
+registered translation wins over the inline C# default, so reusing the old id would have rendered the
+old three-line sentence in all 12 languages and silently dropped the new tokens with no error
+anywhere. The old key is now orphaned and has been removed from all 13 files.
+
+**`maxDeferredWages` was a gold cap wearing a day-count's name.** 60 gold, clamped in two places. A
+Sergeant on 22/day reached it in 2.7 days and everything past it was destroyed silently — roughly 600
+gold over a poor stretch, with no log. Renamed `maxDeferredWageDays` and computed inside
+`WagePolicy.ComputeDaily` as `days * dailyWage`, which keeps it a pure static change since the
+function already receives the wage. A forfeit log line now names the gold lost, because the silent
+destruction was the actual defect and the rename alone would not have fixed it. An existing config
+carrying the old key is detected and warned about rather than silently taking the new default — the
+values are not convertible, gold is not days.
+
+**Two conversation lines stopped vanishing.** The reassignment line put its 7-day cooldown in the
+*visibility* condition, which is the exact bug reported in play: a player saw no cavalry option and
+concluded cavalry was unavailable. It now greys with the days remaining bound to the `TextObject`
+rather than through `MBTextManager` — the hint renders later in `ConversationItemVM.RefreshValues`,
+so a process-global text variable can be overwritten by another sentence's condition in the same
+`GetSentenceOptions` loop. The enlist offer greys only on `AtWarWithYourKingdom`, deliberately not on
+`CommanderUnavailable`, which fires for every governor and garrison-sitting lord and would park a
+permanently-disabled line near the top of a large share of all noble conversations.
+
+**Walking out of a battle banked full survival merit.** `OnEndMission` computed survival as "did I go
+down", so leaving at t=5s scored the entire 25-point survival weight — positively-scored
+non-participation. `OnMissionResultReady` now latches whether the battle reached a verdict. No trust
+debit was added: `MeritBand.Trust` already falls with the band, and a second debit would double-count
+the same failure.
+
+**The equipment reclaim was 90% written and wired to nothing.** `IPartyItemRosterAdapter.RemoveItem`,
+`IssuedItemIds` and `EquipmentPayoffCalculator` all had zero production callers, while
+`IPartyItemRosterAdapter`'s own doc comment promised "reclaim it at discharge." Honourable discharge
+now returns the issued kit, trusting `RemoveItem`'s return value rather than the ledger — it drains
+only the unmodified stack by design, so a player's modified variants correctly survive. Confiscation
+only; the gold payoff needs an item-value surface that does not exist and stays deferred.
+
+**Riders.** `GateSpec.Weight` for weighted duty selection, with `weight <= 0` skipping the row and
+warning rather than being treated as a disable switch — in a cumulative-sum pick a zero silently
+shifts every subsequent probability.
+
+And equipment for two cultures that had none. `enlist_lothlorien_*` / `enlist_battania_*` were
+missing because three separate places asserted those cultures have no troop tree, so both fell
+through to `enlist_default_{rank}`. The assertion is false: neither owns a `troops_*.xml`, but each
+BINDS to another culture's tree in the culture data — lothlorien to Rivendell's
+(`imladris_recruit`), battania to Rhun's (`loke_rim_initiate`; battania is Khand here, not a lore
+name). Fixed in the data (hand-authored roster rows) AND in the generator, which gained a real
+`TREE_ALIASES` map and an `apply_tree_aliases()` pass so a re-seed reproduces them instead of
+silently dropping back to the default kit. A borrower that later grows its own troops file keeps it
+— the real tree always wins. The generator's dry-run donor table now matches the hand-authored rows
+slot for slot.
+
+Extraction made room under ADR-002 rather than pushing past it: `EnlistmentMeritMissionBehavior` 163
+to 139 lines (its inline geometry scoring became a testable `MeritGeometryAccumulator`), and
+`EnlistmentDialogBehavior` 157 to 146. Both were over the 150 ceiling before this changeset.
+
+14 new localization keys registered and translated into all 12 languages; every file now carries an
+identical 191-key set, verified by id-set comparison rather than by count. Suite 6234 passing.
+
 ### fix(enlistment): a completed hunt duty killed the process (#375)
 
 An independent tester ran a `recon_sweep`, won the fight it spawned, and the game died instantly

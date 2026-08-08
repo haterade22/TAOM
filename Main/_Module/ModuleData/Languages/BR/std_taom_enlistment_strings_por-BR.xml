@@ -77,7 +77,7 @@
     <string id="taom_enlist_trust_poor" text="mal-visto" />
     <string id="taom_enlist_trust_solid" text="bem considerado" />
     <string id="taom_enlist_trust_trusted" text="de confiança" />
-    <string id="taom_enlist_wait_board" text="{ACTIVITY}{NEWLINE}{NEWLINE}Posto: {RANK} · {SECTION}{NEWLINE}Dias servidos: {DAYS} · Reputação: {TRUST}{ARREARS}{DUTY}" />
+
     <string id="taom_enlist_grade_distinguished" text="distinto" />
     <string id="taom_enlist_grade_strong" text="forte" />
     <string id="taom_enlist_grade_solid" text="firme" />
@@ -183,6 +183,20 @@
     <string id="taom_enlist_duty_supply_delivery_title" text="uma entrega de suprimentos" />
     <string id="taom_enlist_duty_forage_title" text="forrageamento para a companhia" />
     <string id="taom_enlist_duty_hideout_strike_title" text="um ataque a um esconderijo" />
-    <string id="taom_enlist_duty_service_shift_title" text="serviço no acampamento" />
+    <string id="taom_enlist_duty_service_shift_title" text="serviço no acampamento" />
+    <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}Posto: {RANK} · {SECTION}{NEWLINE}Dias servidos: {DAYS} · Reputação: {TRUST}{NEWLINE}Ficha de serviço: {XP} XP · Soldo diário: {WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
+    <string id="taom_enlist_board_ladder" text="{NEWLINE}Rumo a {NEXT_RANK}: {REQUIREMENT}" />
+    <string id="taom_enlist_req_days" text="{COUNT} dias de serviço" />
+    <string id="taom_enlist_req_xp" text="{COUNT} XP de serviço" />
+    <string id="taom_enlist_req_leadership" text="Liderança {COUNT}" />
+    <string id="taom_enlist_req_duties" text="{COUNT} incumbências cumpridas" />
+    <string id="taom_enlist_req_trust" text="a confiança do seu comandante" />
+    <string id="taom_enlist_req_other" text="mais serviço" />
+    <string id="taom_enlist_no_at_war" text="Teu reino está em guerra com o dele. Não podes aceitar o soldo dele e manter teu juramento." />
+    <string id="taom_enlist_no_generic" text="Não podes te alistar sob o comando dele agora." />
+    <string id="taom_enlist_reassign_no_cooldown" text="Trocaste de seção há pouco tempo. Pergunta de novo em {DAYS} dias." />
+    <string id="taom_enlist_reassign_no_cooldown_one" text="Trocaste de seção há pouco tempo. Pergunta de novo amanhã." />
+    <string id="taom_enlist_reassign_no_generic" text="Não podes trocar de seção agora." />
+    <string id="taom_enlist_kit_reclaimed" text="O intendente recolhe teu equipamento de serviço: {COUNT} item(ns)." />
   </strings>
 </base>

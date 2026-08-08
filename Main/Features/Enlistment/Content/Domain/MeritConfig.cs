@@ -18,6 +18,14 @@ public sealed class MeritScoringConfig
     public int RoleFitBonus { get; set; } = 10;
     public int FellEarlyPenalty { get; set; } = 10;
 
+    /// <summary>
+    /// Subtracted when the player quit the field before the battle resolved — the retreat or
+    /// surrender inquiry, or walking out of the battle boundary. Sized (30) to sink the best
+    /// possible walkout into the bottom band: the most a departing player can bank without kills
+    /// is cohesion + commander + engagement + role fit = 45, which this drops to 15.
+    /// </summary>
+    public int LeftFieldPenalty { get; set; } = 30;
+
     /// <summary>Mission sampling cadence in seconds.</summary>
     public float SampleIntervalSeconds { get; set; } = 2f;
     public float CohesionDistance { get; set; } = 25f;

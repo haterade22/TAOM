@@ -29,6 +29,21 @@ public sealed class GateSpec
 
     /// <summary>Assignments this duty prefers (selection weight, not a hard gate). Empty = all.</summary>
     public List<ServiceAssignment> AssignmentAffinity { get; set; } = new List<ServiceAssignment>();
+
+    /// <summary>
+    /// Relative rarity weight for the duty-offer pick, multiplied by the assignment-affinity
+    /// weight. Absent from JSON = 1, which reproduces the pre-weighting uniform behaviour
+    /// exactly, so every existing row is unaffected until it opts in.
+    /// <para>
+    /// A row whose weight falls outside [1, DutySelector.MaxSelectionWeight] is SKIPPED with a
+    /// warning: in a cumulative-sum weighted pick a zero or negative weight is a selection bug,
+    /// not a disable switch — it contributes nothing to the total yet still occupies a band
+    /// boundary, so it can be returned by a roll that belongs to its neighbour. Delete the row
+    /// or raise its gates to disable it.
+    /// </para>
+    /// <para>Incidents ignore this — they roll their own <c>Chance</c> instead of entering the weighted pool.</para>
+    /// </summary>
+    public int Weight { get; set; } = 1;
 }
 
 /// <summary>One field duty (detached map mission). 13 data rows over 5 mechanics.</summary>

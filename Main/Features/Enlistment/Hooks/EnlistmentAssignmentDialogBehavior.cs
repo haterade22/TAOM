@@ -1,5 +1,6 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Localization;
+using TAOM.Core.Validation;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
@@ -41,10 +42,10 @@ public class EnlistmentAssignmentDialogBehavior : CampaignBehaviorBase
             "hero_main_options",
             "taom_enlist_reassign_pick",
             "{=taom_enlist_reassign}I would take a different place in the line.",
-            () => _gate.CanRequestDischargeFrom(Hero.OneToOneConversationHero?.StringId)
-                  && _assignments.CooldownRemaining(CampaignTime.Now.ToDays) <= 0.0,
+            () => _gate.CanRequestDischargeFrom(Hero.OneToOneConversationHero?.StringId),
             null,
-            109);
+            109,
+            ReassignIsClickable);
 
         // The commander answers before the options are listed. Two reasons, both real:
         //
@@ -100,4 +101,31 @@ public class EnlistmentAssignmentDialogBehavior : CampaignBehaviorBase
         return true;
     }
 
+    /// <summary>
+    /// The swap cooldown greys this line; it no longer hides it. Hiding is what shipped first, and
+    /// it produced the same failure as the missing CURRENT_SECTION line above, one level up: for
+    /// seven days the option was simply absent, with nothing to say the player was waiting rather
+    /// than locked out.
+    /// </summary>
+    private bool ReassignIsClickable(out TextObject? explanation)
+    {
+        var remaining = _assignments.CooldownRemaining(CampaignTime.Now.ToDays);
+        if (ReassignIsTakeable(remaining))
+        {
+            explanation = null;
+            return true;
+        }
+
+        explanation = Presentation.ServiceVocabulary.ReassignCooldownReason(remaining);
+        return false;
+    }
+
+    /// <summary>
+    /// Positive requirement, per the NaN-gate rule: the line unlocks only for a PROVABLY finite,
+    /// spent cooldown. <c>CooldownRemaining</c> returns NaN for a NaN clock by design, and a
+    /// <c>remaining &lt;= 0</c> test reads NaN as "ready" — re-opening the very swap the cooldown
+    /// exists to prevent. Static so the degenerate inputs can be pinned without a live conversation.
+    /// </summary>
+    public static bool ReassignIsTakeable(double cooldownRemaining) =>
+        FiniteFloatValidator.IsFinite(cooldownRemaining) && !(cooldownRemaining > 0.0);
 }

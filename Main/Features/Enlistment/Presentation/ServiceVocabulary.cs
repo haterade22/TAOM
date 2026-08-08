@@ -1,4 +1,5 @@
 using TaleWorlds.Localization;
+using TAOM.Core.Validation;
 using TAOM.Features.Enlistment.Content.Domain;
 
 namespace TAOM.Features.Enlistment.Presentation;
@@ -81,5 +82,70 @@ public static class ServiceVocabulary
             default:
                 return new TextObject("{=taom_enlist_talk_no_generic}You cannot speak with him just now.");
         }
+    }
+
+    /// <summary>
+    /// Why the enlist offer is greyed out, as words for the disabled-option hint.
+    ///
+    /// Exactly ONE rejection reaches this method in practice, and the split is deliberate:
+    ///
+    /// * <see cref="EnlistGateResult.AtWarWithYourKingdom"/> is SHOWN and greyed, because a player
+    ///   cannot work it out unaided. The lord is standing there, alive, with a column behind him;
+    ///   nothing on screen connects his war to your crown's. A vanished line teaches "broken".
+    /// * <see cref="EnlistGateResult.CommanderUnavailable"/> is HIDDEN, and that is not an
+    ///   oversight. It fires for every governor and every garrison-sitting lord — a large fraction
+    ///   of the nobility, for the entire campaign. Greying it would park a permanently-dead line
+    ///   near the top of most noble conversations, and unlike the war case the reason is already
+    ///   on screen: a lord with no column is visibly not leading one.
+    /// * AlreadyEnlisted / NotALord / UnderMercenaryContract / FeatureDisabled are self-evident,
+    ///   permanent, or not about this lord at all.
+    ///
+    /// The default arm is unreachable while that split holds. It exists so a verdict added to the
+    /// enum later surfaces as a vague hint instead of an unhandled case.
+    /// </summary>
+    public static TextObject EnlistUnavailableReason(EnlistGateResult verdict)
+    {
+        switch (verdict)
+        {
+            case EnlistGateResult.AtWarWithYourKingdom:
+                return new TextObject("{=taom_enlist_no_at_war}Your kingdom is at war with his. You cannot take his coin and keep your own oath.");
+            default:
+                return new TextObject("{=taom_enlist_no_generic}You cannot enlist under him just now.");
+        }
+    }
+
+    /// <summary>
+    /// Why the reassignment line is greyed out, with the wait spelled out in days.
+    ///
+    /// The number binds to THIS TextObject rather than through MBTextManager.SetTextVariable, and
+    /// that is a correctness requirement rather than a style choice. A conversation hint renders
+    /// LATE: ConversationManager.GetSentenceOptions stores the TextObject by reference,
+    /// ConversationItemVM.RefreshValues wraps it in a HintViewModel, and
+    /// HintViewModel.ExecuteBeginHint only calls ToString() when the player hovers the row. A
+    /// process-global text variable set inside our condition would be overwritten by any later
+    /// sentence's condition in the same option sweep, and the hint would render someone else's
+    /// number. Vanilla binds hint variables the same way — see
+    /// LordConversationsCampaignBehavior.conversation_player_is_offering_mercenary_on_clickable_condition.
+    /// Verified against installed v1.4.7.
+    /// </summary>
+    public static TextObject ReassignCooldownReason(double daysRemaining)
+    {
+        // Positive requirement, per the NaN-gate rule: a day count is printed only when one can be
+        // PROVEN. NaN fails `> 0` and lands on the generic arm rather than rendering as garbage.
+        if (!FiniteFloatValidator.IsFinite(daysRemaining) || !(daysRemaining > 0.0))
+            return new TextObject("{=taom_enlist_reassign_no_generic}You cannot change section just now.");
+
+        // Clamped BEFORE the narrowing conversion. A merely huge finite value overflows the cast
+        // and would surface as a NEGATIVE wait — the float-to-int trap, distinct from NaN.
+        var ceiling = System.Math.Ceiling(daysRemaining);
+        var days = ceiling >= int.MaxValue ? int.MaxValue : (int)ceiling;
+
+        // Two keys instead of one plural token: Bannerlord's plural forms need a per-language
+        // functions file, and "1 more days" reads to a player as a bug in the mod.
+        if (days == 1)
+            return new TextObject("{=taom_enlist_reassign_no_cooldown_one}You changed section too recently. Ask again tomorrow.");
+
+        return new TextObject("{=taom_enlist_reassign_no_cooldown}You changed section too recently. Ask again in {DAYS} days.")
+            .SetTextVariable("DAYS", days);
     }
 }

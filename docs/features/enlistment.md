@@ -381,10 +381,20 @@ service XP + the assignment's signature skill + Leadership + one context skill
 evaluates promotion. Config: `ModuleData/enlistment/enlistment_config.json`.
 
 **Wages.** `WagePolicy` is pure: the commander pays from his own gold above a solvency
-floor; the shortfall defers into arrears capped at 60. `ServiceRewardService.PayDailyWage`
-spends that plan through exactly ONE channel (commander transfer or mint, per config) and
-derives the new debt by conservation — owed minus delivered — rather than patching the
-plan's fields. An honorable discharge settles remaining arrears; desertion forfeits them.
+floor; the shortfall defers into arrears capped at `wagePolicy.maxDeferredWageDays` (default
+**14**) days of the player's *current* rank wage — 70 gold at Recruit, 308 at Sergeant.
+`ServiceRewardService.PayDailyWage` spends that plan through exactly ONE channel (commander
+transfer or mint, per config) and derives the new debt by conservation — owed minus delivered
+— rather than patching the plan's fields. Anything owed above the cap is forfeited, and the
+service logs `deferred-wage cap reached — N gold of back pay forfeited` when that happens; it
+used to be destroyed silently. An honorable discharge settles remaining arrears; desertion
+forfeits them.
+
+> **Config migration.** The key was `wagePolicy.maxDeferredWages`, a flat **60-gold** ceiling —
+> a Sergeant on 22/day reached it in 2.7 days and lost roughly 600 gold over a 30-day insolvent
+> stretch with nothing in the log. An existing install's `enlistment_config.json` still carrying
+> the old key gets a load-time warning; the old value is ignored (the two units are not
+> convertible), so re-set `maxDeferredWageDays` if you had retuned it. Valid range `[0, 365]`.
 
 **Ranks + promotion.** Four ranks, thresholds in JSON (days / service XP / Leadership /
 duty successes / trust), evaluated at exactly two points — the daily tick and the battle
@@ -400,6 +410,19 @@ promotion. Role fit (`RoleFitEvaluator`) asks whether you fought the way your as
 wants: archers hold an 18-50m shooting line, cavalry work the flanks at 10-28m, support
 stays near the commander, infantry holds formation *and* stays in contact. Never-measured
 and non-finite inputs fail closed — no free bonus.
+
+**Leaving early is not surviving.** Survival was read as "never went down", which a player who
+walked out at t=5s trivially satisfies — so quitting immediately banked the full 25-point survival
+weight. `OnMissionResultReady` now latches whether the battle actually reached a verdict:
+`Mission.MissionResult` is assigned in exactly one place (`Mission.CheckMissionEnded`, which calls
+that hook in the same block), whereas the retreat inquiry, surrender, and walking out of the battle
+boundary all reach `RetreatMission()`/`SurrenderMission()` → `EndMission()` and never produce one.
+No verdict means `MeritSample.LeftTheField`, which zeroes the survival term and subtracts
+`meritScoring.leftFieldPenalty` (30) — enough to sink even a maximally-engaged walkout into the
+bottom band. No trust debit rides along: `MeritBand.Trust` already falls with the band, and a
+second debit would charge the same failure twice. The geometry moved out to
+`MeritGeometryAccumulator` (pure, unit-tested) with the engine scan isolated in
+`MeritGeometryScanner`, which put the behavior back under the ADR-002 ceiling at 139 lines.
 
 **Assignments.** Infantry / Archer / Cavalry / Support, changed by asking the commander;
 costs a 7-day cooldown and a point of trust (the donor allowed free swaps in any
@@ -527,9 +550,10 @@ Specifically owed, because each is a state a test structurally cannot reach:
   Two guards now stop that recurring: the generator **hard-fails** on a field-duty row with no
   authored title, and `ServiceStatusTextWriter`'s fallback is prose rather than the row id, so a
   future miss degrades quietly for the player instead of printing an internal symbol.
-- **Two entry points remain over the ADR-002 ceiling**, both pre-dating this arc:
-  `EnlistmentMeritMissionBehavior` (163 — it holds a 44-line geometric scoring algorithm inline that
-  wants to be a testable engine) and `EnlistmentBattleBehavior` (157).
+- **One entry point remains over the ADR-002 ceiling**, pre-dating this arc:
+  `EnlistmentBattleBehavior` (157). `EnlistmentMeritMissionBehavior` was the other (163); the
+  left-the-field fix paid that down to 139 by extracting its inline geometry into
+  `MeritGeometryAccumulator` + `MeritGeometryScanner`.
 
 ## Referenced by
 

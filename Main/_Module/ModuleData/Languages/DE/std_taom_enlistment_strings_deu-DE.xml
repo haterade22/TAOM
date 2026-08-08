@@ -77,7 +77,7 @@
     <string id="taom_enlist_trust_poor" text="in schlechtem Ruf" />
     <string id="taom_enlist_trust_solid" text="gut angesehen" />
     <string id="taom_enlist_trust_trusted" text="vertraut" />
-    <string id="taom_enlist_wait_board" text="{ACTIVITY}{NEWLINE}{NEWLINE}Rang: {RANK} · {SECTION}{NEWLINE}Diensttage: {DAYS} · Ansehen: {TRUST}{ARREARS}{DUTY}" />
+
     <string id="taom_enlist_grade_distinguished" text="ausgezeichnet" />
     <string id="taom_enlist_grade_strong" text="stark" />
     <string id="taom_enlist_grade_solid" text="beständig" />
@@ -183,6 +183,20 @@
     <string id="taom_enlist_duty_supply_delivery_title" text="eine Nachschubfahrt" />
     <string id="taom_enlist_duty_forage_title" text="Furagieren für die Kompanie" />
     <string id="taom_enlist_duty_hideout_strike_title" text="ein Angriff auf ein Versteck" />
-    <string id="taom_enlist_duty_service_shift_title" text="Lagerdienst" />
+    <string id="taom_enlist_duty_service_shift_title" text="Lagerdienst" />
+    <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}Rang: {RANK} · {SECTION}{NEWLINE}Diensttage: {DAYS} · Ansehen: {TRUST}{NEWLINE}Dienstakte: {XP} EP · Tagessold: {WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
+    <string id="taom_enlist_board_ladder" text="{NEWLINE}Bis {NEXT_RANK}: {REQUIREMENT}" />
+    <string id="taom_enlist_req_days" text="{COUNT} Diensttage" />
+    <string id="taom_enlist_req_xp" text="{COUNT} Dienst-EP" />
+    <string id="taom_enlist_req_leadership" text="Führung {COUNT}" />
+    <string id="taom_enlist_req_duties" text="{COUNT} erfüllte Aufträge" />
+    <string id="taom_enlist_req_trust" text="das Vertrauen Eures Befehlshabers" />
+    <string id="taom_enlist_req_other" text="weiterer Dienst" />
+    <string id="taom_enlist_no_at_war" text="Euer Königreich liegt mit dem seinen im Krieg. Ihr könnt sein Silber nicht nehmen und Euren Eid halten." />
+    <string id="taom_enlist_no_generic" text="Ihr könnt Euch derzeit nicht unter ihm verpflichten." />
+    <string id="taom_enlist_reassign_no_cooldown" text="Ihr habt Eure Abteilung erst kürzlich gewechselt. Fragt in {DAYS} Tagen erneut." />
+    <string id="taom_enlist_reassign_no_cooldown_one" text="Ihr habt Eure Abteilung erst kürzlich gewechselt. Fragt morgen erneut." />
+    <string id="taom_enlist_reassign_no_generic" text="Ihr könnt Eure Abteilung derzeit nicht wechseln." />
+    <string id="taom_enlist_kit_reclaimed" text="Der Quartiermeister nimmt Eure Dienstausrüstung zurück: {COUNT} Stück." />
   </strings>
 </base>

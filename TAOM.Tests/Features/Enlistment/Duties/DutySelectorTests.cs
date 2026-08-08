@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Duties;
 using TAOM.Features.TroopProgression;
@@ -11,13 +13,33 @@ namespace TAOM.Tests.Features.Enlistment.Duties;
 public class DutySelectorTests
 {
     private IRandomProvider _random = null!;
+    private IModLogger _logger = null!;
     private DutySelector _selector = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _random = Substitute.For<IRandomProvider>();
-        _selector = new DutySelector(_random);
+        _logger = Substitute.For<IModLogger>();
+        _selector = new DutySelector(_random, _logger);
+    }
+
+    /// <summary>Replays a fixed roll sequence so two runs of the same input are provably identical.</summary>
+    private sealed class SequenceRandom : IRandomProvider
+    {
+        private readonly int[] _values;
+        private int _index;
+
+        public SequenceRandom(params int[] values) => _values = values;
+
+        public int Next(int maxValue)
+        {
+            if (maxValue <= 0)
+                return 0;
+            var value = _values[_index % _values.Length];
+            _index++;
+            return value % maxValue;
+        }
     }
 
     private static ServiceProgressSnapshot Progress(ServiceRank rank = ServiceRank.Recruit, int trust = 0, ServiceAssignment assignment = ServiceAssignment.Infantry) =>
@@ -211,5 +233,159 @@ public class DutySelectorTests
         var result = _selector.SelectIncident(incidents, Progress(), new ArmyRhythmSnapshot());
 
         Assert.AreEqual("second", result?.Id);
+    }
+
+    // ---- GateSpec.Weight (per-row rarity) ----
+
+    private static GateSpec Weighted(int weight) => new GateSpec { Weight = weight };
+
+    [TestMethod]
+    public void SelectOffer_AbsentWeight_DefaultsToOneAndKeepsUniformBands()
+    {
+        // Two ungated rows, neither declaring a weight -> total 2, one band each: exactly the
+        // pre-weighting behaviour. This is the regression pin for "existing rows are unaffected".
+        Assert.AreEqual(1, new GateSpec().Weight, "an absent weight must default to 1");
+        var duties = new EnlistmentDutiesConfig
+        {
+            FieldDuties = new List<DutyDefinition> { Field("field_a"), Field("field_b") },
+        };
+        _random.Next(2).Returns(1);
+
+        var result = _selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+
+        Assert.AreEqual("field_b", result.FieldDuty?.Id);
+    }
+
+    [TestMethod]
+    public void SelectOffer_WeightMultipliesAffinity_WidensThePreferredBand()
+    {
+        var duties = new EnlistmentDutiesConfig
+        {
+            FieldDuties = new List<DutyDefinition>
+            {
+                Field("routine", new GateSpec { Weight = 5 }),
+                Field("rare", new GateSpec { Weight = 2, AssignmentAffinity = new List<ServiceAssignment> { ServiceAssignment.Cavalry } }),
+            },
+        };
+        // routine = baseline 1 x 5 -> [0,5); rare = preferred 3 x 2 -> [5,11). Total 11.
+        _random.Next(11).Returns(5);
+
+        var result = _selector.SelectOffer(duties, Progress(assignment: ServiceAssignment.Cavalry), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+
+        Assert.AreEqual("rare", result.FieldDuty?.Id);
+    }
+
+    [TestMethod]
+    public void SelectOffer_ZeroWeight_SkipsRowAndWarns()
+    {
+        var duties = new EnlistmentDutiesConfig
+        {
+            FieldDuties = new List<DutyDefinition> { Field("zero_weight_row", Weighted(0)), Field("kept") },
+        };
+        _random.Next(1).Returns(0); // only "kept" survives, so the total weight is 1
+
+        var result = _selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+
+        Assert.AreEqual("kept", result.FieldDuty?.Id);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("zero_weight_row")));
+    }
+
+    [TestMethod]
+    public void SelectOffer_NegativeWeight_SkipsRowAndWarns()
+    {
+        var duties = new EnlistmentDutiesConfig
+        {
+            FieldDuties = new List<DutyDefinition> { Field("neg_weight_row", Weighted(-3)) },
+        };
+
+        var result = _selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+
+        Assert.IsFalse(result.HasOffer);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("neg_weight_row")));
+    }
+
+    [TestMethod]
+    public void SelectOffer_WeightAboveMaximum_SkipsRowAndWarns()
+    {
+        var duties = new EnlistmentDutiesConfig
+        {
+            FieldDuties = new List<DutyDefinition> { Field("huge_weight_row", Weighted(DutySelector.MaxSelectionWeight + 1)) },
+        };
+
+        var result = _selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+
+        Assert.IsFalse(result.HasOffer);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("huge_weight_row")));
+    }
+
+    [TestMethod]
+    public void SelectOffer_WeightAtMaximum_IsAccepted()
+    {
+        var duties = new EnlistmentDutiesConfig
+        {
+            FieldDuties = new List<DutyDefinition> { Field("at_the_cap", Weighted(DutySelector.MaxSelectionWeight)) },
+        };
+        _random.Next(DutySelector.MaxSelectionWeight).Returns(0);
+
+        var result = _selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+
+        Assert.AreEqual("at_the_cap", result.FieldDuty?.Id);
+    }
+
+    [TestMethod]
+    public void SelectOffer_ZeroWeightOnInteractiveRow_SkipsRowAndWarns()
+    {
+        var duties = new EnlistmentDutiesConfig
+        {
+            InteractiveDuties = new List<InteractiveDutyDefinition> { Interactive("interactive_zero_row", Weighted(0)) },
+        };
+
+        var result = _selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+
+        Assert.IsFalse(result.HasOffer);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("interactive_zero_row")));
+    }
+
+    [TestMethod]
+    public void SelectOffer_SameUnusableRowSeenTwice_WarnsOnce()
+    {
+        var duties = new EnlistmentDutiesConfig
+        {
+            FieldDuties = new List<DutyDefinition> { Field("repeat_zero_row", Weighted(0)) },
+        };
+
+        _selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+        _selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false);
+
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("repeat_zero_row")));
+    }
+
+    [TestMethod]
+    public void SelectOffer_SameRollSequenceReplayed_ReturnsIdenticalPicks()
+    {
+        var expected = new[] { "one", "two", "two", "three", "three", "three" };
+
+        var first = RunSixOffers();
+        var second = RunSixOffers();
+
+        CollectionAssert.AreEqual(expected, first, "weights 1/2/3 must map rolls 0-5 onto bands [0,1) [1,3) [3,6)");
+        CollectionAssert.AreEqual(first, second, "replaying the same roll sequence must reproduce the same picks");
+
+        string[] RunSixOffers()
+        {
+            var duties = new EnlistmentDutiesConfig
+            {
+                FieldDuties = new List<DutyDefinition>
+                {
+                    Field("one", Weighted(1)),
+                    Field("two", Weighted(2)),
+                    Field("three", Weighted(3)),
+                },
+            };
+            var selector = new DutySelector(new SequenceRandom(0, 1, 2, 3, 4, 5), Substitute.For<IModLogger>());
+            return Enumerable.Range(0, 6)
+                .Select(_ => selector.SelectOffer(duties, Progress(), new ArmyRhythmSnapshot(), new List<string>(), pressure: false).FieldDuty?.Id ?? "")
+                .ToArray();
+        }
     }
 }

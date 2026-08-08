@@ -15,6 +15,14 @@ public sealed class MeritSample
     public bool FellEarly { get; set; }
     public bool RoleFit { get; set; }
 
+    /// <summary>
+    /// The player quit the field before the battle resolved (retreat, surrender, or walking out of
+    /// bounds). Distinct from <see cref="FellEarly"/>, which means they went down early while still
+    /// in it — and distinct from <see cref="SurvivalRatio"/>, which only asks whether they stayed
+    /// standing. Leaving is not surviving: it zeroes the survival weight and takes a penalty.
+    /// </summary>
+    public bool LeftTheField { get; set; }
+
     /// <summary>Mean distance to the nearest enemy across samples; negative when never measured.</summary>
     public float AverageEnemyDistance { get; set; } = -1f;
 }
@@ -65,8 +73,8 @@ public static class RoleFitEvaluator
 
 /// <summary>
 /// Pure battle-merit scoring (the donor's formula, config-typed): capped kills + weighted
-/// ratios + role fit − fell-early penalty, clamped 0-100. Non-finite ratios score as 0
-/// contribution (NaN must fail the gate, never inflate it).
+/// ratios + role fit − fell-early penalty − left-the-field penalty, clamped 0-100. Non-finite
+/// ratios score as 0 contribution (NaN must fail the gate, never inflate it).
 /// </summary>
 public static class BattleMeritScorer
 {
@@ -77,7 +85,10 @@ public static class BattleMeritScorer
 
         var score = 0f;
         score += Math.Min(Math.Max(0, sample.Kills), config.KillCountCap) * config.KillWeight;
-        score += SafeRatio(sample.SurvivalRatio) * config.SurvivalWeight;
+        // Walking out at t=5s used to bank the FULL survival weight, because "never went down" and
+        // "stayed and fought" were the same measurement. They are not — a player who left never had
+        // the chance to go down, so their survival is worth nothing.
+        score += SafeRatio(sample.LeftTheField ? 0f : sample.SurvivalRatio) * config.SurvivalWeight;
         score += SafeRatio(sample.CohesionRatio) * config.CohesionWeight;
         score += SafeRatio(sample.CommanderProximityRatio) * config.CommanderProximityWeight;
         score += SafeRatio(sample.EngagementRatio) * config.EngagementWeight;
@@ -85,6 +96,8 @@ public static class BattleMeritScorer
             score += config.RoleFitBonus;
         if (sample.FellEarly)
             score -= config.FellEarlyPenalty;
+        if (sample.LeftTheField)
+            score -= config.LeftFieldPenalty;
 
         return (int)Math.Max(0f, Math.Min(100f, score));
     }

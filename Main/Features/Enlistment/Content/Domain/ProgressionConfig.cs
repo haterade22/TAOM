@@ -57,5 +57,13 @@ public sealed class WagePolicyConfig
     /// <summary>The commander never pays below this reserve; the difference defers.</summary>
     public int CommanderGoldFloor { get; set; } = 500;
 
-    public int MaxDeferredWages { get; set; } = 60;
+    /// <summary>
+    /// How many days of the player's CURRENT daily wage may stand as unpaid arrears. The cap is
+    /// therefore rank-relative: 14 days is 70 gold at Recruit (5/day) and 308 at Sergeant (22/day).
+    /// The pre-rename key was <c>maxDeferredWages</c>, a flat 60-GOLD cap — a Sergeant reached it in
+    /// under three days and every further gold of back pay was destroyed with no log. Anything owed
+    /// above the cap is still forfeited, but <c>ServiceRewardService</c> now logs the loss.
+    /// Validated to [0, 365] (the contract length) by EnlistmentContentConfigProvider.
+    /// </summary>
+    public int MaxDeferredWageDays { get; set; } = 14;
 }

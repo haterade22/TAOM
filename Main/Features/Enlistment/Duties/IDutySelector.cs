@@ -6,7 +6,8 @@ namespace TAOM.Features.Enlistment.Duties;
 /// <summary>
 /// Picks WHICH duty/incident gets offered, given that <see cref="IDutyRotationPolicy"/>
 /// already decided an offer should happen today. Filters by <see cref="DutyGateEvaluator"/>
-/// gates, weights by assignment affinity, and applies field/interactive anti-repeat via
+/// gates, weights by assignment affinity multiplied by the row's own <c>GateSpec.Weight</c>
+/// rarity (absent = 1; outside [1,1000] the row is skipped), and applies field/interactive anti-repeat via
 /// <c>RecentDutyIds</c> (not applied to incidents — they have their own cooldown in
 /// <see cref="IDutyRotationPolicy.ShouldRollIncident"/>). Deterministic given the same
 /// <c>IRandomProvider</c> sequence.

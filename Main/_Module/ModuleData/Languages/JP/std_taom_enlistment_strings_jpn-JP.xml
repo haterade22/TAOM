@@ -77,7 +77,7 @@
     <string id="taom_enlist_trust_poor" text="評判が悪い" />
     <string id="taom_enlist_trust_solid" text="評価は良い" />
     <string id="taom_enlist_trust_trusted" text="信頼されている" />
-    <string id="taom_enlist_wait_board" text="{ACTIVITY}{NEWLINE}{NEWLINE}階級: {RANK} · {SECTION}{NEWLINE}従軍日数: {DAYS} · 評価: {TRUST}{ARREARS}{DUTY}" />
+
     <string id="taom_enlist_grade_distinguished" text="抜群" />
     <string id="taom_enlist_grade_strong" text="見事" />
     <string id="taom_enlist_grade_solid" text="堅実" />
@@ -183,6 +183,20 @@
     <string id="taom_enlist_duty_supply_delivery_title" text="物資の輸送" />
     <string id="taom_enlist_duty_forage_title" text="部隊のための糧秣徴発" />
     <string id="taom_enlist_duty_hideout_strike_title" text="隠れ家への強襲" />
-    <string id="taom_enlist_duty_service_shift_title" text="野営の当番" />
+    <string id="taom_enlist_duty_service_shift_title" text="野営の当番" />
+    <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}階級: {RANK} · {SECTION}{NEWLINE}従軍日数: {DAYS} · 評価: {TRUST}{NEWLINE}軍歴: {XP} 経験 · 日給: {WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
+    <string id="taom_enlist_board_ladder" text="{NEWLINE}{NEXT_RANK}まで: {REQUIREMENT}" />
+    <string id="taom_enlist_req_days" text="従軍 {COUNT} 日" />
+    <string id="taom_enlist_req_xp" text="軍歴 {COUNT}" />
+    <string id="taom_enlist_req_leadership" text="統率 {COUNT}" />
+    <string id="taom_enlist_req_duties" text="任務 {COUNT} 件の完遂" />
+    <string id="taom_enlist_req_trust" text="指揮官の信頼" />
+    <string id="taom_enlist_req_other" text="さらなる従軍" />
+    <string id="taom_enlist_no_at_war" text="そなたの王国は彼と戦のさなかにある。彼の銀を受け取りながら己の誓いを守ることはできぬ。" />
+    <string id="taom_enlist_no_generic" text="今は彼の下に加わることはできぬ。" />
+    <string id="taom_enlist_reassign_no_cooldown" text="配置換えをして日が浅い。{DAYS} 日後にまた申し出よ。" />
+    <string id="taom_enlist_reassign_no_cooldown_one" text="配置換えをして日が浅い。明日また申し出よ。" />
+    <string id="taom_enlist_reassign_no_generic" text="今は配置を換えられぬ。" />
+    <string id="taom_enlist_kit_reclaimed" text="需品係が支給装備を回収した: {COUNT} 点。" />
   </strings>
 </base>

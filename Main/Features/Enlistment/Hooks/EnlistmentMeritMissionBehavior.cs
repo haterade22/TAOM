@@ -1,7 +1,7 @@
-using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Validation;
 using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
 
@@ -14,24 +14,28 @@ namespace TAOM.Features.Enlistment.Hooks;
 /// player's kills; submit ONE sample at mission end. `: MissionLogic` — NEVER
 /// MissionBehavior (BehaviorTreeMissionLogic regression rule). Registered UNCONDITIONALLY
 /// from SubModule (the donor's mission.Mode gate at init time never fired — Mode is still
-/// StartUp there); all filtering happens inside.
+/// StartUp there); all filtering happens inside. This class keeps only lifecycle and sample
+/// assembly: <see cref="MeritGeometryScanner"/> owns the engine scan and
+/// <see cref="MeritGeometryAccumulator"/> owns the thresholds and ratios.
 /// </summary>
 public class EnlistmentMeritMissionBehavior : MissionLogic
 {
+    /// <summary>Mirrors <see cref="MeritScoringConfig.SampleIntervalSeconds"/>'s compiled default.</summary>
+    private const float FallbackSampleIntervalSeconds = 2f;
+
+    /// <summary>Going down within this many seconds of the first tick earns the fell-early penalty.</summary>
+    private const float FellEarlySeconds = 60f;
+
     private readonly IEnlistmentStateQuery _query;
     private readonly IBattleMeritAccumulator _accumulator;
     private readonly IEnlistmentContentStore _contentStore;
-    private readonly MeritScoringConfig _scoring;
+    private readonly MeritGeometryAccumulator _geometry;
+    private readonly float _sampleInterval;
 
     private bool _active;
+    private bool _battleResolved;
     private float _sampleClock;
-    private int _samples;
-    private int _cohesionHits;
-    private int _commanderHits;
-    private int _engagementHits;
     private int _kills;
-    private float _enemyDistanceSum;
-    private int _enemyDistanceSamples;
     private float _downSince = -1f;
     private float _missionStart = -1f;
     private bool _fellEarly;
@@ -45,7 +49,15 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
         _query = query;
         _accumulator = accumulator;
         _contentStore = contentStore;
-        _scoring = scoring;
+        _geometry = new MeritGeometryAccumulator(scoring);
+
+        // The provider clamps sampleIntervalSeconds to [0.5,30], but this behavior is handed the
+        // config object directly and cannot assume it came from there. A non-finite interval would
+        // defeat the cadence gate below, turning a 2-second sampler into a per-frame one.
+        var interval = scoring?.SampleIntervalSeconds ?? 0f;
+        _sampleInterval = FiniteFloatValidator.IsFiniteInRange(interval, 0.1f, 60f)
+            ? interval
+            : FallbackSampleIntervalSeconds;
     }
 
     public override void AfterStart()
@@ -56,6 +68,16 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
             && _query.State == Domain.EnlistmentState.EnlistedBattle;
     }
 
+    /// <summary>
+    /// The battle reached a verdict. Verified against v1.4.7 <c>Mission.cs</c>:
+    /// <c>Mission.MissionResult</c> is assigned in exactly one place, <c>CheckMissionEnded</c>,
+    /// which calls this on every MissionLogic in the same block. A player-initiated exit instead
+    /// reaches <c>RetreatMission()</c>/<c>SurrenderMission()</c> and then <c>EndMission()</c>,
+    /// which never produces a result — so this does not fire for a walkout. The argument may
+    /// legitimately be null, so latch on the CALL and never on the argument.
+    /// </summary>
+    public override void OnMissionResultReady(MissionResult missionResult) => _battleResolved = true;
+
     public override void OnMissionTick(float dt)
     {
         if (!_active)
@@ -64,7 +86,9 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
             _missionStart = Mission.CurrentTime;
 
         _sampleClock += dt;
-        if (_sampleClock < _scoring.SampleIntervalSeconds)
+        // Positive requirement, not `< interval` — a poisoned clock fails the gate and skips the
+        // sample instead of falling straight through into one.
+        if (!(_sampleClock >= _sampleInterval))
             return;
         _sampleClock = 0f;
 
@@ -74,13 +98,12 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
             if (_downSince < 0f)
             {
                 _downSince = Mission.CurrentTime;
-                _fellEarly = Mission.CurrentTime - _missionStart < 60f;
+                _fellEarly = Mission.CurrentTime - _missionStart < FellEarlySeconds;
             }
             return;
         }
 
-        _samples++;
-        SampleDistances(main);
+        MeritGeometryScanner.Sample(Mission, main, _geometry);
     }
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
@@ -97,67 +120,20 @@ public class EnlistmentMeritMissionBehavior : MissionLogic
             return;
         _active = false;
 
-        var survival = _downSince < 0f ? 1f : 0f;
         var sample = new MeritSample
         {
             Kills = _kills,
-            SurvivalRatio = survival,
-            CohesionRatio = Ratio(_cohesionHits),
-            CommanderProximityRatio = Ratio(_commanderHits),
-            EngagementRatio = Ratio(_engagementHits),
+            SurvivalRatio = _downSince < 0f ? 1f : 0f,
+            // No verdict means the player ended this mission themselves. Before this flag, walking
+            // out at t=5s banked the full survival weight — never went down, so "survived".
+            LeftTheField = !_battleResolved,
+            CohesionRatio = _geometry.CohesionRatio,
+            CommanderProximityRatio = _geometry.CommanderProximityRatio,
+            EngagementRatio = _geometry.EngagementRatio,
             FellEarly = _fellEarly,
-            AverageEnemyDistance = _enemyDistanceSamples > 0
-                ? _enemyDistanceSum / _enemyDistanceSamples
-                : -1f,
+            AverageEnemyDistance = _geometry.AverageEnemyDistance,
         };
         sample.RoleFit = RoleFitEvaluator.Evaluate(_contentStore.Record.Assignment, sample);
         _accumulator.Submit(sample);
-    }
-
-    private float Ratio(int hits) => _samples <= 0 ? 0f : (float)hits / _samples;
-
-    private void SampleDistances(Agent main)
-    {
-        var position = main.Position;
-        var cohesionSq = _scoring.CohesionDistance * _scoring.CohesionDistance;
-        var commanderSq = _scoring.CommanderDistance * _scoring.CommanderDistance;
-        var engagementSq = _scoring.EngagementDistance * _scoring.EngagementDistance;
-
-        var captain = main.Formation?.Captain;
-        if (captain != null && captain != main && captain.IsActive()
-            && captain.Position.DistanceSquared(position) <= cohesionSq)
-        {
-            _cohesionHits++;
-        }
-
-        var commanderNear = false;
-        var nearestEnemySq = float.MaxValue;
-        foreach (var agent in Mission.Agents)
-        {
-            if (agent == main || !agent.IsHuman || !agent.IsActive() || agent.Team == null)
-                continue;
-            var distanceSq = agent.Position.DistanceSquared(position);
-            if (agent.Team.IsEnemyOf(main.Team))
-            {
-                if (distanceSq < nearestEnemySq)
-                    nearestEnemySq = distanceSq;
-            }
-            else if (!commanderNear && agent.IsHero && distanceSq <= commanderSq)
-            {
-                commanderNear = true;
-            }
-        }
-
-        if (commanderNear)
-            _commanderHits++;
-        if (nearestEnemySq <= engagementSq)
-            _engagementHits++;
-        if (nearestEnemySq < float.MaxValue)
-        {
-            // Mean nearest-enemy distance drives the role-fit bands (archers hold a line,
-            // cavalry work the flanks) — measured, not inferred from the engagement flag.
-            _enemyDistanceSum += (float)System.Math.Sqrt(nearestEnemySq);
-            _enemyDistanceSamples++;
-        }
     }
 }

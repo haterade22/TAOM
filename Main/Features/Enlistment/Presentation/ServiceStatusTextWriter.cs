@@ -23,6 +23,9 @@ public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
     /// </summary>
     private const string WaitTextVariable = "TAOM_ENLISTMENT_WAIT_TEXT";
 
+    /// <summary>Inline coin glyph. Shared by the wage and arrears lines so the two cannot diverge.</summary>
+    private const string CoinIcon = "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">";
+
     public void Write(ServiceStatusModel status)
     {
         if (status == null)
@@ -32,18 +35,97 @@ public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
         // CHANGED — a handful of times per settlement stop, not per frame — and reusing one
         // instance would leave stale attributes from the previous shape (the duty line in
         // particular is not always present).
+        //
+        // The key is _v2 because the template's SHAPE changed. `taom_enlist_wait_board` was
+        // registered and translated, and for a translated language the registered row wins over
+        // this inline default — so reusing the id would have rendered the old three-line sentence
+        // to every non-English player and silently dropped the XP / wage / ladder tokens, with no
+        // error anywhere. A changed template needs a new id, always.
+        //
+        // Precision worth keeping, because it is counter-intuitive: this is NOT true for English.
+        // `MBTextManager.GetLocalizedText` (v1.4.7, :264-268) short-circuits —
+        // `if (_activeTextLanguageId == "English") return RemoveComments(<inline default>);` —
+        // and never consults the registered row at all. So for a `{=key}default` TextObject the
+        // English XML row is translator source material, not a render path: an English copy edit
+        // must be made HERE, in the C#, or it will not appear in game no matter what the XML says.
+        // The 11 translated languages are the ones the registration actually feeds.
         var text = new TextObject(
-            "{=taom_enlist_wait_board}{ACTIVITY}{NEWLINE}{NEWLINE}Rank: {RANK} · {SECTION}{NEWLINE}Days served: {DAYS} · Standing: {TRUST}{ARREARS}{DUTY}");
+            "{=taom_enlist_wait_board_v2}{ACTIVITY}{NEWLINE}{NEWLINE}Rank: {RANK} · {SECTION}{NEWLINE}Days served: {DAYS} · Standing: {TRUST}{NEWLINE}Service record: {XP} XP · Daily pay: {WAGE}{COIN}{LADDER}{ARREARS}{DUTY}");
 
         text.SetTextVariable("ACTIVITY", ActivityLine(status));
         text.SetTextVariable("RANK", ServiceVocabulary.RankName(status.Rank));
         text.SetTextVariable("SECTION", ServiceVocabulary.SectionName(status.Assignment));
         text.SetTextVariable("DAYS", status.DaysServed.ToString());
         text.SetTextVariable("TRUST", TrustName(status.Trust));
+        text.SetTextVariable("XP", status.ServiceXp.ToString());
+        text.SetTextVariable("WAGE", status.DailyWage.ToString());
+        text.SetTextVariable("COIN", CoinIcon);
+        text.SetTextVariable("LADDER", LadderLine(status));
         text.SetTextVariable("ARREARS", ArrearsLine(status.DeferredWages));
         text.SetTextVariable("DUTY", DutyLine(status.ActiveDutyId));
 
         MBTextManager.SetTextVariable(WaitTextVariable, text);
+    }
+
+    /// <summary>
+    /// The one thing standing between the player and their next rank. Promotion needs FIVE
+    /// simultaneous gates; listing all five turns a status board into a spreadsheet, and listing
+    /// none — which is what shipped — makes the whole ladder read as a broken feature. The service
+    /// picks the single most-binding gate; this just renders it.
+    ///
+    /// Absent when <see cref="ServiceStatusModel.NextRequirementKey"/> is null: top rank, or every
+    /// requirement already met and the promotion due on the next daily tick.
+    /// </summary>
+    private static TextObject LadderLine(ServiceStatusModel status)
+    {
+        if (string.IsNullOrEmpty(status.NextRequirementKey) || !status.NextRank.HasValue)
+            return new TextObject("");
+
+        var line = new TextObject("{=taom_enlist_board_ladder}{NEWLINE}Toward {NEXT_RANK}: {REQUIREMENT}");
+        line.SetTextVariable("NEXT_RANK", ServiceVocabulary.RankName(status.NextRank.Value));
+        line.SetTextVariable("REQUIREMENT", RequirementPhrase(status.NextRequirementKey, status.NextRequirementTarget));
+        return line;
+    }
+
+    /// <summary>
+    /// A promotion-requirement key as words. Deliberately NOT in ServiceVocabulary: that type
+    /// exists because section/rank names were authored twice over one key set and drifted, and
+    /// these phrases have exactly one consumer — this board. Moving them there would add a
+    /// cross-file hop for no shared use.
+    ///
+    /// Trust is the one gate rendered WITHOUT its number, on purpose. Standing is shown to the
+    /// player as words a few lines above precisely because the raw [-10,20] scale means nothing and
+    /// invites bar-optimising; quoting "trust 6" here would contradict that in the same paragraph.
+    ///
+    /// The default arm is unreachable through PromotionEvaluator's closed key set — it is there so
+    /// a future key added to the evaluator degrades into prose instead of printing an internal
+    /// identifier at the player, which is exactly how the duty line shipped "recon_sweep".
+    /// </summary>
+    private static TextObject RequirementPhrase(string key, int target)
+    {
+        TextObject line;
+        switch (key)
+        {
+            case "days":
+                line = new TextObject("{=taom_enlist_req_days}{COUNT} days of service");
+                break;
+            case "xp":
+                line = new TextObject("{=taom_enlist_req_xp}{COUNT} service XP");
+                break;
+            case "leadership":
+                line = new TextObject("{=taom_enlist_req_leadership}Leadership {COUNT}");
+                break;
+            case "dutySuccesses":
+                line = new TextObject("{=taom_enlist_req_duties}{COUNT} duties seen through");
+                break;
+            case "trust":
+                return new TextObject("{=taom_enlist_req_trust}your commander's confidence");
+            default:
+                return new TextObject("{=taom_enlist_req_other}more service");
+        }
+
+        line.SetTextVariable("COUNT", target.ToString());
+        return line;
     }
 
     private static TextObject ActivityLine(ServiceStatusModel status)
@@ -82,7 +164,7 @@ public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
 
         var line = new TextObject("{=taom_enlist_board_arrears}{NEWLINE}Pay owed to you: {GOLD}{GOLD_ICON}");
         line.SetTextVariable("GOLD", deferredWages.ToString());
-        line.SetTextVariable("GOLD_ICON", "<img src=\"General\\Icons\\Coin@2x\" extend=\"8\">");
+        line.SetTextVariable("GOLD_ICON", CoinIcon);
         return line;
     }
 

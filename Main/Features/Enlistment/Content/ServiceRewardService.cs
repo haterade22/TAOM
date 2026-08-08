@@ -105,9 +105,28 @@ public class ServiceRewardService : IServiceRewardService
 
         // Ledger by conservation, never by patching the plan's fields: everything owed
         // this tick (today's wage + the standing debt) minus what actually reached the
-        // player IS the new debt, clamped to the cap (overflow is forfeited, as before).
+        // player IS the new debt, clamped to the cap. The cap is day-denominated, so it
+        // scales with the rank wage it caps — see WagePolicy.ArrearsCap.
+        var arrearsCap = WagePolicy.ArrearsCap(wage, config.WagePolicy);
         var stillOwed = System.Math.Max(0, wage + priorArrears - delivered);
-        record.DeferredWages = System.Math.Min(stillOwed, System.Math.Max(0, config.WagePolicy.MaxDeferredWages));
+
+        // The cap limits ACCRUAL; it must never retroactively confiscate arrears the player
+        // already banked at a higher wage. Because the ceiling is now wage-relative it can
+        // SHRINK — a demotion, a retuned dailyWageByRank, even a rank whose wage is 0 — and a
+        // bare Min() would have wiped the whole standing debt on the next tick. Floor it at
+        // whatever is left of yesterday's debt.
+        var alreadyBanked = System.Math.Max(0, priorArrears - delivered);
+        var carried = System.Math.Min(stillOwed, System.Math.Max(arrearsCap, alreadyBanked));
+        var forfeited = stillOwed - carried;
+        record.DeferredWages = carried;
+
+        // Clamping DESTROYS gold the commander still owes. That used to happen in total
+        // silence, so a long insolvent stretch erased hundreds of gold of back pay with
+        // nothing in the log to explain where it went. Never clamp player money quietly.
+        if (forfeited > 0)
+            _logger?.LogWarning(
+                $"[Enlistment] deferred-wage cap reached — {forfeited} gold of back pay forfeited "
+                + $"(owed {stillOwed}, cap {arrearsCap} = {config.WagePolicy.MaxDeferredWageDays} days x {wage}/day)");
 
         // Report what actually happened, not what was planned.
         return new WageDecision
@@ -116,6 +135,7 @@ public class ServiceRewardService : IServiceRewardService
             Minted = config.WagePolicy.PayFromCommanderGold ? 0 : System.Math.Min(delivered, wage),
             ArrearsReleased = System.Math.Max(0, delivered - System.Math.Min(delivered, wage)),
             NewlyDeferred = System.Math.Max(0, wage - System.Math.Min(delivered, wage)),
+            Forfeited = forfeited,
         };
     }
 

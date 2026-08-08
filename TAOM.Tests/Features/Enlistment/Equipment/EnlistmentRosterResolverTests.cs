@@ -60,25 +60,41 @@ public class EnlistmentRosterResolverTests
     }
 
     [TestMethod]
-    public void Resolve_LothlorienNoRosters_FallsToDefaultForRequestedRank()
+    public void Resolve_CultureWithNoRoster_FallsToDefaultForRequestedRank()
     {
-        // Lothlorien has no troop tree, hence no culture rosters — the default must
-        // match the REQUESTED rank, not a lower one.
+        // A culture with no roster of its own takes the default for the REQUESTED rank,
+        // not a lower one. (This used to be spelled with "lothlorien" on the claim that it
+        // had no troop tree; it borrows Rivendell's and now ships enlist_lothlorien_* —
+        // see the two tests below.)
         var result = EnlistmentRosterResolver.Resolve(
-            "lothlorien", EnlistmentRank.Veteran,
+            "unrostered_culture", EnlistmentRank.Veteran,
             Exists("enlist_default_recruit", "enlist_default_veteran"));
 
         Assert.AreEqual("enlist_default_veteran", result);
     }
 
     [TestMethod]
-    public void Resolve_BattaniaKhandNoRosters_FallsToDefault()
+    public void Resolve_Lothlorien_PrefersItsOwnRosterOverTheDefault()
     {
-        // Khand's runtime id is battania (XSLT culture) — no tree, default fallthrough.
+        // lothlorien binds to the Rivendell tree (taom_spcultures.xml: basic_troop=
+        // imladris_recruit), so enlist_lothlorien_* ships and must beat the default.
         var result = EnlistmentRosterResolver.Resolve(
-            "battania", EnlistmentRank.Recruit, Exists("enlist_default_recruit"));
+            "lothlorien", EnlistmentRank.Veteran,
+            Exists("enlist_lothlorien_veteran", "enlist_default_veteran"));
 
-        Assert.AreEqual("enlist_default_recruit", result);
+        Assert.AreEqual("enlist_lothlorien_veteran", result);
+    }
+
+    [TestMethod]
+    public void Resolve_BattaniaKhand_PrefersItsOwnRosterOverTheDefault()
+    {
+        // Khand's runtime id is battania (XSLT culture); it binds to the Rhun tree
+        // (spcultures.xslt: basic_troop=loke_rim_initiate), so enlist_battania_* ships.
+        var result = EnlistmentRosterResolver.Resolve(
+            "battania", EnlistmentRank.Recruit,
+            Exists("enlist_battania_recruit", "enlist_default_recruit"));
+
+        Assert.AreEqual("enlist_battania_recruit", result);
     }
 
     [TestMethod]

@@ -1,5 +1,6 @@
 using TAOM.Adapters;
 using TAOM.Features.Enlistment.Content;
+using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Domain;
 using TAOM.Features.Enlistment.Hooks;
 
@@ -43,6 +44,8 @@ public class ServiceStatusService : IServiceStatusService
     private readonly IEnlistmentContentStore _content;
     private readonly ICommanderLordAdapter _commander;
     private readonly IServiceStatusTextWriter _writer;
+    private readonly IPromotionService _promotion;
+    private readonly IEnlistmentContentConfigProvider _config;
 
     private ServiceStatusModel _last;
 
@@ -50,12 +53,16 @@ public class ServiceStatusService : IServiceStatusService
         IEnlistmentStore store,
         IEnlistmentContentStore content,
         ICommanderLordAdapter commander,
-        IServiceStatusTextWriter writer)
+        IServiceStatusTextWriter writer,
+        IPromotionService promotion,
+        IEnlistmentContentConfigProvider config)
     {
         _store = store;
         _content = content;
         _commander = commander;
         _writer = writer;
+        _promotion = promotion;
+        _config = config;
     }
 
     public ServiceStatusModel Build()
@@ -67,6 +74,16 @@ public class ServiceStatusService : IServiceStatusService
         var commander = _commander.GetSnapshot(record.CommanderHeroId) ?? CommanderSnapshot.Missing;
         var content = _content.Record;
 
+        // Peek(), never EvaluateAndApply(): a render path must not be able to promote anyone. The
+        // two share one evaluator call, which is what keeps the numbers on screen identical to the
+        // numbers that actually grant the rank.
+        var promotion = _promotion?.Peek();
+
+        // Show the ladder only while there is something to ask of the player. At the top rank there
+        // is no next step, and when every requirement is already met the promotion lands on the next
+        // daily tick — a "you still need…" line in either case would be a lie.
+        var showLadder = promotion != null && !promotion.AtTopRank && promotion.MostBindingUnmetKey != null;
+
         return new ServiceStatusModel(
             commanderName: commander.Name,
             activity: ResolveActivity(commander),
@@ -76,7 +93,25 @@ public class ServiceStatusService : IServiceStatusService
             daysServed: content.DaysServed,
             trust: content.Trust,
             deferredWages: content.DeferredWages,
-            activeDutyId: content.ActiveDutyId);
+            activeDutyId: content.ActiveDutyId,
+            serviceXp: content.ServiceXp,
+            dailyWage: DailyWageFor(content.Rank),
+            nextRank: showLadder ? promotion.ToRank : (ServiceRank?)null,
+            nextRequirementKey: showLadder ? promotion.MostBindingUnmetKey : null,
+            nextRequirementTarget: showLadder ? promotion.MostBindingUnmetTarget : 0);
+    }
+
+    /// <summary>
+    /// Today's wage, read from the same rank-indexed table <c>ServiceRewardService.PayDailyWage</c>
+    /// pays from — so the board cannot quote a number the player is not actually paid. Out-of-range
+    /// reads yield 0 rather than throwing; the config validator already pins the table at exactly
+    /// four non-negative entries, so this is a belt for a rank enum that outgrows its table.
+    /// </summary>
+    private int DailyWageFor(ServiceRank rank)
+    {
+        var table = _config?.GetConfig()?.Progression?.DailyWageByRank;
+        var index = (int)rank;
+        return table != null && index >= 0 && index < table.Count ? table[index] : 0;
     }
 
     /// <summary>

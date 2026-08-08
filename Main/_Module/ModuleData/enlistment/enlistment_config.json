@@ -19,7 +19,7 @@
   "wagePolicy": {
     "payFromCommanderGold": true,
     "commanderGoldFloor": 500,
-    "maxDeferredWages": 60
+    "maxDeferredWageDays": 14
   },
   "meritScoring": {
     "killWeight": 5,
@@ -30,6 +30,7 @@
     "engagementWeight": 10,
     "roleFitBonus": 10,
     "fellEarlyPenalty": 10,
+    "leftFieldPenalty": 30,
     "sampleIntervalSeconds": 2.0,
     "cohesionDistance": 25.0,
     "commanderDistance": 40.0,

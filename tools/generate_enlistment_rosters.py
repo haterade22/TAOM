@@ -9,10 +9,12 @@ EnlistmentEquipmentService via EnlistmentRosterResolver (fallback chain:
 exact -> lower ranks -> enlist_default_{rank} -> none).
 
 Culture ids are RUNTIME StringIds (the #1 TAOM data bug): vlandia=Rohan,
-empire=Dunland, aserai=Harad, khuzait=Rhun, sturgia=Dale, battania=Khand.
-Cultures are enumerated from Main/_Module/ModuleData/troops/troops_*.xml (the
-16 tree-cultures); lothlorien and battania (Khand) have no troop tree and fall
-through to the hand-authored enlist_default_{rank} rosters at runtime.
+empire=Dunland, aserai=Harad, khuzait=Rhun, sturgia=Dale, battania=Khand,
+lothlorien=Galadhrim. Cultures are enumerated from
+Main/_Module/ModuleData/troops/troops_*.xml (16 cultures own a file), then
+extended by TREE_ALIASES: lothlorien and battania own no troops file but each
+BINDS to another culture's tree in the culture data, so they get that tree's
+issue kit instead of falling through to enlist_default_{rank}.
 
 Donor selection per (culture, rank): pick the troop whose level sits in the
 rank's band -- consistent with derive_armor_tiers.level_to_tier (recruit<=13,
@@ -104,6 +106,25 @@ DEFAULT_ROSTER_ITEMS = {
 }
 DEFAULT_CULTURE = 'neutral_culture'
 
+# Cultures with no troops_*.xml file of their own that nevertheless BIND to another
+# culture's troop tree in the culture data. Enumerating troop files alone reports them
+# as "no troop tree", which is what made them fall through to enlist_default_{rank};
+# they are tree-BORROWERS, not tree-less. Both bindings verified 2026-08-08:
+#   lothlorien -> rivendell   Main/_Module/ModuleData/taom_spcultures.xml, Culture id="lothlorien":
+#                             basic_troop=NPCCharacter.imladris_recruit,
+#                             elite_basic_troop=NPCCharacter.imladris_infantry
+#                             -- byte-identical to Culture id="rivendell".
+#   battania   -> khuzait     Main/_Module/ModuleData/spcultures.xslt, Culture[@id='battania']
+#                             (the Variag/Khand re-theme; battania is a VANILLA culture, so it is
+#                             NOT in taom_spcultures.xml): basic_troop=NPCCharacter.loke_rim_initiate,
+#                             elite_basic_troop=NPCCharacter.loke_rim_cavalry
+#                             -- identical to the Culture[@id='khuzait'] template's Rhun bindings.
+# If either culture ever ships its own troops file, its real tree wins and the alias is dropped.
+TREE_ALIASES = {
+    'lothlorien': 'rivendell',
+    'battania': 'khuzait',
+}
+
 
 # =============================================================================
 # Parsing
@@ -166,6 +187,25 @@ def parse_troops():
 # Donor selection
 # =============================================================================
 
+def apply_tree_aliases(by_culture):
+    """Point each tree-borrowing culture at the donor pool of the tree it binds to.
+
+    Mutates by_culture in place. A borrower that has since grown its own troops file
+    keeps that file and the alias is dropped -- the real tree always wins.
+    """
+    for alias, source in sorted(TREE_ALIASES.items()):
+        if alias in by_culture:
+            print(f'  NOTE: {alias} now owns a troop tree -- ignoring the {source} alias')
+            continue
+        if source not in by_culture:
+            print(f'  WARN: alias {alias} -> {source}: {source} has no troop tree; '
+                  f'{alias} will fall through to enlist_default_{{rank}}', file=sys.stderr)
+            continue
+        by_culture[alias] = by_culture[source]
+        print(f'  Alias: {alias} borrows the {source} troop tree '
+              f'({len(by_culture[source])} donors)')
+
+
 def band_score(level, rank):
     lo, hi = RANK_BANDS[rank]
     if level < lo:
@@ -222,8 +262,11 @@ def roster_block(roster_id, culture, slot_items):
 def default_blocks(index):
     blocks = ['\n    <!-- ═══ HAND-AUTHORED culture-neutral fallbacks (enlist_default_{rank}) ═══',
               '         Broadly-available human militia armor. The resolver falls through here',
-              '         for cultures with no roster (lothlorien, battania/Khand). Do not let a',
-              '         regeneration drop these: the generator carries them as a literal. -->\n']
+              '         for any culture with no roster of its own. Every culture that ships a',
+              '         troop tree, plus the two tree-borrowers (lothlorien, battania/Khand),',
+              '         now has one, so this is a genuine last resort rather than the routine',
+              '         path it used to be for those two. Do not let a regeneration drop these:',
+              '         the generator carries them as a literal. -->\n']
     for rank in RANKS:
         items = DEFAULT_ROSTER_ITEMS[rank]
         missing = [i for _, i in items if i not in index]
@@ -247,8 +290,17 @@ def file_header():
         '\n'
         '  RUNTIME culture ids (the #1 TAOM data bug; lore names are WRONG here):\n'
         '  vlandia=Rohan, empire=Dunland, aserai=Harad, khuzait=Rhun, sturgia=Dale,\n'
-        '  battania=Khand. lothlorien + battania have no troop tree -> no rosters ->\n'
-        '  runtime fallthrough to enlist_default_{rank}.\n'
+        '  battania=Khand, lothlorien=Galadhrim.\n'
+        '\n'
+        '  lothlorien and battania define no troops_*.xml file of their OWN, but both bind\n'
+        "  to another culture's tree, so they are NOT rosterless: taom_spcultures.xml gives\n"
+        '  lothlorien basic_troop=imladris_recruit / elite_basic_troop=imladris_infantry,\n'
+        '  i.e. the same Rivendell tree rivendell itself uses; spcultures.xslt gives\n'
+        '  battania (Variag/Khand) basic_troop=loke_rim_initiate /\n'
+        "  elite_basic_troop=loke_rim_cavalry, i.e. khuzait's Rhun tree. Their rosters\n"
+        "  therefore mirror rivendell and khuzait rank-for-rank (the generator's\n"
+        '  TREE_ALIASES map reproduces them). enlist_default_{rank} stays the fallback for\n'
+        '  any culture that really has neither.\n'
         '\n'
         '  GENERATED by tools/generate_enlistment_rosters.py from per-culture donor troops\n'
         '  (rank -> level band per derive_armor_tiers.level_to_tier) + the live\n'
@@ -301,13 +353,14 @@ def main():
     print(f'Armory index: {len(index)} items from {armory_dir}')
 
     by_culture = parse_troops()
+    apply_tree_aliases(by_culture)
     cultures = sorted(by_culture)
     if args.culture:
         if args.culture not in by_culture:
             raise SystemExit(f'ERROR: culture {args.culture!r} has no troop tree. '
                              f'Known: {", ".join(cultures)}')
         cultures = [args.culture]
-    print(f'Tree-cultures: {len(cultures)} ({", ".join(cultures)})')
+    print(f'Cultures (own tree + aliases): {len(cultures)} ({", ".join(cultures)})')
 
     blocks = []
     donor_table = []  # (culture, rank, donor_id, level, group, slots emitted, slots skipped)

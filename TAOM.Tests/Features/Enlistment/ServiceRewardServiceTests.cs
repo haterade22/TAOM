@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -130,13 +131,88 @@ public class ServiceRewardServiceTests
     [TestMethod]
     public void PayDailyWage_ArrearsNeverExceedCap()
     {
-        _configValue.WagePolicy.MaxDeferredWages = 8;
-        _contentStore.Record.DeferredWages = 8;
+        // 2 days x the recruit's 5/day = a 10 gold ceiling, already full.
+        _configValue.WagePolicy.MaxDeferredWageDays = 2;
+        _contentStore.Record.DeferredWages = 10;
+        _goldTransfer.GetHeroGold("lord_1_1").Returns(0);
+
+        var decision = _service.PayDailyWage();
+
+        Assert.AreEqual(10, _contentStore.Record.DeferredWages, "overflow forfeited, never exceeds the cap");
+        Assert.AreEqual(5, decision.Forfeited, "today's whole wage was destroyed by the cap");
+    }
+
+    [TestMethod]
+    public void PayDailyWage_CapReached_LogsTheForfeitedGold()
+    {
+        // The real defect: the clamp destroyed the player's back pay in total silence. Roughly
+        // 600 gold evaporated over a 30-day insolvent stretch with nothing in the log.
+        _configValue.WagePolicy.MaxDeferredWageDays = 2;
+        _contentStore.Record.DeferredWages = 10;
         _goldTransfer.GetHeroGold("lord_1_1").Returns(0);
 
         _service.PayDailyWage();
 
-        Assert.AreEqual(8, _contentStore.Record.DeferredWages, "overflow forfeited, never exceeds the cap");
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("forfeited") && s.Contains("5")));
+    }
+
+    [TestMethod]
+    public void PayDailyWage_CapNotReached_LogsNoForfeit()
+    {
+        _contentStore.Record.DeferredWages = 20;
+        _goldTransfer.GetHeroGold("lord_1_1").Returns(0);
+
+        _service.PayDailyWage();
+
+        Assert.AreEqual(25, _contentStore.Record.DeferredWages, "5 wage + 20 prior, all inside the 70-gold recruit cap");
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("forfeited")));
+    }
+
+    [TestMethod]
+    public void PayDailyWage_SergeantInsolvent_CapScalesWithRankWageInsteadOfDestroyingBackPay()
+    {
+        // Under the old flat 60-GOLD cap this Sergeant's arrears were clamped to 60 and 162
+        // gold vanished on this single tick. The cap is now 14 days x 22/day = 308.
+        _contentStore.Record.Rank = ServiceRank.Sergeant;
+        _contentStore.Record.DeferredWages = 200;
+        _goldTransfer.GetHeroGold("lord_1_1").Returns(0);
+
+        var decision = _service.PayDailyWage();
+
+        Assert.AreEqual(222, _contentStore.Record.DeferredWages, "22 wage + 200 prior, all still owed");
+        Assert.AreEqual(0, decision.Forfeited);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("forfeited")));
+    }
+
+    [TestMethod]
+    public void PayDailyWage_CapShrinksBelowBankedArrears_ForfeitsOnlyTodaysAccrual()
+    {
+        // A wage-relative ceiling can SHRINK (demotion, retuned wage table). A bare Min()
+        // against it would confiscate arrears the player legitimately banked at the old wage.
+        _contentStore.Record.Rank = ServiceRank.Sergeant;   // 22/day, cap 2 x 22 = 44
+        _configValue.WagePolicy.MaxDeferredWageDays = 2;
+        _contentStore.Record.DeferredWages = 300;
+        _goldTransfer.GetHeroGold("lord_1_1").Returns(0);
+
+        var decision = _service.PayDailyWage();
+
+        Assert.AreEqual(300, _contentStore.Record.DeferredWages, "banked debt survives a shrinking cap");
+        Assert.AreEqual(22, decision.Forfeited, "only today's refused accrual is lost");
+    }
+
+    [TestMethod]
+    public void PayDailyWage_ZeroWageTable_DoesNotWipeStandingArrears()
+    {
+        // wage 0 makes the day-denominated cap 0. That must not mean "destroy everything owed".
+        _configValue.Progression.DailyWageByRank = new List<int> { 0, 0, 0, 0 };
+        _contentStore.Record.DeferredWages = 200;
+        _goldTransfer.GetHeroGold("lord_1_1").Returns(0);
+
+        var decision = _service.PayDailyWage();
+
+        Assert.AreEqual(200, _contentStore.Record.DeferredWages);
+        Assert.AreEqual(0, decision.Forfeited);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("forfeited")));
     }
 
     [TestMethod]

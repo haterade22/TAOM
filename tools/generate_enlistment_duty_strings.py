@@ -160,8 +160,17 @@ def main() -> None:
     args = ap.parse_args()
 
     entries = build_entries()
+    # newline="" IS LOAD-BEARING on both the read and the write below, and `utf-8` (not
+    # `utf-8-sig`) is deliberate. Together they make this a byte-faithful round-trip:
+    # newline="" disables newline translation in both directions so CRLF survives, and plain
+    # utf-8 decodes a BOM to a literal U+FEFF and re-encodes it unchanged rather than eating it.
+    # Delete either kwarg as apparent boilerplate and a 13-line insert silently becomes a
+    # whole-file rewrite with every line ending changed. See tools/README.md "XML I/O convention".
     xml = io.open(STRINGS_XML, encoding="utf-8", newline="").read()
-    existing = set(re.findall(r'id="([^"]+)"', xml))
+    # Anchored to `<string id="` on purpose. A bare `id="([^"]+)"` would also match an id
+    # mentioned inside an XML comment and silently treat that key as already registered,
+    # so the generator would skip writing it and nothing would report the omission.
+    existing = set(re.findall(r'<string\s+id="([^"]+)"', xml))
     new = [(k, v) for k, v in entries if k not in existing]
 
     print(f"  interactive/incident rows: {sum(1 for k, _ in entries if k.endswith('_body'))}")

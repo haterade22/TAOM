@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
@@ -34,6 +35,13 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
     {
         "", "ReleaseDeferredPay",
     };
+
+    /// <summary>
+    /// Upper bound on wagePolicy.maxDeferredWageDays: one full contract (EnlistmentCoreConfig.ContractDays
+    /// defaults to 365). Past that the arrears stop being a debt and become a discharge-time gold bomb,
+    /// and an absurd hand-edited day count would push the cap multiply toward overflow.
+    /// </summary>
+    private const int MaxDeferredWageDaysCeiling = 365;
 
     private readonly IPathService _pathService;
     private readonly IModLogger _logger;
@@ -87,9 +95,11 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             return defaults;
         }
 
+        string text;
         EnlistmentContentConfig parsed;
         try
         {
+            text = File.ReadAllText(path);
             // ObjectCreationHandling.Replace is REQUIRED, not a preference. The config model gives
             // its list properties initializers (e.g. DailyWageByRank = { 5, 8, 14, 22 }), and
             // Newtonsoft's default (Auto) APPENDS the JSON entries to that existing collection
@@ -98,7 +108,7 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             // compiled defaults — so every retune of these tables was discarded with only a
             // warning. Observed in-game 2026-08-07.
             parsed = JsonConvert.DeserializeObject<EnlistmentContentConfig>(
-                File.ReadAllText(path),
+                text,
                 new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
         }
         catch (Exception ex)
@@ -110,12 +120,48 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         if (parsed == null)
             return defaults;
 
+        WarnOnRenamedKeys(text);
+
         if (parsed.MeritBands == null || parsed.MeritBands.Count == 0)
             parsed.MeritBands = DefaultMeritBands();
         if (parsed.Promotions == null || parsed.Promotions.Count == 0)
             parsed.Promotions = DefaultPromotions();
 
         return ValidateConfig(parsed, defaults);
+    }
+
+    /// <summary>
+    /// A RENAMED json key is invisible to Newtonsoft — the old name binds to nothing, the field takes
+    /// the compiled default, and the player's deliberate retune vanishes with no warning anywhere.
+    /// Every rename of a shipped key must be announced here, because an existing install keeps its
+    /// own enlistment_config.json and will not pick up the new name on its own.
+    ///
+    /// wagePolicy.maxDeferredWages -> wagePolicy.maxDeferredWageDays (2026-08-08). It also changed
+    /// MEANING — flat gold ceiling to a count of days of the current rank wage — so the old value is
+    /// not mechanically convertible and we warn rather than silently migrate it.
+    /// </summary>
+    private void WarnOnRenamedKeys(string json)
+    {
+        JObject root;
+        try
+        {
+            root = JObject.Parse(json);
+        }
+        catch (Exception)
+        {
+            // The typed parse already succeeded; a shape we cannot re-walk is not worth failing over.
+            return;
+        }
+
+        var wagePolicy = root.Property("wagePolicy", StringComparison.OrdinalIgnoreCase)?.Value as JObject;
+        if (wagePolicy?.Property("maxDeferredWages", StringComparison.OrdinalIgnoreCase) != null)
+        {
+            _logger.LogWarning(
+                "EnlistmentContentConfigProvider: wagePolicy.maxDeferredWages was renamed to "
+                + "wagePolicy.maxDeferredWageDays and changed meaning (flat gold ceiling -> days of the "
+                + "current rank wage). The old key is IGNORED and the new default is in force — set "
+                + "maxDeferredWageDays if you had retuned it.");
+        }
     }
 
     private EnlistmentContentConfig ValidateConfig(EnlistmentContentConfig config, EnlistmentContentConfig defaults)
@@ -130,7 +176,13 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         rejected |= RevertIfNegative(() => config.Progression.XpPerKill, v => config.Progression.XpPerKill = v, defaults.Progression.XpPerKill, "progression.xpPerKill");
         rejected |= RevertIfNegative(() => config.Progression.KillXpCap, v => config.Progression.KillXpCap = v, defaults.Progression.KillXpCap, "progression.killXpCap");
         rejected |= RevertIfNegative(() => config.WagePolicy.CommanderGoldFloor, v => config.WagePolicy.CommanderGoldFloor = v, defaults.WagePolicy.CommanderGoldFloor, "wagePolicy.commanderGoldFloor");
-        rejected |= RevertIfNegative(() => config.WagePolicy.MaxDeferredWages, v => config.WagePolicy.MaxDeferredWages = v, defaults.WagePolicy.MaxDeferredWages, "wagePolicy.maxDeferredWages");
+        rejected |= RevertIfOutOfRange(() => config.WagePolicy.MaxDeferredWageDays, v => config.WagePolicy.MaxDeferredWageDays = v, defaults.WagePolicy.MaxDeferredWageDays, 0, MaxDeferredWageDaysCeiling, "wagePolicy.maxDeferredWageDays");
+
+        // Both merit penalties are directional — the scorer SUBTRACTS them, so a negative value
+        // silently inverts the field into a reward. A negative leftFieldPenalty would hand the
+        // bonus straight back to the walk-out-at-5-seconds case that penalty exists to stop.
+        rejected |= RevertIfNegative(() => config.MeritScoring.FellEarlyPenalty, v => config.MeritScoring.FellEarlyPenalty = v, defaults.MeritScoring.FellEarlyPenalty, "meritScoring.fellEarlyPenalty");
+        rejected |= RevertIfNegative(() => config.MeritScoring.LeftFieldPenalty, v => config.MeritScoring.LeftFieldPenalty = v, defaults.MeritScoring.LeftFieldPenalty, "meritScoring.leftFieldPenalty");
 
         if (!FiniteFloatValidator.IsFiniteInRange(config.Scheduler.BaseOfferChance, 0f, 1f))
         {
@@ -190,6 +242,16 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         if (get() >= 0)
             return false;
         _logger.LogWarning($"EnlistmentContentConfigProvider: {name}={get()} must be >= 0, reverting to {defaultValue}");
+        set(defaultValue);
+        return true;
+    }
+
+    private bool RevertIfOutOfRange(Func<int> get, Action<int> set, int defaultValue, int min, int max, string name)
+    {
+        var value = get();
+        if (value >= min && value <= max)
+            return false;
+        _logger.LogWarning($"EnlistmentContentConfigProvider: {name}={value} must be in [{min},{max}], reverting to {defaultValue}");
         set(defaultValue);
         return true;
     }

@@ -1,4 +1,4 @@
-# Lessons — Localization & UI
+﻿# Lessons — Localization & UI
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Localization & UI lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -201,3 +201,40 @@ must come first and the centre second.
   new art for genuinely new geometry.
 - **Source:** career UX arc 2026-08-06, commit `505bb6e1`; confirmed in-game (bronze/silver/gold
   rendering distinctly). Underlying packer bug remains open as #392.
+
+### For a `{=key}default` TextObject, the English XML row is never rendered — edit the C#
+
+`MBTextManager.GetLocalizedText` (v1.4.7, `TaleWorlds.Localization.MBTextManager.cs:264-268`)
+short-circuits on the active language before it ever looks up a registered translation:
+
+```csharp
+if (_activeTextLanguageId == "English")
+{
+    text2 = _targetStringBuilder.ToString();   // the inline default
+    return RemoveComments(text2);              // registered row never consulted
+}
+```
+
+So for the `new TextObject("{=key}English fallback")` form, an English player always sees the
+string literal in the C#. The English row in `taom_enlistment_strings.xml` (or any sibling) is
+**translator source material and the id registry** — not a render path. The 11 non-English
+languages are the ones the registration actually feeds.
+
+Two practical consequences:
+
+1. **An English copy edit made only in the XML will not appear in game.** Edit the C# literal.
+2. **Changing a template's SHAPE requires a NEW key id**, because the 11 translated rows WILL win
+   for their languages — reusing the id renders the old sentence to every non-English player and
+   silently drops any new `{TOKEN}` the new template introduced, with no error anywhere. English
+   looks correct throughout, which is exactly what makes it easy to ship.
+
+- **Why missed:** the mental model "registered translation beats inline default" is true for the
+  languages you are usually thinking about, so it gets generalised to all 12. Nobody re-reads the
+  loader because the rule feels settled, and English — the language the developer plays in — is
+  structurally immune to the bug, so local testing cannot surface it.
+- **Prevent:** treat a template-shape change as needing a new key id, and verify English copy
+  changes at the C# literal rather than in XML. When reasoning about localization precedence,
+  name which languages you mean; "all 12" is the tell that the English carve-out was forgotten.
+- **Source:** enlistment status-board v2, 2026-08-08. The `_v2` key decision was independently
+  correct; the comment justifying it overstated the scope, caught by the deep-review API agent
+  and confirmed by reading the loader.

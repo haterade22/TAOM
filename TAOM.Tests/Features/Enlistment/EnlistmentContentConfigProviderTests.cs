@@ -98,6 +98,55 @@ public class EnlistmentContentConfigProviderTests
     }
 
     [TestMethod]
+    public void GetConfig_LegacyMaxDeferredWagesKey_WarnsAboutTheRename()
+    {
+        // Migration hazard: the key was renamed AND changed unit (flat gold -> days of the current
+        // rank wage). Newtonsoft binds the old name to nothing, so without this warning a player's
+        // retuned install silently takes the new default and never learns why.
+        WriteConfig("{\"wagePolicy\":{\"maxDeferredWages\":60}}");
+
+        var config = Provider().GetConfig();
+
+        Assert.AreEqual(14, config.WagePolicy.MaxDeferredWageDays, "the old key is ignored, not converted");
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("maxDeferredWages") && s.Contains("renamed")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NewMaxDeferredWageDaysKey_NoRenameWarning()
+    {
+        WriteConfig("{\"wagePolicy\":{\"maxDeferredWageDays\":30}}");
+
+        var config = Provider().GetConfig();
+
+        Assert.AreEqual(30, config.WagePolicy.MaxDeferredWageDays);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("renamed")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NegativeMaxDeferredWageDays_Reverts()
+    {
+        WriteConfig("{\"wagePolicy\":{\"maxDeferredWageDays\":-1}}");
+
+        var config = Provider().GetConfig();
+
+        Assert.AreEqual(14, config.WagePolicy.MaxDeferredWageDays);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("maxDeferredWageDays")));
+    }
+
+    [TestMethod]
+    public void GetConfig_MaxDeferredWageDaysAboveContractLength_Reverts()
+    {
+        // Unbounded day counts turn arrears into a discharge-time gold bomb and push the
+        // days x wage multiply toward overflow. One contract (365 days) is the ceiling.
+        WriteConfig("{\"wagePolicy\":{\"maxDeferredWageDays\":4000}}");
+
+        var config = Provider().GetConfig();
+
+        Assert.AreEqual(14, config.WagePolicy.MaxDeferredWageDays);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("maxDeferredWageDays")));
+    }
+
+    [TestMethod]
     public void GetConfig_NonMonotonicPromotionDays_RevertsToDefaultLadder()
     {
         WriteConfig("{\"promotions\":[" +

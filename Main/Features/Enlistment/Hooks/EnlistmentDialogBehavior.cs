@@ -1,4 +1,5 @@
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Localization;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
@@ -51,9 +52,10 @@ public class EnlistmentDialogBehavior : CampaignBehaviorBase
             "hero_main_options",
             "taom_enlist_oath_ask",
             "{=taom_enlist_offer}I wish to enlist under your command.",
-            () => _gate.CanEnlistWith(PartnerId()) == EnlistGateResult.Ok,
+            OfferIsVisible,
             null,
-            110);
+            110,
+            OfferIsClickable);
 
         starter.AddDialogLine(
             "taom_enlist_oath_ask",
@@ -95,6 +97,35 @@ public class EnlistmentDialogBehavior : CampaignBehaviorBase
 
     // Boundary conversion only: the conversation partner's id.
     private static string PartnerId() => Hero.OneToOneConversationHero?.StringId;
+
+    /// <summary>
+    /// The two verdicts that put the offer on screen; everything else hides the line. Why
+    /// CommanderUnavailable is deliberately NOT among them is argued in
+    /// <see cref="Presentation.ServiceVocabulary.EnlistUnavailableReason"/>. Static because the
+    /// split is load-bearing on EnlistGateResult's ladder ORDER — <c>EnlistOfferVisibilityTests</c>.
+    /// </summary>
+    public static bool ShowsOfferFor(EnlistGateResult verdict) =>
+        verdict == EnlistGateResult.Ok || verdict == EnlistGateResult.AtWarWithYourKingdom;
+
+    /// <summary>Only a clean Ok is takeable; any other shown verdict renders greyed.</summary>
+    public static bool OfferIsTakeable(EnlistGateResult verdict) => verdict == EnlistGateResult.Ok;
+
+    private bool OfferIsVisible() => ShowsOfferFor(_gate.CanEnlistWith(PartnerId()));
+
+    // Re-asks the gate rather than caching the verdict in a field: the engine runs this immediately
+    // after the condition for the same sentence, so a cache saves one call and buys stale state.
+    private bool OfferIsClickable(out TextObject? explanation)
+    {
+        var verdict = _gate.CanEnlistWith(PartnerId());
+        if (OfferIsTakeable(verdict))
+        {
+            explanation = null;
+            return true;
+        }
+
+        explanation = Presentation.ServiceVocabulary.EnlistUnavailableReason(verdict);
+        return false;
+    }
 
     private void OnOathSworn()
     {

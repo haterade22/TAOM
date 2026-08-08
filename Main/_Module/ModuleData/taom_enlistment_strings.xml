@@ -75,7 +75,6 @@
 	<string id="taom_enlist_trust_poor" text="{=taom_enlist_trust_poor}badly thought of" />
 	<string id="taom_enlist_trust_solid" text="{=taom_enlist_trust_solid}well regarded" />
 	<string id="taom_enlist_trust_trusted" text="{=taom_enlist_trust_trusted}trusted" />
-	<string id="taom_enlist_wait_board" text="{=taom_enlist_wait_board}{ACTIVITY}{NEWLINE}{NEWLINE}Rank: {RANK} · {SECTION}{NEWLINE}Days served: {DAYS} · Standing: {TRUST}{ARREARS}{DUTY}" />
 	<string id="taom_enlist_grade_distinguished" text="{=taom_enlist_grade_distinguished}distinguished" />
 	<string id="taom_enlist_grade_strong" text="{=taom_enlist_grade_strong}strong" />
 	<string id="taom_enlist_grade_solid" text="{=taom_enlist_grade_solid}steady" />
@@ -184,5 +183,19 @@
 	<string id="taom_enlist_duty_service_shift_title" text="{=taom_enlist_duty_service_shift_title}camp duty" />
 	<string id="taom_enlist_duty_supply_delivery_title" text="{=taom_enlist_duty_supply_delivery_title}a supply run" />
 	<string id="taom_enlist_duty_trusted_dispatch_title" text="{=taom_enlist_duty_trusted_dispatch_title}to carry a dispatch" />
+	<string id="taom_enlist_wait_board_v2" text="{=taom_enlist_wait_board_v2}{ACTIVITY}{NEWLINE}{NEWLINE}Rank: {RANK} · {SECTION}{NEWLINE}Days served: {DAYS} · Standing: {TRUST}{NEWLINE}Service record: {XP} XP · Daily pay: {WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
+	<string id="taom_enlist_board_ladder" text="{=taom_enlist_board_ladder}{NEWLINE}Toward {NEXT_RANK}: {REQUIREMENT}" />
+	<string id="taom_enlist_req_days" text="{=taom_enlist_req_days}{COUNT} days of service" />
+	<string id="taom_enlist_req_xp" text="{=taom_enlist_req_xp}{COUNT} service XP" />
+	<string id="taom_enlist_req_leadership" text="{=taom_enlist_req_leadership}Leadership {COUNT}" />
+	<string id="taom_enlist_req_duties" text="{=taom_enlist_req_duties}{COUNT} duties seen through" />
+	<string id="taom_enlist_req_trust" text="{=taom_enlist_req_trust}your commander's confidence" />
+	<string id="taom_enlist_req_other" text="{=taom_enlist_req_other}more service" />
+	<string id="taom_enlist_no_at_war" text="{=taom_enlist_no_at_war}Your kingdom is at war with his. You cannot take his coin and keep your own oath." />
+	<string id="taom_enlist_no_generic" text="{=taom_enlist_no_generic}You cannot enlist under him just now." />
+	<string id="taom_enlist_reassign_no_cooldown" text="{=taom_enlist_reassign_no_cooldown}You changed section too recently. Ask again in {DAYS} days." />
+	<string id="taom_enlist_reassign_no_cooldown_one" text="{=taom_enlist_reassign_no_cooldown_one}You changed section too recently. Ask again tomorrow." />
+	<string id="taom_enlist_reassign_no_generic" text="{=taom_enlist_reassign_no_generic}You cannot change section just now." />
+	<string id="taom_enlist_kit_reclaimed" text="{=taom_enlist_kit_reclaimed}The quartermaster takes back your service kit: {COUNT} item(s)." />
 
 </strings>

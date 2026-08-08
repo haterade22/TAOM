@@ -12,8 +12,8 @@ public class EnlistmentContentPureLogicTests
 {
     // ---- WagePolicy: solvency × arrears matrix ----
 
-    private static WagePolicyConfig Wages(bool fromCommander = true, int floor = 500, int maxDeferred = 60) =>
-        new WagePolicyConfig { PayFromCommanderGold = fromCommander, CommanderGoldFloor = floor, MaxDeferredWages = maxDeferred };
+    private static WagePolicyConfig Wages(bool fromCommander = true, int floor = 500, int maxDeferredDays = 14) =>
+        new WagePolicyConfig { PayFromCommanderGold = fromCommander, CommanderGoldFloor = floor, MaxDeferredWageDays = maxDeferredDays };
 
     [TestMethod]
     public void Wage_SolventCommander_PaysFullNoArrears()
@@ -44,12 +44,73 @@ public class EnlistmentContentPureLogicTests
         Assert.AreEqual(6, d.NewlyDeferred);
     }
 
+    // SCOPE OF THIS FILE'S WAGE TESTS: WagePolicy.ComputeDaily is the PLAN — what we intend before
+    // any gold moves. It is NOT what the player's ledger or the forfeit log are built from.
+    // ServiceRewardService.PayDailyWage deliberately RE-derives the outcome by conservation from
+    // what the transfer actually delivered ("Ledger by conservation, never by patching the plan's
+    // fields"), because a transfer can come up short, and it adds an `alreadyBanked` floor so a
+    // shrinking cap cannot retroactively confiscate arrears banked at a higher wage.
+    //
+    // So `plan.Forfeited` asserted here has NO production consumer, and passing these tests is not
+    // evidence that the forfeit LOG is correct — ServiceRewardServiceTests covers that path.
+    // Said explicitly because a comment claiming coverage it does not provide is the same failure
+    // that let the #375 duty recursion ship: the guard everyone trusted did not guard anything.
+
     [TestMethod]
     public void Wage_ArrearsCapForfeitsOverflow()
     {
-        var d = WagePolicy.ComputeDaily(14, commanderGold: 0, currentArrears: 55, Wages());
+        // 4 days x 14/day = a 56 gold ceiling; 50 already owed leaves room for 6 of today's 14.
+        var d = WagePolicy.ComputeDaily(14, commanderGold: 0, currentArrears: 50, Wages(maxDeferredDays: 4));
 
-        Assert.AreEqual(5, d.NewlyDeferred, "only room to 60");
+        Assert.AreEqual(6, d.NewlyDeferred, "only room to the 56-gold cap");
+        Assert.AreEqual(8, d.Forfeited, "the PLANNED overflow; the reported figure is recomputed in PayDailyWage");
+    }
+
+    [TestMethod]
+    public void Wage_CapScalesWithRankWage_SergeantKeepsWhatRecruitCapWouldHaveDestroyed()
+    {
+        // The defect this replaced: a flat 60-GOLD cap. A Sergeant on 22/day filled it in 2.7
+        // days and lost everything after. Day-denominated, the same 14 days is 308 gold for him.
+        var recruit = WagePolicy.ComputeDaily(5, commanderGold: 0, currentArrears: 0, Wages());
+        var sergeant = WagePolicy.ComputeDaily(22, commanderGold: 0, currentArrears: 200, Wages());
+
+        Assert.AreEqual(70, WagePolicy.ArrearsCap(5, Wages()), "14 days x 5/day");
+        Assert.AreEqual(308, WagePolicy.ArrearsCap(22, Wages()), "14 days x 22/day");
+        Assert.AreEqual(5, recruit.NewlyDeferred);
+        Assert.AreEqual(22, sergeant.NewlyDeferred, "200 owed is still well inside a Sergeant's cap");
+        Assert.AreEqual(0, sergeant.Forfeited);
+    }
+
+    [TestMethod]
+    public void ArrearsCap_ZeroDays_ForfeitsEverythingImmediately()
+    {
+        var d = WagePolicy.ComputeDaily(14, commanderGold: 0, currentArrears: 0, Wages(maxDeferredDays: 0));
+
+        Assert.AreEqual(0, WagePolicy.ArrearsCap(14, Wages(maxDeferredDays: 0)));
+        Assert.AreEqual(0, d.NewlyDeferred);
+        Assert.AreEqual(14, d.Forfeited, "a zero-day cap is legitimate; PayDailyWage is what must not be silent about it");
+    }
+
+    [TestMethod]
+    public void ArrearsCap_NullConfig_IsZero()
+    {
+        Assert.AreEqual(0, WagePolicy.ArrearsCap(22, null!));
+    }
+
+    [TestMethod]
+    public void ArrearsCap_NegativeInputs_ClampToZero()
+    {
+        Assert.AreEqual(0, WagePolicy.ArrearsCap(-22, Wages()));
+        Assert.AreEqual(0, WagePolicy.ArrearsCap(22, Wages(maxDeferredDays: -3)));
+    }
+
+    [TestMethod]
+    public void ArrearsCap_HugeDayCount_SaturatesInsteadOfOverflowingNegative()
+    {
+        // days x wage is widened to long first: int arithmetic would wrap negative here and
+        // Math.Max(0, negative - arrears) would silently produce a ZERO cap — i.e. the most
+        // permissive setting a user could type would destroy 100% of their back pay.
+        Assert.AreEqual(int.MaxValue, WagePolicy.ArrearsCap(1000, Wages(maxDeferredDays: int.MaxValue)));
     }
 
     [TestMethod]
