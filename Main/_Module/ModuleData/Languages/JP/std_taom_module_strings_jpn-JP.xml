@@ -360,6 +360,7 @@
     <string id="taom_str_player_father_name.shaghana" text="ザルカン" />
     <string id="taom_str_player_mother_name.shaghana" text="ハンサ" />
     <string id="0aXG8dvJ" text="{KINGDOM_NAME}と和平を結ぶ。貢納金は支払われません。" />
+    <string id="0bPb5btR" text="{LORD.NAME}は内戦で{RULER}を支持している{FACTION_NAME}の{CLAN_DESCRIPTION}である{CLAN_NAME}の一員です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="0CsbbwtN" text="{CALLED_KINGDOM}を{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争に召集する" />
     <string id="0nhqJewP" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{SETTLEMENT}を{LEADER.NAME}に授与した。" />
     <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{KINGDOM}と和平を結ぶことを決定した。" />
@@ -369,20 +370,25 @@
     <string id="21yUheIy" text="{KINGDOM_NAME}は{CREATION_YEAR}年に、台頭する{CULTURE_ADJECTIVE}の武将{RULER.NAME}によって建国された。" />
     <string id="22LCyCoA" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}への宣戦布告の対価として、あなたの王国に{GOLD}{GOLD_ICON}を提供できます。" />
     <string id="2b1xZGaQ" text="{KINGDOM_NAME}と和平を結ぶ。我が王国は{TRIBUTE_DURATION}日間、毎日{TRIBUTE_AMOUNT}の貢納金を支払う。" />
+    <string id="2BVDp7Tg" text="{KINGDOM}は{POLICY_DESCRIPTION}({POLICY})を停止します。{POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}の略奪により、多くの農民が家を追われた。土地を持つ者は通常そこに戻るが、貧しい者の多くは新しい住処を探している。あなたは村の郊外に野営している数人と話をする。彼らには土地がない。彼らは小作人として働くことを熱望しているようだが、村の古参の家族との間に緊張が生じる可能性は常にある。" />
+    <string id="2mVZORaE" text="{FACTION_NAME}の従者" />
     <string id="4fXpOe4N" text="{CLAN_NAME}から伝令が到着した。彼らは{CAPTIVE_HERO.NAME}を捕らえており、{GOLD_AMOUNT}{GOLD_ICON}の身代金を要求している。" />
     <string id="4GgfFDWG" text="{KINGDOM_NAME}との和平" />
     <string id="4JSzHkpt" text="{?IS_FEMALE}女王{?}王{\?}として、{KINGDOM_NAME}に宣戦布告するかどうかを決定しなければならない" />
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}の城は{FACTION_TERM}の{FACTION_OFFICIAL}である{LORD.LINK}が所有しています。{KEEP_INFO}" />
     <string id="4z1t75be" text="{CLAN_NAME}の{FIRSTNAME}" />
     <string id="5bBAOHmC" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会が均等に分かれる中、{SETTLEMENT}を{?RULER.GENDER}彼女{?}彼{\?}の領地として取得した。" />
     <string id="5bza9sDs" text="それは残念です。{FACTION_NAME}よりも良い雇い主はいないと確信してください。" />
     <string id="5DdbkWLu" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{OTHER_KINGDOM}との通商協定に署名することを決定した。" />
     <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は、{?AGGRESSOR_RULER.GENDER}彼女{?}彼{\?}の評議会が均等に分かれる中、{KINGDOM}との戦争を選択しなかった。" />
     <string id="5pOKmHsf" text="{RULER.NAME}は、{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争に{CALLED_KINGDOM}を召集することを決定した。この決定は{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得た。" />
+    <string id="6d4ZTvGv" text="{LORD.NAME}は{FACTION_NAME}の{TITLE}であり、王国の{CLAN_DESCRIPTION}である{CLAN_NAME}の当主です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}は我らの祖先の地を占領し、同胞を虐げている。" />
     <string id="7ouzFASf" text="伝令が到着し、{OFFERED_KINGDOM_LEADER.NAME}からの伝言を携えている。{?OFFERED_KINGDOM_LEADER.GENDER}彼女{?}彼{\?}はあなたの高まる評判に言及し、{OFFERED_KINGDOM_NAME}の臣下として誓約することを検討してくれないかと尋ねている。興味があれば直接会って話すべきだ。" />
     <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は、{?AGGRESSOR_RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{KINGDOM}との戦争を選択しなかった。" />
     <string id="940TwBPs" text="{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM}から{CLAN}一族を追放しないことを選択した。" />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}は{FACTION_NAME}の地の{CLAN_DESCRIPTION}である{CLAN_NAME}の一員です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は{KINGDOM}との戦争を選択しなかった。" />
     <string id="aE7OQDMS" text="{KINGDOM_NAME}と同盟を結ぶ。" />
     <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会がこの件について均等に分かれる中、{KINGDOM}と和平を結ぶことを決定した。" />
@@ -423,6 +429,7 @@
     <string id="eTylgLCc" text="{KINGDOM_NAME}から使者が到着した。彼らは同盟を申し出ている。あなたの王国は申し出を受け入れるかどうか投票する。" />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM}はもはや{KINGDOM_TO_CALL_TO_WAR_AGAINST}と戦争状態にない。" />
     <string id="F7CMsDyG" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM_NAME}との同盟結成を見送ることを決定した。" />
+    <string id="faUooB7V" text="{KINGDOM}は{POLICY_DESCRIPTION}({POLICY})を行いません。{POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME}は{CALLING_KINGDOM}の要請に応じないことを決定し、{KINGDOM_TO_CALL_TO_WAR_AGAINST}と戦わない。この決定は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得た。" />
     <string id="FNCq25P1" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{KINGDOM_NAME}との同盟を結ぶことを決定した。" />
     <string id="FuNbouTu" text="{KINGDOM_NAME}から使者が到着した。彼らはあなたの王国に{KINGDOM_TO_CALL_TO_WAR_AGAINST}への参戦を要請している。あなたの王国は申し出を受け入れるかどうか投票する。" />
@@ -433,6 +440,7 @@
     <string id="gNf0ALKw" text="{MAP_FACTION_NAME}から使者が到着した。彼らは白紙和平を申し出ている。あなたの王国は申し出を受け入れるかどうか投票する。" />
     <string id="h5eTEYON" text="{RULER.NAME}は{CLAN}一族を{KINGDOM}から追放した。" />
     <string id="h9bWTLgK" text="我らの同盟国{KINGDOM_NAME}の戦いに加わる時が来た。" />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}は{FACTION_NAME}の地の{CLAN_DESCRIPTION}である{CLAN_NAME}の当主です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="IB1xsVEr" text="{MAP_FACTION_NAME}から使者が到着した。彼らは白紙和平を申し出ている。あなたの臣下たちは決定をあなたに委ねた。" />
     <string id="INfHUqxT" text="{RULER.NAME}は{KINGDOM_NAME}との同盟締結を決定した。" />
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず{KINGDOM}との講和を見送ることを選択した。" />
@@ -442,8 +450,10 @@
     <string id="jaioXYDc" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て、{KINGDOM_NAME}との同盟結成を見送ることを決定した。" />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM}との和平を決定した。" />
     <string id="JJQ0Hp4m" text="{MAP_FACTION_NAME}から使者が到着した。{MAP_FACTION_NAME}は両国間の戦争を終結させるため、毎日{GOLD_AMOUNT}{GOLD_ICON}の貢納金を支払うという。あなたの臣下たちは決定をあなたに委ねている。" />
+    <string id="jnYwiCAz" text="{KINGDOM}は{POLICY_DESCRIPTION}({POLICY})を継続します。{POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}は現在我々より強大である。我々は力を蓄える時間が必要だ。" />
     <string id="JQligd8z" text="{KINGDOM}の評議会は{KING.NAME}を新たな統治者に選出した。" />
+    <string id="JuPUG5wX" text="{LORD.NAME}は{FACTION_NAME}の{TITLE}であり、内戦で{RULER}を支持している{CLAN_DESCRIPTION}である{CLAN_NAME}の当主です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="JY717hPW" text="私には{ENEMY_INFORMAL_NAME}を代表して和平を結ぶ権限はない。{ENEMY_RULER.NAME}と{?ENEMY_RULER.GENDER}彼女{?}彼{\?}の評議会が和平を提案するかどうか、そしてその条件を決定すべきである。" />
     <string id="K5w135N9" text="{RULER.NAME}は{CALLING_KINGDOM}の召集に応じないことを決定し、{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争には参加しない。この決定は{?RULER.GENDER}彼女{?}彼{\?}の評議会の助言に反して下された。" />
     <string id="KFHj7ckm" text="統治者として、{KINGDOM_NAME}との和平を結ぶかどうかを決定しなければならない" />
@@ -454,6 +464,7 @@
     <string id="L802I9W2" text="承知した、{FACTION_NAME}に加わろう。" />
     <string id="L81DPSom" text="{RULER_NAME_AND_TITLE}として、あなたの王国が{CALLING_KINGDOM}の召集に応じ、{CALL_TO_WAR_COST}{GOLD_ICON}で{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告するかどうかを決定しなければならない。" />
     <string id="Lalj0T1i" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{CALLING_KINGDOM}の召集に応じ、{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告した。" />
+    <string id="Lbs2bNlg" text="{KINGDOM}は{POLICY_DESCRIPTION}({POLICY})を開始します。{POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="あなたの王国は{KINGDOM_NAME}と戦争状態にある。" />
     <string id="LVX2x6Jf" text="{SERVED_FACTION}との契約を終了したい。" />
     <string id="m69pvful" text="{KINGDOM_LEADER}が、あなたの王国が{CALLING_KINGDOM}の召集に応じ、{CALL_TO_WAR_PAYMENT}{GOLD_ICON}で{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告するかどうかを決定する。あなたはこの決定に関する立場を選ぶことができる。" />
@@ -470,6 +481,7 @@
     <string id="nkvT88r2" text="{CALLED_KINGDOM}を{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争に召集するための資金が不足している。" />
     <string id="NuYzgBZB" text="やり過ぎだ。{KINGDOM}は自国の隊商の破壊を許さない。" />
     <string id="o4IxXHnB" text="{RULER.NAME}は{KINGDOM_NAME}との同盟締結を見送ることを決定した。" />
+    <string id="o5AUljbW" text="{LORD.NAME}は{FACTION_NAME}の{CLAN_DESCRIPTION}である{CLAN_NAME}の一員です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="o69PZuce" text="{OLD_LEADER.LINK}はもはや{CLAN_NAME}の長ではない。{NEW_LEADER.LINK}が一族の統治者を引き継いだ。" />
     <string id="O9XpB5Ah" text="統治者として、{KINGDOM}との貿易協定を結ぶかどうかを決定しなければならない" />
     <string id="oAw74q3r" text="{RULER_NAME_AND_TITLE}として、あなたの王国が{CALLING_KINGDOM}の召集に応じ、{CALL_TO_WAR_PAYMENT}{GOLD_ICON}で{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告するかどうかを決定しなければならない。" />
@@ -480,6 +492,7 @@
     <string id="PneX4Ayw" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}に対する{KINGDOM_NAME}からの参戦要請を携えた使者が、あなたの王国の宮廷に到着した。" />
     <string id="PP7KD7OC" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会が均等に分かれる中、{OTHER_KINGDOM}との貿易協定に署名することを決定した。" />
     <string id="PutoRsWp" text="{CLAN_NAME}から使者が到着した。彼らは{CAPTIVE_HERO.NAME}を解放すれば{GOLD_AMOUNT}{GOLD_ICON}の身代金を支払うと申し出ている。" />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}は{FACTION_TERM}の{FACTION_OFFICIAL}である{LORD.LINK}が統治しています。{KEEP_INFO}" />
     <string id="q9DnHVcZ" text="{KINGDOM_NAME}の戦争に参加することは我々の利益にはならない。" />
     <string id="qa4FlTWS" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{SETTLEMENT}を{?RULER.GENDER}彼女{?}彼{\?}の領地として奪取した。" />
     <string id="qgN9o2ip" text="我らが同盟国{KINGDOM_NAME}に{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争への参戦を要請する時が来た!王国は彼らに参戦要請の提案を行うかどうかを投票する。" />
@@ -490,16 +503,19 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は、{?AGGRESSOR_RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て、{KINGDOM}に宣戦布告した。" />
     <string id="rJIuQ0hc" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対を押し切って、{OTHER_KINGDOM}との貿易協定に署名しないことを選択した。" />
     <string id="rtfoywJl" text="{KINGDOM_NAME}に宣戦布告する" />
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周辺の土地は主に{FACTION_TERM}の{FACTION_OFFICIAL}である{LORD.LINK}が所有しています。{PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="{MAP_FACTION_NAME}から使者が到着した。彼らは、毎日{GOLD_AMOUNT}{GOLD_ICON}の貢納金の支払いに同意すれば和平を提供すると申し出ている。王国はこの提案を受け入れるかどうかを投票する。" />
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}が{KINGDOM}に宣戦布告した。" />
     <string id="SR9FC5jH" text="{MAP_FACTION_NAME}から和平の申し出を携えた使者が到着した。{MAP_FACTION_NAME}は両国間の戦争を終結させるため、毎日{GOLD_AMOUNT}{GOLD_ICON}の貢納金を支払うという。王国はこの提案を受け入れるかどうかを投票する。" />
     <string id="syGyjjKE" text="{CALLING_KINGDOM}の要請に応え、{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告する。" />
+    <string id="TauRjAud" text="{FACTION}の{NAME}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}が傭兵としての仕事を提供しています。彼らのために戦って得られる影響力ポイント1につき{GOLD_AMOUNT}{GOLD_ICON}が支払われます。受諾しますか?" />
     <string id="uc4M4bhG" text="実は、望むことがあるのだ。{TARGET_FACTION}に一人の{?TARGET_HERO.GENDER}貴婦人{?}貴族{\?}がいてな、長い長い因縁がある。そして友好的なものではない。今我々は戦争状態にあり、{?TARGET_HERO.GENDER}彼女{?}彼{\?}が自由である限り、私の命も領地も安全ではないのだ。言っておくが、決して容易なことではない。だが、それを成し遂げ、{?TARGET_HERO.GENDER}彼女{?}彼{\?}を生きたまま私のもとへ連れ戻した者は、私の感謝はさておき、大変な富を手にすることになろう。[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}は{CALLING_KINGDOM}の要請に応え、{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告した。" />
     <string id="UQq4ekeu" text="{KINGDOM}の{RULER.NAME}は{OTHER_KINGDOM}との貿易協定に署名しないことを選択した。" />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}が{CALLED_KINGDOM_LINK}に{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}との戦争への参戦を要請した。" />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}は{CHARACTER_FACTION_SHORT}の一員だった。{FURTHER_DETAILS}。" />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}は{FACTION_TERM}の{FACTION_OFFICIAL}である{LORD.LINK}が統治しています。{PROSPERITY_INFO} {MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME}は{CLAN_NAME}の長であり、新興の一族である。{?LORD.GENDER}彼女{?}彼{\?}はまだ{?LORD.GENDER}彼女{?}彼{\?}の名声を築いている最中である。" />
     <string id="vf2pb7Ts" text="{RULER.NAME}は{CALLING_KINGDOM}の要請に応え、{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告した。" />
     <string id="Vg5RmOqL" text="{FACTION_LEADER}は{KINGDOM}が{OTHER_KINGDOM}と貿易協定を結ぶかどうかを決定する。あなたはこの決定に関する立場を選ぶことができる。" />
@@ -512,7 +528,9 @@
     <string id="xhK4zMec" text="{RULER.NAME}は{CALLED_KINGDOM}に{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争への参戦を要請することを決定した。" />
     <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}が{CALLED_KINGDOM_LINK}に発した{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}との戦争への参戦要請は終了した。" />
     <string id="xM97H0oR" text="{KINGDOM_NAME}への宣戦布告に投票せよ。" />
+    <string id="yAOQnMVw" text="お前は{FACTION}の者だな?つまり、お前は俺の捕虜だ。" />
     <string id="yBL3TzXw" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{CLAN}一族を{KINGDOM}から追放しないことを選択した。" />
+    <string id="YT4OvaAG" text="よろしい。{FACTION_NAME}の保護下にあると考えてよい。明日のこの時刻までに旅を完了せよ。さもなくば再び通行料を請求するかもしれぬ。" />
     <string id="yUYNlQhU" text="よろしい、部下に簡単な契約書を作成させよう。{KINGDOM_FORMAL_NAME}を代表して、あなたを歓迎する。我々の敵に対してその剣を有効に用いられんことを。" />
     <string id="Zckbdm4Z" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{SETTLEMENT}を{?RULER.GENDER}彼女{?}彼{\?}の領地として奪取した。" />
     <string id="zd9sawl9" text="あなたはすでに{KINGDOM_NAME}と同盟している。" />
@@ -681,6 +699,9 @@
     <string id="taom_career_free_points" text="フリーポイント: {COUNT}" />
     <string id="taom_career_tier_requirement" text="レベル{LEVEL}が必要" />
     <string id="taom_career_choice_while_active" text="活動中" />
+    <string id="taom_career_active_effects" text="発動中の効果" />
+    <string id="taom_career_dmg_attrib" text="{TARGET}：{DMG}のダメージ（能力により+{BONUS}）" />
+    <string id="taom_career_dmg_none" text="経歴の能力が発動中 — この能力はダメージ以外を強化します。" />
     <string id="taom_career_switch_title" text="道を選べ" />
     <string id="taom_career_switch_choose" text="選択" />
     <string id="taom_career_switch_subtitle" text="あなたの文化と地位に適した職業。" />
@@ -1273,6 +1294,7 @@
     <string id="taom_hideout_desc_harad" text="ハラドの砂丘の中で、隠された砂漠の井戸を囲んで集まる、偽装された南方人の野営地に遭遇した。" />
     <string id="taom_hideout_desc_rhun" text="ルーンの広大な草原で、谷間に野営する東夷の略奪隊の荷馬車と獣皮のテントを見つけた。" />
     <string id="taom_hideout_desc_umbar" text="南の海岸沿いで、ウンバールの海賊どもの黒い船が停泊する隠れ入り江を発見した。" />
+    <string id="taom_hideout_desc_erebor" text="東方の荒涼とした丘陵の只中で、あなたは黒錠族（ブラックロック）のドワーフの野営地に行き当たる。遥か昔に影と滅びに落ちた氏族である。" />
     <string id="taom_faction_difficulty_1" text="難易度:非常に簡単" />
     <string id="taom_faction_difficulty_2" text="難易度:簡単" />
     <string id="taom_faction_difficulty_3" text="難易度:普通" />
@@ -2093,7 +2115,6 @@
     <string id="LjUhEJxz" text="{OWNER.NAME}の隊商" />
     <string id="l4pRw7pO" text="{OWNER.NAME}の武装隊商" />
     <string id="taom_align_desertion" text="{COUNT}名の兵が脱走した――彼らは敵対する陣営の君主に仕えることを拒んだ。" />
-    <string id="taom_hideout_desc_erebor" text="東方の荒涼とした丘陵の只中で、あなたは黒錠族（ブラックロック）のドワーフの野営地に行き当たる。遥か昔に影と滅びに落ちた氏族である。" />
-    <string id="taom_troop_weight_size" text="重装兵" />
+    <string id="taom_troop_weight_size" text="重装兵" />
   </strings>
 </base>

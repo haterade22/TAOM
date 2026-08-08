@@ -10,4 +10,5 @@
   <LanguageFile xml_path="IT/std_taom_xslt_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_emissary_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_wotr_strings_ita-IT.xml" />
+  <LanguageFile xml_path="IT/std_taom_enlistment_strings_ita-IT.xml" />
 </LanguageData>

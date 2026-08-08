@@ -360,6 +360,7 @@
     <string id="taom_str_player_father_name.shaghana" text="Zarkan" />
     <string id="taom_str_player_mother_name.shaghana" text="Khansa" />
     <string id="0aXG8dvJ" text="Zawrzyj pokój z {KINGDOM_NAME}. Nie zostanie zapłacony żaden trybut." />
+    <string id="0bPb5btR" text="{LORD.NAME} jest członkiem rodu {CLAN_NAME}, {CLAN_DESCRIPTION} {FACTION_NAME}, który popiera {RULER} w wojnie domowej. {?LORD.GENDER}Ma{?}Ma{\?} reputację {REPUTATION}." />
     <string id="0CsbbwtN" text="Wezwij {CALLED_KINGDOM} do wojny przeciw {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
     <string id="0nhqJewP" text="{RULER.NAME} z {KINGDOM} nadaje {SETTLEMENT} {LEADER.NAME} przy poparciu {?RULER.GENDER}swojej{?}swojej{\?} rady." />
     <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} z {KINGDOM_CONSIDERING_PEACE} postanowił{?PEACEMAKER_RULER.GENDER}a{?}{\?} zawrzeć pokój z {KINGDOM} przy poparciu swojej rady." />
@@ -369,20 +370,25 @@
     <string id="21yUheIy" text="{KINGDOM_NAME} zostało utworzone w {CREATION_YEAR} przez {RULER.NAME}, wschodzącego {CULTURE_ADJECTIVE} wodza." />
     <string id="22LCyCoA" text="Mogę zaoferować twojemu królestwu {GOLD}{GOLD_ICON} za wypowiedzenie wojny {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="2b1xZGaQ" text="Zawrzyj pokój z {KINGDOM_NAME}. Nasze królestwo będzie płacić {TRIBUTE_AMOUNT} trybutu dziennie przez {TRIBUTE_DURATION} dni." />
+    <string id="2BVDp7Tg" text="{KINGDOM} zaprzestanie {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="Grabieże {NEARBY_ENEMY_FACTION} wypędziły wielu rolników z ich domów. Ci, którzy mają ziemię, zwykle na nią wracają, lecz wielu z biedniejszych szuka nowego miejsca do życia. Rozmawiasz z kilkoma obozującymi na obrzeżach twojej wioski. Nie ma dla nich ziemi. Wydają się chętni do pracy jako dzierżawcy, lecz zawsze istnieje możliwość napięć z bardziej zasiedziałymi rodzinami we wsi." />
+    <string id="2mVZORaE" text="sługa {FACTION_NAME}" />
     <string id="4fXpOe4N" text="Przybywa kurier od {CLAN_NAME}. Trzymają {CAPTIVE_HERO.NAME} i żądają {GOLD_AMOUNT}{GOLD_ICON} okupu." />
     <string id="4GgfFDWG" text="Zawieranie pokoju z {KINGDOM_NAME}" />
     <string id="4JSzHkpt" text="Jako {?IS_FEMALE}królowa{?}król{\?} musisz zdecydować, czy zostanie wypowiedziana wojna {KINGDOM_NAME}" />
+    <string id="4pmvrnmN" text="Zamek {SETTLEMENT_LINK} należy do {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {KEEP_INFO}" />
     <string id="4z1t75be" text="{FIRSTNAME} z {CLAN_NAME}" />
     <string id="5bBAOHmC" text="{RULER.NAME} z {KINGDOM} przejmuje {SETTLEMENT} jako {?RULER.GENDER}swoje{?}swoje{\?} lenno, choć {?RULER.GENDER}jej{?}jego{\?} rada jest podzielona po równo." />
     <string id="5bza9sDs" text="Bardzo mi przykro to słyszeć. Nie znajdziesz lepszych pracodawców niż {FACTION_NAME}, możesz być tego pewien." />
     <string id="5DdbkWLu" text="{RULER.NAME} z {KINGDOM} postanowił podpisać umowę handlową z {OTHER_KINGDOM} przy poparciu {?RULER.GENDER}swojej{?}swojej{\?} rady." />
     <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} z {AGGRESSOR_KINGDOM} postanowił nie wszczynać wojny z {KINGDOM}, przy równo podzielonej {?AGGRESSOR_RULER.GENDER}swojej{?}swojej{\?} radzie." />
     <string id="5pOKmHsf" text="{RULER.NAME} postanowił wezwać {CALLED_KINGDOM} do wojny przeciw {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Decyzję popierała połowa {?RULER.GENDER}jej{?}jego{\?} rady." />
+    <string id="6d4ZTvGv" text="{LORD.NAME} jest {TITLE} {FACTION_NAME} i głową rodu {CLAN_NAME}, {CLAN_DESCRIPTION} królestwa. {?LORD.GENDER}Ma{?}Ma{\?} reputację {REPUTATION}." />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} zajęli nasze ojczyste ziemie i gnębią naszych pobratymców." />
     <string id="7ouzFASf" text="Przybywa kurier z wiadomością od {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Ona wspomina{?}On wspomina{\?} o twojej rosnącej sławie i pyta, czy rozważyłbyś złożenie przysięgi wasalnej wobec {OFFERED_KINGDOM_NAME}. Jeśli jesteś zainteresowany, powinniście porozmawiać osobiście." />
     <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} z {AGGRESSOR_KINGDOM} postanowił nie wszczynać wojny z {KINGDOM} przy poparciu {?AGGRESSOR_RULER.GENDER}swojej{?}swojej{\?} rady." />
     <string id="940TwBPs" text="{RULER.NAME} postanowił nie wypędzać klanu {CLAN} z {KINGDOM}, wbrew sprzeciwom {?RULER.GENDER}swojej{?}swojej{\?} rady." />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} jest członkiem rodu {CLAN_NAME}, {CLAN_DESCRIPTION} z ziem {FACTION_NAME}. {?LORD.GENDER}Ma{?}Ma{\?} reputację {REPUTATION}." />
     <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} z {AGGRESSOR_KINGDOM} postanowił nie wszczynać wojny z {KINGDOM}." />
     <string id="aE7OQDMS" text="Zawrzyj sojusz z {KINGDOM_NAME}." />
     <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} z {KINGDOM_CONSIDERING_PEACE} postanowił zawrzeć pokój z {KINGDOM}, przy równo podzielonej w tej sprawie {?PEACEMAKER_RULER.GENDER}swojej{?}swojej{\?} radzie." />
@@ -423,6 +429,7 @@
     <string id="eTylgLCc" text="Przybył kurier z {KINGDOM_NAME}. Oferują ci sojusz. Twoje królestwo zagłosuje, czy przyjąć ofertę." />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM} nie jest już w stanie wojny z {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="F7CMsDyG" text="{RULER.NAME} postanowił nie zawierać sojuszu z {KINGDOM_NAME}, wbrew sprzeciwowi {?RULER.GENDER}swojej{?}swojej{\?} rady." />
+    <string id="faUooB7V" text="{KINGDOM} nie będzie {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME} postanowił nie odpowiadać na wezwanie {CALLING_KINGDOM} i nie wyruszy na wojnę z {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Decyzja zyskała poparcie {?RULER.GENDER}jej{?}jego{\?} rady." />
     <string id="FNCq25P1" text="{RULER.NAME} postanowił zawrzeć sojusz z {KINGDOM_NAME} przy poparciu {?RULER.GENDER}jej{?}jego{\?} rady." />
     <string id="FuNbouTu" text="Przybył kurier z {KINGDOM_NAME}. Wzywają twoje królestwo do wojny przeciw {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Twoje królestwo zagłosuje, czy przyjąć ofertę." />
@@ -433,6 +440,7 @@
     <string id="gNf0ALKw" text="Przybył kurier z {MAP_FACTION_NAME}. Oferują ci biały pokój. Twoje królestwo zagłosuje, czy przyjąć ofertę." />
     <string id="h5eTEYON" text="{RULER.NAME} wypędził klan {CLAN} z {KINGDOM}." />
     <string id="h9bWTLgK" text="Czas przystąpić do wojny naszych sojuszników, {KINGDOM_NAME}." />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} jest głową rodu {CLAN_NAME}, {CLAN_DESCRIPTION} z ziem {FACTION_NAME}. {?LORD.GENDER}Ma{?}Ma{\?} reputację {REPUTATION}." />
     <string id="IB1xsVEr" text="Przybył kurier z {MAP_FACTION_NAME}. Oferują ci biały pokój. Twoi wasale pozostawili decyzję tobie." />
     <string id="INfHUqxT" text="{RULER.NAME} postanowił zawrzeć sojusz z {KINGDOM_NAME}." />
     <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} z {KINGDOM_CONSIDERING_PEACE} postanowił nie zawierać pokoju z {KINGDOM}, wbrew sprzeciwowi {?PEACEMAKER_RULER.GENDER}jej{?}jego{\?} rady." />
@@ -442,8 +450,10 @@
     <string id="jaioXYDc" text="{RULER.NAME} postanowił nie zawierać sojuszu z {KINGDOM_NAME} przy poparciu połowy {?RULER.GENDER}jej{?}jego{\?} rady." />
     <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} z {KINGDOM_CONSIDERING_PEACE} postanowił zawrzeć pokój z {KINGDOM}, wbrew sprzeciwowi {?PEACEMAKER_RULER.GENDER}jej{?}jego{\?} rady." />
     <string id="JJQ0Hp4m" text="Przybył kurier z {MAP_FACTION_NAME}. {MAP_FACTION_NAME} zapłaci {GOLD_AMOUNT} {GOLD_ICON} trybutu każdego dnia, aby zakończyć wojnę między waszymi królestwami. Twoi wasale pozostawili decyzję tobie." />
+    <string id="jnYwiCAz" text="{KINGDOM} będzie kontynuować {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} jest obecnie potężniejsze od nas. Potrzebujemy czasu, by zebrać siły." />
     <string id="JQligd8z" text="Rada {KINGDOM} wybrała {KING.NAME} nowym władcą." />
+    <string id="JuPUG5wX" text="{LORD.NAME} jest {TITLE} {FACTION_NAME} i głową rodu {CLAN_NAME}, {CLAN_DESCRIPTION}, który popiera {RULER} w wojnie domowej. {?LORD.GENDER}Ma{?}Ma{\?} reputację {REPUTATION}." />
     <string id="JY717hPW" text="Nie mam władzy, by zawierać pokój w imieniu {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} i {?ENEMY_RULER.GENDER}jej{?}jego{\?} rada powinni zdecydować, czy zaproponować pokój i na jakich warunkach." />
     <string id="K5w135N9" text="{RULER.NAME} postanowił nie odpowiadać na wezwanie {CALLING_KINGDOM} i nie wyruszy na wojnę z {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Decyzja została podjęta wbrew radzie {?RULER.GENDER}jej{?}jego{\?} rady." />
     <string id="KFHj7ckm" text="Jako władca musisz zdecydować, czy zostanie zawarty pokój z {KINGDOM_NAME}" />
@@ -454,6 +464,7 @@
     <string id="L802I9W2" text="Tak, przystąpię do {FACTION_NAME}." />
     <string id="L81DPSom" text="Jako {RULER_NAME_AND_TITLE} musisz zdecydować, czy twoje królestwo odpowie na wezwanie {CALLING_KINGDOM} i wypowie wojnę {KINGDOM_TO_CALL_TO_WAR_AGAINST} za {CALL_TO_WAR_COST}{GOLD_ICON}." />
     <string id="Lalj0T1i" text="{RULER.NAME} odpowiedział na wezwanie {CALLING_KINGDOM} i wypowiedział wojnę {KINGDOM_TO_CALL_TO_WAR_AGAINST} wbrew sprzeciwowi {?RULER.GENDER}swojej{?}swojej{\?} rady." />
+    <string id="Lbs2bNlg" text="{KINGDOM} rozpocznie {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="Twoje królestwo jest w stanie wojny z {KINGDOM_NAME}." />
     <string id="LVX2x6Jf" text="Chciałbym zakończyć swój kontrakt z {SERVED_FACTION}." />
     <string id="m69pvful" text="{KINGDOM_LEADER} zdecyduje, czy twoje królestwo odpowie na wezwanie {CALLING_KINGDOM} i wypowie wojnę {KINGDOM_TO_CALL_TO_WAR_AGAINST} za {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Możesz wybrać swoje stanowisko wobec tej decyzji." />
@@ -470,6 +481,7 @@
     <string id="nkvT88r2" text="Nie masz dość złota, by wezwać {CALLED_KINGDOM} do wojny przeciw {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="NuYzgBZB" text="Posuwasz się za daleko. {KINGDOM} nie ścierpi niszczenia swoich karawan." />
     <string id="o4IxXHnB" text="{RULER.NAME} postanowił nie zawierać sojuszu z {KINGDOM_NAME}." />
+    <string id="o5AUljbW" text="{LORD.NAME} jest członkiem rodu {CLAN_NAME}, {CLAN_DESCRIPTION} {FACTION_NAME}. {?LORD.GENDER}Ma{?}Ma{\?} reputację {REPUTATION}." />
     <string id="o69PZuce" text="{OLD_LEADER.LINK} nie jest już głową {CLAN_NAME}. {NEW_LEADER.LINK} przejął władzę nad klanem." />
     <string id="O9XpB5Ah" text="Jako władca musisz zdecydować, czy zostanie zawarty układ handlowy z {KINGDOM}" />
     <string id="oAw74q3r" text="Jako {RULER_NAME_AND_TITLE} musisz zdecydować, czy twoje królestwo odpowie na wezwanie {CALLING_KINGDOM} i wypowie wojnę {KINGDOM_TO_CALL_TO_WAR_AGAINST} za {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
@@ -480,6 +492,7 @@
     <string id="PneX4Ayw" text="Na dwór twojego królestwa przybył kurier z ofertą wezwania do wojny od {KINGDOM_NAME} przeciw {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="PP7KD7OC" text="{RULER.NAME} z {KINGDOM} postanowił podpisać układ handlowy z {OTHER_KINGDOM}, gdy {?RULER.GENDER}jej{?}jego{\?} rada była podzielona po równo w tej sprawie." />
     <string id="PutoRsWp" text="Przybywa kurier z {CLAN_NAME}. Oferują ci {GOLD_AMOUNT}{GOLD_ICON} okupu, jeśli uwolnisz {CAPTIVE_HERO.NAME}." />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK} zarządza {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {KEEP_INFO}" />
     <string id="q9DnHVcZ" text="Przystąpienie do wojny {KINGDOM_NAME} nie leży w naszym interesie." />
     <string id="qa4FlTWS" text="{RULER.NAME} z {KINGDOM} bierze {SETTLEMENT} jako {?RULER.GENDER}swoje{?}swoje{\?} lenno wbrew sprzeciwowi {?RULER.GENDER}swojej{?}swojej{\?} rady." />
     <string id="qgN9o2ip" text="Czas wezwać naszego sojusznika {KINGDOM_NAME} do wojny przeciw {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Twoje królestwo zagłosuje, czy zaproponować im wezwanie do wojny." />
@@ -490,16 +503,19 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} z {AGGRESSOR_KINGDOM} wypowiedział{?AGGRESSOR_RULER.GENDER}a{?}{\?} wojnę {KINGDOM} przy poparciu połowy swojej rady." />
     <string id="rJIuQ0hc" text="{RULER.NAME} z {KINGDOM} postanowił{?RULER.GENDER}a{?}{\?} nie podpisywać układu handlowego z {OTHER_KINGDOM}, wbrew sprzeciwom swojej rady." />
     <string id="rtfoywJl" text="Wypowiedz wojnę {KINGDOM_NAME}" />
+    <string id="RVDojUOM" text="Ziemie wokół {SETTLEMENT_LINK} należą w większości do {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="Przybył posłaniec z {MAP_FACTION_NAME}. Oferują pokój, jeśli zgodzisz się płacić dzienną daninę w wysokości {GOLD_AMOUNT} {GOLD_ICON}. Twoje królestwo zagłosuje, czy przyjąć tę ofertę." />
     <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} z {AGGRESSOR_KINGDOM} wypowiedział wojnę {KINGDOM}." />
     <string id="SR9FC5jH" text="Przybył posłaniec z {MAP_FACTION_NAME} z ofertą pokoju. {MAP_FACTION_NAME} będzie płacić {GOLD_AMOUNT} {GOLD_ICON} daniny każdego dnia, by zakończyć wojnę między waszymi krainami. Twoje królestwo zagłosuje, czy przyjąć tę ofertę." />
     <string id="syGyjjKE" text="Odpowiedz na wezwanie {CALLING_KINGDOM} i wypowiedz wojnę {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+    <string id="TauRjAud" text="{NAME} z {FACTION}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} oferuje ci służbę najemną, płacąc {GOLD_AMOUNT}{GOLD_ICON} za każdy punkt wpływów, jaki zdobędziesz walcząc w ich imieniu. Przyjmujesz?" />
     <string id="uc4M4bhG" text="Cóż, jest coś, czego pragnę. Jest pewien {?TARGET_HERO.GENDER}pani{?}pan{\?} z {TARGET_FACTION}, z którym łączy mnie długa, długa historia. I bynajmniej nie przyjazna. Teraz, gdy jesteśmy w stanie wojny, dopóki {?TARGET_HERO.GENDER}ona jest wolna{?}on jest wolny{\?}, wiem, że moje życie i ziemie nie są bezpieczne. Jak mówię, nie będzie to wcale łatwe. Ale ten, komu się to uda i przywiedzie {?TARGET_HERO.GENDER}ją{?}go{\?} do mnie żywcem, prócz mojej wdzięczności stanie się doprawdy bardzo bogatym człowiekiem.[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME} odpowiedział na wezwanie {CALLING_KINGDOM} i wypowiedział wojnę {KINGDOM_TO_CALL_TO_WAR_AGAINST}, mając poparcie połowy {?RULER.GENDER}swojej{?}swojej{\?} rady." />
     <string id="UQq4ekeu" text="{RULER.NAME} z {KINGDOM} postanowił nie podpisywać umowy handlowej z {OTHER_KINGDOM}." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} wezwało {CALLED_KINGDOM_LINK} do wypowiedzenia wojny {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME} należał do {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK} zarządza {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME} is a head of {CLAN_NAME}, a rising new clan. {?LORD.GENDER}She{?}He{\?} is still making {?LORD.GENDER}her{?}his{\?} reputation." />
     <string id="vf2pb7Ts" text="{RULER.NAME} odpowiedział na wezwanie {CALLING_KINGDOM} i wypowiedział wojnę {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="Vg5RmOqL" text="{FACTION_LEADER} zdecyduje, czy {KINGDOM} podpisze układ handlowy z {OTHER_KINGDOM}. Możesz wybrać swoje stanowisko w tej sprawie." />
@@ -512,7 +528,9 @@
     <string id="xhK4zMec" text="{RULER.NAME} postanowił wezwać {CALLED_KINGDOM} do wojny przeciw {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="xKev8i5B" text="Wezwanie, które {CALLING_KINGDOM_LINK} skierowało do {CALLED_KINGDOM_LINK}, by ruszyć na wojnę przeciw {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, wygasło." />
     <string id="xM97H0oR" text="Głosuj za wypowiedzeniem wojny {KINGDOM_NAME}." />
+    <string id="yAOQnMVw" text="Jesteś z {FACTION}, prawda? To znaczy, że jesteś moim jeńcem." />
     <string id="yBL3TzXw" text="{RULER.NAME} postanowił{?RULER.GENDER}a{?}{\?} nie wyganiać rodu {CLAN} z {KINGDOM} przy poparciu swojej rady." />
+    <string id="YT4OvaAG" text="Doskonale. Możesz uważać się za osobę pod ochroną {FACTION_NAME}. Masz czas do tej pory jutro, aby ukończyć swą podróż, w przeciwnym razie możemy zażądać kolejnej zapłaty." />
     <string id="yUYNlQhU" text="Dobrze, moi ludzie spiszą prosty kontrakt. W imieniu {KINGDOM_FORMAL_NAME} witam cię. Oby twój miecz dobrze służył przeciw naszym wrogom." />
     <string id="Zckbdm4Z" text="{RULER.NAME} z {KINGDOM} przejmuje {SETTLEMENT} jako {?RULER.GENDER}swoje{?}swoje{\?} lenno przy poparciu {?RULER.GENDER}swojej{?}swojej{\?} rady." />
     <string id="zd9sawl9" text="Jesteś już w sojuszu z {KINGDOM_NAME}." />
@@ -618,50 +636,54 @@
     <string id="aom_ab_headman_1" text="Sołtys wioski z Âbanissy" />
     <string id="aom_ab_headman_2" text="Starszy sołtys z Âbanissy" />
     <string id="aom_ab_headman_3" text="Starszy wioski z Âbanissy" />
-    <string id="TAOM_ghilman_name" text="Straż Węża" />
-    <string id="TAOM_ghilman_short" text="Straż Węża" />
-    <string id="TAOM_ghilman_text" text="Straż Węża to konni żołnierze w służbie Władcy Wężów z Bliskiego Haradu. Wychowani w siodle na falujących równinach na południe od Ephel Dúath, nie mają sobie równych jako konni łucznicy w całych południowych krainach Śródziemia. W czasach pokoju między Haradem a Mordorem Straż wynajmuje swe usługi haradzkim panom i każdej innej potędze dość bogatej, by opłacić ich złotą stawkę." />
+    <string id="TAOM_ghilman_name" text="Wężowa Gwardia" />
+    <string id="TAOM_ghilman_short" text="Wężowa Gwardia" />
+    <string id="TAOM_ghilman_text" text="Wężowa Gwardia to konni żołnierze w służbie Wężowego Pana Bliskiego Haradu. Wychowani w siodle na falujących równinach na południe od Ephel Dúath, nie mają sobie równych jako konni łucznicy we wszystkich południowych krainach Śródziemia. W czasach pokoju między Haradem a Mordorem Gwardia wynajmuje swe usługi haradrimskim władcom oraz każdej innej potędze dość bogatej, by opłacić ich złotą stawkę." />
     <string id="TAOM_legion_name" text="Szara Kompania" />
     <string id="TAOM_legion_short" text="Szara Kompania" />
-    <string id="TAOM_legion_text" text="Szara Kompania to ostatnie zorganizowane braterstwo Strażników Dúnedainów, potomków królów Arnoru, którzy dawno temu utracili swe królestwo. Przemierzają Północ bez własnego domu, strzegąc pokoju w krainach, które zapomniały ich imion. Choć pierwsza ich wierność należy do rodu Elendila, przyjmują zlecenia od panów całego Śródziemia, gdy tułaczka wiedzie ich przez cywilizowane ziemie." />
-    <string id="TAOM_skolderbrotva_name" text="Topornicy z Ereboru" />
+    <string id="TAOM_legion_text" text="Szara Kompania to ostatnie zorganizowane braterstwo Strażników Dúnedainów, potomków królów Arnoru, którzy dawno temu utracili swe królestwo. Przemierzają Północ bez własnego domu, strzegąc pokoju w krainach, które zapomniały ich imion. Choć ich pierwsza wierność należy do rodu Elendila, przyjmują kontrakty od władców całego Śródziemia, gdy wędrówka wiedzie ich przez cywilizowane ziemie." />
+    <string id="TAOM_skolderbrotva_name" text="Topornicy Ereboru" />
     <string id="TAOM_skolderbrotva_short" text="Topornicy" />
-    <string id="TAOM_skolderbrotva_text" text="Topornicy z Ereboru to weterani bitew króla Thorina, którym czas pokoju nie przypadł do charakteru. Wyszkoleni w walce w ciasnych krasnoludzkich salach — mur tarcz, krótki topór, kilof — są groźni na każdym terenie, lecz najlepsi w górskich przełęczach łączących Erebor z królestwami ludzi. Przyjmują zlecenia od każdego, kto zapłaci, lecz nigdy nie podniosą topora przeciw Ereborowi ani Rivendell." />
+    <string id="TAOM_skolderbrotva_text" text="Topornicy Ereboru to weterani bitew króla Thorina, którym czas pokoju nie przypadł do gustu. Wyszkoleni w walce na krótki dystans w krasnoludzkich salach — ściana tarcz, krótki topór, kilof — są groźni na każdym terenie, lecz najlepiej sprawdzają się w górskich przełęczach łączących Erebor z królestwami ludzi. Przyjmują kontrakty od każdego, kto może zapłacić, lecz nigdy nie podniosą topora przeciw Ereborowi ani Rivendell." />
     <string id="TAOM_company_name" text="Korsarskie Klingi" />
     <string id="TAOM_company_short" text="Korsarze" />
-    <string id="TAOM_company_text" text="Korsarskie Klingi to doświadczeni morscy wojownicy z portów Umbaru, którzy zaczęli sprzedawać swe umiejętności na lądzie. Walczą jako kusznicy — ulubiona broń walki okrętowej — i czują się równie swobodnie w oblężeniu, jak na kołyszącym się pokładzie. Ich kapitan, pokryty bliznami wygnaniec númenorejski, żelazną dyscypliną pilnuje wypełniania kontraktów, wiedząc, że reputacja to ich najcenniejszy ładunek." />
-    <string id="TAOM_beni_zilal_name" text="Slepe Oko" />
+    <string id="TAOM_company_text" text="Korsarskie Klingi to doświadczeni morscy wojownicy z portów Umbaru, którzy zaczęli sprzedawać swe umiejętności na lądzie. Walczą jako kusznicy — ulubiona broń wojny okrętowej — i czują się równie swobodnie w oblężeniu, jak na kołyszącym się pokładzie. Ich kapitan, pokryty bliznami wygnaniec númenorejski, żelazną dyscypliną pilnuje, by dotrzymywali kontraktów, wiedząc, że reputacja jest ich najcenniejszym ładunkiem." />
+    <string id="TAOM_beni_zilal_name" text="Ślepe Oko" />
     <string id="TAOM_beni_zilal_short" text="Ślepe Oko" />
-    <string id="TAOM_beni_zilal_text" text="Ślepe Oko to braterstwo przemytników, paserów i najemnych zabójców działające na wybrzeżach Haradu i w głębi pustyni. Mówi się, że pochodzą od sekty skrytobójców służących zapomnianemu haradzkiemu królowi, a ich metody — trucizna, cień i wykorzystywanie sekretów — pozostały niezmienne. Panowie pragnący cicho usunąć rywala lub kupcy potrzebujący przewiezienia towaru bez kontroli celnej wiedzą, gdzie zostawić złotą monetę i zapieczętowany list." />
+    <string id="TAOM_beni_zilal_text" text="Ślepe Oko to braterstwo przemytników, paserów i najemnych zabójców działające na wybrzeżach Haradu i w głębi pustyni. Powiada się, że wywodzą się z kultu skrytobójców służących zapomnianemu królowi Haradrimów, a ich metody — trucizna, cień i wykorzystywanie sekretów — pozostały niezmienione. Władcy pragnący cicho usunąć rywala albo kupcy, którzy muszą przewieźć ładunek bez kontroli celnej, wiedzą, gdzie zostawić złotą monetę i zapieczętowany list." />
     <string id="TAOM_wolfskins_name" text="Wariascy Pustoszyciele" />
     <string id="TAOM_wolfskins_short" text="Pustoszyciele" />
-    <string id="TAOM_wolfskins_text" text="Wariascy Pustoszyciele to drużyny młodych wojowników Wariagów ze stepów Khandu, którzy wczesną młodość spędzają w stanie rytualnej wojny: nie wolno im posiadać gotowanego jedzenia, spać pod stałym dachem ani okazywać litości. Choć większość wraca w końcu do osiadłego życia swych klanów, niektórzy nigdy tego nie czynią — i oni tworzą Pustoszycieli: wyrzutków polujących na drogach Khandu i najeżdżających poza jego granice, do Haradu i Gondoru." />
-    <string id="TAOM_brotherhood_name" text="Dunlandzcy Rabusie" />
-    <string id="TAOM_brotherhood_short" text="Rabusie" />
-    <string id="TAOM_brotherhood_text" text="Dunlandzcy Rabusie to złamana resztka klanu wzgórz, który kiedyś zamieszkiwał doliny rządzone dziś przez Rohirrimów. Ich dziadów wypędzono z żyznych ziem w skaliste wyżyny, a tę gorycz przekuli w filozofię łupieżców: wszystko zabrane południowcowi czy człowiekowi króla to jedynie odzyskanie tego, co ukradziono. W praktyce są zbójcami, lecz groźnymi, znającymi każdą kozią ścieżkę w tych wzgórzach." />
-    <string id="TAOM_hidden_hand_name" text="Słudzy Usta" />
+    <string id="TAOM_wolfskins_text" text="Wariascy Pustoszyciele to bandy wojenne młodych wojowników Wariagów ze stepów Khandu, którzy wczesne lata męskości spędzają w stanie rytualnej wojny: nie wolno im posiadać gotowanego jedzenia, spać pod stałym dachem ani okazywać litości. Choć większość w końcu wraca do osiadłego życia swoich klanów, niektórzy nigdy tego nie czynią — i właśnie oni tworzą Pustoszycieli: wyjętych spod prawa rozbójników, którzy czyhają na drogach Khandu i przekraczają jego granice, by łupić Harad i Gondor." />
+    <string id="TAOM_brotherhood_name" text="Dunlandzcy Grabieżcy" />
+    <string id="TAOM_brotherhood_short" text="Grabieżcy" />
+    <string id="TAOM_brotherhood_text" text="Dunlandzcy Grabieżcy to złamane resztki klanu wzgórz, który kiedyś zamieszkiwał doliny rządzone dziś przez Rohirrimów. Ich dziadów wypędzono z żyznych ziem na skaliste wyżyny, a oni tę gorycz przekuli w filozofię rozbójnika: wszystko, co zabrane człowiekowi z południa lub słudze króla, jest jedynie odzyskaniem tego, co ukradziono. W praktyce są zbójcami, lecz groźnymi — znają każdą kozią ścieżkę w tych wzgórzach." />
+    <string id="TAOM_hidden_hand_name" text="Słudzy Usta Saurona" />
     <string id="TAOM_hidden_hand_short" text="Słudzy" />
-    <string id="TAOM_hidden_hand_text" text="Słudzy Usta to Oczy Barad-dûr działające poza Czarną Bramą — informatorzy, egzekutorzy i szpiedzy wtopieni w ludy sąsiadujące z Mordorem. Tam, gdzie armie Saurona jeszcze nie dosięgają, agenci ci zbierają daninę i uciszają sprzeciw. Działają przez łapówki, szantaż i cichy mord, dbając, by żaden spisek przeciw Czarnemu Władcy nie zdążył zakorzenić się przed wyrwaniem go i zmiażdżeniem." />
-    <string id="TAOM_lakepike_name" text="Rozbójnicy Długiego Jeziora" />
-    <string id="TAOM_lakepike_short" text="Rozbójnicy" />
-    <string id="TAOM_lakepike_text" text="Rozbójnicy Długiego Jeziora żyją w trzcinowiskach i gnijących starych pomostach zacienionych brzegów Długiego Jeziora, daleko od szacownych świateł Esgaroth. Utrzymują się, wywabiając barki na ukryte mielizny fałszywymi latarniami, a potem ograbiając je i sprzedając łup przez paserów w samym mieście. Choć Burmistrz Miasta na Jeziorze i kupcy z Dale czynią wysiłki, Rozbójnicy mają zbyt wielu przyjaciół w portowych karczmach, by łatwo ich wygnać." />
+    <string id="TAOM_hidden_hand_text" text="Słudzy Usta Saurona to Oczy Barad-dûr działające poza Czarną Bramą — donosiciele, egzekutorzy i szpiedzy wtopieni w ludy graniczące z Mordorem. Tam, gdzie armie Saurona jeszcze nie sięgają, agenci ci zbierają daninę i uciszają sprzeciw. Działają przez łapówki, szantaż i cichy mord, dbając o to, by żaden spisek przeciw Czarnemu Władcy nie zapuścił korzeni, zanim zostanie wyrwany i zniszczony." />
+    <string id="TAOM_lakepike_name" text="Rozbijacze z Długiego Jeziora" />
+    <string id="TAOM_lakepike_short" text="Rozbijacze" />
+    <string id="TAOM_lakepike_text" text="Rozbijacze z Długiego Jeziora żyją w trzcinowiskach i gnijących starych pomostach na zacienionych brzegach Długiego Jeziora, daleko od szacownych światel Esgaroth. Żyją z wywabiania barek na ukryte mielizny fałszywymi latarniami, po czym ogołacają ładunek i sprzedają go przez paserów w samym mieście. Wbrew wysiłkom Burmistrza Miasta na Jeziorze i kupców z Dale, Rozbijacze mają zbyt wielu przyjaciół w portowych karczmach, by łatwo ich przepędzić." />
     <string id="TAOM_embers_name" text="Kult Nieusypiającego Oka" />
     <string id="TAOM_embers_short" text="Kult Oka" />
-    <string id="TAOM_embers_text" text="Kult Nieuśpionego Oka to tajne stowarzyszenie zakorzenione w tradycji Czarnych Númenorejczyków, czczące Saurona jako boga-króla, który przywróci swoim wiernym chwałę, gdy powstanie ponownie. Rekrutują wśród wywłaszczonych z Dunlandu i zapomnianych zakątków królestwa, obiecując boską łaskę i ziemską potęgę. W istocie ich przywódcy podlegają agentom Barad-dûr, a struktura oparta na komórkach czyni ich niemal niemożliwymi do wykorzenienia przez sprawiedliwość jakiegokolwiek pana." />
+    <string id="TAOM_embers_text" text="Kult Nieusypiającego Oka to tajne stowarzyszenie zakorzenione w tradycji Czarnych Númenorejczyków, czczące Saurona jako boga-króla, który przywróci swoim wiernym chwałę, gdy powstanie na nowo. Rekrutują wśród wywłaszczonych Dunlandu i zapomnianych zakątków królestwa, obiecując boską łaskę i ziemską potęgę. W prawdzie ich przywódcy podlegają agentom Barad-dûr, a struktura oparta na komórkach czyni ich niemal niemożliwymi do wytępienia przez sprawiedliwość jakiegokolwiek władcy." />
     <string id="TAOM_jawwal_name" text="Jeźdźcy Piasków" />
     <string id="TAOM_jawwal_short" text="Jeźdźcy Piasków" />
-    <string id="TAOM_jawwal_text" text="Jeźdźcy Piasków to koczownicze klany pustynne z głębi Haradu, władcy bezwodnych pustkowi między Ephel Dúath a odległym południowym morzem. Wędrują szlakami znanymi tylko im samym, żądając daniny od każdej karawany dość śmiałej, by przemierzyć ich terytorium. Osiadli panowie Bliskiego Haradu traktują ich jak utrapienie; Jeźdźcy Piasków uważają osiadłych panów za złodziei, którzy ukradli to, co pustynia już dała za darmo." />
-    <string id="TAOM_karakhuzaits_name" text="Dzicy Ludzie Wschodu" />
+    <string id="TAOM_jawwal_text" text="Jeźdźcy Piasków to koczownicze klany pustynne z głębi Haradu, panowie bezwodnych pustkowi między Ephel Dúath a odległym morzem południa. Wędrują szlakami znanymi tylko sobie, żądając daniny od każdej karawany dość śmiałej, by przemierzyć ich terytorium. Osiadli władcy Bliskiego Haradu traktują ich jak plagę; Jeźdźcy Piasków uważają osiadłych władców za złodziei, którzy ukradli to, co pustynia już dała darmo." />
+    <string id="TAOM_karakhuzaits_name" text="Dzicy Easterlingowie" />
     <string id="TAOM_karakhuzaits_short" text="Dzicy" />
-    <string id="TAOM_karakhuzaits_text" text="Dzicy Ludzie Wschodu to niepodbite klany stepowe z okolic Morza Rhûn, które opierały się władzy każdego pana, jaki próbował je ujarzmić — czy to wodza Rhûnu, czy namiestnika Mordoru, czy Króla Dale. Wędrują po trawiastych stepach na wschód od Celduiny, spędzając konie, łupiąc stada i pobierając drogową daninę od każdej karawany dość głupiej, by przekroczyć ich step bez zbrojnej eskorty." />
+    <string id="TAOM_karakhuzaits_text" text="Dzicy Easterlingowie to niepodbite klany stepowe Morza Rhûn, które oparły się władzy każdego pana próbującego je ujarzmić — wodza Rhûnu, dowódcy Mordoru i Króla Dale na równi. Wędrują po trawiastych równinach na wschód od Celduiny, spędzając konie, łupiąc trzody i ściągając drogową daninę od każdej karawany dość głupiej, by przekraczać ich step bez zbrojnej eskorty." />
     <string id="TAOM_forest_people_name" text="Drúedainowie" />
     <string id="TAOM_forest_people_short" text="Drûgowie" />
-    <string id="TAOM_forest_people_text" text="Drúedainowie, znani Ludziom jako Woses lub Dzicy Ludzie z Lasu, to starożytny lud zamieszkujący głębie Lasu Drúadan i ukryte doliny Białych Gór. Wypalają ziemię ogniem, uprawiają to, co potrzebne, na żyznej od popiołu glebie, a gdy ziemia się wyjałowi, ruszają dalej — to sposób życia, którego osiadłe ludy Śródziemia nigdy nie zrozumiały i nigdy nie próbowały zrozumieć. Drúedainowie nie chcą żadnego pana, nie płacą podatków i proszą tylko, by zostawiono ich ciszy lasu." />
+    <string id="TAOM_forest_people_text" text="Drúedainowie, znani Ludziom jako Drûgowie albo Dzicy Ludzie Lasów, to starożytny lud zamieszkujący głębie Lasu Drúadan i ukryte doliny Białych Gór. Wypalają ziemię ogniem, uprawiają na bogatej w popiół glebie to, co potrzebne, i ruszają dalej, gdy ziemia się wyczerpie — to sposób życia, którego osiadłe ludy Śródziemia nigdy nie rozumiały i nigdy nie starały się zrozumieć. Drúedainowie nie chcą żadnego pana, nie płacą podatków i proszą tylko, by pozostawiono ich leśnej ciszy." />
     <string id="TAOM_eleftheroi_name" text="Beorningowie" />
     <string id="TAOM_eleftheroi_short" text="Beorningowie" />
-    <string id="TAOM_eleftheroi_text" text="Beorningowie to wielcy leśni ludzie zamieszkujący dolinę Anduiny między Górami Mglistymi a Mroczną Puszczą, wiedzeni przez zmiennoskórych z rodu Beorna. Nie pozwalają żadnemu orkowi przekroczyć swojego terytorium, pobierają myto przy Brodzie Carrock, by opłacić swoją straż, i nie podlegają żadnemu królowi Śródziemia. Choć będą handlować i rozmawiać z Elfami i Krasnoludami, każda armia, która przejdzie przez ich las bez zezwolenia, odkryje, że Beorningowie mają bardzo wielkie zęby." />
+    <string id="TAOM_eleftheroi_text" text="Beorningowie to wielcy leśni ludzie z doliny Anduiny między Górami Mglistymi a Mroczną Puszczą, wiedzeni przez zmiennoskórych z rodu Beorna. Nie pozwalają żadnemu orkowi przejść przez swoje ziemie, pobierają myto u Brodu Carrock, by opłacić swoje straże, i nie podlegają żadnemu królowi w Śródziemiu. Choć handlują i rozmawiają z Elfami i Krasnoludami, każda armia, która przejdzie ich lasem bez zezwolenia, odkryje, że Beorningowie mają bardzo wielkie zęby." />
     <string id="taom_career" text="Kariera" />
     <string id="taom_alliance_lore" text="Zgodność z legendarium" />
+    <string id="taom_alliance_player_freedom" text="Dyplomacja gracza" />
+    <string id="taom_alliance_propose" text="Proponuję przymierze między naszymi królestwami." />
+    <string id="taom_alliance_accept" text="Niech więc nasze królestwa staną razem. To przymierze jest zawarte." />
+    <string id="taom_player_alliance_formed" text="Zawarto przymierze między {PLAYER_KINGDOM} a {TARGET_KINGDOM}." />
     <string id="taom_alliance_blocked" text="Te królestwa nigdy nie mogą być sprzymierzone." />
     <string id="taom_war_blocked" text="Te królestwa łączy nierozerwalne przymierze." />
     <string id="taom_wotr_no_peace" text="Wojna o Pierścień szaleje. Nie może być pokoju." />
@@ -677,6 +699,9 @@
     <string id="taom_career_free_points" text="Wolne punkty: {COUNT}" />
     <string id="taom_career_tier_requirement" text="Wymaga poziomu {LEVEL}" />
     <string id="taom_career_choice_while_active" text="Gdy aktywne" />
+    <string id="taom_career_active_effects" text="Aktywne efekty" />
+    <string id="taom_career_dmg_attrib" text="{TARGET}: {DMG} obrażeń (+{BONUS} ze zdolności)" />
+    <string id="taom_career_dmg_none" text="Zdolność kariery aktywna — ta zdolność wzmacnia coś innego niż obrażenia." />
     <string id="taom_career_switch_title" text="Wybierz swoją ścieżkę" />
     <string id="taom_career_switch_choose" text="Wybierz" />
     <string id="taom_career_switch_subtitle" text="Kariery dostępne dla twojej kultury i pozycji." />
@@ -1269,6 +1294,7 @@
     <string id="taom_hideout_desc_harad" text="Pośród wydm Haradu natrafiasz na zamaskowany obóz Południowców rozstawiony wokół ukrytej studni na pustyni." />
     <string id="taom_hideout_desc_rhun" text="Na szerokich stepach Rhûnu dostrzegasz wozy i skórzane namioty bandy łupieżców Easterlingów obozującej w jarze." />
     <string id="taom_hideout_desc_umbar" text="Wzdłuż południowego wybrzeża odnajdujesz osłoniętą zatoczkę, w której na kotwicy stoją czarne okręty Korsarzy z Umbaru." />
+    <string id="taom_hideout_desc_erebor" text="Wśród ponurych wzgórz wschodu natrafiasz na obóz krasnoludów z klanu Czarnowłosych, który dawno temu pogrążył się w cieniu i ruinie." />
     <string id="taom_faction_difficulty_1" text="Trudność: Bardzo łatwa" />
     <string id="taom_faction_difficulty_2" text="Trudność: Łatwa" />
     <string id="taom_faction_difficulty_3" text="Trudność: Średnia" />
@@ -1562,7 +1588,6 @@
     <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Ostatni z Wysokich Elfów" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="Elfia duma podnosi koszty wpływów" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Przemijający lud — niewielu następców" />
-
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% prędkości drużyny na stepie (Stepowi rydwannicy)" />
     <string id="taom_faction_khudorom_of_khand_bonus_1" text="50% mniejsza kara do prędkości w lasach + 15% zasięgu wzroku (battańskie, odziedziczone)" />
     <string id="taom_faction_khudorom_of_khand_bonus_2" text="+20% szansy na doświadczoną milicję w miastach (battańskie, odziedziczone)" />
@@ -1716,7 +1741,6 @@
     <string id="taom_faction_kingdom_of_imladris_trait_3" text="Ukryta Dolina" />
     <string id="taom_faction_kingdom_of_imladris_weakness_0" text="Elfia duma podnosi koszty wpływów" />
     <string id="taom_faction_kingdom_of_imladris_weakness_1" text="Przemijający lud — niewielu następców" />
-
     <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="+10% szybkości drużyny w lasach (Leśne Królestwo)" />
     <string id="taom_faction_kingdom_of_lasgalen_bonus_1" text="+25% szansy na weteranów w milicji (Sylvańscy strażnicy)" />
     <string id="taom_faction_kingdom_of_lasgalen_bonus_2" text="+3 morale drużyny (Leśne więzi)" />
@@ -2083,19 +2107,14 @@
     <string id="taom_bandit_mistymountainorcs_f4" text="Grishta" />
     <string id="taom_bandit_mistymountainorcs_f5" text="Narzga" />
     <string id="taom_hideout_desc_mistymountainorcs" text="Pod urwiskami Gór Mglistych odnajdujesz plugawy labirynt orków, wykuty w nagiej skale." />
-    <string id="taom_alliance_player_freedom" text="Dyplomacja gracza" />
-    <string id="taom_alliance_propose" text="Proponuję przymierze między naszymi królestwami." />
-    <string id="taom_alliance_accept" text="Niech więc nasze królestwa staną razem. To przymierze jest zawarte." />
-    <string id="taom_player_alliance_formed" text="Zawarto przymierze między {PLAYER_KINGDOM} a {TARGET_KINGDOM}." />
-    <string id="taom_hideout_desc_erebor" text="Wśród ponurych wzgórz wschodu natrafiasz na obóz krasnoludów z klanu Czarnowłosych, który dawno temu pogrążył się w cieniu i ruinie." />
-    <string id="taom_bld_stall_title" text="TAOM: wczytywanie ostatniej bitwy mogło się nie zakończyć" />
-    <string id="taom_bld_stall_dismiss" text="Odrzuć" />
-    <string id="taom_bld_stall_openfolder" text="Otwórz folder dzienników" />
-    <string id="taom_settlement_food_adjustment" text="Żywność osady (TAOM)" />
-    <string id="taom_recruit_needs_resource" text="Wymaga {AMOUNT} {RESOURCE}" />
-    <string id="LjUhEJxz" text="Karawana {OWNER.NAME}" />
-    <string id="l4pRw7pO" text="Zbrojna karawana {OWNER.NAME}" />
-    <string id="taom_align_desertion" text="{COUNT} żołnierzy zdezerterowało — odmawiają służby panu o przeciwnym opowiedzeniu się." />
-    <string id="taom_troop_weight_size" text="Ciężkie oddziały" />
+    <string id="taom_bld_stall_title" text="TAOM: wczytywanie ostatniej bitwy mogło się nie zakończyć" />
+    <string id="taom_bld_stall_dismiss" text="Odrzuć" />
+    <string id="taom_bld_stall_openfolder" text="Otwórz folder dzienników" />
+    <string id="taom_settlement_food_adjustment" text="Żywność osady (TAOM)" />
+    <string id="taom_recruit_needs_resource" text="Wymaga {AMOUNT} {RESOURCE}" />
+    <string id="LjUhEJxz" text="Karawana {OWNER.NAME}" />
+    <string id="l4pRw7pO" text="Zbrojna karawana {OWNER.NAME}" />
+    <string id="taom_align_desertion" text="{COUNT} żołnierzy zdezerterowało — odmawiają służby panu o przeciwnym opowiedzeniu się." />
+    <string id="taom_troop_weight_size" text="Ciężkie oddziały" />
   </strings>
 </base>

@@ -360,6 +360,7 @@
     <string id="taom_str_player_father_name.shaghana" text="자르칸" />
     <string id="taom_str_player_mother_name.shaghana" text="칸사" />
     <string id="0aXG8dvJ" text="{KINGDOM_NAME}와 평화를 맺습니다. 조공은 지불되지 않습니다." />
+    <string id="0bPb5btR" text="{LORD.NAME}은(는) 내전에서 {RULER}을(를) 지지하는 {FACTION_NAME}의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="0CsbbwtN" text="{CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전 요청" />
     <string id="0nhqJewP" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {SETTLEMENT}을(를) {LEADER.NAME}에게 하사하였습니다." />
     <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM}과(와) 평화 조약을 맺기로 결정하였습니다." />
@@ -369,20 +370,25 @@
     <string id="21yUheIy" text="{KINGDOM_NAME}은(는) {CREATION_YEAR}년에 떠오르는 {CULTURE_ADJECTIVE} 군벌 {RULER.NAME}에 의해 세워졌습니다." />
     <string id="22LCyCoA" text="귀하의 왕국이 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에게 선전포고를 한다면 {GOLD}{GOLD_ICON}을(를) 제공하겠습니다." />
     <string id="2b1xZGaQ" text="{KINGDOM_NAME}과(와) 평화 조약을 맺습니다. 우리 왕국은 {TRIBUTE_DURATION}일 동안 매일 {TRIBUTE_AMOUNT}의 조공을 지불할 것입니다." />
+    <string id="2BVDp7Tg" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 중단합니다. {POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}의 약탈로 인해 많은 농부들이 고향을 떠났습니다. 토지를 가진 자들은 대개 돌아가지만, 가난한 이들은 새로운 정착지를 찾고 있습니다. 당신은 마을 외곽에 야영하고 있는 몇몇과 대화를 나눕니다. 그들에게 줄 땅은 없습니다. 그들은 소작인으로 일하기를 열망하는 것 같지만, 기존 마을 가문들과의 갈등 가능성은 항상 존재합니다." />
+    <string id="2mVZORaE" text="{FACTION_NAME}의 신하" />
     <string id="4fXpOe4N" text="{CLAN_NAME}에서 전령이 도착했습니다. 그들은 {CAPTIVE_HERO.NAME}을(를) 붙잡고 있으며 {GOLD_AMOUNT}{GOLD_ICON}의 몸값을 요구하고 있습니다." />
     <string id="4GgfFDWG" text="{KINGDOM_NAME}과(와) 평화 조약 체결" />
     <string id="4JSzHkpt" text="{?IS_FEMALE}여왕{?}왕{\?}으로서, {KINGDOM_NAME}에게 선전포고를 할지 결정해야 합니다" />
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}의 성은 {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 소유하고 있습니다. {KEEP_INFO}" />
     <string id="4z1t75be" text="{CLAN_NAME}의 {FIRSTNAME}" />
     <string id="5bBAOHmC" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 반반으로 나뉜 가운데 {SETTLEMENT}을(를) {?RULER.GENDER}그녀의{?}그의{\?} 영지로 취하였습니다." />
     <string id="5bza9sDs" text="유감입니다. {FACTION_NAME}보다 더 나은 고용주는 없을 것입니다. 확신하십시오." />
     <string id="5DdbkWLu" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {OTHER_KINGDOM}과(와) 무역 협정을 체결하기로 결정하였습니다." />
     <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회가 반반으로 나뉜 가운데 {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
     <string id="5pOKmHsf" text="{RULER.NAME}이(가) {CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전을 요청하기로 결정하였습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받았습니다." />
+    <string id="6d4ZTvGv" text="{LORD.NAME}은(는) {FACTION_NAME}의 {TITLE}이자 왕국의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}은(는) 우리의 조상 대대로 내려온 땅을 점령하고 우리 동족을 억압하고 있습니다." />
     <string id="7ouzFASf" text="전령이 도착하여 {OFFERED_KINGDOM_LEADER.NAME}의 전갈을 전합니다. {?OFFERED_KINGDOM_LEADER.GENDER}그녀는{?}그는{\?} 당신의 높아지는 명성에 대해 언급하며, {OFFERED_KINGDOM_NAME}의 봉신이 되는 것을 고려해보겠느냐고 묻습니다. 관심이 있다면 직접 만나 이야기해야 합니다." />
     <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
     <string id="940TwBPs" text="{RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {CLAN} 일족을 {KINGDOM}에서 추방하지 않기로 결정하였습니다." />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}은(는) {FACTION_NAME} 땅 출신의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
     <string id="aE7OQDMS" text="{KINGDOM_NAME}과(와) 동맹 체결" />
     <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 반반으로 나뉜 가운데 {KINGDOM}과(와) 평화 조약을 맺기로 결정하였습니다." />
@@ -423,6 +429,7 @@
     <string id="eTylgLCc" text="{KINGDOM_NAME}에서 전령이 도착했습니다. 그들은 당신에게 동맹을 제안합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM}은(는) 더 이상 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁 중이 아닙니다." />
     <string id="F7CMsDyG" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM_NAME}와(과)의 동맹 결성을 거부하기로 결정했습니다." />
+    <string id="faUooB7V" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 시행하지 않습니다. {POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME}은(는) {CALLING_KINGDOM}의 요청에 응하지 않고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁하지 않기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받았습니다." />
     <string id="FNCq25P1" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM_NAME}와(과)의 동맹을 결성하기로 결정했습니다." />
     <string id="FuNbouTu" text="{KINGDOM_NAME}에서 전령이 도착했습니다. 그들은 당신의 왕국에 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁을 요청합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
@@ -433,6 +440,7 @@
     <string id="gNf0ALKw" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신에게 무조건 평화를 제안합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
     <string id="h5eTEYON" text="{RULER.NAME}은(는) {CLAN} 일족을 {KINGDOM}에서 추방했습니다." />
     <string id="h9bWTLgK" text="우리의 동맹 {KINGDOM_NAME}의 전쟁에 합류할 시간입니다." />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}은(는) {FACTION_NAME} 땅 출신의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="IB1xsVEr" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신에게 무조건 평화를 제안합니다. 당신의 가신들은 결정을 당신에게 맡겼습니다." />
     <string id="INfHUqxT" text="{RULER.NAME}은(는) {KINGDOM_NAME}와(과)의 동맹을 결성하기로 결정했습니다." />
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}은(는) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM}와(과)의 평화를 거부했습니다." />
@@ -442,8 +450,10 @@
     <string id="jaioXYDc" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM_NAME}와(과)의 동맹 결성을 거부하기로 결정했습니다." />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM}와(과) 평화를 맺기로 결정했습니다." />
     <string id="JJQ0Hp4m" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. {MAP_FACTION_NAME}은(는) 우리 왕국들 간의 전쟁을 끝내기 위해 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불할 것입니다. 귀하의 가신들은 결정을 귀하에게 맡겼습니다." />
+    <string id="jnYwiCAz" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 계속합니다. {POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}은(는) 현재 우리보다 더 강력합니다. 우리는 힘을 키울 시간이 필요합니다." />
     <string id="JQligd8z" text="{KINGDOM}의 평의회가 {KING.NAME}을(를) 새로운 통치자로 선출했습니다." />
+    <string id="JuPUG5wX" text="{LORD.NAME}은(는) {FACTION_NAME}의 {TITLE}이자 내전에서 {RULER}을(를) 지지하는 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="JY717hPW" text="저는 {ENEMY_INFORMAL_NAME}을(를) 대신해 평화를 맺을 권한이 없습니다. {ENEMY_RULER.NAME}과(와) {?ENEMY_RULER.GENDER}그녀의{?}그의{\?} 평의회가 평화를 제안할지 여부와 조건을 결정해야 합니다." />
     <string id="K5w135N9" text="{RULER.NAME}은(는) {CALLING_KINGDOM}의 요청에 응하지 않고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁하지 않기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 조언에 반하는 것입니다." />
     <string id="KFHj7ckm" text="통치자로서, 귀하는 {KINGDOM_NAME}와(과) 평화를 맺을지 결정해야 합니다" />
@@ -454,6 +464,7 @@
     <string id="L802I9W2" text="그렇습니다, {FACTION_NAME}에 가입하겠습니다." />
     <string id="L81DPSom" text="{RULER_NAME_AND_TITLE}(으)로서, 귀하는 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_COST}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정해야 합니다." />
     <string id="Lalj0T1i" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {CALLING_KINGDOM}의 요청에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포했습니다." />
+    <string id="Lbs2bNlg" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 시작합니다. {POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="귀하의 왕국은 {KINGDOM_NAME}와(과) 전쟁 중입니다." />
     <string id="LVX2x6Jf" text="{SERVED_FACTION}와(과)의 계약을 끝내고 싶습니다." />
     <string id="m69pvful" text="{KINGDOM_LEADER}이(가) 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_PAYMENT}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정할 것입니다. 귀하는 이 결정에 대한 입장을 선택할 수 있습니다." />
@@ -470,6 +481,7 @@
     <string id="nkvT88r2" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대해 {CALLED_KINGDOM}을(를) 전쟁에 부를 충분한 자금이 없습니다." />
     <string id="NuYzgBZB" text="너무 지나칩니다. {KINGDOM}은(는) 자국의 카라반 파괴를 용납하지 않을 것입니다." />
     <string id="o4IxXHnB" text="{RULER.NAME}은(는) {KINGDOM_NAME}와(과) 동맹을 맺지 않기로 결정했습니다." />
+    <string id="o5AUljbW" text="{LORD.NAME}은(는) {FACTION_NAME}의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="o69PZuce" text="{OLD_LEADER.LINK}은(는) 더 이상 {CLAN_NAME}의 수장이 아닙니다. {NEW_LEADER.LINK}이(가) 일족의 통치자로 취임했습니다." />
     <string id="O9XpB5Ah" text="통치자로서, 귀하는 {KINGDOM}와(과) 무역 협정을 맺을지 결정해야 합니다" />
     <string id="oAw74q3r" text="{RULER_NAME_AND_TITLE}(으)로서, 귀하는 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_PAYMENT}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정해야 합니다." />
@@ -480,6 +492,7 @@
     <string id="PneX4Ayw" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 {KINGDOM_NAME}의 참전 요청을 담은 전령이 귀하 왕국의 궁정에 도착했습니다." />
     <string id="PP7KD7OC" text="{KINGDOM}의 {RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 동등하게 나뉜 가운데 {OTHER_KINGDOM}와(과) 무역 협정을 체결하기로 결정했습니다." />
     <string id="PutoRsWp" text="{CLAN_NAME}에서 전령이 도착했습니다. 그들은 {CAPTIVE_HERO.NAME}을(를) 석방하면 {GOLD_AMOUNT}{GOLD_ICON}의 몸값을 제안합니다." />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}은(는) {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 통치하고 있습니다. {KEEP_INFO}" />
     <string id="q9DnHVcZ" text="{KINGDOM_NAME}의 전쟁에 참여하는 것은 우리의 이익에 부합하지 않습니다." />
     <string id="qa4FlTWS" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
     <string id="qgN9o2ip" text="우리의 동맹 {KINGDOM_NAME}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집할 때입니다! 왕국은 그들에게 참전 요청 협정을 제안할지 투표할 것입니다." />
@@ -490,16 +503,19 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM}에 선전포고했습니다." />
     <string id="rJIuQ0hc" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}자신의{?}자신의{\?} 평의회의 반대에도 불구하고 {OTHER_KINGDOM}와(과)의 무역 협정 체결을 거부했습니다." />
     <string id="rtfoywJl" text="{KINGDOM_NAME}에 선전포고" />
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK} 주변의 땅은 대부분 {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 소유하고 있습니다. {PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신이 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불하는 것에 동의한다면 평화를 제안합니다. 왕국은 이 제안을 수락할지 투표할 것입니다." />
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {KINGDOM}에 선전포고했습니다." />
     <string id="SR9FC5jH" text="{MAP_FACTION_NAME}에서 평화 제안을 가지고 전령이 도착했습니다. {MAP_FACTION_NAME}은(는) 왕국 간의 전쟁을 끝내기 위해 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불할 것입니다. 왕국은 이 제안을 수락할지 투표할 것입니다." />
     <string id="syGyjjKE" text="{CALLING_KINGDOM}의 소집에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고하십시오." />
+    <string id="TauRjAud" text="{FACTION}의 {NAME}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}에서 용병 일을 제안하고 있습니다. 그들을 위해 싸워 얻는 영향력 1포인트당 {GOLD_AMOUNT}{GOLD_ICON}을(를) 지불합니다. 수락하시겠습니까?" />
     <string id="uc4M4bhG" text="음, 내가 원하는 것이 있소. {TARGET_FACTION}의 한 {?TARGET_HERO.GENDER}귀부인{?}영주{\?}와 나는 아주 오랜, 오랜 관계가 있소. 그리고 우호적인 관계는 아니오. 지금 우리가 전쟁 중인 만큼, {?TARGET_HERO.GENDER}그녀가{?}그가{\?} 자유로운 한 내 목숨과 영지가 안전하지 않다는 것을 알고 있소. 말했듯이, 전혀 쉽지 않을 것이오. 하지만 그것을 해내는 자, {?TARGET_HERO.GENDER}그녀를{?}그를{\?} 살아서 내게 데려오는 자는, 내 감사는 차치하고라도, 정말로 매우 부유한 사람이 될 것이오.[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}이(가) {CALLING_KINGDOM}의 소집에 응하여 {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고했습니다." />
     <string id="UQq4ekeu" text="{KINGDOM}의 {RULER.NAME}이(가) {OTHER_KINGDOM}와(과)의 무역 협정 체결을 거부했습니다." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}이(가) {CALLED_KINGDOM_LINK}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}에 대한 선전포고를 요청했습니다." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}은(는) {CHARACTER_FACTION_SHORT}의 일원이었습니다. {FURTHER_DETAILS}." />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}은(는) {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 통치하고 있습니다. {PROSPERITY_INFO} {MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME}은(는) 떠오르는 새로운 일족인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} 아직 {?LORD.GENDER}그녀의{?}그의{\?} 명성을 쌓고 있는 중입니다." />
     <string id="vf2pb7Ts" text="{RULER.NAME}이(가) {CALLING_KINGDOM}의 소집에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고했습니다." />
     <string id="Vg5RmOqL" text="{FACTION_LEADER}이(가) {KINGDOM}이(가) {OTHER_KINGDOM}와(과) 무역 협정을 체결할지 결정할 것입니다. 이 결정에 대한 당신의 입장을 선택할 수 있습니다." />
@@ -512,7 +528,9 @@
     <string id="xhK4zMec" text="{RULER.NAME}이(가) {CALLED_KINGDOM}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집하기로 결정했습니다." />
     <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}이(가) {CALLED_KINGDOM_LINK}에게 발령한 {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}에 대한 참전 소집이 종료되었습니다." />
     <string id="xM97H0oR" text="{KINGDOM_NAME}에 대한 선전포고에 투표하십시오." />
+    <string id="yAOQnMVw" text="너는 {FACTION} 소속이지? 그렇다면 너는 내 포로다." />
     <string id="yBL3TzXw" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {CLAN} 일족을 {KINGDOM}에서 추방하지 않기로 했습니다." />
+    <string id="YT4OvaAG" text="좋습니다. 당신은 {FACTION_NAME}의 보호를 받는다고 생각하십시오. 내일 이 시간까지 여정을 완료하지 못하면 추가 지불을 요청할 수 있습니다." />
     <string id="yUYNlQhU" text="좋소, 내 부하들에게 간단한 계약서를 작성하도록 하겠소. {KINGDOM_FORMAL_NAME}을(를) 대표하여 환영하오. 우리의 적들에게 당신의 검을 잘 사용하시기를." />
     <string id="Zckbdm4Z" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}자신의{?}자신의{\?} 평의회의 지지를 받아 {SETTLEMENT}을(를) {?RULER.GENDER}자신의{?}자신의{\?} 영지로 삼았습니다." />
     <string id="zd9sawl9" text="당신은 이미 {KINGDOM_NAME}와(과) 동맹 관계입니다." />
@@ -681,6 +699,9 @@
     <string id="taom_career_free_points" text="사용 가능 포인트: {COUNT}" />
     <string id="taom_career_tier_requirement" text="레벨 {LEVEL} 필요" />
     <string id="taom_career_choice_while_active" text="활동 중" />
+    <string id="taom_career_active_effects" text="활성 효과" />
+    <string id="taom_career_dmg_attrib" text="{TARGET}: {DMG} 피해 (능력으로 +{BONUS})" />
+    <string id="taom_career_dmg_none" text="경력 능력 활성 — 이 능력은 피해가 아닌 다른 것을 강화합니다." />
     <string id="taom_career_switch_title" text="길을 선택하세요" />
     <string id="taom_career_switch_choose" text="선택" />
     <string id="taom_career_switch_subtitle" text="당신의 문화와 지위에 적합한 경력." />
@@ -1273,6 +1294,7 @@
     <string id="taom_hideout_desc_harad" text="하라드의 모래언덕 사이에서 숨겨진 사막 우물 주변에 모여 있는 위장된 남방인 야영지를 발견했습니다." />
     <string id="taom_hideout_desc_rhun" text="룬의 광활한 초원에서 계곡에 야영한 동방인 약탈단의 마차와 가죽 천막을 발견했습니다." />
     <string id="taom_hideout_desc_umbar" text="남쪽 해안을 따라가다 움바르 해적들의 검은 배들이 정박해 있는 은폐된 만을 발견했습니다." />
+    <string id="taom_hideout_desc_erebor" text="동쪽의 황량한 구릉지대에서 당신은 검은자물쇠족 난쟁이들의 야영지를 발견한다. 오래전 어둠과 파멸에 빠져든 씨족이다." />
     <string id="taom_faction_difficulty_1" text="난이도: 매우 쉬움" />
     <string id="taom_faction_difficulty_2" text="난이도: 쉬움" />
     <string id="taom_faction_difficulty_3" text="난이도: 보통" />
@@ -2093,7 +2115,6 @@
     <string id="LjUhEJxz" text="{OWNER.NAME}의 대상" />
     <string id="l4pRw7pO" text="{OWNER.NAME}의 무장 대상" />
     <string id="taom_align_desertion" text="{COUNT}명의 병력이 탈영했습니다 — 그들은 반대 진영의 군주를 섬기기를 거부합니다." />
-    <string id="taom_hideout_desc_erebor" text="동쪽의 황량한 구릉지대에서 당신은 검은자물쇠족 난쟁이들의 야영지를 발견한다. 오래전 어둠과 파멸에 빠져든 씨족이다." />
-    <string id="taom_troop_weight_size" text="중장병" />
+    <string id="taom_troop_weight_size" text="중장병" />
   </strings>
 </base>

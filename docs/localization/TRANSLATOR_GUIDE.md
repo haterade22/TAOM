@@ -337,3 +337,30 @@ Open an issue on GitHub or reach out on the mod's Discord channel.
 - [docs/reference/localization-map.md](../reference/localization-map.md)
 
 <!-- backlinks-end -->
+
+## Adding a new strings file to the pipeline (order matters)
+
+Registering a key in a source XML is only half the job — a key that is not wired into the
+pipeline ships as its English fallback in all 12 languages, silently, with no error anywhere.
+
+1. **Register every key in the source XML**, including any generated at build time. Keys built at
+   RUNTIME from data ids (`"taom_enlist_duty_" + id + "_title"`) are invisible to a literal
+   `{=key}` grep, so they need a generator — see `tools/generate_enlistment_duty_strings.py`.
+2. Add the file to `SOURCES` in `tools/generate_translation_template.py`.
+3. Add it to the TAOM tuple list in `tools/translate_with_claude.py`.
+4. Run `generate_translation_template.py --all --apply`.
+5. Add a `<LanguageFile>` entry to all 12 `Languages/*/language_data.xml`.
+6. Bump the count in `LanguageDataXmlTests.AllLanguageDirs_HaveExactly…LanguageFiles`.
+7. Run `translate_with_claude.py --lang <L> --module TAOM --apply` per language.
+
+**Step 1 must complete before step 4.** `generate_translation_template.py --apply` overwrites each
+per-language file with a fresh English template, discarding whatever translation is in it. The
+cache makes recovery free (re-run the translator; everything returns from cache), but doing it in
+the wrong order costs a full re-run — as it did on 2026-08-08, when 84 late-registered duty keys
+blanked all 12 freshly-translated enlistment files.
+
+**A non-zero exit is not necessarily failure.** The translator exits 1 if ANY entry failed
+validation. Four pre-existing vanilla-derived strings with nested gender conditionals
+(`{?TARGET_HERO.GENDER}lady{?}lord{\?}`) fail on every language that has not cached them:
+`uc4M4bhG`, `qa4FlTWS`, `uiY3ds0Z`, `V097rA1v`. Check the failed-ID list before treating exit 1 as
+a problem with your own strings.

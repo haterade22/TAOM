@@ -425,6 +425,37 @@ without MCM reads the JSON, a player with MCM at default reads the literal, and 
 describe the same game. A test fails the build if they drift, which is the kind of split that is
 otherwise invisible because the test host never has MCM loaded.
 
+### feat(localization): enlistment ships in 12 languages, including the 84 keys a grep cannot find
+
+The enlistment strings were registered but not in the pipeline: `taom_enlistment_strings.xml` was
+absent from both `generate_translation_template.py` and `translate_with_claude.py`, and
+`LanguageDataXmlTests` pinned 10 language files per directory. `/localize` would have translated
+nothing here — 66 keys shipping as English fallbacks in all 12 languages, silently, with no error.
+
+**The half that mattered more was invisible.** `InteractiveDutyPresenter` builds its keys at RUNTIME
+from data-row ids (`"taom_enlist_duty_" + id + "_" + suffix`), so the literal `{=key}` grep that
+discovers every other TAOM string finds none of them — 14 duty/incident rows × 6 suffixes = 84 keys
+that could never have been translated by hand-maintenance. `tools/generate_enlistment_duty_strings.py`
+generates them, lifting the English from the three places it actually lives: the `DutyCopy`
+dictionary in C#, `Humanize(option.Key)` over the JSON option keys, and the two shared result
+toasts. Idempotent, so hand-tuned copy survives a re-run.
+
+**160 keys × 12 languages, verified per language rather than assumed** — entry count and
+translated-vs-still-English counted against the English source. All 12 at 160/160.
+
+An ordering trap, hit and now documented in the generator and the translator guide:
+`generate_translation_template.py --apply` **overwrites** each per-language file with a fresh
+English template. Registering the 84 duty keys after translating meant regenerating to pick them
+up, which blanked all 12 files. The cache made recovery free (re-run, everything returns from
+cache, $0) but the correct order — register every key, THEN generate, THEN translate — saves the
+round trip.
+
+Also worth knowing: the translator exits 1 if ANY entry fails validation. Four pre-existing
+vanilla-derived strings with nested gender conditionals (`{?TARGET_HERO.GENDER}lady{?}lord{\?}`)
+fail on every language that has not cached them, so a non-zero exit is not automatically a problem
+with your own strings. Zero enlistment entries failed.
+
+$2.91, 1,980 LLM translations. Suite 6079 green.
 ### docs(enlistment): record the review pass, the surfaces, and what is still owed
 
 `docs/features/enlistment.md` now carries the 2026-08-08 review pass — the four terminal defects

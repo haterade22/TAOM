@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_enlist_already_serving" text="Askerlik hizmetine bağlısın." />
+    <string id="taom_enlist_discharge" text="Hizmetinizden salıverilmemi istiyorum." />
+    <string id="taom_enlist_discharge_answer" text="Yeterince iyi yürüdün. Git öyleyse — serbestsin." />
+    <string id="taom_enlist_menu_leave" text="Hizmetten salıverilmeyi iste" />
+    <string id="taom_enlist_menu_status" text="Hizmetini gözden geçir" />
+    <string id="taom_enlist_merit_toast" text="Çavuşlar davranışını kaydetti: {GRADE}." />
+    <string id="taom_enlist_oath_ask" text="Öyleyse yemin et: kılıcın yanımda, ekmeğim dağarcığında, süren bitene dek. Yemin eder misin?" />
+    <string id="taom_enlist_oath_decline" text="Bir daha düşününce — henüz değil." />
+    <string id="taom_enlist_oath_swear" text="Yemin ederim." />
+    <string id="taom_enlist_offer" text="Komutanız altında askere yazılmak istiyorum." />
+    <string id="taom_enlist_ok" text="Anlaşıldı" />
+    <string id="taom_enlist_promoted" text="{RANK} rütbesine yükseltildin." />
+    <string id="taom_enlist_qm_issued" text="Levazımcının arabasına bak — teçhizatın yükünde." />
+    <string id="taom_enlist_qm_refused" text="Rütbene düşen payı zaten aldın. Önce bir sonraki şeridi kazan." />
+    <string id="taom_enlist_qm_request" text="Levazımcıdan hizmet teçhizatımı almak isterim." />
+    <string id="taom_enlist_reassign" text="Safta başka bir yer almak isterim." />
+    <string id="taom_enlist_reassign_arc" text="Saplamaktan iyi nişan alırım." />
+    <string id="taom_enlist_reassign_cav" text="Ata binebilirim. Bana bir at ver." />
+    <string id="taom_enlist_reassign_done" text="Öyleyse yeni birliğine katıl. Pişman etme beni." />
+    <string id="taom_enlist_reassign_inf" text="Beni kalkan safına koy." />
+    <string id="taom_enlist_reassign_sup" text="Yük ve yaralılar için el gerek." />
+    <string id="taom_enlist_status_body" text="Komutan: {COMMANDER}. {ENLISTED_DAY}. günde askere yazıldın; sözleşme {CONTRACT_END}. günde sona eriyor." />
+    <string id="taom_enlist_status_title" text="Hizmet kaydı" />
+    <string id="taom_enlist_term_served" text="Hizmet süren tamamlandı — onurla salıverilmeyi isteyebilir ya da yürüyüşe devam edebilirsin." />
+    <string id="taom_enlist_wait_text" text="{COMMANDER} bölüğünde hizmet ediyorsun. Kol, komutanının hızıyla ilerliyor." />
+    <string id="taom_enlist_welcome" text="Kola hoş geldin, asker. Safa gir." />
+    <string id="taom_fc_accept" text="Yükselt" />
+    <string id="taom_fc_acknowledge" text="Anlaşıldı" />
+    <string id="taom_fc_confirm_name" text="Onayla" />
+    <string id="taom_fc_decline" text="Henüz Değil" />
+    <string id="taom_fc_keep_name" text="Varsayılan Adı Koru" />
+    <string id="taom_fc_no_room_body" text="Şu anda başka bir yoldaş için yer yok. {TROOP_NAME}'in terfisi daha sonra yeniden sunulacak." />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME} savaşta kendini gösterdi. Onu yoldaş olarak yükseltmek ister misin?" />
+    <string id="taom_fc_offer_title" text="Savaş Alanı Terfisi" />
+    <string id="taom_fc_rename_body" text="{TROOP_NAME}'e bir ad ver ya da savaşa taşıdığı adı koru." />
+    <string id="taom_fc_rename_title" text="Yeni Yoldaşa İsim Ver" />
+    <string id="taom_enlist_act_battle" text="{COMMANDER} çarpışmaya girdi. Safta yerini koru." />
+    <string id="taom_enlist_act_lost" text="Kolu kaybettin. Komutanından haber bekle." />
+    <string id="taom_enlist_act_march" text="{COMMANDER} bölüğüyle, komutanının hızında yürüyorsun." />
+    <string id="taom_enlist_act_settlement" text="Kol {SETTLEMENT} içinde dinleniyor." />
+    <string id="taom_enlist_act_siege" text="{COMMANDER} bölüğüyle surların önünde kamp kurdunuz." />
+    <string id="taom_enlist_board_arrears" text="{NEWLINE}Sana borçlu olunan ücret: {GOLD}{GOLD_ICON}" />
+    <string id="taom_enlist_board_duty" text="{NEWLINE}Emirlerin var: {DUTY_NAME}" />
+    <string id="taom_enlist_duty_already" text="Emirlerini zaten aldın. Önce onları yerine getir." />
+    <string id="taom_enlist_duty_none" text="Şimdilik sana iş yok. Tetikte ol — bu değişir." />
+    <string id="taom_enlist_menu_duty" text="Çavuşundan iş iste" />
+    <string id="taom_enlist_menu_talk" text="Komutanınla konuş" />
+    <string id="taom_enlist_rank_recruit" text="Acemi" />
+    <string id="taom_enlist_rank_sergeant" text="Çavuş" />
+    <string id="taom_enlist_rank_soldier" text="Asker" />
+    <string id="taom_enlist_rank_veteran" text="Kıdemli" />
+    <string id="taom_enlist_reassign_pick" text="Şu anda {CURRENT_SECTION} ile yürüyorsun. Nerede durmayı yeğlerdin?" />
+    <string id="taom_enlist_release_battle" text="Yapılacak çarpışma varken olmaz. Meydan sustuğunda tekrar sor." />
+    <string id="taom_enlist_release_desert" text="O halde bölüğünle işim bitti. Yeminli ya da değil, izin istemeden gidiyorum." />
+    <string id="taom_enlist_release_desert_answer" text="O halde yemin bozansın ve buradaki her adam bunu biliyor. Gözümün önünden kaybol." />
+    <string id="taom_enlist_release_desert_option" text="Bölükten kaç" />
+    <string id="taom_enlist_release_in_battle" text="Yapılacak çarpışma var. Meydan sustuğunda tekrar sor." />
+    <string id="taom_enlist_release_refused_body" text="Komutanın seni yeminine bağlı tutuyor — {DAYS} gün daha borçlusun. Şimdi gitmek firardır: sana borçlu olunan ücretten olursun ve komutanın bunu unutmaz." />
+    <string id="taom_enlist_release_refused_title" text="Süren dolmadı" />
+    <string id="taom_enlist_release_relent" text="Nasıl istersen. Safta kalacağım." />
+    <string id="taom_enlist_release_soon" text="Hizmet etmeye yemin ettin ve o yeminin {DAYS} günü hâlâ borçtur. Seni buna bağlı tutuyorum." />
+    <string id="taom_enlist_release_stay" text="Kal ve hizmet et" />
+    <string id="taom_enlist_section_arc" text="okçular" />
+    <string id="taom_enlist_section_cav" text="süvari" />
+    <string id="taom_enlist_section_inf" text="kalkan hattı" />
+    <string id="taom_enlist_section_sup" text="levazım kolu" />
+    <string id="taom_enlist_trust_known" text="tanınmış" />
+    <string id="taom_enlist_trust_new" text="sınanmamış" />
+    <string id="taom_enlist_trust_poor" text="gözden düşmüş" />
+    <string id="taom_enlist_trust_solid" text="itibarlı" />
+    <string id="taom_enlist_trust_trusted" text="güvenilir" />
+    <string id="taom_enlist_wait_board" text="{ACTIVITY}{NEWLINE}{NEWLINE}Rütbe: {RANK} · {SECTION}{NEWLINE}Hizmet günü: {DAYS} · İtibar: {TRUST}{ARREARS}{DUTY}" />
+    <string id="taom_enlist_grade_distinguished" text="seçkin" />
+    <string id="taom_enlist_grade_strong" text="güçlü" />
+    <string id="taom_enlist_grade_solid" text="istikrarlı" />
+    <string id="taom_enlist_grade_rough" text="zorlu geçti, ama dayandın" />
+    <string id="taom_enlist_duty_camp_discipline_title" text="Kampta Sorun" />
+    <string id="taom_enlist_duty_camp_discipline_body" text="Bir bağrışma daha kötü bir şeye dönüşmeden kalabalık toplamaya başladı." />
+    <string id="taom_enlist_duty_camp_discipline_opta" text="Kavgayı Ayır" />
+    <string id="taom_enlist_duty_camp_discipline_optb" text="Çavuşu Çağır" />
+    <string id="taom_enlist_duty_camp_discipline_success" text="İyi geçti." />
+    <string id="taom_enlist_duty_camp_discipline_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_command_squad_title" text="Bir Manga Komuta Et" />
+    <string id="taom_enlist_duty_command_squad_body" text="Bir mangayı talim ettirip hatta hazırlamak için sağlam bir el gerek." />
+    <string id="taom_enlist_duty_command_squad_opta" text="Manevra Talimi" />
+    <string id="taom_enlist_duty_command_squad_optb" text="Teçhizatı Denetle" />
+    <string id="taom_enlist_duty_command_squad_success" text="İyi geçti." />
+    <string id="taom_enlist_duty_command_squad_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_coordinate_supply_title" text="İkmal Hatları" />
+    <string id="taom_enlist_duty_coordinate_supply_body" text="Arabalar birikmiş, birinin onları yeniden yola koyması gerekiyor." />
+    <string id="taom_enlist_duty_coordinate_supply_opta" text="Arabaları Yönlendir" />
+    <string id="taom_enlist_duty_coordinate_supply_optb" text="Arabacı Tut" />
+    <string id="taom_enlist_duty_coordinate_supply_success" text="İyi geçti." />
+    <string id="taom_enlist_duty_coordinate_supply_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_equipment_check_title" text="Teçhizat Denetimi" />
+    <string id="taom_enlist_duty_equipment_check_body" text="Levazım subayı, yoklamadan önce her askerin teçhizatının denetlenmesini istiyor." />
+    <string id="taom_enlist_duty_equipment_check_opta" text="Tam Sayım" />
+    <string id="taom_enlist_duty_equipment_check_optb" text="Yerinde Onarım" />
+    <string id="taom_enlist_duty_equipment_check_success" text="İyi geçti." />
+    <string id="taom_enlist_duty_equipment_check_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_gate_watch_title" text="Kapı Nöbeti" />
+    <string id="taom_enlist_duty_gate_watch_body" text="Kapıda gelen gideni izleyecek keskin bir çift göz gerek." />
+    <string id="taom_enlist_duty_gate_watch_opta" text="Belgeleri Denetle" />
+    <string id="taom_enlist_duty_gate_watch_optb" text="Duvara Yaslan" />
+    <string id="taom_enlist_duty_gate_watch_success" text="İyi geçti." />
+    <string id="taom_enlist_duty_gate_watch_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_inspect_defenses_title" text="Surları Dolaş" />
+    <string id="taom_enlist_duty_inspect_defenses_body" text="Birinin savunmaları dolaşıp durumları hakkında rapor vermesi gerekiyor." />
+    <string id="taom_enlist_duty_inspect_defenses_opta" text="Surları Dolaş" />
+    <string id="taom_enlist_duty_inspect_defenses_optb" text="Erzakı Say" />
+    <string id="taom_enlist_duty_inspect_defenses_success" text="İyi geçti." />
+    <string id="taom_enlist_duty_inspect_defenses_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_lead_patrol_title" text="Devriyeyi Üstlen" />
+    <string id="taom_enlist_duty_lead_patrol_body" text="Sıradaki devriyeyi dışarı çıkarıp sağ salim geri getirecek birine ihtiyaç var." />
+    <string id="taom_enlist_duty_lead_patrol_opta" text="Öne Geç" />
+    <string id="taom_enlist_duty_lead_patrol_optb" text="Güzergâhı Devret" />
+    <string id="taom_enlist_duty_lead_patrol_success" text="İyi gitti." />
+    <string id="taom_enlist_duty_lead_patrol_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_night_patrol_title" text="Gece Nöbeti" />
+    <string id="taom_enlist_duty_night_patrol_body" text="Çavuş, nöbet değişmeden önce gece turlarını atacak birine ihtiyaç duyuyor." />
+    <string id="taom_enlist_duty_night_patrol_opta" text="Turları At" />
+    <string id="taom_enlist_duty_night_patrol_optb" text="Çift Nöbet" />
+    <string id="taom_enlist_duty_night_patrol_success" text="İyi gitti." />
+    <string id="taom_enlist_duty_night_patrol_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_pay_delay_title" text="Ödeme Yine Gecikti" />
+    <string id="taom_enlist_duty_pay_delay_body" text="Ödemenin yine geciktiği duyuldu ve adamlar homurdanıyor." />
+    <string id="taom_enlist_duty_pay_delay_opta" text="Hakkını İste" />
+    <string id="taom_enlist_duty_pay_delay_optb" text="Beklemeye Geç" />
+    <string id="taom_enlist_duty_pay_delay_success" text="İyi gitti." />
+    <string id="taom_enlist_duty_pay_delay_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_quartermaster_shortage_title" text="Erzak Kıtlığı" />
+    <string id="taom_enlist_duty_quartermaster_shortage_body" text="Levazımcının erzağı azaldı ve işi düzene sokmak için yardıma ihtiyacı var." />
+    <string id="taom_enlist_duty_quartermaster_shortage_opta" text="Erzağı İdare Et" />
+    <string id="taom_enlist_duty_quartermaster_shortage_optb" text="Yerlilerle Takas Et" />
+    <string id="taom_enlist_duty_quartermaster_shortage_success" text="İyi gitti." />
+    <string id="taom_enlist_duty_quartermaster_shortage_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_short_rations_title" text="Kıt Tayınlar" />
+    <string id="taom_enlist_duty_short_rations_body" text="Bu gece erzak az ve herkese yetecek kadar yok." />
+    <string id="taom_enlist_duty_short_rations_opta" text="Kendi Payını Paylaş" />
+    <string id="taom_enlist_duty_short_rations_optb" text="Fazladan Yem Topla" />
+    <string id="taom_enlist_duty_short_rations_success" text="İyi gitti." />
+    <string id="taom_enlist_duty_short_rations_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_strategic_planning_title" text="Güzergâhı Planla" />
+    <string id="taom_enlist_duty_strategic_planning_body" text="Subaylar bir sonraki yürüyüş üzerine tartışıyor ve masada bir görüş daha istiyorlar." />
+    <string id="taom_enlist_duty_strategic_planning_opta" text="Güzergâhı Çiz" />
+    <string id="taom_enlist_duty_strategic_planning_optb" text="Subayları Bilgilendir" />
+    <string id="taom_enlist_duty_strategic_planning_success" text="İyi gitti." />
+    <string id="taom_enlist_duty_strategic_planning_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_train_recruits_title" text="Acemileri Talime Çıkar" />
+    <string id="taom_enlist_duty_train_recruits_body" text="Bir grup çaylak acemi, kendilerini terletecek birini bekleyerek boş boş duruyor." />
+    <string id="taom_enlist_duty_train_recruits_opta" text="Talim Yaptır" />
+    <string id="taom_enlist_duty_train_recruits_optb" text="Hafif İdman Yap" />
+    <string id="taom_enlist_duty_train_recruits_success" text="İyi gitti." />
+    <string id="taom_enlist_duty_train_recruits_failure" text="Planlandığı gibi gitmedi." />
+    <string id="taom_enlist_duty_treat_wounded_title" text="Yaralıların Bakıma İhtiyacı Var" />
+    <string id="taom_enlist_duty_treat_wounded_body" text="Cerrah hepsine yetişemeden önce birkaç yaralının bakıma ihtiyacı var." />
+    <string id="taom_enlist_duty_treat_wounded_opta" text="Yaraları Sar" />
+    <string id="taom_enlist_duty_treat_wounded_optb" text="Malzeme Taşı" />
+    <string id="taom_enlist_duty_treat_wounded_success" text="İyi gitti." />
+    <string id="taom_enlist_duty_treat_wounded_failure" text="Planlandığı gibi gitmedi." />
+  </strings>
+</base>

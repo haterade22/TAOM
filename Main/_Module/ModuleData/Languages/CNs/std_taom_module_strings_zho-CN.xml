@@ -360,6 +360,7 @@
     <string id="taom_str_player_father_name.shaghana" text="扎尔坎" />
     <string id="taom_str_player_mother_name.shaghana" text="汉萨" />
     <string id="0aXG8dvJ" text="与{KINGDOM_NAME}议和。不支付任何贡品。" />
+    <string id="0bPb5btR" text="{LORD.NAME}是{CLAN_NAME}家族的成员，该家族是{FACTION_NAME}的{CLAN_DESCRIPTION}，在内战中支持{RULER}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="0CsbbwtN" text="召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战" />
     <string id="0nhqJewP" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,将{SETTLEMENT}授予{LEADER.NAME}。" />
     <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会支持下,决定与{KINGDOM}议和。" />
@@ -369,20 +370,25 @@
     <string id="21yUheIy" text="{KINGDOM_NAME}由崛起的{CULTURE_ADJECTIVE}军阀{RULER.NAME}于{CREATION_YEAR}年建立。" />
     <string id="22LCyCoA" text="我可以向你的王国提供{GOLD}{GOLD_ICON},以对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="2b1xZGaQ" text="与{KINGDOM_NAME}议和。我们的王国将每日支付{TRIBUTE_AMOUNT}贡金,持续{TRIBUTE_DURATION}天。" />
+    <string id="2BVDp7Tg" text="{KINGDOM}将停止{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}的掠夺迫使许多农民离开家园。拥有土地的人通常会返回,但许多贫困者正在寻找新的定居地。你在村庄外围与几个扎营的人交谈。这里没有土地给他们。他们似乎渴望作为佃农工作,但这总是有可能与村里更老的家族产生矛盾。" />
+    <string id="2mVZORaE" text="{FACTION_NAME}的仆从" />
     <string id="4fXpOe4N" text="一名信使从{CLAN_NAME}前来。他们扣押了{CAPTIVE_HERO.NAME},要求{GOLD_AMOUNT}{GOLD_ICON}的赎金。" />
     <string id="4GgfFDWG" text="与{KINGDOM_NAME}议和" />
     <string id="4JSzHkpt" text="作为{?IS_FEMALE}女王{?}国王{\?},你必须决定是否对{KINGDOM_NAME}宣战" />
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}城堡由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}拥有。{KEEP_INFO}" />
     <string id="4z1t75be" text="{CLAN_NAME}的{FIRSTNAME}" />
     <string id="5bBAOHmC" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="5bza9sDs" text="很遗憾听到这个消息。要知道你找不到比{FACTION_NAME}更好的雇主了。" />
     <string id="5DdbkWLu" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,决定与{OTHER_KINGDOM}签署贸易协定。" />
     <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,选择不与{KINGDOM}开战。" />
     <string id="5pOKmHsf" text="{RULER.NAME}决定召集{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。这个决定得到了{?RULER.GENDER}她{?}他{\?}半数议会的支持。" />
+    <string id="6d4ZTvGv" text="{LORD.NAME}是{FACTION_NAME}的{TITLE}，{CLAN_NAME}家族的族长，该家族是王国的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}占据了我们的祖传土地,并压迫我们的同胞。" />
     <string id="7ouzFASf" text="一名信使送来了{OFFERED_KINGDOM_LEADER.NAME}的信函。{?OFFERED_KINGDOM_LEADER.GENDER}她{?}他{\?}提到你日益增长的声望,并询问你是否愿意考虑成为{OFFERED_KINGDOM_NAME}的封臣。如果你有兴趣,应该亲自去谈。" />
     <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会支持下,选择不与{KINGDOM}开战。" />
     <string id="940TwBPs" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,选择不将{CLAN}家族从{KINGDOM}驱逐。" />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}是{CLAN_NAME}家族的成员，该家族是来自{FACTION_NAME}领地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}选择不与{KINGDOM}开战。" />
     <string id="aE7OQDMS" text="与{KINGDOM_NAME}结盟。" />
     <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,决定与{KINGDOM}议和。" />
@@ -423,6 +429,7 @@
     <string id="eTylgLCc" text="一位信使从{KINGDOM_NAME}赶来。他们向你提议结盟。你的王国将投票决定是否接受该提议。" />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM}已不再与{KINGDOM_TO_CALL_TO_WAR_AGAINST}交战。" />
     <string id="F7CMsDyG" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,决定不与{KINGDOM_NAME}结盟。" />
+    <string id="faUooB7V" text="{KINGDOM}将不会{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。该决定得到了{?RULER.GENDER}她的{?}他的{\?}议会的支持。" />
     <string id="FNCq25P1" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下决定与{KINGDOM_NAME}结盟。" />
     <string id="FuNbouTu" text="一位信使从{KINGDOM_NAME}赶来。他们号召你的王国对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你的王国将投票决定是否接受该提议。" />
@@ -433,6 +440,7 @@
     <string id="gNf0ALKw" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的王国将投票决定是否接受该提议。" />
     <string id="h5eTEYON" text="{RULER.NAME}将{CLAN}家族逐出{KINGDOM}。" />
     <string id="h9bWTLgK" text="是时候加入我们的盟友{KINGDOM_NAME}的战争了。" />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}是{CLAN_NAME}家族的族长，该家族是来自{FACTION_NAME}领地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="IB1xsVEr" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的封臣将决定权留给了你。" />
     <string id="INfHUqxT" text="{RULER.NAME}决定与{KINGDOM_NAME}结盟。" />
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}不顾{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会的反对,选择不与{KINGDOM}议和。" />
@@ -442,8 +450,10 @@
     <string id="jaioXYDc" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}半数议会成员支持下决定不与{KINGDOM_NAME}结盟。" />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}决定与{KINGDOM}议和,尽管{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
     <string id="JJQ0Hp4m" text="一名信使从{MAP_FACTION_NAME}前来。{MAP_FACTION_NAME}愿意每日支付{GOLD_AMOUNT}{GOLD_ICON}作为贡金以结束你们领地间的战争。你的封臣将决定权交给了你。" />
+    <string id="jnYwiCAz" text="{KINGDOM}将继续{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}目前比我们更强大。我们需要时间来增强实力。" />
     <string id="JQligd8z" text="{KINGDOM}的议会选择{KING.NAME}为新的统治者。" />
+    <string id="JuPUG5wX" text="{LORD.NAME}是{FACTION_NAME}的{TITLE},同时也是{CLAN_NAME}的首领,{CLAN_DESCRIPTION},在内战中支持{RULER}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}而闻名。" />
     <string id="JY717hPW" text="我没有权力代表{ENEMY_INFORMAL_NAME}议和。应当由{ENEMY_RULER.NAME}和{?ENEMY_RULER.GENDER}她的{?}他的{\?}议会决定是否提议和平,以及条件如何。" />
     <string id="K5w135N9" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不会对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。此决定违背了{?RULER.GENDER}她的{?}他的{\?}议会的建议。" />
     <string id="KFHj7ckm" text="作为统治者,你必须决定是否与{KINGDOM_NAME}议和" />
@@ -454,6 +464,7 @@
     <string id="L802I9W2" text="好,我会加入{FACTION_NAME}。" />
     <string id="L81DPSom" text="作为{RULER_NAME_AND_TITLE},你必须决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_COST}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="Lalj0T1i" text="{RULER.NAME}响应了{CALLING_KINGDOM}的号召,对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战,尽管{?RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
+    <string id="Lbs2bNlg" text="{KINGDOM}将开始{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="你的领地正与{KINGDOM_NAME}交战。" />
     <string id="LVX2x6Jf" text="我想终止与{SERVED_FACTION}的契约。" />
     <string id="m69pvful" text="{KINGDOM_LEADER}将决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你可以选择你对此决定的立场。" />
@@ -470,6 +481,7 @@
     <string id="nkvT88r2" text="你没有足够的金钱来号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="NuYzgBZB" text="你做得太过分了。{KINGDOM}不会容忍其商队遭到破坏。" />
     <string id="o4IxXHnB" text="{RULER.NAME}决定不与{KINGDOM_NAME}结成同盟。" />
+    <string id="o5AUljbW" text="{LORD.NAME}是{CLAN_NAME}家族的成员，该家族是{FACTION_NAME}的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
     <string id="o69PZuce" text="{OLD_LEADER.LINK}不再是{CLAN_NAME}的首领。{NEW_LEADER.LINK}已接任为氏族的统治者。" />
     <string id="O9XpB5Ah" text="作为统治者,你必须决定是否与{KINGDOM}签订贸易协定" />
     <string id="oAw74q3r" text="作为{RULER_NAME_AND_TITLE},你必须决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
@@ -480,6 +492,7 @@
     <string id="PneX4Ayw" text="一名信使带着来自{KINGDOM_NAME}的宣战号召抵达你领地的朝廷,号召对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="PP7KD7OC" text="{KINGDOM}的{RULER.NAME}决定与{OTHER_KINGDOM}签订贸易协定,{?RULER.GENDER}她的{?}他的{\?}议会对此意见均分。" />
     <string id="PutoRsWp" text="一名信使从{CLAN_NAME}前来。如果你愿意释放{CAPTIVE_HERO.NAME},他们愿意支付{GOLD_AMOUNT}{GOLD_ICON}作为赎金。" />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}统治。{KEEP_INFO}" />
     <string id="q9DnHVcZ" text="加入{KINGDOM_NAME}的战争不符合我们的利益。" />
     <string id="qa4FlTWS" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="qgN9o2ip" text="是时候召唤我们的盟友{KINGDOM_NAME}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战了!你的王国将投票决定是否向他们提议参战协议。" />
@@ -490,16 +503,19 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM}宣战。" />
     <string id="rJIuQ0hc" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,选择不与{OTHER_KINGDOM}签署贸易协定。" />
     <string id="rtfoywJl" text="向{KINGDOM_NAME}宣战" />
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周围的土地主要由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}拥有。{PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="一名信使从{MAP_FACTION_NAME}送来消息。如果你同意每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金,他们愿意与你议和。你的王国将投票决定是否接受这一提议。" />
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}向{KINGDOM}宣战。" />
     <string id="SR9FC5jH" text="一名信使从{MAP_FACTION_NAME}带来和平提议。{MAP_FACTION_NAME}将每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金以结束双方的战争。你的王国将投票决定是否接受这一提议。" />
     <string id="syGyjjKE" text="响应{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+    <string id="TauRjAud" text="{FACTION}的{NAME}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}正向你提供雇佣工作,为你代表他们作战所获得的每点影响力支付{GOLD_AMOUNT}{GOLD_ICON}。你接受吗?" />
     <string id="uc4M4bhG" text="Well, there is something I want. There is one {?TARGET_HERO.GENDER}lady{?}lord{\?} of {TARGET_FACTION} with whom I have a long, long relationship. And not a friendly one. Now that we are at war, as long as {?TARGET_HERO.GENDER}she{?}he{\?} is free, I know my life and lands are not safe. As I say, it won't be easy at all. But whoever manages to do that, bring {?TARGET_HERO.GENDER}her{?}him{\?} back alive to me, having my gratitude aside, will be a very rich man indeed.[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,在{?RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="UQq4ekeu" text="{KINGDOM}的{RULER.NAME}选择不与{OTHER_KINGDOM}签署贸易协定。" />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}召唤{CALLED_KINGDOM_LINK}向{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}宣战。" />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}曾是{CHARACTER_FACTION_SHORT}的成员。{FURTHER_DETAILS}。" />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}统治。{PROSPERITY_INFO}{MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME}是{CLAN_NAME}的首领,这是一个新兴氏族。{?LORD.GENDER}她{?}他{\?}仍在建立{?LORD.GENDER}她的{?}他的{\?}声望。" />
     <string id="vf2pb7Ts" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
     <string id="Vg5RmOqL" text="{FACTION_LEADER}将决定{KINGDOM}是否与{OTHER_KINGDOM}签署贸易协定。你可以选择你对此决定的立场。" />
@@ -512,7 +528,9 @@
     <string id="xhK4zMec" text="{RULER.NAME}决定召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
     <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}向{CALLED_KINGDOM_LINK}发出的对{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}开战的召唤已结束。" />
     <string id="xM97H0oR" text="投票决定是否向{KINGDOM_NAME}宣战。" />
+    <string id="yAOQnMVw" text="你是{FACTION}的人，对吧？这意味着你是我的俘虏。" />
     <string id="yBL3TzXw" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下选择不将{CLAN}氏族驱逐出{KINGDOM}。" />
+    <string id="YT4OvaAG" text="很好。你可以认为自己处于{FACTION_NAME}的保护之下。你有到明天这个时候完成旅程的时间，否则我们可能会向你索取另一笔费用。" />
     <string id="yUYNlQhU" text="很好,我会让手下起草一份简单的契约。我代表{KINGDOM_FORMAL_NAME}欢迎你。愿你的剑能很好地对付我们的敌人。" />
     <string id="Zckbdm4Z" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="zd9sawl9" text="你已经与{KINGDOM_NAME}结盟了。" />
@@ -681,6 +699,9 @@
     <string id="taom_career_free_points" text="可用点数:{COUNT}" />
     <string id="taom_career_tier_requirement" text="需要等级 {LEVEL}" />
     <string id="taom_career_choice_while_active" text="进行中时" />
+    <string id="taom_career_active_effects" text="生效效果" />
+    <string id="taom_career_dmg_attrib" text="{TARGET}：{DMG} 点伤害（其中 +{BONUS} 来自能力）" />
+    <string id="taom_career_dmg_none" text="职业能力已生效——此能力增益的并非伤害。" />
     <string id="taom_career_switch_title" text="选择你的道路" />
     <string id="taom_career_switch_choose" text="选择" />
     <string id="taom_career_switch_subtitle" text="符合你的文化和地位的职业道路。" />
@@ -1273,6 +1294,7 @@
     <string id="taom_hideout_desc_harad" text="在哈拉德的沙丘之间,你遇到了一处伪装的南方人营地,聚集在一口隐蔽的沙漠水井周围。" />
     <string id="taom_hideout_desc_rhun" text="在洛汗广阔的草原上,你辨认出东夷掠袭者的篷车和兽皮帐篷,他们在一处沟壑中扎营。" />
     <string id="taom_hideout_desc_umbar" text="沿着南方海岸,你发现了一处隐蔽的海湾,昂巴海盗的黑船正停泊于此。" />
+    <string id="taom_hideout_desc_erebor" text="在东方荒凉的丘陵之间，你偶然发现了一处黑发矮人的营地——这个氏族早已沉入阴影与败亡之中。" />
     <string id="taom_faction_difficulty_1" text="难度:非常简单" />
     <string id="taom_faction_difficulty_2" text="难度:简单" />
     <string id="taom_faction_difficulty_3" text="难度:中等" />
@@ -2093,7 +2115,6 @@
     <string id="LjUhEJxz" text="{OWNER.NAME}的商队" />
     <string id="l4pRw7pO" text="{OWNER.NAME}的武装商队" />
     <string id="taom_align_desertion" text="{COUNT}名士兵逃跑了——他们拒绝为对立阵营的领主效力。" />
-    <string id="taom_hideout_desc_erebor" text="在东方荒凉的丘陵之间，你偶然发现了一处黑发矮人的营地——这个氏族早已沉入阴影与败亡之中。" />
-    <string id="taom_troop_weight_size" text="重装部队" />
+    <string id="taom_troop_weight_size" text="重装部队" />
   </strings>
 </base>

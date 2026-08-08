@@ -360,6 +360,7 @@
     <string id="taom_str_player_father_name.shaghana" text="Zarkan" />
     <string id="taom_str_player_mother_name.shaghana" text="Khansa" />
     <string id="0aXG8dvJ" text="{KINGDOM_NAME} ile barış yap. Haraç ödenmeyecek." />
+    <string id="0bPb5btR" text="{LORD.NAME}, iç savaşta {RULER}'ı destekleyen {FACTION_NAME}'in {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in bir üyesidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
     <string id="0CsbbwtN" text="{CALLED_KINGDOM}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e Karşı Savaşa Çağır" />
     <string id="0nhqJewP" text="{KINGDOM}'ın hükümdarı {RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyinin desteğiyle {SETTLEMENT}'ı {LEADER.NAME}'e bağışlıyor." />
     <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}'in hükümdarı {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}onun{?}onun{\?} konseyinin desteğiyle {KINGDOM} ile barış yapmaya karar verdi." />
@@ -369,20 +370,25 @@
     <string id="21yUheIy" text="{KINGDOM_NAME}, {CREATION_YEAR} yılında yükselen bir {CULTURE_ADJECTIVE} savaş lordu olan {RULER.NAME} tarafından kuruldu." />
     <string id="22LCyCoA" text="Krallığınıza {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan etmesi için {GOLD}{GOLD_ICON} teklif edebilirim." />
     <string id="2b1xZGaQ" text="{KINGDOM_NAME} ile barış yap. Krallığımız {TRIBUTE_DURATION} gün boyunca günlük {TRIBUTE_AMOUNT} haraç ödeyecek." />
+    <string id="2BVDp7Tg" text="{KINGDOM}, {POLICY_DESCRIPTION} ({POLICY}) uygulamasını durduracak. {POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}'ın yağmalamaları birçok çiftçiyi evlerinden sürdü. Toprağı olanlar genellikle geri dönüyor ama yoksulların çoğu yaşayacak yeni bir yer arıyor. Köyünüzün dışında kamp kuranlardan birkaçıyla konuşuyorsunuz. Onlar için toprak yok. Kiracı olarak çalışmaya istekli görünüyorlar ancak köyün yerleşik aileleriyle gerginlik yaşanma ihtimali her zaman var." />
+    <string id="2mVZORaE" text="{FACTION_NAME}'in hizmetkârı" />
     <string id="4fXpOe4N" text="{CLAN_NAME}'den bir ulak geliyor. {CAPTIVE_HERO.NAME}'i ellerinde tutuyorlar ve fidye olarak {GOLD_AMOUNT}{GOLD_ICON} talep ediyorlar." />
     <string id="4GgfFDWG" text="{KINGDOM_NAME} ile barış yapılıyor" />
     <string id="4JSzHkpt" text="{?IS_FEMALE}Kraliçe{?}Kral{\?} olarak, {KINGDOM_NAME}'e karşı savaş ilan edilip edilmeyeceğine karar vermelisiniz" />
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK} kalesi, {FACTION_TERM}'un {FACTION_OFFICIAL} {LORD.LINK}'e aittir. {KEEP_INFO}" />
     <string id="4z1t75be" text="{CLAN_NAME}'den {FIRSTNAME}" />
     <string id="5bBAOHmC" text="{KINGDOM}'ın hükümdarı {RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyi eşit şekilde bölünmüşken {SETTLEMENT}'ı {?RULER.GENDER}kendi{?}kendi{\?} mülkü olarak alıyor." />
     <string id="5bza9sDs" text="Bunu duyduğuma çok üzüldüm. {FACTION_NAME}'den daha iyi bir işveren bulamayacağınızdan emin olun." />
     <string id="5DdbkWLu" text="{KINGDOM}'ın hükümdarı {RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyinin desteğiyle {OTHER_KINGDOM} ile ticaret anlaşması imzalamaya karar verdi." />
     <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}'ın hükümdarı {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}onun{?}onun{\?} konseyi eşit şekilde bölünmüşken {KINGDOM} ile savaşa girmemeyi seçti." />
     <string id="5pOKmHsf" text="{RULER.NAME}, {CALLED_KINGDOM}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmaya karar verdi. Karar, {?RULER.GENDER}onun{?}onun{\?} konseyinin yarısının desteğini aldı." />
+    <string id="6d4ZTvGv" text="{LORD.NAME}, {FACTION_NAME}'in {TITLE}'ı ve diyarın {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in reisidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} atalarımızın topraklarını işgal etti ve soydaşlarımıza zulmediyorlar." />
     <string id="7ouzFASf" text="{OFFERED_KINGDOM_LEADER.NAME}'den bir mesaj taşıyan bir ulak geliyor. {?OFFERED_KINGDOM_LEADER.GENDER}O{?}O{\?}, artan itibarınızdan bahsediyor ve {OFFERED_KINGDOM_NAME}'in bir vassalı olarak kendinizi adayıp adamayacağınızı soruyor. İlgileniyorsanız bizzat konuşmalısınız." />
     <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}'ın hükümdarı {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}onun{?}onun{\?} konseyinin desteğiyle {KINGDOM} ile savaşa girmemeyi seçti." />
     <string id="940TwBPs" text="{RULER.NAME}, {?RULER.GENDER}onun{?}onun{\?} konseyinin itirazlarına rağmen {CLAN} klanını {KINGDOM}'dan kovmamayı seçti." />
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}, {FACTION_NAME} topraklarından {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in bir üyesidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
     <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}'ın hükümdarı {AGGRESSOR_RULER.NAME}, {KINGDOM} ile savaşa girmemeyi seçti." />
     <string id="aE7OQDMS" text="{KINGDOM_NAME} ile ittifak kur." />
     <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}'in hükümdarı {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}onun{?}onun{\?} konseyi bu konuda eşit şekilde bölünmüşken {KINGDOM} ile barış yapmaya karar verdi." />
@@ -423,6 +429,7 @@
     <string id="eTylgLCc" text="{KINGDOM_NAME}'dan bir ulak geldi. Size ittifak teklif ediyorlar. Krallığınız teklifi kabul edip etmeyeceğine oy verecek." />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM} artık {KINGDOM_TO_CALL_TO_WAR_AGAINST} ile savaş halinde değil." />
     <string id="F7CMsDyG" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin muhalefetine rağmen {KINGDOM_NAME} ile ittifak kurmamaya karar verdi." />
+    <string id="faUooB7V" text="{KINGDOM}, {POLICY_DESCRIPTION} ({POLICY}) uygulamayacak. {POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME}, {CALLING_KINGDOM}'ın çağrısına yanıt vermemeye ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e savaş açmamaya karar verdi. Karar {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğini aldı." />
     <string id="FNCq25P1" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {KINGDOM_NAME} ile ittifak kurmaya karar verdi." />
     <string id="FuNbouTu" text="{KINGDOM_NAME}'dan bir ulak geldi. Krallığınızı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırıyorlar. Krallığınız teklifi kabul edip etmeyeceğine oy verecek." />
@@ -433,6 +440,7 @@
     <string id="gNf0ALKw" text="{MAP_FACTION_NAME}'dan bir ulak geldi. Size beyaz barış teklif ediyorlar. Krallığınız teklifi kabul edip etmeyeceğine oy verecek." />
     <string id="h5eTEYON" text="{RULER.NAME}, {CLAN} klanını {KINGDOM}'dan kovdu." />
     <string id="h9bWTLgK" text="Müttefiklerimiz {KINGDOM_NAME}'a savaşlarında katılma zamanı." />
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}, {FACTION_NAME} topraklarından {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in reisidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
     <string id="IB1xsVEr" text="{MAP_FACTION_NAME}'dan bir ulak geldi. Size beyaz barış teklif ediyorlar. Vasallarınız kararı size bıraktı." />
     <string id="INfHUqxT" text="{RULER.NAME}, {KINGDOM_NAME} ile ittifak kurmaya karar verdi." />
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}'dan {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}kendi{?}kendi{\?} konseyinin itirazlarına rağmen {KINGDOM} ile barış yapmamayı seçti." />
@@ -442,8 +450,10 @@
     <string id="jaioXYDc" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin yarısının desteğiyle {KINGDOM_NAME} ile ittifak kurmamaya karar verdi." />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE} hükümdarı {PEACEMAKER_RULER.NAME}, {?PEACEMAKER_RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} muhalefetine rağmen {KINGDOM} ile barış yapmaya karar verdi." />
     <string id="JJQ0Hp4m" text="{MAP_FACTION_NAME}'den bir ulak geldi. {MAP_FACTION_NAME}, diyarlarınız arasındaki savaşı sona erdirmek için her gün {GOLD_AMOUNT} {GOLD_ICON} haraç ödeyecek. Vassallarınız kararı size bıraktı." />
+    <string id="jnYwiCAz" text="{KINGDOM}, {POLICY_DESCRIPTION} ({POLICY}) uygulamasına devam edecek. {POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} şu anda bizden daha güçlü. Gücümüzü artırmak için zamana ihtiyacımız var." />
     <string id="JQligd8z" text="{KINGDOM} meclisi {KING.NAME}'i yeni hükümdar olarak seçti." />
+    <string id="JuPUG5wX" text="{LORD.NAME}, {FACTION_NAME}'in {TITLE}'ı ve iç savaşta {RULER}'ı destekleyen {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in reisidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
     <string id="JY717hPW" text="{ENEMY_INFORMAL_NAME} adına barış yapma yetkisine sahip değilim. {ENEMY_RULER.NAME} ve {?ENEMY_RULER.GENDER}meclisi{?}meclisi{\?} barış teklif edilip edilmeyeceğine ve şartların ne olacağına karar vermelidir." />
     <string id="K5w135N9" text="{RULER.NAME}, {CALLING_KINGDOM} çağrısına cevap vermemeye ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşmamaya karar verdi. Karar, {?RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} tavsiyesine karşı alındı." />
     <string id="KFHj7ckm" text="Hükümdar olarak, {KINGDOM_NAME} ile barış yapılıp yapılmayacağına karar vermelisiniz" />
@@ -454,6 +464,7 @@
     <string id="L802I9W2" text="Evet, {FACTION_NAME}'e katılacağım." />
     <string id="L81DPSom" text="{RULER_NAME_AND_TITLE} olarak, diyarınızın {CALLING_KINGDOM} çağrısına cevap verip {CALL_TO_WAR_COST}{GOLD_ICON} karşılığında {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan edip etmeyeceğine karar vermelisiniz." />
     <string id="Lalj0T1i" text="{RULER.NAME}, {?RULER.GENDER}konsey üyelerinin{?}konsey üyelerinin{\?} muhalefetine rağmen {CALLING_KINGDOM} çağrısına cevap verdi ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan etti." />
+    <string id="Lbs2bNlg" text="{KINGDOM}, {POLICY_DESCRIPTION} ({POLICY}) uygulamasına başlayacak. {POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="Diyarınız {KINGDOM_NAME} ile savaş halindedir." />
     <string id="LVX2x6Jf" text="{SERVED_FACTION} ile olan sözleşmemi sonlandırmak istiyorum." />
     <string id="m69pvful" text="{KINGDOM_LEADER}, diyarınızın {CALLING_KINGDOM} çağrısına cevap verip {CALL_TO_WAR_PAYMENT}{GOLD_ICON} karşılığında {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan edip etmeyeceğine karar verecek. Bu karara ilişkin tutumunuzu seçebilirsiniz." />
@@ -470,6 +481,7 @@
     <string id="nkvT88r2" text="{CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmak için yeterli paranız yok." />
     <string id="NuYzgBZB" text="Çok ileri gidiyorsun. {KINGDOM}, kervanlarının yok edilmesine göz yummayacak." />
     <string id="o4IxXHnB" text="{RULER.NAME}, {KINGDOM_NAME} ile ittifak kurmamaya karar verdi." />
+    <string id="o5AUljbW" text="{LORD.NAME}, {FACTION_NAME}'in {CLAN_DESCRIPTION} klanı olan {CLAN_NAME}'in bir üyesidir. {?LORD.GENDER}Kadının{?}Adamın{\?} {REPUTATION} olma itibarı vardır." />
     <string id="o69PZuce" text="{OLD_LEADER.LINK} artık {CLAN_NAME}'in başı değil. {NEW_LEADER.LINK} klanın hükümdarı olarak devraldı." />
     <string id="O9XpB5Ah" text="Hükümdar olarak, {KINGDOM} ile bir ticaret anlaşması yapılıp yapılmayacağına karar vermelisiniz" />
     <string id="oAw74q3r" text="{RULER_NAME_AND_TITLE} olarak, diyarınızın {CALLING_KINGDOM} çağrısına cevap verip {CALL_TO_WAR_PAYMENT}{GOLD_ICON} karşılığında {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaş ilan edip etmeyeceğine karar vermelisiniz." />
@@ -480,6 +492,7 @@
     <string id="PneX4Ayw" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı {KINGDOM_NAME}'den bir savaş çağrısı teklifi taşıyan bir ulak, diyarınızın sarayına geldi." />
     <string id="PP7KD7OC" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}konseyi{?}konseyi{\?} mesele konusunda eşit bölünmüşken {OTHER_KINGDOM} ile bir ticaret anlaşması imzalamaya karar verdi." />
     <string id="PutoRsWp" text="{CLAN_NAME}'den bir ulak geldi. {CAPTIVE_HERO.NAME}'i serbest bırakırsanız size fidye olarak {GOLD_AMOUNT}{GOLD_ICON} teklif ediyorlar." />
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}, {FACTION_TERM}'un {FACTION_OFFICIAL} {LORD.LINK} tarafından yönetilmektedir. {KEEP_INFO}" />
     <string id="q9DnHVcZ" text="{KINGDOM_NAME} ile savaşlarına katılmak çıkarlarımıza uygun değil." />
     <string id="qa4FlTWS" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
     <string id="qgN9o2ip" text="Müttefikimiz {KINGDOM_NAME}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırma zamanı geldi! Krallığınız onlara savaş çağrısı anlaşması teklif edilip edilmeyeceğini oylayacak." />
@@ -490,16 +503,19 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM} hükümdarı {AGGRESSOR_RULER.NAME}, {?AGGRESSOR_RULER.GENDER}kendi{?}kendi{\?} konseyinin yarısının desteğiyle {KINGDOM}'a savaş ilan etti." />
     <string id="rJIuQ0hc" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin itirazlarına rağmen {OTHER_KINGDOM} ile ticaret anlaşması imzalamamayı seçti." />
     <string id="rtfoywJl" text="{KINGDOM_NAME}'a savaş ilan et" />
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK} çevresindeki topraklar çoğunlukla {FACTION_TERM}'un {FACTION_OFFICIAL} {LORD.LINK}'e aittir. {PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="{MAP_FACTION_NAME}'dan bir ulak geldi. Günlük {GOLD_AMOUNT} {GOLD_ICON} haraç ödemeyi kabul ederseniz size barış teklif ediyorlar. Krallığınız teklifi kabul edip etmemeyi oylayacak." />
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM} hükümdarı {AGGRESSOR_RULER.NAME}, {KINGDOM}'a savaş ilan etti." />
     <string id="SR9FC5jH" text="{MAP_FACTION_NAME}'dan barış teklifi getiren bir ulak geldi. {MAP_FACTION_NAME}, diyarlarınız arasındaki savaşı bitirmek için her gün {GOLD_AMOUNT} {GOLD_ICON} haraç ödeyecek. Krallığınız teklifi kabul edip etmemeyi oylayacak." />
     <string id="syGyjjKE" text="{CALLING_KINGDOM}'ın çağrısını yanıtla ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e savaş ilan et." />
+    <string id="TauRjAud" text="{FACTION} mensubu {NAME}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}, sizden onlar adına savaşarak kazanacağınız her etki puanı başına {GOLD_AMOUNT}{GOLD_ICON} ödeyerek paralı asker olarak çalışmanızı teklif ediyor. Kabul ediyor musunuz?" />
     <string id="uc4M4bhG" text="Şey, istediğim bir şey var. {TARGET_FACTION}'dan uzun, çok uzun bir geçmişim olan bir {?TARGET_HERO.GENDER}hanımefendi{?}lord{\?} var. Ve dostane bir geçmiş değil. Şimdi savaştayken, {?TARGET_HERO.GENDER}o{?}o{\?} özgür olduğu sürece hayatımın ve topraklarımın güvende olmadığını biliyorum. Dediğim gibi, hiç kolay olmayacak. Ama bunu başaran, {?TARGET_HERO.GENDER}onu{?}onu{\?} bana canlı getiren kişi, minnettarlığımı bir kenara bırakırsak, gerçekten çok zengin bir adam olacak.[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
     <string id="UQq4ekeu" text="{KINGDOM} hükümdarı {RULER.NAME}, {OTHER_KINGDOM} ile ticaret anlaşması imzalamamayı seçti." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}, {CALLED_KINGDOM_LINK}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}'e karşı savaş ilan etmeye çağırdı." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}, {CHARACTER_FACTION_SHORT}'ın bir üyesiydi. {FURTHER_DETAILS}." />
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}, {FACTION_TERM}'un {FACTION_OFFICIAL} {LORD.LINK} tarafından yönetilmektedir. {PROSPERITY_INFO} {MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME}, yükselen yeni bir klan olan {CLAN_NAME}'in başıdır. {?LORD.GENDER}O{?}O{\?} hâlâ {?LORD.GENDER}kendi{?}kendi{\?} itibarını kazanıyor." />
     <string id="vf2pb7Ts" text="{RULER.NAME}, {CALLING_KINGDOM}'ın çağrısını yanıtladı ve {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e savaş ilan etti." />
     <string id="Vg5RmOqL" text="{FACTION_LEADER}, {KINGDOM}'ın {OTHER_KINGDOM} ile ticaret anlaşması imzalayıp imzalamayacağına karar verecek. Bu karar hakkında tavrınızı seçebilirsiniz." />
@@ -512,7 +528,9 @@
     <string id="xhK4zMec" text="{RULER.NAME}, {CALLED_KINGDOM}'ı {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e karşı savaşa çağırmaya karar verdi." />
     <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}'ın {CALLED_KINGDOM_LINK}'a {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}'e karşı savaşa girmesi için yaptığı çağrı sona erdi." />
     <string id="xM97H0oR" text="{KINGDOM_NAME}'a savaş ilan etmeyi oylayın." />
+    <string id="yAOQnMVw" text="{FACTION}'dansın, değil mi? Bu da seni benim esirimin yaptı." />
     <string id="yBL3TzXw" text="{RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {CLAN} klanını {KINGDOM}'dan kovmamayı seçti." />
+    <string id="YT4OvaAG" text="Peki öyle olsun. Kendini {FACTION_NAME}'in koruması altında sayabilirsin. Yolculuğunu tamamlamak için yarın bu vakte kadar vaktiniz var, yoksa sizden başka bir ödeme daha talep edebiliriz." />
     <string id="yUYNlQhU" text="Güzel, adamlarıma basit bir sözleşme yazdıracağım. {KINGDOM_FORMAL_NAME} adına seni hoş karşılıyorum. Umarım kılıcını düşmanlarımıza karşı iyi kullanırsın." />
     <string id="Zckbdm4Z" text="{KINGDOM} hükümdarı {RULER.NAME}, {?RULER.GENDER}kendi{?}kendi{\?} konseyinin desteğiyle {SETTLEMENT}'i {?RULER.GENDER}kendi{?}kendi{\?} tımarı olarak aldı." />
     <string id="zd9sawl9" text="{KINGDOM_NAME} ile zaten müttefiksiniz." />
@@ -681,6 +699,9 @@
     <string id="taom_career_free_points" text="Serbest Puan: {COUNT}" />
     <string id="taom_career_tier_requirement" text="{LEVEL}. Seviye Gerektirir" />
     <string id="taom_career_choice_while_active" text="Aktifken" />
+    <string id="taom_career_active_effects" text="Etkin Etkiler" />
+    <string id="taom_career_dmg_attrib" text="{TARGET}: {DMG} hasar (yetenekten +{BONUS})" />
+    <string id="taom_career_dmg_none" text="Kariyer yeteneği etkin — bu yetenek hasar dışında bir şeyi güçlendirir." />
     <string id="taom_career_switch_title" text="Yolunu Seç" />
     <string id="taom_career_switch_choose" text="Seç" />
     <string id="taom_career_switch_subtitle" text="Kültürünüz ve konumunuz için uygun meslekler." />
@@ -1273,6 +1294,7 @@
     <string id="taom_hideout_desc_harad" text="Harad'ın kumları arasında, gizli bir çöl kuyusu etrafında toplanmış kamufle edilmiş bir Güneyli kampına rastlıyorsun." />
     <string id="taom_hideout_desc_rhun" text="Rhûn'un geniş otlaklarında, bir vadiyle çukurda kamp kurmuş bir Doğulu akıncı grubunun vagonlarını ve deri çadırlarını seçiyorsun." />
     <string id="taom_hideout_desc_umbar" text="Güney kıyısı boyunca, Umbar Korsanları'nın kara gemilerinin demir attığı korunaklı bir koy buluyorsun." />
+    <string id="taom_hideout_desc_erebor" text="Doğunun ıssız tepeleri arasında, uzun zaman önce gölgeye ve yıkıma düşmüş bir boy olan Karakâküllerin bir cüce kampına rastlarsın." />
     <string id="taom_faction_difficulty_1" text="Zorluk: Çok Kolay" />
     <string id="taom_faction_difficulty_2" text="Zorluk: Kolay" />
     <string id="taom_faction_difficulty_3" text="Zorluk: Orta" />
@@ -2093,7 +2115,6 @@
     <string id="LjUhEJxz" text="{OWNER.NAME}'in Kervanı" />
     <string id="l4pRw7pO" text="{OWNER.NAME}'in Silahlı Kervanı" />
     <string id="taom_align_desertion" text="{COUNT} asker firar etti — karşıt taraftaki bir lorda hizmet etmeyi reddediyorlar." />
-    <string id="taom_hideout_desc_erebor" text="Doğunun ıssız tepeleri arasında, uzun zaman önce gölgeye ve yıkıma düşmüş bir boy olan Karakâküllerin bir cüce kampına rastlarsın." />
-    <string id="taom_troop_weight_size" text="Ağır askerler" />
+    <string id="taom_troop_weight_size" text="Ağır askerler" />
   </strings>
 </base>

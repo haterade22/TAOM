@@ -20,6 +20,19 @@ from pathlib import Path
 TAOM_BASE = Path("Main/_Module/ModuleData")
 LANG_DIR = TAOM_BASE / "Languages"
 
+# ORDERING TRAP: --apply OVERWRITES each per-language file with a fresh ENGLISH template.
+# Any translation already in that file is discarded. The cache
+# (tools/translation_cache/<lang>.json) makes recovery free — re-run translate_with_claude.py
+# and everything comes back from cache — but the correct order still saves a round trip:
+#
+#   1. register EVERY key in the source XML first (incl. generated ones, e.g.
+#      tools/generate_enlistment_duty_strings.py)
+#   2. THEN run this generator
+#   3. THEN translate
+#
+# Hit on 2026-08-08: templates were generated, 12 languages translated, and then 84
+# runtime-built duty keys were registered — regenerating to pick them up blanked all 12.
+
 # (source file, target filename template, description)
 SOURCES = [
     (TAOM_BASE / "taom_module_strings.xml",
@@ -37,6 +50,9 @@ SOURCES = [
     (TAOM_BASE / "taom_career_strings.xml",
      "std_taom_career_strings_{locale}.xml",
      "career system strings"),
+    (TAOM_BASE / "taom_enlistment_strings.xml",
+     "std_taom_enlistment_strings_{locale}.xml",
+     "enlistment + field-commission strings"),
 ]
 
 # lang_dir -> (locale_suffix, language_tag)
