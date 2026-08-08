@@ -596,6 +596,37 @@ without MCM reads the JSON, a player with MCM at default reads the literal, and 
 describe the same game. A test fails the build if they drift, which is the kind of split that is
 otherwise invisible because the test host never has MCM loaded.
 
+### fix(enlistment): serving no longer makes you MORE likely to die
+
+The most serious thing the *Serve as Soldier* comparison surfaced, and it was silent.
+
+`DefaultPartyHealingModel.GetSurvivalChance` reads every survival bonus off the party it is PASSED —
+`AddSurgeonSurvivalBonus(mobileParty, …)`, the `PhysicianOfPeople` perk, and
+`HasPerk(Medicine.CheatDeath, checkSecondaryRole: true)`. An enlisted player's party is one hero,
+parked and hidden, with no surgeon and no perks. So a soldier going down in his commander's battle
+was rolled as if nobody were there to save him — **more likely to die than the same character
+freelancing**, with nothing on screen to say so.
+
+The roll now resolves against the commander's party: the company that is actually tending you. It is
+narrow by construction — the character must be the player, the party must be the player's own, and
+service must be live, with any failure returning the original party untouched, and it can only ever
+substitute a party (never hand back something worse). SAS needed a Harmony patch plus a
+`[ThreadStatic]` flag and a `PartyBase.get_MapEvent` postfix to achieve this; TAOM already owns
+`TaomPartyHealingModel`, so it is eleven lines in a GameModel and no new patch surface.
+
+**Healing now scales, because a flat rate made two systems inert.** +11/day regardless of Medicine
+meant a physician and a farmhand recovered at identical speed — so the skill did nothing in service,
+and neither did the surgeon duty. Now `11 + Medicine/10`, doubled while the commander's column is
+resting in a settlement (read from the COMMANDER, since the column is what rests and a following
+player is wherever it is).
+
+For scale: SAS pays ~28.8 HP/day in the field and ~86.4 resting. TAOM at Medicine 100 now gives 21,
+or 42 resting — deliberately below SAS, because TAOM also feeds the player and SAS does not (it has
+no food handling at all and simply out-heals the -19/day starvation branch).
+
+Suite 6089 green.
+
+Research: DefaultPartyHealingModel.GetSurvivalChance bonus sources
 ### fix(enlistment): wait-menu options grey out with a reason instead of vanishing
 
 From a comparative read of the *Serve as Soldier* mod, whose changelog records this as a fix for a

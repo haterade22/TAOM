@@ -826,7 +826,7 @@ public class SubModule : MBSubModuleBase
         var battleBalanceConfig = IoC.Resolve<IBattleBalanceConfigProvider>();
         campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
         campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings));
-        campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>()));
+        campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>(), IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>()));
 
         campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
 

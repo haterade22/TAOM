@@ -20,6 +20,7 @@ public class EnlistmentDailyServiceTests
     private IArmyRhythmSnapshotService _rhythm = null!;
     private IHeroSkillXpAdapter _skillXp = null!;
     private PromotionService _promotion = null!;
+    private ICommanderLordAdapter _commanderAdapter = null!;
     private IDutyWorldAdapter _world = null!;
     private EnlistmentDailyService _service = null!;
 
@@ -38,7 +39,9 @@ public class EnlistmentDailyServiceTests
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
         _promotion = new PromotionService(_contentStore, _config, _skillXp, _store, _logger);
         _world = Substitute.For<IDutyWorldAdapter>();
-        _service = new EnlistmentDailyService(_store, _contentStore, _config, _rewards, _rhythm, _skillXp, _promotion, _world, _logger);
+        _commanderAdapter = Substitute.For<ICommanderLordAdapter>();
+        _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, isAlive: true, partyId: "lord_party", partyIsActive: true));
+        _service = new EnlistmentDailyService(_store, _contentStore, _config, _rewards, _rhythm, _skillXp, _promotion, _world, _commanderAdapter, _logger);
     }
 
     private void MakeEnlisted(double contractEnd = 465.0)
@@ -145,6 +148,8 @@ public class EnlistmentDailyServiceTests
 public class EnlistmentProvisioningTests
 {
     private IDutyWorldAdapter _world = null!;
+    private IHeroSkillXpAdapter _skillXp = null!;
+    private ICommanderLordAdapter _commander = null!;
     private EnlistmentStore _store = null!;
     private EnlistmentContentStore _content = null!;
     private EnlistmentDailyService _service = null!;
@@ -154,6 +159,9 @@ public class EnlistmentProvisioningTests
     {
         var logger = Substitute.For<IModLogger>();
         _world = Substitute.For<IDutyWorldAdapter>();
+        _skillXp = Substitute.For<IHeroSkillXpAdapter>();
+        _commander = Substitute.For<ICommanderLordAdapter>();
+        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, isAlive: true, partyId: "lord_party", partyIsActive: true));
         _store = new EnlistmentStore(logger);
         _content = new EnlistmentContentStore(logger);
         var config = Substitute.For<IEnlistmentContentConfigProvider>();
@@ -165,7 +173,7 @@ public class EnlistmentProvisioningTests
 
         _service = new EnlistmentDailyService(
             _store, _content, config, Substitute.For<IServiceRewardService>(), rhythm,
-            Substitute.For<IHeroSkillXpAdapter>(), promotion, _world, logger);
+            _skillXp, promotion, _world, _commander, logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
@@ -240,5 +248,31 @@ public class EnlistmentProvisioningTests
         _world.DidNotReceiveWithAnyArgs().GrantPlayerFood(default);
         _world.DidNotReceiveWithAnyArgs().RaisePlayerMoraleTo(default);
         _world.DidNotReceiveWithAnyArgs().HealPlayerHero(default);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_MedicineSkill_IncreasesTheHeal()
+    {
+        // A flat rate made both the skill and the surgeon duty inert — a physician and a farmhand
+        // recovered at identical speed, telling the player their Medicine does nothing in service.
+        _skillXp.GetSkillValue(Arg.Any<string>(), "Medicine").Returns(120);
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.Received(1).HealPlayerHero(23);   // 11 base + 120/10
+    }
+
+    [TestMethod]
+    public void RunDailyTick_ColumnRestingInASettlement_DoublesTheHeal()
+    {
+        // Read from the COMMANDER: the column is what is resting, and a following player is
+        // wherever it is.
+        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party", partyIsActive: true,
+            partyIsInSettlement: true, settlementId: "town_EW1"));
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.Received(1).HealPlayerHero(22);   // 11 base x2 resting
     }
 }

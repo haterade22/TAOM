@@ -14,6 +14,7 @@ public class EnlistmentDailyService : IEnlistmentDailyService
     private readonly IHeroSkillXpAdapter _skillXp;
     private readonly IPromotionService _promotion;
     private readonly TAOM.Adapters.IDutyWorldAdapter _world;
+    private readonly TAOM.Adapters.ICommanderLordAdapter _commander;
     private readonly IModLogger _logger;
 
     public EnlistmentDailyService(
@@ -25,6 +26,7 @@ public class EnlistmentDailyService : IEnlistmentDailyService
         IHeroSkillXpAdapter skillXp,
         IPromotionService promotion,
         TAOM.Adapters.IDutyWorldAdapter world,
+        TAOM.Adapters.ICommanderLordAdapter commander,
         IModLogger logger)
     {
         _store = store;
@@ -32,6 +34,7 @@ public class EnlistmentDailyService : IEnlistmentDailyService
         _config = config;
         _rewards = rewards;
         _world = world;
+        _commander = commander;
         _rhythm = rhythm;
         _skillXp = skillXp;
         _promotion = promotion;
@@ -55,11 +58,24 @@ public class EnlistmentDailyService : IEnlistmentDailyService
     private const float ServiceMoraleFloor = 40f;
 
     /// <summary>
-    /// HP the company surgeon restores per day. Matches vanilla's baseline for a mobile party
-    /// (`DefaultPartyHealingModel` adds 11) so serving is never WORSE for your health than running
-    /// your own party — which is the whole bargain of enlisting.
+    /// Base HP the company surgeon restores per day. Matches vanilla's mobile-party baseline
+    /// (`DefaultPartyHealingModel` adds 11) so serving is never WORSE than running your own party.
     /// </summary>
     private const int ServiceDailyHealing = 11;
+
+    /// <summary>
+    /// Extra HP per 10 points of the player's own Medicine. A flat rate made both the skill and the
+    /// surgeon duty inert — a physician and a farmhand recovered at exactly the same speed, which
+    /// tells the player their Medicine investment does nothing while serving.
+    /// </summary>
+    private const int MedicinePerHealingPoint = 10;
+
+    /// <summary>
+    /// Multiplier while the commander's column is resting in a settlement. Recovering in a town with
+    /// the baggage unpacked should beat recovering on the march; vanilla scales healing on the same
+    /// idea, and the reference mod triples its hourly rate on exactly this condition.
+    /// </summary>
+    private const int SettlementHealingMultiplier = 2;
 
     /// <summary>
     /// Feed the soldier. Verified against DefaultPartyHealingModel: a mobile party heals its heroes
@@ -98,8 +114,20 @@ public class EnlistmentDailyService : IEnlistmentDailyService
         // engine's own healing path was never written for, and one a player reached at 19% HP with
         // no recovery. Serving under a lord must never be worse for your health than marching
         // alone, so the company surgeon tends you explicitly rather than by side effect.
-        if (_world.HealPlayerHero(ServiceDailyHealing))
-            _logger?.LogInfo($"[Enlistment] the company surgeon tended the player (+{ServiceDailyHealing} HP)");
+        var healing = ServiceDailyHealing;
+
+        var medicine = _skillXp?.GetSkillValue(_store.Record.EnlistedHeroId, "Medicine") ?? 0;
+        if (medicine > 0)
+            healing += medicine / MedicinePerHealingPoint;
+
+        // Read from the COMMANDER, not the player: the column is what is resting, and a following
+        // player is wherever it is.
+        var resting = _commander?.GetSnapshot(_store.Record.CommanderHeroId)?.PartyIsInSettlement == true;
+        if (resting)
+            healing *= SettlementHealingMultiplier;
+
+        if (_world.HealPlayerHero(healing))
+            _logger?.LogInfo($"[Enlistment] the company surgeon tended the player (+{healing} HP; medicine {medicine}, resting {resting})");
     }
 
     public DailySummary RunDailyTick(double nowDays, double hourOfDay)
