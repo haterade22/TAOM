@@ -21,6 +21,15 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     /// <summary>Real seconds between expensive passes. The donor ran its whole loop at this rate.</summary>
     private const float MaintenanceIntervalSeconds = 0.25f;
 
+    /// <summary>
+    /// How often the wait-menu status board is rebuilt. Much slower than the maintenance tier
+    /// because it uses the EXPENSIVE commander read (GetSnapshot renders Name and walks Culture /
+    /// Clan.MapFaction / CurrentSettlement) — forbidden at 4 Hz, harmless at 0.5 Hz, and the
+    /// underlying facts (in a town, in a battle, promoted) change on a scale of campaign minutes.
+    /// The push itself is additionally gated on the model actually differing.
+    /// </summary>
+    private const float StatusIntervalSeconds = 2f;
+
     /// <summary>Campaign hours between attach/join attempts. Shared with the hourly reconciler.</summary>
     private const double AttachRetryIntervalHours = 1.0;
 
@@ -33,9 +42,11 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private readonly ICommanderLordAdapter _commander;
     private readonly IGameMenuAdapter _gameMenu;
     private readonly IEnlistmentMenuService _menuService;
+    private readonly IServiceStatusService _status;
     private readonly IModLogger _logger;
 
     private float _budget;
+    private float _statusBudget;
     private int _menuFailures;
     private string _cachedCommanderPartyId;
     private int _lastJoinRequestedForMapEventToken;
@@ -47,6 +58,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         ICommanderLordAdapter commander,
         IGameMenuAdapter gameMenu,
         IEnlistmentMenuService menuService,
+        IServiceStatusService status,
         IModLogger logger)
     {
         _store = store;
@@ -55,6 +67,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _commander = commander;
         _gameMenu = gameMenu;
         _menuService = menuService;
+        _status = status;
         _logger = logger;
     }
 
@@ -69,8 +82,16 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // Positive requirement, so a NaN dt contributes NOTHING rather than poisoning the budget
         // into never firing again (NaN propagates through every subsequent addition, and every
         // comparison against it is false).
+        // BRACES ARE LOAD-BEARING. Both accumulators must sit INSIDE the guard: NaN propagates
+        // through every subsequent addition and every comparison against it is false, so one
+        // unguarded `+= dt` permanently wedges that budget below its threshold and the tier it
+        // gates never runs again. This is the NaN-gate bug class the codebase has shipped five
+        // times; it very nearly became a sixth here.
         if (dt > 0f && !float.IsInfinity(dt))
+        {
             _budget += dt;
+            _statusBudget += dt;
+        }
 
         // CHEAP TIER — every pass. Only meaningful while parked and attached; any other state
         // either owns its own placement (duty, captivity) or is mid-transition.
@@ -90,6 +111,23 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         TryBreakBattleLatch(record, commander, presence);
         TryRequestBattleJoin(record, commander, presence, nowHours);
         EnsureServiceMenu(record, presence);
+        RefreshStatusBoard(record);
+    }
+
+    /// <summary>
+    /// Keep the wait menu's text honest. Without this the board is written once at menu init and
+    /// then never again — which is precisely why the old one-line text appeared frozen for an
+    /// entire term of service.
+    /// </summary>
+    private void RefreshStatusBoard(EnlistmentRecord record)
+    {
+        if (record.State != EnlistmentState.EnlistedAttached)
+            return;
+        if (_statusBudget < StatusIntervalSeconds)
+            return;
+
+        _statusBudget = 0f;
+        _status?.RefreshIfChanged();
     }
 
     public void OnPartyJoinedRunningMapEvent(string partyId)

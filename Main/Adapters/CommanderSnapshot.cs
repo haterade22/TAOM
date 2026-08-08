@@ -16,6 +16,12 @@ public sealed class CommanderSnapshot
     public bool PartyIsInSettlement { get; }
     public string SettlementId { get; }
 
+    /// <summary>Display name of the settlement the commander is in. Status board only — never a lookup key.</summary>
+    public string SettlementName { get; }
+
+    /// <summary>The commander's party is besieging something — distinct from being in a battle.</summary>
+    public bool PartyIsBesieging { get; }
+
     /// <summary>Which vanilla menu a discharge into this settlement should open: town / castle / village.</summary>
     public string SettlementMenuId { get; }
     public string CultureId { get; }
@@ -33,6 +39,8 @@ public sealed class CommanderSnapshot
         bool partyIsInMapEvent = false,
         bool partyIsInSettlement = false,
         string settlementId = null,
+        string settlementName = null,
+        bool partyIsBesieging = false,
         string settlementMenuId = null,
         string cultureId = null,
         string factionId = null,
@@ -46,6 +54,8 @@ public sealed class CommanderSnapshot
         PartyIsInMapEvent = partyIsInMapEvent;
         PartyIsInSettlement = partyIsInSettlement;
         SettlementId = settlementId;
+        SettlementName = settlementName;
+        PartyIsBesieging = partyIsBesieging;
         SettlementMenuId = settlementMenuId;
         CultureId = cultureId;
         FactionId = factionId;

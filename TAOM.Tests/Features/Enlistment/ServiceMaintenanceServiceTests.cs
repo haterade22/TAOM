@@ -36,7 +36,8 @@ public class ServiceMaintenanceServiceTests
         _menuService.IsRedirectable(Arg.Any<string>()).Returns(true);
 
         _pump = new ServiceMaintenanceService(
-            _store, _machine, _attachment, _commander, _gameMenu, _menuService, _logger);
+            _store, _machine, _attachment, _commander, _gameMenu, _menuService,
+            Substitute.For<IServiceStatusService>(), _logger);
 
         Commander(followable: true);
         Presence(parked: true);

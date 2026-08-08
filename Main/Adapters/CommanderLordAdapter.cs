@@ -34,6 +34,8 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 partyIsInMapEvent: party?.MapEvent != null,
                 partyIsInSettlement: party?.CurrentSettlement != null,
                 settlementId: hero.CurrentSettlement?.StringId,
+                settlementName: hero.CurrentSettlement?.Name?.ToString(),
+                partyIsBesieging: party?.BesiegedSettlement != null,
                 settlementMenuId: MenuIdFor(hero.CurrentSettlement),
                 cultureId: hero.Culture?.StringId,
                 factionId: hero.Clan?.MapFaction?.StringId,

@@ -38,9 +38,7 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     private readonly IEnlistmentService _service;
     private readonly IInquiryAdapter _inquiry;
     private readonly ICoopSessionProvider _coopSession;
-
-    private readonly TextObject _waitText = new TextObject(
-        "{=taom_enlist_wait_text}You serve in {COMMANDER}'s company. The column moves at your commander's pace.");
+    private readonly IServiceStatusService _status;
 
     public EnlistmentWaitMenuPresenter(
         IEnlistmentStore store,
@@ -48,7 +46,8 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         IEnlistmentDialogGateService gate,
         IEnlistmentService service,
         IInquiryAdapter inquiry,
-        ICoopSessionProvider coopSession)
+        ICoopSessionProvider coopSession,
+        IServiceStatusService status)
     {
         _store = store;
         _commander = commander;
@@ -56,13 +55,18 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         _service = service;
         _inquiry = inquiry;
         _coopSession = coopSession;
+        _status = status;
     }
 
+    /// <summary>
+    /// Force a push on menu init. Invalidate first: the cached model is almost always identical
+    /// to what is on screen, so a plain RefreshIfChanged would no-op and leave whatever text the
+    /// previous menu had.
+    /// </summary>
     public void RefreshWaitText()
     {
-        var commanderName = _commander.GetSnapshot(_store.Record.CommanderHeroId).Name ?? "";
-        _waitText.SetTextVariable("COMMANDER", commanderName);
-        MBTextManager.SetTextVariable("TAOM_ENLISTMENT_WAIT_TEXT", _waitText);
+        _status.Invalidate();
+        _status.RefreshIfChanged();
     }
 
     public void ShowServiceStatus()

@@ -12,6 +12,14 @@ public interface IEnlistmentReconciler
 {
     void ReconcileHourly(double nowDays);
 
+    /// <summary>
+    /// Full reconcile off an EDGE rather than the hourly tick — the commander left a settlement,
+    /// left an army. Re-entrant-safe: a reconcile already in flight is a no-op, which matters
+    /// because the reconciler itself calls LeaveSettlementAction and that dispatches
+    /// OnSettlementLeft straight back into here.
+    /// </summary>
+    void ReconcileNow(double nowDays, string trigger);
+
     /// <summary>Raised when the commander is fighting a map event the player has not joined. The battle layer subscribes.</summary>
     event Action<string> BattleJoinRequested;
 }

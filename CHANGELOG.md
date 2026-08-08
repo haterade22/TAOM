@@ -48,6 +48,49 @@ trimming 234 bodies at weighted 465 against limit 231.
 Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
 guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
 equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+### feat(enlistment): a wait menu that tells you what is happening, and two edges that beat the tick
+
+Batches 9 and 10. The wait menu showed one sentence — *"You serve in X's company"* — unchanged from
+oath to discharge. It now shows where the column is and by name, your rank and section, days
+served, standing, any pay owed, and your current orders.
+
+**The planned root cause for this was wrong, and verifying it saved the work.** The design said
+`GameMenuVM.IsMenuTextChanged` compares `Attributes`, that a global text variable never lands
+there, that the text was therefore structurally frozen, and that the fix was
+`args.MenuContext.GameMenu.GetText().SetTextVariable(...)`. Read against the installed v1.4.7, the
+method compares `_menuTextAttributes.Count` (an `int`) with `_menuText?.Attributes?.Count` (an
+`int?`). Our menu text is built by `new TextObject(text)` with no attributes, so that comparison is
+`0 != null` — always TRUE under C#'s lifted equality, confirmed by compiling and running it rather
+than reasoning about it. The menu re-renders every frame and re-resolves the global each time.
+
+Nothing was frozen. `RefreshWaitText` simply ran once at menu init and its only token was the
+commander's name, which does not change all term — nothing new was ever computed. So the fix is
+cadence and varying content, and the proposed plumbing would have been real code aimed at a bug
+this menu does not have.
+
+The board rebuilds every 2 seconds and pushes only when the value actually differs. That equality
+IS the throttle, so a field omitted from `Equals` is a status line whose changes never reach the
+screen — one `DataRow` per field guards it.
+
+Batch 10: the reconciler gained a re-entrancy guard, and it is not theoretical. Settlement
+following made the reconciler call `LeaveSettlementAction`, which dispatches `OnSettlementLeft` —
+the very edge this batch subscribes. Without the guard it re-enters itself mid-pass, on a record it
+is halfway through mutating.
+
+Two re-attach edges subscribed, not the donor's six. The pump already re-derives everything within
+250 ms, so an edge earns its place only by firing where the pump is silent — and
+`CampaignEvents.TickEvent` does not run inside encounter or settlement menus or a map conversation.
+A commander walking out of a town while the player sits in a menu is exactly that gap. The other
+four only re-arm a flag whose own retry budget is an hour anyway; declined deliberately, and
+recorded as a decision rather than an oversight.
+
+Near-miss worth recording: the status budget was first written outside the pump's NaN guard, one
+missing pair of braces from being the sixth shipped instance of that bug class. A NaN `dt` would
+have wedged the board permanently.
+
+Enlistment suite 659 green.
+
+Research: GameMenuVM.IsMenuTextChanged, MBTextManager vs TextObject.SetTextVariable, CampaignEvents.OnSettlementLeftEvent
 ### feat(enlistment): make the enlisted dialog surface reachable, and add a master off switch
 
 Batch 8. Reassignment, the quartermaster and in-person discharge were all shipped, all tested, and

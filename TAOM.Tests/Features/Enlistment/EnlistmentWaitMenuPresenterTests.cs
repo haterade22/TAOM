@@ -39,7 +39,8 @@ public class EnlistmentWaitMenuPresenterTests
         _gate.EvaluateReleaseRequest(Arg.Any<double>()).Returns(ReleaseRequest.Granted);
         _gate.ClassifyLeaveReason(Arg.Any<double>()).Returns(DischargeReason.PlayerRequest);
 
-        _sut = new EnlistmentWaitMenuPresenter(_store, _commander, _gate, _service, _inquiry, _coop);
+        _sut = new EnlistmentWaitMenuPresenter(_store, _commander, _gate, _service, _inquiry, _coop,
+            Substitute.For<IServiceStatusService>());
     }
 
     [TestMethod]

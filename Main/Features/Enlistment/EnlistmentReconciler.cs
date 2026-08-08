@@ -19,6 +19,14 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     private readonly IEnlistmentFeatureSettingsProvider _feature;
     private readonly IModLogger _logger;
 
+    /// <summary>
+    /// RE-ENTRANCY GUARD, and the hazard is live rather than theoretical. Settlement following
+    /// made the reconciler call LeaveSettlementAction, which dispatches OnSettlementLeft — the
+    /// very edge this class now subscribes. Without this flag the reconciler re-enters itself
+    /// mid-pass, on a record it is halfway through mutating.
+    /// </summary>
+    private bool _reconcileInFlight;
+
     public EnlistmentReconciler(
         IEnlistmentStore store,
         IEnlistmentStateMachine machine,
@@ -47,11 +55,36 @@ public class EnlistmentReconciler : IEnlistmentReconciler
 
     public event Action<string> BattleJoinRequested;
 
-    public void ReconcileHourly(double nowDays)
+    public void ReconcileHourly(double nowDays) => Reconcile(nowDays, "hourly");
+
+    /// <summary>
+    /// Run a full reconcile now, off an edge rather than the hourly tick. The trigger string is
+    /// diagnostic only — it names which edge woke us in the log.
+    /// </summary>
+    public void ReconcileNow(double nowDays, string trigger) => Reconcile(nowDays, trigger);
+
+    private void Reconcile(double nowDays, string trigger)
     {
         var record = _store.Record;
         if (!record.IsEnlisted)
             return;
+
+        if (_reconcileInFlight)
+            return;
+
+        _reconcileInFlight = true;
+        try
+        {
+            ReconcileCore(record, nowDays, trigger);
+        }
+        finally
+        {
+            _reconcileInFlight = false;
+        }
+    }
+
+    private void ReconcileCore(EnlistmentRecord record, double nowDays, string trigger)
+    {
 
         // MCM master switch, checked before any other reconciliation. Turning the feature off
         // mid-service cannot simply stop the loop: the player is parked HIDDEN and INACTIVE,
@@ -81,7 +114,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 return;
             case EnlistmentState.EnlistedAttached:
             case EnlistmentState.EnlistedBattle:
-                ReconcileAttached(record, presence, nowDays);
+                ReconcileAttached(record, presence, nowDays, trigger);
                 return;
         }
     }
@@ -152,7 +185,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         }
     }
 
-    private void ReconcileAttached(EnlistmentRecord record, PlayerPresenceSnapshot presence, double nowDays)
+    private void ReconcileAttached(EnlistmentRecord record, PlayerPresenceSnapshot presence, double nowDays, string trigger)
     {
         var snapshot = _commander.GetSnapshot(record.CommanderHeroId);
 
@@ -189,7 +222,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         // with the toggle off.
         if (_diag?.IsEnabled == true)
             _logger?.LogInfo(
-                $"[EnlistDiag] TICK state={record.State} verdict={assessment.Status}" +
+                $"[EnlistDiag] TICK trigger={trigger} state={record.State} verdict={assessment.Status}" +
                 (assessment.Status == AttachmentStatus.Blocked ? $"({assessment.BlockReason})" : "") +
                 $" | player: {presence.Describe()}" +
                 $" | commander '{record.CommanderHeroId}': exists={snapshot.Exists} alive={snapshot.IsAlive} " +
