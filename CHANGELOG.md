@@ -4,6 +4,47 @@
 
 ## 2026-08-08
 
+### fix(enlistment): stop double-healing on detached duty, and stop showing players raw duty ids
+
+Both found by the adversarially-verified SAS comparison — not in the reference mod, in our code.
+
+**The heal double-paid for most of a player's service.** `ProvisionFromCommander` healed on
+`IsEnlisted` alone, but vanilla's `PartyHealCampaignBehavior` keys on `IsActive`. Service has two
+regimes and they differ in exactly that property: parked (`EnlistedAttached` / `EnlistedBattle`) is
+inactive, so vanilla never reaches the party and nothing heals the player at all — that is the
+19%-HP report from this morning. Detached (`EnlistedDetachedOnDuty`, and the 7-day
+`CommanderUnavailable` grace) has already called `RestorePresence()`, so vanilla is healing +11/day
+and we were adding 11–22 on top. **12 of the 13 field duties detach** for 4–6 days at a time — only
+`WaitHours` stays attached — so the detached regime is the common case, not an edge.
+
+The comment block shipped hours earlier asserted the party was "hidden, inactive, one-man" in all
+cases. It is not, and that false safety property is what let the double-pay through; it now states
+both regimes explicitly. Food and morale stay ungated on purpose — on detached duty the party is
+active and vanilla consumes food for real, so the baggage top-up is the company still provisioning
+a soldier it sent out. Only the heal double-paid. Gate reads state rather than a live presence flag
+so it cannot disagree with the transition that caused it. RED verified by disabling the guard: 3
+fail without it, 13 pass with it.
+
+Same pass, `Hero.Heal(hitPoints, addXp: true)` — vanilla's `HealMemberHeroes` passes `true` on the
+very path this replaces, and without it the two regimes would silently differ in whether the day's
+recovery trained Medicine.
+
+**The status board printed internal identifiers.** All 13 field duties rendered as
+`You have orders: recon_sweep` in all 12 languages, because
+`generate_enlistment_duty_strings.py` derived its key set from `interactiveDuties` + `incidents`
+only, and `ServiceStatusTextWriter` used the row id as its own fallback text. 13 authored titles
+added and translated into all 12 languages (every file now 178 keys, matching English, verified by
+count). Two guards so it cannot recur: the generator hard-fails on an unauthored field-duty row,
+and the fallback is now prose — the loud signal for a missing key belongs where a human sees it,
+not on the player's status board.
+
+Also corrected `docs/features/enlistment.md`, whose "~84 unregistered keys / needs a generator"
+claim was stale enough that it became the single biggest evidence error in the comparison: one
+dimension concluded the prose was trapped in C# and unlocalized when it has been registered
+`GameText` in 12 languages for some time.
+
+Suite 6094 passing / 0 failing; `validate_moduledata.py` PASS.
+
 ### docs: record the Serve as Soldier comparison with its engine facts already resolved
 
 Three fixes from the comparison shipped earlier today (`97d6b6e6`, `2a6b3061`). What remains is

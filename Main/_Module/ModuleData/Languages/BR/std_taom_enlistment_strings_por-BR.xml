@@ -170,6 +170,19 @@
     <string id="taom_enlist_talk_no_duty" text="Você está afastado sob ordens — cavalgue até ele você mesmo." />
     <string id="taom_enlist_talk_no_commander" text="Seu comandante não pode ser alcançado." />
     <string id="taom_enlist_talk_no_map" text="Não daqui." />
-    <string id="taom_enlist_talk_no_generic" text="Você não pode falar com ele agora." />
+    <string id="taom_enlist_talk_no_generic" text="Você não pode falar com ele agora." />
+    <string id="taom_enlist_duty_recon_sweep_title" text="um reconhecimento" />
+    <string id="taom_enlist_duty_mounted_pursuit_title" text="uma perseguição montada" />
+    <string id="taom_enlist_duty_bandit_hunt_title" text="uma caçada a bandidos" />
+    <string id="taom_enlist_duty_deserter_sweep_title" text="uma varredura de desertores" />
+    <string id="taom_enlist_duty_road_patrol_title" text="uma patrulha na estrada" />
+    <string id="taom_enlist_duty_scout_route_title" text="o reconhecimento da estrada" />
+    <string id="taom_enlist_duty_recruitment_errand_title" text="uma missão de recrutamento" />
+    <string id="taom_enlist_duty_trusted_dispatch_title" text="um despacho confidencial" />
+    <string id="taom_enlist_duty_relief_dispatch_title" text="um aviso a um feudo em apuros" />
+    <string id="taom_enlist_duty_supply_delivery_title" text="uma entrega de suprimentos" />
+    <string id="taom_enlist_duty_forage_title" text="forrageamento para a companhia" />
+    <string id="taom_enlist_duty_hideout_strike_title" text="um ataque a um esconderijo" />
+    <string id="taom_enlist_duty_service_shift_title" text="serviço no acampamento" />
   </strings>
 </base>

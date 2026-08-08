@@ -1,6 +1,7 @@
-using TAOM.Adapters;
+﻿using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Content.Domain;
+using TAOM.Features.Enlistment.Domain;
 
 namespace TAOM.Features.Enlistment.Content;
 
@@ -78,6 +79,17 @@ public class EnlistmentDailyService : IEnlistmentDailyService
     private const int SettlementHealingMultiplier = 2;
 
     /// <summary>
+    /// True only while the player's party is parked on the commander — the states in which
+    /// <c>IsActive</c> is false and the engine's own healing path therefore cannot see them.
+    /// Read from state rather than from a live presence flag on purpose: state is what the save
+    /// carries and what the reconciler drives, so the gate cannot disagree with the transition
+    /// that caused it.
+    /// </summary>
+    private bool IsParked() =>
+        _store.Record.State == EnlistmentState.EnlistedAttached
+        || _store.Record.State == EnlistmentState.EnlistedBattle;
+
+    /// <summary>
     /// Feed the soldier. Verified against DefaultPartyHealingModel: a mobile party heals its heroes
     /// +11 HP/day, BUT `if (party.IsStarving && CurrentSettlement == null) return -19f` — a starving
     /// hero LOSES 19 HP a day. An enlisted player is a single hero parked in the field for days
@@ -109,11 +121,23 @@ public class EnlistmentDailyService : IEnlistmentDailyService
         if (_world.RaisePlayerMoraleTo(ServiceMoraleFloor))
             _logger?.LogInfo($"[Enlistment] company morale lifted the player to the service floor ({ServiceMoraleFloor})");
 
-        // Healing LAST and unconditional. Vanilla heals heroes in a mobile party +11/day, but an
-        // enlisted player is a hidden, inactive, one-man party parked in a field — a shape the
-        // engine's own healing path was never written for, and one a player reached at 19% HP with
-        // no recovery. Serving under a lord must never be worse for your health than marching
-        // alone, so the company surgeon tends you explicitly rather than by side effect.
+        // Healing LAST, and only in the PARKED regime. Service has two of them and they differ in
+        // exactly the property vanilla's healing keys on:
+        //
+        //   parked   (EnlistedAttached / EnlistedBattle)  IsActive == false — vanilla's
+        //            PartyHealCampaignBehavior never reaches the party, so nothing heals the
+        //            player at all. This is the 19%-HP report from 2026-08-08. We heal.
+        //   detached (EnlistedDetachedOnDuty, CommanderUnavailable grace) RestorePresence() has
+        //            set IsActive == true, so vanilla is already healing +11/day. We must not.
+        //
+        // Getting this wrong is not cosmetic: 12 of the 13 field duties detach for 4–6 days
+        // (only WaitHours stays attached), so the detached regime is the COMMON one, and healing
+        // unconditionally paid the player twice for most of their service. An earlier version of
+        // this comment asserted the party was "hidden, inactive" in all cases — it is not, and
+        // that false safety property is what let the double-pay through.
+        if (!IsParked())
+            return;
+
         var healing = ServiceDailyHealing;
 
         var medicine = _skillXp?.GetSkillValue(_store.Record.EnlistedHeroId, "Medicine") ?? 0;

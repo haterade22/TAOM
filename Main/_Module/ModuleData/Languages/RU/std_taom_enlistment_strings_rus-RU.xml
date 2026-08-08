@@ -170,6 +170,19 @@
     <string id="taom_enlist_talk_no_duty" text="Вы отправлены с приказом — поезжайте к нему сами." />
     <string id="taom_enlist_talk_no_commander" text="С вашим командиром нельзя связаться." />
     <string id="taom_enlist_talk_no_map" text="Не отсюда." />
-    <string id="taom_enlist_talk_no_generic" text="Сейчас вы не можете с ним поговорить." />
+    <string id="taom_enlist_talk_no_generic" text="Сейчас вы не можете с ним поговорить." />
+    <string id="taom_enlist_duty_recon_sweep_title" text="разведывательный дозор" />
+    <string id="taom_enlist_duty_mounted_pursuit_title" text="конная погоня" />
+    <string id="taom_enlist_duty_bandit_hunt_title" text="охота на разбойников" />
+    <string id="taom_enlist_duty_deserter_sweep_title" text="облава на дезертиров" />
+    <string id="taom_enlist_duty_road_patrol_title" text="дорожный патруль" />
+    <string id="taom_enlist_duty_scout_route_title" text="разведка дороги" />
+    <string id="taom_enlist_duty_recruitment_errand_title" text="вербовочный обход" />
+    <string id="taom_enlist_duty_trusted_dispatch_title" text="тайная депеша" />
+    <string id="taom_enlist_duty_relief_dispatch_title" text="весть осаждённому владению" />
+    <string id="taom_enlist_duty_supply_delivery_title" text="доставка припасов" />
+    <string id="taom_enlist_duty_forage_title" text="фуражировка для роты" />
+    <string id="taom_enlist_duty_hideout_strike_title" text="удар по логову" />
+    <string id="taom_enlist_duty_service_shift_title" text="служба в лагере" />
   </strings>
 </base>

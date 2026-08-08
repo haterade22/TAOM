@@ -170,6 +170,19 @@
     <string id="taom_enlist_talk_no_duty" text="你正奉命在外——自己骑马去找他吧。" />
     <string id="taom_enlist_talk_no_commander" text="无法联系上你的指挥官。" />
     <string id="taom_enlist_talk_no_map" text="不能在此处。" />
-    <string id="taom_enlist_talk_no_generic" text="此刻你无法与他交谈。" />
+    <string id="taom_enlist_talk_no_generic" text="此刻你无法与他交谈。" />
+    <string id="taom_enlist_duty_recon_sweep_title" text="侦察巡视" />
+    <string id="taom_enlist_duty_mounted_pursuit_title" text="骑马追击" />
+    <string id="taom_enlist_duty_bandit_hunt_title" text="剿匪" />
+    <string id="taom_enlist_duty_deserter_sweep_title" text="搜捕逃兵" />
+    <string id="taom_enlist_duty_road_patrol_title" text="道路巡逻" />
+    <string id="taom_enlist_duty_scout_route_title" text="侦察前路" />
+    <string id="taom_enlist_duty_recruitment_errand_title" text="招募差事" />
+    <string id="taom_enlist_duty_trusted_dispatch_title" text="密信传递" />
+    <string id="taom_enlist_duty_relief_dispatch_title" text="向受困封地传讯" />
+    <string id="taom_enlist_duty_supply_delivery_title" text="运送补给" />
+    <string id="taom_enlist_duty_forage_title" text="为连队征粮" />
+    <string id="taom_enlist_duty_hideout_strike_title" text="突袭匪巢" />
+    <string id="taom_enlist_duty_service_shift_title" text="营中值勤" />
   </strings>
 </base>

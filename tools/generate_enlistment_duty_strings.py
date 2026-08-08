@@ -43,6 +43,29 @@ STRINGS_XML = REPO_ROOT / "Main/_Module/ModuleData/taom_enlistment_strings.xml"
 SUCCESS_TEXT = "It went well."
 FAILURE_TEXT = "It didn't go as planned."
 
+# Field duties need ONLY a _title: ServiceStatusTextWriter renders "You have orders: {DUTY_NAME}"
+# and nothing else about a field duty is player-facing text. They were missed on the first pass
+# because that pass derived its key set from `interactiveDuties` + `incidents` only, so all 13
+# rendered as their raw snake_case id ("You have orders: recon_sweep") in every language.
+#
+# Authored rather than Humanize()d: these read after a colon, so they want a noun phrase a soldier
+# would recognise as an order, not a title-cased identifier ("Recon Sweep").
+FIELD_DUTY_TITLES = {
+    "recon_sweep":        "a reconnaissance sweep",
+    "mounted_pursuit":    "a mounted pursuit",
+    "bandit_hunt":        "a bandit hunt",
+    "deserter_sweep":     "a sweep for deserters",
+    "road_patrol":        "a road patrol",
+    "scout_route":        "to scout the road ahead",
+    "recruitment_errand": "a recruiting errand",
+    "trusted_dispatch":   "to carry a dispatch",
+    "relief_dispatch":    "to carry word to a hard-pressed fief",
+    "supply_delivery":    "a supply run",
+    "forage":             "to forage for the company",
+    "hideout_strike":     "to strike a hideout",
+    "service_shift":      "camp duty",
+}
+
 
 def xml_escape(text: str) -> str:
     return (text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -101,6 +124,24 @@ def build_entries() -> list[tuple[str, str]]:
         entries.append((f"taom_enlist_duty_{row_id}_success", SUCCESS_TEXT))
         entries.append((f"taom_enlist_duty_{row_id}_failure", FAILURE_TEXT))
 
+    # Field duties: title only. Driven off the JSON rows so a new row fails loudly here rather
+    # than shipping as a raw id, which is exactly how the first 13 escaped.
+    data = json.loads(io.open(DUTIES_JSON, encoding="utf-8").read())
+    field_ids = [r.get("id") for r in (data.get("fieldDuties") or []) if r.get("id")]
+    unauthored = [i for i in field_ids if i not in FIELD_DUTY_TITLES]
+    if unauthored:
+        sys.exit(
+            "ERROR: field duty rows with no authored title: "
+            + ", ".join(unauthored)
+            + "\n       Add them to FIELD_DUTY_TITLES — an unauthored row renders as its raw id in all 12 languages."
+        )
+    for row_id in sorted(field_ids):
+        entries.append((f"taom_enlist_duty_{row_id}_title", FIELD_DUTY_TITLES[row_id]))
+
+    stale = sorted(set(FIELD_DUTY_TITLES) - set(field_ids))
+    if stale:
+        print(f"  NOTE: {len(stale)} authored field-duty title(s) have no matching row: {', '.join(stale)}")
+
     missing = sorted(set(options) - set(copy))
     if missing:
         print(f"  NOTE: {len(missing)} row(s) have no DutyCopy entry and fall back to generic copy: {', '.join(missing)}")
@@ -123,7 +164,8 @@ def main() -> None:
     existing = set(re.findall(r'id="([^"]+)"', xml))
     new = [(k, v) for k, v in entries if k not in existing]
 
-    print(f"  duty/incident rows: {len(entries) // 6}")
+    print(f"  interactive/incident rows: {sum(1 for k, _ in entries if k.endswith('_body'))}")
+    print(f"  field-duty rows:           {sum(1 for k, _ in entries if k.endswith('_title')) - sum(1 for k, _ in entries if k.endswith('_body'))}")
     print(f"  keys generated:     {len(entries)}")
     print(f"  already registered: {len(entries) - len(new)}")
     print(f"  to add:             {len(new)}")

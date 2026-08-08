@@ -170,6 +170,19 @@
     <string id="taom_enlist_talk_no_duty" text="Du bist mit Befehlen unterwegs — reite selbst zu ihm." />
     <string id="taom_enlist_talk_no_commander" text="Dein Befehlshaber ist nicht erreichbar." />
     <string id="taom_enlist_talk_no_map" text="Nicht von hier aus." />
-    <string id="taom_enlist_talk_no_generic" text="Du kannst gerade nicht mit ihm sprechen." />
+    <string id="taom_enlist_talk_no_generic" text="Du kannst gerade nicht mit ihm sprechen." />
+    <string id="taom_enlist_duty_recon_sweep_title" text="ein Spähtrupp" />
+    <string id="taom_enlist_duty_mounted_pursuit_title" text="eine berittene Verfolgung" />
+    <string id="taom_enlist_duty_bandit_hunt_title" text="eine Banditenjagd" />
+    <string id="taom_enlist_duty_deserter_sweep_title" text="eine Jagd auf Deserteure" />
+    <string id="taom_enlist_duty_road_patrol_title" text="eine Straßenpatrouille" />
+    <string id="taom_enlist_duty_scout_route_title" text="die Erkundung der Straße" />
+    <string id="taom_enlist_duty_recruitment_errand_title" text="ein Rekrutierungsgang" />
+    <string id="taom_enlist_duty_trusted_dispatch_title" text="eine vertrauliche Depesche" />
+    <string id="taom_enlist_duty_relief_dispatch_title" text="Nachricht an ein bedrängtes Lehen" />
+    <string id="taom_enlist_duty_supply_delivery_title" text="eine Nachschubfahrt" />
+    <string id="taom_enlist_duty_forage_title" text="Furagieren für die Kompanie" />
+    <string id="taom_enlist_duty_hideout_strike_title" text="ein Angriff auf ein Versteck" />
+    <string id="taom_enlist_duty_service_shift_title" text="Lagerdienst" />
   </strings>
 </base>

@@ -511,12 +511,22 @@ Specifically owed, because each is a state a test structurally cannot reach:
 ### Still owed beyond testing
 
 - **Batch 11 (content beats)** — not started.
-- **12-language translation.** All 66 keys are registered, but `taom_enlistment_strings.xml` is not
-  in `translate_with_claude.py`'s file list and `LanguageDataXmlTests` pins 10 language files per
-  directory, so `/localize` currently translates nothing here. English fallbacks work.
-- **~84 runtime-built duty keys** (`taom_enlist_duty_{id}_{title|body|opta|optb|success|failure}`)
-  are assembled from data-row ids, so a literal `{=key}` grep cannot find them and none are
-  registered. Needs a generator, or those 14 duties/incidents ship English-only.
+- **12-language translation — DONE (2026-08-08).** `taom_enlistment_strings.xml` holds **178** keys
+  and every one of the 12 `Languages/<L>/std_taom_enlistment_strings_<loc>.xml` files holds 178,
+  verified by count this session. Nothing here ships English-only.
+
+  The **97 runtime-built duty keys** are the reason
+  `tools/generate_enlistment_duty_strings.py` exists: `InteractiveDutyPresenter` and
+  `ServiceStatusTextWriter` assemble ids as `taom_enlist_duty_<row id>_<suffix>` at runtime, so a
+  literal `{=key}` grep — the discovery mechanism `/localize` relies on — finds none of them. The
+  generator enumerates them from the data rows instead. 84 are the 14 interactive-duty/incident
+  rows × 6 suffixes; **13 are the field-duty `_title`s, added 2026-08-08** after the first pass
+  derived its key set from `interactiveDuties` + `incidents` only and left all 13 field duties
+  rendering as their raw snake_case id ("You have orders: recon_sweep") in every language.
+
+  Two guards now stop that recurring: the generator **hard-fails** on a field-duty row with no
+  authored title, and `ServiceStatusTextWriter`'s fallback is prose rather than the row id, so a
+  future miss degrades quietly for the player instead of printing an internal symbol.
 - **Two entry points remain over the ADR-002 ceiling**, both pre-dating this arc:
   `EnlistmentMeritMissionBehavior` (163 — it holds a 44-line geometric scoring algorithm inline that
   wants to be a testable engine) and `EnlistmentBattleBehavior` (157).

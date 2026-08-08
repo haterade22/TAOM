@@ -170,6 +170,19 @@
     <string id="taom_enlist_talk_no_duty" text="당신은 명령을 받아 떠나 있습니다 — 직접 그에게 찾아가십시오." />
     <string id="taom_enlist_talk_no_commander" text="당신의 지휘관에게 닿을 수 없습니다." />
     <string id="taom_enlist_talk_no_map" text="여기서는 안 됩니다." />
-    <string id="taom_enlist_talk_no_generic" text="지금은 그와 이야기할 수 없습니다." />
+    <string id="taom_enlist_talk_no_generic" text="지금은 그와 이야기할 수 없습니다." />
+    <string id="taom_enlist_duty_recon_sweep_title" text="정찰 순회" />
+    <string id="taom_enlist_duty_mounted_pursuit_title" text="기마 추격" />
+    <string id="taom_enlist_duty_bandit_hunt_title" text="산적 토벌" />
+    <string id="taom_enlist_duty_deserter_sweep_title" text="탈영병 수색" />
+    <string id="taom_enlist_duty_road_patrol_title" text="도로 순찰" />
+    <string id="taom_enlist_duty_scout_route_title" text="길 정찰" />
+    <string id="taom_enlist_duty_recruitment_errand_title" text="모병 심부름" />
+    <string id="taom_enlist_duty_trusted_dispatch_title" text="밀서 전달" />
+    <string id="taom_enlist_duty_relief_dispatch_title" text="곤경에 처한 영지로 전갈" />
+    <string id="taom_enlist_duty_supply_delivery_title" text="보급품 수송" />
+    <string id="taom_enlist_duty_forage_title" text="중대를 위한 징발" />
+    <string id="taom_enlist_duty_hideout_strike_title" text="은신처 습격" />
+    <string id="taom_enlist_duty_service_shift_title" text="야영지 당번" />
   </strings>
 </base>

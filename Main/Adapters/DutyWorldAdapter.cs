@@ -331,7 +331,12 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
             if (hero == null || hitPoints <= 0 || hero.HitPoints >= hero.MaxHitPoints)
                 return false;
 
-            hero.Heal(hitPoints);
+            // addXp: true matches vanilla — PartyHealCampaignBehavior.HealMemberHeroes passes true
+            // on the very path this replaces. Recovering under the company surgeon should train
+            // Medicine exactly as recovering in your own party does; without it the two regimes
+            // (parked, where we heal, and detached, where vanilla does) would silently differ in
+            // whether the day's recovery taught you anything. ~6 XP/day at heal 11, self-limiting.
+            hero.Heal(hitPoints, addXp: true);
             return true;
         }
         catch (Exception ex)

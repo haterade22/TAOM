@@ -263,6 +263,69 @@ public class EnlistmentProvisioningTests
     }
 
     [TestMethod]
+    public void RunDailyTick_InBattle_StillHeals()
+    {
+        // EnlistedBattle is the other PARKED state: presence is restored for the fight itself, but
+        // the party is not out living its own life on the map. Same regime as attached.
+        _store.Record.State = EnlistmentState.EnlistedBattle;
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.Received(1).HealPlayerHero(11);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_DetachedOnDuty_DoesNotHeal_VanillaAlreadyDoes()
+    {
+        // THE REGIME SPLIT. A field duty calls RestorePresence() — IsActive becomes true — and
+        // vanilla's PartyHealCampaignBehavior heals any ACTIVE party's heroes +11/day on its own.
+        // Healing here too paid the player twice for 4–6 days per duty. 12 of the 13 field duties
+        // detach (only WaitHours stays attached), so this was the common case, not an edge.
+        _store.Record.State = EnlistmentState.EnlistedDetachedOnDuty;
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.DidNotReceiveWithAnyArgs().HealPlayerHero(default);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_CommanderUnavailable_DoesNotHeal()
+    {
+        // The 7-day grace also restores presence (EnlistmentReconciler:349), so vanilla is healing.
+        _store.Record.State = EnlistmentState.CommanderUnavailable;
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.DidNotReceiveWithAnyArgs().HealPlayerHero(default);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_PlayerCaptive_DoesNotHeal()
+    {
+        // Vanilla captivity owns the party entirely. A prisoner is not drawing the company surgeon.
+        _store.Record.State = EnlistmentState.EnlistedPlayerCaptive;
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.DidNotReceiveWithAnyArgs().HealPlayerHero(default);
+    }
+
+    [TestMethod]
+    public void RunDailyTick_DetachedOnDuty_StillFedAndKeptInMorale()
+    {
+        // Deliberately NOT gated with the heal. On detached duty the party is active, so vanilla
+        // consumes food for real — the baggage top-up is the company still provisioning a soldier
+        // it sent out, which is the point of the feature. Only the HEAL double-pays.
+        _store.Record.State = EnlistmentState.EnlistedDetachedOnDuty;
+        _world.CountPlayerFood().Returns(0);
+
+        _service.RunDailyTick(5.0, 12.0);
+
+        _world.Received(1).GrantPlayerFood(3);
+        _world.Received(1).RaisePlayerMoraleTo(40f);
+    }
+
+    [TestMethod]
     public void RunDailyTick_ColumnRestingInASettlement_DoublesTheHeal()
     {
         // Read from the COMMANDER: the column is what is resting, and a following player is
