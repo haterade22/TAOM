@@ -4,6 +4,21 @@
 
 ## 2026-08-07
 
+### fix(tools): a degraded validate_moduledata run stops reporting PASS as a pass (#404)
+
+`validate_moduledata.py` took its Modules folder from a literal, so on a wrong root the registry came
+back with 0 items and 0 NPCCharacters, `BROKEN_ITEM_REF` and `BROKEN_TROOP_REF` could not fire, and
+the run still printed `PASS` and exited 0. It now resolves the folder through `_gamedir.game_modules`
+(aliased on import, since `main()` binds a local of the same name), and a run whose root is missing
+returns 2 rather than 0. The commit hook already fails open on anything that is not 1, so nothing
+starts blocking that did not block before.
+
+Measured on this machine: with the root right, `Registry: 5,952 items, 5,005 NPCCharacters` and
+`PASS`, exit 0. With it wrong, `Registry: 0 items, 0 NPCCharacters`, `PASS`, and now exit 2.
+
+The hook itself needed no change: `BANNERLORD_GAME_DIR` is a persistent user variable, so every
+process it spawns inherits it.
+
 ### feat(tools): one place answers "where is the install", and a wrong root says so (#404)
 
 Completes #404 on top of the writers. `tools/_gamedir.py` holds `game_dir(default)`,
