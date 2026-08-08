@@ -22,8 +22,16 @@ public interface IEnlistmentDialogGateService
     bool CanRequestDischargeFrom(string partnerHeroId);
 
     /// <summary>
-    /// Leaving before the contract day is desertion (arrears forfeit, relation cost);
-    /// at/after it — or with no contract recorded — an honorable player request.
+    /// The reason recorded for a leave the commander GRANTS. Always an honourable player
+    /// request — see the implementation for why this is not a classification any more.
     /// </summary>
     Domain.DischargeReason ClassifyLeaveReason(double nowDays);
+
+    /// <summary>
+    /// Decide what happens when the player asks to be released, and how many days are owed if
+    /// the answer is "not yet". Every degenerate input falls open to
+    /// <see cref="Domain.ReleaseVerdict.Granted"/> — the failure mode of this gate is a player
+    /// trapped in service with no exit, so it is built to let people go, not to hold them.
+    /// </summary>
+    Domain.ReleaseRequest EvaluateReleaseRequest(double nowDays);
 }

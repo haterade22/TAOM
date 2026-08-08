@@ -19,12 +19,20 @@ namespace TAOM.Adapters;
 /// </summary>
 public interface IInquiryAdapter
 {
+    /// <summary>
+    /// <paramref name="bodyVariableName"/>/<paramref name="bodyVariableValue"/> are optional and
+    /// substitute into the BODY only — they exist so a consequence can be stated with a real
+    /// number ("18 more days are owed") instead of a vague one. Optional rather than a second
+    /// overload on purpose: an overload would let a call site silently bind to the variable-less
+    /// form and drop the number without a compile error.
+    /// </summary>
     void ShowTwoOptionInquiry(
         string titleKey, string titleFallback,
         string bodyKey, string bodyFallback,
         string optionAKey, string optionAFallback,
         string optionBKey, string optionBFallback,
-        Action onOptionA, Action onOptionB);
+        Action onOptionA, Action onOptionB,
+        string bodyVariableName = null, string bodyVariableValue = null);
 
     /// <summary>Fire-and-forget toast. <paramref name="variableName"/>/<paramref name="variableValue"/> are optional — pass null to skip the substitution.</summary>
     void ShowMessage(string key, string fallback, string variableName, string variableValue);

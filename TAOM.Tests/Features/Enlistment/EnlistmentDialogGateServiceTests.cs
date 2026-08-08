@@ -13,6 +13,7 @@ public class EnlistmentDialogGateServiceTests
     private EnlistmentStore _store = null!;
     private ICommanderLordAdapter _commander = null!;
     private IPlayerContextAdapter _playerContext = null!;
+    private IEnlistmentConfigProvider _config = null!;
     private EnlistmentDialogGateService _gate = null!;
 
     [TestInitialize]
@@ -21,7 +22,9 @@ public class EnlistmentDialogGateServiceTests
         _store = new EnlistmentStore(Substitute.For<IModLogger>());
         _commander = Substitute.For<ICommanderLordAdapter>();
         _playerContext = Substitute.For<IPlayerContextAdapter>();
-        _gate = new EnlistmentDialogGateService(_store, _commander, _playerContext);
+        _config = Substitute.For<IEnlistmentConfigProvider>();
+        _config.GetConfig().Returns(new EnlistmentCoreConfig());
+        _gate = new EnlistmentDialogGateService(_store, _commander, _playerContext, _config);
 
         _commander.IsLord("lord_1_1").Returns(true);
         _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(

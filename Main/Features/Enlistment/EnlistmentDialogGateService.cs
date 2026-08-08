@@ -7,15 +7,18 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
     private readonly IEnlistmentStore _store;
     private readonly ICommanderLordAdapter _commander;
     private readonly IPlayerContextAdapter _playerContext;
+    private readonly IEnlistmentConfigProvider _config;
 
     public EnlistmentDialogGateService(
         IEnlistmentStore store,
         ICommanderLordAdapter commander,
-        IPlayerContextAdapter playerContext)
+        IPlayerContextAdapter playerContext,
+        IEnlistmentConfigProvider config)
     {
         _store = store;
         _commander = commander;
         _playerContext = playerContext;
+        _config = config;
     }
 
     public EnlistGateResult CanEnlistWith(string partnerHeroId)
@@ -70,4 +73,42 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
     /// </summary>
     public Domain.DischargeReason ClassifyLeaveReason(double nowDays) =>
         Domain.DischargeReason.PlayerRequest;
+
+    /// <summary>
+    /// Every branch here is written to fall OPEN. The failure this gate can cause is a player
+    /// locked in service with no exit — strictly worse than releasing someone a day early — so
+    /// missing data, a poisoned config and a NaN clock all grant the release.
+    /// </summary>
+    public Domain.ReleaseRequest EvaluateReleaseRequest(double nowDays)
+    {
+        var record = _store.Record;
+        if (!record.IsEnlisted)
+            return Domain.ReleaseRequest.Granted;
+
+        // Outranks the term: walking off mid-engagement is not a paperwork question. Deliberately
+        // a refusal of the MOMENT, not of the request — the player is told to ask again after.
+        if (record.State == Domain.EnlistmentState.EnlistedBattle)
+            return Domain.ReleaseRequest.RefusedInBattle;
+
+        var minimum = _config?.GetConfig()?.MinimumServiceDays ?? 0.0;
+
+        // Positive requirement, per the NaN-gate rule: we refuse only when we can PROVE a debt.
+        // Written as `<= 0 || !finite -> granted` rather than `> 0 -> refuse` so every
+        // non-finite value lands on the safe side without a separate guard.
+        if (double.IsNaN(minimum) || double.IsInfinity(minimum) || minimum <= 0.0)
+            return Domain.ReleaseRequest.Granted;
+
+        // No recorded start day cannot prove a debt either.
+        if (record.EnlistedAtDay == null)
+            return Domain.ReleaseRequest.Granted;
+
+        var served = nowDays - record.EnlistedAtDay.Value;
+
+        // NaN served => `served < minimum` is false => granted. That is the intent, not an
+        // accident: do not rewrite this as `if (served >= minimum) return Granted;`.
+        if (!(served < minimum))
+            return Domain.ReleaseRequest.Granted;
+
+        return Domain.ReleaseRequest.TooSoon((int)System.Math.Ceiling(minimum - served));
+    }
 }

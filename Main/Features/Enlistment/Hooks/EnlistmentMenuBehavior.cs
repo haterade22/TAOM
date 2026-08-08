@@ -22,19 +22,14 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
 
     private readonly IEnlistmentStore _store;
     private readonly IServiceAttachmentService _attachment;
-    private readonly IEnlistmentService _service;
-    private readonly IEnlistmentDialogGateService _gate;
     private readonly IEnlistmentWaitMenuPresenter _presenter;
     private readonly IGameMenuAdapter _gameMenu;
     private readonly ICoopSessionProvider _coopSession;
     private readonly IServiceMaintenanceService _maintenance;
 
-
     public EnlistmentMenuBehavior(
         IEnlistmentStore store,
         IServiceAttachmentService attachment,
-        IEnlistmentService service,
-        IEnlistmentDialogGateService gate,
         IEnlistmentWaitMenuPresenter presenter,
         IGameMenuAdapter gameMenu,
         ICoopSessionProvider coopSession,
@@ -42,8 +37,6 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
     {
         _store = store;
         _attachment = attachment;
-        _service = service;
-        _gate = gate;
         _presenter = presenter;
         _gameMenu = gameMenu;
         _coopSession = coopSession;
@@ -86,7 +79,7 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
             "taom_enlist_menu_leave",
             "{=taom_enlist_menu_leave}Ask to be released from service",
             args => { args.optionLeaveType = GameMenuOption.LeaveType.Leave; return true; },
-            _ => OnLeaveServiceSelected(),
+            _ => _presenter.RequestRelease(CampaignTime.Now.ToDays),
             false, 1);
     }
 
@@ -111,21 +104,10 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         _maintenance.Pump(WaitMenuFrameSeconds, CampaignTime.Now.ToHours);
     }
 
-    private void OnLeaveServiceSelected()
-    {
-        // CO-OP: host-only, like every other discharge path. A client running this locally
-        // would restore its own presence and clear its record while the host stayed
-        // enlisted (Codex P2-3).
-        if (!_coopSession.IsAuthority)
-            return;
-
-        // Terminal decision routed through the single discharge pipeline. Leaving before
-        // the contract day classifies as desertion (arrears forfeit + relation cost in
-        // the consequence layer); at/after it, an honorable release.
-        var reason = _gate.ClassifyLeaveReason(CampaignTime.Now.ToDays);
-        if (_service.RequestDischarge(reason))
-            _gameMenu.ExitToLast();
-    }
+    // Asking to leave is a DECISION with a cost the player must see first, so the whole thing —
+    // verdict, popup, discharge — lives in the presenter. The menu exit is DischargeService's
+    // job now (INV-D1); calling ExitToLast here as well would stop campaign time on the refusal
+    // paths, where nothing was discharged at all.
 
     private void OnConversationEnded(IEnumerable<CharacterObject> characters)
     {

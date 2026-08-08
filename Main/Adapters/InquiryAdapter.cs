@@ -11,10 +11,15 @@ public sealed class InquiryAdapter : IInquiryAdapter
         string bodyKey, string bodyFallback,
         string optionAKey, string optionAFallback,
         string optionBKey, string optionBFallback,
-        System.Action onOptionA, System.Action onOptionB)
+        System.Action onOptionA, System.Action onOptionB,
+        string bodyVariableName = null, string bodyVariableValue = null)
     {
         var title = new TextObject("{=" + titleKey + "}" + titleFallback).ToString();
-        var body = new TextObject("{=" + bodyKey + "}" + bodyFallback).ToString();
+
+        var bodyText = new TextObject("{=" + bodyKey + "}" + bodyFallback);
+        if (!string.IsNullOrEmpty(bodyVariableName))
+            bodyText.SetTextVariable(bodyVariableName, bodyVariableValue ?? string.Empty);
+        var body = bodyText.ToString();
         var optionA = new TextObject("{=" + optionAKey + "}" + optionAFallback).ToString();
         var optionB = new TextObject("{=" + optionBKey + "}" + optionBFallback).ToString();
 

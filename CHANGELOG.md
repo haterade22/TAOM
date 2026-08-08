@@ -48,6 +48,106 @@ trimming 234 bodies at weighted 465 against limit 231.
 Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
 guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
 equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+### feat(enlistment): asking to leave is a choice you can see the price of
+
+Batch 6. "Ask to be released" used to discharge you the instant you clicked it, with no
+confirmation and no statement of cost. It now runs through a gate with three answers, and the
+refusals carry the number that makes them actionable: *"{DAYS} more days are owed. Leaving now is
+desertion: you forfeit the pay still owed to you."* — with a real integer, in the popup and in the
+commander's own dialog line.
+
+The refusal is keyed to a new `MinimumServiceDays` (21), deliberately NOT to `ContractDays`. The
+contract is a year, so keying it there would refuse every realistic request and leave desertion as
+the only exit — the bug fixed in Batch 1 wearing a different hat. A term you can actually serve is
+what makes this a choice instead of a trap.
+
+Desertion now has exactly one producer: a branch the player picked after being told what it costs.
+Nothing classifies a leave as desertion behind their back.
+
+Every degenerate input falls OPEN to granted — no start day recorded, a NaN clock, a poisoned
+`MinimumServiceDays`. The failure this gate can cause is a player locked in service with no exit,
+which is strictly worse than releasing someone a day early, so it is built to let people go.
+
+The confirmation callback re-checks co-op authority. It runs on a LATER frame than the menu option
+that already checked, so that check does not cover the moment the discharge actually runs.
+
+`EnlistmentMenuBehavior` sheds two constructor dependencies as the decision moves out of it, and
+stops calling `ExitToLast` — `DischargeService` owns the menu exit since Batch 5, and calling it
+here too would stop campaign time on the refusal paths, where nothing was discharged at all.
+
+Suite 5917 green.
+### feat(battleload): split the 11.9-second load gap into three named buckets, and add engine memory attribution
+
+`MissionInitialize → MissionAfterStartBegin` held 11.9 seconds of a measured 29-second battle load
+with no instrumentation inside it — the largest unattributed span in the lifecycle. The engine
+decomposes it into exactly three things (`MissionState.cs:221-350`), and three new markers name them:
+`MissionInitializeDone` brackets the native `MBAPI.IMBMission.InitializeMission` call, and
+`FinishMissionLoadingBegin`/`Done` bracket the private `MissionState.FinishMissionLoading`. There is
+now no unattributed span between `MissionInitialize` and `BattlePlayable`.
+
+The async wait in the middle is measured by a **counter hook that never logs**. `MissionState.TickLoading`
+runs once per frame during a load, so at 60 fps a 12-second wait is ~720 calls; its prefix does one
+`Interlocked.Increment` and the result rides a single `polls=`/`waitMs=` token pair on
+`FinishMissionLoadingBegin`. That pair separates two diagnoses that were previously indistinguishable:
+`polls=1` with a large `waitMs` means the main thread was **blocked inside one frame** (a native spin,
+the #352 `WaitForMeshesToBeLoaded` shape), while `polls ≈ waitMs/16` means genuine async streaming
+with a healthy main thread. `polls=0` means the binding failed — not that there was no wait, and the
+feature doc says so. All three markers carry the `MemStats()` tokens, so the `privMB` curve *across*
+the stall answers whether the load stall and the process-commit growth are one problem or two.
+
+Also added `taom.print_memory [label] [gpu]` (Tier A, cheat gate) over
+`TaleWorlds.Engine.Utilities`' memory statics, for the per-station rows of the commit-attribution
+matrix in `docs/investigations/native-commit-audit-2026-08.md`, whose runbook this fills in.
+`GetMemoryUsageOfCategory(int)` is deliberately **not** called: there is no category-count or
+category-name API in either build and the index goes straight to native unvalidated, so a blind walk
+is an access-violation risk inside a diagnostic. The two statistics strings get read first, and a
+numeric probe gets built only if they turn out not to carry the breakdown. `MemoryPressureSampler.Start()`
+moved to `OnBeforeInitialModuleScreenSetAsRoot` so a **main-menu** `[MemSample]` baseline exists —
+the A-vs-B menu delta is the audit's decisive number, and no console command can produce it
+(`RunAnywhere` still answers "Campaign was not started." before a game loads).
+
+`tools/triage_battle_load.py` learned the three markers, which fixed a wrong verdict as well as
+adding a report section. Its `classify()` knew only `MissionInitialize`/`BattleSceneSelected` as
+`SCENE` and let every other phase fall through to `PRE_SCENE`, so a log ending at
+`MissionInitializeDone` — a freeze in the native async load wait — was reported as *"froze very early
+… before scene selection"*, aiming triage at the opposite end of the lifecycle. The two mid-window
+markers now map to `SCENE` and `FinishMissionLoadingDone` to `POST_EQUIP` (loaded, first
+`OnMissionTick` never came); the verdict kinds and exit codes are unchanged. A `Load timing` section
+plus a `timings` JSON key report the six buckets the Phase-2 runbook records, the dominant one, the
+`polls=`/`waitMs=` pair and the `privMB` trajectory. Spans are **gaps between markers, never
+absolute `t=+` values** — the stopwatch is `IsRunning`-guarded, so a chained second mission inherits
+the first's origin and only gaps stay comparable — and an unmeasured value is absent rather than
+zero (`waitMs=<not observed>`, `?`), mirroring the C# side's refusal to fabricate one. Per RCA gap
+#8 (a trailing token broke a near-identical regex on 2026-08-02, and the recorded mitigation is a
+fixture rather than reasoning about the regex) every new phase is pinned with and without the
+`MemStats()` suffix, and the `polls=87 waitMs=1449` / `polls=87` literals are pinned as twins of
+`BattleLoadDiagnosticsService.FormatFinishWaitDetail`.
+
+Two pre-existing defects fixed along the way, both load-bearing for the measurement:
+
+- **The stopwatch never ran in a custom battle.** It was started only from `LogEncounterStart` /
+  `ResetLifecycle`, both reachable only from the campaign-only `PlayerEncounter_Start_Patch` — so
+  every `[BattleLoad]` line in a custom battle read `t=+0ms`, in the exact station the matrix uses.
+  The existing `IsRunning`-guarded restart idiom now also runs from `LogMissionOpenNew` (the
+  universal funnel) and `LogMissionInitialize`, leaving campaign deltas unchanged.
+- **`BattleLoadPhaseBehavior` was registered only while the toggle was on**, despite being the
+  loading window's only closer against an opener in `Mission.Initialize`'s prefix. The 2026-07-06 RCA
+  deferred this as "the same synchronous call chain"; the bucket measurement disproves that — the two
+  evaluations are separated by a tick boundary and ~11.9 s, and a toggle flipped inside that window
+  latched the window open until the next `Mission.Initialize`, after which the stall watchdog fired
+  at 300 s and wrote a spurious bundle.
+
+**Known limitation:** the `t=+` origin is now inherited by a second mission in the same process, so
+absolutes grow across chained missions. Gaps stay valid — read deltas, never absolutes.
+
+Patch43 went 14 → 17 hooks (four private engine methods bound by string; the category's apply is
+already try/catch-guarded). 44 tests added, all verified able to fail by mutating the three
+load-bearing rules they guard.
+
+Not-tested: the Harmony prefix/postfix bodies and the four `TaleWorlds.Engine.Utilities` statics
+(native — everything downstream of them was extracted into a pure formatter precisely so it could be).
+Research: `MissionState.TickLoading` / `FinishMissionLoading` / `Mission.Initialize` /
+`TaleWorlds.Engine.Utilities`, all against the installed v1.4.7.
 
 ### fix(tools): five audits honour BANNERLORD_GAME_DIR instead of one machine's install path (#400, #401)
 
@@ -333,6 +433,38 @@ The alarm stops crying wolf: `EncountersBlocked` gained the settlement clause it
 Suite 5849 green.
 
 Research: GameMenu.ExitToLast TimeControlMode, MobileParty.SetAttachedToInternal, PlayerEncounter.Finish branches
+
+### feat(enlistment): put the `[EnlistDiag]` trace behind a switch the player owns
+
+`[EnlistDiag]` was **4,856 of 6,001 lines (81%)** of one 32-minute log, 3,674 of them from the single
+"map event started, commander NOT in it" line. `FileLogger` has no level filter, so the earlier DEBUG
+downgrades changed only durability — every line was still built, timestamped and written. The gate had
+to go at the call site; `FileLogger` itself is untouched and its durability contract is unchanged.
+
+`TaomSettings.EnableEnlistmentDiagnostics` (MCM `Enlistment/Diagnostics`, no restart) now gates the
+routine trace — TICK, SYNC ok, PARK ok, RESTORE ok and the per-map-event line, together ~93.5% of
+measured volume across three files. Gating the *statement* rather than the level is what stops
+`CountInvolved`'s full `InvolvedParties` walk from running at all when it is off; `FindCommanderPartyIdIn`
+still enumerates once above the gate because it is load-bearing, so this removes one of two walks, not
+both.
+
+Gated lines emit at **INFO, not DEBUG**: DEBUG is the async queue a hard native CTD discards, which
+would lose exactly the trace someone switched on to catch a crash.
+
+**The toggle gates volume, not the tag.** Faults keep the `[EnlistDiag]` prefix and log regardless —
+park/sync/restore failures, the drift warning, the stranded-`PlayerEncounter` sweep, and every
+`DischargeService` line including `LEFT THE PLAYER UNABLE TO START ENCOUNTERS`. Turning it off does not
+produce zero `[EnlistDiag]` lines, and the MCM hint says so.
+
+The hazard was never the logging. In `ReconcileAttached` the log sits interleaved with the encounter
+self-heal, the re-park and the position sync, so an `if (!enabled) return;` would have disabled the
+enlistment self-heal for anyone who turned the toggle off. Six tests run the reconciler with it off and
+assert each mutation still happens; a source scan rejects `IsEnabled) return` across all three gated
+files. Verified by mutation: converting the gate to an early return reddens 22 tests, including all six.
+
+Not-tested: MobilePartyAttachmentAdapter and EnlistmentBattleBehavior gate bodies (static
+`MobileParty.MainParty`, sealed `MapEvent`) — pinned by source scan instead.
+
 ### fix(enlistment): settlements were never resolvable, and party attachment is settled as a no
 
 `CampaignObjectManager.Find<Settlement>` returns null **unconditionally** on 1.4.7. The manager

@@ -7,6 +7,17 @@ public sealed class EnlistmentCoreConfig
 {
     public double ContractDays { get; set; } = 365.0;
 
+    /// <summary>
+    /// Days of service owed before a commander will grant an honourable release. Deliberately
+    /// NOT <see cref="ContractDays"/>: the contract is a year, so keying the release refusal to
+    /// it would refuse every realistic request and leave desertion as the only exit — which is
+    /// the bug reported on 2026-08-07 wearing a different hat. A term the player can actually
+    /// serve is what makes "leave now and forfeit your pay" a choice rather than a trap.
+    /// Degenerate values (NaN, infinity, &lt;= 0) grant release immediately; see
+    /// <c>EnlistmentDialogGateService.EvaluateReleaseRequest</c>.
+    /// </summary>
+    public double MinimumServiceDays { get; set; } = 21.0;
+
     /// <summary>Days a commander may remain party-less (captured/disbanded) before an honorable auto-discharge.</summary>
     public double CommanderGraceDays { get; set; } = 7.0;
 
