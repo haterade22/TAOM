@@ -333,6 +333,30 @@ to characterise. The existing try/catch around acceptance is containment, not co
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
   short strings instead of 112 values read off two screens.
 
+  **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
+  MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:
+  `MCM.Internal.GameFeatures.PerSaveCampaignBehavior : CampaignBehaviorBase` carries
+  `SyncData<Dictionary<string, string>>("_settings", ref _settings)`, so **PerSave** is in the
+  savegame. **PerCampaign** is not, despite the name — `PerCampaignSettingsContainer` roots at a
+  `PerCampaign` directory, then `GetOrCreateDirectory(RootFolder, GetCurrentCampaignId())`, and
+  loads through `ISettingsFormat.Load(…)`: a per-machine file keyed by campaign id. It would NOT
+  arrive in parity with the host's save — the campaign id matches while the local file may not
+  exist at all, which is worse than global rather than better. TAOM declares neither:
+  the only `AttributePerCampaignSettings` reference in the tree is a reflection target string in
+  `McmSettingsCollector.cs`, which scans third-party mods. So nothing here is save-inherited and
+  nothing arrives guaranteed-equal. **If a PerSave or PerCampaign settings class ever lands in
+  TAOM, this paragraph stops being true and the fingerprint's meaning changes with it** — a
+  PerSave class would be equal by construction and need not be hashed; a PerCampaign one would
+  need hashing more urgently than a global, not less.
+
+  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 112
+  values on the four settings pages. It does not cover the `ModuleData` JSON/XML that several
+  features fall back to when a setting is unset, the `TAOM.Dependencies` flag files
+  (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`, `coop-force-active.flag`),
+  or any difference outside TAOM. None of those three flags gates a setting in the 112 — each
+  governs a Dependencies-side shield with no MCM property — but the general point holds: read the
+  log line as "our settings pages match", not as "our installs are equivalent".
+
   **Still not done:** peers do not exchange them. Putting the fingerprint in save metadata and
   comparing on join is the remaining step, and it cannot be verified without two machines in a
   session — `FingerprintReport.DivergentGroups` is already there for it. BannerlordCoop still

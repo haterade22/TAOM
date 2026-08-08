@@ -314,6 +314,63 @@ public class SettingsFingerprintTests
     }
 
     [TestMethod]
+    public void EveryPageUnavailable_IsNotReportedAsAgreement()
+    {
+        // Reachable, not hypothetical. MCM 5.12.1 declares
+        //     public static T? Instance =>
+        //         BaseSettingsProvider.Instance?.GetSettings(...) as T;
+        // — a nullable return, a null-conditional on the provider and an `as` cast, so a page read
+        // before MCM's provider is up yields null rather than throwing. Skipping those nulls leaves
+        // nothing to hash, and SHA-256 of the empty string is a constant: two such peers produce
+        // the SAME code and read it as "we agree".
+        var a = SettingsFingerprint.ComputeAcross(null, null, null, null);
+        var b = SettingsFingerprint.ComputeAcross(null, null, null, null);
+
+        Assert.AreEqual(0, a.Covered, "sanity: nothing was measured");
+        Assert.IsFalse(a.Matches(b),
+            "a fingerprint over zero settings must not answer 'equal' — it measured nothing, " +
+            "and 'cannot tell' is not 'agree'");
+    }
+
+    [TestMethod]
+    public void APartialRead_StaysConclusive_ButCountsWhatItMissed()
+    {
+        // One unreadable page must not disarm the whole report — the settings that WERE read can
+        // still catch a divergence. It must be counted, though, or "partial" reads as "complete".
+        var partial = SettingsFingerprint.ComputeAcross(new TaomSettings(), null, null);
+        var whole = SettingsFingerprint.ComputeAcross(new TaomSettings());
+
+        Assert.IsTrue(partial.IsConclusive, "settings were read; the report stands");
+        Assert.AreEqual(2, partial.Unavailable, "both nulls must be counted");
+        Assert.AreEqual(0, whole.Unavailable);
+        Assert.IsTrue(partial.Matches(whole), "the pages that were read still hash the same");
+    }
+
+    [TestMethod]
+    public void TheLogAdapter_SaysAReadWasPartial()
+    {
+        var log = new RecordingLogger();
+        SettingsFingerprintLog.WriteAcross(log, new TaomSettings(), null, null, null);
+
+        Assert.IsTrue(log.Lines.Any(l => l.Contains("partial")),
+            "a report missing 3 of 4 pages must say so; got: " + string.Join(" | ", log.Lines));
+    }
+
+    [TestMethod]
+    public void TheLogAdapter_SaysSoWhenItMeasuredNothing()
+    {
+        // The line must not promise that comparing it is meaningful when there was nothing to
+        // compare. This is the same rule as the linter's no-models guard: a check that reports
+        // clean without having looked is worse than no check.
+        var log = new RecordingLogger();
+        SettingsFingerprintLog.WriteAcross(log, null, null, null, null);
+
+        Assert.IsTrue(
+            log.Lines.Any(l => l.Contains("could not read") || l.StartsWith("WARN")),
+            "expected the log to say it read no settings; got: " + string.Join(" | ", log.Lines));
+    }
+
+    [TestMethod]
     public void TheRealSettings_HashWithoutThrowing_AndCoverMostOfThem()
     {
         var report = SettingsFingerprint.Compute(new TaomSettings());

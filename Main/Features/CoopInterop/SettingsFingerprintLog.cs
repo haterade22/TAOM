@@ -46,10 +46,31 @@ public static class SettingsFingerprintLog
         try
         {
             var report = SettingsFingerprint.ComputeAcross(settingsObjects);
+
+            // Nothing read means nothing to compare, and the code for "nothing" is the same on
+            // every machine. Saying that plainly matters more than printing a code: two peers
+            // reading an identical e3b0c442… would otherwise conclude their settings agree.
+            if (!report.IsConclusive)
+            {
+                logger.LogWarning(
+                    $"{Tag} could not read any of the {settingsObjects.Length} settings page(s) — " +
+                    "MCM's settings provider was not up when the co-op gate fired. NO fingerprint " +
+                    "was taken: the code below is the hash of an empty read and is identical on " +
+                    "every machine, so a peer showing the same code tells you nothing about " +
+                    "whether your settings agree.");
+                logger.LogWarning($"{Tag} global={report.ShortGlobal} over 0 setting(s) — not a comparison.");
+                return;
+            }
+
+            var partial = report.Unavailable > 0
+                ? $" {report.Unavailable} settings page(s) could not be read, so this is partial."
+                : string.Empty;
+
             logger.LogInfo(
                 $"{Tag} global={report.ShortGlobal} over {report.Covered} simulation-relevant setting(s). " +
                 "Compare this line with the other peer's — a difference means the two campaigns " +
-                "will compute different outcomes, and nothing else will say so.");
+                "will compute different outcomes, and nothing else will say so. A match means " +
+                "these settings agree, not that the two installs are equivalent." + partial);
 
             foreach (var kv in report.ByGroup.OrderBy(k => k.Key, StringComparer.Ordinal))
             {

@@ -66,6 +66,11 @@ public static class SettingsFingerprint
     {
         if (settingsObjects == null) throw new ArgumentNullException(nameof(settingsObjects));
 
+        // Counted, not merely skipped. A page that could not be read is the difference between
+        // "these two peers agree" and "nothing was compared", and something has to be able to say
+        // which — see FingerprintReport.IsConclusive.
+        var unavailable = settingsObjects.Count(o => o == null);
+
         var relevant = settingsObjects
             .Where(o => o != null)
             .SelectMany(o => o.GetType()
@@ -103,7 +108,8 @@ public static class SettingsFingerprint
         var globalText = string.Concat(groupHashes.OrderBy(kv => kv.Key, StringComparer.Ordinal)
                                                   .Select(kv => kv.Key + ":" + kv.Value + "\n"));
 
-        return new FingerprintReport(Sha256(globalText), groupHashes, counts, relevant.Count);
+        return new FingerprintReport(Sha256(globalText), groupHashes, counts, relevant.Count,
+                                     unavailable);
     }
 
     /// <summary>A property paired with the settings instance it must be read from.</summary>
@@ -207,12 +213,14 @@ public static class SettingsFingerprint
     public sealed class FingerprintReport
     {
         internal FingerprintReport(string global, IReadOnlyDictionary<string, string> byGroup,
-                                   IReadOnlyDictionary<string, int> countsByGroup, int covered)
+                                   IReadOnlyDictionary<string, int> countsByGroup, int covered,
+                                   int unavailable = 0)
         {
             Global = global;
             ByGroup = byGroup;
             CountsByGroup = countsByGroup;
             Covered = covered;
+            Unavailable = unavailable;
         }
 
         public string Global { get; }
@@ -223,12 +231,27 @@ public static class SettingsFingerprint
         /// version bump that silently drops half the settings is visible.</summary>
         public int Covered { get; }
 
+        /// <summary>How many settings pages could not be read at all (a null instance).</summary>
+        public int Unavailable { get; }
+
+        /// <summary>
+        /// False when nothing was measured. SHA-256 of the empty string is a constant, so an
+        /// all-unavailable read produces the same code on every machine — two such peers would
+        /// otherwise compare equal and read it as agreement over 112 settings, when the true
+        /// answer is that neither side was inspected. "Cannot tell" is not "agree".
+        /// </summary>
+        public bool IsConclusive => Covered > 0;
+
         public string ShortGlobal => Global.Substring(0, Math.Min(DisplayLength, Global.Length));
 
         /// <summary>
         /// Groups whose settings differ from <paramref name="other"/>, in name order.
         /// A group present on one side only counts as differing: a peer running a build without
         /// that feature is exactly the mismatch worth reporting.
+        ///
+        /// An empty result means "no group differs", NOT "the two agree" — check
+        /// <see cref="IsConclusive"/> on both sides first, or a pair that measured nothing reads
+        /// as a clean comparison.
         /// </summary>
         public IReadOnlyList<string> DivergentGroups(FingerprintReport other)
         {
@@ -246,7 +269,14 @@ public static class SettingsFingerprint
             return divergent;
         }
 
+        /// <summary>
+        /// True only when both sides actually measured something AND agree. An inconclusive
+        /// report never matches — including against another inconclusive one, which is the pair
+        /// that would otherwise compare equal on an identical empty-string hash.
+        /// </summary>
         public bool Matches(FingerprintReport other) =>
-            other != null && string.Equals(Global, other.Global, StringComparison.Ordinal);
+            other != null
+            && IsConclusive && other.IsConclusive
+            && string.Equals(Global, other.Global, StringComparison.Ordinal);
     }
 }
