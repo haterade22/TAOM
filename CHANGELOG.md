@@ -4,6 +4,38 @@
 
 ## 2026-08-08
 
+### fix(coopinterop): a fingerprint over zero settings no longer reads as agreement
+
+`SettingsFingerprint` skipped null settings pages, which is right — MCM's `Instance` is a
+null-conditional over a provider that may not be up yet, so a page read too early yields null rather
+than throwing. But skipping every page left nothing to hash, and SHA-256 of the empty string is a
+constant. Two peers in that state both produced `e3b0c44298fc…` and `Matches` returned **true**:
+"we agree about 112 settings", from having compared none of them.
+
+Reproduced on the unfixed code before the fix was accepted — `covered=0, short=e3b0c44298fc, two
+empty reads compare EQUAL`. That is the failure mode worse than no diagnostic at all, because it
+answers confidently.
+
+`FingerprintReport` now counts the pages it could not read and exposes `IsConclusive`, `Matches`
+requires both sides to have measured something, and the log writes a warning in words — that no
+fingerprint was taken and a peer showing the same code means nothing — instead of printing a code
+that looks like a result. A partial read still stands, since the pages that were read can still
+catch a divergence, but it says how many it missed.
+
+Falling back to `new TaomSettings()` was considered and rejected on a count: of 121
+`TaomSettings.Instance?.X ?? …` sites in `Main/`, 33 fall back to a member of a config object rather
+than a compiled literal, and at least one of those providers loads from JSON. Hashing defaults would
+report 112 settings measured while naming values that peer may not be running — the same defect this
+fixes, pointed the other way.
+
+Also documents that all four TAOM settings classes are `AttributeGlobalSettings<T>` (verified: the
+only `AttributePerCampaignSettings` in the tree is a reflection target string in
+`McmSettingsCollector.cs:69`), and that a matching fingerprint means the MCM settings agree and
+nothing wider — not the ModuleData configs behind those 33 fallbacks, not the flag files.
+
+Not verified in a running game: reproducing it needs a co-op install and MCM's provider induced to
+fail at the gate.
+
 ### fix(enlistment): stop double-healing on detached duty, and stop showing players raw duty ids
 
 Both found by the adversarially-verified SAS comparison — not in the reference mod, in our code.
