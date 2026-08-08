@@ -160,6 +160,7 @@ class LintReport:
     config_drift: list[tuple[Path, int, str, str]] = field(default_factory=list)
     version_mismatches: list[tuple[Path, int, str, str]] = field(default_factory=list)
     budget: list[tuple[Path, int, str, str]] = field(default_factory=list)
+    model_registry: list[tuple[Path, int, str, str]] = field(default_factory=list)
 
     @property
     def total(self) -> int:
@@ -171,6 +172,7 @@ class LintReport:
             + len(self.config_drift)
             + len(self.version_mismatches)
             + len(self.budget)
+            + len(self.model_registry)
         )
 
 
@@ -593,6 +595,91 @@ def check_claude_md_budget() -> list[tuple[Path, int, str, str]]:
     return findings
 
 
+# --------------------------------------------------------------------------- model registry
+#
+# Two files catalogue TAOM's GameModel overrides, and neither is ordinary documentation.
+# `.claude/rules/gamemodels.md` carries `paths: Main/Features/**/Models/*.cs`, so it is loaded
+# automatically whenever a model is edited — its table IS the briefing the next person gets,
+# including the cross-entity-propagation rule written after the NavalTravel #296 RCA. A model
+# missing from it is a model that rule never reaches. `docs/reference/gamemodel-registry.md`
+# opens with "Every TAOM GameModel override", which is a claim a checker can hold it to.
+#
+# Both directions matter, and so does the count in the prose: a hardcoded "TAOM has N overrides"
+# is exactly the shape that rots, and it rots silently because nobody recounts 40 table rows.
+
+MODEL_RULES_DOC = REPO_ROOT / ".claude" / "rules" / "gamemodels.md"
+MODEL_REGISTRY_DOC = DOCS_DIR / "reference" / "gamemodel-registry.md"
+MODELS_SEARCH_ROOT = REPO_ROOT / "Main"
+
+# A TAOM model is a class named Taom*Model deriving from something whose name ends in Model —
+# Default*, Sandbox*, or one of TAOM's own abstract intermediates.
+MODEL_CLASS_RE = re.compile(
+    r"^[ \t]*(?:public\s+|internal\s+)?(?:sealed\s+|abstract\s+|partial\s+)*"
+    r"class\s+(Taom\w*Model)\s*:\s*(\w*Model)\b", re.M)
+MODEL_MENTION_RE = re.compile(r"`(Taom\w*Model)`")
+MODEL_COUNT_CLAIM_RES = (
+    re.compile(r"TAOM has (\d+) GameModel overrides"),
+    re.compile(r"Existing Overrides \((\d+) total\)"),
+)
+
+
+def discover_model_classes() -> dict[str, Path]:
+    """Every Taom*Model in Main/, mapped to the file that declares it."""
+    found: dict[str, Path] = {}
+    if not MODELS_SEARCH_ROOT.is_dir():
+        return found
+    for path in MODELS_SEARCH_ROOT.rglob("*.cs"):
+        parts = set(path.parts)
+        if "obj" in parts or "bin" in parts:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for name, _base in MODEL_CLASS_RE.findall(text):
+            found.setdefault(name, path)
+    return found
+
+
+def _line_of(text: str, needle: str) -> int:
+    idx = text.find(needle)
+    return text.count("\n", 0, idx) + 1 if idx >= 0 else 0
+
+
+def check_model_registry() -> list[tuple[Path, int, str, str]]:
+    findings: list[tuple[Path, int, str, str]] = []
+    in_code = discover_model_classes()
+    if not in_code:
+        # No models found at all means the search root moved, not that the catalogues are clean.
+        # Staying silent here would turn a broken checker into a green one.
+        findings.append((MODELS_SEARCH_ROOT, 0, "no-models",
+                         f"found no Taom*Model classes under {rel(MODELS_SEARCH_ROOT)} — "
+                         "the search root moved, so this check cannot vouch for anything"))
+        return findings
+
+    for doc in (MODEL_RULES_DOC, MODEL_REGISTRY_DOC):
+        if not doc.is_file():
+            findings.append((doc, 0, "missing-doc", f"{rel(doc)} does not exist"))
+            continue
+        text = doc.read_text(encoding="utf-8", errors="replace")
+        listed = set(MODEL_MENTION_RE.findall(text))
+
+        for name in sorted(set(in_code) - listed):
+            findings.append((doc, 0, "unlisted-model",
+                             f"`{name}` ({rel(in_code[name])}) is not in {rel(doc)}"))
+        for name in sorted(listed - set(in_code)):
+            findings.append((doc, _line_of(text, f"`{name}`"), "phantom-model",
+                             f"`{name}` is listed in {rel(doc)} but no such class exists"))
+
+        for pattern in MODEL_COUNT_CLAIM_RES:
+            for m in pattern.finditer(text):
+                claimed = int(m.group(1))
+                if claimed != len(in_code):
+                    findings.append((doc, text.count("\n", 0, m.start()) + 1, "model-count",
+                                     f"claims {claimed} GameModel overrides; {len(in_code)} exist"))
+    return findings
+
+
 def rel(p: Path) -> str:
     try:
         return str(p.relative_to(REPO_ROOT)).replace("\\", "/")
@@ -612,6 +699,7 @@ def format_report(report: LintReport, quick: bool) -> str:
         out.append(f"- Config-example drift (doc JSON != shipped ModuleData config): **{len(report.config_drift)}**")
         out.append(f"- Version mismatches (CLAUDE.md / snapshot != pin): **{len(report.version_mismatches)}**")
         out.append(f"- CLAUDE.md budget (size/row/line caps{'' if CLAUDE_MD_BUDGET_ENFORCE else ', warn-only'}): **{len(report.budget)}**")
+        out.append(f"- GameModel registry drift (code vs the two catalogues): **{len(report.model_registry)}**")
     out.append("")
     if report.dead_links:
         out.append("## Dead links")
@@ -673,6 +761,18 @@ def format_report(report: LintReport, quick: bool) -> str:
                 loc = f"`{rel(f)}:{lineno}`" if lineno else f"`{rel(f)}`"
                 out.append(f"- {loc} — [{kind}] {msg}")
             out.append("")
+        if report.model_registry:
+            out.append("## GameModel registry drift")
+            out.append("")
+            out.append("`.claude/rules/gamemodels.md` is `paths:`-scoped to the model files, so it is the "
+                       "briefing whoever edits a model actually receives — a model missing from its table "
+                       "never gets the cross-entity-propagation rule. `docs/reference/gamemodel-registry.md` "
+                       "claims to list every override. Add the model to both, or correct the claim.")
+            out.append("")
+            for f, lineno, kind, msg in report.model_registry:
+                loc = f"`{rel(f)}:{lineno}`" if lineno else f"`{rel(f)}`"
+                out.append(f"- {loc} — [{kind}] {msg}")
+            out.append("")
     if report.total == 0:
         out.append("**Clean — no findings.**")
         out.append("")
@@ -709,6 +809,7 @@ def main(argv: list[str]) -> int:
         report.config_drift = check_config_example_drift(files)
         report.version_mismatches = check_version_consistency()
         report.budget = check_claude_md_budget()
+        report.model_registry = check_model_registry()
 
     if args.summary:
         # Structured grep-friendly block, modeled on autoresearch's train.py final output
@@ -721,6 +822,7 @@ def main(argv: list[str]) -> int:
             f"config_drift:      {len(report.config_drift)}",
             f"version_mismatch:  {len(report.version_mismatches)}",
             f"claude_budget:     {len(report.budget)}",
+            f"model_registry:    {len(report.model_registry)}",
             f"total_findings:    {report.total}",
             "---",
             "",
