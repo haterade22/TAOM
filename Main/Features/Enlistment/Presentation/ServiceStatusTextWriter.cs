@@ -2,7 +2,7 @@ using TaleWorlds.Localization;
 using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Domain;
 
-namespace TAOM.Features.Enlistment.Hooks;
+namespace TAOM.Features.Enlistment.Presentation;
 
 /// <summary>
 /// Turns a <see cref="ServiceStatusModel"/> into the wait menu's text. Boundary layer: this is the
@@ -36,8 +36,8 @@ public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
             "{=taom_enlist_wait_board}{ACTIVITY}{NEWLINE}{NEWLINE}Rank: {RANK} · {SECTION}{NEWLINE}Days served: {DAYS} · Standing: {TRUST}{ARREARS}{DUTY}");
 
         text.SetTextVariable("ACTIVITY", ActivityLine(status));
-        text.SetTextVariable("RANK", RankName(status.Rank));
-        text.SetTextVariable("SECTION", SectionName(status.Assignment));
+        text.SetTextVariable("RANK", ServiceVocabulary.RankName(status.Rank));
+        text.SetTextVariable("SECTION", ServiceVocabulary.SectionName(status.Assignment));
         text.SetTextVariable("DAYS", status.DaysServed.ToString());
         text.SetTextVariable("TRUST", TrustName(status.Trust));
         text.SetTextVariable("ARREARS", ArrearsLine(status.DeferredWages));
@@ -98,27 +98,7 @@ public sealed class ServiceStatusTextWriter : IServiceStatusTextWriter
         return line;
     }
 
-    private static TextObject RankName(ServiceRank rank)
-    {
-        switch (rank)
-        {
-            case ServiceRank.Soldier: return new TextObject("{=taom_enlist_rank_soldier}Soldier");
-            case ServiceRank.Veteran: return new TextObject("{=taom_enlist_rank_veteran}Veteran");
-            case ServiceRank.Sergeant: return new TextObject("{=taom_enlist_rank_sergeant}Sergeant");
-            default: return new TextObject("{=taom_enlist_rank_recruit}Recruit");
-        }
-    }
 
-    private static TextObject SectionName(ServiceAssignment assignment)
-    {
-        switch (assignment)
-        {
-            case ServiceAssignment.Archer: return new TextObject("{=taom_enlist_section_arc}bowmen");
-            case ServiceAssignment.Cavalry: return new TextObject("{=taom_enlist_section_cav}horse");
-            case ServiceAssignment.Support: return new TextObject("{=taom_enlist_section_sup}baggage train");
-            default: return new TextObject("{=taom_enlist_section_inf}shield line");
-        }
-    }
 
     /// <summary>
     /// Trust as words, not a raw integer. The number is an internal scale ([-10, 20]) that means

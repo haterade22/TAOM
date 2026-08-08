@@ -96,27 +96,8 @@ public class EnlistmentAssignmentDialogBehavior : CampaignBehaviorBase
     /// </summary>
     private bool SetCurrentSectionName()
     {
-        MBTextManager.SetTextVariable("CURRENT_SECTION", SectionName(_assignments.Current));
+        MBTextManager.SetTextVariable("CURRENT_SECTION", Presentation.ServiceVocabulary.SectionName(_assignments.Current));
         return true;
     }
 
-    /// <summary>
-    /// Localized section names. The enum's own <c>ToString()</c> is an internal identifier and
-    /// must never reach the player — it cannot be translated, and "Support" is not what a soldier
-    /// would call the baggage train.
-    /// </summary>
-    private static TextObject SectionName(ServiceAssignment assignment)
-    {
-        switch (assignment)
-        {
-            case ServiceAssignment.Archer:
-                return new TextObject("{=taom_enlist_section_arc}bowmen");
-            case ServiceAssignment.Cavalry:
-                return new TextObject("{=taom_enlist_section_cav}horse");
-            case ServiceAssignment.Support:
-                return new TextObject("{=taom_enlist_section_sup}baggage train");
-            default:
-                return new TextObject("{=taom_enlist_section_inf}shield line");
-        }
-    }
 }

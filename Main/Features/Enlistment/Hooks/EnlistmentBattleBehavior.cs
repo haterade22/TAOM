@@ -90,18 +90,17 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
             // block, never guarding a `return`, never above a state mutation. `?.` + `== true` so a
             // null provider fails quiet. The `return` below is CONTROL FLOW and stays OUTSIDE the gate.
             //
-            // DEBUG, not INFO: this fires for EVERY map event in the world, and at accelerated
-            // campaign speed that was 3674 lines in one 32-minute session — 61% of the whole log,
-            // each one synchronously flushed. It stays available for diagnosis (it is what proved
-            // the commander was in 0 of 456 events) without drowning the signal.
-            //
             // Gating the STATEMENT (not just the log level) is what removes CountInvolved's full
             // InvolvedParties walk when the toggle is off — C# never evaluates the arguments of a
             // statement that does not execute. Honest limit: FindCommanderPartyIdIn above ALSO
             // enumerates InvolvedParties and runs unconditionally because it is load-bearing, so
             // this removes one of the two enumerations, not both.
+            // INFO, not DEBUG — the toggle controls the volume, the level controls durability. This
+            // is the highest-volume line in the feature (3,674 of 4,856 in one session), but it is
+            // also the one that proved the commander was in 0 of 456 events, so when it is on it has
+            // to survive a hard CTD rather than sit in FileLogger's async queue.
             if (_diagSettings?.IsEnabled == true)
-                _diag?.LogDebug(
+                _diag?.LogInfo(
                     $"[EnlistDiag] map event started, commander NOT in it — commanderHero='{_store.Record.CommanderHeroId}' " +
                     $"resolvedParty='{_commander.GetPartyId(_store.Record.CommanderHeroId) ?? "NONE"}' " +
                     $"attacker='{attackerParty?.MobileParty?.StringId ?? attackerParty?.Name?.ToString() ?? "?"}' " +

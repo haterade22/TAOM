@@ -5,7 +5,7 @@ using TAOM.Adapters;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment.Domain;
 
-namespace TAOM.Features.Enlistment.Hooks;
+namespace TAOM.Features.Enlistment.Presentation;
 
 /// <summary>
 /// Entry-point-layer presenter for the wait menu's text and the service-status inquiry.

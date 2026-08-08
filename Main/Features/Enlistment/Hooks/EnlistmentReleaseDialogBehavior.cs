@@ -11,11 +11,8 @@ namespace TAOM.Features.Enlistment.Hooks;
 /// and for the one branch in the whole feature that produces
 /// <see cref="DischargeReason.Desertion"/>.
 ///
-/// Split out of <see cref="EnlistmentDialogBehavior"/> (ADR-003 decomposition) rather than left
-/// beside the oath chain: the release conversation grew three verdict-gated answers plus a
-/// two-option desert branch, which took the combined file to 218 lines — well past the 150-line
-/// entry-point ceiling. They are also genuinely separate conversations, joined only by both
-/// hanging off <c>hero_main_options</c>.
+/// Split from the oath chain (ADR-003): two genuinely separate conversations that share only
+/// the <c>hero_main_options</c> entry, and together exceeded the entry-point ceiling.
 /// </summary>
 public class EnlistmentReleaseDialogBehavior : CampaignBehaviorBase
 {
@@ -117,15 +114,13 @@ public class EnlistmentReleaseDialogBehavior : CampaignBehaviorBase
     // Boundary conversion only: the conversation partner's id.
     private static string PartnerId() => Hero.OneToOneConversationHero?.StringId;
 
-    // Dialog conditions run per conversation frame, not per campaign tick — one gate call each is
-    // cheap, and re-reading keeps the answer honest if a battle starts mid-conversation.
+    // Per conversation frame, not per campaign tick: re-reading keeps the answer honest if a
+    // battle starts mid-conversation.
     private ReleaseVerdict ReleaseVerdictNow() =>
         _gate.EvaluateReleaseRequest(CampaignTime.Now.ToDays).Verdict;
 
-    /// <summary>
-    /// Condition AND text setup: the line cannot state the debt unless the number is pushed before
-    /// it renders, and the condition is the only hook that runs at that moment.
-    /// </summary>
+    // Condition AND text setup: the line cannot state the debt unless the number is pushed
+    // before it renders, and the condition is the only hook running at that moment.
     private bool SetDaysOwedIfTooSoon()
     {
         var request = _gate.EvaluateReleaseRequest(CampaignTime.Now.ToDays);

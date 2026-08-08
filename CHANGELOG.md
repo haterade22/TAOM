@@ -48,6 +48,28 @@ trimming 234 bodies at weighted 465 against limit 231.
 Verified: `dotnet test TAOM.Tests -c Release` returns an identical pass/fail set before and after the
 guard, and `Main/TAOM.csproj` builds clean. Not verified in-game — recovery from 20 back to
 equilibrium is roughly 40 game days, so expect a climb rather than a jump.
+### refactor(enlistment): put the presentation layer where it belongs, and stop duplicating strings
+
+A standards pass found six entry points at or over ADR-002's 150-line ceiling — three of them
+introduced by this arc, including one *created* while splitting a different 218-line violation.
+
+The root cause for two of them was placement, not size: `EnlistmentWaitMenuPresenter` and
+`ServiceStatusTextWriter` are registered singleton services, not entry points, and were sitting in
+`Hooks/` where the ceiling applies. They now live in `Presentation/`, which resolves both the
+misfiling and the apparent breach in one move. `EnlistmentMenuBehavior` (162) shed its option list
+to `EnlistmentWaitMenuOptions` — the behavior's job is lifecycle, the option list is a separate and
+growing concern.
+
+`ServiceVocabulary` now owns every enum→player-words mapping. Section names had been written twice
+— once in the reassignment dialog, once in the status board — as identical ladders over the same
+localization keys. Two copies of one key set do not stay in sync, and the failure is silent: the
+dialog says "baggage train", the board says something else, and nothing errors.
+
+Four entry points brought under the ceiling. Two remain over and both pre-date this arc:
+`EnlistmentMeritMissionBehavior` (163, and it holds a 44-line geometric scoring algorithm inline
+that should be a testable engine) and `EnlistmentBattleBehavior` (157).
+
+Enlistment suite 659 green.
 ### fix(enlistment): register the 40 strings that would have shipped untranslatable
 
 An audit of every `{=key}` literal and every `IInquiryAdapter` key/fallback pair against

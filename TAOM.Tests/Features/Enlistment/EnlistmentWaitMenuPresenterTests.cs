@@ -7,6 +7,7 @@ using TAOM.Features.Enlistment;
 using TAOM.Features.Enlistment.Domain;
 using TAOM.Features.Enlistment.Hooks;
 
+using TAOM.Features.Enlistment.Presentation;
 namespace TAOM.Tests.Features.Enlistment;
 
 /// <summary>

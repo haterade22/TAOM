@@ -68,7 +68,7 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
         if (!string.IsNullOrEmpty(sampleBand))
         {
             var text = new TextObject("{=taom_enlist_merit_toast}The sergeants noted your conduct: {GRADE}.");
-            text.SetTextVariable("GRADE", GradeName(sampleBand));
+            text.SetTextVariable("GRADE", Presentation.ServiceVocabulary.GradeName(sampleBand));
             InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
         }
 
@@ -145,25 +145,4 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
         _justLoadedFromSave = false;
     }
 
-    /// <summary>
-    /// Merit bands carry a GradeKey that is an INTERNAL id ("distinguished", "rough"). It was
-    /// being substituted into the toast raw, so the player read "your conduct: distinguished" —
-    /// lower-cased engine data in the middle of a sentence, and untranslatable in all 12
-    /// languages even once the toast itself was localized. An unknown key falls back to the
-    /// mildest real grade rather than echoing the id.
-    /// </summary>
-    private static TextObject GradeName(string gradeKey)
-    {
-        switch (gradeKey)
-        {
-            case "distinguished":
-                return new TextObject("{=taom_enlist_grade_distinguished}distinguished");
-            case "strong":
-                return new TextObject("{=taom_enlist_grade_strong}strong");
-            case "solid":
-                return new TextObject("{=taom_enlist_grade_solid}steady");
-            default:
-                return new TextObject("{=taom_enlist_grade_rough}rough, but you held");
-        }
-    }
 }

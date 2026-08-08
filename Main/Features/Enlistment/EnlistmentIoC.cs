@@ -2,6 +2,7 @@ using DryIoc;
 using TAOM.Adapters;
 using TAOM.Features.Enlistment.Hooks;
 
+using TAOM.Features.Enlistment.Presentation;
 namespace TAOM.Features.Enlistment;
 
 public static class EnlistmentIoC
@@ -23,7 +24,8 @@ public static class EnlistmentIoC
         container.Register<IEnlistmentFeatureSettingsProvider, EnlistmentFeatureSettingsProvider>(Reuse.Singleton);
         container.Register<TAOM.Adapters.IMapConversationAdapter, TAOM.Adapters.MapConversationAdapter>(Reuse.Singleton);
         container.Register<IEnlistmentPlayerActionService, EnlistmentPlayerActionService>(Reuse.Singleton);
-        container.Register<Hooks.IServiceStatusTextWriter, Hooks.ServiceStatusTextWriter>(Reuse.Singleton);
+        container.Register<IServiceStatusTextWriter, ServiceStatusTextWriter>(Reuse.Singleton);
+        container.Register<Presentation.IEnlistmentWaitMenuOptions, Presentation.EnlistmentWaitMenuOptions>(Reuse.Singleton);
         container.Register<IServiceStatusService, ServiceStatusService>(Reuse.Singleton);
         container.Register<IServiceAttachmentService, ServiceAttachmentService>(Reuse.Singleton);
         container.Register<IDischargeService, DischargeService>(Reuse.Singleton);
