@@ -9,10 +9,11 @@ Structure (v2 single-item AnimationClip _anm.tpac):
   meta tail after the last flag string: [ClipUsages count][len][quad_movement] [empty list count=0] [3 step floats]
 """
 import struct, os, shutil
+from _gamedir import game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = os.environ.get('BANNERLORD_GAME_DIR') or r'E:\Steam\steamapps\common\Mount & Blade II Bannerlord'
+GAME = game_dir(r'E:\Steam\steamapps\common\Mount & Blade II Bannerlord')
 DIR = GAME + r'\Modules\LOTRLOME_Armory\Assets\creature\chariot\animations'
 PAIRS = [  # (target, donor) — donor is a tagged sibling of the same gait direction
     ('chariot_gait_walkfast_anm.tpac',     'chariot_walkfast_anm.tpac'),

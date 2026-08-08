@@ -292,18 +292,27 @@ See `docs/localization/TRANSLATOR_GUIDE.md` for the translator-facing workflow +
 **AI translation (translate_with_claude.py only):** `anthropic` SDK
 
 **Game install — set `BANNERLORD_GAME_DIR`.** `README.md` lists it as a prerequisite and
-`setup-dev-env.ps1` sets it. 18 tools honour it: 14 read it directly, and `analyze_armor_balance.py`,
+`setup-dev-env.ps1` sets it. 28 tools honour it: 24 resolve it themselves, and `analyze_armor_balance.py`,
 `apply_settlement_buildings.py`, `derive_armor_tiers.py` and `generate_enlistment_rosters.py` inherit it
 by importing one that does. Every one falls back to `E:\Steam\steamapps\common\Mount & Blade II Bannerlord`, so leaving it unset changes
 nothing on a machine where that literal is correct.
 
-Three narrower variables are **not** derived from it — set them separately if you use those tools:
-`BANNERLORD_GAME_MODULES` (`taom_mcp_server.py`), `TAOM_ARMORY_BASE` (`cleanup_deleted_gondor_items.py`),
-`TAOM_MAP_FILE` (`merge_settlements.py`). `tools/.env.example` documents the `TAOM_*` pair but not
-`BANNERLORD_GAME_DIR`.
+**Resolve it through `tools/_gamedir.py`** — 21 of the 24 do. `game_dir(default)` treats a set-but-blank
+variable as unset, which `os.environ.get(VAR, default)` does not: it returns `""`, `Path("")` is `.`, and
+the tool then reports every file missing rather than the root being wrong. `game_modules(default)` adds
+the `BANNERLORD_GAME_MODULES` precedence, and `ensure_exists(path, what=...)` exits 2 naming the path,
+for the tools that would otherwise end on a clean-looking result against a root that is not there.
+`dump_settlement_buildings.py`, `rebalance_armor.py` and `rebalance_settlement_prosperity.py` keep their
+own inline resolution: they already handle the blank case, and two of them define a local `game_dir()`
+that the import would shadow.
 
-**Thirteen top-level tools still have no override at all**, nine of which write rather than read — read
-the source before pointing one at a non-default install (#404).
+`taom_mcp_server.py` derives its Modules folder from `BANNERLORD_GAME_DIR`, keeping
+`BANNERLORD_GAME_MODULES` as an explicit override. Two narrower variables are still **not** derived from
+it — set them separately if you use those tools: `TAOM_ARMORY_BASE` (`cleanup_deleted_gondor_items.py`)
+and `TAOM_MAP_FILE` (`merge_settlements.py`). `tools/.env.example` documents all four.
+
+The thirteen top-level tools that had no override of any kind now all read `BANNERLORD_GAME_DIR` (#404).
+Six others were left alone deliberately: they take a path flag, which is override enough.
 
 **Other hardcoded paths** (update if your environment differs):
 - TAOM repo: `c:\Users\mikew\source\repos\TAOM\` — `generate_xslt.py`, `blender/rebuild_anim_from_json.py`

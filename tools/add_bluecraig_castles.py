@@ -20,11 +20,12 @@ Usage:
   python tools/add_bluecraig_castles.py            # dry-run (prints plan)
   python tools/add_bluecraig_castles.py --apply    # writes the live file (+ backup)
 """
-import argparse, os, re, shutil, datetime, xml.etree.ElementTree as ET
+import argparse, re, shutil, datetime, xml.etree.ElementTree as ET
+from _gamedir import game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord"
+GAME = game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord")
 LIVE = GAME + r"/Modules/TAOM_Map/ModuleData/settlements.xml"
 VALID_VILLAGE_TYPES = {"swine_farm", "cattle_farm", "sheep_farm", "wheat_farm", "vineyard",
                        "fisherman", "lumberjack", "iron_mine", "silver_mine", "clay_mine",

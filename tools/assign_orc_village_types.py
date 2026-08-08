@@ -17,12 +17,13 @@ Usage:
   python tools/assign_orc_village_types.py            # dry-run (prints plan)
   python tools/assign_orc_village_types.py --apply    # writes live file (+ backup)
 """
-import argparse, os, re, shutil
+import argparse, re, shutil
 from datetime import datetime
+from _gamedir import game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord"
+GAME = game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord")
 LIVE = GAME + r"/Modules/TAOM_Map/ModuleData/settlements.xml"
 ORC_CULTURES = {"goblin", "mistymountainorcs"}  # bluecraig villages (culture goblin) covered when added
 # v1.4.5 VillageType stringIds are CODE-registered in DefaultVillageTypes (NOT XML) — verify against the

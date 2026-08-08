@@ -8,6 +8,7 @@ import os
 import re
 import sys
 import glob
+from _gamedir import ensure_exists, game_dir
 
 TROOPS_FILE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -19,10 +20,7 @@ TROOPS_FILE = os.path.join(
 # (tools/.env.example also documents a narrower TAOM_ARMORY_BASE, but only
 # cleanup_deleted_gondor_items.py reads it; the game root is the consistent knob here.)
 ARMORY_BASE = os.path.join(
-    os.environ.get(
-        "BANNERLORD_GAME_DIR",
-        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
-    ),
+    game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"),
     "Modules", "LOTRLOME_Armory", "ModuleData", "LOTRLOME_items", "gondor",
 )
 
@@ -44,6 +42,11 @@ def collect_ids() -> set:
 
 
 def main():
+    # An absent Armory root collects zero ids, so every sk_gd_* / sk_dg_*
+    # reference is reported missing and the run exits 1 predicting the underwear
+    # bug in-game — from a folder it never read.
+    ensure_exists(ARMORY_BASE, what="the Gondor item folder")
+
     refs = collect_refs()
     ids = collect_ids()
     missing = sorted(refs - ids)

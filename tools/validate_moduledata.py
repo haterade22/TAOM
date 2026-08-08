@@ -43,13 +43,18 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import taom_schema as ts
+# Aliased: main() binds a local `game_modules`, which would shadow the import.
+from _gamedir import game_modules as resolve_game_modules
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
 
-DEFAULT_GAME_MODULES = Path(
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules"
+# The commit hook runs this with no --game-modules, so the default is what it
+# gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
+# while the hook still saw PASS (#404).
+DEFAULT_GAME_MODULES = resolve_game_modules(
+    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 )
 
 
@@ -80,8 +85,10 @@ def main() -> int:
         print(f"WARNING: Bannerlord Modules folder not found: {game_modules}\n"
               f"         item / troop / party-template ref checks will be SKIPPED (need the\n"
               f"         game install for a complete registry). Culture-validity, duplicate-id,\n"
-              f"         civilian-type and enum checks still run. Pass --game-modules <path> to\n"
-              f"         enable the skipped checks.", file=sys.stderr)
+              f"         civilian-type and enum checks still run. Set $BANNERLORD_GAME_DIR or\n"
+              f"         pass --game-modules <path> to enable the skipped checks.\n"
+              f"         This run will exit 2 (bad input), not 0 — a degraded sweep must not\n"
+              f"         report PASS as though it had checked everything.", file=sys.stderr)
 
     schemas = ts.load_schemas(SCHEMA_DIR)
     print(f"Loaded {len(schemas)} schemas:", file=sys.stderr)
@@ -137,6 +144,12 @@ def main() -> int:
     n_warn = sum(1 for i in issues if i.severity is ts.Severity.WARNING)
     if n_err or (args.warnings_as_errors and n_warn):
         return 1
+    if not game_modules.exists():
+        # PASS from a registry with no items and no NPCCharacters means the two
+        # ref sweeps never ran, and the commit hook cannot tell that apart from
+        # a real pass. 2 is bad-input, which the hook already fails open on, so
+        # nothing starts blocking that did not block before.
+        return 2
     return 0
 
 

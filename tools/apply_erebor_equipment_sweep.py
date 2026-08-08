@@ -48,14 +48,16 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from _gamedir import game_dir
+
 BOM = b"\xef\xbb\xbf"
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TROOPS = os.path.join(REPO, "Main", "_Module", "ModuleData", "troops", "troops_erebor.xml")
 MODULEDATA = os.path.join(REPO, "Main", "_Module", "ModuleData")
 ARMORY = (
-    r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules"
-    r"/LOTRLOME_Armory/ModuleData/LOTRLOME_items"
+    game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord")
+    + r"/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items"
 )
 
 DWARF_CULTURE = "Culture.erebor"

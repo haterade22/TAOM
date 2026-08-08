@@ -22,13 +22,11 @@ import xml.etree.ElementTree as ET
 from collections import OrderedDict
 
 from tpac_clipinfo import parse as parse_clip
+from _gamedir import game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = os.path.join(os.environ.get(
-    "BANNERLORD_GAME_DIR",
-    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord",
-), "Modules")
+GAME = os.path.join(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"), "Modules")
 LOTR = GAME + r"\LOTRLOME_Armory\ModuleData"
 WARG = GAME + r"\Alliance.Wargs\ModuleData"
 NATIVE = GAME + r"\Native\ModuleData"

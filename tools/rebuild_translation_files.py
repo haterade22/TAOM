@@ -13,17 +13,17 @@ Usage: python tools/rebuild_translation_files.py --lang RU
 
 import argparse
 import json
-import os
 import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from _gamedir import ensure_exists, game_modules
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
-GAME_ROOT = Path(GAME) / "Modules"
+GAME_ROOT = game_modules(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 
 LANGUAGES = {
     "BR":  ("por-BR", "Portuguese (Brazilian)"),
@@ -177,6 +177,10 @@ def rebuild_language(lang):
 
     # ─── LOTRLOME_Armory: 19 source XMLs at root of Languages/ ─────────────────
     armory_root = GAME_ROOT / "LOTRLOME_Armory" / "ModuleData" / "Languages"
+    # mkdir(parents=True) under a root that does not exist quietly builds the
+    # whole Modules/LOTRLOME_Armory/ModuleData/Languages/<lang> chain there,
+    # finds no loc_*.xml to read, and the run still ends on "Done." (#404).
+    ensure_exists(armory_root, what="the Armory Languages folder")
     armory_target = armory_root / lang
     armory_target.mkdir(parents=True, exist_ok=True)
     for src_path in sorted(armory_root.glob("loc_*.xml")):

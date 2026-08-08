@@ -34,6 +34,7 @@ See docs/reference/taom-map-settlement-naming.md for:
 Last bulk-applied: 2026-05-26 (345 village display names across 15 regions).
 """
 import os, re
+from _gamedir import game_dir
 
 NAMES = {
     # V - Rohan (Anglo-Saxon)
@@ -501,7 +502,7 @@ print("All names unique.")
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+GAME = game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
 ROOT = GAME + r"\Modules\TAOM_Map\ModuleData"
 LANGS = ["BR", "CNs", "CNt", "DE", "FR", "IT", "JP", "KO", "PL", "RU", "SP", "TR"]
 

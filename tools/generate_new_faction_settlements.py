@@ -22,12 +22,13 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from assign_orc_village_types import fief_types, ORC_CULTURES  # per-fief orc village-type rule
+from _gamedir import game_dir
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LAYOUT = os.path.join(ROOT, "tools", "taom_new_factions_layout.json")
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = os.environ.get("BANNERLORD_GAME_DIR") or r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord"
+GAME = game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord")
 LIVE = GAME + r"/Modules/TAOM_Map/ModuleData/settlements.xml"
 
 # ---- Curated display names (placeholders, lore-flavoured; user can rename freely) ----

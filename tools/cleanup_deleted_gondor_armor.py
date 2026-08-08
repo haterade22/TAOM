@@ -10,15 +10,16 @@ Usage:
 """
 
 import argparse
-import os
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from _gamedir import ensure_exists, game_dir
+
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
 # The E:/repos asset-repo entry is a different concept and keeps its own literal.
-GAME = os.environ.get("BANNERLORD_GAME_DIR") or "E:/Steam/steamapps/common/Mount & Blade II Bannerlord"
+GAME = game_dir("E:/Steam/steamapps/common/Mount & Blade II Bannerlord")
 ARMORY_PATHS = [
     Path("E:/repos/lotraom-assets/shared/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor"),
     Path(GAME) / "Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/gondor",
@@ -188,6 +189,11 @@ def main():
     group.add_argument("--dry-run", action="store_true", help="List items to remove")
     group.add_argument("--apply", action="store_true", help="Remove items from XMLs")
     args = parser.parse_args()
+
+    # With neither location present the loop prints two SKIP lines and a
+    # "Grand total: 0", then exits 0 — indistinguishable from a clean run.
+    if not any(p.exists() for p in ARMORY_PATHS):
+        ensure_exists(ARMORY_PATHS[-1], what="the Gondor item folder")
 
     grand_total = 0
     for armory_base in ARMORY_PATHS:

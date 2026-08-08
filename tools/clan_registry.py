@@ -18,10 +18,13 @@ import os
 import re
 import xml.etree.ElementTree as ET
 
+from _gamedir import game_dir
+
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CLANS_XML = os.path.join(ROOT, "Main", "_Module", "ModuleData", "characters", "clans.xml")
 SPCLANS_XSLT = os.path.join(ROOT, "Main", "_Module", "ModuleData", "spclans.xslt")
-VANILLA_SPCLANS = r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/SandBox/ModuleData/spclans.xml"
+VANILLA_SPCLANS = (game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord")
+                   + r"/Modules/SandBox/ModuleData/spclans.xml")
 
 ATTRS = ("culture", "super_faction", "color", "color2", "default_party_template",
          "is_bandit", "is_minor_faction", "is_clan_type_mercenary", "is_outlaw")

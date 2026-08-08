@@ -18,14 +18,14 @@ Usage:
 """
 from __future__ import annotations
 import argparse
-import os
 import re
 from pathlib import Path
 
+from _gamedir import ensure_exists, game_dir
+
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
-GAME = Path(os.environ.get("BANNERLORD_GAME_DIR")
-            or r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
+GAME = Path(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"))
 MODULES = GAME / "Modules"
 LIVE = MODULES / "TAOM_Map" / "ModuleData" / "settlements.xml"
 SHADOW = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "settlements.xml"
@@ -75,6 +75,11 @@ def main() -> int:
     args = ap.parse_args()
     if not (args.dry_run or args.apply):
         ap.error("pass --dry-run or --apply")
+
+    # A wrong root globs no SceneObj folders and matches no remaps, so the run
+    # ends on "0 of 13 remaps match the live file" and exits 0 — which reads as
+    # "already remapped" rather than "looked in the wrong place".
+    ensure_exists(MODULES, what="the Bannerlord Modules folder")
 
     folders = scene_folders_lower()
     # Only require a replacement scene to exist for entries that ACTUALLY match the
