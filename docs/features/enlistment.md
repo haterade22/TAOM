@@ -450,12 +450,48 @@ second debit would charge the same failure twice. The geometry moved out to
 costs a 7-day cooldown and a point of trust (the donor allowed free swaps in any
 conversation, which made the choice weightless).
 
-**Duties.** 13 field duties collapse onto 5 mechanics — `HuntSpawnedParty` (5 flavors),
-`VisitSettlement` (5), `DeliverFood`, `CollectFood`, `WaitHours` — with the flavor,
-targets, deadlines, gates and rewards as data rows in `enlistment_duties.json`, plus 11
-interactive skill-check duties and 3 camp incidents through one presenter. Rows failing
-validation are SKIPPED with a warning (never silently defaulted). `IArmyRhythmSnapshotService`
-caches the world read once per game hour.
+**Duties.** 13 field duties, plus 11 interactive skill-check duties and 3 camp incidents through
+one presenter. Rows failing validation are SKIPPED with a warning (never silently defaulted).
+`IArmyRhythmSnapshotService` caches the world read once per game hour.
+
+A field duty is **camp work, not a journey** (reworked 2026-08-09, #428): you are given orders, they
+occupy you for `durationHours` (4–8), and one `ISkillCheckService` roll against the row's
+`difficulty` (45–76) decides the outcome. Success pays `reportReward`, failure pays
+`failureReward` — both through the one `IServiceRewardService.Grant` chokepoint, so a duty cannot
+pay through a side channel. Skills come from the row's `supportSkills`.
+
+### The player is NEVER detached by a duty — do not re-add travel
+
+This is the load-bearing property of the design, and it is pinned by
+`FieldDutyRuntime_HasNoPresenceOrSpawnDependencies`, a source-scan test that reddens if
+`RestorePresence`, `IServiceAttachmentService`, `SpawnLooterParty`, `DestroyParty` or
+`EnlistedDetachedOnDuty` reappear in the runtime.
+
+The previous model detached for **days**: `Start` called `RestorePresence()`, setting `IsActive`
+and `IsVisible` true. An enlisted player's roster is one hero with no troops, so that produced a
+fully targetable, escortless party in contested territory. A live session recorded the cost to the
+second — duty started 22:02:38, player captured 22:03:19 — and the duty then outlived the
+captivity and would have charged trust for a failure the player was physically prevented from
+avoiding.
+
+| Consequence | Detail |
+|---|---|
+| `EnlistedDetachedOnDuty` is **retired, not deleted** | The enum member and value 4 must survive: `TryParse` rejects any state failing `Enum.IsDefined`, which drops the WHOLE core record and silently un-enlists the player. `ToPersistedState` coerces it to `EnlistedAttached` **on parse** — that coercion IS the save migration |
+| The inbound transition edge is gone; outbound edges stay | Nothing produces the state, but "unreachable" rests entirely on that one coercion. `EnlistmentReconciler.ReconcileRetiredDetachedDuty` is a 3-line recovery that returns the player to attached and logs loudly if it ever fires |
+| A legacy duty with no `ShiftEndDay` self-heals | It would never satisfy the shift gate and would occupy the single duty slot forever, blocking every future offer. `HourlyUpdate` cancels it — no reward, no penalty |
+| Duties cancel on captivity **and** on `CommanderUnavailable` | `IsEnlisted` spans five states including both. Without explicit guards a prisoner keeps ticking and is paid from a dungeon, and a duty resolves during the 7-day grace with no company to report to |
+| Offers require `EnlistedAttached`, not `IsEnlisted` | Same reason: a prisoner was otherwise offered camp work |
+| A duty day is now a **parked** day | So TAOM heals on it where vanilla used to. Intended — you are with the column — but it is a behaviour change from the detached model |
+| Every start announces | The old model was self-announcing by accident (it made you visible and sent you travelling). This one is invisible, so `Start` shows an assignment toast — otherwise the first evidence of a duty is the result toast, after it has already moved trust |
+
+The spawn/destroy path went with the travel model, which removes the **#375 stack-overflow surface**
+entirely rather than guarding it: `DestroyPartyAction` dispatches `MobilePartyDestroyed` *before* it
+deactivates the party, so the handler re-entered `Apply` and recursed. Nothing in the mod destroys a
+party any more. Nine now-dead members were deleted from `IDutyWorldAdapter` (384 → 121 lines); the
+four survivors are daily upkeep, used only by `EnlistmentDailyService`.
+
+Known and accepted: a save made mid-duty under the old model may leave its spawned looter party on
+the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
 **Equipment.** `enlist_{runtimeCultureId}_{rank}` rosters in
 `equipmentsets/taom_enlistment_equipment.xml` (68: 16 cultures × 4 ranks + 4
