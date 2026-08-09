@@ -27,5 +27,6 @@
     <string id="taom_emissary_no_resource" text="이 정착지에는 사절 거래가 없습니다." />
     <string id="taom_emissary_no_offers" text="사절이 현재 제공할 정예 부대가 없습니다." />
     <string id="taom_emissary_failed" text="사절이 거래를 완료할 수 없었습니다." />
+    <string id="taom_emissary_coop_guest" text="사절은 이 캠페인의 호스트와만 거래합니다." />
   </strings>
 </base>

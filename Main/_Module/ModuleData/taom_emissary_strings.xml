@@ -29,5 +29,9 @@
 	<string id="taom_emissary_no_resource" text="{=taom_emissary_no_resource}There is no emissary trade in this settlement." />
 	<string id="taom_emissary_no_offers" text="{=taom_emissary_no_offers}The emissary has no elite units to offer right now." />
 	<string id="taom_emissary_failed" text="{=taom_emissary_failed}The emissary could not complete the deal." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- EliteEmissary -->
+	<string id="taom_emissary_coop_guest" text="{=taom_emissary_coop_guest}The emissary only deals with the host of this campaign." />
+
 
 </strings>

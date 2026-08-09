@@ -778,5 +778,105 @@
     <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="Le poison agissait rapidement et le chaman disait qu'il n'y avait rien à faire. Vous vous êtes souvenu d'un enseignement différent — une préparation des plantes froides des steppes qui fonctionnait contre ce type de blessure. Vous l'avez préparée, appliquée et êtes resté assis toute la nuit. Le chef s'est rétabli. Il vous a donné une place à son conseil." />
     <string id="taom_cc_taom_adulthood_khuzait_6_text" text="Vous avez éclairé la forteresse gondorienne de Cair Andros et cartographié ses faiblesses." />
     <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="Le seigneur de bataille devait savoir si la forteresse pouvait être contournée ou devait être réduite. Vous êtes allé de l'avant seul, avez passé quatre jours à observer depuis la rive orientale du fleuve et êtes revenu avec une évaluation détaillée de la force de sa garnison, du calendrier d'approvisionnement et de l'approche offrant les meilleures chances. Le seigneur de bataille l'a qualifié de rapport le plus utile qu'il ait reçu dans une campagne." />
+    <string id="taom_cc_taom_parent_goblin_1_text" text="Chefs de Gobelinville" />
+    <string id="taom_cc_taom_parent_goblin_1_desc" text="Votre famille comptait parmi l'élite noble de Gobelinville, vouée à reconquérir son foyer ancestral et à le défendre des envahisseurs." />
+    <string id="taom_cc_taom_parent_goblin_2_text" text="Bricoleurs de Gobelinville" />
+    <string id="taom_cc_taom_parent_goblin_2_desc" text="Votre famille était composée de forgerons habiles, fabriquant outils et armes pour équiper les défenseurs de Gobelinville." />
+    <string id="taom_cc_taom_parent_goblin_3_text" text="Mineurs de Gobelinville" />
+    <string id="taom_cc_taom_parent_goblin_3_desc" text="Votre famille travaillait sans relâche dans les mines de Gobelinville, en exhumant les richesses cachées." />
+    <string id="taom_cc_taom_parent_goblin_4_text" text="Guerriers des Monts Gris" />
+    <string id="taom_cc_taom_parent_goblin_4_desc" text="Votre famille a combattu les Orques et d'autres menaces dans les Montagnes Grises, défendant l'honneur des siens." />
+    <string id="taom_cc_taom_parent_goblin_5_text" text="Rôdeurs de Grand'Peur" />
+    <string id="taom_cc_taom_parent_goblin_5_desc" text="Votre famille servit comme rôdeurs, patrouillant les terres sauvages autour de Grand'Peur et protégeant ses frontières de tout danger." />
+    <string id="taom_cc_taom_parent_goblin_6_text" text="Bannis des Montagnes" />
+    <string id="taom_cc_taom_parent_goblin_6_desc" text="Votre famille vivait aux marges de la société de Grand'Peur, survivant par la ruse et la cruauté dans les cols impitoyables des montagnes." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_text" text="Chefs de guerre des Monts Brumeux" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_desc" text="Votre famille comptait parmi l'élite noble des Monts Brumeux, vouée à reconquérir son foyer ancestral et à le défendre des envahisseurs." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_text" text="Forgerons de la Moria" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_desc" text="Votre famille était composée de forgerons habiles, façonnant outils et armes pour équiper les défenseurs des Monts Brumeux." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_text" text="Mineurs des Monts Brumeux" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_desc" text="Votre famille travaillait sans relâche dans les mines des Monts Brumeux, mettant au jour leurs richesses cachées." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_text" text="Guerriers des Montagnes Grises" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_desc" text="Votre famille a combattu les Orques et d'autres menaces dans les Montagnes Grises, défendant l'honneur des siens." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_text" text="Rôdeurs des Monts Brumeux" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_desc" text="Votre famille servit comme rôdeurs, patrouillant les terres sauvages autour des Monts Brumeux et protégeant leurs frontières de tout danger." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_text" text="Bannis des Montagnes" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="Votre famille vivait aux marges de la société des Monts Brumeux, survivant par la ruse et la cruauté dans les cols impitoyables des montagnes." />
+    <string id="taom_cc_taom_youth_goblin_1_text" text="Vous avez chevauché avec les hordes de wargs du Haut Col." />
+    <string id="taom_cc_taom_youth_goblin_1_desc" text="Vous vous êtes entraîné avec les cavaliers de wargs du Haut Col, apprenant à maîtriser ces bêtes sauvages à travers les cols traîtres et à frapper de la lance et de l'épieu depuis leur dos." />
+    <string id="taom_cc_taom_youth_goblin_2_text" text="Vous avez gardé les galeries de Grand'Peur." />
+    <string id="taom_cc_taom_youth_goblin_2_desc" text="Vous avez servi dans les galeries de Grand'Peur, défendant les forges et les tunnels contre les intrus à l'arc et à l'épieu." />
+    <string id="taom_cc_taom_youth_goblin_3_text" text="Vous vous êtes entraîné avec les berserkers." />
+    <string id="taom_cc_taom_youth_goblin_3_desc" text="Vous comptiez parmi les berserkers de Grand'Peur, apprenant à combattre avec une fureur téméraire et une force écrasante." />
+    <string id="taom_cc_taom_youth_goblin_4_text" text="Vous avez éclairé les cols de montagne." />
+    <string id="taom_cc_taom_youth_goblin_4_desc" text="Vous avez parcouru les sentiers traîtres autour de Grand'Peur, pistant les ennemis et assurant un passage sûr aux vôtres." />
+    <string id="taom_cc_taom_youth_goblin_5_text" text="Vous avez tenu la ligne dans les légions de lanciers de Grand'Peur." />
+    <string id="taom_cc_taom_youth_goblin_5_desc" text="Vous avez manœuvré et marché avec les formations de lanciers lourds du Haut Col, apprenant à résister à une charge et à tenir votre position dans les conditions brutales du Nord jusqu'à la relève." />
+    <string id="taom_cc_taom_youth_goblin_6_text" text="Vous avez couru avec les bandes de pillards des cols." />
+    <string id="taom_cc_taom_youth_goblin_6_desc" text="Vous viviez hors des structures des clans de la montagne, avec ces opportunistes aux doigts agiles qui suivaient les bandes guerrières et fouillaient les restes de chaque escarmouche. Les armes de jet et des jambes rapides vous ont gardé en vie quand rien d'autre ne l'aurait fait." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_text" text="Vous avez chevauché avec les cavaliers de wargs des Monts Brumeux." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_desc" text="Vous vous êtes entraîné avec les cavaliers de wargs des Monts Brumeux, apprenant à maîtriser ces bêtes sauvages à travers les cols traîtres et à frapper de la lance et de l'épieu depuis leur dos." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_text" text="Vous avez gardé les forges profondes de la Moria." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_desc" text="Vous avez servi dans la garnison de la Moria, défendant les forges et les tunnels contre les intrus à l'arc et à l'épieu." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_text" text="Vous vous êtes entraîné avec les berserkers." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_desc" text="Vous comptiez parmi les berserkers des Monts Brumeux, apprenant à combattre avec une fureur téméraire et une force écrasante." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_text" text="Vous avez éclairé les cols de montagne." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_desc" text="Vous avez parcouru les sentiers traîtres autour des Monts Brumeux, pistant les ennemis et assurant un passage sûr aux vôtres." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="Vous avez tenu la ligne dans les légions de lanciers des Monts Brumeux." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_desc" text="Vous avez manœuvré et marché avec les formations de lanciers lourds des Monts Brumeux, apprenant à résister à une charge et à tenir votre position dans les conditions brutales du Nord jusqu'à la relève." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_text" text="Vous avez couru avec les bandes de pillards des cols." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_desc" text="Tu vivais en marge de la structure des clans de la montagne, courant avec les opportunistes aux doigts agiles qui suivaient les bandes guerrières et fouillaient les restes de chaque escarmouche. Les armes de jet et une bonne paire de jambes t'ont gardé en vie là où rien d'autre n'aurait suffi." />
+    <string id="taom_cc_taom_education_goblin_1_text" text="Entraîné dans les salles-tunnels de Gobelinville." />
+    <string id="taom_cc_taom_education_goblin_1_desc" text="Tu as reçu le baptême du sang dans les salles d'entraînement éclairées aux torches de la forteresse de la montagne, apprenant à chevaucher durement et à manier des armes lourdes selon la tradition des clans orques du Nord. Le rang allait à ceux qui savaient faire leurs preuves dans la fosse devant leurs anciens." />
+    <string id="taom_cc_taom_education_goblin_2_text" text="Apprenti chez les forgerons d'armes de Gobelinville." />
+    <string id="taom_cc_taom_education_goblin_2_desc" text="Tu as appris à forger des armes grossières mais efficaces dans les bruyantes salles de forge de la montagne, et à les troquer contre des vivres et des faveurs. Le travail était laid mais le savoir-faire bien réel, et tu as quitté la forge en connaissant à la fois le fer et le marchandage." />
+    <string id="taom_cc_taom_education_goblin_3_text" text="Tu as creusé dans les mines sous la montagne." />
+    <string id="taom_cc_taom_education_goblin_3_desc" text="Tu as manié la pioche dans les puits sans lumière de Gobelinville, apprenant la structure de la montagne et l'ingénierie des étais de fosse. Les tunnels étaient ta demeure et tu pouvais t'y déplacer en aveugle, ce qui était souvent nécessaire." />
+    <string id="taom_cc_taom_education_goblin_4_text" text="Tu as combattu dans les cols des Montagnes Grises." />
+    <string id="taom_cc_taom_education_goblin_4_desc" text="Tu courais avec les bandes de pillards qui frappaient dans les Montagnes Grises, apprenant à combattre à la hache et à la lance selon le style brutal des raids éclair des clans du Nord. Tu revenais plus hargneux chaque fois, et un peu plus certain de ta propre survie." />
+    <string id="taom_cc_taom_education_goblin_5_text" text="Tu as parcouru les terres sauvages autour de Gobelinville." />
+    <string id="taom_cc_taom_education_goblin_5_desc" text="Tu patrouillais la sauvagerie rocheuse entourant la forteresse de la montagne, traquant les intrus et lisant les signes des mouvements ennemis. Les froides étendues du Nord t'ont donné la patience et l'immobilité d'un archer qui survit à n'importe quelle cible." />
+    <string id="taom_cc_taom_education_goblin_6_text" text="Tu as survécu seul dans les cols de la montagne." />
+    <string id="taom_cc_taom_education_goblin_6_desc" text="Banni ou fuyant quelque dette, tu t'es débrouillé seul dans les cols traîtres autour de la montagne, survivant par le vol et la vivacité d'esprit. L'expérience t'a laissé sans aucune illusion sur la loyauté et un talent aiguisé pour te sortir du pétrin." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_text" text="Entraîné dans les salles de guerre de la Moria." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_desc" text="Tu as reçu le baptême du sang dans les salles d'entraînement éclairées aux torches de la forteresse de la montagne, apprenant à chevaucher durement et à manier des armes lourdes selon la tradition des clans orques du Nord. Le rang allait à ceux qui savaient faire leurs preuves dans la fosse devant leurs anciens." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_text" text="Apprenti chez les forgerons d'armes des Monts Brumeux." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_desc" text="Tu as appris à forger des armes grossières mais efficaces dans les bruyantes salles de forge de la montagne, et à les troquer contre des vivres et des faveurs. Le travail était laid mais le savoir-faire bien réel, et tu as quitté la forge en connaissant à la fois le fer et le marchandage." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_text" text="Tu as creusé dans les mines sous la montagne." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_desc" text="Tu as manié la pioche dans les puits sans lumière des Monts Brumeux, apprenant la structure de la montagne et l'ingénierie des étais de fosse. Les tunnels étaient ta demeure et tu pouvais t'y déplacer en aveugle, ce qui était souvent nécessaire." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_text" text="Tu as combattu dans les cols des Montagnes Grises." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_desc" text="Tu courais avec les bandes de pillards qui frappaient dans les Montagnes Grises, apprenant à combattre à la hache et à la lance selon le style brutal des raids éclair des clans du Nord. Tu revenais plus hargneux chaque fois, et un peu plus certain de ta propre survie." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_text" text="Tu as parcouru les terres sauvages autour des Monts Brumeux." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_desc" text="Tu patrouillais la sauvagerie rocheuse entourant la forteresse de la montagne, traquant les intrus et lisant les signes des mouvements ennemis. Les froides étendues du Nord t'ont donné la patience et l'immobilité d'un archer qui survit à n'importe quelle cible." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_text" text="Tu as survécu seul dans les cols de la montagne." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_desc" text="Banni ou fuyant quelque dette, tu t'es débrouillé seul dans les cols traîtres autour de la montagne, survivant par le vol et la vivacité d'esprit. L'expérience t'a laissé sans aucune illusion sur la loyauté et un talent aiguisé pour te sortir du pétrin." />
+    <string id="taom_cc_taom_adulthood_goblin_1_text" text="Tu as remporté le Grand Tournoi de la Montagne et fus nommé homme de main d'un chef de guerre." />
+    <string id="taom_cc_taom_adulthood_goblin_1_desc" text="Le tournoi se disputa en trois manches brutales dans la grande salle. Tu y es entré sans que personne ne te donne favori et tu en es sorti avec le brassard d'argent d'un chef de guerre et une meilleure couche. Les autres concurrents t'ont respecté davantage pour cette victoire que pour tout ce que tu avais fait avant." />
+    <string id="taom_cc_taom_adulthood_goblin_2_text" text="Tu as établi un commerce d'armes lucratif avec un clan orque du Sud." />
+    <string id="taom_cc_taom_adulthood_goblin_2_desc" text="Le clan du Sud avait du fer mais pas de forgerons. Gobelinville avait des bricoleurs mais manquait de vivres et de fourrures. Tu as arrangé le premier échange, fixé les conditions, et empêché les deux camps de s'entretuer assez longtemps pour que l'accord devienne une habitude. Le chef de guerre t'a accordé un pourcentage." />
+    <string id="taom_cc_taom_adulthood_goblin_3_text" text="Tu as étayé les galeries inférieures de la mine après un effondrement partiel." />
+    <string id="taom_cc_taom_adulthood_goblin_3_desc" text="L'effondrement avait piégé huit orques dans la galerie inférieure. Tu as évalué les tensions, dirigé les travaux de renforcement et mis l'équipe en sécurité avant que l'effondrement secondaire qui suivit ne les tue. L'ingénieur du chef de guerre t'a laissé les plans." />
+    <string id="taom_cc_taom_adulthood_goblin_4_text" text="Tu as mené le raid qui a brisé l'avant-poste nain des Montagnes Grises." />
+    <string id="taom_cc_taom_adulthood_goblin_4_desc" text="Les Nains avaient fortifié un col que Gobelinville utilisait pour ses raids d'hiver, coupant l'accès et coûtant à la montagne une saison entière de butin. Tu as planifié l'assaut, mené l'avant-garde et brisé la porte de l'avant-poste en une seule poussée. Le col fut rouvert. Les Nains ne revinrent pas." />
+    <string id="taom_cc_taom_adulthood_goblin_5_text" text="Tu as pisté une patrouille naine pendant quatre jours et rapporté leurs cartes." />
+    <string id="taom_cc_taom_adulthood_goblin_5_desc" text="Les Nains cartographiaient quelque chose dans les Montagnes Grises et Gobelinville devait savoir quoi. Tu les as suivis par les hauts cols sans être vu, tu as attendu qu'ils campent, pris les cartes, et tu étais de retour à la forteresse avant qu'ils ne donnent l'alarme." />
+    <string id="taom_cc_taom_adulthood_goblin_6_text" text="Tu as fait accuser un chef de guerre rival de vol et pris sa place." />
+    <string id="taom_cc_taom_adulthood_goblin_6_desc" text="Le rival bloquait ton avancement depuis deux ans à coups de pots-de-vin et de meilleures relations. Tu as identifié ce à quoi il tenait, arrangé pour que les bons objets se trouvent au mauvais endroit au mauvais moment, et fait la découverte au moment opportun. Tu avais sa position avant la fin du mois." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_text" text="Tu as remporté le Grand Tournoi de la Montagne et fus nommé homme de main d'un chef de guerre." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_desc" text="Le tournoi se disputa en trois manches brutales dans la grande salle. Tu y es entré sans que personne ne te donne favori et tu en es sorti avec le brassard d'argent d'un chef de guerre et une meilleure couche. Les autres concurrents t'ont respecté davantage pour cette victoire que pour tout ce que tu avais fait avant." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_text" text="Tu as établi un commerce d'armes lucratif avec un clan orque du Sud." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_desc" text="Le clan du sud avait du fer mais pas de forgerons. La Moria avait des forgerons mais manquait de vivres et de fourrures. Tu as arrangé le premier échange, fixé les conditions, et empêché les deux camps de s'entretuer assez longtemps pour que l'accord devienne habitude. Le chef de guerre t'a accordé un pourcentage." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_text" text="Tu as étayé les galeries inférieures de la mine après un effondrement partiel." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_desc" text="L'effondrement avait piégé huit Orques dans la galerie inférieure. Tu as évalué les tensions, dirigé les travaux de renforcement et mis l'équipe à l'abri avant que l'effondrement secondaire qui suivit ne les tue. L'ingénieur du chef de guerre t'a laissé les plans." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_text" text="Tu as mené le raid qui a brisé l'avant-poste nain des Montagnes Grises." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_desc" text="Les Nains avaient fortifié un col que les Monts Brumeux utilisaient pour leurs raids d'hiver, coupant l'accès et coûtant à la montagne une saison entière de pillage. Tu as planifié l'assaut, mené l'avant-garde et brisé la porte de l'avant-poste d'un seul élan. Le col fut rouvert. Les Nains ne revinrent pas." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_text" text="Tu as suivi une patrouille d'éclaireurs nains pendant quatre jours et rapporté leurs cartes." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_desc" text="Les Nains cartographiaient quelque chose dans les Montagnes Grises et les Monts Brumeux devaient savoir quoi. Tu les as suivis par les hauts cols sans être vu, tu as attendu qu'ils campent, pris les cartes, et tu étais de retour à la forteresse avant qu'ils ne donnent l'alarme." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_text" text="Tu as fait accuser un chef de guerre rival de vol et pris sa place." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_desc" text="Le rival bloquait ton ascension depuis deux ans à coups de pots-de-vin et de meilleures relations. Tu as trouvé ce à quoi il tenait, veillé à ce que les bons objets se trouvent au mauvais endroit au mauvais moment, et fait la découverte au moment opportun. Tu avais sa position avant la fin du mois." />
+    <string id="taom_cc_career_title" text="Carrière" />
+    <string id="taom_cc_career_desc" text="Tes expériences t'ont engagé sur une voie. Choisis la carrière qui définira ta légende." />
+    <string id="taom_cc_career_none" text="Aucune spécialisation" />
+    <string id="taom_cc_career_none_desc" text="Tu ne t'es pas encore engagé sur une voie particulière. Ta carrière sera déterminée par tes actes dans le monde." />
   </strings>
 </base>

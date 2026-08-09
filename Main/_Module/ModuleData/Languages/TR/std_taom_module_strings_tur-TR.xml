@@ -2116,5 +2116,318 @@
     <string id="l4pRw7pO" text="{OWNER.NAME}'in Silahlı Kervanı" />
     <string id="taom_align_desertion" text="{COUNT} asker firar etti — karşıt taraftaki bir lorda hizmet etmeyi reddediyorlar." />
     <string id="taom_troop_weight_size" text="Ağır askerler" />
+    <string id="taom_res_desertion" text="{COUNT} seçkin asker firar etti — {RESOURCE} kaynağınız tükendi!" />
+    <string id="taom_feat_erebor_gw" text="Cüce Garnizonu" />
+    <string id="taom_feat_erebor_gw_desc" text="Garnizon ücretleri %25 azalır." />
+    <string id="taom_feat_erebor_p" text="Cüce Sanayisi" />
+    <string id="taom_feat_erebor_p_desc" text="Tüm köy üretimi %10 artar." />
+    <string id="taom_feat_erebor_cs" text="Cüce Kusursuzluğu" />
+    <string id="taom_feat_erebor_cs_desc" text="İnşaat hızı %15 azalır." />
+    <string id="taom_feat_erebor_loy" text="Cüce Onuru" />
+    <string id="taom_feat_erebor_loy_desc" text="Yerleşim sadakati günde 1 artar." />
+    <string id="taom_feat_erebor_mor" text="Cüce İnadı" />
+    <string id="taom_feat_erebor_mor_desc" text="Birlik morali 5 artar." />
+    <string id="taom_feat_erebor_sm" text="Usta Demirciler" />
+    <string id="taom_feat_erebor_sm_desc" text="Demircilik enerji maliyeti %30 azalır." />
+    <string id="taom_feat_erebor_ss" text="Dağ Halkı" />
+    <string id="taom_feat_erebor_ss_desc" text="Karda birlik hareket hızı %10 artar." />
+    <string id="taom_feat_erebor_ti" text="Cüce Tutumluluğu" />
+    <string id="taom_feat_erebor_ti_desc" text="Gümrük geliri %5 artar." />
+    <string id="taom_feat_riv_ai" text="Elf Bilgeliği" />
+    <string id="taom_feat_riv_ai_desc" text="Ordu etki ödülü %35 artar." />
+    <string id="taom_feat_riv_hg" text="Son Sıcak Yuva" />
+    <string id="taom_feat_riv_hg_desc" text="Köy ocak büyümesi %20 artar." />
+    <string id="taom_feat_riv_aic" text="Elf Kibri" />
+    <string id="taom_feat_riv_aic_desc" text="Ordu toplamak %25 daha fazla etkiye mal olur." />
+    <string id="taom_feat_riv_fc" text="Elf Kanaatkârlığı" />
+    <string id="taom_feat_riv_fc_desc" text="Birlik yiyecek tüketimi %15 azalır." />
+    <string id="taom_feat_riv_loy" text="Elf Bilgeliği" />
+    <string id="taom_feat_riv_loy_desc" text="Yerleşim sadakati günde 0,5 artar." />
+    <string id="taom_feat_riv_fs" text="Orman Zarafeti" />
+    <string id="taom_feat_riv_fs_desc" text="Ormanlarda birlik hareket hızı %10 artar." />
+    <string id="taom_feat_mrk_fs" text="Orman Krallığı" />
+    <string id="taom_feat_mrk_fs_desc" text="Ormanlarda birlik hareket hızı %10 artar." />
+    <string id="taom_feat_mrk_mp" text="Silvan Muhafızları" />
+    <string id="taom_feat_mrk_mp_desc" text="Tecrübeli milis çıkma şansı %25 artar." />
+    <string id="taom_feat_mrk_hg" text="Orman Yalnızlığı" />
+    <string id="taom_feat_mrk_hg_desc" text="Köy ocak büyümesi %20 azalır." />
+    <string id="taom_feat_mrk_fc" text="Orman Rızkı" />
+    <string id="taom_feat_mrk_fc_desc" text="Birlik yiyecek tüketimi %15 azalır." />
+    <string id="taom_feat_mrk_mor" text="Orman Bağları" />
+    <string id="taom_feat_mrk_mor_desc" text="Müfreze morali 3 artar." />
+    <string id="taom_feat_mrk_aic" text="Yalıtılmış Saray" />
+    <string id="taom_feat_mrk_aic_desc" text="Ordu toplama maliyeti %15 daha fazla nüfuz gerektirir." />
+    <string id="taom_feat_loth_fs" text="Altın Orman" />
+    <string id="taom_feat_loth_fs_desc" text="Ormanlarda müfreze hareket hızı %10 artar." />
+    <string id="taom_feat_loth_gw" text="Lórien Muhafızları" />
+    <string id="taom_feat_loth_gw_desc" text="Garnizon ücretleri %20 azalır." />
+    <string id="taom_feat_loth_cs" text="Zamansız Zanaat" />
+    <string id="taom_feat_loth_cs_desc" text="İnşaat hızı %10 azalır." />
+    <string id="taom_feat_loth_fc" text="Lembas Ekmeği" />
+    <string id="taom_feat_loth_fc_desc" text="Müfreze yiyecek tüketimi %15 azalır." />
+    <string id="taom_feat_loth_loy" text="Elf Zarafeti" />
+    <string id="taom_feat_loth_loy_desc" text="Yerleşim bağlılığı günde 0,5 artar." />
+    <string id="taom_feat_loth_mor" text="Elf Uyumu" />
+    <string id="taom_feat_loth_mor_desc" text="Müfreze morali 3 artar." />
+    <string id="taom_feat_loth_vr" text="Solan Işık" />
+    <string id="taom_feat_loth_vr_desc" text="Köy gönüllülerinin yenilenme oranı %15 azalır." />
+    <string id="taom_feat_isen_cr" text="Savaş Makinesi" />
+    <string id="taom_feat_isen_cr_desc" text="Atlı asker toplama ve yükseltme maliyetleri %15 azalır." />
+    <string id="taom_feat_isen_gw" text="Orthanc Garnizonu" />
+    <string id="taom_feat_isen_gw_desc" text="Garnizon ücretleri %20 azalır." />
+    <string id="taom_feat_isen_dp" text="Saruman'ın Pençesi" />
+    <string id="taom_feat_isen_dp_desc" text="Krallık kararlarının ilişki cezaları %25 artar." />
+    <string id="taom_feat_isen_ps" text="Uruk-hai Lejyonları" />
+    <string id="taom_feat_isen_ps_desc" text="Müfreze büyüklüğü sınırı %20 artar." />
+    <string id="taom_feat_isen_cs" text="Sanayi Gücü" />
+    <string id="taom_feat_isen_cs_desc" text="İnşaat hızı %15 artar." />
+    <string id="taom_feat_isen_sm" text="Sanayi Ocakları" />
+    <string id="taom_feat_isen_sm_desc" text="Demircilik enerji maliyeti %20 azalır." />
+    <string id="taom_feat_isen_rd" text="Savaş Makinesi Akınları" />
+    <string id="taom_feat_isen_rd_desc" text="Akın hasarı %20 artar." />
+    <string id="taom_feat_isen_ps2" text="Zorlu Yürüyüş" />
+    <string id="taom_feat_isen_ps2_desc" text="Ovalarda müfreze hareket hızı %10 artar." />
+    <string id="taom_feat_isen_sws" text="Bataklık Talim Ustaları" />
+    <string id="taom_feat_isen_sws_desc" text="Bataklıklarda müfreze hareket hızı %10 artar." />
+    <string id="taom_feat_isen_nctm" text="Orthanc Levazımcıları" />
+    <string id="taom_feat_isen_nctm_desc" text="Şehirlerde +2 tüccar ileri geleni." />
+    <string id="taom_feat_isen_ncta" text="Sanayi Ocakları" />
+    <string id="taom_feat_isen_ncta_desc" text="Şehirlerde +1 zanaatkâr ileri geleni." />
+    <string id="taom_feat_isen_nctg" text="Uruk-hai Kaptanları" />
+    <string id="taom_feat_isen_nctg_desc" text="Şehirlerde +12 çete lideri ileri geleni (Isengard'ın tek şehri büyük bir askere alma merkezine dönüşür)." />
+    <string id="taom_feat_isen_ncv" text="Demir Cendere" />
+    <string id="taom_feat_isen_ncv_desc" text="Köylerdeki ileri gelen sayısı %10 arttı." />
+    <string id="taom_feat_gun_aic" text="Ork Ordusu" />
+    <string id="taom_feat_gun_aic_desc" text="Ordu toplama %40 daha az nüfuza mal olur." />
+    <string id="taom_feat_gun_gp" text="Yağmalanmış Ambarlar" />
+    <string id="taom_feat_gun_gp_desc" text="Tahıl üretimi %15 arttı." />
+    <string id="taom_feat_gun_w" text="Yağma Talepleri" />
+    <string id="taom_feat_gun_w_desc" text="Müfreze ücretleri %10 arttı." />
+    <string id="taom_feat_gun_ps" text="Dağ Sürüsü" />
+    <string id="taom_feat_gun_ps_desc" text="Müfreze büyüklüğü sınırı %20 arttı." />
+    <string id="taom_feat_gun_rd" text="Ork Talancılar" />
+    <string id="taom_feat_gun_rd_desc" text="Yağma hasarı %25 arttı." />
+    <string id="taom_feat_gun_ss" text="Dağ Çapulcuları" />
+    <string id="taom_feat_gun_ss_desc" text="Karda müfreze hareket hızı %10 arttı." />
+    <string id="taom_feat_gun_vr" text="Dağ Askerleri" />
+    <string id="taom_feat_gun_vr_desc" text="Köy gönüllülerinin yenilenme hızı %20 arttı." />
+    <string id="taom_feat_gun_ncta" text="Kemik Ustaları" />
+    <string id="taom_feat_gun_ncta_desc" text="Şehirlerde +1 zanaatkâr ileri geleni." />
+    <string id="taom_feat_gun_nctg" text="Solgun Savaş Bölüğü Reisleri" />
+    <string id="taom_feat_gun_nctg_desc" text="Şehirlerde +3 çete lideri ileri geleni." />
+    <string id="taom_feat_gun_ncv" text="Kemik Kampları" />
+    <string id="taom_feat_gun_ncv_desc" text="Köylerdeki ileri gelen sayısı %10 arttı." />
+    <string id="taom_feat_gob_ps" text="Goblin Sürüsü" />
+    <string id="taom_feat_gob_ps_desc" text="Müfreze büyüklüğü sınırı %40 arttı." />
+    <string id="taom_feat_gob_vr" text="Bitmeyen Üreme" />
+    <string id="taom_feat_gob_vr_desc" text="Köy gönüllülerinin yenilenme hızı %25 arttı." />
+    <string id="taom_feat_gob_ss" text="Tünel Koşucuları" />
+    <string id="taom_feat_gob_ss_desc" text="Karda müfreze hareket hızı %10 arttı." />
+    <string id="taom_feat_gob_fc" text="Doymayan Sürü" />
+    <string id="taom_feat_gob_fc_desc" text="Müfreze yiyecek tüketimi %20 arttı." />
+    <string id="taom_feat_gob_sm" text="Ele Geçirilmiş Silah Yığını" />
+    <string id="taom_feat_gob_sm_desc" text="Demircilik enerji maliyeti %10 azaldı." />
+    <string id="taom_feat_gob_rd" text="Goblin Pususu" />
+    <string id="taom_feat_gob_rd_desc" text="Yağma hasarı %10 arttı." />
+    <string id="taom_feat_mmo_aic" text="Ork Ordusu" />
+    <string id="taom_feat_mmo_aic_desc" text="Ordu toplama %40 daha az nüfuza mal olur." />
+    <string id="taom_feat_mmo_ps" text="Dağ Ordusu" />
+    <string id="taom_feat_mmo_ps_desc" text="Müfreze büyüklüğü sınırı %30 arttı." />
+    <string id="taom_feat_mmo_ss" text="Dağ Doğumlu" />
+    <string id="taom_feat_mmo_ss_desc" text="Karda müfreze hareket hızı %10 artar." />
+    <string id="taom_feat_mmo_fc" text="Aç Kalabalık" />
+    <string id="taom_feat_mmo_fc_desc" text="Müfreze yemek tüketimi %15 artar." />
+    <string id="taom_feat_mmo_sm" text="Yağmalanmış Demirhaneler" />
+    <string id="taom_feat_mmo_sm_desc" text="Demircilik enerji maliyeti %15 azalır." />
+    <string id="taom_feat_mmo_rd" text="Mağara Trolü Devşirmesi" />
+    <string id="taom_feat_mmo_rd_desc" text="Yağma hasarı %15 artar." />
+    <string id="taom_feat_mmo_cs" text="Yankılanan Salonlar" />
+    <string id="taom_feat_mmo_cs_desc" text="İnşaat hızı %10 azalır." />
+    <string id="taom_feat_umb_cc" text="Korsan Ticareti" />
+    <string id="taom_feat_umb_cc_desc" text="Kervan kurma maliyeti %25 azalır." />
+    <string id="taom_feat_umb_r" text="Korsan Şanı" />
+    <string id="taom_feat_umb_r_desc" text="Savaşlardan kazanılan itibar %8 artar." />
+    <string id="taom_feat_umb_w" text="Korsan Hırsı" />
+    <string id="taom_feat_umb_w_desc" text="Müfreze ücretleri %8 artar." />
+    <string id="taom_feat_umb_ti" text="Korsan Ticaret Ağları" />
+    <string id="taom_feat_umb_ti_desc" text="Gümrük geliri %15 artar." />
+    <string id="taom_feat_umb_ds" text="Çöl Korsanları" />
+    <string id="taom_feat_umb_ds_desc" text="Çöllerde müfreze hareket hızı %10 artar." />
+    <string id="taom_feat_umb_rd" text="Korsan Yağma Doktrini" />
+    <string id="taom_feat_umb_rd_desc" text="Yağma hasarı %20 artar." />
+    <string id="taom_feat_umb_fc" text="Kara Númenorlu Dayanıklılığı" />
+    <string id="taom_feat_umb_fc_desc" text="Müfreze yemek tüketimi %10 azalır." />
+    <string id="taom_feat_dg_aic" text="Gölge Komutası" />
+    <string id="taom_feat_dg_aic_desc" text="Ordu toplama %50 daha az nüfuza mal olur." />
+    <string id="taom_feat_dg_mp" text="Karanlık Askere Alım" />
+    <string id="taom_feat_dg_mp_desc" text="Tecrübeli milis çıkma şansı %20 artar." />
+    <string id="taom_feat_dg_cs" text="Yıkıcı İşler" />
+    <string id="taom_feat_dg_cs_desc" text="İnşaat hızı %20 azalır." />
+    <string id="taom_feat_dg_ps" text="Karanlık Lejyonlar" />
+    <string id="taom_feat_dg_ps_desc" text="Müfreze büyüklüğü sınırı %20 artar." />
+    <string id="taom_feat_dg_fc" text="Doymak Bilmez Sürüler" />
+    <string id="taom_feat_dg_fc_desc" text="Müfreze yemek tüketimi %10 artar." />
+    <string id="taom_feat_dg_vr" text="Karanlık Devşirmeler" />
+    <string id="taom_feat_dg_vr_desc" text="Köy gönüllülerinin yenilenme oranı %20 artar." />
+    <string id="taom_feat_dg_nctm" text="Gölge Tüccarları" />
+    <string id="taom_feat_dg_nctm_desc" text="Şehirlerde +1 tüccar ileri geleni." />
+    <string id="taom_feat_dg_ncta" text="Karanlık Demirhaneler" />
+    <string id="taom_feat_dg_ncta_desc" text="Şehirlerde +1 zanaatkâr ileri geleni." />
+    <string id="taom_feat_dg_nctg" text="Gölge Kaptanları" />
+    <string id="taom_feat_dg_nctg_desc" text="Kasabalarda +13 çete lideri ileri gelen (Dol Guldur'un gölge komuta merkezi)." />
+    <string id="taom_feat_dg_ncv" text="Gizli Kulübeler" />
+    <string id="taom_feat_dg_ncv_desc" text="Köylerdeki ileri gelen sayısı %10 arttı." />
+    <string id="taom_feat_gon_gw" text="Kule Muhafızı" />
+    <string id="taom_feat_gon_gw_desc" text="Garnizon ücretleri %20 azaldı." />
+    <string id="taom_feat_gon_ai" text="Gondor Disiplini" />
+    <string id="taom_feat_gon_ai_desc" text="Ordu nüfuz ödülü %30 arttı." />
+    <string id="taom_feat_gon_hg" text="Savaşta Tükenmiş Topraklar" />
+    <string id="taom_feat_gon_hg_desc" text="Köy ocak büyümesi %15 azaldı." />
+    <string id="taom_feat_gon_ps" text="Daimi Ordular" />
+    <string id="taom_feat_gon_ps_desc" text="Müfreze büyüklüğü sınırı %2,5 arttı." />
+    <string id="taom_feat_gon_loy" text="Kule Muhafızı Disiplini" />
+    <string id="taom_feat_gon_loy_desc" text="Yerleşim bağlılığı günde 1 arttı." />
+    <string id="taom_feat_gon_mor" text="Gondor Azmi" />
+    <string id="taom_feat_gon_mor_desc" text="Müfreze morali 5 arttı." />
+    <string id="taom_feat_gon_ps2" text="Ova Adamları" />
+    <string id="taom_feat_gon_ps2_desc" text="Ovalarda müfreze hareket hızı %10 arttı." />
+    <string id="taom_feat_mor_aic" text="Karanlık Lord'un İradesi" />
+    <string id="taom_feat_mor_aic_desc" text="Ordu toplama %60 daha az nüfuza mal olur." />
+    <string id="taom_feat_mor_gp" text="Nurn Tarlaları" />
+    <string id="taom_feat_mor_gp_desc" text="Tahıl üretimi %20 arttı." />
+    <string id="taom_feat_mor_w" text="Karanlık Haraç" />
+    <string id="taom_feat_mor_w_desc" text="Müfreze ücretleri %20 arttı." />
+    <string id="taom_feat_mor_ps" text="Sauron'un Orduları" />
+    <string id="taom_feat_mor_ps_desc" text="Müfreze büyüklüğü sınırı %10 arttı." />
+    <string id="taom_feat_mor_rd" text="Sauron'un Gazabı" />
+    <string id="taom_feat_mor_rd_desc" text="Yağma hasarı %25 arttı." />
+    <string id="taom_feat_mor_pls" text="Gölge Yürüyüşü" />
+    <string id="taom_feat_mor_pls_desc" text="Ovalarda müfreze hareket hızı %5 arttı." />
+    <string id="taom_feat_mor_sws" text="Ölü Bataklıklar" />
+    <string id="taom_feat_mor_sws_desc" text="Bataklıklarda müfreze hareket hızı %5 arttı." />
+    <string id="taom_feat_mor_ns" text="Karanlığın Yaratıkları" />
+    <string id="taom_feat_mor_ns_desc" text="Geceleyin müfreze hareket hızı %10 arttı." />
+    <string id="taom_feat_mor_vr" text="Sauron'un Askere Alımı" />
+    <string id="taom_feat_mor_vr_desc" text="Köy gönüllülerinin yenilenme hızı %20 arttı." />
+    <string id="taom_feat_mord_sm" text="Karanlık Demircilik" />
+    <string id="taom_feat_mord_sm_desc" text="Demircilik enerji maliyeti %15 azaldı." />
+    <string id="taom_feat_mor_nctg" text="Kara Lisan Habercileri" />
+    <string id="taom_feat_mor_nctg_desc" text="Kasabalarda +2 çete lideri ileri gelen." />
+    <string id="taom_feat_mor_ncv" text="Köle Sürücüleri" />
+    <string id="taom_feat_mor_ncv_desc" text="Köylerdeki ileri gelen sayısı %5 arttı." />
+    <string id="taom_feat_roh_mc" text="At Efendisi Mirası" />
+    <string id="taom_feat_roh_mc_desc" text="Atlı asker toplama ve yükseltme maliyetleri %15 azaldı." />
+    <string id="taom_feat_roh_mw" text="Mark Süvarileri" />
+    <string id="taom_feat_roh_mw_desc" text="Atlı asker ücretleri %15 azaldı." />
+    <string id="taom_feat_roh_is" text="Süvariye Bağımlı" />
+    <string id="taom_feat_roh_is_desc" text="Çoğunluk piyade olduğunda müfreze hızı %10 azalır." />
+    <string id="taom_feat_roh_loy" text="At Efendileri Kardeşliği" />
+    <string id="taom_feat_roh_loy_desc" text="Yerleşim bağlılığı günde 0,5 arttı." />
+    <string id="taom_feat_roh_mor" text="Süvarilerin Ruhu" />
+    <string id="taom_feat_roh_mor_desc" text="Müfreze morali 5 arttı." />
+    <string id="taom_feat_roh_pls" text="Ovaların Süvarileri" />
+    <string id="taom_feat_roh_pls_desc" text="Ovalarda müfreze hareket hızı %10 arttı." />
+    <string id="taom_feat_dale_pls" text="Vadi Tüccarları" />
+    <string id="taom_feat_dale_pls_desc" text="Ovalarda müfreze hareket hızı %10 arttı." />
+    <string id="taom_feat_dale_ti" text="Cüce Ticaret İttifakı" />
+    <string id="taom_feat_dale_ti_desc" text="Gümrük geliri %10 arttı." />
+    <string id="taom_feat_dale_r" text="Kara Ok Geleneği" />
+    <string id="taom_feat_dale_r_desc" text="Savaş şöhreti %10 arttı." />
+    <string id="taom_feat_dale_loy" text="Küçük Topraklarin Kırılganlığı" />
+    <string id="taom_feat_dale_loy_desc" text="Yerleşim bağlılığı günde 0,5 azaldı." />
+    <string id="taom_feat_khand_sts" text="Bozkır Savaş Arabacıları" />
+    <string id="taom_feat_khand_sts_desc" text="Bozkırlarda müfreze hareket hızı %10 arttı." />
+    <string id="taom_feat_khand_r" text="Paralı Asker Payı" />
+    <string id="taom_feat_khand_r_desc" text="Savaş şöhreti %8 arttı." />
+    <string id="taom_feat_khand_ti" text="Mordor'a Haraç" />
+    <string id="taom_feat_khand_ti_desc" text="Gümrük geliri %10 azaldı." />
+    <string id="taom_feat_khand_fc" text="Bozkır Dayanıklılığı" />
+    <string id="taom_feat_khand_fc_desc" text="Müfreze yiyecek tüketimi %10 azaldı." />
+    <string id="taom_feat_khand_ps" text="Savaş Arabacısı Hareketliliği" />
+    <string id="taom_feat_khand_ps_desc" text="Müfreze büyüklüğü sınırı %5 arttı." />
+    <string id="taom_feat_rhun_sts" text="Doğulu Akıncılar" />
+    <string id="taom_feat_rhun_sts_desc" text="Bozkırlarda müfreze hareket hızı %10 arttı." />
+    <string id="taom_feat_rhun_ps" text="Doğulu Ordusu" />
+    <string id="taom_feat_rhun_ps_desc" text="Müfreze büyüklüğü sınırı %5 arttı." />
+    <string id="taom_feat_rhun_loy" text="Doğulu Haracı" />
+    <string id="taom_feat_rhun_loy_desc" text="Yerleşim bağlılığı günde 0,5 azaldı." />
+    <string id="taom_feat_rhun_rd" text="Bozkır Akıncı Doktrini" />
+    <string id="taom_feat_rhun_rd_desc" text="Yağma hasarı %15 arttı." />
+    <string id="taom_feat_har_ds" text="Güneşin Oğulları" />
+    <string id="taom_feat_har_ds_desc" text="Çöllerde birlik hareket hızı %10 artar." />
+    <string id="taom_feat_har_ps" text="Haradrim Savaş Bölükleri" />
+    <string id="taom_feat_har_ps_desc" text="Birlik büyüklüğü sınırı %5 artar." />
+    <string id="taom_feat_harad_mor" text="Mûmak Sürücüleri" />
+    <string id="taom_feat_harad_mor_desc" text="Birlik morali 5 artar." />
+    <string id="taom_feat_harad_fc" text="Çöl Dayanıklılığı" />
+    <string id="taom_feat_harad_fc_desc" text="Birlik yiyecek tüketimi %15 azalır." />
+    <string id="taom_feat_harad_rd" text="Uzak Harad Vahşiliği" />
+    <string id="taom_feat_harad_rd_desc" text="Yağma hasarı %15 artar." />
+    <string id="taom_feat_harad_aic" text="Bölünmüş Kabileler" />
+    <string id="taom_feat_harad_aic_desc" text="Ordu toplama %15 daha fazla nüfuza mal olur." />
+    <string id="taom_feat_dun_pls" text="Tepe Yürüyüşçüleri" />
+    <string id="taom_feat_dun_pls_desc" text="Ovalarda birlik hareket hızı %10 artar." />
+    <string id="taom_feat_dun_ps" text="Tepe Kabilesi Askerleri" />
+    <string id="taom_feat_dun_ps_desc" text="Birlik büyüklüğü sınırı %5 artar." />
+    <string id="taom_feat_dun_vr" text="Tepe Kabilesi Devşirmesi" />
+    <string id="taom_feat_dun_vr_desc" text="Köy gönüllülerinin yenilenme hızı %10 artar." />
+    <string id="taom_feat_shg_ds" text="Kum Tepesi Gezginleri" />
+    <string id="taom_feat_shg_ds_desc" text="Çöllerde birlik hareket hızı %10 artar." />
+    <string id="taom_feat_aba_ds" text="Derin Çöl Göçebeleri" />
+    <string id="taom_feat_aba_ds_desc" text="Çöllerde birlik hareket hızı %10 artar." />
+    <string id="taom_ep_no_hero" text="Envanter ekranında etkin kahraman yok." />
+    <string id="taom_ep_save" text="Yeni Kaydet" />
+    <string id="taom_ep_save_hint" text="Mevcut teçhizatı yeni bir hazır set olarak kaydet." />
+    <string id="taom_ep_load" text="Yükle" />
+    <string id="taom_ep_load_hint" text="Kayıtlı bir hazır seti kuşan." />
+    <string id="taom_ep_update" text="Güncelle" />
+    <string id="taom_ep_update_hint" text="Kayıtlı bir hazır seti mevcut teçhizatla değiştir." />
+    <string id="taom_ep_delete" text="Sil" />
+    <string id="taom_ep_delete_hint" text="Bir hazır seti kaldır." />
+    <string id="taom_ep_title" text="Teçhizat Setleri" />
+    <string id="taom_ep_ok" text="Tamam" />
+    <string id="taom_ep_cancel" text="İptal" />
+    <string id="taom_ep_header" text="Kahraman: {HERO}  Setler: {COUNT}/{MAX}" />
+    <string id="taom_ep_save_title" text="Seti Kaydet" />
+    <string id="taom_ep_save_msg" text="Bir ad girin. Set, mevcut savaş ve sivil teçhizatınızı ve binitinizi kaydeder." />
+    <string id="taom_ep_select_load" text="Set Yükle" />
+    <string id="taom_ep_select_update" text="Seti Güncelle" />
+    <string id="taom_ep_select_delete" text="Seti Sil" />
+    <string id="taom_ep_select" text="Set Seç" />
+    <string id="taom_ep_load_failed" text="Yükleme başarısız." />
+    <string id="taom_ep_load_partial" text="{EQUIPPED} eşya yüklendi. Eksik eşyalar: {MISS_ITEMS}. Eksik nitelikler: {MISS_MODS}." />
+    <string id="taom_ep_load_ok" text="Hazır donanım yüklendi ({COUNT} eşya)." />
+    <string id="taom_ep_updated" text="Hazır donanım güncellendi." />
+    <string id="taom_ep_notfound" text="Hazır donanım bulunamadı." />
+    <string id="taom_ep_disabled" text="Hazır Donanımlar MCM'de devre dışı." />
+    <string id="taom_ep_delete_title" text="Hazır Donanımı Sil" />
+    <string id="taom_ep_delete_msg" text="Bu hazır donanımı silmek istediğinizden emin misiniz?" />
+    <string id="taom_ep_yes" text="Evet" />
+    <string id="taom_ep_no" text="Hayır" />
+    <string id="taom_ep_deleted" text="Hazır donanım silindi." />
+    <string id="taom_ep_saved" text="'{NAME}' hazır donanımı kaydedildi." />
+    <string id="taom_ep_max" text="Azami hazır donanım sayısına ulaşıldı ({MAX}). Yeni bir tane kaydetmek için birini silin." />
+    <string id="taom_ep_bad_name" text="Hazır donanım adı boş olamaz." />
+    <string id="taom_ep_psummary" text="Savaş: {B}  Sivil: {C}  Binek: {M}" />
+    <string id="taom_fief_hub_empty" text="Tımar Yönetimi — hiç tımarınız yok" />
+    <string id="taom_fief_hub_title" text="Tımar Yönetimi — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
+    <string id="taom_fief_kind_town" text="Şehir" />
+    <string id="taom_fief_kind_castle" text="Kale" />
+    <string id="taom_fief_hub_remote_disabled" text="Uzaktan yapı kuyruğu devre dışı — yönetmek için tımarı ziyaret edin." />
+    <string id="taom_fief_hub_prev" text="Önceki tımar" />
+    <string id="taom_fief_hub_next" text="Sonraki tımar" />
+    <string id="taom_fief_hub_manage" text="Bu tımarı yönet" />
+    <string id="taom_fief_hub_leave" text="Ayrıl" />
+    <string id="taom_fief_no_fiefs" text="Henüz hiç tımarınız yok." />
+    <string id="taom_fief_nav_label" text="Tımarlar" />
+    <string id="taom_qa_title" text="Hızlı Eylemler" />
+    <string id="taom_qa_desc" text="Bir eylem seçin." />
+    <string id="taom_qa_ok" text="Tamam" />
+    <string id="taom_qa_cancel" text="İptal" />
+    <string id="taom_qa_confirm_title" text="Onayla" />
+    <string id="taom_qa_confirm_msg" text="Bu toplu eylem uygulanacak mı?" />
+    <string id="taom_qa_yes" text="Evet" />
+    <string id="taom_qa_no" text="Hayır" />
+    <string id="taom_extra_fast_forward_hint" text="Ekstra Hızlı İleri (E)" />
   </strings>
 </base>

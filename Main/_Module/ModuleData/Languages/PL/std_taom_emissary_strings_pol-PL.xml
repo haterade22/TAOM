@@ -27,5 +27,6 @@
     <string id="taom_emissary_no_resource" text="W tej osadzie nie ma handlu z emisariuszem." />
     <string id="taom_emissary_no_offers" text="Emisariusz nie ma teraz żadnych elitarnych oddziałów do zaoferowania." />
     <string id="taom_emissary_failed" text="Emisariusz nie mógł dopełnić transakcji." />
+    <string id="taom_emissary_coop_guest" text="Wysłannik rozmawia wyłącznie z gospodarzem tej kampanii." />
   </strings>
 </base>

@@ -2116,5 +2116,318 @@
     <string id="l4pRw7pO" text="{OWNER.NAME}의 무장 대상" />
     <string id="taom_align_desertion" text="{COUNT}명의 병력이 탈영했습니다 — 그들은 반대 진영의 군주를 섬기기를 거부합니다." />
     <string id="taom_troop_weight_size" text="중장병" />
+    <string id="taom_res_desertion" text="정예 병사 {COUNT}명이 탈영했습니다 — {RESOURCE}이(가) 고갈되었습니다!" />
+    <string id="taom_feat_erebor_gw" text="난쟁이 수비대" />
+    <string id="taom_feat_erebor_gw_desc" text="수비대 급료 25% 감소." />
+    <string id="taom_feat_erebor_p" text="난쟁이 공업" />
+    <string id="taom_feat_erebor_p_desc" text="모든 마을 생산량 10% 증가." />
+    <string id="taom_feat_erebor_cs" text="난쟁이 완벽주의" />
+    <string id="taom_feat_erebor_cs_desc" text="건설 속도 15% 감소." />
+    <string id="taom_feat_erebor_loy" text="난쟁이 명예" />
+    <string id="taom_feat_erebor_loy_desc" text="정착지 충성도 하루 1 증가." />
+    <string id="taom_feat_erebor_mor" text="난쟁이 고집" />
+    <string id="taom_feat_erebor_mor_desc" text="부대 사기 5 증가." />
+    <string id="taom_feat_erebor_sm" text="장인 대장장이" />
+    <string id="taom_feat_erebor_sm_desc" text="제련 기력 소모 30% 감소." />
+    <string id="taom_feat_erebor_ss" text="산악 민족" />
+    <string id="taom_feat_erebor_ss_desc" text="눈 지형에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_erebor_ti" text="난쟁이 검약" />
+    <string id="taom_feat_erebor_ti_desc" text="관세 수입 5% 증가." />
+    <string id="taom_feat_riv_ai" text="요정의 지혜" />
+    <string id="taom_feat_riv_ai_desc" text="군대 영향력 보상 35% 증가." />
+    <string id="taom_feat_riv_hg" text="마지막 편안한 집" />
+    <string id="taom_feat_riv_hg_desc" text="마을 화덕 성장 20% 증가." />
+    <string id="taom_feat_riv_aic" text="요정의 자긍심" />
+    <string id="taom_feat_riv_aic_desc" text="군대 소집에 영향력 25% 추가 소모." />
+    <string id="taom_feat_riv_fc" text="요정의 절약" />
+    <string id="taom_feat_riv_fc_desc" text="부대 식량 소모 15% 감소." />
+    <string id="taom_feat_riv_loy" text="요정의 지혜" />
+    <string id="taom_feat_riv_loy_desc" text="정착지 충성도 하루 0.5 증가." />
+    <string id="taom_feat_riv_fs" text="숲의 우아함" />
+    <string id="taom_feat_riv_fs_desc" text="숲에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_mrk_fs" text="어둠숲 왕국" />
+    <string id="taom_feat_mrk_fs_desc" text="숲에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_mrk_mp" text="실반 파수꾼" />
+    <string id="taom_feat_mrk_mp_desc" text="정예 민병대 등장 확률 25% 증가." />
+    <string id="taom_feat_mrk_hg" text="숲의 고립" />
+    <string id="taom_feat_mrk_hg_desc" text="마을 화덕 성장 20% 감소." />
+    <string id="taom_feat_mrk_fc" text="숲의 양식" />
+    <string id="taom_feat_mrk_fc_desc" text="부대 식량 소모 15% 감소." />
+    <string id="taom_feat_mrk_mor" text="숲의 유대" />
+    <string id="taom_feat_mrk_mor_desc" text="부대 사기 3 증가." />
+    <string id="taom_feat_mrk_aic" text="고립주의 궁정" />
+    <string id="taom_feat_mrk_aic_desc" text="군대 소집 비용의 영향력이 15% 증가합니다." />
+    <string id="taom_feat_loth_fs" text="황금 숲" />
+    <string id="taom_feat_loth_fs_desc" text="숲에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_loth_gw" text="로리엔의 파수꾼" />
+    <string id="taom_feat_loth_gw_desc" text="수비대 급여가 20% 감소합니다." />
+    <string id="taom_feat_loth_cs" text="영원의 공예" />
+    <string id="taom_feat_loth_cs_desc" text="건설 속도가 10% 감소합니다." />
+    <string id="taom_feat_loth_fc" text="렘바스 빵" />
+    <string id="taom_feat_loth_fc_desc" text="부대 식량 소모가 15% 감소합니다." />
+    <string id="taom_feat_loth_loy" text="요정의 우아함" />
+    <string id="taom_feat_loth_loy_desc" text="정착지 충성도가 하루 0.5씩 증가합니다." />
+    <string id="taom_feat_loth_mor" text="요정의 조화" />
+    <string id="taom_feat_loth_mor_desc" text="부대 사기가 3 증가합니다." />
+    <string id="taom_feat_loth_vr" text="스러지는 빛" />
+    <string id="taom_feat_loth_vr_desc" text="마을 의용병 재생성 속도가 15% 감소합니다." />
+    <string id="taom_feat_isen_cr" text="전쟁 기계" />
+    <string id="taom_feat_isen_cr_desc" text="기병 병사의 모집 및 승급 비용이 15% 감소합니다." />
+    <string id="taom_feat_isen_gw" text="오르상크 수비대" />
+    <string id="taom_feat_isen_gw_desc" text="수비대 급여가 20% 감소합니다." />
+    <string id="taom_feat_isen_dp" text="사루만의 지배" />
+    <string id="taom_feat_isen_dp_desc" text="왕국 결정으로 인한 관계 감소가 25% 증가합니다." />
+    <string id="taom_feat_isen_ps" text="우루크하이 군단" />
+    <string id="taom_feat_isen_ps_desc" text="부대 규모 한도가 20% 증가합니다." />
+    <string id="taom_feat_isen_cs" text="산업의 위력" />
+    <string id="taom_feat_isen_cs_desc" text="건설 속도가 15% 증가합니다." />
+    <string id="taom_feat_isen_sm" text="산업 대장간" />
+    <string id="taom_feat_isen_sm_desc" text="제련 기력 소모가 20% 감소합니다." />
+    <string id="taom_feat_isen_rd" text="전쟁 기계의 약탈" />
+    <string id="taom_feat_isen_rd_desc" text="약탈 피해가 20% 증가합니다." />
+    <string id="taom_feat_isen_ps2" text="강행군" />
+    <string id="taom_feat_isen_ps2_desc" text="평원에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_isen_sws" text="늪지대 훈련교관" />
+    <string id="taom_feat_isen_sws_desc" text="늪에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_isen_nctm" text="오르상크 병참관" />
+    <string id="taom_feat_isen_nctm_desc" text="도시의 상인 유지 +2." />
+    <string id="taom_feat_isen_ncta" text="산업 대장간" />
+    <string id="taom_feat_isen_ncta_desc" text="도시의 장인 유지 +1." />
+    <string id="taom_feat_isen_nctg" text="우루크하이 대장" />
+    <string id="taom_feat_isen_nctg_desc" text="도시의 조직 두목 유지 +12 (아이센가드의 유일한 도시가 주요 모병 거점이 됩니다)." />
+    <string id="taom_feat_isen_ncv" text="철의 압박" />
+    <string id="taom_feat_isen_ncv_desc" text="마을의 유력자 수가 10% 증가합니다." />
+    <string id="taom_feat_gun_aic" text="오르크 무리" />
+    <string id="taom_feat_gun_aic_desc" text="군대 소집 비용이 영향력 40% 감소합니다." />
+    <string id="taom_feat_gun_gp" text="약탈한 창고" />
+    <string id="taom_feat_gun_gp_desc" text="곡물 생산량이 15% 증가합니다." />
+    <string id="taom_feat_gun_w" text="약탈 요구" />
+    <string id="taom_feat_gun_w_desc" text="부대 급여가 10% 증가합니다." />
+    <string id="taom_feat_gun_ps" text="산악의 무리" />
+    <string id="taom_feat_gun_ps_desc" text="부대 규모 한도가 20% 증가합니다." />
+    <string id="taom_feat_gun_rd" text="오르크 약탈자" />
+    <string id="taom_feat_gun_rd_desc" text="약탈 피해가 25% 증가합니다." />
+    <string id="taom_feat_gun_ss" text="산악의 노략꾼" />
+    <string id="taom_feat_gun_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_gun_vr" text="산악의 징집병" />
+    <string id="taom_feat_gun_vr_desc" text="마을 지원병 재생성 속도가 20% 증가합니다." />
+    <string id="taom_feat_gun_ncta" text="뼈 대장장이" />
+    <string id="taom_feat_gun_ncta_desc" text="도시의 장인 유력자 +1." />
+    <string id="taom_feat_gun_nctg" text="창백한 전투단 두목" />
+    <string id="taom_feat_gun_nctg_desc" text="도시의 조직 두목 유력자 +3." />
+    <string id="taom_feat_gun_ncv" text="뼈 야영지" />
+    <string id="taom_feat_gun_ncv_desc" text="마을의 유력자 수가 10% 증가합니다." />
+    <string id="taom_feat_gob_ps" text="고블린 무리" />
+    <string id="taom_feat_gob_ps_desc" text="부대 규모 한도가 40% 증가합니다." />
+    <string id="taom_feat_gob_vr" text="끝없는 번식" />
+    <string id="taom_feat_gob_vr_desc" text="마을 지원병 재생성 속도가 25% 증가합니다." />
+    <string id="taom_feat_gob_ss" text="굴 달리기꾼" />
+    <string id="taom_feat_gob_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_gob_fc" text="굶주린 무리" />
+    <string id="taom_feat_gob_fc_desc" text="부대 식량 소비가 20% 증가합니다." />
+    <string id="taom_feat_gob_sm" text="노획 무기 더미" />
+    <string id="taom_feat_gob_sm_desc" text="제련 기력 소모가 10% 감소합니다." />
+    <string id="taom_feat_gob_rd" text="고블린 매복" />
+    <string id="taom_feat_gob_rd_desc" text="약탈 피해가 10% 증가합니다." />
+    <string id="taom_feat_mmo_aic" text="오르크 무리" />
+    <string id="taom_feat_mmo_aic_desc" text="군대 소집 비용이 영향력 40% 감소합니다." />
+    <string id="taom_feat_mmo_ps" text="산악의 군세" />
+    <string id="taom_feat_mmo_ps_desc" text="부대 규모 한도가 30% 증가합니다." />
+    <string id="taom_feat_mmo_ss" text="산악 태생" />
+    <string id="taom_feat_mmo_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_mmo_fc" text="굶주린 무리" />
+    <string id="taom_feat_mmo_fc_desc" text="부대 식량 소비 15% 증가." />
+    <string id="taom_feat_mmo_sm" text="약탈된 대장간" />
+    <string id="taom_feat_mmo_sm_desc" text="제련 기력 소모 15% 감소." />
+    <string id="taom_feat_mmo_rd" text="동굴 트롤 징집" />
+    <string id="taom_feat_mmo_rd_desc" text="약탈 피해 15% 증가." />
+    <string id="taom_feat_mmo_cs" text="메아리치는 전당" />
+    <string id="taom_feat_mmo_cs_desc" text="건설 속도 10% 감소." />
+    <string id="taom_feat_umb_cc" text="코르세어 교역" />
+    <string id="taom_feat_umb_cc_desc" text="대상 편성 비용 25% 감소." />
+    <string id="taom_feat_umb_r" text="코르세어의 영광" />
+    <string id="taom_feat_umb_r_desc" text="전투 명성 8% 증가." />
+    <string id="taom_feat_umb_w" text="코르세어의 탐욕" />
+    <string id="taom_feat_umb_w_desc" text="부대 급료 8% 증가." />
+    <string id="taom_feat_umb_ti" text="코르세어 교역망" />
+    <string id="taom_feat_umb_ti_desc" text="관세 수입 15% 증가." />
+    <string id="taom_feat_umb_ds" text="사막의 코르세어" />
+    <string id="taom_feat_umb_ds_desc" text="사막에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_umb_rd" text="코르세어 약탈 교리" />
+    <string id="taom_feat_umb_rd_desc" text="약탈 피해 20% 증가." />
+    <string id="taom_feat_umb_fc" text="검은 누메노르인의 인내" />
+    <string id="taom_feat_umb_fc_desc" text="부대 식량 소비 10% 감소." />
+    <string id="taom_feat_dg_aic" text="그림자의 지휘" />
+    <string id="taom_feat_dg_aic_desc" text="군대 소집에 드는 영향력 50% 감소." />
+    <string id="taom_feat_dg_mp" text="어둠의 징병" />
+    <string id="taom_feat_dg_mp_desc" text="정예 민병대 등장 확률 20% 증가." />
+    <string id="taom_feat_dg_cs" text="폐허의 공사" />
+    <string id="taom_feat_dg_cs_desc" text="건설 속도 20% 감소." />
+    <string id="taom_feat_dg_ps" text="어둠의 군단" />
+    <string id="taom_feat_dg_ps_desc" text="부대 규모 한계 20% 증가." />
+    <string id="taom_feat_dg_fc" text="게걸스러운 무리" />
+    <string id="taom_feat_dg_fc_desc" text="부대 식량 소비 10% 증가." />
+    <string id="taom_feat_dg_vr" text="어둠의 징집병" />
+    <string id="taom_feat_dg_vr_desc" text="마을 지원병 재생성 속도 20% 증가." />
+    <string id="taom_feat_dg_nctm" text="그림자 중개인" />
+    <string id="taom_feat_dg_nctm_desc" text="도시의 상인 유지 +1." />
+    <string id="taom_feat_dg_ncta" text="어둠의 대장간" />
+    <string id="taom_feat_dg_ncta_desc" text="도시의 장인 유지 +1." />
+    <string id="taom_feat_dg_nctg" text="그림자 대장들" />
+    <string id="taom_feat_dg_nctg_desc" text="도시의 조직 두목 유지 +13 (돌 굴두르의 그림자 지휘 중심지)." />
+    <string id="taom_feat_dg_ncv" text="숨겨진 오두막" />
+    <string id="taom_feat_dg_ncv_desc" text="마을의 유력자 수 10% 증가." />
+    <string id="taom_feat_gon_gw" text="탑의 수비대" />
+    <string id="taom_feat_gon_gw_desc" text="주둔군 임금 20% 감소." />
+    <string id="taom_feat_gon_ai" text="곤도르의 규율" />
+    <string id="taom_feat_gon_ai_desc" text="군대 영향력 보상 30% 증가." />
+    <string id="taom_feat_gon_hg" text="전쟁으로 피폐해진 땅" />
+    <string id="taom_feat_gon_hg_desc" text="마을 화덕 성장 15% 감소." />
+    <string id="taom_feat_gon_ps" text="상비군" />
+    <string id="taom_feat_gon_ps_desc" text="부대 규모 제한 2.5% 증가." />
+    <string id="taom_feat_gon_loy" text="탑 수비대의 규율" />
+    <string id="taom_feat_gon_loy_desc" text="정착지 충성도 하루 1 증가." />
+    <string id="taom_feat_gon_mor" text="곤도르의 결의" />
+    <string id="taom_feat_gon_mor_desc" text="부대 사기 5 증가." />
+    <string id="taom_feat_gon_ps2" text="평야의 사람들" />
+    <string id="taom_feat_gon_ps2_desc" text="평야에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_mor_aic" text="암흑의 군주의 의지" />
+    <string id="taom_feat_mor_aic_desc" text="군대 소집에 드는 영향력 60% 감소." />
+    <string id="taom_feat_mor_gp" text="누르넨 농경지" />
+    <string id="taom_feat_mor_gp_desc" text="곡물 생산량 20% 증가." />
+    <string id="taom_feat_mor_w" text="암흑의 공물" />
+    <string id="taom_feat_mor_w_desc" text="부대 임금 20% 증가." />
+    <string id="taom_feat_mor_ps" text="사우론의 무리" />
+    <string id="taom_feat_mor_ps_desc" text="부대 규모 제한 10% 증가." />
+    <string id="taom_feat_mor_rd" text="사우론의 진노" />
+    <string id="taom_feat_mor_rd_desc" text="약탈 피해 25% 증가." />
+    <string id="taom_feat_mor_pls" text="그림자의 행군" />
+    <string id="taom_feat_mor_pls_desc" text="평야에서 부대 이동 속도 5% 증가." />
+    <string id="taom_feat_mor_sws" text="죽음늪" />
+    <string id="taom_feat_mor_sws_desc" text="늪지에서 부대 이동 속도 5% 증가." />
+    <string id="taom_feat_mor_ns" text="어둠의 피조물" />
+    <string id="taom_feat_mor_ns_desc" text="야간에 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_mor_vr" text="사우론의 징집" />
+    <string id="taom_feat_mor_vr_desc" text="마을 지원병 재생성 속도 20% 증가." />
+    <string id="taom_feat_mord_sm" text="암흑의 대장기술" />
+    <string id="taom_feat_mord_sm_desc" text="제련 기력 소모 15% 감소." />
+    <string id="taom_feat_mor_nctg" text="암흑어 전령" />
+    <string id="taom_feat_mor_nctg_desc" text="도시의 조직 두목 유력자 +2." />
+    <string id="taom_feat_mor_ncv" text="노예 감독관" />
+    <string id="taom_feat_mor_ncv_desc" text="마을의 유력자 수 5% 증가." />
+    <string id="taom_feat_roh_mc" text="기마군주의 혈통" />
+    <string id="taom_feat_roh_mc_desc" text="기병 병력 모집 및 승급 비용 15% 감소." />
+    <string id="taom_feat_roh_mw" text="마크의 기사들" />
+    <string id="taom_feat_roh_mw_desc" text="기병 병력 임금 15% 감소." />
+    <string id="taom_feat_roh_is" text="기병 의존" />
+    <string id="taom_feat_roh_is_desc" text="부대 대부분이 보병일 경우 부대 속도 10% 감소." />
+    <string id="taom_feat_roh_loy" text="기마군주의 결속" />
+    <string id="taom_feat_roh_loy_desc" text="정착지 충성도 하루 0.5 증가." />
+    <string id="taom_feat_roh_mor" text="기사들의 기백" />
+    <string id="taom_feat_roh_mor_desc" text="부대 사기 5 증가." />
+    <string id="taom_feat_roh_pls" text="평원의 기사들" />
+    <string id="taom_feat_roh_pls_desc" text="평원에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_dale_pls" text="골짜기의 상인들" />
+    <string id="taom_feat_dale_pls_desc" text="평원에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_dale_ti" text="난쟁이 교역 동맹" />
+    <string id="taom_feat_dale_ti_desc" text="관세 수입 10% 증가." />
+    <string id="taom_feat_dale_r" text="검은 화살의 전통" />
+    <string id="taom_feat_dale_r_desc" text="전투 명성 10% 증가." />
+    <string id="taom_feat_dale_loy" text="작은 영토의 취약성" />
+    <string id="taom_feat_dale_loy_desc" text="정착지 충성도 하루 0.5 감소." />
+    <string id="taom_feat_khand_sts" text="초원의 전차병" />
+    <string id="taom_feat_khand_sts_desc" text="초원에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_khand_r" text="용병의 명성" />
+    <string id="taom_feat_khand_r_desc" text="전투 명성 8% 증가." />
+    <string id="taom_feat_khand_ti" text="모르도르에 바치는 공물" />
+    <string id="taom_feat_khand_ti_desc" text="관세 수입 10% 감소." />
+    <string id="taom_feat_khand_fc" text="초원의 인내" />
+    <string id="taom_feat_khand_fc_desc" text="부대 식량 소모 10% 감소." />
+    <string id="taom_feat_khand_ps" text="전차병의 기동력" />
+    <string id="taom_feat_khand_ps_desc" text="부대 규모 한도 5% 증가." />
+    <string id="taom_feat_rhun_sts" text="동부인 척후 기병" />
+    <string id="taom_feat_rhun_sts_desc" text="초원에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_rhun_ps" text="동부인 대군" />
+    <string id="taom_feat_rhun_ps_desc" text="부대 규모 한도 5% 증가." />
+    <string id="taom_feat_rhun_loy" text="동부인의 공물" />
+    <string id="taom_feat_rhun_loy_desc" text="정착지 충성도 하루 0.5 감소." />
+    <string id="taom_feat_rhun_rd" text="초원 약탈자 교리" />
+    <string id="taom_feat_rhun_rd_desc" text="약탈 피해 15% 증가." />
+    <string id="taom_feat_har_ds" text="태양의 아들들" />
+    <string id="taom_feat_har_ds_desc" text="사막에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_har_ps" text="하라드림 전투 부대" />
+    <string id="taom_feat_har_ps_desc" text="부대 규모 한계가 5% 증가합니다." />
+    <string id="taom_feat_harad_mor" text="무마킬 조련사" />
+    <string id="taom_feat_harad_mor_desc" text="부대 사기가 5 증가합니다." />
+    <string id="taom_feat_harad_fc" text="사막의 인내" />
+    <string id="taom_feat_harad_fc_desc" text="부대 식량 소모가 15% 감소합니다." />
+    <string id="taom_feat_harad_rd" text="머나먼 하라드의 야만성" />
+    <string id="taom_feat_harad_rd_desc" text="약탈 피해가 15% 증가합니다." />
+    <string id="taom_feat_harad_aic" text="분열된 부족" />
+    <string id="taom_feat_harad_aic_desc" text="군대 모집에 영향력이 15% 더 듭니다." />
+    <string id="taom_feat_dun_pls" text="구릉의 행군자" />
+    <string id="taom_feat_dun_pls_desc" text="평원에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_dun_ps" text="구릉 부족 징집병" />
+    <string id="taom_feat_dun_ps_desc" text="부대 규모 한계가 5% 증가합니다." />
+    <string id="taom_feat_dun_vr" text="구릉 부족 모병" />
+    <string id="taom_feat_dun_vr_desc" text="마을 지원병 재생성 속도가 10% 증가합니다." />
+    <string id="taom_feat_shg_ds" text="모래언덕의 방랑자" />
+    <string id="taom_feat_shg_ds_desc" text="사막에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_aba_ds" text="심층 사막의 유목민" />
+    <string id="taom_feat_aba_ds_desc" text="사막에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_ep_no_hero" text="소지품 화면에 활성화된 영웅이 없습니다." />
+    <string id="taom_ep_save" text="새로 저장" />
+    <string id="taom_ep_save_hint" text="현재 장비를 새 프리셋으로 저장합니다." />
+    <string id="taom_ep_load" text="불러오기" />
+    <string id="taom_ep_load_hint" text="저장된 프리셋을 착용합니다." />
+    <string id="taom_ep_update" text="갱신" />
+    <string id="taom_ep_update_hint" text="저장된 프리셋을 현재 장비로 덮어씁니다." />
+    <string id="taom_ep_delete" text="삭제" />
+    <string id="taom_ep_delete_hint" text="프리셋을 제거합니다." />
+    <string id="taom_ep_title" text="장비 프리셋" />
+    <string id="taom_ep_ok" text="확인" />
+    <string id="taom_ep_cancel" text="취소" />
+    <string id="taom_ep_header" text="영웅: {HERO}  프리셋: {COUNT}/{MAX}" />
+    <string id="taom_ep_save_title" text="프리셋 저장" />
+    <string id="taom_ep_save_msg" text="이름을 입력하세요. 프리셋에는 현재 전투 및 평상복 장비와 탈것이 저장됩니다." />
+    <string id="taom_ep_select_load" text="프리셋 불러오기" />
+    <string id="taom_ep_select_update" text="프리셋 갱신" />
+    <string id="taom_ep_select_delete" text="프리셋 삭제" />
+    <string id="taom_ep_select" text="프리셋 선택" />
+    <string id="taom_ep_load_failed" text="불러오기에 실패했습니다." />
+    <string id="taom_ep_load_partial" text="{EQUIPPED}개의 장비를 불러왔습니다. 누락된 장비: {MISS_ITEMS}. 누락된 개조: {MISS_MODS}." />
+    <string id="taom_ep_load_ok" text="프리셋을 불러왔습니다 ({COUNT}개 장비)." />
+    <string id="taom_ep_updated" text="프리셋이 갱신되었습니다." />
+    <string id="taom_ep_notfound" text="프리셋을 찾을 수 없습니다." />
+    <string id="taom_ep_disabled" text="MCM에서 장비 프리셋이 비활성화되어 있습니다." />
+    <string id="taom_ep_delete_title" text="프리셋 삭제" />
+    <string id="taom_ep_delete_msg" text="이 프리셋을 정말 삭제하시겠습니까?" />
+    <string id="taom_ep_yes" text="예" />
+    <string id="taom_ep_no" text="아니오" />
+    <string id="taom_ep_deleted" text="프리셋이 삭제되었습니다." />
+    <string id="taom_ep_saved" text="프리셋 '{NAME}'이(가) 저장되었습니다." />
+    <string id="taom_ep_max" text="프리셋 최대 개수에 도달했습니다 ({MAX}). 새 프리셋을 저장하려면 하나를 삭제하십시오." />
+    <string id="taom_ep_bad_name" text="프리셋 이름은 비워 둘 수 없습니다." />
+    <string id="taom_ep_psummary" text="전투: {B}  평상복: {C}  탈것: {M}" />
+    <string id="taom_fief_hub_empty" text="영지 관리 — 소유한 영지 없음" />
+    <string id="taom_fief_hub_title" text="영지 관리 — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
+    <string id="taom_fief_kind_town" text="도시" />
+    <string id="taom_fief_kind_castle" text="성" />
+    <string id="taom_fief_hub_remote_disabled" text="원격 건설 대기열이 비활성화되었습니다 — 관리하려면 영지를 방문하십시오." />
+    <string id="taom_fief_hub_prev" text="이전 영지" />
+    <string id="taom_fief_hub_next" text="다음 영지" />
+    <string id="taom_fief_hub_manage" text="이 영지 관리" />
+    <string id="taom_fief_hub_leave" text="나가기" />
+    <string id="taom_fief_no_fiefs" text="아직 소유한 영지가 없습니다." />
+    <string id="taom_fief_nav_label" text="영지" />
+    <string id="taom_qa_title" text="빠른 작업" />
+    <string id="taom_qa_desc" text="작업을 선택하십시오." />
+    <string id="taom_qa_ok" text="확인" />
+    <string id="taom_qa_cancel" text="취소" />
+    <string id="taom_qa_confirm_title" text="확인" />
+    <string id="taom_qa_confirm_msg" text="이 일괄 작업을 적용하시겠습니까?" />
+    <string id="taom_qa_yes" text="예" />
+    <string id="taom_qa_no" text="아니오" />
+    <string id="taom_extra_fast_forward_hint" text="추가 빨리감기 (E)" />
   </strings>
 </base>

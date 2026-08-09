@@ -27,5 +27,6 @@
     <string id="taom_emissary_no_resource" text="Non c'è commercio con emissari in questo insediamento." />
     <string id="taom_emissary_no_offers" text="L'emissario non ha unità d'élite da offrire al momento." />
     <string id="taom_emissary_failed" text="L'emissario non è riuscito a completare l'accordo." />
+    <string id="taom_emissary_coop_guest" text="L'emissario tratta solo con l'ospite di questa campagna." />
   </strings>
 </base>

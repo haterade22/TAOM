@@ -2116,5 +2116,318 @@
     <string id="l4pRw7pO" text="Вооружённый караван {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} воинов дезертировало — они отказываются служить лорду противоположной стороны." />
     <string id="taom_troop_weight_size" text="Тяжёлые воины" />
+    <string id="taom_res_desertion" text="{COUNT} элитных воинов дезертировали — ваши {RESOURCE} истощены!" />
+    <string id="taom_feat_erebor_gw" text="Гномий гарнизон" />
+    <string id="taom_feat_erebor_gw_desc" text="Расходы на гарнизон снижены на 25%." />
+    <string id="taom_feat_erebor_p" text="Гномье производство" />
+    <string id="taom_feat_erebor_p_desc" text="Производство всех деревень увеличено на 10%." />
+    <string id="taom_feat_erebor_cs" text="Гномий перфекционизм" />
+    <string id="taom_feat_erebor_cs_desc" text="Скорость строительства снижена на 15%." />
+    <string id="taom_feat_erebor_loy" text="Гномья честь" />
+    <string id="taom_feat_erebor_loy_desc" text="Лояльность поселения увеличена на 1 в день." />
+    <string id="taom_feat_erebor_mor" text="Гномье упрямство" />
+    <string id="taom_feat_erebor_mor_desc" text="Боевой духа отряда увеличен на 5." />
+    <string id="taom_feat_erebor_sm" text="Кузнецы-мастера" />
+    <string id="taom_feat_erebor_sm_desc" text="Затраты энергии на кузнечное дело снижены на 30%." />
+    <string id="taom_feat_erebor_ss" text="Горный народ" />
+    <string id="taom_feat_erebor_ss_desc" text="Скорость отряда увеличена на 10% в снегу." />
+    <string id="taom_feat_erebor_ti" text="Гномья бережливость" />
+    <string id="taom_feat_erebor_ti_desc" text="Доход с пошлин увеличен на 5%." />
+    <string id="taom_feat_riv_ai" text="Эльфийская мудрость" />
+    <string id="taom_feat_riv_ai_desc" text="Награда влияния за армию увеличена на 35%." />
+    <string id="taom_feat_riv_hg" text="Последний Приютный Дом" />
+    <string id="taom_feat_riv_hg_desc" text="Рост очагов в деревнях увеличен на 20%." />
+    <string id="taom_feat_riv_aic" text="Эльфийская гордость" />
+    <string id="taom_feat_riv_aic_desc" text="Набор в армию стоит на 25% больше влияния." />
+    <string id="taom_feat_riv_fc" text="Эльфийская умеренность" />
+    <string id="taom_feat_riv_fc_desc" text="Потребление пищи отрядом снижено на 15%." />
+    <string id="taom_feat_riv_loy" text="Эльфийская мудрость" />
+    <string id="taom_feat_riv_loy_desc" text="Лояльность поселения увеличена на 0,5 в день." />
+    <string id="taom_feat_riv_fs" text="Лесная грация" />
+    <string id="taom_feat_riv_fs_desc" text="Скорость отряда увеличена на 10% в лесах." />
+    <string id="taom_feat_mrk_fs" text="Лесное царство" />
+    <string id="taom_feat_mrk_fs_desc" text="Скорость отряда увеличена на 10% в лесах." />
+    <string id="taom_feat_mrk_mp" text="Лесные стражи" />
+    <string id="taom_feat_mrk_mp_desc" text="Шанс появления опытного ополчения увеличен на 25%." />
+    <string id="taom_feat_mrk_hg" text="Лесная замкнутость" />
+    <string id="taom_feat_mrk_hg_desc" text="Рост очагов в деревнях снижен на 20%." />
+    <string id="taom_feat_mrk_fc" text="Дары леса" />
+    <string id="taom_feat_mrk_fc_desc" text="Потребление пищи отрядом снижено на 15%." />
+    <string id="taom_feat_mrk_mor" text="Лесное братство" />
+    <string id="taom_feat_mrk_mor_desc" text="Боевой дух отряда увеличен на 3." />
+    <string id="taom_feat_mrk_aic" text="Замкнутый двор" />
+    <string id="taom_feat_mrk_aic_desc" text="Набор армии стоит на 15% больше влияния." />
+    <string id="taom_feat_loth_fs" text="Золотой Лес" />
+    <string id="taom_feat_loth_fs_desc" text="Скорость передвижения отряда в лесах увеличена на 10%." />
+    <string id="taom_feat_loth_gw" text="Стражи Лориэна" />
+    <string id="taom_feat_loth_gw_desc" text="Расходы на гарнизон снижены на 20%." />
+    <string id="taom_feat_loth_cs" text="Нетленное мастерство" />
+    <string id="taom_feat_loth_cs_desc" text="Скорость строительства снижена на 10%." />
+    <string id="taom_feat_loth_fc" text="Лембас" />
+    <string id="taom_feat_loth_fc_desc" text="Потребление еды отрядом снижено на 15%." />
+    <string id="taom_feat_loth_loy" text="Эльфийская грация" />
+    <string id="taom_feat_loth_loy_desc" text="Лояльность поселений увеличена на 0,5 в день." />
+    <string id="taom_feat_loth_mor" text="Эльфийская гармония" />
+    <string id="taom_feat_loth_mor_desc" text="Боевой дух отряда увеличен на 3." />
+    <string id="taom_feat_loth_vr" text="Угасающий свет" />
+    <string id="taom_feat_loth_vr_desc" text="Скорость восполнения добровольцев в деревнях снижена на 15%." />
+    <string id="taom_feat_isen_cr" text="Военная машина" />
+    <string id="taom_feat_isen_cr_desc" text="Стоимость набора и улучшения конных воинов снижена на 15%." />
+    <string id="taom_feat_isen_gw" text="Гарнизон Орфанка" />
+    <string id="taom_feat_isen_gw_desc" text="Расходы на гарнизон снижены на 20%." />
+    <string id="taom_feat_isen_dp" text="Хватка Сарумана" />
+    <string id="taom_feat_isen_dp_desc" text="Штрафы к отношениям от решений королевства увеличены на 25%." />
+    <string id="taom_feat_isen_ps" text="Легионы урук-хай" />
+    <string id="taom_feat_isen_ps_desc" text="Предел размера отряда увеличен на 20%." />
+    <string id="taom_feat_isen_cs" text="Промышленная мощь" />
+    <string id="taom_feat_isen_cs_desc" text="Скорость строительства увеличена на 15%." />
+    <string id="taom_feat_isen_sm" text="Промышленные горны" />
+    <string id="taom_feat_isen_sm_desc" text="Затраты энергии на кузнечное дело снижены на 20%." />
+    <string id="taom_feat_isen_rd" text="Набеги военной машины" />
+    <string id="taom_feat_isen_rd_desc" text="Урон от набегов увеличен на 20%." />
+    <string id="taom_feat_isen_ps2" text="Форсированный марш" />
+    <string id="taom_feat_isen_ps2_desc" text="Скорость передвижения отряда на равнинах увеличена на 10%." />
+    <string id="taom_feat_isen_sws" text="Наставники Болотного края" />
+    <string id="taom_feat_isen_sws_desc" text="Скорость передвижения отряда на болотах увеличена на 10%." />
+    <string id="taom_feat_isen_nctm" text="Квартирмейстеры Орфанка" />
+    <string id="taom_feat_isen_nctm_desc" text="+2 знатных торговца в городах." />
+    <string id="taom_feat_isen_ncta" text="Промышленные горны" />
+    <string id="taom_feat_isen_ncta_desc" text="+1 знатный ремесленник в городах." />
+    <string id="taom_feat_isen_nctg" text="Капитаны урук-хай" />
+    <string id="taom_feat_isen_nctg_desc" text="+12 главарей банд в городах (единственный город Изенгарда становится крупным центром набора)." />
+    <string id="taom_feat_isen_ncv" text="Железный гнёт" />
+    <string id="taom_feat_isen_ncv_desc" text="Количество знати в деревнях увеличено на 10%." />
+    <string id="taom_feat_gun_aic" text="Орочья орда" />
+    <string id="taom_feat_gun_aic_desc" text="Набор армии стоит на 40% меньше влияния." />
+    <string id="taom_feat_gun_gp" text="Разграбленные запасы" />
+    <string id="taom_feat_gun_gp_desc" text="Производство зерна увеличено на 15%." />
+    <string id="taom_feat_gun_w" text="Требования добычи" />
+    <string id="taom_feat_gun_w_desc" text="Жалование отряда увеличено на 10%." />
+    <string id="taom_feat_gun_ps" text="Горная орда" />
+    <string id="taom_feat_gun_ps_desc" text="Предел размера отряда увеличен на 20%." />
+    <string id="taom_feat_gun_rd" text="Орки-грабители" />
+    <string id="taom_feat_gun_rd_desc" text="Урон от набегов увеличен на 25%." />
+    <string id="taom_feat_gun_ss" text="Горные мародёры" />
+    <string id="taom_feat_gun_ss_desc" text="Скорость передвижения отряда по снегу увеличена на 10%." />
+    <string id="taom_feat_gun_vr" text="Горное ополчение" />
+    <string id="taom_feat_gun_vr_desc" text="Скорость восстановления добровольцев в деревнях увеличена на 20%." />
+    <string id="taom_feat_gun_ncta" text="Костяные кузнецы" />
+    <string id="taom_feat_gun_ncta_desc" text="+1 знатный ремесленник в городах." />
+    <string id="taom_feat_gun_nctg" text="Вожди Бледной стаи" />
+    <string id="taom_feat_gun_nctg_desc" text="+3 знатных главаря банд в городах." />
+    <string id="taom_feat_gun_ncv" text="Костяные лагеря" />
+    <string id="taom_feat_gun_ncv_desc" text="Количество знати в деревнях увеличено на 10%." />
+    <string id="taom_feat_gob_ps" text="Гоблинская орда" />
+    <string id="taom_feat_gob_ps_desc" text="Предел размера отряда увеличен на 40%." />
+    <string id="taom_feat_gob_vr" text="Бесконечный выводок" />
+    <string id="taom_feat_gob_vr_desc" text="Скорость восстановления добровольцев в деревнях увеличена на 25%." />
+    <string id="taom_feat_gob_ss" text="Бегуны по туннелям" />
+    <string id="taom_feat_gob_ss_desc" text="Скорость передвижения отряда по снегу увеличена на 10%." />
+    <string id="taom_feat_gob_fc" text="Ненасытная орда" />
+    <string id="taom_feat_gob_fc_desc" text="Потребление пищи отрядом увеличено на 20%." />
+    <string id="taom_feat_gob_sm" text="Склад захваченного оружия" />
+    <string id="taom_feat_gob_sm_desc" text="Затраты энергии на кузнечное дело снижены на 10%." />
+    <string id="taom_feat_gob_rd" text="Гоблинская засада" />
+    <string id="taom_feat_gob_rd_desc" text="Урон от набегов увеличен на 10%." />
+    <string id="taom_feat_mmo_aic" text="Орочья орда" />
+    <string id="taom_feat_mmo_aic_desc" text="Набор армии стоит на 40% меньше влияния." />
+    <string id="taom_feat_mmo_ps" text="Горное войско" />
+    <string id="taom_feat_mmo_ps_desc" text="Предел размера отряда увеличен на 30%." />
+    <string id="taom_feat_mmo_ss" text="Рождённые в горах" />
+    <string id="taom_feat_mmo_ss_desc" text="Скорость передвижения отряда по снегу увеличена на 10%." />
+    <string id="taom_feat_mmo_fc" text="Голодное войско" />
+    <string id="taom_feat_mmo_fc_desc" text="Потребление еды отрядом увеличено на 15%." />
+    <string id="taom_feat_mmo_sm" text="Разграбленные кузни" />
+    <string id="taom_feat_mmo_sm_desc" text="Затраты энергии на кузнечное дело снижены на 15%." />
+    <string id="taom_feat_mmo_rd" text="Набор пещерных троллей" />
+    <string id="taom_feat_mmo_rd_desc" text="Урон от набегов увеличен на 15%." />
+    <string id="taom_feat_mmo_cs" text="Гулкие залы" />
+    <string id="taom_feat_mmo_cs_desc" text="Скорость строительства снижена на 10%." />
+    <string id="taom_feat_umb_cc" text="Торговля корсаров" />
+    <string id="taom_feat_umb_cc_desc" text="Стоимость создания караванов снижена на 25%." />
+    <string id="taom_feat_umb_r" text="Слава корсаров" />
+    <string id="taom_feat_umb_r_desc" text="Известность за битвы увеличена на 8%." />
+    <string id="taom_feat_umb_w" text="Жадность корсаров" />
+    <string id="taom_feat_umb_w_desc" text="Жалованье отряда увеличено на 8%." />
+    <string id="taom_feat_umb_ti" text="Торговые сети корсаров" />
+    <string id="taom_feat_umb_ti_desc" text="Доход с пошлин увеличен на 15%." />
+    <string id="taom_feat_umb_ds" text="Корсары пустыни" />
+    <string id="taom_feat_umb_ds_desc" text="Скорость передвижения отряда в пустынях увеличена на 10%." />
+    <string id="taom_feat_umb_rd" text="Доктрина набегов корсаров" />
+    <string id="taom_feat_umb_rd_desc" text="Урон от набегов увеличен на 20%." />
+    <string id="taom_feat_umb_fc" text="Стойкость чёрных нуменорцев" />
+    <string id="taom_feat_umb_fc_desc" text="Потребление еды отрядом снижено на 10%." />
+    <string id="taom_feat_dg_aic" text="Власть тени" />
+    <string id="taom_feat_dg_aic_desc" text="Созыв армии требует на 50% меньше влияния." />
+    <string id="taom_feat_dg_mp" text="Тёмный призыв" />
+    <string id="taom_feat_dg_mp_desc" text="Шанс появления опытного ополчения увеличен на 20%." />
+    <string id="taom_feat_dg_cs" text="Разрушительные работы" />
+    <string id="taom_feat_dg_cs_desc" text="Скорость строительства снижена на 20%." />
+    <string id="taom_feat_dg_ps" text="Тёмные легионы" />
+    <string id="taom_feat_dg_ps_desc" text="Предел размера отряда увеличен на 20%." />
+    <string id="taom_feat_dg_fc" text="Ненасытные орды" />
+    <string id="taom_feat_dg_fc_desc" text="Потребление еды отрядом увеличено на 10%." />
+    <string id="taom_feat_dg_vr" text="Тёмные новобранцы" />
+    <string id="taom_feat_dg_vr_desc" text="Скорость восполнения добровольцев в деревнях увеличена на 20%." />
+    <string id="taom_feat_dg_nctm" text="Посредники тени" />
+    <string id="taom_feat_dg_nctm_desc" text="+1 знатный торговец в городах." />
+    <string id="taom_feat_dg_ncta" text="Тёмные кузницы" />
+    <string id="taom_feat_dg_ncta_desc" text="+1 знатный ремесленник в городах." />
+    <string id="taom_feat_dg_nctg" text="Капитаны тени" />
+    <string id="taom_feat_dg_nctg_desc" text="+13 знатных главарей банд в городах (центр тёмного command Дол Гулдура)." />
+    <string id="taom_feat_dg_ncv" text="Скрытые лачуги" />
+    <string id="taom_feat_dg_ncv_desc" text="Количество знатных людей в деревнях увеличено на 10%." />
+    <string id="taom_feat_gon_gw" text="Стража Башни" />
+    <string id="taom_feat_gon_gw_desc" text="Жалование гарнизона снижено на 20%." />
+    <string id="taom_feat_gon_ai" text="Гондорская дисциплина" />
+    <string id="taom_feat_gon_ai_desc" text="Награда влиянием за армию увеличена на 30%." />
+    <string id="taom_feat_gon_hg" text="Земли, истощённые войной" />
+    <string id="taom_feat_gon_hg_desc" text="Рост очагов в деревнях снижен на 15%." />
+    <string id="taom_feat_gon_ps" text="Постоянные войска" />
+    <string id="taom_feat_gon_ps_desc" text="Предел размера отряда увеличен на 2,5%." />
+    <string id="taom_feat_gon_loy" text="Дисциплина Стражи Башни" />
+    <string id="taom_feat_gon_loy_desc" text="Лояльность поселений увеличена на 1 в день." />
+    <string id="taom_feat_gon_mor" text="Гондорская стойкость" />
+    <string id="taom_feat_gon_mor_desc" text="Боевой духа отряда увеличен на 5." />
+    <string id="taom_feat_gon_ps2" text="Люди полей" />
+    <string id="taom_feat_gon_ps2_desc" text="Скорость отряда на равнинах увеличена на 10%." />
+    <string id="taom_feat_mor_aic" text="Воля Тёмного Властелина" />
+    <string id="taom_feat_mor_aic_desc" text="Созыв армии стоит на 60% меньше влияния." />
+    <string id="taom_feat_mor_gp" text="Пашни Нурна" />
+    <string id="taom_feat_mor_gp_desc" text="Производство зерна увеличено на 20%." />
+    <string id="taom_feat_mor_w" text="Тёмная дань" />
+    <string id="taom_feat_mor_w_desc" text="Жалование отряда увеличено на 20%." />
+    <string id="taom_feat_mor_ps" text="Орды Саурона" />
+    <string id="taom_feat_mor_ps_desc" text="Предел размера отряда увеличен на 10%." />
+    <string id="taom_feat_mor_rd" text="Гнев Саурона" />
+    <string id="taom_feat_mor_rd_desc" text="Урон от набегов увеличен на 25%." />
+    <string id="taom_feat_mor_pls" text="Марш теней" />
+    <string id="taom_feat_mor_pls_desc" text="Скорость отряда на равнинах увеличена на 5%." />
+    <string id="taom_feat_mor_sws" text="Мёртвые Топи" />
+    <string id="taom_feat_mor_sws_desc" text="Скорость отряда на болотах увеличена на 5%." />
+    <string id="taom_feat_mor_ns" text="Твари тьмы" />
+    <string id="taom_feat_mor_ns_desc" text="Скорость отряда ночью увеличена на 10%." />
+    <string id="taom_feat_mor_vr" text="Набор Саурона" />
+    <string id="taom_feat_mor_vr_desc" text="Скорость восстановления добровольцев в деревнях увеличена на 20%." />
+    <string id="taom_feat_mord_sm" text="Тёмное кузнечное дело" />
+    <string id="taom_feat_mord_sm_desc" text="Затраты энергии на кузнечное дело снижены на 15%." />
+    <string id="taom_feat_mor_nctg" text="Глашатаи Чёрного Наречия" />
+    <string id="taom_feat_mor_nctg_desc" text="+2 главаря банд среди знати в городах." />
+    <string id="taom_feat_mor_ncv" text="Надзиратели над рабами" />
+    <string id="taom_feat_mor_ncv_desc" text="Количество знатных людей в деревнях увеличено на 5%." />
+    <string id="taom_feat_roh_mc" text="Наследие Повелителей Коней" />
+    <string id="taom_feat_roh_mc_desc" text="Стоимость найма и повышения конных войск снижена на 15%." />
+    <string id="taom_feat_roh_mw" text="Всадники Марки" />
+    <string id="taom_feat_roh_mw_desc" text="Жалованье конных войск снижено на 15%." />
+    <string id="taom_feat_roh_is" text="Зависимость от кавалерии" />
+    <string id="taom_feat_roh_is_desc" text="Скорость отряда снижена на 10%, если большинство составляет пехота." />
+    <string id="taom_feat_roh_loy" text="Братство повелителей коней" />
+    <string id="taom_feat_roh_loy_desc" text="Лояльность поселений увеличена на 0,5 в день." />
+    <string id="taom_feat_roh_mor" text="Дух всадников" />
+    <string id="taom_feat_roh_mor_desc" text="Боевой духа отряда увеличен на 5." />
+    <string id="taom_feat_roh_pls" text="Всадники равнин" />
+    <string id="taom_feat_roh_pls_desc" text="Скорость передвижения отряда на равнинах увеличена на 10%." />
+    <string id="taom_feat_dale_pls" text="Торговцы долины" />
+    <string id="taom_feat_dale_pls_desc" text="Скорость передвижения отряда на равнинах увеличена на 10%." />
+    <string id="taom_feat_dale_ti" text="Торговый союз с гномами" />
+    <string id="taom_feat_dale_ti_desc" text="Доход от пошлин увеличен на 10%." />
+    <string id="taom_feat_dale_r" text="Традиция Чёрной стрелы" />
+    <string id="taom_feat_dale_r_desc" text="Боевая слава увеличена на 10%." />
+    <string id="taom_feat_dale_loy" text="Уязвимость малых земель" />
+    <string id="taom_feat_dale_loy_desc" text="Лояльность поселений снижена на 0,5 в день." />
+    <string id="taom_feat_khand_sts" text="Степные колесничие" />
+    <string id="taom_feat_khand_sts_desc" text="Скорость передвижения отряда в степях увеличена на 10%." />
+    <string id="taom_feat_khand_r" text="Наёмничья надбавка" />
+    <string id="taom_feat_khand_r_desc" text="Боевая слава увеличена на 8%." />
+    <string id="taom_feat_khand_ti" text="Дань Мордору" />
+    <string id="taom_feat_khand_ti_desc" text="Доход от пошлин снижен на 10%." />
+    <string id="taom_feat_khand_fc" text="Степная выносливость" />
+    <string id="taom_feat_khand_fc_desc" text="Потребление продовольствия отрядом снижено на 10%." />
+    <string id="taom_feat_khand_ps" text="Подвижность колесничих" />
+    <string id="taom_feat_khand_ps_desc" text="Предел размера отряда увеличен на 5%." />
+    <string id="taom_feat_rhun_sts" text="Дозорные истерлингов" />
+    <string id="taom_feat_rhun_sts_desc" text="Скорость передвижения отряда в степях увеличена на 10%." />
+    <string id="taom_feat_rhun_ps" text="Воинство истерлингов" />
+    <string id="taom_feat_rhun_ps_desc" text="Предел размера отряда увеличен на 5%." />
+    <string id="taom_feat_rhun_loy" text="Дань истерлингов" />
+    <string id="taom_feat_rhun_loy_desc" text="Лояльность поселений снижена на 0,5 в день." />
+    <string id="taom_feat_rhun_rd" text="Доктрина степных налётчиков" />
+    <string id="taom_feat_rhun_rd_desc" text="Урон от набегов увеличен на 15%." />
+    <string id="taom_feat_har_ds" text="Сыны Солнца" />
+    <string id="taom_feat_har_ds_desc" text="Скорость передвижения отряда в пустынях увеличена на 10%." />
+    <string id="taom_feat_har_ps" text="Боевые отряды харадрим" />
+    <string id="taom_feat_har_ps_desc" text="Предел размера отряда увеличен на 5%." />
+    <string id="taom_feat_harad_mor" text="Погонщики мумаков" />
+    <string id="taom_feat_harad_mor_desc" text="Боевой духа отряда увеличен на 5." />
+    <string id="taom_feat_harad_fc" text="Выносливость пустыни" />
+    <string id="taom_feat_harad_fc_desc" text="Потребление продовольствия отрядом снижено на 15%." />
+    <string id="taom_feat_harad_rd" text="Свирепость Дальнего Харада" />
+    <string id="taom_feat_harad_rd_desc" text="Урон от разорения увеличен на 15%." />
+    <string id="taom_feat_harad_aic" text="Разделённые племена" />
+    <string id="taom_feat_harad_aic_desc" text="Набор войск в армию стоит на 15% больше влияния." />
+    <string id="taom_feat_dun_pls" text="Ходоки холмов" />
+    <string id="taom_feat_dun_pls_desc" text="Скорость передвижения отряда на равнинах увеличена на 10%." />
+    <string id="taom_feat_dun_ps" text="Ополчение горных племён" />
+    <string id="taom_feat_dun_ps_desc" text="Предел размера отряда увеличен на 5%." />
+    <string id="taom_feat_dun_vr" text="Набор из горных племён" />
+    <string id="taom_feat_dun_vr_desc" text="Скорость восполнения добровольцев в деревнях увеличена на 10%." />
+    <string id="taom_feat_shg_ds" text="Странники дюн" />
+    <string id="taom_feat_shg_ds_desc" text="Скорость передвижения отряда в пустынях увеличена на 10%." />
+    <string id="taom_feat_aba_ds" text="Кочевники глубинной пустыни" />
+    <string id="taom_feat_aba_ds_desc" text="Скорость передвижения отряда в пустынях увеличена на 10%." />
+    <string id="taom_ep_no_hero" text="На экране инвентаря нет активного героя." />
+    <string id="taom_ep_save" text="Сохранить новый" />
+    <string id="taom_ep_save_hint" text="Сохранить текущее снаряжение как новый набор." />
+    <string id="taom_ep_load" text="Загрузить" />
+    <string id="taom_ep_load_hint" text="Надеть сохранённый набор." />
+    <string id="taom_ep_update" text="Обновить" />
+    <string id="taom_ep_update_hint" text="Перезаписать сохранённый набор текущим снаряжением." />
+    <string id="taom_ep_delete" text="Удалить" />
+    <string id="taom_ep_delete_hint" text="Удалить набор." />
+    <string id="taom_ep_title" text="Наборы снаряжения" />
+    <string id="taom_ep_ok" text="ОК" />
+    <string id="taom_ep_cancel" text="Отмена" />
+    <string id="taom_ep_header" text="Герой: {HERO}  Наборы: {COUNT}/{MAX}" />
+    <string id="taom_ep_save_title" text="Сохранить набор" />
+    <string id="taom_ep_save_msg" text="Введите название. Набор сохраняет ваше текущее боевое и гражданское снаряжение, а также скакуна." />
+    <string id="taom_ep_select_load" text="Загрузить набор" />
+    <string id="taom_ep_select_update" text="Обновить набор" />
+    <string id="taom_ep_select_delete" text="Удалить набор" />
+    <string id="taom_ep_select" text="Выбрать набор" />
+    <string id="taom_ep_load_failed" text="Не удалось загрузить." />
+    <string id="taom_ep_load_partial" text="Надето предметов: {EQUIPPED}. Отсутствующие предметы: {MISS_ITEMS}. Отсутствующие модификаторы: {MISS_MODS}." />
+    <string id="taom_ep_load_ok" text="Набор загружен ({COUNT} предметов)." />
+    <string id="taom_ep_updated" text="Набор обновлён." />
+    <string id="taom_ep_notfound" text="Набор не найден." />
+    <string id="taom_ep_disabled" text="Наборы снаряжения отключены в MCM." />
+    <string id="taom_ep_delete_title" text="Удалить набор" />
+    <string id="taom_ep_delete_msg" text="Вы уверены, что хотите удалить этот набор?" />
+    <string id="taom_ep_yes" text="Да" />
+    <string id="taom_ep_no" text="Нет" />
+    <string id="taom_ep_deleted" text="Набор удалён." />
+    <string id="taom_ep_saved" text="Набор «{NAME}» сохранён." />
+    <string id="taom_ep_max" text="Достигнут предел наборов ({MAX}). Удалите один, чтобы сохранить новый." />
+    <string id="taom_ep_bad_name" text="Название набора не может быть пустым." />
+    <string id="taom_ep_psummary" text="Бой: {B}  Гражданское: {C}  Скакун: {M}" />
+    <string id="taom_fief_hub_empty" text="Управление владениями — владений нет" />
+    <string id="taom_fief_hub_title" text="Управление владениями — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
+    <string id="taom_fief_kind_town" text="Город" />
+    <string id="taom_fief_kind_castle" text="Замок" />
+    <string id="taom_fief_hub_remote_disabled" text="Удалённая очередь строительства отключена — посетите владение для управления." />
+    <string id="taom_fief_hub_prev" text="Предыдущее владение" />
+    <string id="taom_fief_hub_next" text="Следующее владение" />
+    <string id="taom_fief_hub_manage" text="Управлять этим владением" />
+    <string id="taom_fief_hub_leave" text="Уйти" />
+    <string id="taom_fief_no_fiefs" text="У вас пока нет владений." />
+    <string id="taom_fief_nav_label" text="Владения" />
+    <string id="taom_qa_title" text="Быстрые действия" />
+    <string id="taom_qa_desc" text="Выберите действие." />
+    <string id="taom_qa_ok" text="ОК" />
+    <string id="taom_qa_cancel" text="Отмена" />
+    <string id="taom_qa_confirm_title" text="Подтверждение" />
+    <string id="taom_qa_confirm_msg" text="Применить это массовое действие?" />
+    <string id="taom_qa_yes" text="Да" />
+    <string id="taom_qa_no" text="Нет" />
+    <string id="taom_extra_fast_forward_hint" text="Ускоренное время (E)" />
   </strings>
 </base>

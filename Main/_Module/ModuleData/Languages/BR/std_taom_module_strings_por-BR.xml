@@ -2116,5 +2116,318 @@
     <string id="l4pRw7pO" text="Caravana Armada de {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} tropas desertaram — elas se recusam a servir um senhor do alinhamento oposto." />
     <string id="taom_troop_weight_size" text="Tropas pesadas" />
+    <string id="taom_res_desertion" text="{COUNT} tropas de elite desertaram — seus {RESOURCE} estão esgotados!" />
+    <string id="taom_feat_erebor_gw" text="Guarnição Anã" />
+    <string id="taom_feat_erebor_gw_desc" text="Salários da guarnição reduzidos em 25%." />
+    <string id="taom_feat_erebor_p" text="Indústria Anã" />
+    <string id="taom_feat_erebor_p_desc" text="Toda a produção das aldeias aumentada em 10%." />
+    <string id="taom_feat_erebor_cs" text="Perfeccionismo Anão" />
+    <string id="taom_feat_erebor_cs_desc" text="Velocidade de construção reduzida em 15%." />
+    <string id="taom_feat_erebor_loy" text="Honra Anã" />
+    <string id="taom_feat_erebor_loy_desc" text="Lealdade do assentamento aumentada em 1 por dia." />
+    <string id="taom_feat_erebor_mor" text="Obstinação Anã" />
+    <string id="taom_feat_erebor_mor_desc" text="Moral do grupo aumentado em 5." />
+    <string id="taom_feat_erebor_sm" text="Mestres Ferreiros" />
+    <string id="taom_feat_erebor_sm_desc" text="Custo de energia da forja reduzido em 30%." />
+    <string id="taom_feat_erebor_ss" text="Povo das Montanhas" />
+    <string id="taom_feat_erebor_ss_desc" text="Velocidade de movimento do grupo aumentada em 10% na neve." />
+    <string id="taom_feat_erebor_ti" text="Parcimônia Anã" />
+    <string id="taom_feat_erebor_ti_desc" text="Renda de tarifas aumentada em 5%." />
+    <string id="taom_feat_riv_ai" text="Sabedoria Elfica" />
+    <string id="taom_feat_riv_ai_desc" text="Recompensa de influência do exército aumentada em 35%." />
+    <string id="taom_feat_riv_hg" text="A Última Casa Acolhedora" />
+    <string id="taom_feat_riv_hg_desc" text="Crescimento das lareiras da aldeia aumentado em 20%." />
+    <string id="taom_feat_riv_aic" text="Orgulho Élfico" />
+    <string id="taom_feat_riv_aic_desc" text="Recrutamento de exército custa 25% mais influência." />
+    <string id="taom_feat_riv_fc" text="Frugalidade Élfica" />
+    <string id="taom_feat_riv_fc_desc" text="Consumo de comida do grupo reduzido em 15%." />
+    <string id="taom_feat_riv_loy" text="Sabedoria Élfica" />
+    <string id="taom_feat_riv_loy_desc" text="Lealdade do assentamento aumentada em 0,5 por dia." />
+    <string id="taom_feat_riv_fs" text="Graça das Florestas" />
+    <string id="taom_feat_riv_fs_desc" text="Velocidade de movimento do grupo aumentada em 10% em florestas." />
+    <string id="taom_feat_mrk_fs" text="Reino da Floresta" />
+    <string id="taom_feat_mrk_fs_desc" text="Velocidade de movimento do grupo aumentada em 10% em florestas." />
+    <string id="taom_feat_mrk_mp" text="Guardiões Silvestres" />
+    <string id="taom_feat_mrk_mp_desc" text="25% mais chance de milícia veterana." />
+    <string id="taom_feat_mrk_hg" text="Isolamento da Floresta" />
+    <string id="taom_feat_mrk_hg_desc" text="Crescimento das lareiras da aldeia reduzido em 20%." />
+    <string id="taom_feat_mrk_fc" text="Sustento das Florestas" />
+    <string id="taom_feat_mrk_fc_desc" text="Consumo de comida do grupo reduzido em 15%." />
+    <string id="taom_feat_mrk_mor" text="Laços das Florestas" />
+    <string id="taom_feat_mrk_mor_desc" text="Moral do grupo aumentado em 3." />
+    <string id="taom_feat_mrk_aic" text="Corte Isolacionista" />
+    <string id="taom_feat_mrk_aic_desc" text="O recrutamento de exércitos custa 15% mais influência." />
+    <string id="taom_feat_loth_fs" text="Bosque Dourado" />
+    <string id="taom_feat_loth_fs_desc" text="Velocidade de deslocamento do grupo aumentada em 10% em florestas." />
+    <string id="taom_feat_loth_gw" text="Guardiões de Lórien" />
+    <string id="taom_feat_loth_gw_desc" text="Salários da guarnição reduzidos em 20%." />
+    <string id="taom_feat_loth_cs" text="Ofício Atemporal" />
+    <string id="taom_feat_loth_cs_desc" text="Velocidade de construção reduzida em 10%." />
+    <string id="taom_feat_loth_fc" text="Pão de Lembas" />
+    <string id="taom_feat_loth_fc_desc" text="Consumo de comida do grupo reduzido em 15%." />
+    <string id="taom_feat_loth_loy" text="Graça Élfica" />
+    <string id="taom_feat_loth_loy_desc" text="Lealdade do assentamento aumentada em 0,5 por dia." />
+    <string id="taom_feat_loth_mor" text="Harmonia Élfica" />
+    <string id="taom_feat_loth_mor_desc" text="Moral do grupo aumentada em 3." />
+    <string id="taom_feat_loth_vr" text="Luz Minguante" />
+    <string id="taom_feat_loth_vr_desc" text="Taxa de reposição de voluntários nas aldeias reduzida em 15%." />
+    <string id="taom_feat_isen_cr" text="Máquina de Guerra" />
+    <string id="taom_feat_isen_cr_desc" text="Custos de recrutamento e aprimoramento de tropas montadas reduzidos em 15%." />
+    <string id="taom_feat_isen_gw" text="Guarnição de Orthanc" />
+    <string id="taom_feat_isen_gw_desc" text="Salários da guarnição reduzidos em 20%." />
+    <string id="taom_feat_isen_dp" text="Punho de Saruman" />
+    <string id="taom_feat_isen_dp_desc" text="Penalidades de relação por decisões do reino aumentadas em 25%." />
+    <string id="taom_feat_isen_ps" text="Legiões Uruk-hai" />
+    <string id="taom_feat_isen_ps_desc" text="Limite de tamanho do grupo aumentado em 20%." />
+    <string id="taom_feat_isen_cs" text="Poder Industrial" />
+    <string id="taom_feat_isen_cs_desc" text="Velocidade de construção aumentada em 15%." />
+    <string id="taom_feat_isen_sm" text="Forjas Industriais" />
+    <string id="taom_feat_isen_sm_desc" text="Custo de energia de forja reduzido em 20%." />
+    <string id="taom_feat_isen_rd" text="Saques da Máquina de Guerra" />
+    <string id="taom_feat_isen_rd_desc" text="Dano de saque aumentado em 20%." />
+    <string id="taom_feat_isen_ps2" text="Marcha Forçada" />
+    <string id="taom_feat_isen_ps2_desc" text="Velocidade de deslocamento do grupo aumentada em 10% em planícies." />
+    <string id="taom_feat_isen_sws" text="Instrutores dos Pântanos" />
+    <string id="taom_feat_isen_sws_desc" text="Velocidade de deslocamento do grupo aumentada em 10% em pântanos." />
+    <string id="taom_feat_isen_nctm" text="Intendentes de Orthanc" />
+    <string id="taom_feat_isen_nctm_desc" text="+2 notáveis mercadores nas cidades." />
+    <string id="taom_feat_isen_ncta" text="Forjas Industriais" />
+    <string id="taom_feat_isen_ncta_desc" text="+1 notável artesão nas cidades." />
+    <string id="taom_feat_isen_nctg" text="Capitães Uruk-hai" />
+    <string id="taom_feat_isen_nctg_desc" text="+12 notáveis líderes de gangue nas cidades (a única cidade de Isengard se torna um grande centro de recrutamento)." />
+    <string id="taom_feat_isen_ncv" text="Prensa de Ferro" />
+    <string id="taom_feat_isen_ncv_desc" text="Número de notáveis nas aldeias aumentado em 10%." />
+    <string id="taom_feat_gun_aic" text="Horda de Orcs" />
+    <string id="taom_feat_gun_aic_desc" text="Recrutamento de exércitos custa 40% menos influência." />
+    <string id="taom_feat_gun_gp" text="Depósitos Saqueados" />
+    <string id="taom_feat_gun_gp_desc" text="Produção de grãos aumentada em 15%." />
+    <string id="taom_feat_gun_w" text="Exigências de Pilhagem" />
+    <string id="taom_feat_gun_w_desc" text="Soldos do grupo aumentados em 10%." />
+    <string id="taom_feat_gun_ps" text="Enxame da Montanha" />
+    <string id="taom_feat_gun_ps_desc" text="Limite de tamanho do grupo aumentado em 20%." />
+    <string id="taom_feat_gun_rd" text="Pilhadores Orcs" />
+    <string id="taom_feat_gun_rd_desc" text="Dano de pilhagem aumentado em 25%." />
+    <string id="taom_feat_gun_ss" text="Saqueadores da Montanha" />
+    <string id="taom_feat_gun_ss_desc" text="Velocidade de movimento do grupo aumentada em 10% na neve." />
+    <string id="taom_feat_gun_vr" text="Recrutas da Montanha" />
+    <string id="taom_feat_gun_vr_desc" text="Taxa de reposição de voluntários nas aldeias aumentada em 20%." />
+    <string id="taom_feat_gun_ncta" text="Forjadores de Ossos" />
+    <string id="taom_feat_gun_ncta_desc" text="+1 notável artesão nas cidades." />
+    <string id="taom_feat_gun_nctg" text="Chefes da Hoste Pálida" />
+    <string id="taom_feat_gun_nctg_desc" text="+3 notáveis líderes de gangue nas cidades." />
+    <string id="taom_feat_gun_ncv" text="Acampamentos de Ossos" />
+    <string id="taom_feat_gun_ncv_desc" text="Número de notáveis nas aldeias aumentado em 10%." />
+    <string id="taom_feat_gob_ps" text="Enxame de Gobelins" />
+    <string id="taom_feat_gob_ps_desc" text="Limite de tamanho do grupo aumentado em 40%." />
+    <string id="taom_feat_gob_vr" text="Ninhada Sem Fim" />
+    <string id="taom_feat_gob_vr_desc" text="Taxa de reposição de voluntários nas aldeias aumentada em 25%." />
+    <string id="taom_feat_gob_ss" text="Corredores de Túneis" />
+    <string id="taom_feat_gob_ss_desc" text="Velocidade de movimento do grupo aumentada em 10% na neve." />
+    <string id="taom_feat_gob_fc" text="Enxame Voraz" />
+    <string id="taom_feat_gob_fc_desc" text="Consumo de comida do grupo aumentado em 20%." />
+    <string id="taom_feat_gob_sm" text="Tesouro de Armas Capturadas" />
+    <string id="taom_feat_gob_sm_desc" text="Custo de energia de forja reduzido em 10%." />
+    <string id="taom_feat_gob_rd" text="Emboscada de Gobelins" />
+    <string id="taom_feat_gob_rd_desc" text="Dano de pilhagem aumentado em 10%." />
+    <string id="taom_feat_mmo_aic" text="Horda de Orcs" />
+    <string id="taom_feat_mmo_aic_desc" text="Recrutamento de exércitos custa 40% menos influência." />
+    <string id="taom_feat_mmo_ps" text="Hoste da Montanha" />
+    <string id="taom_feat_mmo_ps_desc" text="Limite de tamanho do grupo aumentado em 30%." />
+    <string id="taom_feat_mmo_ss" text="Criados na Montanha" />
+    <string id="taom_feat_mmo_ss_desc" text="Velocidade de movimento do grupo aumentada em 10% na neve." />
+    <string id="taom_feat_mmo_fc" text="Hoste Faminta" />
+    <string id="taom_feat_mmo_fc_desc" text="Consumo de comida do grupo aumentado em 15%." />
+    <string id="taom_feat_mmo_sm" text="Forjas Saqueadas" />
+    <string id="taom_feat_mmo_sm_desc" text="Custo de energia de forja reduzido em 15%." />
+    <string id="taom_feat_mmo_rd" text="Recrutamento de Trols das Cavernas" />
+    <string id="taom_feat_mmo_rd_desc" text="Dano de pilhagem aumentado em 15%." />
+    <string id="taom_feat_mmo_cs" text="Salões Ecoantes" />
+    <string id="taom_feat_mmo_cs_desc" text="Velocidade de construção reduzida em 10%." />
+    <string id="taom_feat_umb_cc" text="Comércio Corsário" />
+    <string id="taom_feat_umb_cc_desc" text="Custo de formação de caravanas reduzido em 25%." />
+    <string id="taom_feat_umb_r" text="Glória Corsária" />
+    <string id="taom_feat_umb_r_desc" text="Renome obtido em batalhas aumentado em 8%." />
+    <string id="taom_feat_umb_w" text="Cobiça Corsária" />
+    <string id="taom_feat_umb_w_desc" text="Salários do grupo aumentados em 8%." />
+    <string id="taom_feat_umb_ti" text="Redes Comerciais Corsárias" />
+    <string id="taom_feat_umb_ti_desc" text="Renda de tarifas aumentada em 15%." />
+    <string id="taom_feat_umb_ds" text="Corsários do Deserto" />
+    <string id="taom_feat_umb_ds_desc" text="Velocidade de movimento do grupo aumentada em 10% em desertos." />
+    <string id="taom_feat_umb_rd" text="Doutrina de Pilhagem Corsária" />
+    <string id="taom_feat_umb_rd_desc" text="Dano de pilhagem aumentado em 20%." />
+    <string id="taom_feat_umb_fc" text="Resistência Númenoriana Negra" />
+    <string id="taom_feat_umb_fc_desc" text="Consumo de comida do grupo reduzido em 10%." />
+    <string id="taom_feat_dg_aic" text="Comando das Sombras" />
+    <string id="taom_feat_dg_aic_desc" text="Recrutamento de exércitos custa 50% menos influência." />
+    <string id="taom_feat_dg_mp" text="Conscrição Sombria" />
+    <string id="taom_feat_dg_mp_desc" text="20% mais chance de milícia veterana." />
+    <string id="taom_feat_dg_cs" text="Obras Ruinosas" />
+    <string id="taom_feat_dg_cs_desc" text="Velocidade de construção reduzida em 20%." />
+    <string id="taom_feat_dg_ps" text="Legiões Sombrias" />
+    <string id="taom_feat_dg_ps_desc" text="Limite de tamanho do grupo aumentado em 20%." />
+    <string id="taom_feat_dg_fc" text="Hordas Voraz es" />
+    <string id="taom_feat_dg_fc_desc" text="Consumo de comida do grupo aumentado em 10%." />
+    <string id="taom_feat_dg_vr" text="Conscritos Sombrios" />
+    <string id="taom_feat_dg_vr_desc" text="Taxa de reposição de voluntários nas aldeias aumentada em 20%." />
+    <string id="taom_feat_dg_nctm" text="Negociantes das Sombras" />
+    <string id="taom_feat_dg_nctm_desc" text="+1 notável mercador nas cidades." />
+    <string id="taom_feat_dg_ncta" text="Ferrarias Sombrias" />
+    <string id="taom_feat_dg_ncta_desc" text="+1 notável artesão nas cidades." />
+    <string id="taom_feat_dg_nctg" text="Capitães das Sombras" />
+    <string id="taom_feat_dg_nctg_desc" text="+13 notáveis líderes de gangue nas cidades (centro de comando sombrio de Dol Guldur)." />
+    <string id="taom_feat_dg_ncv" text="Casebres Ocultos" />
+    <string id="taom_feat_dg_ncv_desc" text="Número de notáveis em aldeias aumentado em 10%." />
+    <string id="taom_feat_gon_gw" text="Guarda da Torre" />
+    <string id="taom_feat_gon_gw_desc" text="Soldos da guarnição reduzidos em 20%." />
+    <string id="taom_feat_gon_ai" text="Disciplina Gondoriana" />
+    <string id="taom_feat_gon_ai_desc" text="Recompensa de influência do exército aumentada em 30%." />
+    <string id="taom_feat_gon_hg" text="Terras Esgotadas pela Guerra" />
+    <string id="taom_feat_gon_hg_desc" text="Crescimento de lares nas aldeias reduzido em 15%." />
+    <string id="taom_feat_gon_ps" text="Exércitos Permanentes" />
+    <string id="taom_feat_gon_ps_desc" text="Limite de tamanho do grupo aumentado em 2,5%." />
+    <string id="taom_feat_gon_loy" text="Disciplina da Guarda da Torre" />
+    <string id="taom_feat_gon_loy_desc" text="Lealdade do assentamento aumentada em 1 por dia." />
+    <string id="taom_feat_gon_mor" text="Determinação Gondoriana" />
+    <string id="taom_feat_gon_mor_desc" text="Moral do grupo aumentada em 5." />
+    <string id="taom_feat_gon_ps2" text="Homens dos Campos" />
+    <string id="taom_feat_gon_ps2_desc" text="Velocidade de movimento do grupo aumentada em 10% em planícies." />
+    <string id="taom_feat_mor_aic" text="A Vontade do Senhor Sombrio" />
+    <string id="taom_feat_mor_aic_desc" text="Recrutamento de exército custa 60% menos influência." />
+    <string id="taom_feat_mor_gp" text="Campos de Nurn" />
+    <string id="taom_feat_mor_gp_desc" text="Produção de grãos aumentada em 20%." />
+    <string id="taom_feat_mor_w" text="Tributo Sombrio" />
+    <string id="taom_feat_mor_w_desc" text="Soldos do grupo aumentados em 20%." />
+    <string id="taom_feat_mor_ps" text="Hordas de Sauron" />
+    <string id="taom_feat_mor_ps_desc" text="Limite de tamanho do grupo aumentado em 10%." />
+    <string id="taom_feat_mor_rd" text="Ira de Sauron" />
+    <string id="taom_feat_mor_rd_desc" text="Dano de pilhagem aumentado em 25%." />
+    <string id="taom_feat_mor_pls" text="Marcha das Sombras" />
+    <string id="taom_feat_mor_pls_desc" text="Velocidade de movimento do grupo aumentada em 5% em planícies." />
+    <string id="taom_feat_mor_sws" text="Pântanos Mortos" />
+    <string id="taom_feat_mor_sws_desc" text="Velocidade de movimento do grupo aumentada em 5% em pântanos." />
+    <string id="taom_feat_mor_ns" text="Criaturas das Trevas" />
+    <string id="taom_feat_mor_ns_desc" text="Velocidade de movimento do grupo aumentada em 10% à noite." />
+    <string id="taom_feat_mor_vr" text="Recrutamento de Sauron" />
+    <string id="taom_feat_mor_vr_desc" text="Taxa de reposição de voluntários nas aldeias aumentada em 20%." />
+    <string id="taom_feat_mord_sm" text="Forja Sombria" />
+    <string id="taom_feat_mord_sm_desc" text="Custo de energia de forja reduzido em 15%." />
+    <string id="taom_feat_mor_nctg" text="Heraldos da Fala Negra" />
+    <string id="taom_feat_mor_nctg_desc" text="+2 notáveis líderes de gangue nas cidades." />
+    <string id="taom_feat_mor_ncv" text="Feitores de Escravos" />
+    <string id="taom_feat_mor_ncv_desc" text="Número de notáveis em aldeias aumentado em 5%." />
+    <string id="taom_feat_roh_mc" text="Herança dos Senhores dos Cavalos" />
+    <string id="taom_feat_roh_mc_desc" text="Custos de recrutamento e melhoria de tropas montadas reduzidos em 15%." />
+    <string id="taom_feat_roh_mw" text="Cavaleiros da Marca" />
+    <string id="taom_feat_roh_mw_desc" text="Soldos de tropas montadas reduzidos em 15%." />
+    <string id="taom_feat_roh_is" text="Dependente de Cavalaria" />
+    <string id="taom_feat_roh_is_desc" text="Velocidade do grupo reduzida em 10% quando a maioria for de infantaria." />
+    <string id="taom_feat_roh_loy" text="Irmandade dos Senhores dos Cavalos" />
+    <string id="taom_feat_roh_loy_desc" text="Lealdade dos assentamentos aumentada em 0,5 por dia." />
+    <string id="taom_feat_roh_mor" text="Espírito dos Cavaleiros" />
+    <string id="taom_feat_roh_mor_desc" text="Moral do grupo aumentada em 5." />
+    <string id="taom_feat_roh_pls" text="Cavaleiros das Planícies" />
+    <string id="taom_feat_roh_pls_desc" text="Velocidade de movimento do grupo aumentada em 10% em planícies." />
+    <string id="taom_feat_dale_pls" text="Mercadores do Vale" />
+    <string id="taom_feat_dale_pls_desc" text="Velocidade de movimento do grupo aumentada em 10% em planícies." />
+    <string id="taom_feat_dale_ti" text="Aliança Comercial Anã" />
+    <string id="taom_feat_dale_ti_desc" text="Renda de tarifas aumentada em 10%." />
+    <string id="taom_feat_dale_r" text="Tradição da Flecha Negra" />
+    <string id="taom_feat_dale_r_desc" text="Renome de batalha aumentado em 10%." />
+    <string id="taom_feat_dale_loy" text="Exposição de Território Pequeno" />
+    <string id="taom_feat_dale_loy_desc" text="Lealdade dos assentamentos reduzida em 0,5 por dia." />
+    <string id="taom_feat_khand_sts" text="Condutores de Carros da Estepe" />
+    <string id="taom_feat_khand_sts_desc" text="Velocidade de movimento do grupo aumentada em 10% em estepes." />
+    <string id="taom_feat_khand_r" text="Prêmio Mercenário" />
+    <string id="taom_feat_khand_r_desc" text="Renome de batalha aumentado em 8%." />
+    <string id="taom_feat_khand_ti" text="Tributo a Mordor" />
+    <string id="taom_feat_khand_ti_desc" text="Renda de tarifas reduzida em 10%." />
+    <string id="taom_feat_khand_fc" text="Resistência da Estepe" />
+    <string id="taom_feat_khand_fc_desc" text="Consumo de comida do grupo reduzido em 10%." />
+    <string id="taom_feat_khand_ps" text="Mobilidade dos Carros de Guerra" />
+    <string id="taom_feat_khand_ps_desc" text="Limite de tamanho do grupo aumentado em 5%." />
+    <string id="taom_feat_rhun_sts" text="Batedores Orientais" />
+    <string id="taom_feat_rhun_sts_desc" text="Velocidade de movimento do grupo aumentada em 10% em estepes." />
+    <string id="taom_feat_rhun_ps" text="Hoste Oriental" />
+    <string id="taom_feat_rhun_ps_desc" text="Limite de tamanho do grupo aumentado em 5%." />
+    <string id="taom_feat_rhun_loy" text="Tributo Oriental" />
+    <string id="taom_feat_rhun_loy_desc" text="Lealdade dos assentamentos reduzida em 0,5 por dia." />
+    <string id="taom_feat_rhun_rd" text="Doutrina dos Saqueadores da Estepe" />
+    <string id="taom_feat_rhun_rd_desc" text="Dano de pilhagem aumentado em 15%." />
+    <string id="taom_feat_har_ds" text="Filhos do Sol" />
+    <string id="taom_feat_har_ds_desc" text="Velocidade de movimento do grupo aumentada em 10% em desertos." />
+    <string id="taom_feat_har_ps" text="Bandos de Guerra Haradrim" />
+    <string id="taom_feat_har_ps_desc" text="Limite de tamanho do grupo aumentado em 5%." />
+    <string id="taom_feat_harad_mor" text="Condutores de Mûmakil" />
+    <string id="taom_feat_harad_mor_desc" text="Moral do grupo aumentado em 5." />
+    <string id="taom_feat_harad_fc" text="Resistência do Deserto" />
+    <string id="taom_feat_harad_fc_desc" text="Consumo de comida do grupo reduzido em 15%." />
+    <string id="taom_feat_harad_rd" text="Selvageria do Harad Distante" />
+    <string id="taom_feat_harad_rd_desc" text="Dano de saque aumentado em 15%." />
+    <string id="taom_feat_harad_aic" text="Tribos Divididas" />
+    <string id="taom_feat_harad_aic_desc" text="O recrutamento de exércitos custa 15% mais influência." />
+    <string id="taom_feat_dun_pls" text="Marchadores das Colinas" />
+    <string id="taom_feat_dun_pls_desc" text="Velocidade de movimento do grupo aumentada em 10% em planícies." />
+    <string id="taom_feat_dun_ps" text="Recrutas das Tribos das Colinas" />
+    <string id="taom_feat_dun_ps_desc" text="Limite de tamanho do grupo aumentado em 5%." />
+    <string id="taom_feat_dun_vr" text="Recrutamento das Tribos das Colinas" />
+    <string id="taom_feat_dun_vr_desc" text="Taxa de reposição de voluntários nas aldeias aumentada em 10%." />
+    <string id="taom_feat_shg_ds" text="Andarilhos das Dunas" />
+    <string id="taom_feat_shg_ds_desc" text="Velocidade de movimento do grupo aumentada em 10% em desertos." />
+    <string id="taom_feat_aba_ds" text="Nômades do Deserto Profundo" />
+    <string id="taom_feat_aba_ds_desc" text="Velocidade de movimento do grupo aumentada em 10% em desertos." />
+    <string id="taom_ep_no_hero" text="Nenhum herói ativo na tela de inventário." />
+    <string id="taom_ep_save" text="Salvar Novo" />
+    <string id="taom_ep_save_hint" text="Salvar o equipamento atual como um novo preset." />
+    <string id="taom_ep_load" text="Carregar" />
+    <string id="taom_ep_load_hint" text="Equipar um preset salvo." />
+    <string id="taom_ep_update" text="Atualizar" />
+    <string id="taom_ep_update_hint" text="Sobrescrever um preset salvo com o equipamento atual." />
+    <string id="taom_ep_delete" text="Excluir" />
+    <string id="taom_ep_delete_hint" text="Remover um preset." />
+    <string id="taom_ep_title" text="Presets de Equipamento" />
+    <string id="taom_ep_ok" text="OK" />
+    <string id="taom_ep_cancel" text="Cancelar" />
+    <string id="taom_ep_header" text="Herói: {HERO}  Presets: {COUNT}/{MAX}" />
+    <string id="taom_ep_save_title" text="Salvar Preset" />
+    <string id="taom_ep_save_msg" text="Digite um nome. O preset captura seu equipamento atual de batalha e civil, além da montaria." />
+    <string id="taom_ep_select_load" text="Carregar Preset" />
+    <string id="taom_ep_select_update" text="Atualizar Preset" />
+    <string id="taom_ep_select_delete" text="Excluir Preset" />
+    <string id="taom_ep_select" text="Selecionar Preset" />
+    <string id="taom_ep_load_failed" text="Falha ao carregar." />
+    <string id="taom_ep_load_partial" text="Carregado(s) {EQUIPPED} item(ns). Itens ausentes: {MISS_ITEMS}. Modificadores ausentes: {MISS_MODS}." />
+    <string id="taom_ep_load_ok" text="Conjunto carregado ({COUNT} itens)." />
+    <string id="taom_ep_updated" text="Conjunto atualizado." />
+    <string id="taom_ep_notfound" text="Conjunto não encontrado." />
+    <string id="taom_ep_disabled" text="Os Conjuntos de Equipamento estão desativados no MCM." />
+    <string id="taom_ep_delete_title" text="Excluir Conjunto" />
+    <string id="taom_ep_delete_msg" text="Tem certeza de que deseja excluir este conjunto?" />
+    <string id="taom_ep_yes" text="Sim" />
+    <string id="taom_ep_no" text="Não" />
+    <string id="taom_ep_deleted" text="Conjunto excluído." />
+    <string id="taom_ep_saved" text="Conjunto '{NAME}' salvo." />
+    <string id="taom_ep_max" text="Limite de conjuntos alcançado ({MAX}). Exclua um para salvar um novo conjunto." />
+    <string id="taom_ep_bad_name" text="O nome do conjunto não pode ficar vazio." />
+    <string id="taom_ep_psummary" text="Batalha: {B}  Civil: {C}  Montaria: {M}" />
+    <string id="taom_fief_hub_empty" text="Gestão de Feudos — nenhum feudo possuído" />
+    <string id="taom_fief_hub_title" text="Gestão de Feudos — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
+    <string id="taom_fief_kind_town" text="Cidade" />
+    <string id="taom_fief_kind_castle" text="Castelo" />
+    <string id="taom_fief_hub_remote_disabled" text="Fila de construção remota desativada — visite o feudo para gerenciar." />
+    <string id="taom_fief_hub_prev" text="Feudo anterior" />
+    <string id="taom_fief_hub_next" text="Próximo feudo" />
+    <string id="taom_fief_hub_manage" text="Gerenciar este feudo" />
+    <string id="taom_fief_hub_leave" text="Sair" />
+    <string id="taom_fief_no_fiefs" text="Você ainda não possui nenhum feudo." />
+    <string id="taom_fief_nav_label" text="Feudos" />
+    <string id="taom_qa_title" text="Ações Rápidas" />
+    <string id="taom_qa_desc" text="Selecione uma ação." />
+    <string id="taom_qa_ok" text="OK" />
+    <string id="taom_qa_cancel" text="Cancelar" />
+    <string id="taom_qa_confirm_title" text="Confirmar" />
+    <string id="taom_qa_confirm_msg" text="Aplicar esta ação em massa?" />
+    <string id="taom_qa_yes" text="Sim" />
+    <string id="taom_qa_no" text="Não" />
+    <string id="taom_extra_fast_forward_hint" text="Avanço Rápido Extra (E)" />
   </strings>
 </base>

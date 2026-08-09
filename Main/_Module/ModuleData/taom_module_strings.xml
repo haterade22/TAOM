@@ -2324,5 +2324,324 @@
   <string id="taom_troop_weight_size" text="{=taom_troop_weight_size}Heavy troops" />
 	<!-- SpecialResources -->
 	<string id="taom_res_desertion" text="{=taom_res_desertion}{COUNT} elite troops deserted &#8212; your {RESOURCE} are depleted!" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CulturalFeats -->
+	<string id="taom_feat_erebor_gw" text="{=taom_feat_erebor_gw}Dwarven Garrison" />
+	<string id="taom_feat_erebor_gw_desc" text="{=taom_feat_erebor_gw_desc}Garrison wages reduced by 25%." />
+	<string id="taom_feat_erebor_p" text="{=taom_feat_erebor_p}Dwarven Industry" />
+	<string id="taom_feat_erebor_p_desc" text="{=taom_feat_erebor_p_desc}All village production increased by 10%." />
+	<string id="taom_feat_erebor_cs" text="{=taom_feat_erebor_cs}Dwarven Perfectionism" />
+	<string id="taom_feat_erebor_cs_desc" text="{=taom_feat_erebor_cs_desc}Construction speed reduced by 15%." />
+	<string id="taom_feat_erebor_loy" text="{=taom_feat_erebor_loy}Dwarven Honor" />
+	<string id="taom_feat_erebor_loy_desc" text="{=taom_feat_erebor_loy_desc}Settlement loyalty increased by 1 per day." />
+	<string id="taom_feat_erebor_mor" text="{=taom_feat_erebor_mor}Dwarven Stubbornness" />
+	<string id="taom_feat_erebor_mor_desc" text="{=taom_feat_erebor_mor_desc}Party morale increased by 5." />
+	<string id="taom_feat_erebor_sm" text="{=taom_feat_erebor_sm}Master Smiths" />
+	<string id="taom_feat_erebor_sm_desc" text="{=taom_feat_erebor_sm_desc}Smithing energy cost reduced by 30%." />
+	<string id="taom_feat_erebor_ss" text="{=taom_feat_erebor_ss}Mountain Folk" />
+	<string id="taom_feat_erebor_ss_desc" text="{=taom_feat_erebor_ss_desc}Party movement speed increased by 10% in snow." />
+	<string id="taom_feat_erebor_ti" text="{=taom_feat_erebor_ti}Dwarven Thrift" />
+	<string id="taom_feat_erebor_ti_desc" text="{=taom_feat_erebor_ti_desc}Tariff income increased by 5%." />
+	<string id="taom_feat_riv_ai" text="{=taom_feat_riv_ai}Elven Wisdom" />
+	<string id="taom_feat_riv_ai_desc" text="{=taom_feat_riv_ai_desc}Army influence award increased by 35%." />
+	<string id="taom_feat_riv_hg" text="{=taom_feat_riv_hg}The Last Homely House" />
+	<string id="taom_feat_riv_hg_desc" text="{=taom_feat_riv_hg_desc}Village hearth growth increased by 20%." />
+	<string id="taom_feat_riv_aic" text="{=taom_feat_riv_aic}Elven Pride" />
+	<string id="taom_feat_riv_aic_desc" text="{=taom_feat_riv_aic_desc}Army recruitment costs 25% more influence." />
+	<string id="taom_feat_riv_fc" text="{=taom_feat_riv_fc}Elven Frugality" />
+	<string id="taom_feat_riv_fc_desc" text="{=taom_feat_riv_fc_desc}Party food consumption reduced by 15%." />
+	<string id="taom_feat_riv_loy" text="{=taom_feat_riv_loy}Elven Wisdom" />
+	<string id="taom_feat_riv_loy_desc" text="{=taom_feat_riv_loy_desc}Settlement loyalty increased by 0.5 per day." />
+	<string id="taom_feat_riv_fs" text="{=taom_feat_riv_fs}Woodland Grace" />
+	<string id="taom_feat_riv_fs_desc" text="{=taom_feat_riv_fs_desc}Party movement speed increased by 10% in forests." />
+	<string id="taom_feat_mrk_fs" text="{=taom_feat_mrk_fs}Woodland Realm" />
+	<string id="taom_feat_mrk_fs_desc" text="{=taom_feat_mrk_fs_desc}Party movement speed increased by 10% in forests." />
+	<string id="taom_feat_mrk_mp" text="{=taom_feat_mrk_mp}Silvan Wardens" />
+	<string id="taom_feat_mrk_mp_desc" text="{=taom_feat_mrk_mp_desc}25% increased chance of veteran militia." />
+	<string id="taom_feat_mrk_hg" text="{=taom_feat_mrk_hg}Forest Isolation" />
+	<string id="taom_feat_mrk_hg_desc" text="{=taom_feat_mrk_hg_desc}Village hearth growth reduced by 20%." />
+	<string id="taom_feat_mrk_fc" text="{=taom_feat_mrk_fc}Woodland Sustenance" />
+	<string id="taom_feat_mrk_fc_desc" text="{=taom_feat_mrk_fc_desc}Party food consumption reduced by 15%." />
+	<string id="taom_feat_mrk_mor" text="{=taom_feat_mrk_mor}Woodland Bonds" />
+	<string id="taom_feat_mrk_mor_desc" text="{=taom_feat_mrk_mor_desc}Party morale increased by 3." />
+	<string id="taom_feat_mrk_aic" text="{=taom_feat_mrk_aic}Isolationist Court" />
+	<string id="taom_feat_mrk_aic_desc" text="{=taom_feat_mrk_aic_desc}Army recruitment costs 15% more influence." />
+	<string id="taom_feat_loth_fs" text="{=taom_feat_loth_fs}Golden Wood" />
+	<string id="taom_feat_loth_fs_desc" text="{=taom_feat_loth_fs_desc}Party movement speed increased by 10% in forests." />
+	<string id="taom_feat_loth_gw" text="{=taom_feat_loth_gw}Wardens of Lorien" />
+	<string id="taom_feat_loth_gw_desc" text="{=taom_feat_loth_gw_desc}Garrison wages reduced by 20%." />
+	<string id="taom_feat_loth_cs" text="{=taom_feat_loth_cs}Timeless Craft" />
+	<string id="taom_feat_loth_cs_desc" text="{=taom_feat_loth_cs_desc}Construction speed reduced by 10%." />
+	<string id="taom_feat_loth_fc" text="{=taom_feat_loth_fc}Lembas Bread" />
+	<string id="taom_feat_loth_fc_desc" text="{=taom_feat_loth_fc_desc}Party food consumption reduced by 15%." />
+	<string id="taom_feat_loth_loy" text="{=taom_feat_loth_loy}Elven Grace" />
+	<string id="taom_feat_loth_loy_desc" text="{=taom_feat_loth_loy_desc}Settlement loyalty increased by 0.5 per day." />
+	<string id="taom_feat_loth_mor" text="{=taom_feat_loth_mor}Elven Harmony" />
+	<string id="taom_feat_loth_mor_desc" text="{=taom_feat_loth_mor_desc}Party morale increased by 3." />
+	<string id="taom_feat_loth_vr" text="{=taom_feat_loth_vr}Fading Light" />
+	<string id="taom_feat_loth_vr_desc" text="{=taom_feat_loth_vr_desc}Village volunteer respawn rate reduced by 15%." />
+	<string id="taom_feat_isen_cr" text="{=taom_feat_isen_cr}War Machine" />
+	<string id="taom_feat_isen_cr_desc" text="{=taom_feat_isen_cr_desc}Mounted troop recruitment and upgrade costs reduced by 15%." />
+	<string id="taom_feat_isen_gw" text="{=taom_feat_isen_gw}Orthanc Garrison" />
+	<string id="taom_feat_isen_gw_desc" text="{=taom_feat_isen_gw_desc}Garrison wages reduced by 20%." />
+	<string id="taom_feat_isen_dp" text="{=taom_feat_isen_dp}Saruman's Grip" />
+	<string id="taom_feat_isen_dp_desc" text="{=taom_feat_isen_dp_desc}Kingdom decision relationship penalties increased by 25%." />
+	<string id="taom_feat_isen_ps" text="{=taom_feat_isen_ps}Uruk-hai Legions" />
+	<string id="taom_feat_isen_ps_desc" text="{=taom_feat_isen_ps_desc}Party size limit increased by 20%." />
+	<string id="taom_feat_isen_cs" text="{=taom_feat_isen_cs}Industrial Might" />
+	<string id="taom_feat_isen_cs_desc" text="{=taom_feat_isen_cs_desc}Construction speed increased by 15%." />
+	<string id="taom_feat_isen_sm" text="{=taom_feat_isen_sm}Industrial Forges" />
+	<string id="taom_feat_isen_sm_desc" text="{=taom_feat_isen_sm_desc}Smithing energy cost reduced by 20%." />
+	<string id="taom_feat_isen_rd" text="{=taom_feat_isen_rd}War Machine Raids" />
+	<string id="taom_feat_isen_rd_desc" text="{=taom_feat_isen_rd_desc}Raid damage increased by 20%." />
+	<string id="taom_feat_isen_ps2" text="{=taom_feat_isen_ps2}Forced March" />
+	<string id="taom_feat_isen_ps2_desc" text="{=taom_feat_isen_ps2_desc}Party movement speed increased by 10% on plains." />
+	<string id="taom_feat_isen_sws" text="{=taom_feat_isen_sws}Fenland Drillmasters" />
+	<string id="taom_feat_isen_sws_desc" text="{=taom_feat_isen_sws_desc}Party movement speed increased by 10% in swamps." />
+	<string id="taom_feat_isen_nctm" text="{=taom_feat_isen_nctm}Orthanc Quartermasters" />
+	<string id="taom_feat_isen_nctm_desc" text="{=taom_feat_isen_nctm_desc}+2 merchant notables in towns." />
+	<string id="taom_feat_isen_ncta" text="{=taom_feat_isen_ncta}Industrial Forges" />
+	<string id="taom_feat_isen_ncta_desc" text="{=taom_feat_isen_ncta_desc}+1 artisan notable in towns." />
+	<string id="taom_feat_isen_nctg" text="{=taom_feat_isen_nctg}Uruk-hai Captains" />
+	<string id="taom_feat_isen_nctg_desc" text="{=taom_feat_isen_nctg_desc}+12 gang-leader notables in towns (Isengard's single town becomes a major recruitment hub)." />
+	<string id="taom_feat_isen_ncv" text="{=taom_feat_isen_ncv}Iron Press" />
+	<string id="taom_feat_isen_ncv_desc" text="{=taom_feat_isen_ncv_desc}Notable count in villages increased by 10%." />
+	<string id="taom_feat_gun_aic" text="{=taom_feat_gun_aic}Orc Horde" />
+	<string id="taom_feat_gun_aic_desc" text="{=taom_feat_gun_aic_desc}Army recruitment costs 40% less influence." />
+	<string id="taom_feat_gun_gp" text="{=taom_feat_gun_gp}Plundered Stores" />
+	<string id="taom_feat_gun_gp_desc" text="{=taom_feat_gun_gp_desc}Grain production increased by 15%." />
+	<string id="taom_feat_gun_w" text="{=taom_feat_gun_w}Plunder Demands" />
+	<string id="taom_feat_gun_w_desc" text="{=taom_feat_gun_w_desc}Party wages increased by 10%." />
+	<string id="taom_feat_gun_ps" text="{=taom_feat_gun_ps}Mountain Swarm" />
+	<string id="taom_feat_gun_ps_desc" text="{=taom_feat_gun_ps_desc}Party size limit increased by 20%." />
+	<string id="taom_feat_gun_rd" text="{=taom_feat_gun_rd}Orc Pillagers" />
+	<string id="taom_feat_gun_rd_desc" text="{=taom_feat_gun_rd_desc}Raid damage increased by 25%." />
+	<string id="taom_feat_gun_ss" text="{=taom_feat_gun_ss}Mountain Marauders" />
+	<string id="taom_feat_gun_ss_desc" text="{=taom_feat_gun_ss_desc}Party movement speed increased by 10% in snow." />
+	<string id="taom_feat_gun_vr" text="{=taom_feat_gun_vr}Mountain Levies" />
+	<string id="taom_feat_gun_vr_desc" text="{=taom_feat_gun_vr_desc}Village volunteer respawn rate increased by 20%." />
+	<string id="taom_feat_gun_ncta" text="{=taom_feat_gun_ncta}Bone-Smiths" />
+	<string id="taom_feat_gun_ncta_desc" text="{=taom_feat_gun_ncta_desc}+1 artisan notable in towns." />
+	<string id="taom_feat_gun_nctg" text="{=taom_feat_gun_nctg}Pale Warband Chieftains" />
+	<string id="taom_feat_gun_nctg_desc" text="{=taom_feat_gun_nctg_desc}+3 gang-leader notables in towns." />
+	<string id="taom_feat_gun_ncv" text="{=taom_feat_gun_ncv}Bone Camps" />
+	<string id="taom_feat_gun_ncv_desc" text="{=taom_feat_gun_ncv_desc}Notable count in villages increased by 10%." />
+	<string id="taom_feat_gob_ps" text="{=taom_feat_gob_ps}Goblin Swarm" />
+	<string id="taom_feat_gob_ps_desc" text="{=taom_feat_gob_ps_desc}Party size limit increased by 40%." />
+	<string id="taom_feat_gob_vr" text="{=taom_feat_gob_vr}Endless Spawn" />
+	<string id="taom_feat_gob_vr_desc" text="{=taom_feat_gob_vr_desc}Village volunteer respawn rate increased by 25%." />
+	<string id="taom_feat_gob_ss" text="{=taom_feat_gob_ss}Tunnel-Runners" />
+	<string id="taom_feat_gob_ss_desc" text="{=taom_feat_gob_ss_desc}Party movement speed increased by 10% in snow." />
+	<string id="taom_feat_gob_fc" text="{=taom_feat_gob_fc}Ravenous Swarm" />
+	<string id="taom_feat_gob_fc_desc" text="{=taom_feat_gob_fc_desc}Party food consumption increased by 20%." />
+	<string id="taom_feat_gob_sm" text="{=taom_feat_gob_sm}Captured-Weapon Hoard" />
+	<string id="taom_feat_gob_sm_desc" text="{=taom_feat_gob_sm_desc}Smithing energy cost reduced by 10%." />
+	<string id="taom_feat_gob_rd" text="{=taom_feat_gob_rd}Goblin Ambush" />
+	<string id="taom_feat_gob_rd_desc" text="{=taom_feat_gob_rd_desc}Raid damage increased by 10%." />
+	<string id="taom_feat_mmo_aic" text="{=taom_feat_mmo_aic}Orc Horde" />
+	<string id="taom_feat_mmo_aic_desc" text="{=taom_feat_mmo_aic_desc}Army recruitment costs 40% less influence." />
+	<string id="taom_feat_mmo_ps" text="{=taom_feat_mmo_ps}Mountain Host" />
+	<string id="taom_feat_mmo_ps_desc" text="{=taom_feat_mmo_ps_desc}Party size limit increased by 30%." />
+	<string id="taom_feat_mmo_ss" text="{=taom_feat_mmo_ss}Mountain-Bred" />
+	<string id="taom_feat_mmo_ss_desc" text="{=taom_feat_mmo_ss_desc}Party movement speed increased by 10% in snow." />
+	<string id="taom_feat_mmo_fc" text="{=taom_feat_mmo_fc}Hungry Host" />
+	<string id="taom_feat_mmo_fc_desc" text="{=taom_feat_mmo_fc_desc}Party food consumption increased by 15%." />
+	<string id="taom_feat_mmo_sm" text="{=taom_feat_mmo_sm}Looted Forges" />
+	<string id="taom_feat_mmo_sm_desc" text="{=taom_feat_mmo_sm_desc}Smithing energy cost reduced by 15%." />
+	<string id="taom_feat_mmo_rd" text="{=taom_feat_mmo_rd}Cave Troll Levy" />
+	<string id="taom_feat_mmo_rd_desc" text="{=taom_feat_mmo_rd_desc}Raid damage increased by 15%." />
+	<string id="taom_feat_mmo_cs" text="{=taom_feat_mmo_cs}Echoing Halls" />
+	<string id="taom_feat_mmo_cs_desc" text="{=taom_feat_mmo_cs_desc}Construction speed reduced by 10%." />
+	<string id="taom_feat_umb_cc" text="{=taom_feat_umb_cc}Corsair Trade" />
+	<string id="taom_feat_umb_cc_desc" text="{=taom_feat_umb_cc_desc}Caravan formation cost reduced by 25%." />
+	<string id="taom_feat_umb_r" text="{=taom_feat_umb_r}Corsair Glory" />
+	<string id="taom_feat_umb_r_desc" text="{=taom_feat_umb_r_desc}Renown from battles increased by 8%." />
+	<string id="taom_feat_umb_w" text="{=taom_feat_umb_w}Corsair Greed" />
+	<string id="taom_feat_umb_w_desc" text="{=taom_feat_umb_w_desc}Party wages increased by 8%." />
+	<string id="taom_feat_umb_ti" text="{=taom_feat_umb_ti}Corsair Trade Networks" />
+	<string id="taom_feat_umb_ti_desc" text="{=taom_feat_umb_ti_desc}Tariff income increased by 15%." />
+	<string id="taom_feat_umb_ds" text="{=taom_feat_umb_ds}Desert Corsairs" />
+	<string id="taom_feat_umb_ds_desc" text="{=taom_feat_umb_ds_desc}Party movement speed increased by 10% in deserts." />
+	<string id="taom_feat_umb_rd" text="{=taom_feat_umb_rd}Corsair Raid Doctrine" />
+	<string id="taom_feat_umb_rd_desc" text="{=taom_feat_umb_rd_desc}Raid damage increased by 20%." />
+	<string id="taom_feat_umb_fc" text="{=taom_feat_umb_fc}Black Numenorean Endurance" />
+	<string id="taom_feat_umb_fc_desc" text="{=taom_feat_umb_fc_desc}Party food consumption reduced by 10%." />
+	<string id="taom_feat_dg_aic" text="{=taom_feat_dg_aic}Shadow Command" />
+	<string id="taom_feat_dg_aic_desc" text="{=taom_feat_dg_aic_desc}Army recruitment costs 50% less influence." />
+	<string id="taom_feat_dg_mp" text="{=taom_feat_dg_mp}Dark Conscription" />
+	<string id="taom_feat_dg_mp_desc" text="{=taom_feat_dg_mp_desc}20% increased chance of veteran militia." />
+	<string id="taom_feat_dg_cs" text="{=taom_feat_dg_cs}Ruinous Works" />
+	<string id="taom_feat_dg_cs_desc" text="{=taom_feat_dg_cs_desc}Construction speed reduced by 20%." />
+	<string id="taom_feat_dg_ps" text="{=taom_feat_dg_ps}Dark Legions" />
+	<string id="taom_feat_dg_ps_desc" text="{=taom_feat_dg_ps_desc}Party size limit increased by 20%." />
+	<string id="taom_feat_dg_fc" text="{=taom_feat_dg_fc}Voracious Hordes" />
+	<string id="taom_feat_dg_fc_desc" text="{=taom_feat_dg_fc_desc}Party food consumption increased by 10%." />
+	<string id="taom_feat_dg_vr" text="{=taom_feat_dg_vr}Dark Conscripts" />
+	<string id="taom_feat_dg_vr_desc" text="{=taom_feat_dg_vr_desc}Village volunteer respawn rate increased by 20%." />
+	<string id="taom_feat_dg_nctm" text="{=taom_feat_dg_nctm}Shadow Brokers" />
+	<string id="taom_feat_dg_nctm_desc" text="{=taom_feat_dg_nctm_desc}+1 merchant notable in towns." />
+	<string id="taom_feat_dg_ncta" text="{=taom_feat_dg_ncta}Dark Smithies" />
+	<string id="taom_feat_dg_ncta_desc" text="{=taom_feat_dg_ncta_desc}+1 artisan notable in towns." />
+	<string id="taom_feat_dg_nctg" text="{=taom_feat_dg_nctg}Shadow Captains" />
+	<string id="taom_feat_dg_nctg_desc" text="{=taom_feat_dg_nctg_desc}+13 gang-leader notables in towns (Dol Guldur's shadow command center)." />
+	<string id="taom_feat_dg_ncv" text="{=taom_feat_dg_ncv}Hidden Hovels" />
+	<string id="taom_feat_dg_ncv_desc" text="{=taom_feat_dg_ncv_desc}Notable count in villages increased by 10%." />
+	<string id="taom_feat_gon_gw" text="{=taom_feat_gon_gw}Tower Guard" />
+	<string id="taom_feat_gon_gw_desc" text="{=taom_feat_gon_gw_desc}Garrison wages reduced by 20%." />
+	<string id="taom_feat_gon_ai" text="{=taom_feat_gon_ai}Gondorian Discipline" />
+	<string id="taom_feat_gon_ai_desc" text="{=taom_feat_gon_ai_desc}Army influence award increased by 30%." />
+	<string id="taom_feat_gon_hg" text="{=taom_feat_gon_hg}War-Depleted Lands" />
+	<string id="taom_feat_gon_hg_desc" text="{=taom_feat_gon_hg_desc}Village hearth growth reduced by 15%." />
+	<string id="taom_feat_gon_ps" text="{=taom_feat_gon_ps}Standing Armies" />
+	<string id="taom_feat_gon_ps_desc" text="{=taom_feat_gon_ps_desc}Party size limit increased by 2.5%." />
+	<string id="taom_feat_gon_loy" text="{=taom_feat_gon_loy}Tower Guard Discipline" />
+	<string id="taom_feat_gon_loy_desc" text="{=taom_feat_gon_loy_desc}Settlement loyalty increased by 1 per day." />
+	<string id="taom_feat_gon_mor" text="{=taom_feat_gon_mor}Gondorian Resolve" />
+	<string id="taom_feat_gon_mor_desc" text="{=taom_feat_gon_mor_desc}Party morale increased by 5." />
+	<string id="taom_feat_gon_ps2" text="{=taom_feat_gon_ps2}Men of the Fields" />
+	<string id="taom_feat_gon_ps2_desc" text="{=taom_feat_gon_ps2_desc}Party movement speed increased by 10% on plains." />
+	<string id="taom_feat_mor_aic" text="{=taom_feat_mor_aic}The Dark Lord's Will" />
+	<string id="taom_feat_mor_aic_desc" text="{=taom_feat_mor_aic_desc}Army recruitment costs 60% less influence." />
+	<string id="taom_feat_mor_gp" text="{=taom_feat_mor_gp}Nurn Farmlands" />
+	<string id="taom_feat_mor_gp_desc" text="{=taom_feat_mor_gp_desc}Grain production increased by 20%." />
+	<string id="taom_feat_mor_w" text="{=taom_feat_mor_w}Dark Tribute" />
+	<string id="taom_feat_mor_w_desc" text="{=taom_feat_mor_w_desc}Party wages increased by 20%." />
+	<string id="taom_feat_mor_ps" text="{=taom_feat_mor_ps}Sauron's Hordes" />
+	<string id="taom_feat_mor_ps_desc" text="{=taom_feat_mor_ps_desc}Party size limit increased by 10%." />
+	<string id="taom_feat_mor_rd" text="{=taom_feat_mor_rd}Sauron's Wrath" />
+	<string id="taom_feat_mor_rd_desc" text="{=taom_feat_mor_rd_desc}Raid damage increased by 25%." />
+	<string id="taom_feat_mor_pls" text="{=taom_feat_mor_pls}Shadow March" />
+	<string id="taom_feat_mor_pls_desc" text="{=taom_feat_mor_pls_desc}Party movement speed increased by 5% on plains." />
+	<string id="taom_feat_mor_sws" text="{=taom_feat_mor_sws}Dead Marshes" />
+	<string id="taom_feat_mor_sws_desc" text="{=taom_feat_mor_sws_desc}Party movement speed increased by 5% in swamps." />
+	<string id="taom_feat_mor_ns" text="{=taom_feat_mor_ns}Creatures of the Dark" />
+	<string id="taom_feat_mor_ns_desc" text="{=taom_feat_mor_ns_desc}Party movement speed increased by 10% at night." />
+	<string id="taom_feat_mor_vr" text="{=taom_feat_mor_vr}Sauron's Levy" />
+	<string id="taom_feat_mor_vr_desc" text="{=taom_feat_mor_vr_desc}Village volunteer respawn rate increased by 20%." />
+	<string id="taom_feat_mord_sm" text="{=taom_feat_mord_sm}Dark Smithing" />
+	<string id="taom_feat_mord_sm_desc" text="{=taom_feat_mord_sm_desc}Smithing energy cost reduced by 15%." />
+	<string id="taom_feat_mor_nctg" text="{=taom_feat_mor_nctg}Black Speech Heralds" />
+	<string id="taom_feat_mor_nctg_desc" text="{=taom_feat_mor_nctg_desc}+2 gang-leader notables in towns." />
+	<string id="taom_feat_mor_ncv" text="{=taom_feat_mor_ncv}Slave Drivers" />
+	<string id="taom_feat_mor_ncv_desc" text="{=taom_feat_mor_ncv_desc}Notable count in villages increased by 5%." />
+	<string id="taom_feat_roh_mc" text="{=taom_feat_roh_mc}Horse-lord Heritage" />
+	<string id="taom_feat_roh_mc_desc" text="{=taom_feat_roh_mc_desc}Mounted troop recruitment and upgrade costs reduced by 15%." />
+	<string id="taom_feat_roh_mw" text="{=taom_feat_roh_mw}Riders of the Mark" />
+	<string id="taom_feat_roh_mw_desc" text="{=taom_feat_roh_mw_desc}Mounted troop wages reduced by 15%." />
+	<string id="taom_feat_roh_is" text="{=taom_feat_roh_is}Cavalry Dependent" />
+	<string id="taom_feat_roh_is_desc" text="{=taom_feat_roh_is_desc}Party speed reduced by 10% when majority infantry." />
+	<string id="taom_feat_roh_loy" text="{=taom_feat_roh_loy}Horse-lord Fellowship" />
+	<string id="taom_feat_roh_loy_desc" text="{=taom_feat_roh_loy_desc}Settlement loyalty increased by 0.5 per day." />
+	<string id="taom_feat_roh_mor" text="{=taom_feat_roh_mor}Riders' Spirit" />
+	<string id="taom_feat_roh_mor_desc" text="{=taom_feat_roh_mor_desc}Party morale increased by 5." />
+	<string id="taom_feat_roh_pls" text="{=taom_feat_roh_pls}Riders of the Plains" />
+	<string id="taom_feat_roh_pls_desc" text="{=taom_feat_roh_pls_desc}Party movement speed increased by 10% on plains." />
+	<string id="taom_feat_dale_pls" text="{=taom_feat_dale_pls}Vale Traders" />
+	<string id="taom_feat_dale_pls_desc" text="{=taom_feat_dale_pls_desc}Party movement speed increased by 10% on plains." />
+	<string id="taom_feat_dale_ti" text="{=taom_feat_dale_ti}Dwarven Trade Alliance" />
+	<string id="taom_feat_dale_ti_desc" text="{=taom_feat_dale_ti_desc}Tariff income increased by 10%." />
+	<string id="taom_feat_dale_r" text="{=taom_feat_dale_r}Black Arrow Tradition" />
+	<string id="taom_feat_dale_r_desc" text="{=taom_feat_dale_r_desc}Battle renown increased by 10%." />
+	<string id="taom_feat_dale_loy" text="{=taom_feat_dale_loy}Small Territory Exposure" />
+	<string id="taom_feat_dale_loy_desc" text="{=taom_feat_dale_loy_desc}Settlement loyalty reduced by 0.5 per day." />
+	<string id="taom_feat_khand_sts" text="{=taom_feat_khand_sts}Steppe Charioteers" />
+	<string id="taom_feat_khand_sts_desc" text="{=taom_feat_khand_sts_desc}Party movement speed increased by 10% on steppes." />
+	<string id="taom_feat_khand_r" text="{=taom_feat_khand_r}Mercenary Premium" />
+	<string id="taom_feat_khand_r_desc" text="{=taom_feat_khand_r_desc}Battle renown increased by 8%." />
+	<string id="taom_feat_khand_ti" text="{=taom_feat_khand_ti}Tribute to Mordor" />
+	<string id="taom_feat_khand_ti_desc" text="{=taom_feat_khand_ti_desc}Tariff income reduced by 10%." />
+	<string id="taom_feat_khand_fc" text="{=taom_feat_khand_fc}Steppe Endurance" />
+	<string id="taom_feat_khand_fc_desc" text="{=taom_feat_khand_fc_desc}Party food consumption reduced by 10%." />
+	<string id="taom_feat_khand_ps" text="{=taom_feat_khand_ps}Charioteer Mobility" />
+	<string id="taom_feat_khand_ps_desc" text="{=taom_feat_khand_ps_desc}Party size limit increased by 5%." />
+	<string id="taom_feat_rhun_sts" text="{=taom_feat_rhun_sts}Easterling Outriders" />
+	<string id="taom_feat_rhun_sts_desc" text="{=taom_feat_rhun_sts_desc}Party movement speed increased by 10% on steppes." />
+	<string id="taom_feat_rhun_ps" text="{=taom_feat_rhun_ps}Easterling Host" />
+	<string id="taom_feat_rhun_ps_desc" text="{=taom_feat_rhun_ps_desc}Party size limit increased by 5%." />
+	<string id="taom_feat_rhun_loy" text="{=taom_feat_rhun_loy}Easterling Tribute" />
+	<string id="taom_feat_rhun_loy_desc" text="{=taom_feat_rhun_loy_desc}Settlement loyalty reduced by 0.5 per day." />
+	<string id="taom_feat_rhun_rd" text="{=taom_feat_rhun_rd}Steppe Raider Doctrine" />
+	<string id="taom_feat_rhun_rd_desc" text="{=taom_feat_rhun_rd_desc}Raid damage increased by 15%." />
+	<string id="taom_feat_har_ds" text="{=taom_feat_har_ds}Sons of the Sun" />
+	<string id="taom_feat_har_ds_desc" text="{=taom_feat_har_ds_desc}Party movement speed increased by 10% in deserts." />
+	<string id="taom_feat_har_ps" text="{=taom_feat_har_ps}Haradrim Warbands" />
+	<string id="taom_feat_har_ps_desc" text="{=taom_feat_har_ps_desc}Party size limit increased by 5%." />
+	<string id="taom_feat_harad_mor" text="{=taom_feat_harad_mor}Mumakil Drivers" />
+	<string id="taom_feat_harad_mor_desc" text="{=taom_feat_harad_mor_desc}Party morale increased by 5." />
+	<string id="taom_feat_harad_fc" text="{=taom_feat_harad_fc}Desert Endurance" />
+	<string id="taom_feat_harad_fc_desc" text="{=taom_feat_harad_fc_desc}Party food consumption reduced by 15%." />
+	<string id="taom_feat_harad_rd" text="{=taom_feat_harad_rd}Far Harad Savagery" />
+	<string id="taom_feat_harad_rd_desc" text="{=taom_feat_harad_rd_desc}Raid damage increased by 15%." />
+	<string id="taom_feat_harad_aic" text="{=taom_feat_harad_aic}Divided Tribes" />
+	<string id="taom_feat_harad_aic_desc" text="{=taom_feat_harad_aic_desc}Army recruitment costs 15% more influence." />
+	<string id="taom_feat_dun_pls" text="{=taom_feat_dun_pls}Hill Marchers" />
+	<string id="taom_feat_dun_pls_desc" text="{=taom_feat_dun_pls_desc}Party movement speed increased by 10% on plains." />
+	<string id="taom_feat_dun_ps" text="{=taom_feat_dun_ps}Hill-Tribe Levy" />
+	<string id="taom_feat_dun_ps_desc" text="{=taom_feat_dun_ps_desc}Party size limit increased by 5%." />
+	<string id="taom_feat_dun_vr" text="{=taom_feat_dun_vr}Hill-Tribe Recruitment" />
+	<string id="taom_feat_dun_vr_desc" text="{=taom_feat_dun_vr_desc}Village volunteer respawn rate increased by 10%." />
+	<string id="taom_feat_shg_ds" text="{=taom_feat_shg_ds}Dune Wanderers" />
+	<string id="taom_feat_shg_ds_desc" text="{=taom_feat_shg_ds_desc}Party movement speed increased by 10% in deserts." />
+	<string id="taom_feat_aba_ds" text="{=taom_feat_aba_ds}Deep Desert Nomads" />
+	<string id="taom_feat_aba_ds_desc" text="{=taom_feat_aba_ds_desc}Party movement speed increased by 10% in deserts." />
+	<!-- EquipPresets -->
+	<string id="taom_ep_no_hero" text="{=taom_ep_no_hero}No active hero on the inventory screen." />
+	<string id="taom_ep_save" text="{=taom_ep_save}Save New" />
+	<string id="taom_ep_save_hint" text="{=taom_ep_save_hint}Save current equipment as a new preset." />
+	<string id="taom_ep_load" text="{=taom_ep_load}Load" />
+	<string id="taom_ep_load_hint" text="{=taom_ep_load_hint}Equip a saved preset." />
+	<string id="taom_ep_update" text="{=taom_ep_update}Update" />
+	<string id="taom_ep_update_hint" text="{=taom_ep_update_hint}Overwrite a saved preset with current equipment." />
+	<string id="taom_ep_delete" text="{=taom_ep_delete}Delete" />
+	<string id="taom_ep_delete_hint" text="{=taom_ep_delete_hint}Remove a preset." />
+	<string id="taom_ep_title" text="{=taom_ep_title}Equipment Presets" />
+	<string id="taom_ep_ok" text="{=taom_ep_ok}OK" />
+	<string id="taom_ep_cancel" text="{=taom_ep_cancel}Cancel" />
+	<string id="taom_ep_header" text="{=taom_ep_header}Hero: {HERO}  Presets: {COUNT}/{MAX}" />
+	<string id="taom_ep_save_title" text="{=taom_ep_save_title}Save Preset" />
+	<string id="taom_ep_save_msg" text="{=taom_ep_save_msg}Enter a name. The preset captures your current battle and civilian equipment, plus mount." />
+	<string id="taom_ep_select_load" text="{=taom_ep_select_load}Load Preset" />
+	<string id="taom_ep_select_update" text="{=taom_ep_select_update}Update Preset" />
+	<string id="taom_ep_select_delete" text="{=taom_ep_select_delete}Delete Preset" />
+	<string id="taom_ep_select" text="{=taom_ep_select}Select Preset" />
+	<string id="taom_ep_load_failed" text="{=taom_ep_load_failed}Load failed." />
+	<string id="taom_ep_load_partial" text="{=taom_ep_load_partial}Loaded {EQUIPPED} item(s). Missing items: {MISS_ITEMS}. Missing modifiers: {MISS_MODS}." />
+	<string id="taom_ep_load_ok" text="{=taom_ep_load_ok}Preset loaded ({COUNT} items)." />
+	<string id="taom_ep_updated" text="{=taom_ep_updated}Preset updated." />
+	<string id="taom_ep_notfound" text="{=taom_ep_notfound}Preset not found." />
+	<string id="taom_ep_disabled" text="{=taom_ep_disabled}Equipment Presets are disabled in MCM." />
+	<string id="taom_ep_delete_title" text="{=taom_ep_delete_title}Delete Preset" />
+	<string id="taom_ep_delete_msg" text="{=taom_ep_delete_msg}Are you sure you want to delete this preset?" />
+	<string id="taom_ep_yes" text="{=taom_ep_yes}Yes" />
+	<string id="taom_ep_no" text="{=taom_ep_no}No" />
+	<string id="taom_ep_deleted" text="{=taom_ep_deleted}Preset deleted." />
+	<string id="taom_ep_saved" text="{=taom_ep_saved}Preset '{NAME}' saved." />
+	<string id="taom_ep_max" text="{=taom_ep_max}Max presets reached ({MAX}). Delete one to save a new preset." />
+	<string id="taom_ep_bad_name" text="{=taom_ep_bad_name}Preset name cannot be empty." />
+	<string id="taom_ep_psummary" text="{=taom_ep_psummary}Battle: {B}  Civilian: {C}  Mount: {M}" />
+	<!-- FiefManagement -->
+	<string id="taom_fief_hub_empty" text="{=taom_fief_hub_empty}Fief Management — no fiefs owned" />
+	<string id="taom_fief_hub_title" text="{=taom_fief_hub_title}Fief Management — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
+	<string id="taom_fief_kind_town" text="{=taom_fief_kind_town}Town" />
+	<string id="taom_fief_kind_castle" text="{=taom_fief_kind_castle}Castle" />
+	<string id="taom_fief_hub_remote_disabled" text="{=taom_fief_hub_remote_disabled}Remote building queue disabled — visit the fief to manage." />
+	<string id="taom_fief_hub_prev" text="{=taom_fief_hub_prev}Previous fief" />
+	<string id="taom_fief_hub_next" text="{=taom_fief_hub_next}Next fief" />
+	<string id="taom_fief_hub_manage" text="{=taom_fief_hub_manage}Manage this fief" />
+	<string id="taom_fief_hub_leave" text="{=taom_fief_hub_leave}Leave" />
+	<string id="taom_fief_no_fiefs" text="{=taom_fief_no_fiefs}You don't own any fiefs yet." />
+	<string id="taom_fief_nav_label" text="{=taom_fief_nav_label}Fiefs" />
+	<!-- QuickActions -->
+	<string id="taom_qa_title" text="{=taom_qa_title}Quick Actions" />
+	<string id="taom_qa_desc" text="{=taom_qa_desc}Select an action." />
+	<string id="taom_qa_ok" text="{=taom_qa_ok}OK" />
+	<string id="taom_qa_cancel" text="{=taom_qa_cancel}Cancel" />
+	<string id="taom_qa_confirm_title" text="{=taom_qa_confirm_title}Confirm" />
+	<string id="taom_qa_confirm_msg" text="{=taom_qa_confirm_msg}Apply this bulk action?" />
+	<string id="taom_qa_yes" text="{=taom_qa_yes}Yes" />
+	<string id="taom_qa_no" text="{=taom_qa_no}No" />
+	<!-- TimeAcceleration -->
+	<string id="taom_extra_fast_forward_hint" text="{=taom_extra_fast_forward_hint}Extra Fast Forward (E)" />
+
 
 </strings>

@@ -778,5 +778,105 @@
     <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="Il veleno era ad azione rapida e lo sciamano disse che non c'era nulla da fare. Hai ricordato un insegnamento diverso — una preparazione dalle piante fredde della steppa che funzionava contro questo tipo di ferita. L'hai preparata, applicata e sei rimasto sveglio tutta la notte. Il capotribù si è ripreso. Ti ha dato un posto nel suo consiglio." />
     <string id="taom_cc_taom_adulthood_khuzait_6_text" text="Hai esplorato la fortezza gondoriana a Cair Andros e mappato le sue debolezze." />
     <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="Il signore della battaglia doveva sapere se la fortezza poteva essere aggirata o doveva essere ridotta. Sei andato avanti da solo, hai trascorso quattro giorni osservando dalla riva orientale del fiume e sei tornato con una valutazione dettagliata della forza della sua guarnigione, del programma di rifornimenti e dell'approccio che offriva le migliori probabilità. Il signore della battaglia l'ha definito il rapporto più utile che avesse ricevuto in una campagna." />
+    <string id="taom_cc_taom_parent_goblin_1_text" text="Capi di Città degli Orchi" />
+    <string id="taom_cc_taom_parent_goblin_1_desc" text="La tua famiglia faceva parte dell'élite nobiliare di Città degli Orchi, dedicata a riconquistare la dimora ancestrale e a difenderla dagli invasori." />
+    <string id="taom_cc_taom_parent_goblin_2_text" text="Armeggioni di Città degli Orchi" />
+    <string id="taom_cc_taom_parent_goblin_2_desc" text="La tua famiglia era composta da abili fabbri, che forgiavano utensili e armi per equipaggiare i difensori di Città degli Orchi." />
+    <string id="taom_cc_taom_parent_goblin_3_text" text="Minatori di Città degli Orchi" />
+    <string id="taom_cc_taom_parent_goblin_3_desc" text="La tua famiglia lavorava senza sosta nelle miniere di Città degli Orchi, portando alla luce le sue ricchezze nascoste." />
+    <string id="taom_cc_taom_parent_goblin_4_text" text="Guerrieri dei Monti Grigi" />
+    <string id="taom_cc_taom_parent_goblin_4_desc" text="La tua famiglia combatté contro Orchi e altre minacce nelle Montagne Grigie, difendendo l'onore dei propri consanguinei." />
+    <string id="taom_cc_taom_parent_goblin_5_text" text="Ramingi di Goblinopoli" />
+    <string id="taom_cc_taom_parent_goblin_5_desc" text="La tua famiglia servì come esploratori, pattugliando le terre selvagge attorno a Goblinopoli e proteggendone i confini da ogni pericolo." />
+    <string id="taom_cc_taom_parent_goblin_6_text" text="Reietti delle Montagne" />
+    <string id="taom_cc_taom_parent_goblin_6_desc" text="La tua famiglia viveva ai margini della società di Goblinopoli, sopravvivendo con astuzia e spietatezza tra gli implacabili passi montani." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_text" text="Signori della guerra delle Montagne Nebbiose" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_desc" text="La tua famiglia era tra l'élite nobile delle Montagne Nebbiose, dedita a riconquistare la dimora ancestrale e a difenderla dagli invasori." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_text" text="Fabbri di Moria" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_desc" text="La tua famiglia era composta da abili fabbri, che forgiavano utensili e armi per equipaggiare i difensori delle Montagne Nebbiose." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_text" text="Minatori delle Montagne Nebbiose" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_desc" text="La tua famiglia lavorò senza sosta nelle miniere delle Montagne Nebbiose, portando alla luce le loro ricchezze nascoste." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_text" text="Guerrieri delle Montagne Grigie" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_desc" text="La tua famiglia combatté contro Orchi e altre minacce nelle Montagne Grigie, difendendo l'onore dei propri consanguinei." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_text" text="Ramingi delle Montagne Nebbiose" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_desc" text="La tua famiglia servì come esploratori, pattugliando le terre selvagge attorno alle Montagne Nebbiose e proteggendone i confini da ogni pericolo." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_text" text="Reietti delle Montagne" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="La tua famiglia viveva ai margini della società delle Montagne Nebbiose, sopravvivendo con astuzia e spietatezza tra gli implacabili passi montani." />
+    <string id="taom_cc_taom_youth_goblin_1_text" text="Cavalcasti con i branchi di Warg del Passo Alto." />
+    <string id="taom_cc_taom_youth_goblin_1_desc" text="Ti addestrasti con i cavalcatori di Warg del Passo Alto, imparando a dominare le bestie selvagge attraverso i passi montani insidiosi e a colpire con lancia e giavellotto dalle loro groppe." />
+    <string id="taom_cc_taom_youth_goblin_2_text" text="Custodisti i cunicoli di Goblinopoli." />
+    <string id="taom_cc_taom_youth_goblin_2_desc" text="Servisti nei cunicoli di Goblinopoli, difendendo le fucine e i tunnel dagli intrusi con arco e lancia." />
+    <string id="taom_cc_taom_youth_goblin_3_text" text="Ti addestrasti con i berserker." />
+    <string id="taom_cc_taom_youth_goblin_3_desc" text="Fosti tra i berserker di Goblinopoli, imparando a combattere con furia sconsiderata e forza travolgente." />
+    <string id="taom_cc_taom_youth_goblin_4_text" text="Esplorasti i passi montani." />
+    <string id="taom_cc_taom_youth_goblin_4_desc" text="Vagasti per i sentieri montani insidiosi attorno a Goblinopoli, seguendo le tracce dei nemici e garantendo un passaggio sicuro ai tuoi simili." />
+    <string id="taom_cc_taom_youth_goblin_5_text" text="Tenesti la linea nelle legioni di lancieri di Goblinopoli." />
+    <string id="taom_cc_taom_youth_goblin_5_desc" text="Ti esercitasti e marciasti con le formazioni di lancieri pesanti del Passo Alto, imparando a resistere a una carica e a mantenere la posizione nelle brutali condizioni del nord, fino all'arrivo dei rincalzi." />
+    <string id="taom_cc_taom_youth_goblin_6_text" text="Corresti con le bande di saccheggiatori dei passi." />
+    <string id="taom_cc_taom_youth_goblin_6_desc" text="Vivesti al di fuori delle strutture dei clan montani, muovendoti con gli opportunisti dalle dita svelte che seguivano le bande guerriere e razziavano ciò che restava dopo ogni scontro. Armi da lancio e un paio di gambe veloci ti tennero in vita quando nulla altro poteva farlo." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_text" text="Cavalcasti con i cavalcatori di Warg delle Montagne Nebbiose." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_desc" text="Ti addestrasti con i cavalcatori di Warg delle Montagne Nebbiose, imparando a dominare le bestie selvagge attraverso i passi montani insidiosi e a colpire con lancia e giavellotto dalle loro groppe." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_text" text="Custodisti le fucine profonde di Moria." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_desc" text="Servisti nella guarnigione di Moria, difendendo le fucine e i tunnel dagli intrusi con arco e lancia." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_text" text="Ti addestrasti con i berserker." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_desc" text="Fosti tra i berserker delle Montagne Nebbiose, imparando a combattere con furia sconsiderata e forza travolgente." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_text" text="Esplorasti i passi montani." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_desc" text="Vagasti per i sentieri montani insidiosi attorno alle Montagne Nebbiose, seguendo le tracce dei nemici e garantendo un passaggio sicuro ai tuoi simili." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="Tenesti la linea nelle legioni di lancieri delle Montagne Nebbiose." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_desc" text="Ti esercitasti e marciasti con le formazioni di lancieri pesanti delle Montagne Nebbiose, imparando a resistere a una carica e a mantenere la posizione nelle brutali condizioni del nord, fino all'arrivo dei rincalzi." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_text" text="Corresti con le bande di saccheggiatori dei passi." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_desc" text="Vivevi al di fuori della struttura dei clan della montagna, muovendoti con gli opportunisti dalle dita svelte che seguivano le bande guerriere e razziavano ciò che restava dopo ogni scaramuccia. Le armi da lancio e un paio di gambe veloci ti hanno tenuto in vita quando nient'altro avrebbe potuto." />
+    <string id="taom_cc_taom_education_goblin_1_text" text="Addestrato nelle sale-tunnel di Città degli Orchi." />
+    <string id="taom_cc_taom_education_goblin_1_desc" text="Fosti battezzato col sangue nelle sale d'addestramento illuminate dalle torce della fortezza montana, imparando a cavalcare duramente e a maneggiare armi pesanti secondo la tradizione dei clan orcheschi del nord. Il prestigio andava a chi sapeva dimostrare il proprio valore nella fossa davanti agli anziani." />
+    <string id="taom_cc_taom_education_goblin_2_text" text="Apprendista presso i forgiatori d'armi di Città degli Orchi." />
+    <string id="taom_cc_taom_education_goblin_2_desc" text="Imparasti a forgiare armi rozze ma efficaci nelle rumorose fucine della montagna, e a barattarle per provviste e favori. Il lavoro era brutto, ma le capacità erano reali: lasciasti la forgia conoscendo sia il ferro sia il commercio." />
+    <string id="taom_cc_taom_education_goblin_3_text" text="Hai scavato nelle miniere sotto la montagna." />
+    <string id="taom_cc_taom_education_goblin_3_desc" text="Impugnasti un piccone nei pozzi senza luce di Città degli Orchi, imparando la struttura della montagna e l'ingegneria dei sostegni delle gallerie. I tunnel erano la tua casa e sapevi orientarti alla cieca, cosa che spesso eri costretto a fare." />
+    <string id="taom_cc_taom_education_goblin_4_text" text="Hai combattuto nei passi delle Montagne Grigie." />
+    <string id="taom_cc_taom_education_goblin_4_desc" text="Cavalcasti con le bande di razziatori che colpivano le Montagne Grigie, imparando a combattere con ascia e lancia nel brutale stile mordi-e-fuggi dei clan del nord. Tornavi più feroce ogni volta e un po' più certo della tua sopravvivenza." />
+    <string id="taom_cc_taom_education_goblin_5_text" text="Hai percorso le terre selvagge attorno a Città degli Orchi." />
+    <string id="taom_cc_taom_education_goblin_5_desc" text="Pattugliasti la desolazione rocciosa attorno alla fortezza montana, seguendo le tracce degli intrusi e leggendo i segni dei movimenti nemici. Le fredde terre selvagge del nord ti diedero pazienza e l'immobilità di un arciere, capace di durare più di qualsiasi bersaglio." />
+    <string id="taom_cc_taom_education_goblin_6_text" text="Sei sopravvissuto da solo nei passi montani." />
+    <string id="taom_cc_taom_education_goblin_6_desc" text="Scacciato o in fuga da qualche debito, ti arrangiasti da solo nei passi insidiosi attorno alla montagna, sopravvivendo con il furto e la prontezza di spirito. L'esperienza ti lasciò senza illusioni sulla lealtà e con un acuto talento per cavarti dai guai." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_text" text="Addestrato nelle sale di guerra di Moria." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_desc" text="Fosti battezzato col sangue nelle sale d'addestramento illuminate dalle torce della fortezza montana, imparando a cavalcare duramente e a maneggiare armi pesanti secondo la tradizione dei clan orcheschi del nord. Il prestigio andava a chi sapeva dimostrare il proprio valore nella fossa davanti agli anziani." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_text" text="Apprendista presso i forgiatori d'armi delle Montagne Nebbiose." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_desc" text="Imparasti a forgiare armi rozze ma efficaci nelle rumorose fucine della montagna, e a barattarle per provviste e favori. Il lavoro era brutto, ma le capacità erano reali: lasciasti la forgia conoscendo sia il ferro sia il commercio." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_text" text="Hai scavato nelle miniere sotto la montagna." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_desc" text="Impugnasti un piccone nei pozzi senza luce delle Montagne Nebbiose, imparando la struttura della montagna e l'ingegneria dei sostegni delle gallerie. I tunnel erano la tua casa e sapevi orientarti alla cieca, cosa che spesso eri costretto a fare." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_text" text="Hai combattuto nei passi delle Montagne Grigie." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_desc" text="Cavalcasti con le bande di razziatori che colpivano le Montagne Grigie, imparando a combattere con ascia e lancia nel brutale stile mordi-e-fuggi dei clan del nord. Tornavi più feroce ogni volta e un po' più certo della tua sopravvivenza." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_text" text="Hai percorso le terre selvagge attorno alle Montagne Nebbiose." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_desc" text="Pattugliasti la desolazione rocciosa attorno alla fortezza montana, seguendo le tracce degli intrusi e leggendo i segni dei movimenti nemici. Le fredde terre selvagge del nord ti diedero pazienza e l'immobilità di un arciere, capace di durare più di qualsiasi bersaglio." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_text" text="Sei sopravvissuto da solo nei passi montani." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_desc" text="Scacciato o in fuga da qualche debito, ti arrangiasti da solo nei passi insidiosi attorno alla montagna, sopravvivendo con il furto e la prontezza di spirito. L'esperienza ti lasciò senza illusioni sulla lealtà e con un acuto talento per cavarti dai guai." />
+    <string id="taom_cc_taom_adulthood_goblin_1_text" text="Hai vinto il Grande Torneo della Montagna e sei stato nominato seguace di un capoguerra." />
+    <string id="taom_cc_taom_adulthood_goblin_1_desc" text="Il torneo si svolse in tre brutali turni nella sala principale. Entrasti come favorito di nessuno e uscisti con l'anello d'argento da braccio di un capoguerra e una cuccetta migliore. Gli altri concorrenti ti rispettarono per quella vittoria più di quanto avessero mai fatto per qualsiasi altra cosa." />
+    <string id="taom_cc_taom_adulthood_goblin_2_text" text="Hai instaurato un lucroso commercio d'armi con un clan orchesco del sud." />
+    <string id="taom_cc_taom_adulthood_goblin_2_desc" text="Il clan del sud aveva ferro ma nessun fabbro. Città degli Orchi aveva artigiani ma serviva cibo e pellicce. Mediasti il primo scambio, fissasti le condizioni e impedisti alle due parti di massacrarsi abbastanza a lungo perché l'accordo diventasse abitudine. Il capoguerra ti diede una percentuale." />
+    <string id="taom_cc_taom_adulthood_goblin_3_text" text="Hai rinforzato le gallerie minerarie inferiori dopo un crollo parziale." />
+    <string id="taom_cc_taom_adulthood_goblin_3_desc" text="Il crollo aveva intrappolato otto orchi nella galleria inferiore. Valutasti la distribuzione delle tensioni, dirigesti i lavori di rinforzo e portasti la squadra in salvo prima che il crollo secondario che seguì li uccidesse. L'ingegnere del capoguerra ti lasciò i progetti." />
+    <string id="taom_cc_taom_adulthood_goblin_4_text" text="Hai guidato l'incursione che ha distrutto l'avamposto nanico sulle Montagne Grigie." />
+    <string id="taom_cc_taom_adulthood_goblin_4_desc" text="I Nani avevano fortificato un passo che Città degli Orchi usava per le razzie invernali, tagliando l'accesso e costando alla montagna un'intera stagione di saccheggi. Pianificasti l'assalto, guidasti l'avanguardia e sfondasti il cancello dell'avamposto in un solo attacco. Il passo si riaprì. I Nani non tornarono." />
+    <string id="taom_cc_taom_adulthood_goblin_5_text" text="Hai seguito un gruppo di esploratori nanici per quattro giorni e riportato le loro mappe." />
+    <string id="taom_cc_taom_adulthood_goblin_5_desc" text="I Nani stavano cartografando qualcosa nelle Montagne Grigie e Città degli Orchi doveva sapere cosa. Li seguisti attraverso gli alti passi senza essere visto, attendesti che si accampassero, prendesti le mappe e fosti di ritorno alla fortezza prima che dessero l'allarme." />
+    <string id="taom_cc_taom_adulthood_goblin_6_text" text="Hai incastrato un capoguerra rivale per furto e ne hai preso il posto." />
+    <string id="taom_cc_taom_adulthood_goblin_6_desc" text="Il rivale bloccava la tua ascesa da due anni con tangenti e conoscenze migliori. Individuasti ciò a cui teneva, fece sì che gli oggetti giusti finissero nel posto sbagliato al momento sbagliato, e facesti la scoperta al momento giusto. Prima della fine del mese avevi il suo posto." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_text" text="Hai vinto il Grande Torneo della Montagna e sei stato nominato seguace di un capoguerra." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_desc" text="Il torneo si svolse in tre brutali turni nella sala principale. Entrasti come favorito di nessuno e uscisti con l'anello d'argento da braccio di un capoguerra e una cuccetta migliore. Gli altri concorrenti ti rispettarono per quella vittoria più di quanto avessero mai fatto per qualsiasi altra cosa." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_text" text="Hai instaurato un lucroso commercio d'armi con un clan orchesco del sud." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_desc" text="Il clan meridionale aveva ferro ma nessun fabbro. Moria aveva fabbri ma le servivano cibo e pellicce. Tu mediasti il primo scambio, fissasti le condizioni ed evitasti che le due parti si scannassero abbastanza a lungo perché l'accordo diventasse consuetudine. Il capoguerra ti concesse una percentuale." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_text" text="Hai messo in sicurezza le gallerie inferiori della miniera dopo un crollo parziale." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_desc" text="Il crollo aveva intrappolato otto Orchi nella galleria inferiore. Tu valutasti la distribuzione delle tensioni, dirigesti i lavori di rinforzo e portasti la squadra in salvo prima che il crollo successivo li uccidesse. L'ingegnere del capoguerra ti lasciò i progetti." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_text" text="Hai guidato l'incursione che ha spezzato l'avamposto nanico sulle Montagne Grigie." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_desc" text="I Nani avevano fortificato un passo che i Monti Nebbiosi usavano per le razzie invernali, tagliando gli accessi e costando alla montagna un'intera stagione di saccheggi. Tu pianificasti l'assalto, guidasti l'avanguardia e sfondasti la porta dell'avamposto in un solo slancio. Il passo fu riaperto. I Nani non tornarono più." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_text" text="Hai seguito una pattuglia di esploratori nani per quattro giorni e ne hai riportato le mappe." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_desc" text="I Nani stavano cartografando qualcosa nelle Montagne Grigie e i Monti Nebbiosi dovevano sapere cosa. Tu li seguisti attraverso gli alti passi senza essere visto, attendesti che si accampassero, prendesti le mappe e rientrasti nella fortezza prima che dessero l'allarme." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_text" text="Hai incastrato un rivale capobanda per furto e ne hai preso il posto." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_desc" text="Il rivale bloccava la tua ascesa da due anni con corruzione e conoscenze migliori. Tu individuasti ciò che gli stava a cuore, fecesti in modo che gli oggetti giusti si trovassero nel posto sbagliato al momento sbagliato, e facesti la scoperta al momento giusto. Prima della fine del mese avevi il suo posto." />
+    <string id="taom_cc_career_title" text="Carriera" />
+    <string id="taom_cc_career_desc" text="Le tue esperienze ti hanno incamminato su una strada. Scegli la carriera che definirà la tua leggenda." />
+    <string id="taom_cc_career_none" text="Nessuna specializzazione" />
+    <string id="taom_cc_career_none_desc" text="Non ti sei ancora votato a un cammino preciso. La tua carriera sarà determinata dalle tue azioni nel mondo." />
   </strings>
 </base>

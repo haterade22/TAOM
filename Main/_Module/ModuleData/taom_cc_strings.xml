@@ -893,6 +893,13 @@
 	<string id="taom_cc_taom_adulthood_mistymountainorcs_5_desc" text="{=taom_cc_taom_adulthood_mistymountainorcs_5_desc}The Dwarves were mapping something in the Grey Mountains and the Misty Mountains needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm." />
 	<string id="taom_cc_taom_adulthood_mistymountainorcs_6_text" text="{=taom_cc_taom_adulthood_mistymountainorcs_6_text}You framed a rival warleader for theft and took his position." />
 	<string id="taom_cc_taom_adulthood_mistymountainorcs_6_desc" text="{=taom_cc_taom_adulthood_mistymountainorcs_6_desc}The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CharacterCreation -->
+	<string id="taom_cc_career_title" text="{=taom_cc_career_title}Career" />
+	<string id="taom_cc_career_desc" text="{=taom_cc_career_desc}Your experiences have set you on a path. Choose the career that will define your legend." />
+	<string id="taom_cc_career_none" text="{=taom_cc_career_none}No specialization" />
+	<string id="taom_cc_career_none_desc" text="{=taom_cc_career_none_desc}You have not yet committed to a particular path. Your career will be determined by your actions in the world." />
+
 
 
 </strings>

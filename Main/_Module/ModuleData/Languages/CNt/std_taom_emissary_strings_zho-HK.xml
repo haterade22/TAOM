@@ -27,5 +27,6 @@
     <string id="taom_emissary_no_resource" text="此定居點沒有使者貿易。" />
     <string id="taom_emissary_no_offers" text="使者目前沒有精銳部隊可供招募。" />
     <string id="taom_emissary_failed" text="使者無法完成交易。" />
+    <string id="taom_emissary_coop_guest" text="這名使節只與本次戰役的主機交涉。" />
   </strings>
 </base>

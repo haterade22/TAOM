@@ -778,5 +778,105 @@
     <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="Zehir hızlı etkiliyor ve şaman yapılacak bir şey olmadığını söylüyordu. Farklı bir öğretiyi hatırladınız — bu tür yaralara karşı işleyen soğuk bozkır bitkilerinden bir karışım. Hazırlayıp uyguladınız ve gece boyunca oturarak beklediniz. Reis iyileşti. Size konseyinde bir yer verdi." />
     <string id="taom_cc_taom_adulthood_khuzait_6_text" text="Cair Andros'taki Gondor kalesini keşfedip zayıf noktalarını haritaladınız." />
     <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="Savaş lordu kalenin atlanıp atlanamayacağını ya da düşürülmesi gerekip gerekmediğini bilmeye ihtiyaç duyuyordu. Tek başınıza ileri gittiniz, nehrin doğu kıyısından dört gün gözlemleme yaptınız ve garnizon gücü, tedarik programı ve en iyi şansı veren yaklaşımın detaylı değerlendirmesiyle döndünüz. Savaş lordu bunu bir seferde aldığı en yararlı rapor olarak nitelendirdi." />
+    <string id="taom_cc_taom_parent_goblin_1_text" text="Goblin-şehri Reisleri" />
+    <string id="taom_cc_taom_parent_goblin_1_desc" text="Ailen, ata yurtlarını geri kazanmaya ve onu işgalcilerden korumaya adanmış Goblin-şehri'nin soylu seçkinleri arasındaydı." />
+    <string id="taom_cc_taom_parent_goblin_2_text" text="Goblin-şehri Zanaatkârları" />
+    <string id="taom_cc_taom_parent_goblin_2_desc" text="Ailen, Goblin-şehri'nin savunucularını donatmak için alet ve silah yapan usta demircilerdi." />
+    <string id="taom_cc_taom_parent_goblin_3_text" text="Goblin-şehri Madencileri" />
+    <string id="taom_cc_taom_parent_goblin_3_desc" text="Ailen, Goblin-kentin madenlerinde durmaksızın çalışarak oranın gizli zenginliklerini gün yüzüne çıkardı." />
+    <string id="taom_cc_taom_parent_goblin_4_text" text="Gri Dağların Savaşçıları" />
+    <string id="taom_cc_taom_parent_goblin_4_desc" text="Ailen, Gri Dağlar'da Orklara ve diğer tehditlere karşı savaşarak soylarının onurunu korudu." />
+    <string id="taom_cc_taom_parent_goblin_5_text" text="Goblin-kentin Kolcuları" />
+    <string id="taom_cc_taom_parent_goblin_5_desc" text="Ailen kolcu olarak hizmet etti; Goblin-kentin çevresindeki vahşi topraklarda devriye gezip sınırlarını zarardan korudu." />
+    <string id="taom_cc_taom_parent_goblin_6_text" text="Dağların Sürgünleri" />
+    <string id="taom_cc_taom_parent_goblin_6_desc" text="Ailen, Goblin-kentin toplumunun kıyısında yaşadı; affetmeyen dağ geçitlerinde kurnazlık ve acımasızlıkla hayatta kaldı." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_text" text="Puslu Dağların Savaş Beyleri" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_desc" text="Ailen, Puslu Dağlar'ın soylu seçkinleri arasındaydı; ata yurtlarını geri almaya ve işgalcilerden korumaya adanmışlardı." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_text" text="Moria Demircileri" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_desc" text="Ailen usta demircilerdi; Puslu Dağlar'ın savunucularını donatmak için alet ve silah yaptılar." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_text" text="Puslu Dağların Madencileri" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_desc" text="Ailen, Puslu Dağlar'ın madenlerinde durmaksızın çalışarak oranın gizli zenginliklerini gün yüzüne çıkardı." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_text" text="Gri Dağların Savaşçıları" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_desc" text="Ailen, Gri Dağlar'da Orklara ve diğer tehditlere karşı savaşarak soylarının onurunu korudu." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_text" text="Puslu Dağların Kolcuları" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_desc" text="Ailen kolcu olarak hizmet etti; Puslu Dağlar'ın çevresindeki vahşi topraklarda devriye gezip sınırlarını zarardan korudu." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_text" text="Dağların Sürgünleri" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="Ailen, Puslu Dağlar toplumunun kıyısında yaşadı; affetmeyen dağ geçitlerinde kurnazlık ve acımasızlıkla hayatta kaldı." />
+    <string id="taom_cc_taom_youth_goblin_1_text" text="Yüksek Geçit'in warg sürüleriyle at sürdün." />
+    <string id="taom_cc_taom_youth_goblin_1_desc" text="Yüksek Geçit'in Warg binicileriyle eğitim gördün; bu vahşi yaratıkları hain dağ geçitlerinde denetlemeyi ve sırtlarından mızrak ve kargıyla vurmayı öğrendin." />
+    <string id="taom_cc_taom_youth_goblin_2_text" text="Goblin-kentin in yollarını korudun." />
+    <string id="taom_cc_taom_youth_goblin_2_desc" text="Goblin-kentin in yollarında hizmet ettin; ocakları ve tünelleri yay ve mızrakla davetsizlerden korudun." />
+    <string id="taom_cc_taom_youth_goblin_3_text" text="Berserklerle eğitim gördün." />
+    <string id="taom_cc_taom_youth_goblin_3_desc" text="Goblin-kentin berserkleri arasındaydın; pervasız bir öfkeyle ve ezici bir güçle dövüşmeyi öğrendin." />
+    <string id="taom_cc_taom_youth_goblin_4_text" text="Dağ geçitlerinde keşfe çıktın." />
+    <string id="taom_cc_taom_youth_goblin_4_desc" text="Goblin-kentin çevresindeki hain dağ yollarında dolaştın; düşmanların izini sürüp soyunun güvenli geçişini sağladın." />
+    <string id="taom_cc_taom_youth_goblin_5_text" text="Goblin-kentin mızrak lejyonlarında hattı tuttun." />
+    <string id="taom_cc_taom_youth_goblin_5_desc" text="Yüksek Geçit'in ağır mızrak düzenleriyle talim yapıp yürüdün; bir hücuma karşı kenetlenmeyi ve hat rahatlatılana kadar acımasız kuzey koşullarında mevzide kalmayı öğrendin." />
+    <string id="taom_cc_taom_youth_goblin_6_text" text="Geçitlerin çapulcu çeteleriyle koştun." />
+    <string id="taom_cc_taom_youth_goblin_6_desc" text="Dağ klanlarının düzeni dışında yaşadın; savaş birliklerinin ardından gidip her çarpışmanın kalıntılarını yağmalayan eli çabuk fırsatçılarla dolaştın. Atmalı silahlar ve hızlı bir çift bacak, başka hiçbir şeyin yapamayacağı zamanlarda seni hayatta tuttu." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_text" text="Puslu Dağların warg binicileriyle at sürdün." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_desc" text="Puslu Dağlar'ın Warg binicileriyle eğitim gördün; bu vahşi yaratıkları hain dağ geçitlerinde denetlemeyi ve sırtlarından mızrak ve kargıyla vurmayı öğrendin." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_text" text="Moria'nın derin ocaklarını korudun." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_desc" text="Moria garnizonunda hizmet ettin; ocakları ve tünelleri yay ve mızrakla davetsizlerden korudun." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_text" text="Berserklerle eğitim gördün." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_desc" text="Puslu Dağlar'ın berserkleri arasındaydın; pervasız bir öfkeyle ve ezici bir güçle dövüşmeyi öğrendin." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_text" text="Dağ geçitlerinde keşfe çıktın." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_desc" text="Puslu Dağlar'ın çevresindeki hain dağ yollarında dolaştın; düşmanların izini sürüp soyunun güvenli geçişini sağladın." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="Puslu Dağların mızrak lejyonlarında hattı tuttun." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_desc" text="Puslu Dağlar'ın ağır mızrak düzenleriyle talim yapıp yürüdün; bir hücuma karşı sağlam durmayı ve hat yenilenene dek acımasız kuzey koşullarında mevziyi korumayı öğrendin." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_text" text="Geçitlerin çapulcu çetelerinde koştun." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_desc" text="Dağ klanlarının düzeni dışında yaşadın; savaş çetelerinin ardından gidip her çatışmanın kalıntılarını didikleyen hızlı parmaklı fırsatçılarla dolaştın. Atma silahları ve çevik bir çift bacak, başka hiçbir şeyin yapamayacağı zamanda seni hayatta tuttu." />
+    <string id="taom_cc_taom_education_goblin_1_text" text="Goblin-şehri'nin tünel salonlarında eğitildin." />
+    <string id="taom_cc_taom_education_goblin_1_desc" text="Dağ kalesinin meşale ışıklı talim salonlarında kana bulandın; kuzey Ork klanlarının geleneğinde sert binmeyi ve ağır silah savurmayı öğrendin. İtibar, çukurda yaşlıların önünde kendini kanıtlayanlara gelirdi." />
+    <string id="taom_cc_taom_education_goblin_2_text" text="Goblin-şehri'nin silah demircilerinde çıraklık yaptın." />
+    <string id="taom_cc_taom_education_goblin_2_desc" text="Dağın gürültülü demirci salonlarında kaba ama etkili silahlar dövmeyi ve onları erzak ve iyilikler karşılığında takas etmeyi öğrendin. İş çirkindi ama beceriler gerçekti; ocaktan hem demiri hem pazarlığı bilerek ayrıldın." />
+    <string id="taom_cc_taom_education_goblin_3_text" text="Dağın altındaki madenlerde kazma sardın." />
+    <string id="taom_cc_taom_education_goblin_3_desc" text="Goblin-şehri'nin ışıksız kuyularında kazma savurdun; dağın yapısını ve ocak desteklerinin mühendisliğini öğrendin. Tüneller eviydi ve onları gözü kapalı geçebiliyordun; çoğu zaman da öyle geçmek zorundaydın." />
+    <string id="taom_cc_taom_education_goblin_4_text" text="Gri Dağlar'ın geçitlerinde savaştın." />
+    <string id="taom_cc_taom_education_goblin_4_desc" text="Gri Dağlar'a saldıran akın çeteleriyle koştun; kuzey klanlarının acımasız vur-kaç tarzında balta ve mızrakla dövüşmeyi öğrendin. Her seferinde daha zalim ve kendi hayatta kalışından biraz daha emin döndün." />
+    <string id="taom_cc_taom_education_goblin_5_text" text="Goblin-şehri çevresindeki vahşi topraklarda dolaştın." />
+    <string id="taom_cc_taom_education_goblin_5_desc" text="Dağ kalesini çevreleyen kayalık yabanı devriye gezdin; davetsizlerin izini sürdün ve düşman hareketlerinin işaretlerini okudun. Soğuk kuzey yabanı sana sabır ve her hedeften daha uzun süren bir okçu dinginliği verdi." />
+    <string id="taom_cc_taom_education_goblin_6_text" text="Dağ geçitlerinde tek başına hayatta kaldın." />
+    <string id="taom_cc_taom_education_goblin_6_desc" text="Kovulmuş ya da bir borçtan kaçarken, dağın çevresindeki hain geçitlerde kendi başının çaresine baktın; hırsızlık ve hızlı düşünmeyle hayatta kaldın. Bu deneyim sana sadakat konusunda hiçbir yanılsama bırakmadı, ama beladan sıyrılmak için keskin bir yetenek verdi." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_text" text="Moria'nın savaş salonlarında eğitildin." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_desc" text="Dağ kalesinin meşale ışıklı talim salonlarında kana bulandın; kuzey Ork klanlarının geleneğinde sert binmeyi ve ağır silah savurmayı öğrendin. İtibar, çukurda yaşlıların önünde kendini kanıtlayanlara gelirdi." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_text" text="Puslu Dağlar'ın silah demircilerinde çıraklık yaptın." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_desc" text="Dağın gürültülü demirci salonlarında kaba ama etkili silahlar dövmeyi ve onları erzak ve iyilikler karşılığında takas etmeyi öğrendin. İş çirkindi ama beceriler gerçekti; ocaktan hem demiri hem pazarlığı bilerek ayrıldın." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_text" text="Dağın altındaki madenlerde kazma sardın." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_desc" text="Puslu Dağlar'ın ışıksız kuyularında kazma savurdun; dağın yapısını ve ocak desteklerinin mühendisliğini öğrendin. Tüneller eviydi ve onları gözü kapalı geçebiliyordun; çoğu zaman da öyle geçmek zorundaydın." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_text" text="Gri Dağlar'ın geçitlerinde savaştın." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_desc" text="Gri Dağlar'a saldıran akın çeteleriyle koştun; kuzey klanlarının acımasız vur-kaç tarzında balta ve mızrakla dövüşmeyi öğrendin. Her seferinde daha zalim ve kendi hayatta kalışından biraz daha emin döndün." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_text" text="Puslu Dağlar çevresindeki vahşi topraklarda dolaştın." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_desc" text="Dağ kalesini çevreleyen kayalık yabanı devriye gezdin; davetsizlerin izini sürdün ve düşman hareketlerinin işaretlerini okudun. Soğuk kuzey yabanı sana sabır ve her hedeften daha uzun süren bir okçu dinginliği verdi." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_text" text="Dağ geçitlerinde tek başına hayatta kaldın." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_desc" text="Kovulmuş ya da bir borçtan kaçarken, dağın çevresindeki hain geçitlerde kendi başının çaresine baktın; hırsızlık ve hızlı düşünmeyle hayatta kaldın. Bu deneyim sana sadakat konusunda hiçbir yanılsama bırakmadı, ama beladan sıyrılmak için keskin bir yetenek verdi." />
+    <string id="taom_cc_taom_adulthood_goblin_1_text" text="Büyük Dağ Turnuvası'nı kazandın ve bir savaş reisinin maiyetine alındın." />
+    <string id="taom_cc_taom_adulthood_goblin_1_desc" text="Turnuva ana salonda üç acımasız turda yapıldı. Kimsenin favorisi olmadan girdin ve bir savaş reisinin gümüş kol halkasıyla, daha iyi bir ranzayla ayrıldın. Diğer yarışmacılar bu zaferin ardından sana eskiden hiçbir şey için göstermedikleri bir saygıyı gösterdi." />
+    <string id="taom_cc_taom_adulthood_goblin_2_text" text="Güneyli bir Ork klanıyla kârlı bir silah ticareti kurdun." />
+    <string id="taom_cc_taom_adulthood_goblin_2_desc" text="Güneyli klanın demiri vardı ama demircisi yoktu. Goblin-şehri'nin tamircileri vardı ama yiyeceğe ve kürke ihtiyacı vardı. İlk takası sen ayarladın, şartları koydun ve anlaşma alışkanlığa dönüşecek kadar uzun süre iki tarafın birbirini öldürmesini engelledin. Savaş reisi sana bir pay verdi." />
+    <string id="taom_cc_taom_adulthood_goblin_3_text" text="Kısmi bir çöküşün ardından alt maden galerilerini destekleyip sağlamlaştırdın." />
+    <string id="taom_cc_taom_adulthood_goblin_3_desc" text="Çöküş alt galeride sekiz Ork'u mahsur bırakmıştı. Gerilme düzenini değerlendirdin, takviye çalışmasını yönettin ve ardından gelen ikinci çöküş onları öldürmeden önce ekibi güvenli yere çıkardın. Savaş reisinin mühendisi planları sende bıraktı." />
+    <string id="taom_cc_taom_adulthood_goblin_4_text" text="Gri Dağlar'daki Cüce karakolunu kıran akına liderlik ettin." />
+    <string id="taom_cc_taom_adulthood_goblin_4_desc" text="Cüceler, Goblin-şehri'nin kış akınlarında kullandığı bir geçidi tahkim edip yolu kesmiş ve dağa tam bir mevsimlik yağmaya mal olmuştu. Saldırıyı sen planladın, öncüyü sen yönettin ve karakolun kapısını tek hamlede kırdın. Geçit yeniden açıldı. Cüceler geri gelmedi." />
+    <string id="taom_cc_taom_adulthood_goblin_5_text" text="Bir Cüce keşif kolunun izini dört gün sürdün ve haritalarını getirdin." />
+    <string id="taom_cc_taom_adulthood_goblin_5_desc" text="Cüceler Gri Dağlar'da bir şeyin haritasını çıkarıyordu ve Goblin-şehri'nin bunun ne olduğunu bilmesi gerekiyordu. Yüksek geçitlerde görünmeden onları izledin, kamp kurmalarını bekledin, haritaları aldın ve alarmı vermelerinden önce kaleye döndün." />
+    <string id="taom_cc_taom_adulthood_goblin_6_text" text="Rakip bir savaş liderine hırsızlık suçu yükleyip onun yerini aldın." />
+    <string id="taom_cc_taom_adulthood_goblin_6_desc" text="Rakip iki yıl boyunca rüşvetlerle ve daha iyi bağlantılarla yükselmenin önünü kesmişti. Neye değer verdiğini belirledin, doğru eşyaların yanlış yerde ve yanlış zamanda bulunmasını ayarladın ve keşfi tam doğru anda yaptın. Ay dolmadan onun makamı senindi." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_text" text="Büyük Dağ Turnuvası'nı kazandın ve bir savaş reisinin maiyetine alındın." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_desc" text="Turnuva ana salonda üç acımasız tur boyunca sürdü. Kimsenin favorisi olmadan girdin ve bir savaş şefinin gümüş kol halkasıyla, daha iyi bir yatakla ayrıldın. Diğer yarışmacılar bu zaferin ardından sana daha önce hiçbir şey için göstermedikleri bir saygıyı gösterdiler." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_text" text="Güneyli bir Ork klanıyla kârlı bir silah ticareti kurdun." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_desc" text="Güneyli klanın demiri vardı ama demircisi yoktu. Moria'nın demircileri vardı ama yiyeceğe ve postlara ihtiyacı vardı. İlk takası sen ayarladın, şartları sen belirledin ve anlaşma bir alışkanlığa dönüşecek kadar uzun süre iki tarafın birbirini öldürmesini engelledin. Savaş şefi sana bir pay verdi." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_text" text="Kısmi bir çöküşün ardından alt maden galerilerini destekleyip sağlamlaştırdın." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_desc" text="Çöküş, alt galeride sekiz Orku mahsur bırakmıştı. Gerilme örüntüsünü inceledin, takviye çalışmasını yönettin ve ardından gelen ikinci çöküş onları öldürmeden önce ekibi güvenliğe çıkardın. Savaş şefinin mühendisi planları sende kalması için sana verdi." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_text" text="Gri Dağlar'daki Cüce karakolunu yıkan akına liderlik ettin." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_desc" text="Cüceler, Puslu Dağlar'ın kış akınlarında kullandığı bir geçidi tahkim etmiş, geçişi kesmiş ve dağa koca bir yağma mevsimine mal olmuştu. Saldırıyı sen planladın, öncü kuvvete sen liderlik ettin ve karakolun kapısını tek bir hamlede kırdın. Geçit yeniden açıldı. Cüceler bir daha gelmedi." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_text" text="Bir Cüce keşif kolunu dört gün boyunca izleyip haritalarını geri getirdin." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_desc" text="Cüceler Gri Dağlar'da bir şeyin haritasını çıkarıyordu ve Puslu Dağlar bunun ne olduğunu bilmek zorundaydı. Yüksek geçitler boyunca görülmeden onları takip ettin, kamp kurmalarını bekledin, haritaları aldın ve onlar alarmı vermeden kaleye dönmüştün." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_text" text="Rakip bir savaş liderine hırsızlık suçunu yıkıp onun yerini aldın." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_desc" text="Rakibin, iki yıl boyunca rüşvetler ve daha iyi bağlantılarla yükselişini engelliyordu. Nelere değer verdiğini saptadın, doğru eşyaların yanlış zamanda yanlış yerde bulunmasını ayarladın ve keşfi tam doğru anda yaptın. Ay bitmeden onun yerine geçmiştin." />
+    <string id="taom_cc_career_title" text="Kariyer" />
+    <string id="taom_cc_career_desc" text="Yaşadıkların seni bir yola koydu. Efsanenizi tanımlayacak kariyeri seç." />
+    <string id="taom_cc_career_none" text="Uzmanlık yok" />
+    <string id="taom_cc_career_none_desc" text="Henüz belirli bir yola bağlanmadın. Kariyerin, dünyadaki eylemlerinle belirlenecek." />
   </strings>
 </base>

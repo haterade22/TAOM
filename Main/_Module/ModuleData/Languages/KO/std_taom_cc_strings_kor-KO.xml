@@ -778,5 +778,105 @@
     <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="독은 빠르게 작용했고 주술사는 할 수 있는 일이 없다고 말했습니다. 당신은 다른 가르침을 기억했습니다 - 이러한 유형의 상처에 효과가 있는 추운 초원 식물의 조제법. 당신은 그것을 준비하고 적용한 후 밤새 앉아 있었습니다. 족장은 회복했습니다. 그는 당신에게 그의 의회에 자리를 주었습니다." />
     <string id="taom_cc_taom_adulthood_khuzait_6_text" text="당신은 카이르 안드로스의 곤도르 요새를 정찰하고 약점을 지도화했습니다." />
     <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="전투 지휘관은 요새를 우회할 수 있는지 또는 함락해야 하는지 알아야 했습니다. 당신은 혼자 전진하여 강의 동쪽 둑에서 나흘을 관찰하며 수비대 병력, 보급 일정, 그리고 최상의 확률을 주는 접근법에 대한 상세한 평가를 가지고 돌아왔습니다. 전투 지휘관은 그것을 작전에서 받은 가장 유용한 보고서라고 불렀습니다." />
+    <string id="taom_cc_taom_parent_goblin_1_text" text="고블린 마을의 족장들" />
+    <string id="taom_cc_taom_parent_goblin_1_desc" text="당신의 가문은 고블린 마을의 고귀한 지배층에 속해 있었으며, 조상의 터전을 되찾고 침입자로부터 지키는 데 헌신했습니다." />
+    <string id="taom_cc_taom_parent_goblin_2_text" text="고블린 마을의 땜장이들" />
+    <string id="taom_cc_taom_parent_goblin_2_desc" text="당신의 가문은 뛰어난 대장장이로서, 고블린 마을의 수비대에게 도구와 무기를 만들어 공급했습니다." />
+    <string id="taom_cc_taom_parent_goblin_3_text" text="고블린 마을의 광부들" />
+    <string id="taom_cc_taom_parent_goblin_3_desc" text="당신의 가문은 고블린 마을의 광산에서 쉼 없이 일하며 그곳에 숨겨진 보물을 캐냈습니다." />
+    <string id="taom_cc_taom_parent_goblin_4_text" text="회색산맥의 전사들" />
+    <string id="taom_cc_taom_parent_goblin_4_desc" text="당신의 가문은 회색산맥에서 오크와 여러 위협에 맞서 싸우며 동족의 명예를 지켰다." />
+    <string id="taom_cc_taom_parent_goblin_5_text" text="고블린 마을의 순찰자들" />
+    <string id="taom_cc_taom_parent_goblin_5_desc" text="당신의 가문은 순찰자로 복무하며 고블린 마을 주변의 황야를 순찰하고 그 국경을 위험으로부터 지켜냈다." />
+    <string id="taom_cc_taom_parent_goblin_6_text" text="산맥의 추방자들" />
+    <string id="taom_cc_taom_parent_goblin_6_desc" text="당신의 가문은 고블린 마을 사회의 변두리에서 살아가며, 무자비한 산길에서 교활함과 잔혹함으로 살아남았다." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_text" text="안개산맥의 전쟁군주들" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_desc" text="당신의 가문은 안개산맥의 귀족 정예에 속해, 조상의 터전을 되찾고 침략자로부터 지키는 데 헌신했다." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_text" text="모리아의 대장장이들" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_desc" text="당신의 가문은 숙련된 대장장이로서 안개산맥의 수호자들을 무장시킬 도구와 무기를 만들었다." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_text" text="안개산맥의 광부들" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_desc" text="당신의 가문은 안개산맥의 광산에서 지칠 줄 모르고 일하며 숨겨진 부를 캐냈다." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_text" text="회색산맥의 전사들" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_desc" text="당신의 가문은 회색산맥에서 오크와 여러 위협에 맞서 싸우며 동족의 명예를 지켰다." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_text" text="안개산맥의 순찰자들" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_desc" text="당신의 가문은 순찰자로 복무하며 안개산맥 주변의 황야를 순찰하고 그 국경을 위험으로부터 지켜냈다." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_text" text="산맥의 추방자들" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="당신의 가문은 안개산맥 사회의 변두리에서 살아가며, 무자비한 산길에서 교활함과 잔혹함으로 살아남았다." />
+    <string id="taom_cc_taom_youth_goblin_1_text" text="높은 고개의 와르그 무리와 함께 달렸다." />
+    <string id="taom_cc_taom_youth_goblin_1_desc" text="당신은 높은 고개의 와르그 기수들과 함께 훈련하며, 험난한 산길에서 그 사나운 짐승을 다루고 그 등 위에서 창과 랜스로 공격하는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_goblin_2_text" text="고블린 마을의 굴을 지켰다." />
+    <string id="taom_cc_taom_youth_goblin_2_desc" text="당신은 고블린 마을의 굴에서 복무하며 활과 창으로 대장간과 터널을 침입자로부터 지켰다." />
+    <string id="taom_cc_taom_youth_goblin_3_text" text="광전사들과 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_goblin_3_desc" text="당신은 고블린 마을의 광전사들 사이에서 무모한 분노와 압도적인 힘으로 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_goblin_4_text" text="산길을 정찰했다." />
+    <string id="taom_cc_taom_youth_goblin_4_desc" text="당신은 고블린 마을 주변의 험난한 산길을 누비며 적을 추적하고 동족의 안전한 통행을 확보했다." />
+    <string id="taom_cc_taom_youth_goblin_5_text" text="고블린 마을의 창병 군단에서 전열을 지켰다." />
+    <string id="taom_cc_taom_youth_goblin_5_desc" text="당신은 높은 고개의 중창병 대형과 함께 훈련하고 행군하며, 돌격을 버텨내고 가혹한 북방의 환경 속에서 교대가 올 때까지 자리를 지키는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_goblin_6_text" text="고갯길의 약탈자 무리와 함께 떠돌았다." />
+    <string id="taom_cc_taom_youth_goblin_6_desc" text="당신은 산악 씨족의 체계 밖에서 살며, 전쟁 무리를 뒤따라 모든 전투의 잔해를 뒤지던 손 빠른 기회주의자들과 함께 움직였다. 투척 무기와 빠른 두 다리만이 당신을 살아남게 했다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_text" text="안개산맥의 와르그 기수들과 함께 달렸다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_desc" text="당신은 안개산맥의 와르그 기수들과 함께 훈련하며, 험난한 산길에서 그 사나운 짐승을 다루고 그 등 위에서 창과 랜스로 공격하는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_text" text="모리아의 깊은 대장간을 지켰다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_desc" text="당신은 모리아의 수비대에서 복무하며 활과 창으로 대장간과 터널을 침입자로부터 지켰다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_text" text="광전사들과 함께 훈련했다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_desc" text="당신은 안개산맥의 광전사들 사이에서 무모한 분노와 압도적인 힘으로 싸우는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_text" text="산길을 정찰했다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_desc" text="당신은 안개산맥 주변의 험난한 산길을 누비며 적을 추적하고 동족의 안전한 통행을 확보했다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="안개산맥의 창병 군단에서 전열을 지켰다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_desc" text="당신은 안개산맥의 중창병 대형과 함께 훈련하고 행군하며, 돌격을 버텨내고 가혹한 북방의 환경 속에서 교대가 올 때까지 자리를 지키는 법을 배웠다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_text" text="고갯길의 약탈꾼 무리와 함께 떠돌았다." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_desc" text="당신은 산악 씨족의 체계 밖에서 살았고, 전투 무리를 뒤따라 다니며 모든 접전의 잔해를 뒤지는 손 빠른 기회주의자들과 함께 움직였다. 투척 무기와 날랜 두 다리가 다른 무엇도 해줄 수 없을 때 당신을 살려주었다." />
+    <string id="taom_cc_taom_education_goblin_1_text" text="고블린 마을의 굴 회랑에서 훈련받았다." />
+    <string id="taom_cc_taom_education_goblin_1_desc" text="당신은 산악 요새의 횃불이 밝혀진 훈련장에서 첫 피를 보았고, 북부 오크 씨족의 전통에 따라 거칠게 말을 몰고 무거운 무기를 휘두르는 법을 배웠다. 지위는 원로들 앞의 투기장에서 자신을 증명한 자에게 돌아갔다." />
+    <string id="taom_cc_taom_education_goblin_2_text" text="고블린 마을의 무기 대장장이 밑에서 도제로 일했다." />
+    <string id="taom_cc_taom_education_goblin_2_desc" text="당신은 산속의 시끄러운 대장간에서 조잡하지만 쓸 만한 무기를 벼리는 법을 배웠고, 그것을 물자와 호의로 바꾸는 법도 익혔다. 일은 추했지만 기술은 진짜였고, 당신은 쇠와 거래를 모두 아는 채로 대장간을 떠났다." />
+    <string id="taom_cc_taom_education_goblin_3_text" text="산 아래 광산에서 굴을 팠다." />
+    <string id="taom_cc_taom_education_goblin_3_desc" text="당신은 고블린 마을의 빛 없는 갱도에서 곡괭이를 휘두르며 산의 구조와 갱목 지지대의 공학을 익혔다. 굴은 당신의 집이었고 눈을 감고도 다닐 수 있었는데, 실제로 그래야 할 때가 많았다." />
+    <string id="taom_cc_taom_education_goblin_4_text" text="회색산맥의 고갯길에서 싸웠다." />
+    <string id="taom_cc_taom_education_goblin_4_desc" text="당신은 회색산맥을 습격하는 무리와 함께 다니며 북부 씨족의 잔혹한 치고 빠지기 방식으로 도끼와 창을 쓰는 법을 배웠다. 돌아올 때마다 당신은 더 사나워졌고 자신의 생존을 조금 더 확신하게 되었다." />
+    <string id="taom_cc_taom_education_goblin_5_text" text="고블린 마을 주변의 황야를 돌아다녔다." />
+    <string id="taom_cc_taom_education_goblin_5_desc" text="당신은 산악 요새를 둘러싼 바위투성이 황무지를 순찰하며 침입자를 추적하고 적의 움직임을 읽었다. 차가운 북방의 야생은 당신에게 인내심과, 어떤 표적보다도 오래 버티는 궁수의 고요함을 주었다." />
+    <string id="taom_cc_taom_education_goblin_6_text" text="산길에서 홀로 살아남았다." />
+    <string id="taom_cc_taom_education_goblin_6_desc" text="쫓겨났든 빚을 피해 달아났든, 당신은 산 주변의 험한 고갯길에서 도둑질과 임기응변으로 스스로를 건사했다. 그 경험은 충성심에 대한 환상을 모두 없애주었고, 곤경에서 빠져나오는 날카로운 재능을 남겼다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_text" text="모리아의 전쟁 회랑에서 훈련받았다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_desc" text="당신은 산악 요새의 횃불이 밝혀진 훈련장에서 첫 피를 보았고, 북부 오크 씨족의 전통에 따라 거칠게 말을 몰고 무거운 무기를 휘두르는 법을 배웠다. 지위는 원로들 앞의 투기장에서 자신을 증명한 자에게 돌아갔다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_text" text="안개산맥의 무기 대장장이 밑에서 도제로 일했다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_desc" text="당신은 산속의 시끄러운 대장간에서 조잡하지만 쓸 만한 무기를 벼리는 법을 배웠고, 그것을 물자와 호의로 바꾸는 법도 익혔다. 일은 추했지만 기술은 진짜였고, 당신은 쇠와 거래를 모두 아는 채로 대장간을 떠났다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_text" text="산 아래 광산에서 굴을 팠다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_desc" text="당신은 안개산맥의 빛 없는 갱도에서 곡괭이를 휘두르며 산의 구조와 갱목 지지대의 공학을 익혔다. 굴은 당신의 집이었고 눈을 감고도 다닐 수 있었는데, 실제로 그래야 할 때가 많았다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_text" text="회색산맥의 고갯길에서 싸웠다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_desc" text="당신은 회색산맥을 습격하는 무리와 함께 다니며 북부 씨족의 잔혹한 치고 빠지기 방식으로 도끼와 창을 쓰는 법을 배웠다. 돌아올 때마다 당신은 더 사나워졌고 자신의 생존을 조금 더 확신하게 되었다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_text" text="안개산맥 주변의 황야를 돌아다녔다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_desc" text="당신은 산악 요새를 둘러싼 바위투성이 황무지를 순찰하며 침입자를 추적하고 적의 움직임을 읽었다. 차가운 북방의 야생은 당신에게 인내심과, 어떤 표적보다도 오래 버티는 궁수의 고요함을 주었다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_text" text="산길에서 홀로 살아남았다." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_desc" text="쫓겨났든 빚을 피해 달아났든, 당신은 산 주변의 험한 고갯길에서 도둑질과 임기응변으로 스스로를 건사했다. 그 경험은 충성심에 대한 환상을 모두 없애주었고, 곤경에서 빠져나오는 날카로운 재능을 남겼다." />
+    <string id="taom_cc_taom_adulthood_goblin_1_text" text="당신은 대(大) 산악 대회에서 우승하여 전쟁족장의 가신이 되었다." />
+    <string id="taom_cc_taom_adulthood_goblin_1_desc" text="대회는 대전당에서 세 차례의 잔혹한 라운드로 치러졌다. 당신은 아무도 주목하지 않는 자로 들어갔다가 전쟁족장의 은팔찌와 더 나은 잠자리를 얻어 나왔다. 다른 참가자들은 이전의 그 무엇보다도 이 승리로 당신을 존중하게 되었다." />
+    <string id="taom_cc_taom_adulthood_goblin_2_text" text="당신은 남부 오크 씨족과 수익성 있는 무기 교역을 성사시켰다." />
+    <string id="taom_cc_taom_adulthood_goblin_2_desc" text="남부 씨족에게는 쇠가 있었지만 대장장이가 없었다. 고블린 마을에는 손재주꾼이 있었지만 식량과 모피가 필요했다. 당신은 첫 거래를 중개하고 조건을 정했으며, 그 거래가 관행이 될 만큼 오래 양측이 서로를 죽이지 않도록 붙잡아두었다. 전쟁족장은 당신에게 몫을 주었다." />
+    <string id="taom_cc_taom_adulthood_goblin_3_text" text="당신은 부분 붕괴 이후 하부 갱도를 보강했다." />
+    <string id="taom_cc_taom_adulthood_goblin_3_desc" text="붕괴로 하부 갱도에 오크 여덟이 갇혔다. 당신은 응력 양상을 파악하고 보강 작업을 지휘하여, 뒤이은 2차 붕괴가 그들을 죽이기 전에 인부들을 안전하게 빼냈다. 전쟁족장의 기술자는 당신에게 도면을 넘겨주었다." />
+    <string id="taom_cc_taom_adulthood_goblin_4_text" text="당신은 회색산맥의 드워프 전초기지를 무너뜨린 습격을 이끌었다." />
+    <string id="taom_cc_taom_adulthood_goblin_4_desc" text="드워프들이 고블린 마을이 겨울 습격에 쓰던 고갯길을 요새화하여 길을 막았고, 산은 한 철의 약탈을 통째로 잃었다. 당신은 공격을 계획하고 선봉에 서서 단 한 번의 돌파로 전초기지의 문을 부쉈다. 고갯길은 다시 열렸다. 드워프들은 돌아오지 않았다." />
+    <string id="taom_cc_taom_adulthood_goblin_5_text" text="당신은 나흘간 드워프 정찰대를 추적해 그들의 지도를 가져왔다." />
+    <string id="taom_cc_taom_adulthood_goblin_5_desc" text="드워프들이 회색산맥에서 무언가를 지도로 그리고 있었고, 고블린 마을은 그것이 무엇인지 알아야 했다. 당신은 들키지 않고 높은 고갯길을 넘어 그들을 뒤쫓았고, 야영할 때까지 기다렸다가 지도를 빼내어 그들이 경보를 울리기도 전에 요새로 돌아왔다." />
+    <string id="taom_cc_taom_adulthood_goblin_6_text" text="당신은 경쟁 전쟁수장에게 절도 누명을 씌우고 그 자리를 차지했다." />
+    <string id="taom_cc_taom_adulthood_goblin_6_desc" text="그 경쟁자는 뇌물과 더 나은 인맥으로 2년 동안 당신의 승진을 막아왔다. 당신은 그가 무엇을 소중히 여기는지 알아내어, 적절한 물건이 잘못된 장소에 잘못된 때에 놓이도록 꾸미고, 알맞은 순간에 그것을 '발견'했다. 그달이 가기 전에 당신은 그의 자리를 차지했다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_text" text="당신은 대(大) 산악 대회에서 우승하여 전쟁족장의 가신이 되었다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_desc" text="대회는 대전당에서 세 차례의 잔혹한 라운드로 치러졌다. 당신은 아무도 주목하지 않는 자로 들어갔다가 전쟁족장의 은팔찌와 더 나은 잠자리를 얻어 나왔다. 다른 참가자들은 이전의 그 무엇보다도 이 승리로 당신을 존중하게 되었다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_text" text="당신은 남쪽 오크 씨족과 이익이 남는 무기 거래를 성사시켰다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_desc" text="남쪽 씨족에는 철은 있었으나 대장장이가 없었다. 모리아에는 대장장이가 있었으나 식량과 모피가 필요했다. 당신은 첫 교환을 중개하고 조건을 정했으며, 그 거래가 관례가 될 만큼 오래도록 양측이 서로를 죽이지 못하게 막았다. 전쟁 두목은 당신에게 몫을 떼어 주었다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_text" text="당신은 일부 붕괴가 일어난 뒤 아래쪽 갱도를 보강했다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_desc" text="붕괴로 오크 여덟이 아래쪽 갱도에 갇혔다. 당신은 응력 방향을 살피고 보강 작업을 지휘하여, 뒤이어 그들을 죽였을 2차 붕괴가 일어나기 전에 인부들을 안전한 곳으로 빼냈다. 전쟁 두목의 기술자는 그 설계도를 당신에게 넘겨주었다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_text" text="당신은 회색산맥의 난쟁이 전초기지를 무너뜨린 습격을 이끌었다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_desc" text="난쟁이들은 안개산맥이 겨울 약탈에 쓰던 고갯길을 요새화하여 길을 끊었고, 산은 한 계절치 노획물을 통째로 잃었다. 당신은 공격을 계획하고 선봉에 서서 단 한 번의 돌격으로 전초기지의 문을 부쉈다. 고갯길은 다시 열렸다. 난쟁이들은 돌아오지 않았다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_text" text="당신은 난쟁이 정찰대를 나흘간 추적하여 그들의 지도를 가져왔다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_desc" text="난쟁이들은 회색산맥에서 무언가를 지도로 그리고 있었고, 안개산맥은 그것이 무엇인지 알아야 했다. 당신은 들키지 않고 높은 고갯길을 따라 그들을 뒤쫓았고, 야영할 때까지 기다렸다가 지도를 빼앗아, 그들이 경보를 울리기도 전에 요새로 돌아왔다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_text" text="당신은 경쟁 전쟁 지휘관에게 절도 누명을 씌우고 그 자리를 차지했다." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_desc" text="그 경쟁자는 뇌물과 더 나은 연줄로 2년간 당신의 승진을 가로막아 왔다. 당신은 그가 아끼는 것이 무엇인지 알아내고, 적절한 물건이 잘못된 장소에 잘못된 시간에 놓이도록 꾸민 뒤, 알맞은 순간에 그것을 '발견'했다. 그 달이 가기 전에 그의 자리는 당신 것이 되었다." />
+    <string id="taom_cc_career_title" text="경력" />
+    <string id="taom_cc_career_desc" text="당신의 경험이 하나의 길을 열었다. 그대의 전설을 규정할 경력을 선택하라." />
+    <string id="taom_cc_career_none" text="전문 분야 없음" />
+    <string id="taom_cc_career_none_desc" text="당신은 아직 특정한 길을 정하지 않았다. 당신의 경력은 세상에서의 행동으로 결정될 것이다." />
   </strings>
 </base>

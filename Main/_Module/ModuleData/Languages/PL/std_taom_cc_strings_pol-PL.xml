@@ -778,5 +778,105 @@
     <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="Trucizna działała szybko, a szaman orzekł, że nic nie da się zrobić. Ty jednak pamiętałeś inną naukę — wywar z roślin zimnego stepu, który pomagał przy tego rodzaju ranach. Przygotowałeś go, podałeś i przesiedziałeś całą noc. Wódz wyzdrowiał. Dał ci miejsce w swojej radzie." />
     <string id="taom_cc_taom_adulthood_khuzait_6_text" text="Zbadałeś gondorską twierdzę Cair Andros i sporządziłeś mapę jej słabości." />
     <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="Wódz bitewny musiał wiedzieć, czy twierdzę można ominąć, czy trzeba ją zdobyć. Poszedłeś sam, cztery dni obserwowałeś ją ze wschodniego brzegu rzeki i wróciłeś ze szczegółową oceną siły załogi, harmonogramu dostaw oraz kierunku natarcia dającego najlepsze szanse. Wódz nazwał to najbardziej przydatnym raportem, jaki otrzymał w całej kampanii." />
+    <string id="taom_cc_taom_parent_goblin_1_text" text="Wodzowie Goblinowa" />
+    <string id="taom_cc_taom_parent_goblin_1_desc" text="Twoja rodzina należała do szlachetnej elity Goblinowa, oddanej odzyskaniu odwiecznej siedziby i obronie jej przed najeźdźcami." />
+    <string id="taom_cc_taom_parent_goblin_2_text" text="Majsterkowicze z Goblinowa" />
+    <string id="taom_cc_taom_parent_goblin_2_desc" text="Twoja rodzina to byli wprawni kowale, wykuwający narzędzia i broń dla obrońców Goblinowa." />
+    <string id="taom_cc_taom_parent_goblin_3_text" text="Górnicy z Goblinowa" />
+    <string id="taom_cc_taom_parent_goblin_3_desc" text="Twoja rodzina niestrudzenie pracowała w kopalniach Goblinowa, wydobywając jego ukryte bogactwa." />
+    <string id="taom_cc_taom_parent_goblin_4_text" text="Wojownicy Gór Szarych" />
+    <string id="taom_cc_taom_parent_goblin_4_desc" text="Twoja rodzina walczyła z orkami i innymi zagrożeniami w Górach Szarych, strzegąc honoru swego rodu." />
+    <string id="taom_cc_taom_parent_goblin_5_text" text="Zwiadowcy Goblinowa" />
+    <string id="taom_cc_taom_parent_goblin_5_desc" text="Twoja rodzina służyła jako zwiadowcy, patrolując dzikie ostępy wokół Goblinowa i strzegąc jego granic przed niebezpieczeństwem." />
+    <string id="taom_cc_taom_parent_goblin_6_text" text="Wyrzutkowie gór" />
+    <string id="taom_cc_taom_parent_goblin_6_desc" text="Twoja rodzina żyła na obrzeżach społeczności Goblinowa, przetrwając dzięki sprytowi i bezwzględności w bezlitosnych górskich przełęczach." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_text" text="Wodzowie Gór Mglistych" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_desc" text="Twoja rodzina należała do możnej elity Gór Mglistych, oddanej odzyskaniu siedziby przodków i obronie jej przed najeźdźcami." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_text" text="Kowale Morii" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_desc" text="Twoja rodzina to biegli kowale, wykuwający narzędzia i broń dla obrońców Gór Mglistych." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_text" text="Górnicy Gór Mglistych" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_desc" text="Twoja rodzina niestrudzenie pracowała w kopalniach Gór Mglistych, wydobywając ich ukryte bogactwa." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_text" text="Wojownicy Gór Szarych" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_desc" text="Twoja rodzina walczyła z orkami i innymi zagrożeniami w Górach Szarych, strzegąc honoru swego rodu." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_text" text="Zwiadowcy Gór Mglistych" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_desc" text="Twoja rodzina służyła jako zwiadowcy, patrolując dzikie ostępy wokół Gór Mglistych i strzegąc ich granic przed niebezpieczeństwem." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_text" text="Wyrzutkowie gór" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="Twoja rodzina żyła na obrzeżach społeczności Gór Mglistych, przetrwając dzięki sprytowi i bezwzględności w bezlitosnych górskich przełęczach." />
+    <string id="taom_cc_taom_youth_goblin_1_text" text="Jeździłeś z watahami wargów Wysokiej Przełęczy." />
+    <string id="taom_cc_taom_youth_goblin_1_desc" text="Szkoliłeś się z jeźdźcami wargów z Wysokiej Przełęczy, ucząc się panować nad dzikimi bestiami na zdradliwych górskich szlakach i uderzać z ich grzbietów kopią i włócznią." />
+    <string id="taom_cc_taom_youth_goblin_2_text" text="Strzegłeś nor Goblinowa." />
+    <string id="taom_cc_taom_youth_goblin_2_desc" text="Służyłeś w norach Goblinowa, broniąc kuźni i tuneli przed intruzami łukiem i włócznią." />
+    <string id="taom_cc_taom_youth_goblin_3_text" text="Szkoliłeś się wśród berserkerów." />
+    <string id="taom_cc_taom_youth_goblin_3_desc" text="Byłeś jednym z berserkerów Goblinowa, ucząc się walczyć z bezmyślną furią i miażdżącą siłą." />
+    <string id="taom_cc_taom_youth_goblin_4_text" text="Zwiadowałeś górskie przełęcze." />
+    <string id="taom_cc_taom_youth_goblin_4_desc" text="Przemierzałeś zdradliwe górskie ścieżki wokół Goblinowa, tropiąc wrogów i zapewniając bezpieczne przejście swoim pobratymcom." />
+    <string id="taom_cc_taom_youth_goblin_5_text" text="Trzymałeś szyk w legionach włóczników Goblinowa." />
+    <string id="taom_cc_taom_youth_goblin_5_desc" text="Ćwiczyłeś i maszerowałeś z ciężkimi formacjami włóczników Wysokiej Przełęczy, ucząc się przyjmować szarżę i utrzymywać pozycję w brutalnych północnych warunkach, aż nadejdzie zmiana." />
+    <string id="taom_cc_taom_youth_goblin_6_text" text="Włóczyłeś się z bandami szabrowników z przełęczy." />
+    <string id="taom_cc_taom_youth_goblin_6_desc" text="Żyłeś poza strukturą górskich klanów, wędrując ze zwinnopalcymi oportunistami, którzy podążali za bandami wojennymi i przetrząsali pobojowiska po każdej potyczce. Broń miotana i szybkie nogi utrzymywały cię przy życiu, gdy nic innego nie mogło." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_text" text="Jeździłeś z jeźdźcami wargów Gór Mglistych." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_desc" text="Szkoliłeś się z jeźdźcami wargów z Gór Mglistych, ucząc się panować nad dzikimi bestiami na zdradliwych górskich szlakach i uderzać z ich grzbietów kopią i włócznią." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_text" text="Strzegłeś głębokich kuźni Morii." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_desc" text="Służyłeś w garnizonie Morii, broniąc kuźni i tuneli przed intruzami łukiem i włócznią." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_text" text="Szkoliłeś się wśród berserkerów." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_desc" text="Byłeś jednym z berserkerów Gór Mglistych, ucząc się walczyć z bezmyślną furią i miażdżącą siłą." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_text" text="Zwiadowałeś górskie przełęcze." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_desc" text="Przemierzałeś zdradliwe górskie ścieżki wokół Gór Mglistych, tropiąc wrogów i zapewniając bezpieczne przejście swoim pobratymcom." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="Trzymałeś szyk w legionach włóczników Gór Mglistych." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_desc" text="Ćwiczyłeś i maszerowałeś z ciężkimi formacjami włóczników Gór Mglistych, ucząc się przyjmować szarżę i utrzymywać pozycję w brutalnych północnych warunkach, aż nadejdzie zmiana." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_text" text="Włóczyłeś się z bandami padlinożerców z przełęczy." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_desc" text="Żyłeś poza strukturą górskich klanów, przemieszczając się z szybkopalcymi oportunistami, którzy podążali za watahami wojowników i przetrząsali pobojowiska po każdej potyczce. Broń miotana i szybkie nogi utrzymywały cię przy życiu, gdy nic innego nie mogło." />
+    <string id="taom_cc_taom_education_goblin_1_text" text="Szkolony w tunelowych salach Goblinowa." />
+    <string id="taom_cc_taom_education_goblin_1_desc" text="Zostałeś zaprawiony w krwi w oświetlonych pochodniami salach treningowych górskiej twierdzy, ucząc się twardej jazdy i władania ciężką bronią w tradycji północnych klanów orków. Poważanie zyskiwali ci, którzy potrafili wykazać się w dole na oczach starszyzny." />
+    <string id="taom_cc_taom_education_goblin_2_text" text="Terminowałeś u płatnerzy Goblinowa." />
+    <string id="taom_cc_taom_education_goblin_2_desc" text="Nauczyłeś się kuć prostą, lecz skuteczną broń w hałaśliwych kuźniach góry i wymieniać ją na zapasy i przysługi. Robota była paskudna, ale umiejętności prawdziwe — odszedłeś od kuźni znając się i na żelazie, i na targach." />
+    <string id="taom_cc_taom_education_goblin_3_text" text="Kopałeś w kopalniach pod górą." />
+    <string id="taom_cc_taom_education_goblin_3_desc" text="Machałeś kilofem w pozbawionych światła szybach Goblinowa, poznając budowę góry i sztukę stawiania podpór. Tunele były twoim domem i potrafiłeś poruszać się po nich na ślepo — co często było koniecznością." />
+    <string id="taom_cc_taom_education_goblin_4_text" text="Walczyłeś na przełęczach Gór Szarych." />
+    <string id="taom_cc_taom_education_goblin_4_desc" text="Włóczyłeś się z bandami łupieżców uderzającymi w Góry Szare, ucząc się walki toporem i włócznią w brutalnym stylu uderz-i-uciekaj północnych klanów. Za każdym razem wracałeś podlejszy i nieco pewniejszy własnego przetrwania." />
+    <string id="taom_cc_taom_education_goblin_5_text" text="Przemierzałeś dzikie ziemie wokół Goblinowa." />
+    <string id="taom_cc_taom_education_goblin_5_desc" text="Patrolowałeś skalistą głuszę otaczającą górską twierdzę, tropiąc intruzów i odczytując ślady ruchów wroga. Zimne północne pustkowia dały ci cierpliwość i bezruch łucznika, który przetrzyma każdy cel." />
+    <string id="taom_cc_taom_education_goblin_6_text" text="Przetrwałeś samotnie na górskich przełęczach." />
+    <string id="taom_cc_taom_education_goblin_6_desc" text="Wygnany lub uciekający przed jakimś długiem, radziłeś sobie sam na zdradliwych przełęczach wokół góry, żyjąc z kradzieży i sprytu. Doświadczenie pozbawiło cię złudzeń co do lojalności i dało ostry talent do wywijania się z kłopotów." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_text" text="Szkolony w salach wojennych Morii." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_desc" text="Zostałeś zaprawiony w krwi w oświetlonych pochodniami salach treningowych górskiej twierdzy, ucząc się twardej jazdy i władania ciężką bronią w tradycji północnych klanów orków. Poważanie zyskiwali ci, którzy potrafili wykazać się w dole na oczach starszyzny." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_text" text="Terminowałeś u płatnerzy Gór Mglistych." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_desc" text="Nauczyłeś się kuć prostą, lecz skuteczną broń w hałaśliwych kuźniach góry i wymieniać ją na zapasy i przysługi. Robota była paskudna, ale umiejętności prawdziwe — odszedłeś od kuźni znając się i na żelazie, i na targach." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_text" text="Kopałeś w kopalniach pod górą." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_desc" text="Machałeś kilofem w pozbawionych światła szybach Gór Mglistych, poznając budowę góry i sztukę stawiania podpór. Tunele były twoim domem i potrafiłeś poruszać się po nich na ślepo — co często było koniecznością." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_text" text="Walczyłeś na przełęczach Gór Szarych." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_desc" text="Włóczyłeś się z bandami łupieżców uderzającymi w Góry Szare, ucząc się walki toporem i włócznią w brutalnym stylu uderz-i-uciekaj północnych klanów. Za każdym razem wracałeś podlejszy i nieco pewniejszy własnego przetrwania." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_text" text="Przemierzałeś dzikie ziemie wokół Gór Mglistych." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_desc" text="Patrolowałeś skalistą głuszę otaczającą górską twierdzę, tropiąc intruzów i odczytując ślady ruchów wroga. Zimne północne pustkowia dały ci cierpliwość i bezruch łucznika, który przetrzyma każdy cel." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_text" text="Przetrwałeś samotnie na górskich przełęczach." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_desc" text="Wygnany lub uciekający przed jakimś długiem, radziłeś sobie sam na zdradliwych przełęczach wokół góry, żyjąc z kradzieży i sprytu. Doświadczenie pozbawiło cię złudzeń co do lojalności i dało ostry talent do wywijania się z kłopotów." />
+    <string id="taom_cc_taom_adulthood_goblin_1_text" text="Wygrałeś Wielki Turniej Góry i zostałeś nazwany sługą wodza wojennego." />
+    <string id="taom_cc_taom_adulthood_goblin_1_desc" text="Turniej rozegrano w trzech brutalnych rundach w głównej sali. Wszedłeś jako niczyj faworyt, a wyszedłeś ze srebrnym naramiennikiem wodza i lepszą pryczą. Inni zawodnicy szanowali cię za to zwycięstwo bardziej niż za cokolwiek wcześniej." />
+    <string id="taom_cc_taom_adulthood_goblin_2_text" text="Nawiązałeś zyskowny handel bronią z południowym klanem orków." />
+    <string id="taom_cc_taom_adulthood_goblin_2_desc" text="Klan z południa miał żelazo, ale nie miał kowali. Goblinowo miało majstrów, lecz potrzebowało jadła i futer. Ty pośredniczyłeś w pierwszej wymianie, ustaliłeś warunki i powstrzymałeś obie strony od wyrżnięcia się nawzajem na tyle długo, by układ wszedł w zwyczaj. Wódz przyznał ci działkę." />
+    <string id="taom_cc_taom_adulthood_goblin_3_text" text="Wzmocniłeś dolne chodniki kopalni po częściowym zawale." />
+    <string id="taom_cc_taom_adulthood_goblin_3_desc" text="Zawał uwięził ośmiu orków w dolnym chodniku. Oceniłeś rozkład naprężeń, pokierowałeś pracami wzmacniającymi i wyprowadziłeś załogę w bezpieczne miejsce, zanim wtórny zawał zdążył ich zabić. Inżynier wodza pozwolił ci zatrzymać plany." />
+    <string id="taom_cc_taom_adulthood_goblin_4_text" text="Poprowadziłeś napad, który złamał krasnoludzką strażnicę w Górach Szarych." />
+    <string id="taom_cc_taom_adulthood_goblin_4_desc" text="Krasnoludowie ufortyfikowali przełęcz, której Goblinowo używało do zimowych wypraw, odcinając dostęp i kosztując górę cały sezon łupów. Zaplanowałeś szturm, poprowadziłeś czoło i rozbiłeś bramę strażnicy jednym uderzeniem. Przełęcz znów stanęła otworem. Krasnoludowie nie wrócili." />
+    <string id="taom_cc_taom_adulthood_goblin_5_text" text="Tropiłeś krasnoludzki oddział zwiadowczy przez cztery dni i przyniosłeś ich mapy." />
+    <string id="taom_cc_taom_adulthood_goblin_5_desc" text="Krasnoludowie coś kartowali w Górach Szarych, a Goblinowo musiało wiedzieć co. Szedłeś za nimi przez wysokie przełęcze niezauważony, czekałeś, aż rozbiją obóz, zabrałeś mapy i wróciłeś do twierdzy, zanim podnieśli alarm." />
+    <string id="taom_cc_taom_adulthood_goblin_6_text" text="Wrobiłeś rywalizującego wodza w kradzież i zająłeś jego miejsce." />
+    <string id="taom_cc_taom_adulthood_goblin_6_desc" text="Rywal blokował twój awans przez dwa lata łapówkami i lepszymi znajomościami. Ustaliłeś, co ceni najbardziej, zadbałeś, by właściwe przedmioty znalazły się w niewłaściwym miejscu o niewłaściwej porze, i dokonałeś odkrycia we właściwej chwili. Przed końcem miesiąca zajmowałeś jego stanowisko." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_text" text="Wygrałeś Wielki Turniej Góry i zostałeś nazwany sługą wodza wojennego." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_desc" text="Turniej rozegrano w trzech brutalnych rundach w głównej sali. Wszedłeś jako niczyj faworyt, a wyszedłeś ze srebrnym naramiennikiem wodza i lepszą pryczą. Inni zawodnicy szanowali cię za to zwycięstwo bardziej niż za cokolwiek wcześniej." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_text" text="Nawiązałeś zyskowny handel bronią z południowym klanem orków." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_desc" text="Południowy klan miał żelazo, lecz nie miał kowali. Moria miała kowali, ale potrzebowała żywności i futer. To ty pośredniczyłeś w pierwszej wymianie, ustaliłeś warunki i powstrzymywałeś obie strony od wzajemnej rzezi na tyle długo, by układ wszedł w zwyczaj. Wódz wojenny przyznał ci procent." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_text" text="Zabezpieczyłeś dolne chodniki kopalni po częściowym zawaleniu." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_desc" text="Zawał uwięził ośmiu orków w dolnym chodniku. Oceniłeś rozkład naprężeń, pokierowałeś pracami wzmacniającymi i wyprowadziłeś drużynę w bezpieczne miejsce, zanim wtórne zawalenie zdążyło ich zabić. Inżynier wodza wojennego oddał ci plany na własność." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_text" text="Poprowadziłeś napad, który złamał krasnoludzką strażnicę w Górach Szarych." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_desc" text="Krasnoludowie umocnili przełęcz, z której Góry Mgliste korzystały przy zimowych wyprawach, odcinając dostęp i pozbawiając górę całego sezonu łupów. Zaplanowałeś szturm, poprowadziłeś czoło i rozbiłeś bramę strażnicy jednym natarciem. Przełęcz znów stanęła otworem. Krasnoludowie nie wrócili." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_text" text="Tropiłeś krasnoludzki oddział zwiadowczy przez cztery dni i przyniosłeś ich mapy." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_desc" text="Krasnoludowie coś kartografowali w Górach Szarych, a Góry Mgliste musiały wiedzieć co. Szedłeś za nimi przez wysokie przełęcze niezauważony, odczekałeś, aż rozbiją obóz, zabrałeś mapy i wróciłeś do twierdzy, nim podnieśli alarm." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_text" text="Wrobiłeś rywalizującego wodza w kradzież i przejąłeś jego stanowisko." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_desc" text="Rywal od dwóch lat blokował twój awans łapówkami i lepszymi znajomościami. Ustaliłeś, co ceni najbardziej, zadbałeś, by właściwe przedmioty znalazły się w niewłaściwym miejscu o niewłaściwej porze, i dokonałeś odkrycia w odpowiedniej chwili. Jego stanowisko było twoje przed końcem miesiąca." />
+    <string id="taom_cc_career_title" text="Kariera" />
+    <string id="taom_cc_career_desc" text="Twoje doświadczenia wytyczyły ci drogę. Wybierz karierę, która określi twoją legendę." />
+    <string id="taom_cc_career_none" text="Brak specjalizacji" />
+    <string id="taom_cc_career_none_desc" text="Nie obrałeś jeszcze żadnej konkretnej drogi. Twoją karierę wyznaczą czyny, których dokonasz w świecie." />
   </strings>
 </base>

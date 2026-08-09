@@ -778,5 +778,105 @@
     <string id="taom_cc_taom_adulthood_khuzait_5_desc" text="O veneno era de ação rápida e o xamã disse que não havia nada a fazer. Você se lembrou de um ensinamento diferente — uma preparação das plantas frias da estepe que funcionava contra este tipo de ferimento. Você a preparou, aplicou e ficou durante a noite. O chefe se recuperou. Ele lhe deu um lugar em seu conselho." />
     <string id="taom_cc_taom_adulthood_khuzait_6_text" text="Você explorou a fortaleza Gondoriana em Cair Andros e mapeou suas fraquezas." />
     <string id="taom_cc_taom_adulthood_khuzait_6_desc" text="O senhor da batalha precisava saber se a fortaleza podia ser contornada ou tinha que ser reduzida. Você foi à frente sozinho, passou quatro dias observando da margem oriental do rio e retornou com uma avaliação detalhada da força da guarnição, cronograma de suprimentos e a abordagem que dava as melhores chances. O senhor da batalha chamou de o relatório mais útil que havia recebido em uma campanha." />
+    <string id="taom_cc_taom_parent_goblin_1_text" text="Chefes da Cidade dos Gobelins" />
+    <string id="taom_cc_taom_parent_goblin_1_desc" text="Sua família fazia parte da elite nobre da Cidade dos Gobelins, dedicada a reconquistar seu lar ancestral e defendê-lo dos invasores." />
+    <string id="taom_cc_taom_parent_goblin_2_text" text="Artífices da Cidade dos Gobelins" />
+    <string id="taom_cc_taom_parent_goblin_2_desc" text="Sua família era de ferreiros habilidosos, forjando ferramentas e armas para equipar os defensores da Cidade dos Gobelins." />
+    <string id="taom_cc_taom_parent_goblin_3_text" text="Mineiros da Cidade dos Gobelins" />
+    <string id="taom_cc_taom_parent_goblin_3_desc" text="Sua família trabalhava incansavelmente nas minas da Cidade dos Gobelins, desenterrando suas riquezas ocultas." />
+    <string id="taom_cc_taom_parent_goblin_4_text" text="Guerreiros das Montanhas Cinzentas" />
+    <string id="taom_cc_taom_parent_goblin_4_desc" text="Sua família lutou contra Orcs e outras ameaças nas Montanhas Cinzentas, mantendo a honra de seu povo." />
+    <string id="taom_cc_taom_parent_goblin_5_text" text="Patrulheiros de Goblinópolis" />
+    <string id="taom_cc_taom_parent_goblin_5_desc" text="Sua família serviu como patrulheiros, vigiando as terras selvagens ao redor de Goblinópolis e protegendo suas fronteiras de qualquer ameaça." />
+    <string id="taom_cc_taom_parent_goblin_6_text" text="Renegados das Montanhas" />
+    <string id="taom_cc_taom_parent_goblin_6_desc" text="Sua família vivia às margens da sociedade de Goblinópolis, sobrevivendo pela astúcia e pela crueldade nos implacáveis desfiladeiros das montanhas." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_text" text="Senhores da Guerra das Montanhas Nevoentas" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_1_desc" text="Sua família estava entre a nobre elite das Montanhas Nevoentas, dedicada a reconquistar seu lar ancestral e a defendê-lo dos invasores." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_text" text="Ferreiros de Moria" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_2_desc" text="Sua família era de ferreiros habilidosos, forjando ferramentas e armas para equipar os defensores das Montanhas Nevoentas." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_text" text="Mineiros das Montanhas Nevoentas" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_3_desc" text="Sua família trabalhou incansavelmente nas minas das Montanhas Nevoentas, revelando suas riquezas ocultas." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_text" text="Guerreiros das Montanhas Cinzentas" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_4_desc" text="Sua família lutou contra Orcs e outras ameaças nas Montanhas Cinzentas, mantendo a honra de seu povo." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_text" text="Patrulheiros das Montanhas Nevoentas" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_5_desc" text="Sua família serviu como patrulheiros, vigiando as terras selvagens ao redor das Montanhas Nevoentas e protegendo suas fronteiras de qualquer ameaça." />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_text" text="Renegados das Montanhas" />
+    <string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="Sua família vivia às margens da sociedade das Montanhas Nevoentas, sobrevivendo pela astúcia e pela crueldade nos implacáveis desfiladeiros das montanhas." />
+    <string id="taom_cc_taom_youth_goblin_1_text" text="Cavalgou com as matilhas de wargs do Passo Alto." />
+    <string id="taom_cc_taom_youth_goblin_1_desc" text="Você treinou com os cavaleiros de Wargs do Passo Alto, aprendendo a controlar as bestas selvagens pelos traiçoeiros desfiladeiros das montanhas e a golpear com lança e azagaia de suas costas." />
+    <string id="taom_cc_taom_youth_goblin_2_text" text="Guardou os túneis de Goblinópolis." />
+    <string id="taom_cc_taom_youth_goblin_2_desc" text="Você serviu nos túneis de Goblinópolis, defendendo as forjas e as galerias contra invasores com arco e lança." />
+    <string id="taom_cc_taom_youth_goblin_3_text" text="Treinou com os berserkers." />
+    <string id="taom_cc_taom_youth_goblin_3_desc" text="Você esteve entre os berserkers de Goblinópolis, aprendendo a lutar com fúria imprudente e força avassaladora." />
+    <string id="taom_cc_taom_youth_goblin_4_text" text="Explorou os desfiladeiros das montanhas." />
+    <string id="taom_cc_taom_youth_goblin_4_desc" text="Você vagou pelas traiçoeiras trilhas montanhosas ao redor de Goblinópolis, rastreando inimigos e garantindo passagem segura para os seus." />
+    <string id="taom_cc_taom_youth_goblin_5_text" text="Manteve a linha nas legiões de lanceiros de Goblinópolis." />
+    <string id="taom_cc_taom_youth_goblin_5_desc" text="Você treinou e marchou com as formações de lanças pesadas do Passo Alto, aprendendo a resistir a uma carga e a manter a posição sob as brutais condições do norte até que a linha pudesse ser substituída." />
+    <string id="taom_cc_taom_youth_goblin_6_text" text="Andou com as bandas de saqueadores dos desfiladeiros." />
+    <string id="taom_cc_taom_youth_goblin_6_desc" text="Você viveu fora da estrutura dos clãs da montanha, movendo-se com os oportunistas de dedos ligeiros que seguiam as hostes de guerra e reviravam os restos de cada escaramuça. Armas de arremesso e um par de pernas rápidas o mantiveram vivo quando nada mais o faria." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_text" text="Cavalgou com os cavaleiros de wargs das Montanhas Nevoentas." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_1_desc" text="Você treinou com os cavaleiros de Wargs das Montanhas Nevoentas, aprendendo a controlar as bestas selvagens pelos traiçoeiros desfiladeiros das montanhas e a golpear com lança e azagaia de suas costas." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_text" text="Guardou as forjas profundas de Moria." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_2_desc" text="Você serviu na guarnição de Moria, defendendo as forjas e os túneis contra invasores com arco e lança." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_text" text="Treinou com os berserkers." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_3_desc" text="Você esteve entre os berserkers das Montanhas Nevoentas, aprendendo a lutar com fúria imprudente e força avassaladora." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_text" text="Explorou os desfiladeiros das montanhas." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_4_desc" text="Você vagou pelas traiçoeiras trilhas montanhosas ao redor das Montanhas Nevoentas, rastreando inimigos e garantindo passagem segura para os seus." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="Manteve a linha nas legiões de lanceiros das Montanhas Nevoentas." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_5_desc" text="Você treinou e marchou com as formações de lanças pesadas das Montanhas Nevoentas, aprendendo a resistir a uma carga e a manter a posição sob as brutais condições do norte até que a linha pudesse ser substituída." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_text" text="Andou com as bandas de saqueadores dos desfiladeiros." />
+    <string id="taom_cc_taom_youth_mistymountainorcs_6_desc" text="Você viveu fora da estrutura dos clãs da montanha, andando com os oportunistas de dedos rápidos que seguiam as hordas e catavam os restos de cada escaramuça. Armas de arremesso e um par de pernas velozes o mantiveram vivo quando nada mais o faria." />
+    <string id="taom_cc_taom_education_goblin_1_text" text="Treinado nos salões-túnel de Goblinburgo." />
+    <string id="taom_cc_taom_education_goblin_1_desc" text="Você foi iniciado no sangue nos salões de treinamento iluminados por tochas da fortaleza da montanha, aprendendo a cavalgar duro e a brandir armas pesadas na tradição dos clãs Orques do norte. O status ia para aqueles que conseguiam provar seu valor no fosso diante dos mais velhos." />
+    <string id="taom_cc_taom_education_goblin_2_text" text="Aprendiz entre os armeiros de Goblinburgo." />
+    <string id="taom_cc_taom_education_goblin_2_desc" text="Você aprendeu a forjar armas rudes mas eficazes nos ruidosos salões de forja da montanha, aprendendo a trocá-las por suprimentos e favores. O trabalho era feio, mas as habilidades eram reais, e você deixou a forja conhecendo tanto o ferro quanto a barganha." />
+    <string id="taom_cc_taom_education_goblin_3_text" text="Cavou nas minas sob a montanha." />
+    <string id="taom_cc_taom_education_goblin_3_desc" text="Você brandiu uma picareta nos poços sem luz de Goblinburgo, aprendendo a estrutura da montanha e a engenharia dos escoramentos. Os túneis eram sua casa e você podia percorrê-los às cegas, o que muitas vezes era exatamente o caso." />
+    <string id="taom_cc_taom_education_goblin_4_text" text="Lutou nos passos das Montanhas Cinzentas." />
+    <string id="taom_cc_taom_education_goblin_4_desc" text="Você correu com as hordas de pilhagem que atacavam as Montanhas Cinzentas, aprendendo a lutar com machado e lança no brutal estilo de golpear e fugir dos clãs do norte. Você voltava mais cruel a cada vez e um pouco mais certo da própria sobrevivência." />
+    <string id="taom_cc_taom_education_goblin_5_text" text="Percorreu as terras selvagens ao redor de Goblinburgo." />
+    <string id="taom_cc_taom_education_goblin_5_desc" text="Você patrulhou a natureza rochosa que cerca a fortaleza da montanha, rastreando intrusos e lendo os sinais de movimento inimigo. As frias terras selvagens do norte lhe deram paciência e a imobilidade de um arqueiro que sobrevivia a qualquer alvo." />
+    <string id="taom_cc_taom_education_goblin_6_text" text="Sobreviveu sozinho nos passos da montanha." />
+    <string id="taom_cc_taom_education_goblin_6_desc" text="Expulso ou fugindo de alguma dívida, você se sustentou nos traiçoeiros passos ao redor da montanha, sobrevivendo de roubo e raciocínio rápido. A experiência não lhe deixou ilusões sobre lealdade e um talento afiado para escapar de problemas." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_text" text="Treinado nos salões de guerra de Moria." />
+    <string id="taom_cc_taom_education_mistymountainorcs_1_desc" text="Você foi iniciado no sangue nos salões de treinamento iluminados por tochas da fortaleza da montanha, aprendendo a cavalgar duro e a brandir armas pesadas na tradição dos clãs Orques do norte. O status ia para aqueles que conseguiam provar seu valor no fosso diante dos mais velhos." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_text" text="Aprendiz entre os armeiros das Montanhas Nevoentas." />
+    <string id="taom_cc_taom_education_mistymountainorcs_2_desc" text="Você aprendeu a forjar armas rudes mas eficazes nos ruidosos salões de forja da montanha, aprendendo a trocá-las por suprimentos e favores. O trabalho era feio, mas as habilidades eram reais, e você deixou a forja conhecendo tanto o ferro quanto a barganha." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_text" text="Cavou nas minas sob a montanha." />
+    <string id="taom_cc_taom_education_mistymountainorcs_3_desc" text="Você brandiu uma picareta nos poços sem luz das Montanhas Nevoentas, aprendendo a estrutura da montanha e a engenharia dos escoramentos. Os túneis eram sua casa e você podia percorrê-los às cegas, o que muitas vezes era exatamente o caso." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_text" text="Lutou nos passos das Montanhas Cinzentas." />
+    <string id="taom_cc_taom_education_mistymountainorcs_4_desc" text="Você correu com as hordas de pilhagem que atacavam as Montanhas Cinzentas, aprendendo a lutar com machado e lança no brutal estilo de golpear e fugir dos clãs do norte. Você voltava mais cruel a cada vez e um pouco mais certo da própria sobrevivência." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_text" text="Percorreu as terras selvagens ao redor das Montanhas Nevoentas." />
+    <string id="taom_cc_taom_education_mistymountainorcs_5_desc" text="Você patrulhou a natureza rochosa que cerca a fortaleza da montanha, rastreando intrusos e lendo os sinais de movimento inimigo. As frias terras selvagens do norte lhe deram paciência e a imobilidade de um arqueiro que sobrevivia a qualquer alvo." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_text" text="Sobreviveu sozinho nos passos da montanha." />
+    <string id="taom_cc_taom_education_mistymountainorcs_6_desc" text="Expulso ou fugindo de alguma dívida, você se sustentou nos traiçoeiros passos ao redor da montanha, sobrevivendo de roubo e raciocínio rápido. A experiência não lhe deixou ilusões sobre lealdade e um talento afiado para escapar de problemas." />
+    <string id="taom_cc_taom_adulthood_goblin_1_text" text="Você venceu o Grande Torneio da Montanha e foi nomeado vassalo de um chefe de guerra." />
+    <string id="taom_cc_taom_adulthood_goblin_1_desc" text="O torneio foi disputado em três rodadas brutais no salão principal. Você entrou sem ser o favorito de ninguém e saiu com o bracelete de prata de um chefe de guerra e um catre melhor. Os outros competidores o respeitaram mais por essa vitória do que por qualquer coisa antes." />
+    <string id="taom_cc_taom_adulthood_goblin_2_text" text="Você estabeleceu um lucrativo comércio de armas com um clã Orque do sul." />
+    <string id="taom_cc_taom_adulthood_goblin_2_desc" text="O clã do sul tinha ferro, mas não tinha ferreiros. Goblinburgo tinha remendões, mas precisava de comida e peles. Você intermediou a primeira troca, fixou os termos e impediu que os dois lados se matassem por tempo suficiente para o acordo virar hábito. O chefe de guerra lhe deu uma porcentagem." />
+    <string id="taom_cc_taom_adulthood_goblin_3_text" text="Você escorou as galerias inferiores da mina depois de um desabamento parcial." />
+    <string id="taom_cc_taom_adulthood_goblin_3_desc" text="O desabamento havia prendido oito Orques na galeria inferior. Você avaliou o padrão de tensão, dirigiu o trabalho de reforço e levou a equipe à segurança antes que o desabamento secundário que se seguiu os matasse. O engenheiro do chefe de guerra lhe deu as plantas para guardar." />
+    <string id="taom_cc_taom_adulthood_goblin_4_text" text="Você liderou o ataque que destruiu o posto avançado Anão nas Montanhas Cinzentas." />
+    <string id="taom_cc_taom_adulthood_goblin_4_desc" text="Os Anões haviam fortificado um passo que Goblinburgo usava para as pilhagens de inverno, cortando o acesso e custando à montanha uma estação inteira de saques. Você planejou o assalto, liderou a vanguarda e arrebentou o portão do posto em um único avanço. O passo reabriu. Os Anões não voltaram." />
+    <string id="taom_cc_taom_adulthood_goblin_5_text" text="Você rastreou um grupo de batedores Anões por quatro dias e trouxe de volta seus mapas." />
+    <string id="taom_cc_taom_adulthood_goblin_5_desc" text="Os Anões estavam mapeando algo nas Montanhas Cinzentas e Goblinburgo precisava saber o quê. Você os seguiu pelos passos altos sem ser visto, esperou até que acampassem, tomou os mapas e estava de volta à fortaleza antes que dessem o alarme." />
+    <string id="taom_cc_taom_adulthood_goblin_6_text" text="Você incriminou um chefe rival por roubo e assumiu o posto dele." />
+    <string id="taom_cc_taom_adulthood_goblin_6_desc" text="O rival vinha bloqueando sua ascensão havia dois anos com sobornos e melhores contatos. Você identificou o que ele valorizava, providenciou para que os objetos certos estivessem no lugar errado na hora errada, e fez a descoberta no momento exato. Você tinha o posto dele antes do fim do mês." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_text" text="Você venceu o Grande Torneio da Montanha e foi nomeado vassalo de um chefe de guerra." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_1_desc" text="O torneio foi disputado em três rodadas brutais no salão principal. Você entrou sem ser o favorito de ninguém e saiu com o bracelete de prata de um chefe de guerra e um catre melhor. Os outros competidores o respeitaram mais por essa vitória do que por qualquer coisa antes." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_text" text="Você estabeleceu um lucrativo comércio de armas com um clã Orque do sul." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_2_desc" text="O clã do sul tinha ferro, mas nenhum ferreiro. Moria tinha ferreiros, mas precisava de comida e pele. Você intermediou a primeira troca, definiu os termos e impediu que os dois lados se matassem por tempo suficiente para que o acordo se tornasse hábito. O chefe de guerra lhe deu uma porcentagem." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_text" text="Você escorou as galerias inferiores da mina depois de um desabamento parcial." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_3_desc" text="O desabamento havia prendido oito Orcs na galeria inferior. Você avaliou o padrão de tensão, dirigiu o trabalho de reforço e levou a equipe para um lugar seguro antes que o desabamento secundário que se seguiu os matasse. O engenheiro do chefe de guerra lhe deu as plantas para guardar." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_text" text="Você liderou o ataque que destruiu o posto avançado dos Anões nas Montanhas Cinzentas." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_4_desc" text="Os Anões fortificaram um desfiladeiro que as Montanhas Nevoentas usavam para incursões de inverno, cortando o acesso e custando à montanha uma estação inteira de pilhagem. Você planejou o assalto, liderou a vanguarda e arrebentou o portão do posto avançado num único avanço. O desfiladeiro foi reaberto. Os Anões não voltaram." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_text" text="Você seguiu o rastro de um grupo de batedores Anões por quatro dias e trouxe de volta seus mapas." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_5_desc" text="Os Anões estavam mapeando algo nas Montanhas Cinzentas e as Montanhas Nevoentas precisavam saber o quê. Você os seguiu pelos altos desfiladeiros sem ser visto, esperou até que acampassem, tomou os mapas e estava de volta à fortaleza antes que dessem o alarme." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_text" text="Você incriminou um chefe de guerra rival por roubo e assumiu o posto dele." />
+    <string id="taom_cc_taom_adulthood_mistymountainorcs_6_desc" text="O rival vinha bloqueando sua ascensão por dois anos com subornos e melhores contatos. Você identificou o que ele valorizava, providenciou para que os objetos certos estivessem no lugar errado na hora errada, e fez a descoberta no momento certo. Você tinha o posto dele antes do fim do mês." />
+    <string id="taom_cc_career_title" text="Carreira" />
+    <string id="taom_cc_career_desc" text="Suas experiências o colocaram em um caminho. Escolha a carreira que definirá sua lenda." />
+    <string id="taom_cc_career_none" text="Sem especialização" />
+    <string id="taom_cc_career_none_desc" text="Você ainda não se comprometeu com um caminho específico. Sua carreira será determinada por suas ações no mundo." />
   </strings>
 </base>

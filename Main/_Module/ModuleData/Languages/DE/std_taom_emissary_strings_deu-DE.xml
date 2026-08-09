@@ -27,5 +27,6 @@
     <string id="taom_emissary_no_resource" text="Es gibt keinen Emissärshandel in dieser Siedlung." />
     <string id="taom_emissary_no_offers" text="Der Emissär hat derzeit keine Eliteeinheiten anzubieten." />
     <string id="taom_emissary_failed" text="Der Emissär konnte den Handel nicht abschließen." />
+    <string id="taom_emissary_coop_guest" text="Der Gesandte verhandelt nur mit dem Gastgeber dieser Kampagne." />
   </strings>
 </base>
