@@ -1270,6 +1270,10 @@ public class SubModule : MBSubModuleBase
         Features.BattleLoadDiagnostics.Hooks.MissionState_OnFinalize_ExitPhase_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.MapState_OnActivate_ExitPhase_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.MapState_OnTick_ExitPhase_Patch.Initialize(battleLoadSvc);
+        // #425 quit-to-load disarm: the Load Game click precedes any teardown of the old Game,
+        // which OnGameEnd cannot guarantee (Game.Destroy's two callers are OnStateStackEmpty and
+        // MBInitialScreenBase.OnInitialize — neither is on the early in-campaign load path).
+        Features.BattleLoadDiagnostics.Hooks.SandBoxSaveHelper_TryLoadSave_DisarmPatch.Initialize(battleLoadSvc);
         // Guarded like Patch60/61/62: this category binds several engine targets by string (two of
         // them private), so an engine bump can throw here. A DIAGNOSTICS category must never take
         // startup down with it — losing the stamps is survivable, losing the game is not.
