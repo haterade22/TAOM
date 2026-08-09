@@ -104,12 +104,48 @@ wear) are all yours. What is added is the invariant, so culture 21 cannot arrive
 - **#431** *(new)* — abanissa/shaghana lords issue Rohan militia gear; guard added
 - **#432** *(new)* — the 96 CC strings; English landed, translation owed
 - **#433** *(new)* — eight selectable cultures get no player starting equipment
+- **#434** *(new)* — **317 of 567 TAOM localization keys are unregistered**, 258 of them
+  CulturalFeats. All literals, so a grep would have found them at any point in two years; nobody ran
+  it because English is correct and nothing complains. Ratcheted, not fixed
 - **#427** merged (`7ac91bb1`) + root cause (`7c93e0fd`) · **#429** CHANGES_REQUESTED
 - **#424** unblocked by #406 closing; still needs the F1–F8 look
 
+## Reviews
+
+| Pass | Verdict |
+|---|---|
+| Codex, duty rework | **FIX FIRST** — 1 P1, 2 P2, 2 P3. All fixed |
+| Deep review, duty rework (5 agents) | 5 MED. All fixed |
+| Deep review, PRs #427/#429 (6 agents) | HIGH on each. #427's fixed; #429's returned to the author |
+| Codex, the coverage guards | **ISSUES FOUND** — 1 P1, 1 P2, 3 P3. All fixed |
+
+The last one is worth reading. Its P1 was #433, which I had filed hours earlier from a different
+direction — genuine convergence. The other four I had missed, and **two of them were my own comments
+claiming things the code did not do** — on work explicitly about that defect class, hours after I
+wrote the lesson about it:
+
+- a test excluded `childhood_menu.json` because its keys were "literal, not composed"; childhood
+  routes through the same builder as every other menu, so the guard had a hole exactly where its
+  comment promised it did not;
+- another said its rank list "mirrors `EnlistmentRosterIds.RankToken`" while hand-copying that
+  method's current output.
+
+Both now derive from production instead of asserting a faithful copy. The lesson gained a mechanical
+form as a result: **when a test's comment claims it mirrors production, derive it from production** —
+then the claim needs no comment and no reader.
+
+It also caught that the unregistered-key scanner missed keys **in the exact form it was written to
+find** (it required a quote before `{=`, so it skipped every `$"{{=...}}"`), and that
+`taom_res_desertion` interpolated its runtime values into the default text — unlocalizable no matter
+how well registered, since the translator's row has no slot for the number.
+
+Five claims it checked and confirmed, including that `ExitSettlementForDuty` genuinely has no
+callers and that the eight cultures excluded from the enlistment guard are real bandit clans
+(`is_bandit`/`is_outlaw`), which enlistment gates out through `IsLord`.
+
 ## State
 
-Suite **6281 passing / 0 failing** · `validate_moduledata.py` PASS · `lint_docs.py` clean ·
+Suite **6284 passing / 0 failing** · `validate_moduledata.py` PASS · `lint_docs.py` clean ·
 217 enlistment localization keys, all 12 languages id-identical to English.
 
 `SubModule.xml`'s `<Version>` is untouched, so no release tag is owed from this work.
@@ -117,8 +153,9 @@ Suite **6281 passing / 0 failing** · `validate_moduledata.py` PASS · `lint_doc
 ## Owed
 
 1. The in-game duty check above, and #424's F1–F8 look.
-2. **The 12-language translation of the 96 CC strings** (#432) — one command per language, ~$2.16
-   total, but it calls the Anthropic API and the key on this machine is the one that needs rotating.
+2. **Translation** — the 96 CC strings (#432, ~$2.16) and, once registered, the 317 from #434
+   (~$7). Both call the Anthropic API, and the key on this machine is the one that needs rotating.
+   Neither was run unattended.
 3. **`IDutyWorldAdapter` wants renaming** — four members of daily upkeep with one consumer, and
    "Duty" no longer describes it. Deliberately not done: it touches `Main/IoC.cs`, a single-owner
    file another session was working in.
