@@ -42,10 +42,4 @@ public interface IServiceAttachmentService
 
     /// <summary>Leave a settlement the commander is not in and resume parked following.</summary>
     bool ExitSettlementForService(string commanderHeroId);
-
-    /// <summary>
-    /// Leave a settlement and stay VISIBLE — for a detached duty, where parking would hide the
-    /// player for the whole deadline with nothing able to un-hide them.
-    /// </summary>
-    bool ExitSettlementForDuty();
 }

@@ -45,6 +45,19 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### refactor(enlistment): delete the settlement exit the travel model needed
+
+`ExitSettlementForDuty()` left a settlement and then **restored presence** — the one thing the
+current design must never do. It was already unreachable (zero callers since the rework), and its
+own doc comment still explained itself in terms of a four-to-six-day duty deadline that no longer
+exists.
+
+Deleted rather than kept as a spare. A second exit path ending in `RestorePresence` sitting on the
+interface is an invitation to re-add exactly the exposure #428 was filed for, and the sibling
+`ExitSettlementForService` — which parks instead — already covers the only exit the feature has.
+
+The guard test's forbidden-token list keeps the name, so re-adding the member trips it.
+
 ### fix(localization): the 26 duty result toasts existed only in code (#428)
 
 `FieldDutyRuntime` composes its result key at runtime — `"taom_enlist_duty_" + duty.Id + "_success"`

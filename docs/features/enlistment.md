@@ -338,9 +338,12 @@ duty: parking hides and deactivates the party, and NOTHING un-hides it while the
 the reconciler nor the pump ever restores presence). Invisible and immobile for the deadline — four
 to six days — then the duty fails.
 
-**Fix:** `ExitSettlementForDuty()` — leaves, then restores presence. Deliberately a separate member
-from `ExitSettlementForService()`, with the difference documented at both, because the two look
-identical and differ only in how they end.
+**Fixed at the time** by `ExitSettlementForDuty()` — leave, then restore presence — deliberately a
+separate member from `ExitSettlementForService()` because the two looked identical and differed only
+in how they ended. **Both the bug and its fix are gone (2026-08-09, #428):** a duty no longer leaves
+the settlement, or anywhere else, so the exit it needed has no callers. The member was deleted
+rather than kept as a spare — a second exit path that ends in `RestorePresence` is precisely what
+the current design must not have, and leaving it available is an invitation.
 
 ### 4. The wait-menu guard could switch itself off for the rest of the process
 
