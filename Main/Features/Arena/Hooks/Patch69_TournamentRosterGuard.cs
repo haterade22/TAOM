@@ -91,15 +91,15 @@ public static class Patch69_TournamentRosterGuard
 
             var unsafeIndices = guard.FindUnsafeIndices(roster);
 
+            // The healthy path is silent. It used to log "N entrant(s), all safe" at DEBUG — 78
+            // lines in a single 70-minute session, because the arena join menu's on_init calls
+            // GetMenuText and GetTournamentPrize, which both re-enter this method, so the line
+            // fired several times per menu open. That trace existed to prove the guard runs; it
+            // has, across every tournament in every logged session, so it is retired. Every branch
+            // below still speaks up, at WARNING or ERROR, because each one reports a real
+            // substitution or a real failure.
             if (unsafeIndices.Count == 0)
-            {
-                // DEBUG, not INFO: the arena join menu's on_init calls GetMenuText and
-                // GetTournamentPrize, which both re-enter this method, so an INFO line here would
-                // emit a durable synchronously-flushed write on every menu open. DEBUG is async.
-                logger.LogDebug($"{Tag} roster for {settlement?.StringId ?? "<no settlement>"}: " +
-                                $"{__result.Count} entrant(s), all safe.");
                 return;
-            }
 
             // A substitution is rare and is exactly what a future crash bundle needs named, so the
             // summary and each offender below stay at a durable level.

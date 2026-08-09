@@ -4,6 +4,24 @@
 
 ## 2026-08-09
 
+### chore(arena): the tournament roster guard stops announcing that nothing is wrong
+
+`Patch69_TournamentRosterGuard` logged `roster for town_X: N entrant(s), all safe` on every healthy
+pass — 78 lines in a single 70-minute session, because the arena join menu's `on_init` calls
+`GetMenuText` and `GetTournamentPrize`, both of which re-enter the patched method, so it fired
+several times per menu open.
+
+That line existed to prove the guard runs. It has, across every tournament in every logged session,
+so it is retired. The cost was never the issue: it was already `LogDebug` on the async queue,
+deliberately, and that call was correct — this is a proven diagnostic being switched off, not a
+mislevelled one being corrected.
+
+Every remaining branch still speaks, because each reports something real: the unsafe-roster summary
+and the per-entrant substitution lines stay at WARNING, the `OnTournamentEnd` exception and bracket
+dump stay at ERROR. The trade is that a session where the guard silently fails to run now looks
+identical to one where every roster was safe — acceptable, because the guard's value is the
+substitution it performs, and that still announces itself.
+
 ### feat(enlistment): field duties are camp work, not a journey (#428)
 
 Accept a duty, it occupies a few hours, one skill check decides how it went. The player stays
