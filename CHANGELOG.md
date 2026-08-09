@@ -45,6 +45,30 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### test(charactercreation): pin narrative coverage to the culture list itself (#111)
+
+`shaghana` and `abanissa` are selectable in `cultures.json` and have zero options in all four
+culture-scoped narrative menus, so picking either renders an empty page and vanilla throws on
+`SelectedOptions[CurrentMenu]` when the player advances. Open as #111 since 2026-05-07, still exactly
+true at HEAD — confirmed by counting, not by reading the issue.
+
+No code change: which way to fix it is a design decision (author the content, or drop the two from
+`cultures.json` and keep them as NPC-only kingdoms). What is added is the invariant, so culture 21
+cannot arrive the same way.
+
+The reason this is worth a test rather than a note is the pattern the last two days keep producing.
+`shaghana`/`abanissa` have no narrative options (#111), no eligible careers (review #24) and no
+enlistment rosters (#431). `goblin`/`mistymountainorcs` have no careers and shipped with all 96
+narrative strings unregistered (#432). Four systems, two culture pairs, one cause: **every one of
+those coverage tables was hand-maintained and written before those cultures existed.** So this test
+enumerates from `cultures.json` rather than from a list someone has to remember to extend.
+
+The second test guards the guard: a documented exception that has been resolved — culture no longer
+selectable, or now fully authored — fails loudly. A stale suppression silently widens the blind spot
+for whoever inherits it, and nothing else would ever prompt its deletion. It also rejects a
+*partially* authored culture, since a flow that dead-ends on menu three is no better than one that
+dead-ends on menu one.
+
 ### docs(lessons): a runtime-composed loc key needs a generator or a test
 
 New `lessons/localization-ui.md` entry. The existing lesson explains why an unregistered key is
