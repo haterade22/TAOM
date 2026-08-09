@@ -59,5 +59,17 @@ public class BattleFormationPolicyTests
             "Formation.OrderGroundPosition missing — the reposition target has moved.");
         Assert.IsNotNull(AccessTools.PropertyGetter(formation, "OrderPositionIsValid"),
             "Formation.OrderPositionIsValid missing — the reposition guard has moved.");
+        Assert.IsNotNull(AccessTools.PropertyGetter(formation, "CountOfDetachableNonPlayerUnits"),
+            "Formation.CountOfDetachableNonPlayerUnits missing — the has-a-line check counts the " +
+            "player himself without it, so a formation of one reads as a line to join.");
+
+        // The two members the causal chain actually rides on, and neither was pinned: the setter
+        // routes through AddUnit, and AddUnit is what sets IsPlayerTroopInFormation. If either
+        // moves, the placement compiles and silently stops doing the thing it exists for.
+        Assert.IsNotNull(AccessTools.Method(formation, "AddUnit"),
+            "Formation.AddUnit missing — the Agent.Formation setter routes through it, and it is " +
+            "what sets IsPlayerTroopInFormation (Formation.cs:2117-2119).");
+        Assert.IsNotNull(AccessTools.Method(AccessTools.TypeByName("TaleWorlds.MountAndBlade.Team"), "GetFormation"),
+            "Team.GetFormation missing — the formation lookup has moved.");
     }
 }

@@ -138,6 +138,49 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### fix(enlistment): harden the formation placement merged in #442
+
+Post-merge adversarial review of PR #442. Nothing regressed, so the merge stands — but four things
+were worth fixing immediately and two doc claims were wrong.
+
+**The exception guard is the one that mattered.** `Mission.SpawnAgent` dispatches
+`foreach (MissionBehavior mb in MissionBehaviors) mb.OnAgentBuild(...)` with **no per-behavior try**
+(`Mission.cs:4357-4360`), so a throw in this behavior aborts the whole spawn wave and every TAOM
+behavior registered after it silently never sees the agent. Placement is cosmetic; taking a battle
+down for it is not a trade worth making. The sibling `ElephantMissionBehavior` already guards. The
+catch latches too — a placement that throws once throws for every agent in the wave, and retrying it
+turns one logged error into hundreds.
+
+**NaN gate on the teleport target.** `OrderPositionIsValid` checks the 2D position and the scene
+pointer only; the Z comes from `GetGroundZ()`, which returns NaN when it cannot validate, and
+`TeleportToPosition` hands the vector straight to native `SetPosition`. Written as a positive
+finiteness requirement per the architecture rule, so NaN falls out on the safe side.
+
+**`CountOfUnits` counts the player himself** — it is `Arrangement.UnitCount + _detachedUnits.Count`
+(`Formation.cs:182`). Now `CountOfDetachableNonPlayerUnits`, so a formation of one stops reading as a
+line to join. Paired with an explicit bail when the player is already in the target formation:
+vanilla assigns the same class at `Agent.Build`, the setter early-returns on identity, but the
+teleport still fired and the log still claimed a placement.
+
+**The `?? Mission.PlayerTeam` fallback is gone.** Team is always set before `OnAgentBuild`, so it was
+dead — and on the one path that could have reached it, it was *wrong*: an enlisted player routes to
+`PlayerTeam` while the commander routes to `PlayerAllyTeam`, so substituting one for the other places
+the agent on a team he is not on.
+
+**Two doc corrections, both the same defect class this session keeps producing.** The behavior
+claimed `agent.Formation =` "completes" `IsPlayerTroopInFormation`; it **relocates** it —
+`Agent.Build` assigns a formation at `Agent.cs:5173` and `Mission.SpawnAgent` calls `BuildAgent`
+before the dispatch loop, so the flag was already true. And `BehaviorComponent:105` has **four**
+conjuncts, not two — both files quoted it as two.
+
+Also pinned `Formation.AddUnit` and `Team.GetFormation`, the two members the causal chain actually
+rides on and neither of which was covered by the PR's six-member binding test.
+
+**The gap that is not fixed is #443**, filed separately: the formation the soldier joins is on his
+own one-man team. Verified through three engine methods — `MainParty` routes to `PlayerTeam`, the
+commander to `PlayerAllyTeam`, and the ally team is created precisely *because* `isPlayerSergeant` is
+false, which is the same fact #424 rests on. That needs a design call, not a patch.
+
 ### feat(enlistment): word from the column — losing your commander is a moment now
 
 A design pass over the three ways a commander can stop having a command, then the implementation of
