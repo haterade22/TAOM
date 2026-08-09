@@ -162,7 +162,6 @@ public class WargMissionBehavior : MissionLogic
                 if (comp.Tree != null)
                 {
                     _wargComponents.Add((agent, comp));
-                    _logger.LogDebug($"[Warg] Late-spawn BT attached to {agent.Name}");
                 }
             }
         }

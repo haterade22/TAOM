@@ -34,35 +34,20 @@ public class WargAttackService : IWargAttackService
 
     public void HandleWargTargetHit(IAgentAdapter attacker, IAgentAdapter target, sbyte boneId)
     {
-        // Diagnostic 2026-05-24: trace why "Mount charged for 1-3 Blunt" appears
-        // instead of (or alongside) our 40+ Pierce bite. Logs every gate so the
-        // user's next taom_debug log answers the question definitively.
         if (target == null || !target.IsActive() || target.IsFadingOut())
-        {
-            _logger.LogDebug($"[Warg] HandleWargTargetHit: skipped — target null/inactive/fading bone={boneId}");
             return;
-        }
         if (attacker == null)
-        {
-            _logger.LogDebug("[Warg] HandleWargTargetHit: skipped — attacker null");
             return;
-        }
 
         // Warg-specific victim-team rule: if the victim is a mount, attribute the team to its rider.
         var victimTeamSource = target.IsMount && target.RiderAgent != null ? target.RiderAgent : target;
         if (attacker.RiderAgent != null && attacker.RiderAgent.IsSameTeam(victimTeamSource))
-        {
-            _logger.LogDebug($"[Warg] HandleWargTargetHit: skipped — same team (rider='{attacker.RiderAgent.Name}', victim='{target.Name}')");
             return;
-        }
 
         try
         {
             if (target.State != AgentState.Active && target.State != AgentState.Routed)
-            {
-                _logger.LogDebug($"[Warg] HandleWargTargetHit: skipped — target state={target.State} bone={boneId}");
                 return;
-            }
 
             float velocity = attacker.MovementVelocity.Y;
             int armor = target.GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType.Chest);
@@ -71,19 +56,14 @@ public class WargAttackService : IWargAttackService
             // Damager attribution: prefer the warg's rider; fall back to the warg itself.
             // If both are absent/dead, vanilla self-damage fallback at 20 damage.
             IAgentAdapter damagerAdapter = attacker.RiderAgent ?? attacker;
-            string damagerKind = attacker.RiderAgent != null ? "rider" : "warg-self";
             if (damagerAdapter == null || damagerAdapter.Health <= 0)
             {
                 damagerAdapter = target;
                 damage = 20;
-                damagerKind = "self-fallback";
             }
 
             if (target.IsHorse() || target.IsCamel())
-            {
                 damage *= 2;
-                damagerKind += "+mount2x";
-            }
 
             if (!target.HasMount)
             {
@@ -101,7 +81,6 @@ public class WargAttackService : IWargAttackService
             var targetAgent = (target as AgentAdapter)?.GetUnderlyingAgent();
             if (damagerAgent != null && targetAgent != null)
             {
-                _logger.LogInfo($"[Warg] BITE HIT: attacker='{attacker.Name}' target='{target.Name}' bone={boneId} vel={velocity:F2} armor={armor} damage={damage}p (Pierce, damager={damagerKind})");
                 CustomAttacksUtils.TakeDamage(targetAgent, damagerAgent, damage);
             }
             else
@@ -118,10 +97,7 @@ public class WargAttackService : IWargAttackService
     public void WargAttack(IAgentAdapter warg)
     {
         if (warg == null || !warg.IsActive())
-        {
-            _logger.LogDebug("[Warg] WargAttack: skipped — warg null/inactive");
             return;
-        }
 
         List<sbyte> boneIds;
         float targetDetectionRange = WargConfig.TargetDetectionRange;
@@ -171,10 +147,6 @@ public class WargAttackService : IWargAttackService
             actionProgressMax = 0.5f;
             boneCollisionRadius = 0.5f;
         }
-
-        // Diagnostic 2026-05-24: log every WargAttack invocation so we can correlate
-        // BT eval rate against actual hit reports in HandleWargTargetHit.
-        _logger.LogInfo($"[Warg] WargAttack: attacker='{warg.Name}' action={actionName} vel={warg.MovementVelocity.Y:F2} boneIds=[{string.Join(",", boneIds)}] range={targetDetectionRange:F1}m collisionR={boneCollisionRadius:F2}m");
 
         warg.CustomAttack(action, boneIds, actionProgressMin, actionProgressMax, targetDetectionRange, boneCollisionRadius, true,
             (attackerAdapter, targetAdapter, boneId) => HandleWargTargetHit(attackerAdapter, targetAdapter, boneId));

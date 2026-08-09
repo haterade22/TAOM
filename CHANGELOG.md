@@ -31,6 +31,29 @@ present.
 
 Not-tested: the handler path (`MapEvent` is not constructible outside the game).
 
+### perf(warg): retire the 2026-05-24 bite tracing, including a synchronous flush on every bite
+
+`[Warg]` was 3,013 lines of one session's log — 17% of the file, third behind the auto-resolve
+census and battle records. All of it came from a trace added on 2026-05-24 and labelled as such in
+the source: *"trace why 'Mount charged for 1-3 Blunt' appears instead of (or alongside) our 40+
+Pierce bite. Logs every gate so the user's next taom_debug log answers the question definitively."*
+It did answer it. The feature has shipped since.
+
+The volume was the smaller problem. `BITE HIT` and the per-invocation `WargAttack` line were
+`LogInfo`, and `FileLogger.LogInfo` is `durable: true` — it takes the write lock and flushes to the
+OS on the **calling thread**. That thread is the mission tick, so every connecting bite and every
+behaviour-tree attack evaluation paid a synchronous flush mid-combat. Unlike the auto-resolve census,
+which pays that cost once at session launch, this scaled with the number of wargs in the battle.
+
+Removed: the four `HandleWargTargetHit` gate traces (the same-team one alone accounted for over 400
+lines in a single session), the two per-hit `LogInfo` lines, the `WargAttack` null-gate trace, and
+the per-agent late-spawn attach line. The `damagerKind` local went with them — it existed only to be
+interpolated into `BITE HIT` and had become write-only.
+
+Kept, deliberately: all six error and warning paths, including the adapter-extraction warning that
+reports a bite failing to land damage, and both one-shot per-mission `LogInfo` lines that confirm the
+behaviour trees attached. Anomalies still announce themselves; the healthy path is silent.
+
 ### fix(autoresolve): review wave — wounded men counted as fielded, and a version gate that was never wired
 
 Five reviewers (four agents plus an adversarial Codex pass) and a 2,653-record live corpus. The two
