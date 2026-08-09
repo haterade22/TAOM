@@ -224,5 +224,7 @@
     <string id="taom_enlist_duty_hideout_strike_failure" text="接近時就出了岔子，你只帶著來時的東西退回。" />
     <string id="taom_enlist_duty_service_shift_success" text="你的這班崗平安無事。" />
     <string id="taom_enlist_duty_service_shift_failure" text="有人發現你在崗上睡著。此事已記下。" />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}你接到命令：{DUTY}。" />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}命令：{DUTY}。{RESULT}" />
   </strings>
 </base>

@@ -52,7 +52,7 @@
     "guaranteedOfferDaysQuiet": 7,
     "guaranteedOfferDaysPressure": 4,
     "baseOfferChance": 0.06,
-    "maxOfferChance": 0.45,
+    "maxOfferChance": 0.4,
     "antiRepeatDays": 5,
     "incidentMinDaysServed": 7,
     "incidentCooldownDays": 3

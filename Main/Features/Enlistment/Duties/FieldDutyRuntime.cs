@@ -43,7 +43,36 @@ public class FieldDutyRuntime : IFieldDutyRuntime
     private readonly ISkillCheckService _skillCheck;
     private readonly IHeroSkillXpAdapter _skillXp;
     private readonly IInquiryAdapter _inquiry;
+    private readonly IRealTimeProvider _realTime;
     private readonly IModLogger _logger;
+
+    /// <summary>
+    /// A duty whose whole shift elapses within this many REAL seconds cannot show the player two
+    /// readable messages, so it shows one. Bannerlord's quick-information toast lives about three
+    /// seconds; measured live on 2026-08-09 at 4x, a 4-hour shift started 09:29:38 and resolved
+    /// 09:29:42 — the assignment toast had faded as the result arrived, and the player reported
+    /// having been given one duty when the log records two (#436).
+    ///
+    /// Ten rather than six. The two failure directions are not symmetric: folding when we did not
+    /// need to costs one combined message instead of two, while not folding when we should have is
+    /// the reported bug — trust moving off a notification nobody could read. At 1x a 4-hour shift
+    /// takes minutes, so this never fires for a player who is not accelerating.
+    /// </summary>
+    private const double CombinedToastWindowSeconds = 10.0;
+
+    /// <summary>
+    /// Real seconds observed between the last two hourly ticks — i.e. how long one campaign hour
+    /// currently takes the player, which is what the time-acceleration multiplier controls. Null
+    /// until two ticks have been seen.
+    ///
+    /// Deliberately in-memory and NOT persisted. After a save/load it is null, which predicts an
+    /// infinite shift and therefore ALWAYS announces. That is the conservative direction: an extra
+    /// assignment toast is a cosmetic redundancy, a missing one is #436.
+    /// </summary>
+    private double? _realSecondsPerCampaignHour;
+
+    /// <summary><see cref="IRealTimeProvider.ElapsedSeconds"/> at the previous hourly tick.</summary>
+    private double? _lastHourlyRealSeconds;
 
     public FieldDutyRuntime(
         IEnlistmentStore store,
@@ -53,6 +82,7 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         ISkillCheckService skillCheck,
         IHeroSkillXpAdapter skillXp,
         IInquiryAdapter inquiry,
+        IRealTimeProvider realTime,
         IModLogger logger)
     {
         _store = store;
@@ -62,6 +92,7 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         _skillCheck = skillCheck;
         _skillXp = skillXp;
         _inquiry = inquiry;
+        _realTime = realTime;
         _logger = logger;
     }
 
@@ -83,11 +114,16 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         // and sent them travelling, so it was impossible to miss. This one is invisible by design,
         // which means the first evidence a duty ever existed would otherwise be the result toast
         // hours later, after it had already moved trust.
-        _inquiry?.ShowMessage(
-            "taom_enlist_duty_assigned",
-            "You are given orders: {DUTY}.",
-            "DUTY",
-            new TextObject("{=taom_enlist_duty_" + duty.Id + "_title}a task for the company").ToString());
+        //
+        // SKIPPED when the shift will resolve faster than two messages can be read (#436). The
+        // result toast names the duty either way, so nothing is lost — the player who reads one
+        // message gets the whole story instead of half of it. At 1x this never fires.
+        if (!ShiftIsTooFastToAnnounce(duty.DurationHours))
+            _inquiry?.ShowMessage(
+                "taom_enlist_duty_assigned",
+                "You are given orders: {DUTY}.",
+                "DUTY",
+                DutyTitle(duty.Id));
 
         _logger?.LogInfo(
             $"[Enlistment.Duties] duty '{duty.Id}' started — {duty.DurationHours}h shift, " +
@@ -96,8 +132,64 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         return true;
     }
 
+    /// <summary>
+    /// Records real seconds between consecutive hourly ticks. Deltas outside (0, 3600) are
+    /// discarded: a non-positive one means the clock did not advance between two calls in the same
+    /// frame, and anything past an hour means the process was paused, minimised or breakpointed —
+    /// neither describes the player's actual pace, and either would poison the estimate toward
+    /// "shifts are slow", which is the direction that reintroduces #436.
+    /// </summary>
+    private void SampleTickRate()
+    {
+        var now = _realTime?.ElapsedSeconds;
+        if (!now.HasValue || double.IsNaN(now.Value) || double.IsInfinity(now.Value))
+            return;
+
+        if (_lastHourlyRealSeconds.HasValue)
+        {
+            var delta = now.Value - _lastHourlyRealSeconds.Value;
+            if (delta > 0.0 && delta < 3600.0)
+                _realSecondsPerCampaignHour = delta;
+        }
+
+        _lastHourlyRealSeconds = now.Value;
+    }
+
+    /// <summary>
+    /// The duty's display title. ONE place, because the assignment toast and the result toast must
+    /// name a duty identically — two call sites composing the same runtime key is how a raw id like
+    /// `recon_sweep` reached the UI once already.
+    /// </summary>
+    private static string DutyTitle(string dutyId)
+        => new TextObject("{=taom_enlist_duty_" + dutyId + "_title}a task for the company").ToString();
+
+    /// <summary>
+    /// True when the whole shift is predicted to elapse too fast for the player to read two
+    /// separate messages, so the assignment toast is skipped and the result toast carries both
+    /// halves. Written as a POSITIVE requirement — <c>predicted &lt;= window</c> rather than
+    /// <c>!(predicted &gt; window)</c> — so a NaN or a missing estimate falls out as "announce",
+    /// the conservative side. See `.claude/rules/csharp-architecture.md` on NaN gate polarity.
+    /// </summary>
+    private bool ShiftIsTooFastToAnnounce(int durationHours)
+    {
+        if (!_realSecondsPerCampaignHour.HasValue)
+            return false;
+
+        var predicted = durationHours * _realSecondsPerCampaignHour.Value;
+        return predicted > 0.0 && predicted <= CombinedToastWindowSeconds;
+    }
+
     public void HourlyUpdate(double nowDays)
     {
+        // BEFORE every guard, deliberately. This samples how long a campaign hour is taking the
+        // player in real seconds, and Start needs that estimate at a moment when there is by
+        // definition NO active duty — so sampling below the HasActiveDuty guard would mean the
+        // estimate only ever existed while it was already too late to use.
+        //
+        // It is pure measurement: no campaign state is read or written, so it cannot affect the
+        // guards it precedes. Kept to one statement for that reason.
+        SampleTickRate();
+
         var record = _contentStore.Record;
         if (!record.HasActiveDuty)
             return;
@@ -205,10 +297,19 @@ public class FieldDutyRuntime : IFieldDutyRuntime
             record.DutyFailures++;
         }
 
+        // SELF-CONTAINED (#436). The result names the duty as well as the outcome, so it reads on
+        // its own whether or not the assignment toast was shown — which is what lets Start skip
+        // that toast at speed, and what stops a player who blinked from losing trust to a duty
+        // they never saw named. The per-duty outcome line is resolved here and passed as a
+        // variable rather than being concatenated into the template, so translators keep both
+        // halves as independent, reorderable strings.
         _inquiry?.ShowMessage(
-            passed ? "taom_enlist_duty_" + duty.Id + "_success" : "taom_enlist_duty_" + duty.Id + "_failure",
-            passed ? "It went well." : "It didn't go as planned.",
-            null, null);
+            "taom_enlist_duty_result",
+            "Orders: {DUTY}. {RESULT}",
+            "DUTY", DutyTitle(duty.Id),
+            "RESULT", new TextObject(
+                "{=taom_enlist_duty_" + duty.Id + (passed ? "_success" : "_failure") + "}"
+                + (passed ? "It went well." : "It didn't go as planned.")).ToString());
 
         _logger?.LogInfo(
             $"[Enlistment.Duties] duty '{duty.Id}' {(passed ? "completed" : "failed")} — " +

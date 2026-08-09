@@ -224,5 +224,7 @@
     <string id="taom_enlist_duty_hideout_strike_failure" text="La aproximación se tuerce pronto y te retiras con lo que trajiste." />
     <string id="taom_enlist_duty_service_shift_success" text="Tu guardia pasa sin novedad." />
     <string id="taom_enlist_duty_service_shift_failure" text="Te encuentran dormido en tu puesto. Queda anotado." />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Recibes órdenes: {DUTY}." />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Órdenes: {DUTY}. {RESULT}" />
   </strings>
 </base>

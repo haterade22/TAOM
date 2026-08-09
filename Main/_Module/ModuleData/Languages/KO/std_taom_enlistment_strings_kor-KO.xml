@@ -224,5 +224,7 @@
     <string id="taom_enlist_duty_hideout_strike_failure" text="접근이 일찌감치 어그러져, 가져간 것만 들고 물러난다." />
     <string id="taom_enlist_duty_service_shift_success" text="그대의 당번은 아무 일 없이 지나간다." />
     <string id="taom_enlist_duty_service_shift_failure" text="초소에서 잠든 채 발각된다. 기록에 남는다." />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}명령을 받았다: {DUTY}." />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}명령: {DUTY}. {RESULT}" />
   </strings>
 </base>

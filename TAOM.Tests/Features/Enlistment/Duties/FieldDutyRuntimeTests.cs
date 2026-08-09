@@ -32,6 +32,7 @@ public class FieldDutyRuntimeTests
     private ISkillCheckService _skillCheck = null!;
     private IHeroSkillXpAdapter _skillXp = null!;
     private IInquiryAdapter _inquiry = null!;
+    private IRealTimeProvider _realTime = null!;
     private FieldDutyRuntime _runtime = null!;
 
     [TestInitialize]
@@ -45,9 +46,14 @@ public class FieldDutyRuntimeTests
         _skillCheck = Substitute.For<ISkillCheckService>();
         _skillXp = Substitute.For<IHeroSkillXpAdapter>();
         _inquiry = Substitute.For<IInquiryAdapter>();
+        _realTime = Substitute.For<IRealTimeProvider>();
+        // Default: the clock never advances between hourly ticks, so no rate is ever established
+        // and ShiftIsTooFastToAnnounce stays false. Every pre-existing test therefore keeps the
+        // two-toast behaviour it was written against; the fold is opted into explicitly below.
+        _realTime.ElapsedSeconds.Returns(0.0);
 
         _runtime = new FieldDutyRuntime(
-            _store, _contentStore, _config, _rewards, _skillCheck, _skillXp, _inquiry, _logger);
+            _store, _contentStore, _config, _rewards, _skillCheck, _skillXp, _inquiry, _realTime, _logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
@@ -332,4 +338,98 @@ public class FieldDutyRuntimeTests
         throw new System.InvalidOperationException(
             "repo root (.git) not found from " + System.AppDomain.CurrentDomain.BaseDirectory);
     }
+    // ---- #436: the assignment toast is skipped when the shift is too fast to read two messages ----
+
+    /// <summary>Drives two hourly ticks the given number of real seconds apart, which is what
+    /// establishes the runtime's real-seconds-per-campaign-hour estimate.</summary>
+    private void EstablishTickRate(double secondsPerCampaignHour)
+    {
+        _realTime.ElapsedSeconds.Returns(100.0, 100.0 + secondsPerCampaignHour);
+        _runtime.HourlyUpdate(10.0);
+        _runtime.HourlyUpdate(10.0 + (1.0 / 24.0));
+    }
+
+    private static DutyDefinition FourHourDuty() => new DutyDefinition
+    {
+        Id = "scout_route", DurationHours = 4, Difficulty = 50,
+        SupportSkills = new List<string> { "Scouting" },
+    };
+
+    [TestMethod]
+    public void Start_ShiftFasterThanTheToastWindow_SkipsTheAssignmentToast()
+    {
+        // 1 real second per campaign hour => a 4-hour shift is 4 real seconds, inside the 10s
+        // window. This is the measured live case (#436): started 09:29:38, resolved 09:29:42.
+        EstablishTickRate(1.0);
+
+        _runtime.Start(FourHourDuty(), 10.0);
+
+        _inquiry.DidNotReceive().ShowMessage(
+            "taom_enlist_duty_assigned", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Start_ShiftSlowerThanTheToastWindow_AnnouncesNormally()
+    {
+        // 10 real seconds per campaign hour => a 4-hour shift is 40 real seconds, well outside the
+        // window. The player has time to read both messages, so both are shown.
+        EstablishTickRate(10.0);
+
+        _runtime.Start(FourHourDuty(), 10.0);
+
+        _inquiry.Received(1).ShowMessage(
+            "taom_enlist_duty_assigned", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Start_NoTickRateObservedYet_AnnouncesNormally()
+    {
+        // The save/load and first-duty-of-session case. An unknown rate must resolve to ANNOUNCE:
+        // a redundant toast is cosmetic, a missing one is the bug. No EstablishTickRate call here.
+        _runtime.Start(FourHourDuty(), 10.0);
+
+        _inquiry.Received(1).ShowMessage(
+            "taom_enlist_duty_assigned", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Start_NonFiniteClock_AnnouncesNormally()
+    {
+        // NaN gate polarity (csharp-architecture.md): every comparison against NaN is false, so a
+        // poisoned clock must fall out on the ANNOUNCE side rather than silently suppressing.
+        _realTime.ElapsedSeconds.Returns(double.NaN);
+        _runtime.HourlyUpdate(10.0);
+        _runtime.HourlyUpdate(10.0 + (1.0 / 24.0));
+
+        _runtime.Start(FourHourDuty(), 10.0);
+
+        _inquiry.Received(1).ShowMessage(
+            "taom_enlist_duty_assigned", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Resolve_AlwaysEmitsASelfContainedResultNamingTheDuty()
+    {
+        // The load-bearing half of #436. Whether or not the assignment toast was shown, the result
+        // must carry both the duty and the outcome — that is what makes skipping the assignment
+        // safe, and what stops a player who blinked from losing trust to an unnamed duty.
+        EstablishTickRate(1.0);
+        var duty = FourHourDuty();
+        ConfigureDuties(duty);
+        _skillCheck.Passes(Arg.Any<int>(), Arg.Any<int?>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>())
+            .Returns(false);
+
+        _runtime.Start(duty, 10.0);
+        _runtime.HourlyUpdate(10.0 + 1.0);
+
+        _inquiry.Received(1).ShowMessage(
+            "taom_enlist_duty_result", Arg.Any<string>(),
+            "DUTY", Arg.Any<string>(),
+            "RESULT", Arg.Any<string>());
+    }
+
 }

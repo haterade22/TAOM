@@ -224,5 +224,7 @@
 	<string id="taom_enlist_duty_supply_delivery_failure" text="{=taom_enlist_duty_supply_delivery_failure}Half the load is spoiled by the time it is counted." />
 	<string id="taom_enlist_duty_trusted_dispatch_success" text="{=taom_enlist_duty_trusted_dispatch_success}The dispatch is in the right hands, and no others." />
 	<string id="taom_enlist_duty_trusted_dispatch_failure" text="{=taom_enlist_duty_trusted_dispatch_failure}The dispatch arrives late, and you cannot swear it arrived unread." />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}You are given orders: {DUTY}." />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Orders: {DUTY}. {RESULT}" />
 
 </strings>

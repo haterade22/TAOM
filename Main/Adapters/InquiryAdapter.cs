@@ -36,11 +36,16 @@ public sealed class InquiryAdapter : IInquiryAdapter
             false);
     }
 
-    public void ShowMessage(string key, string fallback, string variableName, string variableValue)
+    public void ShowMessage(
+        string key, string fallback,
+        string variableName, string variableValue,
+        string secondVariableName = null, string secondVariableValue = null)
     {
         var text = new TextObject("{=" + key + "}" + fallback);
         if (!string.IsNullOrEmpty(variableName))
             text.SetTextVariable(variableName, variableValue ?? string.Empty);
+        if (!string.IsNullOrEmpty(secondVariableName))
+            text.SetTextVariable(secondVariableName, secondVariableValue ?? string.Empty);
         InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TAOM.Features.Enlistment.Duties;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
@@ -192,6 +193,27 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
             _logger.LogWarning("EnlistmentContentConfigProvider: scheduler.maxOfferChance must be finite in [baseOfferChance,1], reverting");
             config.Scheduler.MaxOfferChance = defaults.Scheduler.MaxOfferChance;
             rejected = true;
+        }
+
+        // A ceiling nothing can reach is dead config: a tuner raises it, sees no change, and has
+        // no way to learn why. The attainable maximum is base + the pressure bonus + trustMax
+        // trust points, all of which live in this same file, so the three can drift apart silently
+        // — shipped 2026-08-09 with maxOfferChance 0.45 against an attainable 0.41.
+        //
+        // A WARNING, not a revert. The value is harmless, and clamping it down would silently
+        // change a tuner's intent; the useful action is to tell them the knob is inert.
+        var attainableMax = config.Scheduler.BaseOfferChance
+            + DutyRotationPolicy.PressureChanceBonus
+            + Math.Max(0, config.Scheduler.TrustMax) * DutyRotationPolicy.TrustChanceBonusPerPoint;
+        if (FiniteFloatValidator.IsFinite(config.Scheduler.MaxOfferChance)
+            && config.Scheduler.MaxOfferChance > attainableMax)
+        {
+            _logger.LogWarning(
+                $"EnlistmentContentConfigProvider: scheduler.maxOfferChance={config.Scheduler.MaxOfferChance} " +
+                $"can never bind — the highest chance reachable is {attainableMax} " +
+                $"(baseOfferChance {config.Scheduler.BaseOfferChance} + pressure {DutyRotationPolicy.PressureChanceBonus} " +
+                $"+ trustMax {config.Scheduler.TrustMax} x {DutyRotationPolicy.TrustChanceBonusPerPoint}). " +
+                "The clamp is inert; raising it will not change how often duties are offered.");
         }
 
         if (!FiniteFloatValidator.IsFiniteInRange(config.MeritScoring.SampleIntervalSeconds, 0.5f, 30f))

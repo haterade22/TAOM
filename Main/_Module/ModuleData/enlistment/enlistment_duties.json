@@ -307,8 +307,7 @@
         "trust": -2
       },
       "gates": {
-        "minRank": "Veteran"
-      },
+        "minRank": "Veteran", "minTrust": 15 },
       "supportSkills": [
         "Tactics",
         "Scouting"

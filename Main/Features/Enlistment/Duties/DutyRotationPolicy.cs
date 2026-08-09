@@ -8,8 +8,13 @@ public class DutyRotationPolicy : IDutyRotationPolicy
 {
     /// <summary>Roll precision — 1000 gives 0.1% granularity over the config's [0,1] chance floats.</summary>
     private const int RollPrecision = 1000;
-    private const float PressureChanceBonus = 0.15f;
-    private const float TrustChanceBonusPerPoint = 0.01f;
+    /// <summary>Added while the column is under siege/naval/blockade/pre-battle pressure.</summary>
+    public const float PressureChanceBonus = 0.15f;
+
+    /// <summary>Added per point of positive trust. Public so the config validator can compute the
+    /// attainable ceiling and warn when maxOfferChance is set above it — see
+    /// EnlistmentContentConfigProvider.</summary>
+    public const float TrustChanceBonusPerPoint = 0.01f;
 
     private readonly IRandomProvider _random;
 

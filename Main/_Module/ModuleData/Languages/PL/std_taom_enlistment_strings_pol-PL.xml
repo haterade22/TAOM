@@ -224,5 +224,7 @@
     <string id="taom_enlist_duty_hideout_strike_failure" text="Podejście psuje się wcześnie i wycofujesz się z tym, co masz." />
     <string id="taom_enlist_duty_service_shift_success" text="Twoja warta mija bez zdarzeń." />
     <string id="taom_enlist_duty_service_shift_failure" text="Zastają cię śpiącego na posterunku. Zostaje to odnotowane." />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Otrzymujesz rozkazy: {DUTY}." />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Rozkazy: {DUTY}. {RESULT}" />
   </strings>
 </base>

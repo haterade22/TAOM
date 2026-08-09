@@ -224,5 +224,7 @@
     <string id="taom_enlist_duty_hideout_strike_failure" text="Подход срывается рано, и вы отходите с тем, что принесли." />
     <string id="taom_enlist_duty_service_shift_success" text="Ваша смена проходит без происшествий." />
     <string id="taom_enlist_duty_service_shift_failure" text="Вас находят спящим на посту. Это записывают." />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Вы получили приказ: {DUTY}." />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Приказ: {DUTY}. {RESULT}" />
   </strings>
 </base>

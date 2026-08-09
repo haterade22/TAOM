@@ -224,5 +224,7 @@
     <string id="taom_enlist_duty_hideout_strike_failure" text="Der Anmarsch misslingt früh, und Ihr zieht Euch zurück." />
     <string id="taom_enlist_duty_service_shift_success" text="Eure Wache vergeht ohne Zwischenfall." />
     <string id="taom_enlist_duty_service_shift_failure" text="Man findet Euch schlafend auf Posten. Es wird vermerkt." />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Du erhältst Befehle: {DUTY}." />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Befehl: {DUTY}. {RESULT}" />
   </strings>
 </base>

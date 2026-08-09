@@ -34,6 +34,17 @@ public interface IInquiryAdapter
         Action onOptionA, Action onOptionB,
         string bodyVariableName = null, string bodyVariableValue = null);
 
-    /// <summary>Fire-and-forget toast. <paramref name="variableName"/>/<paramref name="variableValue"/> are optional — pass null to skip the substitution.</summary>
-    void ShowMessage(string key, string fallback, string variableName, string variableValue);
+    /// <summary>
+    /// Fire-and-forget toast. Both variable pairs are optional — pass null to skip a substitution.
+    ///
+    /// The SECOND pair exists for the duty result toast, which must name the duty and the outcome
+    /// in one message (#436) while keeping them as two independent strings a translator can reorder.
+    /// Optional parameters rather than an overload, for the reason given on
+    /// <see cref="ShowTwoOptionInquiry"/>: an overload lets a call site silently bind to the
+    /// narrower form and drop a variable with no compile error.
+    /// </summary>
+    void ShowMessage(
+        string key, string fallback,
+        string variableName, string variableValue,
+        string secondVariableName = null, string secondVariableValue = null);
 }

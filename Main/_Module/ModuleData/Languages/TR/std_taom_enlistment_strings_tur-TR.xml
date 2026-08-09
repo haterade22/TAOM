@@ -224,5 +224,7 @@
     <string id="taom_enlist_duty_hideout_strike_failure" text="Yaklaşma erkenden bozulur, getirdiğinle geri çekilirsin." />
     <string id="taom_enlist_duty_service_shift_success" text="Nöbetin olaysız geçer." />
     <string id="taom_enlist_duty_service_shift_failure" text="Seni nöbette uyurken bulurlar. Kayda geçer." />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Emir aldın: {DUTY}." />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Emir: {DUTY}. {RESULT}" />
   </strings>
 </base>

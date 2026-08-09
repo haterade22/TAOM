@@ -61,6 +61,7 @@ public static class EnlistmentIoC
         container.Register<Content.IArmyRhythmSnapshotService, Content.ArmyRhythmSnapshotService>(Reuse.Singleton);
         container.Register<Content.IServiceRewardService, Content.ServiceRewardService>(Reuse.Singleton);
         container.Register<Content.ISkillCheckService, Content.SkillCheckService>(Reuse.Singleton);
+        container.Register<IRealTimeProvider, RealTimeProvider>(Reuse.Singleton);
         container.Register<Content.IPromotionService, Content.PromotionService>(Reuse.Singleton);
         container.Register<Content.IDischargeConsequenceService, Content.DischargeConsequenceService>(Reuse.Singleton);
         container.Register<Content.IAssignmentService, Content.AssignmentService>(Reuse.Singleton);

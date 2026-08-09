@@ -492,6 +492,54 @@ occupy you for `durationHours` (4–8), and one `ISkillCheckService` roll agains
 `failureReward` — both through the one `IServiceRewardService.Grant` chokepoint, so a duty cannot
 pay through a side channel. Skills come from the row's `supportSkills`.
 
+### Two toasts, one of which is conditional (#436)
+
+A duty announces at start and reports at resolve. At time acceleration those land closer together
+than a message stays on screen: measured live 2026-08-09 at 4x, a 4-hour shift started 09:29:38 and
+resolved 09:29:42, and the player reported being given **one** duty when the log records two. A
+Bannerlord quick-info toast lives about three seconds, so the assignment had faded as the result
+arrived — and trust had already moved off a notification nobody could read.
+
+Two changes, and the second is the load-bearing one:
+
+- **The result toast is self-contained.** `taom_enlist_duty_result` = `Orders: {DUTY}. {RESULT}`,
+  where `RESULT` is the row's own success/failure line. The player who reads exactly one message now
+  gets the whole story. The two halves stay separate variables rather than a concatenated template
+  so a translator can reorder them.
+- **The assignment toast is skipped when the shift is too fast to read two messages.**
+  `FieldDutyRuntime` samples real seconds per campaign hour from the gap between hourly ticks — that
+  gap *is* the time-acceleration multiplier — and predicts `durationHours × rate`. Under ten real
+  seconds, it does not announce.
+
+The prediction fails toward announcing, deliberately: an unknown rate (first duty of a session, or
+straight after a save/load, since the estimate is in-memory and not persisted) and a non-finite
+clock both resolve to "announce". A redundant toast is cosmetic; a missing one is the bug. The gate
+is written as a positive requirement for the same reason NaN gates are elsewhere in TAOM.
+
+`IRealTimeProvider` exists for this and nothing else. It is a seam for the same reason
+`IRandomProvider` is one — a service that reads the clock directly cannot be tested — and it is
+deliberately **not** campaign time. Everything else in this feature measures campaign days, because
+that is what the fiction runs on; this measures what the player experienced, and the two diverge by
+exactly the multiplier.
+
+### Duty gates must admit someone who can pass
+
+`SkillCheckService.Passes` is `skill + max(0,trust)×2 + rank×4 + Next(0..50) >= difficulty`. The
+roll caps at 50, so a row whose `difficulty` exceeds a gated-in player's reachable total by more
+than 50 is not *hard* — it is **impossible**, and every offer is a guaranteed trust loss the player
+could neither foresee nor avoid.
+
+`hideout_strike` shipped that way: difficulty 76, gated at Veteran with **no** `minTrust`, while its
+two Veteran siblings both had one (`trusted_dispatch` 70/trust 15, `relief_dispatch` 72/trust 8). An
+untrained Veteran needed 58 on a d50. Fixed by completing the pattern the author had already
+established — `minTrust: 15`, the value already in the file for a comparable duty — rather than by
+inventing a new difficulty.
+
+`FieldDutyReachabilityTests` now pins two floors: no row may be unpassable by the weakest player its
+own gates admit, and the difficulty ceiling must **rise** with the rank required, so a promotion
+cannot hand the player easier work than it just unlocked. Both are floors, not balance opinions —
+whether a 6% duty is *good* belongs to whoever plays it; whether a 0% duty is a *bug* does not.
+
 ### The player is NEVER detached by a duty — do not re-add travel
 
 This is the load-bearing property of the design, and it is pinned by

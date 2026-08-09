@@ -63,6 +63,56 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### fix(enlistment): a duty you can read, and one you can actually win (#436)
+
+**The toasts.** A duty announces at start and reports at resolve, and at 4x those land four real
+seconds apart — measured live: `scout_route` started 09:29:38 and failed 09:29:42. A Bannerlord
+toast lives about three seconds, so the assignment had faded as the result arrived. The player
+reported being given one duty; the log records two. Trust had already moved off a message nobody
+could read, which is the same outcome as the P1 the assignment toast was added to fix, reached by a
+different route.
+
+The result toast is now **self-contained** — `Orders: {DUTY}. {RESULT}` — so reading exactly one
+message gets the whole story. That is what makes it safe to **skip the assignment toast when the
+shift is too fast to read two**: `FieldDutyRuntime` samples real seconds per campaign hour from the
+gap between hourly ticks (that gap *is* the acceleration multiplier) and predicts the shift length.
+Both halves stay separate variables rather than a concatenated template, so translators can reorder
+them.
+
+Everything fails toward announcing. An unknown rate — first duty of a session, or straight after a
+load, since the estimate is in-memory by design — and a non-finite clock both resolve to "announce",
+written as a positive requirement for the same reason NaN gates are elsewhere. A redundant toast is
+cosmetic; a missing one is the bug.
+
+`IRealTimeProvider` exists for this and nothing else, a seam for the same reason `IRandomProvider`
+is one. Deliberately not campaign time: everything else here measures campaign days because that is
+what the fiction runs on, while this measures what the player experienced, and the two diverge by
+exactly the multiplier.
+
+**Both duty toast keys were unregistered.** `taom_enlist_duty_assigned` has been English-only since
+the day it was added. It is a third invisible-key form — not a `{=key}` literal, not a runtime-composed
+string, but a bare key handed to `IInquiryAdapter.ShowMessage`, which assembles the `{=…}` internally.
+Sweeping only the adapter call sites, where the contract guarantees the argument is a loc key: nine
+keys, two unregistered, both now registered across 12 languages.
+
+**`hideout_strike` could not be passed.** `Passes` is `skill + max(0,trust)×2 + rank×4 + d50 >=
+difficulty`. At difficulty 76, gated Veteran with no `minTrust`, an untrained Veteran needed 58 on a
+d50 — every offer a guaranteed trust loss the player could neither foresee nor avoid. Its two Veteran
+siblings both gate on trust (`trusted_dispatch` 70/15, `relief_dispatch` 72/8); the hardest of the
+three had no gate at all. Fixed by completing the author's own pattern with the value already in the
+file, not by inventing a difficulty.
+
+`FieldDutyReachabilityTests` pins two floors: no row may be unpassable by the weakest player its own
+gates admit, and the difficulty ceiling must rise with the rank required, so a promotion cannot hand
+the player easier work than it just unlocked. Floors, not balance opinions — whether a 6% duty is
+good belongs to whoever plays it; whether a 0% duty is a bug does not.
+
+**`maxOfferChance` was dead config.** Shipped at 0.45 against an attainable ceiling of
+`0.06 base + 0.15 pressure + 20 trust × 0.01 = 0.41`, so the clamp could never bind and raising it
+did nothing. Set to 0.40 so it binds, and the config provider now warns when the three values drift
+apart again — a warning rather than a revert, because the value is harmless and the useful action is
+telling the tuner the knob is inert.
+
 ### chore(enlistment): the diagnostic trace ships OFF now that the feature is verified
 
 Measured on the field session that closed #375: **950 of 3,452 log lines were enlistment, and five

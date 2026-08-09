@@ -224,5 +224,7 @@
     <string id="taom_enlist_duty_hideout_strike_failure" text="寄せが早々に崩れ、持ち出した分だけで退く。" />
     <string id="taom_enlist_duty_service_shift_success" text="そなたの当番は何事もなく過ぎた。" />
     <string id="taom_enlist_duty_service_shift_failure" text="持ち場で眠っているのを見つかった。記録に残る。" />
+	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}命令を受けた：{DUTY}。" />
+	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}命令：{DUTY}。{RESULT}" />
   </strings>
 </base>
