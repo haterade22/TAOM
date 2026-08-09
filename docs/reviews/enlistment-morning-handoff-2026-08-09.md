@@ -16,7 +16,7 @@ what your log showed, and the whole design rests on a property only you can conf
 
 Grep afterwards for `[Enlistment.Duties]` — start, resolve and cancel all log now.
 
-## What changed and why
+## Part 1 — the duty rework
 
 ### Field duties no longer detach you (#428)
 
@@ -32,6 +32,17 @@ nothing in the mod destroys a party any more, so the re-entrancy that killed you
 occur. And the roll cost no new content: `supportSkills` was already authored for all 13 rows and
 had **no consumer at all**, so per-duty skills came from data that was already there.
 
+Reviews: Codex returned **FIX FIRST** (1 P1, 2 P2, 2 P3), the five-agent deep review 5 MED. All ten
+fixed. **None was caught before commit, because I committed the C# without running `/deep-review`,
+which CLAUDE.md marks Mandatory.** The gate works; I ran it late.
+
+The uncomfortable one, in full in the RCA: hours after codifying *"a comment asserting a property the
+code lacks"* as the defect class behind the #375 crash, I wrote a comment guaranteeing
+`RankBonusPerLevel` was shared and could not drift — while a second definition sat in the file next
+door. Both reviewers found it with one `grep`, immediately. I never ran that grep because I had just
+written the alias and had no reason to doubt myself. That asymmetry is the entire value of an
+independent pass.
+
 ### PR #427 merged, then root-caused
 
 The Rohan-gloves fix was correct but **revertible**: the roster is a generated artifact, and
@@ -46,59 +57,82 @@ The `MapResumed` half is good. The quit-to-load half has a HIGH: `OnGameEnd` rea
 in-campaign load, which is the exact path it claims to fix. Its own cited log also contradicts one
 stated claim. I suggested splitting it. Sternab's call.
 
-## Reviews
+## Part 2 — one bug turned out to be six
 
-| Pass | Verdict |
-|---|---|
-| Codex, duty rework | **FIX FIRST** — 1 P1, 2 P2, 2 P3. All fixed |
-| Deep review, duty rework (5 agents) | 5 MED. All fixed |
-| Deep review, PRs #427/#429 (6 agents) | HIGH on each. #427's fixed; #429's returned to the author |
+Finding 9 of the duty RCA was local: 26 duty-result toasts shipped unregistered because the key is
+**composed at runtime** from the duty id, so no `{=key}` grep can see it — and
+`GetLocalizedText` short-circuits on English, so it renders correctly for you and is broken only for
+the other eleven languages.
 
-**Ten findings on the rework, none caught before commit — because I committed the C# without
-running `/deep-review`, which CLAUDE.md marks Mandatory.** The gate works; I ran it late.
+I swept all four composed-key sites in the codebase. One more was live: **all 96 character-creation
+narrative strings for `goblin` and `mistymountainorcs`** — two entire cultures, while the other
+sixteen were complete (#432). English registered; the 12-language pass is owed and costs about
+$2.16 by the tool's own estimate, so I did not run it on an unrotated key.
 
-The uncomfortable one, recorded in full in the RCA: hours after codifying *"a comment asserting a
-property the code lacks"* as the defect class behind the #375 crash, I wrote a comment guaranteeing
-`RankBonusPerLevel` was shared and could not drift — while a second definition sat in the file next
-door. Both reviewers found it with one `grep`, immediately. I never ran that grep because I had just
-written the alias and had no reason to doubt myself. That asymmetry is the entire value of an
-independent pass.
+Then the pattern underneath became visible. **Six separate systems have shipped a per-culture gap,
+and they are not the same cultures each time:**
+
+| System | Missing | Issue | Guard |
+|---|---|---|---|
+| eligible careers | abanissa, shaghana, goblin, mistymountainorcs | review #24 | pre-existing test |
+| narrative options | abanissa, shaghana | #111 (open since May) | added |
+| narrative strings | goblin, mistymountainorcs | #432 | added |
+| education templates | fixed earlier | #354 | validator rule |
+| enlistment rosters | abanissa, shaghana | #431 | added |
+| player CC equipment | goblin, mistymountainorcs + the 6 vanilla | #433 | none yet |
+
+One cause: **every one of those coverage tables is hand-maintained, and each was completed at a
+different moment.** Nobody forgot — the lists had no way to know. The tell is that
+`generate_char_creation_equipment.py` *does* include shaghana and abanissa, the two cultures every
+other table misses. It is not about which cultures are obscure.
+
+So the three guards I added enumerate from the culture data itself (`cultures.json`,
+`is_main_culture="true"`) rather than from a list someone must remember to extend. Each carries a
+documented-exception list for the known gaps, plus a second test that **fails when an exception is
+resolved** — including partial authoring, which is harder to notice than none at all. Every one was
+verified RED before GREEN.
+
+**No design decisions were made.** #111 (author content vs drop the cultures from `cultures.json`),
+#431 (author rosters vs make the fallback genuinely neutral) and #433 (what the vanilla six should
+wear) are all yours. What is added is the invariant, so culture 21 cannot arrive the same way.
 
 ## Issues
 
-- **#428** — fixed, left OPEN for the in-game gate above
-- **#427** — merged (`7ac91bb1`) + root cause (`7c93e0fd`)
-- **#429** — CHANGES_REQUESTED
-- **#424** — unblocked by #406 closing; still needs the F1–F8 look
-- **#355, #334** — closed on evidence during the sweep; 19 others updated
+- **#428** duty rework — fixed, OPEN for the in-game gate above
+- **#375** — updated: the crash surface is deleted, not guarded
+- **#111** — re-verified still true at HEAD by counting; guard added; still needs your A/B/C call
+- **#431** *(new)* — abanissa/shaghana lords issue Rohan militia gear; guard added
+- **#432** *(new)* — the 96 CC strings; English landed, translation owed
+- **#433** *(new)* — eight selectable cultures get no player starting equipment
+- **#427** merged (`7ac91bb1`) + root cause (`7c93e0fd`) · **#429** CHANGES_REQUESTED
+- **#424** unblocked by #406 closing; still needs the F1–F8 look
 
 ## State
 
-Suite **6274 passing / 0 failing** · `validate_moduledata.py` PASS · `lint_docs.py` clean ·
-217 localization keys, all 12 languages id-identical to English (the 26 duty result toasts are
-per-duty, not generic — the toast is the only thing you see of a duty now).
+Suite **6281 passing / 0 failing** · `validate_moduledata.py` PASS · `lint_docs.py` clean ·
+217 enlistment localization keys, all 12 languages id-identical to English.
 
 `SubModule.xml`'s `<Version>` is untouched, so no release tag is owed from this work.
 
 ## Owed
 
 1. The in-game duty check above, and #424's F1–F8 look.
-2. **`IDutyWorldAdapter` wants renaming** — it is four members of daily upkeep with one consumer,
-   and "Duty" no longer describes it. Deliberately not done overnight: it touches `IoC.cs`, a
-   single-owner file, and I would not put a rename in the same change as a behavioural rework.
-3. `ExitSettlementForDuty` has zero callers and a doc describing the deleted deadline model.
-4. Two cultures (`abanissa`, `shaghana`) have clans but no `enlist_*` rosters, so they fall through
-   to `enlist_default_*` — which is **Rohan militia gear**. Same complaint that opened #427, by a
-   different mechanism. Found by the review; not filed as an issue yet, since you may want the
-   default kit made culture-neutral instead.
+2. **The 12-language translation of the 96 CC strings** (#432) — one command per language, ~$2.16
+   total, but it calls the Anthropic API and the key on this machine is the one that needs rotating.
+3. **`IDutyWorldAdapter` wants renaming** — four members of daily upkeep with one consumer, and
+   "Duty" no longer describes it. Deliberately not done: it touches `Main/IoC.cs`, a single-owner
+   file another session was working in.
+4. Design calls on #111, #431, #433.
 
 ## Note on the other session
 
-They were working the whole night too — release tagging, `/release`, and `AutoResolveDiagnostics`.
-I held `CHANGELOG.md`, `SubModule.cs` and `IoC.cs` until they committed.
+They were working most of the night too — release tagging, `/release`, and `AutoResolveDiagnostics`.
+I held `CHANGELOG.md`, `SubModule.cs` and `IoC.cs` until they committed, and checked
+`git status --porcelain` on `CHANGELOG.md` before each of my own edits to it.
 
-One incident worth knowing: my CHANGELOG entries were swept into **their** commit `3b0e0831`
-("docs(battleload): …"). Content is intact and correct in HEAD; only the attribution is wrong. I
-caused it by writing the file with one command and committing with the next — the gap CLAUDE.md
-warns about. I did not rewrite their commit to fix it, because that would be far more destructive
-than a misleading message.
+One incident worth knowing: my earliest CHANGELOG entries were swept into **their** commit
+`3b0e0831` ("docs(battleload): …"). Content is intact and correct in HEAD; only the attribution is
+wrong. I caused it by writing the file with one command and committing with the next — the gap
+CLAUDE.md warns about. I did not rewrite their commit to fix it, because that would be far more
+destructive than a misleading message. Every later CHANGELOG edit was staged in the same command
+that made it.
