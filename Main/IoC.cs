@@ -145,6 +145,7 @@ public static class IoC
         BattleLoadDiagnosticsIoC.RegisterBattleLoadDiagnosticsFeature(container);
         Features.SaveLoadDiagnostics.SaveLoadDiagnosticsIoC.RegisterSaveLoadDiagnosticsFeature(container);
         Features.BlowDiagnostics.BlowDiagnosticsIoC.RegisterBlowDiagnosticsFeature(container);
+        Features.AutoResolveDiagnostics.AutoResolveDiagnosticsIoC.RegisterAutoResolveDiagnosticsFeature(container);
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);

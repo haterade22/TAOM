@@ -252,3 +252,54 @@ never asserted recovery.
 
 This is `harmony-patches.md` "Latches & Toggle Gates" rule 2 in a new costume: **state transitions
 come first, gates second.** When you add a back-off, add the test that proves it un-backs-off.
+
+### Enumerate what runs BEFORE an event dispatch, not only the teardown after it
+
+When reading engine state inside an event handler, verifying "the teardown runs later, so the data
+is intact" is a half-audit. Decompile the dispatch site and walk *upward* through every path that
+reaches it.
+
+**Why missed:** AutoResolveDiagnostics (2026-08-08) confirmed `MapEventSide.HandleMapEventEnd()`
+runs at `MapEvent.cs:2147`, after the `:2068` dispatch, and concluded `Party.MemberRoster` was
+intact. It is not: `CaptureDefeatedPartyMembers` (`:2018`) strips captured troops from the defeated
+parties and `MapEventSide.Route()` (`:1250`) empties the roster on a rout — both reached from the
+`BattleState` setter at `:301`, well before the dispatch. Result: every composition measurement was
+taken on winners only, a silent survivorship bias in the one thing the feature existed to measure.
+
+**Prevent:** confirming the absence of one mutation is not confirming the absence of all mutations —
+and do not stop at the second one either. The first fix swapped `MemberRoster` for
+`MapEventParty.Troops`, which only flips per-descriptor state in its own mutators and looked safe.
+It was not: `MapEventSide.MakeReadyParty` calls `MapEventParty.Update()`, which does
+`_roster.Clear()` and rebuilds from the already-stripped `MemberRoster`. Measured over 4,380 live
+battles, losing sides read a median 55% short and winners 1%.
+
+**The general rule: the only reliable record of a pre-event state is one captured before the event.**
+If a measurement must reflect state at time T, snapshot at time T; do not hunt for a field that
+survives to time T+1. Sibling of "GameModel Cross-Entity Propagation" in `csharp-architecture.md`:
+open the engine code, do not reason from the shape of the API.
+
+**Source:** `docs/reviews/rca-autoresolve-diagnostics-2026-08-08.md` (P1, found independently by
+Codex and the data-flow agent).
+
+### Resetting the sibling fields is not the same as resetting the field
+
+`AutoResolveDiagnosticsBehavior`'s session-launch handler cleared `_pending` and `_sequence`, under a
+comment that named the exact hazard: "A second campaign in the same process must not inherit the
+first one's tracking." The third field on the same class, `_censusWritten`, was not cleared. So the
+troop census ran once per **process** rather than once per session, and a player who returned to the
+main menu and started a second campaign got a log with no engine ground truth at all — silently, and
+the census is what validates every tier and power figure the offline analysis rests on.
+
+The adjacent correct code is what makes this hard to see: a reviewer reading the handler sees a reset
+block with a rationale and moves on. Two agents plus an adversarial pass all found it only by
+enumerating the class's fields rather than by reading the handler.
+
+Second defect in the same method, same shape: the latch was set **before** the work it guards, so one
+exception mid-write foreclosed the census permanently instead of leaving it retryable.
+
+**How to apply:** at a session/campaign boundary, enumerate every instance field on the type and
+decide for each whether it is session-scoped — do not review the reset block, review the field list.
+Set an idempotence latch *after* the successful pass, never before, unless the retry itself is the
+hazard.
+
+**Source:** review wave on #430, 2026-08-08.

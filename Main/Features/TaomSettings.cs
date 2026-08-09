@@ -355,6 +355,29 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Log every prop, including working ones. Off = log only props that are unusable, plus the summary.")]
     public bool SiegePropDiagnosticsVerbose { get; set; } = false;
 
+    // --- Battle Tactics / Auto-Resolve Diagnostics ---
+    // Diagnostic only, no gameplay effect. Simulated-battle strength reads ONLY troop tier, so
+    // before changing that we need to know what real mid-campaign armies look like. Party
+    // templates cannot answer it — they only seed a lord's party at spawn.
+    //
+    // ON by default, unlike the per-event diagnostics: this emits one line per completed battle,
+    // not one per hit, and the question is always asked about a session that already happened.
+    // The AutoResolveDiagnosticsSettingsProvider fallback must match this default; a test pins both.
+
+    [SettingPropertyGroup("Battle Tactics/Auto-Resolve Diagnostics", GroupOrder = 24)]
+    // RequireRestart = false is load-bearing, not cosmetic: MCM's BaseSettingPropertyAttribute
+    // defaults it to TRUE, so omitting it tells the player a restart is needed for a toggle that
+    // is read on every MapEventEnded and takes effect immediately. Same convention as the sibling
+    // diagnostics toggles below.
+    [SettingPropertyBool("Log Auto-Resolved Battles", Order = 0, RequireRestart = false,
+        HintText = "Master switch. Write one record per completed map battle (composition, sizes, casualties, outcome) to the TAOM log for balance analysis. Off means the feature does nothing at all — no per-battle capture, no cost. Diagnostic only, changes no gameplay. On by default.")]
+    public bool LogAutoResolvedBattles { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Auto-Resolve Diagnostics")]
+    [SettingPropertyBool("Log Troop Census", Order = 1, RequireRestart = false,
+        HintText = "Once per session, dump every troop type's engine-side tier, power, formation class and hit points. This verifies the offline analysis against the running game rather than trusting it — but it is one line per character (~8,300, roughly half the entire log) and the answer only changes when troop data or the balance config does. Capture it once, then leave it off. Requires the master switch above. Off by default.")]
+    public bool LogAutoResolveTroopCensus { get; set; } = false;
+
     // --- Enlistment ---
     // Master switch for the whole serve-as-a-soldier feature. OFF removes the enlist dialog line,
     // so no new service can start. Turning it off MID-SERVICE does not simply freeze the feature:

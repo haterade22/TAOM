@@ -4,6 +4,205 @@
 
 ## 2026-08-08
 
+### fix(autoresolve): the battle log was recording the consequence of losing as its cause
+
+Schema v6. v5 fixed troop composition by snapshotting rosters at `MapEventStarted`, but left four
+per-side fields — `leader`, `tactics`, `powerModifier`, `sideMorale` — being read at `MapEventEnded`.
+All four are *inputs* to the simulation, and the engine removes the defeated side's leader and zeroes
+its morale as part of losing.
+
+Measured over the v5 corpus: losing sides had `sideMorale == 0` in **5,543 of 5,548** battles, and a
+resolvable leader in **17 of 5,546 — 0%**, against 74% for winning sides. Any tuning that controlled
+for morale would have been controlling for "did this side lose", which is the dependent variable.
+
+All four now live in `BattleStartSnapshot` alongside the rosters. Also added: per-troop-class
+`contextModifier`, the `GetContextModifier` terrain × class × side term spanning −0.50 to +0.30 that
+the offline power model had no way to see. Its capture is guarded on
+`SimulationContext != PowerCalculationContext.Estimated` — that context sets no terrain flag, so the
+engine's lookup throws `KeyNotFoundException`.
+
+This is the second instance of one bug class in this feature, so the rule is now written down in the
+feature doc rather than left implicit: **classify every logged field as an input or an outcome, and
+capture it at the matching end of the battle.** Both prior instances were found by a cross-check, not
+by a test — the analyzer now warns when a v5 record appears in the corpus instead of blending the two.
+
+`analyze_battle_logs.py` accepts v5 and v6 and names the four unreliable fields when v5 records are
+present.
+
+Not-tested: the handler path (`MapEvent` is not constructible outside the game).
+
+### fix(autoresolve): review wave — wounded men counted as fielded, and a version gate that was never wired
+
+Five reviewers (four agents plus an adversarial Codex pass) and a 2,653-record live corpus. The two
+that were actively producing wrong numbers:
+
+**`fielded` counted wounded troops.** `AccumulateRoster` recorded `TroopRosterElement.Number`, which
+includes the wounded, while `menStart` sums `HealthyManCountAtStart`, which does not — and a wounded
+troop is never allocated into the simulation at all. Measured before the fix: 12.3% of sides
+reported more fielded men than `menStart`, the corpus overstated by +4.5% on average, and the worst
+case was a side with `menStart=1` against `fielded=141` — a party that was 140 wounded, credited
+with 141 fighters. Same class of error as the roster-stripping bug: a plausible number measuring the
+wrong thing.
+
+**The analyzer's version gate did not exist.** `SUPPORTED_VERSIONS`, `EXPECTED_PARTY` and
+`OPTIONAL_PARTY` were each referenced exactly once — at their own definition. So the refusal
+`BattleLogRecord`'s doc comment promised ("the analyzer refuses to analyse a version it does not
+understand") never happened, and a rotated pre-v5 log in the same directory would have blended
+winners-only composition data straight back into the corpus. Now enforced, with the party and siege
+levels checked too, across every record and both sides rather than `records[0]`.
+
+Also fixed: the census latch survived the session boundary, so a second campaign in one process got
+no census at all, and the latch was set *before* the write so one failure foreclosed it permanently;
+`OnPartyAddedToMapEvent` was ungated and re-ran a full both-sides snapshot per joining party, which
+is quadratic because `PartyBase.MapEventSide` recurses into `AttachedParties`; late joiners never
+contributed a `contextModifier`, so a battle could log cavalry with no cavalry terrain term; the
+serializer could emit a bare `NaN` token, which Python's `json.loads` silently accepts as a float
+rather than rejecting; and player battles the player *fought* were being counted in a corpus that
+exists to measure auto-resolve.
+
+`AutoResolveDiagnosticsBehavior` is now event wiring only, with the census, record ids and emit
+policy behind `IAutoResolveLogWriter` — it had reached 237 lines against ADR-002's 150, and every
+bug above was in that entry-point logic rather than in the wiring. The pending-battle map stays in
+the behavior because it is keyed by the sealed `MapEvent` (ADR-007).
+
+One test was removed rather than kept: `OnMapEventEnded_WhenTheAdapterThrows_DoesNotPropagate`
+passed a null `MapEvent`, which returns at the null guard before the adapter is touched — it would
+have passed with the try/catch deleted. That was a recurrence of finding #8 in this feature's own
+RCA. Containment is now asserted on `OnSessionLaunched`, which is genuinely reachable.
+
+Not-tested: the handler paths themselves (`MapEvent` and `PartyBase` are not constructible outside
+the game).
+
+### perf(autoresolve): the troop census now defaults off, and stops flushing 8,341 times
+
+Measured on a live session: the census was **8,341 of 17,622 log lines — 47% of the file** — against
+3,661 battle records. It is static per build (the engine's tier, power and classification for a
+troop move only when troop data or the balance config moves), so it was rewriting an identical
+answer every launch.
+
+Two changes. The default flips to **off**, inverting the master switch's opt-out default on purpose:
+a battle record describes a session that already happened and must have been running beforehand,
+whereas the census can be captured once, on demand, after the data it measures changes. And its
+per-record lines move from `LogInfo` to `LogDebug` — `LogInfo` takes the write lock and flushes on
+the calling thread per line, so 8,341 of them were thousands of synchronous flushes on the
+session-launch thread. The completion summary stays `LogInfo`, so there is still durable proof the
+census ran.
+
+### feat(autoresolve): a separate toggle for the troop census
+
+`LogAutoResolveTroopCensus`, under Battle Tactics → Auto-Resolve Diagnostics, live (no restart). The
+census is a once-per-session dump of every troop's tier, class and equipment — roughly 8,300 lines
+and 2.5 MB — which is worth paying once but is the first thing you want off when the log gets
+unwieldy. It nests under the existing `LogAutoResolvedBattles` master: master off means no census
+regardless of this setting.
+
+Both settings are classified `Instrumentation` in `CoopSettingsRelevance`, so neither enters the
+co-op settings fingerprint. That classification is a claim about behaviour, not a convenience: each
+gates a log line and nothing the simulation reads. `SettingsFingerprintTests` moves 154 → 155
+reflected properties with coverage unchanged at 112, and `docs/features/coop-interop.md` tracks the
+same numbers.
+
+### perf(autoresolve): turning the battle log off now actually stops the work
+
+`OnMapEventEnded` gated the log write on the MCM toggle, but `OnMapEventStarted` snapshotted the start
+rosters unconditionally. Turning the feature off therefore still paid, per battle start world-wide, a
+nested-dictionary allocation plus a `Party.Id.ToString()` and a full roster walk per involved party.
+Battle count scales with campaign time, so on fast-forward a disabled feature was still paying its
+expensive half, multiplied.
+
+The gate now covers the snapshot. This does not weaken the latch discipline the original comment was
+protecting: the closer in `OnMapEventEnded`'s `finally` stays unconditional, so a toggle flipped
+mid-session still cannot strand a pending entry. Flipping it *on* mid-battle now yields a record with
+no start rosters, which `Capture` already accepts, rather than a stranded snapshot.
+
+The decision is a pure `ShouldCaptureStart(isEnabled, hasMapEvent, pendingCount)` seam because
+`MapEvent` cannot be constructed in a unit test and the null path returns before any settings read —
+asserting `DidNotReceive().SnapshotStartRosters(...)` with a null `MapEvent` would pass whether or not
+the gate existed. Five tests, including the paired positive and both cap boundaries. Mutation-checked:
+deleting `&& isEnabled` reddens exactly `ShouldCaptureStart_WhenDisabled_IsFalse`, and nothing else.
+
+Found while auditing the campaign-tick surface for a 16–40 FPS report. Cheap checks deliberately
+precede the settings read — `IsEnabled` is an MCM registry lookup, not a field read.
+
+Not-tested: the handler path itself (`MapEvent` is not constructible outside the game).
+
+### feat(autoresolve): record what real armies look like, because auto-resolve reads only troop tier
+
+Simulated map battles score every soldier from `troop.level` alone. `CharacterObject.Tier` is
+`clamp(ceil((level−5)/5), 0, MaxCharacterTier)`, power is `tierTable[Tier] × (mounted ? 1.2 : 1)`,
+and damage is `(0.5+0.5·rand) × 40 × (P_striker/P_struck)^0.7 × advantage`. Skills, weapons, armour,
+race and hit points never reach the simulation — so `tools/rebalance_troops.py`, the project's main
+balance lever, has only ever tuned an axis auto-resolve cannot see. Measured consequence: Gondor
+beats Mordor 100% of the time, Erebor beats Gundabad 100%, and Mordor is last of all seventeen
+cultures on power per man.
+
+Fixing that needs to be tuned against real armies, and party templates cannot supply them — they
+only seed a lord's party at spawn and drift through recruitment and casualties by mid-campaign. So
+this adds `AutoResolveDiagnostics`: one record per completed map battle, written through the shared
+logger on `MapEventEnded`, plus `tools/analyze_battle_logs.py` to consume it.
+
+The record is deliberately **raw** — troop ids and counts, nothing derived. Tier, class, race and
+power are all computed offline against `troops_*.xml`, so the analysis can be redone a dozen
+different ways without a rebuild or a second play session, and the unverified `WeaponClass`
+classification API stays off the data-collection path entirely.
+
+One engine fact worth recording because it is a trap: `MapEvent.State` is set to `WaitingRemoval`
+at `:2067`, one line *before* the dispatch, so `IsFinalized` is already true inside the handler.
+Gating on it — as sibling code legitimately does elsewhere — would have logged nothing, forever,
+with no error.
+
+Review caught three defects that all failed **silently** rather than loudly, which for a measurement
+tool is worse than a crash — it launders a guess into a number. The worst: composition was read from
+`Party.MemberRoster`, but the engine strips captured troops from a *defeated* party
+(`CaptureDefeatedPartyMembers`, `MapEvent.cs:2018`) and empties it on a rout (`:1250`), both from the
+`BattleState` setter at `:301` — **before** the `:2068` dispatch. Every composition, loss rate and
+culture multiplier was therefore measured on winners only. Found independently by Codex and the
+data-flow agent.
+
+The first fix read `MapEventParty.Troops` instead, which only flips per-descriptor state in its own
+mutators and looked immune. It is not: `MapEventSide.MakeReadyParty` calls `MapEventParty.Update()`,
+which does `_roster.Clear()` and rebuilds from the same stripped roster. A live session settled it —
+**losing sides read a median 55% short, winners 1%**. Same bug, third mechanism. The shipped fix
+takes a start-of-battle snapshot and accepts the per-battle latch, handled explicitly: it opens and
+closes unconditionally, the toggle gates only the write, the closer is in a `finally`, and a test
+asserts it closes even with the toggle off. Casualties still come from the engine's accumulating
+per-troop rosters, which genuinely do survive to battle end.
+
+The safeguard that would have caught it had been *documented in three places and implemented in
+none* — `menStart` was logged specifically so the analyzer could cross-check itself, and the comment
+read as evidence the check existed. It exists now. The analyzer also validates the producer/consumer
+field contract in both directions across every record and hard-stops on drift, after two earlier
+bugs where it read a key the C# never wrote (reporting a 0.0% loss rate for every class) and looked
+for a log path that never exists (reading zero records).
+
+Also fixed from review: whole-side rosters attributed to the leader's culture rather than each
+party's own; party morale logged where the simulation reads `MapEventSide.GetSideMorale()`; and
+`leaderParty?.Culture`, which still throws for a null-faction party because `PartyBase.Culture` is
+an unguarded `MapFaction.Culture` — the documented `PartyBase.Owner` hazard class.
+
+RCA: `docs/reviews/rca-autoresolve-diagnostics-2026-08-08.md` — all three silent failures share one
+shape, and the durable rule is now in the lessons record: *a measurement tool must be able to detect
+that it is measuring the wrong thing*, and *enumerate what runs BEFORE an event dispatch, not only
+the teardown after it*.
+
+Also added, after the first collection run showed what was missing: the engine's own `strength` and
+`advantage` figures (ground truth for the power model), `present`/`participating`/`troopLimit`,
+`playerSimulated`, `rounds`, `session`, a **siege block** (`settlementAdvantage`, wall level, wall
+HP, engines built — measured at 3.6–6.0, and the term that actually decides a siege), and a
+once-per-session **troop census** dumping every CharacterObject's engine-side tier, power, formation
+class, hit points and race.
+
+The census immediately earned its place: it validated the offline model at **829/829 on tier and
+829/829 on classification**, confirmed hit points are **uniformly 100** (so race and armour never
+reach the removal roll), and caught a real bug — the engine disagreed on power for exactly 146
+troops, every one mounted, every one off by ×1.2, because the offline model omitted
+`MountedMultiplier`. The analyzer now reads power from the engine rather than a hardcoded table, and
+uses census entries for the 7% of men (`looter`, villagers, caravan guards, armed traders) whose ids
+live outside `troops_*.xml` and were previously dropped from composition.
+
+Not-tested: capture from a live `MapEvent` (needs a running campaign). Verified against the real
+`FileLogger` line format end-to-end, then against 9,286 live records across two sessions.
+
 ### fix(coopinterop): a fingerprint over zero settings no longer reads as agreement
 
 `SettingsFingerprint` skipped null settings pages, which is right — MCM's `Instance` is a

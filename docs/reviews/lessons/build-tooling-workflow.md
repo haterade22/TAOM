@@ -928,3 +928,49 @@ leaves 120,178, already past the tool's own warn line.
   out as a sentence and confirm the measured set is that set — this tool's own docstring already said
   it and the code still did not.
 - **Source:** #359, `docs/audits/issue-triage-2026-08-08.md` (`62abaeb6`)
+
+### A measurement tool must be able to detect that it is measuring the wrong thing
+
+Every measurement pipeline needs at least one independent quantity it can cross-check itself
+against, and it must **stop** rather than report when the check fails.
+
+**Why missed:** AutoResolveDiagnostics (2026-08-08) shipped four defects into review that each
+produced plausible output rather than an error — a 0.0% loss rate for every class (the analyzer read
+a key the producer never wrote), zero records parsed (wrong log path and format), a composition
+table built from winners only, and a morale column reading the wrong engine property. For a tool
+whose output is pasted into a balance config, a silent wrong answer is worse than no tool: it
+launders a guess into a number.
+
+The safeguard had even been *written about*. `menStart` was logged specifically so the analyzer
+could cross-check its roster reconstruction, and three separate places — a DTO comment, the feature
+doc and the CHANGELOG — described that check. It was never implemented. That is why the
+survivorship bias survived: the comment read as evidence the check existed.
+
+**Prevent:** (1) validate the producer/consumer field contract in both directions, on every record,
+and hard-stop on drift — a warning that is followed by the reports anyway is not a gate. (2) Log one
+authoritative quantity that is derived independently of the rest, and assert against it. (3) Never
+write the justification for a safeguard in the same pass as the field it justifies; write the
+safeguard first.
+
+**Source:** `docs/reviews/rca-autoresolve-diagnostics-2026-08-08.md`.
+
+### A validation constant nobody references is worse than no validation
+
+`tools/analyze_battle_logs.py` declared `SUPPORTED_VERSIONS`, `EXPECTED_PARTY` and `OPTIONAL_PARTY`,
+and the C# `BattleLogRecord` doc comment told readers the analyzer "refuses to analyse a version it
+does not understand rather than producing quiet nonsense." A `grep -c` for each name returned **1** —
+its own definition. The gate had never existed, and the documentation asserting it made anyone
+reading the code *less* likely to check.
+
+The tell that this is a category, not an incident: a session editing that file changed
+`SUPPORTED_VERSIONS = {5}` to `{5, 6}` believing it was loosening an active constraint. A constant
+that looks like configuration is assumed to be wired.
+
+**How to apply:** when a constant encodes a rule, the same commit adds the assertion that consumes
+it — and one test that feeds a violating input and expects rejection. When reviewing a validation
+block, `grep -c` each constant it names before believing the block does anything; a count of 1 means
+the rule is decoration. Prefer validating the union across all records to sampling `records[0]`:
+drift does not have to appear in the first row, and a field only a defender or only a siege carries
+will sail past a single-sample check.
+
+**Source:** review wave on #430, 2026-08-08.
