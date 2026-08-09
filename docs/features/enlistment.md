@@ -151,18 +151,47 @@ writer thread puts it on disk — so a `LogDebug` downgrade changes durability, 
 false`) reaches the call sites through `IEnlistmentDiagnosticsSettingsProvider`, whose singleton reads
 the static on every call — which is what makes "takes effect immediately" true rather than aspirational.
 
-**It ships ON** while the enlisted-service loop is under active diagnosis, and the provider's
-MCM-absent fallback is `?? true` to match. Those are two independent literals encoding one decision;
-`CompiledDefault_AndProviderFallback_Agree` fails if either moves alone, so a player without MCM never
-gets different logging from a player at the shipped default.
+**It ships OFF since 2026-08-09**, and the provider's MCM-absent fallback is `?? false` to match.
+Those are two independent literals encoding one decision; `CompiledDefault_AndProviderFallback_Agree`
+fails if either moves alone, so a player without MCM never gets different logging from a player at
+the shipped default. The MCM-absent case is the one that decides the direction: a player with no
+settings host cannot turn the trace off in game, so defaulting them into it is the only choice that
+is unrecoverable.
+
+It shipped **ON** for as long as the service loop was under diagnosis, and it earned that — the
+trace is what found the battle-join defect (#406), the enlisted-general defect (#424) and the duty
+exposure (#428). The flip came when #375 closed on a field-verified session. That session is also
+the measurement: **950 of 3,452 log lines were enlistment, and five gated shapes accounted for 851
+of them** — `TICK` (202), `SYNC ok` (199), `PARK ok` (23), `RESTORE ok` (12) and the per-map-event
+line (450). The 52 ungated INFO sites produced the other ~99. A player now carries the events and
+none of the trace; turn it on before reproducing a problem you intend to report.
 
 **Gated lines emit at INFO, not DEBUG.** DEBUG is `FileLogger`'s async queue and a hard native CTD
 discards whatever is still in it — under a DEBUG design the trace you switched on to catch a crash is
 exactly what the crash destroys. Volume is the toggle's job; durability is the level's.
 
-| Gated (routine, ~93.5% of measured volume) | Always-on (faults + forensic controls) |
+| Gated (routine, ~90% of measured volume) | Always-on (faults + forensic controls) |
 |---|---|
 | `TICK` (reconciler), `SYNC ok`, `PARK ok`, `RESTORE ok`, "map event started, commander NOT in it" | every `PARK/SYNC/RESTORE FAILED`/`THREW`, the drift WARNING above `15f`, the stranded-`PlayerEncounter` sweep + its failure, "verdict=Attached but the party is NOT parked", and every `DischargeService` line — including `LEFT THE PLAYER UNABLE TO START ENCOUNTERS`, which is never gated under any circumstance |
+
+**The per-map-event line is additionally throttled to once per episode** (2026-08-09). Narrowing it
+in August to "only when the commander's party does not resolve" was correct for the defect it was
+chasing and wrong one level down: *unresolvable* is not rare, it is the **defining condition of the
+`CommanderUnavailable` grace**, so the moment a commander loses his party the line reverted to the
+every-world-event firehose it had been narrowed to escape — 450 lines in five minutes, measured
+live, each a synchronous flush, describing bandit skirmishes the player has no part in.
+
+It throttles on the **commander id**, not on `State != CommanderUnavailable`. The state gate would
+leave the 33-second window between the party vanishing and the reconciler transitioning unthrottled,
+and — the reason that matters — it would still spam in the one case the line exists to catch: a
+commander who *is* present while resolution fails, which is #406 and which leaves the state at
+`EnlistedAttached`.
+
+`PARK skipped` (was `PARK FAILED`) is a **WARNING, not an ERROR**, for the same reason: a commander
+with no active party is the grace's normal condition, not a fault. Live on 2026-08-09 it fired at
+ERROR four seconds before `commander lord_4_1 lost their party — grace until day 26039.4`, and it
+was the only ERROR in a 3,452-line session — the first line anyone would chase in a crash bundle,
+and a dead end. The sibling `MainParty is null` branch stays ERROR; that one cannot be legitimate.
 
 **"Toggle off" does NOT mean "zero `[EnlistDiag]` lines"** — the toggle gates volume, not the tag,
 because `[EnlistDiag]` is the grep handle a bug reporter needs. Fault lines keep it. Expect a support

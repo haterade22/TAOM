@@ -45,6 +45,47 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### chore(enlistment): the diagnostic trace ships OFF now that the feature is verified
+
+Measured on the field session that closed #375: **950 of 3,452 log lines were enlistment, and five
+gated message shapes accounted for 851 of them** — `TICK` (202), `SYNC ok` (199), `PARK ok` (23),
+`RESTORE ok` (12) and the per-map-event line (450). The 52 ungated INFO sites produced the other
+~99, and those are the ones worth keeping: oath, joins, duties, promotion, rewards, discharge.
+
+So almost nothing was deleted. The gating architecture was already right; the **default** was wrong.
+`EnableEnlistmentDiagnostics` flips to OFF, along with the provider's MCM-absent `?? false` — two
+literals encoding one decision, pinned together by an existing test. The MCM-absent case decides the
+direction: a player with no settings host cannot turn the trace off in game, so defaulting them into
+it is the only choice that is unrecoverable.
+
+It shipped ON for as long as the service loop was under diagnosis and it earned that — the trace is
+what found #406, #424 and #428. That work is done.
+
+Two things that needed more than a default flip, both found in the live session and both confirmed
+independently by a parallel triage:
+
+**The per-map-event line is throttled to once per episode.** Narrowing it on 2026-08-08 to "only
+when the commander's party does not resolve" was correct for the defect it was chasing and wrong one
+level down: *unresolvable* is not rare, it is the **defining condition of the `CommanderUnavailable`
+grace**. The moment a commander lost his party the line reverted to the every-world-event firehose it
+had been narrowed to escape — 450 lines in five minutes, each a synchronous flush, describing bandit
+skirmishes the player has no part in. Throttled on the commander id rather than on the state,
+because the state gate would leave the 33-second window before the transition unthrottled and would
+still spam in the one case the line exists to catch: a commander who *is* present while resolution
+fails, which is #406 and which leaves the state at `EnlistedAttached`.
+
+**`PARK FAILED` → `PARK skipped`, ERROR → WARNING.** A commander with no active party is the grace's
+normal condition. It fired at ERROR four seconds before `commander lord_4_1 lost their party — grace
+until day 26039.4`, and was the only ERROR in the session — the first line anyone would chase in a
+crash bundle, and a dead end. The sibling `MainParty is null` branch stays ERROR.
+
+The gate-shape guard test needed rewriting, and found something while it was at it: it had been
+scanning for `if (_diagSettings?.IsEnabled`, whose only occurrence in that file is the **comment**
+describing the rule. It was matching prose, and passed because the parenthesis walk happened to land
+correctly anyway. It now asserts the whole chain — toggle → local → guard → statement → call — which
+is stronger than the containment check it replaces, and comments are stripped before scanning so
+prose can never satisfy it again.
+
 ### fix(localization): Codex findings on the coverage guards — 1 P1, 1 P2, 3 P3
 
 An independent pass over the four coverage-guard commits. It confirmed the P1 I had already filed

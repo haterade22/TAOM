@@ -25,6 +25,14 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
     // Named _diagSettings, not _diag: _diag above is already this class's IModLogger.
     private readonly IEnlistmentDiagnosticsSettingsProvider _diagSettings;
 
+    /// <summary>
+    /// Commander id the "party did NOT resolve" line was last written for, or null when the
+    /// commander last resolved. Throttles that line to ONCE PER EPISODE — see the comment at its
+    /// call site. Diagnostics-only: nothing but the log statement reads it, so it carries no
+    /// behaviour and needs no persistence across a save.
+    /// </summary>
+    private string _loggedUnresolvedCommanderId;
+
     public EnlistmentBattleBehavior(
         IEnlistmentStore store,
         ICommanderLordAdapter commander,
@@ -109,17 +117,39 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
             // noise you have to filter past to find the unhealthy one. `resolvedParty == NONE` is
             // the actual failure signature — commander alive, id held, party unfindable — so that
             // is what survives. The healthy "not your battle" case is now silent.
-            // Still EXACTLY ONE logging statement under the gate, per the shape rule above. The
-            // resolve check joins the gate condition rather than becoming a nested block, and the
-            // `&&` short-circuit keeps BOTH GetPartyId and CountInvolved off the toggle-off path.
-            if (_diagSettings?.IsEnabled == true
-                && string.IsNullOrEmpty(_commander.GetPartyId(_store.Record.CommanderHeroId)))
+            //
+            // THROTTLED TO ONCE PER EPISODE 2026-08-09, because the 2026-08-08 narrowing above was
+            // still wrong — one level down. It assumed "the commander's party will not resolve" is
+            // rare. It is not: it is the DEFINING condition of the CommanderUnavailable grace, so
+            // the moment a commander loses his party the line reverts to the every-world-event
+            // firehose it was narrowed to escape. Measured live on 2026-08-09: 450 lines in five
+            // minutes, 13% of the whole log, describing bandit skirmishes the player has no part in,
+            // each one a synchronous FileLogger flush.
+            //
+            // Throttling on the commander id rather than on `State != CommanderUnavailable` is
+            // deliberate. The state gate would leave the 33-second window between the party
+            // vanishing (09:37:51 live) and the reconciler transitioning (09:38:24) unthrottled, and
+            // — more importantly — it would still spam in the case this line actually exists to
+            // catch: a commander who IS present while resolution fails, which is #406 and which
+            // leaves State at EnlistedAttached. One line per episode covers both.
+            //
+            // Gate shape holds: still EXACTLY ONE logging statement, the `return` stays outside it,
+            // and `CountInvolved` now sits behind the throttle as well as the toggle. The field
+            // write below is ungated on purpose — it is pure logging bookkeeping, but gating a
+            // mutation is the mistake the shape rule exists to prevent, so it does not get one.
+            var unresolved = _diagSettings?.IsEnabled == true
+                && string.IsNullOrEmpty(_commander.GetPartyId(_store.Record.CommanderHeroId));
+            var firstOfEpisode = unresolved
+                && _loggedUnresolvedCommanderId != _store.Record.CommanderHeroId;
+            _loggedUnresolvedCommanderId = unresolved ? _store.Record.CommanderHeroId : null;
+
+            if (firstOfEpisode)
                 _diag?.LogInfo(
                     $"[EnlistDiag] map event started and the commander's party did NOT resolve — " +
                     $"commanderHero='{_store.Record.CommanderHeroId}' resolvedParty='NONE' " +
                     $"attacker='{attackerParty?.MobileParty?.StringId ?? attackerParty?.Name?.ToString() ?? "?"}' " +
                     $"defender='{defenderParty?.MobileParty?.StringId ?? defenderParty?.Name?.ToString() ?? "?"}' " +
-                    $"involved={CountInvolved(mapEvent)}");
+                    $"involved={CountInvolved(mapEvent)} (further occurrences suppressed until the commander resolves again)");
             return;
         }
 

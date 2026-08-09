@@ -43,7 +43,16 @@ public sealed class MobilePartyAttachmentAdapter : IMobilePartyAttachmentAdapter
                 // FindCommanderParty returns null when the hero is missing, has no party, or the
                 // party is inactive. This is the silent failure behind "still enlisted but left
                 // behind": no park, no sync, no signal.
-                _logger?.LogError($"[EnlistDiag] PARK FAILED — commander '{commanderHeroId}' has no findable ACTIVE party. Player stays where they are.");
+                //
+                // WARNING, not ERROR (downgraded 2026-08-09). A commander with no active party is
+                // not necessarily a fault: it is the DEFINING condition of the CommanderUnavailable
+                // grace, which the reconciler handles deliberately and logs as its own state change.
+                // Live on 2026-08-09 this fired at ERROR four seconds before
+                // "commander lord_4_1 lost their party — grace until day 26039.4" — and it was the
+                // only ERROR in a 3,452-line session, so it is the first line anyone would chase in
+                // a crash bundle, and a dead end. The null-MainParty branch above stays ERROR
+                // because that one genuinely cannot be a legitimate state.
+                _logger?.LogWarning($"[EnlistDiag] PARK skipped — commander '{commanderHeroId}' has no findable ACTIVE party. Player stays where they are (expected during the commander-unavailable grace).");
                 return false;
             }
 

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -20,11 +21,11 @@ namespace TAOM.Tests.Features.Enlistment;
 /// self-heal for anyone who turns the toggle off. Group B1 exists to make that mistake impossible
 /// to ship: each of those tests runs with the toggle OFF and asserts a MUTATION still happens.
 ///
-/// NOTE ON THE DEFAULT: the toggle ships ON (`TaomSettings.EnableEnlistmentDiagnostics = true`, and
-/// the provider resolves a missing MCM setting with `?? true`) because the enlistment service loop
-/// is under active diagnosis. These tests deliberately run the OFF path anyway — that is the path
-/// where a mis-shaped gate does damage, and it is the path every player lands on once the default
-/// flips. Do not "correct" the substitute to true.
+/// NOTE ON THE DEFAULT: the toggle now ships OFF (`TaomSettings.EnableEnlistmentDiagnostics = false`,
+/// and the provider resolves a missing MCM setting with `?? false`), flipped 2026-08-09 when #375
+/// closed on a field-verified session. It shipped ON while the service loop was under diagnosis and
+/// earned that — the trace is what found #406, #424 and #428 — but the OFF path these tests exercise
+/// is now the path EVERY player is on, not a future one. Do not "correct" the substitute to true.
 /// </summary>
 [TestClass]
 public class EnlistmentDiagnosticsGateTests
@@ -399,47 +400,84 @@ public class EnlistmentDiagnosticsGateTests
     [TestMethod]
     public void BattleBehavior_CountInvolved_AppearsOnlyInsideTheGatedStatement()
     {
-        var lines = ReadProjectSourceLines(GatedFiles[2]);
-        Assert.IsNotNull(lines, "EnlistmentBattleBehavior.cs not found");
+        // The property under test has never changed: `CountInvolved(mapEvent)` walks the whole
+        // InvolvedParties collection, so it must sit in the ARGUMENT LIST of a statement that does
+        // not execute when the toggle is off. C# never evaluates the arguments of a statement it
+        // skips; outside one, turning the toggle off saves the disk write and still pays the
+        // enumeration on every map event in the world.
+        //
+        // The SCAN changed on 2026-08-09, for two reasons.
+        //
+        // 1. It was matching a COMMENT. It looked for `if (_diagSettings?.IsEnabled`, and the only
+        //    occurrence of that text in the file is the gate-shape rule written in prose above the
+        //    code. The parenthesis walk then measured a range starting inside a comment block and
+        //    happened to land correctly, so the test passed for the wrong reason. Comments are
+        //    stripped first now.
+        // 2. The gate is no longer a single `if`. The line is throttled to once per
+        //    commander-unavailable episode, so the toggle feeds a local, the local feeds the
+        //    throttle, and the throttle guards the statement. Asserting on the old one-line shape
+        //    would forbid a correct refactor rather than protect the property.
+        //
+        // So the assertion is now the CHAIN: toggle -> local -> guard -> statement -> call. Each
+        // link is checked, which is stronger than the old single containment check, not weaker.
+        var raw = ReadProjectSourceLines(GatedFiles[2]);
+        Assert.IsNotNull(raw, "EnlistmentBattleBehavior.cs not found");
 
-        var gateIndex = System.Array.FindIndex(lines, l => l.Contains("if (_diagSettings?.IsEnabled"));
+        // Blank out line comments so prose describing the gate can never satisfy a scan for it.
+        var lines = raw!.Select(l =>
+        {
+            var slash = l.IndexOf("//", System.StringComparison.Ordinal);
+            return slash >= 0 ? l.Substring(0, slash) : l;
+        }).ToArray();
+
+        Assert.IsFalse(
+            lines.Any(l => l.Contains("if (_diagSettings?.IsEnabled")),
+            "A bare `if (_diagSettings?.IsEnabled ...)` is back in code. That is fine in itself, but " +
+            "this test now verifies the toggle->local->guard chain below; re-point it at the new shape " +
+            "rather than leaving both half-checked.");
+
+        var toggleLocal = System.Array.FindIndex(lines,
+            l => l.Contains("var unresolved") && l.Contains("_diagSettings?.IsEnabled == true"));
+        var throttleLocal = System.Array.FindIndex(lines,
+            l => l.Contains("var firstOfEpisode") && l.Contains("unresolved"));
+        var guardIndex = System.Array.FindIndex(lines, l => l.Trim() == "if (firstOfEpisode)");
         var callIndex = System.Array.FindIndex(lines, l => l.Contains("CountInvolved(mapEvent)"));
 
-        Assert.IsTrue(gateIndex >= 0, "the map-event gate is missing entirely");
+        Assert.IsTrue(toggleLocal >= 0,
+            "no local derives from `_diagSettings?.IsEnabled == true` — the toggle no longer gates anything here");
+        Assert.IsTrue(throttleLocal > toggleLocal,
+            "`firstOfEpisode` must be derived FROM `unresolved`, so the throttle cannot outlive the toggle");
+        Assert.IsTrue(guardIndex > throttleLocal, "the logging statement is not guarded by `firstOfEpisode`");
         Assert.IsTrue(callIndex >= 0, "CountInvolved(mapEvent) call site not found");
 
-        // Containment, not ordering. `callIndex > gateIndex` is satisfied by ANY line below the gate,
-        // including one after the gated statement has closed — which is exactly the regression this
-        // test exists to catch (the walk would then run unconditionally). Walk the parenthesis balance
-        // from the gate's own statement to find where it actually ends, and require the call inside it.
+        // Containment, not ordering. `callIndex > guardIndex` is satisfied by ANY line below the
+        // guard, including one after the guarded statement has closed — which is exactly the
+        // regression this test exists to catch. Walk the parenthesis balance from the guarded
+        // statement to find where it actually ends, and require the call inside it.
         var depth = 0;
         var started = false;
         var statementEnd = -1;
-        for (var i = gateIndex; i < lines.Length; i++)
+        for (var i = guardIndex + 1; i < lines.Length; i++)
         {
             foreach (var c in lines[i])
             {
                 if (c == '(') { depth++; started = true; }
                 else if (c == ')') depth--;
             }
-            // The gate line closes its own condition; the guarded statement follows and closes at
-            // the first point where every parenthesis opened since the gate is balanced AND the
-            // line terminates a statement.
-            if (started && depth <= 0 && i > gateIndex && lines[i].TrimEnd().EndsWith(";"))
+            if (started && depth <= 0 && lines[i].TrimEnd().EndsWith(";"))
             {
                 statementEnd = i;
                 break;
             }
         }
 
-        Assert.IsTrue(statementEnd > gateIndex,
-            $"could not find the end of the gated statement starting at line {gateIndex + 1}");
-        Assert.IsTrue(callIndex > gateIndex && callIndex <= statementEnd,
-            $"CountInvolved(mapEvent) is at line {callIndex + 1}, outside the gated statement " +
-            $"(lines {gateIndex + 1}-{statementEnd + 1}). The full InvolvedParties walk must sit inside " +
-            "the gated statement's argument list — C# does not evaluate the arguments of a statement " +
-            "that does not execute. Outside it, turning the toggle off saves the disk write but still " +
-            "pays the enumeration on every map event in the world.");
+        Assert.IsTrue(statementEnd > guardIndex,
+            $"could not find the end of the guarded statement starting at line {guardIndex + 2}");
+        Assert.IsTrue(callIndex > guardIndex && callIndex <= statementEnd,
+            $"CountInvolved(mapEvent) is at line {callIndex + 1}, outside the guarded statement " +
+            $"(lines {guardIndex + 2}-{statementEnd + 1}). The full InvolvedParties walk must sit inside " +
+            "the guarded statement's argument list — C# does not evaluate the arguments of a statement " +
+            "that does not execute.");
     }
 
     private static string[] ReadProjectSourceLines(string relativePath)

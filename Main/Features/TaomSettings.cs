@@ -401,12 +401,21 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // The gated lines emit at INFO, which FileLogger flushes synchronously, so the trace survives a
     // hard native CTD. Measured cost ~0.11 ms/flush (rca-battleload-agentbuild-2026-08-03: 1,287
     // stamps = 145 ms), i.e. ~0.5 s across a 32-minute session. The default here MUST match
-    // EnlistmentDiagnosticsSettingsProvider.ResolveEnabled's `?? true` fallback; a test pins each.
+    // EnlistmentDiagnosticsSettingsProvider.ResolveEnabled's `?? false` fallback; a test pins each.
+    //
+    // FLIPPED OFF 2026-08-09, when #375 closed on a field-verified session. The trace shipped ON
+    // because the service loop was under active diagnosis, and it earned that: it is what found the
+    // battle-join defect (#406), the enlisted-general defect (#424) and the duty exposure (#428).
+    // That work is done. Measured on the session that closed #375: 950 of 3,452 log lines were
+    // enlistment, and FIVE gated message shapes accounted for 851 of them — TICK (202), SYNC ok
+    // (199), PARK ok (23), RESTORE ok (12) and the per-map-event line (450). The 52 ungated INFO
+    // sites produced the other ~99, and those are the ones worth keeping: oath, joins, duties,
+    // promotion, rewards, discharge. A player now carries the events and none of the trace.
 
     [SettingPropertyGroup("Enlistment/Diagnostics", GroupOrder = 42)]
     [SettingPropertyBool("Enable Enlistment Diagnostics", Order = 0, RequireRestart = false,
-        HintText = "Log the routine enlistment trace ([EnlistDiag] TICK, SYNC ok, PARK ok, and a line for every map event in the world) to the TAOM debug log. ON by default while the enlisted-service loop is being diagnosed — it produces thousands of lines per session, so turn it OFF for a quieter log once you are not chasing an enlistment problem. Real faults are always logged regardless of this setting, so [EnlistDiag] lines will still appear when it is off. Takes effect immediately; no restart. Default ON.")]
-    public bool EnableEnlistmentDiagnostics { get; set; } = true;
+        HintText = "Log the routine enlistment trace ([EnlistDiag] TICK, SYNC ok, PARK ok, RESTORE ok) to the TAOM debug log. OFF by default: it is roughly ten times the volume of the ordinary enlistment log and exists for diagnosing the service loop, not for playing. Turn it ON before reproducing an enlistment problem you intend to report. Real faults are always logged regardless of this setting, so [EnlistDiag] lines will still appear when it is off. Takes effect immediately; no restart. Default OFF.")]
+    public bool EnableEnlistmentDiagnostics { get; set; } = false;
 
     // --- Battlefield Promotions (Field Commission) ---
     // Every default here MUST equal its counterpart in

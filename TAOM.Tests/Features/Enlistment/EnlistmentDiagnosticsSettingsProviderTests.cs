@@ -24,18 +24,23 @@ namespace TAOM.Tests.Features.Enlistment;
 public class EnlistmentDiagnosticsSettingsProviderTests
 {
     [TestMethod]
-    public void ResolveEnabled_NullSetting_ReturnsTrue()
+    public void ResolveEnabled_NullSetting_ReturnsFalse()
     {
-        // The whole guard. Reddened by changing the provider's `?? true` to `?? false`.
-        Assert.IsTrue(EnlistmentDiagnosticsSettingsProvider.ResolveEnabled(null));
+        // The whole guard. Reddened by changing the provider's `?? false` back to `?? true`.
+        //
+        // FLIPPED 2026-08-09 with the compiled default. A missing MCM instance must land on the
+        // QUIET posture: a player without the settings host has no way to turn the trace off, so
+        // defaulting them into it is the one direction that cannot be undone in game.
+        Assert.IsFalse(EnlistmentDiagnosticsSettingsProvider.ResolveEnabled(null));
     }
 
     [TestMethod]
     public void ResolveEnabled_False_ReturnsFalse()
     {
-        // Kills a vacuous hard-coded-true implementation: the seam must actually pass the player's
-        // choice through, not just always answer "on". This is the test that proves the MCM
-        // checkbox does something.
+        // Kills a vacuous hard-coded implementation: the seam must pass the player's choice
+        // through, not just always answer with the default. Since the default flipped to OFF, the
+        // test that now carries that weight is ResolveEnabled_True_ReturnsTrue below — this one
+        // agrees with the default and can no longer distinguish a constant from a passthrough.
         Assert.IsFalse(EnlistmentDiagnosticsSettingsProvider.ResolveEnabled(false));
     }
 
@@ -46,13 +51,13 @@ public class EnlistmentDiagnosticsSettingsProviderTests
     }
 
     [TestMethod]
-    public void IsEnabled_NoMcmInstance_DefaultsTrue()
+    public void IsEnabled_NoMcmInstance_DefaultsFalse()
     {
         // TaomSettings.Instance is null in the test host (MCM v5 isn't loaded), so the provider
         // falls back to the compiled default. Same shape as NameplateFadeSettingsProviderTests.
         var sut = new EnlistmentDiagnosticsSettingsProvider();
 
-        Assert.IsTrue(sut.IsEnabled);
+        Assert.IsFalse(sut.IsEnabled);
     }
 
     [TestMethod]
@@ -67,15 +72,15 @@ public class EnlistmentDiagnosticsSettingsProviderTests
         var providerSource = File.ReadAllText(
             RepoPath("Main", "Features", "Enlistment", "EnlistmentDiagnosticsSettingsProvider.cs"));
 
-        var defaultIsTrue = settingsSource.Contains("EnableEnlistmentDiagnostics { get; set; } = true;");
-        var fallbackIsTrue = providerSource.Contains("ResolveEnabled(bool? raw) => raw ?? true;");
+        var defaultIsOn = settingsSource.Contains("EnableEnlistmentDiagnostics { get; set; } = true;");
+        var fallbackIsOn = providerSource.Contains("ResolveEnabled(bool? raw) => raw ?? true;");
 
         Assert.IsTrue(
             settingsSource.Contains("EnableEnlistmentDiagnostics"),
             "Sanity floor: TaomSettings.cs must actually contain the property — a path or rename " +
             "slip must fail loudly here rather than let both Contains() checks pass vacuously.");
         Assert.AreEqual(
-            defaultIsTrue, fallbackIsTrue,
+            defaultIsOn, fallbackIsOn,
             "TaomSettings.EnableEnlistmentDiagnostics' compiled default and " +
             "EnlistmentDiagnosticsSettingsProvider.ResolveEnabled's `??` fallback must encode the " +
             "same posture. Flip both or neither.");
