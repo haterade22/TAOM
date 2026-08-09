@@ -2,7 +2,105 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-09
+
+### feat(enlistment): field duties are camp work, not a journey (#428)
+
+Accept a duty, it occupies a few hours, one skill check decides how it went. The player stays
+parked with the column throughout — never visible, never targetable.
+
+The old model detached them. `Start` called `RestorePresence()`, setting `IsActive` and `IsVisible`
+true, which turns an enlisted player — whose roster is one hero with no troops — into a fully
+targetable party in contested territory, for **days**. A live session recorded the cost to the
+second: duty started 22:02:38, player captured 22:03:19. The duty then outlived the captivity
+(state went DetachedOnDuty → Captive → Attached while the record kept its duty) and would have
+charged trust for a failure the player was physically prevented from avoiding.
+
+Both are now unrepresentable. Nothing in the runtime touches presence, and captivity cancels rather
+than orphans.
+
+The roll reuses `SkillCheckService` verbatim rather than inventing a second randomness path, and
+takes its skills from each row's `supportSkills` — a field authored for all 13 rows that had **no
+consumer at all** until now, so per-duty skills cost zero new JSON. Two new per-row fields
+(`difficulty`, `durationHours`) plus a `failureReward`, mirroring the shape `DutyOptionSpec` already
+uses for interactive duties.
+
+Deleted with the travel model: the spawn/destroy path, the settlement-arrival path, `DutyMechanic`,
+`DutyTargetKind`, `DutyTargetAi`, and the travel fields. That removes the #375 stack-overflow
+surface entirely rather than guarding it — the re-entrancy guard added that morning goes with it,
+because nothing destroys a party any more.
+
+**Save-compat.** `EnlistedDetachedOnDuty` is retired, NOT deleted: the member and its numeric value
+must survive because `TryParse` rejects any state failing `Enum.IsDefined`, which would drop the
+whole core record and silently un-enlist the player. It coerces to `EnlistedAttached` on parse —
+verified the coercion runs on read, not only on write, which is the difference between a migration
+and a no-op. A legacy duty carrying no shift timer self-heals to cancelled rather than occupying
+the single duty slot forever and blocking every future offer.
+
+The captivity guard is explicit because `EnlistmentRecord.IsEnlisted` deliberately **includes**
+`EnlistedPlayerCaptive`, so the discharge guard does not catch a prisoner — without it the shift
+timer keeps running in a dungeon and pays out a completed duty from captivity. Four independent
+design reviewers each caught that the redesign alone does not fix it.
+
+Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
+the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
+
+### fix(troops): a Rohan militiaman stops issuing Gondor gloves (#427 root cause)
+
+PR #427 fixed the enlistment roster. The roster is a **generated artifact**, and the generator still
+emitted the bug: `generate_enlistment_rosters.py` picks `rohan_edoras_militia` as vlandia's recruit
+donor and takes the first equipment variant's item per slot — and that variant's Gloves was
+`Item.sk_gd_ano_gloves_a`. So `--apply` would have reverted the merged fix.
+
+The PR deferred this as possibly-deliberate variant styling. The troop's own data disagrees: of its
+five variants, three already used `cts_rohan_armguard1` and two used the Gondor glove, with
+identical Body and Cape throughout. That is within-troop inconsistency, not styling. Both now match
+the other three, and `troops_rohan.xml` contains no `sk_gd_ano_gloves_a`.
+
+Found by the deep review of #427 *after* it had merged. The pre-merge check asked "is this fix
+complete across the rosters?" — which it was — but not "would regenerating revert it?", which is
+the question that mattered for a generated file.
+
 ## 2026-08-08
+
+### fix(diagnostics): the exit-stall sampler was watching player time (#425, PR #429)
+
+`ExitStallSampler` suspends the main thread to walk its stack, and it stayed armed until
+`FirstMapTick` — which needs a real campaign map tick, and one never arrives while the player sits
+in a post-battle menu or a conversation. `MapResumed` landed within ~1 s of `ExitBegin` on every
+observed exit (16 across two field sessions, #425), so everything the sampler saw past that point
+was player time: three `[ERROR]` captures fired into a 123-second quartermaster conversation.
+
+Quit-to-load was worse. Neither `MapResumed` nor `FirstMapTick` fires when the player leaves a
+finished battle for a save load, so the still-armed sampler ran into the **next** campaign's
+initialization — a captured stack shows the suspend landing in `MBObjectManager.LoadXML` via
+`GameLoadingState.OnTick`, the heaviest allocation phase in the process, and exactly the
+suspend-mid-GC wedge the class header documents as its accepted risk.
+
+Sampler-armed and logging-window are now separate lifetimes. `LogMapResumed` zeroes the sampler
+feed unconditionally (the toggle-off rule `CloseExitWindow` already documents) while
+`_exitWindowActive` stays true, so `FirstMapTick` still logs the time-to-playable tail.
+`SubModule.OnGameEnd` routes to `ResetLifecycle()`, so the window dies with the `Game` that opened
+it on the quit-to-load and quit-to-menu paths. The ~107 s tournament-exit stall the sampler exists
+for (#331) still gets all three samples: the disarm sits at a phase boundary a real teardown stall
+never reaches.
+
+Merged from Sternab's PR #429. Verified before merge, because CI could not: the `Build & Test` job
+is skipped whenever the `BANNERLORD_GAME_DIR` repo variable is unset, so nothing on GitHub had
+compiled it. Built and ran the suite on the merge result in an isolated worktree — 0 errors,
+**6276 passed / 0 failed / 2 skipped**, the 3 new `ExitStallDisarmTests` among them. Also checked
+that the disarm cannot suppress phase logging (`IsExitPhaseLoggable` reads `_exitWindowActive`,
+never the ticks field), that the hook's own `IsExitWindowActive` early-out cannot re-condition the
+"unconditional" disarm (ticks ≠ 0 implies the window is active), and that
+`MBSubModuleBase.OnGameEnd(Game)` is `public virtual` and reached via `Game.Destroy()` →
+`GameManager.OnGameEnd(this)` on both quit paths.
+
+Two doc surfaces corrected in the same pass, both of which the fix falsified:
+`battle-load-diagnostics.md` asserted `ExitWindowOpenedUtcTicks` was "nonzero exactly while the
+exit window is open" and still carried #425 as an open limitation; the `IsExitWindowActive`
+comment named two closers where there are now four.
+
+Not-tested: a live quit-to-load pass with the sampler enabled — owed on the next field session.
 
 ### feat(release): the version in a crash report now resolves to a commit
 

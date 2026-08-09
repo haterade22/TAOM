@@ -88,12 +88,19 @@ public interface IBattleLoadDiagnosticsService
     // ExitBegin opens an "exit window", restarts the stopwatch + sequence counter, and
     // stamps GC/heap stats. Every other exit phase is silent unless the window is open,
     // so probes on methods that also fire at load time (ClearUnreferencedResources) or on
-    // every map frame (MapState.OnTick) stay inert outside a mission exit. The window
-    // closes at FirstMapTick or on the next ResetLifecycle.
+    // every map frame (MapState.OnTick) stay inert outside a mission exit. Four closers, all
+    // unconditional state transitions independent of the master toggle: FirstMapTick (normal
+    // path), the next ResetLifecycle, the next Mission.Initialize (chained mission without map
+    // activation), and SubModule.OnGameEnd -> ResetLifecycle (quit-to-load / quit-to-menu, where
+    // no map tick ever comes — #425).
     bool IsExitWindowActive { get; }
 
-    /// <summary>UTC ticks when the exit window opened; 0 while closed. Feeds the exit-stall
-    /// stack sampler (#331 round 2) the same way BattleLoadLoadingWindow feeds the watchdog.</summary>
+    /// <summary>UTC ticks while the exit-stall stack sampler (#331 round 2) is ARMED; 0 otherwise.
+    /// Armed by ExitBegin, disarmed at MapResumed (#425) and by every closer above — a SHORTER
+    /// lifetime than IsExitWindowActive, which runs on to FirstMapTick so the time-to-playable
+    /// tail still gets logged. The name predates that split. Everything after MapResumed is player
+    /// time (menus, conversations, loot), and suspending the main thread there is a false positive
+    /// with real deadlock exposure, not log noise.</summary>
     long ExitWindowOpenedUtcTicks { get; }
 
     void LogExitBegin(string missionName, string sceneName, int agentCount, int allAgentCount);
