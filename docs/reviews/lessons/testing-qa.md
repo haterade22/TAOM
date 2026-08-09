@@ -536,3 +536,36 @@ quietly promises coverage that does not exist.
   message claiming what a test covers. When reviewing, treat an unusually confident comment as a
   claim to verify, not as evidence — it is most load-bearing exactly where it is most wrong.
 - **Source:** #375 duty-recursion crash + `rca-enlistment-survivors-2026-08-08.md`, both 2026-08-08.
+
+### Widen "a comment is a claim" to cover claims about our OWN adjacent code
+
+The existing entry above covers a comment asserting ENGINE behaviour. That scope is one category
+too narrow, and the gap was demonstrated the same day it was written.
+
+Hours after codifying that lesson from the #375 stack overflow, the same author wrote:
+
+```csharp
+/// Rank contribution to the check. Shared with the interactive duties so the two cannot drift.
+private const int RankBonusPerLevel = SkillCheckService.RankBonusPerLevel;
+```
+
+while `InteractiveDutyPresenter.cs` still held `private const int RankBonusPerLevel = 4;`. Two
+independent definitions; editing either silently drifted the other. The comment guaranteed an
+invariant that did not exist. `grep -rn RankBonusPerLevel` — one command — falsified it, and both
+independent reviewers ran it immediately.
+
+**The mechanism, which matters more than the instance:** the comment was written at the moment the
+author formed the INTENTION to relocate the constant. It described that intention accurately. The
+code then went a different way, and nothing re-read the comment — comments are not compiled, not
+tested, and not diffed for truth. The same shape produced a stale healing-regime comment describing
+"12 of the 13 field duties detach" after zero did, and the original #375 comment. Three instances,
+one mechanism.
+
+- **Why missed:** an author cannot hold a reviewer's prior. You do not grep to check a fact you
+  just wrote — you already believe it. That asymmetry is the entire value of an independent pass,
+  and it is why "I'll review it carefully myself" does not substitute.
+- **Prevent:** treat these words as trigger words in a comment — **shared, single source, cannot
+  drift, always, never, only, unconditional**. Each is one grep from verified or falsified. When
+  deleting a concept, grep its name in COMMENTS as well as code; `WaitHours` and `DetachedOnDuty`
+  were both greppable and both left behind in prose describing a model that no longer existed.
+- **Source:** `docs/reviews/rca-duty-autoresolve-2026-08-09.md` (findings 6 and 7), 2026-08-09.
