@@ -45,6 +45,22 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### docs(lessons): a runtime-composed loc key needs a generator or a test
+
+New `lessons/localization-ui.md` entry. The existing lesson explains why an unregistered key is
+invisible **in English**; compose the key from data and it becomes invisible to the author too, so
+the `{=key}` grep every registration audit is built on reports clean while being structurally
+incapable of seeing the family. Two instances in three days (#428, #432) made the class worth naming
+rather than fixing twice.
+
+Records the three composition forms to grep for, TAOM's four sites, and the pattern underneath both:
+**the non-vanilla cultures fall out of every coverage sweep** — `goblin`/`mistymountainorcs` here,
+`shaghana`/`abanissa` for careers (review #24) and enlistment rosters (#431). They post-date the
+tables that enumerate cultures, so any per-culture invariant has to be driven off the culture list
+itself.
+
+Index counts re-derived by `grep -c '^### '`: 383 lessons, four categories were stale.
+
 ### fix(charactercreation): goblin and orc backstories were never registered
 
 All 96 narrative strings for `goblin` and `mistymountainorcs` — every parents, youth, education and

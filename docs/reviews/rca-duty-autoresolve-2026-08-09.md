@@ -69,10 +69,10 @@ had no such prior, so they checked. **That is the entire value of the gate I ski
 ## Preventive actions
 
 1. **Applied.** All ten findings fixed across `7c1a1a92` and `20d3344d`.
-2. **Rule extension owed (not yet applied).** `lessons/testing-qa.md`'s comment-as-claim entry is
-   scoped to *engine* behaviour. Widen it to any comment asserting an invariant about adjacent TAOM
-   code — "shared", "single source", "cannot drift", "always", "never" are the trigger words, and
-   each is one grep from being verified or falsified.
+2. **Applied.** `lessons/testing-qa.md` → *"Widen 'a comment is a claim' to cover claims about our
+   OWN adjacent code."* The prior entry was scoped to *engine* behaviour, one category too narrow.
+   Trigger words: shared, single source, cannot drift, always, never, only, unconditional — each is
+   one grep from verified or falsified.
 3. **Process.** `/deep-review` before the commit, not after. Every finding here was findable
    pre-commit; the reviews were run late and still found all ten, which means the gate works and the
    timing was the only failure.
@@ -80,9 +80,32 @@ had no such prior, so they checked. **That is the entire value of the gate I ski
    grep the concept's name in *comments*; grep each removed member for surviving *declarations*, not
    just callers; and ask what the mechanic communicated *incidentally*.
 
+## Follow-up: finding 9 generalised, and it found a second instance
+
+Finding 9 was a *local* fix — extend the generator, register the 26 keys. The class it belongs to is
+broader: **a localization key composed from data is invisible to the `{=key}` grep that every
+registration audit is built on.** So the audit reports clean while being structurally incapable of
+seeing the family.
+
+Sweeping all four composition sites in the codebase found a second live instance: all 96
+character-creation narrative rows for `goblin` and `mistymountainorcs` (#432), unregistered — two
+entire cultures, while the other sixteen were complete. Registered in `83f970df` with
+`NarrativeStringRegistrationTests` pinning presence *and* value drift.
+
+Enumerating all four sites, rather than sampling until one turned up, is what makes "there are no
+more" a claim worth making. The forms to grep are `"{=" +`, `"{=prefix" +` and `$"{{=`. Lesson
+recorded in `lessons/localization-ui.md`.
+
+One more pattern fell out of it, worth more than either instance: the cultures that lose coverage
+are always the non-vanilla ones. `goblin` / `mistymountainorcs` here; `shaghana` / `abanissa` had no
+eligible careers (review #24) and have no enlistment rosters (#431). They were added after the
+tables that enumerate cultures were written, so every hand-maintained per-culture list omits them.
+**A per-culture invariant must be driven off the culture list itself.**
+
 ## Verification
 
-Build 0 errors · suite **6274 passing / 0 failing** · `validate_moduledata.py` PASS ·
-`lint_docs.py` clean · 217 localization keys, all 12 languages id-identical to English.
+Build 0 errors · suite **6276 passing / 0 failing** (6274 at the time of the rework, +2 for the
+narrative-registration guard) · `validate_moduledata.py` PASS · `lint_docs.py` clean ·
+217 enlistment localization keys, all 12 languages id-identical to English.
 
 **Not verified: any of it in a live game.** Tracked on #428 and #375.

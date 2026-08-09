@@ -239,6 +239,51 @@ Two practical consequences:
   correct; the comment justifying it overstated the scope, caught by the deep-review API agent
   and confirmed by reading the loader.
 
+### A localization key composed at runtime is unfindable — the generator or a test must own the family
+
+The entry above explains why an unregistered key is invisible **in English**. Compose the key from
+data and it becomes invisible to the *author* too:
+
+```csharp
+new TextObject("{=taom_enlist_duty_" + duty.Id + "_success}...")            // FieldDutyRuntime
+new TextObject($"{{=taom_cc_{definition.StringId}_text}}{definition.Text}") // NarrativeMenuBuilder
+```
+
+`taom_cc_taom_parent_goblin_1_text` appears in no source file, so a `{=key}` grep — the normal way
+anyone audits registration — returns nothing at all. Combine that with the English short-circuit and
+the defect has no observer: not the compiler, not the suite, not the developer playing in English.
+Only a player reading one of the other eleven languages ever sees it.
+
+It has now shipped twice in three days. 26 enlistment duty-result toasts (#428), then all 96
+character-creation narrative rows for `goblin` and `mistymountainorcs` (#432) — two entire cultures,
+while the other sixteen were complete.
+
+**The fix is structural, and there are exactly two acceptable owners for a composed-key family:**
+
+1. **A generator** that walks the data and emits every row, hard-failing on an unauthored one rather
+   than emitting a placeholder (`generate_enlistment_duty_strings.py`). A generator that
+   *silently defaults* is worse than none — it converts a loud gap into a raw id in the UI.
+2. **A test** that cross-references the data source against the registry
+   (`NarrativeStringRegistrationTests`). Pin **value drift as well as presence**: a registered row
+   whose default no longer matches its JSON is worse than a missing one, because English renders the
+   JSON via the short-circuit while the translations were made from the stale text, so the same
+   option says different things per language and neither half looks broken.
+
+- **Why missed:** every registration audit anyone runs is a grep, and the whole point of a composed
+  key is that it is not a literal. The audit is not weak — it is structurally incapable of seeing
+  this family, and it reports clean while doing so.
+- **Prevent:** grep for the *composition sites* instead — `"{=" +`, `"{=prefix" +`, and `$"{{=` are
+  the three forms — and require each one to name its generator or its coverage test. TAOM has four
+  such sites; the sweep that found #432 enumerated all four, which is the only way to know a sweep
+  is complete rather than a sample. Adding a fifth without an owner should be a review finding.
+- **Also:** the two cultures missing here (`goblin`, `mistymountainorcs`) rhyme with `shaghana` /
+  `abanissa` missing careers (review #24) and enlistment rosters (#431). **The non-vanilla cultures
+  fall out of every coverage sweep**, because they were added after the tables that enumerate
+  cultures were written. Any per-culture invariant deserves a test driven off the culture list
+  itself, never a hand-maintained one.
+- **Source:** #428 duty toasts + #432 narrative strings, 2026-08-09;
+  `rca-duty-autoresolve-2026-08-09.md` finding 9.
+
 ### An unloaded sprite category fails as a SILENT BLANK — and the `Sprite`-level null check that looks like a guard is not one
 Before removing `<AlwaysLoad/>` from any sprite category, prove an explicit `LoadSpriteCategory` call
 runs on every path that displays it — **in game, not by inspection.** The failure mode is not an
