@@ -8,9 +8,13 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 
 // Exit-stall stack sampler (#331 round 2). The ~107s tournament-exit stall froze the MAIN
 // thread inside Mission.EndMissionInternal, so — like BattleLoadStallWatchdog — only a
-// background thread can observe it. While the diagnostics exit window is open (opened by
-// LogExitBegin, closed by FirstMapTick/ResetLifecycle/MissionInitialize), this samples the
-// main thread's managed stack at +15s/+30s/+60s and logs the frames. Three samples of a
+// background thread can observe it. The sampler is armed by LogExitBegin and DISARMED at
+// MapResumed (#425): teardown is what it watches, and everything after MapResumed is player
+// time — menus, conversations, loot — field-measured at 123 s with three [ERROR] samples
+// fired into an ordinary quartermaster chat before the disarm existed. The logging window
+// itself stays open to FirstMapTick (or ResetLifecycle/MissionInitialize, and OnGameEnd for
+// the quit-to-load path where no map tick ever comes). While armed, this samples the main
+// thread's managed stack at +15s/+30s/+60s and logs the frames. Three samples of a
 // deterministic stall name the hot method (a loop shows identical top frames each time).
 // Independently disableable via the "Enable Exit Stall Sampler" MCM toggle (the only
 // diagnostics component that suspends the main thread).
@@ -20,7 +24,7 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 // thread mid-GC and then allocating can deadlock the sampler before Resume — acceptable for
 // a dev-machine diagnostic on a 100%-reproducible stall (worst case: kill + retry). The
 // whole capture is try/catch'd with Resume in finally, and the sampler only ever runs while
-// the exit window is open (never during normal play).
+// a mission teardown is actually in progress.
 public sealed class ExitStallSampler : IDisposable
 {
     private const string Tag = "[ExitStall]";

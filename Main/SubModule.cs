@@ -553,6 +553,24 @@ public class SubModule : MBSubModuleBase
         }
     }
 
+    public override void OnGameEnd(Game game)
+    {
+        base.OnGameEnd(game);
+
+        // #425 — the exit-stall window must die with the Game that opened it. A post-battle
+        // quit-to-load (or quit-to-menu) leaves the mission-exit window armed with no map tick
+        // ever coming, so ExitStallSampler kept firing Thread.Suspend stack captures INTO the
+        // next campaign's load (observed live: samples during MBObjectManager.LoadXML, the
+        // heaviest allocation phase in the process — the class's own documented suspend-mid-GC
+        // hazard). ResetLifecycle's window close is deliberately unconditional, same reasoning
+        // as the PlayerEncounter.Start site.
+        try
+        {
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>()?.ResetLifecycle();
+        }
+        catch { /* diagnostic is best-effort, never break OnGameEnd */ }
+    }
+
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
     {
         base.OnGameStart(game, gameStarterObject);
