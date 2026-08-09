@@ -319,7 +319,27 @@ is the named-mapped-files split, and it names the offending tpac/atlas *by file*
 | L1 | Banner icons 1024²→256² (41 sheets → ~2) | **~2.4–2.5 GB commit** | Rebake via editor flow (`banner-icon-generation.md` — bare CLI silently no-ops); re-apply import flags; `tools/sync_sprite_bake.ps1`; restart law |
 | **L1 — DONE 2026-08-08, in-game confirmed** | 369 sources 1024²→256², rebaked | **2,624 MB → 128 MB resident (−2.44 GB)** | Banner icons visually confirmed correct in game after the rebake + restart (Mike, 2026-08-08) — the manifest check below proves the bake landed, this proves the art survived it. Verified in BOTH manifests: `SpriteSheetCount` 41→**2**, every `SpritePart` **256×256**, 369 parts, `<AlwaysLoad/>` retained, `_tex.tpac` present. Target chosen from measurement, not guesswork: the widest consumer is 110 Gauntlet design units (`BannerEditor.xml`), Gauntlet scales by screen **height** vs a 1080 reference, so on the 5120×1440 test display it renders **147 px** and at 4K height 220 px — 256 covers both. Sigils are white-on-alpha (368/369 have RGB=255 everywhere), so a plain LANCZOS resize is exact; only `15009.png` carries colour and needed premultiplied resampling. **Left behind:** ~39 stale `ui_taom_bannericons_3..41` atlas PNGs + `_tex.tpac` in the install — harmless at runtime (`SpriteCategory.Load` loops `1..SpriteSheetCount`) but dead install weight; fold into L5. |
 | **L3a — DONE 2026-08-08** | 35 oversized `faction_*.png` capped at 1024 on the long side | **2,474 MB → 78 MB decoded (−2.40 GB worst case)**; on disk 932 MB → 32 MB | These are **loose PNGs, NOT baked sprites** — `FactionImageWidget` builds the path itself and calls `EngineTexture.LoadTextureFromPath`, so no bake and no restart law applies (see `gui-sprite-system.md`). 34 files were 5504×3072 into a **429×240** design-unit widget (858×480 at 4K) — a 36× area oversample; 36 sibling files were already ≤340×200. Saving is a **worst case, not a flat win**: the textures load per faction viewed during character creation and are never released, so a player who loads a save pays 0 and one who browses all 72 paid the full 2.4 GB. |
-| L2 | Drop `<AlwaysLoad/>`: bannericons+career OFF; fonts KEEP; ui_loading verify-first; ui_taom after consumer enum | ~0.2 GB on top of L1 (overlaps) | Needs TAOM-side `UIResourceManager.LoadSpriteCategory`/`Unload` call sites; a missed consumer renders blank **silently** — in-game verify every touched screen |
+| L2 | Drop `<AlwaysLoad/>`: bannericons+career OFF; fonts KEEP; **`ui_loading` DO NOT DROP** (see below); ui_taom after consumer enum | ~0.2 GB on top of L1 (overlaps) | Needs TAOM-side `UIResourceManager.LoadSpriteCategory`/`Unload` call sites; a missed consumer renders blank **silently** — in-game verify every touched screen |
+
+> **`ui_loading` — REJECTED 2026-08-08, after a claim that it was the safest drop of the five.**
+> A prior analysis held that `GauntletDefaultLoadingWindowManager` drives this category through
+> `InitializePartialLoad`/`PartialLoadAtIndex`, so `<AlwaysLoad/>` defeated the engine's own
+> one-image-at-a-time design and was actively harmful. **Both halves are false in the v1.4.7 dump:**
+> `InitializePartialLoad` and `PartialLoadAtIndex` are referenced **only inside `SpriteCategory.cs`
+> itself** — no caller exists anywhere — and the literal `"ui_loading"` appears **nowhere** in the
+> decompile, so no engine code loads this category by name.
+>
+> Dropping `AlwaysLoad` here would therefore black out the loading screen, silently. The chain:
+> `SpriteData.GetSprite` resolves from a flat dict built from the **manifest**, so it returns a
+> non-null `Sprite` for an unloaded category; `SpritePart.Texture` returns **null** while
+> `!category.IsLoaded`; and `LoadingWindowWidget.UpdateImage` guards on `sprite == null`, not on a
+> null texture — so its `background_1` fallback never fires and it draws a textured-with-nothing
+> sprite. No exception, no log line.
+>
+> **General rule this establishes for every remaining `AlwaysLoad` drop:** the failure mode is a
+> silent blank, and the `Sprite`-level null check that looks like a guard is not one. A category may
+> only lose `AlwaysLoad` once an explicit `LoadSpriteCategory` call is proven to run on every path
+> that displays it — verified in game, not by inspection.
 | L3b | FactionMap texture cache + dispose on CC exit | ~34 MB after L3a (was 0.3–1.2 GB) | The leak is real and verified — five `EngineTexture.LoadTextureFromPath` sites in `Main/Features/FactionMap/Widgets/`, and **zero** `Release`/`Dispose`/`Unload` calls anywhere in the feature, so every viewed faction stays resident for the process. L3a shrank the prize by ~97 %, so do this as correctness hygiene, not as a memory lever. `PolygonWidget`'s `_emblemSprite`/`_emblemLoaded` are **static** — reset them too or a second character creation in the same process draws from a released texture. |
 | L3c | `region_*` map art sizing (47 files, ~640 MB decoded) | unquantified | **Deliberately excluded from L3a.** `PolygonWidget.cs:323` sizes these as `ScaledSuggestedWidth = _bboxW * parentW` against a `StretchToParent` container, so they scale with the whole map surface rather than a fixed panel, and `region_map_boundary.png` covers the entire map. Capping them at 1024 would visibly soften the culture-stage map. Needs its own per-region rendered-size analysis first. |
 | L4 | Author `tools/package_release.ps1` (include-list; exclude RDC pending P1, AssetSources, Race Test, naval art, Prefabs_Unused, `.bak`, NSF pdbs) | install ≤ ~44 GB lighter | `.bak` exclusion changes the loaded XML set — gate with `validate_moduledata.py` + a load test |

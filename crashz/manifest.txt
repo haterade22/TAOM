@@ -1,0 +1,13 @@
+TAOM CrashReport bundle
+Captured: 2026-08-09T02:37:42.9928138Z
+Signature: 28161302fbe173af5181133c6a35879afab8c812
+TAOM version: v2.0.18.0
+Bannerlord version: v1.4.7.117484
+Origin: TaleWorlds.MountAndBlade.Module.OnApplicationTick
+Exception: System.TypeInitializationException
+
+--- File inventory ---
+report.txt        72237 chars
+report.json       95588 chars
+taom_debug.log    source=Logs\taom_debug_2026-08-08_21-36-44.log
+rgl_log.txt       source=C:\ProgramData\Mount and Blade II Bannerlord\logs\rgl_log_78540.txt

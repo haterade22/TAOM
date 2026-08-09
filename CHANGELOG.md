@@ -226,6 +226,42 @@ live outside `troops_*.xml` and were previously dropped from composition.
 Not-tested: capture from a live `MapEvent` (needs a running campaign). Verified against the real
 `FileLogger` line format end-to-end, then against 9,286 live records across two sessions.
 
+### docs(battleload): the exit-stall sampler does fire on healthy exits — correct the claim that it cannot
+
+`battle-load-diagnostics.md` stated that the `[ExitStall]` thresholds "sit above the healthy
+tournament exit (~9.5s residual) so normal exits never log a false sample." A 45-minute field session
+produced four `[ExitStall]` ERROR lines, none of them a hang.
+
+The threshold is not the problem. `ExitBegin` opens the exit window and, within a single exit,
+`LogFirstMapTick` is its only closer — `ResetLifecycle` and the next `Mission.Initialize` both belong
+to the *next* battle's lifecycle. `FirstMapTick` needs a real campaign map tick, which never arrives
+while the player sits in a post-battle menu or a conversation. So the window measures time until the
+player is back on the map, not time the exit took. In that session `MapResumed` landed within ~1s on
+all five exits, yet two windows ran 123s and 21s, and the player was mid-quartermaster-conversation
+12 seconds into the 123s "stall". Every capture reported `0 frames` — a healthy main thread in native
+code, not a wedge.
+
+This matters beyond log noise: each false positive suspends the main thread up to three times, and
+`ExitStallSampler`'s own header documents the residual suspend-mid-GC wedge risk. Filed as #425 with
+two candidate fixes. Until it lands, the doc now says to read `ExitBegin→MapResumed` as the real
+teardown cost and `MapResumed→FirstMapTick` as player time, and not to treat an `[ExitStall]` line as
+evidence of a hang without checking `MapResumed` first.
+
+Also recorded a Localization & UI lesson from the `ui_loading` lever: an unloaded sprite category
+fails as a **silent blank**, and the `sprite == null` check that looks like a guard is not one —
+`GetSprite` resolves from the manifest so it returns a non-null `Sprite` for an unloaded category,
+while `SpritePart.Texture` returns null. The analysis that called `ui_loading` "the safest drop of the
+five" rested on `InitializePartialLoad`/`PartialLoadAtIndex` being engine-driven; both methods are
+referenced only inside `SpriteCategory.cs` and the literal `"ui_loading"` appears nowhere in the
+v1.4.7 dump. The generalisable habit: grep the decompile for *callers*, not definitions.
+
+Issue #386's body amended to record that `MemStats()` now enriches eight phases rather than the five
+it specifies (so its `~18 KB/h` estimate is stale), and that `[MemSample]` itself is complete and
+field-validated — the later load-gap and memory-probe work appended to that issue should not gate its
+closure.
+
+Refs #425, #386.
+
 ### fix(coopinterop): a fingerprint over zero settings no longer reads as agreement
 
 `SettingsFingerprint` skipped null settings pages, which is right — MCM's `Instance` is a

@@ -238,3 +238,31 @@ Two practical consequences:
 - **Source:** enlistment status-board v2, 2026-08-08. The `_v2` key decision was independently
   correct; the comment justifying it overstated the scope, caught by the deep-review API agent
   and confirmed by reading the loader.
+
+### An unloaded sprite category fails as a SILENT BLANK — and the `Sprite`-level null check that looks like a guard is not one
+Before removing `<AlwaysLoad/>` from any sprite category, prove an explicit `LoadSpriteCategory` call
+runs on every path that displays it — **in game, not by inspection.** The failure mode is not an
+exception or a log line; it is a rectangle that draws nothing.
+
+The chain, verified in the v1.4.7 dump:
+`SpriteData.GetSprite` resolves from a flat dict built from the **manifest**, so it returns a
+**non-null** `Sprite` for a category that is not loaded. `SpritePart.Texture` then returns **null**
+while `!category.IsLoaded`. Consumers that guard on `sprite == null` — `LoadingWindowWidget.UpdateImage`
+is the worked example — see a perfectly good `Sprite`, skip their fallback, and draw a
+textured-with-nothing sprite. No exception, no log, no clue.
+
+- **Why missed:** an analysis concluded `ui_loading` was "the safest drop of the five" on the theory
+  that `GauntletDefaultLoadingWindowManager` drives the category through
+  `InitializePartialLoad`/`PartialLoadAtIndex`, so `<AlwaysLoad/>` was defeating the engine's own
+  one-image-at-a-time design and was actively harmful. **Both halves are false.** Those two methods
+  are referenced *only inside `SpriteCategory.cs` itself* — no caller exists anywhere in the dump —
+  and the literal `"ui_loading"` appears **nowhere** in the decompile, so no engine code loads that
+  category by name. The reasoning was internally coherent and had a plausible mechanism, which is
+  exactly why it survived until someone grepped the dump for callers rather than for definitions.
+- **Prevent:** when a plan claims the engine drives something, grep the decompile for **callers of**
+  that method and for the **literal category/asset name**, not just for the method's definition. A
+  method that exists is not a method that runs. And when the proposed failure mode is "renders blank",
+  treat in-game verification as mandatory rather than as confirmation — static review cannot see it.
+- **Source:** native-commit-audit L2, 2026-08-08. `ui_loading` drop REJECTED after the supporting
+  analysis was refuted against the v1.4.7 dump; `docs/investigations/native-commit-audit-2026-08.md`
+  carries the full refutation and the general rule for the remaining `AlwaysLoad` levers.

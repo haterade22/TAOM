@@ -1,0 +1,1933 @@
+{
+  "CapturedAtUtc": "2026-08-09T02:37:42.992Z",
+  "CrashSignature": "28161302fbe173af5181133c6a35879afab8c812",
+  "Identity": {
+    "BannerlordVersion": "v1.4.7.117484",
+    "BannerlordExeFileVersion": "1.0.0.0",
+    "TaomVersion": "v2.0.18.0",
+    "TaomDllSha1": "5d4f7bd22618dad8efb876cad400faca8a43db1f",
+    "OriginatingPatchTarget": "TaleWorlds.MountAndBlade.Module.OnApplicationTick",
+    "LanguageCode": "English"
+  },
+  "Exception": {
+    "Type": "System.TypeInitializationException",
+    "Message": "The type initializer for 'System.MemoryExtensions' threw an exception.",
+    "Source": "System.Memory",
+    "HResult": -2146233036,
+    "TargetSiteFullName": "System.MemoryExtensions.AsSpan",
+    "StackTrace": "   at System.MemoryExtensions.AsSpan(String text)\r\n   at System.Diagnostics.Logger.LoggerTraceListener.WriteLine(String message)\r\n   at System.Diagnostics.TraceInternal.WriteLine(String message)\r\n   at System.Diagnostics.Trace.WriteLine(String message)\r\n   at Bannerlord.ButterLib.ButterLibSubModule.InitializeServices()\r\n   at Bannerlord.ButterLib.ButterLibSubModule.OnBeforeInitialModuleScreenSetAsRoot()\r\n   at TaleWorlds.MountAndBlade.Module.SetInitialModuleScreenAsRootScreen_Patch2(Module this)\r\n   at TaleWorlds.MountAndBlade.Module.OnApplicationTick_Patch2(Module this, Single dt)",
+    "Data": [],
+    "InnerException": {
+      "Type": "System.IO.FileNotFoundException",
+      "Message": "Could not load file or assembly 'System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' or one of its dependencies. The system cannot find the file specified.",
+      "Source": "System.Memory",
+      "HResult": -2147024894,
+      "TargetSiteFullName": "System.MemoryExtensions.MeasureStringAdjustment",
+      "StackTrace": "   at System.MemoryExtensions.MeasureStringAdjustment()\r\n   at System.MemoryExtensions..cctor()",
+      "Data": [],
+      "InnerException": null
+    }
+  },
+  "StackFrames": [
+    {
+      "Index": 0,
+      "MethodFullName": "System.MemoryExtensions.AsSpan",
+      "DeclaringTypeFullName": "System.MemoryExtensions",
+      "DeclaringAssemblyName": "System.Memory",
+      "FileName": null,
+      "FileLine": 0,
+      "IlOffset": -1
+    },
+    {
+      "Index": 1,
+      "MethodFullName": "System.Diagnostics.Logger.LoggerTraceListener.WriteLine",
+      "DeclaringTypeFullName": "System.Diagnostics.Logger.LoggerTraceListener",
+      "DeclaringAssemblyName": "Bannerlord.ButterLib",
+      "FileName": null,
+      "FileLine": 0,
+      "IlOffset": 6
+    },
+    {
+      "Index": 2,
+      "MethodFullName": "System.Diagnostics.TraceInternal.WriteLine",
+      "DeclaringTypeFullName": "System.Diagnostics.TraceInternal",
+      "DeclaringAssemblyName": "System",
+      "FileName": null,
+      "FileLine": 0,
+      "IlOffset": 55
+    },
+    {
+      "Index": 3,
+      "MethodFullName": "System.Diagnostics.Trace.WriteLine",
+      "DeclaringTypeFullName": "System.Diagnostics.Trace",
+      "DeclaringAssemblyName": "System",
+      "FileName": null,
+      "FileLine": 0,
+      "IlOffset": 6
+    },
+    {
+      "Index": 4,
+      "MethodFullName": "Bannerlord.ButterLib.ButterLibSubModule.InitializeServices",
+      "DeclaringTypeFullName": "Bannerlord.ButterLib.ButterLibSubModule",
+      "DeclaringAssemblyName": "Bannerlord.ButterLib",
+      "FileName": null,
+      "FileLine": 0,
+      "IlOffset": 270
+    },
+    {
+      "Index": 5,
+      "MethodFullName": "Bannerlord.ButterLib.ButterLibSubModule.OnBeforeInitialModuleScreenSetAsRoot",
+      "DeclaringTypeFullName": "Bannerlord.ButterLib.ButterLibSubModule",
+      "DeclaringAssemblyName": "Bannerlord.ButterLib",
+      "FileName": null,
+      "FileLine": 0,
+      "IlOffset": 56
+    },
+    {
+      "Index": 6,
+      "MethodFullName": "?.TaleWorlds.MountAndBlade.Module.SetInitialModuleScreenAsRootScreen_Patch2",
+      "DeclaringTypeFullName": null,
+      "DeclaringAssemblyName": null,
+      "FileName": null,
+      "FileLine": 0,
+      "IlOffset": -1
+    },
+    {
+      "Index": 7,
+      "MethodFullName": "?.TaleWorlds.MountAndBlade.Module.OnApplicationTick_Patch2",
+      "DeclaringTypeFullName": null,
+      "DeclaringAssemblyName": null,
+      "FileName": null,
+      "FileLine": 0,
+      "IlOffset": -1
+    }
+  ],
+  "Harmony": {
+    "PatchesPerStackFrame": [
+      {
+        "FrameIndex": 0,
+        "MethodFullName": "System.MemoryExtensions.AsSpan",
+        "Patches": []
+      },
+      {
+        "FrameIndex": 1,
+        "MethodFullName": "System.Diagnostics.Logger.LoggerTraceListener.WriteLine",
+        "Patches": []
+      },
+      {
+        "FrameIndex": 2,
+        "MethodFullName": "System.Diagnostics.TraceInternal.WriteLine",
+        "Patches": []
+      },
+      {
+        "FrameIndex": 3,
+        "MethodFullName": "System.Diagnostics.Trace.WriteLine",
+        "Patches": []
+      },
+      {
+        "FrameIndex": 4,
+        "MethodFullName": "Bannerlord.ButterLib.ButterLibSubModule.InitializeServices",
+        "Patches": []
+      },
+      {
+        "FrameIndex": 5,
+        "MethodFullName": "Bannerlord.ButterLib.ButterLibSubModule.OnBeforeInitialModuleScreenSetAsRoot",
+        "Patches": []
+      },
+      {
+        "FrameIndex": 6,
+        "MethodFullName": "?.TaleWorlds.MountAndBlade.Module.SetInitialModuleScreenAsRootScreen_Patch2",
+        "Patches": [
+          {
+            "Owner": "MCM.UI.Adapter.MCMv5",
+            "PatchType": "Postfix",
+            "Priority": 400,
+            "PatchMethodFullName": "MCM.UI.MCMUIAdapterSubModule.OnAfterSetInitialModuleScreenAsRootScreen"
+          },
+          {
+            "Owner": "Bannerlord.ButterLib.MBSubModuleBaseEx",
+            "PatchType": "Transpiler",
+            "Priority": 400,
+            "PatchMethodFullName": "Bannerlord.ButterLib.Implementation.MBSubModuleBaseExtended.Patches.ModulePatch.Transpiler"
+          }
+        ]
+      },
+      {
+        "FrameIndex": 7,
+        "MethodFullName": "?.TaleWorlds.MountAndBlade.Module.OnApplicationTick_Patch2",
+        "Patches": [
+          {
+            "Owner": "com.taom.mod",
+            "PatchType": "Postfix",
+            "Priority": 900,
+            "PatchMethodFullName": "TAOM.Features.CrashReport.DevTriggers.CrashReportApplicationTickTrigger.Postfix"
+          },
+          {
+            "Owner": "com.taom.mod",
+            "PatchType": "Finalizer",
+            "Priority": 800,
+            "PatchMethodFullName": "TAOM.Features.CrashReport.Hooks.ModuleOnApplicationTickFinalizer.Finalizer"
+          }
+        ]
+      }
+    ],
+    "AllOwnersByPatchCount": [
+      {
+        "Owner": "com.taom.mod",
+        "PatchCount": 327
+      },
+      {
+        "Owner": "Bannerlord.ButterLib.SubModuleWrappers2",
+        "PatchCount": 30
+      },
+      {
+        "Owner": "TAOM.Dependencies.Foundation.PatchShield",
+        "PatchCount": 30
+      },
+      {
+        "Owner": "TAOM.Dependencies",
+        "PatchCount": 22
+      },
+      {
+        "Owner": "bannerlord.uiextender.ex",
+        "PatchCount": 19
+      },
+      {
+        "Owner": "bannerlord.uiextender.ex.viewmodels.TAOM",
+        "PatchCount": 15
+      },
+      {
+        "Owner": "TAOM.Dependencies.Foundation.SaveShield",
+        "PatchCount": 12
+      },
+      {
+        "Owner": "Bannerlord.ButterLib.SaveSystem",
+        "PatchCount": 12
+      },
+      {
+        "Owner": "Bannerlord.ButterLib.MBSubModuleBaseEx",
+        "PatchCount": 4
+      },
+      {
+        "Owner": "bannerlord.mcm.ui.optionsgauntletscreenpatch",
+        "PatchCount": 4
+      },
+      {
+        "Owner": "TAOM.Dependencies.Foundation.CollectAssemblyTypesShim",
+        "PatchCount": 2
+      },
+      {
+        "Owner": "TAOM.Dependencies.Foundation.SubModuleConstructionGuard",
+        "PatchCount": 2
+      },
+      {
+        "Owner": "TAOM.HarmonyGuard",
+        "PatchCount": 1
+      },
+      {
+        "Owner": "Bannerlord.ButterLib.HotKeySystem",
+        "PatchCount": 1
+      },
+      {
+        "Owner": "MCM.UI.Adapter.MCMv5",
+        "PatchCount": 1
+      },
+      {
+        "Owner": "bannerlord.mcm.ui.optionsswitchpatch",
+        "PatchCount": 1
+      }
+    ],
+    "TotalPatchedMethods": 412
+  },
+  "Modules": {
+    "Modules": [
+      {
+        "Id": "TAOM.Dependencies",
+        "Version": "v2.0.6.0",
+        "LoadIndex": 0,
+        "IsOfficial": false,
+        "MainDllSha1": "06bb1577fc842aedc871096bbbfcb4ae25686426",
+        "MainDllPath": "..\\..\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\TAOM.Dependencies.dll",
+        "ManifestPath": "..\\..\\Modules\\TAOM.Dependencies\\SubModule.xml",
+        "DeclaredDependencies": [],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": []
+      },
+      {
+        "Id": "Native",
+        "Version": "v1.4.7.117484",
+        "LoadIndex": 1,
+        "IsOfficial": true,
+        "MainDllSha1": "10f6e7adfeb4149307414f4f71aebf329c99013c",
+        "MainDllPath": "..\\..\\Modules\\Native\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.0.dll",
+        "ManifestPath": "..\\..\\Modules\\Native\\SubModule.xml",
+        "DeclaredDependencies": [],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "managed_core_parameters",
+          "mpitems",
+          "native_equipment_sets",
+          "native_skill_sets",
+          "mpbodypropertytemplates",
+          "mpcharacters",
+          "mpcultures",
+          "mpclassdivisions",
+          "monsters",
+          "item_modifiers",
+          "item_modifiers_groups",
+          "mp_crafting_pieces",
+          "crafting_pieces",
+          "weapon_descriptions",
+          "crafting_templates",
+          "skeleton_scales",
+          "siegeengines",
+          "global_strings",
+          "consoles",
+          "native_strings",
+          "module_strings",
+          "photo_mode_strings",
+          "banner_icons",
+          "multiplayer_strings"
+        ]
+      },
+      {
+        "Id": "SandBoxCore",
+        "Version": "v1.4.7.117484",
+        "LoadIndex": 2,
+        "IsOfficial": true,
+        "MainDllSha1": "(no-path)",
+        "MainDllPath": null,
+        "ManifestPath": "..\\..\\Modules\\SandBoxCore\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "items",
+          "spcultures",
+          "sandboxcore_bodyproperties",
+          "sandboxcore_equipment_sets",
+          "sandboxcore_skill_sets",
+          "spnpccharactertemplates",
+          "spnpccharacters",
+          "obsolete_characters"
+        ]
+      },
+      {
+        "Id": "CustomBattle",
+        "Version": "v1.4.7.117484",
+        "LoadIndex": 3,
+        "IsOfficial": true,
+        "MainDllSha1": "dec437ffc0ee585d053c10ee0e3b92df61aad065",
+        "MainDllPath": "..\\..\\Modules\\CustomBattle\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.CustomBattle.dll",
+        "ManifestPath": "..\\..\\Modules\\CustomBattle\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native",
+          "SandBoxCore"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "custombattlecharacters",
+          "custom_battle_scenes"
+        ]
+      },
+      {
+        "Id": "Sandbox",
+        "Version": "v1.4.7.117484",
+        "LoadIndex": 4,
+        "IsOfficial": true,
+        "MainDllSha1": "7b0f51102b44b5c601eb1a46f0e2f9cab3801b5d",
+        "MainDllPath": "..\\..\\Modules\\SandBox\\bin\\Win64_Shipping_Client\\Sandbox.dll",
+        "ManifestPath": "..\\..\\Modules\\SandBox\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native",
+          "SandBoxCore"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "obsolete_characters",
+          "partyTemplates",
+          "lords",
+          "bandits",
+          "heroes",
+          "education_equipment_templates",
+          "sandbox_equipment_sets",
+          "education_character_templates",
+          "caravans",
+          "spspecialcharacters",
+          "spgenericcharacters",
+          "spkingdoms",
+          "spclans",
+          "spworkshops",
+          "location_complex_templates",
+          "concept_strings",
+          "settlements",
+          "sandbox_bodyproperties",
+          "sandbox_skill_sets",
+          "settlement_track_instruments",
+          "settlement_tracks",
+          "module_strings",
+          "world_lore_strings",
+          "companion_strings",
+          "wanderer_strings",
+          "comment_strings",
+          "comment_on_action_strings",
+          "trait_strings",
+          "voice_strings",
+          "action_strings",
+          "monsters"
+        ]
+      },
+      {
+        "Id": "StoryMode",
+        "Version": "v1.4.7.117484",
+        "LoadIndex": 5,
+        "IsOfficial": true,
+        "MainDllSha1": "acc04e53fe9e261b7d2a5f0ad06d1e141142a75d",
+        "MainDllPath": "..\\..\\Modules\\StoryMode\\bin\\Win64_Shipping_Client\\StoryMode.dll",
+        "ManifestPath": "..\\..\\Modules\\StoryMode\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native",
+          "SandBoxCore",
+          "Sandbox"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "story_mode_location_complex_templates",
+          "story_mode_equipments",
+          "story_mode_characters",
+          "story_mode_party_templates",
+          "story_mode_items",
+          "story_mode_settlements",
+          "module_strings"
+        ]
+      },
+      {
+        "Id": "BirthAndDeath",
+        "Version": "v1.4.7.117484",
+        "LoadIndex": 6,
+        "IsOfficial": true,
+        "MainDllSha1": "5bd8bb4ee3cc56e820b65f52a11d8ba80eea6bb6",
+        "MainDllPath": "..\\..\\Modules\\BirthAndDeath\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.ViewModelCollection.BirthAndDeath.dll",
+        "ManifestPath": "..\\..\\Modules\\BirthAndDeath\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native",
+          "SandBoxCore"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": []
+      },
+      {
+        "Id": "FastMode",
+        "Version": "v1.4.7.117484",
+        "LoadIndex": 7,
+        "IsOfficial": true,
+        "MainDllSha1": "256c4b349f5556b4fda2b7d8a62e40093e33f1c5",
+        "MainDllPath": "..\\..\\Modules\\FastMode\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.FastMode.dll",
+        "ManifestPath": "..\\..\\Modules\\FastMode\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native",
+          "SandBoxCore"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": []
+      },
+      {
+        "Id": "Alliance.Wargs",
+        "Version": "v2.0.8.0",
+        "LoadIndex": 8,
+        "IsOfficial": false,
+        "MainDllSha1": "(no-path)",
+        "MainDllPath": null,
+        "ManifestPath": "..\\..\\Modules\\Alliance.Wargs\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "Monsters/LOTR",
+          "Items/LOTR"
+        ]
+      },
+      {
+        "Id": "LOTRLOME_Armory",
+        "Version": "v2.0.15.0",
+        "LoadIndex": 9,
+        "IsOfficial": false,
+        "MainDllSha1": "(no-path)",
+        "MainDllPath": null,
+        "ManifestPath": "..\\..\\Modules\\LOTRLOME_Armory\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native",
+          "SandBoxCore",
+          "Sandbox",
+          "CustomBattle"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "LOTRLOME_items/gondor",
+          "LOTRLOME_items/mirkwood",
+          "LOTRLOME_items/rohan",
+          "LOTRLOME_items/rhun",
+          "LOTRLOME_items/harad",
+          "LOTRLOME_items/mordor",
+          "LOTRLOME_items/erebor",
+          "LOTRLOME_items/dale",
+          "LOTRLOME_items/rivendell",
+          "LOTRLOME_items/dunland",
+          "LOTRLOME_items/isengard",
+          "LOTRLOME_items/troll",
+          "LOTRLOME_items/iron_hills",
+          "LOTRLOME_items/thenn",
+          "LOTRLOME_items/gundabad",
+          "LOTRLOME_items/arnor",
+          "LOTRLOME_items/mercenary",
+          "LOTRLOME_crafting_pieces",
+          "crafting_templates",
+          "weapon_descriptions",
+          "monsters",
+          "Monsters/LOTR/lotr_monster_spider",
+          "Monsters/LOTR/lotr_monster_elephant",
+          "Monsters/LOTR/lotr_monster_mumakil",
+          "Monsters/LOTR/lotr_monster_chariot",
+          "LOTRLOME_items/LOTRAOM_horses",
+          "LOTRLOME_items/LOTRAOM_weapons",
+          "LOTRLOME_items/LOTRAOM_shields",
+          "LOTRLOME_items/dol_guldur",
+          "module_sounds"
+        ]
+      },
+      {
+        "Id": "TAOM_Map",
+        "Version": "v2.0.15.0",
+        "LoadIndex": 10,
+        "IsOfficial": false,
+        "MainDllSha1": "(no-path)",
+        "MainDllPath": null,
+        "ManifestPath": "..\\..\\Modules\\TAOM_Map\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native",
+          "SandBoxCore",
+          "Sandbox",
+          "CustomBattle"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "items",
+          "spcultures",
+          "spnpccharacters",
+          "partyTemplates",
+          "spkingdoms",
+          "spclans",
+          "spworkshops",
+          "settlements"
+        ]
+      },
+      {
+        "Id": "TAOM",
+        "Version": "v2.0.18.0",
+        "LoadIndex": 11,
+        "IsOfficial": false,
+        "MainDllSha1": "5d4f7bd22618dad8efb876cad400faca8a43db1f",
+        "MainDllPath": "..\\..\\Modules\\TAOM\\bin\\Win64_Shipping_Client\\TAOM.dll",
+        "ManifestPath": "..\\..\\Modules\\TAOM\\SubModule.xml",
+        "DeclaredDependencies": [
+          "Native",
+          "SandBoxCore",
+          "Sandbox",
+          "CustomBattle",
+          "TAOM.Dependencies"
+        ],
+        "HasDependencyOrderInversion": false,
+        "XmlFilePaths": [
+          "spkingdoms",
+          "spcultures",
+          "spclans",
+          "lords",
+          "heroes",
+          "taom_spcultures",
+          "taom_spkingdoms",
+          "characters/clans",
+          "characters/heroes",
+          "characters/lords",
+          "TAOM_bodyproperties",
+          "troops/troops_gondor",
+          "troops/troops_rohan",
+          "troops/troops_erebor",
+          "troops/troops_dale",
+          "troops/troops_rivendell",
+          "troops/troops_mirkwood",
+          "troops/troops_mordor",
+          "troops/troops_isengard",
+          "troops/troops_dolguldur",
+          "characters/npcs_dolguldur",
+          "characters/spider_creature",
+          "equipmentsets/taom_equipment_sets_dolguldur",
+          "taom_education_character_templates",
+          "equipmentsets/taom_education_equipment_templates",
+          "equipmentsets/taom_child_equipment_templates",
+          "troops/troops_gundabad",
+          "characters/npcs_gundabad",
+          "taom_partyTemplates",
+          "equipmentsets/taom_equipment_sets_gundabad",
+          "troops/troops_goblin",
+          "characters/npcs_goblin",
+          "equipmentsets/taom_equipment_sets_goblin",
+          "troops/troops_mistymountainorcs",
+          "characters/npcs_mistymountainorcs",
+          "equipmentsets/taom_equipment_sets_mistymountainorcs",
+          "characters/npcs_mirkwood",
+          "equipmentsets/taom_equipment_sets_mirkwood",
+          "characters/npcs_erebor",
+          "equipmentsets/taom_equipment_sets_erebor",
+          "characters/npcs_rivendell",
+          "equipmentsets/taom_equipment_sets_rivendell",
+          "characters/npcs_gondor",
+          "equipmentsets/taom_equipment_sets_gondor",
+          "characters/npcs_mordor",
+          "equipmentsets/taom_equipment_sets_mordor",
+          "troops/troops_harad",
+          "troops/troops_rhun_new",
+          "troops/troops_dunland",
+          "troops/troops_umbar",
+          "characters/npcs_rohan",
+          "equipmentsets/taom_equipment_sets_rohan",
+          "characters/npcs_dunland",
+          "equipmentsets/taom_equipment_sets_dunland",
+          "characters/npcs_harad",
+          "equipmentsets/taom_equipment_sets_harad",
+          "characters/npcs_rhun",
+          "equipmentsets/taom_equipment_sets_rhun",
+          "equipmentsets/taom_equipment_sets_dale",
+          "equipmentsets/taom_equipment_sets_lothlorien",
+          "equipmentsets/taom_equipment_sets_umbar",
+          "characters/npcs_isengard",
+          "characters/npcs_lothlorien",
+          "characters/npcs_shaghana",
+          "characters/npcs_abanissa",
+          "characters/npcs_umbar",
+          "characters/npcs_dale",
+          "characters/npcs_khand",
+          "equipmentsets/taom_equipment_sets_isengard",
+          "taom_wanderers",
+          "taom_lord_skill_sets",
+          "taom_wanderer_skill_sets",
+          "equipmentsets/taom_wanderer_equipment",
+          "named_companions/named_companions",
+          "equipmentsets/taom_equipment_sets_named_companions",
+          "equipmentsets/taom_char_creation_equipment",
+          "equipmentsets/taom_career_starting_equipment",
+          "equipmentsets/taom_enlistment_equipment",
+          "equipmentsets/taom_lord_template_equipment",
+          "module_strings",
+          "action_strings",
+          "comment_strings",
+          "taom_module_strings",
+          "taom_wanderer_strings",
+          "named_companions/named_companion_strings",
+          "taom_cc_strings",
+          "taom_enlistment_strings",
+          "taom_career_strings",
+          "taom_wotr_strings",
+          "taom_messenger_strings",
+          "taom_lotr_issue_strings",
+          "taom_emissary_strings",
+          "taom_xslt_strings",
+          "banner_icons",
+          "custom_battle_scenes"
+        ]
+      }
+    ]
+  },
+  "Assemblies": {
+    "Assemblies": [
+      {
+        "Name": "0Harmony",
+        "Version": "2.4.2.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\0Harmony.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Accessibility",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\Accessibility\\v4.0_4.0.0.0__b03f5f7f11d50a3a\\Accessibility.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "BUTR.CrashReport",
+        "Version": "14.0.0.99",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\BUTR.CrashReport.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "BUTR.CrashReport.Models",
+        "Version": "14.0.0.99",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\BUTR.CrashReport.Models.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "BUTR.CrashReport.Renderer.ImGui",
+        "Version": "14.0.0.99",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\BUTR.CrashReport.Renderer.ImGui.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "BUTR.CrashReport.Renderer.WinForms",
+        "Version": "14.0.0.99",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\BUTR.CrashReport.Renderer.WinForms.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Bannerlord.ButterLib",
+        "Version": "2.11.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Bannerlord.ButterLib.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Bannerlord.ButterLib.Implementation.1.4.5",
+        "Version": "2.11.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Bannerlord.ButterLib.Implementation.1.4.5.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Bannerlord.MBOptionScreen",
+        "Version": "1.0.1.50",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Bannerlord.MBOptionScreen.v1.4.5",
+        "Version": "5.12.1.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Bannerlord.MBOptionScreen.v1.4.5.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Bannerlord.UIExtenderEx",
+        "Version": "2.13.2.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Bannerlord.UIExtenderEx.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "DryIoc",
+        "Version": "4.8.8.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM\\bin\\Win64_Shipping_Client\\DryIoc.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "HarmonySharedState",
+        "Version": "0.0.0.0",
+        "Location": "",
+        "IsInGac": false
+      },
+      {
+        "Name": "MCM.UI.Adapter.MCMv5",
+        "Version": "5.12.1.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\MCM.UI.Adapter.MCMv5.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "MCMv5",
+        "Version": "5.12.1.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\MCMv5.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "ManagedStarter",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\Bannerlord.exe",
+        "IsInGac": false
+      },
+      {
+        "Name": "Microsoft.Bcl.HashCode",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Microsoft.Bcl.HashCode.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Microsoft.Extensions.DependencyInjection",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Microsoft.Extensions.DependencyInjection.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Microsoft.Extensions.Logging",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Microsoft.Extensions.Logging.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Microsoft.Extensions.Logging.Abstractions",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Microsoft.Extensions.Logging.Abstractions.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Microsoft.Extensions.Options",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Microsoft.Extensions.Options.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Microsoft.Extensions.Primitives",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Microsoft.Extensions.Primitives.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "MonoMod.Utils.Cil.ILGeneratorProxy",
+        "Version": "0.0.0.0",
+        "Location": "",
+        "IsInGac": false
+      },
+      {
+        "Name": "Newtonsoft.Json",
+        "Version": "13.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\Newtonsoft.Json.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "SandBox",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\bin\\Win64_Shipping_Client\\SandBox.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "SandBox.GauntletUI",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\bin\\Win64_Shipping_Client\\SandBox.GauntletUI.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "SandBox.GauntletUI.AutoGenerated.0",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\bin\\Win64_Shipping_Client\\SandBox.GauntletUI.AutoGenerated.0.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "SandBox.GauntletUI.AutoGenerated.1",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\bin\\Win64_Shipping_Client\\SandBox.GauntletUI.AutoGenerated.1.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "SandBox.View",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\bin\\Win64_Shipping_Client\\SandBox.View.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "SandBox.ViewModelCollection",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\bin\\Win64_Shipping_Client\\SandBox.ViewModelCollection.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Serilog",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Serilog.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Serilog.Extensions.Logging",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Serilog.Extensions.Logging.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Serilog.Sinks.File",
+        "Version": "5.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\Serilog.Sinks.File.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "Steamworks.NET",
+        "Version": "20.1.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\Steamworks.NET.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "StoryMode",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\StoryMode\\bin\\Win64_Shipping_Client\\StoryMode.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "StoryMode.GauntletUI",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\StoryMode\\bin\\Win64_Shipping_Client\\StoryMode.GauntletUI.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "StoryMode.GauntletUI.AutoGenerated",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\StoryMode\\bin\\Win64_Shipping_Client\\StoryMode.GauntletUI.AutoGenerated.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "StoryMode.View",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\StoryMode\\bin\\Win64_Shipping_Client\\StoryMode.View.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "StoryMode.ViewModelCollection",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\StoryMode\\bin\\Win64_Shipping_Client\\StoryMode.ViewModelCollection.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "System",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System\\v4.0_4.0.0.0__b77a5c561934e089\\System.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Collections.Immutable",
+        "Version": "1.2.5.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\System.Collections.Immutable.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "System.Configuration",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Configuration\\v4.0_4.0.0.0__b03f5f7f11d50a3a\\System.Configuration.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Core",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Core\\v4.0_4.0.0.0__b77a5c561934e089\\System.Core.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Data",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_64\\System.Data\\v4.0_4.0.0.0__b77a5c561934e089\\System.Data.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Data.SqlXml",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Data.SqlXml\\v4.0_4.0.0.0__b77a5c561934e089\\System.Data.SqlXml.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Drawing",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Drawing\\v4.0_4.0.0.0__b03f5f7f11d50a3a\\System.Drawing.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Memory",
+        "Version": "4.0.1.1",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\System.Memory.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "System.Net.Http",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Net.Http\\v4.0_4.0.0.0__b03f5f7f11d50a3a\\System.Net.Http.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Numerics",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Numerics\\v4.0_4.0.0.0__b77a5c561934e089\\System.Numerics.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Numerics.Vectors",
+        "Version": "4.1.3.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\System.Numerics.Vectors.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "System.Reflection.Emit.ILGeneration",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Reflection.Emit.ILGeneration\\v4.0_4.0.0.0__b03f5f7f11d50a3a\\System.Reflection.Emit.ILGeneration.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Reflection.Metadata",
+        "Version": "1.4.5.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\System.Reflection.Metadata.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "System.Runtime.InteropServices.RuntimeInformation",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Runtime.InteropServices.RuntimeInformation\\v4.0_4.0.0.0__b03f5f7f11d50a3a\\System.Runtime.InteropServices.RuntimeInformation.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Runtime.Serialization",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Runtime.Serialization\\v4.0_4.0.0.0__b77a5c561934e089\\System.Runtime.Serialization.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Security",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Security\\v4.0_4.0.0.0__b03f5f7f11d50a3a\\System.Security.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.ServiceModel.Internals",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.ServiceModel.Internals\\v4.0_4.0.0.0__31bf3856ad364e35\\System.ServiceModel.Internals.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Transactions",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_64\\System.Transactions\\v4.0_4.0.0.0__b77a5c561934e089\\System.Transactions.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.ValueTuple",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.ValueTuple\\v4.0_4.0.0.0__cc7b13ffcd2ddd51\\System.ValueTuple.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Windows.Forms",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Windows.Forms\\v4.0_4.0.0.0__b77a5c561934e089\\System.Windows.Forms.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Xml",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Xml\\v4.0_4.0.0.0__b77a5c561934e089\\System.Xml.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "System.Xml.Linq",
+        "Version": "4.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\System.Xml.Linq\\v4.0_4.0.0.0__b77a5c561934e089\\System.Xml.Linq.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "TAOM",
+        "Version": "2.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM\\bin\\Win64_Shipping_Client\\TAOM.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TAOM.Dependencies",
+        "Version": "0.1.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\TAOM.Dependencies\\bin\\Win64_Shipping_Client\\TAOM.Dependencies.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.AchievementSystem",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.AchievementSystem.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.ActivitySystem",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.ActivitySystem.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.CampaignSystem",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.CampaignSystem.FastMode",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\FastMode\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.FastMode.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.CampaignSystem.ViewModelCollection",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.ViewModelCollection.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.CampaignSystem.ViewModelCollection.BirthAndDeath",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\BirthAndDeath\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.ViewModelCollection.BirthAndDeath.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Core",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Core.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Core.ViewModelCollection",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Core.ViewModelCollection.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Diamond",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Diamond.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Diamond.AccessProvider.Test",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Diamond.AccessProvider.Test.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.DotNet",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.DotNet.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.DotNet.AutoGenerated",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.DotNet.AutoGenerated.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Engine",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Engine.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Engine.AutoGenerated",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Engine.AutoGenerated.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Engine.GauntletUI",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Engine.GauntletUI.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.GauntletUI",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.GauntletUI.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.GauntletUI.Data",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.GauntletUI.Data.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.GauntletUI.ExtraWidgets",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.GauntletUI.ExtraWidgets.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.GauntletUI.PrefabSystem",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.GauntletUI.PrefabSystem.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.InputSystem",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.InputSystem.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Library",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Library.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.LinQuick",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.LinQuick.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Localization",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Localization.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.ModuleManager",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.ModuleManager.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.AutoGenerated",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.AutoGenerated.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.CustomBattle",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\CustomBattle\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.CustomBattle.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.Diamond",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.Diamond.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.GauntletUI",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\Native\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.GauntletUI.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.0",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\Native\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.0.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.1",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\Native\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.GauntletUI.AutoGenerated.1.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.GauntletUI.Widgets",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.GauntletUI.Widgets.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.Platform.PC",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\Native\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.Platform.PC.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.View",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\Native\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.View.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.MountAndBlade.ViewModelCollection",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.ViewModelCollection.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Network",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Network.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.ObjectSystem",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.ObjectSystem.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.PSAI",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.PSAI.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.PlatformService",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.PlatformService.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.PlatformService.Steam",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.PlatformService.Steam.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.PlayerServices",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.PlayerServices.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.SaveSystem",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.SaveSystem.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.ScreenSystem",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.ScreenSystem.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.Starter.Library",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.Starter.Library.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "TaleWorlds.TwoDimension",
+        "Version": "1.0.0.0",
+        "Location": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\TaleWorlds.TwoDimension.dll",
+        "IsInGac": false
+      },
+      {
+        "Name": "mscorlib",
+        "Version": "4.0.0.0",
+        "Location": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\mscorlib.dll",
+        "IsInGac": true
+      },
+      {
+        "Name": "netstandard",
+        "Version": "2.0.0.0",
+        "Location": "C:\\WINDOWS\\Microsoft.Net\\assembly\\GAC_MSIL\\netstandard\\v4.0_2.0.0.0__cc7b13ffcd2ddd51\\netstandard.dll",
+        "IsInGac": true
+      }
+    ]
+  },
+  "Campaign": null,
+  "Mission": null,
+  "Taom": {
+    "Career": null,
+    "SpecialResources": [],
+    "CulturalFeats": null,
+    "RevoltTuning": null,
+    "ActiveMessengersCount": null
+  },
+  "Mcm": {
+    "Providers": []
+  },
+  "Process": {
+    "WorkingSetBytes": 4706877440,
+    "PrivateMemoryBytes": 7193583616,
+    "GcTotalMemoryBytes": 307081920,
+    "Gen0CollectionCount": 291,
+    "Gen1CollectionCount": 63,
+    "Gen2CollectionCount": 6,
+    "ProcessThreadCount": 208,
+    "ManagedThreadCount": 208,
+    "UptimeSeconds": 107.2964793,
+    "ThrowingThread": {
+      "ManagedThreadId": 39,
+      "Name": null,
+      "IsBackground": true,
+      "ApartmentState": "MTA"
+    }
+  },
+  "Gpu": {
+    "Adapters": [
+      {
+        "Name": "AMD Radeon(TM) Graphics",
+        "DriverVersion": "32.0.21045.1000",
+        "DriverDate": "2026-07-22",
+        "AdapterRamBytes": 2147483648,
+        "VideoProcessor": "AMD Radeon Graphics Processor (0x13C0)"
+      },
+      {
+        "Name": "NVIDIA GeForce RTX 5080",
+        "DriverVersion": "32.0.16.1088",
+        "DriverDate": "2026-07-21",
+        "AdapterRamBytes": 4293918720,
+        "VideoProcessor": "NVIDIA GeForce RTX 5080"
+      }
+    ]
+  },
+  "Display": {
+    "ResolutionWidth": 5120,
+    "ResolutionHeight": 1440,
+    "RefreshRate": 239,
+    "IsFullscreen": false,
+    "MonitorCount": 2
+  },
+  "Os": {
+    "OsDescription": "Microsoft Windows 10.0.26200 ",
+    "OsVersion": "Microsoft Windows NT 6.2.9200.0",
+    "Is64BitOs": true,
+    "LogicalProcessorCount": 32,
+    "ArchitectureLabel": "X64",
+    "CurrentCulture": "",
+    "CurrentUiCulture": "",
+    "ClrVersion": "4.0.30319.42000"
+  },
+  "AppDomain": {
+    "FriendlyName": "Bannerlord.exe",
+    "BaseDirectory": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\",
+    "RelativeSearchPath": null,
+    "IsFullyTrusted": true
+  },
+  "EnvVars": [
+    {
+      "Name": "BANNERLORD_GAME_DIR",
+      "Value": "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord"
+    },
+    {
+      "Name": "STEAM_COMPAT_MEDIA_PATH",
+      "Value": "E:\\Steam\\steamapps\\shadercache\\261550/fozmediav1"
+    },
+    {
+      "Name": "STEAM_COMPAT_TRANSCODED_MEDIA_PATH",
+      "Value": "E:\\Steam\\steamapps\\shadercache\\261550"
+    },
+    {
+      "Name": "STEAM_FOSSILIZE_DUMP_PATH",
+      "Value": "E:\\Steam\\steamapps\\shadercache\\261550\\fozpipelinesv6\\steamapprun_pipeline_cache"
+    },
+    {
+      "Name": "STEAM_FOSSILIZE_DUMP_PATH_READ_ONLY",
+      "Value": "$bucketdir\\steam_pipeline_cache.foz;$bucketdir\\steamapp_pipeline_cache.foz"
+    }
+  ],
+  "Performance": {
+    "RecentFrameTimesMs": [],
+    "AverageFrameTimeMs": 0.0,
+    "FpsAtCrash": 0.0,
+    "SampleCount": 0
+  },
+  "Logs": {
+    "TaomDebugLogPath": "Logs\\taom_debug_2026-08-08_21-36-44.log",
+    "TaomDebugLogTail": [
+      "[2026-08-08 21:36:44] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20260809-023542Z+bbf27dda77561ec0524ee4fbbc1a3e588da61b35 TAOM.Dependencies=v0.1.0.0 build.20260809-023230Z+6dc9dadc6d5945dfdaf885469cd93700397e172b (pair OK)",
+      "[2026-08-08 21:36:44] [DEBUG] [SaveDefiners] 74 definer(s) found, no base-id collisions.",
+      "[2026-08-08 21:37:18] [INFO] [CrashReport] Native2Managed: attached 247 Finalizer(s)",
+      "[2026-08-08 21:37:18] [INFO] [CoopInterop] no co-op module detected at UI registration — registering all TAOM UI",
+      "[2026-08-08 21:37:21] [INFO] [LocalizationOverride] Registered 313 English string overrides",
+      "[2026-08-08 21:37:26] [INFO] Loaded 24 kingdom alignments",
+      "[2026-08-08 21:37:26] [INFO] AlignmentService: Loaded 24 kingdom alignments",
+      "[2026-08-08 21:37:26] [INFO] Loaded 130 diplomacy relationships",
+      "[2026-08-08 21:37:26] [INFO] Loaded War of the Ring config: Phase1 day 30, Phase2 day 44",
+      "[2026-08-08 21:37:26] [INFO] Loaded 87 troop weights from XML",
+      "[2026-08-08 21:37:26] [INFO] [TroopWeight] Service initialized with 87 weighted troop definitions",
+      "[2026-08-08 21:37:28] [INFO] CastleRecruitmentConfigProvider: Loaded castle_recruitment_config.json",
+      "[2026-08-08 21:37:28] [DEBUG] [CastleRecruitment] AiHourlyTick: IsCastle gate swapped at instruction 571",
+      "[2026-08-08 21:37:28] [DEBUG] [CastleRecruitment] FillSettlements: IsCastle gate swapped at instruction 100"
+    ],
+    "RglLogPath": "C:\\ProgramData\\Mount and Blade II Bannerlord\\logs\\rgl_log_78540.txt",
+    "RglLogTail": [
+      "[21:37:30.693] Combat parameter added: 136 -> weapon_bash_params_1h",
+      "[21:37:30.693] Loading xml file: $BASE/Modules/SandBox/ModuleData/project.mbproj.",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading combat parameters file![21:37:30.693] Loading xml file: $BASE/Modules/StoryMode/ModuleData/project.mbproj.",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading combat parameters file![21:37:30.693] Loading xml file: $BASE/Modules/Alliance.Wargs/ModuleData/project.mbproj.",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading combat parameters file![21:37:30.693] Loading xml file: $BASE/Modules/LOTRLOME_Armory/ModuleData/project.mbproj.",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading combat parameters file![21:37:30.693] Loading xml file: $BASE/Modules/TAOM_Map/ModuleData/project.mbproj.",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading combat parameters file![21:37:30.693] Loading xml file: $BASE/Modules/TAOM/ModuleData/project.mbproj.",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading animation_combat_parameters xml files",
+      "[21:37:30.693] reading combat parameters file![21:37:30.694] opening ..\\..\\Modules\\Native/ModuleData/action_sets.xml ",
+      "",
+      "[21:37:30.711] opening ..\\..\\Modules\\Alliance.Wargs/ModuleData/Animations/action_sets_warg.xml ",
+      "",
+      "[21:37:30.962] opening ..\\..\\Modules\\LOTRLOME_Armory/ModuleData/action_sets.xml ",
+      "",
+      "[21:37:31.133] Loading Module...",
+      "[21:37:31.133] Body mesh name fetched: body_male_a, for index: 0",
+      "[21:37:31.133] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.133] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.153] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.153] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.153] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.171] Body mesh name fetched: body_male_a_teen, for index: 0",
+      "[21:37:31.171] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.171] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.171] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.171] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.171] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.172] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.172] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.172] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.173] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.173] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.173] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.173] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.173] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.173] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.174] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.174] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.174] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.174] Body mesh name fetched: body_female_a_kid3, for index: 0",
+      "[21:37:31.174] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.174] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.181] Body mesh name fetched: body_female_a_kid4, for index: 0",
+      "[21:37:31.181] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.181] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.181] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.181] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.181] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.187] Body mesh name fetched: sk_dwarf_bm_f1_body, for index: 0",
+      "[21:37:31.187] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.187] Body mesh name fetched: sk_dwarf_bm_f1_shoulder, for index: 2",
+      "[21:37:31.202] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.202] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.202] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.202] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.202] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.202] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.203] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.203] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.203] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.203] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.203] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.203] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.203] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.203] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.203] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.203] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.203] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.203] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.204] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.204] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.204] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.204] Body mesh name fetched: sm_dwarf_basemesh_a1_body, for index: 0",
+      "[21:37:31.204] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.204] Body mesh name fetched: sm_dwarf_basemesh_a1_shoulder, for index: 2",
+      "[21:37:31.205] gpu_morph_mapping: 10492",
+      "[21:37:31.205] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.205] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.205] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.208] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.208] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.208] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.209] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.209] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.209] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.209] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.209] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.209] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.210] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.210] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.210] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.211] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.211] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.211] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.211] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.211] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.211] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.212] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.212] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.212] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.212] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.212] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.212] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.213] Body mesh name fetched: sk_uruk_basemesh_a_body, for index: 0",
+      "[21:37:31.213] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.213] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.213] Body mesh name fetched: nazghul_body_male, for index: 0",
+      "[21:37:31.213] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.213] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.218] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.218] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.218] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.218] Body mesh name fetched: body_male_a_teen, for index: 0",
+      "[21:37:31.218] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.218] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.218] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.218] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.218] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.219] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.219] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.219] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.219] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.219] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.219] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.220] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.220] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.220] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.220] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.220] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.220] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.221] Body mesh name fetched: body_female_a_kid3, for index: 0",
+      "[21:37:31.221] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.221] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.221] Body mesh name fetched: body_female_a_kid4, for index: 0",
+      "[21:37:31.221] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.221] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.222] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.222] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.222] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.225] gpu_morph_mapping: 15588",
+      "[21:37:31.226] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.226] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.226] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.227] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.227] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.227] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.227] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.227] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.228] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.228] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.228] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.228] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.228] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.228] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.228] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.228] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.228] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.228] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.229] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.229] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.229] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.229] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.229] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.229] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.230] Body mesh name fetched: orc_a_body, for index: 0",
+      "[21:37:31.230] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.230] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.230] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.230] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.230] Body mesh name fetched: sk_uruk_hai_bm_a_shoulder, for index: 2",
+      "[21:37:31.235] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.235] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.235] Body mesh name fetched: sk_uruk_hai_bm_a_shoulder, for index: 2",
+      "[21:37:31.235] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.235] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.235] Body mesh name fetched: sk_uruk_hai_bm_a_shoulder, for index: 2",
+      "[21:37:31.236] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.236] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.236] Body mesh name fetched: sk_uruk_hai_bm_a_shoulder, for index: 2",
+      "[21:37:31.236] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.236] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.236] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.237] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.237] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.237] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.237] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.237] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.237] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.238] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.238] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.238] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.238] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.238] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.238] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.238] Body mesh name fetched: sk_uruk_hai_bm_a_body, for index: 0",
+      "[21:37:31.238] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.238] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.239] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.239] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.239] Body mesh name fetched: sk_uruk_hai_bm_b_shoulder, for index: 2",
+      "[21:37:31.240] gpu_morph_mapping: 17150",
+      "[21:37:31.245] gpu_morph_mapping: 18712",
+      "[21:37:31.247] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.247] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.247] Body mesh name fetched: sk_uruk_hai_bm_b_shoulder, for index: 2",
+      "[21:37:31.247] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.247] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.247] Body mesh name fetched: sk_uruk_hai_bm_b_shoulder, for index: 2",
+      "[21:37:31.248] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.248] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.248] Body mesh name fetched: sk_uruk_hai_bm_b_shoulder, for index: 2",
+      "[21:37:31.248] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.248] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.248] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.249] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.249] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.249] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.249] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.249] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.249] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.250] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.250] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.250] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.250] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.250] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.250] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.250] Body mesh name fetched: sk_uruk_hai_bm_b_body, for index: 0",
+      "[21:37:31.250] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.250] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.250] Body mesh name fetched: lotr_troll_body, for index: 0",
+      "[21:37:31.250] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.250] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.260] Body mesh name fetched: lotr_troll_body, for index: 0",
+      "[21:37:31.260] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.260] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.261] Body mesh name fetched: lotr_troll_body, for index: 0",
+      "[21:37:31.261] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.261] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.261] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.261] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.261] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.262] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.262] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.262] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.262] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.262] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.262] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.263] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.263] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.263] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.263] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.263] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.263] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.264] Body mesh name fetched: body_female_a_kid3, for index: 0",
+      "[21:37:31.264] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.264] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.264] Body mesh name fetched: body_female_a_kid4, for index: 0",
+      "[21:37:31.264] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.264] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.264] Body mesh name fetched: mordor_hill_troll, for index: 0",
+      "[21:37:31.264] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.264] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.275] Body mesh name fetched: mordor_hill_troll, for index: 0",
+      "[21:37:31.275] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.275] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.275] gpu_morph_mapping: 18712",
+      "[21:37:31.276] Body mesh name fetched: mordor_hill_troll, for index: 0",
+      "[21:37:31.276] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.276] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.276] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.276] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.276] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.277] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.277] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.277] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.277] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.277] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.277] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.278] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.278] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.278] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.278] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.278] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.278] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.279] Body mesh name fetched: body_female_a_kid3, for index: 0",
+      "[21:37:31.279] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.279] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.279] Body mesh name fetched: body_female_a_kid4, for index: 0",
+      "[21:37:31.279] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.279] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.280] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.280] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.280] Body mesh name fetched: sk_pale_uruk_bm_a_shoulder, for index: 2",
+      "[21:37:31.286] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.286] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.286] Body mesh name fetched: sk_pale_uruk_bm_a_shoulder, for index: 2",
+      "[21:37:31.286] gpu_morph_mapping: 20238",
+      "[21:37:31.287] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.287] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.287] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.287] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.287] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.287] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.288] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.288] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.288] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.288] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.288] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.288] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.290] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.290] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.290] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.290] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.290] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.290] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.290] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.290] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.290] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.291] Body mesh name fetched: sk_pale_uruk_bm_a_body, for index: 0",
+      "[21:37:31.291] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.291] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.291] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.291] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.291] Body mesh name fetched: sk_guldur_uruk_bm_a_shoulder, for index: 2",
+      "[21:37:31.297] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.297] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.297] Body mesh name fetched: sk_guldur_uruk_bm_a_shoulder, for index: 2",
+      "[21:37:31.298] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.298] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.298] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.298] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.298] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.298] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.299] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.299] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.299] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.300] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.300] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.300] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.301] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.301] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.301] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.301] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.301] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.301] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.302] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.302] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.302] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.302] Body mesh name fetched: sk_guldur_uruk_bm_a_body, for index: 0",
+      "[21:37:31.302] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.302] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.303] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.303] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.303] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.304] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.304] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.304] Body mesh name fetched: sk_guldur_uruk_bm_a_shoulder, for index: 2",
+      "[21:37:31.304] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.304] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.304] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.305] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.305] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.305] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.305] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.305] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.305] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.305] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.305] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.305] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.305] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.305] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.305] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.305] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.305] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.305] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.308] gpu_morph_mapping: 23468",
+      "[21:37:31.308] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.308] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.308] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.308] Body mesh name fetched: sk_goblin_basemesh_a_body, for index: 0",
+      "[21:37:31.308] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.308] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.309] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.309] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.309] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.315] gpu_morph_mapping: 27092",
+      "[21:37:31.324] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.324] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.324] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.325] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.325] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.325] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.326] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.326] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.326] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.327] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.327] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.327] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.328] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.328] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.328] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.328] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.328] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.328] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.329] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.329] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.329] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.329] Body mesh name fetched: body_female_a_kid3, for index: 0",
+      "[21:37:31.329] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.329] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.331] Body mesh name fetched: body_female_a_kid4, for index: 0",
+      "[21:37:31.331] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.331] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.331] Body mesh name fetched: sk_body_male_a, for index: 0",
+      "[21:37:31.331] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.331] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.336] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.336] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.336] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.336] Body mesh name fetched: body_male_a_teen, for index: 0",
+      "[21:37:31.336] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.336] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.337] Body mesh name fetched: body_female_a, for index: 0",
+      "[21:37:31.337] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.337] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.337] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.337] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.337] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.338] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.338] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.338] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.342] gpu_morph_mapping: 28796",
+      "[21:37:31.343] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.343] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.343] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.343] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.343] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.343] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.344] Body mesh name fetched: body_female_a_kid3, for index: 0",
+      "[21:37:31.344] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.344] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.344] Body mesh name fetched: body_female_a_kid4, for index: 0",
+      "[21:37:31.344] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.344] Body mesh name fetched: body_male_a_sh, for index: 2",
+      "[21:37:31.345] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.345] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.345] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.346] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.346] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.346] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.347] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.347] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.347] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.349] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.349] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.349] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.350] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.350] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.350] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.351] Body mesh name fetched: sk_elf_basemesh_a1_body, for index: 0",
+      "[21:37:31.351] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.351] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.351] Body mesh name fetched: body_male_a_kid, for index: 0",
+      "[21:37:31.351] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.351] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.352] Body mesh name fetched: body_female_a_kid, for index: 0",
+      "[21:37:31.352] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.352] Body mesh name fetched: body_female_a_sh, for index: 2",
+      "[21:37:31.353] Body mesh name fetched: body_female_a_kid3, for index: 0",
+      "[21:37:31.354] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.354] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.355] Body mesh name fetched: body_female_a_kid4, for index: 0",
+      "[21:37:31.355] Body mesh name fetched: box_a, for index: 1",
+      "[21:37:31.355] Body mesh name fetched: sk_elf_basemesh_a1_shoulders, for index: 2",
+      "[21:37:31.371] gpu_morph_mapping: 32722",
+      "[21:37:31.372] gpu_morph_mapping: 33697",
+      "[21:37:31.405] gpu_morph_mapping: 38163",
+      "[21:37:32.475] reading action files![21:37:35.690] Loading xml file: $BASE/Modules/Native/ModuleData/photo_mode_strings.xml.",
+      "[21:37:35.725] gpu_morph_mapping: 6366250",
+      "[21:37:35.727] loading time: 98.185725[21:37:35.727] ",
+      "",
+      "Loading Time: 98.186 secs",
+      "[21:37:35.727] ",
+      "",
+      "Windows Free Memory: %23.982",
+      "[21:37:35.727] Mount and Blade II Bannerlord Memory Usage: 4501.180 Mb",
+      "",
+      "[21:37:35.727] ",
+      "Finished All..."
+    ]
+  },
+  "CollectorFailures": []
+}
