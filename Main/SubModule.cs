@@ -1401,6 +1401,13 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.Enlistment.Content.IBattleMeritAccumulator>(),
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentConfigProvider>().GetConfig().MeritScoring));
+        // Registered unconditionally per the same convention; self-filters in AfterStart on
+        // enlisted-battle state. Corrects #424: Army is permanently null while enlisted, so
+        // vanilla's IsPlayerSergeant() is structurally false and AssignPlayerRoleInTeamMissionController
+        // makes the enlisted player GENERAL of his whole side.
+        AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentBattleRoleMissionBehavior(
+            IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
+            IoC.Resolve<IModLogger>()));
         // Registered unconditionally; self-filters internally on Campaign.Current and co-op authority.
         AddTaomBehavior(new Features.FieldCommission.Hooks.FieldCommissionMissionLogic());
         // Added unconditionally per TAOM convention; gates internally on

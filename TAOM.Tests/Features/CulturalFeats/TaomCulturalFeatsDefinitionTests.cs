@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -360,7 +360,12 @@ public class TaomCulturalFeatsDefinitionTests
         var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
         while (dir != null)
         {
-            if (Directory.Exists(Path.Combine(dir.FullName, ".git")))
+            // File.Exists too, not just Directory.Exists: in a git WORKTREE `.git` is a FILE
+            // holding a `gitdir:` pointer, not a directory. Without this the locator walks past
+            // the repo root and throws, so every source-reading test in this suite fails inside
+            // a worktree — including the isolation TAOM recommends for parallel agent runs.
+            var gitPath = Path.Combine(dir.FullName, ".git");
+            if (Directory.Exists(gitPath) || File.Exists(gitPath))
                 return Path.Combine(dir.FullName, relPath.Replace('/', Path.DirectorySeparatorChar));
             dir = dir.Parent;
         }

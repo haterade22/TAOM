@@ -262,6 +262,60 @@ closure.
 
 Refs #425, #386.
 
+### fix(enlistment): a private no longer commands his lord's army (#424, PR #426)
+
+Contributed by **@Sternab** (`00d39113`, merged as `6dc9dadc`); this entry and the corrections
+below are the follow-up.
+
+An enlisted player was handed to the engine as the **general of his entire battle side**. The chain
+is short and each link is forced: `ClearArmyAttachment()` runs in both `ParkNear` and
+`RestorePresence`, so `MobileParty.MainParty.Army` is permanently null → `MapEvent.IsPlayerSergeant()`
+requires `Army != null` and is structurally false → `SandBoxMissions` passes `!isPlayerSergeant`
+positionally as `isPlayerGeneral` → `Team.SetPlayerRole` calls `SetControlledByAI(false)` on every
+formation. A rank-1 recruit commanded the line and the lord he served commanded nothing.
+
+The fix is a `MissionLogic` that calls `Team.SetPlayerRole(false, false)` when the battle was entered
+as enlisted service and the player does not lead the side, with the decision itself in a pure
+`BattleCommandPolicy` table. Detached-duty fights keep vanilla roles — on a duty the player genuinely
+leads their own force. Deliberately not the reference mod's sergeant-score rig: that score also feeds
+`GetLeaderOfMapEvent`, so it changes who leads the battle at campaign level rather than only in the
+mission.
+
+Verified against the installed 1.4.7 DLLs before merge: `AddMissionBehavior` appends and
+`Mission.AfterStart` iterates in list order, so TAOM's correction runs after
+`AssignPlayerRoleInTeamMissionController`; `SetPlayerRole` has exactly one engine call site
+(`Mission.cs:745`), so nothing re-sets the role afterwards; and no `AddTeamAI` caller passes
+`forceNotAIControlled: true`.
+
+Two claims in the merged comment were corrected. It said neither-general-nor-sergeant is not a state
+vanilla produces — vanilla has a **dedicated branch** for it (`BehaviorComponent.cs:105`, the "player
+is a soldier inside a formation receiving orders" path), so this correction makes an intended engine
+state reachable rather than inventing one. And it said the Order-of-Battle model "reads no
+player-role flag"; it reads `IsPlayerSergeant()`. The conclusion survives for a stronger reason:
+`CanPlayerSideDeployWithOrderOfBattleAux` offers deployment only if the player leads the side, owns
+the besieged settlement, or is sergeant — all false while enlisted — so `FinishDeployment()` fires
+immediately and **the OOB screen was already unreachable before this change**. That is why the
+ordering question never arises, and it is worth stating because the original phrasing invited a
+future reader to re-derive it from a false premise.
+
+### fix(tests): the suite was green in one working tree and red on a fresh clone
+
+Surfaced by running the merge in an isolated worktree. Two source-reading tests failed there and
+neither had anything to do with the change under test:
+
+- `TaomCulturalFeatsDefinitionTests.LocateSource` walked up looking for `.git` via
+  `Directory.Exists`. In a git **worktree** `.git` is a *file* holding a `gitdir:` pointer, so the
+  locator ran past the repo root and threw. Now accepts either.
+- `FiefHubCampaignBehaviorTests` asserts on source content with a hardcoded `\n`. The repo has no
+  `.gitattributes` and `core.autocrlf=true`, so a fresh checkout gets CRLF while this long-lived
+  tree still holds LF — measured on the same file: 95 CRLF in a new worktree, 95 bare LF here.
+  `ReadProjectSource` now normalises to LF, which fixes every assertion in the file rather than the
+  one that happened to fail.
+
+Neither is caused by #426. Both mean anyone cloning TAOM — including the contributor who opened that
+PR — saw two failures that nobody working in an established tree could reproduce. Worth knowing that
+"6234 green" was a statement about one directory, not about the repository.
+
 ### fix(coopinterop): a fingerprint over zero settings no longer reads as agreement
 
 `SettingsFingerprint` skipped null settings pages, which is right — MCM's `Instance` is a
