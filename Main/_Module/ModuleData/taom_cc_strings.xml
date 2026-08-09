@@ -194,6 +194,34 @@
 	<string id="taom_cc_taom_parent_khuzait_5_desc" text="{=taom_cc_taom_parent_khuzait_5_desc}Your family were shamans and spirit-speakers of the Easterling clans, communing with the spirits of the land and sky." />
 	<string id="taom_cc_taom_parent_khuzait_6_text" text="{=taom_cc_taom_parent_khuzait_6_text}Outland Scouts" />
 	<string id="taom_cc_taom_parent_khuzait_6_desc" text="{=taom_cc_taom_parent_khuzait_6_desc}Your family served as scouts and outriders for the Easterling host, ranging far ahead of the main force to gather intelligence." />
+	<!-- goblin -->
+	<string id="taom_cc_taom_parent_goblin_1_text" text="{=taom_cc_taom_parent_goblin_1_text}Chiefs of Goblin-town" />
+	<string id="taom_cc_taom_parent_goblin_1_desc" text="{=taom_cc_taom_parent_goblin_1_desc}Your family were among the noble elite of Goblin-town, dedicated to reclaiming their ancestral home and defending it from invaders." />
+	<string id="taom_cc_taom_parent_goblin_2_text" text="{=taom_cc_taom_parent_goblin_2_text}Tinkerers of Goblin-town" />
+	<string id="taom_cc_taom_parent_goblin_2_desc" text="{=taom_cc_taom_parent_goblin_2_desc}Your family were skilled smiths, crafting tools and weapons to equip the defenders of Goblin-town." />
+	<string id="taom_cc_taom_parent_goblin_3_text" text="{=taom_cc_taom_parent_goblin_3_text}Miners of Goblin-town" />
+	<string id="taom_cc_taom_parent_goblin_3_desc" text="{=taom_cc_taom_parent_goblin_3_desc}Your family worked tirelessly in the mines of Goblin-town, uncovering its hidden riches." />
+	<string id="taom_cc_taom_parent_goblin_4_text" text="{=taom_cc_taom_parent_goblin_4_text}Warriors of the Grey Mountains" />
+	<string id="taom_cc_taom_parent_goblin_4_desc" text="{=taom_cc_taom_parent_goblin_4_desc}Your family fought against Orcs and other threats in the Grey Mountains, upholding the honor of their kin." />
+	<string id="taom_cc_taom_parent_goblin_5_text" text="{=taom_cc_taom_parent_goblin_5_text}Rangers of Goblin-town" />
+	<string id="taom_cc_taom_parent_goblin_5_desc" text="{=taom_cc_taom_parent_goblin_5_desc}Your family served as rangers, patrolling the wilds around Goblin-town and safeguarding its borders from harm." />
+	<string id="taom_cc_taom_parent_goblin_6_text" text="{=taom_cc_taom_parent_goblin_6_text}Outcasts of the Mountains" />
+	<string id="taom_cc_taom_parent_goblin_6_desc" text="{=taom_cc_taom_parent_goblin_6_desc}Your family lived on the fringes of Goblin-town's society, surviving through cunning and ruthlessness in the unforgiving mountain passes." />
+
+	<!-- mistymountainorcs -->
+	<string id="taom_cc_taom_parent_mistymountainorcs_1_text" text="{=taom_cc_taom_parent_mistymountainorcs_1_text}Warlords of the Misty Mountains" />
+	<string id="taom_cc_taom_parent_mistymountainorcs_1_desc" text="{=taom_cc_taom_parent_mistymountainorcs_1_desc}Your family were among the noble elite of the Misty Mountains, dedicated to reclaiming their ancestral home and defending it from invaders." />
+	<string id="taom_cc_taom_parent_mistymountainorcs_2_text" text="{=taom_cc_taom_parent_mistymountainorcs_2_text}Smiths of Moria" />
+	<string id="taom_cc_taom_parent_mistymountainorcs_2_desc" text="{=taom_cc_taom_parent_mistymountainorcs_2_desc}Your family were skilled smiths, crafting tools and weapons to equip the defenders of the Misty Mountains." />
+	<string id="taom_cc_taom_parent_mistymountainorcs_3_text" text="{=taom_cc_taom_parent_mistymountainorcs_3_text}Miners of the Misty Mountains" />
+	<string id="taom_cc_taom_parent_mistymountainorcs_3_desc" text="{=taom_cc_taom_parent_mistymountainorcs_3_desc}Your family worked tirelessly in the mines of the Misty Mountains, uncovering its hidden riches." />
+	<string id="taom_cc_taom_parent_mistymountainorcs_4_text" text="{=taom_cc_taom_parent_mistymountainorcs_4_text}Warriors of the Grey Mountains" />
+	<string id="taom_cc_taom_parent_mistymountainorcs_4_desc" text="{=taom_cc_taom_parent_mistymountainorcs_4_desc}Your family fought against Orcs and other threats in the Grey Mountains, upholding the honor of their kin." />
+	<string id="taom_cc_taom_parent_mistymountainorcs_5_text" text="{=taom_cc_taom_parent_mistymountainorcs_5_text}Rangers of the Misty Mountains" />
+	<string id="taom_cc_taom_parent_mistymountainorcs_5_desc" text="{=taom_cc_taom_parent_mistymountainorcs_5_desc}Your family served as rangers, patrolling the wilds around the Misty Mountains and safeguarding its borders from harm." />
+	<string id="taom_cc_taom_parent_mistymountainorcs_6_text" text="{=taom_cc_taom_parent_mistymountainorcs_6_text}Outcasts of the Mountains" />
+	<string id="taom_cc_taom_parent_mistymountainorcs_6_desc" text="{=taom_cc_taom_parent_mistymountainorcs_6_desc}Your family lived on the fringes of the Misty Mountains's society, surviving through cunning and ruthlessness in the unforgiving mountain passes." />
+
 
 	<!-- CHILDHOOD -->
 	<string id="taom_cc_taom_childhood_leadership_text" text="{=taom_cc_taom_childhood_leadership_text}your leadership skills." />
@@ -394,6 +422,34 @@
 	<string id="taom_cc_taom_youth_khuzait_5_desc" text="{=taom_cc_taom_youth_khuzait_5_desc}You stood shoulder to shoulder with your kinsmen in the disciplined Easterling spear line, learning to brace against cavalry and advance in ordered ranks under the red dawn banners that had marched west before." />
 	<string id="taom_cc_taom_youth_khuzait_6_text" text="{=taom_cc_taom_youth_khuzait_6_text}Traveled with the Karash bands." />
 	<string id="taom_cc_taom_youth_khuzait_6_desc" text="{=taom_cc_taom_youth_khuzait_6_desc}You lived outside formal Easterling clan structure, moving with the Karash bands who followed the armies and profited from their passage. Cunning and thrown weapons kept you fed on the margins of the great eastern host." />
+	<!-- goblin -->
+	<string id="taom_cc_taom_youth_goblin_1_text" text="{=taom_cc_taom_youth_goblin_1_text}Rode with the warg-packs of the High Pass." />
+	<string id="taom_cc_taom_youth_goblin_1_desc" text="{=taom_cc_taom_youth_goblin_1_desc}You trained with the Warg riders of the High Pass, learning to control the savage beasts through the treacherous mountain passes and to strike with lance and spear from their backs." />
+	<string id="taom_cc_taom_youth_goblin_2_text" text="{=taom_cc_taom_youth_goblin_2_text}Guarded the warrens of Goblin-town." />
+	<string id="taom_cc_taom_youth_goblin_2_desc" text="{=taom_cc_taom_youth_goblin_2_desc}You served in the warrens of Goblin-town, defending the forges and tunnels from intruders with bow and spear." />
+	<string id="taom_cc_taom_youth_goblin_3_text" text="{=taom_cc_taom_youth_goblin_3_text}Trained with the berserkers." />
+	<string id="taom_cc_taom_youth_goblin_3_desc" text="{=taom_cc_taom_youth_goblin_3_desc}You were among the berserkers of Goblin-town, learning to fight with reckless fury and overwhelming force." />
+	<string id="taom_cc_taom_youth_goblin_4_text" text="{=taom_cc_taom_youth_goblin_4_text}Scouted the mountain passes." />
+	<string id="taom_cc_taom_youth_goblin_4_desc" text="{=taom_cc_taom_youth_goblin_4_desc}You roamed the treacherous mountain paths around Goblin-town, tracking enemies and ensuring safe passage for your kin." />
+	<string id="taom_cc_taom_youth_goblin_5_text" text="{=taom_cc_taom_youth_goblin_5_text}Held the line in Goblin-town's spear legions." />
+	<string id="taom_cc_taom_youth_goblin_5_desc" text="{=taom_cc_taom_youth_goblin_5_desc}You drilled and marched with the heavy spear formations of the High Pass, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved." />
+	<string id="taom_cc_taom_youth_goblin_6_text" text="{=taom_cc_taom_youth_goblin_6_text}Ran with the scavenger bands of the passes." />
+	<string id="taom_cc_taom_youth_goblin_6_desc" text="{=taom_cc_taom_youth_goblin_6_desc}You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would." />
+
+	<!-- mistymountainorcs -->
+	<string id="taom_cc_taom_youth_mistymountainorcs_1_text" text="{=taom_cc_taom_youth_mistymountainorcs_1_text}Rode with the warg-riders of the Misty Mountains." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_1_desc" text="{=taom_cc_taom_youth_mistymountainorcs_1_desc}You trained with the Warg riders of the Misty Mountains, learning to control the savage beasts through the treacherous mountain passes and to strike with lance and spear from their backs." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_2_text" text="{=taom_cc_taom_youth_mistymountainorcs_2_text}Guarded the deep forges of Moria." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_2_desc" text="{=taom_cc_taom_youth_mistymountainorcs_2_desc}You served in the garrison of Moria, defending the forges and tunnels from intruders with bow and spear." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_3_text" text="{=taom_cc_taom_youth_mistymountainorcs_3_text}Trained with the berserkers." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_3_desc" text="{=taom_cc_taom_youth_mistymountainorcs_3_desc}You were among the berserkers of the Misty Mountains, learning to fight with reckless fury and overwhelming force." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_4_text" text="{=taom_cc_taom_youth_mistymountainorcs_4_text}Scouted the mountain passes." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_4_desc" text="{=taom_cc_taom_youth_mistymountainorcs_4_desc}You roamed the treacherous mountain paths around the Misty Mountains, tracking enemies and ensuring safe passage for your kin." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_5_text" text="{=taom_cc_taom_youth_mistymountainorcs_5_text}Held the line in the Misty Mountains's spear legions." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_5_desc" text="{=taom_cc_taom_youth_mistymountainorcs_5_desc}You drilled and marched with the heavy spear formations of the Misty Mountains, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_6_text" text="{=taom_cc_taom_youth_mistymountainorcs_6_text}Ran with the scavenger bands of the passes." />
+	<string id="taom_cc_taom_youth_mistymountainorcs_6_desc" text="{=taom_cc_taom_youth_mistymountainorcs_6_desc}You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would." />
+
 
 	<!-- EDUCATION -->
 	<string id="taom_cc_taom_education_gondor_1_text" text="{=taom_cc_taom_education_gondor_1_text}Drilled with the sons of noble houses." />
@@ -588,6 +644,34 @@
 	<string id="taom_cc_taom_education_khuzait_5_desc" text="{=taom_cc_taom_education_khuzait_5_desc}You sat with the shamans and healers of the Easterling clans, learning the ritual knowledge and practical medicine that kept the nomadic people alive on the open plains. Words and understanding were your tools long before any weapon." />
 	<string id="taom_cc_taom_education_khuzait_6_text" text="{=taom_cc_taom_education_khuzait_6_text}Scouted far ahead of the eastern war-host." />
 	<string id="taom_cc_taom_education_khuzait_6_desc" text="{=taom_cc_taom_education_khuzait_6_desc}You rode as a forward scout for the Easterling cavalry columns, ranging days ahead of the main force and reporting back what you found. The work demanded you stay unseen, shoot straight from horseback, and judge when to run rather than fight." />
+	<!-- goblin -->
+	<string id="taom_cc_taom_education_goblin_1_text" text="{=taom_cc_taom_education_goblin_1_text}Trained in the tunnel-halls of Goblin-town." />
+	<string id="taom_cc_taom_education_goblin_1_desc" text="{=taom_cc_taom_education_goblin_1_desc}You were blooded in the torch-lit training halls of the mountain stronghold, learning to ride hard and swing heavy weapons in the tradition of the northern Orc clans. Status came to those who could prove themselves in the pit before their elders." />
+	<string id="taom_cc_taom_education_goblin_2_text" text="{=taom_cc_taom_education_goblin_2_text}Apprenticed in the weapon-smiths of Goblin-town." />
+	<string id="taom_cc_taom_education_goblin_2_desc" text="{=taom_cc_taom_education_goblin_2_desc}You learned to forge crude but effective arms in the noisy smithing halls of the mountain, learning to trade them for supplies and favors. The work was ugly but the skills were real, and you left the forge knowing both iron and dealing." />
+	<string id="taom_cc_taom_education_goblin_3_text" text="{=taom_cc_taom_education_goblin_3_text}Dug in the mines beneath the mountain." />
+	<string id="taom_cc_taom_education_goblin_3_desc" text="{=taom_cc_taom_education_goblin_3_desc}You swung a pick in the lightless shafts of Goblin-town, learning the mountain's structure and the engineering of the pit supports. The tunnels were your home and you could navigate them blind, which was often how you had to." />
+	<string id="taom_cc_taom_education_goblin_4_text" text="{=taom_cc_taom_education_goblin_4_text}Fought in the passes of the Grey Mountains." />
+	<string id="taom_cc_taom_education_goblin_4_desc" text="{=taom_cc_taom_education_goblin_4_desc}You ran with the raiding bands that struck into the Grey Mountains, learning to fight with axe and spear in the brutal hit-and-run style of the northern clans. You came back meaner each time and a little more certain of your own survival." />
+	<string id="taom_cc_taom_education_goblin_5_text" text="{=taom_cc_taom_education_goblin_5_text}Ranged the wild lands around Goblin-town." />
+	<string id="taom_cc_taom_education_goblin_5_desc" text="{=taom_cc_taom_education_goblin_5_desc}You patrolled the rocky wilderness surrounding the mountain fortress, tracking intruders and reading signs of enemy movement. The cold northern wilds gave you patience and a bowman's stillness that outlasted any target." />
+	<string id="taom_cc_taom_education_goblin_6_text" text="{=taom_cc_taom_education_goblin_6_text}Survived alone in the mountain passes." />
+	<string id="taom_cc_taom_education_goblin_6_desc" text="{=taom_cc_taom_education_goblin_6_desc}Cast out or escaping some debt, you fended for yourself in the treacherous passes around the mountain, surviving by theft and quick thinking. The experience left you with no illusions about loyalty and a sharp talent for getting out of trouble." />
+
+	<!-- mistymountainorcs -->
+	<string id="taom_cc_taom_education_mistymountainorcs_1_text" text="{=taom_cc_taom_education_mistymountainorcs_1_text}Trained in the war-halls of Moria." />
+	<string id="taom_cc_taom_education_mistymountainorcs_1_desc" text="{=taom_cc_taom_education_mistymountainorcs_1_desc}You were blooded in the torch-lit training halls of the mountain stronghold, learning to ride hard and swing heavy weapons in the tradition of the northern Orc clans. Status came to those who could prove themselves in the pit before their elders." />
+	<string id="taom_cc_taom_education_mistymountainorcs_2_text" text="{=taom_cc_taom_education_mistymountainorcs_2_text}Apprenticed in the weapon-smiths of the Misty Mountains." />
+	<string id="taom_cc_taom_education_mistymountainorcs_2_desc" text="{=taom_cc_taom_education_mistymountainorcs_2_desc}You learned to forge crude but effective arms in the noisy smithing halls of the mountain, learning to trade them for supplies and favors. The work was ugly but the skills were real, and you left the forge knowing both iron and dealing." />
+	<string id="taom_cc_taom_education_mistymountainorcs_3_text" text="{=taom_cc_taom_education_mistymountainorcs_3_text}Dug in the mines beneath the mountain." />
+	<string id="taom_cc_taom_education_mistymountainorcs_3_desc" text="{=taom_cc_taom_education_mistymountainorcs_3_desc}You swung a pick in the lightless shafts of the Misty Mountains, learning the mountain's structure and the engineering of the pit supports. The tunnels were your home and you could navigate them blind, which was often how you had to." />
+	<string id="taom_cc_taom_education_mistymountainorcs_4_text" text="{=taom_cc_taom_education_mistymountainorcs_4_text}Fought in the passes of the Grey Mountains." />
+	<string id="taom_cc_taom_education_mistymountainorcs_4_desc" text="{=taom_cc_taom_education_mistymountainorcs_4_desc}You ran with the raiding bands that struck into the Grey Mountains, learning to fight with axe and spear in the brutal hit-and-run style of the northern clans. You came back meaner each time and a little more certain of your own survival." />
+	<string id="taom_cc_taom_education_mistymountainorcs_5_text" text="{=taom_cc_taom_education_mistymountainorcs_5_text}Ranged the wild lands around the Misty Mountains." />
+	<string id="taom_cc_taom_education_mistymountainorcs_5_desc" text="{=taom_cc_taom_education_mistymountainorcs_5_desc}You patrolled the rocky wilderness surrounding the mountain fortress, tracking intruders and reading signs of enemy movement. The cold northern wilds gave you patience and a bowman's stillness that outlasted any target." />
+	<string id="taom_cc_taom_education_mistymountainorcs_6_text" text="{=taom_cc_taom_education_mistymountainorcs_6_text}Survived alone in the mountain passes." />
+	<string id="taom_cc_taom_education_mistymountainorcs_6_desc" text="{=taom_cc_taom_education_mistymountainorcs_6_desc}Cast out or escaping some debt, you fended for yourself in the treacherous passes around the mountain, surviving by theft and quick thinking. The experience left you with no illusions about loyalty and a sharp talent for getting out of trouble." />
+
 
 	<!-- ADULTHOOD -->
 	<string id="taom_cc_taom_adulthood_gondor_1_text" text="{=taom_cc_taom_adulthood_gondor_1_text}You distinguished yourself at the defence of Osgiliath." />
@@ -782,5 +866,33 @@
 	<string id="taom_cc_taom_adulthood_khuzait_5_desc" text="{=taom_cc_taom_adulthood_khuzait_5_desc}The poison was fast-acting and the shaman said there was nothing to be done. You remembered a different teaching — a preparation from the cold steppe plants that worked against this type of wound. You prepared it, applied it, and sat through the night. The chieftain recovered. He gave you a place at his council." />
 	<string id="taom_cc_taom_adulthood_khuzait_6_text" text="{=taom_cc_taom_adulthood_khuzait_6_text}You scouted the Gondorian fortress at Cair Andros and mapped its weaknesses." />
 	<string id="taom_cc_taom_adulthood_khuzait_6_desc" text="{=taom_cc_taom_adulthood_khuzait_6_desc}The battle-lord needed to know whether the fortress could be bypassed or had to be reduced. You went forward alone, spent four days observing from the river's eastern bank, and returned with a detailed assessment of its garrison strength, supply schedule, and the approach that gave the best odds. The battle-lord called it the most useful report he had received in a campaign." />
+	<!-- goblin -->
+	<string id="taom_cc_taom_adulthood_goblin_1_text" text="{=taom_cc_taom_adulthood_goblin_1_text}You won the Great Mountain Tournament and were named a warchief's retainer." />
+	<string id="taom_cc_taom_adulthood_goblin_1_desc" text="{=taom_cc_taom_adulthood_goblin_1_desc}The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before." />
+	<string id="taom_cc_taom_adulthood_goblin_2_text" text="{=taom_cc_taom_adulthood_goblin_2_text}You established a profitable arms trade with a southern Orc clan." />
+	<string id="taom_cc_taom_adulthood_goblin_2_desc" text="{=taom_cc_taom_adulthood_goblin_2_desc}The southern clan had iron but no smiths. Goblin-town had tinkerers but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage." />
+	<string id="taom_cc_taom_adulthood_goblin_3_text" text="{=taom_cc_taom_adulthood_goblin_3_text}You shored up the lower mine galleries after a partial collapse." />
+	<string id="taom_cc_taom_adulthood_goblin_3_desc" text="{=taom_cc_taom_adulthood_goblin_3_desc}The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep." />
+	<string id="taom_cc_taom_adulthood_goblin_4_text" text="{=taom_cc_taom_adulthood_goblin_4_text}You led the raid that broke the Dwarven outpost on the Grey Mountains." />
+	<string id="taom_cc_taom_adulthood_goblin_4_desc" text="{=taom_cc_taom_adulthood_goblin_4_desc}The Dwarves had fortified a pass that Goblin-town used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back." />
+	<string id="taom_cc_taom_adulthood_goblin_5_text" text="{=taom_cc_taom_adulthood_goblin_5_text}You tracked a Dwarven scouting party for four days and brought back their maps." />
+	<string id="taom_cc_taom_adulthood_goblin_5_desc" text="{=taom_cc_taom_adulthood_goblin_5_desc}The Dwarves were mapping something in the Grey Mountains and Goblin-town needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm." />
+	<string id="taom_cc_taom_adulthood_goblin_6_text" text="{=taom_cc_taom_adulthood_goblin_6_text}You framed a rival warleader for theft and took his position." />
+	<string id="taom_cc_taom_adulthood_goblin_6_desc" text="{=taom_cc_taom_adulthood_goblin_6_desc}The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out." />
+
+	<!-- mistymountainorcs -->
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_1_text" text="{=taom_cc_taom_adulthood_mistymountainorcs_1_text}You won the Great Mountain Tournament and were named a warchief's retainer." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_1_desc" text="{=taom_cc_taom_adulthood_mistymountainorcs_1_desc}The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_2_text" text="{=taom_cc_taom_adulthood_mistymountainorcs_2_text}You established a profitable arms trade with a southern Orc clan." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_2_desc" text="{=taom_cc_taom_adulthood_mistymountainorcs_2_desc}The southern clan had iron but no smiths. Moria had smiths but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_3_text" text="{=taom_cc_taom_adulthood_mistymountainorcs_3_text}You shored up the lower mine galleries after a partial collapse." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_3_desc" text="{=taom_cc_taom_adulthood_mistymountainorcs_3_desc}The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_4_text" text="{=taom_cc_taom_adulthood_mistymountainorcs_4_text}You led the raid that broke the Dwarven outpost on the Grey Mountains." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_4_desc" text="{=taom_cc_taom_adulthood_mistymountainorcs_4_desc}The Dwarves had fortified a pass that the Misty Mountains used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_5_text" text="{=taom_cc_taom_adulthood_mistymountainorcs_5_text}You tracked a Dwarven scouting party for four days and brought back their maps." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_5_desc" text="{=taom_cc_taom_adulthood_mistymountainorcs_5_desc}The Dwarves were mapping something in the Grey Mountains and the Misty Mountains needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_6_text" text="{=taom_cc_taom_adulthood_mistymountainorcs_6_text}You framed a rival warleader for theft and took his position." />
+	<string id="taom_cc_taom_adulthood_mistymountainorcs_6_desc" text="{=taom_cc_taom_adulthood_mistymountainorcs_6_desc}The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out." />
+
 
 </strings>

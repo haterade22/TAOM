@@ -45,6 +45,31 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### fix(charactercreation): goblin and orc backstories were never registered
+
+All 96 narrative strings for `goblin` and `mistymountainorcs` — every parents, youth, education and
+adulthood option for both cultures — were missing from `taom_cc_strings.xml`. The other sixteen
+cultures were complete.
+
+`NarrativeMenuBuilder` composes its keys at runtime, `$"{{=taom_cc_{StringId}_text}}{Text}"`, so no
+`{=key}` grep could ever have surfaced these. And nothing looked wrong: `GetLocalizedText`
+short-circuits on English and returns the inline default, so the JSON text renders correctly and the
+key is never consulted. The rows matter only for the other eleven languages — a failure invisible to
+the author, invisible to the suite, and visible only to a player reading a language the author does
+not.
+
+Found by sweeping every runtime-composed key family in the codebase after the enlistment duty
+toasts hit the same class two days earlier. Those two are the only occurrences; the remaining
+composed-key sites (`InquiryAdapter`, the duty titles) are fully registered.
+
+`NarrativeStringRegistrationTests` now pins both halves: every menu option has its `_text` and
+`_desc` rows, and each registered default still matches the JSON it mirrors. A drifted row is worse
+than a missing one — English renders the JSON while the translations were made from the stale text,
+so the same option says different things in different languages.
+
+**Translation is still owed** and is deliberately not in this commit: 96 rows × 12 languages,
+`~$0.18` each by the tool's own estimate. Tracked separately.
+
 ### refactor(enlistment): delete the settlement exit the travel model needed
 
 `ExitSettlementForDuty()` left a settlement and then **restored presence** — the one thing the
