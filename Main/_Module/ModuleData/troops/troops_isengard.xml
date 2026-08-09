@@ -2536,7 +2536,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.isengard_pike_a" />
+                <equipment slot="Item0" id="Item.isengard_spear_a" />
                 <equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
                 <equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
@@ -2544,7 +2544,7 @@
                 <equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.isengard_pike_b" />
+                <equipment slot="Item0" id="Item.isengard_spear_b" />
                 <equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_sword_med_a4" />
                 <equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
@@ -2650,7 +2650,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.isengard_pike_b" />
+                <equipment slot="Item0" id="Item.isengard_spear_b" />
                 <equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
                 <equipment slot="Item2" id="Item.isengard_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_uruk_hai_helmet_spear_med_a4" />
