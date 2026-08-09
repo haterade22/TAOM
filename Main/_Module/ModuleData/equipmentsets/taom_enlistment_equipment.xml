@@ -669,7 +669,12 @@
             <Equipment slot="Head" id="Item.cts_rohan_helmet4a" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.roh_sol_bts" />
-            <Equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+            <!-- cts_rohan_armguard1, not sk_gd_ano_gloves_a: the Gondor Anorien glove was a
+                 copy-paste stray. troops_rohan.xml uses cts_rohan_* gloves ~80:2 over sk_gd_*,
+                 and armguard1 is worn at militia tier (rohan_edoras_militia, level 11) — the
+                 right weight for a recruit. Reported in play 2026-08-08 ("the quartermaster
+                 gives me gondor gloves and I'm enlisted under Theoden"). -->
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
             <Equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
         </EquipmentSet>
     </EquipmentRoster>
