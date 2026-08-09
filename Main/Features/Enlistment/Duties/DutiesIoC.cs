@@ -13,7 +13,6 @@ internal static class DutiesIoC
     internal static void RegisterEnlistmentDutiesFeature(IContainer container)
     {
         container.Register<IDutyWorldAdapter, DutyWorldAdapter>(Reuse.Singleton);
-        container.Register<IInquiryAdapter, InquiryAdapter>(Reuse.Singleton);
 
         container.Register<IDutyRotationPolicy, DutyRotationPolicy>(Reuse.Singleton);
         container.Register<IDutySelector, DutySelector>(Reuse.Singleton);

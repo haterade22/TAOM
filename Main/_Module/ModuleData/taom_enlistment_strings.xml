@@ -226,5 +226,11 @@
 	<string id="taom_enlist_duty_trusted_dispatch_failure" text="{=taom_enlist_duty_trusted_dispatch_failure}The dispatch arrives late, and you cannot swear it arrived unread." />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}You are given orders: {DUTY}." />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Orders: {DUTY}. {RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}Word from the column" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER} was taken on the field. {CAPTOR} hold him in {TOWN}, and the company is scattered. Hold to your oath and wait for word, or count your service at an end. If no word comes in {DAYS} days, the oath lapses and you are paid what you are owed." />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER} was taken on the field, and no one can say where he is held. The company is scattered. Hold to your oath and wait for word, or count your service at an end. If no word comes in {DAYS} days, the oath lapses and you are paid what you are owed." />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}{COMMANDER}'s company is broken. He lives, but there is no banner left to march with. Hold to your oath and wait for him to raise another, or count your service at an end. If no word comes in {DAYS} days, the oath lapses and you are paid what you are owed." />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}Hold to your oath" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Count your service ended" />
 
 </strings>

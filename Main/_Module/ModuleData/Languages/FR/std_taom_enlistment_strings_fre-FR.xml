@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="On vous trouve endormi à votre poste. C'est consigné." />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}On vous donne des ordres : {DUTY}." />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Ordres : {DUTY}. {RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}Des nouvelles de la colonne" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER} a été capturé sur le champ de bataille. {CAPTOR} le détient à {TOWN}, et la compagnie est dispersée. Tenez votre serment et attendez des nouvelles, ou considérez votre service terminé. Si aucune nouvelle ne vient dans {DAYS} jours, le serment expire et vous recevez votre dû." />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER} a été capturé sur le champ de bataille, et nul ne sait où il est détenu. La compagnie est dispersée. Tenez votre serment et attendez des nouvelles, ou considérez votre service terminé. Si aucune nouvelle ne vient dans {DAYS} jours, le serment expire et vous recevez votre dû." />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}La compagnie de {COMMANDER} est brisée. Il vit, mais il ne reste aucune bannière sous laquelle marcher. Tenez votre serment et attendez qu’il en lève une autre, ou considérez votre service terminé. Si aucune nouvelle ne vient dans {DAYS} jours, le serment expire et vous recevez votre dû." />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}Tenir votre serment" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Mettre fin à votre service" />
   </strings>
 </base>

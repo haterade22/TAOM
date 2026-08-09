@@ -126,4 +126,23 @@ public class EnlistmentDialogGateServiceTests
     {
         Assert.IsFalse(_gate.CanRequestDischargeFrom("lord_1_1"));
     }
+    [TestMethod]
+    public void EvaluateReleaseRequest_CommanderUnavailable_GrantsEvenMidContract()
+    {
+        // The term is WAIVED once the commander cannot hold up his end — not as a kindness, but
+        // because the term cannot be SERVED. With no commander there are no duties to take, no
+        // battles to join and no trust to earn, so refusing release leaves exactly one
+        // interaction: stand still for N days or accept a desertion penalty for walking away from
+        // a company that no longer exists.
+        //
+        // The contract below is deliberately mid-term: without the waiver this returns TooSoon.
+        _store.Record.State = EnlistmentState.CommanderUnavailable;
+        _store.Record.EnlistedAtDay = 100.0;
+
+        var verdict = _gate.EvaluateReleaseRequest(101.0);
+
+        Assert.AreEqual(ReleaseVerdict.Granted, verdict.Verdict,
+            "losing your commander must not make you a deserter for leaving");
+    }
+
 }

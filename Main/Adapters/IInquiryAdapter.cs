@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace TAOM.Adapters;
 
@@ -32,7 +33,9 @@ public interface IInquiryAdapter
         string optionAKey, string optionAFallback,
         string optionBKey, string optionBFallback,
         Action onOptionA, Action onOptionB,
-        string bodyVariableName = null, string bodyVariableValue = null);
+        string bodyVariableName = null, string bodyVariableValue = null,
+        IReadOnlyDictionary<string, string> bodyVariables = null,
+        bool prioritize = false);
 
     /// <summary>
     /// Fire-and-forget toast. Both variable pairs are optional — pass null to skip a substitution.

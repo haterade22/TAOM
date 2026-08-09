@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="Man findet Euch schlafend auf Posten. Es wird vermerkt." />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Du erhältst Befehle: {DUTY}." />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Befehl: {DUTY}. {RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}Nachricht von der Kolonne" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER} wurde im Feld gefangen genommen. {CAPTOR} hält ihn in {TOWN} fest, und die Kompanie ist zersprengt. Halte deinen Eid und warte auf Nachricht, oder betrachte deinen Dienst als beendet. Kommt in {DAYS} Tagen keine Nachricht, verfällt der Eid und du erhältst, was dir zusteht." />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER} wurde im Feld gefangen genommen, und niemand weiß, wo man ihn festhält. Die Kompanie ist zersprengt. Halte deinen Eid und warte auf Nachricht, oder betrachte deinen Dienst als beendet. Kommt in {DAYS} Tagen keine Nachricht, verfällt der Eid und du erhältst, was dir zusteht." />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}Die Kompanie von {COMMANDER} ist zerschlagen. Er lebt, doch es ist kein Banner mehr da, mit dem man marschieren könnte. Halte deinen Eid und warte, bis er ein neues aufstellt, oder betrachte deinen Dienst als beendet. Kommt in {DAYS} Tagen keine Nachricht, verfällt der Eid und du erhältst, was dir zusteht." />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}Halte deinen Eid" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Den Dienst als beendet ansehen" />
   </strings>
 </base>

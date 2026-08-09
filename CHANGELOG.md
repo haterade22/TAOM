@@ -1,4 +1,4 @@
-# CHANGELOG — TAOM (Tales From the Age of Men)
+﻿# CHANGELOG — TAOM (Tales From the Age of Men)
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
@@ -137,6 +137,50 @@ design reviewers each caught that the redesign alone does not fix it.
 
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
+
+### feat(enlistment): word from the column — losing your commander is a moment now
+
+A design pass over the three ways a commander can stop having a command, then the implementation of
+its recommendations. The mechanism was never broken; the **output** was. The reference mods are no
+better — one discharges instantly and says nothing — but their brutality is over in a frame, while
+TAOM left the player wandering visibly for a week with no idea why.
+
+**A modal at the transition, with a real choice.** Hold to your oath, or count your service ended.
+Prioritized, because `ShowInquiry` enqueues a non-prioritized inquiry behind whatever is on screen
+and this fires in the tick after a battle — exactly when vanilla raises its own ransom and peace
+popups. A toast was considered and rejected: #436 measured what a toast is worth at 4x, and unlike a
+duty assignment this one asks a question.
+
+Deliberately **not** also forcing `TimeControlMode = Stop`, which was the plan until the co-op
+interop rule got checked: BannerlordTogether prefixes that setter and rewrites the value outright,
+so it would silently do nothing in a co-op session while looking like it worked.
+`pauseGameActiveState: true` already covers the window that matters.
+
+**The case split is in the text, not the clock.** One 7-day window serves both cases, from the
+engine numbers rather than taste: a captured lord has a flat `0.04f`/day escape chance
+(`PrisonerReleaseCampaignBehavior.DailyHeroTick:206` — the ×5 field multiplier applies only to
+prisoners held by a *mobile* party, not one in a dungeon), which is **~25% inside the window**, plus
+the peace and ransom paths the same behavior runs. A design pass had called 7 days "a guaranteed
+no-op"; reading the behavior corrected that. Two timers would be two numbers to tune for no measured
+gain.
+
+What genuinely differs is what can be *said*. Captivity is the only case with a location, so
+`CommanderSnapshot` gained `CaptorName` and `CaptivitySettlementName` — read from
+`PartyBelongedToAsPrisoner`, because all four existing settlement fields resolve through
+`PartyBelongedTo` and are null for a prisoner. A lord whose party was merely destroyed has no
+position at all until the engine respawns him, so that line names nothing.
+
+**The contract term is waived while the commander is unavailable.** Not a kindness: the term cannot
+be *served*. No duties, no battles, no trust, nobody to earn it from — so refusing release left one
+interaction, stand still or take a desertion penalty for leaving a company that no longer exists.
+
+**No wage and no promotion during the grace.** `RunDailyTick` gates on `IsEnlisted`, which spans
+this state, so a lord in an enemy dungeon went on paying a daily wage and could fire *"You have been
+promoted to {RANK}."* Rations, the morale floor and the surgeon deliberately stay above the guard.
+
+Six strings, twelve languages. Every change RED-verified before GREEN, and the IoC validation tests
+earned their keep: `IInquiryAdapter` was registered in the duties sub-module while its new consumer
+lives in the core module, and they failed on it immediately.
 
 ### fix(enlistment): the "you have lost the column" message existed all along
 

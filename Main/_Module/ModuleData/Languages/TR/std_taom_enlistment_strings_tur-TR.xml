@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="Seni nöbette uyurken bulurlar. Kayda geçer." />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Emir aldın: {DUTY}." />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Emir: {DUTY}. {RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}Kafileden haber" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER} savaş alanında esir alındı. {CAPTOR} onu {TOWN} şehrinde tutuyor ve bölük dağıldı. Yeminine bağlı kal ve haber bekle ya da hizmetini sonlanmış say. {DAYS} gün içinde haber gelmezse yemin düşer ve hak ettiğin ödenir." />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER} savaş alanında esir alındı ve nerede tutulduğunu kimse bilmiyor. Bölük dağıldı. Yeminine bağlı kal ve haber bekle ya da hizmetini sonlanmış say. {DAYS} gün içinde haber gelmezse yemin düşer ve hak ettiğin ödenir." />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}{COMMANDER} adlı komutanın bölüğü dağıtıldı. Yaşıyor, ama artık ardından yürünecek bir sancak yok. Yeminine bağlı kal ve yeni bir bölük toplamasını bekle ya da hizmetini sonlanmış say. {DAYS} gün içinde haber gelmezse yemin düşer ve hak ettiğin ödenir." />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}Yeminine bağlı kal" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Hizmetini sonlanmış say" />
   </strings>
 </base>

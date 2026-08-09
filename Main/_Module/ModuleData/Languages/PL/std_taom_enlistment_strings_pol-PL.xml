@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="Zastają cię śpiącego na posterunku. Zostaje to odnotowane." />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Otrzymujesz rozkazy: {DUTY}." />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Rozkazy: {DUTY}. {RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}Wieści od kolumny" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER} został pojmany na polu bitwy. {CAPTOR} przetrzymuje go w {TOWN}, a kompania jest rozproszona. Dochowaj przysięgi i czekaj na wieści albo uznaj służbę za zakończoną. Jeśli w ciągu {DAYS} dni nie nadejdą wieści, przysięga wygasa, a ty otrzymasz należną zapłatę." />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER} został pojmany na polu bitwy i nikt nie wie, gdzie go przetrzymują. Kompania jest rozproszona. Dochowaj przysięgi i czekaj na wieści albo uznaj służbę za zakończoną. Jeśli w ciągu {DAYS} dni nie nadejdą wieści, przysięga wygasa, a ty otrzymasz należną zapłatę." />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}Kompania {COMMANDER} została rozbita. Żyje, lecz nie został żaden sztandar, pod którym można maszerować. Dochowaj przysięgi i czekaj, aż zbierze nową, albo uznaj służbę za zakończoną. Jeśli w ciągu {DAYS} dni nie nadejdą wieści, przysięga wygasa, a ty otrzymasz należną zapłatę." />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}Dochowaj przysięgi" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Uznaj służbę za zakończoną" />
   </strings>
 </base>

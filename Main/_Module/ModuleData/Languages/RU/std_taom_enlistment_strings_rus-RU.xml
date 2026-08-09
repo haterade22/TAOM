@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="Вас находят спящим на посту. Это записывают." />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Вы получили приказ: {DUTY}." />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Приказ: {DUTY}. {RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}Весть от отряда" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER} захвачен в бою. {CAPTOR} держит его в {TOWN}, отряд рассеян. Держитесь клятвы и ждите вестей или считайте службу оконченной. Если вестей не будет {DAYS} дней, клятва теряет силу, и вам заплатят причитающееся." />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER} захвачен в бою, и никто не знает, где его держат. Отряд рассеян. Держитесь клятвы и ждите вестей или считайте службу оконченной. Если вестей не будет {DAYS} дней, клятва теряет силу, и вам заплатят причитающееся." />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}Отряд {COMMANDER} разбит. Он жив, но знамени, за которым идти, больше нет. Держитесь клятвы и ждите, пока он соберёт новый, или считайте службу оконченной. Если вестей не будет {DAYS} дней, клятва теряет силу, и вам заплатят причитающееся." />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}Держаться клятвы" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Считать службу оконченной" />
   </strings>
 </base>

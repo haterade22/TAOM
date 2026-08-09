@@ -492,6 +492,58 @@ occupy you for `durationHours` (4–8), and one `ISkillCheckService` roll agains
 `failureReward` — both through the one `IServiceRewardService.Grant` chokepoint, so a duty cannot
 pay through a side channel. Skills come from the row's `supportSkills`.
 
+### When the commander stops having a command
+
+Three outcomes wear one state. `CommanderUnavailable` is entered whenever `Assess` returns
+`Blocked(CommanderPartyMissing)`, which covers a lord who was captured and a lord whose party was
+simply destroyed; a dead lord discharges immediately instead.
+
+Until 2026-08-09 the transition was **completely silent** — zero `ShowMessage`/`_inquiry` calls in
+either `EnlistmentReconciler` or `DischargeService`. The player went from invisible soldier to lone
+visible hero with no explanation, standing exactly where their company had been annihilated, because
+`RestorePresence` restores presence without moving the party. A live session measured 73 real
+seconds from that transition to the same lone hero being inside a 1,544-combatant sally-out.
+
+**The case split is in the TEXT, not the clock.** One 7-day window serves both, and that is a
+measured decision rather than a shrug:
+
+| Case | Recovery odds inside 7 days | What can be said |
+|---|---|---|
+| Captured | ~25% on escape alone — `PrisonerReleaseCampaignBehavior.DailyHeroTick:206` is a flat `0.04f`/day for a prisoner held in a settlement (the ×5 field multiplier applies only to prisoners held by a *mobile* party). Plus the peace and ransom release paths the same behavior runs | Captor **and** settlement — the only loss case with a location |
+| Party destroyed, lord free | Waits on a respawn tick, then a clan-tier gate decides whether he ever re-arms | Nothing locational. He has no position at all until the engine places him |
+
+Neither is a certainty and neither is a no-op, so two timers would be two numbers to tune and two
+behaviours to explain for no measured gain. `CommanderSnapshot` gained `CaptorName` and
+`CaptivitySettlementName` for the split, read from `PartyBelongedToAsPrisoner` — **not** from the
+four existing settlement fields, every one of which resolves through `PartyBelongedTo` and is
+therefore null for a prisoner.
+
+**A modal, not a toast, and prioritized.** It fires in the tick after a battle, which is when the
+player is accelerating — and #436 measured what a toast is worth at speed. It also asks a question,
+unlike a duty assignment. `InformationManager.ShowInquiry(data, pauseGameActiveState, prioritize)`
+enqueues a non-prioritized inquiry behind whatever is on screen, and the tick after a battle is when
+vanilla raises its own ransom and peace popups, so it passes `prioritize: true`.
+
+It deliberately does **not** also force `TimeControlMode = Stop`, which was the original plan.
+`pauseGameActiveState: true` already holds the clock for the window that matters, and Stop is a
+setter BannerlordTogether prefixes and rewrites outright in a co-op session (see
+`CoopSuppressedUiAttribute`) — a control that lies is worse than no control.
+
+Latched on the commander id, so the hourly reconciler asks once per episode rather than once per
+game hour.
+
+**Two consequences of the state, both of which used to be wrong:**
+
+- **The term is waived.** `EvaluateReleaseRequest` now grants release outright while the commander
+  is unavailable. Not a kindness — the term cannot be *served*: no duties (the orchestrator requires
+  attached), no battles, no trust, nobody to earn it from. Refusing left exactly one interaction,
+  stand still for N days or take a desertion penalty for leaving a company that no longer exists.
+- **No wage and no promotion.** `RunDailyTick` gates on `IsEnlisted`, which spans this state, so a
+  lord in an enemy dungeon went on paying a daily wage and could fire *"You have been promoted to
+  {RANK}."* Rations, the morale floor and the surgeon stay — they are the difference between waiting
+  and starving, and the player did not choose to be left behind. Pay and rank are the parts that
+  require someone to award them.
+
 ### Two toasts, one of which is conditional (#436)
 
 A duty announces at start and reports at resolve. At time acceleration those land closer together

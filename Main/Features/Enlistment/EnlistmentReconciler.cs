@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Domain;
@@ -30,6 +31,16 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     /// <summary>Fallback when the configured grace window is unusable. Matches EnlistmentCoreConfig.</summary>
     private const double DefaultGraceDays = 7.0;
 
+    private readonly IInquiryAdapter _inquiry;
+
+    /// <summary>
+    /// Commander the loss modal has already been raised for, so the hourly tick cannot re-raise it
+    /// every hour of the grace. Not persisted: after a save/load the player is re-told once, which
+    /// is the right side to fail on — this is the message explaining why they are suddenly visible
+    /// and alone, and hearing it twice beats resuming a campaign with no idea.
+    /// </summary>
+    private string _lossAnnouncedFor;
+
     public EnlistmentReconciler(
         IEnlistmentStore store,
         IEnlistmentStateMachine machine,
@@ -41,6 +52,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         IEncounterOwnershipPolicy ownership,
         IEnlistmentDiagnosticsSettingsProvider diag,
         IEnlistmentFeatureSettingsProvider feature,
+        IInquiryAdapter inquiry,
         IModLogger logger)
     {
         _store = store;
@@ -53,6 +65,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _ownership = ownership;
         _diag = diag;
         _feature = feature;
+        _inquiry = inquiry;
         _logger = logger;
     }
 
@@ -133,6 +146,92 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         // Released — resume service; a missing commander is picked up by the next pass.
         _machine.TryTransition(EnlistmentState.EnlistedAttached);
         _attachment.EnsureParked(record.CommanderHeroId);
+    }
+
+    /// <summary>
+    /// The one moment the player is told their service just changed underneath them. Raised at the
+    /// transition, once per commander, with a real choice.
+    ///
+    /// WHY A MODAL AND NOT A TOAST. This fires in the tick after a battle, which is exactly when
+    /// the player is accelerating time — and a toast at speed is not a message. #436 measured that
+    /// precisely: two duty toasts four real seconds apart read as one, and the player said so.
+    /// Unlike a duty assignment, this one also asks a question, and questions get modals.
+    ///
+    /// WHY prioritize: true. <c>InformationManager.ShowInquiry(data, pauseGameActiveState,
+    /// prioritize)</c> (verified 1.4.7) ENQUEUES a non-prioritized inquiry behind whatever is
+    /// already on screen — and the tick after a battle is when vanilla raises its own ransom and
+    /// peace popups. Queued, this arrives minutes later with no context.
+    ///
+    /// WHY NO EXPLICIT TimeControlMode = Stop, which was the original plan.
+    /// <c>pauseGameActiveState: true</c> already holds the clock while the popup is up, and that is
+    /// the whole window that matters. Forcing Stop as well would be a second engine mutation from a
+    /// service, and it is one BannerlordTogether prefixes and rewrites outright in a co-op session
+    /// — see CoopSuppressedUiAttribute. A control that lies is worse than no control.
+    /// </summary>
+    private void AnnounceCommanderLoss(EnlistmentRecord record, CommanderSnapshot snapshot, double nowDays)
+    {
+        if (_inquiry == null || _lossAnnouncedFor == record.CommanderHeroId)
+            return;
+
+        _lossAnnouncedFor = record.CommanderHeroId;
+
+        var days = record.GraceEndsAtDay.HasValue
+            ? Math.Max(0, (int)Math.Ceiling(record.GraceEndsAtDay.Value - nowDays))
+            : (int)DefaultGraceDays;
+
+        var vars = new Dictionary<string, string>
+        {
+            ["COMMANDER"] = snapshot.Name ?? "your commander",
+            ["DAYS"] = days.ToString(),
+        };
+
+        // CASE SPLIT IN THE TEXT, NOT THE CLOCK. One 7-day window serves both: a captured lord has
+        // a 4%/day escape chance (PrisonerReleaseCampaignBehavior.DailyHeroTick:206, verified
+        // 1.4.7) = ~25% inside the window, plus the peace and ransom release paths the same
+        // behavior runs; a party-less free lord waits on a respawn tick and then a clan-tier gate.
+        // Neither is a certainty and neither is a no-op, so two timers would be two things to tune
+        // and two things to explain for no measured gain.
+        //
+        // What genuinely differs is what can be SAID. Captivity is the only case with a location —
+        // a lord whose party was merely destroyed has no position at all until the engine respawns
+        // him, so there is nothing to name.
+        string bodyKey, bodyFallback;
+        if (snapshot.IsPrisoner && !string.IsNullOrEmpty(snapshot.CaptivitySettlementName))
+        {
+            vars["CAPTOR"] = snapshot.CaptorName ?? "the enemy";
+            vars["TOWN"] = snapshot.CaptivitySettlementName;
+            bodyKey = "taom_enlist_lost_captured_body";
+            bodyFallback = "{COMMANDER} was taken on the field. {CAPTOR} hold him in {TOWN}, and the company is scattered. "
+                + "Hold to your oath and wait for word, or count your service at an end. "
+                + "If no word comes in {DAYS} days, the oath lapses and you are paid what you are owed.";
+        }
+        else if (snapshot.IsPrisoner)
+        {
+            bodyKey = "taom_enlist_lost_captured_unknown_body";
+            bodyFallback = "{COMMANDER} was taken on the field, and no one can say where he is held. The company is scattered. "
+                + "Hold to your oath and wait for word, or count your service at an end. "
+                + "If no word comes in {DAYS} days, the oath lapses and you are paid what you are owed.";
+        }
+        else
+        {
+            bodyKey = "taom_enlist_lost_broken_body";
+            bodyFallback = "{COMMANDER}'s company is broken. He lives, but there is no banner left to march with. "
+                + "Hold to your oath and wait for him to raise another, or count your service at an end. "
+                + "If no word comes in {DAYS} days, the oath lapses and you are paid what you are owed.";
+        }
+
+        _inquiry.ShowTwoOptionInquiry(
+            "taom_enlist_lost_title", "Word from the column",
+            bodyKey, bodyFallback,
+            "taom_enlist_lost_hold", "Hold to your oath",
+            "taom_enlist_lost_leave", "Count your service ended",
+            onOptionA: null,
+            // PlayerRequest, not CommanderUnavailableGraceExpired: the player ASKED, no timer ran.
+            // The consequence arms differ, and calling this an expiry would settle them as though
+            // they had waited the full term out.
+            onOptionB: () => _discharge.Execute(DischargeReason.PlayerRequest),
+            bodyVariables: vars,
+            prioritize: true);
     }
 
     private void ReconcileGrace(EnlistmentRecord record, PlayerPresenceSnapshot presence, double nowDays)
@@ -346,6 +445,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                     record.GraceEndsAtDay = GraceDeadline(nowDays);
                     _attachment.RestorePresence();
                     _logger?.LogInfo($"[Enlistment] commander {record.CommanderHeroId} lost their party — grace until day {record.GraceEndsAtDay:F1}");
+                    AnnounceCommanderLoss(record, snapshot, nowDays);
                 }
                 return;
 

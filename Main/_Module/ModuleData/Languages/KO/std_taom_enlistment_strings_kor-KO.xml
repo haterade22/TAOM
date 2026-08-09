@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="초소에서 잠든 채 발각된다. 기록에 남는다." />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}명령을 받았다: {DUTY}." />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}명령: {DUTY}. {RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}대열에서 온 소식" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER}이(가) 전장에서 사로잡혔다. {CAPTOR}이(가) {TOWN}에 가두었고, 부대는 흩어졌다. 맹세를 지키며 소식을 기다리거나, 복무를 끝낼 수 있다. {DAYS}일 안에 소식이 없으면 맹세는 소멸하고 받을 몫을 받게 된다." />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER}이(가) 전장에서 사로잡혔으나 어디에 갇혔는지는 아무도 모른다. 부대는 흩어졌다. 맹세를 지키며 소식을 기다리거나, 복무를 끝낼 수 있다. {DAYS}일 안에 소식이 없으면 맹세는 소멸하고 받을 몫을 받게 된다." />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}{COMMANDER}의 부대가 무너졌다. 그는 살아 있으나 함께 진군할 깃발이 남지 않았다. 맹세를 지키며 그가 다시 부대를 일으키기를 기다리거나, 복무를 끝낼 수 있다. {DAYS}일 안에 소식이 없으면 맹세는 소멸하고 받을 몫을 받게 된다." />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}맹세를 지킨다" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}복무를 끝낸다" />
   </strings>
 </base>

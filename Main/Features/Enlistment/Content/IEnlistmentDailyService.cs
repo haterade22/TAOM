@@ -9,6 +9,13 @@ public sealed class DailySummary
     public bool Promoted { get; set; }
     public ServiceRank NewRank { get; set; }
     public bool ContractExpiredToday { get; set; }
+
+    /// <summary>
+    /// The tick ran while the commander had no command, so nothing past the day counter happened:
+    /// no wage, no service or skill XP, no promotion evaluation. Rations, the morale floor and the
+    /// surgeon still ran — they are upkeep the player did not choose to lose.
+    /// </summary>
+    public bool CommanderUnavailable { get; set; }
 }
 
 /// <summary>

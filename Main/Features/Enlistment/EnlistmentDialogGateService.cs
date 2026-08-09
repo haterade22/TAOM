@@ -97,6 +97,18 @@ public class EnlistmentDialogGateService : IEnlistmentDialogGateService
         if (record.State == Domain.EnlistmentState.EnlistedBattle)
             return Domain.ReleaseRequest.RefusedInBattle;
 
+        // The term is WAIVED once the commander can no longer hold up his end. This is not a
+        // difficulty choice; it is that the term cannot be SERVED. With no commander there are no
+        // duties to take (DutyOrchestrationService gates on EnlistedAttached), no battles to join,
+        // no trust to earn and nobody to earn it from — so refusing release leaves exactly one
+        // interaction: stand still for N days or accept a desertion penalty for walking away from
+        // a company that no longer exists.
+        //
+        // Deliberately ABOVE the minimum-service check, so it outranks an unserved contract rather
+        // than being one more input to it.
+        if (record.State == Domain.EnlistmentState.CommanderUnavailable)
+            return Domain.ReleaseRequest.Granted;
+
         var minimum = _config?.GetConfig()?.MinimumServiceDays ?? 0.0;
 
         // Positive requirement, per the NaN-gate rule: we refuse only when we can PROVE a debt.

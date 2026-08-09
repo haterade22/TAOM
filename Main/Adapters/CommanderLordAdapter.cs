@@ -25,6 +25,12 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 return CommanderSnapshot.Missing;
 
             var party = hero.PartyBelongedTo;
+
+            // PartyBelongedToAsPrisoner, NOT PartyBelongedTo — a captured lord has no party at all,
+            // which is exactly why every settlement field below reads null for him. Guarded on
+            // IsPrisoner so a free commander never pays the two lookups.
+            var captivity = hero.IsPrisoner ? hero.PartyBelongedToAsPrisoner : null;
+
             return new CommanderSnapshot(
                 exists: true,
                 isAlive: hero.IsAlive,
@@ -46,6 +52,8 @@ public sealed class CommanderLordAdapter : ICommanderLordAdapter
                 partyIsBesieging: party?.BesiegedSettlement != null,
                 armyLeaderPartyId: party?.Army?.LeaderParty?.StringId,
                 settlementMenuId: MenuIdFor(party?.CurrentSettlement),
+                captorName: captivity?.MapFaction?.Name?.ToString(),
+                captivitySettlementName: captivity?.Settlement?.Name?.ToString(),
                 cultureId: hero.Culture?.StringId,
                 factionId: hero.Clan?.MapFaction?.StringId,
                 name: hero.Name?.ToString());

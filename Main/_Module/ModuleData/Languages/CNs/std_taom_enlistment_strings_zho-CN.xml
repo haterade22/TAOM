@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="有人发现你在岗上睡着。此事已记下。" />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}你接到命令：{DUTY}。" />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}命令：{DUTY}。{RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}来自队列的消息" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER}在战场上被俘。{CAPTOR}将他关押在{TOWN}，队伍已经溃散。你可以坚守誓言等待消息，或就此结束服役。若{DAYS}天内仍无音讯，誓言失效，你将领到应得的酬劳。" />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER}在战场上被俘，无人知晓他被关押在何处。队伍已经溃散。你可以坚守誓言等待消息，或就此结束服役。若{DAYS}天内仍无音讯，誓言失效，你将领到应得的酬劳。" />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}{COMMANDER}的队伍已被打散。他还活着，但已无旗帜可随。你可以坚守誓言，等他重整旗鼓，或就此结束服役。若{DAYS}天内仍无音讯，誓言失效，你将领到应得的酬劳。" />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}坚守誓言" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}结束服役" />
   </strings>
 </base>

@@ -32,6 +32,12 @@ public static class EnlistmentIoC
         container.Register<IEnlistmentService, EnlistmentService>(Reuse.Singleton);
         container.Register<IEnlistmentStateQuery, EnlistmentStateQuery>(Reuse.Singleton);
         container.Register<IEncounterOwnershipPolicy, EncounterOwnershipPolicy>(Reuse.Singleton);
+        // MOVED UP from DutiesIoC on 2026-08-09. It lived in the duties sub-module because the
+        // duty presenter was its only consumer; the reconciler now raises the commander-loss modal
+        // through it, and the reconciler is registered HERE. DryIoc resolves lazily so runtime
+        // order never mattered, but the IoC validation tests build a container per feature module
+        // and caught the split immediately.
+        container.Register<TAOM.Adapters.IInquiryAdapter, TAOM.Adapters.InquiryAdapter>(Reuse.Singleton);
         container.Register<IEnlistmentReconciler, EnlistmentReconciler>(Reuse.Singleton);
         container.Register<IServiceMaintenanceService, ServiceMaintenanceService>(Reuse.Singleton);
         container.Register<IEnlistmentLoadNormalizer, EnlistmentLoadNormalizer>(Reuse.Singleton);

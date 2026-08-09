@@ -31,6 +31,22 @@ public sealed class CommanderSnapshot
 
     /// <summary>Which vanilla menu a discharge into this settlement should open: town / castle / village.</summary>
     public string SettlementMenuId { get; }
+    /// <summary>
+    /// Who holds the commander prisoner, and where. Both null unless <see cref="IsPrisoner"/>.
+    ///
+    /// Separate from the four settlement fields above, which all resolve through
+    /// <c>PartyBelongedTo</c> — null for a prisoner, because a captured lord has no party. These
+    /// come from <c>PartyBelongedToAsPrisoner</c> instead. Display only, never lookup keys.
+    ///
+    /// They exist so the player can be TOLD where their commander went. Captivity is the one
+    /// commander-loss case that is locatable at all: a lord whose party was merely destroyed has
+    /// no position until the engine respawns him.
+    /// </summary>
+    public string CaptorName { get; }
+
+    /// <inheritdoc cref="CaptorName"/>
+    public string CaptivitySettlementName { get; }
+
     public string CultureId { get; }
     public string FactionId { get; }
     public string Name { get; }
@@ -50,6 +66,8 @@ public sealed class CommanderSnapshot
         bool partyIsBesieging = false,
         string armyLeaderPartyId = null,
         string settlementMenuId = null,
+        string captorName = null,
+        string captivitySettlementName = null,
         string cultureId = null,
         string factionId = null,
         string name = null)
@@ -57,6 +75,8 @@ public sealed class CommanderSnapshot
         Exists = exists;
         IsAlive = isAlive;
         IsPrisoner = isPrisoner;
+        CaptorName = captorName;
+        CaptivitySettlementName = captivitySettlementName;
         PartyId = partyId;
         PartyIsActive = partyIsActive;
         PartyIsInMapEvent = partyIsInMapEvent;

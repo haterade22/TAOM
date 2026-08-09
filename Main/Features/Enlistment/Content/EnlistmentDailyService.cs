@@ -179,6 +179,24 @@ public class EnlistmentDailyService : IEnlistmentDailyService
 
         record.DaysServed++;
 
+        // NOTHING BELOW THIS LINE IS PAID BY A COMMANDER WHO NO LONGER HAS A COMMAND.
+        //
+        // RunDailyTick gates on IsEnlisted, which spans five states including
+        // CommanderUnavailable — so before this guard a lord who was dead in all but name, or
+        // sitting in an enemy dungeon, went on paying a daily wage, awarding service XP, and
+        // could fire "You have been promoted to {RANK}." The promotion is the one that gives the
+        // game away: there is no chain of command left to promote anyone.
+        //
+        // Rations, the morale floor and the surgeon are DELIBERATELY above this, in
+        // ProvisionFromCommander. Those are the difference between waiting and starving, and the
+        // player did not choose to be left behind. Pay and rank are the parts that require someone
+        // to award them.
+        if (_store.Record.State == EnlistmentState.CommanderUnavailable)
+        {
+            summary.CommanderUnavailable = true;
+            return summary;
+        }
+
         summary.Wage = _rewards.PayDailyWage();
 
         var rankIndex = (int)record.Rank;

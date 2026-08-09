@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="持ち場で眠っているのを見つかった。記録に残る。" />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}命令を受けた：{DUTY}。" />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}命令：{DUTY}。{RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}隊列からの知らせ" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER}は戦場で捕らえられた。{CAPTOR}が{TOWN}に幽閉しており、隊は散り散りだ。誓いを守って報せを待つか、務めを終えたものとするか。{DAYS}日のうちに報せがなければ誓いは失効し、相応の報酬が支払われる。" />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER}は戦場で捕らえられたが、どこに囚われているかは誰にもわからない。隊は散り散りだ。誓いを守って報せを待つか、務めを終えたものとするか。{DAYS}日のうちに報せがなければ誓いは失効し、相応の報酬が支払われる。" />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}{COMMANDER}の隊は壊滅した。存命ではあるが、共に進む旗はもうない。誓いを守って再興を待つか、務めを終えたものとするか。{DAYS}日のうちに報せがなければ誓いは失効し、相応の報酬が支払われる。" />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}誓いを守る" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}務めを終える" />
   </strings>
 </base>

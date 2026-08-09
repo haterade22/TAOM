@@ -226,5 +226,11 @@
     <string id="taom_enlist_duty_service_shift_failure" text="Ti trovano addormentato di guardia. Viene annotato." />
 	<string id="taom_enlist_duty_assigned" text="{=taom_enlist_duty_assigned}Ricevi degli ordini: {DUTY}." />
 	<string id="taom_enlist_duty_result" text="{=taom_enlist_duty_result}Ordini: {DUTY}. {RESULT}" />
+	<string id="taom_enlist_lost_title" text="{=taom_enlist_lost_title}Notizie dalla colonna" />
+	<string id="taom_enlist_lost_captured_body" text="{=taom_enlist_lost_captured_body}{COMMANDER} è stato catturato sul campo. {CAPTOR} lo tiene a {TOWN}, e la compagnia è dispersa. Mantieni il giuramento e attendi notizie, oppure considera concluso il tuo servizio. Se non arrivano notizie entro {DAYS} giorni, il giuramento decade e riceverai quanto ti spetta." />
+	<string id="taom_enlist_lost_captured_unknown_body" text="{=taom_enlist_lost_captured_unknown_body}{COMMANDER} è stato catturato sul campo e nessuno sa dove sia tenuto. La compagnia è dispersa. Mantieni il giuramento e attendi notizie, oppure considera concluso il tuo servizio. Se non arrivano notizie entro {DAYS} giorni, il giuramento decade e riceverai quanto ti spetta." />
+	<string id="taom_enlist_lost_broken_body" text="{=taom_enlist_lost_broken_body}La compagnia di {COMMANDER} è distrutta. È vivo, ma non resta alcuna insegna sotto cui marciare. Mantieni il giuramento e attendi che ne raduni un’altra, oppure considera concluso il tuo servizio. Se non arrivano notizie entro {DAYS} giorni, il giuramento decade e riceverai quanto ti spetta." />
+	<string id="taom_enlist_lost_hold" text="{=taom_enlist_lost_hold}Mantieni il giuramento" />
+	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Considerare concluso il servizio" />
   </strings>
 </base>

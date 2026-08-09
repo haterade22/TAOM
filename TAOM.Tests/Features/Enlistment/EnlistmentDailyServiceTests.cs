@@ -338,4 +338,22 @@ public class EnlistmentProvisioningTests
 
         _world.Received(1).HealPlayerHero(22);   // 11 base x2 resting
     }
+
+    [TestMethod]
+    public void RunDailyTick_CommanderUnavailable_PaysNoWageAndEvaluatesNoPromotion()
+    {
+        // RunDailyTick gates on IsEnlisted, which spans five states including CommanderUnavailable.
+        // Before this guard a lord who was dead in all but name — or sitting in an enemy dungeon —
+        // went on paying a daily wage and could fire "You have been promoted to {RANK}." The
+        // promotion is what gives it away: there is no chain of command left to promote anyone.
+        _store.Record.State = EnlistmentState.CommanderUnavailable;
+
+        var summary = _service.RunDailyTick(200.0, 12.0);
+
+        Assert.IsTrue(summary.CommanderUnavailable, "the summary must say why the tick did nothing");
+        Assert.IsFalse(summary.Promoted, "no chain of command is left to promote anyone");
+        Assert.AreEqual(0, summary.Wage.TotalPaidToPlayer, "a lord with no command pays no wage");
+        Assert.AreEqual(0, summary.Wage.NewlyDeferred, "nor does he defer one to pay later");
+    }
+
 }

@@ -259,7 +259,7 @@ public class SettlementFollowingReconcilerTests
             new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(),
             new EncounterOwnershipPolicy(),
             Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
-            EnlistmentTestDoubles.FeatureOn(), _logger);
+            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(), _logger);
     }
 
     private void Commander(string settlementId = null)
