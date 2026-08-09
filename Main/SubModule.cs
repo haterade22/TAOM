@@ -1426,6 +1426,13 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentBattleRoleMissionBehavior(
             IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
             IoC.Resolve<IModLogger>()));
+        // The second half of the same engine branch (#441): the role strip above delivers
+        // neither-role; this puts the soldier IN a formation so IsPlayerTroopInFormation
+        // completes BehaviorComponent's soldier path. Same gate, all filtering inside.
+        AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentBattleFormationMissionBehavior(
+            IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
+            IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
+            IoC.Resolve<IModLogger>()));
         // Registered unconditionally; self-filters internally on Campaign.Current and co-op authority.
         AddTaomBehavior(new Features.FieldCommission.Hooks.FieldCommissionMissionLogic());
         // Added unconditionally per TAOM convention; gates internally on
