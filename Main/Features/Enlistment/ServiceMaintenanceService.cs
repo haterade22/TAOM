@@ -118,7 +118,19 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     /// </summary>
     private void RefreshStatusBoard(EnlistmentRecord record)
     {
-        if (record.State != EnlistmentState.EnlistedAttached)
+        // Attached OR waiting on a lost commander. Widened by exactly one state on 2026-08-09,
+        // deliberately not to IsEnlisted: ServiceStatusService.ResolveActivity reads the
+        // COMMANDER's activity, so a captive player would be told "You march with X's company"
+        // from a dungeon.
+        //
+        // The one state added is the one that had a finished line waiting for it.
+        // ServiceStatusTextWriter already returns "{=taom_enlist_act_lost}You have lost the
+        // column. Await word of your commander." for CommanderUnavailable — authored, registered,
+        // and translated into all twelve languages — and this early return was the only reason it
+        // could never reach the board. A player whose commander's party was destroyed got no
+        // message anywhere; the message existed the whole time.
+        if (record.State != EnlistmentState.EnlistedAttached
+            && record.State != EnlistmentState.CommanderUnavailable)
             return;
         if (_statusBudget < StatusIntervalSeconds)
             return;

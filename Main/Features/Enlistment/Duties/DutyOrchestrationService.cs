@@ -99,8 +99,23 @@ public class DutyOrchestrationService : IDutyOrchestrationService
     /// </summary>
     public DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay)
     {
+        // IsAvailableForOrders, not IsEnlisted — the SAME predicate DailyOfferTick uses, and for
+        // the reason written above it: IsEnlisted spans five states including
+        // EnlistedPlayerCaptive and CommanderUnavailable, so this menu option was handing camp
+        // work to a prisoner and to a soldier whose company no longer exists.
+        //
+        // It was fixed on the daily path in 7c1a1a92 (Codex P2) and missed here — the sibling
+        // twelve lines up literally describes this bug while this one had it. That is the third
+        // occurrence of one predicate being narrowed at one call site and not swept to the others
+        // (rca-duty-autoresolve-2026-08-09.md finding 2 says to grep every use; I did not).
+        //
+        // NoWorkAvailable rather than NotEnlisted: the player IS enlisted, and the honest answer
+        // is that there is no one to give them orders. NotEnlisted would make the wait menu claim
+        // the service had ended.
         if (!_store.Record.IsEnlisted)
             return DutyRequestResult.NotEnlisted;
+        if (!IsAvailableForOrders())
+            return DutyRequestResult.NoWorkAvailable;
         if (_contentStore.Record.HasActiveDuty)
             return DutyRequestResult.AlreadyOnDuty;
 

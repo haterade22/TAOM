@@ -4,6 +4,60 @@
 
 ## 2026-08-09
 
+### feat(localization): the 55% of TAOM's text that no translator could reach (#434)
+
+317 of the 568 `{=taom_*}` keys the C# declares had no row in any ModuleData XML. All 317 are now
+registered and translated into all twelve languages, and the ratchet that was holding the number
+steady is empty.
+
+258 of them were the cultural feats — every feat name and description shown on the culture screen
+and in the encyclopedia, for all 22 cultures. The rest were `EquipPresets` (34), `FiefManagement`
+(11), `QuickActions` (8), `CharacterCreation` (4), `EliteEmissary` and `TimeAcceleration` (1 each).
+
+Nothing about this was subtle, which is the uncomfortable part. The keys are plain literals — a grep
+would have found every one of them on any day in the last two years. What hid them is that an
+unregistered key is **correct in English**: `MBTextManager.GetLocalizedText` short-circuits on
+English and returns the inline default, so the developer's own game renders every one of these
+strings perfectly. The registered row only ever feeds the other eleven languages. No warning, no
+test, no visible defect.
+
+`tools/harvest_literal_loc_keys.py` does the registration, lifting each English default straight out
+of the source literal rather than asking anyone to retype 317 strings. It routes by key prefix,
+skips anything already registered, and refuses to emit a row whose default is blank — a blank row is
+worse than a missing one, because it looks handled and gives a translator nothing to work from.
+
+**Registration alone would have fixed nothing.** The translator substitutes **by id**: `write_back`
+rewrites the `text` of an existing `<string id="KEY">` and has nowhere to put a key the per-language
+file does not declare, so the translation is generated, paid for, and dropped. `--sync-ids` seeds
+the row first. It also picked up two older cases of exactly this — the 96 goblin and orc narrative
+rows registered yesterday under #432, and the one `taom_res_desertion` row — for 414 keys per
+language, 4,968 rows seeded, 4,969 translations, $8.12.
+
+`--sync-ids` was used deliberately in preference to `generate_translation_template.py --apply`,
+which reaches the same place by overwriting each per-language file with a fresh English template.
+That discards every translation in the file. The git-tracked cache makes the AI languages
+recoverable; it would not have restored Polish, which is hand-written.
+
+Four entries failed placeholder validation and kept English — `uc4M4bhG`, `qa4FlTWS`, `uiY3ds0Z`
+across CNs/KO/TR. All four are vanilla-derived strings with nested gender conditionals that fail on
+every uncached language by design, and none of them is one of the 317.
+
+### test(localization): a guard for the gap that hid three separate defects (#434)
+
+`LanguageFileCoverageTests` asserts that every key the English source declares has a row in all
+twelve language files. Red before this pass at 414 missing per language; green after.
+
+`LanguageDataXmlTests` already checked the `Languages/` tree exhaustively — directories exist, each
+declares exactly eleven files, every file is well-formed, every row carries `id` and `text` — and
+never once compared an id set against the English source. That is the only check that would have
+caught #434, #432, or the stray `taom_res_desertion` row, and all three presented identically:
+perfect English, eleven silently untranslated languages, green suite.
+
+It is a presence check on purpose. Asserting difference-from-English would permanently report proper
+nouns, the four nested-gender fallbacks above, and words like "OK" that are already correct in
+Italian — and a check that reports mostly noise gets ignored, which is the failure that let #434 sit
+this long in the first place.
+
 ### chore(arena): the tournament roster guard stops announcing that nothing is wrong
 
 `Patch69_TournamentRosterGuard` logged `roster for town_X: N entrant(s), all safe` on every healthy
@@ -62,6 +116,36 @@ design reviewers each caught that the redesign alone does not fix it.
 
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
+
+### fix(enlistment): the "you have lost the column" message existed all along
+
+A design pass on commander loss found two bugs before it got to any design, and both are small.
+
+**The message was already written.** `ServiceStatusTextWriter` has returned
+`{=taom_enlist_act_lost}` — *"You have lost the column. Await word of your commander."* — for an
+unavailable commander since it was authored. It is registered and translated into **all twelve
+languages**. It has never once rendered, because `RefreshStatusBoard` returned early unless the
+state was exactly `EnlistedAttached`. So the player in the live session whose commander's party was
+destroyed got no explanation anywhere, while the explanation sat finished in the repo.
+
+Verified the whole chain rather than the one line: `ResolveActivity` returns
+`CommanderActivity.Unavailable` when `!commander.HasParty` (the live `party=NONE` case),
+`ActivityLine` maps that to the string, and the early return was the only thing in the way.
+
+Widened by **exactly one state**, not to `IsEnlisted`. That would have been the obvious move and is
+wrong: `ResolveActivity` reads the *commander's* activity, so a captive player whose commander is
+fine would be told "You march with X's company" from a cell. There is a test for that specifically.
+
+**`RequestDutyNow` was missing the gate its own sibling documents.** The wait menu's "ask your
+sergeant for work" gated on `IsEnlisted`, which spans five states — so it handed camp work to a
+prisoner and to a soldier whose company no longer exists. `DailyOfferTick`, twelve lines above it,
+has the correct gate and a comment describing this exact bug.
+
+That is the **third** occurrence of one predicate being narrowed at one call site and not swept to
+its siblings: Codex found it on the daily path (P2, `7c1a1a92`), the RCA's own preventive action
+says *"grep every other use of it in the same feature before closing"*, and this call site was
+neither swept then nor caught since. Returns `NoWorkAvailable` rather than `NotEnlisted` — the
+player is enlisted; the honest answer is that there is nobody left to give them orders.
 
 ### fix(enlistment): a duty you can read, and one you can actually win (#436)
 

@@ -20,6 +20,7 @@ public class ServiceMaintenanceServiceTests
     private ICommanderLordAdapter _commander = null!;
     private IGameMenuAdapter _gameMenu = null!;
     private IEnlistmentMenuService _menuService = null!;
+    private IServiceStatusService _status = null!;
     private ServiceMaintenanceService _pump = null!;
 
     [TestInitialize]
@@ -35,9 +36,11 @@ public class ServiceMaintenanceServiceTests
         _gameMenu.EnsureMenuOpen(Arg.Any<string>()).Returns(true);
         _menuService.IsRedirectable(Arg.Any<string>()).Returns(true);
 
+        _status = Substitute.For<IServiceStatusService>();
+
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, _gameMenu, _menuService,
-            Substitute.For<IServiceStatusService>(), _logger);
+            _status, _logger);
 
         Commander(followable: true);
         Presence(parked: true);
@@ -381,4 +384,36 @@ public class ServiceMaintenanceServiceTests
         Assert.IsFalse(takesDischarge,
             "ServiceMaintenanceService must not inject IDischargeService — terminal decisions belong to the hourly reconciler.");
     }
+    // ---- the wait-menu board while the commander is lost ----
+
+    [TestMethod]
+    public void Pump_CommanderUnavailable_RefreshesTheStatusBoard()
+    {
+        // ServiceStatusTextWriter has returned "You have lost the column. Await word of your
+        // commander." for this case since it was written, registered and translated into all 12
+        // languages — and RefreshStatusBoard's `!= EnlistedAttached` early return was the only
+        // reason it could never render. A player whose commander's party was destroyed got no
+        // message anywhere while the message already existed.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        Commander(followable: false);
+
+        _pump.Pump(5f, 0.0);
+
+        _status.Received().RefreshIfChanged();
+    }
+
+    [TestMethod]
+    public void Pump_PlayerCaptive_DoesNotRefreshTheStatusBoard()
+    {
+        // The guard on the fix. Widening to IsEnlisted would have been the obvious move and is
+        // wrong: ServiceStatusService.ResolveActivity reads the COMMANDER's activity, so a captive
+        // player whose commander is fine would be told "You march with X's company" from a cell.
+        // Exactly one state was added, not a predicate.
+        MakeEnlisted(EnlistmentState.EnlistedPlayerCaptive);
+
+        _pump.Pump(5f, 0.0);
+
+        _status.DidNotReceive().RefreshIfChanged();
+    }
+
 }
