@@ -1,4 +1,5 @@
 using System.Linq;
+using TaleWorlds.Localization;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Content;
@@ -74,6 +75,18 @@ public class FieldDutyRuntime : IFieldDutyRuntime
         record.ActiveDutyId = duty.Id;
         record.ShiftEndDay = nowDays + duty.DurationHours / 24.0;
 
+        // TELL THE PLAYER, and do it here rather than at the offer site so EVERY start path
+        // announces — the daily tick assigns duties on its own, not just the wait-menu request.
+        // Under the old model a duty was self-announcing by accident: it made the player visible
+        // and sent them travelling, so it was impossible to miss. This one is invisible by design,
+        // which means the first evidence a duty ever existed would otherwise be the result toast
+        // hours later, after it had already moved trust.
+        _inquiry?.ShowMessage(
+            "taom_enlist_duty_assigned",
+            "You are given orders: {DUTY}.",
+            "DUTY",
+            new TextObject("{=taom_enlist_duty_" + duty.Id + "_title}a task for the company").ToString());
+
         _logger?.LogInfo(
             $"[Enlistment.Duties] duty '{duty.Id}' started — {duty.DurationHours}h shift, " +
             $"difficulty {duty.Difficulty}, skills [{string.Join(",", duty.SupportSkills)}], " +
@@ -93,14 +106,23 @@ public class FieldDutyRuntime : IFieldDutyRuntime
             return;
         }
 
-        // Captivity cancels rather than orphans. `IsEnlisted` deliberately INCLUDES
-        // EnlistedPlayerCaptive (EnlistmentRecord.cs), so the discharge guard above does not
-        // catch a prisoner — without this the shift timer would keep running in a dungeon and pay
-        // out a completed duty from captivity. That is the surviving half of #428: the redesign
-        // removes the state-machine orphan, this removes the record orphan.
-        if (_store.Record.State == EnlistmentState.EnlistedPlayerCaptive)
+        // A duty can only be WORKED while attached to the column, and `IsEnlisted` is far too wide
+        // a predicate for that — it deliberately spans five states, two of which are not service:
+        //
+        //   EnlistedPlayerCaptive   you are a prisoner. Without this the shift timer keeps running
+        //                           in a dungeon and pays out a completed duty from captivity.
+        //   CommanderUnavailable    your commander has lost their party; this is a 7-day grace in
+        //                           which the reconciler has already called RestorePresence() and
+        //                           set you loose. There is no company left to report to, so a duty
+        //                           must not pay, fail, or keep ticking through it.
+        //
+        // Both cancel rather than orphan. The redesign made the state-machine orphan
+        // unrepresentable; these two guards remove the RECORD orphan, which is the half of #428
+        // that the redesign alone does not fix.
+        var state = _store.Record.State;
+        if (state != EnlistmentState.EnlistedAttached && state != EnlistmentState.EnlistedBattle)
         {
-            CancelActive("captive");
+            CancelActive(state == EnlistmentState.EnlistedPlayerCaptive ? "captive" : "no-commander");
             return;
         }
 

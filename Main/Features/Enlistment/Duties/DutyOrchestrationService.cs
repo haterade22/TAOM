@@ -1,6 +1,7 @@
 using TAOM.Adapters;
 using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
+using TAOM.Features.Enlistment.Domain;
 
 namespace TAOM.Features.Enlistment.Duties;
 
@@ -48,9 +49,21 @@ public class DutyOrchestrationService : IDutyOrchestrationService
         _runtime.HourlyUpdate(nowDays);
     }
 
+    /// <summary>
+    /// The ONLY state in which the company can hand out work. Captivity and the
+    /// commander-loss grace are both inside <c>IsEnlisted</c>, so that predicate is too wide
+    /// for anything that assigns or pays.
+    /// </summary>
+    private bool IsAvailableForOrders()
+        => _store.Record.State == EnlistmentState.EnlistedAttached;
+
     public void DailyOfferTick(double nowDays, double hourOfDay)
     {
-        if (!_store.Record.IsEnlisted)
+        // NOT IsEnlisted. That predicate deliberately spans five states including
+        // EnlistedPlayerCaptive and CommanderUnavailable — a prisoner would be offered camp work,
+        // and a player whose commander has just been captured would be offered work by a company
+        // that no longer has anyone to assign it. Only an attached soldier can be given orders.
+        if (!IsAvailableForOrders())
             return;
 
         var record = _contentStore.Record;
@@ -122,9 +135,10 @@ public class DutyOrchestrationService : IDutyOrchestrationService
         if (offer.FieldDuty != null)
         {
             RememberOffered(record, offer.FieldDuty.Id);
-            return _runtime.Start(offer.FieldDuty, nowDays)
-                ? DutyRequestResult.DutyAssigned
-                : DutyRequestResult.NoWorkAvailable;
+            if (!_runtime.Start(offer.FieldDuty, nowDays))
+                return DutyRequestResult.NoWorkAvailable;
+
+            return DutyRequestResult.DutyAssigned;
         }
 
         if (offer.InteractiveDuty != null)

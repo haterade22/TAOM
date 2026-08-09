@@ -245,11 +245,40 @@ public class EnlistmentContentConfigProviderTests
     }
 
     [TestMethod]
-    public void GetDuties_ZeroDeadline_SkipsRow()
+    public void GetDuties_ZeroDurationHours_SkipsRow()
     {
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"zero_deadline\",\"mechanic\":\"VisitSettlement\",\"targetKind\":\"FriendlySettlement\",\"deadlineDays\":0}]}");
+        // Every OTHER field is deliberately valid, so this pins the durationHours rule specifically.
+        // The version this replaced wrote the retired keys (mechanic / targetKind / deadlineDays:0)
+        // and omitted supportSkills — so the row was skipped by the support-skill rule and the test
+        // passed while testing nothing about duration. A zero-hour duty resolves the instant it is
+        // assigned, which is exactly what this must keep out of the data.
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"zero_hours\",\"difficulty\":55,\"durationHours\":0,"
+            + "\"supportSkills\":[\"Scouting\"]}]}");
 
         Assert.AreEqual(0, Provider().GetDuties().FieldDuties.Count);
+    }
+
+    [TestMethod]
+    public void GetDuties_NoSupportSkills_SkipsRow()
+    {
+        // A row with no skills rolls against skill 0 forever — silently unwinnable at any rank.
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"no_skills\",\"difficulty\":55,\"durationHours\":6}]}");
+
+        Assert.AreEqual(0, Provider().GetDuties().FieldDuties.Count);
+    }
+
+    [TestMethod]
+    public void GetDuties_ValidRow_IsKept()
+    {
+        // The positive control the three skip-tests need: proves they fail for their stated reason
+        // and not because the fixture shape is wrong.
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"ok\",\"difficulty\":55,\"durationHours\":6,"
+            + "\"supportSkills\":[\"Scouting\"]}]}");
+
+        var duties = Provider().GetDuties().FieldDuties;
+        Assert.AreEqual(1, duties.Count);
+        Assert.AreEqual(6, duties[0].DurationHours);
+        Assert.AreEqual(55, duties[0].Difficulty);
     }
 
     [TestMethod]

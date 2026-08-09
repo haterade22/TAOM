@@ -48,21 +48,13 @@ public class CodexFindingRegressionTests
     }
 
     // ---- P2-2: DeliverFood completed for free when the player drove livestock ----
-
-    [TestMethod]
-    public void DeliverFood_ConsumeTakesLessThanRequired_DoesNotComplete()
-    {
-        var world = Substitute.For<IDutyWorldAdapter>();
-        // Count says 10 (as the old TotalFood-based count would with livestock aboard)
-        // but only 3 real food units can actually be handed over.
-        world.CountPlayerFood().Returns(10);
-        world.ConsumePlayerFood(Arg.Any<int>()).Returns(3);
-
-        var delivered = world.ConsumePlayerFood(8);
-
-        Assert.IsTrue(delivered < 8,
-            "the runtime completes on what was actually consumed, so a short delivery must not finish the duty");
-    }
+    //
+    // RETIRED 2026-08-09. The DeliverFood mechanic is gone — field duties no longer travel,
+    // carry, or deliver anything, so ConsumePlayerFood was deleted with the rest of the
+    // travel adapter. The test is not ported because it never tested TAOM: it stubbed the
+    // mock to return 3 and asserted 3 < 8, which exercises NSubstitute. The real guard for
+    // the livestock miscount now lives in DutyWorldAdapter.CountPlayerFood's own comment
+    // and its IsFood-summing implementation, which the daily-upkeep tests cover.
 
     // ---- P2-4: NaN campaign day failed open / stranded duties ----
 

@@ -1,26 +1,28 @@
 using System;
-using System.Linq;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Party.PartyComponents;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
-using TaleWorlds.Library;
 using TAOM.Core.Logging;
 
 namespace TAOM.Adapters;
 
 /// <summary>
-/// Wraps <c>BanditPartyComponent.CreateLooterParty</c>, <c>MobileParty.SetMove*</c>,
-/// <c>DestroyPartyAction</c>, a bounded <c>Settlement.All</c> scan, and the main party's
-/// food roster / locator-grid enemy scan for the Enlistment field-duty system.
+/// The enlisted soldier's daily upkeep: the main party's food roster, its morale, and the hero's
+/// health. Four members, one consumer (<c>EnlistmentDailyService</c>).
+///
+/// It used to be much larger. Nine members — <c>SpawnLooterParty</c>, <c>SetPartyAi</c>,
+/// <c>DestroyParty</c>, the three <c>FindNearest*</c> scans, <c>IsEnemyNearPlayer</c>,
+/// <c>ConsumePlayerFood</c> and <c>GetPlayerMorale</c> — existed for the travel-based field-duty
+/// model and died with it (2026-08-09). Two of those were already dead before that.
+///
+/// <c>DestroyParty</c> is worth naming specifically: it carried a re-entrancy guard added hours
+/// earlier for #375, because <c>DestroyPartyAction</c> dispatches <c>MobilePartyDestroyed</c>
+/// BEFORE it deactivates the party, so a handler calling back in re-entered <c>Apply</c> and
+/// recursed to a stack overflow. Deleting the method removes that surface rather than guarding it —
+/// nothing in the mod destroys a party any more. Do not reintroduce it without re-reading that RCA.
 /// </summary>
 public sealed class DutyWorldAdapter : IDutyWorldAdapter
 {
-    private const string LootersClanId = "looters";
-    private const float SpawnOffsetRadius = 2.5f;
-
     private readonly IModLogger _logger;
 
     public DutyWorldAdapter(IModLogger logger)
@@ -28,117 +30,10 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
         _logger = logger;
     }
 
-    public string SpawnLooterParty(string idPrefix, string anchorSettlementId, bool patrolNotEngage)
-    {
-        try
-        {
-            var settlement = FindSettlement(anchorSettlementId);
-            var clan = Clan.BanditFactions?.FirstOrDefault(c => c.StringId == LootersClanId);
-            if (settlement == null || clan == null)
-            {
-                _logger?.LogWarning($"[Enlistment.Duties] SpawnLooterParty: settlement='{anchorSettlementId}' or looters clan unresolved");
-                return null;
-            }
-
-            var stringId = idPrefix + "_" + Guid.NewGuid().ToString("N").Substring(0, 8);
-            var spawnPosition = OffsetPosition(settlement.GatePosition, SpawnOffsetRadius);
-            var party = BanditPartyComponent.CreateLooterParty(
-                stringId, clan, settlement, isBossParty: false, clan.DefaultPartyTemplate, spawnPosition);
-            if (party == null)
-                return null;
-
-            ApplyAi(party, patrolNotEngage, settlement);
-            return party.StringId;
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError($"[Enlistment.Duties] SpawnLooterParty('{idPrefix}', '{anchorSettlementId}') failed: {ex.Message}");
-            return null;
-        }
-    }
-
-    public void SetPartyAi(string partyId, bool engagePlayer, string anchorSettlementId)
-    {
-        try
-        {
-            var party = FindParty(partyId);
-            var settlement = FindSettlement(anchorSettlementId);
-            if (party == null)
-                return;
-            ApplyAi(party, patrolNotEngage: !engagePlayer, anchorSettlement: settlement);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError($"[Enlistment.Duties] SetPartyAi('{partyId}') failed: {ex.Message}");
-        }
-    }
-
     /// <summary>
-    /// Party ids currently inside a <see cref="DestroyPartyAction.Apply"/> call on this thread.
-    ///
-    /// <c>!party.IsActive</c> below CANNOT serve as the re-entrancy guard, though it reads like one.
-    /// <c>DestroyPartyAction.ApplyInternal</c> raises <c>OnMobilePartyDestroyed</c> (line 23) BEFORE
-    /// <c>RemoveParty()</c> (line 25), so any handler that calls back in during the event still sees
-    /// <c>IsActive == true</c>, passes the guard, and re-enters <c>Apply</c>. Its
-    /// <c>Debug.FailedAssert</c> does not throw in a shipping build, so nothing stops it.
-    ///
-    /// #375 hit exactly that: the duty runtime's own destroy handler recursed 7,482 deep in one
-    /// second and killed the process with an uncatchable <c>StackOverflowException</c> — no crash
-    /// report, no managed frame to blame. The root fix is ordering in <c>FieldDutyRuntime</c>
-    /// (clear the record before destroying); this is the second, independent guard, because a
-    /// stack overflow cannot be caught and recovered from the way an ordinary bug can.
-    ///
-    /// Campaign code is single-threaded, so a plain field is sufficient and cheaper than a set.
-    /// </summary>
-    private string _destroyingPartyId;
-
-    public void DestroyParty(string partyId)
-    {
-        try
-        {
-            var party = FindParty(partyId);
-            if (party == null || !party.IsActive)
-                return;
-
-            if (string.Equals(_destroyingPartyId, partyId, StringComparison.Ordinal))
-            {
-                _logger?.LogInfo(
-                    $"[Enlistment.Duties] DestroyParty('{partyId}') re-entered from its own " +
-                    "MobilePartyDestroyed handler — ignoring the inner call (see #375)");
-                return;
-            }
-
-            _destroyingPartyId = partyId;
-            try
-            {
-                DestroyPartyAction.Apply(null, party);
-            }
-            finally
-            {
-                _destroyingPartyId = null;
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError($"[Enlistment.Duties] DestroyParty('{partyId}') failed: {ex.Message}");
-        }
-    }
-
-    public string FindNearestFriendlySettlement(string commanderHeroId)
-        => FindNearestSettlement(commanderHeroId, requireSameFaction: true, villageOnly: false, _logger);
-
-    public string FindNearestFriendlyVillage(string commanderHeroId)
-        => FindNearestSettlement(commanderHeroId, requireSameFaction: true, villageOnly: true, _logger);
-
-    public string FindNearestAllySettlement(string commanderHeroId)
-        => FindNearestSettlement(commanderHeroId, requireSameFaction: false, villageOnly: false, _logger);
-
-    /// <summary>
-    /// Counts exactly what <see cref="ConsumePlayerFood"/> can remove — deliverable
-    /// <c>IsFood</c> stacks. Deliberately NOT <c>ItemRoster.TotalFood</c>: vanilla's
-    /// property also folds in livestock via <c>item.HorseComponent.MeatCount</c>
-    /// (ItemRoster.cs:452), so a player driving cattle read as "has enough food", the
-    /// consume step removed nothing, and the delivery completed for free (Codex P2-2).
+    /// Sums <c>IsFood</c> stacks. Deliberately NOT <c>ItemRoster.TotalFood</c>: vanilla's property
+    /// also folds in livestock via <c>item.HorseComponent.MeatCount</c> (ItemRoster.cs:452), so a
+    /// player driving cattle read as "has enough food" while the stores held none.
     /// </summary>
     public int CountPlayerFood()
     {
@@ -158,44 +53,7 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"[Enlistment.Duties] CountPlayerFood failed: {ex.Message}");
-            return 0;
-        }
-    }
-
-    /// <summary>Removes up to <paramref name="amount"/> food and returns how much it actually took.</summary>
-    public int ConsumePlayerFood(int amount)
-    {
-        if (amount <= 0)
-            return 0;
-        try
-        {
-            var roster = MobileParty.MainParty?.ItemRoster;
-            if (roster == null)
-                return 0;
-
-            // Cheapest food first. Deviation from the donor's fixed grain->fish->meat->cheese
-            // chain: vanilla DefaultItems only defines Grain/Meat as food (no fish/cheese) —
-            // see the feature doc for the noted deviation.
-            var remaining = amount;
-            var foodElements = roster
-                .Where(e => e.EquipmentElement.Item != null && e.EquipmentElement.Item.IsFood && e.Amount > 0)
-                .OrderBy(e => e.EquipmentElement.Item.Value)
-                .ToList();
-
-            foreach (var element in foodElements)
-            {
-                if (remaining <= 0)
-                    break;
-                var take = Math.Min(remaining, element.Amount);
-                roster.AddToCounts(element.EquipmentElement, -take);
-                remaining -= take;
-            }
-            return amount - remaining;
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError($"[Enlistment.Duties] ConsumePlayerFood({amount}) failed: {ex.Message}");
+            _logger?.LogError($"[Enlistment] CountPlayerFood failed: {ex.Message}");
             return 0;
         }
     }
@@ -210,128 +68,7 @@ public sealed class DutyWorldAdapter : IDutyWorldAdapter
         }
         catch (Exception ex)
         {
-            _logger?.LogError($"[Enlistment.Duties] GrantPlayerFood({amount}) failed: {ex.Message}");
-        }
-    }
-
-    public bool IsEnemyNearPlayer(float radius)
-    {
-        try
-        {
-            var main = MobileParty.MainParty;
-            if (main?.MapFaction == null)
-                return false;
-
-            var data = MobileParty.StartFindingLocatablesAroundPosition(main.Position.ToVec2(), radius);
-            for (var party = MobileParty.FindNextLocatable(ref data); party != null; party = MobileParty.FindNextLocatable(ref data))
-            {
-                if (party == main || party.MapFaction == null)
-                    continue;
-                if (party.MapFaction.IsAtWarWith(main.MapFaction))
-                    return true;
-            }
-            return false;
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError($"[Enlistment.Duties] IsEnemyNearPlayer({radius}) failed: {ex.Message}");
-            return false;
-        }
-    }
-
-    private static void ApplyAi(MobileParty party, bool patrolNotEngage, Settlement anchorSettlement)
-    {
-        if (!patrolNotEngage)
-        {
-            var main = MobileParty.MainParty;
-            if (main != null)
-            {
-                party.SetMoveEngageParty(main, MobileParty.NavigationType.Default);
-                return;
-            }
-        }
-
-        if (anchorSettlement != null)
-            party.SetMovePatrolAroundSettlement(anchorSettlement, MobileParty.NavigationType.Default, isTargetingPort: false);
-        else
-            party.SetMoveModeHold();
-    }
-
-    private static string FindNearestSettlement(string commanderHeroId, bool requireSameFaction, bool villageOnly, IModLogger logger)
-    {
-        try
-        {
-            var commanderParty = Campaign.Current?.CampaignObjectManager?.Find<Hero>(commanderHeroId)?.PartyBelongedTo;
-            var faction = commanderParty?.MapFaction;
-            if (faction == null)
-                return null;
-
-            var origin = commanderParty.Position;
-            Settlement best = null;
-            var bestDistanceSq = float.MaxValue;
-
-            foreach (var settlement in Settlement.All)
-            {
-                if (settlement?.MapFaction == null || settlement.IsHideout)
-                    continue;
-                if (villageOnly && !settlement.IsVillage)
-                    continue;
-
-                var sameFaction = settlement.MapFaction == faction;
-                if (requireSameFaction && !sameFaction)
-                    continue;
-                if (!requireSameFaction && (sameFaction || settlement.MapFaction.IsAtWarWith(faction)))
-                    continue;
-
-                var distanceSq = origin.DistanceSquared(settlement.Position);
-                if (distanceSq < bestDistanceSq)
-                {
-                    bestDistanceSq = distanceSq;
-                    best = settlement;
-                }
-            }
-
-            return best?.StringId;
-        }
-        catch (Exception ex)
-        {
-            logger?.LogError($"[Enlistment.Duties] FindNearestSettlement('{commanderHeroId}') failed: {ex.Message}");
-            return null;
-        }
-    }
-
-    private static Settlement FindSettlement(string settlementId)
-    {
-        // Settlement.Find, NOT CampaignObjectManager.Find<Settlement>: CampaignObjectManager
-        // registers only MobileParty/Hero/Clan/Kingdom, so Find<Settlement> returns null
-        // UNCONDITIONALLY on 1.4.7. This silently broke every spawned hunt duty.
-        return string.IsNullOrEmpty(settlementId) ? null : Settlement.Find(settlementId);
-    }
-
-    private static MobileParty FindParty(string partyId)
-    {
-        return string.IsNullOrEmpty(partyId)
-            ? null
-            : Campaign.Current?.CampaignObjectManager?.Find<MobileParty>(partyId);
-    }
-
-    private static CampaignVec2 OffsetPosition(CampaignVec2 origin, float radius)
-    {
-        var angle = MBRandom.RandomFloat * 2f * (float)Math.PI;
-        var offset = new Vec2((float)Math.Cos(angle) * radius, (float)Math.Sin(angle) * radius);
-        return origin + offset;
-    }
-
-    public float GetPlayerMorale()
-    {
-        try
-        {
-            return MobileParty.MainParty?.Morale ?? -1f;
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError($"[Enlistment] GetPlayerMorale failed: {ex.Message}");
-            return -1f;
+            _logger?.LogError($"[Enlistment] GrantPlayerFood({amount}) failed: {ex.Message}");
         }
     }
 
