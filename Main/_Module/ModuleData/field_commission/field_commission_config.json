@@ -2,9 +2,9 @@
   "enabled": true,
   "ratioThreshold": 1.3,
   "meritPerKill": 1,
-  "meritThreshold": 8,
+  "meritThreshold": 32,
   "retainerAllowance": 0,
-  "maxOffersPerBattle": 1,
+  "maxOffersPerBattle": 2,
   "skillPointsPerLevel": 5,
   "diagnostics": false,
   "allowedRaceNames": ["human", "dwarf", "elf"]

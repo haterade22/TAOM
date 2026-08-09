@@ -18,19 +18,23 @@ public class FieldCommissionConfig
     /// <summary>Merit points banked per kill of a given troop type in an eligible, won battle.</summary>
     public int MeritPerKill { get; set; } = 1;
 
-    /// <summary>Merit required before a promotion offer is queued for that troop type.</summary>
-    public int MeritThreshold { get; set; } = 8;
+    /// <summary>Merit required before a promotion offer is queued for that troop type. Raised 8 → 32
+    /// on 2026-08-08: merit pools per troop TYPE rather than per soldier, so a 30-strong stack shares
+    /// one counter and cleared the old bar inside a single battle at well under a kill each.</summary>
+    public int MeritThreshold { get; set; } = 32;
 
     /// <summary>Extra companions allowed beyond the clan-tier limit before offers defer for lack
     /// of room. Default 0 — the tier limit is strict.</summary>
     public int RetainerAllowance { get; set; } = 0;
 
     /// <summary>Hard ceiling on how many promotion offers ONE won battle may queue, across all troop
-    /// types. Must be >= 1. Default 1, matching the donor mod's shipped behaviour: without a cap the
-    /// count is <c>sum over troop types of min(count, merit/threshold)</c>, and each offer is a
-    /// separate game-pausing modal inquiry the player cannot dismiss in bulk. Unspent merit is never
-    /// lost — it re-queues after the next won battle.</summary>
-    public int MaxOffersPerBattle { get; set; } = 1;
+    /// types. Must be >= 1. A cap is needed at all because without one the count is <c>sum over troop
+    /// types of min(count, merit/threshold)</c>, and each offer is a separate game-pausing modal the
+    /// player cannot dismiss in bulk. Default 2 (was 1, the donor's behaviour): at a threshold of 32
+    /// a battle that earns two promotions is a genuine result rather than routine, and holding it to
+    /// one would drip-feed merit the player has already earned. Unspent merit is never lost — it
+    /// re-queues after the next won battle.</summary>
+    public int MaxOffersPerBattle { get; set; } = 2;
 
     /// <summary>Skill points of "budget" granted per hero level when building a promoted
     /// companion's skills from its troop template (see <c>CommissionSkillBudget</c>).</summary>

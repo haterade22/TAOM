@@ -509,6 +509,31 @@ the question that mattered for a generated file.
 
 ## 2026-08-08
 
+### balance(fieldcommission): raise the promotion bar — 8 merit was under a kill each
+
+Promotions were landing too easily. The number was the visible cause; the structure underneath it is
+the real one. Merit pools per troop **TYPE**, not per soldier — `_merits` is keyed on the
+`CharacterObject` StringId — so a 30-strong stack of Lossarnach Lumbermen shares a single counter.
+At a threshold of 8 that is well under one kill each, inside a single battle.
+
+`meritThreshold` 8 → **32**, so a 20-stack now takes roughly three to four battles rather than one.
+`maxOffersPerBattle` 1 → **2**: that one is a *raise*, deliberately — at 32 merit a battle that earns
+two promotions is a genuine result rather than routine, and holding the ceiling at one would
+drip-feed merit the player has already earned. Both numbers live in three places that must agree
+(compiled default, shipped JSON, MCM default); a drift test fails the build if only some move.
+
+Banked merit in existing saves is untouched. It simply now sits further from the bar.
+
+**What this does not fix, stated plainly.** Merit still never decays — it is a permanently rising
+ratchet, persisted across saves, reduced only by an accepted promotion. And a 40-stack still accrues
+roughly 5× faster than an 8-stack of the same tier. This changes the slope of the curve, not its
+shape. `ratioThreshold` also stays at 1.3, which is looser than it reads: you can outnumber the enemy
+5:4 and still qualify, and since the numerator counts only your own party, an army battle where
+allied lords do most of the fighting is structurally always eligible. Per-stack scaling and a minimum
+troop level are the levers that would change the shape; both were considered and deliberately not
+taken here.
+
+
 ### fix(diagnostics): the exit-stall sampler was watching player time (#425, PR #429)
 
 `ExitStallSampler` suspends the main thread to walk its stack, and it stayed armed until

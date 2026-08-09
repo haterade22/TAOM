@@ -32,9 +32,9 @@ public class FieldCommissionSettingsProviderTests
         Enabled = true,
         RatioThreshold = 1.3f,
         MeritPerKill = 1,
-        MeritThreshold = 8,
+        MeritThreshold = 32,
         RetainerAllowance = 0,
-        MaxOffersPerBattle = 1,
+        MaxOffersPerBattle = 2,
         Diagnostics = false,
         SkillPointsPerLevel = 5,
         AllowedRaceNames = new List<string> { "human", "dwarf", "elf" },
@@ -52,9 +52,9 @@ public class FieldCommissionSettingsProviderTests
         Assert.IsTrue(merged.Enabled);
         Assert.AreEqual(1.3f, merged.RatioThreshold, 0.0001f);
         Assert.AreEqual(1, merged.MeritPerKill);
-        Assert.AreEqual(8, merged.MeritThreshold);
+        Assert.AreEqual(32, merged.MeritThreshold);
         Assert.AreEqual(0, merged.RetainerAllowance);
-        Assert.AreEqual(1, merged.MaxOffersPerBattle);
+        Assert.AreEqual(2, merged.MaxOffersPerBattle);
     }
 
     [TestMethod]
@@ -346,9 +346,9 @@ public class FieldCommissionSettingsProviderTests
         AssertPairedDefault(settings, json, "EnableFieldCommission { get; set; } = true;", "\"enabled\": true");
         AssertPairedDefault(settings, json, "FieldCommissionRatioThreshold { get; set; } = 1.3f;", "\"ratioThreshold\": 1.3");
         AssertPairedDefault(settings, json, "FieldCommissionMeritPerKill { get; set; } = 1;", "\"meritPerKill\": 1");
-        AssertPairedDefault(settings, json, "FieldCommissionMeritThreshold { get; set; } = 8;", "\"meritThreshold\": 8");
+        AssertPairedDefault(settings, json, "FieldCommissionMeritThreshold { get; set; } = 32;", "\"meritThreshold\": 32");
         AssertPairedDefault(settings, json, "FieldCommissionRetainerAllowance { get; set; } = 0;", "\"retainerAllowance\": 0");
-        AssertPairedDefault(settings, json, "FieldCommissionMaxOffersPerBattle { get; set; } = 1;", "\"maxOffersPerBattle\": 1");
+        AssertPairedDefault(settings, json, "FieldCommissionMaxOffersPerBattle { get; set; } = 2;", "\"maxOffersPerBattle\": 2");
         AssertPairedDefault(settings, json, "EnableFieldCommissionDiagnostics { get; set; } = false;", "\"diagnostics\": false");
     }
 

@@ -435,8 +435,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battlefield Promotions")]
     [SettingPropertyInteger("Offers Per Battle", 1, 20, Order = 1, RequireRestart = false,
-        HintText = "The most promotion prompts a single won battle may raise. Each prompt pauses the game, so a large number after a large battle means a long queue of dialogs. Merit above the cap is not lost — it carries to the next battle. Default: 1.")]
-    public int FieldCommissionMaxOffersPerBattle { get; set; } = 1;
+        HintText = "The most promotion prompts a single won battle may raise. Each prompt pauses the game, so a large number after a large battle means a long queue of dialogs. Merit above the cap is not lost — it carries to the next battle. Default: 2.")]
+    public int FieldCommissionMaxOffersPerBattle { get; set; } = 2;
 
     [SettingPropertyGroup("Battlefield Promotions")]
     [SettingPropertyFloatingInteger("Fair-Fight Ratio", 0.1f, 3.0f, "#0.00", Order = 2, RequireRestart = false,
@@ -450,8 +450,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battlefield Promotions")]
     [SettingPropertyInteger("Merit To Promote", 1, 100, Order = 4, RequireRestart = false,
-        HintText = "Merit a troop type must bank before it earns a promotion offer. Higher = rarer promotions. Default: 8.")]
-    public int FieldCommissionMeritThreshold { get; set; } = 8;
+        HintText = "Merit a troop type must bank before it earns a promotion offer. Note merit is pooled per troop TYPE, not per soldier — a large stack of one type reaches the bar faster than a small one. Higher = rarer promotions. Default: 32.")]
+    public int FieldCommissionMeritThreshold { get; set; } = 32;
 
     [SettingPropertyGroup("Battlefield Promotions")]
     [SettingPropertyInteger("Companions Over The Limit", 0, 10, Order = 5, RequireRestart = false,

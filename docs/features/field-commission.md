@@ -124,16 +124,33 @@ FieldCommissionBehavior (CampaignBehaviorBase)   FieldCommissionMissionLogic (Mi
 | `enabled` | bool | Master toggle. |
 | `ratioThreshold` | float | Player-healthy / enemy-healthy must be BELOW this for merit to accrue. Default 1.3. 0 is a valid (if extreme — "never eligible") choice; negative/NaN/Infinity revert to default. |
 | `meritPerKill` | int | Merit banked per kill of a troop type in an eligible, won battle. Must be ≥ 1. |
-| `meritThreshold` | int | Merit required before a promotion offer is queued. Must be ≥ 1. |
+| `meritThreshold` | int | Merit required before a promotion offer is queued. Must be ≥ 1. Default 32. |
 | `retainerAllowance` | int | Extra companions allowed beyond the clan-tier limit before offers defer. Must be ≥ 0. |
-| `maxOffersPerBattle` | int | Hard ceiling on promotion offers queued by ONE won battle, across all troop types. Must be ≥ 1. Default 1 (the donor mod's shipped behaviour). Merit above the cap is kept and re-queues after the next won battle. |
+| `maxOffersPerBattle` | int | Hard ceiling on promotion offers queued by ONE won battle, across all troop types. Must be ≥ 1. Default 2. Merit above the cap is kept and re-queues after the next won battle. |
 | `skillPointsPerLevel` | int | Skill-value budget granted per hero level (see Commission Skill Budget above). Must be ≥ 1. |
 | `allowedRaceNames` | string[] | Race names (matched via `IRaceManager`) eligible for promotion. Blank/whitespace entries are sanitized out; a missing/null field defaults to `["human","dwarf","elf"]`. |
 
 ### Current Values
 
-Defaults mirror the donor mod's tuning (`RatioThreshold=1.3`, `MeritPerKill=1`, `MeritThreshold=8`,
-and `maxOffersPerBattle=1`, which is what the donor's `AllowMultiplePromotions=false` amounted to).
+`RatioThreshold=1.3` and `MeritPerKill=1` still mirror the donor mod. **`MeritThreshold` and
+`MaxOffersPerBattle` no longer do** — retuned 2026-08-08 because promotions landed too easily in play
+(see the note below). `MaxOffersPerBattle=1` was the donor's `AllowMultiplePromotions=false`
+behaviour; it is now 2.
+
+> **Why the bar moved, and what it does not fix.** Merit pools per troop **TYPE**, not per soldier —
+> `_merits` is keyed on the `CharacterObject` StringId, so a 30-strong stack shares one counter. At
+> the old threshold of 8 that was well under a kill each, inside a single battle. Raising it to 32
+> makes a 20-stack take roughly three to four battles instead of one.
+>
+> Two structural causes are deliberately **not** addressed and remain true: merit still never decays
+> (it is a permanently rising ratchet, persisted across saves, reduced only by an accepted
+> promotion), and a 40-stack still accrues ~5× faster than an 8-stack of the same tier. The raise
+> changes the slope of the curve, not its shape. Also unchanged: `ratioThreshold` stays 1.3, so
+> battles you comfortably win still count — at 1.3 you can outnumber the enemy 5:4 and qualify, and
+> because the numerator counts only your own party, an army battle where allies do most of the work
+> is structurally always eligible. If the bar still feels low after play, per-stack scaling and a
+> minimum troop level are the levers that change the shape.
+
 Dropped donor knobs: `PromotedCompanionsIncreaseLimit`/`EnableBonusCompanionLimit`/
 `BonusCompanionLimitValue` — all three were **dead code in the donor itself**
 (`PromotedHelper.GetAdditionalCompanionLimit` has no caller anywhere in the donor tree), replaced by
@@ -148,10 +165,10 @@ need a full application restart**. The MCM knobs below do not — they are re-re
 | Property | Range | Default | JSON field it overrides |
 |----------|-------|---------|-------------------------|
 | `EnableFieldCommission` | bool | `true` | `enabled` |
-| `FieldCommissionMaxOffersPerBattle` | 1–20 | `1` | `maxOffersPerBattle` |
+| `FieldCommissionMaxOffersPerBattle` | 1–20 | `2` | `maxOffersPerBattle` |
 | `FieldCommissionRatioThreshold` | 0.1–3.0 | `1.3` | `ratioThreshold` |
 | `FieldCommissionMeritPerKill` | 1–10 | `1` | `meritPerKill` |
-| `FieldCommissionMeritThreshold` | 1–100 | `8` | `meritThreshold` |
+| `FieldCommissionMeritThreshold` | 1–100 | `32` | `meritThreshold` |
 | `FieldCommissionRetainerAllowance` | 0–10 | `0` | `retainerAllowance` |
 
 `skillPointsPerLevel` and `allowedRaceNames` stay JSON-only (advanced / pack-author territory).

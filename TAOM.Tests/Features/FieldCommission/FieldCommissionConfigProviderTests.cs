@@ -80,7 +80,7 @@ public class FieldCommissionConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(1, config.MaxOffersPerBattle);
+        Assert.AreEqual(2, config.MaxOffersPerBattle);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("maxOffersPerBattle=0")));
     }
 
@@ -92,7 +92,7 @@ public class FieldCommissionConfigProviderTests
         Assert.IsTrue(config.Enabled);
         Assert.AreEqual(1.3f, config.RatioThreshold, 0.001f);
         Assert.AreEqual(1, config.MeritPerKill);
-        Assert.AreEqual(8, config.MeritThreshold);
+        Assert.AreEqual(32, config.MeritThreshold);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not found")));
     }
 
@@ -103,7 +103,7 @@ public class FieldCommissionConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(8, config.MeritThreshold);
+        Assert.AreEqual(32, config.MeritThreshold);
         _logger.Received().LogError(Arg.Is<string>(s => s.Contains("Failed to parse")));
     }
 
@@ -159,7 +159,7 @@ public class FieldCommissionConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(8, config.MeritThreshold);
+        Assert.AreEqual(32, config.MeritThreshold);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("meritThreshold=-5")));
     }
 
