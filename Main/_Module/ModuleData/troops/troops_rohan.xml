@@ -3062,7 +3062,7 @@
                     id="Item.rohan_militia_armour_c" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_gd_ano_gloves_a" />
+                    id="Item.cts_rohan_armguard1" />
                 <equipment
                     slot="Leg"
                     id="Item.roh_sol_bts" />
@@ -3114,7 +3114,7 @@
                     id="Item.rohan_militia_armour_e" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_gd_ano_gloves_a" />
+                    id="Item.cts_rohan_armguard1" />
                 <equipment
                     slot="Leg"
                     id="Item.roh_sol_bts" />
