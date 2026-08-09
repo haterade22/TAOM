@@ -116,7 +116,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
                 ReconcileGrace(record, presence, nowDays);
                 return;
             case EnlistmentState.EnlistedDetachedOnDuty:
-                ReconcileDetachedDuty(record, presence, nowDays);
+                ReconcileRetiredDetachedDuty();
                 return;
             case EnlistmentState.EnlistedAttached:
             case EnlistmentState.EnlistedBattle:
@@ -168,27 +168,25 @@ public class EnlistmentReconciler : IEnlistmentReconciler
             _discharge.Execute(DischargeReason.CommanderUnavailableGraceExpired);
     }
 
-    private void ReconcileDetachedDuty(EnlistmentRecord record, PlayerPresenceSnapshot presence, double nowDays)
+    /// <summary>
+    /// RETIRED STATE, RECOVERY ONLY. Nothing produces <c>EnlistedDetachedOnDuty</c> since field
+    /// duties stopped detaching (2026-08-09) — its only producer was <c>FieldDutyRuntime.Start</c>,
+    /// and <c>EnlistmentRecord.ToPersistedState</c> coerces it to attached on parse, so no save can
+    /// restore it either.
+    ///
+    /// The 30-line handler that lived here (captivity sync, commander-death discharge, grace start)
+    /// went with it. This stub survives because "unreachable" rests entirely on that one coercion:
+    /// if it ever regressed, a player in state 4 with no handler would sit in a state the
+    /// reconciler ignores forever. Returning them to attached costs three lines and cannot be wrong
+    /// — attached is where every path out of a duty led anyway.
+    /// </summary>
+    private void ReconcileRetiredDetachedDuty()
     {
-        if (presence.IsCaptive)
-        {
-            _machine.TryTransition(EnlistmentState.EnlistedPlayerCaptive);
-            return;
-        }
-
-        var snapshot = _commander.GetSnapshot(record.CommanderHeroId);
-        if (!snapshot.Exists || !snapshot.IsAlive)
-        {
-            _discharge.Execute(DischargeReason.CommanderDead);
-            return;
-        }
-
-        if (!snapshot.HasParty || !snapshot.PartyIsActive)
-        {
-            // Player is already free-roaming on duty — grace starts with no presence change.
-            _machine.TryTransition(EnlistmentState.CommanderUnavailable);
-            record.GraceEndsAtDay = GraceDeadline(nowDays);
-        }
+        _logger?.LogWarning(
+            "[Enlistment] reconciler saw the retired EnlistedDetachedOnDuty state — nothing should "
+            + "produce it since field duties stopped detaching. Returning to attached; if this line "
+            + "ever appears, the parse-time coercion in EnlistmentRecord.ToPersistedState has failed.");
+        _machine.TryTransition(EnlistmentState.EnlistedAttached);
     }
 
     private void ReconcileAttached(EnlistmentRecord record, PlayerPresenceSnapshot presence, double nowDays, string trigger)

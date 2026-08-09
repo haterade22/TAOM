@@ -44,10 +44,6 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         if (record.State == EnlistmentState.EnlistedBattle)
             return TalkToCommanderResult.InBattle;
 
-        // Detached on duty the player is a free agent — they can ride up and click the lord.
-        if (record.State == EnlistmentState.EnlistedDetachedOnDuty)
-            return TalkToCommanderResult.OnDuty;
-
         var commander = _commander.GetSnapshot(record.CommanderHeroId);
         if (commander == null || !commander.Exists || !commander.IsAlive
             || commander.IsPrisoner || !commander.HasParty || !commander.PartyIsActive)

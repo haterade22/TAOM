@@ -23,7 +23,6 @@ public static class EnlistmentTransitionTable
         (EnlistmentState.EnlistedAttached, EnlistmentState.EnlistedBattle),
         (EnlistmentState.EnlistedBattle, EnlistmentState.EnlistedAttached),
 
-        (EnlistmentState.EnlistedAttached, EnlistmentState.EnlistedDetachedOnDuty),
         (EnlistmentState.EnlistedDetachedOnDuty, EnlistmentState.EnlistedAttached),
 
         (EnlistmentState.EnlistedAttached, EnlistmentState.EnlistedPlayerCaptive),

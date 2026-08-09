@@ -182,16 +182,23 @@ public class EnlistmentLoadNormalizerTests
     }
 
     [TestMethod]
-    public void Normalize_DetachedDuty_NoPresenceMutation()
+    public void Normalize_RetiredDetachedDutyState_IsNotReachableAfterParse()
     {
-        MakeEnlisted(EnlistmentState.EnlistedDetachedOnDuty);
+        // REPLACES Normalize_DetachedDuty_NoPresenceMutation, which asserted a save loading in
+        // EnlistedDetachedOnDuty STAYS there. After 2026-08-09 nothing produces that state and
+        // EnlistmentRecord.ToPersistedState coerces it to attached ON PARSE, so the old test was
+        // pinning a save shape that can no longer exist — and pinning it as a state the player
+        // would be stuck in, since the reconciler branch that serviced it is gone.
+        //
+        // The normalizer is downstream of that coercion, so the property worth pinning here is
+        // that it does not undo it: an attached record is left attached, presence untouched.
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
         CommanderHealthy();
-        Presence(parked: false);
+        Presence(parked: true);
 
         _normalizer.Normalize("main_hero", Now);
 
-        Assert.AreEqual(EnlistmentState.EnlistedDetachedOnDuty, _store.Record.State);
-        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
         _partyAdapter.DidNotReceive().RestorePresence();
     }
 }

@@ -17,8 +17,15 @@ public class SkillCheckService : ISkillCheckService
 {
     public const int RollRange = 51; // 0..50 inclusive
 
-    /// <summary>Check bonus per rank level. Shared by interactive and field duties so the two
-    /// difficulty curves cannot drift apart.</summary>
+    /// <summary>
+    /// Check bonus per rank level. Both duty systems alias THIS constant, so the magnitude
+    /// cannot drift.
+    ///
+    /// It does NOT make the two curves identical, and the difference is deliberate: a field
+    /// duty always applies the bonus, while an interactive option applies it only when its
+    /// row sets <c>rankBonusApplies</c>. Rank always helps work you are ordered to do; it
+    /// does not always help a personal choice in camp.
+    /// </summary>
     public const int RankBonusPerLevel = 4;
 
     private readonly IRandomProvider _random;

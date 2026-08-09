@@ -18,7 +18,9 @@ public class EnlistmentTransitionTableTests
         (EnlistmentState.PetitionPending, EnlistmentState.EnlistedAttached),
         (EnlistmentState.EnlistedAttached, EnlistmentState.EnlistedBattle),
         (EnlistmentState.EnlistedBattle, EnlistmentState.EnlistedAttached),
-        (EnlistmentState.EnlistedAttached, EnlistmentState.EnlistedDetachedOnDuty),
+        // (EnlistedAttached -> EnlistedDetachedOnDuty) DELETED 2026-08-09. Field duties stopped
+        // detaching, so nothing produces the state; the OUTBOUND edges below are kept as a
+        // recovery path in case the parse-time coercion ever regresses.
         (EnlistmentState.EnlistedDetachedOnDuty, EnlistmentState.EnlistedAttached),
         (EnlistmentState.EnlistedAttached, EnlistmentState.EnlistedPlayerCaptive),
         (EnlistmentState.EnlistedBattle, EnlistmentState.EnlistedPlayerCaptive),

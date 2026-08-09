@@ -67,14 +67,6 @@ public class EnlistmentPlayerActionServiceTests
         Assert.AreEqual(TalkToCommanderResult.InBattle, _sut.CanTalkToCommander());
     }
 
-    [TestMethod]
-    public void CanTalkToCommander_OnDuty_OnDuty()
-    {
-        // Detached, the player can ride up and click the lord like anyone else. A teleporting
-        // menu option here would be strictly worse than the thing it replaces.
-        _store.Record.State = EnlistmentState.EnlistedDetachedOnDuty;
-        Assert.AreEqual(TalkToCommanderResult.OnDuty, _sut.CanTalkToCommander());
-    }
 
     [DataTestMethod]
     [DataRow(false, true, false, false)]

@@ -88,15 +88,17 @@ public class EnlistmentStateMachineTests
     [TestMethod]
     public void TryTransition_FullServiceLifecycle_Walkable()
     {
-        // petition -> oath -> battle -> back -> duty -> back -> captured -> released
+        // petition -> oath -> battle -> back -> captured -> released
         // -> commander lost -> recovered -> discharge -> done
+        //
+        // The duty leg is gone from this walk on purpose. Field duties no longer change
+        // state at all — a duty is camp work you do while attached (2026-08-09) — so the
+        // Attached -> DetachedOnDuty edge was deleted and the walk would fail at it.
         foreach (var step in new[]
         {
             EnlistmentState.PetitionPending,
             EnlistmentState.EnlistedAttached,
             EnlistmentState.EnlistedBattle,
-            EnlistmentState.EnlistedAttached,
-            EnlistmentState.EnlistedDetachedOnDuty,
             EnlistmentState.EnlistedAttached,
             EnlistmentState.EnlistedPlayerCaptive,
             EnlistmentState.EnlistedAttached,

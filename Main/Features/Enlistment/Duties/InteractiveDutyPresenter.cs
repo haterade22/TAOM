@@ -10,7 +10,7 @@ namespace TAOM.Features.Enlistment.Duties;
 public class InteractiveDutyPresenter : IInteractiveDutyPresenter
 {
     /// <summary>rankBonus = (int)rank * this, applied only when the option's RankBonusApplies is set.</summary>
-    private const int RankBonusPerLevel = 4;
+    private const int RankBonusPerLevel = Content.SkillCheckService.RankBonusPerLevel;
 
     /// <summary>Incident pay-delay relief: release min(arrears, max(floor, arrears/2)).</summary>
     private const int DeferredReleaseFloor = 8;

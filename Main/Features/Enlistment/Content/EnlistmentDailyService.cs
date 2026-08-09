@@ -121,20 +121,28 @@ public class EnlistmentDailyService : IEnlistmentDailyService
         if (_world.RaisePlayerMoraleTo(ServiceMoraleFloor))
             _logger?.LogInfo($"[Enlistment] company morale lifted the player to the service floor ({ServiceMoraleFloor})");
 
-        // Healing LAST, and only in the PARKED regime. Service has two of them and they differ in
-        // exactly the property vanilla's healing keys on:
+        // Healing LAST, and only in the PARKED regime. Service still has two regimes, and they
+        // differ in exactly the property vanilla's healing keys on:
         //
         //   parked   (EnlistedAttached / EnlistedBattle)  IsActive == false — vanilla's
         //            PartyHealCampaignBehavior never reaches the party, so nothing heals the
         //            player at all. This is the 19%-HP report from 2026-08-08. We heal.
-        //   detached (EnlistedDetachedOnDuty, CommanderUnavailable grace) RestorePresence() has
-        //            set IsActive == true, so vanilla is already healing +11/day. We must not.
+        //   detached (CommanderUnavailable grace only)    RestorePresence() has set
+        //            IsActive == true, so vanilla is already healing +11/day. We must not.
         //
-        // Getting this wrong is not cosmetic: 12 of the 13 field duties detach for 4–6 days
-        // (only WaitHours stays attached), so the detached regime is the COMMON one, and healing
-        // unconditionally paid the player twice for most of their service. An earlier version of
-        // this comment asserted the party was "hidden, inactive" in all cases — it is not, and
-        // that false safety property is what let the double-pay through.
+        // THE DETACHED REGIME SHRANK on 2026-08-09. It used to include EnlistedDetachedOnDuty, and
+        // 12 of the 13 field duties detached for 4-6 days at a time, which made detached the COMMON
+        // case and the double-pay a routine one. Field duties no longer detach at all (#428), so a
+        // duty day is now a parked day and TAOM does the healing on it where vanilla used to. That
+        // is the intended behaviour — you are with the column, so the company surgeon tends you —
+        // but it IS a behaviour change and it belongs in the comment rather than in a reader's
+        // surprise.
+        //
+        // The gate stays because the grace period still detaches, and because the failure mode is
+        // silent. Two earlier versions of this comment were wrong in the same direction: one
+        // asserted the party is "hidden, inactive" in all cases, the other kept describing a duty
+        // model that no longer existed. A comment on a load-bearing gate is a claim; check it when
+        // the regimes move.
         if (!IsParked())
             return;
 

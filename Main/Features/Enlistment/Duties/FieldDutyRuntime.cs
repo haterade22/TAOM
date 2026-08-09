@@ -31,7 +31,9 @@ namespace TAOM.Features.Enlistment.Duties;
 /// </summary>
 public class FieldDutyRuntime : IFieldDutyRuntime
 {
-    /// <summary>Rank contribution to the check. Shared with the interactive duties so the two cannot drift.</summary>
+    /// <summary>Rank contribution to the check, aliased from the one definition both duty
+    /// systems use. Field duties apply it unconditionally; see SkillCheckService for why the
+    /// interactive path does not.</summary>
     private const int RankBonusPerLevel = SkillCheckService.RankBonusPerLevel;
 
     private readonly IEnlistmentStore _store;

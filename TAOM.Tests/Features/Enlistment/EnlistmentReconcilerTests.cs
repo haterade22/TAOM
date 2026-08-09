@@ -334,30 +334,5 @@ public class EnlistmentReconcilerTests
         Assert.AreEqual("lord_1_1", requestedFor);
     }
 
-    [TestMethod]
-    public void Reconcile_DetachedDutyCommanderDead_Discharges()
-    {
-        MakeEnlisted(EnlistmentState.EnlistedDetachedOnDuty);
-        CommanderDead();
-        PlayerPresence(parked: false);
 
-        _reconciler.ReconcileHourly(Now);
-
-        Assert.AreEqual(EnlistmentState.NotEnlisted, _store.Record.State);
-    }
-
-    [TestMethod]
-    public void Reconcile_DetachedDutyCommanderCaptured_GraceStartsNoPresenceChange()
-    {
-        MakeEnlisted(EnlistmentState.EnlistedDetachedOnDuty);
-        CommanderCaptured();
-        PlayerPresence(parked: false);
-
-        _reconciler.ReconcileHourly(Now);
-
-        Assert.AreEqual(EnlistmentState.CommanderUnavailable, _store.Record.State);
-        Assert.AreEqual(Now + Grace, _store.Record.GraceEndsAtDay);
-        _partyAdapter.DidNotReceive().RestorePresence();
-        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
-    }
 }
