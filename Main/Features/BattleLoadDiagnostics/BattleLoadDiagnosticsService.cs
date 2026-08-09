@@ -392,6 +392,14 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
 
     public void LogMapResumed(bool isSaving)
     {
+        // #425 — MapResumed is the end of the TEARDOWN the stall sampler exists to watch.
+        // Everything after it is player time: menus, conversations, loot screens (field-measured
+        // 123 s in a quartermaster conversation with three [ERROR] samples fired into it).
+        // Disarm the sampler here, unconditionally — same reasoning as CloseExitWindow's
+        // toggle-off note — while _exitWindowActive stays true so FirstMapTick still logs the
+        // time-to-playable tail for the phase record.
+        Interlocked.Exchange(ref _exitWindowOpenedUtcTicks, 0L);
+
         if (!IsExitPhaseLoggable()) return;
         Emit(BattleLoadPhase.MapResumed, $"isSaving={isSaving} {MemStats()}");
     }
