@@ -1,4 +1,4 @@
-﻿# CHANGELOG — TAOM (Tales From the Age of Men)
+# CHANGELOG — TAOM (Tales From the Age of Men)
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
@@ -44,6 +44,35 @@ design reviewers each caught that the redesign alone does not fix it.
 
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
+
+### test(localization): ratchet on unregistered keys — 317 of 567 (#434)
+
+Every `{=taom_*}` literal in `Main/**/*.cs` checked against every `<string id>` row and every
+`{=key}`-prefixed data attribute in `ModuleData`: **317 of 567 have no registration at all.** 258 of
+them are CulturalFeats — every feat name and description a player reads.
+
+Costs nothing in English, which is the whole problem. `GetLocalizedText` short-circuits on English
+and returns the inline default, so an unregistered key renders its C# literal perfectly and the row
+only ever feeds the other eleven languages. No warning, no test, no symptom.
+
+Unlike #432 these are all **literals** — a grep would have found every one at any point in the last
+two years. Nobody ran it because there was no reason to suspect anything. Found by asking the
+follow-up to #432: that was about keys a grep *cannot* see, so what about the ones where it can?
+
+Not fixed here. 317 registrations plus 3,804 translated rows is a content task with an API cost, and
+each key needs someone to decide which strings file owns it. What lands is the ratchet:
+`UnregisteredLocalizationKeyBaselineTests` holds the live set to a subset of a checked-in baseline,
+so a new unregistered key fails the build with its file:line — and a **stale** baseline entry fails
+too, since otherwise the list would never visibly shrink and a fixed key could quietly come back.
+
+Scoped to `taom_`-prefixed keys on purpose. A bare `{=SomeVanillaId}` usually references a row the
+base game owns, and flagging those would bury the signal — the same "a check that reports mostly
+noise gets ignored" failure that let this accumulate.
+
+Separately noted on the issue, because registration cannot fix it:
+`SpecialResourcesBehavior.cs:216` interpolates its runtime values into the **default text** instead
+of using `SetTextVariable`, so no translation could ever carry the number. It needs `{COUNT}` /
+`{RESOURCE}` slots before registering it means anything.
 
 ### test(enlistment): pin roster coverage to the culture list too (#431)
 
