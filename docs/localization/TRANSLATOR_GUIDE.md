@@ -150,7 +150,7 @@ python tools/translate_with_claude.py --lang PL --module TAOM --max-entries 50 -
 
 1. **Hand-curated override** — `tools/translation_overrides/<lang>.json` (canonical Tolkien names that should ALWAYS use a specific translation)
 2. **Cache** — `tools/translation_cache/<lang>.json` (previously translated; free on re-run)
-3. **Claude API** — Sonnet 4.5 with strict prompt about preserving placeholders
+3. **Claude API** — `claude-opus-5` (`MODEL` in `translate_with_claude.py`) with strict prompt about preserving placeholders
 4. **English fallback** — if all else fails or translation breaks placeholder structure, keep English so the game text stays valid
 
 > **Trap — the cache does not notice that the English changed.** Tier 2 matches on `string_id` alone

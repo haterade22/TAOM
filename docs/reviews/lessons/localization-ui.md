@@ -324,3 +324,31 @@ textured-with-nothing sprite. No exception, no log, no clue.
 - **Source:** native-commit-audit L2, 2026-08-08. `ui_loading` drop REJECTED after the supporting
   analysis was refuted against the v1.4.7 dump; `docs/investigations/native-commit-audit-2026-08.md`
   carries the full refutation and the general rule for the remaining `AlwaysLoad` levers.
+
+### Registering a localization key is not the same as propagating it
+A `{=key}` row in the English source makes a string *registered*. It does not make it
+*translatable*. `write_back` in `translate_with_claude.py` substitutes **by id** — it rewrites the
+`text` of an existing `<string id="KEY">` and has nowhere to put a key the per-language file does
+not already declare. So a registered-but-unpropagated key is translated, paid for, and discarded,
+and the player sees English forever in all eleven non-English languages.
+
+`--sync-ids` is the step that closes this, and it must run **before** the translation, not after.
+Prefer it over `generate_translation_template.py --apply`, which reaches the same end state by
+overwriting each per-language file with a fresh English template — that discards every translation
+in the file, including PL's hand-written ones, and only the git-tracked cache makes the AI half
+recoverable.
+
+- **Why missed:** all three gaps looked identical from the developer's chair — perfect English,
+  green suite, no warning. `MBTextManager.GetLocalizedText` short-circuits on English and returns
+  the inline default, so the registered row only ever feeds the other eleven languages, and nobody
+  who plays in English can see it fail. `LanguageDataXmlTests` checked the *shape* of the
+  `Languages/` tree exhaustively — dirs, file counts, well-formedness, every row has id and text —
+  and never once compared an id set against the English source, which is the only check that would
+  have caught any of it.
+- **Prevent:** `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` pins it —
+  every key the English side declares must exist as a row in all twelve language files. It is a
+  presence check on purpose: asserting difference-from-English would permanently report proper nouns
+  and the four vanilla nested-gender strings that fall back by design, and a check that reports
+  mostly noise gets ignored — the same failure that let #434 sit for two years.
+- **Source:** #434, 2026-08-09. 317 keys never registered, 96 registered but never propagated
+  (#432), one late `taom_res_desertion` row — 414 per language, all fixed in one pass.

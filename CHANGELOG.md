@@ -58,6 +58,27 @@ nouns, the four nested-gender fallbacks above, and words like "OK" that are alre
 Italian — and a check that reports mostly noise gets ignored, which is the failure that let #434 sit
 this long in the first place.
 
+### docs(localization): the pipeline docs described a pipeline that had moved (#434)
+
+Three corrections found while running the #434 pass, each one a statement a reader would have acted
+on and been wrong.
+
+`/localize` told you to validate with `LanguageDataXmlTests` "enforces 8 LanguageFile refs/language".
+The assertion is 11, and the method has been called `AllLanguageDirs_HaveExactlyElevenLanguageFiles`
+since the enlistment file was added. The skill now names all three localization test classes and
+what red means in each, because two of them did not exist when it was written.
+
+`TRANSLATOR_GUIDE.md` and `tools/README.md` both said the translator runs Sonnet 4.5. It has been
+`claude-opus-5` since the model constant was changed — a three-times-the-price difference that any
+cost estimate built on those docs would have got wrong.
+
+Case A of `/localize` said to hand-add the key to `taom_module_strings.xml` and run the translator.
+Both steps now name the tool that does them, and `--sync-ids` is marked as not optional for a new
+key, which is the step whose absence made #434 and #432 invisible.
+
+Also lands the lesson: registering a key and propagating it are different operations, and only the
+second one is what a translator can act on.
+
 ### chore(arena): the tournament roster guard stops announcing that nothing is wrong
 
 `Patch69_TournamentRosterGuard` logged `roster for town_X: N entrant(s), all safe` on every healthy

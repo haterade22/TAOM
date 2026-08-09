@@ -231,7 +231,8 @@ Four scripts that together produce, translate, validate, and inject loc XMLs acr
 | Script | Purpose | Output |
 |--------|---------|--------|
 | `generate_translation_template.py` | Generate English templates for a target language across the 8 TAOM source XMLs | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` |
-| `translate_with_claude.py` | AI first-draft translation via Claude API (Sonnet 4.5). 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. | All 28 language XMLs for `<LANG>` |
+| `translate_with_claude.py` | AI first-draft translation via Claude API (`claude-opus-5`). 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. `--sync-ids` seeds a language file with rows the English source declares but it lacks — **required before translating newly-registered keys**, since `write_back` substitutes by id and silently discards a translation with nowhere to land. | All 28 language XMLs for `<LANG>` |
+| `harvest_literal_loc_keys.py` | Register every `{=taom_*}` key C# declares as a literal but no ModuleData XML carries a row for, lifting the English default straight out of the source literal. Idempotent; routes by key prefix. Pairs with `UnregisteredLocalizationKeyBaselineTests`. | `taom_module_strings.xml`, `taom_cc_strings.xml`, `taom_emissary_strings.xml` |
 | `rebuild_translation_files.py` | Inject cached translations into XML files from scratch (rebuilds the language file structure using English source + overrides + cache). Use after API runs to apply translations cleanly. | All 28 language XMLs for `<LANG>` (or `--all` for every language) |
 | `translation_status.sh` | One-shot status dashboard: per-language cache size + last batch line + running process count. | (stdout) |
 

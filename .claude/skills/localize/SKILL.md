@@ -10,8 +10,8 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 
 ## Case A — new C# text shown to the player
 1. Wrap the string: `new TextObject("{=taom_my_feature_label}My Feature")` (always `{=KEY}default` form).
-2. Add the key + English default to `Main/_Module/ModuleData/taom_module_strings.xml`.
-3. Propagate: `python tools/translate_with_claude.py` (machine-translates to the 11 AI languages; PL is hand-translated, overrides in `tools/translation_overrides/<lang>.json` always win).
+2. Register it: `python tools/harvest_literal_loc_keys.py --apply` lifts the default out of the literal into `taom_module_strings.xml` (or the feature's own file). Idempotent, so a hand-tuned row survives.
+3. Propagate: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` (machine-translates to the 11 AI languages; PL is hand-translated, overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key** — the translator substitutes by id, so without a seeded row the translation is paid for and discarded.
 
 ## Case B — new SOURCE XML file containing in-game text
 1. Register the file in `SubModule.xml` as `<XmlNode><XmlName id="GameText" path="..."/>`.
@@ -30,7 +30,10 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 - `tools/translation_status.sh` — coverage report.
 
 ## Validate
-`dotnet test TAOM.Tests --filter "LanguageDataXmlTests"` — enforces 8 LanguageFile refs/language, well-formed XML, no missing files. For Case B the test count bump is mandatory or this goes red.
+`dotnet test TAOM.Tests --filter "Infrastructure.Localization"`:
+- `LanguageDataXmlTests` — enforces 11 LanguageFile refs/language (`AllLanguageDirs_HaveExactlyElevenLanguageFiles`), well-formed XML, no missing files. For Case B the count bump is mandatory or this goes red.
+- `LanguageFileCoverageTests` — every key the English source declares has a row in all 12 language files. Red here means you registered but never propagated: run the translator with `--sync-ids`.
+- `UnregisteredLocalizationKeyBaselineTests` — no `{=taom_*}` literal in C# lacks a ModuleData row. Red means you skipped step 2; `python tools/harvest_literal_loc_keys.py --apply` does it.
 
 ## Gotchas
 - Morphologically-rich languages (RU/JP/KO/TR/CN) hit gender-agreement rejections that fall back to English — flag for human polish (no auto-fix).
