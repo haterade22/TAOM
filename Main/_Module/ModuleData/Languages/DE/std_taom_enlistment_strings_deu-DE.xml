@@ -197,6 +197,32 @@
     <string id="taom_enlist_reassign_no_cooldown" text="Ihr habt Eure Abteilung erst kürzlich gewechselt. Fragt in {DAYS} Tagen erneut." />
     <string id="taom_enlist_reassign_no_cooldown_one" text="Ihr habt Eure Abteilung erst kürzlich gewechselt. Fragt morgen erneut." />
     <string id="taom_enlist_reassign_no_generic" text="Ihr könnt Eure Abteilung derzeit nicht wechseln." />
-    <string id="taom_enlist_kit_reclaimed" text="Der Quartiermeister nimmt Eure Dienstausrüstung zurück: {COUNT} Stück." />
+    <string id="taom_enlist_kit_reclaimed" text="Der Quartiermeister nimmt Eure Dienstausrüstung zurück: {COUNT} Stück." />
+    <string id="taom_enlist_duty_recon_sweep_success" text="Ihr reitet die Linie ab und kehrt mit kartiertem Gelände zurück." />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="Euch geht das Licht aus, ehe die Spur ausgeht — Ihr bringt wenig heim." />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="Ihr holt sie ein, bevor sie den Waldrand erreichen." />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="Sie zersprengen ins Bruchland, wohin die Pferde nicht folgen." />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="Das Lager ist kalte Asche, als Ihr es verlasst." />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="Das Lager steht leer und noch warm — sie waren gewarnt." />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="Ihr bringt sie zur Kolonne zurück. Die meisten zu Fuß." />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="Sie kennen das Land besser als Ihr und nutzen es." />
+    <string id="taom_enlist_duty_road_patrol_success" text="Die Straße hinter Euch ist still und bleibt es." />
+    <string id="taom_enlist_duty_road_patrol_failure" text="Ihr reitet die Straße zweimal ab und verfehlt doch, was darauf war." />
+    <string id="taom_enlist_duty_scout_route_success" text="Der Weg voraus ist frei, und Ihr könnt sagen warum." />
+    <string id="taom_enlist_duty_scout_route_failure" text="Ihr kehrt mit Vermutungen zurück. Der Hauptmann wollte Gewissheit." />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="Drei Namen, und zwei davon halten schon einen Speer." />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="Das Dorf hat alle Söhne gegeben, die es zu geben gedenkt." />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="Die Depesche liegt in den rechten Händen und in keinen anderen." />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="Die Depesche kommt spät an, und Ihr könnt nicht schwören, ungelesen." />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="Die Nachricht erreicht sie noch rechtzeitig." />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="Ihr erreicht sie. Die Nachricht war schneller." />
+    <string id="taom_enlist_duty_supply_delivery_success" text="Die Wagen sind leichter und die Vorräte voller." />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="Die halbe Ladung ist verdorben, ehe sie gezählt wird." />
+    <string id="taom_enlist_duty_forage_success" text="Ihr kehrt schwerer zurück, als Ihr aufgebrochen seid." />
+    <string id="taom_enlist_duty_forage_failure" text="Das Land ist abgegrast, und zwar erst kürzlich." />
+    <string id="taom_enlist_duty_hideout_strike_success" text="Sie kamen nie in Ordnung. Im Dunkeln war es vorbei." />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="Der Anmarsch misslingt früh, und Ihr zieht Euch zurück." />
+    <string id="taom_enlist_duty_service_shift_success" text="Eure Wache vergeht ohne Zwischenfall." />
+    <string id="taom_enlist_duty_service_shift_failure" text="Man findet Euch schlafend auf Posten. Es wird vermerkt." />
   </strings>
 </base>

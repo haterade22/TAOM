@@ -197,6 +197,32 @@
     <string id="taom_enlist_reassign_no_cooldown" text="你不久前才换过编制。请在 {DAYS} 天后再问。" />
     <string id="taom_enlist_reassign_no_cooldown_one" text="你不久前才换过编制。明日再问吧。" />
     <string id="taom_enlist_reassign_no_generic" text="你现在无法更换编制。" />
-    <string id="taom_enlist_kit_reclaimed" text="军需官收回你的配发装备：{COUNT} 件。" />
+    <string id="taom_enlist_kit_reclaimed" text="军需官收回你的配发装备：{COUNT} 件。" />
+    <string id="taom_enlist_duty_recon_sweep_success" text="你沿边巡行，带回了这片地形。" />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="天光先于线索而尽，你几乎空手而归。" />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="他们还没到林边，你就追上了。" />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="他们四散进破碎的地形，马跟不进去。" />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="你离开时，营地只剩冷灰。" />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="营地空了，却还是温的——有人报了信。" />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="你把他们带回队列，多数还能自己走。" />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="他们比你更熟这片地，也懂得利用。" />
+    <string id="taom_enlist_duty_road_patrol_success" text="身后的道路安静下来，而且一直安静。" />
+    <string id="taom_enlist_duty_road_patrol_failure" text="你把这条路走了两遍，仍旧漏掉了什么。" />
+    <string id="taom_enlist_duty_scout_route_success" text="前路清净，你还能说出缘由。" />
+    <string id="taom_enlist_duty_scout_route_failure" text="你带回的只是猜测。队长要的是确凿。" />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="三个名字，其中两个已经握得住长矛。" />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="这村子该出的儿郎，已经都出了。" />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="急件送到了该到的手里，再无旁人。" />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="急件迟到了，你也不敢断言它未被拆看。" />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="消息及时传到了。" />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="你到了。消息比你更早到。" />
+    <string id="taom_enlist_duty_supply_delivery_success" text="车轻了，仓满了。" />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="还没清点，半车已经坏了。" />
+    <string id="taom_enlist_duty_forage_success" text="你回来时比出发时更重。" />
+    <string id="taom_enlist_duty_forage_failure" text="这一带被搜刮过，而且就在不久前。" />
+    <string id="taom_enlist_duty_hideout_strike_success" text="他们没来得及列阵。天黑里就结束了。" />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="接近时就出了岔子，你只带着来时的东西退回。" />
+    <string id="taom_enlist_duty_service_shift_success" text="你的这班岗平安无事。" />
+    <string id="taom_enlist_duty_service_shift_failure" text="有人发现你在岗上睡着。此事已记下。" />
   </strings>
 </base>

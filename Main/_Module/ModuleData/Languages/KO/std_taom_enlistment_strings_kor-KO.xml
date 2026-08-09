@@ -197,6 +197,32 @@
     <string id="taom_enlist_reassign_no_cooldown" text="배속을 바꾼 지 얼마 되지 않았다. {DAYS}일 뒤에 다시 청하라." />
     <string id="taom_enlist_reassign_no_cooldown_one" text="배속을 바꾼 지 얼마 되지 않았다. 내일 다시 청하라." />
     <string id="taom_enlist_reassign_no_generic" text="지금은 배속을 바꿀 수 없다." />
-    <string id="taom_enlist_kit_reclaimed" text="보급관이 지급 장비를 회수했다: {COUNT}점." />
+    <string id="taom_enlist_kit_reclaimed" text="보급관이 지급 장비를 회수했다: {COUNT}점." />
+    <string id="taom_enlist_duty_recon_sweep_success" text="전선을 따라 돌며 지형을 파악해 돌아온다." />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="자취보다 빛이 먼저 스러져, 얻은 것이 적다." />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="숲 가장자리에 닿기 전에 따라잡는다." />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="험한 지형으로 흩어지니 말이 따라가지 못한다." />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="자리를 뜰 무렵 진영에는 식은 재만 남는다." />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="진영은 비었고 아직 온기가 있다 — 누군가 알렸다." />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="그들을 대열로 데려온다. 대개는 제 발로." />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="이 땅을 그대보다 잘 알고, 그것을 이용한다." />
+    <string id="taom_enlist_duty_road_patrol_success" text="뒤편의 길은 조용해지고, 계속 조용하다." />
+    <string id="taom_enlist_duty_road_patrol_failure" text="길을 두 번 오갔는데도 무언가를 놓친다." />
+    <string id="taom_enlist_duty_scout_route_success" text="앞길은 트였고, 그 까닭도 말할 수 있다." />
+    <string id="taom_enlist_duty_scout_route_failure" text="짐작만 안고 돌아온다. 지휘관이 원한 것은 확증이었다." />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="이름 셋, 그중 둘은 이미 창을 쥘 줄 안다." />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="마을은 내놓을 아들을 이미 다 내놓았다." />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="전갈은 마땅한 손에 닿았고, 다른 손에는 닿지 않았다." />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="전갈이 늦게 닿았고, 뜯기지 않았다고 장담할 수 없다." />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="소식이 늦지 않게 닿았다." />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="그대가 닿았다. 소식이 먼저 닿아 있었다." />
+    <string id="taom_enlist_duty_supply_delivery_success" text="수레는 가벼워지고 곳간은 채워진다." />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="헤아리기도 전에 짐의 절반이 상했다." />
+    <string id="taom_enlist_duty_forage_success" text="떠날 때보다 무겁게 돌아온다." />
+    <string id="taom_enlist_duty_forage_failure" text="이 일대는 훑렸다. 그것도 얼마 되지 않았다." />
+    <string id="taom_enlist_duty_hideout_strike_success" text="진형을 갖추지도 못했다. 어둠 속에서 끝났다." />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="접근이 일찌감치 어그러져, 가져간 것만 들고 물러난다." />
+    <string id="taom_enlist_duty_service_shift_success" text="그대의 당번은 아무 일 없이 지나간다." />
+    <string id="taom_enlist_duty_service_shift_failure" text="초소에서 잠든 채 발각된다. 기록에 남는다." />
   </strings>
 </base>

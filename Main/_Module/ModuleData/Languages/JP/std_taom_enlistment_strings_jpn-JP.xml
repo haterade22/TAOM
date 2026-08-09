@@ -197,6 +197,32 @@
     <string id="taom_enlist_reassign_no_cooldown" text="配置換えをして日が浅い。{DAYS} 日後にまた申し出よ。" />
     <string id="taom_enlist_reassign_no_cooldown_one" text="配置換えをして日が浅い。明日また申し出よ。" />
     <string id="taom_enlist_reassign_no_generic" text="今は配置を換えられぬ。" />
-    <string id="taom_enlist_kit_reclaimed" text="需品係が支給装備を回収した: {COUNT} 点。" />
+    <string id="taom_enlist_kit_reclaimed" text="需品係が支給装備を回収した: {COUNT} 点。" />
+    <string id="taom_enlist_duty_recon_sweep_success" text="戦線沿いを回り、地勢を把握して戻る。" />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="痕跡より先に日が落ち、得るものは少ない。" />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="林の際に着く前に追いついた。" />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="荒れ地へ散られ、馬では追えぬ。" />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="去るころには、野営は冷えた灰だけだ。" />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="野営はもぬけの殻で、まだ温い——報せが回っていた。" />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="隊へ連れ戻す。多くは自分の足で。" />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="この土地を我らより知り、それを使ってくる。" />
+    <string id="taom_enlist_duty_road_patrol_success" text="背後の街道は静まり、静かなままだ。" />
+    <string id="taom_enlist_duty_road_patrol_failure" text="街道を二度往復して、なお見落とす。" />
+    <string id="taom_enlist_duty_scout_route_success" text="前路は開けており、その理由も言える。" />
+    <string id="taom_enlist_duty_scout_route_failure" text="持ち帰ったのは推測だけ。隊長が求めたのは確証だった。" />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="三人の名、うち二人はすでに槍を握れる。" />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="村はもう、出す気のある倅をすべて出した。" />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="書状は然るべき手に渡り、他の手には触れていない。" />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="書状は遅れて着き、開かれなかったとは誓えぬ。" />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="報せは間に合って届いた。" />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="そなたは着いた。報せの方が先に着いていた。" />
+    <string id="taom_enlist_duty_supply_delivery_success" text="荷車は軽くなり、蔵は満ちた。" />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="数える前に、荷の半分が傷んでいた。" />
+    <string id="taom_enlist_duty_forage_success" text="出たときより重くなって戻る。" />
+    <string id="taom_enlist_duty_forage_failure" text="この一帯は漁られている。しかもごく最近に。" />
+    <string id="taom_enlist_duty_hideout_strike_success" text="陣を組む間もなかった。闇の中で片がついた。" />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="寄せが早々に崩れ、持ち出した分だけで退く。" />
+    <string id="taom_enlist_duty_service_shift_success" text="そなたの当番は何事もなく過ぎた。" />
+    <string id="taom_enlist_duty_service_shift_failure" text="持ち場で眠っているのを見つかった。記録に残る。" />
   </strings>
 </base>

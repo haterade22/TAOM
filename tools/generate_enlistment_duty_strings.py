@@ -67,6 +67,38 @@ FIELD_DUTY_TITLES = {
 }
 
 
+# Field duties resolve OFF-SCREEN now — the player accepts one, a few hours pass, and this toast is
+# the ONLY thing they ever see of it. Generic "It went well." would make thirteen distinct duties
+# read as one. Each line is written to imply the work happened without narrating a scene.
+FIELD_DUTY_RESULTS = {
+    "recon_sweep":        ("You ride the line and come back with the ground mapped.",
+                           "You lose the light before you lose the ground, and come back with little."),
+    "mounted_pursuit":    ("You run them down before they reach the treeline.",
+                           "They scatter into broken country and the horses will not follow."),
+    "bandit_hunt":        ("The camp is cold ash by the time you leave it.",
+                           "You find the camp abandoned, warm — they were warned."),
+    "deserter_sweep":     ("You bring them back to the column. Most of them walking.",
+                           "They know the country better than you do, and use it."),
+    "road_patrol":        ("The road is quiet behind you, and stays quiet.",
+                           "You ride the road twice and still miss whatever was on it."),
+    "scout_route":        ("The way ahead is clear, and you can say why.",
+                           "You come back with guesses. The captain wanted certainties."),
+    "recruitment_errand": ("Three names, and two of them can already hold a spear.",
+                           "The village has given all the sons it intends to."),
+    "trusted_dispatch":   ("The dispatch is in the right hands, and no others.",
+                           "The dispatch arrives late, and you cannot swear it arrived unread."),
+    "relief_dispatch":    ("Word reaches them in time to matter.",
+                           "You reach them. The news reached them first."),
+    "supply_delivery":    ("The wagons are lighter and the stores are fuller.",
+                           "Half the load is spoiled by the time it is counted."),
+    "forage":             ("You come back heavier than you left.",
+                           "The country has been picked over, and recently."),
+    "hideout_strike":     ("They never formed up. It was over in the dark.",
+                           "The approach goes wrong early and you pull back with what you brought."),
+    "service_shift":      ("Your shift passes without incident.",
+                           "You are found asleep at your post. It is noted."),
+}
+
 def xml_escape(text: str) -> str:
     return (text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
                 .replace('"', "&quot;").replace("'", "&#x27;"))
@@ -135,8 +167,19 @@ def build_entries() -> list[tuple[str, str]]:
             + ", ".join(unauthored)
             + "\n       Add them to FIELD_DUTY_TITLES — an unauthored row renders as its raw id in all 12 languages."
         )
+    missing_results = [i for i in field_ids if i not in FIELD_DUTY_RESULTS]
+    if missing_results:
+        sys.exit(
+            "ERROR: field duty rows with no authored success/failure text: "
+            + ", ".join(missing_results)
+            + "\n       Add them to FIELD_DUTY_RESULTS — the toast is the ONLY thing the player"
+            + " sees of a duty now, so an unauthored row ships the generic fallback in 12 languages."
+        )
     for row_id in sorted(field_ids):
         entries.append((f"taom_enlist_duty_{row_id}_title", FIELD_DUTY_TITLES[row_id]))
+        ok, bad = FIELD_DUTY_RESULTS[row_id]
+        entries.append((f"taom_enlist_duty_{row_id}_success", ok))
+        entries.append((f"taom_enlist_duty_{row_id}_failure", bad))
 
     stale = sorted(set(FIELD_DUTY_TITLES) - set(field_ids))
     if stale:

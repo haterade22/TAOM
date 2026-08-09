@@ -197,6 +197,32 @@
     <string id="taom_enlist_reassign_no_cooldown" text="Zbyt niedawno zmieniłeś przydział. Spytaj ponownie za {DAYS} dni." />
     <string id="taom_enlist_reassign_no_cooldown_one" text="Zbyt niedawno zmieniłeś przydział. Spytaj ponownie jutro." />
     <string id="taom_enlist_reassign_no_generic" text="Nie możesz teraz zmienić przydziału." />
-    <string id="taom_enlist_kit_reclaimed" text="Kwatermistrz odbiera twój przydziałowy ekwipunek: {COUNT} szt." />
+    <string id="taom_enlist_kit_reclaimed" text="Kwatermistrz odbiera twój przydziałowy ekwipunek: {COUNT} szt." />
+    <string id="taom_enlist_duty_recon_sweep_success" text="Objeżdżasz rubież i wracasz z rozpoznanym terenem." />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="Tracisz światło, zanim tracisz trop, i wracasz z niczym." />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="Dopadasz ich, nim dosięgną skraju lasu." />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="Rozpierzchają się w bezdroża, a konie tam nie pójdą." />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="Gdy odchodzisz, po obozie zostaje zimny popiół." />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="Obóz zastajesz pusty, jeszcze ciepły — ktoś ich ostrzegł." />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="Sprowadzasz ich do kolumny. Większość o własnych siłach." />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="Znają tę okolicę lepiej niż ty i umieją to wykorzystać." />
+    <string id="taom_enlist_duty_road_patrol_success" text="Trakt za tobą jest cichy i taki pozostaje." />
+    <string id="taom_enlist_duty_road_patrol_failure" text="Przejeżdżasz trakt dwakroć i i tak coś ci umyka." />
+    <string id="taom_enlist_duty_scout_route_success" text="Droga przed wami jest czysta i wiesz dlaczego." />
+    <string id="taom_enlist_duty_scout_route_failure" text="Wracasz z domysłami. Dowódca chciał pewności." />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="Trzy nazwiska, a dwóch już umie trzymać włócznię." />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="Wieś oddała już tylu synów, ilu zamierzała." />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="Depesza trafia we właściwe ręce i w żadne inne." />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="Depesza dociera późno i nie przysięgniesz, że nieczytana." />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="Wieść dociera do nich w porę." />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="Docierasz do nich. Wieść dotarła pierwsza." />
+    <string id="taom_enlist_duty_supply_delivery_success" text="Wozy są lżejsze, a spiżarnie pełniejsze." />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="Połowa ładunku psuje się, nim ktokolwiek go przeliczy." />
+    <string id="taom_enlist_duty_forage_success" text="Wracasz cięższy, niż wyruszyłeś." />
+    <string id="taom_enlist_duty_forage_failure" text="Okolica została ogołocona, i to niedawno." />
+    <string id="taom_enlist_duty_hideout_strike_success" text="Nie zdążyli stanąć w szyku. Skończyło się po ciemku." />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="Podejście psuje się wcześnie i wycofujesz się z tym, co masz." />
+    <string id="taom_enlist_duty_service_shift_success" text="Twoja warta mija bez zdarzeń." />
+    <string id="taom_enlist_duty_service_shift_failure" text="Zastają cię śpiącego na posterunku. Zostaje to odnotowane." />
   </strings>
 </base>

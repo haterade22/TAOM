@@ -197,6 +197,32 @@
     <string id="taom_enlist_reassign_no_cooldown" text="Вы слишком недавно сменили назначение. Спросите снова через {DAYS} дн." />
     <string id="taom_enlist_reassign_no_cooldown_one" text="Вы слишком недавно сменили назначение. Спросите снова завтра." />
     <string id="taom_enlist_reassign_no_generic" text="Сейчас вы не можете сменить назначение." />
-    <string id="taom_enlist_kit_reclaimed" text="Квартирмейстер забирает выданное снаряжение: {COUNT} предм." />
+    <string id="taom_enlist_kit_reclaimed" text="Квартирмейстер забирает выданное снаряжение: {COUNT} предм." />
+    <string id="taom_enlist_duty_recon_sweep_success" text="Вы обходите рубеж и возвращаетесь с описанной местностью." />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="Свет уходит раньше следа, и вы возвращаетесь почти ни с чем." />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="Вы настигаете их прежде, чем они дойдут до опушки." />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="Они рассыпаются по бездорожью, куда кони не пойдут." />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="Когда вы уходите, от лагеря остаётся холодная зола." />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="Лагерь пуст и ещё тёплый — их предупредили." />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="Вы возвращаете их в колонну. Большинство — своими ногами." />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="Они знают эту землю лучше вас и пользуются этим." />
+    <string id="taom_enlist_duty_road_patrol_success" text="Дорога позади тиха и остаётся тихой." />
+    <string id="taom_enlist_duty_road_patrol_failure" text="Вы дважды проезжаете дорогу и всё равно упускаете то, что было на ней." />
+    <string id="taom_enlist_duty_scout_route_success" text="Путь впереди чист, и вы можете сказать почему." />
+    <string id="taom_enlist_duty_scout_route_failure" text="Вы возвращаетесь с догадками. Командиру нужны были точные сведения." />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="Три имени, и двое уже умеют держать копьё." />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="Деревня отдала всех сыновей, каких собиралась." />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="Депеша в нужных руках и ни в каких иных." />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="Депеша приходит поздно, и вы не поклянётесь, что нераспечатанной." />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="Весть доходит до них вовремя." />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="Вы доходите до них. Весть дошла раньше." />
+    <string id="taom_enlist_duty_supply_delivery_success" text="Повозки легче, а закрома полнее." />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="Половина груза портится, прежде чем её успевают счесть." />
+    <string id="taom_enlist_duty_forage_success" text="Вы возвращаетесь тяжелее, чем уходили." />
+    <string id="taom_enlist_duty_forage_failure" text="Округа выбрана дочиста, и совсем недавно." />
+    <string id="taom_enlist_duty_hideout_strike_success" text="Они так и не построились. В темноте всё кончилось." />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="Подход срывается рано, и вы отходите с тем, что принесли." />
+    <string id="taom_enlist_duty_service_shift_success" text="Ваша смена проходит без происшествий." />
+    <string id="taom_enlist_duty_service_shift_failure" text="Вас находят спящим на посту. Это записывают." />
   </strings>
 </base>

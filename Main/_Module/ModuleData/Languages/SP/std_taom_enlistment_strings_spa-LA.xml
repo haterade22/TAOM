@@ -197,6 +197,32 @@
     <string id="taom_enlist_reassign_no_cooldown" text="Cambiaste de sección hace muy poco. Vuelve a pedirlo en {DAYS} días." />
     <string id="taom_enlist_reassign_no_cooldown_one" text="Cambiaste de sección hace muy poco. Vuelve a pedirlo mañana." />
     <string id="taom_enlist_reassign_no_generic" text="No puedes cambiar de sección ahora mismo." />
-    <string id="taom_enlist_kit_reclaimed" text="El intendente recupera tu equipo de servicio: {COUNT} objeto(s)." />
+    <string id="taom_enlist_kit_reclaimed" text="El intendente recupera tu equipo de servicio: {COUNT} objeto(s)." />
+    <string id="taom_enlist_duty_recon_sweep_success" text="Recorres la línea y vuelves con el terreno cartografiado." />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="Pierdes la luz antes que el rastro, y vuelves con poco." />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="Les das alcance antes de que lleguen a la arboleda." />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="Se dispersan por terreno quebrado y los caballos no los siguen." />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="El campamento es ceniza fría cuando lo dejas." />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="Encuentras el campamento vacío y aún tibio: los avisaron." />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="Los devuelves a la columna. La mayoría por su pie." />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="Conocen la tierra mejor que tú, y la usan." />
+    <string id="taom_enlist_duty_road_patrol_success" text="El camino queda tranquilo a tu espalda, y así sigue." />
+    <string id="taom_enlist_duty_road_patrol_failure" text="Recorres el camino dos veces y aun así se te escapa." />
+    <string id="taom_enlist_duty_scout_route_success" text="El paso está despejado, y sabes decir por qué." />
+    <string id="taom_enlist_duty_scout_route_failure" text="Vuelves con conjeturas. El capitán quería certezas." />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="Tres nombres, y dos ya saben sostener una lanza." />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="La aldea ha dado todos los hijos que pensaba dar." />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="El despacho está en las manos debidas, y en ninguna otra." />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="El despacho llega tarde, y no jurarías que llegó cerrado." />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="La noticia les llega a tiempo." />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="Llegas hasta ellos. La noticia llegó antes." />
+    <string id="taom_enlist_duty_supply_delivery_success" text="Los carros van más ligeros y las despensas más llenas." />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="Media carga se echa a perder antes de contarla." />
+    <string id="taom_enlist_duty_forage_success" text="Vuelves más cargado de lo que saliste." />
+    <string id="taom_enlist_duty_forage_failure" text="La tierra ha sido rebuscada, y hace poco." />
+    <string id="taom_enlist_duty_hideout_strike_success" text="Nunca llegaron a formar. Terminó en la oscuridad." />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="La aproximación se tuerce pronto y te retiras con lo que trajiste." />
+    <string id="taom_enlist_duty_service_shift_success" text="Tu guardia pasa sin novedad." />
+    <string id="taom_enlist_duty_service_shift_failure" text="Te encuentran dormido en tu puesto. Queda anotado." />
   </strings>
 </base>

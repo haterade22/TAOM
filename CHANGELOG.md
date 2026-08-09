@@ -45,6 +45,25 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### fix(localization): the 26 duty result toasts existed only in code (#428)
+
+`FieldDutyRuntime` composes its result key at runtime — `"taom_enlist_duty_" + duty.Id + "_success"`
+— so the 13 rows needed 26 registrations that no `{=key}` grep could ever surface. They shipped
+unregistered. `MBTextManager.GetLocalizedText` short-circuits on English and returns the inline
+default, so English looked correct while every other language fell back to it silently.
+
+They are authored per duty rather than generic, because the toast is now the **only** thing the
+player sees of a field duty. A shared "the duty went well" would make thirteen distinct orders
+indistinguishable — and the assignment toast, the result toast and the status board are the whole
+of the feature's visible surface since it stopped sending anyone anywhere.
+
+`generate_enlistment_duty_strings.py` now owns the field-duty family alongside the interactive one
+and **hard-fails on an unauthored row** rather than emitting a placeholder, so adding a 14th duty
+without writing its strings breaks the generator instead of shipping a raw id. That is the same
+failure the `recon_sweep` fix caught in the UI two days ago, moved one step earlier.
+
+217 keys, 12 languages, every file id-identical to English.
+
 ### fix(troops): a Rohan militiaman stops issuing Gondor gloves (#427 root cause)
 
 PR #427 fixed the enlistment roster. The roster is a **generated artifact**, and the generator still

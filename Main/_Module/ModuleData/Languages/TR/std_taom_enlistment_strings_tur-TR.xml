@@ -197,6 +197,32 @@
     <string id="taom_enlist_reassign_no_cooldown" text="Birliğini çok yakın zamanda değiştirdin. {DAYS} gün sonra tekrar sor." />
     <string id="taom_enlist_reassign_no_cooldown_one" text="Birliğini çok yakın zamanda değiştirdin. Yarın tekrar sor." />
     <string id="taom_enlist_reassign_no_generic" text="Şu anda birliğini değiştiremezsin." />
-    <string id="taom_enlist_kit_reclaimed" text="Levazımcı hizmet teçhizatını geri alır: {COUNT} parça." />
+    <string id="taom_enlist_kit_reclaimed" text="Levazımcı hizmet teçhizatını geri alır: {COUNT} parça." />
+    <string id="taom_enlist_duty_recon_sweep_success" text="Hattı boydan boya gezip araziyi çıkararak dönersin." />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="İzi değil ışığı yitirirsin; elin boş sayılır dönersin." />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="Ağaç sınırına varmadan yetişirsin onlara." />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="Bozuk araziye dağılırlar, atlar oraya girmez." />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="Ayrıldığında kamptan geriye soğuk kül kalır." />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="Kampı boş ve hâlâ ılık bulursun — haber verilmiş." />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="Onları kola geri getirirsin. Çoğu kendi ayağıyla." />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="Bu toprakları senden iyi bilirler, ve kullanırlar." />
+    <string id="taom_enlist_duty_road_patrol_success" text="Ardında yol sessizdir, sessiz de kalır." />
+    <string id="taom_enlist_duty_road_patrol_failure" text="Yolu iki kez geçersin, üstündekini yine de kaçırırsın." />
+    <string id="taom_enlist_duty_scout_route_success" text="İleri yol açık, ve nedenini söyleyebilirsin." />
+    <string id="taom_enlist_duty_scout_route_failure" text="Tahminlerle dönersin. Yüzbaşı kesinlik istiyordu." />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="Üç isim, ikisi mızrağı şimdiden tutabiliyor." />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="Köy vermeyi düşündüğü bütün oğulları verdi." />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="Haber doğru ellerde, başka hiçbirinde değil." />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="Haber geç ulaşır, ve okunmadığına yemin edemezsin." />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="Haber onlara vaktinde ulaşır." />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="Onlara ulaşırsın. Haber senden önce ulaşmış." />
+    <string id="taom_enlist_duty_supply_delivery_success" text="Arabalar hafifler, ambarlar dolar." />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="Yükün yarısı sayılmadan bozulur." />
+    <string id="taom_enlist_duty_forage_success" text="Gittiğinden daha yüklü dönersin." />
+    <string id="taom_enlist_duty_forage_failure" text="Bu topraklar taranmış, hem de yakın zamanda." />
+    <string id="taom_enlist_duty_hideout_strike_success" text="Düzen alamadılar bile. Karanlıkta bitti." />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="Yaklaşma erkenden bozulur, getirdiğinle geri çekilirsin." />
+    <string id="taom_enlist_duty_service_shift_success" text="Nöbetin olaysız geçer." />
+    <string id="taom_enlist_duty_service_shift_failure" text="Seni nöbette uyurken bulurlar. Kayda geçer." />
   </strings>
 </base>
