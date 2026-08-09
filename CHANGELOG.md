@@ -45,6 +45,28 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### test(enlistment): pin roster coverage to the culture list too (#431)
+
+The fifth per-culture coverage gap, and the last one without a guard. `EnlistmentRosterResolver`
+falls back to `enlist_default_{rank}` when a commander's culture has no roster — and that fallback
+is tagged `Culture.neutral_culture` while being Rohan militia with Dunland boots. So `abanissa` and
+`shaghana`, 17 lord clans between them, dress their soldiers as Rohan militia. Nothing fails, logs,
+or crashes; you just get the wrong faction's kit.
+
+Keyed on `is_main_culture="true"`, the same predicate `taom_schema.py`'s MISSING_EDUCATION_TEMPLATES
+rule uses, and for the same reason: derived from the data instead of hand-maintained. That is the
+whole point — five systems have now shipped a per-culture gap (careers, narrative options, narrative
+strings, education templates, enlistment rosters) and every one went through a list written before
+the missing culture existed.
+
+Three tests: coverage with documented exceptions, the fallback itself covering all four ranks (the
+resolver returns the REQUESTED rank or null — it does not walk down), and a stale-exception guard
+that also rejects a *partially* authored culture, since a half-finished one is harder to notice than
+an untouched one.
+
+Also asserts the culture parse found something. A coverage test whose source list comes back empty
+passes while checking nothing.
+
 ### test(charactercreation): pin narrative coverage to the culture list itself (#111)
 
 `shaghana` and `abanissa` are selectable in `cultures.json` and have zero options in all four
