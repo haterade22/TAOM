@@ -1348,7 +1348,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.empire_lance_2_t4" />
+                    id="Item.sturgia_lance_1_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.dunland_caerdh_shield_elite_a" />
@@ -2756,7 +2756,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.vlandia_pike_1_t5" />
+                    id="Item.dunland_caerdh_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.dunland_wulf_shield_medium_b" />
@@ -2833,7 +2833,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.thamaskene_pike_t4" />
+                    id="Item.dunland_caerdh_spear_c" />
                 <equipment
                     slot="Item1"
                     id="Item.dunland_wulf_shield_heavy_a" />
@@ -2907,7 +2907,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.fine_pike_t4" />
+                    id="Item.dunland_caerdh_spear_e" />
                 <equipment
                     slot="Item1"
                     id="Item.dunland_wulf_shield_heavy_b" />

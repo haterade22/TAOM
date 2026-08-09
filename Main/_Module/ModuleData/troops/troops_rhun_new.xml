@@ -3649,7 +3649,6 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_harad_glaive_a01" />
-                <equipment slot="Item1" id="Item.battered_kite_shield" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_arch_heavy_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_a" />
@@ -3724,7 +3723,6 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_harad_glaive_a01" />
-                <equipment slot="Item1" id="Item.battered_kite_shield" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_b" />
                 <equipment slot="Item3" id="Item.eastern_javelin_1_t2" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_arch_elite_a" />
@@ -3760,7 +3758,6 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_harad_glaive_a01" />
-                <equipment slot="Item1" id="Item.battered_kite_shield" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_arch_elite_b" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_elite_b" />

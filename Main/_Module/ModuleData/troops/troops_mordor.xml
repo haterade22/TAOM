@@ -2143,21 +2143,21 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+                <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
                 <equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_a1" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
                 <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
                 <equipment slot="Item1" id="Item.sm_mordor_shield_small_b" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b1" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
                 <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a03" />
+                <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
                 <equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_c1" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
@@ -2281,7 +2281,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+                <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
                 <equipment slot="Item1" id="Item.sm_mordor_shield_mid_a" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_heavy_a1" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
@@ -2289,7 +2289,7 @@
                 <equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a04" />
+                <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
                 <equipment slot="Item1" id="Item.sm_mordor_shield_mid_a" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_heavy_b1" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
@@ -2297,7 +2297,7 @@
                 <equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
                 <equipment slot="Item1" id="Item.sm_mordor_shield_mid_a" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_heavy_c1" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
