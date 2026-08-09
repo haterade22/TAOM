@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -8,10 +9,18 @@ using TAOM.Features.Enlistment.Content;
 using TAOM.Features.Enlistment.Content.Domain;
 using TAOM.Features.Enlistment.Domain;
 using TAOM.Features.Enlistment.Duties;
-using TAOM.Features.TroopProgression;
 
 namespace TAOM.Tests.Features.Enlistment.Duties;
 
+/// <summary>
+/// Field duties are camp work: accept one, it occupies a few hours, one skill check decides it.
+///
+/// The tests this file REPLACED pinned the opposite model — travel, spawned hunt targets, and a
+/// detached player. `_attachment.Received(1).RestorePresence()` was among them, which is literally
+/// the call that made a one-man party visible in contested territory and got a live tester captured
+/// 41 seconds into a duty on 2026-08-08. Those assertions were deleted rather than repaired,
+/// because they asserted the defect.
+/// </summary>
 [TestClass]
 public class FieldDutyRuntimeTests
 {
@@ -19,12 +28,10 @@ public class FieldDutyRuntimeTests
     private EnlistmentStore _store = null!;
     private EnlistmentContentStore _contentStore = null!;
     private IEnlistmentContentConfigProvider _config = null!;
-    private IEnlistmentStateMachine _stateMachine = null!;
-    private IServiceAttachmentService _attachment = null!;
-    private IDutyWorldAdapter _world = null!;
-    private ICommanderLordAdapter _commander = null!;
     private IServiceRewardService _rewards = null!;
-    private IRandomProvider _random = null!;
+    private ISkillCheckService _skillCheck = null!;
+    private IHeroSkillXpAdapter _skillXp = null!;
+    private IInquiryAdapter _inquiry = null!;
     private FieldDutyRuntime _runtime = null!;
 
     [TestInitialize]
@@ -34,602 +41,295 @@ public class FieldDutyRuntimeTests
         _store = new EnlistmentStore(_logger);
         _contentStore = new EnlistmentContentStore(_logger);
         _config = Substitute.For<IEnlistmentContentConfigProvider>();
-        _stateMachine = Substitute.For<IEnlistmentStateMachine>();
-        _attachment = Substitute.For<IServiceAttachmentService>();
-        _world = Substitute.For<IDutyWorldAdapter>();
-        _commander = Substitute.For<ICommanderLordAdapter>();
         _rewards = Substitute.For<IServiceRewardService>();
-        _random = Substitute.For<IRandomProvider>();
+        _skillCheck = Substitute.For<ISkillCheckService>();
+        _skillXp = Substitute.For<IHeroSkillXpAdapter>();
+        _inquiry = Substitute.For<IInquiryAdapter>();
 
-        _stateMachine.TryTransition(Arg.Any<EnlistmentState>()).Returns(true);
-        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, settlementId: "town_1"));
+        _runtime = new FieldDutyRuntime(
+            _store, _contentStore, _config, _rewards, _skillCheck, _skillXp, _inquiry, _logger);
 
-        _runtime = new FieldDutyRuntime(_store, _contentStore, _config, _stateMachine, _attachment, _world, _commander, _rewards, _random, _logger);
-
-        MakeEnlisted();
-    }
-
-    private void MakeEnlisted()
-    {
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
         _store.Record.CommanderHeroId = "lord_1_1";
     }
 
     private void ConfigureDuties(params DutyDefinition[] duties)
+        => _config.GetDuties().Returns(new EnlistmentDutiesConfig { FieldDuties = new List<DutyDefinition>(duties) });
+
+    private static DutyDefinition Duty(
+        string id = "recon_sweep", int hours = 6, int difficulty = 55, params string[] skills)
+        => new DutyDefinition
+        {
+            Id = id,
+            DurationHours = hours,
+            Difficulty = difficulty,
+            SupportSkills = new List<string>(skills.Length > 0 ? skills : new[] { "Scouting" }),
+            ReportReward = new RewardSpec { ServiceXp = 45 },
+            FailureReward = new RewardSpec { ServiceXp = 10, Trust = -1 },
+        };
+
+    private void StartAndReachShiftEnd(DutyDefinition duty, bool passes)
     {
-        _config.GetDuties().Returns(new EnlistmentDutiesConfig { FieldDuties = new List<DutyDefinition>(duties) });
+        ConfigureDuties(duty);
+        _skillCheck.Passes(default, default, default, default, default).ReturnsForAnyArgs(passes);
+        Assert.IsTrue(_runtime.Start(duty, 10.0));
+        _runtime.HourlyUpdate(10.0 + duty.DurationHours / 24.0);
     }
-
-    private static DutyDefinition HuntDuty(string id = "recon_sweep") => new DutyDefinition
-    {
-        Id = id,
-        Mechanic = DutyMechanic.HuntSpawnedParty,
-        TargetKind = DutyTargetKind.SpawnedLooterParty,
-        TargetAi = DutyTargetAi.PatrolAnchor,
-        DeadlineDays = 5,
-        ReportReward = new RewardSpec { ServiceXp = 10 },
-    };
-
-    private static DutyDefinition VisitDuty(string id = "road_patrol") => new DutyDefinition
-    {
-        Id = id,
-        Mechanic = DutyMechanic.VisitSettlement,
-        TargetKind = DutyTargetKind.FriendlySettlement,
-        DeadlineDays = 4,
-        ReportReward = new RewardSpec { ServiceXp = 10 },
-    };
-
-    private static DutyDefinition DeliverFoodDuty(string id = "supply_delivery") => new DutyDefinition
-    {
-        Id = id,
-        Mechanic = DutyMechanic.DeliverFood,
-        TargetKind = DutyTargetKind.FriendlySettlement,
-        DeadlineDays = 5,
-        ReportReward = new RewardSpec { ServiceXp = 10 },
-    };
-
-    private static DutyDefinition CollectFoodDuty(string id = "forage") => new DutyDefinition
-    {
-        Id = id,
-        Mechanic = DutyMechanic.CollectFood,
-        TargetKind = DutyTargetKind.FriendlyVillage,
-        DeadlineDays = 4,
-        ReportReward = new RewardSpec { ServiceXp = 10 },
-    };
-
-    private static DutyDefinition WaitDuty(string id = "service_shift") => new DutyDefinition
-    {
-        Id = id,
-        Mechanic = DutyMechanic.WaitHours,
-        TargetKind = DutyTargetKind.None,
-        DeadlineDays = 1,
-        ReportReward = new RewardSpec { ServiceXp = 10 },
-    };
 
     // ---- Start ----
 
     [TestMethod]
-    public void Start_ActiveDutyAlreadyExists_ReturnsFalse()
+    public void Start_SetsTheDutyAndItsShiftEnd()
     {
-        _contentStore.Record.ActiveDutyId = "existing";
+        var duty = Duty(hours: 6);
+        ConfigureDuties(duty);
 
-        var result = _runtime.Start(HuntDuty(), 100.0);
+        Assert.IsTrue(_runtime.Start(duty, 10.0));
 
-        Assert.IsFalse(result);
+        Assert.AreEqual("recon_sweep", _contentStore.Record.ActiveDutyId);
+        Assert.AreEqual(10.0 + 6.0 / 24.0, _contentStore.Record.ShiftEndDay.GetValueOrDefault(), 1e-9);
     }
 
     [TestMethod]
     public void Start_NullDuty_ReturnsFalse()
-    {
-        Assert.IsFalse(_runtime.Start(null, 100.0));
-    }
+        => Assert.IsFalse(_runtime.Start(null, 10.0));
 
     [TestMethod]
-    public void Start_HuntSpawnedParty_SpawnFails_ReturnsFalseAndLeavesRecordClear()
+    public void Start_DutyAlreadyActive_ReturnsFalseAndKeepsTheFirst()
     {
-        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns((string)null);
+        var first = Duty("recon_sweep");
+        ConfigureDuties(first);
+        Assert.IsTrue(_runtime.Start(first, 10.0));
 
-        var result = _runtime.Start(HuntDuty(), 100.0);
-
-        Assert.IsFalse(result);
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void Start_HuntSpawnedParty_CommanderInTheField_AnchorsOnTheNearestSettlement()
-    {
-        // Regression (in-game 2026-08-07): the anchor used CommanderSnapshot.SettlementId, which is
-        // empty whenever the column is marching — i.e. nearly always. Every recon_sweep failed with
-        // "SpawnLooterParty: settlement=''". Hunt duties could only start while the commander sat
-        // inside a town, which is the rarer state.
-        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, settlementId: null));
-        _world.FindNearestFriendlySettlement("lord_1_1").Returns("town_nearby");
-        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("taom_enlist_duty_abc123");
-
-        var result = _runtime.Start(HuntDuty("recon_sweep"), 100.0);
-
-        Assert.IsTrue(result);
-        _world.Received(1).SpawnLooterParty(Arg.Any<string>(), "town_nearby", Arg.Any<bool>());
-    }
-
-    [TestMethod]
-    public void Start_HuntSpawnedParty_CommanderInSettlement_PrefersThatSettlement()
-    {
-        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, settlementId: "town_1"));
-        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("taom_enlist_duty_abc123");
-
-        _runtime.Start(HuntDuty("recon_sweep"), 100.0);
-
-        _world.Received(1).SpawnLooterParty(Arg.Any<string>(), "town_1", Arg.Any<bool>());
-        _world.DidNotReceive().FindNearestFriendlySettlement(Arg.Any<string>());
-    }
-
-    [TestMethod]
-    public void Start_HuntSpawnedParty_NoAnchorAnywhere_FailsWithoutSpawning()
-    {
-        _commander.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(exists: true, settlementId: null));
-        _world.FindNearestFriendlySettlement(Arg.Any<string>()).Returns((string)null);
-
-        var result = _runtime.Start(HuntDuty("recon_sweep"), 100.0);
-
-        Assert.IsFalse(result);
-        _world.DidNotReceive().SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>());
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void Start_HuntSpawnedParty_Success_SetsActiveDutyTransitionsAndRestoresPresence()
-    {
-        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("taom_enlist_duty_abc123");
-
-        var result = _runtime.Start(HuntDuty("recon_sweep"), 100.0);
-
-        Assert.IsTrue(result);
+        Assert.IsFalse(_runtime.Start(Duty("road_patrol"), 10.0));
         Assert.AreEqual("recon_sweep", _contentStore.Record.ActiveDutyId);
-        Assert.AreEqual("taom_enlist_duty_abc123", _contentStore.Record.ActiveDutyTargetPartyId);
-        Assert.AreEqual(105.0, _contentStore.Record.ActiveDutyDeadlineDay);
-        _stateMachine.Received(1).TryTransition(EnlistmentState.EnlistedDetachedOnDuty);
-        _attachment.Received(1).RestorePresence();
     }
 
     [TestMethod]
-    public void Start_TransitionFails_DestroysSpawnedTargetAndReturnsFalse()
+    public void Start_DoesNotTouchPlayerState()
     {
-        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("party_xyz");
-        _stateMachine.TryTransition(EnlistmentState.EnlistedDetachedOnDuty).Returns(false);
+        // The negative property that is the entire reason this model exists. The runtime no longer
+        // holds an attachment service or a state machine at all, so there is nothing it COULD
+        // detach with — asserted here as behaviour, and structurally by
+        // FieldDutyRuntime_HasNoPresenceOrSpawnDependencies below.
+        var duty = Duty();
+        ConfigureDuties(duty);
 
-        var result = _runtime.Start(HuntDuty(), 100.0);
+        _runtime.Start(duty, 10.0);
 
-        Assert.IsFalse(result);
-        _world.Received(1).DestroyParty("party_xyz");
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State,
+            "a field duty must never move the player out of the attached state");
+    }
+
+    // ---- Resolution ----
+
+    [TestMethod]
+    public void HourlyUpdate_BeforeShiftEnd_DoesNothing()
+    {
+        var duty = Duty(hours: 6);
+        ConfigureDuties(duty);
+        _runtime.Start(duty, 10.0);
+
+        _runtime.HourlyUpdate(10.0 + 5.0 / 24.0);
+
+        Assert.IsTrue(_contentStore.Record.HasActiveDuty);
+        _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
+    }
+
+    [TestMethod]
+    public void HourlyUpdate_ShiftEndAndCheckPasses_GrantsSuccessAndCountsIt()
+    {
+        var duty = Duty();
+        StartAndReachShiftEnd(duty, passes: true);
+
+        _rewards.Received(1).Grant(duty.ReportReward, "duty:recon_sweep");
+        Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
+        Assert.AreEqual(0, _contentStore.Record.DutyFailures);
         Assert.IsFalse(_contentStore.Record.HasActiveDuty);
     }
 
     [TestMethod]
-    public void Start_VisitSettlement_NoEligibleSettlement_ReturnsFalse()
+    public void HourlyUpdate_ShiftEndAndCheckFails_GrantsFailureRewardAndCountsIt()
     {
-        _world.FindNearestFriendlySettlement(Arg.Any<string>()).Returns((string)null);
+        var duty = Duty();
+        StartAndReachShiftEnd(duty, passes: false);
 
-        var result = _runtime.Start(VisitDuty(), 100.0);
-
-        Assert.IsFalse(result);
+        _rewards.Received(1).Grant(duty.FailureReward, "duty-failed:recon_sweep");
+        Assert.AreEqual(1, _contentStore.Record.DutyFailures);
+        Assert.AreEqual(0, _contentStore.Record.DutySuccesses);
+        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
     }
 
     [TestMethod]
-    public void Start_VisitSettlement_Success_SetsSettlementTargetNoPartyTarget()
+    public void HourlyUpdate_UsesTheRowsDifficultyAndSkills()
     {
-        _world.FindNearestFriendlySettlement(Arg.Any<string>()).Returns("town_2");
+        _skillXp.GetSkillValue("main_hero", "Tactics").Returns(70);
+        _skillXp.GetSkillValue("main_hero", "Scouting").Returns(40);
+        _contentStore.Record.Trust = 5;
+        _contentStore.Record.Rank = ServiceRank.Veteran;
 
-        var result = _runtime.Start(VisitDuty("road_patrol"), 100.0);
+        var duty = Duty("hideout_strike", hours: 8, difficulty: 76, "Tactics", "Scouting");
+        StartAndReachShiftEnd(duty, passes: true);
 
-        Assert.IsTrue(result);
-        Assert.AreEqual("town_2", _contentStore.Record.ActiveDutySettlementId);
-        Assert.IsNull(_contentStore.Record.ActiveDutyTargetPartyId);
+        _skillCheck.Received(1).Passes(
+            70, 40, 5, (int)ServiceRank.Veteran * SkillCheckService.RankBonusPerLevel, 76);
     }
 
     [TestMethod]
-    public void Start_DeliverFood_SetsFoodRequirement()
+    public void HourlyUpdate_SingleSupportSkill_PassesNullSecondary()
     {
-        _world.FindNearestFriendlySettlement(Arg.Any<string>()).Returns("town_2");
+        _skillXp.GetSkillValue("main_hero", "Scouting").Returns(33);
+        var duty = Duty("recon_sweep", difficulty: 55, skills: "Scouting");
 
-        _runtime.Start(DeliverFoodDuty(), 100.0);
+        StartAndReachShiftEnd(duty, passes: true);
 
-        Assert.AreEqual(6, _contentStore.Record.ActiveDutyFoodRequired);
+        _skillCheck.Received(1).Passes(33, null, Arg.Any<int>(), Arg.Any<int>(), 55);
+    }
+
+    // ---- Hygiene exits ----
+
+    [TestMethod]
+    public void HourlyUpdate_NoLongerEnlisted_CancelsWithoutPayingAnything()
+    {
+        var duty = Duty();
+        ConfigureDuties(duty);
+        _runtime.Start(duty, 10.0);
+        _store.Record.State = EnlistmentState.NotEnlisted;
+
+        _runtime.HourlyUpdate(99.0);
+
+        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
+        _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
     }
 
     [TestMethod]
-    public void Start_CollectFood_UsesFriendlyVillageLookup()
+    public void HourlyUpdate_PlayerCaptive_CancelsAndPaysNothing()
     {
-        _world.FindNearestFriendlyVillage(Arg.Any<string>()).Returns("village_1");
+        // REGRESSION, #428. EnlistmentRecord.IsEnlisted deliberately INCLUDES
+        // EnlistedPlayerCaptive, so the discharge guard above does not catch a prisoner. Without
+        // the explicit captivity check the shift timer keeps running in a dungeon and pays out a
+        // completed duty from captivity.
+        var duty = Duty();
+        ConfigureDuties(duty);
+        _runtime.Start(duty, 10.0);
+        _store.Record.State = EnlistmentState.EnlistedPlayerCaptive;
 
-        var result = _runtime.Start(CollectFoodDuty(), 100.0);
+        _runtime.HourlyUpdate(99.0);
 
-        Assert.IsTrue(result);
-        Assert.AreEqual("village_1", _contentStore.Record.ActiveDutySettlementId);
-        _world.DidNotReceive().FindNearestFriendlySettlement(Arg.Any<string>());
+        Assert.IsFalse(_contentStore.Record.HasActiveDuty, "captivity must cancel, not orphan");
+        _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
+        Assert.AreEqual(0, _contentStore.Record.DutyFailures, "being taken prisoner is not a duty failure");
     }
 
     [TestMethod]
-    public void Start_WaitHours_StaysAttached_NoTransitionAndSetsShiftEnd()
+    public void HourlyUpdate_DutyDefinitionGone_Cancels()
     {
-        var result = _runtime.Start(WaitDuty(), 100.0);
+        var duty = Duty();
+        ConfigureDuties(duty);
+        _runtime.Start(duty, 10.0);
+        ConfigureDuties();
 
-        Assert.IsTrue(result);
-        Assert.AreEqual("service_shift", _contentStore.Record.ActiveDutyId);
-        Assert.IsTrue(_contentStore.Record.ShiftEndDay.HasValue);
-        _stateMachine.DidNotReceive().TryTransition(EnlistmentState.EnlistedDetachedOnDuty);
-        _attachment.DidNotReceive().RestorePresence();
+        _runtime.HourlyUpdate(99.0);
+
+        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
     }
 
     [TestMethod]
-    public void Start_TrustAboveBonusThreshold_AddsDeadlineBonusDays()
+    public void HourlyUpdate_LegacyDutyWithNoShiftEnd_CancelsInsteadOfSticking()
     {
-        _contentStore.Record.Trust = 20;
-        var duty = HuntDuty();
-        duty.TrustBonusThreshold = 10;
-        duty.TrustDeadlineBonusDays = 2;
-        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("party_1");
+        // A save written under the travel model carries ActiveDutyId with no ShiftEndDay. Left
+        // alone it can never satisfy the shift gate, so it would occupy the single duty slot
+        // forever and block every future offer.
+        var duty = Duty();
+        ConfigureDuties(duty);
+        _contentStore.Record.ActiveDutyId = duty.Id;
+        _contentStore.Record.ShiftEndDay = null;
 
-        _runtime.Start(duty, 100.0);
+        _runtime.HourlyUpdate(99.0);
 
-        Assert.AreEqual(107.0, _contentStore.Record.ActiveDutyDeadlineDay); // 100 + 5 (deadline) + 2 (bonus)
+        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
+        _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
+        Assert.AreEqual(0, _contentStore.Record.DutyFailures, "a mechanic change is not the player's failure");
     }
 
     [TestMethod]
-    public void Start_TrustBelowBonusThreshold_NoDeadlineBonus()
+    public void HourlyUpdate_NonFiniteDay_SkipsAndKeepsTheDuty()
     {
-        _contentStore.Record.Trust = 0;
-        var duty = HuntDuty();
-        duty.TrustBonusThreshold = 10;
-        duty.TrustDeadlineBonusDays = 2;
-        _world.SpawnLooterParty(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>()).Returns("party_1");
+        var duty = Duty();
+        ConfigureDuties(duty);
+        _runtime.Start(duty, 10.0);
 
-        _runtime.Start(duty, 100.0);
+        _runtime.HourlyUpdate(double.NaN);
 
-        Assert.AreEqual(105.0, _contentStore.Record.ActiveDutyDeadlineDay);
+        Assert.IsTrue(_contentStore.Record.HasActiveDuty, "a garbage tick must not resolve or destroy the duty");
+        _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
     }
-
-    // ---- HourlyUpdate ----
 
     [TestMethod]
     public void HourlyUpdate_NoActiveDuty_NoOp()
     {
-        _runtime.HourlyUpdate(100.0);
-
+        _runtime.HourlyUpdate(10.0);
         _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
     }
 
     [TestMethod]
-    public void HourlyUpdate_NoLongerEnlisted_CancelsActiveDutyArtifacts()
+    public void CancelActive_ClearsWithoutRewardOrPenalty()
     {
-        ConfigureDuties(HuntDuty("recon_sweep"));
-        _contentStore.Record.ActiveDutyId = "recon_sweep";
-        _contentStore.Record.ActiveDutyTargetPartyId = "party_1";
-        _store.Record.State = EnlistmentState.NotEnlisted;
+        var duty = Duty();
+        ConfigureDuties(duty);
+        _runtime.Start(duty, 10.0);
 
-        _runtime.HourlyUpdate(100.0);
+        _runtime.CancelActive("discharge");
 
-        _world.Received(1).DestroyParty("party_1");
         Assert.IsFalse(_contentStore.Record.HasActiveDuty);
         _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
+        Assert.AreEqual(0, _contentStore.Record.DutyFailures);
     }
 
-    [TestMethod]
-    public void HourlyUpdate_MissingDutyDefinition_CancelsActiveDutyArtifacts()
-    {
-        ConfigureDuties(); // empty pool -> FindDuty returns null
-        _contentStore.Record.ActiveDutyId = "gone_from_config";
-
-        _runtime.HourlyUpdate(100.0);
-
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
+    // ---- Structural guard ----
 
     [TestMethod]
-    public void HourlyUpdate_EnemyContactAltCompletion_CompletesDutyWithReward()
+    public void FieldDutyRuntime_HasNoPresenceOrSpawnDependencies()
     {
-        var duty = HuntDuty("scout_route");
-        duty.AltCompletion = "EnemyContact";
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "scout_route";
-        _contentStore.Record.ActiveDutyDeadlineDay = 200.0; // far from expiry
-        _world.IsEnemyNearPlayer(Arg.Any<float>()).Returns(true);
+        // A behavioural test cannot prove a NEGATIVE about code that no longer has the dependency
+        // — it can only prove today's build does not call it. This reddens if anyone reintroduces
+        // detachment or party spawning, which is the specific regression that would re-expose the
+        // player (#428) and re-open the #375 re-entrancy surface.
+        var src = File.ReadAllText(FromRepoRoot("Main/Features/Enlistment/Duties/FieldDutyRuntime.cs"))
+            .Replace("\r\n", "\n");
 
-        _runtime.HourlyUpdate(100.0);
-
-        _rewards.Received(1).Grant(duty.ReportReward, "duty:scout_route");
-        Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void HourlyUpdate_WaitHoursShiftEnded_CompletesDuty()
-    {
-        var duty = WaitDuty();
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "service_shift";
-        _contentStore.Record.ShiftEndDay = 100.0;
-        _contentStore.Record.ActiveDutyDeadlineDay = 200.0;
-
-        _runtime.HourlyUpdate(100.5);
-
-        Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void HourlyUpdate_WaitHoursShiftNotYetEnded_StaysActive()
-    {
-        var duty = WaitDuty();
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "service_shift";
-        _contentStore.Record.ShiftEndDay = 100.5;
-        _contentStore.Record.ActiveDutyDeadlineDay = 200.0;
-
-        _runtime.HourlyUpdate(100.1);
-
-        Assert.IsTrue(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void HourlyUpdate_DeadlineExpired_FailsDutyAndDestroysTarget()
-    {
-        var duty = HuntDuty("bandit_hunt");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "bandit_hunt";
-        _contentStore.Record.ActiveDutyTargetPartyId = "party_1";
-        _contentStore.Record.ActiveDutyDeadlineDay = 100.0;
-
-        _runtime.HourlyUpdate(100.0);
-
-        _rewards.Received(1).AdjustTrust(-2);
-        Assert.AreEqual(1, _contentStore.Record.DutyFailures);
-        _world.Received(1).DestroyParty("party_1");
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void HourlyUpdate_BeforeDeadlineAndNoAltCompletion_StaysActive()
-    {
-        var duty = HuntDuty("bandit_hunt");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "bandit_hunt";
-        _contentStore.Record.ActiveDutyDeadlineDay = 105.0;
-
-        _runtime.HourlyUpdate(100.0);
-
-        Assert.IsTrue(_contentStore.Record.HasActiveDuty);
-        _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
-    }
-
-    [TestMethod]
-    public void HourlyUpdate_FailWhileDetached_TransitionsBackAndParks()
-    {
-        var duty = HuntDuty("bandit_hunt");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "bandit_hunt";
-        _contentStore.Record.ActiveDutyDeadlineDay = 100.0;
-        _stateMachine.State.Returns(EnlistmentState.EnlistedDetachedOnDuty);
-
-        _runtime.HourlyUpdate(100.0);
-
-        _stateMachine.Received(1).TryTransition(EnlistmentState.EnlistedAttached);
-        _attachment.Received(1).EnsureParked("lord_1_1");
-    }
-
-    // ---- OnTargetPartyDestroyed ----
-
-    [TestMethod]
-    public void OnTargetPartyDestroyed_NoActiveDuty_NoOp()
-    {
-        _runtime.OnTargetPartyDestroyed("party_1");
-
-        _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
-    }
-
-    [TestMethod]
-    public void OnTargetPartyDestroyed_EngineReentersDuringDestroy_GrantsExactlyOnce()
-    {
-        // REGRESSION, #375 — this killed the process in a live session on 2026-08-08.
-        //
-        // The engine raises MobilePartyDestroyed from INSIDE DestroyPartyAction.Apply, before it
-        // deactivates the party (OnMobilePartyDestroyed line 23, RemoveParty line 25). So our own
-        // destroy call re-enters our own handler. While FinishActive cleared the duty record AFTER
-        // destroying, that re-entry found HasActiveDuty still true and ran the whole completion
-        // path again: 7,482 grants in one wall-clock second, ~336k XP and ~450k gold, then an
-        // uncatchable StackOverflowException with no crash report.
-        //
-        // The mock reproduces the engine's ordering exactly — DestroyParty calls the handler back.
-        // Without clear-before-destroy this test does not fail, it hangs the runner until the
-        // stack dies, which is itself the point: this class of bug has no graceful failure.
-        ConfigureDuties(HuntDuty("recon_sweep"));
-        _contentStore.Record.ActiveDutyId = "recon_sweep";
-        _contentStore.Record.ActiveDutyTargetPartyId = "party_1";
-
-        var reentries = 0;
-        _world.When(w => w.DestroyParty("party_1")).Do(_ =>
+        foreach (var banned in new[]
+                 {
+                     "RestorePresence", "IServiceAttachmentService", "ExitSettlementForDuty",
+                     "SpawnLooterParty", "DestroyParty", "IDutyWorldAdapter",
+                     "EnlistedDetachedOnDuty",
+                 })
         {
-            // Bounded so a regression fails the assert instead of overflowing the test host.
-            if (++reentries <= 5)
-                _runtime.OnTargetPartyDestroyed("party_1");
-        });
-
-        _runtime.OnTargetPartyDestroyed("party_1");
-
-        _rewards.Received(1).Grant(Arg.Any<RewardSpec>(), Arg.Any<string>());
-        Assert.AreEqual(1, reentries, "DestroyParty must be called exactly once, not once per re-entry");
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty, "the record must be cleared before the destroy");
+            // Comments legitimately NAME these while explaining why they are gone, so only
+            // executable references count: strip // and /// lines before matching.
+            var code = string.Join("\n", System.Array.FindAll(
+                src.Split('\n'), l => !l.TrimStart().StartsWith("//")));
+            StringAssert.DoesNotMatch(code, new System.Text.RegularExpressions.Regex(
+                System.Text.RegularExpressions.Regex.Escape(banned)),
+                $"FieldDutyRuntime must not reference '{banned}' — field duties are camp work and "
+                + "must never detach the player or spawn a party (#428, #375).");
+        }
     }
 
-    [TestMethod]
-    public void OnTargetPartyDestroyed_NonMatchingPartyId_NoOp()
+    private static string FromRepoRoot(string relPath)
     {
-        ConfigureDuties(HuntDuty("recon_sweep"));
-        _contentStore.Record.ActiveDutyId = "recon_sweep";
-        _contentStore.Record.ActiveDutyTargetPartyId = "party_1";
+        var dir = new DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory);
+        while (dir != null)
+        {
+            // File.Exists too: in a git worktree `.git` is a FILE holding a gitdir: pointer (f1bc6b39).
+            var gitPath = Path.Combine(dir.FullName, ".git");
+            if (Directory.Exists(gitPath) || File.Exists(gitPath))
+                return Path.Combine(dir.FullName, relPath.Replace('/', Path.DirectorySeparatorChar));
+            dir = dir.Parent;
+        }
 
-        _runtime.OnTargetPartyDestroyed("party_other");
-
-        Assert.IsTrue(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void OnTargetPartyDestroyed_MatchingPartyId_CompletesDuty()
-    {
-        var duty = HuntDuty("recon_sweep");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "recon_sweep";
-        _contentStore.Record.ActiveDutyTargetPartyId = "party_1";
-
-        _runtime.OnTargetPartyDestroyed("party_1");
-
-        _rewards.Received(1).Grant(duty.ReportReward, "duty:recon_sweep");
-        Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    // ---- OnSettlementEntered ----
-
-    [TestMethod]
-    public void OnSettlementEntered_NoActiveDuty_NoOp()
-    {
-        _runtime.OnSettlementEntered("town_1", 100.0);
-
-        _rewards.DidNotReceiveWithAnyArgs().Grant(default, default);
-    }
-
-    [TestMethod]
-    public void OnSettlementEntered_NonMatchingSettlementId_NoOp()
-    {
-        ConfigureDuties(VisitDuty("road_patrol"));
-        _contentStore.Record.ActiveDutyId = "road_patrol";
-        _contentStore.Record.ActiveDutySettlementId = "town_1";
-
-        _runtime.OnSettlementEntered("town_2", 100.0);
-
-        Assert.IsTrue(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void OnSettlementEntered_VisitSettlementMechanic_CompletesDuty()
-    {
-        var duty = VisitDuty("road_patrol");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "road_patrol";
-        _contentStore.Record.ActiveDutySettlementId = "town_1";
-
-        _runtime.OnSettlementEntered("town_1", 100.0);
-
-        Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void OnSettlementEntered_DeliverFoodEnoughFood_ConsumesAndCompletes()
-    {
-        var duty = DeliverFoodDuty("supply_delivery");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "supply_delivery";
-        _contentStore.Record.ActiveDutySettlementId = "town_1";
-        _contentStore.Record.ActiveDutyFoodRequired = 6;
-        _world.CountPlayerFood().Returns(10);
-        // Consumption reports what it actually took; completion keys on that, not on the count.
-        _world.ConsumePlayerFood(6).Returns(6);
-
-        _runtime.OnSettlementEntered("town_1", 100.0);
-
-        _world.Received(1).ConsumePlayerFood(6);
-        Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void OnSettlementEntered_DeliverFoodCountLiesAboutDeliverableFood_StaysActive()
-    {
-        // Codex P2-2: the count once included livestock that consumption could never
-        // remove, so the delivery completed for free. Completion now needs real handover.
-        var duty = DeliverFoodDuty("supply_delivery");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "supply_delivery";
-        _contentStore.Record.ActiveDutySettlementId = "town_1";
-        _contentStore.Record.ActiveDutyFoodRequired = 6;
-        _world.CountPlayerFood().Returns(10);
-        _world.ConsumePlayerFood(6).Returns(2);
-
-        _runtime.OnSettlementEntered("town_1", 100.0);
-
-        Assert.AreEqual(0, _contentStore.Record.DutySuccesses);
-        Assert.IsTrue(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void OnSettlementEntered_DeliverFoodNotEnoughFood_StaysActiveNoConsumption()
-    {
-        var duty = DeliverFoodDuty("supply_delivery");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "supply_delivery";
-        _contentStore.Record.ActiveDutySettlementId = "town_1";
-        _contentStore.Record.ActiveDutyFoodRequired = 6;
-        _world.CountPlayerFood().Returns(2);
-
-        _runtime.OnSettlementEntered("town_1", 100.0);
-
-        _world.DidNotReceive().ConsumePlayerFood(Arg.Any<int>());
-        Assert.IsTrue(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void OnSettlementEntered_CollectFoodMechanic_GrantsFoodAndCompletes()
-    {
-        var duty = CollectFoodDuty("forage");
-        ConfigureDuties(duty);
-        _contentStore.Record.ActiveDutyId = "forage";
-        _contentStore.Record.ActiveDutySettlementId = "village_1";
-        _random.Next(7).Returns(3); // bonus = 4 + 3 = 7
-
-        _runtime.OnSettlementEntered("village_1", 100.0);
-
-        _world.Received(1).GrantPlayerFood(13); // 6 base + 7 bonus
-        Assert.AreEqual(1, _contentStore.Record.DutySuccesses);
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    // ---- CancelActive ----
-
-    [TestMethod]
-    public void CancelActive_NoActiveDuty_NoOp()
-    {
-        _runtime.CancelActive("test");
-
-        _world.DidNotReceiveWithAnyArgs().DestroyParty(default);
-    }
-
-    [TestMethod]
-    public void CancelActive_ActiveDutyWithTargetWhileDetached_DestroysTargetAndRestoresAttachment()
-    {
-        _contentStore.Record.ActiveDutyId = "recon_sweep";
-        _contentStore.Record.ActiveDutyTargetPartyId = "party_1";
-        _stateMachine.State.Returns(EnlistmentState.EnlistedDetachedOnDuty);
-
-        _runtime.CancelActive("discharge");
-
-        _world.Received(1).DestroyParty("party_1");
-        _stateMachine.Received(1).TryTransition(EnlistmentState.EnlistedAttached);
-        _attachment.Received(1).EnsureParked("lord_1_1");
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
-    }
-
-    [TestMethod]
-    public void CancelActive_StateNotDetached_DoesNotTouchAttachmentOrStateMachine()
-    {
-        _contentStore.Record.ActiveDutyId = "service_shift"; // WaitHours duty stays attached
-        _stateMachine.State.Returns(EnlistmentState.EnlistedAttached);
-
-        _runtime.CancelActive("discharge");
-
-        _attachment.DidNotReceive().EnsureParked(Arg.Any<string>());
-        _stateMachine.DidNotReceive().TryTransition(EnlistmentState.EnlistedAttached);
-        Assert.IsFalse(_contentStore.Record.HasActiveDuty);
+        throw new System.InvalidOperationException(
+            "repo root (.git) not found from " + System.AppDomain.CurrentDomain.BaseDirectory);
     }
 }

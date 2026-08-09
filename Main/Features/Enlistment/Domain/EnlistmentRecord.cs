@@ -182,10 +182,22 @@ public sealed class EnlistmentRecord
         return true;
     }
 
-    /// <summary>EnlistedBattle and Discharging never persist — both coerce to EnlistedAttached.</summary>
+    /// <summary>
+    /// EnlistedBattle and Discharging never persist — both coerce to EnlistedAttached.
+    ///
+    /// EnlistedDetachedOnDuty joins them as of 2026-08-08, for a different reason: field duties no
+    /// longer detach the player, so nothing can PRODUCE that state any more. It is retired, not
+    /// deleted — the enum member and its numeric value 4 must survive, because a save written
+    /// before the change carries `state=4` and `TryParse` rejects any value that fails
+    /// `Enum.IsDefined`, which would drop the WHOLE core record and silently un-enlist the player.
+    /// Coercing here is the entire state migration: such a save loads as an ordinary attached
+    /// soldier, which is where the reconciler would have put them anyway.
+    /// </summary>
     private static EnlistmentState ToPersistedState(EnlistmentState state)
     {
-        return state == EnlistmentState.EnlistedBattle || state == EnlistmentState.Discharging
+        return state == EnlistmentState.EnlistedBattle
+               || state == EnlistmentState.Discharging
+               || state == EnlistmentState.EnlistedDetachedOnDuty
             ? EnlistmentState.EnlistedAttached
             : state;
     }

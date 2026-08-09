@@ -33,10 +33,6 @@ public interface IDutyOrchestrationService
     /// </summary>
     DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay);
 
-    void OnSettlementEntered(string settlementId, double nowDays);
-
-    void OnMobilePartyDestroyed(string partyId);
-
     /// <summary>Clears any active duty artifact without reward/penalty — call from the discharge consequence.</summary>
     void CancelActiveDuty(string reason);
 }

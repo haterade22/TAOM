@@ -208,41 +208,9 @@ public class DutyOrchestrationServiceTests
 
     // ---- Passthrough wiring ----
 
-    [TestMethod]
-    public void OnSettlementEntered_NotEnlisted_NoOp()
-    {
-        _store.Record.State = EnlistmentState.NotEnlisted;
 
-        _service.OnSettlementEntered("town_1", 100.0);
 
-        _runtime.DidNotReceiveWithAnyArgs().OnSettlementEntered(default, default);
-    }
 
-    [TestMethod]
-    public void OnSettlementEntered_Enlisted_DelegatesToRuntime()
-    {
-        _service.OnSettlementEntered("town_1", 100.0);
-
-        _runtime.Received(1).OnSettlementEntered("town_1", 100.0);
-    }
-
-    [TestMethod]
-    public void OnMobilePartyDestroyed_NotEnlisted_NoOp()
-    {
-        _store.Record.State = EnlistmentState.NotEnlisted;
-
-        _service.OnMobilePartyDestroyed("party_1");
-
-        _runtime.DidNotReceiveWithAnyArgs().OnTargetPartyDestroyed(default);
-    }
-
-    [TestMethod]
-    public void OnMobilePartyDestroyed_Enlisted_DelegatesToRuntime()
-    {
-        _service.OnMobilePartyDestroyed("party_1");
-
-        _runtime.Received(1).OnTargetPartyDestroyed("party_1");
-    }
 
     [TestMethod]
     public void CancelActiveDuty_AlwaysDelegatesToRuntimeRegardlessOfEnlistmentState()

@@ -236,7 +236,7 @@ public class EnlistmentContentConfigProviderTests
     [TestMethod]
     public void GetDuties_UnknownContext_SkipsRowWithWarning()
     {
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"bad_ctx\",\"mechanic\":\"VisitSettlement\",\"targetKind\":\"FriendlySettlement\",\"deadlineDays\":4,\"gates\":{\"requiredContexts\":[\"siegee\"]}}]}");
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"bad_ctx\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"gates\":{\"requiredContexts\":[\"siegee\"]}}]}");
 
         var duties = Provider().GetDuties();
 
@@ -256,19 +256,19 @@ public class EnlistmentContentConfigProviderTests
     public void GetDuties_DuplicateId_SkipsLaterRow()
     {
         WriteDuties("{\"fieldDuties\":[" +
-            "{\"id\":\"road_patrol\",\"mechanic\":\"VisitSettlement\",\"targetKind\":\"FriendlySettlement\",\"deadlineDays\":4}," +
-            "{\"id\":\"road_patrol\",\"mechanic\":\"CollectFood\",\"targetKind\":\"FriendlyVillage\",\"deadlineDays\":5}]}");
+            "{\"id\":\"road_patrol\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"]}," +
+            "{\"id\":\"road_patrol\",\"difficulty\":48,\"durationHours\":4,\"supportSkills\":[\"Steward\"]}]}");
 
         var duties = Provider().GetDuties();
 
         Assert.AreEqual(1, duties.FieldDuties.Count);
-        Assert.AreEqual(DutyMechanic.VisitSettlement, duties.FieldDuties[0].Mechanic);
+        Assert.AreEqual(55, duties.FieldDuties[0].Difficulty, "the FIRST row wins a duplicate id");
     }
 
     [TestMethod]
     public void GetDuties_NegativeReward_SkipsRow()
     {
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"neg\",\"mechanic\":\"VisitSettlement\",\"targetKind\":\"FriendlySettlement\",\"deadlineDays\":4,\"reportReward\":{\"gold\":-5}}]}");
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"neg\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"reportReward\":{\"gold\":-5}}]}");
 
         Assert.AreEqual(0, Provider().GetDuties().FieldDuties.Count);
     }
@@ -276,7 +276,7 @@ public class EnlistmentContentConfigProviderTests
     [TestMethod]
     public void GetDuties_ValidRows_Load()
     {
-        WriteDuties("{\"fieldDuties\":[{\"id\":\"road_patrol\",\"mechanic\":\"VisitSettlement\",\"targetKind\":\"FriendlySettlement\",\"deadlineDays\":4,\"reportReward\":{\"serviceXp\":48,\"gold\":55}}]," +
+        WriteDuties("{\"fieldDuties\":[{\"id\":\"road_patrol\",\"difficulty\":55,\"durationHours\":6,\"supportSkills\":[\"Scouting\"],\"reportReward\":{\"serviceXp\":48,\"gold\":55}}]," +
             "\"incidents\":[{\"id\":\"pay_delay\",\"chance\":0.22,\"effect\":\"ReleaseDeferredPay\",\"optionA\":{\"key\":\"press\",\"skillId\":\"Charm\",\"difficulty\":65},\"optionB\":{\"key\":\"wait\",\"skillId\":\"Steward\",\"difficulty\":50}}]}");
 
         var duties = Provider().GetDuties();

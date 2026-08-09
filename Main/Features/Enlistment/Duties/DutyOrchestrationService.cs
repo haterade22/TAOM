@@ -137,20 +137,6 @@ public class DutyOrchestrationService : IDutyOrchestrationService
         return DutyRequestResult.NoWorkAvailable;
     }
 
-    public void OnSettlementEntered(string settlementId, double nowDays)
-    {
-        if (!_store.Record.IsEnlisted)
-            return;
-        _runtime.OnSettlementEntered(settlementId, nowDays);
-    }
-
-    public void OnMobilePartyDestroyed(string partyId)
-    {
-        if (!_store.Record.IsEnlisted)
-            return;
-        _runtime.OnTargetPartyDestroyed(partyId);
-    }
-
     public void CancelActiveDuty(string reason)
     {
         _runtime.CancelActive(reason);

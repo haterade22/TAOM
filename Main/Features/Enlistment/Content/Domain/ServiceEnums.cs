@@ -18,35 +18,6 @@ public enum ServiceAssignment
     Support = 3,
 }
 
-/// <summary>
-/// The 5 field-duty mechanics. The donor's 13 duty types collapse onto these; per-duty
-/// flavor (briefings, targets, rewards) stays in data rows.
-/// </summary>
-public enum DutyMechanic
-{
-    HuntSpawnedParty = 0,
-    VisitSettlement = 1,
-    DeliverFood = 2,
-    CollectFood = 3,
-    WaitHours = 4,
-}
-
-public enum DutyTargetKind
-{
-    None = 0,
-    SpawnedLooterParty = 1,
-    FriendlySettlement = 2,
-    FriendlyVillage = 3,
-    AllySettlement = 4,
-}
-
-/// <summary>Spawned-hunt AI: MountedPursuit keeps the donor's engage-the-player fiction; the rest patrol.</summary>
-public enum DutyTargetAi
-{
-    PatrolAnchor = 0,
-    EngagePlayer = 1,
-}
-
 /// <summary>Commander-reputation domains (donor's four, enum-typed instead of strings).</summary>
 public enum ReputationDomain
 {

@@ -46,19 +46,24 @@ public sealed class GateSpec
     public int Weight { get; set; } = 1;
 }
 
-/// <summary>One field duty (detached map mission). 13 data rows over 5 mechanics.</summary>
+/// <summary>One field duty: camp work that occupies the player for a few hours and resolves
+/// on a single skill check. 13 data rows. NOT a map mission — the player never detaches.</summary>
 public sealed class DutyDefinition
 {
     public string Id { get; set; } = "";
-    public DutyMechanic Mechanic { get; set; }
-    public DutyTargetKind TargetKind { get; set; }
-    public DutyTargetAi TargetAi { get; set; } = DutyTargetAi.PatrolAnchor;
-    public int DeadlineDays { get; set; } = 4;
-    public int TrustDeadlineBonusDays { get; set; } = 1;
-    public int TrustBonusThreshold { get; set; } = 10;
 
-    /// <summary>Optional alternate completion trigger. Known set: "", "EnemyContact".</summary>
-    public string AltCompletion { get; set; } = "";
+    /// <summary>Target the skill check must beat. Higher is harder; see ISkillCheckService.Passes.</summary>
+    public int Difficulty { get; set; } = 60;
+
+    /// <summary>How long the shift occupies the player, in HOURS. Deliberately not the old
+    /// <c>deadlineDays</c>: that was a TRAVEL budget (service_shift allowed 1 day for a 4-hour
+    /// shift, hideout_strike 6 days), so reusing it would re-create the multi-day wait this
+    /// design removes.</summary>
+    public int DurationHours { get; set; } = 6;
+
+    /// <summary>Paid when the check fails. Same type as the success reward so both flow through
+    /// the one Grant chokepoint; typically a little service XP and a small trust cost.</summary>
+    public RewardSpec FailureReward { get; set; } = new RewardSpec();
 
     public RewardSpec ReportReward { get; set; } = new RewardSpec();
     public GateSpec Gates { get; set; } = new GateSpec();

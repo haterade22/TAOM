@@ -27,10 +27,14 @@ public class EnlistmentDutyBehavior : CampaignBehaviorBase
 
     public override void RegisterEvents()
     {
+        // Two ticks, no completion triggers. Field duties are camp work resolved by a timed skill
+        // check, so nothing outside this behavior can complete one — there is no target party to
+        // destroy and no settlement to arrive at. The SettlementEntered and MobilePartyDestroyed
+        // subscriptions that used to live here went with the travel model (#428); the second was
+        // also the entry point for the #375 stack overflow, and unsubscribing removes that
+        // re-entrancy surface entirely rather than guarding it.
         CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, OnHourlyTick);
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
-        CampaignEvents.SettlementEntered.AddNonSerializedListener(this, OnSettlementEntered);
-        CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
     }
 
     public override void SyncData(IDataStore dataStore) { }
@@ -49,17 +53,4 @@ public class EnlistmentDutyBehavior : CampaignBehaviorBase
         _duties.DailyOfferTick(CampaignTime.Now.ToDays, CampaignTime.Now.CurrentHourInDay);
     }
 
-    private void OnSettlementEntered(MobileParty party, Settlement settlement, Hero hero)
-    {
-        if (!_coopSession.IsAuthority || party != MobileParty.MainParty || settlement == null)
-            return;
-        _duties.OnSettlementEntered(settlement.StringId, CampaignTime.Now.ToDays);
-    }
-
-    private void OnMobilePartyDestroyed(MobileParty party, PartyBase destroyer)
-    {
-        if (!_coopSession.IsAuthority || party == null)
-            return;
-        _duties.OnMobilePartyDestroyed(party.StringId);
-    }
 }

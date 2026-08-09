@@ -26,11 +26,6 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         "siege", "naval", "blockade", "army", "garrison", "march",
     };
 
-    private static readonly HashSet<string> KnownAltCompletions = new HashSet<string>(StringComparer.Ordinal)
-    {
-        "", "EnemyContact",
-    };
-
     private static readonly HashSet<string> KnownIncidentEffects = new HashSet<string>(StringComparer.Ordinal)
     {
         "", "ReleaseDeferredPay",
@@ -322,11 +317,15 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         foreach (var duty in parsed.FieldDuties ?? new List<DutyDefinition>())
         {
             if (RowInvalid(duty?.Id, seenIds, out var reason)
-                || duty.DeadlineDays < 1 && Warn(duty.Id, $"deadlineDays={duty.DeadlineDays} must be >= 1", out reason)
-                || !KnownAltCompletions.Contains(duty.AltCompletion ?? "") && Warn(duty.Id, $"unknown altCompletion '{duty.AltCompletion}'", out reason)
+                || (duty.DurationHours < 1 || duty.DurationHours > 24) && Warn(duty.Id, $"durationHours={duty.DurationHours} must be 1..24", out reason)
+                || (duty.Difficulty < 1 || duty.Difficulty > 200) && Warn(duty.Id, $"difficulty={duty.Difficulty} must be 1..200", out reason)
                 || !RewardValid(duty.ReportReward) && Warn(duty.Id, "negative or unknown-skill reportReward", out reason)
+                || !RewardValid(duty.FailureReward) && Warn(duty.Id, "negative or unknown-skill failureReward", out reason)
                 || !GatesValid(duty.Gates) && Warn(duty.Id, $"unknown context '{FirstUnknownContext(duty.Gates)}' in gates", out reason)
-                || duty.SupportSkills != null && duty.SupportSkills.Any(s => !KnownSkills.Contains(s)) && Warn(duty.Id, $"unknown supportSkill '{duty.SupportSkills.First(s => !KnownSkills.Contains(s))}'", out reason))
+                // A row with no supportSkills would roll against skill 0 forever — silently
+                // unwinnable at any rank. SKIP it rather than ship a duty nobody can pass.
+                || (duty.SupportSkills == null || duty.SupportSkills.Count == 0) && Warn(duty.Id, "supportSkills is empty — the duty would roll against skill 0", out reason)
+                || duty.SupportSkills.Any(s => !KnownSkills.Contains(s)) && Warn(duty.Id, $"unknown supportSkill '{duty.SupportSkills.First(s => !KnownSkills.Contains(s))}'", out reason))
             {
                 _ = reason;
                 continue;

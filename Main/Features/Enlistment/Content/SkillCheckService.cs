@@ -17,6 +17,10 @@ public class SkillCheckService : ISkillCheckService
 {
     public const int RollRange = 51; // 0..50 inclusive
 
+    /// <summary>Check bonus per rank level. Shared by interactive and field duties so the two
+    /// difficulty curves cannot drift apart.</summary>
+    public const int RankBonusPerLevel = 4;
+
     private readonly IRandomProvider _random;
 
     public SkillCheckService(IRandomProvider random)
