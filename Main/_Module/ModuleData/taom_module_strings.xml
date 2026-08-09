@@ -2322,4 +2322,7 @@
 
   <!-- TroopWeight — party-size-limit breakdown label (2026-07-11 count->limit rework) -->
   <string id="taom_troop_weight_size" text="{=taom_troop_weight_size}Heavy troops" />
+	<!-- SpecialResources -->
+	<string id="taom_res_desertion" text="{=taom_res_desertion}{COUNT} elite troops deserted &#8212; your {RESOURCE} are depleted!" />
+
 </strings>

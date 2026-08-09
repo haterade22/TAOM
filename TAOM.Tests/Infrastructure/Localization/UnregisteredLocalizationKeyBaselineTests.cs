@@ -37,9 +37,23 @@ public class UnregisteredLocalizationKeyBaselineTests
     private static string BaselinePath => Path.Combine(RepoRoot, "TAOM.Tests", "Infrastructure",
         "Localization", "unregistered-loc-keys-baseline.txt");
 
-    /// <summary>Matches a TAOM key literal as written in C#: <c>"{=taom_foo}default text"</c>.</summary>
+    /// <summary>
+    /// Matches a whole TAOM key as written in C#, in both forms the codebase uses:
+    /// <c>"{=taom_foo}default"</c> and the interpolated <c>$"{{=taom_foo}}{value} default"</c>.
+    ///
+    /// The doubled-brace form matters: a first version of this scan required a quote immediately
+    /// before <c>{=</c> and therefore missed every interpolated site — including
+    /// <c>taom_res_desertion</c>, which was unregistered and invisible to the very guard written to
+    /// find unregistered keys. Codex caught it (#434).
+    ///
+    /// The trailing <c>\}</c> is load-bearing in the other direction: it excludes keys COMPOSED from
+    /// data (<c>"{=taom_enlist_duty_" + duty.Id + "_title}"</c>), which have no closing brace before
+    /// the quote. Those cannot be resolved statically at all and are guarded per-family instead —
+    /// see <c>NarrativeStringRegistrationTests</c> and
+    /// <c>generate_enlistment_duty_strings.py</c>.
+    /// </summary>
     private static readonly Regex KeyLiteral =
-        new Regex(@"""\{=(taom_[A-Za-z0-9_]*)\}", RegexOptions.Compiled);
+        new Regex(@"\{\{?=(taom_[A-Za-z0-9_]+)\}", RegexOptions.Compiled);
 
     /// <summary>Matches a registered default's own embedded prefix: <c>text="{=taom_foo}Foo"</c>.</summary>
     private static readonly Regex EmbeddedPrefix =

@@ -45,6 +45,46 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### fix(localization): Codex findings on the coverage guards — 1 P1, 1 P2, 3 P3
+
+An independent pass over the four coverage-guard commits. It confirmed the P1 I had already filed
+as #433 (character-creation equipment is the sixth culture-keyed system) and found four things I
+had not.
+
+**The unlocalizable toast.** `SpecialResourcesBehavior:216` baked its runtime values into the
+default text — `$"{{=taom_res_desertion}}{totalDeserted} elite troops deserted…"`. Registering the
+key would not have helped: the row a translator works from has no slot for the number, so no
+translation could ever carry it. Now `{COUNT}` / `{RESOURCE}` with `SetTextVariable`, key registered,
+line struck from the #434 baseline — the first entry to leave it, which is the workflow that list
+exists to drive.
+
+**The scanner missed keys in the form it was written for.** `UnregisteredLocalizationKeyBaselineTests`
+required a quote immediately before `{=`, so it saw `"{=taom_x}"` and skipped every `$"{{=taom_x}}"`
+— including the one live unregistered interpolated key in the tree. The pattern now accepts
+`\{\{?=` while still requiring the closing brace, so genuinely composed keys stay excluded rather
+than being truncated into a bogus key name.
+
+**Two comments claiming things the code did not do** — the same defect class as the duty rework's
+RCA, on work explicitly about that defect class, hours later:
+
+- `NarrativeStringRegistrationTests` excluded `childhood_menu.json` because it is "authored as
+  literal keys, not composed ones." Childhood routes through the same `NarrativeMenuBuilder` as
+  every other menu and its options carry `string_id`s, so its keys are composed like the rest. They
+  happen to be registered, so nothing was broken — but the guard had a hole exactly where its
+  comment promised it did not. Now included; both reasons in the list are now the operative ones.
+- `EnlistmentRosterCultureCoverageTests` said `RankTokens` "mirrors `EnlistmentRosterIds.RankToken`"
+  while hand-copying its current output. Now derived from the enum through the production method,
+  so it cannot drift — plus a companion test that every rank maps to a **distinct** token, because
+  `RankToken`'s `_ => "recruit"` default would let a fifth rank silently wear starting gear and read
+  as covered.
+
+The scope of the narrative test is now stated rather than implied: it guards English registration,
+not the twelve language files, which are 96 rows short on purpose while #432 is open.
+
+Both new guards verified RED before GREEN. Codex also confirmed five claims held, including that
+`ExitSettlementForDuty` has no remaining callers and that the eight excluded enlistment cultures are
+genuinely bandit clans (`is_bandit`/`is_outlaw`), which enlistment gates out via `IsLord`.
+
 ### test(localization): ratchet on unregistered keys — 317 of 567 (#434)
 
 Every `{=taom_*}` literal in `Main/**/*.cs` checked against every `<string id>` row and every

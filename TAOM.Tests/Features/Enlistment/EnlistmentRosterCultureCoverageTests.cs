@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.Enlistment.Equipment;
 
 namespace TAOM.Tests.Features.Enlistment;
 
@@ -34,8 +35,17 @@ public class EnlistmentRosterCultureCoverageTests
         Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..",
             "Main", "_Module", "ModuleData"));
 
-    /// <summary>Mirrors <c>EnlistmentRosterIds.RankToken</c> — every rank needs its own roster.</summary>
-    private static readonly string[] RankTokens = { "recruit", "soldier", "veteran", "sergeant" };
+    /// <summary>
+    /// Derived from production, not copied from it. A hard-coded list here would have carried the
+    /// comment "mirrors <c>EnlistmentRosterIds.RankToken</c>" while being free to drift from it —
+    /// the exact defect this repo has now shipped three times (see
+    /// <c>lessons/testing-qa.md</c>, "a comment is a claim"). Adding a fifth
+    /// <see cref="EnlistmentRank"/> extends the coverage requirement automatically.
+    /// </summary>
+    private static readonly string[] RankTokens =
+        Enum.GetValues(typeof(EnlistmentRank)).Cast<EnlistmentRank>()
+            .Select(EnlistmentRosterIds.RankToken)
+            .ToArray();
 
     /// <summary>
     /// Main cultures knowingly without rosters. Removing an entry is the last step of authoring the
@@ -106,6 +116,26 @@ public class EnlistmentRosterCultureCoverageTests
             + "back to enlist_default_*, which is Rohan militia gear, so the player is silently "
             + "issued another faction's kit (#431). Author these rosters, or document the "
             + "exception:\n  " + string.Join("\n  ", missing));
+    }
+
+    [TestMethod]
+    public void EveryRank_MapsToItsOwnToken()
+    {
+        // RankToken ends in `_ => "recruit"`, so a rank added without a case silently ALIASES the
+        // recruit roster: the new rank looks covered, issues starting gear forever, and no other
+        // test can see it because the id it asks for exists. Deriving RankTokens above from the
+        // enum is not enough on its own — this is the half that makes the derivation meaningful.
+        var ranks = Enum.GetValues(typeof(EnlistmentRank)).Cast<EnlistmentRank>().ToList();
+        var collisions = ranks
+            .GroupBy(EnlistmentRosterIds.RankToken)
+            .Where(g => g.Count() > 1)
+            .Select(g => $"'{g.Key}' <- {string.Join(", ", g)}")
+            .ToList();
+
+        Assert.AreEqual(0, collisions.Count,
+            "Two EnlistmentRank values produce the same roster token, so one silently wears the "
+            + "other's kit. Add the missing case to EnlistmentRosterIds.RankToken:\n  "
+            + string.Join("\n  ", collisions));
     }
 
     [TestMethod]

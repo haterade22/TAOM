@@ -569,3 +569,41 @@ one mechanism.
   deleting a concept, grep its name in COMMENTS as well as code; `WaitHours` and `DetachedOnDuty`
   were both greppable and both left behind in prose describing a model that no longer existed.
 - **Source:** `docs/reviews/rca-duty-autoresolve-2026-08-09.md` (findings 6 and 7), 2026-08-09.
+
+### The comment-as-claim rule fired twice more in the hours after it was written
+
+The entry above records three instances and names the mechanism. Within the same session, on work
+that was *explicitly about* that mechanism, two more shipped — both caught by an independent Codex
+pass, neither by the author:
+
+```csharp
+/// Childhood is deliberately absent: it is culture-agnostic and its options are
+/// authored as literal keys, not composed ones.          // FALSE on the second half
+private static readonly string[] NarrativeMenus = { "parents_menu.json", ... };
+
+/// <summary>Mirrors EnlistmentRosterIds.RankToken — every rank needs its own roster.</summary>
+private static readonly string[] RankTokens = { "recruit", "soldier", "veteran", "sergeant" };
+```
+
+Childhood routes through the same `NarrativeMenuBuilder` as every other menu and its options carry
+`string_id`s, so its keys ARE composed — the guard had a hole precisely where its comment promised
+it did not. (Those keys happened to be registered, so nothing was broken; the *coverage* claim was
+the false one.) And `RankTokens` "mirrors" a production method by being a hand-typed copy of its
+current output, free to drift the moment a fifth rank is added — where `RankToken`'s `_ => "recruit"`
+default would silently alias it.
+
+- **Why missed:** both comments were written while reasoning about the neighbouring code, which
+  feels like having read it. Neither was a guess — they were confident summaries of a mental model,
+  and a mental model is what a comment is a claim *about*. The author has no prompt to re-derive it.
+- **Prevent — the mechanical form of the rule.** When a test's comment claims it mirrors production,
+  **derive it from production instead of asserting the copy is faithful**: `Enum.GetValues(...)
+  .Select(EnlistmentRosterIds.RankToken)` cannot drift, so the claim needs no comment and no reader.
+  When a comment claims something is EXCLUDED for a stated reason, open the code that would include
+  it and check that reason holds — "X is culture-agnostic" and "X's keys are literal" are two
+  different facts, and only one of them was true.
+- **Derivation alone is not enough.** Deriving `RankTokens` from the enum makes the list complete,
+  but a fifth rank falling to `_ => "recruit"` still aliases silently and reads as covered. The
+  companion assertion — every enum value maps to a *distinct* token — is what makes the derivation
+  mean anything.
+- **Source:** Codex pass on the coverage guards, 2026-08-09
+  (`docs/reviews/raw/codex-coverage-guards-2026-08-09.md`, 1 P1 / 1 P2 / 3 P3).

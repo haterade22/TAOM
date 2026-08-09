@@ -276,6 +276,19 @@ while the other sixteen were complete.
   the three forms — and require each one to name its generator or its coverage test. TAOM has four
   such sites; the sweep that found #432 enumerated all four, which is the only way to know a sweep
   is complete rather than a sample. Adding a fifth without an owner should be a review finding.
+- **`$"{{=` is two different bugs wearing one shape, and it is easy to check only the first.** The
+  interpolation may be in the KEY (`$"{{=taom_cc_{StringId}_text}}"` — a composed key, unfindable)
+  or only in the DEFAULT (`$"{{=taom_res_desertion}}{count} troops deserted"` — a literal key, but
+  the runtime value is baked into the template). The second is worse than an unregistered key,
+  because registering it does not help: the row a translator works from has no slot for the number,
+  so **no translation can ever carry it**. Use `SetTextVariable`. Found by Codex 2026-08-09 after I
+  classified that line as "literal key, fine" and moved on (#434).
+- **A scanner written to find unregistered keys can miss them in exactly the form it was written
+  for.** The first version of `UnregisteredLocalizationKeyBaselineTests` required a quote
+  immediately before `{=`, so it saw `"{=taom_x}"` and skipped every `$"{{=taom_x}}"` — including
+  the one live unregistered interpolated key in the tree. The regex must accept `\{\{?=`, and must
+  still require the closing `\}` so that genuinely composed keys are excluded rather than truncated
+  into a bogus key name.
 - **Also:** the two cultures missing here (`goblin`, `mistymountainorcs`) rhyme with `shaghana` /
   `abanissa` missing careers (review #24) and enlistment rosters (#431). **The non-vanilla cultures
   fall out of every coverage sweep**, because they were added after the tables that enumerate

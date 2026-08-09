@@ -212,8 +212,15 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
             if (totalDeserted > 0)
             {
+                // Slots, not interpolation. Baking the count and the resource name into the
+                // DEFAULT text made this string unlocalizable by construction: English reads
+                // correctly (GetLocalizedText short-circuits and returns the inline default), but
+                // the registered row a translator works from has no place to put a number, so no
+                // translation could ever carry it. Found by Codex, 2026-08-09 (#434).
                 MBInformationManager.AddQuickInformation(
-                    new TextObject($"{{=taom_res_desertion}}{totalDeserted} elite troops deserted — your {resource.DisplayName} are depleted!"),
+                    new TextObject("{=taom_res_desertion}{COUNT} elite troops deserted — your {RESOURCE} are depleted!")
+                        .SetTextVariable("COUNT", totalDeserted)
+                        .SetTextVariable("RESOURCE", resource.DisplayName),
                     extraTimeInMs: 3000);
             }
         }

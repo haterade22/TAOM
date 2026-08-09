@@ -26,6 +26,13 @@ namespace TAOM.Tests.Features.CharacterCreation;
 /// narrative rows missing while the other sixteen cultures were complete (2026-08-09). It is the
 /// same defect class the enlistment duty-result toasts hit two days earlier, which is what prompted
 /// the sweep that found this one.
+///
+/// <para><b>Scope: English registration only.</b> This asserts each key has a row in
+/// <c>taom_cc_strings.xml</c> — the id registry and the translator's source. It does NOT check the
+/// twelve <c>Languages/*/std_taom_cc_strings_*.xml</c> files, which are currently 96 rows short
+/// because the translation pass is owed (#432). That gap is deliberate and tracked; asserting
+/// parity here would redden the suite for work that costs API money and needs a decision, and
+/// would say nothing the issue does not already say.</para>
 /// </summary>
 [TestClass]
 public class NarrativeStringRegistrationTests
@@ -35,11 +42,27 @@ public class NarrativeStringRegistrationTests
             "Main", "_Module", "ModuleData"));
 
     /// <summary>
-    /// The menus <c>NarrativeMenuBuilder</c> renders. Childhood is deliberately absent: it is
-    /// culture-agnostic and its options are authored as literal keys, not composed ones.
+    /// Every menu <c>CharacterCreationContentService.RegisterNarrativeMenus</c> hands to
+    /// <c>NarrativeMenuBuilder</c> — which composes both keys unconditionally, for any option it is
+    /// given. That routing is the test for inclusion here, NOT whether the menu is culture-scoped.
+    ///
+    /// An earlier version of this list omitted `childhood_menu.json` with the comment
+    /// "authored as literal keys, not composed ones." That was false: childhood routes through the
+    /// same builder and its six options carry `string_id`s like any other. They happen to be
+    /// registered already, so nothing was broken — but the guard had a hole exactly where its
+    /// comment promised it did not. Caught by an independent Codex pass, which read
+    /// `RegisterNarrativeMenus` instead of trusting the comment.
+    ///
+    /// `career_menu.json` is genuinely out of scope: it goes through `RegisterCareerMenu`, not this
+    /// builder, and its rows carry `career_string_id` rather than `string_id`. Its display text is
+    /// localized through `taom_careers.xml`, where each `display_name` embeds its own `{=key}` — so
+    /// those keys ARE greppable and are not this class of problem.
     /// </summary>
     private static readonly string[] NarrativeMenus =
-        { "parents_menu.json", "youth_menu.json", "education_menu.json", "adulthood_menu.json" };
+    {
+        "parents_menu.json", "childhood_menu.json", "education_menu.json",
+        "youth_menu.json", "adulthood_menu.json",
+    };
 
     private static readonly Regex KeyPrefix = new Regex(@"^\{=[^}]*\}", RegexOptions.Compiled);
 
