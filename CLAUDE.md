@@ -81,6 +81,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | User shares an external repo/article/skill/plugin to evaluate for adoption ("review this repo", "next repo", pastes a GitHub URL or a SKILL.md) | **`/adopt-external`** | None — always. Security-vet first: foreign `.claude/` trees get `python tools/audit_claude_config.py --root <clone> --external` BEFORE porting. |
 | Before `/ship`, after editing hooks / MCP servers / `settings*.json` permissions / CLAUDE.md, or after porting external `.claude/` config | **`/security-scan`** | Skip for routine feature edits. Foreign-skill vetting uses `--root <clone> --external` (see `/adopt-external`). |
 | "audit the whole repo", "what's worth doing / what should we build next", "write a handoff plan for X" | **`/improve`** | Repo-wide / proactive asks only — change-scoped C# review stays with `/deep-review`; build+test gating with `/verify`. |
+| "cut a release", "bump the module version", "ship v2.0.x to players" | **`/release`** | None — always. Downstream of `/ship`, not a substitute: `/ship` closes a feature, `/release` versions + tags a build for players. |
 
 ### Soft suggest (offer, don't auto-invoke)
 
@@ -249,6 +250,17 @@ Use when work can be parallelized. See [agent-teams.md](./docs/ai-includes/agent
 | `Research:` | What was decompiled to inform this change | `Research: DefaultPartyWageModel.GetCharacterWage` |
 | `Save-compat:` | Save file impact | `Save-compat: New field — safe, defaults to 0 on load` |
 
+### Release tags
+
+`Main/_Module/SubModule.xml`'s `<Version>` is what every crash bundle reports as `TaomVersion`, so it
+changes **only** in a release commit — which is then tagged `vX.Y.Z` (annotated, `git tag -a`) and
+pushed. `git push` does NOT push tags; the tag needs its own refspec. Never move a pushed tag.
+
+Five versions players actually ran (`v2.0.11/.12/.14/.16/.17`) appear in no commit on any branch and
+are permanently unresolvable — two crash reports cite `v2.0.12`. `/release` runs the full sequence
+including the #371 Dependencies pairing check; contract + backfill record + the phantom-version list:
+[`docs/reference/release-process.md`](docs/reference/release-process.md).
+
 ### Multi-session git safety (MANDATORY — a rebase can destroy another session's work)
 
 **Commit your work BEFORE any `git pull --rebase`, and never leave an auto-stash unrestored.**
@@ -304,7 +316,7 @@ Full detail (compose examples, dual-build layout, DLL paths, configuration): [`d
 
 ## Hooks
 
-24 hook registrations across 9 events (+ the `/freeze` inline hook). Full catalog (hook → event → purpose):
+25 hook registrations across 9 events (+ the `/freeze` inline hook). Full catalog (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".
@@ -322,6 +334,7 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 | `validate-push.sh` (blocked) | Never retry with `--no-verify` or downgrade to a non-force push silently. Explain the block and ask the user whether to push to a non-protected branch instead. |
 | `block-dangerous-git.sh` (ask) | When it prompts, approve ONLY if you intend to discard uncommitted/unpushed work; otherwise commit or stash first, then proceed. Don't auto-approve. |
 | `check-verification-evidence.sh` | Run the build/test it names (`./build.ps1 -RunTests`) and read the output before claiming the work is done — don't dismiss the reminder. If the build genuinely can't run (env failure), say so explicitly per `environment-failures.md`; don't silently ignore it. |
+| `check-version-tagged.sh` | Tag the release commit (`git tag -a <version>`) and push the tag. Don't dismiss it — an untagged module version can't be resolved from a player's crash report, which is how `v2.0.12` became a dead end. `/release` runs the sequence. |
 
 ## Status Line
 

@@ -4,6 +4,45 @@
 
 ## 2026-08-08
 
+### feat(release): the version in a crash report now resolves to a commit
+
+The repo had two tags, neither a release, and `git describe` read `crafting-tool-v1.0-492-gd9817f89`.
+Meanwhile every crash bundle carries a `TaomVersion` — `IdentityCollector` reads
+`ModuleHelper.GetModuleInfo("TAOM")?.Version`, which is `<Version>` in `Main/_Module/SubModule.xml`.
+That string was the only link between a player's report and our source, and it pointed nowhere.
+
+Reading `SubModule.xml` back at every commit that ever touched it gives the complete set of module
+versions git has seen: `v0.1.0`, `v1.0.0`–`v1.0.3`, `v2.0.0`, `.2`, `.4`, `.5`, `.7`, `.8`, `.9`,
+`.10`, `.13`, `.15`, `.18`. **`v2.0.12` is not among them** — yet two player crash reports in this
+file cite it, the Rhûn notable CTD and the Nan Angren deserters CTD. So do `v2.0.11`, `.14`, `.16`
+and `.17`: builds went out carrying version strings that were set outside git, and those reports
+cannot be pinned to a commit or even to a range.
+
+Eleven `v2.0.x` tags were backfilled at the commit that *introduced* each version — annotated, and
+backdated with `GIT_COMMITTER_DATE` so a tag does not claim to have been cut today. Each was gated on
+reading `<Version>` back out of `SubModule.xml` at that commit before tagging it; all 11 verified and
+pushed. `git describe --tags --match 'v[0-9]*'` now reports against `v2.0.18`. The pre-2.0 line was
+deliberately skipped — no crash report will be triaged against it — and the five phantom versions are
+recorded as unresolvable rather than guessed at, so a future triage falls back to the bundle's
+`TaomDllSha1` instead of inventing a range.
+
+Going forward the contract is one sentence: `<Version>` changes only in a release commit, which is
+tagged and pushed immediately. `/release` runs that sequence and asserts the #371 Dependencies
+pairing — `Dependencies/_Module/SubModule.xml`'s `<Version>` must equal Main's
+`DependedModuleMetadata version=`, or a new TAOM loads against an old Dependencies and every
+character renders in bind pose. `check-version-tagged.sh` reminds at turn end whenever the current
+module version has no tag; one condition catches both a bump committed without a tag and a version
+that never entered git. It is a `Stop` hook, not `PreToolUse`, because the tag can only exist after
+the commit does.
+
+Tag-only by decision — no GitHub Releases page. GitHub serves a source archive per tag anyway, and
+CI cannot build TAOM (the build job is gated on `BANNERLORD_GAME_DIR`, which hosted runners lack).
+
+New: `docs/reference/release-process.md`, `.claude/skills/release/SKILL.md`,
+`.claude/hooks/check-version-tagged.sh`.
+
+Not-tested: the release sequence end-to-end — the next real bump is its first live run.
+
 ### fix(autoresolve): the battle log was recording the consequence of losing as its cause
 
 Schema v6. v5 fixed troop composition by snapshotting rosters at `MapEventStarted`, but left four

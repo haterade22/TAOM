@@ -1,6 +1,6 @@
 # Hooks Catalog
 
-> Every `.claude/hooks/` script -> event -> purpose (24 scripts / 24 registrations across 9 events, plus the `/freeze` skill-inline hook — audited 2026-08-05). Extracted from CLAUDE.md 2026-07-18. Authoring rules: `.claude/rules/hook-authoring.md`. Lifecycle facts: `.claude/rules/harness-facts.md`.
+> Every `.claude/hooks/` script -> event -> purpose (25 scripts / 25 registrations across 9 events, plus the `/freeze` skill-inline hook — audited 2026-08-05, `check-version-tagged.sh` added 2026-08-08). Extracted from CLAUDE.md 2026-07-18. Authoring rules: `.claude/rules/hook-authoring.md`. Lifecycle facts: `.claude/rules/harness-facts.md`.
 
 
 | Hook | Event | Purpose |
@@ -8,6 +8,7 @@
 | `check-build-before-commit.sh` | PreToolUse (Bash) | Blocks `git commit` if build fails |
 | `notify-csharp-edit.sh` | PostToolUse (Edit\|Write) | Logs C# file modifications |
 | `check-changelog-updated.sh` | Stop | Reminds to update CHANGELOG.md when source is dirty. One-shot per streak (`.changelog-reminded` marker, added 2026-08-05); re-arms when CHANGELOG becomes dirty/staged |
+| `check-version-tagged.sh` | Stop | Reminds to tag + push the release when `<Version>` in `Main/_Module/SubModule.xml` has no matching git tag — the version every crash bundle reports as `TaomVersion`. One condition catches both a bump committed without a tag and a version that never entered git (`v2.0.12`). Marker stores the version, so a new untagged bump re-arms. Stop, not PreToolUse: the tag can only exist after the commit. See `docs/reference/release-process.md` |
 | `session-start.sh` | SessionStart | Prints branch, recent commits, CHANGELOG summary on startup. **Also warns loudly on game-version drift** (installed `Version.xml` vs `.claude/pinned-game-version.txt`) → run `/engine-bump`. |
 | `pre-compact.sh` | PreCompact | Dumps modified files list before context compaction |
 | `log-agent.sh` | SubagentStart | Audit logs agent invocations to `.claude/logs/agent-audit.log` |
