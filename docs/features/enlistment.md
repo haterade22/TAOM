@@ -79,6 +79,28 @@ including foreign/corrupt saves.
   `IEnlistmentReconciler.BattleJoinRequested` → `ServiceBattleService.TryJoinCommanderBattle`,
   raised when the commander is in a map event and the player is not. The recovery path covers
   a missed edge (save-load mid-battle, a throw, enlisting into a running fight).
+- **The player has NO battlefield command while enlisted** (#424, PR #426).
+  `EnlistmentBattleRoleMissionBehavior` calls `Team.SetPlayerRole(false, false)` at `AfterStart`
+  when the battle was entered as `EnlistedBattle` and the player does not lead the side;
+  `BattleCommandPolicy` is the pure decision table. Detached-duty fights keep vanilla roles — the
+  player really does lead their own force there.
+
+### Battle-role facts that follow from Army being null (verified 1.4.7 — do not re-derive)
+
+Everything below is a consequence of the SAME null `Army` that `ParkNear`/`RestorePresence` enforce.
+Written down because two of them were re-derived wrongly during PR #426's review.
+
+| Fact | Why |
+|---|---|
+| Without the correction, the enlisted player is the **general** of his side — not merely "not a sergeant" | `IsPlayerSergeant()` needs `Army != null`, so it is false; `SandBoxMissions` passes `!isPlayerSergeant` positionally as `isPlayerGeneral`; `Team.SetPlayerRole` then does `SetControlledByAI(this != PlayerTeam \|\| !IsPlayerGeneral)` across every formation |
+| Neither-general-nor-sergeant is a **supported vanilla state**, not untested ground | `BehaviorComponent.cs:105` branches on exactly `!IsPlayerGeneral && !IsPlayerSergeant && IsPlayerTroopInFormation` — the soldier-receiving-orders path. The correction makes it reachable |
+| The correction cannot be overwritten later | `SetPlayerRole` has exactly one engine call site (`Mission.cs:745`, team creation), and no `AddTeamAI` caller passes `forceNotAIControlled: true` |
+| TAOM's `AfterStart` runs **after** vanilla's role assignment | `AddMissionBehavior` appends; the mission's own controllers enter via `InitializeStartingBehaviors` at construction; TAOM appends during `OnMissionBehaviorInitialize`; `Mission.AfterStart` then iterates the list in order |
+| **The Order-of-Battle screen is unreachable while enlisted, and always was** | `SandboxBattleInitializationModel.CanPlayerSideDeployWithOrderOfBattleAux()` offers deployment only if the player leads the side, owns the besieged settlement, or `IsPlayerSergeant()`. All three are false while enlisted → `DeploymentMissionController` calls `FinishDeployment()` immediately. This predates the correction, which is why its ordering relative to deployment setup does not matter |
+
+Do **not** adopt the reference mod's approach of rigging `GetCharacterSergeantScore`: that score also
+feeds `DefaultEncounterModel.GetLeadingScore → GetLeaderOfMapEvent`, so it changes who leads the
+battle at **campaign** level (sally-out menu, `PlayerEncounter.LeaveBattle`), not just in the mission.
 
 ### Why the player's party is NOT attached to the commander (settled 2026-08-07 — do not re-derive)
 

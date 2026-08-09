@@ -147,7 +147,12 @@ public class FiefHubCampaignBehaviorTests
         {
             var candidate = Path.Combine(new[] { dir }.Concat(relativeParts).ToArray());
             if (File.Exists(candidate))
-                return File.ReadAllText(candidate);
+                // Normalised to LF so the assertions above can hardcode "\n" and still match.
+                // The repo has no .gitattributes and core.autocrlf=true, so a FRESH CLONE checks
+                // these files out with CRLF while a long-lived working tree may still hold LF.
+                // Without this the suite is green in one tree and red on a clean clone — which it
+                // silently was, until a worktree run surfaced it.
+                return File.ReadAllText(candidate).Replace("\r\n", "\n");
             dir = Directory.GetParent(dir)?.FullName;
         }
         return null;

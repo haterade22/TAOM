@@ -16,10 +16,26 @@ namespace TAOM.Features.Enlistment.Hooks;
 ///
 /// Deliberately <c>SetPlayerRole(false, false)</c> — option (a) from #424 — rather than the
 /// SAS sergeant-score rig, which mutates campaign-level battle leadership
-/// (<c>GetCharacterSergeantScore</c> feeds <c>GetLeaderOfMapEvent</c>). Neither-role is not
-/// a state vanilla produces in campaign; the OOB gate was checked for this
-/// (<c>BattleInitializationModel.CanPlayerSideDeployWithOrderOfBattle</c> reads no player-role
-/// flag), and the in-game F1–F8 observation is tracked on #424.
+/// (<c>GetCharacterSergeantScore</c> feeds <c>GetLeaderOfMapEvent</c>).
+///
+/// NEITHER-ROLE IS A SUPPORTED VANILLA STATE, not untested ground. <c>BehaviorComponent</c>
+/// (v1.4.7, <c>:105</c>) branches on exactly it:
+/// <c>if (!Team.IsPlayerGeneral &amp;&amp; !Team.IsPlayerSergeant &amp;&amp; Formation.IsPlayerTroopInFormation
+/// &amp;&amp; Mission.Current.MainAgent != null)</c> — the "player is a soldier inside a formation
+/// receiving orders" path. That branch is what this correction makes reachable, and it is the
+/// enlistment fantasy stated in engine code.
+///
+/// ORDER OF BATTLE is unaffected, but NOT for the reason first written here (the original
+/// comment claimed the model "reads no player-role flag" — it reads one). The real mechanism,
+/// from <c>SandboxBattleInitializationModel.CanPlayerSideDeployWithOrderOfBattleAux()</c>:
+/// deployment is offered only if the player leads the side, owns the besieged settlement, or
+/// <c>playerMapEvent.IsPlayerSergeant()</c>. For an enlisted player all three are false — the
+/// commander leads, and IsPlayerSergeant is false because Army is null — so the model returns
+/// false and <c>DeploymentMissionController</c> calls <c>FinishDeployment()</c> immediately.
+/// The OOB screen was ALREADY unreachable while enlisted, before this class existed, which is
+/// why the ordering question (does this AfterStart beat deployment setup?) does not arise.
+///
+/// The in-game F1–F8 observation is still owed and tracked on #424.
 /// </summary>
 public class EnlistmentBattleRoleMissionBehavior : MissionLogic
 {
@@ -49,8 +65,8 @@ public class EnlistmentBattleRoleMissionBehavior : MissionLogic
         if (mapEvent == null)
             return;
 
-        var playerLeads = mapEvent.GetLeaderParty(mapEvent.PlayerSide) == PartyBase.MainParty;
-        if (!BattleCommandPolicy.ShouldStripPlayerCommand(_query.State, playerLeads))
+        var sideLeader = mapEvent.GetLeaderParty(mapEvent.PlayerSide);
+        if (!BattleCommandPolicy.ShouldStripPlayerCommand(_query.State, sideLeader == PartyBase.MainParty))
             return;
 
         var team = Mission?.PlayerTeam;
@@ -61,6 +77,6 @@ public class EnlistmentBattleRoleMissionBehavior : MissionLogic
         _applied = true;
         _logger?.LogInfo(
             $"[Enlistment] battle command stripped at {site} — enlisted soldier, side led by " +
-            $"'{mapEvent.GetLeaderParty(mapEvent.PlayerSide)?.Id ?? "unknown"}' (#424)");
+            $"'{sideLeader?.Id ?? "unknown"}' (#424)");
     }
 }
