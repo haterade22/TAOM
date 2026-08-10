@@ -1,10 +1,17 @@
 # Field Commission (Battlefield Promotions)
 
-> **STATUS: CODE-COMPLETE AND WIRED, AWAITING IN-GAME VERIFICATION** (#376, committed in
-> `b1852a7a`). Registered in `Main/IoC.cs` (after Enlistment — the `NullEnlistmentStateQuery`
-> fallback uses `IfAlreadyRegistered.Keep`, so the real query must already be in the container)
-> and in `Main/SubModule.cs` (campaign behaviour + `FieldCommissionMissionLogic` in the
-> unconditional `AddTaomBehavior` block). Nothing has run in a live game. Reviews:
+> **STATUS: SHIPPED TO PLAYERS, STILL AWAITING IN-GAME VERIFICATION** (#376). Registered in
+> `Main/IoC.cs` (after Enlistment — the `NullEnlistmentStateQuery` fallback uses
+> `IfAlreadyRegistered.Keep`, so the real query must already be in the container) and in
+> `Main/SubModule.cs` (campaign behaviour + `FieldCommissionMissionLogic` in the unconditional
+> `AddTaomBehavior` block).
+>
+> **Nothing here has ever run in a live game** — and it reached players in that state, which is how
+> #415 (promoted companions reported un-interactable) arrived. Treat every behavioural claim below as
+> code-verified, not play-verified.
+>
+> Commits: `b1852a7a` (build + wiring) → `5fa48f95` (15 defects, MCM group, diagnostics) →
+> `14160f0a` (promotion bar raised). Reviews: `docs/reviews/rca-field-commission-2026-08-07.md`,
 > `docs/reviews/rca-enlistment-content-2026-08-05.md`.
 
 ## Overview
@@ -249,7 +256,7 @@ literal, and those two must describe the same game.
 - `TAOM.Tests/Features/FieldCommission/NullEnlistmentStateQueryTests.cs` — null-object contract.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionBindingTests.cs` (`TestCategory=BindingVerification`) — every TaleWorlds signature this feature depends on, most load-bearing being the `TextInquiryData` 12-parameter ctor order (bug fix (b)).
 
-**152 tests total, all passing** (`dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~FieldCommission"` → `Passed! - Failed: 0, Passed: 152, Skipped: 0, Total: 152`).
+**154 tests total, all passing** (`dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~FieldCommission"` → `Passed! - Failed: 0, Passed: 154, Skipped: 0, Total: 154`).
 
 **Deliberately untested:** the three guards at the top of `FieldCommissionBehavior.OnTick`
 (co-op authority / enlisted / master toggle; `PlayerEncounter.Current` and `MapEvent.PlayerMapEvent`;
@@ -285,11 +292,27 @@ ever fielded — not a concern at any realistic party size.
   Registering the four `LordConversations` prefixes of the sibling Enlistment feature also
   required dispositions in `CoopVetoClassificationTests` — that suite fails the build on any
   skip-original prefix with no recorded co-op stance, and it caught them.
+- 2026-08-07 — **15 defects fixed** (`5fa48f95`) after a player report of un-interactable promoted
+  companions (#415). A 28-agent adversarial pass plus an independent Codex pass could **not**
+  reproduce the reported symptoms and disproved the attractive hypotheses; what they did find was an
+  uncapped prompt storm, an offer queue that outlived its campaign, a promotion that could create a
+  companion with no soldier consumed, a promoted-hero list that emptied itself on every load, and a
+  decline that recorded nothing. Four of the fifteen were introduced by the fix pass and caught by
+  review. Shipped alongside: the **MCM "Battlefield Promotions" group** and the `[FieldCommission]`
+  diagnostics trace. Full write-up: `docs/reviews/rca-field-commission-2026-08-07.md`.
+- 2026-08-08 — **Promotion bar raised** (`14160f0a`): `meritThreshold` 8 → 32,
+  `maxOffersPerBattle` 1 → 2. Promotions were landing too easily because merit pools per troop TYPE
+  rather than per soldier. See "Current Values" for what this does and does not fix.
 
 ## GitHub Issue
 
-- **Issue:** #376 — Battlefield Promotions (Field Commission native rewrite)
-- **Status:** Open (code complete + wired; in-game smoke and `/localize` for the 13 strings pending)
+- **#376** — Battlefield Promotions (Field Commission native rewrite). **Open**: code complete,
+  wired and shipped; in-game verification still owed.
+- **#415** — promoted companions reported with no dialogue / crash on interaction. **Open**: the
+  symptoms were **not** reproduced and remain unexplained. Reproduce with **Promotion Diagnostics**
+  on and attach the log.
+- **#418** — `/localize` for the 10 `taom_fc_*` strings (with #375's 66 enlistment keys, 76 total).
+  **Open**, blocked on `ANTHROPIC_API_KEY` not being set in the build environment.
 
 ---
 

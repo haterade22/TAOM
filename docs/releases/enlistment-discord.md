@@ -76,7 +76,7 @@ Duties are data rows — flavour, gates, deadline and rewards all live in JSON, 
 
 ```jsonc
 // field_commission_config.json
-{ "ratioThreshold": 1.3, "meritThreshold": 8, "allowedRaceNames": ["human", "dwarf", "elf"] }
+{ "ratioThreshold": 1.3, "meritThreshold": 32, "maxOffersPerBattle": 2, "allowedRaceNames": ["human", "dwarf", "elf"] }
 ```
 
 To regenerate the service armour after a troop-tree change:
@@ -85,7 +85,9 @@ To regenerate the service armour after a troop-tree change:
 Testing promotions without grinding out battles — two dev-console commands:
 `taom.fc_grant_merit [troopId] [amount]` and `taom.fc_status`.
 
-> **Caveats, plainly.** Config is cached for the whole process — retuning needs a **full game restart**, not a save-load. The in-camp duty prompts (titles and body text) are still **hardcoded in C#**, so the JSON controls a duty's gates, deadline and rewards but not its wording. Khand and Lothlórien have no per-culture kit yet and draw the neutral set. **Neither feature has MCM sliders yet:** Battlefield Promotions can at least be switched off with `"enabled": false` in its JSON, but **Enlistment currently has no off switch at all** — it's always registered.
+> **Caveats, plainly.** JSON config is cached for the whole process — retuning the **JSON** needs a **full game restart**, not a save-load. The MCM sliders do not: they are re-read on every access. The in-camp duty prompts (titles and body text) are still **hardcoded in C#**, so the JSON controls a duty's gates, deadline and rewards but not its wording. Khand and Lothlórien have no per-culture kit yet and draw the neutral set.
+
+> **Both features now have MCM controls.** Mod Options → **Enlistment** has an off switch (turning it off mid-service discharges you honourably rather than stranding you), and → **Battlefield Promotions** has a master toggle plus offers-per-battle, fair-fight ratio, merit per kill, merit to promote, companions-over-the-limit, and a diagnostics switch. Off is inert and reversible — banked merit stays in the save and companions you already promoted are untouched.
 
 ---
 

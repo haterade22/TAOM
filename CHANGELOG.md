@@ -600,6 +600,29 @@ the question that mattered for a generated file.
 
 ## 2026-08-08
 
+### docs(fieldcommission): bring the feature's documentation up to what the code now does
+
+Four docs had drifted, and two of them were telling players something false.
+
+`releases/enlistment-discord.md` — the player-facing announcement — still quoted
+`"meritThreshold": 8` and closed with *"Neither feature has MCM sliders yet ... Enlistment currently
+has no off switch at all."* Both were true when written and neither is now: Enlistment has had an off
+switch since it shipped, and Battlefield Promotions has a seven-control MCM group.
+
+`features/field-commission.md`'s status banner still pointed at the build commit and read as though
+nothing had happened since. It now names the three commits, records the 15-defect pass and the bar
+raise in its changelog section, lists #415 and #418 alongside #376, and carries the corrected test
+count. The one claim left deliberately unsoftened is that **nothing here has ever run in a live
+game** — that is still true, it is how the feature reached players in the state #415 reports, and the
+banner now says so in those words.
+
+`reference/doc-lookup.md` routes on the need "debug battlefield promotions" and had no answer for it;
+it now names the diagnostics toggle and `taom.fc_status`. `INDEX.md` gained the MCM group and the
+same never-play-tested caveat.
+
+Left alone on purpose: the dated handoff and issue-triage notes, the RCA, and the raw review
+archives. Those record a moment and retconning them would destroy the record.
+
 ### balance(fieldcommission): raise the promotion bar — 8 merit was under a kill each
 
 Promotions were landing too easily. The number was the visible cause; the structure underneath it is
