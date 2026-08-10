@@ -1,12 +1,18 @@
 # Enlistment — serve as a soldier in a lord's party
 
-> **STATUS: FEATURE-COMPLETE, AWAITING IN-GAME VERIFICATION** (#375; commits `25a3340c` →
-> `b1852a7a` → `554b6993` → `d905cb36` → `6557a202`). Core, dialogs, content systems, duties
-> and equipment are built and unit-tested. Nothing has run in a live game — the checklist at
-> the bottom is the remaining gate, along with `/localize` for the 36 English keys in
-> `taom_enlistment_strings.xml`. Reviews: two internal `/deep-review` cycles plus an
-> independent Codex pass (`docs/reviews/rca-enlistment-core-2026-08-04.md`,
-> `docs/reviews/rca-enlistment-content-2026-08-05.md`).
+> **STATUS: SHIPPED AND FIELD-VERIFIED** (#375 closed 2026-08-09). A live session that day exercised
+> oath, parking, ten battle joins on both sides, two field duties, a promotion, a camp incident,
+> battle merit, rations and the morale floor, and a commander-loss grace — **one `[ERROR]` line in
+> 3,452, and that one was a mislabelled diagnostic** since downgraded. 225 localization keys, all 12
+> languages id-identical to English.
+>
+> **Not exercised in game:** discharge (any reason), player captivity, the commander-loss modal, the
+> contract waiver, and the formation placement. Those are the remaining gates, tracked on their own
+> issues rather than here.
+>
+> Reviews: three `/deep-review` cycles and three independent Codex passes. RCAs:
+> `rca-enlistment-core-2026-08-04.md`, `rca-enlistment-content-2026-08-05.md`,
+> `rca-enlistment-survivors-2026-08-08.md`, `rca-duty-autoresolve-2026-08-09.md`.
 
 **Issue:** #375 · **Donor (reference only, never installed):**
 `C:\Users\mikew\Downloads\TAOM-Enlistment-Promoted-Source\` (Realms Forgotten RF_Enlistment)
@@ -84,6 +90,50 @@ including foreign/corrupt saves.
   when the battle was entered as `EnlistedBattle` and the player does not lead the side;
   `BattleCommandPolicy` is the pure decision table. Detached-duty fights keep vanilla roles — the
   player really does lead their own force there.
+
+### Standing in the line — and why the soldier is still standing alone (#441, #442, #443)
+
+`EnlistmentBattleFormationMissionBehavior` assigns the enlisted player's agent, at `OnAgentBuild`, to
+the formation matching their `ServiceAssignment` (`BattleFormationPolicy`: Infantry → Infantry,
+Archer → Ranged, Cavalry → Cavalry, **Support deliberately unmapped** — the rear-echelon fantasy has
+no line to stand in), and repositions them onto it when that formation already has non-player units
+and a valid order position. It shares the #424 gate via `BattleCommandPolicy.ShouldStripPlayerCommand`
+so the two corrections cannot gate apart.
+
+**Two corrections to how this was originally described, both verified against 1.4.7:**
+
+1. **It relocates `IsPlayerTroopInFormation`; it does not deliver it.** `Agent.Build` already assigns
+   `Formation = agentBuildData?.AgentFormation` (`Agent.cs:5173`), and `Mission.SpawnAgent` calls
+   `BuildAgent` **before** the `OnAgentBuild` dispatch loop (`Mission.cs:4348` then `:4360`). The
+   player was always in a formation and the flag was always true. What this actually buys is the
+   formation matching the assignment the player *chose* rather than their equipment. (The mechanism
+   itself checks out: the `Agent.Formation` setter routes through `Formation.AddUnit` at
+   `Agent.cs:1143`, and `AddUnit` sets the flag at `Formation.cs:2117-2119`.)
+2. **`BehaviorComponent:105` has FOUR conjuncts, not two** — `!IsPlayerGeneral && !IsPlayerSergeant &&
+   IsPlayerTroopInFormation && Mission.Current.MainAgent != null` — and the branch is a two-second
+   `AddQuickInformation` toast, not an orders pipeline.
+
+**The formation has nobody else in it — #443, open.** `Mission.GetAgentTeam` (`Mission.cs:5183-5189`)
+routes a party to `PlayerTeam` when `IsUnderPlayersCommand || IsInSameArmyAsPlayer`, else to
+`PlayerAllyTeam`. The player's own party takes the first arm; the commander's party takes neither,
+because enlistment keeps `MainParty.Army` permanently null. And the ally team **is** created, for a
+reason that falls straight out of #424: `MissionCombatantsLogic.SupportsAllyTeamOnPlayerSide:271`
+short-circuits its same-general filter when `isPlayerSergeant` is false, which it structurally is.
+
+So the soldier joins a formation on his own one-man team and is manoeuvred by that team's own
+`TeamAIGeneral`. This is consistent with the #424 field test — "F1–F8 dead and the AI fought the
+line" — because the line being fought was the **ally** team's. The two findings agree; #443 carries
+the design call (look the formation up on `PlayerAllyTeam`, or give the enlisted player a non-null
+`Army`, which TAOM deliberately clears in both `ParkNear` and `RestorePresence`).
+
+**Hardening applied post-merge** (`ab5d3cfe`): a try/catch, because `Mission.SpawnAgent` dispatches
+`OnAgentBuild` in a bare `foreach` (`Mission.cs:4357-4360`) and a throw there aborts the whole spawn
+wave and skips every later TAOM behavior for that agent; a finiteness gate on the teleport target,
+since `OrderPositionIsValid` checks only the 2D position and the scene pointer while the Z comes from
+`GetGroundZ()`, which returns NaN when it cannot validate; `CountOfDetachableNonPlayerUnits` instead
+of `CountOfUnits`, which counts the player himself so a formation of one read as a line to join; and
+removal of a dead `?? Mission.PlayerTeam` fallback that would have placed the agent on a team he is
+not on.
 
 ### Battle-role facts that follow from Army being null (verified 1.4.7 — do not re-derive)
 
@@ -675,18 +725,36 @@ the conversation encounter being closed at swear-in. Log lines that prove each:
 `joined commander battle on side …`, `closed the enlistment conversation's PlayerEncounter`,
 `service wait menu re-opened after …`.
 
-**Still owed (in-game gates that have NOT run):**
-A field battle with the commander **in an army** — the one case that could still fail, because
-`FindCommanderPartyIdIn` matches only the commander's own party in `InvolvedParties`, and an
-attached army member may not appear there. **Leaving service and immediately clicking a lord** —
-the save-breaker fix is written but never exercised; the line that would indict it is
-`DISCHARGE(…) LEFT THE PLAYER UNABLE TO START ENCOUNTERS`. **Save-load mid-service, then a
-battle.** Also: SetNextMenu timing vs EncounterGameMenuBehavior; camera
-handoff; captivity entry/exit mid-service; food/wage/morale ticks for the inactive
-MainParty; save-load inside the wait menu; TimeAcceleration interplay; the duty
-spawn→hunt→complete loop and its target-party cleanup; equipment visuals per race
-(erebor, goblin, the four orc cultures); promotion/merit/incident popups; and the
-FieldCommission offer flow with enlisted suppression.
+**Still owed (in-game gates that have NOT run) — rewritten 2026-08-09 after the live session.**
+
+Struck from this list because the 2026-08-09 session exercised them: **battle joins** (ten, both
+sides, four via `MapEventStarted` and six via the hourly recovery), **field duties** (two, one passed
+one failed), **promotion** (to Soldier on day 7), **a camp incident** (`short_rations`), **battle
+merit** banding, and the **food/wage/morale ticks for the inactive MainParty** (rations topped twice,
+morale lifted to the floor). Also struck: *the duty spawn→hunt→complete loop and its target-party
+cleanup* — **that model no longer exists.** Duties never spawn or destroy anything (#428).
+
+What actually remains, each a state no test can reach:
+
+- **Discharge, any reason.** Zero occurrences in the live log. The save-breaker fix is written and
+  never exercised; the line that would indict it is
+  `DISCHARGE(…) LEFT THE PLAYER UNABLE TO START ENCOUNTERS`. Leaving service and immediately
+  clicking a lord is the sharpest version.
+- **Player captivity mid-service** — entry and exit. Every captivity guard across the reconciler, the
+  duty runtime and the grace freeze is unit-tested only. The duty guard's proof line is
+  `duty '<id>' cancelled (captive)`.
+- **The commander-loss modal, the contract waiver, and the wage/promotion gate.** All written
+  2026-08-09, none seen. The live session reached `CommanderUnavailable` but before the modal existed.
+- **Formation placement (#443).** The sharpest case is an **Archer** assignment while carrying a melee
+  kit — if the player stands alone behind the ally line rather than among archers, #443 is confirmed
+  visually.
+- **A field battle with the commander in an army.** Still the case most likely to fail:
+  `FindCommanderPartyIdIn` matches only the commander's own party in `InvolvedParties`, and an
+  attached army member may not appear there.
+- **Save-load mid-service, then a battle**, and save-load inside the wait menu.
+- Remaining smaller unknowns: SetNextMenu timing vs `EncounterGameMenuBehavior`; camera handoff;
+  TimeAcceleration interplay; equipment visuals per race (erebor, goblin, the four orc cultures); and
+  the FieldCommission offer flow with enlisted suppression.
 
 ---
 

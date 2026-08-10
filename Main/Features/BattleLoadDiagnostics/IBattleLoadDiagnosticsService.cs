@@ -88,11 +88,17 @@ public interface IBattleLoadDiagnosticsService
     // ExitBegin opens an "exit window", restarts the stopwatch + sequence counter, and
     // stamps GC/heap stats. Every other exit phase is silent unless the window is open,
     // so probes on methods that also fire at load time (ClearUnreferencedResources) or on
-    // every map frame (MapState.OnTick) stay inert outside a mission exit. Four closers, all
+    // every map frame (MapState.OnTick) stay inert outside a mission exit. FIVE closers, all
     // unconditional state transitions independent of the master toggle: FirstMapTick (normal
     // path), the next ResetLifecycle, the next Mission.Initialize (chained mission without map
-    // activation), and SubModule.OnGameEnd -> ResetLifecycle (quit-to-load / quit-to-menu, where
-    // no map tick ever comes — #425).
+    // activation), SubModule.OnGameEnd -> ResetLifecycle (quit-to-MENU, where no map tick ever
+    // comes — #425), and the SandBoxSaveHelper.TryLoadSave prefix (quit-to-LOAD — #440).
+    //
+    // The last two are NOT interchangeable, which is why there are five. OnGameEnd is reached only
+    // through Game.Destroy(), whose two callers on 1.4.7 are OnStateStackEmpty and
+    // MBInitialScreenBase.OnInitialize — the second is what makes it the quit-to-menu owner, and
+    // neither sits early on the in-campaign load path. TryLoadSave is the Load Game click itself,
+    // so it precedes any teardown of the old Game by construction.
     bool IsExitWindowActive { get; }
 
     /// <summary>UTC ticks while the exit-stall stack sampler (#331 round 2) is ARMED; 0 otherwise.

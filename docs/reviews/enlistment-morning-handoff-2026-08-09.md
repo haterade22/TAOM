@@ -1,5 +1,27 @@
 # Morning handoff — 2026-08-09
 
+> **SUPERSEDED, same day.** This was written mid-session, before the live playtest and before six
+> more commits landed. Read it as a record of that moment, not as current state. What changed after
+> it was written:
+>
+> - The **live session ran** — battle joins, two duties, a promotion, a camp incident, merit banding
+>   and a commander-loss grace, with one `[ERROR]` in 3,452 lines (a mislabelled diagnostic, since
+>   downgraded). So "nothing has run in a live game" is no longer true, and #375 / #424 / #428 all
+>   closed on that evidence.
+> - **Duty toasts were rebuilt again** (#436): the assignment toast is now conditional on real-time
+>   shift length and the result toast is self-contained. The instruction below to "watch for an
+>   assignment toast" is therefore wrong at time acceleration — by design.
+> - **Enlistment diagnostics ship OFF.** The `[EnlistDiag]` trace this doc tells you to grep is
+>   silent unless you turn it on in MCM.
+> - **Commander loss became a moment** — a prioritized modal, the contract term waived, no wage or
+>   promotion during the grace.
+> - **PRs #440 and #442 merged**, and #443 was filed against #442's premise.
+> - The `IDutyWorldAdapter` rename listed as owed below is still owed; the `ExitSettlementForDuty`
+>   item was done (`25a6eba3`).
+>
+> Current state lives in [`docs/features/enlistment.md`](../features/enlistment.md) and the
+> 2026-08-09 section of `CHANGELOG.md`.
+
 Overnight session. Everything below is committed and pushed to `bannerlord-1.4.5`.
 **Nothing has run in a live game.** Restart Bannerlord to pick any of it up.
 

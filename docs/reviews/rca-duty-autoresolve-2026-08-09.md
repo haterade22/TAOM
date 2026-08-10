@@ -76,6 +76,10 @@ had no such prior, so they checked. **That is the entire value of the gate I ski
 3. **Process.** `/deep-review` before the commit, not after. Every finding here was findable
    pre-commit; the reviews were run late and still found all ten, which means the gate works and the
    timing was the only failure.
+   **Held for the rest of the day**, and it kept paying: the Codex pass on the coverage guards found
+   five more (including two comments of exactly the class this RCA is about), and the adversarial
+   pass on PRs #440/#442 refuted all four of its own HIGHs while surfacing a real missing exception
+   guard and the #443 team-topology gap.
 4. **Deletion checklist**, from findings 4, 7, 8 and 10 — when removing a mechanic:
    grep the concept's name in *comments*; grep each removed member for surviving *declarations*, not
    just callers; and ask what the mechanic communicated *incidentally*.

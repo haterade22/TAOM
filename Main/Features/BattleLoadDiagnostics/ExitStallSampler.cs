@@ -13,7 +13,7 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 // time — menus, conversations, loot — field-measured at 123 s with three [ERROR] samples
 // fired into an ordinary quartermaster chat before the disarm existed. The logging window
 // itself stays open to FirstMapTick (or ResetLifecycle/MissionInitialize, and OnGameEnd for
-// the quit-to-load path where no map tick ever comes). While armed, this samples the main
+// the quit-to-menu and quit-to-load paths, where no map tick ever comes — #425, #440). While armed, this samples the main
 // thread's managed stack at +15s/+30s/+60s and logs the frames. Three samples of a
 // deterministic stall name the hot method (a loop shows identical top frames each time).
 // Independently disableable via the "Enable Exit Stall Sampler" MCM toggle (the only

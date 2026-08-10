@@ -138,6 +138,54 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### docs: bring the documentation back in line with a very long day
+
+`lint_docs.py` reported clean throughout, which is exactly why this was needed — every item below is
+prose or a table asserting something the code no longer does, and the linter checks links, versions,
+orphans and config drift, not claims.
+
+**The API snapshot was stale by 22 patches, not one.** `patch-targets.md` said `Patches: 172`;
+regenerating gives **194**. That had been accumulating across earlier work and was only noticed
+because PR #440's new prefix was missing from it.
+
+**`Patch43_BattleLoadDiagnostics` said "17 hooks".** It is 18 — the `SandBoxSaveHelper.TryLoadSave`
+disarm prefix had no row. Added, with the reasoning that makes it a separate closer rather than a
+duplicate of `OnGameEnd`, and a note that `Patch61_SaveLoadDiagnostics` also binds `TryLoadSave` so
+ownership is split across two categories.
+
+**Four places said the exit window has "four closers".** It has five since #440, and the two new ones
+are not interchangeable: `OnGameEnd` is reached only through `Game.Destroy()`, whose two callers on
+1.4.7 are `OnStateStackEmpty` and `MBInitialScreenBase.OnInitialize` — that second one is what makes
+it the quit-to-**menu** owner — while `TryLoadSave` is the Load Game click and precedes any teardown
+by construction. Corrected in the service contract, the sampler header, `SubModule.OnGameEnd`'s own
+comment, and the feature doc.
+
+**The `LoadXML` hazard was overstated and is now labelled.** The captured stack behind #425 predates
+`OnGameEnd` being a closer, which the PR author conceded; with it in place `SavedGameVM.StartGame`
+runs `CleanStates(0)` before `StartNewGame`, so the residual #440 actually closes is
+`MBSaveLoad.LoadSaveGameData`. Worth closing either way — but the stated model would mislead anyone
+reasoning about the window from here, and "the sampler fired inside LoadXML *with* the disarm
+present" remains unreproduced.
+
+**`enlistment.md`'s STATUS block still said "AWAITING IN-GAME VERIFICATION"** and "36 English keys".
+#375 closed on a field-verified session; the count is 225 across 12 languages. Rewritten, and the
+"still owed" list rewritten with it — six items struck because the live session exercised them, and
+one struck because *the mechanism no longer exists* (the duty spawn→hunt→complete loop).
+
+**A new section on the formation work** carries the two corrections and #443's finding: the player is
+alone on `PlayerTeam` while his commander is on `PlayerAllyTeam`, so the formation he joins has
+nobody else in it. Also that `Agent.Build` assigns a formation *before* the `OnAgentBuild` dispatch
+loop — so `IsPlayerTroopInFormation` was always true and #441's premise was wrong — and that
+`BehaviorComponent:105` has four conjuncts rather than the two both files quoted.
+
+**The morning handoff is marked SUPERSEDED rather than rewritten.** It is a dated record; editing it
+to look prescient would destroy what it is for. The banner lists what changed after it was written,
+including that its own advice to watch for an assignment toast is now wrong by design.
+
+Also: the CLAUDE.md enlisted-service trap row (390/400 chars), the feature-map Enlistment row, and
+the RCA's preventive-action 3, which said "run `/deep-review` before the commit" and can now record
+that holding to it for the rest of the day kept paying.
+
 ### fix(enlistment): harden the formation placement merged in #442
 
 Post-merge adversarial review of PR #442. Nothing regressed, so the merge stands — but four things
