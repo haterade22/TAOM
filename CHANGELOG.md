@@ -4,6 +4,44 @@
 
 ## 2026-08-09
 
+### fix(tools): the translator can be pointed at an install, and run without an Anthropic key
+
+Two defects in `translate_with_claude.py`, both of which only bite people who are not the author.
+
+`GAME_ROOT` was a hardcoded literal with no override, and the TAOM_Map and Armory branches guarded
+on `.exists()`. On any machine without an `E:` drive that produced `0 untranslated entries, ~$0.00,
+exit 0` — for two of the three modules, whose files it never looked for. `--module all` is the
+default, so the natural invocation reported one module's work as three. It resolves through the
+#416 helper now and `ensure_exists` exits 2 naming the folder; a module absent from a valid install
+still stands but says so instead of skipping in silence. Pointed at a real install, TAOM_Map goes
+from 0 entries to 333 and Armory from 0 to 10.
+
+The pipeline was also Anthropic-only, in a workflow `TRANSLATOR_GUIDE.md` asks contributors to run —
+and #432 records the #434 pass not happening because "nobody authorized spend on" the API. Both are
+the same wall. `--provider` adds the `/chat/completions` shape that OpenRouter and DeepSeek both
+serve, over `urllib`, so those two need **no SDK installed**. Anthropic stays the default and its
+request body is unchanged, pinned by a test that builds both and compares them.
+
+**Batch size is per provider, and the live run is what found it.** 40 entries fit Claude's reply;
+against `deepseek-v4-flash` a 40-entry Polish batch stops at `finish_reason=length` having spent all
+8,192 output tokens, so the JSON arrives truncated and the whole batch is lost. 30 fit, 40 did not.
+Worse than the failure was the message: a truncated reply surfaced as `[batch_json_fail] Expecting
+value: line 1 column 1; raw: (empty)`, which sends the reader to the parser. It names the output
+budget now.
+
+The `--provider` work shipped with `--model` broken on the default path — both Anthropic call sites
+called `build_request` without the provider argument, so a run printed and priced one model and sent
+another. Fixed in the commit above this one, not by the author of the flag: the class written to
+prevent exactly that asserted against `build_request` in isolation and never exercised its callers,
+and the batched path's own drift test compared the caller's output against `build_request` invoked
+the same wrong way, so both sides agreed on the wrong model.
+
+**Two findings that fall out of the silent skip, neither fixable from this repo.** The TAOM_Map and
+Armory language files are ~2,062 entries behind their own cache across 11 languages — every one
+already in `tools/translation_cache/`, so applying them costs a run and no API call. And Polish is
+not behind by accident: of its 3,990 outstanding entries, 3,892 are in those same two modules. No
+`loc_*.xml` is tracked here, so both belong to whoever ships those modules.
+
 ### fix(harness): the rule against `git add -A` is now enforced, not just written
 
 CLAUDE.md has said "stage explicitly, never `git add -A`" since 2026-08-07. In the two days since,

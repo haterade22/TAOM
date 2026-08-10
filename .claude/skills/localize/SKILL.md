@@ -25,7 +25,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 2. Run `tools/translate_with_claude.py`.
 
 ## Tools
-- `tools/translate_with_claude.py` — 4-tier fallback (override → cache → Claude LLM → English); cache in `tools/translation_cache/<lang>.json` is git-tracked, so re-runs are free.
+- `tools/translate_with_claude.py` — 4-tier fallback (override → cache → LLM → English); cache in `tools/translation_cache/<lang>.json` is git-tracked, so re-runs are free. `--provider anthropic` (default, `claude-opus-5`) | `deepseek` | `openrouter`; the last two need no SDK and read `DEEPSEEK_API_KEY` / `OPENROUTER_API_KEY`. `--module TAOM` works with no game installed; `--module all` reads TAOM_Map and Armory from the install, so it needs `$BANNERLORD_GAME_DIR` and exits 2 without it.
 - `tools/rebuild_translation_files.py` — rebuild per-language files from cache.
 - `tools/translation_status.sh` — coverage report.
 
