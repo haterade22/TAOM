@@ -1,0 +1,50 @@
+{
+  "BR": {
+    "armory": 4,
+    "taom_map": 335
+  },
+  "CNs": {
+    "armory": 0,
+    "taom_map": 0
+  },
+  "CNt": {
+    "armory": 0,
+    "taom_map": 0
+  },
+  "DE": {
+    "armory": 10,
+    "taom_map": 333
+  },
+  "FR": {
+    "armory": 9,
+    "taom_map": 335
+  },
+  "IT": {
+    "armory": 2,
+    "taom_map": 336
+  },
+  "JP": {
+    "armory": 0,
+    "taom_map": 0
+  },
+  "KO": {
+    "armory": 0,
+    "taom_map": 23
+  },
+  "PL": {
+    "armory": 2782,
+    "taom_map": 1110
+  },
+  "RU": {
+    "armory": 0,
+    "taom_map": 0
+  },
+  "SP": {
+    "armory": 1,
+    "taom_map": 335
+  },
+  "TR": {
+    "armory": 1,
+    "taom_map": 338
+  }
+}
