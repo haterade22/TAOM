@@ -250,5 +250,17 @@ class TheModelOverrideReachesTheWire(unittest.TestCase):
         twc.call_claude(bare, "German", _entries(1))
         self.assertEqual(twc.MODEL, bare.messages.sent["model"])
 
+    def test_the_dispatch_seam_hands_the_provider_to_the_anthropic_path(self):
+        # The tests above call call_claude / call_claude_batched directly, so they pin that
+        # those two honour a provider they are GIVEN. Nothing pinned that anything gives
+        # them one. main() reaches the sequential path through call_model, and that seam was
+        # unexercised: reverting `call_claude(..., provider)` to `call_claude(...)` there
+        # left the entire suite green. Measured, not assumed -- 485 passed with it broken.
+        client = self._recording_client()
+        twc.call_model(twc.resolve_provider("anthropic", model="claude-sonnet-5"),
+                       client, "German", _entries(1))
+        self.assertEqual("claude-sonnet-5", client.messages.sent["model"],
+                         "call_model did not pass the provider on to call_claude")
+
 if __name__ == "__main__":
     unittest.main()
