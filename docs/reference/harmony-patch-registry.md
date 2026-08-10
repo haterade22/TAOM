@@ -343,9 +343,22 @@ Map-tick CTD guard (crash report 2026-06-17). Vanilla `Army.FindBestGatheringSet
 
 ## Patch50_DropFlaggedItemGuard
 
-**Target:** `Agent.CheckToDropFlaggedItem` (public, Finalizer)
+**Target:** `Agent.CheckToDropFlaggedItem` (public, **Prefix skip-original + Finalizer**)
 
-Warg-on-warg bite NRE guard (crash report 2026-06-17; caught, non-fatal log spam). The shared synthetic-bite path (`CustomAttacksUtils.TakeDamage` → `Mission.RegisterBlow` → `Agent.HandleBlow` → `Mission.OnAgentHit`) calls `affectedAgent.CheckToDropFlaggedItem()` (Mission.cs:5609) on the victim; when the victim is a non-vanilla mount (a warg biting another warg) it passes the `CanWieldWeapon` guard but `Equipment[wieldedIndex].Item` is null → `.ItemFlags` NRE (Agent.cs:3595). Finalizer swallows ONLY `NullReferenceException`; damage is applied upstream in `HandleBlow` so the bite still lands, and the only skipped effect (a flagged-item drop) doesn't apply to a mount. Covers warg + spider. Lives in `Main/Features/AdvancedCombat/Hooks/`.
+Synthetic-bite NRE guard for the shared creature path (`CustomAttacksUtils.TakeDamage` → `Mission.RegisterBlow` → `Agent.HandleBlow` → `Mission.OnAgentHit`), which calls `affectedAgent.CheckToDropFlaggedItem()` on the victim as `OnAgentHit`'s **last statement** (Mission.cs:5621, v1.4.8). The method's only guard tests the wielded INDEX (`!= EquipmentIndex.None`) — never `Equipment` itself, nor the resolved `Item` — so it NREs at Agent.cs:3604 on either shape. Covers warg + spider + elephant/mûmakil.
+
+**Two observations, and they are NOT the same shape** — which is why the Prefix guards the throw condition itself rather than a proxy:
+
+| When | Victim | Null |
+|---|---|---|
+| 2026-06-17 (crash report, warg-vs-warg) | read as a non-vanilla **mount** | `Equipment[wieldedIndex].Item` |
+| 2026-08-10 (live debugger, warg battle) | **not a mount** — `IsHuman=true`, `IsMount=false`, `State=Active`, `Health=13`, no rider/mount, flags carry `CanWieldWeapon`, **`Character == null`** | almost certainly `Equipment` itself (a half-built/mid-teardown agent never reached `InitializeMissionEquipment`), making the **indexer** the throw |
+
+**Prefix** returns false only when vanilla would dereference null; decision logic lives in the unit-tested `DropFlaggedItemGuard.WouldVanillaDereferenceNull` (ADR-008 — a patch body has no harness). It checks `Equipment == null` *first*, which also avoids reads vanilla would do: the wielded-index getters are unsafe raw pointer dereferences (`AgentHelper.GetPrimaryWieldedItemIndex`), so skipping them on a half-built agent is strictly safer than vanilla, not merely equivalent. Known divergence, accepted: an agent holding a genuine `DropOnAnyAction` item in one slot AND a phantom index in the other loses the good drop (vanilla drops it, then throws) — that requires a half-built agent carrying a flagged item, where vanilla is already broken.
+
+**Finalizer is KEPT** as backstop — Harmony routes Prefix, original and postfix exceptions through it, so it still covers shapes neither observation has shown. Swallows ONLY `NullReferenceException`. A managed-NRE Finalizer still surfaces as a first-chance exception under a debugger — expected; **that first-chance break in a warg battle is what prompted the 2026-08-10 Prefix.** The throw was never functionally destructive (both MissionBehavior loops and the AgentComponent loop have already run; damage lands upstream in `HandleBlow`) — it cost a throw + unwind per bite inside `OnMissionTick` and broke every debugging session.
+
+Engine parity: this method's body is byte-identical v1.4.5 → v1.4.8; only line numbers moved (Mission.cs:5609 → 5621). Co-op disposition `ReviewedSafe` (`CoopVetoClassificationTests`): mission-scoped, and both branches end in "no item dropped". Lives in `Main/Features/AdvancedCombat/{,Hooks/}`.
 
 ## Patch51_RecruitmentResourceGate
 

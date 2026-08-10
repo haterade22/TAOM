@@ -72,13 +72,23 @@ For a hook whose job is to **detect and warn**, fail-open is only half the contr
 those, **no output is itself a claim**. A drift check that prints nothing is read as "no drift", not
 as "never ran".
 
-The v1.4.7 → v1.4.8 bump proved it. `session-start.sh` built its path as
-`"${BANNERLORD_GAME_DIR:-<literal>}/bin/..."`. The `:-` form substitutes the literal only when the
-variable is **unset or empty** — a variable that is *set but does not resolve in the hook's
-environment* sailed past it, the `-f` test went false, and the whole block fell through without a
-word. `.claude/settings.json` does not define `BANNERLORD_GAME_DIR`, so the hook inherits whatever
-the harness process happens to carry. The guard produced nothing on the exact event it exists to
-catch, and the session ran 47 minutes believing the engine was still pinned.
+The v1.4.7 → v1.4.8 bump proved it. **What is observed:** on 2026-08-10 the hook fired with
+`source=startup` and printed branch, stashes and commits — but no drift banner, with the game on
+v1.4.8 and the pin on v1.4.7. Not a race; the session transcript's birth time was 47 minutes after
+the update finished.
+
+**What is proven about the mechanism:** the pre-fix code had a silent-failure mode. It built its path
+as `"${BANNERLORD_GAME_DIR:-<literal>}/bin/..."`, and the `:-` form substitutes the literal only when
+the variable is **unset or empty** — so a variable that is *set but does not resolve in the hook's
+environment* sails past it, the `-f` test goes false, and the whole block falls through without a
+word. Exporting a bogus `BANNERLORD_GAME_DIR` reproduces total silence in one command.
+`.claude/settings.json` does not define the variable, so the hook inherits whatever the harness
+process carries.
+
+**What is NOT proven:** that this was the actual trigger that morning. The same variable resolves
+fine from an interactive shell, so the hook's environment must have differed in some way that was
+not captured. Treat the mechanism as demonstrated and the specific trigger as undetermined — the
+lesson does not depend on which it was, because a guard with *any* silent-failure mode is the defect.
 
 **When writing or reviewing a detect-and-warn hook:**
 
