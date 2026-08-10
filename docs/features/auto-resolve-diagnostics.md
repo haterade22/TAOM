@@ -1,7 +1,8 @@
 # Auto-Resolve Diagnostics
 
 > **Status:** shipped 2026-08-08. Diagnostic only — changes no gameplay.
-> **MCM toggle:** `Battle Tactics/Auto-Resolve Diagnostics → Log Auto-Resolved Battles`, **default ON**.
+> **MCM toggles:** `Battle Tactics/Auto-Resolve Diagnostics` → `Log Auto-Resolved Battles` **default ON**
+> (master switch), and `Log Troop Census` **default OFF** (see [Turning it off](#turning-it-off)).
 
 ## Why this exists
 
@@ -37,7 +38,7 @@ classification API off the data-collection path entirely.
 
 | Field | Why it earns its place |
 |---|---|
-| `fielded` (troop id → count, **per party**) | the army as fielded, from a start-of-battle snapshot. Per party, because a side can hold several cultures |
+| `fielded` (troop id → count, **per party**) | the army as fielded, from a start-of-battle snapshot. **Healthy men only** — see below. Per party, because a side can hold several cultures |
 | `killed`, `wounded`, `routed` (per party) | from the engine's accumulating casualty rosters, which do survive to battle end |
 | `strength`, `advantage` | the engine's OWN power figure and the multiplier it applied — ground truth to check the offline model against |
 | `siege` block | `settlementAdvantage` (3.6–6.0 measured), wall level, wall HP, engines built. The term that decides a siege |
@@ -45,7 +46,7 @@ classification API off the data-collection path entirely.
 | `rounds`, `session` | how decisive the battle was; and which campaign it came from, so two campaigns don't pool silently |
 | `terrain` (`MapEvent.SimulationContext`) | vanilla already grants type-vs-terrain power modifiers; without this, a class-loss skew cannot be separated from a counter effect |
 | `tactics`, `powerModifier`, `sideMorale`, `leader` | the multipliers the sim actually applied — confounds any tuning must control for. **Start-snapshot, not battle-end** (see below) |
-| `contextModifier` (per troop class) | `CombatSimulationModel.GetContextModifier`, the terrain × class × side term spanning −0.50 to +0.30. The offline power model was missing it entirely |
+| `contextModifier` (per troop class) | `MilitaryPowerModel.GetContextModifier` (**not** `CombatSimulationModel` — a Codex review prompt sent reviewers to the wrong type; both abstract bases live in `ComponentInterfaces`), the terrain × class × side term spanning −0.50 to +0.30. The offline power model was missing it entirely |
 | `player` | player battles use a different blunt-damage chance and difficulty multipliers, and may have been fought rather than simulated |
 | `parties` | distinguishes a lone lord from a stacked army |
 | `winner`, `endedBy` | how decisive battles really are |
@@ -53,6 +54,27 @@ classification API off the data-collection path entirely.
 `fielded` is the army as it stood when the battle began. The analyzer cross-checks the summed
 per-party rosters against each side's independently-recorded `menStart` and reports any divergence —
 that check is what caught two successive versions of this feature measuring winners only.
+
+**Healthy men only, and that cross-check is why.** `AccumulateRoster` records
+`element.Number - element.WoundedNumber`. It used to record `Number`, which counts the wounded — but
+`menStart` sums `MapEventParty.HealthyManCountAtStart`, which does not, and a wounded troop is never
+allocated into the simulation at all (vanilla's supplier skips `!IsWounded`). Measured before the
+fix: **12.3% of sides reported more fielded men than `menStart`**, corpus-wide overstatement +4.5%,
+worst case `menStart=1` against `fielded=141` — a party that was 140 wounded, credited with 141
+fighters. The median error was +0.00%, which is exactly why three earlier review passes saw nothing.
+After the fix, on a live 1,672-record session: **100% of sides on both the winning and losing side
+within 5%**.
+
+**A party that joins mid-battle** is folded in through `IMapEventBattleLogAdapter.SnapshotParty`,
+wired from `OnPartyAddedToMapEvent`. It captures only the joiner's roster, plus a `contextModifier`
+for any troop class the battle had not already seen — so a cavalry reinforcement into an
+infantry-only fight does not end up in `fielded` with no terrain term to score it by. The obvious
+implementation, re-running `SnapshotStart` and keeping its rosters, is what this replaced: it
+re-derives every party on both sides plus both leaders, morale and advantage and discards all of it,
+and because `PartyBase.MapEventSide`'s setter recurses into `MobileParty.AttachedParties`, a
+reinforcing army raises the event once per attached party — quadratic in the size of the battle. The
+per-side leader inputs are deliberately *not* revisited: a party arriving mid-fight does not
+retroactively change the morale or advantage the simulation has already been applying.
 
 ## Three engine facts this depends on
 
@@ -126,7 +148,24 @@ because the failure mode of this feature is a log that looks healthy and analyse
 | v6 | those four moved into the start snapshot; added per-class `contextModifier` | Yes |
 
 `analyze_battle_logs.py` accepts v5 and v6 and prints a warning naming the four unreliable fields
-when any v5 record is present, rather than silently blending the two corpora.
+when any v5 record is present, rather than silently blending the two corpora. Anything outside
+`SUPPORTED_VERSIONS` is **dropped**, with the count reported — that gate was declared but never
+wired until 2026-08-08, so the refusal this section describes did not actually happen for the first
+six schema versions. The party-level and siege-level field contracts are checked too, unioned across
+every record and both sides rather than sampled from `records[0]`.
+
+### Non-finite floats
+
+Every engine-sourced float in a record (`advantage`, `powerModifier`, `sideMorale`, `strength`, each
+`contextModifier` value, `settlementAdvantage`, `engineProgress`) is serialized with
+`FloatFormatHandling.DefaultValue`, so a `NaN` or `Infinity` writes as JSON `null`.
+
+The reason is not that a bare `NaN` token would crash the analyzer — **it would not**. Python's
+`json.loads` accepts `NaN`/`Infinity` via `parse_constant` and hands back a float, so a poisoned
+record would sail past the malformed-line counter and silently contaminate every mean, median and
+comparison downstream. That is a quieter failure than a parse error, and therefore a worse one. No
+non-finite value has been observed in a live corpus; the guard is there because "no path found this
+time" has not been a reliable predictor for this bug class.
 
 ## Turning it off
 
@@ -175,7 +214,8 @@ dropped from composition.
 ```bash
 python tools/analyze_battle_logs.py                 # summary + tools/reports/battle-logs/REPORT.md
 python tools/analyze_battle_logs.py --stdout        # print only
-python tools/analyze_battle_logs.py --no-player     # drop player-involved battles
+python tools/analyze_battle_logs.py --no-player     # drop ALL player-involved battles
+python tools/analyze_battle_logs.py --keep-player-fought  # keep battles the player FOUGHT (dropped by default)
 python tools/analyze_battle_logs.py --min-men 100   # ignore skirmishes (default 40)
 python tools/analyze_battle_logs.py --replay        # replay real armies under candidate knobs
 ```
@@ -199,11 +239,14 @@ multipliers from what actually fought.
 | File | Role |
 |---|---|
 | `Main/Features/AutoResolveDiagnostics/Domain/BattleLogRecord.cs` | engine-free DTO; the `[JsonProperty]` names are the contract with the Python tool |
+| `Main/Features/AutoResolveDiagnostics/Domain/BattleStartSnapshot.cs` | the start-of-battle capture: per-party rosters plus each side's leader-derived inputs |
 | `Main/Features/AutoResolveDiagnostics/AutoResolveLogFormatter.cs` | pure DTO → one tagged JSON line; the whole testable surface |
-| `Main/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsBehavior.cs` | `CampaignBehaviorBase`, subscribes `MapEventEnded` |
-| `Main/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsSettingsProvider.cs` | MCM seam; `?? true` fallback pinned against the compiled default |
+| `Main/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsBehavior.cs` | `CampaignBehaviorBase`. Event wiring plus the pending-battle map, nothing else (ADR-002). Subscribes `MapEventStarted`, `OnPartyAddedToMapEventEvent`, `MapEventEnded` and `OnSessionLaunchedEvent` |
+| `Main/Features/AutoResolveDiagnostics/IAutoResolveLogWriter.cs` + `AutoResolveLogWriter.cs` | the write half — record ids, the once-per-session census, emit policy. Split out of the behavior, which had reached 237 lines against ADR-002's 150. The pending map stayed behind because it is keyed by the sealed `MapEvent` (ADR-007) |
+| `Main/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsSettingsProvider.cs` | MCM seam; each `??` fallback pinned against the matching compiled default (`?? true` for the master, `?? false` for the census) |
 | `Main/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsIoC.cs` | DryIoc registration |
-| `Main/Adapters/MapEventBattleLogAdapter.cs` | walks `MapEvent` → sides → parties → rosters at the ADR-007 boundary |
+| `Main/Adapters/MapEventBattleLogAdapter.cs` | the ADR-007 boundary, two entry points: `SnapshotStart` walks `MapEvent` → sides → parties → rosters for the whole battle, `SnapshotParty` folds in one late joiner |
+| `Main/Adapters/TroopCensusAdapter.cs` | reads the engine's own tier/power/formation/HP for every `CharacterObject` |
 | `tools/analyze_battle_logs.py` | offline analysis + replay simulator |
 
 ## Cost
@@ -215,8 +258,11 @@ index with no allocation (verified by decompile).
 
 ## Known limitations
 
-- **Player-fought battles are recorded too**, flagged `player: true`. They are not auto-resolved and
-  use different damage constants — filter them with `--no-player` for balance work.
+- **Player-fought battles are logged but excluded from analysis by default.** A player battle carries
+  `player: true`, and `playerSimulated` says whether the player auto-resolved it or fought it. A
+  battle the player *fought* is a mission result, not a `SimulateHit` sample, so `analyze_battle_logs.py`
+  drops `player && !playerSimulated` unless you pass `--keep-player-fought`. `--no-player` is the
+  stricter option: it drops every player-involved battle, auto-resolved ones included.
 - **Coverage is complete for anything with combat.** Field battles, sieges, sally-outs, blockades,
   raids and hideouts are all `MapEvent.BattleTypes` and all reach `OnMapEventEnded`. The one absent
   case is a siege that ends by starvation surrender (`SiegeEvent.OnBeforeSiegeEventEnd`, no

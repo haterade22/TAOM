@@ -99,7 +99,14 @@ v5 uses a start-of-battle snapshot, accepting the per-battle latch and handling 
 - Siege telemetry: `settlementAdvantage` and friends — measured at 3.6–6.0, the term that decides
   a siege and previously invisible.
 - `report_reconstruction` cross-checks per-party rosters against `menStart` and warns loudly.
-- `report_schema` validates the contract both directions, across all records, and **hard-stops**.
+- `report_schema` validates the contract both directions and **hard-stops**. **Correction, added
+  2026-08-09:** as written at v5 this checked only the top level and one side of `records[0]`, and the
+  version gate it claimed to enforce did not exist — `SUPPORTED_VERSIONS`, `EXPECTED_PARTY` and
+  `OPTIONAL_PARTY` each had exactly one reference in the file, their own definition. The party-level
+  and siege-level checks, the union across every record and both sides, and the enforced version drop
+  all arrived in the 2026-08-08 review wave (Review 86). This bullet described the intended end-state
+  as though it had shipped — the same documented-but-unimplemented-safeguard failure this RCA's own
+  Finding #3 is about, recurring inside its retrospective. Left visible rather than silently rewritten.
 - `session` (`Campaign.UniqueGameId`) and `rounds` (`MapEvent.UpdateCount`) added; the analyzer
   warns when two campaigns are pooled.
 - `GetSideMorale()`, `MapFaction?.Culture`, battle-type histogram, replay never omits a row.

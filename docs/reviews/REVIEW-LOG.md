@@ -1,6 +1,6 @@
 # Codex Adversarial Review Log
 
-Running scorecard of all reviews. **Reviews 1–85, 2026-04-05 → 2026-08-07.** 79 of those numbers have an entry below; 37, 46, 48, 63, 64 and 73 do not. The number is not a unique key — the Summary and Gap Reviews tables both carry #17–#22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06" — a claim about the April 2026 sweep that the log outgrew.)
+Running scorecard of all reviews. **Reviews 1–86, 2026-04-05 → 2026-08-08.** 80 of those numbers have an entry below; 37, 46, 48, 63, 64 and 73 do not. The number is not a unique key — the Summary and Gap Reviews tables both carry #17–#22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06" — a claim about the April 2026 sweep that the log outgrew.)
 
 ## Summary
 
@@ -1907,7 +1907,7 @@ combination with a zero trade score) and both the verdict text and gate table no
 **Root-cause pattern:** components verified, inherited seams not. The one seam that *was* verified —
 Harmony discovering the nested patch classes, the only nested `[HarmonyPatch]` classes in TAOM — was
 verified precisely because it felt unprecedented, and it turned out fine. The boring seam that runs
-first took the game down. Novelty is a bad predictor of risk. Suite 5686 green.
+first took the game down. Novelty is a bad predictor of risk. Suite 5686 green.
 
 ## Review 85 — Female-dwarf mesh CTD (#403) + Patch69 tournament guard (#407), full deep-review + Codex adversarial pass (2026-08-07)
 
@@ -1973,3 +1973,81 @@ female dwarf in an Erebor keep interior and a tournament "Skip All Rounds" remai
 Lessons: review-finding-with-its-own-exemption (testing-qa), containment-finalizer-scope (harmony-il),
 enumerate-call-sites-before-durable-logging and binary-IO-is-not-just-XML (build-tooling-workflow),
 artifact-may-not-be-the-reported-crash (misc).
+
+## Review 86 — AutoResolveDiagnostics (#430) schema v6, full deep-review + Codex adversarial pass (2026-08-08)
+
+5 Claude agents (standards, API compatibility, performance, correctness/lifecycle, MCM/co-op) then an
+independent Codex pass. Codex 3 P1 / 4 P2 / 3 P3; the API agent returned 60 verified, 0 incompatible,
+0 unverified against the installed 1.4.7 DLLs. Full record: `rca-autoresolve-diagnostics-2026-08-08.md`.
+
+**This feature had already shipped wrong data three times, and the review caught a fourth.** v1–v2 read
+composition from `Party.MemberRoster` at battle end, which the engine strips at `MapEvent.cs:2018`
+before the `:2068` dispatch. v3–v4 moved to `MapEventParty.Troops` on the belief it was untouched;
+`MakeReadyParty` → `Update()` → `_roster.Clear()` rebuilds it from the same stripped roster, and losing
+sides came back a median **55% short against 1% for winners** — invisible precisely because the bias
+correlated with losing, the variable under study. v5 fixed composition with a start-of-battle snapshot
+but still read `leader`/`tactics`/`powerModifier`/`sideMorale` at battle end, so losing sides recorded
+`sideMorale == 0` in **5,543 of 5,548** battles and a leader in **17 of 5,546**. v6 moved those into the
+snapshot. The fourth instance, found here: `AccumulateRoster` recorded `TroopRosterElement.Number`,
+which counts the wounded, while `menStart` sums `HealthyManCountAtStart`, which does not — and a wounded
+troop is never allocated into the simulation at all. **12.3% of sides overstated, worst case
+`menStart=1` against `fielded=141`**, a party that was 140 wounded credited with 141 fighters. Median
+error was +0.00%, which is why three prior passes saw nothing wrong.
+
+**The analyzer's version gate had never been wired.** `SUPPORTED_VERSIONS`, `EXPECTED_PARTY` and
+`OPTIONAL_PARTY` each had exactly **one** reference in `analyze_battle_logs.py` — their own definition —
+while `BattleLogRecord`'s doc comment told readers the analyzer "refuses to analyse a version it does
+not understand rather than producing quiet nonsense." A rotated pre-v5 log in the same directory would
+have blended winners-only composition back in. The tell that this is a category rather than an
+incident: earlier in the same session I *edited* that constant, `{5}` → `{5, 6}`, believing I was
+loosening a live constraint. The siege block had no drift protection at all, and validation sampled
+`records[0]` and one side. Now enforced, party and siege levels checked, unioned across every record.
+
+**Two findings were downgraded after measuring rather than implemented as reported.** Codex's P1 that
+records emitted with no start snapshot are indistinguishable from real data was sound reasoning, but
+0 of 2,653 records showed the signature — all 123 zero-roster sides also had `menStart == 0`, i.e.
+genuinely empty sides. Fixed anyway, since the path exists and fails silently. The second was mine: the
+residual `leader` asymmetry (winners 79.7%, losers 6.5%) took three passes, and **the first two
+conclusions were wrong.** I built a "kingdom present but no leader" table and read 95.8% as proof of a
+capture miss — invalid, because `kingdom` is `MapFaction.StringId`, non-null for bandit clans. I then
+assumed composition explained it, but holding size fixed and excluding bandit cultures, attackers ran
+~98% in every bucket while defenders never passed 60%. Resolved only by decompiling:
+`MapEventSide.CacheLeaderSimulationModifier()` is `LeaderParty.LeaderHero?.PowerModifier ?? 0f`, and
+`LeaderParty` is frozen at construction, reassigned only if that party is removed and then to
+`_battleParties[0]`. The capture is faithful; a defending side fronted by a hero-less party genuinely
+feeds `tactics = 0` into the simulation. **No code change** — a real engine asymmetry, and a candidate
+for the balance work rather than a defect in the instrument.
+
+**Three errors were in prose I had written.** The Codex prompt sent reviewers to
+`CombatSimulationModel.GetContextModifier`, which does not exist — it is on `MilitaryPowerModel`, and
+both abstract bases live in `ComponentInterfaces`, not `GameComponents`; the production code was right
+and only the brief was wrong. The same prompt asserted a bare `NaN` token "will break the Python
+analyzer's `json.loads`". It does not: Python accepts `NaN`/`Infinity` via `parse_constant` and returns
+a float, so a poisoned record would **not** count as malformed and would silently contaminate every
+mean and comparison — a worse failure than the loud one I claimed, caught by the correctness agent.
+And I recommended cutting `[TournamentDiag]`'s "all safe" line as un-gated INFO; it was already
+`LogDebug`, with a comment recording that the arena join menu re-enters the patched method, so INFO
+there would flush per menu open. Reading the source before proposing the fix would have caught all three.
+
+**A vacuous test, and a recurrence.** `OnMapEventEnded_WhenTheAdapterThrows_DoesNotPropagate` passed a
+null `MapEvent`; production returns at the null guard on the first line inside the try, so the adapter
+was never reached and the mocked throw was dead configuration — it passed with the try/catch deleted.
+That is finding #8 in this feature's own RCA, already condemned there. Removed rather than patched,
+because with `MapEvent` unconstructable the guarantee is not unit-reachable; containment now asserts on
+`OnSessionLaunched`, which is. Also fixed: the census latch survived the session boundary (second
+campaign in one process got no census) and was set *before* the write pass, so one failure foreclosed
+it permanently; `OnPartyAddedToMapEvent` was ungated and re-ran a full both-sides snapshot per joining
+party, quadratic because `PartyBase.MapEventSide` recurses into `AttachedParties`; and player battles
+the player *fought* were counted in a corpus that exists to measure auto-resolve.
+
+`AutoResolveDiagnosticsBehavior` was 237 lines against ADR-002's 150, and every bug above lived in that
+entry-point logic rather than the wiring — census, ids and emit moved behind `IAutoResolveLogWriter`.
+The pending-battle map stayed put: it is keyed by the sealed `MapEvent`, which must not cross into a
+service (ADR-007).
+
+Suite 6290 green. **Verified in a live game the next morning**, which is unusual for this log and worth
+recording: the roster cross-check went from 95.1%/97.8% within 5% to **1628/1628 and 1601/1601 —
+100%/100%**, zero sides overstating `menStart`, no non-finite floats across 1,672 records. The census
+default-off landed too: 8,341 census lines → 0, whole log 17,622 → 3,452. Lessons:
+dead-validation-constant-is-worse-than-none (build-tooling-workflow),
+sibling-field-reset-is-not-field-reset (state-lifecycle-save).

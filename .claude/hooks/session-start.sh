@@ -52,6 +52,20 @@ if [[ -d "$WORKTREE_DIR" ]]; then
   fi
 fi
 
+# Stash visibility. `git pull --rebase` auto-stashes the WHOLE working tree, including
+# files another session is mid-edit on, and an auto-stash that is never popped reverts
+# that session's work to HEAD with no error and no conflict — invisible data loss
+# (CLAUDE.md "Multi-session git safety"; happened 2026-08-07, and an `autostash` entry
+# was still sitting unresolved two days later). `git status` does not mention stashes, so
+# nothing surfaced it. Read-only, count only. Fail-open.
+STASH_COUNT=$(git stash list 2>/dev/null | grep -c . || true)
+if [[ -n "${STASH_COUNT:-}" && "${STASH_COUNT:-0}" -gt 0 ]]; then
+  echo ""
+  echo "Stashes: ${STASH_COUNT} present — an unpopped auto-stash is silent data loss, not a to-do."
+  git stash list 2>/dev/null | head -3 | sed 's/^/  /'
+  echo "  Prove redundant before dropping: git show stash@{0}:<f> emits LF, so diff --strip-trailing-cr."
+fi
+
 # Last 5 commits
 echo ""
 echo "Recent commits:"

@@ -48,6 +48,10 @@
           },
           {
             "type": "command",
+            "command": ".claude/hooks/block-broad-git-add.sh"
+          },
+          {
+            "type": "command",
             "command": ".claude/hooks/check-moduledata-validation.sh",
             "statusMessage": "Validating ModuleData refs before commit…"
           },
