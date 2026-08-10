@@ -4,6 +4,39 @@
 
 ## 2026-08-09
 
+### docs(autoresolve): bring the feature doc and two registries back in line with the code
+
+Two audit passes against current source. The feature doc had drifted in the ways a doc drifts when
+the code moves faster than it does: the Files table still described `AutoResolveDiagnosticsBehavior`
+as subscribing `MapEventEnded` (it subscribes four events, and is now event wiring only), and did not
+list `IAutoResolveLogWriter` / `AutoResolveLogWriter` / `TroopCensusAdapter` at all. The late-joining
+party path (`SnapshotParty`) was undocumented, as was the healthy-only `fielded` fix and non-finite
+float handling. The player-battle guidance was actively wrong — battles the player *fought* are now
+dropped by default, not merely flagged, and `--keep-player-fought` was missing from the usage block.
+
+One factual error corrected: `contextModifier` was credited to `CombatSimulationModel.GetContextModifier`.
+That method does not exist on that type — it is on `MilitaryPowerModel`, and both abstract bases live
+in `ComponentInterfaces` rather than `GameComponents`. The production code always called the right
+one; a Codex review prompt named the wrong type and the doc inherited it.
+
+`harmony-patch-registry.md`'s Patch69 section still described a per-roster `[TournamentDiag]` line and
+carried a paragraph defending it as a durable INFO write that must not be "optimised" to DEBUG. That
+line was already DEBUG, and it was removed entirely on 2026-08-09 — so the paragraph defended a
+decision that had not been made about a line that no longer existed. Rewritten to record the removal
+and its accepted trade: a session where the guard silently fails to run now looks like one where every
+roster was safe.
+
+Two retrospectives carry dated corrections rather than silent rewrites. `rca-autoresolve-diagnostics`
+claimed `report_schema` "validates the contract both directions, across all records" — at v5 it
+checked one side of `records[0]`, and the version gate it advertised did not exist. That is the same
+documented-but-unimplemented-safeguard failure the RCA's own Finding #3 is about, recurring inside its
+retrospective, so it is annotated in place. `rca-patch69-tournament-guard` said "clean roster now logs
+DEBUG"; marked superseded.
+
+Also re-synced `LESSONS-LEARNED.md`: 384 → 385 total, `localization-ui` 23 → 24. Its own note says the
+printed counts drift and must be re-derived with `grep -c '^### '` — they had, by one. `lint_docs.py`
+clean at 0 findings.
+
 ### feat(localization): the 55% of TAOM's text that no translator could reach (#434)
 
 317 of the 568 `{=taom_*}` keys the C# declares had no row in any ModuleData XML. All 317 are now
