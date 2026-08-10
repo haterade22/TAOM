@@ -1662,10 +1662,6 @@ RCA: `docs/reviews/rca-battleload-agentbuild-2026-08-03.md`. Lessons: 2 in
 downgrade is a feature change). Preventive: `/deep-review` Agent 3 prompt now carries the
 decompile-before-costing instruction and the FileLogger durability contract. Suite 4,795 green.
 
----
-
-<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-
 ## Review 84 — Enlistment battle-join (#406), full deep-review + Codex adversarial pass (2026-08-07)
 
 5 Claude agents then an independent Codex pass, over a player-reported bug and its fix. Full record:
@@ -1716,6 +1712,10 @@ before the null check — the null-conditional operator short-circuits argument 
 cases in #406 remain the real gate, and unit tests are precisely the evidence class that missed this
 bug four times. Lessons: mocked-adapter-hides-the-engine-seam and return-values-are-not-verification
 (both testing-qa).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
 

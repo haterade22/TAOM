@@ -148,3 +148,13 @@ Both caught by reading the installed 1.4.7 DLLs rather than trusting the plan:
   a sixth instance of the NaN-gate bug class this codebase has already shipped five times.
 - I committed 4 of the other session's files in `a26aecd2`; entangled and not separable without
   breaking the build at HEAD. Nothing of theirs was lost.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/enlistment.md](../features/enlistment.md)
+
+<!-- backlinks-end -->

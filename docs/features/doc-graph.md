@@ -154,6 +154,7 @@ These were considered and intentionally **not** built in v1 (scope + ROI; see th
 ## Referenced by
 
 - [docs/ai-includes/agent-operating-manual.md](../ai-includes/agent-operating-manual.md)
+- [docs/features/doc-health-linter.md](./doc-health-linter.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)
 

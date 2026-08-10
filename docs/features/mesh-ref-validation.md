@@ -175,6 +175,7 @@ python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 
 - [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
 - [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
+- [docs/features/doc-health-linter.md](./doc-health-linter.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 

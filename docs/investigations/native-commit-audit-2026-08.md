@@ -364,3 +364,14 @@ headroom). The remaining ~10–12 GB is battle content (armory textures are alre
 multiplier), engine working set, and .NET heaps; only content rationalization touches it, and only with Phase-2/4
 numbers in hand. The two measurements that most tighten this: one VMMap of TAOM-full mid-battle + the A-vs-B menu
 delta — under an hour combined.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/battle-load-diagnostics.md](../features/battle-load-diagnostics.md)
+- [docs/features/gui-sprite-system.md](../features/gui-sprite-system.md)
+
+<!-- backlinks-end -->

@@ -138,3 +138,13 @@ the engine version, the reported date) rather than inventing a commit range.
 - [`doc-lookup.md`](doc-lookup.md) — task index
 - [`completion-workflow.md`](../ai-includes/completion-workflow.md) — the per-feature ship sequence `/release` sits downstream of
 - [`dr3-maintenance.md`](../migration/dr3-maintenance.md) — updating the bundled BUTR stack, which is what forces a Dependencies bump
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
+
+<!-- backlinks-end -->

@@ -453,5 +453,6 @@ If ILRepack consolidation is later desired, do it as a focused project with thor
 - [docs/migration/dependency-audit-2026-07-15.md](./dependency-audit-2026-07-15.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/release-process.md](../reference/release-process.md)
 
 <!-- backlinks-end -->

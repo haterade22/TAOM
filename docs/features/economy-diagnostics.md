@@ -179,6 +179,7 @@ Wiring: `Main/IoC.cs`, `Main/SubModule.cs` (`Patch68_EconomyDiagnostics` in the 
 
 ## Referenced by
 
+- [docs/features/auto-resolve-diagnostics.md](./auto-resolve-diagnostics.md)
 - [docs/features/caravan-trade.md](./caravan-trade.md)
 - [docs/features/dev-console.md](./dev-console.md)
 - [docs/features/settlement-economy.md](./settlement-economy.md)

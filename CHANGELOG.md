@@ -229,6 +229,56 @@ design reviewers each caught that the redesign alone does not fix it.
 Known and accepted: a save made mid-duty under the old model may leave the spawned looter party on
 the map with nothing to destroy it. They are ordinary bandit parties the engine already manages.
 
+### fix(docs): 101 lines of writing were queued for silent deletion
+
+A doc-drift sweep found **51 lines of `enlistment.md`'s live-session record sitting inside its
+auto-generated backlinks region.** `build_backlinks.py`'s `splice_footer` keeps only
+`content[:start] + regenerated footer + content[end:]` — everything between the markers is discarded,
+with no error and no conflict. And the regeneration was already **armed**: today's handoff doc had
+become the file's 4th inbound reference while the footer still listed 3, so the next run would have
+taken it.
+
+Then it demonstrated itself. Running the generator during the fix destroyed **50 lines of
+`REVIEW-LOG.md`** — Review 84's entire record of the enlistment battle-join deep review — for exactly
+the same reason. Restored from `HEAD` and rescued properly. That is why this is now a linter check
+rather than a note in a doc nobody re-reads.
+
+**`lint_docs.py` check 3b:** authored prose between `backlinks-start` and `backlinks-end`. Two
+details make it correct rather than merely present:
+
+- It uses the generator's own **`rfind`** semantics, so it identifies the same region
+  `splice_footer` will rewrite. First-match semantics reported 11 findings; every one was a raw
+  Codex transcript that merely *quoted* a footer.
+- It skips `docs/reviews/raw/`. Those are gitignored verbatim tool dumps — nobody hand-writes prose
+  there to lose, and switching to `rfind` did not clear them because in a transcript the quoted pair
+  genuinely IS the last pair. The check is about authored docs.
+
+Verified RED (1 finding) and GREEN (0) against an injected line, and the real generator now runs
+over both rescued files without touching their prose.
+
+### docs: the rest of the drift sweep
+
+Six more corrections to `enlistment.md`, each one a claim the code had outgrown:
+
+- **The assignment-toast invariant row told a reader to restore the flood #436 removed.** It sits in
+  the "do not re-add travel" table, so it read as a rule.
+- **A dropped negation.** An edit turned "Nothing in the 2026-08-08 batch has run in a live game"
+  into "The rest of … has run in a live game" — self-refuting against the same doc's "Discharge, any
+  reason. Zero occurrences in the live log", since the MCM switch *is* a discharge.
+- **`EnlistedDetachedOnDuty` was described as "reserved for the content phase"** — it is retired, with
+  outbound edges only, and the table has **19** edges rather than the documented 20.
+- **"Detached-duty fights keep vanilla roles"** describes a case that cannot occur: `BattleCommandPolicy`
+  has no duty branch, and since #428 a duty never detaches the player. Same claim corrected in the
+  policy's own doc comment.
+- **A live "never anchor world spawns on the commander's settlement" trap row** for a code path that
+  was deleted — `SpawnLooterParty` survives only as a banned symbol in a test.
+- **The translation counts said 178 keys.** Recounted from the files by set comparison rather than by
+  count — a matching count with a differing key passes the weaker check — giving **225**, 12/12
+  id-identical.
+
+The one finding I did NOT act on: `CLAUDE.md:280` is 452 chars against a 400 cap. That row is the
+other session's uncommitted edit to the multi-session git-safety table, so it is theirs to trim.
+
 ### docs: bring the documentation back in line with a very long day
 
 `lint_docs.py` reported clean throughout, which is exactly why this was needed — every item below is

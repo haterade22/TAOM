@@ -36,10 +36,19 @@ skip the whole report — including the six checks that were correct.
 | 1 | **Dead links** | no | a `[text](path)` in `docs/` whose relative target does not resolve |
 | 2 | **Stale version refs** | no | a version string *presented as the current target* when the pin says otherwise — see below |
 | 3 | **Orphan feature docs** | no | a `docs/features/*.md` that **no other file under `docs/` links to**. Self-links don't count, and links from outside `docs/` (e.g. `tools/README.md`, a skill body) do **not** clear it |
+| 3b | **Prose trapped in a backlinks region** | no | authored text sitting BETWEEN a file's `backlinks-start` / `backlinks-end` markers. `build_backlinks.py`'s `splice_footer` keeps only `content[:start] + regenerated footer + content[end:]`, so anything in there is deleted on its next run — no error, no conflict. The region may hold only blank lines, `## Referenced by`, and the generated link list. Uses the generator's own `rfind` semantics so it identifies the SAME region that will be rewritten, and skips `docs/reviews/raw/` (verbatim transcripts routinely QUOTE a footer). |
 | 4 | **Missing feature docs** | no | a `Main/Features/<X>/` with no `docs/features/<x>.md`. PascalCase→kebab plus a fuzzy match (exact, `-system` suffix, prefix, substring either way) — the same algorithm as `.claude/hooks/detect-docs-gaps.sh` |
 | 5 | **Config-example drift** | **yes** | a `docs/features/*.md` ```json block labelled with a config path whose values disagree with the shipped `Main/_Module/ModuleData/**/*.json`, or a doc key the shipped config no longer has. Shared keys only, so a partial example is fine; an unparseable (annotated) block is skipped rather than guessed at |
 | 6 | **Version mismatch** | **yes** | `CLAUDE.md`'s `Target: Bannerlord X`, `AGENTS.md`'s `mod for Bannerlord X`, or a `(vX snapshot)` header in `docs/reference/taleworlds-api-snapshot/{gamemodel-bases,patch-targets}.md` disagreeing with `.claude/pinned-game-version.txt` |
 | 7 | **CLAUDE.md / AGENTS.md eager budget** | **yes** (except `size-warn`) | size caps plus per-line caps on CLAUDE.md. Both files load into every session and every agent spawn, so bytes here are a permanent per-turn tax |
+
+**Why 3b exists (2026-08-09).** `docs/features/enlistment.md` had **51 lines** of a live-session
+record sitting below its `backlinks-start` marker, and the regeneration was already armed — today's
+handoff doc had become the file's 4th inbound reference while the footer still listed 3. It was
+found by a doc-drift sweep, moved out, and the guard written. Running the generator during that same
+pass then destroyed **50 lines of `REVIEW-LOG.md`** (Review 84's entire record) for exactly the same
+reason, which had to be restored from `HEAD` — the bug demonstrating itself mid-fix is the reason
+this is a check and not a note.
 
 `--fail-on-drift` gates on **5, 6, and 7** — checks 1-4 never block. Within 7, only hard violations
 gate; a `size-warn` finding is report-only by design.
@@ -197,3 +206,14 @@ may delete this one.
 - [#399](https://github.com/haterade22/TAOM/pull/399) — the fix
 - [#405](https://github.com/haterade22/TAOM/issues/405) — closed: marker-word narrowing + v1.4.5/v1.4.6
   never matched
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+
+<!-- backlinks-end -->

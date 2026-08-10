@@ -93,3 +93,12 @@ Phase 4: CLOSE OUT
 
 **Process docs:** `docs/reviews/REVIEW-GUIDE.md` (prompt templates), `docs/reviews/REVIEW-LOG.md` (scoring history)
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/release-process.md](../reference/release-process.md)
+
+<!-- backlinks-end -->

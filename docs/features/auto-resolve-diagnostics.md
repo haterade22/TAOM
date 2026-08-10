@@ -284,3 +284,13 @@ index with no allocation (verified by decompile).
   power-driven, not count-driven
 - [`docs/features/economy-diagnostics.md`](economy-diagnostics.md) — the "retrospective diagnostics
   default on" precedent this follows
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

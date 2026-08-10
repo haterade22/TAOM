@@ -182,7 +182,6 @@ which is a worse bug than the one being fixed and leaves no trace. Two tests pin
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
-
 ### Un-persisted state on a `Reuse.Singleton` service outlives the campaign — clear it at the session boundary
 
 TAOM services are registered `Reuse.Singleton`, and `IoC.Configure()` runs once in `OnSubModuleLoad`,

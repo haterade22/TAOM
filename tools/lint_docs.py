@@ -6,6 +6,7 @@ Walks docs/ and reports doc rot:
 - Dead markdown links (relative paths that don't resolve)
 - Stale version refs (1.3.15, 1.3.x, Bannerlord 1.3 outside docs/migration/)
 - Orphan feature docs (docs/features/<x>.md not referenced anywhere else)
+- Prose trapped inside an auto-generated backlinks region (build_backlinks.py deletes it)
 - Missing feature docs (Main/Features/<X>/ without a matching docs/features/<x>.md)
 
 Usage:
@@ -222,6 +223,7 @@ class LintReport:
     dead_links: list[tuple[Path, int, str, str]] = field(default_factory=list)
     stale_versions: list[tuple[Path, int, str, str]] = field(default_factory=list)
     orphan_features: list[Path] = field(default_factory=list)
+    backlinks_prose: list[tuple[Path, int, str, str]] = field(default_factory=list)
     missing_feature_docs: list[tuple[str, str]] = field(default_factory=list)
     config_drift: list[tuple[Path, int, str, str]] = field(default_factory=list)
     version_mismatches: list[tuple[Path, int, str, str]] = field(default_factory=list)
@@ -234,6 +236,7 @@ class LintReport:
             len(self.dead_links)
             + len(self.stale_versions)
             + len(self.orphan_features)
+            + len(self.backlinks_prose)
             + len(self.missing_feature_docs)
             + len(self.config_drift)
             + len(self.version_mismatches)
@@ -648,6 +651,66 @@ def build_inbound_reference_index(files: list[Path]) -> dict[Path, set[Path]]:
     return index
 
 
+def check_backlinks_region_prose(files: list[Path]) -> list[tuple[Path, int, str, str]]:
+    """Hand-written prose trapped inside the auto-generated backlinks region.
+
+    build_backlinks.py's splice_footer keeps only `content[:start] + footer + content[end:]`, so
+    ANYTHING between the markers is destroyed on its next run — silently, with no error and no
+    conflict. Found 2026-08-09 in docs/features/enlistment.md, which had 51 lines of a live-session
+    record sitting below the start marker with a regeneration already armed (the file had gained a
+    4th inbound reference while the footer still listed 3).
+
+    The region may legitimately contain only: blank lines, the `## Referenced by` heading, and the
+    generated `- [label](path)` list. Anything else is someone's writing about to be deleted.
+    """
+    findings: list[tuple[Path, int, str, str]] = []
+    start_re = re.compile(r"<!--\s*backlinks-start")
+    end_re = re.compile(r"<!--\s*backlinks-end")
+
+    for f in files:
+        # docs/reviews/raw/ is gitignored verbatim tool output (see is_never_committed_target).
+        # Nobody hand-writes prose there to lose, and the transcripts routinely QUOTE a backlinks
+        # footer — 11 false positives came from exactly that, and switching to the generator's
+        # rfind semantics did not clear them because the quoted pair IS the last pair in those
+        # files. The right answer is that this check is about authored docs.
+        if is_never_committed_target(f):
+            continue
+
+        try:
+            lines = f.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError):
+            continue
+
+        # LAST marker pair, not the first — build_backlinks.py's splice_footer uses rfind for
+        # exactly this reason ("so footer-shaped examples inside fenced code blocks don't shadow
+        # the real footer"). The linter has to identify the SAME region the generator will
+        # rewrite, or it reports on text nothing is going to touch. First-match cost 11 false
+        # positives on raw Codex transcripts that merely quote a footer.
+        start = end = None
+        for i, line in enumerate(lines):
+            if start_re.search(line):
+                start = i
+        if start is not None:
+            for i in range(len(lines) - 1, start, -1):
+                if end_re.search(lines[i]):
+                    end = i
+                    break
+        if start is None or end is None:
+            continue
+
+        for i in range(start + 1, end):
+            stripped = lines[i].strip()
+            if not stripped:
+                continue
+            if stripped == "## Referenced by":
+                continue
+            if stripped.startswith("- [") and "](" in stripped:
+                continue
+            findings.append((f, i + 1, "backlinks-prose", stripped[:120]))
+
+    return findings
+
+
 def check_orphan_features(files: list[Path]) -> list[Path]:
     """Feature docs that no other doc references."""
     inbound = build_inbound_reference_index(files)
@@ -812,6 +875,7 @@ def format_report(report: LintReport, quick: bool) -> str:
     if not quick:
         out.append(f"- Stale version refs (outside migration/archive): **{len(report.stale_versions)}**")
         out.append(f"- Orphan feature docs (no inbound references): **{len(report.orphan_features)}**")
+        out.append(f"- Prose trapped in an auto-generated backlinks region: **{len(report.backlinks_prose)}**")
         out.append(f"- Missing feature docs (Main/Features/<X> with no docs/features/<x>.md): **{len(report.missing_feature_docs)}**")
         out.append(f"- Config-example drift (doc JSON != shipped ModuleData config): **{len(report.config_drift)}**")
         out.append(f"- Version mismatches (CLAUDE.md / snapshot != pin): **{len(report.version_mismatches)}**")
@@ -833,6 +897,16 @@ def format_report(report: LintReport, quick: bool) -> str:
             for f, lineno, label, line in report.stale_versions:
                 out.append(f"- `{rel(f)}:{lineno}` — `{label}` — `{line}`")
             out.append("")
+        if report.backlinks_prose:
+            out.append("## Prose trapped in an auto-generated backlinks region")
+            out.append("")
+            out.append("`build_backlinks.py` replaces EVERYTHING between the markers on its next "
+                       "run. These lines will be silently deleted — move them above the marker.")
+            out.append("")
+            for f, lineno, _kind, text in report.backlinks_prose:
+                out.append(f"- `{rel(f)}:{lineno}` — {text}")
+            out.append("")
+
         if report.orphan_features:
             out.append("## Orphan feature docs")
             out.append("")
@@ -922,6 +996,7 @@ def main(argv: list[str]) -> int:
     if not args.quick:
         report.stale_versions = check_stale_versions(files)
         report.orphan_features = check_orphan_features(files)
+        report.backlinks_prose = check_backlinks_region_prose(files)
         report.missing_feature_docs = check_missing_feature_docs(feature_doc_basenames())
         report.config_drift = check_config_example_drift(files)
         report.version_mismatches = check_version_consistency()
@@ -935,6 +1010,7 @@ def main(argv: list[str]) -> int:
             f"dead_links:        {len(report.dead_links)}",
             f"stale_versions:    {len(report.stale_versions)}",
             f"orphan_features:   {len(report.orphan_features)}",
+            f"backlinks_prose:   {len(report.backlinks_prose)}",
             f"missing_features:  {len(report.missing_feature_docs)}",
             f"config_drift:      {len(report.config_drift)}",
             f"version_mismatch:  {len(report.version_mismatches)}",

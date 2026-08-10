@@ -160,6 +160,7 @@ A `tools/search_docs.py` (Karpathy's "naive search engine") is **deferred indefi
 
 - [docs/adrs/README.md](./README.md)
 - [docs/features/doc-graph.md](../features/doc-graph.md)
+- [docs/features/doc-health-linter.md](../features/doc-health-linter.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/raw/README.md](../raw/README.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)

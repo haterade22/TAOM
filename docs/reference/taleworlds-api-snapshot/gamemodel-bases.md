@@ -291,3 +291,12 @@ Models: 46. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 - `Single GetDailyVolunteerProductionProbability(Hero hero, Int32 index, Settlement settlement)`
 - `Int32 MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, Int32 useValueAsRelation)`
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/taleworlds-api-snapshot/README.md](./README.md)
+
+<!-- backlinks-end -->

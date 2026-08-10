@@ -400,6 +400,7 @@ only coverage.
 
 ## Referenced by
 
+- [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
 - [docs/features/special-resources.md](./special-resources.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)

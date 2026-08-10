@@ -495,6 +495,7 @@ repeat is needed before attributing the 19.5 s wholly to TAOM. Also note `[MemSa
 ## Referenced by
 
 - [docs/features/atmosphere-persistence.md](./atmosphere-persistence.md)
+- [docs/features/dev-console.md](./dev-console.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

@@ -51,3 +51,13 @@ Not part of the phase series — same directory, different subject.
 - `/scope-check` — when an audit phase tempts you to fix beyond wiring, run this first.
 - `/deep-review` — appropriate for Phase 2+ cluster reviews; **not** for Phase 1 (too heavy for mechanical probing).
 - `/codex-verify` — appropriate for cross-checking each phase's findings once a draft exists.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

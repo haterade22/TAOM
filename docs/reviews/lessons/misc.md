@@ -44,7 +44,6 @@ When CC/rendering breaks for one race, check XML config references before invest
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
-
 ### The artifact a reporter attaches may not be the crash they are reporting
 
 **Symptom:** a player reported *"every instance that I attempt to find a female dwarf in a

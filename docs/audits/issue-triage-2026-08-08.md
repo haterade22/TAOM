@@ -323,3 +323,15 @@ Verified true and completely untouched at HEAD -- every culture's `civ_template`
 ---
 
 _Every close is reversible with `gh issue reopen <N>`. The per-issue evidence is in each closing comment; the run ledger is `idx/ledger.jsonl` in the session scratchpad._
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/README.md](./README.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/TRACKING.md](../migration/TRACKING.md)
+
+<!-- backlinks-end -->

@@ -472,6 +472,7 @@ Owed by the 2026-08-03 work specifically, none of it run:
 
 ## Referenced by
 
+- [docs/features/bannerlord-together-compat.md](./bannerlord-together-compat.md)
 - [docs/features/hero-race.md](./hero-race.md)
 - [docs/features/player-possession.md](./player-possession.md)
 - [docs/INDEX.md](../INDEX.md)

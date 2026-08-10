@@ -15,7 +15,9 @@ namespace TAOM.Features.Enlistment;
 /// The policy is a pure table so the decision is testable without a mission: strip command
 /// exactly when the battle was entered as enlisted service (<see cref="EnlistmentState.EnlistedBattle"/>)
 /// and the player does not lead the battle side. Detached-duty battles are the player's own
-/// business (their duty spawned the fight) and keep vanilla roles.
+/// business and keep vanilla roles. (The "their duty spawned the fight" case this
+/// once also covered is gone: since #428 a duty never detaches the player and so never
+/// produces a battle of their own.)
 /// </summary>
 public static class BattleCommandPolicy
 {

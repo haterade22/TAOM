@@ -317,7 +317,6 @@ patch in it, not just the offending method.
 - [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../rca-tournament-dwarf-dismount-2026-06-09.md)
 
 <!-- backlinks-end -->
-
 ### A containment finalizer must swallow only the exception class it exists for
 
 **Symptom:** `Patch69_TournamentEndGuard` was written to contain a known `NullReferenceException` in

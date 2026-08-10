@@ -65,3 +65,12 @@
 | Understand the quest/issue system, or convert vanilla quests to LOTR | [issue-and-quest-system.md](../../docs/reference/engine/issue-and-quest-system.md) (engine A-to-Z) + [lotr-issues.md](../../docs/features/lotr-issues.md) (**IMPLEMENTED** 2026-06-20 — 43 vanilla issues suppressed + replaced via XML-config + 3 generic templates) |
 | Browse all engine process docs | [docs/reference/engine/](../../docs/reference/engine/) — full arc: campaign heartbeat → object graph → encounter seam → mission lifecycle → agent spawn → formation/team AI → mount/rider → combat stats → usable machines → UI → save/object system → GameModel → scene/script → campaign behaviors → items → module integration → settlement economy |
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/release-process.md](./release-process.md)
+
+<!-- backlinks-end -->

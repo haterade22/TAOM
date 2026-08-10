@@ -337,7 +337,6 @@ Open an issue on GitHub or reach out on the mod's Discord channel.
 - [docs/reference/localization-map.md](../reference/localization-map.md)
 
 <!-- backlinks-end -->
-
 ## Adding a new strings file to the pipeline (order matters)
 
 Registering a key in a source XML is only half the job — a key that is not wired into the
