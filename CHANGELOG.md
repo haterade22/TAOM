@@ -4,6 +4,64 @@
 
 ## 2026-08-09
 
+### fix(harness): the rule against `git add -A` is now enforced, not just written
+
+CLAUDE.md has said "stage explicitly, never `git add -A`" since 2026-08-07. In the two days since,
+it was broken three times — a rebase auto-stash left unrestored and committed over, a CHANGELOG
+appended into a file carrying live conflict markers, and today two `#434` CHANGELOG entries swept
+into an unrelated enlistment commit that was then pushed. The prose half of that change is now in
+`HEAD` under a subject that does not describe it, and its code half landed separately.
+
+`block-broad-git-add.sh` confirms before `git add -A/-u/.` and `git commit -a/-am`, and lists the
+paths the sweep would actually take — because the decision is never "did I mean to type `-A`", it
+is "is every one of these files mine". Confirm-not-block, matching `block-dangerous-git.sh`:
+naming the paths explicitly is always available, so there is nothing to override.
+
+Detection is segment-anchored and strips quoted spans, so `git commit -m "fix: add -a flag"` and
+`echo "git add -A"` both pass untouched. 23 cases, and the suite was verified able to fail — run
+against an always-allow stub, exactly the 11 that must confirm do.
+
+`session-start.sh` now prints the stash count. `git status` never mentions stashes, which is how a
+2026-08-07 `autostash` sat unresolved for two days. That one is now gone: every line it held was
+superseded — `MeritThreshold` 8→32 and `MaxOffersPerBattle` 1→2 from the deliberate raise in
+`14160f0a`, "in poor odour" → "badly thought of", and `taom_enlist_wait_board` replaced by `_v2`
+after a shape change. 19 of its 35 files were byte-identical to the tree; applying it would have
+reverted three intentional changes.
+
+### fix(localization): four shipped strings contained a decoding failure
+
+One Japanese culture description and three Korean rows carried U+FFFD — the character a decoder
+emits when it gives up. The player sees a box mid-sentence. `회색 산맥` (the Grey Mountains) shipped
+with a stray wedged between the two syllables of 산맥.
+
+Repaired by removing the stray and nothing else. What byte it stood for is not recoverable, and
+each row reads correctly without it; reconstructing a character would be invention. The matching
+`translation_cache` entries were poisoned too, so a re-translation could not have cleared them —
+the cache keys on `string_id` alone and would have served the same damage straight back.
+
+`LanguageTextIntegrityTests` now fails on any U+FFFD or stray C0 control in a shipped translation.
+It does not assert where the damage came from: the cache reads and writes clean UTF-8 and the only
+`errors="replace"` in the translator is on the stdout wrapper, which never touches data, so the
+origin is unproven. Detection does not require knowing the source.
+
+### test(localization): a ratchet on the two modules this repo cannot see
+
+`TAOM_Map` and `LOTRLOME_Armory` live in the game install, so nothing here tracks their
+`loc_*.xml` and a module reinstall reverts their translations with no diff, no test and no build
+failure. `check_external_loc_coverage.py` records per-language untranslated counts and fails when
+they go backwards. An absent install skips at exit 0 rather than reporting perfect coverage it
+never measured — the pipeline has to stay usable by contributors with no Bannerlord installed.
+
+**Correcting the finding that prompted it.** #444 reported ~2,062 entries "behind their own cache,
+so applying them costs nothing but a run". Applying them costs nothing because it changes nothing:
+the cached value for every one is byte-identical to the English. All 333 of German's are `.name.`
+rows — Cirith Ungol, Barad Nûrn, Carach Angren — whose correct German form is the Sindarin name.
+They will read as "untranslated" forever and should.
+
+The real gap in that PR's numbers is the other half, and it is real: **Polish is 3,892 entries
+short across those two modules with nothing cached at all.** That needs an API key, and is the
+only external-module translation work actually outstanding.
+
 ### docs(autoresolve): bring the feature doc and two registries back in line with the code
 
 Two audit passes against current source. The feature doc had drifted in the ways a doc drifts when
