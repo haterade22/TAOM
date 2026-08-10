@@ -525,9 +525,15 @@ def _parse_response_text(text: str) -> dict[str, str]:
     return _extract_translations(json.loads(text))
 
 
-def call_claude(client, target_language: str, batch: list[Entry]) -> dict[str, str]:
-    """Translate a batch via the Claude API. Returns {id: translated_text}."""
-    req = build_request(target_language, batch)
+def call_claude(client, target_language: str, batch: list[Entry],
+                provider: dict = None) -> dict[str, str]:
+    """Translate a batch via the Claude API. Returns {id: translated_text}.
+
+    `provider` is threaded through so --model reaches the request. Omitting it here made
+    build_request fall back to the packaged default, so `--model X` printed X in the run
+    header, priced the estimate as X, and sent the hardcoded MODEL.
+    """
+    req = build_request(target_language, batch, provider)
     # The installed SDK predates the typed output_config parameter — send it via extra_body.
     output_config = req.pop("output_config")
 
@@ -627,18 +633,20 @@ def call_model(provider: dict, client, target_language: str,
                batch: list[Entry]) -> tuple[dict[str, str], tuple[int, int]]:
     """One batch through whichever provider is selected."""
     if provider["api"] == "anthropic":
-        return call_claude(client, target_language, batch)
+        return call_claude(client, target_language, batch, provider)
     return call_openai_compatible(provider, target_language, batch)
 
 
-def call_claude_batched(client, target_language: str, chunks: list[list[Entry]],
-                        poll_seconds: int = 30) -> tuple[dict[int, dict[str, str]], tuple[int, int]]:
+def call_claude_batched(
+        client, target_language: str, chunks: list[list[Entry]], poll_seconds: int = 30,
+        provider: dict = None) -> tuple[dict[int, dict[str, str]], tuple[int, int]]:
     """Translate many chunks through the Batches API (50% of standard price).
 
     Returns ({chunk_index: {id: translated}}, (input_tokens, output_tokens)). A chunk that
     errored, expired, or was canceled comes back absent — the caller marks its entries failed.
     """
-    requests = [{"custom_id": f"chunk-{i}", "params": build_request(target_language, chunk)}
+    requests = [{"custom_id": f"chunk-{i}",
+                 "params": build_request(target_language, chunk, provider)}
                 for i, chunk in enumerate(chunks)]
     batch = client.messages.batches.create(requests=requests)
     print(f"    Batch submitted: {batch.id} ({len(requests)} requests)", flush=True)
@@ -926,9 +934,10 @@ def main():
         chunks = [need_llm[i:i + size] for i in range(0, len(need_llm), size)]
 
         if args.batch:
-            print(f"\n  Calling Claude Batches API ({MODEL}) — "
+            print(f"\n  Calling Claude Batches API ({provider['model']}) — "
                   f"{len(chunks)} requests of up to {size} entries (50% price)...")
-            per_chunk, (in_tok, out_tok) = call_claude_batched(client, lang_name, chunks)
+            per_chunk, (in_tok, out_tok) = call_claude_batched(
+                client, lang_name, chunks, provider=provider)
             result.api_input_tokens += in_tok
             result.api_output_tokens += out_tok
             for idx, chunk in enumerate(chunks):

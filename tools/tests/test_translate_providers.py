@@ -22,6 +22,7 @@ import json
 import os
 import sys
 import unittest
+from types import SimpleNamespace
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -177,6 +178,77 @@ class ResponseParsing(unittest.TestCase):
         self.assertTrue(captured["url"].endswith("/chat/completions"))
         self.assertTrue(captured["auth"].startswith("Bearer "))
 
+
+class TheModelOverrideReachesTheWire(unittest.TestCase):
+    """--model must reach the request on every provider, the default one included.
+
+    AnthropicIsUnchanged above asserts build_request in isolation, and that is exactly
+    why it could not see this: both Anthropic call sites called build_request WITHOUT
+    the provider, so `--model X` was accepted by argparse, printed in the run header and
+    used to price the estimate, then dropped before the request was built. The run said
+    one model and sent another.
+
+    A test one level up -- on what the CALLER hands the SDK -- is the only level where
+    that gap is visible, so these assert there.
+    """
+
+    def _recording_client(self):
+        """A stand-in that records the kwargs call_claude hands messages.create."""
+        class Messages:
+            def __init__(self):
+                self.sent = None
+
+            def create(self, **kwargs):
+                self.sent = kwargs
+                return SimpleNamespace(
+                    content=[SimpleNamespace(text='{"translations": []}')],
+                    usage=SimpleNamespace(input_tokens=1, output_tokens=1))
+
+        return SimpleNamespace(messages=Messages())
+
+    def test_the_sequential_path_sends_the_model_the_cli_asked_for(self):
+        client = self._recording_client()
+        twc.call_claude(client, "German", _entries(1),
+                        twc.resolve_provider("anthropic", model="claude-sonnet-5"))
+        self.assertEqual("claude-sonnet-5", client.messages.sent["model"],
+                         "--model was printed and priced but not sent")
+
+    def test_the_batched_path_sends_the_model_the_cli_asked_for(self):
+        class Batches:
+            def __init__(self):
+                self.created_requests = None
+
+            def create(self, requests):
+                self.created_requests = requests
+                return SimpleNamespace(id="msgbatch_fake", processing_status="in_progress")
+
+            def retrieve(self, batch_id):
+                return SimpleNamespace(
+                    id=batch_id, processing_status="ended",
+                    request_counts=SimpleNamespace(processing=0, succeeded=0, errored=0))
+
+            def results(self, batch_id):
+                return iter(())
+
+        client = SimpleNamespace(messages=SimpleNamespace(batches=Batches()))
+        twc.call_claude_batched(
+            client, "German", [_entries(1)], poll_seconds=0,
+            provider=twc.resolve_provider("anthropic", model="claude-sonnet-5"))
+
+        sent = client.messages.batches.created_requests
+        self.assertEqual("claude-sonnet-5", sent[0]["params"]["model"],
+                         "--batch ignored --model and sent the packaged default")
+
+    def test_without_the_flag_both_paths_still_send_the_packaged_default(self):
+        # The other half of the guard: threading the provider through must not change
+        # what an ordinary run sends, which is every run anyone is making today.
+        client = self._recording_client()
+        twc.call_claude(client, "German", _entries(1), twc.resolve_provider("anthropic"))
+        self.assertEqual(twc.MODEL, client.messages.sent["model"])
+
+        bare = self._recording_client()
+        twc.call_claude(bare, "German", _entries(1))
+        self.assertEqual(twc.MODEL, bare.messages.sent["model"])
 
 if __name__ == "__main__":
     unittest.main()
