@@ -1,7 +1,8 @@
 # Creature Mount Authoring — the complete workflow
 
 How to take a non-humanoid creature from raw assets to a **rideable, battle-stable mount** in
-TAOM on Bannerlord 1.4.6. Distilled from the two campaigns that proved every step the hard way:
+TAOM on Bannerlord **1.4.8** (the workflow was proven on 1.4.5 → 1.4.6 — see "The engine-bump
+protocol" near the end). Distilled from the two campaigns that proved every step the hard way:
 the **war elephant** (2026-06-03 → 06-10, upstream-pack port) and the **giant spider**
 (2026-06-04 → 06-12, custom skeleton + custom clips — the maximal case). The warg
 (Alliance.Wargs) is the always-on reference implementation: when in doubt, do what the warg does.
@@ -134,11 +135,62 @@ Copy the warg's shape (`Alliance.Wargs/ModuleData/Monsters/LOTR/lotr_monster_war
 | `num_paces` | **6** | every mountable monster is 6; the mount machinery indexes the gallop pace (5) |
 | `family_type` | **1** (horse family) | family 1 carries vanilla's complete rider-death / dismount / rider-fall surface. The spider tried 11 — no such surface exists for it. Harness isolation is done in C# (mount-lock), not via family |
 | `<Flags>` | **EXACTLY** `Mountable CanRear RunsAwayWhenHit CanCharge CanWander` | **`CanAttack` is forbidden on a mountable monster** — it activates the engine's own attack-AI (`Agent_ai::set_attack_entity`), a code path NO working mount takes, and the site of the 1.4.6 charge-CTD (null `agent+0xAD8`, Event-Log-proven 2026-06-12). The BT bite/trample does NOT need it — the warg proves it. No other extras: no baseline mount declares any |
-| Rein surface | `rein_handle_bone` + `rein_handle_left/right_local_pos` + `rein_collision_1/2_bone` | every working mount declares one (warg-minimal is fine) |
+| Rein surface | the warg's five — `rein_handle_bone` + `rein_handle_left/right_local_pos` + `rein_collision_1/2_bone` — but **vanilla declares all twelve** | "warg-minimal is fine" has never been tested against a native change in the rein path, and v1.4.8 made one. The elephant and mûmakil declare **zero** while still being `Mountable`. See "The rein-attribute invariant" below |
 | Rider adders | `rider_eye_height_adder`, `rider_body_capsule_height_adder`, `rider_body_capsule_forward_adder` | warg + vanilla horse parity (camera + rider capsule) |
 | `rider_sit_bone` | a spine/chest bone | seats the rider; `rider_camera_height_adder` tunes camera |
 | Slope block | `front/back_bone_to_detect_ground_slope_index` + `bones_to_modify_on_sloping_ground_*` | quadruped slope pitch (indices verified vs decompiled `MonsterExtensions`) |
 | `sound_and_collision_info_class` | an existing class (`horse`) or author your own collision_infos (warg does) | footstep sounds/particles only — cosmetic |
+
+### The rein-attribute invariant (measured 2026-08-10 on v1.4.8) — **UNVERIFIED risk, in-game test owed**
+
+`Monster.Deserialize` reads **twelve** rein attributes (`TaleWorlds.Core.Monster`, v1.4.8): the five
+in the table above plus `rein_collision_body`, `rein_head_bone`, `rein_head_left_attachment_bone`,
+`rein_head_right_attachment_bone`, `rein_left_hand_bone`, `rein_right_hand_bone`, `rein_skeleton`.
+An absent bone attribute resolves to bone index **−1** — unless the Monster sets `base_monster`, in
+which case the base's value is inherited.
+
+**In vanilla, "is `Mountable`" and "carries all twelve rein attributes" are the same set, with no
+exceptions.** Measured across all 94 `<Monster>` definitions in the install:
+
+| Monster | Module | `family_type` | `Mountable` | rein attrs declared | effective (after `base_monster`) |
+|---|---|---|---|---|---|
+| `horse`, `mule` | Native | 1 | yes | 12 | 12 |
+| `camel` | Native | 2 | yes | 12 | 12 |
+| `horse_2` | Native (`base_monster="horse"`) | 1 — inherited | yes — inherited | 0 | **12 — inherited** |
+| `camel_unmountable`, `mule_unmountable` | Native (inherit `camel`/`mule`) | 2 / 1 — inherited | no | 0 | 12 — inherited |
+| `chariot` | LOTRLOME_Armory | 4 | yes | 12 | 12 |
+| `spider` | LOTRLOME_Armory | 1 | yes | **5** | 5 |
+| `warg` | Alliance.Wargs | 1 | yes | **5** | 5 |
+| `taom_war_elephant`, `taom_mumakil` | LOTRLOME_Armory | 10 | yes | **0** | 0 |
+
+TAOM breaks the pairing on four mounts. Rideability here is **declared, not inferred**: the
+`<Horse monster="Monster.X">` items in
+`LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` (`spider_mount_a`,
+`taom_war_elephant`, `taom_mumakil`, `taom_chariot_a`) and
+`Alliance.Wargs/ModuleData/Items/LOTR/lotr_warg.xml` (3 warg items). The zero-rein shape is
+upstream, not a TAOM authoring slip — the donor beasts pack's own `elephant` Monster
+(`ADOD_Beasts/ModuleData/adod_beasts.xml`) is likewise `Mountable` with zero rein attributes.
+
+**Why this is newly worth testing.** v1.4.8 fixed a "horse rein visual bug when a mounted agent
+died" — a native change with no managed diff, in a path that runs on **mounted-agent death**
+(row N7, [v1.4.8-impact.md](../migration/v1.4.8-impact.md)). TAOM feeds that path a shape vanilla
+never produces. **No crash is predicted and none is claimed here**; nothing offline settles it. The
+test that does: kill a **ridden** elephant, mûmakil, spider and warg, and kill their riders while
+mounted, and watch the deaths. The spider's 1.4.6 river battle covered rider deaths and spider
+deaths with no rein defect reported ([spider.md](../features/spider.md) "The v1.4.6 engine-bump
+campaign") — but that predates this native change.
+
+**Nothing gates it.** `tools/audit_mount_parity.py` contains zero occurrences of "rein"
+(case-insensitive) and has no `sys.exit` at all — it always exits 0. Its Section A *does* print the
+elephant's five missing rein attributes, but as five unlabelled rows among 57 attribute-presence
+divergences, with no severity; `mumakil` is not in that presence comparison at all (Section A
+compares spider vs warg vs elephant). If you add a rein rule, add it **repo-side**: the live Monster
+files are in the unversioned `LOTRLOME_Armory` / `Alliance.Wargs` dependency modules, so a fix made
+only there is silently reverted by a module reinstall (CLAUDE.md, "A fix in a dependency module").
+
+**Authoring rule going forward:** a new `Mountable` monster declares all twelve, or inherits them
+via `base_monster`. Shipping fewer is a deliberate deviation — record it here and battle-test the
+mounted death before calling the mount done.
 
 ## Phase 3 — action_types (typed verb surface)
 
@@ -238,7 +290,11 @@ Steam force-bumped the engine mid-campaign (2026-06-11 17:39) and three latent d
 CTDs because the rewritten native lookups stopped tolerating misses. After ANY engine bump:
 run `/verify-bindings`, re-run the parity audit + control battles, and check the Event Log fault
 offsets against the previous version's known sites before assuming your last change caused a
-crash. Keep the previous decompile as `_shipping_build_vX.Y.Z` (the 1.4.5 baseline lives at
+crash. **Include a mounted-death pass in the control battle** — kill the ridden creature, and kill
+its rider while mounted. That is the one path a data-only creature can regress on with zero managed
+diff (1.4.6 melee-death Die-path AV → Patch47; v1.4.8 native rein fix → the rein-attribute
+invariant under Phase 2, still unverified). Keep the previous decompile as
+`_shipping_build_vX.Y.Z` (the 1.4.5 baseline lives at
 `E:\Decompiled_Bannerlord\_shipping_build_v1.4.5`) — managed diffs scope the blast radius fast
 (1.4.6: combat assembly byte-identical; all changes native-internal).
 
@@ -272,6 +328,11 @@ crash. Keep the previous decompile as `_shipping_build_vX.Y.Z` (the 1.4.5 baseli
     recursive worker-thread native AV (spider 2026-06-14): a standalone skeleton tpac is an unproven
     structure, and every shipping creature bundles its skeleton WITH the mesh. (spider rework
     2026-06-13/14). See the "Replacing FBX/TPAC files" section at the top.
+18. **A `Mountable` monster with an incomplete rein surface is a TAOM-only shape** — vanilla pairs
+    `Mountable` with all twelve rein attributes without exception, whereas the elephant and mûmakil
+    declare zero and the spider and warg five. v1.4.8 changed the native rein path that runs on
+    mounted-agent death. **UNVERIFIED — a ridden-death in-game test is owed, and no tool gates it**
+    (2026-08-10). See "The rein-attribute invariant" under Phase 2.
 
 ---
 
@@ -281,6 +342,7 @@ crash. Keep the previous decompile as `_shipping_build_vX.Y.Z` (the 1.4.5 baseli
 
 - [docs/ai-includes/creature-animation-blender-mcp-workflow.md](./creature-animation-blender-mcp-workflow.md)
 - [docs/features/elephant.md](../features/elephant.md)
+- [docs/features/mumakil.md](../features/mumakil.md)
 - [docs/features/spider.md](../features/spider.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)

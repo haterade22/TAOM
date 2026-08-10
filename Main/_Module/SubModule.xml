@@ -23,7 +23,7 @@
     <DependedModule Id="TAOM.Dependencies" />
   </DependedModules>
   <DependedModuleMetadatas>
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.7.*" />
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.8.*" />
     <!-- Version-pinned mirror of the DependedModule above, for BUTR/BLSE launchers (which DO read
          this block). Bump this alongside Dependencies/_Module/SubModule.xml's <Version> whenever
          the Dependencies assembly changes — a stale pairing is the #371 failure mode. -->

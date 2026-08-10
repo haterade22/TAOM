@@ -1,6 +1,6 @@
 # TAOM — Tales From the Age of Men
 
-A Lord of the Rings total conversion mod for **Mount & Blade II: Bannerlord v1.4.5**.
+A Lord of the Rings total conversion mod for **Mount & Blade II: Bannerlord v1.4.8**.
 
 ![The TAOM world map — Middle-earth at the time of the War of the Ring](tools/factionmap_output/verification_full.png)
 
@@ -22,7 +22,7 @@ troop has been replaced or rewritten to fit Tolkien's world.
 
 **Prerequisites**
 
-- Mount & Blade II: Bannerlord **v1.4.5** installed
+- Mount & Blade II: Bannerlord **v1.4.8** installed
 - Visual Studio 2022 (or the .NET SDK + MSBuild) — targets .NET Framework 4.7.2
 - `BANNERLORD_GAME_DIR` environment variable pointing at your game install
   (the `setup-dev-env.ps1` script configures this)

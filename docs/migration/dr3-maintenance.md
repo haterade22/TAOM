@@ -54,7 +54,7 @@ Patterns, not a fixed list — the impl set grows every time BUTR ships a build 
 | `MCM.UI.Adapter.MCMv5.dll` | `2859238197` | same as above |
 | `BUTR.CrashReport*.dll` (6 files) | `2859232415` | same as ButterLib — **not optional**, see the inventory note below |
 
-> **The `<game-ver>` suffix names the game build BUTR compiled that impl against — not a version TAOM supports.** The meta-loader picks the highest impl whose suffix is ≤ the running engine. So a gap between the newest bundled impl and the Native pin is normal whenever BUTR hasn't shipped an impl for the current engine yet (e.g. on 1.4.7 the loader correctly runs the `1.4.5` impl, because BUTR ships nothing newer). Bundling only a stale subset is the actual bug — see Scenario A.
+> **The `<game-ver>` suffix names the game build BUTR compiled that impl against — not a version TAOM supports.** The meta-loader picks the highest impl whose suffix is ≤ the running engine. So a gap between the newest bundled impl and the Native pin is normal whenever BUTR hasn't shipped an impl for the current engine yet — on 1.4.8 nobody ships a 1.4.8 impl, so the loader landing on an older one is expected. Bundling only a stale subset is the actual bug — see Scenario A, where the 2026-08-10 re-check found BUTR shipping `1.4.6` and `1.4.7` impls that we do not vendor.
 
 **Steam Workshop folder mapping (Bannerlord app ID = 261550):**
 - `2859188632` — Bannerlord.Harmony (we DON'T bundle this DLL — we use Lib.Harmony NuGet instead)
@@ -162,12 +162,14 @@ If any of these fail, the most common causes are:
 
 ## Common scenarios
 
-### Scenario A: Bannerlord ships a patch within the current minor (e.g. 1.4.6 → 1.4.7)
+### Scenario A: Bannerlord ships a patch within the current minor (e.g. 1.4.7 → 1.4.8)
 
 **This scenario's old advice ("most likely nothing needs to change") is what caused the 2026-07 drift — it was followed literally on both the 1.4.6 and 1.4.7 bumps, and both the Native pin and the vendored impl set went stale.** Do all of:
 
 1. **Bump `Main/_Module/SubModule.xml`'s Native constraint** to the new version (`v<new>.*`). Enforced by `BundledDependencyManifestTests.NativeConstraint_MatchesPinnedGameVersion` against `.claude/pinned-game-version.txt`.
-2. **Re-check the Workshop impl set.** BUTR ships new `Implementation.<game-ver>.dll` / `MBOptionScreen.v<game-ver>.dll` builds on its own cadence, independent of the engine. If the Workshop folders now hold impls newer than what we vendor, copy them in — otherwise the meta-loader silently keeps selecting an older impl than BUTR intends. (This is exactly what happened: TAOM shipped only `1.4.0`/`1.4.1` while BUTR had shipped through `1.4.5`.)
+2. **Re-check the Workshop impl set — in the Workshop folders, not the game install.** BUTR ships new `Implementation.<game-ver>.dll` / `MBOptionScreen.v<game-ver>.dll` builds on its own cadence, independent of the engine. If the Workshop folders now hold impls newer than what we vendor, copy them in — otherwise the meta-loader silently keeps selecting an older impl than BUTR intends. (This is exactly what happened: TAOM shipped only `1.4.0`/`1.4.1` while BUTR had shipped through `1.4.5`.) The install's `Modules/Bannerlord.ButterLib/` and `Modules/Bannerlord.MBOptionScreen/` are the wrong place to look — verified 2026-08-10, both hold **zero DLLs** (only `_Module/`, because they are TAOM's own stub deploys), so checking there reads as "BUTR shipped nothing."
+
+   **What the check found on the 1.4.7 → 1.4.8 bump (2026-08-10):** the ButterLib Workshop folder (`261550/2859232415`) now carries `Bannerlord.ButterLib.Implementation.1.4.6.dll` and `.1.4.7.dll`, both written 2026-07-21, while `Dependencies/_Module/bin/Win64_Shipping_Client/` still tops out at `Implementation.1.4.5.dll` — a two-impl vendoring gap, exactly the failure this step exists to catch. Copy both in. MCM is clean: the MBOptionScreen Workshop folder (`261550/2859238197`) tops out at `v1.4.5` (written 2026-06-21), matching what we vendor. Neither module ships anything built for 1.4.8, so the "BUTR ships behind Bannerlord" note below still applies on top of the gap.
 3. **Re-check the NuGet pins** (`Lib.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.MCM`) against current releases. An engine patch is a natural checkpoint even though these version independently of the game.
 4. Run the smoke test.
 

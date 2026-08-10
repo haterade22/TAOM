@@ -3,7 +3,7 @@
 **Migration: Bannerlord 1.3.15 → 1.4.5 — Functional foundation complete (2026-05-22).**
 **Status:** S0–S5b ✅ landed (adapters, GameModels, equipment XML migration, roster authoring). S6–S12 (smoke test, per-tier feature validation, Codex review, closeout) were rolled into ongoing feature work on the `bannerlord-1.4.5` branch rather than executed as discrete gates — see commit history from 2026-05-22 onward for de-facto validation (CC fixes, warg combat, faction-map UI overhaul, career system tooltips, etc.). The formal validation pipeline was not run; runtime exposure has come through feature development.
 
-**Subsequent minor engine bumps (tracked engine, no schema migration):** v1.4.5 → v1.4.6 (spider/elephant native-crash line) → **v1.4.7 (2026-07-08, current)**. Each was handled via `/engine-bump` (preserve baseline → regen decompile → `/verify-bindings` → parity audits → snapshot refresh) rather than a fresh migration.
+**Subsequent minor engine bumps (tracked engine, no schema migration):** v1.4.5 → v1.4.6 (spider/elephant native-crash line) → v1.4.7 (2026-07-08) → **v1.4.8 (2026-08-10, current)**. Each was handled via `/engine-bump` (preserve baseline → regen decompile → `/verify-bindings` → parity audits → snapshot refresh) rather than a fresh migration.
 
 **Tracker issue #210 closed 2026-08-08 as `obsolete-premise`** (issue-triage pass, [`docs/audits/issue-triage-2026-08-08.md`](../audits/issue-triage-2026-08-08.md)). The premise it tracked no longer holds: the code and data migration landed, and the engine is pinned two bumps past its target at v1.4.7. The S6–S12 gates it listed were never run as discrete steps — they were rolled into ongoing feature work (see the S6–S12 section below) — so closing the issue performed no validation. The residual in-game checks stay open and unticked in [`s6-runtime-punchlist.md`](./s6-runtime-punchlist.md); nothing in this file was ticked on account of the close.
 
@@ -651,6 +651,7 @@ BannerlordTogether v0.2.2 requires `DependentVersion="v1.3.15.110062"`. TAOM's S
 - [docs/migration/s6-runtime-punchlist.md](./s6-runtime-punchlist.md)
 - [docs/migration/templates/README.md](templates/README.md)
 - [docs/migration/v1.4.7-impact.md](./v1.4.7-impact.md)
+- [docs/migration/v1.4.8-impact.md](./v1.4.8-impact.md)
 - [docs/migration/v1.4.x-overview.md](./v1.4.x-overview.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/taleworlds-api-snapshot/README.md](../reference/taleworlds-api-snapshot/README.md)

@@ -2,7 +2,7 @@
 
 **Purpose.** TAOM reaches into private/internal TaleWorlds members by *string name* in many places. The C# compiler cannot verify those — a rename/move/removal in a Bannerlord update makes the lookup return `null`, and the reflecting code logs-and-survives, so the feature silently degrades with **no crash to investigate**. This file is the authoritative inventory of every reflection touchpoint, and the data source for the offline binding gate `TAOM.Tests/Migration/ReflectionSiteBindingTests.cs`.
 
-It also exists so that an agent working on TAOM does not need the external decompile dump (`E:\Decompiled_Bannerlord\`) just to answer "what private member does feature X reach into, and is it still there in v1.4.5?"
+It also exists so that an agent working on TAOM does not need the external decompile dump (`E:\Decompiled_Bannerlord\`) just to answer "what private member does feature X reach into, and is it still there in v1.4.8?"
 
 **How the gate uses this.** Each row in [Category B](#category-b--auxiliary-static-engine-reflection-gated) is a `[DataRow]` in `ReflectionSiteBindingTests`. The test resolves the type (full name, then simple-name fallback) and asserts the member exists on the installed engine. Run it with:
 
@@ -65,6 +65,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 
 Status (2026-05-28): **all 32 resolve against installed v1.4.5.**
 Status (2026-07-14): SettlementGuards rows added (`PrepareGuardAgentDataFromGarrison` backfill + `_garrisonTroops`, #346) — **all 35 gate rows resolve against installed v1.4.7.**
+Status (2026-08-10): v1.4.8 engine bump — **every gate row still resolves; no row added or removed.** `BindingVerification` ran 106/106 green against the installed v1.4.8 DLLs. 1.4.8 rewrote `NavigationCache` for speed (`GetClosestSettlementToPosition` gained an optional `useEarlyOut` parameter), but no member this table names changed shape.
 
 ---
 

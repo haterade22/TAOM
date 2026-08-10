@@ -6,7 +6,7 @@ argument-hint: [path|list|remove|clean] <FullyQualifiedType>
 
 # taom-src — one-command TaleWorlds source lookup
 
-Wraps `ilspycmd` against the **installed DLLs** (auto-detects the engine version from `Version.xml` — currently v1.4.7) and caches at `~/.taom-src/<version>/`. Inspired by [vercel-labs/opensrc](https://github.com/vercel-labs/opensrc). Use this **before** every `[HarmonyPatch]`, `GameModel` override, or adapter that touches a TaleWorlds type — never guess signatures from the `E:\Decompiled_Bannerlord\` dump (it can lag the installed engine after a bump).
+Wraps `ilspycmd` against the **installed DLLs** (auto-detects the engine version from `Version.xml` — currently v1.4.8) and caches at `~/.taom-src/<version>/`. Inspired by [vercel-labs/opensrc](https://github.com/vercel-labs/opensrc). Use this **before** every `[HarmonyPatch]`, `GameModel` override, or adapter that touches a TaleWorlds type — never guess signatures from the `E:\Decompiled_Bannerlord\` dump (it can lag the installed engine after a bump).
 
 ## Core pattern
 

@@ -2,6 +2,89 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-10
+
+### chore: v1.4.8 engine bump — nothing in `Main/` had to change
+
+Steam moved the installed game to v1.4.8 (War Sails v1.2.8, build `117131 → 119303`) at 07:22 this
+morning, alongside the public War Sails Modding Kit. The bump protocol ran end to end and came back
+cleaner than any before it: TAOM compiles against the new assemblies with **0 errors**,
+`BindingVerification` is **106/106**, the full suite is **6311 passed / 0 failed / 2 skipped**, and
+every data audit is green (action-set parity 0 gaps and 0 orphans, `validate_moduledata` PASS, all
+256 battle-map indices, mount parity clean).
+
+The strongest single statement available: regenerating the committed API snapshot against v1.4.8
+changed **only the version strings**. Not one of the 194 Harmony patch targets or 46 GameModel
+override signatures differs from the v1.4.7 copy.
+
+**8 of 56 shipping assemblies actually changed**, and three of those differ only by the build number.
+`TaleWorlds.MountAndBlade` — the combat assembly — changed by **one line**. Zero vanilla `ModuleData`
+XML was touched, which means the 1.4.7 data baseline survived the update and every parity audit still
+has something to compare against; that was luck, not design, since nothing archives vanilla data
+before Steam overwrites it.
+
+Diffing found four engine changes the changelog does not mention, all verified harmless to TAOM and
+all recorded in the impact doc: `Debug.ShowMessageBox` changed return type `void → int`; the
+raid-engagement guard narrowed to `engagingParty.IsMainParty`; two new save-repair blocks run on load
+(every existing TAOM save takes the village `MapEventSide` repair once); and `NotablesCampaignBehavior`
+now vetoes the death of a notable whose caravan is in a map event. That last one looked like a real
+hazard for culture conversion's notable replacement until the call chain resolved it —
+`ApplyByRemove` defaults `isForced: true`, which bypasses the veto. TAOM's **other** hero-kill path
+does not: `HeroAgeAdapter` → `ApplyByOldAge` passes four arguments, so `isForced` takes its `false`
+default and the veto applies. That one is harmless too, but for a different reason — `RaceAgeBehavior`
+re-enumerates every alive hero daily with no already-attempted set and announces only on a re-read of
+`IsAlive`, so a vetoed notable is retried tomorrow.
+
+Two things are owed and neither is code: the in-game control battles, and TAOM's ~158 MB of shader
+caches, which carry format version `0x0782` against the `0x0783` that all 486 sacks 1.4.8 shipped now
+use. Deferred deliberately, tracked as #448.
+
+Full analysis, including the changelog-item → surface → verdict table:
+[`docs/migration/v1.4.8-impact.md`](docs/migration/v1.4.8-impact.md).
+
+Research: NavigationCache · KillCharacterAction.ApplyByRemove · Scene.ClearRuntimeDecals · GauntletUI drag-drop
+Save-compat: none from TAOM — but 1.4.8 itself repairs village `MapEventSide` on any save older than v1.4.8
+Not-tested: in-game control battles, cold shader-precompile walk, first campaign load
+
+### fix(tools): the decompile stack was missing 34 assemblies, including ones we patch
+
+`decompile_bannerlord.ps1` only ever walked `<GameBin>\Win64_Shipping_{Client,wEditor}`, and
+`decompile_to_folder.ps1` pulled just the primary DLL per module. Everything shipping inside a
+module's own bin folder was in no decompile artifact at all — `SandBox.View`,
+`SandBox.ViewModelCollection`, `SandBox.GauntletUI`, `TaleWorlds.MountAndBlade.View`,
+`TaleWorlds.MountAndBlade.GauntletUI`, the `StoryMode` / `Multiplayer` / `NavalDLC` satellites.
+34 vanilla assemblies, and TAOM patches into several of them: `AgentVisuals`, `CharacterTableau`,
+`MobilePartyVisual`, `SPInventoryVM`, the tournament controllers.
+
+Nobody noticed because the gap is invisible until you try to diff. The v1.4.8 assembly comparison
+read as complete and was not — it covered the base bin only.
+
+The cost is one-way. Steam overwrites the install in place, so an assembly that is not in the stack
+when an update lands has no recoverable baseline afterwards; the 1.4.7 bytes for those 34 are gone.
+A `_modules_build` pass now decompiles all 125 managed module DLLs (`<Module>__<Dll>.cs`, because
+`TaleWorlds.MountAndBlade.Multiplayer.dll` ships in both `CustomBattle\` and `Multiplayer\` and a
+flat name would silently drop one). The next bump is diffable.
+
+For this bump the recovery came from `~/.taom-src/v1.4.7/`: 42 of its 475 cached types are from
+module DLLs, decompiled per-type from the 1.4.7 binaries by the same tool that reads 1.4.8. That set
+is exactly the module-DLL types TAOM has ever needed to look up.
+
+### fix(harness): the drift guard was silent on the exact event it exists to catch
+
+The `SessionStart` hook printed no `GAME VERSION DRIFT` banner this morning, with the game on v1.4.8
+and the pin on v1.4.7. Not a race — the session transcript's birth time is 08:20:07, 47 minutes after
+the update finished.
+
+`${BANNERLORD_GAME_DIR:-<literal>}` substitutes the literal only when the variable is unset or empty.
+A variable that is *set but does not resolve in the hook's environment* took the `-f` test straight to
+false and the entire block fell through without a word — and `settings.json` does not define
+`BANNERLORD_GAME_DIR`, so the hook inherits whatever the harness process happens to carry.
+
+It now tries the env path, then always falls back to the known install, and says
+`engine drift is UNCHECKED this session, not absent` when neither resolves. Still fail-open, no longer
+fail-silent: silence from this particular guard reads as "no drift" when it means "never checked", and
+that is how the 1.4.5→1.4.6 bump cost a morning of misattributed crashes.
+
 ## 2026-08-09
 
 ### fix(tools): the translator can be pointed at an install, and run without an Anthropic key

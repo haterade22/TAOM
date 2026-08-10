@@ -21,7 +21,11 @@
 .NOTES
   Requires ilspycmd (dotnet global tool). Re-run after an engine update. Idempotent: overwrites.
   Output per build:  <Out>\<build>\<Dll>.cs   (.NET)   +   <Out>\<build>\_native_dlls.txt  (native)
-  builds: _shipping_build, _editor_build.
+  builds: _shipping_build, _editor_build, _modules_build.
+  _modules_build covers Modules\*\bin\Win64_Shipping_Client (SandBox.View, SandBox.ViewModelCollection,
+  TaleWorlds.MountAndBlade.View, the StoryMode/Multiplayer/NavalDLC satellites — 34 assemblies the
+  two bin builds do NOT contain). Its files are named <Module>__<Dll>.cs because names collide
+  across modules. Added 2026-08-10: their absence made the v1.4.8 assembly diff silently partial.
   The pre-existing curated category folders under <Out> (Campaign\, MountAndBlade\, Core\, ...) are
   the SHIPPING client browse reference; these per-build folders are the full per-DLL decompile.
 #>
@@ -68,4 +72,48 @@ foreach ($build in $builds.Keys) {
   }
   Write-Host ("  ${build}: $managed managed decompiled, $native native listed")
 }
-Write-Host "DONE. shipping vs editor decompiles under $Out\{_shipping_build,_editor_build}\ (+ _native_dlls.txt each)"
+
+# --- Module-bin DLLs -------------------------------------------------------------------
+# The two builds above cover ONLY <GameBin>\Win64_Shipping_*. They MISS every DLL that ships
+# inside a module's own bin folder — SandBox.View, SandBox.ViewModelCollection, SandBox.GauntletUI,
+# TaleWorlds.MountAndBlade.View, TaleWorlds.MountAndBlade.GauntletUI, the StoryMode/Multiplayer/
+# NavalDLC satellites. That is 34 assemblies, and TAOM patches heavily into several of them
+# (AgentVisuals, MobilePartyVisual, SPInventoryVM, the tournament controllers).
+#
+# Found 2026-08-10 during the v1.4.8 bump: the 1.4.7 -> 1.4.8 assembly diff silently covered only
+# the base bin, because these were never in the stack to diff against. Since Steam overwrites the
+# install in place, a DLL absent from this stack has NO recoverable baseline once the update lands.
+# Decompiling them here is what makes the NEXT bump diffable.
+#
+# Files are named <Module>__<Dll>.cs: names collide across modules (TaleWorlds.MountAndBlade.
+# Multiplayer.dll ships in both CustomBattle\ and Multiplayer\), so a flat <Dll>.cs would drop one.
+$modRoot = Join-Path (Split-Path -Parent $GameBin) 'Modules'
+if (Test-Path $modRoot) {
+  $dst = Join-Path $Out '_modules_build'
+  New-Item -ItemType Directory -Force $dst | Out-Null
+  $nativeList = Join-Path $dst '_native_dlls.txt'
+  Set-Content -LiteralPath $nativeList -Value "# Native (non-.NET) DLLs in module bin folders — cannot be decompiled by ilspycmd." -Encoding UTF8
+  $managed = 0; $native = 0
+  Write-Host "=== _modules_build : Modules\*\bin\Win64_Shipping_Client -> $dst ==="
+  foreach ($mod in (Get-ChildItem $modRoot -Directory | Sort-Object Name)) {
+    $bin = Join-Path $mod.FullName 'bin\Win64_Shipping_Client'
+    if (-not (Test-Path $bin)) { continue }
+    foreach ($dll in (Get-ChildItem (Join-Path $bin '*.dll') -ErrorAction SilentlyContinue)) {
+      $outFile = Join-Path $dst ("{0}__{1}.cs" -f $mod.Name, $dll.BaseName)
+      & ilspycmd $dll.FullName 2>$null | Set-Content -LiteralPath $outFile -Encoding UTF8
+      if ((Get-Item -LiteralPath $outFile).Length -lt 200) {
+        Remove-Item -LiteralPath $outFile -ErrorAction SilentlyContinue
+        Add-Content -LiteralPath $nativeList -Value ("{0}/{1}" -f $mod.Name, $dll.Name)
+        $native++
+      } else {
+        $managed++
+        Write-Host ("  {0}__{1}.cs" -f $mod.Name, $dll.BaseName)
+      }
+    }
+  }
+  Write-Host "  _modules_build: $managed managed decompiled, $native native listed"
+} else {
+  Write-Warning "missing Modules dir: $modRoot — skipping module-bin decompile"
+}
+
+Write-Host "DONE. decompiles under $Out\{_shipping_build,_editor_build,_modules_build}\ (+ _native_dlls.txt each)"

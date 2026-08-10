@@ -49,7 +49,7 @@ FILES TO REVIEW: [list from Step 1, one per line]
 Focus on (in priority order):
 1. Adapter pattern violations (ADR-007) — sealed TaleWorlds types in service classes
 2. Thin entry point violations (ADR-002) — entry points over 150 lines with business logic
-3. Harmony patch target signatures — verify method signatures exist in installed v1.4.7 DLLs (NOT the decompiled folder, which may have drifted)
+3. Harmony patch target signatures — verify method signatures exist in installed v1.4.8 DLLs (NOT the decompiled folder, which may have drifted)
 4. Test coverage gaps — services without corresponding test files
 5. GameModel override correctness — correct base class, base call patterns
 6. Cross-file data flow — declared types/fields/methods without consumers (aspirational scaffolding)

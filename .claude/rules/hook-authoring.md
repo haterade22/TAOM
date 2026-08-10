@@ -65,6 +65,34 @@ Two correct patterns depending on what the hook checks:
 | Files in the commit's diff (e.g., is CHANGELOG.md staged?) | Compute the **post-amend file set** as `staged ∪ HEAD` and apply the same gate. If CHANGELOG was already in HEAD's diff, it's still in the post-amend commit — the gate correctly allows. |
 | Working-tree state (e.g., is a file gitignored?) | Don't exempt amend at all. Working-tree state is amend-independent — a gitignored file on disk is just as broken in an amended commit as in a fresh one. |
 
+## A detection hook must fail open, but NEVER fail silent (EMPIRICAL: TAOM 2026-08-10)
+
+`harness-facts.md` mandates that a hook's own bug must never block the user. That is about *gating*.
+For a hook whose job is to **detect and warn**, fail-open is only half the contract — because for
+those, **no output is itself a claim**. A drift check that prints nothing is read as "no drift", not
+as "never ran".
+
+The v1.4.7 → v1.4.8 bump proved it. `session-start.sh` built its path as
+`"${BANNERLORD_GAME_DIR:-<literal>}/bin/..."`. The `:-` form substitutes the literal only when the
+variable is **unset or empty** — a variable that is *set but does not resolve in the hook's
+environment* sailed past it, the `-f` test went false, and the whole block fell through without a
+word. `.claude/settings.json` does not define `BANNERLORD_GAME_DIR`, so the hook inherits whatever
+the harness process happens to carry. The guard produced nothing on the exact event it exists to
+catch, and the session ran 47 minutes believing the engine was still pinned.
+
+**When writing or reviewing a detect-and-warn hook:**
+
+| Do | Why |
+|---|---|
+| Probe candidates in order and **always** fall through to the known-good literal | `:-` covers unset/empty, not *wrong*. A set-but-broken value is the common case, not the rare one. |
+| When no candidate resolves, print an explicit **"unchecked, not absent"** line | Silence is indistinguishable from a clean result. Name which inputs were tried. |
+| Ask "what does this hook print when its input is missing?" before shipping | If the answer is "nothing", the hook has no failure signal at all. |
+| Test the broken-input path, not just the happy path | Export a bogus value and run the hook. The 2026-08-10 bug reproduced in one command. |
+
+Still `exit 0`, still never blocks — but loud about not knowing. Applies to `session-start.sh`'s
+drift/stash/worktree checks, `check-doc-config-drift.sh`, `mcp-health-check.sh`, and any future
+hook whose value is the warning it emits.
+
 ## Log-appending hooks: size-cap rotation (EMPIRICAL: TAOM 2026-07-12)
 
 A hook that appends to a `.claude/logs/` file must size-cap-and-rotate it (see `session-stop.sh` /

@@ -38,7 +38,7 @@ boot. The 2026-08-03 case was 168 root-level `<action>` elements in LOTRLOME_Arm
 — tolerated by build 1.4.7.117484, fatal on build 117131 (`KeyNotFoundException` in
 `MBObjectManager.MergeElements` at `/action_sets/action`). Both build numbers come from the co-op field
 report; they are **not** locally verifiable — the installed client's `bin/Win64_Shipping_Client/Version.xml`
-carries only `<Singleplayer Value="v1.4.7"/>` and every exe/DLL reports FileVersion `1.0.0.0`.
+carries only `<Singleplayer Value="v1.4.8"/>` and every exe/DLL reports FileVersion `1.0.0.0`.
 
 What *is* verifiable on disk is that the two installs ship different schema sets: `<game>/XmlSchemas/`
 has 51 `.xsd`, the Dedicated Server app 45 — it lacks the single-player/naval set (`SPCultures.xsd`,
@@ -87,10 +87,46 @@ server-capable.
 | `Campaign\`, `MountAndBlade\`, `Core\`, `Engine\`, `UI\`, … (category folders) | shipping | curated, by namespace | **browse** patterns/namespaces (the long-standing reference) |
 | `_shipping_build\<Dll>.cs` | shipping | one .cs per DLL | full per-DLL decompile; **diff** vs editor |
 | `_editor_build\<Dll>.cs` | wEditor | one .cs per DLL | **editor-only code** (EditorGame, AnimalSpawnSettings, …) |
-| `_{shipping,editor}_build\_native_dlls.txt` | both | list | the native DLLs that can't be decompiled (see §3) |
+| `_modules_build\<Module>__<Dll>.cs` | module bins | one .cs per DLL, module-prefixed | the assemblies that ship inside `Modules\*\bin\Win64_Shipping_Client` (SandBox.View, TaleWorlds.MountAndBlade.View, the GauntletUI satellites, …) |
+| `_{shipping,editor,modules}_build\_native_dlls.txt` | each | list | the native DLLs that can't be decompiled (see §3) |
 
 Regenerate with **`pwsh tools/decompile_bannerlord.ps1`** (re-run after an engine update). `ilspycmd` only
 decompiles .NET assemblies; native DLLs are detected and listed, not decompiled.
+
+**Current version: v1.4.8**, regenerated 2026-08-10. `_manifest.json` carries `"version": "v1.4.8"`,
+and `TaleWorlds.Library`'s `public const string GameVersion` reads `v1.4.8.119303` in both
+`_shipping_build` and `_editor_build`. Counts at that regen: 56 `.cs` in `_shipping_build`, 66 in
+`_editor_build`, 125 in `_modules_build`.
+
+**`_modules_build` (added 2026-08-10) covers assemblies nothing else did.** The two
+`<GameBin>\Win64_Shipping_*` folders hold only the base binaries, and the category tree's generator
+(`tools/decompile_to_folder.ps1`) takes just the PRIMARY DLL per module (`SandBox.dll`,
+`StoryMode.dll`, …). So `SandBox.View`, `SandBox.ViewModelCollection`, `SandBox.GauntletUI`,
+`TaleWorlds.MountAndBlade.View`, `TaleWorlds.MountAndBlade.GauntletUI`,
+`TaleWorlds.MountAndBlade.Platform.PC` and the StoryMode / Multiplayer / CustomBattle / NavalDLC /
+BirthAndDeath / FastMode satellites appeared in **no** decompile artifact — while TAOM patches into
+several of them. Because Steam overwrites the install in place, an assembly missing from the stack
+when an update lands has no recoverable baseline afterwards; that is what made the 1.4.7 → 1.4.8
+assembly diff silently partial. The pass walks every `Modules\*\bin\Win64_Shipping_Client`, so it
+also picks up TAOM's own modules and every other installed one (`DOTS`, `ADOD_Beasts`,
+`ServeAsSoldier`, …) — those 125 files are not 125 vanilla assemblies.
+
+**Why `<Module>__<Dll>.cs` rather than `<Dll>.cs`:** DLL basenames collide across module folders, so
+a flat layout would silently drop one. `TaleWorlds.MountAndBlade.Multiplayer.dll` ships in both
+`CustomBattle\` and `Multiplayer\`, and the vendored companions collide harder still — `0Harmony`
+appears in three module bins, `System.Runtime.CompilerServices.Unsafe` in four.
+
+**Preserved baselines** (rename before regenerating — `/engine-bump` Phase 2):
+`_shipping_build_v1.4.5` / `_v1.4.6` / `_v1.4.7`, `_editor_build_v1.4.5`, and
+`_categories_v1.4.5` / `_v1.4.6` / `_v1.4.7` for the category tree. There is no
+`_modules_build_v<older>` — the folder did not exist before 1.4.8.
+
+**The wEditor build follows its own Steam schedule and can skip versions.** On 2026-08-10 it went
+`v1.4.5.114928` → `v1.4.8.119303` — three engine versions in one update — while the client moved
+1.4.7 → 1.4.8 (compare `GameVersion` in `_editor_build_v1.4.5\TaleWorlds.Library.cs` against
+`_editor_build\TaleWorlds.Library.cs`). Anything derived from a wEditor binary is valid only against
+the version that binary carried at the time, which is why `/native-crash-triage` checks
+`bin/Win64_Shipping_wEditor/Version.xml` before trusting a fault offset.
 
 **Authoritative signatures** still come from `pwsh tools/taom-src.ps1 path <Type>` (runs `ilspycmd` on the
 *installed* shipping DLLs, auto-detects version). Use the decompiled folders for *browsing*; use `taom-src` for
@@ -263,7 +299,9 @@ Moved from CLAUDE.md (repo-reorg 2026-07-12). The category tree is the SHIPPING-
 > ⚠️ **The category folders below are the SHIPPING-CLIENT decompile — they STRIP editor-only code.** Editor-only
 > managed types (`EditorGame`, `MBEditor`, `AnimalSpawnSettings`, `VertexAnimator`, FBX-import / scene / animation
 > authoring) live ONLY in the **wEditor** build of the *same-named* DLLs — **"absent from this dump" ≠ "doesn't
-> exist."** Lookup order: **shipping → if missing, the editor build → if still missing, it's native (Qt/C++).** For
+> exist."** Lookup order: **shipping → if missing, the editor build → if missing, `_modules_build\` (the
+> module-bin satellites: SandBox.View, TaleWorlds.MountAndBlade.View, the GauntletUI satellites — managed,
+> but in neither `bin\` build) → if still missing, it's native (Qt/C++).** For
 > both builds side-by-side use the dual-build decompile at `E:\Decompiled_Bannerlord\{_shipping_build,_editor_build}\`
 > (regen: `tools/decompile_bannerlord.ps1`); inspect native DLLs with `tools/pe_inspect.py`. Full map (builds,
 > managed-vs-native, the Mono/PhysX/Granite/DX11 engine stack, FBX→tpac pipeline):

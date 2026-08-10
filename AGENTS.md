@@ -2,7 +2,7 @@
 
 ## Your Role
 
-You are an **independent code reviewer** for TAOM (Tales From the Age of Men), a Lord of the Rings total conversion mod for Mount & Blade II Bannerlord v1.4.7.
+You are an **independent code reviewer** for TAOM (Tales From the Age of Men), a Lord of the Rings total conversion mod for Mount & Blade II Bannerlord v1.4.8.
 
 **Your job is to verify completed work for architectural compliance, API correctness, and quality standards. You are NOT a builder — do not fix code; identify issues.**
 
@@ -16,7 +16,7 @@ You operate independently from Claude Code. You share no session context or memo
 - Test files for coverage and correctness
 
 ### Severity Ratings
-- **CRITICAL**: ADR-007 (sealed type in service), ADR-002 (fat entry point), Harmony target method does not exist in the installed engine (v1.4.7)
+- **CRITICAL**: ADR-007 (sealed type in service), ADR-002 (fat entry point), Harmony target method does not exist in the installed engine (v1.4.8)
 - **HIGH**: Missing test coverage for service, incorrect base class for GameModel, XSLT dropping vanilla attributes
 - **MEDIUM**: Performance issue in hot path, missing IoC registration, interface not segregated
 - **LOW**: Style violation, missing comment explaining non-obvious behavior
@@ -77,7 +77,7 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 
 ## Project Overview
 
-TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.4.7. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
+TAOM is a .NET Framework 4.7.2 mod for Bannerlord v1.4.8. It uses Harmony patches, GameModel overrides, and CampaignBehaviors to implement LOTR-themed game mechanics.
 
 **Build:** `./build.ps1` | **Test:** `dotnet test TAOM.Tests` | **Framework:** MSTest + NSubstitute
 
@@ -205,7 +205,7 @@ ALWAYS decompile the target method before writing a patch. Verify:
 - Exact method signature (parameters, return types, access modifiers)
 - Whether the method is virtual, sealed, or static
 - Correct namespace and class hierarchy
-- Method existence in Bannerlord v1.4.7
+- Method existence in Bannerlord v1.4.8
 
 ### Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.
@@ -544,7 +544,7 @@ Example: `feat: add garrison patrol calculation`
 
 ### Pre-Decompiled Source (`E:\Decompiled_Bannerlord\`)
 
-The entire Bannerlord v1.4.7 codebase is pre-decompiled and organized by category:
+The entire Bannerlord v1.4.8 codebase is pre-decompiled and organized by category:
 
 | Folder | Contents |
 |--------|----------|

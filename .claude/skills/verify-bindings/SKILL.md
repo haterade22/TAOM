@@ -6,7 +6,7 @@ argument-hint: [check|refresh|full]
 
 # Verify TaleWorlds API Bindings
 
-Re-verify that TAOM's engine touchpoints still bind against the **installed** Bannerlord version, and keep the committed v1.4.5 signature snapshot in sync. This is the standing, offline form of the migration S6 smoke-test gate.
+Re-verify that TAOM's engine touchpoints still bind against the **installed** Bannerlord version, and keep the committed signature snapshot in sync. This is the standing, offline form of the migration S6 smoke-test gate.
 
 **Full background:** [docs/reference/taleworlds-api-snapshot/README.md](../../../docs/reference/taleworlds-api-snapshot/README.md).
 

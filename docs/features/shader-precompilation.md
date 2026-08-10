@@ -92,6 +92,33 @@ The 1.4.6→1.4.7 engine bump broke the walk. On 1.4.7 the precompile hung indef
 
 **Wiring gotcha (in-game-caught):** the guard was first added from `TaomShaderGameManager.OnLoadFinished` via `Mission.Current?.AddMissionBehavior` — that **silently no-op'd** because `Mission.Current` isn't the battle mission yet at `OnLoadFinished`. It never registered (absent from the mission behavior dump) and the NRE still fired. Adding mission behaviors to a freshly-opened mission must go through `OnMissionBehaviorInitialize` (the engine hands the mission in directly). Binding drift on `_initialPlayerAgent` is pinned by `ReflectionSiteBindingTests`. See `docs/reviews/rca-shader-precompile-1.4.7-2026-07-11.md`.
 
+## v1.4.8 — the walk's output is now discarded by a module-list change
+
+The v1.4.8 bump needed **no code change here** (TAOM compiles against v1.4.8 with 0 errors, `BindingVerification` 106/106 — [`docs/migration/v1.4.8-impact.md`](../migration/v1.4.8-impact.md)). Three v1.4.8 changelog items land on this feature anyway, none of them through the managed API:
+
+1. **The locally created shader cache is now deleted automatically after a module list change.**
+2. **A fallback system detects and removes a corrupted local shader cache.**
+3. **The mod publish system now compiles terrain shaders.**
+
+(1) is the one that bites, because of *where* this feature's product lives. Every TAOM `_forceatmo` scene ships **header-only**, which `precompile_scenes.txt:4` already states as the premise and which was re-measured against the live install on 2026-08-10: across the 43 scene folders under `<game>\Modules\TAOM_Map\SceneObj\*\ShaderCache\D3D11\` (excluding `Backups\`) there are **43** `terrain_shaders_header_data.bin` and **zero** `compressed_shader_cache.sack`, against **406** per-scene sacks under `Native` / `SandBox` / `SandBoxCore` / `StoryMode`. So the 1–2 hour walk writes nothing per-scene; its entire output is entries in the player's **local** shader cache — exactly what (1) now deletes.
+
+### KNOWN ISSUE — "Run once after installing TAOM" is no longer true
+
+Both copies of the `{=taom_precompile_hint}` string tell the player the walk is a one-time job:
+
+| Location | Shipped text |
+|---|---|
+| `Main/SubModule.cs:549` (compiled default) | "Pre-compiles shaders to eliminate in-game stutter + the battle-load crash. **Run once after installing TAOM.**" |
+| `Main/_Module/ModuleData/taom_module_strings.xml:825` (localized string) | "Pre-compiles shaders to eliminate in-game stutter. **Run once after installing TAOM.**" |
+
+Under v1.4.8, enabling NavalDLC, toggling any mod, or a launcher reordering the module list discards the work — and nothing tells the player. **TAOM writes no completion sentinel that could notice.** `ShaderPrecompileCrashGuard` is the feature's only writer and it persists exactly two files, `Logs/shader-precompile-inflight.marker` and `Logs/shader-precompile-crashed-scenes.txt`; there is no "done" file, and no other file in `Main/Features/ShaderPrecompilation/` touches `System.IO` (`PrecompileSceneProvider` only *reads* `precompile_scenes.txt`). Completion exists solely in-session, as the `ShaderPrecompileRunner.cs:272` status line "Shader pre-compilation COMPLETE" and its matching log line.
+
+The fix is a text change plus `/localize` across all 12 languages, so it was deliberately left out of the bump rather than half-done. Until it ships, the honest guidance is: **re-run the walk after any module-list change.**
+
+### (3) is an opportunity — per-scene sacks instead of a player-side walk
+
+A publish system that compiles terrain shaders is a candidate path to shipping real per-scene `compressed_shader_cache.sack` files, which would retire the #287 class outright rather than paying for it with 1–2 hours of the player's time. It runs into **[#448](https://github.com/haterade22/TAOM/issues/448)** first: reading the version dword at offset 4 of all 490 sacks in the install on 2026-08-10, the **486** the v1.4.8 update wrote carry `0x0783` while all three TAOM-side module sacks (`TAOM/`, `TAOM_Map/`, `LOTRLOME_Armory/Shaders/D3D11/`) still carry `0x0782`. Whether v1.4.8 accepts `0x0782`, ignores it, or routes it into (2)'s corrupted-cache fallback is unverified — that is what #448 tracks.
+
 ## Configuration
 
 **MCM toggles** (group "Graphics/Shader Precompilation", GroupOrder 15): **Enable Shader Precompilation** (property `EnableShaderPrecompilation`; master; default on) live-hides the main-menu option via its `isHidden` callback when off — no relaunch — and blocks new walks (a walk already running finishes). **Include Scene Passes** (property `EnableScenePassPrecompilation`; default on) gates the risky terrain/atmosphere scene passes; off runs only the all-characters pass (compiles every troop/equipment shader, never crashes), read in `ShaderPrecompileRunner.Begin()`. The off-path is the immediate escape hatch for a user whose GPU crashes on the scene loads, while the native shader-compile guard (#287) is built — that guard is planned as Phases 1-3 and gated on a real fault offset from an affected machine.
@@ -177,6 +204,7 @@ If a culture's characters are not getting compiled, verify:
 
 ## Changelog
 
+- 2026-08-10 — **v1.4.8 engine bump: no code change, one shipped string now wrong.** Nothing in the managed shader API moved, so the feature carried over untouched. But v1.4.8 auto-deletes the local shader cache after a module-list change, and TAOM's scenes ship header-only, so the whole walk's output now lives only in the cache that gets deleted — while `{=taom_precompile_hint}` still promises "Run once after installing TAOM." Recorded as a KNOWN ISSUE (see the v1.4.8 section); the fix is a text change plus `/localize` ×12. Also recorded: v1.4.8's terrain-shader publish support as a candidate path to per-scene sacks, blocked behind the `0x0782` vs `0x0783` cache-format gap (#448).
 - 2026-07-11 — **1.4.7 deployment-NRE fix (#336).** Root-caused the "precompile stuck on 1.4.7" reports to a 1.4.7 engine regression: `DeploymentMissionController.SetupTeams()`/`FinishDeployment()` now unconditionally deref `Mission.InitialPlayerAgent`, which is null in the headless precompile battle → NRE every mission tick + (once guarded) a freeze at the OoB deployment view. Added `ShaderPrecompilePlayerAgentGuard` (seeds `InitialPlayerAgent` + force-finishes deployment, scoped to the walk via `IsWalkInProgress`). Robustness package alongside: per-item-kind decider caps (scene passes bail at 8 min, not 90), a churn backstop, self-classifying abort logs, and a Ctrl+Shift+K cancel. In-game 1.4.7: full walk completes (13 items, 0 NRE, 0 hang). RCA `docs/reviews/rca-shader-precompile-1.4.7-2026-07-11.md`.
 - 2026-06-25 — Phase 0 of the native shader-compile guard (#287): fixed the `DefaultScenes` fallback drift (now mirrors the live `precompile_scenes.txt`; no missing-config resurrection of disabled crashers); added MCM "Graphics/Shader Precompilation" toggles (master + Include Scene Passes — off runs only the safe all-characters pass); added post-crash in-game + log guidance for exporting the Windows Event Log fault offset the native guard needs. Root cause confirmed as `normalize()`-of-zero in `pbr_terrain` (`terrain_pixel_functions.rsh:818`) but the shader source is engine-global (unshippable as a module override).
 - 2026-06-18 — Added a per-scene crash guard (`ShaderPrecompileCrashGuard`) that records hard-crashing scenes to a skip list and drops them from the plan so the walk can finish.
@@ -196,6 +224,7 @@ If a culture's characters are not getting compiled, verify:
 - [#106 — fix: silent character drop + premature 120s abort + stale latch on retry/abort](https://github.com/haterade22/TAOM/issues/106) — 2026-05-04 stability fix, CLOSED
 - [#287 — Battle-load CTD/hang: scenes lack precompiled shader caches](https://github.com/haterade22/TAOM/issues/287) — 2026-06-17 re-enable + scene-walk, OPEN until in-game verification
 - [#336 — crash/hang: shader precompile stuck on 1.4.7 (DeploymentMissionController.SetupTeams NRE on headless battle)](https://github.com/haterade22/TAOM/issues/336) — 2026-07-11, in-game confirmed (13/13 items, 0 NRE, 0 hang); OPEN pending optional cold-cache validation of the force-finish path
+- [#448 — TAOM's shader caches are one format version behind (`0x0782` vs v1.4.8's `0x0783`)](https://github.com/haterade22/TAOM/issues/448) — 2026-08-10, deferred by decision; gates the "publish per-scene sacks" path above
 
 ---
 

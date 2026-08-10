@@ -1,6 +1,6 @@
 # TaleWorlds API Snapshot + Binding-Verification Gate
 
-A committed, in-repo snapshot of the exact TaleWorlds v1.4.5 engine surface that TAOM patches, overrides, and reflects into — plus the offline test gate that keeps it honest. The goal: **answer "what's the signature of X / is this member still here in v1.4.5?" without the external decompile dump** (`E:\Decompiled_Bannerlord\`), and **turn a silent in-game binding failure into a red `dotnet test`.**
+A committed, in-repo snapshot of the exact TaleWorlds v1.4.8 engine surface that TAOM patches, overrides, and reflects into — plus the offline test gate that keeps it honest. The goal: **answer "what's the signature of X / is this member still here in v1.4.8?" without the external decompile dump** (`E:\Decompiled_Bannerlord\`), and **turn a silent in-game binding failure into a red `dotnet test`.**
 
 ## Why this exists
 
@@ -15,13 +15,13 @@ The v1.3.15 → v1.4.5 migration completed its code stages but the formal runtim
 | File | What it is |
 |------|------------|
 | [`reflection-sites.md`](./reflection-sites.md) | Authoritative catalogue of every reflection touchpoint, grouped by gated / runtime-dynamic / internal. Data source for `ReflectionSiteBindingTests`. |
-| [`gamemodel-bases.md`](./gamemodel-bases.md) | Auto-generated: each `Taom*Model`, its `Default*Model` base, and the exact v1.4.5 signature of every overridden method. |
+| [`gamemodel-bases.md`](./gamemodel-bases.md) | Auto-generated: each `Taom*Model`, its `Default*Model` base, and the exact v1.4.8 signature of every overridden method. |
 | [`patch-targets.md`](./patch-targets.md) | Auto-generated: each of the 110 `[HarmonyPatch]` / `TargetMethod` classes and the engine method it patches, resolved as Harmony resolves it. |
 | [`../../../tools/snapshot_api_surface.ps1`](../../../tools/snapshot_api_surface.ps1) | Regenerates the two auto-generated files from the installed DLLs. Auto-derives the type list from `TAOM.dll`. |
 
 ## The gate (`TAOM.Tests/Migration/`)
 
-Runs under `dotnet test` — no game launch. TAOM.Tests references the v1.4.5 `TaleWorlds.*.dll`; `GameAssemblies.cs` pre-loads the SandBox/CustomBattle/StoryMode module DLLs from the install so every engine type resolves.
+Runs under `dotnet test` — no game launch. TAOM.Tests references the installed `TaleWorlds.*.dll` (v1.4.8); `GameAssemblies.cs` pre-loads the SandBox/CustomBattle/StoryMode module DLLs from the install so every engine type resolves.
 
 | Test class | Covers | Granularity |
 |------------|--------|-------------|

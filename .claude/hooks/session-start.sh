@@ -26,10 +26,31 @@ echo "Branch: $BRANCH"
 
 # Game-version drift check (the 1.4.5->1.4.6 Steam force-bump cost a morning of
 # misattributed crashes before anyone noticed). Pin lives in .claude/pinned-game-version.txt;
-# on drift, warn loudly and point at /engine-bump. Fail-open: any missing file = silence.
-GAME_VERSION_XML="${BANNERLORD_GAME_DIR:-E:/Steam/steamapps/common/Mount & Blade II Bannerlord}/bin/Win64_Shipping_Client/Version.xml"
+# on drift, warn loudly and point at /engine-bump.
+#
+# 2026-08-10: this check silently produced NOTHING on the v1.4.7->v1.4.8 bump, the exact event it
+# exists to catch. `${BANNERLORD_GAME_DIR:-<literal>}` only substitutes the literal when the var is
+# unset or empty -- a var that is SET but does not resolve in the hook's environment took the -f
+# test straight to false, and the whole block fell through without a word. settings.json does not
+# define BANNERLORD_GAME_DIR, so the hook inherits whatever the harness process happens to carry.
+# Fix: try the env path, then ALWAYS fall back to the known install, and if neither resolves say so
+# out loud. Still fail-open (never blocks) -- but no longer fail-SILENT, because silence here reads
+# as "no drift" when it actually means "never checked".
+DEFAULT_GAME_DIR="E:/Steam/steamapps/common/Mount & Blade II Bannerlord"
+GAME_VERSION_XML=""
+for candidate in "${BANNERLORD_GAME_DIR}" "$DEFAULT_GAME_DIR"; do
+  [[ -z "$candidate" ]] && continue
+  if [[ -f "${candidate}/bin/Win64_Shipping_Client/Version.xml" ]]; then
+    GAME_VERSION_XML="${candidate}/bin/Win64_Shipping_Client/Version.xml"
+    break
+  fi
+done
 PIN_FILE=".claude/pinned-game-version.txt"
-if [[ -f "$GAME_VERSION_XML" && -f "$PIN_FILE" ]]; then
+if [[ -z "$GAME_VERSION_XML" ]]; then
+  echo ""
+  echo "NOTE: could not read the installed game version (no Version.xml under BANNERLORD_GAME_DIR"
+  echo "      or $DEFAULT_GAME_DIR) — engine drift is UNCHECKED this session, not absent."
+elif [[ -f "$PIN_FILE" ]]; then
   INSTALLED=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' "$GAME_VERSION_XML" 2>/dev/null | head -1)
   PINNED=$(tr -d '[:space:]' < "$PIN_FILE" 2>/dev/null)
   if [[ -n "$INSTALLED" && -n "$PINNED" && "$INSTALLED" != "$PINNED" ]]; then

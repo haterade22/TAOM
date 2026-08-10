@@ -2,7 +2,7 @@
 
 Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 
-> **Target: Bannerlord 1.4.7** (installed; pinned in `.claude/pinned-game-version.txt` — the session-start hook warns on drift → run `/engine-bump`). The `E:\Decompiled_Bannerlord\` dump matches (v1.4.7; older baselines preserved) but `ilspycmd`/`taom-src` on the installed DLLs is authoritative for signatures. Impact + history: [`docs/migration/v1.4.7-impact.md`](docs/migration/v1.4.7-impact.md) · [`TRACKING.md`](docs/migration/TRACKING.md) · [`v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md).
+> **Target: Bannerlord 1.4.8** (installed; pinned in `.claude/pinned-game-version.txt` — the session-start hook warns on drift → run `/engine-bump`). The `E:\Decompiled_Bannerlord\` dump matches (v1.4.8; older baselines preserved) but `ilspycmd`/`taom-src` on the installed DLLs is authoritative for signatures. Impact + history: [`docs/migration/v1.4.8-impact.md`](docs/migration/v1.4.8-impact.md) · [`v1.4.7-impact.md`](docs/migration/v1.4.7-impact.md) · [`TRACKING.md`](docs/migration/TRACKING.md) · [`v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md).
 
 ## Commands
 
@@ -23,7 +23,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
 | **Adapter Pattern** | Services use `IHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts (v1.4.7 as of 2026-07-08, matching installed), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs** — the dump can lag after an engine bump; the installed DLLs are always authoritative |
+| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts (v1.4.8 as of 2026-08-10, matching installed), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs** — the dump can lag after an engine bump; the installed DLLs are always authoritative |
 | **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |
 | **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.4 incompatibilities, missing tests, data flow gaps |
 
@@ -277,7 +277,7 @@ original bug over its own fix, with a message describing a fix that was no longe
 | **`git stash list` after any rebase; restore what it took** | An unpopped auto-stash is invisible data loss — no error, no conflict, just reverted files. `session-start.sh` now prints the stash count at startup, because `git status` never mentions stashes and the 2026-08-07 `autostash` sat unresolved for two days before anyone looked |
 | **`git stash apply`, never `pop`, when recovering** | Keeps the stash as a safety net until the recovery is verified green |
 | **Verify your own markers survived before committing** | `git grep <marker> HEAD -- <path>` after any rebase/stash event. The tree compiling is NOT proof your change is still in it |
-| **Stage explicitly (`git add <paths>`), never `git add -A`** | A shared file (CHANGELOG.md especially) routinely holds two sessions' edits; commit only your own hunks, hand-building the blob if needed. **Enforced since 2026-08-09** by `.claude/hooks/block-broad-git-add.sh`, which confirms before `git add -A/-u/.` and `git commit -a/-am` and lists what the sweep would take — the rule was prose-only for two days and was broken three times in them |
+| **Stage explicitly (`git add <paths>`), never `git add -A`** | A shared file (CHANGELOG.md especially) routinely holds two sessions' edits; commit only your own hunks. Enforced since 2026-08-09 by `.claude/hooks/block-broad-git-add.sh`, which confirms before `git add -A/-u/.` and `git commit -a/-am` and lists what the sweep would take |
 | **`git status --porcelain` BEFORE editing a shared file** | An unpopped auto-stash can leave a path `UU` with everything already staged. 2026-08-08: a session appended a CHANGELOG entry into a file carrying live `<<<<<<<` markers and never saw them; a plain `git commit` would have swept both sessions into one commit |
 | **Prove a stash is redundant before trusting the tree — normalise line endings** | `git show stash@{0}:<f>` emits LF against a CRLF worktree, so a raw `diff` calls every line changed and looks like total divergence. Use `diff --strip-trailing-cr`. Doing so turned "35 files diverged" into "the stash is a strict subset, nothing lost" |
 | **Re-read `HEAD` immediately before `--amend`, not before the edit** | If another session commits in between, your amend rewrites THEIR commit. 2026-08-08 a CHANGELOG fix landed inside another session's docs commit. Recovery: `git reset --mixed <their-sha>`, confirm `git diff <their-sha> HEAD` is empty, re-commit yours separately |
@@ -344,8 +344,8 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- Target: Bannerlord v1.4.7 (installed game version; the `E:\Decompiled_Bannerlord\` dump is v1.4.7 as of 2026-07-08 — `ilspycmd` on the installed 1.4.7 DLLs is authoritative)
-- `E:\Decompiled_Bannerlord\` — v1.4.7 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}` for editor types; older baselines preserved). Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md); installed DLLs stay authoritative for signatures.
+- Target: Bannerlord v1.4.8 (installed game version; the `E:\Decompiled_Bannerlord\` dump is v1.4.8 as of 2026-08-10 — `ilspycmd` on the installed 1.4.8 DLLs is authoritative)
+- `E:\Decompiled_Bannerlord\` — v1.4.8 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}` for editor types; older baselines preserved — note `_editor_build_v1.4.5`: the Modding Kit sat three versions behind until 1.4.8 brought it level). Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md); installed DLLs stay authoritative for signatures.
 - Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
 

@@ -54,6 +54,26 @@ protocol has produced was DATA (XML) or a routing patch — never a blind retry.
    (2026-07-24 `rglConcurrentQueue`: Ignore → permanent loading-screen hang). Editor crashes:
    pass `--dll` pointing at the **Win64_Shipping_wEditor** `TaleWorlds.Native.dll` — offsets
    differ from the shipping client build.
+6. **Any derived offset is valid only against the engine version its binary carries — check the
+   wEditor version BEFORE trusting one.** `Win64_Shipping_wEditor` (the Modding Kit build) updates
+   on its OWN Steam schedule and can sit at a different engine version than the shipping client the
+   crash came from. It did: on 2026-08-10 it jumped `v1.4.5.114928` → `v1.4.8.119303` — three
+   engine versions in one update — while the client went v1.4.7 → v1.4.8 (`TaleWorlds.Library`
+   `GameVersion` in `_editor_build_v1.4.5` vs `_editor_build`). Every offset ever derived from that
+   binary before then was against a v1.4.5 image, and it moved with no signal. Even at a matching
+   version string the builds are not identical (v1.4.5 client `.115026` vs v1.4.5 editor `.114928`).
+   **So: read `<game>/bin/Win64_Shipping_wEditor/Version.xml` and compare it against the crash
+   report's `BannerlordVersion` before believing any RVA you derive from it.** A mismatch means the
+   offset does not transfer — the same rule as step 2's `--dump` build-version caveat, applied to
+   the editor binary.
+7. **Steam overwrites in place, so old native images do not survive — archive one before each
+   engine bump.** The only `TaleWorlds.Native.dll` copies on this machine are the two live ones
+   under `bin/Win64_Shipping_{Client,wEditor}`, and both are now v1.4.8; nothing v1.4.5 or v1.4.7
+   is preserved in the repo or under `E:\Decompiled_Bannerlord\` (the decompile stack holds `.cs`
+   for managed assemblies only — native modules are merely *listed* in `_native_dlls.txt`).
+   Consequence: the open player report at `crashz/report.json` (`BannerlordVersion v1.4.7.117484`)
+   **cannot currently be triaged locally** — there is no v1.4.7 image to disassemble against.
+   Copy both `TaleWorlds.Native.dll` files aside before the next update lands.
 
 ## Phase 2 — Name the site (offline, fully scripted)
 

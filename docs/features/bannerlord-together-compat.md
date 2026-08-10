@@ -20,7 +20,7 @@ Keep the two version numbers apart when reading anything sourced from that repor
 
 | Requirement | Details |
 |-------------|---------|
-| Bannerlord version | **v1.4.7** — TAOM's pin, and BT a0.5.3.2's declared dependency version for Native/SandBoxCore/Sandbox/StoryMode/CustomBattle |
+| Bannerlord version | **v1.4.8** — TAOM's pin as of 2026-08-10. BT a0.5.3.2's declared dependency version for Native/SandBoxCore/Sandbox/StoryMode/CustomBattle was v1.4.7 when this table was written and has **not been re-checked since the 1.4.8 bump** — BT is not installed on the dev machine, so verify against BT's own `SubModule.xml` before relying on this row |
 | BannerlordTogether | a0.5.3.2 (the reviewed build) |
 | TAOM version | **Same version on every client — not enforced.** The `TAOM_Build` stamp in save metadata records which build wrote a save and is logged on load, which makes a mismatch diagnosable after the fact, not preventable |
 | All players | Must have TAOM installed and enabled, with matching MCM settings |

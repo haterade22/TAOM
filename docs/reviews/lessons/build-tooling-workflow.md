@@ -974,3 +974,90 @@ drift does not have to appear in the first row, and a field only a defender or o
 will sail past a single-sample check.
 
 **Source:** review wave on #430, 2026-08-08.
+
+### A decompile stack that skips module-bin assemblies makes an engine diff silently partial, and the loss is one-way (2026-08-10)
+
+The v1.4.7 → v1.4.8 assembly diff read as complete — 8 of 56 changed, each one accounted for — and
+it covered `<GameBin>\Win64_Shipping_{Client,wEditor}` alone, because that is the only place
+`tools/decompile_bannerlord.ps1` walked. `tools/decompile_to_folder.ps1` could not fill the gap
+either: it takes a single mandatory `-Source` bin folder, and its `Modules` category pattern is
+anchored to `^(SandBox|SandBoxCore|StoryMode)\.dll$` — the primary DLL per module. So the 34 vanilla
+assemblies that ship inside a module's own `bin\Win64_Shipping_Client` (`SandBox.View`,
+`SandBox.ViewModelCollection`, `SandBox.GauntletUI`, `TaleWorlds.MountAndBlade.View`,
+`TaleWorlds.MountAndBlade.GauntletUI`, `TaleWorlds.MountAndBlade.Platform.PC`, the
+StoryMode/Multiplayer/NavalDLC satellites, `CustomBattle`, `BirthAndDeath`, `FastMode`, `DOTS`) were
+in no decompile artifact at all — and TAOM patches into several of them (`AgentVisuals`,
+`CharacterTableau`, `MobilePartyVisual`, `SPInventoryVM`, the tournament controllers). Steam
+overwrites the install in place, so **the loss is one-way**: an assembly absent from the stack when
+an update lands has no recoverable baseline afterwards. The v1.4.7 bytes for those 34 are gone.
+
+- **Why missed:** the diff's denominator was the folder the tool already walked, not the set of
+  assemblies the game loads, and every prior bump produced a clean-looking result off the same
+  denominator. Nothing in the pipeline compares its own coverage against the install's DLL
+  inventory, so "56 assemblies diffed" reads identically whether that is all of them or two thirds.
+  Same shape as the prefab-budget lesson above — a green result over the wrong denominator is
+  indistinguishable from a green result.
+- **Prevent:** before trusting an engine diff, enumerate every `bin\Win64_Shipping_Client` the game
+  loads from — the base bin **and** `Modules\*\bin\` — and confirm each DLL landed in an artifact.
+  The baseline has to be captured BEFORE the update, because it cannot be reconstructed after.
+  `decompile_bannerlord.ps1` now carries a `_modules_build` pass over
+  `Modules\*\bin\Win64_Shipping_Client` (125 managed DLLs, written as `<Module>__<Dll>.cs` because
+  names collide across modules), so the next bump is diffable. Recovery for *this* one was partial
+  and accidental: `~/.taom-src/v1.4.7/` had cached 475 per-type decompiles, 42 of them from module
+  DLLs, which diffed 1.4.7-vs-1.4.8 as 42 identical / 0 changed. A per-type lookup cache is an
+  accidental baseline — do not plan to be saved by it twice.
+- **Source:** `docs/migration/v1.4.8-impact.md` ("The decompile stack had a 34-assembly hole").
+
+### A fail-open guard whose failure mode is silence reads as "all clear" — make it fail LOUD (2026-08-10)
+
+`session-start.sh`'s game-version drift check printed nothing on the v1.4.7 → v1.4.8 bump, the exact
+event it exists to catch. Nothing is also what "no drift" looks like. The cause was a shell default
+substitution: `"${BANNERLORD_GAME_DIR:-<literal>}/bin/.../Version.xml"` substitutes the literal only
+when the variable is **unset or empty**, so a variable that was *set but did not resolve in the
+hook's environment* took the `-f` test straight to false and the whole block fell through without a
+word. `.claude/settings.json` defines no `BANNERLORD_GAME_DIR`; the hook inherits whatever the
+harness process happens to carry.
+
+- **Why missed:** the guard was written and verified in the one environment where the variable
+  resolved, and its skipped path and its clean path emit the same thing — nothing. A gate whose pass
+  state is "no output" has no observable difference between working and dead, so no session could
+  have noticed; the drift was found later, by diffing the install.
+- **Prevent:** fail-open is mandatory for TAOM hooks (`.claude/rules/harness-facts.md`), but
+  fail-open must still be fail-LOUD — a guard that can be skipped says it was skipped. The fix tries
+  the env path, then **always** falls back to the known install, and prints `engine drift is
+  UNCHECKED this session, not absent` when neither resolves. When a path comes from an environment
+  variable, build a candidate list with an unconditional fallback rather than `${VAR:-default}`,
+  which defends against unset/empty and never against wrong. Test the guard by handing it a bogus
+  path and confirming it still says something.
+- **Source:** `docs/migration/v1.4.8-impact.md` ("`session-start.sh` — the drift guard failed on the
+  event it exists for"); `.claude/hooks/session-start.sh`.
+
+### For a native-only changelog item, audit the DATA feeding the native path — not the C# calling it (2026-08-10)
+
+v1.4.8's "Fixed horse rein visual bug when a mounted agent died" was first ruled **Unaffected** off a
+C#-only grep: TAOM has no Harmony patch on agent death, ragdoll or reins. Wrong question. The fix is
+native with no managed diff anywhere, so no grep of `Main/` could return a hit — a zero-hit grep was
+guaranteed before it ran. TAOM's exposure is in Monster DATA. Measured against the live install:
+native `horse` / `camel` / `mule` each declare the full set of 12 `rein_*` attributes and are
+rideable; native `horse_2` / `camel_unmountable` / `mule_unmountable` declare none and are not
+rideable. `taom_war_elephant` and `taom_mumakil` declare **zero rein attributes and are rideable**
+(`LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_{elephant,mumakil}.xml`), `Monster.spider`
+declares a partial set, `chariot` the full 12. In vanilla, "rideable" and "declares a full rein set"
+are the same set; TAOM breaks that pairing. Rideability is declared, not inferred —
+`LOTRLOME_items/LOTRAOM_horses.xml` carries `<Horse monster="…">` for `Monster.chariot`,
+`Monster.spider`, `Monster.taom_mumakil`, `Monster.taom_war_elephant` — and
+`tools/audit_mount_parity.py` contains **zero** occurrences of `rein`, so nothing gates it. This is
+an UNVERIFIED risk awaiting an in-game test, not a confirmed defect.
+
+- **Why missed:** "does TAOM patch this?" is the reflex question at a bump and the right one for a
+  managed change. For a native fix it is unanswerable by construction: the absence of a managed
+  surface guarantees the empty result, which then reads as evidence of safety instead of evidence
+  that the wrong instrument was used.
+- **Prevent:** classify each changelog line as managed or native FIRST. For a native one, ask what
+  data TAOM feeds into that subsystem and compare its shape against vanilla's — a total conversion
+  is usually the only caller producing the unusual input. Where the comparison finds a gap, the
+  subsystem's parity auditor gets the check (`audit_mount_parity.py` covers usage actions and gait
+  clips; rein attributes are in neither). The live monster files sit in unversioned dependency
+  modules (`LOTRLOME_Armory`, `Alliance.Wargs`), so per the CLAUDE.md trap any fix there ships with
+  a repo-side validator gate beside it, or a module reinstall silently reverts it.
+- **Source:** `docs/migration/v1.4.8-impact.md` (changelog row N7 — rein / ragdoll).

@@ -54,8 +54,8 @@ calls — Harmony doesn't reach C++ code.
 
 The upstream NativeSkinFixes mod uses hardcoded RVAs (`0x617B50` etc.) inside
 `TaleWorlds.Native.dll`. Every Bannerlord patch changes those offsets, so the
-mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.4.7 as of
-2026-08-05) and wants the hooks to keep working across `v1.4.x → v1.5.x`
+mod ships a v1.3.15-only DLL. TAOM tracks the current engine (v1.4.8 as of
+2026-08-10) and wants the hooks to keep working across `v1.4.x → v1.5.x`
 patches without C++ rebuilds.
 
 ### Solution Approach
@@ -128,10 +128,26 @@ All 7 signatures were authored + statically verified against Bannerlord v1.4.6's
 `TaleWorlds.Native.dll` (each was a single match at the RVA below). See the
 "v1.4.6 native port" section below for the method and the RVA/verification map.
 
-**They have not been re-verified since; the engine has moved to v1.4.7.** The feature is PARKED and
-disabled at the wiring level (2026-07-08), so nothing loads these signatures today. Treat every RVA
-and pattern below as provenance from that port, not as a live binding, and re-derive them against
-the engine in `.claude/pinned-game-version.txt` before re-enabling.
+**They have not been re-verified since. The engine is now v1.4.8 — two bumps past the v1.4.6 the
+patterns were authored against (v1.4.6 → v1.4.7 → v1.4.8).** `Signatures.h:29` still heads its
+shipped values "AUTHORED FOR BANNERLORD v1.4.6 (2026-06-30)", and the client
+`bin\Win64_Shipping_Client\TaleWorlds.Native.dll` those patterns scan was rewritten by the v1.4.8
+update on 2026-08-10 at 07:22 (14,185,944 bytes on disk now). The feature is PARKED and disabled at
+the wiring level (2026-07-08), so nothing loads these signatures today. Treat every RVA and pattern
+below as provenance from that port, not as a live binding, and **re-author them against the engine
+in `.claude/pinned-game-version.txt` before re-enabling** — two engine versions is outside the range
+Solution Approach #2 above claims for byte patterns (relocation *within* an engine version, and
+*usually* a minor patch).
+
+**Re-enabling is a port, not a toggle** — but the toolkit still works. `tools/native_sig_author.py`
+remains the fastest path (see "v1.4.6 native port" below), and its `diff --old <dll>` still has a
+reference to diff against: the v1.3.15 backup install at
+`E:\BannerlordBackup\1.3.15\bin\Win64_Shipping_Client\TaleWorlds.Native.dll` (engine
+`v1.3.15.110062`, 14,127,552 bytes) is intact. That is the same engine version the v1.4.6 port
+diffed against, where 5 of 7 targets had byte-identical prologues. What is **gone** is any
+intermediate image: a recursive search of the whole `E:` drive on 2026-08-10 found exactly three
+`TaleWorlds.Native.dll` copies — that v1.3.15 backup and the two the update just rewrote. No
+v1.4.5, v1.4.6 or v1.4.7 native binary is left to bridge with, because Steam overwrites in place.
 
 | Signature | v1.4.6 RVA | How pinned |
 |-----------|-----------|-----------|
@@ -405,6 +421,7 @@ practice (only `CoversHeadHook` writes, and only during AgentVisuals init).
 
 ## Changelog
 
+- 2026-08-10 — docs: **v1.4.8 engine-bump context refresh; still parked, still inert.** No code or pattern change — the install call stays commented out in `Main/SubModule.cs` (the `Uninstall()` call in `OnSubModuleUnloaded` is the only live reference) and `EnableNativeSkinFixes` stays `false`, so nothing scans anything. Recorded that the engine is two bumps past the version the patterns were authored for, that both `TaleWorlds.Native.dll` images were rewritten by the update (client 07:22, wEditor 07:25 — and the wEditor build jumped three versions, see the impact doc), and that the only surviving pre-v1.4.8 native binary on this machine is the v1.3.15 backup, which is still a usable `diff --old` reference. Added a follow-up to observe the covers_head symptom against v1.4.8's ragdoll fix before costing a re-author.
 - 2026-06-30 — feat: author + verify all 7 byte patterns for **Bannerlord v1.4.6** and activate the feature (RTTI-anchored disassembly + interior byte-triangulation via `tools/native_sig_author.py`; no IDA). Added the `EnableNativeSkinFixes` MCM toggle (default ON) + required-cloth-pair all-or-nothing install. RCA in-line: the first deploy hooked a shared-body SIBLING of the cloth factory (`0x35AF00`, rdx=byte-flag) instead of the real `0x35B0C0` (rdx=mesh) → per-call SEH-caught AVs; fixed by triangulating the 1.3.15 factory (166 votes) and verifying the argument signature. **In-game confirmed** (v1.4.6.115628): full battle stable ~20 min, all 7 resolved, zero `sample-AV`.
 - 2026-06-18 — fix: ship a static-CRT DLL (`/MTd`) so the native DLL loads for players instead of failing with `LoadLibrary` Win32 error 126; documented the Build & CRT requirement (the byte-pattern signatures still ship as `<PATTERN_TBD>` placeholders).
 - 2026-05-26 — feat: adopt + port NativeSkinFixes into TAOM (v1.4.5, in-repo, pattern-scanning) — C++ source vendored under `Dependencies/NativeSkinFixes.NativeHooks/`, C# wrapper inlined into `TAOM.dll`, hardcoded RVAs replaced with byte-pattern scanning, unified logging, boot banner, and 8 installer unit tests.
@@ -421,6 +438,17 @@ practice (only `CoversHeadHook` writes, and only during AgentVisuals init).
 
 ## Open follow-ups
 
+- **Re-measure the covers_head symptom on v1.4.8 before re-authoring anything.** The v1.4.8
+  changelog carries "Fixed ragdoll jittering" and "Fixed horse rein visual bug when a mounted agent
+  died" — both native, both in the impact analysis
+  ([`docs/migration/v1.4.8-impact.md`](../migration/v1.4.8-impact.md), the rein/ragdoll row). This
+  doc names "frozen hands during ragdoll" as the *visible* covers_head symptom, so the observable
+  half of what CoversHead exists to fix may have moved underneath the parked feature. **That is not
+  a claim the hooks are now redundant** — the engine fix is described as a ragdoll-jitter fix, not a
+  morph-pipeline fix; nobody has looked at a covered-head agent's hands on v1.4.8; and the hair /
+  beard cloth orphans are a separate mechanism the changelog does not mention at all. The cheap
+  first step is to watch a Gondor knight in a closed helm die on v1.4.8 with the hooks still off and
+  record what the hands do. Only then is a re-author worth costing.
 - **Observe the cloth-physics effect on cloth-hair troops.** Stability is
   confirmed (zero AVs, battle stable), but the verification battle (looters +
   Gondor line) had no cloth-flagged hair/beard, so the hook fired without

@@ -45,3 +45,13 @@ Appended to `docs/reviews/LESSONS-LEARNED.md`:
 - **Adapters & TaleWorlds API** — add a mission behavior to a freshly-opened mission via `OnMissionBehaviorInitialize`, not `Mission.Current.AddMissionBehavior` from a game manager's `OnLoadFinished` (Mission.Current isn't the battle mission yet → silent no-op).
 - **State/Lifecycle/Save** — an engine bump can regress a feature with unchanged bindings via a behavior-only change in an engine method the feature drives unusually (headless battle → new unconditional `InitialPlayerAgent` deref); binding-test-green ≠ behavior-verified. In-game-exercise headless/unusual paths on every bump.
 - **Testing & QA** — a warm-cache pass is not proof the cold path works; validate cold for render/compile/deployment fixes.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/v1.4.8-impact.md](../migration/v1.4.8-impact.md)
+
+<!-- backlinks-end -->

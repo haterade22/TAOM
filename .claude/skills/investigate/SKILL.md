@@ -62,7 +62,7 @@ Gather context before forming any hypothesis.
    - XSLT transforms (vanilla attribute drift)
    - `IoC.cs` registration order (service-locator hot path)
 
-6. **Verify TaleWorlds API signatures.** The installed game is **v1.4.7** and `E:\Decompiled_Bannerlord\` matches (v1.4.7), but the dump can lag after an engine bump. Before assuming a method exists or has a particular signature, run `pwsh tools/taom-src.ps1 path <Type>` (or `ilspycmd`) against the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\`. If dump and installed disagree, trust installed. Use the `/research` skill if the surface is large.
+6. **Verify TaleWorlds API signatures.** The installed game is **v1.4.8** and `E:\Decompiled_Bannerlord\` matches (v1.4.8), but the dump can lag after an engine bump. Before assuming a method exists or has a particular signature, run `pwsh tools/taom-src.ps1 path <Type>` (or `ilspycmd`) against the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\`. If dump and installed disagree, trust installed. Use the `/research` skill if the surface is large.
 
 Output: **"Root-cause hypothesis: ..."** — a specific, testable claim about *what* is wrong and *why*.
 

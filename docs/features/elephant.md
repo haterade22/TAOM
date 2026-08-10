@@ -712,6 +712,29 @@ standing per the spider's three crash sites:
 **Owed:** an elephant battle on 1.4.6 (charge + melee + mahout deaths). Not fielded since the
 bump as of 2026-06-12.
 
+## v1.4.8 exposure (2026-08-10) — zero rein attributes; mounted-death test owed
+
+Steam bumped the engine 1.4.7 → 1.4.8 on 2026-08-10. TAOM compiles against it with no errors and
+no patch-target or GameModel signature moved. One **UNVERIFIED** data exposure is open, and it is
+not C#:
+
+`lotr_monster_elephant.xml` declares **0 of the 12 rein attributes** the engine reads, while being
+`Mountable="true"` (`family_type="10"`) — the repo snapshot at
+[`elephant/lotr_monster_elephant.xml`](elephant/lotr_monster_elephant.xml) matches the live file.
+Every vanilla `Mountable` monster carries all twelve: `horse`/`camel`/`mule` declare them and
+`horse_2` inherits them via `base_monster`. v1.4.8 fixed a "horse rein visual bug when a mounted
+agent died" — native, no managed diff, in a path that runs on **mounted-agent death**
+([v1.4.8-impact.md](../migration/v1.4.8-impact.md) row N7). The shape came from upstream: the donor
+beasts pack's own `elephant` Monster (`ADOD_Beasts/ModuleData/adod_beasts.xml`) is also `Mountable`
+with zero rein attributes.
+
+**No crash is predicted.** Nothing offline settles it, and `tools/audit_mount_parity.py` has no rein
+check (zero occurrences of "rein"; it always exits 0), so this will not surface from tooling.
+**Owed:** a battle where a *ridden* elephant is killed, and where a mahout dies while mounted. Full
+measured table + the authoring contract:
+[creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The rein-attribute
+invariant".
+
 ## Open items
 
 - [x] Fold in the exact recipe + the donor code/NativeHook verdict from the deep-dive workflow. *(done 2026-06-05)*
@@ -729,6 +752,7 @@ bump as of 2026-06-12.
 - [x] **Monster + Horse Item** (`taom_war_elephant`) deployed into LOTRLOME_Armory — DONE (2026-06-06). `lotr_monster_elephant.xml` + `taom_war_elephant` Item in `LOTRAOM_horses.xml` + SubModule.xml registrations.
 - [x] **Action-set deployed self-contained** in LOTRLOME_Armory — DONE (2026-06-08). The donor's `as_elephant` / `as_elephant_town_and_village` / `as_elephant_map` merged into `LOTRLOME_Armory/ModuleData/action_sets.xml` (single `soln_action_sets` entry in `project.mbproj`). Two deployment crashes fixed (see "Action-sets deployment crash history" above).
 - [x] **In-game battle smoke test** — CONFIRMED (2026-06-08). Multiple war elephants with Harad riders spawned, rendered, and fought correctly in battle. The upstream beasts pack NOT in load order.
+- [ ] **Battle-test a ridden elephant death + a mounted mahout death on v1.4.8** — the Monster declares zero rein attributes while being `Mountable`, and v1.4.8 changed the native rein path that runs on mounted-agent death. UNVERIFIED; no tool gates it. See "v1.4.8 exposure" above.
 - [ ] Revert **TEMP** `Horse`-slot entry in `Main/_Module/ModuleData/troops/troops_harad.xml` — marked `TEMP-ELEPHANT-TEST`, MUST revert before any commit.
 - [ ] Author a **TAOM-owned action-set** `as_war_elephant` (rename from `as_elephant`, bind TAOM-authored clip names) to make the action-set fully TAOM-authored (currently uses donor ids / clip names verbatim).
 - [ ] **Build the elephant animations on our FBX** (Blender → Modding-Kit compile) — TAOM-owned, NOT the donor's 1.2.12 clips. Gating seam for the rename to `as_war_elephant`.

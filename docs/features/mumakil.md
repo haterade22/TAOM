@@ -112,6 +112,21 @@ unification (#305) the formerly-cloned internals are SHARED:** `MumakilAttackSer
 - **Verify assets after any mesh re-export:** `python tools/verify_mount_assets.py mumakil` +
   `python tools/tpac_skeleton_scan.py <mumakil tpac>` (must reference `elephant_skeleton`, no `_unused`).
 
+## v1.4.8 exposure (2026-08-10) — zero rein attributes; mounted-death test owed
+
+`lotr_monster_mumakil.xml` declares **0 of the 12 rein attributes** the engine reads, while being
+`Mountable="true"` (`family_type="10"`) — inherited verbatim from the elephant it clones. Every
+vanilla `Mountable` monster carries all twelve. v1.4.8 fixed a "horse rein visual bug when a mounted
+agent died" — native, no managed diff, in a path that runs on **mounted-agent death**
+([v1.4.8-impact.md](../migration/v1.4.8-impact.md) row N7).
+
+**UNVERIFIED — no crash is predicted, and nothing offline settles it.** `tools/audit_mount_parity.py`
+does not check reins (zero occurrences of "rein"; it always exits 0), and the Mûmakil is not in its
+Section A attribute-presence comparison at all, which compares spider vs warg vs elephant only.
+**Owed:** a battle where a *ridden* Mûmakil is killed and where its rider dies while mounted. Full
+measured table: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) "The
+rein-attribute invariant"; sibling entry in [elephant.md](elephant.md) "v1.4.8 exposure".
+
 ## Phase 2 (not built)
 
 Platform crew (archers on the war-tower) — deferred for the same physics-contact reason the elephant howdah crew is
