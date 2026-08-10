@@ -146,6 +146,36 @@ python tools/translate_with_claude.py --lang PL --module Armory --apply
 python tools/translate_with_claude.py --lang PL --module TAOM --max-entries 50 --apply
 ```
 
+**Which API it calls.** `--provider anthropic` is the default and unchanged. `deepseek` and
+`openrouter` serve the same `/chat/completions` shape and need **no SDK installed** — the tool
+speaks HTTP through the standard library for those two, so contributing takes a key and nothing
+else. Each provider reads its own variable (`ANTHROPIC_API_KEY`, `DEEPSEEK_API_KEY`,
+`OPENROUTER_API_KEY`) and the run exits 2 naming the one that is missing.
+
+```bash
+# The same work through a different API:
+python tools/translate_with_claude.py --lang PL --module TAOM --provider deepseek --apply
+
+# Override the provider's model, or the prices the estimate is printed from:
+python tools/translate_with_claude.py --lang PL --provider openrouter \
+    --model deepseek/deepseek-v4-pro --price-in 0.435 --price-out 0.87 --apply
+```
+
+`--batch` is the Anthropic Batches API (50% price); asking for it with another provider is refused
+up front rather than failing mid-run. Batch size is per provider — 40 for Anthropic, 20 for the
+others, because a 40-entry Polish batch spends `deepseek-v4-flash`'s whole 8,192-token output
+budget and the JSON arrives truncated.
+
+> **The strings leave the project.** `deepseek` and `openrouter` send TAOM's English source text to
+> a third party. So does the Anthropic default, but it is worth saying once: the strings are the
+> mod's own content, and picking a provider is picking who sees it.
+
+**Pointing it at your install.** `--module TAOM` reads its sources from the repo and needs no game.
+`--module TAOM_Map`, `--module Armory` and `--module all` read the installed modules, so set
+`$BANNERLORD_GAME_DIR` to your Bannerlord root. A root that is not there now exits 2 naming the
+folder; it used to report `0 untranslated entries, ~$0.00` and exit 0, which reads as "nothing to
+do" for a module it never looked at.
+
 **Translation chain (4-tier fallback per entry):**
 
 1. **Hand-curated override** — `tools/translation_overrides/<lang>.json` (canonical Tolkien names that should ALWAYS use a specific translation)

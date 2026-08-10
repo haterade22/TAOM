@@ -27,6 +27,8 @@ import os
 import re
 import sys
 import time
+import urllib.error
+import urllib.request
 import xml.etree.ElementTree as ET
 
 # Force UTF-8 stdout/stderr so we can print translated Russian/Japanese/Chinese error messages
@@ -38,15 +40,37 @@ if hasattr(sys.stderr, "buffer"):
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from _gamedir import ensure_exists, game_modules
+
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-GAME_ROOT = Path(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules")
+DEFAULT_GAME_ROOT = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 
 TAOM_LANG_DIR = REPO_ROOT / "Main" / "_Module" / "ModuleData" / "Languages"
-TAOM_MAP_LANG_DIR = GAME_ROOT / "TAOM_Map" / "ModuleData" / "Languages"
-ARMORY_LANG_DIR = GAME_ROOT / "LOTRLOME_Armory" / "ModuleData" / "Languages"
+
+
+def game_modules_root():
+    """The Modules folder, resolved per call rather than at import.
+
+    Per call because this module replaces sys.stdout/sys.stderr with UTF-8
+    wrappers at import time (below), so reloading it to pick up a changed
+    variable closes the real streams — a module-level constant would be
+    untestable. Everything else here follows the #416 helper.
+    """
+    return game_modules(DEFAULT_GAME_ROOT)
+
+
+def taom_map_lang_dir():
+    """TAOM_Map's per-language folder in the install."""
+    return game_modules_root() / "TAOM_Map" / "ModuleData" / "Languages"
+
+
+def armory_lang_dir():
+    """LOTRLOME_Armory's per-language folder in the install."""
+    return game_modules_root() / "LOTRLOME_Armory" / "ModuleData" / "Languages"
+
 
 OVERRIDES_DIR = REPO_ROOT / "tools" / "translation_overrides"
 CACHE_DIR = REPO_ROOT / "tools" / "translation_cache"
@@ -107,6 +131,68 @@ OUTPUT_CONFIG = {
 
 BATCH_SIZE = 40  # entries per API call — small enough to keep output reliable
 MAX_RETRIES = 3
+
+
+# Providers. Anthropic stays the default and its path is unchanged — this exists so a
+# contributor without an Anthropic key can still run the pipeline, which is what the
+# TRANSLATOR_GUIDE asks people to do.
+#
+# `api` selects the request/response shape, not the vendor: "anthropic" is the Messages API
+# (system as a top-level field, content blocks back), "openai" is the /chat/completions shape
+# that both OpenRouter and DeepSeek serve. The openai path speaks HTTP directly through
+# urllib, so those two providers need no SDK installed at all.
+#
+# Prices are per million tokens, and they date. Anthropic's are the file's originals; DeepSeek's
+# were published rates on 2026-07-25. OpenRouter charges per underlying model and adds a margin,
+# so its entry is an estimate for its default model — pass --price-in/--price-out for anything
+# else. Every one of these only feeds the printed estimate; none of them affects what is billed.
+PROVIDERS = {
+    "anthropic": {
+        "api": "anthropic",
+        "model": MODEL,
+        "key_env": "ANTHROPIC_API_KEY",
+        "base_url": None,               # SDK default
+        "price_in": PRICE_INPUT_PER_MTOK,
+        "price_out": PRICE_OUTPUT_PER_MTOK,
+        "batch": True,                  # Batches API, 50% price
+        "batch_size": BATCH_SIZE,       # unchanged for the default provider
+    },
+    "deepseek": {
+        "api": "openai",
+        "model": "deepseek-v4-flash",
+        "key_env": "DEEPSEEK_API_KEY",
+        "base_url": "https://api.deepseek.com/v1",
+        "price_in": 0.14,
+        "price_out": 0.28,
+        "batch": False,
+        "batch_size": 20,
+    },
+    "openrouter": {
+        "api": "openai",
+        "model": "deepseek/deepseek-v4-flash",
+        "key_env": "OPENROUTER_API_KEY",
+        "base_url": "https://openrouter.ai/api/v1",
+        "price_in": 0.14,
+        "price_out": 0.28,
+        "batch": False,
+        "batch_size": 20,
+    },
+}
+DEFAULT_PROVIDER = "anthropic"
+
+
+def resolve_provider(name, model=None, price_in=None, price_out=None):
+    """The provider config, with the CLI overrides applied. Copied, not mutated in place."""
+    cfg = dict(PROVIDERS[name])
+    cfg["name"] = name
+    if model:
+        cfg["model"] = model
+    if price_in is not None:
+        cfg["price_in"] = price_in
+    if price_out is not None:
+        cfg["price_out"] = price_out
+    return cfg
+
 
 
 # ── Domain types ───────────────────────────────────────────────────────────────
@@ -173,23 +259,36 @@ def discover_entries(lang: str, module_filter: str) -> list[Entry]:
             target_file = taom_lang_dir / tgt_template.format(locale=locale)
             entries.extend(_diff_files(source_xml, target_file))
 
+    # Only these two read the install. The TAOM module above is repo-only, so
+    # asking for it alone must not require a game at all.
+    if module_filter in ("TAOM_Map", "Armory", "all"):
+        modules = ensure_exists(game_modules_root(), "the Bannerlord Modules folder")
+
     # TAOM_Map module — settlements.xml has inline {=KEY}default; we use the populated target as English source
     if module_filter in ("TAOM_Map", "all"):
-        target_file = TAOM_MAP_LANG_DIR / lang / "loc_settlements.xml"
+        target_file = taom_map_lang_dir() / lang / "loc_settlements.xml"
         # English source: extract inline keys from the settlements.xml itself
-        source_xml = GAME_ROOT / "TAOM_Map" / "ModuleData" / "settlements.xml"
+        source_xml = modules / "TAOM_Map" / "ModuleData" / "settlements.xml"
+        # A module present in the install but missing this file is a real state
+        # (an install without TAOM_Map), so it is reported rather than fatal —
+        # but never in silence, which is what produced "0 entries, $0.00, exit 0".
         if target_file.exists() and source_xml.exists():
             entries.extend(_diff_against_settlement_source(source_xml, target_file))
+        else:
+            missing = target_file if not target_file.exists() else source_xml
+            print(f"  WARNING: TAOM_Map skipped — not found: {missing}", file=sys.stderr)
 
     # LOTRLOME_Armory module — root has English files; per-language dir mirrors them
     if module_filter in ("Armory", "all"):
-        armory_root = GAME_ROOT / "LOTRLOME_Armory" / "ModuleData" / "Languages"
+        armory_root = armory_lang_dir()
         target_dir = armory_root / lang
         if target_dir.exists():
             for src_file in armory_root.glob("loc_*.xml"):
                 target_file = target_dir / src_file.name
                 if target_file.exists():
                     entries.extend(_diff_files(src_file, target_file))
+        else:
+            print(f"  WARNING: Armory skipped — not found: {target_dir}", file=sys.stderr)
 
     return entries
 
@@ -371,22 +470,46 @@ def _extract_translations(data) -> dict[str, str]:
     return result
 
 
-def build_request(target_language: str, batch: list[Entry]) -> dict:
+def build_request(target_language: str, batch: list[Entry], provider: dict = None) -> dict:
     """The request body for one batch. Sequential and batched paths BOTH build from here —
-    if they diverge, the two paths silently produce different translations."""
+    if they diverge, the two paths silently produce different translations.
+
+    Same prompt and same entries for every provider; only the envelope differs. The system
+    prompt carries the rules that keep placeholders intact, so it must reach the model on
+    both shapes — as the top-level `system` field on Anthropic, as the first message on the
+    /chat/completions shape.
+    """
+    provider = provider or resolve_provider(DEFAULT_PROVIDER)
     user_payload = [{"id": e.string_id, "text": e.english_text} for e in batch]
     user_msg = (
         f"Translate these {len(batch)} entries to {target_language}. "
         f"Respond with the JSON object only.\n\n"
         f"INPUT:\n{json.dumps(user_payload, ensure_ascii=False, indent=2)}"
     )
+    system = SYSTEM_PROMPT.format(target_language=target_language)
+
+    if provider["api"] == "anthropic":
+        return {
+            "model": provider["model"],
+            "max_tokens": 8192,
+            "thinking": THINKING,
+            "output_config": OUTPUT_CONFIG,
+            "system": system,
+            "messages": [{"role": "user", "content": user_msg}],
+        }
+
+    # /chat/completions. `json_object` rather than a json_schema: OpenRouter routes to many
+    # models and schema support is uneven, while the object mode is universal and the prompt
+    # already specifies the schema. _parse_response_text tolerates the shape drift either way.
     return {
-        "model": MODEL,
+        "model": provider["model"],
         "max_tokens": 8192,
-        "thinking": THINKING,
-        "output_config": OUTPUT_CONFIG,
-        "system": SYSTEM_PROMPT.format(target_language=target_language),
-        "messages": [{"role": "user", "content": user_msg}],
+        "temperature": 0,
+        "response_format": {"type": "json_object"},
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user_msg},
+        ],
     }
 
 
@@ -402,9 +525,15 @@ def _parse_response_text(text: str) -> dict[str, str]:
     return _extract_translations(json.loads(text))
 
 
-def call_claude(client, target_language: str, batch: list[Entry]) -> dict[str, str]:
-    """Translate a batch via the Claude API. Returns {id: translated_text}."""
-    req = build_request(target_language, batch)
+def call_claude(client, target_language: str, batch: list[Entry],
+                provider: dict = None) -> dict[str, str]:
+    """Translate a batch via the Claude API. Returns {id: translated_text}.
+
+    `provider` is threaded through so --model reaches the request. Omitting it here made
+    build_request fall back to the packaged default, so `--model X` printed X in the run
+    header, priced the estimate as X, and sent the hardcoded MODEL.
+    """
+    req = build_request(target_language, batch, provider)
     # The installed SDK predates the typed output_config parameter — send it via extra_body.
     output_config = req.pop("output_config")
 
@@ -432,14 +561,92 @@ def call_claude(client, target_language: str, batch: list[Entry]) -> dict[str, s
                 raise
 
 
-def call_claude_batched(client, target_language: str, chunks: list[list[Entry]],
-                        poll_seconds: int = 30) -> tuple[dict[int, dict[str, str]], tuple[int, int]]:
+def require_key(provider: dict) -> str:
+    """The provider's API key, or exit 2 naming the variable that is missing."""
+    key = os.environ.get(provider["key_env"])
+    if not key or not key.strip():
+        print(f"ERROR: ${provider['key_env']} is not set — required for --provider "
+              f"{provider['name']}.", file=sys.stderr)
+        raise SystemExit(2)
+    return key
+
+
+def _post_json(url: str, headers: dict, payload: dict, timeout: int = 180) -> dict:
+    """POST JSON, return the parsed body. Separated so a test can stand in for the network."""
+    data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+    with urllib.request.urlopen(req, timeout=timeout) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def call_openai_compatible(provider: dict, target_language: str,
+                           batch: list[Entry]) -> tuple[dict[str, str], tuple[int, int]]:
+    """Translate a batch through a /chat/completions endpoint. Returns ({id: text}, usage).
+
+    Mirrors call_claude's failure handling deliberately: a batch whose JSON will not parse
+    after MAX_RETRIES comes back empty so the caller marks its entries failed, rather than
+    taking the whole run down over one bad response.
+    """
+    req = build_request(target_language, batch, provider)
+    url = provider["base_url"].rstrip("/") + "/chat/completions"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {require_key(provider)}",
+    }
+    text = ""
+    for attempt in range(MAX_RETRIES):
+        try:
+            body = _post_json(url, headers, req)
+            usage = body.get("usage") or {}
+            tokens = (usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0))
+            choice = body["choices"][0]
+            text = (choice["message"]["content"] or "").strip()
+            # A reply that ran out of output budget arrives as truncated JSON, which then fails
+            # to parse — and "could not read the JSON" sends the reader looking at the wrong
+            # thing entirely. Name the real cause and what to do about it.
+            if choice.get("finish_reason") == "length":
+                print(f"    Batch of {len(batch)} hit the model's output limit "
+                      f"({tokens[1]} tokens) and was truncated — retry with a smaller "
+                      f"batch_size for {provider['name']}.", file=sys.stderr)
+                return {}, tokens
+            return _parse_response_text(text), tokens
+        except json.JSONDecodeError as e:
+            if attempt == MAX_RETRIES - 1:
+                safe_raw = (text[:300] if text else "(empty)").replace("\n", " ")
+                print(f"    [batch_json_fail] {e}; raw: {safe_raw}...", flush=True)
+                return {}, (0, 0)
+            time.sleep(2 ** attempt)
+        except urllib.error.HTTPError as e:
+            # 429 and 5xx are worth waiting out; a 400 or 401 is not going to fix itself.
+            if e.code == 429 or e.code >= 500:
+                wait = 5 * (2 ** attempt)
+                print(f"  HTTP {e.code} from {provider['name']} — sleeping {wait}s...")
+                time.sleep(wait)
+            else:
+                detail = e.read().decode("utf-8", errors="replace")[:300]
+                print(f"    HTTP {e.code} from {provider['name']}: {detail}", file=sys.stderr)
+                raise
+    return {}, (0, 0)
+
+
+def call_model(provider: dict, client, target_language: str,
+               batch: list[Entry]) -> tuple[dict[str, str], tuple[int, int]]:
+    """One batch through whichever provider is selected."""
+    if provider["api"] == "anthropic":
+        return call_claude(client, target_language, batch, provider)
+    return call_openai_compatible(provider, target_language, batch)
+
+
+def call_claude_batched(
+        client, target_language: str, chunks: list[list[Entry]], poll_seconds: int = 30,
+        provider: dict = None) -> tuple[dict[int, dict[str, str]], tuple[int, int]]:
     """Translate many chunks through the Batches API (50% of standard price).
 
     Returns ({chunk_index: {id: translated}}, (input_tokens, output_tokens)). A chunk that
     errored, expired, or was canceled comes back absent — the caller marks its entries failed.
     """
-    requests = [{"custom_id": f"chunk-{i}", "params": build_request(target_language, chunk)}
+    requests = [{"custom_id": f"chunk-{i}",
+                 "params": build_request(target_language, chunk, provider)}
                 for i, chunk in enumerate(chunks)]
     batch = client.messages.batches.create(requests=requests)
     print(f"    Batch submitted: {batch.id} ({len(requests)} requests)", flush=True)
@@ -602,12 +809,13 @@ def write_back(file_path: Path, translations: dict[str, str],
 
 # ── Main orchestration ────────────────────────────────────────────────────────
 
-def estimate_cost(entry_count: int) -> float:
+def estimate_cost(entry_count: int, provider: dict = None) -> float:
     """Rough cost estimate. ~50 tokens input + ~50 tokens output per entry on average."""
+    provider = provider or resolve_provider(DEFAULT_PROVIDER)
     in_tokens = entry_count * 80   # includes prompt overhead
     out_tokens = entry_count * 60
-    return (in_tokens / 1_000_000 * PRICE_INPUT_PER_MTOK
-            + out_tokens / 1_000_000 * PRICE_OUTPUT_PER_MTOK)
+    return (in_tokens / 1_000_000 * provider["price_in"]
+            + out_tokens / 1_000_000 * provider["price_out"])
 
 
 def main():
@@ -624,10 +832,24 @@ def main():
     p.add_argument("--batch", action="store_true",
                    help="Submit via the Batches API at 50%% price (async, up to 24h; "
                         "worth it for bulk runs, not for a handful of entries)")
+    p.add_argument("--provider", default=DEFAULT_PROVIDER, choices=sorted(PROVIDERS),
+                   help="Which API to translate through (default: %(default)s). "
+                        "openrouter and deepseek need no SDK installed.")
+    p.add_argument("--model", default=None,
+                   help="Override the provider's default model id")
+    p.add_argument("--price-in", type=float, default=None,
+                   help="Override input price per Mtok, for the printed estimate only")
+    p.add_argument("--price-out", type=float, default=None,
+                   help="Override output price per Mtok, for the printed estimate only")
     args = p.parse_args()
 
     if not args.dry_run and not args.apply:
         p.error("Specify either --dry-run or --apply")
+
+    provider = resolve_provider(args.provider, args.model, args.price_in, args.price_out)
+    if args.batch and not provider["batch"]:
+        p.error(f"--batch is the Anthropic Batches API; {provider['name']} has no equivalent. "
+                f"Drop --batch to run sequentially.")
 
     lang = args.lang
     locale, lang_name = LANGUAGES[lang]
@@ -671,8 +893,11 @@ def main():
         print(f"  --max-entries cap applied: {args.max_entries}/{len(need_llm)} LLM entries")
         need_llm = need_llm[:args.max_entries]
 
-    api_cost = estimate_cost(len(need_llm))
-    print(f"  Estimated API cost: ~${api_cost:.2f}")
+    api_cost = estimate_cost(len(need_llm), provider)
+    print(f"  Provider: {provider['name']} ({provider['model']})")
+    # Enough decimals that a cheap provider does not round to "$0.00", which reads as free.
+    print(f"  Estimated API cost: ~${api_cost:.2f}" if api_cost >= 0.01
+          else f"  Estimated API cost: ~${api_cost:.4f}")
 
     if args.dry_run or not need_llm and not via_override and not via_cache:
         print("\n  (dry run — no files written)" if args.dry_run else "  Nothing to do.")
@@ -693,16 +918,26 @@ def main():
         result.from_cache += 1
 
     if need_llm:
-        # Import here so --dry-run doesn't need anthropic SDK
-        import anthropic
-        client = anthropic.Anthropic()
+        client = None
+        if provider["api"] == "anthropic":
+            # Import here so --dry-run doesn't need the anthropic SDK — and so the
+            # openai-compatible providers never need it at all.
+            import anthropic
+            client = anthropic.Anthropic(api_key=require_key(provider))
+        else:
+            require_key(provider)   # fail before the first request, not after
 
-        chunks = [need_llm[i:i + BATCH_SIZE] for i in range(0, len(need_llm), BATCH_SIZE)]
+        # Per provider: 40 entries fit Claude's reply, but measured against deepseek-v4-flash a
+        # 40-entry Polish batch stops at finish_reason=length having spent all 8192 output
+        # tokens, so the JSON arrives truncated and the whole batch is lost. 30 fit, 40 did not.
+        size = provider.get("batch_size", BATCH_SIZE)
+        chunks = [need_llm[i:i + size] for i in range(0, len(need_llm), size)]
 
         if args.batch:
-            print(f"\n  Calling Claude Batches API ({MODEL}) — "
-                  f"{len(chunks)} requests of up to {BATCH_SIZE} entries (50% price)...")
-            per_chunk, (in_tok, out_tok) = call_claude_batched(client, lang_name, chunks)
+            print(f"\n  Calling Claude Batches API ({provider['model']}) — "
+                  f"{len(chunks)} requests of up to {size} entries (50% price)...")
+            per_chunk, (in_tok, out_tok) = call_claude_batched(
+                client, lang_name, chunks, provider=provider)
             result.api_input_tokens += in_tok
             result.api_output_tokens += out_tok
             for idx, chunk in enumerate(chunks):
@@ -710,10 +945,12 @@ def main():
                 print(f"    Chunk {idx + 1}/{len(chunks)}: {chunk_ok}/{len(chunk)} ok", flush=True)
             save_cache(lang, cache)
         else:
-            print(f"\n  Calling Claude API ({MODEL}) in batches of {BATCH_SIZE}...")
+            print(f"\n  Calling {provider['name']} ({provider['model']}) "
+                  f"in batches of {size}...")
             for idx, batch in enumerate(chunks):
                 try:
-                    translated_map, (in_tok, out_tok) = call_claude(client, lang_name, batch)
+                    translated_map, (in_tok, out_tok) = call_model(
+                        provider, client, lang_name, batch)
                 except Exception as exc:
                     print(f"    Batch {idx + 1} FAILED: {exc}")
                     for e in batch:
@@ -729,8 +966,8 @@ def main():
                 save_cache(lang, cache)
 
         rate = 0.5 if args.batch else 1.0  # Batches API bills at 50%
-        actual_cost = rate * (result.api_input_tokens / 1_000_000 * PRICE_INPUT_PER_MTOK
-                              + result.api_output_tokens / 1_000_000 * PRICE_OUTPUT_PER_MTOK)
+        actual_cost = rate * (result.api_input_tokens / 1_000_000 * provider["price_in"]
+                              + result.api_output_tokens / 1_000_000 * provider["price_out"])
         print(f"\n  Actual cost: ${actual_cost:.3f} "
               f"(in={result.api_input_tokens} out={result.api_output_tokens}"
               f"{', batched 50%' if args.batch else ''})")
