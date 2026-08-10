@@ -1665,6 +1665,57 @@ regenerated GUIDs already existed in the original 98, so nothing was lost; the p
 rather than deleted. `package_release.py` now matches `RuntimeDataCache*` by prefix, so a stray
 `.OFF` or `.editor-partial-<date>` is excluded as cache instead of blocking a release run as unknown.
 
+### fix(items): the Dale spears could not be fought with, and nothing in the repo could have said so
+
+Every Dale spear troop that also carried a shield — 28 equipment rosters, 18 troops — held its spear
+through the pre-battle phase and then drew a sword the instant combat started. Reported as a cavalry
+problem; it was item data, and it hit the infantry spear line just as hard.
+
+A crafted weapon takes a `WeaponDescription` only when **every** piece it uses is in that
+description's `<AvailablePieces>`, and the first match in the crafting template's description order
+becomes the primary usage (`Crafting.cs:566-608`). The Armory's `weapon_descriptions.xslt` registers
+19 cultures' spear pieces under `OneHandedPolearm` and none of Dale's, so all four Dale spears
+resolved to `TwoHandedPolearm` — whose usage set is flagged `requires_no_shield`. Spawn wield is
+plain slot order, which is why the spear was visible right up until it mattered.
+
+The fix is seven `<AvailablePiece>` lines. **They go in the Armory, not here.** PR #447 originally
+shipped them as a TAOM-side `weapon_descriptions.xslt`, on the premise that the Armory is an external
+dependency TAOM does not ship — but `README.md` lists `LOTRLOME_Armory` among the modules players
+install, `tools/package_release.py` has it in `DEFAULT_MODULES`, and `tools/build_weapon_xml.py`
+already writes `<AvailablePiece>` entries into that same Armory file by default. Splitting ownership
+of one registry across two modules bought nothing.
+
+What that placement does cost is durability, since the Armory is not in this repo and a refresh
+reverts it silently. So the edit ships with the three things CLAUDE.md's dependency-module trap asks
+for, none of which #445 or #447 had:
+
+- `tools/register_dale_spear_descriptions.py` — idempotent replay, marker-delimited. The **item**
+  list is hardcoded (which weapons should be one-handed is a design call); the piece ids are derived
+  from those items' own `<CraftedItem>` blocks, so a re-modelled spear moves its own registration
+  instead of silently un-fixing itself. It refuses to write a piece id with no `<CraftingPiece>`.
+- `tools/audit_polearm_shield_parity.py` — the gate, with contract tests. Reverting the Armory edit
+  takes it from PASS to exactly 28 findings, so the reversion detector is proven rather than assumed.
+- `docs/reference/lotrlome-armory-snapshot/weapon_descriptions.xslt` + an APPLIED EDIT block.
+
+Dale's halberds, poleaxe and war spear stay two-handed. They share *handles* with the spears but not
+*heads*, and the every-piece-must-match rule means a shared handle alone grants nothing — verified
+item by item rather than assumed, since that is the only thing standing between this change and a
+silent 1H halberd.
+
+Verified by running the real transform chain offline (Native XML → Armory XSLT, lxml): the only delta
+in the merged document is +7 `AvailablePiece` entries on `OneHandedPolearm`, 5,060 → 5,067, no other
+description touched. Also measured: 0 shieldless Dale spear rosters, so no troop loses a two-handed
+stance it was using. Closes #449. In-game smoke on a new campaign is still owed.
+
+Two things fell out of the work. `docs/reference/item-usage-features.md` claimed the Armory's XSLT
+**replaces** `<AvailablePieces>` wholesale and "re-lists zero vanilla piece ids" — it does the
+opposite, appending via `<xsl:apply-templates>`, and `OneHandedPolearm` emerges with 130 mod entries
+plus vanilla's 234. That paragraph was the stated methodology for the whole item-usage audit, so it
+is corrected with the measurement. And the new gate found 33 rosters across 13 troops pairing a
+shield with a two-handed sword, axe or mace — the identical engine rule, pre-existing, and a roster
+decision rather than a data one, so it is filed as #450 and reported as WARN rather than quietly
+dropped.
+
 ### chore: v1.4.8 engine bump — nothing in `Main/` had to change
 
 Steam moved the installed game to v1.4.8 (War Sails v1.2.8, build `117131 → 119303`) at 07:22 this

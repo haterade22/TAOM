@@ -38,8 +38,11 @@ Four consequences that drive the authoring rules:
 ## Token vocabulary
 
 Every excludable token is one that appears in `item_usage_features` across the 22 native
-`WeaponDescription`s. TAOM adds no descriptions — LOTRLOME's `weapon_descriptions.xslt` only replaces
-their `<AvailablePieces>` lists.
+`WeaponDescription`s. Neither TAOM nor LOTRLOME adds a description — LOTRLOME's
+`weapon_descriptions.xslt` only extends their `<AvailablePieces>` lists, and TAOM ships no
+`weapon_descriptions` override of its own. A new piece registration therefore belongs in the
+Armory's XSLT, beside the other 19 cultures' (`tools/register_dale_spear_descriptions.py` is the
+worked example, and the reason that external edit needs a replay script).
 
 | Token | Kind | What removing it does |
 |---|---|---|
@@ -95,8 +98,14 @@ Because exclusions are unioned across all pieces in a weapon, a correct audit en
 *combinations*, not pieces:
 
 1. Build the effective piece list per `WeaponDescription`, honouring that
-   `weapon_descriptions.xslt` **replaces** `<AvailablePieces>` wholesale for the descriptions it
-   targets (it re-lists zero vanilla piece ids — intended for a total conversion).
+   `weapon_descriptions.xslt` **appends to** `<AvailablePieces>` for the descriptions it targets —
+   every one of its 15 override templates ends with `<xsl:apply-templates select="@*|node()"/>`,
+   which copies the vanilla entries it matched straight through. Measured 2026-08-10 by running the
+   real chain (Native XML → the Armory's XSLT) under lxml: `OneHandedPolearm` emerges with 364
+   entries — 130 from the Armory, 234 from vanilla — and the merged document holds 5,067
+   `AvailablePiece` entries in total. This paragraph previously said the transform *replaced* the
+   lists wholesale and "re-lists zero vanilla piece ids"; that was wrong, and it matters because an
+   audit built on it would miss every vanilla piece a mod weapon can legally use.
 2. Group each description's pieces by slot (`Blade` / `Guard` / `Handle` / `Pommel` — a weapon uses at
    most one per slot, so only cross-slot unions are reachable).
 3. For every cross-slot combination, union the exclusion sets, remove them from the description's
