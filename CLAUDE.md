@@ -18,6 +18,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 |------|---------|
 | **TDD Mandatory** | RED -> GREEN -> REFACTOR. Test first, always. |
 | **Never Fabricate** | If you don't know, research — don't guess. State no file list / diff / count / hash / tool output / signature you have not actually read THIS turn. "I don't know yet, checking" is always acceptable; an invented fact never is. Read the proving output, confirm it's real, *then* write the doc/CHANGELOG/commit. See `.claude/rules/evidence-over-claims.md` §C. |
+| **Humanize Output** | Every artifact you produce (commit body, CHANGELOG, issue/PR, doc, RCA) must read as human writing, not LLM output. No em or en dash in prose (`—`, `–`): use a comma, colon, semicolon, parentheses, or a new sentence. Hyphens in flags/paths/versions stay legal. Tells: `.claude/rules/output-style.md` Part 2. Deep clean: `/humanizer`. |
 | **No `#region`** | Use class decomposition (ADR-003) |
 | **No `[Obsolete]`** | Migrate all usage in same PR (ADR-004) |
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
