@@ -1437,17 +1437,17 @@
     <string id="TAOM_hero_B8_l" text="Doğu tepelerinin bir Variag savaş lordu." />
     <string id="TAOM_hero_B8_s" text="Variag savaş lordunun eşi." />
     <string id="TAOM_hero_B8_c" text="Variag savaş lordunun varisi." />
-    <string id="TAOM_liege_dunland" text="Dunland Brenin'i" />
-    <string id="TAOM_liege_dunland_female" text="Dunland Brenhines'i" />
-    <string id="TAOM_liege_dale" text="Dale Kralı" />
-    <string id="TAOM_liege_dale_female" text="Dale Kraliçesi" />
-    <string id="TAOM_liege_harad" text="Harad Taskral'ı" />
-    <string id="TAOM_liege_harad_female" text="Harad Taskral'ı" />
-    <string id="TAOM_liege_khand" text="Khand Khudriag'ı" />
-    <string id="TAOM_liege_khand_female" text="Khand Khudriag'ı" />
-    <string id="TAOM_liege_rohan" text="Mark Kralı" />
-    <string id="TAOM_liege_rohan_female" text="Mark Kraliçesi" />
-    <string id="TAOM_liege_rhun" text="Rhûn Loke-Kan'ı" />
-    <string id="TAOM_liege_rhun_female" text="Rhûn Loke-Kan'ı" />
+    <string id="TAOM_liege_dunland" text="Dunland Brenin'i" />
+    <string id="TAOM_liege_dunland_female" text="Dunland Brenhines'i" />
+    <string id="TAOM_liege_dale" text="Dale Kralı" />
+    <string id="TAOM_liege_dale_female" text="Dale Kraliçesi" />
+    <string id="TAOM_liege_harad" text="Harad Taskral'ı" />
+    <string id="TAOM_liege_harad_female" text="Harad Taskral'ı" />
+    <string id="TAOM_liege_khand" text="Khand Khudriag'ı" />
+    <string id="TAOM_liege_khand_female" text="Khand Khudriag'ı" />
+    <string id="TAOM_liege_rohan" text="Mark Kralı" />
+    <string id="TAOM_liege_rohan_female" text="Mark Kraliçesi" />
+    <string id="TAOM_liege_rhun" text="Rhûn Loke-Kan'ı" />
+    <string id="TAOM_liege_rhun_female" text="Rhûn Loke-Kan'ı" />
   </strings>
 </base>

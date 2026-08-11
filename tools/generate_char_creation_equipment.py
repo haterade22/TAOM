@@ -6,8 +6,7 @@ Each culture gets 55 equipment rosters following vanilla Bannerlord patterns.
 """
 
 import os
-import xml.etree.ElementTree as ET
-from xml.dom import minidom
+import sys
 
 OUTPUT_PATH = os.path.join(
     os.path.dirname(__file__),
@@ -236,6 +235,50 @@ CULTURES = {
 # Lothlorien uses Rivendell items per user instruction
 CULTURES["lothlorien"] = dict(CULTURES["rivendell"])
 
+# Goblin-town and the Moria orcs. Every item below is taken from the slot it already occupies in
+# the shipped troop trees (troops_goblin.xml / troops_mistymountainorcs.xml), so nothing here can
+# reference an item the Armory does not define — the "underwear bug" gate.
+#
+# `no_mount: True` — both troop trees contain zero `slot="Horse"` entries, so the player must not
+# be handed a horse the culture never fields. See docs/features/no-mount-cultures.md; Patch20
+# detects the absence at runtime and skips vanilla's horse actor in the narrative stages.
+CULTURES["goblin"] = {
+    "body_civilian": "sk_md_orc_arc_chest_light_a",
+    "body_alt": "sk_md_orc_arc_chest_light_b",
+    "body_military": "sk_md_orc_inf_chest_med_a",
+    "leg": "sk_md_orc_boots_light_a",
+    "leg_alt": "sk_md_orc_boots_med_a",
+    "head_light": "sk_gn_orc_helmet_light_a",
+    "head_military": "sk_gn_orc_inf_helmet_med_a",
+    "gloves": "sk_md_orc_bracer_med_a",
+    "cape": "sk_md_orc_pauldron_light_a",
+    "cape_alt": "sk_md_orc_pauldron_med_a",
+    "sword": "wm_mordor_set1_sword_a02",
+    "spear": "wm_gundabad_spear_a01",
+    "bow": "sm_uruk_bow_a",
+    "arrows": "bodkin_arrows_c",
+    "shield": "wm_gundabad_shield_a02",
+    "axe_or_mace": "wm_gundabad_axe_a01",
+    "javelin": "wm_gundabad_javelin_a01",
+    "no_mount": True,
+}
+
+# The Misty Mountain tree is a leaf-for-leaf clone of the Goblin-town one (same 23 troop names,
+# same item pool — see docs/features/new-factions-misty-mountains-lindon.md, which flags both trees
+# as placeholder Gundabad clones). Sharing the table is therefore accurate today rather than lazy;
+# when either tree is given its own identity, split this into a literal dict.
+CULTURES["mistymountainorcs"] = dict(CULTURES["goblin"])
+
+# Cultures promoted out of a borrowed one (2026-08-10). Their troop trees are clones, and the items
+# in them are LOTRLOME_Armory ids that the promotion deliberately did not rename — an Armory id
+# names a real asset, so renaming it invents a reference to nothing. Reusing the source culture's
+# verified item table is therefore accurate rather than lazy: it is literally the same gear.
+#
+# Blue Craig is no-mount like the goblin tree it came from (zero `slot="Horse"` entries). Lindon is
+# NOT — the Rivendell tree it came from fields elven cavalry, so it keeps horse and harness.
+CULTURES["bluecraig"] = dict(CULTURES["goblin"])
+CULTURES["lindon"] = dict(CULTURES["rivendell"])
+
 OCCUPATIONS = ["retainer", "merchant", "farmer", "artisan", "hunter", "vagabond"]
 CAREERS = ["retainer", "mercenary", "guard", "hunter", "infantry", "skirmisher", "bard", "6"]
 
@@ -409,9 +452,11 @@ def career_battle_items(c, career):
         items.append(equip("Body", c["body_military"]))
         items.append(equip("Leg", c["leg"]))
 
-    # All careers get horse + harness
-    items.append(equip("Horse", "sumpter_horse"))
-    items.append(equip("HorseHarness", "light_harness"))
+    # Mounted cultures get horse + harness. A no-mount culture must not, or the player rides out of
+    # character creation on an animal its own troop tree never fields.
+    if not c.get("no_mount"):
+        items.append(equip("Horse", "sumpter_horse"))
+        items.append(equip("HorseHarness", "light_harness"))
 
     return items
 
@@ -443,120 +488,190 @@ def generate_all():
     all_rosters = []
     total_count = 0
 
-    for culture_id, c in CULTURES.items():
-        rosters = []
-        rosters.append(f'\t<!-- ═══ Culture: {culture_id.upper()} ═══ -->')
-
-        # 1. Parent fallback (none)
-        rosters.append(f'\t<!-- Parent fallback -->')
-        mother_none = [equip("Body", c["body_civilian"]), equip("Leg", c["leg"])]
-        if c.get("cape"):
-            mother_none.append(equip("Cape", c["cape"]))
-        rosters.append(build_roster(
-            f"mother_char_creation_none_{culture_id}", culture_id,
-            [{"items": mother_none}]
-        ))
-        total_count += 1
-
-        father_none = [equip("Body", c["body_civilian"]), equip("Leg", c["leg"])]
-        rosters.append(build_roster(
-            f"father_char_creation_none_{culture_id}", culture_id,
-            [{"items": father_none}]
-        ))
-        total_count += 1
-
-        # 2. Parent occupations (6 × mother + father = 12)
-        for i, occ in enumerate(OCCUPATIONS, 1):
-            rosters.append(f'\t<!--{i}.{occ.capitalize()}-->')
-
-            m_items = mother_items(c, occ)
-            rosters.append(build_roster(
-                f"mother_char_creation_{occ}_{culture_id}", culture_id,
-                [{"items": m_items}]
-            ))
-            total_count += 1
-
-            f_items = father_items(c, occ)
-            rosters.append(build_roster(
-                f"father_char_creation_{occ}_{culture_id}", culture_id,
-                [{"items": f_items}]
-            ))
-            total_count += 1
-
-        # 3. Childhood/Education age (6 occ × 2 ages × 2 genders = 24)
-        rosters.append(f'\t<!-- Childhood & Education age -->')
-        for occ in OCCUPATIONS:
-            for gender in ["m", "f"]:
-                if gender == "m":
-                    ch_items = childhood_items_m(c, occ)
-                else:
-                    ch_items = childhood_items_f(c, occ)
-
-                # Childhood and education use same items (matching vanilla pattern)
-                rosters.append(build_roster(
-                    f"player_char_creation_childhood_age_{culture_id}_{occ}_{gender}",
-                    culture_id, [{"items": ch_items}]
-                ))
-                total_count += 1
-
-                rosters.append(build_roster(
-                    f"player_char_creation_education_age_{culture_id}_{occ}_{gender}",
-                    culture_id, [{"items": ch_items}]
-                ))
-                total_count += 1
-
-        # 4. Adult careers (8 careers × 2 genders = 16)
-        rosters.append(f'\t<!-- Adult careers -->')
-        for career in CAREERS:
-            for gender in ["m", "f"]:
-                is_female = gender == "f"
-                battle = career_battle_items(c, career)
-                civilian = career_civilian_items(c, career, is_female)
-
-                rosters.append(build_roster(
-                    f"player_char_creation_{culture_id}_{career}_{gender}",
-                    culture_id,
-                    [
-                        {"items": battle},
-                        {"items": civilian, "civilian": True},
-                    ]
-                ))
-                total_count += 1
-
-        # 5. Show roster (1)
-        rosters.append(f'\t<!-- Show -->')
-        show_items = [equip("Body", c["body_military"])]
-        if c.get("gloves"):
-            show_items.append(equip("Gloves", c["gloves"]))
-        show_items.append(equip("Leg", c["leg"]))
-
-        show_civilian = [equip("Body", c["body_civilian"]), equip("Leg", c["leg"])]
-        if c.get("axe_or_mace"):
-            show_civilian.insert(0, equip("Item0", c["axe_or_mace"]))
-        else:
-            show_civilian.insert(0, equip("Item0", c["sword"]))
-
-        rosters.append(build_roster(
-            f"player_char_creation_show_{culture_id}", culture_id,
-            [
-                {"items": show_items},
-                {"items": show_civilian, "civilian": True},
-            ]
-        ))
-        total_count += 1
-
+    for culture_id in CULTURES:
+        rosters, count = generate_culture(culture_id)
         all_rosters.extend(rosters)
+        total_count += count
 
     return all_rosters, total_count
 
 
+def generate_culture(culture_id):
+    """Generate the 55 rosters for a single culture. Returns (lines, count)."""
+    c = CULTURES[culture_id]
+    rosters = []
+    rosters.append(f'\t<!-- ═══ Culture: {culture_id.upper()} ═══ -->')
+    total_count = 0
+
+    # 1. Parent fallback (none)
+    rosters.append(f'\t<!-- Parent fallback -->')
+    mother_none = [equip("Body", c["body_civilian"]), equip("Leg", c["leg"])]
+    if c.get("cape"):
+        mother_none.append(equip("Cape", c["cape"]))
+    rosters.append(build_roster(
+        f"mother_char_creation_none_{culture_id}", culture_id,
+        [{"items": mother_none}]
+    ))
+    total_count += 1
+
+    father_none = [equip("Body", c["body_civilian"]), equip("Leg", c["leg"])]
+    rosters.append(build_roster(
+        f"father_char_creation_none_{culture_id}", culture_id,
+        [{"items": father_none}]
+    ))
+    total_count += 1
+
+    # 2. Parent occupations (6 × mother + father = 12)
+    for i, occ in enumerate(OCCUPATIONS, 1):
+        rosters.append(f'\t<!--{i}.{occ.capitalize()}-->')
+
+        m_items = mother_items(c, occ)
+        rosters.append(build_roster(
+            f"mother_char_creation_{occ}_{culture_id}", culture_id,
+            [{"items": m_items}]
+        ))
+        total_count += 1
+
+        f_items = father_items(c, occ)
+        rosters.append(build_roster(
+            f"father_char_creation_{occ}_{culture_id}", culture_id,
+            [{"items": f_items}]
+        ))
+        total_count += 1
+
+    # 3. Childhood/Education age (6 occ × 2 ages × 2 genders = 24)
+    rosters.append(f'\t<!-- Childhood & Education age -->')
+    for occ in OCCUPATIONS:
+        for gender in ["m", "f"]:
+            if gender == "m":
+                ch_items = childhood_items_m(c, occ)
+            else:
+                ch_items = childhood_items_f(c, occ)
+
+            # Childhood and education use same items (matching vanilla pattern)
+            rosters.append(build_roster(
+                f"player_char_creation_childhood_age_{culture_id}_{occ}_{gender}",
+                culture_id, [{"items": ch_items}]
+            ))
+            total_count += 1
+
+            rosters.append(build_roster(
+                f"player_char_creation_education_age_{culture_id}_{occ}_{gender}",
+                culture_id, [{"items": ch_items}]
+            ))
+            total_count += 1
+
+    # 4. Adult careers (8 careers × 2 genders = 16)
+    rosters.append(f'\t<!-- Adult careers -->')
+    for career in CAREERS:
+        for gender in ["m", "f"]:
+            is_female = gender == "f"
+            battle = career_battle_items(c, career)
+            civilian = career_civilian_items(c, career, is_female)
+
+            rosters.append(build_roster(
+                f"player_char_creation_{culture_id}_{career}_{gender}",
+                culture_id,
+                [
+                    {"items": battle},
+                    {"items": civilian, "civilian": True},
+                ]
+            ))
+            total_count += 1
+
+    # 5. Show roster (1)
+    rosters.append(f'\t<!-- Show -->')
+    show_items = [equip("Body", c["body_military"])]
+    if c.get("gloves"):
+        show_items.append(equip("Gloves", c["gloves"]))
+    show_items.append(equip("Leg", c["leg"]))
+
+    show_civilian = [equip("Body", c["body_civilian"]), equip("Leg", c["leg"])]
+    if c.get("axe_or_mace"):
+        show_civilian.insert(0, equip("Item0", c["axe_or_mace"]))
+    else:
+        show_civilian.insert(0, equip("Item0", c["sword"]))
+
+    rosters.append(build_roster(
+        f"player_char_creation_show_{culture_id}", culture_id,
+        [
+            {"items": show_items},
+            {"items": show_civilian, "civilian": True},
+        ]
+    ))
+    total_count += 1
+
+    return rosters, total_count
+
+
+def append_cultures(culture_ids, apply=False):
+    """
+    Splice one or more cultures' rosters into the existing file, leaving every other culture's
+    bytes untouched.
+
+    A full rewrite is NOT safe here. The shipped file has been hand-corrected since it was last
+    generated (verified 2026-08-10: Gondor's shield was fixed from `gond_shld2` to
+    `wm_gondor_shield_a02` in 8 rosters), so re-running the whole generator silently reverts those
+    edits. Until the tables are reconciled with the file, only ever append.
+
+    Idempotent: a culture that already has rosters in the file is skipped.
+    """
+    output = os.path.normpath(OUTPUT_PATH)
+    original = open(output, encoding="utf-8", newline="").read()
+    newline = "\r\n" if "\r\n" in original else "\n"
+    text = original.replace("\r\n", "\n")
+
+    closing = "</EquipmentRosters>"
+    if closing not in text:
+        raise SystemExit(f"{output}: no {closing} — refusing to guess where to append")
+
+    added, skipped, lines = 0, [], []
+    for culture_id in culture_ids:
+        if culture_id not in CULTURES:
+            raise SystemExit(f"unknown culture '{culture_id}' — add it to CULTURES first")
+        if f'culture="Culture.{culture_id}"' in text:
+            skipped.append(culture_id)
+            continue
+        rosters, count = generate_culture(culture_id)
+        lines.extend(rosters)
+        added += count
+
+    for culture_id in skipped:
+        print(f"skip {culture_id}: already present")
+    if not lines:
+        print("nothing to do")
+        return
+
+    head, _, tail = text.rpartition(closing)
+    updated = head + "\n".join(lines) + "\n" + closing + tail
+
+    if not apply:
+        print(f"DRY RUN: would add {added} rosters for {[c for c in culture_ids if c not in skipped]}")
+        print(f"         {output}: {text.count(chr(10))} -> {updated.count(chr(10))} lines")
+        print("         re-run with --apply to write")
+        return
+
+    with open(output, "w", encoding="utf-8", newline="") as f:
+        f.write(updated.replace("\n", newline))
+    print(f"Added {added} equipment rosters -> {output}")
+
+
 def main():
+    argv = sys.argv[1:]
+    if "--append" in argv:
+        i = argv.index("--append")
+        cultures = [a for a in argv[i + 1:] if not a.startswith("-")]
+        if not cultures:
+            raise SystemExit("--append needs at least one culture id")
+        append_cultures(cultures, apply="--apply" in argv)
+        return
+
     rosters, count = generate_all()
 
     xml_lines = [
         '<?xml version="1.0" encoding="utf-8"?>',
         '<!--',
-        f'  TAOM Character Creation Equipment Rosters ({count} rosters for 12 custom cultures)',
+        f'  TAOM Character Creation Equipment Rosters ({count} rosters for {len(CULTURES)} custom cultures)',
         '  Generated by tools/generate_char_creation_equipment.py',
         '  Items sourced from LOTRLOME_Armory module',
         '-->',

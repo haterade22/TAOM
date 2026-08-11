@@ -390,5 +390,149 @@
         "focus_to_add": 0,
         "skill_level_to_add": 0,
         "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "goblin_troll_driver",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "goblin_tunnel_stalker",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "goblin_warg_master",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "misty_troll_goad",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "misty_deep_marksman",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "misty_warg_chieftain",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "craig_pit_driver",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "craig_crag_stalker",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "craig_warg_master",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "falathrim_blade_dancer",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "falathrim_sentinel",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "falathrim_mariner",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "shaghana_zajana_tribesman",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "shaghana_chatak_javelineer",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "shaghana_beast_rider",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "abanissa_house_guard",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "abanissa_jiret_javelineer",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "abanissa_ivory_rider",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     }
 ]

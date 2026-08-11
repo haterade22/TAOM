@@ -1445,7 +1445,10 @@
         "occupation_type": "retainer",
         "text": "Trained in the tunnel-halls of Goblin-town.",
         "description": "You were blooded in the torch-lit training halls of the mountain stronghold, learning to ride hard and swing heavy weapons in the tradition of the northern Orc clans. Status came to those who could prove themselves in the pit before their elders.",
-        "skills": ["TwoHanded", "Riding"],
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1457,7 +1460,10 @@
         "occupation_type": "merchant_urban",
         "text": "Apprenticed in the weapon-smiths of Goblin-town.",
         "description": "You learned to forge crude but effective arms in the noisy smithing halls of the mountain, learning to trade them for supplies and favors. The work was ugly but the skills were real, and you left the forge knowing both iron and dealing.",
-        "skills": ["Crafting", "Trade"],
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1469,7 +1475,10 @@
         "occupation_type": "farmer",
         "text": "Dug in the mines beneath the mountain.",
         "description": "You swung a pick in the lightless shafts of Goblin-town, learning the mountain's structure and the engineering of the pit supports. The tunnels were your home and you could navigate them blind, which was often how you had to.",
-        "skills": ["Engineering", "Athletics"],
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1481,7 +1490,10 @@
         "occupation_type": "artisan_urban",
         "text": "Fought in the passes of the Grey Mountains.",
         "description": "You ran with the raiding bands that struck into the Grey Mountains, learning to fight with axe and spear in the brutal hit-and-run style of the northern clans. You came back meaner each time and a little more certain of your own survival.",
-        "skills": ["OneHanded", "Polearm"],
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1493,7 +1505,10 @@
         "occupation_type": "hunter",
         "text": "Ranged the wild lands around Goblin-town.",
         "description": "You patrolled the rocky wilderness surrounding the mountain fortress, tracking intruders and reading signs of enemy movement. The cold northern wilds gave you patience and a bowman's stillness that outlasted any target.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1505,7 +1520,10 @@
         "occupation_type": "vagabond_urban",
         "text": "Survived alone in the mountain passes.",
         "description": "Cast out or escaping some debt, you fended for yourself in the treacherous passes around the mountain, surviving by theft and quick thinking. The experience left you with no illusions about loyalty and a sharp talent for getting out of trouble.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1517,7 +1535,10 @@
         "occupation_type": "retainer",
         "text": "Trained in the war-halls of Moria.",
         "description": "You were blooded in the torch-lit training halls of the mountain stronghold, learning to ride hard and swing heavy weapons in the tradition of the northern Orc clans. Status came to those who could prove themselves in the pit before their elders.",
-        "skills": ["TwoHanded", "Riding"],
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1529,7 +1550,10 @@
         "occupation_type": "merchant_urban",
         "text": "Apprenticed in the weapon-smiths of the Misty Mountains.",
         "description": "You learned to forge crude but effective arms in the noisy smithing halls of the mountain, learning to trade them for supplies and favors. The work was ugly but the skills were real, and you left the forge knowing both iron and dealing.",
-        "skills": ["Crafting", "Trade"],
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1541,7 +1565,10 @@
         "occupation_type": "farmer",
         "text": "Dug in the mines beneath the mountain.",
         "description": "You swung a pick in the lightless shafts of the Misty Mountains, learning the mountain's structure and the engineering of the pit supports. The tunnels were your home and you could navigate them blind, which was often how you had to.",
-        "skills": ["Engineering", "Athletics"],
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1553,7 +1580,10 @@
         "occupation_type": "artisan_urban",
         "text": "Fought in the passes of the Grey Mountains.",
         "description": "You ran with the raiding bands that struck into the Grey Mountains, learning to fight with axe and spear in the brutal hit-and-run style of the northern clans. You came back meaner each time and a little more certain of your own survival.",
-        "skills": ["OneHanded", "Polearm"],
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1565,7 +1595,10 @@
         "occupation_type": "hunter",
         "text": "Ranged the wild lands around the Misty Mountains.",
         "description": "You patrolled the rocky wilderness surrounding the mountain fortress, tracking intruders and reading signs of enemy movement. The cold northern wilds gave you patience and a bowman's stillness that outlasted any target.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1577,7 +1610,190 @@
         "occupation_type": "vagabond_urban",
         "text": "Survived alone in the mountain passes.",
         "description": "Cast out or escaping some debt, you fended for yourself in the treacherous passes around the mountain, surviving by theft and quick thinking. The experience left you with no illusions about loyalty and a sharp talent for getting out of trouble.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_bluecraig_1",
+        "culture_id": "bluecraig",
+        "occupation_type": "retainer",
+        "text": "Trained in the crag-halls of Blue Craig.",
+        "description": "You were blooded in the torch-lit training halls of the mountain stronghold, learning to ride hard and swing heavy weapons in the tradition of the northern Orc clans. Status came to those who could prove themselves in the pit before their elders.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_bluecraig_2",
+        "culture_id": "bluecraig",
+        "occupation_type": "merchant_urban",
+        "text": "Apprenticed in the weapon-smiths of Blue Craig.",
+        "description": "You learned to forge crude but effective arms in the noisy smithing halls of the mountain, learning to trade them for supplies and favors. The work was ugly but the skills were real, and you left the forge knowing both iron and dealing.",
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_bluecraig_3",
+        "culture_id": "bluecraig",
+        "occupation_type": "farmer",
+        "text": "Dug in the mines beneath the mountain.",
+        "description": "You swung a pick in the lightless shafts of Blue Craig, learning the mountain's structure and the engineering of the pit supports. The tunnels were your home and you could navigate them blind, which was often how you had to.",
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_bluecraig_4",
+        "culture_id": "bluecraig",
+        "occupation_type": "artisan_urban",
+        "text": "Fought in the passes of the Grey Mountains.",
+        "description": "You ran with the raiding bands that struck into the Grey Mountains, learning to fight with axe and spear in the brutal hit-and-run style of the northern clans. You came back meaner each time and a little more certain of your own survival.",
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_bluecraig_5",
+        "culture_id": "bluecraig",
+        "occupation_type": "hunter",
+        "text": "Ranged the wild lands around Blue Craig.",
+        "description": "You patrolled the rocky wilderness surrounding the mountain fortress, tracking intruders and reading signs of enemy movement. The cold northern wilds gave you patience and a bowman's stillness that outlasted any target.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_bluecraig_6",
+        "culture_id": "bluecraig",
+        "occupation_type": "vagabond_urban",
+        "text": "Survived alone in the mountain passes.",
+        "description": "Cast out or escaping some debt, you fended for yourself in the treacherous passes around the mountain, surviving by theft and quick thinking. The experience left you with no illusions about loyalty and a sharp talent for getting out of trouble.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_lindon_1",
+        "culture_id": "lindon",
+        "occupation_type": "retainer",
+        "text": "Trained in the riding courts of Mithlond.",
+        "description": "You practiced the mounted arts in the quiet training grounds of Lindon, learning to ride and fight with the fluid grace that Elven tradition demanded. The great library was never far, and your education in blade and lore went hand in hand.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_lindon_2",
+        "culture_id": "lindon",
+        "occupation_type": "merchant_urban",
+        "text": "Studied craft and lore in Cirdan's halls.",
+        "description": "You spent your formative years learning the craft-arts and histories preserved in Lindon, working alongside master artisans and loremasters. Long evenings of talk sharpened your tongue and your understanding of the world's deep past.",
+        "skills": [
+            "Crafting",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_lindon_3",
+        "culture_id": "lindon",
+        "occupation_type": "farmer",
+        "text": "Tended the gardens and orchards of the Grey Havens.",
+        "description": "You worked the terraced gardens of Mithlond, learning patience and diligence from Elves who had tended those same beds for an age. Between rows you practiced swordplay, finding that tending living things gave you an instinct for measured force.",
+        "skills": [
+            "Athletics",
+            "OneHanded"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_lindon_4",
+        "culture_id": "lindon",
+        "occupation_type": "artisan_urban",
+        "text": "Walked the border watches of Mithlond.",
+        "description": "You accompanied the Elven wardens on their long circuits around the valley's hidden paths, learning to read the forest and loose an arrow before your quarry heard you coming. The valley's peace was hard-won and you helped keep it.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_lindon_5",
+        "culture_id": "lindon",
+        "occupation_type": "hunter",
+        "text": "Learned healing arts in the halls of Cirdan.",
+        "description": "You served in the healing rooms of Lindon, learning herb-lore and the arts of mending under the guidance of Cirdan's healers. Tending to weary travellers and wounded Elves gave you both knowledge and the empathy that comes with it.",
+        "skills": [
+            "Medicine",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_lindon_6",
+        "culture_id": "lindon",
+        "occupation_type": "vagabond_urban",
+        "text": "Wandered the wild roads beyond the valley.",
+        "description": "You slipped beyond Lindon's borders as often as you could, exploring the Tower Hills and the shores of the Gulf of Lune. You developed a taste for risk and discovered that you could survive on cunning where a sword would only bring trouble.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,

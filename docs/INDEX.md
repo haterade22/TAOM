@@ -21,6 +21,7 @@
 ## By major system
 
 ### Character, race, body, & character creation
+- [culture-playability-wiring](features/culture-playability-wiring.md) — the 14-row checklist separating a *selectable* culture from a *playable* one, why `is_main_culture` is not the CC gate (vanilla hardcodes six StringIds), and the three failure modes that ship silently: no CC equipment, no starting denars, no eligible career
 - [character-creation](features/character-creation.md) — race-restricted CC dropdown, action_set requirements, narrative-stage flow, vanilla-aligned bonus budget (skill/attribute/focus per stage)
 - [character-creation-body-properties](features/character-creation-body-properties.md) — per-culture default body properties on CC screen (Patch29)
 - [character-selection](features/character-selection.md) — transpiler-driven race fallback in CC

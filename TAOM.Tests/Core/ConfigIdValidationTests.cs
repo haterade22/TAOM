@@ -16,6 +16,8 @@ public class ConfigIdValidationTests
         "mirkwood", "isengard", "gundabad", "dolguldur", "umbar",
         // New orc cultures (Misty Mountains expansion)
         "goblin", "mistymountainorcs",
+        // Promoted 2026-08-10 out of a borrowed culture: bluecraig off goblin, lindon off rivendell
+        "bluecraig", "lindon",
         // XSLT cultures (vanilla engine StringIds)
         "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania"
     };
@@ -191,10 +193,13 @@ public class ConfigIdValidationTests
     // --- ValidCultureIds set is complete ---
 
     [TestMethod]
-    public void ValidCultureIds_Contains18Cultures()
+    public void ValidCultureIds_Contains20Cultures()
     {
-        Assert.AreEqual(18, ValidCultureIds.Count,
-            "Expected 18 valid culture IDs (12 custom incl. goblin + mistymountainorcs, + 6 XSLT)");
+        Assert.AreEqual(20, ValidCultureIds.Count,
+            "Expected 20 valid culture IDs (14 custom — incl. goblin, mistymountainorcs, and the "
+            + "2026-08-10 promotions bluecraig + lindon — plus 6 XSLT). This count is deliberately "
+            + "hardcoded: it is the tripwire that makes adding a culture surface every other "
+            + "per-culture list that also needs it.");
     }
 
     [TestMethod]

@@ -1348,7 +1348,10 @@
         "culture_id": "goblin",
         "text": "You won the Great Mountain Tournament and were named a warchief's retainer.",
         "description": "The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before.",
-        "skills": ["TwoHanded", "Riding"],
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1359,7 +1362,10 @@
         "culture_id": "goblin",
         "text": "You established a profitable arms trade with a southern Orc clan.",
         "description": "The southern clan had iron but no smiths. Goblin-town had tinkerers but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage.",
-        "skills": ["Crafting", "Trade"],
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1370,7 +1376,10 @@
         "culture_id": "goblin",
         "text": "You shored up the lower mine galleries after a partial collapse.",
         "description": "The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep.",
-        "skills": ["Engineering", "Athletics"],
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1381,7 +1390,10 @@
         "culture_id": "goblin",
         "text": "You led the raid that broke the Dwarven outpost on the Grey Mountains.",
         "description": "The Dwarves had fortified a pass that Goblin-town used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back.",
-        "skills": ["OneHanded", "Polearm"],
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1392,7 +1404,10 @@
         "culture_id": "goblin",
         "text": "You tracked a Dwarven scouting party for four days and brought back their maps.",
         "description": "The Dwarves were mapping something in the Grey Mountains and Goblin-town needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1403,7 +1418,10 @@
         "culture_id": "goblin",
         "text": "You framed a rival warleader for theft and took his position.",
         "description": "The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1414,7 +1432,10 @@
         "culture_id": "mistymountainorcs",
         "text": "You won the Great Mountain Tournament and were named a warchief's retainer.",
         "description": "The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before.",
-        "skills": ["TwoHanded", "Riding"],
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1425,7 +1446,10 @@
         "culture_id": "mistymountainorcs",
         "text": "You established a profitable arms trade with a southern Orc clan.",
         "description": "The southern clan had iron but no smiths. Moria had smiths but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage.",
-        "skills": ["Crafting", "Trade"],
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1436,7 +1460,10 @@
         "culture_id": "mistymountainorcs",
         "text": "You shored up the lower mine galleries after a partial collapse.",
         "description": "The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep.",
-        "skills": ["Engineering", "Athletics"],
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1447,7 +1474,10 @@
         "culture_id": "mistymountainorcs",
         "text": "You led the raid that broke the Dwarven outpost on the Grey Mountains.",
         "description": "The Dwarves had fortified a pass that the Misty Mountains used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back.",
-        "skills": ["OneHanded", "Polearm"],
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1458,7 +1488,10 @@
         "culture_id": "mistymountainorcs",
         "text": "You tracked a Dwarven scouting party for four days and brought back their maps.",
         "description": "The Dwarves were mapping something in the Grey Mountains and the Misty Mountains needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1469,7 +1502,178 @@
         "culture_id": "mistymountainorcs",
         "text": "You framed a rival warleader for theft and took his position.",
         "description": "The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_bluecraig_1",
+        "culture_id": "bluecraig",
+        "text": "You won the Great Mountain Tournament and were named a warchief's retainer.",
+        "description": "The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_bluecraig_2",
+        "culture_id": "bluecraig",
+        "text": "You established a profitable arms trade with a southern Orc clan.",
+        "description": "The southern clan had iron but no smiths. Blue Craig had tinkerers but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage.",
+        "skills": [
+            "Crafting",
+            "Trade"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_bluecraig_3",
+        "culture_id": "bluecraig",
+        "text": "You shored up the lower mine galleries after a partial collapse.",
+        "description": "The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep.",
+        "skills": [
+            "Engineering",
+            "Athletics"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_bluecraig_4",
+        "culture_id": "bluecraig",
+        "text": "You led the raid that broke the Dwarven outpost on the Grey Mountains.",
+        "description": "The Dwarves had fortified a pass that Blue Craig used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back.",
+        "skills": [
+            "OneHanded",
+            "Polearm"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_bluecraig_5",
+        "culture_id": "bluecraig",
+        "text": "You tracked a Dwarven scouting party for four days and brought back their maps.",
+        "description": "The Dwarves were mapping something in the Grey Mountains and Blue Craig needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_bluecraig_6",
+        "culture_id": "bluecraig",
+        "text": "You framed a rival warleader for theft and took his position.",
+        "description": "The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lindon_1",
+        "culture_id": "lindon",
+        "text": "You rode out alone to escort a wounded messenger back to Mithlond.",
+        "description": "The messenger had been ambushed east of the Ford and could not ride unaided. You found him, fought off the Orc stragglers still searching the road, and brought him in. Cirdan himself spoke to you briefly before turning to the message.",
+        "skills": [
+            "TwoHanded",
+            "Riding"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lindon_2",
+        "culture_id": "lindon",
+        "text": "You completed a work of craft that Cirdan's shipwrights chose to preserve.",
+        "description": "The piece — a detailed relief map of Eriador's ancient road network, reconstructed from fragmentary sources — was considered accurate enough to be copied into the library's archives. Three loremasters disagreed about two valleys; you were right about both.",
+        "skills": [
+            "Crafting",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lindon_3",
+        "culture_id": "lindon",
+        "text": "You tended the valley's terraces through a blight season without losing a harvest.",
+        "description": "A fungal blight spread through the upper orchards and threatened the lower terraces. You identified the affected trees early, imposed a quarantine the Elves considered excessive, and kept the blight from spreading. The harvest that year was smaller but whole.",
+        "skills": [
+            "Athletics",
+            "OneHanded"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lindon_4",
+        "culture_id": "lindon",
+        "text": "You warned Mithlond of a Troll encampment before it threatened the Ford.",
+        "description": "Three Stone Trolls had settled in the Tower Hills closer to the Ford than any before. You spotted their camp, mapped its position, estimated their range, and brought the report to the wardens before they had moved. The wardens handled the rest.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lindon_5",
+        "culture_id": "lindon",
+        "text": "You saved the life of a traveller that Cirdan's healers had given up on.",
+        "description": "The traveller had taken a Morgul-tainted wound and the senior healers were already preparing their regrets. You had read a different account of the toxin's behavior in the library's older texts. You applied what you had read and the traveller recovered.",
+        "skills": [
+            "Medicine",
+            "Charm"
+        ],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_lindon_6",
+        "culture_id": "lindon",
+        "text": "You retrieved a stolen document from a Ranger camp without being seen.",
+        "description": "A private letter from Cirdan's household had gone missing in circumstances that pointed to a guest's pack. You recovered it before anyone knew it was gone, replaced what had been disturbed, and returned the letter without a word spoken about any of it.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,

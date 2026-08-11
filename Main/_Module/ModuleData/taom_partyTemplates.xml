@@ -4912,4 +4912,200 @@
 		</stacks>
 	</MBPartyTemplate>
 
+  <!-- TAOM-NEWCULTURE:lindon:BEGIN -->
+	<MBPartyTemplate id="villager_lindon_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_lindon" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="caravan_template_lindon">
+		<stacks>
+			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_lindon" />
+			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_lindon" />
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_lindon" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="elite_caravan_template_lindon">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_lindon" />
+			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_lindon" />
+			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_lindon" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="kingdom_hero_party_lindon_template">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="50" troop="NPCCharacter.lindon_imladris_infantry" />
+			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.lindon_imladris_bowman" />
+			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.lindon_imladris_guardsman" />
+			<PartyTemplateStack min_value="6" max_value="50" troop="NPCCharacter.lindon_imladris_archer" />
+			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.lindon_imladris_swordguard" />
+			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.lindon_imladris_marksman" />
+			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.lindon_imladris_nobleman" />
+			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.lindon_imladris_warden" />
+			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.lindon_imladris_horse_archer" />
+			<PartyTemplateStack min_value="2" max_value="50" troop="NPCCharacter.lindon_imladris_marchwarden" />
+			<PartyTemplateStack min_value="2" max_value="50" troop="NPCCharacter.lindon_imladris_outrider" />
+			<PartyTemplateStack min_value="2" max_value="50" troop="NPCCharacter.lindon_imladris_blademaster" />
+			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.lindon_noldorin_lancer" />
+			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.lindon_rider_of_himring" />
+			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.lindon_royal_guard" />
+			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.lindon_royal_knight" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="kingdom_hero_party_mercenary_lindon_template">
+		<stacks>
+			<PartyTemplateStack min_value="16" max_value="50" troop="NPCCharacter.lindon_imladris_guardsman" />
+			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.lindon_imladris_swordguard" />
+			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.lindon_imladris_blademaster" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="kingdom_hero_party_outlaw_lindon_template">
+		<stacks>
+			<PartyTemplateStack min_value="16" max_value="50" troop="NPCCharacter.lindon_imladris_infantry" />
+			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.lindon_imladris_bowman" />
+			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.lindon_imladris_warden" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="militia_lindon_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.lindon_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.lindon_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_lindon_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.lindon_imladris_infantry" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.lindon_imladris_bowman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.lindon_imladris_guardsman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.lindon_imladris_swordguard" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_lindon_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.lindon_imladris_swordguard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.lindon_imladris_archer" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.lindon_imladris_nobleman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.lindon_imladris_warden" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.lindon_imladris_marksman" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_lindon_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.lindon_imladris_marchwarden" />
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.lindon_imladris_blademaster" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.lindon_imladris_marksman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.lindon_noldorin_lancer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.lindon_royal_guard" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="rebels_lindon_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.lindon_imladris_infantry" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.lindon_imladris_guardsman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.lindon_imladris_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="vassal_reward_troops_lindon">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.lindon_royal_guard" />
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.lindon_imladris_blademaster" />
+		</stacks>
+	</MBPartyTemplate>
+
+  <!-- TAOM-NEWCULTURE:lindon:END -->
+  <!-- TAOM-NEWCULTURE:bluecraig:BEGIN -->
+	<MBPartyTemplate id="villager_bluecraig_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_bluecraig" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="caravan_template_bluecraig">
+		<stacks>
+			<PartyTemplateStack min_value="12" max_value="15" troop="NPCCharacter.armed_trader_bluecraig" />
+			<PartyTemplateStack min_value="5" max_value="9" troop="NPCCharacter.caravan_guard_bluecraig" />
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.veteran_caravan_guard_bluecraig" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="elite_caravan_template_bluecraig">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.armed_trader_bluecraig" />
+			<PartyTemplateStack min_value="7" max_value="14" troop="NPCCharacter.caravan_guard_bluecraig" />
+			<PartyTemplateStack min_value="8" max_value="17" troop="NPCCharacter.veteran_caravan_guard_bluecraig" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="kingdom_hero_party_bluecraig_template">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="50" troop="NPCCharacter.bluecraig_snaga" />
+			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.bluecraig_grunt" />
+			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.bluecraig_hunter" />
+			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.bluecraig_fighter" />
+			<PartyTemplateStack min_value="5" max_value="50" troop="NPCCharacter.bluecraig_guard" />
+			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.bluecraig_lurker" />
+			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.bluecraig_brute" />
+			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.bluecraig_sword_warrior" />
+			<PartyTemplateStack min_value="3" max_value="50" troop="NPCCharacter.bluecraig_spear_warrior" />
+			<PartyTemplateStack min_value="2" max_value="50" troop="NPCCharacter.bluecraig_sentry" />
+			<PartyTemplateStack min_value="2" max_value="50" troop="NPCCharacter.bluecraig_berserker" />
+			<PartyTemplateStack min_value="1" max_value="50" troop="NPCCharacter.bluecraig_bolgs_ironfang" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="kingdom_hero_party_mercenary_bluecraig_template">
+		<stacks>
+			<PartyTemplateStack min_value="16" max_value="50" troop="NPCCharacter.bluecraig_grunt" />
+			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.bluecraig_fighter" />
+			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.bluecraig_berserker" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="kingdom_hero_party_outlaw_bluecraig_template">
+		<stacks>
+			<PartyTemplateStack min_value="16" max_value="50" troop="NPCCharacter.bluecraig_snaga" />
+			<PartyTemplateStack min_value="8" max_value="50" troop="NPCCharacter.bluecraig_lurker" />
+			<PartyTemplateStack min_value="4" max_value="50" troop="NPCCharacter.bluecraig_sword_warrior" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="militia_bluecraig_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.bluecraig_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.bluecraig_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_bluecraig_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="8" troop="NPCCharacter.bluecraig_grunt" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.bluecraig_lurker" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.bluecraig_fighter" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.bluecraig_sword_warrior" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_bluecraig_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.bluecraig_fighter" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.bluecraig_lurker" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.bluecraig_brute" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.bluecraig_berserker" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="patrol_party_bluecraig_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="10" troop="NPCCharacter.bluecraig_guard" />
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.bluecraig_sentry" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.bluecraig_brute" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.bluecraig_berserker" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="rebels_bluecraig_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.bluecraig_snaga" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.bluecraig_fighter" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.bluecraig_lurker" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="vassal_reward_troops_bluecraig">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.bluecraig_bolgs_ironfang" />
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.bluecraig_berserker" />
+		</stacks>
+	</MBPartyTemplate>
+
+  <!-- TAOM-NEWCULTURE:bluecraig:END -->
 </partyTemplates>

@@ -1437,17 +1437,17 @@
     <string id="TAOM_hero_B8_l" text="Вариаг-военачальник из восточных холмов." />
     <string id="TAOM_hero_B8_s" text="Жена вариаг-военачальника." />
     <string id="TAOM_hero_B8_c" text="Наследник вариаг-военачальника." />
-    <string id="TAOM_liege_dunland" text="Бренин Дунланда" />
-    <string id="TAOM_liege_dunland_female" text="Бренхинес Дунланда" />
-    <string id="TAOM_liege_dale" text="Король Дейла" />
-    <string id="TAOM_liege_dale_female" text="Королева Дейла" />
-    <string id="TAOM_liege_harad" text="Таскрал Харада" />
-    <string id="TAOM_liege_harad_female" text="Таскрал Харада" />
-    <string id="TAOM_liege_khand" text="Худриаг Кханда" />
-    <string id="TAOM_liege_khand_female" text="Худриаг Кханда" />
-    <string id="TAOM_liege_rohan" text="Король Марки" />
-    <string id="TAOM_liege_rohan_female" text="Королева Марки" />
-    <string id="TAOM_liege_rhun" text="Локе-Кан Руна" />
-    <string id="TAOM_liege_rhun_female" text="Локе-Кан Руна" />
+    <string id="TAOM_liege_dunland" text="Бренин Дунланда" />
+    <string id="TAOM_liege_dunland_female" text="Бренхинес Дунланда" />
+    <string id="TAOM_liege_dale" text="Король Дейла" />
+    <string id="TAOM_liege_dale_female" text="Королева Дейла" />
+    <string id="TAOM_liege_harad" text="Таскрал Харада" />
+    <string id="TAOM_liege_harad_female" text="Таскрал Харада" />
+    <string id="TAOM_liege_khand" text="Худриаг Кханда" />
+    <string id="TAOM_liege_khand_female" text="Худриаг Кханда" />
+    <string id="TAOM_liege_rohan" text="Король Марки" />
+    <string id="TAOM_liege_rohan_female" text="Королева Марки" />
+    <string id="TAOM_liege_rhun" text="Локе-Кан Руна" />
+    <string id="TAOM_liege_rhun_female" text="Локе-Кан Руна" />
   </strings>
 </base>

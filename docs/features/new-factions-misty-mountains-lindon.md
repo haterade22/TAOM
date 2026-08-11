@@ -227,8 +227,17 @@ bluecraig (Culture.goblin) and Lindon (Culture.rivendell) inherit their culture'
    (`sk_md_orc_*`/`sk_gn_orc_*`) + mixed Gundabad/Mordor/Dol-Guldur weapons (placeholder).
    Authoring dedicated Goblin / Misty-Mountain trees + bespoke armor is optional polish via
    `docs/ai-includes/new-culture-authoring.md`.
-6. **Careers** — the orc cultures are CC-selectable but have no career trees yet (parked in
-   `CareerCultureCoverageTests` documentedExceptions). Add to `taom_careers.xml` when desired.
+6. **Careers — DONE** (2026-08-10). Each orc culture has three careers cloned from Gundabad's by
+   `tools/insert_new_faction_careers.py`; both cultures are un-parked from
+   `CareerCultureCoverageTests` documentedExceptions. Art and FX ids are deliberately reused from
+   the source careers rather than minted, so the clones are exactly as well-resourced as their
+   originals — only 21 of the 50 shipped careers have a portrait registered in `TAOMSpriteData.xml`.
+
+8. **CC starting equipment + starting denars — DONE** (2026-08-10). Both were missing outright and
+   both failed silently: the player finished character creation naked and on zero denars. Neither
+   was listed here because neither was known. See
+   [culture-playability-wiring.md](culture-playability-wiring.md) for the full checklist that now
+   separates *selectable* from *playable*, and `PlayerStartCoverageTests` for the gate.
 7. **Localization** — culture/kingdom display names use inline-default `{=…}` keys (English-only);
    faction-map card strings ARE registered (via `harvest_factionmap_strings.py`). Run
    `tools/translate_with_claude.py` to translate.

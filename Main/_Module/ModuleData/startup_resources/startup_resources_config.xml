@@ -45,4 +45,20 @@
   <Culture id="gundabad"    gold="75000"  influence="1000" playerGold="2000"  />
   <Culture id="dolguldur"   gold="75000"  influence="500"  playerGold="2000"  />
   <Culture id="umbar"       gold="200000" influence="1000" playerGold="2000"  />
+
+  <!-- Goblin-town and the Moria orcs. Both shipped CC-selectable in June 2026 with no row here at
+       all, so every player who picked one started on 0 denars — and because a missing culture is
+       documented above as a silent default of 0, nothing logged it. Sized against their nearest
+       peers: Goblin-town is a scavenging mountain kingdom (5 clans), Moria is the larger power
+       (15 clans, 33 fiefs), so it sits level with Gundabad rather than below it. -->
+  <Culture id="goblin"             gold="50000"  influence="500"  playerGold="2000"  />
+  <Culture id="mistymountainorcs"  gold="75000"  influence="1000" playerGold="2000"  />
+
+  <!-- Promoted out of a borrowed culture 2026-08-10: Blue Craig off goblin, Lindon off rivendell.
+       Each now needs its own row — before the split they inherited nothing, because these values
+       are keyed on culture and their kingdoms had none of their own. Blue Craig is the smaller of
+       the two goblin realms (5 clans, 1 town); Lindon is an old elven realm with a single great
+       haven, so it sits below Rivendell's treasury but keeps elven influence. -->
+  <Culture id="bluecraig"          gold="40000"  influence="400"  playerGold="2000"  />
+  <Culture id="lindon"             gold="500000" influence="1250" playerGold="4000"  />
 </StartupResources>

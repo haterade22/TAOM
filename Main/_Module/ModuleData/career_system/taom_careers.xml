@@ -1124,4 +1124,382 @@
     </ChoiceGroups>
   </Career>
 
+  <Career id="goblin_troll_driver" rank1_name="{=taom_career_rank1_goblin_troll_driver}Pit-Driver" rank2_name="{=taom_career_rank2_goblin_troll_driver}Troll-Goad of Goblin-town" rank3_name="{=taom_career_rank3_goblin_troll_driver}Maker of Broken Trolls"
+          display_name="{=taom_career_goblin_troll_driver}Goblin-town Troll-Driver"
+          description="{=taom_career_goblin_troll_driver_desc}A brutal orc chieftain of Goblin-town who commands cave trolls in battle, driving them forward with whip and cunning."
+          portrait_sprite="career_cave_troll_master_portrait"
+          ability_template_id="goblin_troll_driver_ability"
+          min_clan_tier="0"
+          root_choice_id="goblin_troll_driver_root"
+          keystone_icon="22000">
+    <EligibleCultures>
+      <Culture id="goblin" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="goblin_troll_driver_t1_a" />
+      <Group id="goblin_troll_driver_t1_b" />
+      <Group id="goblin_troll_driver_t2_a" />
+      <Group id="goblin_troll_driver_t2_b" />
+      <Group id="goblin_troll_driver_t3_a" />
+      <Group id="goblin_troll_driver_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="goblin_tunnel_stalker" rank1_name="{=taom_career_rank1_goblin_tunnel_stalker}Crag-Lurker" rank2_name="{=taom_career_rank2_goblin_tunnel_stalker}High Pass Stalker" rank3_name="{=taom_career_rank3_goblin_tunnel_stalker}Eye of Goblin-town"
+          display_name="{=taom_career_goblin_tunnel_stalker}Goblin-town Tunnel Stalker"
+          description="{=taom_career_goblin_tunnel_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
+          portrait_sprite="career_goblin_sniper_portrait"
+          ability_template_id="goblin_tunnel_stalker_ability"
+          min_clan_tier="0"
+          root_choice_id="goblin_tunnel_stalker_root"
+          keystone_icon="22001">
+    <EligibleCultures>
+      <Culture id="goblin" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="goblin_tunnel_stalker_t1_a" />
+      <Group id="goblin_tunnel_stalker_t1_b" />
+      <Group id="goblin_tunnel_stalker_t2_a" />
+      <Group id="goblin_tunnel_stalker_t2_b" />
+      <Group id="goblin_tunnel_stalker_t3_a" />
+      <Group id="goblin_tunnel_stalker_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="goblin_warg_master" rank1_name="{=taom_career_rank1_goblin_warg_master}Warg-Rider of the Pack" rank2_name="{=taom_career_rank2_goblin_warg_master}Fell Wolf-Captain" rank3_name="{=taom_career_rank3_goblin_warg_master}Wolf-Lord of the Wild Hunt"
+          display_name="{=taom_career_goblin_warg_master}Goblin-town Warg Master"
+          description="{=taom_career_goblin_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
+          portrait_sprite="career_warg_pack_leader_portrait"
+          ability_template_id="goblin_warg_master_ability"
+          min_clan_tier="0"
+          root_choice_id="goblin_warg_master_root"
+          keystone_icon="22002">
+    <EligibleCultures>
+      <Culture id="goblin" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="goblin_warg_master_t1_a" />
+      <Group id="goblin_warg_master_t1_b" />
+      <Group id="goblin_warg_master_t2_a" />
+      <Group id="goblin_warg_master_t2_b" />
+      <Group id="goblin_warg_master_t3_a" />
+      <Group id="goblin_warg_master_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="misty_troll_goad" rank1_name="{=taom_career_rank1_misty_troll_goad}Pit-Driver" rank2_name="{=taom_career_rank2_misty_troll_goad}Troll-Goad of Moria" rank3_name="{=taom_career_rank3_misty_troll_goad}Maker of Broken Trolls"
+          display_name="{=taom_career_misty_troll_goad}Moria Troll-Goad"
+          description="{=taom_career_misty_troll_goad_desc}A brutal orc chieftain of Moria who commands cave trolls in battle, driving them forward with whip and cunning."
+          portrait_sprite="career_cave_troll_master_portrait"
+          ability_template_id="misty_troll_goad_ability"
+          min_clan_tier="0"
+          root_choice_id="misty_troll_goad_root"
+          keystone_icon="22000">
+    <EligibleCultures>
+      <Culture id="mistymountainorcs" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="misty_troll_goad_t1_a" />
+      <Group id="misty_troll_goad_t1_b" />
+      <Group id="misty_troll_goad_t2_a" />
+      <Group id="misty_troll_goad_t2_b" />
+      <Group id="misty_troll_goad_t3_a" />
+      <Group id="misty_troll_goad_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="misty_deep_marksman" rank1_name="{=taom_career_rank1_misty_deep_marksman}Crag-Lurker" rank2_name="{=taom_career_rank2_misty_deep_marksman}High Pass Stalker" rank3_name="{=taom_career_rank3_misty_deep_marksman}Eye of Moria"
+          display_name="{=taom_career_misty_deep_marksman}Moria Deep-Marksman"
+          description="{=taom_career_misty_deep_marksman_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
+          portrait_sprite="career_goblin_sniper_portrait"
+          ability_template_id="misty_deep_marksman_ability"
+          min_clan_tier="0"
+          root_choice_id="misty_deep_marksman_root"
+          keystone_icon="22001">
+    <EligibleCultures>
+      <Culture id="mistymountainorcs" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="misty_deep_marksman_t1_a" />
+      <Group id="misty_deep_marksman_t1_b" />
+      <Group id="misty_deep_marksman_t2_a" />
+      <Group id="misty_deep_marksman_t2_b" />
+      <Group id="misty_deep_marksman_t3_a" />
+      <Group id="misty_deep_marksman_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="misty_warg_chieftain" rank1_name="{=taom_career_rank1_misty_warg_chieftain}Warg-Rider of the Pack" rank2_name="{=taom_career_rank2_misty_warg_chieftain}Fell Wolf-Captain" rank3_name="{=taom_career_rank3_misty_warg_chieftain}Wolf-Lord of the Wild Hunt"
+          display_name="{=taom_career_misty_warg_chieftain}Misty Mountain Warg Chieftain"
+          description="{=taom_career_misty_warg_chieftain_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
+          portrait_sprite="career_warg_pack_leader_portrait"
+          ability_template_id="misty_warg_chieftain_ability"
+          min_clan_tier="0"
+          root_choice_id="misty_warg_chieftain_root"
+          keystone_icon="22002">
+    <EligibleCultures>
+      <Culture id="mistymountainorcs" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="misty_warg_chieftain_t1_a" />
+      <Group id="misty_warg_chieftain_t1_b" />
+      <Group id="misty_warg_chieftain_t2_a" />
+      <Group id="misty_warg_chieftain_t2_b" />
+      <Group id="misty_warg_chieftain_t3_a" />
+      <Group id="misty_warg_chieftain_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="craig_pit_driver" rank1_name="{=taom_career_rank1_craig_pit_driver}Pit-Driver" rank2_name="{=taom_career_rank2_craig_pit_driver}Troll-Goad of Blue Craig" rank3_name="{=taom_career_rank3_craig_pit_driver}Maker of Broken Trolls"
+          display_name="{=taom_career_craig_pit_driver}Blue Craig Pit-Driver"
+          description="{=taom_career_craig_pit_driver_desc}A brutal orc chieftain of Blue Craig who commands cave trolls in battle, driving them forward with whip and cunning."
+          portrait_sprite="career_cave_troll_master_portrait"
+          ability_template_id="craig_pit_driver_ability"
+          min_clan_tier="0"
+          root_choice_id="craig_pit_driver_root"
+          keystone_icon="22000">
+    <EligibleCultures>
+      <Culture id="bluecraig" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="craig_pit_driver_t1_a" />
+      <Group id="craig_pit_driver_t1_b" />
+      <Group id="craig_pit_driver_t2_a" />
+      <Group id="craig_pit_driver_t2_b" />
+      <Group id="craig_pit_driver_t3_a" />
+      <Group id="craig_pit_driver_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="craig_crag_stalker" rank1_name="{=taom_career_rank1_craig_crag_stalker}Crag-Lurker" rank2_name="{=taom_career_rank2_craig_crag_stalker}Ered Luin Stalker" rank3_name="{=taom_career_rank3_craig_crag_stalker}Eye of Blue Craig"
+          display_name="{=taom_career_craig_crag_stalker}Blue Craig Crag Stalker"
+          description="{=taom_career_craig_crag_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
+          portrait_sprite="career_goblin_sniper_portrait"
+          ability_template_id="craig_crag_stalker_ability"
+          min_clan_tier="0"
+          root_choice_id="craig_crag_stalker_root"
+          keystone_icon="22001">
+    <EligibleCultures>
+      <Culture id="bluecraig" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="craig_crag_stalker_t1_a" />
+      <Group id="craig_crag_stalker_t1_b" />
+      <Group id="craig_crag_stalker_t2_a" />
+      <Group id="craig_crag_stalker_t2_b" />
+      <Group id="craig_crag_stalker_t3_a" />
+      <Group id="craig_crag_stalker_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="craig_warg_master" rank1_name="{=taom_career_rank1_craig_warg_master}Warg-Rider of the Pack" rank2_name="{=taom_career_rank2_craig_warg_master}Fell Wolf-Captain" rank3_name="{=taom_career_rank3_craig_warg_master}Wolf-Lord of the Wild Hunt"
+          display_name="{=taom_career_craig_warg_master}Blue Craig Warg Master"
+          description="{=taom_career_craig_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Ered Luin."
+          portrait_sprite="career_warg_pack_leader_portrait"
+          ability_template_id="craig_warg_master_ability"
+          min_clan_tier="0"
+          root_choice_id="craig_warg_master_root"
+          keystone_icon="22002">
+    <EligibleCultures>
+      <Culture id="bluecraig" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="craig_warg_master_t1_a" />
+      <Group id="craig_warg_master_t1_b" />
+      <Group id="craig_warg_master_t2_a" />
+      <Group id="craig_warg_master_t2_b" />
+      <Group id="craig_warg_master_t3_a" />
+      <Group id="craig_warg_master_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="falathrim_blade_dancer" rank1_name="{=taom_career_rank1_falathrim_blade_dancer}Falathrim Bladesman" rank2_name="{=taom_career_rank2_falathrim_blade_dancer}Blade of the Golden Flower" rank3_name="{=taom_career_rank3_falathrim_blade_dancer}Blademaster of Mithlond"
+          display_name="{=taom_career_falathrim_blade_dancer}Falathrim Blade-Dancer"
+          description="{=taom_career_falathrim_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age."
+          portrait_sprite="career_blade_dancer_portrait"
+          ability_template_id="falathrim_blade_dancer_ability"
+          min_clan_tier="0"
+          root_choice_id="falathrim_blade_dancer_root"
+          keystone_icon="15000">
+    <EligibleCultures>
+      <Culture id="lindon" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="falathrim_blade_dancer_t1_a" />
+      <Group id="falathrim_blade_dancer_t1_b" />
+      <Group id="falathrim_blade_dancer_t2_a" />
+      <Group id="falathrim_blade_dancer_t2_b" />
+      <Group id="falathrim_blade_dancer_t3_a" />
+      <Group id="falathrim_blade_dancer_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="falathrim_sentinel" rank1_name="{=taom_career_rank1_falathrim_sentinel}Falathrim Bowman" rank2_name="{=taom_career_rank2_falathrim_sentinel}Sentinel of the Heavenly Arch" rank3_name="{=taom_career_rank3_falathrim_sentinel}Warden of Mithlond"
+          display_name="{=taom_career_falathrim_sentinel}Falathrim Sentinel"
+          description="{=taom_career_falathrim_sentinel_desc}A peerless marksman of Mithlond whose arrows fly true across vast distances, guided by centuries of practice."
+          portrait_sprite="career_elven_archer_portrait"
+          ability_template_id="falathrim_sentinel_ability"
+          min_clan_tier="0"
+          root_choice_id="falathrim_sentinel_root"
+          keystone_icon="15001">
+    <EligibleCultures>
+      <Culture id="lindon" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="falathrim_sentinel_t1_a" />
+      <Group id="falathrim_sentinel_t1_b" />
+      <Group id="falathrim_sentinel_t2_a" />
+      <Group id="falathrim_sentinel_t2_b" />
+      <Group id="falathrim_sentinel_t3_a" />
+      <Group id="falathrim_sentinel_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="falathrim_mariner" rank1_name="{=taom_career_rank1_falathrim_mariner}Ohtar of Mithlond" rank2_name="{=taom_career_rank2_falathrim_mariner}Roquen of Mithlond" rank3_name="{=taom_career_rank3_falathrim_mariner}Knight of the Golden Flower"
+          display_name="{=taom_career_falathrim_mariner}Falathrim Mariner"
+          description="{=taom_career_falathrim_mariner_desc}A mounted warrior of Cirdan's household who rides to war on swift elven steeds, a beacon of hope against the shadow."
+          portrait_sprite="career_rivendell_knight_portrait"
+          ability_template_id="falathrim_mariner_ability"
+          min_clan_tier="0"
+          root_choice_id="falathrim_mariner_root"
+          keystone_icon="15002">
+    <EligibleCultures>
+      <Culture id="lindon" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="falathrim_mariner_t1_a" />
+      <Group id="falathrim_mariner_t1_b" />
+      <Group id="falathrim_mariner_t2_a" />
+      <Group id="falathrim_mariner_t2_b" />
+      <Group id="falathrim_mariner_t3_a" />
+      <Group id="falathrim_mariner_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="shaghana_zajana_tribesman" rank1_name="{=taom_career_rank1_shaghana_zajana_tribesman}Zajâna Tribesman" rank2_name="{=taom_career_rank2_shaghana_zajana_tribesman}Sandstorm Raider" rank3_name="{=taom_career_rank3_shaghana_zajana_tribesman}Serpent-Banner Chieftain"
+          display_name="{=taom_career_shaghana_zajana_tribesman}Tribesman of Zajâna"
+          description="{=taom_career_shaghana_zajana_tribesman_desc}A warrior of the Zajâna desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
+          portrait_sprite="career_tribesman_of_jelut_portrait"
+          ability_template_id="shaghana_zajana_tribesman_ability"
+          min_clan_tier="0"
+          root_choice_id="shaghana_zajana_tribesman_root"
+          keystone_icon="13000">
+    <EligibleCultures>
+      <Culture id="shaghana" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="shaghana_zajana_tribesman_t1_a" />
+      <Group id="shaghana_zajana_tribesman_t1_b" />
+      <Group id="shaghana_zajana_tribesman_t2_a" />
+      <Group id="shaghana_zajana_tribesman_t2_b" />
+      <Group id="shaghana_zajana_tribesman_t3_a" />
+      <Group id="shaghana_zajana_tribesman_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="shaghana_chatak_javelineer" rank1_name="{=taom_career_rank1_shaghana_chatak_javelineer}Chatâk Javelineer" rank2_name="{=taom_career_rank2_shaghana_chatak_javelineer}Throwing-Spear Skirmisher" rank3_name="{=taom_career_rank3_shaghana_chatak_javelineer}Scarlet Spear-Master"
+          display_name="{=taom_career_shaghana_chatak_javelineer}Chatâk Javelineer"
+          description="{=taom_career_shaghana_chatak_javelineer_desc}A fast-moving skirmisher of Chatâk who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
+          portrait_sprite="career_pezarsani_javelineer_portrait"
+          ability_template_id="shaghana_chatak_javelineer_ability"
+          min_clan_tier="0"
+          root_choice_id="shaghana_chatak_javelineer_root"
+          keystone_icon="13001">
+    <EligibleCultures>
+      <Culture id="shaghana" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="shaghana_chatak_javelineer_t1_a" />
+      <Group id="shaghana_chatak_javelineer_t1_b" />
+      <Group id="shaghana_chatak_javelineer_t2_a" />
+      <Group id="shaghana_chatak_javelineer_t2_b" />
+      <Group id="shaghana_chatak_javelineer_t3_a" />
+      <Group id="shaghana_chatak_javelineer_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="shaghana_beast_rider" rank1_name="{=taom_career_rank1_shaghana_beast_rider}Sormedân Beast-Tamer" rank2_name="{=taom_career_rank2_shaghana_beast_rider}Mûmak Driver" rank3_name="{=taom_career_rank3_shaghana_beast_rider}Mûmak War-Leader"
+          display_name="{=taom_career_shaghana_beast_rider}Sormedân Beast Rider"
+          description="{=taom_career_shaghana_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
+          portrait_sprite="career_mahud_beast_rider_portrait"
+          ability_template_id="shaghana_beast_rider_ability"
+          min_clan_tier="0"
+          root_choice_id="shaghana_beast_rider_root"
+          keystone_icon="25015">
+    <EligibleCultures>
+      <Culture id="shaghana" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="shaghana_beast_rider_t1_a" />
+      <Group id="shaghana_beast_rider_t1_b" />
+      <Group id="shaghana_beast_rider_t2_a" />
+      <Group id="shaghana_beast_rider_t2_b" />
+      <Group id="shaghana_beast_rider_t3_a" />
+      <Group id="shaghana_beast_rider_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="abanissa_house_guard" rank1_name="{=taom_career_rank1_abanissa_house_guard}Damudûr House-Guard" rank2_name="{=taom_career_rank2_abanissa_house_guard}Caravan Outrider" rank3_name="{=taom_career_rank3_abanissa_house_guard}Ivory-Throne Chieftain"
+          display_name="{=taom_career_abanissa_house_guard}House-Guard of Damudûr"
+          description="{=taom_career_abanissa_house_guard_desc}A warrior of the Damudûr desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
+          portrait_sprite="career_tribesman_of_jelut_portrait"
+          ability_template_id="abanissa_house_guard_ability"
+          min_clan_tier="0"
+          root_choice_id="abanissa_house_guard_root"
+          keystone_icon="13000">
+    <EligibleCultures>
+      <Culture id="abanissa" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="abanissa_house_guard_t1_a" />
+      <Group id="abanissa_house_guard_t1_b" />
+      <Group id="abanissa_house_guard_t2_a" />
+      <Group id="abanissa_house_guard_t2_b" />
+      <Group id="abanissa_house_guard_t3_a" />
+      <Group id="abanissa_house_guard_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="abanissa_jiret_javelineer" rank1_name="{=taom_career_rank1_abanissa_jiret_javelineer}Jîret Javelineer" rank2_name="{=taom_career_rank2_abanissa_jiret_javelineer}Throwing-Spear Skirmisher" rank3_name="{=taom_career_rank3_abanissa_jiret_javelineer}Gilded Spear-Master"
+          display_name="{=taom_career_abanissa_jiret_javelineer}Jîret Javelineer"
+          description="{=taom_career_abanissa_jiret_javelineer_desc}A fast-moving skirmisher of Jîret who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
+          portrait_sprite="career_pezarsani_javelineer_portrait"
+          ability_template_id="abanissa_jiret_javelineer_ability"
+          min_clan_tier="0"
+          root_choice_id="abanissa_jiret_javelineer_root"
+          keystone_icon="13001">
+    <EligibleCultures>
+      <Culture id="abanissa" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="abanissa_jiret_javelineer_t1_a" />
+      <Group id="abanissa_jiret_javelineer_t1_b" />
+      <Group id="abanissa_jiret_javelineer_t2_a" />
+      <Group id="abanissa_jiret_javelineer_t2_b" />
+      <Group id="abanissa_jiret_javelineer_t3_a" />
+      <Group id="abanissa_jiret_javelineer_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="abanissa_ivory_rider" rank1_name="{=taom_career_rank1_abanissa_ivory_rider}Ivory-Road Beast-Tamer" rank2_name="{=taom_career_rank2_abanissa_ivory_rider}Mûmak Driver" rank3_name="{=taom_career_rank3_abanissa_ivory_rider}Mûmak War-Leader"
+          display_name="{=taom_career_abanissa_ivory_rider}Ivory-Road Beast Rider"
+          description="{=taom_career_abanissa_ivory_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
+          portrait_sprite="career_mahud_beast_rider_portrait"
+          ability_template_id="abanissa_ivory_rider_ability"
+          min_clan_tier="0"
+          root_choice_id="abanissa_ivory_rider_root"
+          keystone_icon="25015">
+    <EligibleCultures>
+      <Culture id="abanissa" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="abanissa_ivory_rider_t1_a" />
+      <Group id="abanissa_ivory_rider_t1_b" />
+      <Group id="abanissa_ivory_rider_t2_a" />
+      <Group id="abanissa_ivory_rider_t2_b" />
+      <Group id="abanissa_ivory_rider_t3_a" />
+      <Group id="abanissa_ivory_rider_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
 </Careers>

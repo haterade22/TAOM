@@ -745,4 +745,74 @@
         </EquipmentSet>
     </EquipmentRoster>
 
+  <!-- TAOM-NEWCULTURE:lindon:BEGIN -->
+    <EquipmentRoster id="enlist_lindon_recruit" culture="Culture.lindon">
+        <EquipmentSet>
+            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+            <Equipment slot="Leg" id="Item.rivendell_boots" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lindon_soldier" culture="Culture.lindon">
+        <EquipmentSet>
+            <Equipment slot="Head" id="Item.rivendell_helmet_infantry_tier1" />
+            <Equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_greaves1" />
+            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lindon_veteran" culture="Culture.lindon">
+        <EquipmentSet>
+            <Equipment slot="Head" id="Item.rivendell_helmet_infantry_tier1" />
+            <Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_greaves1" />
+            <Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_lindon_sergeant" culture="Culture.lindon">
+        <EquipmentSet>
+            <Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+            <Equipment slot="Body" id="Item.rivendell_torso_heavy_tier1" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+            <Equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
+            <Equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:lindon:END -->
+  <!-- TAOM-NEWCULTURE:bluecraig:BEGIN -->
+    <EquipmentRoster id="enlist_bluecraig_recruit" culture="Culture.bluecraig">
+        <EquipmentSet>
+            <Equipment slot="Head" id="Item.sk_gn_orc_helmet_light_b" />
+            <Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_bluecraig_soldier" culture="Culture.bluecraig">
+        <EquipmentSet>
+            <Equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            <Equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_bluecraig_veteran" culture="Culture.bluecraig">
+        <EquipmentSet>
+            <Equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+            <Equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+            <Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+            <Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_bluecraig_sergeant" culture="Culture.bluecraig">
+        <EquipmentSet>
+            <Equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
+            <Equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+            <Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:bluecraig:END -->
 </EquipmentRosters>

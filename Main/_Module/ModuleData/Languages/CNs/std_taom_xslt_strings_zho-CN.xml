@@ -1437,17 +1437,17 @@
     <string id="TAOM_hero_B8_l" text="东方山地的瓦瑞亚格军阀。" />
     <string id="TAOM_hero_B8_s" text="瓦瑞亚格军阀的妻子。" />
     <string id="TAOM_hero_B8_c" text="瓦瑞亚格军阀的继承人。" />
-    <string id="TAOM_liege_dunland" text="邓兰德的布雷宁" />
-    <string id="TAOM_liege_dunland_female" text="邓兰德的布雷妮丝" />
-    <string id="TAOM_liege_dale" text="河谷邦国王" />
-    <string id="TAOM_liege_dale_female" text="河谷邦女王" />
-    <string id="TAOM_liege_harad" text="哈拉德的塔斯克拉尔" />
-    <string id="TAOM_liege_harad_female" text="哈拉德的塔斯克拉尔" />
-    <string id="TAOM_liege_khand" text="康德的胡德里亚格" />
-    <string id="TAOM_liege_khand_female" text="康德的胡德里亚格" />
-    <string id="TAOM_liege_rohan" text="马克之王" />
-    <string id="TAOM_liege_rohan_female" text="马克女王" />
-    <string id="TAOM_liege_rhun" text="鲁恩的洛克-坎" />
-    <string id="TAOM_liege_rhun_female" text="鲁恩的洛克-坎" />
+    <string id="TAOM_liege_dunland" text="邓兰德的布雷宁" />
+    <string id="TAOM_liege_dunland_female" text="邓兰德的布雷妮丝" />
+    <string id="TAOM_liege_dale" text="河谷邦国王" />
+    <string id="TAOM_liege_dale_female" text="河谷邦女王" />
+    <string id="TAOM_liege_harad" text="哈拉德的塔斯克拉尔" />
+    <string id="TAOM_liege_harad_female" text="哈拉德的塔斯克拉尔" />
+    <string id="TAOM_liege_khand" text="康德的胡德里亚格" />
+    <string id="TAOM_liege_khand_female" text="康德的胡德里亚格" />
+    <string id="TAOM_liege_rohan" text="马克之王" />
+    <string id="TAOM_liege_rohan_female" text="马克女王" />
+    <string id="TAOM_liege_rhun" text="鲁恩的洛克-坎" />
+    <string id="TAOM_liege_rhun_female" text="鲁恩的洛克-坎" />
   </strings>
 </base>

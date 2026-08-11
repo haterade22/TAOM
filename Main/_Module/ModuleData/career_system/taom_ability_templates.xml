@@ -400,7 +400,6 @@
 
   <!-- ═══ GUNDABAD ═══ -->
 
-  <!-- DISABLED 2026-05-14: Cave Troll Master ability WIP; not ready for live game yet. Re-enable by uncommenting.
   <AbilityTemplate id="cave_troll_master_ability"
                    display_name="{=taom_ability_cave_troll_master}Gundabad Berserker"
                    sprite="ability_cave_troll_master_icon"
@@ -409,7 +408,6 @@
                    particle_effect="cave_troll_master_particle"
                    sound_effect="cave_troll_master_activate"
                    tooltip="{=taom_ability_cave_troll_master_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-  -->
 
   <AbilityTemplate id="goblin_sniper_ability"
                    display_name="{=taom_ability_goblin_sniper}Poison Dart"
@@ -486,5 +484,152 @@
                    particle_effect="corsair_captain_particle"
                    sound_effect="corsair_captain_activate"
                    tooltip="{=taom_ability_corsair_captain_tt}Rally your crew with promises of plunder — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+
+  <AbilityTemplate id="goblin_troll_driver_ability"
+                   display_name="{=taom_ability_goblin_troll_driver}Goblin-town Frenzy"
+                   sprite="ability_cave_troll_master_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="cave_troll_master_particle"
+                   sound_effect="cave_troll_master_activate"
+                   tooltip="{=taom_ability_goblin_troll_driver_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="goblin_tunnel_stalker_ability"
+                   display_name="{=taom_ability_goblin_tunnel_stalker}Poison Dart"
+                   sprite="ability_goblin_sniper_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="goblin_sniper_particle"
+                   sound_effect="goblin_sniper_activate"
+                   tooltip="{=taom_ability_goblin_tunnel_stalker_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="goblin_warg_master_ability"
+                   display_name="{=taom_ability_goblin_warg_master}Alpha Howl"
+                   sprite="ability_warg_pack_leader_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="warg_pack_leader_particle"
+                   sound_effect="warg_pack_leader_activate"
+                   tooltip="{=taom_ability_goblin_warg_master_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+  <AbilityTemplate id="misty_troll_goad_ability"
+                   display_name="{=taom_ability_misty_troll_goad}Moria Frenzy"
+                   sprite="ability_cave_troll_master_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="cave_troll_master_particle"
+                   sound_effect="cave_troll_master_activate"
+                   tooltip="{=taom_ability_misty_troll_goad_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="misty_deep_marksman_ability"
+                   display_name="{=taom_ability_misty_deep_marksman}Poison Dart"
+                   sprite="ability_goblin_sniper_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="goblin_sniper_particle"
+                   sound_effect="goblin_sniper_activate"
+                   tooltip="{=taom_ability_misty_deep_marksman_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="misty_warg_chieftain_ability"
+                   display_name="{=taom_ability_misty_warg_chieftain}Alpha Howl"
+                   sprite="ability_warg_pack_leader_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="warg_pack_leader_particle"
+                   sound_effect="warg_pack_leader_activate"
+                   tooltip="{=taom_ability_misty_warg_chieftain_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+
+  <AbilityTemplate id="craig_pit_driver_ability"
+                   display_name="{=taom_ability_craig_pit_driver}Blue Craig Frenzy"
+                   sprite="ability_cave_troll_master_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="cave_troll_master_particle"
+                   sound_effect="cave_troll_master_activate"
+                   tooltip="{=taom_ability_craig_pit_driver_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="craig_crag_stalker_ability"
+                   display_name="{=taom_ability_craig_crag_stalker}Poison Dart"
+                   sprite="ability_goblin_sniper_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="goblin_sniper_particle"
+                   sound_effect="goblin_sniper_activate"
+                   tooltip="{=taom_ability_craig_crag_stalker_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="craig_warg_master_ability"
+                   display_name="{=taom_ability_craig_warg_master}Alpha Howl"
+                   sprite="ability_warg_pack_leader_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="warg_pack_leader_particle"
+                   sound_effect="warg_pack_leader_activate"
+                   tooltip="{=taom_ability_craig_warg_master_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+  <AbilityTemplate id="falathrim_blade_dancer_ability"
+                   display_name="{=taom_ability_falathrim_blade_dancer}Starlight Weave"
+                   sprite="ability_blade_dancer_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="blade_dancer_particle"
+                   sound_effect="blade_dancer_activate"
+                   tooltip="{=taom_ability_falathrim_blade_dancer_tt}Enter a graceful Noldor combat trance — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="falathrim_sentinel_ability"
+                   display_name="{=taom_ability_falathrim_sentinel}Elven Sight"
+                   sprite="ability_elven_archer_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="elven_archer_particle"
+                   sound_effect="elven_archer_activate"
+                   tooltip="{=taom_ability_falathrim_sentinel_tt}Focus ancient elven perception — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="falathrim_mariner_ability"
+                   display_name="{=taom_ability_falathrim_mariner}Last Alliance"
+                   sprite="ability_rivendell_knight_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="rivendell_knight_particle"
+                   sound_effect="rivendell_knight_activate"
+                   tooltip="{=taom_ability_falathrim_mariner_tt}Ride with the valor of the Last Alliance — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+
+  <AbilityTemplate id="shaghana_zajana_tribesman_ability"
+                   display_name="{=taom_ability_shaghana_zajana_tribesman}Serpent-Venom Blades"
+                   sprite="ability_tribesman_of_jelut_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="tribesman_of_jelut_particle"
+                   sound_effect="tribesman_of_jelut_activate"
+                   tooltip="{=taom_ability_shaghana_zajana_tribesman_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="shaghana_chatak_javelineer_ability"
+                   display_name="{=taom_ability_shaghana_chatak_javelineer}Chatâk Volley"
+                   sprite="ability_pezarsani_javelineer_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="pezarsani_javelineer_particle"
+                   sound_effect="pezarsani_javelineer_activate"
+                   tooltip="{=taom_ability_shaghana_chatak_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="shaghana_beast_rider_ability"
+                   display_name="{=taom_ability_shaghana_beast_rider}Horns of Mûmakan"
+                   sprite="ability_mahud_beast_rider_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="mahud_beast_rider_particle"
+                   sound_effect="mahud_beast_rider_activate"
+                   tooltip="{=taom_ability_shaghana_beast_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+  <AbilityTemplate id="abanissa_house_guard_ability"
+                   display_name="{=taom_ability_abanissa_house_guard}Ivory-Ward Blades"
+                   sprite="ability_tribesman_of_jelut_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="tribesman_of_jelut_particle"
+                   sound_effect="tribesman_of_jelut_activate"
+                   tooltip="{=taom_ability_abanissa_house_guard_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="abanissa_jiret_javelineer_ability"
+                   display_name="{=taom_ability_abanissa_jiret_javelineer}Jîret Volley"
+                   sprite="ability_pezarsani_javelineer_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="pezarsani_javelineer_particle"
+                   sound_effect="pezarsani_javelineer_activate"
+                   tooltip="{=taom_ability_abanissa_jiret_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="abanissa_ivory_rider_ability"
+                   display_name="{=taom_ability_abanissa_ivory_rider}Tusk-Thunder of Mûmakan"
+                   sprite="ability_mahud_beast_rider_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="mahud_beast_rider_particle"
+                   sound_effect="mahud_beast_rider_activate"
+                   tooltip="{=taom_ability_abanissa_ivory_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
 </AbilityTemplates>

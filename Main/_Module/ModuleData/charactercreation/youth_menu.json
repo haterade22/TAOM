@@ -5,7 +5,10 @@
         "title_type": "retainer",
         "text": "Trained with the Swan Knights.",
         "description": "You joined the ranks of the Swan Knights of Dol Amroth, learning the art of mounted combat and chivalric warfare under the banners of Gondor's finest.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -17,7 +20,10 @@
         "title_type": "guard",
         "text": "Stood guard in Minas Tirith.",
         "description": "You served in the garrison of Minas Tirith, defending the White City's walls and learning the art of siege defense from its veteran commanders.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -29,7 +35,10 @@
         "title_type": "hunter",
         "text": "Rode with the Rangers of Ithilien.",
         "description": "You patrolled the wilds of Ithilien, striking at the enemy from the shadows and honing your skills as a ranger in the tradition of Faramir's company.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -41,7 +50,10 @@
         "title_type": "infantry",
         "text": "Trained with the Tower Guard.",
         "description": "You joined the elite Tower Guard of Gondor, training in disciplined infantry warfare to protect the Citadel and the White Tree.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -53,7 +65,10 @@
         "title_type": "skirmisher",
         "text": "Lived by your wits in the ruins of Osgiliath.",
         "description": "You scraped by in the contested ruins of Osgiliath, learning the lethal economy of street-fighting and the value of a well-thrown stone. Survival in that half-drowned maze of broken stone shaped you into someone who could improvise anything from nothing.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -65,7 +80,10 @@
         "title_type": "retainer",
         "text": "Trained with the Warg Riders.",
         "description": "You were chosen to train with the elite Warg Riders of Mordor, learning to control the fearsome beasts and strike terror into the hearts of the enemy.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -77,7 +95,10 @@
         "title_type": "guard",
         "text": "Manned the towers of Mordor's fortresses.",
         "description": "You were stationed on the watchtowers and walls of Mordor's black fortresses, scanning the horizon for movement and directing fire on any who approached. The post suited those who could think as well as shoot.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -89,7 +110,10 @@
         "title_type": "hunter",
         "text": "Rode with the Black Scouts.",
         "description": "You joined the Black Scouts, riding swiftly through the wastelands to gather intelligence and harry the enemy's flanks.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -101,7 +125,10 @@
         "title_type": "infantry",
         "text": "Marched in the Orc legions of the Dark Lord.",
         "description": "You drilled in the relentless formations of Sauron's infantry, learning to shoulder-charge and cut with blade and axe in ranks that moved like a single armoured fist. Weakness was punished and strength rewarded in iron.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -113,7 +140,10 @@
         "title_type": "skirmisher",
         "text": "Joined the Shadow Skirmishers.",
         "description": "You became a Shadow Skirmisher, harassing the enemy with thrown weapons and quick strikes before melting back into the darkness.",
-        "skills": ["Throwing", "OneHanded"],
+        "skills": [
+            "Throwing",
+            "OneHanded"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -125,7 +155,10 @@
         "title_type": "bard",
         "text": "Lived on the fringes of Sauron's war host.",
         "description": "You were neither soldier nor slave, moving on the shadowed margins of Mordor's great army — stealing what you could, trading information, and learning which officers were bribeable and which were better avoided. Cunning was the only currency you trusted.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -137,7 +170,10 @@
         "title_type": "infantry",
         "text": "Served in the Royal Guard of Erebor.",
         "description": "You pledged your loyalty to the King Under the Mountain, serving in the elite Royal Guard and learning to wield axe and hammer in defense of the realm.",
-        "skills": ["TwoHanded", "Polearm"],
+        "skills": [
+            "TwoHanded",
+            "Polearm"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -149,7 +185,10 @@
         "title_type": "guard",
         "text": "Defended the gates of Erebor.",
         "description": "As part of Erebor's garrison, you manned the crossbows and held the gates against all comers, learning the art of dwarven siege defense.",
-        "skills": ["Crossbow", "Polearm"],
+        "skills": [
+            "Crossbow",
+            "Polearm"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -161,7 +200,10 @@
         "title_type": "skirmisher",
         "text": "Trained with the Iron Guard.",
         "description": "You joined the Iron Guard, Erebor's shock troops, learning to hurl throwing axes and fight in the tight corridors of the mountain halls.",
-        "skills": ["Throwing", "OneHanded"],
+        "skills": [
+            "Throwing",
+            "OneHanded"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -173,7 +215,10 @@
         "title_type": "hunter",
         "text": "Scouted the foothills of the Lonely Mountain.",
         "description": "You ventured into the wild lands around Erebor, tracking Orcs and wolves and safeguarding the mountain's approaches.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -185,7 +230,10 @@
         "title_type": "infantry",
         "text": "Stood in the vanguard.",
         "description": "You trained as part of Erebor's vanguard, mastering the two-handed axe and polearm in the disciplined dwarven battle formations.",
-        "skills": ["Polearm", "TwoHanded"],
+        "skills": [
+            "Polearm",
+            "TwoHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -197,7 +245,10 @@
         "title_type": "bard",
         "text": "Worked with the caravan guards.",
         "description": "You accompanied trading caravans between Erebor and Dale, learning the ways of commerce and the art of defending valuable cargo.",
-        "skills": ["OneHanded", "Trade"],
+        "skills": [
+            "OneHanded",
+            "Trade"
+        ],
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -209,7 +260,10 @@
         "title_type": "retainer",
         "text": "Trained with the Guard of Imladris.",
         "description": "You served under the banners of Rivendell, training in mounted combat and the graceful Elven martial arts to defend the Last Homely House.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -221,7 +275,10 @@
         "title_type": "guard",
         "text": "Stood watch at the halls of Elrond.",
         "description": "You served as a sentry at the halls of Elrond, learning to read the land and anticipate threats before they could reach the hidden valley.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -233,7 +290,10 @@
         "title_type": "hunter",
         "text": "Ranged the Trollshaws with the border wardens.",
         "description": "You joined the wardens who patrolled far beyond Rivendell's borders into the wild Trollshaws and the upper Anduin vales, learning to track enemies and read the signs of dark movement through ancient forest.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -245,7 +305,10 @@
         "title_type": "infantry",
         "text": "Trained in the art of Elven infantry.",
         "description": "You stood with the ranks of Rivendell's warriors, mastering the spear and sword in the precise, deadly style of the High Elves.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -257,7 +320,10 @@
         "title_type": "bard",
         "text": "Journeyed with the loremasters.",
         "description": "You accompanied Rivendell's loremasters on their journeys, learning diplomacy, persuasion, and the art of leadership among the free peoples.",
-        "skills": ["Charm", "Leadership"],
+        "skills": [
+            "Charm",
+            "Leadership"
+        ],
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -269,7 +335,10 @@
         "title_type": "hunter",
         "text": "Trained with the Woodland Riders.",
         "description": "You rode through the dark woods on swift Elven steeds, learning to fight from horseback among the ancient trees of Thranduil's realm.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -281,7 +350,10 @@
         "title_type": "guard",
         "text": "Patrolled the darkened glades.",
         "description": "You joined the wardens who patrolled the glades of Mirkwood, keeping watch against spiders, Orcs, and the creeping shadow of Dol Guldur.",
-        "skills": ["Scouting", "OneHanded"],
+        "skills": [
+            "Scouting",
+            "OneHanded"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -293,7 +365,10 @@
         "title_type": "infantry",
         "text": "Stood with the Elven Spear Guard.",
         "description": "You took your place among the Spear Guard of the Woodland Realm, learning to fight in disciplined formations beneath the forest canopy.",
-        "skills": ["Polearm", "Tactics"],
+        "skills": [
+            "Polearm",
+            "Tactics"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -305,7 +380,10 @@
         "title_type": "skirmisher",
         "text": "Set traps for the spiders of Mirkwood.",
         "description": "You were among the hunters tasked with keeping the great spiders from the Woodland Realm's heart, learning to lay snares and ambushes in the dark undergrowth and to strike with knife and hurled blade before the creatures could close with you.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -317,7 +395,10 @@
         "title_type": "bard",
         "text": "Served in the halls of the Woodland King.",
         "description": "You were admitted to the court of Thranduil, learning the diplomatic arts and the songs of the Woodland Elves under the tutelage of those who had sung since the first age of stars. The Elvenking's hall demanded as much from the tongue as from the sword-arm.",
-        "skills": ["Charm", "Leadership"],
+        "skills": [
+            "Charm",
+            "Leadership"
+        ],
         "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -329,7 +410,10 @@
         "title_type": "retainer",
         "text": "Trained with the Galadhrim cavalry.",
         "description": "You joined the elite cavalry of Lothlorien, riding swift horses through the Golden Wood and learning to fight with the grace of the Galadhrim.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -341,7 +425,10 @@
         "title_type": "guard",
         "text": "Kept vigil on the flets of the Golden Wood.",
         "description": "You stood the long, still watches on the high platforms among the mallorn branches, your silver bow drawn across the threshold of the veiled borders. Nothing passed the Galadhrim wardens unseen — and you intended to keep it that way.",
-        "skills": ["Bow", "Scouting"],
+        "skills": [
+            "Bow",
+            "Scouting"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -353,7 +440,10 @@
         "title_type": "hunter",
         "text": "Joined the archers of Caras Galadhon.",
         "description": "You trained with the famed archers of Lothlorien, learning to send arrows with deadly precision from the platforms among the mallorn trees.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -365,7 +455,10 @@
         "title_type": "infantry",
         "text": "Joined the wardens of the trees.",
         "description": "You became a warden of the trees, defending the heart of Lothlorien with spear and sword in the ancient Elven tradition.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -377,7 +470,10 @@
         "title_type": "bard",
         "text": "Walked the mirror paths as a student of the Lady.",
         "description": "You studied the deeper arts of the Golden Wood under those closest to Galadriel's counsel, learning the songs of power and the quiet persuasion that could shift the will of lords without raising a blade. You left with gifts not easily named.",
-        "skills": ["Charm", "Roguery"],
+        "skills": [
+            "Charm",
+            "Roguery"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -389,7 +485,10 @@
         "title_type": "retainer",
         "text": "Joined Saruman's Warg Riders.",
         "description": "You trained as a rider for Saruman's forces, learning to control Wargs and strike with devastating speed across the plains.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -401,7 +500,10 @@
         "title_type": "guard",
         "text": "Guarded the pits of Orthanc.",
         "description": "You were stationed at Orthanc, manning the crossbows and defending the breeding pits from any who would oppose Saruman's will.",
-        "skills": ["Crossbow", "Polearm"],
+        "skills": [
+            "Crossbow",
+            "Polearm"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -413,7 +515,10 @@
         "title_type": "infantry",
         "text": "Fought among the Uruk-hai infantry.",
         "description": "You trained with the ferocious Uruk-hai, learning their brutal close-quarters fighting style and building endurance through grueling drills.",
-        "skills": ["OneHanded", "Athletics"],
+        "skills": [
+            "OneHanded",
+            "Athletics"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -425,7 +530,10 @@
         "title_type": "hunter",
         "text": "Scouted for Saruman's spies.",
         "description": "You were sent as a scout and spy, ranging across the lands to gather intelligence for Saruman's war machine.",
-        "skills": ["Athletics", "Scouting"],
+        "skills": [
+            "Athletics",
+            "Scouting"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -437,7 +545,10 @@
         "title_type": "infantry",
         "text": "Joined the ranks of Isengard's pikes.",
         "description": "You became a member of Isengard's formidable pikemen, learning to fight in tight formations that could break any cavalry charge.",
-        "skills": ["Polearm", "Athletics"],
+        "skills": [
+            "Polearm",
+            "Athletics"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -449,7 +560,10 @@
         "title_type": "mercenary",
         "text": "Fought your way through Saruman's warbands.",
         "description": "You proved yourself in the brutal warbands of Isengard, picking up every weapon style that kept you alive and leaving behind anything that did not. Saruman cared only for results and the warbands enforced that philosophy without mercy.",
-        "skills": ["OneHanded", "TwoHanded"],
+        "skills": [
+            "OneHanded",
+            "TwoHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -461,7 +575,10 @@
         "title_type": "retainer",
         "text": "Rode with the Warg riders of Gundabad.",
         "description": "You trained with the Warg riders of Mount Gundabad, learning to control the savage beasts through the treacherous mountain passes and to strike with lance and spear from their backs.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -473,7 +590,10 @@
         "title_type": "guard",
         "text": "Guarded the forges of Gundabad.",
         "description": "You served in the garrison of Gundabad, defending the forges and tunnels from intruders with bow and spear.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -485,7 +605,10 @@
         "title_type": "mercenary",
         "text": "Trained with the berserkers.",
         "description": "You were among the berserkers of Gundabad, learning to fight with reckless fury and overwhelming force.",
-        "skills": ["TwoHanded", "Athletics"],
+        "skills": [
+            "TwoHanded",
+            "Athletics"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -497,7 +620,10 @@
         "title_type": "hunter",
         "text": "Scouted the mountain passes.",
         "description": "You roamed the treacherous mountain paths around Gundabad, tracking enemies and ensuring safe passage for your kin.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -509,7 +635,10 @@
         "title_type": "infantry",
         "text": "Held the line in Gundabad's spear legions.",
         "description": "You drilled and marched with the heavy spear formations of Mount Gundabad, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved.",
-        "skills": ["Polearm", "Tactics"],
+        "skills": [
+            "Polearm",
+            "Tactics"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -521,7 +650,10 @@
         "title_type": "bard",
         "text": "Ran with the scavenger bands of the passes.",
         "description": "You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -533,7 +665,10 @@
         "title_type": "retainer",
         "text": "Served the Necromancer's riders.",
         "description": "You rode in the service of Dol Guldur, commanding dark steeds and spreading terror across the southern reaches of Mirkwood.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -545,7 +680,10 @@
         "title_type": "guard",
         "text": "Guarded the halls of shadow.",
         "description": "You defended the dark halls of Dol Guldur, standing watch over the Necromancer's domain with bow and blade.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -557,7 +695,10 @@
         "title_type": "mercenary",
         "text": "Trained in the dark arts of war.",
         "description": "You honed your skills in the dark arts of warfare, learning to fight with cunning and deception in the shadowed corridors of Dol Guldur.",
-        "skills": ["OneHanded", "Tactics"],
+        "skills": [
+            "OneHanded",
+            "Tactics"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -569,7 +710,10 @@
         "title_type": "hunter",
         "text": "Hunted trespassers in the corrupted Greenwood.",
         "description": "You were sent into the twisted undergrowth of southern Mirkwood to track and eliminate those who strayed near the Necromancer's domain, learning to stalk quarry through corrupted forest without making a sound or leaving a print.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -581,7 +725,10 @@
         "title_type": "infantry",
         "text": "Marched in the shadow legions of Dol Guldur.",
         "description": "You drilled in the iron-disciplined ranks of Dol Guldur's dark legions, learning to wield heavy weapons in formation as the corruption of the Necromancer's fortress settled into your stride and your silence.",
-        "skills": ["Polearm", "TwoHanded"],
+        "skills": [
+            "Polearm",
+            "TwoHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -593,7 +740,10 @@
         "title_type": "bard",
         "text": "Moved through darkness as a courier of the Necromancer.",
         "description": "You carried messages through the corrupted wood that no one would write down, delivering them by hand to agents who never showed their faces. The work demanded silence, patience, and the ability to strike without warning when the shadow required it.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -605,7 +755,10 @@
         "title_type": "retainer",
         "text": "Served in the Corsair Fleet.",
         "description": "You joined the Corsair Fleet of Umbar, learning to fight aboard ships and lead boarding parties against Gondor's coastal defenses.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -617,7 +770,10 @@
         "title_type": "guard",
         "text": "Guarded the harbors of Umbar.",
         "description": "You served in the harbor garrisons of Umbar, defending the docks and learning the art of coastal defense.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -629,7 +785,10 @@
         "title_type": "skirmisher",
         "text": "Raided the shores of Gondor with the Corsairs.",
         "description": "You led the charge onto enemy docks, hurling javelins and cutting your way through defenders before retreating to the Black ships with what you had taken. Raids were fast and brutal, and you learned that hesitation cost lives.",
-        "skills": ["Throwing", "OneHanded"],
+        "skills": [
+            "Throwing",
+            "OneHanded"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -641,7 +800,10 @@
         "title_type": "hunter",
         "text": "Navigated the Bay of Belfalas as a Corsair scout.",
         "description": "You served in the masthead and scout-boats of the Corsair fleet, reading tides and spotting prey across open water while learning to loose a bow from a pitching deck. What you saw decided whether a raid went ahead or was abandoned.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -653,7 +815,10 @@
         "title_type": "infantry",
         "text": "Stood in the spear line of the Black Numenoreans.",
         "description": "You drilled in the disciplined ground formations of Umbar's infantry, learning to hold a coastal beachhead with spear and shield while the ships unloaded behind you. The Black Numenorean officers expected precision, and they got it.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -665,7 +830,10 @@
         "title_type": "bard",
         "text": "Ran with the outlaws of the Umbar waterfront.",
         "description": "You survived on the rough margins of the harbor city, moving goods that could not be declared and acquiring skills that could not be taught in any school. The Corsair world had a place for those clever enough to see opportunities no one else had noticed.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -677,7 +845,10 @@
         "title_type": "retainer",
         "text": "Rode with the Hill Riders.",
         "description": "Mounted on sturdy hill ponies, you rode with the Hill Riders of Dunland, learning to fight across the rough terrain of the highlands.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -689,7 +860,10 @@
         "title_type": "guard",
         "text": "Served in the Tribal Longhouse.",
         "description": "Within the tribal longhouses of Dunland, you learned tactics and the art of command, planning raids and defenses for your clan.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -701,7 +875,10 @@
         "title_type": "skirmisher",
         "text": "Stood guard with the Border Watch.",
         "description": "You joined the Border Watch of Dunland, hurling javelins and fighting with sword to defend your clan's territory.",
-        "skills": ["Throwing", "OneHanded"],
+        "skills": [
+            "Throwing",
+            "OneHanded"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -713,7 +890,10 @@
         "title_type": "hunter",
         "text": "Scouted the highlands.",
         "description": "You roamed the highlands and forests as a scout, learning to read the land and shoot from horseback.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -725,7 +905,10 @@
         "title_type": "infantry",
         "text": "Joined the Spear Brothers.",
         "description": "You became one of the Spear Brothers of Dunland, learning to fight in tight formations with spear and shield.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -737,7 +920,10 @@
         "title_type": "bard",
         "text": "Harried the horse-lords as a Tribal Skirmisher.",
         "description": "As a Tribal Skirmisher, you learned to ambush Rohirrim outriders in the passes, hurling javelins and vanishing into the ridgeline before they could counter. The old grudge against the horse-lords lived in every throw.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -749,7 +935,10 @@
         "title_type": "retainer",
         "text": "Trained with the Riders of the Mark.",
         "description": "You proved your skill as a rider among the Rohirrim, learning to charge with lance and fight from horseback in the traditions of Eorl the Young.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -761,7 +950,10 @@
         "title_type": "guard",
         "text": "Served in the city watch of Edoras.",
         "description": "You stood guard over the gates and walls of Edoras, learning tactics and discipline in service of the Golden Hall.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Intelligence",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -773,7 +965,10 @@
         "title_type": "skirmisher",
         "text": "Joined the skirmishers of the Westfold.",
         "description": "You joined the Westfold skirmishers, learning to fight with thrown weapons and sword on the open plains.",
-        "skills": ["Throwing", "OneHanded"],
+        "skills": [
+            "Throwing",
+            "OneHanded"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -785,7 +980,10 @@
         "title_type": "hunter",
         "text": "Rode with the scouts of the Wold.",
         "description": "You rode with the scouts of the Wold, ranging far across the plains to watch for threats from the East.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -797,7 +995,10 @@
         "title_type": "infantry",
         "text": "Stood among the spearmen of the Eastfold.",
         "description": "As a spearman of the Eastfold, you learned to hold the shieldwall against the enemy's charge.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -809,7 +1010,10 @@
         "title_type": "bard",
         "text": "Traveled with the camp followers of Rohan.",
         "description": "Rather than taking up arms directly, you traveled with the camp followers, learning to survive on the march and profit from the chaos of war.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -821,7 +1025,10 @@
         "title_type": "guard",
         "text": "Served in the Royal Guard of Dale.",
         "description": "You pledged your loyalty to the King of Dale, serving in the Royal Guard and learning the martial traditions of the Men of the North.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -833,7 +1040,10 @@
         "title_type": "guard",
         "text": "Defended the gates of Dale.",
         "description": "As a member of the garrison, you defended the rebuilt gates of Dale, learning the art of siege defense from veterans who had seen the city fall and rise again.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -845,7 +1055,10 @@
         "title_type": "skirmisher",
         "text": "Fought in the militia of the Long Lake shore.",
         "description": "You trained with the lake-shore militia, learning to fight with thrown weapons and sword in defense of the settlements that straddled the trade route between Dale and the south. Commerce and combat were equally part of daily life.",
-        "skills": ["Throwing", "OneHanded"],
+        "skills": [
+            "Throwing",
+            "OneHanded"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -857,7 +1070,10 @@
         "title_type": "hunter",
         "text": "Tracked game and Orcs in the forest east of Dale.",
         "description": "You ranged the dark woodlands east of the Long Lake, hunting game for the market and keeping a watchful eye on the Orc paths coming down from the mountains. The forest taught you to read the land and keep your bow strung at all times.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -869,7 +1085,10 @@
         "title_type": "infantry",
         "text": "Joined the shieldwall.",
         "description": "You took your place in Dale's shieldwall, learning to stand firm with spear and shield against any enemy that threatened the city.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -881,7 +1100,10 @@
         "title_type": "bard",
         "text": "Traveled with the merchant caravans of the North.",
         "description": "You went with the caravans that moved between Dale, Erebor, and the southern kingdoms, learning the arts of commerce, survival on the road, and the opportunism that made some traders very successful and others very sorry.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -893,7 +1115,10 @@
         "title_type": "retainer",
         "text": "Trained with the war elephants.",
         "description": "You trained alongside Harad's mighty war elephants, learning to ride and fight from their towering backs under the blazing southern sun.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -905,7 +1130,10 @@
         "title_type": "guard",
         "text": "Watched the walls of Harad's desert cities.",
         "description": "You served as a sentinel on the sun-baked battlements of Harad's fortified cities, learning to scan the shimmering horizon for enemy movement and to direct arrow fire against raiders from the desert fringe.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -917,7 +1145,10 @@
         "title_type": "hunter",
         "text": "Rode with the desert outriders.",
         "description": "You joined Harad's swift outriders, scouting the vast desert on horseback and striking at the enemy's flanks before vanishing back into the heat-haze.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -929,7 +1160,10 @@
         "title_type": "infantry",
         "text": "Drilled with the Black Serpent's footmen.",
         "description": "You trained in the disciplined spear formations that served under the Black Serpent banner, learning to hold position in the merciless desert heat and advance in step with warriors sworn to carry the war into the north.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -941,7 +1175,10 @@
         "title_type": "skirmisher",
         "text": "Harassed enemies as a javelin skirmisher of Harad.",
         "description": "You fought in the loose Haradrim skirmishing style, hurling javelins to soften the enemy before closing with sword and buckler. The heat and the sand were on your side, and you learned to use both.",
-        "skills": ["Throwing", "OneHanded"],
+        "skills": [
+            "Throwing",
+            "OneHanded"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -953,7 +1190,10 @@
         "title_type": "bard",
         "text": "Wandered with the nomadic tribes of the Sunlands.",
         "description": "You drifted with the wandering people of the deep desert, learning to read water-signs and navigate the dune-sea by starlight. When coin ran short you found other ways to survive, and the vast empty Sunlands gave you room to perfect them.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -965,7 +1205,10 @@
         "title_type": "retainer",
         "text": "Rode with the Rangers of the North.",
         "description": "You were taken into the company of the Dunedain Rangers, learning to ride hard through the ruins of Arnor and fight with the disciplined ferocity of the Heirs of Isildur. The Rangers rode far and told little to any they met on the road.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -977,7 +1220,10 @@
         "title_type": "guard",
         "text": "Watched the crossroads of Eriador.",
         "description": "You kept vigil over the crumbling watchtowers and old road-crossings of the North Kingdom, learning to read the land and spot the signs of Orc movement before trouble arrived. The Rangers held no formal posts, only duty.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -989,7 +1235,10 @@
         "title_type": "hunter",
         "text": "Ranged the wilds of Arnor as a Dunedain scout.",
         "description": "You moved through the old kingdom's overgrown ruins and moorlands as a ranger scout, learning to live off the wild land and track both beast and enemy across terrain that held memory in its stones. Speed and silence were your only tools.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1001,7 +1250,10 @@
         "title_type": "infantry",
         "text": "Stood in the Ranger line against the Orc warbands.",
         "description": "You fought in the close-quarters engagements that kept the northern settlements alive, learning to wield sword and spear with the steadiness of men who knew they were the last line between the people and the dark. There were no reinforcements in the North.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1013,7 +1265,10 @@
         "title_type": "bard",
         "text": "Moved unseen among the villages of the North.",
         "description": "You kept the hidden network of Dunedain informants alive, passing between settlements under assumed names and gathering word of Orc movements, dark strangers, and threats to the people. The Rangers relied on those who could pass for ordinary, and you had the gift.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1025,7 +1280,10 @@
         "title_type": "skirmisher",
         "text": "Tracked and ambushed in the ruins of the North Kingdom.",
         "description": "You learned to set ambushes in the old ruins and thickets of ruined Arnor, reading trails and using the broken landscape to your advantage. A well-placed arrow from cover was worth a dozen men in the open, and you made every shot count.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1037,7 +1295,10 @@
         "title_type": "retainer",
         "text": "Rode with the Khelek Warriors.",
         "description": "You proved your worth as a rider among the Khelek Warriors, learning mounted combat on the wide steppes of Rhun in the tradition of the eastern war-riders.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1049,7 +1310,10 @@
         "title_type": "guard",
         "text": "Guarded the settlements of Rhun.",
         "description": "You patrolled the walls of Rhun's settlements, learning archery and the art of defense against raiders from the wild eastern steppes.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1061,7 +1325,10 @@
         "title_type": "skirmisher",
         "text": "Joined the ranks of the Uruk-thar.",
         "description": "As a member of the Uruk-thar, you learned to fight with thrown weapons and sword in the Easterling skirmishing tradition.",
-        "skills": ["Throwing", "OneHanded"],
+        "skills": [
+            "Throwing",
+            "OneHanded"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1073,7 +1340,10 @@
         "title_type": "hunter",
         "text": "Ranged the Sea of Rhun shores as a mounted scout.",
         "description": "You rode far ahead of the eastern columns along the shores of the inland sea, reading the land for threats and opportunity. The steppe gave you a horseman's eye for distance and a bowman's patience for the right moment.",
-        "skills": ["Riding", "Bow"],
+        "skills": [
+            "Riding",
+            "Bow"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1085,7 +1355,10 @@
         "title_type": "infantry",
         "text": "Held the line in the Easterling spear formation.",
         "description": "You stood shoulder to shoulder with your kinsmen in the disciplined Easterling spear line, learning to brace against cavalry and advance in ordered ranks under the red dawn banners that had marched west before.",
-        "skills": ["Polearm", "OneHanded"],
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1097,7 +1370,10 @@
         "title_type": "bard",
         "text": "Traveled with the Karash bands.",
         "description": "You lived outside formal Easterling clan structure, moving with the Karash bands who followed the armies and profited from their passage. Cunning and thrown weapons kept you fed on the margins of the great eastern host.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1109,7 +1385,10 @@
         "title_type": "retainer",
         "text": "Rode with the warg-packs of the High Pass.",
         "description": "You trained with the Warg riders of the High Pass, learning to control the savage beasts through the treacherous mountain passes and to strike with lance and spear from their backs.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1121,7 +1400,10 @@
         "title_type": "guard",
         "text": "Guarded the warrens of Goblin-town.",
         "description": "You served in the warrens of Goblin-town, defending the forges and tunnels from intruders with bow and spear.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1133,7 +1415,10 @@
         "title_type": "mercenary",
         "text": "Trained with the berserkers.",
         "description": "You were among the berserkers of Goblin-town, learning to fight with reckless fury and overwhelming force.",
-        "skills": ["TwoHanded", "Athletics"],
+        "skills": [
+            "TwoHanded",
+            "Athletics"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1145,7 +1430,10 @@
         "title_type": "hunter",
         "text": "Scouted the mountain passes.",
         "description": "You roamed the treacherous mountain paths around Goblin-town, tracking enemies and ensuring safe passage for your kin.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1157,7 +1445,10 @@
         "title_type": "infantry",
         "text": "Held the line in Goblin-town's spear legions.",
         "description": "You drilled and marched with the heavy spear formations of the High Pass, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved.",
-        "skills": ["Polearm", "Tactics"],
+        "skills": [
+            "Polearm",
+            "Tactics"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1169,7 +1460,10 @@
         "title_type": "bard",
         "text": "Ran with the scavenger bands of the passes.",
         "description": "You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1181,7 +1475,10 @@
         "title_type": "retainer",
         "text": "Rode with the warg-riders of the Misty Mountains.",
         "description": "You trained with the Warg riders of the Misty Mountains, learning to control the savage beasts through the treacherous mountain passes and to strike with lance and spear from their backs.",
-        "skills": ["Riding", "Polearm"],
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1193,7 +1490,10 @@
         "title_type": "guard",
         "text": "Guarded the deep forges of Moria.",
         "description": "You served in the garrison of Moria, defending the forges and tunnels from intruders with bow and spear.",
-        "skills": ["Bow", "Tactics"],
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
         "attribute": "Control",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1205,7 +1505,10 @@
         "title_type": "mercenary",
         "text": "Trained with the berserkers.",
         "description": "You were among the berserkers of the Misty Mountains, learning to fight with reckless fury and overwhelming force.",
-        "skills": ["TwoHanded", "Athletics"],
+        "skills": [
+            "TwoHanded",
+            "Athletics"
+        ],
         "attribute": "Vigor",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1217,7 +1520,10 @@
         "title_type": "hunter",
         "text": "Scouted the mountain passes.",
         "description": "You roamed the treacherous mountain paths around the Misty Mountains, tracking enemies and ensuring safe passage for your kin.",
-        "skills": ["Scouting", "Bow"],
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
         "attribute": "Cunning",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1229,7 +1535,10 @@
         "title_type": "infantry",
         "text": "Held the line in the Misty Mountains's spear legions.",
         "description": "You drilled and marched with the heavy spear formations of the Misty Mountains, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved.",
-        "skills": ["Polearm", "Tactics"],
+        "skills": [
+            "Polearm",
+            "Tactics"
+        ],
         "attribute": "Endurance",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
@@ -1241,8 +1550,176 @@
         "title_type": "bard",
         "text": "Ran with the scavenger bands of the passes.",
         "description": "You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would.",
-        "skills": ["Roguery", "Throwing"],
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
         "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_bluecraig_1",
+        "culture_id": "bluecraig",
+        "title_type": "retainer",
+        "text": "Rode with the warg-packs of the Blue Mountains.",
+        "description": "You trained with the Warg riders of the Ered Luin, learning to control the savage beasts through the treacherous mountain passes and to strike with lance and spear from their backs.",
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_bluecraig_2",
+        "culture_id": "bluecraig",
+        "title_type": "guard",
+        "text": "Guarded the warrens of Blue Craig.",
+        "description": "You served in the warrens of Blue Craig, defending the forges and tunnels from intruders with bow and spear.",
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_bluecraig_3",
+        "culture_id": "bluecraig",
+        "title_type": "mercenary",
+        "text": "Trained with the berserkers.",
+        "description": "You were among the berserkers of Blue Craig, learning to fight with reckless fury and overwhelming force.",
+        "skills": [
+            "TwoHanded",
+            "Athletics"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_bluecraig_4",
+        "culture_id": "bluecraig",
+        "title_type": "hunter",
+        "text": "Scouted the mountain passes.",
+        "description": "You roamed the treacherous mountain paths around Blue Craig, tracking enemies and ensuring safe passage for your kin.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_bluecraig_5",
+        "culture_id": "bluecraig",
+        "title_type": "infantry",
+        "text": "Held the line in Blue Craig's spear legions.",
+        "description": "You drilled and marched with the heavy spear formations of the Ered Luin, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved.",
+        "skills": [
+            "Polearm",
+            "Tactics"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_bluecraig_6",
+        "culture_id": "bluecraig",
+        "title_type": "bard",
+        "text": "Ran with the scavenger bands of the passes.",
+        "description": "You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would.",
+        "skills": [
+            "Roguery",
+            "Throwing"
+        ],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_lindon_1",
+        "culture_id": "lindon",
+        "title_type": "retainer",
+        "text": "Trained with the Guard of Mithlond.",
+        "description": "You served under the banners of Lindon, training in mounted combat and the graceful Elven martial arts to defend the Grey Havens.",
+        "skills": [
+            "Riding",
+            "Polearm"
+        ],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_lindon_2",
+        "culture_id": "lindon",
+        "title_type": "guard",
+        "text": "Stood watch at the halls of Cirdan.",
+        "description": "You served as a sentry at the halls of Cirdan, learning to read the land and anticipate threats before they could reach the Grey Havens.",
+        "skills": [
+            "Bow",
+            "Tactics"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_lindon_3",
+        "culture_id": "lindon",
+        "title_type": "hunter",
+        "text": "Ranged the Tower Hills with the border wardens.",
+        "description": "You joined the wardens who patrolled far beyond Lindon's borders into the wild Tower Hills and the upper Anduin vales, learning to track enemies and read the signs of dark movement through ancient forest.",
+        "skills": [
+            "Scouting",
+            "Bow"
+        ],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_lindon_4",
+        "culture_id": "lindon",
+        "title_type": "infantry",
+        "text": "Trained in the art of Elven infantry.",
+        "description": "You stood with the ranks of Lindon's warriors, mastering the spear and sword in the precise, deadly style of the High Elves.",
+        "skills": [
+            "Polearm",
+            "OneHanded"
+        ],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_lindon_5",
+        "culture_id": "lindon",
+        "title_type": "bard",
+        "text": "Journeyed with the loremasters.",
+        "description": "You accompanied Lindon's loremasters on their journeys, learning diplomacy, persuasion, and the art of leadership among the free peoples.",
+        "skills": [
+            "Charm",
+            "Leadership"
+        ],
+        "attribute": "Social",
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1

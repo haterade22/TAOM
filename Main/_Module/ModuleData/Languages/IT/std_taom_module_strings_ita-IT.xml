@@ -360,7 +360,6 @@
     <string id="taom_str_player_father_name.shaghana" text="Zarkan" />
     <string id="taom_str_player_mother_name.shaghana" text="Khansa" />
     <string id="0aXG8dvJ" text="Fai pace con {KINGDOM_NAME}. Nessun tributo sarà pagato." />
-    <string id="0bPb5btR" text="{LORD.NAME} è un membro di {CLAN_NAME}, {CLAN_DESCRIPTION} di {FACTION_NAME} che sostiene {RULER} nella guerra civile. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="0CsbbwtN" text="Chiama {CALLED_KINGDOM} in Guerra Contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
     <string id="0nhqJewP" text="{RULER.NAME} di {KINGDOM} concede {SETTLEMENT} a {LEADER.NAME} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM} con il sostegno del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
@@ -370,25 +369,20 @@
     <string id="21yUheIy" text="{KINGDOM_NAME} fu creato nel {CREATION_YEAR} da {RULER.NAME}, un {CULTURE_ADJECTIVE} signore della guerra in ascesa." />
     <string id="22LCyCoA" text="Posso offrire al vostro reame {GOLD}{GOLD_ICON} per dichiarare guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="2b1xZGaQ" text="Fai pace con {KINGDOM_NAME}. Il nostro regno pagherà {TRIBUTE_AMOUNT} di tributo giornaliero per {TRIBUTE_DURATION} giorni." />
-    <string id="2BVDp7Tg" text="{KINGDOM} cesserà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="Le devastazioni di {NEARBY_ENEMY_FACTION} hanno costretto molti contadini ad abbandonare le loro case. Coloro che possiedono terre di solito vi ritornano, ma molti dei più poveri cercano un nuovo luogo dove vivere. Parli con alcuni accampati alla periferia del tuo villaggio. Non c'è terra per loro. Sembrano desiderosi di lavorare come affittuari, ma c'è sempre la possibilità di tensioni con le famiglie più consolidate del villaggio." />
-    <string id="2mVZORaE" text="un servitore di {FACTION_NAME}" />
     <string id="4fXpOe4N" text="Giunge un messaggero da {CLAN_NAME}. Detengono {CAPTIVE_HERO.NAME} e richiedono {GOLD_AMOUNT}{GOLD_ICON} come riscatto." />
     <string id="4GgfFDWG" text="Fare pace con {KINGDOM_NAME}" />
     <string id="4JSzHkpt" text="Come {?IS_FEMALE}regina{?}re{\?}, devi decidere se dichiarare guerra a {KINGDOM_NAME}" />
-    <string id="4pmvrnmN" text="Il castello di {SETTLEMENT_LINK} è posseduto da {LORD.LINK}, {FACTION_OFFICIAL} di {FACTION_TERM}. {KEEP_INFO}" />
     <string id="4z1t75be" text="{FIRSTNAME} di {CLAN_NAME}" />
     <string id="5bBAOHmC" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso." />
     <string id="5bza9sDs" text="Mi dispiace molto sentirlo. Non troverete datori di lavoro migliori di {FACTION_NAME}, state certi." />
     <string id="5DdbkWLu" text="{RULER.NAME} di {KINGDOM} ha deciso di firmare un accordo commerciale con {OTHER_KINGDOM} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM}, con il {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso." />
     <string id="5pOKmHsf" text="{RULER.NAME} ha deciso di chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno della metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="6d4ZTvGv" text="{LORD.NAME} è {TITLE} di {FACTION_NAME} e capo di {CLAN_NAME}, {CLAN_DESCRIPTION} del reame. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} ha occupato le nostre terre ancestrali e opprime i nostri consanguinei." />
     <string id="7ouzFASf" text="Giunge un messaggero, recante un messaggio da {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Ella{?}Egli{\?} osserva la vostra crescente reputazione e chiede se considerereste di giurare come vassallo di {OFFERED_KINGDOM_NAME}. Dovreste parlare di persona se siete interessati." />
     <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM} con il sostegno del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="940TwBPs" text="{RULER.NAME} ha scelto di non espellere il clan {CLAN} da {KINGDOM} nonostante le obiezioni del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} è un membro di {CLAN_NAME}, {CLAN_DESCRIPTION} dalle terre di {FACTION_NAME}. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha scelto di non entrare in guerra con {KINGDOM}." />
     <string id="aE7OQDMS" text="Forma alleanza con {KINGDOM_NAME}." />
     <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM}, con il {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
@@ -429,7 +423,6 @@
     <string id="eTylgLCc" text="È arrivato un corriere da {KINGDOM_NAME}. Ti offrono un'alleanza. Il tuo regno voterà se accettare l'offerta." />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM} non è più in guerra con {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="F7CMsDyG" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="faUooB7V" text="{KINGDOM} non sarà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME} ha deciso di non rispondere alla chiamata di {CALLING_KINGDOM} e non farà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione ha avuto il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="FNCq25P1" text="{RULER.NAME} ha deciso di formare un'alleanza con {KINGDOM_NAME} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="FuNbouTu" text="È arrivato un corriere da {KINGDOM_NAME}. Chiamano il tuo regno alla guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Il tuo regno voterà se accettare l'offerta." />
@@ -440,7 +433,6 @@
     <string id="gNf0ALKw" text="È arrivato un corriere da {MAP_FACTION_NAME}. Ti offrono una pace bianca. Il tuo regno voterà se accettare l'offerta." />
     <string id="h5eTEYON" text="{RULER.NAME} ha espulso il clan {CLAN} da {KINGDOM}." />
     <string id="h9bWTLgK" text="È tempo di unirci ai nostri alleati, {KINGDOM_NAME}, nella loro guerra." />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} è un capo di {CLAN_NAME}, {CLAN_DESCRIPTION} dalle terre di {FACTION_NAME}. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="IB1xsVEr" text="È arrivato un corriere da {MAP_FACTION_NAME}. Ti offrono una pace bianca. I tuoi vassalli hanno lasciato la decisione a te." />
     <string id="INfHUqxT" text="{RULER.NAME} ha deciso di formare un'alleanza con {KINGDOM_NAME}." />
     <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha scelto di non fare pace con {KINGDOM} nonostante le obiezioni del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
@@ -450,10 +442,8 @@
     <string id="jaioXYDc" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME} con il sostegno di metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} di {KINGDOM_CONSIDERING_PEACE} ha deciso di fare pace con {KINGDOM} nonostante l'opposizione del {?PEACEMAKER_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="JJQ0Hp4m" text="È arrivato un corriere da {MAP_FACTION_NAME}. {MAP_FACTION_NAME} pagherà {GOLD_AMOUNT} {GOLD_ICON} in tributo ogni giorno per porre fine alla guerra tra i vostri regni. I vostri vassalli hanno lasciato la decisione a voi." />
-    <string id="jnYwiCAz" text="{KINGDOM} continuerà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} è attualmente più potente di noi. Abbiamo bisogno di tempo per rafforzare le nostre forze." />
     <string id="JQligd8z" text="Il consiglio di {KINGDOM} ha scelto {KING.NAME} come nuovo sovrano." />
-    <string id="JuPUG5wX" text="{LORD.NAME} è {TITLE} di {FACTION_NAME} e capo di {CLAN_NAME}, {CLAN_DESCRIPTION} che sostiene {RULER} nella guerra civile. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="JY717hPW" text="Non ho l'autorità per fare pace a nome di {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} e il {?ENEMY_RULER.GENDER}suo{?}suo{\?} consiglio dovrebbero decidere se offrire la pace e quali saranno i termini." />
     <string id="K5w135N9" text="{RULER.NAME} ha deciso di non rispondere alla chiamata di {CALLING_KINGDOM} e non farà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisione è stata presa contro il consiglio del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="KFHj7ckm" text="Come sovrano, devi decidere se fare pace con {KINGDOM_NAME}" />
@@ -464,7 +454,6 @@
     <string id="L802I9W2" text="Sì, mi unirò a {FACTION_NAME}." />
     <string id="L81DPSom" text="Come {RULER_NAME_AND_TITLE}, devi decidere se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_COST}{GOLD_ICON}." />
     <string id="Lalj0T1i" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="Lbs2bNlg" text="{KINGDOM} inizierà {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="Il tuo regno è in guerra con {KINGDOM_NAME}." />
     <string id="LVX2x6Jf" text="Vorrei terminare il mio contratto con {SERVED_FACTION}." />
     <string id="m69pvful" text="{KINGDOM_LEADER} deciderà se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Puoi scegliere la tua posizione riguardo questa decisione." />
@@ -481,7 +470,6 @@
     <string id="nkvT88r2" text="Non hai abbastanza denaro per chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="NuYzgBZB" text="Stai andando troppo oltre. {KINGDOM} non sopporterà la distruzione delle sue carovane." />
     <string id="o4IxXHnB" text="{RULER.NAME} ha deciso di non formare un'alleanza con {KINGDOM_NAME}." />
-    <string id="o5AUljbW" text="{LORD.NAME} è un membro di {CLAN_NAME}, {CLAN_DESCRIPTION} di {FACTION_NAME}. {?LORD.GENDER}Ella{?}Egli{\?} ha la reputazione di essere {REPUTATION}." />
     <string id="o69PZuce" text="{OLD_LEADER.LINK} non è più il capo di {CLAN_NAME}. {NEW_LEADER.LINK} ha assunto il controllo come sovrano del clan." />
     <string id="O9XpB5Ah" text="Come sovrano, devi decidere se stipulare un accordo commerciale con {KINGDOM}" />
     <string id="oAw74q3r" text="Come {RULER_NAME_AND_TITLE}, devi decidere se il tuo regno risponderà alla chiamata di {CALLING_KINGDOM} e dichiarerà guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} per {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
@@ -492,7 +480,6 @@
     <string id="PneX4Ayw" text="Un corriere che porta un'offerta di chiamata alla guerra da {KINGDOM_NAME} contro {KINGDOM_TO_CALL_TO_WAR_AGAINST} è arrivato alla corte del tuo regno." />
     <string id="PP7KD7OC" text="{RULER.NAME} di {KINGDOM} ha deciso di firmare un accordo commerciale con {OTHER_KINGDOM}, con il {?RULER.GENDER}suo{?}suo{\?} consiglio equamente diviso sulla questione." />
     <string id="PutoRsWp" text="Arriva un corriere da {CLAN_NAME}. Ti offrono {GOLD_AMOUNT}{GOLD_ICON} come riscatto se libererai {CAPTIVE_HERO.NAME}." />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK} è governata da {LORD.LINK}, {FACTION_OFFICIAL} di {FACTION_TERM}. {KEEP_INFO}" />
     <string id="q9DnHVcZ" text="Non è nel nostro interesse unirci a {KINGDOM_NAME} nella loro guerra." />
     <string id="qa4FlTWS" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo nonostante l'opposizione del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="qgN9o2ip" text="È tempo di chiamare il nostro alleato {KINGDOM_NAME} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Il tuo regno voterà se proporre loro un accordo di chiamata alle armi." />
@@ -503,19 +490,16 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha dichiarato guerra a {KINGDOM} con il sostegno di metà del {?AGGRESSOR_RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="rJIuQ0hc" text="{RULER.NAME} di {KINGDOM} ha scelto di non firmare un accordo commerciale con {OTHER_KINGDOM} contro le obiezioni del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="rtfoywJl" text="Dichiara guerra a {KINGDOM_NAME}" />
-    <string id="RVDojUOM" text="Le terre attorno a {SETTLEMENT_LINK} sono possedute principalmente da {LORD.LINK}, {FACTION_OFFICIAL} di {FACTION_TERM}. {PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="Un corriere è arrivato da {MAP_FACTION_NAME}. Ti offrono la pace se accetti di pagare un tributo giornaliero di {GOLD_AMOUNT} {GOLD_ICON}. Il tuo regno voterà se accettare l'offerta." />
     <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} di {AGGRESSOR_KINGDOM} ha dichiarato guerra a {KINGDOM}." />
     <string id="SR9FC5jH" text="Un corriere è arrivato da {MAP_FACTION_NAME} portando un'offerta di pace. {MAP_FACTION_NAME} pagherà {GOLD_AMOUNT} {GOLD_ICON} in tributo ogni giorno per porre fine alla guerra tra i vostri regni. Il tuo regno voterà se accettare l'offerta." />
     <string id="syGyjjKE" text="Rispondi alla chiamata di {CALLING_KINGDOM} e dichiara guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="TauRjAud" text="{NAME} di {FACTION}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} ti offre lavoro come mercenario, pagando {GOLD_AMOUNT}{GOLD_ICON} per punto influenza che guadagneresti combattendo per loro conto. Accetti?" />
     <string id="uc4M4bhG" text="Ebbene, c'è qualcosa che voglio. C'è un {?TARGET_HERO.GENDER}dama{?}signore{\?} di {TARGET_FACTION} con cui ho una lunga, lunga relazione. E non amichevole. Ora che siamo in guerra, finché {?TARGET_HERO.GENDER}ella{?}egli{\?} è libero, so che la mia vita e le mie terre non sono al sicuro. Come dico, non sarà affatto facile. Ma chiunque riesca a farlo, a portarmelo {?TARGET_HERO.GENDER}la{?}lo{\?} vivo, oltre ad avere la mia gratitudine, diventerà davvero un uomo molto ricco.[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con il sostegno di metà del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="UQq4ekeu" text="{RULER.NAME} di {KINGDOM} ha scelto di non firmare un accordo commerciale con {OTHER_KINGDOM}." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} ha chiamato {CALLED_KINGDOM_LINK} a dichiarare guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME} era un membro di {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK} è governata da {LORD.LINK}, {FACTION_OFFICIAL} di {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME} è a capo di {CLAN_NAME}, un nuovo clan emergente. {?LORD.GENDER}Lei{?}Lui{\?} sta ancora costruendo la {?LORD.GENDER}sua{?}sua{\?} reputazione." />
     <string id="vf2pb7Ts" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="Vg5RmOqL" text="{FACTION_LEADER} deciderà se {KINGDOM} firmerà un accordo commerciale con {OTHER_KINGDOM}. Puoi scegliere la tua posizione riguardo a questa decisione." />
@@ -528,9 +512,7 @@
     <string id="xhK4zMec" text="{RULER.NAME} ha deciso di chiamare {CALLED_KINGDOM} in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="xKev8i5B" text="La chiamata che {CALLING_KINGDOM_LINK} ha emesso a {CALLED_KINGDOM_LINK}, per entrare in guerra contro {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, è terminata." />
     <string id="xM97H0oR" text="Vota per dichiarare guerra a {KINGDOM_NAME}." />
-    <string id="yAOQnMVw" text="Sei di {FACTION}, giusto? Ciò significa che sei mio prigioniero." />
     <string id="yBL3TzXw" text="{RULER.NAME} ha scelto di non espellere il clan {CLAN} da {KINGDOM} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
-    <string id="YT4OvaAG" text="Molto bene. Puoi considerarti sotto la protezione di {FACTION_NAME}. Hai tempo fino a domani a quest'ora per completare il tuo viaggio, o potremmo chiederti un altro pagamento." />
     <string id="yUYNlQhU" text="Bene, farò scrivere ai miei uomini un semplice contratto. A nome di {KINGDOM_FORMAL_NAME}, ti do il benvenuto. Possa tu usare bene la tua spada contro i nostri nemici." />
     <string id="Zckbdm4Z" text="{RULER.NAME} di {KINGDOM} prende {SETTLEMENT} come {?RULER.GENDER}suo{?}suo{\?} feudo con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="zd9sawl9" text="Sei già alleato con {KINGDOM_NAME}." />
@@ -2116,318 +2098,352 @@
     <string id="l4pRw7pO" text="Carovana Armata di {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} truppe hanno disertato — rifiutano di servire un signore dell'allineamento opposto." />
     <string id="taom_troop_weight_size" text="Truppe pesanti" />
-    <string id="taom_res_desertion" text="{COUNT} truppe d'elite hanno disertato — le tue {RESOURCE} sono esaurite!" />
-    <string id="taom_feat_erebor_gw" text="Guarnigione nanica" />
-    <string id="taom_feat_erebor_gw_desc" text="Paghe della guarnigione ridotte del 25%." />
-    <string id="taom_feat_erebor_p" text="Industria nanica" />
-    <string id="taom_feat_erebor_p_desc" text="Produzione di tutti i villaggi aumentata del 10%." />
-    <string id="taom_feat_erebor_cs" text="Perfezionismo nanico" />
-    <string id="taom_feat_erebor_cs_desc" text="Velocità di costruzione ridotta del 15%." />
-    <string id="taom_feat_erebor_loy" text="Onore nanico" />
-    <string id="taom_feat_erebor_loy_desc" text="Lealtà dell'insediamento aumentata di 1 al giorno." />
-    <string id="taom_feat_erebor_mor" text="Testardaggine nanica" />
-    <string id="taom_feat_erebor_mor_desc" text="Morale del gruppo aumentato di 5." />
-    <string id="taom_feat_erebor_sm" text="Fabbri maestri" />
-    <string id="taom_feat_erebor_sm_desc" text="Costo in energia della forgiatura ridotto del 30%." />
-    <string id="taom_feat_erebor_ss" text="Popolo delle montagne" />
-    <string id="taom_feat_erebor_ss_desc" text="Velocità di movimento del gruppo aumentata del 10% sulla neve." />
-    <string id="taom_feat_erebor_ti" text="Parsimonia nanica" />
-    <string id="taom_feat_erebor_ti_desc" text="Entrate dei dazi aumentate del 5%." />
-    <string id="taom_feat_riv_ai" text="Saggezza elfica" />
-    <string id="taom_feat_riv_ai_desc" text="Influenza guadagnata dagli eserciti aumentata del 35%." />
-    <string id="taom_feat_riv_hg" text="L'Ultima Casa Accogliente" />
-    <string id="taom_feat_riv_hg_desc" text="Crescita dei focolari dei villaggi aumentata del 20%." />
-    <string id="taom_feat_riv_aic" text="Orgoglio elfico" />
-    <string id="taom_feat_riv_aic_desc" text="Il reclutamento dell'esercito costa il 25% di influenza in più." />
-    <string id="taom_feat_riv_fc" text="Frugalità elfica" />
-    <string id="taom_feat_riv_fc_desc" text="Consumo di cibo del gruppo ridotto del 15%." />
-    <string id="taom_feat_riv_loy" text="Saggezza elfica" />
-    <string id="taom_feat_riv_loy_desc" text="Lealtà dell'insediamento aumentata di 0,5 al giorno." />
-    <string id="taom_feat_riv_fs" text="Grazia silvana" />
-    <string id="taom_feat_riv_fs_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle foreste." />
-    <string id="taom_feat_mrk_fs" text="Reame Boscoso" />
-    <string id="taom_feat_mrk_fs_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle foreste." />
-    <string id="taom_feat_mrk_mp" text="Guardiani Silvani" />
-    <string id="taom_feat_mrk_mp_desc" text="25% di possibilità in più di milizia veterana." />
-    <string id="taom_feat_mrk_hg" text="Isolamento della foresta" />
-    <string id="taom_feat_mrk_hg_desc" text="Crescita dei focolari dei villaggi ridotta del 20%." />
-    <string id="taom_feat_mrk_fc" text="Sostentamento boschivo" />
-    <string id="taom_feat_mrk_fc_desc" text="Consumo di cibo del gruppo ridotto del 15%." />
-    <string id="taom_feat_mrk_mor" text="Legami boschivi" />
-    <string id="taom_feat_mrk_mor_desc" text="Morale del gruppo aumentato di 3." />
-    <string id="taom_feat_mrk_aic" text="Corte isolazionista" />
-    <string id="taom_feat_mrk_aic_desc" text="Il reclutamento dell'esercito costa il 15% di influenza in più." />
-    <string id="taom_feat_loth_fs" text="Bosco d'Oro" />
-    <string id="taom_feat_loth_fs_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle foreste." />
-    <string id="taom_feat_loth_gw" text="Guardiani di Lórien" />
-    <string id="taom_feat_loth_gw_desc" text="Paghe della guarnigione ridotte del 20%." />
-    <string id="taom_feat_loth_cs" text="Arte Intramontabile" />
-    <string id="taom_feat_loth_cs_desc" text="Velocità di costruzione ridotta del 10%." />
-    <string id="taom_feat_loth_fc" text="Pane di Lembas" />
-    <string id="taom_feat_loth_fc_desc" text="Consumo di cibo del gruppo ridotto del 15%." />
-    <string id="taom_feat_loth_loy" text="Grazia Elfica" />
-    <string id="taom_feat_loth_loy_desc" text="Lealtà dell'insediamento aumentata di 0,5 al giorno." />
-    <string id="taom_feat_loth_mor" text="Armonia Elfica" />
-    <string id="taom_feat_loth_mor_desc" text="Morale del gruppo aumentato di 3." />
-    <string id="taom_feat_loth_vr" text="Luce Declinante" />
-    <string id="taom_feat_loth_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi ridotto del 15%." />
-    <string id="taom_feat_isen_cr" text="Macchina da Guerra" />
-    <string id="taom_feat_isen_cr_desc" text="Costi di reclutamento e miglioramento delle truppe a cavallo ridotti del 15%." />
-    <string id="taom_feat_isen_gw" text="Guarnigione di Orthanc" />
-    <string id="taom_feat_isen_gw_desc" text="Paghe della guarnigione ridotte del 20%." />
-    <string id="taom_feat_isen_dp" text="La Morsa di Saruman" />
-    <string id="taom_feat_isen_dp_desc" text="Penalità di relazione per le decisioni del regno aumentate del 25%." />
-    <string id="taom_feat_isen_ps" text="Legioni Uruk-hai" />
-    <string id="taom_feat_isen_ps_desc" text="Limite di dimensione del gruppo aumentato del 20%." />
-    <string id="taom_feat_isen_cs" text="Potenza Industriale" />
-    <string id="taom_feat_isen_cs_desc" text="Velocità di costruzione aumentata del 15%." />
-    <string id="taom_feat_isen_sm" text="Fucine Industriali" />
-    <string id="taom_feat_isen_sm_desc" text="Costo di energia della forgiatura ridotto del 20%." />
-    <string id="taom_feat_isen_rd" text="Razzie della Macchina da Guerra" />
-    <string id="taom_feat_isen_rd_desc" text="Danni delle razzie aumentati del 20%." />
-    <string id="taom_feat_isen_ps2" text="Marcia Forzata" />
-    <string id="taom_feat_isen_ps2_desc" text="Velocità di movimento del gruppo aumentata del 10% in pianura." />
-    <string id="taom_feat_isen_sws" text="Istruttori delle Paludi" />
-    <string id="taom_feat_isen_sws_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle paludi." />
-    <string id="taom_feat_isen_nctm" text="Quartiermastri di Orthanc" />
-    <string id="taom_feat_isen_nctm_desc" text="+2 notabili mercanti nelle città." />
-    <string id="taom_feat_isen_ncta" text="Fucine Industriali" />
-    <string id="taom_feat_isen_ncta_desc" text="+1 notabile artigiano nelle città." />
-    <string id="taom_feat_isen_nctg" text="Capitani Uruk-hai" />
-    <string id="taom_feat_isen_nctg_desc" text="+12 notabili capibanda nelle città (l'unica città di Isengard diventa un grande centro di reclutamento)." />
-    <string id="taom_feat_isen_ncv" text="Pressa di Ferro" />
-    <string id="taom_feat_isen_ncv_desc" text="Numero di notabili nei villaggi aumentato del 10%." />
-    <string id="taom_feat_gun_aic" text="Orda di orchi" />
-    <string id="taom_feat_gun_aic_desc" text="Il reclutamento dell'esercito costa il 40% di influenza in meno." />
-    <string id="taom_feat_gun_gp" text="Scorte saccheggiate" />
-    <string id="taom_feat_gun_gp_desc" text="Produzione di grano aumentata del 15%." />
-    <string id="taom_feat_gun_w" text="Richieste di saccheggio" />
-    <string id="taom_feat_gun_w_desc" text="Paghe della compagnia aumentate del 10%." />
-    <string id="taom_feat_gun_ps" text="Sciame della montagna" />
-    <string id="taom_feat_gun_ps_desc" text="Limite di dimensione della compagnia aumentato del 20%." />
-    <string id="taom_feat_gun_rd" text="Predoni orcheschi" />
-    <string id="taom_feat_gun_rd_desc" text="Danni da razzia aumentati del 25%." />
-    <string id="taom_feat_gun_ss" text="Saccheggiatori della montagna" />
-    <string id="taom_feat_gun_ss_desc" text="Velocità di movimento della compagnia aumentata del 10% sulla neve." />
-    <string id="taom_feat_gun_vr" text="Leve della montagna" />
-    <string id="taom_feat_gun_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 20%." />
-    <string id="taom_feat_gun_ncta" text="Fabbri d'ossa" />
-    <string id="taom_feat_gun_ncta_desc" text="+1 notabile artigiano nelle città." />
-    <string id="taom_feat_gun_nctg" text="Capitribù della Banda Pallida" />
-    <string id="taom_feat_gun_nctg_desc" text="+3 notabili capibanda nelle città." />
-    <string id="taom_feat_gun_ncv" text="Accampamenti d'ossa" />
-    <string id="taom_feat_gun_ncv_desc" text="Numero di notabili nei villaggi aumentato del 10%." />
-    <string id="taom_feat_gob_ps" text="Sciame di goblin" />
-    <string id="taom_feat_gob_ps_desc" text="Limite di dimensione della compagnia aumentato del 40%." />
-    <string id="taom_feat_gob_vr" text="Progenie infinita" />
-    <string id="taom_feat_gob_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 25%." />
-    <string id="taom_feat_gob_ss" text="Corridori dei tunnel" />
-    <string id="taom_feat_gob_ss_desc" text="Velocità di movimento della compagnia aumentata del 10% sulla neve." />
-    <string id="taom_feat_gob_fc" text="Sciame vorace" />
-    <string id="taom_feat_gob_fc_desc" text="Consumo di cibo della compagnia aumentato del 20%." />
-    <string id="taom_feat_gob_sm" text="Tesoro di armi catturate" />
-    <string id="taom_feat_gob_sm_desc" text="Costo in energia della forgiatura ridotto del 10%." />
-    <string id="taom_feat_gob_rd" text="Imboscata dei goblin" />
-    <string id="taom_feat_gob_rd_desc" text="Danni da razzia aumentati del 10%." />
-    <string id="taom_feat_mmo_aic" text="Orda di orchi" />
-    <string id="taom_feat_mmo_aic_desc" text="Il reclutamento dell'esercito costa il 40% di influenza in meno." />
-    <string id="taom_feat_mmo_ps" text="Schiera della montagna" />
-    <string id="taom_feat_mmo_ps_desc" text="Limite di dimensione della compagnia aumentato del 30%." />
-    <string id="taom_feat_mmo_ss" text="Nati nella montagna" />
-    <string id="taom_feat_mmo_ss_desc" text="Velocità di movimento della compagnia aumentata del 10% sulla neve." />
-    <string id="taom_feat_mmo_fc" text="Schiera affamata" />
-    <string id="taom_feat_mmo_fc_desc" text="Consumo di cibo del gruppo aumentato del 15%." />
-    <string id="taom_feat_mmo_sm" text="Fucine saccheggiate" />
-    <string id="taom_feat_mmo_sm_desc" text="Costo di energia della forgiatura ridotto del 15%." />
-    <string id="taom_feat_mmo_rd" text="Leva dei troll delle caverne" />
-    <string id="taom_feat_mmo_rd_desc" text="Danno dei saccheggi aumentato del 15%." />
-    <string id="taom_feat_mmo_cs" text="Sale riecheggianti" />
-    <string id="taom_feat_mmo_cs_desc" text="Velocità di costruzione ridotta del 10%." />
-    <string id="taom_feat_umb_cc" text="Commercio dei corsari" />
-    <string id="taom_feat_umb_cc_desc" text="Costo di formazione delle carovane ridotto del 25%." />
-    <string id="taom_feat_umb_r" text="Gloria dei corsari" />
-    <string id="taom_feat_umb_r_desc" text="Fama ottenuta dalle battaglie aumentata dell'8%." />
-    <string id="taom_feat_umb_w" text="Avidità dei corsari" />
-    <string id="taom_feat_umb_w_desc" text="Paghe del gruppo aumentate dell'8%." />
-    <string id="taom_feat_umb_ti" text="Reti commerciali dei corsari" />
-    <string id="taom_feat_umb_ti_desc" text="Introiti dei dazi aumentati del 15%." />
-    <string id="taom_feat_umb_ds" text="Corsari del deserto" />
-    <string id="taom_feat_umb_ds_desc" text="Velocità di movimento del gruppo aumentata del 10% nei deserti." />
-    <string id="taom_feat_umb_rd" text="Dottrina di razzia dei corsari" />
-    <string id="taom_feat_umb_rd_desc" text="Danno dei saccheggi aumentato del 20%." />
-    <string id="taom_feat_umb_fc" text="Resistenza dei Númenóreani Neri" />
-    <string id="taom_feat_umb_fc_desc" text="Consumo di cibo del gruppo ridotto del 10%." />
-    <string id="taom_feat_dg_aic" text="Comando dell'Ombra" />
-    <string id="taom_feat_dg_aic_desc" text="Il reclutamento dell'esercito costa il 50% di influenza in meno." />
-    <string id="taom_feat_dg_mp" text="Coscrizione oscura" />
-    <string id="taom_feat_dg_mp_desc" text="20% di probabilità in più di milizia veterana." />
-    <string id="taom_feat_dg_cs" text="Opere rovinose" />
-    <string id="taom_feat_dg_cs_desc" text="Velocità di costruzione ridotta del 20%." />
-    <string id="taom_feat_dg_ps" text="Legioni oscure" />
-    <string id="taom_feat_dg_ps_desc" text="Limite di dimensione del gruppo aumentato del 20%." />
-    <string id="taom_feat_dg_fc" text="Orde voraci" />
-    <string id="taom_feat_dg_fc_desc" text="Consumo di cibo del gruppo aumentato del 10%." />
-    <string id="taom_feat_dg_vr" text="Coscritti oscuri" />
-    <string id="taom_feat_dg_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 20%." />
-    <string id="taom_feat_dg_nctm" text="Mediatori dell'Ombra" />
-    <string id="taom_feat_dg_nctm_desc" text="+1 notabile mercante nelle città." />
-    <string id="taom_feat_dg_ncta" text="Fucine oscure" />
-    <string id="taom_feat_dg_ncta_desc" text="+1 notabile artigiano nelle città." />
-    <string id="taom_feat_dg_nctg" text="Capitani dell'Ombra" />
-    <string id="taom_feat_dg_nctg_desc" text="+13 notabili capibanda nelle città (centro di comando dell'ombra di Dol Guldur)." />
-    <string id="taom_feat_dg_ncv" text="Tuguri nascosti" />
-    <string id="taom_feat_dg_ncv_desc" text="Numero di notabili nei villaggi aumentato del 10%." />
-    <string id="taom_feat_gon_gw" text="Guardia della Torre" />
-    <string id="taom_feat_gon_gw_desc" text="Paghe della guarnigione ridotte del 20%." />
-    <string id="taom_feat_gon_ai" text="Disciplina gondoriana" />
-    <string id="taom_feat_gon_ai_desc" text="Influenza guadagnata con l'armata aumentata del 30%." />
-    <string id="taom_feat_gon_hg" text="Terre svuotate dalla guerra" />
-    <string id="taom_feat_gon_hg_desc" text="Crescita dei focolari nei villaggi ridotta del 15%." />
-    <string id="taom_feat_gon_ps" text="Eserciti permanenti" />
-    <string id="taom_feat_gon_ps_desc" text="Limite di dimensione del gruppo aumentato del 2,5%." />
-    <string id="taom_feat_gon_loy" text="Disciplina della Guardia della Torre" />
-    <string id="taom_feat_gon_loy_desc" text="Lealtà degli insediamenti aumentata di 1 al giorno." />
-    <string id="taom_feat_gon_mor" text="Fermezza gondoriana" />
-    <string id="taom_feat_gon_mor_desc" text="Morale del gruppo aumentato di 5." />
-    <string id="taom_feat_gon_ps2" text="Uomini dei campi" />
-    <string id="taom_feat_gon_ps2_desc" text="Velocità di movimento del gruppo aumentata del 10% in pianura." />
-    <string id="taom_feat_mor_aic" text="Volontà dell'Oscuro Signore" />
-    <string id="taom_feat_mor_aic_desc" text="Il reclutamento dell'armata costa il 60% di influenza in meno." />
-    <string id="taom_feat_mor_gp" text="Campi di Nurn" />
-    <string id="taom_feat_mor_gp_desc" text="Produzione di grano aumentata del 20%." />
-    <string id="taom_feat_mor_w" text="Tributo oscuro" />
-    <string id="taom_feat_mor_w_desc" text="Paghe del gruppo aumentate del 20%." />
-    <string id="taom_feat_mor_ps" text="Le orde di Sauron" />
-    <string id="taom_feat_mor_ps_desc" text="Limite di dimensione del gruppo aumentato del 10%." />
-    <string id="taom_feat_mor_rd" text="L'ira di Sauron" />
-    <string id="taom_feat_mor_rd_desc" text="Danni delle razzie aumentati del 25%." />
-    <string id="taom_feat_mor_pls" text="Marcia d'ombra" />
-    <string id="taom_feat_mor_pls_desc" text="Velocità di movimento del gruppo aumentata del 5% in pianura." />
-    <string id="taom_feat_mor_sws" text="Paludi Morte" />
-    <string id="taom_feat_mor_sws_desc" text="Velocità di movimento del gruppo aumentata del 5% nelle paludi." />
-    <string id="taom_feat_mor_ns" text="Creature dell'oscurità" />
-    <string id="taom_feat_mor_ns_desc" text="Velocità di movimento del gruppo aumentata del 10% di notte." />
-    <string id="taom_feat_mor_vr" text="La leva di Sauron" />
-    <string id="taom_feat_mor_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 20%." />
-    <string id="taom_feat_mord_sm" text="Forgiatura oscura" />
-    <string id="taom_feat_mord_sm_desc" text="Costo in energia della forgiatura ridotto del 15%." />
-    <string id="taom_feat_mor_nctg" text="Araldi della Lingua Nera" />
-    <string id="taom_feat_mor_nctg_desc" text="+2 notabili capibanda nelle città." />
-    <string id="taom_feat_mor_ncv" text="Aguzzini di schiavi" />
-    <string id="taom_feat_mor_ncv_desc" text="Numero di notabili nei villaggi aumentato del 5%." />
-    <string id="taom_feat_roh_mc" text="Eredità dei Signori dei Cavalli" />
-    <string id="taom_feat_roh_mc_desc" text="Costi di reclutamento e potenziamento delle truppe a cavallo ridotti del 15%." />
-    <string id="taom_feat_roh_mw" text="Cavalieri della Marca" />
-    <string id="taom_feat_roh_mw_desc" text="Paghe delle truppe a cavallo ridotte del 15%." />
-    <string id="taom_feat_roh_is" text="Dipendenza dalla cavalleria" />
-    <string id="taom_feat_roh_is_desc" text="Velocità del gruppo ridotta del 10% se composto in maggioranza da fanteria." />
-    <string id="taom_feat_roh_loy" text="Fratellanza dei Signori dei Cavalli" />
-    <string id="taom_feat_roh_loy_desc" text="Lealtà dell'insediamento aumentata di 0,5 al giorno." />
-    <string id="taom_feat_roh_mor" text="Spirito dei Cavalieri" />
-    <string id="taom_feat_roh_mor_desc" text="Morale del gruppo aumentato di 5." />
-    <string id="taom_feat_roh_pls" text="Cavalieri delle Pianure" />
-    <string id="taom_feat_roh_pls_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle pianure." />
-    <string id="taom_feat_dale_pls" text="Mercanti della Valle" />
-    <string id="taom_feat_dale_pls_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle pianure." />
-    <string id="taom_feat_dale_ti" text="Alleanza commerciale nanica" />
-    <string id="taom_feat_dale_ti_desc" text="Entrate dai dazi aumentate del 10%." />
-    <string id="taom_feat_dale_r" text="Tradizione della Freccia Nera" />
-    <string id="taom_feat_dale_r_desc" text="Fama in battaglia aumentata del 10%." />
-    <string id="taom_feat_dale_loy" text="Vulnerabilità di un piccolo territorio" />
-    <string id="taom_feat_dale_loy_desc" text="Lealtà dell'insediamento ridotta di 0,5 al giorno." />
-    <string id="taom_feat_khand_sts" text="Aurighi della steppa" />
-    <string id="taom_feat_khand_sts_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle steppe." />
-    <string id="taom_feat_khand_r" text="Premio mercenario" />
-    <string id="taom_feat_khand_r_desc" text="Fama in battaglia aumentata dell'8%." />
-    <string id="taom_feat_khand_ti" text="Tributo a Mordor" />
-    <string id="taom_feat_khand_ti_desc" text="Entrate dai dazi ridotte del 10%." />
-    <string id="taom_feat_khand_fc" text="Resistenza della steppa" />
-    <string id="taom_feat_khand_fc_desc" text="Consumo di cibo del gruppo ridotto del 10%." />
-    <string id="taom_feat_khand_ps" text="Mobilità degli aurighi" />
-    <string id="taom_feat_khand_ps_desc" text="Limite di dimensione del gruppo aumentato del 5%." />
-    <string id="taom_feat_rhun_sts" text="Esploratori a cavallo Orientali" />
-    <string id="taom_feat_rhun_sts_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle steppe." />
-    <string id="taom_feat_rhun_ps" text="Schiera degli Orientali" />
-    <string id="taom_feat_rhun_ps_desc" text="Limite di dimensione del gruppo aumentato del 5%." />
-    <string id="taom_feat_rhun_loy" text="Tributo degli Orientali" />
-    <string id="taom_feat_rhun_loy_desc" text="Lealtà dell'insediamento ridotta di 0,5 al giorno." />
-    <string id="taom_feat_rhun_rd" text="Dottrina dei razziatori della steppa" />
-    <string id="taom_feat_rhun_rd_desc" text="Danni da razzia aumentati del 15%." />
-    <string id="taom_feat_har_ds" text="Figli del Sole" />
-    <string id="taom_feat_har_ds_desc" text="Velocità di movimento del gruppo aumentata del 10% nei deserti." />
-    <string id="taom_feat_har_ps" text="Bande guerriere degli Haradrim" />
-    <string id="taom_feat_har_ps_desc" text="Limite di dimensione del gruppo aumentato del 5%." />
-    <string id="taom_feat_harad_mor" text="Conducenti di Mûmakil" />
-    <string id="taom_feat_harad_mor_desc" text="Morale del gruppo aumentato di 5." />
-    <string id="taom_feat_harad_fc" text="Resistenza del deserto" />
-    <string id="taom_feat_harad_fc_desc" text="Consumo di cibo del gruppo ridotto del 15%." />
-    <string id="taom_feat_harad_rd" text="Ferocia dell'Harad Lontano" />
-    <string id="taom_feat_harad_rd_desc" text="Danni da razzia aumentati del 15%." />
-    <string id="taom_feat_harad_aic" text="Tribù divise" />
-    <string id="taom_feat_harad_aic_desc" text="Il reclutamento dell'esercito costa il 15% di influenza in più." />
-    <string id="taom_feat_dun_pls" text="Marciatori delle colline" />
-    <string id="taom_feat_dun_pls_desc" text="Velocità di movimento del gruppo aumentata del 10% in pianura." />
-    <string id="taom_feat_dun_ps" text="Leva delle tribù collinari" />
-    <string id="taom_feat_dun_ps_desc" text="Limite di dimensione del gruppo aumentato del 5%." />
-    <string id="taom_feat_dun_vr" text="Reclutamento delle tribù collinari" />
-    <string id="taom_feat_dun_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 10%." />
-    <string id="taom_feat_shg_ds" text="Vagabondi delle dune" />
-    <string id="taom_feat_shg_ds_desc" text="Velocità di movimento del gruppo aumentata del 10% nei deserti." />
-    <string id="taom_feat_aba_ds" text="Nomadi del deserto profondo" />
-    <string id="taom_feat_aba_ds_desc" text="Velocità di movimento del gruppo aumentata del 10% nei deserti." />
-    <string id="taom_ep_no_hero" text="Nessun eroe attivo nella schermata dell'inventario." />
-    <string id="taom_ep_save" text="Salva nuovo" />
-    <string id="taom_ep_save_hint" text="Salva l'equipaggiamento attuale come nuovo preset." />
-    <string id="taom_ep_load" text="Carica" />
-    <string id="taom_ep_load_hint" text="Equipaggia un preset salvato." />
-    <string id="taom_ep_update" text="Aggiorna" />
-    <string id="taom_ep_update_hint" text="Sovrascrivi un preset salvato con l'equipaggiamento attuale." />
-    <string id="taom_ep_delete" text="Elimina" />
-    <string id="taom_ep_delete_hint" text="Rimuovi un preset." />
-    <string id="taom_ep_title" text="Preset di equipaggiamento" />
-    <string id="taom_ep_ok" text="OK" />
-    <string id="taom_ep_cancel" text="Annulla" />
-    <string id="taom_ep_header" text="Eroe: {HERO}  Preset: {COUNT}/{MAX}" />
-    <string id="taom_ep_save_title" text="Salva preset" />
-    <string id="taom_ep_save_msg" text="Inserisci un nome. Il preset registra il tuo equipaggiamento da battaglia e civile attuale, oltre alla cavalcatura." />
-    <string id="taom_ep_select_load" text="Carica preset" />
-    <string id="taom_ep_select_update" text="Aggiorna preset" />
-    <string id="taom_ep_select_delete" text="Elimina preset" />
-    <string id="taom_ep_select" text="Seleziona preset" />
-    <string id="taom_ep_load_failed" text="Caricamento fallito." />
-    <string id="taom_ep_load_partial" text="Caricati {EQUIPPED} oggetto/i. Oggetti mancanti: {MISS_ITEMS}. Modificatori mancanti: {MISS_MODS}." />
-    <string id="taom_ep_load_ok" text="Preset caricato ({COUNT} oggetti)." />
-    <string id="taom_ep_updated" text="Preset aggiornato." />
-    <string id="taom_ep_notfound" text="Preset non trovato." />
-    <string id="taom_ep_disabled" text="I preset di equipaggiamento sono disattivati in MCM." />
-    <string id="taom_ep_delete_title" text="Elimina preset" />
-    <string id="taom_ep_delete_msg" text="Sei sicuro di voler eliminare questo preset?" />
-    <string id="taom_ep_yes" text="Sì" />
-    <string id="taom_ep_no" text="No" />
-    <string id="taom_ep_deleted" text="Preset eliminato." />
-    <string id="taom_ep_saved" text="Preset '{NAME}' salvato." />
-    <string id="taom_ep_max" text="Numero massimo di preset raggiunto ({MAX}). Eliminane uno per salvarne uno nuovo." />
-    <string id="taom_ep_bad_name" text="Il nome del preset non può essere vuoto." />
-    <string id="taom_ep_psummary" text="Battaglia: {B}  Civile: {C}  Cavalcatura: {M}" />
-    <string id="taom_fief_hub_empty" text="Gestione feudi — nessun feudo posseduto" />
-    <string id="taom_fief_hub_title" text="Gestione feudi — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
-    <string id="taom_fief_kind_town" text="Città" />
-    <string id="taom_fief_kind_castle" text="Castello" />
-    <string id="taom_fief_hub_remote_disabled" text="Coda di costruzione a distanza disattivata — visita il feudo per gestirla." />
-    <string id="taom_fief_hub_prev" text="Feudo precedente" />
-    <string id="taom_fief_hub_next" text="Feudo successivo" />
-    <string id="taom_fief_hub_manage" text="Gestisci questo feudo" />
-    <string id="taom_fief_hub_leave" text="Esci" />
-    <string id="taom_fief_no_fiefs" text="Non possiedi ancora alcun feudo." />
-    <string id="taom_fief_nav_label" text="Feudi" />
-    <string id="taom_qa_title" text="Azioni rapide" />
-    <string id="taom_qa_desc" text="Seleziona un'azione." />
-    <string id="taom_qa_ok" text="OK" />
-    <string id="taom_qa_cancel" text="Annulla" />
-    <string id="taom_qa_confirm_title" text="Conferma" />
-    <string id="taom_qa_confirm_msg" text="Applicare questa azione in blocco?" />
-    <string id="taom_qa_yes" text="Sì" />
-    <string id="taom_qa_no" text="No" />
-    <string id="taom_extra_fast_forward_hint" text="Avanzamento extra rapido (E)" />
+    <string id="taom_res_desertion" text="{COUNT} truppe d'elite hanno disertato — le tue {RESOURCE} sono esaurite!" />
+    <string id="taom_feat_erebor_gw" text="Guarnigione nanica" />
+    <string id="taom_feat_erebor_gw_desc" text="Paghe della guarnigione ridotte del 25%." />
+    <string id="taom_feat_erebor_p" text="Industria nanica" />
+    <string id="taom_feat_erebor_p_desc" text="Produzione di tutti i villaggi aumentata del 10%." />
+    <string id="taom_feat_erebor_cs" text="Perfezionismo nanico" />
+    <string id="taom_feat_erebor_cs_desc" text="Velocità di costruzione ridotta del 15%." />
+    <string id="taom_feat_erebor_loy" text="Onore nanico" />
+    <string id="taom_feat_erebor_loy_desc" text="Lealtà dell'insediamento aumentata di 1 al giorno." />
+    <string id="taom_feat_erebor_mor" text="Testardaggine nanica" />
+    <string id="taom_feat_erebor_mor_desc" text="Morale del gruppo aumentato di 5." />
+    <string id="taom_feat_erebor_sm" text="Fabbri maestri" />
+    <string id="taom_feat_erebor_sm_desc" text="Costo in energia della forgiatura ridotto del 30%." />
+    <string id="taom_feat_erebor_ss" text="Popolo delle montagne" />
+    <string id="taom_feat_erebor_ss_desc" text="Velocità di movimento del gruppo aumentata del 10% sulla neve." />
+    <string id="taom_feat_erebor_ti" text="Parsimonia nanica" />
+    <string id="taom_feat_erebor_ti_desc" text="Entrate dei dazi aumentate del 5%." />
+    <string id="taom_feat_riv_ai" text="Saggezza elfica" />
+    <string id="taom_feat_riv_ai_desc" text="Influenza guadagnata dagli eserciti aumentata del 35%." />
+    <string id="taom_feat_riv_hg" text="L'Ultima Casa Accogliente" />
+    <string id="taom_feat_riv_hg_desc" text="Crescita dei focolari dei villaggi aumentata del 20%." />
+    <string id="taom_feat_riv_aic" text="Orgoglio elfico" />
+    <string id="taom_feat_riv_aic_desc" text="Il reclutamento dell'esercito costa il 25% di influenza in più." />
+    <string id="taom_feat_riv_fc" text="Frugalità elfica" />
+    <string id="taom_feat_riv_fc_desc" text="Consumo di cibo del gruppo ridotto del 15%." />
+    <string id="taom_feat_riv_loy" text="Saggezza elfica" />
+    <string id="taom_feat_riv_loy_desc" text="Lealtà dell'insediamento aumentata di 0,5 al giorno." />
+    <string id="taom_feat_riv_fs" text="Grazia silvana" />
+    <string id="taom_feat_riv_fs_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle foreste." />
+    <string id="taom_feat_mrk_fs" text="Reame Boscoso" />
+    <string id="taom_feat_mrk_fs_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle foreste." />
+    <string id="taom_feat_mrk_mp" text="Guardiani Silvani" />
+    <string id="taom_feat_mrk_mp_desc" text="25% di possibilità in più di milizia veterana." />
+    <string id="taom_feat_mrk_hg" text="Isolamento della foresta" />
+    <string id="taom_feat_mrk_hg_desc" text="Crescita dei focolari dei villaggi ridotta del 20%." />
+    <string id="taom_feat_mrk_fc" text="Sostentamento boschivo" />
+    <string id="taom_feat_mrk_fc_desc" text="Consumo di cibo del gruppo ridotto del 15%." />
+    <string id="taom_feat_mrk_mor" text="Legami boschivi" />
+    <string id="taom_feat_mrk_mor_desc" text="Morale del gruppo aumentato di 3." />
+    <string id="taom_feat_mrk_aic" text="Corte isolazionista" />
+    <string id="taom_feat_mrk_aic_desc" text="Il reclutamento dell'esercito costa il 15% di influenza in più." />
+    <string id="taom_feat_loth_fs" text="Bosco d'Oro" />
+    <string id="taom_feat_loth_fs_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle foreste." />
+    <string id="taom_feat_loth_gw" text="Guardiani di Lórien" />
+    <string id="taom_feat_loth_gw_desc" text="Paghe della guarnigione ridotte del 20%." />
+    <string id="taom_feat_loth_cs" text="Arte Intramontabile" />
+    <string id="taom_feat_loth_cs_desc" text="Velocità di costruzione ridotta del 10%." />
+    <string id="taom_feat_loth_fc" text="Pane di Lembas" />
+    <string id="taom_feat_loth_fc_desc" text="Consumo di cibo del gruppo ridotto del 15%." />
+    <string id="taom_feat_loth_loy" text="Grazia Elfica" />
+    <string id="taom_feat_loth_loy_desc" text="Lealtà dell'insediamento aumentata di 0,5 al giorno." />
+    <string id="taom_feat_loth_mor" text="Armonia Elfica" />
+    <string id="taom_feat_loth_mor_desc" text="Morale del gruppo aumentato di 3." />
+    <string id="taom_feat_loth_vr" text="Luce Declinante" />
+    <string id="taom_feat_loth_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi ridotto del 15%." />
+    <string id="taom_feat_isen_cr" text="Macchina da Guerra" />
+    <string id="taom_feat_isen_cr_desc" text="Costi di reclutamento e miglioramento delle truppe a cavallo ridotti del 15%." />
+    <string id="taom_feat_isen_gw" text="Guarnigione di Orthanc" />
+    <string id="taom_feat_isen_gw_desc" text="Paghe della guarnigione ridotte del 20%." />
+    <string id="taom_feat_isen_dp" text="La Morsa di Saruman" />
+    <string id="taom_feat_isen_dp_desc" text="Penalità di relazione per le decisioni del regno aumentate del 25%." />
+    <string id="taom_feat_isen_ps" text="Legioni Uruk-hai" />
+    <string id="taom_feat_isen_ps_desc" text="Limite di dimensione del gruppo aumentato del 20%." />
+    <string id="taom_feat_isen_cs" text="Potenza Industriale" />
+    <string id="taom_feat_isen_cs_desc" text="Velocità di costruzione aumentata del 15%." />
+    <string id="taom_feat_isen_sm" text="Fucine Industriali" />
+    <string id="taom_feat_isen_sm_desc" text="Costo di energia della forgiatura ridotto del 20%." />
+    <string id="taom_feat_isen_rd" text="Razzie della Macchina da Guerra" />
+    <string id="taom_feat_isen_rd_desc" text="Danni delle razzie aumentati del 20%." />
+    <string id="taom_feat_isen_ps2" text="Marcia Forzata" />
+    <string id="taom_feat_isen_ps2_desc" text="Velocità di movimento del gruppo aumentata del 10% in pianura." />
+    <string id="taom_feat_isen_sws" text="Istruttori delle Paludi" />
+    <string id="taom_feat_isen_sws_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle paludi." />
+    <string id="taom_feat_isen_nctm" text="Quartiermastri di Orthanc" />
+    <string id="taom_feat_isen_nctm_desc" text="+2 notabili mercanti nelle città." />
+    <string id="taom_feat_isen_ncta" text="Fucine Industriali" />
+    <string id="taom_feat_isen_ncta_desc" text="+1 notabile artigiano nelle città." />
+    <string id="taom_feat_isen_nctg" text="Capitani Uruk-hai" />
+    <string id="taom_feat_isen_nctg_desc" text="+12 notabili capibanda nelle città (l'unica città di Isengard diventa un grande centro di reclutamento)." />
+    <string id="taom_feat_isen_ncv" text="Pressa di Ferro" />
+    <string id="taom_feat_isen_ncv_desc" text="Numero di notabili nei villaggi aumentato del 10%." />
+    <string id="taom_feat_gun_aic" text="Orda di orchi" />
+    <string id="taom_feat_gun_aic_desc" text="Il reclutamento dell'esercito costa il 40% di influenza in meno." />
+    <string id="taom_feat_gun_gp" text="Scorte saccheggiate" />
+    <string id="taom_feat_gun_gp_desc" text="Produzione di grano aumentata del 15%." />
+    <string id="taom_feat_gun_w" text="Richieste di saccheggio" />
+    <string id="taom_feat_gun_w_desc" text="Paghe della compagnia aumentate del 10%." />
+    <string id="taom_feat_gun_ps" text="Sciame della montagna" />
+    <string id="taom_feat_gun_ps_desc" text="Limite di dimensione della compagnia aumentato del 20%." />
+    <string id="taom_feat_gun_rd" text="Predoni orcheschi" />
+    <string id="taom_feat_gun_rd_desc" text="Danni da razzia aumentati del 25%." />
+    <string id="taom_feat_gun_ss" text="Saccheggiatori della montagna" />
+    <string id="taom_feat_gun_ss_desc" text="Velocità di movimento della compagnia aumentata del 10% sulla neve." />
+    <string id="taom_feat_gun_vr" text="Leve della montagna" />
+    <string id="taom_feat_gun_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 20%." />
+    <string id="taom_feat_gun_ncta" text="Fabbri d'ossa" />
+    <string id="taom_feat_gun_ncta_desc" text="+1 notabile artigiano nelle città." />
+    <string id="taom_feat_gun_nctg" text="Capitribù della Banda Pallida" />
+    <string id="taom_feat_gun_nctg_desc" text="+3 notabili capibanda nelle città." />
+    <string id="taom_feat_gun_ncv" text="Accampamenti d'ossa" />
+    <string id="taom_feat_gun_ncv_desc" text="Numero di notabili nei villaggi aumentato del 10%." />
+    <string id="taom_feat_gob_ps" text="Sciame di goblin" />
+    <string id="taom_feat_gob_ps_desc" text="Limite di dimensione della compagnia aumentato del 40%." />
+    <string id="taom_feat_gob_vr" text="Progenie infinita" />
+    <string id="taom_feat_gob_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 25%." />
+    <string id="taom_feat_gob_ss" text="Corridori dei tunnel" />
+    <string id="taom_feat_gob_ss_desc" text="Velocità di movimento della compagnia aumentata del 10% sulla neve." />
+    <string id="taom_feat_gob_fc" text="Sciame vorace" />
+    <string id="taom_feat_gob_fc_desc" text="Consumo di cibo della compagnia aumentato del 20%." />
+    <string id="taom_feat_gob_sm" text="Tesoro di armi catturate" />
+    <string id="taom_feat_gob_sm_desc" text="Costo in energia della forgiatura ridotto del 10%." />
+    <string id="taom_feat_gob_rd" text="Imboscata dei goblin" />
+    <string id="taom_feat_gob_rd_desc" text="Danni da razzia aumentati del 10%." />
+    <string id="taom_feat_mmo_aic" text="Orda di orchi" />
+    <string id="taom_feat_mmo_aic_desc" text="Il reclutamento dell'esercito costa il 40% di influenza in meno." />
+    <string id="taom_feat_mmo_ps" text="Schiera della montagna" />
+    <string id="taom_feat_mmo_ps_desc" text="Limite di dimensione della compagnia aumentato del 30%." />
+    <string id="taom_feat_mmo_ss" text="Nati nella montagna" />
+    <string id="taom_feat_mmo_ss_desc" text="Velocità di movimento della compagnia aumentata del 10% sulla neve." />
+    <string id="taom_feat_mmo_fc" text="Schiera affamata" />
+    <string id="taom_feat_mmo_fc_desc" text="Consumo di cibo del gruppo aumentato del 15%." />
+    <string id="taom_feat_mmo_sm" text="Fucine saccheggiate" />
+    <string id="taom_feat_mmo_sm_desc" text="Costo di energia della forgiatura ridotto del 15%." />
+    <string id="taom_feat_mmo_rd" text="Leva dei troll delle caverne" />
+    <string id="taom_feat_mmo_rd_desc" text="Danno dei saccheggi aumentato del 15%." />
+    <string id="taom_feat_mmo_cs" text="Sale riecheggianti" />
+    <string id="taom_feat_mmo_cs_desc" text="Velocità di costruzione ridotta del 10%." />
+    <string id="taom_feat_umb_cc" text="Commercio dei corsari" />
+    <string id="taom_feat_umb_cc_desc" text="Costo di formazione delle carovane ridotto del 25%." />
+    <string id="taom_feat_umb_r" text="Gloria dei corsari" />
+    <string id="taom_feat_umb_r_desc" text="Fama ottenuta dalle battaglie aumentata dell'8%." />
+    <string id="taom_feat_umb_w" text="Avidità dei corsari" />
+    <string id="taom_feat_umb_w_desc" text="Paghe del gruppo aumentate dell'8%." />
+    <string id="taom_feat_umb_ti" text="Reti commerciali dei corsari" />
+    <string id="taom_feat_umb_ti_desc" text="Introiti dei dazi aumentati del 15%." />
+    <string id="taom_feat_umb_ds" text="Corsari del deserto" />
+    <string id="taom_feat_umb_ds_desc" text="Velocità di movimento del gruppo aumentata del 10% nei deserti." />
+    <string id="taom_feat_umb_rd" text="Dottrina di razzia dei corsari" />
+    <string id="taom_feat_umb_rd_desc" text="Danno dei saccheggi aumentato del 20%." />
+    <string id="taom_feat_umb_fc" text="Resistenza dei Númenóreani Neri" />
+    <string id="taom_feat_umb_fc_desc" text="Consumo di cibo del gruppo ridotto del 10%." />
+    <string id="taom_feat_dg_aic" text="Comando dell'Ombra" />
+    <string id="taom_feat_dg_aic_desc" text="Il reclutamento dell'esercito costa il 50% di influenza in meno." />
+    <string id="taom_feat_dg_mp" text="Coscrizione oscura" />
+    <string id="taom_feat_dg_mp_desc" text="20% di probabilità in più di milizia veterana." />
+    <string id="taom_feat_dg_cs" text="Opere rovinose" />
+    <string id="taom_feat_dg_cs_desc" text="Velocità di costruzione ridotta del 20%." />
+    <string id="taom_feat_dg_ps" text="Legioni oscure" />
+    <string id="taom_feat_dg_ps_desc" text="Limite di dimensione del gruppo aumentato del 20%." />
+    <string id="taom_feat_dg_fc" text="Orde voraci" />
+    <string id="taom_feat_dg_fc_desc" text="Consumo di cibo del gruppo aumentato del 10%." />
+    <string id="taom_feat_dg_vr" text="Coscritti oscuri" />
+    <string id="taom_feat_dg_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 20%." />
+    <string id="taom_feat_dg_nctm" text="Mediatori dell'Ombra" />
+    <string id="taom_feat_dg_nctm_desc" text="+1 notabile mercante nelle città." />
+    <string id="taom_feat_dg_ncta" text="Fucine oscure" />
+    <string id="taom_feat_dg_ncta_desc" text="+1 notabile artigiano nelle città." />
+    <string id="taom_feat_dg_nctg" text="Capitani dell'Ombra" />
+    <string id="taom_feat_dg_nctg_desc" text="+13 notabili capibanda nelle città (centro di comando dell'ombra di Dol Guldur)." />
+    <string id="taom_feat_dg_ncv" text="Tuguri nascosti" />
+    <string id="taom_feat_dg_ncv_desc" text="Numero di notabili nei villaggi aumentato del 10%." />
+    <string id="taom_feat_gon_gw" text="Guardia della Torre" />
+    <string id="taom_feat_gon_gw_desc" text="Paghe della guarnigione ridotte del 20%." />
+    <string id="taom_feat_gon_ai" text="Disciplina gondoriana" />
+    <string id="taom_feat_gon_ai_desc" text="Influenza guadagnata con l'armata aumentata del 30%." />
+    <string id="taom_feat_gon_hg" text="Terre svuotate dalla guerra" />
+    <string id="taom_feat_gon_hg_desc" text="Crescita dei focolari nei villaggi ridotta del 15%." />
+    <string id="taom_feat_gon_ps" text="Eserciti permanenti" />
+    <string id="taom_feat_gon_ps_desc" text="Limite di dimensione del gruppo aumentato del 2,5%." />
+    <string id="taom_feat_gon_loy" text="Disciplina della Guardia della Torre" />
+    <string id="taom_feat_gon_loy_desc" text="Lealtà degli insediamenti aumentata di 1 al giorno." />
+    <string id="taom_feat_gon_mor" text="Fermezza gondoriana" />
+    <string id="taom_feat_gon_mor_desc" text="Morale del gruppo aumentato di 5." />
+    <string id="taom_feat_gon_ps2" text="Uomini dei campi" />
+    <string id="taom_feat_gon_ps2_desc" text="Velocità di movimento del gruppo aumentata del 10% in pianura." />
+    <string id="taom_feat_mor_aic" text="Volontà dell'Oscuro Signore" />
+    <string id="taom_feat_mor_aic_desc" text="Il reclutamento dell'armata costa il 60% di influenza in meno." />
+    <string id="taom_feat_mor_gp" text="Campi di Nurn" />
+    <string id="taom_feat_mor_gp_desc" text="Produzione di grano aumentata del 20%." />
+    <string id="taom_feat_mor_w" text="Tributo oscuro" />
+    <string id="taom_feat_mor_w_desc" text="Paghe del gruppo aumentate del 20%." />
+    <string id="taom_feat_mor_ps" text="Le orde di Sauron" />
+    <string id="taom_feat_mor_ps_desc" text="Limite di dimensione del gruppo aumentato del 10%." />
+    <string id="taom_feat_mor_rd" text="L'ira di Sauron" />
+    <string id="taom_feat_mor_rd_desc" text="Danni delle razzie aumentati del 25%." />
+    <string id="taom_feat_mor_pls" text="Marcia d'ombra" />
+    <string id="taom_feat_mor_pls_desc" text="Velocità di movimento del gruppo aumentata del 5% in pianura." />
+    <string id="taom_feat_mor_sws" text="Paludi Morte" />
+    <string id="taom_feat_mor_sws_desc" text="Velocità di movimento del gruppo aumentata del 5% nelle paludi." />
+    <string id="taom_feat_mor_ns" text="Creature dell'oscurità" />
+    <string id="taom_feat_mor_ns_desc" text="Velocità di movimento del gruppo aumentata del 10% di notte." />
+    <string id="taom_feat_mor_vr" text="La leva di Sauron" />
+    <string id="taom_feat_mor_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 20%." />
+    <string id="taom_feat_mord_sm" text="Forgiatura oscura" />
+    <string id="taom_feat_mord_sm_desc" text="Costo in energia della forgiatura ridotto del 15%." />
+    <string id="taom_feat_mor_nctg" text="Araldi della Lingua Nera" />
+    <string id="taom_feat_mor_nctg_desc" text="+2 notabili capibanda nelle città." />
+    <string id="taom_feat_mor_ncv" text="Aguzzini di schiavi" />
+    <string id="taom_feat_mor_ncv_desc" text="Numero di notabili nei villaggi aumentato del 5%." />
+    <string id="taom_feat_roh_mc" text="Eredità dei Signori dei Cavalli" />
+    <string id="taom_feat_roh_mc_desc" text="Costi di reclutamento e potenziamento delle truppe a cavallo ridotti del 15%." />
+    <string id="taom_feat_roh_mw" text="Cavalieri della Marca" />
+    <string id="taom_feat_roh_mw_desc" text="Paghe delle truppe a cavallo ridotte del 15%." />
+    <string id="taom_feat_roh_is" text="Dipendenza dalla cavalleria" />
+    <string id="taom_feat_roh_is_desc" text="Velocità del gruppo ridotta del 10% se composto in maggioranza da fanteria." />
+    <string id="taom_feat_roh_loy" text="Fratellanza dei Signori dei Cavalli" />
+    <string id="taom_feat_roh_loy_desc" text="Lealtà dell'insediamento aumentata di 0,5 al giorno." />
+    <string id="taom_feat_roh_mor" text="Spirito dei Cavalieri" />
+    <string id="taom_feat_roh_mor_desc" text="Morale del gruppo aumentato di 5." />
+    <string id="taom_feat_roh_pls" text="Cavalieri delle Pianure" />
+    <string id="taom_feat_roh_pls_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle pianure." />
+    <string id="taom_feat_dale_pls" text="Mercanti della Valle" />
+    <string id="taom_feat_dale_pls_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle pianure." />
+    <string id="taom_feat_dale_ti" text="Alleanza commerciale nanica" />
+    <string id="taom_feat_dale_ti_desc" text="Entrate dai dazi aumentate del 10%." />
+    <string id="taom_feat_dale_r" text="Tradizione della Freccia Nera" />
+    <string id="taom_feat_dale_r_desc" text="Fama in battaglia aumentata del 10%." />
+    <string id="taom_feat_dale_loy" text="Vulnerabilità di un piccolo territorio" />
+    <string id="taom_feat_dale_loy_desc" text="Lealtà dell'insediamento ridotta di 0,5 al giorno." />
+    <string id="taom_feat_khand_sts" text="Aurighi della steppa" />
+    <string id="taom_feat_khand_sts_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle steppe." />
+    <string id="taom_feat_khand_r" text="Premio mercenario" />
+    <string id="taom_feat_khand_r_desc" text="Fama in battaglia aumentata dell'8%." />
+    <string id="taom_feat_khand_ti" text="Tributo a Mordor" />
+    <string id="taom_feat_khand_ti_desc" text="Entrate dai dazi ridotte del 10%." />
+    <string id="taom_feat_khand_fc" text="Resistenza della steppa" />
+    <string id="taom_feat_khand_fc_desc" text="Consumo di cibo del gruppo ridotto del 10%." />
+    <string id="taom_feat_khand_ps" text="Mobilità degli aurighi" />
+    <string id="taom_feat_khand_ps_desc" text="Limite di dimensione del gruppo aumentato del 5%." />
+    <string id="taom_feat_rhun_sts" text="Esploratori a cavallo Orientali" />
+    <string id="taom_feat_rhun_sts_desc" text="Velocità di movimento del gruppo aumentata del 10% nelle steppe." />
+    <string id="taom_feat_rhun_ps" text="Schiera degli Orientali" />
+    <string id="taom_feat_rhun_ps_desc" text="Limite di dimensione del gruppo aumentato del 5%." />
+    <string id="taom_feat_rhun_loy" text="Tributo degli Orientali" />
+    <string id="taom_feat_rhun_loy_desc" text="Lealtà dell'insediamento ridotta di 0,5 al giorno." />
+    <string id="taom_feat_rhun_rd" text="Dottrina dei razziatori della steppa" />
+    <string id="taom_feat_rhun_rd_desc" text="Danni da razzia aumentati del 15%." />
+    <string id="taom_feat_har_ds" text="Figli del Sole" />
+    <string id="taom_feat_har_ds_desc" text="Velocità di movimento del gruppo aumentata del 10% nei deserti." />
+    <string id="taom_feat_har_ps" text="Bande guerriere degli Haradrim" />
+    <string id="taom_feat_har_ps_desc" text="Limite di dimensione del gruppo aumentato del 5%." />
+    <string id="taom_feat_harad_mor" text="Conducenti di Mûmakil" />
+    <string id="taom_feat_harad_mor_desc" text="Morale del gruppo aumentato di 5." />
+    <string id="taom_feat_harad_fc" text="Resistenza del deserto" />
+    <string id="taom_feat_harad_fc_desc" text="Consumo di cibo del gruppo ridotto del 15%." />
+    <string id="taom_feat_harad_rd" text="Ferocia dell'Harad Lontano" />
+    <string id="taom_feat_harad_rd_desc" text="Danni da razzia aumentati del 15%." />
+    <string id="taom_feat_harad_aic" text="Tribù divise" />
+    <string id="taom_feat_harad_aic_desc" text="Il reclutamento dell'esercito costa il 15% di influenza in più." />
+    <string id="taom_feat_dun_pls" text="Marciatori delle colline" />
+    <string id="taom_feat_dun_pls_desc" text="Velocità di movimento del gruppo aumentata del 10% in pianura." />
+    <string id="taom_feat_dun_ps" text="Leva delle tribù collinari" />
+    <string id="taom_feat_dun_ps_desc" text="Limite di dimensione del gruppo aumentato del 5%." />
+    <string id="taom_feat_dun_vr" text="Reclutamento delle tribù collinari" />
+    <string id="taom_feat_dun_vr_desc" text="Tasso di ricomparsa dei volontari nei villaggi aumentato del 10%." />
+    <string id="taom_feat_shg_ds" text="Vagabondi delle dune" />
+    <string id="taom_feat_shg_ds_desc" text="Velocità di movimento del gruppo aumentata del 10% nei deserti." />
+    <string id="taom_feat_aba_ds" text="Nomadi del deserto profondo" />
+    <string id="taom_feat_aba_ds_desc" text="Velocità di movimento del gruppo aumentata del 10% nei deserti." />
+    <string id="taom_ep_no_hero" text="Nessun eroe attivo nella schermata dell'inventario." />
+    <string id="taom_ep_save" text="Salva nuovo" />
+    <string id="taom_ep_save_hint" text="Salva l'equipaggiamento attuale come nuovo preset." />
+    <string id="taom_ep_load" text="Carica" />
+    <string id="taom_ep_load_hint" text="Equipaggia un preset salvato." />
+    <string id="taom_ep_update" text="Aggiorna" />
+    <string id="taom_ep_update_hint" text="Sovrascrivi un preset salvato con l'equipaggiamento attuale." />
+    <string id="taom_ep_delete" text="Elimina" />
+    <string id="taom_ep_delete_hint" text="Rimuovi un preset." />
+    <string id="taom_ep_title" text="Preset di equipaggiamento" />
+    <string id="taom_ep_ok" text="OK" />
+    <string id="taom_ep_cancel" text="Annulla" />
+    <string id="taom_ep_header" text="Eroe: {HERO}  Preset: {COUNT}/{MAX}" />
+    <string id="taom_ep_save_title" text="Salva preset" />
+    <string id="taom_ep_save_msg" text="Inserisci un nome. Il preset registra il tuo equipaggiamento da battaglia e civile attuale, oltre alla cavalcatura." />
+    <string id="taom_ep_select_load" text="Carica preset" />
+    <string id="taom_ep_select_update" text="Aggiorna preset" />
+    <string id="taom_ep_select_delete" text="Elimina preset" />
+    <string id="taom_ep_select" text="Seleziona preset" />
+    <string id="taom_ep_load_failed" text="Caricamento fallito." />
+    <string id="taom_ep_load_partial" text="Caricati {EQUIPPED} oggetto/i. Oggetti mancanti: {MISS_ITEMS}. Modificatori mancanti: {MISS_MODS}." />
+    <string id="taom_ep_load_ok" text="Preset caricato ({COUNT} oggetti)." />
+    <string id="taom_ep_updated" text="Preset aggiornato." />
+    <string id="taom_ep_notfound" text="Preset non trovato." />
+    <string id="taom_ep_disabled" text="I preset di equipaggiamento sono disattivati in MCM." />
+    <string id="taom_ep_delete_title" text="Elimina preset" />
+    <string id="taom_ep_delete_msg" text="Sei sicuro di voler eliminare questo preset?" />
+    <string id="taom_ep_yes" text="Sì" />
+    <string id="taom_ep_no" text="No" />
+    <string id="taom_ep_deleted" text="Preset eliminato." />
+    <string id="taom_ep_saved" text="Preset '{NAME}' salvato." />
+    <string id="taom_ep_max" text="Numero massimo di preset raggiunto ({MAX}). Eliminane uno per salvarne uno nuovo." />
+    <string id="taom_ep_bad_name" text="Il nome del preset non può essere vuoto." />
+    <string id="taom_ep_psummary" text="Battaglia: {B}  Civile: {C}  Cavalcatura: {M}" />
+    <string id="taom_fief_hub_empty" text="Gestione feudi — nessun feudo posseduto" />
+    <string id="taom_fief_hub_title" text="Gestione feudi — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
+    <string id="taom_fief_kind_town" text="Città" />
+    <string id="taom_fief_kind_castle" text="Castello" />
+    <string id="taom_fief_hub_remote_disabled" text="Coda di costruzione a distanza disattivata — visita il feudo per gestirla." />
+    <string id="taom_fief_hub_prev" text="Feudo precedente" />
+    <string id="taom_fief_hub_next" text="Feudo successivo" />
+    <string id="taom_fief_hub_manage" text="Gestisci questo feudo" />
+    <string id="taom_fief_hub_leave" text="Esci" />
+    <string id="taom_fief_no_fiefs" text="Non possiedi ancora alcun feudo." />
+    <string id="taom_fief_nav_label" text="Feudi" />
+    <string id="taom_qa_title" text="Azioni rapide" />
+    <string id="taom_qa_desc" text="Seleziona un'azione." />
+    <string id="taom_qa_ok" text="OK" />
+    <string id="taom_qa_cancel" text="Annulla" />
+    <string id="taom_qa_confirm_title" text="Conferma" />
+    <string id="taom_qa_confirm_msg" text="Applicare questa azione in blocco?" />
+    <string id="taom_qa_yes" text="Sì" />
+    <string id="taom_qa_no" text="No" />
+    <string id="taom_extra_fast_forward_hint" text="Avanzamento extra rapido (E)" />
+    <string id="taom_str_faction_official.lindon" text="a loremaster of Lindon" />
+    <string id="taom_str_faction_official.lindon_f" text="a healer of Lindon" />
+    <string id="taom_str_faction_ruler.lindon" text="Lord" />
+    <string id="taom_str_faction_ruler.lindon_f" text="Lady" />
+    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lindon" text="Lindonian" />
+    <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
+    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Grey Havens" />
+    <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
+    <string id="taom_str_neutral_term_for_culture.lindon" text="Elves of Lindon" />
+    <string id="taom_str_culture_description.lindon" text="Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
+    <string id="taom_str_culture_rich_name.lindon" text="Falathrim" />
+    <string id="taom_str_adjective_for_culture.lindon" text="Lindonian" />
+    <string id="taom_str_player_father_name.lindon" text="Celeforn" />
+    <string id="taom_str_player_mother_name.lindon" text="Gilrien" />
+    <string id="taom_str_faction_official.bluecraig" text="a chieftain of Blue Craig" />
+    <string id="taom_str_faction_official.bluecraig_f" text="a chieftainess of Blue Craig" />
+    <string id="taom_str_faction_ruler.bluecraig" text="Warlord" />
+    <string id="taom_str_faction_ruler.bluecraig_f" text="Lady Warlord" />
+    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="the Warlord, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Warlord {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
+    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
+    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins of Blue Craig" />
+    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />
+    <string id="taom_str_culture_description.bluecraig" text="The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
+    <string id="taom_str_culture_rich_name.bluecraig" text="Goblins" />
+    <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
+    <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
   </strings>
 </base>

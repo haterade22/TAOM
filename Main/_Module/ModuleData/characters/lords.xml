@@ -52494,7 +52494,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
   <!-- TAOM-NEWFACTIONS:bluecraig:BEGIN -->
-    <NPCCharacter id="lord_BC1_1" race="goblin" name="{=aom_lord_BC1_1_name}Morgrub" age="33" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_chieftain_skills">
+    <NPCCharacter id="lord_BC1_1" race="goblin" name="{=aom_lord_BC1_1_name}Morgrub" age="33" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_chieftain_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52542,7 +52542,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC1_2" race="goblin" name="{=aom_lord_BC1_2_name}Snagbut" age="36" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC1_2" race="goblin" name="{=aom_lord_BC1_2_name}Snagbut" age="36" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52590,7 +52590,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC1_3" race="goblin" name="{=aom_lord_BC1_3_name}Hrakdush" age="39" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC1_3" race="goblin" name="{=aom_lord_BC1_3_name}Hrakdush" age="39" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52638,7 +52638,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC1_4" race="goblin" name="{=aom_lord_BC1_4_name}Boldog" age="42" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC1_4" race="goblin" name="{=aom_lord_BC1_4_name}Boldog" age="42" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52686,7 +52686,7 @@
             <EquipmentSet id="goblin_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC1_5" race="goblin" name="{=aom_lord_BC1_5_name}Lugbol" age="45" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC1_5" race="goblin" name="{=aom_lord_BC1_5_name}Lugbol" age="45" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52734,7 +52734,7 @@
             <EquipmentSet id="goblin_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC1_6" race="goblin" name="{=aom_lord_BC1_6_name}Grizznak" age="32" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC1_6" race="goblin" name="{=aom_lord_BC1_6_name}Grizznak" age="32" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52782,7 +52782,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC1_7" race="goblin" name="{=aom_lord_BC1_7_name}Gnarla" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC1_7" race="goblin" name="{=aom_lord_BC1_7_name}Gnarla" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52827,7 +52827,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC1_8" race="goblin" name="{=aom_lord_BC1_8_name}Vugza" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC1_8" race="goblin" name="{=aom_lord_BC1_8_name}Vugza" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52872,7 +52872,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC2_1" race="goblin" name="{=aom_lord_BC2_1_name}Grizznak" age="33" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC2_1" race="goblin" name="{=aom_lord_BC2_1_name}Grizznak" age="33" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52920,7 +52920,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC2_2" race="goblin" name="{=aom_lord_BC2_2_name}Frakû" age="36" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC2_2" race="goblin" name="{=aom_lord_BC2_2_name}Frakû" age="36" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -52968,7 +52968,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC2_3" race="goblin" name="{=aom_lord_BC2_3_name}Mughash" age="39" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC2_3" race="goblin" name="{=aom_lord_BC2_3_name}Mughash" age="39" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53016,7 +53016,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC2_4" race="goblin" name="{=aom_lord_BC2_4_name}Grishnák" age="42" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC2_4" race="goblin" name="{=aom_lord_BC2_4_name}Grishnák" age="42" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53064,7 +53064,7 @@
             <EquipmentSet id="goblin_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC2_5" race="goblin" name="{=aom_lord_BC2_5_name}Muzgash" age="45" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC2_5" race="goblin" name="{=aom_lord_BC2_5_name}Muzgash" age="45" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53112,7 +53112,7 @@
             <EquipmentSet id="goblin_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC2_6" race="goblin" name="{=aom_lord_BC2_6_name}Lugdush" age="32" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC2_6" race="goblin" name="{=aom_lord_BC2_6_name}Lugdush" age="32" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53160,7 +53160,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC2_7" race="goblin" name="{=aom_lord_BC2_7_name}Urshza" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC2_7" race="goblin" name="{=aom_lord_BC2_7_name}Urshza" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53205,7 +53205,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC2_8" race="goblin" name="{=aom_lord_BC2_8_name}Lazgha" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC2_8" race="goblin" name="{=aom_lord_BC2_8_name}Lazgha" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53250,7 +53250,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC3_1" race="goblin" name="{=aom_lord_BC3_1_name}Lugdush" age="33" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC3_1" race="goblin" name="{=aom_lord_BC3_1_name}Lugdush" age="33" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53298,7 +53298,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC3_2" race="goblin" name="{=aom_lord_BC3_2_name}Radbug" age="36" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC3_2" race="goblin" name="{=aom_lord_BC3_2_name}Radbug" age="36" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53346,7 +53346,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC3_3" race="goblin" name="{=aom_lord_BC3_3_name}Gorbag" age="39" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC3_3" race="goblin" name="{=aom_lord_BC3_3_name}Gorbag" age="39" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53394,7 +53394,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC3_4" race="goblin" name="{=aom_lord_BC3_4_name}Shagrat" age="42" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC3_4" race="goblin" name="{=aom_lord_BC3_4_name}Shagrat" age="42" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53442,7 +53442,7 @@
             <EquipmentSet id="goblin_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC3_5" race="goblin" name="{=aom_lord_BC3_5_name}Ufthak" age="45" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC3_5" race="goblin" name="{=aom_lord_BC3_5_name}Ufthak" age="45" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53490,7 +53490,7 @@
             <EquipmentSet id="goblin_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC3_6" race="goblin" name="{=aom_lord_BC3_6_name}Lagduf" age="32" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC3_6" race="goblin" name="{=aom_lord_BC3_6_name}Lagduf" age="32" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53538,7 +53538,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC3_7" race="goblin" name="{=aom_lord_BC3_7_name}Ulga" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC3_7" race="goblin" name="{=aom_lord_BC3_7_name}Ulga" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53583,7 +53583,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC3_8" race="goblin" name="{=aom_lord_BC3_8_name}Brakza" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC3_8" race="goblin" name="{=aom_lord_BC3_8_name}Brakza" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53628,7 +53628,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC4_1" race="goblin" name="{=aom_lord_BC4_1_name}Lagduf" age="33" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC4_1" race="goblin" name="{=aom_lord_BC4_1_name}Lagduf" age="33" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53676,7 +53676,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC4_2" race="goblin" name="{=aom_lord_BC4_2_name}Orcobal" age="36" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC4_2" race="goblin" name="{=aom_lord_BC4_2_name}Orcobal" age="36" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53724,7 +53724,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC4_3" race="goblin" name="{=aom_lord_BC4_3_name}Yazneg" age="39" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC4_3" race="goblin" name="{=aom_lord_BC4_3_name}Yazneg" age="39" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53772,7 +53772,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC4_4" race="goblin" name="{=aom_lord_BC4_4_name}Narzug" age="42" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC4_4" race="goblin" name="{=aom_lord_BC4_4_name}Narzug" age="42" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53820,7 +53820,7 @@
             <EquipmentSet id="goblin_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC4_5" race="goblin" name="{=aom_lord_BC4_5_name}Grukhash" age="45" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC4_5" race="goblin" name="{=aom_lord_BC4_5_name}Grukhash" age="45" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53868,7 +53868,7 @@
             <EquipmentSet id="goblin_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC4_6" race="goblin" name="{=aom_lord_BC4_6_name}Mauhur" age="32" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC4_6" race="goblin" name="{=aom_lord_BC4_6_name}Mauhur" age="32" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53916,7 +53916,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC4_7" race="goblin" name="{=aom_lord_BC4_7_name}Hagza" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC4_7" race="goblin" name="{=aom_lord_BC4_7_name}Hagza" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -53961,7 +53961,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC4_8" race="goblin" name="{=aom_lord_BC4_8_name}Mogra" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC4_8" race="goblin" name="{=aom_lord_BC4_8_name}Mogra" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54006,7 +54006,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_1" race="goblin" name="{=aom_lord_BC5_1_name}Mauhur" age="33" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC5_1" race="goblin" name="{=aom_lord_BC5_1_name}Mauhur" age="33" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54054,7 +54054,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_2" race="goblin" name="{=aom_lord_BC5_2_name}Uglûk" age="36" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC5_2" race="goblin" name="{=aom_lord_BC5_2_name}Uglûk" age="36" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54102,7 +54102,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_3" race="goblin" name="{=aom_lord_BC5_3_name}Bûrzum" age="39" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC5_3" race="goblin" name="{=aom_lord_BC5_3_name}Bûrzum" age="39" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54150,7 +54150,7 @@
             <EquipmentSet id="goblin_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_4" race="goblin" name="{=aom_lord_BC5_4_name}Throkmaw" age="42" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC5_4" race="goblin" name="{=aom_lord_BC5_4_name}Throkmaw" age="42" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54198,7 +54198,7 @@
             <EquipmentSet id="goblin_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_5" race="goblin" name="{=aom_lord_BC5_5_name}Skarsnik" age="45" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC5_5" race="goblin" name="{=aom_lord_BC5_5_name}Skarsnik" age="45" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54246,7 +54246,7 @@
             <EquipmentSet id="goblin_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_6" race="goblin" name="{=aom_lord_BC5_6_name}Gnashrak" age="32" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
+    <NPCCharacter id="lord_BC5_6" race="goblin" name="{=aom_lord_BC5_6_name}Gnashrak" age="32" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54294,7 +54294,7 @@
             <EquipmentSet id="goblin_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_7" race="goblin" name="{=aom_lord_BC5_7_name}Gralza" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC5_7" race="goblin" name="{=aom_lord_BC5_7_name}Gralza" age="23" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54339,7 +54339,7 @@
             <EquipmentSet id="goblin_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_BC5_8" race="goblin" name="{=aom_lord_BC5_8_name}Shelza" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.goblin" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
+    <NPCCharacter id="lord_BC5_8" race="goblin" name="{=aom_lord_BC5_8_name}Shelza" age="24" is_female="true" voice="earnest" is_hero="true" culture="Culture.bluecraig" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_north_orc_female_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
             <hair_tags>
@@ -54386,7 +54386,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:bluecraig:END -->
   <!-- TAOM-NEWFACTIONS:lindon:BEGIN -->
-    <NPCCharacter id="lord_LN1_1" race="elf" name="{=aom_lord_LN1_1_name}Círdan" age="33" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_king_skills">
+    <NPCCharacter id="lord_LN1_1" race="elf" name="{=aom_lord_LN1_1_name}Círdan" age="33" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_king_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54434,7 +54434,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN1_2" race="elf" name="{=aom_lord_LN1_2_name}Calemir" age="36" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN1_2" race="elf" name="{=aom_lord_LN1_2_name}Calemir" age="36" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54482,7 +54482,7 @@
             <EquipmentSet id="rivendell_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN1_3" race="elf" name="{=aom_lord_LN1_3_name}Nárdir" age="39" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN1_3" race="elf" name="{=aom_lord_LN1_3_name}Nárdir" age="39" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54530,7 +54530,7 @@
             <EquipmentSet id="rivendell_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN1_4" race="elf" name="{=aom_lord_LN1_4_name}Lhúnedhel" age="42" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN1_4" race="elf" name="{=aom_lord_LN1_4_name}Lhúnedhel" age="42" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54578,7 +54578,7 @@
             <EquipmentSet id="rivendell_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN1_5" race="elf" name="{=aom_lord_LN1_5_name}Nimwen" age="27" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
+    <NPCCharacter id="lord_LN1_5" race="elf" name="{=aom_lord_LN1_5_name}Nimwen" age="27" voice="earnest" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="00020000000016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54623,7 +54623,7 @@
             <EquipmentSet id="rivendell_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN1_6" race="elf" name="{=aom_lord_LN1_6_name}Lindis" age="22" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
+    <NPCCharacter id="lord_LN1_6" race="elf" name="{=aom_lord_LN1_6_name}Lindis" age="22" voice="earnest" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="00020000000016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54668,7 +54668,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN2_1" race="elf" name="{=aom_lord_LN2_1_name}Aeglir" age="33" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN2_1" race="elf" name="{=aom_lord_LN2_1_name}Aeglir" age="33" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54716,7 +54716,7 @@
             <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN2_2" race="elf" name="{=aom_lord_LN2_2_name}Celebrin" age="36" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN2_2" race="elf" name="{=aom_lord_LN2_2_name}Celebrin" age="36" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54764,7 +54764,7 @@
             <EquipmentSet id="rivendell_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN2_3" race="elf" name="{=aom_lord_LN2_3_name}Edronil" age="39" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+    <NPCCharacter id="lord_LN2_3" race="elf" name="{=aom_lord_LN2_3_name}Edronil" age="39" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -54812,7 +54812,7 @@
             <EquipmentSet id="rivendell_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_LN2_4" race="elf" name="{=aom_lord_LN2_4_name}Nárwen" age="26" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
+    <NPCCharacter id="lord_LN2_4" race="elf" name="{=aom_lord_LN2_4_name}Nárwen" age="26" voice="earnest" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="00020000000016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>

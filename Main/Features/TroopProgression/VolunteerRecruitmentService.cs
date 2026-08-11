@@ -44,6 +44,9 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeGoblinCulture();
         InitializeMistyMountainOrcsCulture();
         InitializeRivendellCulture();
+        // Promoted out of the two pools directly above: Blue Craig off goblin, Lindon off rivendell.
+        InitializeBlueCraigCulture();
+        InitializeLindonCulture();
         InitializeMordorSettlements();
         InitializeMordorCulture();
         // (No InitializeMordorClans — user explicitly chose to skip clan pools.)

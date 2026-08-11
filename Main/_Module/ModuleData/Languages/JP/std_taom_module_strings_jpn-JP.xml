@@ -360,7 +360,6 @@
     <string id="taom_str_player_father_name.shaghana" text="ザルカン" />
     <string id="taom_str_player_mother_name.shaghana" text="ハンサ" />
     <string id="0aXG8dvJ" text="{KINGDOM_NAME}と和平を結ぶ。貢納金は支払われません。" />
-    <string id="0bPb5btR" text="{LORD.NAME}は内戦で{RULER}を支持している{FACTION_NAME}の{CLAN_DESCRIPTION}である{CLAN_NAME}の一員です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="0CsbbwtN" text="{CALLED_KINGDOM}を{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争に召集する" />
     <string id="0nhqJewP" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{SETTLEMENT}を{LEADER.NAME}に授与した。" />
     <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{KINGDOM}と和平を結ぶことを決定した。" />
@@ -370,25 +369,20 @@
     <string id="21yUheIy" text="{KINGDOM_NAME}は{CREATION_YEAR}年に、台頭する{CULTURE_ADJECTIVE}の武将{RULER.NAME}によって建国された。" />
     <string id="22LCyCoA" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}への宣戦布告の対価として、あなたの王国に{GOLD}{GOLD_ICON}を提供できます。" />
     <string id="2b1xZGaQ" text="{KINGDOM_NAME}と和平を結ぶ。我が王国は{TRIBUTE_DURATION}日間、毎日{TRIBUTE_AMOUNT}の貢納金を支払う。" />
-    <string id="2BVDp7Tg" text="{KINGDOM}は{POLICY_DESCRIPTION}({POLICY})を停止します。{POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}の略奪により、多くの農民が家を追われた。土地を持つ者は通常そこに戻るが、貧しい者の多くは新しい住処を探している。あなたは村の郊外に野営している数人と話をする。彼らには土地がない。彼らは小作人として働くことを熱望しているようだが、村の古参の家族との間に緊張が生じる可能性は常にある。" />
-    <string id="2mVZORaE" text="{FACTION_NAME}の従者" />
     <string id="4fXpOe4N" text="{CLAN_NAME}から伝令が到着した。彼らは{CAPTIVE_HERO.NAME}を捕らえており、{GOLD_AMOUNT}{GOLD_ICON}の身代金を要求している。" />
     <string id="4GgfFDWG" text="{KINGDOM_NAME}との和平" />
     <string id="4JSzHkpt" text="{?IS_FEMALE}女王{?}王{\?}として、{KINGDOM_NAME}に宣戦布告するかどうかを決定しなければならない" />
-    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}の城は{FACTION_TERM}の{FACTION_OFFICIAL}である{LORD.LINK}が所有しています。{KEEP_INFO}" />
     <string id="4z1t75be" text="{CLAN_NAME}の{FIRSTNAME}" />
     <string id="5bBAOHmC" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会が均等に分かれる中、{SETTLEMENT}を{?RULER.GENDER}彼女{?}彼{\?}の領地として取得した。" />
     <string id="5bza9sDs" text="それは残念です。{FACTION_NAME}よりも良い雇い主はいないと確信してください。" />
     <string id="5DdbkWLu" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{OTHER_KINGDOM}との通商協定に署名することを決定した。" />
     <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は、{?AGGRESSOR_RULER.GENDER}彼女{?}彼{\?}の評議会が均等に分かれる中、{KINGDOM}との戦争を選択しなかった。" />
     <string id="5pOKmHsf" text="{RULER.NAME}は、{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争に{CALLED_KINGDOM}を召集することを決定した。この決定は{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得た。" />
-    <string id="6d4ZTvGv" text="{LORD.NAME}は{FACTION_NAME}の{TITLE}であり、王国の{CLAN_DESCRIPTION}である{CLAN_NAME}の当主です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}は我らの祖先の地を占領し、同胞を虐げている。" />
     <string id="7ouzFASf" text="伝令が到着し、{OFFERED_KINGDOM_LEADER.NAME}からの伝言を携えている。{?OFFERED_KINGDOM_LEADER.GENDER}彼女{?}彼{\?}はあなたの高まる評判に言及し、{OFFERED_KINGDOM_NAME}の臣下として誓約することを検討してくれないかと尋ねている。興味があれば直接会って話すべきだ。" />
     <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は、{?AGGRESSOR_RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{KINGDOM}との戦争を選択しなかった。" />
     <string id="940TwBPs" text="{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM}から{CLAN}一族を追放しないことを選択した。" />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}は{FACTION_NAME}の地の{CLAN_DESCRIPTION}である{CLAN_NAME}の一員です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は{KINGDOM}との戦争を選択しなかった。" />
     <string id="aE7OQDMS" text="{KINGDOM_NAME}と同盟を結ぶ。" />
     <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会がこの件について均等に分かれる中、{KINGDOM}と和平を結ぶことを決定した。" />
@@ -429,7 +423,6 @@
     <string id="eTylgLCc" text="{KINGDOM_NAME}から使者が到着した。彼らは同盟を申し出ている。あなたの王国は申し出を受け入れるかどうか投票する。" />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM}はもはや{KINGDOM_TO_CALL_TO_WAR_AGAINST}と戦争状態にない。" />
     <string id="F7CMsDyG" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM_NAME}との同盟結成を見送ることを決定した。" />
-    <string id="faUooB7V" text="{KINGDOM}は{POLICY_DESCRIPTION}({POLICY})を行いません。{POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME}は{CALLING_KINGDOM}の要請に応じないことを決定し、{KINGDOM_TO_CALL_TO_WAR_AGAINST}と戦わない。この決定は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得た。" />
     <string id="FNCq25P1" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{KINGDOM_NAME}との同盟を結ぶことを決定した。" />
     <string id="FuNbouTu" text="{KINGDOM_NAME}から使者が到着した。彼らはあなたの王国に{KINGDOM_TO_CALL_TO_WAR_AGAINST}への参戦を要請している。あなたの王国は申し出を受け入れるかどうか投票する。" />
@@ -440,7 +433,6 @@
     <string id="gNf0ALKw" text="{MAP_FACTION_NAME}から使者が到着した。彼らは白紙和平を申し出ている。あなたの王国は申し出を受け入れるかどうか投票する。" />
     <string id="h5eTEYON" text="{RULER.NAME}は{CLAN}一族を{KINGDOM}から追放した。" />
     <string id="h9bWTLgK" text="我らの同盟国{KINGDOM_NAME}の戦いに加わる時が来た。" />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}は{FACTION_NAME}の地の{CLAN_DESCRIPTION}である{CLAN_NAME}の当主です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="IB1xsVEr" text="{MAP_FACTION_NAME}から使者が到着した。彼らは白紙和平を申し出ている。あなたの臣下たちは決定をあなたに委ねた。" />
     <string id="INfHUqxT" text="{RULER.NAME}は{KINGDOM_NAME}との同盟締結を決定した。" />
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず{KINGDOM}との講和を見送ることを選択した。" />
@@ -450,10 +442,8 @@
     <string id="jaioXYDc" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て、{KINGDOM_NAME}との同盟結成を見送ることを決定した。" />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM}との和平を決定した。" />
     <string id="JJQ0Hp4m" text="{MAP_FACTION_NAME}から使者が到着した。{MAP_FACTION_NAME}は両国間の戦争を終結させるため、毎日{GOLD_AMOUNT}{GOLD_ICON}の貢納金を支払うという。あなたの臣下たちは決定をあなたに委ねている。" />
-    <string id="jnYwiCAz" text="{KINGDOM}は{POLICY_DESCRIPTION}({POLICY})を継続します。{POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}は現在我々より強大である。我々は力を蓄える時間が必要だ。" />
     <string id="JQligd8z" text="{KINGDOM}の評議会は{KING.NAME}を新たな統治者に選出した。" />
-    <string id="JuPUG5wX" text="{LORD.NAME}は{FACTION_NAME}の{TITLE}であり、内戦で{RULER}を支持している{CLAN_DESCRIPTION}である{CLAN_NAME}の当主です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="JY717hPW" text="私には{ENEMY_INFORMAL_NAME}を代表して和平を結ぶ権限はない。{ENEMY_RULER.NAME}と{?ENEMY_RULER.GENDER}彼女{?}彼{\?}の評議会が和平を提案するかどうか、そしてその条件を決定すべきである。" />
     <string id="K5w135N9" text="{RULER.NAME}は{CALLING_KINGDOM}の召集に応じないことを決定し、{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争には参加しない。この決定は{?RULER.GENDER}彼女{?}彼{\?}の評議会の助言に反して下された。" />
     <string id="KFHj7ckm" text="統治者として、{KINGDOM_NAME}との和平を結ぶかどうかを決定しなければならない" />
@@ -464,7 +454,6 @@
     <string id="L802I9W2" text="承知した、{FACTION_NAME}に加わろう。" />
     <string id="L81DPSom" text="{RULER_NAME_AND_TITLE}として、あなたの王国が{CALLING_KINGDOM}の召集に応じ、{CALL_TO_WAR_COST}{GOLD_ICON}で{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告するかどうかを決定しなければならない。" />
     <string id="Lalj0T1i" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{CALLING_KINGDOM}の召集に応じ、{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告した。" />
-    <string id="Lbs2bNlg" text="{KINGDOM}は{POLICY_DESCRIPTION}({POLICY})を開始します。{POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="あなたの王国は{KINGDOM_NAME}と戦争状態にある。" />
     <string id="LVX2x6Jf" text="{SERVED_FACTION}との契約を終了したい。" />
     <string id="m69pvful" text="{KINGDOM_LEADER}が、あなたの王国が{CALLING_KINGDOM}の召集に応じ、{CALL_TO_WAR_PAYMENT}{GOLD_ICON}で{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告するかどうかを決定する。あなたはこの決定に関する立場を選ぶことができる。" />
@@ -481,7 +470,6 @@
     <string id="nkvT88r2" text="{CALLED_KINGDOM}を{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争に召集するための資金が不足している。" />
     <string id="NuYzgBZB" text="やり過ぎだ。{KINGDOM}は自国の隊商の破壊を許さない。" />
     <string id="o4IxXHnB" text="{RULER.NAME}は{KINGDOM_NAME}との同盟締結を見送ることを決定した。" />
-    <string id="o5AUljbW" text="{LORD.NAME}は{FACTION_NAME}の{CLAN_DESCRIPTION}である{CLAN_NAME}の一員です。{?LORD.GENDER}彼女{?}彼{\?}は{REPUTATION}という評判を得ています。" />
     <string id="o69PZuce" text="{OLD_LEADER.LINK}はもはや{CLAN_NAME}の長ではない。{NEW_LEADER.LINK}が一族の統治者を引き継いだ。" />
     <string id="O9XpB5Ah" text="統治者として、{KINGDOM}との貿易協定を結ぶかどうかを決定しなければならない" />
     <string id="oAw74q3r" text="{RULER_NAME_AND_TITLE}として、あなたの王国が{CALLING_KINGDOM}の召集に応じ、{CALL_TO_WAR_PAYMENT}{GOLD_ICON}で{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告するかどうかを決定しなければならない。" />
@@ -492,7 +480,6 @@
     <string id="PneX4Ayw" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}に対する{KINGDOM_NAME}からの参戦要請を携えた使者が、あなたの王国の宮廷に到着した。" />
     <string id="PP7KD7OC" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会が均等に分かれる中、{OTHER_KINGDOM}との貿易協定に署名することを決定した。" />
     <string id="PutoRsWp" text="{CLAN_NAME}から使者が到着した。彼らは{CAPTIVE_HERO.NAME}を解放すれば{GOLD_AMOUNT}{GOLD_ICON}の身代金を支払うと申し出ている。" />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}は{FACTION_TERM}の{FACTION_OFFICIAL}である{LORD.LINK}が統治しています。{KEEP_INFO}" />
     <string id="q9DnHVcZ" text="{KINGDOM_NAME}の戦争に参加することは我々の利益にはならない。" />
     <string id="qa4FlTWS" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{SETTLEMENT}を{?RULER.GENDER}彼女{?}彼{\?}の領地として奪取した。" />
     <string id="qgN9o2ip" text="我らが同盟国{KINGDOM_NAME}に{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争への参戦を要請する時が来た!王国は彼らに参戦要請の提案を行うかどうかを投票する。" />
@@ -503,19 +490,16 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は、{?AGGRESSOR_RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て、{KINGDOM}に宣戦布告した。" />
     <string id="rJIuQ0hc" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対を押し切って、{OTHER_KINGDOM}との貿易協定に署名しないことを選択した。" />
     <string id="rtfoywJl" text="{KINGDOM_NAME}に宣戦布告する" />
-    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周辺の土地は主に{FACTION_TERM}の{FACTION_OFFICIAL}である{LORD.LINK}が所有しています。{PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="{MAP_FACTION_NAME}から使者が到着した。彼らは、毎日{GOLD_AMOUNT}{GOLD_ICON}の貢納金の支払いに同意すれば和平を提供すると申し出ている。王国はこの提案を受け入れるかどうかを投票する。" />
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}が{KINGDOM}に宣戦布告した。" />
     <string id="SR9FC5jH" text="{MAP_FACTION_NAME}から和平の申し出を携えた使者が到着した。{MAP_FACTION_NAME}は両国間の戦争を終結させるため、毎日{GOLD_AMOUNT}{GOLD_ICON}の貢納金を支払うという。王国はこの提案を受け入れるかどうかを投票する。" />
     <string id="syGyjjKE" text="{CALLING_KINGDOM}の要請に応え、{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告する。" />
-    <string id="TauRjAud" text="{FACTION}の{NAME}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}が傭兵としての仕事を提供しています。彼らのために戦って得られる影響力ポイント1につき{GOLD_AMOUNT}{GOLD_ICON}が支払われます。受諾しますか?" />
     <string id="uc4M4bhG" text="実は、望むことがあるのだ。{TARGET_FACTION}に一人の{?TARGET_HERO.GENDER}貴婦人{?}貴族{\?}がいてな、長い長い因縁がある。そして友好的なものではない。今我々は戦争状態にあり、{?TARGET_HERO.GENDER}彼女{?}彼{\?}が自由である限り、私の命も領地も安全ではないのだ。言っておくが、決して容易なことではない。だが、それを成し遂げ、{?TARGET_HERO.GENDER}彼女{?}彼{\?}を生きたまま私のもとへ連れ戻した者は、私の感謝はさておき、大変な富を手にすることになろう。[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}は{CALLING_KINGDOM}の要請に応え、{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告した。" />
     <string id="UQq4ekeu" text="{KINGDOM}の{RULER.NAME}は{OTHER_KINGDOM}との貿易協定に署名しないことを選択した。" />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}が{CALLED_KINGDOM_LINK}に{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}との戦争への参戦を要請した。" />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}は{CHARACTER_FACTION_SHORT}の一員だった。{FURTHER_DETAILS}。" />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}は{FACTION_TERM}の{FACTION_OFFICIAL}である{LORD.LINK}が統治しています。{PROSPERITY_INFO} {MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME}は{CLAN_NAME}の長であり、新興の一族である。{?LORD.GENDER}彼女{?}彼{\?}はまだ{?LORD.GENDER}彼女{?}彼{\?}の名声を築いている最中である。" />
     <string id="vf2pb7Ts" text="{RULER.NAME}は{CALLING_KINGDOM}の要請に応え、{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告した。" />
     <string id="Vg5RmOqL" text="{FACTION_LEADER}は{KINGDOM}が{OTHER_KINGDOM}と貿易協定を結ぶかどうかを決定する。あなたはこの決定に関する立場を選ぶことができる。" />
@@ -528,9 +512,7 @@
     <string id="xhK4zMec" text="{RULER.NAME}は{CALLED_KINGDOM}に{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争への参戦を要請することを決定した。" />
     <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}が{CALLED_KINGDOM_LINK}に発した{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}との戦争への参戦要請は終了した。" />
     <string id="xM97H0oR" text="{KINGDOM_NAME}への宣戦布告に投票せよ。" />
-    <string id="yAOQnMVw" text="お前は{FACTION}の者だな?つまり、お前は俺の捕虜だ。" />
     <string id="yBL3TzXw" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{CLAN}一族を{KINGDOM}から追放しないことを選択した。" />
-    <string id="YT4OvaAG" text="よろしい。{FACTION_NAME}の保護下にあると考えてよい。明日のこの時刻までに旅を完了せよ。さもなくば再び通行料を請求するかもしれぬ。" />
     <string id="yUYNlQhU" text="よろしい、部下に簡単な契約書を作成させよう。{KINGDOM_FORMAL_NAME}を代表して、あなたを歓迎する。我々の敵に対してその剣を有効に用いられんことを。" />
     <string id="Zckbdm4Z" text="{KINGDOM}の{RULER.NAME}は、{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{SETTLEMENT}を{?RULER.GENDER}彼女{?}彼{\?}の領地として奪取した。" />
     <string id="zd9sawl9" text="あなたはすでに{KINGDOM_NAME}と同盟している。" />
@@ -2116,318 +2098,352 @@
     <string id="l4pRw7pO" text="{OWNER.NAME}の武装隊商" />
     <string id="taom_align_desertion" text="{COUNT}名の兵が脱走した――彼らは敵対する陣営の君主に仕えることを拒んだ。" />
     <string id="taom_troop_weight_size" text="重装兵" />
-    <string id="taom_res_desertion" text="{COUNT}名の精鋭兵が脱走した — {RESOURCE}が枯渇している！" />
-    <string id="taom_feat_erebor_gw" text="ドワーフの守備隊" />
-    <string id="taom_feat_erebor_gw_desc" text="守備隊の給与が25％減少する。" />
-    <string id="taom_feat_erebor_p" text="ドワーフの工業" />
-    <string id="taom_feat_erebor_p_desc" text="すべての村の生産が10％増加する。" />
-    <string id="taom_feat_erebor_cs" text="ドワーフの完璧主義" />
-    <string id="taom_feat_erebor_cs_desc" text="建設速度が15％減少する。" />
-    <string id="taom_feat_erebor_loy" text="ドワーフの誇り" />
-    <string id="taom_feat_erebor_loy_desc" text="拠点の忠誠が1日あたり1増加する。" />
-    <string id="taom_feat_erebor_mor" text="ドワーフの頑固さ" />
-    <string id="taom_feat_erebor_mor_desc" text="部隊の士気が5増加する。" />
-    <string id="taom_feat_erebor_sm" text="熟練の鍛冶師" />
-    <string id="taom_feat_erebor_sm_desc" text="鍛冶のエネルギー消費が30％減少する。" />
-    <string id="taom_feat_erebor_ss" text="山の民" />
-    <string id="taom_feat_erebor_ss_desc" text="雪上での部隊移動速度が10％増加する。" />
-    <string id="taom_feat_erebor_ti" text="ドワーフの倹約" />
-    <string id="taom_feat_erebor_ti_desc" text="関税収入が5％増加する。" />
-    <string id="taom_feat_riv_ai" text="エルフの知恵" />
-    <string id="taom_feat_riv_ai_desc" text="軍の影響力報酬が35％増加する。" />
-    <string id="taom_feat_riv_hg" text="最後の憩い館" />
-    <string id="taom_feat_riv_hg_desc" text="村の炉の成長が20％増加する。" />
-    <string id="taom_feat_riv_aic" text="エルフの矜持" />
-    <string id="taom_feat_riv_aic_desc" text="軍の招集に必要な影響力が25％増加する。" />
-    <string id="taom_feat_riv_fc" text="エルフの節制" />
-    <string id="taom_feat_riv_fc_desc" text="部隊の食料消費が15％減少する。" />
-    <string id="taom_feat_riv_loy" text="エルフの知恵" />
-    <string id="taom_feat_riv_loy_desc" text="拠点の忠誠が1日あたり0.5増加する。" />
-    <string id="taom_feat_riv_fs" text="森の優雅さ" />
-    <string id="taom_feat_riv_fs_desc" text="森林での部隊移動速度が10％増加する。" />
-    <string id="taom_feat_mrk_fs" text="闇の森の王国" />
-    <string id="taom_feat_mrk_fs_desc" text="森林での部隊移動速度が10％増加する。" />
-    <string id="taom_feat_mrk_mp" text="シルヴァンの守人" />
-    <string id="taom_feat_mrk_mp_desc" text="熟練民兵が出現する確率が25％増加する。" />
-    <string id="taom_feat_mrk_hg" text="森の孤立" />
-    <string id="taom_feat_mrk_hg_desc" text="村の炉の成長が20％減少する。" />
-    <string id="taom_feat_mrk_fc" text="森の恵み" />
-    <string id="taom_feat_mrk_fc_desc" text="部隊の食料消費が15％減少する。" />
-    <string id="taom_feat_mrk_mor" text="森の絆" />
-    <string id="taom_feat_mrk_mor_desc" text="部隊の士気が3増加する。" />
-    <string id="taom_feat_mrk_aic" text="孤立主義の宮廷" />
-    <string id="taom_feat_mrk_aic_desc" text="軍の召集に必要な影響力が15%増加する。" />
-    <string id="taom_feat_loth_fs" text="黄金の森" />
-    <string id="taom_feat_loth_fs_desc" text="森林での部隊移動速度が10%上昇する。" />
-    <string id="taom_feat_loth_gw" text="ロリアンの守人" />
-    <string id="taom_feat_loth_gw_desc" text="守備隊の給与が20%減少する。" />
-    <string id="taom_feat_loth_cs" text="永遠の技" />
-    <string id="taom_feat_loth_cs_desc" text="建設速度が10%減少する。" />
-    <string id="taom_feat_loth_fc" text="レンバスのパン" />
-    <string id="taom_feat_loth_fc_desc" text="部隊の食料消費が15%減少する。" />
-    <string id="taom_feat_loth_loy" text="エルフの優雅" />
-    <string id="taom_feat_loth_loy_desc" text="拠点の忠誠が1日あたり0.5上昇する。" />
-    <string id="taom_feat_loth_mor" text="エルフの調和" />
-    <string id="taom_feat_loth_mor_desc" text="部隊の士気が3上昇する。" />
-    <string id="taom_feat_loth_vr" text="衰えゆく光" />
-    <string id="taom_feat_loth_vr_desc" text="村の志願兵の再出現率が15%減少する。" />
-    <string id="taom_feat_isen_cr" text="戦争機械" />
-    <string id="taom_feat_isen_cr_desc" text="騎乗兵の雇用および昇格の費用が15%減少する。" />
-    <string id="taom_feat_isen_gw" text="オルサンクの守備隊" />
-    <string id="taom_feat_isen_gw_desc" text="守備隊の給与が20%減少する。" />
-    <string id="taom_feat_isen_dp" text="サルマンの支配" />
-    <string id="taom_feat_isen_dp_desc" text="王国の決定による関係悪化が25%増加する。" />
-    <string id="taom_feat_isen_ps" text="ウルク=ハイ軍団" />
-    <string id="taom_feat_isen_ps_desc" text="部隊の人数上限が20%増加する。" />
-    <string id="taom_feat_isen_cs" text="産業の力" />
-    <string id="taom_feat_isen_cs_desc" text="建設速度が15%上昇する。" />
-    <string id="taom_feat_isen_sm" text="産業の炉" />
-    <string id="taom_feat_isen_sm_desc" text="鍛冶のエネルギー消費が20%減少する。" />
-    <string id="taom_feat_isen_rd" text="戦争機械の襲撃" />
-    <string id="taom_feat_isen_rd_desc" text="襲撃による被害が20%増加する。" />
-    <string id="taom_feat_isen_ps2" text="強行軍" />
-    <string id="taom_feat_isen_ps2_desc" text="平原での部隊移動速度が10%上昇する。" />
-    <string id="taom_feat_isen_sws" text="沼地の教練官" />
-    <string id="taom_feat_isen_sws_desc" text="沼地での部隊移動速度が10%上昇する。" />
-    <string id="taom_feat_isen_nctm" text="オルサンクの補給官" />
-    <string id="taom_feat_isen_nctm_desc" text="都市の商人有力者が+2。" />
-    <string id="taom_feat_isen_ncta" text="産業の炉" />
-    <string id="taom_feat_isen_ncta_desc" text="都市の職人有力者が+1。" />
-    <string id="taom_feat_isen_nctg" text="ウルク=ハイの隊長" />
-    <string id="taom_feat_isen_nctg_desc" text="都市のギャング頭領の有力者が+12（アイゼンガルドの唯一の都市が主要な兵員募集拠点となる）。" />
-    <string id="taom_feat_isen_ncv" text="鉄の圧政" />
-    <string id="taom_feat_isen_ncv_desc" text="村の有力者の数が10%増加。" />
-    <string id="taom_feat_gun_aic" text="オークの大群" />
-    <string id="taom_feat_gun_aic_desc" text="軍の招集に必要な影響力が40%減少。" />
-    <string id="taom_feat_gun_gp" text="略奪した蓄え" />
-    <string id="taom_feat_gun_gp_desc" text="穀物生産量が15%増加。" />
-    <string id="taom_feat_gun_w" text="略奪の要求" />
-    <string id="taom_feat_gun_w_desc" text="部隊の給料が10%増加。" />
-    <string id="taom_feat_gun_ps" text="山の群れ" />
-    <string id="taom_feat_gun_ps_desc" text="部隊の人数上限が20%増加。" />
-    <string id="taom_feat_gun_rd" text="オークの掠奪者" />
-    <string id="taom_feat_gun_rd_desc" text="襲撃による被害が25%増加。" />
-    <string id="taom_feat_gun_ss" text="山の襲撃者" />
-    <string id="taom_feat_gun_ss_desc" text="雪原での部隊の移動速度が10%増加。" />
-    <string id="taom_feat_gun_vr" text="山の徴募兵" />
-    <string id="taom_feat_gun_vr_desc" text="村の志願兵の回復速度が20%増加。" />
-    <string id="taom_feat_gun_ncta" text="骨の鍛冶師" />
-    <string id="taom_feat_gun_ncta_desc" text="都市の職人の有力者+1。" />
-    <string id="taom_feat_gun_nctg" text="青白き戦団の族長" />
-    <string id="taom_feat_gun_nctg_desc" text="都市のギャング頭の有力者+3。" />
-    <string id="taom_feat_gun_ncv" text="骨の野営地" />
-    <string id="taom_feat_gun_ncv_desc" text="村の有力者の数が10%増加。" />
-    <string id="taom_feat_gob_ps" text="ゴブリンの群れ" />
-    <string id="taom_feat_gob_ps_desc" text="部隊の人数上限が40%増加。" />
-    <string id="taom_feat_gob_vr" text="尽きぬ湧き出し" />
-    <string id="taom_feat_gob_vr_desc" text="村の志願兵の回復速度が25%増加。" />
-    <string id="taom_feat_gob_ss" text="坑道走り" />
-    <string id="taom_feat_gob_ss_desc" text="雪原での部隊の移動速度が10%増加。" />
-    <string id="taom_feat_gob_fc" text="貪欲な群れ" />
-    <string id="taom_feat_gob_fc_desc" text="部隊の食料消費が20%増加。" />
-    <string id="taom_feat_gob_sm" text="奪った武器の蓄え" />
-    <string id="taom_feat_gob_sm_desc" text="鍛冶のエネルギー消費が10%減少。" />
-    <string id="taom_feat_gob_rd" text="ゴブリンの奇襲" />
-    <string id="taom_feat_gob_rd_desc" text="襲撃による被害が10%増加。" />
-    <string id="taom_feat_mmo_aic" text="オークの大群" />
-    <string id="taom_feat_mmo_aic_desc" text="軍の招集に必要な影響力が40%減少。" />
-    <string id="taom_feat_mmo_ps" text="山の軍勢" />
-    <string id="taom_feat_mmo_ps_desc" text="部隊の人数上限が30%増加。" />
-    <string id="taom_feat_mmo_ss" text="山に育まれし者" />
-    <string id="taom_feat_mmo_ss_desc" text="雪原での部隊の移動速度が10%増加。" />
-    <string id="taom_feat_mmo_fc" text="飢えた軍勢" />
-    <string id="taom_feat_mmo_fc_desc" text="部隊の食料消費が15%増加する。" />
-    <string id="taom_feat_mmo_sm" text="略奪された鍛冶場" />
-    <string id="taom_feat_mmo_sm_desc" text="鍛冶の消費エネルギーが15%減少する。" />
-    <string id="taom_feat_mmo_rd" text="洞窟トロルの徴集" />
-    <string id="taom_feat_mmo_rd_desc" text="襲撃による損害が15%増加する。" />
-    <string id="taom_feat_mmo_cs" text="響き渡る広間" />
-    <string id="taom_feat_mmo_cs_desc" text="建設速度が10%減少する。" />
-    <string id="taom_feat_umb_cc" text="海賊の交易" />
-    <string id="taom_feat_umb_cc_desc" text="隊商の編成費用が25%減少する。" />
-    <string id="taom_feat_umb_r" text="海賊の栄光" />
-    <string id="taom_feat_umb_r_desc" text="戦闘で得る名声が8%増加する。" />
-    <string id="taom_feat_umb_w" text="海賊の貪欲" />
-    <string id="taom_feat_umb_w_desc" text="部隊の賃金が8%増加する。" />
-    <string id="taom_feat_umb_ti" text="海賊の交易網" />
-    <string id="taom_feat_umb_ti_desc" text="関税収入が15%増加する。" />
-    <string id="taom_feat_umb_ds" text="砂漠の海賊" />
-    <string id="taom_feat_umb_ds_desc" text="砂漠での部隊の移動速度が10%増加する。" />
-    <string id="taom_feat_umb_rd" text="海賊の襲撃戦術" />
-    <string id="taom_feat_umb_rd_desc" text="襲撃による損害が20%増加する。" />
-    <string id="taom_feat_umb_fc" text="黒きヌーメノール人の忍耐" />
-    <string id="taom_feat_umb_fc_desc" text="部隊の食料消費が10%減少する。" />
-    <string id="taom_feat_dg_aic" text="影の統帥" />
-    <string id="taom_feat_dg_aic_desc" text="軍の招集に必要な影響力が50%減少する。" />
-    <string id="taom_feat_dg_mp" text="暗黒の徴兵" />
-    <string id="taom_feat_dg_mp_desc" text="精鋭民兵が現れる確率が20%増加する。" />
-    <string id="taom_feat_dg_cs" text="荒廃した工事" />
-    <string id="taom_feat_dg_cs_desc" text="建設速度が20%減少する。" />
-    <string id="taom_feat_dg_ps" text="暗黒の軍団" />
-    <string id="taom_feat_dg_ps_desc" text="部隊の人数上限が20%増加する。" />
-    <string id="taom_feat_dg_fc" text="貪欲なる大群" />
-    <string id="taom_feat_dg_fc_desc" text="部隊の食料消費が10%増加する。" />
-    <string id="taom_feat_dg_vr" text="暗黒の徴集兵" />
-    <string id="taom_feat_dg_vr_desc" text="村の志願兵の再出現速度が20%増加する。" />
-    <string id="taom_feat_dg_nctm" text="影の仲買人" />
-    <string id="taom_feat_dg_nctm_desc" text="都市の商人の有力者が+1。" />
-    <string id="taom_feat_dg_ncta" text="暗黒の鍛冶場" />
-    <string id="taom_feat_dg_ncta_desc" text="都市の職人の有力者が+1。" />
-    <string id="taom_feat_dg_nctg" text="影の隊長たち" />
-    <string id="taom_feat_dg_nctg_desc" text="都市のギャング頭の有力者が+13(ドル・グルドゥアの影の司令拠点)。" />
-    <string id="taom_feat_dg_ncv" text="隠された小屋" />
-    <string id="taom_feat_dg_ncv_desc" text="村の有力者の数が10%増加する。" />
-    <string id="taom_feat_gon_gw" text="塔の衛兵" />
-    <string id="taom_feat_gon_gw_desc" text="守備隊の賃金が20%減少する。" />
-    <string id="taom_feat_gon_ai" text="ゴンドールの規律" />
-    <string id="taom_feat_gon_ai_desc" text="軍の影響力報酬が30%増加する。" />
-    <string id="taom_feat_gon_hg" text="戦に疲れた土地" />
-    <string id="taom_feat_gon_hg_desc" text="村の炉の成長が15%減少する。" />
-    <string id="taom_feat_gon_ps" text="常備軍" />
-    <string id="taom_feat_gon_ps_desc" text="部隊の人数上限が2.5%増加する。" />
-    <string id="taom_feat_gon_loy" text="塔の衛兵の規律" />
-    <string id="taom_feat_gon_loy_desc" text="拠点の忠誠心が1日あたり1増加する。" />
-    <string id="taom_feat_gon_mor" text="ゴンドールの決意" />
-    <string id="taom_feat_gon_mor_desc" text="部隊の士気が5増加する。" />
-    <string id="taom_feat_gon_ps2" text="野の人々" />
-    <string id="taom_feat_gon_ps2_desc" text="平原での部隊の移動速度が10%増加する。" />
-    <string id="taom_feat_mor_aic" text="冥王の意志" />
-    <string id="taom_feat_mor_aic_desc" text="軍の招集に必要な影響力が60%減少する。" />
-    <string id="taom_feat_mor_gp" text="ヌルンの農地" />
-    <string id="taom_feat_mor_gp_desc" text="穀物の生産量が20%増加する。" />
-    <string id="taom_feat_mor_w" text="暗黒の貢納" />
-    <string id="taom_feat_mor_w_desc" text="部隊の賃金が20%増加する。" />
-    <string id="taom_feat_mor_ps" text="サウロンの大軍" />
-    <string id="taom_feat_mor_ps_desc" text="部隊の人数上限が10%増加する。" />
-    <string id="taom_feat_mor_rd" text="サウロンの怒り" />
-    <string id="taom_feat_mor_rd_desc" text="襲撃による被害が25%増加する。" />
-    <string id="taom_feat_mor_pls" text="影の行軍" />
-    <string id="taom_feat_mor_pls_desc" text="平原での部隊の移動速度が5%増加する。" />
-    <string id="taom_feat_mor_sws" text="死者の沼地" />
-    <string id="taom_feat_mor_sws_desc" text="沼地での部隊の移動速度が5%増加する。" />
-    <string id="taom_feat_mor_ns" text="闇の生き物" />
-    <string id="taom_feat_mor_ns_desc" text="夜間の部隊の移動速度が10%増加する。" />
-    <string id="taom_feat_mor_vr" text="サウロンの徴兵" />
-    <string id="taom_feat_mor_vr_desc" text="村の志願兵の回復速度が20%増加する。" />
-    <string id="taom_feat_mord_sm" text="暗黒の鍛冶" />
-    <string id="taom_feat_mord_sm_desc" text="鍛冶の体力消費が15%減少する。" />
-    <string id="taom_feat_mor_nctg" text="暗黒語の伝令" />
-    <string id="taom_feat_mor_nctg_desc" text="都市のギャングの頭目である有力者が+2される。" />
-    <string id="taom_feat_mor_ncv" text="奴隷監督者" />
-    <string id="taom_feat_mor_ncv_desc" text="村の有力者の数が5%増加する。" />
-    <string id="taom_feat_roh_mc" text="馬の王の血統" />
-    <string id="taom_feat_roh_mc_desc" text="騎馬兵の徴募費用と昇級費用が15%減少。" />
-    <string id="taom_feat_roh_mw" text="マークの騎士" />
-    <string id="taom_feat_roh_mw_desc" text="騎馬兵の賃金が15%減少。" />
-    <string id="taom_feat_roh_is" text="騎兵依存" />
-    <string id="taom_feat_roh_is_desc" text="歩兵が過半数の場合、部隊速度が10%減少。" />
-    <string id="taom_feat_roh_loy" text="馬の王の友誼" />
-    <string id="taom_feat_roh_loy_desc" text="拠点の忠誠度が1日あたり0.5増加。" />
-    <string id="taom_feat_roh_mor" text="騎士の気概" />
-    <string id="taom_feat_roh_mor_desc" text="部隊の士気が5増加。" />
-    <string id="taom_feat_roh_pls" text="平原の騎士" />
-    <string id="taom_feat_roh_pls_desc" text="平原での部隊移動速度が10%増加。" />
-    <string id="taom_feat_dale_pls" text="谷間の商人" />
-    <string id="taom_feat_dale_pls_desc" text="平原での部隊移動速度が10%増加。" />
-    <string id="taom_feat_dale_ti" text="ドワーフとの通商同盟" />
-    <string id="taom_feat_dale_ti_desc" text="関税収入が10%増加。" />
-    <string id="taom_feat_dale_r" text="黒い矢の伝統" />
-    <string id="taom_feat_dale_r_desc" text="戦闘による名声が10%増加。" />
-    <string id="taom_feat_dale_loy" text="狭小な領土の脆弱さ" />
-    <string id="taom_feat_dale_loy_desc" text="拠点の忠誠度が1日あたり0.5減少。" />
-    <string id="taom_feat_khand_sts" text="草原の戦車兵" />
-    <string id="taom_feat_khand_sts_desc" text="ステップでの部隊移動速度が10%増加。" />
-    <string id="taom_feat_khand_r" text="傭兵の名声" />
-    <string id="taom_feat_khand_r_desc" text="戦闘による名声が8%増加。" />
-    <string id="taom_feat_khand_ti" text="モルドールへの貢納" />
-    <string id="taom_feat_khand_ti_desc" text="関税収入が10%減少。" />
-    <string id="taom_feat_khand_fc" text="草原の忍耐" />
-    <string id="taom_feat_khand_fc_desc" text="部隊の食料消費が10%減少。" />
-    <string id="taom_feat_khand_ps" text="戦車兵の機動力" />
-    <string id="taom_feat_khand_ps_desc" text="部隊の人数上限が5%増加。" />
-    <string id="taom_feat_rhun_sts" text="東夷の斥候騎兵" />
-    <string id="taom_feat_rhun_sts_desc" text="ステップでの部隊移動速度が10%増加。" />
-    <string id="taom_feat_rhun_ps" text="東夷の大軍" />
-    <string id="taom_feat_rhun_ps_desc" text="部隊の人数上限が5%増加。" />
-    <string id="taom_feat_rhun_loy" text="東夷への貢納" />
-    <string id="taom_feat_rhun_loy_desc" text="拠点の忠誠度が1日あたり0.5減少。" />
-    <string id="taom_feat_rhun_rd" text="草原の襲撃者の教え" />
-    <string id="taom_feat_rhun_rd_desc" text="襲撃による被害が15%増加。" />
-    <string id="taom_feat_har_ds" text="太陽の子ら" />
-    <string id="taom_feat_har_ds_desc" text="砂漠での部隊移動速度が10%増加。" />
-    <string id="taom_feat_har_ps" text="ハラドリムの戦団" />
-    <string id="taom_feat_har_ps_desc" text="部隊の人数上限が5%増加する。" />
-    <string id="taom_feat_harad_mor" text="ムマキルの操り手" />
-    <string id="taom_feat_harad_mor_desc" text="部隊の士気が5増加する。" />
-    <string id="taom_feat_harad_fc" text="砂漠の耐久力" />
-    <string id="taom_feat_harad_fc_desc" text="部隊の食料消費が15%減少する。" />
-    <string id="taom_feat_harad_rd" text="遠ハラドの蛮勇" />
-    <string id="taom_feat_harad_rd_desc" text="襲撃による被害が15%増加する。" />
-    <string id="taom_feat_harad_aic" text="分裂した部族" />
-    <string id="taom_feat_harad_aic_desc" text="軍の召集に必要な影響力が15%増加する。" />
-    <string id="taom_feat_dun_pls" text="丘の行軍者" />
-    <string id="taom_feat_dun_pls_desc" text="平原での部隊の移動速度が10%増加する。" />
-    <string id="taom_feat_dun_ps" text="丘族の徴兵" />
-    <string id="taom_feat_dun_ps_desc" text="部隊の人数上限が5%増加する。" />
-    <string id="taom_feat_dun_vr" text="丘族の募兵" />
-    <string id="taom_feat_dun_vr_desc" text="村の志願兵の回復速度が10%増加する。" />
-    <string id="taom_feat_shg_ds" text="砂丘の放浪者" />
-    <string id="taom_feat_shg_ds_desc" text="砂漠での部隊の移動速度が10%増加する。" />
-    <string id="taom_feat_aba_ds" text="深奥砂漠の遊牧民" />
-    <string id="taom_feat_aba_ds_desc" text="砂漠での部隊の移動速度が10%増加する。" />
-    <string id="taom_ep_no_hero" text="所持品画面に有効な英雄がいません。" />
-    <string id="taom_ep_save" text="新規保存" />
-    <string id="taom_ep_save_hint" text="現在の装備を新しいプリセットとして保存します。" />
-    <string id="taom_ep_load" text="読み込み" />
-    <string id="taom_ep_load_hint" text="保存したプリセットを装備します。" />
-    <string id="taom_ep_update" text="更新" />
-    <string id="taom_ep_update_hint" text="保存済みのプリセットを現在の装備で上書きします。" />
-    <string id="taom_ep_delete" text="削除" />
-    <string id="taom_ep_delete_hint" text="プリセットを削除します。" />
-    <string id="taom_ep_title" text="装備プリセット" />
-    <string id="taom_ep_ok" text="OK" />
-    <string id="taom_ep_cancel" text="キャンセル" />
-    <string id="taom_ep_header" text="英雄: {HERO}  プリセット: {COUNT}/{MAX}" />
-    <string id="taom_ep_save_title" text="プリセットの保存" />
-    <string id="taom_ep_save_msg" text="名前を入力してください。プリセットには現在の戦闘装備と平服、および馬が保存されます。" />
-    <string id="taom_ep_select_load" text="プリセットの読み込み" />
-    <string id="taom_ep_select_update" text="プリセットの更新" />
-    <string id="taom_ep_select_delete" text="プリセットの削除" />
-    <string id="taom_ep_select" text="プリセットの選択" />
-    <string id="taom_ep_load_failed" text="読み込みに失敗しました。" />
-    <string id="taom_ep_load_partial" text="{EQUIPPED}個のアイテムを装備しました。不足アイテム: {MISS_ITEMS}。不足する修正: {MISS_MODS}。" />
-    <string id="taom_ep_load_ok" text="プリセットを読み込みました（{COUNT}個の装備）。" />
-    <string id="taom_ep_updated" text="プリセットを更新しました。" />
-    <string id="taom_ep_notfound" text="プリセットが見つかりません。" />
-    <string id="taom_ep_disabled" text="装備プリセットはMCMで無効になっています。" />
-    <string id="taom_ep_delete_title" text="プリセットの削除" />
-    <string id="taom_ep_delete_msg" text="このプリセットを削除してもよろしいですか？" />
-    <string id="taom_ep_yes" text="はい" />
-    <string id="taom_ep_no" text="いいえ" />
-    <string id="taom_ep_deleted" text="プリセットを削除しました。" />
-    <string id="taom_ep_saved" text="プリセット「{NAME}」を保存しました。" />
-    <string id="taom_ep_max" text="プリセットの上限（{MAX}）に達しました。新しく保存するには一つ削除してください。" />
-    <string id="taom_ep_bad_name" text="プリセット名を空にはできません。" />
-    <string id="taom_ep_psummary" text="戦闘: {B}  平服: {C}  騎乗: {M}" />
-    <string id="taom_fief_hub_empty" text="領地管理 — 所有する領地なし" />
-    <string id="taom_fief_hub_title" text="領地管理 — {NAME}（{KIND}）[{INDEX}/{COUNT}]" />
-    <string id="taom_fief_kind_town" text="都市" />
-    <string id="taom_fief_kind_castle" text="城" />
-    <string id="taom_fief_hub_remote_disabled" text="遠隔からの建設キューは無効です — 管理するには領地を訪れてください。" />
-    <string id="taom_fief_hub_prev" text="前の領地" />
-    <string id="taom_fief_hub_next" text="次の領地" />
-    <string id="taom_fief_hub_manage" text="この領地を管理する" />
-    <string id="taom_fief_hub_leave" text="立ち去る" />
-    <string id="taom_fief_no_fiefs" text="まだ領地を所有していません。" />
-    <string id="taom_fief_nav_label" text="領地" />
-    <string id="taom_qa_title" text="クイックアクション" />
-    <string id="taom_qa_desc" text="行動を選択してください。" />
-    <string id="taom_qa_ok" text="OK" />
-    <string id="taom_qa_cancel" text="キャンセル" />
-    <string id="taom_qa_confirm_title" text="確認" />
-    <string id="taom_qa_confirm_msg" text="この一括操作を適用しますか？" />
-    <string id="taom_qa_yes" text="はい" />
-    <string id="taom_qa_no" text="いいえ" />
-    <string id="taom_extra_fast_forward_hint" text="追加早送り（E）" />
+    <string id="taom_res_desertion" text="{COUNT}名の精鋭兵が脱走した — {RESOURCE}が枯渇している！" />
+    <string id="taom_feat_erebor_gw" text="ドワーフの守備隊" />
+    <string id="taom_feat_erebor_gw_desc" text="守備隊の給与が25％減少する。" />
+    <string id="taom_feat_erebor_p" text="ドワーフの工業" />
+    <string id="taom_feat_erebor_p_desc" text="すべての村の生産が10％増加する。" />
+    <string id="taom_feat_erebor_cs" text="ドワーフの完璧主義" />
+    <string id="taom_feat_erebor_cs_desc" text="建設速度が15％減少する。" />
+    <string id="taom_feat_erebor_loy" text="ドワーフの誇り" />
+    <string id="taom_feat_erebor_loy_desc" text="拠点の忠誠が1日あたり1増加する。" />
+    <string id="taom_feat_erebor_mor" text="ドワーフの頑固さ" />
+    <string id="taom_feat_erebor_mor_desc" text="部隊の士気が5増加する。" />
+    <string id="taom_feat_erebor_sm" text="熟練の鍛冶師" />
+    <string id="taom_feat_erebor_sm_desc" text="鍛冶のエネルギー消費が30％減少する。" />
+    <string id="taom_feat_erebor_ss" text="山の民" />
+    <string id="taom_feat_erebor_ss_desc" text="雪上での部隊移動速度が10％増加する。" />
+    <string id="taom_feat_erebor_ti" text="ドワーフの倹約" />
+    <string id="taom_feat_erebor_ti_desc" text="関税収入が5％増加する。" />
+    <string id="taom_feat_riv_ai" text="エルフの知恵" />
+    <string id="taom_feat_riv_ai_desc" text="軍の影響力報酬が35％増加する。" />
+    <string id="taom_feat_riv_hg" text="最後の憩い館" />
+    <string id="taom_feat_riv_hg_desc" text="村の炉の成長が20％増加する。" />
+    <string id="taom_feat_riv_aic" text="エルフの矜持" />
+    <string id="taom_feat_riv_aic_desc" text="軍の招集に必要な影響力が25％増加する。" />
+    <string id="taom_feat_riv_fc" text="エルフの節制" />
+    <string id="taom_feat_riv_fc_desc" text="部隊の食料消費が15％減少する。" />
+    <string id="taom_feat_riv_loy" text="エルフの知恵" />
+    <string id="taom_feat_riv_loy_desc" text="拠点の忠誠が1日あたり0.5増加する。" />
+    <string id="taom_feat_riv_fs" text="森の優雅さ" />
+    <string id="taom_feat_riv_fs_desc" text="森林での部隊移動速度が10％増加する。" />
+    <string id="taom_feat_mrk_fs" text="闇の森の王国" />
+    <string id="taom_feat_mrk_fs_desc" text="森林での部隊移動速度が10％増加する。" />
+    <string id="taom_feat_mrk_mp" text="シルヴァンの守人" />
+    <string id="taom_feat_mrk_mp_desc" text="熟練民兵が出現する確率が25％増加する。" />
+    <string id="taom_feat_mrk_hg" text="森の孤立" />
+    <string id="taom_feat_mrk_hg_desc" text="村の炉の成長が20％減少する。" />
+    <string id="taom_feat_mrk_fc" text="森の恵み" />
+    <string id="taom_feat_mrk_fc_desc" text="部隊の食料消費が15％減少する。" />
+    <string id="taom_feat_mrk_mor" text="森の絆" />
+    <string id="taom_feat_mrk_mor_desc" text="部隊の士気が3増加する。" />
+    <string id="taom_feat_mrk_aic" text="孤立主義の宮廷" />
+    <string id="taom_feat_mrk_aic_desc" text="軍の召集に必要な影響力が15%増加する。" />
+    <string id="taom_feat_loth_fs" text="黄金の森" />
+    <string id="taom_feat_loth_fs_desc" text="森林での部隊移動速度が10%上昇する。" />
+    <string id="taom_feat_loth_gw" text="ロリアンの守人" />
+    <string id="taom_feat_loth_gw_desc" text="守備隊の給与が20%減少する。" />
+    <string id="taom_feat_loth_cs" text="永遠の技" />
+    <string id="taom_feat_loth_cs_desc" text="建設速度が10%減少する。" />
+    <string id="taom_feat_loth_fc" text="レンバスのパン" />
+    <string id="taom_feat_loth_fc_desc" text="部隊の食料消費が15%減少する。" />
+    <string id="taom_feat_loth_loy" text="エルフの優雅" />
+    <string id="taom_feat_loth_loy_desc" text="拠点の忠誠が1日あたり0.5上昇する。" />
+    <string id="taom_feat_loth_mor" text="エルフの調和" />
+    <string id="taom_feat_loth_mor_desc" text="部隊の士気が3上昇する。" />
+    <string id="taom_feat_loth_vr" text="衰えゆく光" />
+    <string id="taom_feat_loth_vr_desc" text="村の志願兵の再出現率が15%減少する。" />
+    <string id="taom_feat_isen_cr" text="戦争機械" />
+    <string id="taom_feat_isen_cr_desc" text="騎乗兵の雇用および昇格の費用が15%減少する。" />
+    <string id="taom_feat_isen_gw" text="オルサンクの守備隊" />
+    <string id="taom_feat_isen_gw_desc" text="守備隊の給与が20%減少する。" />
+    <string id="taom_feat_isen_dp" text="サルマンの支配" />
+    <string id="taom_feat_isen_dp_desc" text="王国の決定による関係悪化が25%増加する。" />
+    <string id="taom_feat_isen_ps" text="ウルク=ハイ軍団" />
+    <string id="taom_feat_isen_ps_desc" text="部隊の人数上限が20%増加する。" />
+    <string id="taom_feat_isen_cs" text="産業の力" />
+    <string id="taom_feat_isen_cs_desc" text="建設速度が15%上昇する。" />
+    <string id="taom_feat_isen_sm" text="産業の炉" />
+    <string id="taom_feat_isen_sm_desc" text="鍛冶のエネルギー消費が20%減少する。" />
+    <string id="taom_feat_isen_rd" text="戦争機械の襲撃" />
+    <string id="taom_feat_isen_rd_desc" text="襲撃による被害が20%増加する。" />
+    <string id="taom_feat_isen_ps2" text="強行軍" />
+    <string id="taom_feat_isen_ps2_desc" text="平原での部隊移動速度が10%上昇する。" />
+    <string id="taom_feat_isen_sws" text="沼地の教練官" />
+    <string id="taom_feat_isen_sws_desc" text="沼地での部隊移動速度が10%上昇する。" />
+    <string id="taom_feat_isen_nctm" text="オルサンクの補給官" />
+    <string id="taom_feat_isen_nctm_desc" text="都市の商人有力者が+2。" />
+    <string id="taom_feat_isen_ncta" text="産業の炉" />
+    <string id="taom_feat_isen_ncta_desc" text="都市の職人有力者が+1。" />
+    <string id="taom_feat_isen_nctg" text="ウルク=ハイの隊長" />
+    <string id="taom_feat_isen_nctg_desc" text="都市のギャング頭領の有力者が+12（アイゼンガルドの唯一の都市が主要な兵員募集拠点となる）。" />
+    <string id="taom_feat_isen_ncv" text="鉄の圧政" />
+    <string id="taom_feat_isen_ncv_desc" text="村の有力者の数が10%増加。" />
+    <string id="taom_feat_gun_aic" text="オークの大群" />
+    <string id="taom_feat_gun_aic_desc" text="軍の招集に必要な影響力が40%減少。" />
+    <string id="taom_feat_gun_gp" text="略奪した蓄え" />
+    <string id="taom_feat_gun_gp_desc" text="穀物生産量が15%増加。" />
+    <string id="taom_feat_gun_w" text="略奪の要求" />
+    <string id="taom_feat_gun_w_desc" text="部隊の給料が10%増加。" />
+    <string id="taom_feat_gun_ps" text="山の群れ" />
+    <string id="taom_feat_gun_ps_desc" text="部隊の人数上限が20%増加。" />
+    <string id="taom_feat_gun_rd" text="オークの掠奪者" />
+    <string id="taom_feat_gun_rd_desc" text="襲撃による被害が25%増加。" />
+    <string id="taom_feat_gun_ss" text="山の襲撃者" />
+    <string id="taom_feat_gun_ss_desc" text="雪原での部隊の移動速度が10%増加。" />
+    <string id="taom_feat_gun_vr" text="山の徴募兵" />
+    <string id="taom_feat_gun_vr_desc" text="村の志願兵の回復速度が20%増加。" />
+    <string id="taom_feat_gun_ncta" text="骨の鍛冶師" />
+    <string id="taom_feat_gun_ncta_desc" text="都市の職人の有力者+1。" />
+    <string id="taom_feat_gun_nctg" text="青白き戦団の族長" />
+    <string id="taom_feat_gun_nctg_desc" text="都市のギャング頭の有力者+3。" />
+    <string id="taom_feat_gun_ncv" text="骨の野営地" />
+    <string id="taom_feat_gun_ncv_desc" text="村の有力者の数が10%増加。" />
+    <string id="taom_feat_gob_ps" text="ゴブリンの群れ" />
+    <string id="taom_feat_gob_ps_desc" text="部隊の人数上限が40%増加。" />
+    <string id="taom_feat_gob_vr" text="尽きぬ湧き出し" />
+    <string id="taom_feat_gob_vr_desc" text="村の志願兵の回復速度が25%増加。" />
+    <string id="taom_feat_gob_ss" text="坑道走り" />
+    <string id="taom_feat_gob_ss_desc" text="雪原での部隊の移動速度が10%増加。" />
+    <string id="taom_feat_gob_fc" text="貪欲な群れ" />
+    <string id="taom_feat_gob_fc_desc" text="部隊の食料消費が20%増加。" />
+    <string id="taom_feat_gob_sm" text="奪った武器の蓄え" />
+    <string id="taom_feat_gob_sm_desc" text="鍛冶のエネルギー消費が10%減少。" />
+    <string id="taom_feat_gob_rd" text="ゴブリンの奇襲" />
+    <string id="taom_feat_gob_rd_desc" text="襲撃による被害が10%増加。" />
+    <string id="taom_feat_mmo_aic" text="オークの大群" />
+    <string id="taom_feat_mmo_aic_desc" text="軍の招集に必要な影響力が40%減少。" />
+    <string id="taom_feat_mmo_ps" text="山の軍勢" />
+    <string id="taom_feat_mmo_ps_desc" text="部隊の人数上限が30%増加。" />
+    <string id="taom_feat_mmo_ss" text="山に育まれし者" />
+    <string id="taom_feat_mmo_ss_desc" text="雪原での部隊の移動速度が10%増加。" />
+    <string id="taom_feat_mmo_fc" text="飢えた軍勢" />
+    <string id="taom_feat_mmo_fc_desc" text="部隊の食料消費が15%増加する。" />
+    <string id="taom_feat_mmo_sm" text="略奪された鍛冶場" />
+    <string id="taom_feat_mmo_sm_desc" text="鍛冶の消費エネルギーが15%減少する。" />
+    <string id="taom_feat_mmo_rd" text="洞窟トロルの徴集" />
+    <string id="taom_feat_mmo_rd_desc" text="襲撃による損害が15%増加する。" />
+    <string id="taom_feat_mmo_cs" text="響き渡る広間" />
+    <string id="taom_feat_mmo_cs_desc" text="建設速度が10%減少する。" />
+    <string id="taom_feat_umb_cc" text="海賊の交易" />
+    <string id="taom_feat_umb_cc_desc" text="隊商の編成費用が25%減少する。" />
+    <string id="taom_feat_umb_r" text="海賊の栄光" />
+    <string id="taom_feat_umb_r_desc" text="戦闘で得る名声が8%増加する。" />
+    <string id="taom_feat_umb_w" text="海賊の貪欲" />
+    <string id="taom_feat_umb_w_desc" text="部隊の賃金が8%増加する。" />
+    <string id="taom_feat_umb_ti" text="海賊の交易網" />
+    <string id="taom_feat_umb_ti_desc" text="関税収入が15%増加する。" />
+    <string id="taom_feat_umb_ds" text="砂漠の海賊" />
+    <string id="taom_feat_umb_ds_desc" text="砂漠での部隊の移動速度が10%増加する。" />
+    <string id="taom_feat_umb_rd" text="海賊の襲撃戦術" />
+    <string id="taom_feat_umb_rd_desc" text="襲撃による損害が20%増加する。" />
+    <string id="taom_feat_umb_fc" text="黒きヌーメノール人の忍耐" />
+    <string id="taom_feat_umb_fc_desc" text="部隊の食料消費が10%減少する。" />
+    <string id="taom_feat_dg_aic" text="影の統帥" />
+    <string id="taom_feat_dg_aic_desc" text="軍の招集に必要な影響力が50%減少する。" />
+    <string id="taom_feat_dg_mp" text="暗黒の徴兵" />
+    <string id="taom_feat_dg_mp_desc" text="精鋭民兵が現れる確率が20%増加する。" />
+    <string id="taom_feat_dg_cs" text="荒廃した工事" />
+    <string id="taom_feat_dg_cs_desc" text="建設速度が20%減少する。" />
+    <string id="taom_feat_dg_ps" text="暗黒の軍団" />
+    <string id="taom_feat_dg_ps_desc" text="部隊の人数上限が20%増加する。" />
+    <string id="taom_feat_dg_fc" text="貪欲なる大群" />
+    <string id="taom_feat_dg_fc_desc" text="部隊の食料消費が10%増加する。" />
+    <string id="taom_feat_dg_vr" text="暗黒の徴集兵" />
+    <string id="taom_feat_dg_vr_desc" text="村の志願兵の再出現速度が20%増加する。" />
+    <string id="taom_feat_dg_nctm" text="影の仲買人" />
+    <string id="taom_feat_dg_nctm_desc" text="都市の商人の有力者が+1。" />
+    <string id="taom_feat_dg_ncta" text="暗黒の鍛冶場" />
+    <string id="taom_feat_dg_ncta_desc" text="都市の職人の有力者が+1。" />
+    <string id="taom_feat_dg_nctg" text="影の隊長たち" />
+    <string id="taom_feat_dg_nctg_desc" text="都市のギャング頭の有力者が+13(ドル・グルドゥアの影の司令拠点)。" />
+    <string id="taom_feat_dg_ncv" text="隠された小屋" />
+    <string id="taom_feat_dg_ncv_desc" text="村の有力者の数が10%増加する。" />
+    <string id="taom_feat_gon_gw" text="塔の衛兵" />
+    <string id="taom_feat_gon_gw_desc" text="守備隊の賃金が20%減少する。" />
+    <string id="taom_feat_gon_ai" text="ゴンドールの規律" />
+    <string id="taom_feat_gon_ai_desc" text="軍の影響力報酬が30%増加する。" />
+    <string id="taom_feat_gon_hg" text="戦に疲れた土地" />
+    <string id="taom_feat_gon_hg_desc" text="村の炉の成長が15%減少する。" />
+    <string id="taom_feat_gon_ps" text="常備軍" />
+    <string id="taom_feat_gon_ps_desc" text="部隊の人数上限が2.5%増加する。" />
+    <string id="taom_feat_gon_loy" text="塔の衛兵の規律" />
+    <string id="taom_feat_gon_loy_desc" text="拠点の忠誠心が1日あたり1増加する。" />
+    <string id="taom_feat_gon_mor" text="ゴンドールの決意" />
+    <string id="taom_feat_gon_mor_desc" text="部隊の士気が5増加する。" />
+    <string id="taom_feat_gon_ps2" text="野の人々" />
+    <string id="taom_feat_gon_ps2_desc" text="平原での部隊の移動速度が10%増加する。" />
+    <string id="taom_feat_mor_aic" text="冥王の意志" />
+    <string id="taom_feat_mor_aic_desc" text="軍の招集に必要な影響力が60%減少する。" />
+    <string id="taom_feat_mor_gp" text="ヌルンの農地" />
+    <string id="taom_feat_mor_gp_desc" text="穀物の生産量が20%増加する。" />
+    <string id="taom_feat_mor_w" text="暗黒の貢納" />
+    <string id="taom_feat_mor_w_desc" text="部隊の賃金が20%増加する。" />
+    <string id="taom_feat_mor_ps" text="サウロンの大軍" />
+    <string id="taom_feat_mor_ps_desc" text="部隊の人数上限が10%増加する。" />
+    <string id="taom_feat_mor_rd" text="サウロンの怒り" />
+    <string id="taom_feat_mor_rd_desc" text="襲撃による被害が25%増加する。" />
+    <string id="taom_feat_mor_pls" text="影の行軍" />
+    <string id="taom_feat_mor_pls_desc" text="平原での部隊の移動速度が5%増加する。" />
+    <string id="taom_feat_mor_sws" text="死者の沼地" />
+    <string id="taom_feat_mor_sws_desc" text="沼地での部隊の移動速度が5%増加する。" />
+    <string id="taom_feat_mor_ns" text="闇の生き物" />
+    <string id="taom_feat_mor_ns_desc" text="夜間の部隊の移動速度が10%増加する。" />
+    <string id="taom_feat_mor_vr" text="サウロンの徴兵" />
+    <string id="taom_feat_mor_vr_desc" text="村の志願兵の回復速度が20%増加する。" />
+    <string id="taom_feat_mord_sm" text="暗黒の鍛冶" />
+    <string id="taom_feat_mord_sm_desc" text="鍛冶の体力消費が15%減少する。" />
+    <string id="taom_feat_mor_nctg" text="暗黒語の伝令" />
+    <string id="taom_feat_mor_nctg_desc" text="都市のギャングの頭目である有力者が+2される。" />
+    <string id="taom_feat_mor_ncv" text="奴隷監督者" />
+    <string id="taom_feat_mor_ncv_desc" text="村の有力者の数が5%増加する。" />
+    <string id="taom_feat_roh_mc" text="馬の王の血統" />
+    <string id="taom_feat_roh_mc_desc" text="騎馬兵の徴募費用と昇級費用が15%減少。" />
+    <string id="taom_feat_roh_mw" text="マークの騎士" />
+    <string id="taom_feat_roh_mw_desc" text="騎馬兵の賃金が15%減少。" />
+    <string id="taom_feat_roh_is" text="騎兵依存" />
+    <string id="taom_feat_roh_is_desc" text="歩兵が過半数の場合、部隊速度が10%減少。" />
+    <string id="taom_feat_roh_loy" text="馬の王の友誼" />
+    <string id="taom_feat_roh_loy_desc" text="拠点の忠誠度が1日あたり0.5増加。" />
+    <string id="taom_feat_roh_mor" text="騎士の気概" />
+    <string id="taom_feat_roh_mor_desc" text="部隊の士気が5増加。" />
+    <string id="taom_feat_roh_pls" text="平原の騎士" />
+    <string id="taom_feat_roh_pls_desc" text="平原での部隊移動速度が10%増加。" />
+    <string id="taom_feat_dale_pls" text="谷間の商人" />
+    <string id="taom_feat_dale_pls_desc" text="平原での部隊移動速度が10%増加。" />
+    <string id="taom_feat_dale_ti" text="ドワーフとの通商同盟" />
+    <string id="taom_feat_dale_ti_desc" text="関税収入が10%増加。" />
+    <string id="taom_feat_dale_r" text="黒い矢の伝統" />
+    <string id="taom_feat_dale_r_desc" text="戦闘による名声が10%増加。" />
+    <string id="taom_feat_dale_loy" text="狭小な領土の脆弱さ" />
+    <string id="taom_feat_dale_loy_desc" text="拠点の忠誠度が1日あたり0.5減少。" />
+    <string id="taom_feat_khand_sts" text="草原の戦車兵" />
+    <string id="taom_feat_khand_sts_desc" text="ステップでの部隊移動速度が10%増加。" />
+    <string id="taom_feat_khand_r" text="傭兵の名声" />
+    <string id="taom_feat_khand_r_desc" text="戦闘による名声が8%増加。" />
+    <string id="taom_feat_khand_ti" text="モルドールへの貢納" />
+    <string id="taom_feat_khand_ti_desc" text="関税収入が10%減少。" />
+    <string id="taom_feat_khand_fc" text="草原の忍耐" />
+    <string id="taom_feat_khand_fc_desc" text="部隊の食料消費が10%減少。" />
+    <string id="taom_feat_khand_ps" text="戦車兵の機動力" />
+    <string id="taom_feat_khand_ps_desc" text="部隊の人数上限が5%増加。" />
+    <string id="taom_feat_rhun_sts" text="東夷の斥候騎兵" />
+    <string id="taom_feat_rhun_sts_desc" text="ステップでの部隊移動速度が10%増加。" />
+    <string id="taom_feat_rhun_ps" text="東夷の大軍" />
+    <string id="taom_feat_rhun_ps_desc" text="部隊の人数上限が5%増加。" />
+    <string id="taom_feat_rhun_loy" text="東夷への貢納" />
+    <string id="taom_feat_rhun_loy_desc" text="拠点の忠誠度が1日あたり0.5減少。" />
+    <string id="taom_feat_rhun_rd" text="草原の襲撃者の教え" />
+    <string id="taom_feat_rhun_rd_desc" text="襲撃による被害が15%増加。" />
+    <string id="taom_feat_har_ds" text="太陽の子ら" />
+    <string id="taom_feat_har_ds_desc" text="砂漠での部隊移動速度が10%増加。" />
+    <string id="taom_feat_har_ps" text="ハラドリムの戦団" />
+    <string id="taom_feat_har_ps_desc" text="部隊の人数上限が5%増加する。" />
+    <string id="taom_feat_harad_mor" text="ムマキルの操り手" />
+    <string id="taom_feat_harad_mor_desc" text="部隊の士気が5増加する。" />
+    <string id="taom_feat_harad_fc" text="砂漠の耐久力" />
+    <string id="taom_feat_harad_fc_desc" text="部隊の食料消費が15%減少する。" />
+    <string id="taom_feat_harad_rd" text="遠ハラドの蛮勇" />
+    <string id="taom_feat_harad_rd_desc" text="襲撃による被害が15%増加する。" />
+    <string id="taom_feat_harad_aic" text="分裂した部族" />
+    <string id="taom_feat_harad_aic_desc" text="軍の召集に必要な影響力が15%増加する。" />
+    <string id="taom_feat_dun_pls" text="丘の行軍者" />
+    <string id="taom_feat_dun_pls_desc" text="平原での部隊の移動速度が10%増加する。" />
+    <string id="taom_feat_dun_ps" text="丘族の徴兵" />
+    <string id="taom_feat_dun_ps_desc" text="部隊の人数上限が5%増加する。" />
+    <string id="taom_feat_dun_vr" text="丘族の募兵" />
+    <string id="taom_feat_dun_vr_desc" text="村の志願兵の回復速度が10%増加する。" />
+    <string id="taom_feat_shg_ds" text="砂丘の放浪者" />
+    <string id="taom_feat_shg_ds_desc" text="砂漠での部隊の移動速度が10%増加する。" />
+    <string id="taom_feat_aba_ds" text="深奥砂漠の遊牧民" />
+    <string id="taom_feat_aba_ds_desc" text="砂漠での部隊の移動速度が10%増加する。" />
+    <string id="taom_ep_no_hero" text="所持品画面に有効な英雄がいません。" />
+    <string id="taom_ep_save" text="新規保存" />
+    <string id="taom_ep_save_hint" text="現在の装備を新しいプリセットとして保存します。" />
+    <string id="taom_ep_load" text="読み込み" />
+    <string id="taom_ep_load_hint" text="保存したプリセットを装備します。" />
+    <string id="taom_ep_update" text="更新" />
+    <string id="taom_ep_update_hint" text="保存済みのプリセットを現在の装備で上書きします。" />
+    <string id="taom_ep_delete" text="削除" />
+    <string id="taom_ep_delete_hint" text="プリセットを削除します。" />
+    <string id="taom_ep_title" text="装備プリセット" />
+    <string id="taom_ep_ok" text="OK" />
+    <string id="taom_ep_cancel" text="キャンセル" />
+    <string id="taom_ep_header" text="英雄: {HERO}  プリセット: {COUNT}/{MAX}" />
+    <string id="taom_ep_save_title" text="プリセットの保存" />
+    <string id="taom_ep_save_msg" text="名前を入力してください。プリセットには現在の戦闘装備と平服、および馬が保存されます。" />
+    <string id="taom_ep_select_load" text="プリセットの読み込み" />
+    <string id="taom_ep_select_update" text="プリセットの更新" />
+    <string id="taom_ep_select_delete" text="プリセットの削除" />
+    <string id="taom_ep_select" text="プリセットの選択" />
+    <string id="taom_ep_load_failed" text="読み込みに失敗しました。" />
+    <string id="taom_ep_load_partial" text="{EQUIPPED}個のアイテムを装備しました。不足アイテム: {MISS_ITEMS}。不足する修正: {MISS_MODS}。" />
+    <string id="taom_ep_load_ok" text="プリセットを読み込みました（{COUNT}個の装備）。" />
+    <string id="taom_ep_updated" text="プリセットを更新しました。" />
+    <string id="taom_ep_notfound" text="プリセットが見つかりません。" />
+    <string id="taom_ep_disabled" text="装備プリセットはMCMで無効になっています。" />
+    <string id="taom_ep_delete_title" text="プリセットの削除" />
+    <string id="taom_ep_delete_msg" text="このプリセットを削除してもよろしいですか？" />
+    <string id="taom_ep_yes" text="はい" />
+    <string id="taom_ep_no" text="いいえ" />
+    <string id="taom_ep_deleted" text="プリセットを削除しました。" />
+    <string id="taom_ep_saved" text="プリセット「{NAME}」を保存しました。" />
+    <string id="taom_ep_max" text="プリセットの上限（{MAX}）に達しました。新しく保存するには一つ削除してください。" />
+    <string id="taom_ep_bad_name" text="プリセット名を空にはできません。" />
+    <string id="taom_ep_psummary" text="戦闘: {B}  平服: {C}  騎乗: {M}" />
+    <string id="taom_fief_hub_empty" text="領地管理 — 所有する領地なし" />
+    <string id="taom_fief_hub_title" text="領地管理 — {NAME}（{KIND}）[{INDEX}/{COUNT}]" />
+    <string id="taom_fief_kind_town" text="都市" />
+    <string id="taom_fief_kind_castle" text="城" />
+    <string id="taom_fief_hub_remote_disabled" text="遠隔からの建設キューは無効です — 管理するには領地を訪れてください。" />
+    <string id="taom_fief_hub_prev" text="前の領地" />
+    <string id="taom_fief_hub_next" text="次の領地" />
+    <string id="taom_fief_hub_manage" text="この領地を管理する" />
+    <string id="taom_fief_hub_leave" text="立ち去る" />
+    <string id="taom_fief_no_fiefs" text="まだ領地を所有していません。" />
+    <string id="taom_fief_nav_label" text="領地" />
+    <string id="taom_qa_title" text="クイックアクション" />
+    <string id="taom_qa_desc" text="行動を選択してください。" />
+    <string id="taom_qa_ok" text="OK" />
+    <string id="taom_qa_cancel" text="キャンセル" />
+    <string id="taom_qa_confirm_title" text="確認" />
+    <string id="taom_qa_confirm_msg" text="この一括操作を適用しますか？" />
+    <string id="taom_qa_yes" text="はい" />
+    <string id="taom_qa_no" text="いいえ" />
+    <string id="taom_extra_fast_forward_hint" text="追加早送り（E）" />
+    <string id="taom_str_faction_official.lindon" text="a loremaster of Lindon" />
+    <string id="taom_str_faction_official.lindon_f" text="a healer of Lindon" />
+    <string id="taom_str_faction_ruler.lindon" text="Lord" />
+    <string id="taom_str_faction_ruler.lindon_f" text="Lady" />
+    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lindon" text="Lindonian" />
+    <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
+    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Grey Havens" />
+    <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
+    <string id="taom_str_neutral_term_for_culture.lindon" text="Elves of Lindon" />
+    <string id="taom_str_culture_description.lindon" text="Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
+    <string id="taom_str_culture_rich_name.lindon" text="Falathrim" />
+    <string id="taom_str_adjective_for_culture.lindon" text="Lindonian" />
+    <string id="taom_str_player_father_name.lindon" text="Celeforn" />
+    <string id="taom_str_player_mother_name.lindon" text="Gilrien" />
+    <string id="taom_str_faction_official.bluecraig" text="a chieftain of Blue Craig" />
+    <string id="taom_str_faction_official.bluecraig_f" text="a chieftainess of Blue Craig" />
+    <string id="taom_str_faction_ruler.bluecraig" text="Warlord" />
+    <string id="taom_str_faction_ruler.bluecraig_f" text="Lady Warlord" />
+    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="the Warlord, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Warlord {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
+    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
+    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins of Blue Craig" />
+    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />
+    <string id="taom_str_culture_description.bluecraig" text="The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
+    <string id="taom_str_culture_rich_name.bluecraig" text="Goblins" />
+    <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
+    <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
   </strings>
 </base>

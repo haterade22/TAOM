@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+
+	<!-- ==================== RIVENDELL LORD BATTLE EQUIPMENT ==================== -->
+
+	<EquipmentRoster id="lindon_bat_template_medium_a" culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_bat_template_medium_b" culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_bat_template_medium_c" culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_vambraces_3" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_bat_template_medium_d" culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_bat_template_medium_e" culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circletmask" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_c" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== RIVENDELL LORD CIVILIAN EQUIPMENT ==================== -->
+
+	<EquipmentRoster id="lindon_civ_template_default_a" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_a" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_civ_template_default_b" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_civ_template_default_c" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_vambraces_3" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_civ_template_default_d" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
+			<Equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_civ_template_default_e" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circletmask" />
+			<Equipment slot="Body" id="Item.rivendell_body_gold_c" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+
+	<!-- ==================== GLORFINDEL ==================== -->
+
+	<EquipmentRoster id="lindon_glorfindel_civ_equipment" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01_silver" />
+			<Equipment slot="Head" id="Item.glorfindel_helmet" />
+			<Equipment slot="Body" id="Item.glorfindel_body" />
+			<Equipment slot="Cape" id="Item.glorfindel_pauldrons" />
+			<Equipment slot="Gloves" id="Item.glorfindel_gauntlets" />
+			<Equipment slot="Leg" id="Item.glorfindel_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lindon_glorfindel_bat_equipment" culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01_silver" />
+			<Equipment slot="Head" id="Item.glorfindel_helmet" />
+			<Equipment slot="Body" id="Item.glorfindel_body" />
+			<Equipment slot="Cape" id="Item.glorfindel_pauldrons" />
+			<Equipment slot="Gloves" id="Item.glorfindel_gauntlets" />
+			<Equipment slot="Leg" id="Item.glorfindel_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+</EquipmentRosters>

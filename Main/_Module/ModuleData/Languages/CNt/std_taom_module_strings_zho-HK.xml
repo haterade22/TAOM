@@ -360,7 +360,6 @@
     <string id="taom_str_player_father_name.shaghana" text="扎爾坎" />
     <string id="taom_str_player_mother_name.shaghana" text="汗薩" />
     <string id="0aXG8dvJ" text="與{KINGDOM_NAME}議和。不支付貢金。" />
-    <string id="0bPb5btR" text="{LORD.NAME}是{CLAN_NAME}的成員,乃{FACTION_NAME}{CLAN_DESCRIPTION},在內戰中支持{RULER}。{?LORD.GENDER}她{?}他{\?}被譽為{REPUTATION}。" />
     <string id="0CsbbwtN" text="召喚{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰" />
     <string id="0nhqJewP" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}議會支持下,將{SETTLEMENT}授予{LEADER.NAME}。" />
     <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}議會支持下,決定與{KINGDOM}議和。" />
@@ -370,25 +369,20 @@
     <string id="21yUheIy" text="{KINGDOM_NAME}於{CREATION_YEAR}年由{RULER.NAME}創建,一位崛起的{CULTURE_ADJECTIVE}軍閥。" />
     <string id="22LCyCoA" text="我可以向您的王國提供{GOLD}{GOLD_ICON},以對{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
     <string id="2b1xZGaQ" text="與{KINGDOM_NAME}議和。我們的王國將每日支付{TRIBUTE_AMOUNT}貢金,為期{TRIBUTE_DURATION}天。" />
-    <string id="2BVDp7Tg" text="{KINGDOM}將停止{POLICY_DESCRIPTION}({POLICY})。{POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}的掠奪使許多農民離開家園。擁有土地的人通常會回去,但許多貧窮者正在尋找新的居住地。您與幾位在村莊外圍紮營的人交談。沒有土地給他們。他們似乎渴望作為佃農工作,但總是有可能與更穩定的村莊家庭產生緊張關係。" />
-    <string id="2mVZORaE" text="{FACTION_NAME}的僕人" />
     <string id="4fXpOe4N" text="來自{CLAN_NAME}的信使到達。他們扣押了{CAPTIVE_HERO.NAME},並要求{GOLD_AMOUNT}{GOLD_ICON}贖金。" />
     <string id="4GgfFDWG" text="與{KINGDOM_NAME}議和" />
     <string id="4JSzHkpt" text="作為{?IS_FEMALE}女王{?}國王{\?},您必須決定是否對{KINGDOM_NAME}宣戰" />
-    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}城堡的擁有者是{LORD.LINK},{FACTION_TERM}的{FACTION_OFFICIAL}。{KEEP_INFO}" />
     <string id="4z1t75be" text="{CLAN_NAME}的{FIRSTNAME}" />
     <string id="5bBAOHmC" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}議會意見均分的情況下,將{SETTLEMENT}作為{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="5bza9sDs" text="聽到這個消息我很遺憾。您不會找到比{FACTION_NAME}更好的僱主,這是肯定的。" />
     <string id="5DdbkWLu" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}議會支持下,決定與{OTHER_KINGDOM}簽訂貿易協定。" />
     <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}議會意見均分的情況下,選擇不與{KINGDOM}開戰。" />
     <string id="5pOKmHsf" text="{RULER.NAME}決定召喚{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。該決定獲得{?RULER.GENDER}她的{?}他的{\?}半數議會支持。" />
-    <string id="6d4ZTvGv" text="{LORD.NAME}是{FACTION_NAME}的{TITLE},也是{CLAN_NAME}的首領,乃該國{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}被譽為{REPUTATION}。" />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}佔領了我們的祖傳土地,並壓迫我們的同胞。" />
     <string id="7ouzFASf" text="一位信使到達,帶來{OFFERED_KINGDOM_LEADER.NAME}的訊息。{?OFFERED_KINGDOM_LEADER.GENDER}她{?}他{\?}提到您日益增長的聲望,並詢問您是否考慮宣誓成為{OFFERED_KINGDOM_NAME}的封臣。如果您有興趣,應該親自面談。" />
     <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}議會支持下,選擇不與{KINGDOM}開戰。" />
     <string id="940TwBPs" text="{RULER.NAME}不顧{?RULER.GENDER}她的{?}他的{\?}議會反對,選擇不將{CLAN}氏族逐出{KINGDOM}。" />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}是{CLAN_NAME}的成員,乃來自{FACTION_NAME}領地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}被譽為{REPUTATION}。" />
     <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}選擇不與{KINGDOM}開戰。" />
     <string id="aE7OQDMS" text="與{KINGDOM_NAME}結盟。" />
     <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}決定與{KINGDOM}議和,{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}議會對此事意見均分。" />
@@ -429,7 +423,6 @@
     <string id="eTylgLCc" text="一名信使從{KINGDOM_NAME}抵達。他們向你提議結盟。你的王國將投票決定是否接受此提議。" />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM}已不再與{KINGDOM_TO_CALL_TO_WAR_AGAINST}交戰。" />
     <string id="F7CMsDyG" text="{RULER.NAME}不顧{?RULER.GENDER}她的{?}他的{\?}議會反對,決定不與{KINGDOM_NAME}結盟。" />
-    <string id="faUooB7V" text="{KINGDOM}將不會{POLICY_DESCRIPTION}({POLICY})。{POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME}決定不響應{CALLING_KINGDOM}的徵召,不會對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。此決定獲得了{?RULER.GENDER}她的{?}他的{\?}議會支持。" />
     <string id="FNCq25P1" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}議會支持下,決定與{KINGDOM_NAME}結盟。" />
     <string id="FuNbouTu" text="一名信使從{KINGDOM_NAME}抵達。他們號召你的王國對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。你的王國將投票決定是否接受此提議。" />
@@ -440,7 +433,6 @@
     <string id="gNf0ALKw" text="一名信使從{MAP_FACTION_NAME}抵達。他們向你提議白色和平。你的王國將投票決定是否接受此提議。" />
     <string id="h5eTEYON" text="{RULER.NAME}已將{CLAN}家族逐出{KINGDOM}。" />
     <string id="h9bWTLgK" text="是時候加入我們的盟友{KINGDOM_NAME}的戰爭了。" />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}是{CLAN_NAME}的首領,乃來自{FACTION_NAME}領地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}被譽為{REPUTATION}。" />
     <string id="IB1xsVEr" text="一名信使從{MAP_FACTION_NAME}抵達。他們向你提議白色和平。你的封臣將決定權交給了你。" />
     <string id="INfHUqxT" text="{RULER.NAME}決定與{KINGDOM_NAME}結盟。" />
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}不顧{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}議會反對,決定不與{KINGDOM}議和。" />
@@ -450,10 +442,8 @@
     <string id="jaioXYDc" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}議會半數支持下,決定不與{KINGDOM_NAME}結盟。" />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}決定與{KINGDOM}議和,儘管{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}議會反對此舉。" />
     <string id="JJQ0Hp4m" text="來自{MAP_FACTION_NAME}的信使抵達了。{MAP_FACTION_NAME}將每日支付{GOLD_AMOUNT}{GOLD_ICON}作為貢金以結束你們王國之間的戰爭。你的封臣們將決定權交給了你。" />
-    <string id="jnYwiCAz" text="{KINGDOM}將繼續{POLICY_DESCRIPTION}({POLICY})。{POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}目前比我們更強大。我們需要時間來積蓄實力。" />
     <string id="JQligd8z" text="{KINGDOM}的議會選擇了{KING.NAME}作為新的統治者。" />
-    <string id="JuPUG5wX" text="{LORD.NAME}是{FACTION_NAME}的{TITLE},也是{CLAN_NAME}的首領,乃在內戰中支持{RULER}的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}被譽為{REPUTATION}。" />
     <string id="JY717hPW" text="我沒有代表{ENEMY_INFORMAL_NAME}議和的權力。應由{ENEMY_RULER.NAME}和{?ENEMY_RULER.GENDER}她的{?}他的{\?}議會決定是否提出和平,以及條件為何。" />
     <string id="K5w135N9" text="{RULER.NAME}決定不響應{CALLING_KINGDOM}的召喚,不會對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。此決定違背了{?RULER.GENDER}她的{?}他的{\?}議會的建議。" />
     <string id="KFHj7ckm" text="作為統治者,你必須決定是否與{KINGDOM_NAME}議和" />
@@ -464,7 +454,6 @@
     <string id="L802I9W2" text="好,我會加入{FACTION_NAME}。" />
     <string id="L81DPSom" text="作為{RULER_NAME_AND_TITLE},你必須決定你的王國是否響應{CALLING_KINGDOM}的召喚,以{CALL_TO_WAR_COST}{GOLD_ICON}的代價對{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
     <string id="Lalj0T1i" text="{RULER.NAME}響應了{CALLING_KINGDOM}的召喚,對{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰,儘管{?RULER.GENDER}她的{?}他的{\?}議會反對。" />
-    <string id="Lbs2bNlg" text="{KINGDOM}將開始{POLICY_DESCRIPTION}({POLICY})。{POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="你的王國正在與{KINGDOM_NAME}交戰。" />
     <string id="LVX2x6Jf" text="我想終止與{SERVED_FACTION}的契約。" />
     <string id="m69pvful" text="{KINGDOM_LEADER}將決定你的王國是否響應{CALLING_KINGDOM}的召喚,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代價對{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。你可以選擇對此決定的立場。" />
@@ -481,7 +470,6 @@
     <string id="nkvT88r2" text="你沒有足夠的金錢來召喚{CALLED_KINGDOM}對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
     <string id="NuYzgBZB" text="你太過分了。{KINGDOM}不會容忍對其商隊的破壞。" />
     <string id="o4IxXHnB" text="{RULER.NAME}決定不與{KINGDOM_NAME}結成同盟。" />
-    <string id="o5AUljbW" text="{LORD.NAME}是{CLAN_NAME}的成員,乃{FACTION_NAME}{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}被譽為{REPUTATION}。" />
     <string id="o69PZuce" text="{OLD_LEADER.LINK}不再是{CLAN_NAME}的族長。{NEW_LEADER.LINK}已接任為家族統治者。" />
     <string id="O9XpB5Ah" text="作為統治者,你必須決定是否與{KINGDOM}簽訂貿易協定" />
     <string id="oAw74q3r" text="作為{RULER_NAME_AND_TITLE},你必須決定你的王國是否響應{CALLING_KINGDOM}的召喚,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代價對{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
@@ -492,7 +480,6 @@
     <string id="PneX4Ayw" text="一名信使帶著來自{KINGDOM_NAME}的參戰召喚抵達了你王國的宮廷,召喚對{KINGDOM_TO_CALL_TO_WAR_AGAINST}開戰。" />
     <string id="PP7KD7OC" text="{KINGDOM}的{RULER.NAME}決定與{OTHER_KINGDOM}簽訂貿易協定,{?RULER.GENDER}她的{?}他的{\?}議會對此意見均分。" />
     <string id="PutoRsWp" text="來自{CLAN_NAME}的信使抵達了。如果你釋放{CAPTIVE_HERO.NAME},他們願意支付{GOLD_AMOUNT}{GOLD_ICON}作為贖金。" />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}由{LORD.LINK}治理,乃{FACTION_TERM}的{FACTION_OFFICIAL}。{KEEP_INFO}" />
     <string id="q9DnHVcZ" text="加入{KINGDOM_NAME}的戰爭不符合我們的利益。" />
     <string id="qa4FlTWS" text="{KINGDOM}的{RULER.NAME}不顧{?RULER.GENDER}她的{?}他的{\?}議會反對,將{SETTLEMENT}收為{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="qgN9o2ip" text="是時候召喚我們的盟友{KINGDOM_NAME}對抗{KINGDOM_TO_CALL_TO_WAR_AGAINST}了!你的王國將投票決定是否向他們提出參戰協議。" />
@@ -503,19 +490,16 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}議會半數支持下,向{KINGDOM}宣戰。" />
     <string id="rJIuQ0hc" text="{KINGDOM}的{RULER.NAME}不顧{?RULER.GENDER}她的{?}他的{\?}議會反對,選擇不與{OTHER_KINGDOM}簽訂貿易協定。" />
     <string id="rtfoywJl" text="向{KINGDOM_NAME}宣戰" />
-    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周圍的土地大多由{LORD.LINK}擁有,乃{FACTION_TERM}的{FACTION_OFFICIAL}。{PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="一位來自{MAP_FACTION_NAME}的信使已經抵達。他們提議若你同意支付每日{GOLD_AMOUNT}{GOLD_ICON}的貢金,他們將與你議和。你的王國將投票決定是否接受這項提議。" />
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}已向{KINGDOM}宣戰。" />
     <string id="SR9FC5jH" text="一位來自{MAP_FACTION_NAME}的信使帶來了和平提議。{MAP_FACTION_NAME}將每日支付{GOLD_AMOUNT}{GOLD_ICON}的貢金以結束你們王國之間的戰爭。你的王國將投票決定是否接受這項提議。" />
     <string id="syGyjjKE" text="回應{CALLING_KINGDOM}的召喚,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
-    <string id="TauRjAud" text="{FACTION}的{NAME}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}正在向你提供僱傭兵工作,每獲得一點影響力將支付{GOLD_AMOUNT}{GOLD_ICON}。你接受嗎?" />
     <string id="uc4M4bhG" text="嗯,我確實有件事想要。{TARGET_FACTION}有一位{?TARGET_HERO.GENDER}女領主{?}領主{\?}與我有著很長很長的淵源。而且不是友好的那種。現在我們處於戰爭狀態,只要{?TARGET_HERO.GENDER}她{?}他{\?}還自由著,我就知道我的生命和領地都不安全。正如我所說,這絕非易事。但無論誰能做到這一點,將{?TARGET_HERO.GENDER}她{?}他{\?}活著帶回來給我,除了獲得我的感激之外,將會成為非常富有的人。[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}回應了{CALLING_KINGDOM}的召喚,在{?RULER.GENDER}她的{?}他的{\?}議會半數支持下向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
     <string id="UQq4ekeu" text="{KINGDOM}的{RULER.NAME}選擇不與{OTHER_KINGDOM}簽訂貿易協定。" />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}已召喚{CALLED_KINGDOM_LINK}向{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}宣戰。" />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}是{CHARACTER_FACTION_SHORT}的成員。{FURTHER_DETAILS}。" />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}由{LORD.LINK}治理,乃{FACTION_TERM}的{FACTION_OFFICIAL}。{PROSPERITY_INFO}{MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME}是{CLAN_NAME}的族長,一個新興的氏族。{?LORD.GENDER}她{?}他{\?}仍在建立{?LORD.GENDER}她的{?}他的{\?}聲望。" />
     <string id="vf2pb7Ts" text="{RULER.NAME}回應了{CALLING_KINGDOM}的召喚,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣戰。" />
     <string id="Vg5RmOqL" text="{FACTION_LEADER}將決定{KINGDOM}是否與{OTHER_KINGDOM}簽訂貿易協定。你可以選擇你對此決定的立場。" />
@@ -528,9 +512,7 @@
     <string id="xhK4zMec" text="{RULER.NAME}已決定召喚{CALLED_KINGDOM}對抗{KINGDOM_TO_CALL_TO_WAR_AGAINST}。" />
     <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}向{CALLED_KINGDOM_LINK}發出的對抗{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}的召喚已經結束。" />
     <string id="xM97H0oR" text="投票決定是否向{KINGDOM_NAME}宣戰。" />
-    <string id="yAOQnMVw" text="你是{FACTION}的人,對吧?那意味著你是我的俘虜。" />
     <string id="yBL3TzXw" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}議會支持下,選擇不將{CLAN}氏族逐出{KINGDOM}。" />
-    <string id="YT4OvaAG" text="很好。你可以認為自己受到{FACTION_NAME}的保護。你有到明天這個時候完成旅程,否則我們可能會向你索取另一筆費用。" />
     <string id="yUYNlQhU" text="很好,我會讓我的人起草一份簡單的契約。代表{KINGDOM_FORMAL_NAME},我歡迎你。願你善用你的劍對抗我們的敵人。" />
     <string id="Zckbdm4Z" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}議會支持下,將{SETTLEMENT}收為{?RULER.GENDER}她的{?}他的{\?}封地。" />
     <string id="zd9sawl9" text="你已經與{KINGDOM_NAME}結盟。" />
@@ -2116,318 +2098,352 @@
     <string id="l4pRw7pO" text="{OWNER.NAME}的武裝商隊" />
     <string id="taom_align_desertion" text="{COUNT}名士兵逃走了——他們拒絕侍奉立場對立的領主。" />
     <string id="taom_troop_weight_size" text="重裝部隊" />
-    <string id="taom_res_desertion" text="{COUNT} 名精銳士兵逃亡——你的{RESOURCE}已耗盡！" />
-    <string id="taom_feat_erebor_gw" text="矮人守軍" />
-    <string id="taom_feat_erebor_gw_desc" text="守軍薪資減少 25%。" />
-    <string id="taom_feat_erebor_p" text="矮人工業" />
-    <string id="taom_feat_erebor_p_desc" text="所有村莊產量提升 10%。" />
-    <string id="taom_feat_erebor_cs" text="矮人的完美主義" />
-    <string id="taom_feat_erebor_cs_desc" text="建造速度降低 15%。" />
-    <string id="taom_feat_erebor_loy" text="矮人榮譽" />
-    <string id="taom_feat_erebor_loy_desc" text="聚落忠誠度每日增加 1。" />
-    <string id="taom_feat_erebor_mor" text="矮人的固執" />
-    <string id="taom_feat_erebor_mor_desc" text="隊伍士氣提升 5。" />
-    <string id="taom_feat_erebor_sm" text="鑄造大師" />
-    <string id="taom_feat_erebor_sm_desc" text="鍛造精力消耗減少 30%。" />
-    <string id="taom_feat_erebor_ss" text="山中之民" />
-    <string id="taom_feat_erebor_ss_desc" text="在雪地中隊伍移動速度提升 10%。" />
-    <string id="taom_feat_erebor_ti" text="矮人的節儉" />
-    <string id="taom_feat_erebor_ti_desc" text="關稅收入提升 5%。" />
-    <string id="taom_feat_riv_ai" text="精靈智慧" />
-    <string id="taom_feat_riv_ai_desc" text="軍隊影響力獎勵提升 35%。" />
-    <string id="taom_feat_riv_hg" text="最後的家園" />
-    <string id="taom_feat_riv_hg_desc" text="村莊爐火成長提升 20%。" />
-    <string id="taom_feat_riv_aic" text="精靈的驕傲" />
-    <string id="taom_feat_riv_aic_desc" text="招募軍隊需多花 25% 影響力。" />
-    <string id="taom_feat_riv_fc" text="精靈的節約" />
-    <string id="taom_feat_riv_fc_desc" text="隊伍糧食消耗減少 15%。" />
-    <string id="taom_feat_riv_loy" text="精靈智慧" />
-    <string id="taom_feat_riv_loy_desc" text="聚落忠誠度每日增加 0.5。" />
-    <string id="taom_feat_riv_fs" text="林地優雅" />
-    <string id="taom_feat_riv_fs_desc" text="在森林中隊伍移動速度提升 10%。" />
-    <string id="taom_feat_mrk_fs" text="林地王國" />
-    <string id="taom_feat_mrk_fs_desc" text="在森林中隊伍移動速度提升 10%。" />
-    <string id="taom_feat_mrk_mp" text="西爾凡守衛" />
-    <string id="taom_feat_mrk_mp_desc" text="出現老練民兵的機率提升 25%。" />
-    <string id="taom_feat_mrk_hg" text="森林的孤立" />
-    <string id="taom_feat_mrk_hg_desc" text="村莊爐火成長降低 20%。" />
-    <string id="taom_feat_mrk_fc" text="林地供養" />
-    <string id="taom_feat_mrk_fc_desc" text="隊伍糧食消耗減少 15%。" />
-    <string id="taom_feat_mrk_mor" text="林地情誼" />
-    <string id="taom_feat_mrk_mor_desc" text="隊伍士氣提升 3。" />
-    <string id="taom_feat_mrk_aic" text="孤立主義的宮廷" />
-    <string id="taom_feat_mrk_aic_desc" text="組建軍隊所需影響力增加15%。" />
-    <string id="taom_feat_loth_fs" text="黃金森林" />
-    <string id="taom_feat_loth_fs_desc" text="部隊在森林中的移動速度提升10%。" />
-    <string id="taom_feat_loth_gw" text="羅瑞安守衛" />
-    <string id="taom_feat_loth_gw_desc" text="駐軍薪資減少20%。" />
-    <string id="taom_feat_loth_cs" text="不朽工藝" />
-    <string id="taom_feat_loth_cs_desc" text="建造速度降低10%。" />
-    <string id="taom_feat_loth_fc" text="蘭巴斯麵包" />
-    <string id="taom_feat_loth_fc_desc" text="部隊糧食消耗減少15%。" />
-    <string id="taom_feat_loth_loy" text="精靈優雅" />
-    <string id="taom_feat_loth_loy_desc" text="聚落忠誠度每日增加0.5。" />
-    <string id="taom_feat_loth_mor" text="精靈和諧" />
-    <string id="taom_feat_loth_mor_desc" text="部隊士氣增加3。" />
-    <string id="taom_feat_loth_vr" text="消逝之光" />
-    <string id="taom_feat_loth_vr_desc" text="村莊志願兵補充速度降低15%。" />
-    <string id="taom_feat_isen_cr" text="戰爭機器" />
-    <string id="taom_feat_isen_cr_desc" text="騎乘兵種的招募與升級費用減少15%。" />
-    <string id="taom_feat_isen_gw" text="歐爾桑克駐軍" />
-    <string id="taom_feat_isen_gw_desc" text="駐軍薪資減少20%。" />
-    <string id="taom_feat_isen_dp" text="薩魯曼的掌控" />
-    <string id="taom_feat_isen_dp_desc" text="王國決議的關係懲罰增加25%。" />
-    <string id="taom_feat_isen_ps" text="半獸人軍團" />
-    <string id="taom_feat_isen_ps_desc" text="部隊規模上限提升20%。" />
-    <string id="taom_feat_isen_cs" text="工業之力" />
-    <string id="taom_feat_isen_cs_desc" text="建造速度提升15%。" />
-    <string id="taom_feat_isen_sm" text="工業熔爐" />
-    <string id="taom_feat_isen_sm_desc" text="鍛造精力消耗減少20%。" />
-    <string id="taom_feat_isen_rd" text="戰爭機器掠襲" />
-    <string id="taom_feat_isen_rd_desc" text="掠襲傷害提升20%。" />
-    <string id="taom_feat_isen_ps2" text="強行軍" />
-    <string id="taom_feat_isen_ps2_desc" text="部隊在平原上的移動速度提升10%。" />
-    <string id="taom_feat_isen_sws" text="沼地教頭" />
-    <string id="taom_feat_isen_sws_desc" text="部隊在沼澤中的移動速度提升10%。" />
-    <string id="taom_feat_isen_nctm" text="歐爾桑克軍需官" />
-    <string id="taom_feat_isen_nctm_desc" text="城鎮中商人顯要+2。" />
-    <string id="taom_feat_isen_ncta" text="工業熔爐" />
-    <string id="taom_feat_isen_ncta_desc" text="城鎮中工匠顯要+1。" />
-    <string id="taom_feat_isen_nctg" text="半獸人隊長" />
-    <string id="taom_feat_isen_nctg_desc" text="城鎮中幫派首領顯要+12（艾辛格唯一的城鎮成為主要招募樞紐）。" />
-    <string id="taom_feat_isen_ncv" text="鐵之壓榨" />
-    <string id="taom_feat_isen_ncv_desc" text="村莊顯要人物數量增加10%。" />
-    <string id="taom_feat_gun_aic" text="半獸人大軍" />
-    <string id="taom_feat_gun_aic_desc" text="組建軍隊所需影響力減少40%。" />
-    <string id="taom_feat_gun_gp" text="掠奪的糧倉" />
-    <string id="taom_feat_gun_gp_desc" text="穀物產量增加15%。" />
-    <string id="taom_feat_gun_w" text="掠奪索求" />
-    <string id="taom_feat_gun_w_desc" text="隊伍薪資增加10%。" />
-    <string id="taom_feat_gun_ps" text="山中蜂群" />
-    <string id="taom_feat_gun_ps_desc" text="隊伍規模上限增加20%。" />
-    <string id="taom_feat_gun_rd" text="半獸人劫掠者" />
-    <string id="taom_feat_gun_rd_desc" text="劫掠傷害增加25%。" />
-    <string id="taom_feat_gun_ss" text="山中掠奪者" />
-    <string id="taom_feat_gun_ss_desc" text="隊伍在雪地中的移動速度增加10%。" />
-    <string id="taom_feat_gun_vr" text="山地徵召兵" />
-    <string id="taom_feat_gun_vr_desc" text="村莊志願兵補充速度增加20%。" />
-    <string id="taom_feat_gun_ncta" text="骨匠" />
-    <string id="taom_feat_gun_ncta_desc" text="城鎮中工匠顯要人物+1。" />
-    <string id="taom_feat_gun_nctg" text="白皮戰團首領" />
-    <string id="taom_feat_gun_nctg_desc" text="城鎮中幫派首領顯要人物+3。" />
-    <string id="taom_feat_gun_ncv" text="骨營" />
-    <string id="taom_feat_gun_ncv_desc" text="村莊顯要人物數量增加10%。" />
-    <string id="taom_feat_gob_ps" text="半獸人蜂群" />
-    <string id="taom_feat_gob_ps_desc" text="隊伍規模上限增加40%。" />
-    <string id="taom_feat_gob_vr" text="無盡繁衍" />
-    <string id="taom_feat_gob_vr_desc" text="村莊志願兵補充速度增加25%。" />
-    <string id="taom_feat_gob_ss" text="隧道疾行者" />
-    <string id="taom_feat_gob_ss_desc" text="隊伍在雪地中的移動速度增加10%。" />
-    <string id="taom_feat_gob_fc" text="貪食蜂群" />
-    <string id="taom_feat_gob_fc_desc" text="隊伍食物消耗增加20%。" />
-    <string id="taom_feat_gob_sm" text="繳獲兵器囤積" />
-    <string id="taom_feat_gob_sm_desc" text="鍛造精力消耗減少10%。" />
-    <string id="taom_feat_gob_rd" text="半獸人伏擊" />
-    <string id="taom_feat_gob_rd_desc" text="劫掠傷害增加10%。" />
-    <string id="taom_feat_mmo_aic" text="半獸人大軍" />
-    <string id="taom_feat_mmo_aic_desc" text="組建軍隊所需影響力減少40%。" />
-    <string id="taom_feat_mmo_ps" text="山中大軍" />
-    <string id="taom_feat_mmo_ps_desc" text="隊伍規模上限增加30%。" />
-    <string id="taom_feat_mmo_ss" text="山中所生" />
-    <string id="taom_feat_mmo_ss_desc" text="隊伍在雪地中的移動速度增加10%。" />
-    <string id="taom_feat_mmo_fc" text="飢餓之軍" />
-    <string id="taom_feat_mmo_fc_desc" text="隊伍食物消耗增加15%。" />
-    <string id="taom_feat_mmo_sm" text="掠奪的鍛爐" />
-    <string id="taom_feat_mmo_sm_desc" text="鍛造精力消耗減少15%。" />
-    <string id="taom_feat_mmo_rd" text="洞穴食人妖徵召" />
-    <string id="taom_feat_mmo_rd_desc" text="劫掠傷害增加15%。" />
-    <string id="taom_feat_mmo_cs" text="迴響廳堂" />
-    <string id="taom_feat_mmo_cs_desc" text="建造速度降低10%。" />
-    <string id="taom_feat_umb_cc" text="海盜貿易" />
-    <string id="taom_feat_umb_cc_desc" text="商隊組建費用減少25%。" />
-    <string id="taom_feat_umb_r" text="海盜榮光" />
-    <string id="taom_feat_umb_r_desc" text="戰鬥獲得的聲望增加8%。" />
-    <string id="taom_feat_umb_w" text="海盜貪慾" />
-    <string id="taom_feat_umb_w_desc" text="隊伍薪資增加8%。" />
-    <string id="taom_feat_umb_ti" text="海盜貿易網絡" />
-    <string id="taom_feat_umb_ti_desc" text="關稅收入增加15%。" />
-    <string id="taom_feat_umb_ds" text="沙漠海盜" />
-    <string id="taom_feat_umb_ds_desc" text="在沙漠中隊伍移動速度增加10%。" />
-    <string id="taom_feat_umb_rd" text="海盜劫掠準則" />
-    <string id="taom_feat_umb_rd_desc" text="劫掠傷害增加20%。" />
-    <string id="taom_feat_umb_fc" text="黑努曼諾爾人的耐力" />
-    <string id="taom_feat_umb_fc_desc" text="隊伍食物消耗減少10%。" />
-    <string id="taom_feat_dg_aic" text="陰影統御" />
-    <string id="taom_feat_dg_aic_desc" text="招募軍隊所需影響力減少50%。" />
-    <string id="taom_feat_dg_mp" text="黑暗徵兵" />
-    <string id="taom_feat_dg_mp_desc" text="出現老兵民兵的機率增加20%。" />
-    <string id="taom_feat_dg_cs" text="廢墟工事" />
-    <string id="taom_feat_dg_cs_desc" text="建造速度降低20%。" />
-    <string id="taom_feat_dg_ps" text="黑暗軍團" />
-    <string id="taom_feat_dg_ps_desc" text="隊伍人數上限增加20%。" />
-    <string id="taom_feat_dg_fc" text="貪食群獸" />
-    <string id="taom_feat_dg_fc_desc" text="隊伍食物消耗增加10%。" />
-    <string id="taom_feat_dg_vr" text="黑暗徵召兵" />
-    <string id="taom_feat_dg_vr_desc" text="村莊志願兵補充速度增加20%。" />
-    <string id="taom_feat_dg_nctm" text="陰影仲介" />
-    <string id="taom_feat_dg_nctm_desc" text="城鎮中商人顯要+1。" />
-    <string id="taom_feat_dg_ncta" text="黑暗鍛坊" />
-    <string id="taom_feat_dg_ncta_desc" text="城鎮中工匠顯要+1。" />
-    <string id="taom_feat_dg_nctg" text="陰影隊長" />
-    <string id="taom_feat_dg_nctg_desc" text="城鎮中幫派首領顯要+13（多爾哥多的陰影指揮中心）。" />
-    <string id="taom_feat_dg_ncv" text="隱匿棚屋" />
-    <string id="taom_feat_dg_ncv_desc" text="村莊中的顯要人物數量增加 10%。" />
-    <string id="taom_feat_gon_gw" text="塔衛" />
-    <string id="taom_feat_gon_gw_desc" text="駐軍薪資減少 20%。" />
-    <string id="taom_feat_gon_ai" text="剛鐸紀律" />
-    <string id="taom_feat_gon_ai_desc" text="軍隊影響力獎勵增加 30%。" />
-    <string id="taom_feat_gon_hg" text="戰火凋敝之地" />
-    <string id="taom_feat_gon_hg_desc" text="村莊爐火增長減少 15%。" />
-    <string id="taom_feat_gon_ps" text="常備軍" />
-    <string id="taom_feat_gon_ps_desc" text="部隊規模上限增加 2.5%。" />
-    <string id="taom_feat_gon_loy" text="塔衛紀律" />
-    <string id="taom_feat_gon_loy_desc" text="聚落忠誠度每日增加 1。" />
-    <string id="taom_feat_gon_mor" text="剛鐸決心" />
-    <string id="taom_feat_gon_mor_desc" text="部隊士氣增加 5。" />
-    <string id="taom_feat_gon_ps2" text="平原之民" />
-    <string id="taom_feat_gon_ps2_desc" text="在平原上部隊移動速度增加 10%。" />
-    <string id="taom_feat_mor_aic" text="黑暗魔君的意志" />
-    <string id="taom_feat_mor_aic_desc" text="招募軍隊所需影響力減少 60%。" />
-    <string id="taom_feat_mor_gp" text="努恩農田" />
-    <string id="taom_feat_mor_gp_desc" text="穀物產量增加 20%。" />
-    <string id="taom_feat_mor_w" text="黑暗貢賦" />
-    <string id="taom_feat_mor_w_desc" text="部隊薪資增加 20%。" />
-    <string id="taom_feat_mor_ps" text="索倫的大軍" />
-    <string id="taom_feat_mor_ps_desc" text="部隊規模上限增加 10%。" />
-    <string id="taom_feat_mor_rd" text="索倫之怒" />
-    <string id="taom_feat_mor_rd_desc" text="劫掠傷害增加 25%。" />
-    <string id="taom_feat_mor_pls" text="暗影行軍" />
-    <string id="taom_feat_mor_pls_desc" text="在平原上部隊移動速度增加 5%。" />
-    <string id="taom_feat_mor_sws" text="死亡沼澤" />
-    <string id="taom_feat_mor_sws_desc" text="在沼澤中部隊移動速度增加 5%。" />
-    <string id="taom_feat_mor_ns" text="黑暗之物" />
-    <string id="taom_feat_mor_ns_desc" text="夜間部隊移動速度增加 10%。" />
-    <string id="taom_feat_mor_vr" text="索倫的徵召" />
-    <string id="taom_feat_mor_vr_desc" text="村莊志願兵補充速率增加 20%。" />
-    <string id="taom_feat_mord_sm" text="黑暗鍛造" />
-    <string id="taom_feat_mord_sm_desc" text="鍛造精力消耗減少 15%。" />
-    <string id="taom_feat_mor_nctg" text="黑語傳令者" />
-    <string id="taom_feat_mor_nctg_desc" text="城鎮中幫派首領顯要人物 +2。" />
-    <string id="taom_feat_mor_ncv" text="奴隸監工" />
-    <string id="taom_feat_mor_ncv_desc" text="村莊中的顯要人物數量增加 5%。" />
-    <string id="taom_feat_roh_mc" text="驃騎王的血脈" />
-    <string id="taom_feat_roh_mc_desc" text="騎乘兵種招募與升級費用降低15%。" />
-    <string id="taom_feat_roh_mw" text="馬克騎士" />
-    <string id="taom_feat_roh_mw_desc" text="騎乘兵種薪資降低15%。" />
-    <string id="taom_feat_roh_is" text="倚賴騎兵" />
-    <string id="taom_feat_roh_is_desc" text="當隊伍以步兵為主時，行軍速度降低10%。" />
-    <string id="taom_feat_roh_loy" text="驃騎王的情誼" />
-    <string id="taom_feat_roh_loy_desc" text="聚落忠誠度每日增加0.5。" />
-    <string id="taom_feat_roh_mor" text="騎士之魂" />
-    <string id="taom_feat_roh_mor_desc" text="隊伍士氣增加5。" />
-    <string id="taom_feat_roh_pls" text="平原騎士" />
-    <string id="taom_feat_roh_pls_desc" text="在平原上隊伍行軍速度增加10%。" />
-    <string id="taom_feat_dale_pls" text="河谷商賈" />
-    <string id="taom_feat_dale_pls_desc" text="在平原上隊伍行軍速度增加10%。" />
-    <string id="taom_feat_dale_ti" text="矮人貿易同盟" />
-    <string id="taom_feat_dale_ti_desc" text="關稅收入增加10%。" />
-    <string id="taom_feat_dale_r" text="黑箭傳統" />
-    <string id="taom_feat_dale_r_desc" text="戰鬥聲望增加10%。" />
-    <string id="taom_feat_dale_loy" text="疆域狹小之患" />
-    <string id="taom_feat_dale_loy_desc" text="聚落忠誠度每日降低0.5。" />
-    <string id="taom_feat_khand_sts" text="草原戰車手" />
-    <string id="taom_feat_khand_sts_desc" text="在草原上隊伍行軍速度增加10%。" />
-    <string id="taom_feat_khand_r" text="傭兵厚酬" />
-    <string id="taom_feat_khand_r_desc" text="戰鬥聲望增加8%。" />
-    <string id="taom_feat_khand_ti" text="向魔多納貢" />
-    <string id="taom_feat_khand_ti_desc" text="關稅收入降低10%。" />
-    <string id="taom_feat_khand_fc" text="草原耐力" />
-    <string id="taom_feat_khand_fc_desc" text="隊伍糧食消耗降低10%。" />
-    <string id="taom_feat_khand_ps" text="戰車機動" />
-    <string id="taom_feat_khand_ps_desc" text="隊伍人數上限增加5%。" />
-    <string id="taom_feat_rhun_sts" text="東方人游騎" />
-    <string id="taom_feat_rhun_sts_desc" text="在草原上隊伍行軍速度增加10%。" />
-    <string id="taom_feat_rhun_ps" text="東方人大軍" />
-    <string id="taom_feat_rhun_ps_desc" text="隊伍人數上限增加5%。" />
-    <string id="taom_feat_rhun_loy" text="東方人貢賦" />
-    <string id="taom_feat_rhun_loy_desc" text="聚落忠誠度每日降低0.5。" />
-    <string id="taom_feat_rhun_rd" text="草原掠襲之道" />
-    <string id="taom_feat_rhun_rd_desc" text="劫掠傷害增加15%。" />
-    <string id="taom_feat_har_ds" text="太陽之子" />
-    <string id="taom_feat_har_ds_desc" text="在沙漠中隊伍行軍速度增加10%。" />
-    <string id="taom_feat_har_ps" text="哈拉德戰團" />
-    <string id="taom_feat_har_ps_desc" text="隊伍人數上限提升5%。" />
-    <string id="taom_feat_harad_mor" text="猛獁禦者" />
-    <string id="taom_feat_harad_mor_desc" text="隊伍士氣提升5點。" />
-    <string id="taom_feat_harad_fc" text="沙漠耐力" />
-    <string id="taom_feat_harad_fc_desc" text="隊伍糧食消耗減少15%。" />
-    <string id="taom_feat_harad_rd" text="遠哈拉德的野蠻" />
-    <string id="taom_feat_harad_rd_desc" text="劫掠傷害提升15%。" />
-    <string id="taom_feat_harad_aic" text="分裂的部族" />
-    <string id="taom_feat_harad_aic_desc" text="組建軍隊所需的影響力增加15%。" />
-    <string id="taom_feat_dun_pls" text="丘陵行者" />
-    <string id="taom_feat_dun_pls_desc" text="隊伍在平原上的移動速度提升10%。" />
-    <string id="taom_feat_dun_ps" text="丘陵部族徵召" />
-    <string id="taom_feat_dun_ps_desc" text="隊伍人數上限提升5%。" />
-    <string id="taom_feat_dun_vr" text="丘陵部族募兵" />
-    <string id="taom_feat_dun_vr_desc" text="村莊志願兵補充速度提升10%。" />
-    <string id="taom_feat_shg_ds" text="沙丘遊者" />
-    <string id="taom_feat_shg_ds_desc" text="隊伍在沙漠中的移動速度提升10%。" />
-    <string id="taom_feat_aba_ds" text="深漠遊牧民" />
-    <string id="taom_feat_aba_ds_desc" text="隊伍在沙漠中的移動速度提升10%。" />
-    <string id="taom_ep_no_hero" text="物品欄畫面上沒有作用中的英雄。" />
-    <string id="taom_ep_save" text="儲存為新預設" />
-    <string id="taom_ep_save_hint" text="將目前的裝備儲存為新的預設組合。" />
-    <string id="taom_ep_load" text="載入" />
-    <string id="taom_ep_load_hint" text="裝備已儲存的預設組合。" />
-    <string id="taom_ep_update" text="更新" />
-    <string id="taom_ep_update_hint" text="以目前的裝備覆寫已儲存的預設組合。" />
-    <string id="taom_ep_delete" text="刪除" />
-    <string id="taom_ep_delete_hint" text="移除一組預設。" />
-    <string id="taom_ep_title" text="裝備預設組合" />
-    <string id="taom_ep_ok" text="確定" />
-    <string id="taom_ep_cancel" text="取消" />
-    <string id="taom_ep_header" text="英雄：{HERO}  預設：{COUNT}/{MAX}" />
-    <string id="taom_ep_save_title" text="儲存預設" />
-    <string id="taom_ep_save_msg" text="請輸入名稱。此預設會記錄你目前的戰鬥與平民裝備，以及坐騎。" />
-    <string id="taom_ep_select_load" text="載入預設" />
-    <string id="taom_ep_select_update" text="更新預設" />
-    <string id="taom_ep_select_delete" text="刪除預設" />
-    <string id="taom_ep_select" text="選擇預設" />
-    <string id="taom_ep_load_failed" text="載入失敗。" />
-    <string id="taom_ep_load_partial" text="已裝備 {EQUIPPED} 件物品。缺少物品：{MISS_ITEMS}。缺少修飾詞：{MISS_MODS}。" />
-    <string id="taom_ep_load_ok" text="已載入預設（{COUNT} 件物品）。" />
-    <string id="taom_ep_updated" text="預設已更新。" />
-    <string id="taom_ep_notfound" text="找不到預設。" />
-    <string id="taom_ep_disabled" text="裝備預設已在 MCM 中停用。" />
-    <string id="taom_ep_delete_title" text="刪除預設" />
-    <string id="taom_ep_delete_msg" text="你確定要刪除此預設嗎？" />
-    <string id="taom_ep_yes" text="是" />
-    <string id="taom_ep_no" text="否" />
-    <string id="taom_ep_deleted" text="預設已刪除。" />
-    <string id="taom_ep_saved" text="預設「{NAME}」已儲存。" />
-    <string id="taom_ep_max" text="已達預設上限（{MAX}）。請刪除一個以儲存新預設。" />
-    <string id="taom_ep_bad_name" text="預設名稱不可為空。" />
-    <string id="taom_ep_psummary" text="戰鬥：{B}　平民：{C}　坐騎：{M}" />
-    <string id="taom_fief_hub_empty" text="領地管理 — 未擁有任何領地" />
-    <string id="taom_fief_hub_title" text="領地管理 — {NAME}（{KIND}）[{INDEX}/{COUNT}]" />
-    <string id="taom_fief_kind_town" text="城鎮" />
-    <string id="taom_fief_kind_castle" text="城堡" />
-    <string id="taom_fief_hub_remote_disabled" text="遠端建造佇列已停用 — 請親自前往領地管理。" />
-    <string id="taom_fief_hub_prev" text="上一個領地" />
-    <string id="taom_fief_hub_next" text="下一個領地" />
-    <string id="taom_fief_hub_manage" text="管理此領地" />
-    <string id="taom_fief_hub_leave" text="離開" />
-    <string id="taom_fief_no_fiefs" text="你尚未擁有任何領地。" />
-    <string id="taom_fief_nav_label" text="領地" />
-    <string id="taom_qa_title" text="快速操作" />
-    <string id="taom_qa_desc" text="請選擇一項操作。" />
-    <string id="taom_qa_ok" text="確定" />
-    <string id="taom_qa_cancel" text="取消" />
-    <string id="taom_qa_confirm_title" text="確認" />
-    <string id="taom_qa_confirm_msg" text="要執行此批次操作嗎？" />
-    <string id="taom_qa_yes" text="是" />
-    <string id="taom_qa_no" text="否" />
-    <string id="taom_extra_fast_forward_hint" text="額外加速（E）" />
+    <string id="taom_res_desertion" text="{COUNT} 名精銳士兵逃亡——你的{RESOURCE}已耗盡！" />
+    <string id="taom_feat_erebor_gw" text="矮人守軍" />
+    <string id="taom_feat_erebor_gw_desc" text="守軍薪資減少 25%。" />
+    <string id="taom_feat_erebor_p" text="矮人工業" />
+    <string id="taom_feat_erebor_p_desc" text="所有村莊產量提升 10%。" />
+    <string id="taom_feat_erebor_cs" text="矮人的完美主義" />
+    <string id="taom_feat_erebor_cs_desc" text="建造速度降低 15%。" />
+    <string id="taom_feat_erebor_loy" text="矮人榮譽" />
+    <string id="taom_feat_erebor_loy_desc" text="聚落忠誠度每日增加 1。" />
+    <string id="taom_feat_erebor_mor" text="矮人的固執" />
+    <string id="taom_feat_erebor_mor_desc" text="隊伍士氣提升 5。" />
+    <string id="taom_feat_erebor_sm" text="鑄造大師" />
+    <string id="taom_feat_erebor_sm_desc" text="鍛造精力消耗減少 30%。" />
+    <string id="taom_feat_erebor_ss" text="山中之民" />
+    <string id="taom_feat_erebor_ss_desc" text="在雪地中隊伍移動速度提升 10%。" />
+    <string id="taom_feat_erebor_ti" text="矮人的節儉" />
+    <string id="taom_feat_erebor_ti_desc" text="關稅收入提升 5%。" />
+    <string id="taom_feat_riv_ai" text="精靈智慧" />
+    <string id="taom_feat_riv_ai_desc" text="軍隊影響力獎勵提升 35%。" />
+    <string id="taom_feat_riv_hg" text="最後的家園" />
+    <string id="taom_feat_riv_hg_desc" text="村莊爐火成長提升 20%。" />
+    <string id="taom_feat_riv_aic" text="精靈的驕傲" />
+    <string id="taom_feat_riv_aic_desc" text="招募軍隊需多花 25% 影響力。" />
+    <string id="taom_feat_riv_fc" text="精靈的節約" />
+    <string id="taom_feat_riv_fc_desc" text="隊伍糧食消耗減少 15%。" />
+    <string id="taom_feat_riv_loy" text="精靈智慧" />
+    <string id="taom_feat_riv_loy_desc" text="聚落忠誠度每日增加 0.5。" />
+    <string id="taom_feat_riv_fs" text="林地優雅" />
+    <string id="taom_feat_riv_fs_desc" text="在森林中隊伍移動速度提升 10%。" />
+    <string id="taom_feat_mrk_fs" text="林地王國" />
+    <string id="taom_feat_mrk_fs_desc" text="在森林中隊伍移動速度提升 10%。" />
+    <string id="taom_feat_mrk_mp" text="西爾凡守衛" />
+    <string id="taom_feat_mrk_mp_desc" text="出現老練民兵的機率提升 25%。" />
+    <string id="taom_feat_mrk_hg" text="森林的孤立" />
+    <string id="taom_feat_mrk_hg_desc" text="村莊爐火成長降低 20%。" />
+    <string id="taom_feat_mrk_fc" text="林地供養" />
+    <string id="taom_feat_mrk_fc_desc" text="隊伍糧食消耗減少 15%。" />
+    <string id="taom_feat_mrk_mor" text="林地情誼" />
+    <string id="taom_feat_mrk_mor_desc" text="隊伍士氣提升 3。" />
+    <string id="taom_feat_mrk_aic" text="孤立主義的宮廷" />
+    <string id="taom_feat_mrk_aic_desc" text="組建軍隊所需影響力增加15%。" />
+    <string id="taom_feat_loth_fs" text="黃金森林" />
+    <string id="taom_feat_loth_fs_desc" text="部隊在森林中的移動速度提升10%。" />
+    <string id="taom_feat_loth_gw" text="羅瑞安守衛" />
+    <string id="taom_feat_loth_gw_desc" text="駐軍薪資減少20%。" />
+    <string id="taom_feat_loth_cs" text="不朽工藝" />
+    <string id="taom_feat_loth_cs_desc" text="建造速度降低10%。" />
+    <string id="taom_feat_loth_fc" text="蘭巴斯麵包" />
+    <string id="taom_feat_loth_fc_desc" text="部隊糧食消耗減少15%。" />
+    <string id="taom_feat_loth_loy" text="精靈優雅" />
+    <string id="taom_feat_loth_loy_desc" text="聚落忠誠度每日增加0.5。" />
+    <string id="taom_feat_loth_mor" text="精靈和諧" />
+    <string id="taom_feat_loth_mor_desc" text="部隊士氣增加3。" />
+    <string id="taom_feat_loth_vr" text="消逝之光" />
+    <string id="taom_feat_loth_vr_desc" text="村莊志願兵補充速度降低15%。" />
+    <string id="taom_feat_isen_cr" text="戰爭機器" />
+    <string id="taom_feat_isen_cr_desc" text="騎乘兵種的招募與升級費用減少15%。" />
+    <string id="taom_feat_isen_gw" text="歐爾桑克駐軍" />
+    <string id="taom_feat_isen_gw_desc" text="駐軍薪資減少20%。" />
+    <string id="taom_feat_isen_dp" text="薩魯曼的掌控" />
+    <string id="taom_feat_isen_dp_desc" text="王國決議的關係懲罰增加25%。" />
+    <string id="taom_feat_isen_ps" text="半獸人軍團" />
+    <string id="taom_feat_isen_ps_desc" text="部隊規模上限提升20%。" />
+    <string id="taom_feat_isen_cs" text="工業之力" />
+    <string id="taom_feat_isen_cs_desc" text="建造速度提升15%。" />
+    <string id="taom_feat_isen_sm" text="工業熔爐" />
+    <string id="taom_feat_isen_sm_desc" text="鍛造精力消耗減少20%。" />
+    <string id="taom_feat_isen_rd" text="戰爭機器掠襲" />
+    <string id="taom_feat_isen_rd_desc" text="掠襲傷害提升20%。" />
+    <string id="taom_feat_isen_ps2" text="強行軍" />
+    <string id="taom_feat_isen_ps2_desc" text="部隊在平原上的移動速度提升10%。" />
+    <string id="taom_feat_isen_sws" text="沼地教頭" />
+    <string id="taom_feat_isen_sws_desc" text="部隊在沼澤中的移動速度提升10%。" />
+    <string id="taom_feat_isen_nctm" text="歐爾桑克軍需官" />
+    <string id="taom_feat_isen_nctm_desc" text="城鎮中商人顯要+2。" />
+    <string id="taom_feat_isen_ncta" text="工業熔爐" />
+    <string id="taom_feat_isen_ncta_desc" text="城鎮中工匠顯要+1。" />
+    <string id="taom_feat_isen_nctg" text="半獸人隊長" />
+    <string id="taom_feat_isen_nctg_desc" text="城鎮中幫派首領顯要+12（艾辛格唯一的城鎮成為主要招募樞紐）。" />
+    <string id="taom_feat_isen_ncv" text="鐵之壓榨" />
+    <string id="taom_feat_isen_ncv_desc" text="村莊顯要人物數量增加10%。" />
+    <string id="taom_feat_gun_aic" text="半獸人大軍" />
+    <string id="taom_feat_gun_aic_desc" text="組建軍隊所需影響力減少40%。" />
+    <string id="taom_feat_gun_gp" text="掠奪的糧倉" />
+    <string id="taom_feat_gun_gp_desc" text="穀物產量增加15%。" />
+    <string id="taom_feat_gun_w" text="掠奪索求" />
+    <string id="taom_feat_gun_w_desc" text="隊伍薪資增加10%。" />
+    <string id="taom_feat_gun_ps" text="山中蜂群" />
+    <string id="taom_feat_gun_ps_desc" text="隊伍規模上限增加20%。" />
+    <string id="taom_feat_gun_rd" text="半獸人劫掠者" />
+    <string id="taom_feat_gun_rd_desc" text="劫掠傷害增加25%。" />
+    <string id="taom_feat_gun_ss" text="山中掠奪者" />
+    <string id="taom_feat_gun_ss_desc" text="隊伍在雪地中的移動速度增加10%。" />
+    <string id="taom_feat_gun_vr" text="山地徵召兵" />
+    <string id="taom_feat_gun_vr_desc" text="村莊志願兵補充速度增加20%。" />
+    <string id="taom_feat_gun_ncta" text="骨匠" />
+    <string id="taom_feat_gun_ncta_desc" text="城鎮中工匠顯要人物+1。" />
+    <string id="taom_feat_gun_nctg" text="白皮戰團首領" />
+    <string id="taom_feat_gun_nctg_desc" text="城鎮中幫派首領顯要人物+3。" />
+    <string id="taom_feat_gun_ncv" text="骨營" />
+    <string id="taom_feat_gun_ncv_desc" text="村莊顯要人物數量增加10%。" />
+    <string id="taom_feat_gob_ps" text="半獸人蜂群" />
+    <string id="taom_feat_gob_ps_desc" text="隊伍規模上限增加40%。" />
+    <string id="taom_feat_gob_vr" text="無盡繁衍" />
+    <string id="taom_feat_gob_vr_desc" text="村莊志願兵補充速度增加25%。" />
+    <string id="taom_feat_gob_ss" text="隧道疾行者" />
+    <string id="taom_feat_gob_ss_desc" text="隊伍在雪地中的移動速度增加10%。" />
+    <string id="taom_feat_gob_fc" text="貪食蜂群" />
+    <string id="taom_feat_gob_fc_desc" text="隊伍食物消耗增加20%。" />
+    <string id="taom_feat_gob_sm" text="繳獲兵器囤積" />
+    <string id="taom_feat_gob_sm_desc" text="鍛造精力消耗減少10%。" />
+    <string id="taom_feat_gob_rd" text="半獸人伏擊" />
+    <string id="taom_feat_gob_rd_desc" text="劫掠傷害增加10%。" />
+    <string id="taom_feat_mmo_aic" text="半獸人大軍" />
+    <string id="taom_feat_mmo_aic_desc" text="組建軍隊所需影響力減少40%。" />
+    <string id="taom_feat_mmo_ps" text="山中大軍" />
+    <string id="taom_feat_mmo_ps_desc" text="隊伍規模上限增加30%。" />
+    <string id="taom_feat_mmo_ss" text="山中所生" />
+    <string id="taom_feat_mmo_ss_desc" text="隊伍在雪地中的移動速度增加10%。" />
+    <string id="taom_feat_mmo_fc" text="飢餓之軍" />
+    <string id="taom_feat_mmo_fc_desc" text="隊伍食物消耗增加15%。" />
+    <string id="taom_feat_mmo_sm" text="掠奪的鍛爐" />
+    <string id="taom_feat_mmo_sm_desc" text="鍛造精力消耗減少15%。" />
+    <string id="taom_feat_mmo_rd" text="洞穴食人妖徵召" />
+    <string id="taom_feat_mmo_rd_desc" text="劫掠傷害增加15%。" />
+    <string id="taom_feat_mmo_cs" text="迴響廳堂" />
+    <string id="taom_feat_mmo_cs_desc" text="建造速度降低10%。" />
+    <string id="taom_feat_umb_cc" text="海盜貿易" />
+    <string id="taom_feat_umb_cc_desc" text="商隊組建費用減少25%。" />
+    <string id="taom_feat_umb_r" text="海盜榮光" />
+    <string id="taom_feat_umb_r_desc" text="戰鬥獲得的聲望增加8%。" />
+    <string id="taom_feat_umb_w" text="海盜貪慾" />
+    <string id="taom_feat_umb_w_desc" text="隊伍薪資增加8%。" />
+    <string id="taom_feat_umb_ti" text="海盜貿易網絡" />
+    <string id="taom_feat_umb_ti_desc" text="關稅收入增加15%。" />
+    <string id="taom_feat_umb_ds" text="沙漠海盜" />
+    <string id="taom_feat_umb_ds_desc" text="在沙漠中隊伍移動速度增加10%。" />
+    <string id="taom_feat_umb_rd" text="海盜劫掠準則" />
+    <string id="taom_feat_umb_rd_desc" text="劫掠傷害增加20%。" />
+    <string id="taom_feat_umb_fc" text="黑努曼諾爾人的耐力" />
+    <string id="taom_feat_umb_fc_desc" text="隊伍食物消耗減少10%。" />
+    <string id="taom_feat_dg_aic" text="陰影統御" />
+    <string id="taom_feat_dg_aic_desc" text="招募軍隊所需影響力減少50%。" />
+    <string id="taom_feat_dg_mp" text="黑暗徵兵" />
+    <string id="taom_feat_dg_mp_desc" text="出現老兵民兵的機率增加20%。" />
+    <string id="taom_feat_dg_cs" text="廢墟工事" />
+    <string id="taom_feat_dg_cs_desc" text="建造速度降低20%。" />
+    <string id="taom_feat_dg_ps" text="黑暗軍團" />
+    <string id="taom_feat_dg_ps_desc" text="隊伍人數上限增加20%。" />
+    <string id="taom_feat_dg_fc" text="貪食群獸" />
+    <string id="taom_feat_dg_fc_desc" text="隊伍食物消耗增加10%。" />
+    <string id="taom_feat_dg_vr" text="黑暗徵召兵" />
+    <string id="taom_feat_dg_vr_desc" text="村莊志願兵補充速度增加20%。" />
+    <string id="taom_feat_dg_nctm" text="陰影仲介" />
+    <string id="taom_feat_dg_nctm_desc" text="城鎮中商人顯要+1。" />
+    <string id="taom_feat_dg_ncta" text="黑暗鍛坊" />
+    <string id="taom_feat_dg_ncta_desc" text="城鎮中工匠顯要+1。" />
+    <string id="taom_feat_dg_nctg" text="陰影隊長" />
+    <string id="taom_feat_dg_nctg_desc" text="城鎮中幫派首領顯要+13（多爾哥多的陰影指揮中心）。" />
+    <string id="taom_feat_dg_ncv" text="隱匿棚屋" />
+    <string id="taom_feat_dg_ncv_desc" text="村莊中的顯要人物數量增加 10%。" />
+    <string id="taom_feat_gon_gw" text="塔衛" />
+    <string id="taom_feat_gon_gw_desc" text="駐軍薪資減少 20%。" />
+    <string id="taom_feat_gon_ai" text="剛鐸紀律" />
+    <string id="taom_feat_gon_ai_desc" text="軍隊影響力獎勵增加 30%。" />
+    <string id="taom_feat_gon_hg" text="戰火凋敝之地" />
+    <string id="taom_feat_gon_hg_desc" text="村莊爐火增長減少 15%。" />
+    <string id="taom_feat_gon_ps" text="常備軍" />
+    <string id="taom_feat_gon_ps_desc" text="部隊規模上限增加 2.5%。" />
+    <string id="taom_feat_gon_loy" text="塔衛紀律" />
+    <string id="taom_feat_gon_loy_desc" text="聚落忠誠度每日增加 1。" />
+    <string id="taom_feat_gon_mor" text="剛鐸決心" />
+    <string id="taom_feat_gon_mor_desc" text="部隊士氣增加 5。" />
+    <string id="taom_feat_gon_ps2" text="平原之民" />
+    <string id="taom_feat_gon_ps2_desc" text="在平原上部隊移動速度增加 10%。" />
+    <string id="taom_feat_mor_aic" text="黑暗魔君的意志" />
+    <string id="taom_feat_mor_aic_desc" text="招募軍隊所需影響力減少 60%。" />
+    <string id="taom_feat_mor_gp" text="努恩農田" />
+    <string id="taom_feat_mor_gp_desc" text="穀物產量增加 20%。" />
+    <string id="taom_feat_mor_w" text="黑暗貢賦" />
+    <string id="taom_feat_mor_w_desc" text="部隊薪資增加 20%。" />
+    <string id="taom_feat_mor_ps" text="索倫的大軍" />
+    <string id="taom_feat_mor_ps_desc" text="部隊規模上限增加 10%。" />
+    <string id="taom_feat_mor_rd" text="索倫之怒" />
+    <string id="taom_feat_mor_rd_desc" text="劫掠傷害增加 25%。" />
+    <string id="taom_feat_mor_pls" text="暗影行軍" />
+    <string id="taom_feat_mor_pls_desc" text="在平原上部隊移動速度增加 5%。" />
+    <string id="taom_feat_mor_sws" text="死亡沼澤" />
+    <string id="taom_feat_mor_sws_desc" text="在沼澤中部隊移動速度增加 5%。" />
+    <string id="taom_feat_mor_ns" text="黑暗之物" />
+    <string id="taom_feat_mor_ns_desc" text="夜間部隊移動速度增加 10%。" />
+    <string id="taom_feat_mor_vr" text="索倫的徵召" />
+    <string id="taom_feat_mor_vr_desc" text="村莊志願兵補充速率增加 20%。" />
+    <string id="taom_feat_mord_sm" text="黑暗鍛造" />
+    <string id="taom_feat_mord_sm_desc" text="鍛造精力消耗減少 15%。" />
+    <string id="taom_feat_mor_nctg" text="黑語傳令者" />
+    <string id="taom_feat_mor_nctg_desc" text="城鎮中幫派首領顯要人物 +2。" />
+    <string id="taom_feat_mor_ncv" text="奴隸監工" />
+    <string id="taom_feat_mor_ncv_desc" text="村莊中的顯要人物數量增加 5%。" />
+    <string id="taom_feat_roh_mc" text="驃騎王的血脈" />
+    <string id="taom_feat_roh_mc_desc" text="騎乘兵種招募與升級費用降低15%。" />
+    <string id="taom_feat_roh_mw" text="馬克騎士" />
+    <string id="taom_feat_roh_mw_desc" text="騎乘兵種薪資降低15%。" />
+    <string id="taom_feat_roh_is" text="倚賴騎兵" />
+    <string id="taom_feat_roh_is_desc" text="當隊伍以步兵為主時，行軍速度降低10%。" />
+    <string id="taom_feat_roh_loy" text="驃騎王的情誼" />
+    <string id="taom_feat_roh_loy_desc" text="聚落忠誠度每日增加0.5。" />
+    <string id="taom_feat_roh_mor" text="騎士之魂" />
+    <string id="taom_feat_roh_mor_desc" text="隊伍士氣增加5。" />
+    <string id="taom_feat_roh_pls" text="平原騎士" />
+    <string id="taom_feat_roh_pls_desc" text="在平原上隊伍行軍速度增加10%。" />
+    <string id="taom_feat_dale_pls" text="河谷商賈" />
+    <string id="taom_feat_dale_pls_desc" text="在平原上隊伍行軍速度增加10%。" />
+    <string id="taom_feat_dale_ti" text="矮人貿易同盟" />
+    <string id="taom_feat_dale_ti_desc" text="關稅收入增加10%。" />
+    <string id="taom_feat_dale_r" text="黑箭傳統" />
+    <string id="taom_feat_dale_r_desc" text="戰鬥聲望增加10%。" />
+    <string id="taom_feat_dale_loy" text="疆域狹小之患" />
+    <string id="taom_feat_dale_loy_desc" text="聚落忠誠度每日降低0.5。" />
+    <string id="taom_feat_khand_sts" text="草原戰車手" />
+    <string id="taom_feat_khand_sts_desc" text="在草原上隊伍行軍速度增加10%。" />
+    <string id="taom_feat_khand_r" text="傭兵厚酬" />
+    <string id="taom_feat_khand_r_desc" text="戰鬥聲望增加8%。" />
+    <string id="taom_feat_khand_ti" text="向魔多納貢" />
+    <string id="taom_feat_khand_ti_desc" text="關稅收入降低10%。" />
+    <string id="taom_feat_khand_fc" text="草原耐力" />
+    <string id="taom_feat_khand_fc_desc" text="隊伍糧食消耗降低10%。" />
+    <string id="taom_feat_khand_ps" text="戰車機動" />
+    <string id="taom_feat_khand_ps_desc" text="隊伍人數上限增加5%。" />
+    <string id="taom_feat_rhun_sts" text="東方人游騎" />
+    <string id="taom_feat_rhun_sts_desc" text="在草原上隊伍行軍速度增加10%。" />
+    <string id="taom_feat_rhun_ps" text="東方人大軍" />
+    <string id="taom_feat_rhun_ps_desc" text="隊伍人數上限增加5%。" />
+    <string id="taom_feat_rhun_loy" text="東方人貢賦" />
+    <string id="taom_feat_rhun_loy_desc" text="聚落忠誠度每日降低0.5。" />
+    <string id="taom_feat_rhun_rd" text="草原掠襲之道" />
+    <string id="taom_feat_rhun_rd_desc" text="劫掠傷害增加15%。" />
+    <string id="taom_feat_har_ds" text="太陽之子" />
+    <string id="taom_feat_har_ds_desc" text="在沙漠中隊伍行軍速度增加10%。" />
+    <string id="taom_feat_har_ps" text="哈拉德戰團" />
+    <string id="taom_feat_har_ps_desc" text="隊伍人數上限提升5%。" />
+    <string id="taom_feat_harad_mor" text="猛獁禦者" />
+    <string id="taom_feat_harad_mor_desc" text="隊伍士氣提升5點。" />
+    <string id="taom_feat_harad_fc" text="沙漠耐力" />
+    <string id="taom_feat_harad_fc_desc" text="隊伍糧食消耗減少15%。" />
+    <string id="taom_feat_harad_rd" text="遠哈拉德的野蠻" />
+    <string id="taom_feat_harad_rd_desc" text="劫掠傷害提升15%。" />
+    <string id="taom_feat_harad_aic" text="分裂的部族" />
+    <string id="taom_feat_harad_aic_desc" text="組建軍隊所需的影響力增加15%。" />
+    <string id="taom_feat_dun_pls" text="丘陵行者" />
+    <string id="taom_feat_dun_pls_desc" text="隊伍在平原上的移動速度提升10%。" />
+    <string id="taom_feat_dun_ps" text="丘陵部族徵召" />
+    <string id="taom_feat_dun_ps_desc" text="隊伍人數上限提升5%。" />
+    <string id="taom_feat_dun_vr" text="丘陵部族募兵" />
+    <string id="taom_feat_dun_vr_desc" text="村莊志願兵補充速度提升10%。" />
+    <string id="taom_feat_shg_ds" text="沙丘遊者" />
+    <string id="taom_feat_shg_ds_desc" text="隊伍在沙漠中的移動速度提升10%。" />
+    <string id="taom_feat_aba_ds" text="深漠遊牧民" />
+    <string id="taom_feat_aba_ds_desc" text="隊伍在沙漠中的移動速度提升10%。" />
+    <string id="taom_ep_no_hero" text="物品欄畫面上沒有作用中的英雄。" />
+    <string id="taom_ep_save" text="儲存為新預設" />
+    <string id="taom_ep_save_hint" text="將目前的裝備儲存為新的預設組合。" />
+    <string id="taom_ep_load" text="載入" />
+    <string id="taom_ep_load_hint" text="裝備已儲存的預設組合。" />
+    <string id="taom_ep_update" text="更新" />
+    <string id="taom_ep_update_hint" text="以目前的裝備覆寫已儲存的預設組合。" />
+    <string id="taom_ep_delete" text="刪除" />
+    <string id="taom_ep_delete_hint" text="移除一組預設。" />
+    <string id="taom_ep_title" text="裝備預設組合" />
+    <string id="taom_ep_ok" text="確定" />
+    <string id="taom_ep_cancel" text="取消" />
+    <string id="taom_ep_header" text="英雄：{HERO}  預設：{COUNT}/{MAX}" />
+    <string id="taom_ep_save_title" text="儲存預設" />
+    <string id="taom_ep_save_msg" text="請輸入名稱。此預設會記錄你目前的戰鬥與平民裝備，以及坐騎。" />
+    <string id="taom_ep_select_load" text="載入預設" />
+    <string id="taom_ep_select_update" text="更新預設" />
+    <string id="taom_ep_select_delete" text="刪除預設" />
+    <string id="taom_ep_select" text="選擇預設" />
+    <string id="taom_ep_load_failed" text="載入失敗。" />
+    <string id="taom_ep_load_partial" text="已裝備 {EQUIPPED} 件物品。缺少物品：{MISS_ITEMS}。缺少修飾詞：{MISS_MODS}。" />
+    <string id="taom_ep_load_ok" text="已載入預設（{COUNT} 件物品）。" />
+    <string id="taom_ep_updated" text="預設已更新。" />
+    <string id="taom_ep_notfound" text="找不到預設。" />
+    <string id="taom_ep_disabled" text="裝備預設已在 MCM 中停用。" />
+    <string id="taom_ep_delete_title" text="刪除預設" />
+    <string id="taom_ep_delete_msg" text="你確定要刪除此預設嗎？" />
+    <string id="taom_ep_yes" text="是" />
+    <string id="taom_ep_no" text="否" />
+    <string id="taom_ep_deleted" text="預設已刪除。" />
+    <string id="taom_ep_saved" text="預設「{NAME}」已儲存。" />
+    <string id="taom_ep_max" text="已達預設上限（{MAX}）。請刪除一個以儲存新預設。" />
+    <string id="taom_ep_bad_name" text="預設名稱不可為空。" />
+    <string id="taom_ep_psummary" text="戰鬥：{B}　平民：{C}　坐騎：{M}" />
+    <string id="taom_fief_hub_empty" text="領地管理 — 未擁有任何領地" />
+    <string id="taom_fief_hub_title" text="領地管理 — {NAME}（{KIND}）[{INDEX}/{COUNT}]" />
+    <string id="taom_fief_kind_town" text="城鎮" />
+    <string id="taom_fief_kind_castle" text="城堡" />
+    <string id="taom_fief_hub_remote_disabled" text="遠端建造佇列已停用 — 請親自前往領地管理。" />
+    <string id="taom_fief_hub_prev" text="上一個領地" />
+    <string id="taom_fief_hub_next" text="下一個領地" />
+    <string id="taom_fief_hub_manage" text="管理此領地" />
+    <string id="taom_fief_hub_leave" text="離開" />
+    <string id="taom_fief_no_fiefs" text="你尚未擁有任何領地。" />
+    <string id="taom_fief_nav_label" text="領地" />
+    <string id="taom_qa_title" text="快速操作" />
+    <string id="taom_qa_desc" text="請選擇一項操作。" />
+    <string id="taom_qa_ok" text="確定" />
+    <string id="taom_qa_cancel" text="取消" />
+    <string id="taom_qa_confirm_title" text="確認" />
+    <string id="taom_qa_confirm_msg" text="要執行此批次操作嗎？" />
+    <string id="taom_qa_yes" text="是" />
+    <string id="taom_qa_no" text="否" />
+    <string id="taom_extra_fast_forward_hint" text="額外加速（E）" />
+    <string id="taom_str_faction_official.lindon" text="a loremaster of Lindon" />
+    <string id="taom_str_faction_official.lindon_f" text="a healer of Lindon" />
+    <string id="taom_str_faction_ruler.lindon" text="Lord" />
+    <string id="taom_str_faction_ruler.lindon_f" text="Lady" />
+    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lindon" text="Lindonian" />
+    <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
+    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Grey Havens" />
+    <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
+    <string id="taom_str_neutral_term_for_culture.lindon" text="Elves of Lindon" />
+    <string id="taom_str_culture_description.lindon" text="Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
+    <string id="taom_str_culture_rich_name.lindon" text="Falathrim" />
+    <string id="taom_str_adjective_for_culture.lindon" text="Lindonian" />
+    <string id="taom_str_player_father_name.lindon" text="Celeforn" />
+    <string id="taom_str_player_mother_name.lindon" text="Gilrien" />
+    <string id="taom_str_faction_official.bluecraig" text="a chieftain of Blue Craig" />
+    <string id="taom_str_faction_official.bluecraig_f" text="a chieftainess of Blue Craig" />
+    <string id="taom_str_faction_ruler.bluecraig" text="Warlord" />
+    <string id="taom_str_faction_ruler.bluecraig_f" text="Lady Warlord" />
+    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="the Warlord, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Warlord {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
+    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
+    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins of Blue Craig" />
+    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />
+    <string id="taom_str_culture_description.bluecraig" text="The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
+    <string id="taom_str_culture_rich_name.bluecraig" text="Goblins" />
+    <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
+    <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
   </strings>
 </base>

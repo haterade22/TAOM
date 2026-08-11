@@ -55,12 +55,12 @@ public class CareerCultureCoverageTests
         // When careers are added for these, remove them from this list.
         var documentedExceptions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "shaghana",
-            "abanissa",
-            // New Misty Mountains factions — playable cultures with placeholder troop trees;
-            // dedicated careers are a documented follow-up (see new-factions feature doc).
-            "goblin",
-            "mistymountainorcs"
+            // Empty, and worth keeping empty. `goblin` and `mistymountainorcs` were here until
+            // 2026-08-10, and `shaghana` and `abanissa` — the two this test was originally written
+            // for, after Review #24 — until 2026-08-11, when each was given three careers cloned
+            // from its nearest peer by tools/insert_new_faction_careers.py. Removing an entry is
+            // what makes this test start guarding the culture — leaving a fixed culture parked
+            // here is a permanent blind spot, not a harmless leftover.
         };
 
         // Act + Assert — every CC culture must have career coverage or be documented

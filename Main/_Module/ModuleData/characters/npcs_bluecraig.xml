@@ -1,0 +1,1281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== GUNDABAD CIVILIAN NPCs ==================== -->
+	<!-- All use race="goblin" for correct bluecraig rendering -->
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.bluecraig" name="{=aom_bcg_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager (upgrades to snaga) -->
+	<NPCCharacter id="villager_bluecraig" race="goblin" default_group="Infantry" level="1" name="{=aom_bcg_villager}Slave" occupation="Villager" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.bluecraig_snaga" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="caravan_master_bluecraig" race="goblin" default_group="Infantry" level="26" name="{=aom_bcg_caravan_master}Goblin Caravan Master" occupation="CaravanGuard" culture="Culture.bluecraig">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_bluecraig" race="goblin" default_group="Infantry" level="21" name="{=aom_bcg_caravan_guard}Goblin Caravan Guard" occupation="CaravanGuard" culture="Culture.bluecraig">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_bluecraig" race="goblin" default_group="Infantry" level="26" name="{=aom_bcg_vet_caravan_guard}Goblin Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.bluecraig">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+				<equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armed_trader_bluecraig" race="goblin" default_group="Infantry" level="16" name="{=aom_bcg_armed_trader}Goblin Armed Trader" occupation="CaravanGuard" culture="Culture.bluecraig">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+				<equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_bluecraig" race="goblin" default_group="Infantry" level="4" culture="Culture.bluecraig" occupation="PrisonGuard" name="{=aom_bcg_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item1" id="Item.wm_gundabad_spear_a01" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item1" id="Item.wm_gundabad_spear_a01" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_bluecraig" race="goblin" default_group="Infantry" level="16" name="{=aom_bcg_guard}Guard" occupation="Soldier" culture="Culture.bluecraig">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.bluecraig" name="{=aom_bcg_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.bluecraig" name="{=aom_bcg_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.bluecraig" name="{=aom_bcg_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.bluecraig" name="{=aom_bcg_warg_merchant}Warg Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.bluecraig" name="{=aom_bcg_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_bluecraig" race="goblin" default_group="Infantry" is_hero="false" name="{=aom_bcg_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_bluecraig" race="goblin" default_group="Infantry" is_hero="false" name="{=aom_bcg_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_bluecraig" race="goblin" default_group="Infantry" is_hero="false" name="{=aom_bcg_musician}Musician" occupation="Musician" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_bluecraig" race="goblin" default_group="Infantry" is_hero="false" name="{=aom_bcg_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="barber_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.bluecraig" name="{=aom_bcg_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="shop_worker_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.bluecraig" name="{=aom_bcg_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="ransom_broker_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="RansomBroker" culture="Culture.bluecraig" name="{=aom_bcg_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Gang -->
+	<NPCCharacter id="gangleader_bodyguard_bluecraig" race="goblin" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.bluecraig" name="{=aom_bcg_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+				<equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+				<equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables -->
+
+	<!-- Merchant 1: Cautious bluecraig trader -->
+	<NPCCharacter id="spc_notable_bluecraig_0" name="{=aom_bcg_notable_0}Cautious bluecraig trader" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 2: Cunning Goblin haggler -->
+	<NPCCharacter id="spc_notable_bluecraig_0b" name="{=aom_bcg_notable_0b}Cunning Goblin haggler" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 3: Ruthless bluecraig provisioner -->
+	<NPCCharacter id="spc_notable_bluecraig_1" name="{=aom_bcg_notable_1}Ruthless bluecraig provisioner" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 4: Cold Goblin quartermaster -->
+	<NPCCharacter id="spc_notable_bluecraig_1b" name="{=aom_bcg_notable_1b}Cold Goblin quartermaster" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 5: Shrewd bluecraig supply master -->
+	<NPCCharacter id="spc_notable_bluecraig_2" name="{=aom_bcg_notable_2}Shrewd bluecraig supply master" race="goblin" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 6: Wary Goblin hoarder -->
+	<NPCCharacter id="spc_notable_bluecraig_2b" name="{=aom_bcg_notable_2b}Wary Goblin hoarder" race="goblin" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 7: Self-made bluecraig dealer -->
+	<NPCCharacter id="spc_notable_bluecraig_3" name="{=aom_bcg_notable_3}Self-made bluecraig dealer" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 8: Jovial Goblin peddler -->
+	<NPCCharacter id="spc_notable_bluecraig_3b" name="{=aom_bcg_notable_3b}Jovial Goblin peddler" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 9: Scheming bluecraig profiteer -->
+	<NPCCharacter id="spc_notable_bluecraig_4" name="{=aom_bcg_notable_4}Scheming bluecraig profiteer" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 10: Devious Goblin trader -->
+	<NPCCharacter id="spc_notable_bluecraig_4b" name="{=aom_bcg_notable_4b}Devious Goblin trader" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 1: Fanatical Goblin war-chanter -->
+	<NPCCharacter id="spc_notable_bluecraig_5" name="{=aom_bcg_notable_5}Fanatical Goblin war-chanter" race="goblin" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 2: Stern bluecraig taskmaster -->
+	<NPCCharacter id="spc_notable_bluecraig_6" name="{=aom_bcg_notable_6}Stern bluecraig taskmaster" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 3: Brooding bluecraig mystic -->
+	<NPCCharacter id="spc_notable_bluecraig_7" name="{=aom_bcg_notable_7}Brooding bluecraig mystic" race="goblin" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Artisan 1: Gruff bluecraig smith -->
+	<NPCCharacter id="spc_notable_bluecraig_8" name="{=aom_bcg_notable_8}Gruff bluecraig smith" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Artisan 2: Outgoing Goblin forgemaster -->
+	<NPCCharacter id="spc_notable_bluecraig_9" name="{=aom_bcg_notable_9}Outgoing Goblin forgemaster" race="goblin" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 1: Protective Goblin pit lord -->
+	<NPCCharacter id="spc_notable_bluecraig_gl1" name="{=aom_bcg_notable_gl1}Protective Goblin pit lord" race="goblin" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 2: Snarling bluecraig enforcer -->
+	<NPCCharacter id="spc_notable_bluecraig_10" name="{=aom_bcg_notable_10}Snarling bluecraig enforcer" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 3: Intimidating bluecraig brute -->
+	<NPCCharacter id="spc_notable_bluecraig_11" name="{=aom_bcg_notable_11}Intimidating bluecraig brute" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 4: Bestial Goblin thug -->
+	<NPCCharacter id="spc_notable_bluecraig_gl4" name="{=aom_bcg_notable_gl4}Bestial Goblin thug" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 5: Scheming bluecraig racketeer -->
+	<NPCCharacter id="spc_notable_bluecraig_12" name="{=aom_bcg_notable_12}Scheming bluecraig racketeer" race="goblin" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 6: Menacing Goblin cutthroat -->
+	<NPCCharacter id="spc_notable_bluecraig_13" name="{=aom_bcg_notable_13}Menacing Goblin cutthroat" race="goblin" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 1: Gruff bluecraig overseer -->
+	<NPCCharacter id="spc_notable_bluecraig_21" name="{=aom_bcg_notable_21}Gruff bluecraig overseer" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 2: Agreeable Goblin field boss -->
+	<NPCCharacter id="spc_notable_bluecraig_22" name="{=aom_bcg_notable_22}Agreeable Goblin field boss" race="goblin" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 3: Vicious Goblin slave-driver (added 2026-05-31 for notable-count feat) -->
+	<NPCCharacter id="spc_notable_bluecraig_23" name="{=aom_bcg_notable_23}Vicious Goblin slave-driver" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 1: Rebellious Goblin captain -->
+	<NPCCharacter id="spc_bluecraig_headman_1" name="{=aom_bcg_headman_1}Rebellious Goblin captain" race="goblin" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 2: Conservative bluecraig elder -->
+	<NPCCharacter id="spc_bluecraig_headman_2" name="{=aom_bcg_headman_2}Conservative bluecraig elder" race="goblin" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 3: Devious Goblin headman -->
+	<NPCCharacter id="spc_bluecraig_headman_3" name="{=aom_bcg_headman_3}Devious Goblin headman" race="goblin" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.bluecraig" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.bluecraig" name="{=aom_bcg_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.bluecraig" name="{=aom_bcg_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_bluecraig" race="goblin" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.bluecraig" name="{=aom_bcg_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Town Population -->
+	<NPCCharacter id="townsman_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_townsman}Townsman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_infant_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Population -->
+	<NPCCharacter id="village_woman_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_child_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_teenager_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_child_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_villager_child}Village Child" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_teenager_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_practice_dummy}Practice Dummy" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_practice_1}Practice Fighter" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_practice_2}Practice Fighter" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_practice_3}Practice Fighter" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_bluecraig" race="goblin" default_group="Infantry" name="{=aom_bcg_gear_dummy}Gear Dummy" occupation="Townsfolk" culture="Culture.bluecraig" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Lord templates. Referenced from taom_spcultures.xml <lord_templates> and
+	     <rebellion_hero_templates>; both lists previously held vanilla's Culture.empire
+	     leaders, and a hero keeps its TEMPLATE's culture. Equipment comes from the
+	     already-authored taom_bluecraig_lord_* rosters. -->
+	<NPCCharacter id="spc_bluecraig_lord_1" race="goblin" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.bluecraig" name="{=aom_bluecraig_lord_1}Bold bluecraig chieftain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_bluecraig_lord_battle_male" />
+			<EquipmentSet id="taom_bluecraig_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_bluecraig_lord_2" race="goblin" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.bluecraig" name="{=aom_bluecraig_lord_2}Cautious bluecraig chieftain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_bluecraig_lord_battle_male" />
+			<EquipmentSet id="taom_bluecraig_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+</NPCCharacters>

@@ -1,34 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Polish" />
-  </tags>
-  <strings>
-    <string id="taom_wotr_title" text="Wojna o Pierścień" />
-    <string id="taom_wotr_leaders" text="Przywódcy" />
-    <string id="taom_wotr_allies" text="Sojusznicy" />
-    <string id="taom_wotr_breakdown_header" text="Rozkład impetu" />
-    <string id="taom_wotr_total_stats_header" text="Statystyki ogólne" />
-    <string id="taom_wotr_total" text="Razem: {MOMENTUM}" />
-    <string id="taom_wotr_battles_won" text="Wygrane bitwy" />
-    <string id="taom_wotr_villages_raided" text="Splądrowane wioski" />
-    <string id="taom_wotr_fiefs_captured" text="Zdobyte lenna" />
-    <string id="taom_wotr_army_gathered" text="Zebrane armie" />
-    <string id="taom_wotr_relative_strength" text="Względna siła" />
-    <string id="taom_wotr_enemies_killed" text="Zabici wrogowie" />
-    <string id="taom_wotr_settlements_captured" text="Zdobyte osady" />
-    <string id="taom_wotr_momentum" text="Rozpęd" />
-    <string id="taom_wotr_desc_battle" text="Armia {WINNER_FACTION}, prowadzona przez {WINNER_LEADER}, zniszczyła armię {LOSER_FACTION}, prowadzoną przez {LOSER_LEADER}, zabijając {CASUALTIES}." />
-    <string id="taom_wotr_desc_siege" text="Armia {FACTION}, prowadzona przez {LEADER}, zdobyła {SETTLEMENT}." />
-    <string id="taom_wotr_desc_raid" text="{PARTY} z {FACTION} złupiła wioskę {SETTLEMENT}." />
-    <string id="taom_wotr_desc_army" text="Zebrała się armia pod dowództwem {LEADER}." />
-    <string id="taom_wotr_desc_strength" text="Jesteśmy o {PERCENTAGE}% silniejsi od naszych wrogów!" />
-    <string id="taom_wotr_desc_kills" text="Nasze siły ubiły {CASUALTIES} wrogów w bitwie." />
-    <string id="taom_wotr_victory_title" text="Koniec wojny" />
-    <string id="taom_wotr_victory_free" text="Wojna się skończyła. Wolne Ludy przetrwały i wywalczyły przyszłość dla swoich dzieci. Niech żyje wolność!" />
-    <string id="taom_wotr_victory_evil" text="Królestwa Ludzi i Elfów zostały zmiażdżone. Niech żyje Sauron!" />
-    <string id="taom_wotr_continue" text="Kontynuuj" />
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Polish" />
+  </tags>
+  <strings>
+    <string id="taom_wotr_title" text="Wojna o Pierścień" />
+    <string id="taom_wotr_leaders" text="Przywódcy" />
+    <string id="taom_wotr_allies" text="Sojusznicy" />
+    <string id="taom_wotr_breakdown_header" text="Rozkład impetu" />
+    <string id="taom_wotr_total_stats_header" text="Statystyki ogólne" />
+    <string id="taom_wotr_total" text="Razem: {MOMENTUM}" />
+    <string id="taom_wotr_battles_won" text="Wygrane bitwy" />
+    <string id="taom_wotr_villages_raided" text="Splądrowane wioski" />
+    <string id="taom_wotr_fiefs_captured" text="Zdobyte lenna" />
+    <string id="taom_wotr_army_gathered" text="Zebrane armie" />
+    <string id="taom_wotr_relative_strength" text="Względna siła" />
+    <string id="taom_wotr_enemies_killed" text="Zabici wrogowie" />
+    <string id="taom_wotr_settlements_captured" text="Zdobyte osady" />
+    <string id="taom_wotr_momentum" text="Rozpęd" />
+    <string id="taom_wotr_desc_battle" text="Armia {WINNER_FACTION}, prowadzona przez {WINNER_LEADER}, zniszczyła armię {LOSER_FACTION}, prowadzoną przez {LOSER_LEADER}, zabijając {CASUALTIES}." />
+    <string id="taom_wotr_desc_siege" text="Armia {FACTION}, prowadzona przez {LEADER}, zdobyła {SETTLEMENT}." />
+    <string id="taom_wotr_desc_raid" text="{PARTY} z {FACTION} złupiła wioskę {SETTLEMENT}." />
+    <string id="taom_wotr_desc_army" text="Zebrała się armia pod dowództwem {LEADER}." />
+    <string id="taom_wotr_desc_strength" text="Jesteśmy o {PERCENTAGE}% silniejsi od naszych wrogów!" />
+    <string id="taom_wotr_desc_kills" text="Nasze siły ubiły {CASUALTIES} wrogów w bitwie." />
+    <string id="taom_wotr_victory_title" text="Koniec wojny" />
+    <string id="taom_wotr_victory_free" text="Wojna się skończyła. Wolne Ludy przetrwały i wywalczyły przyszłość dla swoich dzieci. Niech żyje wolność!" />
+    <string id="taom_wotr_victory_evil" text="Królestwa Ludzi i Elfów zostały zmiażdżone. Niech żyje Sauron!" />
+    <string id="taom_wotr_continue" text="Kontynuuj" />
+  </strings>
+</base>

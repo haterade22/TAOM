@@ -20,15 +20,13 @@
          and a user could run any TAOM against any Dependencies. <DependedModule> is the
          engine-honoured element (ModuleInfo.LoadWithFullPath parses it; it does NOT parse
          DependedModuleMetadatas), so this is what actually blocks a broken pairing. -->
-    <DependedModule Id="TAOM.Dependencies" />
   </DependedModules>
   <DependedModuleMetadatas>
     <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.8.*" />
     <!-- Version-pinned mirror of the DependedModule above, for BUTR/BLSE launchers (which DO read
          this block). Bump this alongside Dependencies/_Module/SubModule.xml's <Version> whenever
          the Dependencies assembly changes — a stale pairing is the #371 failure mode. -->
-    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.6" />
-    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
+   <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
     <!-- Co-op interop (2026-07-31). BUTR/BLSE launchers read this block; the VANILLA launcher does
@@ -403,6 +401,62 @@
       </IncludedGameTypes>
     </XmlNode>
     <!-- TAOM-NEWFACTIONS-REG:END -->
+    <!-- TAOM-NEWCULTURE-REG:BEGIN -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_lindon"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/npcs_lindon"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_lindon"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_bluecraig"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/npcs_bluecraig"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_bluecraig"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- TAOM-NEWCULTURE-REG:END -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="characters/npcs_mirkwood"/>
       <IncludedGameTypes>

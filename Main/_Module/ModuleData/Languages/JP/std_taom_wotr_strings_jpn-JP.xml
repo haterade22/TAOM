@@ -25,10 +25,10 @@
     <string id="taom_wotr_desc_raid" text="{FACTION}の{PARTY}が{SETTLEMENT}の村を略奪した。" />
     <string id="taom_wotr_desc_army" text="{LEADER}率いる軍勢が集結した。" />
     <string id="taom_wotr_desc_strength" text="我らは敵より{PERCENTAGE}%強い!" />
+    <string id="taom_wotr_desc_kills" text="我が軍は戦闘で{CASUALTIES}人の敵を討ち取った。" />
     <string id="taom_wotr_victory_title" text="戦争の終結" />
     <string id="taom_wotr_victory_free" text="戦争は終わった。自由の民は耐え抜き、子らのための未来を勝ち取った。自由万歳!" />
     <string id="taom_wotr_victory_evil" text="人間とエルフの国々は悉く砕かれた。サウロン万歳!" />
     <string id="taom_wotr_continue" text="続ける" />
-    <string id="taom_wotr_desc_kills" text="我が軍は戦闘で{CASUALTIES}人の敵を討ち取った。" />
   </strings>
 </base>

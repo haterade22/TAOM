@@ -71,6 +71,10 @@ def main():
     cultures = [
         "gondor", "mordor", "isengard", "dolguldur",
         "gundabad", "erebor", "rhun_new", "dale",
+        # Promoted 2026-08-10 out of a borrowed culture: bluecraig off goblin, lindon off rivendell.
+        # A new culture must be appended here or its troop file is never swept for broken item refs
+        # — the "underwear bug" gate (docs/ai-includes/new-culture-authoring.md Phase 4).
+        "bluecraig", "lindon",
     ]
     armory_ids = collect_armory_ids()
     print(f"Armory IDs (recursive): {len(armory_ids):,}\n")

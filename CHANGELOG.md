@@ -4,6 +4,95 @@
 
 ## 2026-08-10
 
+### feat(cultures): Blue Craig and Lindon were kingdoms without cultures, so they played as someone else
+
+Both shipped in June as real map factions, and both ran on a borrowed culture — `bluecraig` on
+`Culture.goblin`, `lindon` on `Culture.rivendell`. The faction map offered them, the culture
+confirmed, and then the player woke up somewhere else: the starting settlement is a property of the
+CULTURE, not of the region clicked, so picking Blue Craig started you in Goblin-town and picking
+Lindon started you in Rivendell rather than Mithlond. Everything downstream — troops, names, banner,
+feats, recruitment — was the host's too.
+
+Both now have their own `<Culture>` object and everything a culture needs: troop trees, 71 NPCs
+each, equipment sets, wanderers, the twelve canonical party templates, child/teen/lord/education
+templates, the six stage-2 tutor templates, enlistment rosters for all four ranks, a volunteer
+recruitment pool, cultural feats, CC narrative options in all four culture-scoped menus, CC starting
+equipment, starting denars, three careers each, and a body. Lindon is Círdan's Falathrim rather than
+a Rivendell reskin — Sindar shipwrights of the Grey Havens, not Imladris Ñoldor — and Blue Craig is
+the western goblin realm of the Ered Luin. The kingdoms, 7 clans, 50 lords and 25 settlements were
+retagged onto them, the last of those in the live `TAOM_Map` file outside git, with a `.bak-*` copy
+and `LANDLESS_CULTURE` as the in-repo gate that catches a module reinstall reverting it.
+
+Four defects surfaced during the work, each caught by a check that then became part of the tooling.
+A culture's id-space is not namespaced by its own name — `troops_rivendell.xml` defines 14
+`imladris_*` ids beside 13 `rivendell_*` ones — so a blanket rename produced a clone that redefined
+existing ids; the fix is an explicit id map. A display-text remap ending in `("rivendell", "lindon")`
+ran after the asset shield was lifted and renamed all 1763 `Item.rivendell_*` references out of
+existence: 2470 validator errors from a table entry that was merely redundant. The retag scoped
+"any element whose id matches" and matched the ROOT element, reporting 102 rewrites on `lords.xml` —
+Rivendell's 22 plus Goblin-town's 80, every lord of both host cultures. And a duplicate-id check
+collected into a `set`, which silently collapses an id minted twice by the same run, so seven
+duplicate party templates passed it; it counts a list now.
+
+Two more the surface audit caught after the data had landed: seven `kingdom_hero_party_*_*_N_template`
+duplicates, because the extractor matched any id merely CONTAINING the source name and swept up the
+per-clan family a different generator owns; and both cultures shipping with zero `<cultural_feats>`
+while their faction cards already advertised six bonuses each. Feat ids are now reused verbatim from
+the source, because `CulturalFeatsService` matches `FeatObject` identity against what
+`TaomCulturalFeats.cs` registers — a renamed `taom_lindon_*` feat resolves to nothing and is dropped
+without a word.
+
+Verified: build 0 errors, 6322 tests pass, `validate_moduledata.py --game-modules` PASS (40 cultures,
+5,317 NPCCharacters), doc lint clean, 0 encoding faults across 61 language files. The in-game smoke
+is still owed and is the only thing that proves any of it loaded — a new XML file is null in-engine
+until a full process restart. Method and traps:
+[`docs/features/culture-playability-wiring.md`](docs/features/culture-playability-wiring.md).
+
+### fix(character-creation): the two orc cultures were selectable, then handed the player nothing
+
+`goblin` and `mistymountainorcs` shipped CC-selectable in June. Picking either one worked right up to
+the moment character creation finalized, at which point three separate systems that give the player
+something had never heard of them, and none of the three said so.
+
+`equipmentsets/taom_char_creation_equipment.xml` covered twelve cultures and neither of these two, so
+all 24 roster ids those cultures can produce resolved to nothing. `PlayerEquipmentRosterIds` builds
+the id unconditionally — `player_char_creation_{culture}_{title}_{m|f}`, no existence check — and
+`PlayerEquipmentService` logs `RosterNotFound` and applies nothing, so the player walked out wearing
+whatever the previous stage happened to leave on them. `startup_resources_config.xml` had no row for
+either, and that file documents its own default as *"Default 0 (no warning when missing)"*, which
+makes an accidental omission byte-identical to a deliberate zero: they started on zero denars.
+Careers were parked in a `documentedExceptions` list, so the stage offered only "No specialization".
+
+Fixed all three. 110 rosters (55 per culture) generated from the item pool the shipped troop trees
+already use, so nothing references an item the Armory does not define; both cultures are marked
+`no_mount` because their troop trees contain zero `slot="Horse"` entries, and handing the player a
+horse the culture never fields is its own bug. Two `startup_resources_config.xml` rows sized against
+their nearest peers. Six careers cloned from Gundabad's three — the house pattern for these two
+cultures, whose troop trees and CC menus are already Gundabad clones.
+
+The clone script preserves `portrait_sprite`, `sprite`, `icon_sprite`, `particle_effect` and
+`sound_effect` verbatim rather than renaming them with everything else. The first run did rename
+them, which would have shipped six careers asking for particle systems and sounds nobody has
+authored. It also carries a contamination gate that fails the run if a source display word survives
+into a generated field — the defect the new-factions RCA recorded after it shipped.
+
+New `PlayerStartCoverageTests` pins both invariants, deriving the culture list from `cultures.json`
+rather than a hand-written list. That is the actual lesson: every one of these gaps reached a shipped
+build because the coverage table that should have caught it was written before the culture existed.
+Both cultures un-parked from the career exception list.
+
+Not fixed, found on the way: `tools/generate_char_creation_equipment.py` has drifted 257 lines from
+the file it owns — a full regeneration would revert Gondor's shield fix across 8 rosters — so it
+gained an `--append <culture>` mode instead. And Erebor's CC rosters still carry 16 horse-bearing
+entries despite `no-mount-cultures.md` recording their removal in March; the May regeneration put
+them back. Left alone as out of scope, recorded in
+[`docs/features/culture-playability-wiring.md`](docs/features/culture-playability-wiring.md), which
+is the new checklist for what a culture needs before it is playable rather than merely selectable.
+
+Verified: build 0 errors, 6322 tests pass, `validate_moduledata.py --game-modules` PASS. In-game
+smoke on a new campaign per culture is still owed — a new XML file is null in-engine until a full
+process restart, so none of the above proves the running game loaded it.
+
 ### chore: v1.4.8 engine bump — nothing in `Main/` had to change
 
 Steam moved the installed game to v1.4.8 (War Sails v1.2.8, build `117131 → 119303`) at 07:22 this

@@ -1437,17 +1437,17 @@
     <string id="TAOM_hero_B8_l" text="Ein Variag-Kriegsherr der östlichen Hügel." />
     <string id="TAOM_hero_B8_s" text="Frau des Variag-Kriegsherrn." />
     <string id="TAOM_hero_B8_c" text="Erbe des Variag-Kriegsherrn." />
-    <string id="TAOM_liege_dunland" text="Brenin von Dunland" />
-    <string id="TAOM_liege_dunland_female" text="Brenhines von Dunland" />
-    <string id="TAOM_liege_dale" text="König von Thal" />
-    <string id="TAOM_liege_dale_female" text="Königin von Thal" />
-    <string id="TAOM_liege_harad" text="Taskral von Harad" />
-    <string id="TAOM_liege_harad_female" text="Taskral von Harad" />
-    <string id="TAOM_liege_khand" text="Khudriag von Khand" />
-    <string id="TAOM_liege_khand_female" text="Khudriag von Khand" />
-    <string id="TAOM_liege_rohan" text="König der Mark" />
-    <string id="TAOM_liege_rohan_female" text="Königin der Mark" />
-    <string id="TAOM_liege_rhun" text="Loke-Kan von Rhûn" />
-    <string id="TAOM_liege_rhun_female" text="Loke-Kan von Rhûn" />
+    <string id="TAOM_liege_dunland" text="Brenin von Dunland" />
+    <string id="TAOM_liege_dunland_female" text="Brenhines von Dunland" />
+    <string id="TAOM_liege_dale" text="König von Thal" />
+    <string id="TAOM_liege_dale_female" text="Königin von Thal" />
+    <string id="TAOM_liege_harad" text="Taskral von Harad" />
+    <string id="TAOM_liege_harad_female" text="Taskral von Harad" />
+    <string id="TAOM_liege_khand" text="Khudriag von Khand" />
+    <string id="TAOM_liege_khand_female" text="Khudriag von Khand" />
+    <string id="TAOM_liege_rohan" text="König der Mark" />
+    <string id="TAOM_liege_rohan_female" text="Königin der Mark" />
+    <string id="TAOM_liege_rhun" text="Loke-Kan von Rhûn" />
+    <string id="TAOM_liege_rhun_female" text="Loke-Kan von Rhûn" />
   </strings>
 </base>

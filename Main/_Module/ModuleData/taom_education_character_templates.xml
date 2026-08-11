@@ -2518,4 +2518,364 @@
 				civilian="true" />
 		</Equipments>
 	</NPCCharacter>
+  <!-- TAOM-NEWCULTURE:lindon:BEGIN -->
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_0_lindon"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_0_lindon"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lindon"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.empire_horseman_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_1_lindon"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_1_lindon"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lindon"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Head"
+					id="Item.empire_crown_v2" />
+				<equipment
+					slot="Body"
+					id="Item.empire_dress" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_2_lindon"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_2_lindon"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lindon"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.short_padded_robe" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_3_lindon"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_3_lindon"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lindon"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.padded_leather_overcoat" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_4_lindon"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_4_lindon"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lindon"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.empire_plate_vest_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_5_lindon"
+		race="elf"
+		name="{=!}stage_2_page_0_branch_5_lindon"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.lindon"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_rivendell" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Cape"
+					id="Item.scarf" />
+				<equipment
+					slot="Body"
+					id="Item.empire_horseman_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:lindon:END -->
+  <!-- TAOM-NEWCULTURE:bluecraig:BEGIN -->
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_0_bluecraig"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_0_bluecraig"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.bluecraig"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_1_bluecraig"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_1_bluecraig"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.bluecraig"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_2_bluecraig"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_2_bluecraig"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.bluecraig"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_3_bluecraig"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_3_bluecraig"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.bluecraig"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_4_bluecraig"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_4_bluecraig"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.bluecraig"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_5_bluecraig"
+		race="goblin"
+		name="{=!}stage_2_page_0_branch_5_bluecraig"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.bluecraig"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gundabad" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment
+					slot="Leg"
+					id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:bluecraig:END -->
 </NPCCharacters>

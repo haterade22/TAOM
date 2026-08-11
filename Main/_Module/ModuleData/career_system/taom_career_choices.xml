@@ -6767,7 +6767,6 @@
   <!-- GUNDABAD - Cave Troll Master (Infantry) -->
   <!-- ======================================================================= -->
 
-  <!-- DISABLED 2026-05-14: Cave Troll Master choice tree WIP; not ready for live game yet. Re-enable by uncommenting.
   <Choice id="cave_troll_master_root" group_id="" type="Passive"
           description="{=taom_cave_troll_master_root_desc}Gundabad Berserker grants +5 health and drives your trolls berserk."
           icon_sprite="career_choice_cave_troll_master_root">
@@ -6881,7 +6880,6 @@
       <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
   </ChoiceGroup>
-  -->
 
   <!-- ======================================================================= -->
   <!-- GUNDABAD - Goblin Sniper (Ranged) -->
@@ -7823,6 +7821,2076 @@
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
     </Choice>
     <Choice id="corsair_captain_t3_b_p4" type="Passive" description="{=taom_crca_t3_b_p4}+9 max health." icon_sprite="career_choice_crca_t3_b_p4">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Goblin-town Troll-Driver (goblin) — cloned from cave_troll_master ═══ -->
+  <Choice id="goblin_troll_driver_root" group_id="" type="Passive"
+          description="{=taom_goblin_troll_driver_root_desc}Goblin-town Frenzy grants +5 health and drives your trolls berserk."
+          icon_sprite="career_choice_cave_troll_master_root">
+    <PassiveEffect type="Health" magnitude="5" operation="Add" />
+  </Choice>
+
+  <ChoiceGroup id="goblin_troll_driver_t1_a" display_name="{=taom_career_grp_goblin_troll_driver_t1_a}Pit-Whip Driver" career_id="goblin_troll_driver" tier="1">
+    <Choice id="goblin_troll_driver_t1_a_key" type="Keystone" description="{=taom_gtd_t1_a_key}Goblin-town Frenzy radius increased, empowering more warriors." icon_sprite="career_choice_ctm_t1_a_key">
+      <Mutations><Mutation target_id="goblin_troll_driver_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_troll_driver_t1_a_p1" type="Passive" description="{=taom_gtd_t1_a_p1}+8% melee damage." icon_sprite="career_choice_ctm_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t1_a_p2" type="Passive" description="{=taom_gtd_t1_a_p2}+3% troop damage." icon_sprite="career_choice_ctm_t1_a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t1_a_p3" type="Passive" description="{=taom_gtd_t1_a_p3}+6 max health." icon_sprite="career_choice_ctm_t1_a_p3">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t1_a_p4" type="Passive" description="{=taom_gtd_t1_a_p4}+7% swing speed." icon_sprite="career_choice_ctm_t1_a_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_troll_driver_t1_b" display_name="{=taom_career_grp_goblin_troll_driver_t1_b}Cave-Mouth Warden" career_id="goblin_troll_driver" tier="1">
+    <Choice id="goblin_troll_driver_t1_b_key" type="Keystone" description="{=taom_gtd_t1_b_key}Goblin-town Frenzy duration extended, fortifying the defense." icon_sprite="career_choice_ctm_t1_b_key">
+      <Mutations><Mutation target_id="goblin_troll_driver_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_troll_driver_t1_b_p1" type="Passive" description="{=taom_gtd_t1_b_p1}+8% resistance." icon_sprite="career_choice_ctm_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t1_b_p2" type="Passive" description="{=taom_gtd_t1_b_p2}+5% troop morale." icon_sprite="career_choice_ctm_t1_b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t1_b_p3" type="Passive" description="{=taom_gtd_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_ctm_t1_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t1_b_p4" type="Passive" description="{=taom_gtd_t1_b_p4}+5% troop survival." icon_sprite="career_choice_ctm_t1_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_troll_driver_t2_a" display_name="{=taom_career_grp_goblin_troll_driver_t2_a}Goblin-town Tyrant" career_id="goblin_troll_driver" tier="2">
+    <Choice id="goblin_troll_driver_t2_a_key" type="Keystone" description="{=taom_gtd_t2_a_key}Goblin-town Frenzy charge reduced, activating more frequently." icon_sprite="career_choice_ctm_t2_a_key">
+      <Mutations><Mutation target_id="goblin_troll_driver_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_troll_driver_t2_a_p1" type="Passive" description="{=taom_gtd_t2_a_p1}+10% troop morale." icon_sprite="career_choice_ctm_t2_a_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t2_a_p2" type="Passive" description="{=taom_gtd_t2_a_p2}+2 party size." icon_sprite="career_choice_ctm_t2_a_p2">
+      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t2_a_p3" type="Passive" description="{=taom_gtd_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_ctm_t2_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t2_a_p4" type="Passive" description="{=taom_gtd_t2_a_p4}-10% troop wages." icon_sprite="career_choice_ctm_t2_a_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_troll_driver_t2_b" display_name="{=taom_career_grp_goblin_troll_driver_t2_b}Deep-Hold Breaker" career_id="goblin_troll_driver" tier="2">
+    <Choice id="goblin_troll_driver_t2_b_key" type="Keystone" description="{=taom_gtd_t2_b_key}Goblin-town Frenzy grants additional defensive buffs while active." icon_sprite="career_choice_ctm_t2_b_key">
+      <Mutations><Mutation target_id="goblin_troll_driver_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_troll_driver_t2_b_p1" type="Passive" description="{=taom_gtd_t2_b_p1}+12% resistance." icon_sprite="career_choice_ctm_t2_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t2_b_p2" type="Passive" description="{=taom_gtd_t2_b_p2}+8 max health." icon_sprite="career_choice_ctm_t2_b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t2_b_p3" type="Passive" description="{=taom_gtd_t2_b_p3}+13% troop resistance." icon_sprite="career_choice_ctm_t2_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t2_b_p4" type="Passive" description="{=taom_gtd_t2_b_p4}+5% troop damage." icon_sprite="career_choice_ctm_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_troll_driver_t3_a" display_name="{=taom_career_grp_goblin_troll_driver_t3_a}Scourge of Goblin-town" career_id="goblin_troll_driver" tier="3">
+    <Choice id="goblin_troll_driver_t3_a_key" type="Keystone" description="{=taom_gtd_t3_a_key}Goblin-town Frenzy radius greatly expanded, devastating power." icon_sprite="career_choice_ctm_t3_a_key">
+      <Mutations><Mutation target_id="goblin_troll_driver_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_troll_driver_t3_a_p1" type="Passive" description="{=taom_gtd_t3_a_p1}+15% melee damage." icon_sprite="career_choice_ctm_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t3_a_p2" type="Passive" description="{=taom_gtd_t3_a_p2}+10 max health." icon_sprite="career_choice_ctm_t3_a_p2">
+      <PassiveEffect type="Health" magnitude="10" operation="Add" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t3_a_p3" type="Passive" description="{=taom_gtd_t3_a_p3}+7% troop damage." icon_sprite="career_choice_ctm_t3_a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t3_a_p4" type="Passive" description="{=taom_gtd_t3_a_p4}+4 party size." icon_sprite="career_choice_ctm_t3_a_p4">
+      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_troll_driver_t3_b" display_name="{=taom_career_grp_goblin_troll_driver_t3_b}Dread of the Northern Halls" career_id="goblin_troll_driver" tier="3">
+    <Choice id="goblin_troll_driver_t3_b_key" type="Keystone" description="{=taom_gtd_t3_b_key}Goblin-town Frenzy charge greatly reduced, nearly always available." icon_sprite="career_choice_ctm_t3_b_key">
+      <Mutations><Mutation target_id="goblin_troll_driver_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_troll_driver_t3_b_p1" type="Passive" description="{=taom_gtd_t3_b_p1}+18% resistance." icon_sprite="career_choice_ctm_t3_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t3_b_p2" type="Passive" description="{=taom_gtd_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_ctm_t3_b_p2">
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t3_b_p3" type="Passive" description="{=taom_gtd_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ctm_t3_b_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_troll_driver_t3_b_p4" type="Passive" description="{=taom_gtd_t3_b_p4}+15% troop survival." icon_sprite="career_choice_ctm_t3_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Goblin-town Tunnel Stalker (goblin) — cloned from goblin_sniper ═══ -->
+  <Choice id="goblin_tunnel_stalker_root" group_id="" type="Passive"
+          description="{=taom_goblin_tunnel_stalker_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin."
+          icon_sprite="career_choice_goblin_sniper_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="goblin_tunnel_stalker_t1_a" display_name="{=taom_career_grp_goblin_tunnel_stalker_t1_a}Crag-Stalker" career_id="goblin_tunnel_stalker" tier="1">
+    <Choice id="goblin_tunnel_stalker_t1_a_key" type="Keystone" description="{=taom_gts_t1_a_key}Poison Dart radius increased, covering wider kill zones." icon_sprite="career_choice_gbs_t1_a_key">
+      <Mutations><Mutation target_id="goblin_tunnel_stalker_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t1_a_p1" type="Passive" description="{=taom_gts_t1_a_p1}+8% ranged damage." icon_sprite="career_choice_gbs_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t1_a_p2" type="Passive" description="{=taom_gts_t1_a_p2}+5% armor penetration." icon_sprite="career_choice_gbs_t1_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t1_a_p3" type="Passive" description="{=taom_gts_t1_a_p3}+7% movement speed." icon_sprite="career_choice_gbs_t1_a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t1_a_p4" type="Passive" description="{=taom_gts_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_gbs_t1_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_tunnel_stalker_t1_b" display_name="{=taom_career_grp_goblin_tunnel_stalker_t1_b}Tunnel Skulker" career_id="goblin_tunnel_stalker" tier="1">
+    <Choice id="goblin_tunnel_stalker_t1_b_key" type="Keystone" description="{=taom_gts_t1_b_key}Poison Dart duration extended, sustained barrage." icon_sprite="career_choice_gbs_t1_b_key">
+      <Mutations><Mutation target_id="goblin_tunnel_stalker_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t1_b_p1" type="Passive" description="{=taom_gts_t1_b_p1}+5% resistance." icon_sprite="career_choice_gbs_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t1_b_p2" type="Passive" description="{=taom_gts_t1_b_p2}+5 max health." icon_sprite="career_choice_gbs_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t1_b_p3" type="Passive" description="{=taom_gts_t1_b_p3}+5% party spotting range." icon_sprite="career_choice_gbs_t1_b_p3">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t1_b_p4" type="Passive" description="{=taom_gts_t1_b_p4}+10% stealth bonus." icon_sprite="career_choice_gbs_t1_b_p4">
+      <PassiveEffect type="StealthBonus" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_tunnel_stalker_t2_a" display_name="{=taom_career_grp_goblin_tunnel_stalker_t2_a}High Pass Ambusher" career_id="goblin_tunnel_stalker" tier="2">
+    <Choice id="goblin_tunnel_stalker_t2_a_key" type="Keystone" description="{=taom_gts_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." icon_sprite="career_choice_gbs_t2_a_key">
+      <Mutations><Mutation target_id="goblin_tunnel_stalker_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t2_a_p1" type="Passive" description="{=taom_gts_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_gbs_t2_a_p1">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t2_a_p2" type="Passive" description="{=taom_gts_t2_a_p2}+10% movement speed." icon_sprite="career_choice_gbs_t2_a_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t2_a_p3" type="Passive" description="{=taom_gts_t2_a_p3}+13% stealth bonus." icon_sprite="career_choice_gbs_t2_a_p3">
+      <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t2_a_p4" type="Passive" description="{=taom_gts_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_gbs_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_tunnel_stalker_t2_b" display_name="{=taom_career_grp_goblin_tunnel_stalker_t2_b}Poison-Fletcher" career_id="goblin_tunnel_stalker" tier="2">
+    <Choice id="goblin_tunnel_stalker_t2_b_key" type="Keystone" description="{=taom_gts_t2_b_key}Poison Dart gains additional penetration while active." icon_sprite="career_choice_gbs_t2_b_key">
+      <Mutations><Mutation target_id="goblin_tunnel_stalker_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t2_b_p1" type="Passive" description="{=taom_gts_t2_b_p1}+12% ranged damage." icon_sprite="career_choice_gbs_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t2_b_p2" type="Passive" description="{=taom_gts_t2_b_p2}+10% armor penetration." icon_sprite="career_choice_gbs_t2_b_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t2_b_p3" type="Passive" description="{=taom_gts_t2_b_p3}+8 max health." icon_sprite="career_choice_gbs_t2_b_p3">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t2_b_p4" type="Passive" description="{=taom_gts_t2_b_p4}+3% troop damage." icon_sprite="career_choice_gbs_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_tunnel_stalker_t3_a" display_name="{=taom_career_grp_goblin_tunnel_stalker_t3_a}Front Porch Reaver" career_id="goblin_tunnel_stalker" tier="3">
+    <Choice id="goblin_tunnel_stalker_t3_a_key" type="Keystone" description="{=taom_gts_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." icon_sprite="career_choice_gbs_t3_a_key">
+      <Mutations><Mutation target_id="goblin_tunnel_stalker_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t3_a_p1" type="Passive" description="{=taom_gts_t3_a_p1}+18% ranged damage." icon_sprite="career_choice_gbs_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t3_a_p2" type="Passive" description="{=taom_gts_t3_a_p2}+15% armor penetration." icon_sprite="career_choice_gbs_t3_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t3_a_p3" type="Passive" description="{=taom_gts_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_gbs_t3_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t3_a_p4" type="Passive" description="{=taom_gts_t3_a_p4}+5% troop damage." icon_sprite="career_choice_gbs_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_tunnel_stalker_t3_b" display_name="{=taom_career_grp_goblin_tunnel_stalker_t3_b}Shadow of the High Pass" career_id="goblin_tunnel_stalker" tier="3">
+    <Choice id="goblin_tunnel_stalker_t3_b_key" type="Keystone" description="{=taom_gts_t3_b_key}Poison Dart charge greatly reduced, relentless fire." icon_sprite="career_choice_gbs_t3_b_key">
+      <Mutations><Mutation target_id="goblin_tunnel_stalker_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t3_b_p1" type="Passive" description="{=taom_gts_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_gbs_t3_b_p1">
+      <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t3_b_p2" type="Passive" description="{=taom_gts_t3_b_p2}+15% movement speed." icon_sprite="career_choice_gbs_t3_b_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t3_b_p3" type="Passive" description="{=taom_gts_t3_b_p3}+9 max health." icon_sprite="career_choice_gbs_t3_b_p3">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="goblin_tunnel_stalker_t3_b_p4" type="Passive" description="{=taom_gts_t3_b_p4}+15% party spotting range." icon_sprite="career_choice_gbs_t3_b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Goblin-town Warg Master (goblin) — cloned from warg_pack_leader ═══ -->
+  <Choice id="goblin_warg_master_root" group_id="" type="Passive"
+          description="{=taom_goblin_warg_master_root_desc}Alpha Howl grants +5% melee damage and the pack hunts."
+          icon_sprite="career_choice_warg_pack_leader_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  </Choice>
+
+  <ChoiceGroup id="goblin_warg_master_t1_a" display_name="{=taom_career_grp_goblin_warg_master_t1_a}Warg-Rider" career_id="goblin_warg_master" tier="1">
+    <Choice id="goblin_warg_master_t1_a_key" type="Keystone" description="{=taom_gwm_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." icon_sprite="career_choice_wpl_t1_a_key">
+      <Mutations><Mutation target_id="goblin_warg_master_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_warg_master_t1_a_p1" type="Passive" description="{=taom_gwm_t1_a_p1}+8% melee damage." icon_sprite="career_choice_wpl_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="goblin_warg_master_t1_a_p2" type="Passive" description="{=taom_gwm_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_wpl_t1_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t1_a_p3" type="Passive" description="{=taom_gwm_t1_a_p3}+7% swing speed." icon_sprite="career_choice_wpl_t1_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t1_a_p4" type="Passive" description="{=taom_gwm_t1_a_p4}+5% party movement speed." icon_sprite="career_choice_wpl_t1_a_p4">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_warg_master_t1_b" display_name="{=taom_career_grp_goblin_warg_master_t1_b}Pack-Keeper" career_id="goblin_warg_master" tier="1">
+    <Choice id="goblin_warg_master_t1_b_key" type="Keystone" description="{=taom_gwm_t1_b_key}Alpha Howl duration extended, maintaining momentum." icon_sprite="career_choice_wpl_t1_b_key">
+      <Mutations><Mutation target_id="goblin_warg_master_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_warg_master_t1_b_p1" type="Passive" description="{=taom_gwm_t1_b_p1}+10% horse health." icon_sprite="career_choice_wpl_t1_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="goblin_warg_master_t1_b_p2" type="Passive" description="{=taom_gwm_t1_b_p2}+5 max health." icon_sprite="career_choice_wpl_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="goblin_warg_master_t1_b_p3" type="Passive" description="{=taom_gwm_t1_b_p3}-5% troop wages." icon_sprite="career_choice_wpl_t1_b_p3">
+      <PassiveEffect type="TroopWages" magnitude="-0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t1_b_p4" type="Passive" description="{=taom_gwm_t1_b_p4}+5% resistance." icon_sprite="career_choice_wpl_t1_b_p4">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_warg_master_t2_a" display_name="{=taom_career_grp_goblin_warg_master_t2_a}Grey Pack Outrider" career_id="goblin_warg_master" tier="2">
+    <Choice id="goblin_warg_master_t2_a_key" type="Keystone" description="{=taom_gwm_t2_a_key}Alpha Howl charge reduced, swifter activation." icon_sprite="career_choice_wpl_t2_a_key">
+      <Mutations><Mutation target_id="goblin_warg_master_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_warg_master_t2_a_p1" type="Passive" description="{=taom_gwm_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_wpl_t2_a_p1">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t2_a_p2" type="Passive" description="{=taom_gwm_t2_a_p2}-10% troop wages." icon_sprite="career_choice_wpl_t2_a_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t2_a_p3" type="Passive" description="{=taom_gwm_t2_a_p3}+10% troop morale." icon_sprite="career_choice_wpl_t2_a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t2_a_p4" type="Passive" description="{=taom_gwm_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_wpl_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_warg_master_t2_b" display_name="{=taom_career_grp_goblin_warg_master_t2_b}Fell Wolf-Master" career_id="goblin_warg_master" tier="2">
+    <Choice id="goblin_warg_master_t2_b_key" type="Keystone" description="{=taom_gwm_t2_b_key}Alpha Howl boosts mount resilience while active." icon_sprite="career_choice_wpl_t2_b_key">
+      <Mutations><Mutation target_id="goblin_warg_master_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_warg_master_t2_b_p1" type="Passive" description="{=taom_gwm_t2_b_p1}+12% melee damage." icon_sprite="career_choice_wpl_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="goblin_warg_master_t2_b_p2" type="Passive" description="{=taom_gwm_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_wpl_t2_b_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t2_b_p3" type="Passive" description="{=taom_gwm_t2_b_p3}+13% horse health." icon_sprite="career_choice_wpl_t2_b_p3">
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="goblin_warg_master_t2_b_p4" type="Passive" description="{=taom_gwm_t2_b_p4}+10% swing speed." icon_sprite="career_choice_wpl_t2_b_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_warg_master_t3_a" display_name="{=taom_career_grp_goblin_warg_master_t3_a}Alpha of Goblin-town" career_id="goblin_warg_master" tier="3">
+    <Choice id="goblin_warg_master_t3_a_key" type="Keystone" description="{=taom_gwm_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." icon_sprite="career_choice_wpl_t3_a_key">
+      <Mutations><Mutation target_id="goblin_warg_master_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_warg_master_t3_a_p1" type="Passive" description="{=taom_gwm_t3_a_p1}+18% melee damage." icon_sprite="career_choice_wpl_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="goblin_warg_master_t3_a_p2" type="Passive" description="{=taom_gwm_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_wpl_t3_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t3_a_p3" type="Passive" description="{=taom_gwm_t3_a_p3}+15% swing speed." icon_sprite="career_choice_wpl_t3_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t3_a_p4" type="Passive" description="{=taom_gwm_t3_a_p4}+7% troop damage." icon_sprite="career_choice_wpl_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="goblin_warg_master_t3_b" display_name="{=taom_career_grp_goblin_warg_master_t3_b}Bolg's Wolf-Captain" career_id="goblin_warg_master" tier="3">
+    <Choice id="goblin_warg_master_t3_b_key" type="Keystone" description="{=taom_gwm_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." icon_sprite="career_choice_wpl_t3_b_key">
+      <Mutations><Mutation target_id="goblin_warg_master_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="goblin_warg_master_t3_b_p1" type="Passive" description="{=taom_gwm_t3_b_p1}+15% horse health." icon_sprite="career_choice_wpl_t3_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="goblin_warg_master_t3_b_p2" type="Passive" description="{=taom_gwm_t3_b_p2}-15% troop wages." icon_sprite="career_choice_wpl_t3_b_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t3_b_p3" type="Passive" description="{=taom_gwm_t3_b_p3}+15% party movement speed." icon_sprite="career_choice_wpl_t3_b_p3">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="goblin_warg_master_t3_b_p4" type="Passive" description="{=taom_gwm_t3_b_p4}+9 max health." icon_sprite="career_choice_wpl_t3_b_p4">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Moria Troll-Goad (mistymountainorcs) — cloned from cave_troll_master ═══ -->
+  <Choice id="misty_troll_goad_root" group_id="" type="Passive"
+          description="{=taom_misty_troll_goad_root_desc}Moria Frenzy grants +5 health and drives your trolls berserk."
+          icon_sprite="career_choice_cave_troll_master_root">
+    <PassiveEffect type="Health" magnitude="5" operation="Add" />
+  </Choice>
+
+  <ChoiceGroup id="misty_troll_goad_t1_a" display_name="{=taom_career_grp_misty_troll_goad_t1_a}Pit-Whip Driver" career_id="misty_troll_goad" tier="1">
+    <Choice id="misty_troll_goad_t1_a_key" type="Keystone" description="{=taom_mtg_t1_a_key}Moria Frenzy radius increased, empowering more warriors." icon_sprite="career_choice_ctm_t1_a_key">
+      <Mutations><Mutation target_id="misty_troll_goad_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_troll_goad_t1_a_p1" type="Passive" description="{=taom_mtg_t1_a_p1}+8% melee damage." icon_sprite="career_choice_ctm_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="misty_troll_goad_t1_a_p2" type="Passive" description="{=taom_mtg_t1_a_p2}+3% troop damage." icon_sprite="career_choice_ctm_t1_a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t1_a_p3" type="Passive" description="{=taom_mtg_t1_a_p3}+6 max health." icon_sprite="career_choice_ctm_t1_a_p3">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="misty_troll_goad_t1_a_p4" type="Passive" description="{=taom_mtg_t1_a_p4}+7% swing speed." icon_sprite="career_choice_ctm_t1_a_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_troll_goad_t1_b" display_name="{=taom_career_grp_misty_troll_goad_t1_b}Cave-Mouth Warden" career_id="misty_troll_goad" tier="1">
+    <Choice id="misty_troll_goad_t1_b_key" type="Keystone" description="{=taom_mtg_t1_b_key}Moria Frenzy duration extended, fortifying the defense." icon_sprite="career_choice_ctm_t1_b_key">
+      <Mutations><Mutation target_id="misty_troll_goad_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_troll_goad_t1_b_p1" type="Passive" description="{=taom_mtg_t1_b_p1}+8% resistance." icon_sprite="career_choice_ctm_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t1_b_p2" type="Passive" description="{=taom_mtg_t1_b_p2}+5% troop morale." icon_sprite="career_choice_ctm_t1_b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t1_b_p3" type="Passive" description="{=taom_mtg_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_ctm_t1_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t1_b_p4" type="Passive" description="{=taom_mtg_t1_b_p4}+5% troop survival." icon_sprite="career_choice_ctm_t1_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_troll_goad_t2_a" display_name="{=taom_career_grp_misty_troll_goad_t2_a}Goblin-town Tyrant" career_id="misty_troll_goad" tier="2">
+    <Choice id="misty_troll_goad_t2_a_key" type="Keystone" description="{=taom_mtg_t2_a_key}Moria Frenzy charge reduced, activating more frequently." icon_sprite="career_choice_ctm_t2_a_key">
+      <Mutations><Mutation target_id="misty_troll_goad_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_troll_goad_t2_a_p1" type="Passive" description="{=taom_mtg_t2_a_p1}+10% troop morale." icon_sprite="career_choice_ctm_t2_a_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t2_a_p2" type="Passive" description="{=taom_mtg_t2_a_p2}+2 party size." icon_sprite="career_choice_ctm_t2_a_p2">
+      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
+    </Choice>
+    <Choice id="misty_troll_goad_t2_a_p3" type="Passive" description="{=taom_mtg_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_ctm_t2_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t2_a_p4" type="Passive" description="{=taom_mtg_t2_a_p4}-10% troop wages." icon_sprite="career_choice_ctm_t2_a_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_troll_goad_t2_b" display_name="{=taom_career_grp_misty_troll_goad_t2_b}Deep-Hold Breaker" career_id="misty_troll_goad" tier="2">
+    <Choice id="misty_troll_goad_t2_b_key" type="Keystone" description="{=taom_mtg_t2_b_key}Moria Frenzy grants additional defensive buffs while active." icon_sprite="career_choice_ctm_t2_b_key">
+      <Mutations><Mutation target_id="misty_troll_goad_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_troll_goad_t2_b_p1" type="Passive" description="{=taom_mtg_t2_b_p1}+12% resistance." icon_sprite="career_choice_ctm_t2_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t2_b_p2" type="Passive" description="{=taom_mtg_t2_b_p2}+8 max health." icon_sprite="career_choice_ctm_t2_b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="misty_troll_goad_t2_b_p3" type="Passive" description="{=taom_mtg_t2_b_p3}+13% troop resistance." icon_sprite="career_choice_ctm_t2_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t2_b_p4" type="Passive" description="{=taom_mtg_t2_b_p4}+5% troop damage." icon_sprite="career_choice_ctm_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_troll_goad_t3_a" display_name="{=taom_career_grp_misty_troll_goad_t3_a}Scourge of Moria" career_id="misty_troll_goad" tier="3">
+    <Choice id="misty_troll_goad_t3_a_key" type="Keystone" description="{=taom_mtg_t3_a_key}Moria Frenzy radius greatly expanded, devastating power." icon_sprite="career_choice_ctm_t3_a_key">
+      <Mutations><Mutation target_id="misty_troll_goad_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_troll_goad_t3_a_p1" type="Passive" description="{=taom_mtg_t3_a_p1}+15% melee damage." icon_sprite="career_choice_ctm_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="misty_troll_goad_t3_a_p2" type="Passive" description="{=taom_mtg_t3_a_p2}+10 max health." icon_sprite="career_choice_ctm_t3_a_p2">
+      <PassiveEffect type="Health" magnitude="10" operation="Add" />
+    </Choice>
+    <Choice id="misty_troll_goad_t3_a_p3" type="Passive" description="{=taom_mtg_t3_a_p3}+7% troop damage." icon_sprite="career_choice_ctm_t3_a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t3_a_p4" type="Passive" description="{=taom_mtg_t3_a_p4}+4 party size." icon_sprite="career_choice_ctm_t3_a_p4">
+      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_troll_goad_t3_b" display_name="{=taom_career_grp_misty_troll_goad_t3_b}Dread of the Northern Halls" career_id="misty_troll_goad" tier="3">
+    <Choice id="misty_troll_goad_t3_b_key" type="Keystone" description="{=taom_mtg_t3_b_key}Moria Frenzy charge greatly reduced, nearly always available." icon_sprite="career_choice_ctm_t3_b_key">
+      <Mutations><Mutation target_id="misty_troll_goad_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_troll_goad_t3_b_p1" type="Passive" description="{=taom_mtg_t3_b_p1}+18% resistance." icon_sprite="career_choice_ctm_t3_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t3_b_p2" type="Passive" description="{=taom_mtg_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_ctm_t3_b_p2">
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t3_b_p3" type="Passive" description="{=taom_mtg_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ctm_t3_b_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_troll_goad_t3_b_p4" type="Passive" description="{=taom_mtg_t3_b_p4}+15% troop survival." icon_sprite="career_choice_ctm_t3_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Moria Deep-Marksman (mistymountainorcs) — cloned from goblin_sniper ═══ -->
+  <Choice id="misty_deep_marksman_root" group_id="" type="Passive"
+          description="{=taom_misty_deep_marksman_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin."
+          icon_sprite="career_choice_goblin_sniper_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="misty_deep_marksman_t1_a" display_name="{=taom_career_grp_misty_deep_marksman_t1_a}Crag-Stalker" career_id="misty_deep_marksman" tier="1">
+    <Choice id="misty_deep_marksman_t1_a_key" type="Keystone" description="{=taom_mdm_t1_a_key}Poison Dart radius increased, covering wider kill zones." icon_sprite="career_choice_gbs_t1_a_key">
+      <Mutations><Mutation target_id="misty_deep_marksman_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_deep_marksman_t1_a_p1" type="Passive" description="{=taom_mdm_t1_a_p1}+8% ranged damage." icon_sprite="career_choice_gbs_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t1_a_p2" type="Passive" description="{=taom_mdm_t1_a_p2}+5% armor penetration." icon_sprite="career_choice_gbs_t1_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t1_a_p3" type="Passive" description="{=taom_mdm_t1_a_p3}+7% movement speed." icon_sprite="career_choice_gbs_t1_a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t1_a_p4" type="Passive" description="{=taom_mdm_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_gbs_t1_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_deep_marksman_t1_b" display_name="{=taom_career_grp_misty_deep_marksman_t1_b}Tunnel Skulker" career_id="misty_deep_marksman" tier="1">
+    <Choice id="misty_deep_marksman_t1_b_key" type="Keystone" description="{=taom_mdm_t1_b_key}Poison Dart duration extended, sustained barrage." icon_sprite="career_choice_gbs_t1_b_key">
+      <Mutations><Mutation target_id="misty_deep_marksman_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_deep_marksman_t1_b_p1" type="Passive" description="{=taom_mdm_t1_b_p1}+5% resistance." icon_sprite="career_choice_gbs_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t1_b_p2" type="Passive" description="{=taom_mdm_t1_b_p2}+5 max health." icon_sprite="career_choice_gbs_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t1_b_p3" type="Passive" description="{=taom_mdm_t1_b_p3}+5% party spotting range." icon_sprite="career_choice_gbs_t1_b_p3">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t1_b_p4" type="Passive" description="{=taom_mdm_t1_b_p4}+10% stealth bonus." icon_sprite="career_choice_gbs_t1_b_p4">
+      <PassiveEffect type="StealthBonus" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_deep_marksman_t2_a" display_name="{=taom_career_grp_misty_deep_marksman_t2_a}High Pass Ambusher" career_id="misty_deep_marksman" tier="2">
+    <Choice id="misty_deep_marksman_t2_a_key" type="Keystone" description="{=taom_mdm_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." icon_sprite="career_choice_gbs_t2_a_key">
+      <Mutations><Mutation target_id="misty_deep_marksman_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_deep_marksman_t2_a_p1" type="Passive" description="{=taom_mdm_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_gbs_t2_a_p1">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t2_a_p2" type="Passive" description="{=taom_mdm_t2_a_p2}+10% movement speed." icon_sprite="career_choice_gbs_t2_a_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t2_a_p3" type="Passive" description="{=taom_mdm_t2_a_p3}+13% stealth bonus." icon_sprite="career_choice_gbs_t2_a_p3">
+      <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t2_a_p4" type="Passive" description="{=taom_mdm_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_gbs_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_deep_marksman_t2_b" display_name="{=taom_career_grp_misty_deep_marksman_t2_b}Poison-Fletcher" career_id="misty_deep_marksman" tier="2">
+    <Choice id="misty_deep_marksman_t2_b_key" type="Keystone" description="{=taom_mdm_t2_b_key}Poison Dart gains additional penetration while active." icon_sprite="career_choice_gbs_t2_b_key">
+      <Mutations><Mutation target_id="misty_deep_marksman_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_deep_marksman_t2_b_p1" type="Passive" description="{=taom_mdm_t2_b_p1}+12% ranged damage." icon_sprite="career_choice_gbs_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t2_b_p2" type="Passive" description="{=taom_mdm_t2_b_p2}+10% armor penetration." icon_sprite="career_choice_gbs_t2_b_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t2_b_p3" type="Passive" description="{=taom_mdm_t2_b_p3}+8 max health." icon_sprite="career_choice_gbs_t2_b_p3">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t2_b_p4" type="Passive" description="{=taom_mdm_t2_b_p4}+3% troop damage." icon_sprite="career_choice_gbs_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_deep_marksman_t3_a" display_name="{=taom_career_grp_misty_deep_marksman_t3_a}Front Porch Reaver" career_id="misty_deep_marksman" tier="3">
+    <Choice id="misty_deep_marksman_t3_a_key" type="Keystone" description="{=taom_mdm_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." icon_sprite="career_choice_gbs_t3_a_key">
+      <Mutations><Mutation target_id="misty_deep_marksman_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_deep_marksman_t3_a_p1" type="Passive" description="{=taom_mdm_t3_a_p1}+18% ranged damage." icon_sprite="career_choice_gbs_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t3_a_p2" type="Passive" description="{=taom_mdm_t3_a_p2}+15% armor penetration." icon_sprite="career_choice_gbs_t3_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t3_a_p3" type="Passive" description="{=taom_mdm_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_gbs_t3_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t3_a_p4" type="Passive" description="{=taom_mdm_t3_a_p4}+5% troop damage." icon_sprite="career_choice_gbs_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_deep_marksman_t3_b" display_name="{=taom_career_grp_misty_deep_marksman_t3_b}Shadow of the High Pass" career_id="misty_deep_marksman" tier="3">
+    <Choice id="misty_deep_marksman_t3_b_key" type="Keystone" description="{=taom_mdm_t3_b_key}Poison Dart charge greatly reduced, relentless fire." icon_sprite="career_choice_gbs_t3_b_key">
+      <Mutations><Mutation target_id="misty_deep_marksman_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_deep_marksman_t3_b_p1" type="Passive" description="{=taom_mdm_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_gbs_t3_b_p1">
+      <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t3_b_p2" type="Passive" description="{=taom_mdm_t3_b_p2}+15% movement speed." icon_sprite="career_choice_gbs_t3_b_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t3_b_p3" type="Passive" description="{=taom_mdm_t3_b_p3}+9 max health." icon_sprite="career_choice_gbs_t3_b_p3">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="misty_deep_marksman_t3_b_p4" type="Passive" description="{=taom_mdm_t3_b_p4}+15% party spotting range." icon_sprite="career_choice_gbs_t3_b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Misty Mountain Warg Chieftain (mistymountainorcs) — cloned from warg_pack_leader ═══ -->
+  <Choice id="misty_warg_chieftain_root" group_id="" type="Passive"
+          description="{=taom_misty_warg_chieftain_root_desc}Alpha Howl grants +5% melee damage and the pack hunts."
+          icon_sprite="career_choice_warg_pack_leader_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  </Choice>
+
+  <ChoiceGroup id="misty_warg_chieftain_t1_a" display_name="{=taom_career_grp_misty_warg_chieftain_t1_a}Warg-Rider" career_id="misty_warg_chieftain" tier="1">
+    <Choice id="misty_warg_chieftain_t1_a_key" type="Keystone" description="{=taom_mwc_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." icon_sprite="career_choice_wpl_t1_a_key">
+      <Mutations><Mutation target_id="misty_warg_chieftain_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_warg_chieftain_t1_a_p1" type="Passive" description="{=taom_mwc_t1_a_p1}+8% melee damage." icon_sprite="career_choice_wpl_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t1_a_p2" type="Passive" description="{=taom_mwc_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_wpl_t1_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t1_a_p3" type="Passive" description="{=taom_mwc_t1_a_p3}+7% swing speed." icon_sprite="career_choice_wpl_t1_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t1_a_p4" type="Passive" description="{=taom_mwc_t1_a_p4}+5% party movement speed." icon_sprite="career_choice_wpl_t1_a_p4">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_warg_chieftain_t1_b" display_name="{=taom_career_grp_misty_warg_chieftain_t1_b}Pack-Keeper" career_id="misty_warg_chieftain" tier="1">
+    <Choice id="misty_warg_chieftain_t1_b_key" type="Keystone" description="{=taom_mwc_t1_b_key}Alpha Howl duration extended, maintaining momentum." icon_sprite="career_choice_wpl_t1_b_key">
+      <Mutations><Mutation target_id="misty_warg_chieftain_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_warg_chieftain_t1_b_p1" type="Passive" description="{=taom_mwc_t1_b_p1}+10% horse health." icon_sprite="career_choice_wpl_t1_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t1_b_p2" type="Passive" description="{=taom_mwc_t1_b_p2}+5 max health." icon_sprite="career_choice_wpl_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t1_b_p3" type="Passive" description="{=taom_mwc_t1_b_p3}-5% troop wages." icon_sprite="career_choice_wpl_t1_b_p3">
+      <PassiveEffect type="TroopWages" magnitude="-0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t1_b_p4" type="Passive" description="{=taom_mwc_t1_b_p4}+5% resistance." icon_sprite="career_choice_wpl_t1_b_p4">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_warg_chieftain_t2_a" display_name="{=taom_career_grp_misty_warg_chieftain_t2_a}Grey Pack Outrider" career_id="misty_warg_chieftain" tier="2">
+    <Choice id="misty_warg_chieftain_t2_a_key" type="Keystone" description="{=taom_mwc_t2_a_key}Alpha Howl charge reduced, swifter activation." icon_sprite="career_choice_wpl_t2_a_key">
+      <Mutations><Mutation target_id="misty_warg_chieftain_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_warg_chieftain_t2_a_p1" type="Passive" description="{=taom_mwc_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_wpl_t2_a_p1">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t2_a_p2" type="Passive" description="{=taom_mwc_t2_a_p2}-10% troop wages." icon_sprite="career_choice_wpl_t2_a_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t2_a_p3" type="Passive" description="{=taom_mwc_t2_a_p3}+10% troop morale." icon_sprite="career_choice_wpl_t2_a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t2_a_p4" type="Passive" description="{=taom_mwc_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_wpl_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_warg_chieftain_t2_b" display_name="{=taom_career_grp_misty_warg_chieftain_t2_b}Fell Wolf-Master" career_id="misty_warg_chieftain" tier="2">
+    <Choice id="misty_warg_chieftain_t2_b_key" type="Keystone" description="{=taom_mwc_t2_b_key}Alpha Howl boosts mount resilience while active." icon_sprite="career_choice_wpl_t2_b_key">
+      <Mutations><Mutation target_id="misty_warg_chieftain_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_warg_chieftain_t2_b_p1" type="Passive" description="{=taom_mwc_t2_b_p1}+12% melee damage." icon_sprite="career_choice_wpl_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t2_b_p2" type="Passive" description="{=taom_mwc_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_wpl_t2_b_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t2_b_p3" type="Passive" description="{=taom_mwc_t2_b_p3}+13% horse health." icon_sprite="career_choice_wpl_t2_b_p3">
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t2_b_p4" type="Passive" description="{=taom_mwc_t2_b_p4}+10% swing speed." icon_sprite="career_choice_wpl_t2_b_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_warg_chieftain_t3_a" display_name="{=taom_career_grp_misty_warg_chieftain_t3_a}Alpha of Moria" career_id="misty_warg_chieftain" tier="3">
+    <Choice id="misty_warg_chieftain_t3_a_key" type="Keystone" description="{=taom_mwc_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." icon_sprite="career_choice_wpl_t3_a_key">
+      <Mutations><Mutation target_id="misty_warg_chieftain_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_warg_chieftain_t3_a_p1" type="Passive" description="{=taom_mwc_t3_a_p1}+18% melee damage." icon_sprite="career_choice_wpl_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t3_a_p2" type="Passive" description="{=taom_mwc_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_wpl_t3_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t3_a_p3" type="Passive" description="{=taom_mwc_t3_a_p3}+15% swing speed." icon_sprite="career_choice_wpl_t3_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t3_a_p4" type="Passive" description="{=taom_mwc_t3_a_p4}+7% troop damage." icon_sprite="career_choice_wpl_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="misty_warg_chieftain_t3_b" display_name="{=taom_career_grp_misty_warg_chieftain_t3_b}Bolg's Wolf-Captain" career_id="misty_warg_chieftain" tier="3">
+    <Choice id="misty_warg_chieftain_t3_b_key" type="Keystone" description="{=taom_mwc_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." icon_sprite="career_choice_wpl_t3_b_key">
+      <Mutations><Mutation target_id="misty_warg_chieftain_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="misty_warg_chieftain_t3_b_p1" type="Passive" description="{=taom_mwc_t3_b_p1}+15% horse health." icon_sprite="career_choice_wpl_t3_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t3_b_p2" type="Passive" description="{=taom_mwc_t3_b_p2}-15% troop wages." icon_sprite="career_choice_wpl_t3_b_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t3_b_p3" type="Passive" description="{=taom_mwc_t3_b_p3}+15% party movement speed." icon_sprite="career_choice_wpl_t3_b_p3">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="misty_warg_chieftain_t3_b_p4" type="Passive" description="{=taom_mwc_t3_b_p4}+9 max health." icon_sprite="career_choice_wpl_t3_b_p4">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Blue Craig Pit-Driver (bluecraig) — cloned from goblin_troll_driver ═══ -->
+  <Choice id="craig_pit_driver_root" group_id="" type="Passive"
+          description="{=taom_craig_pit_driver_root_desc}Blue Craig Frenzy grants +5 health and drives your trolls berserk."
+          icon_sprite="career_choice_cave_troll_master_root">
+    <PassiveEffect type="Health" magnitude="5" operation="Add" />
+  </Choice>
+
+  <ChoiceGroup id="craig_pit_driver_t1_a" display_name="{=taom_career_grp_craig_pit_driver_t1_a}Pit-Whip Driver" career_id="craig_pit_driver" tier="1">
+    <Choice id="craig_pit_driver_t1_a_key" type="Keystone" description="{=taom_cpd_t1_a_key}Blue Craig Frenzy radius increased, empowering more warriors." icon_sprite="career_choice_ctm_t1_a_key">
+      <Mutations><Mutation target_id="craig_pit_driver_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_pit_driver_t1_a_p1" type="Passive" description="{=taom_cpd_t1_a_p1}+8% melee damage." icon_sprite="career_choice_ctm_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="craig_pit_driver_t1_a_p2" type="Passive" description="{=taom_cpd_t1_a_p2}+3% troop damage." icon_sprite="career_choice_ctm_t1_a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t1_a_p3" type="Passive" description="{=taom_cpd_t1_a_p3}+6 max health." icon_sprite="career_choice_ctm_t1_a_p3">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="craig_pit_driver_t1_a_p4" type="Passive" description="{=taom_cpd_t1_a_p4}+7% swing speed." icon_sprite="career_choice_ctm_t1_a_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_pit_driver_t1_b" display_name="{=taom_career_grp_craig_pit_driver_t1_b}Cave-Mouth Warden" career_id="craig_pit_driver" tier="1">
+    <Choice id="craig_pit_driver_t1_b_key" type="Keystone" description="{=taom_cpd_t1_b_key}Blue Craig Frenzy duration extended, fortifying the defense." icon_sprite="career_choice_ctm_t1_b_key">
+      <Mutations><Mutation target_id="craig_pit_driver_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_pit_driver_t1_b_p1" type="Passive" description="{=taom_cpd_t1_b_p1}+8% resistance." icon_sprite="career_choice_ctm_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t1_b_p2" type="Passive" description="{=taom_cpd_t1_b_p2}+5% troop morale." icon_sprite="career_choice_ctm_t1_b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t1_b_p3" type="Passive" description="{=taom_cpd_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_ctm_t1_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t1_b_p4" type="Passive" description="{=taom_cpd_t1_b_p4}+5% troop survival." icon_sprite="career_choice_ctm_t1_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_pit_driver_t2_a" display_name="{=taom_career_grp_craig_pit_driver_t2_a}Blue Craig Tyrant" career_id="craig_pit_driver" tier="2">
+    <Choice id="craig_pit_driver_t2_a_key" type="Keystone" description="{=taom_cpd_t2_a_key}Blue Craig Frenzy charge reduced, activating more frequently." icon_sprite="career_choice_ctm_t2_a_key">
+      <Mutations><Mutation target_id="craig_pit_driver_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_pit_driver_t2_a_p1" type="Passive" description="{=taom_cpd_t2_a_p1}+10% troop morale." icon_sprite="career_choice_ctm_t2_a_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t2_a_p2" type="Passive" description="{=taom_cpd_t2_a_p2}+2 party size." icon_sprite="career_choice_ctm_t2_a_p2">
+      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
+    </Choice>
+    <Choice id="craig_pit_driver_t2_a_p3" type="Passive" description="{=taom_cpd_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_ctm_t2_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t2_a_p4" type="Passive" description="{=taom_cpd_t2_a_p4}-10% troop wages." icon_sprite="career_choice_ctm_t2_a_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_pit_driver_t2_b" display_name="{=taom_career_grp_craig_pit_driver_t2_b}Deep-Hold Breaker" career_id="craig_pit_driver" tier="2">
+    <Choice id="craig_pit_driver_t2_b_key" type="Keystone" description="{=taom_cpd_t2_b_key}Blue Craig Frenzy grants additional defensive buffs while active." icon_sprite="career_choice_ctm_t2_b_key">
+      <Mutations><Mutation target_id="craig_pit_driver_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_pit_driver_t2_b_p1" type="Passive" description="{=taom_cpd_t2_b_p1}+12% resistance." icon_sprite="career_choice_ctm_t2_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t2_b_p2" type="Passive" description="{=taom_cpd_t2_b_p2}+8 max health." icon_sprite="career_choice_ctm_t2_b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="craig_pit_driver_t2_b_p3" type="Passive" description="{=taom_cpd_t2_b_p3}+13% troop resistance." icon_sprite="career_choice_ctm_t2_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t2_b_p4" type="Passive" description="{=taom_cpd_t2_b_p4}+5% troop damage." icon_sprite="career_choice_ctm_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_pit_driver_t3_a" display_name="{=taom_career_grp_craig_pit_driver_t3_a}Scourge of Blue Craig" career_id="craig_pit_driver" tier="3">
+    <Choice id="craig_pit_driver_t3_a_key" type="Keystone" description="{=taom_cpd_t3_a_key}Blue Craig Frenzy radius greatly expanded, devastating power." icon_sprite="career_choice_ctm_t3_a_key">
+      <Mutations><Mutation target_id="craig_pit_driver_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_pit_driver_t3_a_p1" type="Passive" description="{=taom_cpd_t3_a_p1}+15% melee damage." icon_sprite="career_choice_ctm_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="craig_pit_driver_t3_a_p2" type="Passive" description="{=taom_cpd_t3_a_p2}+10 max health." icon_sprite="career_choice_ctm_t3_a_p2">
+      <PassiveEffect type="Health" magnitude="10" operation="Add" />
+    </Choice>
+    <Choice id="craig_pit_driver_t3_a_p3" type="Passive" description="{=taom_cpd_t3_a_p3}+7% troop damage." icon_sprite="career_choice_ctm_t3_a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t3_a_p4" type="Passive" description="{=taom_cpd_t3_a_p4}+4 party size." icon_sprite="career_choice_ctm_t3_a_p4">
+      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_pit_driver_t3_b" display_name="{=taom_career_grp_craig_pit_driver_t3_b}Dread of the Northern Halls" career_id="craig_pit_driver" tier="3">
+    <Choice id="craig_pit_driver_t3_b_key" type="Keystone" description="{=taom_cpd_t3_b_key}Blue Craig Frenzy charge greatly reduced, nearly always available." icon_sprite="career_choice_ctm_t3_b_key">
+      <Mutations><Mutation target_id="craig_pit_driver_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_pit_driver_t3_b_p1" type="Passive" description="{=taom_cpd_t3_b_p1}+18% resistance." icon_sprite="career_choice_ctm_t3_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t3_b_p2" type="Passive" description="{=taom_cpd_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_ctm_t3_b_p2">
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t3_b_p3" type="Passive" description="{=taom_cpd_t3_b_p3}+20% troop morale." icon_sprite="career_choice_ctm_t3_b_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_pit_driver_t3_b_p4" type="Passive" description="{=taom_cpd_t3_b_p4}+15% troop survival." icon_sprite="career_choice_ctm_t3_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Blue Craig Crag Stalker (bluecraig) — cloned from goblin_tunnel_stalker ═══ -->
+  <Choice id="craig_crag_stalker_root" group_id="" type="Passive"
+          description="{=taom_craig_crag_stalker_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin."
+          icon_sprite="career_choice_goblin_sniper_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="craig_crag_stalker_t1_a" display_name="{=taom_career_grp_craig_crag_stalker_t1_a}Crag-Stalker" career_id="craig_crag_stalker" tier="1">
+    <Choice id="craig_crag_stalker_t1_a_key" type="Keystone" description="{=taom_ccs_t1_a_key}Poison Dart radius increased, covering wider kill zones." icon_sprite="career_choice_gbs_t1_a_key">
+      <Mutations><Mutation target_id="craig_crag_stalker_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_crag_stalker_t1_a_p1" type="Passive" description="{=taom_ccs_t1_a_p1}+8% ranged damage." icon_sprite="career_choice_gbs_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t1_a_p2" type="Passive" description="{=taom_ccs_t1_a_p2}+5% armor penetration." icon_sprite="career_choice_gbs_t1_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t1_a_p3" type="Passive" description="{=taom_ccs_t1_a_p3}+7% movement speed." icon_sprite="career_choice_gbs_t1_a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t1_a_p4" type="Passive" description="{=taom_ccs_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_gbs_t1_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_crag_stalker_t1_b" display_name="{=taom_career_grp_craig_crag_stalker_t1_b}Tunnel Skulker" career_id="craig_crag_stalker" tier="1">
+    <Choice id="craig_crag_stalker_t1_b_key" type="Keystone" description="{=taom_ccs_t1_b_key}Poison Dart duration extended, sustained barrage." icon_sprite="career_choice_gbs_t1_b_key">
+      <Mutations><Mutation target_id="craig_crag_stalker_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_crag_stalker_t1_b_p1" type="Passive" description="{=taom_ccs_t1_b_p1}+5% resistance." icon_sprite="career_choice_gbs_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t1_b_p2" type="Passive" description="{=taom_ccs_t1_b_p2}+5 max health." icon_sprite="career_choice_gbs_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t1_b_p3" type="Passive" description="{=taom_ccs_t1_b_p3}+5% party spotting range." icon_sprite="career_choice_gbs_t1_b_p3">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t1_b_p4" type="Passive" description="{=taom_ccs_t1_b_p4}+10% stealth bonus." icon_sprite="career_choice_gbs_t1_b_p4">
+      <PassiveEffect type="StealthBonus" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_crag_stalker_t2_a" display_name="{=taom_career_grp_craig_crag_stalker_t2_a}High Pass Ambusher" career_id="craig_crag_stalker" tier="2">
+    <Choice id="craig_crag_stalker_t2_a_key" type="Keystone" description="{=taom_ccs_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." icon_sprite="career_choice_gbs_t2_a_key">
+      <Mutations><Mutation target_id="craig_crag_stalker_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_crag_stalker_t2_a_p1" type="Passive" description="{=taom_ccs_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_gbs_t2_a_p1">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t2_a_p2" type="Passive" description="{=taom_ccs_t2_a_p2}+10% movement speed." icon_sprite="career_choice_gbs_t2_a_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t2_a_p3" type="Passive" description="{=taom_ccs_t2_a_p3}+13% stealth bonus." icon_sprite="career_choice_gbs_t2_a_p3">
+      <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t2_a_p4" type="Passive" description="{=taom_ccs_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_gbs_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_crag_stalker_t2_b" display_name="{=taom_career_grp_craig_crag_stalker_t2_b}Poison-Fletcher" career_id="craig_crag_stalker" tier="2">
+    <Choice id="craig_crag_stalker_t2_b_key" type="Keystone" description="{=taom_ccs_t2_b_key}Poison Dart gains additional penetration while active." icon_sprite="career_choice_gbs_t2_b_key">
+      <Mutations><Mutation target_id="craig_crag_stalker_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_crag_stalker_t2_b_p1" type="Passive" description="{=taom_ccs_t2_b_p1}+12% ranged damage." icon_sprite="career_choice_gbs_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t2_b_p2" type="Passive" description="{=taom_ccs_t2_b_p2}+10% armor penetration." icon_sprite="career_choice_gbs_t2_b_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t2_b_p3" type="Passive" description="{=taom_ccs_t2_b_p3}+8 max health." icon_sprite="career_choice_gbs_t2_b_p3">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t2_b_p4" type="Passive" description="{=taom_ccs_t2_b_p4}+3% troop damage." icon_sprite="career_choice_gbs_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_crag_stalker_t3_a" display_name="{=taom_career_grp_craig_crag_stalker_t3_a}Front Porch Reaver" career_id="craig_crag_stalker" tier="3">
+    <Choice id="craig_crag_stalker_t3_a_key" type="Keystone" description="{=taom_ccs_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." icon_sprite="career_choice_gbs_t3_a_key">
+      <Mutations><Mutation target_id="craig_crag_stalker_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_crag_stalker_t3_a_p1" type="Passive" description="{=taom_ccs_t3_a_p1}+18% ranged damage." icon_sprite="career_choice_gbs_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t3_a_p2" type="Passive" description="{=taom_ccs_t3_a_p2}+15% armor penetration." icon_sprite="career_choice_gbs_t3_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t3_a_p3" type="Passive" description="{=taom_ccs_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_gbs_t3_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t3_a_p4" type="Passive" description="{=taom_ccs_t3_a_p4}+5% troop damage." icon_sprite="career_choice_gbs_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_crag_stalker_t3_b" display_name="{=taom_career_grp_craig_crag_stalker_t3_b}Shadow of the High Pass" career_id="craig_crag_stalker" tier="3">
+    <Choice id="craig_crag_stalker_t3_b_key" type="Keystone" description="{=taom_ccs_t3_b_key}Poison Dart charge greatly reduced, relentless fire." icon_sprite="career_choice_gbs_t3_b_key">
+      <Mutations><Mutation target_id="craig_crag_stalker_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_crag_stalker_t3_b_p1" type="Passive" description="{=taom_ccs_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_gbs_t3_b_p1">
+      <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t3_b_p2" type="Passive" description="{=taom_ccs_t3_b_p2}+15% movement speed." icon_sprite="career_choice_gbs_t3_b_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t3_b_p3" type="Passive" description="{=taom_ccs_t3_b_p3}+9 max health." icon_sprite="career_choice_gbs_t3_b_p3">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="craig_crag_stalker_t3_b_p4" type="Passive" description="{=taom_ccs_t3_b_p4}+15% party spotting range." icon_sprite="career_choice_gbs_t3_b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Blue Craig Warg Master (bluecraig) — cloned from goblin_warg_master ═══ -->
+  <Choice id="craig_warg_master_root" group_id="" type="Passive"
+          description="{=taom_craig_warg_master_root_desc}Alpha Howl grants +5% melee damage and the pack hunts."
+          icon_sprite="career_choice_warg_pack_leader_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  </Choice>
+
+  <ChoiceGroup id="craig_warg_master_t1_a" display_name="{=taom_career_grp_craig_warg_master_t1_a}Warg-Rider" career_id="craig_warg_master" tier="1">
+    <Choice id="craig_warg_master_t1_a_key" type="Keystone" description="{=taom_cwm_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." icon_sprite="career_choice_wpl_t1_a_key">
+      <Mutations><Mutation target_id="craig_warg_master_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_warg_master_t1_a_p1" type="Passive" description="{=taom_cwm_t1_a_p1}+8% melee damage." icon_sprite="career_choice_wpl_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="craig_warg_master_t1_a_p2" type="Passive" description="{=taom_cwm_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_wpl_t1_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t1_a_p3" type="Passive" description="{=taom_cwm_t1_a_p3}+7% swing speed." icon_sprite="career_choice_wpl_t1_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t1_a_p4" type="Passive" description="{=taom_cwm_t1_a_p4}+5% party movement speed." icon_sprite="career_choice_wpl_t1_a_p4">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_warg_master_t1_b" display_name="{=taom_career_grp_craig_warg_master_t1_b}Pack-Keeper" career_id="craig_warg_master" tier="1">
+    <Choice id="craig_warg_master_t1_b_key" type="Keystone" description="{=taom_cwm_t1_b_key}Alpha Howl duration extended, maintaining momentum." icon_sprite="career_choice_wpl_t1_b_key">
+      <Mutations><Mutation target_id="craig_warg_master_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_warg_master_t1_b_p1" type="Passive" description="{=taom_cwm_t1_b_p1}+10% horse health." icon_sprite="career_choice_wpl_t1_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="craig_warg_master_t1_b_p2" type="Passive" description="{=taom_cwm_t1_b_p2}+5 max health." icon_sprite="career_choice_wpl_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="craig_warg_master_t1_b_p3" type="Passive" description="{=taom_cwm_t1_b_p3}-5% troop wages." icon_sprite="career_choice_wpl_t1_b_p3">
+      <PassiveEffect type="TroopWages" magnitude="-0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t1_b_p4" type="Passive" description="{=taom_cwm_t1_b_p4}+5% resistance." icon_sprite="career_choice_wpl_t1_b_p4">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_warg_master_t2_a" display_name="{=taom_career_grp_craig_warg_master_t2_a}Grey Pack Outrider" career_id="craig_warg_master" tier="2">
+    <Choice id="craig_warg_master_t2_a_key" type="Keystone" description="{=taom_cwm_t2_a_key}Alpha Howl charge reduced, swifter activation." icon_sprite="career_choice_wpl_t2_a_key">
+      <Mutations><Mutation target_id="craig_warg_master_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_warg_master_t2_a_p1" type="Passive" description="{=taom_cwm_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_wpl_t2_a_p1">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t2_a_p2" type="Passive" description="{=taom_cwm_t2_a_p2}-10% troop wages." icon_sprite="career_choice_wpl_t2_a_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t2_a_p3" type="Passive" description="{=taom_cwm_t2_a_p3}+10% troop morale." icon_sprite="career_choice_wpl_t2_a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t2_a_p4" type="Passive" description="{=taom_cwm_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_wpl_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_warg_master_t2_b" display_name="{=taom_career_grp_craig_warg_master_t2_b}Fell Wolf-Master" career_id="craig_warg_master" tier="2">
+    <Choice id="craig_warg_master_t2_b_key" type="Keystone" description="{=taom_cwm_t2_b_key}Alpha Howl boosts mount resilience while active." icon_sprite="career_choice_wpl_t2_b_key">
+      <Mutations><Mutation target_id="craig_warg_master_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_warg_master_t2_b_p1" type="Passive" description="{=taom_cwm_t2_b_p1}+12% melee damage." icon_sprite="career_choice_wpl_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="craig_warg_master_t2_b_p2" type="Passive" description="{=taom_cwm_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_wpl_t2_b_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t2_b_p3" type="Passive" description="{=taom_cwm_t2_b_p3}+13% horse health." icon_sprite="career_choice_wpl_t2_b_p3">
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="craig_warg_master_t2_b_p4" type="Passive" description="{=taom_cwm_t2_b_p4}+10% swing speed." icon_sprite="career_choice_wpl_t2_b_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_warg_master_t3_a" display_name="{=taom_career_grp_craig_warg_master_t3_a}Alpha of Blue Craig" career_id="craig_warg_master" tier="3">
+    <Choice id="craig_warg_master_t3_a_key" type="Keystone" description="{=taom_cwm_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." icon_sprite="career_choice_wpl_t3_a_key">
+      <Mutations><Mutation target_id="craig_warg_master_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_warg_master_t3_a_p1" type="Passive" description="{=taom_cwm_t3_a_p1}+18% melee damage." icon_sprite="career_choice_wpl_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="craig_warg_master_t3_a_p2" type="Passive" description="{=taom_cwm_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_wpl_t3_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t3_a_p3" type="Passive" description="{=taom_cwm_t3_a_p3}+15% swing speed." icon_sprite="career_choice_wpl_t3_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t3_a_p4" type="Passive" description="{=taom_cwm_t3_a_p4}+7% troop damage." icon_sprite="career_choice_wpl_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="craig_warg_master_t3_b" display_name="{=taom_career_grp_craig_warg_master_t3_b}Bolg's Wolf-Captain" career_id="craig_warg_master" tier="3">
+    <Choice id="craig_warg_master_t3_b_key" type="Keystone" description="{=taom_cwm_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." icon_sprite="career_choice_wpl_t3_b_key">
+      <Mutations><Mutation target_id="craig_warg_master_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="craig_warg_master_t3_b_p1" type="Passive" description="{=taom_cwm_t3_b_p1}+15% horse health." icon_sprite="career_choice_wpl_t3_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="craig_warg_master_t3_b_p2" type="Passive" description="{=taom_cwm_t3_b_p2}-15% troop wages." icon_sprite="career_choice_wpl_t3_b_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t3_b_p3" type="Passive" description="{=taom_cwm_t3_b_p3}+15% party movement speed." icon_sprite="career_choice_wpl_t3_b_p3">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="craig_warg_master_t3_b_p4" type="Passive" description="{=taom_cwm_t3_b_p4}+9 max health." icon_sprite="career_choice_wpl_t3_b_p4">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Falathrim Blade-Dancer (lindon) — cloned from blade_dancer ═══ -->
+  <Choice id="falathrim_blade_dancer_root" group_id="" type="Passive"
+          description="{=taom_falathrim_blade_dancer_root_desc}Starlight Weave grants +5% resistance and elven agility."
+          icon_sprite="career_choice_blade_dancer_root">
+    <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+  </Choice>
+
+  <ChoiceGroup id="falathrim_blade_dancer_t1_a" display_name="{=taom_career_grp_falathrim_blade_dancer_t1_a}Starlit Steel" career_id="falathrim_blade_dancer" tier="1">
+    <Choice id="falathrim_blade_dancer_t1_a_key" type="Keystone" description="{=taom_fbd_t1_a_key}Starlight Weave radius increased, empowering more warriors." icon_sprite="career_choice_bd_t1_a_key">
+      <Mutations><Mutation target_id="falathrim_blade_dancer_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t1_a_p1" type="Passive" description="{=taom_fbd_t1_a_p1}+8% melee damage." icon_sprite="career_choice_bd_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t1_a_p2" type="Passive" description="{=taom_fbd_t1_a_p2}+3% troop damage." icon_sprite="career_choice_bd_t1_a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t1_a_p3" type="Passive" description="{=taom_fbd_t1_a_p3}+6 max health." icon_sprite="career_choice_bd_t1_a_p3">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t1_a_p4" type="Passive" description="{=taom_fbd_t1_a_p4}+7% swing speed." icon_sprite="career_choice_bd_t1_a_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_blade_dancer_t1_b" display_name="{=taom_career_grp_falathrim_blade_dancer_t1_b}Guard of Mithlond" career_id="falathrim_blade_dancer" tier="1">
+    <Choice id="falathrim_blade_dancer_t1_b_key" type="Keystone" description="{=taom_fbd_t1_b_key}Starlight Weave duration extended, fortifying the defense." icon_sprite="career_choice_bd_t1_b_key">
+      <Mutations><Mutation target_id="falathrim_blade_dancer_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t1_b_p1" type="Passive" description="{=taom_fbd_t1_b_p1}+8% resistance." icon_sprite="career_choice_bd_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t1_b_p2" type="Passive" description="{=taom_fbd_t1_b_p2}+5% troop morale." icon_sprite="career_choice_bd_t1_b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t1_b_p3" type="Passive" description="{=taom_fbd_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_bd_t1_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t1_b_p4" type="Passive" description="{=taom_fbd_t1_b_p4}+5% troop survival." icon_sprite="career_choice_bd_t1_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_blade_dancer_t2_a" display_name="{=taom_career_grp_falathrim_blade_dancer_t2_a}Dance of Gondolin" career_id="falathrim_blade_dancer" tier="2">
+    <Choice id="falathrim_blade_dancer_t2_a_key" type="Keystone" description="{=taom_fbd_t2_a_key}Starlight Weave charge reduced, activating more frequently." icon_sprite="career_choice_bd_t2_a_key">
+      <Mutations><Mutation target_id="falathrim_blade_dancer_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t2_a_p1" type="Passive" description="{=taom_fbd_t2_a_p1}+10% troop morale." icon_sprite="career_choice_bd_t2_a_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t2_a_p2" type="Passive" description="{=taom_fbd_t2_a_p2}+2 party size." icon_sprite="career_choice_bd_t2_a_p2">
+      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t2_a_p3" type="Passive" description="{=taom_fbd_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_bd_t2_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t2_a_p4" type="Passive" description="{=taom_fbd_t2_a_p4}-10% troop wages." icon_sprite="career_choice_bd_t2_a_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_blade_dancer_t2_b" display_name="{=taom_career_grp_falathrim_blade_dancer_t2_b}Ward of the Hidden Valley" career_id="falathrim_blade_dancer" tier="2">
+    <Choice id="falathrim_blade_dancer_t2_b_key" type="Keystone" description="{=taom_fbd_t2_b_key}Starlight Weave grants additional defensive buffs while active." icon_sprite="career_choice_bd_t2_b_key">
+      <Mutations><Mutation target_id="falathrim_blade_dancer_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t2_b_p1" type="Passive" description="{=taom_fbd_t2_b_p1}+12% resistance." icon_sprite="career_choice_bd_t2_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t2_b_p2" type="Passive" description="{=taom_fbd_t2_b_p2}+8 max health." icon_sprite="career_choice_bd_t2_b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t2_b_p3" type="Passive" description="{=taom_fbd_t2_b_p3}+13% troop resistance." icon_sprite="career_choice_bd_t2_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t2_b_p4" type="Passive" description="{=taom_fbd_t2_b_p4}+5% troop damage." icon_sprite="career_choice_bd_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_blade_dancer_t3_a" display_name="{=taom_career_grp_falathrim_blade_dancer_t3_a}Sword of the First Age" career_id="falathrim_blade_dancer" tier="3">
+    <Choice id="falathrim_blade_dancer_t3_a_key" type="Keystone" description="{=taom_fbd_t3_a_key}Starlight Weave radius greatly expanded, devastating power." icon_sprite="career_choice_bd_t3_a_key">
+      <Mutations><Mutation target_id="falathrim_blade_dancer_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t3_a_p1" type="Passive" description="{=taom_fbd_t3_a_p1}+15% melee damage." icon_sprite="career_choice_bd_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t3_a_p2" type="Passive" description="{=taom_fbd_t3_a_p2}+10 max health." icon_sprite="career_choice_bd_t3_a_p2">
+      <PassiveEffect type="Health" magnitude="10" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t3_a_p3" type="Passive" description="{=taom_fbd_t3_a_p3}+7% troop damage." icon_sprite="career_choice_bd_t3_a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t3_a_p4" type="Passive" description="{=taom_fbd_t3_a_p4}+4 party size." icon_sprite="career_choice_bd_t3_a_p4">
+      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_blade_dancer_t3_b" display_name="{=taom_career_grp_falathrim_blade_dancer_t3_b}Light of Eärendil" career_id="falathrim_blade_dancer" tier="3">
+    <Choice id="falathrim_blade_dancer_t3_b_key" type="Keystone" description="{=taom_fbd_t3_b_key}Starlight Weave charge greatly reduced, nearly always available." icon_sprite="career_choice_bd_t3_b_key">
+      <Mutations><Mutation target_id="falathrim_blade_dancer_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t3_b_p1" type="Passive" description="{=taom_fbd_t3_b_p1}+18% resistance." icon_sprite="career_choice_bd_t3_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t3_b_p2" type="Passive" description="{=taom_fbd_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_bd_t3_b_p2">
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t3_b_p3" type="Passive" description="{=taom_fbd_t3_b_p3}+20% troop morale." icon_sprite="career_choice_bd_t3_b_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_blade_dancer_t3_b_p4" type="Passive" description="{=taom_fbd_t3_b_p4}+15% troop survival." icon_sprite="career_choice_bd_t3_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Falathrim Sentinel (lindon) — cloned from elven_archer ═══ -->
+  <Choice id="falathrim_sentinel_root" group_id="" type="Passive"
+          description="{=taom_falathrim_sentinel_root_desc}Elven Sight grants +5% ranged damage with centuries of practice."
+          icon_sprite="career_choice_elven_archer_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="falathrim_sentinel_t1_a" display_name="{=taom_career_grp_falathrim_sentinel_t1_a}Keen-Eyed Watcher" career_id="falathrim_sentinel" tier="1">
+    <Choice id="falathrim_sentinel_t1_a_key" type="Keystone" description="{=taom_fsn_t1_a_key}Elven Sight radius increased, covering wider kill zones." icon_sprite="career_choice_elar_t1_a_key">
+      <Mutations><Mutation target_id="falathrim_sentinel_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_sentinel_t1_a_p1" type="Passive" description="{=taom_fsn_t1_a_p1}+8% ranged damage." icon_sprite="career_choice_elar_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t1_a_p2" type="Passive" description="{=taom_fsn_t1_a_p2}+5% armor penetration." icon_sprite="career_choice_elar_t1_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t1_a_p3" type="Passive" description="{=taom_fsn_t1_a_p3}+7% movement speed." icon_sprite="career_choice_elar_t1_a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t1_a_p4" type="Passive" description="{=taom_fsn_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_elar_t1_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_sentinel_t1_b" display_name="{=taom_career_grp_falathrim_sentinel_t1_b}Watch of Lindon" career_id="falathrim_sentinel" tier="1">
+    <Choice id="falathrim_sentinel_t1_b_key" type="Keystone" description="{=taom_fsn_t1_b_key}Elven Sight duration extended, sustained barrage." icon_sprite="career_choice_elar_t1_b_key">
+      <Mutations><Mutation target_id="falathrim_sentinel_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_sentinel_t1_b_p1" type="Passive" description="{=taom_fsn_t1_b_p1}+5% resistance." icon_sprite="career_choice_elar_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t1_b_p2" type="Passive" description="{=taom_fsn_t1_b_p2}+5 max health." icon_sprite="career_choice_elar_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t1_b_p3" type="Passive" description="{=taom_fsn_t1_b_p3}+5% party spotting range." icon_sprite="career_choice_elar_t1_b_p3">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t1_b_p4" type="Passive" description="{=taom_fsn_t1_b_p4}+10% stealth bonus." icon_sprite="career_choice_elar_t1_b_p4">
+      <PassiveEffect type="StealthBonus" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_sentinel_t2_a" display_name="{=taom_career_grp_falathrim_sentinel_t2_a}Unceasing Volley" career_id="falathrim_sentinel" tier="2">
+    <Choice id="falathrim_sentinel_t2_a_key" type="Keystone" description="{=taom_fsn_t2_a_key}Elven Sight charge reduced, maintaining constant pressure." icon_sprite="career_choice_elar_t2_a_key">
+      <Mutations><Mutation target_id="falathrim_sentinel_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_sentinel_t2_a_p1" type="Passive" description="{=taom_fsn_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_elar_t2_a_p1">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t2_a_p2" type="Passive" description="{=taom_fsn_t2_a_p2}+10% movement speed." icon_sprite="career_choice_elar_t2_a_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t2_a_p3" type="Passive" description="{=taom_fsn_t2_a_p3}+13% stealth bonus." icon_sprite="career_choice_elar_t2_a_p3">
+      <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t2_a_p4" type="Passive" description="{=taom_fsn_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_elar_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_sentinel_t2_b" display_name="{=taom_career_grp_falathrim_sentinel_t2_b}Bow of Eregion" career_id="falathrim_sentinel" tier="2">
+    <Choice id="falathrim_sentinel_t2_b_key" type="Keystone" description="{=taom_fsn_t2_b_key}Elven Sight gains additional penetration while active." icon_sprite="career_choice_elar_t2_b_key">
+      <Mutations><Mutation target_id="falathrim_sentinel_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_sentinel_t2_b_p1" type="Passive" description="{=taom_fsn_t2_b_p1}+12% ranged damage." icon_sprite="career_choice_elar_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t2_b_p2" type="Passive" description="{=taom_fsn_t2_b_p2}+10% armor penetration." icon_sprite="career_choice_elar_t2_b_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t2_b_p3" type="Passive" description="{=taom_fsn_t2_b_p3}+8 max health." icon_sprite="career_choice_elar_t2_b_p3">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t2_b_p4" type="Passive" description="{=taom_fsn_t2_b_p4}+3% troop damage." icon_sprite="career_choice_elar_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_sentinel_t3_a" display_name="{=taom_career_grp_falathrim_sentinel_t3_a}Storm of Gil-galad" career_id="falathrim_sentinel" tier="3">
+    <Choice id="falathrim_sentinel_t3_a_key" type="Keystone" description="{=taom_fsn_t3_a_key}Elven Sight radius greatly expanded, inescapable volleys." icon_sprite="career_choice_elar_t3_a_key">
+      <Mutations><Mutation target_id="falathrim_sentinel_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_sentinel_t3_a_p1" type="Passive" description="{=taom_fsn_t3_a_p1}+18% ranged damage." icon_sprite="career_choice_elar_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t3_a_p2" type="Passive" description="{=taom_fsn_t3_a_p2}+15% armor penetration." icon_sprite="career_choice_elar_t3_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t3_a_p3" type="Passive" description="{=taom_fsn_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_elar_t3_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t3_a_p4" type="Passive" description="{=taom_fsn_t3_a_p4}+5% troop damage." icon_sprite="career_choice_elar_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_sentinel_t3_b" display_name="{=taom_career_grp_falathrim_sentinel_t3_b}Vigil of Vilya" career_id="falathrim_sentinel" tier="3">
+    <Choice id="falathrim_sentinel_t3_b_key" type="Keystone" description="{=taom_fsn_t3_b_key}Elven Sight charge greatly reduced, relentless fire." icon_sprite="career_choice_elar_t3_b_key">
+      <Mutations><Mutation target_id="falathrim_sentinel_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_sentinel_t3_b_p1" type="Passive" description="{=taom_fsn_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_elar_t3_b_p1">
+      <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t3_b_p2" type="Passive" description="{=taom_fsn_t3_b_p2}+15% movement speed." icon_sprite="career_choice_elar_t3_b_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t3_b_p3" type="Passive" description="{=taom_fsn_t3_b_p3}+9 max health." icon_sprite="career_choice_elar_t3_b_p3">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_sentinel_t3_b_p4" type="Passive" description="{=taom_fsn_t3_b_p4}+15% party spotting range." icon_sprite="career_choice_elar_t3_b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Falathrim Mariner (lindon) — cloned from rivendell_knight ═══ -->
+  <Choice id="falathrim_mariner_root" group_id="" type="Passive"
+          description="{=taom_falathrim_mariner_root_desc}Last Alliance grants +5% melee damage and inspires your allies."
+          icon_sprite="career_choice_rivendell_knight_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  </Choice>
+
+  <ChoiceGroup id="falathrim_mariner_t1_a" display_name="{=taom_career_grp_falathrim_mariner_t1_a}Charge of Mithlond" career_id="falathrim_mariner" tier="1">
+    <Choice id="falathrim_mariner_t1_a_key" type="Keystone" description="{=taom_fmr_t1_a_key}Last Alliance radius expanded, sweeping wider formations." icon_sprite="career_choice_rvk_t1_a_key">
+      <Mutations><Mutation target_id="falathrim_mariner_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_mariner_t1_a_p1" type="Passive" description="{=taom_fmr_t1_a_p1}+8% melee damage." icon_sprite="career_choice_rvk_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="falathrim_mariner_t1_a_p2" type="Passive" description="{=taom_fmr_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_rvk_t1_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t1_a_p3" type="Passive" description="{=taom_fmr_t1_a_p3}+7% swing speed." icon_sprite="career_choice_rvk_t1_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t1_a_p4" type="Passive" description="{=taom_fmr_t1_a_p4}+5% party movement speed." icon_sprite="career_choice_rvk_t1_a_p4">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_mariner_t1_b" display_name="{=taom_career_grp_falathrim_mariner_t1_b}Rider of the Ford" career_id="falathrim_mariner" tier="1">
+    <Choice id="falathrim_mariner_t1_b_key" type="Keystone" description="{=taom_fmr_t1_b_key}Last Alliance duration extended, maintaining momentum." icon_sprite="career_choice_rvk_t1_b_key">
+      <Mutations><Mutation target_id="falathrim_mariner_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_mariner_t1_b_p1" type="Passive" description="{=taom_fmr_t1_b_p1}+10% horse health." icon_sprite="career_choice_rvk_t1_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_mariner_t1_b_p2" type="Passive" description="{=taom_fmr_t1_b_p2}+5 max health." icon_sprite="career_choice_rvk_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_mariner_t1_b_p3" type="Passive" description="{=taom_fmr_t1_b_p3}-5% troop wages." icon_sprite="career_choice_rvk_t1_b_p3">
+      <PassiveEffect type="TroopWages" magnitude="-0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t1_b_p4" type="Passive" description="{=taom_fmr_t1_b_p4}+5% resistance." icon_sprite="career_choice_rvk_t1_b_p4">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_mariner_t2_a" display_name="{=taom_career_grp_falathrim_mariner_t2_a}Gallop of Asfaloth" career_id="falathrim_mariner" tier="2">
+    <Choice id="falathrim_mariner_t2_a_key" type="Keystone" description="{=taom_fmr_t2_a_key}Last Alliance charge reduced, swifter activation." icon_sprite="career_choice_rvk_t2_a_key">
+      <Mutations><Mutation target_id="falathrim_mariner_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_mariner_t2_a_p1" type="Passive" description="{=taom_fmr_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_rvk_t2_a_p1">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t2_a_p2" type="Passive" description="{=taom_fmr_t2_a_p2}-10% troop wages." icon_sprite="career_choice_rvk_t2_a_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t2_a_p3" type="Passive" description="{=taom_fmr_t2_a_p3}+10% troop morale." icon_sprite="career_choice_rvk_t2_a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t2_a_p4" type="Passive" description="{=taom_fmr_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_rvk_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_mariner_t2_b" display_name="{=taom_career_grp_falathrim_mariner_t2_b}Aegis of the Valar" career_id="falathrim_mariner" tier="2">
+    <Choice id="falathrim_mariner_t2_b_key" type="Keystone" description="{=taom_fmr_t2_b_key}Last Alliance boosts mount resilience while active." icon_sprite="career_choice_rvk_t2_b_key">
+      <Mutations><Mutation target_id="falathrim_mariner_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_mariner_t2_b_p1" type="Passive" description="{=taom_fmr_t2_b_p1}+12% melee damage." icon_sprite="career_choice_rvk_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="falathrim_mariner_t2_b_p2" type="Passive" description="{=taom_fmr_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_rvk_t2_b_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t2_b_p3" type="Passive" description="{=taom_fmr_t2_b_p3}+13% horse health." icon_sprite="career_choice_rvk_t2_b_p3">
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_mariner_t2_b_p4" type="Passive" description="{=taom_fmr_t2_b_p4}+10% swing speed." icon_sprite="career_choice_rvk_t2_b_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_mariner_t3_a" display_name="{=taom_career_grp_falathrim_mariner_t3_a}Wrath of Glorfindel" career_id="falathrim_mariner" tier="3">
+    <Choice id="falathrim_mariner_t3_a_key" type="Keystone" description="{=taom_fmr_t3_a_key}Last Alliance radius greatly expanded, unstoppable impact." icon_sprite="career_choice_rvk_t3_a_key">
+      <Mutations><Mutation target_id="falathrim_mariner_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_mariner_t3_a_p1" type="Passive" description="{=taom_fmr_t3_a_p1}+18% melee damage." icon_sprite="career_choice_rvk_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="falathrim_mariner_t3_a_p2" type="Passive" description="{=taom_fmr_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_rvk_t3_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t3_a_p3" type="Passive" description="{=taom_fmr_t3_a_p3}+15% swing speed." icon_sprite="career_choice_rvk_t3_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t3_a_p4" type="Passive" description="{=taom_fmr_t3_a_p4}+7% troop damage." icon_sprite="career_choice_rvk_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="falathrim_mariner_t3_b" display_name="{=taom_career_grp_falathrim_mariner_t3_b}Host of the Last Alliance" career_id="falathrim_mariner" tier="3">
+    <Choice id="falathrim_mariner_t3_b_key" type="Keystone" description="{=taom_fmr_t3_b_key}Last Alliance charge greatly reduced, ride without ceasing." icon_sprite="career_choice_rvk_t3_b_key">
+      <Mutations><Mutation target_id="falathrim_mariner_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="falathrim_mariner_t3_b_p1" type="Passive" description="{=taom_fmr_t3_b_p1}+15% horse health." icon_sprite="career_choice_rvk_t3_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="falathrim_mariner_t3_b_p2" type="Passive" description="{=taom_fmr_t3_b_p2}-15% troop wages." icon_sprite="career_choice_rvk_t3_b_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t3_b_p3" type="Passive" description="{=taom_fmr_t3_b_p3}+15% party movement speed." icon_sprite="career_choice_rvk_t3_b_p3">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="falathrim_mariner_t3_b_p4" type="Passive" description="{=taom_fmr_t3_b_p4}+9 max health." icon_sprite="career_choice_rvk_t3_b_p4">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Tribesman of Zajâna (shaghana) — cloned from tribesman_of_jelut ═══ -->
+  <Choice id="shaghana_zajana_tribesman_root" group_id="" type="Passive"
+          description="{=taom_shaghana_zajana_tribesman_root_desc}Serpent-Venom Blades grants +5% melee damage and applies attrition effects."
+          icon_sprite="career_choice_tribesman_of_jelut_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  </Choice>
+
+  <ChoiceGroup id="shaghana_zajana_tribesman_t1_a" display_name="{=taom_career_grp_shaghana_zajana_tribesman_t1_a}Dune Raider" career_id="shaghana_zajana_tribesman" tier="1">
+    <Choice id="shaghana_zajana_tribesman_t1_a_key" type="Keystone" description="{=taom_szt_t1a_key}Serpent-Venom Blades radius increased, the toxin spreads wider." icon_sprite="career_choice_toj_t1a_key">
+      <Mutations><Mutation target_id="shaghana_zajana_tribesman_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t1_a_p1" type="Passive" description="{=taom_szt_t1a_p1}+8% melee damage." icon_sprite="career_choice_toj_t1a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t1_a_p2" type="Passive" description="{=taom_szt_t1a_p2}+3% troop damage." icon_sprite="career_choice_toj_t1a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t1_a_p3" type="Passive" description="{=taom_szt_t1a_p3}+7% swing speed." icon_sprite="career_choice_toj_t1a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t1_a_p4" type="Passive" description="{=taom_szt_t1a_p4}+5% battle renown gain." icon_sprite="career_choice_toj_t1a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_zajana_tribesman_t1_b" display_name="{=taom_career_grp_shaghana_zajana_tribesman_t1_b}Desert Survivor" career_id="shaghana_zajana_tribesman" tier="1">
+    <Choice id="shaghana_zajana_tribesman_t1_b_key" type="Keystone" description="{=taom_szt_t1b_key}Serpent-Venom Blades duration extended, the toxin lingers." icon_sprite="career_choice_toj_t1b_key">
+      <Mutations><Mutation target_id="shaghana_zajana_tribesman_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t1_b_p1" type="Passive" description="{=taom_szt_t1b_p1}+6% resistance." icon_sprite="career_choice_toj_t1b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.06" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t1_b_p2" type="Passive" description="{=taom_szt_t1b_p2}+6 max health." icon_sprite="career_choice_toj_t1b_p2">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t1_b_p3" type="Passive" description="{=taom_szt_t1b_p3}+5% movement speed." icon_sprite="career_choice_toj_t1b_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t1_b_p4" type="Passive" description="{=taom_szt_t1b_p4}+5% troop morale." icon_sprite="career_choice_toj_t1b_p4">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_zajana_tribesman_t2_a" display_name="{=taom_career_grp_shaghana_zajana_tribesman_t2_a}Serpent-Fang Striker" career_id="shaghana_zajana_tribesman" tier="2">
+    <Choice id="shaghana_zajana_tribesman_t2_a_key" type="Keystone" description="{=taom_szt_t2a_key}Serpent-Venom Blades charge reduced, strike more frequently." icon_sprite="career_choice_toj_t2a_key">
+      <Mutations><Mutation target_id="shaghana_zajana_tribesman_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t2_a_p1" type="Passive" description="{=taom_szt_t2a_p1}+5% troop damage." icon_sprite="career_choice_toj_t2a_p1">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t2_a_p2" type="Passive" description="{=taom_szt_t2a_p2}+10% melee damage." icon_sprite="career_choice_toj_t2a_p2">
+      <PassiveEffect type="Damage" magnitude="0.10" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t2_a_p3" type="Passive" description="{=taom_szt_t2a_p3}+10% battle renown gain." icon_sprite="career_choice_toj_t2a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t2_a_p4" type="Passive" description="{=taom_szt_t2a_p4}+3 party size." icon_sprite="career_choice_toj_t2a_p4">
+      <PassiveEffect type="PartySize" magnitude="3" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_zajana_tribesman_t2_b" display_name="{=taom_career_grp_shaghana_zajana_tribesman_t2_b}Wearer of the Sands" career_id="shaghana_zajana_tribesman" tier="2">
+    <Choice id="shaghana_zajana_tribesman_t2_b_key" type="Keystone" description="{=taom_szt_t2b_key}Serpent-Venom Blades boosts attrition, sapping enemy will to fight." icon_sprite="career_choice_toj_t2b_key">
+      <Mutations><Mutation target_id="shaghana_zajana_tribesman_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t2_b_p1" type="Passive" description="{=taom_szt_t2b_p1}+10% swing speed." icon_sprite="career_choice_toj_t2b_p1">
+      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t2_b_p2" type="Passive" description="{=taom_szt_t2b_p2}+8 max health." icon_sprite="career_choice_toj_t2b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t2_b_p3" type="Passive" description="{=taom_szt_t2b_p3}+10% resistance." icon_sprite="career_choice_toj_t2b_p3">
+      <PassiveEffect type="Resistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t2_b_p4" type="Passive" description="{=taom_szt_t2b_p4}+10% troop morale." icon_sprite="career_choice_toj_t2b_p4">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_zajana_tribesman_t3_a" display_name="{=taom_career_grp_shaghana_zajana_tribesman_t3_a}Venom of Haradwaith" career_id="shaghana_zajana_tribesman" tier="3">
+    <Choice id="shaghana_zajana_tribesman_t3_a_key" type="Keystone" description="{=taom_szt_t3a_key}Serpent-Venom Blades radius greatly expanded, a cloud of toxin." icon_sprite="career_choice_toj_t3a_key">
+      <Mutations><Mutation target_id="shaghana_zajana_tribesman_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t3_a_p1" type="Passive" description="{=taom_szt_t3a_p1}+15% melee damage." icon_sprite="career_choice_toj_t3a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t3_a_p2" type="Passive" description="{=taom_szt_t3a_p2}+9 max health." icon_sprite="career_choice_toj_t3a_p2">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t3_a_p3" type="Passive" description="{=taom_szt_t3a_p3}+7% troop damage." icon_sprite="career_choice_toj_t3a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t3_a_p4" type="Passive" description="{=taom_szt_t3a_p4}+15% battle renown gain." icon_sprite="career_choice_toj_t3a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_zajana_tribesman_t3_b" display_name="{=taom_career_grp_shaghana_zajana_tribesman_t3_b}Scourge of the Southrons" career_id="shaghana_zajana_tribesman" tier="3">
+    <Choice id="shaghana_zajana_tribesman_t3_b_key" type="Keystone" description="{=taom_szt_t3b_key}Serpent-Venom Blades charge greatly reduced, constant attrition." icon_sprite="career_choice_toj_t3b_key">
+      <Mutations><Mutation target_id="shaghana_zajana_tribesman_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t3_b_p1" type="Passive" description="{=taom_szt_t3b_p1}+15% resistance." icon_sprite="career_choice_toj_t3b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t3_b_p2" type="Passive" description="{=taom_szt_t3b_p2}+20% troop morale." icon_sprite="career_choice_toj_t3b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t3_b_p3" type="Passive" description="{=taom_szt_t3b_p3}+8% troop damage." icon_sprite="career_choice_toj_t3b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_zajana_tribesman_t3_b_p4" type="Passive" description="{=taom_szt_t3b_p4}+5 party size." icon_sprite="career_choice_toj_t3b_p4">
+      <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Chatâk Javelineer (shaghana) — cloned from pezarsani_javelineer ═══ -->
+  <Choice id="shaghana_chatak_javelineer_root" group_id="" type="Passive"
+          description="{=taom_shaghana_chatak_javelineer_root_desc}Chatâk Volley grants +5% ranged damage and quickens javelin throws."
+          icon_sprite="career_choice_pezarsani_javelineer_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="shaghana_chatak_javelineer_t1_a" display_name="{=taom_career_grp_shaghana_chatak_javelineer_t1_a}Sun-Spear Skirmisher" career_id="shaghana_chatak_javelineer" tier="1">
+    <Choice id="shaghana_chatak_javelineer_t1_a_key" type="Keystone" description="{=taom_scj_t1a_key}Chatâk Volley radius increased, javelins cover wider ground." icon_sprite="career_choice_pj_t1a_key">
+      <Mutations><Mutation target_id="shaghana_chatak_javelineer_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t1_a_p1" type="Passive" description="{=taom_scj_t1a_p1}+8% ranged damage." icon_sprite="career_choice_pj_t1a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t1_a_p2" type="Passive" description="{=taom_scj_t1a_p2}+10% ammo." icon_sprite="career_choice_pj_t1a_p2">
+      <PassiveEffect type="Ammo" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t1_a_p3" type="Passive" description="{=taom_scj_t1a_p3}+7% movement speed." icon_sprite="career_choice_pj_t1a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t1_a_p4" type="Passive" description="{=taom_scj_t1a_p4}+5% battle renown gain." icon_sprite="career_choice_pj_t1a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_chatak_javelineer_t1_b" display_name="{=taom_career_grp_shaghana_chatak_javelineer_t1_b}Roving Outrider" career_id="shaghana_chatak_javelineer" tier="1">
+    <Choice id="shaghana_chatak_javelineer_t1_b_key" type="Keystone" description="{=taom_scj_t1b_key}Chatâk Volley duration extended, sustained harassing fire." icon_sprite="career_choice_pj_t1b_key">
+      <Mutations><Mutation target_id="shaghana_chatak_javelineer_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t1_b_p1" type="Passive" description="{=taom_scj_t1b_p1}+5% resistance." icon_sprite="career_choice_pj_t1b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t1_b_p2" type="Passive" description="{=taom_scj_t1b_p2}+5 max health." icon_sprite="career_choice_pj_t1b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t1_b_p3" type="Passive" description="{=taom_scj_t1b_p3}+3% troop damage." icon_sprite="career_choice_pj_t1b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t1_b_p4" type="Passive" description="{=taom_scj_t1b_p4}+5% party spotting range." icon_sprite="career_choice_pj_t1b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_chatak_javelineer_t2_a" display_name="{=taom_career_grp_shaghana_chatak_javelineer_t2_a}Sunfire Slinger" career_id="shaghana_chatak_javelineer" tier="2">
+    <Choice id="shaghana_chatak_javelineer_t2_a_key" type="Keystone" description="{=taom_scj_t2a_key}Chatâk Volley charge reduced, never out of javelins." icon_sprite="career_choice_pj_t2a_key">
+      <Mutations><Mutation target_id="shaghana_chatak_javelineer_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t2_a_p1" type="Passive" description="{=taom_scj_t2a_p1}+13% ammo." icon_sprite="career_choice_pj_t2a_p1">
+      <PassiveEffect type="Ammo" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t2_a_p2" type="Passive" description="{=taom_scj_t2a_p2}+10% ranged damage." icon_sprite="career_choice_pj_t2a_p2">
+      <PassiveEffect type="Damage" magnitude="0.10" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t2_a_p3" type="Passive" description="{=taom_scj_t2a_p3}+10% movement speed." icon_sprite="career_choice_pj_t2a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t2_a_p4" type="Passive" description="{=taom_scj_t2a_p4}+10% battle renown gain." icon_sprite="career_choice_pj_t2a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_chatak_javelineer_t2_b" display_name="{=taom_career_grp_shaghana_chatak_javelineer_t2_b}Scarlet Screen" career_id="shaghana_chatak_javelineer" tier="2">
+    <Choice id="shaghana_chatak_javelineer_t2_b_key" type="Keystone" description="{=taom_scj_t2b_key}Chatâk Volley boosts screening effectiveness while active." icon_sprite="career_choice_pj_t2b_key">
+      <Mutations><Mutation target_id="shaghana_chatak_javelineer_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t2_b_p1" type="Passive" description="{=taom_scj_t2b_p1}+12% ranged damage." icon_sprite="career_choice_pj_t2b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t2_b_p2" type="Passive" description="{=taom_scj_t2b_p2}+8 max health." icon_sprite="career_choice_pj_t2b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t2_b_p3" type="Passive" description="{=taom_scj_t2b_p3}+5% troop damage." icon_sprite="career_choice_pj_t2b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t2_b_p4" type="Passive" description="{=taom_scj_t2b_p4}+10% party spotting range." icon_sprite="career_choice_pj_t2b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_chatak_javelineer_t3_a" display_name="{=taom_career_grp_shaghana_chatak_javelineer_t3_a}Rain of Far Harad" career_id="shaghana_chatak_javelineer" tier="3">
+    <Choice id="shaghana_chatak_javelineer_t3_a_key" type="Keystone" description="{=taom_scj_t3a_key}Chatâk Volley radius greatly expanded, an inescapable barrage." icon_sprite="career_choice_pj_t3a_key">
+      <Mutations><Mutation target_id="shaghana_chatak_javelineer_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t3_a_p1" type="Passive" description="{=taom_scj_t3a_p1}+15% ranged damage." icon_sprite="career_choice_pj_t3a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t3_a_p2" type="Passive" description="{=taom_scj_t3a_p2}+15% ammo." icon_sprite="career_choice_pj_t3a_p2">
+      <PassiveEffect type="Ammo" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t3_a_p3" type="Passive" description="{=taom_scj_t3a_p3}+15% battle renown gain." icon_sprite="career_choice_pj_t3a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t3_a_p4" type="Passive" description="{=taom_scj_t3a_p4}+15% movement speed." icon_sprite="career_choice_pj_t3a_p4">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_chatak_javelineer_t3_b" display_name="{=taom_career_grp_shaghana_chatak_javelineer_t3_b}Shadow of the Dunes" career_id="shaghana_chatak_javelineer" tier="3">
+    <Choice id="shaghana_chatak_javelineer_t3_b_key" type="Keystone" description="{=taom_scj_t3b_key}Chatâk Volley charge greatly reduced, unrelenting harassment." icon_sprite="career_choice_pj_t3b_key">
+      <Mutations><Mutation target_id="shaghana_chatak_javelineer_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t3_b_p1" type="Passive" description="{=taom_scj_t3b_p1}+15% ranged damage." icon_sprite="career_choice_pj_t3b_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t3_b_p2" type="Passive" description="{=taom_scj_t3b_p2}+9 max health." icon_sprite="career_choice_pj_t3b_p2">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t3_b_p3" type="Passive" description="{=taom_scj_t3b_p3}+7% troop damage." icon_sprite="career_choice_pj_t3b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_chatak_javelineer_t3_b_p4" type="Passive" description="{=taom_scj_t3b_p4}+15% party spotting range." icon_sprite="career_choice_pj_t3b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Sormedân Beast Rider (shaghana) — cloned from mahud_beast_rider ═══ -->
+  <Choice id="shaghana_beast_rider_root" group_id="" type="Passive"
+          description="{=taom_shaghana_beast_rider_root_desc}Horns of Mûmakan grants +10% horse charge damage and spreads fear."
+          icon_sprite="career_choice_mahud_beast_rider_root">
+    <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+  </Choice>
+
+  <ChoiceGroup id="shaghana_beast_rider_t1_a" display_name="{=taom_career_grp_shaghana_beast_rider_t1_a}Tusk Vanguard" career_id="shaghana_beast_rider" tier="1">
+    <Choice id="shaghana_beast_rider_t1_a_key" type="Keystone" description="{=taom_sbr_t1a_key}Horns of Mûmakan radius expanded, fear spreads further." icon_sprite="career_choice_mbr_t1a_key">
+      <Mutations><Mutation target_id="shaghana_beast_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_beast_rider_t1_a_p1" type="Passive" description="{=taom_sbr_t1a_p1}+10% horse charge damage." icon_sprite="career_choice_mbr_t1a_p1">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t1_a_p2" type="Passive" description="{=taom_sbr_t1a_p2}+8% melee damage." icon_sprite="career_choice_mbr_t1a_p2">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t1_a_p3" type="Passive" description="{=taom_sbr_t1a_p3}+5% troop morale." icon_sprite="career_choice_mbr_t1a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t1_a_p4" type="Passive" description="{=taom_sbr_t1a_p4}+5% party movement speed." icon_sprite="career_choice_mbr_t1a_p4">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_beast_rider_t1_b" display_name="{=taom_career_grp_shaghana_beast_rider_t1_b}Beast-Warden" career_id="shaghana_beast_rider" tier="1">
+    <Choice id="shaghana_beast_rider_t1_b_key" type="Keystone" description="{=taom_sbr_t1b_key}Horns of Mûmakan duration extended, fear lingers." icon_sprite="career_choice_mbr_t1b_key">
+      <Mutations><Mutation target_id="shaghana_beast_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_beast_rider_t1_b_p1" type="Passive" description="{=taom_sbr_t1b_p1}+10% horse health." icon_sprite="career_choice_mbr_t1b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t1_b_p2" type="Passive" description="{=taom_sbr_t1b_p2}+3% troop damage." icon_sprite="career_choice_mbr_t1b_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t1_b_p3" type="Passive" description="{=taom_sbr_t1b_p3}+5% battle renown gain." icon_sprite="career_choice_mbr_t1b_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t1_b_p4" type="Passive" description="{=taom_sbr_t1b_p4}+5% resistance." icon_sprite="career_choice_mbr_t1b_p4">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_beast_rider_t2_a" display_name="{=taom_career_grp_shaghana_beast_rider_t2_a}Trampling Charge" career_id="shaghana_beast_rider" tier="2">
+    <Choice id="shaghana_beast_rider_t2_a_key" type="Keystone" description="{=taom_sbr_t2a_key}Horns of Mûmakan charge reduced, terror always imminent." icon_sprite="career_choice_mbr_t2a_key">
+      <Mutations><Mutation target_id="shaghana_beast_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_beast_rider_t2_a_p1" type="Passive" description="{=taom_sbr_t2a_p1}+13% horse charge damage." icon_sprite="career_choice_mbr_t2a_p1">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t2_a_p2" type="Passive" description="{=taom_sbr_t2a_p2}+10% troop morale." icon_sprite="career_choice_mbr_t2a_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t2_a_p3" type="Passive" description="{=taom_sbr_t2a_p3}+5% troop damage." icon_sprite="career_choice_mbr_t2a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t2_a_p4" type="Passive" description="{=taom_sbr_t2a_p4}+10% battle renown gain." icon_sprite="career_choice_mbr_t2a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_beast_rider_t2_b" display_name="{=taom_career_grp_shaghana_beast_rider_t2_b}Howdah Guardian" career_id="shaghana_beast_rider" tier="2">
+    <Choice id="shaghana_beast_rider_t2_b_key" type="Keystone" description="{=taom_sbr_t2b_key}Horns of Mûmakan boosts beast resilience during the charge." icon_sprite="career_choice_mbr_t2b_key">
+      <Mutations><Mutation target_id="shaghana_beast_rider_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_beast_rider_t2_b_p1" type="Passive" description="{=taom_sbr_t2b_p1}+12% melee damage." icon_sprite="career_choice_mbr_t2b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t2_b_p2" type="Passive" description="{=taom_sbr_t2b_p2}+13% horse health." icon_sprite="career_choice_mbr_t2b_p2">
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t2_b_p3" type="Passive" description="{=taom_sbr_t2b_p3}+10% party movement speed." icon_sprite="career_choice_mbr_t2b_p3">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t2_b_p4" type="Passive" description="{=taom_sbr_t2b_p4}+3 party size." icon_sprite="career_choice_mbr_t2b_p4">
+      <PassiveEffect type="PartySize" magnitude="3" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_beast_rider_t3_a" display_name="{=taom_career_grp_shaghana_beast_rider_t3_a}Wrath of Mûmakan" career_id="shaghana_beast_rider" tier="3">
+    <Choice id="shaghana_beast_rider_t3_a_key" type="Keystone" description="{=taom_sbr_t3a_key}Horns of Mûmakan radius greatly expanded, the very earth shakes." icon_sprite="career_choice_mbr_t3a_key">
+      <Mutations><Mutation target_id="shaghana_beast_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_beast_rider_t3_a_p1" type="Passive" description="{=taom_sbr_t3a_p1}+15% horse charge damage." icon_sprite="career_choice_mbr_t3a_p1">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t3_a_p2" type="Passive" description="{=taom_sbr_t3a_p2}+15% melee damage." icon_sprite="career_choice_mbr_t3a_p2">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t3_a_p3" type="Passive" description="{=taom_sbr_t3a_p3}+20% troop morale." icon_sprite="career_choice_mbr_t3a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t3_a_p4" type="Passive" description="{=taom_sbr_t3a_p4}+15% battle renown gain." icon_sprite="career_choice_mbr_t3a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="shaghana_beast_rider_t3_b" display_name="{=taom_career_grp_shaghana_beast_rider_t3_b}Lord of the Oliphaunts" career_id="shaghana_beast_rider" tier="3">
+    <Choice id="shaghana_beast_rider_t3_b_key" type="Keystone" description="{=taom_sbr_t3b_key}Horns of Mûmakan charge greatly reduced, unending dread." icon_sprite="career_choice_mbr_t3b_key">
+      <Mutations><Mutation target_id="shaghana_beast_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="shaghana_beast_rider_t3_b_p1" type="Passive" description="{=taom_sbr_t3b_p1}+15% horse health." icon_sprite="career_choice_mbr_t3b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t3_b_p2" type="Passive" description="{=taom_sbr_t3b_p2}+15% party movement speed." icon_sprite="career_choice_mbr_t3b_p2">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t3_b_p3" type="Passive" description="{=taom_sbr_t3b_p3}+7% troop damage." icon_sprite="career_choice_mbr_t3b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="shaghana_beast_rider_t3_b_p4" type="Passive" description="{=taom_sbr_t3b_p4}+9 max health." icon_sprite="career_choice_mbr_t3b_p4">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ House-Guard of Damudûr (abanissa) — cloned from tribesman_of_jelut ═══ -->
+  <Choice id="abanissa_house_guard_root" group_id="" type="Passive"
+          description="{=taom_abanissa_house_guard_root_desc}Ivory-Ward Blades grants +5% melee damage and applies attrition effects."
+          icon_sprite="career_choice_tribesman_of_jelut_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  </Choice>
+
+  <ChoiceGroup id="abanissa_house_guard_t1_a" display_name="{=taom_career_grp_abanissa_house_guard_t1_a}Dune Raider" career_id="abanissa_house_guard" tier="1">
+    <Choice id="abanissa_house_guard_t1_a_key" type="Keystone" description="{=taom_ahg_t1a_key}Ivory-Ward Blades radius increased, the toxin spreads wider." icon_sprite="career_choice_toj_t1a_key">
+      <Mutations><Mutation target_id="abanissa_house_guard_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_house_guard_t1_a_p1" type="Passive" description="{=taom_ahg_t1a_p1}+8% melee damage." icon_sprite="career_choice_toj_t1a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t1_a_p2" type="Passive" description="{=taom_ahg_t1a_p2}+3% troop damage." icon_sprite="career_choice_toj_t1a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t1_a_p3" type="Passive" description="{=taom_ahg_t1a_p3}+7% swing speed." icon_sprite="career_choice_toj_t1a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t1_a_p4" type="Passive" description="{=taom_ahg_t1a_p4}+5% battle renown gain." icon_sprite="career_choice_toj_t1a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_house_guard_t1_b" display_name="{=taom_career_grp_abanissa_house_guard_t1_b}Desert Survivor" career_id="abanissa_house_guard" tier="1">
+    <Choice id="abanissa_house_guard_t1_b_key" type="Keystone" description="{=taom_ahg_t1b_key}Ivory-Ward Blades duration extended, the toxin lingers." icon_sprite="career_choice_toj_t1b_key">
+      <Mutations><Mutation target_id="abanissa_house_guard_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_house_guard_t1_b_p1" type="Passive" description="{=taom_ahg_t1b_p1}+6% resistance." icon_sprite="career_choice_toj_t1b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.06" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t1_b_p2" type="Passive" description="{=taom_ahg_t1b_p2}+6 max health." icon_sprite="career_choice_toj_t1b_p2">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t1_b_p3" type="Passive" description="{=taom_ahg_t1b_p3}+5% movement speed." icon_sprite="career_choice_toj_t1b_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t1_b_p4" type="Passive" description="{=taom_ahg_t1b_p4}+5% troop morale." icon_sprite="career_choice_toj_t1b_p4">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_house_guard_t2_a" display_name="{=taom_career_grp_abanissa_house_guard_t2_a}Serpent-Fang Striker" career_id="abanissa_house_guard" tier="2">
+    <Choice id="abanissa_house_guard_t2_a_key" type="Keystone" description="{=taom_ahg_t2a_key}Ivory-Ward Blades charge reduced, strike more frequently." icon_sprite="career_choice_toj_t2a_key">
+      <Mutations><Mutation target_id="abanissa_house_guard_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_house_guard_t2_a_p1" type="Passive" description="{=taom_ahg_t2a_p1}+5% troop damage." icon_sprite="career_choice_toj_t2a_p1">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t2_a_p2" type="Passive" description="{=taom_ahg_t2a_p2}+10% melee damage." icon_sprite="career_choice_toj_t2a_p2">
+      <PassiveEffect type="Damage" magnitude="0.10" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t2_a_p3" type="Passive" description="{=taom_ahg_t2a_p3}+10% battle renown gain." icon_sprite="career_choice_toj_t2a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t2_a_p4" type="Passive" description="{=taom_ahg_t2a_p4}+3 party size." icon_sprite="career_choice_toj_t2a_p4">
+      <PassiveEffect type="PartySize" magnitude="3" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_house_guard_t2_b" display_name="{=taom_career_grp_abanissa_house_guard_t2_b}Wearer of the Sands" career_id="abanissa_house_guard" tier="2">
+    <Choice id="abanissa_house_guard_t2_b_key" type="Keystone" description="{=taom_ahg_t2b_key}Ivory-Ward Blades boosts attrition, sapping enemy will to fight." icon_sprite="career_choice_toj_t2b_key">
+      <Mutations><Mutation target_id="abanissa_house_guard_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_house_guard_t2_b_p1" type="Passive" description="{=taom_ahg_t2b_p1}+10% swing speed." icon_sprite="career_choice_toj_t2b_p1">
+      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t2_b_p2" type="Passive" description="{=taom_ahg_t2b_p2}+8 max health." icon_sprite="career_choice_toj_t2b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t2_b_p3" type="Passive" description="{=taom_ahg_t2b_p3}+10% resistance." icon_sprite="career_choice_toj_t2b_p3">
+      <PassiveEffect type="Resistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t2_b_p4" type="Passive" description="{=taom_ahg_t2b_p4}+10% troop morale." icon_sprite="career_choice_toj_t2b_p4">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_house_guard_t3_a" display_name="{=taom_career_grp_abanissa_house_guard_t3_a}Venom of Haradwaith" career_id="abanissa_house_guard" tier="3">
+    <Choice id="abanissa_house_guard_t3_a_key" type="Keystone" description="{=taom_ahg_t3a_key}Ivory-Ward Blades radius greatly expanded, a cloud of toxin." icon_sprite="career_choice_toj_t3a_key">
+      <Mutations><Mutation target_id="abanissa_house_guard_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_house_guard_t3_a_p1" type="Passive" description="{=taom_ahg_t3a_p1}+15% melee damage." icon_sprite="career_choice_toj_t3a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t3_a_p2" type="Passive" description="{=taom_ahg_t3a_p2}+9 max health." icon_sprite="career_choice_toj_t3a_p2">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t3_a_p3" type="Passive" description="{=taom_ahg_t3a_p3}+7% troop damage." icon_sprite="career_choice_toj_t3a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t3_a_p4" type="Passive" description="{=taom_ahg_t3a_p4}+15% battle renown gain." icon_sprite="career_choice_toj_t3a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_house_guard_t3_b" display_name="{=taom_career_grp_abanissa_house_guard_t3_b}Scourge of the Southrons" career_id="abanissa_house_guard" tier="3">
+    <Choice id="abanissa_house_guard_t3_b_key" type="Keystone" description="{=taom_ahg_t3b_key}Ivory-Ward Blades charge greatly reduced, constant attrition." icon_sprite="career_choice_toj_t3b_key">
+      <Mutations><Mutation target_id="abanissa_house_guard_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_house_guard_t3_b_p1" type="Passive" description="{=taom_ahg_t3b_p1}+15% resistance." icon_sprite="career_choice_toj_t3b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t3_b_p2" type="Passive" description="{=taom_ahg_t3b_p2}+20% troop morale." icon_sprite="career_choice_toj_t3b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t3_b_p3" type="Passive" description="{=taom_ahg_t3b_p3}+8% troop damage." icon_sprite="career_choice_toj_t3b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_house_guard_t3_b_p4" type="Passive" description="{=taom_ahg_t3b_p4}+5 party size." icon_sprite="career_choice_toj_t3b_p4">
+      <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Jîret Javelineer (abanissa) — cloned from pezarsani_javelineer ═══ -->
+  <Choice id="abanissa_jiret_javelineer_root" group_id="" type="Passive"
+          description="{=taom_abanissa_jiret_javelineer_root_desc}Jîret Volley grants +5% ranged damage and quickens javelin throws."
+          icon_sprite="career_choice_pezarsani_javelineer_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="abanissa_jiret_javelineer_t1_a" display_name="{=taom_career_grp_abanissa_jiret_javelineer_t1_a}Sun-Spear Skirmisher" career_id="abanissa_jiret_javelineer" tier="1">
+    <Choice id="abanissa_jiret_javelineer_t1_a_key" type="Keystone" description="{=taom_ajj_t1a_key}Jîret Volley radius increased, javelins cover wider ground." icon_sprite="career_choice_pj_t1a_key">
+      <Mutations><Mutation target_id="abanissa_jiret_javelineer_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t1_a_p1" type="Passive" description="{=taom_ajj_t1a_p1}+8% ranged damage." icon_sprite="career_choice_pj_t1a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t1_a_p2" type="Passive" description="{=taom_ajj_t1a_p2}+10% ammo." icon_sprite="career_choice_pj_t1a_p2">
+      <PassiveEffect type="Ammo" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t1_a_p3" type="Passive" description="{=taom_ajj_t1a_p3}+7% movement speed." icon_sprite="career_choice_pj_t1a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t1_a_p4" type="Passive" description="{=taom_ajj_t1a_p4}+5% battle renown gain." icon_sprite="career_choice_pj_t1a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_jiret_javelineer_t1_b" display_name="{=taom_career_grp_abanissa_jiret_javelineer_t1_b}Roving Outrider" career_id="abanissa_jiret_javelineer" tier="1">
+    <Choice id="abanissa_jiret_javelineer_t1_b_key" type="Keystone" description="{=taom_ajj_t1b_key}Jîret Volley duration extended, sustained harassing fire." icon_sprite="career_choice_pj_t1b_key">
+      <Mutations><Mutation target_id="abanissa_jiret_javelineer_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t1_b_p1" type="Passive" description="{=taom_ajj_t1b_p1}+5% resistance." icon_sprite="career_choice_pj_t1b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t1_b_p2" type="Passive" description="{=taom_ajj_t1b_p2}+5 max health." icon_sprite="career_choice_pj_t1b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t1_b_p3" type="Passive" description="{=taom_ajj_t1b_p3}+3% troop damage." icon_sprite="career_choice_pj_t1b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t1_b_p4" type="Passive" description="{=taom_ajj_t1b_p4}+5% party spotting range." icon_sprite="career_choice_pj_t1b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_jiret_javelineer_t2_a" display_name="{=taom_career_grp_abanissa_jiret_javelineer_t2_a}Sunfire Slinger" career_id="abanissa_jiret_javelineer" tier="2">
+    <Choice id="abanissa_jiret_javelineer_t2_a_key" type="Keystone" description="{=taom_ajj_t2a_key}Jîret Volley charge reduced, never out of javelins." icon_sprite="career_choice_pj_t2a_key">
+      <Mutations><Mutation target_id="abanissa_jiret_javelineer_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t2_a_p1" type="Passive" description="{=taom_ajj_t2a_p1}+13% ammo." icon_sprite="career_choice_pj_t2a_p1">
+      <PassiveEffect type="Ammo" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t2_a_p2" type="Passive" description="{=taom_ajj_t2a_p2}+10% ranged damage." icon_sprite="career_choice_pj_t2a_p2">
+      <PassiveEffect type="Damage" magnitude="0.10" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t2_a_p3" type="Passive" description="{=taom_ajj_t2a_p3}+10% movement speed." icon_sprite="career_choice_pj_t2a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t2_a_p4" type="Passive" description="{=taom_ajj_t2a_p4}+10% battle renown gain." icon_sprite="career_choice_pj_t2a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_jiret_javelineer_t2_b" display_name="{=taom_career_grp_abanissa_jiret_javelineer_t2_b}Scarlet Screen" career_id="abanissa_jiret_javelineer" tier="2">
+    <Choice id="abanissa_jiret_javelineer_t2_b_key" type="Keystone" description="{=taom_ajj_t2b_key}Jîret Volley boosts screening effectiveness while active." icon_sprite="career_choice_pj_t2b_key">
+      <Mutations><Mutation target_id="abanissa_jiret_javelineer_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t2_b_p1" type="Passive" description="{=taom_ajj_t2b_p1}+12% ranged damage." icon_sprite="career_choice_pj_t2b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t2_b_p2" type="Passive" description="{=taom_ajj_t2b_p2}+8 max health." icon_sprite="career_choice_pj_t2b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t2_b_p3" type="Passive" description="{=taom_ajj_t2b_p3}+5% troop damage." icon_sprite="career_choice_pj_t2b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t2_b_p4" type="Passive" description="{=taom_ajj_t2b_p4}+10% party spotting range." icon_sprite="career_choice_pj_t2b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_jiret_javelineer_t3_a" display_name="{=taom_career_grp_abanissa_jiret_javelineer_t3_a}Rain of Far Harad" career_id="abanissa_jiret_javelineer" tier="3">
+    <Choice id="abanissa_jiret_javelineer_t3_a_key" type="Keystone" description="{=taom_ajj_t3a_key}Jîret Volley radius greatly expanded, an inescapable barrage." icon_sprite="career_choice_pj_t3a_key">
+      <Mutations><Mutation target_id="abanissa_jiret_javelineer_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t3_a_p1" type="Passive" description="{=taom_ajj_t3a_p1}+15% ranged damage." icon_sprite="career_choice_pj_t3a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t3_a_p2" type="Passive" description="{=taom_ajj_t3a_p2}+15% ammo." icon_sprite="career_choice_pj_t3a_p2">
+      <PassiveEffect type="Ammo" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t3_a_p3" type="Passive" description="{=taom_ajj_t3a_p3}+15% battle renown gain." icon_sprite="career_choice_pj_t3a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t3_a_p4" type="Passive" description="{=taom_ajj_t3a_p4}+15% movement speed." icon_sprite="career_choice_pj_t3a_p4">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_jiret_javelineer_t3_b" display_name="{=taom_career_grp_abanissa_jiret_javelineer_t3_b}Shadow of the Dunes" career_id="abanissa_jiret_javelineer" tier="3">
+    <Choice id="abanissa_jiret_javelineer_t3_b_key" type="Keystone" description="{=taom_ajj_t3b_key}Jîret Volley charge greatly reduced, unrelenting harassment." icon_sprite="career_choice_pj_t3b_key">
+      <Mutations><Mutation target_id="abanissa_jiret_javelineer_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t3_b_p1" type="Passive" description="{=taom_ajj_t3b_p1}+15% ranged damage." icon_sprite="career_choice_pj_t3b_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t3_b_p2" type="Passive" description="{=taom_ajj_t3b_p2}+9 max health." icon_sprite="career_choice_pj_t3b_p2">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t3_b_p3" type="Passive" description="{=taom_ajj_t3b_p3}+7% troop damage." icon_sprite="career_choice_pj_t3b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_jiret_javelineer_t3_b_p4" type="Passive" description="{=taom_ajj_t3b_p4}+15% party spotting range." icon_sprite="career_choice_pj_t3b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Ivory-Road Beast Rider (abanissa) — cloned from mahud_beast_rider ═══ -->
+  <Choice id="abanissa_ivory_rider_root" group_id="" type="Passive"
+          description="{=taom_abanissa_ivory_rider_root_desc}Tusk-Thunder of Mûmakan grants +10% horse charge damage and spreads fear."
+          icon_sprite="career_choice_mahud_beast_rider_root">
+    <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+  </Choice>
+
+  <ChoiceGroup id="abanissa_ivory_rider_t1_a" display_name="{=taom_career_grp_abanissa_ivory_rider_t1_a}Tusk Vanguard" career_id="abanissa_ivory_rider" tier="1">
+    <Choice id="abanissa_ivory_rider_t1_a_key" type="Keystone" description="{=taom_air_t1a_key}Tusk-Thunder of Mûmakan radius expanded, fear spreads further." icon_sprite="career_choice_mbr_t1a_key">
+      <Mutations><Mutation target_id="abanissa_ivory_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t1_a_p1" type="Passive" description="{=taom_air_t1a_p1}+10% horse charge damage." icon_sprite="career_choice_mbr_t1a_p1">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t1_a_p2" type="Passive" description="{=taom_air_t1a_p2}+8% melee damage." icon_sprite="career_choice_mbr_t1a_p2">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t1_a_p3" type="Passive" description="{=taom_air_t1a_p3}+5% troop morale." icon_sprite="career_choice_mbr_t1a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t1_a_p4" type="Passive" description="{=taom_air_t1a_p4}+5% party movement speed." icon_sprite="career_choice_mbr_t1a_p4">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_ivory_rider_t1_b" display_name="{=taom_career_grp_abanissa_ivory_rider_t1_b}Beast-Warden" career_id="abanissa_ivory_rider" tier="1">
+    <Choice id="abanissa_ivory_rider_t1_b_key" type="Keystone" description="{=taom_air_t1b_key}Tusk-Thunder of Mûmakan duration extended, fear lingers." icon_sprite="career_choice_mbr_t1b_key">
+      <Mutations><Mutation target_id="abanissa_ivory_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t1_b_p1" type="Passive" description="{=taom_air_t1b_p1}+10% horse health." icon_sprite="career_choice_mbr_t1b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t1_b_p2" type="Passive" description="{=taom_air_t1b_p2}+3% troop damage." icon_sprite="career_choice_mbr_t1b_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t1_b_p3" type="Passive" description="{=taom_air_t1b_p3}+5% battle renown gain." icon_sprite="career_choice_mbr_t1b_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t1_b_p4" type="Passive" description="{=taom_air_t1b_p4}+5% resistance." icon_sprite="career_choice_mbr_t1b_p4">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_ivory_rider_t2_a" display_name="{=taom_career_grp_abanissa_ivory_rider_t2_a}Trampling Charge" career_id="abanissa_ivory_rider" tier="2">
+    <Choice id="abanissa_ivory_rider_t2_a_key" type="Keystone" description="{=taom_air_t2a_key}Tusk-Thunder of Mûmakan charge reduced, terror always imminent." icon_sprite="career_choice_mbr_t2a_key">
+      <Mutations><Mutation target_id="abanissa_ivory_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t2_a_p1" type="Passive" description="{=taom_air_t2a_p1}+13% horse charge damage." icon_sprite="career_choice_mbr_t2a_p1">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t2_a_p2" type="Passive" description="{=taom_air_t2a_p2}+10% troop morale." icon_sprite="career_choice_mbr_t2a_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t2_a_p3" type="Passive" description="{=taom_air_t2a_p3}+5% troop damage." icon_sprite="career_choice_mbr_t2a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t2_a_p4" type="Passive" description="{=taom_air_t2a_p4}+10% battle renown gain." icon_sprite="career_choice_mbr_t2a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_ivory_rider_t2_b" display_name="{=taom_career_grp_abanissa_ivory_rider_t2_b}Howdah Guardian" career_id="abanissa_ivory_rider" tier="2">
+    <Choice id="abanissa_ivory_rider_t2_b_key" type="Keystone" description="{=taom_air_t2b_key}Tusk-Thunder of Mûmakan boosts beast resilience during the charge." icon_sprite="career_choice_mbr_t2b_key">
+      <Mutations><Mutation target_id="abanissa_ivory_rider_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t2_b_p1" type="Passive" description="{=taom_air_t2b_p1}+12% melee damage." icon_sprite="career_choice_mbr_t2b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t2_b_p2" type="Passive" description="{=taom_air_t2b_p2}+13% horse health." icon_sprite="career_choice_mbr_t2b_p2">
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t2_b_p3" type="Passive" description="{=taom_air_t2b_p3}+10% party movement speed." icon_sprite="career_choice_mbr_t2b_p3">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t2_b_p4" type="Passive" description="{=taom_air_t2b_p4}+3 party size." icon_sprite="career_choice_mbr_t2b_p4">
+      <PassiveEffect type="PartySize" magnitude="3" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_ivory_rider_t3_a" display_name="{=taom_career_grp_abanissa_ivory_rider_t3_a}Wrath of Mûmakan" career_id="abanissa_ivory_rider" tier="3">
+    <Choice id="abanissa_ivory_rider_t3_a_key" type="Keystone" description="{=taom_air_t3a_key}Tusk-Thunder of Mûmakan radius greatly expanded, the very earth shakes." icon_sprite="career_choice_mbr_t3a_key">
+      <Mutations><Mutation target_id="abanissa_ivory_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t3_a_p1" type="Passive" description="{=taom_air_t3a_p1}+15% horse charge damage." icon_sprite="career_choice_mbr_t3a_p1">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t3_a_p2" type="Passive" description="{=taom_air_t3a_p2}+15% melee damage." icon_sprite="career_choice_mbr_t3a_p2">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t3_a_p3" type="Passive" description="{=taom_air_t3a_p3}+20% troop morale." icon_sprite="career_choice_mbr_t3a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t3_a_p4" type="Passive" description="{=taom_air_t3a_p4}+15% battle renown gain." icon_sprite="career_choice_mbr_t3a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="abanissa_ivory_rider_t3_b" display_name="{=taom_career_grp_abanissa_ivory_rider_t3_b}Lord of the Oliphaunts" career_id="abanissa_ivory_rider" tier="3">
+    <Choice id="abanissa_ivory_rider_t3_b_key" type="Keystone" description="{=taom_air_t3b_key}Tusk-Thunder of Mûmakan charge greatly reduced, unending dread." icon_sprite="career_choice_mbr_t3b_key">
+      <Mutations><Mutation target_id="abanissa_ivory_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t3_b_p1" type="Passive" description="{=taom_air_t3b_p1}+15% horse health." icon_sprite="career_choice_mbr_t3b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t3_b_p2" type="Passive" description="{=taom_air_t3b_p2}+15% party movement speed." icon_sprite="career_choice_mbr_t3b_p2">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t3_b_p3" type="Passive" description="{=taom_air_t3b_p3}+7% troop damage." icon_sprite="career_choice_mbr_t3b_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="abanissa_ivory_rider_t3_b_p4" type="Passive" description="{=taom_air_t3b_p4}+9 max health." icon_sprite="career_choice_mbr_t3b_p4">
       <PassiveEffect type="Health" magnitude="9" operation="Add" />
     </Choice>
   </ChoiceGroup>

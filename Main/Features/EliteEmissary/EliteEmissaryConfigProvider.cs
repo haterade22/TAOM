@@ -26,6 +26,7 @@ public sealed class EliteEmissaryConfigProvider : IEliteEmissaryConfigProvider
     {
         "gondor", "mordor", "erebor", "rivendell", "lothlorien", "mirkwood",
         "isengard", "gundabad", "dolguldur", "umbar", "goblin", "mistymountainorcs",
+        "bluecraig", "lindon",
         "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania",
     };
 

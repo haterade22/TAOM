@@ -4590,4 +4590,499 @@
 	</NPCCharacter>
 
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
+  <!-- TAOM-NEWCULTURE:lindon:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_lindon_0"
+		name="{=aom_spc_wanderer_lindon_0_name}{FIRSTNAME} Erestelionath"
+		voice="softspoken"
+		age="45"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_1"
+		name="{=aom_spc_wanderer_lindon_1_name}{FIRSTNAME} Calenglorionath"
+		voice="earnest"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_2"
+		name="{=aom_spc_wanderer_lindon_2_name}{FIRSTNAME} Noldorionath"
+		voice="ironic"
+		age="52"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_3"
+		name="{=aom_spc_wanderer_lindon_3_name}{FIRSTNAME} Lindonionath"
+		voice="softspoken"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_4"
+		name="{=aom_spc_wanderer_lindon_4_name}{FIRSTNAME} Aranwionath"
+		voice="earnest"
+		age="41"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_5"
+		name="{=aom_spc_wanderer_lindon_5_name}{FIRSTNAME} Celebrindionath"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_6"
+		name="{=aom_spc_wanderer_lindon_6_name}{FIRSTNAME} Ithilionath"
+		voice="softspoken"
+		age="48"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_7"
+		name="{=aom_spc_wanderer_lindon_7_name}{FIRSTNAME} Gildorionath"
+		voice="ironic"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_8"
+		name="{=aom_spc_wanderer_lindon_8_name}{FIRSTNAME} Peredhilionath"
+		voice="earnest"
+		age="40"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_lindon_9"
+		name="{=aom_spc_wanderer_lindon_9_name}{FIRSTNAME} Earendilionath"
+		voice="softspoken"
+		age="37"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.lindon"
+		race="elf"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rivendell_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rivendell" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_lindon" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_lindon" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:lindon:END -->
+  <!-- TAOM-NEWCULTURE:bluecraig:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_0"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_0_name}{FIRSTNAME} Bonechewer"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_1"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_1_name}{FIRSTNAME} Skullsplitter"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_2"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_2_name}{FIRSTNAME} Bloodfang"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_3"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_3_name}{FIRSTNAME} Ironscar"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_4"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_4_name}{FIRSTNAME} Rageclaw"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_5"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_5_name}{FIRSTNAME} Fleshripper"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_6"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_6_name}{FIRSTNAME} Shadowlurker"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_7"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_7_name}{FIRSTNAME} Doommarked"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_8"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_8_name}{FIRSTNAME} Goremaiden"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_bluecraig_9"
+		race="goblin"
+		name="{=aom_spc_wanderer_bluecraig_9_name}{FIRSTNAME} Cruelblade"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.bluecraig"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_bluecraig" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:bluecraig:END -->
 </NPCCharacters>

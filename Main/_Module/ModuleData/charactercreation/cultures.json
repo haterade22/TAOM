@@ -255,5 +255,25 @@
     "default_build": 0.543,
     "focus_to_add": 0,
     "skill_level_to_add": 0
-  }
+  },
+    {
+        "culture_id": "bluecraig",
+        "races": ["goblin", "orc", "human"],
+        "starting_settlement": "town_GBC1",
+        "default_age": 30.0,
+        "default_weight": 0.5417,
+        "default_build": 0.543,
+        "focus_to_add": 0,
+        "skill_level_to_add": 0
+    },
+    {
+        "culture_id": "lindon",
+        "races": ["elf", "human"],
+        "starting_settlement": "town_LN1",
+        "default_age": 20.0,
+        "default_weight": 0.0232,
+        "default_build": 0.5347,
+        "focus_to_add": 0,
+        "skill_level_to_add": 0
+    }
 ]

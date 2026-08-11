@@ -1,0 +1,1178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== RIVENDELL CIVILIAN NPCs ==================== -->
+	<!-- Elves use default human race (no race attribute) -->
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.lindon" name="{=aom_rv_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager (upgrades to lindon_imladris_recruit) -->
+	<NPCCharacter id="villager_lindon" race="elf" default_group="Infantry" level="1" name="{=aom_rv_villager}Villager" occupation="Villager" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.lindon_imladris_recruit" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="caravan_master_lindon" race="elf" default_group="Infantry" level="26" name="{=aom_rv_caravan_master}Lindon Caravan Master" occupation="CaravanGuard" culture="Culture.lindon">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+				<equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_greaves2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armed_trader_lindon" race="elf" default_group="Infantry" level="16" name="{=aom_rv_armed_trader}Lindon Armed Trader" occupation="CaravanGuard" culture="Culture.lindon">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_infantry_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_greaves1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_lindon" race="elf" default_group="Infantry" level="21" name="{=aom_rv_caravan_guard}Lindon Caravan Guard" occupation="CaravanGuard" culture="Culture.lindon">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+				<equipment slot="Body" id="Item.rivendell_torso_infantry_tier1" />
+				<equipment slot="Gloves" id="Item.rivendell_vambraces_1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_greaves1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_lindon" race="elf" default_group="Infantry" level="26" name="{=aom_rv_vet_caravan_guard}Lindon Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.lindon">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+				<equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_greaves2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Town Population -->
+	<NPCCharacter id="townsman_lindon" race="elf" default_group="Infantry" name="{=aom_rv_townsman}Townsman" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_lindon" race="elf" default_group="Infantry" name="{=aom_rv_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="town_child_lindon" race="elf" default_group="Infantry" name="{=aom_rv_town_child}Town Child" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="town_teenager_lindon" race="elf" default_group="Infantry" name="{=aom_rv_town_teen}Town Teenager" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Population -->
+	<NPCCharacter id="village_woman_lindon" race="elf" default_group="Infantry" name="{=aom_rv_village_woman}Village Woman" occupation="Villager" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_child_lindon" race="elf" default_group="Infantry" name="{=aom_rv_village_child}Village Child" occupation="Villager" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_teenager_lindon" race="elf" default_group="Infantry" name="{=aom_rv_village_teen}Village Teenager" occupation="Villager" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.lindon" name="{=aom_rv_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.lindon" name="{=aom_rv_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.lindon" name="{=aom_rv_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.lindon" name="{=aom_rv_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.lindon" name="{=aom_rv_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_lindon" race="elf" default_group="Infantry" is_hero="false" name="{=aom_rv_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_lindon" race="elf" default_group="Infantry" is_hero="false" name="{=aom_rv_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_lindon" race="elf" default_group="Infantry" is_hero="false" name="{=aom_rv_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_lindon" race="elf" default_group="Infantry" is_hero="false" name="{=aom_rv_musician}Musician" occupation="Musician" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="shop_worker_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.lindon" name="{=aom_rv_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="barber_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.lindon" name="{=aom_rv_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="ransom_broker_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="RansomBroker" culture="Culture.lindon" name="{=aom_rv_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_lindon" race="elf" default_group="Infantry" level="4" culture="Culture.lindon" occupation="PrisonGuard" name="{=aom_rv_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_lindon" race="elf" default_group="Infantry" level="16" name="{=aom_rv_guard}Guard" occupation="Soldier" culture="Culture.lindon">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+				<equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
+				<equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_greaves2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+				<equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
+				<equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_greaves2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Gang -->
+	<NPCCharacter id="gangleader_bodyguard_lindon" race="elf" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.lindon" name="{=aom_rv_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.lindon" name="{=aom_rv_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.lindon" name="{=aom_rv_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_lindon" race="elf" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.lindon" name="{=aom_rv_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_lindon_0" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_rv_notable_0}Cautious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_0b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_rv_notable_0b}Elven vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_notable_1}Stern elven trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_1b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_notable_1b}Aloof elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_2" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lindon" name="{=aom_rv_notable_2}Elven gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_2b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lindon" name="{=aom_rv_notable_2b}Wise elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_3" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_rv_notable_3}Self-made elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_3b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_rv_notable_3b}Elven lorekeeper of trade" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_4" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_notable_4}Shrewd elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_4b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_rv_notable_4b}Devious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_lindon_5" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lindon" name="{=aom_rv_notable_5}Zealous elven loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_6" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_notable_6}Stern elven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_7" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lindon" name="{=aom_rv_notable_7}Elven keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_lindon_8" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_notable_8}Meticulous elven smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_9" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lindon" name="{=aom_rv_notable_9}Gifted elven craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_lindon_gl1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lindon" name="{=aom_rv_notable_gl1}Protective elven ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_10" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_rv_notable_10}Sardonic elven outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_11" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_notable_11}Intimidating elven enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_gl4" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_notable_gl4}Ruthless elven exile" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_12" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_rv_notable_12}Cunning elven smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_13" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lindon" name="{=aom_rv_notable_13}Menacing elven schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_lindon_21" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_notable_21}Stern elven landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_lindon_22" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lindon" name="{=aom_rv_notable_22}Agreeable elven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_lindon_headman_1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lindon" name="{=aom_rv_headman_1}Rebellious elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_lindon_headman_2" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_rv_headman_2}Conservative elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_lindon_headman_3" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.lindon" name="{=aom_rv_headman_3}Devious elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_lindon" race="elf" default_group="Infantry" name="{=aom_rv_practice_dummy}Practice Dummy" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_lindon" race="elf" default_group="Infantry" name="{=aom_rv_practice_1}Practice Fighter" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_lindon" race="elf" default_group="Infantry" name="{=aom_rv_practice_2}Practice Fighter" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_lindon" race="elf" default_group="Infantry" name="{=aom_rv_practice_3}Practice Fighter" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_lindon" race="elf" default_group="Infantry" name="{=aom_rv_gear_dummy}Gear Dummy" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Child/Infant/Teenager variants for culture definition -->
+	<NPCCharacter id="townsman_infant_lindon" race="elf" default_group="Infantry" name="{=aom_rv_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_lindon" race="elf" default_group="Infantry" name="{=aom_rv_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_lindon" race="elf" default_group="Infantry" name="{=aom_rv_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_lindon" race="elf" default_group="Infantry" name="{=aom_rv_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_lindon" race="elf" default_group="Infantry" name="{=aom_rv_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_lindon" race="elf" default_group="Infantry" name="{=aom_rv_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_child_lindon" race="elf" default_group="Infantry" name="{=aom_rv_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_teenager_lindon" race="elf" default_group="Infantry" name="{=aom_rv_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_child_lindon" race="elf" default_group="Infantry" name="{=aom_rv_villager_child}Village Child" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_teenager_lindon" race="elf" default_group="Infantry" name="{=aom_rv_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.lindon" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Lord templates. Referenced from taom_spcultures.xml <lord_templates> and
+	     <rebellion_hero_templates>; both lists previously held vanilla's Culture.empire
+	     leaders, and a hero keeps its TEMPLATE's culture. Equipment comes from the
+	     already-authored taom_lindon_lord_* rosters. -->
+	<NPCCharacter id="spc_lindon_lord_1" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.lindon" name="{=aom_lindon_lord_1}Bold elven lord of Mithlond" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_lindon_lord_battle_male" />
+			<EquipmentSet id="taom_lindon_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_lindon_lord_2" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.lindon" name="{=aom_lindon_lord_2}Cautious elven lord of Mithlond" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_lindon_lord_battle_male" />
+			<EquipmentSet id="taom_lindon_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+</NPCCharacters>

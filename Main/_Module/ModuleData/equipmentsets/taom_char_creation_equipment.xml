@@ -14099,4 +14099,4434 @@
 				id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 	</EquipmentRoster>
+	<!-- ═══ Culture: GOBLIN ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_inf_helmet_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_retainer_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_retainer_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_retainer_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_retainer_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_merchant_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_merchant_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_merchant_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_merchant_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_farmer_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_farmer_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_farmer_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_farmer_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_artisan_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_artisan_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_artisan_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_artisan_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_hunter_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_hunter_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_hunter_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_hunter_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_vagabond_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_vagabond_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_goblin_vagabond_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_goblin_vagabond_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_goblin_retainer_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_retainer_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_mercenary_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_mercenary_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_guard_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_guard_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_hunter_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_hunter_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_infantry_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_infantry_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_skirmisher_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_skirmisher_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_bard_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_bard_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_6_m"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_goblin_6_f"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_goblin"
+		culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Gloves"
+				id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- ═══ Culture: MISTYMOUNTAINORCS ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_inf_helmet_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_retainer_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_retainer_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_retainer_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_retainer_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_merchant_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_merchant_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_merchant_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_merchant_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_farmer_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_farmer_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_farmer_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_farmer_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_artisan_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_artisan_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_artisan_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_artisan_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_hunter_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_hunter_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_hunter_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_hunter_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_vagabond_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_vagabond_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_mistymountainorcs_vagabond_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_mistymountainorcs_vagabond_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_retainer_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_retainer_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_mercenary_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_mercenary_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_guard_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_guard_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_hunter_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_hunter_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_infantry_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_infantry_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_skirmisher_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_skirmisher_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_bard_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_bard_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_6_m"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_mistymountainorcs_6_f"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_mistymountainorcs"
+		culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Gloves"
+				id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- ═══ Culture: BLUECRAIG ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_inf_helmet_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_gn_orc_helmet_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_retainer_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_retainer_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_retainer_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_retainer_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_merchant_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_merchant_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_merchant_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_merchant_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_farmer_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_farmer_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_farmer_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_farmer_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_artisan_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_artisan_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_artisan_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_artisan_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_hunter_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_hunter_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_med_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_hunter_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_hunter_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_vagabond_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_vagabond_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_bluecraig_vagabond_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_bluecraig_vagabond_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_retainer_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_retainer_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_mercenary_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_mercenary_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_guard_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_guard_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_hunter_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_hunter_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.sm_uruk_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.bodkin_arrows_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_infantry_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_infantry_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_skirmisher_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_skirmisher_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_bard_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_bard_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_javelin_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_6_m"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_bluecraig_6_f"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_gundabad_shield_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_mordor_set1_sword_a02" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_md_orc_pauldron_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_bluecraig"
+		culture="Culture.bluecraig">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_inf_chest_med_a" />
+			<Equipment
+				slot="Gloves"
+				id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gundabad_axe_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- ═══ Culture: LINDON ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Head"
+				id="Item.gf_helmet_1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather2" />
+			<Equipment
+				slot="Head"
+				id="Item.gf_helmet_1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather2" />
+			<Equipment
+				slot="Head"
+				id="Item.gf_helmet_1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather2" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Head"
+				id="Item.gf_helmet_1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_retainer_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_retainer_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_retainer_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_retainer_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_merchant_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_merchant_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_merchant_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_merchant_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_farmer_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_farmer_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_farmer_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_farmer_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_artisan_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_artisan_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_artisan_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_artisan_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_hunter_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_hunter_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_hunter_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_hunter_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_vagabond_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_vagabond_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_lindon_vagabond_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_lindon_vagabond_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_lindon_retainer_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_elven_shield_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_retainer_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_elven_shield_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_mercenary_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_elven_shield_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_mercenary_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_elven_shield_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_guard_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_elven_shield_a" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.highelf_longbow_starter" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_arrow_v1_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_guard_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_elven_shield_a" />
+			<Equipment
+				slot="Item1"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.highelf_longbow_starter" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_arrow_v1_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_hunter_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.highelf_longbow_starter" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_arrow_v1_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_hunter_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.highelf_longbow_starter" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_arrow_v1_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_infantry_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_infantry_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_skirmisher_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.highelf_longbow_starter" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_arrow_v1_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_skirmisher_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.highelf_longbow_starter" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_arrow_v1_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_bard_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.highelf_longbow_starter" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_arrow_v1_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_bard_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.highelf_longbow_starter" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_arrow_v1_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_6_m"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_shield_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_lindon_6_f"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.wm_rivendell_spear_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.wm_elven_shield_a" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rivendell_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_lindon"
+		culture="Culture.lindon">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment
+				slot="Gloves"
+				id="Item.rivendell_vambraces_gloves1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rivendell_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment
+				slot="Leg"
+				id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+	</EquipmentRoster>
 </EquipmentRosters>

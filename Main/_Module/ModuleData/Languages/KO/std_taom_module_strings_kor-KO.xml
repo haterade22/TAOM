@@ -360,7 +360,6 @@
     <string id="taom_str_player_father_name.shaghana" text="자르칸" />
     <string id="taom_str_player_mother_name.shaghana" text="칸사" />
     <string id="0aXG8dvJ" text="{KINGDOM_NAME}와 평화를 맺습니다. 조공은 지불되지 않습니다." />
-    <string id="0bPb5btR" text="{LORD.NAME}은(는) 내전에서 {RULER}을(를) 지지하는 {FACTION_NAME}의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="0CsbbwtN" text="{CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전 요청" />
     <string id="0nhqJewP" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {SETTLEMENT}을(를) {LEADER.NAME}에게 하사하였습니다." />
     <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM}과(와) 평화 조약을 맺기로 결정하였습니다." />
@@ -370,25 +369,20 @@
     <string id="21yUheIy" text="{KINGDOM_NAME}은(는) {CREATION_YEAR}년에 떠오르는 {CULTURE_ADJECTIVE} 군벌 {RULER.NAME}에 의해 세워졌습니다." />
     <string id="22LCyCoA" text="귀하의 왕국이 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에게 선전포고를 한다면 {GOLD}{GOLD_ICON}을(를) 제공하겠습니다." />
     <string id="2b1xZGaQ" text="{KINGDOM_NAME}과(와) 평화 조약을 맺습니다. 우리 왕국은 {TRIBUTE_DURATION}일 동안 매일 {TRIBUTE_AMOUNT}의 조공을 지불할 것입니다." />
-    <string id="2BVDp7Tg" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 중단합니다. {POLICY_SUPPORT}" />
     <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}의 약탈로 인해 많은 농부들이 고향을 떠났습니다. 토지를 가진 자들은 대개 돌아가지만, 가난한 이들은 새로운 정착지를 찾고 있습니다. 당신은 마을 외곽에 야영하고 있는 몇몇과 대화를 나눕니다. 그들에게 줄 땅은 없습니다. 그들은 소작인으로 일하기를 열망하는 것 같지만, 기존 마을 가문들과의 갈등 가능성은 항상 존재합니다." />
-    <string id="2mVZORaE" text="{FACTION_NAME}의 신하" />
     <string id="4fXpOe4N" text="{CLAN_NAME}에서 전령이 도착했습니다. 그들은 {CAPTIVE_HERO.NAME}을(를) 붙잡고 있으며 {GOLD_AMOUNT}{GOLD_ICON}의 몸값을 요구하고 있습니다." />
     <string id="4GgfFDWG" text="{KINGDOM_NAME}과(와) 평화 조약 체결" />
     <string id="4JSzHkpt" text="{?IS_FEMALE}여왕{?}왕{\?}으로서, {KINGDOM_NAME}에게 선전포고를 할지 결정해야 합니다" />
-    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}의 성은 {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 소유하고 있습니다. {KEEP_INFO}" />
     <string id="4z1t75be" text="{CLAN_NAME}의 {FIRSTNAME}" />
     <string id="5bBAOHmC" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 반반으로 나뉜 가운데 {SETTLEMENT}을(를) {?RULER.GENDER}그녀의{?}그의{\?} 영지로 취하였습니다." />
     <string id="5bza9sDs" text="유감입니다. {FACTION_NAME}보다 더 나은 고용주는 없을 것입니다. 확신하십시오." />
     <string id="5DdbkWLu" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {OTHER_KINGDOM}과(와) 무역 협정을 체결하기로 결정하였습니다." />
     <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회가 반반으로 나뉜 가운데 {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
     <string id="5pOKmHsf" text="{RULER.NAME}이(가) {CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전을 요청하기로 결정하였습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받았습니다." />
-    <string id="6d4ZTvGv" text="{LORD.NAME}은(는) {FACTION_NAME}의 {TITLE}이자 왕국의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}은(는) 우리의 조상 대대로 내려온 땅을 점령하고 우리 동족을 억압하고 있습니다." />
     <string id="7ouzFASf" text="전령이 도착하여 {OFFERED_KINGDOM_LEADER.NAME}의 전갈을 전합니다. {?OFFERED_KINGDOM_LEADER.GENDER}그녀는{?}그는{\?} 당신의 높아지는 명성에 대해 언급하며, {OFFERED_KINGDOM_NAME}의 봉신이 되는 것을 고려해보겠느냐고 묻습니다. 관심이 있다면 직접 만나 이야기해야 합니다." />
     <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
     <string id="940TwBPs" text="{RULER.NAME}이(가) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {CLAN} 일족을 {KINGDOM}에서 추방하지 않기로 결정하였습니다." />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}은(는) {FACTION_NAME} 땅 출신의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {KINGDOM}과(와)의 전쟁을 하지 않기로 결정하였습니다." />
     <string id="aE7OQDMS" text="{KINGDOM_NAME}과(와) 동맹 체결" />
     <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 반반으로 나뉜 가운데 {KINGDOM}과(와) 평화 조약을 맺기로 결정하였습니다." />
@@ -429,7 +423,6 @@
     <string id="eTylgLCc" text="{KINGDOM_NAME}에서 전령이 도착했습니다. 그들은 당신에게 동맹을 제안합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM}은(는) 더 이상 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁 중이 아닙니다." />
     <string id="F7CMsDyG" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM_NAME}와(과)의 동맹 결성을 거부하기로 결정했습니다." />
-    <string id="faUooB7V" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 시행하지 않습니다. {POLICY_SUPPORT}" />
     <string id="fcuUcjYV" text="{RULER.NAME}은(는) {CALLING_KINGDOM}의 요청에 응하지 않고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁하지 않기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받았습니다." />
     <string id="FNCq25P1" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {KINGDOM_NAME}와(과)의 동맹을 결성하기로 결정했습니다." />
     <string id="FuNbouTu" text="{KINGDOM_NAME}에서 전령이 도착했습니다. 그들은 당신의 왕국에 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁을 요청합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
@@ -440,7 +433,6 @@
     <string id="gNf0ALKw" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신에게 무조건 평화를 제안합니다. 당신의 왕국은 제안 수락 여부를 투표할 것입니다." />
     <string id="h5eTEYON" text="{RULER.NAME}은(는) {CLAN} 일족을 {KINGDOM}에서 추방했습니다." />
     <string id="h9bWTLgK" text="우리의 동맹 {KINGDOM_NAME}의 전쟁에 합류할 시간입니다." />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}은(는) {FACTION_NAME} 땅 출신의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="IB1xsVEr" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신에게 무조건 평화를 제안합니다. 당신의 가신들은 결정을 당신에게 맡겼습니다." />
     <string id="INfHUqxT" text="{RULER.NAME}은(는) {KINGDOM_NAME}와(과)의 동맹을 결성하기로 결정했습니다." />
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}은(는) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM}와(과)의 평화를 거부했습니다." />
@@ -450,10 +442,8 @@
     <string id="jaioXYDc" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM_NAME}와(과)의 동맹 결성을 거부하기로 결정했습니다." />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}의 {PEACEMAKER_RULER.NAME}이(가) {?PEACEMAKER_RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {KINGDOM}와(과) 평화를 맺기로 결정했습니다." />
     <string id="JJQ0Hp4m" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. {MAP_FACTION_NAME}은(는) 우리 왕국들 간의 전쟁을 끝내기 위해 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불할 것입니다. 귀하의 가신들은 결정을 귀하에게 맡겼습니다." />
-    <string id="jnYwiCAz" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 계속합니다. {POLICY_SUPPORT}" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}은(는) 현재 우리보다 더 강력합니다. 우리는 힘을 키울 시간이 필요합니다." />
     <string id="JQligd8z" text="{KINGDOM}의 평의회가 {KING.NAME}을(를) 새로운 통치자로 선출했습니다." />
-    <string id="JuPUG5wX" text="{LORD.NAME}은(는) {FACTION_NAME}의 {TITLE}이자 내전에서 {RULER}을(를) 지지하는 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="JY717hPW" text="저는 {ENEMY_INFORMAL_NAME}을(를) 대신해 평화를 맺을 권한이 없습니다. {ENEMY_RULER.NAME}과(와) {?ENEMY_RULER.GENDER}그녀의{?}그의{\?} 평의회가 평화를 제안할지 여부와 조건을 결정해야 합니다." />
     <string id="K5w135N9" text="{RULER.NAME}은(는) {CALLING_KINGDOM}의 요청에 응하지 않고 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와(과) 전쟁하지 않기로 결정했습니다. 이 결정은 {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 조언에 반하는 것입니다." />
     <string id="KFHj7ckm" text="통치자로서, 귀하는 {KINGDOM_NAME}와(과) 평화를 맺을지 결정해야 합니다" />
@@ -464,7 +454,6 @@
     <string id="L802I9W2" text="그렇습니다, {FACTION_NAME}에 가입하겠습니다." />
     <string id="L81DPSom" text="{RULER_NAME_AND_TITLE}(으)로서, 귀하는 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_COST}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정해야 합니다." />
     <string id="Lalj0T1i" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 반대에도 불구하고 {CALLING_KINGDOM}의 요청에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포했습니다." />
-    <string id="Lbs2bNlg" text="{KINGDOM}은(는) {POLICY_DESCRIPTION} ({POLICY})을(를) 시작합니다. {POLICY_SUPPORT}" />
     <string id="lseJ70y0" text="귀하의 왕국은 {KINGDOM_NAME}와(과) 전쟁 중입니다." />
     <string id="LVX2x6Jf" text="{SERVED_FACTION}와(과)의 계약을 끝내고 싶습니다." />
     <string id="m69pvful" text="{KINGDOM_LEADER}이(가) 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_PAYMENT}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정할 것입니다. 귀하는 이 결정에 대한 입장을 선택할 수 있습니다." />
@@ -481,7 +470,6 @@
     <string id="nkvT88r2" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대해 {CALLED_KINGDOM}을(를) 전쟁에 부를 충분한 자금이 없습니다." />
     <string id="NuYzgBZB" text="너무 지나칩니다. {KINGDOM}은(는) 자국의 카라반 파괴를 용납하지 않을 것입니다." />
     <string id="o4IxXHnB" text="{RULER.NAME}은(는) {KINGDOM_NAME}와(과) 동맹을 맺지 않기로 결정했습니다." />
-    <string id="o5AUljbW" text="{LORD.NAME}은(는) {FACTION_NAME}의 {CLAN_DESCRIPTION}인 {CLAN_NAME}의 일원입니다. {?LORD.GENDER}그녀는{?}그는{\?} {REPUTATION}(이)라는 평판을 가지고 있습니다." />
     <string id="o69PZuce" text="{OLD_LEADER.LINK}은(는) 더 이상 {CLAN_NAME}의 수장이 아닙니다. {NEW_LEADER.LINK}이(가) 일족의 통치자로 취임했습니다." />
     <string id="O9XpB5Ah" text="통치자로서, 귀하는 {KINGDOM}와(과) 무역 협정을 맺을지 결정해야 합니다" />
     <string id="oAw74q3r" text="{RULER_NAME_AND_TITLE}(으)로서, 귀하는 귀하의 왕국이 {CALLING_KINGDOM}의 요청에 응하여 {CALL_TO_WAR_PAYMENT}{GOLD_ICON}으로 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 전쟁을 선포할지 결정해야 합니다." />
@@ -492,7 +480,6 @@
     <string id="PneX4Ayw" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 {KINGDOM_NAME}의 참전 요청을 담은 전령이 귀하 왕국의 궁정에 도착했습니다." />
     <string id="PP7KD7OC" text="{KINGDOM}의 {RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회가 이 문제에 대해 동등하게 나뉜 가운데 {OTHER_KINGDOM}와(과) 무역 협정을 체결하기로 결정했습니다." />
     <string id="PutoRsWp" text="{CLAN_NAME}에서 전령이 도착했습니다. 그들은 {CAPTIVE_HERO.NAME}을(를) 석방하면 {GOLD_AMOUNT}{GOLD_ICON}의 몸값을 제안합니다." />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}은(는) {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 통치하고 있습니다. {KEEP_INFO}" />
     <string id="q9DnHVcZ" text="{KINGDOM_NAME}의 전쟁에 참여하는 것은 우리의 이익에 부합하지 않습니다." />
     <string id="qa4FlTWS" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
     <string id="qgN9o2ip" text="우리의 동맹 {KINGDOM_NAME}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집할 때입니다! 왕국은 그들에게 참전 요청 협정을 제안할지 투표할 것입니다." />
@@ -503,19 +490,16 @@
     <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {?AGGRESSOR_RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM}에 선전포고했습니다." />
     <string id="rJIuQ0hc" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}자신의{?}자신의{\?} 평의회의 반대에도 불구하고 {OTHER_KINGDOM}와(과)의 무역 협정 체결을 거부했습니다." />
     <string id="rtfoywJl" text="{KINGDOM_NAME}에 선전포고" />
-    <string id="RVDojUOM" text="{SETTLEMENT_LINK} 주변의 땅은 대부분 {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 소유하고 있습니다. {PROSPERITY_INFO}" />
     <string id="sbFboHmV" text="{MAP_FACTION_NAME}에서 전령이 도착했습니다. 그들은 당신이 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불하는 것에 동의한다면 평화를 제안합니다. 왕국은 이 제안을 수락할지 투표할 것입니다." />
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}의 {AGGRESSOR_RULER.NAME}이(가) {KINGDOM}에 선전포고했습니다." />
     <string id="SR9FC5jH" text="{MAP_FACTION_NAME}에서 평화 제안을 가지고 전령이 도착했습니다. {MAP_FACTION_NAME}은(는) 왕국 간의 전쟁을 끝내기 위해 매일 {GOLD_AMOUNT} {GOLD_ICON}의 조공을 지불할 것입니다. 왕국은 이 제안을 수락할지 투표할 것입니다." />
     <string id="syGyjjKE" text="{CALLING_KINGDOM}의 소집에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고하십시오." />
-    <string id="TauRjAud" text="{FACTION}의 {NAME}" />
     <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}에서 용병 일을 제안하고 있습니다. 그들을 위해 싸워 얻는 영향력 1포인트당 {GOLD_AMOUNT}{GOLD_ICON}을(를) 지불합니다. 수락하시겠습니까?" />
     <string id="uc4M4bhG" text="음, 내가 원하는 것이 있소. {TARGET_FACTION}의 한 {?TARGET_HERO.GENDER}귀부인{?}영주{\?}와 나는 아주 오랜, 오랜 관계가 있소. 그리고 우호적인 관계는 아니오. 지금 우리가 전쟁 중인 만큼, {?TARGET_HERO.GENDER}그녀가{?}그가{\?} 자유로운 한 내 목숨과 영지가 안전하지 않다는 것을 알고 있소. 말했듯이, 전혀 쉽지 않을 것이오. 하지만 그것을 해내는 자, {?TARGET_HERO.GENDER}그녀를{?}그를{\?} 살아서 내게 데려오는 자는, 내 감사는 차치하고라도, 정말로 매우 부유한 사람이 될 것이오.[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}이(가) {CALLING_KINGDOM}의 소집에 응하여 {?RULER.GENDER}그녀의{?}그의{\?} 평의회 절반의 지지를 받아 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고했습니다." />
     <string id="UQq4ekeu" text="{KINGDOM}의 {RULER.NAME}이(가) {OTHER_KINGDOM}와(과)의 무역 협정 체결을 거부했습니다." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}이(가) {CALLED_KINGDOM_LINK}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}에 대한 선전포고를 요청했습니다." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME}은(는) {CHARACTER_FACTION_SHORT}의 일원이었습니다. {FURTHER_DETAILS}." />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}은(는) {FACTION_TERM}의 {FACTION_OFFICIAL}인 {LORD.LINK}이(가) 통치하고 있습니다. {PROSPERITY_INFO} {MORALE_INFO}" />
     <string id="V097rA1v" text="{LORD.FIRSTNAME}은(는) 떠오르는 새로운 일족인 {CLAN_NAME}의 수장입니다. {?LORD.GENDER}그녀는{?}그는{\?} 아직 {?LORD.GENDER}그녀의{?}그의{\?} 명성을 쌓고 있는 중입니다." />
     <string id="vf2pb7Ts" text="{RULER.NAME}이(가) {CALLING_KINGDOM}의 소집에 응하여 {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 선전포고했습니다." />
     <string id="Vg5RmOqL" text="{FACTION_LEADER}이(가) {KINGDOM}이(가) {OTHER_KINGDOM}와(과) 무역 협정을 체결할지 결정할 것입니다. 이 결정에 대한 당신의 입장을 선택할 수 있습니다." />
@@ -528,9 +512,7 @@
     <string id="xhK4zMec" text="{RULER.NAME}이(가) {CALLED_KINGDOM}을(를) {KINGDOM_TO_CALL_TO_WAR_AGAINST}에 대한 전쟁에 소집하기로 결정했습니다." />
     <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}이(가) {CALLED_KINGDOM_LINK}에게 발령한 {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}에 대한 참전 소집이 종료되었습니다." />
     <string id="xM97H0oR" text="{KINGDOM_NAME}에 대한 선전포고에 투표하십시오." />
-    <string id="yAOQnMVw" text="너는 {FACTION} 소속이지? 그렇다면 너는 내 포로다." />
     <string id="yBL3TzXw" text="{RULER.NAME}은(는) {?RULER.GENDER}그녀의{?}그의{\?} 평의회의 지지를 받아 {CLAN} 일족을 {KINGDOM}에서 추방하지 않기로 했습니다." />
-    <string id="YT4OvaAG" text="좋습니다. 당신은 {FACTION_NAME}의 보호를 받는다고 생각하십시오. 내일 이 시간까지 여정을 완료하지 못하면 추가 지불을 요청할 수 있습니다." />
     <string id="yUYNlQhU" text="좋소, 내 부하들에게 간단한 계약서를 작성하도록 하겠소. {KINGDOM_FORMAL_NAME}을(를) 대표하여 환영하오. 우리의 적들에게 당신의 검을 잘 사용하시기를." />
     <string id="Zckbdm4Z" text="{KINGDOM}의 {RULER.NAME}이(가) {?RULER.GENDER}자신의{?}자신의{\?} 평의회의 지지를 받아 {SETTLEMENT}을(를) {?RULER.GENDER}자신의{?}자신의{\?} 영지로 삼았습니다." />
     <string id="zd9sawl9" text="당신은 이미 {KINGDOM_NAME}와(과) 동맹 관계입니다." />
@@ -2116,318 +2098,352 @@
     <string id="l4pRw7pO" text="{OWNER.NAME}의 무장 대상" />
     <string id="taom_align_desertion" text="{COUNT}명의 병력이 탈영했습니다 — 그들은 반대 진영의 군주를 섬기기를 거부합니다." />
     <string id="taom_troop_weight_size" text="중장병" />
-    <string id="taom_res_desertion" text="정예 병사 {COUNT}명이 탈영했습니다 — {RESOURCE}이(가) 고갈되었습니다!" />
-    <string id="taom_feat_erebor_gw" text="난쟁이 수비대" />
-    <string id="taom_feat_erebor_gw_desc" text="수비대 급료 25% 감소." />
-    <string id="taom_feat_erebor_p" text="난쟁이 공업" />
-    <string id="taom_feat_erebor_p_desc" text="모든 마을 생산량 10% 증가." />
-    <string id="taom_feat_erebor_cs" text="난쟁이 완벽주의" />
-    <string id="taom_feat_erebor_cs_desc" text="건설 속도 15% 감소." />
-    <string id="taom_feat_erebor_loy" text="난쟁이 명예" />
-    <string id="taom_feat_erebor_loy_desc" text="정착지 충성도 하루 1 증가." />
-    <string id="taom_feat_erebor_mor" text="난쟁이 고집" />
-    <string id="taom_feat_erebor_mor_desc" text="부대 사기 5 증가." />
-    <string id="taom_feat_erebor_sm" text="장인 대장장이" />
-    <string id="taom_feat_erebor_sm_desc" text="제련 기력 소모 30% 감소." />
-    <string id="taom_feat_erebor_ss" text="산악 민족" />
-    <string id="taom_feat_erebor_ss_desc" text="눈 지형에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_erebor_ti" text="난쟁이 검약" />
-    <string id="taom_feat_erebor_ti_desc" text="관세 수입 5% 증가." />
-    <string id="taom_feat_riv_ai" text="요정의 지혜" />
-    <string id="taom_feat_riv_ai_desc" text="군대 영향력 보상 35% 증가." />
-    <string id="taom_feat_riv_hg" text="마지막 편안한 집" />
-    <string id="taom_feat_riv_hg_desc" text="마을 화덕 성장 20% 증가." />
-    <string id="taom_feat_riv_aic" text="요정의 자긍심" />
-    <string id="taom_feat_riv_aic_desc" text="군대 소집에 영향력 25% 추가 소모." />
-    <string id="taom_feat_riv_fc" text="요정의 절약" />
-    <string id="taom_feat_riv_fc_desc" text="부대 식량 소모 15% 감소." />
-    <string id="taom_feat_riv_loy" text="요정의 지혜" />
-    <string id="taom_feat_riv_loy_desc" text="정착지 충성도 하루 0.5 증가." />
-    <string id="taom_feat_riv_fs" text="숲의 우아함" />
-    <string id="taom_feat_riv_fs_desc" text="숲에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_mrk_fs" text="어둠숲 왕국" />
-    <string id="taom_feat_mrk_fs_desc" text="숲에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_mrk_mp" text="실반 파수꾼" />
-    <string id="taom_feat_mrk_mp_desc" text="정예 민병대 등장 확률 25% 증가." />
-    <string id="taom_feat_mrk_hg" text="숲의 고립" />
-    <string id="taom_feat_mrk_hg_desc" text="마을 화덕 성장 20% 감소." />
-    <string id="taom_feat_mrk_fc" text="숲의 양식" />
-    <string id="taom_feat_mrk_fc_desc" text="부대 식량 소모 15% 감소." />
-    <string id="taom_feat_mrk_mor" text="숲의 유대" />
-    <string id="taom_feat_mrk_mor_desc" text="부대 사기 3 증가." />
-    <string id="taom_feat_mrk_aic" text="고립주의 궁정" />
-    <string id="taom_feat_mrk_aic_desc" text="군대 소집 비용의 영향력이 15% 증가합니다." />
-    <string id="taom_feat_loth_fs" text="황금 숲" />
-    <string id="taom_feat_loth_fs_desc" text="숲에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_feat_loth_gw" text="로리엔의 파수꾼" />
-    <string id="taom_feat_loth_gw_desc" text="수비대 급여가 20% 감소합니다." />
-    <string id="taom_feat_loth_cs" text="영원의 공예" />
-    <string id="taom_feat_loth_cs_desc" text="건설 속도가 10% 감소합니다." />
-    <string id="taom_feat_loth_fc" text="렘바스 빵" />
-    <string id="taom_feat_loth_fc_desc" text="부대 식량 소모가 15% 감소합니다." />
-    <string id="taom_feat_loth_loy" text="요정의 우아함" />
-    <string id="taom_feat_loth_loy_desc" text="정착지 충성도가 하루 0.5씩 증가합니다." />
-    <string id="taom_feat_loth_mor" text="요정의 조화" />
-    <string id="taom_feat_loth_mor_desc" text="부대 사기가 3 증가합니다." />
-    <string id="taom_feat_loth_vr" text="스러지는 빛" />
-    <string id="taom_feat_loth_vr_desc" text="마을 의용병 재생성 속도가 15% 감소합니다." />
-    <string id="taom_feat_isen_cr" text="전쟁 기계" />
-    <string id="taom_feat_isen_cr_desc" text="기병 병사의 모집 및 승급 비용이 15% 감소합니다." />
-    <string id="taom_feat_isen_gw" text="오르상크 수비대" />
-    <string id="taom_feat_isen_gw_desc" text="수비대 급여가 20% 감소합니다." />
-    <string id="taom_feat_isen_dp" text="사루만의 지배" />
-    <string id="taom_feat_isen_dp_desc" text="왕국 결정으로 인한 관계 감소가 25% 증가합니다." />
-    <string id="taom_feat_isen_ps" text="우루크하이 군단" />
-    <string id="taom_feat_isen_ps_desc" text="부대 규모 한도가 20% 증가합니다." />
-    <string id="taom_feat_isen_cs" text="산업의 위력" />
-    <string id="taom_feat_isen_cs_desc" text="건설 속도가 15% 증가합니다." />
-    <string id="taom_feat_isen_sm" text="산업 대장간" />
-    <string id="taom_feat_isen_sm_desc" text="제련 기력 소모가 20% 감소합니다." />
-    <string id="taom_feat_isen_rd" text="전쟁 기계의 약탈" />
-    <string id="taom_feat_isen_rd_desc" text="약탈 피해가 20% 증가합니다." />
-    <string id="taom_feat_isen_ps2" text="강행군" />
-    <string id="taom_feat_isen_ps2_desc" text="평원에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_feat_isen_sws" text="늪지대 훈련교관" />
-    <string id="taom_feat_isen_sws_desc" text="늪에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_feat_isen_nctm" text="오르상크 병참관" />
-    <string id="taom_feat_isen_nctm_desc" text="도시의 상인 유지 +2." />
-    <string id="taom_feat_isen_ncta" text="산업 대장간" />
-    <string id="taom_feat_isen_ncta_desc" text="도시의 장인 유지 +1." />
-    <string id="taom_feat_isen_nctg" text="우루크하이 대장" />
-    <string id="taom_feat_isen_nctg_desc" text="도시의 조직 두목 유지 +12 (아이센가드의 유일한 도시가 주요 모병 거점이 됩니다)." />
-    <string id="taom_feat_isen_ncv" text="철의 압박" />
-    <string id="taom_feat_isen_ncv_desc" text="마을의 유력자 수가 10% 증가합니다." />
-    <string id="taom_feat_gun_aic" text="오르크 무리" />
-    <string id="taom_feat_gun_aic_desc" text="군대 소집 비용이 영향력 40% 감소합니다." />
-    <string id="taom_feat_gun_gp" text="약탈한 창고" />
-    <string id="taom_feat_gun_gp_desc" text="곡물 생산량이 15% 증가합니다." />
-    <string id="taom_feat_gun_w" text="약탈 요구" />
-    <string id="taom_feat_gun_w_desc" text="부대 급여가 10% 증가합니다." />
-    <string id="taom_feat_gun_ps" text="산악의 무리" />
-    <string id="taom_feat_gun_ps_desc" text="부대 규모 한도가 20% 증가합니다." />
-    <string id="taom_feat_gun_rd" text="오르크 약탈자" />
-    <string id="taom_feat_gun_rd_desc" text="약탈 피해가 25% 증가합니다." />
-    <string id="taom_feat_gun_ss" text="산악의 노략꾼" />
-    <string id="taom_feat_gun_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_feat_gun_vr" text="산악의 징집병" />
-    <string id="taom_feat_gun_vr_desc" text="마을 지원병 재생성 속도가 20% 증가합니다." />
-    <string id="taom_feat_gun_ncta" text="뼈 대장장이" />
-    <string id="taom_feat_gun_ncta_desc" text="도시의 장인 유력자 +1." />
-    <string id="taom_feat_gun_nctg" text="창백한 전투단 두목" />
-    <string id="taom_feat_gun_nctg_desc" text="도시의 조직 두목 유력자 +3." />
-    <string id="taom_feat_gun_ncv" text="뼈 야영지" />
-    <string id="taom_feat_gun_ncv_desc" text="마을의 유력자 수가 10% 증가합니다." />
-    <string id="taom_feat_gob_ps" text="고블린 무리" />
-    <string id="taom_feat_gob_ps_desc" text="부대 규모 한도가 40% 증가합니다." />
-    <string id="taom_feat_gob_vr" text="끝없는 번식" />
-    <string id="taom_feat_gob_vr_desc" text="마을 지원병 재생성 속도가 25% 증가합니다." />
-    <string id="taom_feat_gob_ss" text="굴 달리기꾼" />
-    <string id="taom_feat_gob_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_feat_gob_fc" text="굶주린 무리" />
-    <string id="taom_feat_gob_fc_desc" text="부대 식량 소비가 20% 증가합니다." />
-    <string id="taom_feat_gob_sm" text="노획 무기 더미" />
-    <string id="taom_feat_gob_sm_desc" text="제련 기력 소모가 10% 감소합니다." />
-    <string id="taom_feat_gob_rd" text="고블린 매복" />
-    <string id="taom_feat_gob_rd_desc" text="약탈 피해가 10% 증가합니다." />
-    <string id="taom_feat_mmo_aic" text="오르크 무리" />
-    <string id="taom_feat_mmo_aic_desc" text="군대 소집 비용이 영향력 40% 감소합니다." />
-    <string id="taom_feat_mmo_ps" text="산악의 군세" />
-    <string id="taom_feat_mmo_ps_desc" text="부대 규모 한도가 30% 증가합니다." />
-    <string id="taom_feat_mmo_ss" text="산악 태생" />
-    <string id="taom_feat_mmo_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_feat_mmo_fc" text="굶주린 무리" />
-    <string id="taom_feat_mmo_fc_desc" text="부대 식량 소비 15% 증가." />
-    <string id="taom_feat_mmo_sm" text="약탈된 대장간" />
-    <string id="taom_feat_mmo_sm_desc" text="제련 기력 소모 15% 감소." />
-    <string id="taom_feat_mmo_rd" text="동굴 트롤 징집" />
-    <string id="taom_feat_mmo_rd_desc" text="약탈 피해 15% 증가." />
-    <string id="taom_feat_mmo_cs" text="메아리치는 전당" />
-    <string id="taom_feat_mmo_cs_desc" text="건설 속도 10% 감소." />
-    <string id="taom_feat_umb_cc" text="코르세어 교역" />
-    <string id="taom_feat_umb_cc_desc" text="대상 편성 비용 25% 감소." />
-    <string id="taom_feat_umb_r" text="코르세어의 영광" />
-    <string id="taom_feat_umb_r_desc" text="전투 명성 8% 증가." />
-    <string id="taom_feat_umb_w" text="코르세어의 탐욕" />
-    <string id="taom_feat_umb_w_desc" text="부대 급료 8% 증가." />
-    <string id="taom_feat_umb_ti" text="코르세어 교역망" />
-    <string id="taom_feat_umb_ti_desc" text="관세 수입 15% 증가." />
-    <string id="taom_feat_umb_ds" text="사막의 코르세어" />
-    <string id="taom_feat_umb_ds_desc" text="사막에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_umb_rd" text="코르세어 약탈 교리" />
-    <string id="taom_feat_umb_rd_desc" text="약탈 피해 20% 증가." />
-    <string id="taom_feat_umb_fc" text="검은 누메노르인의 인내" />
-    <string id="taom_feat_umb_fc_desc" text="부대 식량 소비 10% 감소." />
-    <string id="taom_feat_dg_aic" text="그림자의 지휘" />
-    <string id="taom_feat_dg_aic_desc" text="군대 소집에 드는 영향력 50% 감소." />
-    <string id="taom_feat_dg_mp" text="어둠의 징병" />
-    <string id="taom_feat_dg_mp_desc" text="정예 민병대 등장 확률 20% 증가." />
-    <string id="taom_feat_dg_cs" text="폐허의 공사" />
-    <string id="taom_feat_dg_cs_desc" text="건설 속도 20% 감소." />
-    <string id="taom_feat_dg_ps" text="어둠의 군단" />
-    <string id="taom_feat_dg_ps_desc" text="부대 규모 한계 20% 증가." />
-    <string id="taom_feat_dg_fc" text="게걸스러운 무리" />
-    <string id="taom_feat_dg_fc_desc" text="부대 식량 소비 10% 증가." />
-    <string id="taom_feat_dg_vr" text="어둠의 징집병" />
-    <string id="taom_feat_dg_vr_desc" text="마을 지원병 재생성 속도 20% 증가." />
-    <string id="taom_feat_dg_nctm" text="그림자 중개인" />
-    <string id="taom_feat_dg_nctm_desc" text="도시의 상인 유지 +1." />
-    <string id="taom_feat_dg_ncta" text="어둠의 대장간" />
-    <string id="taom_feat_dg_ncta_desc" text="도시의 장인 유지 +1." />
-    <string id="taom_feat_dg_nctg" text="그림자 대장들" />
-    <string id="taom_feat_dg_nctg_desc" text="도시의 조직 두목 유지 +13 (돌 굴두르의 그림자 지휘 중심지)." />
-    <string id="taom_feat_dg_ncv" text="숨겨진 오두막" />
-    <string id="taom_feat_dg_ncv_desc" text="마을의 유력자 수 10% 증가." />
-    <string id="taom_feat_gon_gw" text="탑의 수비대" />
-    <string id="taom_feat_gon_gw_desc" text="주둔군 임금 20% 감소." />
-    <string id="taom_feat_gon_ai" text="곤도르의 규율" />
-    <string id="taom_feat_gon_ai_desc" text="군대 영향력 보상 30% 증가." />
-    <string id="taom_feat_gon_hg" text="전쟁으로 피폐해진 땅" />
-    <string id="taom_feat_gon_hg_desc" text="마을 화덕 성장 15% 감소." />
-    <string id="taom_feat_gon_ps" text="상비군" />
-    <string id="taom_feat_gon_ps_desc" text="부대 규모 제한 2.5% 증가." />
-    <string id="taom_feat_gon_loy" text="탑 수비대의 규율" />
-    <string id="taom_feat_gon_loy_desc" text="정착지 충성도 하루 1 증가." />
-    <string id="taom_feat_gon_mor" text="곤도르의 결의" />
-    <string id="taom_feat_gon_mor_desc" text="부대 사기 5 증가." />
-    <string id="taom_feat_gon_ps2" text="평야의 사람들" />
-    <string id="taom_feat_gon_ps2_desc" text="평야에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_mor_aic" text="암흑의 군주의 의지" />
-    <string id="taom_feat_mor_aic_desc" text="군대 소집에 드는 영향력 60% 감소." />
-    <string id="taom_feat_mor_gp" text="누르넨 농경지" />
-    <string id="taom_feat_mor_gp_desc" text="곡물 생산량 20% 증가." />
-    <string id="taom_feat_mor_w" text="암흑의 공물" />
-    <string id="taom_feat_mor_w_desc" text="부대 임금 20% 증가." />
-    <string id="taom_feat_mor_ps" text="사우론의 무리" />
-    <string id="taom_feat_mor_ps_desc" text="부대 규모 제한 10% 증가." />
-    <string id="taom_feat_mor_rd" text="사우론의 진노" />
-    <string id="taom_feat_mor_rd_desc" text="약탈 피해 25% 증가." />
-    <string id="taom_feat_mor_pls" text="그림자의 행군" />
-    <string id="taom_feat_mor_pls_desc" text="평야에서 부대 이동 속도 5% 증가." />
-    <string id="taom_feat_mor_sws" text="죽음늪" />
-    <string id="taom_feat_mor_sws_desc" text="늪지에서 부대 이동 속도 5% 증가." />
-    <string id="taom_feat_mor_ns" text="어둠의 피조물" />
-    <string id="taom_feat_mor_ns_desc" text="야간에 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_mor_vr" text="사우론의 징집" />
-    <string id="taom_feat_mor_vr_desc" text="마을 지원병 재생성 속도 20% 증가." />
-    <string id="taom_feat_mord_sm" text="암흑의 대장기술" />
-    <string id="taom_feat_mord_sm_desc" text="제련 기력 소모 15% 감소." />
-    <string id="taom_feat_mor_nctg" text="암흑어 전령" />
-    <string id="taom_feat_mor_nctg_desc" text="도시의 조직 두목 유력자 +2." />
-    <string id="taom_feat_mor_ncv" text="노예 감독관" />
-    <string id="taom_feat_mor_ncv_desc" text="마을의 유력자 수 5% 증가." />
-    <string id="taom_feat_roh_mc" text="기마군주의 혈통" />
-    <string id="taom_feat_roh_mc_desc" text="기병 병력 모집 및 승급 비용 15% 감소." />
-    <string id="taom_feat_roh_mw" text="마크의 기사들" />
-    <string id="taom_feat_roh_mw_desc" text="기병 병력 임금 15% 감소." />
-    <string id="taom_feat_roh_is" text="기병 의존" />
-    <string id="taom_feat_roh_is_desc" text="부대 대부분이 보병일 경우 부대 속도 10% 감소." />
-    <string id="taom_feat_roh_loy" text="기마군주의 결속" />
-    <string id="taom_feat_roh_loy_desc" text="정착지 충성도 하루 0.5 증가." />
-    <string id="taom_feat_roh_mor" text="기사들의 기백" />
-    <string id="taom_feat_roh_mor_desc" text="부대 사기 5 증가." />
-    <string id="taom_feat_roh_pls" text="평원의 기사들" />
-    <string id="taom_feat_roh_pls_desc" text="평원에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_dale_pls" text="골짜기의 상인들" />
-    <string id="taom_feat_dale_pls_desc" text="평원에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_dale_ti" text="난쟁이 교역 동맹" />
-    <string id="taom_feat_dale_ti_desc" text="관세 수입 10% 증가." />
-    <string id="taom_feat_dale_r" text="검은 화살의 전통" />
-    <string id="taom_feat_dale_r_desc" text="전투 명성 10% 증가." />
-    <string id="taom_feat_dale_loy" text="작은 영토의 취약성" />
-    <string id="taom_feat_dale_loy_desc" text="정착지 충성도 하루 0.5 감소." />
-    <string id="taom_feat_khand_sts" text="초원의 전차병" />
-    <string id="taom_feat_khand_sts_desc" text="초원에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_khand_r" text="용병의 명성" />
-    <string id="taom_feat_khand_r_desc" text="전투 명성 8% 증가." />
-    <string id="taom_feat_khand_ti" text="모르도르에 바치는 공물" />
-    <string id="taom_feat_khand_ti_desc" text="관세 수입 10% 감소." />
-    <string id="taom_feat_khand_fc" text="초원의 인내" />
-    <string id="taom_feat_khand_fc_desc" text="부대 식량 소모 10% 감소." />
-    <string id="taom_feat_khand_ps" text="전차병의 기동력" />
-    <string id="taom_feat_khand_ps_desc" text="부대 규모 한도 5% 증가." />
-    <string id="taom_feat_rhun_sts" text="동부인 척후 기병" />
-    <string id="taom_feat_rhun_sts_desc" text="초원에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_rhun_ps" text="동부인 대군" />
-    <string id="taom_feat_rhun_ps_desc" text="부대 규모 한도 5% 증가." />
-    <string id="taom_feat_rhun_loy" text="동부인의 공물" />
-    <string id="taom_feat_rhun_loy_desc" text="정착지 충성도 하루 0.5 감소." />
-    <string id="taom_feat_rhun_rd" text="초원 약탈자 교리" />
-    <string id="taom_feat_rhun_rd_desc" text="약탈 피해 15% 증가." />
-    <string id="taom_feat_har_ds" text="태양의 아들들" />
-    <string id="taom_feat_har_ds_desc" text="사막에서 부대 이동 속도 10% 증가." />
-    <string id="taom_feat_har_ps" text="하라드림 전투 부대" />
-    <string id="taom_feat_har_ps_desc" text="부대 규모 한계가 5% 증가합니다." />
-    <string id="taom_feat_harad_mor" text="무마킬 조련사" />
-    <string id="taom_feat_harad_mor_desc" text="부대 사기가 5 증가합니다." />
-    <string id="taom_feat_harad_fc" text="사막의 인내" />
-    <string id="taom_feat_harad_fc_desc" text="부대 식량 소모가 15% 감소합니다." />
-    <string id="taom_feat_harad_rd" text="머나먼 하라드의 야만성" />
-    <string id="taom_feat_harad_rd_desc" text="약탈 피해가 15% 증가합니다." />
-    <string id="taom_feat_harad_aic" text="분열된 부족" />
-    <string id="taom_feat_harad_aic_desc" text="군대 모집에 영향력이 15% 더 듭니다." />
-    <string id="taom_feat_dun_pls" text="구릉의 행군자" />
-    <string id="taom_feat_dun_pls_desc" text="평원에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_feat_dun_ps" text="구릉 부족 징집병" />
-    <string id="taom_feat_dun_ps_desc" text="부대 규모 한계가 5% 증가합니다." />
-    <string id="taom_feat_dun_vr" text="구릉 부족 모병" />
-    <string id="taom_feat_dun_vr_desc" text="마을 지원병 재생성 속도가 10% 증가합니다." />
-    <string id="taom_feat_shg_ds" text="모래언덕의 방랑자" />
-    <string id="taom_feat_shg_ds_desc" text="사막에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_feat_aba_ds" text="심층 사막의 유목민" />
-    <string id="taom_feat_aba_ds_desc" text="사막에서 부대 이동 속도가 10% 증가합니다." />
-    <string id="taom_ep_no_hero" text="소지품 화면에 활성화된 영웅이 없습니다." />
-    <string id="taom_ep_save" text="새로 저장" />
-    <string id="taom_ep_save_hint" text="현재 장비를 새 프리셋으로 저장합니다." />
-    <string id="taom_ep_load" text="불러오기" />
-    <string id="taom_ep_load_hint" text="저장된 프리셋을 착용합니다." />
-    <string id="taom_ep_update" text="갱신" />
-    <string id="taom_ep_update_hint" text="저장된 프리셋을 현재 장비로 덮어씁니다." />
-    <string id="taom_ep_delete" text="삭제" />
-    <string id="taom_ep_delete_hint" text="프리셋을 제거합니다." />
-    <string id="taom_ep_title" text="장비 프리셋" />
-    <string id="taom_ep_ok" text="확인" />
-    <string id="taom_ep_cancel" text="취소" />
-    <string id="taom_ep_header" text="영웅: {HERO}  프리셋: {COUNT}/{MAX}" />
-    <string id="taom_ep_save_title" text="프리셋 저장" />
-    <string id="taom_ep_save_msg" text="이름을 입력하세요. 프리셋에는 현재 전투 및 평상복 장비와 탈것이 저장됩니다." />
-    <string id="taom_ep_select_load" text="프리셋 불러오기" />
-    <string id="taom_ep_select_update" text="프리셋 갱신" />
-    <string id="taom_ep_select_delete" text="프리셋 삭제" />
-    <string id="taom_ep_select" text="프리셋 선택" />
-    <string id="taom_ep_load_failed" text="불러오기에 실패했습니다." />
-    <string id="taom_ep_load_partial" text="{EQUIPPED}개의 장비를 불러왔습니다. 누락된 장비: {MISS_ITEMS}. 누락된 개조: {MISS_MODS}." />
-    <string id="taom_ep_load_ok" text="프리셋을 불러왔습니다 ({COUNT}개 장비)." />
-    <string id="taom_ep_updated" text="프리셋이 갱신되었습니다." />
-    <string id="taom_ep_notfound" text="프리셋을 찾을 수 없습니다." />
-    <string id="taom_ep_disabled" text="MCM에서 장비 프리셋이 비활성화되어 있습니다." />
-    <string id="taom_ep_delete_title" text="프리셋 삭제" />
-    <string id="taom_ep_delete_msg" text="이 프리셋을 정말 삭제하시겠습니까?" />
-    <string id="taom_ep_yes" text="예" />
-    <string id="taom_ep_no" text="아니오" />
-    <string id="taom_ep_deleted" text="프리셋이 삭제되었습니다." />
-    <string id="taom_ep_saved" text="프리셋 '{NAME}'이(가) 저장되었습니다." />
-    <string id="taom_ep_max" text="프리셋 최대 개수에 도달했습니다 ({MAX}). 새 프리셋을 저장하려면 하나를 삭제하십시오." />
-    <string id="taom_ep_bad_name" text="프리셋 이름은 비워 둘 수 없습니다." />
-    <string id="taom_ep_psummary" text="전투: {B}  평상복: {C}  탈것: {M}" />
-    <string id="taom_fief_hub_empty" text="영지 관리 — 소유한 영지 없음" />
-    <string id="taom_fief_hub_title" text="영지 관리 — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
-    <string id="taom_fief_kind_town" text="도시" />
-    <string id="taom_fief_kind_castle" text="성" />
-    <string id="taom_fief_hub_remote_disabled" text="원격 건설 대기열이 비활성화되었습니다 — 관리하려면 영지를 방문하십시오." />
-    <string id="taom_fief_hub_prev" text="이전 영지" />
-    <string id="taom_fief_hub_next" text="다음 영지" />
-    <string id="taom_fief_hub_manage" text="이 영지 관리" />
-    <string id="taom_fief_hub_leave" text="나가기" />
-    <string id="taom_fief_no_fiefs" text="아직 소유한 영지가 없습니다." />
-    <string id="taom_fief_nav_label" text="영지" />
-    <string id="taom_qa_title" text="빠른 작업" />
-    <string id="taom_qa_desc" text="작업을 선택하십시오." />
-    <string id="taom_qa_ok" text="확인" />
-    <string id="taom_qa_cancel" text="취소" />
-    <string id="taom_qa_confirm_title" text="확인" />
-    <string id="taom_qa_confirm_msg" text="이 일괄 작업을 적용하시겠습니까?" />
-    <string id="taom_qa_yes" text="예" />
-    <string id="taom_qa_no" text="아니오" />
-    <string id="taom_extra_fast_forward_hint" text="추가 빨리감기 (E)" />
+    <string id="taom_res_desertion" text="정예 병사 {COUNT}명이 탈영했습니다 — {RESOURCE}이(가) 고갈되었습니다!" />
+    <string id="taom_feat_erebor_gw" text="난쟁이 수비대" />
+    <string id="taom_feat_erebor_gw_desc" text="수비대 급료 25% 감소." />
+    <string id="taom_feat_erebor_p" text="난쟁이 공업" />
+    <string id="taom_feat_erebor_p_desc" text="모든 마을 생산량 10% 증가." />
+    <string id="taom_feat_erebor_cs" text="난쟁이 완벽주의" />
+    <string id="taom_feat_erebor_cs_desc" text="건설 속도 15% 감소." />
+    <string id="taom_feat_erebor_loy" text="난쟁이 명예" />
+    <string id="taom_feat_erebor_loy_desc" text="정착지 충성도 하루 1 증가." />
+    <string id="taom_feat_erebor_mor" text="난쟁이 고집" />
+    <string id="taom_feat_erebor_mor_desc" text="부대 사기 5 증가." />
+    <string id="taom_feat_erebor_sm" text="장인 대장장이" />
+    <string id="taom_feat_erebor_sm_desc" text="제련 기력 소모 30% 감소." />
+    <string id="taom_feat_erebor_ss" text="산악 민족" />
+    <string id="taom_feat_erebor_ss_desc" text="눈 지형에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_erebor_ti" text="난쟁이 검약" />
+    <string id="taom_feat_erebor_ti_desc" text="관세 수입 5% 증가." />
+    <string id="taom_feat_riv_ai" text="요정의 지혜" />
+    <string id="taom_feat_riv_ai_desc" text="군대 영향력 보상 35% 증가." />
+    <string id="taom_feat_riv_hg" text="마지막 편안한 집" />
+    <string id="taom_feat_riv_hg_desc" text="마을 화덕 성장 20% 증가." />
+    <string id="taom_feat_riv_aic" text="요정의 자긍심" />
+    <string id="taom_feat_riv_aic_desc" text="군대 소집에 영향력 25% 추가 소모." />
+    <string id="taom_feat_riv_fc" text="요정의 절약" />
+    <string id="taom_feat_riv_fc_desc" text="부대 식량 소모 15% 감소." />
+    <string id="taom_feat_riv_loy" text="요정의 지혜" />
+    <string id="taom_feat_riv_loy_desc" text="정착지 충성도 하루 0.5 증가." />
+    <string id="taom_feat_riv_fs" text="숲의 우아함" />
+    <string id="taom_feat_riv_fs_desc" text="숲에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_mrk_fs" text="어둠숲 왕국" />
+    <string id="taom_feat_mrk_fs_desc" text="숲에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_mrk_mp" text="실반 파수꾼" />
+    <string id="taom_feat_mrk_mp_desc" text="정예 민병대 등장 확률 25% 증가." />
+    <string id="taom_feat_mrk_hg" text="숲의 고립" />
+    <string id="taom_feat_mrk_hg_desc" text="마을 화덕 성장 20% 감소." />
+    <string id="taom_feat_mrk_fc" text="숲의 양식" />
+    <string id="taom_feat_mrk_fc_desc" text="부대 식량 소모 15% 감소." />
+    <string id="taom_feat_mrk_mor" text="숲의 유대" />
+    <string id="taom_feat_mrk_mor_desc" text="부대 사기 3 증가." />
+    <string id="taom_feat_mrk_aic" text="고립주의 궁정" />
+    <string id="taom_feat_mrk_aic_desc" text="군대 소집 비용의 영향력이 15% 증가합니다." />
+    <string id="taom_feat_loth_fs" text="황금 숲" />
+    <string id="taom_feat_loth_fs_desc" text="숲에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_loth_gw" text="로리엔의 파수꾼" />
+    <string id="taom_feat_loth_gw_desc" text="수비대 급여가 20% 감소합니다." />
+    <string id="taom_feat_loth_cs" text="영원의 공예" />
+    <string id="taom_feat_loth_cs_desc" text="건설 속도가 10% 감소합니다." />
+    <string id="taom_feat_loth_fc" text="렘바스 빵" />
+    <string id="taom_feat_loth_fc_desc" text="부대 식량 소모가 15% 감소합니다." />
+    <string id="taom_feat_loth_loy" text="요정의 우아함" />
+    <string id="taom_feat_loth_loy_desc" text="정착지 충성도가 하루 0.5씩 증가합니다." />
+    <string id="taom_feat_loth_mor" text="요정의 조화" />
+    <string id="taom_feat_loth_mor_desc" text="부대 사기가 3 증가합니다." />
+    <string id="taom_feat_loth_vr" text="스러지는 빛" />
+    <string id="taom_feat_loth_vr_desc" text="마을 의용병 재생성 속도가 15% 감소합니다." />
+    <string id="taom_feat_isen_cr" text="전쟁 기계" />
+    <string id="taom_feat_isen_cr_desc" text="기병 병사의 모집 및 승급 비용이 15% 감소합니다." />
+    <string id="taom_feat_isen_gw" text="오르상크 수비대" />
+    <string id="taom_feat_isen_gw_desc" text="수비대 급여가 20% 감소합니다." />
+    <string id="taom_feat_isen_dp" text="사루만의 지배" />
+    <string id="taom_feat_isen_dp_desc" text="왕국 결정으로 인한 관계 감소가 25% 증가합니다." />
+    <string id="taom_feat_isen_ps" text="우루크하이 군단" />
+    <string id="taom_feat_isen_ps_desc" text="부대 규모 한도가 20% 증가합니다." />
+    <string id="taom_feat_isen_cs" text="산업의 위력" />
+    <string id="taom_feat_isen_cs_desc" text="건설 속도가 15% 증가합니다." />
+    <string id="taom_feat_isen_sm" text="산업 대장간" />
+    <string id="taom_feat_isen_sm_desc" text="제련 기력 소모가 20% 감소합니다." />
+    <string id="taom_feat_isen_rd" text="전쟁 기계의 약탈" />
+    <string id="taom_feat_isen_rd_desc" text="약탈 피해가 20% 증가합니다." />
+    <string id="taom_feat_isen_ps2" text="강행군" />
+    <string id="taom_feat_isen_ps2_desc" text="평원에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_isen_sws" text="늪지대 훈련교관" />
+    <string id="taom_feat_isen_sws_desc" text="늪에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_isen_nctm" text="오르상크 병참관" />
+    <string id="taom_feat_isen_nctm_desc" text="도시의 상인 유지 +2." />
+    <string id="taom_feat_isen_ncta" text="산업 대장간" />
+    <string id="taom_feat_isen_ncta_desc" text="도시의 장인 유지 +1." />
+    <string id="taom_feat_isen_nctg" text="우루크하이 대장" />
+    <string id="taom_feat_isen_nctg_desc" text="도시의 조직 두목 유지 +12 (아이센가드의 유일한 도시가 주요 모병 거점이 됩니다)." />
+    <string id="taom_feat_isen_ncv" text="철의 압박" />
+    <string id="taom_feat_isen_ncv_desc" text="마을의 유력자 수가 10% 증가합니다." />
+    <string id="taom_feat_gun_aic" text="오르크 무리" />
+    <string id="taom_feat_gun_aic_desc" text="군대 소집 비용이 영향력 40% 감소합니다." />
+    <string id="taom_feat_gun_gp" text="약탈한 창고" />
+    <string id="taom_feat_gun_gp_desc" text="곡물 생산량이 15% 증가합니다." />
+    <string id="taom_feat_gun_w" text="약탈 요구" />
+    <string id="taom_feat_gun_w_desc" text="부대 급여가 10% 증가합니다." />
+    <string id="taom_feat_gun_ps" text="산악의 무리" />
+    <string id="taom_feat_gun_ps_desc" text="부대 규모 한도가 20% 증가합니다." />
+    <string id="taom_feat_gun_rd" text="오르크 약탈자" />
+    <string id="taom_feat_gun_rd_desc" text="약탈 피해가 25% 증가합니다." />
+    <string id="taom_feat_gun_ss" text="산악의 노략꾼" />
+    <string id="taom_feat_gun_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_gun_vr" text="산악의 징집병" />
+    <string id="taom_feat_gun_vr_desc" text="마을 지원병 재생성 속도가 20% 증가합니다." />
+    <string id="taom_feat_gun_ncta" text="뼈 대장장이" />
+    <string id="taom_feat_gun_ncta_desc" text="도시의 장인 유력자 +1." />
+    <string id="taom_feat_gun_nctg" text="창백한 전투단 두목" />
+    <string id="taom_feat_gun_nctg_desc" text="도시의 조직 두목 유력자 +3." />
+    <string id="taom_feat_gun_ncv" text="뼈 야영지" />
+    <string id="taom_feat_gun_ncv_desc" text="마을의 유력자 수가 10% 증가합니다." />
+    <string id="taom_feat_gob_ps" text="고블린 무리" />
+    <string id="taom_feat_gob_ps_desc" text="부대 규모 한도가 40% 증가합니다." />
+    <string id="taom_feat_gob_vr" text="끝없는 번식" />
+    <string id="taom_feat_gob_vr_desc" text="마을 지원병 재생성 속도가 25% 증가합니다." />
+    <string id="taom_feat_gob_ss" text="굴 달리기꾼" />
+    <string id="taom_feat_gob_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_gob_fc" text="굶주린 무리" />
+    <string id="taom_feat_gob_fc_desc" text="부대 식량 소비가 20% 증가합니다." />
+    <string id="taom_feat_gob_sm" text="노획 무기 더미" />
+    <string id="taom_feat_gob_sm_desc" text="제련 기력 소모가 10% 감소합니다." />
+    <string id="taom_feat_gob_rd" text="고블린 매복" />
+    <string id="taom_feat_gob_rd_desc" text="약탈 피해가 10% 증가합니다." />
+    <string id="taom_feat_mmo_aic" text="오르크 무리" />
+    <string id="taom_feat_mmo_aic_desc" text="군대 소집 비용이 영향력 40% 감소합니다." />
+    <string id="taom_feat_mmo_ps" text="산악의 군세" />
+    <string id="taom_feat_mmo_ps_desc" text="부대 규모 한도가 30% 증가합니다." />
+    <string id="taom_feat_mmo_ss" text="산악 태생" />
+    <string id="taom_feat_mmo_ss_desc" text="눈 지형에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_mmo_fc" text="굶주린 무리" />
+    <string id="taom_feat_mmo_fc_desc" text="부대 식량 소비 15% 증가." />
+    <string id="taom_feat_mmo_sm" text="약탈된 대장간" />
+    <string id="taom_feat_mmo_sm_desc" text="제련 기력 소모 15% 감소." />
+    <string id="taom_feat_mmo_rd" text="동굴 트롤 징집" />
+    <string id="taom_feat_mmo_rd_desc" text="약탈 피해 15% 증가." />
+    <string id="taom_feat_mmo_cs" text="메아리치는 전당" />
+    <string id="taom_feat_mmo_cs_desc" text="건설 속도 10% 감소." />
+    <string id="taom_feat_umb_cc" text="코르세어 교역" />
+    <string id="taom_feat_umb_cc_desc" text="대상 편성 비용 25% 감소." />
+    <string id="taom_feat_umb_r" text="코르세어의 영광" />
+    <string id="taom_feat_umb_r_desc" text="전투 명성 8% 증가." />
+    <string id="taom_feat_umb_w" text="코르세어의 탐욕" />
+    <string id="taom_feat_umb_w_desc" text="부대 급료 8% 증가." />
+    <string id="taom_feat_umb_ti" text="코르세어 교역망" />
+    <string id="taom_feat_umb_ti_desc" text="관세 수입 15% 증가." />
+    <string id="taom_feat_umb_ds" text="사막의 코르세어" />
+    <string id="taom_feat_umb_ds_desc" text="사막에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_umb_rd" text="코르세어 약탈 교리" />
+    <string id="taom_feat_umb_rd_desc" text="약탈 피해 20% 증가." />
+    <string id="taom_feat_umb_fc" text="검은 누메노르인의 인내" />
+    <string id="taom_feat_umb_fc_desc" text="부대 식량 소비 10% 감소." />
+    <string id="taom_feat_dg_aic" text="그림자의 지휘" />
+    <string id="taom_feat_dg_aic_desc" text="군대 소집에 드는 영향력 50% 감소." />
+    <string id="taom_feat_dg_mp" text="어둠의 징병" />
+    <string id="taom_feat_dg_mp_desc" text="정예 민병대 등장 확률 20% 증가." />
+    <string id="taom_feat_dg_cs" text="폐허의 공사" />
+    <string id="taom_feat_dg_cs_desc" text="건설 속도 20% 감소." />
+    <string id="taom_feat_dg_ps" text="어둠의 군단" />
+    <string id="taom_feat_dg_ps_desc" text="부대 규모 한계 20% 증가." />
+    <string id="taom_feat_dg_fc" text="게걸스러운 무리" />
+    <string id="taom_feat_dg_fc_desc" text="부대 식량 소비 10% 증가." />
+    <string id="taom_feat_dg_vr" text="어둠의 징집병" />
+    <string id="taom_feat_dg_vr_desc" text="마을 지원병 재생성 속도 20% 증가." />
+    <string id="taom_feat_dg_nctm" text="그림자 중개인" />
+    <string id="taom_feat_dg_nctm_desc" text="도시의 상인 유지 +1." />
+    <string id="taom_feat_dg_ncta" text="어둠의 대장간" />
+    <string id="taom_feat_dg_ncta_desc" text="도시의 장인 유지 +1." />
+    <string id="taom_feat_dg_nctg" text="그림자 대장들" />
+    <string id="taom_feat_dg_nctg_desc" text="도시의 조직 두목 유지 +13 (돌 굴두르의 그림자 지휘 중심지)." />
+    <string id="taom_feat_dg_ncv" text="숨겨진 오두막" />
+    <string id="taom_feat_dg_ncv_desc" text="마을의 유력자 수 10% 증가." />
+    <string id="taom_feat_gon_gw" text="탑의 수비대" />
+    <string id="taom_feat_gon_gw_desc" text="주둔군 임금 20% 감소." />
+    <string id="taom_feat_gon_ai" text="곤도르의 규율" />
+    <string id="taom_feat_gon_ai_desc" text="군대 영향력 보상 30% 증가." />
+    <string id="taom_feat_gon_hg" text="전쟁으로 피폐해진 땅" />
+    <string id="taom_feat_gon_hg_desc" text="마을 화덕 성장 15% 감소." />
+    <string id="taom_feat_gon_ps" text="상비군" />
+    <string id="taom_feat_gon_ps_desc" text="부대 규모 제한 2.5% 증가." />
+    <string id="taom_feat_gon_loy" text="탑 수비대의 규율" />
+    <string id="taom_feat_gon_loy_desc" text="정착지 충성도 하루 1 증가." />
+    <string id="taom_feat_gon_mor" text="곤도르의 결의" />
+    <string id="taom_feat_gon_mor_desc" text="부대 사기 5 증가." />
+    <string id="taom_feat_gon_ps2" text="평야의 사람들" />
+    <string id="taom_feat_gon_ps2_desc" text="평야에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_mor_aic" text="암흑의 군주의 의지" />
+    <string id="taom_feat_mor_aic_desc" text="군대 소집에 드는 영향력 60% 감소." />
+    <string id="taom_feat_mor_gp" text="누르넨 농경지" />
+    <string id="taom_feat_mor_gp_desc" text="곡물 생산량 20% 증가." />
+    <string id="taom_feat_mor_w" text="암흑의 공물" />
+    <string id="taom_feat_mor_w_desc" text="부대 임금 20% 증가." />
+    <string id="taom_feat_mor_ps" text="사우론의 무리" />
+    <string id="taom_feat_mor_ps_desc" text="부대 규모 제한 10% 증가." />
+    <string id="taom_feat_mor_rd" text="사우론의 진노" />
+    <string id="taom_feat_mor_rd_desc" text="약탈 피해 25% 증가." />
+    <string id="taom_feat_mor_pls" text="그림자의 행군" />
+    <string id="taom_feat_mor_pls_desc" text="평야에서 부대 이동 속도 5% 증가." />
+    <string id="taom_feat_mor_sws" text="죽음늪" />
+    <string id="taom_feat_mor_sws_desc" text="늪지에서 부대 이동 속도 5% 증가." />
+    <string id="taom_feat_mor_ns" text="어둠의 피조물" />
+    <string id="taom_feat_mor_ns_desc" text="야간에 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_mor_vr" text="사우론의 징집" />
+    <string id="taom_feat_mor_vr_desc" text="마을 지원병 재생성 속도 20% 증가." />
+    <string id="taom_feat_mord_sm" text="암흑의 대장기술" />
+    <string id="taom_feat_mord_sm_desc" text="제련 기력 소모 15% 감소." />
+    <string id="taom_feat_mor_nctg" text="암흑어 전령" />
+    <string id="taom_feat_mor_nctg_desc" text="도시의 조직 두목 유력자 +2." />
+    <string id="taom_feat_mor_ncv" text="노예 감독관" />
+    <string id="taom_feat_mor_ncv_desc" text="마을의 유력자 수 5% 증가." />
+    <string id="taom_feat_roh_mc" text="기마군주의 혈통" />
+    <string id="taom_feat_roh_mc_desc" text="기병 병력 모집 및 승급 비용 15% 감소." />
+    <string id="taom_feat_roh_mw" text="마크의 기사들" />
+    <string id="taom_feat_roh_mw_desc" text="기병 병력 임금 15% 감소." />
+    <string id="taom_feat_roh_is" text="기병 의존" />
+    <string id="taom_feat_roh_is_desc" text="부대 대부분이 보병일 경우 부대 속도 10% 감소." />
+    <string id="taom_feat_roh_loy" text="기마군주의 결속" />
+    <string id="taom_feat_roh_loy_desc" text="정착지 충성도 하루 0.5 증가." />
+    <string id="taom_feat_roh_mor" text="기사들의 기백" />
+    <string id="taom_feat_roh_mor_desc" text="부대 사기 5 증가." />
+    <string id="taom_feat_roh_pls" text="평원의 기사들" />
+    <string id="taom_feat_roh_pls_desc" text="평원에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_dale_pls" text="골짜기의 상인들" />
+    <string id="taom_feat_dale_pls_desc" text="평원에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_dale_ti" text="난쟁이 교역 동맹" />
+    <string id="taom_feat_dale_ti_desc" text="관세 수입 10% 증가." />
+    <string id="taom_feat_dale_r" text="검은 화살의 전통" />
+    <string id="taom_feat_dale_r_desc" text="전투 명성 10% 증가." />
+    <string id="taom_feat_dale_loy" text="작은 영토의 취약성" />
+    <string id="taom_feat_dale_loy_desc" text="정착지 충성도 하루 0.5 감소." />
+    <string id="taom_feat_khand_sts" text="초원의 전차병" />
+    <string id="taom_feat_khand_sts_desc" text="초원에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_khand_r" text="용병의 명성" />
+    <string id="taom_feat_khand_r_desc" text="전투 명성 8% 증가." />
+    <string id="taom_feat_khand_ti" text="모르도르에 바치는 공물" />
+    <string id="taom_feat_khand_ti_desc" text="관세 수입 10% 감소." />
+    <string id="taom_feat_khand_fc" text="초원의 인내" />
+    <string id="taom_feat_khand_fc_desc" text="부대 식량 소모 10% 감소." />
+    <string id="taom_feat_khand_ps" text="전차병의 기동력" />
+    <string id="taom_feat_khand_ps_desc" text="부대 규모 한도 5% 증가." />
+    <string id="taom_feat_rhun_sts" text="동부인 척후 기병" />
+    <string id="taom_feat_rhun_sts_desc" text="초원에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_rhun_ps" text="동부인 대군" />
+    <string id="taom_feat_rhun_ps_desc" text="부대 규모 한도 5% 증가." />
+    <string id="taom_feat_rhun_loy" text="동부인의 공물" />
+    <string id="taom_feat_rhun_loy_desc" text="정착지 충성도 하루 0.5 감소." />
+    <string id="taom_feat_rhun_rd" text="초원 약탈자 교리" />
+    <string id="taom_feat_rhun_rd_desc" text="약탈 피해 15% 증가." />
+    <string id="taom_feat_har_ds" text="태양의 아들들" />
+    <string id="taom_feat_har_ds_desc" text="사막에서 부대 이동 속도 10% 증가." />
+    <string id="taom_feat_har_ps" text="하라드림 전투 부대" />
+    <string id="taom_feat_har_ps_desc" text="부대 규모 한계가 5% 증가합니다." />
+    <string id="taom_feat_harad_mor" text="무마킬 조련사" />
+    <string id="taom_feat_harad_mor_desc" text="부대 사기가 5 증가합니다." />
+    <string id="taom_feat_harad_fc" text="사막의 인내" />
+    <string id="taom_feat_harad_fc_desc" text="부대 식량 소모가 15% 감소합니다." />
+    <string id="taom_feat_harad_rd" text="머나먼 하라드의 야만성" />
+    <string id="taom_feat_harad_rd_desc" text="약탈 피해가 15% 증가합니다." />
+    <string id="taom_feat_harad_aic" text="분열된 부족" />
+    <string id="taom_feat_harad_aic_desc" text="군대 모집에 영향력이 15% 더 듭니다." />
+    <string id="taom_feat_dun_pls" text="구릉의 행군자" />
+    <string id="taom_feat_dun_pls_desc" text="평원에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_dun_ps" text="구릉 부족 징집병" />
+    <string id="taom_feat_dun_ps_desc" text="부대 규모 한계가 5% 증가합니다." />
+    <string id="taom_feat_dun_vr" text="구릉 부족 모병" />
+    <string id="taom_feat_dun_vr_desc" text="마을 지원병 재생성 속도가 10% 증가합니다." />
+    <string id="taom_feat_shg_ds" text="모래언덕의 방랑자" />
+    <string id="taom_feat_shg_ds_desc" text="사막에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_feat_aba_ds" text="심층 사막의 유목민" />
+    <string id="taom_feat_aba_ds_desc" text="사막에서 부대 이동 속도가 10% 증가합니다." />
+    <string id="taom_ep_no_hero" text="소지품 화면에 활성화된 영웅이 없습니다." />
+    <string id="taom_ep_save" text="새로 저장" />
+    <string id="taom_ep_save_hint" text="현재 장비를 새 프리셋으로 저장합니다." />
+    <string id="taom_ep_load" text="불러오기" />
+    <string id="taom_ep_load_hint" text="저장된 프리셋을 착용합니다." />
+    <string id="taom_ep_update" text="갱신" />
+    <string id="taom_ep_update_hint" text="저장된 프리셋을 현재 장비로 덮어씁니다." />
+    <string id="taom_ep_delete" text="삭제" />
+    <string id="taom_ep_delete_hint" text="프리셋을 제거합니다." />
+    <string id="taom_ep_title" text="장비 프리셋" />
+    <string id="taom_ep_ok" text="확인" />
+    <string id="taom_ep_cancel" text="취소" />
+    <string id="taom_ep_header" text="영웅: {HERO}  프리셋: {COUNT}/{MAX}" />
+    <string id="taom_ep_save_title" text="프리셋 저장" />
+    <string id="taom_ep_save_msg" text="이름을 입력하세요. 프리셋에는 현재 전투 및 평상복 장비와 탈것이 저장됩니다." />
+    <string id="taom_ep_select_load" text="프리셋 불러오기" />
+    <string id="taom_ep_select_update" text="프리셋 갱신" />
+    <string id="taom_ep_select_delete" text="프리셋 삭제" />
+    <string id="taom_ep_select" text="프리셋 선택" />
+    <string id="taom_ep_load_failed" text="불러오기에 실패했습니다." />
+    <string id="taom_ep_load_partial" text="{EQUIPPED}개의 장비를 불러왔습니다. 누락된 장비: {MISS_ITEMS}. 누락된 개조: {MISS_MODS}." />
+    <string id="taom_ep_load_ok" text="프리셋을 불러왔습니다 ({COUNT}개 장비)." />
+    <string id="taom_ep_updated" text="프리셋이 갱신되었습니다." />
+    <string id="taom_ep_notfound" text="프리셋을 찾을 수 없습니다." />
+    <string id="taom_ep_disabled" text="MCM에서 장비 프리셋이 비활성화되어 있습니다." />
+    <string id="taom_ep_delete_title" text="프리셋 삭제" />
+    <string id="taom_ep_delete_msg" text="이 프리셋을 정말 삭제하시겠습니까?" />
+    <string id="taom_ep_yes" text="예" />
+    <string id="taom_ep_no" text="아니오" />
+    <string id="taom_ep_deleted" text="프리셋이 삭제되었습니다." />
+    <string id="taom_ep_saved" text="프리셋 '{NAME}'이(가) 저장되었습니다." />
+    <string id="taom_ep_max" text="프리셋 최대 개수에 도달했습니다 ({MAX}). 새 프리셋을 저장하려면 하나를 삭제하십시오." />
+    <string id="taom_ep_bad_name" text="프리셋 이름은 비워 둘 수 없습니다." />
+    <string id="taom_ep_psummary" text="전투: {B}  평상복: {C}  탈것: {M}" />
+    <string id="taom_fief_hub_empty" text="영지 관리 — 소유한 영지 없음" />
+    <string id="taom_fief_hub_title" text="영지 관리 — {NAME} ({KIND}) [{INDEX}/{COUNT}]" />
+    <string id="taom_fief_kind_town" text="도시" />
+    <string id="taom_fief_kind_castle" text="성" />
+    <string id="taom_fief_hub_remote_disabled" text="원격 건설 대기열이 비활성화되었습니다 — 관리하려면 영지를 방문하십시오." />
+    <string id="taom_fief_hub_prev" text="이전 영지" />
+    <string id="taom_fief_hub_next" text="다음 영지" />
+    <string id="taom_fief_hub_manage" text="이 영지 관리" />
+    <string id="taom_fief_hub_leave" text="나가기" />
+    <string id="taom_fief_no_fiefs" text="아직 소유한 영지가 없습니다." />
+    <string id="taom_fief_nav_label" text="영지" />
+    <string id="taom_qa_title" text="빠른 작업" />
+    <string id="taom_qa_desc" text="작업을 선택하십시오." />
+    <string id="taom_qa_ok" text="확인" />
+    <string id="taom_qa_cancel" text="취소" />
+    <string id="taom_qa_confirm_title" text="확인" />
+    <string id="taom_qa_confirm_msg" text="이 일괄 작업을 적용하시겠습니까?" />
+    <string id="taom_qa_yes" text="예" />
+    <string id="taom_qa_no" text="아니오" />
+    <string id="taom_extra_fast_forward_hint" text="추가 빨리감기 (E)" />
+    <string id="taom_str_faction_official.lindon" text="a loremaster of Lindon" />
+    <string id="taom_str_faction_official.lindon_f" text="a healer of Lindon" />
+    <string id="taom_str_faction_ruler.lindon" text="Lord" />
+    <string id="taom_str_faction_ruler.lindon_f" text="Lady" />
+    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lindon" text="Lindonian" />
+    <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
+    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Grey Havens" />
+    <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
+    <string id="taom_str_neutral_term_for_culture.lindon" text="Elves of Lindon" />
+    <string id="taom_str_culture_description.lindon" text="Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
+    <string id="taom_str_culture_rich_name.lindon" text="Falathrim" />
+    <string id="taom_str_adjective_for_culture.lindon" text="Lindonian" />
+    <string id="taom_str_player_father_name.lindon" text="Celeforn" />
+    <string id="taom_str_player_mother_name.lindon" text="Gilrien" />
+    <string id="taom_str_faction_official.bluecraig" text="a chieftain of Blue Craig" />
+    <string id="taom_str_faction_official.bluecraig_f" text="a chieftainess of Blue Craig" />
+    <string id="taom_str_faction_ruler.bluecraig" text="Warlord" />
+    <string id="taom_str_faction_ruler.bluecraig_f" text="Lady Warlord" />
+    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="the Warlord, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Warlord {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
+    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
+    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins of Blue Craig" />
+    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />
+    <string id="taom_str_culture_description.bluecraig" text="The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
+    <string id="taom_str_culture_rich_name.bluecraig" text="Goblins" />
+    <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
+    <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
   </strings>
 </base>

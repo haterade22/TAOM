@@ -1740,17 +1740,17 @@
 	<string id="taom_faction_havens_of_umbar_weakness_1" text="{=taom_faction_havens_of_umbar_weakness_1}Hated by Gondor" />
 	<string id="taom_faction_havens_of_umbar_weakness_2" text="{=taom_faction_havens_of_umbar_weakness_2}Land army weaker than navy" />
 	<string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="{=taom_faction_high_kingdom_of_lindon_bonus_0}+35% army influence award (Elven Wisdom)" />
-	<string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="{=taom_faction_high_kingdom_of_lindon_bonus_1}+20% village hearth growth (The Last Homely House)" />
+	<string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="{=taom_faction_high_kingdom_of_lindon_bonus_1}+20% village hearth growth (The Grey Havens)" />
 	<string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="{=taom_faction_high_kingdom_of_lindon_bonus_2}+10% party speed in forest (Woodland Grace)" />
 	<string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="{=taom_faction_high_kingdom_of_lindon_bonus_3}-15% party food consumption (Elven Frugality)" />
 	<string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="{=taom_faction_high_kingdom_of_lindon_bonus_4}+0.5 settlement loyalty per day" />
 	<string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="{=taom_faction_high_kingdom_of_lindon_bonus_5}+25% army influence cost (Elven Pride)" />
-	<string id="taom_faction_high_kingdom_of_lindon_desc" text="{=taom_faction_high_kingdom_of_lindon_desc}The green land west of the Blue Mountains, last realm of the High Elves on the shores of Middle-earth. From the Grey Havens of Mithlond the white ships sail into the West. Círdan the Shipwright, eldest of the Eldar, keeps the fading light of the Noldor — wise, few, and each blade irreplaceable. Lindon shares the Noldor strength of Imladris." />
+	<string id="taom_faction_high_kingdom_of_lindon_desc" text="{=taom_faction_high_kingdom_of_lindon_desc}The green land west of the Blue Mountains, last realm of the High Elves on the shores of Middle-earth. From the Grey Havens of Mithlond the white ships sail into the West. Círdan the Shipwright, eldest of the Eldar, keeps the fading light of the Falathrim — wise, few, and each blade irreplaceable. Lindon shares the Falathrim strength of Mithlond." />
 	<string id="taom_faction_high_kingdom_of_lindon_name" text="{=taom_faction_high_kingdom_of_lindon_name}High Kingdom of Lindon" />
 	<string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="{=taom_faction_high_kingdom_of_lindon_perk_0_desc}+35% influence awarded on army success — the Wise know how to lead." />
 	<string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="{=taom_faction_high_kingdom_of_lindon_perk_0_name}Elven Wisdom" />
 	<string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="{=taom_faction_high_kingdom_of_lindon_perk_1_desc}+20% village hearth growth and -15% party food consumption." />
-	<string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="{=taom_faction_high_kingdom_of_lindon_perk_1_name}The Last Homely House" />
+	<string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="{=taom_faction_high_kingdom_of_lindon_perk_1_name}The Grey Havens" />
 	<string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="{=taom_faction_high_kingdom_of_lindon_perk_2_desc}+10% party speed in forest and +0.5 settlement loyalty per day." />
 	<string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="{=taom_faction_high_kingdom_of_lindon_perk_2_name}Woodland Grace" />
 	<string id="taom_faction_high_kingdom_of_lindon_strength_0" text="{=taom_faction_high_kingdom_of_lindon_strength_0}Elite warriors of legend" />
@@ -1758,10 +1758,10 @@
 	<string id="taom_faction_high_kingdom_of_lindon_strength_2" text="{=taom_faction_high_kingdom_of_lindon_strength_2}Frugal, self-sufficient hosts" />
 	<string id="taom_faction_high_kingdom_of_lindon_strength_3" text="{=taom_faction_high_kingdom_of_lindon_strength_3}Hearth-rich, loyal havens" />
 	<string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="{=taom_faction_high_kingdom_of_lindon_su_0_desc}Legendary first-age veteran of the Eldar." />
-	<string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="{=taom_faction_high_kingdom_of_lindon_su_0_name}Noldor Blade-master" />
+	<string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="{=taom_faction_high_kingdom_of_lindon_su_0_name}Falathrim Blade-master" />
 	<string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="{=taom_faction_high_kingdom_of_lindon_su_1_desc}Sea-elf guardian of the Havens." />
 	<string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="{=taom_faction_high_kingdom_of_lindon_su_1_name}Falathrim Mariner-warden" />
-	<string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="{=taom_faction_high_kingdom_of_lindon_su_2_desc}Heavy Noldor guardian of the Grey Havens." />
+	<string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="{=taom_faction_high_kingdom_of_lindon_su_2_desc}Heavy Falathrim guardian of the Grey Havens." />
 	<string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="{=taom_faction_high_kingdom_of_lindon_su_2_name}Mithlond Sentinel" />
 	<string id="taom_faction_high_kingdom_of_lindon_trait_0" text="{=taom_faction_high_kingdom_of_lindon_trait_0}Círdan the Shipwright" />
 	<string id="taom_faction_high_kingdom_of_lindon_trait_1" text="{=taom_faction_high_kingdom_of_lindon_trait_1}The Grey Havens" />
@@ -2644,4 +2644,44 @@
 	<string id="taom_extra_fast_forward_hint" text="{=taom_extra_fast_forward_hint}Extra Fast Forward (E)" />
 
 
+  <!-- TAOM-NEWCULTURE:lindon:BEGIN -->
+  <string id="str_faction_official.lindon" text="{=taom_str_faction_official.lindon}a loremaster of Lindon" />
+  <string id="str_faction_official.lindon_f" text="{=taom_str_faction_official.lindon_f}a healer of Lindon" />
+  <string id="str_faction_ruler.lindon" text="{=taom_str_faction_ruler.lindon}Lord" />
+  <string id="str_faction_ruler.lindon_f" text="{=taom_str_faction_ruler.lindon_f}Lady" />
+  <string id="str_faction_ruler_term_in_speech.lindon" text="{=taom_str_faction_ruler_term_in_speech.lindon}{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
+  <string id="str_faction_ruler_name_with_title.lindon" text="{=taom_str_faction_ruler_name_with_title.lindon}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+  <string id="str_faction_noble_name_with_title.lindon" text="{=taom_str_faction_noble_name_with_title.lindon}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+  <string id="str_adjective_for_faction.lindon" text="{=taom_str_adjective_for_faction.lindon}Lindonian" />
+  <string id="str_short_term_for_faction.lindon" text="{=taom_str_short_term_for_faction.lindon}Elf" />
+  <string id="str_faction_formal_name_for_culture.lindon" text="{=taom_str_faction_formal_name_for_culture.lindon}Grey Havens" />
+  <string id="str_faction_informal_name_for_culture.lindon" text="{=taom_str_faction_informal_name_for_culture.lindon}Lindon" />
+  <string id="str_neutral_term_for_culture.lindon" text="{=taom_str_neutral_term_for_culture.lindon}Elves of Lindon" />
+  <string id="str_culture_description.lindon" text="{=taom_str_culture_description.lindon}Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
+  <string id="str_culture_rich_name.lindon" text="{=taom_str_culture_rich_name.lindon}Falathrim" />
+  <string id="str_adjective_for_culture.lindon" text="{=taom_str_adjective_for_culture.lindon}Lindonian" />
+  <string id="str_player_father_name.lindon" text="{=taom_str_player_father_name.lindon}Celeforn" />
+  <string id="str_player_mother_name.lindon" text="{=taom_str_player_mother_name.lindon}Gilrien" />
+
+  <!-- TAOM-NEWCULTURE:lindon:END -->
+  <!-- TAOM-NEWCULTURE:bluecraig:BEGIN -->
+  <string id="str_faction_official.bluecraig" text="{=taom_str_faction_official.bluecraig}a chieftain of Blue Craig" />
+  <string id="str_faction_official.bluecraig_f" text="{=taom_str_faction_official.bluecraig_f}a chieftainess of Blue Craig" />
+  <string id="str_faction_ruler.bluecraig" text="{=taom_str_faction_ruler.bluecraig}Warlord" />
+  <string id="str_faction_ruler.bluecraig_f" text="{=taom_str_faction_ruler.bluecraig_f}Lady Warlord" />
+  <string id="str_faction_ruler_term_in_speech.bluecraig" text="{=taom_str_faction_ruler_term_in_speech.bluecraig}the Warlord, {RULER.NAME}" />
+  <string id="str_faction_ruler_name_with_title.bluecraig" text="{=taom_str_faction_ruler_name_with_title.bluecraig}Warlord {RULER.NAME}" />
+  <string id="str_faction_noble_name_with_title.bluecraig" text="{=taom_str_faction_noble_name_with_title.bluecraig}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+  <string id="str_adjective_for_faction.bluecraig" text="{=taom_str_adjective_for_faction.bluecraig}Goblin" />
+  <string id="str_short_term_for_faction.bluecraig" text="{=taom_str_short_term_for_faction.bluecraig}Goblin" />
+  <string id="str_faction_formal_name_for_culture.bluecraig" text="{=taom_str_faction_formal_name_for_culture.bluecraig}Goblins of Blue Craig" />
+  <string id="str_faction_informal_name_for_culture.bluecraig" text="{=taom_str_faction_informal_name_for_culture.bluecraig}Goblin" />
+  <string id="str_neutral_term_for_culture.bluecraig" text="{=taom_str_neutral_term_for_culture.bluecraig}Goblins" />
+  <string id="str_culture_description.bluecraig" text="{=taom_str_culture_description.bluecraig}The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
+  <string id="str_culture_rich_name.bluecraig" text="{=taom_str_culture_rich_name.bluecraig}Goblins" />
+  <string id="str_adjective_for_culture.bluecraig" text="{=taom_str_adjective_for_culture.bluecraig}Goblin" />
+  <string id="str_player_father_name.bluecraig" text="{=taom_str_player_father_name.bluecraig}Narzuk" />
+  <string id="str_player_mother_name.bluecraig" text="{=taom_str_player_mother_name.bluecraig}Borlia" />
+
+  <!-- TAOM-NEWCULTURE:bluecraig:END -->
 </strings>

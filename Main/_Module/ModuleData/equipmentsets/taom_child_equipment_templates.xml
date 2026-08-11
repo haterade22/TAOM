@@ -795,4 +795,142 @@
 	</EquipmentRoster>
 
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
+  <!-- TAOM-NEWCULTURE:lindon:BEGIN -->
+	<EquipmentRoster id="child_template_lindon_noble_male" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lindon_noble_female" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lindon_townsman_male" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lindon_townsman_female" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lindon_villager_male" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_lindon_villager_female" culture="Culture.lindon">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:lindon:END -->
+  <!-- TAOM-NEWCULTURE:bluecraig:BEGIN -->
+	<EquipmentRoster id="child_template_bluecraig_noble_male" culture="Culture.bluecraig">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_bluecraig_noble_female" culture="Culture.bluecraig">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_bluecraig_townsman_male" culture="Culture.bluecraig">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_bluecraig_townsman_female" culture="Culture.bluecraig">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_bluecraig_villager_male" culture="Culture.bluecraig">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_bluecraig_villager_female" culture="Culture.bluecraig">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:bluecraig:END -->
 </EquipmentRosters>

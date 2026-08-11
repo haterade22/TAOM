@@ -27,6 +27,6 @@
     <string id="taom_emissary_no_resource" text="Bu yerleşimde elçi ticareti bulunmuyor." />
     <string id="taom_emissary_no_offers" text="Elçinin şu anda sunabileceği seçkin birlik yok." />
     <string id="taom_emissary_failed" text="Elçi anlaşmayı tamamlayamadı." />
-    <string id="taom_emissary_coop_guest" text="Elçi yalnızca bu seferin ev sahibiyle görüşür." />
+    <string id="taom_emissary_coop_guest" text="Elçi yalnızca bu seferin ev sahibiyle görüşür." />
   </strings>
 </base>

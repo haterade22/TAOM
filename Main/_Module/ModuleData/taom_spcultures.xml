@@ -4920,4 +4920,674 @@
   </Culture>
 
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
+  <!-- TAOM-NEWCULTURE:lindon:BEGIN -->
+  <Culture
+    id="lindon"
+    name="{=aom_lindon_name}Falathrim Elves"
+    is_main_culture="true"
+    color="0xFF50A090"
+    color2="0xFF7FC4B4"
+    elite_basic_troop="NPCCharacter.lindon_imladris_infantry"
+    basic_troop="NPCCharacter.lindon_imladris_recruit"
+    melee_militia_troop="NPCCharacter.lindon_militia_spearman"
+    ranged_militia_troop="NPCCharacter.lindon_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.lindon_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.lindon_militia_veteran_archer"
+    can_have_settlement="true"
+    villager_party_template="PartyTemplate.villager_lindon_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_lindon_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_lindon_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_lindon_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_lindon_template_level_3"
+    militia_party_template="PartyTemplate.militia_lindon_template"
+    rebels_party_template="PartyTemplate.rebels_lindon_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_lindon"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_empire"
+    faction_banner_key="11.4.124.4345.4345.764.764.1.0.0.163.0.5.512.512.764.764.1.0.0"
+    text="{=aom_lindon_desc}The Falathrim of Lindon are the last of the Sindar shipwrights, dwelling at Mithlond where the Gulf of Lune meets the sea. Círdan has kept the Grey Havens since the First Age, and it is from his quays that the white ships pass into the West."
+    tournament_master="NPCCharacter.tournament_master_lindon"
+    villager="NPCCharacter.villager_lindon"
+    caravan_master="NPCCharacter.caravan_master_lindon"
+    caravan_guard="NPCCharacter.caravan_guard_lindon"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_lindon"
+    prison_guard="NPCCharacter.prison_guard_lindon"
+    guard="NPCCharacter.guard_lindon"
+    blacksmith="NPCCharacter.blacksmith_lindon"
+    weaponsmith="NPCCharacter.weaponsmith_lindon"
+    townswoman="NPCCharacter.townswoman_lindon"
+    townswoman_infant="NPCCharacter.townswoman_infant_lindon"
+    townswoman_child="NPCCharacter.townswoman_child_lindon"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_lindon"
+    townsman="NPCCharacter.townsman_lindon"
+    townsman_infant="NPCCharacter.townsman_infant_lindon"
+    townsman_child="NPCCharacter.townsman_child_lindon"
+    village_woman="NPCCharacter.village_woman_lindon"
+    villager_male_child="NPCCharacter.villager_child_lindon"
+    villager_male_teenager="NPCCharacter.villager_teenager_lindon"
+    villager_female_child="NPCCharacter.village_woman_child_lindon"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_lindon"
+    townsman_teenager="NPCCharacter.townsman_teenager_lindon"
+    ransom_broker="NPCCharacter.ransom_broker_lindon"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_lindon"
+    merchant_notary="NPCCharacter.spc_notable_lindon_0"
+    artisan_notary="NPCCharacter.spc_notable_lindon_8"
+    preacher_notary="NPCCharacter.spc_notable_lindon_5"
+    rural_notable_notary="NPCCharacter.spc_notable_lindon_21"
+    shop_worker="NPCCharacter.shop_worker_lindon"
+    tavernkeeper="NPCCharacter.tavernkeeper_lindon"
+    taverngamehost="NPCCharacter.taverngamehost_lindon"
+    musician="NPCCharacter.musician_lindon"
+    tavern_wench="NPCCharacter.tavern_wench_lindon"
+    armorer="NPCCharacter.armorer_lindon"
+    horseMerchant="NPCCharacter.horseMerchant_lindon"
+    barber="NPCCharacter.barber_lindon"
+    merchant="NPCCharacter.merchant_lindon"
+    beggar="NPCCharacter.beggar_lindon"
+    female_beggar="NPCCharacter.female_beggar_lindon"
+    female_dancer="NPCCharacter.female_dancer_lindon"
+    default_battle_equipment_roster="EquipmentRoster.lindon_bat_template_medium_a"
+    default_civilian_equipment_roster="EquipmentRoster.lindon_civ_template_default_a"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
+    duel_preset_equipment_roster="EquipmentRoster.emp_duel_preset_template"
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Tablut"
+    default_character_creation_body_property="BodyProperty.fighter_rivendell"
+    start_point_position_x="300.109"
+    start_point_position_y="1113.782">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_lindon" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_lindon" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
+    <vassal_reward_items>
+      <item id="Item.wm_rivendell_sword_a01" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.wm_rivendell_sword_a01" />
+      <item id="Item.wm_rivendell_sword_a01_silver" />
+      <item id="Item.wm_rivendell_sword_a02" />
+      <item id="Item.wm_rivendell_sword_a01_black" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_senate" />
+    </default_policies>
+    <male_names>
+      <name name="{=aom_lindon_male_name_1}Calenion" />
+      <name name="{=aom_lindon_male_name_2}Erelion" />
+      <name name="{=aom_lindon_male_name_3}Amarion" />
+      <name name="{=aom_lindon_male_name_4}Nolindir" />
+      <name name="{=aom_lindon_male_name_5}Thalion" />
+      <name name="{=aom_lindon_male_name_6}Salmar" />
+      <name name="{=aom_lindon_male_name_7}Saranion" />
+      <name name="{=aom_lindon_male_name_8}Ithralion" />
+      <name name="{=aom_lindon_male_name_9}Valendil" />
+      <name name="{=aom_lindon_male_name_10}Orodin" />
+      <name name="{=aom_lindon_male_name_11}Aeglir" />
+      <name name="{=aom_lindon_male_name_12}Ethirion" />
+      <name name="{=aom_lindon_male_name_13}Anarion" />
+      <name name="{=aom_lindon_male_name_14}Celethir" />
+      <name name="{=aom_lindon_male_name_15}Falinor" />
+      <name name="{=aom_lindon_male_name_16}Elrodir" />
+      <name name="{=aom_lindon_male_name_17}Aradion" />
+      <name name="{=aom_lindon_male_name_18}Vorendil" />
+      <name name="{=aom_lindon_male_name_19}Melianar" />
+      <name name="{=aom_lindon_male_name_20}Tathrin" />
+      <name name="{=aom_lindon_male_name_21}Galion" />
+      <name name="{=aom_lindon_male_name_22}Eledir" />
+      <name name="{=aom_lindon_male_name_23}Mardil" />
+      <name name="{=aom_lindon_male_name_24}Silonar" />
+      <name name="{=aom_lindon_male_name_25}Nimlothon" />
+      <name name="{=aom_lindon_male_name_26}Ciryandir" />
+      <name name="{=aom_lindon_male_name_27}Arthon" />
+      <name name="{=aom_lindon_male_name_28}Elmirion" />
+      <name name="{=aom_lindon_male_name_29}Caradion" />
+      <name name="{=aom_lindon_male_name_30}Fingalor" />
+      <name name="{=aom_lindon_male_name_31}Erendur" />
+      <name name="{=aom_lindon_male_name_32}Tirion" />
+      <name name="{=aom_lindon_male_name_33}Velandor" />
+      <name name="{=aom_lindon_male_name_34}Alathion" />
+      <name name="{=aom_lindon_male_name_35}Minrandir" />
+      <name name="{=aom_lindon_male_name_36}Galdorion" />
+      <name name="{=aom_lindon_male_name_37}Lothanor" />
+      <name name="{=aom_lindon_male_name_38}Tirandir" />
+      <name name="{=aom_lindon_male_name_39}Ereglin" />
+      <name name="{=aom_lindon_male_name_40}Thaladir" />
+      <name name="{=aom_lindon_male_name_41}Anarindor" />
+      <name name="{=aom_lindon_male_name_42}Calinor" />
+      <name name="{=aom_lindon_male_name_43}Suilon" />
+      <name name="{=aom_lindon_male_name_44}Elarion" />
+      <name name="{=aom_lindon_male_name_45}Rilion" />
+      <name name="{=aom_lindon_male_name_46}Thalorin" />
+      <name name="{=aom_lindon_male_name_47}Velanor" />
+      <name name="{=aom_lindon_male_name_48}Cathanor" />
+      <name name="{=aom_lindon_male_name_49}Aranion" />
+      <name name="{=aom_lindon_male_name_50}Lathion" />
+      <name name="{=aom_lindon_male_name_51}Falathar" />
+      <name name="{=aom_lindon_male_name_52}Aerandir" />
+      <name name="{=aom_lindon_male_name_53}Erellont" />
+      <name name="{=aom_lindon_male_name_54}Belegon" />
+      <name name="{=aom_lindon_male_name_55}Nimros" />
+      <name name="{=aom_lindon_male_name_56}Salmar" />
+      <name name="{=aom_lindon_male_name_57}Elmoth" />
+      <name name="{=aom_lindon_male_name_58}Nowe" />
+      <name name="{=aom_lindon_male_name_59}Falathar" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_lindon_female_name_1}Anariel" />
+      <name name="{=aom_lindon_female_name_2}Elenna" />
+      <name name="{=aom_lindon_female_name_3}Calenwen" />
+      <name name="{=aom_lindon_female_name_4}Nimrielle" />
+      <name name="{=aom_lindon_female_name_5}Tathriel" />
+      <name name="{=aom_lindon_female_name_6}Amariel" />
+      <name name="{=aom_lindon_female_name_7}Valwen" />
+      <name name="{=aom_lindon_female_name_8}Elariel" />
+      <name name="{=aom_lindon_female_name_9}Lothiriel" />
+      <name name="{=aom_lindon_female_name_10}Silwen" />
+      <name name="{=aom_lindon_female_name_11}Ithrelle" />
+      <name name="{=aom_lindon_female_name_12}Galadwen" />
+      <name name="{=aom_lindon_female_name_13}Melinna" />
+      <name name="{=aom_lindon_female_name_14}Suilwen" />
+      <name name="{=aom_lindon_female_name_15}Calyndra" />
+      <name name="{=aom_lindon_female_name_16}Ardien" />
+      <name name="{=aom_lindon_female_name_17}Velindra" />
+      <name name="{=aom_lindon_female_name_18}Ethiriel" />
+      <name name="{=aom_lindon_female_name_19}Thaliel" />
+      <name name="{=aom_lindon_female_name_20}Caraniel" />
+      <name name="{=aom_lindon_female_name_21}Minlothwen" />
+      <name name="{=aom_lindon_female_name_22}Aeliriel" />
+      <name name="{=aom_lindon_female_name_23}Falinwen" />
+      <name name="{=aom_lindon_female_name_24}Tiriel" />
+      <name name="{=aom_lindon_female_name_25}Idriel" />
+      <name name="{=aom_lindon_female_name_26}Elvanna" />
+      <name name="{=aom_lindon_female_name_27}Ciryawen" />
+      <name name="{=aom_lindon_female_name_28}Lindalwen" />
+      <name name="{=aom_lindon_female_name_29}Erethiel" />
+      <name name="{=aom_lindon_female_name_30}Silmariel" />
+      <name name="{=aom_lindon_female_name_31}Galadien" />
+      <name name="{=aom_lindon_female_name_32}Aelinor" />
+      <name name="{=aom_lindon_female_name_33}Thalwin" />
+      <name name="{=aom_lindon_female_name_34}Ethirwen" />
+      <name name="{=aom_lindon_female_name_35}Nimlothiel" />
+      <name name="{=aom_lindon_female_name_36}Suilenna" />
+      <name name="{=aom_lindon_female_name_37}Nolwin" />
+      <name name="{=aom_lindon_female_name_38}Tathwen" />
+      <name name="{=aom_lindon_female_name_39}Calindriel" />
+      <name name="{=aom_lindon_female_name_40}Ithriel" />
+      <name name="{=aom_lindon_female_name_41}Velwen" />
+      <name name="{=aom_lindon_female_name_42}Aelinna" />
+      <name name="{=aom_lindon_female_name_43}Faliniel" />
+      <name name="{=aom_lindon_female_name_44}Erelle" />
+      <name name="{=aom_lindon_female_name_45}Cariel" />
+      <name name="{=aom_lindon_female_name_46}Lothanna" />
+      <name name="{=aom_lindon_female_name_47}Elarielle" />
+      <name name="{=aom_lindon_female_name_48}Galwynn" />
+      <name name="{=aom_lindon_female_name_49}Nimindiel" />
+      <name name="{=aom_lindon_female_name_50}Silvariel" />
+    </female_names>
+    <clan_names>
+      <name name="{=aom_lindon_clan_1}House of Cirdan" />
+      <name name="{=aom_lindon_clan_2}House of Falathar" />
+      <name name="{=aom_lindon_clan_3}House of Galdor" />
+      <name name="{=aom_lindon_clan_4}House of Aerandir" />
+      <name name="{=aom_lindon_clan_5}House of Erellont" />
+      <name name="{=aom_lindon_clan_6}Gwaith-i-Falath" />
+      <name name="{=aom_lindon_clan_7}House of Nimros" />
+      <name name="{=aom_lindon_clan_8}House of Gildor" />
+      <name name="{=aom_lindon_clan_9}House of Belegon" />
+      <name name="{=aom_lindon_clan_10}House of Elmoth" />
+      <name name="{=aom_lindon_clan_11}Cirdanath" />
+      <name name="{=aom_lindon_clan_12}House of Salmar" />
+      <name name="{=aom_lindon_clan_13}House of Nimloth" />
+      <name name="{=aom_lindon_clan_14}House of Gil-galad" />
+      <name name="{=aom_lindon_clan_15}House of Cirdan" />
+    </clan_names>
+        <cultural_feats>
+            <feat id="taom_rivendell_army_influence" />
+            <feat id="taom_rivendell_hearth_growth" />
+            <feat id="taom_rivendell_army_influence_cost" />
+            <feat id="taom_rivendell_food_consumption" />
+            <feat id="taom_rivendell_loyalty" />
+            <feat id="taom_rivendell_forest_speed" />
+        </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_wanderer_lindon_0" />
+      <template name="NPCCharacter.spc_wanderer_lindon_1" />
+      <template name="NPCCharacter.spc_wanderer_lindon_2" />
+      <template name="NPCCharacter.spc_wanderer_lindon_3" />
+      <template name="NPCCharacter.spc_wanderer_lindon_4" />
+      <template name="NPCCharacter.spc_wanderer_lindon_5" />
+      <template name="NPCCharacter.spc_wanderer_lindon_6" />
+      <template name="NPCCharacter.spc_wanderer_lindon_7" />
+      <template name="NPCCharacter.spc_wanderer_lindon_8" />
+      <template name="NPCCharacter.spc_wanderer_lindon_9" />
+      <template name="NPCCharacter.spc_notable_lindon_0" />
+      <template name="NPCCharacter.spc_notable_lindon_0b" />
+      <template name="NPCCharacter.spc_notable_lindon_1" />
+      <template name="NPCCharacter.spc_notable_lindon_1b" />
+      <template name="NPCCharacter.spc_notable_lindon_2" />
+      <template name="NPCCharacter.spc_notable_lindon_2b" />
+      <template name="NPCCharacter.spc_notable_lindon_3" />
+      <template name="NPCCharacter.spc_notable_lindon_3b" />
+      <template name="NPCCharacter.spc_notable_lindon_4" />
+      <template name="NPCCharacter.spc_notable_lindon_4b" />
+      <template name="NPCCharacter.spc_notable_lindon_5" />
+      <template name="NPCCharacter.spc_notable_lindon_6" />
+      <template name="NPCCharacter.spc_notable_lindon_7" />
+      <template name="NPCCharacter.spc_notable_lindon_8" />
+      <template name="NPCCharacter.spc_notable_lindon_9" />
+      <template name="NPCCharacter.spc_notable_lindon_gl1" />
+      <template name="NPCCharacter.spc_notable_lindon_10" />
+      <template name="NPCCharacter.spc_notable_lindon_11" />
+      <template name="NPCCharacter.spc_notable_lindon_gl4" />
+      <template name="NPCCharacter.spc_notable_lindon_12" />
+      <template name="NPCCharacter.spc_notable_lindon_13" />
+      <template name="NPCCharacter.spc_notable_lindon_21" />
+      <template name="NPCCharacter.spc_notable_lindon_22" />
+      <template name="NPCCharacter.spc_lindon_headman_1" />
+      <template name="NPCCharacter.spc_lindon_headman_2" />
+      <template name="NPCCharacter.spc_lindon_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_lindon_lord_1" />
+      <template name="NPCCharacter.spc_lindon_lord_2" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_lindon_lord_1" />
+      <template name="NPCCharacter.spc_lindon_lord_2" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.lindon_noble_merc" />
+    </basic_mercenary_troops>
+  </Culture>
+
+  <!-- TAOM-NEWCULTURE:lindon:END -->
+  <!-- TAOM-NEWCULTURE:bluecraig:BEGIN -->
+  <Culture
+    id="bluecraig"
+    name="{=aom_bluecraig_name}Blue Craig Goblins"
+    is_main_culture="true"
+    color="0xFF2A3A5A"
+    color2="0xFF44586E"
+    elite_basic_troop="NPCCharacter.bluecraig_fighter"
+    basic_troop="NPCCharacter.bluecraig_snaga"
+    melee_militia_troop="NPCCharacter.bluecraig_militia_spearman"
+    ranged_militia_troop="NPCCharacter.bluecraig_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.bluecraig_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.bluecraig_militia_veteran_archer"
+    can_have_settlement="true"
+    villager_party_template="PartyTemplate.villager_bluecraig_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_bluecraig_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_bluecraig_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_bluecraig_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_bluecraig_template_level_3"
+    militia_party_template="PartyTemplate.militia_bluecraig_template"
+    rebels_party_template="PartyTemplate.rebels_bluecraig_template"
+    vassal_reward_party_template="PartyTemplate.vassal_reward_troops_bluecraig"
+    prosperity_bonus="1"
+    encounter_background_mesh="encounter_sturgia"
+    faction_banner_key="11.12.12.4345.4345.764.764.1.0.0.462.13.13.512.512.764.764.1.0.0"
+    text="{=aom_bluecraig_desc}The goblins of Blue Craig hold the western spurs of the Ered Luin, cut off from their kin under the Ered Luin by the length of Eriador. They raid the Dwarf-roads and the shores of Lune, and the Elves of Mithlond count them the nearer enemy."
+    tournament_master="NPCCharacter.tournament_master_bluecraig"
+    villager="NPCCharacter.villager_bluecraig"
+    caravan_master="NPCCharacter.caravan_master_bluecraig"
+    caravan_guard="NPCCharacter.caravan_guard_bluecraig"
+    veteran_caravan_guard="NPCCharacter.veteran_caravan_guard_bluecraig"
+    prison_guard="NPCCharacter.prison_guard_bluecraig"
+    guard="NPCCharacter.guard_bluecraig"
+    blacksmith="NPCCharacter.blacksmith_bluecraig"
+    weaponsmith="NPCCharacter.weaponsmith_bluecraig"
+    townswoman="NPCCharacter.townswoman_bluecraig"
+    townswoman_infant="NPCCharacter.townswoman_infant_bluecraig"
+    townswoman_child="NPCCharacter.townswoman_child_bluecraig"
+    townswoman_teenager="NPCCharacter.townswoman_teenager_bluecraig"
+    townsman="NPCCharacter.townsman_bluecraig"
+    townsman_infant="NPCCharacter.townsman_infant_bluecraig"
+    townsman_child="NPCCharacter.townsman_child_bluecraig"
+    village_woman="NPCCharacter.village_woman_bluecraig"
+    villager_male_child="NPCCharacter.villager_child_bluecraig"
+    villager_male_teenager="NPCCharacter.villager_teenager_bluecraig"
+    villager_female_child="NPCCharacter.village_woman_child_bluecraig"
+    villager_female_teenager="NPCCharacter.village_woman_teenager_bluecraig"
+    townsman_teenager="NPCCharacter.townsman_teenager_bluecraig"
+    ransom_broker="NPCCharacter.ransom_broker_bluecraig"
+    gangleader_bodyguard="NPCCharacter.gangleader_bodyguard_bluecraig"
+    merchant_notary="NPCCharacter.spc_notable_bluecraig_0"
+    artisan_notary="NPCCharacter.spc_notable_bluecraig_8"
+    preacher_notary="NPCCharacter.spc_notable_bluecraig_5"
+    rural_notable_notary="NPCCharacter.spc_notable_bluecraig_21"
+    shop_worker="NPCCharacter.shop_worker_bluecraig"
+    tavernkeeper="NPCCharacter.tavernkeeper_bluecraig"
+    taverngamehost="NPCCharacter.taverngamehost_bluecraig"
+    musician="NPCCharacter.musician_bluecraig"
+    tavern_wench="NPCCharacter.tavern_wench_bluecraig"
+    armorer="NPCCharacter.armorer_bluecraig"
+    horseMerchant="NPCCharacter.horseMerchant_bluecraig"
+    barber="NPCCharacter.barber_bluecraig"
+    merchant="NPCCharacter.merchant_bluecraig"
+    beggar="NPCCharacter.beggar_bluecraig"
+    female_beggar="NPCCharacter.female_beggar_bluecraig"
+    female_dancer="NPCCharacter.female_dancer_bluecraig"
+    default_battle_equipment_roster="EquipmentRoster.bluecraig_bat_template_medium_a"
+    default_civilian_equipment_roster="EquipmentRoster.bluecraig_civ_template_default_a"
+    default_stealth_equipment_roster="EquipmentRoster.default_stealth_equipment_roster"
+    duel_preset_equipment_roster="EquipmentRoster.stu_duel_preset_template"
+    marriage_bride_equipment_roster="EquipmentRoster.marriage_female_emp_cutscene_template"
+    board_game_type="Konane"
+    default_character_creation_body_property="BodyProperty.fighter_gundabad"
+    start_point_position_x="250.9735"
+    start_point_position_y="1270.663">
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_bluecraig" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_bluecraig" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls></available_ship_hulls>
+    <vassal_reward_items>
+      <item id="Item.wm_gundabad_mace_a02" />
+    </vassal_reward_items>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.wm_dol_goldur_1h_sword_a01" />
+      <item id="Item.wm_mordor_set1_sword_a02" />
+      <item id="Item.wm_dol_goldur_1h_sword_a02" />
+      <item id="Item.wm_gundabad_sword_a02" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_council_of_the_commons" />
+    </default_policies>
+    <male_names>
+      <name name="{=aom_bluecraig_male_name_1}Azgar" />
+      <name name="{=aom_bluecraig_male_name_2}Drozmak" />
+      <name name="{=aom_bluecraig_male_name_3}Kargoth" />
+      <name name="{=aom_bluecraig_male_name_4}Thrazak" />
+      <name name="{=aom_bluecraig_male_name_5}Ulgrim" />
+      <name name="{=aom_bluecraig_male_name_6}Zorgath" />
+      <name name="{=aom_bluecraig_male_name_7}Gragor" />
+      <name name="{=aom_bluecraig_male_name_8}Durmash" />
+      <name name="{=aom_bluecraig_male_name_9}Vorgoth" />
+      <name name="{=aom_bluecraig_male_name_10}Mugzun" />
+      <name name="{=aom_bluecraig_male_name_11}Lurzok" />
+      <name name="{=aom_bluecraig_male_name_12}Zorgha" />
+      <name name="{=aom_bluecraig_male_name_13}Thrumak" />
+      <name name="{=aom_bluecraig_male_name_14}Nargoth" />
+      <name name="{=aom_bluecraig_male_name_15}Borzak" />
+      <name name="{=aom_bluecraig_male_name_16}Druznar" />
+      <name name="{=aom_bluecraig_male_name_17}Kragloth" />
+      <name name="{=aom_bluecraig_male_name_18}Vurzag" />
+      <name name="{=aom_bluecraig_male_name_19}Narlog" />
+      <name name="{=aom_bluecraig_male_name_20}Thalrug" />
+      <name name="{=aom_bluecraig_male_name_21}Urzul" />
+      <name name="{=aom_bluecraig_male_name_22}Gralthak" />
+      <name name="{=aom_bluecraig_male_name_23}Vorgrim" />
+      <name name="{=aom_bluecraig_male_name_24}Mazkor" />
+      <name name="{=aom_bluecraig_male_name_25}Skarnakath" />
+      <name name="{=aom_bluecraig_male_name_26}Lurthak" />
+      <name name="{=aom_bluecraig_male_name_27}Thrugol" />
+      <name name="{=aom_bluecraig_male_name_28}Narzuk" />
+      <name name="{=aom_bluecraig_male_name_29}Kruznor" />
+      <name name="{=aom_bluecraig_male_name_30}Thrazgul" />
+      <name name="{=aom_bluecraig_male_name_31}Durzak" />
+      <name name="{=aom_bluecraig_male_name_32}Zulgoth" />
+      <name name="{=aom_bluecraig_male_name_33}Vorzak" />
+      <name name="{=aom_bluecraig_male_name_34}Krogar" />
+      <name name="{=aom_bluecraig_male_name_35}Thrunak" />
+      <name name="{=aom_bluecraig_male_name_36}Grazar" />
+      <name name="{=aom_bluecraig_male_name_37}Narzog" />
+      <name name="{=aom_bluecraig_male_name_38}Ulgrim" />
+      <name name="{=aom_bluecraig_male_name_39}Vurlak" />
+      <name name="{=aom_bluecraig_male_name_40}Borzak" />
+      <name name="{=aom_bluecraig_male_name_41}Durzor" />
+      <name name="{=aom_bluecraig_male_name_42}Muzrag" />
+      <name name="{=aom_bluecraig_male_name_43}Gralthor" />
+      <name name="{=aom_bluecraig_male_name_44}Tharzog" />
+      <name name="{=aom_bluecraig_male_name_45}Vrognak" />
+      <name name="{=aom_bluecraig_male_name_46}Karnak" />
+      <name name="{=aom_bluecraig_male_name_47}Borzak" />
+      <name name="{=aom_bluecraig_male_name_48}Narzul" />
+      <name name="{=aom_bluecraig_male_name_49}Thrulgoth" />
+      <name name="{=aom_bluecraig_male_name_50}Druzmok" />
+    </male_names>
+    <female_names>
+      <name name="{=aom_bluecraig_female_name_1}Gralza" />
+      <name name="{=aom_bluecraig_female_name_2}Thurka" />
+      <name name="{=aom_bluecraig_female_name_3}Zulgara" />
+      <name name="{=aom_bluecraig_female_name_4}Vorzha" />
+      <name name="{=aom_bluecraig_female_name_5}Durga" />
+      <name name="{=aom_bluecraig_female_name_6}Nargra" />
+      <name name="{=aom_bluecraig_female_name_7}Thrulza" />
+      <name name="{=aom_bluecraig_female_name_8}Muzra" />
+      <name name="{=aom_bluecraig_female_name_9}Kralza" />
+      <name name="{=aom_bluecraig_female_name_10}Ulzara" />
+      <name name="{=aom_bluecraig_female_name_11}Borza" />
+      <name name="{=aom_bluecraig_female_name_12}Zargra" />
+      <name name="{=aom_bluecraig_female_name_13}Grusha" />
+      <name name="{=aom_bluecraig_female_name_14}Dursha" />
+      <name name="{=aom_bluecraig_female_name_15}Thalra" />
+      <name name="{=aom_bluecraig_female_name_16}Vorla" />
+      <name name="{=aom_bluecraig_female_name_17}Nargul" />
+      <name name="{=aom_bluecraig_female_name_18}Thurka" />
+      <name name="{=aom_bluecraig_female_name_19}Ulsha" />
+      <name name="{=aom_bluecraig_female_name_20}Muzrak" />
+      <name name="{=aom_bluecraig_female_name_21}Kralsha" />
+      <name name="{=aom_bluecraig_female_name_22}Gralsha" />
+      <name name="{=aom_bluecraig_female_name_23}Dursha" />
+      <name name="{=aom_bluecraig_female_name_24}Thranza" />
+      <name name="{=aom_bluecraig_female_name_25}Nargra" />
+      <name name="{=aom_bluecraig_female_name_26}Ulzira" />
+      <name name="{=aom_bluecraig_female_name_27}Borlia" />
+      <name name="{=aom_bluecraig_female_name_28}Zorgla" />
+      <name name="{=aom_bluecraig_female_name_29}Durla" />
+      <name name="{=aom_bluecraig_female_name_30}Muzsha" />
+      <name name="{=aom_bluecraig_female_name_31}Thrulga" />
+      <name name="{=aom_bluecraig_female_name_32}Narsha" />
+      <name name="{=aom_bluecraig_female_name_33}Kralga" />
+      <name name="{=aom_bluecraig_female_name_34}Grinza" />
+      <name name="{=aom_bluecraig_female_name_35}Thalzia" />
+      <name name="{=aom_bluecraig_female_name_36}Vorgla" />
+      <name name="{=aom_bluecraig_female_name_37}Ulzila" />
+      <name name="{=aom_bluecraig_female_name_38}Durzha" />
+      <name name="{=aom_bluecraig_female_name_39}Nargula" />
+      <name name="{=aom_bluecraig_female_name_40}Thrugla" />
+      <name name="{=aom_bluecraig_female_name_41}Muzla" />
+      <name name="{=aom_bluecraig_female_name_42}Gralna" />
+      <name name="{=aom_bluecraig_female_name_43}Tharka" />
+      <name name="{=aom_bluecraig_female_name_44}Ulzara" />
+      <name name="{=aom_bluecraig_female_name_45}Kralza" />
+      <name name="{=aom_bluecraig_female_name_46}Durka" />
+      <name name="{=aom_bluecraig_female_name_47}Thruna" />
+      <name name="{=aom_bluecraig_female_name_48}Borza" />
+      <name name="{=aom_bluecraig_female_name_49}Zorga" />
+      <name name="{=aom_bluecraig_female_name_50}Narlia" />
+    </female_names>
+    <clan_names>
+      <name name="{=aom_bluecraig_clan_1}Blue Craig Horde" />
+      <name name="{=aom_bluecraig_clan_2}Blue Craig Clan" />
+      <name name="{=aom_bluecraig_clan_3}Misty Mountain Wolves" />
+      <name name="{=aom_bluecraig_clan_4}Warg Pack" />
+      <name name="{=aom_bluecraig_clan_5}Stone Giant Horde" />
+      <name name="{=aom_bluecraig_clan_6}Nogrod Remnants" />
+      <name name="{=aom_bluecraig_clan_7}Lune-mouth Brood" />
+      <name name="{=aom_bluecraig_clan_8}Craig-spawn" />
+      <name name="{=aom_bluecraig_clan_9}Carn Dum Warband" />
+      <name name="{=aom_bluecraig_clan_10}Grey Mountain Raiders" />
+      <name name="{=aom_bluecraig_clan_11}Ettenmoors Horde" />
+      <name name="{=aom_bluecraig_clan_12}Snaga Band" />
+      <name name="{=aom_bluecraig_clan_13}Skarnak's Kin" />
+      <name name="{=aom_bluecraig_clan_14}Blacktooth Clan" />
+      <name name="{=aom_bluecraig_clan_15}Blue Mountains Scourge" />
+    </clan_names>
+        <cultural_feats>
+            <feat id="taom_goblin_party_size" />
+            <feat id="taom_goblin_volunteer_rate" />
+            <feat id="taom_goblin_snow_speed" />
+            <feat id="taom_goblin_food_consumption" />
+            <feat id="taom_goblin_smithing" />
+            <feat id="taom_goblin_raid_damage" />
+        </cultural_feats>
+    <possible_clan_banner_icon_ids>
+      <icon id="100" />
+      <icon id="101" />
+      <icon id="102" />
+      <icon id="103" />
+      <icon id="104" />
+      <icon id="105" />
+      <icon id="106" />
+      <icon id="107" />
+      <icon id="108" />
+      <icon id="109" />
+      <icon id="110" />
+      <icon id="119" />
+      <icon id="147" />
+      <icon id="148" />
+      <icon id="152" />
+      <icon id="200" />
+      <icon id="201" />
+      <icon id="202" />
+      <icon id="203" />
+      <icon id="204" />
+      <icon id="205" />
+      <icon id="206" />
+      <icon id="207" />
+      <icon id="208" />
+      <icon id="209" />
+      <icon id="210" />
+      <icon id="211" />
+      <icon id="212" />
+      <icon id="213" />
+      <icon id="214" />
+      <icon id="215" />
+      <icon id="216" />
+      <icon id="217" />
+      <icon id="218" />
+      <icon id="219" />
+      <icon id="220" />
+      <icon id="221" />
+      <icon id="222" />
+      <icon id="223" />
+      <icon id="400" />
+    </possible_clan_banner_icon_ids>
+    <notable_templates>
+      <template name="NPCCharacter.spc_wanderer_bluecraig_0" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_1" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_2" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_3" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_4" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_5" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_6" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_7" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_8" />
+      <template name="NPCCharacter.spc_wanderer_bluecraig_9" />
+      <template name="NPCCharacter.spc_notable_bluecraig_0" />
+      <template name="NPCCharacter.spc_notable_bluecraig_0b" />
+      <template name="NPCCharacter.spc_notable_bluecraig_1" />
+      <template name="NPCCharacter.spc_notable_bluecraig_1b" />
+      <template name="NPCCharacter.spc_notable_bluecraig_2" />
+      <template name="NPCCharacter.spc_notable_bluecraig_2b" />
+      <template name="NPCCharacter.spc_notable_bluecraig_3" />
+      <template name="NPCCharacter.spc_notable_bluecraig_3b" />
+      <template name="NPCCharacter.spc_notable_bluecraig_4" />
+      <template name="NPCCharacter.spc_notable_bluecraig_4b" />
+      <template name="NPCCharacter.spc_notable_bluecraig_5" />
+      <template name="NPCCharacter.spc_notable_bluecraig_6" />
+      <template name="NPCCharacter.spc_notable_bluecraig_7" />
+      <template name="NPCCharacter.spc_notable_bluecraig_8" />
+      <template name="NPCCharacter.spc_notable_bluecraig_9" />
+      <template name="NPCCharacter.spc_notable_bluecraig_gl1" />
+      <template name="NPCCharacter.spc_notable_bluecraig_10" />
+      <template name="NPCCharacter.spc_notable_bluecraig_11" />
+      <template name="NPCCharacter.spc_notable_bluecraig_gl4" />
+      <template name="NPCCharacter.spc_notable_bluecraig_12" />
+      <template name="NPCCharacter.spc_notable_bluecraig_13" />
+      <template name="NPCCharacter.spc_notable_bluecraig_21" />
+      <template name="NPCCharacter.spc_notable_bluecraig_22" />
+      <template name="NPCCharacter.spc_notable_bluecraig_23" />
+      <template name="NPCCharacter.spc_bluecraig_headman_1" />
+      <template name="NPCCharacter.spc_bluecraig_headman_2" />
+      <template name="NPCCharacter.spc_bluecraig_headman_3" />
+    </notable_templates>
+    <lord_templates>
+      <template name="NPCCharacter.spc_bluecraig_lord_1" />
+      <template name="NPCCharacter.spc_bluecraig_lord_2" />
+    </lord_templates>
+    <rebellion_hero_templates>
+      <template name="NPCCharacter.spc_bluecraig_lord_1" />
+      <template name="NPCCharacter.spc_bluecraig_lord_2" />
+    </rebellion_hero_templates>
+    <tournament_team_templates_one_participant>
+      <template name="NPCCharacter.tournament_template_empire_one_participant_set_v1" />
+    </tournament_team_templates_one_participant>
+    <tournament_team_templates_two_participant>
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_two_participant_set_v3" />
+    </tournament_team_templates_two_participant>
+    <tournament_team_templates_four_participant>
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v1" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v2" />
+      <template name="NPCCharacter.tournament_template_empire_four_participant_set_v3" />
+    </tournament_team_templates_four_participant>
+    <basic_mercenary_troops>
+      <template name="NPCCharacter.bluecraig_fighter_merc" />
+    </basic_mercenary_troops>
+  </Culture>
+
+  <!-- TAOM-NEWCULTURE:bluecraig:END -->
 </SPCultures>
