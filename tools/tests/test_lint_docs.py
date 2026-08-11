@@ -14,6 +14,7 @@ Each test builds a SYNTHETIC repo tree in a tempdir and points lint_docs's REPO_
 DOCS_DIR at it, so the checks are exercised independently of the real repo contents.
 """
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -415,6 +416,171 @@ class DeadLinkNeverCommittedTests(_PathConstantRepo):
         self._doc("features/here.md", "# here\n")
         doc = self._doc("reviews/rca-thing.md", "See [notes](../features/here.md).\n")
         self.assertEqual(ld.check_dead_links([doc]), [])
+
+
+EM = "—"
+EN = "–"
+
+
+class AiDashScannerTests(unittest.TestCase):
+    """The pure scanner behind check_ai_dashes.
+
+    Em and en dashes are the loudest AI-writing tell, so produced prose must not
+    contain them (.claude/rules/output-style.md Part 2). Hyphens stay legal: CLI
+    flags, version numbers and kebab-case filenames are full of them, and matching
+    those would make the check unusable.
+    """
+
+    P = Path("docs/features/thing.md")
+
+    def _scan(self, text, only_lines=None):
+        return ld.scan_text_for_dashes(self.P, text, only_lines)
+
+    def test_a_bare_em_dash_in_prose_is_reported(self):
+        found = self._scan(f"The guard fires early {EM} before state init.\n")
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0][1], 1)
+        self.assertEqual(found[0][2], "em-dash")
+
+    def test_a_bare_en_dash_in_prose_is_reported(self):
+        found = self._scan(f"Pages 10{EN}14 cover the bump.\n")
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0][2], "en-dash")
+
+    def test_a_dash_inside_a_fenced_block_is_not_reported(self):
+        self.assertEqual(self._scan(f"Intro.\n\n```\ncode {EM} sample\n```\n"), [])
+
+    def test_a_tilde_fence_also_suppresses(self):
+        self.assertEqual(self._scan(f"Intro.\n\n~~~\ncode {EM} sample\n~~~\n"), [])
+
+    def test_a_backtick_fence_inside_a_tilde_fence_does_not_close_it(self):
+        self.assertEqual(self._scan(f"~~~\n```\nstill code {EM} here\n```\n~~~\n"), [])
+
+    def test_prose_after_a_closed_fence_is_still_scanned(self):
+        found = self._scan(f"```\ncode\n```\n\nProse {EM} here.\n")
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0][1], 5)
+
+    def test_a_dash_inside_an_inline_code_span_is_not_reported(self):
+        self.assertEqual(self._scan(f"Run `taom {EM} src` to check.\n"), [])
+
+    def test_a_dash_inside_a_link_target_is_not_reported(self):
+        self.assertEqual(self._scan(f"See [notes](docs/a{EM}b.md) for detail.\n"), [])
+
+    def test_a_dash_inside_a_bare_url_is_not_reported(self):
+        self.assertEqual(self._scan(f"Source: https://example.com/a{EM}b\n"), [])
+
+    def test_a_dash_outside_the_code_span_on_the_same_line_is_still_reported(self):
+        found = self._scan(f"Run `build.ps1` first {EM} it deploys the module.\n")
+        self.assertEqual(len(found), 1)
+
+    def test_hyphens_in_flags_versions_and_filenames_are_not_reported(self):
+        text = (
+            "Run `./build.ps1 -RunTests` on v1.4.8.\n"
+            "The hook is check-freeze.sh, a kebab-case name.\n"
+            "Pass --fail-on-drift to gate the commit.\n"
+            "A well-known cross-platform trade-off.\n"
+        )
+        self.assertEqual(self._scan(text), [])
+
+    def test_an_explicit_allow_marker_suppresses_the_line(self):
+        text = f'Vanilla emits "load {EM} failed". <!-- lint-allow-dash -->\n'
+        self.assertEqual(self._scan(text), [])
+
+    def test_one_finding_per_line_even_with_several_dashes(self):
+        found = self._scan(f"A {EM} b {EM} c {EN} d.\n")
+        self.assertEqual(len(found), 1)
+
+    def test_only_lines_restricts_the_scan(self):
+        text = f"Old prose {EM} untouched.\nNew prose {EM} added.\n"
+        found = self._scan(text, only_lines={2})
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0][1], 2)
+
+
+class AiDashGitScopeTests(unittest.TestCase):
+    """check_ai_dashes reports NEW writing only.
+
+    40,476 em dashes already live in the tree (CHANGELOG 1,604 / docs 37,448 /
+    .claude 1,424, counted 2026-08-11). A whole-tree check would drown the report
+    and the rule would be ignored, so the scope is added lines plus untracked files.
+    """
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        self._orig_root = ld.REPO_ROOT
+        ld.REPO_ROOT = self.root
+        self._git("init", "-q")
+
+    def tearDown(self):
+        ld.REPO_ROOT = self._orig_root
+        self._tmp.cleanup()
+
+    def _git(self, *args):
+        subprocess.run(
+            ["git", "-C", str(self.root), "-c", "user.email=t@t", "-c", "user.name=t", *args],
+            capture_output=True, text=True, check=True,
+        )
+
+    def _commit(self, msg="c"):
+        self._git("add", "-A")
+        self._git("commit", "-q", "-m", msg)
+
+    def test_committed_dashes_are_invisible_and_only_the_new_line_is_reported(self):
+        doc = self.root / "docs" / "old.md"
+        _write(doc, f"Legacy prose {EM} with a dash.\nAnother {EM} one.\n")
+        self._commit()
+        self.assertEqual(ld.check_ai_dashes(), [], "a clean tree must report nothing")
+
+        _write(doc, f"Legacy prose {EM} with a dash.\nAnother {EM} one.\nFresh {EM} line.\n")
+        found = ld.check_ai_dashes()
+        self.assertEqual([(f.name, n) for f, n, _k, _t in found], [("old.md", 3)])
+
+    def test_an_untracked_markdown_file_is_scanned_in_full(self):
+        _write(self.root / "docs" / "seed.md", "# seed\n")
+        self._commit()
+        _write(self.root / "docs" / "new.md", f"Brand new {EM} file.\n")
+        found = ld.check_ai_dashes()
+        self.assertEqual([(f.name, n) for f, n, _k, _t in found], [("new.md", 1)])
+
+    def test_a_staged_addition_is_reported(self):
+        _write(self.root / "docs" / "seed.md", "# seed\n")
+        self._commit()
+        _write(self.root / "docs" / "seed.md", f"# seed\n\nStaged {EM} prose.\n")
+        self._git("add", "-A")
+        found = ld.check_ai_dashes()
+        self.assertEqual([(f.name, n) for f, n, _k, _t in found], [("seed.md", 3)])
+
+    def test_a_non_markdown_file_is_ignored(self):
+        _write(self.root / "docs" / "seed.md", "# seed\n")
+        self._commit()
+        _write(self.root / "notes.txt", f"Plain text {EM} file.\n")
+        self.assertEqual(ld.check_ai_dashes(), [])
+
+    def test_an_added_line_inside_a_fenced_block_is_not_reported(self):
+        doc = self.root / "docs" / "old.md"
+        _write(doc, "Intro.\n\n```\ncode\n```\n")
+        self._commit()
+        _write(doc, f"Intro.\n\n```\ncode\nmore {EM} code\n```\n")
+        self.assertEqual(ld.check_ai_dashes(), [])
+
+    def test_a_base_ref_widens_the_scan_to_a_whole_branch(self):
+        doc = self.root / "docs" / "old.md"
+        _write(doc, "# base\n")
+        self._commit("base")
+        base = subprocess.run(
+            ["git", "-C", str(self.root), "rev-parse", "HEAD"],
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        _write(doc, f"# base\n\nCommitted {EM} later.\n")
+        self._commit("later")
+        self.assertEqual(ld.check_ai_dashes(), [], "HEAD base sees nothing after the commit")
+        self.assertEqual(len(ld.check_ai_dashes(base)), 1, "the branch base still sees it")
+
+    def test_a_repo_with_no_commits_fails_open(self):
+        _write(self.root / "docs" / "a.md", "# a\n")
+        self.assertIsInstance(ld.check_ai_dashes(), list)
 
 
 if __name__ == "__main__":

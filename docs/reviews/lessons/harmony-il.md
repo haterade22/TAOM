@@ -336,3 +336,33 @@ TAOM's own `PatchShield.ShouldSwallow` is the reference implementation — it ea
 MissingMethod/MissingField/TypeLoad and rethrows everything else, deliberately.
 
 **Source:** `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` finding 8 (Codex P3, #407).
+
+### Before documenting when a patch runs, grep every call site of the patched method
+
+**Symptom:** `Patch50_DropFlaggedItemGuard`'s doc-comment and registry entry both described
+`Agent.CheckToDropFlaggedItem` as reached via `Mission.OnAgentHit`. The engine calls it from
+**three** sites — `Agent.OnMount` (:12142), `Agent.OnDismount` (:12167) and `Mission.OnAgentHit`
+(:57869), v1.4.8. A Prefix documented as "runs per creature bite" actually runs on every mount,
+every dismount and every agent-hit in every battle. The efficiency review then costed it against
+the wrong frequency.
+
+**Why missed:** the patch was authored from a crash stack, which is read *backwards* from the throw.
+That naturally answers "how did I get here" and never asks "who else arrives here". A patch target
+is a fan-in point; a stack trace shows exactly one of its inbound edges.
+
+**Prevent:** before writing any sentence about when a patch runs, grep the decompiled dump for the
+target method name and enumerate every caller — `grep -n "MethodName" <dump>` takes seconds. Put the
+full call-site list in the doc-comment, because the next reader will otherwise inherit the single
+edge the original stack happened to show. This matters most for guards: the frequency claim drives
+whether allocation, logging or reflection in the patch body is acceptable.
+
+**Corollary — the same evidence bar applies to prose as to code.** In the same review, three further
+findings were all unverified sentences about engine behavior ("mid-teardown", "both branches end in
+no item dropped", an overstated Finalizer reach) written in a session where every *code* claim had
+been checked against the installed decompile. `evidence-over-claims.md` §C names tool output, counts
+and signatures — the artifacts of doing work — but not doc-comments and design rationale. Inaccurate
+patch documentation is not cosmetic here: this very bug took eight weeks to diagnose because
+Patch50's original comment confidently asserted the victim was a mount, and the live debugger later
+showed it was not.
+
+**Source:** `docs/reviews/rca-dropflaggeditem-guard-2026-08-10.md` findings 1–4.

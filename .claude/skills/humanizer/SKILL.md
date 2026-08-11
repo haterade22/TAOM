@@ -1,6 +1,6 @@
 ---
 name: humanizer
-description: Use when cleaning AI-writing tells out of a commit body, CHANGELOG entry, issue/PR, or doc. Strips slop; keeps TAOM's em-dash/boldface house style.
+description: Use when cleaning AI-writing tells out of a commit body, CHANGELOG entry, issue/PR, or doc. Strips slop and long dashes; keeps TAOM's boldface house style.
 allowed-tools:
   - Read
   - Write
@@ -12,7 +12,7 @@ allowed-tools:
 
 # /humanizer — Strip AI-Writing Tells From Prose
 
-Rewrite a piece of prose so it reads as deliberate human writing instead of generic LLM output. Ported from [blader/humanizer](https://github.com/blader/humanizer) (MIT), whose pattern list derives from Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing). Adapted for TAOM: the em-dash / boldface / inline-header patterns are **carved out** because TAOM uses them deliberately (see the carve-out below).
+Rewrite a piece of prose so it reads as deliberate human writing instead of generic LLM output. Ported from [blader/humanizer](https://github.com/blader/humanizer) (MIT), whose pattern list derives from Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing). Adapted for TAOM: the boldface / inline-header patterns are **carved out** because TAOM uses them deliberately (see the carve-out below). The em-dash carve-out was **reversed on 2026-08-11**, so the upstream's dash handling now applies in full.
 
 The everyday, always-on form of this discipline is `.claude/rules/output-style.md` Part 2 (an always-load rule that keeps the worst tells out of new prose as you write it). This skill is the **deep-clean tool** — invoke it to pass an already-written artifact through the full pattern list.
 
@@ -22,7 +22,7 @@ The everyday, always-on form of this discipline is `.claude/rules/output-style.m
 
 That bias is the source of every pattern below: text drifts toward generic, broadly-applicable phrasing. The fix is almost always **more specific and more concrete**, not more "polished."
 
-The diagnostic strength is in **clusters**, not isolated instances. One em-dash or one formal word is not AI slop. A paragraph stacking significance inflation + vague attribution + rule-of-three + a generic conclusion is.
+The diagnostic strength is in **clusters**, not isolated instances. One formal word is not AI slop. A paragraph stacking significance inflation + vague attribution + rule-of-three + a generic conclusion is. **The long dashes are the one exception**: a single em or en dash is enough on its own, which is why it gets a hard rule rather than a cluster judgement.
 
 ## When to use
 
@@ -40,13 +40,15 @@ TAOM's knowledge base uses several "AI tells" as **deliberate semantic markers**
 
 | Upstream pattern | TAOM disposition | Why |
 |---|---|---|
-| #14 em/en dashes | **KEEP** | ~4,340 across CHANGELOG + docs. They mark findings and causal breaks; they're structural to the analytical style. |
+| #14 em/en dashes | **STRIP** | Carve-out **reversed 2026-08-11** on user standing instruction: the long dashes are the loudest AI tell, so produced prose does not use them. 40,476 predate the rule (CHANGELOG 1,604 / docs 37,448 / `.claude` 1,424, counted that day) and are left alone. See `.claude/rules/output-style.md` Part 2. |
 | #15 boldface | **KEEP** | Status / finding / constraint markers (`**Status: BUILT**`, `**Correct fix:**`). Semantic, not ornamental. |
 | #16 inline-`**Label:**` lists | **KEEP** | The data-dense bullet format TAOM docs rely on. |
 | markdown tables, backticked paths/code | **KEEP** | Core to every TAOM doc. |
 | #17 Title Case headings | n/a | TAOM already uses sentence case, so this rule is a no-op here. |
 
 Everything else in the list below applies. The skill removes slop **without** touching TAOM's visual-hierarchy conventions.
+
+**Dash exemptions** (same four as the rule): fenced blocks and inline code spans; URLs and link targets; text quoted verbatim from outside TAOM, which a rewrite would falsify; and existing prose you are not otherwise touching.
 
 ## Workflow
 
@@ -72,7 +74,7 @@ After the first-draft rewrite:
 2. Produce a final version that addresses each one.
 3. Present: the draft, the bullets of remaining tells, and the final rewrite. Offer a short summary of what changed if it's a large edit.
 
-(The upstream's "zero em/en dashes" hard constraint in this pass is **dropped** for TAOM — em-dashes are carved out.)
+(The upstream's "zero em/en dashes" hard constraint applies in full: the final version must contain neither character outside the four exemptions above. TAOM dropped this constraint until 2026-08-11; it is back.)
 
 ## What NOT to flag (over-editing protection)
 
@@ -81,7 +83,7 @@ These are not AI tells. Leave them alone:
 - Perfect grammar or consistent style on their own
 - Mixed casual / formal registers
 - Formal or academic vocabulary used correctly
-- A lone em-dash, a single transition word, or one short emphatic sentence
+- A single transition word, or one short emphatic sentence (a lone em-dash used to be listed here; as of 2026-08-11 it is always flagged)
 - An unsourced claim that has no other clustering tells
 
 **Preserve these human signals where they exist:** specific hard-to-fabricate detail; mixed feelings and unresolved tension; dated references tied to an era or subculture; genuine asides and self-corrections; varied sentence length.
@@ -115,7 +117,7 @@ These are not AI tells. Leave them alone:
 
 | # | Pattern | Before → After |
 |---|---------|----------------|
-| 14 | **Em/en dashes** | **TAOM EXCEPTION — KEEP.** Upstream cuts them all; TAOM uses them deliberately. |
+| 14 | **Em/en dashes** | `the guard fires early — before state init` → comma, colon, semicolon, parentheses, or a new sentence. Hyphens (`--RunTests`, `v1.4.8`) stay legal. |
 | 15 | **Boldface overuse** | **TAOM EXCEPTION — KEEP.** Semantic status/finding markers. |
 | 16 | **Inline-header lists** (`**Label:**`) | **TAOM EXCEPTION — KEEP.** Data-dense format. |
 | 17 | Title Case headings | "Strategic Negotiations And Partnerships" → "Strategic negotiations and partnerships" (TAOM already does this) |
@@ -153,4 +155,6 @@ These are not AI tells. Leave them alone:
 
 ## Source
 
-Ported from [blader/humanizer](https://github.com/blader/humanizer) (MIT license), version 2.8.0, whose 33-pattern catalogue is drawn from Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup). TAOM adaptations: dropped upstream `version:`/`compatibility:`/`license:` frontmatter (not Claude Code fields); carved out em-dashes (#14), boldface (#15), and inline-headers (#16) as deliberate TAOM conventions; removed the "zero em-dashes" hard constraint from the audit pass; pointed sycophancy (#22) at `output-style.md` Part 1 to avoid duplication.
+Ported from [blader/humanizer](https://github.com/blader/humanizer) (MIT license), version 2.8.0, whose 33-pattern catalogue is drawn from Wikipedia's [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup). TAOM adaptations: dropped upstream `version:`/`compatibility:`/`license:` frontmatter (not Claude Code fields); carved out boldface (#15) and inline-headers (#16) as deliberate TAOM conventions; pointed sycophancy (#22) at `output-style.md` Part 1 to avoid duplication.
+
+**Reversed 2026-08-11:** em-dashes (#14) were carved out too, and the audit pass had the upstream's "zero em-dashes" constraint removed. Both are back on user standing instruction, so TAOM now matches the upstream on dashes and diverges only on boldface and inline headers.

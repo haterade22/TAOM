@@ -111,6 +111,19 @@ public class CoopVetoClassificationTests
             "Mission-scoped agent spawn. Not campaign state."),
         ["BannerBearerLogic_SpawnBannerBearer_Patch"] = new(CoopVeto.ReviewedSafe,
             "Mission-scoped reinforcement bearer spawn + AV guard. Not campaign state."),
+        ["Agent_CheckToDropFlaggedItem_Guard_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Mission-scoped flagged-item drop on an Agent — not campaign state, and the condition " +
+            "reads only that agent's own equipment, which vanilla replicates. NOT claimed: that " +
+            "the outcome is always identical. There is one documented divergence (see " +
+            "DropFlaggedItemGuard) — a wielded DropOnAnyAction item in one slot plus a phantom " +
+            "index in the other means vanilla drops the good item before throwing and the skip " +
+            "drops nothing. Safe anyway: censused 2026-08-10 across every installed module, all 41 " +
+            "items carrying DropOnAnyAction are Type=\"Thrown\" consumables — siege ammunition " +
+            "(boulder/pot/grapeshot, plus NavalDLC ballista+mangonel variants) and one naval " +
+            "boarding hook. No armour, shield, banner or melee weapon carries it, and TAOM, " +
+            "TAOM_Map and LOTRLOME_Armory ship none at all. Reaching the divergence needs an agent " +
+            "holding thrown siege ammo while ALSO in the not-yet-built state that triggers the " +
+            "NRE — and vanilla is already throwing there."),
         ["Patch30_FormationGetOrderPositionOfUnit"] = new(CoopVeto.ReviewedSafe,
             "Mission-scoped formation positioning. Not campaign state."),
         ["GuardsCampaignBehavior_GetSuitableSpear_Patch"] = new(CoopVeto.ReviewedSafe,

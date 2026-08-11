@@ -2,6 +2,110 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-11
+
+### docs(style): produced prose no longer uses em or en dashes
+
+The rule said the opposite until today. `.claude/rules/output-style.md` carried a house-style
+carve-out declaring the long dashes deliberate semantic markers to keep, and
+`.claude/skills/humanizer/SKILL.md` repeated that in six places, including the pattern table, the
+audit pass and the "what NOT to flag" list. Both now say the opposite, on a standing instruction
+from the user: the point of the style rule is that produced work should not read as machine-written,
+and the long dashes are what gives it away first.
+
+Three boundaries, all deliberate. Hyphens stay legal, so `--RunTests`, `v1.4.8` and every kebab-case
+filename are untouched. The ban covers produced artifacts only (commit bodies, CHANGELOG entries,
+issues, PRs, docs, RCAs), not chat replies. And it applies to new writing only: 40,476 dashes already
+sit in the tree (CHANGELOG 1,604, `docs/` 37,448 across 637 files, `.claude/` 1,424 across 73), a
+count the old carve-out put at "~4,340", so it was wrong by a factor of ten as well as being
+reversed. Rewriting 711 files would risk mangling tables for no reader benefit.
+
+Enforcement is `check_ai_dashes` in `tools/lint_docs.py`. It reads git rather than the tree: added
+lines since a base ref (`--dash-base`, default `HEAD`) plus untracked markdown in full, which is what
+keeps the report at zero on a clean checkout instead of drowning in the 40,476. Fenced blocks, inline
+code spans, URLs, link targets and an explicit `<!-- lint-allow-dash -->` marker are exempt, the last
+one for text quoted verbatim from outside TAOM, where a rewrite would falsify the quote. The check is
+**report-only** and deliberately absent from the `--fail-on-drift` set that
+`.claude/hooks/check-doc-config-drift.sh` uses to block commits, since a false positive there would
+stop work over punctuation. Commit message bodies are governed by the rule but invisible to the
+linter, which only sees markdown files.
+
+21 new tests in `tools/tests/test_lint_docs.py` cover the scanner (fence tracking across both fence
+styles, code spans, link targets, the hyphen guard, one finding per line) and the git scope, the last
+including the case that matters most: a committed file full of dashes plus one new line reports
+exactly one finding.
+
+Not-tested: nothing in the game. Documentation and tooling only.
+Rejected: a blocking pre-commit hook, and a full 40,476-instance sweep. Both were offered; the user
+took the lint check and the new-writing-only scope.
+
+### fix(careers): a Gundabad career was offered, selectable, and granted nothing
+
+The Cave Troll Master career screen drew its three tier labels and then stopped — no perks, and an
+ability slot reading `cave_troll_master_ability` where a name should be. The data was never missing.
+Its perk tree and its ability template were commented out behind a `DISABLED 2026-05-14 ... not
+ready for live game yet` marker while the `<Career>` element itself stayed live, so character
+creation kept offering a career the registry could not resolve.
+
+Nothing complained, because nothing is built to. `CareerRegistry.GetGroup` returns null for an
+unknown group and `GetChoicesForGroup` returns `EmptyChoices`, neither with a log line — an empty
+screen is indistinguishable from a career that legitimately has no perks yet.
+
+The reason for the park had also expired. `insert_new_faction_careers.py` cloned this exact tree
+into `goblin_troll_driver`, `misty_troll_goad` and `craig_pit_driver`, all three of which ship live
+and all three of which point at the same `cave_troll_master_particle`, `cave_troll_master_activate`
+and `ability_cave_troll_master_icon` assets. The tree players were being protected from was already
+in their game three times over.
+
+An audit of the other 60 careers found no second instance: every one resolves six groups of five
+choices with exactly one keystone each, valid tiers, no duplicate or orphan ids, and a matching
+`career_menu.json` row. All 23 `PassiveEffect` types the data uses exist in `PassiveEffectType` and
+each has a real consumer, so no perk anywhere was silently doing nothing.
+
+`far_harad_halftroll` stays parked. It is commented out consistently across all three career files,
+which is the difference between deliberately absent and accidentally broken.
+
+New `CareerChoiceIntegrityTests` pins the cross-file references — declared `<Group id>`,
+`root_choice_id`, `ability_template_id`, and each group's `career_id` back-reference. Commented-out
+XML is invisible to `XDocument`, which is exactly right: a disabled block is as absent as a deleted
+one and both now fail the same way. All three assertions failed on `cave_troll_master` before the
+fix and on nothing else.
+
+### feat(careers): the last two selectable cultures with no careers at all
+
+Shaghâna and Âbanissa were 2 of 22 cultures a player can pick and the only two whose career stage
+offered nothing but "No specialization". They had sat in `CareerCultureCoverageTests`'
+`documentedExceptions` since Review #24 — the list written *because* of them, which then became the
+reason nobody noticed they were still there.
+
+Three careers each, cloned from Aserai on the evidence rather than on proximity: Shaghâna's own NPC
+file records that it "uses harad face templates and aserai civilian equipment", both cultures carry
+a `*DesertSpeedFeat`, and `VolunteerRecruitmentService` already routes Shaghâna volunteers to
+`harad_levy`. Named for their own towns in the live map — Tribesman of Zajâna, Chatâk Javelineer and
+Sormedân Beast Rider for Shaghâna; House-Guard of Damudûr, Jîret Javelineer and Ivory-Road Beast
+Rider for Âbanissa, whose notables are ivory, gold and gem traders rather than desert tribesmen.
+
+Inherited group names that say Haradwaith, Far Harad, Southrons, Scarlet or Mûmakan were left alone.
+Unlike the Ñoldor → Falathrim rename these words are already correct for a Harad culture, and
+Tolkien gives the Haradrim chieftain a black serpent upon scarlet, so Shaghâna keeps both.
+
+The clone tool's contamination gate only knew the word "Gundabad", which is fine until the source
+faction is not Gundabad. It now takes a `SOURCE_DISPLAY_WORDS` list covering Jelut, Pezarsan and
+Mahûd, so a missed remap fails the run instead of shipping Aserai wording under a Harad career.
+
+Both cultures removed from `documentedExceptions`, which is what makes the test start guarding them.
+The list is now empty.
+
+Verified: build 0 errors, `validate_moduledata.py` PASS, 514 career and culture-coverage tests
+green, and the audit re-run reports 67 careers all resolving 6 groups and 30 choices with no
+selectable culture left uncovered. Not proven: that any of it loaded — a new XML file is null
+in-engine until a full process restart, so the in-game smoke on Gundabad, Shaghâna and Âbanissa is
+still owed.
+
+Known gaps, unchanged by this work: 28 of 49 career portraits and all 49 ability icons have no PNG,
+and 974 of 3024 career localization keys are unregistered, so the 12 translated languages fall back
+to the inline English default.
+
 ## 2026-08-10
 
 ### feat(cultures): Blue Craig and Lindon were kingdoms without cultures, so they played as someone else
@@ -92,6 +196,134 @@ is the new checklist for what a culture needs before it is playable rather than 
 Verified: build 0 errors, 6322 tests pass, `validate_moduledata.py --game-modules` PASS. In-game
 smoke on a new campaign per culture is still owed — a new XML file is null in-engine until a full
 process restart, so none of the above proves the running game loaded it.
+
+### fix(advanced-combat): the warg-bite NRE was caught on every bite instead of prevented
+
+A warg battle under the debugger breaks on a `NullReferenceException` from a `[Lightweight Function]`
+frame inside `Mission.OnAgentHit`. It is not a crash — F5 continues and the battle plays on, because
+that frame **is** `Patch50_DropFlaggedItemGuard`: Harmony replaces a patched method's body with a
+`DynamicMethod`, which is what VS renders that way, and the patch's Finalizer swallows the NRE.
+
+The throw was never functionally destructive. `affectedAgent.CheckToDropFlaggedItem()` is
+`OnAgentHit`'s **last statement** (Mission.cs:5621, v1.4.8) — both `MissionBehavior` loops and the
+`AgentComponent.OnHit` loop have already run, and damage lands upstream in `HandleBlow`. What it cost
+was a throw plus stack unwind per bite inside `OnMissionTick`, and a debugger break on every warg
+engagement. So the fix is to stop generating the throw, not to keep catching it.
+
+Chasing it turned up something better than the tidy version. The patch's own doc comment attributed
+the NRE to a **mount** victim — a warg biting another warg — whose `Equipment[wieldedIndex].Item` was
+null. The live victim is not a mount: `IsHuman=true`, `IsMount=false`, `State=Active`, `Health=13`, no
+rider, no mount, flags carrying `CanWieldWeapon` — and **`Character == null`**. A null `Character`
+means a half-built or mid-teardown agent, one that never reached `InitializeMissionEquipment`, so
+`Equipment` itself is null and the **indexer** is the throw, not `.Item`. Vanilla's guard tests only
+the wielded index (`!= EquipmentIndex.None`) and never `Equipment` nor the resolved `Item`, so both
+shapes reach Agent.cs:3604.
+
+The new Prefix therefore guards the actual throw conditions rather than a proxy such as `IsMount`,
+which the second observation disproves. It checks `Equipment == null` first — which also avoids reads
+vanilla would do, since the wielded-index getters are unsafe raw pointer dereferences
+(`AgentHelper.GetPrimaryWieldedItemIndex`), making the skip strictly safer than vanilla rather than
+merely equivalent. The Finalizer stays: Harmony routes Prefix, original and postfix exceptions through
+it, so it still backstops shapes neither observation has shown. Decision logic sits in
+`DropFlaggedItemGuard`, unit-tested, because a patch body has no harness (ADR-008).
+
+Two things this is **not**. It is not v1.4.8 fallout — `Mission.OnAgentHit`, `Agent.HandleBlow` and
+`Agent.CheckToDropFlaggedItem` are byte-identical v1.4.5 → v1.4.8 and only line numbers moved. And two
+Watch-window results that looked like findings are debugger artifacts: `WalkingSpeedLimitOfMountable`
+throwing `AccessViolationException` and the wielded-index getters throwing `NullReferenceException` are
+both the evaluator failing on native calls and unsafe pointer dereferences, not runtime state.
+
+A reported adjacent defect was checked and **rejected rather than shipped**: `blow.VictimBodyPart` is
+indeed never assigned in `CustomAttacksUtils.TakeDamage`, and `BoneBodyPartType.Head` is 0, so the
+field does read as a headshot — but `Mission.RegisterBlow` takes `Blow` **by value** and its first
+statement is `b.VictimBodyPart = collisionData.VictimHitBodyPart`, which TAOM already sets to
+`Abdomen`. The engine normalises the field at the entry of the exact method TAOM calls, so no consumer
+ever sees the stale value. The "fix" would have been a no-op with a false changelog claim attached.
+
+Still open, and the more valuable question: why a half-built agent is in the bone-sweep target set at
+all. The Prefix makes the symptom moot but the target filters (`SpatialGrid`,
+`AgentAdapter.CustomAttack`, `HandleWargTargetHit`) all admit an agent that `IsActive()` reports as
+live before it is built — and that gap would affect spider, elephant and mûmakil identically.
+
+Not-tested: Harmony patch invocation (requires live game, ADR-008) — verify in-game by running a warg
+battle with `System.NullReferenceException` ticked in Exception Settings.
+Research: Mission.OnAgentHit, Mission.RegisterBlow, Agent.HandleBlow, Agent.CheckToDropFlaggedItem,
+AgentHelper, MissionEquipment, BoneBodyPartType, EquipmentIndex (installed v1.4.8)
+
+### feat(tools): a public build can drop 92.99 GB, and the engine settled the RDC question itself
+
+The editor's Publish Module step copies `RuntimeDataCache` into every module, and nobody could say
+whether players need it. The 2026-08-08 Procmon capture proved the shipping client *reads* it —
+13,795 `ReadFile` across 5,036 `.rdc` files — which killed the hoped-for "editor-only, delete it"
+answer. Two checks against the installed binaries take it the rest of the way.
+
+Diffing the RDC string surface between the client and editor builds of `TaleWorlds.Native.dll`: the
+client has `RuntimeDataCache`, `RDC0`, `RDC cache path is not valid` and the partial-read warning,
+and nothing else. Every write string — textures, meshes, animation clips, cloth cook data — is
+editor-only, including `External .rdc file modification detected. RDC files cannot be updated
+outside the editor.` The zero writes in that capture were not a warm cache; the client genuinely
+cannot rebuild what it reads. And vanilla `Modules\Native` ships 1,188 tpacs, 44.71 GB, and **zero**
+`.rdc` while running fine, on an identical TPAC v2 header. So the no-RDC path is retail's normal
+path and the only open number is what taking it costs.
+
+`tools/Invoke-RdcAbTest.ps1` makes that measurement one command — `-Status` / `-Off` / `-On` /
+`-Report`. It renames rather than deletes, refuses to run while the game is open, rolls back a
+partial toggle, and stamps every log artifact FRESH or STALE against a cutoff, because the first
+attempt at this capture produced zero rows for the sole reason that the game never ran. `-Report`
+pulled an RDC-ON baseline out of this morning's session: 67.4 s to `BattlePlayable` on
+`battle_terrain_biome_040`, 12,799 MB private at loading-done, 16,979 MB peak.
+
+`tools/package_release.py` is the packager the release process never had. It copies an allowed set
+into a fresh destination and never deletes from the source, so the editor install keeps the cache
+developers need. Dry run over the five release modules: **147.72 GB → 54.73 GB**, with zero
+unrecognised entries. Unknown paths are not merely logged — they fail the run until reviewed, since
+a new editor artifact riding along silently and a needed folder vanishing silently are the same bug.
+
+One exclusion did not survive the evidence: the audit doc listed `EmAssetPackages` as "editor-mode
+packs" worth 11.7 GB. Vanilla ships 26.36 GB of it. It is now a candidate that ships by default
+pending its own measurement, as is `Assets/Race Test`. The same check cleared `SceneEditData` and
+`SceneObj`, which vanilla also ships. Dropping RDC prints a standing warning naming the unrun A/B
+rather than letting a default harden into an assumption.
+
+Not-tested: 6,319 C# tests pass, 1 fails — `EveryBoolPrefix_HasACoopDisposition`, because another
+session's uncommitted work turned `Agent_CheckToDropFlaggedItem_Guard_Patch` into a `bool` prefix
+without classifying it. Not this change, and left alone. 542 Python tests green, 28 of them new.
+Research: `TaleWorlds.Native.dll` string surface, client vs editor build; `Modules\Native` tpac/rdc inventory.
+
+### test(release): the RDC A/B ran, and the first answer it gave was wrong
+
+Phase 1 went live with the cache renamed away on all four modules. The client booted, TAOM loaded and
+wrote its log, no `rgl_log_errors` file was produced at all — and the main menu came up **black**. The
+obvious reading was the one this repo's own `ui_loading` note predicts: a sprite whose manifest entry
+resolves while its texture does not, drawing textured-with-nothing, silently. That reading was wrong.
+The cause was stale compressed shader sacks, invalidated when Steam moved the install to v1.4.8 at
+07:22 the same morning; deleting them fixed the art with the cache still absent.
+
+Two variables had already been flagged — the missing cache, and a `TAOM.dll` built minutes earlier
+from another session's uncommitted prefix. Neither was the culprit. A third nobody had listed was.
+The lesson is not about RDC: an A/B whose environment changed that morning has more arms than the
+person running it thinks, and the honest move on a black screen is to enumerate what else moved
+that day before naming a cause.
+
+What is now settled, from the same session:
+
+- **The editor requires the cache.** Launched against the renamed folders it asserts on
+  `rglIntrusive_ptr.h:151`, `px != nullptr` — and it regenerated 6 `.rdc` files before dying, which
+  is the editor-only write surface demonstrating itself. Developers keep it; that was never in doubt
+  and is now measured.
+- **The shipping client reaches the main menu without it** and regenerates nothing, exactly as the
+  string evidence said it could not.
+
+What is **not** settled: the campaign map and a battle were never reached, and TAOM_Map is 13,577 of
+the 23,329 recorded operations against TAOM's 1,801. The menu exercised the small end. Load-time
+comparison against the 67.4 s baseline is also blocked until shaders are warm again, or the
+recompilation cost would be charged to the cache. The verdict stays open and the packager keeps
+printing its warning.
+
+Restoring afterwards found both a `RuntimeDataCache` and a `RuntimeDataCache.OFF` under TAOM. All six
+regenerated GUIDs already existed in the original 98, so nothing was lost; the partial was set aside
+rather than deleted. `package_release.py` now matches `RuntimeDataCache*` by prefix, so a stray
+`.OFF` or `.editor-partial-<date>` is excluded as cache instead of blocking a release run as unknown.
 
 ### chore: v1.4.8 engine bump — nothing in `Main/` had to change
 

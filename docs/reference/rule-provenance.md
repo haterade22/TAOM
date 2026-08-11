@@ -83,6 +83,14 @@ User standing instruction, 2026-06-14. Rule 1 generalizes `evidence-over-claims.
 
 Imported from [blader/humanizer](https://github.com/blader/humanizer) (MIT), whose patterns derive from Wikipedia's "Signs of AI writing". This rule is the high-value, TAOM-carve-out subset applied always-on; the skill is the full reference.
 
+### The em-dash reversal (2026-08-11)
+
+Pattern #14 (em and en dashes) was originally carved out: TAOM used them as deliberate semantic markers and the rule said to keep them. **That is reversed.** User standing instruction, 2026-08-11: the point of the rule is that produced work should not be identifiable as machine-written, and the long dashes are the tell that gives it away first. Nothing about TAOM's analytical style depended on them; a comma, colon, semicolon, parentheses or a sentence break covers every case they were doing.
+
+Three decisions bound the reversal, all the user's: hyphens stay legal (banning them would break `--flags`, `v1.4.8` and every kebab-case filename); the ban covers produced artifacts only, not chat replies; and the roughly 40,000 dashes already in the tree (40,476, counted that day across CHANGELOG, `docs/` and `.claude/`) are left alone, since a 711-file rewrite risks mangling tables for no reader benefit.
+
+Enforcement is `check_ai_dashes` in `tools/lint_docs.py`, scoped to lines added since a base ref plus untracked markdown, with code spans, fenced blocks, URLs and `<!-- lint-allow-dash -->` exempt. It is deliberately **report-only**: it is not in the `--fail-on-drift` set that `check-doc-config-drift.sh` uses to block commits, because a false positive there would block work over punctuation.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
