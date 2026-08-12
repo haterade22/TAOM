@@ -43,6 +43,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private readonly IGameMenuAdapter _gameMenu;
     private readonly IEnlistmentMenuService _menuService;
     private readonly IServiceStatusService _status;
+    private readonly IArmyMembershipAdapter _army;
     private readonly IModLogger _logger;
 
     private float _budget;
@@ -59,6 +60,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         IGameMenuAdapter gameMenu,
         IEnlistmentMenuService menuService,
         IServiceStatusService status,
+        IArmyMembershipAdapter army,
         IModLogger logger)
     {
         _store = store;
@@ -68,6 +70,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _gameMenu = gameMenu;
         _menuService = menuService;
         _status = status;
+        _army = army;
         _logger = logger;
     }
 
@@ -104,6 +107,15 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _cachedCommanderPartyId = commander.PartyId;
 
         var presence = _attachment.GetPresenceFlags();
+
+        // Shore leave dies with the settlement stop (field report 1). Done here, on the presence
+        // this pump already read, rather than through a second service doing its own lookup — one
+        // owner for the revoke means it cannot be half-applied.
+        if (TownLeavePolicy.ShouldRevokeLeave(record.State, presence.IsInSettlement, record.OnTownLeave))
+        {
+            record.OnTownLeave = false;
+            _logger?.LogInfo("[Enlistment] shore leave ended — the column has moved on");
+        }
 
         TryBreakBattleLatch(record, commander, presence);
         TryRequestBattleJoin(record, commander, presence, nowHours);
@@ -144,6 +156,11 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     /// id is matched by StringId, and lord-party ids are identical across a reload of the same
     /// campaign — so a stale handle from a destroyed campaign HITS the cache test and the cheap
     /// position sync then drives the player from a dead party's position at frame rate.
+    ///
+    /// This method is the ONE place that knows the lifetime of the feature's per-session state, so
+    /// collaborators' caches are dropped from here too rather than each being wired separately into
+    /// the load hook — the same reason <c>_attachment.InvalidateCommanderCache()</c> is called here
+    /// and not from <c>EnlistmentBehavior</c>.
     /// </summary>
     public void ResetSessionCaches()
     {
@@ -154,6 +171,14 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _statusBudget = 0f;
         _attachment.InvalidateCommanderCache();
         _status?.Invalidate();
+
+        // The army adapter holds a live Army REFERENCE on a singleton that outlives the campaign.
+        // After a reload it names either a dead campaign's object or an instance this world no
+        // longer contains, and the identity test in LeaveArmy can then never match again for the
+        // rest of the process — so the army raised for a battle would never be disbanded, and a
+        // bare-ctor army carries a null AiBehaviorObject that crashes the map UI. See
+        // IArmyMembershipAdapter.ResetSessionCaches.
+        _army?.ResetSessionCaches();
     }
 
     public void OnPartyJoinedRunningMapEvent(string partyId)
@@ -234,6 +259,14 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
 
     private void EnsureServiceMenu(EnlistmentRecord record, PlayerPresenceFlags presence)
     {
+        // SHORE LEAVE OUTRANKS THE INVARIANT. IsRedirectable is id-only by design ("am I entitled
+        // to replace what is on screen?"), so it answers TRUE for "town" — meaning that without this
+        // the pump would close the settlement menu out from under a player who is deliberately away
+        // from camp, seconds after he opened it. The revoke above is what bounds this: the moment
+        // the column moves, the flag clears and the very next pass restores the menu.
+        if (record.OnTownLeave)
+            return;
+
         // The EnlistedAttached gate is LOAD-BEARING, not defensive: "encounter" and
         // "join_encounter" are in the default redirect list, so asserting the wait menu while in
         // EnlistedBattle would eat the battle, loot and aftermath menus.

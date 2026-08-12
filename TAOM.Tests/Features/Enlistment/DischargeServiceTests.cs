@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -26,10 +26,12 @@ public class DischargeServiceTests
     private IEncounterAdapter _encounter = null!;
     private ICommanderLordAdapter _commanderAdapter = null!;
     private IGameMenuAdapter _gameMenu = null!;
+    private IArmyMembershipAdapter _army = null!;
 
     [TestInitialize]
     public void Setup()
     {
+        _army = Substitute.For<IArmyMembershipAdapter>();
         _logger = Substitute.For<IModLogger>();
         _store = new EnlistmentStore(_logger);
         _machine = new EnlistmentStateMachine(_store, _logger);
@@ -42,7 +44,7 @@ public class DischargeServiceTests
         _gameMenu.EnsureMenuOpen(Arg.Any<string>()).Returns(true);
         _attachment.MoveIntoSettlement(Arg.Any<string>()).Returns(true);
         _service = new DischargeService(_store, _machine, _attachment, _encounter,
-            new EncounterOwnershipPolicy(), _commanderAdapter, _gameMenu, _logger);
+            new EncounterOwnershipPolicy(), _commanderAdapter, _gameMenu, Substitute.For<IServiceDiplomacyService>(), _army, _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
@@ -52,6 +54,50 @@ public class DischargeServiceTests
         _store.Record.CommanderHeroId = "lord_1_1";
         _store.Record.EnlistedAtDay = 100.0;
         _store.Record.ContractEndDay = 465.0;
+    }
+
+    /// <summary>
+    /// Codex P1 (2026-08-12). Discharge can fire MID-BATTLE — the MCM master switch flipping off
+    /// (<c>ReconcileCore</c> discharges rather than halting, so the player is not stranded hidden),
+    /// or <c>CommanderDead</c> raised from the reconciler while the state is <c>EnlistedBattle</c>.
+    /// At that moment the adapter may hold an army it raised for this fight.
+    ///
+    /// <c>ClearArmyAttachment</c> only detaches the PLAYER; it has no idea the army exists. Without
+    /// routing discharge through <c>LeaveArmy</c> the army is left standing with the null
+    /// <c>AiBehaviorObject</c> that crashes <c>Army.GetLongTermBehaviorTextForAILeadedParty</c> —
+    /// and nothing would ever clean it up, because after discharge no battle path runs again and
+    /// <c>Army.CheckInactivity</c> never times out an army whose leader is besieging.
+    /// </summary>
+    [TestMethod]
+    public void Execute_EveryReason_LeavesTheCommanderArmy()
+    {
+        foreach (DischargeReason reason in Enum.GetValues(typeof(DischargeReason)))
+        {
+            Setup();
+            MakeEnlisted(EnlistmentState.EnlistedBattle);
+
+            _service.Execute(reason);
+
+            _army.Received(1).LeaveArmy();
+        }
+    }
+
+    [TestMethod]
+    public void Execute_LeavesTheArmyBeforeClearingTheAttachment()
+    {
+        // Ordering pin. LeaveArmy disbands what we raised AND detaches; ClearArmyAttachment is the
+        // idempotent safety net beneath it that also covers a REAL army we never created. Reversing
+        // them would leave LeaveArmy nothing to identify — main.Army is already null by then, so the
+        // created army would never be disbanded.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        Received.InOrder(() =>
+        {
+            _army.LeaveArmy();
+            _attachment.ClearArmyAttachment();
+        });
     }
 
     [TestMethod]

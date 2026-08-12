@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -37,10 +37,11 @@ public class EnlistmentLoadNormalizerTests
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
         var attachment = new ServiceAttachmentService(_partyAdapter, Substitute.For<IGameMenuAdapter>(), _logger);
-        var discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
+        var discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), Substitute.For<IServiceDiplomacyService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
         var reconciler = new EnlistmentReconciler(_store, _machine, attachment, _commander, discharge,
             new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
-            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(), _logger);
+            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(),
+            Substitute.For<IArmyMembershipAdapter>(), _logger);
         _normalizer = new EnlistmentLoadNormalizer(
             _store, _machine, reconciler, _partyAdapter, discharge, _logger);
     }

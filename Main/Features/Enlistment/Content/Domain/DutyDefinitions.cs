@@ -12,6 +12,10 @@ public sealed class RewardSpec
     public int SkillXp { get; set; }
     public int Trust { get; set; }
     public int Relation { get; set; }
+
+    /// <summary>Clan renown. Granted through GainRenownAction so the campaign's own renown-gained
+    /// event fires — SAS writes Clan.Renown directly and skips every listener.</summary>
+    public int Renown { get; set; }
     public ReputationDomain RepDomain { get; set; } = ReputationDomain.None;
     public int RepAmount { get; set; }
 }

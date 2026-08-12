@@ -12,6 +12,7 @@ public class ServiceBattleService : IServiceBattleService
     private readonly IServiceAttachmentService _attachment;
     private readonly IGameMenuAdapter _gameMenu;
     private readonly IEncounterOwnershipPolicy _ownership;
+    private readonly IArmyMembershipAdapter _army;
     private readonly IModLogger _logger;
 
     public ServiceBattleService(
@@ -21,6 +22,7 @@ public class ServiceBattleService : IServiceBattleService
         IServiceAttachmentService attachment,
         IGameMenuAdapter gameMenu,
         IEncounterOwnershipPolicy ownership,
+        IArmyMembershipAdapter army,
         IModLogger logger)
     {
         _store = store;
@@ -29,6 +31,7 @@ public class ServiceBattleService : IServiceBattleService
         _attachment = attachment;
         _gameMenu = gameMenu;
         _ownership = ownership;
+        _army = army;
         _logger = logger;
     }
 
@@ -81,6 +84,16 @@ public class ServiceBattleService : IServiceBattleService
         {
         _attachment.SyncPosition(_store.Record.CommanderHeroId);
 
+        // ARMY MERGE, and it has to be here: after presence (an inactive party is skipped by the
+        // engine's encounter detection) and before JoinBattle, because Mission.GetAgentTeam reads
+        // IsInSameArmyAsPlayer when the mission builds its teams — which is downstream of the join.
+        //
+        // Best-effort by design. A commander with no kingdom cannot have an army raised for him, and
+        // that is not a reason to miss the battle: without the merge the player still fights, just
+        // on his own team as before (#443). Never let a cosmetic placement fix cost a join.
+        if (!_army.JoinCommanderArmy(_store.Record.CommanderHeroId))
+            _logger?.LogInfo("[Enlistment] army merge unavailable — joining on the ally-team path (see #443)");
+
         // EnsureEncounterAgainst refuses to seed while a DIFFERENT PlayerEncounter.Current
         // exists. Rather than burning the immediate join and waiting out the retry budget — long
         // enough to miss a short battle — clear a stale encounter that is OURS and try once more
@@ -132,6 +145,11 @@ public class ServiceBattleService : IServiceBattleService
         // PlayerEncounter behind blocks the main party from ever entering another encounter.
         _logger?.LogWarning($"[Enlistment] could not join commander battle ({trigger}) — rolling back to parked service mode");
 
+        // The merge may have succeeded before a later step failed. Undo it here rather than relying
+        // on the re-park below: a rollback that leaves the player attached to an army he is not
+        // fighting with is the same forfeited-escape state as above, with no battle to justify it.
+        _army.LeaveArmy();
+
         // Only clean up an encounter that is OURS. Everything after this runs on every rollback
         // path regardless of the verdict — the player must always end up parked with a menu.
         var rollbackVerdict = _ownership.Evaluate(
@@ -156,6 +174,21 @@ public class ServiceBattleService : IServiceBattleService
 
     public void OnCommanderBattleEnded()
     {
+        // LEAVE THE ARMY FIRST, above every gate below, and this ordering is the whole reason the
+        // membership is transient.
+        //
+        // PlayerEncounter.FinishEncounterInternal grants the post-defeat escape —
+        // TeleportPartyToOutSideOfEncounterRadius() + SetDoNotAttackMainParty(2) — only when
+        // MainParty.AttachedTo == null. Army.AddPartyToMergedParties sets AttachedTo. So a player
+        // still attached when the encounter finishes forfeits vanilla's escape and is re-engaged on
+        // the spot by whoever just beat him. That is the field report *"after they were defeated I
+        // immediately got jumped by the enemy army"*, and ServeAsSoldier ships with the same hole.
+        //
+        // This runs on MapEventEnded, while the aftermath encounter is still open — so the detach
+        // lands before Finish, not after. Above the state gate too: army membership is ours to clean
+        // up whatever state we are in, and leaking it would strand the player attached indefinitely.
+        _army.LeaveArmy();
+
         if (_store.Record.State != EnlistmentState.EnlistedBattle)
             return;
 

@@ -284,3 +284,55 @@ citation makes it read as authoritative, and the next person to need a real gate
 **The rule:** a deliberate approximation of engine logic states that it is one, names what it
 omits, and says what must be fixed before promotion to a decision input. A precise-looking citation
 on an imprecise copy is worse than no citation.
+
+### When you skip an engine initializer, audit what READS the field it would have set
+
+Constructing an engine object through a bare constructor to avoid an initializer's side effects
+leaves every field that initializer would have populated at its default. Verifying that the default
+makes things INERT is only half the audit — inertness is what the field fails to *drive*. The other
+half is what *reads* it, and a reader has no reason to guard a field the engine's own construction
+path always fills.
+
+- **Why missed:** `ArmyMembershipAdapter` uses `new Army(...)` rather than `Kingdom.CreateArmy`,
+  because `CreateArmy` calls `Gather()` and would march the commander off the battlefield. The review
+  confirmed the resulting null `AiBehaviorObject` keeps the army's siege and owner-change handlers
+  inert — they all gate on `AiBehaviorObject is Settlement` — and wrote exactly that into the doc
+  comment and the feature doc. Nobody grepped for readers. Five of the seven cases in
+  `Army.GetLongTermBehaviorTextForAILeadedParty` cast and dereference it unguarded, reached from the
+  map party tooltip (`MobileParty.GetBehaviorText`) and the kingdom Armies tab (`KingdomArmyItemVM`);
+  `_aiBehaviorObject` is `[SaveableField(16)]`, so the crash survives every reload, and
+  `Army.CheckInactivity` *decrements* the inactivity counter for a besieging leader, so the army
+  never times out on its own either.
+- **Prevent:** after choosing a bare constructor over an engine factory, list the fields the factory
+  would have set and grep the engine for every READ of each — not just the writes and the gates. If
+  any reader dereferences without a guard, the object must not outlive the narrow window it was
+  created for. Pin it with a `[TestCategory("BindingVerification")]` test asserting the unguarded
+  member still exists, so an engine bump that adds the guard tells you the workaround can relax.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #6.
+
+### A field's unguarded readers are not confined to the class that declares it
+
+Grepping the declaring type for reads of a field you are leaving at default finds the readers that
+type owns. It does not find the ones in behaviours, view models, conversation conditions, or sibling
+engine types — and those are usually the reachable ones, because they sit behind ordinary player
+actions rather than internal ticks.
+
+- **Why missed:** the review of TAOM's bare-ctor `Army` enumerated every read of `AiBehaviorObject`
+  inside `Army.cs` and concluded the exposure was the map tooltip and the kingdom Armies tab. Two
+  more readers lived elsewhere: `LordConversationsCampaignBehavior` (reads
+  `Army.AiBehaviorObject.Name` gated only on `IsWaitingForArmyMembers()` — which is true FOREVER for
+  a bare-ctor army — so talking to any lord in it is an unconditional CTD) and
+  `MobileParty.CheckAiForMapChangeAndUpdateIfNeeded` (branches on the field being null, then
+  dereferences it on that same branch). The first is reached by an action the feature's own menu
+  offers.
+- **Second half: check what WRITES the state you are reasoning from.** The same review argued
+  certain switch cases were unreachable-with-a-null because the engine writes the objective whenever
+  it sets that behaviour. True for every case but one: `SetPartyAiAction`'s `PatrolAroundPoint`
+  branch sets `DefaultBehavior` without writing `AiBehaviorObject`. Reachability arguments built on
+  "the engine always sets both" must be checked against the writer, not assumed from the readers.
+- **Prevent:** grep the whole decompiled tree for the member name, not the declaring file — then
+  classify each hit as guarded or not, and record the list in the feature doc so it is never
+  re-derived. And prefer making the invariant a property of the OBJECT (seed the field) over
+  enumerating the paths that could observe it violated; the enumeration is only ever as good as your
+  grep, while the seed is true by construction.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #13.

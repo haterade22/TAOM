@@ -78,6 +78,28 @@ public sealed class GameMenuAdapter : IGameMenuAdapter
         }
     }
 
+    public string CurrentSettlementMenuId
+    {
+        get
+        {
+            try
+            {
+                var settlement = TaleWorlds.CampaignSystem.Settlements.Settlement.CurrentSettlement;
+                if (settlement == null)
+                    return null;
+                if (settlement.IsTown) return "town";
+                if (settlement.IsCastle) return "castle";
+                if (settlement.IsVillage) return "village";
+                return null;
+            }
+            catch (System.Exception ex)
+            {
+                _logger?.LogError($"[Enlistment] CurrentSettlementMenuId failed: {ex.Message}");
+                return null;
+            }
+        }
+    }
+
     public bool ExitToLast()
     {
         try

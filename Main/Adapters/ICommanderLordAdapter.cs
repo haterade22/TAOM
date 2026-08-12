@@ -38,6 +38,17 @@ public interface ICommanderLordAdapter
     /// </summary>
     string GetPartyId(string heroId);
 
+    /// <summary>
+    /// StringId of the party leading the army the commander belongs to, or null when he belongs to
+    /// none. Returns his OWN party id when he leads the army himself.
+    ///
+    /// Deliberately a second cheap lookup rather than a <c>GetSnapshot</c> call: the one consumer
+    /// runs for every map event in the world while enlisted, and the full snapshot walks
+    /// Culture/Clan/MapFaction/Settlement and allocates through <c>Name.ToString()</c> for data it
+    /// never reads.
+    /// </summary>
+    string GetArmyLeaderPartyId(string heroId);
+
     /// <summary>True when the hero resolves and is a lord (dialog-gate check).</summary>
     bool IsLord(string heroId);
 

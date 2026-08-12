@@ -73,4 +73,41 @@ public class EnlistmentContainerWiringTests
             "IEnlistmentReconciler is not resolvable: "
                 + string.Join("; ", errors.Select(e => e.Value.Message)));
     }
+
+    /// <summary>
+    /// <c>EnlistmentBehavior.OnGameLoaded</c> is the load hook, and it cannot be executed in a unit
+    /// test — it reads <c>CampaignTime.Now</c>, which needs a live <c>Campaign</c>. What IS testable
+    /// is that it resolves, which is what breaks when a dependency is added to the graph below it.
+    /// The behaviour it triggers is pinned directly on the service:
+    /// <c>ServiceMaintenanceServiceTests.ResetSessionCaches_AlsoDropsTheArmyAdapterHandle</c>.
+    /// </summary>
+    [TestMethod]
+    public void LifecycleBehavior_Resolvable_SessionCacheResetChainSatisfied()
+    {
+        var container = BuildContainer();
+
+        var errors = container.Validate(typeof(EnlistmentBehavior));
+
+        Assert.AreEqual(
+            0,
+            errors.Length,
+            "EnlistmentBehavior is not resolvable: "
+                + string.Join("; ", errors.Select(e => e.Value.Message)));
+    }
+
+    [TestMethod]
+    public void MaintenanceService_Resolvable_ArmyCacheResetDependencySatisfied()
+    {
+        // Owns ResetSessionCaches for the whole feature; it gained IArmyMembershipAdapter on
+        // 2026-08-12 so the army handle is dropped on load with every other per-session cache.
+        var container = BuildContainer();
+
+        var errors = container.Validate(typeof(IServiceMaintenanceService));
+
+        Assert.AreEqual(
+            0,
+            errors.Length,
+            "IServiceMaintenanceService is not resolvable: "
+                + string.Join("; ", errors.Select(e => e.Value.Message)));
+    }
 }

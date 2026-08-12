@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using System;
 using System.Globalization;
 
@@ -39,6 +40,50 @@ public sealed class EnlistmentRecord
     public bool PendingCommanderAttachment { get; set; }
 
     /// <summary>
+    /// Shore leave is active: the player has stepped out of the column's camp into the settlement it
+    /// is resting in, so the settlement menu is his to use (field report 1). Suspends ONLY the
+    /// town/castle/village redirects — every other redirect and every service rule still applies.
+    ///
+    /// Persisted because the pass has to survive a save taken while shopping; revoked by
+    /// <see cref="TAOM.Features.Enlistment.TownLeavePolicy.ShouldRevokeLeave"/> the moment the column
+    /// is no longer at rest in that settlement.
+    /// </summary>
+    public bool OnTownLeave { get; set; }
+
+    /// <summary>
+    /// Faction ids this service put the player at war with (field report 5), and the ids he was
+    /// ALREADY at war with when he swore. Both are needed: the discharge unwinds the first minus the
+    /// second, which is what stops enlistment becoming a free universal peace button the way it is
+    /// in ServeAsSoldier.
+    ///
+    /// Serialised as comma-separated ids inside the existing semicolon-delimited record, so a
+    /// faction id may not contain a comma or a semicolon — StringIds never do.
+    /// </summary>
+    public List<string> MirroredWars { get; set; } = new List<string>();
+
+    public List<string> EnemiesAtOath { get; set; } = new List<string>();
+
+    /// <summary>
+    /// The player's own <c>MapFaction</c> id at the moment the mirror declared those wars — the
+    /// identity that DID the declaring, pinned so the unwind can refuse to act on behalf of a
+    /// different one.
+    ///
+    /// WHY IT IS NEEDED. Verified on installed 1.4.8, <c>Hero.MapFaction</c> is
+    /// <c>Clan.Kingdom ?? Clan</c>, and the enlist gate deliberately admits a player whose clan is
+    /// already a kingdom vassal. So the identity is not stable across a term of service: a player
+    /// who is independent at oath declares as his CLAN, and if his clan joins a kingdom before
+    /// discharge the unwind would resolve <c>MapFaction</c> live and call
+    /// <c>MakePeaceAction.Apply</c> on the KINGDOM — ending a war for every vassal in it as a side
+    /// effect of one soldier's discharge, invisibly. The reverse (vassal at oath, independent at
+    /// discharge) silently strands the kingdom in wars the oath created.
+    ///
+    /// Empty means no pin was recorded — a save from before this field existed. The unwind then
+    /// proceeds as it did before, which is the status quo rather than a new hazard, and says so in
+    /// the log.
+    /// </summary>
+    public string OathFactionId { get; set; }
+
+    /// <summary>
     /// Campaign-hours stamp before which no further attach/join attempt is made. ONE budget shared
     /// by the real-time pump and the hourly reconciler, so adding the pump cannot multiply the
     /// attempt rate. Null means 'retry immediately'.
@@ -62,6 +107,10 @@ public sealed class EnlistmentRecord
         ContractEndDay = null;
         GraceEndsAtDay = null;
         PendingCommanderAttachment = false;
+        OnTownLeave = false;
+        MirroredWars = new List<string>();
+        EnemiesAtOath = new List<string>();
+        OathFactionId = null;
         NextAttachRetryAtHours = null;
     }
 
@@ -77,6 +126,10 @@ public sealed class EnlistmentRecord
         ContractEndDay = other.ContractEndDay;
         GraceEndsAtDay = other.GraceEndsAtDay;
         PendingCommanderAttachment = other.PendingCommanderAttachment;
+        OnTownLeave = other.OnTownLeave;
+        MirroredWars = new List<string>(other.MirroredWars ?? new List<string>());
+        EnemiesAtOath = new List<string>(other.EnemiesAtOath ?? new List<string>());
+        OathFactionId = other.OathFactionId;
         NextAttachRetryAtHours = other.NextAttachRetryAtHours;
     }
 
@@ -101,6 +154,14 @@ public sealed class EnlistmentRecord
             parts.Add("graceEndDay=" + GraceEndsAtDay.Value.ToString("R", inv));
         if (PendingCommanderAttachment)
             parts.Add("pendingAttach=1");
+        if (OnTownLeave)
+            parts.Add("onTownLeave=1");
+        if (MirroredWars != null && MirroredWars.Count > 0)
+            parts.Add("mirroredWars=" + string.Join(",", MirroredWars));
+        if (EnemiesAtOath != null && EnemiesAtOath.Count > 0)
+            parts.Add("enemiesAtOath=" + string.Join(",", EnemiesAtOath));
+        if (!string.IsNullOrEmpty(OathFactionId))
+            parts.Add("oathFactionId=" + OathFactionId);
         if (NextAttachRetryAtHours.HasValue)
             parts.Add("nextAttachHour=" + NextAttachRetryAtHours.Value.ToString("R", inv));
         return string.Join(";", parts);
@@ -121,7 +182,8 @@ public sealed class EnlistmentRecord
 
         string stateRaw = null, heroId = null, commanderId = null, petitionId = null;
         string enlistedDayRaw = null, contractEndRaw = null, graceEndRaw = null;
-        string pendingAttachRaw = null, nextAttachHourRaw = null;
+        string pendingAttachRaw = null, nextAttachHourRaw = null, onTownLeaveRaw = null;
+        string mirroredWarsRaw = null, enemiesAtOathRaw = null, oathFactionIdRaw = null;
 
         foreach (var part in serialized.Split(';'))
         {
@@ -140,6 +202,10 @@ public sealed class EnlistmentRecord
                 case "contractEndDay": contractEndRaw = value; break;
                 case "graceEndDay": graceEndRaw = value; break;
                 case "pendingAttach": pendingAttachRaw = value; break;
+                case "onTownLeave": onTownLeaveRaw = value; break;
+                case "mirroredWars": mirroredWarsRaw = value; break;
+                case "enemiesAtOath": enemiesAtOathRaw = value; break;
+                case "oathFactionId": oathFactionIdRaw = value; break;
                 case "nextAttachHour": nextAttachHourRaw = value; break;
                 // Unknown keys: additive fields from a newer same-major build — ignore.
             }
@@ -164,6 +230,12 @@ public sealed class EnlistmentRecord
             ContractEndDay = ParseFiniteDayOrNull(contractEndRaw),
             GraceEndsAtDay = ParseFiniteDayOrNull(graceEndRaw),
             PendingCommanderAttachment = pendingAttachRaw == "1",
+            OnTownLeave = onTownLeaveRaw == "1",
+            MirroredWars = ParseIdList(mirroredWarsRaw),
+            EnemiesAtOath = ParseIdList(enemiesAtOathRaw),
+            // Absent in a save from before the pin existed. Empty means 'unknown', which
+            // UnwindServiceWars treats as the pre-pin status quo rather than a new refusal.
+            OathFactionId = NullIfEmpty(oathFactionIdRaw),
             // ParseFiniteDayOrNull, not a bare parse: a non-finite stamp would compare false
             // against every future hour and freeze EVERY retry for the rest of the campaign.
             NextAttachRetryAtHours = ParseFiniteDayOrNull(nextAttachHourRaw),
@@ -200,6 +272,26 @@ public sealed class EnlistmentRecord
                || state == EnlistmentState.EnlistedDetachedOnDuty
             ? EnlistmentState.EnlistedAttached
             : state;
+    }
+
+    /// <summary>
+    /// Parse a comma-separated id list. An absent or malformed value yields an EMPTY list, never
+    /// null: the war policy treats an empty mirror as "nothing to unwind", which is the safe
+    /// reading, while a null would put a NullReferenceException on the discharge path.
+    /// </summary>
+    private static List<string> ParseIdList(string raw)
+    {
+        var list = new List<string>();
+        if (string.IsNullOrEmpty(raw))
+            return list;
+
+        foreach (var part in raw.Split(','))
+        {
+            var id = part?.Trim();
+            if (!string.IsNullOrEmpty(id))
+                list.Add(id);
+        }
+        return list;
     }
 
     private static string NullIfEmpty(string value) => string.IsNullOrEmpty(value) ? null : value;

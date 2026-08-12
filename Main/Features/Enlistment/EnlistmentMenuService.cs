@@ -63,6 +63,20 @@ public class EnlistmentMenuService : IEnlistmentMenuService
             return false;
         }
 
+        // SHORE LEAVE (field report 1). The player is genuinely inside the settlement already —
+        // EnterSettlementAction.ApplyForParty ran on the follow path — and this redirect was the only
+        // thing standing between him and the market he is standing in. While the pass is held, the
+        // settlement's own menu is his.
+        //
+        // Narrow on purpose: only the three settlement menus are released, and only while the column
+        // rests there. Every other redirect, and the whole of service, still applies — this is a pass
+        // to walk the town, not a suspension of enlistment.
+        if (_store.Record.OnTownLeave && IsSettlementMenu(requestedMenuId))
+        {
+            _logger?.LogInfo($"[Enlistment] shore leave — '{requestedMenuId}' left to the player");
+            return false;
+        }
+
         if (_redirectIds.Contains(requestedMenuId))
         {
             redirectedMenuId = ServiceWaitMenuId;
@@ -82,4 +96,14 @@ public class EnlistmentMenuService : IEnlistmentMenuService
     /// <summary>Menus that drive a live PlayerEncounter rather than merely describing state.</summary>
     private static bool IsBattleMenu(string menuId) =>
         menuId == "encounter" || menuId == "join_encounter";
+
+    /// <summary>
+    /// The three settlement menus shore leave releases. Deliberately its own list rather than a
+    /// subtraction from <c>RedirectMenuIds</c>: that list also carries the settlement APPROACH menus
+    /// (<c>town_outside</c>, <c>village_outside</c>, the port menus), which stay redirected even on
+    /// leave — a soldier on a pass is already inside, and has no business back on the map deciding
+    /// whether to besiege the place.
+    /// </summary>
+    private static bool IsSettlementMenu(string menuId) =>
+        menuId == "town" || menuId == "castle" || menuId == "village";
 }

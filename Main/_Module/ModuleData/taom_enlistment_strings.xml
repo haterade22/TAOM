@@ -6,6 +6,7 @@
 	<string id="taom_enlist_discharge" text="{=taom_enlist_discharge}I ask to be released from your service." />
 	<string id="taom_enlist_discharge_answer" text="{=taom_enlist_discharge_answer}You have marched well enough. Go, then — you are released." />
 	<string id="taom_enlist_menu_leave" text="{=taom_enlist_menu_leave}Ask to be released from service" />
+	<string id="taom_enlist_menu_leave_pass" text="{=taom_enlist_menu_leave_pass}Take leave in the settlement" />
 	<string id="taom_enlist_menu_status" text="{=taom_enlist_menu_status}Review your service" />
 	<string id="taom_enlist_merit_toast" text="{=taom_enlist_merit_toast}The sergeants noted your conduct: {GRADE}." />
 	<string id="taom_enlist_oath_ask" text="{=taom_enlist_oath_ask}Then swear it: your blade at my side, my bread in your pack, until your term is served. Do you swear?" />
@@ -26,6 +27,10 @@
 	<string id="taom_enlist_status_body" text="{=taom_enlist_status_body}Commander: {COMMANDER}. Enlisted on day {ENLISTED_DAY}; contract ends on day {CONTRACT_END}." />
 	<string id="taom_enlist_status_title" text="{=taom_enlist_status_title}Service record" />
 	<string id="taom_enlist_term_served" text="{=taom_enlist_term_served}Your term of service is complete — you may ask for release with honor, or march on." />
+	<string id="taom_enlist_wage_deferred" text="{=taom_enlist_wage_deferred}The paychest is short — {AMOUNT}{GOLD_ICON} of your wages is owed against later." />
+	<string id="taom_enlist_wage_forfeited" text="{=taom_enlist_wage_forfeited}The column can no longer account for {AMOUNT}{GOLD_ICON} of your back pay." />
+	<string id="taom_enlist_wage_paid" text="{=taom_enlist_wage_paid}Wages received: {AMOUNT}{GOLD_ICON}" />
+	<string id="taom_enlist_wage_line" text="{=taom_enlist_wage_line}Service wages" />
 	<string id="taom_enlist_wait_text" text="{=taom_enlist_wait_text}You serve in {COMMANDER}&#x27;s company. The column moves at your commander&#x27;s pace." />
 	<string id="taom_enlist_welcome" text="{=taom_enlist_welcome}Welcome to the column, soldier. Fall in." />
 

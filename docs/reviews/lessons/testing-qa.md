@@ -607,3 +607,78 @@ default would silently alias it.
   mean anything.
 - **Source:** Codex pass on the coverage guards, 2026-08-09
   (`docs/reviews/raw/codex-coverage-guards-2026-08-09.md`, 1 P1 / 1 P2 / 3 P3).
+
+
+### A pure policy's tests do not cover its service's ordering
+
+Extracting a decision into a pure static policy moves the risk; it does not remove it. The policy
+tests cover the arithmetic. What they cannot see is what the SERVICE does between the calls, and
+"snapshot the world, change the world, record what changed" is a shape where the ordering IS the
+behaviour.
+
+- **Why missed:** the 2026-08-11 enlistment diplomacy feature shipped 10 tests over `ServiceWarPolicy`
+  covering every set-arithmetic edge case, including the ServeAsSoldier universal-peace regression.
+  It felt thorough. But the bug those tests exist to prevent only occurs if `ApplyServiceWars`
+  snapshots `EnemiesAtOath` **after** declaring instead of before, at which point every mirrored war
+  reads as pre-existing, the discharge unwinds nothing, and the player keeps his commander's wars for
+  the rest of the campaign. The policy is agnostic to that and passes either way.
+- **Prevent:** for every new `XxxPolicy` + `XxxService` pair, ask *what does the service do BETWEEN
+  the policy calls?* and write a service test for it. The mechanical form: stub the adapter to return
+  a DIFFERENT value on its second call, then assert the service recorded the FIRST. That is a test
+  only correct ordering can pass.
+- **Generalises to:** any read-mutate-read sequence: pre/post snapshots, before/after diffs,
+  optimistic-concurrency checks.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #1.
+
+### A test named `*_PreservesAllFields` must fail when a field is added
+
+A round-trip test that asserts a hand-listed set of fields does not cover fields added later, but its
+NAME claims it does. The next author reads the name, sees green, and ships an unpersisted field.
+Save-record fields fail silently and are discovered by players, not by CI.
+
+- **Why missed:** `EnlistmentRecordTests.Serialize_RoundTrip_PreservesAllFields` asserted seven of the
+  record's fields. Three new ones (`OnTownLeave`, `MirroredWars`, `EnemiesAtOath`) were added on
+  2026-08-11 and it stayed green, because a hand-listed assertion set cannot notice an absence.
+- **Prevent:** adding any field to a persisted record owes THREE tests, not one: (1) the round-trip
+  assertion, (2) a **legacy-save test** proving a save written before the field existed deserializes
+  to a safe default, and (3) that `Reset()` clears it. The default matters: enlistment's discharge
+  path enumerates both new lists unguarded, so `null` would be an NRE on the first discharge after
+  updating, for every player mid-service. Prefer a reflection-driven test that enumerates the
+  record's properties, which makes the name true instead of aspirational.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #2.
+
+### Test the seam, not just the two things it joins
+
+A pure policy and the state it reads can both be fully tested while the wiring between them is not,
+and the wiring is what ships broken. Green tests on both sides of a seam are the most reassuring and
+least informative coverage there is.
+
+- **Why missed:** 2026-08-11 shore leave had `TownLeavePolicy` tested (10 cases) and
+  `EnlistmentRecord.OnTownLeave` persisted, but nothing asserted that `EnlistmentMenuService` actually
+  consults the flag. A change to that one `if` would have silently restored the bug being fixed, with
+  the whole suite green.
+- **Prevent:** for every new flag/policy pair, write the PAIRED test: behaviour with the flag set AND
+  behaviour with it unset. A single positive test passes against a method that ignores its input and
+  returns the expected value by luck; the negative is what proves the flag is load-bearing. Add a
+  third for narrowness when the change is deliberately scoped (shore leave releases `town`/`castle`/
+  `village` but must NOT release the approach menus).
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #3.
+
+### 100% coverage of a pure function proves nothing about the values that reach it
+
+A pure policy that takes its inputs as parameters can be tested exhaustively — every edge, every
+clamp, every null — while the real caller supplies a constant that makes the whole computation inert.
+The tests pass literals; the config supplies zero; nobody notices.
+
+- **Why missed:** `BattleRenownPolicyTests` covers `BattleRenownPolicy.Compute` in six cases,
+  including `MeritBandRenownAddsToTheBase` asserting `2 + 5 == 7`. Meanwhile no default band and no
+  shipped config key ever set `MeritBand.Renown`, so the live value was always 0, every battle paid
+  the same flat base, and the policy's own doc comment asserting that "the band figure does the
+  differentiating" was false for the whole life of the feature.
+- **Prevent:** for every pure policy, add one test on the SUPPLY side — assert the shipped defaults,
+  and where it is a shipped asset the FILE itself, actually produce values that make the policy do
+  something. "Does this config key have a non-default value anywhere in the product?" is a different
+  question from "does the function handle this value?", and only the first catches dead config. This
+  is the sibling of "test the seam, not just the two things it joins": that one is about the seam
+  BELOW the policy (ordering, persistence, wiring); this is the seam ABOVE it.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #9.

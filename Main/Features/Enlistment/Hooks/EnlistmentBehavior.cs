@@ -116,7 +116,7 @@ public class EnlistmentBehavior : CampaignBehaviorBase
     {
         if (!_coopSession.IsAuthority) return;
 
-        // BEFORE normalizing: a stale cached commander party matches by StringId.
+        // BEFORE normalizing — it owns every per-session cache (stale commander id, stale Army handle).
         _maintenance.ResetSessionCaches();
         _normalizer.Normalize(_playerParty.GetMainHeroId(), CampaignTime.Now.ToDays);
     }

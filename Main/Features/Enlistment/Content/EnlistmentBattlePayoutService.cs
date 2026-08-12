@@ -72,6 +72,7 @@ public class EnlistmentBattlePayoutService : IEnlistmentBattlePayoutService
 
         record.ServiceXp += won ? tables.BattleWinXp : tables.BattleLossXp;
 
+        var bandRenown = 0;
         var sample = _accumulator.Consume();
         if (sample != null)
         {
@@ -94,9 +95,18 @@ public class EnlistmentBattlePayoutService : IEnlistmentBattlePayoutService
                     RepAmount = band.RepAmount,
                 }, $"merit-{band.GradeKey}");
                 LastBandGradeKey = band.GradeKey;
+                bandRenown = band.Renown;
                 _logger?.LogInfo($"[Enlistment] battle merit {score} -> band '{band.GradeKey}' (kills={sample.Kills}, won={won})");
             }
         }
+
+        // Renown is granted ONCE for the battle, not per band, and deliberately outside the
+        // sample block: a battle the accumulator never sampled (joined late, no geometry) still
+        // earned the base. Field report 3 — TAOM granted none at all, and vanilla's share is
+        // contribution-scaled, which rounds to nothing for a party of one hero.
+        var renown = BattleRenownPolicy.Compute(won, bandRenown, tables);
+        if (renown > 0)
+            _rewards.Grant(new RewardSpec { Renown = renown }, won ? "battle-won" : "battle-lost");
 
         // The SECOND promotion evaluation point (the daily tick is the first). Both route
         // through the single IPromotionService chokepoint so the thresholds can't drift —

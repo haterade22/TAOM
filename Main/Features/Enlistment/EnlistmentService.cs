@@ -15,6 +15,7 @@ public class EnlistmentService : IEnlistmentService
     private readonly IEncounterAdapter _encounter;
     private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IEnlistmentConfigProvider _config;
+    private readonly IServiceDiplomacyService _diplomacy;
     private readonly IModLogger _logger;
 
     public EnlistmentService(
@@ -26,6 +27,7 @@ public class EnlistmentService : IEnlistmentService
         IEncounterAdapter encounter,
         IEncounterOwnershipPolicy ownership,
         IEnlistmentConfigProvider config,
+        IServiceDiplomacyService diplomacy,
         IModLogger logger)
     {
         _store = store;
@@ -36,6 +38,7 @@ public class EnlistmentService : IEnlistmentService
         _encounter = encounter;
         _ownership = ownership;
         _config = config;
+        _diplomacy = diplomacy;
         _logger = logger;
     }
 
@@ -114,6 +117,10 @@ public class EnlistmentService : IEnlistmentService
 
         if (!_attachment.ParkNear(commanderHeroId))
             _logger?.LogWarning($"[Enlistment] ParkNear failed right after the oath with {commanderHeroId} — reconciler will re-park");
+
+        // Mirror the commander's wars BEFORE announcing the oath, so any subscriber that reads
+        // diplomatic state sees the finished picture rather than a half-applied one.
+        _diplomacy.ApplyServiceWars(commanderHeroId);
 
         try
         {

@@ -32,6 +32,16 @@ A review finding is a **hypothesis, not a verdict.** TAOM's `/review-codex` loop
 
 **Stop and verify if** you're about to type "Done!" / "Great, that works!" before running the check, or about to commit/push on an unrun build.
 
+**Cadence: this rule gates CLAIMS, not edits.** It says nothing may be *claimed* unverified. It does not ask for a full suite after every edit, and reading it that way is how a session spends most of its wall-clock waiting on its own test runs (2026-08-11: the full 6,380-test suite run ~15 times across seven fixes; the user noticed the latency before the session did). The rate that keeps the guarantee intact:
+
+| When | Run |
+|---|---|
+| After each edit | **Compile** — fast, and it catches the error that actually happens most |
+| While iterating on one component | **Filtered suite** — `dotnet test TAOM.Tests --filter FullyQualifiedName~XxxTests` |
+| At each work-item boundary, and once before the review gate | **Full suite** — this is the run you quote, and the only one this rule ever asked for |
+
+Batch engine lookups the same way: related `ilspycmd` / `taom-src` calls go in one command, not one round trip per type. A verification you already ran this turn and haven't invalidated is still evidence; re-running it is not more evidence.
+
 This is the *reflex* form of `/verify` and `/ship` — those are the commands; this is the rule that fires even when you didn't invoke them.
 
 ## C. Never fabricate — "I don't know" is the correct answer

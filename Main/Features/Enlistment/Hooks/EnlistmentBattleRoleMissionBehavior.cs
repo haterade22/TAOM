@@ -25,28 +25,37 @@ namespace TAOM.Features.Enlistment.Hooks;
 /// receiving orders" path. That branch is what this correction makes reachable, and it is the
 /// enlistment fantasy stated in engine code.
 ///
-/// ORDER OF BATTLE is unaffected, but NOT for the reason first written here (the original
-/// comment claimed the model "reads no player-role flag" — it reads one). The real mechanism,
-/// from <c>SandboxBattleInitializationModel.CanPlayerSideDeployWithOrderOfBattleAux()</c>:
-/// deployment is offered only if the player leads the side, owns the besieged settlement, or
-/// <c>playerMapEvent.IsPlayerSergeant()</c>. For an enlisted player all three are false — the
-/// commander leads, and IsPlayerSergeant is false because Army is null — so the model returns
-/// false and <c>DeploymentMissionController</c> calls <c>FinishDeployment()</c> immediately.
-/// The OOB screen was ALREADY unreachable while enlisted, before this class existed, which is
-/// why the ordering question (does this AfterStart beat deployment setup?) does not arise.
+/// ORDER OF BATTLE — this paragraph previously concluded "unaffected", and that conclusion no
+/// longer holds. The mechanism, from
+/// <c>SandboxBattleInitializationModel.CanPlayerSideDeployWithOrderOfBattleAux()</c>: deployment is
+/// offered if the player leads the side, owns the besieged settlement, or
+/// <c>playerMapEvent.IsPlayerSergeant()</c>. The old reasoning was that all three are false while
+/// enlisted, because Army is null. Army is no longer null — it is joined for the duration of a
+/// battle so the player deploys with his commander's troops rather than in a lone block 20 units
+/// behind them (#443) — so the third clause is now TRUE and the OOB screen IS reachable.
 ///
-/// The in-game F1–F8 observation is still owed and tracked on #424.
+/// That is the intended outcome at the top of the ladder and only there:
+/// <see cref="BattleCommandPolicy.ShouldKeepSergeantCommand"/> lets a rank-3 Sergeant keep the one
+/// formation vanilla offers him, and strips every rank below back to a private in the line. It also
+/// re-checks <c>Team.IsPlayerSergeant</c> rather than trusting rank, because the merge is
+/// best-effort and a failed merge puts vanilla back on the general-of-the-side path.
+///
+/// The in-game F1–F8 observation is still owed and tracked on #424, and now also covers whether the
+/// deployment screen appears for a Sergeant.
 /// </summary>
 public class EnlistmentBattleRoleMissionBehavior : MissionLogic
 {
     private readonly IEnlistmentStateQuery _query;
+    private readonly Content.IEnlistmentContentStore _content;
     private readonly IModLogger _logger;
 
     private bool _applied;
 
-    public EnlistmentBattleRoleMissionBehavior(IEnlistmentStateQuery query, IModLogger logger)
+    public EnlistmentBattleRoleMissionBehavior(
+        IEnlistmentStateQuery query, Content.IEnlistmentContentStore content, IModLogger logger)
     {
         _query = query;
+        _content = content;
         _logger = logger;
     }
 
@@ -72,6 +81,19 @@ public class EnlistmentBattleRoleMissionBehavior : MissionLogic
         var team = Mission?.PlayerTeam;
         if (team == null)
             return;
+
+        // Read the role vanilla actually granted, BEFORE overwriting it. Team.IsPlayerSergeant is
+        // the engine's own verdict, so this distinguishes "the army merge worked and he was offered
+        // a formation" from "the merge failed and he was made general of the side" — which look
+        // identical from rank alone.
+        if (BattleCommandPolicy.ShouldKeepSergeantCommand(_content.Record.Rank, team.IsPlayerSergeant))
+        {
+            _applied = true;
+            _logger?.LogInfo(
+                $"[Enlistment] battle command KEPT at {site} — rank {_content.Record.Rank} " +
+                "commands one formation under the side's leader");
+            return;
+        }
 
         team.SetPlayerRole(false, false);
         _applied = true;

@@ -23,6 +23,7 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
     private readonly Duties.IDutyOrchestrationService _duties;
     private readonly IDischargeService _discharge;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly Presentation.IServiceDailyAnnouncer _announcer;
 
     private CampaignGameStarter _lastSessionStarter;
     private bool _justLoadedFromSave;
@@ -34,7 +35,8 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
         IDischargeConsequenceService consequences,
         Duties.IDutyOrchestrationService duties,
         IDischargeService discharge,
-        ICoopSessionProvider coopSession)
+        ICoopSessionProvider coopSession,
+        Presentation.IServiceDailyAnnouncer announcer)
     {
         _contentStore = contentStore;
         _daily = daily;
@@ -43,6 +45,7 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
         _duties = duties;
         _discharge = discharge;
         _coopSession = coopSession;
+        _announcer = announcer;
     }
 
     public override void RegisterEvents()
@@ -78,14 +81,7 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
         }
 
         if (_battle.LastBattlePromoted)
-            AnnouncePromotion(_battle.LastPromotedRank);
-    }
-
-    private static void AnnouncePromotion(Content.Domain.ServiceRank rank)
-    {
-        var text = new TextObject("{=taom_enlist_promoted}You have been promoted to {RANK}.");
-        text.SetTextVariable("RANK", Presentation.ServiceVocabulary.RankName(rank));
-        InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
+            _announcer.AnnouncePromotion(_battle.LastPromotedRank);
     }
 
     public override void SyncData(IDataStore dataStore)
@@ -112,8 +108,10 @@ public class EnlistmentContentBehavior : CampaignBehaviorBase
 
         var summary = _daily.RunDailyTick(CampaignTime.Now.ToDays, CampaignTime.Now.CurrentHourInDay);
 
+        _announcer.AnnounceWage(summary.Wage);
+
         if (summary.Promoted)
-            AnnouncePromotion(summary.NewRank);
+            _announcer.AnnouncePromotion(summary.NewRank);
 
         if (summary.ContractExpiredToday)
         {

@@ -18,6 +18,7 @@ public class ServiceBattleServiceTests
     private IMobilePartyAttachmentAdapter _partyAdapter = null!;
     private ServiceAttachmentService _attachment = null!;
     private IGameMenuAdapter _gameMenu = null!;
+    private IArmyMembershipAdapter _army = null!;
     private ServiceBattleService _service = null!;
 
     [TestInitialize]
@@ -36,7 +37,10 @@ public class ServiceBattleServiceTests
         // Default to a working menu switch — the service now treats a failed switch as a join
         // failure and rolls back, so an unstubbed (false) default would fail every happy path.
         _gameMenu.EnsureMenuOpen(Arg.Any<string>()).Returns(true);
-        _service = new ServiceBattleService(_store, _machine, _encounter, _attachment, _gameMenu, new EncounterOwnershipPolicy(), _logger);
+        _army = Substitute.For<IArmyMembershipAdapter>();
+        _army.JoinCommanderArmy(Arg.Any<string>()).Returns(true);
+        _army.LeaveArmy().Returns(true);
+        _service = new ServiceBattleService(_store, _machine, _encounter, _attachment, _gameMenu, new EncounterOwnershipPolicy(), _army, _logger);
 
         _encounter.GetPartyBattleSide("lord_party_1").Returns(PartyBattleSide.Defender);
         _encounter.IsCommanderBattleJoinable("lord_party_1", PartyBattleSide.Defender).Returns(true);
@@ -405,4 +409,85 @@ public class ServiceBattleServiceTests
         _gameMenu.Received(1).EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
     }
 
+    // ---- transient army membership (#443, field reports 4 and 7) ----
+
+    [TestMethod]
+    public void BattleStarted_JoinsTheCommandersArmyBeforeJoiningTheBattle()
+    {
+        // Ordering, not just occurrence. Mission.GetAgentTeam reads IsInSameArmyAsPlayer when the
+        // mission builds its teams, which is downstream of JoinBattle — so a merge that lands after
+        // it is a merge the team assignment never sees.
+        MakeEnlisted();
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Received.InOrder(() =>
+        {
+            _army.JoinCommanderArmy("lord_1_1");
+            _encounter.JoinBattle(PartyBattleSide.Defender);
+        });
+    }
+
+    [TestMethod]
+    public void BattleStarted_ArmyMergeUnavailable_StillJoinsTheBattle()
+    {
+        // Best-effort by design. A kingdomless commander cannot have an army raised for him, and
+        // that is not a reason to miss the battle — without the merge the player fights on the
+        // ally-team path, which is exactly today's behaviour.
+        MakeEnlisted();
+        _army.JoinCommanderArmy(Arg.Any<string>()).Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _encounter.Received(1).JoinBattle(PartyBattleSide.Defender);
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void BattleEnded_EncounterStillOpen_StillLeavesTheArmy()
+    {
+        // THE ordering test. PlayerEncounter.FinishEncounterInternal grants the post-defeat escape
+        // (teleport out + SetDoNotAttackMainParty(2)) only when MainParty.AttachedTo == null, and
+        // AddPartyToMergedParties sets AttachedTo. The loot-flow branch below returns EARLY while
+        // that encounter is still open — so a detach placed after the state gate would run only
+        // after Finish had already denied the escape. Hence: above every gate.
+        //
+        // This is the field report *"after they were defeated I immediately got jumped by the enemy
+        // army"*, and ServeAsSoldier ships with the same hole.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.HasCurrent.Returns(true);
+
+        _service.OnCommanderBattleEnded();
+
+        _army.Received(1).LeaveArmy();
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);   // loot flow preserved
+    }
+
+    [TestMethod]
+    public void BattleEnded_NotInBattleState_StillLeavesTheArmy()
+    {
+        // Army membership is ours to clean up whatever state we are in. Leaking it strands the
+        // player attached indefinitely, and an attached party with a null Army is also the shape
+        // DefaultEncounterGameMenuModel.GetGenericStateMenu derefs unguarded on every map frame.
+        MakeEnlisted();
+
+        _service.OnCommanderBattleEnded();
+
+        _army.Received(1).LeaveArmy();
+    }
+
+    [TestMethod]
+    public void BattleStarted_JoinFails_LeavesTheArmyOnRollback()
+    {
+        // The merge may have succeeded before a later step failed. A rollback that leaves the player
+        // attached to an army he is not fighting with is the same forfeited-escape state, with no
+        // battle to justify it.
+        MakeEnlisted();
+        _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _army.Received(1).LeaveArmy();
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+    }
 }

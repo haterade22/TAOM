@@ -18,6 +18,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IEnlistmentDiagnosticsSettingsProvider _diag;
     private readonly IEnlistmentFeatureSettingsProvider _feature;
+    private readonly IArmyMembershipAdapter _army;
     private readonly IModLogger _logger;
 
     /// <summary>
@@ -53,6 +54,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         IEnlistmentDiagnosticsSettingsProvider diag,
         IEnlistmentFeatureSettingsProvider feature,
         IInquiryAdapter inquiry,
+        IArmyMembershipAdapter army,
         IModLogger logger)
     {
         _store = store;
@@ -66,6 +68,7 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         _diag = diag;
         _feature = feature;
         _inquiry = inquiry;
+        _army = army;
         _logger = logger;
     }
 
@@ -251,6 +254,15 @@ public class EnlistmentReconciler : IEnlistmentReconciler
         if (snapshot.HasParty && snapshot.PartyIsActive && !snapshot.IsPrisoner)
         {
             record.GraceEndsAtDay = null;
+
+            // Re-arm the announcement with the grace timer it belongs to. The latch exists to stop
+            // the modal repeating every hour WITHIN one episode; leaving it set past a recovery
+            // made it a once-per-commander-per-process latch instead, so a lord who was captured,
+            // ransomed, and then lost his party again later took the player back into a silent
+            // grace — visible and alone on the map with nothing said. Same commander, second
+            // episode, and the message that explains it is exactly the one being suppressed.
+            _lossAnnouncedFor = null;
+
             _machine.TryTransition(EnlistmentState.EnlistedAttached);
             _attachment.EnsureParked(record.CommanderHeroId);
             _logger?.LogInfo($"[Enlistment] commander {record.CommanderHeroId} recovered — service resumes");
@@ -292,18 +304,38 @@ public class EnlistmentReconciler : IEnlistmentReconciler
     {
         var snapshot = _commander.GetSnapshot(record.CommanderHeroId);
 
-        // A battle state with no map event on either side is stale (event resolved while
-        // we weren't looking) — return to attached before assessing. An OPEN encounter means
-        // the battle is still live (loot/aftermath runs inside it, and the map event reads as
-        // gone before the encounter closes), so demoting here would re-park mid-battle and
-        // hand the menu guard the aftermath menus.
-        if (record.State == EnlistmentState.EnlistedBattle
-            && !presence.IsInMapEvent
+        // No map event on either side and no open encounter — there is no battle anywhere. An OPEN
+        // encounter means the battle is still live (loot/aftermath runs inside it, and the map event
+        // reads as gone before the encounter closes), so treating that as "over" would re-park
+        // mid-battle and hand the menu guard the aftermath menus.
+        var noBattleAnywhere = !presence.IsInMapEvent
             && !snapshot.PartyIsInMapEvent
-            && !_encounter.HasCurrent)
-        {
+            && !_encounter.HasCurrent;
+
+        // THE ARMY COMES OFF WHENEVER THERE IS NO BATTLE, and deliberately NOT only when the state
+        // still reads EnlistedBattle. Army membership is acquired by ServiceBattleService.TryJoin
+        // and released by OnCommanderBattleEnded; when the battle resolves without that edge — a
+        // throw, a co-op host handoff, a save/load across the MapEventEnded — this is the only code
+        // that notices.
+        //
+        // The save/load case is why the guard cannot key on EnlistedBattle. EnlistmentRecord
+        // COERCES EnlistedBattle to EnlistedAttached on persist (ToPersistedState), so a save taken
+        // mid-battle reloads reading EnlistedAttached while the main party is still merged into the
+        // commander's army — the one shape a state-keyed check is structurally blind to. Found by
+        // the Codex pass, 2026-08-12.
+        //
+        // Leaving it attached is not cosmetic: MobileParty.AttachedTo stays set, and
+        // PlayerEncounter.FinishEncounterInternal grants the post-defeat escape ONLY when
+        // AttachedTo == null — so the next unrelated ambush re-creates field report 7b's "jumped
+        // immediately after being defeated" exactly, with no army fight anywhere to explain it.
+        //
+        // Gated on IsInArmy so the ordinary parked tick does no work and cannot race the battle
+        // path for ownership of an army raised seconds earlier.
+        if (noBattleAnywhere && _army?.IsInArmy == true)
+            _army.LeaveArmy();
+
+        if (record.State == EnlistmentState.EnlistedBattle && noBattleAnywhere)
             _machine.TryTransition(EnlistmentState.EnlistedAttached);
-        }
 
         var assessment = _attachment.Assess(record.State, snapshot, presence);
 

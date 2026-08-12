@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -57,7 +57,7 @@ public class EnlistmentDiagnosticsGateTests
         _attachment = new ServiceAttachmentService(_partyAdapter, Substitute.For<IGameMenuAdapter>(), _logger);
         _discharge = new DischargeService(_store, _machine, _partyAdapter,
             Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(),
-            Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
+            Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), Substitute.For<IServiceDiplomacyService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
 
         // An NSubstitute bool defaults to false, so every test in this class runs the "toggle off"
@@ -68,7 +68,8 @@ public class EnlistmentDiagnosticsGateTests
 
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
             new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), _diag,
-            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(), _logger);
+            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(),
+            Substitute.For<IArmyMembershipAdapter>(), _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)

@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -24,6 +24,7 @@ public class EnlistmentReconcilerTests
     private ServiceAttachmentService _attachment = null!;
     private DischargeService _discharge = null!;
     private IEncounterAdapter _encounter = null!;
+    private IArmyMembershipAdapter _army = null!;
     private EnlistmentReconciler _reconciler = null!;
 
     private const double Now = 200.0;
@@ -41,11 +42,12 @@ public class EnlistmentReconcilerTests
         _partyAdapter.ParkNear(Arg.Any<string>()).Returns(true);
         _partyAdapter.SyncPositionTo(Arg.Any<string>()).Returns(true);
         _attachment = new ServiceAttachmentService(_partyAdapter, Substitute.For<IGameMenuAdapter>(), _logger);
-        _discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
+        _discharge = new DischargeService(_store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), Substitute.For<IServiceDiplomacyService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
+        _army = Substitute.For<IArmyMembershipAdapter>();
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
             new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
-            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(), _logger);
+            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(), _army, _logger);
     }
 
     private void MakeEnlisted(EnlistmentState state = EnlistmentState.EnlistedAttached)
@@ -299,6 +301,99 @@ public class EnlistmentReconcilerTests
         _reconciler.ReconcileHourly(Now);
 
         Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void Reconcile_StaleBattleStateNoEventsAnywhere_LeavesTheCommanderArmy()
+    {
+        // Deep-review finding (2026-08-11). This branch is the ONLY code that notices a battle
+        // which resolved without a MapEventEnded edge — a save/load across the end, a throw in
+        // OnCommanderBattleEnded, a co-op host handoff. It flipped the state back to attached and
+        // left the player merged into the commander's army indefinitely.
+        //
+        // MobileParty.AttachedTo then stays set, and PlayerEncounter.FinishEncounterInternal
+        // (verified on installed 1.4.8) grants the post-defeat escape ONLY when AttachedTo == null.
+        // So the next unrelated ambush re-creates field report 7b — "jumped immediately after being
+        // defeated" — with no army battle anywhere to explain it.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: true, inMapEvent: false);
+        _encounter.HasCurrent.Returns(false);
+        _army.IsInArmy.Returns(true);
+
+        _reconciler.ReconcileHourly(Now);
+
+        _army.Received(1).LeaveArmy();
+    }
+
+    [TestMethod]
+    public void Reconcile_AttachedButStillMergedAfterAReload_LeavesTheCommanderArmy()
+    {
+        // Codex P1 (2026-08-12). The detach cannot key on EnlistedBattle, because
+        // EnlistmentRecord.ToPersistedState COERCES EnlistedBattle to EnlistedAttached — so a save
+        // taken mid-battle reloads reading EnlistedAttached while the main party is still merged
+        // into the commander's army. That is the one shape a state-keyed check is blind to, and it
+        // leaves AttachedTo set, which forfeits the vanilla post-defeat escape on the next
+        // unrelated ambush.
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: true, inMapEvent: false);
+        _encounter.HasCurrent.Returns(false);
+        _army.IsInArmy.Returns(true);
+
+        _reconciler.ReconcileHourly(Now);
+
+        _army.Received(1).LeaveArmy();
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+    }
+
+    [TestMethod]
+    public void Reconcile_AttachedAndNotInAnyArmy_DoesNotCallLeaveArmy()
+    {
+        // The guard is on IsInArmy so the ordinary parked tick does no work at all — an hourly
+        // LeaveArmy would race the battle path for ownership of an army raised seconds earlier.
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        CommanderHealthy(inMapEvent: false);
+        PlayerPresence(parked: true, inMapEvent: false);
+        _encounter.HasCurrent.Returns(false);
+        _army.IsInArmy.Returns(false);
+
+        _reconciler.ReconcileHourly(Now);
+
+        _army.DidNotReceive().LeaveArmy();
+    }
+
+    [TestMethod]
+    public void Reconcile_BattleStateWithOpenEncounter_StaysInArmy()
+    {
+        // The mirror of the test above, and the reason the LeaveArmy call sits INSIDE the
+        // stale-battle branch rather than at the top of ReconcileAttached. While the battle is
+        // genuinely live, detaching would undo the team merge mid-fight and put the player back
+        // behind his own commander's line — the exact placement bug #443 exists to fix.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        CommanderHealthy(inMapEvent: true);
+        PlayerPresence(parked: false, inMapEvent: true);
+        _encounter.HasCurrent.Returns(true);
+        _army.IsInArmy.Returns(true);
+
+        _reconciler.ReconcileHourly(Now);
+
+        _army.DidNotReceive().LeaveArmy();
+    }
+
+    [TestMethod]
+    public void Reconcile_AttachedHealthy_DoesNotTouchArmyMembership()
+    {
+        // Ordinary parked service must not call LeaveArmy every hour: it is not free — the adapter
+        // disbands the army it raised, and an hourly disband would fight the battle path for
+        // ownership of the same object.
+        MakeEnlisted();
+        CommanderHealthy();
+        PlayerPresence(parked: true);
+
+        _reconciler.ReconcileHourly(Now);
+
+        _army.DidNotReceive().LeaveArmy();
     }
 
     [TestMethod]

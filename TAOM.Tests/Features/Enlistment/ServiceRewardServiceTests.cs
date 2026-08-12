@@ -19,6 +19,7 @@ namespace TAOM.Tests.Features.Enlistment;
 [TestClass]
 public class ServiceRewardServiceTests
 {
+    private IHeroRenownAdapter _renown = null!;
     private IModLogger _logger = null!;
     private EnlistmentStore _store = null!;
     private EnlistmentContentStore _contentStore = null!;
@@ -45,8 +46,10 @@ public class ServiceRewardServiceTests
         _commander = Substitute.For<ICommanderLordAdapter>();
         var playerParty = Substitute.For<IPlayerPartyAdapter>();
         playerParty.GetMainHeroId().Returns("main_hero");
+        _renown = Substitute.For<IHeroRenownAdapter>();
         _service = new ServiceRewardService(
-            _store, _contentStore, _config, _skillXp, _goldGift, _goldTransfer, _commander, playerParty, _logger);
+            _store, _contentStore, _config, _skillXp, _goldGift, _goldTransfer, _commander, playerParty,
+            _renown, _logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";
@@ -55,6 +58,57 @@ public class ServiceRewardServiceTests
         // Commander pays in full unless a test says otherwise.
         _goldTransfer.GetHeroGold("lord_1_1").Returns(10000);
         _goldTransfer.TransferToPlayer("lord_1_1", Arg.Any<int>()).Returns(call => call.ArgAt<int>(1));
+    }
+
+    /// <summary>
+    /// The wallet projection and the payment must name the SAME condition.
+    ///
+    /// <c>GetDailyWage</c> gated only on <c>IsEnlisted</c>, which spans five states, while
+    /// <c>EnlistmentDailyService.RunDailyTick</c> early-returns before <c>PayDailyWage</c> whenever
+    /// the state is <c>CommanderUnavailable</c> — there is no chain of command left to pay anyone.
+    /// The clan gold-change tooltip therefore promised income on exactly the days none arrived, for
+    /// a grace window up to a week long, and that tooltip is the one surface a player checks when
+    /// they suspect they are not being paid. Found by the deep-review data-flow pass, 2026-08-11.
+    /// </summary>
+    [TestMethod]
+    public void GetDailyWage_CommanderUnavailable_PromisesNothing()
+    {
+        _store.Record.State = EnlistmentState.CommanderUnavailable;
+
+        Assert.AreEqual(0, _service.GetDailyWage());
+    }
+
+    [TestMethod]
+    public void GetDailyWage_Attached_PromisesTheRankWage()
+    {
+        Assert.AreEqual(5, _service.GetDailyWage(), "recruit wage");
+    }
+
+    [TestMethod]
+    public void GetDailyWage_NotEnlisted_PromisesNothing()
+    {
+        _store.Record.State = EnlistmentState.NotEnlisted;
+        _store.Record.EnlistedHeroId = null;
+        _store.Record.CommanderHeroId = null;
+
+        Assert.AreEqual(0, _service.GetDailyWage());
+    }
+
+    /// <summary>
+    /// Every state the DAILY TICK pays a wage in must project one, or the tooltip under-promises —
+    /// the same class of lie in the opposite direction. The tick's only exclusion is
+    /// <c>CommanderUnavailable</c>, so every other enlisted state has to show the wage.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(EnlistmentState.EnlistedAttached)]
+    [DataRow(EnlistmentState.EnlistedBattle)]
+    [DataRow(EnlistmentState.EnlistedPlayerCaptive)]
+    [DataRow(EnlistmentState.EnlistedDetachedOnDuty)]
+    public void GetDailyWage_EveryOtherEnlistedState_StillPromisesTheWage(EnlistmentState state)
+    {
+        _store.Record.State = state;
+
+        Assert.AreEqual(5, _service.GetDailyWage());
     }
 
     [TestMethod]
@@ -285,5 +339,28 @@ public class ServiceRewardServiceTests
         _service.AdjustTrust(10);
 
         Assert.AreEqual(20, _contentStore.Record.Trust);
+    }
+
+    [TestMethod]
+    public void Grant_RenownGoesToThePlayerNotTheCommander()
+    {
+        // The relation sink above pays the COMMANDER's id; renown must not follow it there. Serving
+        // in another lord's army builds your own clan's name — paying the commander would make the
+        // reward invisible to the player, which is the field report this fixes, not a fix for it.
+        _store.Record.EnlistedHeroId = "main_hero";
+        _store.Record.CommanderHeroId = "lord_1_1";
+
+        _service.Grant(new RewardSpec { Renown = 3 }, "battle-won");
+
+        _renown.Received(1).AddClanRenown("main_hero", 3);
+        _renown.DidNotReceive().AddClanRenown("lord_1_1", Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void Grant_ZeroRenown_DoesNotTouchTheAdapter()
+    {
+        _service.Grant(new RewardSpec { ServiceXp = 5 }, "duty");
+
+        _renown.DidNotReceive().AddClanRenown(Arg.Any<string>(), Arg.Any<int>());
     }
 }

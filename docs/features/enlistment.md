@@ -693,6 +693,191 @@ The issue-ledger is monotonic (covering a rank covers every rank below, so a dem
 re-issues) and persists in the content record, so a full game restart cannot re-allow a
 free draw.
 
+## The field-test arc (2026-08-11) — seven reports, one root cause
+
+A live playtest produced seven complaints. **Six trace to one decision:** `MobileParty.MainParty.Army`
+was kept permanently null (`ClearArmyAttachment()` in both `ParkNear` and `RestorePresence`).
+
+| Report | Actual cause | Fix |
+|---|---|---|
+| 1. Can't enter towns / can't buy anything | The player was ALREADY inside; `"town"`/`"castle"`/`"village"` were in `RedirectMenuIds` | Shore-leave pass (`TownLeavePolicy`) suspends those three while the column rests there |
+| 2. Not paid, or it doesn't show in the wallet | Both true: the 500g commander reserve silently defers the wage, and the gold that did arrive used `disableNotification: true` with `DailySummary.Wage` read by nobody | `WageReportPolicy` + three messages; display-only line in `TaomClanFinanceModel` |
+| 3. Not enough renown | TAOM granted none; vanilla's share is contribution-scaled and a party of one hero rounds to zero | `BattleRenownPolicy` through the `Grant` chokepoint, via `GainRenownAction` |
+| 4. Spawn far behind everyone | `Army == null` → different TEAM → own deployment block, sorted last, 20-unit gap | Transient army join |
+| 5. Clan declares war individually | Already happening via `BeHostileAction` on the vanilla `encounter` menu | Mirror the commander's wars; unwind only what the mirror created |
+| 6. Commands show wrong | **Vanilla bug** at `BehaviorComponent.cs:107` | One-instruction transpiler |
+| 7a. Lord's army fought without me | `FindCommanderPartyIdIn` matched only his OWN party; an army-attached lord never enters the `MapEvent` himself | Match the army leader too |
+| 7b. Jumped immediately after defeat | Still `AttachedTo` when the encounter finished → forfeits vanilla's escape | Detach above every gate in `OnCommanderBattleEnded` |
+
+### The three engine facts this rests on (installed v1.4.8)
+
+**`PartyAgentOrigin.IsInSameArmyAsPlayer` needs BOTH halves.** It requires
+`army == MobileParty.MainParty.Army` — membership, which only the `Army` setter gives, because
+`OnAddPartyInternal` does the `_parties.Add` — AND, when the leader is not the main party,
+`MobileParty.MainParty.AttachedTo == army.LeaderParty`, which only `AddPartyToMergedParties` sets.
+Either call alone leaves the property false and the player back on his own team.
+
+**`PlayerEncounter.FinishEncounterInternal` grants the post-defeat escape only when
+`MainParty.AttachedTo == null`.** `TeleportPartyToOutSideOfEncounterRadius()` plus
+`SetDoNotAttackMainParty(2)` sit behind that check, and `AddPartyToMergedParties` sets `AttachedTo`.
+**So the leave must run before the encounter finishes**, which is why `_army.LeaveArmy()` sits above
+the state gate AND above the loot-flow `HasCurrent` gate in `OnCommanderBattleEnded` — that gate
+returns early while the aftermath encounter is still open. ServeAsSoldier ships with this hole.
+`BattleEnded_EncounterStillOpen_StillLeavesTheArmy` fails if the call is moved below it.
+
+**`Kingdom.CreateArmy` moves the commander.** It calls `army.Gather()`, whose non-player branch runs
+`FindBestGatheringSettlementAndMoveTheLeader` and dispatches `OnArmyCreated`. So
+`ArmyMembershipAdapter` uses the bare `Army(kingdom, party, type)` constructor instead: it sets
+`LeaderParty`, assigns `LeaderParty.Army = this`, and the `Kingdom` setter self-registers through
+`AddArmyInternal` — complete, without the march or the "has formed an army" notification.
+
+`AiBehaviorObject` therefore stays null for that army's whole life. **That is a liability, not a
+feature** — see the review-pass section below. It does keep the siege and owner-change handlers inert
+(they gate on `AiBehaviorObject is Settlement`), but five cases of
+`Army.GetLongTermBehaviorTextForAILeadedParty` dereference the same field with no guard, so the army
+must never outlive the battle.
+
+### Rank gate (supersedes part of #424)
+
+With `Army != null`, `IsPlayerSergeant()` is true, so vanilla stops promoting the player to GENERAL
+and offers him ONE formation. `BattleCommandPolicy.ShouldKeepSergeantCommand` lets a rank-3 Sergeant
+keep it and strips every rank below. **It re-checks `Team.IsPlayerSergeant` rather than trusting
+rank**, because the merge is best-effort — a commander with no kingdom gets no army, so vanilla falls
+back to the general-of-the-side path, and gating on rank alone would hand a sergeant the whole army
+precisely when the merge failed.
+
+**Consequence to watch in-game:** `CanPlayerSideDeployWithOrderOfBattleAux()` also keys on
+`IsPlayerSergeant()`, so the Order of Battle deployment screen is now REACHABLE while enlisted, where
+it previously never was. Intended at Sergeant; the F1-F8 observation owed on #424 now covers this too.
+
+### Where we deliberately diverge from ServeAsSoldier
+
+- **Town access:** SAS force-evicts the player from every settlement each tick (`Test.cs:2424-2440`)
+  and substitutes a gear-picker conversation for shopping. TAOM already has him inside a real town.
+- **Post-defeat escape:** SAS has no mitigation for the `AttachedTo` window above.
+- **Order banner:** SAS leaves the broken one and adds its own, so a sub-sergeant player reads both.
+- **Renown:** SAS writes `Clan.Renown` directly, bypassing `OnRenownGained` and every listener.
+- **Discharge peace:** SAS peaces out of EVERY war including pre-enlistment ones — a free universal
+  peace button — and its changelog admits it ignores minor factions. Both fixed here.
+- **Army leadership:** SAS rips a lord out of someone else's army to make him a leader
+  (`Test.cs:2465-2476`). We join whatever army he is already in.
+
+### The review pass (2026-08-12) — read this before touching the army merge
+
+**A bare-ctor army's `AiBehaviorObject` is null for its whole life, and vanilla dereferences that
+field unguarded in five separate places.** Vanilla never hits them because `Gather()` always seeds
+the field first. This is the authoritative reader list, verified on installed 1.4.8 — **do not
+re-derive it**:
+
+| Reader | Guarded? | What it dereferences | Reached from |
+|---|---|---|---|
+| `GetLongTermBehaviorTextForAILeadedParty` — `Hold`, `GoToPoint` | **yes** (`IsWaitingForArmyMembers() && AiBehaviorObject != null`) | — | — |
+| …`GoToSettlement` | no | `AiBehaviorObject.Name` | `MobileParty.GetBehaviorText()` (map party tooltip), `KingdomArmyItemVM` (kingdom Armies tab) |
+| …`BesiegeSettlement` | no | `((Settlement)AiBehaviorObject).IsVillage` | as above |
+| …`RaidSettlement` | no | `.EncyclopediaLinkWithName` / `.Name` | as above |
+| …`DefendSettlement` | no | `((Settlement)AiBehaviorObject).Position` | as above |
+| …`PatrolAroundPoint` | no | `.EncyclopediaLinkWithName` / `.Name` | as above — **and the only case reachable with a genuinely unset objective in vanilla too**, because `SetPartyAiAction`'s `PatrolAroundPoint` branch sets `DefaultBehavior` WITHOUT writing `AiBehaviorObject` (every other settlement-bound case writes both in the same block) |
+| `Army.GetNotificationText` | no | `AiBehaviorObject.Name` | whenever the leader is not the main party |
+| `LordConversationsCampaignBehavior.conversation_lord_tell_objective_gathering_on_condition` | no | `Army.AiBehaviorObject.Name` | **any conversation with any lord in the army** |
+| `MobileParty.CheckAiForMapChangeAndUpdateIfNeeded` — `GoToPoint` | **no, despite testing for null** | branches on `aiBehaviorObject == null` then reads `Army.AiBehaviorObject.Position` on that same branch | `Campaign.CheckMapUpdate()` on save load, when the scene's navmesh CRC differs from the save's |
+| `OnSiegeStarted`, `OnSettlementOwnerChanged`, `CheckAndSetArmyGatheringTime`, `MoveLeaderToGatheringLocationIfNeeded`, `StartTrackingTargetSettlement` | **yes** (`is Settlement` / explicit null test) | — | — |
+| `IsAnotherEnemyBesiegingTarget` | safe **only** because `ArmyType == ArmyTypes.Besieger` short-circuits first | `settlement.IsUnderSiege` | — |
+
+Two of those deserve emphasis. **The conversation one is the worst**, and it is the reason the field
+is seeded rather than merely cleaned up: it is gated only on `Army != null &&
+Army.IsWaitingForArmyMembers()`, with no `ArmyType` check (unlike its three sibling conditions), and
+`IsWaitingForArmyMembers()` returns **true forever** for a bare-ctor army — `_armyGatheringStartTime`
+stays 0, and the only thing that sets it (`CheckAndSetArmyGatheringTime`) itself requires
+`AiBehaviorObject is Settlement`. So with a null objective, talking to the commander is an
+unconditional CTD, and *this feature's own wait menu offers exactly that action*. And
+`IsAnotherEnemyBesiegingTarget` is why **`ArmyTypes.Patrolling` is load-bearing, not cosmetic** —
+switching it to `Besieger` would defeat the short-circuit and add a per-tick NRE.
+
+**The invariant is closed twice over:**
+
+1. **Seed it.** `CreateArmyLedBy` sets `AiBehaviorObject` to the commander's `CurrentSettlement ??
+   HomeSettlement ?? LeaderHero.HomeSettlement` immediately after construction. This is inert for
+   the army's real lifetime — the only two behaviours the objective drives
+   (`MoveLeaderToGatheringLocationIfNeeded`, `CheckAndSetArmyGatheringTime`) both require
+   `LeaderParty.MapEvent == null`, and the army exists only while the commander IS in a map event.
+   They can fire solely for an army that leaked, where being walked toward a settlement beats a
+   crash. Set before the main party joins, so the setter's tracking branch
+   (`Parties.Contains(MobileParty.MainParty)`) cannot fire.
+2. **Disband it unconditionally.** `LeaveArmy()` ends what it raised whether or not other lords
+   joined. The first revision kept it standing when another lord had attached, reasoning it had
+   become a real army; it had not. `DisbandArmyAction.ApplyByObjectiveFinished` is an ordinary
+   vanilla dispersion — every party is detached, repositioned around the leader and set to hold.
+
+Neither alone is sufficient, and the disband could not be conditional even on `left`: `DischargeService`
+calls `RestorePresence()` (which nulls `main.Army`) *before* `LeaveArmy()`, so a disband keyed on the
+army the player just left would silently skip on every mid-battle discharge.
+
+**Nothing cleans a leaked army up on its own.** `Army.CheckInactivity` *decrements*
+`_inactivityCounter` for `Besiege`/`Raid`/`Defend`/`AssaultSettlement`, so an army around a lord who
+goes besieging never hits the inactivity disband, and `_aiBehaviorObject` is `[SaveableField(16)]`,
+so whatever it holds survives every reload.
+
+**Three places the membership could leak, all now closed:**
+
+- `EnlistmentReconciler`'s stale-battle self-heal is the ONLY code that notices a battle resolved
+  without a `MapEventEnded` edge (save/load across the end, a throw, a co-op host handoff). It now
+  calls `LeaveArmy()` before the transition — without it, the player stayed merged into peacetime and
+  the next unrelated ambush re-created report 7b with no army fight to explain it.
+- `ServiceMaintenanceService.ResetSessionCaches` drops the adapter's `_createdArmy` handle. That
+  handle is a live `Army` reference on a `Reuse.Singleton` whose container is process-scoped, so
+  after a reload it names a dead object and the identity test in `LeaveArmy` could never match again.
+  It lives there, not in `EnlistmentBehavior`, because that method is the one place that knows the
+  lifetime of the feature's per-session state — the same reason `InvalidateCommanderCache` is called
+  from it.
+- `CreateArmyLedBy` disbands any prior created army before raising another, so a missed `LeaveArmy`
+  cannot orphan one by overwriting the handle.
+
+**`MeritBand.Renown` was dead config**, and the shape of the miss is worth keeping. The field
+existed, `BattleRenownPolicy` added it, and six tests covered that policy exhaustively — every one
+passing `bandRenown` in as a literal. No default band and no shipped JSON key ever set it, so the
+live value was always 0, every battle paid the same flat base, and the policy's doc comment asserting
+that "the band figure does the differentiating" was false for the feature's whole life. 100% coverage
+of a pure function proves nothing about the values that reach it. Bands now pay 3/2/1/0 against a
+base of 2 (win) / 1 (loss); `Renown` is in `IsValidBandLadder`'s non-negative set because it is
+directional; and a test reads the shipped `enlistment_config.json` rather than the compiled defaults.
+
+**The war mirror declares as one faction and could make peace as another.** `Hero.MapFaction` is
+`Clan.Kingdom ?? Clan` (verified 1.4.8) and the enlist gate deliberately admits a player whose clan
+is already a vassal — so the identity is not stable across a term of service. A player independent
+at oath declared as his own CLAN; if that clan joined a kingdom before discharge, `UnwindServiceWars`
+resolved `MapFaction` live and would have called `MakePeaceAction.Apply` on the **kingdom**, ending a
+war for every vassal in it because one soldier left service, with nothing on screen connecting the
+two. The reverse strands the kingdom in wars the oath created. `EnlistmentRecord.OathFactionId` now
+pins the declaring identity and the unwind refuses to act under a different one — clearing the mirror
+either way, since those wars are neither ours to unwind nor ours to keep. An absent pin (a save from
+before the field) unwinds as previous builds did, so nobody mid-service is stranded.
+
+**The commander-loss modal only fired once per commander per process.** `_lossAnnouncedFor` exists to
+stop the "Word from the column" inquiry repeating every hour *within* one grace episode, but it was
+never cleared when the commander recovered — so a lord who was captured, ransomed, and later lost his
+party again took the player into a second silent grace: visible and alone on the map, with the
+message that explains it suppressed. It is now re-armed alongside `GraceEndsAtDay = null`.
+
+**Two gates naming one condition.** `GetDailyWage()` (the wallet projection) gated on `IsEnlisted`,
+five states; `EnlistmentDailyService.RunDailyTick` skips `PayDailyWage` in `CommanderUnavailable`.
+The projection promised income on exactly the days none arrived. When you add a preview for an
+existing action, copy the action's guard — do not re-derive one from the same intent. Same class:
+`TaomClanFinanceModel` overrode `CalculateClanGoldChange` but not `CalculateClanIncome`, which calls
+`CalculateClanIncomeInternal` directly and never routes through it, so the clan screen's Income tile
+and the expected-change tooltip beside it disagreed. Both now share `AddServiceWageLine`.
+
+Full RCA with a "why missed" for each finding:
+[`docs/reviews/rca-enlistment-field-fixes-2026-08-11.md`](../reviews/rca-enlistment-field-fixes-2026-08-11.md).
+
+### Owed
+
+In-game verification of all seven, in one session: spawn WITH the line; banner reads "Men! Wait!";
+wallet tooltip shows the wage; renown moves; enter a town and buy something; lose a battle and confirm
+you are not immediately re-engaged; discharge and confirm pre-enlistment wars are exactly as they were.
+**Add to that list:** raise an army for a battle, let a real lord join it, end the battle, then open
+the kingdom Armies tab and hover the commander's party on the map — both were the crash surface.
+Translation of the 5 new keys (#434).
+
 ## Interactions with the rest of TAOM
 
 **Leader-keyed attribution is the recurring hazard.** For months of game time the player fights

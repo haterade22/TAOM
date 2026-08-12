@@ -26,6 +26,7 @@ public static class EnlistmentIoC
         container.Register<IEnlistmentPlayerActionService, EnlistmentPlayerActionService>(Reuse.Singleton);
         container.Register<IServiceStatusTextWriter, ServiceStatusTextWriter>(Reuse.Singleton);
         container.Register<Presentation.IEnlistmentWaitMenuOptions, Presentation.EnlistmentWaitMenuOptions>(Reuse.Singleton);
+        container.Register<Presentation.IServiceDailyAnnouncer, Presentation.ServiceDailyAnnouncer>(Reuse.Singleton);
         container.Register<IServiceStatusService, ServiceStatusService>(Reuse.Singleton);
         container.Register<IServiceAttachmentService, ServiceAttachmentService>(Reuse.Singleton);
         container.Register<IDischargeService, DischargeService>(Reuse.Singleton);
@@ -37,6 +38,10 @@ public static class EnlistmentIoC
         // through it, and the reconciler is registered HERE. DryIoc resolves lazily so runtime
         // order never mattered, but the IoC validation tests build a container per feature module
         // and caught the split immediately.
+        container.Register<TAOM.Adapters.IArmyMembershipAdapter, TAOM.Adapters.ArmyMembershipAdapter>(Reuse.Singleton);
+        container.Register<TAOM.Adapters.IHeroRenownAdapter, TAOM.Adapters.HeroRenownAdapter>(Reuse.Singleton);
+        container.Register<TAOM.Adapters.IServiceDiplomacyAdapter, TAOM.Adapters.ServiceDiplomacyAdapter>(Reuse.Singleton);
+        container.Register<IServiceDiplomacyService, ServiceDiplomacyService>(Reuse.Singleton);
         container.Register<TAOM.Adapters.IInquiryAdapter, TAOM.Adapters.InquiryAdapter>(Reuse.Singleton);
         container.Register<IEnlistmentReconciler, EnlistmentReconciler>(Reuse.Singleton);
         container.Register<IServiceMaintenanceService, ServiceMaintenanceService>(Reuse.Singleton);
@@ -66,6 +71,9 @@ public static class EnlistmentIoC
         container.Register<Content.IEnlistmentContentStore, Content.EnlistmentContentStore>(Reuse.Singleton);
         container.Register<Content.IArmyRhythmSnapshotService, Content.ArmyRhythmSnapshotService>(Reuse.Singleton);
         container.Register<Content.IServiceRewardService, Content.ServiceRewardService>(Reuse.Singleton);
+        // SAME instance under the preview interface — the wallet projection must read the very wage the
+        // payment uses, not a second service that could drift from it.
+        container.RegisterMapping<Content.IEnlistmentWagePreview, Content.IServiceRewardService>();
         container.Register<Content.ISkillCheckService, Content.SkillCheckService>(Reuse.Singleton);
         container.Register<IRealTimeProvider, RealTimeProvider>(Reuse.Singleton);
         container.Register<Content.IPromotionService, Content.PromotionService>(Reuse.Singleton);

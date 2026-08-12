@@ -44,10 +44,11 @@ public class EnlistmentPumpAuthorityTests
 
         _reconciler = new EnlistmentReconciler(_store, _machine, _attachment, _commander, _discharge,
             new EnlistmentConfigProvider(_logger), _encounter, new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
-            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(), _logger);
+            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(),
+            Substitute.For<IArmyMembershipAdapter>(), _logger);
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, menu, menuService,
-            Substitute.For<IServiceStatusService>(), _logger);
+            Substitute.For<IServiceStatusService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";

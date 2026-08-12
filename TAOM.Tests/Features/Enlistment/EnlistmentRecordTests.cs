@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Enlistment.Domain;
 
@@ -34,6 +35,72 @@ public class EnlistmentRecordTests
         Assert.AreEqual(120.25, parsed.EnlistedAtDay);
         Assert.AreEqual(485.25, parsed.ContractEndDay);
         Assert.AreEqual(130.5, parsed.GraceEndsAtDay);
+    }
+
+    [TestMethod]
+    public void Serialize_RoundTrip_PreservesTheShoreLeaveAndServiceWarFields()
+    {
+        // SAVE COMPAT. These three landed with the 2026-08-11 field fixes and are the kind of field
+        // whose absence is silent: a war list that fails to round-trip means the discharge unwinds
+        // nothing and the player keeps his commander's wars for the rest of the campaign, with no
+        // error anywhere.
+        var record = EnlistedRecord();
+        record.OnTownLeave = true;
+        record.MirroredWars = new List<string> { "empire", "sturgia" };
+        record.EnemiesAtOath = new List<string> { "vlandia" };
+        record.OathFactionId = "player_clan";
+
+        var parsed = ParseOrFail(record.Serialize());
+
+        Assert.IsTrue(parsed.OnTownLeave);
+        CollectionAssert.AreEqual(new List<string> { "empire", "sturgia" }, parsed.MirroredWars);
+        CollectionAssert.AreEqual(new List<string> { "vlandia" }, parsed.EnemiesAtOath);
+
+        // The pin is what stops a discharge making peace on behalf of a faction that never declared
+        // the war. If it fails to round-trip, a save/load mid-service silently restores the exact
+        // asymmetry it exists to prevent.
+        Assert.AreEqual("player_clan", parsed.OathFactionId);
+    }
+
+    [TestMethod]
+    public void Deserialize_ASavePredatingTheseFields_YieldsEmptyListsNotNull()
+    {
+        // The upgrade path. Every existing save has no mirroredWars/enemiesAtOath/onTownLeave key,
+        // and the discharge path enumerates both lists unguarded — a null here is an NRE on the
+        // first discharge after updating, for every player mid-service.
+        var legacy = "state=2;heroId=main_hero;commanderId=lord_1_1;enlistedDay=120.25";
+
+        var parsed = ParseOrFail(legacy);
+
+        Assert.IsFalse(parsed.OnTownLeave);
+        Assert.IsNotNull(parsed.MirroredWars);
+        Assert.IsNotNull(parsed.EnemiesAtOath);
+        Assert.AreEqual(0, parsed.MirroredWars.Count);
+        Assert.AreEqual(0, parsed.EnemiesAtOath.Count);
+
+        // No pin on an older save. Null (not "") so ServiceDiplomacyService can tell "we never
+        // recorded one" from "we recorded a faction whose id is empty", and unwind as before.
+        Assert.IsNull(parsed.OathFactionId);
+    }
+
+    [TestMethod]
+    public void Reset_ClearsTheShoreLeavePassAndTheWarLists()
+    {
+        // The maintenance pump early-returns on !IsEnlisted, so it can never revoke a pass after
+        // discharge. Reset() is therefore the only thing standing between a stale OnTownLeave and a
+        // NEXT enlistment that silently suspends the settlement redirect from its first day.
+        var record = EnlistedRecord();
+        record.OnTownLeave = true;
+        record.MirroredWars = new List<string> { "empire" };
+        record.EnemiesAtOath = new List<string> { "vlandia" };
+        record.OathFactionId = "player_clan";
+
+        record.Reset();
+
+        Assert.IsFalse(record.OnTownLeave);
+        Assert.AreEqual(0, record.MirroredWars.Count);
+        Assert.AreEqual(0, record.EnemiesAtOath.Count);
+        Assert.IsNull(record.OathFactionId);
     }
 
     [TestMethod]
