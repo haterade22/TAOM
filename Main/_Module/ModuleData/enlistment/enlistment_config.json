@@ -13,6 +13,8 @@
     "killXpCap": 10,
     "battleWinXp": 40,
     "battleLossXp": 15,
+    "battleWinRenown": 2,
+    "battleLossRenown": 1,
     "assignmentSwapCooldownDays": 7,
     "assignmentSwapTrustCost": 1
   },
@@ -37,10 +39,10 @@
     "engagementDistance": 35.0
   },
   "meritBands": [
-    { "minScore": 80, "serviceXp": 30, "gold": 20, "trust": 2, "repDomain": "Field", "repAmount": 2, "gradeKey": "distinguished" },
-    { "minScore": 60, "serviceXp": 20, "gold": 10, "trust": 1, "repDomain": "Field", "repAmount": 1, "gradeKey": "strong" },
-    { "minScore": 40, "serviceXp": 12, "gold": 5, "trust": 0, "repDomain": "Field", "repAmount": 1, "gradeKey": "solid" },
-    { "minScore": 0, "serviceXp": 4, "gold": 0, "trust": 0, "repDomain": "None", "repAmount": 0, "gradeKey": "rough" }
+    { "minScore": 80, "serviceXp": 30, "gold": 20, "trust": 2, "renown": 3, "repDomain": "Field", "repAmount": 2, "gradeKey": "distinguished" },
+    { "minScore": 60, "serviceXp": 20, "gold": 10, "trust": 1, "renown": 2, "repDomain": "Field", "repAmount": 1, "gradeKey": "strong" },
+    { "minScore": 40, "serviceXp": 12, "gold": 5, "trust": 0, "renown": 1, "repDomain": "Field", "repAmount": 1, "gradeKey": "solid" },
+    { "minScore": 0, "serviceXp": 4, "gold": 0, "trust": 0, "renown": 0, "repDomain": "None", "repAmount": 0, "gradeKey": "rough" }
   ],
   "scheduler": {
     "trustMin": -10,

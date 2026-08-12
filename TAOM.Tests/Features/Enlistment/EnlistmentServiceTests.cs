@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -29,12 +29,12 @@ public class EnlistmentServiceTests
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
         _attachment.RestorePresence().Returns(true);
         _attachment.ParkNear(Arg.Any<string>()).Returns(true);
-        _discharge = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), _logger);
+        _discharge = new DischargeService(_store, _machine, _attachment, Substitute.For<IEncounterAdapter>(), new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(), Substitute.For<IGameMenuAdapter>(), Substitute.For<IServiceDiplomacyService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
         _encounter = Substitute.For<IEncounterAdapter>();
         _encounter.Finish(Arg.Any<bool>()).Returns(true);
         _service = new EnlistmentService(
             _store, _machine, _discharge, _commander, _attachment, _encounter, new EncounterOwnershipPolicy(),
-            new EnlistmentConfigProvider(_logger), _logger);
+            new EnlistmentConfigProvider(_logger), Substitute.For<IServiceDiplomacyService>(), _logger);
 
         _commander.GetSnapshot("lord_1_1").Returns(new CommanderSnapshot(
             exists: true, isAlive: true, isPrisoner: false,

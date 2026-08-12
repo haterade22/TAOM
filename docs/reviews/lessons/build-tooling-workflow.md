@@ -1061,3 +1061,60 @@ an UNVERIFIED risk awaiting an in-game test, not a confirmed defect.
   modules (`LOTRLOME_Armory`, `Alliance.Wargs`), so per the CLAUDE.md trap any fix there ships with
   a repo-side validator gate beside it, or a module reinstall silently reverts it.
 - **Source:** `docs/migration/v1.4.8-impact.md` (changelog row N7 — rein / ragdoll).
+
+
+### Batch verification; a suite you already ran is not new evidence
+
+`evidence-over-claims.md` requires fresh verification before a completion claim. It does NOT require
+verification after every edit, and reading it that way is how a session spends most of its wall-clock
+waiting on its own test runs.
+
+- **Why it happens:** each individual re-run feels like diligence, so there is no single moment at
+  which the cost becomes visible. The 2026-08-11 enlistment session ran the full 6,380-test suite
+  roughly fifteen times across seven fixes. The marginal runs proved nothing that a batched run at
+  each item's completion would not have, and the user noticed the latency before the session did.
+- **Prevent, a rate that keeps the guarantee intact:**
+  - **Compile** after each edit. Fast, and it catches the error that actually happens most.
+  - **Filtered suite** (`--filter FullyQualifiedName~XxxTests`) while iterating on one component.
+  - **Full suite** at each work-item boundary and once before the review gate. That is the run whose
+    result you quote, and it is the only one the rule ever asked for.
+- **Same discipline for engine lookups:** batch `ilspycmd` / `taom-src` calls for related types into
+  one command instead of one round trip per type.
+- **Source:** 2026-08-11 enlistment field-fix session, user-reported.
+
+### Use Edit for edits; reach for a script only for genuine fan-out
+
+A throwaway Python or sed script to change one constructor or one comment is slower than the Edit
+tool, not faster. It fails on assumptions you cannot see until it runs, and a failed script leaves you
+re-reading the file to work out what state it is now in.
+
+- **Why it happens:** batching several edits into one script LOOKS like the efficient move, and for
+  genuine fan-out (the same mechanical change across 12 language files, or 8 test constructors) it is.
+  For one or two edits it inverts: the script needs anchors that must match exactly, and a mismatched
+  anchor costs a full read-diagnose-rewrite cycle.
+- **Concrete failures, one session:** a constructor extraction took **three attempts** (wrong method
+  ordering, then a regex that did not match the ctor signature); a `sed` meant to rename a parameter
+  also mangled the doc comment above it and needed a manual repair; and a heredoc broke on an
+  apostrophe inside the payload.
+- **Prevent:** Edit for 1-3 sites. Script only when the same change lands in 4+ files, and when it
+  does, make every anchor an `assert` so it fails loudly and atomically **before** the write rather
+  than half-applying. Write the script to the scratchpad with the Write tool and execute the file,
+  rather than piping a heredoc through the shell, which turns every apostrophe and backtick in the
+  payload into a quoting hazard. Never chain a backup through `/tmp` on Windows: the Read tool cannot
+  see git-bash `/tmp` paths, so a failed restore is invisible.
+- **Source:** 2026-08-11 enlistment field-fix session.
+
+### Do not refactor during a review gate
+
+A cleanup that is not fixing a reported defect does not belong between "changeset complete" and
+"changeset committed". It churns the exact files the review agents are reading, invalidating their
+results, and it delays the finding that would actually change the code.
+
+- **Why it happens:** a review flags a code-quality issue, and fixing it immediately feels like
+  responsiveness. The tell is writing the words *this is polish, not a fix* and then doing it anyway,
+  which happened verbatim on 2026-08-11.
+- **Prevent:** while a review is outstanding, act only on findings that change runtime behaviour.
+  Queue quality findings and address them after the gate closes, or in a follow-up commit. The one
+  exception is a violation your own changeset introduced or deepened, which is yours to fix, and even
+  then hold the edit until the agents reading that file have reported.
+- **Source:** 2026-08-11 enlistment field-fix session.

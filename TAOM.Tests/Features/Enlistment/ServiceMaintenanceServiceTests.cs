@@ -21,6 +21,7 @@ public class ServiceMaintenanceServiceTests
     private IGameMenuAdapter _gameMenu = null!;
     private IEnlistmentMenuService _menuService = null!;
     private IServiceStatusService _status = null!;
+    private IArmyMembershipAdapter _army = null!;
     private ServiceMaintenanceService _pump = null!;
 
     [TestInitialize]
@@ -37,10 +38,11 @@ public class ServiceMaintenanceServiceTests
         _menuService.IsRedirectable(Arg.Any<string>()).Returns(true);
 
         _status = Substitute.For<IServiceStatusService>();
+        _army = Substitute.For<IArmyMembershipAdapter>();
 
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, _gameMenu, _menuService,
-            _status, _logger);
+            _status, _army, _logger);
 
         Commander(followable: true);
         Presence(parked: true);
@@ -70,6 +72,43 @@ public class ServiceMaintenanceServiceTests
 
     /// <summary>Pump enough to cross the throttle and reach the expensive tier.</summary>
     private void PumpExpensive(double nowHours = 100.0) => _pump.Pump(Interval, nowHours);
+
+    // ---- per-session cache lifetime -----------------------------------------------------
+
+    /// <summary>
+    /// This method is the one place that knows how long the feature's per-session state lives, so
+    /// every collaborator cache is dropped from here rather than being wired separately into the
+    /// load hook.
+    ///
+    /// The army adapter's is the one that hurts if it is missed: it holds a live <c>Army</c>
+    /// REFERENCE on a singleton whose container outlives the campaign. After a reload that handle
+    /// names either a dead campaign's object or an instance this world no longer contains, and the
+    /// identity test in <c>LeaveArmy</c> can then never match again for the rest of the process —
+    /// so the army raised for a battle would never be disbanded. A bare-ctor army carries a null
+    /// <c>AiBehaviorObject</c>, which crashes <c>Army.GetLongTermBehaviorTextForAILeadedParty</c>
+    /// from the map party tooltip and the kingdom Armies tab, and survives every later reload.
+    /// </summary>
+    [TestMethod]
+    public void ResetSessionCaches_AlsoDropsTheArmyAdapterHandle()
+    {
+        _pump.ResetSessionCaches();
+
+        _army.Received(1).ResetSessionCaches();
+        _attachment.Received(1).InvalidateCommanderCache();
+        _status.Received(1).Invalidate();
+    }
+
+    [TestMethod]
+    public void Pump_DoesNotResetTheArmyAdapterCache()
+    {
+        // The reset is a LOAD-time action. Dropping the handle on an ordinary pump would orphan an
+        // army raised moments earlier for a battle still in progress.
+        MakeEnlisted();
+
+        PumpExpensive();
+
+        _army.DidNotReceive().ResetSessionCaches();
+    }
 
     // ---- gating -------------------------------------------------------------------------
 

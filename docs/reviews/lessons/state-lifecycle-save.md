@@ -302,3 +302,68 @@ Set an idempotence latch *after* the successful pass, never before, unless the r
 hazard.
 
 **Source:** review wave on #430, 2026-08-08.
+
+### A singleton holding an ENGINE OBJECT REFERENCE needs a load-time reset, not just an id
+
+TAOM's DryIoc container is process-scoped, so a `Reuse.Singleton` outlives the campaign. A cached
+*id* that survives a reload is the familiar hazard (a lord-party StringId is identical across a
+reload of the same campaign, so a stale handle HITS the cache test). A cached engine **object
+reference** is worse in the opposite direction: after a reload it can never match anything again, so
+every identity check against it silently fails forever.
+
+- **Why missed:** `ArmyMembershipAdapter._createdArmy` holds a live `Army`. The load hook already
+  called `_maintenance.ResetSessionCaches()`, and the presence of one reset made the load path look
+  handled — nobody asked which OTHER singletons hold campaign-scoped state. Left stale, the identity
+  test in `LeaveArmy` could never match, so the army raised for a battle would never be disbanded —
+  and a bare-ctor army carries a null `AiBehaviorObject` that crashes the map UI permanently.
+- **Prevent:** at a load/session boundary, enumerate every instance field on every singleton the
+  feature registers and classify each as campaign-scoped or process-scoped — review the FIELD LIST,
+  not the reset block. Put the reset in the ONE service that owns per-session cache lifetime rather
+  than wiring each collaborator separately into the load hook; that keeps the enumeration in one
+  place and keeps the thin lifecycle behavior from accreting a dependency per cache.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #8.
+
+### Enumerate the paths that end the SERVICE, not just the ones that end the EPISODE
+
+A feature that acquires a resource for the duration of an episode (a battle, a mission, a quest) gets
+its teardown reviewed in the vocabulary the feature is written in — "where does the battle end?" The
+paths that end the whole SERVICE are a different question, they usually live in files the changeset
+never touched, and they are where the leak is.
+
+- **Why missed:** the transient army merge is acquired in `ServiceBattleService.TryJoin` and released
+  in `OnCommanderBattleEnded`. Two review passes enumerated battle exits and one of them added a
+  release to the reconciler's stale-battle self-heal. Nobody opened `DischargeService`, which is how
+  service ENDS — it calls `ClearArmyAttachment()`, which detaches the player but knows nothing about
+  the army — and discharge fires mid-battle whenever the MCM master switch is turned off or
+  `CommanderDead` is raised from `EnlistedBattle`. Found by the Codex pass after ten agent-passes
+  missed it.
+- **Prevent:** for any resource acquired for an episode, list the exits in BOTH vocabularies before
+  reviewing the teardown — "the episode ended" and "the feature stopped running" — and include the
+  MCM master switch, every discharge/cancel reason, captivity, death, and save/load in the second
+  list. Then test the second list exhaustively (a `foreach` over the reason enum is cheap).
+- **Second half of the same finding: a state-keyed guard is defeated by a state coercion.**
+  `EnlistmentRecord.ToPersistedState` coerces `EnlistedBattle` to `EnlistedAttached` on save, so any
+  `if (State == EnlistedBattle)` self-heal is structurally blind after a reload. Re-key such guards
+  on the OBSERVABLE world (`IsInArmy`, "no map event anywhere") rather than on persisted state whose
+  own serializer rewrites it. Grep the record's persist path for coercions before writing any guard
+  that keys on a state value.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #12.
+
+### "Is the sequence right?" and "is it still the same actor?" are different review questions
+
+A two-phase operation (acquire now, release later) gets its ORDERING reviewed carefully, because
+ordering bugs are the famous ones. The identity of the actor performing each phase is a separate
+question, and a passing ordering test makes the whole area feel covered.
+
+- **Why missed:** TAOM's service-war mirror has a dedicated, well-commented test asserting the
+  pre-oath enemy set is snapshotted BEFORE any declaration — the ordering safeguard, and it is
+  correct. But both the declare and the unwind resolve `Hero.MapFaction` LIVE, and `MapFaction` is
+  `Clan.Kingdom ?? Clan`, so a player whose clan joins a kingdom mid-service declares as his clan and
+  makes peace as the KINGDOM — ending a war for every vassal in it because one soldier was
+  discharged, with nothing on screen connecting the two.
+- **Prevent:** for any acquire-then-release pair, ask who the actor is at each end and whether the
+  engine can change it in between. Player faction, clan, kingdom, party, army and settlement
+  ownership are all live-resolved in Bannerlord and all mutable mid-campaign. Pin the identity in the
+  persisted record at acquire time and refuse to release under a different one — refusing is almost
+  always safer than acting, because the release is a mutation someone else now owns.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #14.

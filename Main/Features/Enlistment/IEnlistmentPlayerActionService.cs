@@ -49,4 +49,16 @@ public interface IEnlistmentPlayerActionService
 
     /// <summary>Ask the commander for work now. Shares one offer path with the daily tick.</summary>
     DutyRequestResult RequestDutyNow(double nowDays, double hourOfDay);
+
+    /// <summary>
+    /// May the player be offered shore leave right now (field report 1)? Pure gate — safe to call
+    /// from a menu-option condition every frame.
+    /// </summary>
+    bool CanTakeTownLeave();
+
+    /// <summary>
+    /// Take shore leave: releases the settlement menu so the player can use the town his column is
+    /// resting in. Returns false when the gate has closed since the option was drawn.
+    /// </summary>
+    bool TakeTownLeave();
 }

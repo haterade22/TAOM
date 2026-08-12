@@ -832,7 +832,9 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>()));
         campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
-        campaignStarter.AddModel(new TaomClanFinanceModel(culturalFeats));
+        campaignStarter.AddModel(new TaomClanFinanceModel(
+            culturalFeats,
+            IoC.Resolve<Features.Enlistment.Content.IEnlistmentWagePreview>()));
         campaignStarter.AddModel(new TaomRaidModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomNotableSpawnModel(culturalFeats));
     }
@@ -1424,11 +1426,14 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
             IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentConfigProvider>().GetConfig().MeritScoring));
         // Registered unconditionally per the same convention; self-filters in AfterStart on
-        // enlisted-battle state. Corrects #424: Army is permanently null while enlisted, so
-        // vanilla's IsPlayerSergeant() is structurally false and AssignPlayerRoleInTeamMissionController
-        // makes the enlisted player GENERAL of his whole side.
+        // enlisted-battle state. Corrects #424, whose premise has since narrowed: Army is now joined
+        // for the duration of a battle (#443), so IsPlayerSergeant() is true and vanilla offers a
+        // single formation instead of promoting the player to GENERAL of his whole side. The
+        // behavior keeps that formation at rank Sergeant and strips it below — and re-checks the
+        // engine's verdict, because a commander with no kingdom gets no merge and no sergeant role.
         AddTaomBehavior(new Features.Enlistment.Hooks.EnlistmentBattleRoleMissionBehavior(
             IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>(),
+            IoC.Resolve<Features.Enlistment.Content.IEnlistmentContentStore>(),
             IoC.Resolve<IModLogger>()));
         // The second half of the same engine branch (#441): the role strip above delivers
         // neither-role; this puts the soldier IN a formation so IsPlayerTroopInFormation

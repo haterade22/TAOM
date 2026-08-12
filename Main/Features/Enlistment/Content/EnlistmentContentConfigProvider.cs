@@ -65,12 +65,22 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         };
     }
 
+    /// <summary>
+    /// Renown is what makes one battle worth more than another. Left at 0 — as it shipped until
+    /// 2026-08-11 — every fight paid the same flat <c>BattleWinRenown</c>/<c>BattleLossRenown</c>
+    /// base, so <c>BattleMeritScorer</c> graded the battle and the grade bought nothing.
+    ///
+    /// 3/2/1/0 against a win base of 2 is a deliberate ratio, not a placeholder: a distinguished
+    /// fight pays 5 and a rough one 2, so the best battle is worth two and a half of the worst
+    /// without any single fight moving the clan-tier needle. Tunable — see the <c>renown</c> keys
+    /// in enlistment_config.json.
+    /// </summary>
     private static List<MeritBand> DefaultMeritBands() => new List<MeritBand>
     {
-        new MeritBand { MinScore = 80, ServiceXp = 30, Gold = 20, Trust = 2, RepDomain = ReputationDomain.Field, RepAmount = 2, GradeKey = "distinguished" },
-        new MeritBand { MinScore = 60, ServiceXp = 20, Gold = 10, Trust = 1, RepDomain = ReputationDomain.Field, RepAmount = 1, GradeKey = "strong" },
-        new MeritBand { MinScore = 40, ServiceXp = 12, Gold = 5, Trust = 0, RepDomain = ReputationDomain.Field, RepAmount = 1, GradeKey = "solid" },
-        new MeritBand { MinScore = 0, ServiceXp = 4, Gold = 0, Trust = 0, RepDomain = ReputationDomain.None, RepAmount = 0, GradeKey = "rough" },
+        new MeritBand { MinScore = 80, ServiceXp = 30, Gold = 20, Trust = 2, Renown = 3, RepDomain = ReputationDomain.Field, RepAmount = 2, GradeKey = "distinguished" },
+        new MeritBand { MinScore = 60, ServiceXp = 20, Gold = 10, Trust = 1, Renown = 2, RepDomain = ReputationDomain.Field, RepAmount = 1, GradeKey = "strong" },
+        new MeritBand { MinScore = 40, ServiceXp = 12, Gold = 5, Trust = 0, Renown = 1, RepDomain = ReputationDomain.Field, RepAmount = 1, GradeKey = "solid" },
+        new MeritBand { MinScore = 0, ServiceXp = 4, Gold = 0, Trust = 0, Renown = 0, RepDomain = ReputationDomain.None, RepAmount = 0, GradeKey = "rough" },
     };
 
     private static List<PromotionRequirement> DefaultPromotions() => new List<PromotionRequirement>
@@ -297,7 +307,11 @@ public class EnlistmentContentConfigProvider : IEnlistmentContentConfigProvider
         for (var i = 0; i < bands.Count; i++)
         {
             var band = bands[i];
-            if (band.MinScore < 0 || band.ServiceXp < 0 || band.Gold < 0 || band.RepAmount < 0)
+            // Renown joins the non-negative set now that it is live config (2026-08-11). It is a
+            // directional bonus, so a sign flip does not merely shrink the reward — a negative band
+            // eats into the flat win/loss base, and a good fight would pay LESS than a bad one.
+            // Trust stays out on purpose: a band docking trust is a legitimate tuning choice.
+            if (band.MinScore < 0 || band.ServiceXp < 0 || band.Gold < 0 || band.RepAmount < 0 || band.Renown < 0)
                 return false;
             if (i > 0 && band.MinScore >= bands[i - 1].MinScore)
                 return false;

@@ -41,6 +41,15 @@ public sealed class ProgressionTables
     public int BattleWinXp { get; set; } = 40;
     public int BattleLossXp { get; set; } = 15;
 
+    /// <summary>
+    /// Renown for one battle of service (#443 field report 3). Small on purpose: vanilla's share is
+    /// contribution-scaled and an enlisted player is a party of one hero, so his share rounds to
+    /// nothing — but renown is the clan-tier currency and a soldier should earn a name slowly.
+    /// The merit band adds to this; both at 0 disables the award entirely.
+    /// </summary>
+    public int BattleWinRenown { get; set; } = 2;
+    public int BattleLossRenown { get; set; } = 1;
+
     /// <summary>Assignment swaps cost a cooldown + trust (donor allowed free swaps).</summary>
     public int AssignmentSwapCooldownDays { get; set; } = 7;
     public int AssignmentSwapTrustCost { get; set; } = 1;

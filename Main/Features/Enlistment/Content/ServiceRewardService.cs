@@ -1,10 +1,11 @@
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Enlistment.Content.Domain;
+using TAOM.Features.Enlistment.Domain;
 
 namespace TAOM.Features.Enlistment.Content;
 
-public class ServiceRewardService : IServiceRewardService
+public class ServiceRewardService : IServiceRewardService, IEnlistmentWagePreview
 {
     private readonly IEnlistmentStore _store;
     private readonly IEnlistmentContentStore _contentStore;
@@ -14,6 +15,7 @@ public class ServiceRewardService : IServiceRewardService
     private readonly IGoldTransferAdapter _goldTransfer;
     private readonly ICommanderLordAdapter _commander;
     private readonly IPlayerPartyAdapter _playerParty;
+    private readonly IHeroRenownAdapter _renown;
     private readonly IModLogger _logger;
 
     public ServiceRewardService(
@@ -25,6 +27,7 @@ public class ServiceRewardService : IServiceRewardService
         IGoldTransferAdapter goldTransfer,
         ICommanderLordAdapter commander,
         IPlayerPartyAdapter playerParty,
+        IHeroRenownAdapter renown,
         IModLogger logger)
     {
         _playerParty = playerParty;
@@ -35,6 +38,7 @@ public class ServiceRewardService : IServiceRewardService
         _goldGift = goldGift;
         _goldTransfer = goldTransfer;
         _commander = commander;
+        _renown = renown;
         _logger = logger;
     }
 
@@ -65,19 +69,45 @@ public class ServiceRewardService : IServiceRewardService
         if (reward.Relation != 0)
             _commander.ApplyPlayerRelation(_store.Record.CommanderHeroId, reward.Relation);
 
+        // Renown goes to the PLAYER's clan, so it uses playerId like the gold and skill sinks above
+        // rather than the commander id used for relation. Serving in someone else's army builds your
+        // OWN name — that is the whole point of the reward.
+        if (reward.Renown > 0)
+            _renown.AddClanRenown(playerId, reward.Renown);
+
         if (reward.RepDomain != ReputationDomain.None && reward.RepAmount != 0)
             ApplyReputation(reward.RepDomain, reward.RepAmount);
 
-        _logger?.LogDebug($"[Enlistment] reward '{sourceLabel}': xp={reward.ServiceXp} gold={reward.Gold} skill={reward.SkillId}/{reward.SkillXp} trust={reward.Trust}");
+        _logger?.LogDebug($"[Enlistment] reward '{sourceLabel}': xp={reward.ServiceXp} gold={reward.Gold} skill={reward.SkillId}/{reward.SkillXp} trust={reward.Trust} renown={reward.Renown}");
     }
+
+    /// <inheritdoc />
+    public int GetDailyWage()
+        => IsWageEarningToday()
+            ? WagePolicy.DailyWageForRank(
+                (int)_contentStore.Record.Rank, _config.GetConfig().Progression.DailyWageByRank)
+            : 0;
+
+    /// <summary>
+    /// Whether a wage is actually due today, which is NARROWER than <c>IsEnlisted</c>.
+    ///
+    /// <c>IsEnlisted</c> spans five states, and <c>EnlistmentDailyService.RunDailyTick</c>
+    /// early-returns before <see cref="PayDailyWage"/> whenever the state is
+    /// <c>CommanderUnavailable</c> — there is no chain of command left to pay anyone. Gating the
+    /// projection on <c>IsEnlisted</c> alone therefore promised the player money on exactly the
+    /// days none arrived, for a grace window up to a week long, and the wallet tooltip is the one
+    /// surface a player checks when they suspect they are not being paid. Both gates must name the
+    /// same condition or the projection is a lie.
+    /// </summary>
+    private bool IsWageEarningToday()
+        => _store.Record.IsEnlisted
+           && _store.Record.State != EnlistmentState.CommanderUnavailable;
 
     public WageDecision PayDailyWage()
     {
         var record = _contentStore.Record;
         var config = _config.GetConfig();
-        var wageTable = config.Progression.DailyWageByRank;
-        var rankIndex = (int)record.Rank;
-        var wage = rankIndex >= 0 && rankIndex < wageTable.Count ? wageTable[rankIndex] : 0;
+        var wage = WagePolicy.DailyWageForRank((int)record.Rank, config.Progression.DailyWageByRank);
 
         var commanderId = _store.Record.CommanderHeroId;
         var priorArrears = System.Math.Max(0, record.DeferredWages);

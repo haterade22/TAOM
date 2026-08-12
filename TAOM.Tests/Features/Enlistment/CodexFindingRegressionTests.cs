@@ -36,7 +36,7 @@ public class CodexFindingRegressionTests
             store, contentStore, config,
             Substitute.For<IHeroSkillXpAdapter>(), goldGift,
             Substitute.For<IGoldTransferAdapter>(), Substitute.For<ICommanderLordAdapter>(),
-            playerParty, logger);
+            playerParty, Substitute.For<IHeroRenownAdapter>(), logger);
 
         // The discharge pipeline has already cleared the core record by the time the
         // consequence layer settles the arrears — EnlistedHeroId is null here.

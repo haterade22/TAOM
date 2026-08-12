@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -60,7 +60,7 @@ public class CommanderLossAnnouncementTests
         var discharge = new DischargeService(
             _store, machine, _partyAdapter, Substitute.For<IEncounterAdapter>(),
             new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(),
-            Substitute.For<IGameMenuAdapter>(), _logger);
+            Substitute.For<IGameMenuAdapter>(), Substitute.For<IServiceDiplomacyService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
 
         _commander = Substitute.For<ICommanderLordAdapter>();
         _inquiry = Substitute.For<IInquiryAdapter>();
@@ -69,7 +69,8 @@ public class CommanderLossAnnouncementTests
             _store, machine, attachment, _commander, discharge,
             new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(),
             new EncounterOwnershipPolicy(), Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
-            EnlistmentTestDoubles.FeatureOn(), _inquiry, _logger);
+            EnlistmentTestDoubles.FeatureOn(), _inquiry,
+            Substitute.For<IArmyMembershipAdapter>(), _logger);
 
         _store.Record.State = EnlistmentState.EnlistedAttached;
         _store.Record.EnlistedHeroId = "main_hero";

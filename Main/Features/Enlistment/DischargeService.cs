@@ -14,6 +14,8 @@ public class DischargeService : IDischargeService
     private readonly IEncounterOwnershipPolicy _ownership;
     private readonly ICommanderLordAdapter _commander;
     private readonly IGameMenuAdapter _gameMenu;
+    private readonly IServiceDiplomacyService _diplomacy;
+    private readonly IArmyMembershipAdapter _army;
     private readonly IModLogger _logger;
 
     public DischargeService(
@@ -24,6 +26,8 @@ public class DischargeService : IDischargeService
         IEncounterOwnershipPolicy ownership,
         ICommanderLordAdapter commander,
         IGameMenuAdapter gameMenu,
+        IServiceDiplomacyService diplomacy,
+        IArmyMembershipAdapter army,
         IModLogger logger)
     {
         _store = store;
@@ -33,6 +37,8 @@ public class DischargeService : IDischargeService
         _ownership = ownership;
         _commander = commander;
         _gameMenu = gameMenu;
+        _diplomacy = diplomacy;
+        _army = army;
         _logger = logger;
     }
 
@@ -73,6 +79,21 @@ public class DischargeService : IDischargeService
             _logger?.LogError($"DischargeService: RestorePresence failed during discharge ({reason}) — continuing pipeline");
 
         // 6 — detach BEFORE the encounter work: PlayerEncounter.Finish branches on Army/AttachedTo.
+        //
+        // LeaveArmy FIRST, and it is not interchangeable with ClearArmyAttachment. Discharge can
+        // fire mid-battle — the MCM master switch flipping off, or CommanderDead raised from the
+        // reconciler while the state is EnlistedBattle — and at that moment the adapter may be
+        // holding an army IT raised for this fight. ClearArmyAttachment only detaches the player;
+        // it has no idea the army exists, so the army would be left standing with the null
+        // AiBehaviorObject that crashes Army.GetLongTermBehaviorTextForAILeadedParty from the map
+        // party tooltip and the kingdom Armies tab, for the rest of the campaign. Nothing else
+        // would ever clean it up: after discharge no battle path runs again, and
+        // Army.CheckInactivity never times out an army whose leader is besieging.
+        //
+        // ClearArmyAttachment still runs below it — idempotent after a successful leave, and the
+        // one that must not be removed, since it is what detaches a player who was in a REAL army
+        // this adapter never created. (Codex P1, 2026-08-12.)
+        _army?.LeaveArmy();
         _attachment.ClearArmyAttachment();
 
         // 7 — encounter, per the ownership policy. Discharge outranks ownership: leaving one live
@@ -90,6 +111,13 @@ public class DischargeService : IDischargeService
         {
             _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) left the live encounter alone: {verdict}");
         }
+
+        // 7b — UNWIND THE SERVICE WARS, and it has to be here rather than in an EnlistmentEnded
+        // subscriber. Step 8 calls _store.Record.Reset(), which wipes MirroredWars and EnemiesAtOath,
+        // and step 9 dispatches the event only AFTER that — so a subscriber would find an empty
+        // mirror and silently leave the player at war with everyone his commander was fighting,
+        // permanently and with no record of where those wars came from.
+        _diplomacy.UnwindServiceWars();
 
         // 8 — clear
         _attachment.InvalidateCommanderCache();

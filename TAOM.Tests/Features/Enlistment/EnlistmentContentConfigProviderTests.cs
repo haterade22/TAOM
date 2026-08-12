@@ -183,6 +183,101 @@ public class EnlistmentContentConfigProviderTests
     }
 
     [TestMethod]
+    public void GetConfig_MeritBandsNegativeRenown_Reverts()
+    {
+        // Renown joined the non-negative set when it became live config (2026-08-11). It is
+        // directional: BattleRenownPolicy adds the band figure to the flat win/loss base, so a
+        // negative band does not merely shrink the reward — it eats the base, and a distinguished
+        // fight ends up paying LESS than a rough one. Clamped at the policy, reverted here.
+        WriteConfig("{\"meritBands\":[" +
+            "{\"minScore\":80,\"serviceXp\":30,\"renown\":-5},{\"minScore\":0,\"serviceXp\":4,\"renown\":0}]}");
+
+        var config = Provider().GetConfig();
+
+        Assert.AreEqual(4, config.MeritBands.Count, "default bands restored");
+        Assert.IsTrue(config.MeritBands.All(b => b.Renown >= 0));
+    }
+
+    /// <summary>
+    /// The regression for the defect BattleRenownPolicy's own doc comment described but the config
+    /// never delivered: <c>MeritBand.Renown</c> existed, the policy added it, and NO default band
+    /// and NO shipped config key ever set it. <c>bandRenown</c> was 0 on every path, so every
+    /// battle paid the identical flat base while the comment claimed the band did the
+    /// differentiating.
+    ///
+    /// BattleRenownPolicyTests could not catch it — every one of those cases passes
+    /// <c>bandRenown</c> in as a literal, so the pure function was fully covered and completely
+    /// disconnected from the numbers that actually reach it. This asserts the SUPPLY side.
+    /// </summary>
+    [TestMethod]
+    public void DefaultMeritBands_ActuallyDifferentiateOnRenown()
+    {
+        var bands = EnlistmentContentConfigProvider.BuildDefaults().MeritBands;
+
+        Assert.IsTrue(bands.Any(b => b.Renown > 0),
+            "no default band awards renown — bandRenown is always 0 and every battle pays the same flat base");
+
+        // Descending minScore must mean non-increasing renown, or a worse fight outearns a better
+        // one. Strictly greater at the ends, so the ladder is not merely flat-but-nonzero.
+        for (var i = 1; i < bands.Count; i++)
+            Assert.IsTrue(bands[i].Renown <= bands[i - 1].Renown,
+                $"band '{bands[i].GradeKey}' pays more renown than the better band above it");
+
+        Assert.IsTrue(bands[0].Renown > bands[bands.Count - 1].Renown,
+            "the best and worst bands pay the same renown — the grade buys nothing");
+    }
+
+    /// <summary>
+    /// The defaults are only half the fix: an install reads the SHIPPED json, and a key absent
+    /// there silently takes the compiled default rather than the tuner's intent. This pins that the
+    /// renown chain is actually exposed in the file players edit — both the per-band figure and the
+    /// flat win/loss base it is added to.
+    /// </summary>
+    [TestMethod]
+    public void ShippedConfig_ExposesTheWholeRenownChain()
+    {
+        var provider = new EnlistmentContentConfigProvider(ShippedPaths(), _logger);
+        var config = provider.GetConfig();
+
+        Assert.IsTrue(config.MeritBands.Any(b => b.Renown > 0),
+            "the shipped enlistment_config.json has no band awarding renown");
+        Assert.IsTrue(config.Progression.BattleWinRenown > 0,
+            "the shipped enlistment_config.json does not set battleWinRenown");
+
+        var raw = File.ReadAllText(Path.Combine(
+            ShippedModuleDataPath(), "enlistment", "enlistment_config.json"));
+        StringAssert.Contains(raw, "\"renown\"",
+            "the band renown key is missing from the shipped file, so a retune has nothing to edit");
+        StringAssert.Contains(raw, "\"battleWinRenown\"",
+            "the flat renown base is missing from the shipped file");
+
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("meritBands")));
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+    }
+
+    private IPathService ShippedPaths()
+    {
+        var paths = Substitute.For<IPathService>();
+        paths.ModuleDataPath.Returns(ShippedModuleDataPath());
+        return paths;
+    }
+
+    private static string ShippedModuleDataPath()
+    {
+        var dir = Directory.GetCurrentDirectory();
+        while (dir != null)
+        {
+            var candidate = Path.Combine(dir, "Main", "_Module", "ModuleData");
+            if (Directory.Exists(candidate))
+                return candidate;
+            dir = Directory.GetParent(dir)?.FullName;
+        }
+
+        Assert.Fail("Could not locate Main/_Module/ModuleData from the test working directory.");
+        return null;
+    }
+
+    [TestMethod]
     public void GetConfig_ValidFile_LoadsAndKeepsValues()
     {
         WriteConfig("{\"progression\":{\"dailyLeadershipXp\":15}}");

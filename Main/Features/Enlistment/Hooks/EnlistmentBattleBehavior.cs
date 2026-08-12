@@ -191,11 +191,25 @@ public class EnlistmentBattleBehavior : CampaignBehaviorBase
         if (string.IsNullOrEmpty(commanderPartyId))
             return null;
 
+        // The ARMY LEADER counts too (#408 / field report 2026-08-09). A MapEvent lists the parties
+        // that ENTERED it; a lord attached to someone else's army does not enter it himself, the
+        // leader does. Matching only his own party missed every battle he fought while attached —
+        // which is the "my lord's army respawned and I was not pulled in" report, and why a live
+        // session saw 6 of 10 joins arrive through the hourly recovery instead of this edge.
+        //
+        // The decision is in CommanderBattleMatchPolicy so it can be tested without a MapEvent; the
+        // enumeration stays here because MapEvent is a sealed engine type (ADR-007).
+        var armyLeaderPartyId = _commander.GetArmyLeaderPartyId(_store.Record.CommanderHeroId);
+
+        return CommanderBattleMatchPolicy.IsCommanderInvolved(
+                   commanderPartyId, armyLeaderPartyId, InvolvedPartyIds(mapEvent))
+            ? commanderPartyId   // his OWN id: downstream seeds the encounter, and that must be with him
+            : null;
+    }
+
+    private static System.Collections.Generic.IEnumerable<string> InvolvedPartyIds(MapEvent mapEvent)
+    {
         foreach (var involved in mapEvent.InvolvedParties)
-        {
-            if (involved?.MobileParty?.StringId == commanderPartyId)
-                return commanderPartyId;
-        }
-        return null;
+            yield return involved?.MobileParty?.StringId;
     }
 }

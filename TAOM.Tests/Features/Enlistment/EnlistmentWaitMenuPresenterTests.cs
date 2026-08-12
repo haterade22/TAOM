@@ -23,6 +23,8 @@ public class EnlistmentWaitMenuPresenterTests
     private IEnlistmentService _service;
     private IInquiryAdapter _inquiry;
     private ICoopSessionProvider _coop;
+    private IEnlistmentPlayerActionService _actions = null!;
+    private IGameMenuAdapter _menuAdapter = null!;
     private EnlistmentWaitMenuPresenter _sut;
 
     [TestInitialize]
@@ -40,8 +42,10 @@ public class EnlistmentWaitMenuPresenterTests
         _gate.EvaluateReleaseRequest(Arg.Any<double>()).Returns(ReleaseRequest.Granted);
         _gate.ClassifyLeaveReason(Arg.Any<double>()).Returns(DischargeReason.PlayerRequest);
 
+        _actions = Substitute.For<IEnlistmentPlayerActionService>();
+        _menuAdapter = Substitute.For<IGameMenuAdapter>();
         _sut = new EnlistmentWaitMenuPresenter(_store, _commander, _gate, _service, _inquiry, _coop,
-            Substitute.For<IServiceStatusService>());
+            _actions, _menuAdapter, Substitute.For<IServiceStatusService>());
     }
 
     [TestMethod]

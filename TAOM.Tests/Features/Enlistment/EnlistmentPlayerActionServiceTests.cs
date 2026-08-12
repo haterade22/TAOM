@@ -21,6 +21,7 @@ public class EnlistmentPlayerActionServiceTests
     private ICommanderLordAdapter _commander;
     private IMapConversationAdapter _conversation;
     private IDutyOrchestrationService _duties;
+    private IMobilePartyAttachmentAdapter _attachment = null!;
     private EnlistmentPlayerActionService _sut;
 
     [TestInitialize]
@@ -41,7 +42,9 @@ public class EnlistmentPlayerActionServiceTests
         _store.Record.EnlistedHeroId = "main_hero";
         _store.Record.CommanderHeroId = "lord_1";
 
-        _sut = new EnlistmentPlayerActionService(_store, _commander, _conversation, _duties, Coop(), logger);
+        _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
+        _sut = new EnlistmentPlayerActionService(
+            _store, _commander, _conversation, _duties, Coop(), _attachment, logger);
     }
 
     [TestMethod]

@@ -362,3 +362,44 @@ compiled default, and log. Write the test as "does this still EXPIRE", not "is t
 the failure is a window that never closes, not a wrong number.
 
 Caught before shipping this time, by a review rather than a player.
+
+
+### Inheriting an ADR violation is not licence to deepen it
+
+A file already over the ADR-002 entry-point ceiling reads as pre-existing debt, so the check *am I
+over the limit?* is already true before your edit and has stopped discriminating. The question that
+still works is **is this file bigger than I found it?**
+
+- **Why missed:** `EnlistmentContentBehavior` was 153 lines at HEAD, already past the 150 ceiling.
+  Adding 43 lines of inline announcement code took it to 196 and tripped no new alarm, because the
+  alarm was already ringing when the work started. The reviewing agent flagged it, but as pre-existing
+  debt rather than as a regression.
+- **Prevent:** for any entry point (Behavior / Model / Patch), compare against
+  `git show HEAD:<file> | wc -l`, not against 150. Leave it no larger than you found it. When your
+  addition is a distinct concern (player-facing wording, option registration, status text) extract it
+  to `Presentation/` rather than inlining. That is the precedent `EnlistmentWaitMenuOptions` and
+  `ServiceDailyAnnouncer` both document in their own summaries.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #4.
+
+### Two gates on one condition must be written from each other, not from their own specs
+
+A projection ("show what they will earn") and an action ("pay them") are naturally built as separate
+features with separate specs. Each can be perfectly correct against its own spec while disagreeing
+about *when*, and the disagreement is invisible to both test suites because neither knows the other
+gate exists.
+
+- **Why missed:** `ServiceRewardService.GetDailyWage()` gated on `IsEnlisted`, which spans five
+  states; `EnlistmentDailyService.RunDailyTick` skips `PayDailyWage` in one of them
+  (`CommanderUnavailable`), for a well-documented reason. The wallet therefore promised income on
+  exactly the days none arrived, for a grace window up to a week — and the wallet tooltip is the one
+  surface a player checks when they suspect they are not being paid. Same shape, same changeset:
+  `TaomClanFinanceModel` overrode `CalculateClanGoldChange` but not `CalculateClanIncome`, which
+  calls `CalculateClanIncomeInternal` directly and never routes through it, so the clan screen's
+  Income tile and the expected-change tooltip beside it disagreed about the same income.
+- **Prevent:** when adding a preview, projection, tooltip or estimate for an existing action, open
+  the action and COPY its guard — never re-derive one from the same intent. For a GameModel, decompile
+  the base class and check whether the sibling methods delegate to the one you overrode or compute
+  independently. Then test in both directions: the state where the action is skipped must project
+  nothing, AND every state where the action runs must still project, or the fix over-corrects into
+  under-promising.
+- **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` findings #10 and #11.

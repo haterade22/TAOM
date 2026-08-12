@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -252,14 +252,15 @@ public class SettlementFollowingReconcilerTests
         var discharge = new DischargeService(
             _store, _machine, _partyAdapter, Substitute.For<IEncounterAdapter>(),
             new EncounterOwnershipPolicy(), Substitute.For<ICommanderLordAdapter>(),
-            Substitute.For<IGameMenuAdapter>(), _logger);
+            Substitute.For<IGameMenuAdapter>(), Substitute.For<IServiceDiplomacyService>(), Substitute.For<IArmyMembershipAdapter>(), _logger);
 
         _sut = new EnlistmentReconciler(
             _store, _machine, _attachment, _commander, discharge,
             new EnlistmentConfigProvider(_logger), Substitute.For<IEncounterAdapter>(),
             new EncounterOwnershipPolicy(),
             Substitute.For<IEnlistmentDiagnosticsSettingsProvider>(),
-            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(), _logger);
+            EnlistmentTestDoubles.FeatureOn(), Substitute.For<IInquiryAdapter>(),
+            Substitute.For<IArmyMembershipAdapter>(), _logger);
     }
 
     private void Commander(string settlementId = null)

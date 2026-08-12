@@ -21,6 +21,12 @@ public interface IEnlistmentWaitMenuPresenter
     void ShowServiceStatus();
 
     /// <summary>
+    /// Take shore leave and open the settlement's own menu (field report 1). The player is already
+    /// physically inside — this is what stops the wait menu swallowing the town.
+    /// </summary>
+    void TakeTownLeave();
+
+    /// <summary>
     /// Ask to be released. Owns the whole decision — verdict, the popup that states the cost,
     /// and the discharge itself — so the menu behaviour stays a registration shell.
     /// </summary>
@@ -39,6 +45,8 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     private readonly IInquiryAdapter _inquiry;
     private readonly ICoopSessionProvider _coopSession;
     private readonly IServiceStatusService _status;
+    private readonly IEnlistmentPlayerActionService _actions;
+    private readonly IGameMenuAdapter _gameMenu;
 
     public EnlistmentWaitMenuPresenter(
         IEnlistmentStore store,
@@ -47,6 +55,8 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         IEnlistmentService service,
         IInquiryAdapter inquiry,
         ICoopSessionProvider coopSession,
+        IEnlistmentPlayerActionService actions,
+        IGameMenuAdapter gameMenu,
         IServiceStatusService status)
     {
         _store = store;
@@ -55,6 +65,8 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
         _service = service;
         _inquiry = inquiry;
         _coopSession = coopSession;
+        _actions = actions;
+        _gameMenu = gameMenu;
         _status = status;
     }
 
@@ -67,6 +79,19 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     {
         _status.Invalidate();
         _status.RefreshIfChanged();
+    }
+
+    public void TakeTownLeave()
+    {
+        if (!_actions.TakeTownLeave())
+            return;
+
+        // Vanilla decides WHICH settlement menu applies; we only ask which one the player is
+        // standing in. With the pass now held, EnlistmentMenuService lets these three through
+        // untouched, so this is an ordinary menu activation rather than a bypass.
+        var menuId = _gameMenu.CurrentSettlementMenuId;
+        if (!string.IsNullOrEmpty(menuId))
+            _gameMenu.EnsureMenuOpen(menuId);
     }
 
     public void ShowServiceStatus()

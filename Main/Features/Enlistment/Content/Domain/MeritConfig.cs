@@ -40,6 +40,11 @@ public sealed class MeritBand
     public int ServiceXp { get; set; }
     public int Gold { get; set; }
     public int Trust { get; set; }
+
+    /// <summary>Renown on top of the flat per-battle base — this is what makes a good fight pay
+    /// more than a bad one without turning battles into a renown farm.</summary>
+    public int Renown { get; set; }
+
     public ReputationDomain RepDomain { get; set; } = ReputationDomain.Field;
     public int RepAmount { get; set; }
 

@@ -41,6 +41,19 @@ public static class WagePolicy
         return cap > int.MaxValue ? int.MaxValue : (int)cap;
     }
 
+    /// <summary>
+    /// The contract wage for a rank. Extracted because TWO callers need the same number and they
+    /// must not drift: the daily payment, and the wallet projection that tells the player what to
+    /// expect. A tooltip promising a figure the payment does not use is worse than no tooltip.
+    /// Out-of-range ranks pay 0 rather than throwing — the table is hand-edited JSON.
+    /// </summary>
+    public static int DailyWageForRank(int rankIndex, System.Collections.Generic.IList<int> wageTable)
+    {
+        if (wageTable == null || rankIndex < 0 || rankIndex >= wageTable.Count)
+            return 0;
+        return System.Math.Max(0, wageTable[rankIndex]);
+    }
+
     public static WageDecision ComputeDaily(int dailyWage, int commanderGold, int currentArrears, WagePolicyConfig config)
     {
         var decision = new WageDecision();

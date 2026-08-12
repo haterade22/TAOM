@@ -76,6 +76,22 @@ public sealed class EnlistmentWaitMenuOptions : IEnlistmentWaitMenuOptions
                 _actions.RequestDutyNow(CampaignTime.Now.ToDays, CampaignTime.Now.GetHourOfDay)),
             false, 2);
 
+        // Shore leave (field report 1). Shown only where there is a town to walk into, and this one
+        // IS hidden rather than greyed — unlike "speak with your commander", whose unavailability is
+        // a rule worth teaching, a settlement the column is not in is not a rule, it is just absent.
+        // A permanently-greyed row on every march would be noise.
+        starter.AddGameMenuOption(
+            EnlistmentMenuService.ServiceWaitMenuId,
+            "taom_enlist_menu_leave_pass",
+            "{=taom_enlist_menu_leave_pass}Take leave in the settlement",
+            args =>
+            {
+                args.optionLeaveType = GameMenuOption.LeaveType.Continue;
+                return _actions.CanTakeTownLeave();
+            },
+            _ => _presenter.TakeTownLeave(),
+            false, 3);
+
         // LAST, deliberately. Leaving service is rare and terminal; it sat second in the first
         // build (seen in-game 2026-08-08) directly above the two options a serving player uses
         // constantly, and it carries the back-arrow icon, which reads as "back" rather than
@@ -86,6 +102,6 @@ public sealed class EnlistmentWaitMenuOptions : IEnlistmentWaitMenuOptions
             "{=taom_enlist_menu_leave}Ask to be released from service",
             args => { args.optionLeaveType = GameMenuOption.LeaveType.Leave; return true; },
             _ => _presenter.RequestRelease(CampaignTime.Now.ToDays),
-            false, 3);
+            false, 4);
     }
 }

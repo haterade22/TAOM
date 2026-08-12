@@ -13,6 +13,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
     private readonly IMapConversationAdapter _conversation;
     private readonly IDutyOrchestrationService _duties;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly IMobilePartyAttachmentAdapter _attachment;
     private readonly IModLogger _logger;
 
     public EnlistmentPlayerActionService(
@@ -21,6 +22,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         IMapConversationAdapter conversation,
         IDutyOrchestrationService duties,
         ICoopSessionProvider coopSession,
+        IMobilePartyAttachmentAdapter attachment,
         IModLogger logger)
     {
         _store = store;
@@ -28,6 +30,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         _conversation = conversation;
         _duties = duties;
         _coopSession = coopSession;
+        _attachment = attachment;
         _logger = logger;
     }
 
@@ -88,5 +91,34 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
             return DutyRequestResult.NoWorkAvailable;
 
         return _duties.RequestDutyNow(nowDays, hourOfDay);
+    }
+
+    public bool CanTakeTownLeave()
+        => TownLeavePolicy.CanTakeLeave(
+            _store.Record.State, InsideSettlement(), _store.Record.OnTownLeave);
+
+    public bool TakeTownLeave()
+    {
+        // Re-check rather than trust the condition that drew the option: a frame passes between a
+        // menu option's condition and its consequence, and the column can start marching in it —
+        // the same reasoning TalkToCommander documents above.
+        if (!CanTakeTownLeave())
+            return false;
+
+        _store.Record.OnTownLeave = true;
+        _logger?.LogInfo("[Enlistment] shore leave granted — the settlement menu is the player's until the column moves");
+        return true;
+    }
+
+    /// <summary>
+    /// Presence read, guarded. This runs from a menu-option condition (every frame the wait menu is
+    /// up) and from the maintenance pump, so a throw here would be a per-frame throw — and the
+    /// honest answer when presence cannot be read is "not in a settlement", which closes the gate
+    /// rather than opening it.
+    /// </summary>
+    private bool InsideSettlement()
+    {
+        try { return _attachment.GetPresenceFlags().IsInSettlement; }
+        catch { return false; }
     }
 }

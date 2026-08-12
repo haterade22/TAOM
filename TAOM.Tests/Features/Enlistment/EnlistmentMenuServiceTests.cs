@@ -167,4 +167,50 @@ public class EnlistmentMenuServiceTests
 
         Assert.IsFalse(_service.TryRedirectMenu(menuId, out _));
     }
+
+    // ---- shore leave (field report 1) ----
+
+    [DataTestMethod]
+    [DataRow("town")]
+    [DataRow("castle")]
+    [DataRow("village")]
+    public void TryRedirectMenu_OnShoreLeave_SettlementMenusPassThrough(string menuId)
+    {
+        // The whole fix for "you can't enter towns when your lord does". The player was already
+        // physically inside the settlement; this redirect was the only thing between him and it.
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        _store.Record.OnTownLeave = true;
+
+        Assert.IsFalse(_service.TryRedirectMenu(menuId, out _));
+    }
+
+    [DataTestMethod]
+    [DataRow("town")]
+    [DataRow("castle")]
+    [DataRow("village")]
+    public void TryRedirectMenu_WithoutTheLeavePass_SettlementMenusStillRedirect(string menuId)
+    {
+        // The other half: without the pass this must behave exactly as before, or the pass is not a
+        // gate at all. Pairs with the test above so a change to the flag check cannot pass both.
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+
+        Assert.IsTrue(_service.TryRedirectMenu(menuId, out var redirected));
+        Assert.AreEqual(EnlistmentMenuService.ServiceWaitMenuId, redirected);
+    }
+
+    [DataTestMethod]
+    [DataRow("town_outside")]
+    [DataRow("castle_outside")]
+    [DataRow("naval_town_outside")]
+    public void TryRedirectMenu_OnShoreLeave_ApproachMenusStillRedirect(string menuId)
+    {
+        // Deliberately NARROW. The pass releases the three menus of the settlement the player is
+        // standing IN, not the approach menus that put him back on the map deciding whether to
+        // besiege the place. A soldier on a pass is already inside.
+        MakeEnlisted(EnlistmentState.EnlistedAttached);
+        _store.Record.OnTownLeave = true;
+
+        Assert.IsTrue(_service.TryRedirectMenu(menuId, out var redirected));
+        Assert.AreEqual(EnlistmentMenuService.ServiceWaitMenuId, redirected);
+    }
 }

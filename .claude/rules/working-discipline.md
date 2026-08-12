@@ -45,6 +45,8 @@ Frontmatter hooks fire ONLY while their skill is invoked — a state file writte
 
 **Every changed line should trace directly to the user's request.** Don't "improve" adjacent code, comments, or formatting just because you're already in the file. A bug fix doesn't reformat the surrounding method. A new feature doesn't rename pre-existing variables. If a refactor is worth doing, it's worth its own PR — surface it after the requested change is done, don't smuggle it in. (Source: karpathy-skills `surgical-changes`.)
 
+**Hardest during a review gate.** While `/deep-review` agents are outstanding, act only on findings that change runtime behaviour: editing a file an agent is reading invalidates its report, and the cleanup delays the finding that would actually change the code. Queue quality findings for after the gate. The one exception is a violation your own changeset introduced or deepened. The tell that you are about to break this is writing "this is polish, not a fix" and proceeding anyway (2026-08-11, verbatim).
+
 **Convert vague asks into testable objectives BEFORE the first Edit.** "Fix the bug" is not a task — "write a failing test that reproduces the NRE, make it pass, verify no regressions in `TAOM.Tests`" is. State the pass/fail criterion up front so the work has a defined end. This is what `/investigate` Phase 1 and `/verify` enforce locally; the same discipline applies to any non-trivial change, not just debugging. (Source: karpathy-skills `goal-driven-execution`.)
 
 See also `.claude/rules/think-before-coding.md` (always-load) for the assumption-surfacing companion rule that fires before the first Edit on non-trivial requests.
