@@ -2051,3 +2051,58 @@ recording: the roster cross-check went from 95.1%/97.8% within 5% to **1628/1628
 default-off landed too: 8,341 census lines → 0, whole log 17,622 → 3,452. Lessons:
 dead-validation-constant-is-worse-than-none (build-tooling-workflow),
 sibling-field-reset-is-not-field-reset (state-lifecycle-save).
+
+## Review 87: Enlistment field-test fixes (#443, #452-#457), four review passes + Codex adversarial pass (2026-08-12)
+
+Seven complaints from a live playtest, six of them one root cause: `MobileParty.MainParty.Army` was
+kept permanently null, so `IsInSameArmyAsPlayer` was structurally false, the player took `PlayerTeam`
+and his commander's troops `PlayerAllyTeam`, and each team got its own deployment block with the
+player's sorted last behind a 20-unit gap. The fix is a transient battle-only army join. Fifteen
+findings followed across four passes, and the interesting thing about them is that each pass found a
+class the previous one had looked straight at.
+
+Pass one (5 agents) found untested seams: a service with no tests at all, three new persisted fields
+with no round-trip test, and a `*_PreservesAllFields` test that asserted a hand-listed seven of ten.
+The root pattern was that extracting a decision into a pure policy moves the risk to the seam, and
+40-plus policy tests felt like coverage of the feature.
+
+Pass two found the first crash. Building the army with the bare `Army` ctor to avoid `Gather()`
+marching the commander off the field leaves `AiBehaviorObject` null for life, and the first pass had
+verified that this keeps the siege handlers *inert* and written exactly that into the doc comment. It
+audited what the null value fails to do and never asked what reads it.
+
+Pass three was Codex, which found the thing ten agent-passes had not: it opened `DischargeService`, a
+file the changeset never touched, and asked what happens to the army when SERVICE ends rather than
+when the battle does. Every Claude agent had enumerated battle exits, because that is the vocabulary
+the work is written in. Codex also caught that a state-keyed self-heal is defeated by a state
+coercion documented three screens away in the same class.
+
+Pass four re-ran the two agents lost to a process exit, and produced the finding that changed the fix
+shape. Three more unguarded readers of the same field, two of them outside `Army` entirely, and the
+worst is `LordConversationsCampaignBehavior.conversation_lord_tell_objective_gathering_on_condition`:
+gated only on `Army != null && Army.IsWaitingForArmyMembers()`, no `ArmyType` check unlike its three
+siblings, and that second call returns true FOREVER for a bare-ctor army because
+`_armyGatheringStartTime` stays 0 and the only writer of it requires `AiBehaviorObject is Settlement`.
+A stray army therefore made *talking to your commander* an unconditional CTD, which is both the first
+thing a player does after reloading and an option on this feature's own wait menu. The recorded
+"narrow window, accept it" limitation from pass three was wrong: the window was narrow, but what sat
+inside it was a guaranteed crash. The field is now seeded as well as the army being disbanded, so the
+invariant is a property of the object rather than of anyone's ability to enumerate exits.
+
+Also fixed: dead config (`MeritBand.Renown` existed, the policy added it, six tests covered the
+policy exhaustively by passing literals, and no default band or shipped key ever set it, so every
+battle paid the same flat base while the doc comment claimed otherwise); two gates naming one
+condition (the wallet projection promised wages on exactly the days the daily tick skips payment);
+and a war mirror that declared as `Clan` and could make peace as `Kingdom`, which would have ended a
+war for every vassal because one soldier was discharged.
+
+One self-inflicted finding worth the record: adding a 9th constructor dependency pushed
+`EnlistmentBehavior` from 147 lines to 157, over ADR-002. Rather than record it as inherited debt the
+reset moved into `ServiceMaintenanceService`, which already owns per-session cache lifetime; the file
+went back to 147 and a brittle source-text pin became a real behavioural test.
+
+Suite 6429 green, 0 failed, 2 skipped. Seven lessons: skip-an-initializer-audit-what-reads-it and
+readers-are-not-confined-to-the-declaring-class (adapters-taleworlds-api), enumerate-service-exits-
+not-episode-exits and same-sequence-different-actor and singleton-holding-an-engine-reference
+(state-lifecycle-save), two-gates-one-condition (gamemodels-services), supply-side-coverage
+(testing-qa). RCA: `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md`.

@@ -29,7 +29,7 @@
 | `TaomSettlementFoodModel` | `DefaultSettlementFoodModel` | Fixes the Troop-Weight garrison food leak (garrison term uses RAW count, not the weighted `NumberOfAllMembers`) + MCM/JSON-tunable food knobs (consumption divisors, base/village/flat production, storage caps); SettlementFood feature |
 | `TaomPartyMoraleModel` | `DefaultPartyMoraleModel` | Party morale feats (Gondor, Rohan, Erebor, elves) + career TroopMorale passive |
 | `TaomSmithingModel` | `DefaultSmithingModel` | Smithing energy cost feats (Erebor, Isengard) + career EnchantmentCostReduction passive |
-| `TaomClanFinanceModel` | `DefaultClanFinanceModel` | Tariff income feat (Umbar) |
+| `TaomClanFinanceModel` | `DefaultClanFinanceModel` | Tariff income feat (Umbar); display-only enlistment wage line on BOTH `CalculateClanGoldChange` and `CalculateClanIncome` (they do not delegate to each other), excluded when `applyWithdrawals` so nobody is paid twice |
 | `TaomRaidModel` | `DefaultRaidModel` | Raid damage feats (Mordor, Gundabad, Isengard) + career TroopDamage passive. **`CalculateHitDamage` is settlement raid SPEED, not combat damage** — it drains `SettlementHitPoints`. It was `TroopDamage`'s only consumer until 2026-08-06, which made 105 pips promising "+N% troop damage" inert in every battle; the battle half now lives on `CalculateDamageAmplification` (#395). Both consumers are intentional |
 | `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | Configurable T7-T10 troop power (MCM + JSON) |
 | `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | Configurable blunt/cut damage ratio per battle type (MCM) |
