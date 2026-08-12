@@ -36,9 +36,9 @@ A review finding is a **hypothesis, not a verdict.** TAOM's `/review-codex` loop
 
 | When | Run |
 |---|---|
-| After each edit | **Compile** — fast, and it catches the error that actually happens most |
-| While iterating on one component | **Filtered suite** — `dotnet test TAOM.Tests --filter FullyQualifiedName~XxxTests` |
-| At each work-item boundary, and once before the review gate | **Full suite** — this is the run you quote, and the only one this rule ever asked for |
+| After each edit | **Compile**, fast, and it catches the error that actually happens most |
+| While iterating on one component | **Filtered suite**, `dotnet test TAOM.Tests --filter FullyQualifiedName~XxxTests` |
+| At each work-item boundary, and once before the review gate | **Full suite**; this is the run you quote, and the only one this rule ever asked for |
 
 Batch engine lookups the same way: related `ilspycmd` / `taom-src` calls go in one command, not one round trip per type. A verification you already ran this turn and haven't invalidated is still evidence; re-running it is not more evidence.
 

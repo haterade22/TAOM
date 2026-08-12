@@ -391,13 +391,13 @@ gate exists.
 - **Why missed:** `ServiceRewardService.GetDailyWage()` gated on `IsEnlisted`, which spans five
   states; `EnlistmentDailyService.RunDailyTick` skips `PayDailyWage` in one of them
   (`CommanderUnavailable`), for a well-documented reason. The wallet therefore promised income on
-  exactly the days none arrived, for a grace window up to a week — and the wallet tooltip is the one
+ exactly the days none arrived, for a grace window up to a week, and the wallet tooltip is the one
   surface a player checks when they suspect they are not being paid. Same shape, same changeset:
   `TaomClanFinanceModel` overrode `CalculateClanGoldChange` but not `CalculateClanIncome`, which
   calls `CalculateClanIncomeInternal` directly and never routes through it, so the clan screen's
   Income tile and the expected-change tooltip beside it disagreed about the same income.
 - **Prevent:** when adding a preview, projection, tooltip or estimate for an existing action, open
-  the action and COPY its guard — never re-derive one from the same intent. For a GameModel, decompile
+ the action and COPY its guard, never re-derive one from the same intent. For a GameModel, decompile
   the base class and check whether the sibling methods delegate to the one you overrode or compute
   independently. Then test in both directions: the state where the action is skipped must project
   nothing, AND every state where the action runs must still project, or the fix over-corrects into

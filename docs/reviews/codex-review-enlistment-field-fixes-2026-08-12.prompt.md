@@ -1,4 +1,4 @@
-# Adversarial review — TAOM enlistment field-test fixes
+# Adversarial review; TAOM enlistment field-test fixes
 
 You are reviewing an uncommitted changeset on branch `feat/enlistment-field-fixes` in this repo
 (`E:/repos/taom-enlist-fixes`, a worktree; base commit `e5ce5e76`). Target game: **Bannerlord
@@ -16,7 +16,7 @@ git diff
 git ls-files --others --exclude-standard
 ```
 
-Untracked files ARE part of the changeset — `git diff` will not show them. Read them directly.
+Untracked files ARE part of the changeset, `git diff` will not show them. Read them directly.
 
 ## What the changeset does
 
@@ -34,10 +34,10 @@ permanently null, which put the player on a different mission TEAM from the lord
 | 6 | Commands show wrong | One-instruction transpiler on `BehaviorComponent.OnBehaviorActivated` |
 | 7 | Lord's army fought without me; jumped immediately after defeat | `CommanderBattleMatchPolicy` matches the army-leader party; `LeaveArmy()` above every gate in `OnCommanderBattleEnded` |
 
-A second pass (2026-08-12) then fixed six review findings. **Scrutinise these hardest — they are the
+A second pass (2026-08-12) then fixed six review findings. **Scrutinise these hardest; they are the
 newest and least-settled code:**
 
-1. `ArmyMembershipAdapter.DisbandCreatedArmy` — now disbands UNCONDITIONALLY (it previously left the
+1. `ArmyMembershipAdapter.DisbandCreatedArmy`, now disbands UNCONDITIONALLY (it previously left the
    army standing when other lords had joined). Rationale: an army built by the bare `Army` ctor has
    `AiBehaviorObject == null` forever, and `Army.GetLongTermBehaviorTextForAILeadedParty`
    dereferences that with no null guard in 5 of 7 cases.
@@ -50,7 +50,7 @@ newest and least-settled code:**
 6. `TaomClanFinanceModel.CalculateClanIncome` override added, sharing `AddServiceWageLine` with
    `CalculateClanGoldChange`.
 
-## Known suspects — attack these specifically
+## Known suspects, attack these specifically
 
 **A. The transient army merge (`Main/Adapters/ArmyMembershipAdapter.cs`).** This is the riskiest
 code in the changeset. It constructs a real `Army` with the bare constructor, sets
@@ -71,13 +71,13 @@ code in the changeset. It constructs a real `Army` with the bare constructor, se
   Read `Army.DisperseInternal` and `DisbandArmyAction.ApplyInternal`.
 
 **B. The reconciler's new `LeaveArmy()` call (`Main/Features/Enlistment/EnlistmentReconciler.cs`).**
-It sits inside the stale-battle branch. Can that branch fire while a battle is genuinely live —
+It sits inside the stale-battle branch. Can that branch fire while a battle is genuinely live,
 detaching the player mid-fight? Trace `presence.IsInMapEvent`, `snapshot.PartyIsInMapEvent` and
 `_encounter.HasCurrent` and find any window where all three read false during a real battle.
 
 **C. The transpiler (`Main/Features/Enlistment/Hooks/BehaviorComponent_OnBehaviorActivated_Transpiler.cs`).**
 Verify against the INSTALLED `TaleWorlds.MountAndBlade.dll`: is there exactly one matching
-`ToString()` call? Is the stack balanced? What happens if the matcher finds zero matches — does it
+`ToString()` call? Is the stack balanced? What happens if the matcher finds zero matches, does it
 fail loud or silently no-op? Check that the patch category is registered in `Main/SubModule.cs`.
 
 **D. The war mirror (`ServiceDiplomacyService` / `ServiceWarPolicy`).** The catastrophic failure
@@ -92,7 +92,7 @@ null? Is any consumer enumerating them unguarded?
 
 **F. The wage chain.** `PayDailyWage` computes arrears with a day-denominated cap. Look for
 off-by-one, double-pay, or silent confiscation. Cross-check `GetDailyWage` (projection) against
-`EnlistmentDailyService.RunDailyTick` (payment) — the author just fixed one gate mismatch there;
+`EnlistmentDailyService.RunDailyTick` (payment), the author just fixed one gate mismatch there;
 are there others?
 
 **G. Config.** `Main/_Module/ModuleData/enlistment/enlistment_config.json` gained `renown`,
@@ -109,7 +109,7 @@ them? Are any parsed-but-never-consumed?
 - **NaN gates:** every decision gate on a float must be written as a POSITIVE requirement
   (`if (!(x > 0f)) return;`), because every NaN comparison is false. This bug class has shipped five
   times in this repo. Check every float comparison and every `(int)<float>` cast in the changeset.
-- **Computed TaleWorlds getters throw before your null check** — `if (party.Culture != null)` NREs
+- **Computed TaleWorlds getters throw before your null check**, `if (party.Culture != null)` NREs
   inside the getter when `MapFaction` is null. Use `party.MapFaction?.Culture`.
 - **Harmony patches** need BOTH `[HarmonyPatchCategory("X")]` and a matching
   `_harmony.PatchCategory("X")` in `Main/SubModule.cs`, applied at a lifecycle stage that precedes
@@ -117,7 +117,7 @@ them? Are any parsed-but-never-consumed?
 
 ## Verification requirement (non-negotiable)
 
-For every claim about a TaleWorlds API, decompile the INSTALLED DLL — do not rely on the
+For every claim about a TaleWorlds API, decompile the INSTALLED DLL, do not rely on the
 `E:/Decompiled_Bannerlord/` dump and do not rely on memory:
 
 ```
