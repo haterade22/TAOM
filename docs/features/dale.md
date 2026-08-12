@@ -127,7 +127,7 @@ No JSON or runtime-tunable config. Two author-time data sources:
 
 | File | Change |
 |------|--------|
-| `Main/_Module/ModuleData/spcultures.xslt` | Dale block (lines 1138-1235): added 9 military attribute overrides on `Culture[@id='sturgia']` |
+| `Main/_Module/ModuleData/spcultures.xslt` | Dale block (`Culture[@id='sturgia']`, lines 1191-1312 as of 2026-08-12): 63 attribute overrides, of which 8 are the party/patrol template bindings, plus the two caravan child elements. The original 2026-05-26 pass set 9 military attributes; `villager_party_template` and both caravan lists were added 2026-08-12, and `villager_dale_template` / `caravan_template_dale` / `elite_caravan_template_dale` had to be authored because Dale had never had them |
 | `Main/_Module/ModuleData/taom_partyTemplates.xml` | Added 9 Dale party templates (lines 962-1056) |
 | `Main/_Module/SubModule.xml` | Registered `troops/troops_dale` XmlNode |
 | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Added `InitializeDaleCulture()` + call in static ctor |

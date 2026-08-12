@@ -90,6 +90,32 @@ public class CultureBonusIntegrationTests
 }
 ```
 
+### 3. Shipped-Data Tests (Required for content that can fail silently)
+
+Neither of the two above covers TAOM's largest failure surface: **XML that ships to players and is
+wrong without any code being wrong.** A missing culture attribute, a party template nothing binds, a
+troop id pointing at a Calradian, an equipment roster with no civilian tag. No unit test touches it
+(there is no unit), and no integration test either (the component graph is fine, the data is not).
+
+These tests read the shipped `Main/_Module/ModuleData/**` files off disk and assert invariants over
+them. They are fast, deterministic and need no game install, so they belong in the normal suite.
+Existing examples: `TAOM.Tests/Core/CultureLordTemplateTests.cs` (every hero template belongs to the
+culture that lists it), `TAOM.Tests/Core/CulturePartyTemplateTests.cs` (every party-template binding
+resolves to a TAOM-authored id), `ShippedBannerBearerConfigTests`, `TavernMercenaryDataTests`,
+`ShippedAlignmentConfigTests`.
+
+Two conventions make them durable:
+
+- **Derive the subject list from the data, never hand-write it.** A test that enumerates cultures in
+  a C# array silently stops covering culture 25. `CultureDataFixture.ModuleDataPath()` walks up from
+  the test working directory so the path survives a repo move.
+- **When the data reaches the engine through a transform, assert on the transform's OUTPUT.** Reading
+  the source markup cannot see an exclusion filter and cannot see an attribute that is not there. The
+  sentinel-stub technique for this is written up in `.claude/rules/tests.md`.
+
+Each of these tests exists because the defect it pins shipped to players first. That is the bar for
+adding one: not "this data could be wrong" but "this class of wrongness has no other detector."
+
 ---
 
 ## Testing with Adapters

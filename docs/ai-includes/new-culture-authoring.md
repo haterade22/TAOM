@@ -211,7 +211,7 @@ Register in `Main/_Module/SubModule.xml` next to similar cultures:
 
 For XSLT-passthrough cultures, the existing culture block in `spcultures.xslt` will preserve every vanilla attribute via `<xsl:apply-templates select="@*"/>` — including ones you don't want. Enumerate **every** CultureObject template/troop attribute the engine reads and explicitly classify each as BIND or PASSTHROUGH.
 
-The full list of bindable culture attributes per v1.4.5 `TaleWorlds.CampaignSystem.CultureObject.Deserialize` (verified by Codex review #227):
+The full list of bindable culture attributes per v1.4.8 `TaleWorlds.CampaignSystem.CultureObject.Deserialize` (`CultureObject.cs:269-280`, re-verified 2026-08-12):
 
 | Attribute | Always bind to TAOM value | Optional / passthrough |
 |---|---|---|
@@ -220,22 +220,43 @@ The full list of bindable culture attributes per v1.4.5 `TaleWorlds.CampaignSyst
 | `melee_militia_troop`, `ranged_militia_troop` | yes | |
 | `melee_elite_militia_troop`, `ranged_elite_militia_troop` | yes | |
 | `default_party_template` | yes | |
+| `villager_party_template` | **yes, 2026-08-12** | |
 | `militia_party_template` | **yes — Codex #227 P1** | |
 | `rebels_party_template` | **yes — Codex #227 P1** | |
 | `vassal_reward_party_template` | **yes — Codex #227 P1** | |
 | `settlement_patrol_template_level_1/2/3` | **yes — Codex #227 P1** | |
+| `caravan_party_templates`, `elite_caravan_party_templates` (child elements) | **yes, 2026-08-12. See the two-edit rule below** | |
 | `default_battle_equipment_roster` | yes | |
 | `default_civilian_equipment_roster` | yes | |
-| `villager_party_template` | | inherit vanilla |
-| `fishing_party_template` | | inherit vanilla |
-| `bandit_boss_party_template` | | inherit vanilla |
-| `caravan_party_templates`, `elite_caravan_party_templates` (child elements) | | inherit vanilla |
+| `bandit_boss_party_template` | | bandit cultures only |
+| `fishing_party_template`, `settlement_patrol_template_coastal` | | NavalDLC only, unreachable (no TAOM settlement has a port) |
+| `caravan_party_template`, `elite_caravan_party_template` (ATTRIBUTES) | | never read by the deserializer; do not bind |
 
 Skipping the **bind-required** rows means the new TAOM templates you wrote for that culture are dead code — vanilla's `militia_sturgia_template` etc. flow through the passthrough.
 
+**Three rows moved out of "inherit vanilla" on 2026-08-12, because that advice is what shipped the
+fourth instance of this bug.** `villager_party_template` and both caravan child lists were listed
+here as safe to inherit; the result was nine town-owning cultures fielding Calradian villagers and
+caravans. Treat "inherit vanilla" as a claim needing evidence, not a default.
+
+**Child elements need TWO edits, not one.** `Deserialize` (`CultureObject.cs:485-497`) does
+`mBList10.Add(...)` inside a loop over every child named `caravan_party_templates`, so emitting yours
+does not displace vanilla's. You must also add the wrapper to that block's `not(self::...)`
+passthrough filter, or the culture carries both and rolls Calradian roughly half the time. The six
+filters in `spcultures.xslt` exclude different name sets (8, 7 or 2), so edit each in place.
+
+**Two of these bindings are crash surfaces, not just wrong troops.** Vanilla
+`PatrolPartiesCampaignBehavior.SpawnPatrolParty` dereferences `partyTemplate.ShipHulls` and
+`CaravansCampaignBehavior.SpawnCaravan` calls `GetRandomElementWithPredicate` on the caravan list,
+neither guarded. So never remove a binding without adding its replacement in the same edit.
+
+`TAOM.Tests/Core/CulturePartyTemplateTests.cs` gates all of this and will fail your PR if a binding is
+absent, unbound or points outside `taom_partyTemplates.xml`. Full contract:
+[culture-playability-wiring.md](../features/culture-playability-wiring.md).
+
 ### 3b. Party templates
 
-Add 9 standard templates to `taom_partyTemplates.xml` (mirror an existing well-developed culture like Rohan or Dale):
+Add 12 standard templates to `taom_partyTemplates.xml` (mirror an existing well-developed culture like Rohan, which has all twelve):
 
 | Template | Composition |
 |---|---|
@@ -246,6 +267,13 @@ Add 9 standard templates to `taom_partyTemplates.xml` (mirror an existing well-d
 | `patrol_party_<culture>_template_level_1/2/3` | T2 / T4 / T6-grade patrols |
 | `rebels_<culture>_template` | 24–32 recruits + 2–3 militia |
 | `vassal_reward_troops_<culture>` | The 3–4 T7 elite terminals |
+| `villager_<culture>_template` | 15 to 30 of the culture's `villager_<culture>` NPC |
+| `caravan_template_<culture>` | 1 armed trader + 5-10 caravan guards + 1-5 veterans |
+| `elite_caravan_template_<culture>` | 1 armed trader + 10-20 guards + 5-10 veterans |
+
+The last three were added to this list on 2026-08-12. Dale had shipped without any of them and
+silently used vanilla Sturgian villagers and caravans; authoring them was the only new content the
+whole party-template fix required, because every other culture's twelve already existed.
 
 When adding new troops later (e.g., Dale's Crossbowman line was a follow-up), update **all relevant templates** — `kingdom_hero_party_<culture>_template` always, patrol templates if the new troop fits a patrol tier, vassal_reward for new T7 terminals.
 

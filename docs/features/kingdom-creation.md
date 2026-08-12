@@ -137,20 +137,27 @@ Required attributes:
 | `color` | `0xffRRGGBB` | Primary culture color (hex ARGB) |
 | `color2` | `0xffRRGGBB` | Secondary color |
 | `can_have_settlement` | `true` | Required |
-| `basic_troop` | `NPCCharacter.{base}_recruit` | Can reuse vanilla (e.g., `aserai_recruit`) |
-| `elite_basic_troop` | `NPCCharacter.{id}_elite` | Culture-specific, or inherited |
-| `melee_militia_troop` | `NPCCharacter.aserai_militia_spearman` | Can reuse vanilla |
-| `ranged_militia_troop` | `NPCCharacter.aserai_militia_archer` | Can reuse vanilla |
-| `melee_elite_militia_troop` | `NPCCharacter.aserai_militia_veteran_spearman` | Can reuse vanilla |
-| `ranged_elite_militia_troop` | `NPCCharacter.aserai_militia_veteran_archer` | Can reuse vanilla |
-| `default_party_template` | `PartyTemplate.kingdom_hero_party_aserai_template` | Can inherit from base culture |
-| `villager_party_template` | `PartyTemplate.villagers_aserai_template` | |
-| `militia_party_template` | `PartyTemplate.militia_aserai_template` | |
-| `rebels_party_template` | `PartyTemplate.rebels_aserai_template` | |
-| `vassal_reward_party_template` | `PartyTemplate.vassal_reward_aserai_template` | |
-| `settlement_patrol_template_level_1` | existing template | |
-| `settlement_patrol_template_level_2` | existing template | |
-| `settlement_patrol_template_level_3` | existing template | |
+| `basic_troop` | `NPCCharacter.harad_levy` | Reuse a TAOM culture's, never a vanilla one |
+| `elite_basic_troop` | `NPCCharacter.{id}_elite` | Culture-specific, or inherited from a TAOM culture |
+| `melee_militia_troop` | `NPCCharacter.harad_militia_spearman` | Reuse a TAOM culture's |
+| `ranged_militia_troop` | `NPCCharacter.harad_militia_archer` | Reuse a TAOM culture's |
+| `melee_elite_militia_troop` | `NPCCharacter.harad_militia_veteran_spearman` | Reuse a TAOM culture's |
+| `ranged_elite_militia_troop` | `NPCCharacter.harad_militia_veteran_archer` | Reuse a TAOM culture's |
+| `default_party_template` | `PartyTemplate.kingdom_hero_party_harad_template` | Reuse a TAOM culture's |
+| `villager_party_template` | `PartyTemplate.villager_harad_template` | Note the singular `villager_`, there is no `villagers_` id |
+| `militia_party_template` | `PartyTemplate.militia_harad_template` | |
+| `rebels_party_template` | `PartyTemplate.rebels_harad_template` | |
+| `vassal_reward_party_template` | `PartyTemplate.vassal_reward_troops_harad` | Note `vassal_reward_troops_`, not `vassal_reward_` |
+| `settlement_patrol_template_level_1` | `PartyTemplate.patrol_party_harad_template_level_1` | Weak patrol, Guard House level 1 |
+| `settlement_patrol_template_level_2` | `PartyTemplate.patrol_party_harad_template_level_2` | Moderate, Guard House level 2 |
+| `settlement_patrol_template_level_3` | `PartyTemplate.patrol_party_harad_template_level_3` | Strong, Guard House level 3 |
+
+Every value above was a vanilla Calradian id or a non-existent one until 2026-08-12. Harad is used as
+the worked example because it is a complete TAOM culture with all twelve templates; substitute
+whichever culture yours is adjacent to. Leaving the three patrol rows as "existing template" is how
+they got left unbound in the first place, so they now name real ids. Full contract, including the
+two crash surfaces and the caravan two-edit rule:
+[culture-playability-wiring.md](culture-playability-wiring.md).
 | `merchant_notary` | `NPCCharacter.spc_notable_{id}_0` | First merchant slot |
 | `artisan_notary` | `NPCCharacter.spc_notable_{id}_8` | First artisan slot |
 | `preacher_notary` | `NPCCharacter.spc_notable_{id}_5` | First preacher slot |
@@ -161,12 +168,22 @@ Required attributes:
 | `text` | `{=aom_{id}_desc}...` | Encyclopedia description |
 
 Required child elements:
+
+> **The caravan block below was wrong until 2026-08-12 and would have crashed the campaign.** It used
+> `<CaravanPartyTemplate template="..."/>`. The deserializer reads the `id` attribute off whichever
+> child it finds (`CultureObject.cs:485-497`), so `template=` resolves to nothing and appends a **null**
+> to `CaravanPartyTemplates`. `CaravansCampaignBehavior.SpawnCaravan` then calls
+> `GetRandomElementWithPredicate(x => x.ShipHulls.Count == 0 ...)` on that list with no guard, so the
+> first caravan spawn is an NRE. It also named `caravan_aserai_template`, which is not an id that
+> exists; the real ones are `caravan_template_<culture>`. Copy the corrected form, and point it at
+> your own culture's templates rather than aserai's.
+
 ```xml
 <caravan_party_templates>
-    <CaravanPartyTemplate template="PartyTemplate.caravan_aserai_template" />
+    <caravan_party_template id="PartyTemplate.caravan_template_{id}" />
 </caravan_party_templates>
 <elite_caravan_party_templates>
-    <EliteCaravanPartyTemplate template="PartyTemplate.caravan_aserai_template" />
+    <caravan_party_template id="PartyTemplate.elite_caravan_template_{id}" />
 </elite_caravan_party_templates>
 <vassal_reward_items />
 <banner_bearer_replacement_weapons />
@@ -467,17 +484,32 @@ If a custom equipment sets file was created:
 
 ## What Can Be Inherited
 
-Many resources can be shared with existing cultures. When a new kingdom is culturally adjacent to an existing one (e.g., Shaghana and Abanissa are both Harad-adjacent and inherit from aserai), there is no need to create new troop trees, party templates, or crowd NPCs.
+Many resources can be shared with existing cultures. When a new kingdom is culturally adjacent to an
+existing one (Shaghana and Abanissa are both Harad-adjacent), there is no need to create new troop
+trees, party templates, or crowd NPCs.
+
+**Inherit from a TAOM culture, never from a vanilla one.** This is a total conversion: a
+`NPCCharacter.aserai_recruit` or `PartyTemplate.kingdom_hero_party_aserai_template` is a literal
+Calradian in a Middle-earth kingdom, and it will not look like a bug in any file, only on the map.
+This table used to give vanilla ids as its worked examples, and that is a good part of why nine
+town-owning cultures shipped fielding Calradians (fixed 2026-08-12).
 
 | Resource | Inherit from | How |
 |----------|-------------|-----|
-| Basic troop | Any vanilla culture | `basic_troop="NPCCharacter.aserai_recruit"` in culture |
-| Militia troops | Any vanilla culture | `melee_militia_troop="NPCCharacter.aserai_militia_spearman"` |
-| Party templates | Any existing template | `default_party_template="PartyTemplate.kingdom_hero_party_aserai_template"` |
-| Crowd NPCs | Any vanilla culture | `guard="NPCCharacter.guard_aserai"` etc. in culture attributes |
+| Basic troop | The nearest TAOM culture | `basic_troop="NPCCharacter.harad_levy"` in culture |
+| Militia troops | The nearest TAOM culture | `melee_militia_troop="NPCCharacter.harad_militia_spearman"` |
+| Party templates | Another TAOM culture's twelve | `default_party_template="PartyTemplate.kingdom_hero_party_harad_template"`, and bind ALL of them: see the [party-template binding contract](culture-playability-wiring.md) |
+| Crowd NPCs | The nearest TAOM culture | `guard="NPCCharacter.guard_harad"` etc. in culture attributes |
 | Equipment sets | Any existing culture's sets | `<EquipmentSet id="harad_bat_template_medium_a" />` in lord `<Equipments>` |
 
-Umbar, Shaghana, and Abanissa all inherit aserai-base resources this way.
+Umbar, Shaghana and Abanissa all share Harad's troops and party templates this way.
+
+**Known gap, not yet fixed:** those three still carry roughly 40 vanilla `*_aserai` **NPC role**
+bindings between them (`tavernkeeper`, `blacksmith`, `guard`, `ransom_broker` and so on, plus the
+`villager_child` / `villager_teenager` / `village_woman_child` / `village_woman_teenager` set). Most
+repoint cheaply to an existing `_harad` id, but the child and teenager ids have no `_harad`
+counterpart and would have to be authored. Deliberately left out of the 2026-08-12 party-template
+pass to keep that change to party data. If you are here to add a culture, do not copy the pattern.
 
 ## Known Crashes
 

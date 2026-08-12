@@ -14,8 +14,8 @@ Update ALL of the following (checklist):
 | Step | File(s) | What to do |
 |------|---------|------------|
 | 1. Define troops | `Main/_Module/ModuleData/troops/troops_{culture}.xml` | Add NPCCharacter with skills, equipment, upgrade_targets, race, culture |
-| 2. Party templates | `Main/_Module/ModuleData/taom_partyTemplates.xml` | Add to ALL relevant templates for the culture (hero, patrol L1/L2/L3, outlaw, rebels, mercenary, vassal_reward) |
-| 3. Culture config | `Main/_Module/ModuleData/taom_spcultures.xml` | Update `basic_troop` / `elite_basic_troop` if entry point changed |
+| 2. Party templates | `Main/_Module/ModuleData/taom_partyTemplates.xml` | Add to ALL relevant templates for the culture (hero, patrol L1/L2/L3, outlaw, rebels, mercenary, vassal_reward, militia, villager, caravan, elite caravan). Twelve, see the table below |
+| 3. Culture config | `Main/_Module/ModuleData/taom_spcultures.xml` **and** `spcultures.xslt` | Update `basic_troop` / `elite_basic_troop` if the entry point changed, and confirm every party template is BOUND. A retagged vanilla culture lives in the XSLT, not the XML, and inherits Calradia for anything its block does not name |
 | 4. Recruitment code | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Add/update settlement, clan, and culture fallback pools |
 | 5. Recruitment tests | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | TDD: write tests FIRST, then implement |
 | 6. NPC references | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | Check villager upgrade_targets, caravan guard references |
@@ -54,6 +54,20 @@ Each culture typically has these templates in `taom_partyTemplates.xml`:
 | `rebels_{culture}_template` | Rebel uprisings | Low tier masses |
 | `vassal_reward_troops_{culture}` | Vassal rewards | Elite troops |
 | `militia_{culture}_template` | Town garrison | Militia troops |
+| `villager_{culture}_template` | Village trade parties | 15-30 of the `villager_{culture}` NPC |
+| `caravan_template_{culture}` | Caravans | 1 armed trader + 5-10 guards + 1-5 veterans |
+| `elite_caravan_template_{culture}` | Elite caravans | 1 armed trader + 10-20 guards + 5-10 veterans |
+
+Twelve, not nine. The last three were missing from this table until 2026-08-12, and Dale had shipped
+without any of them, so its villagers and caravans were vanilla Sturgians. Authoring the three was the
+only new content the whole party-template fix needed.
+
+**Writing a template is half the job. It is dead data until a culture binds it**, and a culture in
+`spcultures.xslt` inherits Calradia for every attribute its block does not name. That has shipped four
+times (Dale, Rohan, Khand, settlement patrols). The binding contract, both crash surfaces and the
+`CulturePartyTemplateTests` gate: [culture-playability-wiring.md](../../docs/features/culture-playability-wiring.md).
+Quick check that a template you just wrote is actually reachable: grep `taom_spcultures.xml` and
+`spcultures.xslt` for its id, and if there are zero hits it is dead.
 
 ## Save Compatibility
 

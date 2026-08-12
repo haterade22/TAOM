@@ -68,5 +68,31 @@ When a service method has `if (condition) continue/return` guard clauses, write 
 // AND:   Method_XisTrue_Proceeds()
 ```
 
+## Testing data that reaches the game through a transform
+
+When the thing you need to pin is not a value in a file but a value the ENGINE will compute from that
+file, assert on the transform's OUTPUT, not on its source markup. Reading the markup cannot see an
+exclusion filter, and it cannot see an attribute that is not there.
+
+**The sentinel-stub pattern.** Build a synthetic input document in the test where every field you care
+about holds a unique `SENTINEL_*` value, run the real transform over it with `XslCompiledTransform`
+(the same class `MBObjectManager.ApplyXslt` uses), then read the output. Three failure states, all
+distinguishable:
+
+| Output | Means |
+|---|---|
+| field absent | the transform dropped it |
+| value still `SENTINEL_*` | the transform never bound it, so the real run inherits vanilla's value |
+| value present but not one of ours | bound to the wrong thing |
+
+Use a synthetic stub rather than the installed vanilla file so the test is deterministic and needs no
+game install. Pair it with a **whitelist** of ids the project authors rather than a blacklist of
+vanilla prefixes: a whitelist needs no exemption for intentional sharing and does not go stale on an
+engine bump.
+
+Worked example, pinning culture party-template bindings across `spcultures.xslt`:
+`TAOM.Tests/Core/CulturePartyTemplateTests.cs`. The same technique applies to `spclans.xslt`,
+`spkingdoms.xslt`, `heroes.xslt` and `lords.xslt`, none of which currently has output coverage.
+
 ## Test Organization
 Mirror source structure: `TAOM.Tests/Features/{FeatureName}/{ServiceName}Tests.cs`

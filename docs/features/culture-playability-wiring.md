@@ -111,11 +111,23 @@ stage; the rest fail silently.
 | 10 | Enlistment rosters, 4 ranks | `equipmentsets/taom_enlistment_equipment.xml` | silent — issues another culture's gear |
 | 11 | Owns at least one settlement | `TAOM_Map/ModuleData/settlements.xml` (**live, external**) | fatal — daily-tick CTD (#374) |
 | 12 | Volunteer recruitment pool | `Main/Features/TroopProgression/RecruitmentPools/` | silent — empty recruit slots |
-| 13 | Party templates, all bound on the culture | `taom_partyTemplates.xml` | silent — templates become dead code |
+| 13 | Party templates: all twelve authored, all eight attributes bound, both caravan child lists bound | `taom_partyTemplates.xml` **plus** `taom_spcultures.xml` or `spcultures.xslt` | mixed: an unbound one is silently Calradian, a null or empty one is an NRE in `SpawnPatrolParty` / `SpawnCaravan`. See the contract above |
 | 14 | `as_<race>_facegen` action set, if it introduces a race | `LOTRLOME_Armory/ModuleData/action_sets.xml` (**live, external**) | fatal — T-pose / contorted mesh |
 
-Rows 1–3 and 8–9 are the ones that produce a visible break. Rows 5–7, 10, 12–13 are the ones that
-ship.
+Rows 1 to 3 and 8 to 9 are the ones that produce a visible break. Rows 5 to 7, 10 and 12 are the ones
+that ship. Row 13 sits in both camps and is the one that shipped nine times over: an unbound template is
+silent (the culture just fields Calradians), while a null or empty one crashes in vanilla code with
+no TAOM frame on the stack.
+
+### What a data fix like row 13 does to an existing save
+
+Culture objects re-deserialize from XML on every load, so a binding change reaches an existing
+campaign immediately: every party spawned *after* the load uses the new template. Parties already on
+the map keep the roster they were built with. Vanilla only tops a patrol up when it is below full
+strength (`ReplenishParty`), so a pre-fix patrol keeps its Calradians until it is destroyed and
+respawns, which can take a long time. That is expected, not a second bug. A tester loading an old
+save and reporting "still vanilla troops" is seeing this; ask for a fresh campaign, or for a patrol
+that has died and respawned, before treating it as a regression.
 
 ## How to make a culture playable
 
@@ -200,10 +212,64 @@ horse-bearing entries despite [no-mount-cultures.md](no-mount-cultures.md) recor
 March 2026 — the May regeneration reverted it. `Patch20_NarrativeHorseGuard` detects horse *absence*,
 so with horses present vanilla simply runs and hands a dwarf a mount.
 
+## Party-template binding contract
+
+A culture is not finished when the player can pick it. It also has to spawn the right troops when the
+engine builds a party for it, and that is a separate surface with its own failure mode: the bindings
+are engine-read XML attributes, so a missing one produces vanilla Calradians rather than an error.
+
+`CultureObject.Deserialize` (v1.4.8, `CultureObject.cs:269-280`) reads eleven party-template
+attributes. Eight of them are load-bearing for every settled culture, and every one has a reader that
+will hand out Calradian troops if the binding is wrong:
+
+| Attribute | Reader |
+|---|---|
+| `default_party_template` | `LordPartyComponent`, lord party spawn |
+| `villager_party_template` | `VillagerCampaignBehavior`, village trade parties |
+| `militia_party_template` | `MilitiaPartyComponent.CreateMilitiaParty` |
+| `rebels_party_template` | `LordPartyComponent`, the `IsRebelClan` branch |
+| `vassal_reward_party_template` | fief-grant troop reward |
+| `settlement_patrol_template_level_1/2/3` | `DefaultSettlementPatrolModel.GetPartyTemplateForPatrolParty`, selected by Guard House level |
+
+Three more exist and are deliberately unbound. `bandit_boss_party_template` belongs to bandit
+cultures only. `fishing_party_template` and `settlement_patrol_template_coastal` are read only by
+NavalDLC, and the reader is unreachable because no TAOM settlement declares a `port_posX` pair, so
+`Settlement.HasPort` is false everywhere. Revisit both if TAOM ever ships ports.
+
+Caravans are the exception that catches people: `caravan_party_template` and
+`elite_caravan_party_template` look like attributes and are never read. The deserializer takes
+caravans only from the plural `<caravan_party_templates>` / `<elite_caravan_party_templates>` CHILD
+elements, and it **appends** every matching child into one list rather than replacing. In
+`spcultures.xslt` that means overriding caravans takes two edits that must land together: emit the
+TAOM block, and add the wrapper to that block's `not(self::...)` passthrough filter. Do only the
+first and the culture carries vanilla's element too, so caravans roll Calradian about half the time.
+
+Two of these are crashes rather than wrong troops, which is why the gate asserts presence and
+non-emptiness and not merely non-vanilla-ness: `PatrolPartiesCampaignBehavior.SpawnPatrolParty`
+dereferences `partyTemplate.ShipHulls` with no null guard, and
+`CaravansCampaignBehavior.SpawnCaravan` calls `GetRandomElementWithPredicate` on the caravan list
+with no empty guard.
+
+**The two sources behave differently, and the difference is the whole trap.** A culture in
+`taom_spcultures.xml` inherits nothing, so a missing attribute is a null and fails loudly the first
+time a reader touches it. A culture retagged in `spcultures.xslt` inherits everything: the block's
+`<xsl:apply-templates select="@*"/>` copies the vanilla value in, so an attribute the block never
+names keeps its Calradian binding with nothing in the file to show for it. That is how Dunland,
+Harad, Rohan and Rhun shipped with vanilla town patrols. Sharing another TAOM culture's templates is
+fine and common (Lothlórien uses Rivendell's, Umbar and the two Haradrim sub-cultures use Harad's,
+Khand uses Rhun's) as long as the target is TAOM-authored.
+
+`TAOM.Tests/Core/CulturePartyTemplateTests.cs` pins all of it. See the fourth-instance entry in
+[`docs/reviews/lessons/xslt-moduledata.md`](../reviews/lessons/xslt-moduledata.md) for how it works
+and why it is a whitelist.
+
 ## Key Files
 
 | File | Purpose |
 |------|---------|
+| `Main/_Module/ModuleData/spcultures.xslt` | Retags the six vanilla cultures; party-template bindings live here |
+| `Main/_Module/ModuleData/taom_spcultures.xml` | The 24 TAOM-native cultures |
+| `Main/_Module/ModuleData/taom_partyTemplates.xml` | Every party template TAOM authors |
 | `Main/Features/CharacterCreation/CharacterCreationContentService.cs` | Registers custom cultures, sets race, teleports to the starting settlement |
 | `Main/Features/CharacterCreation/PlayerEquipmentRosterIds.cs` | Builds the CC roster id — unconditionally |
 | `Main/Features/CharacterCreation/PlayerEquipmentService.cs` | Applies the roster; logs `RosterNotFound` |
@@ -223,6 +289,9 @@ so with horses present vanilla simply runs and hands a dwarf a mount.
   culture-scoped menus, plus a stale-suppression check.
 - `TAOM.Tests/Features/CharacterCreation/CareerCultureCoverageTests.cs` — at least one eligible career.
 - `TAOM.Tests/Features/Enlistment/EnlistmentRosterCultureCoverageTests.cs` — four rank rosters.
+- `TAOM.Tests/Core/CulturePartyTemplateTests.cs`: every party-template binding on every culture, for
+  both sources. Runs `spcultures.xslt` over a sentinel stub rather than reading the markup, which is
+  what lets it see an attribute the block never named.
 
 All four derive their culture list from the data rather than a hand-written list, which is the point.
 Every one of the failures above reached a shipped build because the table that should have caught it
@@ -230,6 +299,10 @@ was written before the culture existed.
 
 ## Changelog
 
+- 2026-08-12: nine town-owning cultures were spawning Calradian patrols, villagers, militia, rebels
+  and caravans. Bound every party template on all six retagged cultures plus `umbar`, `shaghana` and
+  `abanissa`, authored the three Dale templates that never existed, and added the party-template
+  binding contract above with `CulturePartyTemplateTests` behind it.
 - 2026-08-10 — Promoted `bluecraig` and `lindon` from borrowed cultures to their own. Both are now
   CC-selectable and start in their own capitals (`town_GBC1`, `town_LN1`) instead of Goblin-town and
   Rivendell. Added `promote_borrowed_cultures.py` + `retag_promoted_cultures.py` and recorded the

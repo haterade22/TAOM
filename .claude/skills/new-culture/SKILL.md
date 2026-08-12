@@ -18,7 +18,7 @@ If creating a **net-new `taom_spcultures.xml` Culture object**, read [docs/cultu
 0. **Prereqs** — confirm the 5 `.tpac` files exist; decide culture ID (custom vs XSLT-passthrough — check `kingdom-culture-mapping.md` memory); decide tier cap; pick 3–4 Tolkien lore citations.
 1. **Armor** — harvest mesh IDs (`tools/tpac_skeleton_scan.py --all-types`) → clone `tools/generate_dale_armor.py` → emit XML → register the `<culture>/` folder in `LOTRLOME_Armory/SubModule.xml`.
 2. **Troops** — lore + tier design on paper → generator → `troops_<culture>.xml` → register in `Main/_Module/SubModule.xml`.
-3. **Wire** — `spcultures.xslt` (every CultureObject template/troop attr), `taom_partyTemplates.xml` (9 templates), `VolunteerRecruitmentService.cs` (culture + optional settlement/clan pools), add tests.
+3. **Wire**: `spcultures.xslt` (every CultureObject template/troop attr), `taom_partyTemplates.xml` (12 templates), `VolunteerRecruitmentService.cs` (culture + optional settlement/clan pools), add tests.
 4. **Validate** — `python tools/validate_all_troop_refs.py` (underwear-bug gate), then `/ship`.
 5. **Iterate** — expect 5–10 follow-up commits (renames, equipment swaps, balance, settlement-specific recruitment, colors). The first ship is a draft.
 
@@ -27,4 +27,8 @@ If creating a **net-new `taom_spcultures.xml` Culture object**, read [docs/cultu
 - **Canonical Armory folder** — grep ALL `LOTRLOME_items/*/` for the item prefix before authoring; first folder with that prefix wins (`docs/reference/armory-guide.md` per-prefix table). Wrong folder = duplicate-ID shadowing.
 - **Cover attributes** — leg items need `covers_legs="true"`, gloves `covers_hands="true"`, or the mesh doesn't render (bare legs/hands).
 - **`<Flags UseTeamColor="true" />`** on every armor item for banner tint.
-- Run `/xslt-check` after editing `spcultures.xslt`.
+- Run `/xslt-check` after editing `spcultures.xslt`, then run the gate that actually catches the
+  recurring bug: `dotnet test TAOM.Tests --filter FullyQualifiedName~CulturePartyTemplate`.
+  `/xslt-check` passed on all four instances of the passthrough-inheritance bug (Dale, Rohan, Khand,
+  settlement patrols) because it reads the markup, and the defect is an attribute that is not in the
+  markup at all. Extend that test's attribute list if you bind something new.

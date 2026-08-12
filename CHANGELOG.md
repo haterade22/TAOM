@@ -94,6 +94,118 @@ onto `Classify` left it with no production caller, and it had survived only beca
 still referenced it. Those cases are covered by the `Classify` tests, so the method and its tests
 went together.
 
+### fix(cultures): nine kingdoms were fielding Calradian troops
+
+Reported as "settlement patrols are vanilla troops, not kingdom troops". Patrols were the visible
+half. The cause runs through every party the engine builds from a culture.
+
+`DefaultSettlementPatrolModel.GetPartyTemplateForPatrolParty` reads
+`settlement.OwnerClan.Culture.SettlementPatrolPartyTemplate{Weak,Moderate,Strong}`, which
+`CultureObject.Deserialize` fills from the `settlement_patrol_template_level_1/2/3` XML attributes.
+Nine town-owning cultures resolved those to vanilla templates, so Imperial infantrymen patrolled
+Dunland and Vlandian crossbowmen patrolled Rohan. The same gap ran through their villager, militia,
+rebel and caravan bindings.
+
+Two different mechanisms put it there. **Dunland, Harad, Rohan and Rhun never named the patrol
+attributes at all**: each `Culture[@id='X']` block in `spcultures.xslt` opens with
+`<xsl:apply-templates select="@*"/>`, which copies every vanilla attribute in, so an attribute the
+block does not mention keeps its Calradian binding with nothing in the file to show for it.
+**Khand, Umbar, Shaghana and Abanissa were bound to vanilla explicitly**, as placeholders that were
+never revisited. Dale was the only retagged culture wired correctly.
+
+The fix was mostly wiring, not authoring. `patrol_party_{rohan,dunland,harad,rhun}_template_level_1..3`
+already existed with the right lore troops and were referenced by nothing, along with the matching
+villager, militia, rebel and caravan templates. Three genuinely missing templates were written:
+`villager_dale_template`, `caravan_template_dale`, `elite_caravan_template_dale`. Khand shares Rhun's
+(no `khand_*` troop or template exists, and its own block already used Rhun's militia troops), and
+the three southern cultures share Harad's. Umbar's `basic_troop` and four militia troops were also
+literal `aserai_*` ids and are now Harad's, matching Shaghana and Abanissa.
+
+Caravans needed two edits per block rather than one. `CultureObject.Deserialize` reads them only
+from the plural child elements, never from the `caravan_party_template` attribute that four blocks
+carried as dead markup, and it **appends** every matching child into one list instead of replacing.
+Emitting a TAOM caravan block without also excluding vanilla's from the passthrough filter would
+have left each culture holding both and rolling Calradian roughly half the time, which is worse than
+the original bug because it is nondeterministic.
+
+Two of these bindings are crash surfaces, not just wrong troops:
+`PatrolPartiesCampaignBehavior.SpawnPatrolParty` dereferences `partyTemplate.ShipHulls` and
+`CaravansCampaignBehavior.SpawnCaravan` calls `GetRandomElementWithPredicate` on the caravan list,
+neither with a guard. So the new gate asserts presence and non-emptiness, not merely that a binding
+is non-vanilla.
+
+`TAOM.Tests/Core/CulturePartyTemplateTests.cs` runs `spcultures.xslt` over a synthetic vanilla
+document whose every binding is a unique sentinel, then fails on three states: attribute absent,
+sentinel survived (unbound, so the passthrough would supply Calradia), or bound to an id
+`taom_partyTemplates.xml` does not define. Both halves are needed, and Khand is the case that proves
+it: it named every attribute and was still wrong. The id check is a whitelist rather than a blacklist
+of vanilla prefixes, because TAOM redefines no vanilla party-template id, so "not TAOM-authored" is
+exactly "resolves to Calradian troops" with no exemption needed for the intentional cross-culture
+sharing.
+
+This is the fourth time the XSLT passthrough has silently inherited a vanilla binding (Dale, Rohan,
+Khand, now this). The third instance recorded the Rhun and Khuzait party templates as a known gap in
+a code comment and called re-theming them separate content work. It stayed separate for eight days.
+Writing a gap into a comment is not a plan to fix it, and the lesson entry now says so.
+
+Existing saves pick up the new bindings for newly spawned parties, since cultures re-deserialize on
+every load. Patrols already on the map keep their vanilla rosters until they are destroyed and
+respawn, which was the accepted trade for keeping this a pure data change.
+
+Not in scope, split out with the evidence: NavalDLC's coastal patrol and fishing templates (the
+reader is unreachable, no TAOM settlement declares a `port_posX` pair), and roughly 40 vanilla
+`*_aserai` NPC role bindings on Umbar whose child and teenager ids have no Harad counterpart.
+
+Verified: `dotnet test TAOM.Tests` 6435 passed / 0 failed, `python tools/validate_moduledata.py`
+PASS, and the stylesheet transformed against installed `SandBoxCore/spcultures.xml` to confirm all
+eight attributes bind, exactly one caravan wrapper survives per culture, and no child element the
+new filter entries could have caught was dropped.
+
+**Documentation swept for what this falsified, not just what it added.** A four-surface audit
+(registries, culture prose, `.claude/` rules and skills, and a repo-wide stale-string hunt) turned up
+20 files. The ones that mattered were not the missing index rows, they were the docs actively
+teaching the bug:
+
+- `docs/ai-includes/new-culture-authoring.md` listed `villager_party_template` and both caravan child
+  lists under "inherit vanilla". That table is a large part of why this recurred; those three rows
+  moved to bind-required, and the template count went 9 to 12.
+- `docs/features/kingdom-creation.md` gave a caravan snippet using `<CaravanPartyTemplate template="..."/>`.
+  The deserializer reads the `id` attribute off whatever child it finds, so `template=` appends a
+  **null** to the caravan list, and `SpawnCaravan` dereferences it unguarded. Following that doc
+  literally crashed the campaign on the first caravan. Its required-attributes table also recommended
+  vanilla Calradian ids throughout, two of which (`villagers_aserai_template`,
+  `vassal_reward_aserai_template`) are not ids that exist.
+- `tools/generate_xslt.py` is documented as a live generator whose output is `spcultures.xslt`.
+  Running it would have reverted this entire change. Marked retired: its output path is hardcoded to
+  a repo that no longer exists (`c:/Users/mikew/source/repos/TAOM`) and its input to a LOTRAOM asset
+  dump.
+- `docs/reviews/rca-dale-2026-05-26.md` recorded three PASSTHROUGH verdicts ("fine for Dale", "not
+  Dale-specific") that were wrong and were followed for over two months. The RCA keeps its original
+  table as the historical record with a correction appended, because the useful lesson is about the
+  form of the verdict: a PASSTHROUGH decision needs the vanilla value named and a reason, and two of
+  those three named a template that did not exist under that name.
+- `docs/cultures.md` said 10 native cultures (there are 24) and mapped `battania` to Dunland (it is
+  Khand). It now also carries the shares-another-culture's-templates mapping, which was load-bearing
+  and lived only in the data.
+
+Prevention moved to where an agent actually hits it rather than staying in a lessons file:
+`.claude/rules/xslt.md` (fires on every `.xslt` edit) gained the inheritance direction of the
+passthrough hazard and the child-elements-union rule; `.claude/rules/vanilla-data-comparison.md`
+gained a row and a section; `/xslt-check` gained a transform-and-diff step, since it reported clean on
+all four instances by reading markup that never contained the defect; `.claude/rules/tests.md` and
+`docs/ai-includes/testing-guide.md` record the sentinel-stub technique and the shipped-data test
+category it belongs to.
+
+The two deferred items now live somewhere a future session will find them: the NavalDLC coastal and
+fishing templates in `docs/features/naval-travel.md` Known Limitations (with the finding that ports,
+ship hulls and the two templates are one work item, not three), and the Umbar NPC role bindings in
+`docs/features/kingdom-creation.md` and `docs/cultures.md`.
+
+Not-tested: in-game patrol, caravan, villager, militia and rebel spawns.
+Research: DefaultSettlementPatrolModel, PatrolPartiesCampaignBehavior, PatrolPartyComponent,
+CultureObject.Deserialize, CaravansCampaignBehavior.SpawnCaravan, NavalDLC's NavalSettlementPatrolModel.
+Save-compat: XML-only, cultures re-deserialize on load. Live parties keep their existing rosters.
+
 ### fix(enlistment): the review pass on the field-test fixes, including a crash
 
 Six findings from the deep review of the changeset below. One of them was a crash the first pass had

@@ -85,6 +85,18 @@ Concretely, `characters/clans.xml` has **no validator schema** (`tools/schemas/`
 
 The same boundary applies in the other direction — an **extra, XSD-undeclared attribute** — even for files the validator *does* schema. `validate_moduledata.py` checks declared field types, enums, and cross-refs but does not reject unknown attributes; the engine's `NPCCharacters.xsd` does. So `npcs_rohan.xml` passed the validator (all 4,522 NPCCharacters parse) while the editor flagged a bogus `child_monster="…"` on its 10 child-template blocks (`Error: The 'child_monster' attribute is not declared`, fixed 2026-06-22). A clean `validate_moduledata.py` is necessary but not sufficient — the Bannerlord editor / an engine load is the authority for the XSD layer (both required-attribute presence *and* no-undeclared-attributes). Decide a flagged attribute via the decompiled deserializer + vanilla usage: bogus → remove (`child_monster`), real-but-XSD-incomplete → keep (`family_type` on horses, which `Items.xsd` likewise fails to declare).
 
+A third boundary, and the one that hid nine cultures' worth of Calradian troops for months: **the ref
+sweep can only prove a reference RESOLVES, never that it points at the right thing, and it never reads
+`spcultures.xslt` at all.** `settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"`
+resolves perfectly, because vanilla ships that template; it is simply Calradian. And the XSLT is a
+stylesheet rather than a data file, so a binding that lives only there is outside everything the
+validator walks, as is a binding that is *absent* and inherited through the passthrough.
+
+`PASS` from this validator therefore says nothing about whether a culture fields its own troops. That
+question is owned by `TAOM.Tests/Core/CulturePartyTemplateTests.cs`, which transforms the stylesheet
+and checks each emitted binding against the set of ids TAOM authors. The two are complementary: the
+validator catches a typo'd id, the test catches a real id that belongs to the wrong faction. Run both.
+
 ## Landless-culture check (`LANDLESS_CULTURE`)
 
 **Severity ERROR.** Fires when a culture carried by an `NPCCharacter` with `occupation="Lord"`, a

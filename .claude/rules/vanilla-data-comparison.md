@@ -33,6 +33,7 @@ TAOM ships many XML files that **mirror, extend, or transform vanilla Bannerlord
 | TaleWorlds API signatures | installed DLLs | `pwsh tools/taom-src.ps1 path <Type>` (NOT the decompiled dump) |
 | culture/clan/kingdom IDs | vanilla `SandBoxCore` XML | grep + `xml-data.md` ID table |
 | XSLT passthrough attributes | vanilla source the XSLT transforms | `/xslt-check`, `feedback_xslt_passthrough_unintended_inheritance.md` |
+| a culture's party-template bindings (`spcultures.xslt` or `taom_spcultures.xml`) | what the block EMITS vs what vanilla supplies for everything it does not name | `dotnet test TAOM.Tests --filter FullyQualifiedName~CulturePartyTemplate`; see "Passthrough inherits, it does not preserve" below |
 | GUI prefab **clones** (full `<Prefab>` copies of a vanilla prefab) | vanilla `Modules/{SandBox,SandBoxCore,Native}/GUI/Prefabs/<same-name>.xml` | `diff -w --strip-trailing-cr <vanilla> <taom>`; see "GUI prefab clones" below |
 
 **Matching is case-insensitive.** Windows resolves `HART_ISENGARD` vs `HART_isengard`; an exact-case check produces false positives. The scene audit tools already lower-case both sides.
@@ -90,6 +91,29 @@ On 2026-08-03 the file carried 168 `<action>` elements parented directly by `<ac
 **Compare against the set, not the value.** `PathFaceRecord.FaceIslandIndex` is the engine's own connected-component id — two faces with different indices have no path between them at any cost. `taom.audit_settlement_entrances` (`Main/Features/DevConsole/Cheats/SettlementEntranceCheats.cs`) walks every settlement's entrance (`GatePosition` for towns and castles, else `Position`), takes the main landmass to be the island index the most settlements agree on, flags every disagreement, and emits a replacement coordinate from `IMapScene.GetAccessiblePointNearPosition` at widening radii 1/2/4/8/16/32 — the engine's own navmesh answering, not a guess. Command reference: `docs/features/dev-console.md`.
 
 **Status (2026-08-03): the auditor ships; the corrected coordinates do not exist yet.** Producing them needs one in-game campaign run. When they exist they go into the LIVE `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` — the repo's `Main/_Module/ModuleData/settlements.xml` is a stale shadow, and edits there never reach the game.
+
+## Passthrough inherits, it does not preserve
+
+The shapes above are *this file is wrong*, *this file is right and nothing points at it*, and *this
+coordinate is right but unreachable*. This one is: **the wrong value is not in the file at all.**
+
+An XSLT `Culture[@id='X']` block opens with `<xsl:apply-templates select="@*"/>`, so an attribute the
+block never names is not "left unchanged", it is **inherited from Calradia**. There is nothing to grep
+for and nothing to review, because the defect is an absence. On 2026-08-12 that put nine town-owning
+cultures on vanilla patrols, villagers, militia, rebels and caravans; four of them never mentioned
+`settlement_patrol_template_level_*` in any form. Fourth instance of the same shape (Dale 2026-05-26,
+Rohan, Khand 2026-08-04 #374).
+
+Child elements fail differently and worse. `CultureObject.Deserialize` (v1.4.8, `CultureObject.cs:485-497`)
+does `mBList10.Add(...)` inside a loop over every child named `caravan_party_templates`, so a TAOM
+block does not displace vanilla's, it **unions** with it. Emit without also adding the wrapper to that
+block's `not(self::...)` filter and the culture rolls Calradian roughly half the time, which one play
+session can easily miss.
+
+**Compare the OUTPUT against vanilla, never the markup against your intent.** Transform with lxml and
+flag every emitted attribute whose value still carries a vanilla id. `/xslt-check` reported clean on
+all four instances because it reads the stylesheet. `TAOM.Tests/Core/CulturePartyTemplateTests.cs`
+mechanizes the output comparison with a sentinel stub and is the gate that actually holds.
 
 ## Authored data can be complete and still be orphaned
 

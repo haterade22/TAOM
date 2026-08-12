@@ -52,7 +52,12 @@ When TAOM XSLT overrides a vanilla element (e.g. `<xsl:template match="Culture[@
 - **Prevent:** Before authoring an XSLT culture override, decompile the engine deserializer (`taom-src path TaleWorlds.CampaignSystem.CultureObject`) and enumerate every attribute it reads; read the vanilla XML; for each engine-readable attribute explicitly classify BIND / PASSTHROUGH / N/A and code-comment the decision. Symptom in the wild: a new template/roster/NPC declared but grep finds zero consumers → likely dead because the XSLT binding is missing. Same pattern for heroes.xslt, spclans.xslt, spkingdoms.xslt, spnpccharacters.xslt.
 - **THIRD INSTANCE 2026-08-04 (Khand/battania, #374) — the trigger was too narrow.** This entry said "before *authoring* an XSLT culture override". The Khand work was framed as "point Khand's troops at the Rhun roster" — an *edit* to an existing template — so neither this rule nor `/new-culture` was consulted, and the same bug landed a third time (Dale → Rohan → Khand). It bound 6 attributes and let the passthrough inherit **7 more engine-read ones** on Calradian values: `elite_basic_troop`, `villager_party_template`, `militia_party_template`, `rebels_party_template`, `settlement_patrol_template_level_1/2/3`. **The BIND / PASSTHROUGH / N-A enumeration is required for ANY edit to a `Culture[@id=...]` template, including a one-attribute re-point.**
 - **Mechanical form (stop relying on judgement):** transform with lxml and diff the emitted element against a sibling already re-themed the same way — `ET.XSLT(...)(vanilla)`, then flag every attribute whose value still matches the vanilla culture id. That is a 10-line script and it found all 7 in one pass. Also check the deserializer before binding: `caravan_party_template` / `elite_caravan_party_template` look bindable but `CultureObject.Deserialize` (v1.4.7) reads only the plural child elements, so binding them is dead markup.
-- **Source:** memory/feedback_xslt_passthrough_unintended_inheritance.md + feedback_enumerate_from_source_of_truth.md + .claude/rules/troops.md; third instance `docs/reviews/rca-landless-culture-spawn-2026-08-04.md`
+- **FOURTH INSTANCE 2026-08-12 (settlement patrols), and the mechanization now exists, so there should be no fifth.** The third instance recorded the Khuzait/Rhun party templates resolving to Calradian troops as "a pre-existing TAOM gap ... separate content work" and moved on. It stayed separate for eight days, during which every town owned by Dunland, Harad, Rohan, Rhun, Khand, Umbar, Shaghana or Abanissa spawned Calradian patrols, villagers, militia, rebels and caravans. Four of the six retagged cultures never named the patrol attributes at all, so nothing in the file looked wrong. Two things this instance adds that the earlier three did not have:
+  - **The check is now a test, not a discipline.** `TAOM.Tests/Core/CulturePartyTemplateTests.cs` runs `spcultures.xslt` over a synthetic vanilla document whose every party-template binding is a unique `PartyTemplate.SENTINEL_*` value, then fails on three states: attribute absent, sentinel survived (unbound, so the passthrough would hand it Calradia), or bound to an id `taom_partyTemplates.xml` does not define. The sentinel half catches ABSENT bindings, the whitelist half catches PRESENT-but-Calradian ones, and battania is the case proving you need both: it named every attribute and was still wrong.
+  - **Whitelist, never a blacklist of vanilla prefixes.** Index every id TAOM authors and require membership. TAOM redefines zero vanilla party-template ids, so "not TAOM-authored" is exactly "resolves to Calradian troops". A prefix blacklist needs an exemption for every intentional cross-culture share (Lothlórien uses Rivendell's, Umbar uses Harad's, Khand uses Rhun's) and goes stale on the next engine bump.
+  - **Child elements have their own version of the trap, with a worse failure.** `caravan_party_templates` is read only as a child, and `CultureObject.Deserialize` (v1.4.8, `CultureObject.cs:485-497`) does `mBList10.Add(...)` inside a loop over EVERY matching child. It unions, it does not overwrite. So emitting a TAOM caravan block without also adding the wrapper to that block's `not(self::...)` passthrough filter leaves the culture holding both and rolling Calradian roughly half the time, which is worse than a clean miss because it is nondeterministic. The emit and the filter edit must land in the same commit.
+  - **Deferring a known gap is the mechanism, not an accident.** The third instance wrote the gap down accurately, in the right file, next to the code, and it still shipped for eight more days. Writing a gap into a comment is not a plan to fix it. Either fix it or file it as an issue with a number the comment can name.
+- **Source:** memory/feedback_xslt_passthrough_unintended_inheritance.md + feedback_enumerate_from_source_of_truth.md + .claude/rules/troops.md; third instance `docs/reviews/rca-landless-culture-spawn-2026-08-04.md`; fourth instance `docs/features/culture-playability-wiring.md` "Party-template binding contract"
 
 ### A grep over ModuleData that becomes a factual claim must be comment-aware
 XML comment spans are invisible to line-oriented greps. `SandBox/ModuleData/spclans.xml` contains three commented-out `<Faction>` blocks (`guardians`, `chosen_of_the_sky`, `freemen`); a raw-text regex finds 98 factions, an `ElementTree` parse finds 95 live ones. The commented three are the ONLY ones lacking `initial_home_settlement`, so a comment-blind grep produces the exact false claim "vanilla ships three clans without a home settlement" — which then propagated into a patch comment, a service comment, a feature doc, a patch-registry entry and an RCA before anyone parsed the file.
@@ -187,6 +192,45 @@ would have reopened a culture-alias regression that was fixed on 2026-08-02.
   that is a convention rather than a guarantee — read the matched paths before drawing a conclusion
   from a count.
 - **Source:** `docs/audits/issue-triage-2026-08-08.md`, 2026-08-08
+
+---
+
+### ModuleData XML breaks attributes onto their own lines, so `grep 'elem attr='` silently under-reports
+
+Hunting the race-to-voice bindings in `LOTRLOME_Armory/ModuleData/skins.xml`,
+`grep 'voice_type name='` returned 78 hits, every one of them a vanilla `male_0x` / `female_0x`.
+The conclusion drawn was that TAOM's three custom voice definitions bind to nothing and are dead
+data, and that conclusion went to the user. It was wrong. The file holds 45 custom refs, written as:
+
+```xml
+<voice_types>
+    <voice_type
+        name="dwarf_01" />
+</voice_types>
+```
+
+Vanilla's entries are single-line, the mod's hand-authored ones are not, so the pattern matched
+exactly the subset that made the wrong answer look complete and consistent. A multiline-aware
+`<voice_type\s+name="…"` recovered all 45 and produced the real picture: 7 races bound, 3 of them
+diluted with vanilla entries alongside the custom one.
+
+- **Why missed:** the grep returned a large, plausible, internally consistent result set. Nothing
+  about 78 vanilla hits reads as truncation, and the shape of the answer (all vanilla, no custom)
+  was exactly the shape the hypothesis predicted. Confirmation arrived in the form of missing
+  evidence, which is the form hardest to notice. The same grep run against the repo's snapshot copy
+  "corroborated" it, because both files share the formatting.
+- **Prevent:** for any ModuleData element-plus-attribute search, match across whitespace
+  (`<elem\s+attr="`) rather than assuming a single line, and prefer a parser over a grep when the
+  answer is a count or a mapping rather than a location. Cross-check any zero-custom-entries result
+  against a positive control: grep the element name alone and compare counts. Here,
+  `grep -c '<voice_types'` returned 141 blocks against 78 attribute hits, and that mismatch was
+  visible in the same output that produced the wrong conclusion.
+- **Corollary that generalises past XML:** a user contradicting a tool-derived finding ("I can
+  confirm those work in game") outranks the tool. Field observation beat static analysis here, and
+  the productive response was to hunt the mechanism rather than to re-assert the grep. Treat the
+  contradiction as a pointer to a measurement error, not to a disagreement.
+- **Source:** voice-system research, 2026-08-12. Full state table:
+  [`docs/features/kingdom-voices.md`](../../features/kingdom-voices.md)
 
 ---
 

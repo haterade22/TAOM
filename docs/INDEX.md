@@ -21,7 +21,7 @@
 ## By major system
 
 ### Character, race, body, & character creation
-- [culture-playability-wiring](features/culture-playability-wiring.md) — the 14-row checklist separating a *selectable* culture from a *playable* one, why `is_main_culture` is not the CC gate (vanilla hardcodes six StringIds), and the three failure modes that ship silently: no CC equipment, no starting denars, no eligible career
+- [culture-playability-wiring](features/culture-playability-wiring.md): the 14-row checklist separating a *selectable* culture from a *playable* one, why `is_main_culture` is not the CC gate (vanilla hardcodes six StringIds), and the three failure modes that ship silently: no CC equipment, no starting denars, no eligible career. Also the **party-template binding contract**: the eight engine-read attributes that decide which troops a culture actually spawns, why a `spcultures.xslt` block silently inherits Calradia for anything it never names, the caravan child elements that union rather than replace, and the two bindings that are unguarded crash surfaces rather than merely wrong troops
 - [character-creation](features/character-creation.md) — race-restricted CC dropdown, action_set requirements, narrative-stage flow, vanilla-aligned bonus budget (skill/attribute/focus per stage)
 - [character-creation-body-properties](features/character-creation-body-properties.md) — per-culture default body properties on CC screen (Patch29)
 - [character-selection](features/character-selection.md) — transpiler-driven race fallback in CC
@@ -31,6 +31,7 @@
 - [initial-child-generation](features/initial-child-generation.md) — campaign-start child rolls
 - [no-mount-cultures](features/no-mount-cultures.md) — suppress narrative horse crash on no-mount cultures (Patch20)
 - [native-skin-fixes](features/native-skin-fixes.md) — managed wrapper for `TAOM.NativeSkinFixes.dll` (covers_head morph + hair/beard cloth sim)
+- [kingdom-voices](features/kingdom-voices.md): per-race combat voice sets (barks, pain, death, formation shouts). Voice binds to **race, never culture**, so the Mannish kingdoms cannot be separated without C#; the three binding routes, the 68 voice types, and why TAOM's loose-`.wav` path needs no FMOD bank. Records the live race-to-voice table with its two standing defects: seven races bound to nothing, and three more diluted with vanilla entries so their shipped audio plays about one spawn in seven
 - [gui-sprite-system](features/gui-sprite-system.md) — sprite atlas conventions, verification before reference, the **decompile-verified sprite-bake pipeline** (no `pack0.tpac`; per-category `AssetSources` PNG + `Assets/_tex.tpac` + manifest) + end-to-end **Adding / Verifying a sprite** workflow (a new sprite needs the generator AND a render check — **baked ≠ visible**)
 
 ### Combat, AI, & battle

@@ -1,9 +1,38 @@
 # Culture Creation Checklist for TAOM
 
 ## Current State
-- **10 custom cultures** defined in `taom_spcultures.xml`: erebor, rivendell, mirkwood, lothlorien, isengard, gundabad, umbar, dolguldur, gondor, mordor
-- **6 XSLT passthrough cultures** in `spcultures.xslt`: empire(dunland), aserai(harad), vlandia(rohan?), khuzait(rhun), sturgia(dale/barding), battania(dunland)
+
+_Recounted from the files 2026-08-12. The previous version of this block said "10 custom cultures",
+listed only the first ten, and mapped battania to Dunland (it is Khand)._
+
+- **24 cultures** defined in `taom_spcultures.xml`. Sixteen are settled: erebor, rivendell, mirkwood,
+  lothlorien, isengard, gundabad, umbar, dolguldur, gondor, mordor, shaghana, abanissa, goblin,
+  mistymountainorcs, lindon, bluecraig. Eight are hideout-only bandit cultures: dunland_raiders,
+  rhun_raiders, harad_raiders, gundabad_raiders, umbar_corsairs, gondor_soldiers, erebor_warriors,
+  mirkwood_stalkers.
+- **6 retagged vanilla cultures** in `spcultures.xslt`: empire (Dunland), aserai (Harad),
+  vlandia (Rohan), khuzait (Rhun), sturgia (Dale/Barding), battania (Khand/Variag).
 - **16 total** NPC files, 14 troop files, 12 equipment files
+
+### Which cultures share another culture's troops and party templates
+
+This mapping is load-bearing and lives only in the data, so it is recorded here. It is not a defect;
+these cultures deliberately have no roster of their own.
+
+| Culture | Shares | Why |
+|---|---|---|
+| lothlorien | rivendell | Both elven, one roster |
+| battania (Khand/Variag) | rhun | No `khand_*` troop or template exists |
+| umbar | harad | Has its own `umbar_elite` noble line, but no basic or militia line |
+| shaghana | harad | Haradrim sub-culture, lord parties are entirely `harad_*` |
+| abanissa | harad | Same |
+
+**Deferred, tracked here so it is not lost:** umbar, shaghana and abanissa still carry roughly 40
+vanilla `*_aserai` **NPC role** bindings between them (tavernkeeper, blacksmith, guard, ransom broker,
+plus the child and teenager variants). Most repoint cheaply to an existing `_harad` id, but the
+child/teenager ids have no `_harad` counterpart and need authoring. Left out of the 2026-08-12
+party-template pass deliberately. See [kingdom-creation.md](features/kingdom-creation.md)
+"What Can Be Inherited".
 
 ---
 
@@ -16,7 +45,7 @@
   - Identity: `id`, `name`, `text`, `is_main_culture`, `can_have_settlement`
   - Visual: `color`, `color2`, `faction_banner_key`, `encounter_background_mesh`, `board_game_type`
   - Troop refs: `basic_troop`, `elite_basic_troop`, `melee_militia_troop`, `ranged_militia_troop`, `melee_elite_militia_troop`, `ranged_elite_militia_troop`
-  - Party template refs: `villager_party_template`, `default_party_template`, `elite_caravan_party_template`, `militia_party_template`, `rebels_party_template`, `vassal_reward_party_template`, `settlement_patrol_template_level_1/2/3`
+  - Party template refs (all eight are engine-read and all eight must be bound): `default_party_template`, `villager_party_template`, `militia_party_template`, `rebels_party_template`, `vassal_reward_party_template`, `settlement_patrol_template_level_1/2/3`. **`elite_caravan_party_template` used to be listed here and is not an attribute at all:** the deserializer takes caravans only from the child elements below. Contract + the two crash surfaces: [culture-playability-wiring.md](features/culture-playability-wiring.md)
   - Equipment roster refs: `default_battle_equipment_roster`, `default_civilian_equipment_roster`, `default_stealth_equipment_roster`, `duel_preset_equipment_roster`, `marriage_bride_equipment_roster`
   - Notary refs: `merchant_notary`, `artisan_notary`, `preacher_notary`, `rural_notable_notary`
   - Town/village NPC refs: `villager`, `caravan_master`, `caravan_guard`, `veteran_caravan_guard`, `prison_guard`, `guard`, `blacksmith`, `weaponsmith`, `townswoman`, `townsman`, `village_woman` + age variants (infant/child/teenager for each), `ransom_broker`, `gangleader_bodyguard`, `shop_worker`, `tavernkeeper`, `taverngamehost`, `musician`, `tavern_wench`, `armorer`, `horseMerchant`, `barber`, `merchant`, `beggar`, `female_beggar`, `female_dancer`

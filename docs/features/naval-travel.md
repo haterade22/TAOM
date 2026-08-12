@@ -221,6 +221,21 @@ release the key and click land while at sea — it disembarks on the coast.
 
 ## Known Limitations
 
+- **No TAOM culture has coastal patrol or fishing party templates, and no TAOM settlement has a port.**
+  Deferred deliberately on 2026-08-12 during the culture party-template pass, and recorded here
+  because this is the doc a session re-enabling naval travel will open. `CultureObject` reads
+  `settlement_patrol_template_coastal` and `fishing_party_template`; **no TAOM culture sets either**.
+  That is currently harmless only because the readers are unreachable: `Settlement.HasPort` comes
+  solely from a `port_posX`/`port_posY` pair, and there are ZERO occurrences of `port_posX` in either
+  `Main/_Module/ModuleData/settlements.xml` or the live `TAOM_Map/ModuleData/settlements.xml`
+  (verified 2026-08-12). Give a settlement a port and this becomes a crash, not a gap:
+  NavalDLC's `NavalPatrolPartiesCampaignBehavior.SpawnPatrolParty` passes the template straight into
+  `PatrolPartyComponent.CreatePatrolParty`, which dereferences `template.ShipHulls` with no null
+  guard. Authoring one is not a one-liner either, because a coastal template needs `<ShipHulls>`
+  stacks referencing `ShipHull` objects only NavalDLC defines; a template without them spawns a
+  **land** party at `settlement.PortPosition`, a sea coordinate, with land navigation still enabled.
+  So: ports, ship hulls and the two templates are one work item, not three. `CulturePartyTemplateTests`
+  deliberately excludes both attributes with a comment pointing here.
 - **Sea-only by design; rivers are not sailable.** TAOM_Map rivers are authored as a water-`10`
   channel with impassable mountain-`7` banks (to keep AI from getting stuck), so the walkable land never
   borders the water — the embark transition (which only spans `embarkThresholdDistance` past the navmesh
