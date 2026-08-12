@@ -2034,19 +2034,19 @@
     color="0xFF3A1F1F"
     color2="0xFFB5913E"
     elite_basic_troop="NPCCharacter.umbar_elite"
-    basic_troop="NPCCharacter.aserai_recruit"
-    melee_militia_troop="NPCCharacter.aserai_militia_spearman"
-    ranged_militia_troop="NPCCharacter.aserai_militia_archer"
-    melee_elite_militia_troop="NPCCharacter.aserai_militia_veteran_spearman"
-    ranged_elite_militia_troop="NPCCharacter.aserai_militia_veteran_archer"
+    basic_troop="NPCCharacter.harad_levy"
+    melee_militia_troop="NPCCharacter.harad_militia_spearman"
+    ranged_militia_troop="NPCCharacter.harad_militia_archer"
+    melee_elite_militia_troop="NPCCharacter.harad_militia_veteran_spearman"
+    ranged_elite_militia_troop="NPCCharacter.harad_militia_veteran_archer"
     can_have_settlement="true"
-    villager_party_template="PartyTemplate.villager_aserai_template"
-    default_party_template="PartyTemplate.kingdom_hero_party_aserai_template"
-    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
-    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
-    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
-    militia_party_template="PartyTemplate.militia_aserai_template"
-    rebels_party_template="PartyTemplate.rebels_aserai_template"
+    villager_party_template="PartyTemplate.villager_harad_template"
+    default_party_template="PartyTemplate.kingdom_hero_party_harad_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_harad_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_harad_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_harad_template_level_3"
+    militia_party_template="PartyTemplate.militia_harad_template"
+    rebels_party_template="PartyTemplate.rebels_harad_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_umbar"
     prosperity_bonus="1"
     encounter_background_mesh="encounter_aserai"
@@ -2102,10 +2102,10 @@
     start_point_position_x="761.6247"
     start_point_position_y="317.6857">
     <caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.caravan_template_empire" />
+      <caravan_party_template id="PartyTemplate.caravan_template_harad" />
     </caravan_party_templates>
     <elite_caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.elite_caravan_template_empire" />
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_harad" />
     </elite_caravan_party_templates>
     <available_ship_hulls></available_ship_hulls>
     <vassal_reward_items>
@@ -3410,13 +3410,13 @@
     melee_elite_militia_troop="NPCCharacter.harad_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.harad_militia_veteran_archer"
     can_have_settlement="true"
-    villager_party_template="PartyTemplate.villager_aserai_template"
+    villager_party_template="PartyTemplate.villager_harad_template"
     default_party_template="PartyTemplate.kingdom_hero_party_harad_template"
-    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
-    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
-    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
-    militia_party_template="PartyTemplate.militia_aserai_template"
-    rebels_party_template="PartyTemplate.rebels_aserai_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_harad_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_harad_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_harad_template_level_3"
+    militia_party_template="PartyTemplate.militia_harad_template"
+    rebels_party_template="PartyTemplate.rebels_harad_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_harad"
     prosperity_bonus="1"
     encounter_background_mesh="encounter_aserai"
@@ -3472,7 +3472,7 @@
     start_point_position_x="630.0"
     start_point_position_y="295.0">
     <caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.caravan_template_aserai" />
+      <caravan_party_template id="PartyTemplate.caravan_template_harad" />
     </caravan_party_templates>
     <elite_caravan_party_templates>
       <caravan_party_template id="PartyTemplate.elite_caravan_template_harad" />
@@ -3668,13 +3668,13 @@
     melee_elite_militia_troop="NPCCharacter.harad_militia_veteran_spearman"
     ranged_elite_militia_troop="NPCCharacter.harad_militia_veteran_archer"
     can_have_settlement="true"
-    villager_party_template="PartyTemplate.villager_aserai_template"
+    villager_party_template="PartyTemplate.villager_harad_template"
     default_party_template="PartyTemplate.kingdom_hero_party_harad_template"
-    settlement_patrol_template_level_1="PartyTemplate.patrol_party_empire_template_level_1"
-    settlement_patrol_template_level_2="PartyTemplate.patrol_party_empire_template_level_2"
-    settlement_patrol_template_level_3="PartyTemplate.patrol_party_empire_template_level_3"
-    militia_party_template="PartyTemplate.militia_aserai_template"
-    rebels_party_template="PartyTemplate.rebels_aserai_template"
+    settlement_patrol_template_level_1="PartyTemplate.patrol_party_harad_template_level_1"
+    settlement_patrol_template_level_2="PartyTemplate.patrol_party_harad_template_level_2"
+    settlement_patrol_template_level_3="PartyTemplate.patrol_party_harad_template_level_3"
+    militia_party_template="PartyTemplate.militia_harad_template"
+    rebels_party_template="PartyTemplate.rebels_harad_template"
     vassal_reward_party_template="PartyTemplate.vassal_reward_troops_harad"
     prosperity_bonus="1"
     encounter_background_mesh="encounter_aserai"
@@ -3730,7 +3730,7 @@
     start_point_position_x="660.0"
     start_point_position_y="260.0">
     <caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.caravan_template_aserai" />
+      <caravan_party_template id="PartyTemplate.caravan_template_harad" />
     </caravan_party_templates>
     <elite_caravan_party_templates>
       <caravan_party_template id="PartyTemplate.elite_caravan_template_harad" />
