@@ -682,3 +682,21 @@ The tests pass literals; the config supplies zero; nobody notices.
   is the sibling of "test the seam, not just the two things it joins": that one is about the seam
   BELOW the policy (ordering, persistence, wiring); this is the seam ABOVE it.
 - **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #9.
+
+### A mocked collaborator means its real body has zero coverage, however green the suite
+
+If `AServiceTests` mocks `IB`, then `B`'s implementation is never executed by that file, no matter
+how thoroughly `A`'s behaviour is asserted. A refactor of `B` can therefore be shipped against a
+fully green suite with nothing having run the changed lines even once.
+
+- **Why missed:** `SkillCheckService.Passes` is the arithmetic every field duty and camp option
+  resolves on, and it had no test file at all. Its only apparent coverage came through
+  `FieldDutyRuntimeTests`, which does `Substitute.For<ISkillCheckService>()` and stubs `Passes` to a
+  fixed bool. When `Passes` was refactored to extract `EffectiveSkill`/`TrustBonus`, all 6,444 tests
+  passed, and a `Math.Min` for `Math.Max` slip would have passed too. Green was read as covered.
+- **Prevent:** before refactoring any method, ask the mechanical question "does a test construct the
+  REAL type and call this method?" Grep for `new <Type>(` in the test tree, not for the type's name,
+  because the name appears in every mock setup too. If nothing constructs it, write that test first.
+  This is the inverse of "test the seam, not just the two things it joins": there the seam was
+  untested; here one SIDE of the seam is untested precisely because the seam's test mocked it away.
+- **Source:** `docs/reviews/rca-enlistment-diagnostics-legibility-2026-08-12.md` finding #2.

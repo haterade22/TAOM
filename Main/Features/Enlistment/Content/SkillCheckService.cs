@@ -35,11 +35,25 @@ public class SkillCheckService : ISkillCheckService
         _random = random;
     }
 
+    /// <summary>
+    /// The skill the check actually uses: the better of the two support skills, never their sum.
+    /// Public so a caller reporting the outcome quotes the same number the check consumed rather
+    /// than re-deriving it and drifting.
+    /// </summary>
+    public static int EffectiveSkill(int primarySkillValue, int? secondarySkillValue)
+        => Math.Max(primarySkillValue, secondarySkillValue ?? int.MinValue);
+
+    /// <summary>
+    /// Trust's contribution. Negative trust contributes nothing rather than subtracting, so a run
+    /// of failures cannot dig a hole the check keeps counting against you. Public for the same
+    /// no-drift reason as <see cref="EffectiveSkill"/>.
+    /// </summary>
+    public static int TrustBonus(int trust) => Math.Max(0, trust) * 2;
+
     public bool Passes(int primarySkillValue, int? secondarySkillValue, int trust, int rankBonus, int difficulty)
     {
-        var skill = Math.Max(primarySkillValue, secondarySkillValue ?? int.MinValue);
-        var trustBonus = Math.Max(0, trust) * 2;
         var roll = _random.Next(RollRange);
-        return skill + trustBonus + rankBonus + roll >= difficulty;
+        return EffectiveSkill(primarySkillValue, secondarySkillValue)
+            + TrustBonus(trust) + rankBonus + roll >= difficulty;
     }
 }

@@ -1,15 +1,20 @@
 namespace TAOM.Features.Enlistment;
 
 /// <summary>
-/// Master gate for the routine <c>[EnlistDiag]</c> trace (TICK, SYNC ok, PARK ok, RESTORE ok, and
-/// the per-map-event line). ON by default while the enlistment service loop is under active
-/// diagnosis; the MCM checkbox is how it gets turned down.
+/// Master gate for the routine <c>[EnlistDiag]</c> trace. It covers exactly five statements: TICK,
+/// SYNC ok, PARK ok, RESTORE ok, and the high-volume "map event started and the commander's party
+/// did NOT resolve" line. Nothing else in the feature consults it, so do not assume an absent
+/// <c>[EnlistDiag]</c> line was gated — most of them are not.
 ///
-/// FAIL-OPEN, DELIBERATELY. The implementation resolves a missing MCM setting with <c>?? true</c>,
-/// matching <see cref="TAOM.Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider"/>'s
-/// "diagnose now" posture. The fallback must always agree with the compiled default in
+/// OFF BY DEFAULT since 2026-08-09. The implementation resolves a missing MCM setting with
+/// <c>?? false</c>, and that fallback must always agree with the compiled default in
 /// <c>TaomSettings.EnableEnlistmentDiagnostics</c>, or MCM-absent behaviour would silently differ
 /// from MCM-present-at-default behaviour. Both are pinned by tests; flip them together or not at all.
+///
+/// MCM-absent is not hypothetical. A settings file written before the enlistment keys existed
+/// carries none of them, so a real player session runs the compiled defaults with no MCM row to
+/// look at. The 2026-08-12 field test was diagnosed against a config last written 2026-07-07 and
+/// produced no TICK/SYNC/PARK/RESTORE line all session for exactly that reason.
 ///
 /// WHEN ON, THE GATED LINES EMIT AT INFO, NOT DEBUG. That is the point of having a toggle at all:
 /// DEBUG is <c>FileLogger</c>'s async queue, and a hard native CTD drops whatever is still queued —
@@ -25,6 +30,6 @@ namespace TAOM.Features.Enlistment;
 /// </summary>
 public interface IEnlistmentDiagnosticsSettingsProvider
 {
-    /// <summary>True when the routine enlistment trace should be written. Default true.</summary>
+    /// <summary>True when the routine enlistment trace should be written. Default false.</summary>
     bool IsEnabled { get; }
 }

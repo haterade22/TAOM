@@ -281,8 +281,17 @@ public class FieldDutyRuntime : IFieldDutyRuntime
             ? SkillValue(heroId, duty.SupportSkills[1])
             : (int?)null;
 
+        // Snapshot the check's inputs BEFORE Grant runs. The outcome reward moves trust (and the
+        // rank ladder can move with it), so reading them back afterwards reports numbers that did
+        // not decide anything: a failure costing 1 trust used to print "trust -1" for a check that
+        // had actually run on trust 0.
+        var rankBonus = (int)record.Rank * RankBonusPerLevel;
+        var rankAtCheck = record.Rank;
+        var trustBonus = SkillCheckService.TrustBonus(record.Trust);
+        var effectiveSkill = SkillCheckService.EffectiveSkill(primary, secondary);
+
         var passed = _skillCheck.Passes(
-            primary, secondary, record.Trust, (int)record.Rank * RankBonusPerLevel, duty.Difficulty);
+            primary, secondary, record.Trust, rankBonus, duty.Difficulty);
 
         record.ClearActiveDuty();
 
@@ -311,10 +320,17 @@ public class FieldDutyRuntime : IFieldDutyRuntime
                 "{=taom_enlist_duty_" + duty.Id + (passed ? "_success" : "_failure") + "}"
                 + (passed ? "It went well." : "It didn't go as planned.")).ToString());
 
+        // SHOW THE WHOLE COMPARISON, not half of it. The old line read
+        // "skill 29 trust 3 rank Soldier vs difficulty 54" on a duty that COMPLETED, which parses
+        // as a contradiction: it quoted the raw skill against the difficulty and silently dropped
+        // both the bonuses and the d51 roll that actually close the gap. Spelling out the
+        // deterministic half plus the roll range lets a reader derive the pass odds from one line,
+        // which is how the unwinnable Recruit checks were found in the 2026-08-12 field log.
         _logger?.LogInfo(
             $"[Enlistment.Duties] duty '{duty.Id}' {(passed ? "completed" : "failed")} — " +
-            $"skill {primary}{(secondary.HasValue ? "/" + secondary.Value : "")} " +
-            $"trust {record.Trust} rank {record.Rank} vs difficulty {duty.Difficulty}");
+            $"check {effectiveSkill + trustBonus + rankBonus} " +
+            $"(skill {effectiveSkill}, trust +{trustBonus}, rank {rankAtCheck} +{rankBonus}) " +
+            $"+ roll 0-{SkillCheckService.RollRange - 1} vs difficulty {duty.Difficulty}");
     }
 
     private int SkillValue(string heroId, string skillId)

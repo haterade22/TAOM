@@ -1118,3 +1118,41 @@ results, and it delays the finding that would actually change the code.
   exception is a violation your own changeset introduced or deepened, which is yours to fix, and even
   then hold the edit until the agents reading that file have reported.
 - **Source:** 2026-08-11 enlistment field-fix session.
+
+### A diagnostics change justified on volume must carry the measurement, in the comment
+
+"This line is noisy" is not a reason to downgrade or delete it. The count is the reason, and if the
+count cannot be produced the change does not go in. TAOM's `FileLogger` writes INFO synchronously
+and leaves DEBUG on an async queue that a hard native CTD discards, so every INFO-to-DEBUG move
+spends real crash-forensic value; the price is only worth paying against a measured volume.
+
+- **Why missed:** `ServiceBattleService`'s join-refusal line was moved to DEBUG under a code comment
+  asserting it "lands after every single fight." The field log that motivated the whole session was
+  open at the time and says 3 occurrences across 5 joins in 39 minutes. Nobody checked, because the
+  frequency was incidental to the change rather than its subject. The deep-review efficiency agent
+  caught it only because its prompt carries a standing order to read `FileLogger.cs` before costing
+  any logging change, a rule added after the 2026-08-03 battle-load incident.
+- **Prevent:** put the measurement inline, with its source: "3 lines across 5 joins in 39 minutes,
+  `taom_debug_2026-08-12_12-50-32.log`". A comment that states a frequency reads as settled fact to
+  the next person in the file, so an unmeasured one is worse than no comment. Note the surface:
+  `evidence-over-claims.md` §C lists "doc / CHANGELOG / commit message" and does not name code
+  comments, which is exactly where this one landed.
+- **Source:** `docs/reviews/rca-enlistment-diagnostics-legibility-2026-08-12.md` finding #1.
+
+### Confirm a negative by exhaustion, not by sampling
+
+"I read the file and found no other assignment" and "no other assignment exists" are different
+claims, and only the second justifies writing an engine invariant into a shipped comment.
+
+- **Why missed:** the claim that `MapEventSide.LeaderParty` is assigned in exactly two places went
+  into a code comment and the CHANGELOG after one file was read. It happened to be true. The
+  compatibility agent established it properly: decompile the whole assembly as a project with
+  `ilspycmd -p`, grep every file for the assignment, then check the setter's accessibility and the
+  absence of `InternalsVisibleTo` to prove no other assembly can reach it either.
+- **Prevent:** for any "this is the only place X happens" claim about engine internals, decompile
+  the whole assembly and grep it, and close the loop on accessibility. It costs one command more
+  than reading a single file. Relatedly, a subagent's decompile finding that is about to become a
+  durable repo artifact needs the same first-hand verification as one relayed to the user;
+  `evidence-over-claims.md` §A.4 reads as though it governs only the latter.
+- **Source:** `docs/reviews/rca-enlistment-diagnostics-legibility-2026-08-12.md` findings #4 and the
+  Agent 2 note.

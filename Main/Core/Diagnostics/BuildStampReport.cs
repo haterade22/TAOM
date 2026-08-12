@@ -19,10 +19,78 @@ namespace TAOM.Core.Diagnostics;
 /// the string. Both modules are produced by the same build, so their stamps should agree to within
 /// seconds; a gap of hours means a hand-copied module.
 /// </summary>
+/// <summary>How a pair of build stamps relates. Three tiers, because two of them are benign.</summary>
+public enum BuildPairVerdict
+{
+    /// <summary>Stamped within minutes: one build.ps1 run produced both.</summary>
+    Paired = 0,
+
+    /// <summary>
+    /// Hours apart on one working day. A developer rebuilt one module after an edit that may not
+    /// have touched code at all. Worth stating, not worth shouting about.
+    /// </summary>
+    IncrementalRebuild = 1,
+
+    /// <summary>Days apart: the real #371 shape, a hand-copied module from an older release.</summary>
+    Mismatched = 2,
+}
+
 public static class BuildStampReport
 {
     /// <summary>Stamps further apart than this almost certainly come from different builds.</summary>
     public static readonly TimeSpan MismatchTolerance = TimeSpan.FromHours(1);
+
+    /// <summary>
+    /// Upper bound on a same-day rebuild. Past this the pair is treated as genuinely stale.
+    ///
+    /// The runtime cannot answer the question that actually matters — "did any CODE change between
+    /// these two commits?" — because that needs git, and the game has no repo. Elapsed time is the
+    /// only proxy available, so the tiers split on the shape each failure actually has: a developer
+    /// rebuilding one module mid-session is hours apart, while the stale module #371 was opened for
+    /// was two weeks apart. Reporting a docs-only rebuild in the same words as a two-week-old DLL
+    /// is what trains a reader to skip the line, and a warning nobody reads protects nothing.
+    /// </summary>
+    public static readonly TimeSpan RebuildTolerance = TimeSpan.FromHours(12);
+
+    /// <summary>Which tier a pair of stamps falls into. Pure and symmetric in its arguments.</summary>
+    public static BuildPairVerdict Classify(DateTime a, DateTime b)
+    {
+        var gap = a > b ? a - b : b - a;
+        if (gap <= MismatchTolerance) return BuildPairVerdict.Paired;
+        return gap <= RebuildTolerance ? BuildPairVerdict.IncrementalRebuild : BuildPairVerdict.Mismatched;
+    }
+
+    /// <summary>
+    /// Renders a verdict as the tail of the startup line. Only <see cref="BuildPairVerdict.Mismatched"/>
+    /// carries the word MISMATCH, which is what makes that word mean something when it appears.
+    /// </summary>
+    public static string DescribeVerdict(BuildPairVerdict verdict, DateTime a, DateTime b)
+    {
+        string gap = (a > b ? a - b : b - a).ToString(@"d\d\ hh\h\ mm\m", CultureInfo.InvariantCulture);
+
+        switch (verdict)
+        {
+            case BuildPairVerdict.Paired:
+                return " (pair OK)";
+
+            case BuildPairVerdict.IncrementalRebuild:
+                return $" (pair rebuilt {gap} apart — one module was rebuilt after the other, " +
+                       "which is normal mid-session and is usually a docs or config commit. " +
+                       "Rebuild both if the preview patches misbehave. Issue #371.)";
+
+            case BuildPairVerdict.Mismatched:
+                return $" MISMATCH — built {gap} apart. These modules were not built together; " +
+                       "update BOTH from the same release or expect the preview patches to fail " +
+                       "(issue #371).";
+
+            // Explicit, so a future fourth tier cannot inherit the loudest wording by accident.
+            // MISMATCH is an escalation signal; letting an unhandled value render as one is how a
+            // warning stops meaning anything.
+            default:
+                return $" (unrecognised build-pair verdict '{verdict}', {gap} apart — pairing not " +
+                       "assessed; teach DescribeVerdict about this tier. Issue #371.)";
+        }
+    }
 
     // "build." not "+build.": the marker must match whether or not a version prefix precedes it,
     // and the suffix separator the build tooling appends varies ('.' or '+') depending on whether
@@ -57,13 +125,6 @@ public static class BuildStampReport
     }
 
     /// <summary>
-    /// True when two build stamps are far enough apart to indicate the modules were not built
-    /// together. Pure.
-    /// </summary>
-    public static bool IsMismatched(DateTime a, DateTime b, TimeSpan tolerance)
-        => (a > b ? a - b : b - a) > tolerance;
-
-    /// <summary>
     /// Reads both assemblies' informational versions and reports. Returns the message so callers can
     /// route it to whatever logger they have; never throws.
     /// </summary>
@@ -75,11 +136,7 @@ public static class BuildStampReport
         string verdict;
         if (TryParseStamp(mainVer, out var mainStamp) && TryParseStamp(depsVer, out var depsStamp))
         {
-            verdict = IsMismatched(mainStamp, depsStamp, MismatchTolerance)
-                ? $" MISMATCH — built {(mainStamp > depsStamp ? mainStamp - depsStamp : depsStamp - mainStamp):d\\d\\ hh\\h\\ mm\\m} apart. " +
-                  "These modules were not built together; update BOTH from the same release or expect " +
-                  "the preview patches to fail (issue #371)."
-                : " (pair OK)";
+            verdict = DescribeVerdict(Classify(mainStamp, depsStamp), mainStamp, depsStamp);
         }
         else
         {

@@ -97,8 +97,15 @@ public class EnlistmentBattleRoleMissionBehavior : MissionLogic
 
         team.SetPlayerRole(false, false);
         _applied = true;
+        // NAME WHAT THE ID ACTUALLY IS. MapEvent.GetLeaderParty returns MapEventSide.LeaderParty,
+        // which the engine sets to whichever party OPENED that side and only reassigns if that
+        // party leaves. So on a side several parties joined it is routinely an allied lord, not the
+        // player's commander and not the mission team's general. Reading it as "the player is on
+        // the wrong team" is a false #443 sighting, which is exactly how the 2026-08-12 field log
+        // was misread. The real #443 signal is ServiceBattleService's "army merge unavailable".
         _logger?.LogInfo(
-            $"[Enlistment] battle command stripped at {site} — enlisted soldier, side led by " +
-            $"'{sideLeader?.Id ?? "unknown"}' (#424)");
+            $"[Enlistment] battle command stripped at {site} — enlisted soldier, player's side " +
+            $"opened by '{sideLeader?.Id ?? "unknown"}' (map-event side initiator, not the mission " +
+            "team leader) (#424)");
     }
 }

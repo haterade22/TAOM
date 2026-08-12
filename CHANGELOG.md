@@ -4,6 +4,96 @@
 
 ## 2026-08-12
 
+### fix(enlistment): three log lines said things they did not mean
+
+A live field session (39 minutes, Recruit through Soldier, oath to promotion) produced zero errors
+and zero exceptions, so this is a legibility pass on the diagnostics, not a behaviour fix. What it
+did produce was three lines that get read wrong, twice by their own author in one sitting.
+
+**The duty result quoted a comparison it was not making.** The old line, verbatim:
+
+```
+[Enlistment.Duties] duty 'scout_route' completed — skill 12 trust 1 rank Soldier vs difficulty 56
+```
+
+That parses as a contradiction: 12 is nowhere near 56, yet the duty passed. The check is `skill + trustBonus + rankBonus + roll(0..50) >= difficulty`, so the line
+was setting one term of a four term sum against the target and dropping the rest, including the
+roll that does most of the work. It now prints the deterministic half with its breakdown and the
+roll range: `check 16 (skill 12, trust +0, rank Soldier +4) + roll 0-50 vs difficulty 56`.
+
+That format is what exposed the problem sitting behind it, and the problem is not where it first
+looked. `FieldDutyReachabilityTests` already pins the floor "every row must be winnable by the
+weakest player its own gates admit", and every row passes it. The floor rests on one assumed
+constant, `UntrainedSkill = 10`, described in the test as roughly a fresh hero's untrained value.
+The field log falsifies the assumption rather than the rows: the gating skill was 0, because a
+Bannerlord hero has 0 in anything they never invested in and Charm on an orc warrior is the ordinary
+case. Recompute at skill 0 and eight of the thirteen rows become impossible rather than hard, from
+`road_patrol` (52, needs 2) up to `deserter_sweep` (64 at Soldier, needs 10). The three
+Veteran-gated rows are unaffected, since `minTrust` 8 to 15 carries them past their difficulty even
+at skill 0, which is the earlier `hideout_strike` fix still holding. Nothing is retuned here:
+whether the constant moves and which rows follow is #438's call. Recorded in the feature doc.
+
+**It also printed a trust that had decided nothing.** `record.Trust` was read after `Grant` applied
+the outcome's trust delta, so a failure costing 1 trust reported `trust -1` for a check that had run
+on trust 0. Every check input is now snapshotted before the reward.
+
+**A working guard read as a #443 sighting.** The old line, verbatim:
+
+```
+[Enlistment] battle command stripped at AfterStart — enlisted soldier, side led by 'lord_G5_2_party_1' (#424)
+```
+
+It names a lord who is not the player's commander, which looks like wrong-team placement. `MapEvent.GetLeaderParty` returns `MapEventSide.LeaderParty`, which
+the engine sets to whichever party opened that side and only reassigns if that party leaves, so an
+allied lord there is ordinary. The line now says "player's side opened by" and names what the id is.
+The actual #443 signal, `ServiceBattleService`'s "army merge unavailable", was absent across all
+five joins in the session.
+
+`commander battle (...) ignored — state is EnlistedBattle` was briefly dropped to DEBUG and is back
+at INFO, with the reasoning now written down so it does not get downgraded again. The downgrade
+rested on a comment asserting the line "lands after every fight"; the field log says 3 occurrences
+across 5 joins in 39 minutes, and nobody had checked. DEBUG is `FileLogger`'s async queue, which a
+hard native CTD discards, and this is the only line recording that a join was refused and which
+trigger asked, which is the evidence #408 turns on. Three synchronous writes an hour is not a cost
+worth that.
+
+`IEnlistmentDiagnosticsSettingsProvider`'s doc still claimed the gate was "ON by default" and
+resolved a missing setting with `?? true`. It has been `?? false` since 2026-08-09. The doc now also
+names the five statements the gate actually covers, because most `[EnlistDiag]` lines are ungated
+and an absent one proves nothing about the toggle either way.
+
+`SkillCheckService` gained its first test file. The formula every duty and camp option resolves on
+had no direct coverage: its only apparent tests came through `FieldDutyRuntimeTests`, which mocks
+`ISkillCheckService`, so no test in the suite ever executed a line of it. The refactor that split
+out `EffectiveSkill` and `TrustBonus` could have inverted a `Math.Max` and stayed green across all
+6,444 tests. Twelve tests now pin the two statics, the assembled check, the inclusive `>=` boundary,
+and the property that a maximum roll cannot close a gap of 51.
+
+Found by the review, not by the author: `docs/reviews/rca-enlistment-diagnostics-legibility-2026-08-12.md`.
+
+Not-tested: the strings as they appear under a live campaign (asserted at the service layer).
+
+### fix(diagnostics): the #371 build-pair warning cried wolf on a docs commit
+
+`BuildStampReport` flagged any two module build stamps more than an hour apart as a hard
+`MISMATCH`, telling the reader the modules were not built together. The 2026-08-12 session tripped
+it at 2h37m, because TAOM was
+rebuilt after two docs commits and TAOM.Dependencies was not. `git diff --name-only 9c532b5e..HEAD`
+touched only CHANGELOG.md, CLAUDE.md, `docs/` and `.claude/rules/`, so no code differed at all.
+
+The runtime cannot answer the question that actually matters (did any code change between these two
+commits?) because that needs git, and the game has no repo. Elapsed time is the only proxy
+available, so the verdict is now tiered on the shape each case really has: within an hour is a
+paired build, up to twelve hours is an incremental rebuild and says so plainly, and past that keeps
+the loud MISMATCH. The stale module #371 was opened for was two weeks old, not two hours. A warning
+that fires on a docs commit is one the reader learns to skip, which protects nothing.
+
+`Mismatched` is an explicit switch case rather than the `default` branch, so a future fourth tier
+cannot inherit the loudest wording by falling through. `IsMismatched` is gone: rewiring `BuildReport`
+onto `Classify` left it with no production caller, and it had survived only because three tests
+still referenced it. Those cases are covered by the `Classify` tests, so the method and its tests
+went together.
+
 ### fix(enlistment): the review pass on the field-test fixes, including a crash
 
 Six findings from the deep review of the changeset below. One of them was a crash the first pass had

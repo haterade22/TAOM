@@ -49,6 +49,12 @@ public class ServiceBattleService : IServiceBattleService
     {
         if (_store.Record.State != EnlistmentState.EnlistedAttached)
         {
+            // INFO, deliberately, and do NOT downgrade this to DEBUG. It was downgraded once on the
+            // assumption that it "lands after every fight"; the 2026-08-12 field log says otherwise,
+            // 3 lines across 5 joins in 39 minutes. DEBUG is FileLogger's async queue, which a hard
+            // native CTD discards, and this is the only line recording that a join was REFUSED and
+            // which trigger asked. That is the evidence #408 turns on, for a cost of three
+            // synchronous writes an hour.
             _logger?.LogInfo($"[Enlistment] commander battle ({trigger}) ignored — state is {_store.Record.State}, not EnlistedAttached");
             return;
         }

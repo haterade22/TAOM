@@ -293,6 +293,73 @@ public class FieldDutyRuntimeTests
         Assert.AreEqual(0, _contentStore.Record.DutyFailures);
     }
 
+    // ---- Result line is readable ----
+
+    /// <summary>
+    /// Captures every INFO line the runtime wrote, so the result-line tests below assert on the
+    /// text a human actually reads in taom_debug_*.log rather than on internal state.
+    /// </summary>
+    private string CapturedResultLine(DutyDefinition duty, bool passes)
+    {
+        var lines = new List<string>();
+        _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(ci => lines.Add(ci.Arg<string>()));
+        StartAndReachShiftEnd(duty, passes);
+        return lines.Find(l => l.Contains("duty '" + duty.Id + "'")
+                               && (l.Contains("completed") || l.Contains("failed")));
+    }
+
+    [TestMethod]
+    public void Resolve_ResultLine_ShowsTheRollRangeSoThePassCeilingIsDerivable()
+    {
+        // The 2026-08-12 field log read `skill 29 ... vs difficulty 54` on a duty that COMPLETED,
+        // because the line printed the raw skill and omitted both the roll and the bonuses — so the
+        // stated comparison was not the one the code performs. A reader must be able to work out
+        // the pass ceiling from the line alone: here skill 0 + trust 0 + Recruit 0 + roll<=50 can
+        // never reach 54, which is a 0% check the old format hid.
+        var duty = Duty(id: "recruitment_errand", difficulty: 54, skills: new[] { "Charm" });
+        _skillXp.GetSkillValue("main_hero", "Charm").Returns(0);
+
+        var line = CapturedResultLine(duty, passes: false);
+
+        Assert.IsNotNull(line, "the duty result must still be logged");
+        StringAssert.Contains(line, "roll 0-" + (SkillCheckService.RollRange - 1),
+            "the roll range is what makes the pass ceiling derivable");
+        StringAssert.Contains(line, "difficulty 54");
+        StringAssert.Contains(line, "check 0",
+            "skill 0 + trust bonus 0 + Recruit bonus 0 is the deterministic half of the check");
+    }
+
+    [TestMethod]
+    public void Resolve_ResultLine_ReportsTheTrustBonusTheCheckUsed_NotThePostRewardTotal()
+    {
+        // The old line read `record.Trust` AFTER Grant applied the outcome's trust delta, so a
+        // failure that cost 1 trust printed `trust -1` while the check had actually run on trust 0.
+        // It reported a number that did not decide anything.
+        _rewards.When(r => r.Grant(Arg.Any<RewardSpec>(), Arg.Any<string>()))
+            .Do(ci => _contentStore.Record.Trust += ci.Arg<RewardSpec>()?.Trust ?? 0);
+        _contentStore.Record.Trust = 0;
+
+        var line = CapturedResultLine(Duty(id: "recruitment_errand", difficulty: 54), passes: false);
+
+        Assert.AreEqual(-1, _contentStore.Record.Trust, "the failure reward must still cost trust");
+        StringAssert.Contains(line, "trust +0",
+            "the check ran on the pre-reward trust of 0; printing the post-reward -1 misreports it");
+    }
+
+    [TestMethod]
+    public void Resolve_ResultLine_CreditsTheRankBonusThatAppliedToTheCheck()
+    {
+        // Rank contributes SkillCheckService.RankBonusPerLevel per level and is invisible in the
+        // old format, so a Soldier's check looked identical to a Recruit's.
+        _contentStore.Record.Rank = ServiceRank.Soldier;
+        _skillXp.GetSkillValue("main_hero", "Scouting").Returns(12);
+
+        var line = CapturedResultLine(Duty(id: "scout_route", difficulty: 56), passes: true);
+
+        StringAssert.Contains(line, "rank Soldier +" + SkillCheckService.RankBonusPerLevel);
+        StringAssert.Contains(line, "check " + (12 + SkillCheckService.RankBonusPerLevel));
+    }
+
     // ---- Structural guard ----
 
     [TestMethod]

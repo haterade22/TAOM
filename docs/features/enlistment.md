@@ -650,6 +650,34 @@ own gates admit, and the difficulty ceiling must **rise** with the rank required
 cannot hand the player easier work than it just unlocked. Both are floors, not balance opinions —
 whether a 6% duty is *good* belongs to whoever plays it; whether a 0% duty is a *bug* does not.
 
+#### The floor rests on `UntrainedSkill = 10`, and the 2026-08-12 field log says 0 (open)
+
+The reachability test does not read the player's skill (it cannot; there is no player at test time).
+It assumes one, `UntrainedSkill = 10`, documented in the test as "roughly a fresh hero's untrained
+value". That constant is the whole floor: every row passes against it, which is why the suite is
+green.
+
+A live session on 2026-08-12 produced the counter-example. The gating skill was **0**, not 10:
+
+```
+[Enlistment.Duties] duty 'recruitment_errand' failed — skill 0 trust -1 rank Recruit vs difficulty 54
+```
+
+A Bannerlord hero has 0 in any skill they never invested in, and Charm on an orc warrior is the
+ordinary case rather than a corner one. Recompute the ceiling with skill 0 and eight of the thirteen
+rows go from hard to impossible: `road_patrol` (52) and `supply_delivery` (52) need 2, `recruitment_errand`
+(54) needs 4, `recon_sweep` (55) needs 5, `scout_route` (56) needs 6, `bandit_hunt` (58) needs 8,
+`mounted_pursuit` (62 at Soldier) needs 8, `deserter_sweep` (64 at Soldier) needs 10. Only `forage`
+(48) and `service_shift` (45) survive, at 6% and 12%.
+
+The three Veteran-gated rows are **not** affected and need no revisit: `trusted_dispatch`,
+`relief_dispatch` and `hideout_strike` all clear their difficulty by 2 to 18 even at skill 0, because
+`minTrust` 8 to 15 carries them. That is the fix recorded above doing its job.
+
+Nothing has been retuned. The decision is whose call the constant is: lowering `UntrainedSkill`
+toward 0 makes the existing floor tell the truth and will redden eight rows, which is the point of a
+floor, but which rows move and how is a balance question. Tracked under #438.
+
 ### The player is NEVER detached by a duty — do not re-add travel
 
 This is the load-bearing property of the design, and it is pinned by
