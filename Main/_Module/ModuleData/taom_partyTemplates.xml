@@ -972,6 +972,28 @@
 	</MBPartyTemplate>
 
 	<!-- ===================== DALE ===================== -->
+	<MBPartyTemplate id="villager_dale_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_dale" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="caravan_template_dale">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.armed_trader_dale" />
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.caravan_guard_dale" />
+			<PartyTemplateStack min_value="1" max_value="5" troop="NPCCharacter.veteran_caravan_guard_dale" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="elite_caravan_template_dale">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.armed_trader_dale" />
+			<PartyTemplateStack min_value="10" max_value="20" troop="NPCCharacter.caravan_guard_dale" />
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.veteran_caravan_guard_dale" />
+		</stacks>
+	</MBPartyTemplate>
+
 	<MBPartyTemplate id="kingdom_hero_party_dale_template">
 		<stacks>
 			<PartyTemplateStack min_value="10" max_value="50" troop="NPCCharacter.dale_recruit" />
