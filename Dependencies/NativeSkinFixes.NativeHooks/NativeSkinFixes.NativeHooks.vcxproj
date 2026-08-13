@@ -73,6 +73,10 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- Write only the PDB's file name into the DLL's debug directory, not the full
+           build path. Without this the linker stamps the absolute path of whatever
+           checkout built it, and that string ships to every player inside the DLL. -->
+      <AdditionalOptions>/PDBALTPATH:%_PDB% %(AdditionalOptions)</AdditionalOptions>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)MinHook\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>MinHook.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -98,6 +102,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- See the Debug config above: keeps the builder's absolute checkout path out of
+           the shipped DLL. The committed TAOM.NativeSkinFixes.dll still carries the old
+           one and only loses it on the next native rebuild. -->
+      <AdditionalOptions>/PDBALTPATH:%_PDB% %(AdditionalOptions)</AdditionalOptions>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)MinHook\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>MinHook.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>

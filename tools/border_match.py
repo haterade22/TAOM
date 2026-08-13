@@ -12,14 +12,16 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-FULL_MAP_PATH = os.environ.get("TAOM_MAP_IMAGE", r"C:\Users\mikew\Downloads\Vista_dot-settlements-with-borders.png")
-REGIONS_DIR = os.environ.get("TAOM_REGIONS_DIR", r"E:\LOTRAOMAssets\Culture Selection")
+# Same two out-of-repo inputs as assemble_faction_map.py, and the same reason for
+# carrying no default: the old ones named one machine's Downloads folder and asset drive.
+FULL_MAP_PATH = os.environ.get("TAOM_MAP_IMAGE", "")
+REGIONS_DIR = os.environ.get("TAOM_REGIONS_DIR", "")
 OUTPUT_DIR = os.environ.get("TAOM_FACTION_MAP_OUTPUT", str(Path(__file__).parent / "factionmap_output"))
 BORDER_THRESHOLD = 25  # pixels darker than this are "border"
 
 # Import region mappings from assemble script
 sys.path.insert(0, str(Path(__file__).parent))
-from assemble_faction_map import FILE_TO_REGION, REGION_META
+from assemble_faction_map import FILE_TO_REGION, REGION_META, require_inputs
 
 
 def extract_alpha_edge(alpha, thickness=2):
@@ -119,6 +121,9 @@ def find_position(border_map, edge_mask, initial_pos=None, search_radius=40):
 
 
 def main():
+    # Pass this module's own values: require_inputs would otherwise validate
+    # assemble_faction_map's copies, which are separate reads of the same variables.
+    require_inputs(FULL_MAP_PATH, REGIONS_DIR)
     print("=" * 70)
     print("BORDER-LINE MATCHING")
     print("=" * 70)

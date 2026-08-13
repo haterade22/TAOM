@@ -123,10 +123,25 @@
 			<_Parameter1>TAOM_Online</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
-	<ItemGroup>
-	  <Content Include="_Module\GUI\.vs\GUI\v17\DocumentLayout.json" />
-	  <Content Include="_Module\GUI\.vs\VSWorkspaceState.json" />
-	</ItemGroup>
+	<!-- Nothing under _Module may be Visual Studio workspace state. ExcludeSourceFilesFromModule
+	     is false above, which switches off Bannerlord.BuildResources' built-in exclusion list, so
+	     CopyModule recurses _Module verbatim and deploys whatever it finds. A .vs folder there
+	     therefore reaches the player's game install, and DocumentLayout.json holds absolute paths
+	     naming this machine's drive layout and whichever module folder the GUI was authored in.
+	     Fail loudly rather than delete: an unexpected file under _Module is the author's to look at.
+	     The release-zip path is closed independently by tools/package_release.py (VS_IDE_STATE). -->
+	<!-- Conditioned on what CopyModule itself checks, not on DisableModuleCopy (which does
+	     NOT gate CopyModule). MSBuild runs a BeforeTargets dependency before evaluating the
+	     host target's own Condition, so without this the guard would fail the agent-standard
+	     `-p:DisableModuleCopy=true -p:ModuleId=` build over a deployment that cannot happen. -->
+	<Target Name="FailOnIdeStateInModule" BeforeTargets="PostBuildCopyToModules"
+	        Condition="'$(ModuleId)' != '' AND Exists('$(GameFolder)')">
+		<ItemGroup>
+			<_TaomIdeState Include="$(ProjectDir)_Module\**\.vs\**\*" />
+		</ItemGroup>
+		<Error Condition="'@(_TaomIdeState)' != ''"
+		       Text="IDE workspace state under _Module would be deployed to the game install: @(_TaomIdeState, '%3B '). Delete the .vs folder under Main/_Module/ (and from &lt;game&gt;\Modules\$(ModuleId)\, deployment is additive)." />
+	</Target>
 
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
 		<!-- Create directories if they don't exist -->

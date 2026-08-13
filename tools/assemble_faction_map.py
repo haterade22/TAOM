@@ -27,9 +27,54 @@ from PIL import Image
 # CONFIGURATION
 # ============================================================================
 
-FULL_MAP_PATH = os.environ.get("TAOM_MAP_IMAGE", r"C:\Users\mikew\Downloads\Vista_dot-settlements-with-borders.png")
-REGIONS_DIR = os.environ.get("TAOM_REGIONS_DIR", r"E:\LOTRAOMAssets\Culture Selection")
+# The two source inputs live outside the repo AND outside the game install, so unlike
+# the Bannerlord root there is no default worth carrying: the previous ones named one
+# machine's Downloads folder and one machine's asset drive, which is wrong on every
+# other machine and silently produces an empty run rather than an error.
+FULL_MAP_PATH = os.environ.get("TAOM_MAP_IMAGE", "")
+REGIONS_DIR = os.environ.get("TAOM_REGIONS_DIR", "")
 OUTPUT_DIR = os.environ.get("TAOM_FACTION_MAP_OUTPUT", str(Path(__file__).parent / "factionmap_output"))
+
+
+def require_inputs(full_map_path=None, regions_dir=None):
+    """Check both source inputs resolve, or exit 2 naming the variable to set.
+
+    Called from main() rather than at import, because border_match.py imports this
+    module for its region tables and must not die on the import. Same contract as
+    `_gamedir.ensure_exists` (which owns the install-root case): a bad root is the
+    caller's to fix, so say so instead of reporting a clean-looking empty result
+    (`.claude/rules/environment-failures.md`).
+
+    The values are parameters rather than a closure over this module's globals, because
+    border_match.py reads its own copies of the same two variables and consumes THOSE.
+    They agree today only because both are the same `os.environ.get` call; the moment
+    either module grows a different default this would silently validate the wrong pair.
+
+    The PNG must be a file and the regions path a directory. Checking mere existence
+    lets a file slip through as REGIONS_DIR and die later inside os.listdir with a
+    NotADirectoryError that names no variable.
+    """
+    checks = (
+        ("TAOM_MAP_IMAGE", FULL_MAP_PATH if full_map_path is None else full_map_path,
+         "the full campaign-map PNG", "is_file"),
+        ("TAOM_REGIONS_DIR", REGIONS_DIR if regions_dir is None else regions_dir,
+         "the folder of cropped culture/region PNGs", "is_dir"),
+    )
+    for var, value, what, kind in checks:
+        if not value.strip():
+            print(f"ERROR: ${var} is not set. It must name {what}.", file=sys.stderr)
+            print("       See tools/.env.example.", file=sys.stderr)
+            raise SystemExit(2)
+        path = Path(value)
+        if not path.exists():
+            print(f"ERROR: ${var} names {value}, which does not exist.", file=sys.stderr)
+            raise SystemExit(2)
+        if kind == "is_file" and not path.is_file():
+            print(f"ERROR: ${var} names {value}, which is not a file.", file=sys.stderr)
+            raise SystemExit(2)
+        if kind == "is_dir" and not path.is_dir():
+            print(f"ERROR: ${var} names {value}, which is not a directory.", file=sys.stderr)
+            raise SystemExit(2)
 
 # Mapping: user filename (without .png) -> region_id
 FILE_TO_REGION = {
@@ -239,6 +284,7 @@ def default_color_for_side(side):
 
 
 def main():
+    require_inputs()
     print("=" * 70)
     print("FACTION MAP ASSEMBLER")
     print("=" * 70)

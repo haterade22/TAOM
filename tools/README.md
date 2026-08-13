@@ -200,8 +200,8 @@ which it should be re-run.
 
 | Script | Purpose | CLI Flags |
 |--------|---------|-----------|
-| `assemble_faction_map.py` | Assemble FactionMap from cropped region PNGs via template matching; outputs regions.json, factions.json, polygon_widgets.xml | None (hardcoded paths) |
-| `border_match.py` | Position regions by matching alpha outlines to map border lines (dependency of assemble_faction_map) | None |
+| `assemble_faction_map.py` | Assemble FactionMap from cropped region PNGs via template matching; outputs regions.json, factions.json, polygon_widgets.xml | env: `$TAOM_MAP_IMAGE` + `$TAOM_REGIONS_DIR`, both REQUIRED (exit 2 if unset or missing) |
+| `border_match.py` | Position regions by matching alpha outlines to map border lines (dependency of assemble_faction_map) | same two env vars, same exit-2 contract |
 | `process_faction_map.py` | Process full-canvas region PNGs into deploy-ready FactionMap assets | `--input`, `--output`, `--checklist`, `--dry-run` |
 
 ## Settlements

@@ -1,4 +1,16 @@
-$xml = [xml](Get-Content 'c:\Users\mikew\source\repos\TAOM\Main\_Module\ModuleData\settlements.xml')
+# NOTE: this reads the REPO copy of settlements.xml, which CLAUDE.md flags as a stale
+# shadow -- the file the game loads is <game>\Modules\TAOM_Map\ModuleData\settlements.xml.
+# Pass -SettlementsXml to point at the live one.
+param(
+    [string]$SettlementsXml = (Join-Path (Split-Path -Parent $PSScriptRoot) 'Main\_Module\ModuleData\settlements.xml')
+)
+
+if (-not (Test-Path $SettlementsXml)) {
+    Write-Error "settlements.xml not found at $SettlementsXml. Pass -SettlementsXml with the path you mean."
+    exit 2
+}
+
+$xml = [xml](Get-Content $SettlementsXml)
 $settlements = $xml.Settlements.Settlement
 
 $towns = @(); $castles = @(); $villages = @(); $castleVillages = @(); $hideouts = @(); $other = @()

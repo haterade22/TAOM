@@ -110,6 +110,32 @@ class TestConfidentExclusions(unittest.TestCase):
         self.assertEqual(act("SubModule.xml"), pr.COPY)
         self.assertEqual(act("THIRD-PARTY-LICENSES.txt"), pr.COPY)
 
+    def test_visual_studio_workspace_state_is_excluded(self):
+        # `.vs` sits under GUI/, which is a KNOWN_TOP_DIR, so the include-list would
+        # otherwise wave it straight through -- and it did, for every release built on
+        # a machine that had opened the GUI folder in Visual Studio. DocumentLayout.json
+        # holds absolute paths naming the maintainer's drive and the module folder the
+        # GUI was authored in. Match on the path part, not the file name: the folder
+        # nests (`GUI/.vs/GUI/v17/...`) and the file names are not distinctive.
+        self.assertEqual(act("GUI/.vs/VSWorkspaceState.json"), pr.EXCLUDE)
+        self.assertEqual(act("GUI/.vs/GUI/v17/DocumentLayout.json"), pr.EXCLUDE)
+        self.assertEqual(rule("GUI/.vs/GUI/v17/DocumentLayout.json"), "VS_IDE_STATE")
+        # A real GUI asset next door is untouched.
+        self.assertEqual(act("GUI/TAOMSpriteData.xml"), pr.COPY)
+        # ".vs" must be a whole path part, not a substring of a legitimate name.
+        self.assertEqual(act("GUI/Brushes/.vsomething_else.xml"), pr.COPY)
+
+    def test_modding_kit_project_file_still_ships(self):
+        # Regression guard, and the reason is counter-intuitive enough to be worth the
+        # test: project.mbproj reads as an editor artifact but the SHIPPING runtime calls
+        # XmlResource.GetMbprojxmls() for every module and registers its <file> nodes as
+        # native resources. That loader is disjoint from SubModule.xml's <XmlName> glob,
+        # so TAOM's voice definitions + module_sounds.xml and LOTRLOME_Armory's monsters
+        # + action sets are registered HERE AND NOWHERE ELSE. Excluding it produces a
+        # silent-audio, missing-monster release that every test and validator calls clean.
+        self.assertEqual(act("ModuleData/project.mbproj"), pr.COPY)
+        self.assertEqual(act("ModuleData/characters/lords.xml"), pr.COPY)
+
 
 # --------------------------------------------------------------------------- #
 # Candidates -- copied unless explicitly named                                 #

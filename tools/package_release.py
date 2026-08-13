@@ -122,6 +122,24 @@ def classify(rel: str, *, keep_rdc: bool = False, exclude_candidates=()) -> Deci
         return Decision(EXCLUDE, "NATIVE_DEBUG", "debug/link artifact")
     if len(parts) == 1 and name in RUNTIME_STATE_FILES:
         return Decision(EXCLUDE, "RUNTIME_STATE", "generated at runtime on a dev machine")
+    # NOTE: project.mbproj must NEVER be excluded. It looks like an editor-only file and
+    # is not, which is exactly the trap: the SHIPPING runtime calls
+    # XmlResource.GetMbprojxmls(module.Id) for every module (TaleWorlds.MountAndBlade,
+    # Module.LoadSubModules), and that reads ModuleData/project.mbproj's <file> nodes and
+    # registers them as native resources. It is a DISJOINT loader from SubModule.xml's
+    # <XmlName> glob, so a resource registered there appears nowhere else. TAOM's mbproj
+    # is the only registration for the four voice-definition XMLs and module_sounds.xml;
+    # LOTRLOME_Armory's is the only registration for its monsters and action sets, whose
+    # absence is a documented native spawn CTD. Dropping it from the zip breaks a release
+    # while leaving the repo and every test green.
+    #
+    # Visual Studio workspace state. It lands under a KNOWN_TOP_DIR (GUI/), so the
+    # include-list below waves it straight through, and its contents are absolute paths
+    # naming the maintainer's drive layout and whichever module folder the GUI was
+    # authored in. Deployment is additive, so a stale one survives long after the repo
+    # copy is gone -- exclude by path part rather than by name.
+    if ".vs" in parts:
+        return Decision(EXCLUDE, "VS_IDE_STATE", "IDE workspace state; leaks absolute dev paths")
 
     # --- candidates: ship unless explicitly named ------------------------------
     if top == "EmAssetPackages":

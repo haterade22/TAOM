@@ -2,7 +2,7 @@
 # Companion to tools/read_anim_keyframes_tpac.ps1 (which dumps the JSON). Bypasses TpacTool's
 # crashing assimp FBX exporter: read keyframes via TpacTool.Lib -> JSON -> rebuild here -> retarget
 # onto the troll ARP rig with arp_retarget.py. Re-exec'd each Blender-MCP call:
-#   exec(open(r'C:\Users\mikew\source\repos\TAOM\tools\blender\rebuild_anim_from_json.py').read(), globals())
+#   exec(open(r'<taom-repo>\tools\blender\rebuild_anim_from_json.py').read(), globals())
 #
 # KEY CALIBRATION (verified 2026-06-14): the JSON per-bone LOCAL rotation quaternion (relative to
 # parent, Bannerlord space) equals the Blender armature-space rotation for the root with NO axis

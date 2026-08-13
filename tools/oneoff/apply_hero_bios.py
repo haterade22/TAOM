@@ -13,7 +13,10 @@ import re
 import sys
 from pathlib import Path
 
-HEROES_XML = Path(r"c:\Users\mikew\source\repos\TAOM\Main\_Module\ModuleData\characters\heroes.xml")
+# Derived from this file's own location, so it follows the repo. The previous literal
+# was an absolute path to a checkout that no longer exists, which made the script a
+# guaranteed failure as well as a leak of the author's folder layout.
+HEROES_XML = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData" / "characters" / "heroes.xml"
 
 # (hero_id, key, prose)
 # Key convention: aom_lord_<id>_bio
