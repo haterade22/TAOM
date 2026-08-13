@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 
 namespace TAOM.Features.DreadAura.Hooks;
 
 /// <summary>
 /// Entry point for the Aura of Unnatural Dread: gate the mission, schedule the pulse, stand down on
-/// failure. Tracking is <see cref="DreadSourceTracker"/>, executing a pulse <see cref="DreadPulseRunner"/>,
-/// scheduling <see cref="DreadPulseScheduler"/>, every decision <see cref="IDreadAuraService"/>.
-/// Design and balance: <c>docs/features/dread-aura.md</c>.
-///
-/// Inherits <see cref="MissionLogic"/>, NOT <see cref="MissionBehavior"/>: MissionBehavior plus
-/// <c>BehaviorType =&gt; Logic</c> NREs every tick
-/// (<c>docs/reviews/rca-looter-battle-nre-2026-05-24.md</c>; pinned by DreadAuraBindingTests).
+/// failure. Tracking is <see cref="DreadSourceTracker"/>, the pulse <see cref="DreadPulseRunner"/>,
+/// scheduling <see cref="DreadPulseScheduler"/>, decisions <see cref="IDreadAuraService"/>. Design
+/// and balance: <c>docs/features/dread-aura.md</c>. Inherits <see cref="MissionLogic"/>, NOT
+/// <see cref="MissionBehavior"/>: MissionBehavior plus <c>BehaviorType =&gt; Logic</c> NREs every
+/// tick (<c>rca-looter-battle-nre-2026-05-24.md</c>; pinned by DreadAuraBindingTests).
 /// </summary>
 public sealed class DreadAuraMissionLogic : MissionLogic
 {
-    /// <summary>Agents are still spawning early on; a source registered before its team is
-    /// assigned would pulse against a null team.</summary>
+    /// <summary>Agents still spawning; a source registered pre-team pulses against a null team.</summary>
     private const float WarmupSeconds = 1f;
 
     private readonly IDreadAuraService _service;
@@ -33,6 +31,7 @@ public sealed class DreadAuraMissionLogic : MissionLogic
     private bool _scanned;
     private bool _disabledForThisMission;
     private float _timeSinceStart;
+
     public DreadAuraMissionLogic()
     {
         _service = IoC.Resolve<IDreadAuraService>();
@@ -46,15 +45,18 @@ public sealed class DreadAuraMissionLogic : MissionLogic
     {
         base.OnMissionTick(dt);
 
-        // Unconditional, BEFORE any enabled gate: behind IsEnabled the warm-up clock would freeze
-        // while the feature is off, stranding it in warm-up when toggled back on mid-battle.
-        _timeSinceStart += dt;
+        // Unconditional, BEFORE any enabled gate, or the clock freezes while the feature is off and
+        // strands it in warm-up when toggled back on. Finiteness checked HERE because NaN absorbs: one NaN dt poisons the accumulator for
+        // the whole mission and `NaN < WarmupSeconds` is false, silently un-gating the warm-up
+        // (csharp-architecture.md "Engine-Float Decision Gates"; Codex 2026-08-13).
+        if (FiniteFloatValidator.IsFinite(dt) && dt > 0f)
+            _timeSinceStart += dt;
 
         if (_disabledForThisMission)
             return;
 
-        // Patch37_CrashReport turns an OnMissionTick throw into a crash report, so an unguarded
-        // per-frame exception becomes tens of thousands of them. Fail once, then stand down.
+        // Patch37_CrashReport turns a throw here into a crash report, so an unguarded per-frame
+        // exception becomes tens of thousands of them. Fail once, then stand down.
         try
         {
             Tick();
@@ -67,14 +69,15 @@ public sealed class DreadAuraMissionLogic : MissionLogic
 
     private void Tick()
     {
-        if (_timeSinceStart < WarmupSeconds || !_service.IsEnabled)
+        // Positive requirement, not `< WarmupSeconds`: an inverted early-exit admits NaN.
+        if (!(_timeSinceStart >= WarmupSeconds) || !_service.IsEnabled)
             return;
 
         var mission = Mission.Current;
         if (mission == null)
             return;
 
-        // Re-read every tick, NEVER cached at init: MissionTeamAIType is assigned in
+        // Re-read every tick, NEVER cached: MissionTeamAIType is assigned in
         // MissionCombatantsLogic.EarlyStart, after every OnBehaviorInitialize.
         if (!DreadMissionGate.IsEligible(mission))
             return;
@@ -86,7 +89,6 @@ public sealed class DreadAuraMissionLogic : MissionLogic
             if (_tracker.Count > 0)
                 _logger.LogInfo($"[DreadAura] {_tracker.Count} dread source(s) on the field");
         }
-
         _tracker.Prune();
         if (_tracker.Count == 0)
             return;
@@ -103,19 +105,17 @@ public sealed class DreadAuraMissionLogic : MissionLogic
             _service.MaxSourcesPerFrame,
             _dueBuffer);
 
-        var affectsPlayerTroops = _settings.AffectsPlayerTroops;
+        var affects = _settings.AffectsPlayerTroops;
         var playerTeam = mission.PlayerTeam;
-
         foreach (var due in _dueBuffer)
-            _pulse.Run(mission, _tracker.Sources[due.Index], due.Elapsed, playerTeam, affectsPlayerTroops);
+            _pulse.Run(mission, _tracker.Sources[due.Index], due.Elapsed, playerTeam, affects);
     }
 
     public override void OnAgentBuild(Agent agent, Banner banner)
     {
         base.OnAgentBuild(agent, banner);
 
-        // Before the initial scan the scan itself picks this agent up; registering here too
-        // would double-add it.
+        // Before the initial scan, that scan picks this agent up; registering here double-adds.
         if (_disabledForThisMission || !_scanned)
             return;
 

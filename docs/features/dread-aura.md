@@ -149,6 +149,12 @@ Allies are never candidates: `GetNearbyEnemyAgents` filters them out native-side
 - `!GameNetwork.IsSessionActive` excludes multiplayer
 - `CombatType == Combat` excludes arenas and tournaments (`ArenaCombat`) and conversations and
   town walkarounds (`NoCombat`)
+- `Mode == MissionMode.Battle` excludes the pre-battle **Deployment** phase. This one is not
+  redundant with the team-AI check below: `MissionTeamAIType` is assigned *before* deployment
+  (`DeploymentHandler.cs:41` sets `Mode = Deployment`; `MissionCombatantsLogic.cs:225` flips it to
+  `Battle` afterwards), so without this clause a wraith drains morale while the player is still
+  positioning formations, and a player who lingers there starts the battle already down. Caught by
+  Codex 2026-08-13; same gate `BannerBearerAssignmentMissionLogic` uses.
 - `IsFieldBattle || IsSiegeBattle || IsSallyOutBattle`
 
 `MissionTeamAITypeEnum` is `{ NoTeamAI, FieldBattle, Siege, SallyOut, NavalBattle, NavalRaid }`, so
@@ -307,6 +313,37 @@ The panic-before-regeneration ordering is load-bearing and easy to get backwards
 +0.4/sec lift a broken agent back over the threshold every frame so nothing ever routs. That is a
 real bug this feature's own test simulation shipped for one iteration before it was caught.
 
+## Routed troops leave the roster permanently
+
+This is the consequence a player most needs to understand, and it is inherited from vanilla rather
+than invented here: **a routed troop is not a scared troop, it is a lost one.**
+
+`BattleEndLogic.OnEndMission` calls `IAgentOriginBase.SetRouted` on every active agent whose morale
+is below 0.01. For ordinary campaign troops that reaches `MapEventParty.OnTroopRouted:316`, which
+does exactly this:
+
+```csharp
+Party.MemberRoster.AddToCounts(_roster[troopSeed].Troop, -1);   // gone from the party
+RoutedInBattle.AddToCounts(_roster[troopSeed].Troop, 1);        // feeds DesertersCampaignBehavior
+```
+
+So driving a formation to rout removes those troops from their party's roster and seeds deserter
+parties on the map. Three carve-outs, all verified in the same method:
+
+| Case | Outcome |
+|---|---|
+| Heroes and companions | **Exempt.** Line 324 wounds them instead of removing them. |
+| Siege defenders | **Exempt.** Line 683 requires `MissionSide == Attacker` for a siege. |
+| `PartyAgentOrigin` (ungrouped) | **Exempt.** Its `SetRouted` is an empty method. |
+
+Two consequences worth being deliberate about:
+
+- **`DreadAuraAffectsPlayerTroops` defaults to true**, so an enemy wraith can permanently cost the
+  player troops. That is the intended fantasy, but it is a real cost and the MCM hint says so.
+- Raising `profile.moraleFloor` above `0.01` makes the aura incapable of routing anything on its
+  own: it would soften troops and leave the kill to combat. The shipped default of `0` deliberately
+  allows the aura to finish the job.
+
 ## Known Limitations
 
 - **Auto-resolve does not see the aura.** `TaomCombatSimulationModel` and
@@ -316,6 +353,17 @@ real bug this feature's own test simulation shipped for one iteration before it 
 - **No campaign-map effect.** Deferred, see below.
 - **No visual effect.** The audible cue is `SkinVoiceManager.VoiceType.Fear`, which falls silent
   rather than erroring for a race with no clip bound.
+- **The morale write races the engine's regeneration, and that is accepted.**
+  `CommonAIComponent.OnTickParallel` regenerates `_morale` on a parallel job while the pulse writes
+  it from `OnMissionTick` on the main thread. Neither side synchronises, so one side's contribution
+  can be lost. A 32-bit float store is atomic on x64, so there is no tearing, and the drain
+  integrates from `LastPulseTime` rather than from the previous morale value, so a lost update does
+  not accumulate error: the next pulse reads whatever the current value is and carries on. Vanilla's
+  own `AgentMoraleInteractionLogic` writes the same field the same way from a main-thread event.
+  Buffering the drains to a post-parallel sync point was considered and rejected: the win is a rare
+  sub-0.01 perturbation, the cost is a new accumulation buffer plus a guess about which callback is
+  reliably post-parallel, and guessing that wrong is worse than the race. Flagged by Codex
+  2026-08-13 as RACE-REAL; recorded here rather than fixed.
 
 ## Out of scope
 

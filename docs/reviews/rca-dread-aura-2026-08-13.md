@@ -107,3 +107,30 @@ alone.** The lean prompt is committed and ready to re-run once the Codex CLI is 
 questions it asks (thread safety against `OnTickParallel`, `SetRouted` bleed into the post-battle
 roster, mission-type coverage, and the balance judgement) are the ones still owed an independent
 opinion.
+
+## Codex pass, second attempt: it ran, and it found three things
+
+After updating codex-cli from 0.128.0 to 0.147.0 (the `unknown variant 'max'` decode failure was a
+CLI-behind-server mismatch) and splitting the review into five single-question sections with stderr
+redirected away from the output, all five completed. Outputs were 529 to 781 bytes each, against
+11 MB of error log from the first attempt.
+
+| # | Section | Verdict | Disposition |
+|---|---|---|---|
+| C1 | Thread safety vs `OnTickParallel` | RACE-REAL | **Accepted, not fixed.** Documented in the feature doc. Float stores are atomic on x64 so there is no tearing; the drain integrates from `LastPulseTime` rather than from the previous morale, so a lost update does not accumulate; vanilla writes the same field the same way. The proposed fix needs a "confirmed post-parallel sync point" that nothing identifies, and guessing it wrong is worse than the race. |
+| C2 | `SetRouted` campaign bleed | ROSTER-AFFECTING | **Confirmed by reading the engine, documented.** `MapEventParty.OnTroopRouted:320` removes the troop from `Party.MemberRoster` and feeds `DesertersCampaignBehavior`. Heroes, siege defenders and ungrouped origins are exempt. Not a defect in this feature, but a consequence players must be told about, and the feature doc now leads with it. |
+| C3 | Mission-type gate | GATE-WRONG | **Fixed.** `Mode == MissionMode.Battle` added. `MissionTeamAIType` is set before deployment, so the allowlist was already true while the player positioned formations. |
+| C4 | Adversarial bug hunt | 1 x P2 | **Fixed.** A NaN `dt` poisoned `_timeSinceStart` permanently, and `NaN < WarmupSeconds` is false, so the warm-up gate silently stopped gating. Fourth instance of the NaN-polarity class in this codebase. |
+| C5 | Balance | TABLE-CORRECT / OVERPOWERED | Arithmetic independently reproduced, including the elven hero never routing. The OVERPOWERED verdict is a tuning call for the owner, not a defect; `profile.moraleFloor` is the lever and the control battle is the arbiter. |
+
+**C4 is the finding that should sting.** The internal Data Flow agent ran an explicit NaN-polarity
+check over every engine-sourced float and enumerated twelve gates in `ComputeDrain` alone, but it
+scoped that check to the pure service and the scheduler. It never looked at the entry point, where
+`_timeSinceStart += dt` sits above an inverted `<` comparison. The rule the codebase already has
+(`csharp-architecture.md`, "Engine-Float Decision Gates") says to check *every* float-to-decision
+path in a touched method. The agent checked every path in the methods it considered in scope, and
+the scope was wrong.
+
+**Preventive action:** the deep-review Data Flow prompt's NaN check should name the ENTRY POINT
+tick methods explicitly, not just services and pure helpers. `dt` is the most obviously
+engine-sourced float in any `MissionBehavior`, and it was the one float nobody examined.

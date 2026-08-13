@@ -1,4 +1,5 @@
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.DreadAura.Hooks;
@@ -38,6 +39,14 @@ public static class DreadMissionGate
 
         // ArenaCombat covers arenas and tournaments; NoCombat covers conversations and walkarounds.
         if (mission.CombatType != Mission.MissionCombatType.Combat)
+            return false;
+
+        // MissionTeamAIType is assigned BEFORE the deployment phase, so the allowlist below is
+        // already true while the player is still positioning formations (DeploymentHandler.cs:41
+        // sets Mode = Deployment; MissionCombatantsLogic.cs:225 flips it to Battle afterwards).
+        // Without this clause a wraith drains morale during the order phase, and a player who
+        // lingers there starts the battle with pre-drained troops. Same gate BannerBearers uses.
+        if (mission.Mode != MissionMode.Battle)
             return false;
 
         // MissionTeamAITypeEnum is { NoTeamAI, FieldBattle, Siege, SallyOut, NavalBattle, NavalRaid }

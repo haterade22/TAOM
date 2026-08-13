@@ -902,7 +902,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Aura of Dread")]
     [SettingPropertyBool("Affects Your Own Troops", Order = 3,
-        HintText = "When off, troops on your team are immune and dread only touches the AI. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
+        HintText = "When off, troops on your team are immune and dread only touches the AI. Leave it on and an enemy wraith can rout your soldiers, and routed troops are LOST from your party, not merely shaken. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
     public bool DreadAuraAffectsPlayerTroops { get; set; } = true;
 
     // --- Map UI / Settlement Nameplates ---
