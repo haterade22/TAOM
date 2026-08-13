@@ -4,6 +4,14 @@
 
 ## 2026-08-13
 
+### chore(release): TAOM v2.0.22
+
+`Main/_Module/SubModule.xml` goes to `v2.0.22`, carrying the two Codex fixes below. Cut as a new
+version rather than re-tagging `v2.0.21`, because a pushed tag is never moved: anyone who already
+fetched it keeps the old target silently, and the version string is the only key a crash report
+gives us. `TAOM.Dependencies` stays at `v2.0.6`, pairing unchanged. Note:
+[`docs/releases/v2.0.22-discord.md`](docs/releases/v2.0.22-discord.md).
+
 ### chore(release): TAOM v2.0.21
 
 `Main/_Module/SubModule.xml` goes to `v2.0.21`, tagged and pushed with the commit. Player-facing
