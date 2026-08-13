@@ -87,6 +87,36 @@ if [[ -n "${STASH_COUNT:-}" && "${STASH_COUNT:-0}" -gt 0 ]]; then
   echo "  Prove redundant before dropping: git show stash@{0}:<f> emits LF, so diff --strip-trailing-cr."
 fi
 
+# Untagged module version. SubModule.xml's <Version> is what IdentityCollector stamps into every
+# crash bundle as TaomVersion, so an untagged version cannot be resolved back to a commit -- that is
+# how v2.0.11/.12/.14/.16/.17 became permanently unresolvable, with two crash reports citing v2.0.12.
+#
+# check-version-tagged.sh (Stop) already catches the bump itself, but it mutes per-VERSION via an
+# on-disk marker, so it warns exactly once and then stays silent across every later session. On
+# 2026-08-09 it fired 60s after the v2.0.20 bump, wrote .claude/logs/.version-tag-reminded, and went
+# quiet for 33 commits while the tag was never created. Same invisible-across-sessions shape as the
+# unpopped auto-stash above, so it gets the same treatment: re-asserted every startup, never muted.
+#
+# Read-only, no network (git ls-remote at startup would be slow and fail offline), fail-open. The
+# push half is named in the message instead, because `git push` does NOT push tags.
+SUBMODULE_XML="Main/_Module/SubModule.xml"
+if [[ -f "$SUBMODULE_XML" ]]; then
+  # Anchored on `<Version value=` so DependedModuleMetadata's version="..." cannot match.
+  # Same expression as check-version-tagged.sh, so the two can never disagree about the version.
+  MODULE_VERSION=$(grep -o '<Version value="[^"]*"' "$SUBMODULE_XML" 2>/dev/null \
+                   | head -1 | sed 's/.*"\(.*\)"/\1/')
+  if [[ -z "$MODULE_VERSION" ]]; then
+    # Fail LOUD, not silent: no output here would read as "version is tagged".
+    echo ""
+    echo "NOTE: could not read <Version> from $SUBMODULE_XML -- release tagging is UNCHECKED this session, not clean."
+  elif ! git rev-parse -q --verify "refs/tags/${MODULE_VERSION}" >/dev/null 2>&1; then
+    echo ""
+    echo "Release tag: module version ${MODULE_VERSION} has NO git tag. A version with no tag cannot be"
+    echo "  traced from a player's crash report. Tag the commit that actually ships, then push the tag"
+    echo "  separately (git push origin ${MODULE_VERSION}); /release runs the full sequence."
+  fi
+fi
+
 # Last 5 commits
 echo ""
 echo "Recent commits:"

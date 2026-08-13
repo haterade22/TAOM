@@ -4,6 +4,76 @@
 
 ## 2026-08-12
 
+### fix(harness): the untagged-version warning fired once and then muted itself for three days
+
+`v2.0.20` has been in `SubModule.xml` since 2026-08-09 with no git tag, which is the condition that
+turned five versions players actually ran into permanently unresolvable phantoms. Three guardrails
+exist for exactly this and none of them stopped it, so the interesting part is where each one went.
+
+The rule is in CLAUDE.md ("Release tags"), and `/release`'s Phase 1 pre-flight checks the current
+version is tagged before bumping past it. Neither applied, because the bump was not a release: commit
+`094ff0a8` is a bare one-line `fix(module)` touching only `SubModule.xml`, so the sequence that
+tags was never entered. **The rule actually broken is "the version changes only in a release
+commit"; the missing tag is downstream of that.**
+
+`check-version-tagged.sh` did fire, correctly, 60 seconds later. `.claude/logs/.version-tag-reminded`
+is stamped `Aug 9 14:36` against a `14:35:52` commit and holds `v2.0.20`. Then it self-muted. The
+marker keys on the VERSION and lives on disk, so one stderr line was the entire budget: 33 commits
+and every session since, including the one that found this, got silence. That is the failure shape
+`hook-authoring.md` records on 2026-08-10 (a detect-and-warn hook that prints nothing reads as "no
+finding", not "already said"), one day after this hook proved it.
+
+The fix is not another rule. `session-start.sh` now re-asserts the check every startup, alongside the
+stash count, which was promoted there for the identical reason: an unpopped auto-stash was invisible
+across session boundaries and `git status` never mentioned it. An untagged version has the same
+property. The Stop hook keeps its immediate catch; startup is the surface that no longer forgets.
+
+Fails loud rather than silent when `<Version>` is unreadable ("UNCHECKED this session, not clean"),
+uses the same anchored `<Version value=` expression as the Stop hook so the two cannot disagree, and
+makes no network call, since `git ls-remote` at startup is slow and fails offline. The push half is
+named in the message text instead, because `git push` does not push tags. All three paths exercised:
+untagged warns, tagged is silent, unreadable says so. Exit 0 throughout.
+
+Also noted: `v2.0.19` exists in no commit and no tag on any branch, so the numbering skipped it
+outright. Consistent with the phantom-version pattern rather than a separate defect.
+
+Not-tested: nothing in the game. Hook behaviour verified by running it against three constructed
+repo states.
+
+### docs(release): the player-facing post for v2.0.20
+
+`docs/releases/v2.0.20-discord.md`. Players last got a written update at **v2.0.15** (tagged
+2026-07-30); `SubModule.xml` has since moved to v2.0.20 across 249 commits with nothing covering the
+gap.
+
+The boundary is the **v2.0.15 tag**, not "the last two weeks", because the v2.0.15 post already
+announced the Gondor noble armour, banner bearers, the 73 troop skill corrections, the Erebor
+equipment sweep, War of the Ring Day 30 / Day 44, the Polish first pass and the Riding Caparison
+fix. All of that landed on 2026-07-30 and a date-based window would have re-announced it.
+`enlistment-discord.md` is condensed to two sections rather than repeated.
+
+**Four of its numbers were stale and were re-derived from shipped config rather than copied.** The
+merit threshold is **32**, not the 8 that post's prose claims (raised 2026-08-09; that post's own
+quoted config block already disagreed with its prose, so neither was trustworthy). Service kits are
+**84**, not 64: 21 sets at four ranks, up from 16 sets because Blue Craig and Lindon each gained
+rosters on 2026-08-10. Duties held at 27 (13 field, 11 in-camp, 3 incidents) and wages at 5/8/14/22,
+both confirmed rather than assumed. A fifth figure, the "22 cultures" the localization entry cites
+against 16 `is_main_culture` entries, is written qualitatively as "every culture" rather than
+guessed at, per `evidence-over-claims.md` §C.
+
+`grep -c "<EquipmentRoster"` returns 85 against 84 real rosters: the 85th match is the
+`<EquipmentRosters>` container. Worth knowing before that count gets quoted somewhere load-bearing.
+
+Unlike both sibling posts, this one carries **no em or en dashes** (`output-style.md` Part 2, which
+postdates them). `lint_docs.py` reports 0 findings on it and on the `INDEX.md` entry.
+
+Backlinks were deliberately **not** regenerated: `build_backlinks.py --dry-run` would rewrite 8
+files, 7 of them footers gone stale under another session's uncommitted edits. Nothing gates on the
+missing footer (the linter passes), so the next repo-wide run picks it up without this change
+tidying files it does not own.
+
+Not-tested: nothing executable. Documentation only.
+
 ### fix(enlistment): three log lines said things they did not mean
 
 A live field session (39 minutes, Recruit through Soldier, oath to promotion) produced zero errors

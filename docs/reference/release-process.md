@@ -114,7 +114,18 @@ commit shipped under the name.
 | `v2.0.10` | `7b7a8dce` | 2026-07-07 | v2.0.13 |
 | `v2.0.13` | `777411cc` | 2026-07-13 | v2.0.15 |
 | `v2.0.15` | `54667df3` | 2026-07-30 | v2.0.18 |
-| `v2.0.18` | `e396263d` | 2026-08-04 | (current at backfill) |
+| `v2.0.18` | `e396263d` | 2026-08-04 | v2.0.20 |
+| `v2.0.20` | `094ff0a8` | 2026-08-09 | (current) |
+
+`v2.0.20` was added on 2026-08-12, three days after its bump, on the same terms as the eleven above
+(gated on reading `<Version>` back out at that commit, backdated to the commit's author date). It is
+a second-generation instance of the same failure, not a leftover from the original sweep: the bump
+was a bare `fix(module)` commit rather than a `/release` run, so Phase 1's "current version is
+already tagged" pre-flight never executed. `check-version-tagged.sh` did catch it 60 seconds later,
+then muted itself per-version and stayed silent for 33 commits. `session-start.sh` now re-asserts the
+check every startup so a single missed warning cannot go quiet again.
+
+`v2.0.19` was skipped outright and exists in no commit and no tag.
 
 The pre-2.0 line (`v0.1.0`, `v1.0.0`–`v1.0.3`) was deliberately not tagged — no crash report will
 ever be triaged against it.
@@ -124,7 +135,11 @@ ever be triaged against it.
 `v2.0.11`, `v2.0.12`, `v2.0.14`, `v2.0.16`, `v2.0.17` **appear in no commit on any branch.**
 Verified by reading `Main/_Module/SubModule.xml` at every commit that ever touched it and collecting
 the distinct `<Version>` values; the complete set is `v0.1.0`, `v1.0.0`–`v1.0.3`, `v2.0.0`, `.2`,
-`.4`, `.5`, `.7`, `.8`, `.9`, `.10`, `.13`, `.15`, `.18`.
+`.4`, `.5`, `.7`, `.8`, `.9`, `.10`, `.13`, `.15`, `.18`, `.20`.
+
+(`.20` postdates the 2026-08-08 sweep that produced this list and was appended on 2026-08-12. The
+phantom set itself is unchanged at five; `.19` never existed, so it is a skipped number rather than a
+sixth phantom.)
 
 `v2.0.12` is the one that matters — two player crash reports cite it. A build went out carrying a
 version string that was set outside git. **A triage session that meets one of these five should
