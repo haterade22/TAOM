@@ -4,6 +4,16 @@
 
 ## 2026-08-13
 
+### chore(release): TAOM v2.0.21
+
+`Main/_Module/SubModule.xml` goes to `v2.0.21`, tagged and pushed with the commit. Player-facing
+note: [`docs/releases/v2.0.21-discord.md`](docs/releases/v2.0.21-discord.md). `TAOM.Dependencies`
+stays at `v2.0.6` and its pinned mirror in Main's `<DependedModuleMetadata>` is unchanged, because
+the Dependencies assembly did not change in this release (the #371 pairing rule).
+
+The release carries the Aura of Dread feature below, plus the provenance register, the build
+hygiene pass and the ElevenLabs server config already on the branch since `v2.0.20`.
+
 ### feat(dread): Nazgûl and Sauron break the lines they stand in front of
 
 New `DreadAura` feature. On the battlefield, the Nine and Sauron drain the morale of enemy troops
