@@ -54,6 +54,16 @@
     "imagine": {
       "type": "http",
       "url": "https://mcp.imagine.art"
+    },
+    "elevenlabs": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["elevenlabs-mcp"],
+      "env": {
+        "ELEVENLABS_API_KEY": "${ELEVENLABS_API_KEY}",
+        "ELEVENLABS_MCP_BASE_PATH": "${CLAUDE_PROJECT_DIR:-E:/repos/TAOM}/.voice-scratch",
+        "ELEVENLABS_MCP_OUTPUT_MODE": "files"
+      }
     }
   }
 }

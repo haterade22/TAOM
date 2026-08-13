@@ -23,7 +23,7 @@ This document **is the index** of the per-category lesson files under `lessons/`
 - [Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)](lessons/harmony-il.md) — 31 lessons
 - [Animation & Skeleton](lessons/animation-skeleton.md) — 21 lessons
 - [State, Lifecycle & Save](lessons/state-lifecycle-save.md), 28 lessons
-- [XSLT & ModuleData](lessons/xslt-moduledata.md) — 22 lessons
+- [XSLT & ModuleData](lessons/xslt-moduledata.md) — 23 lessons
 - [Campaign Mechanics](lessons/campaign-mechanics.md) — 13 lessons
 - [Localization & UI](lessons/localization-ui.md) — 24 lessons
 - [Native C++ Port](lessons/native-cpp-port.md) — 3 lessons

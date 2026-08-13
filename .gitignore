@@ -155,3 +155,10 @@ docs/raw/**/*.tar.gz
 # reference, never committed. The durable record is the committed distillate
 # (prompt + RCA + REVIEW-LOG entry + LESSONS-LEARNED). See docs/reviews/REVIEW-GUIDE.md.
 docs/reviews/raw/
+
+# Voice-design auditions from the elevenlabs MCP server. This path is also the
+# server's ELEVENLABS_MCP_BASE_PATH sandbox in .mcp.json, so it is the only place
+# that server can write: auditions never land in ModuleSounds by accident, and the
+# batch render goes through tools/generate_voices.py instead. Keep the chosen voice
+# ID (in the manifest), discard the takes. See docs/features/kingdom-voices.md.
+.voice-scratch/

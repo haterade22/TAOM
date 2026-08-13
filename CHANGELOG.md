@@ -37,6 +37,72 @@ default that was right on one machine and elsewhere produced a clean-looking emp
 exists and were simply broken; both now resolve relative to the repo. Two `package_release.py`
 exclusion rules gained tests.
 
+### docs(voices): the generation pipeline, established by running it
+
+A design session on the elven voice, recorded because every finding below cost real iteration and
+none are guessable from the vendor docs. No mod data changed; `docs/features/kingdom-voices.md`
+gains a "Generation facts" section and a "Designed voices" register.
+
+**Audio tags perform the direction, but only on `eleven_v3` and only if you name it.** The MCP
+tool's `model_id` defaults to `eleven_multilingual_v2`, which reads `[shouts]` and `[grunts]` aloud
+as words. That was the session's first dead end and it looked like the whole approach failing.
+Passing `model_id="eleven_v3"` renders an actual shout and an actual grunt. Confirmed on listening.
+
+**Voice design previews never parse tags, whatever the model**, because `text_to_voice` is a
+different path from `text_to_speech`. A design line has to be written the way it should sound;
+delivery goes in the voice description, not in brackets.
+
+**Tags also beat onomatopoeia**, which had been the planned fallback for the 8 wordless slots.
+`Hnngh! Aagh!` reads as literal syllables. `[grunts with effort] Hnn!` does not. So
+`text_to_sound_effects` is not needed and the wordless groups use the same path as everything else.
+
+Three constraints worth knowing before planning credit spend. **Preview IDs cannot render**
+(`voice_not_found`), so a voice cannot be auditioned against the real workload without committing a
+slot. **Voice design bills its prompt text once and returns three variations** (224 characters
+billed 227), making design iteration nearly free. And since a rejected voice can be deleted to
+reclaim its slot while the add-edit is spent regardless, **95 add-edits is the real ceiling, not 30
+voice slots.**
+
+Prompt craft, learned the hard way: clause order is weighted, so "refined English, near RP" placed
+mid-prompt drifted Scottish. Vocal range must be stated, since an unqualified prompt asking for a
+"tenor" produced exactly the thin nasal result that got rejected, and "deep resonant baritone,
+heavy chest resonance" fixed it. Accent left unspecified defaults to General American. `stability`
+is inverted, lower being more expressive; 0.3 suits barks and 0.4 was flat.
+
+Two elven voices now exist, `elf_01` and `Elf 02`, both recorded with their IDs in the feature doc.
+Nothing is bound yet: no `skins.xml` edit, no voice definition, no `module_sounds` entries. Binding
+is a separate step and it lands in the unversioned dependency module.
+
+Operational note: the MCP tool takes `output_directory` but no filename, so it derives names from
+the text (`tts_[shou_...mp3`, brackets included). Rename after each render while you still know
+which slot the file belongs to, and use `-LiteralPath` in PowerShell because a bare `[` is wildcard
+syntax. The `tools/generate_voices.py` generator avoids this entirely by writing files itself from
+manifest slot names.
+
+### chore(mcp): elevenlabs server wired for voice-design iteration only
+
+Eighth server in `.mcp.json`, for the interactive half of voice authoring: write a prompt, listen,
+adjust, keep the voice ID. The batch render deliberately does **not** go through it. A thousand-plus
+clips would mean a thousand model round trips, no manifest, no resume from a failure partway, and no
+way to reproduce a take later; that stays with the planned `tools/generate_voices.py`. The voice ID
+is the handoff between the two.
+
+Three deliberate choices in the config, each the answer to a way this could go wrong:
+
+- **The API key is `${ELEVENLABS_API_KEY}`, never a literal.** `.mcp.json` is tracked.
+- **`ELEVENLABS_MCP_BASE_PATH` is a sandbox, not a convenience.** It points at `.voice-scratch/`
+  (new, gitignored), and the server rejects any path resolving outside it. Auditions therefore
+  cannot land in `ModuleSounds/` by accident, and nothing reaches players without going through the
+  generator. Written as `${CLAUDE_PROJECT_DIR:-…}` rather than an absolute path, which also clears
+  the `mcp-env-secret` heuristic in `tools/audit_claude_config.py`.
+- **`ELEVENLABS_MCP_OUTPUT_MODE=files`**, so takes land on disk to be listened to instead of riding
+  back through context as base64.
+
+`python tools/audit_claude_config.py` after the change: HIGH 0, elevenlabs clean. The one remaining
+MED (`filesystem` using `npx -y` unpinned) predates this and is untouched.
+
+Not done here, because it lives outside the repo: `uvx elevenlabs-mcp` is not installed and
+`ELEVENLABS_API_KEY` is not set. Both are the user's to run.
 
 ## 2026-08-12
 
@@ -109,6 +175,48 @@ missing footer (the linter passes), so the next repo-wide run picks it up withou
 tidying files it does not own.
 
 Not-tested: nothing executable. Documentation only.
+
+### docs(voices): the voice system was undocumented, and it is half wired
+
+Research pass, no code and no data changed. A question about authoring per-kingdom voices turned up
+a subsystem that ships in every build, has never had a doc, an ADR or a validator, and is working at
+a fraction of its intended effect.
+
+**Voice binds to race, never to culture.** Human agents select through `BodyProperties.CurrentVoice`,
+an index into the `<voice_types>` list on their `<skin>`; non-humans select through the monster's
+`sound_and_collision_info_class`. Neither path reads `CultureObject`. Gondor, Rohan and Dol Amroth
+all use the vanilla human race, so no data-only change can separate them. That needs
+`MBAgentVisuals.SetVoiceDefinitionIndex` from a MissionBehavior, an API with zero callers anywhere in
+the shipping client.
+
+**Seven of fourteen races are bound, and three of those are diluted.** `dwarf`, `uruk_hai` and
+`berserker` each list their custom voice alongside 6 to 10 vanilla entries, and since the selector is
+an index into the whole pool, a dwarf draws `dwarf_01` on roughly one spawn in seven. The four uruk
+races list nothing but their custom voice and hit it every time, which is the correct pattern. The
+remaining seven races (`elf`, `orc`, `nazghul`, both trolls, `saruman`, `sauron`) have no custom
+voice at all. Dilution is invisible in play, because the voice does fire sometimes; only a check
+catches it, and no check exists.
+
+Also recorded: 83 Théoden clips registered in `module_sounds.xml` and reachable by nothing, a
+`project.mbproj` entry pointing at a directory that does not exist (the engine tolerates this
+silently), `uruk_01` defined in both TAOM and `Alliance.Wargs` with undocumented merge precedence,
+93 `.mp3` files against an engine comment that documents `.ogg` and `.wav` only, and an asset library
+whose filenames (`Death1_Isengard.wav`, `D1_Warcry1..5`, `Advance_Forth and fear no darkness.wav`)
+read as BFME-sourced. That last one gates the dilution fix: undiluting a skin multiplies how often
+each of its clips plays, so it belongs after asset replacement, not before.
+
+Two mechanisms worth having written down. The middleware is FMOD Studio, not Wwise, and TAOM's voice
+definitions put a `module_sounds.xml` name in the `path` attribute instead of an `event:/…` bank
+event, so loose `.wav` files work and no bank authoring is needed. Registration runs through
+`ModuleData/project.mbproj`, not `SubModule.xml`.
+
+New: [`docs/features/kingdom-voices.md`](docs/features/kingdom-voices.md) with the full race-to-voice
+table, the 68 voice types, the three binding routes and the four checks a validator should make.
+Feature-map row added. One lesson appended to
+[`lessons/xslt-moduledata.md`](docs/reviews/lessons/xslt-moduledata.md): ModuleData XML puts
+attributes on their own lines, so `grep 'voice_type name='` matched only vanilla's single-line
+entries, missed all 45 custom refs, and produced a confident wrong answer that the user's field
+report overturned.
 
 ### fix(enlistment): three log lines said things they did not mean
 
