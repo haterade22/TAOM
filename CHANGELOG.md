@@ -2,6 +2,42 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-13
+
+### docs(reference): provenance register, third-party notice, build and tooling hygiene
+
+**New `docs/reference/provenance-register.md`.** One table of the external sources TAOM's code and
+content derive from, each with its licence, the kind of derivation (a closed vocabulary), and the
+concrete TAOM paths it covers. `.claude/rules/provenance.md` is the path-scoped authoring rule that
+goes with it, registered in `docs/reference/rules-catalog.md`.
+
+**New `Main/_Module/THIRD-PARTY-LICENSES.txt`.** Carries the notice for the redistributed native
+hooking library under `Main/_Module/bin/`, matching the file the Dependencies module already ships
+for its own bundled DLLs. Scoped explicitly to binaries, so it makes no claim about art, audio,
+fonts, or game data.
+
+**Terminology pass** across the elephant, mumakil, and spider docs and their C# comments: sources are
+named consistently rather than referred to obliquely, and `docs/INDEX.md` now matches the file it
+links to. The Dependencies notice's description of `Dependencies/Foundation/` was rewritten to match
+what those files' own headers say, and ten of those headers had "Ports" changed to "Re-implements".
+
+**Build and packaging.** Visual Studio workspace state under `Main/_Module/GUI/` was being deployed
+into the game module. Not via the two `<Content Include>` lines in `TAOM.csproj`, which copy nothing:
+`ExcludeSourceFilesFromModule` is false, so `CopyModule` recurses `_Module` verbatim. The folder is
+removed from the repo and the install, a new `FailOnIdeStateInModule` target errors the build if one
+reappears (verified firing and passing), and `tools/package_release.py` excludes it independently,
+because a release can be cut from a publish output the build guard never saw. `project.mbproj` stops
+shipping too: editor-only, not read at runtime. `/PDBALTPATH:%_PDB%` is set in both
+`NativeSkinFixes.NativeHooks` configurations so the linker stops stamping the build path into the DLL.
+
+**`tools/` path handling.** `assemble_faction_map.py` and `border_match.py` now require
+`$TAOM_MAP_IMAGE` and `$TAOM_REGIONS_DIR` and exit 2 naming the variable, instead of carrying a
+default that was right on one machine and elsewhere produced a clean-looking empty run.
+`apply_hero_bios.py` and `Settlement-Breakdown.ps1` both pointed at a checkout path that no longer
+exists and were simply broken; both now resolve relative to the repo. Two `package_release.py`
+exclusion rules gained tests.
+
+
 ## 2026-08-12
 
 ### fix(harness): the untagged-version warning fired once and then muted itself for three days

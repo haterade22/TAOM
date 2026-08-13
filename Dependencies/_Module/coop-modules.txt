@@ -21,9 +21,11 @@ Coop
 # Harmony owner ids (prefix match, case-insensitive) to add to PatchShield's protected-owner
 # allowlist, so PatchShield never strips their patches.
 #
-# Empty by default: we do not know any co-op mod's Harmony id. TAOM does NOT decompile other
-# mods to find out — the BannerlordTogether package ships an explicit no-decompile policy from
-# its copyright holders, and TAOM respects it. The id is instead read from Harmony's own public
-# runtime registry and printed by the [HarmonyCensus] lines in the TAOM log; add it below if
-# you need belt-and-braces protection. This is normally unnecessary, because the unpatch path is
-# already disabled outright whenever a module above is active.
+# Empty by default, and normally it should stay that way: the unpatch path is already disabled
+# outright whenever any module above is active, so an explicit allowlist entry is belt-and-braces.
+# Add one only if you have a reason to.
+#
+# BannerlordTogether's package ships an explicit no-decompile / no-AI-analysis policy from its
+# copyright holders. TAOM honours it: BT's Harmony id is never read out of its code, only from
+# Harmony's own public runtime registry, printed by the [HarmonyCensus] lines in the TAOM log.
+# That restriction is specific to BT's stated terms and is not a claim about every mod.

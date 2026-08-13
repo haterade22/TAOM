@@ -1,40 +1,40 @@
 # War Elephant (Harad rideable mount)
 
 > **Status: C# BUILT + WIRED (2026-06-05); ACTION-SETS SELF-CONTAINED IN LOTRLOME (2026-06-08); IN-GAME BATTLE CONFIRMED (2026-06-08).**
-> The mount-lock + the structural trample/tusk mechanic are a behavioral port of the donor mod's elephant, adapted to
+> The mount-lock + the structural trample/tusk mechanic are a behavioral port of ADOD_Beasts's elephant, adapted to
 > **v1.4.5**, fully wired (IoC + SubModule) and green. The attack **cadence** (deterministic cooldowns, 2026-06-10) and
 > the per-kind randomized **damage** (trample 50-100, tusk 50-75, 2026-06-15) are TAOM's own rebalance — NOT 1-for-1 with
-> the donor. Supersedes the paused [Giant Spider](spider.md).
+> ADOD_Beasts. Supersedes the paused [Giant Spider](spider.md).
 >
-> **Upstream-pack dependency ELIMINATED (2026-06-08).** After resolving two data-pipeline crashes during the LOTRLOME-
-> standalone deployment (see "Action-sets deployment crash history" below), the donor `as_elephant` action-set block
+> **ADOD_Beasts dependency ELIMINATED (2026-06-08).** After resolving two data-pipeline crashes during the LOTRLOME-
+> standalone deployment (see "Action-sets deployment crash history" below), ADOD_Beasts `as_elephant` action-set block
 > was ported into `LOTRLOME_Armory/ModuleData/action_sets.xml` (merged into the module's single `soln_action_sets`
 > entry in `project.mbproj` — the same pattern as `as_spider`). The game now loads and elephants spawn in battle
-> without the upstream beasts pack in the load order.
+> without ADOD_Beasts in the load order.
 >
 > **IN-GAME BATTLE CONFIRMED (2026-06-08).** Multiple war elephants with Harad riders spawned and fought correctly
 > in battle (screenshot: 5 elephants, riders visible, correct mesh, formation movement). Animations run from the
-> donor `as_elephant` clips already in `LOTRLOME_Armory/Assets/creature/elephant/animations/` (the 35 tpacs copied
+> ADOD_Beasts `as_elephant` clips already in `LOTRLOME_Armory/Assets/creature/elephant/animations/` (the 35 tpacs copied
 > during self-contained clip consolidation). Remaining steps: author TAOM-owned `as_war_elephant` action-set with
 > the TAOM-authored clip names, revert the TEMP `troops_harad.xml` test entry, author the actual Harad rider troop.
 >
 > **First-test deployment (2026-06-06) — CONFIRMED.** The Monster + Item were deployed to live `LOTRLOME_Armory`
-> with the Monster's `action_set="as_elephant"` / `monster_usage="elephant"` (both from the donor pack).  Deployed/changed:
+> with the Monster's `action_set="as_elephant"` / `monster_usage="elephant"` (both from ADOD_Beasts).  Deployed/changed:
 > - `LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` (NEW, de-risked refs) + registered in `LOTRLOME_Armory/SubModule.xml`.
 > - `<Item id="taom_war_elephant">` added to live `LOTRAOM_horses.xml`.
 > - **TEMP** `Horse`-slot mount on `harad_militia` (`Main/.../troops_harad.xml`, marked `TEMP-ELEPHANT-TEST`, REVERT before commit) so a Harad party fields an AI-ridden elephant.
 > - Backups: `*.bak-elephant` beside the two edited LOTRLOME files.
 >
 > **Trample tick VERIFIED 1.4.5-safe (2026-06-06).** The howdah workflow proved `AgentComponent.OnTickAsAI` (the
-> virtual override the donor mod uses for trample/crew AI) **does not exist in v1.4.5** — so the donor's *own* trample is dead on our
+> virtual override ADOD_Beasts uses for trample/crew AI) **does not exist in v1.4.5** — so ADOD_Beasts's *own* trample is dead on our
 > engine. TAOM's port pre-fixed this: `ElephantMissionBehavior : MissionLogic`, trample runs in `OnMissionTick`
 > iterating `Mission.Current.AllAgents` ([ElephantMissionBehavior.cs:60](../../Main/Features/Elephant/ElephantMissionBehavior.cs#L60)), not on an AgentComponent. The trample will fire.
 >
 > **Self-contained clip consolidation — DONE (2026-06-06/08).** LOTRLOME's `elephant_harad_armor_01_geo.tpac`
 > carries `elephant_skeleton`. The clip set (**31 `*_anm.tpac`** + **4 `elephant_anims_all_*_geo.tpac`**, 35 total)
-> was copied to `LOTRLOME_Armory/Assets/creature/elephant/animations/`. The donor `as_elephant` action-set block
+> was copied to `LOTRLOME_Armory/Assets/creature/elephant/animations/`. ADOD_Beasts `as_elephant` action-set block
 > was ported to `action_sets.xml` (2026-06-08, same pattern as `as_spider`). Monster still points at `as_elephant`
-> (donor id) + `monster_usage="elephant"` — next step: rename to `as_war_elephant` + `war_elephant` usage when
+> (ADOD_Beasts id) + `monster_usage="elephant"` — next step: rename to `as_war_elephant` + `war_elephant` usage when
 > authoring the full TAOM-owned action-set with TAOM clip names.
 >
 > **CREW / HOWDAH — slide root cause DIAGNOSED (2026-06-10); fix DEFERRED by project-owner decision.**
@@ -54,7 +54,7 @@
 >   locomotion channel → kills walk/run cycle while engine keeps translating = slide). Fixed: renamed to
 >   `act_elephant_attack_1/2/3` (verified live in LOTRLOME action_types.xml + action_sets_elephant.xml). This
 >   removed a *constant* slide but a residual slide remained — see the isolation section for the two further sources.
-> - **Trample-into-empty-air gate restored:** the donor's `target != null && distance < 3m` gate was missing from the
+> - **Trample-into-empty-air gate restored:** ADOD_Beasts's `target != null && distance < 3m` gate was missing from the
 >   1-for-1 port. Trample fired ~1–2×/sec into empty air overriding channel 0. Fixed: `TrampleTriggerRange = 3f`
 >   proximity + facing scan before firing.
 > - **Bone tracking (Spine1_05) implemented — but is a SUSPECTED slide source (under test):** `TaomHowdahMachine`
@@ -66,7 +66,7 @@
 > - **Archer "constant draw" fixed:** the per-tick `SetActionChannel(0, act_howdah_stand_bow)` pose-lock (added
 >   earlier this session as the jitter fix) pinned the archer's upper body in a draw stance so the combat AI could
 >   never fire. **Removed** (2026-06-10) — combat AI drives the bow animation; the archer is held by `TeleportToPosition`.
->   (`SetOnLandState`/`AgentOnLandFlags`, the donor's anti-fall API, do NOT exist in v1.4.5 — confirmed zero matches.)
+>   (`SetOnLandState`/`AgentOnLandFlags`, ADOD_Beasts's anti-fall API, do NOT exist in v1.4.5 — confirmed zero matches.)
 >
 > 1. **`GetTickRequirement()` missing** — `TaomHowdahStandingPoint` didn't override `GetTickRequirement()` so the
 >    engine never called `OnTick`. Fixed by adding `TickRequirement.Tick | base` override (2026-06-08).
@@ -100,21 +100,21 @@
 >    now calls `agent.TeleportToPosition(elephantAgent?.Position ?? agent.Position)` before `ClearTargetZ()` —
 >    snapping the agent to navmesh and clearing all elevated scripted position state.
 >
-> **Donor-pack XML analysis** — studied all 3 donor howdah variants (`adod_howdah_1_agent.xml`, `howdah_object.xml`,
+> **ADOD_Beasts XML analysis** — studied all 3 ADOD_Beasts howdah variants (`adod_howdah_1_agent.xml`, `howdah_object.xml`,
 > `adod_howdah_4_agents.xml`) 2026-06-09. Key findings vs our `taom_howdah_agent.xml`:
-> - Every donor variant uses `TranslateUser="true"` on seats (base class positions agents via physics-level frame
+> - Every ADOD_Beasts variant uses `TranslateUser="true"` on seats (base class positions agents via physics-level frame
 >   translation each tick). Our prefab uses `TranslateUser="false"` with our custom `SetScriptedPosition`/`SetTargetZ`.
-> - Every donor variant includes 4 `_barrier_04x04m` child entities with `missile_only` body flags — physical walls
+> - Every ADOD_Beasts variant includes 4 `_barrier_04x04m` child entities with `missile_only` body flags — physical walls
 >   keeping archers inside the howdah basket. Our prefab has NO barrier entities.
-> - The donor's 4-seat variant: `AutoWieldWeapons="true"` (we have `false`), all seats tagged `<tag name="pilot"/>`.
+> - ADOD_Beasts's 4-seat variant: `AutoWieldWeapons="true"` (we have `false`), all seats tagged `<tag name="pilot"/>`.
 >
-> See how the donor mod implements this: **[howdah-crew-mechanism.md](elephant/howdah-crew-mechanism.md).**
+> See how ADOD_Beasts implements this: **[howdah-crew-mechanism.md](elephant/howdah-crew-mechanism.md).**
 >
 > **Scope — this is a *standard* war elephant, NOT the giant mumakil / Oliphaunt.** A normal-scale ridden mount
 > (one Harad crewman rides it). TAOM already represents the mumakil separately (the existing `mumak_rider` troop
 > archetype + "Mumakil War Tower" framing in the Harad culture); this feature does not touch those.
 >
-> **⚠️ The upstream beasts pack is built for Bannerlord ~1.2.12, NOT 1.4.5.** So the donor mod is a *behavioral reference only* — its
+> **⚠️ ADOD_Beasts is built for Bannerlord ~1.2.12, NOT 1.4.5.** So ADOD_Beasts is a *behavioral reference only* — its
 > runtime DLL + its `action_sets.xml`/`monster_usage_sets.xml` (1.2.12 schema) must **not** be depended on at
 > runtime. The C# was verified call-by-call against v1.4.5 (the one drift — `ActionIndexCache.Name` → `GetName()`
 > — was caught by the compiler and fixed); the data is authored fresh for 1.4.5.
@@ -182,12 +182,12 @@ Cavalry-reassignment + trample stay enabled (confirmed innocent). The TEMP `hara
 The trample + mount-lock are **done, wired, and green** (build + tests). The mount-lock (`ADODAgentStatCalculateModel`)
 and the structural attack mechanic from `ADODBeastsElephantAgentComponent.OnTickAsAI` are a behavioral port, re-implemented
 in TAOM-clean architecture on the v1.4.5 API — but the attack **cadence** (deterministic cooldowns, 2026-06-10) and the
-per-kind randomized **damage** (trample 50-100 / tusk 50-75, 2026-06-15) are TAOM's deliberate rebalance, NOT the donor's
+per-kind randomized **damage** (trample 50-100 / tusk 50-75, 2026-06-15) are TAOM's deliberate rebalance, NOT ADOD_Beasts's
 per-tick random roll / fixed ~20 damage.
 
 | File | Role |
 |------|------|
-| [`Main/Features/Elephant/ElephantConfig.cs`](../../Main/Features/Elephant/ElephantConfig.cs) | Constants — `ElephantMonsterId="taom_war_elephant"`, `MountDifficulty=999`, attack gates (`TrampleTriggerRange=3f` proximity gate restored from the donor mod, `TrampleFacingDot=0.25`, `TrampleCooldownSeconds=10` / `SideAttackCooldownSeconds=4`, `TrampleRadius=4f` damage radius) + per-kind damage bands (`TrampleMin/MaxDamage=50/100`, `TuskMin/MaxDamage=50/75`, `BlockedDamageMultiplier=0.25`) + the attack clip-name constants (`TrampleActionName` / `SideAttackLeft/RightActionName`). `TrampleTriggerRange` was the missing donor gate — without it the elephant swung into empty air and killed the locomotion channel. |
+| [`Main/Features/Elephant/ElephantConfig.cs`](../../Main/Features/Elephant/ElephantConfig.cs) | Constants — `ElephantMonsterId="taom_war_elephant"`, `MountDifficulty=999`, attack gates (`TrampleTriggerRange=3f` proximity gate restored from ADOD_Beasts, `TrampleFacingDot=0.25`, `TrampleCooldownSeconds=10` / `SideAttackCooldownSeconds=4`, `TrampleRadius=4f` damage radius) + per-kind damage bands (`TrampleMin/MaxDamage=50/100`, `TuskMin/MaxDamage=50/75`, `BlockedDamageMultiplier=0.25`) + the attack clip-name constants (`TrampleActionName` / `SideAttackLeft/RightActionName`). `TrampleTriggerRange` was the missing ADOD_Beasts gate — without it the elephant swung into empty air and killed the locomotion channel. |
 | [`Main/Features/Elephant/IElephantAttackService.cs`](../../Main/Features/Elephant/IElephantAttackService.cs) + [`ElephantAttackService.cs`](../../Main/Features/Elephant/ElephantAttackService.cs) | **Pure** logic (no TaleWorlds deps). Since the 2026-07-01 ElephantLike unification (#305), `ElephantAttackService` is a thin binding of the shared [`ElephantLikeAttackService`](../../Main/Features/ElephantLike/ElephantLikeAttackService.cs) (ctor passes the `ElephantConfig` constants) behind the marker interface `IElephantAttackService : IElephantLikeAttackService`: `IsCreatureMonster`, `ShouldEngage(facingDot, alreadyAttacking)` (facing gate; the BT scan passes -1 when no enemy in range), `IsOffCooldown(lastFired, now, seconds)` (inclusive ≥; future stamps read as ON cooldown), `ComputeInflictedDamage(kind, blocking, roll)` = `round((min + roll·(max−min)) · (blocking?0.25:1))` with the band chosen by `ElephantLikeAttackKind` (Trample 50-100, SideAttack/tusk 50-75; roll is a [0,1] `MBRandom.RandomFloat` supplied per victim by the BT, clamped + NaN-guarded). Unit-tested. |
 | [`Main/Features/Elephant/ElephantMissionBehavior.cs`](../../Main/Features/Elephant/ElephantMissionBehavior.cs) | Boundary `MissionLogic`: registers `"ElephantTree"` + attaches a per-agent `BehaviorTreeAgentComponent` to every elephant (first-tick scan + `OnAgentBuild` late-spawn + dead-agent pruning — the warg's exact wiring). `Initialize` logs an error if any attack action resolved to `act_none` (Armory-drift guard). Also instantiates the howdah when the mahout builds. **As of 2026-06-10 the attacks are BT-driven** — the old inline `TryAiTrample` loop was removed (see "Behavior tree" below). |
 | [`Main/Features/Elephant/ElephantBehaviorTree.cs`](../../Main/Features/Elephant/ElephantBehaviorTree.cs) + the SHARED [`Main/Features/ElephantLike/BehaviorTreeElements/`](../../Main/Features/ElephantLike/BehaviorTreeElements/) | Per-agent behavior tree (warg pattern), built from the shared elephant-like nodes since 2026-07-01 (#305): `ElephantLikeEngageDecorator` (facing+range gate → `ShouldEngage`; writes `TargetBearing`), `ElephantLikeAttackOffCooldownDecorator` ×2 (→ `IsOffCooldown`), `ElephantLikeAttackTaskBase` → `ElephantLikeTrampleTask`/`ElephantLikeSideAttackTask` (→ `ComputeInflictedDamage`) — all parameterized by [`ElephantCombat.Profile`](../../Main/Features/Elephant/ElephantCombat.cs) (an `ElephantLikeCombatProfile`: ranges + eager-resolved `ActionIndexCache`s + Index-compare gate + lazy service resolver). Reuses the shared `HasRiderDecorator`/`IsAiControlledDecorator`/`HasNoRiderDecorator`. |
@@ -195,10 +195,10 @@ per-tick random roll / fixed ~20 damage.
 | `ElephantIoC.cs`, `IoC.cs`, `SubModule.cs` | Service registered (Singleton); `ElephantMissionBehavior` added to the mission list; the stat-model ctor takes the elephant service. (No new registration for the BT — it attaches inside the mission behavior; nodes lazy-resolve the service via `ElephantCombat.Profile.ResolveService`.) |
 | [`TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs`](../../TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs) | 24 tests (IsCreatureMonster ×3, ShouldEngage ×5 incl. the no-enemy −1 sentinel, IsOffCooldown ×6 incl. exact-boundary + future-stamp clock skew, ComputeInflictedDamage ×10 — both kinds × min/max/midpoint/blocking boundaries + NaN/out-of-range roll clamps). The BT calls these same pure methods, so they remain the attack decision's regression guard. |
 
-**1.4.5 adaptations vs the donor mod's 1.2.12 decompile:** `ActionIndexCache.GetName()` (not `.Name`); the 2-arg
-`SetActionChannel(0, anim)` (the donor's long arg list is exactly the engine defaults); `CustomAttacksUtils.TakeDamage`
-(TAOM's clean damage primitive, with a `knockDown` flag that maps to the donor's knockdown BlowFlag) instead of a raw
-`Blow`/`RegisterBlow`. Behaviorally identical; no native code (the donor's `NativeHook.dll` is dead anyway).
+**1.4.5 adaptations vs ADOD_Beasts's 1.2.12 decompile:** `ActionIndexCache.GetName()` (not `.Name`); the 2-arg
+`SetActionChannel(0, anim)` (ADOD_Beasts's long arg list is exactly the engine defaults); `CustomAttacksUtils.TakeDamage`
+(TAOM's clean damage primitive, with a `knockDown` flag that maps to ADOD_Beasts's knockdown BlowFlag) instead of a raw
+`Blow`/`RegisterBlow`. Behaviorally identical; no native code (ADOD_Beasts's `NativeHook.dll` is dead anyway).
 
 **Action code correction (2026-06-10):** the attack codes shipped as `act_war_elephant_attack_1..3` and were
 claimed to degrade gracefully to `act_none`. This was **wrong** — `act_none` on channel 0 does NOT skip the
@@ -220,7 +220,7 @@ inline trample; **phase 1.5 (same day) replaced the stochastic model with the pr
 > enemy's bearing, if off cooldown (4s) → else idle — the engine's regular mount AI (rider cavalry AI + native
 > charge) always continues underneath; the BT only layers attacks on top.
 
-This is a deliberate behavior CHANGE from the donor mod, verified by decompiling the live `ADOD_Beasts.dll`: the donor picks
+This is a deliberate behavior CHANGE from ADOD_Beasts, verified by decompiling the live `ADOD_Beasts.dll`: ADOD_Beasts picks
 randomly among `attack_1..3` at 0.001/tick with no left/right awareness, no cooldowns, and never uses `attack_4`
 (which IS bound to a real clip — `action_types.xml` 99–102, `action_sets.xml` 59684–59687).
 
@@ -277,17 +277,17 @@ main (Selector)
 | `IBTElephantBlackboard` | Cooldown stamps + `TargetBearing`, reflection-copied onto every node by the tree builder. | — |
 
 **Clip-role mapping — VERIFIED numerically (2026-06-10, Blender trajectory analysis).** Nothing in the XML or
-the donor's code identifies the clips (numbers everywhere, and the donor picked randomly), so the roles were measured: the
+ADOD_Beasts's code identifies the clips (numbers everywhere, and ADOD_Beasts picked randomly), so the roles were measured: the
 staged source FBX (`elephant_anims_all_left.fbx`, frame ranges from the pack0.tpac parse) was imported into a live
 Blender session (temp datablocks, cleaned to baseline) and the `Head_08` bone's signed lateral excursion sampled
 per clip window. Result — **`attack_1`** winds up right then strikes sweeping **toward the LEFT** (left-target
 swing); **`attack_2`** is its mirror (right-target swing); **`attack_3` and `attack_4`** are near-identical full
 **double-sweep thrashes** (right→left→right, 60 frames) — the natural trample visual for radial damage. Mapped in
-`ElephantConfig`: trample = `attack_3` (alternating randomly with `attack_4` for variety — a clip the donor never
+`ElephantConfig`: trample = `attack_3` (alternating randomly with `attack_4` for variety — a clip ADOD_Beasts never
 played), left swing = `attack_1`, right swing = `attack_2`. The stand-window control measured ~zero motion,
 confirming the frame ranges. Final eyeball check in one battle is still welcome, but the mapping is no longer a guess.
 
-**Phase 2 (future, not built):** a `player controlled` branch under "has rider" (the donor's Space/Input-57 trample), and
+**Phase 2 (future, not built):** a `player controlled` branch under "has rider" (ADOD_Beasts's Space/Input-57 trample), and
 optional enrage/charge state (warg-style rage). Those add blackboard fields + branches without touching this baseline.
 
 **Tested-via-game:** BT elements + wiring are not unit-tested (consistent with all warg BT elements + Harmony patches,
@@ -304,7 +304,7 @@ stale table above).** Accepted-behavior observations, recorded so they aren't re
 - **Side swings deal the full 360° radial damage** (same disc as the trample, only the clip + cooldown differ) —
   spec asked for animations + cooldowns; a bearing-cone victim filter is an "improve" item.
 - **Left/right pick is near-arbitrary in crowds** (the max-facing-dot enemy is the most front-on one, bearing ≈ 0) —
-  visually fine for a dead-ahead target. Flank/rear enemies (dot ≤ 0.25) never trigger ANY attack (the donor's gate);
+  visually fine for a dead-ahead target. Flank/rear enemies (dot ≤ 0.25) never trigger ANY attack (ADOD_Beasts's gate);
   if flank coverage is ever wanted, pick the max-|bearing| in-cone enemy or relax the gate for side attacks only.
 - **Bearing convention verified against the engine:** `Vec2.LeftVec()` = (-y, x) in the v1.4.5 decompile —
   positive cross-z = LEFT is TaleWorlds' own convention.
@@ -321,7 +321,7 @@ stale table above).** Accepted-behavior observations, recorded so they aren't re
 ### Action-sets deployment crash history (2026-06-08)
 
 Two crashes were encountered when deploying the elephant action-set self-contained inside LOTRLOME_Armory
-(without the upstream beasts pack). Both trace to the same architecture finding about how Bannerlord loads animation data.
+(without ADOD_Beasts). Both trace to the same architecture finding about how Bannerlord loads animation data.
 
 #### Core finding: `action_sets` is a native-only data type
 
@@ -356,10 +356,10 @@ Two crashes were encountered when deploying the elephant action-set self-contain
    (copy to `LOTRLOME_Armory/ModuleData/Monsters/LOTR/` + register in its SubModule.xml) and
    [`elephant/horse_item_taom_war_elephant.xml`](elephant/horse_item_taom_war_elephant.xml) (paste the `<Item>` into
    `LOTRAOM_horses.xml`). Both validated well-formed; the Monster id stays `taom_war_elephant` to match `ElephantConfig`.
-   (Corrected one donor 1.2.12-ism on the way: `bones_to_modify_on_sloping_ground_0` was `Spine2` — a bone our rig
+   (Corrected one ADOD_Beasts 1.2.12-ism on the way: `bones_to_modify_on_sloping_ground_0` was `Spine2` — a bone our rig
    doesn't have — fixed to ` Spine_04`.)
 2. **1.4.5 action-set + clips** — author `as_war_elephant` against the **vanilla 1.4.5** quadruped-mount schema
-   (NOT the donor's 1.2.12 `as_elephant`), binding TAOM-compiled clips. This is the gating dependency for animation.
+   (NOT ADOD_Beasts's 1.2.12 `as_elephant`), binding TAOM-compiled clips. This is the gating dependency for animation.
 3. **Animations** — **idle + walk authored** (2026-06-06, in Blender via MCP — see below); remaining clips
    (run/turn/rear/death + the 3 attack clips) + the Modding-Kit compile of all clips are the next step.
 4. **Harad rider troop + recruitment**, and an in-game smoke test.
@@ -393,18 +393,18 @@ Workflow + theory: [creature-animation-blender-mcp-workflow.md](../ai-includes/c
 Dedicated `elephant_rider_*` clips are located but not yet improved — to be assessed via the composite
 method (master §4).
 
-Superseding the 2026-06-06 rough first pass: extracted the donor's source gaits
+Superseding the 2026-06-06 rough first pass: extracted ADOD_Beasts's source gaits
 (`elephant_anims_all_*.fbx`; per-clip frame ranges parsed from the compiled `_anm.tpac`
 Source1/Source2 fields by `_refine_tools/tpac_clipinfo.py` — walk 680-740, canter/gallop 750-780,
 turns 680-740 in the `_turn_*` FBX) onto our `elephant_skeleton` rig and corrected toward natural
 elephant biomechanics, measured with a foot-trajectory analyzer (`_refine_tools/harness.py`).
 
-- **walk** (`an_war_elephant_walk`, 61f): the donor's was a 2-beat **pace** (ipsilateral legs swing
+- **walk** (`an_war_elephant_walk`, 61f): ADOD_Beasts's was a 2-beat **pace** (ipsilateral legs swing
   together — a waddle); re-phased the front legs +¼ cycle → **4-beat lateral sequence** BL→FL→BR→FR.
   Front-foot over-lift (1.02 vs back 0.26 — "circus march") **height-weight-damped to 0.48** (blend
   toward the planted-frame pose, weighted by foot height, so planted frames stay grounded). In-place
   (root net Y ≈ 0).
-- **run** (`an_war_elephant_run`, 38f): the donor's "canter" was a diagonal **trot** (FL+BR then FR+BL —
+- **run** (`an_war_elephant_run`, 38f): ADOD_Beasts's "canter" was a diagonal **trot** (FL+BR then FR+BL —
   no elephant can, it implies an aerial phase); rebuilt as a **fast amble** (time-compressed refined
   walk → lateral sequence, no suspension).
 - **trot / walk_backwards / turn_left / turn_right / idle** authored to complete the set.
@@ -416,7 +416,7 @@ layers/slots/channelbags). Work scene `elephant_refine_WORK_20260612.blend`; too
 renders (`CMP_walk_src_vs_refined.png`) in sibling dirs; pristine backups in `_backups\`. **NOT
 Kit-compiled / in-game-tested** (Blender→tpac is GUI-only). Compile steps + the **mandatory
 `quad_movement` clip-usage tagging per clip** (else AV at `Skeleton.TickAnimations`):
-`clips_refine_20260612\README_HANDOFF.md`. Faithful donor baselines kept (`*_SRC` actions) to A/B
+`clips_refine_20260612\README_HANDOFF.md`. Faithful ADOD_Beasts baselines kept (`*_SRC` actions) to A/B
 in-game. Memory: `project-elephant-animation-refine-inflight`.
 
 ### Idle ear-fan (2026-06-13, Blender-MCP)
@@ -448,20 +448,20 @@ the gaits; rider clip authoring (in progress separately).
 > independent). The `.blend` got Save-As'd to `troll_anim_WORK_20260613.blend` (16.6 MB, full
 > elephant scene + an in-progress rider composite) — naming is muddled but no data was lost.
 
-### The real donor animation source — found, but unsliced (2026-06-06)
+### The real ADOD_Beasts animation source — found, but unsliced (2026-06-06)
 
-The production donor elephant clips exist as **source** at
+The production ADOD_Beasts elephant clips exist as **source** at
 `…/Modules/ADOD_Beasts/AssetSources/elephants/elephant_anims_all_{left,right,turn_left,turn_right}.fbx` (on
 `elephant_skeleton` — all 52 non-leaf bones match our rig exactly). **But each is one ~1341-frame concatenated take
-with no embedded clip boundaries** — no named sub-takes, no pose markers (the donor defined the per-clip frame ranges
+with no embedded clip boundaries** — no named sub-takes, no pose markers (ADOD_Beasts defined the per-clip frame ranges
 inside the Modding Kit project, which isn't shipped). A leg-motion-profile heuristic couldn't separate them cleanly
 (a 672-frame low-activity block then dozens of 8–12 frame fragments). So the source **can't be auto-sliced** — it
-must be sliced by scrubbing in the Modding Kit (how the donor built it).
+must be sliced by scrubbing in the Modding Kit (how ADOD_Beasts built it).
 
 **The already-sliced real clips = the 31 compiled `elephant_*_anm.tpac`** in `…/ADOD_Beasts/Assets/elephants/animations/`
 — skeleton-agnostic clip data that binds to `elephant_skeleton` (our rig). **Fastest path to the full 1-for-1 set:**
 copy those tpacs into `LOTRLOME_Armory/Assets/creature/elephant/animations/` and reference them in `as_war_elephant`
-(rename to `an_war_elephant_*` to avoid a donor id collision). Caveat: 1.2.12-era, but clip tpacs are skeleton-relative
+(rename to `an_war_elephant_*` to avoid an ADOD_Beasts id collision). Caveat: 1.2.12-era, but clip tpacs are skeleton-relative
 keyframe data (no embedded skeleton — confirmed by the deep-dive), so they should bind on 1.4.5; verify in-game.
 
 **Three animation paths — your call:** (a) **compiled tpacs** — real, full 31-clip set, fastest, slight 1.2.12 risk;
@@ -469,7 +469,7 @@ keyframe data (no embedded skeleton — confirmed by the deep-dive), so they sho
 idle+walk above** — fully owned + 1.4.5-clean, but only 2 rough clips. (a) is quickest to a working animated elephant;
 (c) is the safest fully-owned starting point. The trample C# works regardless (codes degrade to `act_none`).
 
-**Resolution (2026-06-06): duplicate into LOTRLOME_Armory, done in the Kit (project-owner choice).** The 5 donor
+**Resolution (2026-06-06): duplicate into LOTRLOME_Armory, done in the Kit (project-owner choice).** The 5 ADOD_Beasts
 elephant animation-source FBX (`adod_elephant.fbx` + `elephant_anims_all_{left,right,turn_left,turn_right}.fbx`)
 were **staged into `LOTRLOME_Armory/AssetSources/elephants/`** (same `elephant_skeleton` → binds to our rig). The
 owner re-creates the 30 clips in the Modding Kit from these + the frame ranges (the Kit shows each clip's
@@ -485,8 +485,8 @@ source of truth for those. My hand-authored `an_war_elephant_idle`/`_walk` remai
 A rideable **Harad war elephant** — a `Mountable=true` mount (ridden by a Harad crewman) that also **auto-attacks**
 (tramples / gores with its tusks) on its own, modelled on TAOM's working **warg** mount. The asset we import is **our
 own FBX** (`E:\LOTRAOMAssets\Elephant\Meshes BL\elephant_harad_armor_01.fbx`); its **rig + mesh + textures** match
-the donor mod's elephant (the asset was purchased from Artem, the donor-mod author, for use in TAOM), while the **animations are
-TAOM-authored on that FBX** — *not* reused from the donor mod (project-owner decision, 2026-06-05). The data is re-authored
+ADOD_Beasts's elephant (the asset was purchased from Artem, ADOD_Beasts author, for use in TAOM), while the **animations are
+TAOM-authored on that FBX** — *not* reused from ADOD_Beasts (project-owner decision, 2026-06-05). The data is re-authored
 under TAOM ids and themed for Harad, held to TAOM standards (adapter pattern, tests, ADR compliance).
 
 ## Why this exists — and why it is tractable where the spider was not
@@ -499,11 +499,11 @@ detached `FromHorseObj` agent** (`Mountable="false"`), it hard-crashes in native
 
 The elephant **sidesteps that wall entirely** because it is a **ridden mount** (`Mountable=true`), which uses the
 fully-proven horse/warg machinery — no detached-creature hacks, no `FromHorseObj`-mismatch, no native-wield guards.
-This is confirmed, not hoped: **the donor mod ships the exact same 60-bone elephant rig as a working `Mountable=true` mount.**
+This is confirmed, not hoped: **ADOD_Beasts ships the exact same 60-bone elephant rig as a working `Mountable=true` mount.**
 
 ### The asset facts (verified 2026-06-05)
 
-| | TAOM's elephant FBX (`E:\LOTRAOMAssets\Elephant\...\elephant_harad_armor_01.fbx`) | The donor mod's shipped elephant (`ADOD_Beasts/Assets/elephants/adod_elephant_geo.tpac`) |
+| | TAOM's elephant FBX (`E:\LOTRAOMAssets\Elephant\...\elephant_harad_armor_01.fbx`) | ADOD_Beasts's shipped elephant (`ADOD_Beasts/Assets/elephants/adod_elephant_geo.tpac`) |
 |---|---|---|
 | Skeleton | `elephant_skeleton` (renamed from `…_unused` + re-exported, 2026-06-05; verified 60 bones / 0 leaf) | `elephant_skeleton`, **60 bones**, `Usage='horse'`, 59 D6 ragdoll joints |
 | Body mesh | `SK_Elephant_Armor_A` (+ .base/.legs/.nose/.tusk/.head/.platform/.pillow/.cloth/.belt/.feather parts) | `sk_elephant_armor_a` + `elephant_mesh` |
@@ -512,8 +512,8 @@ This is confirmed, not hoped: **the donor mod ships the exact same 60-bone eleph
 | Textures | `t_creature_elephant_a1/a2` + 4 armor sets (d/n/s) | (same family) |
 
 **Conclusion: it is the same rig.** So the bone count (60) is a **non-issue** — it works as a ridden mount. We adopt
-the donor's **rig + mesh + textures** (which are our FBX) and the proven `Mountable=true` mount recipe, but **TAOM authors
-its own elephant animations on our FBX** (the creature-animation pipeline) — *not* a reuse of the donor's `elephant_anims_all`
+ADOD_Beasts's **rig + mesh + textures** (which are our FBX) and the proven `Mountable=true` mount recipe, but **TAOM authors
+its own elephant animations on our FBX** (the creature-animation pipeline) — *not* a reuse of ADOD_Beasts's `elephant_anims_all`
 (project-owner decision, 2026-06-05). So it is a **rig/mesh adopt + custom-animation build**, with the proven mount recipe.
 
 #### Verified bone roster (`tpac_skeleton_dump.py` on `adod_elephant_geo.tpac`, 2026-06-05)
@@ -534,7 +534,7 @@ The engine supports exactly **two agent shapes**: a **humanoid combatant** (skin
 path) and a **ridden mount** (a rider sits on it; the horse/warg/camel path). There is no third "non-humanoid riderless
 combatant" shape — and that, not the bone count, is what the spider session ran into.
 
-| | **Donor-mod elephant** (works) | **TAOM spider** (paused, crashed) |
+| | **ADOD_Beasts elephant** (works) | **TAOM spider** (paused, crashed) |
 |---|---|---|
 | Agent shape | **Ridden mount** — a supported lane | Non-humanoid **riderless combatant** — a shape the engine doesn't have |
 | `Mountable` | `true` (a rider mounts it) | `false` (detached, no rider) |
@@ -543,19 +543,19 @@ combatant" shape — and that, not the bone count, is what the spider session ra
 | Native wield state | Rider carries the weapons; the mount has none → no uninitialised native-wield garbage | Riderless → garbage native-wield pointers (`0xee0`/`0xee4`) → needed a 3-method wield guard |
 | AI / movement | The rider's normal cavalry AI drives the mount | Hand-driven via `SetScriptedPositionAndDirection` (a riderless-AI hack) |
 | Auto-attack | The mount tramples/gores while ridden (the **warg** pattern) | A bespoke detached BT + move-node + bite service |
-| Bone count | 60 — fine (ridden) | 62 — crashed, **but because of the detached path, NOT the count** — the donor's 60-bone elephant proves a 60-bone skeleton renders fine as a ridden mount |
+| Bone count | 60 — fine (ridden) | 62 — crashed, **but because of the detached path, NOT the count** — ADOD_Beasts's 60-bone elephant proves a 60-bone skeleton renders fine as a ridden mount |
 
-**Takeaway:** the donor mod did the *supported* thing — a creature as a **ridden mount** — and never touched any of the five
+**Takeaway:** ADOD_Beasts did the *supported* thing — a creature as a **ridden mount** — and never touched any of the five
 crash layers we fought. We tried the *unsupported* thing — a creature as a **riderless autonomous combatant** — by
 hacking a mount (`FromHorseObj`) into a riderless fighter. The elephant is trivial by comparison precisely because it is
 *naturally a ridden mount that auto-attacks* — exactly the warg pattern. (If the spider is ever revived, the same
 insight applies: make it a **ridden mount**, not a detached agent.)
 
-## The recipe (from the donor mod's working elephant)
+## The recipe (from ADOD_Beasts's working elephant)
 
-Extracted by the donor-mod deep-dive (workflow `w21npmp7s`, 4 agents, 2026-06-05) — decompiled `ADOD_Beasts.dll`
+Extracted by ADOD_Beasts deep-dive (workflow `w21npmp7s`, 4 agents, 2026-06-05) — decompiled `ADOD_Beasts.dll`
 + read `adod_beasts.xml`, `adod_beasts_items.xml`, `elephant_troop_tree.xml`, `action_sets.xml`,
-`monster_usage_sets.xml`. The headline: **the donor's elephant is a STANDARD Bannerlord mount — the exact warg
+`monster_usage_sets.xml`. The headline: **ADOD_Beasts's elephant is a STANDARD Bannerlord mount — the exact warg
 pattern — not a detached agent.** The recipe has four data parts + one C# part:
 
 **1. Monster** (`adod_beasts.xml` `<Monster id="elephant">`, lines 58–114):
@@ -578,7 +578,7 @@ humanoid, so the whole spider problem (a riderless non-humanoid body) never aris
 
 **4. Action set** (`action_sets.xml` `as_elephant`, lines 353–463): `skeleton="elephant_skeleton"`,
 `movement_system="quadrupedal"`; binds the 31 elephant clips; defines custom `act_elephant_attack_1..4`;
-**requires** the `as_elephant_town_and_village` + `as_elephant_map` child derivations. (Porting note: the donor's
+**requires** the `as_elephant_town_and_village` + `as_elephant_map` child derivations. (Porting note: ADOD_Beasts's
 `as_elephant_town_and_village` has a copy-paste bug — it sets `act_elephant_stand_1` four times instead of
 `stand_1/2/3/4`; fix on port.) Plus a full `monster_usage_set` named `elephant` (`monster_usage_sets.xml`).
 
@@ -588,16 +588,16 @@ is < 3 m, look-dot > 0.25, roll < 0.001) plays `act_elephant_attack_N` and build
 the player triggers it on Space (Input 57). The heavy hit is the engine's native charge (`charge_damage=350`).
 The component is attached in `OnAgentBuild` off the HorseHarness, mirroring `WargMissionBehavior`. A
 mount-lockout (`CanAgentRideMount=false` + `MountDifficulty=999f` for non-rider agents) stops the AI stealing
-the elephant. **`NativeHook.dll` / `EasyHook.dll` are DEAD in the donor mod** — a leftover `using`, zero call sites in
+the elephant. **`NativeHook.dll` / `EasyHook.dll` are DEAD in ADOD_Beasts** — a leftover `using`, zero call sites in
 the 5029-line decompile, no `DependedModule`. **There is no native code to port.**
 
-### Deep-dive decision: structure from the warg, data from the donor mod
+### Deep-dive decision: structure from the warg, data from ADOD_Beasts
 
-The deep-dive's verdict (which I'm adopting): **clone the warg's architecture for the C#, re-author the donor's
+The deep-dive's verdict (which I'm adopting): **clone the warg's architecture for the C#, re-author ADOD_Beasts's
 data under TAOM/Harad ids, port no native code.** Concretely — `Main/Features/Elephant/` as a sibling of
 `Main/Features/Warg/`; an adapter-pure `IElephantAttackService` (ADR-002/007) that uses the warg's
-`CustomAttack` + `CustomAttacksUtils.TakeDamage` path (a clean bone-collision hit) **instead of** the donor's
-radial `Blow` loop; `ElephantAttackServiceTests` (the donor ships none); `FiniteFloatValidator` on any config;
+`CustomAttack` + `CustomAttacksUtils.TakeDamage` path (a clean bone-collision hit) **instead of** ADOD_Beasts's
+radial `Blow` loop; `ElephantAttackServiceTests` (ADOD_Beasts ships none); `FiniteFloatValidator` on any config;
 fold the `CanAgentRideMount` + `MountDifficulty 999` mount-lock into the existing TAOM `AgentStatCalculateModel`;
 defer the howdah (YAGNI); and — per the faction-map update rule (memory `feedback_faction_map_update_with_cultural_feats`)
 — update `factions.json` if the war elephant becomes a Harad identity element. Use a plain war-elephant id
@@ -606,45 +606,45 @@ creature TAOM already frames via `mumak_rider`).
 
 ## Plan (port → re-theme → standards)
 
-Ordered, following the deep-dive's step list (structure from warg, data from the donor mod, no native port):
+Ordered, following the deep-dive's step list (structure from warg, data from ADOD_Beasts, no native port):
 
-1. **Verify the rig matches — DONE (2026-06-05).** Diffed our FBX armature against the donor's `elephant_skeleton`:
+1. **Verify the rig matches — DONE (2026-06-05).** Diffed our FBX armature against ADOD_Beasts's `elephant_skeleton`:
    **identical, bone-for-bone, 60 bones, same order** (` Pelvis_03` → ` Spine_04` → ` Spine1_05` → ` Neck_06`
    → ` Neck1_07` → ` Head_08`, then ears + trunk + 4 legs + tail). The rig is confirmed.
    **Skeleton renamed + FBX re-exported — DONE (2026-06-05):** the armature (object + data) was
    `elephant_skeleton_unused`; renamed to **`elephant_skeleton`** (the spider's `_notused` → `_` fix), the body mesh
-   `elephant_mesh_unused` → **`elephant_mesh`** (matches the donor), and `elephant_harad_armor_01.fbx` re-exported with the
+   `elephant_mesh_unused` → **`elephant_mesh`** (matches ADOD_Beasts), and `elephant_harad_armor_01.fbx` re-exported with the
    proven recipe (`object_types={ARMATURE,MESH}`, `primary_bone_axis='Y'`, `secondary_bone_axis='X'`,
    `axis_forward='-Y'`, `axis_up='Z'`, `add_leaf_bones=False`, `bake_anim=False`). **Verified** via
    `tools/extract_fbx_bones.js`: root Null `elephant_skeleton` + **60 LimbNodes (0 leaf bones)** + 11 meshes
    (`elephant_mesh` + 10 `SK_Elephant_Armor_A.*`). Original backed up to `elephant_harad_armor_01.orig.fbx`.
    **The FBX is ready to import into the Modding Kit.** The `SK_Elephant_Armor_A.*` part names are fine as-is (the
    Monster/Item XML references whatever we author).
-2. **Assets** — copy the donor's elephant rig/mesh/textures into TAOM (or `LOTRLOME_Armory`); keep the mount
+2. **Assets** — copy ADOD_Beasts's elephant rig/mesh/textures into TAOM (or `LOTRLOME_Armory`); keep the mount
    `Usage='horse'` on the skeleton; run `tools/tpac_skeleton_transplant.py <tpac> elephant_skeleton --usage horse`
-   if physics needs re-applying after a re-import. (Animations: TAOM-authored on our FBX — step 4b, NOT the donor's clips.)
+   if physics needs re-applying after a re-import. (Animations: TAOM-authored on our FBX — step 4b, NOT ADOD_Beasts's clips.)
 3. **Data — Monster + Item + usage + action_set** (re-authored under TAOM/Harad ids — a plain war-elephant name,
    e.g. `taom_war_elephant`, **not** a mumakil id; final id is your call):
-   - **Monster** `taom_war_elephant`: copy the donor's `<Monster>` bone block verbatim, keep `Mountable/CanRear/CanCharge=true`,
+   - **Monster** `taom_war_elephant`: copy ADOD_Beasts's `<Monster>` bone block verbatim, keep `Mountable/CanRear/CanCharge=true`,
      `action_set=as_war_elephant`, `monster_usage=…`, `sound_and_collision="bovine"`.
    - **Item** (Horse) `taom_war_elephant`: `Type="Horse"`, `culture=Culture.harad` (not empire), tuned `charge_damage`,
      body mesh + `<AdditionalMeshes>` for armor/howdah + `<Materials>` → the elephant textures,
      `<Horse monster="Monster.taom_war_elephant" is_mountable="true">`; + a `HorseHarness` (`family_type="10"`).
-   - **action_set** `as_war_elephant` + the **required** `_town_and_village` + `_map` children (fix the donor's
+   - **action_set** `as_war_elephant` + the **required** `_town_and_village` + `_map` children (fix ADOD_Beasts's
      `stand_1`×4 copy-paste bug); the `monster_usage_set`. Rename `act_elephant_*` → `act_war_elephant_*` so we
-     carry no runtime dependency on the donor mod being installed. Register all in `SubModule.xml`.
+     carry no runtime dependency on ADOD_Beasts being installed. Register all in `SubModule.xml`.
 4. **Validate data** — `python tools/validate_moduledata.py` before any C# (the external LOTRLOME XML is
    out of its scope, but the Main-module refs are not).
 4b. **Animations (TAOM-authored, on our FBX)** — author the elephant clips on our FBX (walk / run / idle /
    turn / charge / trample / tusk-gore / death + trunk + ear motion) via the creature-animation pipeline
    (Blender/Cascadeur → Modding-Kit compile), bound in the action set. The rig is a standard quadruped, so
-   body+leg gaits can retarget from horse/warg; the **trunk + ears are the bespoke part** (the donor bakes trunk/ear
-   motion into each clip — no separate bones — so TAOM must key them into our clips). Reference the donor's action
+   body+leg gaits can retarget from horse/warg; the **trunk + ears are the bespoke part** (ADOD_Beasts bakes trunk/ear
+   motion into each clip — no separate bones — so TAOM must key them into our clips). Reference ADOD_Beasts's action
    *coverage* only (it reuses `elephant_walk` for trot + strafe — TAOM can author real trot/strafe for polish).
-   See "Declined: reusing the donor's clips" below for why we author rather than reuse.
+   See "Declined: reusing ADOD_Beasts's clips" below for why we author rather than reuse.
 5. **C# — clone the warg.** `Main/Features/Elephant/` as a sibling of `Main/Features/Warg/`: an adapter-pure
    `IElephantAttackService` (ADR-002/007) using the warg's `CustomAttack` + `CustomAttacksUtils.TakeDamage`
-   bone-collision path (**not** the donor's radial `Blow` loop); an `ElephantMissionBehavior` that attaches the
+   bone-collision path (**not** ADOD_Beasts's radial `Blow` loop); an `ElephantMissionBehavior` that attaches the
    attack component in `OnAgentBuild` (mirroring `WargMissionBehavior`); `FiniteFloatValidator` on config.
 6. **Mount-lock** — fold `CanAgentRideMount=false` + `MountDifficulty=999f` (non-rider agents) into the existing
    TAOM `AgentStatCalculateModel` so the AI can't steal the mount.
@@ -655,13 +655,13 @@ Ordered, following the deep-dive's step list (structure from warg, data from the
    CHANGELOG before commit.
 10. **In-game smoke** — mount, charge, confirm trample + knockdown, confirm AI cannot steal the mount.
 
-### Declined: reusing the donor's clips (recorded, not chosen)
+### Declined: reusing ADOD_Beasts's clips (recorded, not chosen)
 
-The deep-dive found the donor mod ships **31 elephant-skeleton clips + 32 human-rider clips**, all *clip-only*
+The deep-dive found ADOD_Beasts ships **31 elephant-skeleton clips + 32 human-rider clips**, all *clip-only*
 (skeleton-agnostic, TaleWorlds anim-clip type `506509c8-…`, no embedded skeleton), so they would technically
 drop straight onto our `elephant_skeleton` if the bones match — a complete, production-grade set covering
 walk/trot/canter/gallop(+turns)/idle/rear/dash/hit/death + 4 trample attacks. **The project owner chose to
-author TAOM's own clips on our FBX instead (2026-06-05), so the donor's clip set is a declined fallback / coverage
+author TAOM's own clips on our FBX instead (2026-06-05), so ADOD_Beasts's clip set is a declined fallback / coverage
 reference only — not the shipping animations.** (Licensing is moot either way — the asset was purchased from
 Artem; see below.)
 
@@ -675,11 +675,11 @@ files are data/assets:
 | Mesh + skeleton tpac | `LOTRLOME_Armory/Assets/creature/elephant/mesh/elephant_harad_armor_01_geo.tpac` (+ textures) | **imported** (2026-06-05) |
 | Monster XML | `…/LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` (id `taom_war_elephant`) | **deployed** (2026-06-06) |
 | Item XML | `…/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` (Horse item `taom_war_elephant`, mesh `elephant_mesh`) | **deployed** (2026-06-06) |
-| Action set | `…/LOTRLOME_Armory/ModuleData/action_sets.xml` (`as_elephant` block appended; uses donor ids + clip names — pending rename to `as_war_elephant`) | **deployed** (2026-06-08); confirmed in-game |
-| Animation clips | `LOTRLOME_Armory/Assets/creature/elephant/animations/` (35 donor tpacs — working; TAOM-authored clips pending) | **copied** (2026-06-06); animates in-game |
+| Action set | `…/LOTRLOME_Armory/ModuleData/action_sets.xml` (`as_elephant` block appended; uses ADOD_Beasts ids + clip names — pending rename to `as_war_elephant`) | **deployed** (2026-06-08); confirmed in-game |
+| Animation clips | `LOTRLOME_Armory/Assets/creature/elephant/animations/` (35 ADOD_Beasts tpacs — working; TAOM-authored clips pending) | **copied** (2026-06-06); animates in-game |
 | Recruitment | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` (Harad pools) | TODO — using TEMP harad_militia entry |
 
-## Reference: the upstream beasts pack
+## Reference: ADOD_Beasts
 
 A shipped community beasts mod (wolves, wights, elephant) with `ADOD_Beasts.dll` + a `NativeHook.dll` +
 `EasyHook.dll`. It is the working reference for the elephant. **Deep-dive verdict (`w21npmp7s`, 2026-06-05):**
@@ -688,11 +688,11 @@ the elephant is a standard Bannerlord mount driven entirely by data + managed C#
 GameModel locks out non-rider AI, and the attack component is attached in `OnAgentBuild`. **`NativeHook.dll` /
 `EasyHook.dll` are dead** — a leftover `using`, zero call sites across the 5029-line decompile, no
 `DependedModule` declaration. **TAOM ports no native code and ships neither DLL.** Structure is cloned from the
-warg; data is re-authored from the donor mod; meshes/textures are our own FBX (purchased — see License below).
+warg; data is re-authored from ADOD_Beasts; meshes/textures are our own FBX (purchased — see License below).
 
 ## License / provenance
 
-The elephant asset was **purchased from Artem (the donor-mod author) for use in TAOM** — no clean-room re-derivation or
+The elephant asset was **purchased from Artem (ADOD_Beasts author) for use in TAOM** — no clean-room re-derivation or
 attribution gating required. (Confirmed by the project owner, 2026-06-05.)
 
 ## v1.4.6 exposure (2026-06-12) — jump table hardened; battle-test owed
@@ -724,8 +724,8 @@ not C#:
 Every vanilla `Mountable` monster carries all twelve: `horse`/`camel`/`mule` declare them and
 `horse_2` inherits them via `base_monster`. v1.4.8 fixed a "horse rein visual bug when a mounted
 agent died" — native, no managed diff, in a path that runs on **mounted-agent death**
-([v1.4.8-impact.md](../migration/v1.4.8-impact.md) row N7). The shape came from upstream: the donor
-beasts pack's own `elephant` Monster (`ADOD_Beasts/ModuleData/adod_beasts.xml`) is also `Mountable`
+([v1.4.8-impact.md](../migration/v1.4.8-impact.md) row N7). The shape came from upstream: ADOD_Beasts's
+own `elephant` Monster (`ADOD_Beasts/ModuleData/adod_beasts.xml`) is also `Mountable`
 with zero rein attributes.
 
 **No crash is predicted.** Nothing offline settles it, and `tools/audit_mount_parity.py` has no rein
@@ -737,27 +737,27 @@ invariant".
 
 ## Open items
 
-- [x] Fold in the exact recipe + the donor code/NativeHook verdict from the deep-dive workflow. *(done 2026-06-05)*
-- [x] Capture the donor's `elephant_skeleton` bone roster as the match reference (60 bones — see "Verified bone roster" above). *(done 2026-06-05)*
-- [x] **Verify our FBX rig matches the donor's `elephant_skeleton` bone-for-bone** — DONE (2026-06-05, Blender diff:
+- [x] Fold in the exact recipe + ADOD_Beasts code/NativeHook verdict from the deep-dive workflow. *(done 2026-06-05)*
+- [x] Capture ADOD_Beasts's `elephant_skeleton` bone roster as the match reference (60 bones — see "Verified bone roster" above). *(done 2026-06-05)*
+- [x] **Verify our FBX rig matches ADOD_Beasts's `elephant_skeleton` bone-for-bone** — DONE (2026-06-05, Blender diff:
       identical 60 bones, same order).
 - [x] **Rename the armature → `elephant_skeleton` + body mesh → `elephant_mesh`, re-export `elephant_harad_armor_01.fbx`**
       — DONE (2026-06-05; verified 60 LimbNodes / 0 leaf bones / 11 meshes via `extract_fbx_bones.js`; original backed up).
       **Ready to import into the Modding Kit.** Remaining: re-confirm the rig in the Kit after the tpac compile.
 - [x] Scaffold the `Main/Features/Elephant/` service core (clone of `Main/Features/Warg/`) — `IElephantAttackService`
       via the warg `CustomAttack` path + 19 unit tests. *(done 2026-06-05, build green)*
-- [x] **C# trample + mission behavior + IoC/SubModule wiring** — DONE (2026-06-05, 1-for-1 donor port on v1.4.5, build green; 11 service tests).
+- [x] **C# trample + mission behavior + IoC/SubModule wiring** — DONE (2026-06-05, 1-for-1 ADOD_Beasts port on v1.4.5, build green; 11 service tests).
 - [x] **Mount-lock** (`CanAgentRideMount=false` + `MountDifficulty=999`) folded into `TaomAgentStatCalculateModel` — DONE (2026-06-05).
 - [x] **Mesh + skeleton imported** to `LOTRLOME_Armory/Assets/creature/elephant/` — DONE (2026-06-05, by the project owner).
 - [x] **Monster + Horse Item** (`taom_war_elephant`) deployed into LOTRLOME_Armory — DONE (2026-06-06). `lotr_monster_elephant.xml` + `taom_war_elephant` Item in `LOTRAOM_horses.xml` + SubModule.xml registrations.
-- [x] **Action-set deployed self-contained** in LOTRLOME_Armory — DONE (2026-06-08). The donor's `as_elephant` / `as_elephant_town_and_village` / `as_elephant_map` merged into `LOTRLOME_Armory/ModuleData/action_sets.xml` (single `soln_action_sets` entry in `project.mbproj`). Two deployment crashes fixed (see "Action-sets deployment crash history" above).
-- [x] **In-game battle smoke test** — CONFIRMED (2026-06-08). Multiple war elephants with Harad riders spawned, rendered, and fought correctly in battle. The upstream beasts pack NOT in load order.
+- [x] **Action-set deployed self-contained** in LOTRLOME_Armory — DONE (2026-06-08). ADOD_Beasts's `as_elephant` / `as_elephant_town_and_village` / `as_elephant_map` merged into `LOTRLOME_Armory/ModuleData/action_sets.xml` (single `soln_action_sets` entry in `project.mbproj`). Two deployment crashes fixed (see "Action-sets deployment crash history" above).
+- [x] **In-game battle smoke test** — CONFIRMED (2026-06-08). Multiple war elephants with Harad riders spawned, rendered, and fought correctly in battle. ADOD_Beasts NOT in load order.
 - [ ] **Battle-test a ridden elephant death + a mounted mahout death on v1.4.8** — the Monster declares zero rein attributes while being `Mountable`, and v1.4.8 changed the native rein path that runs on mounted-agent death. UNVERIFIED; no tool gates it. See "v1.4.8 exposure" above.
 - [ ] Revert **TEMP** `Horse`-slot entry in `Main/_Module/ModuleData/troops/troops_harad.xml` — marked `TEMP-ELEPHANT-TEST`, MUST revert before any commit.
-- [ ] Author a **TAOM-owned action-set** `as_war_elephant` (rename from `as_elephant`, bind TAOM-authored clip names) to make the action-set fully TAOM-authored (currently uses donor ids / clip names verbatim).
-- [ ] **Build the elephant animations on our FBX** (Blender → Modding-Kit compile) — TAOM-owned, NOT the donor's 1.2.12 clips. Gating seam for the rename to `as_war_elephant`.
+- [ ] Author a **TAOM-owned action-set** `as_war_elephant` (rename from `as_elephant`, bind TAOM-authored clip names) to make the action-set fully TAOM-authored (currently uses ADOD_Beasts ids / clip names verbatim).
+- [ ] **Build the elephant animations on our FBX** (Blender → Modding-Kit compile) — TAOM-owned, NOT ADOD_Beasts's 1.2.12 clips. Gating seam for the rename to `as_war_elephant`.
 - [x] Author the Harad rider troop + recruitment — DONE (2026-06-10). `harad_elephant_rider` (level 51, `Culture.aserai`, `HorseArcher`) recruitable ONLY by `clan_aserai_1` (Ayerikkä) via `VolunteerRecruitmentService.InitializeHaradClans` (clan pool copies the levy/noble fallback + adds the rider at weight 1). The TEMP `harad_militia` Horse-slot test entry was replaced by this dedicated troop. Remaining rider polish: not yet in any party template (AI Ayerikkä lords field it only when recruited); rider skills left at pre-level-51 values; recruitment weight is a rarity knob. Update `factions.json` if the war elephant becomes a Harad identity element.
-- [x] Tune damage after in-game testing — DONE (2026-06-15): replaced the donor's fixed ~20 with TAOM per-kind randomized bands (trample 50-100, tusk 50-75, ×0.25 on shield block); gates unchanged. Also swapped the rider's primary spear (`eastern_spear_4_t4`) for a 2nd `bodkin_arrows_b` quiver so the mounted archer fires at ground targets instead of melee-swinging into air.
+- [x] Tune damage after in-game testing — DONE (2026-06-15): replaced ADOD_Beasts's fixed ~20 with TAOM per-kind randomized bands (trample 50-100, tusk 50-75, ×0.25 on shield block); gates unchanged. Also swapped the rider's primary spear (`eastern_spear_4_t4`) for a 2nd `bodkin_arrows_b` quiver so the mounted archer fires at ground targets instead of melee-swinging into air.
 - [ ] **DEFERRED — re-enable howdah crew (slide source #1).** Crew spawn is disabled (`TrySpawnHowdahCrew` call
       commented in `ElephantMissionBehavior.TryInstantiateHowdah`). Re-enable with a crew↔elephant collision fix —
       candidate: give the crew the elephant's `FaceGroupId` via `Agent.SetAgentExcludeStateForFaceGroupId` (the
@@ -769,12 +769,12 @@ invariant".
 - [ ] **Fix the fixed-offset fallback (`RepositionToFixedOffset`)** — it places the howdah at the elephant's *legs*,
       not its back (surfaced during the slide ladder when bone-tracking was off). Harmless now (no crew), but it is
       the build-time + bone-failure safety path and must position correctly before crew are re-enabled.
-- [ ] **Add physical barrier entities to `taom_howdah_agent.xml`** — all donor howdah variants include 4 `_barrier_04x04m`
+- [ ] **Add physical barrier entities to `taom_howdah_agent.xml`** — all ADOD_Beasts howdah variants include 4 `_barrier_04x04m`
       entities with `missile_only` body flag to physically wall archers inside the basket. Without them archers can be
       pushed/walk off the howdah. Match `adod_howdah_4_agents.xml` barrier layout.
-- [ ] **Evaluate `TranslateUser = true`** — all donor howdah seats use `TranslateUser="true"` (physics-level frame
+- [ ] **Evaluate `TranslateUser = true`** — all ADOD_Beasts howdah seats use `TranslateUser="true"` (physics-level frame
       translation by the base `StandingPoint.OnTick`). Our seats use `TranslateUser="false"` + custom `SetScriptedPosition`
-      + `SetTargetZ`. If Z-snap issues persist with our approach, switching to the donor's pattern requires: (1) `TranslateUser="true"`
+      + `SetTargetZ`. If Z-snap issues persist with our approach, switching to ADOD_Beasts's pattern requires: (1) `TranslateUser="true"`
       on seat entities in `taom_howdah_agent.xml`, (2) calling `base.OnTick(dt)` at the end of `TaomHowdahStandingPoint.OnTick`.
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
@@ -796,7 +796,7 @@ invariant".
 - 2026-06-09 — Sealed-package howdah (force-spawned crew, 4 seats, dedicated rider); fixed howdah ground-level archers, ignored commands, and end-of-battle freeze.
 - 2026-06-08 — Harad war elephant confirmed in-game; action-sets made self-contained in `LOTRLOME_Armory`; functional howdah seat via vanilla detachment.
 - 2026-06-06 — First-pass idle + walk animations authored in Blender (via MCP); howdah crew mechanism documented + clip consolidation underway.
-- 2026-06-05 — Harad war-elephant trample + mount-lock C# implemented (donor-mod behavioral port adapted to v1.4.5).
+- 2026-06-05 — Harad war-elephant trample + mount-lock C# implemented (ADOD_Beasts behavioral port adapted to v1.4.5).
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

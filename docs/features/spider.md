@@ -57,7 +57,7 @@ spider never crashed here because non-mount agents never engage the quadruped ga
 
 **Why (root cause):** the `an_spi_*` animation clips were Kit-compiled (2026-06-03 loop sessions)
 **without the `quad_movement` tag and step points** in their `_anm.tpac` metadata. Every working
-quadruped's movement clips carry that tag (verified by byte-diffing the upstream beasts pack's
+quadruped's movement clips carry that tag (verified by byte-diffing ADOD_Beasts's
 `elephant_canter_anm.tpac`, which also carries `make_walk_sound`, four step-point fractions, and
 movement speed params — ours had empty tag lists and step points `-1,-1,-1,-1`). A
 `movement_system="quadrupedal"` action set whose movement-bound clips lack the tag builds a
@@ -77,15 +77,15 @@ also failed), the clip *bindings* (all repointed to one intact clip — still fa
 action sets, the old-vs-new tpac (both failed), and dangling `_anm→_geo`/skeleton GUIDs (byte
 cross-reference clean). The final cross-probes (T5: `as_spider`×warg-usage AV; T6:
 `as_warg`×spider-usage OK) convicted the action set's *engagement of our clips*; byte-diffing a
-working upstream pack clip against ours exposed the missing tag in minutes.
+working ADOD_Beasts clip against ours exposed the missing tag in minutes.
 
-**The fix (how):** rebuild the movement clips' `_anm.tpac` on the elephant template — keep the upstream pack's
+**The fix (how):** rebuild the movement clips' `_anm.tpac` on the elephant template — keep ADOD_Beasts's
 proven post-name layout (tags `quad_movement` + `make_walk_sound`, step-point fractions, movement
 params), substitute each clip's own identity fields (file/resource/curve GUIDs, name, duration
 trio, blend float, trailer hash). Patched clips: `an_spi_walk_2`, `an_spi_walk_left`,
 `an_spi_walk_right`, `an_spi_run` (the only clips bound to movement actions). Originals preserved
 as `*.bak-untagged` beside them. Non-movement clips (attacks/hits/deaths) correctly do NOT carry
-`quad_movement` (the upstream pack's attacks don't either).
+`quad_movement` (ADOD_Beasts's attacks don't either).
 
 **THE LESSON (any future creature):** when compiling creature animation clips in the Modding Kit,
 movement/gait clips MUST get the `quad_movement` flag (+ step points) in the Kit's animation
@@ -106,7 +106,7 @@ the detached spawn paths that earlier testing exercised.
 | Mount item | `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` → `spider_mount_a` | `is_mountable`, `<Horse monster="Monster.spider" maneuver=60 speed=40 charge_damage=10 body_length=100>`, `<AdditionalMeshes><Mesh name="sk_spider_forest_c_2"/>` (the L/R split second half) |
 | Skeleton + Meshes (bundled) | `Assets/creature/spider/animations/spider_correct_geo.tpac` (2.78MB) | **LIVE = the PROVEN 6/11 working bundle, RESTORED 2026-06-14 from `E:\LOTRAOMAssets\_tpac_backup_20260613\spider\`** (skeleton `owner_guid a9ec7d87…`, `Usage='horse'`; the 6/10 pre-rework mesh). `sk_spider_forest_c` / `_c_2` L/R-split meshes (≤38 bones/half; the unsplit 58-bone mesh AVs `PreloadForRendering`) + the 62-bone **`spider_skeleton`** resource. The action_set's `skeleton="spider_skeleton"` resolves here. **The 2026-06-13 Kit-rebuild bundle (different mesh) caused a FATAL battle-spawn AV** in the native `sound_and_collision_info` agent-build (`Agent.BuildAux`→native `Build`, RVA 0x490E02) — preserved as `.bak-kitbroken-20260614`; my physics-transplant attempts (`.transplanted-20260614`, `.bak-bundled-crashing-20260614`) likewise didn't fix it. **Restoring the backup did, in one copy.** Lesson: `feedback_creature_rework_restore_from_backup_first.md`. *(In-game battle verification owed.)* |
 | Skeleton history (DO NOT repeat) | — | The 06-13 Blender-loop mesh re-export shipped `spider_correct_geo.tpac` **mesh-only**, dropping the skeleton → `CreateAgentSkeleton` null → riderless spiders. First fix attempt (2026-06-13) extracted the skeleton into a **STANDALONE** `meshes/spider_skeleton_geo.tpac` via `tpac_skeleton_extract.py` — this **CRASHED** the engine (recursive worker-thread native AV reading null; the standalone reused the skeleton's item_guid as its package_guid + no creature ships a standalone skeleton tpac). Deleted 2026-06-14. Correct fix = re-bundle into the mesh tpac via `tools/tpac_skeleton_inject.py`. Skeleton source of truth: `meshes/sk_spider_forest_c_geo.tpac.backup` (item [2], the un-split a/b/c original). Mesh-only backup of the dropped state: `animations/spider_correct_geo.tpac.bak-meshonly-20260614`. Lesson: `feedback_mesh_reexport_drops_skeleton_resource.md`. |
-| Clips | `Assets/creature/spider/animations/an_spi_*_{anm,geo}.tpac` | Loose-pair format (same as the upstream pack elephant). Movement clips tagged (see ROOT CAUSE). The 13 `new_animation_clip*_anm.tpac` files are NOT garbage — Kit default filenames whose internal resource names are real (`an_spi_hit_front`, `an_spi_death_1`, …; quirk: `an_spi_idle2` has no second underscore) |
+| Clips | `Assets/creature/spider/animations/an_spi_*_{anm,geo}.tpac` | Loose-pair format (same as ADOD_Beasts elephant). Movement clips tagged (see ROOT CAUSE). The 13 `new_animation_clip*_anm.tpac` files are NOT garbage — Kit default filenames whose internal resource names are real (`an_spi_hit_front`, `an_spi_death_1`, …; quirk: `an_spi_idle2` has no second underscore) |
 | Rider troop | TAOM `Main/_Module/ModuleData/characters/spider_creature.xml` | `taom_spider_creature`: goblin, Cavalry, level 20, Dol Guldur, 3 equipment rosters all with `Horse = spider_mount_a` |
 | Troop weight | `TroopWeights/troop_weights.xml` | 3.0 (2 mount + 1 rider; elephant precedent 7.0) |
 | Recruitment | `VolunteerRecruitmentService` DG settlement pools | weight 1, all Dol Guldur fiefs (intentionally absent from clan pools) |
@@ -268,7 +268,7 @@ consts (`SpiderConfig.PounceCollisionRadius`/`SideCollisionRadius`) are the dial
 | Spider idle | ✅ pose-correct: `an_spi_idle` (3.5s) tagged + bound (idle_2 → `an_spi_idle2`, the no-underscore resource quirk) |
 | Spider idle refinement (2026-06-12/13, Blender-MCP) | ✅ shipped idle was a walk-in-place bug → fixed via `freeze_toward_rest(legs, 0.92)` to a settled braced IN-PLACE idle (zero-degree loop seam, subtle body breathing), exported (workflow: [creature-animation-blender-mcp-workflow.md](../ai-includes/creature-animation-blender-mcp-workflow.md)) |
 | Turns / jump | ✅ `an_spi_turn_left/right` + `an_spi_jump` tagged + bound |
-| Deaths / hits / attacks | ✅ natural clips bound (`an_spi_death_1/2`, `hit_front/right`, `attack_left/right/top`) — no quad tag needed (upstream pack parity) |
+| Deaths / hits / attacks | ✅ natural clips bound (`an_spi_death_1/2`, `hit_front/right`, `attack_left/right/top`) — no quad tag needed (ADOD_Beasts parity) |
 | Rider animation | ✅ partial `as_human_warrior` with 24 spider→`rider_warg_*` bindings (see "Rider-side bindings"); riders seated correctly in the 09:50 battle |
 | Vanilla-map battle (full polish data) | ✅ 2026-06-11 09:50 `battle_terrain_biome_092`: playable, formations deployed, idles standing, riders seated, battery all-green, 0 mount failures |
 | **v1.4.6 full battle (river map)** | ✅ **2026-06-12: charge + bank jumps + river crossing + prolonged melee + rider deaths + spider deaths, NO CRASH** — all three 1.4.6 crash sites fixed (see the engine-bump campaign section) |
@@ -292,10 +292,10 @@ consts (`SpiderConfig.PounceCollisionRadius`/`SideCollisionRadius`) are the dial
 
 **Durable fix (Kit editor):** open the clip → **Clip usages** section (bottom of the properties
 panel, below Flags) → add **`quad_movement`**; check the **`make_walk_sound`** Flag; set step
-points. Full editor field map + per-category upstream pack flag recipes:
+points. Full editor field map + per-category ADOD_Beasts flag recipes:
 [spider-skeleton-animation-pipeline.md §3c](spider-skeleton-animation-pipeline.md).
 
-**Interim byte-patch (what shipped 2026-06-11):** take a working upstream pack `_anm.tpac` (e.g.
+**Interim byte-patch (what shipped 2026-06-11):** take a working ADOD_Beasts `_anm.tpac` (e.g.
 `elephant_canter_anm.tpac`), keep its post-name layout (step points, the `make_walk_sound` flag
 list + `quad_movement` usage list, movement params), substitute the target clip's file GUID (@8),
 resource GUID (@52), name (+length @72), duration trio (pos+12 where pos=76+namelen), curve GUID

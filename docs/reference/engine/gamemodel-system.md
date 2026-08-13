@@ -31,8 +31,8 @@ is the one `GetModel<DefaultFooModel>()` / `GetModel<FooModel>()` returns. The D
   specific methods and calls `base.Foo(...)` for everything else. Simple, no decorator. (This is the GameModel
   Override Pattern in `.claude/rules/csharp-patterns.md` / `gamemodels.md`.)
 - **Decorator/wrapper (`AddModel<T>` + `MBGameModel<T>`):** `gameModel.Initialize(GetModel<T>())` hands the *previous*
-  model to the new one so it can delegate. **The upstream pack used this** (its `ADODAgentStatCalculateModel` wraps the previous
-  model); TAOM prefers inheritance + `base` (simpler — see the [upstream-pack comparison](../adod-beasts-architecture-and-taom-port.md)).
+  model to the new one so it can delegate. **ADOD_Beasts used this** (its `ADODAgentStatCalculateModel` wraps the previous
+  model); TAOM prefers inheritance + `base` (simpler — see the [ADOD_Beasts comparison](../adod-beasts-architecture-and-taom-port.md)).
 
 ### Where models live + are resolved
 - **Campaign models** — `Campaign.Current.Models` (`GameModels : GameModelsManager`, CampaignSystem.cs:43100):

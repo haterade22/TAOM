@@ -17,9 +17,10 @@ namespace TAOM.Dependencies.Foundation;
 /// <see cref="Harmony.Unpatch(MethodBase, HarmonyPatchType, string)"/>. The patched
 /// method continues running uncaught from the user's perspective — the game keeps going.
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25, port of BetaDeps.Foundation.PatchShield).
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25, re-implementation of BetaDeps.Foundation.PatchShield).
 /// This is the single highest-leverage component in BetaDeps's "every BUTR-dependent mod
-/// works even when broken" promise.
+/// works even when broken" promise. Provenance and licence status:
+/// docs/reference/provenance-register.md (BetaDeps row).
 ///
 /// Opt-out: place a file named <c>patchshield-disabled.flag</c> in the
 /// TAOM.Dependencies module directory to skip install. Useful for diagnosing whether

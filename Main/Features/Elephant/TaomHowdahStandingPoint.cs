@@ -10,7 +10,7 @@ namespace TAOM.Features.Elephant;
 /// Seats a single harad archer on the elephant's back and carries them with it every frame.
 /// Positioning mechanism: <see cref="Agent.TeleportToPosition"/> is called every OnTick with the
 /// seat entity's current world position. TeleportToPosition calls MBAPI.IMBAgent.SetPosition
-/// with the Vec3 as-is (no navmesh Z-snap) — the upstream beasts pack uses the same pattern via a NativeHook
+/// with the Vec3 as-is (no navmesh Z-snap) — ADOD_Beasts uses the same pattern via a NativeHook
 /// SetPosition. Since the parent howdah entity tracks the elephant each frame via
 /// TaomHowdahMachine.RepositionToElephant, this keeps the archer elevated on the howdah platform.
 /// On release, TeleportToPosition drops the agent to elephant ground level for the exit sequencer.
@@ -98,7 +98,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
         // TeleportToPosition calls MBAPI.IMBAgent.SetPosition with the Vec3 as-is (no navmesh
         // Z-snap), so the elevated seat Z (~3.2m above elephant) is preserved.
         // This counteracts the navmesh gravity that snapped agents to terrain Z on spawn.
-        // The upstream beasts pack uses the equivalent pattern via a NativeHook SetPosition each tick.
+        // ADOD_Beasts uses the equivalent pattern via a NativeHook SetPosition each tick.
         MovingAgent.TeleportToPosition(GameEntity.GlobalPosition);
 
         // NO SetActionChannel here (2026-06-10). Forcing act_howdah_stand_bow each tick pinned the archer's

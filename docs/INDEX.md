@@ -43,8 +43,8 @@
 - [companion-tactics](features/companion-tactics.md) — companion-driven formation overrides; `CancelStanceOnMove` postfix
 - [warg-combat](features/warg-combat.md) — BT elements, WargAttackService, WargMissionBehavior
 - [spider](features/spider.md) — spider creature combat (PAUSED: native render AV; fix = wolf's public SpawnMonster + un-split mesh)
-- [elephant](features/elephant.md) — war-elephant trample + tusk auto-attacks + mount-lock (mount-lock + mechanic ported from the upstream pack; cadence + per-kind randomized damage are TAOM's own rebalance) + [howdah-crew-mechanism](features/elephant/howdah-crew-mechanism.md) (UsableMachine crew platform; not yet ported)
-- [upstream beasts pack architecture and TAOM port](reference/adod-beasts-architecture-and-taom-port.md) — **the whole upstream beasts pack end-to-end** (lifecycle + the WHY) + line-by-line TAOM port comparison across all 4 subsystems; the 1.2.12→1.4.5 drift catalogue. Read this before re-decompiling the upstream pack.
+- [elephant](features/elephant.md) — war-elephant trample + tusk auto-attacks + mount-lock (mount-lock + mechanic ported from ADOD_Beasts; cadence + per-kind randomized damage are TAOM's own rebalance) + [howdah-crew-mechanism](features/elephant/howdah-crew-mechanism.md) (UsableMachine crew platform; not yet ported)
+- [ADOD_Beasts architecture and TAOM port](reference/adod-beasts-architecture-and-taom-port.md) — **the whole of ADOD_Beasts end-to-end** (lifecycle + the WHY) + line-by-line TAOM port comparison across all 4 subsystems; the 1.2.12→1.4.5 drift catalogue. Read this before re-decompiling ADOD_Beasts. Provenance row: [provenance-register.md](reference/provenance-register.md)
 - [troop-weight-system](features/troop-weight-system.md) — TroopWeightSettings, PartyBase / TroopRoster patches (Patch17)
 - [battle-balance](features/battle-balance.md) — TaomMilitaryPowerModel, TaomCombatSimulationModel
 - [battle-scenes](features/battle-scenes.md) — battle scene system (Patch0, currently DISABLED)
@@ -222,6 +222,7 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 
 - [reference/rules-catalog.md](reference/rules-catalog.md) — full `.claude/rules/` catalog (rule → scope → content, always-load vs path-scoped); CLAUDE.md keeps only the load-convention note
 - [reference/rule-provenance.md](reference/rule-provenance.md) — the always-load rules' "why this exists / relationships / source" sections, moved out of the eager load; read when auditing or editing a rule
+- [reference/provenance-register.md](reference/provenance-register.md): every third-party source TAOM derives from, with its license and derivation type. Read before porting anything, and see `.claude/rules/provenance.md` for the rule
 - [ai-includes/architecture.md](ai-includes/architecture.md) — layer stack, IoC, lifetimes
 - [ai-includes/patterns.md](ai-includes/patterns.md) — Hook / Strategy / GameModel patterns
 - [ai-includes/agent-teams.md](ai-includes/agent-teams.md) — when to spawn parallel agents

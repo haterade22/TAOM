@@ -13,7 +13,7 @@ namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
 /// Shared template for elephant-like attacks: plays the derived class's attack animation on channel 0, stamps the
 /// derived class's cooldown, and deals radial knockdown damage (`CustomAttacksUtils.TakeDamage`) to every live
 /// enemy within the profile's <see cref="ElephantLikeCombatProfile.TrampleRadius"/>. Damage amount from the pure
-/// <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/> (the upstream pack's formula,
+/// <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/> (ADOD_Beasts's formula,
 /// shield-block-aware). Boundary code, mirroring the warg's <c>WargAttackTask</c>.
 /// </summary>
 public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IBTElephantLikeBlackboard
@@ -72,7 +72,7 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
 
 /// <summary>
 /// The trample (double-sweep thrash) — the priority attack, 10s cooldown. Alternates randomly between the two
-/// near-identical thrash clips (attack_3/attack_4) for variety; the upstream pack never played attack_4 at all.
+/// near-identical thrash clips (attack_3/attack_4) for variety; ADOD_Beasts never played attack_4 at all.
 /// </summary>
 public class ElephantLikeTrampleTask : ElephantLikeAttackTaskBase
 {

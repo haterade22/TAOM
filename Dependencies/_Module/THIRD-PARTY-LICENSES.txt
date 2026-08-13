@@ -101,13 +101,24 @@ under the License.
 
 All other code in this distribution (Dependencies/Foundation/*.cs,
 Dependencies/SubModule.cs, Dependencies/AliasStubSubModule.cs,
-Dependencies/EarlyLog.cs) is original work, MIT-licensed.
+Dependencies/EarlyLog.cs) is written by TAOM and MIT-licensed. The paragraph
+below qualifies where that code's design came from.
 
 The defensive infrastructure classes in Dependencies/Foundation/
 (DiagLog, RuntimeLog, ReflectionUtils, VersionProbe, IncompatibleModDetector,
 PatchShield, SaveShield, FailureRecord, FailedModsCatalog,
-SubModuleConstructionGuard, CollectAssemblyTypesShim) adopt the design
-of the corresponding classes in BetaDeps.Foundation (https://www.nexusmods.com/mountandblade2bannerlord/mods/11274)
-under a clean-room rewrite. All code is original to TAOM.
+SubModuleConstructionGuard, CollectAssemblyTypesShim) are TAOM
+re-implementations. Their design and behaviour were derived from reading the
+corresponding classes in BetaDeps.Foundation
+(https://www.nexusmods.com/mountandblade2bannerlord/mods/11274), which was used
+as a reference while they were written. No BetaDeps source files were copied into
+TAOM; the class names and the shielded-method and simple-type lists do follow the
+upstream's. TAOM's versions differ in substance: several carry notes recording
+where the BetaDeps original was wrong for this engine version and what TAOM does
+instead.
+
+The ModulesToLoadAfterThis list in Dependencies/_Module/SubModule.xml is adapted
+from BetaDeps v0.7.5.1's. It is a list of module ids, which are compatibility
+facts about other people's mods rather than expression.
 
 Copyright (c) 2026 TAOM project contributors, licensed under the MIT License.

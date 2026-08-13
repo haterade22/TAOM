@@ -11,7 +11,7 @@ namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
 /// already mid-attack. On a passing scan it writes the best enemy's signed bearing to the blackboard so
 /// <see cref="ElephantLikeSideAttackTask"/> can pick the matching left/right swing. The pure decision is
 /// <see cref="IElephantLikeAttackService.ShouldEngage"/>; this is boundary code (touches Mission/Agent directly),
-/// like the warg's target-scan decorators. The 2026-06-10 cooldown rework removed the upstream pack's per-tick
+/// like the warg's target-scan decorators. The 2026-06-10 cooldown rework removed ADOD_Beasts's per-tick
 /// probability roll — the AttackOffCooldownDecorator branches downstream are the rate limiter now, and the scan
 /// cadence is bounded by the idle SleepTask sibling in the tree (warg's NoEnemyCloseDecorator economics).
 /// </summary>

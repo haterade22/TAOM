@@ -1,0 +1,309 @@
+# Provenance Register
+
+Every third-party source TAOM derives from, interoperates with, or was compared against, with its
+license and what kind of derivation it is. This file is the single authoritative record. It is also
+designed to double as the allowlist for a future `tools/check_provenance.py`, so that the only way to
+make a checker accept a new third-party name is to write a row here, which forces the license
+question to be answered. **That checker does not exist yet**; for now this file is kept current by
+hand, in the same commit as the code it describes.
+
+**The rule this file exists to serve:** name the source and state its license. A bare unattributed
+mention is a violation, and so is an unnamed euphemism ("the donor mod", "the upstream pack"). This
+reverses an earlier standing rule that said TAOM documentation must not name other mods, recorded at
+[`docs/changelog-archive/CHANGELOG-2026-H1.md:2258-2270`](../changelog-archive/CHANGELOG-2026-H1.md).
+That rule produced a partial de-naming pass and no enforcement, and it left the repo documenting that
+something had been taken while making it impossible to check under what terms. Full rule:
+[`.claude/rules/provenance.md`](../../.claude/rules/provenance.md).
+
+**This file does not ship.** It carries `uncleared` rows, which are a working list of open questions,
+and publishing an open question is not the same as discharging a notice obligation. The shipped
+subset lives in [`Main/_Module/THIRD-PARTY-LICENSES.txt`](../../Main/_Module/THIRD-PARTY-LICENSES.txt)
+and [`Dependencies/_Module/THIRD-PARTY-LICENSES.txt`](../../Dependencies/_Module/THIRD-PARTY-LICENSES.txt),
+and contains **only** `cleared` rows.
+
+## Vocabulary
+
+**Derivation** (closed set, enforced by the checker):
+
+| Value | Means |
+|---|---|
+| `clean-room` | Source read once to produce a committed behavioural spec, implementation written from the spec without re-reading the source. TAOM's procedure is [`docs/scene-scripts/ATTRIBUTION.md`](../scene-scripts/ATTRIBUTION.md). Do not claim this unless that procedure was actually followed. |
+| `behavioural-port` | Behaviour reproduced from reading the source. Structure, naming, and decomposition are TAOM's. |
+| `verbatim-port` | Code shape, identifiers, or constants reproduced. |
+| `data-port` | Game data (XML, JSON) copied or machine-derived from the upstream. |
+| `redistributed` | The upstream's own binary or data ships in a TAOM release. |
+| `interop-only` | Nothing derives from it. TAOM only coexists with its module ids, files, or load order. |
+| `comparison-only` | Read for analysis. Nothing in TAOM derives from it. |
+
+**License** is an SPDX id where one applies. Four non-SPDX values are also legal, and each means
+something specific: `UNKNOWN` (nobody has established the terms), `maintainer-owned` (TAOM's own
+prior work), `purchased-asset, code terms informal` (assets bought, code taken on the same
+relationship without a separate written grant), and a short phrase naming a stated restriction where
+the source publishes one instead of a licence.
+
+**Status:** `cleared` (we have the right, and the notice obligation is met) · `pending-license` (terms
+identified, not yet confirmed or recorded) · `uncleared` (we do not know the terms) · `removed` (the
+derivation no longer exists in TAOM).
+
+**Tokens** are the strings the checker matches on. They must be backticked. Nothing outside backticks
+is ever treated as a token, which is what keeps the bare word "Alliance" from matching vanilla
+`AllianceCampaignBehavior` or the French lore string "Dernière Alliance".
+
+<!-- provenance-register-start -->
+
+| Source | Tokens | License | Derivation | Covers | Status |
+|---|---|---|---|---|---|
+| Alliance | `Byak0/Alliance` `Alliance mod` | GPL-3.0 | clean-room | `Main/SceneScripts/**` | cleared |
+| BetterExceptionWindow | `BetterExceptionWindow` `BEW` | AGPL-3.0 | comparison-only | (none) | cleared |
+| TpacTool | `TpacTool` `szszss/TpacTool` | MIT | behavioural-port | `tools/tpac_skeleton_scan.py` `tools/tpac_clipinfo.py` | cleared |
+| NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
+| MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | cleared |
+| Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
+| BUTR stack | `ButterLib` `UIExtenderEx` `MBOptionScreen` `MCMv5` `BUTR.CrashReport` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Bannerlord,MCM,BUTR}*.dll` | cleared |
+| .NET Foundation | `Microsoft.Extensions` `Microsoft.Bcl` `System.Buffers` `System.Memory` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Microsoft,System}*.dll` | cleared |
+| Serilog | `Serilog` | Apache-2.0 | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/Serilog*.dll` | cleared |
+| LOTRAOM | `LOTRAOM` | maintainer-owned | data-port | `Main/_Module/ModuleData/characters/lords.xml` `Main/_Module/ModuleData/**/taom_wanderer*.xml` `Main/_Module/ModuleData/lords.xslt` `Main/_Module/ModuleData/spcultures.xslt` `Main/Features/WarOfTheRingMomentum/**` `Main/Features/Messengers/**` | cleared |
+| ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/_Module/Prefabs/taom_howdah_agent.xml` | cleared |
+| BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
+| BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
+| BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | UNKNOWN | comparison-only | (none) | uncleared |
+| external developer drop | `Features_fixed` | UNKNOWN | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | uncleared |
+| TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
+| TransferbuttonMenu | `TransferbuttonMenu` | UNKNOWN | behavioural-port | `Main/Features/QuickActions/**` | uncleared |
+| ServeAsSoldier | `ServeAsSoldier` `Serve as Soldier` | UNKNOWN | comparison-only | (none) | uncleared |
+| BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,SubModuleConstructionGuard,CollectAssemblyTypesShim}.cs` `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
+| NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | uncleared |
+| upstream chariot pack | `upstream chariot pack` `upstream-chariot-pack` | UNKNOWN | behavioural-port | `docs/features/chariot.md` `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | uncleared |
+| ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
+| TOR_Core | `TOR_Core` | UNKNOWN | comparison-only | (none) | uncleared |
+
+<!-- provenance-register-end -->
+
+TAOM's own and predecessor modules. The checker skips these entirely.
+
+<!-- taom-owned-start -->
+`TAOM` `TAOM_Map` `TAOM_Online` `TAOM.Dependencies` `TAOM.NativeSkinFixes`
+`LOTRLOME` `LOTRLOME_Armory` `Alliance.Wargs` `LOTRAOM`
+<!-- taom-owned-end -->
+
+Vanilla TaleWorlds module ids (`Native`, `SandBox`, `SandBoxCore`, `StoryMode`, `CustomBattle`,
+`BirthAndDeath`, `Multiplayer`, `NavalDLC`) are engine facts, not project policy, and live as a
+constant in the checker rather than here.
+
+---
+
+## Detail
+
+### Alliance
+
+Upstream: https://github.com/Byak0/Alliance · Pin: `version/0.6.0.0` · GPL-3.0.
+
+The model everything else should follow. Alliance is copyleft, so a port would pull TAOM's MIT code
+under GPL. Instead the source was read once to produce a committed spec, the implementation was
+written from the spec, and a cross-check pass confirmed no structural collision. Procedure and the
+per-file table: [`docs/scene-scripts/ATTRIBUTION.md`](../scene-scripts/ATTRIBUTION.md). Specs:
+`docs/scene-scripts/specs/`. Every covered file carries a four-line header naming Alliance, its
+license, and its spec.
+
+### BetterExceptionWindow
+
+Upstream: https://www.nexusmods.com/mountandblade2bannerlord/mods/3535 · Pin: v8.0.0 · AGPL-3.0.
+
+Design reference only, and the reasoning is recorded at
+[`docs/features/crash-report.md:7`](../features/crash-report.md): BEW is AGPL, so TAOM authored
+equivalents from scratch and used BEW only for *what to patch* and *what to display*. Nothing in
+`Main/Features/CrashReport/**` derives from BEW's expression.
+
+### TpacTool
+
+Upstream: https://github.com/szszss/TpacTool · MIT.
+
+The `.tpac` binary format was reverse-engineered from decompiling `TpacTool.Lib.dll`. MIT permits
+this; the attribution is at [`docs/tools/spider-skeleton-tpac-tools.md:378`](../tools/spider-skeleton-tpac-tools.md).
+
+### NVIDIA SkillSpector
+
+Upstream: https://github.com/NVIDIA/SkillSpector · Apache-2.0.
+
+A calibrated subset of the deterministic `static_patterns_*` and `behavioral_ast` analyzers, with the
+Apache-2.0 §4 attribution preserved in the file header (`tools/audit_claude_config.py:14-22`). The
+LangGraph runtime and LLM analyzers were not ported. Note the deliberate carve-out: the upstream's
+DRL-1.1 / unlicensed Neo23x0-derived `.yar` files were **not** vendored, and `tools/yara_rules/` is
+TAOM clean-room original. Adoption record: [`docs/reviews/adopt-skillspector-2026-06-22.md`](../reviews/adopt-skillspector-2026-06-22.md).
+
+### MinHook
+
+Upstream: https://github.com/TsudaKageyu/minhook · Pin: v1.3.4 (DLL `FileVersion 1.3.4.0`) ·
+BSD-2-Clause, Copyright (C) 2009-2017 Tsuda Kageyu.
+
+Ships as a binary at `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll`, un-ignored explicitly
+by `.gitignore:64`, and the headers are vendored at
+`Dependencies/NativeSkinFixes.NativeHooks/MinHook/include/`. BSD-2-Clause clause 2 requires the
+copyright notice be reproduced in binary redistributions, which is why
+`Main/_Module/THIRD-PARTY-LICENSES.txt` now exists. Until 2026-08-13 it did not, and this condition
+was unmet in every shipped release.
+
+### LOTRAOM
+
+Maintainer-owned predecessor project (Bannerlord 1.2.12).
+
+Cleared: this is the maintainer's own prior work. Recorded here rather than omitted because shipped
+files are machine-derived from it and a reader deserves to know which. `characters/lords.xml`, the
+`taom_wanderer*` XMLs (three under `ModuleData/`, one under `ModuleData/equipmentsets/`), `lords.xslt`,
+and `spcultures.xslt` are generated by
+`tools/extract_wanderers.py`, `tools/generate_xslt.py`, and `tools/oneoff/lords-migration/*.ps1`
+reading LOTRAOM's ModuleData. `Main/Features/WarOfTheRingMomentum/**` and `Main/Features/Messengers/**`
+are behavioural ports of its Momentum and messenger systems.
+
+### ADOD_Beasts, BehaviorTrees
+
+Cleared, and for ADOD_Beasts the basis is recorded in the feature doc rather than assumed:
+`docs/features/elephant.md:488` and `:695` state the elephant asset was **purchased from Artem, the
+ADOD_Beasts author, for use in TAOM**. Note what that covers and what it does not: it is an asset
+purchase, so the meshes and animations are on firm ground, while the behavioural port of the C#
+(trample, mount-lock, howdah) rests on the same relationship rather than on a separate written grant.
+Worth getting one line in writing from Artem covering the code as well as the art.
+
+Architecture dossier:
+[`docs/reference/adod-beasts-architecture-and-taom-port.md`](adod-beasts-architecture-and-taom-port.md).
+`BehaviorTrees.dll` was decompiled with `ilspycmd` on 2026-05-24 and inlined into `Main/BehaviorTrees/`
+so the stack ships as one assembly; the header at `Main/BehaviorTrees/BehaviorTreesCore.cs:7-13`
+records that and the two cleanups applied (ILSpy artifacts dropped, C# 12 primary constructors
+rewritten for `LangVersion=10`).
+
+### BannerlordTogether, BattleLinkMPClient
+
+Interop only. Nothing derives from them. TAOM names their module ids in `SubModule.xml`
+`ModulesToLoadAfterThis` for load-order reasons and detects them at runtime via `CoopPresence`, which
+is a compatibility fact rather than a derivation.
+
+**BannerlordTogether ships an explicit no-decompile / no-AI-analysis policy from its copyright
+holders, and TAOM honours it.** Its Harmony id is obtained only from Harmony's public runtime
+registry, never by reading its code, and `HarmonyCensusModels` is constrained to carry no IL and no
+method bodies. That restriction follows from BT's stated terms and does not generalise to other mods.
+Feature doc: [`docs/features/bannerlord-together-compat.md`](../features/bannerlord-together-compat.md).
+
+### BannerlordCoop (UNCLEARED)
+
+A different mod from BannerlordTogether; its launcher id is the bare string `Coop`. TAOM's
+relationship with it is interop at runtime, but the research behind that interop is not:
+[`docs/research/bannerlordcoop-internals.md`](../research/bannerlordcoop-internals.md) records a full
+decompile ("`ilspycmd` 10.0.1 against the installed client assemblies, 6 DLLs into 3,270 `.cs`
+files") and four verified Harmony owner ids. By this register's own vocabulary that is
+`comparison-only`, the same classification ROT-Core gets, and it is why the row is `uncleared` rather
+than `n/a`. The reasoning recorded at the time was that BannerlordCoop is a public upstream project
+shipping generated sources in plaintext and carries no policy forbidding it, unlike BT. That
+reasoning is worth confirming against the project's actual licence rather than left as an inference.
+
+### external developer drop, `Downloads/Features_fixed/` (UNCLEARED)
+
+Seven features were ported from a drop of decompiled C# supplied by an external developer:
+SiegeDismount, MixedFormations, SmartCavalryAI, FiefManagement, QuickActions, EquipPresets,
+CompanionTactics. Planning record: [`docs/archive/feature-port-prompts/README.md`](../archive/feature-port-prompts/README.md).
+
+No license, grant, or terms are recorded anywhere in the repo. Several sites declare the derivation as
+verbatim rather than behavioural:
+
+- `Main/Features/CompanionTactics/Roles/Models/CombatRole.cs:5` says "Ported verbatim from the original developer's drop"
+- `Main/Features/EquipPresets/Models/HoNEquipmentPreset.cs:7` says "Mirrors the decompiled-source shape verbatim"
+- `Main/Features/SmartCavalryAI/CavalryChargeService.cs:14` says "Differences from the v1.4 decompile baseline (intentional, port-driven)"
+
+Two artefacts carry the donor's identity into TAOM's own public surface: the `HoN*` type-name prefix
+(`HoNFormationPreset`, `HoNEquipmentPreset`, `HoNPresetItemReference`) and the deliberate reuse of the
+donor's TaleWorlds SaveSystem `BaseId 726900601` so its saves import.
+
+**To resolve:** check the drop folder itself for a LICENSE or README, then obtain written terms from
+the developer who supplied it.
+
+### TAOM_Promoted / RF_Promoted (UNCLEARED)
+
+`Main/Features/FieldCommission/**` is described at [`docs/features/field-commission.md:20`](../features/field-commission.md)
+as a "TAOM native rewrite of the `TAOM_Promoted` ('RF_Promoted') donor mod". `Domain/TroopUpgradeGraph.cs:8`
+records "Ported from the donor mod's `FindUpgradedDescendantInParty`". No terms recorded. Distinct from
+the `Features_fixed` drop.
+
+### TransferbuttonMenu (UNCLEARED)
+
+`Main/Features/QuickActions/**` is declared at [`docs/features/quick-actions.md:5`](../features/quick-actions.md)
+as "Ported from the external 1.2.x `TransferbuttonMenu` module". No terms recorded.
+
+### ServeAsSoldier (UNCLEARED)
+
+Declared comparison-only, and much of it genuinely is. But some comments cite its source by file and
+line range (`Main/Features/Enlistment/TownLeavePolicy.cs:17-18` cites `Test.cs:2424-2440`), which means
+its implementation was read, and `docs/reviews/sas-comparative-analysis-2026-08-08.md` is a line-level
+teardown. The installed module carries no LICENSE file, so its Nexus "Permissions and credits" block
+is the only source of terms.
+
+### BetaDeps (UNCLEARED), and the derivation type was previously misstated
+
+Eleven classes under `Dependencies/Foundation/`, plus `AliasStubSubModule.cs` and `SubModule.cs`
+(whose assembly-version list "mirrors BetaDeps.Foundation.AssemblyVersionShim"). The glob is spelled
+out per file rather than as `Foundation/**`, because five files in that folder (`CoopModuleList`,
+`CoopPresence`, `CoopPresencePolicy`, `PatchShieldPolicy`, `SaveShieldPolicy`) are TAOM originals with
+no BetaDeps derivation, and sweeping them in would assert the opposite.
+
+Until 2026-08-13 the shipped notice claimed a "clean-room rewrite" while ten source headers said
+"Ports BetaDeps.Foundation.X". Those cannot both be true, and the headers are the accurate ones: `VersionProbe.cs:13-19` knows that a
+specific upstream field "was BetaDeps invention" and `SaveShield.cs:59` knows its exact patch-target
+list, neither of which is derivable from a behavioural spec. There are no BetaDeps specs under `docs/`.
+This is a behavioural port. `clean-room` is a term of art with a procedure attached, TAOM has that
+procedure, and it was not followed here.
+
+The `ModulesToLoadAfterThis` list at `Dependencies/_Module/SubModule.xml:20` is adapted from BetaDeps
+v0.7.5.1's. A list of module ids is a compatibility fact about other people's mods, not expression.
+
+### NativeSkinFixes (UNCLEARED, and the highest-priority row here)
+
+`Dependencies/NativeSkinFixes.NativeHooks/**` is a port of an upstream Nexus mod of the same name,
+carried through the v1.3.15 to v1.4.5 migration. Classified `verbatim-port` on the repo's own
+evidence: `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md` says the C++ was "copied with
+minimal modification from the upstream" and that three of four review findings were "inherited
+verbatim from upstream code". No upstream name, version, or terms are recorded anywhere in the repo.
+
+**The built `TAOM.NativeSkinFixes.dll` ships today.** The feature is PARKED and disabled at the wiring
+level, so it does nothing at runtime, but a disabled binary is still a redistributed one. Of every row
+in this register this is the one where the licence question is actually blocking: a verbatim port with
+no identified upstream, shipping in the release. Either identify the upstream and its terms, or drop
+the binary from the module until the feature is un-parked.
+
+### upstream chariot pack (UNCLEARED, and still unnamed)
+
+The Rhûn war chariot came from a **different** mod than the elephant. The 2026 de-naming pass is
+explicit that it de-named "the two upstream creature mods the elephant + chariot were ported from"
+(`docs/changelog-archive/CHANGELOG-2026-H1.md:2261-2263`), and the elephant's is ADOD_Beasts, so the
+chariot's is a second source. Its name appears nowhere in the repo, which is the euphemism problem in
+its purest form: the port is documented, the source is not identifiable, and no one can check the
+terms. `docs/features/chariot.md:15` records that "rights to the art confirmed by the maintainer",
+which covers the assets but says nothing about the code or who granted it.
+
+This row is deliberately left with the euphemism as its token rather than a guessed name.
+**To resolve:** the maintainer names the mod, and the pre-de-naming text is recoverable from history
+(`git log -S chariot -- docs/` around 2026-06-12). Then the euphemisms in `docs/features/chariot.md`
+(16 sites) and `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs:20` become the real
+name, the same way the elephant's did.
+
+### ROT-Core, TOR_Core (UNCLEARED)
+
+`docs/migration/ROT-CORE-ANALYSIS.md` is a full decompile dossier of ROT-Core, produced from
+`ROT.dll`. One shipped feature derives from it: [`docs/features/elite-emissary.md:11`](../features/elite-emissary.md)
+records that it is "Inspired by ROT's `ROTTownTradersBehavior`". That derivation is why the row is
+`behavioural-port` rather than `comparison-only`; a row cannot claim nothing derives from it while
+naming thirteen files that do. TOR_Core is a separate source, referenced for engine behaviour only
+(`docs/features/dev-console.md:106`), and derives nothing.
+
+---
+
+## Adding a row
+
+1. Name the source as it is published. No euphemisms.
+2. Put every string the checker should match in the `Tokens` column, in backticks.
+3. Establish the license before writing anything into a shipped file. `UNKNOWN` is a valid value here
+   and is never a valid value in `Main/_Module/THIRD-PARTY-LICENSES.txt`.
+4. Pick the narrowest true `Derivation`. If you read the source while implementing, it is not
+   `clean-room`, regardless of how much you changed.
+5. `Covers` lists the concrete TAOM paths, not a feature name. Every file matched by a glob must name
+   its source in a header or link this register, which the checker enforces.
+6. Add a detail section if the row needs more than the table can hold.
+7. For a brand new adoption, run `/adopt-external` first. Its security and license pass is the front
+   door; this register is where its answer gets written down.

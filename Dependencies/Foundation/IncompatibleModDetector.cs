@@ -19,7 +19,7 @@ namespace TAOM.Dependencies.Foundation;
 /// gating of XML mutation is deferred to a future revision — TAOM Phase 4 ships
 /// detection only, not auto-disable).
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports the read-only-detection subset
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements the read-only-detection subset
 /// of BetaDeps.Foundation.IncompatibleModDetector. The XML auto-modify path is
 /// intentionally omitted; we'll revisit if TAOM users hit recurring crash-loops.
 /// </summary>

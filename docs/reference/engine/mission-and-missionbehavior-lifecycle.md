@@ -78,7 +78,7 @@ confirmation: the null-cast is `Mission.cs:4610`.
   career, banner persistence, etc.). They override `OnMissionTick`/`OnAgentBuild`/`OnRemoveBehavior` (Phases 1–2).
 - Use `GetMissionBehavior<T>()` for cross-behavior lookups (e.g. a feature checking whether another combat behavior
   is already managing `SpatialGrid`/`BoneCollision` — `SpiderMissionBehavior` does this).
-- `OnAgentBuild` is the per-spawn hook (TAOM elephant adds spawned elephants to its shadow list here; the upstream pack spawns
+- `OnAgentBuild` is the per-spawn hook (TAOM elephant adds spawned elephants to its shadow list here; ADOD_Beasts spawns
   the howdah here).
 - `OnRemoveBehavior` (per-mission teardown) is where TAOM clears its per-mission lists (broader than `OnBattleEnded`).
 - **Never** declare `BehaviorType.Logic` without `: MissionLogic`. When porting a 3rd-party behavior, check its base

@@ -6,7 +6,7 @@ namespace TAOM.Features.ElephantLike;
 /// Pure decision logic shared by the elephant-like ridden mounts (war elephant + Mûmakil — same attack model,
 /// different tuning) — extracted from the engine so it is unit-testable (ADR-002/007). The engine-coupled work
 /// (radial agent scan, action channel, damage application) lives in the shared behavior-tree nodes under
-/// <c>BehaviorTreeElements/</c>. The 2026-06-10 cooldown rework replaced the upstream pack's per-tick probability
+/// <c>BehaviorTreeElements/</c>. The 2026-06-10 cooldown rework replaced ADOD_Beasts's per-tick probability
 /// roll with deterministic cooldowns: the BT gates each attack on <see cref="IsOffCooldown"/> and the shared
 /// facing/anim gate <see cref="ShouldEngage"/>. Each creature registers its own marker sub-interface
 /// (<c>IElephantAttackService</c> / <c>IMumakilAttackService</c>) so IoC + injection stay per-creature.

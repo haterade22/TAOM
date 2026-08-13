@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TAOM Additional Lords - New lords from LOTRAOM not in vanilla Bannerlord.
+<!-- TAOM Additional Lords. Derived from LOTRAOM, TAOM's own Bannerlord 1.2.12 predecessor
+     project, and not present in vanilla Bannerlord. Provenance: see
+     docs/reference/provenance-register.md (LOTRAOM row) in the TAOM repository.
      REGISTERED and live: SubModule.xml line 159, <XmlName id="NPCCharacters" path="characters/lords"/>.
      (The old "staged for future activation" note here was stale; corrected 2026-08-04.)
      1184 Occupation.Lord entries across 20 cultures. Vanilla-reused-culture lords are overlaid

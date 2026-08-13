@@ -1,7 +1,7 @@
 # Bannerlord animation-clip flags (`AnimFlags`) — the per-clip-type recipe for custom creatures
 
 > **Why this exists:** a custom creature's clips must have the right **animation-clip flags** set or the creature
-> won't animate correctly even when it renders + spawns fine. The spider's clips shipped with **zero flags**; the upstream pack's
+> won't animate correctly even when it renders + spawns fine. The spider's clips shipped with **zero flags**; ADOD_Beasts's
 > elephant clips have a **specific set per clip type**. This is the "simpler-fix-first" class — broken creature
 > locomotion is usually a clip-flag config problem, **not** an engine-internals problem. Discovered 2026-06-06 (user
 > spotted it in the Kit's Animation Clip Inspector).
@@ -172,7 +172,7 @@ The existing `tpac_skeleton_*` tools read/patch **Skeleton** UserData, not **Ani
 heuristic scan of the `_anm.tpac` metadata for the `AnimFlags` ulong was **unreliable** (false positives from
 adjacent duration floats — the Animation metadata layout isn't reverse-engineered). A proper
 `tpac_clip_flags.py` (read the exact baked flags; optionally patch them to avoid per-clip Kit clicking) is a
-high-value follow-up: it would let us read the upstream pack's exact per-clip flags authoritatively and set the spider's
+high-value follow-up: it would let us read ADOD_Beasts's exact per-clip flags authoritatively and set the spider's
 programmatically. Until then: read/set flags in the Kit's Animation Clip Inspector.
 
 ---

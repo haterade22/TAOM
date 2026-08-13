@@ -35,7 +35,7 @@ namespace TAOM.Dependencies.Foundation;
 /// Opt-out via <c>saveshield-swallow-disabled.flag</c> in the TAOM.Dependencies module
 /// directory.
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports BetaDeps.Foundation.SaveShield.
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements BetaDeps.Foundation.SaveShield.
 /// </summary>
 public static class SaveShield
 {

@@ -14,7 +14,7 @@ namespace TAOM.Dependencies;
 /// showed that uncaught exceptions in stub-module ctors break BLSE's
 /// drag-to-reorder operations on every other mod in the launcher.
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports the design of
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements the design of
 /// BetaDeps.Foundation.AliasStubSubModule. Future phases will append additional
 /// shield installs (IncompatibleModDetector.RunEarlyPhase,
 /// CollectAssemblyTypesShim.Install, SubModuleConstructionGuard.Install) to the

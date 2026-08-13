@@ -15,7 +15,7 @@ namespace TAOM.Features.Elephant;
 /// Built per elephant by <see cref="ElephantMissionBehavior"/> via a <c>BehaviorTreeAgentComponent</c>; the
 /// engine auto-ticks it each frame.
 ///
-/// Attack model (2026-06-10, replaces the upstream pack's random per-tick roll): when a live enemy is in front of the tusks,
+/// Attack model (2026-06-10, replaces ADOD_Beasts's random per-tick roll): when a live enemy is in front of the tusks,
 /// the elephant fires the TRAMPLE if off cooldown (10s, priority); otherwise a LEFT/RIGHT tusk swing picked by
 /// the enemy's bearing if the side-attack cooldown (4s) allows; otherwise the tree idles and the engine's regular
 /// mount AI (rider cavalry AI + native charge) simply continues — the BT only layers attacks on top of it.

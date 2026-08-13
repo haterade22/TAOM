@@ -10,7 +10,7 @@
 > Full analysis + ranked experiments: [`docs/reviews/rca-spider-troop-2026-06-04.md`](../../reviews/rca-spider-troop-2026-06-04.md)
 > "Update 2026-06-06".
 
-## What the upstream beasts pack deep-dive settled (why A is the blocker, not B)
+## What ADOD_Beasts deep-dive settled (why A is the blocker, not B)
 
 Decompiled `ADOD_Beasts.dll` + `NativeHook.dll` (the wolf "has a lot of code"):
 
@@ -22,7 +22,7 @@ Decompiled `ADOD_Beasts.dll` + `NativeHook.dll` (the wolf "has a lot of code"):
   FALSE** — no per-mesh cap exists (the elephant renders 59 active bones in one mesh); the only cap is the
   64-bone `Skeleton.MaxBoneCount`. See `feedback_no_40_bone_per_mesh_limit`.
 - Therefore **no code (managed or native) fixes the spider AV. It's the mesh.** → workstream A.
-- The upstream pack's creatures aren't even roster troops (wolf = scripted companion via public
+- ADOD_Beasts's creatures aren't even roster troops (wolf = scripted companion via public
   `Mission.SpawnMonster(mountItem, default rider, …)`; elephant = ridden mount + howdah). The spider's
   "riderless recruitable troop in a formation" is TAOM's own, harder design.
 
@@ -82,7 +82,7 @@ data overflows the cap regardless of split → A4 (re-author the FBX skin).
 ### A3 — Wolf-mesh control  *(cheap; isolates pipeline-vs-mesh if A2 still AVs)*
 
 Point the item at a **known-good single creature mesh** and keep `monster="Monster.spider"`:
-`mesh="wolf_4"` (the upstream pack's wolf body) in the `spider_mount_a` block above.
+`mesh="wolf_4"` (ADOD_Beasts's wolf body) in the `spider_mount_a` block above.
 
 - **Renders** (even wolf-shaped) → the riderless pipeline + spider monster/skeleton binding are fine; the
   defect is **100% the spider mesh** → A4.
@@ -120,21 +120,21 @@ this is the fallback, not the first move.
 ### B1 — Monster: `monster_usage="spider"` → `"horse"`
 
 `LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_spider.xml` — set `monster_usage="horse"` (use the
-vanilla usage, like the upstream pack's wolf, instead of the custom `lotr_monster_usage_spider.xml`). Keep
+vanilla usage, like ADOD_Beasts's wolf, instead of the custom `lotr_monster_usage_spider.xml`). Keep
 `IsHumanoid="false"`, `Mountable="false"`, `CanRide="false"`.
 
 ### B2 — Item: `Type="Horse"` → `"Animal"`, `item_category` → `"animal"`
 
-In the `spider_mount_a` block, mirror the upstream pack's `adod_wolf_*` items: `Type="Animal"`,
+In the `spider_mount_a` block, mirror ADOD_Beasts's `adod_wolf_*` items: `Type="Animal"`,
 `item_category="animal"`, drop `subtype="horse"`. The `<Horse monster="Monster.spider" …>` component
-**stays** (the upstream pack's `Type="Animal"` wolves still use the `<Horse>` component — that's normal).
+**stays** (ADOD_Beasts's `Type="Animal"` wolves still use the `<Horse>` component — that's normal).
 
 ### B3 — Action-set: rebuild `as_spider` on vanilla `act_horse_*` types
 
 `LOTRLOME_Armory/ModuleData/Animations/action_sets_spider.xml` — the current `as_spider` defines a custom
 `act_spider_*` vocabulary. With `monster_usage="horse"` the engine drives `act_horse_*` movement actions,
 so the action-set must bind **those** types to the `an_spi_*` clips. Mapping (bind `act_horse_*` → spider
-clip, mirroring how the upstream pack's `as_adod_wolf` reuses a few gaits):
+clip, mirroring how ADOD_Beasts's `as_adod_wolf` reuses a few gaits):
 
 | vanilla action family | bind to spider clip | note |
 |---|---|---|

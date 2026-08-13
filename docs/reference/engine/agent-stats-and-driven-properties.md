@@ -59,7 +59,7 @@ only when something actually changed. Making it a GameModel lets mods retune any
   gamemodels.md rule 2). Overrides:
   - `UpdateAgentStats` → `base` → `ICareerAgentStatService.ApplyAgentStatModifiers(...)` (career passives mutate the
     ADP) → set `ADP.MountDifficulty = ElephantConfig.MountDifficulty` for the elephant Monster (near-infinite → non-rider
-    AI can't take the elephant — 1-for-1 upstream-pack mount-lock).
+    AI can't take the elephant — 1-for-1 ADOD_Beasts mount-lock).
   - `CanAgentRideMount` → `false` for an elephant Monster.
   - `GetEffectiveMaxHealth` → `+ career Health passive` for heroes.
 - **One override per type → consolidation** (Phase 7 last-added-wins): the **single** `AgentStatCalculateModel` slot

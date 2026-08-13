@@ -1,0 +1,64 @@
+TAOM third-party license notices
+================================
+
+Scope: this file covers third-party SOFTWARE redistributed inside the TAOM module,
+meaning the compiled binaries under _Module/bin/. It makes no claim at all about
+art, audio, fonts, or game data, whose provenance this file does not record.
+
+The BUTR / Harmony / Microsoft / Serilog stack is redistributed by the companion
+TAOM.Dependencies module and is covered by its own notice file at
+Modules/TAOM.Dependencies/THIRD-PARTY-LICENSES.txt.
+
+----
+
+MinHook.x64.dll  --  MinHook 1.3.4
+The Minimalistic API Hooking Library for x64/x86
+Copyright (C) 2009-2017 Tsuda Kageyu.
+All rights reserved.
+Licensed under the BSD 2-Clause License.
+Source: https://github.com/TsudaKageyu/minhook
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
+  OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+----
+
+Scene scripts under Main/SceneScripts/ take behavioural inspiration from the
+Alliance mod (https://github.com/Byak0/Alliance, GPL v3). They are TAOM original
+work produced by a clean-room procedure: Alliance source was read once to extract a
+behavioural spec, the spec was committed, and the implementation was written from
+the spec. No Alliance source code appears in TAOM. Procedure and per-file mapping:
+docs/scene-scripts/ATTRIBUTION.md in the TAOM repository.
+
+----
+
+TAOM.NativeSkinFixes.dll is built by TAOM from the source in this project's
+repository. Its native hooks re-implement the behaviour of an earlier community
+mod of the same name, read as reference while they were written, and adapted to
+this engine version. It links MinHook, above.
+
+----
+
+TAOM.dll and the remaining binaries built by this project are original TAOM work,
+licensed under the MIT License.
+
+Copyright (c) 2026 TAOM project contributors.

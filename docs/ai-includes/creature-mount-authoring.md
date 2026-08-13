@@ -168,7 +168,7 @@ TAOM breaks the pairing on four mounts. Rideability here is **declared, not infe
 `LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` (`spider_mount_a`,
 `taom_war_elephant`, `taom_mumakil`, `taom_chariot_a`) and
 `Alliance.Wargs/ModuleData/Items/LOTR/lotr_warg.xml` (3 warg items). The zero-rein shape is
-upstream, not a TAOM authoring slip — the donor beasts pack's own `elephant` Monster
+upstream, not a TAOM authoring slip — ADOD_Beasts's own `elephant` Monster
 (`ADOD_Beasts/ModuleData/adod_beasts.xml`) is likewise `Mountable` with zero rein attributes.
 
 **Why this is newly worth testing.** v1.4.8 fixed a "horse rein visual bug when a mounted agent

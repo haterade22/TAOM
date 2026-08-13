@@ -10,7 +10,7 @@ namespace TAOM.Dependencies.Foundation;
 /// for user diagnosis. Dedupes within a session by (culprit, exception_type, owner)
 /// tuple — log shows each distinct failure once per session, not once per occurrence.
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports BetaDeps.Foundation.FailedModsCatalog.
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements BetaDeps.Foundation.FailedModsCatalog.
 /// </summary>
 public static class FailedModsCatalog
 {

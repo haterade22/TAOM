@@ -106,7 +106,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 
 > **Convention:** A rule with a `paths:` array loads **conditionally** when a matching file is opened. A rule **without** `paths:` (omit the field entirely) loads **at conversation start** for every session. `paths: ["**/*"]` is NOT the same as omitting `paths:` — the former is still conditional under the rule loader.
 
-Full catalog (rule → scope → content, 15 path-scoped + 7 always-load):
+Full catalog (rule → scope → content, 16 path-scoped + 7 always-load):
 **[`docs/reference/rules-catalog.md`](docs/reference/rules-catalog.md)**. The always-load rules'
 full text is already in context every session; the path-scoped ones load when you open a matching file.
 

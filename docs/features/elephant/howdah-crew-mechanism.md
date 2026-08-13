@@ -1,8 +1,8 @@
-# How the upstream beasts pack puts a CREW on a moving elephant — the howdah mechanism (+ v1.4.5 portability)
+# How ADOD_Beasts puts a CREW on a moving elephant — the howdah mechanism (+ v1.4.5 portability)
 
 > Research findings (2026-06-06) from decompiling `ADOD_Beasts.dll` + verifying every TaleWorlds API against
-> the installed **v1.4.5** DLLs (`taom-src`). Answers the question: *"how does the upstream pack get multiple AI troops on the
-> back of the elephant?"* The upstream beasts pack is built for ~1.2.12, so this also records the **API drift** a TAOM port
+> the installed **v1.4.5** DLLs (`taom-src`). Answers the question: *"how does ADOD_Beasts get multiple AI troops on the
+> back of the elephant?"* ADOD_Beasts is built for ~1.2.12, so this also records the **API drift** a TAOM port
 > must fix. Source workflow: `wzr1vofux` (3 agents: howdah, wiring, v1.4.5-verify).
 
 ## TL;DR
@@ -17,7 +17,7 @@ riding the elephant) is a **separate** normal mount-rider, not a howdah seat.
 
 1. **The elephant enters battle as a vanilla MOUNT.** A normal troop (`volantene_elephant_rider_tN`,
    `default_group=HorseArcher`) carries `Horse=Item.elephant` + `HorseHarness=Item.volantene_elephant_armor_tier_N`.
-   The stock TaleWorlds reinforcement pipeline spawns it mounted — the upstream beasts pack adds nothing here. An elephant appears in
+   The stock TaleWorlds reinforcement pipeline spawns it mounted — ADOD_Beasts adds nothing here. An elephant appears in
    a random battle *only because that troop is in a party roster.*
 
 2. **`ADODBeastsMissionLogic.OnAgentBuild(agent, banner)`** fires per agent. When
@@ -74,7 +74,7 @@ riding the elephant) is a **separate** normal mount-rider, not a howdah seat.
 Top-tier manned strength = **1 mahout (mount rider) + 4 howdah archers.** A `CharacterObject.GetPower` Harmony
 postfix inflates the rider troop's strength so the campaign AI values it.
 
-## v1.4.5 portability — buildable, but the upstream pack's 1.2.12 code has 4 drifts to fix
+## v1.4.5 portability — buildable, but ADOD_Beasts's 1.2.12 code has 4 drifts to fix
 
 The mechanism **ports to 1.4.5** — `UsableMachine`, `StandingPoint`, `GameEntity.Instantiate`, `SpawnAgent`,
 `AgentVisuals.GetGlobalStableNeckPoint`, `Frame`/`SetFrame`, `AddMovingAgent`, etc. are all confirmed present with
@@ -83,7 +83,7 @@ matching signatures. But a verbatim port would silently fail on these (verified 
 | # | Sev | API | Upstream (1.2.12) | v1.4.5 | Fix for a TAOM port |
 |---|-----|-----|---------------|--------|---------------------|
 | 1 | HIGH | `AgentComponent.OnTickAsAI(float)` | overridden for trample/crew AI | **does not exist** (only `OnTick`/`OnTickParallel`) | move logic to `OnTick`/`OnTickParallel`. **TAOM's elephant already did this** — `ElephantMissionBehavior : MissionLogic.OnMissionTick`, not an AgentComponent. |
-| 2 | HIGH | `StandingPoint.OnUse(Agent)` | 1-param override | `OnUse(Agent, sbyte agentBoneIndex)` (StandingPoint.cs:269) | port to the **2-param** override or seat-entry is dead (the upstream pack limps via the OnTick self-spawn instead). |
+| 2 | HIGH | `StandingPoint.OnUse(Agent)` | 1-param override | `OnUse(Agent, sbyte agentBoneIndex)` (StandingPoint.cs:269) | port to the **2-param** override or seat-entry is dead (ADOD_Beasts limps via the OnTick self-spawn instead). |
 | 3 | HIGH | `MissionObject.SetDisabled(bool)` | used as enable/disable toggle | bool is `isParentObject`; call **always disables** (MissionObject.cs:261) | re-architect seat enable/disable — `SetDisabled(false)` does NOT re-enable. |
 | 4 | MED | `UsableMachine.GetDescriptionText` | `string GetDescriptionText(GameEntity=null)` | `abstract TextObject GetDescriptionText(WeakGameEntity)` (UsableMachine.cs:1173) | change return type + param or it won't satisfy the abstract (compile error). |
 
@@ -97,7 +97,7 @@ matching signatures. But a verbatim port would silently fail on these (verified 
    tier-appropriate prefab per elephant-rider and wires `elephantAgent`/`elephantRider`.
 4. **Armor→crew→count config** — a TAOM-native equivalent of `additional_elephant_characters.xml` (which LOTR crew
    troop, how many seats per tier). Route the decision through a service + adapter per ADR-007/002.
-5. **A stand-and-shoot action** — `act_howdah_stand_bow` + its clip are upstream pack assets; TAOM needs its own action-set
+5. **A stand-and-shoot action** — `act_howdah_stand_bow` + its clip are ADOD_Beasts assets; TAOM needs its own action-set
    entry / anim (or to reuse a vanilla "ranged from standing point" action).
 6. **Apply the 4 drift fixes above** from the start.
 

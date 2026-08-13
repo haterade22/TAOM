@@ -56,7 +56,7 @@ every reference to it below should be read as the root file.
 
 ### 3b. THE `quad_movement` TAG (root cause of the 2026-06-10 mount AVs)
 
-Byte-diff of a working upstream pack clip (`elephant_canter_anm.tpac`) vs ours exposed the difference:
+Byte-diff of a working ADOD_Beasts clip (`elephant_canter_anm.tpac`) vs ours exposed the difference:
 
 | `_anm.tpac` field | Upstream (works) | our 06-03 compiles (AV'd) |
 |---|---|---|
@@ -67,7 +67,7 @@ Byte-diff of a working upstream pack clip (`elephant_canter_anm.tpac`) vs ours e
 A `movement_system="quadrupedal"` action set measuring untagged movement clips builds a **null
 native gait structure** → `AccessViolation` (+0x10) on the first `Skeleton.TickAnimations` /
 `GetWalkSpeedLimitOfMountable`, in every mount context. Non-movement clips (attacks/hits/deaths)
-correctly do NOT carry the tag (the upstream pack's attacks don't either — they carry `lock_movement` /
+correctly do NOT carry the tag (ADOD_Beasts's attacks don't either — they carry `lock_movement` /
 `client_prediction`-class flags only).
 
 **Interim fix applied 2026-06-11:** 9 clips byte-patched onto the elephant template
@@ -79,13 +79,13 @@ with the fields set (next section). The byte-patch recipe lives in [spider.md](s
 ### 3c. WHERE these live in the Kit's clip editor (captured 2026-06-11, editor screenshots)
 
 Open the animation clip in the Modding Kit editor. The properties panel has, top to bottom:
-**Loading Type** (dropdown — the upstream pack ships `Never load` on elephant_attack_1; load-on-demand, works
+**Loading Type** (dropdown — ADOD_Beasts ships `Never load` on elephant_attack_1; load-on-demand, works
 fine), **Flags** (checkbox list), and a collapsed **Clip usages** section at the bottom.
 
 - **`quad_movement` is a CLIP USAGE, not a Flag** — add it in the "Clip usages" section. This is
   the field whose absence caused the mount AVs.
 - **`make_walk_sound` IS a Flag** (footstep sounds) — check it on gait clips.
-- **Step points** are the footstep-timing fractions (separate field; the upstream pack's canter has 4).
+- **Step points** are the footstep-timing fractions (separate field; ADOD_Beasts's canter has 4).
 - `_anm.tpac` serialization (verified by byte-diff): string-list 1 = the CHECKED flags,
   string-list 2 = the clip usages (+ per-usage params). Unchecked = empty lists.
 
@@ -102,7 +102,7 @@ reset_camera_height, ignore_scale_on_root_position, blend_main_item_bone_entitia
 enforce_weapon_tip_with_rope_stretched, enforce_weapon_tip_with_rope_relaxed,
 disable_auto_increment_progress, switch_item_between_hands, attach_sound_to_agent, spawn_particle`
 
-**Upstream pack per-category flag recipes (parity targets when recompiling spider clips):**
+**ADOD_Beasts per-category flag recipes (parity targets when recompiling spider clips):**
 
 | Clip category | Flags | Clip usages |
 |---|---|---|
@@ -111,7 +111,7 @@ disable_auto_increment_progress, switch_item_between_hands, attach_sound_to_agen
 | death (`elephant_death`) | `make_bodyfall_sound, client_prediction, do_not_keep_track_of_sound, enforce_all, update_bounding_volume` | — |
 | rear (`elephant_rear`) | `lock_movement, enforce_lowerbody` | — |
 
-Our spider attack/death clips currently ship with NO flags — they work, but lack the upstream pack's polish
+Our spider attack/death clips currently ship with NO flags — they work, but lack ADOD_Beasts's polish
 flags (`lock_movement` on attacks stops the mount sliding mid-bite; `make_bodyfall_sound` on
 deaths adds the thud). Set these when the clips get their Kit recompile.
 

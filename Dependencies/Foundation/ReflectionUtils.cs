@@ -9,7 +9,7 @@ namespace TAOM.Dependencies.Foundation;
 /// VersionProbe, SubModuleConstructionGuard). All methods are exception-safe — they
 /// return null/empty/false on any failure rather than throwing.
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements
 /// BetaDeps.Foundation.ReflectionUtils.
 /// </summary>
 public static class ReflectionUtils

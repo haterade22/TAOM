@@ -7,7 +7,7 @@ namespace TAOM.Dependencies.Foundation;
 /// to attribute failures to the culprit mod assembly (walked from the exception's
 /// stack frames) and persist to disk for user diagnosis.
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports BetaDeps.Foundation.FailureRecord.
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements BetaDeps.Foundation.FailureRecord.
 /// </summary>
 public sealed class FailureRecord
 {

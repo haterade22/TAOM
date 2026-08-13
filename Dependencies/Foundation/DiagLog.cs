@@ -13,7 +13,7 @@ namespace TAOM.Dependencies.Foundation;
 ///
 /// Threadsafe via single lock on a private object. Append-only writes.
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements
 /// BetaDeps.Foundation.DiagLog. Distinct from EarlyLog: EarlyLog buffers static-init
 /// messages for Main's FileLogger to drain; DiagLog writes runtime events directly
 /// to disk for forensic inspection without requiring Main to load.

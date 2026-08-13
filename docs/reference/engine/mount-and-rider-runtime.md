@@ -59,7 +59,7 @@ engine where the animation/physics state lives, so managed code never has to man
 - **Cavalry** (every mounted TAOM troop): trooper + horse agent linked via `Mount`; the horse item is
   `Equipment[Horse=ArmorItemEndSlot]` (Phase 10) → `HorseComponent.Monster` (Phase 3). The career starting-equipment
   `FillFrom` merge **must give non-cavalry archetypes empty `Horse`/`HorseHarness`** or they spawn mounted (CLAUDE.md).
-- **Elephant** (upstream-pack port): a **ridden mount** (the mahout rides it via the normal `Mount` path) **plus** a howdah
+- **Elephant** (ADOD_Beasts port): a **ridden mount** (the mahout rides it via the normal `Mount` path) **plus** a howdah
   **crew that sit on `UsableMachine` `StandingPoint`s — NOT via `Mount`** (Phase 12 / howdah-crew-mechanism.md). Don't
   conflate the two seating mechanisms: one rider via `RiderSitBoneIndex`, N crew via standing points.
 - **New spider** (riderless combatant): spawned `FromHorseObj` but **`Mountable="false"` → `IsMount == false`** → it

@@ -18,7 +18,7 @@ namespace TAOM.Dependencies.Foundation;
 /// many tools call GetTypes() over every loaded assembly; without this shim,
 /// one broken mod can cause cascade failures.
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements
 /// BetaDeps.Foundation.CollectAssemblyTypesShim.
 /// </summary>
 public static class CollectAssemblyTypesShim

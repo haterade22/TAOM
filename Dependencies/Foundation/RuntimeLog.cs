@@ -10,7 +10,7 @@ namespace TAOM.Dependencies.Foundation;
 /// disk artifacts (diag.log, failed-mods-catalog.txt, last-good-modlist.txt,
 /// *-disabled.flag files, etc.).
 ///
-/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Ports the design of
+/// BetaDeps parity (DR3 Phase 4 — 2026-05-25). Re-implements the design of
 /// BetaDeps.Foundation.RuntimeLog. Path resolution walks back from the deployed
 /// `TAOM.Dependencies.dll` location to `&lt;game&gt;/Modules/TAOM.Dependencies/`.
 /// </summary>

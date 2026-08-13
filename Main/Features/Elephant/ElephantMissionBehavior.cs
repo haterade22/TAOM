@@ -17,7 +17,7 @@ namespace TAOM.Features.Elephant;
 /// Mission boundary for the AI war-elephant. Attaches a per-agent <see cref="ElephantBehaviorTree"/> (via a
 /// <c>BehaviorTreeAgentComponent</c>) to every elephant in the battle — the warg's pattern
 /// (<see cref="TAOM.Features.Warg.WargMissionBehavior"/>) applied to the elephant. The tree drives the auto-trample
-/// (a behavioral 1-for-1 of the upstream pack's <c>OnTickAsAI</c>): an AI-ridden elephant occasionally plays an attack animation
+/// (a behavioral 1-for-1 of ADOD_Beasts's <c>OnTickAsAI</c>): an AI-ridden elephant occasionally plays an attack animation
 /// and deals a radial knockdown to enemies within <see cref="ElephantConfig.TrampleRadius"/>. The pure gate + damage
 /// formula live in <see cref="IElephantAttackService"/> (unit-tested); the engine work lives in the SHARED BT leaf
 /// nodes (<c>ElephantLikeEngageDecorator</c> + <c>ElephantLikeTrampleTask</c>). This behavior also instantiates the howdah
@@ -52,8 +52,8 @@ public class ElephantMissionBehavior : MissionLogic
         if (_treesAdded) _tracker.TryLateAttach(agent);
 
         // Howdah: when the mahout rider builds (human, mounted on an elephant, wearing sk_elephant_armor_a),
-        // instantiate the howdah seat entity above the elephant's neck. Clean-room port of the upstream
-        // beasts pack's mission-logic OnAgentBuild howdah branch. MountAgent is already built at this point
+        // instantiate the howdah seat entity above the elephant's neck. Behavioural port of ADOD_Beasts's
+        // mission-logic OnAgentBuild howdah branch. MountAgent is already built at this point
         // because the engine always builds the mount before the rider (horse-slot spawn order).
         TryInstantiateHowdah(agent);
     }

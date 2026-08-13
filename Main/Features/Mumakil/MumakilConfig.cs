@@ -20,7 +20,7 @@ public static class MumakilConfig
     /// <summary>MountDifficulty forced on the Mûmakil so non-rider AI can't take it (elephant/spider parity: 999f).</summary>
     public const float MountDifficulty = 999f;
 
-    // --- AI attack gates (1-for-1 with the elephant; cooldown model replaces the donor's per-tick roll) ---
+    // --- AI attack gates (1-for-1 with the elephant; cooldown model replaces ADOD_Beasts's per-tick roll) ---
     /// <summary>Proximity gate: an attack only fires when a live enemy is within this distance of the Mûmakil's
     /// CENTER and in front of it. Must stay ≤ <see cref="TrampleRadius"/>. Without it the beast swings into empty
     /// air, overriding its walk cycle (the elephant "slide" class). Scaled ~3× the elephant's 3f to match the 3.0×

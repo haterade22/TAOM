@@ -10,7 +10,8 @@ namespace TAOM.Features.Elephant;
 
 /// <summary>
 /// Tracks the war-elephant every frame and repositions the howdah seat entity so seated archers
-/// remain on the elephant's back. Clean-room port of the upstream beasts pack's howdah machine / howdah-object types.
+/// remain on the elephant's back. Behavioural port of ADOD_Beasts's howdah machine / howdah-object
+/// types (docs/reference/provenance-register.md). Not clean-room: the source was read while writing this.
 ///
 /// Instantiated at runtime by ElephantMissionBehavior.OnAgentBuild when the mahout's HorseHarness
 /// item StringId matches ElephantConfig.HarnessStringId ("sk_elephant_armor_a"). Field refs are set

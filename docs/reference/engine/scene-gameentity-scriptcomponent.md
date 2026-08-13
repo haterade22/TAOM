@@ -48,7 +48,7 @@ The engine-discovered script base. A subclass becomes attachable to an entity by
 </game_entity>
 ```
 The `<script name>` must equal the `ScriptComponentBehavior` subclass name. `<variable>` values populate the
-`[EditableScriptComponentVariable]` fields. The upstream pack's howdah prefabs (`adod_howdah_{1,2,4}_agent`) are exactly this:
+`[EditableScriptComponentVariable]` fields. ADOD_Beasts's howdah prefabs (`adod_howdah_{1,2,4}_agent`) are exactly this:
 a root `<script name="ADODHowdahObject">` + child `<game_entity>`s carrying `<script name="ADODHowdahStandingPoint">`.
 
 ## WHY it's shaped this way

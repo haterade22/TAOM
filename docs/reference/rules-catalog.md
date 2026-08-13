@@ -14,7 +14,7 @@ the rule loader. Doc-backed facts: `.claude/rules/harness-facts.md` "Rule loader
 
 ## Always-load rules (no `paths:` — full text in context every session)
 
-_(8 rules since 2026-08-05: `working-discipline.md` joined from CLAUDE.md; `response-style.md` + `ai-prose-style.md` merged into `output-style.md`.)_
+_(7 rules: `working-discipline.md` joined from CLAUDE.md 2026-08-05; `response-style.md` + `ai-prose-style.md` merged into `output-style.md`.)_
 
 | Rule | Content |
 |------|---------|
@@ -44,6 +44,7 @@ _(8 rules since 2026-08-05: `working-discipline.md` joined from CLAUDE.md; `resp
 | `hook-authoring.md` | `.claude/hooks/**` | Hook authoring conventions: sibling-mirroring, two-stage git-commit matcher, amend handling, log rotation, detect-and-warn hooks must fail open but never fail silent |
 | `native-cpp-ports.md` | `Dependencies/**/*.cpp\|h`, `Main/SceneScripts/**` | 6-point C++ port audit (hot-path logging, SEH specificity, offsets, atomics, SRWLock, C++ deep-review) |
 | `moduledata-validation.md` | `troops/`, `characters/`, `equipmentsets/`, `taom_spcultures.xml`, `taom_partyTemplates.xml`, `named_companions/`, wanderers + education templates, `tools/schemas/*.json` | Run `python tools/validate_moduledata.py` before committing ModuleData edits; schemas are source-of-truth |
+| `provenance.md` | `Main/**/*.cs`, `Dependencies/**/*.cs`, `docs/{features,reference}/**/*.md`, `**/_Module/**/*.xml`, `**/THIRD-PARTY-LICENSES.txt` | Name the third-party source and state its license; euphemisms are the violation. Derivation vocabulary, the register as the record, and the reversal of the old "never name other mods" rule |
 | `vanilla-data-comparison.md` | `**/settlements.xml`, `**/sp_battle_scenes.xml`, `**/spcultures.xml`, `**/taom_spcultures.xml`, `**/spclans.xml`, `**/spkingdoms.xml`, `**/*.xslt` | Compare against current installed vanilla before modifying mirrored data. Vanilla renames/removes scenes & re-schemas XML between versions → stale TAOM refs crash. Scene-ref audit tools + post-bump checklist. |
 
 ---
