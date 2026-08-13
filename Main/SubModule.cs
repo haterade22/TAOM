@@ -1447,6 +1447,11 @@ public class SubModule : MBSubModuleBase
         // Added unconditionally per TAOM convention; gates internally on
         // Mission.Mode == Deployment (the bearer-freeze guard) and on a live BannerBearerLogic.
         AddTaomBehavior(new Features.BannerBearers.Hooks.BannerBearerAssignmentMissionLogic());
+        // Added unconditionally; DreadMissionGate self-filters to campaign field battles, sieges
+        // and sally-outs, re-read every tick because MissionTeamAIType is assigned after every
+        // OnBehaviorInitialize. No AddModel counterpart: the aura drives CommonAIComponent morale
+        // directly and CALLS the registered BattleMoraleModel rather than overriding it.
+        AddTaomBehavior(new Features.DreadAura.Hooks.DreadAuraMissionLogic());
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();

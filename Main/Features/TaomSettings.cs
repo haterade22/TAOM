@@ -883,6 +883,28 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down regardless of resistance (mumakil vs man is ~125). Default 8. Lower = heavy cavalry flattens infantry more often. Values below the neutral weight ratio (default 6 = ordinary horse+rider vs man) are treated as the neutral ratio so every plain horse charge doesn't auto-floor.")]
     public int ChargeAutoKnockdownWeightRatio { get; set; } = 8;
 
+    // --- Aura of Dread ---
+
+    [SettingPropertyGroup("Aura of Dread", GroupOrder = 34)]
+    [SettingPropertyBool("Enable Aura of Dread", Order = 0,
+        HintText = "Nazgul and Sauron drain the morale of nearby enemy troops, breaking formations that stand too close for too long. Takes effect immediately, but morale already drained is not restored when you switch it off.")]
+    public bool EnableDreadAura { get; set; } = true;
+
+    [SettingPropertyGroup("Aura of Dread")]
+    [SettingPropertyFloatingInteger("Dread Radius", 4f, 30f, "#0", Order = 1,
+        HintText = "Metres over which a wraith projects dread. Full strength within the inner radius from dread_aura_config.json (default 4m), falling to nothing at this distance. Default 12. Values above 30 are refused because the engine's proximity search degrades to a full agent scan.")]
+    public float DreadAuraRadius { get; set; } = 12f;
+
+    [SettingPropertyGroup("Aura of Dread")]
+    [SettingPropertyFloatingInteger("Morale Drained Per Second", 0f, 20f, "#0.0", Order = 2,
+        HintText = "Morale per second drained at full strength, before the target's tier/hero resistance and its racial resistance. At the default 5.0 a tier-3 human breaks after about 28 seconds of contact, a tier-6 elite about 49, and an elven hero never. Below about 1.0 the engine's own morale recovery outpaces the drain and nothing ever routs.")]
+    public float DreadAuraMoralePerSecond { get; set; } = 5f;
+
+    [SettingPropertyGroup("Aura of Dread")]
+    [SettingPropertyBool("Affects Your Own Troops", Order = 3,
+        HintText = "When off, troops on your team are immune and dread only touches the AI. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
+    public bool DreadAuraAffectsPlayerTroops { get; set; } = true;
+
     // --- Map UI / Settlement Nameplates ---
 
     [SettingPropertyGroup("Map UI/Settlement Nameplates", GroupOrder = 40)]

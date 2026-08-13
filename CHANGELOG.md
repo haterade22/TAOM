@@ -4,6 +4,61 @@
 
 ## 2026-08-13
 
+### feat(dread): Nazgûl and Sauron break the lines they stand in front of
+
+New `DreadAura` feature. On the battlefield, the Nine and Sauron drain the morale of enemy troops
+around them until formations break. Hold a shieldwall in front of a Ringwraith and the front rank
+goes together, after which vanilla's own morale contagion carries the rout outward.
+
+**Two identity axes, because one does not work.** The Nazgûl are not identifiable by race. Verified
+against TAOM's own data: eight of the Nine carry no `race` attribute at all in `lords.xslt` (so they
+are vanilla race 0, human), Khamûl is `race="orc"`, and `race="nazghul"` appears nowhere in the
+repo despite the race existing in the FaceGen registry. A race-keyed source list would have emitted
+zero auras for eight of nine wraiths, parsed cleanly, and logged nothing. Sources are keyed by hero
+StringId (reusing the existing `NazgulRegistry`) OR by race, which is how Sauron is found.
+
+**No GameModel override.** `BattleMoraleModel.CalculateMoraleChangeToCharacter` is CALLED rather
+than overridden, which is how tier and hero resistance reach the aura at exact parity with vanilla
+kill-morale. Overriding it would have been wrong: the caller applies the sign, so shaping it for
+"elves resist dread" would equally shrink the morale elves gain from kills.
+`GetEffectiveInitialMorale` was rejected too, because it fires once at spawn and permanently lowers
+the derived recovery ceiling, so a wraith killed early would leave the enemy army capped for the
+rest of the battle.
+
+**Counterplay is arithmetic, not a special case.** The engine regenerates morale at +0.4/sec up to
+half a troop's starting morale, so an effective drain at or below that rate suppresses without ever
+routing. At the shipped rate a tier-3 human breaks after about 28 seconds of contact, a tier-6 elite
+about 49, an elf about 93, and an elven hero never: elf resistance plus hero resistance puts his
+drain under the regeneration rate. The player is immune for a different reason, and it is the
+engine's: player-controlled agents get no `CommonAIComponent`, so they have no morale to drain.
+
+Runs in campaign field battles, sieges and sally-outs only, on an allowlist re-read every tick.
+Arenas, tournaments and hideouts are excluded, which matters because routing a tournament entrant
+inside an arena with no retreat position is a known hang family.
+
+161 tests. The rout-time table is a golden-number contract asserted in three places that must move
+together. Mutation-checked: disabling the morale floor, the NaN radius gate, the race-resist
+multiplier or the per-source elapsed integration each redden tests. An `IsValidRaceId` guard that
+reddened none was removed rather than shipped, since the lookup tables are keyed by race id and the
+`GetRaceNameFromId` fallback it defended against is structurally unreachable.
+
+MCM group "Aura of Dread" with four knobs; the radius ceiling is enforced in both the JSON provider
+and the settings provider, because MCM slider bounds are UI-only metadata. Suite green at 6,615.
+
+**Deep review found three real defects before this shipped, all fixed here.** The drain integrates
+over each source's own elapsed time, which is what keeps it rate-exact while wraiths are
+round-robined across frames, but it had no upper bound: toggling the aura off and back on mid-battle
+handed one pulse the entire off-window and routed every enemy in radius instantly. The master toggle
+was also folded into the identity lookup, so a wraith spawning while the feature was off stayed
+unregistered even after it was switched back on. And the radius and rate were snapshotted per source
+at registration, so the sliders only moved wraiths that spawned afterwards. Root cause in all three:
+every skip path was written as "stop doing work" without asking what the skipped time and skipped
+events mean on resume. RCA and the two durable lessons: `docs/reviews/rca-dread-aura-2026-08-13.md`.
+
+Known limitation: auto-resolve does not model the aura, so fighting a wraith manually is harsher
+than auto-resolving one. Campaign-map dread, fearless undead, and trolls or Mumakil as sources are
+all deliberately out of this change. Details: `docs/features/dread-aura.md`.
+
 ### docs(reference): provenance register, third-party notice, build and tooling hygiene
 
 **New `docs/reference/provenance-register.md`.** One table of the external sources TAOM's code and

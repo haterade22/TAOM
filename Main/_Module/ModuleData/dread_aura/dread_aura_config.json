@@ -1,0 +1,38 @@
+{
+  "_comment_feature": "Aura of Unnatural Dread. Nazgul and Sauron drain the morale of nearby enemy troops on the battlefield. Battle scale only; there is no campaign-map effect. Full design: docs/features/dread-aura.md",
+
+  "enabled": true,
+
+  "_comment_pulseIntervalSeconds": "Seconds between dread pulses for one source. Drain integrates over each source's own elapsed time, so this changes scheduling granularity, not strength.",
+  "pulseIntervalSeconds": 0.25,
+
+  "_comment_maxSourcesPerFrame": "Sources allowed to pulse in a single frame. Each pulse takes a process-wide static lock inside the engine's proximity query, so this bounds the worst-case frame cost no matter how many wraiths are on the field.",
+  "maxSourcesPerFrame": 2,
+
+  "_comment_fearVoiceChancePerPulse": "Chance that one affected agent cries out per pulse. 0 disables. Races with no Fear voice clip bound fall silent rather than erroring.",
+  "fearVoiceChancePerPulse": 0.02,
+
+  "_comment_heroSets": "Named compiled hero sets. Only 'nazgul_nine' is known; it resolves to the nine Ringwraith StringIds in NazgulRegistry.cs. THIS is the axis that finds the Nazgul: verified 2026-08-13, eight of the Nine carry no race attribute in lords.xslt (so they are vanilla race 0, human) and Khamul is race=orc. A race-keyed source list emits ZERO auras for eight of them, and adding 'orc' to catch Khamul would give every orc in the game an aura.",
+  "heroSets": ["nazgul_nine"],
+
+  "_comment_heroIds": "Individual hero StringIds. lord_1_17 is Sauron, listed here as well as under races so the feature survives a data change that drops his race attribute.",
+  "heroIds": ["lord_1_17"],
+
+  "_comment_races": "FaceGen race names that project dread. 'sauron' is the only dread-bearer the race axis can actually find in TAOM's shipped data. Adding 'cave_troll' and 'hill_troll' here is all a troll-terror variant needs.",
+  "races": ["sauron"],
+
+  "_comment_profile": "radius/innerRadius in metres. Drain is at full strength within innerRadius and falls linearly to nothing at radius. moralePerSecond is the rate BEFORE the target's tier/hero resistance and its racial resistance. moraleFloor 0 lets the aura alone drive a troop to the engine's 0.01 panic threshold; raise it to make dread soften troops while leaving the kill to combat.",
+  "_comment_balance": "At moralePerSecond 5.0 a tier-3 human breaks after about 28s of contact, a tier-6 elite about 49s, an elf about 93s, and an elven hero never. The engine regenerates morale at +0.4/sec up to half a troop's starting morale, so an effective rate at or below 0.4 suppresses without ever routing. That break-even IS the resistance mechanic.",
+  "profile": {
+    "radius": 12.0,
+    "innerRadius": 4.0,
+    "moralePerSecond": 5.0,
+    "moraleFloor": 0.0
+  },
+
+  "_comment_raceResist": "Multiplier on the drain a TARGET takes, keyed by race name. 1.0 is no resistance, 0.0 is immunity. Values above 1.0 are refused, because they would amplify dread on a race the author meant to protect. Tier and hero resistance are separate and come from the engine's own morale model.",
+  "raceResist": {
+    "elf": 0.4,
+    "dwarf": 0.5
+  }
+}

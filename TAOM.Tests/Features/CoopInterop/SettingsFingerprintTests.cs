@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -19,7 +20,7 @@ namespace TAOM.Tests.Features.CoopInterop;
 //   1. Same settings -> same code, every time. Reflection does not guarantee member order, so the
 //      canonical text is sorted; without that the hash would drift between runs.
 //   2. Different settings -> different code, and the RIGHT GROUP named. A global-only answer sends
-//      a player through 112 checkboxes.
+//      a player through 116 checkboxes.
 //   3. A locale must not fake a mismatch. 0.25f renders "0,25" under es-ES: two peers with identical
 //      settings would diverge on the decimal separator alone. This is the failure that would have
 //      made the feature worse than nothing.
@@ -206,11 +207,54 @@ public class SettingsFingerprintTests
         // guards nothing. The count is the guard that can fail: add a setting anywhere below and
         // one of these numbers moves, which is the moment to decide what it is. The same numbers
         // are quoted in docs/features/coop-interop.md.
-        AssertSplit(typeof(TaomSettings), reflected: 155, covered: 112);
+        AssertSplit(typeof(TaomSettings), reflected: 159, covered: 116);
         AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 7, covered: 0);
         AssertSplit(typeof(BlowDiagnosticsSettings), reflected: 1, covered: 0);
         AssertSplit(typeof(CrashReportSettings), reflected: 6, covered: 0);
     }
+
+    [TestMethod]
+    public void EveryDocQuotingTheSettingsCounts_AgreesWithReflection()
+    {
+        // Two docs quote these numbers and only one used to be pinned, so
+        // bannerlord-together-compat.md sat on "167 settings, 112 simulation-relevant" while
+        // coop-interop.md said 173/116 — and the two contradicted each other in a sentence that
+        // links one to the other. Nothing caught it: lint_docs.py cannot see semantic drift.
+        // Deep-review 2026-08-13 finding 6.
+        var totals = new[]
+        {
+            typeof(TaomSettings), typeof(BattleLoadDiagnosticsSettings),
+            typeof(BlowDiagnosticsSettings), typeof(CrashReportSettings),
+        };
+        var reflected = totals.Sum(t => SettableProperties(t).Count());
+        var relevant = totals.Sum(t => SettableProperties(t).Count(CoopSettingsRelevance.IsSimulationRelevant));
+
+        foreach (var relative in new[]
+        {
+            @"docs\features\coop-interop.md",
+            @"docs\features\bannerlord-together-compat.md",
+        })
+        {
+            var path = Path.Combine(RepoRoot, relative);
+            Assert.IsTrue(File.Exists(path), $"{relative} not found at {path}");
+            var text = File.ReadAllText(path);
+
+            Assert.IsTrue(
+                text.Contains($"**{reflected}**") || text.Contains($" {reflected} MCM settings"),
+                $"{relative} does not quote the current total of {reflected} MCM settings. "
+                + "Update it, or drop the number from that doc so only one file owns it.");
+            Assert.IsTrue(
+                text.Contains($"**{relevant} are simulation-relevant**")
+                || text.Contains($"**{relevant} of them are\n  simulation-relevant**"),
+                $"{relative} does not quote the current simulation-relevant count of {relevant}.");
+            Assert.IsFalse(
+                text.Contains("112 are simulation-relevant") && relevant != 112,
+                $"{relative} still quotes a stale simulation-relevant count.");
+        }
+    }
+
+    private static string RepoRoot => Path.GetFullPath(
+        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\.."));
 
     private static void AssertSplit(Type settingsType, int reflected, int covered)
     {
@@ -309,7 +353,7 @@ public class SettingsFingerprintTests
         // neither throw on a diagnostic path nor cost the coverage of the objects that are there.
         var report = SettingsFingerprint.ComputeAcross(new TaomSettings(), null, new CrashReportSettings());
 
-        Assert.AreEqual(112, report.Covered, "a null entry cost coverage");
+        Assert.AreEqual(116, report.Covered, "a null entry cost coverage");
         Assert.AreEqual(SettingsFingerprint.Compute(new TaomSettings()).Global, report.Global);
     }
 
@@ -376,7 +420,7 @@ public class SettingsFingerprintTests
         var report = SettingsFingerprint.Compute(new TaomSettings());
         // Pinned, not a floor: the docs quote this number, and a change here means someone added
         // or reclassified a setting and the docs need the same edit.
-        Assert.AreEqual(112, report.Covered,
+        Assert.AreEqual(116, report.Covered,
             $"simulation-relevant settings changed — update docs/features/coop-interop.md too");
         Assert.AreEqual(64, report.Global.Length, "SHA-256 hex is 64 chars");
         Assert.IsTrue(report.ByGroup.Count > 5, "expected the fingerprint to span several groups");

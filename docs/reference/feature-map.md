@@ -14,6 +14,7 @@
 | AtmospherePersistence | `Main/Features/AtmospherePersistence/` |
 | AdvancedCombat | `Main/Features/AdvancedCombat/` (SpatialGrid, BoneCollision, CustomAttacks) |
 | CombatMechanics | `Main/Features/CombatMechanics/` (combat feel pack via `TaomCombatMechanicsModel` — crush-through/cleave/unstoppable/charge-knockdown/shield-pen + race modifiers; 4 pure services + validated config `combat_mechanics/combat_mechanics_config.json`; see the GameModel table row + `docs/features/combat-mechanics.md`) |
+| DreadAura | `Main/Features/DreadAura/`: Nazgûl and Sauron drain nearby enemy morale until formations break. One `MissionLogic`, **no GameModel override**: it CALLS `BattleMoraleModel.CalculateMoraleChangeToCharacter` for tier/hero resistance rather than overriding it. Sources are keyed by hero StringId (the Nine carry no `nazghul` race) OR race (`sauron`). Config `dread_aura/dread_aura_config.json`; see [dread-aura.md](../../docs/features/dread-aura.md) |
 | CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 16 GameModel overrides) |
 | CustomBattles | `Main/Features/CustomBattles/` (Custom battle factions, commanders, troops) |
 | Arena | `Main/Features/Arena/` (TaomTournamentModel — per-participant culture armor) |

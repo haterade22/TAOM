@@ -31,7 +31,7 @@ Each override follows the established TAOM pattern (feature module + service + a
 
 | Model | Override Goal |
 |-------|---------------|
-| `BattleMoraleModel` | Racial fearlessness (Undead), cultural bravery |
+| `BattleMoraleModel` | Cultural bravery. **Racial dread is done without an override**: the DreadAura feature CALLS `CalculateMoraleChangeToCharacter` for tier/hero resistance and drives `CommonAIComponent` morale from a `MissionLogic`, because the caller applies the sign and an override would shrink morale GAINS too. Racial fearlessness (`CanPanicDueToMorale`) is the one goal here that still wants the slot: see [dread-aura.md](features/dread-aura.md) "Rejected seams" |
 
 ### Tier 3 — Economy & Society
 
@@ -49,7 +49,7 @@ Each override follows the established TAOM pattern (feature module + service + a
 ## Recommended Implementation Order
 
 1. `AgentStatCalculateModel` (Tier 1 — race stat bonuses)
-2. `BattleMoraleModel` (Tier 2 — racial morale)
+2. `BattleMoraleModel` (Tier 2, now only fearless undead + cultural bravery; racial dread shipped without it)
 3. `CharacterDevelopmentModel` (Tier 3 — race skill caps)
 
 ## Notes
