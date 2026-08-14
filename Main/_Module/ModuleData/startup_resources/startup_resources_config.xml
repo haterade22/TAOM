@@ -13,61 +13,119 @@
 
   Edits to this file take effect on the next Bannerlord process restart, not save reload.
 
-  Flattened 2026-08-14 on a standing balance decision: every culture starts its clans on the
-  same 1,000 influence and its lords on the same 250,000 denars, so no faction opens the
-  campaign with a structural economic head start. The elven realms are the single exception
-  at 500,000, keeping the "old, wealthy, few" character they had before the flattening.
+  ====================== THIS SUPERSEDES THE 2026-08-14 FLATTENING ======================
+  Earlier the same day, commit 4f72e160 flattened this file to 250,000 gold and 1,000
+  influence for every culture (elves 500,000) so that "no faction opens the campaign with a
+  structural economic head start". That is not what flat denars buy. A culture's troops cost
+  between 6.91 and 21.66 denars a day per head, measured (see below), so an identical 250,000
+  funds 1.93x more campaign for Mordor than for Gundabad, and an identical 500,000 buys
+  Rivendell less than Lothlorien. Flat in denars is not flat in effect.
 
-  Worth knowing before retuning. Erebor is the one large move DOWN, from 800,000, where it had
-  been the richest culture on the map by a factor of four. Everything else moved UP or stayed
-  level: Blue Craig from 40,000 and vlandia (Rohan) and sturgia (Dale) from 50,000 gold and 50
-  influence, a twentyfold influence jump; Umbar from 200,000. The elven realms came down from
-  600,000 to the 500,000 exception. playerGold was deliberately NOT flattened and still varies
-  by culture.
+  If you are reading the flattening's header text somewhere, it is history, not policy.
+  Do not restore it without re-reading the wage measurement first.
+
+  ============================ HOW THE gold NUMBERS ARE DERIVED ============================
+  `gold` is paid PER LORD, so a culture's real treasury is the value below times its lord
+  count, and lord counts run from 10 (Umbar, Lindon) to 150 (Moria). One rule sets them:
+
+      gold = K x runwayDays x avgTroopWage        K = 52.5437
+
+  avgTroopWage is measured, not chosen, and it models what the engine actually charges:
+
+    - Each noble clan's roster is its own `default_party_template` from characters/clans.xml
+      and spclans.xslt. 176 of the 193 lord-party templates are per CLAN, not per culture, so
+      reading the culture defaults would measure rosters almost nobody fields. Khand
+      (battania) is the one culture whose clans bind nothing; spcultures.xslt falls it through
+      to `kingdom_hero_party_rhun_template`, so it carries Rhûn's cost, not a Variag one.
+    - Each stack is weighted by its EXPECTED spawn count, (min + max) / 2, per
+      docs/reference/party-template-sizing.md.
+    - Each troop's wage is what TroopCostService.GetCharacterWage would return: the T0-T10
+      table, tier = clamp(ceil((level - 5) / 5), 0, 10), times 1.3 if the troop is mounted,
+      then TRUNCATED to int exactly as the engine truncates. A mounted T5 costs 15, not 15.6.
+      Mounted is read from the troop's `default_group` (the four Cavalry/HorseArcher groups),
+      which is what CharacterObject.IsMounted resolves to for a non-hero.
+    - Party-wage feats are folded in: mordor x1.20, gundabad x1.10, umbar x1.08, and Rohan's
+      taom_rohan_mounted_wage -15% on its mounted share (the only mounted WAGE feat in TAOM).
+      Garrison-wage feats are NOT folded in: they are settlement-scoped and never touch
+      field-party burn.
+    - The mercenary x1.5 multiplier is not modelled because no mercenary-occupation troop
+      appears in any hero party template. The derivation asserts this rather than assuming it.
+
+  What it still does not model, and cannot: vanilla's per-hero perk and policy wage modifiers
+  (DeepPockets, Frugal, MilitaryCoronae, EfficientCampaigner and the rest) all land on the same
+  ExplainedNumber at runtime and depend on which lord holds which perk in a given campaign.
+  This is a design-time proxy for field-party burn, not the runtime figure.
+
+  runwayDays is the only judgement call, four tiers:
+      A = 270 (mythic treasuries)   B = 150 (great realms)
+      C = 100 (regional powers)     D =  70 (marginal realms)
+
+  K scales the table so the world's AI lords hold about 100M denars between them. Values round
+  to the nearest 5,000. Two knobs move everything: the tier a culture sits in, and K.
+  Re-derive with the measurement above rather than nudging a single row, or the rate stops
+  meaning anything.
+
+  Cultures not listed here receive nothing, silently. Goblin-town and Moria shipped that way
+  for two months. StartupResourcesConfigCoverageTests fails if a lord-owning culture is
+  missing a row, so do not add a culture to characters/lords.xml without adding it here.
+
+  WHAT THIS DOES NOT FIX: fief income per lord still spans 25x in units of "days of one party's
+  wages funded per lord". Dol Guldur fields 127 lords on 23 fiefs and Umbar 10 on 40. Startup
+  gold only delays that; the fix is roster size. See docs/features/startup-resources.md.
+  =========================================================================================
 -->
 <StartupResources>
-  <!-- Elven cultures — the one exception to the flat 250,000 -->
-  <Culture id="rivendell"   gold="500000" influence="1000" playerGold="4000"  />
-  <Culture id="lothlorien"  gold="500000" influence="1000" playerGold="4000"  />
-  <Culture id="mirkwood"    gold="500000" influence="1000" playerGold="4000"  />
-  <Culture id="lindon"      gold="500000" influence="1000" playerGold="4000"  />
+  <!-- Elven cultures. Their troops cost roughly three times per head what Mordor's do, and
+       their rosters are 30-40% mounted, so an elven denar buys far less campaign than a human
+       one; the high rates here are that cost, not a bonus. -->
+  <Culture id="rivendell"   gold="305000" influence="600"  playerGold="4000"  />
+  <Culture id="lothlorien"  gold="230000" influence="600"  playerGold="4000"  />
+  <Culture id="mirkwood"    gold="270000" influence="600"  playerGold="4000"  />
+  <Culture id="lindon"      gold="250000" influence="600"  playerGold="4000"  />
 
-  <!-- Dwarven cultures -->
-  <Culture id="erebor"      gold="250000" influence="1000" playerGold="3500"  />
+  <!-- Dwarven cultures. Erebor sat at 800,000 before the flattening, by a wide margin the
+       richest culture on the map; it fields no cavalry at all, so it was also paying a mounted
+       premium it never incurs. -->
+  <Culture id="erebor"      gold="145000" influence="600"  playerGold="3500"  />
 
   <!-- Human Good cultures -->
-  <Culture id="gondor"      gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="vlandia"     gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="sturgia"     gold="250000" influence="1000" playerGold="2000"  />
+  <Culture id="gondor"      gold="80000"  influence="600"  playerGold="2000"  />
+  <Culture id="vlandia"     gold="40000"  influence="400"  playerGold="2000"  />
+  <Culture id="sturgia"     gold="45000"  influence="400"  playerGold="2000"  />
 
-  <!-- Human Evil / Eastern cultures -->
-  <Culture id="empire"      gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="battania"    gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="aserai"      gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="khuzait"     gold="250000" influence="1000" playerGold="2000"  />
+  <!-- Human Evil / Eastern cultures. Rhûn's rate is the highest of this group because its
+       clans field the costliest human rosters on the map (13.03/head), not as a favour. -->
+  <Culture id="empire"      gold="45000"  influence="400"  playerGold="2000"  />
+  <Culture id="battania"    gold="55000"  influence="400"  playerGold="2000"  />
+  <Culture id="aserai"      gold="45000"  influence="400"  playerGold="2000"  />
+  <Culture id="khuzait"     gold="105000" influence="400"  playerGold="2000"  />
 
-  <!-- Independent Harad-region kingdoms (full kingdoms with NPC clans + lords; Shaghana 9 lords, Abanissa 8 lords) -->
+  <!-- Independent Harad-region kingdoms (full kingdoms with NPC clans + lords; Shaghana has 9
+       clans and 90 lords, Abanissa 8 clans and 80 lords) -->
   <!-- Both cultures are now fully playable in character creation (the issue-#111 narrative-menu
        coverage has landed), so their `playerGold` rows below are live. -->
-  <Culture id="shaghana"    gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="abanissa"    gold="250000" influence="1000" playerGold="2000"  />
+  <Culture id="shaghana"    gold="45000"  influence="400"  playerGold="2000"  />
+  <Culture id="abanissa"    gold="45000"  influence="400"  playerGold="2000"  />
 
-  <!-- Orcish / Dark cultures -->
-  <Culture id="mordor"      gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="isengard"    gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="gundabad"    gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="dolguldur"   gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="umbar"       gold="250000" influence="1000" playerGold="2000"  />
+  <!-- Orcish / Dark cultures. Mordor, Gundabad and Umbar each carry a party-wage PENALTY feat
+       (+20%, +10%, +8%) that is already folded into these rates. Mordor still lands lowest of
+       the group because its rosters are the cheapest per head on the map even after the +20%. -->
+  <Culture id="mordor"      gold="55000"  influence="600"  playerGold="2000"  />
+  <Culture id="isengard"    gold="40000"  influence="600"  playerGold="2000"  />
+  <Culture id="gundabad"    gold="70000"  influence="400"  playerGold="2000"  />
+  <Culture id="dolguldur"   gold="60000"  influence="400"  playerGold="2000"  />
+  <Culture id="umbar"       gold="85000"  influence="400"  playerGold="2000"  />
 
   <!-- Goblin-town and the Moria orcs. Both shipped CC-selectable in June 2026 with no row here at
        all, so every player who picked one started on 0 denars — and because a missing culture is
        documented above as a silent default of 0, nothing logged it. -->
-  <Culture id="goblin"             gold="250000" influence="1000" playerGold="2000"  />
-  <Culture id="mistymountainorcs"  gold="250000" influence="1000" playerGold="2000"  />
+  <Culture id="goblin"             gold="35000"  influence="200"  playerGold="2000"  />
+  <Culture id="mistymountainorcs"  gold="70000"  influence="400"  playerGold="2000"  />
 
   <!-- Promoted out of a borrowed culture 2026-08-10: Blue Craig off goblin, Lindon off rivendell.
        Each needs its own row: before the split they inherited nothing, because these values are
-       keyed on culture and their kingdoms had none of their own. Lindon sits with the other
-       elven realms above. -->
-  <Culture id="bluecraig"          gold="250000" influence="1000" playerGold="2000"  />
+       keyed on culture and their kingdoms had none of their own. Blue Craig's five clans still
+       field goblin rosters (they bind ..._goblin_bluecraig_N_template), which is why its rate
+       matches Goblin-town's almost exactly. Lindon sits with the other elven realms above. -->
+  <Culture id="bluecraig"          gold="35000"  influence="200"  playerGold="2000"  />
 </StartupResources>

@@ -1,0 +1,29 @@
+{
+  "_why": [
+    "The 2026-08-14 faction-economy pass. Income per lord spans 25x across cultures because",
+    "fief count and lord count were set independently: Dol Guldur fields 127 lords on 23 fiefs,",
+    "Umbar 10 lords on 40. Per-settlement wealth is already uniform across the map, so the gap",
+    "is not poor settlements, and new settlements are not available either (the rglConcurrentQueue",
+    "prefab cap measured 130,151 of 131,072 with ~921 spare). Raising the existing fiefs of the",
+    "eight starved cultures to a shared floor is what is left, and it closes about half the gap.",
+    "The four worst (dolguldur, gundabad, goblin, mistymountainorcs) stay below the band even at",
+    "vanilla's absolute maxima; their remaining fix is roster size, not fief wealth."
+  ],
+  "_applied_to": "LIVE <game>/Modules/TAOM_Map/ModuleData/settlements.xml, which is unversioned. A module reinstall reverts it silently, which is why validate_moduledata.py gates on this file.",
+  "_command": "python tools/rebalance_settlement_prosperity.py --culture-floor-file tools/settlement_economy_floor.json --apply",
+  "floor": {
+    "town": 4800,
+    "castle": 950,
+    "hearth": 500
+  },
+  "cultures": [
+    "bluecraig",
+    "dolguldur",
+    "goblin",
+    "gundabad",
+    "isengard",
+    "lindon",
+    "mirkwood",
+    "mistymountainorcs"
+  ]
+}

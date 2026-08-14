@@ -1,0 +1,1208 @@
+{
+  "_what": "Pre-change values for every settlement the 2026-08-14 culture-floor pass raised in the LIVE TAOM_Map module.",
+  "_why": "The tool's own settlements.xml.bak was destroyed by an errant `rm -f` from a review agent during the post-change deep review. These values were recovered from settlements.xml.bak-1786039925407181100 (2026-08-06), which is an OLDER state: it predates the 2026-08-10 Blue Craig / Lindon culture promotion, so its culture tags differ. Its prosperity and hearth values are nonetheless the true pre-change values, because a full comparison found exactly these 150 records differing and no others, meaning nothing touched prosperity or hearth between 2026-08-06 and the floor pass.",
+  "_how_to_roll_back": "Write each `before` value back into the named settlement's prosperity/hearth attribute in the LIVE TAOM_Map settlements.xml. Do not use the 2026-08-06 backup wholesale: it would also revert the culture promotion.",
+  "record_count": 150,
+  "records": [
+    {
+      "id": "castle_DG1",
+      "culture": "dolguldur",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 630,
+      "after": 950
+    },
+    {
+      "id": "castle_DG2",
+      "culture": "dolguldur",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 840,
+      "after": 950
+    },
+    {
+      "id": "castle_DG3",
+      "culture": "dolguldur",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 640,
+      "after": 950
+    },
+    {
+      "id": "castle_DG4",
+      "culture": "dolguldur",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_DG5",
+      "culture": "dolguldur",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_G1",
+      "culture": "gundabad",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 610,
+      "after": 950
+    },
+    {
+      "id": "castle_G2",
+      "culture": "gundabad",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 700,
+      "after": 950
+    },
+    {
+      "id": "castle_G3",
+      "culture": "gundabad",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 720,
+      "after": 950
+    },
+    {
+      "id": "castle_G4",
+      "culture": "gundabad",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_G5",
+      "culture": "gundabad",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 850,
+      "after": 950
+    },
+    {
+      "id": "castle_GBC1",
+      "culture": "bluecraig",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_GBC2",
+      "culture": "bluecraig",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_GBC3",
+      "culture": "bluecraig",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 830,
+      "after": 950
+    },
+    {
+      "id": "castle_GBC4",
+      "culture": "bluecraig",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 830,
+      "after": 950
+    },
+    {
+      "id": "castle_I1",
+      "culture": "isengard",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 720,
+      "after": 950
+    },
+    {
+      "id": "castle_I2",
+      "culture": "isengard",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 720,
+      "after": 950
+    },
+    {
+      "id": "castle_M1",
+      "culture": "mirkwood",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 610,
+      "after": 950
+    },
+    {
+      "id": "castle_M2",
+      "culture": "mirkwood",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 610,
+      "after": 950
+    },
+    {
+      "id": "castle_M3",
+      "culture": "mirkwood",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 610,
+      "after": 950
+    },
+    {
+      "id": "castle_M4",
+      "culture": "mirkwood",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 610,
+      "after": 950
+    },
+    {
+      "id": "castle_M5",
+      "culture": "mirkwood",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 610,
+      "after": 950
+    },
+    {
+      "id": "castle_MM1",
+      "culture": "mistymountainorcs",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 830,
+      "after": 950
+    },
+    {
+      "id": "castle_MM2",
+      "culture": "mistymountainorcs",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 620,
+      "after": 950
+    },
+    {
+      "id": "castle_MM3",
+      "culture": "mistymountainorcs",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_MM4",
+      "culture": "mistymountainorcs",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_MM5",
+      "culture": "mistymountainorcs",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_MM6",
+      "culture": "mistymountainorcs",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 600,
+      "after": 950
+    },
+    {
+      "id": "castle_MM7",
+      "culture": "mistymountainorcs",
+      "kind": "castle",
+      "attribute": "prosperity",
+      "before": 630,
+      "after": 950
+    },
+    {
+      "id": "castle_village_DG1_1",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG1_2",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG1_3",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG2_1",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG2_2",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG2_3",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG2_4",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG3_1",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG3_2",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG3_3",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG4_1",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG4_2",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG5_1",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_DG5_2",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G1_1",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G1_2",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G2_1",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G2_2",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G2_3",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G3_1",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G3_2",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G3_4",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G5_1",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G5_2",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G5_3",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_G5_4",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC1_1",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC1_2",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC2_1",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC2_2",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC3_1",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC3_2",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC3_3",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC3_4",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC4_1",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC4_2",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC4_3",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_GBC4_4",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_I1_1",
+      "culture": "isengard",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_I1_2",
+      "culture": "isengard",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_I1_3",
+      "culture": "isengard",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_I2_1",
+      "culture": "isengard",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_I2_2",
+      "culture": "isengard",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_I2_3",
+      "culture": "isengard",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M1_1",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M1_2",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M2_1",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M2_2",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M3_1",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M3_2",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M4_1",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M4_2",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M5_1",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_M5_2",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM1_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM1_2",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM1_3",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM1_4",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM2_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM2_2",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM2_3",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM3_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM4_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM5_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM5_2",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM6_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM7_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM7_2",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_MM7_3",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "castle_village_isengard_a",
+      "culture": "isengard",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 400,
+      "after": 500
+    },
+    {
+      "id": "town_DG1",
+      "culture": "dolguldur",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3500,
+      "after": 4800
+    },
+    {
+      "id": "town_G1",
+      "culture": "gundabad",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3630,
+      "after": 4800
+    },
+    {
+      "id": "town_G2",
+      "culture": "gundabad",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3730,
+      "after": 4800
+    },
+    {
+      "id": "town_GBC1",
+      "culture": "bluecraig",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3000,
+      "after": 4800
+    },
+    {
+      "id": "town_GT1",
+      "culture": "goblin",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3000,
+      "after": 4800
+    },
+    {
+      "id": "town_LN1",
+      "culture": "lindon",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3000,
+      "after": 4800
+    },
+    {
+      "id": "town_M1",
+      "culture": "mirkwood",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3800,
+      "after": 4800
+    },
+    {
+      "id": "town_M2",
+      "culture": "mirkwood",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3500,
+      "after": 4800
+    },
+    {
+      "id": "town_MM1",
+      "culture": "mistymountainorcs",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3000,
+      "after": 4800
+    },
+    {
+      "id": "town_MM2",
+      "culture": "mistymountainorcs",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3000,
+      "after": 4800
+    },
+    {
+      "id": "town_MM3",
+      "culture": "mistymountainorcs",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 3000,
+      "after": 4800
+    },
+    {
+      "id": "town_isengard",
+      "culture": "isengard",
+      "kind": "town",
+      "attribute": "prosperity",
+      "before": 4500,
+      "after": 4800
+    },
+    {
+      "id": "village_DG1_1",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_DG1_2",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_DG1_3",
+      "culture": "dolguldur",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_G1_1",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_G1_2",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_G1_3",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_G1_4",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_G2_1",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_G2_2",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_G2_3",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_G2_4",
+      "culture": "gundabad",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_GBC1_1",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_GBC1_2",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_GBC1_3",
+      "culture": "bluecraig",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_GT1_1",
+      "culture": "goblin",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_GT1_2",
+      "culture": "goblin",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_GT1_3",
+      "culture": "goblin",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_GT1_5",
+      "culture": "goblin",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_GT1_6",
+      "culture": "goblin",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_GT1_7",
+      "culture": "goblin",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_LN1_1",
+      "culture": "lindon",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_LN1_2",
+      "culture": "lindon",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_LN1_3",
+      "culture": "lindon",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_LN1_4",
+      "culture": "lindon",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_M1_1",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_M1_2",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_M1_3",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_M1_4",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_M2_1",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_M2_2",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_M2_3",
+      "culture": "mirkwood",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 350,
+      "after": 500
+    },
+    {
+      "id": "village_MM1_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_MM1_2",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_MM1_3",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_MM2_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_MM2_2",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_MM3_1",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_MM3_2",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_MM3_3",
+      "culture": "mistymountainorcs",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    },
+    {
+      "id": "village_isengard_a",
+      "culture": "isengard",
+      "kind": "village",
+      "attribute": "hearth",
+      "before": 300,
+      "after": 500
+    }
+  ]
+}

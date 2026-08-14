@@ -1168,3 +1168,53 @@ claims, and only the second justifies writing an engine invariant into a shipped
   `evidence-over-claims.md` §A.4 reads as though it governs only the latter.
 - **Source:** `docs/reviews/rca-enlistment-diagnostics-legibility-2026-08-12.md` findings #4 and the
   Agent 2 note.
+
+### Test the input that VIOLATES a guarantee, not the one that satisfies it
+
+One changeset claimed four guarantees in prose (lift-only, idempotent, fail-loud, dry-run gated) and
+tested each along the path where it holds. Every one of them was broken along the path where it is
+stressed, and review found all four:
+
+| Guarantee | Tested | Actually broken by |
+|---|---|---|
+| "lift-only, no fief is ever lowered" | a value below the floor | a value ABOVE the cap: `min(max(current, floor), CAP)` turned 6000 into 5600 |
+| "a re-run reports 0 changes" | a re-run in DRY mode | a re-run with `--apply`, which overwrote the `.bak` with a byte-identical file and destroyed the previous run's rollback point |
+| "exactly-once assertion, fail loud" | a well-formed settlement | `max-prosperity=` (a hyphen IS a word boundary), an attribute value containing the attribute name, and `</Settlement >` with a space. Each produced exactly one match, so the assertion passed while the wrong bytes were rewritten |
+| "the gate reports clean or fails" | a violating value | a missing spec file, an empty spec, and a spec culture matching no settlement, all of which returned "no findings" |
+
+- **Why missed:** verifying the hard part feels like verifying the change. The derivation was
+  re-computed twice and was clean both times, which is exactly what made the ring around it feel
+  covered. Confirming idempotency by dry run is the specific trap: the dry run never reaches the
+  write path, so the write path's no-op behaviour is the one thing that check cannot see.
+- **Prevent:** for each guarantee a change states in prose, write down the input that would violate
+  it and assert the guarantee survives that input. "Lift-only" is a claim about values above the
+  floor. "Idempotent" is a claim about the second WRITE. A guarantee with no violating-input test is
+  a comment, not a contract. Where the shape is adversarial (regex boundaries, parser edge cases),
+  ask an adversarial reviewer to construct counterexamples: four of the five nastiest defects here
+  came from construction, not from rule-checking.
+- **Source:** `docs/reviews/rca-faction-economy-2026-08-14.md` findings #2, #3, #4, #7 (#459).
+
+### A constant shared by a writer and its verifier is IMPORTED, never restated
+
+`rebalance_settlement_prosperity.py` clamps a configured floor to `PROSPERITY_CAP` (5600) and
+`HEARTH_CAP` (825). The `SETTLEMENT_ECONOMY_FLOOR` check that verifies the writer's output read the
+same spec file and compared against the raw value. Set a floor above a cap and the writer silently
+produces 5600 while the checker demands 6000: an ERROR-severity gate in a pre-commit path that
+fails forever, on every commit, with no `--apply` able to satisfy it. Latent at the time, because
+the committed numbers happened to sit under both caps.
+
+The same defect at a different scale, in the same changeset: a doc asserted the prefab entity cap
+left "~921 spare" as a measurement, having copied it from CLAUDE.md's trap table. The independent
+reviewer then contradicted it with 93,407 from `check_prefab_budget.py`, which CLAUDE.md's own trap
+table says undercounts because it reads one module. Two parties quoted a stale or partial number as
+a live measurement and reached opposite conclusions from it.
+
+- **Why missed:** a copied constant is correct at the moment it is copied, and both copies read as
+  right forever after. Nothing about the second one looks like a duplicate. `csharp-architecture.md`
+  already carries this rule for a value settable from both JSON and MCM; it was not read as covering
+  a writer and its verifier, which is the same shape.
+- **Prevent:** one component imports the constant from the other, even across a language or tool
+  boundary (the Python checker now execs the writer module for its caps). And a number quoted as a
+  design CONSTRAINT carries the command that produced it and the date, or it is not a measurement.
+  If two sources disagree, record the disagreement rather than picking the convenient one.
+- **Source:** `docs/reviews/rca-faction-economy-2026-08-14.md` findings #1 and #12 (#459).

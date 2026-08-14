@@ -115,6 +115,40 @@ runtime; this check catches it before it ships. Full analysis:
 Evidence: **18** `LANDLESS_CULTURE` errors before the retag (the 18 TAOM-authored Variag lords in
 `characters/lords.xml`), `PASS: no validation issues found.` after.
 
+## Settlement-economy floor check (`SETTLEMENT_ECONOMY_FLOOR`)
+
+**Severity ERROR.** Fires when a settlement whose culture is named in
+[`tools/settlement_economy_floor.json`](../../tools/settlement_economy_floor.json) sits below that
+spec's `town` / `castle` / `hearth` floor in the world the game actually builds.
+
+The 2026-08-14 faction-economy pass raised every fief of eight fief-starved cultures in the **LIVE**
+`<game>/Modules/TAOM_Map/ModuleData/settlements.xml`. That module is unversioned, so a reinstall
+reverts the whole pass and nothing in this repo would otherwise notice: the same class of silent
+loss behind CLAUDE.md's "A fix in a dependency module" trap, which closed seven issues in the
+2026-08-08 triage. The spec file is the single source of truth, read by both
+`rebalance_settlement_prosperity.py` (which writes the floor) and this check (which verifies it), so
+neither restates the numbers. Re-apply with:
+
+```
+python tools/rebalance_settlement_prosperity.py --culture-floor-file tools/settlement_economy_floor.json --apply
+```
+
+Three degraded states are deliberately distinguished, because each one used to read as a pass:
+
+| State | Result |
+|---|---|
+| Registry unavailable (no game install) | silent; the CLI already exits 2 |
+| Spec file missing, or declaring no floor/cultures | **ERROR**: a deleted spec disables the gate exactly when it is needed |
+| Spec names a culture that owns no settlement | **ERROR**: a retag or a typo'd id leaves the gate covering nothing |
+
+The floor is clamped to the same `PROSPERITY_CAP` / `HEARTH_CAP` the writer clamps to, imported
+from the writer rather than restated. Without that, a spec value above a cap would demand a number
+no `--apply` could ever produce and the gate would fail on every commit forever.
+
+Evidence: adding a culture whose fiefs sit below the floor produced 4 errors and exit 1; the shipped
+spec reports `PASS`. Pinned by `SettlementEconomyFloorTests` and `SettlementEconomyRegistryTests` in
+`tools/tests/test_validate_moduledata.py`.
+
 ## Mounted-dwarf check (`MOUNTED_DWARF`)
 
 **Severity ERROR.** Fires on an `NPCCharacter` with `race="dwarf"` that is either tagged

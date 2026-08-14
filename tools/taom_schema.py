@@ -22,11 +22,13 @@ CLI entry point lives in tools/validate_moduledata.py.
 from __future__ import annotations
 
 import fnmatch
+import functools
 import glob
 import itertools
 import json
 import os
 import re
+import xml.etree.ElementTree as ET
 from collections import defaultdict
 from dataclasses import dataclass, field
 from enum import Enum
@@ -73,6 +75,7 @@ class Registries:
     mount_family_types: dict = field(default_factory=dict)    # Type="Horse" id -> Monster family_type (None = unknown)
     body_properties: set = field(default_factory=set)         # defined BodyProperty ids (face_key_template targets)
     settled_cultures: set = field(default_factory=set)        # cultures owning >=1 settlement in the live world
+    settlement_economy: list = field(default_factory=list)    # live per-settlement (id, culture, kind, value) records
     suspect_registries: list = field(default_factory=list)    # human-readable "this registry looks too small" warnings
 
 
@@ -203,6 +206,7 @@ class Validator:
         issues += self._duplicate_item_defs()
         issues += self._education_coverage()
         issues += self._landless_cultures()
+        issues += self._settlement_economy_floor()
         issues += self._harness_family_types()
         issues += self._mounted_dwarves()
         issues.sort(key=lambda i: i.sort_key())
@@ -523,6 +527,104 @@ class Validator:
                     ))
         return issues
 
+    # -- pass 4c: the live map still honours the settlement-economy floor --- #
+    # The 2026-08-14 faction-economy pass raised every fief of eight fief-starved
+    # cultures in the LIVE TAOM_Map settlements.xml. That file is unversioned, so a
+    # module reinstall reverts the whole pass silently and nothing in this repo would
+    # notice — the same class of loss CLAUDE.md's "A fix in a dependency module" trap
+    # describes, which closed seven issues in the 2026-08-08 triage. The floor spec is
+    # committed at tools/settlement_economy_floor.json and is the single source of
+    # truth: the rebalance tool writes from it, this check reads it. Neither restates
+    # the numbers.
+    _FLOOR_SPEC = Path(__file__).resolve().parent / "settlement_economy_floor.json"
+    _FLOOR_KIND_KEY = {"town": "town", "castle": "castle", "village": "hearth"}
+    # Read from the writer rather than restated here. Restating them is what created the original
+    # defect: the writer clamped a floor to these caps and the checker did not, so a spec value
+    # above a cap made the gate demand a number no --apply could ever produce (data-flow agent,
+    # 2026-08-14). One source, or they drift again.
+    @staticmethod
+    @functools.lru_cache(maxsize=1)
+    def _floor_caps() -> tuple:
+        import importlib.util
+        spec_path = Path(__file__).resolve().parent / "rebalance_settlement_prosperity.py"
+        spec = importlib.util.spec_from_file_location("_rsp_caps", spec_path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return (("town", mod.PROSPERITY_CAP), ("castle", mod.PROSPERITY_CAP),
+                ("hearth", mod.HEARTH_CAP))
+
+    def _settlement_economy_floor(self) -> list:
+        if not self._FLOOR_SPEC.exists():
+            # A missing spec is a defect, not a pass: the gate exists because the file it guards
+            # is unversioned, and a deleted spec disables the gate exactly when it is needed.
+            return [Issue(
+                severity=Severity.ERROR, code="SETTLEMENT_ECONOMY_FLOOR",
+                file="tools/settlement_economy_floor.json", line=0, entry_id="(spec)",
+                message=("the committed settlement-economy floor spec is missing, so the gate "
+                         "protecting the LIVE TAOM_Map settlements.xml cannot run. Restore it "
+                         "from git rather than deleting the check."),
+            )]
+
+        spec = json.loads(self._FLOOR_SPEC.read_text(encoding="utf-8-sig"))
+        floor = spec.get("floor") or {}
+        cultures = set(spec.get("cultures") or ())
+        rel = self._rel(self._FLOOR_SPEC)
+        if not floor or not cultures:
+            return [Issue(
+                severity=Severity.ERROR, code="SETTLEMENT_ECONOMY_FLOOR",
+                file=rel, line=0, entry_id="(spec)",
+                message="the floor spec declares no floor values or no cultures, so it gates nothing.",
+            )]
+
+        if not self.reg.settlement_economy:
+            # Registry UNAVAILABLE (no game install) is not the same as "loaded and clean".
+            # The CLI already exits 2 on a missing install, so stay silent here rather than
+            # failing every install-less commit-hook run; the distinction is the point.
+            return []
+
+        caps = dict(self._floor_caps())
+        observed = {c: 0 for c in cultures}
+        issues = []
+        for record in self.reg.settlement_economy:
+            if record["culture"] not in cultures:
+                continue
+            observed[record["culture"]] += 1
+            key = self._FLOOR_KIND_KEY.get(record["kind"])
+            expected = floor.get(key)
+            if expected is None:
+                continue
+            # Clamp exactly as the writer does, so a spec value above a cap asks for what
+            # --apply can actually produce instead of failing forever.
+            expected = min(expected, caps[key])
+            if record["value"] >= expected:
+                continue
+            attr = "hearth" if key == "hearth" else "prosperity"
+            issues.append(Issue(
+                severity=Severity.ERROR, code="SETTLEMENT_ECONOMY_FLOOR",
+                file=rel, line=0, entry_id=record["id"],
+                message=(
+                    f'{record["kind"]} of culture "{record["culture"]}" has {attr}='
+                    f'{record["value"]:g}, below the committed floor of {expected:g}. The live '
+                    f"TAOM_Map settlements.xml is unversioned, so the usual cause is a module "
+                    f"reinstall that reverted the 2026-08-14 faction-economy pass. Re-apply with: "
+                    f"python tools/rebalance_settlement_prosperity.py "
+                    f"--culture-floor-file tools/settlement_economy_floor.json --apply"
+                ),
+            ))
+
+        # A culture in the spec that matches no settlement means the gate silently covers
+        # nothing for it — a retag or a typo'd id, both of which read as a clean run.
+        for culture, count in sorted(observed.items()):
+            if count == 0:
+                issues.append(Issue(
+                    severity=Severity.ERROR, code="SETTLEMENT_ECONOMY_FLOOR",
+                    file=rel, line=0, entry_id=culture,
+                    message=(f'culture "{culture}" is named in the floor spec but owns no '
+                             f"settlement in the loaded world, so the floor gates nothing for it. "
+                             f"Either the culture was retagged or the id is wrong."),
+                ))
+        return issues
+
     # -- pass 5: horse-harness family_type integrity ----------------------- #
     # A HorseHarness whose <Armor> omits family_type deserializes to FamilyType 0
     # — the HUMAN family (ArmorComponent.cs:153, monsters.xml legend). The v1.4.7
@@ -757,7 +859,13 @@ VANILLA_CULTURES = {
 _COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
 
 
+@functools.lru_cache(maxsize=64)
 def _read_stripped(xml: Path) -> str:
+    """Cached: build_settled_cultures and build_settlement_economy walk the same five modules,
+    so an uncached read costs two full reads plus two comment-strips of every settlements.xml
+    on every validator run, and the commit hook runs the validator (efficiency agent,
+    2026-08-14). A validator process reads each file at one point in time by design, so caching
+    for the process lifetime changes no result."""
     try:
         # utf-8-sig per tools/README.md "XML I/O convention" — a BOM'd definition
         # file must not leave a stray U+FEFF glued to the first captured id.
@@ -1008,6 +1116,63 @@ def build_settled_cultures(game_modules) -> set:
     return cultures
 
 
+def build_settlement_economy(game_modules) -> list:
+    """Per-settlement economy records from the world the game actually builds.
+
+    Same load-order walk and same strip handling as build_settled_cultures — TAOM_Map's
+    unconditional `<xsl:template match="Settlement"/>` deletes everything contributed before
+    it, so a checker that simply unions every module's settlements.xml would score vanilla's
+    494 deleted settlements and reach the wrong answer while reporting a clean run.
+
+    Parsed with ElementTree rather than regex, deliberately (Codex review, 2026-08-14). Two
+    regex failures were real and silent: a `<Settlement ... />` self-closing element has no
+    closing tag, so a block pattern consumes forward and attaches the NEXT settlement's economy
+    component to the wrong id; and `prosperity="4799.5"` is legal (installed `Town.Deserialize`
+    uses `float.Parse`) but does not match `(\\d+)`, so such a fief would evade the floor check
+    entirely. Neither shape exists in today's data, which is exactly why neither would have been
+    noticed. A read-only parse has no byte-fidelity obligation, so ET costs nothing here."""
+    if not game_modules:
+        return []
+    game_modules = Path(game_modules)
+    records = []
+    for name in ("Native", "SandBoxCore", "SandBox", "CustomBattle", "TAOM_Map"):
+        moduledata_dir = game_modules / name / "ModuleData"
+        if not moduledata_dir.exists():
+            continue
+        xslt = moduledata_dir / "settlements.xslt"
+        if xslt.exists() and _SETTLEMENT_STRIP_RE.search(_read_stripped(xslt)):
+            records = []
+        xml = moduledata_dir / "settlements.xml"
+        if not xml.exists():
+            continue
+        try:
+            root = ET.parse(str(xml)).getroot()
+        except ET.ParseError:
+            continue  # a malformed module file is the XML validator's problem, not this pass's
+        for s in root.iter("Settlement"):
+            sid = s.get("id")
+            culture = (s.get("culture") or "").replace("Culture.", "")
+            if not sid or not culture:
+                continue
+            town = s.find(".//Town")
+            village = s.find(".//Village")
+            if town is not None:
+                kind = "castle" if town.get("is_castle") == "true" else "town"
+                raw = town.get("prosperity")
+            elif village is not None:
+                kind, raw = "village", village.get("hearth")
+            else:
+                continue  # hideouts and the like carry no economy component
+            if raw is None:
+                continue
+            try:
+                value = float(raw)
+            except ValueError:
+                continue
+            records.append({"id": sid, "culture": culture, "kind": kind, "value": value})
+    return records
+
+
 def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     """Build cross-reference registries from the real game install + TAOM repo.
 
@@ -1053,6 +1218,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     party_templates = _scan(pt_roots, _PARTYTEMPLATE_DEF_RE)
     body_properties = _scan_files(bodyprop_files, _BODYPROP_DEF_RE)
     settled_cultures = build_settled_cultures(game_modules)
+    settlement_economy = build_settlement_economy(game_modules)
 
     # Only flag duplicate item defs inside the LOTRLOME_Armory item folders,
     # where the multi-folder duplicate-id bug actually occurs.
@@ -1093,7 +1259,8 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
     if game_modules:
         for label, value, floor in (("body_properties", body_properties, 50),
                                     ("cultures", cultures, 20),
-                                    ("settled_cultures", settled_cultures, 15)):
+                                    ("settled_cultures", settled_cultures, 15),
+                                    ("settlement_economy", settlement_economy, 400)):
             if len(value) < floor:
                 suspect.append(f"{label} registry has only {len(value)} entries "
                                f"(expected >={floor}) - a source path may be wrong")
@@ -1106,6 +1273,7 @@ def build_registries(moduledata, game_modules, armory_root=None) -> Registries:
         mount_family_types=mount_family_types,
         body_properties=body_properties,
         settled_cultures=settled_cultures,
+        settlement_economy=settlement_economy,
         suspect_registries=suspect,
     )
 

@@ -16,6 +16,7 @@ Each test maps to one recurring TAOM bug class the validator must catch:
   - DUPLICATE_NPC_ID       -> same NPCCharacter id defined twice in TAOM
   - MISSING_CIVILIAN_TYPE  -> civilian roster missing equipmentType="Civilian"
 """
+import json
 import os
 import sys
 import tempfile
@@ -1059,6 +1060,171 @@ class MountedDwarfTests(unittest.TestCase):
             '      </EquipmentRoster>\n'
             '    </Equipments>\n'))
         self.assertEqual(self._mounted(), [])
+
+
+class SettlementEconomyRegistryTests(unittest.TestCase):
+    """build_settlement_economy (2026-08-14). It feeds SETTLEMENT_ECONOMY_FLOOR, which guards an
+    UNVERSIONED live module file, so a parse that silently drops or mis-attributes a settlement
+    disables the gate exactly where it is needed."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.modules = Path(self._tmp.name) / "Modules"
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _write_settlements(self, module: str, body: str, strip: bool = False) -> None:
+        _write(self.modules / module / "ModuleData" / "settlements.xml",
+               '<?xml version="1.0"?>\n<Settlements>\n' + body + '</Settlements>\n')
+        if strip:
+            _write(self.modules / module / "ModuleData" / "settlements.xslt",
+                   '<?xml version="1.0"?>\n<xsl:stylesheet version="1.0" '
+                   'xmlns:xsl="http://www.w3.org/1999/XSL/Transform">\n'
+                   '  <xsl:template match="Settlement"/>\n</xsl:stylesheet>\n')
+
+    def test_strip_xslt_discards_earlier_modules(self):
+        # The failure this prevents: counting vanilla's deleted settlements, which makes every
+        # culture look landed/floored and reports a clean run while the game disagrees.
+        self._write_settlements("SandBox",
+            '  <Settlement id="van1" culture="Culture.empire">'
+            '<Components><Town prosperity="1000"/></Components></Settlement>\n')
+        self._write_settlements("TAOM_Map",
+            '  <Settlement id="taom1" culture="Culture.goblin">'
+            '<Components><Town prosperity="3000"/></Components></Settlement>\n', strip=True)
+        recs = ts.build_settlement_economy(self.modules)
+        self.assertEqual([r["id"] for r in recs], ["taom1"])
+
+    def test_castle_town_village_and_hideout_classification(self):
+        self._write_settlements("TAOM_Map",
+            '  <Settlement id="t" culture="Culture.goblin">'
+            '<Components><Town prosperity="3000"/></Components></Settlement>\n'
+            '  <Settlement id="c" culture="Culture.goblin">'
+            '<Components><Town is_castle="true" prosperity="600"/></Components></Settlement>\n'
+            '  <Settlement id="v" culture="Culture.goblin">'
+            '<Components><Village hearth="300"/></Components></Settlement>\n'
+            '  <Settlement id="h" culture="Culture.goblin"><Components/></Settlement>\n')
+        recs = {r["id"]: r["kind"] for r in ts.build_settlement_economy(self.modules)}
+        self.assertEqual(recs, {"t": "town", "c": "castle", "v": "village"})
+
+    def test_decimal_prosperity_is_kept(self):
+        # Town.Deserialize uses float.Parse, so 4799.5 is legal data. A `(\\d+)` regex missed it
+        # entirely and the fief evaded the floor check (Codex, 2026-08-14).
+        self._write_settlements("TAOM_Map",
+            '  <Settlement id="t" culture="Culture.goblin">'
+            '<Components><Town prosperity="4799.5"/></Components></Settlement>\n')
+        recs = ts.build_settlement_economy(self.modules)
+        self.assertEqual(len(recs), 1)
+        self.assertAlmostEqual(recs[0]["value"], 4799.5)
+
+    def test_self_closing_settlement_does_not_steal_the_next_economy_component(self):
+        # A block regex anchored on </Settlement> consumed forward past a self-closing element
+        # and attached the FOLLOWING settlement's prosperity to the wrong id.
+        self._write_settlements("TAOM_Map",
+            '  <Settlement id="empty" culture="Culture.goblin" />\n'
+            '  <Settlement id="real" culture="Culture.gundabad">'
+            '<Components><Town prosperity="4800"/></Components></Settlement>\n')
+        recs = {r["id"]: r for r in ts.build_settlement_economy(self.modules)}
+        self.assertNotIn("empty", recs)
+        self.assertEqual(recs["real"]["culture"], "gundabad")
+        self.assertEqual(recs["real"]["value"], 4800)
+
+
+class SettlementEconomyFloorTests(unittest.TestCase):
+    """SETTLEMENT_ECONOMY_FLOOR (2026-08-14). The floored values live in the LIVE TAOM_Map module,
+    which is unversioned: a reinstall reverts them silently. This check is the only thing in the
+    repo that would notice."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _issues(self, economy):
+        regs = ts.Registries(
+            items={"None"}, item_def_files={}, npccharacters=set(),
+            cultures={"goblin"}, party_templates=set(),
+            settled_cultures={"goblin"}, settlement_economy=economy)
+        return [i for i in ts.Validator(self.md, self.schemas, regs).run()
+                if i.code == "SETTLEMENT_ECONOMY_FLOOR"]
+
+    def _spec_cultures(self):
+        spec = json.loads((Path(ts.__file__).resolve().parent
+                           / "settlement_economy_floor.json").read_text(encoding="utf-8-sig"))
+        return spec["cultures"], spec["floor"]
+
+    def _economy_at_floor(self):
+        """Every spec culture holding one of each kind, exactly at its floor. The baseline the
+        other tests perturb — a partial world would also trip the observed-nothing check."""
+        cultures, floor = self._spec_cultures()
+        return [{"id": f"{k}_{c}", "culture": c, "kind": k, "value": floor[fk]}
+                for c in cultures
+                for k, fk in (("town", "town"), ("castle", "castle"), ("village", "hearth"))]
+
+    def test_value_below_floor_is_reported(self):
+        economy = self._economy_at_floor()
+        target = next(r for r in economy if r["kind"] == "town")
+        target["value"] -= 1
+        found = self._issues(economy)
+        self.assertEqual(len(found), 1, "exactly the one below-floor town must fail the gate")
+        self.assertEqual(found[0].entry_id, target["id"])
+
+    def test_value_at_floor_is_clean(self):
+        cultures, floor = self._spec_cultures()
+        economy = [{"id": s, "culture": c, "kind": k, "value": floor[fk]}
+                   for c in cultures
+                   for s, k, fk in ((f"town_{c}", "town", "town"),
+                                    (f"castle_{c}", "castle", "castle"),
+                                    (f"village_{c}", "village", "hearth"))]
+        self.assertEqual(self._issues(economy), [])
+
+    def test_culture_in_spec_with_no_settlement_is_reported(self):
+        # A retag or a typo'd id leaves the gate covering nothing for that culture, which
+        # otherwise reads exactly like a clean run.
+        cultures, floor = self._spec_cultures()
+        economy = [{"id": f"town_{c}", "culture": c, "kind": "town", "value": floor["town"]}
+                   for c in cultures[1:]]
+        found = self._issues(economy)
+        self.assertEqual([i.entry_id for i in found], [cultures[0]])
+
+    def test_unrelated_culture_below_the_floor_is_ignored(self):
+        _, floor = self._spec_cultures()
+        cultures, _ = self._spec_cultures()
+        economy = [{"id": f"town_{c}", "culture": c, "kind": "town", "value": floor["town"]}
+                   for c in cultures]
+        economy.append({"id": "town_gondor", "culture": "gondor", "kind": "town", "value": 1})
+        self.assertEqual(self._issues(economy), [])
+
+    def test_registry_unavailable_is_silent_not_clean(self):
+        # No game install: the CLI already exits 2. This pass must not manufacture findings,
+        # and must not claim a pass either — it simply has nothing to say.
+        self.assertEqual(self._issues([]), [])
+
+    def test_floor_above_the_writer_cap_does_not_demand_the_impossible(self):
+        # The writer clamps a floor to PROSPERITY_CAP/HEARTH_CAP. If the checker did not, a spec
+        # above a cap would fail forever because no --apply could ever satisfy it.
+        caps = dict(ts.Validator._floor_caps())
+        cultures, _ = self._spec_cultures()
+        spec_path = Path(ts.__file__).resolve().parent / "settlement_economy_floor.json"
+        original = spec_path.read_text(encoding="utf-8-sig")
+        try:
+            spec = json.loads(original)
+            spec["floor"] = {"town": caps["town"] + 1000, "castle": caps["castle"] + 1000,
+                             "hearth": caps["hearth"] + 1000}
+            spec_path.write_text(json.dumps(spec, indent=2) + "\n", encoding="utf-8")
+            economy = [{"id": s, "culture": c, "kind": k, "value": caps[ck]}
+                       for c in cultures
+                       for s, k, ck in ((f"town_{c}", "town", "town"),
+                                        (f"castle_{c}", "castle", "castle"),
+                                        (f"village_{c}", "village", "hearth"))]
+            self.assertEqual(self._issues(economy), [],
+                             "a value AT the writer's cap must satisfy an over-cap spec")
+        finally:
+            spec_path.write_text(original, encoding="utf-8")
 
 
 if __name__ == "__main__":

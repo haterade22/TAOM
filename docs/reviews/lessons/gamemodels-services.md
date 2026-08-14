@@ -440,3 +440,28 @@ visible.
 - **Source:** 2026-08-14 culture balance pass (Mordor party-size feat 0.10 to 0.20, new Blue Craig
   feat at 0.40). Companion lesson: "A ModuleData field's NAME is not its semantics" in
   [campaign-mechanics.md](./campaign-mechanics.md).
+
+### Model the FUNCTION the engine calls, not the table that function reads from
+
+Pricing a design-time balance table off `TroopCostService`'s T0-T10 wage dictionary looked like
+measuring the wage. It was not. `GetCharacterWage` reads that table and then does two more things
+before returning: multiplies by 1.3 when `character.IsMounted`, and truncates the result with
+`(int)`. Skipping both understated every culture by 4.6% to 14.3%, and because the understatement
+varied with each roster's cavalry share rather than being uniform, the normalising constant could
+not absorb it. Erebor, Moria, Goblin-town and Blue Craig were charged a cavalry premium on rosters
+that field no cavalry at all, while the 30-40% mounted elven realms under-collected.
+
+- **Why missed:** the constant table is the part that looks like data, so it reads as the answer.
+  The two transformations below it are three lines of ordinary code that do not announce themselves
+  as balance-relevant. Two independent re-derivations reproduced the committed numbers exactly and
+  neither caught it, because both faithfully implemented the *stated* method; reproducibility
+  confirms arithmetic, never premise.
+- **Prevent:** when a tool prices anything off an engine or service formula, read the whole function
+  body to its `return` and mirror every transformation, including casts. Write the mirror next to a
+  citation of the function it mirrors, and assert the inputs you deliberately did NOT model rather
+  than assuming they are absent: this derivation now asserts no mercenary-occupation troop appears
+  in any hero party template instead of quietly omitting the x1.5. A reproduction agent should be
+  asked to question the method, not only to re-run it.
+- **Source:** `docs/reviews/rca-faction-economy-2026-08-14.md` finding #5 (#459). Caught by the
+  Codex pass and the engine-compatibility agent independently, after the derivation agent had
+  reproduced all 22 values exactly.

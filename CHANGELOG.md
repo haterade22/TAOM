@@ -4,6 +4,59 @@
 
 ## 2026-08-14
 
+### balance(economy): price the startup grant off measured burn, and floor the starved cultures
+
+Supersedes the flat 250,000 / 1,000 table from earlier today. Flat denars are not flat in effect.
+
+**What the flat table missed.** A culture's troops cost between 6.91 and 21.66 denars a day per
+head, measured off each noble clan's own `default_party_template`. So an identical 250,000 funded
+1.93x more campaign for Mordor than for Gundabad, and an identical 500,000 bought Rivendell less
+than Lothlorien. Gold is now `K x runwayDays x avgTroopWage`, four lore tiers (270 / 150 / 100 / 70
+days) with `K = 52.54`, putting about 100M denars in AI hands. Influence moved from a 25x per-clan
+spread (1,250 down to 50) to three tiers (600 / 400 / 200).
+
+Three things made the measurement worth trusting where an earlier eyeball did not. Lord parties come
+from **per-clan** templates, 176 of the 193, so reading the culture defaults measures rosters almost
+nobody fields. A stack's expected size is the midpoint of `min_value` and `max_value`, not
+`min_value` (`docs/reference/party-template-sizing.md`, written the same morning). And the wage is
+what `GetCharacterWage` actually returns, including the mounted x1.3 and the `(int)` truncation that
+follows it: without those, Erebor, Moria, Goblin-town and Blue Craig were being charged a cavalry
+premium on rosters that field no cavalry at all, while the 30-40% mounted elven realms under-collected.
+
+**The gap gold cannot close.** Fief income per lord divided by that same burn spans 26.1x. Dol Guldur
+fields 127 lords on 23 fiefs; Umbar 10 on 40. Per-settlement wealth is already uniform across the
+map, so the cause is not poor settlements. Raising the existing fiefs of the eight worst cultures
+(towns 4,800, castles 950, village hearth 500, lift-only) moved the spread to 18.5x and got
+Isengard, Mirkwood, Blue Craig and Lindon to 32-44.
+
+That lever is not income-only, which the balance model does not capture: the same edit adds roughly
+72 militia/day across the changed settlements, about 203,000 aggregate target market gold through
+TAOM's `25000 + P x 12` economy model, and brings each village's hearth-level-2 crossing forward by
+83-167 campaign days. Documented in the feature doc rather than left to be rediscovered.
+
+**Dol Guldur, Gundabad, Goblin-town and Moria are still at 12.7-23.6 and this pass does not fix
+them.** Pushing every one of their fiefs to vanilla's absolute maxima leaves them there. Their
+problem is lord count, and trimming lord definitions breaks existing saves, so it has to ride a
+major version. Adding lords does not break saves, which makes Umbar the cheapest remaining
+correction. Adding settlements was not attempted: the `rglConcurrentQueue` global prefab cap is
+131,072, and how much headroom remains is unsettled (`check_prefab_budget.py` says 93,407 but counts
+only one module; CLAUDE.md cites an all-module 130,151 from 2026-08-08), so it needs a fresh
+measurement before anyone relies on either number.
+
+The floor lives in `tools/settlement_economy_floor.json` and is written into the LIVE `TAOM_Map`
+module, which is unversioned. `validate_moduledata.py` gained `SETTLEMENT_ECONOMY_FLOOR`, reading
+that same spec, so a module reinstall that reverts the pass fails a check instead of going
+unnoticed. `rebalance_settlement_prosperity.py` gained `--culture-floor` / `--culture-floor-file`
+and, for the first time, village `hearth` writes; floored fiefs sit outside the quantile ranking
+population for the same reason preserved ones do, so a re-run is still a no-op.
+
+`StartupResourcesConfigCoverageTests` fails the build if a lord-owning culture has no config row.
+A missing row is documented as a silent 0 and has shipped three times: Goblin-town and Moria for
+two months, then Blue Craig and Lindon on promotion out of their borrowed cultures.
+
+`playerGold` untouched. New campaigns only, both halves: the grant fires at
+`OnNewGameCreatedPartialFollowUpEvent`, and prosperity and hearth are saved state.
+
 ### balance(cultures): evil party bonuses, lord-party sizes, and a flat economic start
 
 Three data passes that answer one report: evil cultures did not feel like they had the party
