@@ -69,8 +69,9 @@ partial service resolution that could leave TAOM scoring active with the co-op g
 player exemption that swallowed a ruling-clan BONUS along with the penalties. RCA and the durable
 lessons: `docs/reviews/rca-fiefgranting-2026-08-14.md`.
 
-Still owed: the in-game smoke tests, which are the only evidence that settles this. Issue #458 stays
-open until then, and #460 tracks the two deferred design questions.
+Still owed: the in-game smoke tests, which are the only evidence that settles whether the campaign
+plays right. #458 was closed on the build, test and review evidence rather than on that, so reopen it
+if a smoke test disagrees. #460 tracks the two deferred design questions.
 
 ### balance(economy): price the startup grant off measured burn, and floor the starved cultures
 

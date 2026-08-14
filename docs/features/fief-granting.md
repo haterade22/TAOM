@@ -264,4 +264,9 @@ covered by `SettingsFingerprint`.
 ## GitHub Issue
 
 - **Issue:** #458, [Fief grants concentrate in one clan per kingdom](https://github.com/haterade22/TAOM/issues/458)
-- **Status:** Open, pending the in-game smoke tests
+- **Status:** Closed 2026-08-14 on the build, test and review evidence. **The in-game smoke tests
+  were never run**, so the code is verified correct but the campaign is not verified to play right.
+  Reopen if a smoke test contradicts anything here.
+- **Follow-up:** [#460](https://github.com/haterade22/TAOM/issues/460) carries the two design
+  questions the Codex pass surfaced (merit weights the election but does not decide it; the King's
+  Vote cap binds AI rulers only).
