@@ -929,6 +929,60 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Size of party-icon figures and their mounts on the campaign map. Vanilla = 0.30; default 0.15 = half (makes parties feel smaller relative to settlements). Applies on the next icon rebuild after changing.")]
     public float MapFigureScale { get; set; } = 0.15f;
 
+    // --- Kingdom Politics / Fief Grants ---
+    //
+    // #458. When a kingdom takes a town or castle it holds an election for the new owner, and
+    // vanilla's ballot cannot change the result: every candidate backs itself at roughly 40x what it
+    // gives a rival, so all three finalists tie and the highest-merit clan wins outright. These knobs
+    // move that merit score, plus the King's Vote that lets a rich ruler overrule the council.
+    // Weights are read live per election, so no restart and no new campaign. The master toggle is
+    // applied when a decision is CREATED, so it does not retrofit an already-pending election.
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyBool("Enable Fief Grant Rebalance", Order = 0, RequireRestart = false,
+        HintText = "Rebalances who gets a captured town or castle. Off = exact vanilla, where the ruling clan's +60 merit and its unlimited King's Vote override let it take fief after fief. Does not change starting ownership.")]
+    public bool EnableFiefGrantRebalance { get; set; } = true;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyFloatingInteger("Capturer Bonus", 1.0f, 5.0f, "#0.00", Order = 1, RequireRestart = false,
+        HintText = "Merit multiplier for the clan that actually stormed the place. Vanilla gives it a flat +30, less than the ruling clan's +60, so the conqueror routinely loses its own siege. 1.00 = no bonus. Default: 2.50.")]
+    public float FiefGrantCapturerBonus { get; set; } = 2.5f;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyFloatingInteger("Landless Clan Bonus", 1.0f, 5.0f, "#0.00", Order = 2, RequireRestart = false,
+        HintText = "Merit multiplier for a clan that holds no town or castle at all. Keeps poor clans able to field parties instead of withering and leaving the kingdom. 1.00 = no bonus. Default: 2.00.")]
+    public float FiefGrantLandlessBonus { get; set; } = 2.0f;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyFloatingInteger("Concentration Penalty", 0.0f, 1.0f, "#0.00", Order = 3, RequireRestart = false,
+        HintText = "How hard each fief a clan already holds counts against its next claim, as 1/(1 + fiefs x penalty). Vanilla only divides by the VALUE it holds, so a clan sitting on many cheap castles is barely damped. 0.00 = off. Default: 0.35.")]
+    public float FiefGrantConcentrationPenalty { get; set; } = 0.35f;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyFloatingInteger("Culture Match Bonus", 1.0f, 3.0f, "#0.00", Order = 4, RequireRestart = false,
+        HintText = "Merit multiplier when the clan's culture matches the settlement's. Vanilla has no equivalent, which is how an orc clan ends up holding an elven city. 1.00 = off. Default: 1.50.")]
+    public float FiefGrantCultureMatchBonus { get; set; } = 1.5f;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyFloatingInteger("Culture Mismatch Penalty", 0.1f, 1.0f, "#0.00", Order = 5, RequireRestart = false,
+        HintText = "Merit multiplier when it does not match. Lower means foreign clans rarely win a settlement of another culture. 1.00 = off. Default: 0.60.")]
+    public float FiefGrantCultureMismatchPenalty { get; set; } = 0.6f;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyFloatingInteger("Ruling Clan Factor", 0.1f, 2.0f, "#0.00", Order = 6, RequireRestart = false,
+        HintText = "Merit multiplier for the king's own clan, which vanilla already hands a flat +60 on top of its tier and strength. Below 1.00 damps the crown's claim. 1.00 = vanilla. Default: 0.75.")]
+    public float FiefGrantRulingClanFactor { get; set; } = 0.75f;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyFloatingInteger("King's Vote Fief Share Cap", 0.0f, 1.0f, "#0.00", Order = 7, RequireRestart = false,
+        HintText = "Share of the kingdom's towns and castles above which the ruling clan loses its right to overrule the council. Vanilla lets a king with enough influence override every grant, and his pick is always himself. 1.00 = vanilla. Default: 0.34.")]
+    public float FiefGrantKingsVoteFiefShareCap { get; set; } = 0.34f;
+
+    [SettingPropertyGroup("Kingdom Politics/Fief Grants", GroupOrder = 42)]
+    [SettingPropertyBool("Apply Penalties To Your Clan", Order = 8, RequireRestart = false,
+        HintText = "On = your clan is scored like any other, including the concentration and culture-mismatch penalties. Off = you keep the capturer, landless and culture-match bonuses but are never damped for what you already hold. Default: off.")]
+    public bool FiefGrantApplyPenaltiesToPlayerClan { get; set; } = false;
+
     // --- Map Tools / Distance Cache Rebuild ---
     //
     // Rebuilds Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin

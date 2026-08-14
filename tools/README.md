@@ -211,6 +211,7 @@ which it should be re-run.
 | Script | Purpose | CLI Flags |
 |--------|---------|-----------|
 | `merge_settlements.py` | Merge settlement names/owners from repo into map file, preserving positional data | `--dry-run`, `--apply` |
+| `apply_starting_fief_spread.py` | **Starting fief spread** (#458). Three kingdoms opened every campaign with ONE clan holding every fortification (Lasgalen 7/7, Imladris 5/5, Lothlorien 4/4), which is authored state no fief-grant rebalancing can touch. Reassigns 10 `owner` attributes in the LIVE `TAOM_Map/ModuleData/settlements.xml` from an explicit curated table (the king keeps his seat, lesser houses hold the marches). Villages are untouched: none carries an explicit `owner`, each follows its bound fortification. **New campaigns only**, because settlement ownership is engine-saved. Default run is a check that exits 1 on drift, which is how you detect a TAOM_Map reinstall reverting it. | `--apply` |
 | `audit_siege_props.py` | **Siege resupply-prop audit** (read-only). For every town/castle in the LIVE `TAOM_Map/ModuleData/settlements.xml`, resolves the `Location id="center"` scene and counts *usable* rock piles / ammo barrels — entities carrying `StonePile`/`ArrowBarrel`/`JavelinBarrel`, whether declared inline or inherited from a prefab (counting one form only double-counts). Flags "looks usable, isn't" scenes (pile-shaped meshes, zero usable piles) and dead `GivenItemID` refs — an unresolvable id silently disables a pile for player *and* AI. | `--game`, `--all`, `--scene` |
 
 ---

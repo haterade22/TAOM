@@ -379,3 +379,22 @@ question, and a passing ordering test makes the whole area feel covered.
  persisted record at acquire time and refuse to release under a different one, refusing is almost
   always safer than acting, because the release is a mutation someone else now owns.
 - **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #14.
+
+### A `static bool` diagnostic latch is process-scoped, and "once per session" is almost never what it delivers
+
+`private static bool _faultReported` with a comment saying "once per session" is a process-lifetime
+latch. Load campaign A, hit the fault, log once; quit to menu, load campaign B, hit a genuinely new
+fault, and it is swallowed with no log at all. Campaign B then runs on the fallback path for its whole
+life with nothing to explain why. Key the latch off `Campaign.Current` identity instead, or reset it on
+a campaign-boundary event.
+
+Second half, from the same finding: the latch was set BEFORE the log call, so a throwing logger would
+have destroyed the one and only report. Latch AFTER the successful pass.
+
+- **Why missed:** fourth instance of once-per-process where once-per-session was meant, and this file
+  already contained both halves of the rule when the code was written. Writing a fault reporter feels
+  like plumbing rather than state, so the state-lifecycle rules were not consulted.
+- **Prevent:** for every `static` field in a Harmony patch or diagnostic helper, state which lifetime
+  it is scoped to and how it is reset. If the answer is "it isn't", it is process-scoped, and say so in
+  the comment rather than writing "session".
+- **Source:** `docs/reviews/rca-fiefgranting-2026-08-14.md` finding #2.

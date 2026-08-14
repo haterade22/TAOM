@@ -215,3 +215,24 @@ the v1.4.8 decompile, 2026-08-14:
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
 
 <!-- backlinks-end -->
+
+### When a design rests on "these always tie", do the arithmetic for the case where they do not
+
+The fief-grant rebalance (#458) was built on the claim that every finalist in a vanilla
+`SettlementClaimantDecision` reaches `FullyPush`, ties at 3 points, and hands the win to the
+highest-merit candidate. The self-vote arithmetic that motivates it is real (a clan backs itself at
+roughly 40x what it gives a rival), but the conclusion does not follow: support costs 20/60/100
+influence, `KingdomDecision.DetermineSupportOption` downgrades a vote the clan cannot afford, and
+points are 1/2/3. A top-merit finalist holding 59 influence casts one point and loses to two poorer
+finalists casting three each. Every non-mercenary clan votes as well, not just the three finalists.
+
+- **Why missed:** the downgrade loop had actually been read. It was dismissed in one sentence ("the
+  finalists are high-merit clans, so they can afford it") without writing down what "afford" costs.
+  Re-reading the same file would never have caught it, because the file was read correctly and the
+  error was in the inference layered on top.
+- **Prevent:** any design premised on "these values always tie", "this branch is always taken", or
+  "that case cannot happen" owes one worked counter-example before anything is built on it. Name the
+  threshold (100 influence), name an input that crosses it (a clan with 59), and state what happens.
+  If the counter-example is reachable, the design is a bias and not a guarantee: say so in the doc.
+- **Source:** `docs/reviews/rca-fiefgranting-2026-08-14.md` finding C2, caught by the Codex pass after
+  six Claude agents missed it.

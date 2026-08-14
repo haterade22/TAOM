@@ -4,6 +4,74 @@
 
 ## 2026-08-14
 
+### feat(fiefs): break the one-clan-takes-everything grip on captured settlements (#458)
+
+Players reported the AI handing holding after holding to the same clan. TAOM shipped no code on this
+pipeline at all: no patch, no GameModel, no behavior on `SettlementClaimantDecision`,
+`SettlementClaimantCampaignBehavior`, `KingdomElection` or `Kingdom.AddDecision`. So the behaviour was
+stock vanilla, plus our own starting data.
+
+**The ballot barely moves the result.** In `DetermineSupport` a clan adds
+`0.2 * settlementValue * DenarsToInfluence()` for itself. `DenarsToInfluence()` is `0.002` and a town
+is worth `750000 + Prosperity * 1000` before multipliers, so that self term lands near 700 against an
+`InitialMerit` in the low tens: a clan backs itself at roughly 40x what it gives a rival. Finalists
+that can afford `FullyPush` tie at 3 points, and `MaxBy` is strictly-greater so it keeps element 0 of
+a list already sorted by merit. So merit dominates, which is why the fix targets merit.
+
+It does NOT decide outright, and the first version of this entry wrongly said it did. Support costs
+20/60/100 influence and `DetermineSupportOption` downgrades a vote the clan cannot afford, so a
+top-merit finalist with 59 influence casts one point while two poorer finalists with 100+ cast three
+each and beat it. Non-finalist clans vote too. The Codex pass caught the overclaim; the code was
+already right, the reasoning behind it was not.
+
+**The expected culprit was innocent.** Vanilla's merit already divides by the value a clan holds and
+adds +30 for holding nothing; worked through, a landless tier-2 clan out-scores a six-fief tier-6
+ruler. An adversarial re-derivation confirmed it against the first analysis, which had claimed the
+opposite. The actual drivers were the King's Vote, which vanilla leaves unlimited for fief grants and
+whose pick is always the king himself (TAOM seeds clans 400 to 600 influence, well past the
+`300 + overrideCost` threshold), and starting ownership that was already fully concentrated.
+
+`TaomSettlementClaimantDecision` subclasses the engine type, which is public, unsealed, and virtual on
+both scoring members, so no transpiler is needed. It multiplies vanilla's merit rather than replacing
+it, keeping the proximity factor and value divisor intact, and denies the King's Vote once the ruling
+clan holds more than a configured share. `Patch70` swaps the instance in at `Kingdom.AddDecision`,
+the one chokepoint all THREE producers pass through: the daily tick, the annexation follow-up, and
+`KingdomManager.RelinquishSettlementOwnership`, which the review found and which patching the
+producers directly would have missed. `DetermineSupport` is left alone, now recorded as a known
+limitation rather than a clean argument.
+
+Two scope limits worth knowing, both found by review rather than by design: the King's Vote cap binds
+AI rulers only (`OnPlayerSupport` never reads the property, so a player king still grants as he
+likes), and the swap happens when a decision is CREATED, so toggling the feature does not retrofit an
+election already pending.
+
+Nine MCM knobs under Kingdom Politics/Fief Grants, weights read live. MCM is the only surface for
+them on purpose, since a parallel ModuleData copy is the second validation site that CombatMechanics
+drifted on in July.
+
+**Data half.** `tools/apply_starting_fief_spread.py` reassigned 10 fortifications from an explicit
+curated table: Lasgalen was `clan_mirkwood_1` holding 7 of 7, Imladris `clan_rivendell_1` 5 of 5,
+Lothlorien `clan_lothlorien_1` 4 of 4. No kingdom holding more than one fortification now has a single
+owner. Lindon and Goblins stay at 100% because they hold exactly one each, which redistribution cannot
+fix. The target file is in `TAOM_Map`, untracked here, so a module reinstall reverts it: the tool's
+default run is the drift check. New campaigns only, since settlement ownership is engine-saved.
+
+Suite 6648 green, `validate_moduledata` PASS. The four binding tests ran against the installed 1.4.8
+DLLs rather than skipping, which is what confirms the class is still subclassable and both scoring
+members are still virtual. Adding nine settings tripped the co-op fingerprint pins (159 to 168
+reflected, 116 to 125 simulation-relevant, 173 to 182 total); all nine are correctly relevant, since
+two peers with different weights allocate land differently.
+
+**Reviewed hard before shipping:** six parallel agents plus a Codex adversarial pass, 11 findings,
+three refuted. Fixed here: a non-atomic write to the live map file, a fault latch scoped to the
+process instead of the campaign, an `IoC.Resolve` that re-threw on every call after a failure, a
+partial service resolution that could leave TAOM scoring active with the co-op gate absent, and a
+player exemption that swallowed a ruling-clan BONUS along with the penalties. RCA and the durable
+lessons: `docs/reviews/rca-fiefgranting-2026-08-14.md`.
+
+Still owed: the in-game smoke tests, which are the only evidence that settles this. Issue #458 stays
+open until then, and #460 tracks the two deferred design questions.
+
 ### balance(economy): price the startup grant off measured burn, and floor the starved cultures
 
 Supersedes the flat 250,000 / 1,000 table from earlier today. Flat denars are not flat in effect.

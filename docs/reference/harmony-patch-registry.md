@@ -564,6 +564,20 @@ Exists because `Patch69_TournamentRosterGuard` covers only the two null sites pr
 
 Runs at the throw site, where the bracket is still reachable — TAOM's CrashReport finalizer on `ScreenManager.Update` would otherwise be first to see it and records only the managed stack.
 
+## Patch70_FiefGrantDecisionSwap
+
+**Target:** `Kingdom.AddDecision(KingdomDecision, bool)` (public, Prefix with `ref KingdomDecision`)
+
+**Feature:** FiefGranting, `Main/Features/FiefGranting/Hooks/Patch70_FiefGrantDecisionSwap.cs`. **Status:** ACTIVE.
+
+Replaces a vanilla `SettlementClaimantDecision` with `TaomSettlementClaimantDecision` so TAOM's fief-grant scoring runs (#458). The subclass overrides `CalculateMeritOfOutcome` (multiplies vanilla's result by a concentration, capturer, culture-fit and ruler term) and `IsKingsVoteAllowed` (denies the override once the ruling clan holds more than a configured share of the kingdom). Both members are public virtual on the engine side, so no transpiler is involved.
+
+**`AddDecision` is the target because it is the single chokepoint.** All THREE producers funnel through it: `SettlementClaimantCampaignBehavior.DailyTickSettlement` (war capture), `SettlementClaimantPreliminaryDecision.ApplyChosenOutcome` (annexation follow-up, the only one setting `IsEnforced`), and `KingdomManager.RelinquishSettlementOwnership` (a lord giving a fief up, passing the owner clan as both proposer and `clanToExclude`). The third was found by a review pass after the patch shipped, when the doc still claimed there were two: patching the sink caught it anyway, which is the whole argument for targeting `AddDecision` over the individual producers.
+
+**The `IsEnforced` ordering is load-bearing and no test can see it.** `ApplyChosenOutcome` sets `IsEnforced = true` on the line BEFORE calling `AddDecision` (verified against the v1.4.8 decompile), so the flag is present on the instance being replaced and is copied across. If a future engine version inverts that, an enforced annexation silently stops being enforced: re-read the decompile after any engine bump. `Patch70FiefGrantDecisionSwapBindingTests` pins the members the copy needs (`Settlement`, `ClanToExclude`, `ProposerClan`, and writable `IsEnforced`/`NotifyPlayer`) plus the parameter NAME `kingdomDecision`, which Harmony binds by.
+
+Replacement is safe because no producer retains a reference: all three construct the decision as an inline local. The prefix is inert when the feature is disabled in MCM, when `ICoopSessionProvider.ShouldDeferToHost` is true (a client runs vanilla and takes the host's result, because `GetAiChoice` calls `MBRandom` and divergent scoring would desync), and for any decision that is not a `SettlementClaimantDecision`. Every fault is caught and reported once per session, leaving vanilla's decision in hand. See [fief-granting.md](../features/fief-granting.md).
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

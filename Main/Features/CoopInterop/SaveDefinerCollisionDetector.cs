@@ -12,7 +12,9 @@ public sealed class SaveDefinerCollisionDetector : ISaveDefinerCollisionDetector
     // green. `PresetSaveableTypeDefinerTests.BaseId_UniqueAcrossDiscoverableDefinersInTaomAssembly`
     // already reflects over the TAOM assembly's real SaveableTypeDefiner subclasses, which is the
     // check that actually holds. For the record, the shipped ids are 726900501 / 726900601 /
-    // 726900701 / 726900801 and the next free one by the +100 convention is 726900901.
+    // 726900701 / 726900801 / 726900901 and the next free one by the +100 convention is 726901001.
+    // (That "next free" line went stale the moment FiefGranting claimed 726900901, which is the
+    // drift this comment's own first sentence warns about. Trust the reflection test, not this.)
 
     public IReadOnlyList<SaveDefinerCollision> Detect(IEnumerable<SaveDefinerRecord>? records)
     {

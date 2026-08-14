@@ -152,6 +152,7 @@ public static class IoC
         MenuLinkColorsIoC.RegisterMenuLinkColorsFeature(container);
         Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
         LordSpawnGuardIoC.RegisterLordSpawnGuardFeature(container);
+        Features.FiefGranting.FiefGrantingIoC.RegisterFiefGrantingFeature(container);
         Features.Enlistment.EnlistmentIoC.RegisterEnlistmentFeature(container);
         Features.Enlistment.Duties.DutiesIoC.RegisterEnlistmentDutiesFeature(container);
         // AFTER Enlistment: FieldCommission registers a NullEnlistmentStateQuery with

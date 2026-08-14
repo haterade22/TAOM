@@ -1169,6 +1169,57 @@ claims, and only the second justifies writing an engine invariant into a shipped
 - **Source:** `docs/reviews/rca-enlistment-diagnostics-legibility-2026-08-12.md` findings #4 and the
   Agent 2 note.
 
+### A tool that writes outside the repo still owes the ModuleData I/O convention
+
+A Python tool whose *target* is the live game install (`Modules/TAOM_Map/ModuleData/settlements.xml`)
+needs the byte-level BOM and newline idiom from `tools/README.md` exactly as much as one editing a
+tracked file. `Path.read_text(encoding="utf-8")` does NOT strip a BOM, it decodes it to a literal
+U+FEFF, and `write_text` re-encodes it; on Windows the newline translation is likewise symmetric for a
+uniformly-CRLF file. So the round-trip can come out byte-identical and look correct while being correct
+by codec coincidence, not by construction. Point the same code at a doubled-CR language file, or run it
+under WSL where `os.linesep` is `\n`, and it rewrites the whole file.
+
+- **Why missed:** `.claude/rules/moduledata-validation.md` is correctly path-scoped to `tools/**/*.py`,
+  so the rule was in scope. It either did not fire on the `Write` that CREATED the file (as opposed to
+  a `Read`/`Edit` of an existing one), or it fired and was not applied. Treat scoped-rule coverage as
+  unproven for a file you are creating rather than opening.
+- **Prevent:** for any script that writes XML anywhere, use `read_bytes()` + `startswith(BOM)` +
+  `decode("utf-8-sig")` + `write_bytes(BOM_if_present + text.encode("utf-8"))`, and prove it by
+  round-tripping the real target file and asserting byte equality before shipping. A dedicated tooling
+  review agent has now caught this class twice; the C#-centric core agents structurally cannot see it.
+- **Source:** `docs/reviews/rca-fiefgranting-2026-08-14.md` finding #1.
+
+### Separate "resolve attempted" from "resolve succeeded" in every lazy service cache
+
+The `_field ??= IoC.Resolve<T>()` idiom is written for the success path. When the resolve THROWS, the
+field stays null, so the next call re-enters the try and throws again. In a method the engine calls
+often this turns one misconfiguration into a silent exception storm: `CalculateMeritOfOutcome` runs 3N
+times per election (vanilla calls `NarrowDownCandidates` from `Setup` twice and from
+`ShouldBeCancelled` once), so a missing registration meant 3N thrown-and-swallowed exceptions per
+election with nothing in the log.
+
+- **Why missed:** the lazy-cache guidance in CLAUDE.md ("use a lazy cache" before an `IoC.Resolve` in a
+  hot path) is about avoiding repeated *successful* resolves. Nobody asks what the cache does on
+  failure.
+- **Prevent:** keep a separate `_resolveAttempted` flag, or resolve everything once in an
+  `EnsureServices()` guarded by a single bool. Fall through to vanilla on null.
+- **Source:** `docs/reviews/rca-fiefgranting-2026-08-14.md` finding #3.
+
+### Enumerate producers by grepping the constructor, not by tracing one path
+
+A doc that says "both producers funnel through here" is a counted claim, and counted claims need the
+cheap exhaustive check. Tracing forward from the siege path found two producers of
+`SettlementClaimantDecision`; `grep -rn "new SettlementClaimantDecision("` found three in one command,
+and the third (`KingdomManager.RelinquishSettlementOwnership`) had been asserted away in a patch
+comment, a registry row and a feature doc.
+
+- **Why missed:** the narrative trace answered the question that motivated it ("how does a captured
+  fief get here"), and that felt like completeness. It was coverage of one scenario, not of the type.
+- **Prevent:** before writing any "all N of X" claim about engine call sites, grep the constructor or
+  the method name across the whole decompile. This is the Never Fabricate rule's "counts, IDs, names"
+  clause applied to documentation, and it is one command.
+- **Source:** `docs/reviews/rca-fiefgranting-2026-08-14.md` finding #5.
+
 ### Test the input that VIOLATES a guarantee, not the one that satisfies it
 
 One changeset claimed four guarantees in prose (lift-only, idempotent, fail-loud, dry-run gated) and

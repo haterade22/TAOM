@@ -1148,6 +1148,12 @@ public class SubModule : MBSubModuleBase
         // campaign-runtime targets; menus first open well after this batch. Fail-open prefixes
         // gated on IEnlistmentStateQuery — inert while not enlisted.
         _harmony.PatchCategory("Patch66_Enlistment");
+        // Patch70 — swaps vanilla's fief-grant election for TAOM's (#458). Target is
+        // Kingdom.AddDecision, the sink all three producers pass through (the daily settlement
+        // tick, the annexation follow-up, and KingdomManager.RelinquishSettlementOwnership). All are
+        // campaign runtime, so the standard batch is early enough; the prefix is inert until a
+        // kingdom actually gains or gives up a fortification.
+        _harmony.PatchCategory("Patch70_FiefGrantDecisionSwap");
         _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
         // Patch47 RE-ENABLED 2026-06-12 after full exoneration: its 06-12 morning indictment
         // ("post-sever tick AV") was actually the CanAttack charge crash at set_attack_entity
