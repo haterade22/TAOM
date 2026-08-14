@@ -598,11 +598,46 @@ public class CulturalFeatsServiceTests
     [TestMethod]
     public void ApplyPartySizeFeats_RetunedValues_MatchTargets()
     {
-        // Defensive: confirm the 4 retuned EffectBonus values.
-        Assert.AreEqual(0.10f, TaomCulturalFeats.MordorPartySizeFeat.EffectBonus, 0.0001f);
+        // Defensive: confirm the 4 retuned EffectBonus values. Mordor went 0.30 -> 0.10 on
+        // 2026-05-31 and back to 0.20 on 2026-08-14, restoring the evil-culture floor.
+        Assert.AreEqual(0.20f, TaomCulturalFeats.MordorPartySizeFeat.EffectBonus, 0.0001f);
         Assert.AreEqual(0.20f, TaomCulturalFeats.GundabadPartySizeFeat.EffectBonus, 0.0001f);
         Assert.AreEqual(0.20f, TaomCulturalFeats.DolGuldurPartySizeFeat.EffectBonus, 0.0001f);
         Assert.AreEqual(0.025f, TaomCulturalFeats.GondorPartySizeFeat.EffectBonus, 0.0001f);
+    }
+
+    /// <summary>
+    /// Standing floor/ceiling for the evil cultures' party-size bonus. Individual values are
+    /// free to move for balance, but not out of the 20% to 50% band: below 20% the bonus stops
+    /// being legible on the party screen once the TroopWeight elite tax subtracts an orc
+    /// roster's weight surplus from the same limit, which is how Mordor's 2026-05-31 retune to
+    /// +10% read in game as "evil cultures have no party bonus".
+    ///
+    /// Harad, Dunland, Khand and Umbar are deliberately OUT of this set (Umbar has no
+    /// party-size feat at all, the other three sit at +5%). Their absence is the intended
+    /// design, not a gap to close.
+    /// </summary>
+    [TestMethod]
+    public void ApplyPartySizeFeats_EvilCultures_WithinTwentyToFiftyPercent()
+    {
+        var inBand = new (string culture, FeatObject feat)[]
+        {
+            ("Mordor", TaomCulturalFeats.MordorPartySizeFeat),
+            ("Isengard", TaomCulturalFeats.IsengardPartySizeFeat),
+            ("Gundabad", TaomCulturalFeats.GundabadPartySizeFeat),
+            ("Dol Guldur", TaomCulturalFeats.DolGuldurPartySizeFeat),
+            ("Goblin", TaomCulturalFeats.GoblinPartySizeFeat),
+            ("Blue Craig", TaomCulturalFeats.BlueCraigPartySizeFeat),
+            ("Misty Mountain Orcs", TaomCulturalFeats.MistyMountainOrcsPartySizeFeat),
+        };
+
+        foreach (var (culture, feat) in inBand)
+        {
+            Assert.IsNotNull(feat, $"{culture} has no party-size feat");
+            Assert.IsTrue(
+                feat.EffectBonus >= 0.20f && feat.EffectBonus <= 0.50f,
+                $"{culture} party-size bonus is {feat.EffectBonus:P1}, outside the 20% to 50% band");
+        }
     }
 
     // ── VolunteerRespawn ──────────────────────────────────────────────
@@ -1377,7 +1412,7 @@ public class CulturalFeatsServiceTests
                 ("_mordorArmyInfluenceCost", "taom_mordor_army_influence_cost", -0.6f),
                 ("_mordorGrainProduction", "taom_mordor_grain_production", 0.2f),
                 ("_mordorWage", "taom_mordor_wage", 0.2f),
-                ("_mordorPartySize", "taom_mordor_party_size", 0.1f),
+                ("_mordorPartySize", "taom_mordor_party_size", 0.2f),
                 ("_mordorRaidDamage", "taom_mordor_raid_damage", 0.25f),
 
                 ("_rohanMountedCost", "taom_rohan_mounted_cost", -0.15f),
@@ -1458,6 +1493,13 @@ public class CulturalFeatsServiceTests
                 ("_haradArmyInfluenceCost", "taom_harad_army_influence_cost", 0.15f),
                 ("_rhunLoyalty", "taom_rhun_loyalty", -0.5f),
                 ("_rhunRaidDamage", "taom_rhun_raid_damage", 0.15f),
+
+                // Orc-kingdom party-size feats. These shipped unmirrored, so every dispatch
+                // assertion that touched them silently read a null FeatObject. Needed by
+                // ApplyPartySizeFeats_EvilCultures_WithinTwentyToFiftyPercent below.
+                ("_goblinPartySize", "taom_goblin_party_size", 0.4f),
+                ("_bluecraigPartySize", "taom_bluecraig_party_size", 0.4f),
+                ("_mistyMountainOrcsPartySize", "taom_mistymountainorcs_party_size", 0.3f),
             };
 
             var effectBonusProp = typeof(FeatObject).GetProperty(

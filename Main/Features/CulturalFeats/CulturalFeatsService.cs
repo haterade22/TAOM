@@ -252,6 +252,8 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.GundabadPartySizeFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.GoblinPartySizeFeat))
             result.AddFactor(TaomCulturalFeats.GoblinPartySizeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.BlueCraigPartySizeFeat))
+            result.AddFactor(TaomCulturalFeats.BlueCraigPartySizeFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.MistyMountainOrcsPartySizeFeat))
             result.AddFactor(TaomCulturalFeats.MistyMountainOrcsPartySizeFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.DolGuldurPartySizeFeat))

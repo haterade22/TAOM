@@ -84,6 +84,9 @@ public class TaomCulturalFeats
     private FeatObject _goblinFoodConsumption;
     private FeatObject _goblinSmithing;
     private FeatObject _goblinRaidDamage;
+    // Blue Craig — the smaller of the two goblin realms. Shares Goblin-town's other five feats,
+    // but owns its party size so the two realms can be tuned apart.
+    private FeatObject _bluecraigPartySize;
     // Misty Mountain Orcs — large weak war-host, snow-bred, hungry (food penalty)
     private FeatObject _mistyMountainOrcsArmyInfluenceCost;
     private FeatObject _mistyMountainOrcsPartySize;
@@ -254,6 +257,8 @@ public class TaomCulturalFeats
     public static FeatObject GoblinFoodConsumptionFeat => Instance._goblinFoodConsumption;
     public static FeatObject GoblinSmithingFeat => Instance._goblinSmithing;
     public static FeatObject GoblinRaidDamageFeat => Instance._goblinRaidDamage;
+    // Blue Craig
+    public static FeatObject BlueCraigPartySizeFeat => Instance._bluecraigPartySize;
     // Misty Mountain Orcs
     public static FeatObject MistyMountainOrcsArmyInfluenceCostFeat => Instance._mistyMountainOrcsArmyInfluenceCost;
     public static FeatObject MistyMountainOrcsPartySizeFeat => Instance._mistyMountainOrcsPartySize;
@@ -426,6 +431,8 @@ public class TaomCulturalFeats
         _goblinFoodConsumption = Register("taom_goblin_food_consumption");
         _goblinSmithing = Register("taom_goblin_smithing");
         _goblinRaidDamage = Register("taom_goblin_raid_damage");
+        // Blue Craig
+        _bluecraigPartySize = Register("taom_bluecraig_party_size");
         // Misty Mountain Orcs
         _mistyMountainOrcsArmyInfluenceCost = Register("taom_mistymountainorcs_army_influence_cost");
         _mistyMountainOrcsPartySize = Register("taom_mistymountainorcs_party_size");
@@ -749,6 +756,13 @@ public class TaomCulturalFeats
             "{=taom_feat_gob_rd}Goblin Ambush",
             "{=taom_feat_gob_rd_desc}Raid damage increased by 10%.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        // Blue Craig — split off Goblin-town's feat 2026-08-14 at the same 40%, so this is a
+        // tunability split rather than a balance change. Only the party-size feat is split;
+        // the other five goblin feats stay shared between the two realms.
+        _bluecraigPartySize.Initialize(
+            "{=taom_feat_bcg_ps}Blue Craig Swarm",
+            "{=taom_feat_bcg_ps_desc}Party size limit increased by 40%.",
+            0.4f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         // Misty Mountain Orcs — large weak war-host, cheap to muster, hungry on the march
         _mistyMountainOrcsArmyInfluenceCost.Initialize(
             "{=taom_feat_mmo_aic}Orc Horde",
@@ -897,8 +911,8 @@ public class TaomCulturalFeats
             0.2f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
         _mordorPartySize.Initialize(
             "{=taom_feat_mor_ps}Sauron's Hordes",
-            "{=taom_feat_mor_ps_desc}Party size limit increased by 10%.",
-            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+            "{=taom_feat_mor_ps_desc}Party size limit increased by 20%.",
+            0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         _mordorRaidDamage.Initialize(
             "{=taom_feat_mor_rd}Sauron's Wrath",
             "{=taom_feat_mor_rd_desc}Raid damage increased by 25%.",
@@ -1134,6 +1148,7 @@ public class TaomCulturalFeats
         yield return _instance._goblinFoodConsumption;
         yield return _instance._goblinSmithing;
         yield return _instance._goblinRaidDamage;
+        yield return _instance._bluecraigPartySize;
         yield return _instance._mistyMountainOrcsArmyInfluenceCost;
         yield return _instance._mistyMountainOrcsPartySize;
         yield return _instance._mistyMountainOrcsSnowSpeed;

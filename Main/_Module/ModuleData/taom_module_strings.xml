@@ -2438,6 +2438,8 @@
 	<string id="taom_feat_gob_sm_desc" text="{=taom_feat_gob_sm_desc}Smithing energy cost reduced by 10%." />
 	<string id="taom_feat_gob_rd" text="{=taom_feat_gob_rd}Goblin Ambush" />
 	<string id="taom_feat_gob_rd_desc" text="{=taom_feat_gob_rd_desc}Raid damage increased by 10%." />
+	<string id="taom_feat_bcg_ps" text="{=taom_feat_bcg_ps}Blue Craig Swarm" />
+	<string id="taom_feat_bcg_ps_desc" text="{=taom_feat_bcg_ps_desc}Party size limit increased by 40%." />
 	<string id="taom_feat_mmo_aic" text="{=taom_feat_mmo_aic}Orc Horde" />
 	<string id="taom_feat_mmo_aic_desc" text="{=taom_feat_mmo_aic_desc}Army recruitment costs 40% less influence." />
 	<string id="taom_feat_mmo_ps" text="{=taom_feat_mmo_ps}Mountain Host" />
@@ -2507,7 +2509,7 @@
 	<string id="taom_feat_mor_w" text="{=taom_feat_mor_w}Dark Tribute" />
 	<string id="taom_feat_mor_w_desc" text="{=taom_feat_mor_w_desc}Party wages increased by 20%." />
 	<string id="taom_feat_mor_ps" text="{=taom_feat_mor_ps}Sauron's Hordes" />
-	<string id="taom_feat_mor_ps_desc" text="{=taom_feat_mor_ps_desc}Party size limit increased by 10%." />
+	<string id="taom_feat_mor_ps_desc" text="{=taom_feat_mor_ps_desc}Party size limit increased by 20%." />
 	<string id="taom_feat_mor_rd" text="{=taom_feat_mor_rd}Sauron's Wrath" />
 	<string id="taom_feat_mor_rd_desc" text="{=taom_feat_mor_rd_desc}Raid damage increased by 25%." />
 	<string id="taom_feat_mor_pls" text="{=taom_feat_mor_pls}Shadow March" />

@@ -19,15 +19,15 @@ public class TaomCulturalFeatsDefinitionTests
     /// without the game framework, we verify the code structure via reflection.
     /// </summary>
     [TestMethod]
-    public void AllFeatProperties_ReturnFeatObject_CountIs129()
+    public void AllFeatProperties_ReturnFeatObject_CountIs130()
     {
         var properties = typeof(TaomCulturalFeats)
             .GetProperties(BindingFlags.Public | BindingFlags.Static)
             .Where(p => p.PropertyType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(129, properties.Count,
-            "Expected 129 culture feat properties (105 prior + 24 Wave 1 economy/military feats)");
+        Assert.AreEqual(130, properties.Count,
+            "Expected 130 culture feat properties (105 prior + 24 Wave 1 economy/military + Blue Craig party size)");
     }
 
     [TestMethod]
@@ -47,12 +47,12 @@ public class TaomCulturalFeatsDefinitionTests
     public void GetAllFeats_YieldsZeroOrFullSet()
     {
         // GetAllFeats returns empty when the static `_instance` is null (no game
-        // framework loaded), OR the full 129-feat enumeration when a sibling test
+        // framework loaded), OR the full 130-feat enumeration when a sibling test
         // (e.g. CulturalFeatsServiceTests) reflection-initialised the singleton.
         // Both states are valid in a test process; assert one or the other.
         var feats = TaomCulturalFeats.GetAllFeats().ToList();
-        Assert.IsTrue(feats.Count == 0 || feats.Count == 129,
-            $"GetAllFeats expected 0 (uninitialised) or 129 (full set), got {feats.Count}");
+        Assert.IsTrue(feats.Count == 0 || feats.Count == 130,
+            $"GetAllFeats expected 0 (uninitialised) or 130 (full set), got {feats.Count}");
     }
 
     [TestMethod]
@@ -165,6 +165,8 @@ public class TaomCulturalFeatsDefinitionTests
     [DataRow("MistyMountainOrcsPartySizeFeat")]
     [DataRow("MistyMountainOrcsSnowSpeedFeat")]
     [DataRow("MistyMountainOrcsFoodConsumptionFeat")]
+    // Blue Craig owns only its party size; its other five feats are Goblin-town's.
+    [DataRow("BlueCraigPartySizeFeat")]
     // Wave 1 economy/military feats (24)
     [DataRow("MordorSmithingFeat")]
     [DataRow("EreborTariffIncomeFeat")]
@@ -230,6 +232,7 @@ public class TaomCulturalFeatsDefinitionTests
             { "Shaghana", 1 },
             { "Abanissa", 1 },
             { "Goblin", 6 },             // party size, volunteer rate, snow speed, food consumption; Wave 1: +1 smithing, +1 raid damage
+            { "BlueCraig", 1 },          // party size only; shares Goblin-town's other five feats
             { "MistyMountainOrcs", 7 },  // army influence cost, party size, snow speed, food consumption; Wave 1: +1 smithing, +1 raid damage, +1 construction speed
         };
 
@@ -250,8 +253,8 @@ public class TaomCulturalFeatsDefinitionTests
             .Where(f => f.FieldType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(129, fields.Count,
-            "Expected 129 private FeatObject fields (105 prior + 24 Wave 1 economy/military feats)");
+        Assert.AreEqual(130, fields.Count,
+            "Expected 130 private FeatObject fields (105 prior + 24 Wave 1 economy/military + Blue Craig party size)");
     }
 
     [TestMethod]
