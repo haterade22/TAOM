@@ -2,13 +2,13 @@
 
 ## Overview
 
-Distributes starting gold to individual Lord heroes and starting influence to clans at new game creation, with amounts configured per culture via XML. The same config file also drives the player's culture-based starting funds, granted at character-creation finalize. A sister feature in `Main/Features/CharacterCreation/` persists each youth option's equipment roster onto the player hero so the equipment shown in the CC preview is what the player actually walks into the campaign with. Together these establish faction-appropriate economic and equipment baselines reflecting Middle-earth power dynamics.
+Distributes starting gold to individual Lord heroes and starting influence to clans at new game creation, with amounts configured per culture via XML. The same config file also drives the player's culture-based starting funds, granted at character-creation finalize. A sister feature in `Main/Features/CharacterCreation/` persists each youth option's equipment roster onto the player hero so the equipment shown in the CC preview is what the player actually walks into the campaign with. Together these set the economic and equipment baseline a new campaign opens on. The lord-gold and clan-influence half is deliberately flat across factions apart from the elven realms; the player's own funds and starting kit stay culture-specific.
 
 ## Why This Exists
 
 - **Vanilla behavior:** All factions start with identical default gold/influence regardless of lore
-- **TAOM requirement:** Elven factions (ancient, wealthy) should start rich; Orcish warchest factions (Isengard, Gundabad) need military funding; Human kingdoms start modest
-- **Without this feature:** Economic parity breaks immersion — Rivendell starts as poor as a human frontier settlement
+- **TAOM requirement:** a deliberate, near-uniform economic start. Every culture's lords open on 250,000 denars and every clan on 1,000 influence, with the four elven realms the single exception at 500,000 gold, keeping the "old, wealthy, few" character they had before the 2026-08-14 flattening. Nothing else separates one kingdom's opening position from another's. Player starting funds are a separate knob and still vary by culture.
+- **Without this feature:** the distribution is vanilla's rather than TAOM's. Lords and clans keep the engine defaults, the player opens on the native 1,000 denars whichever culture he picked, and there is nowhere to express the elven exception.
 
 ## Architecture
 
@@ -54,15 +54,17 @@ Each `<Culture>` element maps a culture ID to gold (per Lord hero) and influence
 
 ### Current Values
 
-NPC-lord gold/influence values are tuning knobs and may drift; consult `startup_resources_config.xml` for the live values. The table below reflects the live `playerGold` values after the 2026-06-30 downward rebalance.
+NPC-lord `gold` and clan `influence` have been flat since 2026-08-14: 250,000 gold and 1,000 influence for every culture, except the four elven realms at 500,000 gold. They remain tuning knobs and may drift, so consult `startup_resources_config.xml` for the live numbers. `playerGold` was not flattened. The three tiers below account for all 22 culture rows, but they were not all set at once: the tier structure comes from the 2026-06-30 downward rebalance, which ran against the 18 rows the config had then, and the four rows added on 2026-08-11 (`goblin`, `mistymountainorcs`, `bluecraig`, `lindon`) were seeded into the tiers that already existed.
 
 | Culture | playerGold | Rationale |
 |---------|-----------|-----------|
-| rivendell, lothlorien, mirkwood | 4,000 | Elven wealth — the highest player start |
+| rivendell, lothlorien, mirkwood, lindon | 4,000 | Elven wealth, the highest player start |
 | erebor | 3,500 | Dwarven hoard culture, just below the elves |
-| all other cultures — gondor, vlandia (Rohan), sturgia (Dale), empire (Dunland), battania (Khand), aserai (Harad), khuzait (Rhun), shaghana, abanissa, mordor, isengard, gundabad, dolguldur, umbar | 2,000 | Flat baseline for every human + orc culture |
+| the other 17: gondor, vlandia (Rohan), sturgia (Dale), empire (Dunland), battania (Khand), aserai (Harad), khuzait (Rhun), shaghana, abanissa, mordor, isengard, gundabad, dolguldur, umbar, goblin, mistymountainorcs, bluecraig | 2,000 | Flat baseline for every human + orc culture |
 
-`shaghana` (eastern Harad reach) and `abanissa` (deep south Harad) are independent Harad-region kingdoms — full peers of Aserai with their own NPC clans, lords, and ruler titles (Taskral / Châjaphân), not sub-cultures — and are now selectable in character creation, so their `playerGold` is live.
+`shaghana` (eastern Harad reach) and `abanissa` (deep south Harad) are independent Harad-region kingdoms, full peers of Aserai with their own NPC clans, lords, and ruler titles (Taskral / Châjaphân) rather than sub-cultures, and are now selectable in character creation, so their `playerGold` is live.
+
+`goblin`, `mistymountainorcs`, `bluecraig`, and `lindon` are selectable too, so every one of the config's 22 rows is live. What puts a culture in the character-creation picker is `is_main_culture="true"`: 16 of the 22 carry it in `taom_spcultures.xml` and the other six inherit it from vanilla, which `spcultures.xslt` never touches. `Main/_Module/ModuleData/charactercreation/cultures.json` is read *after* the pick, for the race filter and the body/settlement defaults, and it too has an entry for all 22. The narrative menus are the one surface that does not cover everything: 20 cultures have their own youth, parents, education, and adulthood options, while `shaghana` and `abanissa` have none in any of the four. Blue Craig and Lindon were promoted out of borrowed cultures on 2026-08-10 (Blue Craig off goblin, Lindon off rivendell) and needed rows of their own, because these values key on culture and before the split their kingdoms had none.
 
 ## Key Files
 
@@ -163,6 +165,7 @@ The NPC-lord gold and clan-influence half is unaffected: `StartupResourcesBehavi
 
 ## Changelog
 
+- 2026-08-14: Flattened NPC-lord `gold` and clan `influence` so no faction opens the campaign with a structural economic head start. Every culture is now 250,000 gold / 1,000 influence, except the four elven realms (rivendell, lothlorien, mirkwood, lindon) at 500,000 gold. Notable movers: erebor is the one large move DOWN, from 800k, where it had been the richest culture on the map by a factor of four, and the elves came down from 600k to the 500k exception. Everything else moved up: bluecraig from 40k, vlandia (Rohan) and sturgia (Dale) from 50k gold and 50 influence (a twentyfold influence jump), umbar from 200k. `playerGold` was deliberately not flattened and still varies by culture (elves 4,000, erebor 3,500, everyone else 2,000). Data-only edit to `startup_resources_config.xml`.
 - 2026-08-03 — The player gold grant is re-invoked after a multiplayer join hand-off, against the hero the join actually hands the player and with the character-creation culture (see [player-possession.md](player-possession.md)). Wiring only — no config, tuning or data change; the youth-option equipment is not re-applied.
 - 2026-07-03 — Retuned NPC-lord `gold` + clan `influence`: elves (rivendell/lothlorien/mirkwood) influence 1,000 → 1,250 (gold stays 600k); erebor 50k → 800k / 150 → 1,000; gondor 50k → 100k / 500 → 1,000; khuzait gold 50k → 75k; isengard/dolguldur 200k → 75k / 2,000 → 500; gundabad 200k → 75k / 2,000 → 1,000; umbar influence 500 → 1,000 (gold stays 200k). All `playerGold` values unchanged. Data-only edit to `startup_resources_config.xml`.
 - 2026-06-30 — Rebalanced `playerGold` downward across all cultures: Elves (rivendell/lothlorien/mirkwood) 4,000, erebor 3,500, every other culture 2,000 (previously 4,000–10,000). NPC `gold`/`influence` unchanged. Data-only edit to `startup_resources_config.xml`.

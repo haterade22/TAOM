@@ -279,15 +279,35 @@ From `SandBox/partyTemplates.xml`:
 | Attribute | Required | Notes |
 |---|---|---|
 | `min_value` | **Yes** | Minimum count of this troop in spawned parties. |
-| `max_value` | **Yes** | Maximum count. Engine samples uniformly between min and max. |
+| `max_value` | **Yes** | Maximum count. Reached only when the party's single spawn ratio draws near 1.0 (see the semantics below). |
 | `troop` | **Yes** | `NPCCharacter.<id>` reference. Must resolve to a real troop. |
 
 ### Stack composition semantics
 
-- Each stack is independently sampled — `min=0` makes the stack optional.
+- **One ratio is drawn per party, not per stack.**
+  `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` (v1.4.8 decompile,
+  `:427-464`) computes the ratio `r` once at `:430`, before the loop, then applies the same `r` to
+  every stack at `:442`: `count = RoundRandomized(min + (max - min) * r)`. One draw moves the whole
+  roster together, so a party is uniformly small or uniformly large across all its stacks. Stacks are
+  **not** independently sampled; the only per-stack randomness is `RoundRandomized` on the fractional
+  result.
+- For a kingdom lord party, `r` is `party.RandomFloat()` (`:412`): roughly uniform on `(0, 1)` and
+  completely independent of the template. Bandits, player-owned caravans and patrol parties take
+  different branches of `GetInitialPartySizeRatioForMobileParty` (`:390-413`).
+- `min=0` still makes a stack optional, because a low `r` rounds that stack to 0.
 - Min/max counts are absolute, not ratios. A party with two stacks of `min=10, max=10` spawns exactly 20 troops.
 - Stack ordering doesn't affect spawn behavior but is convention-ordered low-tier-to-high-tier for readability.
-- The total party size is bounded only by `max_value` sums and engine party-size caps.
+- **The `max_value` sum is the SPAWN ceiling, not the party's size.** Because one shared `r` drives
+  every stack, a *lord* party's expected spawn roster is the midpoint of the min sum and the max sum.
+  Patrol parties and the player's own caravans are the exception: those branches return `1f` (`:410`,
+  `:406`), so they spawn the max sum exactly. Steady-state size belongs to `PartySizeLimit`, a
+  separate model: a party spawned above its limit cannot recruit, and
+  `DefaultPartyDesertionModel.GetTroopsToDesertDueToWageAndPartySize` (`:50-76`) sheds a quarter of
+  the excess on every daily party tick until it is back under.
+  `PartyTemplateObject.GetUpperTroopLimit()` / `GetLowerTroopLimit()` are plain sums with no caller
+  anywhere in the Campaign assembly, though the shipped NavalDLC module does call both. Full engine
+  walkthrough, including the new-game top-up that reads the stacks a second time:
+  [`docs/reference/party-template-sizing.md`](../../reference/party-template-sizing.md).
 
 ### v1.4.0 party visibility note
 
@@ -692,6 +712,7 @@ Vanilla covers 6 cultures × `stage_<n>_page_<p>_branch_<b>`. TAOM extends to LO
 
 ## Cross-references
 
+- [`docs/reference/party-template-sizing.md`](../../reference/party-template-sizing.md): what `max_value` actually controls. The shared per-party spawn ratio, why the max sum is a spawn ceiling rather than a party size, and where `PartySizeLimit` takes over. Read before retuning any stack values.
 - `docs/migration/templates/characters.md` — wanderer / hero / notable NPC schema details
 - `docs/migration/templates/equipment-rosters.md` — `*_equipment_sets.xml` schema details (the **definition** side of the reference)
 - `docs/migration/v1.4.x-equipment-overhaul.md` — full equipment-system migration narrative (3,372 `civilian="true"` mass migration)

@@ -352,3 +352,31 @@ recoverable.
   mostly noise gets ignored — the same failure that let #434 sit for two years.
 - **Source:** #434, 2026-08-09. 317 keys never registered, 96 registered but never propagated
   (#432), one late `taom_res_desertion` row — 414 per language, all fixed in one pass.
+
+### A translation tool that only fills blanks cannot repair a CHANGED English source
+
+`_diff_files` in `tools/translate_with_claude.py:296` selects a row for translation only when
+`cur_text == eng_text`, that is, only while the target file still holds the English. The moment a row
+is translated it leaves the work set permanently. So editing an English string's TEXT (as opposed to
+adding a key) leaves all eleven AI languages and the hand-written PL holding a translation of the OLD
+sentence, indefinitely, and nothing reports it. `--sync-ids` does not help: it seeds MISSING ids only.
+The cache is keyed by string id rather than by source text, so a changed source does not invalidate
+its own cache entry either.
+
+- **Why missed:** this is a different failure from the #434 pair above (never registered, registered
+  but never propagated), and the test that closed those cannot catch it.
+  `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` is a presence check on
+  purpose, and a stale translation is present. Meanwhile the English player sees the new text at once,
+  because `MBTextManager.GetLocalizedText` short-circuits on English, so the change looks finished
+  from the developer's chair.
+- **Prevent:** treat "I edited an English string" as its own task with its own decision, never as a
+  free edit. Three cases, and pick one out loud. A mechanical change such as a numeral (10% to 20%) is
+  best done as a targeted per-row substitution across the twelve files: exact, free, and it preserves
+  each language's phrasing. A NEW key whose English is verbatim identical to an existing key should
+  COPY that key's rows rather than pay for an LLM pass. Anything else owes a real translator run and
+  stays on the owed list until it happens. The durable fix is a source-text hash stored beside each
+  cache entry so a changed English string re-enters the work set; not built as of 2026-08-14.
+- **Source:** 2026-08-14 cultural-feats strings. `{=taom_feat_mor_ps_desc}`'s numeral updated in all
+  12 languages by substitution; the new `{=taom_feat_bcg_ps_desc}` copied from the goblin row
+  (identical English); the new `{=taom_feat_bcg_ps}` name seeded as English in all 12 and still owing
+  a translator run.

@@ -62,6 +62,41 @@ Each translation file is XML with this structure:
 - Keep the file encoding as UTF-8.
 - Use `&amp;` for `&`, `&quot;` for `"`, `&lt;` for `<`, `&gt;` for `>` inside attribute values.
 
+### Line endings and encoding (read this before scripting against these files)
+
+Hand translators can ignore this section; anyone writing a script that edits the per-language files
+cannot. Every file under `Main/_Module/ModuleData/Languages/<LANG>/` is **UTF-8 with no BOM**: all
+144 of them, measured 2026-08-14.
+
+**The line terminator is not uniform, so detect it instead of assuming it.** Every `std_taom_*` type
+except `std_taom_enlistment_strings_*.xml` ends its lines with a **doubled CR, `\r\r\n`**. That file
+and `language_data.xml` use a plain `\r\n`. Measured on `std_taom_module_strings_deu-DE.xml`: 2,451
+line terminators, every one of them `\r\r\n`. The TR, FR, PL and RU copies of that file report the
+same count.
+
+The doubled CR is produced, not inherited, so it comes back after every rebuild.
+`build_translation_xml` in `tools/rebuild_translation_files.py` joins its lines on `\r\n` (`:107`),
+and `rebuild_language` writes the result with `Path.write_text(content, encoding="utf-8")` (`:159`).
+Default text mode expands each `\n` to `\r\n` on Windows, so `\r\n` goes in and `\r\r\n` comes out.
+The doubled types are exactly the ten entries in that script's `taom_sources` list (`:132-143`); the
+enlistment file is plain because it is not in that list, so the rebuild never touches it.
+
+Two consequences:
+
+- **A regex whose terminator is `\r?\n` matches nothing on a doubled file.** On that DE file
+  `/>\r?\n` finds 0 matches, while the literal `/>\r\r\n` finds 2,442. The `\r?` consumes the first
+  CR and then `\n` is asked to match the second CR, which fails, and the empty-`\r?` backtrack fails
+  the same way. Capture the terminator and re-emit it verbatim rather than hard-coding either form,
+  or the same script will corrupt the two files in each language directory that use the other one.
+- **A plain text-mode read silently doubles the file.** Python's universal-newline translation turns
+  each `\r\r\n` into `\n\n`, so a text-read plus text-write round trip inserts a blank line between
+  all 2,451 lines and rewrites every line of the file. That is exactly the whole-file-rewrite defect
+  the XML I/O convention in [tools/README.md](../../tools/README.md) exists to prevent. Read bytes,
+  decode, edit, encode, write bytes.
+
+A per-row substitution that leaves the surrounding bytes untouched is always safer here than a
+normalise-then-rewrite pass.
+
 ---
 
 ## What to Preserve (Do Not Translate)
@@ -183,14 +218,17 @@ do" for a module it never looked at.
 3. **Claude API** — `claude-opus-5` (`MODEL` in `translate_with_claude.py`) with strict prompt about preserving placeholders
 4. **English fallback** — if all else fails or translation breaks placeholder structure, keep English so the game text stays valid
 
-> **Trap — the cache does not notice that the English changed.** Tier 2 matches on `string_id` alone
+> **Trap: the cache does not notice that the English changed.** Tier 2 matches on `string_id` alone
 > (`elif e.string_id in cache`); it never compares the English source it was translated from. Editing
 > the text of a key that has already been translated therefore does **not** invalidate its cached
-> translation — the next run serves the old wording back into all 12 language files and silently
-> undoes your edit. Whenever you change existing English source text (not just add a new key), update
-> or delete those keys in `tools/translation_cache/<lang>.json` in the same change.
+> translation. The rebuild step below resolves every key from that same cache, so it writes the old
+> wording back into all 12 language files and silently undoes your edit. Whenever you change existing
+> English source text (not just add a new key), update or delete those keys in
+> `tools/translation_cache/<lang>.json` in the same change.
 > Found 2026-08-06 (#388), where 165 career health strings changed "+75" to "+9"; worked example:
-> `tools/retune_career_health.py`. New keys are unaffected — an absent key always reaches the API.
+> `tools/retune_career_health.py`. New keys are unaffected: an absent key always reaches the API.
+> The cache is only the second of two gates, and a stale row usually never even reaches it. See
+> "Changing English Text That Is Already Translated" below.
 
 After running the API translator, run the rebuild step to inject the cached translations into the actual XML files:
 
@@ -213,6 +251,72 @@ This populates the TAOM-module files with English placeholders. For TAOM_Map and
 ### Option C — Hybrid (AI first, human refinement)
 
 Run the AI pipeline (Option A), then open each file and refine the AI translations. The validator preserves placeholders but quality varies — narrative text (wanderers, hero bios, kingdom descriptions) often benefits from human polish for tone and nuance.
+
+---
+
+## Changing English Text That Is Already Translated
+
+Adding a new key works. **Changing the English of a key that already has translations does not.** No
+path through the pipeline re-translates such a row, so all 12 languages keep showing wording that
+matched the old English, indefinitely. Nothing reports it: neither `translate_with_claude.py` nor
+`rebuild_translation_files.py` ever compares a target row against the English it was translated
+from, so a run that leaves every language stale prints the same `Untranslated entries discovered: 0`
+as a run with nothing to do.
+
+### Why: two gates, and neither one looks at the source text
+
+| Gate | Where | What it matches on |
+|------|-------|--------------------|
+| **Discovery** | `_diff_files`, `tools/translate_with_claude.py:296-306` | Returns an entry only when `cur_text == eng_text`, meaning the target row still literally holds the English string. (An id the target file does not declare at all also qualifies, because `cur_text` defaults to the English: `tgt_map.get(sid, eng_text)` at `:303`.) A row that already holds a translation is never returned, so it never reaches the overrides, the cache, or the API. `_diff_against_settlement_source` (`:309-326`) filters the TAOM_Map settlement keys the same way. |
+| **Cache** | `main()`, `tools/translate_with_claude.py:883` | `elif e.string_id in cache` matches on `string_id` alone. So on the occasions a row does reach discovery (a file just reset by `generate_translation_template.py --apply`, or an entry whose translation failed validation and fell back to English), the cache answers with the translation of the OLD English. |
+
+**`--sync-ids` does not close this.** `sync_missing_ids` (`:711-754`) computes
+`missing = [sid for sid in src_map if sid not in tgt_map]`, so it appends only the keys a
+per-language file lacks entirely. A key that is present but stale is not missing.
+
+**`rebuild_translation_files.py` does not close it either.** Its `resolve` (`:124-129`) does visit
+every key in the English source, but it resolves override, then cache, then English fallback, and
+that cache is the same `string_id`-keyed dictionary. It writes the stale translation back, and
+because it rebuilds the whole file it will also overwrite a row you corrected by hand.
+
+The one thing that outranks the cache is `tools/translation_overrides/<lang>.json`, checked first in
+both tools. A key parked there is pinned no matter what the cache holds.
+
+### Two zero-cost repairs, both used on 2026-08-14
+
+**1. Only a number changed, so substitute per row.** When a cultural-feat description moved from
+"increased by 10%." to "increased by 20%.", every language's sentence around the numeral was still
+correct. A targeted per-row substitution is exact, costs nothing, and keeps each language's own
+phrasing, which a fresh LLM pass would rewrite.
+
+The numeral is not written the same way everywhere, so the substitution has to survive all of these.
+Real values from `taom_feat_mor_ps_desc` after the 2026-08-14 edit:
+
+| Form | Languages | Example |
+|------|-----------|---------|
+| `20%`, sign straight after the digits | BR, CNs, IT, JP, KO, PL, RU, SP | `Предел размера отряда увеличен на 20%.` |
+| Percent sign FIRST | TR | `Müfreze büyüklüğü sınırı %20 arttı.` |
+| Space before the percent sign | DE, FR | `Limite de taille du groupe augmentée de 20 %.` |
+| Space before the NUMBER | CNt | `部隊規模上限增加 20%。` |
+
+The form also varies row to row inside one language, not just language to language: German writes
+`20 %` on `taom_feat_mor_ps_desc` and `40%` on `taom_feat_bcg_ps_desc`. Anchor on the digits, keep
+whatever surrounds them, and never assume one pattern covers a whole language file.
+
+**2. A new key whose English is verbatim identical to an existing key, so copy the rows.**
+`taom_feat_bcg_ps_desc` is "Party size limit increased by 40%.", character for character the same
+English as `taom_feat_gob_ps_desc`. Copying that key's 12 existing translations is free and better
+than paying for a pass that would produce twelve slightly different renderings of one sentence.
+
+### The checklist when you edit an existing English string
+
+1. Change the English in the source XML under `Main/_Module/ModuleData/`.
+2. Apply the same change to all 12 per-language rows: by substitution if it is mechanical, by hand
+   or a translator run if the meaning actually moved.
+3. Update or delete those keys in `tools/translation_cache/<lang>.json`, so no later run can serve
+   the old wording back.
+4. Respect the file format while you do it: no BOM, and whichever line terminator that particular
+   file already uses. See "Line endings and encoding" under **File Format** above.
 
 ---
 
@@ -348,6 +452,7 @@ Untranslated entries fall back to English text — the game stays valid, just sh
 - **Career choice/group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions.
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
 - **Gender-agreement rejections** — morphologically rich languages (RU, JP, KO, TR, CN) often need more gender conditionals than English. The AI validator preserves English in those cases. Manual translation can fix these — they're available in the XML files just as the English fallback.
+- **OWED (2026-08-14): `taom_feat_bcg_ps` ("Blue Craig Swarm") ships as English in all 12 languages.** The Blue Craig party-size feat was added with no API key available, so the name was seeded as English and never translated. Its description was not affected: `taom_feat_bcg_ps_desc` is verbatim-identical English to `taom_feat_gob_ps_desc`, so the goblin translation was copied into all 12. The name is deliberately ABSENT from `tools/translation_cache/*.json`, because a cache hit is consulted before the LLM tier and seeding English there would block the translation permanently. To close this, run `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` for the 11 AI languages (PL is hand-translated). Nothing fails while this is open: `LanguageFileCoverageTests` is a presence check and the row exists holding English, so the suite stays green with the string permanently untranslated.
 
 ---
 

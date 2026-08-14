@@ -403,3 +403,40 @@ gate exists.
   nothing, AND every state where the action runs must still project, or the fix over-corrects into
   under-promising.
 - **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` findings #10 and #11.
+
+### Two features writing to one `ExplainedNumber` can cancel each other out, and each reads correct alone
+
+`TaomPartySizeModel.GetPartyMemberSizeLimit`
+(`Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs:33`) hands one `ExplainedNumber` to three
+writers in sequence: the culture party-size feat (`ApplyPartySizeFeats`, factor-based), career
+passives (flat), then the TroopWeight "elite tax" (`ApplyPartySizeWeightPenalty`). The tax subtracts
+the party's weight surplus, `weightedCount - rawCount`, clamped at 0 below and `baseLimit - 1` above
+(`ComputeSizePenalty`, `Main/Features/TroopWeight/TroopWeightService.cs:172`).
+
+The two populations overlap partially, which hides the interaction better than a clean match would.
+Counted in `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` on 2026-08-14: 87 live weighted ids
+(an XML parse; a raw grep returns 88 because `cave_troll` at 4.0 sits inside a block commented out
+2026-05-14), 75
+of them at 2.0. Only 33 of that 75 are orc, uruk or warg; 39 are elven or dwarven (`imladris_*`,
+`mirkwood_*`, `rivendell_*`, `noldorin_lancer`, `erebor_*`, `iron_hills_noble_*`), as are all 10 of
+the weight-3.0 ids. `ApplyPartySizeFeats` names 12 cultures (Mordor, Gundabad, Goblin, Blue Craig,
+Misty Mountain Orcs, Dol Guldur, Isengard, Gondor, Dunland, Rhun, Harad, Khand) and no elven or
+dwarven realm is among them. So the evil cultures take bonus and tax together, where a heavy roster's
+surplus can subtract more than a small percentage bonus adds, and the elves and dwarves take the tax
+with no bonus at all. Reading either feature's doc predicts neither outcome. The party-size tooltip
+itemises both lines ("Culture" and "Heavy troops") and is the only surface where the interaction is
+visible.
+
+- **Why missed:** each writer is its own feature, with its own doc and its own green tests, and every
+  one of those tests exercises a single writer against a base number. A per-feature test cannot see a
+  second writer by construction, and the composed number has no owner.
+- **Prevent:** before tuning any contributor to a shared `ExplainedNumber`, open the model and
+  enumerate every writer, then work the case where they OPPOSE at realistic magnitudes rather than the
+  case where they add. Where two writers key on overlapping populations, say so in both feature docs.
+  Put at least one test at the MODEL level over the composed result, not only at each service. And
+  when a field report says a bonus "does nothing", look for a second writer before doubting the bonus.
+- **Open, deliberately:** whether the elite tax should apply at all to a culture whose entire roster
+  is heavy is a design question rather than a defect, and it is unanswered as of 2026-08-14.
+- **Source:** 2026-08-14 culture balance pass (Mordor party-size feat 0.10 to 0.20, new Blue Craig
+  feat at 0.40). Companion lesson: "A ModuleData field's NAME is not its semantics" in
+  [campaign-mechanics.md](./campaign-mechanics.md).

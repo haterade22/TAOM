@@ -45,7 +45,8 @@ Each culture typically has these templates in `taom_partyTemplates.xml`:
 
 | Template | Purpose | Typical Composition |
 |----------|---------|-------------------|
-| `kingdom_hero_party_{culture}_template` | Lord armies | Full range T1-T9 |
+| `kingdom_hero_party_{culture}_template` | Lord armies (culture default) | Full range T1-T9 |
+| `kingdom_hero_party_{culture}_{clan}_template` | Per-clan lord armies (what most named lords field) | Same range as the culture default |
 | `kingdom_hero_party_mercenary_{culture}_template` | Mercenary bands | Mid-tier professional |
 | `kingdom_hero_party_outlaw_{culture}_template` | Outlaw parties | Low-tier rabble |
 | `patrol_party_{culture}_template_level_1` | Weak patrols | Low-mid tier |
@@ -58,9 +59,28 @@ Each culture typically has these templates in `taom_partyTemplates.xml`:
 | `caravan_template_{culture}` | Caravans | 1 armed trader + 5-10 guards + 1-5 veterans |
 | `elite_caravan_template_{culture}` | Elite caravans | 1 armed trader + 10-20 guards + 5-10 veterans |
 
-Twelve, not nine. The last three were missing from this table until 2026-08-12, and Dale had shipped
-without any of them, so its villagers and caravans were vanilla Sturgians. Authoring the three was the
-only new content the whole party-template fix needed.
+Twelve per-culture types, not nine. The last three were missing from this table until 2026-08-12, and
+Dale had shipped without any of them, so its villagers and caravans were vanilla Sturgians. Authoring
+the three was the only new content the whole party-template fix needed.
+
+The clan row is per CLAN, not per culture, and that is where 176 of the 193 lord-party templates live
+(the other 17 are the culture defaults, which `Clan.DefaultPartyTemplate` falls back to only when the
+clan binds nothing). The binding is `default_party_template` in `characters/clans.xml` or
+`spclans.xslt`, and those two files are what you grep to prove a clan template is reachable, NOT the
+culture files. The id is a convention, not a derivation, so never compute one. Most embed the clan id
+minus its `clan_` prefix (`clan_erebor_1` binds `kingdom_hero_party_erebor_erebor_1_template`), but
+Gondor's 14 embed a fief instead and the clan id appears nowhere in them (`clan_empire_west_9` binds
+`kingdom_hero_party_gondor_blackroot_vale_template`). The leading token names the ROSTER's culture,
+which is not always the clan's: the five `Culture.bluecraig` clans bind
+`..._goblin_bluecraig_N_template`, and those stacks really are `goblin_*` troops. Computing instead of
+grepping also hides dead data. Two of the 193 (`..._gondor_ithilien_template`,
+`..._gondor_belfalas_template`) are bound by nothing as of 2026-08-14.
+
+**`max_value` is not the party's size.** The engine draws ONE uniform ratio per party and fills every
+stack to `min + (max - min) * r`, so a template's max sum is a spawn ceiling and the expected spawn
+roster is the midpoint of its min and max sums; `PartySizeLimit` still governs recruitment afterwards.
+Read [docs/reference/party-template-sizing.md](../../docs/reference/party-template-sizing.md) before
+retuning these numbers, and use `tools/rebalance_party_template_maxes.py` rather than hand-editing.
 
 **Writing a template is half the job. It is dead data until a culture binds it**, and a culture in
 `spcultures.xslt` inherits Calradia for every attribute its block does not name. That has shipped four

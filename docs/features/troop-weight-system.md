@@ -237,6 +237,57 @@ wall. The recruit *cap* is preserved exactly; only the intermediate fill-ratio s
 Symptom A (army-sum nameplate) is separate and left as vanilla behavior — a later decision (show solo count
 on nameplates, or calm army churn) if players still complain now that the party-UI counts are honest.
 
+### The elite tax is one of three contributors to the same `ExplainedNumber`
+
+`TaomPartySizeModel.GetPartyMemberSizeLimit`
+([`Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs:33-56`](../../Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs))
+layers three TAOM modifiers onto the single `ExplainedNumber` vanilla hands back, in this order:
+
+| # | Line | Call | How it lands |
+|---|------|------|--------------|
+| 1 | `:40` | `ICulturalFeatsService.ApplyPartySizeFeats` (culture party-size feat) | `AddFactor`, a percentage |
+| 2 | `:44` | `ICareerPassiveService.ApplyFlat(…, PassiveEffectType.PartySize)` (career passive) | flat `Add`, authored as a body count |
+| 3 | `:51` | `ITroopWeightService.ApplyPartySizeWeightPenalty` (this feature) | result-frame subtraction of the weight surplus |
+
+So the elite tax **competes** with a culture bonus on the same number, and the two can cancel. On a
+Mordor, Isengard, Dol Guldur or Gundabad party the weight-2.0 uruks, wargs and black guards can make
+the surplus subtract more than a small percentage bonus adds, which is why those cultures' party-size
+feats now carry a 20% floor, pinned by `ApplyPartySizeFeats_EvilCultures_WithinTwentyToFiftyPercent`.
+Rationale and the excluded cultures: [cultural-feats.md](./cultural-feats.md) "Evil-culture party-size
+floor". For how this limit relates to the roster a party is handed at spawn (a separate model that the
+limit does not cap), see [party-template-sizing.md](../reference/party-template-sizing.md).
+
+Two things about that interaction read backwards if you assume weight tracks alignment. Both counted
+against `troop_weights.xml` and the `troops/troops_*.xml` rosters on 2026-08-14:
+
+- **A weighted troop is not an evil-culture marker.** Rivendell has 22 of its 30 troop ids weighted
+  and Mirkwood 13 of 19, against Dol Guldur 16 of 50, Isengard 8 of 52, Mordor 6 of 49 and Gundabad 3
+  of 30 (Erebor carries 16 of 60). The evil trees are mostly weight-1.0, so the surplus that eats
+  their feat comes from a minority of the roster.
+- **Three of the seven cultures the floor test pins take no tax at all.** Goblin, Blue Craig and Misty
+  Mountain Orcs have zero entries in `troop_weights.xml`, so for them the floor raises a bonus that
+  nothing is subtracting from.
+
+Ordering matters only for contributor 3. `ExplainedNumber` sums factors and applies them to
+`BaseNumber`, so an `Add` lands in the base frame whenever it runs; the weight penalty is a
+result-frame body count, so `SubtractResultFramePenalty` divides `1 + SumOfFactors` back out
+(`Main/Features/TroopWeight/TroopWeightService.cs:141-153`) and must run after the feats so it reads
+the boosted `ResultNumber` as its base.
+
+Contributor 2 is the easiest of the three to miss. The cultural-feats floor section names only 1 and
+3, so a reader arriving from there sees two of the three. The two pages that carry all three are
+[party-template-sizing.md](../reference/party-template-sizing.md) and the `TaomPartySizeModel` row in
+[gamemodel-registry.md](../reference/gamemodel-registry.md).
+
+**Open question, deliberately unanswered.** The Overview above frames this feature as a composition
+incentive. A culture whose roster is heavy end to end has no composition to choose, so for it the tax
+degenerates into a flat cap cut: an all-weight-2.0 roster settles at `raw = baseLimit / 2` by the
+boundary math in point 3 above. On the counts above that lands on Rivendell and Mirkwood, and neither
+culture appears in `ApplyPartySizeFeats`, so nothing offsets it. The Overview also names that exact
+case ("100+ Rivendell blademasters") as the thing to prevent, so the flat cut may be the intent rather
+than a gap. Nobody has written down which. The 20% floor answers the opposing-bonus question for
+Mordor, Isengard, Dol Guldur and Gundabad; it does not answer this one.
+
 ## Configuration
 
 ### Config File: `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`

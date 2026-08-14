@@ -263,6 +263,12 @@ Khand uses Rhun's) as long as the target is TAOM-authored.
 [`docs/reviews/lessons/xslt-moduledata.md`](../reviews/lessons/xslt-moduledata.md) for how it works
 and why it is a whitelist.
 
+**Binding is not sizing.** Everything above decides *which* template a culture spawns from. What the
+numbers inside that template do is a separate question, and the obvious reading of a stack's
+`max_value` is wrong. The stacks' max sum caps the roster a party is handed at spawn; it is not the
+size that party settles at. Read [party-template-sizing.md](../reference/party-template-sizing.md)
+before retuning `taom_partyTemplates.xml`.
+
 ## Key Files
 
 | File | Purpose |

@@ -98,6 +98,7 @@
 - [economy-diagnostics](features/economy-diagnostics.md) — read-only instruments for the "broke town / parked caravan" pair: `taom.print_town_ledger` attributes a town's market-gold movement by flow (one `Patch68` recorder on `ChangeGold`, the pool's sole mutator, + 4 outermost-wins tags), `taom.print_caravans` names which engine gate holds each caravan. No gameplay change (#391)
 - [startup-resources](features/startup-resources.md) — per-culture player startup gold/items
 - [cultural-feats](features/cultural-feats.md) — 16 culture-feat GameModel overrides (Patch18)
+- [party-template-sizing](reference/party-template-sizing.md): what `max_value` in `taom_partyTemplates.xml` actually controls. The max sum is the SPAWN ceiling (expected roster = the midpoint of the min and max sums, ratio drawn per party and independent of the template), not the steady-state size, which belongs to `PartySizeLimit` / `TaomPartySizeModel`. Current per-culture targets, which cultures share another's templates, the new-game top-up that also weights WHICH troops get added, and `tools/rebalance_party_template_maxes.py`
 
 ### Faction, kingdom, & diplomacy
 - [diplomacy](features/diplomacy.md) — TaomDiplomacyModel for LOTR faction relationships

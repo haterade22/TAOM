@@ -175,17 +175,15 @@ Welcome testers! Work through each section below and report any **crashes, visua
 
 ## 7. :moneybag: STARTUP RESOURCES
 
-**Gold Distribution (new campaign)**
-- Gondor lords: ~100,000 starting gold
-- Rivendell/Lothlorien/Mirkwood lords: ~600,000 gold
-- Erebor lords: ~800,000 gold
-- Evil factions: Mordor 50K; Isengard/Gundabad/Dol Guldur 75K; Umbar 200K
-- Player hero gets culture `playerGold` at character creation (lord gold skips the player clan)
+**Gold Distribution (new campaign).** Flattened 2026-08-14, so most cultures are now identical
+- Every culture's lords: 250,000 starting gold
+- Except the four elven realms (Rivendell, Lothlorien, Mirkwood, Lindon): 500,000
+- No other culture is a special case. Erebor, Umbar, Gondor and the orc kingdoms are all on the flat 250,000
+- Player hero gets culture `playerGold` at character creation instead, which was NOT flattened (elves 4,000, Erebor 3,500, everyone else 2,000). Lord gold skips the player clan
+- Live values: `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml`
 
 **Influence Distribution**
-- Elven clans: ~1,250 starting influence
-- Erebor clans: ~1,000 influence
-- Gondor clans: ~1,000 influence
+- Every culture's clans: 1,000 starting influence, with no exceptions
 - Check AI clans in encyclopedia to verify
 
 **Idempotency**

@@ -2,6 +2,69 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-14
+
+### balance(cultures): evil party bonuses, lord-party sizes, and a flat economic start
+
+Three data passes that answer one report: evil cultures did not feel like they had the party
+bonus they were supposed to have.
+
+**The bonus itself.** Mordor was the only evil culture actually below the intended floor, sitting
+at +20% now after a 2026-05-31 cut had taken it from +30% to +10%. Everything else in scope was
+already inside the band: Isengard, Gundabad and Dol Guldur at +20%, Misty Mountain Orcs at +30%,
+Goblin-town at +40%. Harad, Dunland, Khand and Umbar are excluded by design, as is Rhûn at +5%.
+A new invariant test now fails if any in-scope culture leaves `[0.20, 0.50]`, so the value cannot
+quietly drift out of range again.
+
+Worth recording for whoever next reads a "the bonus does nothing" report: `TaomPartySizeModel`
+applies the culture feat and the TroopWeight elite tax to the same `ExplainedNumber`, and an orc
+roster's weight surplus (weight-2.0 uruks, wargs, black guards) can subtract more than a small
+percentage bonus adds. The party-size tooltip itemises both lines, so read it before retuning
+the feat. Whether the elite tax should apply to the cultures whose whole roster is heavy is a
+separate question and is not answered here.
+
+**Blue Craig gets its own party-size feat.** It was borrowing Goblin-town's. The new
+`taom_bluecraig_party_size` is authored at the identical 40%, so nothing moves in play; the two
+goblin realms can now be tuned apart. The other five goblin feats stay shared.
+
+**Lord-party templates.** 193 templates retargeted to a per-culture max troop sum via the new
+`tools/rebalance_party_template_maxes.py` (2,485 stacks, dry-run by default, idempotent): goblin
+realms 4,500, orc and uruk kingdoms 3,500, Erebor 2,000, the ten human realms 1,500, elven realms
+1,000. Per-clan templates were included, not just the culture defaults, because a lord party is
+built from `Clan.DefaultPartyTemplate` (`LordPartyComponent.InitializeLordPartyProperties`).
+Mercenary and outlaw templates were left alone.
+
+Read the units before retuning this. The max sum is the ceiling on the roster a lord party gets
+**at the moment it spawns**: the engine draws a uniform ratio per party and fills each stack to
+`min + (max - min) * r`, so the expected spawn roster is the midpoint of the min and max sums.
+It is **not** the party's steady-state size, which `PartySizeLimit` still governs. A party spawned
+above its limit cannot recruit and bleeds back down. Pairing these numbers with a party-size-limit
+change is a deliberate decision that has not been taken.
+
+**A flat economic start.** Every culture's clans now begin on 1,000 influence and its lords on
+250,000 denars, with the four elven realms the single exception at 500,000. The one big move down
+is Erebor, from 800,000: it had been the richest culture on the map, ahead of even the wealthiest
+elven realms at 600,000. The big moves up are Rohan and Dale, from 50,000 gold and 50 influence,
+a twentyfold influence jump, and Blue Craig, from the 40,000 it was given on 2026-08-10 when it
+was split off goblin. Umbar, previously the richest of the human realms at 200,000, also comes up
+slightly. Lindon keeps the 500,000 it was given in that same split and now sits in the elven tier.
+`playerGold` was deliberately not flattened.
+
+**Localization.** The Mordor party-size description carries the numeral in its text, so
+`taom_feat_mor_ps_desc` was corrected from 10% to 20% in all 12 languages, not just English. Blue
+Craig's description is word-for-word Goblin-town's in English, so `taom_feat_bcg_ps_desc` was copied
+from the `taom_feat_gob_ps_desc` row in each of the 12 files rather than sent for translation. The
+feat NAME `taom_feat_bcg_ps` ("Blue Craig Swarm") ships as English in all 12 and still owes a
+translator run: no API key was set for this pass.
+
+The 12 `tools/translation_cache/*.json` files were synced in the same change, by hand, because
+`tools/translate_with_claude.py` cannot refresh a translation whose English source changed underneath
+a key it has already cached. It sees the key, not the source text. `taom_feat_bcg_ps` was
+deliberately left OUT of the caches: a cache hit is checked before the LLM tier, so seeding the
+English name there would make every later run return English and the string could never be
+translated at all. Its description is cached, which is correct, since that value is a real
+translation.
+
 ## 2026-08-13
 
 ### chore(release): TAOM v2.0.22

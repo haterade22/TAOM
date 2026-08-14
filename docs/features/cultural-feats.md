@@ -4,7 +4,7 @@
 
 Each of TAOM's 10 custom cultures now has 3 unique cultural feats (2 bonuses + 1 penalty) that provide gameplay differentiation. This replaces the placeholder Empire feats that all cultures previously shared. Additionally, Dunland (XSLT culture) was reassigned from Empire feats to Battanian feats for better lore fit.
 
-On top of the base feats, **terrain movement-speed feats** give 18 cultures a flat party-speed bonus on their "home" terrain (forest / snow / steppe / desert / plain / swamp) plus a night bonus for Mordor — see the [Terrain Movement-Speed Feats](#terrain-movement-speed-feats) section. **Village volunteer respawn-rate feats** (4 cultures) and **per-settlement notable-count feats** layer on top — see [Village Volunteer Respawn-Rate Feats](#village-volunteer-respawn-rate-feats) and [Per-Settlement Notable-Count Feats](#per-settlement-notable-count-feats). The feat total is now **129**: 97 (the original 59 base + 18 terrain + 3 party-size + 4 volunteer-respawn + 4 village notable + 9 per-occupation town notable) **+ 8 new-culture feats** (Goblin ×4 + Misty Mountain Orcs ×4, both playable cultures added 2026-05/06) **+ 24 Wave 1 expansion feats** (2026-06-07 — economy/raid/morale/loyalty/smithing/food breadth for thinly-covered cultures: Dale, Khand, Harad, Rhûn, Umbar, Mordor, Erebor, Lothlorien, Mirkwood, Goblin, Misty Mountain Orcs — all plug into existing `CulturalFeatsService.Apply*` methods, no new GameModels).
+On top of the base feats, **terrain movement-speed feats** give 18 cultures a flat party-speed bonus on their "home" terrain (forest / snow / steppe / desert / plain / swamp) plus a night bonus for Mordor (see the [Terrain Movement-Speed Feats](#terrain-movement-speed-feats) section). **Village volunteer respawn-rate feats** (4 cultures) and **per-settlement notable-count feats** layer on top (see [Village Volunteer Respawn-Rate Feats](#village-volunteer-respawn-rate-feats) and [Per-Settlement Notable-Count Feats](#per-settlement-notable-count-feats)). The feat total is now **130**: 97 (the original 59 base + 18 terrain + 3 party-size + 4 volunteer-respawn + 4 village notable + 9 per-occupation town notable) **+ 8 new-culture feats** (Goblin ×4 + Misty Mountain Orcs ×4, both playable cultures added 2026-05/06) **+ 24 Wave 1 expansion feats** (2026-06-07: economy/raid/morale/loyalty/smithing/food breadth for thinly-covered cultures, namely Dale, Khand, Harad, Rhûn, Umbar, Mordor, Erebor, Lothlorien, Mirkwood, Goblin and Misty Mountain Orcs; all plug into existing `CulturalFeatsService.Apply*` methods, no new GameModels) **+ 1 Blue Craig party-size feat** (2026-08-14: `taom_bluecraig_party_size`, split off Goblin-town's shared feat at the identical 40%, so the split moved nothing in play).
 
 ## Why This Exists
 
@@ -126,7 +126,7 @@ Each culture has a `<cultural_feats>` block with 3 feat IDs:
 | Mordor | `taom_mordor_army_influence_cost` | -60% army influence cost | -0.6 | Yes |
 | Mordor | `taom_mordor_grain_production` | +20% grain production | 0.2 | Yes |
 | Mordor | `taom_mordor_wage` | +20% party wages | 0.2 | No |
-| Mordor | `taom_mordor_party_size` | +10% party size (retuned 2026-05-31; was +30%) | 0.1 | Yes |
+| Mordor | `taom_mordor_party_size` | +20% party size (was +30%, cut to +10% 2026-05-31, restored to +20% 2026-08-14) | 0.2 | Yes |
 | Mordor | `taom_mordor_raid_damage` | +25% raid damage | 0.25 | Yes |
 | Rohan | `taom_rohan_mounted_cost` | -15% mounted recruit/upgrade cost | -0.15 | Yes |
 | Rohan | `taom_rohan_mounted_wage` | -15% mounted troop wages | -0.15 | Yes |
@@ -290,11 +290,39 @@ Wave 1 added 24 feats (105 → 129), targeting cultures that read thin after the
 
 **Deferred to Wave 1.5** (need conditional logic / a different model — E-class, not Q): Goblin Sunlight Aversion (daylight-conditional speed), Mirkwood Spider-Tainted Paths (non-forest-conditional speed), Rhûn Cavalry-Only (infantry-% conditional speed), Mirkwood Thranduil's Vaults (garrison wage lives in `TaomPartyWageModel`, not `CulturalFeatsService`).
 
+### Blue Craig Party-Size Split (2026-08-14)
+
+Not a Wave 1 feat: it is the 130th, added on its own.
+
+| Culture | Feat ID | Effect | Bonus | Positive | Service method |
+|---------|---------|--------|-------|----------|----------------|
+| Blue Craig | `taom_bluecraig_party_size` | +40% party size limit | 0.4 | Yes | ApplyPartySizeFeats |
+
+Blue Craig is a special case worth knowing before you retune it. It shares Goblin-town's other
+five feats verbatim (volunteer rate, snow speed, food consumption, smithing, raid damage) and
+owns only its party size, split off `taom_goblin_party_size` on 2026-08-14 at the identical 40%
+so the split changed no behaviour. Both realms are still wired to the shared five in
+`taom_spcultures.xml`, so editing a goblin feat moves both.
+
+### Evil-culture party-size floor
+
+`ApplyPartySizeFeats_EvilCultures_WithinTwentyToFiftyPercent` pins Mordor, Isengard, Gundabad,
+Dol Guldur, Goblin, Blue Craig and Misty Mountain Orcs to a bonus in `[0.20, 0.50]`. Individual
+values are free to move inside that band; leaving it is a test failure. The other five party-size
+feats sit outside the band by design: Dunland, Khand, Harad and Rhûn at +5%, Gondor at +2.5%.
+Umbar has no party-size feat at all.
+
+The floor exists because a small bonus can be swallowed whole. `TaomPartySizeModel` applies the
+culture feat and the TroopWeight elite tax to the same `ExplainedNumber`, and an orc roster's
+weight surplus (weight-2.0 uruks, wargs and black guards) can subtract more than a small
+percentage bonus adds. Mordor sat at +10% from the 2026-05-31 retune until 2026-08-14, the only
+in-scope culture under the floor.
+
 ## Tests
 
 | File | Coverage |
 |------|----------|
-| `TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs` | Feat property count (129), uniqueness, culture distribution, field structure, **Wave 1 production-metadata pin** (`Wave1Feats_ProductionMetadata_MatchesSpec` — source-parses `Initialize(...)` so a production sign-flip can't pass; see Codex review 2026-06-07 MEDIUM) |
+| `TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs` | Feat property count (130), uniqueness, culture distribution, field structure, **Wave 1 production-metadata pin** (`Wave1Feats_ProductionMetadata_MatchesSpec`, which source-parses `Initialize(...)` so a production sign-flip can't pass; see Codex review 2026-06-07 MEDIUM) |
 | `TAOM.Tests/Features/CulturalFeats/CulturalFeatsServiceTests.cs` | Per-feat dispatch incl. terrain-speed (per-terrain match, Mordor 5% vs 10%, night, null/wrong-terrain no-ops) and one dispatch test per (culture, axis) cell for the Wave 1 feats (per `feedback_per_branch_dispatch_test_enumeration`) |
 
 GameModel overrides are thin entry points (delegate to `base` + apply feat modifier via the service) and are verified via in-game testing. The `TaomPartySpeedModel.MapTerrain` boundary mapping is verified in-game (it consumes the sealed `TerrainType`).
@@ -337,6 +365,15 @@ GameModel overrides are thin entry points (delegate to `base` + apply feat modif
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-08-14: Evil-culture party-size pass. Mordor's `taom_mordor_party_size` went back to +20%,
+  reversing the 2026-05-31 cut to +10% recorded in the row below (it was the only in-scope culture
+  under the floor). Blue Craig stopped borrowing `taom_goblin_party_size` and got its own
+  `taom_bluecraig_party_size` at the identical 40%, so the split changed no behaviour; the other
+  five goblin feats stay shared between the two realms. New invariant test
+  `ApplyPartySizeFeats_EvilCultures_WithinTwentyToFiftyPercent` pins Mordor, Isengard, Gundabad,
+  Dol Guldur, Goblin, Blue Craig and Misty Mountain Orcs to `[0.20, 0.50]`, with Harad, Dunland,
+  Khand, Umbar and Rhûn deliberately outside its scope. Total 129 → 130. The new feat's name string
+  `taom_feat_bcg_ps` shipped as English in all 12 languages and still owes a translator run.
 - 2026-06-15 — Guarded the `PartyBase.Culture` NRE in party-culture feat resolution: the `ResolvePartyCulture` chokepoint plus a `PartyBaseHelper.HasFeat` Prefix that protects the vanilla `base.X()` calls.
 - 2026-06-07 — Wave 1 expansion: +24 Q-class feats across 11 thin cultures (total 105 → 129), plus the mandatory review closeout (`/deep-review` + `/review-codex` + RCA + 11-language translation).
 - 2026-05-31 — Per-occupation town notable counts (per-(culture, occupation) `Add` semantics, Isengard/Dol Guldur Gang-Leader hubs) and party-size retune + Dunland/Rhûn/Harad party-size + village volunteer respawn-rate + per-settlement notable-count feats (total 77 → 92 → 97).

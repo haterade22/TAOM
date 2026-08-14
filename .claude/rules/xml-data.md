@@ -107,5 +107,15 @@ Aside (for future arena/crowd debugging): `CharacterSpawner.InitWithCharacter` i
 
 ## Formatting
 - 2-space indentation (per .editorconfig)
-- UTF-8 encoding
-- CRLF line endings
+- UTF-8, usually with no BOM. 11 of the 330 ModuleData `.xml`/`.xslt`/`.json` files do carry one
+  (`taom_partyTemplates.xml`, `spclans.xslt`, `spkingdoms.xslt`, six `troops/troops_*.xml`,
+  `module_sounds.xml`, `lotr_dwarf_voice_def.xml`), so round-trip the bytes instead of normalising.
+- **Line endings are not uniform: detect, never assume.** Byte-measured 2026-08-14 over those same
+  330 files: 158 plain CRLF, 120 doubled CR (`\r\r\n`), 49 LF, 2 single-line files with no terminator
+  at all, and `taom_cc_strings.xml` carrying both shapes inside the one file. The doubling
+  concentrates in `Languages/**/std_taom_*.xml`, 120 of 132 files, with the other 12 on plain CRLF.
+  `\r?\n` does not rescue you: against a doubled file it matches the `\r\n` and leaves a stray `\r`
+  on every line, and `splitlines(keepends=True)` turns each doubled terminator into a phantom blank
+  line. Capture each file's own terminator and re-emit it verbatim. Detail:
+  [docs/localization/TRANSLATOR_GUIDE.md](../../docs/localization/TRANSLATOR_GUIDE.md) "Line endings
+  and encoding".

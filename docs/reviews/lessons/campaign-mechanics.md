@@ -165,6 +165,47 @@ against the server hero while the remote players who fought the battles earned n
   gate built on it purely SUPPRESSES behaviour — check that property before copying the pattern.
 - **Source:** Multiplayer field report 2026-08-03 (TAOM v2.0.16 co-op testing); commit c3ee2e22
 
+### A ModuleData field's NAME is not its semantics: find the engine's READER before retuning it
+
+A lord party template's `max_value` sum reads as "how big this party is". It is not. Verified against
+the v1.4.8 decompile, 2026-08-14:
+
+1. `PartyTemplateObject.GetUpperTroopLimit()` / `GetLowerTroopLimit()` (`PartyTemplateObject.cs:62`,
+   `:72`) are plain sums of the stacks' `MaxValue` / `MinValue`, and **nothing in
+   `TaleWorlds.CampaignSystem` calls either one**. Grepping the whole Campaign tree returns exactly the
+   two definitions and no call site. (`_modules_build/NavalDLC__NavalDLC.cs` does call both; the base
+   campaign never does.) The accessor that looks authoritative is informational.
+2. The sum's real consumer is `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty`
+   (`:427`), which builds the roster a party receives AT SPAWN by filling each stack to
+   `MBRandom.RoundRandomized(min + (max - min) * r)`.
+3. `r` comes from `GetInitialPartySizeRatioForMobileParty` (`:390`). For a lord party (not bandit, not
+   player caravan, not patrol) it falls through to `party.RandomFloat()` (`:412`), which is
+   `PartyBase.RandomValue / 2.1474836E+09f` over a value drawn once per party at construction, with no
+   reference to the template at all. So the expected spawn roster is the MIDPOINT of the min and max
+   sums, and raising the max sum raises it linearly.
+4. It is not the steady state. `PartySizeLimit` still governs recruitment, so a party spawned above its
+   limit cannot recruit and bleeds back down.
+5. The same field also decides WHICH troops, on a path the sums never appear in: on a new game only,
+   `HeroSpawnCampaignBehavior.SpawnLordParty` (`:262`-`:276`) tops the party up toward `PartySizeLimit`
+   and picks each added man with `MBRandom.ChooseWeighted` over `(stack.MinValue + stack.MaxValue) / 2f`.
+
+- **Why missed:** the request arrived in the units of the data file ("make Mordor's lord parties
+  bigger"), the file has a field whose sum is exactly the number under discussion, and the engine
+  ships a method named `GetUpperTroopLimit` that returns it. Three things agreeing is not evidence
+  when all three are the same assumption. Nothing throws either way, so a retune aimed at the wrong
+  quantity ships and reads as done.
+- **Prevent:** before changing a ModuleData number, grep the decompile for the field's engine READER,
+  and separately for CALLERS of the accessor that looks authoritative; an accessor that exists is not
+  an accessor that runs. Then state the gap between what the field actually governs and what the
+  request assumed, in the same message that reports the change, and repeat it in the tool's docstring.
+  `tools/rebalance_party_template_maxes.py` opens by saying it moves the spawn roster and not the
+  steady-state size, so the next session does not re-derive it.
+- **Source:** 2026-08-14 culture balance pass (193 templates retargeted, 2,485 stacks changed). Full
+  engine write-up with per-line citations:
+  [`docs/reference/party-template-sizing.md`](../../reference/party-template-sizing.md). Companion
+  lesson: "Two features writing to one `ExplainedNumber` can cancel each other out" in
+  [gamemodels-services.md](./gamemodels-services.md).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

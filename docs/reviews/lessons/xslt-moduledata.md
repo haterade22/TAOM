@@ -234,6 +234,46 @@ diluted with vanilla entries alongside the custom one.
 
 ---
 
+### Line endings vary file by file under ModuleData, so CAPTURE the terminator instead of assuming it
+
+Four shapes coexist, counted byte by byte on 2026-08-14:
+
+| Files | BOM | Line ending |
+|---|---|---|
+| 120 of the 145 XMLs under `Main/_Module/ModuleData/Languages/` | none | **doubled CR**, `\r\r\n` |
+| 24 more there (the 12 per-language `language_data.xml`, the 12 `std_taom_enlistment_strings_*`) | none | plain CRLF |
+| the 145th, `Main/_Module/ModuleData/Languages/language_data.xml` (the root index) | none | bare LF |
+| `Main/_Module/ModuleData/taom_partyTemplates.xml` | **yes** | plain CRLF |
+
+A substitution regex whose pattern ends `\r?\n` therefore matches **nothing at all** in the 120-file
+majority: `\r?` eats the first CR and then `\n` is asked to match the second CR. The run reports zero
+replacements, which reads as "nothing to do" rather than "the pattern is wrong". The obvious repair is
+worse than the bug: normalising the endings on the way out rewrites every line of those 120 files,
+burying a twelve-row change in a 106,152-line diff that no reviewer can read.
+
+- **Why missed:** line endings are invisible in every tool that displays the file, `git diff` included
+  once the file already has them. The repo's own `.claude/rules/xml-data.md` Formatting section states
+  "CRLF line endings", which holds for `taom_partyTemplates.xml` and for 24 of the 145 Languages
+  files, and fails for the other 121, so the documented convention actively confirms the wrong
+  assumption. The fourth shape is the sharper warning: 13 files here are named `language_data.xml`, 12
+  of them CRLF and the 13th LF, so a spot check that samples one file per NAME pattern generalises the
+  12 over the odd one and never sees it.
+- **Prevent:** match the terminator as a capture group (`(\r*\n)`) and re-emit the captured bytes
+  verbatim. Read and write bytes, or open with `newline=""`, and preserve the BOM per file (decode
+  `utf-8-sig`, re-encode with the BOM only where one was present).
+  `tools/rebalance_party_template_maxes.py` documents that round-trip inline at lines 211-212 for exactly
+  this reason. Before any bulk edit, walk **every** file you are about to touch and print
+  `b.count(b"\r\r\n")`, `b.count(b"\r\n")` and `b.startswith(b"\xef\xbb\xbf")`; it is one loop, and it
+  is the only thing that would have surfaced the bare-LF outlier above. And assert the expected
+  replacement count: a zero-replacement bulk substitution is a FAILURE signal, never a clean pass.
+- **Sibling entries:** same root cause as "A regex of `<tag ` misses `<tag\n  attr=…`" and "ModuleData
+  XML breaks attributes onto their own lines" earlier in this file (a regex written against an assumed
+  file shape rather than the bytes on disk), one level lower down. Those two miss rows; this one misses
+  whole files.
+- **Source:** 2026-08-14 localization and party-template balance pass.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
