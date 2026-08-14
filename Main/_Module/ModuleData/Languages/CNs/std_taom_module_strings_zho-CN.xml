@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="锻造精力消耗减少10%。" />
     <string id="taom_feat_gob_rd" text="半兽人伏击" />
     <string id="taom_feat_gob_rd_desc" text="劫掠伤害增加10%。" />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="部队规模上限增加40%。" />
     <string id="taom_feat_mmo_aic" text="奥克大军" />
     <string id="taom_feat_mmo_aic_desc" text="组建军队所需影响力减少40%。" />
     <string id="taom_feat_mmo_ps" text="山中军团" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="黑暗贡赋" />
     <string id="taom_feat_mor_w_desc" text="部队军饷增加20%。" />
     <string id="taom_feat_mor_ps" text="索伦的大军" />
-    <string id="taom_feat_mor_ps_desc" text="部队规模上限增加10%。" />
+    <string id="taom_feat_mor_ps_desc" text="部队规模上限增加20%。" />
     <string id="taom_feat_mor_rd" text="索伦之怒" />
     <string id="taom_feat_mor_rd_desc" text="劫掠伤害增加25%。" />
     <string id="taom_feat_mor_pls" text="阴影行军" />

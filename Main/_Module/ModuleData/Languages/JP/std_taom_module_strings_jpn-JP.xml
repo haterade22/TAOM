@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="鍛冶のエネルギー消費が10%減少。" />
     <string id="taom_feat_gob_rd" text="ゴブリンの奇襲" />
     <string id="taom_feat_gob_rd_desc" text="襲撃による被害が10%増加。" />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="部隊の人数上限が40%増加。" />
     <string id="taom_feat_mmo_aic" text="オークの大群" />
     <string id="taom_feat_mmo_aic_desc" text="軍の招集に必要な影響力が40%減少。" />
     <string id="taom_feat_mmo_ps" text="山の軍勢" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="暗黒の貢納" />
     <string id="taom_feat_mor_w_desc" text="部隊の賃金が20%増加する。" />
     <string id="taom_feat_mor_ps" text="サウロンの大軍" />
-    <string id="taom_feat_mor_ps_desc" text="部隊の人数上限が10%増加する。" />
+    <string id="taom_feat_mor_ps_desc" text="部隊の人数上限が20%増加する。" />
     <string id="taom_feat_mor_rd" text="サウロンの怒り" />
     <string id="taom_feat_mor_rd_desc" text="襲撃による被害が25%増加する。" />
     <string id="taom_feat_mor_pls" text="影の行軍" />

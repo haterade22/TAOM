@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="Coût en énergie de forge réduit de 10 %." />
     <string id="taom_feat_gob_rd" text="Embuscade de gobelins" />
     <string id="taom_feat_gob_rd_desc" text="Dégâts de razzia augmentés de 10 %." />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="Limite de taille de la troupe augmentée de 40 %." />
     <string id="taom_feat_mmo_aic" text="Horde d'orques" />
     <string id="taom_feat_mmo_aic_desc" text="Le recrutement d'armée coûte 40 % moins d'influence." />
     <string id="taom_feat_mmo_ps" text="Ost des montagnes" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="Tribut noir" />
     <string id="taom_feat_mor_w_desc" text="Solde du groupe augmentée de 20 %." />
     <string id="taom_feat_mor_ps" text="Les hordes de Sauron" />
-    <string id="taom_feat_mor_ps_desc" text="Limite de taille du groupe augmentée de 10 %." />
+    <string id="taom_feat_mor_ps_desc" text="Limite de taille du groupe augmentée de 20 %." />
     <string id="taom_feat_mor_rd" text="Le courroux de Sauron" />
     <string id="taom_feat_mor_rd_desc" text="Dégâts de pillage augmentés de 25 %." />
     <string id="taom_feat_mor_pls" text="Marche de l'Ombre" />

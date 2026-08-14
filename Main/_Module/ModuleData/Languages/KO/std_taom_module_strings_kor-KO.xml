@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="제련 기력 소모가 10% 감소합니다." />
     <string id="taom_feat_gob_rd" text="고블린 매복" />
     <string id="taom_feat_gob_rd_desc" text="약탈 피해가 10% 증가합니다." />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="부대 규모 한도가 40% 증가합니다." />
     <string id="taom_feat_mmo_aic" text="오르크 무리" />
     <string id="taom_feat_mmo_aic_desc" text="군대 소집 비용이 영향력 40% 감소합니다." />
     <string id="taom_feat_mmo_ps" text="산악의 군세" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="암흑의 공물" />
     <string id="taom_feat_mor_w_desc" text="부대 임금 20% 증가." />
     <string id="taom_feat_mor_ps" text="사우론의 무리" />
-    <string id="taom_feat_mor_ps_desc" text="부대 규모 제한 10% 증가." />
+    <string id="taom_feat_mor_ps_desc" text="부대 규모 제한 20% 증가." />
     <string id="taom_feat_mor_rd" text="사우론의 진노" />
     <string id="taom_feat_mor_rd_desc" text="약탈 피해 25% 증가." />
     <string id="taom_feat_mor_pls" text="그림자의 행군" />

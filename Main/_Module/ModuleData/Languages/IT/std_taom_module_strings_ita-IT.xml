@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="Costo in energia della forgiatura ridotto del 10%." />
     <string id="taom_feat_gob_rd" text="Imboscata dei goblin" />
     <string id="taom_feat_gob_rd_desc" text="Danni da razzia aumentati del 10%." />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="Limite di dimensione della compagnia aumentato del 40%." />
     <string id="taom_feat_mmo_aic" text="Orda di orchi" />
     <string id="taom_feat_mmo_aic_desc" text="Il reclutamento dell'esercito costa il 40% di influenza in meno." />
     <string id="taom_feat_mmo_ps" text="Schiera della montagna" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="Tributo oscuro" />
     <string id="taom_feat_mor_w_desc" text="Paghe del gruppo aumentate del 20%." />
     <string id="taom_feat_mor_ps" text="Le orde di Sauron" />
-    <string id="taom_feat_mor_ps_desc" text="Limite di dimensione del gruppo aumentato del 10%." />
+    <string id="taom_feat_mor_ps_desc" text="Limite di dimensione del gruppo aumentato del 20%." />
     <string id="taom_feat_mor_rd" text="L'ira di Sauron" />
     <string id="taom_feat_mor_rd_desc" text="Danni delle razzie aumentati del 25%." />
     <string id="taom_feat_mor_pls" text="Marcia d'ombra" />

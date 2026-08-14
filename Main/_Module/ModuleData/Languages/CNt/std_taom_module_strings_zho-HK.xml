@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="鍛造精力消耗減少10%。" />
     <string id="taom_feat_gob_rd" text="半獸人伏擊" />
     <string id="taom_feat_gob_rd_desc" text="劫掠傷害增加10%。" />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="隊伍規模上限增加40%。" />
     <string id="taom_feat_mmo_aic" text="半獸人大軍" />
     <string id="taom_feat_mmo_aic_desc" text="組建軍隊所需影響力減少40%。" />
     <string id="taom_feat_mmo_ps" text="山中大軍" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="黑暗貢賦" />
     <string id="taom_feat_mor_w_desc" text="部隊薪資增加 20%。" />
     <string id="taom_feat_mor_ps" text="索倫的大軍" />
-    <string id="taom_feat_mor_ps_desc" text="部隊規模上限增加 10%。" />
+    <string id="taom_feat_mor_ps_desc" text="部隊規模上限增加 20%。" />
     <string id="taom_feat_mor_rd" text="索倫之怒" />
     <string id="taom_feat_mor_rd_desc" text="劫掠傷害增加 25%。" />
     <string id="taom_feat_mor_pls" text="暗影行軍" />

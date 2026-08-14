@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="Demircilik enerji maliyeti %10 azaldı." />
     <string id="taom_feat_gob_rd" text="Goblin Pususu" />
     <string id="taom_feat_gob_rd_desc" text="Yağma hasarı %10 arttı." />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="Müfreze büyüklüğü sınırı %40 arttı." />
     <string id="taom_feat_mmo_aic" text="Ork Ordusu" />
     <string id="taom_feat_mmo_aic_desc" text="Ordu toplama %40 daha az nüfuza mal olur." />
     <string id="taom_feat_mmo_ps" text="Dağ Ordusu" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="Karanlık Haraç" />
     <string id="taom_feat_mor_w_desc" text="Müfreze ücretleri %20 arttı." />
     <string id="taom_feat_mor_ps" text="Sauron'un Orduları" />
-    <string id="taom_feat_mor_ps_desc" text="Müfreze büyüklüğü sınırı %10 arttı." />
+    <string id="taom_feat_mor_ps_desc" text="Müfreze büyüklüğü sınırı %20 arttı." />
     <string id="taom_feat_mor_rd" text="Sauron'un Gazabı" />
     <string id="taom_feat_mor_rd_desc" text="Yağma hasarı %25 arttı." />
     <string id="taom_feat_mor_pls" text="Gölge Yürüyüşü" />

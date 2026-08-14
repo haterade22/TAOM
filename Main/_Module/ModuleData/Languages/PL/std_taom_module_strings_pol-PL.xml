@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="Koszt energii kowalstwa zmniejszony o 10%." />
     <string id="taom_feat_gob_rd" text="Zasadzka goblinów" />
     <string id="taom_feat_gob_rd_desc" text="Obrażenia od najazdów zwiększone o 10%." />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="Limit wielkości drużyny zwiększony o 40%." />
     <string id="taom_feat_mmo_aic" text="Orkowa horda" />
     <string id="taom_feat_mmo_aic_desc" text="Rekrutacja armii kosztuje o 40% mniej wpływów." />
     <string id="taom_feat_mmo_ps" text="Górski zastęp" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="Mroczny trybut" />
     <string id="taom_feat_mor_w_desc" text="Żołd drużyny zwiększony o 20%." />
     <string id="taom_feat_mor_ps" text="Hordy Saurona" />
-    <string id="taom_feat_mor_ps_desc" text="Limit wielkości drużyny zwiększony o 10%." />
+    <string id="taom_feat_mor_ps_desc" text="Limit wielkości drużyny zwiększony o 20%." />
     <string id="taom_feat_mor_rd" text="Gniew Saurona" />
     <string id="taom_feat_mor_rd_desc" text="Obrażenia z grabieży zwiększone o 25%." />
     <string id="taom_feat_mor_pls" text="Marsz cieni" />

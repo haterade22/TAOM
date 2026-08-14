@@ -2211,6 +2211,8 @@
     <string id="taom_feat_gob_sm_desc" text="Energiekosten beim Schmieden um 10% verringert." />
     <string id="taom_feat_gob_rd" text="Orkhinterhalt" />
     <string id="taom_feat_gob_rd_desc" text="Plünderschaden um 10% erhöht." />
+    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps_desc" text="Maximale Truppengröße um 40% erhöht." />
     <string id="taom_feat_mmo_aic" text="Orkhorde" />
     <string id="taom_feat_mmo_aic_desc" text="Armeerekrutierung kostet 40% weniger Einfluss." />
     <string id="taom_feat_mmo_ps" text="Bergheer" />
@@ -2280,7 +2282,7 @@
     <string id="taom_feat_mor_w" text="Dunkler Tribut" />
     <string id="taom_feat_mor_w_desc" text="Gruppenlöhne um 20 % erhöht." />
     <string id="taom_feat_mor_ps" text="Saurons Horden" />
-    <string id="taom_feat_mor_ps_desc" text="Obergrenze der Gruppengröße um 10 % erhöht." />
+    <string id="taom_feat_mor_ps_desc" text="Obergrenze der Gruppengröße um 20 % erhöht." />
     <string id="taom_feat_mor_rd" text="Saurons Zorn" />
     <string id="taom_feat_mor_rd_desc" text="Plünderungsschaden um 25 % erhöht." />
     <string id="taom_feat_mor_pls" text="Schattenmarsch" />
