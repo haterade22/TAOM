@@ -39,11 +39,11 @@
     }
   },
   "shieldPenetration": {
-    "enabled": true,
-    "weaponClasses": ["Javelin"],
+    "enabled": false,
+    "weaponClasses": [],
     "itemIds": [],
-    "addMultiplePenetration": true,
-    "runtimeShieldDamageCorrectionEnabled": true,
+    "addMultiplePenetration": false,
+    "runtimeShieldDamageCorrectionEnabled": false,
     "runtimeShieldDamageCorrectionDivisor": 0.3
   },
   "raceModifiers": {

@@ -5,7 +5,13 @@ namespace TAOM.Features.CombatMechanics;
 
 // Spec mechanic 8 (the combat-mechanics spec): config-granted shield
 // penetration flags in DecideMissileWeaponFlags + the runtime-flag shield-damage correction in
-// CalculateShieldDamage (native underestimation workaround, TW forums 470085/470117).
+// CalculateShieldDamage.
+//
+// SHIPS OFF since 2026-08-17, with empty grant lists. The correction was originally a workaround
+// for a "native underestimation" of shield damage on runtime-granted flags (TW forums
+// 470085/470117); that premise was disproved against v1.4.8 and is NOT a live justification. See
+// ShieldPenetrationConfig in CombatMechanicsConfig.cs for the engine trace. Both methods below are
+// identity functions under the shipped config; the class stays for opt-in per item id or class.
 //
 // Per-hit HOT PATH: grant lists are precomputed into HashSets in the constructor; the only per-call
 // provider read is the MCM-backed settings toggle (changes mid-session by design). No LINQ, no

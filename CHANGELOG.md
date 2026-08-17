@@ -2,6 +2,66 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-17
+
+### balance(combat): javelins stop ignoring shields (#320)
+
+Report: javelins seem to do massive damage. A sweep across the C# damage models, the item/XSLT data
+and the troop skills found exactly one javelin-specific modification in the mod, and everything else
+on that path is stock vanilla. Ruled out and worth not re-checking: TAOM registers no `Items` XML
+node and ships no weapon stat data (about 96% of thrown-weapon usage in troop rosters is unmodified
+vanilla items, and `tools/weapon_rebalance.csv` records the two Armory javelins as `changed=False`);
+`Throwing` has the lowest ceiling of any skill in the mod (max 150, and troops that actually carry a
+thrown weapon top out at 110); there is no `StrikeMagnitudeCalculationModel` override anywhere, so
+magnitude, speed bonus and armor absorption are untouched; and no Harmony patch modifies a damage
+value or a `Blow` magnitude.
+
+The cause was CombatMechanics' shield penetration, which shipped on with `weaponClasses: ["Javelin"]`
+and a `runtimeShieldDamageCorrectionDivisor` of 0.3. Two separate problems.
+
+**The 3.33x corrected a bug that does not exist for javelins.** The divisor was justified as a
+workaround for a native underestimation (TW forums 470085/470117) affecting missiles whose
+penetration flags are granted at runtime rather than statically. Read against 1.4.8,
+`MissionCombatMechanicsHelper.ComputeBlowDamageOnShield:531` picks the missile shield multiplier by
+weapon class first (`ThrowingAxe` 0.3f, `Javelin` 0.5f) and only falls through to a
+`CanPenetrateShield`/`MultiplePenetration` check for classes matching neither. For `Javelin`, the one
+class ever listed, the flags are never read, so `baseShieldDamage / 0.3f` was a straight buff.
+
+**That number is also what decides penetration.** Shield damage becomes
+`attackCollisionData.InflictedDamage` (`MissionCombatMechanicsHelper:208`), which `Mission.cs:5774`
+tests as `damage > ShieldPenetrationOffset + ShieldPenetrationFactor * shieldArmor`, or `30.0 + 3.0 *
+armor` from `managed_core_parameters.xml`. Against an armor-30 shield the bar is 120: a javelin
+landing about 40 in vanilla is blocked, at 3.33x it lands about 133 and carries through into the
+soldier behind. Shields also broke roughly 3.3x faster, and a broken shield permits penetration
+unconditionally. The grant carried no attacker filter either, so every AI skirmisher ignored the
+player's shield.
+
+Now ships at vanilla parity: the JSON block, the compiled defaults in `CombatMechanicsConfig` and the
+MCM default are all off, with both grant lists empty. Javelins pierce shields only through the
+engine's own `Throwing.Impale` grant. `ShieldPenetrationService` is untouched and re-enableable per
+item id or class; the divisor stays in the schema for a class whose flags genuinely drive the native
+branch.
+
+**Existing players need do nothing.** MCM merges over JSON per read, so a profile that saved "Shield
+Penetration" as on keeps that toggle on. It no longer matters: the shipped grant lists are empty, so
+`IsGranted` matches nothing and both overrides are identity functions regardless of the toggle. That
+is why the lists were emptied rather than only the flag flipped. Pinned by a new test that forces the
+toggle on against the shipped defaults and asserts no flags and unchanged shield damage.
+
+One clarification the revert makes worth stating, because "vanilla parity" is narrower than it
+sounds: `CharacterObject.GetPerkValue` returns `false` for any non-hero, so vanilla's Impale grant
+only ever reached HEROES. No line troop can pierce a shield with a javelin in the base game at any
+skill level, and only 6 of 145 lord skill sets plus 1 of 170 wanderer sets even reach the Throwing
+250 the perk needs. The in-game A/B therefore has to use a hero thrower; a troop thrower would read
+"blocked" whether or not the fix worked.
+
+Suite 6650 green, `validate_moduledata` PASS. Owed: the in-game A/B that #320 has listed as item 4
+since 2026-07-02, confirming shields stop javelins and that an `Impale` holder still pierces.
+
+Research: SandboxAgentApplyDamageModel.DecideMissileWeaponFlags, MissionCombatMechanicsHelper.ComputeBlowDamageOnShield, Mission.HandleMissileCollisionReaction
+Not-tested: in-game penetration behaviour (requires a live control battle)
+Save-compat: config-only, no save impact
+
 ## 2026-08-14
 
 ### feat(fiefs): break the one-clan-takes-everything grip on captured settlements (#458)

@@ -465,3 +465,34 @@ that field no cavalry at all, while the 30-40% mounted elven realms under-collec
 - **Source:** `docs/reviews/rca-faction-economy-2026-08-14.md` finding #5 (#459). Caught by the
   Codex pass and the engine-compatibility agent independently, after the derivation agent had
   reproduced all 22 values exactly.
+
+### A workaround for an unconfirmed engine bug must ship OFF
+
+CombatMechanics' shield penetration shipped a `runtimeShieldDamageCorrectionDivisor` of 0.3, a 3.33x
+multiplier on javelin shield damage, described in its own comment as "config-gated pending 1.4.6
+re-verify in a control battle". The re-verify never happened; the feature doc and the issue both
+carried it as owed for six weeks. Meanwhile the workaround was the shipped default, so every player
+ran the compensation for a bug nobody had confirmed. When it was finally checked against the engine,
+the premise was wrong in the strongest possible way: `ComputeBlowDamageOnShield` selects the missile
+shield multiplier by weapon CLASS first (`ThrowingAxe` 0.3f, `Javelin` 0.5f) and consults
+`CanPenetrateShield`/`MultiplePenetration` only for classes matching neither. For `Javelin`, the only
+class the config ever listed, the flags the workaround keyed on are never read. There was nothing to
+correct.
+
+- **Why missed:** the engine method was read for the branch that was expected (the flag check) rather
+  than for its control flow. The flag check IS present in that method, so a targeted grep confirms
+  the mental model instead of refuting it. Only reading the full ternary top to bottom shows the
+  class comparisons short-circuit ahead of it.
+- **The compounding that made it a player-visible bug rather than a rounding error:** the corrected
+  value is not cosmetic. Shield damage becomes `attackCollisionData.InflictedDamage`, which the
+  penetration gate in `Mission.HandleMissileCollisionReaction` tests against
+  `ShieldPenetrationOffset + ShieldPenetrationFactor * shieldArmor`. Inflating shield damage silently
+  inflates how often missiles pass THROUGH the shield. Ask of any damage-ish value you scale: what
+  else reads this number downstream?
+- **Prevent:** a compensation for an unverified external bug ships disabled, with the enabling change
+  gated on the measurement. An owed control battle recorded in three docs is not a gate, it is a
+  memo. And when a mechanic is disabled by default, empty its data lists too: a persisted MCM toggle
+  outlives a JSON default flip, so the empty list is what actually protects existing players.
+- **Source:** `docs/reviews/rca-javelin-shield-penetration-2026-08-17.md` (2026-08-17 javelin damage report, #320 item 4). Verified against the installed v1.4.8 DLLs:
+  `MissionCombatMechanicsHelper.ComputeBlowDamageOnShield:531`, `:208`, `Mission.cs:5774-5788`,
+  `managed_core_parameters.xml:232-236`.

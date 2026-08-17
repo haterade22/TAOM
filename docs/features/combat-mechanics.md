@@ -33,13 +33,65 @@ Thin model → four pure services (ADR-002/007; gamemodels.md rule 4): every ove
 | `DecideAgentShrugOffBlow` | `CreatureCombatService` | base (vanilla + career) OR per-creature damage threshold; true sets `BlowFlags.ShrugOff` which also suppresses knockback/knockdown/dismount (intended) |
 | `CalculateStaggerThresholdDamage` | `CreatureCombatService` | × race `staggerThresholdMultiplier`; vanilla shrug-off re-enters this via the REGISTERED model, so the multiplier feeds vanilla stagger automatically |
 | `DecideAgentKnockedDownByBlow` | `ChargeKnockdownService` | weight-driven two-branch (below); non-charge hits short-circuit to base |
-| `DecideMissileWeaponFlags` | `ShieldPenetrationService` | after base (preserves vanilla Javelin+Impale grant): OR-in `CanPenetrateShield`/`MultiplePenetration` for config-listed ids/classes |
-| `CalculateShieldDamage` | `ShieldPenetrationService` | ÷0.3 correction when penetration was granted at runtime only (native underestimation workaround, config-gated) |
+| `DecideMissileWeaponFlags` | `ShieldPenetrationService` | after base (preserves vanilla Javelin+Impale grant): OR-in `CanPenetrateShield`/`MultiplePenetration` for config-listed ids/classes. **SHIPS OFF since 2026-08-17, lists empty** (see "Shield penetration ships off" below) |
+| `CalculateShieldDamage` | `ShieldPenetrationService` | ÷0.3 correction when penetration was granted at runtime only. **SHIPS OFF since 2026-08-17**: the underestimation premise was disproved against 1.4.8 |
 | `GetHorseChargePenetration` | (config constant) | single source for the 0.4 constant — feeds both the vanilla fall-through and TAOM's Branch B; folds the mechanic toggle (disabled → vanilla `base` value, so a tuned value doesn't survive the feature being off) |
 
 `DecideAgentKnockedBackByBlow` is deliberately NOT overridden (vanilla 0.7-dot glancing gate kept; the engine calls KnockedDown unconditionally on the charge path, so Branch A works without it).
 
 Shared infrastructure: `RaceCombatModifiersResolver` (lazy race-key validation via `IRaceManager.IsValidRaceName` — the registry is engine state unavailable at load — plus per-raceId caching; invalid race ids resolve to Neutral, never the "human" fallback row) and monster-id normalization (`X_settlement`/`_settlement_fast`/`_settlement_slow` → `X`).
+
+### Shield penetration ships off (2026-08-17)
+
+The mechanic originally shipped ON with `weaponClasses: ["Javelin"]` and a
+`runtimeShieldDamageCorrectionDivisor` of 0.3. Both defaults are now off and the grant lists are
+empty. Javelins pierce shields only through the engine's own `Throwing.Impale` grant, as in the base
+game. The code is untouched and re-enableable per item id or class.
+
+Two things were wrong with the old default:
+
+1. **The 3.33x was correcting a bug that does not exist for javelins.** The divisor was documented as
+   a workaround for a native underestimation (TW forums 470085/470117) that supposedly hits missiles
+   whose penetration flags are granted at runtime rather than statically. Read against 1.4.8,
+   `MissionCombatMechanicsHelper.ComputeBlowDamageOnShield:531` picks the missile shield multiplier
+   **by weapon class first** (`ThrowingAxe → 0.3f`, `Javelin → 0.5f`) and consults
+   `CanPenetrateShield`/`MultiplePenetration` only for classes matching neither. For `Javelin`, the
+   only class the config ever listed, the flags are never read. `baseShieldDamage / 0.3f` was a
+   straight 3.33x.
+2. **That inflated number is what decides penetration.** The shield damage becomes
+   `attackCollisionData.InflictedDamage` (`MissionCombatMechanicsHelper:208`), which
+   `Mission.cs:5774-5788` tests as
+   `damage > ShieldPenetrationOffset + ShieldPenetrationFactor * shieldArmor` = `30.0 + 3.0 * armor`
+   (`Native/ModuleData/managed_core_parameters.xml:232-236`). Against an armor-30 shield the bar is
+   120: a javelin landing ~40 in vanilla is blocked, at 3.33x it lands ~133 and passes through into
+   the soldier behind. Shields also broke ~3.3x faster, and a broken shield permits penetration
+   unconditionally.
+
+The grant also carried no attacker filter, so every AI skirmisher ignored the player's shield too.
+That cuts both ways on the revert: because the old grant applied to AI and player alike, removing it
+restores the base-game matchup on both sides at once. No culture gains a defensive edge it did not
+previously have, which is why no compensating buff is owed. For scale, 82 of 882 troops across 9 of
+18 cultures carry a Javelin-class weapon at all; only Dunland (63% of its roster) and Harad (39%) are
+javelin-identity, and nine cultures carry none.
+
+**"Vanilla parity" is narrower than it sounds.** `CharacterObject.GetPerkValue` returns `false` for
+any non-hero, so vanilla's Impale grant only ever reached HEROES. No line troop can pierce a shield
+with a javelin in the base game, at any skill, under any perk. `Impale` is a tier-10 perk gated at
+Throwing 250 and mutually exclusive with `WeakSpot`; only 6 of 145 lord skill sets and 1 of 170
+wanderer sets in TAOM reach that threshold. **Run the owed A/B with a hero thrower.** A troop
+thrower reads "blocked" whether or not the change worked, and would prove nothing.
+
+Orc shield-crush does not fill the gap for the orc cultures either: it is melee-only
+(`DecideCrushedThrough` is reached from `GetDefendCollisionResults`, never from the missile path, and
+TAOM's own gate requires `HasMeleeWeapon` + `IsSwing`). The 8 orc javelin carriers are melee
+berserkers with a javelin in a secondary slot, so they keep their crush on the mace swing and lose
+nothing at range.
+
+**Existing players keep their own MCM value.** MCM merges over JSON per read
+(`CombatMechanicsSettingsProvider:33`), so a profile that saved "Shield Penetration" as on stays on.
+The empty grant lists are the second line of defence: `IsGranted` matches nothing, so the mechanic is
+inert even with a stale toggle. Pinned by
+`ShieldPenetrationServiceTests.ShippedDefaults_MechanicToggledOn_StillGrantsNothingAndLeavesShieldDamageAlone`.
 
 ### Charge knockdown formula (v1)
 
@@ -75,7 +127,7 @@ MCM: "Combat Mechanics" group (GroupOrder 24) — master + 8 per-mechanic toggle
 | `Main/Features/CombatMechanics/CombatMechanicsSettingsProvider.cs` | MCM-over-JSON merge, master-toggle folding |
 | `Main/Features/CombatMechanics/Domain/*.cs` | `CrushThroughContext`, `ChargeKnockdownContext`, `RaceCombatModifiers` |
 | `Main/Features/CareerSystem/Models/TaomAgentApplyDamageModel.cs` | Parent (abstract since 2026-07-02) |
-| `Main/SubModule.cs` (~:593) | Single registration: `AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(...))` |
+| `Main/SubModule.cs` (:913) | Single registration: `AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(...))` |
 | `TAOM.Tests/Features/CombatMechanics/*` | Service/provider/resolver tests + `CombatMechanicsModelInvariantsTests` (derivation + abstract parent + exact override set pins) |
 
 ## Dependencies
@@ -90,7 +142,7 @@ MCM: "Combat Mechanics" group (GroupOrder 24) — master + 8 per-mechanic toggle
 
 - **Add a creature to cleave/unstoppable/monster-CTB**: add its `Monster.StringId` to the relevant list/dict in the JSON. Settlement variants (`X_settlement*`) are normalized automatically.
 - **Add race flavor** (e.g. tree-spirits dig in): add a `raceModifiers` row — data, not code. Unknown race names are skipped with a warning.
-- **Make a weapon pierce shields**: add its item id to `shieldPenetration.itemIds` or its class to `weaponClasses`.
+- **Make a weapon pierce shields**: set `shieldPenetration.enabled` true, flip the "Shield Penetration" MCM toggle on, and add the item id to `shieldPenetration.itemIds` (preferred) or its class to `weaponClasses`. All three ship off/empty. Prefer item ids: a class grant hits every weapon of that class in every culture, player and AI alike. Leave `runtimeShieldDamageCorrectionEnabled` off unless you have measured a native underestimation for that specific class in `ComputeBlowDamageOnShield`. It does not exist for `Javelin` or `ThrowingAxe`, which the engine multiplies by class.
 - **Tune charge knockdown**: `neutralWeightRatio` anchors "vanilla feel" (horse+rider vs man); `autoKnockdownWeightRatio` (also an MCM slider) sets the bowled-over threshold; per-race resistance in `raceModifiers`.
 
 ## Performance
@@ -99,7 +151,7 @@ All overrides are per-hit. Services precompute lookups at construction (monster-
 
 ## Known limitations / follow-ups
 
-- The native shield-damage underestimation (TW forums 470085/470117) needs a 1.4.6 control-battle re-verify; `runtimeShieldDamageCorrectionEnabled` ships true and should be flipped if the engine fixed it.
+- The native shield-damage underestimation (TW forums 470085/470117) was re-checked against 1.4.8 on 2026-08-17 and does not apply to any class the config could reach: `ComputeBlowDamageOnShield` multiplies `Javelin` and `ThrowingAxe` by class and never reads the penetration flags. `runtimeShieldDamageCorrectionEnabled` now ships false. Owed: the in-game A/B (#320 item 4) confirming shields stop javelins again, and that an `Impale` perk holder still pierces.
 - Monster-id lists (`monsterCrushMonsterIds`, `cleaveMonsterIds`, `unstoppableDamageThresholds` keys) and `orcShieldCrushRaces` are syntax-cleaned but not resolvability-validated — a typoed id is inert (never matches) and logs no warning, unlike `raceModifiers` keys which get lazy unknown-name warnings. Deliberate (Codex P3, 2026-07-02): the monster registry is engine state, and adding an adapter for a typo diagnostic fails the simplicity criterion. Double-check ids against the Monster XMLs when editing.
 - Cleave chains through shield blocks only when the block takes damage — a zero-shield-damage block (`InflictedDamage == 0`) keeps vanilla's Bounced termination (Codex P3; MCM hint wording matches).
 - Per-race `knockdownResistanceMultiplier` applies only to the owned charge branch in v1; extending it to vanilla weapon knockdowns belongs in `TaomAgentStatCalculateModel.GetKnockDownResistance`.

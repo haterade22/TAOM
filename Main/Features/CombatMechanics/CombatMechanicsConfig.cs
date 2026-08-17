@@ -100,18 +100,34 @@ public class CreatureCombatConfig
     };
 }
 
+// Ships DISABLED (2026-08-17). The mechanic is intact and re-enableable per item id or class, but
+// the default is vanilla parity: javelins pierce shields only via the engine's own Throwing.Impale
+// grant in SandboxAgentApplyDamageModel.DecideMissileWeaponFlags.
+//
+// These compiled values are the revert-to target when the JSON fails validation, so they must match
+// the shipped JSON. A `true` here would resurrect the mechanic from a single malformed edit.
 public class ShieldPenetrationConfig
 {
-    public bool Enabled { get; set; } = true;
+    public bool Enabled { get; set; } = false;
 
     // WeaponClass enum member names (validated via Enum.TryParse at load; unknown → skip + warn).
-    public List<string> WeaponClasses { get; set; } = new List<string> { "Javelin" };
+    public List<string> WeaponClasses { get; set; } = new List<string>();
     public List<string> ItemIds { get; set; } = new List<string>();
-    public bool AddMultiplePenetration { get; set; } = true;
+    public bool AddMultiplePenetration { get; set; } = false;
 
-    // Workaround for the native shield-damage underestimation when penetration flags are added at
-    // RUNTIME only (TW forums 470085/470117, filed ~1.2.x). Config-gated pending 1.4.6 re-verify
-    // in a control battle — flip the default off if the native bug is fixed.
-    public bool RuntimeShieldDamageCorrectionEnabled { get; set; } = true;
+    // Was a workaround for a native shield-damage underestimation when penetration flags are added
+    // at RUNTIME only (TW forums 470085/470117, filed ~1.2.x). Verified against 1.4.8 and the
+    // premise does not hold: MissionCombatMechanicsHelper.ComputeBlowDamageOnShield selects the
+    // missile shield multiplier by weapon CLASS first (ThrowingAxe → 0.3f, Javelin → 0.5f) and only
+    // consults CanPenetrateShield/MultiplePenetration for classes that match neither. So for
+    // Javelin — the only class this was ever pointed at — there is no flag-dependent
+    // underestimation, and dividing by 0.3 was a straight 3.33x on shield damage. That number also
+    // feeds the penetration gate in Mission.HandleMissileCollisionReaction
+    // (damage > ShieldPenetrationOffset + ShieldPenetrationFactor * shieldArmor), so it made
+    // javelins pass through shields that should have blocked them.
+    //
+    // The divisor is kept in the schema for a future weapon class whose flags DO drive the native
+    // branch; it is inert while the toggle is false.
+    public bool RuntimeShieldDamageCorrectionEnabled { get; set; } = false;
     public float RuntimeShieldDamageCorrectionDivisor { get; set; } = 0.3f;
 }

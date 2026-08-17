@@ -273,6 +273,29 @@ public class CombatMechanicsConfigProviderTests
     }
 
     [TestMethod]
+    public void GetConfig_MissingFile_ShieldPenetrationOffByDefault()
+    {
+        // Shipped default is vanilla parity: javelins pierce shields only through the engine's own
+        // Throwing.Impale grant in SandboxAgentApplyDamageModel.DecideMissileWeaponFlags.
+        //
+        // The class-wide grant used to ship ON with a 1/0.3 (3.33x) shield-damage multiplier. That
+        // multiplier was justified as correcting a native underestimation for runtime-granted flags,
+        // but MissionCombatMechanicsHelper.ComputeBlowDamageOnShield picks the missile multiplier by
+        // weapon CLASS first (Javelin -> 0.5f) and never reads the penetration flags, so there was
+        // nothing to correct for the one class in the list. The inflated shield damage then fed the
+        // penetration gate in Mission.HandleMissileCollisionReaction, so javelins punched through
+        // shields that should have stopped them. Compiled defaults are the revert-to target on a
+        // validation failure, so they must not resurrect the mechanic.
+        var c = _sut.GetConfig();
+
+        Assert.IsFalse(c.ShieldPenetration.Enabled);
+        Assert.AreEqual(0, c.ShieldPenetration.WeaponClasses.Count);
+        Assert.AreEqual(0, c.ShieldPenetration.ItemIds.Count);
+        Assert.IsFalse(c.ShieldPenetration.AddMultiplePenetration);
+        Assert.IsFalse(c.ShieldPenetration.RuntimeShieldDamageCorrectionEnabled);
+    }
+
+    [TestMethod]
     public void GetConfig_NegativeSwingEnergyBonusFactor_RevertsToDefaultAndWarns()
     {
         // Sign violation: "bonus" fields are directional, a negative flips the mechanic.

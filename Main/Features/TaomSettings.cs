@@ -865,8 +865,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Combat Mechanics")]
     [SettingPropertyBool("Shield Penetration", Order = 7,
-        HintText = "Missiles from config-listed weapon classes/items (default: javelins) can penetrate shields and damage the soldier behind. Includes a shield-damage correction for a native underestimation bug.")]
-    public bool EnableShieldPenetration { get; set; } = true;
+        HintText = "Missiles from config-listed weapon classes/items can penetrate shields and damage the soldier behind. Off by default, and the shipped lists are empty, so javelins behave as in the base game: only a HERO with the Throwing Impale perk pierces a shield. Regular troops never do, in vanilla or here. Turning this on with an empty config changes nothing; add entries in combat_mechanics_config.json first.")]
+    public bool EnableShieldPenetration { get; set; } = false;
 
     [SettingPropertyGroup("Combat Mechanics")]
     [SettingPropertyBool("Race Combat Modifiers", Order = 8,

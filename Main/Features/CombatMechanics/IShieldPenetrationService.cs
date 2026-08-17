@@ -7,7 +7,10 @@ public interface IShieldPenetrationService
     // service stays TaleWorlds-free (ADR-007). Returns currentFlags unchanged when not granted.
     ulong ApplyPenetrationFlags(string itemId, string weaponClassName, ulong currentFlags);
 
-    // Native workaround (spec mechanic 8): when TAOM grants penetration at RUNTIME and the item's
-    // static flags lack it, divide shield damage by the configured divisor (default 0.3).
+    // Opt-in, and OFF under the shipped config (RuntimeShieldDamageCorrectionEnabled = false), so
+    // this returns baseShieldDamage unchanged. When enabled, and when TAOM granted penetration at
+    // RUNTIME while the item's static flags lack it, divides shield damage by the configured
+    // divisor. It was justified as correcting a native underestimation; that premise does not hold
+    // on v1.4.8 (see ShieldPenetrationConfig in CombatMechanicsConfig.cs).
     float ApplyRuntimeFlagCorrection(string itemId, string weaponClassName, bool itemHasStaticPenetrateFlag, float baseShieldDamage);
 }
