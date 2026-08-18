@@ -4,6 +4,107 @@
 
 ## 2026-08-17
 
+### feat(mordor): Black Numenorean armour, weapons, and troop tree
+
+Erkam shipped the Black Numenorean assets on 2026-08-15 and 2026-08-17 (`6abe7a65`, `2e4ced3c`:
+14 geometry packages, 16 materials, 48 textures) and touched no `ModuleData`, so nothing in the game
+referenced a single one of the 106 authorable meshes. This wires them up and adds the line they were
+built for: Mordor's first human troops, and its first horse cavalry.
+
+**113 Armory entries.** 78 armour items in `LOTRLOME_items/mordor/`, 22 crafting pieces, 7 crafted
+weapons (3 one-handed swords, 3 two-handed, 1 lance) and 6 shields, appended to both the live install
+and the assets-repo copy. Armour stats import `rebalance_armor.calculate_stats` rather than copying
+the tier table: four sibling generators each carry a private copy and all four went stale at once in
+July, so importing removes that whole failure mode and applies Mordor's -1 protection from
+`CULTURAL_MODS` instead of hardcoding it.
+
+**13 troops, T5 to T9**, levels 26/31/36/41/46. Initiate splits into Cavalry, Infantry and Archer,
+each four deep. They carry no `race=` attribute: absent means index 0 means `human`, and TAOM has
+zero `race="human"` occurrences because every human troop is unmarked. The source FBX rig to
+`spine`/`spine1`/`spine2`/`l_clavicle`/`l_thigh`/`l_calf`, the standard humanoid rig.
+
+**Standalone elite line.** `taom_spcultures.xml` is untouched and no volunteer pool changed, so these
+are AI-only: they reach the field through all 16 Mordor lord party templates, the level-3 patrol, the
+vassal reward, and prisoner recruitment. That made
+`AllNonMilitiaNonBossTroops_AreReachableFromARecruitmentPoolRoot` fail, which is the test doing its
+job; `mordor_num_` joins the `IsIntentionallyUnrecruited` clause with the reasoning recorded inline.
+Adding 13 stacks pushed every Mordor lord template from 3500 to 3653, so
+`rebalance_party_template_maxes.py --apply` ran afterwards to pull them back.
+
+Three spec errors worked around rather than trusted: `sm_md_num_chest_light_a` has no `_slim` sibling
+despite the doc claiming every chest does (18 `_slim` meshes, 18 tiered chests); the T7 cape
+pauldrons ship only as `clo_` cloth proxies with no cloth body, so T7 wears the plain pauldron; and
+only the `_a` shields carry collision bodies, so the `_b` variants share them.
+
+**What the review round changed.** Seven agents plus a Codex pass found real defects, and the numbers
+above are the corrected ones:
+
+- **Weapon damage was above every hero blade.** The first cut ran 3.8 to 4.0 and beat both
+  `wm_witch_king_sword_blade` (3.5) and `wm_nazgul_sword_blade` (3.0). The premise was wrong, not
+  just the values: the shipped uruk troop blade already out-cuts hero kit at 3.74, so "below hero
+  kit" was never satisfiable. Re-anchored to 3.20-3.40 thrust and 3.60-3.74 cut, with `Iron6 x9`
+  materials and the `Civilian` flag to match every sibling.
+- **The Initiate was the least-armoured level-26 troop in the game** at 50 total against a cohort
+  median of 157. Moved off the light row onto med and given gloves, now 96. Progression across the
+  line is 96 / 96 / 145 / 154 / 200.
+- **A "promotion" that made the horse worse.** T8 used `charger` (speed 48, charge 22) while T6 used
+  `t2_empire_horse` (50, 26). The ladder is now `t2_empire_horse` then `noble_horse_imperial`, with
+  barding carrying the T8 and T9 steps.
+- **Shields sat above Gondor's ceiling** rather than under it; pulled to 440 / 505 / 415 / 470.
+- **`rebalance_armor.detect_tier` mis-tiered all 78 items.** `elite_keywords` held the literal
+  `'black numenorean'`, so a light hood read as elite and a scoped rebalance run would have flattened
+  the set. That keyword matched these 78 items and nothing else in the Armory, so it is removed.
+- The XSLT writer wrote its files and exited 0 when a template was not found, which is precisely the
+  silent-weapon-death mode it exists to prevent. Now fatal, verified against a renamed-template
+  fixture.
+- Troop weights normalised to 2.0 (1.5 would have been the only non-integer weights in the file), the
+  armour writer now matches each file's line endings, and `.gitignore` widened to `*.bak*` so dated
+  sidecars stop being commit candidates.
+
+**What the Codex pass changed on top.** It returned DO NOT SHIP with one HIGH and three MEDIUM, and
+caught three things the seven Claude agents did not:
+
+- **The T5 to T6 upgrade granted zero added survivability.** Both tiers sat at 96 personal armour
+  because an earlier fix had put them on the same row to keep every mesh worn. Mesh coverage is not
+  worth a dead upgrade edge: T6 moves to the heavy row, T8 to elite, and the cape ladder carries the
+  steps between. Every branch is now strictly increasing, 96 / 145 / 154 / 188 / 200, and the
+  Initiate gains a fourth roster so the med kit is still worn.
+- **`generate_clan_heraldry.py` would have deleted the line.** It replaces a whole
+  `<MBPartyTemplate>` from `clan_heraldry/<culture>.json`, and the Mordor spec is 13 troops behind,
+  so a routine regeneration would drop all 13 stacks from 15 templates and revert their max sums from
+  3500 to between 18 and 34. `upsert_party_template` now refuses to shrink a template and names what
+  would be lost. 19 of 21 specs are unaffected; it also catches a pre-existing case where the Gondor
+  spec would have deleted 5 Lossarnach noble troops.
+- **"AI-only" was factually wrong.** `vassal_reward_troops_mordor` grants `mordor_num_vet_infantry`
+  and `DefaultVassalRewardsModel` puts it straight into the joining player's roster. The accurate
+  claim is that no volunteer pool offers them. The test exemption is now an explicit 13-id set rather
+  than a prefix (a prefix would silently swallow a future orphaned troop), with a companion test
+  pinning the set against the troops actually defined.
+
+Also from that pass: the weapon writer now transforms all five files and validates before writing any
+of them, so a not-found template can no longer leave the crafting pieces written; XSLT passthrough
+searches are bounded to their own template; and the roster-tier map, a backup guard and a wrong doc
+path were corrected.
+
+**Known limitations, deliberately not fixed here.** `Main/_Module/SubModule.xml` declares no
+`<DependedModule Id="LOTRLOME_Armory"/>` even though every TAOM troop file references that module;
+adding it makes TAOM unlaunchable without the Armory and needs a provenance-register row, so it is
+its own change. `tools/generate_clan_heraldry.py` would delete these stacks from 15 templates if
+re-run, because `clan_heraldry/mordor.json` is stale. And `validate_mesh_refs.py --scan-bodies` is
+structurally blind to the Armory (no `AssetPackages` directory), so mesh and collision closure were
+verified by hand instead.
+
+Owed: the in-game pass. Mesh fit on the human skeleton is the one thing only the game can settle,
+along with the lance `piece_offset`, which is 0 and may want adjusting.
+
+Not-tested: in-game rendering, mount behaviour, lance couching.
+Research: `BasicCharacterObject.Deserialize`, `DefaultCharacterStatsModel.GetTier`.
+Save-compat: additive only, no existing id renamed or deleted.
+
+New: `docs/features/black-numenorean.md`, `tools/generate_black_numenorean_armor.py`,
+`tools/generate_black_numenorean_weapons.py`, `tools/apply_black_numenorean_troops.py`,
+`tools/wire_black_numenorean_troops.py`.
+
 ### balance(combat): javelins stop ignoring shields (#320)
 
 Report: javelins seem to do massive damage. A sweep across the C# damage models, the item/XSLT data

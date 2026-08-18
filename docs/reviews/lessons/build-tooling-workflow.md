@@ -400,6 +400,46 @@ documentation.
 
 ---
 
+
+### When a docstring names a catastrophic failure mode, test the failure path
+
+`generate_black_numenorean_weapons.py` opened with: "A piece id present in file 1 but missing from 2
+or 3 makes the weapon fail to load with NO log line, which is why all three are written in one pass."
+The detection for a missing XSLT template was implemented. The consequence was not: it printed the
+NOT-FOUND note among eight others, wrote all the files anyway, and exited 0.
+
+- **Why missed:** the happy path was exercised repeatedly (dry-run, apply, idempotency re-run) and
+  the failure path never was, so the gap was invisible to every run.
+- **Prevent:** a guard whose docstring calls the failure catastrophic needs a fixture that triggers
+  it. Here that was a copy of the ModuleData dir with one template renamed; the fix is confirmed by
+  exit 1 on that fixture and exit 0 on the good path.
+- **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` finding 4.
+
+### Sibling scripts written in one session drift from each other
+
+Four generators authored in one sitting ended up with four conventions: three detected the target
+file's line endings and one hardcoded `
+` (inserting 328 LF lines into a CRLF file), three guarded
+the backup against overwrite and one did not, two passed `count=1` to `str.replace` and one did not.
+
+- **Why missed:** each script was reviewed against the convention, never against its siblings.
+- **Prevent:** diff sibling scripts against each other before shipping. The axes that actually
+  drifted: EOL handling, backup guards, replace counts, dry-run reporting, fatal-path handling.
+- **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` findings 4, 9, 10.
+
+### After editing a generated file, grep `tools/` for the generator that owns it
+
+`taom_partyTemplates.xml` gained 13 stacks across 16 templates. `tools/generate_clan_heraldry.py`
+upserts `<MBPartyTemplate>` blocks **wholesale** from `clan_heraldry/<culture>.json`, and that JSON
+carries no `mordor_num` entries, so a future run would silently delete the feature from 15 of the 16
+templates and revert the party-size rescale with it.
+
+- **Why missed:** the search was "what CONSUMES these troop ids", which finds the models and configs.
+  It does not find the tool that REGENERATES the file being edited.
+- **Prevent:** after editing any ModuleData file, grep `tools/` for writers of that filename. A
+  regeneration is a silent revert, and it will not fail any gate.
+- **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` finding 8.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

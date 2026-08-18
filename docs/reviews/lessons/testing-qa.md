@@ -251,6 +251,25 @@ return proves nothing about steady-state cost if work happens before it.
 
 ---
 
+
+### Fixes made in response to review findings are themselves unreviewed code
+
+Seven agents plus a Codex pass reviewed the Black Numenorean changeset as it stood when they were
+dispatched. Everything changed in response to them went out unexamined, and two of those changes were
+defects in their own right. One was a straight regression: reverting a troop tier to a lower armour
+row to avoid orphaning meshes produced an upgrade edge that cost resources and granted zero added
+survivability, which is worse gameplay than the finding it was fixing. The other left a partial-write
+window open in the very writer whose fix was meant to close it.
+
+- **Why missed:** a review is a snapshot of a tree. The fix round happens after the snapshot, and the
+  natural feeling that "this is just the fix they asked for" hides that it is new, unexamined code.
+  Both defects were caught only because the Codex pass ran long enough to see the fixed tree.
+- **Prevent:** after a fix round, re-run at least the agent whose finding you fixed, against the
+  fixed tree. `/deep-review`'s fix-loop guidance already says to re-run after fixes land; treat that
+  as mandatory rather than optional, and treat a fix that changes data assignments (not just a guard)
+  as needing the same balance/data checks the original assignment needed.
+- **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` findings C2 and C3.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

@@ -457,6 +457,61 @@ material, because skin materials compile the morph/skin permutations.
   working `sk_gn_orc_mrd_helmet_light_a` control carries exactly one.
 - **Source:** #389 / `docs/reviews/rca-isengard-black-tableau-2026-08-06.md`
 
+### A bracketing constraint must be shown non-empty before you design to it
+
+"Above the uruk blade, below hero kit" is worthless as a target if hero kit is already below the uruk
+blade, which it is: `sm_uruk_sword_blade_a3` cuts at 3.74 and `wm_witch_king_sword_blade` at 3.50. A
+whole weapon family shipped at 3.8 to 4.0 cut, beating every hero blade in the game, because the
+bracket was adopted from two looked-up examples rather than from the sorted population.
+
+- **Why missed:** anchoring on the two or three comparators already in hand, and treating "I checked
+  some real examples" as "I checked the population". The blade that invalidated the premise was in a
+  file already read that session.
+- **Prevent:** before designing to a bracket, sort the actual population on the axis in question and
+  confirm the bracket is non-empty. It is one script over data already on disk.
+- **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` finding 1.
+
+### Item-tier correct and wearer-level correct are two different checks
+
+Mapping mesh tier names one-to-one onto curve tiers is right for the ITEMS and says nothing about the
+WEARER. A light-tier hood is perfectly statted and still wrong on a level-26 troop: the Black
+Numenorean Initiate shipped at 50 total personal armour against a level-26 cohort median of 157, the
+lowest of 157 troops at that level.
+
+- **Why missed:** curve conformance was verified exactly (78/78 items matched `calculate_stats`) and
+  read as "the armour is balanced". `derive_armor_tiers.py` cannot adjudicate it either, because
+  `derive()` applies the id keyword before consulting the roster anchor, so a `_light_` id always
+  reports `delta: 0`.
+- **Prevent:** for every new troop, compare total personal armour against the other troops at the
+  same `level=`. Compare across cultures too, not only within one: the same pass shipped shields
+  above Gondor's ceiling while looking correct against Mordor's own ladder.
+- **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` findings 2 and 7.
+
+### Never select a game item by what its name implies
+
+`charger` sounds like a knight's warhorse and is slower and weaker-charging than `t2_empire_horse`
+(speed 48 / charge 22 against 50 / 26). A tier-8 "promotion" therefore downgraded the mount.
+
+- **Why missed:** mounts were picked by name semantics; the stat block was never opened.
+- **Prevent:** read the stat block. The same rule retires invented values: six `merchant_cost`
+  entries were authored without checking the field is only consumed for troops listed in
+  `elite_emissary_config.xml` `<CultureOffers>`.
+- **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` findings 6 and 12.
+
+### A new line whose display name contains a tier keyword is mis-tiered by the shared balance tooling
+
+`rebalance_armor.detect_tier` keyed on an `elite_keywords` list containing the literal string
+`'black numenorean'`. Every item in the new set is named `[Mordor] Black Numenorean <something>`, so a
+**light** hood classified as elite: 45 of 78 mis-tiered, and `rebalance_armor.py --apply --cultures
+mordor` would have flattened the whole set onto the elite row.
+
+- **Why missed:** the question "what will the shared balance tooling make of this id prefix and this
+  display-name convention?" was never asked.
+- **Prevent:** when adding a culture or line, grep the keyword lists in `rebalance_armor.py`
+  (`elite_keywords`, the lord/hero lists) for any word in the new display-name convention before
+  authoring. A line name sitting in a tier-keyword list is the defect.
+- **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` finding 3.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
