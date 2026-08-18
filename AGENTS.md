@@ -364,6 +364,7 @@ public class TaomFooModel : DefaultFooModel
 - **SandBoxCore/ModuleData/** is the authoritative reference for vanilla XML structure
 - NEVER use SandBox/ModuleData/ — it has different element names the engine ignores
 - Example: SandBoxCore uses `<notable_templates>` (engine reads), SandBox uses `<notable_and_wanderer_templates>` (engine ignores)
+- TAOM's other 8 XSLT are LIVE under `<game>/Modules/{TAOM_Map,LOTRLOME_Armory}/ModuleData`, in no checkout and in no CI job
 
 ### Passthrough Requirements (CRITICAL)
 - Always pass through ALL vanilla attributes: `<xsl:apply-templates select="@*"/>`

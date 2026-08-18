@@ -130,7 +130,7 @@
 - [time-acceleration](features/time-acceleration.md) — campaign time scale knobs
 - [atmosphere-persistence](features/atmosphere-persistence.md) — forced-atmosphere scenes (Patch16); exonerated as the `_forceatmo` battle-load crash cause (2026-06-19)
 - [weather-bounds-guard](features/weather-bounds-guard.md) — weather bounds clamp (Patch10)
-- [localization](features/localization.md) — 12 languages × 3 modules, AI-translated via tools
+- [localization](features/localization.md): 12 languages × 3 modules, AI-translated via tools. Only the TAOM third is in git; the other 285 language XML (25 in `TAOM_Map`, 260 in `LOTRLOME_Armory`) live in the game install and a module reinstall reverts them silently. The sole in-repo gate is `python tools/check_external_loc_coverage.py`, a per-language untranslated-row ratchet that no hook or CI job runs
 - [localization-override](features/localization-override.md) — per-language curated overrides
 - [army-targeting](features/army-targeting.md) — besieger commitment stickiness, priority lists, border floor
 - [mcm](features/mcm.md) — MCM options-screen top-to-bottom layout fix (Patch41 on UIExtenderEx `WidgetFactoryManager.CreateAndRegister`; #252)

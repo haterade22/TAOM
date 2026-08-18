@@ -4,6 +4,31 @@
 
 ## 2026-08-18
 
+### docs: the three-module data surface reaches CLAUDE.md, AGENTS.md and the index
+
+Follow-up to the coverage pass below, from a 32-agent adversarial sweep (7 edits approved, 18
+refuted). The requirement now appears where it will actually be read rather than only in a feature
+doc: a **Three-module data surface** row in CLAUDE.md's Traps table, an XSLT note in AGENTS.md, and a
+corrected localization bullet in `docs/INDEX.md`.
+
+Three corrections came back against prose written earlier the same day, which is the point of the
+adversarial pass:
+
+- The coverage table understated CI. `.github/workflows/build.yml`'s "Validate XML & XSLT" job parses
+  all **8** repo stylesheets for well-formedness; `/xslt-check`'s mapping table names only 6 of them
+  (`action_strings.xslt` and `comment_strings.xslt` are absent). Both facts are now stated.
+- "45 files in its ModuleData" collided with the 44 in the table on the same page. It is 45 XML plus
+  XSLT; the directory holds 88 files, the rest being 39 `.bak*`/`.prev` copies, three `DistanceCaches`
+  outputs and `project.mbproj`.
+- The Performance section still claimed **239** TAOM files and a 621 total. Measured: 259 + 382 =
+  **641**.
+
+Also recorded that `audit_action_set_parity.py`, which CLAUDE.md names as the gate for the
+root-`<action>` dedicated-server hazard, reads `action_sets.xml` and never the sibling
+`action_sets.xslt`; and that of the 12-language localization set only TAOM's third is in git, with
+**285** language XML (25 in `TAOM_Map`, 260 in `LOTRLOME_Armory`) living in the game install behind a
+ratchet, `tools/check_external_loc_coverage.py`, that no hook or CI job runs.
+
 ### docs(moduledata): XML and XSLT coverage is a three-module question, and two of them are barely covered
 
 TAOM's data spans three modules and only one is in this repo. `TAOM_Map` (44 ModuleData XML, 1 XSLT)

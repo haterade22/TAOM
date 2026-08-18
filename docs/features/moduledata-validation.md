@@ -303,7 +303,7 @@ The server resolves data paths from its own location, so it is cwd-independent; 
 
 One pass over `Main/_Module/ModuleData/**/*.xml` **plus every `extra_ref_root`** (regex,
 line-numbered) + a registry build that scans the game-module item/character/culture/party-template/
-body-property XML once. 239 TAOM files + 382 Armory files = 621, each read once, patterns
+body-property XML once. 259 TAOM files + 382 Armory files = 641, each read once, patterns
 pre-compiled. Full live run completes in a few seconds; ~27k item refs + ~2.9k troop refs resolved
 per run.
 
@@ -337,7 +337,7 @@ Counts measured 2026-08-18:
 
 | Module | Location | XML (ModuleData / all) | XSLT | XML well-formedness | Cross-ref sweep | XSLT checked |
 |---|---|---|---|---|---|---|
-| TAOM | this repo | 259 / 338 | 8 | CI, `Main/_Module/ModuleData/**` | full (259 files), plus schema contracts | `/xslt-check`, by hand |
+| TAOM | this repo | 259 / 338 | 8 | CI, `Main/_Module/ModuleData/**` | full (259 files), plus schema contracts | CI well-formedness (8 of 8); `/xslt-check` maps 6 of 8, rest by hand |
 | TAOM_Map | game install | 44 / 313 | 1 | none | **2 files of 44** | strip regex only |
 | LOTRLOME_Armory | game install | 382 / 406 | 7 | none | **full (382 files)** via `extra_ref_roots` | **none** |
 | total | | 685 / **1,057** | **16** | | 641 files swept | |
@@ -359,7 +359,9 @@ assumption about today's data, not a guarantee, and `/author-armor`'s workflow m
 someone authors a troop there. Worth an invariant test that fails loudly when it stops holding.
 
 **`TAOM_Map` is the real gap, and it is narrower and worse than "settlements only".** Exactly **two**
-of the 45 files in its `ModuleData` are ever opened, both inside `build_settled_cultures` and
+of the 45 XML and XSLT files in its `ModuleData` are ever opened (44 XML plus `settlements.xslt`;
+the directory holds 88 files in all, the other 43 being 39 `.bak*`/`.prev` copies, three
+`DistanceCaches` outputs and `project.mbproj`), both inside `build_settled_cultures` and
 `build_settlement_economy`: `settlements.xslt`, read only to evaluate one boolean regex, and
 `settlements.xml`. TAOM_Map appears in no other root list, not `item_roots`, not `npc_roots`, not
 `pt_roots`, not `culture_files`, and not `extra_ref_roots`.
