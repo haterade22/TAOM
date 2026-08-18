@@ -164,10 +164,38 @@ def render_template(template_id, roster):
     return "\n".join(lines)
 
 
+class TemplateWouldShrink(Exception):
+    """Raised when a regeneration would drop troops the live template already has."""
+
+
 def upsert_party_template(text, template_id, roster):
+    """Replace a template from the spec roster, refusing to lose existing troops.
+
+    This function REPLACES a whole `<MBPartyTemplate>`, so a spec that has fallen
+    behind the live file silently deletes whatever the live file gained since.
+    That is not hypothetical: on 2026-08-17 `clan_heraldry/mordor.json` held 13
+    troops per clan while the live templates held 23 to 26, because a troop line
+    and a party-size normalisation had landed in between. Running `--spec mordor
+    --apply` would have removed 13 troops from each of 15 templates and reverted
+    their max sums from 3500 to between 18 and 34, with no error.
+
+    The spec is a source for the clans it knows about; it is not authority to
+    delete troops it has never heard of. So: refuse, and say exactly what would
+    have been lost. Re-generate the spec (or add the missing troops to it) and
+    the run proceeds normally.
+    """
     rendered = render_template(template_id, roster)
     existing = re.compile(r'\t?<MBPartyTemplate id="%s">.*?</MBPartyTemplate>' % re.escape(template_id), re.S)
-    if existing.search(text):
+    match = existing.search(text)
+    if match:
+        live = set(re.findall(r'troop="NPCCharacter\.([^"]+)"', match.group(0)))
+        incoming = set(re.findall(r'troop="NPCCharacter\.([^"]+)"', rendered))
+        lost = sorted(live - incoming)
+        if lost:
+            raise TemplateWouldShrink(
+                "%s: the spec would drop %d troop(s) present in the live template: %s. "
+                "Regenerate the spec from the current file (or add these to it) before applying."
+                % (template_id, len(lost), ", ".join(lost)))
         return existing.sub(lambda _: rendered, text, count=1)
     # insert before closing </partyTemplates>
     return text.replace("</partyTemplates>", rendered + "\n\n</partyTemplates>", 1)
@@ -209,7 +237,13 @@ def main():
             else:
                 raise SystemExit("ERROR: clan %s has unknown source %r" % (clan["id"], src))
             if roster:
-                party_text = upsert_party_template(party_text, tid, roster)
+                try:
+                    party_text = upsert_party_template(party_text, tid, roster)
+                except TemplateWouldShrink as e:
+                    raise SystemExit(
+                        "ERROR: refusing to regenerate, the spec is behind the live file.\n"
+                        "  %s\n"
+                        "Nothing was written." % e)
             total += 1
 
     print("\nprocessed %d clans" % total)

@@ -145,6 +145,11 @@ class GeneratorCurveSyncTests(unittest.TestCase):
     GENERATORS = ('generate_gondor_armor', 'generate_dale_armor',
                   'generate_mordor_armor', 'generate_erebor_armor')
 
+    # Generators that import the curve instead of copying it. The drift class the
+    # class docstring describes cannot reach these, so the guard is the INVERSE:
+    # assert no private table was ever reintroduced.
+    CURVE_IMPORTERS = ('generate_black_numenorean_armor',)
+
     def test_generator_shoulder_tables_match_the_curve(self):
         import importlib
         for name in self.GENERATORS:
@@ -157,6 +162,59 @@ class GeneratorCurveSyncTests(unittest.TestCase):
                         curve[stat], row[stat],
                         f"{name}.STAT_TIERS['shoulder']['{tier}']['{stat}'] = {row[stat]} "
                         f"but the curve says {curve[stat]} — a generator run would revert the fix")
+
+    def test_curve_importers_carry_no_private_tier_table(self):
+        """A refactor that reintroduces a local STAT_TIERS here re-arms the exact
+        drift class this generator was written to avoid."""
+        import importlib
+        for name in self.CURVE_IMPORTERS:
+            gen = importlib.import_module(name)
+            self.assertFalse(
+                hasattr(gen, 'STAT_TIERS'),
+                f"{name} reintroduced a private STAT_TIERS — either move it to GENERATORS so "
+                f"the table is pinned, or delete it and keep calling ra.calculate_stats()")
+            self.assertIs(gen.ra, ra, f"{name} no longer imports the shipped curve module")
+
+    # Pre-existing gap, surfaced by the discovery test below when it was added
+    # 2026-08-17. None of these can join GENERATORS as-is:
+    #   generate_rhun_armor / _isengard_armor / _dolguldur_armor
+    #       carry a STAT_TIERS but no 'shoulder' key (they author helmets and
+    #       cloth overlays only), so the shoulder pin raises KeyError. Their
+    #       OTHER slot rows are still unpinned and can drift exactly the way the
+    #       shoulder rows did in July.
+    #   generate_starter_armor
+    #       has no STAT_TIERS at all; it clones existing items and re-stats them
+    #       against its own anchors, so there is nothing to pin.
+    # Closing this needs the shoulder-only pin generalised to every slot present,
+    # which is its own change. Listing them here keeps the guard live for NEW
+    # generators without pretending these four are covered.
+    LEGACY_UNPINNED = ('generate_rhun_armor', 'generate_isengard_armor',
+                       'generate_dolguldur_armor', 'generate_starter_armor')
+
+    def test_every_armor_generator_is_classified(self):
+        """A new generate_*_armor.py must land in one of the lists, or it ships
+        unguarded: neither pinned against the curve nor asserted to import it."""
+        import glob
+        tools_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        found = {os.path.basename(p)[:-3]
+                 for p in glob.glob(os.path.join(tools_dir, 'generate_*_armor.py'))}
+        known = set(self.GENERATORS) | set(self.CURVE_IMPORTERS) | set(self.LEGACY_UNPINNED)
+        self.assertEqual(
+            set(), found - known,
+            "armor generator classified in none of GENERATORS / CURVE_IMPORTERS / "
+            "LEGACY_UNPINNED — it ships unguarded against curve drift")
+
+    def test_legacy_unpinned_list_has_not_grown_stale(self):
+        """If a legacy generator gains a shoulder table it can and should be
+        promoted into GENERATORS, so fail rather than let the exemption linger."""
+        import importlib
+        for name in self.LEGACY_UNPINNED:
+            gen = importlib.import_module(name)
+            table = getattr(gen, 'STAT_TIERS', None)
+            self.assertTrue(
+                table is None or 'shoulder' not in table,
+                f"{name} now has a STAT_TIERS['shoulder'] — move it from "
+                f"LEGACY_UNPINNED into GENERATORS so the curve pin applies")
 
 
 class NativeLadderTests(unittest.TestCase):

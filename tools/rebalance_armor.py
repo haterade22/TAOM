@@ -350,11 +350,20 @@ def detect_tier(item_id, display_name, current_values, slot_type):
         return 'lord'
 
     # Priority 3: Elite
+    #
+    # 'black numenorean' was REMOVED here 2026-08-17. It was a line-name keyword,
+    # not a tier keyword, and once the sk_md_num_ / sm_md_num_ set shipped it
+    # matched all 78 of those items and nothing else in the Armory: every one of
+    # their display names is "[Mordor] Black Numenorean <something>", so a LIGHT
+    # hood was classified elite. That mis-tiered 45 of 78 and would have made
+    # `rebalance_armor.py --apply --cultures mordor` flatten the whole set onto
+    # the elite row. With the keyword gone the id-based _light_/_med_/_heavy_/
+    # _elite_ tokens decide, which is correct for that set. Verified before
+    # removal that it matched no other item.
     elite_keywords = ['elite', 'gold platemail', 'palace guard', 'citadel',
                       'citidel', 'fountain guard', 'fountain helm',
                       'swan knight', 'swanknight', 'royal guard',
-                      'serpent guard', 'berserker', 'black numenorean',
-                      'black númenórean']
+                      'serpent guard', 'berserker']
     for kw in elite_keywords:
         if kw in combined:
             return 'elite'
