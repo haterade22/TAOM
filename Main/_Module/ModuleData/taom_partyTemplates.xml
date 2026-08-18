@@ -750,45 +750,58 @@
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_template">
 		<stacks>
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_grunt" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_warrior" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_archer" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_infantry" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_shieldbearer" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_captain" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_vanguard" />
-			<PartyTemplateStack min_value="5" max_value="116" troop="NPCCharacter.mordor_orc_recruit" />
-			<PartyTemplateStack min_value="4" max_value="118" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="3" max_value="119" troop="NPCCharacter.mordor_orc_fighter" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.mordor_orc_warrior" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.mordor_orc_infantry" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.mordor_orc_impaler" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.mordor_orc_reaver" />
-			<PartyTemplateStack min_value="3" max_value="119" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.mordor_orc_scout" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.mordor_orc_archer" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.mordor_warg_tamer" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.mordor_warg_reaver" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.mordor_warg_ravager" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.mordor_warg_beastmaster" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_fighter" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_skirmisher" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_heavy_archer" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_crossbow" />
-			<PartyTemplateStack min_value="0" max_value="20" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
-			<PartyTemplateStack min_value="3" max_value="119" troop="NPCCharacter.morannon_recruit" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.morannon_fighter" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.morannon_skirmisher" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.morannon_warrior" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.morannon_scout" />
-			<PartyTemplateStack min_value="2" max_value="120" troop="NPCCharacter.morannon_infantry" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.morannon_spearman" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.morannon_archer" />
-			<PartyTemplateStack min_value="1" max_value="122" troop="NPCCharacter.morannon_heavy_infantry" />
-			<PartyTemplateStack min_value="0" max_value="124" troop="NPCCharacter.morannon_heavy_spearman" />
-			<PartyTemplateStack min_value="0" max_value="123" troop="NPCCharacter.cave_troll" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_grunt" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_warrior" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_archer" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_infantry" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_shieldbearer" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_captain" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_vanguard" />
+			<PartyTemplateStack min_value="5" max_value="111" troop="NPCCharacter.mordor_orc_recruit" />
+			<PartyTemplateStack min_value="4" max_value="113" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="3" max_value="114" troop="NPCCharacter.mordor_orc_fighter" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.mordor_orc_warrior" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.mordor_orc_infantry" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.mordor_orc_impaler" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.mordor_orc_reaver" />
+			<PartyTemplateStack min_value="3" max_value="114" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.mordor_orc_scout" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.mordor_orc_archer" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.mordor_warg_tamer" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_fighter" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_skirmisher" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_heavy_archer" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_crossbow" />
+			<PartyTemplateStack min_value="0" max_value="19" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
+			<PartyTemplateStack min_value="3" max_value="114" troop="NPCCharacter.morannon_recruit" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.morannon_fighter" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.morannon_skirmisher" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.morannon_warrior" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.morannon_scout" />
+			<PartyTemplateStack min_value="2" max_value="115" troop="NPCCharacter.morannon_infantry" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.morannon_spearman" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.morannon_archer" />
+			<PartyTemplateStack min_value="1" max_value="117" troop="NPCCharacter.morannon_heavy_infantry" />
+			<PartyTemplateStack min_value="0" max_value="120" troop="NPCCharacter.morannon_heavy_spearman" />
+			<PartyTemplateStack min_value="0" max_value="118" troop="NPCCharacter.cave_troll" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -848,6 +861,7 @@
 			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.mordor_uruk_vanguard" />
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_uruk_captain" />
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_num_infantry" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -864,6 +878,7 @@
 		<stacks>
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_uruk_baraddurguard" />
 			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.mordor_uruk_vanguard" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mordor_num_vet_infantry" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -3408,159 +3423,276 @@
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_1_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_orc_recruit" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_warg_tamer" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="1" max_value="310" troop="NPCCharacter.mordor_orc_fighter" />
-			<PartyTemplateStack min_value="0" max_value="315" troop="NPCCharacter.mordor_orc_reaver" />
-			<PartyTemplateStack min_value="0" max_value="51" troop="NPCCharacter.mordor_uruk_shieldbearer" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="1" max_value="311" troop="NPCCharacter.mordor_orc_scout" />
-			<PartyTemplateStack min_value="0" max_value="51" troop="NPCCharacter.mordor_uruk_archer" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="1" max_value="311" troop="NPCCharacter.mordor_warg_reaver" />
-			<PartyTemplateStack min_value="0" max_value="315" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_orc_recruit" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_warg_tamer" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="1" max_value="297" troop="NPCCharacter.mordor_orc_fighter" />
+			<PartyTemplateStack min_value="0" max_value="303" troop="NPCCharacter.mordor_orc_reaver" />
+			<PartyTemplateStack min_value="0" max_value="49" troop="NPCCharacter.mordor_uruk_shieldbearer" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="1" max_value="298" troop="NPCCharacter.mordor_orc_scout" />
+			<PartyTemplateStack min_value="0" max_value="49" troop="NPCCharacter.mordor_uruk_archer" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="1" max_value="298" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="0" max_value="302" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_2_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_warg_tamer" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_grunt" />
-			<PartyTemplateStack min_value="1" max_value="335" troop="NPCCharacter.mordor_orc_fighter" />
-			<PartyTemplateStack min_value="1" max_value="335" troop="NPCCharacter.mordor_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="1" max_value="335" troop="NPCCharacter.mordor_orc_warrior" />
-			<PartyTemplateStack min_value="0" max_value="340" troop="NPCCharacter.mordor_orc_reaver" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_shieldbearer" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="0" max_value="340" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_warg_tamer" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_grunt" />
+			<PartyTemplateStack min_value="1" max_value="321" troop="NPCCharacter.mordor_orc_fighter" />
+			<PartyTemplateStack min_value="1" max_value="321" troop="NPCCharacter.mordor_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="1" max_value="321" troop="NPCCharacter.mordor_orc_warrior" />
+			<PartyTemplateStack min_value="0" max_value="326" troop="NPCCharacter.mordor_orc_reaver" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_shieldbearer" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="0" max_value="326" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_3_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="359" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="1" max_value="365" troop="NPCCharacter.mordor_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="1" max_value="365" troop="NPCCharacter.mordor_orc_warrior" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_shieldbearer" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_militia_veteran_archer" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_skirmisher" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_archer" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_crossbow" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="0" max_value="371" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="1" max_value="351" troop="NPCCharacter.mordor_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="1" max_value="350" troop="NPCCharacter.mordor_orc_warrior" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_shieldbearer" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_militia_veteran_archer" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_skirmisher" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_archer" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_crossbow" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="0" max_value="356" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_4_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="460" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="0" max_value="76" troop="NPCCharacter.mordor_uruk_grunt" />
-			<PartyTemplateStack min_value="1" max_value="469" troop="NPCCharacter.mordor_orc_warrior" />
-			<PartyTemplateStack min_value="0" max_value="76" troop="NPCCharacter.mordor_uruk_infantry" />
-			<PartyTemplateStack min_value="2" max_value="460" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="0" max_value="76" troop="NPCCharacter.mordor_uruk_crossbow" />
-			<PartyTemplateStack min_value="2" max_value="460" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="1" max_value="469" troop="NPCCharacter.mordor_warg_reaver" />
-			<PartyTemplateStack min_value="0" max_value="477" troop="NPCCharacter.mordor_warg_beastmaster" />
-			<PartyTemplateStack min_value="0" max_value="477" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="2" max_value="441" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="0" max_value="73" troop="NPCCharacter.mordor_uruk_grunt" />
+			<PartyTemplateStack min_value="1" max_value="449" troop="NPCCharacter.mordor_orc_warrior" />
+			<PartyTemplateStack min_value="0" max_value="73" troop="NPCCharacter.mordor_uruk_infantry" />
+			<PartyTemplateStack min_value="2" max_value="441" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="0" max_value="73" troop="NPCCharacter.mordor_uruk_crossbow" />
+			<PartyTemplateStack min_value="2" max_value="441" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="1" max_value="449" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="0" max_value="457" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="457" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_5_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="567" troop="NPCCharacter.mordor_orc_impaler" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_fighter" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_warrior" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_vanguard" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_shieldguard" />
-			<PartyTemplateStack min_value="1" max_value="567" troop="NPCCharacter.mordor_orc_archer" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_skirmisher" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_heavy_archer" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
-			<PartyTemplateStack min_value="1" max_value="567" troop="NPCCharacter.mordor_warg_reaver" />
-			<PartyTemplateStack min_value="0" max_value="578" troop="NPCCharacter.mordor_warg_ravager" />
-			<PartyTemplateStack min_value="0" max_value="577" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="1" max_value="543" troop="NPCCharacter.mordor_orc_impaler" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_fighter" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_warrior" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_vanguard" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_shieldguard" />
+			<PartyTemplateStack min_value="1" max_value="543" troop="NPCCharacter.mordor_orc_archer" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_skirmisher" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_heavy_archer" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
+			<PartyTemplateStack min_value="1" max_value="543" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="0" max_value="555" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="554" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_6_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_militia_spearman" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_orc_recruit" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_fighter" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_shieldguard" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_militia_veteran_archer" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_skirmisher" />
-			<PartyTemplateStack min_value="1" max_value="402" troop="NPCCharacter.mordor_orc_scout" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_archer" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="0" max_value="409" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_orc_recruit" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_fighter" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_shieldguard" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_militia_veteran_archer" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_skirmisher" />
+			<PartyTemplateStack min_value="1" max_value="385" troop="NPCCharacter.mordor_orc_scout" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_archer" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="0" max_value="391" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_7_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="359" troop="NPCCharacter.mordor_orc_recruit" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_warg_tamer" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_warrior" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_captain" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_baraddurguard" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="1" max_value="365" troop="NPCCharacter.mordor_orc_scout" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_archer" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="1" max_value="365" troop="NPCCharacter.mordor_warg_reaver" />
-			<PartyTemplateStack min_value="0" max_value="371" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mordor_orc_recruit" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_warg_tamer" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_warrior" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_captain" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_baraddurguard" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="1" max_value="351" troop="NPCCharacter.mordor_orc_scout" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_archer" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="1" max_value="350" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="0" max_value="356" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_8_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_warg_tamer" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_grunt" />
-			<PartyTemplateStack min_value="1" max_value="335" troop="NPCCharacter.mordor_orc_infantry" />
-			<PartyTemplateStack min_value="1" max_value="335" troop="NPCCharacter.mordor_orc_fighter" />
-			<PartyTemplateStack min_value="1" max_value="335" troop="NPCCharacter.mordor_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_baraddurguard" />
-			<PartyTemplateStack min_value="0" max_value="340" troop="NPCCharacter.mordor_orc_reaver" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_crossbow" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="0" max_value="340" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_warg_tamer" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_grunt" />
+			<PartyTemplateStack min_value="1" max_value="321" troop="NPCCharacter.mordor_orc_infantry" />
+			<PartyTemplateStack min_value="1" max_value="321" troop="NPCCharacter.mordor_orc_fighter" />
+			<PartyTemplateStack min_value="1" max_value="321" troop="NPCCharacter.mordor_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_baraddurguard" />
+			<PartyTemplateStack min_value="0" max_value="326" troop="NPCCharacter.mordor_orc_reaver" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_crossbow" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="0" max_value="326" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_9_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="1" max_value="336" troop="NPCCharacter.mordor_orc_fighter" />
-			<PartyTemplateStack min_value="1" max_value="336" troop="NPCCharacter.mordor_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="0" max_value="341" troop="NPCCharacter.mordor_orc_reaver" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_militia_veteran_archer" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_skirmisher" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_heavy_archer" />
-			<PartyTemplateStack min_value="0" max_value="55" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
-			<PartyTemplateStack min_value="2" max_value="330" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="0" max_value="342" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="1" max_value="322" troop="NPCCharacter.mordor_orc_fighter" />
+			<PartyTemplateStack min_value="1" max_value="322" troop="NPCCharacter.mordor_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="0" max_value="327" troop="NPCCharacter.mordor_orc_reaver" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_militia_veteran_archer" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_skirmisher" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_heavy_archer" />
+			<PartyTemplateStack min_value="0" max_value="53" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
+			<PartyTemplateStack min_value="2" max_value="316" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="0" max_value="328" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -4832,105 +4964,183 @@
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_10_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="359" troop="NPCCharacter.mordor_warg_tamer" />
-			<PartyTemplateStack min_value="2" max_value="359" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="2" max_value="359" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="0" max_value="59" troop="NPCCharacter.mordor_uruk_grunt" />
-			<PartyTemplateStack min_value="1" max_value="366" troop="NPCCharacter.mordor_militia_veteran_spearman" />
-			<PartyTemplateStack min_value="1" max_value="365" troop="NPCCharacter.mordor_orc_warrior" />
-			<PartyTemplateStack min_value="1" max_value="365" troop="NPCCharacter.mordor_orc_impaler" />
-			<PartyTemplateStack min_value="0" max_value="59" troop="NPCCharacter.mordor_uruk_shieldbearer" />
-			<PartyTemplateStack min_value="0" max_value="59" troop="NPCCharacter.mordor_uruk_infantry" />
-			<PartyTemplateStack min_value="2" max_value="359" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="0" max_value="59" troop="NPCCharacter.mordor_uruk_crossbow" />
-			<PartyTemplateStack min_value="2" max_value="359" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="0" max_value="373" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mordor_warg_tamer" />
+			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_grunt" />
+			<PartyTemplateStack min_value="1" max_value="350" troop="NPCCharacter.mordor_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="1" max_value="350" troop="NPCCharacter.mordor_orc_warrior" />
+			<PartyTemplateStack min_value="1" max_value="350" troop="NPCCharacter.mordor_orc_impaler" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_shieldbearer" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_infantry" />
+			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_crossbow" />
+			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="0" max_value="356" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_11_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="359" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="1" max_value="365" troop="NPCCharacter.mordor_orc_warrior" />
-			<PartyTemplateStack min_value="1" max_value="365" troop="NPCCharacter.mordor_orc_impaler" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_infantry" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_militia_veteran_archer" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_skirmisher" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_heavy_archer" />
-			<PartyTemplateStack min_value="0" max_value="60" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
-			<PartyTemplateStack min_value="2" max_value="360" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="0" max_value="371" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="2" max_value="344" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="1" max_value="351" troop="NPCCharacter.mordor_orc_warrior" />
+			<PartyTemplateStack min_value="1" max_value="350" troop="NPCCharacter.mordor_orc_impaler" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_infantry" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_militia_veteran_archer" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_skirmisher" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_heavy_archer" />
+			<PartyTemplateStack min_value="0" max_value="57" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
+			<PartyTemplateStack min_value="2" max_value="345" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="0" max_value="356" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_12_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="460" troop="NPCCharacter.mordor_warg_rider" />
-			<PartyTemplateStack min_value="0" max_value="76" troop="NPCCharacter.mordor_uruk_grunt" />
-			<PartyTemplateStack min_value="1" max_value="469" troop="NPCCharacter.mordor_orc_impaler" />
-			<PartyTemplateStack min_value="0" max_value="76" troop="NPCCharacter.mordor_uruk_vanguard" />
-			<PartyTemplateStack min_value="2" max_value="460" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="0" max_value="76" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
-			<PartyTemplateStack min_value="2" max_value="460" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="1" max_value="469" troop="NPCCharacter.mordor_warg_reaver" />
-			<PartyTemplateStack min_value="0" max_value="477" troop="NPCCharacter.mordor_warg_beastmaster" />
-			<PartyTemplateStack min_value="0" max_value="477" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="2" max_value="441" troop="NPCCharacter.mordor_warg_rider" />
+			<PartyTemplateStack min_value="0" max_value="73" troop="NPCCharacter.mordor_uruk_grunt" />
+			<PartyTemplateStack min_value="1" max_value="449" troop="NPCCharacter.mordor_orc_impaler" />
+			<PartyTemplateStack min_value="0" max_value="73" troop="NPCCharacter.mordor_uruk_vanguard" />
+			<PartyTemplateStack min_value="2" max_value="441" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="0" max_value="73" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
+			<PartyTemplateStack min_value="2" max_value="441" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="1" max_value="449" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="0" max_value="457" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="457" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_13_template">
 		<stacks>
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_fighter" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_warrior" />
-			<PartyTemplateStack min_value="1" max_value="567" troop="NPCCharacter.mordor_orc_infantry" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_shieldguard" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_captain" />
-			<PartyTemplateStack min_value="1" max_value="567" troop="NPCCharacter.mordor_orc_archer" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_skirmisher" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_archer" />
-			<PartyTemplateStack min_value="0" max_value="92" troop="NPCCharacter.mordor_uruk_crossbow" />
-			<PartyTemplateStack min_value="1" max_value="567" troop="NPCCharacter.mordor_warg_reaver" />
-			<PartyTemplateStack min_value="0" max_value="578" troop="NPCCharacter.mordor_warg_ravager" />
-			<PartyTemplateStack min_value="0" max_value="577" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_fighter" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_warrior" />
+			<PartyTemplateStack min_value="1" max_value="543" troop="NPCCharacter.mordor_orc_infantry" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_shieldguard" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_captain" />
+			<PartyTemplateStack min_value="1" max_value="543" troop="NPCCharacter.mordor_orc_archer" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_skirmisher" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_archer" />
+			<PartyTemplateStack min_value="0" max_value="88" troop="NPCCharacter.mordor_uruk_crossbow" />
+			<PartyTemplateStack min_value="1" max_value="543" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="0" max_value="555" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="554" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_14_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_militia_spearman" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_orc_recruit" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_warrior" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_captain" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_militia_veteran_archer" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_skirmisher" />
-			<PartyTemplateStack min_value="1" max_value="402" troop="NPCCharacter.mordor_orc_scout" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_crossbow" />
-			<PartyTemplateStack min_value="0" max_value="65" troop="NPCCharacter.mordor_uruk_heavy_archer" />
-			<PartyTemplateStack min_value="2" max_value="394" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="0" max_value="409" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_orc_recruit" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_warrior" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_captain" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_militia_veteran_archer" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_skirmisher" />
+			<PartyTemplateStack min_value="1" max_value="385" troop="NPCCharacter.mordor_orc_scout" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_crossbow" />
+			<PartyTemplateStack min_value="0" max_value="62" troop="NPCCharacter.mordor_uruk_heavy_archer" />
+			<PartyTemplateStack min_value="2" max_value="378" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="0" max_value="391" troop="NPCCharacter.mordor_warg_beastmaster" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 
 	<MBPartyTemplate id="kingdom_hero_party_mordor_empire_south_15_template">
 		<stacks>
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_orc_recruit" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_warg_tamer" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_orc_lackey" />
-			<PartyTemplateStack min_value="1" max_value="310" troop="NPCCharacter.mordor_orc_infantry" />
-			<PartyTemplateStack min_value="0" max_value="51" troop="NPCCharacter.mordor_uruk_baraddurguard" />
-			<PartyTemplateStack min_value="0" max_value="315" troop="NPCCharacter.mordor_orc_reaver" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_militia_archer" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_orc_hunter" />
-			<PartyTemplateStack min_value="1" max_value="311" troop="NPCCharacter.mordor_orc_scout" />
-			<PartyTemplateStack min_value="0" max_value="51" troop="NPCCharacter.mordor_uruk_heavy_archer" />
-			<PartyTemplateStack min_value="2" max_value="306" troop="NPCCharacter.mordor_warg_raider" />
-			<PartyTemplateStack min_value="1" max_value="311" troop="NPCCharacter.mordor_warg_reaver" />
-			<PartyTemplateStack min_value="0" max_value="315" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_orc_recruit" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_warg_tamer" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_orc_lackey" />
+			<PartyTemplateStack min_value="1" max_value="297" troop="NPCCharacter.mordor_orc_infantry" />
+			<PartyTemplateStack min_value="0" max_value="49" troop="NPCCharacter.mordor_uruk_baraddurguard" />
+			<PartyTemplateStack min_value="0" max_value="303" troop="NPCCharacter.mordor_orc_reaver" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_orc_hunter" />
+			<PartyTemplateStack min_value="1" max_value="298" troop="NPCCharacter.mordor_orc_scout" />
+			<PartyTemplateStack min_value="0" max_value="49" troop="NPCCharacter.mordor_uruk_heavy_archer" />
+			<PartyTemplateStack min_value="2" max_value="293" troop="NPCCharacter.mordor_warg_raider" />
+			<PartyTemplateStack min_value="1" max_value="298" troop="NPCCharacter.mordor_warg_reaver" />
+			<PartyTemplateStack min_value="0" max_value="302" troop="NPCCharacter.mordor_warg_ravager" />
+			<PartyTemplateStack min_value="0" max_value="23" troop="NPCCharacter.mordor_num_initiate" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_infantry" />
+			<PartyTemplateStack min_value="0" max_value="17" troop="NPCCharacter.mordor_num_archer" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_cavalry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_infantry" />
+			<PartyTemplateStack min_value="0" max_value="11" troop="NPCCharacter.mordor_num_vet_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_knight" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_warden" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.mordor_num_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_knight" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_temple_guard" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.mordor_num_shadowbow" />
 		</stacks>
 	</MBPartyTemplate>
 

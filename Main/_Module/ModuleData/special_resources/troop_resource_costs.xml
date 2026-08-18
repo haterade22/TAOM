@@ -102,4 +102,18 @@
   <Troop id="wainrider_warlord_chariot" resource_id="war_banners" merchant_cost="28" />
   <Troop id="dragon_wrath_ash_knight" resource_id="war_banners" merchant_cost="18" />
   <Troop id="loke_rim_gilded_champion" resource_id="war_banners" merchant_cost="12" />
+  <!-- Black Numenorean line -->
+  <Troop id="mordor_num_initiate" resource_id="war_spoils" upgrade_cost="1" daily_upkeep="0.05" />
+  <Troop id="mordor_num_cavalry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" />
+  <Troop id="mordor_num_infantry" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" />
+  <Troop id="mordor_num_archer" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" />
+  <Troop id="mordor_num_vet_cavalry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" />
+  <Troop id="mordor_num_vet_infantry" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" />
+  <Troop id="mordor_num_vet_archer" resource_id="war_spoils" upgrade_cost="3" daily_upkeep="0.15" />
+  <Troop id="mordor_num_knight" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="mordor_num_warden" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="mordor_num_marksman" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="mordor_num_temple_knight" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" />
+  <Troop id="mordor_num_temple_guard" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" />
+  <Troop id="mordor_num_shadowbow" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" />
 </TroopResourceCosts>
