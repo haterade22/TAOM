@@ -50,13 +50,35 @@ esac
 # Get the staged file list (the diff that becomes part of the commit).
 STAGED=$(git diff --cached --name-only 2>/dev/null)
 
+# `git commit -- <paths>` commits the WORKING TREE state of those paths and
+# ignores the index entirely, so `git diff --cached` can be empty (or name a
+# completely different set) while the commit still lands .claude/ changes. That
+# is not hypothetical: on 2026-08-18 a commit touching .claude/rules/ and
+# .claude/skills/ sailed past this gate with no CHANGELOG entry, because it was
+# made with the pathspec form. Parse the pathspec off the command line too.
+#
+# The separator is a standalone ` -- ` token, so this does not match --amend or
+# --no-verify. Over-inclusion is the safe direction here: extra paths can only
+# make the gate MORE likely to fire, and it fires only on .claude/, CLAUDE.md or
+# AGENTS.md. Quoting is approximated (surrounding quotes stripped); a path with
+# embedded spaces may split, which again only over-includes.
+PATHSPEC_FILES=""
+case "$COMMAND" in
+    *" -- "*)
+        PATHSPEC_FILES=$(printf '%s' "${COMMAND##* -- }" \
+            | tr ' \t' '\n\n' \
+            | sed -e 's/^["'"'"']//' -e 's/["'"'"']$//' \
+            | grep -v '^$' || true)
+        ;;
+esac
+
 # For amends, also include files that are already part of HEAD (the commit
 # being amended). The post-amend commit will contain both sets.
 if [[ $IS_AMEND -eq 1 ]]; then
     HEAD_FILES=$(git show HEAD --name-only --pretty=format: 2>/dev/null | grep -v '^$' || true)
-    ALL_FILES=$(printf '%s\n%s\n' "$STAGED" "$HEAD_FILES" | sort -u | grep -v '^$')
+    ALL_FILES=$(printf '%s\n%s\n%s\n' "$STAGED" "$HEAD_FILES" "$PATHSPEC_FILES" | sort -u | grep -v '^$')
 else
-    ALL_FILES="$STAGED"
+    ALL_FILES=$(printf '%s\n%s\n' "$STAGED" "$PATHSPEC_FILES" | sort -u | grep -v '^$')
 fi
 
 if [[ -z "$ALL_FILES" ]]; then

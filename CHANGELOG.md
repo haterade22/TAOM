@@ -4,6 +4,28 @@
 
 ## 2026-08-18
 
+### fix(tooling): two gates that could not fire now fire
+
+**The doc-graph has a ratchet.** `/doc-graph` shipped 2026-06-08 and was then run by nothing: zero
+hooks, zero CI jobs. Ten weeks later isolated docs had gone 64 to **153** and components 70 to
+**156**, with every unit test green throughout, because those tests check the algorithm against
+synthetic fixtures and never look at the real `docs/` tree. New
+`tools/check_doc_graph_ratchet.py` plus a committed baseline runs in the `validate-xml` CI job, the
+unconditional one every committer hits. It gates orphans and components only; node and edge counts
+grow legitimately with every doc, an orphan never does. Lowering the baseline is the point: link
+isolates in, run `--update`, commit the drop.
+
+**The CHANGELOG gate no longer has a hole.** `check-changelog-changed.sh` read only
+`git diff --cached`, but `git commit -- <paths>` commits working-tree paths and ignores the index, so
+a commit touching `.claude/` could pass with no CHANGELOG entry. That is not hypothetical: it
+happened in this session, and was caught by hand rather than by the gate. The hook now also parses
+the pathspec off the command line. The ` -- ` separator is matched as a standalone token, so
+`--amend` and `--no-verify` are unaffected, and over-inclusion is the safe direction because the gate
+only fires on `.claude/`, `CLAUDE.md` or `AGENTS.md`.
+
+Both are tested in both directions, because a gate only ever seen passing is not known to be able to
+fail. Suite 589 to **597**.
+
 ### fix(tooling): the live modules are actually validated now (#462)
 
 Closes the three defects documented below. They were recorded as gaps the same day; this makes them
