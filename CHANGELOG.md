@@ -4,6 +4,37 @@
 
 ## 2026-08-18
 
+### docs(moduledata): XML and XSLT coverage is a three-module question, and two of them are barely covered
+
+TAOM's data spans three modules and only one is in this repo. `TAOM_Map` (44 ModuleData XML, 1 XSLT)
+and `LOTRLOME_Armory` (382, 7) live in the game install and are unversioned. Documenting that
+properly turned up four gaps, all latent today and none of them gated.
+
+**`TAOM_Map` is the sharp one.** Exactly two of its 45 ModuleData files are ever read, and only
+inside `build_settled_cultures` and `build_settlement_economy`. It appears in no root list and is not
+an `extra_ref_root`, so its **1,012 `Culture.` references (30 distinct) are never checked**. The same
+file is the sole input to `settled_cultures`, so a bad id there corrupts the `LANDLESS_CULTURE`
+verdict with no diagnostic. The inversion is worth stating: the validator checks the refs of the
+repo's stale-shadow `settlements.xml`, which feeds no registry, and trusts the live file's. All 30
+ids currently resolve. One line in `validate_moduledata.py` would close it; not done here.
+
+**The commit hook cannot gate either live module.** It matches staged `Main/_Module/ModuleData/*.xml`
+(`check-moduledata-validation.sh:65`) against `git diff --cached`, and neither module is in git, so
+editing them stages nothing and blocks nothing.
+
+**XSLT is barely modelled anywhere.** The three modules ship 16 stylesheets (1,063 `<xsl:template>`
+elements in the repo's 8 alone) and no pass parses one. `taom_schema.py` opens only
+`TAOM_Map/settlements.xslt`, and only to regex for an empty `<xsl:template match="Settlement"/>`, so
+an equivalent rewrite of that strip would silently report every culture as landed, which is the exact
+false-clean `LANDLESS_CULTURE` exists to prevent. The 8 external stylesheets have no validation path:
+`/xslt-check` and the CI `validate-xml` job both glob the repo path, and CI structurally cannot reach
+them. `/xslt-check`'s own mapping table covers 6 of the repo's 8.
+
+**The Armory is better off than "foreign module" suggests:** all 382 of its ModuleData XML are swept
+for refs, and it feeds both the item registry and `mount_family_types` via its `<Monster>` decls. Its
+structure is unchecked, which costs nothing only because it defines no troops, rosters or party
+templates today.
+
 ### docs: the adapter rule cited a type that does not exist
 
 CLAUDE.md's **Adapter Pattern** critical rule used `IHeroAdapter` as its canonical example, and

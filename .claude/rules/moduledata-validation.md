@@ -75,6 +75,40 @@ It is one read-only pass that consolidates the old per-task validators (`validat
 | `INVALID_ENUM` (warn) | `default_group` not Infantry/Ranged/Cavalry/HorseArcher |
 | `BROKEN_PARTY_TEMPLATE_REF` (warn) | a `PartyTemplate.X` ref to an undefined template |
 
+## What actually gets scanned: three modules, not one
+
+Two of TAOM's three data modules live in the game install, are unversioned, and are covered very
+unevenly. Counts measured 2026-08-18.
+
+| Module | ModuleData XML | Cross-ref sweep | Schema checks (dup id, enum, civilian) | Commit hook fires? |
+|---|---|---|---|---|
+| TAOM: `Main/_Module/ModuleData` | 259 | yes, all 5 ref kinds | yes | yes |
+| `<game>/Modules/LOTRLOME_Armory/ModuleData` | 382 | yes, all 5 ref kinds (`extra_ref_roots`) | no, by design | no |
+| `<game>/Modules/TAOM_Map/ModuleData` | 44 | **no** | no | no |
+
+The last column is not a detail. The hook matches on staged `Main/_Module/ModuleData/*.xml`
+(`check-moduledata-validation.sh:65`) and neither live module is in git, so editing them stages
+nothing and gates nothing. Run `python tools/validate_moduledata.py` by hand after any edit there.
+
+- **Editing TAOM_Map's `settlements.xml`?** Nothing checks its `culture=` values. Its 1,012
+  `Culture.` refs sit outside the sweep, yet they are the sole input to `settled_cultures`, so a bad
+  id there corrupts the `LANDLESS_CULTURE` verdict in one direction or the other with no diagnostic.
+  Check any new id with `mcp__taom-moduledata__culture_exists` before you save.
+- **Authoring into LOTRLOME_Armory?** Its refs are checked, its structure is not. Duplicate ids,
+  enums, the civilian rule and `MOUNTED_DWARF` apply to repo files only, so a troop or an equipment
+  roster authored there would be entirely unvalidated. Today it defines items and monsters and
+  nothing else; keep it that way, or extend the schema passes first.
+- **Touching any XSLT?** No pass parses one. Only `TAOM_Map/ModuleData/settlements.xslt` is opened at
+  all, and only to test for the empty `<xsl:template match="Settlement"/>` strip. `/xslt-check` reads
+  from `Main/_Module/ModuleData/` only, so the 8 XSLT in TAOM_Map and the Armory have no tooling, and
+  its mapping table covers 6 of the repo's own 8 (`action_strings.xslt` and `comment_strings.xslt`
+  are absent). For `spcultures.xslt` run `CulturePartyTemplateTests`; everything else is a manual
+  transform-and-diff.
+
+Full matrix, per-kind ref counts and the named gaps:
+[docs/features/moduledata-validation.md](../../docs/features/moduledata-validation.md)
+"Module coverage at a glance".
+
 ## Discipline
 
 - **Schemas are the source of truth.** Field types, enums, cross-ref targets, and the civilian rule live in `tools/schemas/*.json` — add new fields/enums there, never hardcode them in Python.

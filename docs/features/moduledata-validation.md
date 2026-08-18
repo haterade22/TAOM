@@ -328,6 +328,78 @@ vacuous for the other four kinds — Armory XML currently contains no live `NPCC
 wiring is correct and will catch a real dangling ref if one is introduced; just don't read a PASS
 as proof those kinds were stress-tested against the Armory.
 
+### Module coverage at a glance (and what is NOT covered)
+
+TAOM's data spans **three modules**, and only one of them is in this repo. `TAOM_Map` and
+`LOTRLOME_Armory` live in the game install and are unversioned, which is why CLAUDE.md's
+"A fix in a dependency module" trap insists on an in-repo gate beside every external edit.
+Counts measured 2026-08-18:
+
+| Module | Location | XML (ModuleData / all) | XSLT | XML well-formedness | Cross-ref sweep | XSLT checked |
+|---|---|---|---|---|---|---|
+| TAOM | this repo | 259 / 338 | 8 | CI, `Main/_Module/ModuleData/**` | full (259 files), plus schema contracts | `/xslt-check`, by hand |
+| TAOM_Map | game install | 44 / 313 | 1 | none | **2 files of 44** | strip regex only |
+| LOTRLOME_Armory | game install | 382 / 406 | 7 | none | **full (382 files)** via `extra_ref_roots` | **none** |
+| total | | 685 / **1,057** | **16** | | 641 files swept | |
+
+The two columns matter: the validator only ever reads `ModuleData`, so the left number is its
+ceiling and the right one is the module's whole XML surface. Of TAOM's 259 ModuleData files, 145
+are localization files under `Languages/` (12 language folders). The deployed `Modules/TAOM` copy is build output; the repo is
+authoritative for it, so do not count it twice. Counts measured 2026-08-18; the 641 is
+`len(_xml_files()) + len(_extra_ref_files())` on a live `Validator`.
+
+**The Armory is in better shape than its "foreign module" status suggests.** All 382 of its
+ModuleData XML are swept for dangling refs, and it contributes to two registries, not one: items via
+`item_roots`, and `<Monster>` declarations via `build_harness_registries`, which feeds
+`mount_family_types`. What it does *not* get is TAOM's schema contracts (duplicate ids, enums,
+civilian `equipmentType`), because those describe TAOM's own files. That is currently free: the
+Armory defines 3,727 items and 63 monsters and **zero** NPCCharacters, EquipmentRosters, party
+templates, cultures or body properties, so the passes that skip it have nothing to miss. That is an
+assumption about today's data, not a guarantee, and `/author-armor`'s workflow makes it plausible
+someone authors a troop there. Worth an invariant test that fails loudly when it stops holding.
+
+**`TAOM_Map` is the real gap, and it is narrower and worse than "settlements only".** Exactly **two**
+of the 45 files in its `ModuleData` are ever opened, both inside `build_settled_cultures` and
+`build_settlement_economy`: `settlements.xslt`, read only to evaluate one boolean regex, and
+`settlements.xml`. TAOM_Map appears in no other root list, not `item_roots`, not `npc_roots`, not
+`pt_roots`, not `culture_files`, and not `extra_ref_roots`.
+
+The consequence is an inversion worth stating plainly. **The validator checks the dead file's refs
+and trusts the live one's.** The repo's `Main/_Module/ModuleData/settlements.xml` is a stale shadow
+that contributes to no registry, yet its `Culture.` refs are checked on every run. The live
+`TAOM_Map/ModuleData/settlements.xml` is the *sole* source of `settled_cultures` and
+`settlement_economy`, and its **1,012 `Culture.` references (30 distinct) are never checked for
+`UNKNOWN_CULTURE`**. Since that same file is what decides which cultures count as settled, a bad id
+there corrupts the `LANDLESS_CULTURE` verdict in one direction or the other with no diagnostic at
+all. Verified 2026-08-18: all 30 currently resolve against the 40-entry culture registry, so the
+gap is latent, not live.
+
+The cheapest available fix is one line: add `game_modules / "TAOM_Map" / "ModuleData"` to
+`extra_roots` beside `LOTRLOME_Armory` in `validate_moduledata.py`. That converts 1,012 unchecked
+refs into checked ones with no new code. Not done here.
+
+**XSLT is barely modelled anywhere.** `_SETTLEMENT_STRIP_RE` matches only an empty
+`<xsl:template match="Settlement"/>` or its empty-body form; the file is never parsed as XML and
+never transformed. If that live, unversioned stylesheet were malformed, or the strip were rewritten
+to an equivalent the regex does not match (extra whitespace, a non-`xsl` prefix, an
+identity-suppressing variant), the match returns nothing, vanilla's stripped settlements are counted
+as live, and every culture reports as landed. That is precisely the false-clean `LANDLESS_CULTURE`
+exists to prevent, and the tests use synthetic fixtures, so they pin the detector and never touch
+the live file.
+
+**None of the 8 external stylesheets has a validation path.** `/xslt-check` resolves its target
+under `Main/_Module/ModuleData/`, and the CI `validate-xml` job globs that same repo path, so
+neither reaches them; CI *structurally* cannot, because those modules are not in the checkout. Two
+are read narrowly for unrelated purposes and both fail open: `audit_mount_parity.py` string-replaces
+`action_sets.xml` to `action_sets.xslt` and regexes out chariot animations behind an `os.path.exists`
+guard, and `weapon_xml/verify.py` regex-checks only the piece ids a given `build_weapon_xml.py` run
+just generated, never pre-existing content. Note that `audit_action_set_parity.py`, which CLAUDE.md
+names as the gate for the root-`<action>` dedicated-server hazard, reads `action_sets.xml` only and
+contains no XSLT handling at all.
+
+Treat this section as the answer to "is my change covered", not as a to-do list someone is working
+through.
+
 ### Silent-scope guards
 
 Two failure modes make an under-scoped run indistinguishable from a clean one, so both are reported
