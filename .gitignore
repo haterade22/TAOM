@@ -16,7 +16,12 @@ enc_temp_folder/
 
 # Tool backups: rebalance/audit scripts write <file>.bak before destructive edits
 # (see tools/README.md "XML I/O convention"). Git is the real backup — never commit these.
-*.bak
+# The glob is *.bak* rather than *.bak because the newer scripts write dated
+# sidecars (.bak-blacknum-20260817, .bak-parity-20260713, .bak-startergear) that
+# a bare *.bak does not match. Two of those write inside the repo, so without the
+# trailing * a `git add -A` would commit whole duplicate copies of the ModuleData
+# XML (taom_partyTemplates.xml alone is 377 KB).
+*.bak*
 
 # DR3 (2026-05-22): exceptions for bundled BUTR runtime DLLs in
 # TAOM.Dependencies module. These are MAINTAINED-VENDOR — manually copied
