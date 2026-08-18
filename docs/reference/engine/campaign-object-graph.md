@@ -55,8 +55,8 @@ kingdom-level allegiance so diplomacy/war code treats both uniformly. Everything
 gives stable `StringId` lookup (Phase 5) + automatic save (Phase 6).
 
 ## TAOM relevance + gotchas (the recurring campaign-object rules)
-- **ADR-007 — never cross these sealed types into a service.** All five are `sealed`; services take `IHeroAdapter` /
-  `ISettlementAdapter` / etc., adapted at the boundary (the CLAUDE.md architecture one-liner). The campaign behavior
+- **ADR-007: never cross these sealed types into a service.** All five are `sealed`; services take `ICareerHeroAdapter` /
+  `ISettlementOwnerAdapter` / etc., adapted at the boundary (the CLAUDE.md architecture one-liner). The campaign behavior
   (Phase 9) extracts primitives + builds the adapter; the service never sees `Hero`.
 - **`?.` on computed/chained properties** (`.claude/rules/adapters.md`): `Settlement.OwnerClan` chains through
   `Town.OwnerClan` / `Village.Bound.OwnerClan` and can NRE *before* your null check — use

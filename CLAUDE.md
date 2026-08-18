@@ -22,7 +22,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | **No `#region`** | Use class decomposition (ADR-003) |
 | **No `[Obsolete]`** | Migrate all usage in same PR (ADR-004) |
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
-| **Adapter Pattern** | Services use `IHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
+| **Adapter Pattern** | Services use `ICareerHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
 | **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts (v1.4.8 as of 2026-08-10, matching installed), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs** — the dump can lag after an engine bump; the installed DLLs are always authoritative |
 | **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |

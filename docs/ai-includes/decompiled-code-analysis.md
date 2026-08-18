@@ -249,7 +249,7 @@ _logger.LogError($"Failed to process: {ex.Message}");
 |------|---------|
 | **TDD Mandatory** | RED -> GREEN -> REFACTOR |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Adapter Pattern** | Services use `IHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
+| **Adapter Pattern** | Services use `ICareerHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **No business logic in patches** | Patches delegate to hooks/services |
 | **No `#region`** | Use class decomposition (ADR-003) |
 | **Research First** | Decompile TaleWorlds code before implementing |

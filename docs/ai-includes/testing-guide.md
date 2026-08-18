@@ -729,14 +729,14 @@ public static class MockFactories
         return mock;
     }
 
-    public static IHeroAdapter CreateMockHero(
+    public static ICareerHeroAdapter CreateMockHero(
         string name = "Test Hero",
         string culture = "empire",
         int level = 1)
     {
-        var mock = Substitute.For<IHeroAdapter>();
+        var mock = Substitute.For<ICareerHeroAdapter>();
         mock.Name.Returns(name);
-        mock.Culture.Returns(culture);
+        mock.CultureStringId.Returns(culture);
         mock.Level.Returns(level);
         return mock;
     }

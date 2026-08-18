@@ -25,7 +25,7 @@ HarmonyPatch / GameModel / CampaignBehavior   ← THIN (<150 lines, no logic)
 | Rule | Detail |
 |------|--------|
 | Entry points <150 lines | ADR-002: delegate immediately to service |
-| No sealed types in services | ADR-007: `IHeroAdapter` not `Hero` |
+| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero` |
 | Constructor injection only | No service locator in services |
 | Convert at boundary | Adapt sealed types in the entry point, not deep in services |
 | `?.` for computed properties | TaleWorlds getters crash before your null check — see `adapters.md` |

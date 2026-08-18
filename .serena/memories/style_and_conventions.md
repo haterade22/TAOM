@@ -8,7 +8,7 @@
 
 ## Naming
 - Standard C# conventions (PascalCase for public, camelCase for private)
-- Interfaces prefixed with `I` (e.g., `IHeroAdapter`)
+- Interfaces prefixed with `I` (e.g., `ICareerHeroAdapter`)
 - Adapters: `{TypeName}Adapter` implementing `I{TypeName}Adapter`
 
 ## Design Patterns

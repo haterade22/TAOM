@@ -15,7 +15,7 @@ Total conversion mod for Mount & Blade II: Bannerlord v1.3.15, transforming the 
 ## Architecture
 Entry points (`[HarmonyPatch]`, `GameModel`, `CampaignBehavior`) → `IHookInterface` → `Service` → `IAdapter` (wraps sealed TaleWorlds types).
 
-Services must use adapter interfaces (e.g., `IHeroAdapter`), never raw TaleWorlds types directly.
+Services must use adapter interfaces (e.g., `ICareerHeroAdapter`), never raw TaleWorlds types directly.
 
 ## Key Directories
 - `Main/` — Mod source code

@@ -107,7 +107,7 @@ HarmonyPatch / GameModel / CampaignBehavior   <-- THIN (<150 lines, no logic)
 | **No `#region`** | Use class decomposition (ADR-003) |
 | **No `[Obsolete]`** | Migrate all usage in same PR (ADR-004) |
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
-| **Adapter Pattern** | Services use `IHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
+| **Adapter Pattern** | Services use `ICareerHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
 | **Research First** | Never guess TaleWorlds behavior — decompile first |
 
@@ -135,7 +135,7 @@ HarmonyPatch / GameModel / CampaignBehavior   <-- THIN (<150 lines, no logic)
 | Rule | Detail |
 |------|--------|
 | Entry points <150 lines | ADR-002: delegate immediately to service |
-| No sealed types in services | ADR-007: `IHeroAdapter` not `Hero` |
+| No sealed types in services | ADR-007: `ICareerHeroAdapter` not `Hero` |
 | Constructor injection only | No service locator in services |
 | Convert at boundary | Adapt sealed types in the entry point, not deep in services |
 | `?.` for computed properties | TaleWorlds getters crash before your null check |

@@ -220,7 +220,7 @@ Your scope: Main/Features/{FEATURE_NAME}/ only.
 Test scope: TAOM.Tests/Features/{FEATURE_NAME}/ only.
 
 Rules:
-- Follow adapter pattern (ADR-007): use IHeroAdapter etc, never Hero directly
+- Follow adapter pattern (ADR-007): use ICareerHeroAdapter etc, never Hero directly
 - Thin entry points (ADR-002): max 150 lines, delegate to services
 - No #region, no [Obsolete], no #if DEBUG
 - Do NOT edit IoC.cs or SubModule.cs — report needed registrations to lead

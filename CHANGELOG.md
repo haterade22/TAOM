@@ -4,6 +4,22 @@
 
 ## 2026-08-18
 
+### docs: the adapter rule cited a type that does not exist
+
+CLAUDE.md's **Adapter Pattern** critical rule used `IHeroAdapter` as its canonical example, and
+twelve other places echoed it, including `.claude/rules/csharp-architecture.md`, the `/new-feature`
+skill, `AGENTS.md`, `ai-includes/architecture.md`, and both Serena memory files. **No such type is
+defined anywhere in `Main/`.** The real hero-facing adapters are `ICareerHeroAdapter` and
+`IBannerHeroAdapter`, so every reference presenting `IHeroAdapter` as a real type now names
+`ICareerHeroAdapter`.
+
+Deliberately left alone: ADR-002, ADR-004, ADR-007 and `ai-includes/code-quality.md` declare
+`public interface IHeroAdapter` inside their own illustrative fences. Those are self-consistent
+pseudo-code teaching the pattern, not claims that the type ships.
+
+Also corrected the REVIEW-LOG header, which said the log ran to Review 86 and 2026-08-08 while
+Reviews 87 and 88 already sat below it.
+
 ### docs(review): graphify v8 trialled against the real corpus, and rejected on the XML requirement
 
 The external knowledge-graph tool graphify was re-evaluated, this time by installing it (`graphifyy`

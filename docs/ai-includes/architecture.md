@@ -265,45 +265,44 @@ Entry Point → Hook Interface → Service → Engine → Adapter
 
 ```
 Main/
-├── Adapters/                    # Adapter interfaces and implementations
-│   ├── Interfaces/
-│   │   ├── IAgentAdapter.cs
-│   │   ├── IHeroAdapter.cs
-│   │   └── ...
-│   ├── Implementations/
-│   │   ├── AgentAdapter.cs
-│   │   ├── HeroAdapter.cs
-│   │   └── ...
-│   └── IAdapterFactory.cs
-├── Core/                        # Core infrastructure
-│   ├── IoC/
-│   │   └── IoC.cs
-│   ├── Logging/
-│   │   └── ModLogger.cs
-│   └── Configuration/
-│       └── ModSettings.cs
-├── Features/                    # Feature implementations
-│   ├── PartySpeed/
-│   │   ├── Hooks/
-│   │   ├── Services/
-│   │   └── Engines/
-│   ├── CombatBonus/
-│   │   ├── Hooks/
-│   │   ├── Services/
-│   │   └── Engines/
-│   └── ...
-├── Patches/                     # Harmony patches (thin entry points)
-│   ├── Combat/
-│   ├── Campaign/
-│   └── Mission/
-└── SubModule.cs                 # Entry point
+├── Adapters/                    # 166 .cs files: I<X>Adapter.cs beside <X>Adapter.cs
+│   ├── IAgentAdapter.cs
+│   ├── AgentAdapter.cs
+│   ├── ICareerHeroAdapter.cs
+│   ├── CareerHeroAdapter.cs
+│   └── Models/                  # adapter-facing DTOs (MovementOrderType, NearbyAgentSnapshot)
+├── BehaviorTrees/               # behavior-tree runtime
+├── BehaviorTreeWrapper/
+├── Core/                        # cross-cutting infrastructure
+│   ├── Diagnostics/
+│   ├── Domain/
+│   ├── Infrastructure/
+│   ├── Logging/                 # IModLogger.cs, FileLogger.cs
+│   └── Validation/
+├── Features/                    # 87 feature modules, each self-contained
+│   └── CareerSystem/            # a representative one
+│       ├── Abilities/
+│       ├── Domain/
+│       ├── Hooks/               # Harmony patches live INSIDE the feature
+│       ├── Models/              # GameModel overrides
+│       ├── Mutations/
+│       ├── Quests/
+│       └── UI/
+├── SceneScripts/
+├── _Module/                     # shipped payload: ModuleData, Prefabs, GUI, SubModule.xml
+├── IoC.cs                       # single-owner DI composition root
+├── ManualPatchApplicator.cs
+└── SubModule.cs                 # single-owner engine entry point
 
 TAOM.Tests/
-├── Adapters/                    # Adapter tests
-├── Features/                    # Feature tests (mirrors Main structure)
-│   ├── PartySpeed/
-│   └── CombatBonus/
-└── TestUtilities/               # Test helpers and mocks
+├── Adapters/
+├── BehaviorTrees/
+├── BehaviorTreeWrapper/
+├── Core/
+├── Features/                    # mirrors Main/Features
+├── Infrastructure/
+├── Migration/
+└── SceneScripts/
 ```
 
 ---

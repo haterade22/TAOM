@@ -29,7 +29,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 - XML summaries must be ELI5-simple (ADR-009)
 
 **Mod Services:**
-- Services MUST use adapter interfaces (IHeroAdapter, etc.) (ADR-007)
+- Services MUST use adapter interfaces (ICareerHeroAdapter, etc.) (ADR-007)
 - Services MUST NOT accept sealed types (Hero, Settlement, etc.) (ADR-007)
 - Entry points <150 lines, delegate to services (ADR-002)
 - Use XML for game config, not JSON (ADR-001)

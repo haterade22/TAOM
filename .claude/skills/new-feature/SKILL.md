@@ -22,7 +22,7 @@ Create the following files under `Main/Features/$ARGUMENTS/`:
 ### 2. Service Layer
 - `I{FeatureName}Service.cs` — Interface defining the feature's public API
 - `{FeatureName}Service.cs` — Implementation with constructor-injected dependencies
-- Services MUST use adapter interfaces (`IHeroAdapter`, etc.), NEVER sealed TaleWorlds types (ADR-007)
+- Services MUST use adapter interfaces (`ICareerHeroAdapter`, `IAgentAdapter`, etc.), NEVER sealed TaleWorlds types (ADR-007)
 
 ### 3. Entry Points (if needed)
 - `Hooks/{PatchName}Patch.cs` — Harmony patches (thin, delegate to service)
