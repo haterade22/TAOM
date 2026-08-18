@@ -1309,3 +1309,22 @@ a live measurement and reached opposite conclusions from it.
   design CONSTRAINT carries the command that produced it and the date, or it is not a measurement.
   If two sources disagree, record the disagreement rather than picking the convenient one.
 - **Source:** `docs/reviews/rca-faction-economy-2026-08-14.md` findings #1 and #12 (#459).
+
+
+### The binary round-trip I/O idiom is about the idiom, not the file type
+
+`io.open(path, encoding='utf-8-sig')` writes a BOM unconditionally, and a default-newline read
+flattens CRLF to LF. Used for a round-trip edit, it silently rewrites the encoding and line endings
+of the whole file alongside your intended change.
+
+- **Why missed:** `.claude/rules/moduledata-validation.md` already specifies binary round-trip, and
+  it was read as scoped to ModuleData XML. During #461 the same idiom was used on markdown and C#
+  and converted 11 tracked files from CRLF to LF while adding BOMs to files that had none. Git's
+  autocrlf normalisation hid it from `git diff --stat`, which stayed proportional to the intended
+  edits.
+- **Prevent:** round-trip any tracked file as bytes, or verify afterwards. `tools/lint_docs.py`
+  caught it by flagging an em dash on line 1 of a file that had never been edited, which is the tell
+  that the BOM moved the line. `git ls-files --eol` gives the authoritative per-file index and
+  worktree state; comparing a file against an untouched sibling in the same directory is the quick
+  check.
+- **Source:** `docs/reviews/rca-ai-party-size-2026-08-18.md` process finding.

@@ -30,6 +30,10 @@ public class CareerPassiveService : ICareerPassiveService
     private static TextObject? _careerText;
     private static TextObject CareerText => _careerText ?? (_careerText = new TextObject("{=taom_career}Career"));
 
+    // Below this the accumulated factor frame has cancelled the value to (or past) nothing and
+    // converting a flat count into it is meaningless. Matches TroopWeightService.MinFactorScale.
+    private const float MinFactorScale = 0.01f;
+
     public CareerPassiveService(IModLogger logger)
     {
         _logger = logger;
@@ -171,7 +175,22 @@ public class CareerPassiveService : ICareerPassiveService
     {
         if (string.IsNullOrEmpty(heroStringId)) return;
         var magnitude = GetPassiveMagnitude(heroStringId, type);
-        if (magnitude != 0f)
-            result.Add(magnitude, CareerText);
+        if (magnitude == 0f) return;
+
+        // A flat passive is authored as a COUNT and the career screen shows it as one ("+4 party
+        // size", magnitude="4"), so it must be worth exactly four bodies. ExplainedNumber.Add lands
+        // in the BASE frame and the result is BaseNumber * (1 + SumOfFactors), so a raw Add is
+        // multiplied by every factor already on that number, whatever the call order. With only a
+        // culture feat in play that was a rounding error; once AiPartySize started contributing a
+        // large factor (garrisons run at 3x by default) the same +4 became +13, and the promise on
+        // the career screen stopped being true. Divide the factor back out so the count is literal.
+        // Deep review 2026-08-18; same idiom as TroopWeightService.SubtractResultFramePenalty.
+        float scale = 1f + result.SumOfFactors;
+
+        // Positive requirement, so NaN fails it: below this the factor frame has cancelled the
+        // number to nothing (or flipped its sign) and dividing by it is meaningless.
+        if (!(scale > MinFactorScale)) return;
+
+        result.Add(magnitude / scale, CareerText);
     }
 }

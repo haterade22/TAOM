@@ -2322,6 +2322,12 @@
 
   <!-- TroopWeight — party-size-limit breakdown label (2026-07-11 count->limit rework) -->
   <string id="taom_troop_weight_size" text="{=taom_troop_weight_size}Heavy troops" />
+
+  <!-- AiPartySize (#461) - party-size-limit and upkeep breakdown labels for AI lord parties -->
+  <string id="taom_ai_party_size" text="{=taom_ai_party_size}Warlord&apos;s host" />
+  <string id="taom_ai_garrison_size" text="{=taom_ai_garrison_size}Fortified realm" />
+  <string id="taom_ai_forage" text="{=taom_ai_forage}Campaign foraging" />
+  <string id="taom_ai_levy" text="{=taom_ai_levy}Levied service" />
 	<!-- SpecialResources -->
 	<string id="taom_res_desertion" text="{=taom_res_desertion}{COUNT} elite troops deserted &#8212; your {RESOURCE} are depleted!" />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->

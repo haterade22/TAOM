@@ -2,6 +2,95 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-18
+
+### feat(balance): AI lord parties keep the roster they spawn with (#461)
+
+Reported from play: lord parties spawn with 500 to 3000 troops and collapse to 50 to 150 after a
+couple of ticks. Money and food were the obvious suspects and both are wrong. **In vanilla 1.4.8
+neither starvation nor unpaid wages removes a single troop.** `FoodConsumptionBehavior.PartyConsumeFood`
+never touches `MemberRoster`, and the wage branch of `DefaultPartyDesertionModel` is hard capped at 20
+men a day. Both are morale inputs.
+
+The 50 to 150 destination is simply the stock vanilla party size limit: base 20, plus 25 per clan tier
+for a clan leader, plus a quarter of Steward, plus perks. What removes the rest that fast is **TAOM's
+own TroopWeight shed**. It postfixes `PartyUpgraderCampaignBehavior.UpgradeReadyTroops`, which vanilla
+drives from `DailyTickPartyEvent` for every party not in a map event, every day, whether or not
+anything upgraded, and `PlanShed` takes the entire overflow in one pass. Meanwhile
+`FindAppropriateInitialRosterForMobileParty` fills a party from its template without ever consulting
+`PartySizeLimit`, so the 2026-08-14 max-sum raise (`4f72e160`) had nothing holding the other end.
+`docs/reference/party-template-sizing.md` predicted this and deferred it pending a smoke test; the
+smoke test happened by accident.
+
+**Raising the cap alone would not have worked, and that is the real finding.** Four mechanisms shrink
+an over-sized party and the cap governs two. The other two run on morale and ignore it: vanilla's
+morale desertion (up to 14.87% a day below morale 10) and the garrison dump. A large party starves
+automatically, worth a flat -30 morale, and cannot pay its wages, worth -20. So the cap ships with
+food and wage relief behind the same AI-only gate.
+
+**Startup gold had to move for a reason worth writing down.** Gold is granted as
+`K x runwayDays x avgTroopWage`, so the runway a lord actually gets is `K x runwayDays / N` for a
+party of N: **K is the assumed party size.** At `K = 52.5437` the stated 70 to 270 day runways held
+near 53 men, which is exactly what vanilla allowed. At 1000 men they would be about four days. K is
+now 100, which is `targetPartySize x (1 - wageRelief)`, and every culture row scaled by 1.9032.
+
+One service, three existing models, no new Harmony patch. Six MCM knobs, MCM-only on purpose: a value
+settable from both JSON and MCM has to enforce the same invariants twice or the two drift, which
+`csharp-architecture.md` already records as a shipped bug class.
+
+**The ordering is load-bearing and is pinned by a test.** `ApplyAiLordScaling` must run before
+`ApplyPartySizeWeightPenalty`, because that call caches `(int)limit.ResultNumber` as the true base the
+daily shed trims back to. Put it after and the shed keeps trimming to the unscaled limit: the feature
+does nothing, and every arithmetic unit test still passes. Both orderings produce the same
+`ExplainedNumber` and the divergence only shows a tick later inside a hook taking a sealed `PartyBase`,
+so it is guarded by a source-order assertion following the `BannerTripletOrderingTests` precedent.
+
+Also fixed along the way: `startup-resources.md` documented `K = 55.93`, a value that never shipped.
+Mordor was 55,000 and `52.5437 x 150 x 6.91` rounds to 55,000 while 55.93 rounds to 60,000. And
+`party-template-sizing.md` still said Mordor carried 39 stacks; `2fcbef10` took it to 52.
+
+**Not fixed.** The garrison dump is narrowed but not closed: a lord entering a friendly fief with a
+thin food stock can still donate toward the 30-man floor, and closing it needs a Harmony patch on a
+private behaviour method. Raising the garrison multiplier gives lords more room to donate, so those
+two knobs pull against each other. Battle load at this scale is unprofiled and control battles are
+owed before trusting the default multiplier. The 26.1x fief-income spread is untouched, so startup
+gold remains a cushion rather than a fix.
+
+Suite 6683 green, `validate_moduledata` PASS. The 4 new localization keys are registered and seeded
+into all 12 language files, but they render English until a translator run: no provider API key is
+set in this environment, so `translate_with_claude.py` could only seed ids, not translate. The seeded
+rows are correctly detected as untranslated (`cur_text == eng_text`), so a later run picks them up.
+
+**Deep review (5 agents) then fixes.** Standards, API compatibility (8/8 signatures against the
+installed 1.4.8 DLLs) and completeness came back clean. Three things were wrong and are fixed here.
+**The player's own clan parties were collecting the full AI treatment** including both reliefs: a
+party you raise for a companion is a `LordPartyComponent`, so it is `IsLordParty` and is not
+`IsMainParty`, and the gate tested only the latter. The predicate now takes an explicit player-clan
+term with its own regression test. The master toggle's hint claimed "off = vanilla caps", which
+ignored the separately-toggled Troop Weight tax still deflating the limit. And the feature doc's
+retention table was built on an assumed all-weight-2.0 orc roster; measuring the shipped data
+instead gives Mordor an average weight of **1.20**, not 2.0, with Isengard, Goblin-town and Rohan at
+exactly 1.00 and only Rivendell genuinely heavy at 1.93. Retention at the defaults is 100% for
+Gondor, Rohan and Rivendell, 95% Erebor, 79% Goblin-town, 77% Isengard and 58% Mordor. The elite tax
+costs far less than the original write-up claimed.
+
+**Career flat passives are now literal.** `CareerPassiveService.ApplyFlat` added its magnitude in the
+BASE frame, so it was multiplied by every factor on the number. With this feature's 3x garrison
+multiplier in play a "+4 party size" perk was worth about +13, and a perk has to be worth what the
+career screen says it is. `ApplyFlat` now divides the factor frame back out. The blast radius turned
+out to be nil rather than wide: it has exactly two call sites, and the Health one runs on a
+factor-free number because vanilla `MaxHitpoints` uses only `Add`. This also closes a sibling defect
+that a June review had already logged as known-and-deferred in the lessons file.
+
+RCA: `docs/reviews/rca-ai-party-size-2026-08-18.md`.
+
+Not-tested: in-game behaviour. Everything here is the derivation, the frame arithmetic, the gate and
+the call ordering.
+Research: DefaultPartySizeLimitModel, DefaultPartyDesertionModel, PartyUpgraderCampaignBehavior,
+GarrisonTroopsCampaignBehavior, ClanVariablesCampaignBehavior.MakeClanFinancialEvaluation, ExplainedNumber.
+Save-compat: MCM settings only, no new saved state. Startup gold applies at new-game start, so
+existing campaigns keep the gold they were granted.
+
 ## 2026-08-17
 
 ### feat(mordor): Black Numenorean armour, weapons, and troop tree

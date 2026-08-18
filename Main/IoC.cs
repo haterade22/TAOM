@@ -102,6 +102,7 @@ public static class IoC
         EncyclopediaIoC.RegisterEncyclopediaFeature(container);
         StartupResourcesIoC.RegisterStartupResourcesFeature(container);
         TroopWeightIoC.RegisterTroopWeightFeature(container);
+        Features.AiPartySize.AiPartySizeIoC.RegisterAiPartySizeFeature(container);
         AdvancedCombatIoC.RegisterAdvancedCombatFeature(container);
         WargIoC.RegisterWargFeature(container);
         SpiderIoC.RegisterSpiderFeature(container);

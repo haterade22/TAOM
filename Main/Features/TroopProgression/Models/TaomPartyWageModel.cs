@@ -7,6 +7,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.AiPartySize;
 using TAOM.Features.CulturalFeats;
 
 namespace TAOM.Features.TroopProgression.Models;
@@ -19,15 +20,18 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     private readonly ITroopCostService _costService;
     private readonly ICareerPassiveService _careerPassives;
     private readonly IWageModifierService _wageModifiers;
+    private readonly IAiPartySizeService _aiPartySize;
 
     public TaomPartyWageModel(
         ITroopCostService costService,
         ICareerPassiveService careerPassives,
-        IWageModifierService wageModifiers)
+        IWageModifierService wageModifiers,
+        IAiPartySizeService aiPartySize)
     {
         _costService = costService;
         _careerPassives = careerPassives;
         _wageModifiers = wageModifiers;
+        _aiPartySize = aiPartySize;
     }
 
     public override int MaxWagePaymentLimit => 20000;
@@ -61,6 +65,13 @@ public class TaomPartyWageModel : DefaultPartyWageModel
             ref result, garrisonInputs, partyInputs, rohanMountedWageBonus, mountedWageShare, CultureText);
 
         _careerPassives.ApplyFactor(mobileParty.LeaderHero?.StringId, ref result, PassiveEffectType.TroopWages);
+        // AI wage relief (#461). MakeClanFinancialEvaluation sets an AI clan's PaymentLimit from its
+        // leader's gold (200-600 in the bottom bracket), which a large party blows past immediately;
+        // HasUnpaidWages then pins to 1.0, worth a flat -20 morale, and vanilla's morale desertion
+        // starts eating the party regardless of its size limit. Deliberately applied here and not in
+        // GetCharacterWage, so Campaign.AverageWage — which the garrison-donation math divides by —
+        // keeps reading true per-head cost.
+        _aiPartySize.ApplyAiWageRelief(mobileParty, ref result);
         return result;
     }
 

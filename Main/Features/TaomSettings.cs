@@ -28,6 +28,38 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Weighted party size — elite units consume more party capacity. Cave trolls (4x), elves (2x), warg riders (2x).")]
     public bool EnableTroopWeight { get; set; } = true;
 
+    // --- AI Party Size ---
+
+    [SettingPropertyGroup("AI Party Size")]
+    [SettingPropertyBool("Enable AI Party Scaling", Order = 0,
+        HintText = "Lets AI lord parties HOLD the roster their party template spawns them with. Without this they spawn at 500-3000 and are trimmed back to the vanilla 50-150 cap within a day. Also relieves AI food and wage pressure, because those drive a second, morale-based desertion path that ignores the cap entirely. Off restores the pre-feature behaviour. Note that is not the same as raw vanilla: the Troop Weight elite tax has its own toggle and still deflates a heavy party's limit when it is on.")]
+    public bool EnableAiPartyScaling { get; set; } = true;
+
+    [SettingPropertyGroup("AI Party Size")]
+    [SettingPropertyFloatingInteger("AI Lord Party Size Multiplier", 1.0f, 20.0f, "#0.0", Order = 1,
+        HintText = "Multiplies an AI lord's party size limit. Preserves clan-tier progression, so a tier-4 lord still outgrows a tier-1. 1.0 = vanilla. Default: 10.0.")]
+    public float AiLordPartySizeFactor { get; set; } = 10f;
+
+    [SettingPropertyGroup("AI Party Size")]
+    [SettingPropertyFloatingInteger("AI Lord Party Size Flat Bonus", 0.0f, 2000.0f, "#0", Order = 2,
+        HintText = "Added to an AI lord's party size limit AFTER the multiplier, so it is worth exactly this many men. Exists because template spawn size does not scale with clan tier: under a multiplier alone, low-tier lords still shed. Default: 300.")]
+    public float AiLordPartySizeFlatBonus { get; set; } = 300f;
+
+    [SettingPropertyGroup("AI Party Size")]
+    [SettingPropertyFloatingInteger("Garrison Size Multiplier", 1.0f, 10.0f, "#0.0", Order = 3,
+        HintText = "Multiplies every settlement garrison's size limit, player-owned included. Siege balance, not an AI handicap: lords fielding thousands would walk over garrisons still capped near vanilla's 200. Raising this also gives lords more room to donate troops on entering a friendly fief. 1.0 = vanilla. Default: 3.0.")]
+    public float AiGarrisonSizeFactor { get; set; } = 3f;
+
+    [SettingPropertyGroup("AI Party Size")]
+    [SettingPropertyFloatingInteger("AI Food Relief", 0.0f, 0.95f, "#0.00", Order = 4,
+        HintText = "Fraction of an AI lord party's food consumption waived. A large party cannot buy 30 days of food from any town, so it starves permanently, and starvation is -30 morale which opens vanilla's morale-desertion path. 0 = vanilla. Default: 0.90.")]
+    public float AiFoodConsumptionRelief { get; set; } = 0.9f;
+
+    [SettingPropertyGroup("AI Party Size")]
+    [SettingPropertyFloatingInteger("AI Wage Relief", 0.0f, 0.95f, "#0.00", Order = 5,
+        HintText = "Fraction of an AI lord party's wage bill waived. AI clan wage budgets are set from clan gold and a large party blows past them, pinning unpaid wages at -20 morale and opening the same desertion path. 0 = vanilla. Default: 0.90.")]
+    public float AiWageRelief { get; set; } = 0.9f;
+
     // --- Settlement Food ---
 
     [SettingPropertyGroup("Settlement Food")]

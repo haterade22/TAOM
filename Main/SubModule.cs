@@ -723,6 +723,7 @@ public class SubModule : MBSubModuleBase
         var childGenService = IoC.Resolve<IInitialChildGenerationService>();
         campaignStarter.AddBehavior(new TaomInitialChildGenerationBehavior(childGenService));
 
+        var aiPartySize = IoC.Resolve<TAOM.Features.AiPartySize.IAiPartySizeService>();
         var costService = IoC.Resolve<ITroopCostService>();
         // Phase 9b #180 / partial #148 — IWageModifierService extraction. Hoists garrison-wage
         // feat loop + Mordor/Gundabad/Umbar party-wage feats + Rohan mounted-wage scaling +
@@ -733,7 +734,7 @@ public class SubModule : MBSubModuleBase
         var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
         var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
         campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives));
-        campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
+        campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers, aiPartySize));
         campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
 
         // Prisoner-recruitment morale waiver: no morale lost recruiting a prisoner of your own
@@ -824,8 +825,9 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
         campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives));
-        campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>(), IoC.Resolve<IModLogger>()));
-        campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats));
+        var aiPartySize = IoC.Resolve<TAOM.Features.AiPartySize.IAiPartySizeService>();
+        campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>(), aiPartySize, IoC.Resolve<IModLogger>()));
+        campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats, aiPartySize));
         campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementEconomyModel(IoC.Resolve<ISettlementEconomyService>(), IoC.Resolve<ISettlementEconomyConfigProvider>()));

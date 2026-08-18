@@ -2447,5 +2447,9 @@
     <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
     <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
     <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
+    <string id="taom_ai_party_size" text="Warlord's host" />
+    <string id="taom_ai_garrison_size" text="Fortified realm" />
+    <string id="taom_ai_forage" text="Campaign foraging" />
+    <string id="taom_ai_levy" text="Levied service" />
   </strings>
 </base>

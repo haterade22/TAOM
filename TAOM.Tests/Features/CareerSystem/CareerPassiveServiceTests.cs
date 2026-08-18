@@ -224,6 +224,84 @@ public class CareerPassiveServiceTests
         Assert.AreEqual(300f, factor.ResultNumber, 0.01f, "ApplyFactor on a whole-count magnitude is the bug");
     }
 
+    // Deep review 2026-08-18. The test above proves a flat count is not applied as a FACTOR. It does
+    // not prove the count survives contact with factors added by someone else, because it runs on a
+    // bare ExplainedNumber. ExplainedNumber resolves as BaseNumber * (1 + SumOfFactors), so a
+    // base-frame Add is silently multiplied by every factor on the number. That was a rounding error
+    // while only culture feats contributed; once AiPartySize started adding a large factor
+    // (garrisons default to 3x) a "+4 party size" perk became worth +13 and the career screen's
+    // promise stopped being true.
+    private void GivenPartySizePassive(float magnitude)
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_party_size", 10);
+        _registry.GetChoice("wb_party_size").Returns(new CareerChoiceDefinition(
+            id: "wb_party_size", groupId: "wb_command", type: ChoiceType.Passive,
+            description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.PartySize, magnitude),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            id: "wb_root", groupId: "", type: ChoiceType.Passive,
+            description: "", iconSprite: "", passive: null, mutations: null));
+        _service.RefreshCache(_dataService, _registry);
+    }
+
+    [TestMethod]
+    public void ApplyFlat_UnderACultureFactor_IsStillWorthItsLiteralCount()
+    {
+        // Mordor's +20% party-size feat is already in the frame when the career passive lands.
+        GivenPartySizePassive(2f);
+        var result = new ExplainedNumber(100f);
+        result.AddFactor(0.20f);
+
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.PartySize);
+
+        Assert.AreEqual(122f, result.ResultNumber, 0.01f, "+2 must be worth exactly 2 bodies (120 + 2)");
+        Assert.AreNotEqual(122.4f, result.ResultNumber, 0.01f, "a base-frame Add would be amplified to +2.4");
+    }
+
+    [TestMethod]
+    public void ApplyFlat_UnderALargeAiPartySizeFactor_IsNotAmplified()
+    {
+        // A player-owned garrison: 3x garrison multiplier plus a 0.2 culture feat = scale 3.2.
+        GivenPartySizePassive(4f);
+        var result = new ExplainedNumber(100f);
+        result.AddFactor(2.2f);
+
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.PartySize);
+
+        Assert.AreEqual(324f, result.ResultNumber, 0.01f, "+4 must be worth exactly 4 bodies (320 + 4)");
+        Assert.AreNotEqual(332.8f, result.ResultNumber, 0.01f,
+            "the pre-fix base-frame Add turned a '+4 party size' perk into +12.8");
+    }
+
+    [TestMethod]
+    public void ApplyFlat_NoFactors_IsUnchangedByTheResultFrameConversion()
+    {
+        // The Health call site (TaomCharacterStatsModel) runs on a factor-free ExplainedNumber:
+        // vanilla DefaultCharacterStatsModel.MaxHitpoints uses only Add, never AddFactor. The
+        // conversion must therefore be a no-op there, which is why it was safe to change.
+        GivenPartySizePassive(25f);
+        var result = new ExplainedNumber(100f);
+
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.PartySize);
+
+        Assert.AreEqual(125f, result.ResultNumber, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyFlat_CancelledFactorFrame_IsSkippedRatherThanDividingByNearZero()
+    {
+        GivenPartySizePassive(4f);
+        var result = new ExplainedNumber(100f);
+        result.AddFactor(-1f);
+
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.PartySize);
+
+        Assert.AreEqual(0f, result.ResultNumber, 0.01f);
+        Assert.IsFalse(float.IsNaN(result.ResultNumber), "a cancelled frame must not poison the number");
+    }
+
     [TestMethod]
     public void ApplyFactor_NullHeroId_IsNoOp()
     {

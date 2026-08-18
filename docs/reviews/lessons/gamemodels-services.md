@@ -156,7 +156,7 @@ Folding a master toggle inside the SERVICE is not the same as restoring vanilla.
 ### An absolute count subtracted from an `ExplainedNumber` must be scaled into the BASE frame first
 `ExplainedNumber.Add(v)` does `BaseNumber += v`; `AddFactor(v)` does `SumOfFactors += v`; the result is `BaseNumber * (1 + SumOfFactors)`. So **an `Add` is always multiplied by `(1 + SumOfFactors)` no matter when it runs** — factors are summed, not sequenced, and call ORDER cannot clamp or scope an `Add`. Any value you derived from `limit.ResultNumber` (or that is an absolute body/gold/item count) is in the RESULT frame; subtracting it raw over-applies it by `value × SumOfFactors` for every factor-boosted entity. Divide by `(1 + SumOfFactors)` before the `Add` — gate the scale as a positive requirement (`if (!(scale > eps)) return;`) so NaN and factor-cancelled (`SumOfFactors <= -1`) frames skip rather than poison. Corollary: a result-frame clamp (`penalty <= baseLimit - 1` to keep the limit ≥ 1) only holds if the subtraction is frame-converted; applied raw, the floor silently breaks for factor-boosted entities.
 - **Why missed:** TroopWeight's count→limit rework (2026-07-11) shipped `limit.Add(-penalty)` with a comment reasoning that it was "applied last so the surplus is clamped against the feat/career-boosted limit" — reasoning about call ORDER without reading `ExplainedNumber`'s arithmetic. Ordering is irrelevant; the comment was actively teaching the wrong model. The 2026-07-11 5-agent review + Codex pass both read the method and neither opened the struct. Every factor-boosted culture (Mordor +10% … Goblin +40%) was over-taxed for 6 days.
-- **Prevent:** when mutating an `ExplainedNumber` you did not construct, state in a comment which FRAME your value is in before calling `Add`/`AddFactor`. Unit-test the factor case explicitly — construct `new ExplainedNumber(base)`, `AddFactor(f)`, apply, assert the exact `ResultNumber` (a no-factor-only test passes on the buggy code). Known live sibling still unfixed: `CareerPassiveService.ApplyFlat` amplifies flat "+N party size" passives the same way (+6 reads as +8.4 at Goblin +40%) — deliberately out of scope, its own issue.
+- **Prevent:** when mutating an `ExplainedNumber` you did not construct, state in a comment which FRAME your value is in before calling `Add`/`AddFactor`. Unit-test the factor case explicitly: construct `new ExplainedNumber(base)`, `AddFactor(f)`, apply, assert the exact `ResultNumber` (a no-factor-only test passes on the buggy code). That known live sibling, `CareerPassiveService.ApplyFlat` amplifying flat "+N party size" passives the same way (+6 reading as +8.4 at Goblin +40%), was FIXED on 2026-08-18 during the #461 review: it now divides the factor frame back out. See the "flat Add on a shared ExplainedNumber" entry below.
 - **Source:** docs/reviews/rca-troopweight-result-frame-2026-07-17.md (finding 1). Signatures verified against installed v1.4.7 `TaleWorlds.CampaignSystem.ExplainedNumber` (`Add`:227, `AddFactor`:242, `_unclampedResultNumber`:149, `ResultNumber`:115).
 
 ### Guard the float→int CAST, not the integer arithmetic downstream of it
@@ -496,3 +496,49 @@ correct.
 - **Source:** `docs/reviews/rca-javelin-shield-penetration-2026-08-17.md` (2026-08-17 javelin damage report, #320 item 4). Verified against the installed v1.4.8 DLLs:
   `MissionCombatMechanicsHelper.ComputeBlowDamageOnShield:531`, `:208`, `Mission.cs:5774-5788`,
   `managed_core_parameters.xml:232-236`.
+
+
+### Excluding "the player" means enumerating ownership relations, not testing IsMainParty
+
+A campaign feature scoped to "AI only" has at least four player-owned surfaces to consider: the
+main party, parties owned by the player's CLAN, garrisons of player-owned settlements, and
+player-owned caravans. `MobileParty.IsMainParty` covers exactly one of them.
+
+- **Why missed:** #461 gated on `!isMainParty && isLordParty && hasLeaderHero` and the gating tests
+  covered main-party versus non-main only. A party the player raises for a companion is a
+  `LordPartyComponent`, so it is `IsLordParty` and is NOT `IsMainParty`: it collected a 10x size cap
+  plus 90% food and wage relief. The engine says so plainly, in the very component being used:
+  `LordPartyComponent.InitializeLordPartyProperties` branches on
+  `mobileParty == MobileParty.MainParty || owner.Clan == Clan.PlayerClan`. Two conditions, and the
+  gate implemented one.
+- **Prevent:** when a predicate excludes the player, write each ownership relation as its own named
+  parameter and its own named test. If the engine's own code ORs two player conditions together,
+  that is the enumeration, already done for you. Five review agents missed this; the user found it
+  by asking "this doesn't impact the player's party right?"
+- **Source:** `docs/reviews/rca-ai-party-size-2026-08-18.md` finding 1. Verified against installed
+  v1.4.8 `LordPartyComponent.cs:32,122` and `MobileParty.UpdatePartyComponentFlags`.
+
+### A flat Add on a shared ExplainedNumber is amplified by every factor on it
+
+`ExplainedNumber.ResultNumber` is `BaseNumber * (1 + SumOfFactors)`. Anything added in the BASE
+frame is therefore multiplied by the total of every factor any contributor adds, whatever the call
+order. Introducing a large new factor into an existing chain silently revalues every pre-existing
+flat add on that same number.
+
+- **Why missed:** #461 reasoned about exactly this hazard for its OWN flat knob, and wrote
+  `AddResultFrameBonus` to divide the factors back out so "+300" means +300. It then never asked
+  which other contributors add flats to the same `ExplainedNumber`.
+  `CareerPassiveService.ApplyFlat` does a raw `result.Add(magnitude)` for `PassiveEffectType.PartySize`,
+  so inside a player-owned garrison a +25 career passive became roughly +80 at the new 3x garrison
+  factor.
+- **Prevent:** before adding a factor to a shared `ExplainedNumber`, grep every other contributor to
+  that number for base-frame `Add` calls and state what the new factor does to each. Getting the
+  frame right for your own contribution is not the same as getting it right for the number.
+- **Second lesson, about the deferral rather than the bug.** This was first written up as "documented,
+  not fixed: `ApplyFlat` is shared with Health and other passives, so converting it has its own blast
+  radius." That estimate was never checked. `ApplyFlat` has exactly TWO call sites, and the Health one
+  runs on a factor-free number, so the real blast radius was nil and the fix was six lines. **Grep the
+  call sites before pricing a deferral**; "shared helper, therefore risky" is a guess wearing the
+  clothes of an assessment.
+- **Source:** `docs/reviews/rca-ai-party-size-2026-08-18.md` finding 4; `CareerPassiveService.cs:170-176`
+  versus `AiPartySizeService.AddResultFrameBonus`.

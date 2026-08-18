@@ -66,8 +66,9 @@ One ratio `r` is drawn for the whole party, then applied to every stack. Callers
 that party's lifetime, and **completely independent of the template**.
 
 **Consequence:** the expected spawn roster is the midpoint of the min sum and the max sum, and
-raising the max sum raises it linearly. Mordor's culture template carries 39 stacks summing to
-min 47. At the old max sum of 1446 the expected spawn roster was about 747. At the new 3500 it is
+raising the max sum raises it linearly. Mordor's culture template carries 52 stacks summing to
+min 47 (39 when this was written; commit `2fcbef10` added 13 Black Numenorean stacks and re-ran the
+tool, which re-absorbed them while holding the 3500 target). At the old max sum of 1446 the expected spawn roster was about 747. At the new 3500 it is
 about 1773.
 
 ## `PartySizeLimit` is the steady-state cap, and it is a different model
@@ -148,7 +149,7 @@ sum, which the tool never touches.
 |---|---|---|---|---|---|
 | goblin | 4500 | 11 | 12 | 54 | 600 |
 | bluecraig | 4500 | 1 | 12 | 54 | 600 |
-| mordor | 3500 | 16 | 39 | 47 | 1446 |
+| mordor | 3500 | 16 | 52 | 47 | 1446 |
 | isengard | 3500 | 12 | 19 | 54 | 950 |
 | gundabad | 3500 | 6 | 15 | 58 | 750 |
 | dolguldur | 3500 | 7 | 31 | 93 | 1550 |
@@ -249,12 +250,19 @@ After any apply, run `python tools/validate_moduledata.py` (the `BROKEN_TROOP_RE
 
 ## Open questions
 
-**The size cap has not been raised to match.** These are spawn numbers only. `PartySizeLimit` was
-left exactly as it was, so a Mordor lord who spawns with about 1773 men cannot recruit and sheds a
-quarter of his overflow every day until he is back at whatever `TaomPartySizeModel` gives him. On
-the decay rate above that is a couple of campaign weeks, so what players actually get is huge
-parties at campaign start that collapse back to normal size, not permanently large armies. Whether
-that is the intended feel is the thing the in-game smoke test has to answer.
+**ANSWERED 2026-08-18: the cap has now been raised.** This section predicted the behaviour
+correctly and play confirmed it, with one correction to the mechanism. The collapse was not mainly
+the quarter-of-overflow desertion described below, which takes about ten campaign days; it was
+TAOM's own TroopWeight shed, which runs off `DailyTickPartyEvent` for every party not in a map
+event and removes the WHOLE overflow in a single tick. Players saw the drop within a couple of
+ticks, not a couple of weeks.
+
+Raising the cap alone would not have been enough. Two further mechanisms ignore `PartySizeLimit`
+entirely and run on morale instead: vanilla's morale desertion (up to 14.87% a day below morale 10)
+and the garrison dump. A large party starves automatically (a flat -30 morale) and cannot pay its
+wages (-20), so both stay armed no matter how high the cap goes. The fix therefore carries food and
+wage relief alongside the cap, and re-derives startup gold, whose `K` turns out to be the assumed
+party size. See [../features/ai-party-size.md](../features/ai-party-size.md) and issue #461.
 
 **A 3500-man cap would be more than ten times what vanilla builds a lord party from.** Vanilla starts
 at `BaseMobilePartySize = 20` (`DefaultPartySizeLimitModel.cs:27`) and adds 15 per clan tier plus 25
@@ -276,7 +284,9 @@ spread half grew, so each stack's share of the roster shifts toward the wide sta
 the ones whose min carried most of their count. Mordor's factor is `(3500 - 47) / (1446 - 47)`,
 about 2.47, so a `min="5" max="5"` stack still contributes 5 while a `min="1" max="100"` stack now
 contributes about `1 + 99 * 2.47 * r`. Nobody has compared a spawned Mordor party's troop mix before
-and after.
+and after. Note that this arithmetic describes the pre-Black-Numenorean file: commit `2fcbef10` took
+Mordor from 39 stacks to 52 and re-ran the tool, so the per-stack spreads have moved even though the
+min sum (47) and the 3500 target have not.
 
 ## Related
 

@@ -2106,3 +2106,52 @@ readers-are-not-confined-to-the-declaring-class (adapters-taleworlds-api), enume
 not-episode-exits and same-sequence-different-actor and singleton-holding-an-engine-reference
 (state-lifecycle-save), two-gates-one-condition (gamemodels-services), supply-side-coverage
 (testing-qa). RCA: `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md`.
+
+## Review 88: AI party size (#461), 5-agent deep-review plus a user question (2026-08-18)
+
+The changeset lets AI lord parties keep the roster their template spawns them with, instead of being
+trimmed to the vanilla 50-150 cap inside a day. Root cause was not money or food: in vanilla neither
+starvation nor unpaid wages removes a troop, they only move morale. The fast remover was TAOM's own
+TroopWeight shed, which runs off `DailyTickPartyEvent` for every party not in a map event and takes
+the whole overflow in one pass, against a spawn size that `FindAppropriateInitialRosterForMobileParty`
+never clamps.
+
+Standards, API compatibility (8/8 signatures against installed 1.4.8) and completeness came back
+clean. Six findings survived verification.
+
+**The highest-severity finding came from the user, not an agent.** Asked whether this touched the
+player's party, and it did: a party the player raises for a companion is a `LordPartyComponent`, so
+it is `IsLordParty` and is NOT `IsMainParty`, and the gate tested only the latter. Player clan
+parties were collecting the 10x cap plus 90% food and wage relief. Five agents missed it because they
+checked whether the gate was applied consistently, never whether the predicate was the right
+predicate. The gate now takes an explicit player-clan term.
+
+**A number I had already published was wrong.** I asserted heavy cultures shed to roughly half, from
+an assumed all-weight-2.0 orc roster, and put it in a doc table. Parsing `troop_weights.xml` against
+the templates: Mordor averages **1.20**, Isengard, Goblin-town and Rohan are exactly **1.00**, and
+only Rivendell is genuinely heavy at 1.93. Real retention at the defaults is 100% for Gondor, Rohan
+and Rivendell, 95% Erebor, 79% Goblin-town, 77% Isengard, 58% Mordor. The data-flow agent challenged
+the premise correctly but its own numbers (1.10, 9.6%) were also wrong, so the correction needed
+correcting.
+
+**A deferral that should never have been one.** The career `PartySize` passive is added in the base
+frame by `CareerPassiveService.ApplyFlat`, so the new 3x garrison factor turned a "+4 party size"
+perk into about +13. I first wrote this up as documented-not-fixed on the grounds that `ApplyFlat` is
+shared and converting it has blast radius. That estimate was never checked. It has exactly two call
+sites, and the Health one runs on a factor-free number because vanilla `MaxHitpoints` uses only
+`Add`, so the real blast radius was nil and the fix was six lines. A June review had already logged
+this same bug as known-and-deferred; it is now closed.
+
+Also fixed: the master toggle's hint claimed "off = vanilla caps" while the separately-toggled Troop
+Weight tax still deflates the limit.
+
+Process finding worth the record: `io.open(..., encoding='utf-8-sig')` for round-trip edits writes a
+BOM unconditionally and, with default newline handling, flattens CRLF. It silently rewrote encodings
+on 11 files. Caught by `lint_docs.py` flagging line 1 of a file never edited. Then I did it again to
+`LESSONS-LEARNED.md` within the same session, minutes after writing the lesson about it, which is the
+real argument for byte-level round-trip as a reflex rather than a rule to remember.
+
+Suite 6688 green, 0 failed, 2 skipped. Six lessons: enumerate-ownership-relations-not-IsMainParty and
+flat-Add-on-a-shared-ExplainedNumber and grep-the-call-sites-before-pricing-a-deferral
+(gamemodels-services), binary-round-trip-is-about-the-idiom-not-the-file-type
+(build-tooling-workflow). RCA: `docs/reviews/rca-ai-party-size-2026-08-18.md`.

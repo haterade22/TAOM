@@ -20,7 +20,7 @@ namespace TAOM.Tests.Features.CoopInterop;
 //   1. Same settings -> same code, every time. Reflection does not guarantee member order, so the
 //      canonical text is sorted; without that the hash would drift between runs.
 //   2. Different settings -> different code, and the RIGHT GROUP named. A global-only answer sends
-//      a player through 125 checkboxes.
+//      a player through 131 checkboxes.
 //   3. A locale must not fake a mismatch. 0.25f renders "0,25" under es-ES: two peers with identical
 //      settings would diverge on the decimal separator alone. This is the failure that would have
 //      made the feature worse than nothing.
@@ -207,7 +207,7 @@ public class SettingsFingerprintTests
         // guards nothing. The count is the guard that can fail: add a setting anywhere below and
         // one of these numbers moves, which is the moment to decide what it is. The same numbers
         // are quoted in docs/features/coop-interop.md.
-        AssertSplit(typeof(TaomSettings), reflected: 168, covered: 125);
+        AssertSplit(typeof(TaomSettings), reflected: 174, covered: 131);
         AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 7, covered: 0);
         AssertSplit(typeof(BlowDiagnosticsSettings), reflected: 1, covered: 0);
         AssertSplit(typeof(CrashReportSettings), reflected: 6, covered: 0);
@@ -353,7 +353,7 @@ public class SettingsFingerprintTests
         // neither throw on a diagnostic path nor cost the coverage of the objects that are there.
         var report = SettingsFingerprint.ComputeAcross(new TaomSettings(), null, new CrashReportSettings());
 
-        Assert.AreEqual(125, report.Covered, "a null entry cost coverage");
+        Assert.AreEqual(131, report.Covered, "a null entry cost coverage");
         Assert.AreEqual(SettingsFingerprint.Compute(new TaomSettings()).Global, report.Global);
     }
 
@@ -420,7 +420,7 @@ public class SettingsFingerprintTests
         var report = SettingsFingerprint.Compute(new TaomSettings());
         // Pinned, not a floor: the docs quote this number, and a change here means someone added
         // or reclassified a setting and the docs need the same edit.
-        Assert.AreEqual(125, report.Covered,
+        Assert.AreEqual(131, report.Covered,
             $"simulation-relevant settings changed — update docs/features/coop-interop.md too");
         Assert.AreEqual(64, report.Global.Length, "SHA-256 hex is 64 chars");
         Assert.IsTrue(report.ByGroup.Count > 5, "expected the fingerprint to span several groups");

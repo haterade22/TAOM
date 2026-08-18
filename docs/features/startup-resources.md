@@ -76,7 +76,7 @@ faction's treasury track how many lords it happens to have rather than what it n
 replaces that:
 
 ```
-gold = K x runwayDays x avgTroopWage        K = 55.93
+gold = K x runwayDays x avgTroopWage        K = 100.0
 ```
 
 **`avgTroopWage` is measured, and it models what the engine actually charges.** Each noble clan's
@@ -104,6 +104,16 @@ carries Rhûn's cost, not a Variag one.
 same `ExplainedNumber` at runtime (DeepPockets, Frugal, `MilitaryCoronae`, `EfficientCampaigner` and
 a dozen more), all depending on which lord holds which perk in a given campaign. This is a
 design-time proxy for field-party burn, not the runtime figure, and no static table can be otherwise.
+
+**`K` is the assumed sustained party size, and that is the whole point of it.** Rearranged, the
+runway a lord actually gets is `K x runwayDays / N` for a party of N men, so the tiers below only
+mean what they say when N equals K. K was **52.5437**, roughly the 50-150 band a vanilla
+`PartySizeLimit` allowed, so the arithmetic held. Issue #461 raises AI lords toward ~1,000 men and
+waives 90% of their wage bill, so the burn the runway has to fund is `N x (1 - relief)`, giving
+`K = 100`. Every gold value scaled by `100 / 52.5437 = 1.9032` and re-rounded, moving the per-lord
+pool from about 2.16M to 4.10M denars. **If you retune AI Wage Relief or the party-size knobs, this
+is what goes stale:** recompute K as `targetPartySize x (1 - wageRelief)`. See
+[ai-party-size.md](ai-party-size.md).
 
 `runwayDays` is the only judgement call: **270** for the mythic treasuries (the four elven realms
 and Erebor), **150** for the great realms (Gondor, Rhûn, Umbar, Mordor, Moria), **100** for the
@@ -282,7 +292,7 @@ The NPC-lord gold and clan-influence half is unaffected: `StartupResourcesBehavi
 
 ## Changelog
 
-- 2026-08-14 (later, supersedes the flattening below): Retuned NPC-lord `gold` and clan `influence` against **measured** per-culture burn rates. Flat denars are not flat in effect: a culture's troops cost between 5.31 and 19.03 denars a day per head, so an identical 250,000 funded 1.89x more campaign for Mordor than for Gundabad, and an identical 500,000 bought Rivendell less than Lothlorien. Gold is now `K x runwayDays x avgTroopWage` with four lore tiers (270 / 150 / 100 / 70 days) and `K = 55.93`, putting about 100M denars in AI hands. Influence moved to three tiers (600 / 400 / 200) keyed on how centrally a realm acts. Derivation and the measurement method are in the config file's own header. `playerGold` unchanged. Companion data change in the same pass: eight fief-starved cultures' settlements raised to a committed floor in the LIVE `TAOM_Map` module (see "The structural gap" below), gated by the new `SETTLEMENT_ECONOMY_FLOOR` validator check.
+- 2026-08-14 (later, supersedes the flattening below): Retuned NPC-lord `gold` and clan `influence` against **measured** per-culture burn rates. Flat denars are not flat in effect: a culture's troops cost between 5.31 and 19.03 denars a day per head, so an identical 250,000 funded 1.89x more campaign for Mordor than for Gundabad, and an identical 500,000 bought Rivendell less than Lothlorien. Gold is now `K x runwayDays x avgTroopWage` with four lore tiers (270 / 150 / 100 / 70 days) and `K = 52.5437`, putting about 100M denars in AI hands. Influence moved to three tiers (600 / 400 / 200) keyed on how centrally a realm acts. Derivation and the measurement method are in the config file's own header. `playerGold` unchanged. Companion data change in the same pass: eight fief-starved cultures' settlements raised to a committed floor in the LIVE `TAOM_Map` module (see "The structural gap" below), gated by the new `SETTLEMENT_ECONOMY_FLOOR` validator check.
 - 2026-08-14: Flattened NPC-lord `gold` and clan `influence` so no faction opens the campaign with a structural economic head start. Every culture is now 250,000 gold / 1,000 influence, except the four elven realms (rivendell, lothlorien, mirkwood, lindon) at 500,000 gold. Notable movers: erebor is the one large move DOWN, from 800k, where it had been the richest culture on the map by a factor of four, and the elves came down from 600k to the 500k exception. Everything else moved up: bluecraig from 40k, vlandia (Rohan) and sturgia (Dale) from 50k gold and 50 influence (a twentyfold influence jump), umbar from 200k. `playerGold` was deliberately not flattened and still varies by culture (elves 4,000, erebor 3,500, everyone else 2,000). Data-only edit to `startup_resources_config.xml`.
 - 2026-08-03 — The player gold grant is re-invoked after a multiplayer join hand-off, against the hero the join actually hands the player and with the character-creation culture (see [player-possession.md](player-possession.md)). Wiring only — no config, tuning or data change; the youth-option equipment is not re-applied.
 - 2026-07-03 — Retuned NPC-lord `gold` + clan `influence`: elves (rivendell/lothlorien/mirkwood) influence 1,000 → 1,250 (gold stays 600k); erebor 50k → 800k / 150 → 1,000; gondor 50k → 100k / 500 → 1,000; khuzait gold 50k → 75k; isengard/dolguldur 200k → 75k / 2,000 → 500; gundabad 200k → 75k / 2,000 → 1,000; umbar influence 500 → 1,000 (gold stays 200k). All `playerGold` values unchanged. Data-only edit to `startup_resources_config.xml`.
