@@ -337,10 +337,10 @@ Counts measured 2026-08-18:
 
 | Module | Location | XML (ModuleData / all) | XSLT | XML well-formedness | Cross-ref sweep | XSLT checked |
 |---|---|---|---|---|---|---|
-| TAOM | this repo | 259 / 338 | 8 | CI, `Main/_Module/ModuleData/**` | full (259 files), plus schema contracts | CI well-formedness (8 of 8); `/xslt-check` maps 6 of 8, rest by hand |
-| TAOM_Map | game install | 44 / 313 | 1 | none | **2 files of 44** | strip regex only |
-| LOTRLOME_Armory | game install | 382 / 406 | 7 | none | **full (382 files)** via `extra_ref_roots` | **none** |
-| total | | 685 / **1,057** | **16** | | 641 files swept | |
+| TAOM | this repo | 259 / 338 | 8 | CI, `Main/_Module/ModuleData/**` | full (259 files), plus schema contracts | CI (8 of 8) + `check_external_xslt.py`; `/xslt-check` maps 6 of 8 |
+| TAOM_Map | game install | 44 / 313 | 1 | `check_external_xslt.py` | full (44 files) since #462 | `check_external_xslt.py` |
+| LOTRLOME_Armory | game install | 382 / 406 | 7 | `check_external_xslt.py` | **full (382 files)** via `extra_ref_roots` | `check_external_xslt.py` |
+| total | | 685 / **1,057** | **16** | | **685 files swept** | **16 of 16** |
 
 The two columns matter: the validator only ever reads `ModuleData`, so the left number is its
 ceiling and the right one is the module's whole XML surface. Of TAOM's 259 ModuleData files, 145
@@ -358,7 +358,10 @@ templates, cultures or body properties, so the passes that skip it have nothing 
 assumption about today's data, not a guarantee, and `/author-armor`'s workflow makes it plausible
 someone authors a troop there. Worth an invariant test that fails loudly when it stops holding.
 
-**`TAOM_Map` is the real gap, and it is narrower and worse than "settlements only".** Exactly **two**
+**`TAOM_Map` WAS the sharp gap, closed by #462.** Its ModuleData is now an `extra_ref_root`, so all
+44 files and their 1,012 `Culture.` refs are swept; the validator visits 685 files (259 repo, 382
+Armory, 44 TAOM_Map). What follows is the shape of the hole, kept because the registry asymmetry it
+describes is still true and still the reason the sweep matters. Exactly **two**
 of the 45 XML and XSLT files in its `ModuleData` are ever opened (44 XML plus `settlements.xslt`;
 the directory holds 88 files in all, the other 43 being 39 `.bak*`/`.prev` copies, three
 `DistanceCaches` outputs and `project.mbproj`), both inside `build_settled_cultures` and
@@ -376,9 +379,12 @@ there corrupts the `LANDLESS_CULTURE` verdict in one direction or the other with
 all. Verified 2026-08-18: all 30 currently resolve against the 40-entry culture registry, so the
 gap is latent, not live.
 
-The cheapest available fix is one line: add `game_modules / "TAOM_Map" / "ModuleData"` to
-`extra_roots` beside `LOTRLOME_Armory` in `validate_moduledata.py`. That converts 1,012 unchecked
-refs into checked ones with no new code. Not done here.
+**Fixed in #462.** `build_extra_ref_roots()` in `validate_moduledata.py` now returns both modules
+from one `_EXTRA_REF_MODULES` tuple, and `ExtraRefRootTests` pins the contract in both directions,
+including an end-to-end case where a bogus `Culture.` id in a synthetic TAOM_Map root must raise
+`UNKNOWN_CULTURE`. The registry asymmetry above is unchanged: TAOM_Map is still the sole source of
+`settled_cultures` and still contributes to no other registry. What changed is that its refs are no
+longer taken on trust.
 
 **XSLT is barely modelled anywhere.** `_SETTLEMENT_STRIP_RE` matches only an empty
 `<xsl:template match="Settlement"/>` or its empty-body form; the file is never parsed as XML and
@@ -389,7 +395,12 @@ as live, and every culture reports as landed. That is precisely the false-clean 
 exists to prevent, and the tests use synthetic fixtures, so they pin the detector and never touch
 the live file.
 
-**None of the 8 external stylesheets has a validation path.** `/xslt-check` resolves its target
+**The 8 external stylesheets had no validation path until #462.**
+[`tools/check_external_xslt.py`](../../tools/check_external_xslt.py) now gates all 16 across the
+three modules: XML well-formedness always, a root-element check (a stylesheet the engine will
+silently ignore is worse than a broken one), and a real stylesheet compile when `lxml` is present.
+It is a developer-side script by necessity, since CI cannot see the live modules. The limitation
+below is why it exists. `/xslt-check` resolves its target
 under `Main/_Module/ModuleData/`, and the CI `validate-xml` job globs that same repo path, so
 neither reaches them; CI *structurally* cannot, because those modules are not in the checkout. Two
 are read narrowly for unrelated purposes and both fail open: `audit_mount_parity.py` string-replaces

@@ -58,6 +58,35 @@ DEFAULT_GAME_MODULES = resolve_game_modules(
 )
 
 
+# TAOM's data lives in three modules and two of them are outside this repo and
+# outside git: LOTRLOME_Armory (TAOM authors item XML straight into it, see
+# /author-armor) and TAOM_Map. Sweeping only Main/_Module/ModuleData missed 28 of
+# the 33 dangling refs the engine reported on 2026-08-02, which is why the Armory
+# was added; TAOM_Map went unswept on the same reasoning nobody re-applied to it
+# (#462). Cross-references ONLY -- TAOM's schema contracts describe TAOM's own
+# files and must not report defects against a foreign module.
+#
+# TAOM_Map matters more than its file count suggests: its settlements.xml is the
+# SOLE source of `settled_cultures`, so an unchecked bad `Culture.` id there
+# corrupts the LANDLESS_CULTURE verdict (the #374 daily-clan-tick CTD guard) with
+# no diagnostic at all. Neither module is in git, so the pre-commit hook cannot
+# gate either one; this sweep is the only check they get.
+_EXTRA_REF_MODULES = ("LOTRLOME_Armory", "TAOM_Map")
+
+
+def build_extra_ref_roots(game_modules) -> list:
+    """ModuleData roots outside this repo that are swept for dangling refs.
+
+    Returns [] when there is no game install, so a missing install degrades to a
+    TAOM-only sweep rather than raising. A root that is listed but absent is
+    reported via `Validator.missing_ref_roots`, never silently dropped.
+    """
+    game_modules = Path(game_modules)
+    if not game_modules.exists():
+        return []
+    return [game_modules / name / "ModuleData" for name in _EXTRA_REF_MODULES]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -102,14 +131,7 @@ def main() -> int:
           f"{len(registries.party_templates):,} party templates, "
           f"{len(registries.body_properties)} body properties", file=sys.stderr)
 
-    # TAOM authors item XML directly into LOTRLOME_Armory (see /author-armor), so
-    # its files are TAOM's to keep correct even though they live outside this repo
-    # and outside git. Sweeping only Main/_Module/ModuleData missed 28 of the 33
-    # dangling refs the engine reported on 2026-08-02. Cross-references only --
-    # TAOM's schema contracts are not applied to a foreign module.
-    extra_roots = []
-    if game_modules.exists():
-        extra_roots.append(game_modules / "LOTRLOME_Armory" / "ModuleData")
+    extra_roots = build_extra_ref_roots(game_modules)
 
     validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots)
     for root in validator.extra_ref_roots:
@@ -118,7 +140,7 @@ def main() -> int:
     # sweep to TAOM-only and still print PASS -- the exact state that hid 28 of the
     # 33 dangling refs the engine reported on 2026-08-02.
     for root in validator.missing_ref_roots:
-        print(f"WARNING: extra ref root NOT FOUND — Armory sweep SKIPPED: {root}\n"
+        print(f"WARNING: extra ref root NOT FOUND, sweep SKIPPED for {root.parent.name}: {root}\n"
               f"         Cross-references in that module were NOT checked this run.",
               file=sys.stderr)
     for warning in registries.suspect_registries:

@@ -84,26 +84,29 @@ unevenly. Counts measured 2026-08-18.
 |---|---|---|---|---|
 | TAOM: `Main/_Module/ModuleData` | 259 | yes, all 5 ref kinds | yes | yes |
 | `<game>/Modules/LOTRLOME_Armory/ModuleData` | 382 | yes, all 5 ref kinds (`extra_ref_roots`) | no, by design | no |
-| `<game>/Modules/TAOM_Map/ModuleData` | 44 | **no** | no | no |
+| `<game>/Modules/TAOM_Map/ModuleData` | 44 | yes, all 5 ref kinds (added #462) | no | no |
 
 The last column is not a detail. The hook matches on staged `Main/_Module/ModuleData/*.xml`
 (`check-moduledata-validation.sh:65`) and neither live module is in git, so editing them stages
 nothing and gates nothing. Run `python tools/validate_moduledata.py` by hand after any edit there.
 
-- **Editing TAOM_Map's `settlements.xml`?** Nothing checks its `culture=` values. Its 1,012
-  `Culture.` refs sit outside the sweep, yet they are the sole input to `settled_cultures`, so a bad
-  id there corrupts the `LANDLESS_CULTURE` verdict in one direction or the other with no diagnostic.
-  Check any new id with `mcp__taom-moduledata__culture_exists` before you save.
+- **Editing TAOM_Map's `settlements.xml`?** Its 1,012 `Culture.` refs are checked since #462, but
+  only when you run the validator yourself: the file is not in git, so the commit hook never fires on
+  it. That file is the sole input to `settled_cultures`, so a bad id there corrupts the
+  `LANDLESS_CULTURE` verdict with no other diagnostic. Run `python tools/validate_moduledata.py`
+  after any edit, or check a new id with `mcp__taom-moduledata__culture_exists` first.
 - **Authoring into LOTRLOME_Armory?** Its refs are checked, its structure is not. Duplicate ids,
   enums, the civilian rule and `MOUNTED_DWARF` apply to repo files only, so a troop or an equipment
   roster authored there would be entirely unvalidated. Today it defines items and monsters and
   nothing else; keep it that way, or extend the schema passes first.
-- **Touching any XSLT?** No pass parses one. Only `TAOM_Map/ModuleData/settlements.xslt` is opened at
-  all, and only to test for the empty `<xsl:template match="Settlement"/>` strip. `/xslt-check` reads
-  from `Main/_Module/ModuleData/` only, so the 8 XSLT in TAOM_Map and the Armory have no tooling, and
-  its mapping table covers 6 of the repo's own 8 (`action_strings.xslt` and `comment_strings.xslt`
-  are absent). For `spcultures.xslt` run `CulturePartyTemplateTests`; everything else is a manual
-  transform-and-diff.
+- **Touching any XSLT?** Run `python tools/check_external_xslt.py`. It is the only gate that reaches
+  all 16 stylesheets across the three modules (#462): well-formedness always, plus a real stylesheet
+  compile when lxml is present. CI cannot do this, because the two live modules are not in the
+  checkout. Note no pass *interprets* a stylesheet: `TAOM_Map/ModuleData/settlements.xslt` is opened
+  only to regex for the empty `<xsl:template match="Settlement"/>` strip, and `/xslt-check` reads
+  from `Main/_Module/ModuleData/` only, its mapping table covering 6 of the repo's 8
+  (`action_strings.xslt` and `comment_strings.xslt` are absent). For `spcultures.xslt` run
+  `CulturePartyTemplateTests`; everything else is a manual transform-and-diff.
 
 Full matrix, per-kind ref counts and the named gaps:
 [docs/features/moduledata-validation.md](../../docs/features/moduledata-validation.md)

@@ -26,6 +26,7 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import taom_schema as ts  # noqa: E402
+import validate_moduledata as vm  # noqa: E402
 
 SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
 
@@ -1229,3 +1230,99 @@ class SettlementEconomyFloorTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class ExtraRefRootTests(unittest.TestCase):
+    """Which foreign modules the CLI sweeps for dangling refs.
+
+    Both live modules are unversioned and outside git, so nothing else gates them:
+    `.claude/hooks/check-moduledata-validation.sh` matches staged
+    `Main/_Module/ModuleData/*.xml`, which neither module can ever produce. The
+    sweep is the only check they get, so the root list is a contract, not a detail.
+    Issue #462.
+    """
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.modules = Path(self._tmp.name) / "Modules"
+        for name in ("LOTRLOME_Armory", "TAOM_Map"):
+            (self.modules / name / "ModuleData").mkdir(parents=True)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def test_armory_is_swept(self):
+        roots = vm.build_extra_ref_roots(self.modules)
+        self.assertIn(self.modules / "LOTRLOME_Armory" / "ModuleData", roots)
+
+    def test_taom_map_is_swept(self):
+        """TAOM_Map carries ~1,012 Culture. refs AND is the sole source of
+        settled_cultures, so an unchecked bad id there corrupts LANDLESS_CULTURE
+        (the #374 CTD guard) with no diagnostic."""
+        roots = vm.build_extra_ref_roots(self.modules)
+        self.assertIn(self.modules / "TAOM_Map" / "ModuleData", roots)
+
+    def test_no_roots_without_a_game_install(self):
+        roots = vm.build_extra_ref_roots(self.modules.parent / "does_not_exist")
+        self.assertEqual(roots, [])
+
+    def test_bad_culture_id_in_taom_map_is_reported(self):
+        """End-to-end: the reason the root list matters."""
+        md = Path(self._tmp.name) / "ModuleData"
+        md.mkdir(parents=True)
+        _write(md / "empty.xml", "<NPCCharacters />")
+        _write(self.modules / "TAOM_Map" / "ModuleData" / "settlements.xml",
+               '<Settlements><Settlement id="s1" culture="Culture.not_a_culture" /></Settlements>')
+        registries = ts.Registries(items=set(), item_def_files={}, npccharacters=set(),
+                                   cultures={"mordor"}, party_templates=set(),
+                                   body_properties=set())
+        issues = ts.Validator(md, [], registries,
+                              extra_ref_roots=vm.build_extra_ref_roots(self.modules)).run()
+        self.assertTrue(any(i.code == "UNKNOWN_CULTURE" and "not_a_culture" in i.message
+                            for i in issues),
+                        f"expected UNKNOWN_CULTURE for the TAOM_Map ref, got {[i.code for i in issues]}")
+
+
+class ArmoryStructuralAssumptionTests(unittest.TestCase):
+    """The Armory's schema checks silently do not run, and that is only safe today.
+
+    `item_roots` includes LOTRLOME_Armory, so its items and `<Monster>` decls reach
+    the registries, but every schema pass iterates `Validator._xml_files()`, which is
+    repo-only. Duplicate-id, enum, civilian `equipmentType`, harness pairing and
+    MOUNTED_DWARF therefore never run against the Armory.
+
+    That costs nothing purely because of what the Armory currently contains: items
+    and monsters, nothing else. `/author-armor`'s workflow makes it plausible somebody
+    authors a troop or a roster there, at which point those checks no-op in silence.
+    This test makes that assumption fail loudly instead. Issue #462.
+    """
+
+    #: Element types whose checks are repo-only. If the Armory starts defining one,
+    #: either extend the schema passes to the extra roots or drop it from this list
+    #: with a reason.
+    UNCHECKED_ELEMENTS = ("NPCCharacter", "EquipmentRoster", "EquipmentSet",
+                          "MBPartyTemplate", "PartyTemplate")
+
+    def test_armory_still_defines_none_of_the_unchecked_element_types(self):
+        game_dir = os.environ.get("BANNERLORD_GAME_DIR") or \
+            r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+        root = Path(game_dir) / "Modules" / "LOTRLOME_Armory" / "ModuleData"
+        if not root.exists():
+            self.skipTest(f"no Armory install at {root}")
+
+        offenders = {}
+        for xml in root.rglob("*.xml"):
+            try:
+                text = xml.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            for element in self.UNCHECKED_ELEMENTS:
+                if f"<{element} " in text or f"<{element}>" in text:
+                    offenders.setdefault(element, []).append(xml.name)
+
+        self.assertEqual(
+            offenders, {},
+            "LOTRLOME_Armory now defines element types whose duplicate-id / enum / "
+            "civilian-equipmentType / MOUNTED_DWARF checks are repo-only, so they are "
+            "silently NOT running against it. Extend the schema passes to the extra "
+            f"ref roots, or update UNCHECKED_ELEMENTS with a reason. Found: {offenders}")

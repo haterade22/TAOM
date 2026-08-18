@@ -4,6 +4,33 @@
 
 ## 2026-08-18
 
+### fix(tooling): the live modules are actually validated now (#462)
+
+Closes the three defects documented below. They were recorded as gaps the same day; this makes them
+checks.
+
+**TAOM_Map is swept.** `extra_roots` was built inline and named only `LOTRLOME_Armory`. It is now
+`build_extra_ref_roots()`, a pure function over one `_EXTRA_REF_MODULES` tuple, so the root list is
+testable and both live modules are in it. The validator went from 641 files to **685** (259 repo, 382
+Armory, 44 TAOM_Map), and TAOM_Map's **1,012 `Culture.` refs are checked** rather than trusted. That
+file is the sole source of `settled_cultures`, so a bad id there corrupted the `LANDLESS_CULTURE`
+verdict (the #374 CTD guard) with no diagnostic. A real run still reports PASS: all 30 ids resolve,
+which is what "latent" meant.
+
+**The Armory assumption fails loudly now.** Its schema checks (duplicate id, enum, civilian
+`equipmentType`, `MOUNTED_DWARF`) are repo-only and silently do not run against it. That is free only
+because the Armory happens to define items and monsters and nothing else.
+`ArmoryStructuralAssumptionTests` asserts it still defines no `NPCCharacter`, `EquipmentRoster`,
+`EquipmentSet` or `PartyTemplate`, against the live install, skipping when there is none.
+
+**All 16 stylesheets have a gate.** New `tools/check_external_xslt.py` covers the repo's 8 plus the 8
+in TAOM_Map and LOTRLOME_Armory that nothing reached: well-formedness always, a root-element check
+(a stylesheet the engine silently ignores is worse than a broken one), and a real `lxml` compile when
+available. It has to be developer-side, because CI cannot see modules that are not in the checkout.
+
+Also generalised the "Armory sweep SKIPPED" warning, which named the wrong module once a second root
+existed. Suite 574 to **589** tests, all green; validator PASS; 16 of 16 stylesheets clean.
+
 ### docs: the three-module data surface reaches CLAUDE.md, AGENTS.md and the index
 
 Follow-up to the coverage pass below, from a 32-agent adversarial sweep (7 edits approved, 18
