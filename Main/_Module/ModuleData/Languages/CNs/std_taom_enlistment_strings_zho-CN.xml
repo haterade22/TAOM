@@ -21,7 +21,7 @@
     <string id="taom_enlist_discharge_answer" text="你行军表现尚可。那就去吧——你自由了。" />
 
     <string id="taom_enlist_menu_leave" text="请求解除军役" />
-    <string id="taom_enlist_menu_leave_pass" text="Take leave in the settlement" />
+    <string id="taom_enlist_menu_leave_pass" text="在定居点休假" />
 
     <string id="taom_enlist_menu_status" text="查看你的服役情况" />
 
@@ -63,10 +63,10 @@
 
     <string id="taom_enlist_term_served" text="你的役期已满——你可以光荣地请求解役，或继续随军前行。" />
 
-    <string id="taom_enlist_wage_deferred" text="The paychest is short — {AMOUNT}{GOLD_ICON} of your wages is owed against later." />
-    <string id="taom_enlist_wage_forfeited" text="The column can no longer account for {AMOUNT}{GOLD_ICON} of your back pay." />
-    <string id="taom_enlist_wage_paid" text="Wages received: {AMOUNT}{GOLD_ICON}" />
-    <string id="taom_enlist_wage_line" text="Service wages" />
+    <string id="taom_enlist_wage_deferred" text="军饷箱不足——你有 {AMOUNT}{GOLD_ICON} 的薪资被记账拖欠至日后发放。" />
+    <string id="taom_enlist_wage_forfeited" text="队伍再也无法交代你 {AMOUNT}{GOLD_ICON} 的欠饷。" />
+    <string id="taom_enlist_wage_paid" text="已领取薪资：{AMOUNT}{GOLD_ICON}" />
+    <string id="taom_enlist_wage_line" text="服役薪资" />
     <string id="taom_enlist_wait_text" text="你在{COMMANDER}的队伍中服役。行军纵队随你指挥官的步调前进。" />
 
     <string id="taom_enlist_welcome" text="欢迎加入行伍，士兵。列队。" />

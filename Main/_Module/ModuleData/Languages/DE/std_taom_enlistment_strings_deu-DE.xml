@@ -21,7 +21,7 @@
     <string id="taom_enlist_discharge_answer" text="Ihr seid wacker marschiert. So geht denn — Ihr seid entlassen." />
 
     <string id="taom_enlist_menu_leave" text="Um Entlassung aus dem Dienst bitten" />
-    <string id="taom_enlist_menu_leave_pass" text="Take leave in the settlement" />
+    <string id="taom_enlist_menu_leave_pass" text="Urlaub in der Siedlung nehmen" />
 
     <string id="taom_enlist_menu_status" text="Euren Dienst überprüfen" />
 
@@ -63,10 +63,10 @@
 
     <string id="taom_enlist_term_served" text="Eure Dienstzeit ist erfüllt – Ihr könnt ehrenvoll um Entlassung bitten oder weitermarschieren." />
 
-    <string id="taom_enlist_wage_deferred" text="The paychest is short — {AMOUNT}{GOLD_ICON} of your wages is owed against later." />
-    <string id="taom_enlist_wage_forfeited" text="The column can no longer account for {AMOUNT}{GOLD_ICON} of your back pay." />
-    <string id="taom_enlist_wage_paid" text="Wages received: {AMOUNT}{GOLD_ICON}" />
-    <string id="taom_enlist_wage_line" text="Service wages" />
+    <string id="taom_enlist_wage_deferred" text="Die Zahlkiste ist knapp — {AMOUNT}{GOLD_ICON} deines Solds bleiben dir für später geschuldet." />
+    <string id="taom_enlist_wage_forfeited" text="Die Kolonne kann {AMOUNT}{GOLD_ICON} deines ausstehenden Solds nicht mehr aufbringen." />
+    <string id="taom_enlist_wage_paid" text="Sold erhalten: {AMOUNT}{GOLD_ICON}" />
+    <string id="taom_enlist_wage_line" text="Dienstsold" />
     <string id="taom_enlist_wait_text" text="Ihr dient in der Schar von {COMMANDER}. Die Kolonne zieht im Tempo Eures Befehlshabers." />
 
     <string id="taom_enlist_welcome" text="Willkommen in der Kolonne, Soldat. Antreten." />

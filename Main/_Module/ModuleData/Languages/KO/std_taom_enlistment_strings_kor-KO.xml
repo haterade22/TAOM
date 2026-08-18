@@ -21,7 +21,7 @@
     <string id="taom_enlist_discharge_answer" text="충분히 잘 행군했다. 가라 — 너를 놓아주마." />
 
     <string id="taom_enlist_menu_leave" text="복무 해제를 요청한다" />
-    <string id="taom_enlist_menu_leave_pass" text="Take leave in the settlement" />
+    <string id="taom_enlist_menu_leave_pass" text="정착지에서 휴가를 보낸다" />
 
     <string id="taom_enlist_menu_status" text="복무 기록을 확인한다" />
 
@@ -63,10 +63,10 @@
 
     <string id="taom_enlist_term_served" text="복무 기간이 끝났습니다 — 명예롭게 해제를 요청하거나, 계속 행군할 수 있습니다." />
 
-    <string id="taom_enlist_wage_deferred" text="The paychest is short — {AMOUNT}{GOLD_ICON} of your wages is owed against later." />
-    <string id="taom_enlist_wage_forfeited" text="The column can no longer account for {AMOUNT}{GOLD_ICON} of your back pay." />
-    <string id="taom_enlist_wage_paid" text="Wages received: {AMOUNT}{GOLD_ICON}" />
-    <string id="taom_enlist_wage_line" text="Service wages" />
+    <string id="taom_enlist_wage_deferred" text="급료함이 부족하다 — 당신의 임금 중 {AMOUNT}{GOLD_ICON}이 후일로 미뤄졌다." />
+    <string id="taom_enlist_wage_forfeited" text="부대는 당신의 미지급 임금 {AMOUNT}{GOLD_ICON}을 더 이상 책임질 수 없다." />
+    <string id="taom_enlist_wage_paid" text="수령한 임금: {AMOUNT}{GOLD_ICON}" />
+    <string id="taom_enlist_wage_line" text="복무 임금" />
     <string id="taom_enlist_wait_text" text="당신은 {COMMANDER}의 부대에서 복무합니다. 행렬은 지휘관의 속도로 움직입니다." />
 
     <string id="taom_enlist_welcome" text="행렬에 온 것을 환영한다, 병사. 열에 서라." />

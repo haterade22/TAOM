@@ -21,7 +21,7 @@
     <string id="taom_enlist_discharge_answer" text="Ты прошёл достойно немало вёрст. Иди же — ты свободен." />
 
     <string id="taom_enlist_menu_leave" text="Просить об освобождении от службы" />
-    <string id="taom_enlist_menu_leave_pass" text="Take leave in the settlement" />
+    <string id="taom_enlist_menu_leave_pass" text="Взять отпуск в поселении" />
 
     <string id="taom_enlist_menu_status" text="Просмотреть свою службу" />
 
@@ -63,10 +63,10 @@
 
     <string id="taom_enlist_term_served" text="Ваш срок службы истёк — вы можете просить об освобождении с честью или продолжить путь." />
 
-    <string id="taom_enlist_wage_deferred" text="The paychest is short — {AMOUNT}{GOLD_ICON} of your wages is owed against later." />
-    <string id="taom_enlist_wage_forfeited" text="The column can no longer account for {AMOUNT}{GOLD_ICON} of your back pay." />
-    <string id="taom_enlist_wage_paid" text="Wages received: {AMOUNT}{GOLD_ICON}" />
-    <string id="taom_enlist_wage_line" text="Service wages" />
+    <string id="taom_enlist_wage_deferred" text="В казне не хватает средств — {AMOUNT}{GOLD_ICON} вашего жалованья остаётся долгом на будущее." />
+    <string id="taom_enlist_wage_forfeited" text="Отряд больше не может отчитаться за {AMOUNT}{GOLD_ICON} вашего невыплаченного жалованья." />
+    <string id="taom_enlist_wage_paid" text="Получено жалованье: {AMOUNT}{GOLD_ICON}" />
+    <string id="taom_enlist_wage_line" text="Жалованье за службу" />
     <string id="taom_enlist_wait_text" text="Вы служите в отряде {COMMANDER}. Колонна идёт со скоростью вашего командира." />
 
     <string id="taom_enlist_welcome" text="Добро пожаловать в колонну, солдат. Встань в строй." />

@@ -2211,7 +2211,7 @@
     <string id="taom_feat_gob_sm_desc" text="Затраты энергии на кузнечное дело снижены на 10%." />
     <string id="taom_feat_gob_rd" text="Гоблинская засада" />
     <string id="taom_feat_gob_rd_desc" text="Урон от набегов увеличен на 10%." />
-    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps" text="Орда Синей Скалы" />
     <string id="taom_feat_bcg_ps_desc" text="Предел размера отряда увеличен на 40%." />
     <string id="taom_feat_mmo_aic" text="Орочья орда" />
     <string id="taom_feat_mmo_aic_desc" text="Набор армии стоит на 40% меньше влияния." />
@@ -2413,43 +2413,43 @@
     <string id="taom_qa_yes" text="Да" />
     <string id="taom_qa_no" text="Нет" />
     <string id="taom_extra_fast_forward_hint" text="Ускоренное время (E)" />
-    <string id="taom_str_faction_official.lindon" text="a loremaster of Lindon" />
-    <string id="taom_str_faction_official.lindon_f" text="a healer of Lindon" />
-    <string id="taom_str_faction_ruler.lindon" text="Lord" />
-    <string id="taom_str_faction_ruler.lindon_f" text="Lady" />
-    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="Lindonian" />
-    <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
-    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Grey Havens" />
-    <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
-    <string id="taom_str_neutral_term_for_culture.lindon" text="Elves of Lindon" />
-    <string id="taom_str_culture_description.lindon" text="Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
-    <string id="taom_str_culture_rich_name.lindon" text="Falathrim" />
-    <string id="taom_str_adjective_for_culture.lindon" text="Lindonian" />
-    <string id="taom_str_player_father_name.lindon" text="Celeforn" />
-    <string id="taom_str_player_mother_name.lindon" text="Gilrien" />
-    <string id="taom_str_faction_official.bluecraig" text="a chieftain of Blue Craig" />
-    <string id="taom_str_faction_official.bluecraig_f" text="a chieftainess of Blue Craig" />
-    <string id="taom_str_faction_ruler.bluecraig" text="Warlord" />
-    <string id="taom_str_faction_ruler.bluecraig_f" text="Lady Warlord" />
-    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="the Warlord, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Warlord {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
-    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
-    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins of Blue Craig" />
-    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
-    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />
-    <string id="taom_str_culture_description.bluecraig" text="The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
-    <string id="taom_str_culture_rich_name.bluecraig" text="Goblins" />
-    <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
-    <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
-    <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
-    <string id="taom_ai_party_size" text="Warlord's host" />
-    <string id="taom_ai_garrison_size" text="Fortified realm" />
-    <string id="taom_ai_forage" text="Campaign foraging" />
-    <string id="taom_ai_levy" text="Levied service" />
+    <string id="taom_str_faction_official.lindon" text="хранитель знаний Линдона" />
+    <string id="taom_str_faction_official.lindon_f" text="целительница Линдона" />
+    <string id="taom_str_faction_ruler.lindon" text="Владыка" />
+    <string id="taom_str_faction_ruler.lindon_f" text="Владычица" />
+    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lindon" text="линдонский" />
+    <string id="taom_str_short_term_for_faction.lindon" text="эльф" />
+    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Серые Гавани" />
+    <string id="taom_str_faction_informal_name_for_culture.lindon" text="Линдон" />
+    <string id="taom_str_neutral_term_for_culture.lindon" text="Эльфы Линдона" />
+    <string id="taom_str_culture_description.lindon" text="Линдон, Серые Гавани, — обитель мудрости и красоты под властью Кирдана Корабела. Расположенный на берегах залива Луны, этот край населяют хранители знаний и стражи древней мудрости Средиземья. Эльфы Линдона дают совет и помощь всем, кто противостоит тьме, храня свет надежды и единства." />
+    <string id="taom_str_culture_rich_name.lindon" text="Фалатрим" />
+    <string id="taom_str_adjective_for_culture.lindon" text="линдонский" />
+    <string id="taom_str_player_father_name.lindon" text="Келефорн" />
+    <string id="taom_str_player_mother_name.lindon" text="Гилриэн" />
+    <string id="taom_str_faction_official.bluecraig" text="предводитель Синей Скалы" />
+    <string id="taom_str_faction_official.bluecraig_f" text="предводительница Синей Скалы" />
+    <string id="taom_str_faction_ruler.bluecraig" text="Военный вождь" />
+    <string id="taom_str_faction_ruler.bluecraig_f" text="Военная вождица" />
+    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="военный вождь, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Военный вождь {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Госпожа{?}Господин{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.bluecraig" text="гоблинский" />
+    <string id="taom_str_short_term_for_faction.bluecraig" text="гоблин" />
+    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Гоблины Синей Скалы" />
+    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Гоблин" />
+    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Гоблины" />
+    <string id="taom_str_culture_description.bluecraig" text="Гоблины Эред Луин — многочисленный и злобный сброд, обитающий в норах Синей Скалы. Ведомые Великим гоблином и мелкими вожаками, они без устали грабят горные дороги, движимые алчностью и древней ненавистью к Свободным Народам." />
+    <string id="taom_str_culture_rich_name.bluecraig" text="Гоблины" />
+    <string id="taom_str_adjective_for_culture.bluecraig" text="гоблинский" />
+    <string id="taom_str_player_father_name.bluecraig" text="Нарзук" />
+    <string id="taom_str_player_mother_name.bluecraig" text="Борлия" />
+    <string id="taom_ai_party_size" text="Войско вождя" />
+    <string id="taom_ai_garrison_size" text="Укреплённые владения" />
+    <string id="taom_ai_forage" text="Походный фураж" />
+    <string id="taom_ai_levy" text="Ополченская служба" />
   </strings>
 </base>

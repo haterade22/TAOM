@@ -21,7 +21,7 @@
     <string id="taom_enlist_discharge_answer" text="よく行軍した。行け — 任を解こう。" />
 
     <string id="taom_enlist_menu_leave" text="任を解くよう願い出る" />
-    <string id="taom_enlist_menu_leave_pass" text="Take leave in the settlement" />
+    <string id="taom_enlist_menu_leave_pass" text="集落で休暇を取る" />
 
     <string id="taom_enlist_menu_status" text="従軍記録を確認する" />
 
@@ -63,10 +63,10 @@
 
     <string id="taom_enlist_term_served" text="任期は満了した — 誉れをもって除隊を願うか、なお行軍を続けるかだ。" />
 
-    <string id="taom_enlist_wage_deferred" text="The paychest is short — {AMOUNT}{GOLD_ICON} of your wages is owed against later." />
-    <string id="taom_enlist_wage_forfeited" text="The column can no longer account for {AMOUNT}{GOLD_ICON} of your back pay." />
-    <string id="taom_enlist_wage_paid" text="Wages received: {AMOUNT}{GOLD_ICON}" />
-    <string id="taom_enlist_wage_line" text="Service wages" />
+    <string id="taom_enlist_wage_deferred" text="給金箱が足りない――あなたの給金のうち{AMOUNT}{GOLD_ICON}は後払いの借りとなった。" />
+    <string id="taom_enlist_wage_forfeited" text="部隊はもはやあなたの未払い給金{AMOUNT}{GOLD_ICON}を清算できない。" />
+    <string id="taom_enlist_wage_paid" text="受け取った給金：{AMOUNT}{GOLD_ICON}" />
+    <string id="taom_enlist_wage_line" text="従軍給金" />
     <string id="taom_enlist_wait_text" text="あなたは{COMMANDER}の部隊に従軍している。隊列は指揮官の歩調で進む。" />
 
     <string id="taom_enlist_welcome" text="隊列へようこそ、兵士。列に入れ。" />

@@ -21,7 +21,7 @@
     <string id="taom_enlist_discharge_answer" text="Has marchado bastante bien. Ve, entonces: quedas liberado." />
 
     <string id="taom_enlist_menu_leave" text="Pedir ser liberado del servicio" />
-    <string id="taom_enlist_menu_leave_pass" text="Take leave in the settlement" />
+    <string id="taom_enlist_menu_leave_pass" text="Tomar permiso en el asentamiento" />
 
     <string id="taom_enlist_menu_status" text="Revisar tu servicio" />
 
@@ -63,10 +63,10 @@
 
     <string id="taom_enlist_term_served" text="Tu plazo de servicio ha concluido: puedes pedir la liberación con honor, o seguir marchando." />
 
-    <string id="taom_enlist_wage_deferred" text="The paychest is short — {AMOUNT}{GOLD_ICON} of your wages is owed against later." />
-    <string id="taom_enlist_wage_forfeited" text="The column can no longer account for {AMOUNT}{GOLD_ICON} of your back pay." />
-    <string id="taom_enlist_wage_paid" text="Wages received: {AMOUNT}{GOLD_ICON}" />
-    <string id="taom_enlist_wage_line" text="Service wages" />
+    <string id="taom_enlist_wage_deferred" text="El cofre de pagos está escaso: se te deben {AMOUNT}{GOLD_ICON} de tu salario para más adelante." />
+    <string id="taom_enlist_wage_forfeited" text="La columna ya no puede dar cuenta de {AMOUNT}{GOLD_ICON} de tu paga atrasada." />
+    <string id="taom_enlist_wage_paid" text="Salario recibido: {AMOUNT}{GOLD_ICON}" />
+    <string id="taom_enlist_wage_line" text="Salario de servicio" />
     <string id="taom_enlist_wait_text" text="Sirves en la compañía de {COMMANDER}. La columna avanza al ritmo de tu comandante." />
 
     <string id="taom_enlist_welcome" text="Bienvenido a la columna, soldado. Ponte en formación." />

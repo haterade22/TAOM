@@ -21,7 +21,7 @@
     <string id="taom_enlist_discharge_answer" text="Yeterince iyi yürüdün. Git öyleyse — serbestsin." />
 
     <string id="taom_enlist_menu_leave" text="Hizmetten salıverilmeyi iste" />
-    <string id="taom_enlist_menu_leave_pass" text="Take leave in the settlement" />
+    <string id="taom_enlist_menu_leave_pass" text="Yerleşimde izne çık" />
 
     <string id="taom_enlist_menu_status" text="Hizmetini gözden geçir" />
 
@@ -63,10 +63,10 @@
 
     <string id="taom_enlist_term_served" text="Hizmet süren tamamlandı — onurla salıverilmeyi isteyebilir ya da yürüyüşe devam edebilirsin." />
 
-    <string id="taom_enlist_wage_deferred" text="The paychest is short — {AMOUNT}{GOLD_ICON} of your wages is owed against later." />
-    <string id="taom_enlist_wage_forfeited" text="The column can no longer account for {AMOUNT}{GOLD_ICON} of your back pay." />
-    <string id="taom_enlist_wage_paid" text="Wages received: {AMOUNT}{GOLD_ICON}" />
-    <string id="taom_enlist_wage_line" text="Service wages" />
+    <string id="taom_enlist_wage_deferred" text="Ödeme sandığı yetersiz — maaşının {AMOUNT}{GOLD_ICON} kadarı sonraya borç kaldı." />
+    <string id="taom_enlist_wage_forfeited" text="Kol, birikmiş maaşının {AMOUNT}{GOLD_ICON} kadarının hesabını artık veremiyor." />
+    <string id="taom_enlist_wage_paid" text="Alınan maaş: {AMOUNT}{GOLD_ICON}" />
+    <string id="taom_enlist_wage_line" text="Hizmet maaşı" />
     <string id="taom_enlist_wait_text" text="{COMMANDER} bölüğünde hizmet ediyorsun. Kol, komutanının hızıyla ilerliyor." />
 
     <string id="taom_enlist_welcome" text="Kola hoş geldin, asker. Safa gir." />

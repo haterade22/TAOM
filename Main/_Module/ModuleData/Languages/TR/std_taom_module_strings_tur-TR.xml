@@ -2211,7 +2211,7 @@
     <string id="taom_feat_gob_sm_desc" text="Demircilik enerji maliyeti %10 azaldı." />
     <string id="taom_feat_gob_rd" text="Goblin Pususu" />
     <string id="taom_feat_gob_rd_desc" text="Yağma hasarı %10 arttı." />
-    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps" text="Mavi Kaya Sürüsü" />
     <string id="taom_feat_bcg_ps_desc" text="Müfreze büyüklüğü sınırı %40 arttı." />
     <string id="taom_feat_mmo_aic" text="Ork Ordusu" />
     <string id="taom_feat_mmo_aic_desc" text="Ordu toplama %40 daha az nüfuza mal olur." />
@@ -2413,43 +2413,43 @@
     <string id="taom_qa_yes" text="Evet" />
     <string id="taom_qa_no" text="Hayır" />
     <string id="taom_extra_fast_forward_hint" text="Ekstra Hızlı İleri (E)" />
-    <string id="taom_str_faction_official.lindon" text="a loremaster of Lindon" />
-    <string id="taom_str_faction_official.lindon_f" text="a healer of Lindon" />
+    <string id="taom_str_faction_official.lindon" text="bir Lindon bilgesi" />
+    <string id="taom_str_faction_official.lindon_f" text="bir Lindon şifacısı" />
     <string id="taom_str_faction_ruler.lindon" text="Lord" />
-    <string id="taom_str_faction_ruler.lindon_f" text="Lady" />
-    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="Lindonian" />
+    <string id="taom_str_faction_ruler.lindon_f" text="Leydi" />
+    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lindon" text="Lindonlu" />
     <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
-    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Grey Havens" />
+    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Gri Limanlar" />
     <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
-    <string id="taom_str_neutral_term_for_culture.lindon" text="Elves of Lindon" />
-    <string id="taom_str_culture_description.lindon" text="Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
+    <string id="taom_str_neutral_term_for_culture.lindon" text="Lindon Elfleri" />
+    <string id="taom_str_culture_description.lindon" text="Gri Limanlar'ın diyarı Lindon, Gemici Cirdan'ın yönettiği bir bilgelik ve güzellik sığınağıdır. Lune Körfezi'nin kıyılarına kurulmuş olan bu diyarın halkı, Orta Dünya'nın kadim bilgisinin bilgeleri ve koruyucularıdır. Lindon Elfleri, karanlığa karşı duranlara öğüt ve yardım sunar; umut ile birliğin ışığını korurlar." />
     <string id="taom_str_culture_rich_name.lindon" text="Falathrim" />
-    <string id="taom_str_adjective_for_culture.lindon" text="Lindonian" />
+    <string id="taom_str_adjective_for_culture.lindon" text="Lindonlu" />
     <string id="taom_str_player_father_name.lindon" text="Celeforn" />
     <string id="taom_str_player_mother_name.lindon" text="Gilrien" />
-    <string id="taom_str_faction_official.bluecraig" text="a chieftain of Blue Craig" />
-    <string id="taom_str_faction_official.bluecraig_f" text="a chieftainess of Blue Craig" />
-    <string id="taom_str_faction_ruler.bluecraig" text="Warlord" />
-    <string id="taom_str_faction_ruler.bluecraig_f" text="Lady Warlord" />
-    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="the Warlord, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Warlord {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_official.bluecraig" text="bir Mavi Kaya reisi" />
+    <string id="taom_str_faction_official.bluecraig_f" text="bir Mavi Kaya kadın reisi" />
+    <string id="taom_str_faction_ruler.bluecraig" text="Savaş Beyi" />
+    <string id="taom_str_faction_ruler.bluecraig_f" text="Kadın Savaş Beyi" />
+    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="Savaş Beyi {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Savaş Beyi {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
     <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
     <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
-    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins of Blue Craig" />
+    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Mavi Kaya Goblinleri" />
     <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
-    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />
-    <string id="taom_str_culture_description.bluecraig" text="The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
-    <string id="taom_str_culture_rich_name.bluecraig" text="Goblins" />
+    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblinler" />
+    <string id="taom_str_culture_description.bluecraig" text="Ered Luin Goblinleri, Mavi Kaya'nın dehlizlerinde yaşayan kalabalık ve gaddar bir ayaktakımıdır. Büyük Goblin'leri ve küçük kaptanlarının önderliğinde, hırs ve Hür Halklara duydukları kadim nefretle dağ yollarını hiç durmadan yağmalarlar." />
+    <string id="taom_str_culture_rich_name.bluecraig" text="Goblinler" />
     <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
     <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
     <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
-    <string id="taom_ai_party_size" text="Warlord's host" />
-    <string id="taom_ai_garrison_size" text="Fortified realm" />
-    <string id="taom_ai_forage" text="Campaign foraging" />
-    <string id="taom_ai_levy" text="Levied service" />
+    <string id="taom_ai_party_size" text="Savaş beyinin ordusu" />
+    <string id="taom_ai_garrison_size" text="Tahkim edilmiş diyar" />
+    <string id="taom_ai_forage" text="Sefer yemlemesi" />
+    <string id="taom_ai_levy" text="Askere çağrı hizmeti" />
   </strings>
 </base>

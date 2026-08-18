@@ -878,99 +878,99 @@
     <string id="taom_cc_career_desc" text="你的经历已为你指明了一条道路。选择将定义你传奇的职业。" />
     <string id="taom_cc_career_none" text="无专精" />
     <string id="taom_cc_career_none_desc" text="你尚未选定某条特定的道路。你的职业将由你在这世上的行动来决定。" />
-    <string id="taom_cc_taom_parent_bluecraig_1_text" text="Chiefs of Blue Craig" />
-    <string id="taom_cc_taom_parent_bluecraig_1_desc" text="Your family were among the noble elite of Blue Craig, dedicated to reclaiming their ancestral home and defending it from invaders." />
-    <string id="taom_cc_taom_parent_bluecraig_2_text" text="Tinkerers of Blue Craig" />
-    <string id="taom_cc_taom_parent_bluecraig_2_desc" text="Your family were skilled smiths, crafting tools and weapons to equip the defenders of Blue Craig." />
-    <string id="taom_cc_taom_parent_bluecraig_3_text" text="Miners of Blue Craig" />
-    <string id="taom_cc_taom_parent_bluecraig_3_desc" text="Your family worked tirelessly in the mines of Blue Craig, uncovering its hidden riches." />
-    <string id="taom_cc_taom_parent_bluecraig_4_text" text="Warriors of the Grey Mountains" />
-    <string id="taom_cc_taom_parent_bluecraig_4_desc" text="Your family fought against Orcs and other threats in the Grey Mountains, upholding the honor of their kin." />
-    <string id="taom_cc_taom_parent_bluecraig_5_text" text="Rangers of Blue Craig" />
-    <string id="taom_cc_taom_parent_bluecraig_5_desc" text="Your family served as rangers, patrolling the wilds around Blue Craig and safeguarding its borders from harm." />
-    <string id="taom_cc_taom_parent_bluecraig_6_text" text="Outcasts of the Mountains" />
-    <string id="taom_cc_taom_parent_bluecraig_6_desc" text="Your family lived on the fringes of Blue Craig's society, surviving through cunning and ruthlessness in the unforgiving mountain passes." />
-    <string id="taom_cc_taom_youth_bluecraig_1_text" text="Rode with the warg-packs of the Blue Mountains." />
-    <string id="taom_cc_taom_youth_bluecraig_1_desc" text="You trained with the Warg riders of the Ered Luin, learning to control the savage beasts through the treacherous mountain passes and to strike with lance and spear from their backs." />
-    <string id="taom_cc_taom_youth_bluecraig_2_text" text="Guarded the warrens of Blue Craig." />
-    <string id="taom_cc_taom_youth_bluecraig_2_desc" text="You served in the warrens of Blue Craig, defending the forges and tunnels from intruders with bow and spear." />
-    <string id="taom_cc_taom_youth_bluecraig_3_text" text="Trained with the berserkers." />
-    <string id="taom_cc_taom_youth_bluecraig_3_desc" text="You were among the berserkers of Blue Craig, learning to fight with reckless fury and overwhelming force." />
-    <string id="taom_cc_taom_youth_bluecraig_4_text" text="Scouted the mountain passes." />
-    <string id="taom_cc_taom_youth_bluecraig_4_desc" text="You roamed the treacherous mountain paths around Blue Craig, tracking enemies and ensuring safe passage for your kin." />
-    <string id="taom_cc_taom_youth_bluecraig_5_text" text="Held the line in Blue Craig's spear legions." />
-    <string id="taom_cc_taom_youth_bluecraig_5_desc" text="You drilled and marched with the heavy spear formations of the Ered Luin, learning to brace against a charge and hold position under brutal northern conditions until the line could be relieved." />
-    <string id="taom_cc_taom_youth_bluecraig_6_text" text="Ran with the scavenger bands of the passes." />
-    <string id="taom_cc_taom_youth_bluecraig_6_desc" text="You lived outside the structure of the mountain clans, moving with the quick-fingered opportunists who followed warbands and picked over the aftermath of every skirmish. Throwing weapons and a fast pair of legs kept you alive when nothing else would." />
-    <string id="taom_cc_taom_adulthood_bluecraig_1_text" text="You won the Great Mountain Tournament and were named a warchief's retainer." />
-    <string id="taom_cc_taom_adulthood_bluecraig_1_desc" text="The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before." />
-    <string id="taom_cc_taom_adulthood_bluecraig_2_text" text="You established a profitable arms trade with a southern Orc clan." />
-    <string id="taom_cc_taom_adulthood_bluecraig_2_desc" text="The southern clan had iron but no smiths. Blue Craig had tinkerers but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage." />
-    <string id="taom_cc_taom_adulthood_bluecraig_3_text" text="You shored up the lower mine galleries after a partial collapse." />
-    <string id="taom_cc_taom_adulthood_bluecraig_3_desc" text="The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep." />
-    <string id="taom_cc_taom_adulthood_bluecraig_4_text" text="You led the raid that broke the Dwarven outpost on the Grey Mountains." />
-    <string id="taom_cc_taom_adulthood_bluecraig_4_desc" text="The Dwarves had fortified a pass that Blue Craig used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back." />
-    <string id="taom_cc_taom_adulthood_bluecraig_5_text" text="You tracked a Dwarven scouting party for four days and brought back their maps." />
-    <string id="taom_cc_taom_adulthood_bluecraig_5_desc" text="The Dwarves were mapping something in the Grey Mountains and Blue Craig needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm." />
-    <string id="taom_cc_taom_adulthood_bluecraig_6_text" text="You framed a rival warleader for theft and took his position." />
-    <string id="taom_cc_taom_adulthood_bluecraig_6_desc" text="The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out." />
-    <string id="taom_cc_taom_education_bluecraig_1_text" text="Trained in the crag-halls of Blue Craig." />
-    <string id="taom_cc_taom_education_bluecraig_1_desc" text="You were blooded in the torch-lit training halls of the mountain stronghold, learning to ride hard and swing heavy weapons in the tradition of the northern Orc clans. Status came to those who could prove themselves in the pit before their elders." />
-    <string id="taom_cc_taom_education_bluecraig_2_text" text="Apprenticed in the weapon-smiths of Blue Craig." />
-    <string id="taom_cc_taom_education_bluecraig_2_desc" text="You learned to forge crude but effective arms in the noisy smithing halls of the mountain, learning to trade them for supplies and favors. The work was ugly but the skills were real, and you left the forge knowing both iron and dealing." />
-    <string id="taom_cc_taom_education_bluecraig_3_text" text="Dug in the mines beneath the mountain." />
-    <string id="taom_cc_taom_education_bluecraig_3_desc" text="You swung a pick in the lightless shafts of Blue Craig, learning the mountain's structure and the engineering of the pit supports. The tunnels were your home and you could navigate them blind, which was often how you had to." />
-    <string id="taom_cc_taom_education_bluecraig_4_text" text="Fought in the passes of the Grey Mountains." />
-    <string id="taom_cc_taom_education_bluecraig_4_desc" text="You ran with the raiding bands that struck into the Grey Mountains, learning to fight with axe and spear in the brutal hit-and-run style of the northern clans. You came back meaner each time and a little more certain of your own survival." />
-    <string id="taom_cc_taom_education_bluecraig_5_text" text="Ranged the wild lands around Blue Craig." />
-    <string id="taom_cc_taom_education_bluecraig_5_desc" text="You patrolled the rocky wilderness surrounding the mountain fortress, tracking intruders and reading signs of enemy movement. The cold northern wilds gave you patience and a bowman's stillness that outlasted any target." />
-    <string id="taom_cc_taom_education_bluecraig_6_text" text="Survived alone in the mountain passes." />
-    <string id="taom_cc_taom_education_bluecraig_6_desc" text="Cast out or escaping some debt, you fended for yourself in the treacherous passes around the mountain, surviving by theft and quick thinking. The experience left you with no illusions about loyalty and a sharp talent for getting out of trouble." />
-    <string id="taom_cc_taom_parent_lindon_1_text" text="Nobles of Mithlond" />
-    <string id="taom_cc_taom_parent_lindon_1_desc" text="Your family were esteemed Elves of Mithlond, sworn to serve Cirdan. They carried the wisdom of ages and the strength to defend Lindon in its time of need." />
-    <string id="taom_cc_taom_parent_lindon_2_text" text="Artisans of Lindon" />
-    <string id="taom_cc_taom_parent_lindon_2_desc" text="Your family were skilled craftsmen and loremasters, creating wonders of Elven craftsmanship and preserving the ancient knowledge of Middle-earth." />
-    <string id="taom_cc_taom_parent_lindon_3_text" text="Farmers of the Grey Havens" />
-    <string id="taom_cc_taom_parent_lindon_3_desc" text="Your family tended the fertile fields of Lindon, ensuring its people and guests were well-fed and sustained in their peaceful haven." />
-    <string id="taom_cc_taom_parent_lindon_4_text" text="Wardens of the Valley" />
-    <string id="taom_cc_taom_parent_lindon_4_desc" text="Your family served as scouts and guardians, patrolling the borders of Mithlond and ensuring the valley remained a sanctuary free from evil." />
-    <string id="taom_cc_taom_parent_lindon_5_text" text="Elven Scholars" />
-    <string id="taom_cc_taom_parent_lindon_5_desc" text="Your family were scholars of lore, healing, and magic, preserving the ancient knowledge of the Elves and aiding the free peoples of Middle-earth." />
-    <string id="taom_cc_taom_parent_lindon_6_text" text="Wanderers of the Wild" />
-    <string id="taom_cc_taom_parent_lindon_6_desc" text="Your family were known to venture beyond Lindon, aiding those in need and learning of the changing world beyond the valley." />
-    <string id="taom_cc_taom_youth_lindon_1_text" text="Trained with the Guard of Mithlond." />
-    <string id="taom_cc_taom_youth_lindon_1_desc" text="You served under the banners of Lindon, training in mounted combat and the graceful Elven martial arts to defend the Grey Havens." />
-    <string id="taom_cc_taom_youth_lindon_2_text" text="Stood watch at the halls of Cirdan." />
-    <string id="taom_cc_taom_youth_lindon_2_desc" text="You served as a sentry at the halls of Cirdan, learning to read the land and anticipate threats before they could reach the Grey Havens." />
-    <string id="taom_cc_taom_youth_lindon_3_text" text="Ranged the Tower Hills with the border wardens." />
-    <string id="taom_cc_taom_youth_lindon_3_desc" text="You joined the wardens who patrolled far beyond Lindon's borders into the wild Tower Hills and the upper Anduin vales, learning to track enemies and read the signs of dark movement through ancient forest." />
-    <string id="taom_cc_taom_youth_lindon_4_text" text="Trained in the art of Elven infantry." />
-    <string id="taom_cc_taom_youth_lindon_4_desc" text="You stood with the ranks of Lindon's warriors, mastering the spear and sword in the precise, deadly style of the High Elves." />
-    <string id="taom_cc_taom_youth_lindon_5_text" text="Journeyed with the loremasters." />
-    <string id="taom_cc_taom_youth_lindon_5_desc" text="You accompanied Lindon's loremasters on their journeys, learning diplomacy, persuasion, and the art of leadership among the free peoples." />
-    <string id="taom_cc_taom_adulthood_lindon_1_text" text="You rode out alone to escort a wounded messenger back to Mithlond." />
-    <string id="taom_cc_taom_adulthood_lindon_1_desc" text="The messenger had been ambushed east of the Ford and could not ride unaided. You found him, fought off the Orc stragglers still searching the road, and brought him in. Cirdan himself spoke to you briefly before turning to the message." />
-    <string id="taom_cc_taom_adulthood_lindon_2_text" text="You completed a work of craft that Cirdan's shipwrights chose to preserve." />
-    <string id="taom_cc_taom_adulthood_lindon_2_desc" text="The piece — a detailed relief map of Eriador's ancient road network, reconstructed from fragmentary sources — was considered accurate enough to be copied into the library's archives. Three loremasters disagreed about two valleys; you were right about both." />
-    <string id="taom_cc_taom_adulthood_lindon_3_text" text="You tended the valley's terraces through a blight season without losing a harvest." />
-    <string id="taom_cc_taom_adulthood_lindon_3_desc" text="A fungal blight spread through the upper orchards and threatened the lower terraces. You identified the affected trees early, imposed a quarantine the Elves considered excessive, and kept the blight from spreading. The harvest that year was smaller but whole." />
-    <string id="taom_cc_taom_adulthood_lindon_4_text" text="You warned Mithlond of a Troll encampment before it threatened the Ford." />
-    <string id="taom_cc_taom_adulthood_lindon_4_desc" text="Three Stone Trolls had settled in the Tower Hills closer to the Ford than any before. You spotted their camp, mapped its position, estimated their range, and brought the report to the wardens before they had moved. The wardens handled the rest." />
-    <string id="taom_cc_taom_adulthood_lindon_5_text" text="You saved the life of a traveller that Cirdan's healers had given up on." />
-    <string id="taom_cc_taom_adulthood_lindon_5_desc" text="The traveller had taken a Morgul-tainted wound and the senior healers were already preparing their regrets. You had read a different account of the toxin's behavior in the library's older texts. You applied what you had read and the traveller recovered." />
-    <string id="taom_cc_taom_adulthood_lindon_6_text" text="You retrieved a stolen document from a Ranger camp without being seen." />
-    <string id="taom_cc_taom_adulthood_lindon_6_desc" text="A private letter from Cirdan's household had gone missing in circumstances that pointed to a guest's pack. You recovered it before anyone knew it was gone, replaced what had been disturbed, and returned the letter without a word spoken about any of it." />
-    <string id="taom_cc_taom_education_lindon_1_text" text="Trained in the riding courts of Mithlond." />
-    <string id="taom_cc_taom_education_lindon_1_desc" text="You practiced the mounted arts in the quiet training grounds of Lindon, learning to ride and fight with the fluid grace that Elven tradition demanded. The great library was never far, and your education in blade and lore went hand in hand." />
-    <string id="taom_cc_taom_education_lindon_2_text" text="Studied craft and lore in Cirdan's halls." />
-    <string id="taom_cc_taom_education_lindon_2_desc" text="You spent your formative years learning the craft-arts and histories preserved in Lindon, working alongside master artisans and loremasters. Long evenings of talk sharpened your tongue and your understanding of the world's deep past." />
-    <string id="taom_cc_taom_education_lindon_3_text" text="Tended the gardens and orchards of the Grey Havens." />
-    <string id="taom_cc_taom_education_lindon_3_desc" text="You worked the terraced gardens of Mithlond, learning patience and diligence from Elves who had tended those same beds for an age. Between rows you practiced swordplay, finding that tending living things gave you an instinct for measured force." />
-    <string id="taom_cc_taom_education_lindon_4_text" text="Walked the border watches of Mithlond." />
-    <string id="taom_cc_taom_education_lindon_4_desc" text="You accompanied the Elven wardens on their long circuits around the valley's hidden paths, learning to read the forest and loose an arrow before your quarry heard you coming. The valley's peace was hard-won and you helped keep it." />
-    <string id="taom_cc_taom_education_lindon_5_text" text="Learned healing arts in the halls of Cirdan." />
-    <string id="taom_cc_taom_education_lindon_5_desc" text="You served in the healing rooms of Lindon, learning herb-lore and the arts of mending under the guidance of Cirdan's healers. Tending to weary travellers and wounded Elves gave you both knowledge and the empathy that comes with it." />
-    <string id="taom_cc_taom_education_lindon_6_text" text="Wandered the wild roads beyond the valley." />
-    <string id="taom_cc_taom_education_lindon_6_desc" text="You slipped beyond Lindon's borders as often as you could, exploring the Tower Hills and the shores of the Gulf of Lune. You developed a taste for risk and discovered that you could survive on cunning where a sword would only bring trouble." />
+    <string id="taom_cc_taom_parent_bluecraig_1_text" text="蓝岩的首领" />
+    <string id="taom_cc_taom_parent_bluecraig_1_desc" text="你的家族是蓝岩的贵族精英之一，立誓夺回祖辈的家园，并守护它免遭入侵者的践踏。" />
+    <string id="taom_cc_taom_parent_bluecraig_2_text" text="蓝岩的匠人" />
+    <string id="taom_cc_taom_parent_bluecraig_2_desc" text="你的家族是技艺娴熟的铁匠，锻造工具与兵器，武装蓝岩的守卫者。" />
+    <string id="taom_cc_taom_parent_bluecraig_3_text" text="蓝岩的矿工" />
+    <string id="taom_cc_taom_parent_bluecraig_3_desc" text="你的家族在蓝岩的矿坑中不倦劳作，挖出深藏其中的财富。" />
+    <string id="taom_cc_taom_parent_bluecraig_4_text" text="灰色山脉的战士" />
+    <string id="taom_cc_taom_parent_bluecraig_4_desc" text="你的家族在灰色山脉中与半兽人及其他威胁作战，维护族人的荣誉。" />
+    <string id="taom_cc_taom_parent_bluecraig_5_text" text="蓝岩的游骑兵" />
+    <string id="taom_cc_taom_parent_bluecraig_5_desc" text="你的家族充任游骑兵，巡视蓝岩周边的荒野，守护边界不受侵害。" />
+    <string id="taom_cc_taom_parent_bluecraig_6_text" text="群山中的弃徒" />
+    <string id="taom_cc_taom_parent_bluecraig_6_desc" text="你的家族生活在蓝岩社会的边缘，在无情的山道间靠狡诈与狠辣求生。" />
+    <string id="taom_cc_taom_youth_bluecraig_1_text" text="与蓝色山脉的座狼群同骑。" />
+    <string id="taom_cc_taom_youth_bluecraig_1_desc" text="你随埃瑞德路因的座狼骑手受训，学会在险恶的山道中驾驭这些凶兽，并在狼背上以长枪与矛突刺。" />
+    <string id="taom_cc_taom_youth_bluecraig_2_text" text="守卫蓝岩的洞穴巢道。" />
+    <string id="taom_cc_taom_youth_bluecraig_2_desc" text="你在蓝岩的巢道中服役，以弓与矛守卫锻炉和隧道，抵御入侵者。" />
+    <string id="taom_cc_taom_youth_bluecraig_3_text" text="随狂战士受训。" />
+    <string id="taom_cc_taom_youth_bluecraig_3_desc" text="你曾是蓝岩狂战士中的一员，学会以不顾生死的狂怒与压倒性的蛮力作战。" />
+    <string id="taom_cc_taom_youth_bluecraig_4_text" text="侦查山间隘口。" />
+    <string id="taom_cc_taom_youth_bluecraig_4_desc" text="你游走于蓝岩周围险峻的山径，追踪敌踪，为族人确保通路安全。" />
+    <string id="taom_cc_taom_youth_bluecraig_5_text" text="在蓝岩的长矛军团中坚守阵线。" />
+    <string id="taom_cc_taom_youth_bluecraig_5_desc" text="你随埃瑞德路因的重矛阵列操练行军，学会顶住冲锋，在北方严酷的环境下死守阵地，直到有人前来换防。" />
+    <string id="taom_cc_taom_youth_bluecraig_6_text" text="随隘口的拾荒团伙厮混。" />
+    <string id="taom_cc_taom_youth_bluecraig_6_desc" text="你活在山地氏族体制之外，与那些手脚麻利的机会主义者同行——他们跟着战团，在每场厮杀后翻捡残余。投掷武器和一双跑得快的腿，是你别无所依时的活命本钱。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_1_text" text="你赢得大山脉竞技赛，被封为战酋的亲随。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_1_desc" text="竞技赛在大厅里分三轮残酷角逐。你入场时无人看好，离场时却带着战酋的银臂环和一张更好的床铺。旁人对你的敬意，从未如你夺胜之后这般深。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_2_text" text="你与南方的一个半兽人氏族建立了有利可图的军械贸易。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_2_desc" text="南方氏族有铁，却无铁匠；蓝岩有匠人，却缺粮食与皮毛。你促成了第一笔交易，定下条件，并让双方忍住不彼此厮杀，直到这买卖成了惯例。战酋分了你一份提成。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_3_text" text="塌方之后，你加固了下层矿道。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_3_desc" text="塌方将八名半兽人困在下层矿道。你判明了受力走向，指挥支撑加固，在随后的二次塌方到来前把人带了出来——否则他们必死。战酋的工师把图纸留给了你。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_4_text" text="你率队突袭，攻破了灰色山脉上的矮人哨所。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_4_desc" text="矮人在蓝岩冬季掠袭所用的隘口筑起工事，封断通路，害得山中损失了整整一季的掠获。你策划了攻势，亲率前锋，一波便撞开哨所大门。隘口重开，矮人再未回来。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_5_text" text="你跟踪一支矮人斥候队四天，带回了他们的地图。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_5_desc" text="矮人在灰色山脉测绘某物，蓝岩必须知道那是什么。你穿越高隘尾随其后而不被发现，待他们扎营，取走地图，在警报响起前便已回到要塞。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_6_text" text="你栽赃一名对手战首偷盗，夺了他的位置。" />
+    <string id="taom_cc_taom_adulthood_bluecraig_6_desc" text="那对手靠贿赂与更硬的关系，压了你两年不得升迁。你摸清了他看重什么，安排恰当的物件在错误的时间出现在错误的地方，又在恰当的时机" />
+    <string id="taom_cc_taom_education_bluecraig_1_text" text="在蓝岩的崖厅中受训。" />
+    <string id="taom_cc_taom_education_bluecraig_1_desc" text="你在山中堡垒火炬映照的训练厅里初尝血腥，按北方半兽人氏族的传统学会猛骑与挥舞重兵器。地位属于那些能在长辈面前于斗坑中证明自己的人。" />
+    <string id="taom_cc_taom_education_bluecraig_2_text" text="在蓝岩的兵器匠人门下当学徒。" />
+    <string id="taom_cc_taom_education_bluecraig_2_desc" text="你在山中喧嚣的锻造厅里学会打造粗劣却好用的兵器，也学会用它们换取物资与人情。活儿难看，手艺却实在；你离开锻炉时，既懂铁，也懂交易。" />
+    <string id="taom_cc_taom_education_bluecraig_3_text" text="在山下的矿坑中挖掘。" />
+    <string id="taom_cc_taom_education_bluecraig_3_desc" text="你在蓝岩无光的矿井中挥动镐头，学会了山体的构造与坑道支撑的工程之法。那些隧道就是你的家，你能闭着眼在其中穿行——而你也常常不得不如此。" />
+    <string id="taom_cc_taom_education_bluecraig_4_text" text="在灰色山脉的隘口中作战。" />
+    <string id="taom_cc_taom_education_bluecraig_4_desc" text="你随袭击队伍深入灰色山脉，学会以斧与矛作战，掌握了北方氏族那种野蛮的打了就跑的战法。每次归来你都更凶狠一分，也更确信自己能活下去。" />
+    <string id="taom_cc_taom_education_bluecraig_5_text" text="在蓝岩周边的荒野中游荡巡行。" />
+    <string id="taom_cc_taom_education_bluecraig_5_desc" text="你在环绕山中要塞的岩石荒野里巡逻，追踪入侵者，辨读敌人行动的迹象。寒冷的北方荒野赋予你耐心，以及一名弓手比任何目标都更持久的静定。" />
+    <string id="taom_cc_taom_education_bluecraig_6_text" text="独自在山隘中求生。" />
+    <string id="taom_cc_taom_education_bluecraig_6_desc" text="你或被逐出，或为逃债，只能在山周险恶的隘口中自谋生路，靠偷窃与机敏活了下来。这段经历让你对忠诚不抱任何幻想，却练出了脱身的敏锐本领。" />
+    <string id="taom_cc_taom_parent_lindon_1_text" text="米斯泷德的贵族" />
+    <string id="taom_cc_taom_parent_lindon_1_desc" text="你的家族是米斯泷德备受尊崇的精灵，誓言效忠奇尔丹。他们承载着历代的智慧，也拥有在危难之时保卫林顿的力量。" />
+    <string id="taom_cc_taom_parent_lindon_2_text" text="林顿的匠人" />
+    <string id="taom_cc_taom_parent_lindon_2_desc" text="你的家族是技艺精湛的工匠与博学者，创造精灵工艺的奇迹，并守护中洲的古老知识。" />
+    <string id="taom_cc_taom_parent_lindon_3_text" text="灰港的农夫" />
+    <string id="taom_cc_taom_parent_lindon_3_desc" text="你的家族耕作林顿肥沃的田地，让这片安宁港湾中的居民与来客衣食无忧。" />
+    <string id="taom_cc_taom_parent_lindon_4_text" text="山谷的守望者" />
+    <string id="taom_cc_taom_parent_lindon_4_desc" text="你的家族充任侦骑与守卫，巡视米斯泷德的边境，确保山谷始终是不受邪恶侵扰的圣所。" />
+    <string id="taom_cc_taom_parent_lindon_5_text" text="精灵学者" />
+    <string id="taom_cc_taom_parent_lindon_5_desc" text="你的家族是通晓传说、医术与法术的学者，保存着精灵的古老知识，并援助中洲的自由人民。" />
+    <string id="taom_cc_taom_parent_lindon_6_text" text="荒野的漫游者" />
+    <string id="taom_cc_taom_parent_lindon_6_desc" text="你的家族以远行林顿之外闻名，援助需要帮助的人，并了解山谷之外那个不断变化的世界。" />
+    <string id="taom_cc_taom_youth_lindon_1_text" text="随米斯泷德的卫队受训。" />
+    <string id="taom_cc_taom_youth_lindon_1_desc" text="你在林顿的旗帜下效力，习练骑战与优雅的精灵武艺，以保卫灰港。" />
+    <string id="taom_cc_taom_youth_lindon_2_text" text="在奇尔丹的殿堂中值守。" />
+    <string id="taom_cc_taom_youth_lindon_2_desc" text="你在奇尔丹的殿堂中充任哨卫，学会辨读地势，在威胁抵达灰港之前便预先察觉。" />
+    <string id="taom_cc_taom_youth_lindon_3_text" text="随边境守望者巡行塔丘。" />
+    <string id="taom_cc_taom_youth_lindon_3_desc" text="你加入了远出林顿边境、深入荒芜塔丘与安都因上游河谷的守望者，学会追踪敌人，并在古老森林中辨读黑暗势力活动的痕迹。" />
+    <string id="taom_cc_taom_youth_lindon_4_text" text="受训成为精灵步兵。" />
+    <string id="taom_cc_taom_youth_lindon_4_desc" text="你立于林顿战士的行列之中，以高等精灵那精准而致命的方式精通了长矛与利剑。" />
+    <string id="taom_cc_taom_youth_lindon_5_text" text="与博学者一同远行。" />
+    <string id="taom_cc_taom_youth_lindon_5_desc" text="你随林顿的博学者一同远行，学会了外交、辞令，以及在自由人民之间领导众人的艺术。" />
+    <string id="taom_cc_taom_adulthood_lindon_1_text" text="你独自骑马出行，护送一名受伤的信使回到米斯泷德。" />
+    <string id="taom_cc_taom_adulthood_lindon_1_desc" text="那信使在渡口以东遭到伏击，无人扶助便无法骑行。你找到了他，击退了仍在道上搜寻的散兵半兽人，把他带了回来。奇尔丹亲自与你简短交谈，随后才转向那封信。" />
+    <string id="taom_cc_taom_adulthood_lindon_2_text" text="你完成了一件工艺之作，奇尔丹的造船匠选择将其保存下来。" />
+    <string id="taom_cc_taom_adulthood_lindon_2_desc" text="那件作品——一幅根据零散资料复原的伊瑞阿多古代道路网浮雕地图——被认为足够精确，得以抄录入藏书馆的档案。三位博学者曾就两处河谷争执不下；而你在两处上都是对的。" />
+    <string id="taom_cc_taom_adulthood_lindon_3_text" text="你在一个疫病之年照料谷中梯田，未曾损失一季收成。" />
+    <string id="taom_cc_taom_adulthood_lindon_3_desc" text="一种真菌疫病在上游果园蔓延，威胁到下方的梯田。你及早辨出受染的树木，实行了在精灵看来过于严苛的隔离，阻止了疫病扩散。那一年的收成虽少，却完好无损。" />
+    <string id="taom_cc_taom_adulthood_lindon_4_text" text="你在一处食人妖营地威胁到渡口之前便警告了米斯泷德。" />
+    <string id="taom_cc_taom_adulthood_lindon_4_desc" text="三只石食人妖在塔丘中安下窝来，比以往任何一次都更靠近渡口。你发现了它们的营地，标出位置，估算了活动范围，并在它们移动之前把报告送到守望者手中。其余的事由守望者料理。" />
+    <string id="taom_cc_taom_adulthood_lindon_5_text" text="你救下了一名奇尔丹的医者已放弃希望的旅人。" />
+    <string id="taom_cc_taom_adulthood_lindon_5_desc" text="那旅人受了魔窟毒气所染的伤，年长的医者们已在准备致以哀悼之辞。而你曾在藏书馆较古老的典籍中读到关于该毒性另一种记述。你依所读施治，那旅人便痊愈了。" />
+    <string id="taom_cc_taom_adulthood_lindon_6_text" text="你从游侠营地中取回了一份被盗的文件，未被任何人察觉。" />
+    <string id="taom_cc_taom_adulthood_lindon_6_desc" text="瑟丹家中的一封私信不知去向，种种迹象都指向一位客人的行囊。在无人发觉它丢失之前，你便将它取回，把翻动过的东西一一复原，并悄然归还了那封信，对此事始终一言未发。" />
+    <string id="taom_cc_taom_education_lindon_1_text" text="于米斯泷德的骑术场中受训。" />
+    <string id="taom_cc_taom_education_lindon_1_desc" text="你在林顿宁静的训练场上研习骑术，学着以精灵传统所要求的流畅优雅骑行与作战。宏伟的藏书馆就在不远处，你在刀剑与学识上的教养相辅相成。" />
+    <string id="taom_cc_taom_education_lindon_2_text" text="在瑟丹的殿堂中研习工艺与学识。" />
+    <string id="taom_cc_taom_education_lindon_2_desc" text="你在成长的岁月里学习林顿所保存的工艺技艺与历史，与工匠大师和博学者们一同劳作。漫长的夜谈磨利了你的口舌，也加深了你对世界远古过往的理解。" />
+    <string id="taom_cc_taom_education_lindon_3_text" text="照料灰港的花园与果园。" />
+    <string id="taom_cc_taom_education_lindon_3_desc" text="你在米斯泷德的梯形花园中劳作，从那些照料同一片园圃长达一个纪元的精灵身上学到了耐心与勤勉。在花畦之间你练习剑术，并发现照料生灵让你对力道的分寸有了本能的把握。" />
+    <string id="taom_cc_taom_education_lindon_4_text" text="行走于米斯泷德的边境哨戒。" />
+    <string id="taom_cc_taom_education_lindon_4_desc" text="你随精灵守卫沿谷地隐秘小径巡行长途，学会读懂森林，并在猎物听见你的动静之前放出箭矢。谷地的安宁来之不易，而你也曾出力守护。" />
+    <string id="taom_cc_taom_education_lindon_5_text" text="在瑟丹的殿堂中学习医疗之术。" />
+    <string id="taom_cc_taom_education_lindon_5_desc" text="你在林顿的疗伤之室中服务，在瑟丹的医者指导下学习药草学识与治愈之术。照料疲惫的旅人与受伤的精灵，既给了你知识，也给了你随之而来的同情之心。" />
+    <string id="taom_cc_taom_education_lindon_6_text" text="漫游于谷地之外的荒野道路。" />
+    <string id="taom_cc_taom_education_lindon_6_desc" text="你尽可能频繁地溜出林顿的边界，探索塔丘与卢恩湾的海岸。你渐渐迷上了冒险，并发现在刀剑只会招来麻烦的地方，你能靠机智存活下来。" />
   </strings>
 </base>

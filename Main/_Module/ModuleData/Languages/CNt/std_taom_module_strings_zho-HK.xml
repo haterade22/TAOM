@@ -2211,7 +2211,7 @@
     <string id="taom_feat_gob_sm_desc" text="鍛造精力消耗減少10%。" />
     <string id="taom_feat_gob_rd" text="半獸人伏擊" />
     <string id="taom_feat_gob_rd_desc" text="劫掠傷害增加10%。" />
-    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps" text="藍崖蜂擁" />
     <string id="taom_feat_bcg_ps_desc" text="隊伍規模上限增加40%。" />
     <string id="taom_feat_mmo_aic" text="半獸人大軍" />
     <string id="taom_feat_mmo_aic_desc" text="組建軍隊所需影響力減少40%。" />
@@ -2413,43 +2413,43 @@
     <string id="taom_qa_yes" text="是" />
     <string id="taom_qa_no" text="否" />
     <string id="taom_extra_fast_forward_hint" text="額外加速（E）" />
-    <string id="taom_str_faction_official.lindon" text="a loremaster of Lindon" />
-    <string id="taom_str_faction_official.lindon_f" text="a healer of Lindon" />
-    <string id="taom_str_faction_ruler.lindon" text="Lord" />
-    <string id="taom_str_faction_ruler.lindon_f" text="Lady" />
-    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="Lindonian" />
-    <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
-    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Grey Havens" />
-    <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
-    <string id="taom_str_neutral_term_for_culture.lindon" text="Elves of Lindon" />
-    <string id="taom_str_culture_description.lindon" text="Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
-    <string id="taom_str_culture_rich_name.lindon" text="Falathrim" />
-    <string id="taom_str_adjective_for_culture.lindon" text="Lindonian" />
-    <string id="taom_str_player_father_name.lindon" text="Celeforn" />
-    <string id="taom_str_player_mother_name.lindon" text="Gilrien" />
-    <string id="taom_str_faction_official.bluecraig" text="a chieftain of Blue Craig" />
-    <string id="taom_str_faction_official.bluecraig_f" text="a chieftainess of Blue Craig" />
-    <string id="taom_str_faction_ruler.bluecraig" text="Warlord" />
-    <string id="taom_str_faction_ruler.bluecraig_f" text="Lady Warlord" />
-    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="the Warlord, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Warlord {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
-    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
-    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins of Blue Craig" />
-    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
-    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />
-    <string id="taom_str_culture_description.bluecraig" text="The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
-    <string id="taom_str_culture_rich_name.bluecraig" text="Goblins" />
-    <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
-    <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
-    <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
-    <string id="taom_ai_party_size" text="Warlord's host" />
-    <string id="taom_ai_garrison_size" text="Fortified realm" />
-    <string id="taom_ai_forage" text="Campaign foraging" />
-    <string id="taom_ai_levy" text="Levied service" />
+    <string id="taom_str_faction_official.lindon" text="林頓的一位博學者" />
+    <string id="taom_str_faction_official.lindon_f" text="林頓的一位醫者" />
+    <string id="taom_str_faction_ruler.lindon" text="領主" />
+    <string id="taom_str_faction_ruler.lindon_f" text="夫人" />
+    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}夫人{?}領主{\?}{RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}夫人{?}領主{\?}{RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}夫人{?}領主{\?}{RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lindon" text="林頓的" />
+    <string id="taom_str_short_term_for_faction.lindon" text="精靈" />
+    <string id="taom_str_faction_formal_name_for_culture.lindon" text="灰港" />
+    <string id="taom_str_faction_informal_name_for_culture.lindon" text="林頓" />
+    <string id="taom_str_neutral_term_for_culture.lindon" text="林頓的精靈" />
+    <string id="taom_str_culture_description.lindon" text="林頓，即灰港，是由造船者瑟丹所領導的智慧與美的庇護所。它坐落於盧恩灣的岸邊，其民為博學者，也是中土古老知識的守護者。林頓的精靈向抗拒黑暗者提供忠告與援助，守護著希望與團結之光。" />
+    <string id="taom_str_culture_rich_name.lindon" text="法拉斯瑞姆" />
+    <string id="taom_str_adjective_for_culture.lindon" text="林頓的" />
+    <string id="taom_str_player_father_name.lindon" text="凱勒佛恩" />
+    <string id="taom_str_player_mother_name.lindon" text="吉爾瑞恩" />
+    <string id="taom_str_faction_official.bluecraig" text="藍崖的一位酋長" />
+    <string id="taom_str_faction_official.bluecraig_f" text="藍崖的一位女酋長" />
+    <string id="taom_str_faction_ruler.bluecraig" text="軍閥" />
+    <string id="taom_str_faction_ruler.bluecraig_f" text="女軍閥" />
+    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="軍閥{RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="軍閥{RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}夫人{?}領主{\?}{RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.bluecraig" text="半獸人的" />
+    <string id="taom_str_short_term_for_faction.bluecraig" text="半獸人" />
+    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="藍崖的半獸人" />
+    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="半獸人" />
+    <string id="taom_str_neutral_term_for_culture.bluecraig" text="半獸人" />
+    <string id="taom_str_culture_description.bluecraig" text="藍色山脈的半獸人是一群麇集而兇殘的烏合之眾，居住在藍崖的洞窟迷宮之中。在大半獸人與各路小頭目的率領下，他們無休止地劫掠山道，受貪婪與對自由子民的古老憎恨所驅使。" />
+    <string id="taom_str_culture_rich_name.bluecraig" text="半獸人" />
+    <string id="taom_str_adjective_for_culture.bluecraig" text="半獸人的" />
+    <string id="taom_str_player_father_name.bluecraig" text="納爾祖克" />
+    <string id="taom_str_player_mother_name.bluecraig" text="波爾莉亞" />
+    <string id="taom_ai_party_size" text="軍閥麾下" />
+    <string id="taom_ai_garrison_size" text="堅壁之邦" />
+    <string id="taom_ai_forage" text="隨軍徵糧" />
+    <string id="taom_ai_levy" text="徵召服役" />
   </strings>
 </base>

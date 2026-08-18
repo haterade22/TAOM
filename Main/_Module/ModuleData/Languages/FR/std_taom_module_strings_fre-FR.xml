@@ -2211,7 +2211,7 @@
     <string id="taom_feat_gob_sm_desc" text="Coût en énergie de forge réduit de 10 %." />
     <string id="taom_feat_gob_rd" text="Embuscade de gobelins" />
     <string id="taom_feat_gob_rd_desc" text="Dégâts de razzia augmentés de 10 %." />
-    <string id="taom_feat_bcg_ps" text="Blue Craig Swarm" />
+    <string id="taom_feat_bcg_ps" text="Nuée de Blue Craig" />
     <string id="taom_feat_bcg_ps_desc" text="Limite de taille de la troupe augmentée de 40 %." />
     <string id="taom_feat_mmo_aic" text="Horde d'orques" />
     <string id="taom_feat_mmo_aic_desc" text="Le recrutement d'armée coûte 40 % moins d'influence." />
@@ -2413,43 +2413,43 @@
     <string id="taom_qa_yes" text="Oui" />
     <string id="taom_qa_no" text="Non" />
     <string id="taom_extra_fast_forward_hint" text="Accélération supplémentaire (E)" />
-    <string id="taom_str_faction_official.lindon" text="a loremaster of Lindon" />
-    <string id="taom_str_faction_official.lindon_f" text="a healer of Lindon" />
-    <string id="taom_str_faction_ruler.lindon" text="Lord" />
-    <string id="taom_str_faction_ruler.lindon_f" text="Lady" />
-    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}the Lady{?}the Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lindon" text="Lindonian" />
-    <string id="taom_str_short_term_for_faction.lindon" text="Elf" />
-    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Grey Havens" />
+    <string id="taom_str_faction_official.lindon" text="un maître du savoir de Lindon" />
+    <string id="taom_str_faction_official.lindon_f" text="une guérisseuse de Lindon" />
+    <string id="taom_str_faction_ruler.lindon" text="Seigneur" />
+    <string id="taom_str_faction_ruler.lindon_f" text="Dame" />
+    <string id="taom_str_faction_ruler_term_in_speech.lindon" text="{?RULER.GENDER}la Dame{?}le Seigneur{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.lindon" text="{?RULER.GENDER}Dame{?}Seigneur{\?} {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.lindon" text="{?RULER.GENDER}Dame{?}Seigneur{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.lindon" text="lindonien" />
+    <string id="taom_str_short_term_for_faction.lindon" text="Elfe" />
+    <string id="taom_str_faction_formal_name_for_culture.lindon" text="Havres Gris" />
     <string id="taom_str_faction_informal_name_for_culture.lindon" text="Lindon" />
-    <string id="taom_str_neutral_term_for_culture.lindon" text="Elves of Lindon" />
-    <string id="taom_str_culture_description.lindon" text="Lindon, the Grey Havens, is a refuge of wisdom and beauty led by Cirdan the Shipwright. Set on the shores of the Gulf of Lune, its people are loremasters and guardians of Middle-earth's ancient knowledge. The Elves of Lindon offer counsel and aid to those who stand against the darkness, preserving the light of hope and unity." />
+    <string id="taom_str_neutral_term_for_culture.lindon" text="Elfes de Lindon" />
+    <string id="taom_str_culture_description.lindon" text="Lindon, les Havres Gris, est un refuge de sagesse et de beauté dirigé par Círdan le Charpentier de navires. Établi sur les rives du golfe de Lhûn, son peuple est composé de maîtres du savoir et de gardiens des connaissances anciennes de la Terre du Milieu. Les Elfes de Lindon offrent conseil et aide à ceux qui s'opposent aux ténèbres, préservant la lumière de l'espoir et de l'unité." />
     <string id="taom_str_culture_rich_name.lindon" text="Falathrim" />
-    <string id="taom_str_adjective_for_culture.lindon" text="Lindonian" />
+    <string id="taom_str_adjective_for_culture.lindon" text="lindonien" />
     <string id="taom_str_player_father_name.lindon" text="Celeforn" />
     <string id="taom_str_player_mother_name.lindon" text="Gilrien" />
-    <string id="taom_str_faction_official.bluecraig" text="a chieftain of Blue Craig" />
-    <string id="taom_str_faction_official.bluecraig_f" text="a chieftainess of Blue Craig" />
-    <string id="taom_str_faction_ruler.bluecraig" text="Warlord" />
-    <string id="taom_str_faction_ruler.bluecraig_f" text="Lady Warlord" />
-    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="the Warlord, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Warlord {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.bluecraig" text="Goblin" />
-    <string id="taom_str_short_term_for_faction.bluecraig" text="Goblin" />
-    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Goblins of Blue Craig" />
-    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Goblin" />
-    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Goblins" />
-    <string id="taom_str_culture_description.bluecraig" text="The Goblins of the Ered Luin are a teeming, vicious rabble dwelling in the warrens of Blue Craig. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
-    <string id="taom_str_culture_rich_name.bluecraig" text="Goblins" />
-    <string id="taom_str_adjective_for_culture.bluecraig" text="Goblin" />
+    <string id="taom_str_faction_official.bluecraig" text="un chef de Blue Craig" />
+    <string id="taom_str_faction_official.bluecraig_f" text="une cheftaine de Blue Craig" />
+    <string id="taom_str_faction_ruler.bluecraig" text="Seigneur de guerre" />
+    <string id="taom_str_faction_ruler.bluecraig_f" text="Dame de guerre" />
+    <string id="taom_str_faction_ruler_term_in_speech.bluecraig" text="le Seigneur de guerre, {RULER.NAME}" />
+    <string id="taom_str_faction_ruler_name_with_title.bluecraig" text="Seigneur de guerre {RULER.NAME}" />
+    <string id="taom_str_faction_noble_name_with_title.bluecraig" text="{?RULER.GENDER}Dame{?}Seigneur{\?} {RULER.NAME}" />
+    <string id="taom_str_adjective_for_faction.bluecraig" text="gobelin" />
+    <string id="taom_str_short_term_for_faction.bluecraig" text="Gobelin" />
+    <string id="taom_str_faction_formal_name_for_culture.bluecraig" text="Gobelins de Blue Craig" />
+    <string id="taom_str_faction_informal_name_for_culture.bluecraig" text="Gobelin" />
+    <string id="taom_str_neutral_term_for_culture.bluecraig" text="Gobelins" />
+    <string id="taom_str_culture_description.bluecraig" text="Les Gobelins des Ered Luin forment une horde grouillante et féroce qui habite les galeries de Blue Craig. Menés par leur Grand Gobelin et de mesquins capitaines, ils pillent sans fin les routes de montagne, poussés par la cupidité et une haine ancienne des Peuples Libres." />
+    <string id="taom_str_culture_rich_name.bluecraig" text="Gobelins" />
+    <string id="taom_str_adjective_for_culture.bluecraig" text="gobelin" />
     <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
     <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
-    <string id="taom_ai_party_size" text="Warlord's host" />
-    <string id="taom_ai_garrison_size" text="Fortified realm" />
-    <string id="taom_ai_forage" text="Campaign foraging" />
-    <string id="taom_ai_levy" text="Levied service" />
+    <string id="taom_ai_party_size" text="Armée du seigneur de guerre" />
+    <string id="taom_ai_garrison_size" text="Royaume fortifié" />
+    <string id="taom_ai_forage" text="Fourrage de campagne" />
+    <string id="taom_ai_levy" text="Service de levée" />
   </strings>
 </base>
