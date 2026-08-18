@@ -4,6 +4,38 @@
 
 ## 2026-08-18
 
+### docs(review): graphify v8 trialled against the real corpus, and rejected on the XML requirement
+
+The external knowledge-graph tool graphify was re-evaluated, this time by installing it (`graphifyy`
+0.9.46, Apache-2.0) and measuring it against TAOM rather than reasoning about its README. The June
+2026 review had ported three of its ideas into `tools/doc_graph.py` and rejected the rest; the
+project has since changed org, relicensed from MIT, and grown roughly 24 tree-sitter languages, so
+the rejection was worth re-testing.
+
+**It fails on XML and XSLT, which is the requirement that matters here.** Zero `.xml` and `.xslt`
+nodes in every run, and not as a bug: `detect.py` lists `.csproj`, `.sln` and `.xaml` as code but
+never generic `.xml`, whose only appearance in that file is inside an exclusion list. 497 files were
+skipped under `Main/` alone, 567 repo-wide. The graph TAOM needs spans **1,057 XML and 16 XSLT across
+three modules**: the repo (338 / 8), the live unversioned `TAOM_Map` (313 / 1), and the live
+unversioned `LOTRLOME_Armory` (406 / 7).
+
+A second defect rules it out independently. On a corpus deliberately mixing C#, feature docs and
+ModuleData, it produced **153 CODE-to-CODE edges, 37 DOCS-to-DOCS edges, and 0 CODE-to-DOCS edges**.
+The cause is missing entity resolution: the AST layer emits `TaomPartySizeModel` while the semantic
+layer emits `TaomPartySizeModel (Party Size)`, so the same entity never merges. Adding an XML reader
+to a tool that cannot already join its own two halves would produce a third disconnected island.
+Markdown also gets no file-level node at all, so it cannot replace `doc_graph.py` either.
+
+What it is genuinely good at is C#: 12,655 nodes from 1,775 files in 43 seconds at zero token cost,
+with `affected` and `god-nodes` answering blast-radius and hub questions Serena does not. It is
+therefore **kept installed but wired into nothing**, no hook, no CI, no MCP registration. Nothing was
+ported and no repo code or config changed.
+
+Also backfilled a real gap: the provenance register had **no graphify row at all**, despite
+`tools/doc_graph.py` deriving from it since June. Full measurements, and the two paths to actually
+meeting the XML requirement, are in
+[`docs/reviews/adopt-graphify-v8-2026-08-18.md`](docs/reviews/adopt-graphify-v8-2026-08-18.md).
+
 ### feat(balance): AI lord parties keep the roster they spawn with (#461)
 
 Reported from play: lord parties spawn with 500 to 3000 troops and collapse to 50 to 150 after a

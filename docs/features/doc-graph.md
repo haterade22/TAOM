@@ -9,7 +9,7 @@
 TAOM's knowledge base is ~300 cross-linked docs plus 90+ memory files. The existing tooling ([lint_docs.py](../../tools/lint_docs.py), [build_backlinks.py](../../tools/build_backlinks.py), INDEX.md) curates and lints that web but never lets you *interrogate its shape*.
 
 - **Before:** to learn how `cultural-feats` relates to `career-system` you open both docs and read. To find over-connected hubs or fragile single-link joins, you can't — grep sees lines, not topology.
-- **The graphify prompt:** the external tool [safishamsi/graphify](https://github.com/safishamsi/graphify) (reviewed in [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)) builds a queryable code/doc knowledge graph with `explain`/`path` verbs and "god node" / "bridge" metrics. Most of it duplicates TAOM tooling (Serena owns C# symbols; `taom_schema` owns game-data refs; `lint_docs` owns dead-link/orphan detection) or contradicts ADR-010 (Obsidian/HTML/RAG were explicitly rejected). The three ideas that *don't* duplicate anything — query verbs, graph metrics, confidence-tagging — are what this tool adopts, applied to the doc-link graph `lint_docs` already builds and discards.
+- **The graphify prompt:** the external tool [graphify](https://github.com/Graphify-Labs/graphify) (reviewed in [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md), then re-tested by trial install in [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md); it was `safishamsi/graphify` under MIT at the time of the port and is now `Graphify-Labs/graphify` under Apache-2.0) builds a queryable code/doc knowledge graph with `explain`/`path` verbs and "god node" / "bridge" metrics. Most of it duplicates TAOM tooling (Serena owns C# symbols; `taom_schema` owns game-data refs; `lint_docs` owns dead-link/orphan detection) or contradicts ADR-010 (Obsidian/HTML/RAG were explicitly rejected). The three ideas that *don't* duplicate anything (query verbs, graph metrics, confidence-tagging) are what this tool adopts, applied to the doc-link graph `lint_docs` already builds and discards.
 - **Without it:** KB hygiene stays invisible. An orphaned feature doc (nothing links it) or a star-topology (everything reachable only through INDEX.md) is never surfaced until a session can't find something.
 
 ## Architecture
@@ -85,7 +85,7 @@ Reach for doc-graph when the question is about the **shape** of the documentatio
 | **A token-conscious subagent** answering "what's related to X?" | `explain X --json` | A compact machine-readable neighbourhood instead of reading X's full doc and chasing its links — the context-budget lever. |
 | **Pre-merge / pre-release cross-link check** | `metrics` (bridges) | `INDEX.md → X` bridges flag docs reachable **only** through the index; if that one entry is ever dropped, X vanishes from navigation. |
 
-These compose: a typical audit is `metrics` → `explain` the worst orphan / god node → act → re-run. See [adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md) for the first real run, which surfaced TAOM's star-topology-around-INDEX.md and 64 isolated docs.
+These compose: a typical audit is `metrics` → `explain` the worst orphan / god node → act → re-run. See [adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md) for the first real run, which surfaced TAOM's star-topology-around-INDEX.md and 64 isolated docs. The 2026-08-18 re-run is in [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md), which found the isolates had reached 153, unnoticed because nothing had run `metrics` since.
 
 ### When it's NOT the right tool
 
@@ -116,13 +116,15 @@ python tools/graph_query.py metrics --summary     # one-line counts
 python tools/graph_query.py metrics --top 15      # god nodes + bridges + orphans
 ```
 
-Interpret the output (snapshot 2026-06-08: 314 nodes, 490 edges, 70 components, 129 bridges, 64 orphans):
+Interpret the output (snapshot 2026-06-08: 314 nodes, 490 edges, 70 components, 129 bridges, 64 orphans; re-measured 2026-08-18: 538 nodes, 998 edges, 156 components, 134 bridges, **153 orphans**):
 
 - **God nodes** = highest-degree docs. The top one is normally `docs/INDEX.md` itself (the deliberate curated hub — *expected, not a problem*). A *feature* doc near the top may be doing too much and want splitting.
 - **Bridges** = a single link whose removal disconnects two clusters. The common pattern `INDEX.md — features/X.md` means feature X is reachable **only** through INDEX — it has no peer cross-links. Reinforce by linking it from a related feature doc / RCA.
 - **Orphans** = docs with no inbound *or* outbound `.md` link (e.g. a feature doc nobody references). Either link it into INDEX.md / a sibling doc, or delete it. This complements `lint_docs`'s feature-only orphan check (which keys on inbound from any doc).
 
 Then route fixes through the existing pipeline — edit the docs, re-run [build_backlinks.py](../../tools/build_backlinks.py) to refresh footers, `/lint-docs` to confirm clean — and re-run `metrics` to verify the signal improved.
+
+**The 2026-08-18 re-measure is the cautionary case.** Ten weeks after the snapshot above, orphans had gone 64 → 153 and components 70 → 156, and not because anyone degraded the docs: the KB grew (314 → 537 nodes) while nothing re-ran this tool, so the isolates grew about twice as fast as the KB itself. `graph_query` is referenced in zero `.claude/hooks/` scripts and zero CI jobs, so `metrics` had not been run since the day it shipped. The open follow-up is to wire `metrics --summary` into a Stop hook or the `validate-xml` job in `.github/workflows/build.yml` with a ratchet on the orphan count, then work the isolates down. Measurements: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### Agent / session entry points
 
@@ -137,8 +139,25 @@ These were considered and intentionally **not** built in v1 (scope + ROI; see th
 - **Memory-layer ingestion** — the out-of-repo memory files (`[[wikilinks]]` + markdown) could be a second labelled subgraph. Deferred: the memory dir path is harness-coupled (project-slug encoding of cwd), the syntax is mixed, and `[[ ]]` targets can dangle. If built: opt-in (`--include-memory`), best-effort path derivation, failure-tolerant (skip + warn, never crash).
 - **MCP exposure** — the verbs already return dicts, so wrapping them in a stdio MCP server (like `taom_mcp_server.py`) is trivial. Deferred: an always-loaded MCP is a standing token cost ([context-budget](../../.claude/skills/context-budget/SKILL.md)) for a low-frequency tool; the CLI is the right surface until usage proves otherwise.
 
+### Raised by the 2026-08-18 graphify v8 trial
+
+- **Rationale edges.** graphify treats `NOTE:` and `WHY:` comments as first-class nodes linked to the
+  code they explain, and found **869** such edges in TAOM. TAOM writes rationale constantly (ADRs,
+  RCAs, the lessons files, `Constraint:` and `Rejected:` commit trailers) and none of it is
+  queryable. This is the most valuable idea the trial surfaced. Not built.
+- **The XML and XSLT requirement, which this tool does not meet either.** TAOM's graph is now
+  required to span 1,057 XML and 16 XSLT files across the repo, the live `TAOM_Map`, and the live
+  `LOTRLOME_Armory`. That is **in tension with the "No game-data graph" non-goal above**, which was
+  written when `taom_schema.py` was the sole owner of game-data refs and nothing needed to join the
+  two. The non-goal should be revisited deliberately when that phase is written, not quietly
+  dropped. See the [ADR-010 2026-08-18 amendment](../adrs/010-knowledge-base-architecture.md).
+- **Nothing runs this tool.** `graph_query.py` appears in zero hooks and zero CI jobs, and between
+  2026-06-08 and 2026-08-18 the isolated-doc count went from 64 to 153 with nobody noticing. A
+  scheduled caller plus a ratchet on the baseline is worth more than any new verb here.
+
 ## Changelog
 
+- 2026-08-18: Re-tested the upstream by trial install (graphify v8). Nothing adopted; `doc_graph.py` unchanged. Recorded the rationale-edge idea and the XML/XSLT requirement above, and the measured decay (64 to 153 orphans, 70 to 156 components) that follows from nothing invoking this tool. Review: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
 - 2026-06-08 — Wired `/doc-graph` into the discoverability surfaces (CLAUDE.md skills table, agent-operating-manual tool catalog, AGENTS.md Key Paths) so subagents and the Codex reviewer find it.
 - 2026-06-08 — Shipped the doc-graph tool (`tools/doc_graph.py` + `tools/graph_query.py`): `explain`/`path`/`metrics` verbs over the doc-link graph, pure-stdlib, `.md` nodes only; codified as the `/doc-graph` skill. ADR-010 Phase 5, issue #276.
 

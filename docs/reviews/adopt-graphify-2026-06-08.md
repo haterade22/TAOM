@@ -2,6 +2,7 @@
 
 **Date:** 2026-06-08
 **Source:** [github.com/safishamsi/graphify](https://github.com/safishamsi/graphify) (MIT)
+**Superseded by:** [adopt-graphify-v8-2026-08-18.md](./adopt-graphify-v8-2026-08-18.md). The org and licence stated throughout this review are as of 2026-06-08 and are now stale: the project moved to [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify) and relicensed to Apache-2.0, keeping `LICENSE-MIT` and a `NOTICE` covering contributions made before the relicensing. Terms of record: [provenance-register.md](../reference/provenance-register.md).
 **Disposition:** Tier-2 concept port. Adopt 3 ideas as a deterministic stdlib tool; reject the rest. Lands as [ADR-010](../adrs/010-knowledge-base-architecture.md) Phase 5.
 **Process:** [/adopt-external](../../.claude/skills/adopt-external/SKILL.md) (security-vet → map novel-vs-duplicative → tiered recommendation → port-never-install → review).
 

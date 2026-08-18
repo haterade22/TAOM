@@ -52,4 +52,5 @@ Name a doc by slug (`career-system`), filename, or repo-relative path. **Use `--
 
 - [docs/features/doc-graph.md](../../../docs/features/doc-graph.md) — authoritative reference
 - [docs/reviews/adopt-graphify-2026-06-08.md](../../../docs/reviews/adopt-graphify-2026-06-08.md) — why this exists (graphify adoption)
+- [docs/reviews/adopt-graphify-v8-2026-08-18.md](../../../docs/reviews/adopt-graphify-v8-2026-08-18.md): the v8 re-review superseding the 2026-06-08 one. Adopted nothing further, and measured the metric decay from nothing running this skill.
 - [/lint-docs](../lint-docs/SKILL.md) · [/knowledge-compile](../knowledge-compile/SKILL.md) — the rest of the ADR-010 doc-tooling layer

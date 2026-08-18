@@ -124,6 +124,7 @@ HarmonyPatch / GameModel / CampaignBehavior   <-- THIN (<150 lines, no logic)
 | Core | `Main/Core/` |
 | XML config | `Main/_Module/ModuleData/` |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
+| ModuleData XML validator | `python tools/validate_moduledata.py` resolves `Item.`/`NPCCharacter.`/`Culture.`/`PartyTemplate.` refs across every XML under `Main/_Module/ModuleData` (259 today) and `LOTRLOME_Armory`; ref `docs/features/moduledata-validation.md` |
 | TaleWorlds DLLs | `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client` |
 | Doc-graph tool | `tools/graph_query.py` — query/audit the docs link graph (`explain`/`path`/`metrics`); ref `docs/features/doc-graph.md` |
 

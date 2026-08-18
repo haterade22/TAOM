@@ -57,6 +57,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BetterExceptionWindow | `BetterExceptionWindow` `BEW` | AGPL-3.0 | comparison-only | (none) | cleared |
 | TpacTool | `TpacTool` `szszss/TpacTool` | MIT | behavioural-port | `tools/tpac_skeleton_scan.py` `tools/tpac_clipinfo.py` | cleared |
 | NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
+| graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py` | cleared |
 | MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | cleared |
 | Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
 | BUTR stack | `ButterLib` `UIExtenderEx` `MBOptionScreen` `MCMv5` `BUTR.CrashReport` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Bannerlord,MCM,BUTR}*.dll` | cleared |
@@ -130,6 +131,28 @@ Apache-2.0 §4 attribution preserved in the file header (`tools/audit_claude_con
 LangGraph runtime and LLM analyzers were not ported. Note the deliberate carve-out: the upstream's
 DRL-1.1 / unlicensed Neo23x0-derived `.yar` files were **not** vendored, and `tools/yara_rules/` is
 TAOM clean-room original. Adoption record: [`docs/reviews/adopt-skillspector-2026-06-22.md`](../reviews/adopt-skillspector-2026-06-22.md).
+
+### graphify
+
+Upstream: https://github.com/Graphify-Labs/graphify (formerly `safishamsi/graphify`) · PyPI `graphifyy` · Apache-2.0.
+
+`tools/doc_graph.py` and `tools/graph_query.py` reproduce three graphify behaviours over TAOM's own
+doc-link graph: the `explain` and `path` query verbs, and the god-node / bridge metrics. The
+implementation is pure stdlib, reuses `lint_docs`'s link parser, and shares no code with the upstream,
+but the source was read during the port, so this is `behavioural-port` and not `clean-room`. Adoption
+record: [`docs/reviews/adopt-graphify-2026-06-08.md`](../reviews/adopt-graphify-2026-06-08.md);
+ADR-010 Phase 5.
+
+**License note.** The June 2026 port was made against the predecessor repo under **MIT**. The project
+has since relicensed to **Apache-2.0**, retaining `LICENSE-MIT` and a `NOTICE` that reads "portions of
+this software were contributed under the MIT License prior to the relicensing and remain available
+under those terms." Both are permissive and neither constrains a behavioural port. Nothing from
+graphify ships in a TAOM release, so no `THIRD-PARTY-LICENSES.txt` entry is owed.
+
+**Trial install, 2026-08-18.** graphify v8 (`graphifyy` 0.9.46) was installed in an isolated venv and
+measured against TAOM. Nothing further was adopted, and no repo code or config changed. The tool is
+kept as an ad-hoc C# analysis aid only, and is not wired into any hook, CI job, or MCP registration.
+Findings: [`docs/reviews/adopt-graphify-v8-2026-08-18.md`](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### MinHook
 

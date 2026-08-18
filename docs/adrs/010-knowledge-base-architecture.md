@@ -40,9 +40,40 @@ Adopt a layered knowledge-base architecture on top of the existing `docs/` tree,
 
 5. **`tools/doc_graph.py` + `tools/graph_query.py` + `/doc-graph` skill** — query and audit the existing doc-link graph. Three verbs: `explain` (a doc's inbound/outbound neighbourhood), `path` (BFS shortest connection chain between two docs), `metrics` (god nodes = degree centrality, bridges = single-edge cluster joins, isolated orphans). Pure stdlib, deterministic, offline — it reuses the `lint_docs.py` link parser (Phase 2) and reads only links that already resolve on disk; no LLM, no new dependency.
 
-This is the adopted-and-scoped subset of the external [graphify](https://github.com/safishamsi/graphify) tool (review: [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)) — its `explain`/`path` verbs and god-node/bridge metrics, which nothing else in TAOM provides. The rest of graphify was rejected as duplicative (Serena owns C# symbols; `taom_schema` owns game-data refs; Phase 2/3 own dead-link/orphan/backlink) or as already-rejected-here (Obsidian/wikilinks — Alternative 1; docs-site visualization generators — Alternative 2; RAG/vector store — the Decision's "Out of scope" clause; graphify's HTML/D3 + Neo4j export follow the same no-viz rationale). Confidence-tagged `INFERRED` edges, memory-layer ingestion, and MCP exposure are documented as deferred future phases in the feature doc.
+This is the adopted-and-scoped subset of the external [graphify](https://github.com/Graphify-Labs/graphify) tool, which lived at `safishamsi/graphify` under MIT when this subset was ported and has since moved org and relicensed Apache-2.0 (review: [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md); license history and the 2026-08-18 re-review in [docs/reference/provenance-register.md](../reference/provenance-register.md)): its `explain`/`path` verbs and god-node/bridge metrics, which nothing else in TAOM provides. The rest of graphify was rejected as duplicative (Serena owns C# symbols; `taom_schema` owns game-data refs; Phase 2/3 own dead-link/orphan/backlink) or as already-rejected-here (Obsidian/wikilinks, Alternative 1; docs-site visualization generators, Alternative 2; RAG/vector store, the Decision's "Out of scope" clause; graphify's HTML/D3 + Neo4j export follow the same no-viz rationale). Confidence-tagged `INFERRED` edges, memory-layer ingestion, and MCP exposure are documented as deferred future phases in the feature doc.
 
 **This is NOT the deferred `search_docs.py`** (below). It does not do full-text search — it answers topology questions (`how do these two docs connect`, `which doc is an over-connected hub`, `which link holds two clusters together`) that grep cannot, so it does not reopen the search-engine deferral.
+
+### Amendment (2026-08-18): graphify v8 re-evaluated by trial install, nothing further adopted
+
+graphify has since moved to `Graphify-Labs/graphify` (branch `v8`, PyPI `graphifyy`), relicensed from
+MIT to Apache-2.0, and grown roughly 24 tree-sitter languages, Leiden clustering, an MCP server and a
+`merge-graphs` verb. That is enough change to make the June rejection worth re-testing, so it was
+re-tested properly: installed in an isolated venv and measured against TAOM's real corpus. Full
+measurements: [docs/reviews/adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
+
+**The outcome does not change this ADR.** Nothing further was adopted, no dependency was added, and
+`tools/doc_graph.py` is unchanged. Two measured facts settle it, and both are recorded here so a
+third session does not re-litigate the same question:
+
+1. **It cannot read XML or XSLT, which is now a stated project requirement.** TAOM's graph must span
+   1,057 XML and 16 XSLT files across three modules: the repo, the live unversioned `TAOM_Map`, and
+   the live unversioned `LOTRLOME_Armory`. graphify excludes generic `.xml` by design.
+2. **It produces no cross-domain edges even where it should.** On a corpus mixing C#, feature docs
+   and ModuleData it emitted 153 code-to-code and 37 doc-to-doc edges, and zero between them, because
+   nothing resolves an AST symbol against the same entity named in prose. Markdown gets no
+   file-level node at all, so it also cannot do what Phase 5 does.
+
+**What this amendment DOES open.** The XML and XSLT requirement is not satisfied by anything TAOM has
+either. `tools/taom_schema.py` already walks the game Modules folder and resolves `Item.`,
+`NPCCharacter.`, `Culture.` and `PartyTemplate.` refs across `LOTRLOME_Armory` and vanilla, and
+already handles TAOM_Map's settlement-strip with a load-order walk, but Armory troops and party
+templates are outside its registry roots, XSLT is modelled by a single regex, and nothing joins any
+of it to docs or to C#. A future phase that builds that join in stdlib, on top of `doc_graph.py` and
+`taom_query.py`, is the direction this ADR now points at. It is **not** in scope here and needs its
+own issue and ADR phase. Note it sits in tension with the feature doc's existing "No game-data graph"
+non-goal, which was written when `taom_schema` was the only owner of game-data refs; that non-goal
+should be revisited, not silently ignored, when the phase is written.
 
 ## Consequences
 

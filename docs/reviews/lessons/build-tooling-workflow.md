@@ -1328,3 +1328,39 @@ of the whole file alongside your intended change.
   worktree state; comparing a file against an untouched sibling in the same directory is the quick
   check.
 - **Source:** `docs/reviews/rca-ai-party-size-2026-08-18.md` process finding.
+
+
+### State the hard requirement BEFORE evaluating a tool, not after
+
+The graphify v8 trial ran a full install, three extraction runs, and a mixed-corpus experiment before
+the disqualifying fact surfaced: it does not read `.xml` or `.xslt`, which is where TAOM's content
+actually lives. That fact was available in one grep of the upstream's `detect.py` on day one.
+
+- **Why missed:** the evaluation was framed as "what can this tool do", so capabilities were
+  enumerated and the gap was found by exhaustion. Framed instead as "here is the acceptance
+  criterion, does it meet it", the first check would have been the extension list. The June 2026
+  review made the same omission and reached the right answer for adjacent reasons, which is luck,
+  not process.
+- **Prevent:** write the acceptance criterion down before the first install, as a list of file types,
+  modules, and questions the thing must answer. For TAOM that baseline is 1,057 XML and 16 XSLT
+  across three modules (repo, `TAOM_Map`, `LOTRLOME_Armory`), two of which are live and unversioned.
+  `/adopt-external`'s "map novel vs duplicative" phase should run against that criterion, not
+  against the upstream's feature list.
+- **Source:** `docs/reviews/adopt-graphify-v8-2026-08-18.md`.
+
+
+### A tool wired into no hook and no CI decays silently, and the decay is invisible
+
+`/doc-graph` shipped 2026-06-08 with a measured baseline and was never run again, because nothing
+runs it. Ten weeks later the knowledge base had gone from 64 isolated docs to **153**, and from 70
+components to **156**. No test failed, no hook fired, and no session noticed.
+
+- **Why missed:** the June work treated shipping the tool as the deliverable. The tool was correct,
+  documented, registered in the skill list, and cross-linked, so it looked complete. Nothing in the
+  definition of done asked which recurring event would ever invoke it.
+- **Prevent:** a diagnostic tool is not shipped until something calls it on a schedule. Either a
+  hook, a CI job, or an explicit line in a periodic skill such as `/skill-stocktake`. A ratchet on
+  the metric (fail if orphans exceed the committed baseline) turns a report nobody reads into a gate
+  that speaks. Grep for the tool's own name outside `docs/` as the check: zero hits in `.claude/` and
+  `.github/` means nothing will ever run it.
+- **Source:** `docs/reviews/adopt-graphify-v8-2026-08-18.md`.
