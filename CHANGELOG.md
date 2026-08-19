@@ -101,7 +101,14 @@ resolves and nothing more.
 Impact analysis: `docs/migration/v1.5.0-impact.md`. Change-set oracle:
 `docs/migration/v1.5.0-changeset.txt`.
 
-Not-tested: everything in-game. Build and full suite are green (6,692 passed / 0 failed / 2 skipped)
+**Housekeeping caught by the doc lint afterwards.** The v1.5.0 impact doc had two sections sitting
+above its own title, from an append that landed at the wrong offset; they now sit under "Code changes
+made this bump" where they belong. `.claude/rules/gamemodels.md` still claimed 47 GameModel overrides
+after `TaomExecutionRelationModel` was deleted with its vanished base class, so both its count lines
+read 46. Two passages in the impact doc still described the Advanced Starting Options work and the
+review findings as outstanding after both had landed.
+
+Not-tested: everything in-game. Build and full suite are green (6,702 passed / 0 failed / 2 skipped)
 but binding-green is not behaviour-verified, which is the entire lesson of the 1.4.7 shader RCA.
 
 ## 2026-08-18
