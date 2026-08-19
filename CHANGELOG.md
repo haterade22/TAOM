@@ -4,6 +4,26 @@
 
 ## 2026-08-19
 
+### chore(release): TAOM v2.1.1
+
+Hotfix for a campaign-start crash in v2.1.0, which shipped and was caught by the first in-game test
+rather than by any offline gate. Root cause and the two-crashes-one-bug story are in the entry above.
+
+**v2.1.0 is not retagged.** It is pushed, and a moved tag leaves everyone who already fetched it
+pointing at different code under the same name. The broken build keeps its version and the fix gets a
+new one, which is the same reasoning that made this release line v2.1.0 rather than a reused v2.0.21.
+
+No content changed between v2.1.0 and v2.1.1: 16 XML comments removed from inside `notable_templates`,
+one added at the file root, one new test class. All 24 cultures and every notable entry are byte
+identical otherwise.
+
+Verified on the release commit in a clean worktree rather than in the working tree, which currently
+carries another session's in-flight crash-report work: build 0 errors, suite 6,704 passed / 0 failed
+/ 2 skipped, BindingVerification 129/129, validate_moduledata PASS.
+
+Not-tested: the campaign start itself. That is the reporter's next run and the only thing that
+settles it, per #480.
+
 ### fix(cultures): an XML comment inside notable_templates aborts culture loading (#484)
 
 **v2.1.0 could not start a campaign.** Reported from the first in-game test, as two crashes that look
