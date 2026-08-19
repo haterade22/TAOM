@@ -4,6 +4,28 @@
 
 ## 2026-08-19
 
+### chore(release): TAOM v2.1.0
+
+First release on the Bannerlord v1.5.0 line, and the reason for the minor bump rather than another
+patch: this build does not run on v1.4.8, requires a Steam beta-branch engine, and refuses to load
+beside War Sails. A player reading a version list should be able to see that without opening the
+notes.
+
+**Not v2.0.21.** That was the version asked for, and both v2.0.21 and v2.0.22 already exist and are
+pushed, pinned to Native `v1.4.8.*`. Taking v2.0.21 would have meant moving a pushed tag and
+downgrading `SubModule.xml` past a released build, so a crash report quoting v2.0.21 would have
+resolved to two different builds on two different engines. Five phantom versions are already
+unresolvable in this repo's record; the failure mode of this one would have been worse, because it
+resolves to the wrong answer rather than to none.
+
+Release notes: `docs/releases/v2.1.0-discord.md`. Ships the v1.5.0 engine adaptation, the Black
+Númenórean line, the Advanced Starting Options adaptation, the AI lord-party roster fix, the evil
+culture party pass, captured-fief spreading, and the javelin shield-penetration correction.
+
+Not-tested: everything in-game. The offline gates are green (build 0 errors, suite 6,702 passed / 0
+failed / 2 skipped, BindingVerification 129/129) and none of that proves the mod runs, which is what
+issue #480 tracks.
+
 ### fix(module): restore the #371 Dependencies pairing guard
 
 `Main/_Module/SubModule.xml` carried an eight-line comment explaining that
