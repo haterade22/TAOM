@@ -323,5 +323,6 @@ ever fielded — not a concern at any realistic party size.
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
 
 <!-- backlinks-end -->

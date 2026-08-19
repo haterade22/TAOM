@@ -302,3 +302,20 @@ min sum (47) and the 3500 target have not.
   50 on every kingdom and bandit template stack still below it, leaving the one-per-hideout boss
   stack alone. Superseded for culture-level retargeting by `rebalance_party_template_maxes.py`; kept
   for its history
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/culture-playability-wiring.md](../features/culture-playability-wiring.md)
+- [docs/features/startup-resources.md](../features/startup-resources.md)
+- [docs/features/troop-weight-system.md](../features/troop-weight-system.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/templates/troops-and-parties.md](../migration/templates/troops-and-parties.md)
+- [docs/reference/doc-lookup.md](./doc-lookup.md)
+- [docs/reference/feature-map.md](./feature-map.md)
+- [docs/reviews/lessons/campaign-mechanics.md](../reviews/lessons/campaign-mechanics.md)
+
+<!-- backlinks-end -->

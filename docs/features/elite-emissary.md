@@ -234,5 +234,6 @@ TBD (create on ship).
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
 
 <!-- backlinks-end -->

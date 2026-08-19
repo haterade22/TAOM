@@ -63,6 +63,7 @@ Each override follows the established TAOM pattern (feature module + service + a
 
 ## Referenced by
 
+- [docs/features/dread-aura.md](features/dread-aura.md)
 - [docs/reference/doc-lookup.md](reference/doc-lookup.md)
 
 <!-- backlinks-end -->

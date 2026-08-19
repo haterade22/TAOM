@@ -379,3 +379,13 @@ The full workflow (animator's 5-step pipeline + this tooling):
 - Tools developed in collaboration with Claude Code during iterative spider-skeleton debugging sessions in April–May 2026.
 
 If your project uses a creature with substantially different anatomy (snakes, dragons, gigantic four-armed humanoids, etc.), the only thing that needs to change is `classify_bone()` in `tpac_skeleton_transplant.py` — replace the spider patterns with rules matching your bone names, keep the same return dict shape.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
+
+<!-- backlinks-end -->

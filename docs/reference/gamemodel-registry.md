@@ -1,4 +1,4 @@
-# GameModel Override Registry
+﻿# GameModel Override Registry
 
 > Every TAOM GameModel override (vanilla model -> TAOM override -> purpose). Extracted from CLAUDE.md 2026-07-18 (Tier 2 restructure). Override *pattern* + base-class rules live in `.claude/rules/gamemodels.md`.
 
@@ -41,7 +41,6 @@
 | `TaomAllianceModel` | `DefaultAllianceModel` | Racial enmity constraints on alliance formation |
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | Culture/race-based decision permission rules |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | Custom diplomacy logic for LOTR faction relationships |
-| `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | Culture-specific relation penalties for executions |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | Encyclopedia visibility restrictions per settings |
 | `TaomSiegeEventModel` | `DefaultSiegeEventModel` | Adds Trebuchet to defender siege engine options (for Minas Tirith et al.); preserves vanilla Fire-variant perk gating |
 | `TaomTargetScoreModel` | `DefaultTargetScoreCalculatingModel` | Besieger army: commitment stickiness (4×), faction priority lists, strength gate bypass per faction, distance compensation; `Patch22_ArmyTargeting` border proximity floor |
@@ -52,3 +51,12 @@
 | `TaomPrisonerRecruitmentCalculationModel` | `DefaultPrisonerRecruitmentCalculationModel` | PrisonerRecruitment: no morale lost recruiting a prisoner of your own faction (same culture) or own non-Neutral alignment side — Isengard absorbing Mordor/Gundabad/Dunland troops. Covers AI + party screen + cost label in one override. See `docs/features/prisoner-recruitment.md` |
 | `TaomBattleBannerBearersModel` | `SandboxBattleBannerBearersModel` | BannerBearers: bearers-per-formation scales with size per class (vanilla hardcodes 1) + JSON race gate. **Disabled path must `return base.X()`** — a computed "off" suppresses vanilla's own banner path. Subclass, NOT `BaseModel`-decorate. See `docs/features/banner-bearers.md` |
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/troop-weight-system.md](../features/troop-weight-system.md)
+
+<!-- backlinks-end -->

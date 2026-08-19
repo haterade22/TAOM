@@ -1,4 +1,4 @@
-# Lessons — Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)
+﻿# Lessons — Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle) lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -366,3 +366,21 @@ Patch50's original comment confidently asserted the victim was a mount, and the 
 showed it was not.
 
 **Source:** `docs/reviews/rca-dropflaggeditem-guard-2026-08-10.md` findings 1–4.
+
+### A fail-safe transpiler needs a gate fed with REAL engine IL
+
+A transpiler that warns and returns the stream unmodified when its anchor is missing is correct at
+runtime and invisible to tests. v1.5.0 relocated `Patch53_PartyIconScale`'s people site into a new
+helper method and hardcoded a third site; the mount kept honouring the MCM slider while the rider
+stayed vanilla-size, and nothing turned red.
+
+**Why missed:** the existing tests built synthetic `CodeInstruction` lists, so they validated the
+matcher and proved nothing about the engine. `HarmonyPatchBindingTests` only proves the TARGET
+resolves, which it still did.
+
+**Prevent:** feed `PatchProcessor.GetOriginalInstructions(target)` through the production static
+helper and assert the logger received no warning. Because every fail-safe path announces itself
+through `IModLogger`, "no warning" IS the proof the site resolved, with no IL introspection needed.
+See `TAOM.Tests/Migration/TranspilerSiteBindingTests.cs`.
+
+**Source:** `docs/reviews/rca-v150-engine-bump-2026-08-19.md` (Bannerlord v1.5.0 engine bump).

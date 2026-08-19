@@ -481,6 +481,7 @@ culprit diff for free.
 - [docs/features/coop-interop.md](./coop-interop.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
 - [docs/research/bannerlordcoop-internals.md](../research/bannerlordcoop-internals.md)
 
 <!-- backlinks-end -->

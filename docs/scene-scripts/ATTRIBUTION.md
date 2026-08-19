@@ -26,3 +26,13 @@ Alliance's convention is to prefix scene scripts with `CS_` ("Custom Script"). T
 ## Scripts NOT ported
 
 The other 12 scripts in Alliance's CustomScripts folder were deep-dived and triaged — see `docs/features/scene-scripts.md` for the table with reasons (most depend on Alliance-internal infrastructure that we don't and won't have).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
+
+<!-- backlinks-end -->

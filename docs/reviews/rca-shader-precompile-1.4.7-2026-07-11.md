@@ -53,5 +53,6 @@ Appended to `docs/reviews/LESSONS-LEARNED.md`:
 ## Referenced by
 
 - [docs/migration/v1.4.8-impact.md](../migration/v1.4.8-impact.md)
+- [docs/migration/v1.5.0-impact.md](../migration/v1.5.0-impact.md)
 
 <!-- backlinks-end -->

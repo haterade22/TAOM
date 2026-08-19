@@ -1,4 +1,4 @@
-# Lessons — XSLT & ModuleData
+﻿# Lessons — XSLT & ModuleData
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new XSLT & ModuleData lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -278,6 +278,24 @@ burying a twelve-row change in a 106,152-line diff that no reviewer can read.
 
 ## Referenced by
 
+- [docs/features/culture-playability-wiring.md](../../features/culture-playability-wiring.md)
 - [docs/reviews/LESSONS-LEARNED.md](../LESSONS-LEARNED.md)
+- [docs/reviews/rca-dale-2026-05-26.md](../rca-dale-2026-05-26.md)
 
 <!-- backlinks-end -->
+### A stylesheet that REPLACES a vanilla list destroys its contents, so assert on the output
+
+`spcultures.xslt` emits its own complete `notable_templates` list for the six cultures TAOM renames.
+That replaces vanilla's wholesale, so vanilla's female notables were gone. The all-male result is
+what crashed v1.5.0's gender-filtering Trader start. The XML-only check could not see it, because
+the list is emitted, not declared.
+
+**Why missed:** the fix and its gate both read `taom_spcultures.xml`, which is where cultures
+obviously live. Neither ran the transform. An independent reviewer re-derived the effective output
+and found six more broken cultures.
+
+**Prevent:** for any stylesheet that emits a list rather than extending one, assert on the transform
+OUTPUT. A stub input is enough when the template emits its own list, which keeps the test
+deterministic and install-free. See `TAOM.Tests/Core/NotableTemplateGenderTests.cs`.
+
+**Source:** `docs/reviews/rca-v150-engine-bump-2026-08-19.md` (Bannerlord v1.5.0 engine bump).

@@ -223,5 +223,6 @@ identity; the hand-iterate-and-`Tick` loop (redundant — `Agent.Tick` auto-tick
 - [docs/reference/engine/gamemodel-system.md](engine/gamemodel-system.md)
 - [docs/reference/engine/mount-and-rider-runtime.md](engine/mount-and-rider-runtime.md)
 - [docs/reference/engine/save-system.md](engine/save-system.md)
+- [docs/reference/provenance-register.md](./provenance-register.md)
 
 <!-- backlinks-end -->

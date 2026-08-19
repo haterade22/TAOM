@@ -169,6 +169,7 @@ roster from turn one, start a new campaign.
 
 ## Referenced by
 
+- [docs/features/dread-aura.md](./dread-aura.md)
 - [docs/reference/feature-map.md](../reference/feature-map.md)
 
 <!-- backlinks-end -->

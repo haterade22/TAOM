@@ -362,3 +362,14 @@ out-armour two under-rostered Gondor troops.
 - [armor-balance.md](armor-balance.md) for the curve, [troop-weight-system.md](troop-weight-system.md)
   for the 2.0 elite band, [weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
   for the 4-file weapon path
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+
+<!-- backlinks-end -->

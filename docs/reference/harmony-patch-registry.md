@@ -1,4 +1,4 @@
-# Harmony Patch Registry
+﻿# Harmony Patch Registry
 
 Full per-category rationale, history, and RCA links for every TAOM Harmony patch — moved verbatim from CLAUDE.md's Harmony Patch Categories table (repo-reorg 2026-07-12) so the eager-loaded CLAUDE.md keeps only the thin routing table (category | feature | target | status). **Before editing any patch, read its section here** and the scoped rule [.claude/rules/harmony-patches.md](../../.claude/rules/harmony-patches.md) (loads automatically when a `Main/**/Hooks/**` file is opened). Most sections end with a `docs/features/<x>.md` pointer — that feature doc remains the deep-dive.
 
@@ -90,9 +90,27 @@ Noise reduction, NOT a crash fix. Vanilla `DeliverOffSpring` carries a `Debug.Si
 
 ## Patch14_Execution
 
-**Target:** Various
+**Target:** `TraitLevelingHelper.OnBloodFeudStarted(Hero)` (Prefix) + `ExecutionCampaignBehavior.GetBloodFeudStartRelationPenaltyToOtherClan` (Postfix)
 
-Execution system
+Alignment rule for executions: putting an enemy-alignment lord to the sword should not carry the same
+moral or social cost as murdering one of your own. **Re-homed at the v1.5.0 bump.** v1.5.0 deleted
+vanilla's `ExecutionRelationModel` engine-wide (zero references remain) and replaced
+`TraitLevelingHelper.OnLordExecuted()` with `OnBloodFeudStarted(Hero)`, so `TaomExecutionRelationModel`
+lost its base class and was removed along with the now-dead `ExecutionContext` ThreadLocal shim and
+its `KillCharacterAction.ApplyInternal` prefix (the victim arrives as a parameter now).
+
+Both halves run on the Blood Feud seam. The trait prefix suppresses the Honor/Mercy hit for a
+cross-alignment kill. The relation postfix routes vanilla's per-clan penalty through
+`IOnExecutionAction.GetRelationModifier`: observers sharing the executor's side or neutral take
+nothing, observers sharing the victim's side keep the penalty, and a same-alignment kill is amplified
+×1.5 as kinslaying. Returning 0 trips the engine's own `!= 0` guard, so it is no hit and no
+notification rather than a smaller one.
+
+**The feud itself is deliberately NOT suppressed** — `OnBloodFeudStateChanged` still sets the victim
+clan's relation to minimum and starts the vendetta, which is correct: a clan whose kinsman you
+beheaded is entitled to hunt you regardless of side. Patching the model method rather than the apply
+loop also keeps the pre-execution "this will hurt your relations with N clans" tooltip honest.
+`Main/Features/Execution/`.
 
 ## Patch15_BannerLayerLimit
 
@@ -147,6 +165,16 @@ Border proximity floor for priority-list targets
 **Target:** `CampaignUIHelper`, `SandBoxUIHelper`, `SPInventoryVM`, `PartyVM`, `HeroViewModel`, `PartyCharacterVM`, `ClanPartyItemVM`, `Mission`, `CampaignSceneNotificationHelper`, `Banner`, `BannerEditorView`, `Agent.EquipItemsFromSpawnEquipment`, `AgentVisuals.Create` (manual), `MapConversationTableau` (manual ×2), `OrderOfBattleHeroItemVM`
 
 UI color persistence + 3D battle + conversation — player clan colors everywhere
+
+**v1.5.0:** `MobilePartyVisual.AddCharacterToPartyIcon` lost the `teamColor1`/`teamColor2` parameters
+the party-icon postfix wrote to (11 params to 7). Because that patch is applied through
+`ManualPatchApplicator` with `Harmony.Patch` and declared those parameter names, it would have
+**thrown at startup**, while `HarmonyPatchBindingTests` stayed green because `TargetMethod()` resolves
+by name only. Re-seamed as a transpiler on
+`SandBox.View.SandBoxViewHelpers+MobilePartyVisualHelper.GetHumanAgentPartyVisual`, where the colours
+are now locals read from `party.MapFaction.Color`/`.Color2`. Also note `Mission.SpawnAgent` gained an
+`agentSpawnEquipment` parameter, so the `AgentOverridenSpawnEquipment` guard in
+`Mission_SpawnAgent_Patch` now names it too.
 
 ## Patch24_BannerDriftGuard
 
@@ -372,9 +400,23 @@ SpecialResources — gates the recruit-volunteers Done button on the player's sp
 
 ## Patch53_PartyIconScale
 
-**Target:** `MobilePartyVisual.AddCharacterToPartyIcon` (private, Transpiler)
+**Target:** `MobilePartyVisual.AddCharacterToPartyIcon` (private, Transpiler) + `SandBox.View.SandBoxViewHelpers+MobilePartyVisualHelper.GetHumanAgentPartyVisual` (private nested, Transpiler)
 
-Campaign-map party-icon figure/mount scale. Transpiler rewrites the two hardcoded `0.3f` scale literals in `MobilePartyVisual.AddCharacterToPartyIcon` (people = `ldc.r4 0.3`→`callvirt Scale`; mount = `ldc.r4 0.3`→`mul`) into a `call PartyIconScaleConfig.GetScale()` so both honour the MCM "Map Figure Scale" slider (default 0.15 = half vanilla 0.30, range 0.05–1.0; `FiniteFloatValidator`-guarded). Stack-neutral in-place swap (labels preserved); animation-math `/0.3f` (`div`) literals not matched; missing-site fail-safe (warn, keep vanilla, never throw). Static IL-call-target pattern mirrors `CastleAiToggle`. Coexists with the BannerColorPersistence Postfix on the same method. `Main/Features/PartyIconScale/`. See `docs/features/party-icon-scale.md`.
+Campaign-map party-icon figure/mount scale. Transpiler rewrites the two hardcoded `0.3f` scale literals in `MobilePartyVisual.AddCharacterToPartyIcon` (people = `ldc.r4 0.3`→`callvirt Scale`; mount = `ldc.r4 0.3`→`mul`) into a `call PartyIconScaleConfig.GetScale()` so both honour the MCM "Map Figure Scale" slider (default 0.15 = half vanilla 0.30, range 0.05–1.0; `FiniteFloatValidator`-guarded). Stack-neutral in-place swap (labels preserved); animation-math `/0.3f` (`div`) literals not matched; missing-site fail-safe (warn, keep vanilla, never throw). Static IL-call-target pattern mirrors `CastleAiToggle`. **v1.5.0 split this across two methods.** The PEOPLE site (`ldc.r4 0.3` before a `Scale` call) was
+relocated into the new nested helper `MobilePartyVisualHelper.GetHumanAgentPartyVisual`, and
+`AddCharacterToPartyIcon` gained a THIRD, newly hardcoded site (`ldc.r4 0.3` before
+`Mat3.ApplyScaleLocal`) where v1.4.8 derived that frame scale from the already-patched
+`AgentVisualsData`. Harmony never feeds one method's IL to another method's transpiler, so
+`Patch53_PartyIconScaleHumanVisual` is a second patch class under the same category.
+`PartyIconScaleTranspiler` therefore has two entry points: `RewriteIconSites` (mount + human frame)
+and `RewriteHumanVisualSite` (people). Left unfixed this failed SILENTLY, because the transpiler
+fails safe: the mount honoured the slider while the rider stayed vanilla-size.
+
+Coexists on `GetHumanAgentPartyVisual` with the BannerColorPersistence transpiler (applied manually
+via `ManualPatchApplicator`); both matchers are content-based and index-independent, so they are
+order-independent. Site resolution is pinned by `TAOM.Tests/Migration/TranspilerSiteBindingTests.cs`,
+which feeds REAL engine IL through the production helpers and asserts no fail-safe warning fired.
+`Main/Features/PartyIconScale/`. See `docs/features/party-icon-scale.md`.
 
 ## Patch54_NavalTravelBoatVisual
 

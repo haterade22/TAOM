@@ -40,3 +40,13 @@ Same pattern as the `improve-codebase-architecture` review earlier today: the bu
 - `--external` foreign-skill vet over all 6 files: no findings.
 - `python tools/audit_claude_config.py` self-audit after the `/context-save` edit: exit 0, no new findings.
 - Documentation-only change (one skill body); no code/tests affected.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

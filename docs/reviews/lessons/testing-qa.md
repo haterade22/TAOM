@@ -731,3 +731,20 @@ fully green suite with nothing having run the changed lines even once.
   This is the inverse of "test the seam, not just the two things it joins": there the seam was
   untested; here one SIDE of the seam is untested precisely because the seam's test mocked it away.
 - **Source:** `docs/reviews/rca-enlistment-diagnostics-legibility-2026-08-12.md` finding #2.
+
+### A gate written in the same session as the fix inherits the fix's blind spot
+
+Two instances in one bump. The notable-gender gate checked the same file the fix touched and missed
+six cultures defined by a stylesheet. The prefab-XPath gate read the DEPLOYED module, which lags the
+checkout under a non-deploying build, so a broken source XPath would have passed (measured: deployed
+file had 0 of the new bindings, the repo had 5).
+
+**Why missed:** the author's model of "where the thing lives" is the same model that produced the
+incomplete fix, so the gate cannot catch what the fix missed. Both were found by an independent pass
+that shared none of the assumptions.
+
+**Prevent:** scope a new gate from the ENGINE's consumption path, not from the file the fix touched.
+Ask explicitly: what else feeds this consumer, and is the gate reading the artefact the build
+actually produces or a stale copy of it?
+
+**Source:** `docs/reviews/rca-v150-engine-bump-2026-08-19.md` (Bannerlord v1.5.0 engine bump).

@@ -1,4 +1,4 @@
-# NativeSkinFixes
+﻿# NativeSkinFixes
 
 ## Overview
 
@@ -128,7 +128,7 @@ All 7 signatures were authored + statically verified against Bannerlord v1.4.6's
 `TaleWorlds.Native.dll` (each was a single match at the RVA below). See the
 "v1.4.6 native port" section below for the method and the RVA/verification map.
 
-**They have not been re-verified since. The engine is now v1.4.8 — two bumps past the v1.4.6 the
+**They have not been re-verified since. The engine is now v1.5.0, three bumps past the v1.4.6 those offsets were taken against, and the v1.4.8 client native image is gone (only the wEditor v1.4.8 copy was preserved). Re-derive before trusting any of them.**
 patterns were authored against (v1.4.6 → v1.4.7 → v1.4.8).** `Signatures.h:29` still heads its
 shipped values "AUTHORED FOR BANNERLORD v1.4.6 (2026-06-30)", and the client
 `bin\Win64_Shipping_Client\TaleWorlds.Native.dll` those patterns scan was rewritten by the v1.4.8

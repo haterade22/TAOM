@@ -393,3 +393,15 @@ None. No TAOM C# touches the voice API, and no validator covers the data.
 ## GitHub Issue
 
 None filed. The dangling mbproj entry, the dilution, and the asset provenance each warrant one.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
+
+<!-- backlinks-end -->

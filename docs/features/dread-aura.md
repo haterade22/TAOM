@@ -381,3 +381,14 @@ Two consequences worth being deliberate about:
 - [nazgul-family.md](nazgul-family.md): the wraith roster in `NazgulRegistry`, shared with this feature.
 - [banner-bearers.md](banner-bearers.md): the MissionLogic + validated-config feature this mirrors.
 - [coop-interop.md](coop-interop.md): the MCM settings fingerprint the four new knobs join.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/roadmap.md](../roadmap.md)
+
+<!-- backlinks-end -->

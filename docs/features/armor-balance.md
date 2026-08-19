@@ -224,6 +224,7 @@ The analyzer is read-only and self-verifying: running it against the live tree m
 
 ## Referenced by
 
+- [docs/features/black-numenorean.md](./black-numenorean.md)
 - [docs/features/starting-equipment-tuning.md](./starting-equipment-tuning.md)
 
 <!-- backlinks-end -->

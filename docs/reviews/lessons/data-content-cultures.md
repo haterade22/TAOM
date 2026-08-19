@@ -1,4 +1,4 @@
-# Lessons — Data, Content & Cultures
+﻿# Lessons — Data, Content & Cultures
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Data, Content & Cultures lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -523,3 +523,19 @@ mordor` would have flattened the whole set onto the elite row.
 - [docs/reviews/lessons/xslt-moduledata.md](./xslt-moduledata.md)
 
 <!-- backlinks-end -->
+### A new engine-read attribute is an absence with nothing to grep for
+
+v1.5.0 added `CultureObject.Executioner`, read from an XML attribute and dereferenced UNGUARDED
+above its own usage check. Vanilla shipped it on 6 of 16 cultures; TAOM on 0 of 24, so any execution
+by a TAOM-culture lord was a null dereference. Separately, the six XSLT-renamed cultures silently
+INHERITED vanilla's Calradian executioner, because `xsl:apply-templates select="@*"` inherits every
+attribute the block does not name.
+
+**Why missed:** nothing in TAOM referenced the field, so no grep, compile or test could see it. The
+defect is the absence of an attribute.
+
+**Prevent:** on every engine bump, byte-diff the relevant `Deserialize` method between the preserved
+baseline and the new version. That produces the complete list of newly-read attributes in one step,
+and it is the only way to know a passthrough stylesheet is still complete.
+
+**Source:** `docs/reviews/rca-v150-engine-bump-2026-08-19.md` (Bannerlord v1.5.0 engine bump).

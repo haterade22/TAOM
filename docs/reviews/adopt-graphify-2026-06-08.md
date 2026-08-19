@@ -96,5 +96,7 @@ It reuses `lint_docs`'s link parser rather than copy-pasting it (`build_backlink
 - [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
 - [docs/features/doc-graph.md](../features/doc-graph.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/provenance-register.md](../reference/provenance-register.md)
+- [docs/reviews/adopt-graphify-v8-2026-08-18.md](./adopt-graphify-v8-2026-08-18.md)
 
 <!-- backlinks-end -->

@@ -270,3 +270,14 @@ covered by `SettingsFingerprint`.
 - **Follow-up:** [#460](https://github.com/haterade22/TAOM/issues/460) carries the two design
   questions the Codex pass surfaced (merit weights the election but does not decide it; the King's
   Vote cap binds AI rulers only).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/harmony-patch-registry.md](../reference/harmony-patch-registry.md)
+
+<!-- backlinks-end -->

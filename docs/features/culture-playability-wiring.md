@@ -321,3 +321,21 @@ was written before the culture existed.
 
 - **Issue:** not yet filed — see [new-factions-misty-mountains-lindon.md](new-factions-misty-mountains-lindon.md)
   "Known Limitations", items 5–7, which this work closes out.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/new-culture-authoring.md](../ai-includes/new-culture-authoring.md)
+- [docs/cultures.md](../cultures.md)
+- [docs/features/kingdom-creation.md](./kingdom-creation.md)
+- [docs/features/new-factions-misty-mountains-lindon.md](./new-factions-misty-mountains-lindon.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/party-template-sizing.md](../reference/party-template-sizing.md)
+- [docs/reviews/rca-dale-2026-05-26.md](../reviews/rca-dale-2026-05-26.md)
+
+<!-- backlinks-end -->

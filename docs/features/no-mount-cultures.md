@@ -136,6 +136,7 @@ No unit tests — all patches are thin Harmony entry points with no extractable 
 
 ## Referenced by
 
+- [docs/features/culture-playability-wiring.md](./culture-playability-wiring.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

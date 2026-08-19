@@ -1,8 +1,8 @@
-# CLAUDE.md
+﻿# CLAUDE.md
 
 Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 
-> **Target: Bannerlord 1.4.8** (installed; pinned in `.claude/pinned-game-version.txt` — the session-start hook warns on drift → run `/engine-bump`). The `E:\Decompiled_Bannerlord\` dump matches (v1.4.8; older baselines preserved) but `ilspycmd`/`taom-src` on the installed DLLs is authoritative for signatures. Impact + history: [`docs/migration/v1.4.8-impact.md`](docs/migration/v1.4.8-impact.md) · [`v1.4.7-impact.md`](docs/migration/v1.4.7-impact.md) · [`TRACKING.md`](docs/migration/TRACKING.md) · [`v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md).
+> **Target: Bannerlord 1.5.0** (installed, Steam **beta** branch; pinned in `.claude/pinned-game-version.txt`, session-start hook warns on drift, run `/engine-bump`). `ilspycmd`/`taom-src` on the installed DLLs is authoritative for signatures. **The Modding Kit (`bin/Win64_Shipping_wEditor`) is still v1.4.8**, which shifts `/native-crash-triage` offsets. Impact: [`v1.5.0-impact.md`](docs/migration/v1.5.0-impact.md) · [`TRACKING.md`](docs/migration/TRACKING.md) · RCA [`rca-v150`](docs/reviews/rca-v150-engine-bump-2026-08-19.md).
 
 ## Commands
 
@@ -24,7 +24,7 @@ Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
 | **Adapter Pattern** | Services use `ICareerHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts (v1.4.8 as of 2026-08-10, matching installed), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs** — the dump can lag after an engine bump; the installed DLLs are always authoritative |
+| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts (v1.5.0 as of 2026-08-19, matching installed), but **verify signatures via `ilspycmd`/`taom-src` on installed DLLs** — the dump can lag after an engine bump; the installed DLLs are always authoritative |
 | **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |
 | **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.4 incompatibilities, missing tests, data flow gaps |
 
@@ -347,8 +347,8 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- Target: Bannerlord v1.4.8 (installed game version; the `E:\Decompiled_Bannerlord\` dump is v1.4.8 as of 2026-08-10 — `ilspycmd` on the installed 1.4.8 DLLs is authoritative)
-- `E:\Decompiled_Bannerlord\` — v1.4.8 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}` for editor types; older baselines preserved — note `_editor_build_v1.4.5`: the Modding Kit sat three versions behind until 1.4.8 brought it level). Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md); installed DLLs stay authoritative for signatures.
+- Target: Bannerlord v1.5.0 (installed, Steam beta branch; the `E:\Decompiled_Bannerlord\` dump is v1.5.0 as of 2026-08-19. `ilspycmd` on the installed DLLs stays authoritative)
+- `E:\Decompiled_Bannerlord\`: v1.5.0 dump (category tree = shipping-client, strips editor code; dual-build `{_shipping_build,_editor_build}`; v1.4.5 to v1.4.8 baselines preserved as `*_v<ver>`). **The editor build is v1.4.8, not v1.5.0**: the Modding Kit did not move with this bump, reversing the state v1.4.8 recorded. Details: [bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md).
 - Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
 

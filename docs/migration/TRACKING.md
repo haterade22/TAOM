@@ -1,14 +1,16 @@
-# Migration Tracking
+﻿# Migration Tracking
 
 **Migration: Bannerlord 1.3.15 → 1.4.5 — Functional foundation complete (2026-05-22).**
 **Status:** S0–S5b ✅ landed (adapters, GameModels, equipment XML migration, roster authoring). S6–S12 (smoke test, per-tier feature validation, Codex review, closeout) were rolled into ongoing feature work on the `bannerlord-1.4.5` branch rather than executed as discrete gates — see commit history from 2026-05-22 onward for de-facto validation (CC fixes, warg combat, faction-map UI overhaul, career system tooltips, etc.). The formal validation pipeline was not run; runtime exposure has come through feature development.
 
-**Subsequent minor engine bumps (tracked engine, no schema migration):** v1.4.5 → v1.4.6 (spider/elephant native-crash line) → v1.4.7 (2026-07-08) → **v1.4.8 (2026-08-10, current)**. Each was handled via `/engine-bump` (preserve baseline → regen decompile → `/verify-bindings` → parity audits → snapshot refresh) rather than a fresh migration.
+**Subsequent minor engine bumps (tracked engine, no schema migration):** v1.4.5 → v1.4.6 (spider/elephant native-crash line) → v1.4.7 (2026-07-08) → v1.4.8 (2026-08-10) → **v1.5.0 (2026-08-19, current, Steam BETA branch)**. The first four were handled via `/engine-bump` (preserve baseline → regen decompile → `/verify-bindings` → parity audits → snapshot refresh) rather than a fresh migration. **v1.5.0 was not that shape**: every managed assembly was rewritten, 88 vanilla `ModuleData` XML changed against zero at v1.4.8, and it produced four CRITICAL runtime defects that the compiler, the full suite and `BindingVerification` all stayed green through. See [`v1.5.0-impact.md`](v1.5.0-impact.md) and the RCA at [`../reviews/rca-v150-engine-bump-2026-08-19.md`](../reviews/rca-v150-engine-bump-2026-08-19.md).
 
-**Tracker issue #210 closed 2026-08-08 as `obsolete-premise`** (issue-triage pass, [`docs/audits/issue-triage-2026-08-08.md`](../audits/issue-triage-2026-08-08.md)). The premise it tracked no longer holds: the code and data migration landed, and the engine is pinned two bumps past its target at v1.4.7. The S6–S12 gates it listed were never run as discrete steps — they were rolled into ongoing feature work (see the S6–S12 section below) — so closing the issue performed no validation. The residual in-game checks stay open and unticked in [`s6-runtime-punchlist.md`](./s6-runtime-punchlist.md); nothing in this file was ticked on account of the close.
+**Tracker issue #210 closed 2026-08-08 as `obsolete-premise`** (issue-triage pass, [`docs/audits/issue-triage-2026-08-08.md`](../audits/issue-triage-2026-08-08.md)). The premise it tracked no longer holds: the code and data migration landed, and the engine has since moved on to v1.5.0. The S6–S12 gates it listed were never run as discrete steps — they were rolled into ongoing feature work (see the S6–S12 section below) — so closing the issue performed no validation. The residual in-game checks stay open and unticked in [`s6-runtime-punchlist.md`](./s6-runtime-punchlist.md); nothing in this file was ticked on account of the close.
 
 For detailed analysis see:
-- [v1.4.7-impact.md](v1.4.7-impact.md) — **v1.4.7 changelog→surface→verdict impact matrix + code changes (current bump)**
+- [v1.5.0-impact.md](v1.5.0-impact.md): **v1.5.0 changelog→surface→verdict impact matrix + code changes (current bump)**
+- [v1.4.8-impact.md](v1.4.8-impact.md): v1.4.8 impact matrix (previous bump; note two of its claims are corrected by the v1.5.0 doc)
+- [v1.4.7-impact.md](v1.4.7-impact.md): v1.4.7 changelog→surface→verdict impact matrix + code changes
 - [v1.4.x-overview.md](v1.4.x-overview.md) — executive summary + session map
 - [v1.4.x-changes.md](v1.4.x-changes.md) — full changelog analysis
 - [v1.4.x-equipment-overhaul.md](v1.4.x-equipment-overhaul.md) — v1.4.3 equipment system deep dive
@@ -653,6 +655,7 @@ BannerlordTogether v0.2.2 requires `DependentVersion="v1.3.15.110062"`. TAOM's S
 - [docs/migration/v1.4.7-impact.md](./v1.4.7-impact.md)
 - [docs/migration/v1.4.8-impact.md](./v1.4.8-impact.md)
 - [docs/migration/v1.4.x-overview.md](./v1.4.x-overview.md)
+- [docs/migration/v1.5.0-impact.md](./v1.5.0-impact.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/taleworlds-api-snapshot/README.md](../reference/taleworlds-api-snapshot/README.md)
 - [docs/reference/taleworlds-api-snapshot/reflection-sites.md](../reference/taleworlds-api-snapshot/reflection-sites.md)

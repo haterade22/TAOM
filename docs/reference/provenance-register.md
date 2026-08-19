@@ -330,3 +330,16 @@ naming thirteen files that do. TOR_Core is a separate source, referenced for eng
 6. Add a detail section if the row needs more than the table can hold.
 7. For a brand new adoption, run `/adopt-external` first. Its security and license pass is the front
    door; this register is where its answer gets written down.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)
+- [docs/reviews/adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md)
+
+<!-- backlinks-end -->

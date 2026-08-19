@@ -218,3 +218,15 @@ the gating predicate, and one non-finite case per knob per the engine-float gate
 ## GitHub Issue
 
 [#461](https://github.com/haterade22/TAOM/issues/461)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/startup-resources.md](./startup-resources.md)
+- [docs/reference/feature-map.md](../reference/feature-map.md)
+- [docs/reference/party-template-sizing.md](../reference/party-template-sizing.md)
+
+<!-- backlinks-end -->

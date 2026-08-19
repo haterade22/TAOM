@@ -462,6 +462,7 @@ NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companio
 ## Referenced by
 
 - [docs/features/doc-health-linter.md](./doc-health-linter.md)
+- [docs/INDEX.md](../INDEX.md)
 - [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
 - [docs/reference/engine/formations-and-team-ai.md](../reference/engine/formations-and-team-ai.md)
 - [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
