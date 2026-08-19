@@ -2,6 +2,108 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-19
+
+### chore: Bannerlord v1.5.0 engine bump (in progress)
+
+Steam force-updated the install v1.4.8 to v1.5.0 on the **beta branch**. Work is on
+`bannerlord-1.5.x`. Unlike the last three bumps, this one is not cosmetic: v1.4.8 needed zero
+changes to `Main/`, v1.5.0 needed eight compile-level fixes plus three CRITICAL behavioural ones
+that compiled, bound and tested green throughout.
+
+**Eight engine changes fixed:** `MissionBehavior.OnTeamDeployed(Team)` deleted (mirrored vanilla's
+own move to `OnBattleSideSpawned(BattleSideEnum)`); `GetPrisonerRecruitmentMoraleEffect` int to
+float; `SettlementLoyaltyModel`'s governor-culture members removed (override plus its whole orphaned
+config, validator and test surface deleted, matching vanilla); `TraitLevelingHelper.OnLordExecuted`
+retargeted to its `OnBloodFeudStarted(Hero)` successor; `ExecutionRelationModel` gone engine-wide so
+`TaomExecutionRelationModel` and its dead `ExecutionContext` shim were removed;
+`MobileParty.HasPerk` now needs an `out Hero`; and two that were not signature fixes, below.
+
+**The character-creation event now fires ten times.** `OnCharacterCreationIsOverEvent` became
+`MbEvent<int>` and the dispatcher loops `i = 0..9` as a phase index that every vanilla subscriber
+guards on. An unguarded handler runs ten times, and one of TAOM's seeds the player's starting
+special resources. Both handlers are now guarded at phase 9, after Advanced Starting Options applies
+the chosen player start at phase 8.
+
+**Three CRITICAL breaks that no gate could see:**
+
+- **Cultures need an executioner.** v1.5.0 added `CultureObject.Executioner` and dereferences it
+  unguarded in the execution scene builder, above the `_useExecutioner` check, keyed on the
+  executing hero's culture. Vanilla ships it on 6 of 16 cultures; TAOM shipped it on 0 of 24, so any
+  execution by a TAOM-culture lord was a null dereference. Added to all 24 custom cultures and, via
+  `spcultures.xslt`, to the 6 renamed vanilla ones, which were silently inheriting Calradian
+  executioners.
+- **Party nameplates.** `PartyNameplateWidget` gained `BloodFeudIconWidget` and dereferences it every
+  late update with no null guard. TAOM's stale prefab clone never assigned it, which is a per-frame
+  NRE on the campaign map.
+- **Party icon scale.** v1.5.0 relocated the leader-figure scale site out of
+  `AddCharacterToPartyIcon` into a new helper and hardcoded a third site. The transpiler fails safe,
+  so the mount honoured the MCM slider while the rider stayed vanilla-size, silently.
+
+Also fixed: the `SpecialResources` map-bar XPath (measured 0 matches against the shipped file, 1
+after), the banner-colour patch that would have **thrown at startup** because its postfix declared
+two deleted parameters, and 88 dwarf action sets missing `act_ghurab_captain_idle`, a v1.5.0-new
+action type. That last one is the dwarf water-CTD shape and the parity gate now exits 0 again.
+
+**Three more CRITICAL findings, none of them from the changelog:**
+
+- **The engine now overwrites the player's starting gold.** v1.5.0 added `Hero.MainHero.Gold = 1000;`
+  to `FinalizeCharacterCreationState`, which runs immediately after `ApplyFinalEffects` where TAOM
+  grants its culture-keyed startup gold. It is an assignment, not an addition, so every new campaign
+  started at a flat 1000 instead of 2000 / 3500 / 4000 and the elf and dwarf differentiation was
+  simply gone. `StartupResourcesBehavior` now re-applies at character-creation phase 9, gated on the
+  default start so Advanced Starting Options' own king and vassal gold is left alone.
+- **Advanced Starting Options' Trader start crashed female players.** It gender-filters a culture's
+  notable templates and indexes the result unguarded, and all 16 TAOM cultures with notable templates
+  had zero female entries against vanilla's 4 to 5. Fixed at the root with one female notable per
+  culture, cloned from that culture's own donor so race and face template are preserved: for a LOTR
+  conversion a female dwarf built on the dwarf body property beats one built on a Calradian
+  townswoman.
+- **NavalDLC is now formally incompatible.** It ships `DefaultModule="true"`, so it was enabled
+  unless a player turned it off, and it registers the Nord Invasion scenario whose handler
+  dereferences a `"nord"` kingdom TAOM does not have. `SubModule.xml` gained an `IncompatibleModules`
+  block.
+
+**Advanced Starting Options adapted to Middle-earth.** A new `TaomStartOptionsProvider` uses the
+engine's own `[StartOptionsProvider]` hook, so no Harmony patch: it drops the United Empire scenario
+(it merges Gondor, Mordor and Dunland into a kingdom hardcoded as "Calradian Empire", and two of its
+three unifier choices leave the player ruling an empty shell because vanilla branches on
+`Culture.StringId == "empire"` which only Dunland satisfies) and registers TAOM's 14 kingdoms into
+the five faction pickers, which were hardcoded to the eight vanilla ids. 49 string overrides retitle
+the menu so it reads Dunland, Gondor, Mordor, Dale, Harad, Rohan, Khand and Rhun instead of
+"Northern Empire", with Middle-earth wording for the scenario descriptions. Rows exist in all 12
+languages; a translator run is owed.
+
+**Execution alignment rule restored on the Blood Feud seam.** v1.5.0 deleted vanilla's
+`ExecutionRelationModel`, taking TAOM's override with it. Both halves are now re-homed: the trait
+half on `OnBloodFeudStarted`, and the relation half on
+`GetBloodFeudStartRelationPenaltyToOtherClan`. A cross-alignment execution costs no standing with
+observers who share the executor's side or are neutral, while the victim's own side still objects,
+and the blood feud itself starts either way, which is the intended behaviour: a clan whose kinsman
+you beheaded is entitled to hunt you. Patching the model method rather than the apply loop keeps the
+pre-execution tooltip honest. The dead `IOnExecutionAction.IsKinslaying` was removed.
+
+**Vanilla XML formatting was checked and is clean.** Comparing TAOM's attribute vocabulary against
+vanilla's current one across every element type TAOM authors found no renames: `Kingdom`, `Faction`,
+`Settlement`, `MBPartyTemplate` and `EquipmentRoster` have zero TAOM-only attributes. The apparent
+oddities all resolve benignly (`NPCCharacter.race` still read; `Monster.bones_to_modify_on_sloping_ground_5`
+is declared by the rewritten schema; `Item.cultures` and `min_stock` were always inert in both
+versions). `Culture.executioner` was the one real addition.
+
+**Five new permanent gates**, all in `BindingVerification` or plain data invariants:
+`TranspilerSiteBindingTests` feeds real engine IL through each transpiler and asserts no fail-safe
+warning fired; `PrefabExtensionBindingTests` resolves every UIExtenderEx XPath through the engine's
+own basename last-module-wins rule and reports the first step that drops to zero; `CommentStringTagsTests`
+asserts on the transform output that no override drops its variant tags; `NotableTemplateGenderTests`
+pins both genders per culture. They exist because the binding gate verifies that a patch TARGET
+resolves and nothing more.
+
+Impact analysis: `docs/migration/v1.5.0-impact.md`. Change-set oracle:
+`docs/migration/v1.5.0-changeset.txt`.
+
+Not-tested: everything in-game. Build and full suite are green (6,692 passed / 0 failed / 2 skipped)
+but binding-green is not behaviour-verified, which is the entire lesson of the 1.4.7 shader RCA.
+
 ## 2026-08-18
 
 ### fix(tooling): two gates that could not fire now fire

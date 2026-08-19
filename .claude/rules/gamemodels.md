@@ -1,4 +1,4 @@
----
+﻿---
 paths:
   - "Main/Features/**/Models/*.cs"
   - "Main/Features/**/*Model.cs"
@@ -104,7 +104,6 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomAllianceModel` | `DefaultAllianceModel` | `Diplomacy` |
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | `Diplomacy` |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | `Diplomacy` |
-| `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | `Execution` |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | `Encyclopedia` |
 | `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem, **abstract** — career passives via inheritance; ultimately `SandboxAgentApplyDamageModel`) | `CombatMechanics` |
 | `TaomPrisonerRecruitmentCalculationModel` | `DefaultPrisonerRecruitmentCalculationModel` | `PrisonerRecruitment` |

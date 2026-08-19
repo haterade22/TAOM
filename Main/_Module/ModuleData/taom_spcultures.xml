@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <SPCultures>
   <!-- ============================================== -->
   <!-- EREBOR - Dwarves of the Lonely Mountain        -->
@@ -10,6 +10,7 @@
     color="0xFF23432D"
     color2="0xFFB5913E"
     elite_basic_troop="NPCCharacter.erebor_noble"
+    executioner="NPCCharacter.erebor_noble"
     basic_troop="NPCCharacter.erebor_reg_miner"
     melee_militia_troop="NPCCharacter.erebor_militia_spearman"
     ranged_militia_troop="NPCCharacter.erebor_militia_archer"
@@ -308,6 +309,11 @@
       <template name="NPCCharacter.spc_erebor_headman_1" />
       <template name="NPCCharacter.spc_erebor_headman_2" />
       <template name="NPCCharacter.spc_erebor_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_erebor_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_erebor_lord_1" />
@@ -345,6 +351,7 @@
     color="0xff1A1A1A"
     color2="0xff2000AF"
     elite_basic_troop="NPCCharacter.imladris_infantry"
+    executioner="NPCCharacter.imladris_infantry"
     basic_troop="NPCCharacter.imladris_recruit"
     melee_militia_troop="NPCCharacter.rivendell_militia_spearman"
     ranged_militia_troop="NPCCharacter.rivendell_militia_archer"
@@ -648,6 +655,11 @@
       <template name="NPCCharacter.spc_rivendell_headman_1" />
       <template name="NPCCharacter.spc_rivendell_headman_2" />
       <template name="NPCCharacter.spc_rivendell_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_rivendell_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_rivendell_lord_1" />
@@ -685,6 +697,7 @@
     color="0xFF234028"
     color2="0xFF8A734C"
     elite_basic_troop="NPCCharacter.mirkwood_woodsman"
+    executioner="NPCCharacter.mirkwood_woodsman"
     basic_troop="NPCCharacter.mirkwood_recruit"
     melee_militia_troop="NPCCharacter.mirkwood_militia_spearman"
     ranged_militia_troop="NPCCharacter.mirkwood_militia_archer"
@@ -979,6 +992,11 @@
       <template name="NPCCharacter.spc_mirkwood_headman_1" />
       <template name="NPCCharacter.spc_mirkwood_headman_2" />
       <template name="NPCCharacter.spc_mirkwood_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_mirkwood_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_mirkwood_lord_1" />
@@ -1016,6 +1034,7 @@
     color="0xFF998C5E"
     color2="0xFFE8E6D5"
     elite_basic_troop="NPCCharacter.imladris_infantry"
+    executioner="NPCCharacter.imladris_infantry"
     basic_troop="NPCCharacter.imladris_recruit"
     melee_militia_troop="NPCCharacter.rivendell_militia_spearman"
     ranged_militia_troop="NPCCharacter.rivendell_militia_archer"
@@ -1311,6 +1330,11 @@
       <template name="NPCCharacter.spc_lothlorien_headman_1" />
       <template name="NPCCharacter.spc_lothlorien_headman_2" />
       <template name="NPCCharacter.spc_lothlorien_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_lothlorien_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_lothlorien_lord_1" />
@@ -1348,6 +1372,7 @@
     color="0xFF2B2B2B"
     color2="0xFF8C8C8C"
     elite_basic_troop="NPCCharacter.urukhai_scout"
+    executioner="NPCCharacter.urukhai_scout"
     basic_troop="NPCCharacter.urukhai_recruit"
     melee_militia_troop="NPCCharacter.isengard_militia_spearman"
     ranged_militia_troop="NPCCharacter.isengard_militia_archer"
@@ -1658,6 +1683,11 @@
       <template name="NPCCharacter.spc_isengard_headman_1" />
       <template name="NPCCharacter.spc_isengard_headman_2" />
       <template name="NPCCharacter.spc_isengard_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_isengard_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_isengard_lord_1" />
@@ -1697,6 +1727,7 @@
     color="0xFF1E1E1E"
     color2="0xFF6A3E1E"
     elite_basic_troop="NPCCharacter.gundabad_fighter"
+    executioner="NPCCharacter.gundabad_fighter"
     basic_troop="NPCCharacter.gundabad_snaga"
     melee_militia_troop="NPCCharacter.gundabad_militia_spearman"
     ranged_militia_troop="NPCCharacter.gundabad_militia_archer"
@@ -1996,6 +2027,11 @@
       <template name="NPCCharacter.spc_gundabad_headman_1" />
       <template name="NPCCharacter.spc_gundabad_headman_2" />
       <template name="NPCCharacter.spc_gundabad_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_gundabad_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_gundabad_lord_1" />
@@ -2034,6 +2070,7 @@
     color="0xFF3A1F1F"
     color2="0xFFB5913E"
     elite_basic_troop="NPCCharacter.umbar_elite"
+    executioner="NPCCharacter.umbar_elite"
     basic_troop="NPCCharacter.harad_levy"
     melee_militia_troop="NPCCharacter.harad_militia_spearman"
     ranged_militia_troop="NPCCharacter.harad_militia_archer"
@@ -2329,6 +2366,11 @@
       <template name="NPCCharacter.spc_umbar_headman_1" />
       <template name="NPCCharacter.spc_umbar_headman_2" />
       <template name="NPCCharacter.spc_umbar_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_umbar_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_umbar_lord_1" />
@@ -2366,6 +2408,7 @@
     color="0xFF2F2A2A"
     color2="0xFF5C7352"
     elite_basic_troop="NPCCharacter.dg_uruk_warrior"
+    executioner="NPCCharacter.dg_uruk_warrior"
     basic_troop="NPCCharacter.dg_goblin_slave"
     melee_militia_troop="NPCCharacter.dolguldur_militia_spearman"
     ranged_militia_troop="NPCCharacter.dolguldur_militia_archer"
@@ -2674,6 +2717,11 @@
       <template name="NPCCharacter.spc_dolguldur_headman_1" />
       <template name="NPCCharacter.spc_dolguldur_headman_2" />
       <template name="NPCCharacter.spc_dolguldur_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_dolguldur_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_dolguldur_lord_1" />
@@ -2711,6 +2759,7 @@
     color="0xFF23432D"
     color2="0xFFB5913E"
     elite_basic_troop="NPCCharacter.gondor_ano_footman"
+    executioner="NPCCharacter.gondor_ano_footman"
     basic_troop="NPCCharacter.gondor_ano_peasant"
     melee_militia_troop="NPCCharacter.gondor_militia_spearman"
     ranged_militia_troop="NPCCharacter.gondor_militia_archer"
@@ -3014,6 +3063,11 @@
       <template name="NPCCharacter.spc_gondor_headman_1" />
       <template name="NPCCharacter.spc_gondor_headman_2" />
       <template name="NPCCharacter.spc_gondor_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_gondor_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_gondor_lord_1" />
@@ -3053,6 +3107,7 @@
     color="0xFF23432D"
     color2="0xFFB5913E"
     elite_basic_troop="NPCCharacter.mordor_uruk_warrior"
+    executioner="NPCCharacter.mordor_uruk_warrior"
     basic_troop="NPCCharacter.mordor_uruk_grunt"
     melee_militia_troop="NPCCharacter.mordor_militia_spearman"
     ranged_militia_troop="NPCCharacter.mordor_militia_archer"
@@ -3364,6 +3419,11 @@
       <template name="NPCCharacter.spc_mordor_headman_1" />
       <template name="NPCCharacter.spc_mordor_headman_2" />
       <template name="NPCCharacter.spc_mordor_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_mordor_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_mordor_lord_1" />
@@ -3404,6 +3464,7 @@
     color="0xFFA05020"
     color2="0xFF5A3018"
     elite_basic_troop="NPCCharacter.harad_noble"
+    executioner="NPCCharacter.harad_noble"
     basic_troop="NPCCharacter.harad_levy"
     melee_militia_troop="NPCCharacter.harad_militia_spearman"
     ranged_militia_troop="NPCCharacter.harad_militia_archer"
@@ -3625,6 +3686,11 @@
       <template name="NPCCharacter.spc_shaghana_headman_1" />
       <template name="NPCCharacter.spc_shaghana_headman_2" />
       <template name="NPCCharacter.spc_shaghana_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_shaghana_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_shaghana_lord_1" />
@@ -3662,6 +3728,7 @@
     color="0xFF1A3560"
     color2="0xFFAA9240"
     elite_basic_troop="NPCCharacter.harad_noble"
+    executioner="NPCCharacter.harad_noble"
     basic_troop="NPCCharacter.harad_levy"
     melee_militia_troop="NPCCharacter.harad_militia_spearman"
     ranged_militia_troop="NPCCharacter.harad_militia_archer"
@@ -3880,6 +3947,11 @@
       <template name="NPCCharacter.spc_abanissa_headman_1" />
       <template name="NPCCharacter.spc_abanissa_headman_2" />
       <template name="NPCCharacter.spc_abanissa_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_abanissa_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_abanissa_lord_1" />
@@ -3924,6 +3996,7 @@
     bandit_bandit="NPCCharacter.dunland_peasant"
     bandit_boss="NPCCharacter.dunland_raiders_boss"
     elite_basic_troop="NPCCharacter.dunland_raider"
+    executioner="NPCCharacter.dunland_raider"
     basic_troop="NPCCharacter.dunland_peasant"
     is_bandit="true"
     can_have_settlement="true"
@@ -3966,6 +4039,7 @@
     bandit_bandit="NPCCharacter.balcoth_volunteer"
     bandit_boss="NPCCharacter.rhun_raiders_boss"
     elite_basic_troop="NPCCharacter.balcoth_footman"
+    executioner="NPCCharacter.balcoth_footman"
     basic_troop="NPCCharacter.balcoth_volunteer"
     is_bandit="true"
     can_have_settlement="true"
@@ -4008,6 +4082,7 @@
     bandit_bandit="NPCCharacter.harad_levy"
     bandit_boss="NPCCharacter.harad_raiders_boss"
     elite_basic_troop="NPCCharacter.harad_archer"
+    executioner="NPCCharacter.harad_archer"
     basic_troop="NPCCharacter.harad_levy"
     is_bandit="true"
     can_have_settlement="true"
@@ -4050,6 +4125,7 @@
     bandit_bandit="NPCCharacter.gundabad_snaga"
     bandit_boss="NPCCharacter.gundabad_raiders_boss"
     elite_basic_troop="NPCCharacter.gundabad_grunt"
+    executioner="NPCCharacter.gundabad_grunt"
     basic_troop="NPCCharacter.gundabad_snaga"
     is_bandit="true"
     can_have_settlement="true"
@@ -4092,6 +4168,7 @@
     bandit_bandit="NPCCharacter.aux_basic"
     bandit_boss="NPCCharacter.umbar_corsairs_boss"
     elite_basic_troop="NPCCharacter.umbar_elite"
+    executioner="NPCCharacter.umbar_elite"
     basic_troop="NPCCharacter.aux_basic"
     is_bandit="true"
     can_have_settlement="true"
@@ -4142,6 +4219,7 @@
     bandit_bandit="NPCCharacter.gondor_ano_peasant"
     bandit_boss="NPCCharacter.gondor_soldiers_boss"
     elite_basic_troop="NPCCharacter.gondor_ano_militia"
+    executioner="NPCCharacter.gondor_ano_militia"
     basic_troop="NPCCharacter.gondor_ano_peasant"
     is_bandit="true"
     can_have_settlement="true"
@@ -4184,6 +4262,7 @@
     bandit_bandit="NPCCharacter.erebor_reg_miner"
     bandit_boss="NPCCharacter.erebor_warriors_boss"
     elite_basic_troop="NPCCharacter.erebor_reg_militia"
+    executioner="NPCCharacter.erebor_reg_militia"
     basic_troop="NPCCharacter.erebor_reg_miner"
     is_bandit="true"
     can_have_settlement="true"
@@ -4226,6 +4305,7 @@
     bandit_bandit="NPCCharacter.mirkwood_militia_spearman"
     bandit_boss="NPCCharacter.mirkwood_stalkers_boss"
     elite_basic_troop="NPCCharacter.mirkwood_militia_archer"
+    executioner="NPCCharacter.mirkwood_militia_archer"
     basic_troop="NPCCharacter.mirkwood_militia_spearman"
     is_bandit="true"
     can_have_settlement="true"
@@ -4265,6 +4345,7 @@
     color="0xFF1C2A1C"
     color2="0xFF44582E"
     elite_basic_troop="NPCCharacter.goblin_fighter"
+    executioner="NPCCharacter.goblin_fighter"
     basic_troop="NPCCharacter.goblin_snaga"
     melee_militia_troop="NPCCharacter.goblin_militia_spearman"
     ranged_militia_troop="NPCCharacter.goblin_militia_archer"
@@ -4560,6 +4641,11 @@
       <template name="NPCCharacter.spc_goblin_headman_1" />
       <template name="NPCCharacter.spc_goblin_headman_2" />
       <template name="NPCCharacter.spc_goblin_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_goblin_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_goblin_lord_1" />
@@ -4596,6 +4682,7 @@
     color="0xFF2E2E2E"
     color2="0xFF6E5A40"
     elite_basic_troop="NPCCharacter.mistymountainorcs_fighter"
+    executioner="NPCCharacter.mistymountainorcs_fighter"
     basic_troop="NPCCharacter.mistymountainorcs_snaga"
     melee_militia_troop="NPCCharacter.mistymountainorcs_militia_spearman"
     ranged_militia_troop="NPCCharacter.mistymountainorcs_militia_archer"
@@ -4892,6 +4979,11 @@
       <template name="NPCCharacter.spc_mistymountainorcs_headman_1" />
       <template name="NPCCharacter.spc_mistymountainorcs_headman_2" />
       <template name="NPCCharacter.spc_mistymountainorcs_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_mistymountainorcs_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_mistymountainorcs_lord_1" />
@@ -4928,6 +5020,7 @@
     color="0xFF50A090"
     color2="0xFF7FC4B4"
     elite_basic_troop="NPCCharacter.lindon_imladris_infantry"
+    executioner="NPCCharacter.lindon_imladris_infantry"
     basic_troop="NPCCharacter.lindon_imladris_recruit"
     melee_militia_troop="NPCCharacter.lindon_militia_spearman"
     ranged_militia_troop="NPCCharacter.lindon_militia_archer"
@@ -5231,6 +5324,11 @@
       <template name="NPCCharacter.spc_lindon_headman_1" />
       <template name="NPCCharacter.spc_lindon_headman_2" />
       <template name="NPCCharacter.spc_lindon_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_lindon_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_lindon_lord_1" />
@@ -5267,6 +5365,7 @@
     color="0xFF2A3A5A"
     color2="0xFF44586E"
     elite_basic_troop="NPCCharacter.bluecraig_fighter"
+    executioner="NPCCharacter.bluecraig_fighter"
     basic_troop="NPCCharacter.bluecraig_snaga"
     melee_militia_troop="NPCCharacter.bluecraig_militia_spearman"
     ranged_militia_troop="NPCCharacter.bluecraig_militia_archer"
@@ -5564,6 +5663,11 @@
       <template name="NPCCharacter.spc_bluecraig_headman_1" />
       <template name="NPCCharacter.spc_bluecraig_headman_2" />
       <template name="NPCCharacter.spc_bluecraig_headman_3" />
+          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
+           the result unguarded, so a culture with no female template crashes a female player
+           on the Trader start. Race and face template match the male donor deliberately: for a
+           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
+      <template name="NPCCharacter.spc_notable_bluecraig_0_f" />
     </notable_templates>
     <lord_templates>
       <template name="NPCCharacter.spc_bluecraig_lord_1" />

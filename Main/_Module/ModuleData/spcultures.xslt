@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<!-- Identity transformation - copies everything by default -->
 	<xsl:output omit-xml-declaration="no" indent="yes"/>
@@ -25,6 +25,7 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.dunland_peasant</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.dunland_noble_son</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.dunland_noble_son</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.dunland_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.dunland_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.dunland_militia_veteran_spearman</xsl:attribute>
@@ -289,6 +290,12 @@
 				<template name="NPCCharacter.spc_dunland_headman_1" />
 				<template name="NPCCharacter.spc_dunland_headman_2" />
 				<template name="NPCCharacter.spc_dunland_headman_3" />
+			
+				<!-- v1.5.0: Advanced Starting Options gender-filters notable templates and indexes the
+				     result unguarded, so a culture with no female entry crashes a female player on the
+				     Trader start. This list REPLACES vanilla's, so the vanilla female notables are gone
+				     unless one is added back here. -->
+				<template name="NPCCharacter.spc_notable_dunland_0_f" />
 			</notable_templates>
 
 			<!-- Override cultural feats: Dunland uses Battanian-style feats (hill tribe / forest guerrillas) -->
@@ -333,6 +340,7 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.harad_levy</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.harad_noble</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.harad_noble</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.harad_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.harad_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.harad_militia_veteran_spearman</xsl:attribute>
@@ -593,6 +601,12 @@
 				<template name="NPCCharacter.spc_harad_headman_1" />
 				<template name="NPCCharacter.spc_harad_headman_2" />
 				<template name="NPCCharacter.spc_harad_headman_3" />
+			
+				<!-- v1.5.0: Advanced Starting Options gender-filters notable templates and indexes the
+				     result unguarded, so a culture with no female entry crashes a female player on the
+				     Trader start. This list REPLACES vanilla's, so the vanilla female notables are gone
+				     unless one is added back here. -->
+				<template name="NPCCharacter.spc_notable_harad_0_f" />
 			</notable_templates>
 
 			<!-- Caravans. See the Dunland block above for why these are children, not attributes. -->
@@ -623,6 +637,7 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.rohan_edoras_recruit</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.rohan_edoras_golden_hall_rider</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.rohan_edoras_golden_hall_rider</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.rohan_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rohan_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rohan_militia_veteran_spearman</xsl:attribute>
@@ -882,6 +897,12 @@
 				<template name="NPCCharacter.spc_rohan_headman_1" />
 				<template name="NPCCharacter.spc_rohan_headman_2" />
 				<template name="NPCCharacter.spc_rohan_headman_3" />
+			
+				<!-- v1.5.0: Advanced Starting Options gender-filters notable templates and indexes the
+				     result unguarded, so a culture with no female entry crashes a female player on the
+				     Trader start. This list REPLACES vanilla's, so the vanilla female notables are gone
+				     unless one is added back here. -->
+				<template name="NPCCharacter.spc_notable_rohan_0_f" />
 			</notable_templates>
 
 			<!-- Override cultural feats: Rohan uses custom Horse-lord feats -->
@@ -922,6 +943,7 @@
 			<!-- Troop references -->
 			<xsl:attribute name="basic_troop">NPCCharacter.loke_rim_initiate</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.loke_rim_cavalry</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.loke_rim_cavalry</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.rhun_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rhun_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rhun_militia_veteran_spearman</xsl:attribute>
@@ -1172,6 +1194,12 @@
 				<template name="NPCCharacter.spc_rhun_headman_1" />
 				<template name="NPCCharacter.spc_rhun_headman_2" />
 				<template name="NPCCharacter.spc_rhun_headman_3" />
+			
+				<!-- v1.5.0: Advanced Starting Options gender-filters notable templates and indexes the
+				     result unguarded, so a culture with no female entry crashes a female player on the
+				     Trader start. This list REPLACES vanilla's, so the vanilla female notables are gone
+				     unless one is added back here. -->
+				<template name="NPCCharacter.spc_notable_rhun_0_f" />
 			</notable_templates>
 
 			<!-- Caravans. See the Dunland block above for why these are children, not attributes. -->
@@ -1200,6 +1228,7 @@
 			<!-- Military: troops, militias, party templates -->
 			<xsl:attribute name="basic_troop">NPCCharacter.dale_recruit</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.dale_squire</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.dale_squire</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.dale_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.dale_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.dale_militia_veteran_spearman</xsl:attribute>
@@ -1291,6 +1320,12 @@
 				<template name="NPCCharacter.spc_dale_headman_1" />
 				<template name="NPCCharacter.spc_dale_headman_2" />
 				<template name="NPCCharacter.spc_dale_headman_3" />
+			
+				<!-- v1.5.0: Advanced Starting Options gender-filters notable templates and indexes the
+				     result unguarded, so a culture with no female entry crashes a female player on the
+				     Trader start. This list REPLACES vanilla's, so the vanilla female notables are gone
+				     unless one is added back here. -->
+				<template name="NPCCharacter.spc_notable_dale_0_f" />
 			</notable_templates>
 
 			<!-- Vassal reward items (Dale longbow — Bard's black-arrow theme) -->
@@ -1342,6 +1377,7 @@
 			     an already-re-themed sibling (khuzait) for any value still matching /battania/i. -->
 			<xsl:attribute name="basic_troop">NPCCharacter.loke_rim_initiate</xsl:attribute>
 			<xsl:attribute name="elite_basic_troop">NPCCharacter.loke_rim_cavalry</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.loke_rim_cavalry</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.rhun_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.rhun_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.rhun_militia_veteran_spearman</xsl:attribute>
@@ -1446,6 +1482,12 @@
 				<template name="NPCCharacter.spc_khand_headman_1" />
 				<template name="NPCCharacter.spc_khand_headman_2" />
 				<template name="NPCCharacter.spc_khand_headman_3" />
+			
+				<!-- v1.5.0: Advanced Starting Options gender-filters notable templates and indexes the
+				     result unguarded, so a culture with no female entry crashes a female player on the
+				     Trader start. This list REPLACES vanilla's, so the vanilla female notables are gone
+				     unless one is added back here. -->
+				<template name="NPCCharacter.spc_notable_khand_0_f" />
 			</notable_templates>
 
 			<!-- Vassal reward items (Mordor sword — Khand serves Mordor) -->

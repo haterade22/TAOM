@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- ==================== DUNLAND CIVILIAN NPCs ==================== -->
@@ -709,6 +709,21 @@
 
 	<!-- Notables: Merchants (10) -->
 	<NPCCharacter id="spc_notable_dunland_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dn_notable_0}Shrewd hillman trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.battania_civil_a" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.battania_civil_a" />
+				<equipment slot="Leg" id="Item.battania_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_dunland_0_f" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.empire" name="{=aom_dl_notable_f}Dunlending matron" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_dunland_a" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>

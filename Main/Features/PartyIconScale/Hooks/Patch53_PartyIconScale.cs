@@ -31,5 +31,5 @@ public static class Patch53_PartyIconScale
 
     [HarmonyTranspiler]
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) =>
-        PartyIconScaleTranspiler.Rewrite(instructions, _getScale, _logger);
+        PartyIconScaleTranspiler.RewriteIconSites(instructions, _getScale, _logger);
 }

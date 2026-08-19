@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Newtonsoft.Json;
 using TAOM.Core.Infrastructure;
@@ -53,8 +53,9 @@ public class RevoltTuningConfigProvider : IRevoltTuningConfigProvider
         {
             RebellionStartLoyaltyThreshold = parsed.RebellionStartLoyaltyThreshold,
             RebelliousStateStartLoyaltyThreshold = parsed.RebelliousStateStartLoyaltyThreshold,
+            HighRebellionStartLoyaltyThreshold = parsed.HighRebellionStartLoyaltyThreshold,
+            HighRebellionRebelliousStateStartLoyaltyThreshold = parsed.HighRebellionRebelliousStateStartLoyaltyThreshold,
             SettlementOwnerDifferentCultureLoyaltyEffect = parsed.SettlementOwnerDifferentCultureLoyaltyEffect,
-            GovernorDifferentCultureLoyaltyEffect = parsed.GovernorDifferentCultureLoyaltyEffect,
         };
 
         var defaults = new RevoltTuningConfig();
@@ -82,17 +83,32 @@ public class RevoltTuningConfigProvider : IRevoltTuningConfigProvider
             rejected = true;
         }
 
+        if (sanitized.HighRebellionStartLoyaltyThreshold < 0 || sanitized.HighRebellionStartLoyaltyThreshold > 100)
+        {
+            _logger.LogWarning($"RevoltTuningConfigProvider: highRebellionStartLoyaltyThreshold={sanitized.HighRebellionStartLoyaltyThreshold} outside [0,100], reverting to default {defaults.HighRebellionStartLoyaltyThreshold}");
+            sanitized.HighRebellionStartLoyaltyThreshold = defaults.HighRebellionStartLoyaltyThreshold;
+            rejected = true;
+        }
+
+        if (sanitized.HighRebellionRebelliousStateStartLoyaltyThreshold < 0 || sanitized.HighRebellionRebelliousStateStartLoyaltyThreshold > 100)
+        {
+            _logger.LogWarning($"RevoltTuningConfigProvider: highRebellionRebelliousStateStartLoyaltyThreshold={sanitized.HighRebellionRebelliousStateStartLoyaltyThreshold} outside [0,100], reverting to default {defaults.HighRebellionRebelliousStateStartLoyaltyThreshold}");
+            sanitized.HighRebellionRebelliousStateStartLoyaltyThreshold = defaults.HighRebellionRebelliousStateStartLoyaltyThreshold;
+            rejected = true;
+        }
+
+        if (sanitized.HighRebellionRebelliousStateStartLoyaltyThreshold < sanitized.HighRebellionStartLoyaltyThreshold)
+        {
+            _logger.LogWarning($"RevoltTuningConfigProvider: highRebellionRebelliousStateStartLoyaltyThreshold ({sanitized.HighRebellionRebelliousStateStartLoyaltyThreshold}) must be >= highRebellionStartLoyaltyThreshold ({sanitized.HighRebellionStartLoyaltyThreshold}), reverting both to defaults");
+            sanitized.HighRebellionStartLoyaltyThreshold = defaults.HighRebellionStartLoyaltyThreshold;
+            sanitized.HighRebellionRebelliousStateStartLoyaltyThreshold = defaults.HighRebellionRebelliousStateStartLoyaltyThreshold;
+            rejected = true;
+        }
+
         if (!FiniteFloatValidator.IsFiniteAtMost(sanitized.SettlementOwnerDifferentCultureLoyaltyEffect, 0f))
         {
             _logger.LogWarning($"RevoltTuningConfigProvider: settlementOwnerDifferentCultureLoyaltyEffect={sanitized.SettlementOwnerDifferentCultureLoyaltyEffect} must be a finite value <= 0 (this is a daily penalty, not a bonus), reverting to default {defaults.SettlementOwnerDifferentCultureLoyaltyEffect}");
             sanitized.SettlementOwnerDifferentCultureLoyaltyEffect = defaults.SettlementOwnerDifferentCultureLoyaltyEffect;
-            rejected = true;
-        }
-
-        if (!FiniteFloatValidator.IsFiniteAtMost(sanitized.GovernorDifferentCultureLoyaltyEffect, 0f))
-        {
-            _logger.LogWarning($"RevoltTuningConfigProvider: governorDifferentCultureLoyaltyEffect={sanitized.GovernorDifferentCultureLoyaltyEffect} must be a finite value <= 0 (this is a daily penalty, not a bonus), reverting to default {defaults.GovernorDifferentCultureLoyaltyEffect}");
-            sanitized.GovernorDifferentCultureLoyaltyEffect = defaults.GovernorDifferentCultureLoyaltyEffect;
             rejected = true;
         }
 

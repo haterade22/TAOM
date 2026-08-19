@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- ==================== DALE CIVILIAN NPCs ==================== -->
@@ -938,6 +938,23 @@
 
 	<!-- Notables: Merchants (10) -->
 	<NPCCharacter id="spc_notable_dale_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_0}Cautious Barding trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_dale_0_f" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dal_notable_f}Barding matron" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.default_character_creation_body_property_sturgia" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- ==================== RIVENDELL CIVILIAN NPCs ==================== -->
@@ -534,6 +534,23 @@
 
 	<!-- Notables: Merchants (10) -->
 	<NPCCharacter id="spc_notable_lindon_0" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_rv_notable_0}Cautious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_lindon_0_f" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lindon" name="{=aom_ln_notable_f}elven matron" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>

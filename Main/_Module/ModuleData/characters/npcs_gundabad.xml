@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- ==================== GUNDABAD CIVILIAN NPCs ==================== -->
@@ -397,6 +397,28 @@
 
 	<!-- Merchant 1: Cautious pale orc trader -->
 	<NPCCharacter id="spc_notable_gundabad_0" name="{=aom_gb_notable_0}Cautious pale orc trader" race="pale_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+				<equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+				<equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_gundabad_0_f" is_female="true" name="{=aom_gb_notable_f}orcish matron" race="pale_uruk" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
 		<skills></skills>
 		<Traits>

@@ -73,9 +73,15 @@ public class CoopVetoClassificationTests
             "is already allied. Condition is Kingdom.IsAllyWith — replicated vanilla state, so both " +
             "peers compute the same answer. Gating it would restore the decision-queue saturation " +
             "it exists to prevent."),
-        ["TraitLevelingHelper_OnLordExecuted_Patch"] = new(CoopVeto.ReviewedSafe,
-            "Skips the vanilla honour penalty. Condition is AlignmentService.AreEnemyAlignments — a " +
-            "static shipped kingdom->alignment table, no campaign state, so peers agree."),
+        ["TraitLevelingHelper_OnBloodFeudStarted_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Skips the vanilla execution trait penalty. The alignment verdict comes from " +
+            "AlignmentService.AreEnemyAlignments, a static shipped kingdom->alignment table. The " +
+            "v1.5.0 retarget did add one peer-local read: the executor kingdom now comes from " +
+            "Hero.MainHero rather than the killer passed through ExecutionContext, so two peers in " +
+            "different kingdoms can reach different verdicts. That is correct rather than divergent, " +
+            "because the vanilla method being skipped is itself player-local: OnBloodFeudStarted " +
+            "only ever calls AddPlayerTraitXPAndLogEntry against the local Hero.MainHero, and each " +
+            "peer owns a different main hero with different traits. No shared state is skipped."),
         ["BesiegerCamp_GetSiegeCampPartyPosition_Patch"] = new(CoopVeto.ReviewedSafe,
             "Position override driven by static siege-camp config; deterministic across peers."),
         ["PartyBaseHelper_HasFeat_Patch"] = new(CoopVeto.ReviewedSafe,

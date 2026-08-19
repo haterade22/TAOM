@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- ==================== EREBOR CIVILIAN NPCs ==================== -->
@@ -575,6 +575,21 @@
 
 	<!-- Notables: Merchants (10) -->
 	<NPCCharacter id="spc_notable_erebor_0" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_0}Cautious dwarven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_a" />
+				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_erebor_0_f" is_female="true" race="dwarf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.erebor" name="{=aom_er_notable_f}dwarven matron" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_erebor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>

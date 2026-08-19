@@ -2098,6 +2098,10 @@
     <string id="l4pRw7pO" text="Caravana Armada de {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} tropas desertaron — se niegan a servir a un señor de la alineación opuesta." />
     <string id="taom_troop_weight_size" text="Tropas pesadas" />
+    <string id="taom_ai_party_size" text="Hueste del señor de la guerra" />
+    <string id="taom_ai_garrison_size" text="Reino fortificado" />
+    <string id="taom_ai_forage" text="Forrajeo de campaña" />
+    <string id="taom_ai_levy" text="Servicio de leva" />
     <string id="taom_res_desertion" text="¡{COUNT} tropas de élite desertaron — tus {RESOURCE} se han agotado!" />
     <string id="taom_feat_erebor_gw" text="Guarnición enana" />
     <string id="taom_feat_erebor_gw_desc" text="Salarios de la guarnición reducidos un 25%." />
@@ -2447,9 +2451,31 @@
     <string id="taom_str_adjective_for_culture.bluecraig" text="trasgo" />
     <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
     <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
-    <string id="taom_ai_party_size" text="Hueste del señor de la guerra" />
-    <string id="taom_ai_garrison_size" text="Reino fortificado" />
-    <string id="taom_ai_forage" text="Forrajeo de campaña" />
-    <string id="taom_ai_levy" text="Servicio de leva" />
+    <string id="taom_aso_kingdom.empire" text="Dunland" />
+    <string id="taom_aso_kingdom.empire_w" text="Gondor" />
+    <string id="taom_aso_kingdom.empire_s" text="Mordor" />
+    <string id="taom_aso_kingdom.sturgia" text="Dale" />
+    <string id="taom_aso_kingdom.aserai" text="Harad" />
+    <string id="taom_aso_kingdom.vlandia" text="Rohan" />
+    <string id="taom_aso_kingdom.battania" text="Khand" />
+    <string id="taom_aso_kingdom.khuzait" text="Rhun" />
+    <string id="taom_aso_kingdom.erebor" text="Erebor" />
+    <string id="taom_aso_kingdom.rivendell" text="Imladris" />
+    <string id="taom_aso_kingdom.mirkwood" text="Lasgalen" />
+    <string id="taom_aso_kingdom.lothlorien" text="Lothlorien" />
+    <string id="taom_aso_kingdom.isengard" text="Isengard" />
+    <string id="taom_aso_kingdom.gundabad" text="Gundabad" />
+    <string id="taom_aso_kingdom.umbar" text="Umbar" />
+    <string id="taom_aso_kingdom.dolguldur" text="Dol Guldur" />
+    <string id="taom_aso_kingdom.shaghana" text="Shaghâna" />
+    <string id="taom_aso_kingdom.abanissa" text="Âbanissa" />
+    <string id="taom_aso_kingdom.goblin" text="Goblins" />
+    <string id="taom_aso_kingdom.mistymountainorcs" text="Misty Mountain Orcs" />
+    <string id="taom_aso_kingdom.lindon" text="Lindon" />
+    <string id="taom_aso_kingdom.bluecraig" text="Goblins of Blue Craig" />
+    <string id="taom_aso_desc_invasion" text="The faction that rules the majority of Middle-earth." />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId} dominates the vast majority of Middle-earth." />
+    <string id="taom_aso_item_name_randomized" text="Randomized Middle-earth" />
+    <string id="taom_aso_item_desc_randomized" text="Randomizes the starting state of Middle-earth to the degree of your choosing, within reason." />
   </strings>
 </base>

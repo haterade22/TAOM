@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Bannerlord.UIExtenderEx;
 using Bannerlord.UIExtenderEx.Attributes;
 using HarmonyLib;
@@ -25,7 +25,6 @@ using TAOM.Features.Diplomacy.Hooks;
 using TAOM.Features.Diplomacy.Models;
 using TAOM.Features.Execution;
 using TAOM.Features.Execution.Hooks;
-using TAOM.Features.Execution.Models;
 using TAOM.Features.PrisonerRecruitment.Models;
 using TAOM.Features.RaceAge;
 using TAOM.Features.RaceAge.Models;
@@ -406,7 +405,7 @@ public class SubModule : MBSubModuleBase
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
         MapConversationTableau_SpawnOpponentLeader_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         MapConversationTableau_SpawnOpponentBodyguard_Patch.Initialize(bannerColorService, bannerHeroAdapter);
-        MobilePartyVisual_AddCharacterToPartyIcon_Patch.Initialize(bannerColorService, bannerHeroAdapter);
+        MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch.Initialize(bannerColorService, bannerHeroAdapter, IoC.Resolve<IModLogger>());
         OrderOfBattleHeroItemVM_RefreshInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
 
         Mission_Initialize_Patch.Initialize(logger);
@@ -801,9 +800,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         campaignStarter.AddModel(new TaomSiegeEventModel(IoC.Resolve<ISiegeEngineAvailabilityService>()));
 
-        var executionRelationService = IoC.Resolve<IExecutionRelationService>();
-        var playerContext = IoC.Resolve<IPlayerContextAdapter>();
-        campaignStarter.AddModel(new TaomExecutionRelationModel(executionRelationService, playerContext));
+        // TaomExecutionRelationModel was removed at the v1.5.0 bump: vanilla's
+        // ExecutionRelationModel no longer exists, so there is no base to override. Both halves of
+        // the alignment rule were re-homed onto v1.5.0's Blood Feud seam instead: the trait half in
+        // TraitLevelingHelper_OnBloodFeudStarted_Patch, the relation half in
+        // ExecutionCampaignBehavior_BloodFeudRelationPenalty_Patch.
     }
 
     // Cultural feat models — Phase 9b #144/#176: dispatch logic extracted to
@@ -938,7 +939,11 @@ public class SubModule : MBSubModuleBase
         var goldService = IoC.Resolve<IStartupGoldService>();
         var influenceService = IoC.Resolve<IStartupInfluenceService>();
         var startupLogger = IoC.Resolve<IModLogger>();
-        campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
+        // v1.5.0 hard-assigns Hero.MainHero.Gold = 1000 after TAOM's grant runs, so the behavior
+        // re-applies the culture-keyed player gold at the last character-creation phase.
+        var playerStartupGoldService = IoC.Resolve<IPlayerStartupGoldService>();
+        campaignStarter.AddBehavior(new StartupResourcesBehavior(
+            goldService, influenceService, playerStartupGoldService, startupLogger));
 
         var namedCompanionService = IoC.Resolve<INamedCompanionService>();
         campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));
@@ -1224,6 +1229,8 @@ public class SubModule : MBSubModuleBase
         // to PartyIconScaleConfig.GetScale(), so both honour the MCM "Map Figure Scale" slider
         // (default 0.15 = half vanilla). See docs/features/party-icon-scale.md.
         Features.PartyIconScale.Hooks.Patch53_PartyIconScale.Initialize(IoC.Resolve<IModLogger>());
+        // v1.5.0 relocated the leader-figure scale site into MobilePartyVisualHelper.
+        Features.PartyIconScale.Hooks.Patch53_PartyIconScaleHumanVisual.Initialize(IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch53_PartyIconScale");
 
         // NavalTravel PARKED 2026-06-26 (#296/#120) — see the model-registration comment in OnGameStart.

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- ==================== RHUN CIVILIAN NPCs ==================== -->
@@ -756,6 +756,21 @@
 
 	<!-- Notables: Merchants (10) -->
 	<NPCCharacter id="spc_notable_rhun_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rh_notable_0}Crafty eastern trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.easterling_torso" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.easterling_torso" />
+				<equipment slot="Leg" id="Item.easterling_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_rhun_0_f" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.khuzait" name="{=aom_rn_notable_f}Easterling matron" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rhun" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>

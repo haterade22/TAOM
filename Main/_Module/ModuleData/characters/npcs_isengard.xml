@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- ==================== ISENGARD CIVILIAN NPCs ==================== -->
@@ -670,6 +670,26 @@
 
 	<!-- Merchant 1: Cautious Uruk trader -->
 	<NPCCharacter id="spc_notable_isengard_0" name="{=aom_ig_notable_0}Cautious Uruk trader" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_a2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_isengard_0_f" is_female="true" name="{=aom_is_notable_f}Uruk matron" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
 		<skills></skills>
 		<Traits>

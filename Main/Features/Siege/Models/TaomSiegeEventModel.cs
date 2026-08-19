@@ -25,8 +25,8 @@ public class TaomSiegeEventModel : DefaultSiegeEventModel
         // siege-defense calculation. Use `?.` short-circuit; vanilla returns false for null perk
         // checks so the fall-through is "no fire-perk engines" which is the safe default.
         bool hasFirePerks =
-            party.MobileParty?.HasPerk(DefaultPerks.Engineering.Stonecutters, checkSecondaryRole: true) == true
-         || party.MobileParty?.HasPerk(DefaultPerks.Engineering.SiegeEngineer, checkSecondaryRole: true) == true;
+            party.MobileParty?.HasPerk(DefaultPerks.Engineering.Stonecutters, out _, checkSecondaryRole: true) == true
+         || party.MobileParty?.HasPerk(DefaultPerks.Engineering.SiegeEngineer, out _, checkSecondaryRole: true) == true;
 
         foreach (var kind in _availability.GetDefenderEngines(hasFirePerks))
             yield return Resolve(kind);

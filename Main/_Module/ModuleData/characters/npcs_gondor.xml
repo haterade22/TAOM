@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- ==================== GONDOR CIVILIAN NPCs ==================== -->
@@ -763,6 +763,21 @@
 
 	<!-- Notables: Merchants (10) -->
 	<NPCCharacter id="spc_notable_gondor_0" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_0}Prudent Gondorian merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_gondor_0_f" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.gondor" name="{=aom_gd_notable_f}Gondorian matron" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>

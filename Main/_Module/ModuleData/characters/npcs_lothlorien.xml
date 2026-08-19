@@ -1,8 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
 	<!-- Notables: Merchants (10) -->
 	<NPCCharacter id="spc_notable_lothlorien_0" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_lt_notable_0}Cautious Golden Wood merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+		<NPCCharacter id="spc_notable_lothlorien_0_f" is_female="true" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.lothlorien" name="{=aom_ll_notable_f}elven matron" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills></skills>
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>

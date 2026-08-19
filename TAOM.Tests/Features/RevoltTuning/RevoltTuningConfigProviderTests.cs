@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -46,8 +46,7 @@ public class RevoltTuningConfigProviderTests
         WriteConfig(@"{
   ""rebellionStartLoyaltyThreshold"": 3,
   ""rebelliousStateStartLoyaltyThreshold"": 8,
-  ""settlementOwnerDifferentCultureLoyaltyEffect"": -0.75,
-  ""governorDifferentCultureLoyaltyEffect"": -0.25
+  ""settlementOwnerDifferentCultureLoyaltyEffect"": -0.75
 }");
 
         var config = _sut.GetConfig();
@@ -55,7 +54,6 @@ public class RevoltTuningConfigProviderTests
         Assert.AreEqual(3, config.RebellionStartLoyaltyThreshold);
         Assert.AreEqual(8, config.RebelliousStateStartLoyaltyThreshold);
         Assert.AreEqual(-0.75f, config.SettlementOwnerDifferentCultureLoyaltyEffect, 0.001f);
-        Assert.AreEqual(-0.25f, config.GovernorDifferentCultureLoyaltyEffect, 0.001f);
     }
 
     [TestMethod]
@@ -66,7 +64,6 @@ public class RevoltTuningConfigProviderTests
         Assert.AreEqual(5, config.RebellionStartLoyaltyThreshold);
         Assert.AreEqual(10, config.RebelliousStateStartLoyaltyThreshold);
         Assert.AreEqual(-1.0f, config.SettlementOwnerDifferentCultureLoyaltyEffect, 0.001f);
-        Assert.AreEqual(-0.5f, config.GovernorDifferentCultureLoyaltyEffect, 0.001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not found")));
     }
 
@@ -94,7 +91,6 @@ public class RevoltTuningConfigProviderTests
         Assert.AreEqual(2, config.RebellionStartLoyaltyThreshold);
         Assert.AreEqual(10, config.RebelliousStateStartLoyaltyThreshold);
         Assert.AreEqual(-1.0f, config.SettlementOwnerDifferentCultureLoyaltyEffect, 0.001f);
-        Assert.AreEqual(-0.5f, config.GovernorDifferentCultureLoyaltyEffect, 0.001f);
     }
 
     [TestMethod]
@@ -121,8 +117,6 @@ public class RevoltTuningConfigProviderTests
             "Soft tune: rebellious state threshold should be 10 (vanilla 25)");
         Assert.AreEqual(-1.0f, config.SettlementOwnerDifferentCultureLoyaltyEffect, 0.001f,
             "Soft tune: owner-culture penalty should be -1.0 (vanilla -3.0)");
-        Assert.AreEqual(-0.5f, config.GovernorDifferentCultureLoyaltyEffect, 0.001f,
-            "Soft tune: governor-culture penalty should be -0.5 (vanilla -1.0)");
     }
 
     [TestMethod]
@@ -174,24 +168,12 @@ public class RevoltTuningConfigProviderTests
     }
 
     [TestMethod]
-    public void GetConfig_PositiveGovernorCulturePenalty_RevertsToDefaultAndWarns()
-    {
-        WriteConfig(@"{ ""governorDifferentCultureLoyaltyEffect"": 0.5 }");
-
-        var config = _sut.GetConfig();
-
-        Assert.AreEqual(-0.5f, config.GovernorDifferentCultureLoyaltyEffect, 0.001f);
-        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("governorDifferentCultureLoyaltyEffect=0.5")));
-    }
-
-    [TestMethod]
     public void GetConfig_ValidValues_LogsInfoNotWarning()
     {
         WriteConfig(@"{
   ""rebellionStartLoyaltyThreshold"": 3,
   ""rebelliousStateStartLoyaltyThreshold"": 8,
-  ""settlementOwnerDifferentCultureLoyaltyEffect"": -0.5,
-  ""governorDifferentCultureLoyaltyEffect"": -0.25
+  ""settlementOwnerDifferentCultureLoyaltyEffect"": -0.5
 }");
 
         _sut.GetConfig();
@@ -210,7 +192,44 @@ public class RevoltTuningConfigProviderTests
         Assert.AreEqual(5, config.RebellionStartLoyaltyThreshold);
         Assert.AreEqual(10, config.RebelliousStateStartLoyaltyThreshold);
         Assert.AreEqual(-1.0f, config.SettlementOwnerDifferentCultureLoyaltyEffect, 0.001f);
-        Assert.AreEqual(-0.5f, config.GovernorDifferentCultureLoyaltyEffect, 0.001f);
         _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("Loaded")));
+    }
+
+    // v1.5.0 Civil Unrest support: one test per validation rule, per .claude/rules/tests.md.
+
+    [TestMethod]
+    public void GetConfig_HighRebellionDefaults_MatchTaomSofteningRatio()
+    {
+        var config = new RevoltTuningConfig();
+
+        // Vanilla is 50/60 under Civil Unrest; TAOM softens by the same /3 and /2.5 it applies to
+        // the base 15/25 pair, so the modifier stays meaningful without matching vanilla's severity.
+        Assert.AreEqual(17, config.HighRebellionStartLoyaltyThreshold);
+        Assert.AreEqual(24, config.HighRebellionRebelliousStateStartLoyaltyThreshold);
+        Assert.IsTrue(config.HighRebellionStartLoyaltyThreshold > config.RebellionStartLoyaltyThreshold,
+            "Civil Unrest must raise the rebellion threshold above the normal one or it does nothing.");
+    }
+
+    [TestMethod]
+    public void GetConfig_HighRebellionThresholdOutOfRange_RevertsToDefaultAndWarns()
+    {
+        WriteConfig(@"{ ""highRebellionStartLoyaltyThreshold"": 250 }");
+
+        var config = _sut.GetConfig();
+
+        Assert.AreEqual(17, config.HighRebellionStartLoyaltyThreshold);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("highRebellionStartLoyaltyThreshold=250")));
+    }
+
+    [TestMethod]
+    public void GetConfig_HighRebelliousLowerThanHighRebellion_RevertsBothToDefaults()
+    {
+        WriteConfig(@"{ ""highRebellionStartLoyaltyThreshold"": 40, ""highRebellionRebelliousStateStartLoyaltyThreshold"": 10 }");
+
+        var config = _sut.GetConfig();
+
+        Assert.AreEqual(17, config.HighRebellionStartLoyaltyThreshold);
+        Assert.AreEqual(24, config.HighRebellionRebelliousStateStartLoyaltyThreshold);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("must be >= highRebellionStartLoyaltyThreshold")));
     }
 }

@@ -14792,6 +14792,9 @@
 		<action
 			type="act_cutscene_break_chains_short"
 			animation="anim_cutscene_break_chains_short" />
+		<action
+			type="act_ghurab_captain_idle"
+			animation="ghurab_captain_idle" />
 	</action_set>
 	<action_set
 		id="as_dwarf_female_warrior"

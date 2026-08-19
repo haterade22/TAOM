@@ -1,4 +1,4 @@
-namespace TAOM.Features.Execution.Hooks;
+﻿namespace TAOM.Features.Execution.Hooks;
 
 public class ExecutionActionHook : IOnExecutionAction
 {
@@ -15,10 +15,6 @@ public class ExecutionActionHook : IOnExecutionAction
         return !_alignmentService.AreEnemyAlignments(executorKingdomId, victimKingdomId);
     }
 
-    public bool IsKinslaying(string victimKingdomId, string executorKingdomId)
-    {
-        return _alignmentService.AreSameAlignment(executorKingdomId, victimKingdomId);
-    }
 
     public int GetRelationModifier(string executorKingdomId, string victimKingdomId, string evaluatorKingdomId, int baseRelationChange)
     {

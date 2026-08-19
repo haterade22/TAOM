@@ -38,6 +38,10 @@ public class PlayerPossessionBehavior : CampaignBehaviorBase
         _logger = logger;
     }
 
+    // The last of the ten OnCharacterCreationIsOverEvent phases, so it runs after v1.5.0's
+    // Advanced Starting Options has applied the player start at phase 8.
+    private const int CharacterCreationFinalizePhase = 9;
+
     public override void RegisterEvents()
     {
         CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => _possession.ResetForNewCampaign());
@@ -60,8 +64,16 @@ public class PlayerPossessionBehavior : CampaignBehaviorBase
 
     private void RecordBaseline() => _possession.RecordBaselineHero(Hero.MainHero?.StringId);
 
-    internal void OnCharacterCreationIsOver()
+    internal void OnCharacterCreationIsOver(int index)
     {
+        // v1.5.0: OnCharacterCreationIsOverEvent became MbEvent<int> and the dispatcher now
+        // fires it TEN times (index 0..9) as a phase-ordering mechanism. Every vanilla subscriber
+        // guards on the index; an unguarded handler would run ten times. Phase 8 is where
+        // Advanced Starting Options applies the chosen player start (king / vassal / mercenary /
+        // trader / outlaw / beggar), which can hand the player a kingdom, fiefs, a workshop or a
+        // caravan, so anything that reads the settled player state must run after it. 9 is last.
+        if (index != CharacterCreationFinalizePhase) return;
+
         var hero = Hero.MainHero;
         if (hero == null) return;
 

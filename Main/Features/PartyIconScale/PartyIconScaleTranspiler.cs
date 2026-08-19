@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -25,27 +25,53 @@ namespace TAOM.Features.PartyIconScale;
 /// </summary>
 internal static class PartyIconScaleTranspiler
 {
-    internal static List<CodeInstruction> Rewrite(
+    // v1.5.0 split the three scale sites across TWO methods, so there are now two entry points.
+    //
+    // AddCharacterToPartyIcon keeps the MOUNT site (ldc.r4 0.3 -> mul) and gained a NEW hardcoded
+    // human world-frame scale (ldc.r4 0.3 -> call Mat3.ApplyScaleLocal). In v1.4.8 that frame read
+    // its scale back off the AgentVisualsData this transpiler had already rewritten, so one swap
+    // covered both; v1.5.0 hardcodes it and it must be swapped explicitly or the rider's world
+    // frame stays vanilla-size while its visual shrinks.
+    internal static List<CodeInstruction> RewriteIconSites(
         IEnumerable<CodeInstruction> instructions, MethodInfo? getScale, IModLogger? logger)
     {
         var list = new List<CodeInstruction>(instructions);
+        if (!GuardGetScale(getScale, logger)) return list;
 
-        if (getScale == null)
-        {
+        if (!TrySwapZeroPointThree(list, getScale!, NextIsMul))
             logger?.LogWarning(
-                "[PartyIconScale] GetScale lookup failed — party-icon scale not patched (vanilla 0.3 preserved)");
-            return list;
-        }
+                "[PartyIconScale] mount scale site (ldc.r4 0.3 -> mul) not found, left vanilla");
 
-        if (!TrySwapZeroPointThree(list, getScale, NextIsScaleCall))
+        if (!TrySwapZeroPointThree(list, getScale!, NextIsApplyScaleLocal))
             logger?.LogWarning(
-                "[PartyIconScale] people scale site (ldc.r4 0.3 → callvirt Scale) not found — left vanilla");
-
-        if (!TrySwapZeroPointThree(list, getScale, NextIsMul))
-            logger?.LogWarning(
-                "[PartyIconScale] mount scale site (ldc.r4 0.3 → mul) not found — left vanilla");
+                "[PartyIconScale] human frame scale site (ldc.r4 0.3 -> call ApplyScaleLocal) not found, left vanilla");
 
         return list;
+    }
+
+    // The PEOPLE site moved out of AddCharacterToPartyIcon entirely in v1.5.0 and now lives in
+    // SandBox.View.SandBoxViewHelpers+MobilePartyVisualHelper.GetHumanAgentPartyVisual as a bare
+    // .Scale(0.3f). Harmony never feeds one method's IL to another method's transpiler, so this
+    // needs its own patch target rather than a wider matcher.
+    internal static List<CodeInstruction> RewriteHumanVisualSite(
+        IEnumerable<CodeInstruction> instructions, MethodInfo? getScale, IModLogger? logger)
+    {
+        var list = new List<CodeInstruction>(instructions);
+        if (!GuardGetScale(getScale, logger)) return list;
+
+        if (!TrySwapZeroPointThree(list, getScale!, NextIsScaleCall))
+            logger?.LogWarning(
+                "[PartyIconScale] people scale site (ldc.r4 0.3 -> callvirt Scale) not found, left vanilla");
+
+        return list;
+    }
+
+    private static bool GuardGetScale(MethodInfo? getScale, IModLogger? logger)
+    {
+        if (getScale != null) return true;
+        logger?.LogWarning(
+            "[PartyIconScale] GetScale lookup failed, party-icon scale not patched (vanilla 0.3 preserved)");
+        return false;
     }
 
     // Finds the first `ldc.r4 0.3` whose following instruction matches <paramref name="nextMatches"/> and
@@ -72,4 +98,8 @@ internal static class PartyIconScaleTranspiler
         && ci.operand is MethodInfo mi && mi.Name == "Scale";
 
     private static bool NextIsMul(CodeInstruction ci) => ci.opcode == OpCodes.Mul;
+
+    private static bool NextIsApplyScaleLocal(CodeInstruction ci) =>
+        (ci.opcode == OpCodes.Call || ci.opcode == OpCodes.Callvirt)
+        && ci.operand is MethodInfo mi && mi.Name == "ApplyScaleLocal";
 }

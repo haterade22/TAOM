@@ -30,7 +30,7 @@ public class TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmen
     /// declared `new`, shadowing BasicCharacterObject.Culture (which returns a BasicCultureObject).
     /// party.LeaderHero is null for garrisons, militia and caravans; those never waive.
     /// </summary>
-    public override int GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
+    public override float GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
     {
         var leader = party?.LeaderHero;
 
@@ -39,7 +39,7 @@ public class TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmen
                    leader?.Culture?.StringId,
                    character?.Culture?.StringId,
                    leader == Hero.MainHero)
-            ? 0
+            ? 0f
             : base.GetPrisonerRecruitmentMoraleEffect(party, character, num);
     }
 }

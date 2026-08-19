@@ -59,14 +59,16 @@ internal static class ManualPatchApplicator
         else
             IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] InitializeGarrisonCharacters not found — excluded-race garrison scrub will not apply (#346)");
 
-        // Manual patch for private MobilePartyVisual method (SandBox.View.dll)
-        var mobilePartyTarget = MobilePartyVisual_AddCharacterToPartyIcon_Patch.TargetMethod();
+        // Manual patch for the private nested MobilePartyVisualHelper (SandBox.View.dll).
+        // v1.5.0 moved the party-icon colour work here out of MobilePartyVisual.AddCharacterToPartyIcon,
+        // and deleted the teamColor parameters the old postfix wrote to, so this is a transpiler now.
+        var mobilePartyTarget = MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch.TargetMethod();
         if (mobilePartyTarget != null)
-            harmony.Patch(mobilePartyTarget, postfix: new HarmonyMethod(
-                typeof(MobilePartyVisual_AddCharacterToPartyIcon_Patch),
-                nameof(MobilePartyVisual_AddCharacterToPartyIcon_Patch.Postfix)));
+            harmony.Patch(mobilePartyTarget, transpiler: new HarmonyMethod(
+                typeof(MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch),
+                nameof(MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch.Transpiler)));
         else
-            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MobilePartyVisual.AddCharacterToPartyIcon not found — party icon colors will not persist");
+            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MobilePartyVisualHelper.GetHumanAgentPartyVisual not found, party icon colors will not persist");
 
         // Manual patch for AgentVisuals.Create (TaleWorlds.MountAndBlade.View.dll)
         var agentVisualsCreateTarget = AgentVisuals_Create_Patch.TargetMethod();

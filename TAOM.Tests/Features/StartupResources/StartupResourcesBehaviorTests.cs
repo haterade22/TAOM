@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features.StartupResources;
@@ -10,6 +10,7 @@ public class StartupResourcesBehaviorTests
 {
     private IStartupGoldService _goldService;
     private IStartupInfluenceService _influenceService;
+    private IPlayerStartupGoldService _playerGoldService;
     private IModLogger _logger;
     private StartupResourcesBehavior _sut;
 
@@ -18,8 +19,9 @@ public class StartupResourcesBehaviorTests
     {
         _goldService = Substitute.For<IStartupGoldService>();
         _influenceService = Substitute.For<IStartupInfluenceService>();
+        _playerGoldService = Substitute.For<IPlayerStartupGoldService>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new StartupResourcesBehavior(_goldService, _influenceService, _logger);
+        _sut = new StartupResourcesBehavior(_goldService, _influenceService, _playerGoldService, _logger);
     }
 
     [TestMethod]
