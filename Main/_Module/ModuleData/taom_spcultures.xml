@@ -1,5 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <SPCultures>
+  <!-- Female notable templates (the *_f entries in each notable_templates list) exist because
+       v1.5.0's Advanced Starting Options Trader start filters notable templates by the player's
+       gender and indexes the result unguarded, so a culture with no female template throws for a
+       female player at campaign start. Race and face template deliberately match the male donor:
+       for a LOTR conversion race-correctness matters more than a gender-tuned face key.
+       NOTE: this comment lives at root level ON PURPOSE. A comment placed INSIDE a
+       <notable_templates> element is passed to MBObjectManager.ReadObjectReferenceFromXml as if it
+       were a <template>, and XmlComment.Attributes is null, so it aborts the whole file. See
+       docs/features/advanced-start-options.md. -->
+
   <!-- ============================================== -->
   <!-- EREBOR - Dwarves of the Lonely Mountain        -->
   <!-- ============================================== -->
@@ -309,10 +319,6 @@
       <template name="NPCCharacter.spc_erebor_headman_1" />
       <template name="NPCCharacter.spc_erebor_headman_2" />
       <template name="NPCCharacter.spc_erebor_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_erebor_0_f" />
     </notable_templates>
     <lord_templates>
@@ -655,10 +661,6 @@
       <template name="NPCCharacter.spc_rivendell_headman_1" />
       <template name="NPCCharacter.spc_rivendell_headman_2" />
       <template name="NPCCharacter.spc_rivendell_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_rivendell_0_f" />
     </notable_templates>
     <lord_templates>
@@ -992,10 +994,6 @@
       <template name="NPCCharacter.spc_mirkwood_headman_1" />
       <template name="NPCCharacter.spc_mirkwood_headman_2" />
       <template name="NPCCharacter.spc_mirkwood_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_mirkwood_0_f" />
     </notable_templates>
     <lord_templates>
@@ -1330,10 +1328,6 @@
       <template name="NPCCharacter.spc_lothlorien_headman_1" />
       <template name="NPCCharacter.spc_lothlorien_headman_2" />
       <template name="NPCCharacter.spc_lothlorien_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_lothlorien_0_f" />
     </notable_templates>
     <lord_templates>
@@ -1683,10 +1677,6 @@
       <template name="NPCCharacter.spc_isengard_headman_1" />
       <template name="NPCCharacter.spc_isengard_headman_2" />
       <template name="NPCCharacter.spc_isengard_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_isengard_0_f" />
     </notable_templates>
     <lord_templates>
@@ -2027,10 +2017,6 @@
       <template name="NPCCharacter.spc_gundabad_headman_1" />
       <template name="NPCCharacter.spc_gundabad_headman_2" />
       <template name="NPCCharacter.spc_gundabad_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_gundabad_0_f" />
     </notable_templates>
     <lord_templates>
@@ -2366,10 +2352,6 @@
       <template name="NPCCharacter.spc_umbar_headman_1" />
       <template name="NPCCharacter.spc_umbar_headman_2" />
       <template name="NPCCharacter.spc_umbar_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_umbar_0_f" />
     </notable_templates>
     <lord_templates>
@@ -2717,10 +2699,6 @@
       <template name="NPCCharacter.spc_dolguldur_headman_1" />
       <template name="NPCCharacter.spc_dolguldur_headman_2" />
       <template name="NPCCharacter.spc_dolguldur_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_dolguldur_0_f" />
     </notable_templates>
     <lord_templates>
@@ -3063,10 +3041,6 @@
       <template name="NPCCharacter.spc_gondor_headman_1" />
       <template name="NPCCharacter.spc_gondor_headman_2" />
       <template name="NPCCharacter.spc_gondor_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_gondor_0_f" />
     </notable_templates>
     <lord_templates>
@@ -3419,10 +3393,6 @@
       <template name="NPCCharacter.spc_mordor_headman_1" />
       <template name="NPCCharacter.spc_mordor_headman_2" />
       <template name="NPCCharacter.spc_mordor_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_mordor_0_f" />
     </notable_templates>
     <lord_templates>
@@ -3686,10 +3656,6 @@
       <template name="NPCCharacter.spc_shaghana_headman_1" />
       <template name="NPCCharacter.spc_shaghana_headman_2" />
       <template name="NPCCharacter.spc_shaghana_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_shaghana_0_f" />
     </notable_templates>
     <lord_templates>
@@ -3947,10 +3913,6 @@
       <template name="NPCCharacter.spc_abanissa_headman_1" />
       <template name="NPCCharacter.spc_abanissa_headman_2" />
       <template name="NPCCharacter.spc_abanissa_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_abanissa_0_f" />
     </notable_templates>
     <lord_templates>
@@ -4641,10 +4603,6 @@
       <template name="NPCCharacter.spc_goblin_headman_1" />
       <template name="NPCCharacter.spc_goblin_headman_2" />
       <template name="NPCCharacter.spc_goblin_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_goblin_0_f" />
     </notable_templates>
     <lord_templates>
@@ -4979,10 +4937,6 @@
       <template name="NPCCharacter.spc_mistymountainorcs_headman_1" />
       <template name="NPCCharacter.spc_mistymountainorcs_headman_2" />
       <template name="NPCCharacter.spc_mistymountainorcs_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_mistymountainorcs_0_f" />
     </notable_templates>
     <lord_templates>
@@ -5324,10 +5278,6 @@
       <template name="NPCCharacter.spc_lindon_headman_1" />
       <template name="NPCCharacter.spc_lindon_headman_2" />
       <template name="NPCCharacter.spc_lindon_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_lindon_0_f" />
     </notable_templates>
     <lord_templates>
@@ -5663,10 +5613,6 @@
       <template name="NPCCharacter.spc_bluecraig_headman_1" />
       <template name="NPCCharacter.spc_bluecraig_headman_2" />
       <template name="NPCCharacter.spc_bluecraig_headman_3" />
-          <!-- v1.5.0: Advanced Starting Options filters notable templates by gender and indexes
-           the result unguarded, so a culture with no female template crashes a female player
-           on the Trader start. Race and face template match the male donor deliberately: for a
-           LOTR conversion race-correctness matters more than a gender-tuned face key. -->
       <template name="NPCCharacter.spc_notable_bluecraig_0_f" />
     </notable_templates>
     <lord_templates>

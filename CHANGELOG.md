@@ -4,6 +4,39 @@
 
 ## 2026-08-19
 
+### fix(cultures): an XML comment inside notable_templates aborts culture loading (#484)
+
+**v2.1.0 could not start a campaign.** Reported from the first in-game test, as two crashes that look
+unrelated and are one bug.
+
+`MBObjectManager.ReadObjectReferenceFromXml` threw a `NullReferenceException` with its `node`
+argument bound to an `XmlComment`. The engine walks `notable_templates` by child NODE rather than by
+child ELEMENT and hands each one to that method, which reads `node.Attributes["name"]`.
+`XmlComment.Attributes` is `null`. The 16 comments added in the v1.5.0 bump to explain why each
+culture now needs a female notable were sitting between two `<template>` entries, so each one was
+being read as if it were a template.
+
+**The second crash is the first one's shadow.** The NRE aborts the parse of the entire file at line
+312, and `Culture.gondor` is defined at line 2756, so it never registers. `empire_w` then reaches
+`Kingdom.InitializeKingdom` with a null culture and throws there. Nothing in that stack mentions
+cultures, comments, or the file that actually failed. Confirmed by line position rather than
+inferred.
+
+Comments are not banned here and were not removed wholesale: 61 sit on the root element and 4 inside
+`<Culture>`, and both placements have shipped for months, because those loaders match on element
+name. The rule is positional. The rationale moved to the root, where it also now records why it may
+not move back.
+
+New gate `CultureXmlCommentPlacementTests` pins comment placement to the two positions with a
+shipping track record, and pins that the female templates the comments documented survived their
+removal. Proven RED against the reintroduced bug before being accepted GREEN.
+
+**Why the gate written for this exact feature missed it.** `NotableTemplateGenderTests` queries with
+`Descendants("template")`, and LINQ-to-XML skips comment nodes for the same reason the engine's
+element-name loaders do. A test written in the query style of the thing it checks inherits that
+thing's blind spot. That is the third instance of a same-session gate sharing its fix's blind spot in
+this bump, after the two Codex caught.
+
 ### chore(release): TAOM v2.1.0
 
 First release on the Bannerlord v1.5.0 line, and the reason for the minor bump rather than another
