@@ -4,6 +4,25 @@
 
 ## 2026-08-19
 
+### fix(module): restore the #371 Dependencies pairing guard
+
+`Main/_Module/SubModule.xml` carried an eight-line comment explaining that
+`<DependedModule Id="TAOM.Dependencies" />` is the element the engine actually honours, and why its
+absence lets a user run any TAOM against any Dependencies until Harmony and UIExtenderEx fail at the
+member level and every character renders in bind pose. The element the comment describes was not in
+the file. Neither was its BUTR-launcher mirror in `DependedModuleMetadatas`.
+
+Both were present at v2.0.20 and were dropped as collateral by cc1713eb, a cultures commit whose
+message does not mention dependencies at all. **v2.0.21 and v2.0.22 therefore both shipped with the
+guard documented and not implemented**, which is the exact failure the comment was written to
+prevent, sitting directly above the gap.
+
+Restored verbatim from v2.0.20. The pin still reads `v2.0.6` and `Dependencies/_Module/SubModule.xml`
+still reads `v2.0.6`, so the pairing is accurate rather than merely present.
+
+Found by running the `/release` skill's Phase 3 gate, which exists because this is one of the two
+steps that get silently skipped. It caught a real one on its first outing after the regression.
+
 ### chore: Bannerlord v1.5.0 engine bump (in progress)
 
 Steam force-updated the install v1.4.8 to v1.5.0 on the **beta branch**. Work is on
