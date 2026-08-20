@@ -44,6 +44,54 @@ Build clean (0 errors, 0 new warnings), suite 6688 passed / 0 failed / 2 skipped
 Not-tested: the menu option's absence at the main menu (in-game only, ADR-008).
 Rejected: flipping the MCM default, which leaves the button visible on every existing install.
 
+### fix(items): the gate caught the same bug again before anyone had merged it
+
+PR #447 shipped a gate for one defect class: a roster that pairs a shield with a weapon whose
+primary usage set is flagged `requires_no_shield`. The engine does not complain about that pairing,
+it just quietly declines to draw the weapon after spawn, so the only symptom is a player noticing
+his cavalry fight with swords. The PR sat unmerged for ten days. Run against current trunk for the
+first time, the gate failed on 8 rosters, none of them Dale: `sm_md_num_lance_a` on
+`mordor_num_cavalry`, `mordor_num_vet_cavalry`, `mordor_num_knight` and `mordor_num_temple_knight`,
+all of which arrived in `2fcbef10` on 2026-08-18, eight days after the gate that catches them was
+written.
+
+The lance is the Dale spear again, down to the shape of the data: `crafting_template`
+`TwoHandedPolearm`, a blade and a handle, no inline `<Weapon>`. What makes it worth writing down is
+where it came from. The Black Numenorean generator registered the lance's two pieces under
+`TwoHandedPolearm`, `TwoHandedPolearm_Bracing` and `TwoHandedPolearm_Couchable`, and skipped
+`OneHandedPolearm`: three of the four polearm descriptions, missing exactly the one that makes a
+polearm shield-compatible. This class does not only arrive by hand. It comes out of the authoring
+tools too, which is the argument for a gate rather than a fix.
+
+So the replay script is no longer Dale-specific. `register_dale_spear_descriptions.py` becomes
+`tools/register_one_handed_polearms.py`, the lance joins `ONE_HANDED_ITEMS`, and the marker becomes
+`TAOM-1H-POLEARM` (backup `.bak-1hpolearm`). The design input is still the item list and the piece
+ids are still derived from each item's own `<CraftedItem>`, so a re-modelled weapon moves its own
+registration. Adding the next one is a line in a tuple.
+
+Two things the rename had to get right, both now pinned by tests. An install patched under the old
+`TAOM-DALE-1H` marker has to converge on a single block: the new patterns do not match the old
+marker, so without an explicit sweep the Dale pieces end up listed twice and `--revert` clears only
+half the edit. And the write path is byte-level. The Armory sheet is CRLF, and text-mode i/o would
+turn a two-line insert into a whole-file rewrite. `tools/tests/test_register_one_handed_polearms.py`
+covers both plus derivation, idempotence, the refresh-then-reapply cycle, and the two refusals (an
+item that no longer exists, a piece id with no `<CraftingPiece>`).
+
+Measured, not assumed. Reverting the Dale half of the live block takes the gate from PASS to exactly
+28 extra findings, and re-applying restores the file byte for byte, same SHA-256. With the lance
+registered the gate is PASS at exit 0. `tools/tests` is 612 passing (604 before these 8),
+`validate_moduledata` PASS, `lint_docs` clean, doc-graph ratchet PASS at 152 orphans against a
+baseline of 153.
+
+Unchanged: the 43 rosters across 17 troops that pair a shield with a two-handed sword, axe or mace.
+Same engine rule, but that is a roster decision rather than a data one, so it stays a WARN and stays
+with #450. The committed Armory snapshot is refreshed to the live file and now carries ten days of
+drift from the Black Numenorean generator run; the record in
+`docs/reference/lotrlome-armory-snapshot/README.md` says which entries came from where.
+
+In-game smoke is still owed for the lance: Black Numenorean cavalry should keep lance and shield
+when the fight starts.
+
 ## 2026-08-18
 
 ### fix(tooling): two gates that could not fire now fire
@@ -1664,6 +1712,57 @@ Restoring afterwards found both a `RuntimeDataCache` and a `RuntimeDataCache.OFF
 regenerated GUIDs already existed in the original 98, so nothing was lost; the partial was set aside
 rather than deleted. `package_release.py` now matches `RuntimeDataCache*` by prefix, so a stray
 `.OFF` or `.editor-partial-<date>` is excluded as cache instead of blocking a release run as unknown.
+
+### fix(items): the Dale spears could not be fought with, and nothing in the repo could have said so
+
+Every Dale spear troop that also carried a shield — 28 equipment rosters, 18 troops — held its spear
+through the pre-battle phase and then drew a sword the instant combat started. Reported as a cavalry
+problem; it was item data, and it hit the infantry spear line just as hard.
+
+A crafted weapon takes a `WeaponDescription` only when **every** piece it uses is in that
+description's `<AvailablePieces>`, and the first match in the crafting template's description order
+becomes the primary usage (`Crafting.cs:566-608`). The Armory's `weapon_descriptions.xslt` registers
+19 cultures' spear pieces under `OneHandedPolearm` and none of Dale's, so all four Dale spears
+resolved to `TwoHandedPolearm` — whose usage set is flagged `requires_no_shield`. Spawn wield is
+plain slot order, which is why the spear was visible right up until it mattered.
+
+The fix is seven `<AvailablePiece>` lines. **They go in the Armory, not here.** PR #447 originally
+shipped them as a TAOM-side `weapon_descriptions.xslt`, on the premise that the Armory is an external
+dependency TAOM does not ship — but `README.md` lists `LOTRLOME_Armory` among the modules players
+install, `tools/package_release.py` has it in `DEFAULT_MODULES`, and `tools/build_weapon_xml.py`
+already writes `<AvailablePiece>` entries into that same Armory file by default. Splitting ownership
+of one registry across two modules bought nothing.
+
+What that placement does cost is durability, since the Armory is not in this repo and a refresh
+reverts it silently. So the edit ships with the three things CLAUDE.md's dependency-module trap asks
+for, none of which #445 or #447 had:
+
+- `tools/register_one_handed_polearms.py`, idempotent replay, marker-delimited. The **item**
+  list is hardcoded (which weapons should be one-handed is a design call); the piece ids are derived
+  from those items' own `<CraftedItem>` blocks, so a re-modelled spear moves its own registration
+  instead of silently un-fixing itself. It refuses to write a piece id with no `<CraftingPiece>`.
+- `tools/audit_polearm_shield_parity.py` — the gate, with contract tests. Reverting the Armory edit
+  takes it from PASS to exactly 28 findings, so the reversion detector is proven rather than assumed.
+- `docs/reference/lotrlome-armory-snapshot/weapon_descriptions.xslt` + an APPLIED EDIT block.
+
+Dale's halberds, poleaxe and war spear stay two-handed. They share *handles* with the spears but not
+*heads*, and the every-piece-must-match rule means a shared handle alone grants nothing — verified
+item by item rather than assumed, since that is the only thing standing between this change and a
+silent 1H halberd.
+
+Verified by running the real transform chain offline (Native XML → Armory XSLT, lxml): the only delta
+in the merged document is +7 `AvailablePiece` entries on `OneHandedPolearm`, 5,060 → 5,067, no other
+description touched. Also measured: 0 shieldless Dale spear rosters, so no troop loses a two-handed
+stance it was using. Closes #449. In-game smoke on a new campaign is still owed.
+
+Two things fell out of the work. `docs/reference/item-usage-features.md` claimed the Armory's XSLT
+**replaces** `<AvailablePieces>` wholesale and "re-lists zero vanilla piece ids" — it does the
+opposite, appending via `<xsl:apply-templates>`, and `OneHandedPolearm` emerges with 130 mod entries
+plus vanilla's 234. That paragraph was the stated methodology for the whole item-usage audit, so it
+is corrected with the measurement. And the new gate found 33 rosters across 13 troops pairing a
+shield with a two-handed sword, axe or mace — the identical engine rule, pre-existing, and a roster
+decision rather than a data one, so it is filed as #450 and reported as WARN rather than quietly
+dropped.
 
 ### chore: v1.4.8 engine bump — nothing in `Main/` had to change
 

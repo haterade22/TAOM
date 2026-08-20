@@ -19,6 +19,9 @@ Any future Steam-Workshop or manual update of `LOTRLOME_Armory` will overwrite o
 | `action_sets.xml` | All LOTRLOME race action sets (combat / facegen / villager / etc.). **Includes the 1.3 action-type aliases** added 2026-05-04 across all 12 pre-existing facegen sets, **plus** the new `as_elf_facegen` + `as_elf_female_facegen` action_sets authored 2026-05-22 (see CC parent fix checklist below). | ~3.7 MB |
 | `monsters.xml` | LOTRLOME monster definitions (dwarf, uruk, nazghul, orc, etc.) and their skeleton bindings | ~63 KB |
 | `skins.xml` | Race-to-skeleton mapping, body proportions, mesh slot configurations | ~5.3 MB |
+| `weapon_descriptions.xslt` | The Armory's additive override of Native's `<AvailablePieces>` lists: which crafting pieces each `WeaponDescription` accepts, and therefore which usages a crafted weapon resolves to. **Carries the one-handed-polearm registration** for the Dale spears and the Black Numenorean lance (see APPLIED EDIT below). | ~79 KB |
+
+> The first three are race-defining XML and are auto-loaded from every module root. `weapon_descriptions.xslt` is neither — it is here because it now carries an applied edit, and unlike the other three the live copy is already CRLF, so live and snapshot are byte-identical rather than differing by line ending.
 
 ## How to restore from this snapshot
 
@@ -221,6 +224,48 @@ wrong at a glance and neither should be "fixed":
 These are defects in the dependency module's **binary assets**, which this snapshot does not cover —
 it holds XML only. Recorded so a future session does not re-derive them.
 
+### ⚠️ APPLIED EDIT: shield-compatible polearms registered under `OneHandedPolearm` (2026-08-10, extended 2026-08-20)
+
+**This is a live edit to `ModuleData/weapon_descriptions.xslt` that a future Armory update WILL
+silently revert.** Re-apply with `python tools/register_one_handed_polearms.py --apply`
+(`--revert --apply` removes it; the backup is `weapon_descriptions.xslt.bak-1hpolearm` beside the
+live file). The nine `<AvailablePiece>` lines sit inside `<!-- TAOM-1H-POLEARM:START/END -->` markers
+at the end of the `OneHandedPolearm` template, so the script is idempotent and the block is
+greppable.
+
+**The block covers two fixes.** Seven entries for the four Dale spears (2026-08-10, #449) and two
+for the Black Numenorean lance `sm_md_num_lance_a` (2026-08-20). The lance is the same defect on a
+troop tree that landed eight days later, caught by this edit's own gate on its first run against
+current trunk. That is the argument for the gate, made by the gate. An install patched before the lance was
+added carries the superseded `TAOM-DALE-1H` marker; the script sweeps it, so re-running converges on
+one block rather than listing the Dale pieces twice.
+
+**Root cause.** A crafted weapon takes a `WeaponDescription` only when **every** piece it uses is in
+that description's `<AvailablePieces>`, and the **first** match in the crafting template's
+description order becomes the primary usage (`Crafting.cs:566-608`). The Armory registers 19
+cultures' spear pieces under `OneHandedPolearm` and none of Dale's, so all four Dale spears resolved
+to `TwoHandedPolearm`, whose usage set `polearm_block_long_shield_swing_thrust` is flagged
+`requires_no_shield` (`Native/ModuleData/item_usage_sets.xml`). All 28 Dale spear rosters also carry
+a shield, so the AI abandoned the spear the moment combat started. The Black Numenorean lance is the
+same shape: `crafting_template="TwoHandedPolearm"`, blade plus handle, no inline `<Weapon>`, and 8
+cavalry rosters carrying a shield. Registering the pieces makes one-handed-with-shield primary and
+two-handed the alternate, the layout Rohan's spears already had.
+
+**Scope.** The four spears (`dale_spear_a/b`, `dale_winged_spear_a/b`) and `sm_md_num_lance_a`.
+Dale's halberds, poleaxe and war spear stay two-handed: they share *handles* with the spears but not
+*heads*, and the every-piece-must-match rule means a shared handle alone grants nothing. No roster
+pairs them with a shield either.
+
+**Verified** by running the real transform chain offline (Native XML → this XSLT, lxml): the only
+delta in the merged document is the `AvailablePiece` entries on `OneHandedPolearm`, no other
+description touched. The Dale half was confirmed in game 2026-08-09 by a tester running the
+equivalent change.
+
+**Gate.** `python tools/audit_polearm_shield_parity.py` — fails when any roster pairs a shield with a
+polearm whose primary usage forbids one. Proven to fire, twice: reverting the Dale half takes it from
+PASS to exactly 28 extra findings (measured 2026-08-20 against current trunk), and it caught the 8
+lance rosters on its own before they had ever been looked at.
+
 ### ⚠️ APPLIED EDIT — `UseTeamColor="true"` on 79 Isengard items (#389 fix, 2026-08-06)
 
 **This is a live edit to `LOTRLOME_items/isengard/` that a future Armory update WILL silently revert.**
@@ -293,7 +338,25 @@ A dev machine with a Modding Kit `Assets/` directory loads the **loose** tree; a
 
 ## Snapshot date
 
-2026-08-07 — `skins.xml` **patched in place (LIVE + this snapshot)**: one attribute, the adult female
+2026-08-20: `weapon_descriptions.xslt` **patched in place (LIVE)** with nine `<AvailablePiece>`
+entries under `OneHandedPolearm`, inside `<!-- TAOM-1H-POLEARM:START/END -->` markers: the four Dale
+spears' blades and handles (added 2026-08-10) plus the Black Numenorean lance's (added 2026-08-20,
+replacing the Dale-only `TAOM-DALE-1H` marker). See the APPLIED EDIT section above. Unlike the other
+three files here, live and snapshot are **byte-identical**, because the live copy is already CRLF, so there
+is no line-ending skew to normalise, though `tr -d '\r' | md5sum` remains the safe comparison.
+`action_sets.xml`, `monsters.xml` and `skins.xml` untouched. **Not yet verified in the engine by this
+session**. A tester confirmed the equivalent Dale change in game on 2026-08-09, but the in-game
+smoke against *this* file (Dale cavalry keep spear + shield, Black Numenorean cavalry keep the lance,
+Dale halberd troops unchanged) is still owed.
+
+The refresh also picks up ten days of unrelated Armory drift, all of it from the Black Numenorean
+generator run (`32e24144`, 2026-08-18): `OneHandedSword` +9 and `TwoHandedSword` +11 sword pieces,
+and the lance's blade and handle under `TwoHandedPolearm`, `TwoHandedPolearm_Bracing` and
+`TwoHandedPolearm_Couchable`. Worth reading twice: that generator registered the lance in three of
+the four polearm descriptions and skipped `OneHandedPolearm`, which is precisely the omission that
+made the Dale spears unusable. The defect class reproduces itself through the authoring tools, not
+just through hand edits.
+Previous: 2026-08-07 — `skins.xml` **patched in place (LIVE + this snapshot)**: one attribute, the adult female
 dwarf's `underwear_bottom_mesh`, `sk_dwarf_underwear_female` → `sk_dwarf_underwear_female_a` (#403).
 See the APPLIED EDIT section above for the evidence and the audit that gates it. Both copies still
 parse; line endings preserved on each side (live LF, snapshot CRLF — compare with
