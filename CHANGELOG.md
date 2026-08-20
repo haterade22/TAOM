@@ -560,6 +560,52 @@ GarrisonTroopsCampaignBehavior, ClanVariablesCampaignBehavior.MakeClanFinancialE
 Save-compat: MCM settings only, no new saved state. Startup gold applies at new-game start, so
 existing campaigns keep the gold they were granted.
 
+## 2026-08-18
+
+### balance(mordor): re-spread the Black Numenorean armour to the KEYforce tiers
+
+The line shipped on 2026-08-17 with an armour assignment that did not match the intended per-tier
+mesh distribution. The Armory carries three chest weights per line plus a shared light chest, and
+each other slot walks its own ladder; this puts every mesh where it was meant to go.
+
+Distribution, archer shown, cavalry and infantry the same shape: T9 elite chest a+b, four elite
+hoods, elite pauldron a+b, elite bracer, elite greaves. T8 heavy_a chest, four heavy hoods, heavy
+pauldron a+b, heavy bracer and greaves. T7 heavy_b chest, med hoods, med pauldron and bracer, med
+greaves. T6 med chest a+b, light hoods, med pauldron and bracer, light greaves. T5 takes the shared
+light chest, light hoods and light greaves with no pauldron or bracer.
+
+Cavalry and Infantry have no light helmet and only one med, so `*_helmet_med_a` serves T6 and T7,
+mirroring the repetition the spec already has on pauldrons and bracers. Where a line has no plain
+`_b`, the "a + b" pair resolves to plain + cape.
+
+**Stats now come from the wearer's level, not the mesh name.** The distribution deliberately puts
+light meshes on high-level troops, and statting those by name left the level-26 Initiate at 50 total
+armour, below the entire level-26 cohort's floor of 82. Anchoring to the lowest wearer is already the
+project convention in `derive_armor_tiers.py`; this applies it at authoring time. A new test
+recomputes the anchor map from the rosters, so the generator and the roster table cannot drift.
+
+**The line now out-armours every other Men or Orc troop, yielding only to Elves and Dwarves.** That
+deliberately overrides #342 for this line. Measured ceilings for the best non-elf non-dwarf troop run
+211 / 226 / 245 / 250 / 259 across L26 to L46; the best dwarf at L46 is 276, leaving a sixteen-point
+window. A brand-new row above `lord` was ruled out by arithmetic: the two-tier invariant puts its
+minimum legal five-slot total at 278, which overshoots the dwarves. `lord` plus a lifted body arm
+secondary lands at 261, inside the window, and that secondary sits outside the invariant because the
+curve governs the body slot through `leg_armor` instead.
+
+Resulting totals, strictly increasing on every branch and pinned by a test: 109 / 194 / 224 / 255 /
+261 for cavalry and infantry, 109 / 186 / 232 / 255 / 261 for archers. T8 and T9 top their level's
+band. T5 stays an entry tier by decision, and T6 and T7 sit under their ceiling because the
+distribution shares hood and greaves down to T6 and pauldron and bracer down to T7.
+
+`md_num` joins `EXCLUDE_ID_SUBSTRINGS` in `rebalance_armor.py` and `analyze_armor_balance.py`,
+reversing the 2026-08-17 decision not to exclude it. The reason changed: name-based tier detection is
+now structurally wrong for a level-anchored set and would report a false inversion on every piece.
+
+Mesh coverage rises from 92 to 96 of 106 on rosters; the 10 remaining are the 8 hero-reserved
+lord-tier pieces and two untiered hoods the spec never lists.
+
+Not-tested: in-game rendering and mount behaviour, unchanged from the original entry.
+
 ## 2026-08-17
 
 ### feat(mordor): Black Numenorean armour, weapons, and troop tree

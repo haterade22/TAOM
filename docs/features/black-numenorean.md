@@ -5,7 +5,8 @@
 Adds Mordor's first human troops: a 13-troop Black Numenorean tree spanning T5 to T9 with Cavalry,
 Infantry, and Archer branches, plus the 113 Armory entries that dress and arm them. Corrupted Men of
 Numenor who serve Sauron, they are the highest-level line Mordor fields and the culture's only horse
-cavalry. The line is deliberately AI-only: it appears in lord parties rather than in recruitment.
+cavalry. No volunteer pool offers them: they arrive through lord parties, the vassal reward
+and prisoner recruitment.
 
 Assets shipped by Erkam to `E:\repos\lotraom-assets` on 2026-08-15 (`6abe7a65`) and 2026-08-17
 (`2e4ced3c`). Neither commit touched any `ModuleData/`, so nothing referenced the meshes until this
@@ -33,9 +34,9 @@ pass. Spec: `lotraom-assets/tools/mordor_armor_and_troops.md`, "Black Numenorean
 | Troops | 13 | `Main/_Module/ModuleData/troops/troops_mordor.xml` |
 | Party-template stacks | 13 x 16 | `taom_partyTemplates.xml` |
 
-92 of the 106 authorable meshes appear on a troop roster. The 14 that do not: 8 lord-tier pieces
-(authored, hero-reserved), the 4 light-tier pieces (see the armour ladder below), and
-`sk_md_num_hood_a` / `_b`, two untiered plain hoods the spec doc never lists.
+96 of the 106 authorable meshes appear on a troop roster. The 10 that do not are the 8 lord-tier
+pieces (authored, hero-reserved) and `sk_md_num_hood_a` / `_b`, two untiered plain hoods the spec doc
+never lists.
 
 ## The Tree
 
@@ -46,7 +47,7 @@ mordor_num_initiate (T5, level 26)
  |- mordor_num_archer   (T6,31) -> vet_archer   (T7,36) -> marksman (T8,41) -> shadowbow     (T9,46)
 ```
 
-Two equipment rosters per troop, three on the two T9 leaves that have spare elite variants.
+Two to four equipment rosters per troop, driven by how many mesh variants that tier has.
 
 ## Facts a Future Session Should Not Re-derive
 
@@ -261,48 +262,87 @@ visual check because there is no hot-reload.
 6. Block with each of the 6 shields.
 7. Load a Mordor lord party and confirm Black Numenoreans appear at a sensible frequency.
 
-### The armour ladder, and why five tiers ride four rows
+### The armour distribution, and the ceiling it is aimed at
 
-The line has **five troop tiers and four armour rows**, so one row has to serve twice. Review
-measured the first attempt: the Initiate at 50 total personal armour was the single least-armoured
-level-26 troop in the game (cohort n=157, median 157, next-lowest 82). It wore the light row because
-the mesh tier names mapped one-to-one onto the curve tiers, which is right for the items and wrong
-for the wearer.
+The spec spreads three chest weights (Medium / Heavy / Elite) plus a shared light chest across the
+four combat tiers, with every other slot walking its own ladder. Archer shown; Cavalry and Infantry
+follow the same shape.
 
-Final assignment:
+| Tier | level | chest | helmet | pauldron | bracer | greaves |
+|---|---:|---|---|---|---|---|
+| T9 Shadowbow | 46 | `elite_a` + `elite_b` | `hood_elite_a/b/c/d` | `arc_pauld_elite_a` + `_b` | `arc_bracer_elite_a` | `grvs_elite_a` |
+| T8 Marksman | 41 | `heavy_a` | `hood_heavy_a/b/c/d` | `arc_pauld_heavy_a` + `_b` | `arc_bracer_heavy_a` | `grvs_heavy_a` |
+| T7 Vet Archer | 36 | `heavy_b` | `hood_med_a/b` | `arc_pauld_med_a` | `arc_bracer_med_a` | `grvs_med_a` |
+| T6 Archer | 31 | `med_a` + `med_b` | `hood_light_a/b` | `arc_pauld_med_a` | `arc_bracer_med_a` | `grvs_light_a` |
+| T5 Initiate | 26 | `chest_light_a` | `hood_light_a/b` | none | none | `grvs_light_a` |
 
-| tier | level | armour row | cape | total |
-|---|---:|---|---|---:|
-| T5 Initiate | 26 | med (4 rosters across all three lines' med kit) | none | 96 |
-| T6 Cav / Inf / Arc | 31 | heavy | med | 145 |
-| T7 Veteran | 36 | heavy | heavy | 154 |
-| T8 Knight / Warden / Marksman | 41 | elite | heavy | 188 (archer 180) |
-| T9 Temple | 46 | elite | elite | 200 |
+Cavalry and Infantry have **no light helmet** and only one med, so `*_helmet_med_a` serves T6 and T7,
+mirroring the T6/T7 repetition the spec already has on pauldrons and bracers. Where a line has no
+plain `_b` at a tier, the "a + b" pair resolves to plain + cape, which is how the spec says cape and
+non-cape variants are worn: together as a mixed pool, not as alternates. Cavalry has no bracer pool
+and shares Infantry's; Infantry mixes the `arc_` and `inf_` pools at the same tier.
 
-Every branch is now strictly increasing: 96 / 145 / 154 / 188 / 200. A first attempt had T5 and T6
-sharing the med row so that no mesh went unworn, which made the T5 to T6 upgrade cost resources and
-grant **zero** added survivability. Codex flagged it; mesh coverage is not worth a dead upgrade edge.
-The cape ladder carries the T6-to-T7 step, and the T8 elite row carries T7-to-T8.
+### Stats are anchored to the wearer's level, not the mesh name
 
-The Initiate instead carries **four** rosters covering all three lines' med kit, since it is
-pre-split and can plausibly wear any of them. That leaves the four light-tier pieces unworn: they are
-calibrated for level 13 and below, and this line starts at 26.
+The distribution deliberately puts low-tier meshes on high-level troops: light hoods and light
+greaves on the level-31 Archer. Statting those by their name token gives the Initiate 50 total
+armour, below the entire level-26 cohort's floor of 82, and drops four of five tiers into the bottom
+quartile.
 
-**`derive_armor_tiers.py` cannot adjudicate this.** An earlier draft of this doc predicted it would
-flag the light pieces as UNDER. It does not and structurally cannot: `derive()` applies the id
-keyword unconditionally before ever consulting the roster anchor, so `_light_` in the id wins and
-every item reports `delta: 0`. The roster band it would have used (`level_to_tier(26)` is `heavy`) is
-what actually motivated moving the Initiate up.
+So each item is statted from **the level of its lowest wearer**. That is already the project
+convention (`derive_armor_tiers.py` anchors a shared item to its lowest wearer); this applies it at
+authoring time rather than only reporting on it afterwards. `ANCHOR_LEVEL` in the generator holds the
+map, and `tools/tests/test_black_numenorean_anchor.py` recomputes it from the rosters so the two
+files cannot drift.
+
+Level to curve row: **26 to heavy, 31 to elite, 36 to lord, 41 to lord, 46 to lord.**
+
+| Tier | level | cavalry / infantry | archer |
+|---|---:|---:|---:|
+| T5 Initiate | 26 | 109 | 109 |
+| T6 | 31 | 194 | 186 |
+| T7 | 36 | 224 | 232 |
+| T8 | 41 | 255 | 255 |
+| T9 | 46 | 261 | 261 |
+
+Strictly increasing on every branch, pinned by `LadderTests` in the same test file.
+
+### Why these rows, and what it overrides
+
+Black Numenoreans are a rare elite line and are meant to out-armour every other Men or Orc troop,
+yielding only to Elves and Dwarves. **That deliberately overrides #342**, the rule holding
+Mordor-exclusive kit two points under Gondor's. The override is scoped to this line.
+
+Measured ceilings, best non-elf non-dwarf troop at each level: L26 211, L31 226, L36 245, L41 250,
+L46 259 (`dg_khamul_shadow_guard`). Best dwarf at L46 is 276 (`erebor_noble_royal_warden`), so the
+target window at the top is 260 to 275, sixteen points wide.
+
+**A new row above `lord` was ruled out by arithmetic, not taste.** The two-tier invariant requires a
+row above `lord` to clear elite plus the plate legendary plus the variant cap on every slot, which
+makes its minimum legal five-slot total **278**. That overshoots the dwarves. `lord` plus a lifted
+body arm secondary lands at 261, inside the window. The body's `arm_armor` is an Armory convention
+rather than the curve's governed secondary (the curve uses `leg_armor` there), so raising it does not
+touch the invariant, and it is what separates T7, T8 and T9, which all sit on the `lord` row.
+
+T5 to T7 stay under their level's best. T5 is the entry tier by decision, and T6 and T7 are held down
+by the pieces the distribution shares downward: T6 wears T5's hood and greaves, T7 wears T6's
+pauldron and bracer. Topping the band at those tiers would mean breaking that sharing.
 
 ### Three tooling hazards this feature exposed
 
-**1. `rebalance_armor.detect_tier` used to mis-tier the whole set, and it was fixed here.**
+**1. `rebalance_armor.detect_tier` mis-tiered the whole set, and the fix changed twice.**
 `elite_keywords` contained the literal string `'black numenorean'`. Every item's display name is
 `[Mordor] Black Numenorean <something>`, so a **light** hood classified as elite: 45 of 78 mis-tiered,
 and `rebalance_armor.py --apply --cultures mordor` would have flattened them all onto the elite row.
 It was a line-name keyword sitting in a tier-keyword list, and once this set shipped it matched those
-78 items and nothing else in the Armory. Removed 2026-08-17; the id-based `_light_` / `_med_` /
-`_heavy_` / `_elite_` tokens now decide, verified correct across all five tiers.
+78 items and nothing else in the Armory. Removed 2026-08-17.
+
+Then the wearer-level anchoring landed and made name-based tiering wrong for this set a second way:
+`hood_light_a` now deliberately carries heavy-row stats, so any name-based detector reports a false
+inversion on every piece. `md_num` is therefore in `EXCLUDE_ID_SUBSTRINGS` in both
+`rebalance_armor.py` and `analyze_armor_balance.py`. **This reverses an explicit earlier decision not
+to exclude it.** The reason changed: excluding a name-anchored set would have hidden real defects,
+but excluding a level-anchored one removes noise that cannot be anything else.
 
 **2. A clan-heraldry regeneration would delete this feature.**
 `tools/generate_clan_heraldry.py` operation C upserts `<MBPartyTemplate id="...">` **wholesale** from
