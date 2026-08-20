@@ -3,9 +3,11 @@
 > Every `.claude/hooks/` script -> event -> purpose (27 scripts / 27 registrations across 9 events, plus the `/freeze` skill-inline hook; recounted 2026-08-20 from `settings.json` and `ls .claude/hooks/*.sh`, which is the only way to get it right: the stated 25 had been wrong since `block-broad-git-add.sh` landed 2026-08-09 without a row here). Extracted from CLAUDE.md 2026-07-18. Authoring rules: `.claude/rules/hook-authoring.md`. Lifecycle facts: `.claude/rules/harness-facts.md`.
 
 
+> **`jq` is not on PATH in this Git Bash install** (verified 2026-08-20). Any hook that parses stdin JSON must guard with `command -v jq` and fall back, or it is silently inert: a fail-open hook that never runs looks exactly like a hook with nothing to report. Use the python3 fallback (`block-dangerous-git.sh` is the model); the older grep+sed fallback truncates a value at the first escaped quote and leaves Windows backslashes doubled.
+
 | Hook | Event | Purpose |
 |------|-------|---------|
-| `check-build-before-commit.sh` | PreToolUse (Bash) | Blocks `git commit` if build fails |
+| `block-no-verify.sh` | PreToolUse (Bash) | Blocks any git command carrying `--no-verify`. Was `check-build-before-commit.sh` and also ran `dotnet build` before every commit; it never did, because it read the command with a bare `jq` and jq is not on PATH here, so both halves were inert. The build half was dropped rather than re-armed on 2026-08-20: hooks run with cwd = the MAIN tree regardless of where the command runs, so a worktree commit would be gated on another tree's build, and the build lacked `-p:DisableModuleCopy=true` so a running game could block a commit. Verification stays with `check-verification-evidence.sh` (Stop) and `/verify`. |
 | `notify-csharp-edit.sh` | PostToolUse (Edit\|Write) | Logs C# file modifications |
 | `check-changelog-updated.sh` | Stop | Reminds to update CHANGELOG.md when source is dirty. One-shot per streak (`.changelog-reminded` marker, added 2026-08-05); re-arms when CHANGELOG becomes dirty/staged |
 | `check-version-tagged.sh` | Stop | Reminds to tag + push the release when `<Version>` in `Main/_Module/SubModule.xml` has no matching git tag — the version every crash bundle reports as `TaomVersion`. One condition catches both a bump committed without a tag and a version that never entered git (`v2.0.12`). Marker stores the version, so a new untagged bump re-arms. Stop, not PreToolUse: the tag can only exist after the commit. See `docs/reference/release-process.md` |

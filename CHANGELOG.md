@@ -4,6 +4,60 @@
 
 ## 2026-08-20
 
+### fix(hooks): the ones that needed jq now work without it, and two of them were lying
+
+Yesterday's entry claimed 12 hooks call `jq` bare. Four do. The 12 came from grepping for files
+containing `jq` rather than files missing the `command -v jq` guard, and nobody checked it before it
+went into a CHANGELOG and a PR body. The correction is recorded in that entry.
+
+Of the four, `mark-verification-run.sh` needs nothing: it already falls back to scanning the raw
+payload, and its marker file updates correctly. The other three were inert, and fixing them exposed
+two further bugs that inertness had been hiding.
+
+**`notify-csharp-edit.sh` and `notify-test-results.sh`** parsed stdin with a bare `jq -r`, so every
+field came back empty and neither had ever produced output. Both now guard with `command -v jq` and
+fall back to `python3`, matching `block-dangerous-git.sh`. With the test hook running for the first
+time, it reported a fully green suite as **FAILED**: it branched on the string "Failed" appearing in
+the response, and `dotnet test` prints `Failed: 0, Passed: 6380` on success. It now branches on the
+parsed count, and says so explicitly when a crash leaves no counts to parse rather than going quiet.
+
+**`validate-push.sh`** had a guard, but since jq is absent its grep+sed fallback was the only path
+ever taken, and that fallback truncates the command at the first escaped quote. Measured on a real
+payload: `git push origin "master" --force` arrived as `git push origin \`, with the `--force` gone.
+The force-push block cannot fire on a command it cannot see. Now on the python3 fallback. Fixing the
+parse then revealed a second hole in the same gate: the branch token still carried its literal
+quotes, so `"master"` never matched `master` and the block stayed silent. Quotes are stripped now.
+
+Per the decision this session, **`bannerlord-1.4.5` joins the protected list**. It is this repo's
+trunk, and it was in neither the block nor the warn list, so `master` and `main`, branches this repo
+does not use, were the only names guarded while the branch everyone actually works on was open to a
+force push.
+
+**`config-protection.sh`** likewise ran only its grep+sed fallback, which left every Windows path
+with its separators doubled and never consulted `.tool_input.file` at all. On python3 now, and both
+inputs are tested.
+
+**`check-build-before-commit.sh` is now `block-no-verify.sh`, and no longer builds.** It was doubly
+inert: with `COMMAND` empty, neither the `--no-verify` block nor the `git commit` build gate could
+fire. Fixing the parse alone would have re-armed a `dotnet build` on every commit, which is wrong
+here for two measured reasons. Hooks run with cwd set to the **main** project directory whatever
+directory the command runs in, proven by running `dotnet build` inside a worktree and watching the
+main tree's `.verification-ran` marker update, so a commit made in a worktree would have been gated
+on a different tree's build. And the build carried no `-p:DisableModuleCopy=true -p:ModuleId=`, so a
+running Bannerlord could block a commit through the module copy rather than through the code.
+Verification already has two homes without either flaw, `check-verification-evidence.sh` at Stop and
+`/verify`, so the build half is dropped and the cheap correct half kept. A plain commit now costs
+383ms in this hook instead of a 7s build.
+
+Every branch of all five was exercised against real payloads: block, allow, escaped quotes, Windows
+paths, object-valued `tool_response`, unparseable stdin, and the specific inputs that used to slip
+through. `settings.json` was checked both directions afterwards, every registered command exists and
+no script is unregistered.
+
+The reason this class of bug survives: hooks must fail open, so a hook that never runs is
+indistinguishable from a hook with nothing to report. Silence is not evidence. The catalog now says
+so at the top, next to the note that `jq` is absent and `python3` is the fallback to copy.
+
 ### feat(hooks): the polearm/shield gate now runs itself, and jq is not on PATH
 
 The previous entry closed with "nothing runs the gate automatically ... a local PostToolUse hook is
@@ -35,11 +89,15 @@ exercised too.
 
 **The find worth carrying: `jq` is not on PATH in this Git Bash install.** The first version of this
 hook was written the way `notify-csharp-edit.sh` parses stdin, with a bare `jq -r`, and it failed on
-every input with `jq: command not found`. **12 of the repo's hooks call `jq` bare** and are silently
-degraded the same way. `log-agent.sh` is the exception and the model: `command -v jq` with a
+every input with `jq: command not found`. `log-agent.sh` is the model: `command -v jq` with a
 grep/sed fallback, which this hook now copies (plus unescaping the doubled backslashes every Windows
-path carries, which `jq -r` would have handled for free). Fixing the other 12 is a separate change
-and is not attempted here. It is worth doing, because a fail-open hook that never runs looks exactly
+path carries, which `jq -r` would have handled for free).
+
+**Correction, 2026-08-20:** this entry originally said 12 hooks call `jq` bare. That number was
+wrong. It came from counting files containing the string `jq` rather than files missing the
+`command -v jq` guard, and it was never checked. The real figure is **four**, of which one
+(`mark-verification-run.sh`) already degrades correctly on its own. See the next entry, which fixes
+the rest. The underlying point stands either way: a fail-open hook that never runs looks exactly
 like a hook with nothing to report.
 
 Also corrected: the hooks catalog said 25 scripts / 25 registrations. It is 27 of each, counted from

@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/check-build-before-commit.sh"
+            "command": ".claude/hooks/block-no-verify.sh"
           },
           {
             "type": "command",
