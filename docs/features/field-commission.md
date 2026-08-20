@@ -256,7 +256,7 @@ literal, and those two must describe the same game.
 - `TAOM.Tests/Features/FieldCommission/NullEnlistmentStateQueryTests.cs` — null-object contract.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionBindingTests.cs` (`TestCategory=BindingVerification`) — every TaleWorlds signature this feature depends on, most load-bearing being the `TextInquiryData` 12-parameter ctor order (bug fix (b)).
 
-**154 tests total, all passing** (`dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~FieldCommission"` → `Passed! - Failed: 0, Passed: 154, Skipped: 0, Total: 154`).
+**194 tests total, all passing** (`dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "FullyQualifiedName~FieldCommission"` → `Passed! - Failed: 0, Passed: 194, Skipped: 0, Total: 194`). The jump from 154 came with #486: an exhaustive truth table on `EquipmentResetPlan`, behavioural tests on `Patch71.Fill`, and 19 more binding drift-guards.
 
 **Deliberately untested:** the three guards at the top of `FieldCommissionBehavior.OnTick`
 (co-op authority / enlisted / master toggle; `PlayerEncounter.Current` and `MapEvent.PlayerMapEvent`;
@@ -304,6 +304,43 @@ ever fielded — not a concern at any realistic party size.
   `maxOffersPerBattle` 1 → 2. Promotions were landing too easily because merit pools per troop TYPE
   rather than per soldier. See "Current Values" for what this does and does not fix.
 
+## Firing a promoted companion (#486)
+
+Firing a promoted companion threw `NullReferenceException` inside `Hero.ResetEquipments` until
+`Patch71_HeroResetEquipmentsGuard` landed. Worth understanding before touching companion creation,
+because the cause is structural rather than a slip.
+
+`HeroCreator.CreateSpecialHero(troop, ...)` routes through `CreateHero(useCharacterAsTemplate:
+true)`, so a promoted companion's `Hero.Template` is **the line troop it was promoted from**, not a
+wanderer template. `RemoveCompanionAction.ApplyInternal` calls `ResetEquipments()` when a wanderer
+is fired, and that method clones `Template.FirstBattleEquipment`, `FirstCivilianEquipment` and
+`FirstStealthEquipment` with no null checks. On a troop, `FirstCivilianEquipment` is
+`AllEquipments.FirstOrDefaultQ(e => e.IsCivilian)`, which is null for **743 of 895 TAOM troop
+blocks** (every Dale, Dunland, Gondor, Harad and Rhûn troop; Rivendell, Lindon, Umbar and Erebor
+are the exceptions). Vanilla never hits this because `spnpccharacters.xml` wanderers always declare
+a civilian set.
+
+The state left behind is what makes it worse than a normal caught exception: the throw lands after
+`CompanionOf = null`, the roster decrement and `MakeHeroFugitiveAction`, and **before**
+`OnCompanionRemoved` dispatches, so every listener is skipped while the companion is already gone.
+PatchShield catches it, which means the session keeps running on that state. A player who hit this
+pre-fix should reload rather than play on.
+
+Two things this establishes for future work here:
+
+- **`Occupation.Wanderer` is what makes the fire path reachable** (`HeroCommissionAdapter`
+  sets it). Anything that changes a promoted companion's occupation changes which engine paths
+  apply to them.
+- **Guarding at creation cannot fix a method that re-derives from the template.**
+  `CreateCompanionFromTroop` already fell back to battle gear for the civilian slot, and it made no
+  difference: `ResetEquipments` reads the troop again rather than the hero's stored kit. The same
+  commit also fixed that call passing `useSourceEquipmentType` as true on the fallback, which
+  retyped the hero's civilian equipment `EquipmentType.Battle`.
+
+Full mechanism, the campaign-wide-singleton trap in `Hero.BattleEquipment` and friends, and the
+bandit-culture stealth variant: [harmony-patch-registry.md](../reference/harmony-patch-registry.md)
+under `Patch71_HeroResetEquipmentsGuard`.
+
 ## GitHub Issue
 
 - **#376** — Battlefield Promotions (Field Commission native rewrite). **Open**: code complete,
@@ -311,6 +348,10 @@ ever fielded — not a concern at any realistic party size.
 - **#415** — promoted companions reported with no dialogue / crash on interaction. **Open**: the
   symptoms were **not** reproduced and remain unexplained. Reproduce with **Promotion Diagnostics**
   on and attach the log.
+- **#486**: firing a promoted companion NREd in `Hero.ResetEquipments`. **Closed 2026-08-20** on
+  `Patch71_HeroResetEquipmentsGuard`, code-verified rather than play-verified: the in-game smoke
+  (fire a promoted Dale troop, then a bandit-culture one for the stealth branch) was not run.
+  Reopen if it recurs. Two review passes, RCA in `docs/reviews/`.
 - **#418** — `/localize` for the 10 `taom_fc_*` strings (with #375's 66 enlistment keys, 76 total).
   **Open**, blocked on `ANTHROPIC_API_KEY` not being set in the build environment.
 

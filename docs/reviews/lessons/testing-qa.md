@@ -731,3 +731,9 @@ fully green suite with nothing having run the changed lines even once.
   This is the inverse of "test the seam, not just the two things it joins": there the seam was
   untested; here one SIDE of the seam is untested precisely because the seam's test mocked it away.
 - **Source:** `docs/reviews/rca-enlistment-diagnostics-legibility-2026-08-12.md` finding #2.
+
+### Pin the ENGINE behaviour a guard's safety argument rests on, not just the guard's own branches
+`Patch71.ResolveStealth` reads `Culture.DefaultStealthEquipmentRoster.AllEquipments.First()` with no try/catch. That is correct only because `MBEquipmentRoster.AllEquipments` substitutes a one-element list holding the static `EmptyEquipment` when the roster is empty, so `First()` cannot throw. Nothing pinned that substitution. If TaleWorlds ever drops it, `AllEquipments` starts returning a genuinely empty list, `.First()` becomes an `InvalidOperationException` path, and the guard silently stops guarding after an engine bump with every test still green.
+- **Why missed:** the behaviour was verified once against the decompile during design and then treated as settled fact. Binding drift-guards were written from the patch's primary type (`Hero`), so members reached one hop out through `Hero.Template` (`CharacterObject.First{Battle,Civilian,Stealth}Equipment`) were also left unpinned. Branch coverage of TAOM's own code cannot see either gap.
+- **Prevent:** when a guard omits a defence (no try/catch, no null check, no bounds test) BECAUSE of something the engine guarantees, add a binding test for that guarantee whose failure message names what breaks. Enumerate drift-guards from the list of members actually dereferenced, including transitive ones, not from the type the patch targets. Same pass: exhaust small finite input domains rather than sampling them (three booleans is eight rows, not four).
+- **Source:** docs/reviews/rca-field-commission-reset-equipments-2026-08-20.md, #486.

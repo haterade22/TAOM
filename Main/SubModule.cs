@@ -1172,6 +1172,13 @@ public class SubModule : MBSubModuleBase
         // campaign runtime, so the standard batch is early enough; the prefix is inert until a
         // kingdom actually gains or gives up a fortification.
         _harmony.PatchCategory("Patch70_FiefGrantDecisionSwap");
+        // Patch71 — null-guards vanilla's Hero.ResetEquipments (#486). Its only caller is
+        // RemoveCompanionAction.ApplyInternal on the fire-a-wanderer path, which is campaign
+        // runtime and cannot fire before a conversation exists, so the standard batch is early
+        // enough. The prefix defers to vanilla whenever the template supplies all three equipment
+        // slots, so it is inert for every hero except a FieldCommission promotion off a troop with
+        // no civilian roster.
+        _harmony.PatchCategory("Patch71_HeroResetEquipmentsGuard");
         _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
         // Patch47 RE-ENABLED 2026-06-12 after full exoneration: its 06-12 morning indictment
         // ("post-sever tick AV") was actually the CanAttack charge crash at set_attack_entity
@@ -1581,5 +1588,6 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.EconomyDiagnostics.Hooks.SettlementComponent_ChangeGold_Patch.ResetForUnload();
         TAOM.Features.Arena.Hooks.Patch69_TournamentRosterGuard.ResetForUnload();
         TAOM.Features.Arena.Hooks.Patch69_TournamentEndGuard.ResetForUnload();
+        TAOM.Features.FieldCommission.Hooks.Patch71_HeroResetEquipmentsGuard.ResetForUnload();
     }
 }

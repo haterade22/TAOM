@@ -60,17 +60,31 @@ public class HeroCommissionAdapter : IHeroCommissionAdapter
 
         ApplySkillPlan(hero, skillPlan);
 
+        // Filling THROUGH the getter is safe here, but only by one call frame: Hero.BattleEquipment
+        // and its siblings return a campaign-wide shared singleton when the backing field is null,
+        // and CreateSpecialHero has just run SetInitialValuesFromCharacter, which assigns all three
+        // (falling back to neutral_culture). Patch71 cannot rely on that at fire time and carries an
+        // explicit ReferenceEquals guard instead. Do not copy this pattern anywhere the hero was not
+        // constructed moments earlier.
+        //
+        // No Clone on the source: FillFrom copies the 12 slots out by value and never writes to the
+        // source, so cloning the template's equipment first only allocated a throwaway (#486 review).
         if (template.FirstBattleEquipment != null)
-            hero.BattleEquipment.FillFrom(template.FirstBattleEquipment.Clone(false));
+            hero.BattleEquipment.FillFrom(template.FirstBattleEquipment);
 
-        // Most TAOM troops declare a civilian set, but ~60 do not (every Dale troop among them).
+        // Most TAOM troops do NOT declare a civilian set: 743 of 895 troop blocks across the 18
+        // files in ModuleData/troops (measured 2026-08-20, #486), every Dale, Dunland, Gondor,
+        // Harad and Rhûn troop among them. Rivendell, Lindon, Umbar and Erebor are the exceptions.
         // For those the engine has already handed the hero vanilla's `neutral_culture` fallback —
         // a Calradian peasant tunic — and the settlement spawn uses civilian equipment in towns and
         // castles, so the promoted soldier would walk Minas Tirith dressed as a Battanian villager.
         // Their own battle kit is the closer thing to right.
         var civilian = template.FirstCivilianEquipment ?? template.FirstBattleEquipment;
         if (civilian != null)
-            hero.CivilianEquipment.FillFrom(civilian.Clone(false));
+            // useSourceEquipmentType is false on the battle fallback: FillFrom copies the source's
+            // EquipmentType onto the target, so passing true here retyped the hero's civilian kit
+            // EquipmentType.Battle. Same defect Patch71 guards against on the fire path (#486).
+            hero.CivilianEquipment.FillFrom(civilian, civilian.IsCivilian);
 
         hero.SetNewOccupation(Occupation.Wanderer);
         // AddCompanionAction — NEVER a raw Clan.Heroes.Add (bug fix (e); donor's dropped

@@ -199,4 +199,195 @@ public class FieldCommissionBindingTests
         Assert.IsNotNull(missionBehavior);
         Assert.IsTrue(missionBehavior.IsAssignableFrom(missionLogic), "MissionLogic must derive from MissionBehavior — the regression rule this feature follows.");
     }
+
+    // Patch71_HeroResetEquipmentsGuard (#486). Every member below is dereferenced by the prefix,
+    // and each one is a way the guard could silently stop guarding after an engine bump.
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Hero_ResetEquipments_BindingResolvesAsParameterlessVoid()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Hero");
+        Assert.IsNotNull(type, "Hero did not resolve.");
+
+        var method = AccessTools.Method(type, "ResetEquipments");
+        Assert.IsNotNull(method, "Hero.ResetEquipments did not resolve — Patch71 has no target.");
+        Assert.AreEqual(0, method.GetParameters().Length, "Hero.ResetEquipments arity drifted.");
+        Assert.AreEqual(typeof(void), method.ReturnType, "Hero.ResetEquipments return type drifted — the prefix's bool contract assumes void.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void RemoveCompanionAction_ApplyByFire_BindingResolves()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Actions.RemoveCompanionAction");
+        Assert.IsNotNull(type, "RemoveCompanionAction did not resolve.");
+        Assert.IsNotNull(
+            AccessTools.Method(type, "ApplyByFire"),
+            "RemoveCompanionAction.ApplyByFire did not resolve — the only path that reaches ResetEquipments.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Hero_Template_ResolvesToCharacterObject()
+    {
+        RequireGame();
+        var hero = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Hero");
+        var property = AccessTools.Property(hero, "Template");
+        Assert.IsNotNull(property, "Hero.Template did not resolve — the guard has nothing to null-check.");
+        Assert.AreEqual(
+            AccessTools.TypeByName("TaleWorlds.CampaignSystem.CharacterObject"),
+            property.PropertyType,
+            "Hero.Template no longer returns CharacterObject.");
+    }
+
+    [DataTestMethod]
+    [TestCategory("BindingVerification")]
+    [DataRow("BattleEquipment")]
+    [DataRow("CivilianEquipment")]
+    [DataRow("StealthEquipment")]
+    public void Hero_EquipmentSlots_BindingResolves(string propertyName)
+    {
+        RequireGame();
+        var hero = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Hero");
+        Assert.IsNotNull(AccessTools.Property(hero, propertyName), $"Hero.{propertyName} did not resolve — Patch71 fills through it.");
+    }
+
+    [DataTestMethod]
+    [TestCategory("BindingVerification")]
+    [DataRow("DeadBattleEquipment")]
+    [DataRow("DeadCivilianEquipment")]
+    [DataRow("DefaultStealthEquipment")]
+    public void Campaign_SharedEquipmentDefaults_BindingResolves(string propertyName)
+    {
+        RequireGame();
+        var campaign = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Campaign");
+        Assert.IsNotNull(
+            AccessTools.Property(campaign, propertyName),
+            $"Campaign.{propertyName} did not resolve — without it the guard cannot tell a hero's own equipment from the campaign-wide singleton, and would fill the singleton.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CultureObject_DefaultStealthEquipmentRoster_BindingResolves()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CultureObject");
+        Assert.IsNotNull(type, "CultureObject did not resolve.");
+        Assert.IsNotNull(
+            AccessTools.Property(type, "DefaultStealthEquipmentRoster"),
+            "CultureObject.DefaultStealthEquipmentRoster did not resolve — the bandit-culture precondition has nothing to test.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Equipment_FillFrom_BindingResolvesWithEquipmentTypeFlag()
+    {
+        RequireGame();
+        var equipment = AccessTools.TypeByName("TaleWorlds.Core.Equipment");
+        Assert.IsNotNull(equipment, "Equipment did not resolve.");
+
+        var fillFrom = AccessTools.Method(equipment, "FillFrom", new[] { equipment, typeof(bool) });
+        Assert.IsNotNull(fillFrom, "Equipment.FillFrom(Equipment,bool) did not resolve — the useSourceEquipmentType flag is what stops a civilian kit being retyped Battle.");
+        Assert.IsNotNull(AccessTools.Method(equipment, "Clone", new[] { typeof(bool) }), "Equipment.Clone(bool) did not resolve.");
+    }
+
+    [DataTestMethod]
+    [TestCategory("BindingVerification")]
+    [DataRow("FirstBattleEquipment")]
+    [DataRow("FirstCivilianEquipment")]
+    [DataRow("FirstStealthEquipment")]
+    public void CharacterObject_TemplateEquipmentSlots_BindingResolves(string propertyName)
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CharacterObject");
+        Assert.IsNotNull(type, "CharacterObject did not resolve.");
+        Assert.IsNotNull(
+            AccessTools.Property(type, propertyName),
+            $"CharacterObject.{propertyName} did not resolve — this is what Patch71 reads off Hero.Template to decide whether vanilla can be trusted to run.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void MBEquipmentRoster_SubstitutesEmptyEquipment_SoFirstCannotThrow()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.Core.MBEquipmentRoster");
+        Assert.IsNotNull(type, "MBEquipmentRoster did not resolve.");
+        Assert.IsNotNull(AccessTools.Property(type, "AllEquipments"), "MBEquipmentRoster.AllEquipments did not resolve.");
+
+        // The whole reason Patch71.ResolveStealth needs no try/catch is that AllEquipments never
+        // yields an empty sequence: it substitutes a one-element list holding this static when the
+        // roster is empty. If TaleWorlds drops it, FirstStealthEquipment's .First() starts throwing
+        // InvalidOperationException and the guard silently stops guarding, so pin the field itself.
+        Assert.IsNotNull(
+            AccessTools.Field(type, "EmptyEquipment"),
+            "MBEquipmentRoster.EmptyEquipment is gone — AllEquipments may now return an empty list, which turns Patch71's .First() into a throw path. Re-check ResolveStealth before shipping.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CharacterObject_IsHero_BindingResolves()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CharacterObject");
+        Assert.IsNotNull(
+            AccessTools.Property(type, "IsHero"),
+            "CharacterObject.IsHero did not resolve — it is what routes a troop template to the culture roster in ResolveStealth rather than to HeroObject.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CharacterObject_Culture_ShadowsTheBaseAndStillReturnsCultureObject()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.CharacterObject");
+
+        // DeclaredProperty, not Property: CharacterObject declares `public new CultureObject Culture`,
+        // shadowing BasicCharacterObject's BasicCultureObject one, so an inherited-inclusive lookup is
+        // ambiguous and resolves to nothing. The shadow is the whole point of the pin — only the
+        // derived CultureObject carries DefaultStealthEquipmentRoster, so if it ever went away
+        // ResolveStealth's precondition would have nothing to read.
+        var property = AccessTools.DeclaredProperty(type, "Culture");
+        Assert.IsNotNull(property, "CharacterObject no longer declares its own Culture property.");
+        Assert.AreEqual(
+            AccessTools.TypeByName("TaleWorlds.CampaignSystem.CultureObject"),
+            property.PropertyType,
+            "CharacterObject.Culture no longer returns CultureObject — ResolveStealth cannot reach DefaultStealthEquipmentRoster, and the bandit-culture guard stops guarding.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Campaign_Current_BindingResolves()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Campaign");
+        Assert.IsNotNull(
+            AccessTools.Property(type, "Current"),
+            "Campaign.Current did not resolve — Patch71 reaches the shared-equipment defaults and the campaign id for its dedup key through it.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Campaign_UniqueGameId_BindingResolves()
+    {
+        RequireGame();
+        var type = AccessTools.TypeByName("TaleWorlds.CampaignSystem.Campaign");
+        Assert.IsNotNull(
+            AccessTools.Property(type, "UniqueGameId"),
+            "Campaign.UniqueGameId did not resolve — Patch71 keys its warn-once set on it, because hero StringIds restart per campaign and collide across two campaigns in one process.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void Equipment_ItemEquipmentType_BindingResolves()
+    {
+        RequireGame();
+        var equipment = AccessTools.TypeByName("TaleWorlds.Core.Equipment");
+        Assert.IsNotNull(
+            AccessTools.Property(equipment, "ItemEquipmentType"),
+            "Equipment.ItemEquipmentType did not resolve — Patch71FillTests reads it to prove the battle fallback does not retype a civilian kit.");
+    }
 }

@@ -366,3 +366,9 @@ Patch50's original comment confidently asserted the victim was a mount, and the 
 showed it was not.
 
 **Source:** `docs/reviews/rca-dropflaggeditem-guard-2026-08-10.md` findings 1–4.
+
+### "Fall through to vanilla on error" is only safe when vanilla is a safe default at THAT call site
+TAOM guard prefixes conventionally `return true` from their catch, handing control back to the engine. That is right almost everywhere, because vanilla is a working default and the guard is an enhancement. It inverts when the guarded method is itself the crash: `Patch71`'s catch returned `true`, so any internal fault re-raised the very NRE the patch existed to stop, on a hero `RemoveCompanionAction.ApplyInternal` had ALREADY de-clanned, de-partied and made a fugitive. The error path recreated the torn campaign state the fix was written for.
+- **Why missed:** the shape was copied from `Patch8_SiegeCampGuard` and `Late_ActionSetOverride`, where deferring genuinely is the safe outcome, without re-deriving whether vanilla was safe here. "Falls through to vanilla" describes control flow, not an outcome, so it reads as safe wherever it appears.
+- **Prevent:** before writing a defer-on-error catch, state in one sentence what vanilla actually DOES at this call site. If the answer is "throws", or "throws after mutating shared state", the catch must skip the original instead, and the patch's registry entry must record the departure so nobody restores the convention. A prefix that cannot throw also removes the need for a Finalizer, which could only suppress a torn write, never repair it.
+- **Source:** docs/reviews/rca-field-commission-reset-equipments-2026-08-20.md, #486.

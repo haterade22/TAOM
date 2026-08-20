@@ -45,6 +45,90 @@ SKIP without one, so CI cannot run it and nothing runs it automatically. It is a
 step, which is precisely the weakness the tooling lesson above describes. Wiring it to a local
 PostToolUse hook on weapon XML edits is the obvious next move and is not done here.
 
+### fix(fieldcommission): firing a promoted companion no longer NREs in the engine (#486)
+
+Firing a companion promoted by Battlefield Promotions threw `NullReferenceException` inside
+`Hero.ResetEquipments`. PatchShield caught it, so the process survived, but the campaign did not:
+the throw lands after the companion has been de-clanned, dropped from the party and made a
+fugitive, and **before** `OnCompanionRemoved` dispatches, so every listener is skipped while the
+companion is already gone. Anyone who hit this pre-fix should reload rather than play on.
+
+The cause is structural. `HeroCreator.CreateSpecialHero(troop, ...)` goes through
+`CreateHero(useCharacterAsTemplate: true)`, so a promoted companion's `Hero.Template` is the line
+troop it came from, not a wanderer template. `ResetEquipments` clones three equipments straight off
+that template with no null checks, and on a troop `FirstCivilianEquipment` resolves to
+`AllEquipments.FirstOrDefaultQ(e => e.IsCivilian)`. That is null for **743 of 895 TAOM troop
+blocks** (every Dale, Dunland, Gondor, Harad and Rhûn troop; Rivendell, Lindon, Umbar and Erebor
+are the exceptions). Native never reaches it because `spnpccharacters.xml` wanderers always declare
+a civilian set. `RemoveCompanionAction.ApplyInternal` is the method's only caller anywhere in the
+campaign assemblies and only calls it for a fired wanderer, which is why promotion worked and only
+firing broke.
+
+`Patch71_HeroResetEquipmentsGuard` returns `true` untouched whenever the template supplies all
+three slots, so a vanilla-shaped hero still gets the engine's own reset and behaviour changes only
+in the cases that threw. Otherwise it fills each slot in place from the template, falling back to
+the troop's own battle kit, and skips the original. Everything it touches is public: no reflection,
+no private field writes. The decision lives in a pure `EquipmentResetPlan` helper next to
+`CommissionSkillBudget`, so the branch is unit-tested without a running campaign, and the patch
+does the `Equipment` dereferencing at the boundary.
+
+The stealth line fails the same way one culture class over: `FirstStealthEquipment` on a troop is
+`Culture.DefaultStealthEquipmentRoster.AllEquipments.First()`, equally unguarded, and TAOM's eight
+`is_bandit="true"` cultures declare no stealth roster. That is **vanilla's own shape** (its six
+bandit cultures declare none either), so it is guarded in code rather than patched into
+`taom_spcultures.xml`. Creating such a companion survives the same gap because the Hero constructor
+reaches stealth gear through `CharacterObject.StealthEquipments`, which null-checks the battle
+roster first and falls back to `neutral_culture`.
+
+Two traps found while writing it, both recorded in the patch registry because they are easy to
+reintroduce:
+
+- `Hero.BattleEquipment`, `CivilianEquipment` and `StealthEquipment` are
+  `_field ?? Campaign.Current.Dead*/DefaultStealthEquipment`, and those three are campaign-wide
+  singletons loaded once from the `default_*_equipment_roster*` objects. Filling through a getter
+  whose backing field is null does not equip the hero, it rewrites a shared object every consumer
+  reads. The guard skips any slot whose target is that singleton. The getters also never return
+  null, so a `?.` there guards nothing.
+- `FillFrom(source, useSourceEquipmentType)` copies the source's `EquipmentType` onto the target,
+  so passing true on a battle fallback retypes a hero's civilian kit `EquipmentType.Battle`.
+  `HeroCommissionAdapter.CreateCompanionFromTroop` had exactly that defect at creation time and is
+  fixed here too, along with its comment claiming "~60" troops lack civilian gear.
+
+The review gate returned seven findings against the first cut, six of them in code written for
+this fix, and they are recorded in
+`docs/reviews/rca-field-commission-reset-equipments-2026-08-20.md` because five share one cause:
+reusing a house pattern without re-checking that its precondition held here. The sharpest was the
+error path. TAOM guard prefixes conventionally defer to vanilla when they fault, and that is right
+almost everywhere, but not at this call site: deferring re-raised the very NRE the patch exists to
+stop, on a hero already de-clanned and de-partied. The catch now skips the original instead, which
+also makes the prefix total, so there is no Finalizer. That departure is written into the registry
+so nobody restores the convention. Two durable lessons went to `docs/reviews/lessons/`.
+
+Tests: 15 unit tests on the planner (an exhaustive eight-row truth table for the defer decision,
+because deferring is the branch that hands control to three unguarded dereferences), 6 behavioural
+tests on the fill itself (`Equipment` turns out to be constructible without a campaign, so the
+shared-singleton guard and the equipment-type flag are pinned directly rather than left to the
+smoke test), and 15 new binding drift-guards (30 in that file now). One of the new ones pins `MBEquipmentRoster.EmptyEquipment`:
+the argument that the stealth read needs no try/catch rests entirely on that substitution, and
+losing it would break the guard silently with every test still green.
+
+Those fixes were then reviewed in their own right, which found six more things and confirmed the
+two riskiest changes. Two are worth naming. A test asserting the null-target guard passed a null
+`sharedDefault` as well, and `ReferenceEquals(null, null)` is true, so it would have stayed green
+with the guard it existed to pin deleted outright. And pinning `CharacterObject.Culture` turned out
+to need `DeclaredProperty`, because `CharacterObject` shadows the base with `public new
+CultureObject Culture` and an inherited-inclusive lookup resolves to nothing; that one was found by
+writing the test and watching it fail.
+
+**A new build gate closes the class of bug that produced one of the findings.**
+`ResetForUnloadSweepTests` scans `Main/` for every `public static void ResetForUnload()` and fails
+if `SubModule.OnSubModuleUnloaded` does not call it. Five patch classes cache a service in a static
+and need clearing on a reload-in-process; Codex review #46 fixed four of them by hand and this fix
+initially shipped the fifth with the same omission. The gate was verified to actually fire by
+deleting a call and watching it go red. Closing #486 as code-verified: the in-game smoke (fire a
+promoted Dale troop, then a bandit-culture one for the stealth branch) is still the only thing that
+proves it in a live campaign, and the issue can be reopened if it recurs.
+
 ### chore(shaders): the Pre-compile Shaders menu option is parked, the feature is not
 
 The main-menu "Pre-compile Shaders" button is gone. It is no longer needed, but the feature may be,

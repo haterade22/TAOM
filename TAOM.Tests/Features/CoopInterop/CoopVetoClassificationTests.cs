@@ -89,6 +89,16 @@ public class CoopVetoClassificationTests
             "Blocks an upgrade the local player cannot afford. Reads _taom_specialResources, which " +
             "is TAOM campaign state — but it gates the acting player's OWN party screen, and each " +
             "peer owns its own resources."),
+        ["Patch71_HeroResetEquipmentsGuard"] = new(CoopVeto.ReviewedSafe,
+            "Does skip a replicated campaign-state mutation (a fired wanderer's equipment reset), " +
+            "so the second half of the question is what carries it: the condition is whether the " +
+            "hero's Template supplies battle, civilian and stealth equipment, which derives ONLY " +
+            "from shipped troop XML and the culture's stealth roster. Not player-editable config, " +
+            "no SyncData, no campaign state, no MBRandom anywhere in the path — Template.First*" +
+            "Equipment is a first-match over a static roster, and the fill is a straight 12-slot " +
+            "copy out of it. Two peers on the same install compute the same answer and write the " +
+            "same 12 slots. Gating it under co-op would restore the NRE that #486 is about, on " +
+            "whichever peer fires the companion."),
         ["Patch34_SellAllItemsMenu"] = new(CoopVeto.ReviewedSafe,
             "Player-local inventory UI action."),
         ["Patch36_GameStateScreenManager"] = new(CoopVeto.ReviewedSafe,
