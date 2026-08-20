@@ -322,7 +322,7 @@ Full detail (compose examples, dual-build layout, DLL paths, configuration): [`d
 
 ## Hooks
 
-25 hook registrations across 9 events (+ the `/freeze` inline hook). Full catalog (hook → event → purpose):
+27 hook registrations across 9 events (+ the `/freeze` inline hook). Full catalog (hook → event → purpose):
 [`docs/reference/hooks-catalog.md`](docs/reference/hooks-catalog.md). Authoring conventions:
 `.claude/rules/hook-authoring.md` (loads on `.claude/hooks/**`); durable lifecycle facts +
 the verified 30-event list + handler contract: `.claude/rules/harness-facts.md` "Hook lifecycle".
