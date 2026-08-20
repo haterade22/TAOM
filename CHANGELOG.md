@@ -4,6 +4,49 @@
 
 ## 2026-08-20
 
+### feat(hooks): the polearm/shield gate now runs itself, and jq is not on PATH
+
+The previous entry closed with "nothing runs the gate automatically ... a local PostToolUse hook is
+the obvious next move and is not done here". Done here.
+
+`.claude/hooks/check-polearm-shield-parity.sh` runs `tools/audit_polearm_shield_parity.py` after any
+Edit or Write that could introduce the defect. The relevance test is what makes it cheap: the
+registration file (`weapon_descriptions.xslt`), anything under `LOTRLOME_items/`, or any `.xml` that
+**contains** an `<EquipmentRoster>`. That last one reads the file rather than matching a path
+pattern, because the audit rglobs every XML under the rosters root and rosters are not confined to
+`troops/`. Irrelevant edits cost nothing; a relevant one costs about 1.5 seconds, measured.
+
+Contract, and the reason it has one: FAIL prints the block, PASS is silent, and **SKIP or a missing
+tool says so out loud**. For a detection hook, no output is itself a claim, and a check that prints
+nothing is read as "no findings" rather than "never ran". That is `hook-authoring.md`'s
+fail-open-but-never-fail-silent rule, which exists because the v1.4.8 drift check went quiet on the
+one day it mattered. FAIL is reported once per distinct finding set, keyed on a hash in
+`.claude/logs/.polearm-gate-reported`, so a burst of roster edits does not re-nag while a known
+finding stands, but a new regression speaks immediately and a fix clears the mute. It is advisory
+and always exits 0: PostToolUse fires after the write, so it gates nothing. CI still cannot run this
+check at all, because it needs the game install to resolve item data.
+
+Proven rather than assumed, by reverting the live registration and watching the hook: silent on a
+`.cs` edit, on an XML with no roster, on a missing file and on malformed stdin; reports 36 findings
+on the first roster edit after the revert; silent on the second, identical one; silent again once
+`register_one_handed_polearms.py --apply` restores the file, with the mute cleared. The live Armory
+file came back byte-identical, same SHA-256, both times. The SKIP and missing-tool branches were
+exercised too.
+
+**The find worth carrying: `jq` is not on PATH in this Git Bash install.** The first version of this
+hook was written the way `notify-csharp-edit.sh` parses stdin, with a bare `jq -r`, and it failed on
+every input with `jq: command not found`. **12 of the repo's hooks call `jq` bare** and are silently
+degraded the same way. `log-agent.sh` is the exception and the model: `command -v jq` with a
+grep/sed fallback, which this hook now copies (plus unescaping the doubled backslashes every Windows
+path carries, which `jq -r` would have handled for free). Fixing the other 12 is a separate change
+and is not attempted here. It is worth doing, because a fail-open hook that never runs looks exactly
+like a hook with nothing to report.
+
+Also corrected: the hooks catalog said 25 scripts / 25 registrations. It is 27 of each, counted from
+`settings.json` and `ls`. The stated number had been wrong since `block-broad-git-add.sh` landed on
+2026-08-09 without a catalogue row, so that row is added too. `tools/audit_claude_config.py` is clean
+on the new hook, 5 INFO findings and all pre-existing.
+
 ### docs: write down the defect class that has now shipped three times
 
 The shield-plus-unusable-weapon bug was fixed twice this week and documented nowhere a future

@@ -1,6 +1,6 @@
 # Hooks Catalog
 
-> Every `.claude/hooks/` script -> event -> purpose (25 scripts / 25 registrations across 9 events, plus the `/freeze` skill-inline hook — audited 2026-08-05, `check-version-tagged.sh` added 2026-08-08). Extracted from CLAUDE.md 2026-07-18. Authoring rules: `.claude/rules/hook-authoring.md`. Lifecycle facts: `.claude/rules/harness-facts.md`.
+> Every `.claude/hooks/` script -> event -> purpose (27 scripts / 27 registrations across 9 events, plus the `/freeze` skill-inline hook; recounted 2026-08-20 from `settings.json` and `ls .claude/hooks/*.sh`, which is the only way to get it right: the stated 25 had been wrong since `block-broad-git-add.sh` landed 2026-08-09 without a row here). Extracted from CLAUDE.md 2026-07-18. Authoring rules: `.claude/rules/hook-authoring.md`. Lifecycle facts: `.claude/rules/harness-facts.md`.
 
 
 | Hook | Event | Purpose |
@@ -29,6 +29,8 @@
 | `check-verification-evidence.sh` | Stop | Reminds to build/test when a `.cs` file changed but no verification ran since the last edit. Enforces `.claude/rules/evidence-over-claims.md`. |
 | `check-moduledata-validation.sh` | PreToolUse (Bash) | Hard-blocks `git commit` when staged `Main/_Module/ModuleData/**/*.xml` fails the ERROR-severity checks of `tools/validate_moduledata.py` (broken Item/NPCCharacter ref, unknown culture, duplicate id). Fail-open: missing python / game install / validator crash never blocks. Warnings don't block — run the tool to see them. |
 | `check-native-dll-crt.sh` | PreToolUse (Bash) | Hard-blocks commit when the staged `TAOM.NativeSkinFixes.dll` links a dynamic/debug CRT (absent on player machines → `LoadLibrary` error 126); must link static CRT (`/MT`). Fail-open |
+| `block-broad-git-add.sh` | PreToolUse (Bash) | Confirms (`ask`) before `git add -A/-u/.` and `git commit -a/-am`, listing what the sweep would take. A shared file routinely holds two sessions' edits, so a broad add commits work you do not own. Added 2026-08-09; catalogued 2026-08-20. |
+| `check-polearm-shield-parity.sh` | PostToolUse (Edit\|Write) | Runs `tools/audit_polearm_shield_parity.py` after an edit that could pair a shield with a weapon the AI will not draw: `weapon_descriptions.xslt`, anything under `LOTRLOME_items`, or any `.xml` containing an `<EquipmentRoster>` (content test, not a path pattern, because rosters are not confined to `troops/`). FAIL prints the block once per distinct finding set (`.claude/logs/.polearm-gate-reported`), PASS is silent and clears the mute, and SKIP or a missing tool says so rather than passing in silence. Advisory, always exits 0. Exists because the gate needs the game install and so cannot run in CI: `docs/reviews/lessons/build-tooling-workflow.md`, "A gate sitting in an unmerged PR is not a gate". |
 | `check-doc-config-drift.sh` | PreToolUse (Bash) | Hard-blocks commit on config-example drift, version mismatch vs the pin, or a CLAUDE.md hard budget violation (size-warn findings report but don't gate, 2026-08-05), via `tools/lint_docs.py --fail-on-drift`. Fail-open |
 
 Skill-inline (not in `.claude/hooks/`): `check-freeze.sh` — PreToolUse (Edit|Write) declared in the `/freeze` + `/investigate` SKILL.md frontmatter; blocks edits outside the frozen directory while one of those skills is active. Fires only during skill invocation (`harness-facts.md` "Hook lifecycle").

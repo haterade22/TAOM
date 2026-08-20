@@ -102,6 +102,11 @@
           {
             "type": "command",
             "command": ".claude/hooks/notify-csharp-edit.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-polearm-shield-parity.sh",
+            "statusMessage": "Checking no roster pairs a shield with a weapon the AI will not draw…"
           }
         ]
       },
