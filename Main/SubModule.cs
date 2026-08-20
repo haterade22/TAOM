@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Bannerlord.UIExtenderEx;
 using Bannerlord.UIExtenderEx.Attributes;
 using HarmonyLib;
@@ -253,6 +253,42 @@ public class SubModule : MBSubModuleBase
             Features.SaveLoadDiagnostics.Hooks.CampaignBehaviorDataStore_LoadBehaviorData_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             Features.SaveLoadDiagnostics.Hooks.ArchiveDeserializer_LoadFrom_Patch.Initialize(saveLoadDiagnostics, saveLoadLogger);
             _harmony.PatchCategory("Patch61_SaveLoadDiagnostics");
+
+            // Patch66_MapLoadDiagnostics — per-frame [MapLoad] heartbeat on the campaign map.
+            // Added for the v1.5.0 map-load stall: the map screen is live and Campaign.RealTick is
+            // executing while the player sees a frozen loading screen, so a log that simply stops
+            // tells us nothing. Own category and own try/catch: a diagnostic must never be the
+            // thing that breaks the load it exists to explain.
+            try
+            {
+                Features.MapLoadDiagnostics.Hooks.Campaign_RealTick_MapLoad_Patch.Initialize(
+                    IoC.Resolve<Features.MapLoadDiagnostics.IMapLoadHeartbeatService>(), saveLoadLogger);
+                Features.MapLoadDiagnostics.MapLoadTracer.Initialize(saveLoadLogger);
+                _harmony.PatchCategory("Patch66_MapLoadDiagnostics");
+
+                // Lifecycle trace: state pushes/pops, loading-window raise/lower with caller
+                // chains, and the map state/screen seams. Each category applies separately because
+                // Harmony aborts a category at its first failing class, and a drifted engine
+                // binding here must not take the working heartbeat down with it.
+                foreach (var traceCategory in new[]
+                {
+                    "Patch66_MapLoadDiagnostics_Lifecycle",
+                    "Patch66_MapLoadDiagnostics_MapScreen",
+                    "Patch66_MapLoadDiagnostics_SceneReady",
+                })
+                {
+                    try { _harmony.PatchCategory(traceCategory); }
+                    catch (System.Exception ex)
+                    {
+                        saveLoadLogger?.LogError($"[MapLoad] {traceCategory} did not attach: {ex.Message}");
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                saveLoadLogger?.LogError($"[MapLoad] could not attach heartbeat: {ex.Message}");
+            }
+
             foreach (var category in new[]
             {
                 "Patch61_SaveLoadDiagnostics_ContainerFill",

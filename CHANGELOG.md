@@ -2,6 +2,55 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-20
+
+### feat(diagnostics): a map-load timeline, and the blocker it found (#485)
+
+**A new campaign on v1.5.0 reaches the map screen and never leaves the loading screen.** Every
+offline gate was green, nothing logged an error, and the same code worked on v1.4.8.
+
+Seven hypotheses were tested and discarded, each costing a full game launch: the compressed shader
+sack, the settlement distance cache, per-frame nameplate cost, party scale, runaway spawning,
+`Patch58_SkipCampaignIntro`, and `Patch38_SettlementNameplateFade`. All wrong. Single-point logging
+can only kill one at a time, which is why this exists instead.
+
+`Patch66_MapLoadDiagnostics` records a timeline rather than a sample: a 5-second heartbeat off
+`Campaign.RealTick` (fps, tick ms, per-type party census, heroes and clans, campaign time, loading
+window, time control, top screen, and the whole game-state stack), plus sequenced lifecycle tracing
+of every state push, pop and clean with the resulting stack, the map state and screen seams, and
+every loading-window raise and lower **with its managed caller chain**.
+
+It answered the question on the first run:
+
+```
+LOADING-WINDOW raised :: callers: LoadingWindow.EnableGlobalLoadingWindow
+  < MapScreen.HandleIfBlockerStatesDisabled < MapScreen.HandleIfSceneIsReady < MapScreen.OnActivate
+```
+
+Vanilla's own gate, working as written. It lowers the window only when
+`SceneView.ReadyToRender() && SceneView.CheckSceneReadyToRender()` holds for three consecutive
+frames; on TAOM_Map that is never true. After the map screen raised it: **2 raises, 0 lowers**.
+Everything else was healthy at the same moment, which is why this hid so well: 68 fps,
+`MapScreen.OnInitialize` done in 646 ms, first frame ticked, 2,033 parties flat, clock paused at
+`Stop`, one clean `MapState` on the stack.
+
+**Not a TAOM defect.** Confirmed with TaleWorlds: map terrain baked by pre-1.5.0 tools does not
+satisfy the 1.5.0 scene-ready check. The fix needs the v1.5.0 Modding Kit editor (open map, save,
+then re-run the settlement distance cache) and the Kit is still v1.4.8. Full blocker record,
+including the do-not-delete warning on `TAOM_Map/RuntimeDataCache`, in
+`docs/migration/v1.5.0-impact.md`.
+
+**v2.1.0 and v2.1.1 therefore cannot load a campaign** and must not go to players. Both release
+notes now carry that advisory; the tags stay where they are.
+
+Two design points worth keeping. The party census walks every party, so it runs only on frames that
+emit, or it would inflate the number it measures. And the API snapshot caught that `MapState` has no
+`OnInitialize` override, so the patch had silently bound the base `GameState.OnInitialize` and would
+have labelled unrelated states as the map, which is the third mislabelled-binding near-miss in this
+bump.
+
+Not-tested: nothing further is testable in-game until the Modding Kit ships v1.5.0.
+
 ## 2026-08-19
 
 ### chore(release): TAOM v2.1.1
