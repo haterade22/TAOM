@@ -206,6 +206,7 @@ over the whole file during review: 232 shields, zero violations, and all 6 new o
 | **T7 cape pauldrons are cloth-only** | The spec lists `sm_md_num_{cav,inf}_pauld_cape_a`. On disk they are `clo_` cloth proxies with no plain renderable sibling, and no `cloth_bodies.xml` entry exists for any Numenorean piece. They are NOT authored. T7 wears the plain `pauld_med_a`; `cape_heavy_a` and `cape_elite_a` are real `sm_` meshes and work as static geometry at T8 and T9. |
 | **Only `_a` shields have collision bodies** | 15 `bo_` meshes ship: 8 shield (4 `bo_` plus 4 `bo_cap_`, all `_a`), 1 lance, 3 sword_1h, 3 sword_2h. `inf_shield_med_b` points at the `med_a` pair and `inf_shield_heavy_b` at the `heavy_a` pair, the same hitbox-group pattern the orc shields use. |
 | **The lance must exclude `swing`** | The head declares `<Thrust>` only and the `TwoHandedPolearm` description carries a `swing` token, so without `excluded_item_usage_features="swing"` the lance gets a swing attack with zero swing damage. This is the defect class from `rca-crafting-usage-features-2026-07-26.md` (20 mace heads). |
+| **The lance shipped registered in 3 of 4 polearm descriptions** (fixed 2026-08-20) | As authored, `sm_md_num_lance_blade_a` and `_handle_a` went into `TwoHandedPolearm`, `TwoHandedPolearm_Bracing` and `TwoHandedPolearm_Couchable`, but not `OneHandedPolearm`. That is the only one whose usage set permits a shield, and it sits FIRST in Native's `TwoHandedPolearm` template, so it decides the primary usage. All 8 cavalry rosters carry a shield, so the primary resolved to `requires_no_shield` and the AI drew a sword the moment combat started, holding the lance only through the pre-battle phase (spawn wield is slot order). Silent: nothing errors, nothing logs. Now registered by `tools/register_one_handed_polearms.py`; gated by `tools/audit_polearm_shield_parity.py`, which is what found it. Do not hand-edit the Armory XSLT, a module refresh reverts it. |
 | **The spec's 2H `bo_` list is a copy-paste of the 1H one** | Its "2H Sword Parts" block repeats the 1H hull names. The real hulls are `bo_sm_md_num_sword_2h_blade_{a,b,c}` and they do exist. |
 | **A Cavalry troop with a mountless roster is a silent bug** | `_isMounted` is set once at deserialize from `default_group`, never from the equipment, and `RandomBattleEquipment` picks uniformly among battle rosters with no check that the chosen one carries a Horse. So a Cavalry-grouped troop that rolls a mountless roster walks while the AI treats it as cavalry. All 8 cavalry rosters here carry both Horse and HorseHarness; nothing in the engine enforces that, so keep it true when editing. |
 | **`F:\Project_TAoM\` does not exist** | The spec's stated source path is dead. Real FBX sources are under `lotraom-assets/v1.4/LOTRLOME_Armory/AssetSources/`. |
@@ -248,6 +249,11 @@ visual check because there is no hot-reload.
 2. No bare hands, legs or heads (the cover-attribute failures).
 3. The cavalry troops mount, and the harness is accepted rather than silently refused.
 4. Swing a 1H sword and a 2H sword; couch the lance and confirm it has no swing attack.
+4b. **Watch a cavalry troop through the first ten seconds of a fight and confirm it keeps the lance
+   rather than drawing its sword.** This is the 2026-08-20 registration fix in the traps table above,
+   and the pre-battle phase does not test it: the troop holds the lance either way until combat
+   starts. `python tools/audit_polearm_shield_parity.py` already passes at exit 0, so this is
+   confirmation that the offline resolution matches the engine, not an open question.
 5. **Check the lance blade sits at the tip of the shaft.** `piece_offset` is 0, matching the working
    Dale long shaft, but the spec suggested roughly 65 or -65 and was unsure of the sign. A floating
    or sunken blade is a one-attribute fix; `tools/BannerlordCraftingTool/` is the visual
