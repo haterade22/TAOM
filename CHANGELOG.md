@@ -44,6 +44,54 @@ Build clean (0 errors, 0 new warnings), suite 6688 passed / 0 failed / 2 skipped
 Not-tested: the menu option's absence at the main menu (in-game only, ADR-008).
 Rejected: flipping the MCM default, which leaves the button visible on every existing install.
 
+### fix(items): the gate caught the same bug again before anyone had merged it
+
+PR #447 shipped a gate for one defect class: a roster that pairs a shield with a weapon whose
+primary usage set is flagged `requires_no_shield`. The engine does not complain about that pairing,
+it just quietly declines to draw the weapon after spawn, so the only symptom is a player noticing
+his cavalry fight with swords. The PR sat unmerged for ten days. Run against current trunk for the
+first time, the gate failed on 8 rosters, none of them Dale: `sm_md_num_lance_a` on
+`mordor_num_cavalry`, `mordor_num_vet_cavalry`, `mordor_num_knight` and `mordor_num_temple_knight`,
+all of which arrived in `2fcbef10` on 2026-08-18, eight days after the gate that catches them was
+written.
+
+The lance is the Dale spear again, down to the shape of the data: `crafting_template`
+`TwoHandedPolearm`, a blade and a handle, no inline `<Weapon>`. What makes it worth writing down is
+where it came from. The Black Numenorean generator registered the lance's two pieces under
+`TwoHandedPolearm`, `TwoHandedPolearm_Bracing` and `TwoHandedPolearm_Couchable`, and skipped
+`OneHandedPolearm`: three of the four polearm descriptions, missing exactly the one that makes a
+polearm shield-compatible. This class does not only arrive by hand. It comes out of the authoring
+tools too, which is the argument for a gate rather than a fix.
+
+So the replay script is no longer Dale-specific. `register_dale_spear_descriptions.py` becomes
+`tools/register_one_handed_polearms.py`, the lance joins `ONE_HANDED_ITEMS`, and the marker becomes
+`TAOM-1H-POLEARM` (backup `.bak-1hpolearm`). The design input is still the item list and the piece
+ids are still derived from each item's own `<CraftedItem>`, so a re-modelled weapon moves its own
+registration. Adding the next one is a line in a tuple.
+
+Two things the rename had to get right, both now pinned by tests. An install patched under the old
+`TAOM-DALE-1H` marker has to converge on a single block: the new patterns do not match the old
+marker, so without an explicit sweep the Dale pieces end up listed twice and `--revert` clears only
+half the edit. And the write path is byte-level. The Armory sheet is CRLF, and text-mode i/o would
+turn a two-line insert into a whole-file rewrite. `tools/tests/test_register_one_handed_polearms.py`
+covers both plus derivation, idempotence, the refresh-then-reapply cycle, and the two refusals (an
+item that no longer exists, a piece id with no `<CraftingPiece>`).
+
+Measured, not assumed. Reverting the Dale half of the live block takes the gate from PASS to exactly
+28 extra findings, and re-applying restores the file byte for byte, same SHA-256. With the lance
+registered the gate is PASS at exit 0. `tools/tests` is 612 passing (604 before these 8),
+`validate_moduledata` PASS, `lint_docs` clean, doc-graph ratchet PASS at 152 orphans against a
+baseline of 153.
+
+Unchanged: the 43 rosters across 17 troops that pair a shield with a two-handed sword, axe or mace.
+Same engine rule, but that is a roster decision rather than a data one, so it stays a WARN and stays
+with #450. The committed Armory snapshot is refreshed to the live file and now carries ten days of
+drift from the Black Numenorean generator run; the record in
+`docs/reference/lotrlome-armory-snapshot/README.md` says which entries came from where.
+
+In-game smoke is still owed for the lance: Black Numenorean cavalry should keep lance and shield
+when the fight starts.
+
 ## 2026-08-18
 
 ### fix(tooling): two gates that could not fire now fire
@@ -1689,7 +1737,7 @@ What that placement does cost is durability, since the Armory is not in this rep
 reverts it silently. So the edit ships with the three things CLAUDE.md's dependency-module trap asks
 for, none of which #445 or #447 had:
 
-- `tools/register_dale_spear_descriptions.py` — idempotent replay, marker-delimited. The **item**
+- `tools/register_one_handed_polearms.py`, idempotent replay, marker-delimited. The **item**
   list is hardcoded (which weapons should be one-handed is a design call); the piece ids are derived
   from those items' own `<CraftedItem>` blocks, so a re-modelled spear moves its own registration
   instead of silently un-fixing itself. It refuses to write a piece id with no `<CraftingPiece>`.

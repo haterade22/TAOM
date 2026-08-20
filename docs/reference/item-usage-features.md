@@ -41,7 +41,7 @@ Every excludable token is one that appears in `item_usage_features` across the 2
 `WeaponDescription`s. Neither TAOM nor LOTRLOME adds a description — LOTRLOME's
 `weapon_descriptions.xslt` only extends their `<AvailablePieces>` lists, and TAOM ships no
 `weapon_descriptions` override of its own. A new piece registration therefore belongs in the
-Armory's XSLT, beside the other 19 cultures' (`tools/register_dale_spear_descriptions.py` is the
+Armory's XSLT, beside the other 19 cultures' (`tools/register_one_handed_polearms.py` is the
 worked example, and the reason that external edit needs a replay script).
 
 | Token | Kind | What removing it does |

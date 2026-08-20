@@ -306,6 +306,15 @@
 			<AvailablePiece id="sm_dg_khml_sword_pommel_a"/>
 			<AvailablePiece id="sm_dg_khml_sword_pommel_b"/>
 			<AvailablePiece id="sm_dg_khml_sword_handle_a"/>
+			<AvailablePiece id="sm_md_num_sword_1h_blade_a" />
+			<AvailablePiece id="sm_md_num_sword_1h_blade_b" />
+			<AvailablePiece id="sm_md_num_sword_1h_blade_c" />
+			<AvailablePiece id="sm_md_num_sword_1h_guard_a" />
+			<AvailablePiece id="sm_md_num_sword_1h_guard_b" />
+			<AvailablePiece id="sm_md_num_sword_1h_handle_a" />
+			<AvailablePiece id="sm_md_num_sword_1h_handle_b" />
+			<AvailablePiece id="sm_md_num_sword_1h_pommel_a" />
+			<AvailablePiece id="sm_md_num_sword_1h_pommel_b" />
 			<xsl:apply-templates select="@*|node()"/>
 		</AvailablePieces>
 	</xsl:template>
@@ -386,6 +395,17 @@
 			<AvailablePiece id="wm_harad_sword_a02_blade"/>
 			<AvailablePiece id="wm_harad_sword_a02_guard"/>
 			<AvailablePiece id="wm_harad_sword_a02_handle"/>
+			<AvailablePiece id="sm_md_num_sword_2h_blade_a" />
+			<AvailablePiece id="sm_md_num_sword_2h_blade_b" />
+			<AvailablePiece id="sm_md_num_sword_2h_blade_c" />
+			<AvailablePiece id="sm_md_num_sword_2h_guard_a" />
+			<AvailablePiece id="sm_md_num_sword_2h_guard_b" />
+			<AvailablePiece id="sm_md_num_sword_2h_guard_c" />
+			<AvailablePiece id="sm_md_num_sword_2h_handle_a" />
+			<AvailablePiece id="sm_md_num_sword_2h_handle_b" />
+			<AvailablePiece id="sm_md_num_sword_2h_handle_c" />
+			<AvailablePiece id="sm_md_num_sword_2h_pommel_a" />
+			<AvailablePiece id="sm_md_num_sword_2h_pommel_b" />
 			<xsl:apply-templates select="@*|node()"/>
 		</AvailablePieces>
 	</xsl:template>
@@ -544,6 +564,8 @@
 			<AvailablePiece id="sm_rh_loke_sword_blade_a"/>
 			<AvailablePiece id="sm_rh_loke_sword_blade_b"/>
 			<AvailablePiece id="wm_swan_knight_spear_banner_b"/>
+			<AvailablePiece id="sm_md_num_lance_blade_a" />
+			<AvailablePiece id="sm_md_num_lance_handle_a" />
 			<xsl:apply-templates select="@*|node()"/>
 		</AvailablePieces>
 	</xsl:template>
@@ -683,15 +705,17 @@
 			<AvailablePiece id="sm_rh_loke_sword_blade_b"/>
 			<AvailablePiece id="wm_swan_knight_spear_banner_b"/>
 			<xsl:apply-templates select="@*|node()"/>
-			<!-- TAOM-DALE-1H:START -->
+			<!-- TAOM-1H-POLEARM:START -->
 			<AvailablePiece id="wm_dale_ws_spear_a01_blade"/>
 			<AvailablePiece id="wm_dale_ws_spear_a02_blade"/>
+			<AvailablePiece id="sm_md_num_lance_blade_a"/>
 			<AvailablePiece id="wm_dale_ws_polearm_head_a05"/>
 			<AvailablePiece id="wm_dale_ws_polearm_head_a06"/>
 			<AvailablePiece id="wm_dale_ws_spear_a01_handle"/>
 			<AvailablePiece id="wm_dale_ws_spear_a02_handle"/>
 			<AvailablePiece id="wm_dale_ws_polearm_a01_handle"/>
-			<!-- TAOM-DALE-1H:END -->
+			<AvailablePiece id="sm_md_num_lance_handle_a"/>
+			<!-- TAOM-1H-POLEARM:END -->
 		</AvailablePieces>
 	</xsl:template>
 
@@ -840,6 +864,8 @@
 			<AvailablePiece id="sm_rh_loke_sword_blade_a"/>
 			<AvailablePiece id="sm_rh_loke_sword_blade_b"/>
 			<AvailablePiece id="wm_swan_knight_spear_banner_b"/>			
+			<AvailablePiece id="sm_md_num_lance_blade_a" />
+			<AvailablePiece id="sm_md_num_lance_handle_a" />
 			<xsl:apply-templates select="@*|node()"/>
 		</AvailablePieces>
 	</xsl:template>
@@ -1100,6 +1126,8 @@
 			<AvailablePiece id="sm_rh_loke_sword_blade_a"/>
 			<AvailablePiece id="sm_rh_loke_sword_blade_b"/>
 			<AvailablePiece id="wm_swan_knight_spear_banner_b"/>
+			<AvailablePiece id="sm_md_num_lance_blade_a" />
+			<AvailablePiece id="sm_md_num_lance_handle_a" />
 			<xsl:apply-templates select="@*|node()"/>
 		</AvailablePieces>
 	</xsl:template>

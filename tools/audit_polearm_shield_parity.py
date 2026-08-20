@@ -325,7 +325,7 @@ def main() -> int:
     if dangling:
         # Advisory unless --strict: one of these (`vlandian_blade_10`, 2026-08-10) is vanilla's
         # own, so failing on the set would leave a gate nobody can turn green. The insertion path
-        # that matters is guarded at the source -- register_dale_spear_descriptions.py refuses to
+        # that matters is guarded at the source -- register_one_handed_polearms.py refuses to
         # write a piece id with no <CraftingPiece>.
         if args.strict:
             status = 1
@@ -346,7 +346,7 @@ def main() -> int:
         show(failing)
         print(
             "\nFix by registering the item's pieces under a shield-compatible description "
-            "(see tools/register_dale_spear_descriptions.py) or by changing the roster."
+            "(see tools/register_one_handed_polearms.py) or by changing the roster."
         )
 
     if advisory:

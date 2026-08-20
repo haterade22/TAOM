@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
-"""Register the Dale spears' crafting pieces under `OneHandedPolearm` in the Armory's XSLT.
+"""Register shield-compatible polearms' crafting pieces under `OneHandedPolearm` in the Armory's XSLT.
 
 WHY
 ---
-All four Dale spears (`dale_spear_a/b`, `dale_winged_spear_a/b`) are crafted on the
-`TwoHandedPolearm` template with no inline `<Weapon>`, so every usage they get comes from
-`WeaponDescription` matching. `LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt` registers
-19 cultures' spear pieces under `OneHandedPolearm` and Dale's under none of them, so the Dale
-spears resolve strictly two-handed:
+The four Dale spears (`dale_spear_a/b`, `dale_winged_spear_a/b`) and the Black Numenorean lance
+(`sm_md_num_lance_a`) are crafted on the `TwoHandedPolearm` template with no inline `<Weapon>`, so
+every usage they get comes from `WeaponDescription` matching.
+`LOTRLOME_Armory/ModuleData/weapon_descriptions.xslt` registers 19 cultures' spear pieces under
+`OneHandedPolearm` and none of theirs, so they resolve strictly two-handed:
 
   * A description applies only when EVERY used piece is in its `AvailablePieces`
     (`Crafting.cs:566-608` -- a counter starting at 4 that decrements per invalid slot and per
     matched piece, and applies the description at <= 0). Blade and handle both, or neither.
   * `TwoHandedPolearm`'s primary usage set is `polearm_block_long_shield_swing_thrust`, flagged
     `requires_no_shield` (`Native/ModuleData/item_usage_sets.xml`).
-  * All 28 Dale spear equipment rosters also carry a shield, so combat AI abandons the spear the
-    moment a fight starts and fights sword+shield instead. Before the fight it still holds the
-    spear, because spawn wield is plain slot order -- which is why this reads as "the cavalry
-    draw swords when the battle begins".
+  * All 28 Dale spear rosters and all 8 Black Numenorean lance rosters also carry a shield, so
+    combat AI abandons the polearm the moment a fight starts and fights sword+shield instead.
+    Before the fight the troop still holds it, because spawn wield is plain slot order -- which is
+    why this reads as "the cavalry draw swords when the battle begins".
 
 `OneHandedPolearm` is listed FIRST in the `TwoHandedPolearm` template's `<WeaponDescriptions>`
 (`Native/ModuleData/crafting_templates.xml`), and `Crafting.cs` marks only the first match as
@@ -34,6 +34,12 @@ Dale's halberds, poleaxe and war spear stay two-handed on purpose: they are real
 roster pairs them with a shield, and although they share handles with the spears, the
 every-piece-must-match rule means a shared handle alone never grants them the one-handed usage.
 
+ADDING AN ITEM
+--------------
+Append its id to `ONE_HANDED_ITEMS` and re-run with `--apply`. Do that only when the gate
+(`audit_polearm_shield_parity.py`) reports it, and only when one-handed-with-shield is the right
+call for the weapon -- for a genuine two-hander the roster is what should change instead.
+
 WHERE THIS EDIT LIVES
 ---------------------
 `LOTRLOME_Armory` is shipped to players (README.md, `tools/package_release.py`) but is NOT in
@@ -44,9 +50,9 @@ the gate that notices when it has been reverted, and
 
 USAGE
 -----
-    python tools/register_dale_spear_descriptions.py             # dry run
-    python tools/register_dale_spear_descriptions.py --apply
-    python tools/register_dale_spear_descriptions.py --revert    # drop the marker block
+    python tools/register_one_handed_polearms.py             # dry run
+    python tools/register_one_handed_polearms.py --apply
+    python tools/register_one_handed_polearms.py --revert    # drop the marker block
 
 A full game RESTART is required -- weapon descriptions are read at process launch.
 """
@@ -65,19 +71,26 @@ from _gamedir import ENV_VAR, ensure_exists, game_modules  # noqa: E402
 
 DEFAULT_GAME_ROOT = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
 
-# The design decision: these four items should fight one-handed-with-shield. Their pieces are
-# derived, never listed here. Everything else Dale crafts on TwoHandedPolearm stays two-handed.
+# The design decision: these items should fight one-handed-with-shield. Their pieces are derived,
+# never listed here. Everything else crafted on TwoHandedPolearm stays two-handed.
 ONE_HANDED_ITEMS = (
     "dale_spear_a",
     "dale_spear_b",
     "dale_winged_spear_a",
     "dale_winged_spear_b",
+    "sm_md_num_lance_a",
 )
 
 TARGET_DESCRIPTION = "OneHandedPolearm"
-MARKER_START = "<!-- TAOM-DALE-1H:START -->"
-MARKER_END = "<!-- TAOM-DALE-1H:END -->"
-BACKUP_SUFFIX = ".bak-dale1h"
+MARKER_START = "<!-- TAOM-1H-POLEARM:START -->"
+MARKER_END = "<!-- TAOM-1H-POLEARM:END -->"
+BACKUP_SUFFIX = ".bak-1hpolearm"
+
+# The Dale-only predecessor of the marker above. An install patched before the Black Numenorean
+# lance was added still carries it, and the current patterns do not match it -- so without an
+# explicit sweep the Dale pieces would end up listed twice, under two different markers, and
+# `--revert` would leave half the edit behind. Remove after a release or two.
+LEGACY_MARKERS = (("<!-- TAOM-DALE-1H:START -->", "<!-- TAOM-DALE-1H:END -->"),)
 
 CRAFTED_ITEM_RE = re.compile(r"<CraftedItem\b.*?</CraftedItem>", re.S)
 # The template body runs from the OneHandedPolearm match to its closing tag. Anchoring the
@@ -145,6 +158,27 @@ def block_text(pieces: list[str], indent: str, eol: str) -> str:
     return eol.join(lines) + eol
 
 
+def block_re(start: str, end: str) -> re.Pattern:
+    """Match a marker block with its leading indent and trailing newline, so removal leaves no gap.
+
+    The leading `[ \\t]*` matters on the apply path: `block_text` carries the indent of its first
+    line, so without it the match can never equal the wanted text and an unchanged file reports
+    "updated" forever.
+    """
+    return re.compile(
+        r"[ \t]*" + re.escape(start) + r".*?" + re.escape(end) + r"[ \t]*(?:\r\n|\n)?", re.S
+    )
+
+
+def strip_legacy(text: str) -> tuple[str, bool]:
+    """Drop any predecessor marker block. Returns (text, found_any)."""
+    found = False
+    for start, end in LEGACY_MARKERS:
+        text, count = block_re(start, end).subn("", text)
+        found = found or bool(count)
+    return text, found
+
+
 def apply_block(src: str, pieces: list[str], eol: str) -> tuple[str, str]:
     """Return (new_src, action) where action is 'inserted' | 'updated' | 'noop'."""
     match = TEMPLATE_RE.search(src)
@@ -159,15 +193,13 @@ def apply_block(src: str, pieces: list[str], eol: str) -> tuple[str, str]:
     indent = indent_match.group(1) if indent_match else "\t\t\t"
     wanted = block_text(pieces, indent, eol)
 
-    # The leading `[ \t]*` matters: `wanted` carries the indent of its first line, so without it
-    # group(0) can never equal `wanted` and an unchanged file reports "updated" forever.
-    existing = re.search(
-        r"[ \t]*" + re.escape(MARKER_START) + r".*?" + re.escape(MARKER_END) + r"[ \t]*(?:\r\n|\n)?",
-        body,
-        re.S,
-    )
+    # Converge an install patched under an older marker before deciding insert-vs-update, or the
+    # same pieces end up registered twice under two markers.
+    body, had_legacy = strip_legacy(body)
+
+    existing = block_re(MARKER_START, MARKER_END).search(body)
     if existing:
-        if existing.group(0) == wanted:
+        if existing.group(0) == wanted and not had_legacy:
             return src, "noop"
         new_body = body[: existing.start()] + wanted + body[existing.end():]
         action = "updated"
@@ -185,12 +217,10 @@ def apply_block(src: str, pieces: list[str], eol: str) -> tuple[str, str]:
 
 
 def revert_block(src: str) -> tuple[str, bool]:
-    pattern = re.compile(
-        r"[ \t]*" + re.escape(MARKER_START) + r".*?" + re.escape(MARKER_END) + r"[ \t]*(?:\r\n|\n)?",
-        re.S,
-    )
-    new_src, count = pattern.subn("", src)
-    return new_src, bool(count)
+    """Remove the marker block, and any predecessor, so a revert never half-clears the edit."""
+    new_src, count = block_re(MARKER_START, MARKER_END).subn("", src)
+    new_src, had_legacy = strip_legacy(new_src)
+    return new_src, bool(count) or had_legacy
 
 
 def main() -> int:
@@ -230,7 +260,7 @@ def main() -> int:
     pieces, per_item = derive_pieces(items_xml)
     undefined = check_pieces_exist(pieces_xml, pieces)
     if undefined:
-        print("ERROR: piece id(s) referenced by a Dale spear have no <CraftingPiece> definition:", file=sys.stderr)
+        print("ERROR: piece id(s) referenced by a target weapon have no <CraftingPiece> definition:", file=sys.stderr)
         for piece in undefined:
             print(f"       {piece}", file=sys.stderr)
         return 1
