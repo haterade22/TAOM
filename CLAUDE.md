@@ -141,7 +141,7 @@ need 1–2 + scope. Implement-then-review dispatch follows the two-stage orderin
 ## Doc Lookup
 
 **Start here:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map. Task-oriented "Need
-to… / Read" lookup (all 46 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
+to… / Read" lookup (all 63 rows): **[`docs/reference/doc-lookup.md`](docs/reference/doc-lookup.md)**.
 Topology queries: `/doc-graph`; architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
 Lessons-learned: read the relevant `docs/reviews/lessons/<category>.md` BEFORE touching a
 subsystem; append after every RCA ([index](./docs/reviews/LESSONS-LEARNED.md)).
@@ -179,6 +179,7 @@ instructions `AGENTS.md`.
 | **Vendored DLLs** | `Main/_Module/bin/Win64_Shipping_Client/` = allowlist (`MinHook.x64.dll`, `TAOM.NativeSkinFixes.dll`). Do NOT vendor `MCMv5.dll`. |
 | **BehaviorTreeMissionLogic** | `: MissionLogic`, NOT `MissionBehavior` — regression rule, `docs/reviews/rca-looter-battle-nre-2026-05-24.md`. |
 | **Armory** | dep is `LOTRLOME_Armory` (NOT `Armory_2`). Item defs under `.../LOTRLOME_Armory/ModuleData/LOTRLOME_items/<folder>/`. A root-level `<action>` (parented by `<action_sets>`, not an `<action_set>`) loads on the client but kills a dedicated server on boot: gate with `tools/audit_action_set_parity.py`, which reads `action_sets.xml` only and never the sibling `action_sets.xslt`. |
+| **Shield + a weapon the AI won't draw** | A crafted weapon's primary usage is the FIRST `WeaponDescription` listing EVERY piece it uses (`Crafting.cs:566-608`). A polearm absent from `OneHandedPolearm` resolves `requires_no_shield`, so a shield-carrying troop holds it till combat starts then never draws it. No error, no log, native AI. Shipped 3x. Gate: `tools/audit_polearm_shield_parity.py`. |
 | **Co-op gating** | Three different questions, never interchangeable: `ICoopPresenceProvider.IsCoopActive` (a co-op mod is loaded), `ICoopSessionProvider.IsAuthority`/`ShouldDeferToHost` (may this peer mutate shared state), `IDedicatedServerProvider.IsDedicatedServer` (our binaries folder). `docs/features/coop-interop.md`. |
 | **Console commands** | A `[CommandLineArgumentFunction]` method with the wrong shape throws inside the engine's unguarded discovery loop, past a native boundary with no managed backstop — a startup hazard, not just a broken console. Duplicate names drop silently. Route through `TaomConsole`; `ConsoleCommandBindingTests` pins it. `docs/features/dev-console.md`. |
 | **Landless cultures** | A culture owning no settlement makes vanilla `SpawnLordParty`'s unguarded `Settlement.All.First(culture)` throw on the daily clan tick — CTD, no TAOM frame. Reachable: `TAOM_Map/settlements.xslt` strips ALL vanilla settlements. `Patch65_LandlessCultureSpawnGuard` guards it, `validate_moduledata.py`'s `LANDLESS_CULTURE` gates it. `docs/features/lord-spawn-guard.md`. |

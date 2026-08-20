@@ -4,6 +4,47 @@
 
 ## 2026-08-20
 
+### docs: write down the defect class that has now shipped three times
+
+The shield-plus-unusable-weapon bug was fixed twice this week and documented nowhere a future
+session would look before authoring a weapon. `tools/README.md` described the gate, and the snapshot
+README recorded the applied edit, but neither is read at authoring time and neither states the rule.
+Two lessons, a routing row, an index line and a Traps row now do.
+
+The rule, in one place: a crafted weapon with no inline `<Weapon>` takes its usages from
+`WeaponDescription` membership, and the first description in the crafting template's order that
+lists **every** piece the weapon uses becomes the PRIMARY usage (`Crafting.cs:566-608`). A polearm
+absent from `OneHandedPolearm` therefore resolves to a `requires_no_shield` primary, and a roster
+that also carries a shield produces a troop that holds the weapon through the pre-battle phase, then
+draws its sidearm the instant combat starts and never touches it again. Nothing errors, nothing logs,
+and `ItemUsageSetFlags.RequiresNoShield` has exactly one managed consumer, a tooltip in
+`CampaignUIHelper.cs`, so the code that acts on it is native and a decompile search does not lead
+there. Three shipments (#445 rosters, #449 Dale spears, the Black Numenorean lance), a player found
+each one.
+
+Two lessons, because there are two root causes and they need different prevention.
+`lessons/data-content-cultures.md` takes the data half: the lance came out of a **generator** that
+registered it under `TwoHandedPolearm`, `_Bracing` and `_Couchable` and skipped `OneHandedPolearm`.
+Three of four is the shape that defeats review, since a reviewer greps the piece ids, finds them,
+and stops. The prevention is to enumerate the descriptions a new weapon is ABSENT from, and to treat
+the generator as the thing under test rather than its output.
+`lessons/build-tooling-workflow.md` takes the process half: the gate that catches this sat complete
+and green in an unmerged PR for ten days while the defect shipped again on 2026-08-18. A detector's
+value lands on the branch everyone commits to, so merging it is the deliverable and it should
+precede the fix it shipped with, red if necessary. Sibling entry to the doc-graph ratchet, which
+shipped in June and was run by nothing until August.
+
+Also corrected while in here: the lessons index said 439 total, which was right, but its
+`Build, Tooling & Workflow` and `Data, Content & Cultures` rows are now 103 and 56. CLAUDE.md
+claimed `doc-lookup.md` had 46 rows; it has 63. `docs/features/black-numenorean.md` gains the lance
+registration to its authoring-traps table and a step 4b to its owed in-game pass, since the
+pre-battle phase does not test this and watching the first ten seconds of a fight does.
+
+One thing this does not fix. The gate needs the game install to resolve item data and exits 0 as a
+SKIP without one, so CI cannot run it and nothing runs it automatically. It is a documented manual
+step, which is precisely the weakness the tooling lesson above describes. Wiring it to a local
+PostToolUse hook on weapon XML edits is the obvious next move and is not done here.
+
 ### chore(shaders): the Pre-compile Shaders menu option is parked, the feature is not
 
 The main-menu "Pre-compile Shaders" button is gone. It is no longer needed, but the feature may be,
