@@ -2,6 +2,48 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-20
+
+### chore(shaders): the Pre-compile Shaders menu option is parked, the feature is not
+
+The main-menu "Pre-compile Shaders" button is gone. It is no longer needed, but the feature may be,
+so nothing was deleted: `Main/Features/ShaderPrecompilation/` is untouched, its four test files
+still run, `precompile_scenes.txt` still lists the twelve safe scenes, and the
+`{=taom_precompile_shaders}` / `{=taom_precompile_hint}` strings stay registered in all 12
+languages. This is the same wiring-level park NavalTravel and NativeSkinFixes already use.
+
+Three blocks were commented out. The `AddInitialStateOption` registration in `SubModule.cs` is the
+important one: it is the feature's **only** entry point into `ShaderPrecompileRunner.Begin()`, with
+no console command and no other caller, so with it gone no walk can start. `Patch21_ShaderPrecompilation`
+is no longer registered with Harmony, because its single member exists to mirror a running walk's
+status line onto `LoadingWindowViewModel.Update` and would otherwise postfix a vanilla UI method
+every loading-screen frame to do nothing. And the two MCM attributes are commented out, since a
+master toggle governing a button that no longer exists is worse than no toggle at all. The rest of
+the wiring needed no edits: `OnApplicationTick` and the `IsWalkInProgress` mission gate were already
+null-guarded, so they go inert on their own. `_shaderRunner` picked up an explicit `= null` to keep
+CS0649 quiet now that its only assignment is commented out.
+
+**The MCM master toggle could not do this job**, which is worth writing down because it is the
+obvious-looking fix. `EnableShaderPrecompilation` already drives the option's `isHidden` callback,
+so flipping its default to `false` looks like a one-character change. It would have hidden the
+button on a fresh install and nowhere else: `TaomSettings` is an `AttributeGlobalSettings` with
+`FormatType = "json2"`, so every player who has ever launched TAOM has `true` written to their
+settings file, and a changed default never reaches them.
+
+The two properties themselves stay. `ShaderPrecompileRunner.Begin()` still reads
+`EnableScenePassPrecompilation`, and `SettingsFingerprintTests` pins `TaomSettings` at an exact
+reflected-property count for the co-op settings split, so deleting them would have broken that test
+for reasons having nothing to do with shaders.
+
+Re-enabling is three uncomments and no new code. Status recorded in `CLAUDE.md` (Traps + the Harmony
+status table), `docs/reference/harmony-patch-registry.md`, `docs/reference/feature-map.md`, and the
+feature doc.
+
+Build clean (0 errors, 0 new warnings), suite 6688 passed / 0 failed / 2 skipped.
+
+Not-tested: the menu option's absence at the main menu (in-game only, ADR-008).
+Rejected: flipping the MCM default, which leaves the button visible on every existing install.
+
 ## 2026-08-18
 
 ### fix(tooling): two gates that could not fire now fire

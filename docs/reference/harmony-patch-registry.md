@@ -134,6 +134,8 @@ Suppress CC narrative horse crashes for no-mount cultures
 
 **Target:** `LoadingWindowViewModel`
 
+**Status: PARKED 2026-08-20** with the main-menu "Pre-compile Shaders" option. The `_harmony.PatchCategory` call in `SubModule.cs` is commented out, so this category is never registered and the postfix never runs. Parked rather than left applied because the postfix only mirrors a walk's status line, and no walk can start once the menu option is gone.
+
 Loading screen shader progress text
 
 ## Patch22_ArmyTargeting

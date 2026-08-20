@@ -100,7 +100,10 @@ public class SubModule : MBSubModuleBase
     private UIExtender? _uiExtender;
     private ITimeAccelerationService? _timeAccelerationService;
     private static float _shaderTickAccumulator;
-    private static ShaderPrecompileRunner _shaderRunner;
+    // Stays null while ShaderPrecompilation is parked (see OnSubModuleLoad). The explicit
+    // initializer is what keeps CS0649 quiet now that the assignment is commented out; the tick
+    // loop in OnApplicationTick already null-guards, so it goes inert without further edits.
+    private static ShaderPrecompileRunner _shaderRunner = null;
     private static bool _missionTimePatchesApplied;
     private static bool _gameInitPatchesApplied;
     private static bool _basicTableauGuardApplied;
@@ -330,9 +333,15 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<ISideCommanderFilter>(),
             logger);
 
-        _harmony.PatchCategory("Patch21_ShaderPrecompilation");
-        _shaderRunner = IoC.Resolve<ShaderPrecompileRunner>();
-        ShaderPrecompilationIoC.InitializeHooks(logger, _shaderRunner);
+        // Patch21_ShaderPrecompilation: PARKED 2026-08-20 with the main-menu option below.
+        // Left unpatched deliberately. The category's only member mirrors the runner's status line
+        // onto LoadingWindowViewModel.Update, so with no walk reachable it would postfix a vanilla
+        // UI method every loading-screen frame to do nothing. _shaderRunner stays null; every
+        // consumer of it (OnApplicationTick, the IsWalkInProgress mission gate) is already
+        // null-guarded / false, so the rest of the wiring no-ops on its own.
+        // _harmony.PatchCategory("Patch21_ShaderPrecompilation");
+        // _shaderRunner = IoC.Resolve<ShaderPrecompileRunner>();
+        // ShaderPrecompilationIoC.InitializeHooks(logger, _shaderRunner);
 
         _harmony.PatchCategory("Patch22_ArmyTargeting");
         // Patch49: Finalizer guarding vanilla Army.FindBestGatheringSettlementAndMoveTheLeader,
@@ -520,37 +529,44 @@ public class SubModule : MBSubModuleBase
         //     IoC.Resolve<IModLogger>().LogInfo(
         //         "[NativeSkinFixes] disabled (MCM 'Enable Native Skin Fixes' is off) — engine rendering is vanilla");
 
-        // Pre-compile Shaders — RE-ENABLED 2026-06-17 (issue #287). Walks the all-characters battle
-        // (character/equipment shaders) then each TAOM battle scene (terrain + forced-atmosphere
-        // shaders — the d3dcompiler battle-load CTD class). Drives ShaderPrecompileRunner; progress
-        // shows on the loading screen + a 1 Hz status toast. See docs/features/shader-precompilation.md.
-        if (Module.CurrentModule.GetInitialStateOptionWithId("TaomPrecompileShaders") == null)
-        {
-            Module.CurrentModule.AddInitialStateOption(new InitialStateOption(
-                id:                  "TaomPrecompileShaders",
-                name:                new TextObject("{=taom_precompile_shaders}Pre-compile Shaders"),
-                orderIndex:          100,
-                action:              () => InformationManager.ShowInquiry(new InquiryData(
-                    "Shader Pre-compilation",
-                    "Loads a battle with all TAOM troops, then walks each TAOM battle scene, to " +
-                    "pre-compile every shader the game would otherwise compile mid-battle.\n\n" +
-                    "THIS TAKES A LONG TIME (1-2 hours+). Leave it running — progress shows on the " +
-                    "loading screen and as a status line. One-time process; it eliminates in-game " +
-                    "stutter and the intermittent battle-load crash/hang.\n\n" +
-                    "When you see 'Shader pre-compilation COMPLETE', you can play.",
-                    true, true, "Start", "Cancel",
-                    () =>
-                    {
-                        _shaderTickAccumulator = 0f;
-                        _shaderRunner?.Begin();
-                    },
-                    () => InformationManager.HideInquiry())),
-                isDisabledAndReason: () => (false, new TextObject("")),
-                enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter + the battle-load crash. Run once after installing TAOM."),
-                // Hidden live when the MCM master toggle is off (no relaunch needed). Defaults to shown
-                // if settings aren't resolvable yet. The "Include Scene Passes" toggle is read inside Begin().
-                isHidden:            () => !(Features.TaomSettings.Instance?.EnableShaderPrecompilation ?? true)));
-        }
+        // Pre-compile Shaders: PARKED 2026-08-20, DISABLED at the wiring level (issue #287).
+        // No longer needed, so the main-menu option is not registered and nothing can start a walk:
+        // this AddInitialStateOption call is the feature's ONLY entry point into
+        // ShaderPrecompileRunner.Begin(). The feature itself is intact (Main/Features/
+        // ShaderPrecompilation/, its tests, the {=taom_precompile_shaders} / {=taom_precompile_hint}
+        // strings in all 12 languages, precompile_scenes.txt) and re-enabling is: uncomment this
+        // block, uncomment the Patch21 wiring near the top of OnSubModuleLoad, and restore the two
+        // MCM attributes in TaomSettings.cs. Note the MCM master toggle could NOT do this job on its
+        // own: settings persist to json2, so every existing player already has
+        // EnableShaderPrecompilation = true on disk and a changed default would never reach them.
+        // See docs/features/shader-precompilation.md.
+        // if (Module.CurrentModule.GetInitialStateOptionWithId("TaomPrecompileShaders") == null)
+        // {
+            // Module.CurrentModule.AddInitialStateOption(new InitialStateOption(
+                // id:                  "TaomPrecompileShaders",
+                // name:                new TextObject("{=taom_precompile_shaders}Pre-compile Shaders"),
+                // orderIndex:          100,
+                // action:              () => InformationManager.ShowInquiry(new InquiryData(
+                    // "Shader Pre-compilation",
+                    // "Loads a battle with all TAOM troops, then walks each TAOM battle scene, to " +
+                    // "pre-compile every shader the game would otherwise compile mid-battle.\n\n" +
+                    // "THIS TAKES A LONG TIME (1-2 hours+). Leave it running — progress shows on the " +
+                    // "loading screen and as a status line. One-time process; it eliminates in-game " +
+                    // "stutter and the intermittent battle-load crash/hang.\n\n" +
+                    // "When you see 'Shader pre-compilation COMPLETE', you can play.",
+                    // true, true, "Start", "Cancel",
+                    // () =>
+                    // {
+                        // _shaderTickAccumulator = 0f;
+                        // _shaderRunner?.Begin();
+                    // },
+                    // () => InformationManager.HideInquiry())),
+                // isDisabledAndReason: () => (false, new TextObject("")),
+                // enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter + the battle-load crash. Run once after installing TAOM."),
+                // // Hidden live when the MCM master toggle is off (no relaunch needed). Defaults to shown
+                // // if settings aren't resolvable yet. The "Include Scene Passes" toggle is read inside Begin().
+                // isHidden:            () => !(Features.TaomSettings.Instance?.EnableShaderPrecompilation ?? true)));
+        // }
     }
 
     public override void OnGameEnd(Game game)
