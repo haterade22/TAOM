@@ -234,7 +234,13 @@ HERO_NAMES = {
 
 # Hero / boss / fixed-display item id substrings excluded from re-stat (in addition to HERO_NAMES,
 # matched against the display name). Mirrors analyze_armor_balance.EXCLUDE_ID_SUBSTRINGS.
-EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_crown')
+# 'md_num' (Black Numenorean): that set anchors its stats to the wearer's LEVEL rather
+# than to the mesh's tier token, so a `_light_` id intentionally carries heavy-row stats.
+# Name-based tier detection would report a false inversion on every piece, and an --apply
+# run would flatten the set. This reverses the 2026-08-17 decision NOT to exclude it; the
+# reason changed when the set stopped being name-anchored.
+EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_crown',
+                         'md_num')
 
 
 def is_excluded(item_id, display_name):

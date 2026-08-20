@@ -71,9 +71,112 @@ ROMAN = {"a": "I", "b": "II", "c": "III", "d": "IV"}
 # chest on disk. calculate_stats() returns leg_armor for the body slot, which is
 # the curve's own choice of secondary; the Armory convention differs and the
 # convention wins. Measured in body_armors.xml: of 111 items, 103 carry
-# arm_armor and only 7 carry leg_armor. The values below all land on numbers
-# already present in that file's existing arm_armor set.
-BODY_ARM_ARMOR = {"light": 6, "medium": 10, "heavy": 14, "elite": 20, "lord": 26}
+# arm_armor and only 7 carry leg_armor.
+#
+# Keyed on the WEARER LEVEL rather than the row, because T7, T8 and T9 all sit on
+# the `lord` row and would otherwise tie. This secondary is what separates them,
+# and it is free to do so: it is outside the two-tier invariant, which governs
+# the body slot through leg_armor. Every value here is inside the range already
+# shipped in that file (5 through 45).
+BODY_ARM_BY_LEVEL = {26: 10, 31: 20, 36: 26, 41: 30, 46: 36}
+
+
+# ---------------------------------------------------------------------------
+# Stat anchoring
+# ---------------------------------------------------------------------------
+# Stats come from the LEVEL OF THE LOWEST TROOP THAT WEARS THE PIECE, not from
+# the mesh's own tier token. That is already the project convention:
+# derive_armor_tiers.py anchors a shared item to its lowest wearer. This applies
+# it at authoring time instead of only reporting on it afterwards.
+#
+# It is needed because the KEYforce distribution deliberately puts low-tier
+# meshes on high-level troops (light hoods on the level-31 Archer, light greaves
+# too). Statting those by name gives the level-26 Initiate 50 total armour, below
+# the entire level-26 cohort's floor of 82, and puts four of five tiers in the
+# bottom quartile.
+#
+# The rows are the top of the shipped curve, because the Black Numenoreans are a
+# rare elite line and are meant to out-armour every other Men or Orc troop,
+# yielding only to Elves and Dwarves. That deliberately overrides #342 (which
+# holds Mordor-exclusive kit two under Gondor's) for this line alone.
+#
+# Measured ceilings, best non-elf non-dwarf troop at each level:
+#   L26 211, L31 226, L36 245, L41 250, L46 259.
+# Best dwarf at L46 is 276 (erebor_noble_royal_warden), so the target window at
+# the top is 260 to 275, sixteen points wide.
+#
+# A brand-new row above `lord` was ruled out by arithmetic, not taste: the
+# two-tier invariant makes its minimum legal 5-slot total 278, which overshoots
+# the dwarves. `lord` plus a lifted body arm secondary lands at 261, inside the
+# window. The body's arm_armor is an Armory convention rather than the curve's
+# governed secondary (the curve uses leg_armor there), so raising it does not
+# touch the invariant.
+#
+# Resulting per-tier totals: 109 / 186 / 232 / 255 / 261, strictly increasing,
+# topping the Men/Orc band at T8 and T9. T5 to T7 sit under their level's best
+# because T5 is the entry tier and the distribution shares hood+greaves down to
+# T6 and pauldron+bracer down to T7, which anchors both to the tier below.
+LEVEL_ROW = {26: "heavy", 31: "elite", 36: "lord", 41: "lord", 46: "lord"}
+
+K = "sk_md_num_"   # skinned: hoods, helmets, bracers
+I = "sm_md_num_"   # static: chests, pauldrons, greaves
+
+# item id -> level of its lowest wearer. Mirrors the rosters in
+# tools/apply_black_numenorean_troops.py; test_black_numenorean_anchor.py fails
+# if the two ever drift.
+ANCHOR_LEVEL = {}
+for _lv, _ids in {
+    26: [K + "hood_light_a", K + "hood_light_b", I + "chest_light_a", I + "grvs_light_a"],
+    31: [I + f"{l}_chest_med_{v}" for l in ("arc", "cav", "inf") for v in "ab"]
+        + [I + f"{l}_pauld_med_a" for l in ("arc", "cav", "inf")]
+        + [K + "arc_bracer_med_a", K + "inf_bracer_med_a",
+           K + "cav_helmet_med_a", K + "inf_helmet_med_a"],
+    36: [K + "hood_med_a", K + "hood_med_b", I + "grvs_med_a"]
+        + [I + f"{l}_chest_heavy_b" for l in ("arc", "cav", "inf")],
+    41: [K + f"hood_heavy_{v}" for v in "abcd"]
+        + [I + f"{l}_chest_heavy_a" for l in ("arc", "cav", "inf")]
+        + [I + "arc_pauld_heavy_a", I + "arc_pauld_heavy_b",
+           I + "cav_pauld_heavy_a", I + "cav_pauld_cape_heavy_a",
+           I + "inf_pauld_heavy_a", I + "inf_pauld_cape_heavy_a",
+           K + "arc_bracer_heavy_a", K + "inf_bracer_heavy_a",
+           K + "cav_helmet_heavy_a", K + "cav_helmet_heavy_b",
+           K + "inf_helmet_heavy_a", K + "inf_helmet_heavy_b",
+           I + "grvs_heavy_a"],
+    46: [K + f"hood_elite_{v}" for v in "abcd"]
+        + [I + f"{l}_chest_elite_{v}" for l in ("arc", "cav", "inf") for v in "ab"]
+        + [I + "arc_pauld_elite_a", I + "arc_pauld_elite_b",
+           I + "cav_pauld_elite_a", I + "cav_pauld_cape_elite_a",
+           I + "inf_pauld_elite_a", I + "inf_pauld_elite_b",
+           I + "inf_pauld_cape_elite_a", I + "inf_pauld_cape_elite_b",
+           K + "arc_bracer_elite_a", K + "inf_bracer_elite_a",
+           K + "cav_helmet_elite_a", K + "cav_helmet_elite_b",
+           K + "inf_helmet_elite_a", K + "inf_helmet_elite_b",
+           I + "grvs_elite_a"],
+}.items():
+    for _i in _ids:
+        ANCHOR_LEVEL[_i] = _lv
+
+# Nothing wears these, so there is no wearer level to anchor to. The 8 lord
+# pieces are hero-reserved by decision; hood_a / hood_b are untiered plain hoods
+# the spec never lists.
+UNWORN_ROW = {
+    K + "hood_a": "medium", K + "hood_b": "medium",
+    K + "hood_lord_a": "lord", K + "hood_lord_b": "lord",
+    K + "cav_helmet_lord_a": "lord", K + "cav_helmet_lord_b": "lord",
+    K + "inf_helmet_lord_a": "lord", K + "inf_helmet_lord_b": "lord",
+    K + "arc_bracer_lord_a": "lord", K + "inf_bracer_lord_a": "lord",
+}
+
+
+def _row_for(item_id: str) -> str:
+    """Curve row for an item, from its lowest wearer's level."""
+    if item_id in ANCHOR_LEVEL:
+        return LEVEL_ROW[ANCHOR_LEVEL[item_id]]
+    if item_id in UNWORN_ROW:
+        return UNWORN_ROW[item_id]
+    raise KeyError(
+        f"{item_id} is in neither ANCHOR_LEVEL nor UNWORN_ROW. Every authored item "
+        f"needs one: add it to the roster map if a troop wears it, or to UNWORN_ROW.")
 
 
 @dataclass
@@ -81,23 +184,19 @@ class ArmorItem:
     id: str
     display_name: str
     slot: str
-    tier: str
     covers_body: bool = False
     covers_hands: bool = False
     covers_legs: bool = False
     gender_variations: bool = False
-    arm_armor_stat: Optional[int] = None
+    tier: str = ""                          # derived from the wearer level
+    arm_armor_stat: Optional[int] = None    # derived for the body slot
 
-
-def _tier_of(mesh_suffix: str) -> str:
-    """Map the mesh-name weight token to a curve tier."""
-    return {
-        "light": "light",
-        "med": "medium",
-        "heavy": "heavy",
-        "elite": "elite",
-        "lord": "lord",
-    }[mesh_suffix]
+    def __post_init__(self):
+        self.tier = _row_for(self.id)
+        if self.slot == "body" and self.arm_armor_stat is None:
+            lv = ANCHOR_LEVEL.get(self.id)
+            # Unworn body items (none today) fall back to the row's own level.
+            self.arm_armor_stat = BODY_ARM_BY_LEVEL[lv] if lv else 26
 
 
 def _build():
@@ -109,7 +208,7 @@ def _build():
     for v in "ab":
         head.append(ArmorItem(
             f"sk_md_num_hood_{v}", f"{LINE_NAME} Plain Hood {ROMAN[v]}",
-            "head", "light"))
+            "head"))
     for tok, label, letters in [
         ("light", "Light Hood", "ab"),
         ("med", "Hood", "ab"),
@@ -121,7 +220,7 @@ def _build():
             head.append(ArmorItem(
                 f"sk_md_num_hood_{tok}_{v}",
                 f"{LINE_NAME} {label} {ROMAN[v]}",
-                "head", _tier_of(tok)))
+                "head"))
 
     # --- Infantry + Cavalry helmets ---------------------------------------
     for lid, lname in [("inf", "Infantry"), ("cav", "Cavalry")]:
@@ -135,24 +234,21 @@ def _build():
                 head.append(ArmorItem(
                     f"sk_md_num_{lid}_helmet_{tok}_{v}",
                     f"{LINE_NAME} {lname} {label} {ROMAN[v]}",
-                    "head", _tier_of(tok)))
+                    "head"))
 
     # --- Chests ------------------------------------------------------------
     # The shared pre-split chest. No _slim sibling ships, so no gender variations.
     body.append(ArmorItem(
         "sm_md_num_chest_light_a", f"{LINE_NAME} Initiate Chest",
-        "body", "light", covers_body=True,
-        arm_armor_stat=BODY_ARM_ARMOR["light"]))
+        "body", covers_body=True))
     for lid, lname in [("arc", "Archer"), ("cav", "Cavalry"), ("inf", "Infantry")]:
         for tok, label in [("med", "Chest"), ("heavy", "Heavy Chest"), ("elite", "Elite Chest")]:
             for v in "ab":
-                tier = _tier_of(tok)
                 body.append(ArmorItem(
                     f"sm_md_num_{lid}_chest_{tok}_{v}",
                     f"{LINE_NAME} {lname} {label} {ROMAN[v]}",
-                    "body", tier, covers_body=True,
-                    gender_variations=True,  # all 18 tiered chests ship a _slim
-                    arm_armor_stat=BODY_ARM_ARMOR[tier]))
+                    "body", covers_body=True,
+                    gender_variations=True))  # all 18 tiered chests ship a _slim
 
     # --- Pauldrons ---------------------------------------------------------
     # Only the meshes that actually ship as plain sm_ geometry. The T7 cape
@@ -174,7 +270,7 @@ def _build():
                 shoulder.append(ArmorItem(
                     f"sm_md_num_{lid}_pauld_{tok}_{v}",
                     f"{LINE_NAME} {lname} {label} {ROMAN[v]}",
-                    "shoulder", _tier_of(tok)))
+                    "shoulder"))
     # Caped variants, heavy and elite only.
     capes = [
         ("cav", "Cavalry", [("heavy", "a"), ("elite", "a")]),
@@ -187,7 +283,7 @@ def _build():
                 shoulder.append(ArmorItem(
                     f"sm_md_num_{lid}_pauld_cape_{tok}_{v}",
                     f"{LINE_NAME} {lname} {label} {ROMAN[v]}",
-                    "shoulder", _tier_of(tok)))
+                    "shoulder"))
 
     # --- Bracers -----------------------------------------------------------
     # The spec states every Black Numenorean bracer covers the hand, so these
@@ -199,14 +295,14 @@ def _build():
             arm.append(ArmorItem(
                 f"sk_md_num_{lid}_bracer_{tok}_a",
                 f"{LINE_NAME} {lname} {label}",
-                "arm", _tier_of(tok), covers_hands=True))
+                "arm", covers_hands=True))
 
     # --- Greaves (shared across all three lines) ---------------------------
     for tok, label in [("light", "Light Greaves"), ("med", "Greaves"),
                        ("heavy", "Heavy Greaves"), ("elite", "Elite Greaves")]:
         leg.append(ArmorItem(
             f"sm_md_num_grvs_{tok}_a", f"{LINE_NAME} {label}",
-            "leg", _tier_of(tok), covers_legs=True))
+            "leg", covers_legs=True))
 
     return head, body, shoulder, arm, leg
 

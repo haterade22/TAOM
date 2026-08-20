@@ -60,6 +60,11 @@ EXCLUDE_ID_SUBSTRINGS = (
     'glorfindel', 'gf_',                 # rivendell hero
     'crown',                             # any crown is a fixed-display hero outlier (was 'dain_crown';
                                          # [Gondor] King's Crown keyword-tiers as 'lord' and poisons comparisons)
+    'md_num',                            # Black Numenorean line: stats are anchored to the
+                                         # WEARER'S LEVEL, not to the mesh's tier token, so a
+                                         # `_light_` id deliberately carries heavy-row stats and
+                                         # name-based tier detection reports false inversions on
+                                         # every piece. See generate_black_numenorean_armor.py.
 )
 
 
