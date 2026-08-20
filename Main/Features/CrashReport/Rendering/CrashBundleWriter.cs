@@ -16,6 +16,7 @@ namespace TAOM.Features.CrashReport.Rendering;
 //   report.json         — JSON serialisation of ExceptionContext
 //   taom_debug.log      — current session's TAOM debug log (if path resolves)
 //   rgl_log.txt         — current session's TaleWorlds RGL log tail (if path resolves)
+//   diag.log            — TAOM.Dependencies PatchShield log (if path resolves)
 //   manifest.txt        — one-line-per-file inventory with sizes and SHA1
 public sealed class CrashBundleWriter
 {
@@ -44,6 +45,7 @@ public sealed class CrashBundleWriter
             WriteText(zip, "report.json", jsonReport);
             TryCopyFile(zip, "taom_debug.log", context.Logs?.TaomDebugLogPath);
             TryCopyFile(zip, "rgl_log.txt", context.Logs?.RglLogPath);
+            TryCopyFile(zip, "diag.log", context.Logs?.DiagLogPath);
 
             var manifest = BuildManifest(context, plainTextReport, jsonReport);
             WriteText(zip, "manifest.txt", manifest);
@@ -113,6 +115,8 @@ public sealed class CrashBundleWriter
             sb.AppendLine($"taom_debug.log    source={c.Logs.TaomDebugLogPath}");
         if (!string.IsNullOrEmpty(c.Logs?.RglLogPath))
             sb.AppendLine($"rgl_log.txt       source={c.Logs.RglLogPath}");
+        if (!string.IsNullOrEmpty(c.Logs?.DiagLogPath))
+            sb.AppendLine($"diag.log          source={c.Logs.DiagLogPath}");
         return sb.ToString();
     }
 }

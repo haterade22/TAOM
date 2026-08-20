@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Bannerlord.UIExtenderEx;
 using Bannerlord.UIExtenderEx.Attributes;
 using HarmonyLib;
@@ -120,6 +120,38 @@ public class SubModule : MBSubModuleBase
                 Core.Diagnostics.BuildStampReport.BuildReport(
                     typeof(SubModule).Assembly,
                     typeof(TAOM.Dependencies.Foundation.PatchShield).Assembly));
+        }
+        catch { /* a version report must never be the thing that stops the mod loading */ }
+
+        // Engine identity, recorded HERE and not only in MissionDiagnosticService.
+        //
+        // A 2026-08-19 player report was unattributable because of where this used to live. The
+        // Bannerlord version was logged only by LogSessionSnapshot, which runs from OnGameStart, and
+        // that player's session never started a game: it sat at the main menu for 28 minutes and
+        // ended. Their log named the TAOM build exactly (v2.0.20, pinned Native v1.4.7.*) and the
+        // engine build not at all, so "did Steam move their game under a pinned build?" could not be
+        // answered from the artifact they sent. Emitting it beside [BuildStamp] makes every log
+        // self-identifying from its first lines, including logs from sessions that never load a save.
+        //
+        // MissionDiagnosticService still logs the fuller per-module breakdown at OnGameStart; this is
+        // the one-line floor that is always present. Its own [Engine] tag keeps [BuildStamp] greps
+        // about module pairing (#371).
+        try
+        {
+            var descriptors = new System.Collections.Generic.List<string>();
+            var activeModules = TaleWorlds.ModuleManager.ModuleHelper.GetActiveModules();
+            if (activeModules != null)
+            {
+                foreach (var mod in activeModules)
+                {
+                    if (mod != null) descriptors.Add($"{mod.Id} v{mod.Version}");
+                }
+            }
+
+            IoC.Resolve<IModLogger>().LogInfo(
+                Core.Diagnostics.BuildStampReport.EngineReport(
+                    TaleWorlds.ModuleManager.ModuleHelper.GetModuleInfo("Native")?.Version.ToString(),
+                    descriptors));
         }
         catch { /* a version report must never be the thing that stops the mod loading */ }
 
@@ -288,7 +320,6 @@ public class SubModule : MBSubModuleBase
             {
                 saveLoadLogger?.LogError($"[MapLoad] could not attach heartbeat: {ex.Message}");
             }
-
             foreach (var category in new[]
             {
                 "Patch61_SaveLoadDiagnostics_ContainerFill",
@@ -1586,6 +1617,20 @@ public class SubModule : MBSubModuleBase
     protected override void OnSubModuleUnloaded()
     {
         base.OnSubModuleUnloaded();
+
+        // Clean-shutdown marker. Written FIRST, while IoC and the logger are both still alive, and
+        // on the durable path so it is flushed synchronously before the process can go away.
+        //
+        // The point is entirely in its ABSENCE. Until this existed, a deliberate quit and a silent
+        // native CTD produced byte-identical log tails: the file simply stopped. That ambiguity is
+        // what made the 2026-08-19 player report unanswerable, because a log that ends after 28
+        // minutes at the main menu could equally have been someone closing the game. A log ending
+        // without this line now means the process died, and one ending with it means it did not.
+        //
+        // Note the limit: this fires on module unload, so it covers quit-to-desktop, not a power cut.
+        try { IoC.Resolve<IModLogger>().LogInfo("[Shutdown] clean module unload"); }
+        catch { /* shutdown diagnostics must never be the thing that breaks shutdown */ }
+
         // Detach the AppDomain.UnhandledException subscription BEFORE IoC disposal so
         // the hook doesn't hold a stale reference to a disposed CrashReportService
         // across game-restart-in-same-process. Deep-review INC 3 (2026-05-25).

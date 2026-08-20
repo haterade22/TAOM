@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
@@ -144,6 +145,45 @@ public static class BuildStampReport
         }
 
         return $"[BuildStamp] TAOM={mainVer} TAOM.Dependencies={depsVer}{verdict}";
+    }
+
+    /// <summary>
+    /// Renders the engine identity line: which Bannerlord build this process is running, and which
+    /// modules are loaded alongside TAOM.
+    ///
+    /// This exists because of a 2026-08-19 player report. The player sent a debug log, but the
+    /// session never started a game, so <c>MissionDiagnosticService.LogSessionSnapshot</c> (the only
+    /// place the engine version was recorded) never ran. The log named the TAOM build precisely and
+    /// the Bannerlord build not at all, which is exactly backwards: TAOM's own version is knowable
+    /// from the stamp in the filename or the module folder, while the engine version is the fact
+    /// that decides whether a report is an engine-drift case or a real bug.
+    ///
+    /// Deliberately pure and string-typed. The caller does the <c>ModuleHelper</c> lookups, so
+    /// nothing here needs the engine to be loaded and all of it is unit-testable.
+    /// </summary>
+    /// <param name="nativeVersion">
+    /// The Native module's version, typically <c>ModuleHelper.GetModuleInfo("Native")?.Version</c>.
+    /// Null-propagating at the call site, so null and blank are expected inputs, not defects.
+    /// </param>
+    /// <param name="activeModules">Pre-formatted "Id vVersion" descriptors, in load order.</param>
+    public static string EngineReport(string? nativeVersion, IEnumerable<string>? activeModules)
+    {
+        string engine = string.IsNullOrWhiteSpace(nativeVersion) ? "unknown" : nativeVersion!.Trim();
+
+        // Materialise defensively: the caller hands us whatever the engine's enumerator yields this
+        // early in startup, and we need a stable count and a stable join over the same sequence.
+        var modules = new List<string>();
+        if (activeModules != null)
+        {
+            foreach (var descriptor in activeModules)
+            {
+                if (!string.IsNullOrWhiteSpace(descriptor)) modules.Add(descriptor!.Trim());
+            }
+        }
+
+        // No cap on the module list. A 50-mod load order is normal for this game, and the whole
+        // point of the line is answering "what else was loaded", which a truncation would defeat.
+        return $"[Engine] Bannerlord={engine} modules({modules.Count})=[{string.Join(", ", modules.ToArray())}]";
     }
 
     private static string ReadInformationalVersion(Assembly? asm)

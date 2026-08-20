@@ -139,4 +139,63 @@ public class BuildStampReportTests
             "an unhandled verdict must not be reported as a stale pairing");
         StringAssert.Contains(text, "unrecognised");
     }
+
+    // ---- Engine identity line (player-report forensics) ----
+    //
+    // A 2026-08-19 player report arrived as a log that never started a game: the session sat at the
+    // main menu, so MissionDiagnosticService.LogSessionSnapshot never ran and the log recorded no
+    // Bannerlord version at all. The build was attributable (v2.0.20, pinned Native v1.4.7.*) but
+    // the engine the player was actually running was not, which is the one fact needed to rule an
+    // engine bump in or out. These pin the pure formatter that closes that gap at startup.
+
+    [TestMethod]
+    public void EngineReport_KnownVersionAndModules_NamesBothOnOneLine()
+    {
+        string line = BuildStampReport.EngineReport("v1.4.7.35937", new[] { "Native v1.4.7", "TAOM v2.0.20" });
+
+        StringAssert.Contains(line, "[Engine]");
+        StringAssert.Contains(line, "v1.4.7.35937");
+        StringAssert.Contains(line, "Native v1.4.7");
+        StringAssert.Contains(line, "TAOM v2.0.20");
+        StringAssert.Contains(line, "(2)", "the module count is what makes a truncated paste still readable");
+        Assert.IsFalse(line.Contains(((char)10).ToString()), "must stay a single log line");
+    }
+
+    [TestMethod]
+    public void EngineReport_NullOrBlankVersion_RendersUnknownRatherThanEmpty()
+    {
+        // ModuleHelper.GetModuleInfo("Native")?.Version is null-propagating, so the caller can and
+        // does hand us null. An empty value would read as "not recorded" and send the next reader
+        // hunting for a logging bug instead of an install problem.
+        foreach (var missing in new string?[] { null, "", "   " })
+        {
+            string line = BuildStampReport.EngineReport(missing, new[] { "Native v1.4.7" });
+            StringAssert.Contains(line, "unknown");
+            StringAssert.Contains(line, "Native v1.4.7", "a missing engine version must not cost us the module list");
+        }
+    }
+
+    [TestMethod]
+    public void EngineReport_NullOrEmptyModuleList_StillReportsTheEngineVersion()
+    {
+        // This runs inside OnSubModuleLoad, earlier than any TAOM code has run before. If the module
+        // enumeration is not ready yet the engine version is still worth having, and the line must
+        // not throw: the caller's try/catch would swallow it and we would be back to no version.
+        foreach (var none in new System.Collections.Generic.IEnumerable<string>?[] { null, System.Array.Empty<string>() })
+        {
+            string line = BuildStampReport.EngineReport("v1.4.7.35937", none);
+            StringAssert.Contains(line, "v1.4.7.35937");
+            StringAssert.Contains(line, "(0)");
+        }
+    }
+
+    [TestMethod]
+    public void EngineReport_IsGreppableAlongsideTheBuildStampLine()
+    {
+        // Both lines land adjacent at startup and get pasted together into reports. They must be
+        // distinguishable by tag so a reader can grep one without dragging in the other.
+        string engine = BuildStampReport.EngineReport("v1.4.7.35937", new[] { "Native v1.4.7" });
+        Assert.IsFalse(engine.StartsWith("[BuildStamp]"),
+            "the engine line needs its own tag so [BuildStamp] greps stay about module pairing");
+    }
 }

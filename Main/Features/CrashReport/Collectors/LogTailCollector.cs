@@ -9,11 +9,17 @@ namespace TAOM.Features.CrashReport.Collectors;
 public sealed class LogTailCollector
 {
     private readonly Func<string?> _taomLogPathProvider;
+    private readonly Func<string?>? _diagLogPathProvider;
     private const int DefaultTailLines = 500;
 
-    public LogTailCollector(Func<string?> taomLogPathProvider)
+    // diagLogPathProvider is TAOM.Dependencies' RuntimeLog.Path in production. Injected rather than
+    // called directly so this stays testable without loading the Dependencies assembly, matching how
+    // the TAOM debug log path is already supplied. Optional because the path resolution can fail on
+    // an odd install, and a bundle missing one log is worth far more than no bundle.
+    public LogTailCollector(Func<string?> taomLogPathProvider, Func<string?>? diagLogPathProvider = null)
     {
         _taomLogPathProvider = taomLogPathProvider;
+        _diagLogPathProvider = diagLogPathProvider;
     }
 
     public LogTailSnapshot Collect(int tailLines = DefaultTailLines)
@@ -25,7 +31,14 @@ public sealed class LogTailCollector
         string? rglPath = FindLatestRglLog();
         var rglTail = ReadTail(rglPath, tailLines);
 
-        return new LogTailSnapshot(taomPath, taomTail, rglPath, rglTail);
+        // Same swallow as the TAOM path above: this runs while the process is already crashing, so a
+        // throwing provider must cost us this one file and nothing else.
+        string? diagPath = null;
+        try { diagPath = _diagLogPathProvider?.Invoke(); } catch { }
+        if (string.IsNullOrEmpty(diagPath)) diagPath = null;
+        var diagTail = ReadTail(diagPath, tailLines);
+
+        return new LogTailSnapshot(taomPath, taomTail, rglPath, rglTail, diagPath, diagTail);
     }
 
     private static IReadOnlyList<string> ReadTail(string? path, int lines)

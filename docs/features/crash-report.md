@@ -20,6 +20,7 @@ After CrashReport, every crash produces a structured `Logs/taom_debug_*.log` ent
 - `report.json` — machine-parseable equivalent
 - `taom_debug.log` — current session's TAOM log
 - `rgl_log.txt` — current session's TaleWorlds RGL log
+- `diag.log`: TAOM.Dependencies' log, carrying PatchShield's swallowed `MissingMethod` / `MissingField` / `TypeLoad` exceptions (the engine-mismatch signature) when the path resolves
 - `manifest.txt` — file inventory + size + SHA1
 
 Players upload one ZIP, we reproduce locally without playing twenty questions.
@@ -129,7 +130,7 @@ Each section is gathered by a dedicated collector. Any collector that throws is 
 | OS | Description, version, 64-bit flag, CPU count, architecture, locale, CLR version |
 | AppDomain & Environment | Friendly name, base dir, trust flag, env vars matching `BANNERLORD_* / TAOM_* / DOTNET_* / STEAM_*` |
 | Performance | Last N frame deltas (ms), avg, FPS — currently empty ring buffer (v1 doesn't wire the frame-time hook; reserved for v2) |
-| Logs | TAOM debug log path + tail, RGL log path + tail (best-effort from `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\logs\rgl_log_*.txt`) |
+| Logs | TAOM debug log path + tail, RGL log path + tail (newest across `%ProgramData%\Mount and Blade II Bannerlord\logs\` and the `Documents` equivalent, probed in that order), TAOM.Dependencies `diag.log` path + tail |
 | Collector failures | Per-section reason if any collector threw |
 
 ### Crash signature

@@ -34,9 +34,19 @@ public static class CrashReportIoC
         container.RegisterDelegate<TaomStateCollector>(_ => new TaomStateCollector(),
             Reuse.Singleton);
 
-        // LogTailCollector needs the IModLogger path.
+        // LogTailCollector needs the IModLogger path, plus TAOM.Dependencies' diag.log.
+        //
+        // diag.log is where PatchShield records the MissingMethod / MissingField / TypeLoad trinity
+        // that means this build is running against a Bannerlord it was not compiled for. Dependencies
+        // logs its install sequence there unconditionally, so on a healthy install the file exists
+        // and has content; an empty one is its own signal. It lives in the Dependencies module folder
+        // rather than Logs/, so players never send it unprompted, and until 2026-08-19 the bundle did
+        // not carry it either. RuntimeLog.Path returns empty string when it cannot resolve the module
+        // directory; the collector treats that as "no file".
         container.RegisterDelegate<LogTailCollector>(r =>
-            new LogTailCollector(() => r.Resolve<TAOM.Core.Logging.IModLogger>().LogFilePath),
+            new LogTailCollector(
+                () => r.Resolve<TAOM.Core.Logging.IModLogger>().LogFilePath,
+                () => TAOM.Dependencies.Foundation.RuntimeLog.Path),
             Reuse.Singleton);
 
         // Renderers + bundle writer.

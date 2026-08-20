@@ -207,7 +207,7 @@ public sealed class CrashReportService : ICrashReportService
         var appdomain = Safe(() => _process.CollectAppDomain(), failures, "AppDomain") ?? new AppDomainSnapshot("?", "?", null, false);
         var envvars = Safe(() => _process.CollectEnvVars(), failures, "EnvVars") ?? Array.Empty<EnvVarEntry>();
         var perf = Safe(() => _frameTiming.Snapshot(), failures, "Performance") ?? new FrameTimingSnapshot(Array.Empty<float>(), 0d, 0d, 0);
-        var logs = Safe(() => _logTail.Collect(), failures, "Logs") ?? new LogTailSnapshot(_logger.LogFilePath, Array.Empty<string>(), null, Array.Empty<string>());
+        var logs = Safe(() => _logTail.Collect(), failures, "Logs") ?? new LogTailSnapshot(_logger.LogFilePath, Array.Empty<string>(), null, Array.Empty<string>(), null, Array.Empty<string>());
 
         return new ExceptionContext(
             CapturedAtUtc: DateTime.UtcNow,

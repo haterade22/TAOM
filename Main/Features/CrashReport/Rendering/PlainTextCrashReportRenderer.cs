@@ -316,6 +316,12 @@ public sealed class PlainTextCrashReportRenderer : ICrashReportRenderer
             sb.AppendLine($"TAOM tail (last {l.TaomDebugLogTail.Count}):");
             foreach (var line in l.TaomDebugLogTail) sb.AppendLine($"  {line}");
         }
+        sb.AppendLine($"Dependencies diag log: {l.DiagLogPath ?? "?"}");
+        if (l.DiagLogTail.Count > 0)
+        {
+            sb.AppendLine($"diag tail (last {l.DiagLogTail.Count}):");
+            foreach (var line in l.DiagLogTail) sb.AppendLine($"  {line}");
+        }
         sb.AppendLine($"RGL log: {l.RglLogPath ?? "?"}");
         if (l.RglLogTail.Count > 0)
         {
