@@ -542,3 +542,25 @@ flat add on that same number.
   clothes of an assessment.
 - **Source:** `docs/reviews/rca-ai-party-size-2026-08-18.md` finding 4; `CareerPassiveService.cs:170-176`
   versus `AiPartySizeService.AddResultFrameBonus`.
+
+### When porting code that has never executed, treat the source as a hypothesis, not a specification
+
+A port is normally validated by fidelity: does the new code do what the old code did. That argument
+only holds if the old code ever ran. `CharacterTableauService` was registered in IoC and invoked by
+nothing for months, so its per-race framing rules had never framed a single character. Porting it
+faithfully carried its bug across intact: it selected the offset row by PLACE (which of the two
+tableau positions an entity stood in) rather than by ENTITY, so swapping the character and mount
+places handed the horse the rider's offsets.
+
+**Why missed:** the commit message said "this is a faithful port of the deleted
+CharacterTableauService" and offered that as evidence of correctness. For code with a runtime history
+that is reasonable. For code that has never run it is circular, and the reviewing agent that was
+explicitly told to assume the mapping was wrong still cleared it, because it verified the port
+against the old service and against vanilla's frame selection rather than against the premise.
+
+**Prevent:** validate a never-executed source against the DATA the feature ships, not against itself.
+Here that was immediate: `cave_troll` ships a plain row at Zoom -4.0 and no `mount_` row, so
+place-based selection pushes its horse four metres out of frame and leaves the troll unframed. One
+look at the config answered a question no amount of code comparison could.
+
+**Source:** `docs/reviews/rca-herorace-patch72-2026-08-21.md`.

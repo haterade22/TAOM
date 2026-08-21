@@ -737,3 +737,25 @@ fully green suite with nothing having run the changed lines even once.
 - **Why missed:** the behaviour was verified once against the decompile during design and then treated as settled fact. Binding drift-guards were written from the patch's primary type (`Hero`), so members reached one hop out through `Hero.Template` (`CharacterObject.First{Battle,Civilian,Stealth}Equipment`) were also left unpinned. Branch coverage of TAOM's own code cannot see either gap.
 - **Prevent:** when a guard omits a defence (no try/catch, no null check, no bounds test) BECAUSE of something the engine guarantees, add a binding test for that guarantee whose failure message names what breaks. Enumerate drift-guards from the list of members actually dereferenced, including transitive ones, not from the type the patch targets. Same pass: exhaust small finite input domains rather than sampling them (three booleans is eight rows, not four).
 - **Source:** docs/reviews/rca-field-commission-reset-equipments-2026-08-20.md, #486.
+
+### An untestability claim is a technical assertion; prove it or delete it
+
+`EyeHeightAdjustmentHook`'s capture/restore logic shipped with zero tests, justified in two places by
+"a TaleWorlds `Monster` cannot be constructed in a test host". Review disproved it against 1.4.8:
+`Monster` declares no constructor and `MBObjectBase` has a public parameterless one.
+
+Writing the tests then failed anyway, for an unrelated reason nobody had found: `ReflectionHelper`'s
+**type initialiser** resolves `IReflectionService` from the DryIoc container, so the first touch from
+a test host throws `TypeInitializationException`. The stated reason was wrong AND a real blocker
+existed one layer down.
+
+**Why missed:** an untestability claim produces an absence, and absences are not reviewed. Nobody
+re-derives why a test does not exist. Both the original claim and the review's rebuttal were
+confidently wrong about the mechanism; only writing the test and reading the exception settled it.
+
+**Prevent:** never record an untestability claim you have not demonstrated by attempting the test.
+When the blocker turns out to be a static that reaches into the container, that is not an
+untestability, it is a design defect: convert it to constructor injection. Doing so here was the fix
+the architecture rules already wanted, and it recovered nine tests.
+
+**Source:** `docs/reviews/rca-herorace-patch72-2026-08-21.md`.
