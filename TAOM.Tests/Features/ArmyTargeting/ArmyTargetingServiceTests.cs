@@ -25,14 +25,17 @@ public class ArmyTargetingServiceTests
         _settings.CommitmentMultiplier.Returns(4.0f);
         _settings.MaxPriorityBoost.Returns(3.0f);
         _settings.EvilAggressionScale.Returns(1.0f);
-        _settings.LongRangePriorityBoostScale.Returns(1.0f);
         _settings.BorderProximityFloor.Returns(0.15f);
+        _settings.EnableWarTheaters.Returns(true);
+        _settings.ReachRadiusInTownGaps.Returns(3.0f);
+        _settings.DefenderPriorityMultiplier.Returns(1.6f);
 
         _config = new ArmyTargetingConfig
         {
             FactionPriorityTargets = new Dictionary<string, List<string>>(),
             FactionAggressionMultipliers = new Dictionary<string, float>(),
-            FactionDistanceRangeMultipliers = new Dictionary<string, float>()
+            Theaters = new List<string> { "north", "central", "south", "east" },
+            KingdomTheaters = new Dictionary<string, List<string>>()
         };
         _configProvider.GetConfig().Returns(_config);
     }
@@ -260,41 +263,6 @@ public class ArmyTargetingServiceTests
 
         // Act & Assert
         Assert.AreEqual(3.0f, sut.GetStrengthMultiplier("empire_s"), 0.001f);
-    }
-
-    [TestMethod]
-    public void GetDistanceCompensation_FactionNotInPriorityList_ReturnsOne()
-    {
-        // Arrange
-        _config.FactionDistanceRangeMultipliers["empire_s"] = 1.5f;
-        var sut = CreateSut();
-
-        // Act & Assert
-        Assert.AreEqual(1.0f, sut.GetDistanceCompensation("vlandia", "town_V2"), 0.001f);
-    }
-
-    [TestMethod]
-    public void GetDistanceCompensation_TargetNotInPriorityList_ReturnsOne()
-    {
-        // Arrange
-        _config.FactionPriorityTargets["empire_s"] = new List<string> { "town_EW3" };
-        _config.FactionDistanceRangeMultipliers["empire_s"] = 1.5f;
-        var sut = CreateSut();
-
-        // Act & Assert
-        Assert.AreEqual(1.0f, sut.GetDistanceCompensation("empire_s", "town_EW1"), 0.001f);
-    }
-
-    [TestMethod]
-    public void GetDistanceCompensation_TargetInPriorityListWithScale_ReturnsScale()
-    {
-        // Arrange
-        _config.FactionPriorityTargets["empire_s"] = new List<string> { "town_EW3", "town_EW2" };
-        _config.FactionDistanceRangeMultipliers["empire_s"] = 1.5f;
-        var sut = CreateSut();
-
-        // Act & Assert
-        Assert.AreEqual(1.5f, sut.GetDistanceCompensation("empire_s", "town_EW3"), 0.001f);
     }
 
     [TestMethod]

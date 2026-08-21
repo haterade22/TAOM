@@ -1,5 +1,6 @@
 using System;
 using HarmonyLib;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem.CampaignBehaviors.AiBehaviors;
 using TaleWorlds.CampaignSystem.Party;
@@ -11,18 +12,20 @@ namespace TAOM.Features.ArmyTargeting.Hooks;
 [HarmonyPatchCategory("Patch22_ArmyTargeting")]
 public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
 {
-    // Phase 9b #161 — cache the three IoC.Resolve calls instead of resolving per invocation.
+    // Phase 9b #161 — cache the IoC.Resolve calls instead of resolving per invocation.
     // This patch fires per-army-per-AI-tick (~500-2000 calls/cycle per feature doc). Each
     // resolve acquires a DryIoc lock and walks the registration table — non-trivial cost at
     // that frequency. Lazy `??=` cache resolves once per process. Class is also `static` per
     // Harmony 2 convention (#151 pattern).
     private static IArmyTargetingService _service;
     private static IArmyTargetingSettingsProvider _settings;
+    private static IMapReachAdapter _reach;
     private static IModLogger _logger;
 
-    // One-shot breadcrumb: log the first time the floor is applied, then stay silent.
-    // The path fires per-army-per-tick; we only want a single "this is alive" marker.
+    // One-shot breadcrumbs: the path fires per-army-per-tick, so we only want a single "this is
+    // alive" marker for each outcome.
     private static bool _loggedBorderFloor;
+    private static bool _loggedReachRefusal;
 
     // Audit Agent 1 CRITICAL fix 2026-05-22: vanilla 1.4.5 method now has FOUR out params:
     //   private void CalculateDistanceScoreForBesieging(
@@ -50,6 +53,7 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
         {
             _service  ??= IoC.Resolve<IArmyTargetingService>();
             _settings ??= IoC.Resolve<IArmyTargetingSettingsProvider>();
+            _reach    ??= IoC.Resolve<IMapReachAdapter>();
 
             if (!_settings.EnableArmyStrategicIntelligence) return;
 
@@ -59,15 +63,32 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
             string factionId    = mobileParty?.MapFaction?.StringId;
             string settlementId = targetSettlement?.StringId;
 
-            if (_service.IsInPriorityList(factionId, settlementId))
+            if (!_service.IsInPriorityList(factionId, settlementId)) return;
+
+            // The floor exists to rescue a BORDER target vanilla's 2-hop topology scored as
+            // unreachable. Before the reach gate it rescued any priority-list entry at any
+            // distance, which is what turned the list into an "ignore geography" list and is
+            // named in the Patch49 registry entry as the cause of cross-map siege steering.
+            float normalizedDistance = _reach.GetNormalizedDistanceToNearestFortification(
+                targetSettlement, mobileParty?.MapFaction);
+
+            if (!_service.IsWithinReach(normalizedDistance))
             {
-                bestDistanceScore = floor;
-                if (!_loggedBorderFloor)
+                if (!_loggedReachRefusal)
                 {
-                    _loggedBorderFloor = true;
+                    _loggedReachRefusal = true;
                     _logger ??= IoC.Resolve<IModLogger>();
-                    _logger.LogDebug($"ArmyTargeting: border proximity floor {floor:F2} applied for {factionId}→{settlementId}");
+                    _logger.LogDebug($"ArmyTargeting: border floor REFUSED for {factionId} -> {settlementId}, {normalizedDistance:F2} town gaps is out of reach");
                 }
+                return;
+            }
+
+            bestDistanceScore = floor;
+            if (!_loggedBorderFloor)
+            {
+                _loggedBorderFloor = true;
+                _logger ??= IoC.Resolve<IModLogger>();
+                _logger.LogDebug($"ArmyTargeting: border proximity floor {floor:F2} applied for {factionId} -> {settlementId} at {normalizedDistance:F2} town gaps");
             }
         }
         catch (Exception)

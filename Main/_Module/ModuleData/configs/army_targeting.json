@@ -1,27 +1,73 @@
 {
+  "Theaters": ["north", "central", "south", "east"],
+  "KingdomTheaters": {
+    "empire_w": ["south", "central"],
+    "vlandia": ["central"],
+    "empire": ["central", "north"],
+    "isengard": ["central", "north"],
+    "empire_s": ["south", "east", "central"],
+    "khuzait": ["east", "central"],
+    "battania": ["east", "south"],
+    "aserai": ["south"],
+    "umbar": ["south"],
+    "shaghana": ["south"],
+    "abanissa": ["south"],
+    "gundabad": ["north"],
+    "goblin": ["north", "central"],
+    "mistymountainorcs": ["north", "central"],
+    "dolguldur": ["north", "central"],
+    "mirkwood": ["north"],
+    "rivendell": ["north"],
+    "lothlorien": ["north", "central"],
+    "erebor": ["north", "east"],
+    "sturgia": ["north", "east"],
+    "bluecraig": [],
+    "lindon": []
+  },
+  "ReachInnerRadiusInTownGaps": 1.5,
+  "ReachRadiusInTownGaps": 3.0,
+  "ReachFloor": 0.05,
+  "PrimaryTheaterWeight": 1.25,
+  "SecondaryTheaterWeight": 1.0,
+  "ForeignTheaterWeight": 0.35,
   "FactionPriorityTargets": {
-    "empire_s":  ["town_EW3", "town_EW2", "town_EW1", "town_EW4"],
-    "isengard":  ["town_V2", "town_V1"],
-    "gundabad":  ["town_M1", "town_M2", "town_S1", "town_S5", "town_S4", "town_S3", "town_S2", "town_E1", "town_E2", "town_E3", "town_E4", "town_R1"],
-    "dolguldur": ["town_L1", "town_S1", "town_S5", "town_S4", "town_S3", "town_S2", "town_M1", "town_M2", "town_E1", "town_E2", "town_E3", "town_E4", "town_R1"],
-    "khuzait":   ["town_E4", "town_E3", "town_E2", "town_E1", "town_S5", "town_S4", "town_S3", "town_S1", "town_S2"],
-    "empire_w":  ["town_ES2", "town_A1", "town_ES3", "town_A2", "town_ES1", "town_A3", "town_ES4", "town_A4", "town_ES5", "town_A5", "town_ES6", "town_A6"],
-    "empire":    ["town_V7", "town_V2", "town_V5", "town_V4", "town_V1", "town_V3", "town_V6", "town_EW3", "town_EW2", "town_EW1", "town_EW4"],
-    "sturgia":   ["town_RU7", "town_RU2", "town_RU1", "town_RU4", "town_RU3", "town_RU5", "town_RU6", "town_RU8", "town_DG1"],
-    "erebor":    ["town_RU7", "town_RU2", "town_RU1", "town_RU4", "town_RU3", "town_RU5", "town_RU6", "town_RU8"]
+    "empire_s": ["town_EW3", "town_EW2", "town_EW1", "town_EW4"],
+    "isengard": ["town_V2", "town_V1"],
+    "gundabad": ["town_M1", "town_M2", "town_S1", "town_S2", "town_E1", "town_R1"],
+    "dolguldur": [
+      "town_L1",
+      "town_S1",
+      "town_S5",
+      "town_S4",
+      "town_S3",
+      "town_S2",
+      "town_M1",
+      "town_M2",
+      "town_E1",
+      "town_R1"
+    ],
+    "khuzait": ["town_E4", "town_E3", "town_E2", "town_S5", "town_S4", "town_S3"],
+    "empire_w": [
+      "town_ES2",
+      "town_A1",
+      "town_ES3",
+      "town_A2",
+      "town_ES1",
+      "town_A3",
+      "town_ES4",
+      "town_A4",
+      "town_ES5",
+      "town_ES6"
+    ],
+    "empire": ["town_V7", "town_V2", "town_V5", "town_V4", "town_V1", "town_V3", "town_V6"],
+    "sturgia": ["town_RU7", "town_RU2", "town_RU4", "town_RU3", "town_DG1"],
+    "erebor": ["town_RU1", "town_RU4", "town_RU3", "town_RU5"]
   },
   "FactionAggressionMultipliers": {
-    "empire_s":  2.0,
-    "isengard":  2.0,
-    "gundabad":  1.75,
+    "empire_s": 2.0,
+    "isengard": 2.0,
+    "gundabad": 1.75,
     "dolguldur": 1.75,
-    "khuzait":   1.5
-  },
-  "FactionDistanceRangeMultipliers": {
-    "empire_s":  1.5,
-    "isengard":  1.5,
-    "gundabad":  1.3,
-    "dolguldur": 1.3,
-    "khuzait":   1.3
+    "khuzait": 1.5
   }
 }

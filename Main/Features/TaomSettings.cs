@@ -317,15 +317,25 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyGroup("AI Strategic Intelligence")]
     public float EvilFactionAggressionScale { get; set; } = 1.0f;
 
-    [SettingPropertyFloatingInteger("Long-Range Priority Boost Scale", 1.0f, 5.0f, "#0.0", Order = 4,
-        HintText = "Global multiplier applied to per-faction distance compensation values from army_targeting.json. 1.0 = use JSON defaults. Raise if priority-list targets are still being ignored due to map distance.")]
-    [SettingPropertyGroup("AI Strategic Intelligence")]
-    public float LongRangePriorityBoostScale { get; set; } = 1.0f;
-
-    [SettingPropertyFloatingInteger("Border Proximity Floor", 0.0f, 1.0f, "#0.00", Order = 5,
-        HintText = "Minimum border-proximity score substituted for priority-list targets that vanilla rejects as out-of-range. 0 = vanilla (may ignore distant priority targets entirely). 0.15 = allow long-range priority targets to be scored.")]
+    [SettingPropertyFloatingInteger("Border Proximity Floor", 0.0f, 1.0f, "#0.00", Order = 4,
+        HintText = "Minimum border-proximity score substituted for priority-list targets that vanilla rejects as out-of-range, and only for targets inside the march radius below. 0 = vanilla.")]
     [SettingPropertyGroup("AI Strategic Intelligence")]
     public float ArmyBorderProximityFloor { get; set; } = 0.15f;
+
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    [SettingPropertyBool("Enable War Theaters", Order = 5,
+        HintText = "When enabled, kingdoms favour enemies on their own front. Gondor prefers Mordor and Isengard over far northern targets. Weighting only: no war is ever forbidden.")]
+    public bool EnableWarTheaters { get; set; } = true;
+
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    [SettingPropertyFloatingInteger("Army March Radius", 1.0f, 20.0f, "#0.0", Order = 6,
+        HintText = "How far, in average town gaps, an army will march to besiege. Beyond this the target is heavily discounted. 3.0 is about 280 map units, roughly the widest genuine front. Vanilla never discounts distance below 0.9x at any range.")]
+    public float ArmyReachRadiusInTownGaps { get; set; } = 3.0f;
+
+    [SettingPropertyGroup("AI Strategic Intelligence")]
+    [SettingPropertyFloatingInteger("Home Defence Priority", 1.0f, 5.0f, "#0.0", Order = 7,
+        HintText = "Score multiplier on defending one of your own settlements. Raise it if AI kingdoms keep besieging abroad while their own fiefs fall. 1.0 = vanilla.")]
+    public float ArmyDefenderPriority { get; set; } = 1.6f;
 
     // --- Time Acceleration ---
 

@@ -4,31 +4,45 @@ public interface IArmyTargetingService
 {
     float GetTargetMultiplier(string candidateId, string committedTargetId, string factionId);
     float GetStrengthMultiplier(string factionId);
-    float GetDistanceCompensation(string factionId, string targetId);
     bool IsInPriorityList(string factionId, string settlementId);
-
-    // Phase 9b #138 — TaomTargetScoreModel orchestration moved out of override body per
-    // gamemodels.md rule 4. The model becomes a pure boundary that extracts primitives and
-    // delegates to these two methods.
 
     /// <summary>
     /// Returns the modified ourStrength to feed into vanilla base.GetTargetScoreForFaction.
     /// Besieger armies receive a faction-specific multiplier; other army types pass through.
     /// </summary>
-    /// <param name="factionId">MapFaction.StringId of the army (empire_s/empire_w/empire — culture cannot distinguish Mordor/Gondor/Dunland).</param>
-    /// <param name="isBesieger">true iff missionType == Army.ArmyTypes.Besieger.</param>
-    /// <param name="ourStrength">unmodified ourStrength from vanilla.</param>
     float GetEffectiveStrength(string factionId, bool isBesieger, float ourStrength);
 
     /// <summary>
-    /// Returns the final target score after vanilla base has computed baseScore. For Besieger
-    /// armies with positive baseScore, multiplies by target priority + distance compensation;
-    /// otherwise returns baseScore unchanged (vanilla rejection or non-Besieger army type).
+    /// Reach falloff for a besieging army, replacing vanilla's distance factor which never drops
+    /// below 0.9x at ANY distance. Flat 1.0 out to the inner radius so genuine borders are
+    /// untouched, then linear decay to <c>ReachFloor</c> at the outer radius.
+    ///
+    /// A non-finite distance means the adapter could not measure one, and returns 1.0: suppressing
+    /// every target on garbage would break AI targeting outright.
     /// </summary>
-    /// <param name="baseScore">value returned by base.GetTargetScoreForFaction.</param>
-    /// <param name="isBesieger">true iff missionType == Army.ArmyTypes.Besieger.</param>
-    /// <param name="factionId">MapFaction.StringId of the army.</param>
-    /// <param name="targetSettlementId">Settlement.StringId of the candidate target.</param>
-    /// <param name="committedTargetId">Settlement.StringId of the army's current commitment, or null.</param>
-    float ApplyTargetScoreModifiers(float baseScore, bool isBesieger, string factionId, string targetSettlementId, string committedTargetId);
+    /// <param name="normalizedDistance">Map distance to the attacker's nearest owned fortification, in town gaps.</param>
+    float GetReachMultiplier(float normalizedDistance);
+
+    /// <summary>
+    /// True when a target is close enough that Patch22 may override vanilla's "unreachable"
+    /// verdict. A non-finite distance returns FALSE: vanilla already rejected the target, and we
+    /// do not overturn that on an unmeasurable reading.
+    /// </summary>
+    bool IsWithinReach(float normalizedDistance);
+
+    /// <summary>
+    /// Soft theater weighting. Returns the primary, secondary or foreign weight depending on
+    /// whether the target's owner sits in the attacker's primary theater, any shared theater, or
+    /// none. Never returns zero, and returns 1.0 for any faction absent from the table so
+    /// player-founded and rebel kingdoms are unaffected.
+    /// </summary>
+    float GetTheaterWeight(string attackerFactionId, string targetFactionId);
+
+    /// <summary>
+    /// Returns the final target score after vanilla base has computed BaseScore. Besieger armies
+    /// receive priority, theater and reach terms; Defender armies receive the home-defence
+    /// multiplier; everything else passes through. A non-finite or non-positive BaseScore is
+    /// returned unchanged.
+    /// </summary>
+    float ApplyTargetScoreModifiers(TargetScoreContext context);
 }

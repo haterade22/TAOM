@@ -63,8 +63,26 @@ dead-key guard that has caught this bug class five times before: every kingdom k
 the six lore names that are not runtime StringIds are rejected by name. Suite 6889 green,
 `validate_moduledata.py` PASS.
 
-Not yet done: `tools/analyze_war_theaters.py` and the priority-list pruning it drives, the feature
-doc, and in-game measurement of `ArmyDispersionReason.Inactivity` before and after.
+New `tools/analyze_war_theaters.py` measures the map rather than assuming it: it resolves all 988
+live settlements through owner-clan to kingdom, computes G at 78.7 straight-line units over 78 towns,
+and prints every hostile pair's minimum fortification-to-fortification gap with its theater verdict.
+It found 26 of 80 priority entries sitting beyond the march radius, where the falloff pins them at the
+floor regardless of their boost, and `--apply` pruned them. Two of its findings corrected the design:
+Gondor and Harad genuinely border each other at 50.9 units, so most of Gondor's Harad entries are
+legitimate and survived; and Blue Craig is the one kingdom with no hostile inside the radius, at 5.13
+gaps to its nearest, which is the pre-existing navigation-island defect rather than anything here.
+Note that pruning re-steepens the priority decay for the survivors, since the boost spans the list.
+
+A five-dimension deep review with adversarial verification raised 46 findings, of which 3
+survived. Two were the same one reported twice: the new config validator shipped with no
+negative-path tests, which `csharp-architecture.md` requires one of per rule, so 18 were added.
+The third was real and is fixed: `MapReachAdapter` is a singleton in a container built once at
+module load, and it invalidated only on the campaign day number, so quitting to the menu and
+loading a different save sitting on the same day would have kept a fief list of `Settlement`
+objects from the finalized campaign and handed them to a native distance call. It now keys on
+campaign identity as well.
+
+Still owed: in-game measurement of `ArmyDispersionReason.Inactivity` before and after.
 
 
 ### fix(heroRace): the 3D tableau race offsets were parsed and never applied
