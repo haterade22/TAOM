@@ -129,10 +129,27 @@ public class RacePositionStore : IRacePositionStore
         return item;
     }
 
+    /// <summary>
+    /// Writes both configs. Both are STAGED to temp files first and only then swapped in, because
+    /// the pair is reloaded as a set: if the second write failed after the first had already
+    /// replaced its target (a denied ACL, a full disk), the next reload would combine new avatar
+    /// data with old image data and nothing would say so.
+    /// </summary>
     public void Save()
     {
-        RacePositionConfig.WriteConfig(AvatarConfigName, _avatarConfig, _pathService);
-        RacePositionConfig.WriteConfig(ImageConfigName, _imageConfig, _pathService);
+        var staged = new List<string>();
+
+        if (RacePositionConfig.StageWrite(AvatarConfigName, _avatarConfig, _pathService))
+            staged.Add(AvatarConfigName);
+
+        if (RacePositionConfig.StageWrite(ImageConfigName, _imageConfig, _pathService))
+            staged.Add(ImageConfigName);
+
+        // Both temps exist by here, so the remaining work is two renames. That is as close to
+        // atomic as this gets without a transaction, and it moves the likely failure (serialising,
+        // or writing a new file) to before anything live has been touched.
+        foreach (var name in staged)
+            RacePositionConfig.CommitStagedWrite(name, _pathService);
     }
 
     private RacePositionConfig ConfigFor(RacePositionSurface surface)

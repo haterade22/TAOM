@@ -93,9 +93,9 @@ public static class RacePositionTuningCheats
             item.Vertical = v;
             item.Zoom = z;
 
-            RequestRedraw();
+            RequestRedraw(surface);
             return $"{surface} '{race}' set to {RacePositionTuningParser.Format(item)}. "
-                 + "Unsaved: run taom.save_race_offsets.";
+                 + "Unsaved: run taom.save_race_offsets." + RedrawNote(surface);
         });
 
     [CommandLineFunctionality.CommandLineArgumentFunction("nudge_race_offset", "taom")]
@@ -123,9 +123,9 @@ public static class RacePositionTuningCheats
             item.Vertical = v;
             item.Zoom = z;
 
-            RequestRedraw();
+            RequestRedraw(surface);
             return $"{surface} '{race}' now {RacePositionTuningParser.Format(item)}. "
-                 + "Unsaved: run taom.save_race_offsets.";
+                 + "Unsaved: run taom.save_race_offsets." + RedrawNote(surface);
         });
 
     [CommandLineFunctionality.CommandLineArgumentFunction("save_race_offsets", "taom")]
@@ -164,9 +164,26 @@ public static class RacePositionTuningCheats
         return live >= 0 && raceManager.IsValidRaceId(live) ? raceManager.GetRaceNameFromId(live) : null;
     }
 
-    // Marking the tableau dirty makes vanilla re-run RefreshCharacterTableau on its next tick, which
-    // re-applies the offsets through Patch72. Without it an edit is invisible until the player
-    // changes equipment.
+    // Only the AVATAR surface can be redrawn on demand. Marking the tableau dirty makes vanilla
+    // re-run RefreshCharacterTableau on its next tick, which re-applies the offsets through Patch72.
+    //
+    // The IMAGE surface has no equivalent. Its rows are read once, by CharacterSpawnerService inside
+    // CharacterSpawner.InitWithCharacter, and nothing here retains or re-initialises that spawner. So
+    // an image edit is real but invisible until the portrait is next built. Callers say that rather
+    // than implying a redraw that did not happen.
+    private static string RedrawNote(RacePositionSurface surface)
+        => surface == RacePositionSurface.Image
+            ? " The 2D portrait does not redraw on demand: reopen the screen showing it to see this."
+            : string.Empty;
+
+    private static void RequestRedraw(RacePositionSurface surface)
+    {
+        if (surface != RacePositionSurface.Avatar)
+            return;
+
+        RequestRedraw();
+    }
+
     private static void RequestRedraw()
     {
         try

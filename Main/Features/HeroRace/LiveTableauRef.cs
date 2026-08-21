@@ -14,10 +14,14 @@ namespace TAOM.Features.HeroRace;
 /// scene, agent visuals and skeletons for the life of the process, which is the exact shape of leak
 /// the tournament-exit work spent two rounds chasing.</para>
 ///
-/// <para><b>The race self-heals.</b> <see cref="LastRace"/> reports -1 once the tableau it came
-/// from has been collected, rather than continuing to name a race nobody is looking at. Without
-/// that, the tuner "." shorthand would keep resolving to a stale-but-VALID race after the screen
-/// closed, and silently edit the offsets of a race the player cannot see.</para>
+/// <para><b>The race self-heals, and collection is not the only way it goes stale.</b>
+/// <see cref="LastRace"/> reports -1 once the tableau it came from is gone. A weak reference alone
+/// is NOT sufficient for that: <c>CharacterTableauTextureProvider.Clear</c> calls
+/// <c>CharacterTableau.OnFinalize</c>, which nulls every AgentVisuals the tableau owns, but the
+/// provider keeps holding the managed object, so the weak target still resolves for as long as it
+/// takes a GC to run. Marking a finalized tableau dirty redraws nothing, so the tuner would report
+/// success while editing a race nobody is looking at. <see cref="ClearIf"/> is called from a
+/// postfix on <c>OnFinalize</c> to close that window.</para>
 /// </summary>
 public static class LiveTableauRef
 {
@@ -49,6 +53,20 @@ public static class LiveTableauRef
 
         tableau = null;
         return false;
+    }
+
+    /// <summary>
+    /// Drops the handle if it points at <paramref name="tableau"/>. Called when a tableau is
+    /// finalized. Conditional because tableaux are torn down out of order: clearing unconditionally
+    /// would let a closing encyclopedia page blank the handle to the inventory panel still on screen.
+    /// </summary>
+    public static void ClearIf(CharacterTableau tableau)
+    {
+        if (tableau == null)
+            return;
+
+        if (Slot.TryGetTarget(out var current) && ReferenceEquals(current, tableau))
+            Clear();
     }
 
     /// <summary>Drops the handle. Used by tests to isolate cases from one another.</summary>

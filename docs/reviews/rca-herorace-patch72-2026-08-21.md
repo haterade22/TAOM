@@ -114,3 +114,42 @@ container is service location wearing a helper's clothes, and its cost was nine 
   Patch72 (a refresh is not per-frame). Out of scope for this changeset; worth its own issue.
 - **No GitHub issue exists** for any of this work, which CLAUDE.md requires before implementation.
   The `github` MCP server is unauthenticated in this session, so it could not be created. Owed.
+
+---
+
+## Codex pass (independent, after the fixes above)
+
+Dispatched on the fixed tree. **P1: 0, P2: 2, P3: 2.** It cleared every suspect the Claude review had
+cleared, and did so by decompiling rather than by agreeing: origin selection against vanilla's own
+four frames, idempotence, the buffer swap and visibility handoff, Patch2 interaction, native-null
+handling (installed `GameEntity.operator ==` compares native pointers to `UIntPtr.Zero`), eye-height
+re-entrancy, IoC ordering, all five console command shapes, and culture-sensitive formatting (the
+installed launcher sets invariant culture).
+
+It also confirmed the shared-Monster consequence explicitly, which nobody had proven before: installed
+`FaceGen.GetBaseMonsterFromRace` caches into `_monstersArray`, and spawn code copies
+`StandingEyeHeight` / `CrouchEyeHeight` into `AgentSpawnData`. So the eye-height offset really does
+move the aim origin for newly spawned dwarves. The MCM hint already discloses that, so it stands as
+intended behaviour rather than an accident.
+
+| # | Sev | Finding | Verified how | Fix |
+|---|-----|---------|-------------|-----|
+| C1 | P2 | A finalized tableau stays "on screen" until GC, so `.` resolves to a dead tableau and the tuner reports success while redrawing nothing | Read `CharacterTableau.OnFinalize` on 1.4.8: it nulls every AgentVisuals but the texture provider keeps holding the managed object | `LiveTableauRef.ClearIf` from a new `OnFinalize` postfix in the Patch72 category |
+| C2 | P2 | Image-surface edits cannot redraw their consumer; `RequestRedraw` only dirties the 3D tableau | `ResolveImage` has exactly one caller, inside `CharacterSpawner.InitWithCharacter`, which no command re-runs | Redraw is surface-aware, and the image path says the portrait must be reopened rather than implying a redraw |
+| C3 | P3 | Two-file save is atomic per file, so it can half-commit and leave new avatar data beside old image data | Read `Save` and `WriteConfig` | Stage BOTH temp files, then swap both |
+| C4 | P3 | `HeroRaceWiringTests` computed `batchEnd` and never used it, and Patch72 is listed after the marker, so the assertion was vacuous | Read the test and `SubModule.cs` line numbers | Bound by the array's own start and closing `})` |
+
+**C4 is the one worth sitting with.** It was written *in this pass*, as a preventive control against the
+exact failure mode this whole changeset existed to fix, and it did not work. A test that cannot fail is
+worse than no test, because it discharges the obligation to think about the thing again. Both the seven
+Claude dimensions and the completeness critic looked at that file and none of them asked the only
+question that mattered: *what edit would make this test go red?*
+
+**Preventive action:** when a review adds a guard test, verify it by breaking the thing it guards. For
+a string-position assertion that means moving the string and confirming the test fails. The habit
+generalises: a new assertion is not evidence until it has been observed failing at least once.
+
+**The pattern connects to the RCA's existing theme.** Fidelity is not correctness (the port), an
+untestability claim is not a fact (the eye-height hook), and now: an assertion is not coverage. All
+three are the same error, which is accepting a proxy for the property you actually care about because
+the proxy is cheaper to check.

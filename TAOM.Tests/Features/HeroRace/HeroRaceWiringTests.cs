@@ -99,14 +99,24 @@ public class HeroRaceWiringTests
     {
         var src = ReadSource("Main", "SubModule.cs");
 
-        var batchStart = src.IndexOf("\"Patch1_FirstTimeInit\"", StringComparison.Ordinal);
-        var batchEnd = src.IndexOf("\"Patch67_TableauResidencyDiag\"", StringComparison.Ordinal);
-        Assert.IsTrue(batchStart >= 0 && batchEnd > batchStart,
-            "The guarded preview-category batch in SubModule.cs could not be located; this test needs updating.");
+        // Bound by the ARRAY, not by a sibling entry. An earlier version of this test took
+        // "Patch67_TableauResidencyDiag" as the end marker and then never used it, asserting only
+        // that Patch72 appeared somewhere after the array STARTED. Patch72 is listed after Patch67,
+        // so that assertion was vacuous: moving the string to any later, unguarded PatchCategory
+        // call in the file would have kept it green. Codex caught it.
+        var batchStart = src.IndexOf("foreach (var previewCategory in new[]", StringComparison.Ordinal);
+        Assert.IsTrue(batchStart >= 0,
+            "The guarded preview-category loop in SubModule.cs could not be located; this test needs updating.");
+
+        var batchEnd = src.IndexOf("})", batchStart, StringComparison.Ordinal);
+        Assert.IsTrue(batchEnd > batchStart,
+            "The end of the preview-category array could not be located; this test needs updating.");
 
         var categoryIndex = src.IndexOf("\"" + Category + "\"", StringComparison.Ordinal);
-        Assert.IsTrue(categoryIndex > batchStart,
-            Category + " is not inside the guarded preview-category batch, so a failure applying it "
-            + "would not be isolated the way the other tableau categories are.");
+        Assert.IsTrue(categoryIndex > batchStart && categoryIndex < batchEnd,
+            Category + " is not an element of the guarded preview-category array (found at index "
+            + categoryIndex + ", array spans " + batchStart + ".." + batchEnd + "). Applied outside "
+            + "that loop, a binding failure would not be isolated the way the other tableau "
+            + "categories are.");
     }
 }

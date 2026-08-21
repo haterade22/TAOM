@@ -4,6 +4,69 @@
 
 ## 2026-08-21
 
+### feat(armyTargeting): AI armies now fight on their own front instead of the whole map
+
+A player reported kingdoms treating the War of the Ring as one map-wide brawl: Gondor marching far
+north while its own cities were besieged. Three mechanisms produced it, and TAOM owned two of them.
+
+Vanilla's besieger distance factor is `MBMath.Map(...)`, which **clamps to a floor of 0.9x at any
+range**, so the far side of the map costs an AI army about ten percent of score. Its sibling
+`CalculateDistanceScoreForBesieging` uses pure two-hop fortification topology with no metric
+distance at all, which is why sieges are the least distance-constrained thing the campaign AI does.
+On top of that, `army_targeting.json` sent Gondor at all six Harad towns and Gundabad at Mirkwood,
+Dale, Erebor and Rivendell, and `Patch22` substituted a 0.15 border floor **precisely when vanilla
+had scored the target unreachable**, which turned the priority list into an ignore-geography list.
+The Patch49 registry entry already blamed that steering for the army-gathering NRE it guards.
+
+**Reach falloff.** New `IMapReachAdapter` measures a candidate against the attacking faction's
+nearest owned fortification, normalised by the engine's average town gap. Score is flat to 1.5 gaps,
+then decays to a 0.05 floor at 3.0 gaps (about 280 map units). Nearest fortification rather than
+`FactionMidSettlement`: the medoid distorts wide empires by 3.4x (Rhûn to Gondor is 167 path units
+from its nearest fort against 567 from its mid) and it recomputes on every fief transfer, so it
+drifts toward whatever a kingdom is currently conquering.
+
+**Theaters, as weighting rather than a gate.** `north`, `central`, `south` and `east`, with kingdoms
+holding several and the first entry naming their primary front. Primary 1.25, secondary 1.0, foreign
+0.35. A hard gate was designed and rejected on measurement: minimum fortification path gaps put
+Rohan to Mordor at 148 units, Gondor to Rhûn at 167 and Rohan to Rhûn at 183, so a partition drawn
+on kingdom centroids severs four genuine fronts. Once corrected to stop severing them the gate
+vetoes six pairs, all of which the falloff already kills. Weighting also avoids stranding a kingdom
+whose enemies are all foreign, which `Army.CheckInactivity` punishes by disbanding its army about
+two days later. An id absent from the table is neutral, not foreign, so a player-founded kingdom
+(`new_kingdom`), `player_faction` and rebel clans are never silently made un-besiegeable.
+
+**Home defence.** Defender missions take a configurable multiplier, default 1.6. The obvious lever,
+overriding `DefendingFactor`, does nothing: it has exactly one read in the engine, inside
+`CurrentObjectiveValue`, whose only consumer is `Army.ThinkAboutCohesionBoost`. The defender
+weighting that actually enters target selection is a hardcoded `1.75f` / `1.28f` literal inside
+`GetTargetScoreForFaction` that no override can reach. A regression test fails if anyone re-adds the
+override.
+
+Also fixed: a NaN gate in `ApplyTargetScoreModifiers`, which read `baseScore <= 0f` and therefore let
+a NaN into the multiply chain rather than deferring to vanilla. `Patch22`'s floor now also requires
+the target to be in reach. `FactionDistanceRangeMultipliers`, `GetDistanceCompensation` and the
+`Long-Range Priority Boost Scale` setting are deleted, being the mechanism that pushed armies far in
+the first place. The comment in `TaomTargetScoreModel` documenting `empire_w` as Rohan now says
+Gondor.
+
+Three MCM settings added under AI Strategic Intelligence (`Enable War Theaters`, `Army March Radius`,
+`Home Defence Priority`) and one removed, moving the co-op fingerprint pins to 178 reflected and 135
+covered.
+
+Commitment stickiness cannot outrun the suppression, which is what lets an existing save recover: a
+committed cross-map siege scores `4.0 x 0.35 x 0.05 = 0.07` against a legal near target's
+`1.0 x 1.25 x 1.0 = 1.25`. Pinned by a test.
+
+11 new tests for the reach curve (including monotonicity across 0 to 40 gaps, the guard against a
+sign error inverting the feature) and 11 config invariants against the shipped JSON, among them the
+dead-key guard that has caught this bug class five times before: every kingdom key must resolve, and
+the six lore names that are not runtime StringIds are rejected by name. Suite 6889 green,
+`validate_moduledata.py` PASS.
+
+Not yet done: `tools/analyze_war_theaters.py` and the priority-list pruning it drives, the feature
+doc, and in-game measurement of `ArmyDispersionReason.Inactivity` before and after.
+
+
 ### fix(heroRace): the 3D tableau race offsets were parsed and never applied
 
 `CharacterAvatarPatch.json` has been shipping per-race framing offsets for the inventory, party and
@@ -105,6 +168,32 @@ ship, which no test and no validator previously touched. `EyeHeightBackingFieldB
 two `k__BackingField` literals.
 
 Suite 6878 green.
+
+### fix(heroRace): Codex pass follow-ups
+
+An independent Codex review of the fixed tree: **P1 0, P2 2, P3 2**. It cleared every suspect by
+decompiling rather than by agreeing, including the four-way origin selection, idempotence, the buffer
+swap, native-null handling and console command shapes. It also proved something nobody had: installed
+spawn code copies `StandingEyeHeight` into `AgentSpawnData`, so the eye-height offset genuinely does
+move the aim origin for newly spawned dwarves. The MCM hint already says so.
+
+- **A finalized tableau stayed "on screen" until GC.** `CharacterTableauTextureProvider.Clear` calls
+  `OnFinalize`, which nulls the tableau's visuals, but the provider keeps the managed object alive, so
+  a weak reference kept resolving it. Close a dwarf inventory screen and the tuner's `.` still
+  resolved to dwarf and reported success while marking a dead object dirty. Now cleared from an
+  `OnFinalize` postfix.
+- **Image-surface edits could not redraw their consumer.** `RequestRedraw` only dirties the 3D
+  tableau; image rows are read once inside `CharacterSpawner.InitWithCharacter`, which nothing
+  re-runs. The redraw is surface-aware now, and the image path says the portrait has to be reopened
+  instead of implying a refresh that did not happen.
+- **Saving both configs could half-commit.** Per-file atomicity is not enough when the pair is
+  reloaded as a set. Both files are staged, then both swapped.
+- **A guard test added during the review was vacuous.** `HeroRaceWiringTests` computed the end of the
+  category array and never used it, and Patch72 happens to be listed after the marker, so the
+  assertion could not fail. A test that cannot fail is worse than no test: it discharges the
+  obligation to think about the thing again. Bounded by the array's own braces now.
+
+Suite 6894 green.
 
 ### chore(heroRace): reviewed the standalone TAOM_RacePortraits module, did not adopt it
 

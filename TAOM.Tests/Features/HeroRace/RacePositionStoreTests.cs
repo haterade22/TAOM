@@ -289,4 +289,40 @@ public class RacePositionStoreTests
         Assert.IsFalse(File.Exists(Path.Combine(_configDir, "CharacterAvatarPatch.json.tmp")),
             "The temporary file must not survive a successful swap.");
     }
+
+    // --- Two-phase save (Codex P3) ------------------------------------------------------------
+
+    // The pair is reloaded as a set, so a per-file swap that half-commits leaves new avatar data
+    // beside old image data with nothing to say so. Both files are staged before either is swapped.
+    [TestMethod]
+    public void Save_LeavesNoTemporaryFilesBehind()
+    {
+        WriteConfigFile("CharacterAvatarPatch", "{\"Items\":[]}");
+        WriteConfigFile("CharacterImagePatch", "{\"Items\":[]}");
+        var store = CreateStore();
+
+        store.GetOrAdd(RacePositionSurface.Avatar, "dwarf").Vertical = 0.15f;
+        store.GetOrAdd(RacePositionSurface.Image, "dwarf").Vertical = 0.20f;
+        store.Save();
+
+        Assert.AreEqual(0, Directory.GetFiles(_configDir, "*.tmp").Length,
+            "A staged temp file survived the commit.");
+    }
+
+    [TestMethod]
+    public void Save_CommitsBothSurfacesTogether()
+    {
+        WriteConfigFile("CharacterAvatarPatch", "{\"Items\":[]}");
+        WriteConfigFile("CharacterImagePatch", "{\"Items\":[]}");
+        var store = CreateStore();
+
+        store.GetOrAdd(RacePositionSurface.Avatar, "dwarf").Vertical = 0.15f;
+        store.GetOrAdd(RacePositionSurface.Image, "dwarf").Vertical = 0.20f;
+        store.Save();
+        store.Reload();
+
+        Assert.AreEqual(0.15f, store.ResolveAvatar("dwarf").Vertical);
+        Assert.AreEqual(0.20f, store.ResolveImage("dwarf").Vertical,
+            "Both surfaces must land, or a reload silently mixes new and old data.");
+    }
 }

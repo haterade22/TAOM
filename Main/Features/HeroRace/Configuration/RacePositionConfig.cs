@@ -108,22 +108,45 @@ public class RacePositionConfig
     /// </summary>
     public static void WriteConfig(string name, RacePositionConfig config, IPathService pathService)
     {
+        if (StageWrite(name, config, pathService))
+        {
+            CommitStagedWrite(name, pathService);
+        }
+    }
+
+    /// <summary>
+    /// Serialises <paramref name="config"/> to <c>&lt;name&gt;.json.tmp</c> without touching the live
+    /// file. Returns false when there is nothing to write. Split from the swap so a caller writing
+    /// several related files can stage them ALL before committing any: the configs are read back as a
+    /// set, and a half-applied save leaves new data in one surface and old data in the other.
+    /// </summary>
+    public static bool StageWrite(string name, RacePositionConfig config, IPathService pathService)
+    {
         if (config == null || pathService == null)
+        {
+            return false;
+        }
+
+        File.WriteAllText(GetFileName(name, pathService) + ".tmp", JsonConvert.SerializeObject(config));
+        return true;
+    }
+
+    /// <summary>Swaps a staged temp file into place, keeping the previous file as <c>.prev</c>.</summary>
+    public static void CommitStagedWrite(string name, IPathService pathService)
+    {
+        string path = GetFileName(name, pathService);
+        string temp = path + ".tmp";
+
+        if (!File.Exists(temp))
         {
             return;
         }
-
-        string path = GetFileName(name, pathService);
-        string temp = path + ".tmp";
-        string backup = path + ".prev";
-
-        File.WriteAllText(temp, JsonConvert.SerializeObject(config));
 
         if (File.Exists(path))
         {
             // Replace is atomic on NTFS and produces the backup in the same operation.
             // ignoreMetadataErrors keeps a mismatched ACL or stream from failing the swap.
-            File.Replace(temp, path, backup, ignoreMetadataErrors: true);
+            File.Replace(temp, path, path + ".prev", ignoreMetadataErrors: true);
         }
         else
         {
