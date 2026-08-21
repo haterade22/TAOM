@@ -130,6 +130,13 @@ tools/reports/
 .serena/cache/
 .serena/project.local.yml
 
+# graphify output. `graphify extract --out` defaults to the SCANNED directory, so
+# omitting it drops a graphify-out/ tree (graph.json runs to tens of MB, plus a
+# per-file cache) wherever the command was aimed. Main/graphify-out/cache/
+# stat-index.json was committed that way in 8318e346 and untracked here.
+# graphify is a personal analysis aid, never repo content.
+graphify-out/
+
 # DR3 source-merge: vendored upstream BUTR + Harmony + MonoMod + Cecil source (downloaded fresh from GitHub tags each session — see docs/migration/dr3-mcm-internalization-plan.md)
 Dependencies/.vendor-source/
 
