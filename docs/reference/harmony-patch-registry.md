@@ -609,6 +609,34 @@ A fault is logged at **ERROR with the full exception dump**, matching `Patch69_T
 
 Decision logic lives in `Main/Features/FieldCommission/Domain/EquipmentResetPlan.cs` as a pure boolean helper so it is unit-testable without a running campaign (`EquipmentResetPlanTests`, an exhaustive eight-row truth table); the patch does every `Equipment` dereference at the boundary. `Fill` is `internal` so `Patch71FillTests` can pin the singleton guard and the equipment-type flag directly, which works because `Equipment` is constructible without a campaign. Bindings are drift-guarded in `FieldCommissionBindingTests`, including `MBEquipmentRoster.EmptyEquipment` (losing it would turn `ResolveStealth`'s `.First()` into a throw path). `ResetForUnload()` is wired into `SubModule.OnSubModuleUnloaded` alongside its siblings so the cached logger does not survive into a disposed container. RCA: [rca-field-commission-reset-equipments-2026-08-20.md](../reviews/rca-field-commission-reset-equipments-2026-08-20.md). See [field-commission.md](../features/field-commission.md).
 
+## Patch72_TableauRacePosition
+
+**Target:** `CharacterTableau.RefreshCharacterTableau()` (private, Postfix)
+
+**Feature:** HeroRace, `Main/Features/HeroRace/Hooks/CharacterTableau_RefreshCharacterTableau_PositionPatch.cs`. **Status:** ACTIVE.
+
+Applies the per-race framing offsets from `ModuleData/configs/CharacterAvatarPatch.json` to the 3D character tableau (inventory, party, encyclopedia). Bannerlord positions every character as though it were human, so a dwarf sits low in the panel and a cave troll is cropped.
+
+**Second patch on this method.** `Patch2_RefreshTableau` is a *prefix* on the same target and fixes action-set resolution (the bind-pose fault); this is a *postfix* and only moves entity origins. They do not interact, but a stack trace naming `RefreshCharacterTableau` can belong to either, so check both.
+
+**Why it exists at all.** The offsets were parsed and then never applied. `CharacterTableauService` (221 lines, roughly thirty private-field reflection bindings, a full reimplementation of `RefreshCharacterTableau` plus `UpdateMount`) was registered in `HeroRaceIoC` and invoked by nothing, a state `docs/features/hero-race.md` had flagged as undecided since 2026-07-31. Only the 2D portrait offsets (`Patch4_CharacterSpawner`) were live. The service was deleted in favour of this postfix, which reaches the same result while leaving vanilla in charge of the refresh.
+
+**Rows follow the ENTITY; only the origin follows the place.** The character always reads `<race>`, the mount always reads `mount_<race>`, and `_isCharacterMountPlacesSwapped` changes only which spawn origin each is measured from. There is deliberately no fallback from `mount_<race>` to `<race>`; borrowing one for the other sinks the mount into its rider.
+
+This is the one place the patch deliberately departs from the service it replaced. `CharacterTableauService` selected the row by PLACE, so a swap handed the horse the rider's offsets. That was unobservable there (the service was dead code) but wrong against shipped data: `cave_troll` has a plain row at Zoom -4.0 and no mount row, so place-based selection would have pushed a horse four metres out of frame and left the troll unframed. `TableauPositionServiceTests` pins the entity rule.
+
+**Origins are absolute, not deltas.** The patch reads four spawn frames (`_initialSpawnFrame`, `_characterMountPositionFrame`, `_mountSpawnPoint`, `_mountCharacterPositionFrame`) and writes `origin` outright rather than adding to the entity's current origin. Vanilla does reset both origins every refresh (the character via `AgentVisuals.Refresh`, whose `_data.FrameData` is the spawn frame; the mount by being recreated in `UpdateMount`), so a delta would usually be safe, but the failure mode of "usually" is a character that walks out of shot after enough equipment changes. Eight field bindings buys structural idempotence; `Patch72TableauRacePositionBindingTests` pins all of them.
+
+**Rotation is never written.** `AgentVisuals.Refresh` bakes the race scale into the frame rotation (`Mat3.ApplyScaleLocal(_scale)`), so replacing the whole frame would silently reset every non-human body scale. Only `origin` is assigned.
+
+**Ordering.** Runs after vanilla, therefore after `AdjustCharacterForStanceIndex`, which was read on 1.4.8 and touches camera position, actions and skeletons but never an entity origin.
+
+**Failure mode is silent by design.** The category is applied inside the guarded preview loop in `SubModule.cs`, so a binding failure logs and the preview reverts to vanilla framing rather than crashing. That is the right trade for a cosmetic patch, and it is exactly why the binding tests matter: nothing in-game will announce the regression.
+
+**Tuning.** `taom.print_race_offsets`, `taom.set_race_offset`, `taom.nudge_race_offset`, `taom.save_race_offsets`, `taom.reload_race_offsets` (`Main/Features/HeroRace/Cheats/RacePositionTuningCheats.cs`, parsing in `RacePositionTuningParser.cs`) edit the live rows and force a redraw.
+
+**Wiring is pinned, because this feature already shipped the failure once.** `HeroRaceWiringTests` asserts the `Initialize` call in `HeroRaceIoC` and the category string in `SubModule.cs`, and that the `[HarmonyPatchCategory]` literal matches it. Both are silent when missing: no `Initialize` and the patch's null guard yields vanilla framing, no category string and Harmony never applies the postfix. `Patch72TableauRacePositionBindingTests` proves the patch *could* bind; only the wiring test proves anything asks it to.
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

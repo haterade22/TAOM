@@ -1110,6 +1110,7 @@ public class SubModule : MBSubModuleBase
             "Late_Transpiler",
             "Late_ActionSetOverride",
             "Patch67_TableauResidencyDiag",
+            "Patch72_TableauRacePosition",
         })
         {
             try

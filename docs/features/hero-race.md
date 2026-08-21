@@ -19,13 +19,14 @@ Race is an `int` in `CharacterObject` and `Hero`, not a strong type. The mapping
 Save compatibility: Bannerlord's `SyncData` serializes `Hero` fields but not the `Race` property directly in all paths. Races must be captured before saving and restored after loading.
 
 ### Solution Approach
-Five Harmony patches intercept the key rendering and race-assignment paths:
+Six Harmony patches intercept the key rendering and race-assignment paths:
 
 - `Patch3_SetRace` (`CharacterTableau_SetRace_Patch`) — Postfix on `CharacterTableau.SetRace`. After the race field is written, resets agent visuals and calls `InitializeAgentVisuals` so that the tableau rebuilds with the new monster base.
 - `Patch4_CharacterSpawner` (`CharacterSpawner_InitWithCharacter_Patch`) — Prefix on `CharacterSpawner.InitWithCharacter`. When `characterCode.Race > 0`, fully replaces the method with `CharacterSpawnerService.InitWithCharacter`, which replicates the vanilla logic but calls `_faceGenAdapter.GetBaseMonsterFromRace(race)` and applies per-race position offsets from `RacePositionConfig`.
-- `Patch5_FaceGen` (`FaceGen_GetBaseMonsterFromRace_Patch`) — Postfix on `FaceGen.GetBaseMonsterFromRace`. Delegates to `EyeHeightAdjustmentHook`, which lowers `StandingEyeHeight` and `CrouchEyeHeight` by 0.2 for the `dwarf` race via reflection.
+- `Patch5_FaceGen` (`FaceGen_GetBaseMonsterFromRace_Patch`), postfix on `FaceGen.GetBaseMonsterFromRace`. Delegates to `EyeHeightAdjustmentHook`, which lowers `StandingEyeHeight` and `CrouchEyeHeight` for the `dwarf` race via reflection. The offset is an MCM slider (`Character Preview/Dwarf Eye Height`) defaulting to the -0.2 this shipped as a compile-time constant. It mutates the SHARED base monster, so it applies to every dwarf agent and not only the player; the pre-mutation values are captured on first sight and restored when the toggle is switched off, so the toggle works live instead of needing a restart.
 - `CharacterTableau_RefreshCharacterTableau_Patch` (`Patch2_RefreshTableau`) — **Prefix** on `CharacterTableau.RefreshCharacterTableau`. Builds the set name directly from `monster.StringId` (`as_<monster>[_female]_warrior`), resolves it via `MBGlobals.GetActionSet`, and refreshes `_oldAgentVisuals` with that action set, race and monster. It does **not** go through `ActionSetCode.GenerateActionSetNameWithSuffix` (so `BaseMonster` is ignored on this path), applies no position offsets, and sets no action code — vanilla poses the visual afterwards via `GetIdleAction()`, which falls back to `act_inventory_idle_start`.
-  > **Doc-drift correction (2026-07-31).** This entry previously described a Postfix delegating to `CharacterTableauService.RefreshCharacterTableau`. That is not what ships: the patch is a Prefix doing the simpler work above, and **`CharacterTableauService` (221 lines) is registered in IoC but never invoked by anything** — `grep ICharacterTableauService` returns only the interface, the registration and the class itself. Treat that service as dead code pending a decision to wire or delete it. Found while investigating `docs/reviews/rca-prone-character-tableau-2026-07-31.md`.
+  > **Resolved 2026-08-21.** The 2026-07-31 pass recorded that `CharacterTableauService` (221 lines) was registered in IoC and invoked by nothing, so the 3D tableau offsets were parsed and never applied, and left wire-or-delete undecided. Decided: deleted, and replaced by `Patch72_TableauRacePosition`, a postfix on this same method that moves entity origins and leaves vanilla in charge of the refresh. `RacePositionConfigurationService` and `RaceTableauPositioning` went with it (both only existed to serve that service). Background: `docs/reviews/rca-prone-character-tableau-2026-07-31.md`.
+- `CharacterTableau_RefreshCharacterTableau_PositionPatch` (`Patch72_TableauRacePosition`), a **postfix** on `CharacterTableau.RefreshCharacterTableau`, is the patch that actually applies `CharacterAvatarPatch.json` to the 3D tableau. Sets the character and mount entity origins ABSOLUTELY from the tableau's own spawn frames, so re-applying on every refresh is idempotent; writes `origin` only, never `rotation`, because the rotation carries the race scale. The offset row follows the slot, not the entity: main slot reads `<race>`, mount slot reads `mount_<race>`, and `_isCharacterMountPlacesSwapped` swaps which is which. Full rationale in the [patch registry](../reference/harmony-patch-registry.md).
 - `BasicCharacterTableau_RefreshCharacterTableau_Patch` (`Patch55_BasicTableauRaceGuard`, applied in `OnBeforeInitialModuleScreenSetAsRoot`) — Prefix on the private `BasicCharacterTableau.RefreshCharacterTableau` (the Save/Load hero preview, a **different** class from `CharacterTableau`). Coerces the private `_race` to the human base via `IBasicTableauRaceGuard.ResolveSafeRace` so the agentless static-morph build can't AV on a custom-race head — see "Save/Load Hero Preview CTD Guard" below.
 
 `RacePersistenceBehavior` (CampaignBehaviorBase) captures all hero races to a `Dictionary<string, int>` before save (`OnBeforeSaveEvent`), and at session launch (`OnSessionLaunchedEvent`) restores them and then captures again — both halves, in that order, for the reasons below. The dictionary is serialized through `SyncData` under the key `_taom_heroRaceMap`, alongside a **race-name legend** (`_taom_raceNameLegend`, #330): the race names in FaceGen index order at capture time, `;`-joined into one string. The saved ints are positions in the merged skins.xml `<race>` list, which shifts when a race is inserted/removed/reordered or the module set changes — so restore translates `savedInt → legend[savedInt] (name) → IRaceManager.GetRaceIdFromName(name)` (validate-before-lookup via `IsValidRaceName`; a removed race skips + warns and the hero keeps its XML race). An absent/empty legend (pre-#330 save) takes the legacy raw-int path unchanged (`IsValidRaceId` guard, race-0 bypass). The legend is one string beside the proven `Dictionary<string,int>` deliberately — a `Dictionary<string,string>` failed to round-trip `IDataStore` at ~1000 entries (WotR Momentum, 2026-07-03). `SyncRaceData` also clears both fields when `dataStore.IsLoading` before syncing, so a same-process load of an older-format save can't inherit the previous campaign's map/legend (#130-R1 bug class, previously only handled for new campaigns).
@@ -34,7 +35,7 @@ Five Harmony patches intercept the key rendering and race-assignment paths:
 
 **Capture refuses a degenerate race table, and the legend is exactly why it must.** `CaptureHeroRaces` returns early when `IRaceManager.GetOrderedRaceNames()` yields fewer than `MinimumTrustworthyRaceCount = 2` races. A co-op host running WITHOUT TAOM's modules has one race ("human") in its FaceGen, so every hero there reads back as 0; capturing that wrote `legend="human"` + `{all heroes: 0}`, the map rode the host→client save transfer, and `RestoreHeroRaces` on a full 15-race client translated "human" to a **perfectly valid** current id and force-set every hero in the world to it. The legend is what makes the bad map dangerous rather than inert — it translates confidently. **Per-value validation structurally cannot catch this**: every entry is individually well-formed, and the race COUNT is the only tell. Two is the smallest count that can express "human and something else", which is the minimum a real TAOM load produces. This is the same theme as the "Save/Load Hero Preview CTD Guard" below — a module-set difference producing a valid-looking id — one level up, at the whole table rather than one entry. It **skips rather than clears**: the prior map and legend stay intact, so a good capture already in memory survives the bad host, and a genuinely empty state stays empty (restore then takes its no-saved-data path and heroes keep their XML races). The joining player's OWN character-creation race is a separate loss with a separate fix — see [player-possession.md](player-possession.md); the co-op signals both rely on are in [coop-interop.md](coop-interop.md).
 
-Position offsets per race are stored in two JSON config files: `CharacterAvatarPatch.json` (inventory/avatar view) and `CharacterImagePatch.json` (character spawner). Each entry has `race`, `horizontal`, `vertical`, and `zoom` float offsets.
+Position offsets per race are stored in two JSON config files: `CharacterAvatarPatch.json` (the 3D inventory/avatar tableau) and `CharacterImagePatch.json` (the 2D character-spawner portraits). Each entry has `Race`, `Horizontal`, `Vertical` and `Zoom` float offsets. A `mount_<race>` row frames that race's mount. The two files are never merged, and there is no fallback from `mount_<race>` to `<race>`.
 
 ### Component Diagram
 ```
@@ -43,17 +44,27 @@ CharacterTableau.SetRace() [Postfix Patch3_SetRace]
 
 CharacterTableau.RefreshCharacterTableau() [Prefix Patch2_RefreshTableau]
     |-> resolves as_<monster>[_female]_warrior, refreshes _oldAgentVisuals
-    |   (CharacterTableauService is NOT called — see note above)
-            |-> IRaceManager.GetRaceNameFromId(_race)
-            |-> RacePositionConfig["CharacterAvatarPatch"].Items[raceName]
-            |-> applies position offset to charframe / mountframe
-            |-> rebuilds AgentVisualsData with Race(race) and adjusted frame
+
+CharacterTableau.RefreshCharacterTableau() [Postfix Patch72_TableauRacePosition]
+    |-> ITableauPositionService.TryGetOrigin(spawnOrigin, race, entity)
+    |       |-> IRaceManager.IsValidRaceId -> GetRaceNameFromId
+    |       |-> IRacePositionStore.ResolveAvatar(race)        (the character)
+    |       |-> IRacePositionStore.ResolveAvatarMount(race)   (the mount)
+    |-> writes ONLY entity.origin; rotation (which carries race scale) is untouched
+    |   character origin: swapped ? _characterMountPositionFrame : _initialSpawnFrame
+    |   mount origin:     swapped ? _mountCharacterPositionFrame : _mountSpawnPoint
+    |   (the swap moves the models, so it changes the ORIGIN only, never which row is read)
 
 CharacterSpawner.InitWithCharacter() [Prefix Patch4_CharacterSpawner, returns false]
     |-> CharacterSpawnerService.InitWithCharacter(spawner, characterCode)
             |-> IFaceGenAdapter.GetBaseMonsterFromRace(race)
-            |-> RacePositionConfig["CharacterImagePatch"].Items[raceName]
+            |-> IRacePositionStore.ResolveImage(raceName)
             |-> builds AgentVisuals with correct monster base + position offset
+
+taom.set_race_offset / nudge / save / reload  [dev console]
+    |-> RacePositionTuningParser validates surface, race and offsets
+    |-> IRacePositionStore.GetOrAdd(...) returns the LIVE row, mutated in place
+    |-> LiveTableauRef -> _isVisualsDirty = true -> vanilla refreshes -> Patch72 re-applies
 
 FaceGen.GetBaseMonsterFromRace() [Postfix Patch5_FaceGen]
     |-> EyeHeightAdjustmentHook.OnGetBaseMonsterFromRace(ref result, race)
@@ -77,8 +88,10 @@ Two JSON files under the mod's config path (resolved via `IPathService.ConfigPat
 
 | File | Purpose |
 |------|---------|
-| `CharacterAvatarPatch.json` | Per-race position offsets for inventory/avatar tableau (`CharacterTableauService`) |
-| `CharacterImagePatch.json` | Per-race position offsets for character spawner scenes (`CharacterSpawnerService`) |
+| `CharacterAvatarPatch.json` | Per-race position offsets for the 3D inventory/avatar tableau (`Patch72` via `TableauPositionService`) |
+| `CharacterImagePatch.json` | Per-race position offsets for the 2D character spawner scenes (`CharacterSpawnerService`) |
+
+Both are read by one owner, `RacePositionStore`. The two surfaces are tuned independently and are **never merged**: a race may legitimately have a row in one file and not the other, and borrowing across files frames the 2D portrait with 3D numbers. Rows are validated at load (`RacePositionConfigValidator`) and a row with a non-finite or out-of-range offset is dropped with a warning rather than partially applied, which restores the documented default of vanilla framing for that race.
 
 Each file contains a JSON array of objects with fields: `Race` (string, lowercase race name), `Horizontal` (float), `Vertical` (float), `Zoom` (float).
 
@@ -88,18 +101,25 @@ Special case: entries prefixed with `mount_` (e.g., `mount_dwarf`) are used to o
 | File | Purpose |
 |------|---------|
 | `Main/Features/HeroRace/HeroRaceIoC.cs` | DryIoc registrations; also initializes `FaceGen_GetBaseMonsterFromRace_Patch` with the resolved hook |
-| `Main/Features/HeroRace/CharacterTableauService.cs` | Rebuilds tableau agent visuals with race-aware camera offsets — **currently unreferenced** (registered in IoC, no caller; see the Patch2 note above) |
 | `Main/Features/HeroRace/Diagnostics/TableauDiagnostics.cs` | `[TableauDiag]` reporting for the prone-tableau fault. **Reduced 2026-08-01** — the per-race action-set probe, environment dump and action-index health probe were removed (293 lines) once they had identified the root cause. What remains is the throttled logging the repair and the tableau patches use to state in one line whether a session hit the fault. Remove entirely once #371 is confirmed closed in the wild |
 | `Main/Features/HeroRace/ActionIndexCacheRepair.cs` | **Permanent fix**, not diagnostics. Re-resolves `ActionIndexCache`'s static action indices when the engine's explicit static constructor ran before action types loaded and baked all 215 to `-1` — the cause of characters rendering in bind pose in every UI tableau. Gated on `MBAnimation` so it can never trigger the initialisation it detects; round-trip verifies every write; no-op when healthy. Called from `CharacterTableau` `FirstTimeInit` + `RefreshCharacterTableau` prefixes (the paths that READ the statics), with `SubModule.OnGameInitializationFinished` and `CharacterSpawnerService` as earlier/later attempts. See `docs/reviews/rca-prone-character-tableau-2026-07-31.md` addendum |
 | `Main/Features/HeroRace/IBasicTableauRaceGuard.cs` / `BasicTableauRaceGuard.cs` | Allow-list deciding which races are safe in the agentless `BasicCharacterTableau` build (Save/Load preview); coerces others to the human base |
 | `Main/Features/HeroRace/CharacterSpawnerService.cs` | Full reimplementation of `CharacterSpawner.InitWithCharacter` with race-aware monster base |
-| `Main/Features/HeroRace/EyeHeightAdjustmentHook.cs` | Lowers dwarf eye height by 0.2 via reflection on the `Monster` struct |
+| `Main/Features/HeroRace/EyeHeightAdjustmentHook.cs` | Lowers dwarf eye height via reflection on the shared `Monster`, by the MCM offset (default -0.2). Captures the pre-mutation pair on first sight and writes it back when the toggle goes off. Takes `IReflectionService` by injection: the static `ReflectionHelper` resolves from the container in its type initialiser, which made this class unreachable from a test host |
 | `Main/Features/HeroRace/RacePersistenceService.cs` | Captures and restores hero races across save/load — ints + a `;`-joined race-name legend so restore is robust to skins.xml merge-order shifts (#330). Refuses to capture against a table of fewer than 2 races, which is what a TAOM-less co-op host looks like |
 | `Main/Features/HeroRace/RacePersistenceBehavior.cs` | CampaignBehaviorBase wiring for save/load events and SyncData; session launch restores THEN captures (`OnSessionLaunched`) |
-| `Main/Features/HeroRace/RacePositionConfigurationService.cs` | Reads both config files and exposes race and mount position items by race name |
-| `Main/Features/HeroRace/Configuration/RacePositionConfig.cs` | JSON config POCO + `LoadConfig`/`WriteConfig` helpers |
+| `Main/Features/HeroRace/Configuration/RacePositionConfig.cs` | JSON config POCO + `LoadConfig`/`WriteConfig` helpers. Loading sanitises; writing swaps through a temp file and keeps the old file as `.prev` |
+| `Main/Features/HeroRace/Configuration/RacePositionConfigValidator.cs` | Drops any row that is non-finite, out of range, unnamed or duplicated, with a warning per row. Row-level rather than field-level, so a race falls back to vanilla framing rather than being framed half-right |
+| `Main/Features/HeroRace/IRacePositionStore.cs` / `RacePositionStore.cs` | Single owner of both framing configs. Serves live row instances (so tuner edits apply without a reload) and re-checks finiteness on the way out, so both the 2D and 3D paths inherit that gate |
+| `Main/Features/HeroRace/ITableauPositionService.cs` / `TableauPositionService.cs` | Absolute-origin framing maths for the 3D tableau. Rows follow the ENTITY (`<race>` for the character, `mount_<race>` for the mount); swapping places changes only which spawn origin is passed in |
+| `Main/Features/HeroRace/IHeroRaceSettingsProvider.cs` / `HeroRaceSettingsProvider.cs` | MCM boundary for the eye-height toggle and offset |
+| `Main/Features/HeroRace/EyeHeightAdjustment.cs` | Pure clamp/resolve maths for the eye height. Returns 0 in its out parameter on every failure path |
+| `Main/Features/HeroRace/LiveTableauRef.cs` | Weak handle on the tableau that last refreshed, for the tuner's `.` shorthand. Reports race -1 once that tableau is collected, so `.` cannot resolve to a race nobody is looking at |
+| `Main/Features/HeroRace/Cheats/RacePositionTuningCheats.cs` | The five `taom.*` tuning commands (thin entry points) |
+| `Main/Features/HeroRace/Cheats/RacePositionTuningParser.cs` | Their argument parsing and validation, extracted so it is reachable from a test |
+| `Main/Features/HeroRace/Hooks/CharacterTableau_RefreshCharacterTableau_PositionPatch.cs` | `Patch72_TableauRacePosition` postfix: applies the 3D framing offsets |
 | `Main/Features/HeroRace/Hooks/CharacterTableau_SetRace_Patch.cs` | Patch3_SetRace postfix |
-| `Main/Features/HeroRace/Hooks/CharacterTableau_RefreshCharacterTableau_Patch.cs` | RefreshCharacterTableau postfix |
+| `Main/Features/HeroRace/Hooks/CharacterTableau_RefreshCharacterTableau_Patch.cs` | `Patch1_FirstTimeInit` postfix + `Patch2_RefreshTableau` **prefix** (action-set resolution). Note the file name says postfix; only Patch1 is one |
 | `Main/Features/HeroRace/Hooks/CharacterSpawner_InitWithCharacter_Patch.cs` | Patch4_CharacterSpawner prefix |
 | `Main/Features/HeroRace/Hooks/FaceGen_GetBaseMonsterFromRace_Patch.cs` | Patch5_FaceGen postfix delegating to EyeHeightAdjustmentHook |
 | `Main/Features/HeroRace/Hooks/BasicCharacterTableau_RefreshCharacterTableau_Patch.cs` | `Patch55_BasicTableauRaceGuard` prefix (applied pre-menu in `OnBeforeInitialModuleScreenSetAsRoot`); coerces the Save/Load preview `_race` to a tableau-safe race (CTD guard) |
@@ -111,6 +131,11 @@ Special case: entries prefixed with `mount_` (e.g., `mount_dwarf`) are used to o
 | `TAOM.Tests/Features/HeroRace/Configuration/RacePositionConfigTests.cs` | Config POCO loading |
 | `TAOM.Tests/Features/HeroRace/BasicTableauRaceGuardTests.cs` | `ResolveSafeRace` allow-list: human + verified races preserved, unverified/invalid coerced to human, throw fail-safe |
 | `TAOM.Tests/Features/HeroRace/Patch55BasicTableauRaceGuardBindingTests.cs` | Drift-guard: `BasicCharacterTableau._race` (the `____race` injection) still resolves as `int` against the installed engine |
+| `TAOM.Tests/Features/HeroRace/Patch72TableauRacePositionBindingTests.cs` | Drift-guard for Patch72's eight `____field` injections plus its target method |
+| `TAOM.Tests/Features/HeroRace/EyeHeightBackingFieldBindingTests.cs` | Drift-guard for the two `<...>k__BackingField` literals the eye-height hook writes |
+| `TAOM.Tests/Features/HeroRace/HeroRaceWiringTests.cs` | Pins the `Initialize` call and the `SubModule.cs` category string. Both fail silently, and "registered but never invoked" is the exact bug this feature already shipped once |
+| `TAOM.Tests/Features/HeroRace/ShippedRacePositionConfigTests.cs` | Parses the configs that actually ship, which no other test and no validator touched |
+| `TAOM.Tests/Features/HeroRace/RacePositionStoreTests.cs` / `TableauPositionServiceTests.cs` / `RacePositionTuningParserTests.cs` | Store, framing maths, and tuner argument handling |
 
 ## Dependencies
 - `IRaceManager` — maps race int to race name string (from `TAOM.Core.Domain`)
@@ -129,7 +154,12 @@ Special case: entries prefixed with `mount_` (e.g., `mount_dwarf`) are used to o
 2. Edit `CharacterAvatarPatch.json` to add an entry: `{ "Race": "yourrace", "Horizontal": 0.0, "Vertical": 0.0, "Zoom": 0.0 }`.
 3. If the race can be mounted, add a `mount_yourrace` entry for the mount offset.
 4. Edit `CharacterImagePatch.json` similarly for spawner scenes.
-5. Tune values in-game by equipping a hero of the race in inventory and adjusting until framing looks correct.
+5. Tune in-game rather than by guessing. Open an inventory or party screen showing a hero of that race, then from the dev console:
+   - `taom.print_race_offsets` reports every configured row and which race the on-screen tableau is showing.
+   - `taom.nudge_race_offset avatar . v 0.05` nudges one axis of the race currently on screen (`.` resolves it for you) and redraws immediately. Axes are `h` left/right, `v` up/down, `z` nearer/farther.
+   - `taom.set_race_offset avatar dwarf 0 0.15 -0.1` sets all three outright.
+   - `taom.save_race_offsets` writes both files. **They are written to the game install, not the repo.** Copy them back into `Main/_Module/ModuleData/configs/` to keep them.
+   - `taom.reload_race_offsets` discards unsaved edits.
 6. If the race requires eye-height adjustment (e.g., very short), extend `EyeHeightAdjustmentHook.OnGetBaseMonsterFromRace` with a new branch for the race name, write the test first.
 
 ## Wanderer Race Fix (2026-04-08)

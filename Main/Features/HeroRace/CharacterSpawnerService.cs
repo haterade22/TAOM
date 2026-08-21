@@ -21,32 +21,18 @@ public class CharacterSpawnerService : ICharacterSpawnerService
     private readonly IRaceManager _raceManager;
     private readonly IFaceGenAdapter _faceGenAdapter;
     private readonly IModLogger _logger;
-    private readonly RacePositionConfig _config;
-    private readonly Dictionary<string, RacePositionConfigItem> _configLookup;
+    private readonly IRacePositionStore _positionStore;
 
-    public CharacterSpawnerService(IRaceManager raceManager, IFaceGenAdapter faceGenAdapter, IModLogger logger)
+    public CharacterSpawnerService(
+        IRaceManager raceManager,
+        IFaceGenAdapter faceGenAdapter,
+        IRacePositionStore positionStore,
+        IModLogger logger)
     {
         _raceManager = raceManager ?? throw new ArgumentNullException(nameof(raceManager));
         _faceGenAdapter = faceGenAdapter ?? throw new ArgumentNullException(nameof(faceGenAdapter));
+        _positionStore = positionStore ?? throw new ArgumentNullException(nameof(positionStore));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _config = RacePositionConfig.LoadConfig("CharacterImagePatch");
-        _configLookup = BuildConfigLookup(_config);
-    }
-
-    private static Dictionary<string, RacePositionConfigItem> BuildConfigLookup(RacePositionConfig config)
-    {
-        var lookup = new Dictionary<string, RacePositionConfigItem>(StringComparer.OrdinalIgnoreCase);
-        if (config?.Items != null)
-        {
-            foreach (var item in config.Items)
-            {
-                if (!string.IsNullOrEmpty(item.Race))
-                {
-                    lookup[item.Race] = item;
-                }
-            }
-        }
-        return lookup;
     }
 
     public void InitWithCharacter(CharacterSpawner spawner, CharacterCode characterCode, bool useBodyProperties = false)
@@ -146,8 +132,12 @@ public class CharacterSpawnerService : ICharacterSpawnerService
         agentVisuals = ReflectionHelper.GetFieldValue<CharacterSpawner, AgentVisuals>(spawner, "_agentVisuals");
         MatrixFrame frame = MatrixFrame.Identity;
 
-        var raceName = _raceManager.GetRaceNameFromId(characterCode.Race);
-        _configLookup.TryGetValue(raceName, out var configitem);
+        // Validate the id before the name lookup: GetRaceNameFromId falls back to "human" for
+        // unknown ids, which would silently frame a junk race with human offsets.
+        var raceName = _raceManager.IsValidRaceId(characterCode.Race)
+            ? _raceManager.GetRaceNameFromId(characterCode.Race)
+            : null;
+        var configitem = _positionStore.ResolveImage(raceName);
 
         if (configitem != null)
         {

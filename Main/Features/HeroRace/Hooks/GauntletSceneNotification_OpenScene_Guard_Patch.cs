@@ -24,7 +24,7 @@ namespace TAOM.Features.HeroRace.Hooks;
 /// When any one character's visual build yields null, the whole cinematic NREs (managed
 /// <c>System.NullReferenceException</c>, HResult 0x80004003 — catchable here). No TAOM patch is on the crash
 /// stack — unguarded engine code, the FOURTH raw custom-race/visual render path TAOM has to guard (siblings:
-/// Save/Load preview → Patch55_BasicTableauRaceGuard; in-game tableaus → CharacterTableauService; mission spawns
+/// Save/Load preview → Patch55_BasicTableauRaceGuard; in-game tableaus → Patch2_RefreshTableau + Patch72_TableauRacePosition; mission spawns
 /// → CharacterSpawnerService). The same path backs the behavior's KingdomCreated/JoinKingdom/Marriage/death
 /// notifications, so the guard is intentionally generic rather than keyed to one notification type.
 ///

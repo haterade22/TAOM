@@ -15,8 +15,6 @@ namespace TAOM.Features.HeroRace.Hooks;
 [HarmonyPatchCategory("Patch1_FirstTimeInit")]
 public class CharacterTableau_FirstTimeInit_Patch
 {
-    public static RacePositionConfig Config;
-
     [HarmonyPostfix]
     public static void Postfix()
     {
@@ -24,18 +22,12 @@ public class CharacterTableau_FirstTimeInit_Patch
         // first opportunity after game-init to repair the statics vanilla is about to read.
         ActionIndexCacheRepair.TryEnsureRepaired("tableau-first-time-init");
 
-        try
-        {
-            Config = RacePositionConfig.LoadConfig("CharacterAvatarPatch");
-            TableauDiagnostics.Log("p1.firsttimeinit",
-                $"Patch1 CharacterTableau.FirstTimeInit ran; CharacterAvatarPatch config loaded (null={Config == null}).");
-        }
-        catch (Exception e)
-        {
-            // Prevent game crash during mod initialization. Diagnostics 2026-07-31: this catch was
-            // silent, so a config-load failure here was indistinguishable from success.
-            TableauDiagnostics.LogError($"Patch1 FirstTimeInit config load threw: {e}");
-        }
+        // This used to also load CharacterAvatarPatch.json into a public static that nothing read,
+        // re-reading the file from disk on every FirstTimeInit and discarding the validator warnings.
+        // Removed 2026-08-21 with the Patch72 work: RacePositionStore is the single owner of both
+        // framing configs, and a second snapshot here could only ever disagree with it once the
+        // in-game tuner started editing rows.
+        TableauDiagnostics.Log("p1.firsttimeinit", "Patch1 CharacterTableau.FirstTimeInit ran.");
     }
 }
 

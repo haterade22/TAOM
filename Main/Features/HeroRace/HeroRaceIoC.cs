@@ -1,4 +1,5 @@
 using DryIoc;
+using TAOM.Core.Logging;
 using TAOM.Features.HeroRace.Hooks;
 
 namespace TAOM.Features.HeroRace;
@@ -7,11 +8,22 @@ public static class HeroRaceIoC
 {
     public static void RegisterHeroRaceFeature(IContainer container)
     {
-        container.Register<IRacePositionConfigurationService, RacePositionConfigurationService>(Reuse.Singleton);
+        // Single owner of both race-framing configs. Singleton because the rows it hands out are
+        // the live instances the in-game tuner edits — a transient store would silently discard
+        // every nudge.
+        container.Register<IRacePositionStore, RacePositionStore>(Reuse.Singleton);
 
-        container.Register<ICharacterTableauService, CharacterTableauService>(Reuse.Singleton);
+        container.Register<IHeroRaceSettingsProvider, HeroRaceSettingsProvider>(Reuse.Singleton);
 
         container.Register<ICharacterSpawnerService, CharacterSpawnerService>(Reuse.Singleton);
+
+        // 3D tableau framing (Patch72). Until this existed the avatar offsets were loaded, parsed
+        // and never applied: the service that consumed them was registered but never invoked.
+        container.Register<ITableauPositionService, TableauPositionService>(Reuse.Singleton);
+        var tableauPositionService = container.Resolve<ITableauPositionService>();
+        CharacterTableau_RefreshCharacterTableau_PositionPatch.Initialize(
+            tableauPositionService,
+            container.Resolve<IModLogger>());
 
         container.Register<IOnFaceGenGetBaseMonsterFromRace, EyeHeightAdjustmentHook>(Reuse.Singleton);
 

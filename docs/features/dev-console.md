@@ -307,6 +307,17 @@ answer is conclusive and fails open in every path.
 | `taom.spawn_troops <id> <n> [enemy\|ally]` | B | mission | Composing a specific fight. **Vanilla ships no mission spawn at all** |
 | `taom.damage_agent <amount> [name]` | B | mission | HP attrition and death thresholds. **Cannot test shrug-off / unstoppable** — a synthetic blow bypasses the hit path those models run on |
 | `taom.requeue_settlement <settlement>` | B | campaign | A siege plus a day's wait to re-check #333. Refuses settlements with no existing record, so it verifies a timer rather than arming one |
+| `taom.print_race_offsets [avatar\|image]` | A | anywhere | Every configured per-race framing offset, plus which race the on-screen tableau is showing |
+| `taom.set_race_offset <avatar\|image> <race> <h> <v> <z>` | B | anywhere | Sets a race's three framing offsets outright and redraws the open tableau. In memory until saved |
+| `taom.nudge_race_offset <avatar\|image> <race> <h\|v\|z> <delta>` | B | anywhere | Nudges one axis and redraws. `.` targets the race on screen. A nudge past the range is refused, not clamped, so the key never silently stops working |
+| `taom.save_race_offsets` | C | anywhere | Writes both framing configs into the GAME INSTALL, keeping the previous file as `.prev`. Copy them back into the repo to keep them |
+| `taom.reload_race_offsets` | A | anywhere | Re-reads both framing configs from disk, discarding unsaved edits |
+
+> **Race framing (2026-08-21).** Only one of the fifteen races in a TAOM client ships framing
+> offsets, because the documented way to author one was edit JSON, restart, look, repeat. These five
+> commands close that loop: open a character preview, nudge, watch it move. Race names are validated
+> against the engine's own table, so a typo is refused rather than persisted as a row nothing will
+> ever read. `mount_` is accepted only on `avatar`; the 2D portrait path never looks up a mount row.
 
 **Still unbuilt from Phase 1:** `print_town_mercenaries`, `print_banner_bearers`, `print_wotr`.
 **Phase 2 remaining:** `convert_settlement`. **Phase 3:** untouched.

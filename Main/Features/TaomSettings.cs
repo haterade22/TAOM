@@ -1023,6 +1023,33 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "On = your clan is scored like any other, including the concentration and culture-mismatch penalties. Off = you keep the capturer, landless and culture-match bonuses but are never damped for what you already hold. Default: off.")]
     public bool FiefGrantApplyPenaltiesToPlayerClan { get; set; } = false;
 
+    // --- Character Preview / Race Framing ---
+    //
+    // Bannerlord frames and poses every character as if it were human. The per-race position
+    // offsets that correct that live in ModuleData/configs/CharacterAvatarPatch.json (the 3D
+    // tableau) and CharacterImagePatch.json (the 2D portraits), not here — they are per-race data,
+    // not a single slider. Tune them in-game with taom.nudge_race_offset and persist with
+    // taom.save_race_offsets.
+    //
+    // What IS here is the dwarf eye height, because it is one number that applies to one race and
+    // players reported the third-person camera floating above a dwarf head. It was a compile-time
+    // constant of -0.2f; the default below is deliberately the same value, so exposing it as a
+    // slider does not silently retune existing installs. Bounds and default come from
+    // EyeHeightAdjustment's consts rather than repeated literals, so the slider cannot drift away
+    // from the clamp that enforces it.
+
+    [SettingPropertyGroup("Character Preview/Dwarf Eye Height", GroupOrder = 44)]
+    [SettingPropertyBool("Enable Dwarf Eye Height", Order = 0, RequireRestart = false,
+        HintText = "Lower a dwarf eye height so the third-person camera sits at the head instead of floating above it. Applies to every dwarf, not just the player, so it also moves the aim origin for dwarf troops. Changing this takes effect the next time a dwarf visual is built (opening a character preview, or the next dwarf spawn), not the instant you flip it.")]
+    public bool EnableDwarfEyeHeight { get; set; } = true;
+
+    [SettingPropertyGroup("Character Preview/Dwarf Eye Height")]
+    [SettingPropertyFloatingInteger("Dwarf Eye Height Offset",
+        HeroRace.EyeHeightAdjustment.MinAdjuster, HeroRace.EyeHeightAdjustment.MaxAdjuster, "#0.00",
+        Order = 1, RequireRestart = false,
+        HintText = "Metres relative to the human eye height. Negative lowers the camera. Default -0.20. The resulting height is clamped to a safe range, so extreme values cannot put the camera in the floor. Like the toggle above, a change lands the next time a dwarf visual is built.")]
+    public float DwarfEyeHeightAdjuster { get; set; } = HeroRace.EyeHeightAdjustment.DefaultAdjuster;
+
     // --- Map Tools / Distance Cache Rebuild ---
     //
     // Rebuilds Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin

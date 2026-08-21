@@ -4,6 +4,119 @@
 
 ## 2026-08-21
 
+### fix(heroRace): the 3D tableau race offsets were parsed and never applied
+
+`CharacterAvatarPatch.json` has been shipping per-race framing offsets for the inventory, party and
+encyclopedia previews. Nothing applied them. `CharacterTableauService`, the 221-line class that
+consumed them, was registered in `HeroRaceIoC` and **invoked by nothing**; only the 2D portrait half
+(`Patch4_CharacterSpawner`) was live. The 2026-07-31 tableau pass had spotted the dead registration
+and left wire-or-delete open in `docs/features/hero-race.md`. This closes it by deleting.
+
+Replaced with **`Patch72_TableauRacePosition`**, a postfix on `CharacterTableau.RefreshCharacterTableau`
+that moves the character and mount entity origins and leaves vanilla in charge of the refresh. The
+dead service had reimplemented the whole of `RefreshCharacterTableau` plus `UpdateMount` behind about
+thirty private-field reflection bindings; the postfix needs eight, all pinned by
+`Patch72TableauRacePositionBindingTests`.
+
+Two decisions inside it worth keeping:
+
+- **Origins are absolute, not deltas.** The offset is measured from the tableau's own spawn frames
+  rather than added to the entity's current origin. Vanilla does reset both origins on every refresh
+  (the character through `AgentVisuals.Refresh`, the mount by being recreated in `UpdateMount`, both
+  read on 1.4.8), so a delta would usually be fine. "Usually" is load-bearing there and the failure
+  mode is a character that walks out of shot after enough equipment changes.
+- **Rotation is never written.** `AgentVisuals.Refresh` bakes the race scale into the frame rotation,
+  so replacing the whole frame would silently flatten every non-human body scale.
+
+**Rows follow the entity, not the place.** The character always reads `<race>` and the mount always
+reads `mount_<race>`; swapping their places changes only which spawn origin each is measured from.
+The dead service selected by place, so a swap handed the horse the rider's offsets. Unobservable there
+(nothing called it) but wrong against the data we ship: `cave_troll` has a plain row at Zoom -4.0 and
+no mount row, so place-based selection would have pushed a horse four metres out of frame and left the
+troll unframed. Caught in review; the entity rule is now pinned by tests.
+
+`RacePositionConfigurationService` and `RaceTableauPositioning` were deleted alongside it, both having
+existed only to serve it. `RacePositionStore` now owns both config files for everyone, replacing **four**
+independent loaders of the same two files. One of those merged the two files and fell back from the
+image config to the avatar config, which is a real defect: the surfaces are tuned against different
+cameras, so borrowing across them frames the 2D portrait with 3D numbers. The fourth was easy to miss
+and the review found it: `Patch1_FirstTimeInit` re-read `CharacterAvatarPatch.json` from disk on every
+`CharacterTableau.FirstTimeInit` into a `public static` field that nothing anywhere read. Deleted.
+
+### feat(heroRace): tune race framing from the dev console instead of restarting the game
+
+One of fifteen races in a TAOM client had authored offsets, and the documented way to add another was
+edit JSON, restart, look, repeat. `taom.print_race_offsets`, `taom.set_race_offset`,
+`taom.nudge_race_offset`, `taom.save_race_offsets` and `taom.reload_race_offsets` edit the live rows
+and force the open tableau to redraw. Passing `.` as the race targets whatever the on-screen tableau
+is showing, so you do not need to know a race id to frame the hero you are looking at.
+
+Console rather than hotkeys deliberately: a hotkey listener polls input every frame for a feature used
+on a handful of afternoons, and it fires for players who never asked for it.
+
+Saves write to the **game install**, not the repo, so authored offsets have to be copied back into
+`Main/_Module/ModuleData/configs/` to survive.
+
+### feat(heroRace): dwarf eye height is an MCM slider
+
+`DwarvenEyeHeightAdjustment` was a compile-time `-0.2f`. It is now
+`Character Preview/Dwarf Eye Height` in MCM, defaulting to that same -0.2 so exposing it does not
+silently retune existing installs. The adjustment mutates the shared base monster, so it moves every
+dwarf and not only the player; the pre-mutation values are captured on first sight and put back when
+the toggle goes off, so the toggle takes effect live rather than at the next restart.
+
+### fix(heroRace): the framing configs were parsed but never validated
+
+`RacePositionConfig.LoadConfig` caught parse failures only, so a hand-edited `"Vertical": NaN`
+deserialised cleanly and rode into a native `SetFrame`. That is not a visible mis-frame, it is a
+character that vanishes. `RacePositionConfigValidator` now drops any row with a non-finite or
+out-of-range offset and warns, and `TableauPositionService` re-checks at the point of use because the
+new console tuner can create rows after load. Row-level rather than field-level on purpose: zeroing
+one axis frames the race half-right, which reads as a bad tuning pass and sends the next person after
+the wrong bug.
+
+### fix(heroRace): deep-review follow-ups
+
+A seven-dimension review with adversarial verification raised 38 findings. The ones that changed code:
+
+- **The framing rows now follow the entity rather than the place** (above). The single real correctness
+  bug in the changeset, and it came from porting the dead service faithfully instead of questioning it.
+- **The tuner validates race names.** A typo used to create a live row, get persisted by
+  `taom.save_race_offsets`, and sit in the config forever with nothing ever looking it up. It also
+  advertised `mount_` on the 2D portrait surface, which has no mount row on any code path; that is now
+  refused with a message saying so.
+- **Argument parsing moved to `RacePositionTuningParser`.** The console statics are entry points that
+  no test can reach, so the only arithmetic in the feature (the nudge bound check) was unreachable too.
+- **`EyeHeightAdjustmentHook` takes `IReflectionService` by injection.** The static `ReflectionHelper`
+  resolves from the container in its type initialiser, so touching it from a test host throws. That,
+  not the `Monster` type, is why the capture/restore path had no tests. It has nine now.
+- **The finiteness gate moved into `RacePositionStore`.** It guarded only the 3D path; the 2D path
+  reads the same live, tuner-mutable rows and writes them to the same kind of native call.
+- **Saving a config is atomic and keeps a `.prev`.** It writes into the game install, so a crash
+  part-way through a truncating write would have left a config the loader treats as unparseable and
+  silently replaces with vanilla framing for every race.
+- **The MCM hint no longer over-promises.** Flipping the eye-height toggle does nothing by itself: the
+  shared monster is put back on the next dwarf visual build. The hint says that now.
+
+New tests worth naming: `HeroRaceWiringTests` pins the `Initialize` call and the `SubModule.cs`
+category string, both of which fail silently, in the one feature that has already shipped a
+registered-but-never-invoked service. `ShippedRacePositionConfigTests` parses the configs that actually
+ship, which no test and no validator previously touched. `EyeHeightBackingFieldBindingTests` guards the
+two `k__BackingField` literals.
+
+Suite 6878 green.
+
+### chore(heroRace): reviewed the standalone TAOM_RacePortraits module, did not adopt it
+
+An externally built module rebuilding the LOTRAOM 1.2.12 `HeroRace` feature for 1.4.x. Decompiled and
+compared against what TAOM already ships: it duplicates the portrait patch, the eye-height hook and
+both config files, and would have collided on `Patch2`/`Patch3`/`Patch4`/`Patch5` and on both JSON
+filenames. Not adopted. Its `CharacterTableau` postfix informed the shape of Patch72, and its authored
+`cave_troll` avatar offsets were imported as data. Recorded in
+[`docs/reference/provenance-register.md`](docs/reference/provenance-register.md) under LOTRAOM;
+reading its source is what makes Patch72 a behavioural port rather than clean-room.
+
+
 ### fix(tooling): the polearm/shield gate crashed instead of reporting
 
 `audit_polearm_shield_parity.py` called `os.path.relpath(path, REPO_ROOT)` when printing a finding,
