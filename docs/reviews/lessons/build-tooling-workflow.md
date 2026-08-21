@@ -1311,6 +1311,91 @@ a live measurement and reached opposite conclusions from it.
 - **Source:** `docs/reviews/rca-faction-economy-2026-08-14.md` findings #1 and #12 (#459).
 
 
+### A replay tool that defaults to one copy fixes one copy
+
+`tools/register_one_handed_polearms.py` is the replay half of the unversioned-Armory trap: the
+Armory ships to players but is not in the repo, so an edit there is reverted by any module refresh
+and this tool re-applies it. On 2026-08-20 it ran once, against the game install, and the fix was
+called done. On 2026-08-21 the assets-repo copy at `lotraom-assets/v1.4/LOTRLOME_Armory` turned out
+to be missing the Black Numenorean lance's two pieces. It did hold the four Dale spears' seven,
+under the older `TAOM-DALE-1H` marker that the #449 fix wrote and that this tool sweeps forward.
+
+That copy is what a refresh restores FROM. So the replay tool had written only to the thing that
+gets overwritten, and not to the thing that overwrites it. The gate would have reported the same
+finding a fourth time and it would have looked like a regression rather than an incomplete fix.
+
+- **Why missed:** the tool takes `--game-modules` as an override, which frames the game install as
+  the location and anything else as a special case. It is not a special case; it is the authoritative
+  one. A tool whose whole purpose is surviving a refresh should default to writing every copy, or at
+  minimum report the copies it did not touch. Nothing in its output said "1 of 2".
+- **The check that would have caught it:** resolve the affected item's primary usage in every copy,
+  or diff each copy against its own HEAD. A block hash across copies is NOT the check, because a
+  legacy-marker sweep legitimately makes two correct copies differ in text.
+- **Generalise:** for any unversioned dependency module, "where does a refresh restore from" is a
+  different question from "where does the game read from", and a replay tool has to answer the first.
+- **Script and hand edit are both legitimate; the choice is per situation, not per policy.** A
+  script is usually the easier call for a replayable registration like this one. Choosing a hand edit
+  here was defensible in principle and wrong in fact, because the premise behind it was a misread. The tool prints "9 distinct piece(s) to register", which is the size of the block it
+  rewrites, not a count of what was absent. Read as a count, it looked like running the tool would
+  land four unrelated Dale spears in a repo Erkam commits to, so the block was hand-scoped down to the
+  lance. The spears were already registered under the legacy marker, so the hand edit deleted a
+  working registration rather than declining to add one.
+
+### "N items to write" is not "N items missing"
+
+A tool that rewrites a whole block reports the size of the block. Inferring absence from that number
+is a guess wearing a tool's authority. Here it produced two wrong beliefs in a row: first that the
+assets copy held none of the nine pieces, then that scoping the block by hand was preserving someone
+else's state, when it was destroying it.
+
+- **Why missed:** the number was specific, freshly printed, and came from the tool that owns the
+  file, which is exactly the shape of evidence that does not get re-checked. Both later documents
+  repeated it as fact.
+- **The check:** `git diff` the file and read the actual +/- lines. Four added and two removed told
+  the whole story instantly, including the legacy-marker rename that no amount of reading the tool's
+  stdout would have revealed. For an untracked file, resolve the behaviour instead (here, the item's
+  primary usage) rather than counting lines.
+- **Generalise:** a tool's activity count describes what the tool did, never what the file lacked.
+
+### `sed -i` is not a byte-safe hand edit on a CRLF file
+
+Deleting seven lines from a CRLF-ended XSLT with `sed -i '708,718{/pat/d}'` produced the intended
+seven-line content change AND silently converted the entire file to LF: 1483 CR bytes to **zero**,
+1861 bytes smaller, every one of 1476 remaining lines rewritten. In a git-tracked shared repo that
+turns a 7-line reviewable diff into a whole-file rewrite that buries the actual change.
+
+- **Why missed at first:** the obvious check lies. `grep -c $'\r' <file>` returned a plausible 1477
+  on the converted file, which read as "line endings preserved". It is counting the wrong thing.
+  `tr -cd '\r' | wc -c` returned 0 and is the measure to trust. A plain `diff` reporting
+  `1,1483c1,1476` was the real tell and was visible immediately.
+- **Prevent:** hand edits are fine and often better than a script, but pick a hand-edit tool that
+  does not normalise. The `Edit` tool, or the binary round-trip already mandated by
+  `.claude/rules/moduledata-validation.md` (`open(p,"rb").read()` / `open(p,"wb").write()`), both
+  preserve bytes. Verify with a plain `diff` afterwards: if it reports every line changed, the
+  content edit is not what shipped.
+- **Note the rule this does NOT support.** It is not an argument for "always use the generator". It
+  is an argument for using an editor that respects the file's existing bytes.
+
+### When two tools write the same XML list, bound the presence check by the container
+
+`generate_black_numenorean_weapons.py` inserts registrations immediately before a template's
+`<xsl:apply-templates>` passthrough, and checked whether a piece was already registered by searching
+the span from the template's start to that passthrough. The span it inserts into, in other words.
+When a second tool began appending a `TAOM-1H-POLEARM` marker block AFTER the passthrough, those
+registrations were invisible to the check and the next `--apply` would have written all nine pieces a
+second time into the same `<AvailablePieces>`.
+
+- **Why missed:** the bug is dormant until a second writer exists, and it presents as the check
+  working perfectly for months. It surfaced only because the two tools' outputs were compared
+  directly, and even then it read as "the entries are missing" rather than "the check cannot see
+  them". The dry run said `+2` about a file that already had both.
+- **The rule:** scope a presence check to the semantic container (here the whole
+  `</xsl:template>`-bounded body), never to your own insertion window. They coincide only while you
+  are the only writer, which is an assumption no shared data file earns.
+- **Related:** the same instinct that made the insertion bounded by `</xsl:template>` was correct and
+  deliberate, recorded in a comment. The presence check was simply not revisited when the insertion
+  bound was added.
+
 ### The binary round-trip I/O idiom is about the idiom, not the file type
 
 `io.open(path, encoding='utf-8-sig')` writes a BOM unconditionally, and a default-newline read

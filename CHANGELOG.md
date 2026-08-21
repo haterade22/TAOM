@@ -2,6 +2,69 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-21
+
+### fix(armory): make the Black Numenorean lance one-handed as well as two
+
+The lance now resolves its primary usage to `OneHandedPolearm`, so a rider can carry it with a
+shield and still switch to a two-handed grip, couch it, or brace it. Four usages in total.
+
+The mechanism is worth writing down, because the load-bearing ordering is not the one it looks
+like. Primary usage is decided by walking the CRAFTING TEMPLATE's `<WeaponDescriptions>` list in
+order (`Crafting.cs:566-608`), not by the order the `<WeaponDescription>` elements happen to appear
+in `weapon_descriptions.xslt`. Vanilla's `TwoHandedPolearm` template opens that list with
+`OneHandedPolearm`, so a piece registered there wins the primary outright even though the
+`TwoHandedPolearm` element sits 150 lines earlier in the stylesheet. Measured both ways on the live
+data: with the lance registered, primary is `OneHandedPolearm` and the usage set permits a shield;
+with the two piece ids removed, primary falls back to `TwoHandedPolearm`, whose set carries
+`requires_no_shield`. Every Black Numenorean cavalry roster carries lance plus shield, which is the
+defect this repo has now shipped three times.
+
+The live install was already correct: `sm_md_num_lance_a` went into
+`tools/register_one_handed_polearms.py`'s `ONE_HANDED_ITEMS` on 2026-08-20 alongside the Dale spear
+work. **The copy of the Armory in `lotraom-assets` was missing the lance's two pieces.** It already
+carried the four Dale spears, under the older `TAOM-DALE-1H` marker that the #449 fix wrote; the tool
+sweeps that legacy marker into the current `TAOM-1H-POLEARM` one, so the net change there is four
+lines added and two removed. That copy is the one a module refresh restores
+from, so the fix was one revert away from being undone. Running the same tool against it with
+`--game-modules` brings both copies to a byte-identical marker block.
+
+`generate_black_numenorean_weapons.py` gets two changes. Its idempotence check looked for existing
+registrations only in the span between the template's start and the passthrough it inserts before,
+which cannot see anything another tool appended after the passthrough. The `TAOM-1H-POLEARM` marker
+block is exactly that, so a re-run would have duplicated all nine pieces into a second copy. The
+check now covers the whole template body. And a comment records why `OneHandedPolearm` is absent
+from its `DESC_CATEGORIES`: the registration belongs to the tool that owns the replay half of the
+unversioned-Armory trap, and a second writer appending the same pieces to the same list is not worth
+the redundancy.
+
+A detour worth recording, because it produced a regression that the final diff caught. On the
+principle that a hand edit is a legitimate tool, and believing the tool run had landed four unrelated
+Dale spears in a repo Erkam commits to, the assets block was hand-scoped down to the lance alone. It
+had not landed anything unrelated. The tool prints "9 distinct piece(s) to register", which is the
+size of the block it writes, not a count of what was absent, and the assets copy already held the
+Dale seven under the legacy marker. So the hand edit deleted a working registration rather than
+declining to add one. Reverted by re-running the tool; the assets diff is now four lines added and
+two removed, which is what it should have been all along. **The check that would have caught it
+immediately is the one that eventually did: diff the file against HEAD and read what actually
+changed, rather than inferring absence from a tool's own activity count.**
+
+The hand edit itself also took two attempts, and the first is worth recording. `sed -i` made the
+intended seven-line deletion and silently converted the whole file from CRLF to LF, 1483 carriage
+returns to zero, turning a reviewable diff into a whole-file rewrite. `grep -c` for a carriage return
+reported a plausible-looking count and missed it completely; `tr -cd` and a plain `diff` both caught
+it at once. Redone as a binary round-trip, which is what the ModuleData I/O rule already mandates.
+Four backup sidecars this session left in the shared assets repo were removed, their sources all
+being tracked; the four dated 20260820 belong to the armour session and were left alone.
+
+Gates after: polearm/shield parity PASS, 16 stylesheets compile clean, `validate_moduledata` PASS,
+6,729 C# tests green. The three Python test errors are the pre-existing cross-drive `relpath` crash
+in `audit_polearm_shield_parity.show()`, which fires when a finding's path is on a different drive
+from the repo, and is untouched here.
+
+Not-tested: in-game. Weapon descriptions load at process launch, so this needs a full restart, then
+a Black Numenorean rider drawing the lance with his shield up and switching grip.
+
 ## 2026-08-20
 
 ### chore(triage): close 39 issues whose work had already shipped

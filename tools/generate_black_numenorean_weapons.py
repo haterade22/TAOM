@@ -429,7 +429,12 @@ def insert_into_xslt(text, match_attr, lines, tagname, idattr):
     # Reuse the indentation of the passthrough line.
     line_start = text.rfind("\n", 0, passthrough) + 1
     indent = text[line_start:passthrough]
-    todo = [i for i in lines if f'{idattr}="{i}"' not in text[start:passthrough]]
+    # Presence is checked across the WHOLE template body, not just the span up to
+    # the passthrough where this function inserts. Another tool may legitimately
+    # register pieces after the passthrough (the polearm/shield gate's
+    # TAOM-1H-POLEARM block does exactly that), and a check bounded at the
+    # insertion point cannot see those, so every re-run would duplicate them.
+    todo = [i for i in lines if f'{idattr}="{i}"' not in text[start:end]]
     if not todo:
         return text, "already registered"
     block = "".join(f'{indent}<{tagname} {idattr}="{i}" />{eol}' for i in todo)
@@ -441,6 +446,16 @@ DESC_CATEGORIES = {
     "twohanded": ["WeaponDescription[@id='TwoHandedSword']/AvailablePieces"],
     # Long shafts + thrust heads register for couch and brace as well, or the
     # lance cannot be couched from horseback.
+    #
+    # OneHandedPolearm is deliberately NOT here. The lance IS registered there,
+    # which is what lets it be used one- OR two-handed and lets its rider keep a
+    # shield, but that registration is owned by tools/register_one_handed_polearms.py
+    # (`sm_md_num_lance_a` is in its ONE_HANDED_ITEMS). That tool is the replay
+    # half of the unversioned-Armory trap and writes a TAOM-1H-POLEARM marker
+    # block; a second writer here would mean two tools appending the same pieces
+    # to the same list. Verified 2026-08-21: with the lance registered, primary
+    # usage resolves to OneHandedPolearm (shield allowed); without it, to
+    # TwoHandedPolearm, which is `requires_no_shield`.
     "polearm":   ["WeaponDescription[@id='TwoHandedPolearm']/AvailablePieces",
                   "WeaponDescription[@id='TwoHandedPolearm_Couchable']/AvailablePieces",
                   "WeaponDescription[@id='TwoHandedPolearm_Bracing']/AvailablePieces"],
