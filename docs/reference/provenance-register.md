@@ -149,10 +149,23 @@ this software were contributed under the MIT License prior to the relicensing an
 under those terms." Both are permissive and neither constrains a behavioural port. Nothing from
 graphify ships in a TAOM release, so no `THIRD-PARTY-LICENSES.txt` entry is owed.
 
-**Trial install, 2026-08-18.** graphify v8 (`graphifyy` 0.9.46) was installed in an isolated venv and
-measured against TAOM. Nothing further was adopted, and no repo code or config changed. The tool is
-kept as an ad-hoc C# analysis aid only, and is not wired into any hook, CI job, or MCP registration.
-Findings: [`docs/reviews/adopt-graphify-v8-2026-08-18.md`](../reviews/adopt-graphify-v8-2026-08-18.md).
+**Trial install, 2026-08-18 to 2026-08-21.** graphify from the upstream `v8` branch (`graphifyy` 0.9.46, `v8` is a branch name, not a release) was installed in an
+isolated `uv` venv (pinned Python 3.12, because the `leiden` extra pulls in `graspologic`, which requires Python below 3.13) and
+measured against TAOM, including a full multimodal pass at 18.2M input tokens. Nothing was adopted,
+and no repo code or config changed.
+
+**It remains installed on the maintainer's machine and wired into nothing:** no hook, no CI job, no
+MCP registration, and no `graphify * install` subcommand was ever run (those write into CLAUDE.md,
+AGENTS.md and a PreToolUse hook in `.claude/settings.json`; note `config-protection.sh` guards only
+`Directory.Build.props` and the two settings files, and cannot intercept a CLI subprocess anyway, so
+not running them is the actual containment). It is a personal ad-hoc C# analysis aid,
+not a TAOM tool, which is why it appears in no `tools/` table. Remove with
+`uv tool uninstall graphifyy`.
+
+Nothing in this repo derives from it beyond the June concept port recorded above, so the derivation
+stays `behavioural-port` and the trial itself adds nothing. Usage guidance, the three verbs and one generated report worth
+running, the cases where it must not be used, and why it is deliberately absent from CLAUDE.md:
+[`docs/reviews/adopt-graphify-v8-2026-08-18.md`](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### MinHook
 

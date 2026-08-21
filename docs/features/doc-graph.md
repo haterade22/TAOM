@@ -124,7 +124,7 @@ Interpret the output (snapshot 2026-06-08: 314 nodes, 490 edges, 70 components, 
 
 Then route fixes through the existing pipeline — edit the docs, re-run [build_backlinks.py](../../tools/build_backlinks.py) to refresh footers, `/lint-docs` to confirm clean — and re-run `metrics` to verify the signal improved.
 
-**The 2026-08-18 re-measure is the cautionary case.** Ten weeks after the snapshot above, orphans had gone 64 → 153 and components 70 → 156, and not because anyone degraded the docs: the KB grew (314 → 537 nodes) while nothing re-ran this tool, so the isolates grew about twice as fast as the KB itself. `graph_query` is referenced in zero `.claude/hooks/` scripts and zero CI jobs, so `metrics` had not been run since the day it shipped. The open follow-up is to wire `metrics --summary` into a Stop hook or the `validate-xml` job in `.github/workflows/build.yml` with a ratchet on the orphan count, then work the isolates down. Measurements: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
+**The 2026-08-18 re-measure is the cautionary case.** Ten weeks after the snapshot above, orphans had gone 64 → 153 and components 70 → 156, and not because anyone degraded the docs: the KB grew (314 → 537 nodes) while nothing re-ran this tool, so the isolates grew about twice as fast as the KB itself. `graph_query` was referenced in zero `.claude/hooks/` scripts and zero CI jobs, so `metrics` had not been run since the day it shipped. **That is now closed:** `tools/check_doc_graph_ratchet.py` gates orphans and components against `tools/doc_graph_baseline.json` in the `validate-xml` CI job. Working the isolates down and lowering the baseline is the remaining work. Measurements: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### Agent / session entry points
 
@@ -139,6 +139,19 @@ These were considered and intentionally **not** built in v1 (scope + ROI; see th
 - **Memory-layer ingestion** — the out-of-repo memory files (`[[wikilinks]]` + markdown) could be a second labelled subgraph. Deferred: the memory dir path is harness-coupled (project-slug encoding of cwd), the syntax is mixed, and `[[ ]]` targets can dangle. If built: opt-in (`--include-memory`), best-effort path derivation, failure-tolerant (skip + warn, never crash).
 - **MCP exposure** — the verbs already return dicts, so wrapping them in a stdio MCP server (like `taom_mcp_server.py`) is trivial. Deferred: an always-loaded MCP is a standing token cost ([context-budget](../../.claude/skills/context-budget/SKILL.md)) for a low-frequency tool; the CLI is the right surface until usage proves otherwise.
 
+### Not to be confused with graphify itself
+
+This tool and the external graphify answer different questions and neither substitutes for the other.
+**doc-graph is for markdown topology** (which docs are orphaned, how two docs connect, which is a
+hub), is deterministic and offline, and models `.md` nodes only. **graphify is for C# structure**
+(blast radius, architectural hubs). Its **parser** mints no markdown file node at all, so it cannot
+model doc-to-doc topology or answer an orphan question. The 27 `.md`-labelled nodes in its full graph
+are every one `_origin: null`, invented by the semantic layer from prose rather than parsed, which is
+the same caveat that applies to its 13 XML-looking nodes. graphify is also installed but wired into nothing, and
+its node citations are not reliable. Reach for it via
+[adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md) "How to actually use
+it"; reach for this tool via `/doc-graph`.
+
 ### Raised by the 2026-08-18 graphify v8 trial
 
 - **Rationale edges.** graphify treats `NOTE:` and `WHY:` comments as first-class nodes linked to the
@@ -151,9 +164,13 @@ These were considered and intentionally **not** built in v1 (scope + ROI; see th
   written when `taom_schema.py` was the sole owner of game-data refs and nothing needed to join the
   two. The non-goal should be revisited deliberately when that phase is written, not quietly
   dropped. See the [ADR-010 2026-08-18 amendment](../adrs/010-knowledge-base-architecture.md).
-- **Nothing runs this tool.** `graph_query.py` appears in zero hooks and zero CI jobs, and between
-  2026-06-08 and 2026-08-18 the isolated-doc count went from 64 to 153 with nobody noticing. A
-  scheduled caller plus a ratchet on the baseline is worth more than any new verb here.
+- **Nothing ran this tool, and that is now fixed.** `graph_query.py` appeared in zero hooks and zero
+  CI jobs, and between 2026-06-08 and 2026-08-18 the isolated-doc count went from 64 to 153 with
+  nobody noticing. `tools/check_doc_graph_ratchet.py` plus `tools/doc_graph_baseline.json` now gate
+  it in the `validate-xml` job. It passes today with no slack, and has not yet had a regression to
+  catch: the committed baseline was lowered to 152 orphans and 155 components on 2026-08-21, after
+  this session's cross-links closed one of each. Lowering it further is the work; the gate only ever
+  stops it going back up.
 
 ## Changelog
 

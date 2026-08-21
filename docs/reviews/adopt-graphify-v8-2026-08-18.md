@@ -33,14 +33,18 @@ why they matter: a module reinstall silently reverts edits there, and the repo's
 
 | Source | Location | XML | XSLT | Authority |
 |---|---|---|---|---|
-| TAOM | `E:\repos\TAOM` (repo) | 338 | 8 | source of truth |
-| TAOM_Map | game install `Modules/TAOM_Map` | 313 | 1 | **LIVE, unversioned**; repo copy is a stale shadow |
+| TAOM | `Main/_Module` in this repo | 324 | 8 | source of truth |
+| TAOM_Map | game install `Modules/TAOM_Map` | 318 | 1 | **LIVE, unversioned**; repo copy is a stale shadow |
 | LOTRLOME_Armory | game install `Modules/LOTRLOME_Armory` | 406 | 7 | **LIVE, unversioned** |
-| **total to cover** | | **1,057** | **16** | |
+| **total to cover** | | **1,048** | **16** | |
 
-Within TAOM's own 338, 259 are under `Main/_Module/ModuleData` and 145 are localization language
-files. The deployed `Modules/TAOM` copy (324 XML, 8 XSLT) is build output and must not be counted
-twice; the repo is authoritative for it.
+Counted on one basis, each module's own tree, with `find <module> -name '*.xml'` and the same for
+`*.xslt`, measured 2026-08-21. Mind the scope when quoting these: of TAOM's 324, **259 sit under
+`Main/_Module/ModuleData`** (145 of those localization files under `Languages/`), which is the
+narrower figure the validator's coverage matrix uses, and repo-wide, counting `tools/` and `docs/`,
+there are 338. The deployed `Modules/TAOM` copy is build output and must not be counted twice. An
+earlier revision said 1,057 by summing repo-wide TAOM against module-wide counts for the other two,
+which is why the basis is now stated.
 
 A graph that cannot see those files cannot answer the questions TAOM actually asks, such as which
 troop, item, culture, party template, feature doc and service are all involved in one change.
@@ -51,7 +55,7 @@ by how much, and the closing section sets out what meeting the requirement would
 
 - `uv tool install --python 3.12 'graphifyy[mcp,pdf,leiden,anthropic,svg,watch]'`. **The 3.12 pin is load-bearing.** The machine runs Python 3.14, and the `leiden` extra pins `graspologic` to Python below 3.13, so a default install silently drops community detection with no error.
 - There is a `claude-cli` backend that shells out to the local `claude` CLI on a Pro/Max subscription, so the semantic layer runs with no API key. Reported cost on our run: `$0.0000`.
-- `graphify claude install` writes a section into **CLAUDE.md plus a PreToolUse hook**; `codex install` writes into **AGENTS.md**. TAOM guards both paths (`config-protection.sh`, `check-claude-files-tracked.sh`). Not run, and should not be.
+- `graphify claude install` writes a section into **CLAUDE.md plus a PreToolUse hook** in `.claude/settings.json`; `codex install` writes into **AGENTS.md**. Not run, and should not be. Do not assume a hook would stop it: `config-protection.sh` protects only `Directory.Build.props`, `settings.json` and `settings.local.json` (CLAUDE.md was deliberately removed from that list on 2026-07-02), and it matches `Edit|Write`, so a CLI subprocess writing those files is not intercepted at all. The commit-time CHANGELOG and doc-drift hooks would surface the diff afterwards, which is detection, not prevention.
 - `extract --out` defaults to **the target directory**, so omitting it creates `graphify-out/` inside the scanned repo. Always pass it.
 
 ## What was measured
@@ -197,18 +201,21 @@ was opened, parsed, or checked. Anyone reading a node count off this graph would
 ModuleData is represented. It is not.
 
 **3. The provenance is not trustworthy, which is the serious one.** **40 nodes cite a `source_file`
-that graphify never parsed**, and at least four of those paths **do not exist anywhere in the repo**:
+that graphify never parsed, and every one of those citations is wrong.** 27 name a `.cs` file at a
+path that exists nowhere in the repo, and 13 name XML the tool cannot read at all. The failure mode
+is consistent and worth understanding: the class is usually **real**, the path is **invented**.
 
 | Node | Claimed `source_file` | Reality |
 |---|---|---|
 | `CareerScreenVM` | `Main/Features/CareerSystem/CareerScreenVM.cs` | actually `.../CareerSystem/UI/CareerScreenVM.cs` |
 | `GauntletCareerScreen` | `Main/Features/CareerSystem/GauntletCareerScreen.cs` | actually `.../CareerSystem/UI/GauntletCareerScreen.cs` |
-| `CareerQuest` | `Main/Features/CareerQuests/CareerQuest.cs` | no such file |
-| `CareerQuestService` | `Main/Features/CareerQuests/CareerQuestService.cs` | no such file |
+| `CareerQuest` | `Main/Features/CareerQuests/CareerQuest.cs` | actually `.../CareerSystem/Quests/CareerQuest.cs` |
+| `CareerQuestService` | `Main/Features/CareerQuests/CareerQuestService.cs` | actually `.../CareerSystem/CareerQuestService.cs` |
 
-The model read a class name in prose, inferred a plausible path, and attributed the node to it. For a
+In every case the model read a real class name in prose, inferred a plausible path for it, and
+attributed the node to that path. There is no `Main/Features/CareerQuests/` directory at all. For a
 tool whose pitch is "every edge is explained" with a source location, a citation that points at a
-file which was never opened, and sometimes does not exist, is worse than no citation. Treat any
+file which was never opened, and which does not exist, is worse than no citation. Treat any
 `source_file` on a node with `_origin: null` as a claim to check, not a location.
 
 **Also observed:** node ids are minted from source path plus entity name, so two files producing the
@@ -220,6 +227,81 @@ whole-repo run this section describes is not the shape upstream expects for a co
 **Verdict unchanged.** The full pass cost 18.2M input tokens to move cross-domain coverage from 0 to
 119 edges, 84 of which are one accident, while leaving XML unread and adding 40 nodes with unreliable
 provenance. Nothing here argues for adopting it as the cross-domain graph.
+
+## How to actually use it
+
+graphify is **installed and wired into nothing**, deliberately. It is not a TAOM tool, it is a
+personal analysis aid on this machine. Everything below assumes you invoke it by hand from a
+scratchpad.
+
+### The one rule
+
+**It is a lead generator, never a citation.** Confirm every answer against the real file before you
+act on it. This is not caution for its own sake, it is forced by the provenance defect above: 40
+nodes cite a `source_file` graphify never opened and four of those paths do not exist. If you
+`explain CareerScreenVM` it will send you to `Main/Features/CareerSystem/CareerScreenVM.cs`, which is
+not a file (the real one is under `.../CareerSystem/UI/`).
+
+The useful consequence is that one habit covers two failure modes at once. A graph that is a few
+commits stale and a graph that invented a path are both caught by the same "open the file and check"
+motion, which is `.claude/rules/evidence-over-claims.md` applied to a tool instead of an agent.
+
+### Use it for
+
+| Question | Verb | Why it beats the alternative |
+|---|---|---|
+| What is the blast radius of changing this interface | `affected "X" --depth 2` | Returns typed edges with file and line. `grep` returns `.dll`/`.pdb` noise: for `ICoopSessionProvider`, grep gave 52 hits of which 16 were build artifacts, against 36 real `.cs` |
+| Which types are the architectural hubs | `god-nodes --top 15` | Serena has no aggregate view at all |
+| What surrounds this class before I touch it | `explain "X"` | One screen instead of opening nine files |
+| What subsystems exist, and has the architecture regressed | `GRAPH_REPORT.md` | 2,161 named communities, plus an import-cycle check that currently reports none across 65,335 edges |
+
+### Do NOT use it for
+
+| Question | Use instead | Why |
+|---|---|---|
+| Anything touching game data: troops, items, cultures, party templates | `tools/taom_query.py`, the `taom-moduledata` MCP | **1,057 XML and 16 XSLT files are invisible to it.** The 13 XML-looking nodes are LLM hearsay lifted from prose, not parsed files |
+| Who calls this method, right now | **Serena** | Always current, no refresh discipline, no fabricated paths |
+| Which docs are orphaned, how two docs connect | `tools/graph_query.py` (`/doc-graph`) | graphify mints no file-level node for markdown at all, so it cannot model doc-to-doc topology |
+| How does a TaleWorlds type behave | `pwsh tools/taom-src.ps1 path <Type>` | The graph only knows what TAOM's own source references |
+
+### Refresh, and a trap in it
+
+`graphify update <out-dir>` is 44 seconds and free, and it is **not** an incremental `extract`.
+Measured 2026-08-21 on the full graph: it keeps only nodes backed by a scanned file and **discards
+every external-reference node**, so 5,111 nodes (`ExplainedNumber`, `TextObject`, `IEnumerable`,
+`Dictionary`, `IContainer`) and 12,275 edges vanished, 31,439 to 26,328 and 65,335 to 53,060. It
+wrote that result without `--force` despite the large shrink. It does back up first, into a dated
+directory beside the graph, and it gains an aggregated community `graph.html` that a full extract
+cannot produce above the 5,000-node viz limit.
+
+So: to keep the code graph current, re-run `extract --code-only` (100 seconds, zero tokens) rather
+than `update`, unless you specifically want the aggregated HTML and do not care about external types.
+
+**Do not repeat the full semantic pass.** It cost 18.2M input tokens, produced an identical god-node
+ranking to the free code-only run, and 58% of the nodes it added arrived weakly connected (5,744 to
+8,564). If it is ever rerun, a `.graphifyignore` covering `GUI/SpriteParts` and `GUI/SpriteData`
+removes 1,413 sprite images that contributed 1,458 image-to-image edges and almost nothing else.
+
+## Process note: this does not belong in CLAUDE.md
+
+Deliberate, and recorded here so it is not re-litigated a third time.
+
+CLAUDE.md is eager-loaded into every session **and every agent spawn**, is capped at 46,000 bytes by
+`lint_docs.py` (about 35,000 today), and caps table rows at 400 characters. Its own documentation rule
+says a new capability adds a row to `docs/reference/feature-map.md`, and CLAUDE.md carries only a
+trap a crash-triage reader needs. graphify is none of those things: it is an external tool, adopted
+for nothing, invoked by hand, and a wrong answer from it is a wasted minute rather than a crash.
+
+This also matches the standing precedent. The June 2026 review kept `/doc-graph` and
+`graph_query.py` out of the CLAUDE.md tables on the same reasoning, noting the whole ADR-010
+doc-tooling layer lives in the ADR, feature docs and the skill registry instead. A tool TAOM
+**rejected** has a weaker claim on that budget than one it shipped.
+
+Discoverable instead via: this review, the routing row in
+[`docs/reference/doc-lookup.md`](../reference/doc-lookup.md), the `graphify` row in
+[`provenance-register.md`](../reference/provenance-register.md), and
+[`docs/INDEX.md`](../INDEX.md)'s external-adoption-reviews line. If a future session cannot find it,
+fix the routing row, not CLAUDE.md.
 
 ## Deliverables
 
