@@ -334,9 +334,24 @@ def main() -> int:
         for piece in dangling:
             print(f"  {piece}")
 
+    def _display_path(path):
+        """Repo-relative when possible, absolute otherwise.
+
+        `os.path.relpath` RAISES `ValueError` on Windows when the two paths sit on
+        different drives, so a bare call crashes the whole gate rather than printing
+        one awkward path. That is reachable two ways: the tests build their fixture
+        tree under the system temp dir (C:) while REPO_ROOT is on E:, and a real run
+        can be pointed at a game install on another drive. Reporting a finding must
+        never be the thing that fails.
+        """
+        try:
+            return os.path.relpath(path, REPO_ROOT)
+        except ValueError:
+            return str(path)
+
     def show(rows):
         for troop, path, index, item_id, item_type, desc_id, usage in rows:
-            rel = os.path.relpath(path, REPO_ROOT)
+            rel = _display_path(path)
             print(f"  {troop} (roster {index}, {rel})")
             print(f"      {item_id} [{item_type}] -> {desc_id} -> {usage} [{BLOCKING_FLAG}]")
 

@@ -4,6 +4,48 @@
 
 ## 2026-08-21
 
+### fix(tooling): the polearm/shield gate crashed instead of reporting
+
+`audit_polearm_shield_parity.py` called `os.path.relpath(path, REPO_ROOT)` when printing a finding,
+and on Windows that **raises `ValueError` when the two paths sit on different drives**. So the gate
+did not print an awkward path, it died with an unhandled exception at the moment it had something to
+say. Three `GateContractTests` had been red on that: their fixtures build under the system temp dir
+on `C:` while `REPO_ROOT` is on `E:`. A real run can hit it too, by pointing the audit at a game
+install on another drive.
+
+Reporting a finding must never be the thing that fails, so the path now degrades to absolute rather
+than raising. Suite back to green at **617** tests, and the gate still passes against the live repo
+with repo-relative paths intact.
+
+### docs(graphify): when to use it, when not to, and why it is not in CLAUDE.md
+
+The two graphify reviews recorded a verdict but never said how to use the thing that stayed
+installed. Written up in
+[`docs/reviews/adopt-graphify-v8-2026-08-18.md`](docs/reviews/adopt-graphify-v8-2026-08-18.md): one
+rule (**lead generator, never a citation**, forced by the provenance defect), a use-it-for table, a
+do-not-use-it-for table naming the right tool for each case, and the refresh trap where
+`graphify update` silently drops every external-reference node. Routing sits in
+`docs/reference/doc-lookup.md`.
+
+**It deliberately does not go in CLAUDE.md.** That file is eager-loaded into every session and every
+agent spawn, is capped at 46,000 bytes, and its own rule sends new capabilities to
+`feature-map.md`. graphify is an external tool, adopted for nothing, invoked by hand. The June 2026
+review kept `/doc-graph` out of the same tables for the same reason, and a tool TAOM rejected has a
+weaker claim on that budget than one it shipped. Recorded in the review so it is not re-litigated.
+
+A five-agent adversarial pass then found six errors in that guidance, all since corrected: the
+provenance defect is worse than first written (**all 40** citations wrong, not four, with 27 naming
+a `.cs` path that exists nowhere while the class itself is real), the XML total mixed two counting
+bases (**1,048**, not 1,057, basis now stated with the command), `tools/taom_query.py` has no CLI so
+routing readers to it produced silence, `config-protection.sh` guards neither CLAUDE.md nor
+AGENTS.md, and `doc-graph.md` confused the live orphan count with the committed baseline. One audit
+claim was refuted rather than accepted: the `update` node-drop reproduces on a correctly-rooted copy
+(26,572 to 21,461), so it is a real property of the command.
+
+Also added `graphify-out/` to `.gitignore` on both active branches and untracked
+`Main/graphify-out/cache/stat-index.json` (672 KB) from `bannerlord-1.5.x`, where it had been
+committed in `8318e346` because `extract --out` defaults to the scanned directory.
+
 ### fix(armory): make the Black Numenorean lance one-handed as well as two
 
 The lance now resolves its primary usage to `OneHandedPolearm`, so a rider can carry it with a
