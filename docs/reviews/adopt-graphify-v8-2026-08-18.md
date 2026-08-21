@@ -70,7 +70,13 @@ Run C nodes by extension: `.cs` 17,079, `.py` 3,813, `.ps1` 99, `.sh` 81, `.xaml
 
 This is not a parsing failure, it is by design. `detect.py:45` `CODE_EXTENSIONS` includes `.csproj`, `.sln`, `.xaml` and `.razor`, which are XML dialects, but not generic `.xml`. `DOC_EXTENSIONS` is `.md .mdx .qmd .skill .txt .rst .html .yaml .yml`, also without `.xml`. The only occurrence of `.xml` anywhere in `detect.py` is in `_SECRET_PRONE_DATA_EXTS`, an **exclusion** list. Run B reported `497 file(s) not classified ... AbilityHUD.xml, AgentStatus.xml, ArmyComposition.xml (+491 more)`; run C reported 567. TAOM's 259 ModuleData XML (145 of them localization files under `Languages/`) and its 8 XSLT transforms are never collected at all.
 
-### Q4 Cross-domain: zero edges, for a mundane reason
+### Q4 Cross-domain: near-zero, and what there is comes from one label collision
+
+> **Amended 2026-08-20 after a full-corpus run.** The measurements below came from a deliberately
+> small mixed slice. A whole-repo pass with `--mode deep` over 2,695 code files, 794 docs and 1,413
+> images (31,439 nodes, 65,335 edges, 18.2M input tokens) does produce cross-domain edges, so the
+> literal "zero" is wrong at scale. It does **not** change the verdict, and the detail is worse than
+> the headline: see "What the full pass changed" at the end of this review.
 
 This was the only capability that would have justified adopting a new tool, since Serena already owns C# symbols and `taom_schema` owns game-data ids. The slice run put C#, its feature docs, and ModuleData XML in one corpus. Edge endpoints by domain:
 
@@ -166,6 +172,54 @@ ADR-010 phase.
 ## What this does not change
 
 The 153 orphans and 156 components are a genuine finding about TAOM's knowledge base, independent of graphify. `/doc-graph` shipped in June and has never been run since. Wiring `graph_query.py metrics` into a Stop hook or the CI validate job with a ratchet, then working the isolates down, is the higher-value piece of work and is still open.
+
+## What the full pass changed (2026-08-20)
+
+Everything above was measured on `--code-only` runs plus one small mixed slice. On an explicit
+instruction to run every pass regardless of cost, the whole repo went through with `--mode deep`:
+2,695 code files, 794 docs and 1,413 images, producing **31,439 nodes and 65,335 edges** for
+**18,193,422 input and 1,296,566 output tokens**. Three things came out of it.
+
+**1. Cross-domain edges exist, and they are an artifact.** There are **119** CODE-to-DOCS edges, so
+the slice's "zero" does not hold at scale. But **84 of the 119 point at a single concept**,
+`DryIoc Container`, minted by the LLM from `docs/changelog-archive/CHANGELOG-2026-H1.md`. Every
+`*IoC.cs` file emits an AST `imports DryIoc` edge, and those landed on the doc-derived node because
+the labels happened to match. Only **25 distinct doc-side concepts** are involved across 31,439
+nodes. That is a label collision, not entity resolution, and the diagnosis in Q4 stands: nothing
+reconciles an AST symbol with the same entity named in prose. A handful of the remaining 35 edges are
+genuinely useful (`Patch31_FormationSetMovementOrder`, `TaomSettings (MCM)`), which is worth knowing
+but is not a capability.
+
+**2. XML is still never read.** The graph contains 13 nodes whose `source_file` ends in `.xml` or
+`.xslt`, which looks like partial coverage and is not. All 13 carry `_origin: null`, meaning the
+semantic layer minted them: the LLM saw a filename in prose and created a node for it. No XML file
+was opened, parsed, or checked. Anyone reading a node count off this graph would conclude TAOM's
+ModuleData is represented. It is not.
+
+**3. The provenance is not trustworthy, which is the serious one.** **40 nodes cite a `source_file`
+that graphify never parsed**, and at least four of those paths **do not exist anywhere in the repo**:
+
+| Node | Claimed `source_file` | Reality |
+|---|---|---|
+| `CareerScreenVM` | `Main/Features/CareerSystem/CareerScreenVM.cs` | actually `.../CareerSystem/UI/CareerScreenVM.cs` |
+| `GauntletCareerScreen` | `Main/Features/CareerSystem/GauntletCareerScreen.cs` | actually `.../CareerSystem/UI/GauntletCareerScreen.cs` |
+| `CareerQuest` | `Main/Features/CareerQuests/CareerQuest.cs` | no such file |
+| `CareerQuestService` | `Main/Features/CareerQuests/CareerQuestService.cs` | no such file |
+
+The model read a class name in prose, inferred a plausible path, and attributed the node to it. For a
+tool whose pitch is "every edge is explained" with a source location, a citation that points at a
+file which was never opened, and sometimes does not exist, is worse than no citation. Treat any
+`source_file` on a node with `_origin: null` as a claim to check, not a location.
+
+**Also observed:** node ids are minted from source path plus entity name, so two files producing the
+same id **silently drop one of the nodes**. The run reported this for `faction_map_system`,
+`adr_007`, `adr_002`, `faction_gondor` and others, and deduplicated 105 nodes (92 exact, 13 fuzzy).
+Upstream's own advice is to extract per subfolder and `merge-graphs`, which means the single-pass
+whole-repo run this section describes is not the shape upstream expects for a corpus this size.
+
+**Verdict unchanged.** The full pass cost 18.2M input tokens to move cross-domain coverage from 0 to
+119 edges, 84 of which are one accident, while leaving XML unread and adding 40 nodes with unreliable
+provenance. Nothing here argues for adopting it as the cross-domain graph.
 
 ## Deliverables
 
