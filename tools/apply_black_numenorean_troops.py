@@ -164,10 +164,10 @@ _W = {
                  [("Item0", I + "sword_1h_c"), ("Item1", I + "inf_shield_heavy_b"), ("Item2", I + "sword_2h_c")]],
     ("inf", 9): [[("Item0", I + "sword_1h_c"), ("Item1", I + "inf_shield_heavy_a"), ("Item2", I + "sword_2h_c")],
                  [("Item0", I + "sword_1h_c"), ("Item1", I + "inf_shield_heavy_b"), ("Item2", I + "sword_2h_c")]],
-    ("arc", 6): [[("Item0", "sm_dg_khml_longbow_a"), ("Item1", "bodkin_arrows_a"), ("Item2", I + "sword_2h_a")]],
-    ("arc", 7): [[("Item0", "sm_dg_khml_longbow_a"), ("Item1", "bodkin_arrows_a"), ("Item2", I + "sword_2h_b")]],
-    ("arc", 8): [[("Item0", "sm_rh_loke_longbow_a"), ("Item1", "bodkin_arrows_a"), ("Item2", I + "sword_2h_c")]],
-    ("arc", 9): [[("Item0", "sm_rh_loke_longbow_a"), ("Item1", "bodkin_arrows_a"), ("Item2", I + "sword_2h_c")]],
+    ("arc", 6): [[("Item0", I + "bow_a"), ("Item1", "bodkin_arrows_a"), ("Item2", I + "sword_2h_a")]],
+    ("arc", 7): [[("Item0", I + "bow_a"), ("Item1", "bodkin_arrows_a"), ("Item2", I + "sword_2h_b")]],
+    ("arc", 8): [[("Item0", I + "bow_b"), ("Item1", "bodkin_arrows_a"), ("Item2", I + "sword_2h_c")]],
+    ("arc", 9): [[("Item0", I + "bow_b"), ("Item1", "bodkin_arrows_a"), ("Item2", I + "sword_2h_c")]],
 }
 
 # Mount ladder. charger was dropped: it is slower and weaker-charging than

@@ -275,4 +275,93 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+
+	<!-- ==================== BLACK NUMENOREAN LORD EQUIPMENT ==================== -->
+	<!--  Lord-tier helmets and bracers exist as meshes; body, pauldron and    -->
+	<!--  greave slots take the elite row, the top authored for those slots.   -->
+	<!--  NOT yet assigned to any lord: apply to specific human Mordor lords   -->
+	<!--  in characters/lords.xml or lords.xslt. A lord wearing these should   -->
+	<!--  not carry race="uruk".                                              -->
+
+	<EquipmentRoster id="mordor_num_bat_template_lord_cav" culture="Culture.mordor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+			<Equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
+			<Equipment slot="Item2" id="Item.sm_md_num_lance_a" />
+			<Equipment slot="Head" id="Item.sk_md_num_cav_helmet_lord_a" />
+			<Equipment slot="Body" id="Item.sm_md_num_cav_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sm_md_num_cav_pauld_cape_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
+			<Equipment slot="HorseHarness" id="Item.mordor_horse_armour_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="mordor_num_bat_template_lord_inf" culture="Culture.mordor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+			<Equipment slot="Item1" id="Item.sm_md_num_inf_shield_heavy_a" />
+			<Equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
+			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_a" />
+			<Equipment slot="Body" id="Item.sm_md_num_inf_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="mordor_num_bat_template_lord_arc" culture="Culture.mordor">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+			<Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+			<Equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
+			<Equipment slot="Head" id="Item.sk_md_num_hood_lord_a" />
+			<Equipment slot="Body" id="Item.sm_md_num_arc_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sm_md_num_arc_pauld_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_num_arc_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="mordor_num_civ_template_lord_cav" culture="Culture.mordor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+			<Equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
+			<Equipment slot="Item2" id="Item.sm_md_num_lance_a" />
+			<Equipment slot="Head" id="Item.sk_md_num_cav_helmet_lord_b" />
+			<Equipment slot="Body" id="Item.sm_md_num_cav_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sm_md_num_cav_pauld_cape_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+			<Equipment slot="Horse" id="Item.noble_horse_imperial" />
+			<Equipment slot="HorseHarness" id="Item.mordor_horse_armour_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="mordor_num_civ_template_lord_inf" culture="Culture.mordor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+			<Equipment slot="Item1" id="Item.sm_md_num_inf_shield_heavy_a" />
+			<Equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
+			<Equipment slot="Head" id="Item.sk_md_num_inf_helmet_lord_b" />
+			<Equipment slot="Body" id="Item.sm_md_num_inf_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sm_md_num_inf_pauld_cape_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_num_inf_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="mordor_num_civ_template_lord_arc" culture="Culture.mordor">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+			<Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+			<Equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
+			<Equipment slot="Head" id="Item.sk_md_num_hood_lord_b" />
+			<Equipment slot="Body" id="Item.sm_md_num_arc_chest_elite_a" />
+			<Equipment slot="Cape" id="Item.sm_md_num_arc_pauld_elite_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_num_arc_bracer_lord_a" />
+			<Equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
 </EquipmentRosters>

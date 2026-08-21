@@ -3922,7 +3922,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_dg_khml_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_a" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_a" />
         <equipment slot="Head" id="Item.sk_md_num_hood_light_a" />
@@ -3932,7 +3932,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_light_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_dg_khml_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_a" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_a" />
         <equipment slot="Head" id="Item.sk_md_num_hood_light_b" />
@@ -3969,7 +3969,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_dg_khml_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_a" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_b" />
         <equipment slot="Head" id="Item.sk_md_num_hood_med_a" />
@@ -3979,7 +3979,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_dg_khml_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_a" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_b" />
         <equipment slot="Head" id="Item.sk_md_num_hood_med_b" />
@@ -4016,7 +4016,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_b" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_heavy_a" />
@@ -4026,7 +4026,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_b" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_heavy_b" />
@@ -4036,7 +4036,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_b" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_heavy_c" />
@@ -4046,7 +4046,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_b" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_heavy_d" />
@@ -4081,7 +4081,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_b" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_elite_a" />
@@ -4091,7 +4091,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_b" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_elite_b" />
@@ -4101,7 +4101,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_b" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_elite_c" />
@@ -4111,7 +4111,7 @@
         <equipment slot="Leg" id="Item.sm_md_num_grvs_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_rh_loke_longbow_a" />
+        <equipment slot="Item0" id="Item.sm_md_num_bow_b" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.sm_md_num_sword_2h_c" />
         <equipment slot="Head" id="Item.sk_md_num_hood_elite_d" />

@@ -294,6 +294,80 @@ def shield_xml(suffix, body_stem, length, hp, weight, appearance, wooden, displa
 
 
 # ---------------------------------------------------------------------------
+# Bows
+# ---------------------------------------------------------------------------
+# The Black Numenorean bow art already existed in the Armory and was missed on
+# the first pass: the package is Assets/weapons/bow/Gondor/numenorean_steelbow_a_geo.tpac
+# but the MESH inside it is `gondor_steelbow_a`, so a search of mesh names for
+# "num" could never find it. Only the filename carries the provenance.
+#
+# Three Gondor items already share that mesh (gondor_steel_bow, _b, _starter),
+# so authoring Mordor-culture items on it is established practice, not a clash.
+# Nothing about Gondor's items changes.
+#
+# Placement: the best Men or Orc bow in the game is sm_rh_loke_longbow_a at 105
+# damage and the best Elf bow is highelf_longbowd at 115, so a Black Numenorean
+# bow belongs between 106 and 114. These sit at 107 and 111. Unlike the Rhun
+# longbows they replace, this is a 113-length shortbow, which is the actual
+# asset and suits a line that fields cavalry.
+#
+#   id, display, difficulty, thrust_damage, speed, missile, accuracy
+BOWS = [
+    ("sm_md_num_bow_a", "Numenorean Steelbow I",  60, 107, 96, 92, 93),
+    ("sm_md_num_bow_b", "Numenorean Steelbow II", 80, 111, 97, 95, 96),
+]
+
+BOW_MESH = "gondor_steelbow_a"
+BOW_BODY = "bo_short_bow_a"
+
+
+def bow_xml(iid, display, difficulty, damage, speed, missile, accuracy):
+    return (
+        f'    <Item\n'
+        f'        id="{iid}"\n'
+        f'        name="{{=aom_{iid}_name}}[Mordor] {LINE} {display}"\n'
+        f'        body_name="{BOW_BODY}"\n'
+        f'        mesh="{BOW_MESH}"\n'
+        f'        culture="{CULTURE}"\n'
+        f'        is_merchandise="true"\n'
+        f'        weight="1.2"\n'
+        f'        difficulty="{difficulty}"\n'
+        f'        appearance="0.1"\n'
+        f'        Type="Bow"\n'
+        f'        item_holsters="bow_hip:bow_hip_2:bow_back:bow_back_2">\n'
+        f'        <ItemComponent>\n'
+        f'            <Weapon\n'
+        f'                weapon_class="Bow"\n'
+        f'                ammo_class="Arrow"\n'
+        f'                ammo_limit="1"\n'
+        f'                thrust_speed="{speed}"\n'
+        f'                speed_rating="{speed}"\n'
+        f'                missile_speed="{missile}"\n'
+        f'                weapon_length="113"\n'
+        f'                accuracy="{accuracy}"\n'
+        f'                thrust_damage="{damage}"\n'
+        f'                thrust_damage_type="Pierce"\n'
+        f'                item_usage="bow"\n'
+        f'                physics_material="wood_weapon"\n'
+        f'                center_of_mass="0.15,0,0"\n'
+        f'                modifier_group="bow"\n'
+        f'                position="0.0, 0.0, 0.0">\n'
+        f'                <WeaponFlags\n'
+        f'                    RangedWeapon="true"\n'
+        f'                    HasString="true"\n'
+        f'                    StringHeldByHand="true"\n'
+        f'                    NotUsableWithOneHand="true"\n'
+        f'                    TwoHandIdleOnMount="true"\n'
+        f'                    AutoReload="true"\n'
+        f'                    UnloadWhenSheathed="true" />\n'
+        f'            </Weapon>\n'
+        f'        </ItemComponent>\n'
+        f'        <Flags ForceAttachOffHandPrimaryItemBone="true" />\n'
+        f'    </Item>'
+    )
+
+
+# ---------------------------------------------------------------------------
 # File I/O — byte-faithful, per-file line-ending aware, idempotent
 # ---------------------------------------------------------------------------
 def _piece_id(block):
@@ -437,15 +511,19 @@ def apply_to(md_dir, dry):
     path = os.path.join(md_dir, "LOTRLOME_items", "LOTRAOM_weapons.xml")
     t = _read(path)
     todo = [c for c in CRAFTED if f'id="{c[0]}"' not in t]
-    if todo:
+    todo_bows = [b for b in BOWS if f'id="{b[0]}"' not in t]
+    if todo or todo_bows:
         eol = _eol(t)
         header = (f"{eol}    <!-- {MARKER} -->{eol}") if MARKER not in t else ""
+        blocks = [crafted_xml(*c) for c in todo] + [bow_xml(*b) for b in todo_bows]
         staged.append((path, insert_before_close(
-            t, "</Items>", (eol + eol).join(crafted_xml(*c) for c in todo), header),
+            t, "</Items>", (eol + eol).join(blocks), header),
             "LOTRAOM_weapons.xml"))
-        reports.append(f"    LOTRAOM_weapons.xml: +{len(todo)} crafted items")
+        reports.append(f"    LOTRAOM_weapons.xml: +{len(todo)} crafted items, "
+                       f"+{len(todo_bows)} bows")
     else:
-        reports.append(f"    LOTRAOM_weapons.xml: all {len(CRAFTED)} present")
+        reports.append(f"    LOTRAOM_weapons.xml: all {len(CRAFTED)} crafted "
+                       f"+ {len(BOWS)} bows present")
 
     # --- 5. shields ----------------------------------------------------------
     path = os.path.join(md_dir, "LOTRLOME_items", "LOTRAOM_shields.xml")

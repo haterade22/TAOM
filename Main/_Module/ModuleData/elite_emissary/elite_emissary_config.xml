@@ -38,6 +38,19 @@
       <Troop id="mordor_uruk_baraddurguard" />
       <Troop id="mordor_uruk_captain" />
       <Troop id="taom_spider_creature" />
+      <Troop id="mordor_num_initiate" />
+      <Troop id="mordor_num_cavalry" />
+      <Troop id="mordor_num_infantry" />
+      <Troop id="mordor_num_archer" />
+      <Troop id="mordor_num_vet_cavalry" />
+      <Troop id="mordor_num_vet_infantry" />
+      <Troop id="mordor_num_vet_archer" />
+      <Troop id="mordor_num_knight" />
+      <Troop id="mordor_num_warden" />
+      <Troop id="mordor_num_marksman" />
+      <Troop id="mordor_num_temple_knight" />
+      <Troop id="mordor_num_temple_guard" />
+      <Troop id="mordor_num_shadowbow" />
     </Culture>
 
     <Culture id="erebor">

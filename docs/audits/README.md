@@ -27,6 +27,7 @@ Not part of the phase series — same directory, different subject.
 
 | Doc | Scope | Outcome |
 |---|---|---|
+| [issue-triage-2026-08-20.md](issue-triage-2026-08-20.md) | All 85 then-open issues re-checked after the owner retired the in-game smoke-test gate. | **39 closed, 46 left open**, 11 follow-ups filed (#491-#501). Three classification agents then three adversarial refuters; 13 refusals came back, 9 of them the retired gate restated, 4 technical. Two of those four held issues open (#455, #392), one dissolved on branch scope (#332). |
 | [issue-triage-2026-08-08.md](issue-triage-2026-08-08.md) | All 147 then-open GitHub issues re-checked against HEAD `828bf941` to answer one question: is this still an issue? | **81 closed, 66 left open** (60 kept + 6 escalated for a decision). Per-issue verdict + evidence, the three-stage method (evidence index → 18 cluster agents → 12 adversarial refuters, which killed 2 proposed closures), and the failure-mode table — each trap in it had already produced a wrong answer in this repo at least once. |
 
 ## Conventions

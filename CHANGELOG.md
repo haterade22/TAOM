@@ -4,6 +4,44 @@
 
 ## 2026-08-20
 
+### chore(triage): close 39 issues whose work had already shipped
+
+The tracker had drifted into a work log. 36 issues sat open under `triage-needs-ingame`, meaning the
+code shipped and only an in-game observation was missing, and that observation was never going to
+happen for most of them. With that gate retired, the question became what it should always have
+been: does the implementation exist at HEAD?
+
+39 closed, 46 left open, 11 follow-ups filed (#491 to #501). Full record in
+`docs/audits/issue-triage-2026-08-20.md`.
+
+Three classification agents covered the whole tracker, then three adversarial refuters attacked the
+29 riskiest closures. They returned 13 refusals, and nine of them were the retired gate restated. The
+four technical ones are why the pass was worth running:
+
+- **#455 stays open.** `MirroredWars` is assigned once at oath and never appended, so wars picked up
+  mid-service are never recorded and `UnwindServiceWars` cannot undo them. The issue's headline
+  symptom is live in code.
+- **#392 stays open.** The sprite is packed, but by a hand downscale rather than a packer fix.
+  `docs/reviews/lessons/localization-ui.md:203` says so at HEAD.
+- **#407 closed with #491.** A second `OnTournamentEnd` null path is marked in its own source comment
+  "not guarded; it IS logged".
+- **#332 closed.** Its refutation was real on `bannerlord-1.5.x` and irrelevant here: the trigger,
+  XML comments inside `notable_templates`, counts 0 on the default branch and 3 on 1.5.x, where the
+  v1.5.0 bump introduced it and the same branch fixed it.
+
+Two closures were partials hiding a switched-off deliverable: #320's shield penetration and #327's
+victory detection both ship with their flag false, now tracked as #493 and #494.
+
+Three things the sweep found that outlive it. #501 records that the two release lines have diverged
+11 commits each way, and that `0f1488b4`, the only thing blocking a bad Dependencies pairing, exists
+on 1.5.x alone, so the default branch is still exposed to what #371 describes. #421 is worse than
+filed: run `32421646664` shows `Build & Test -> skipped`, so the whole v1.5.0 bump merged with no
+build or test gate. #359 is regressing rather than static, at 93,830 entities against the engine's
+global 131,072 cap.
+
+Not-tested: no code changed, so no build or test run applies. Every closure was verified by reading
+the implementing artifact at HEAD and confirming its registration.
+
 ### fix(hooks): the ones that needed jq now work without it, and two of them were lying
 
 Yesterday's entry claimed 12 hooks call `jq` bare. Four do. The 12 came from grepping for files
