@@ -4,6 +4,44 @@
 
 ## 2026-08-22
 
+### feat(supplyLines): resupply convoys ordered from the field (#505)
+
+Port of yotthani's SupplyLines module (1.4.5, 3,969 decompiled lines) into
+`Main/Features/SupplyLines/`. Order goods from a town's real market stock and troops from its
+volunteers (or a friendly lord's roster), pick an escort, see the full price breakdown, and a
+caravan crosses the map to you. Order screen on the `[GameStateScreen]` attribute path, so the
+source module's `GameStateScreenManager.CreateScreen` patch (which would have collided with
+Patch36) does not exist here.
+
+Behavioural port with the source's defects fixed rather than carried:
+
+- Goods are now DEDUCTED from the settlement roster on confirm. The source read the market to
+  build the UI and then conjured the cargo, an economy dupe TAOM's town ledger would have lit up.
+- Payment lands only after the caravan actually spawns. The source charged first and kept the
+  money when the spawn threw.
+- The escort companion is released BEFORE the caravan party is destroyed, on every path. The
+  source destroyed first, which nulled the hero's party and stranded the companion forever.
+- Delivery never fires while the player is in an encounter. The source's stuck-caravan failsafe
+  delivered recruits into sieges.
+- Volunteers go through `VolunteerModel.MaximumIndexHeroCanRecruitFromHero` and honour TAOM's
+  alignment gate; recruit costs run through the vanilla wage model with the source's tier and
+  wartime scaling.
+- The whole dead handcart subsystem (its flag was never set anywhere), two dead settings and
+  three unused order states are not ported.
+
+Caravan movement keeps the source's teleport-along-path model by explicit decision, hardened:
+party lookups are cached instead of per-frame LINQ over `MobileParty.All`, unchanged frames skip
+the native position set, and the private `MobileParty.Bearing` binding is pinned by a
+BindingVerification test so an engine rename fails in CI instead of silently sliding caravans
+sideways.
+
+Suite green at 7050 (+205: pricing, order engine verdicts incl. NaN polarity, order service
+sequencing with call-order asserts, VM matrix, prefab-binding round-trip, engine bindings). All
+39 player-facing strings registered as `{=taom_sl_*}`; the 12-language translation run is owed
+with the other two ports' strings.
+
+## 2026-08-22
+
 ### feat(timeAcceleration): let players rebind the time-control keys
 
 The extra fast-forward key was hardcoded to `InputKey.E`. So is vanilla's `MapRotateRight` (GameKey

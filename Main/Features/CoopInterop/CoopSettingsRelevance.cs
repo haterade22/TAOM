@@ -97,6 +97,7 @@ public static class CoopSettingsRelevance
     private static readonly HashSet<string> Presentation = new HashSet<string>(StringComparer.Ordinal)
     {
         "ShowAllEncyclopediaCharacters", "EnableNameplateFade", "MapFigureScale",
+        "SupplyShowRouteVisual",
         "NameplateFadeFarDistance", "NameplateFadeNearDistance",
         "EnableScenePassPrecompilation", "EnableShaderPrecompilation",
         "EnableNativeSkinFixes",

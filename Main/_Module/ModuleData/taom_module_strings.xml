@@ -2692,4 +2692,46 @@
   <string id="str_player_mother_name.bluecraig" text="{=taom_str_player_mother_name.bluecraig}Borlia" />
 
   <!-- TAOM-NEWCULTURE:bluecraig:END -->
+	<!-- SupplyLines (#505): resupply convoys ordered from towns, castles and friendly lords. -->
+
+	<!-- SupplyLines (#505): resupply convoys ordered from towns, castles and friendly lords. -->
+	<string id="taom_sl_at_war" text="{=taom_sl_at_war}At war, you cannot trade here." />
+	<string id="taom_sl_cancel" text="{=taom_sl_cancel}Cancel" />
+	<string id="taom_sl_cancelled" text="{=taom_sl_cancelled}Supply orders cancelled; the goods and gold are lost." />
+	<string id="taom_sl_caravan_name" text="{=taom_sl_caravan_name}Supply Caravan" />
+	<string id="taom_sl_clear" text="{=taom_sl_clear}Clear" />
+	<string id="taom_sl_confirm" text="{=taom_sl_confirm}Confirm" />
+	<string id="taom_sl_delivered" text="{=taom_sl_delivered}Your supplies have arrived." />
+	<string id="taom_sl_dispatched" text="{=taom_sl_dispatched}A supply caravan has set out for your party." />
+	<string id="taom_sl_escort_companion" text="{=taom_sl_escort_companion}Companion" />
+	<string id="taom_sl_escort_mercs" text="{=taom_sl_escort_mercs}Mercenaries" />
+	<string id="taom_sl_escort_none" text="{=taom_sl_escort_none}None" />
+	<string id="taom_sl_fail_blockaded" text="{=taom_sl_fail_blockaded}You cannot arrange supplies while blockaded." />
+	<string id="taom_sl_fail_disabled" text="{=taom_sl_fail_disabled}Supply lines are disabled." />
+	<string id="taom_sl_fail_gold" text="{=taom_sl_fail_gold}Not enough gold to place this order." />
+	<string id="taom_sl_fail_no_route" text="{=taom_sl_fail_no_route}There is no route from that source to you right now." />
+	<string id="taom_sl_fail_source" text="{=taom_sl_fail_source}No supply source selected." />
+	<string id="taom_sl_fail_spawn" text="{=taom_sl_fail_spawn}The supply caravan could not be assembled." />
+	<string id="taom_sl_fail_stock" text="{=taom_sl_fail_stock}Nothing you selected is still available at the source." />
+	<string id="taom_sl_good_row" text="{=taom_sl_good_row}{NAME} - {STOCK} in stock, {PRICE} denars" />
+	<string id="taom_sl_goods" text="{=taom_sl_goods}Goods" />
+	<string id="taom_sl_goods_header" text="{=taom_sl_goods_header}Goods in stock" />
+	<string id="taom_sl_guard" text="{=taom_sl_guard}Guard" />
+	<string id="taom_sl_lost" text="{=taom_sl_lost}A supply caravan was lost!" />
+	<string id="taom_sl_order" text="{=taom_sl_order}Order Supplies" />
+	<string id="taom_sl_order_failed" text="{=taom_sl_order_failed}The order could not be placed." />
+	<string id="taom_sl_rel_allied" text="{=taom_sl_rel_allied}Allied" />
+	<string id="taom_sl_rel_enemy" text="{=taom_sl_rel_enemy}Enemy" />
+	<string id="taom_sl_rel_lord" text="{=taom_sl_rel_lord}Lord" />
+	<string id="taom_sl_rel_neutral" text="{=taom_sl_rel_neutral}Neutral" />
+	<string id="taom_sl_rel_own" text="{=taom_sl_rel_own}Own" />
+	<string id="taom_sl_screen_open_failed" text="{=taom_sl_screen_open_failed}The supply screen failed to open (see log). Returning to the map." />
+	<string id="taom_sl_screen_title" text="{=taom_sl_screen_title}Supply Order" />
+	<string id="taom_sl_source_row" text="{=taom_sl_source_row}{NAME} ({RELATION})" />
+	<string id="taom_sl_source_row_blocked" text="{=taom_sl_source_row_blocked}{NAME} ({RELATION}) - {REASON}" />
+	<string id="taom_sl_total" text="{=taom_sl_total}Total" />
+	<string id="taom_sl_transport" text="{=taom_sl_transport}Transport" />
+	<string id="taom_sl_troop_row" text="{=taom_sl_troop_row}{NAME} - {COUNT} available, {PRICE} denars" />
+	<string id="taom_sl_troops" text="{=taom_sl_troops}Recruits" />
+	<string id="taom_sl_troops_header" text="{=taom_sl_troops_header}Volunteers (recruits)" />
 </strings>

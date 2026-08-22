@@ -2098,6 +2098,10 @@
     <string id="l4pRw7pO" text="{OWNER.NAME}의 무장 대상" />
     <string id="taom_align_desertion" text="{COUNT}명의 병력이 탈영했습니다 — 그들은 반대 진영의 군주를 섬기기를 거부합니다." />
     <string id="taom_troop_weight_size" text="중장병" />
+    <string id="taom_ai_party_size" text="군벌의 군세" />
+    <string id="taom_ai_garrison_size" text="요새화된 왕국" />
+    <string id="taom_ai_forage" text="원정 징발" />
+    <string id="taom_ai_levy" text="징집 복무" />
     <string id="taom_res_desertion" text="정예 병사 {COUNT}명이 탈영했습니다 — {RESOURCE}이(가) 고갈되었습니다!" />
     <string id="taom_feat_erebor_gw" text="난쟁이 수비대" />
     <string id="taom_feat_erebor_gw_desc" text="수비대 급료 25% 감소." />
@@ -2412,7 +2416,7 @@
     <string id="taom_qa_confirm_msg" text="이 일괄 작업을 적용하시겠습니까?" />
     <string id="taom_qa_yes" text="예" />
     <string id="taom_qa_no" text="아니오" />
-    <string id="taom_extra_fast_forward_hint" text="추가 빨리감기" />
+    <string id="taom_extra_fast_forward_hint" text="추가 빨리감기 (E)" />
     <string id="taom_str_faction_official.lindon" text="린돈의 학자" />
     <string id="taom_str_faction_official.lindon_f" text="린돈의 치유사" />
     <string id="taom_str_faction_ruler.lindon" text="경" />
@@ -2447,9 +2451,44 @@
     <string id="taom_str_adjective_for_culture.bluecraig" text="고블린의" />
     <string id="taom_str_player_father_name.bluecraig" text="나르주크" />
     <string id="taom_str_player_mother_name.bluecraig" text="보를리아" />
-    <string id="taom_ai_party_size" text="군벌의 군세" />
-    <string id="taom_ai_garrison_size" text="요새화된 왕국" />
-    <string id="taom_ai_forage" text="원정 징발" />
-    <string id="taom_ai_levy" text="징집 복무" />
+    <string id="taom_sl_at_war" text="At war, you cannot trade here." />
+    <string id="taom_sl_cancel" text="Cancel" />
+    <string id="taom_sl_cancelled" text="Supply orders cancelled; the goods and gold are lost." />
+    <string id="taom_sl_caravan_name" text="Supply Caravan" />
+    <string id="taom_sl_clear" text="Clear" />
+    <string id="taom_sl_confirm" text="Confirm" />
+    <string id="taom_sl_delivered" text="Your supplies have arrived." />
+    <string id="taom_sl_dispatched" text="A supply caravan has set out for your party." />
+    <string id="taom_sl_escort_companion" text="Companion" />
+    <string id="taom_sl_escort_mercs" text="Mercenaries" />
+    <string id="taom_sl_escort_none" text="None" />
+    <string id="taom_sl_fail_blockaded" text="You cannot arrange supplies while blockaded." />
+    <string id="taom_sl_fail_disabled" text="Supply lines are disabled." />
+    <string id="taom_sl_fail_gold" text="Not enough gold to place this order." />
+    <string id="taom_sl_fail_no_route" text="There is no route from that source to you right now." />
+    <string id="taom_sl_fail_source" text="No supply source selected." />
+    <string id="taom_sl_fail_spawn" text="The supply caravan could not be assembled." />
+    <string id="taom_sl_fail_stock" text="Nothing you selected is still available at the source." />
+    <string id="taom_sl_good_row" text="{NAME} - {STOCK} in stock, {PRICE} denars" />
+    <string id="taom_sl_goods" text="Goods" />
+    <string id="taom_sl_goods_header" text="Goods in stock" />
+    <string id="taom_sl_guard" text="Guard" />
+    <string id="taom_sl_lost" text="A supply caravan was lost!" />
+    <string id="taom_sl_order" text="Order Supplies" />
+    <string id="taom_sl_order_failed" text="The order could not be placed." />
+    <string id="taom_sl_rel_allied" text="Allied" />
+    <string id="taom_sl_rel_enemy" text="Enemy" />
+    <string id="taom_sl_rel_lord" text="Lord" />
+    <string id="taom_sl_rel_neutral" text="Neutral" />
+    <string id="taom_sl_rel_own" text="Own" />
+    <string id="taom_sl_screen_open_failed" text="The supply screen failed to open (see log). Returning to the map." />
+    <string id="taom_sl_screen_title" text="Supply Order" />
+    <string id="taom_sl_source_row" text="{NAME} ({RELATION})" />
+    <string id="taom_sl_source_row_blocked" text="{NAME} ({RELATION}) - {REASON}" />
+    <string id="taom_sl_total" text="Total" />
+    <string id="taom_sl_transport" text="Transport" />
+    <string id="taom_sl_troop_row" text="{NAME} - {COUNT} available, {PRICE} denars" />
+    <string id="taom_sl_troops" text="Recruits" />
+    <string id="taom_sl_troops_header" text="Volunteers (recruits)" />
   </strings>
 </base>

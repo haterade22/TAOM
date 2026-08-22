@@ -2098,6 +2098,10 @@
     <string id="l4pRw7pO" text="Carovana Armata di {OWNER.NAME}" />
     <string id="taom_align_desertion" text="{COUNT} truppe hanno disertato — rifiutano di servire un signore dell'allineamento opposto." />
     <string id="taom_troop_weight_size" text="Truppe pesanti" />
+    <string id="taom_ai_party_size" text="Schiera del Signore della Guerra" />
+    <string id="taom_ai_garrison_size" text="Reame fortificato" />
+    <string id="taom_ai_forage" text="Foraggiamento in campagna" />
+    <string id="taom_ai_levy" text="Servizio di leva" />
     <string id="taom_res_desertion" text="{COUNT} truppe d'elite hanno disertato — le tue {RESOURCE} sono esaurite!" />
     <string id="taom_feat_erebor_gw" text="Guarnigione nanica" />
     <string id="taom_feat_erebor_gw_desc" text="Paghe della guarnigione ridotte del 25%." />
@@ -2412,7 +2416,7 @@
     <string id="taom_qa_confirm_msg" text="Applicare questa azione in blocco?" />
     <string id="taom_qa_yes" text="Sì" />
     <string id="taom_qa_no" text="No" />
-    <string id="taom_extra_fast_forward_hint" text="Avanzamento extra rapido" />
+    <string id="taom_extra_fast_forward_hint" text="Avanzamento extra rapido (E)" />
     <string id="taom_str_faction_official.lindon" text="un maestro del sapere di Lindon" />
     <string id="taom_str_faction_official.lindon_f" text="una guaritrice di Lindon" />
     <string id="taom_str_faction_ruler.lindon" text="Signore" />
@@ -2447,9 +2451,44 @@
     <string id="taom_str_adjective_for_culture.bluecraig" text="orchesco" />
     <string id="taom_str_player_father_name.bluecraig" text="Narzuk" />
     <string id="taom_str_player_mother_name.bluecraig" text="Borlia" />
-    <string id="taom_ai_party_size" text="Schiera del Signore della Guerra" />
-    <string id="taom_ai_garrison_size" text="Reame fortificato" />
-    <string id="taom_ai_forage" text="Foraggiamento in campagna" />
-    <string id="taom_ai_levy" text="Servizio di leva" />
+    <string id="taom_sl_at_war" text="At war, you cannot trade here." />
+    <string id="taom_sl_cancel" text="Cancel" />
+    <string id="taom_sl_cancelled" text="Supply orders cancelled; the goods and gold are lost." />
+    <string id="taom_sl_caravan_name" text="Supply Caravan" />
+    <string id="taom_sl_clear" text="Clear" />
+    <string id="taom_sl_confirm" text="Confirm" />
+    <string id="taom_sl_delivered" text="Your supplies have arrived." />
+    <string id="taom_sl_dispatched" text="A supply caravan has set out for your party." />
+    <string id="taom_sl_escort_companion" text="Companion" />
+    <string id="taom_sl_escort_mercs" text="Mercenaries" />
+    <string id="taom_sl_escort_none" text="None" />
+    <string id="taom_sl_fail_blockaded" text="You cannot arrange supplies while blockaded." />
+    <string id="taom_sl_fail_disabled" text="Supply lines are disabled." />
+    <string id="taom_sl_fail_gold" text="Not enough gold to place this order." />
+    <string id="taom_sl_fail_no_route" text="There is no route from that source to you right now." />
+    <string id="taom_sl_fail_source" text="No supply source selected." />
+    <string id="taom_sl_fail_spawn" text="The supply caravan could not be assembled." />
+    <string id="taom_sl_fail_stock" text="Nothing you selected is still available at the source." />
+    <string id="taom_sl_good_row" text="{NAME} - {STOCK} in stock, {PRICE} denars" />
+    <string id="taom_sl_goods" text="Goods" />
+    <string id="taom_sl_goods_header" text="Goods in stock" />
+    <string id="taom_sl_guard" text="Guard" />
+    <string id="taom_sl_lost" text="A supply caravan was lost!" />
+    <string id="taom_sl_order" text="Order Supplies" />
+    <string id="taom_sl_order_failed" text="The order could not be placed." />
+    <string id="taom_sl_rel_allied" text="Allied" />
+    <string id="taom_sl_rel_enemy" text="Enemy" />
+    <string id="taom_sl_rel_lord" text="Lord" />
+    <string id="taom_sl_rel_neutral" text="Neutral" />
+    <string id="taom_sl_rel_own" text="Own" />
+    <string id="taom_sl_screen_open_failed" text="The supply screen failed to open (see log). Returning to the map." />
+    <string id="taom_sl_screen_title" text="Supply Order" />
+    <string id="taom_sl_source_row" text="{NAME} ({RELATION})" />
+    <string id="taom_sl_source_row_blocked" text="{NAME} ({RELATION}) - {REASON}" />
+    <string id="taom_sl_total" text="Total" />
+    <string id="taom_sl_transport" text="Transport" />
+    <string id="taom_sl_troop_row" text="{NAME} - {COUNT} available, {PRICE} denars" />
+    <string id="taom_sl_troops" text="Recruits" />
+    <string id="taom_sl_troops_header" text="Volunteers (recruits)" />
   </strings>
 </base>

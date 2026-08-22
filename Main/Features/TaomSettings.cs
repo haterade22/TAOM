@@ -1064,6 +1064,47 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Metres relative to the human eye height. Negative lowers the camera. Default -0.20. The resulting height is clamped to a safe range, so extreme values cannot put the camera in the floor. Like the toggle above, a change lands the next time a dwarf visual is built.")]
     public float DwarfEyeHeightAdjuster { get; set; } = HeroRace.EyeHeightAdjustment.DefaultAdjuster;
 
+    // --- Supply Lines ---
+    //
+    // Resupply convoys ordered from a town, castle or friendly lord (#505, port of the yotthani
+    // SupplyLines module). Costs and speed are the simulation-relevant knobs; the route arrows are
+    // presentation. Defaults match the source module so its author's tuning carries over.
+
+    [SettingPropertyGroup("Supply Lines", GroupOrder = 45)]
+    [SettingPropertyBool("Enable Supply Lines", Order = 0, RequireRestart = false,
+        HintText = "Order resupply convoys from a town, castle or friendly lord: goods from real market stock, troops from volunteers, delivered to you on the map. When off, the order option disappears and no new orders can be placed; convoys already on the road still arrive.")]
+    public bool EnableSupplyLines { get; set; } = true;
+
+    [SettingPropertyGroup("Supply Lines")]
+    [SettingPropertyFloatingInteger("Goods Markup Factor", 1.0f, 3.0f, "#0.00", Order = 1, RequireRestart = false,
+        HintText = "Price multiplier on ordered goods over their market value. Default 1.05.")]
+    public float SupplyGoodsMarkupFactor { get; set; } = 1.05f;
+
+    [SettingPropertyGroup("Supply Lines")]
+    [SettingPropertyFloatingInteger("Transport Fee Per Distance", 0f, 20f, "#0.0", Order = 2, RequireRestart = false,
+        HintText = "Delivery fee per map-distance unit between the source and your party. Default 2.")]
+    public float SupplyTransportFeePerDistance { get; set; } = 2f;
+
+    [SettingPropertyGroup("Supply Lines")]
+    [SettingPropertyFloatingInteger("Mercenary Escort Wage Per Distance", 0f, 50f, "#0.0", Order = 3, RequireRestart = false,
+        HintText = "Cost of a mercenary escort per map-distance unit. Default 10.")]
+    public float SupplyMercenaryWagePerDistance { get; set; } = 10f;
+
+    [SettingPropertyGroup("Supply Lines")]
+    [SettingPropertyInteger("Mercenary Guard Count", 0, 40, "0", Order = 4, RequireRestart = false,
+        HintText = "Guards added to the convoy when a mercenary escort is hired. Default 10.")]
+    public int SupplyMercenaryGuardCount { get; set; } = 10;
+
+    [SettingPropertyGroup("Supply Lines")]
+    [SettingPropertyFloatingInteger("Convoy Hours Per Distance", 0.5f, 10f, "#0.0", Order = 5, RequireRestart = false,
+        HintText = "Convoy travel time per map-distance unit. Default 2. Lower is faster delivery.")]
+    public float SupplyCaravanHoursPerDistance { get; set; } = 2f;
+
+    [SettingPropertyGroup("Supply Lines")]
+    [SettingPropertyBool("Show Convoy Route", Order = 6, RequireRestart = false,
+        HintText = "Draw the arrow trail from the source to your party while a convoy is on the road. Presentation only.")]
+    public bool SupplyShowRouteVisual { get; set; } = true;
+
     // --- Map Tools / Distance Cache Rebuild ---
     //
     // Rebuilds Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin

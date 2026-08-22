@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+
+        <!-- Dimmed full-screen backdrop. DoNotAcceptEvents so it never eats clicks
+             meant for the panel controls (lesson from RingScreen). -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                DoNotAcceptEvents="true"
+                Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.65" />
+
+        <!-- Centered panel -->
+        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                     SuggestedWidth="760" SuggestedHeight="700"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     Brush="Frame1.Broken">
+          <Children>
+
+            <!-- Title -->
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                        HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="20"
+                        Brush="InventoryHeaderFontBrush" Brush.FontSize="34"
+                        Brush.TextHorizontalAlignment="Center" Text="@ScreenTitle" />
+
+            <!-- Body: two columns (settlements | order details) -->
+            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                       SuggestedHeight="540"
+                       MarginTop="70" MarginLeft="20" MarginRight="20"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <Children>
+
+                <!-- LEFT: settlement list. Scrollable pattern copied from vanilla
+                     CharacterCreationCultureStage: ClipRect/InnerPanel are widget-id PATHS,
+                     the ScrollbarWidget is a SIBLING of the ScrollablePanel (..\Id), and the
+                     clip widget uses ClipContents="true". -->
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                        SuggestedWidth="320" SuggestedHeight="540">
+                  <Children>
+                    <ScrollablePanel Id="SettlementScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                     AutoHideScrollBars="true" MouseScrollAxis="Vertical"
+                                     ClipRect="SettlementClip" InnerPanel="SettlementClip\SettlementList" VerticalScrollbar="..\SettlementScrollbar">
+                      <Children>
+                        <Widget Id="SettlementClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                ClipContents="true" MarginRight="12">
+                          <Children>
+                            <ListPanel Id="SettlementList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                       StackLayout.LayoutMethod="VerticalTopToBottom" ClipContents="true"
+                                       DataSource="{Settlements}">
+                              <ItemTemplate>
+                                <ButtonWidget DoNotPassEventsToChildren="true"
+                                              WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                              SuggestedHeight="40" MarginBottom="4"
+                                              Brush="ButtonBrush2" IsEnabled="@RowEnabled"
+                                              Command.Click="ExecuteSelect" UpdateChildrenStates="true">
+                                  <Children>
+                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            Sprite="BlankWhiteSquare_9" Color="#FFD700FF" AlphaFactor="0.18"
+                                            IsVisible="@IsSelected" />
+                                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10"
+                                                Brush="Popup.Text.Medium" Brush.FontSize="16"
+                                                Text="@DisplayName" />
+                                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10"
+                                                Brush="Popup.Text.Small" Brush.FontSize="13"
+                                                Brush.FontColor="#A09080FF" Text="@DistanceText" />
+                                  </Children>
+                                </ButtonWidget>
+                              </ItemTemplate>
+                            </ListPanel>
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </ScrollablePanel>
+                    <ScrollbarWidget Id="SettlementScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                     SuggestedWidth="8" HorizontalAlignment="Right" AlignmentAxis="Vertical"
+                                     Handle="SettlementScrollHandle" MinValue="0" MaxValue="100"
+                                     Sprite="BlankWhiteSquare_9" Color="#00000066">
+                      <Children>
+                        <Widget Id="SettlementScrollHandle" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                SuggestedHeight="40" Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" />
+                      </Children>
+                    </ScrollbarWidget>
+                  </Children>
+                </Widget>
+
+                <!-- RIGHT: order details -->
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                        MarginLeft="20">
+                  <Children>
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                               StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <Children>
+
+                        <!-- Goods header -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginBottom="6"
+                                    Brush="TownManagement.Item.Title.Text" Brush.FontSize="14"
+                                    Text="@GoodsHeaderText" />
+
+                        <!-- Goods list (selected settlement's market stock) -->
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                SuggestedHeight="150" MarginBottom="10">
+                          <Children>
+                            <ScrollablePanel Id="GoodsScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                             AutoHideScrollBars="true" MouseScrollAxis="Vertical"
+                                             ClipRect="GoodsClip" InnerPanel="GoodsClip\GoodsList" VerticalScrollbar="..\GoodsScrollbar">
+                              <Children>
+                                <Widget Id="GoodsClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        ClipContents="true" MarginRight="12">
+                                  <Children>
+                                    <ListPanel Id="GoodsList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                               StackLayout.LayoutMethod="VerticalTopToBottom" ClipContents="true"
+                                               DataSource="{Goods}">
+                                      <ItemTemplate>
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                   MarginBottom="8"
+                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                          <Children>
+                                            <!-- Name on its own full-width line (CoverChildren height,
+                                                 so a long name grows the row instead of overlapping). -->
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                        Brush="Popup.Text.Small" Brush.FontSize="14" Text="@Label" />
+                                            <!-- -/qty/+ controls below, right-aligned -->
+                                            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                       HorizontalAlignment="Right" MarginTop="3" MarginRight="16"
+                                                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                              <Children>
+                                                <ButtonWidget DoNotPassEventsToChildren="true"
+                                                              WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                              SuggestedWidth="30" SuggestedHeight="30"
+                                                              Brush="ButtonBrush2" Command.Click="ExecuteMinus" UpdateChildrenStates="true">
+                                                  <Children>
+                                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                                Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                                                Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="-" />
+                                                  </Children>
+                                                </ButtonWidget>
+                                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                            SuggestedWidth="44" SuggestedHeight="30"
+                                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                            Brush="Popup.Text.Medium" Brush.FontSize="17"
+                                                            Brush.TextHorizontalAlignment="Center" Text="@QtyText" />
+                                                <ButtonWidget DoNotPassEventsToChildren="true"
+                                                              WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                              SuggestedWidth="30" SuggestedHeight="30"
+                                                              Brush="ButtonBrush2" Command.Click="ExecutePlus" UpdateChildrenStates="true">
+                                                  <Children>
+                                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                                Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                                                Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="+" />
+                                                  </Children>
+                                                </ButtonWidget>
+                                              </Children>
+                                            </ListPanel>
+                                          </Children>
+                                        </ListPanel>
+                                      </ItemTemplate>
+                                    </ListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </ScrollablePanel>
+                            <ScrollbarWidget Id="GoodsScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                             SuggestedWidth="8" HorizontalAlignment="Right" AlignmentAxis="Vertical"
+                                             Handle="GoodsScrollHandle" MinValue="0" MaxValue="100"
+                                             Sprite="BlankWhiteSquare_9" Color="#00000066">
+                              <Children>
+                                <Widget Id="GoodsScrollHandle" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                        SuggestedHeight="40" Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" />
+                              </Children>
+                            </ScrollbarWidget>
+                          </Children>
+                        </Widget>
+
+                        <!-- Troops header -->
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginBottom="6"
+                                    Brush="TownManagement.Item.Title.Text" Brush.FontSize="14"
+                                    Text="@TroopsHeaderText" />
+
+                        <!-- Troop list (selected source's volunteers / lord's troops) -->
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                SuggestedHeight="140" MarginBottom="10">
+                          <Children>
+                            <ScrollablePanel Id="TroopsScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                             AutoHideScrollBars="true" MouseScrollAxis="Vertical"
+                                             ClipRect="TroopsClip" InnerPanel="TroopsClip\TroopsList" VerticalScrollbar="..\TroopsScrollbar">
+                              <Children>
+                                <Widget Id="TroopsClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        ClipContents="true" MarginRight="12">
+                                  <Children>
+                                    <ListPanel Id="TroopsList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                               StackLayout.LayoutMethod="VerticalTopToBottom" ClipContents="true"
+                                               DataSource="{Troops}">
+                                      <ItemTemplate>
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                   MarginBottom="8"
+                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                          <Children>
+                                            <!-- Name on its own full-width line (CoverChildren height,
+                                                 so a long name grows the row instead of overlapping). -->
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                        Brush="Popup.Text.Small" Brush.FontSize="14" Text="@Label" />
+                                            <!-- -/qty/+ controls below, right-aligned -->
+                                            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                       HorizontalAlignment="Right" MarginTop="3" MarginRight="16"
+                                                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                              <Children>
+                                                <ButtonWidget DoNotPassEventsToChildren="true"
+                                                              WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                              SuggestedWidth="30" SuggestedHeight="30"
+                                                              Brush="ButtonBrush2" Command.Click="ExecuteMinus" UpdateChildrenStates="true">
+                                                  <Children>
+                                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                                Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                                                Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="-" />
+                                                  </Children>
+                                                </ButtonWidget>
+                                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                            SuggestedWidth="44" SuggestedHeight="30"
+                                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                            Brush="Popup.Text.Medium" Brush.FontSize="17"
+                                                            Brush.TextHorizontalAlignment="Center" Text="@QtyText" />
+                                                <ButtonWidget DoNotPassEventsToChildren="true"
+                                                              WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                              SuggestedWidth="30" SuggestedHeight="30"
+                                                              Brush="ButtonBrush2" Command.Click="ExecutePlus" UpdateChildrenStates="true">
+                                                  <Children>
+                                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                                Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                                                Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="+" />
+                                                  </Children>
+                                                </ButtonWidget>
+                                              </Children>
+                                            </ListPanel>
+                                          </Children>
+                                        </ListPanel>
+                                      </ItemTemplate>
+                                    </ListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </ScrollablePanel>
+                            <ScrollbarWidget Id="TroopsScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                             SuggestedWidth="8" HorizontalAlignment="Right" AlignmentAxis="Vertical"
+                                             Handle="TroopsScrollHandle" MinValue="0" MaxValue="100"
+                                             Sprite="BlankWhiteSquare_9" Color="#00000066">
+                              <Children>
+                                <Widget Id="TroopsScrollHandle" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                        SuggestedHeight="40" Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" />
+                              </Children>
+                            </ScrollbarWidget>
+                          </Children>
+                        </Widget>
+
+                        <!-- Escort selector. Plain flat rectangles (BlankWhiteSquare_9 background,
+                             gold overlay when selected) - NOT ButtonBrush2, whose ornate metal
+                             end-caps overhang the widget box and clipped into each other / the edge. -->
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                   HorizontalAlignment="Center" MarginBottom="14"
+                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <ButtonWidget DoNotPassEventsToChildren="true"
+                                          WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                          SuggestedWidth="108" SuggestedHeight="34" MarginRight="6"
+                                          Command.Click="ExecuteEscortNone" UpdateChildrenStates="true">
+                              <Children>
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="#241B11FF" AlphaFactor="0.95" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortNone" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Brush="Popup.Text.Small" Brush.FontSize="14" Text="{=taom_sl_escort_none}None" />
+                              </Children>
+                            </ButtonWidget>
+                            <ButtonWidget DoNotPassEventsToChildren="true"
+                                          WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                          SuggestedWidth="108" SuggestedHeight="34" MarginRight="6"
+                                          Command.Click="ExecuteEscortMercenaries" UpdateChildrenStates="true">
+                              <Children>
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="#241B11FF" AlphaFactor="0.95" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortMercenaries" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Brush="Popup.Text.Small" Brush.FontSize="14" Text="{=taom_sl_escort_mercs}Mercenaries" />
+                              </Children>
+                            </ButtonWidget>
+                            <ButtonWidget DoNotPassEventsToChildren="true"
+                                          WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                          SuggestedWidth="108" SuggestedHeight="34"
+                                          Command.Click="ExecuteEscortCompanion" UpdateChildrenStates="true">
+                              <Children>
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="#241B11FF" AlphaFactor="0.95" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortCompanion" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Brush="Popup.Text.Small" Brush.FontSize="14" Text="{=taom_sl_escort_companion}Companion" />
+                              </Children>
+                            </ButtonWidget>
+                          </Children>
+                        </ListPanel>
+
+                        <!-- Price breakdown -->
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2"
+                                MarginBottom="8" Sprite="horizontal_gradient_divider" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginBottom="4"
+                                    Brush="Popup.Text.Small" Brush.FontSize="15" Text="@GoodsText" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginBottom="4"
+                                    Brush="Popup.Text.Small" Brush.FontSize="15" Text="@TroopText" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginBottom="4"
+                                    Brush="Popup.Text.Small" Brush.FontSize="15" Text="@TransportText" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginBottom="4"
+                                    Brush="Popup.Text.Small" Brush.FontSize="15" Text="@GuardText" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginBottom="4"
+                                    Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                    Brush.FontColor="#FFD700FF" Text="@TotalText" />
+
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+
+              </Children>
+            </ListPanel>
+
+            <!-- Inline failure line from a rejected confirm (TAOM addition; the source module
+                 closed silently on some failure paths). Sits just above the footer buttons. -->
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                        HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="72"
+                        Brush="Popup.Text.Small" Brush.FontSize="15" Brush.FontColor="#E05545FF"
+                        Brush.TextHorizontalAlignment="Center"
+                        Text="@ErrorText" IsVisible="@HasError" />
+
+            <!-- Footer: Confirm / Clear / Cancel -->
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="20"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <Children>
+                <ButtonWidget DoNotPassEventsToChildren="true"
+                              WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                              SuggestedWidth="160" SuggestedHeight="44" MarginRight="20"
+                              Brush="ButtonBrush2" Command.Click="ExecuteConfirm"
+                              UpdateChildrenStates="true" IsEnabled="@CanConfirm">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Brush="Popup.Text.Medium" Brush.FontSize="16" Text="{=taom_sl_confirm}Confirm" />
+                  </Children>
+                </ButtonWidget>
+                <ButtonWidget DoNotPassEventsToChildren="true"
+                              WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                              SuggestedWidth="130" SuggestedHeight="44" MarginRight="20"
+                              Brush="ButtonBrush2" Command.Click="ExecuteClear"
+                              UpdateChildrenStates="true" IsEnabled="@CanClear">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Brush="Popup.Text.Medium" Brush.FontSize="16" Text="{=taom_sl_clear}Clear" />
+                  </Children>
+                </ButtonWidget>
+                <ButtonWidget DoNotPassEventsToChildren="true"
+                              WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                              SuggestedWidth="160" SuggestedHeight="44"
+                              Brush="ButtonBrush2" Command.Click="ExecuteCancel" UpdateChildrenStates="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Brush="Popup.Text.Medium" Brush.FontSize="16" Text="{=taom_sl_cancel}Cancel" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </ListPanel>
+
+          </Children>
+        </BrushWidget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

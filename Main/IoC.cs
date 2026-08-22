@@ -45,6 +45,7 @@ using TAOM.Features.SettlementFood;
 using TAOM.Features.BanditManagement;
 using TAOM.Features.CastleRecruitment;
 using TAOM.Features.EliteEmissary;
+using TAOM.Features.SupplyLines;
 using TAOM.Features.SiegeDismount;
 using TAOM.Features.SiegePropDiagnostics;
 using TAOM.Features.MixedFormations;
@@ -128,6 +129,7 @@ public static class IoC
         BanditManagementIoC.RegisterBanditManagementFeature(container);
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
         EliteEmissaryIoC.RegisterEliteEmissaryFeature(container);
+        SupplyLinesIoC.RegisterSupplyLinesFeature(container);
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
         SiegePropDiagnosticsIoC.RegisterSiegePropDiagnosticsFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);

@@ -1029,6 +1029,14 @@ public class SubModule : MBSubModuleBase
         // (fixes caravans shuttling between the nearest two towns). Registered unconditionally so a
         // mid-session master-toggle-on works immediately; no SyncData (ephemeral, rebuilds as caravans move).
         campaignStarter.AddBehavior(IoC.Resolve<Features.CaravanTrade.CaravanVisitMemoryBehavior>());
+
+        // SupplyLines (#505): resupply convoys ordered from towns/lords. The behavior owns the
+        // SyncData halves; the order book itself is the singleton ISupplyOrderService.
+        campaignStarter.AddBehavior(new Features.SupplyLines.Hooks.SupplyLinesCampaignBehavior(
+            IoC.Resolve<Features.SupplyLines.ISupplyOrderService>(),
+            IoC.Resolve<Features.SupplyLines.ISupplyLinesSettingsProvider>(),
+            IoC.Resolve<Features.SupplyLines.ISupplyRouteVisualService>(),
+            IoC.Resolve<IModLogger>()));
         // Rolls the town-gold ledger onto a fresh day and clears it between campaigns (#317 follow-up).
         campaignStarter.AddBehavior(IoC.Resolve<Features.EconomyDiagnostics.EconomyDiagnosticsBehavior>());
         // Records one raw record per completed map battle so auto-resolve balance can be tuned
