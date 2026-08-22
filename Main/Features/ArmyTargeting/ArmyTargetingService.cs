@@ -7,11 +7,11 @@ namespace TAOM.Features.ArmyTargeting;
 
 public class ArmyTargetingService : IArmyTargetingService
 {
-    /// <summary>Lowest outer reach radius an MCM slider may impose, in town gaps.</summary>
-    private const float MinReachRadius = 1.0f;
+    /// <summary>Lowest border-rescue radius an MCM slider may impose, in town gaps.</summary>
+    private const float MinRescueRadius = 1.0f;
 
-    /// <summary>Highest outer reach radius. Vanilla's own distance term saturates at 5 gaps, so anything past this is a no-op by construction.</summary>
-    private const float MaxReachRadius = 20.0f;
+    /// <summary>Highest border-rescue radius. Past this the gate stops bounding anything, since vanilla's own distance term saturates at 5 gaps.</summary>
+    private const float MaxRescueRadius = 20.0f;
 
     /// <summary>Compiled fallback for the Defender multiplier, matching TaomSettings.ArmyDefenderPriority.</summary>
     private const float DefaultDefenderMultiplier = 1.6f;
@@ -29,15 +29,9 @@ public class ArmyTargetingService : IArmyTargetingService
     // INSTANCE, not static, and reset per campaign. These were static, which on a
     // process-lifetime singleton meant the second campaign of a session logged nothing at all:
     // a tester loading save B after save A would read the silence as "the feature is not firing".
-    // The FAR CANDIDATE line exists precisely so the next campaign observation is evidence.
     private bool _loggedTargetMultiplier;
     private bool _loggedStrengthMultiplier;
     private bool _loggedTheaterWeight;
-    private bool _loggedReach;
-
-    /// <summary>Cap on distinct far-candidate pairs recorded, so a long campaign cannot grow the log or the set without bound.</summary>
-    private const int MaxLoggedFarCandidates = 200;
-    private readonly HashSet<string> _loggedFarCandidates = new HashSet<string>(StringComparer.Ordinal);
 
     public ArmyTargetingService(IArmyTargetingSettingsProvider settings, IArmyTargetingConfigProvider configProvider, IModLogger logger)
     {
@@ -51,17 +45,14 @@ public class ArmyTargetingService : IArmyTargetingService
     }
 
     /// <summary>
-    /// Clears the one-shot diagnostic latches. Called by the context factory when it observes a new
-    /// campaign, because this service is a process-lifetime singleton and its breadcrumbs would
-    /// otherwise be spent on the first campaign of the session.
+    /// Clears the one-shot diagnostic latches so a second campaign in the same process still
+    /// produces provenance breadcrumbs.
     /// </summary>
     public void ResetDiagnostics()
     {
         _loggedTargetMultiplier = false;
         _loggedStrengthMultiplier = false;
         _loggedTheaterWeight = false;
-        _loggedReach = false;
-        _loggedFarCandidates.Clear();
     }
 
     public float GetTargetMultiplier(string candidateId, string committedTargetId, string factionId)
@@ -117,49 +108,16 @@ public class ArmyTargetingService : IArmyTargetingService
         return _priorityIndex.TryGetValue(factionId, out var targets) && targets.ContainsKey(settlementId);
     }
 
-    public float GetReachMultiplier(float normalizedDistance)
-    {
-        if (!_settings.EnableArmyStrategicIntelligence) return 1.0f;
-
-        // Positive-requirement polarity per csharp-architecture.md: an unmeasurable distance must
-        // FAIL the gate that would suppress. A landless faction, a missing navigation cache, or a
-        // zero average town gap all surface here as NaN, and damping every target on garbage would
-        // break AI targeting outright. Deferring to vanilla is the safe direction.
-        if (!FiniteFloatValidator.IsFinite(normalizedDistance)) return 1.0f;
-
-        float radius = ResolvedReachRadius();
-        float inner = ResolvedInnerRadius(radius);
-        float floor = ResolvedReachFloor();
-
-        if (normalizedDistance <= inner) return 1.0f;
-        if (normalizedDistance >= radius) return floor;
-
-        float span = radius - inner;
-        if (span <= 0f) return floor;
-
-        float t = (normalizedDistance - inner) / span;
-        float result = 1.0f - t * (1.0f - floor);
-
-        if (!_loggedReach)
-        {
-            _loggedReach = true;
-            _logger.LogDebug($"ArmyTargeting: reach x{result:F3} at {normalizedDistance:F2} town gaps (inner={inner:F2}, radius={radius:F2}, floor={floor:F2})");
-        }
-
-        return result;
-    }
-
-    public bool IsWithinReach(float normalizedDistance)
+    public bool IsWithinBorderRescueRange(float normalizedDistance)
     {
         if (!_settings.EnableArmyStrategicIntelligence) return true;
 
-        // Opposite polarity to GetReachMultiplier, and deliberately so. This gate decides whether
-        // TAOM may OVERTURN vanilla's "unreachable" verdict. Vanilla already said no; an
-        // unmeasurable distance is not grounds to overrule it. Both directions defer to vanilla,
-        // which is the invariant, not the boolean.
+        // An unmeasurable distance REFUSES the rescue. This gate decides whether TAOM may overturn
+        // vanilla's "unreachable" verdict, and vanilla has already said no; garbage is not grounds
+        // to overrule it. csharp-architecture.md's positive-requirement polarity.
         if (!FiniteFloatValidator.IsFinite(normalizedDistance)) return false;
 
-        return normalizedDistance < ResolvedReachRadius();
+        return normalizedDistance < ResolvedRescueRadius();
     }
 
     public float GetTheaterWeight(string attackerFactionId, string targetFactionId)
@@ -221,21 +179,25 @@ public class ArmyTargetingService : IArmyTargetingService
 
         switch (context.Mission)
         {
+            // There is deliberately NO metric distance term here. Vanilla's own besieger factor is
+            // MBMath.Map((5G-d)/G, 0f, 5f, 0.9f, 10f), a 10.0-to-0.9 ramp, and
+            // CalculateDistanceScoreForBesieging hard-zeroes anything scoring under 0.1 topology,
+            // so vanilla already discriminates hard on distance.
+            //
+            // A TAOM falloff was tried and REMOVED on 2026-08-22. Measured end to end it moved the
+            // crossover between a max-boost far target and a near neutral one from 4.029 to 3.746
+            // town gaps: 0.283 gaps, in exchange for an adapter on the hot path, a three-way cache,
+            // and a path where suppressing a committed target pushed Army.ThinkAboutCohesionBoost
+            // under its 0.01f gate and disbanded the army. Distance is vanilla's job. TAOM's job is
+            // only to stop its OWN priority boost from overturning vanilla's verdict, and Patch22's
+            // border-rescue gate is where that happens.
             case ArmyTargetingMission.Besieger:
-            {
-                // Commitment stickiness stays multiplicative against suppression rather than being
-                // skipped: 4.0 x 0.35 x 0.05 = 0.07 loses decisively to a legal near target at
-                // 1.0 x 1.25 x 1.0 = 1.25, so an in-flight cross-map siege on an existing save
-                // re-targets instead of pinning. ArmyTargetingServiceTests pins that arithmetic.
-                float priority = GetTargetMultiplier(context.TargetSettlementId, context.CommittedTargetId, context.FactionId);
-                float theater = GetTheaterWeight(context.FactionId, context.TargetFactionId);
-                float reach = GetReachMultiplier(context.NormalizedDistance);
-                LogFarCandidate(context, reach);
-                return context.BaseScore * priority * theater * reach;
-            }
+                return context.BaseScore
+                     * GetTargetMultiplier(context.TargetSettlementId, context.CommittedTargetId, context.FactionId)
+                     * GetTheaterWeight(context.FactionId, context.TargetFactionId);
 
-            // Raider is deliberately absent: vanilla already hard-zeroes raiders past 5 town gaps
-            // in GetDistanceScoreForRaiding, so a TAOM term there would buy nothing.
+            // Raider is absent on purpose: vanilla already hard-zeroes raiders past 5 town gaps in
+            // GetDistanceScoreForRaiding.
             case ArmyTargetingMission.Defender:
                 return context.BaseScore * ResolvedDefenderMultiplier();
 
@@ -244,53 +206,14 @@ public class ArmyTargetingService : IArmyTargetingService
         }
     }
 
-    /// <summary>
-    /// Phase 0 provenance instrumentation. The established root causes explain Gondor pushing at
-    /// Harad and Gundabad reaching for Dale, but NOT a Gondor army in the far north: vanilla's own
-    /// topology score rejects that pair before this method is ever reached. This names whichever
-    /// faction/target pairs actually survive vanilla's filter at long range, so the next campaign
-    /// observation is evidence rather than inference.
-    /// </summary>
-    private void LogFarCandidate(TargetScoreContext context, float reach)
+    private float ResolvedRescueRadius()
     {
-        if (!FiniteFloatValidator.IsFinite(context.NormalizedDistance)) return;
-        if (context.NormalizedDistance < ResolvedReachRadius()) return;
-        if (_loggedFarCandidates.Count >= MaxLoggedFarCandidates) return;
-
-        string key = context.FactionId + ">" + context.TargetSettlementId;
-        if (!_loggedFarCandidates.Add(key)) return;
-
-        _logger.LogDebug(
-            $"ArmyTargeting: FAR CANDIDATE {context.FactionId} -> {context.TargetSettlementId} " +
-            $"(owner={context.TargetFactionId}) at {context.NormalizedDistance:F2} town gaps, " +
-            $"vanilla score {context.BaseScore:F2}, reach x{reach:F3}, theater x{GetTheaterWeight(context.FactionId, context.TargetFactionId):F2}");
-    }
-
-    private float ResolvedReachRadius()
-    {
-        float radius = _settings.ReachRadiusInTownGaps;
-        if (!FiniteFloatValidator.IsFiniteInRange(radius, MinReachRadius, MaxReachRadius))
-            radius = _config.ReachRadiusInTownGaps;
-        if (!FiniteFloatValidator.IsFiniteInRange(radius, MinReachRadius, MaxReachRadius))
-            radius = new ArmyTargetingConfig().ReachRadiusInTownGaps;
+        float radius = _settings.BorderRescueRadiusInTownGaps;
+        if (!FiniteFloatValidator.IsFiniteInRange(radius, MinRescueRadius, MaxRescueRadius))
+            radius = _config.BorderRescueRadiusInTownGaps;
+        if (!FiniteFloatValidator.IsFiniteInRange(radius, MinRescueRadius, MaxRescueRadius))
+            radius = new ArmyTargetingConfig().BorderRescueRadiusInTownGaps;
         return radius;
-    }
-
-    // Centralized clamp rather than duplicate invariants at the JSON and MCM surfaces
-    // (csharp-architecture.md "Config Providers MUST Validate", clause 7). Deriving the inner
-    // radius from the resolved outer radius makes an inversion unrepresentable.
-    private float ResolvedInnerRadius(float radius)
-    {
-        float inner = _config.ReachInnerRadiusInTownGaps;
-        if (!FiniteFloatValidator.IsFiniteAtLeast(inner, 0f)) inner = 0f;
-        float ceiling = radius * 0.5f;
-        return inner < ceiling ? inner : ceiling;
-    }
-
-    private float ResolvedReachFloor()
-    {
-        float floor = _config.ReachFloor;
-        return FiniteFloatValidator.IsFiniteInRange(floor, 0.001f, 1.0f) ? floor : new ArmyTargetingConfig().ReachFloor;
     }
 
     private float ResolvedDefenderMultiplier()
@@ -314,8 +237,14 @@ public class ArmyTargetingService : IArmyTargetingService
         var index = new Dictionary<string, float>();
         if (source == null) return index;
         foreach (var kvp in source)
-            if (kvp.Value > 1.0f)
-                index[kvp.Key] = kvp.Value;
+        {
+            // Finite AND inside a sane band, not merely above neutral. An infinity here makes the
+            // inflated ourStrength infinite, which defeats vanilla's `ourStrength < defenderStrength
+            // * 2` siege veto for every fortress on the map. Json.NET parses 1e39, "Infinity" and a
+            // bare Infinity token into float.PositiveInfinity, and a `> 1.0f` test accepts all three.
+            if (!FiniteFloatValidator.IsFiniteInRange(kvp.Value, 1.0f, 100.0f)) continue;
+            if (kvp.Value > 1.0f) index[kvp.Key] = kvp.Value;
+        }
         return index;
     }
 

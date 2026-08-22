@@ -7,21 +7,19 @@ using TAOM.Features.ArmyTargeting;
 namespace TAOM.Tests.Features.ArmyTargeting;
 
 /// <summary>
-/// The reach falloff and the soft theater weighting, which together replace the old
-/// "long-range priority boost" mechanism.
+/// Theater weighting, the border-rescue range, and the priority-index safety properties.
 ///
-/// SIZING, and why it is gentle. Vanilla is NOT flat with distance: its besieger term is
-/// MBMath.Map((5G-d)/G, 0, 5, 0.9f, 10f), which already spans 10.0 at zero distance down to 0.9
-/// at five town gaps, an 11.1x ramp, and CalculateDistanceScoreForBesieging hard-zeroes any
-/// target whose two-hop topology score is under 0.1. TAOM multiplies on top of that rather than
-/// replacing it. So this term only has to stop TAOM's OWN multipliers (priority up to 3.0 x
-/// primary theater 1.25 = 3.75) from outrunning vanilla's 2.2x penalty at three gaps. An earlier
-/// draft sized it as if vanilla were flat and produced a 44x combined spread that crushed real
-/// fronts; the measured widest genuine hostile front on this map is about 2.95 gaps.
+/// <para><b>There is no distance term in the score, and that is the point.</b> Vanilla's besieger
+/// factor is <c>MBMath.Map((5G-d)/G, 0f, 5f, 0.9f, 10f)</c>, which already ramps 10.0 at zero
+/// distance down to 0.9 at five town gaps, and <c>CalculateDistanceScoreForBesieging</c> hard-zeroes
+/// anything under 0.1 topology score. A TAOM falloff was built and then removed on 2026-08-22:
+/// measured end to end it moved the crossover between a max-boost far target and a near neutral one
+/// from 4.029 to 3.746 town gaps, 0.283 gaps, in exchange for a hot-path adapter, a three-way cache,
+/// and a path where suppressing a committed target pushed <c>Army.ThinkAboutCohesionBoost</c> under
+/// its 0.01f gate and disbanded the army.</para>
 ///
-/// A hard theater gate was rejected on measurement: the corrected membership table severs only
-/// six pairs, all of which the falloff already handles, while a hard gate strands any kingdom
-/// whose enemies are all foreign and loses its army to Army.CheckInactivity two days later.
+/// <para>The only distance decision TAOM still owns is whether Patch22 may overturn vanilla's
+/// unreachable verdict for an authored priority target, bounded by its own radius.</para>
 /// </summary>
 [TestClass]
 public class WarTheaterAndReachTests
@@ -44,7 +42,7 @@ public class WarTheaterAndReachTests
         _settings.MaxPriorityBoost.Returns(3.0f);
         _settings.EvilAggressionScale.Returns(1.0f);
         _settings.BorderProximityFloor.Returns(0.15f);
-        _settings.ReachRadiusInTownGaps.Returns(6.0f);
+        _settings.BorderRescueRadiusInTownGaps.Returns(3.2f);
         _settings.DefenderPriorityMultiplier.Returns(1.6f);
 
         _config = new ArmyTargetingConfig
@@ -75,8 +73,7 @@ public class WarTheaterAndReachTests
         string faction = "empire_w",
         string targetFaction = "empire_s",
         string target = "town_ES1",
-        string committed = null,
-        float distance = 0f) =>
+        string committed = null) =>
         new TargetScoreContext
         {
             BaseScore = baseScore,
@@ -85,173 +82,58 @@ public class WarTheaterAndReachTests
             TargetFactionId = targetFaction,
             TargetSettlementId = target,
             CommittedTargetId = committed,
-            NormalizedDistance = distance,
         };
 
-    // ---------------------------------------------------------------- reach falloff
+    // ---------------------------------------------------------------- border rescue range
 
     [TestMethod]
-    public void GetReachMultiplier_AtOrigin_ReturnsUnity()
+    public void IsWithinBorderRescueRange_NearTarget_IsTrue()
     {
-        Assert.AreEqual(1.0f, CreateSut().GetReachMultiplier(0f), 0.0001f);
+        Assert.IsTrue(CreateSut().IsWithinBorderRescueRange(1.0f));
     }
 
     [TestMethod]
-    public void GetReachMultiplier_InsideInnerRadius_ReturnsUnity()
+    public void IsWithinBorderRescueRange_AtTheWidestRealFront_IsTrue()
     {
-        // The widest measured genuine hostile front is about 2.95 gaps. Every real war must sit
-        // in the flat region, because vanilla already penalises them on its own.
-        Assert.AreEqual(1.0f, CreateSut().GetReachMultiplier(2.9f), 0.0001f);
+        // Lothlorien to Gundabad measures 3.08 town gaps against the engine's own path cache, and
+        // is the widest genuine hostile front on the map. The 3.2 radius exists to clear it.
+        Assert.IsTrue(CreateSut().IsWithinBorderRescueRange(3.08f));
     }
 
     [TestMethod]
-    public void GetReachMultiplier_AtOuterRadius_ReturnsFloor()
+    public void IsWithinBorderRescueRange_BeyondRadius_IsFalse()
     {
-        Assert.AreEqual(_config.ReachFloor, CreateSut().GetReachMultiplier(6.0f), 0.0001f);
+        Assert.IsFalse(CreateSut().IsWithinBorderRescueRange(5.0f));
     }
 
     [TestMethod]
-    public void GetReachMultiplier_FarBeyondRadius_ReturnsFloor()
+    public void IsWithinBorderRescueRange_NaN_IsFalse()
     {
-        Assert.AreEqual(_config.ReachFloor, CreateSut().GetReachMultiplier(9.0f), 0.0001f);
+        // This gate decides whether TAOM may OVERTURN vanilla's unreachable verdict. Vanilla has
+        // already said no, and an unmeasurable distance is not grounds to overrule it.
+        Assert.IsFalse(CreateSut().IsWithinBorderRescueRange(float.NaN));
     }
 
     [TestMethod]
-    public void GetReachMultiplier_FloatMaxValue_ReturnsFloorWithoutOverflow()
+    public void IsWithinBorderRescueRange_Infinity_IsFalse()
     {
-        float result = CreateSut().GetReachMultiplier(float.MaxValue);
-        Assert.AreEqual(_config.ReachFloor, result, 0.0001f);
-        Assert.IsFalse(float.IsNaN(result));
-        Assert.IsFalse(float.IsInfinity(result));
+        Assert.IsFalse(CreateSut().IsWithinBorderRescueRange(float.PositiveInfinity));
     }
 
     [TestMethod]
-    public void GetReachMultiplier_UnreachableSentinel_ReturnsFloor()
-    {
-        // The engine reports an unreachable pair as a huge finite sentinel (1e30), not infinity.
-        Assert.AreEqual(_config.ReachFloor, CreateSut().GetReachMultiplier(1e30f / 93.95f), 0.0001f);
-    }
-
-    [TestMethod]
-    public void GetReachMultiplier_NaN_DoesNotSuppress()
-    {
-        // NaN means "the adapter could not measure a distance" (landless faction, degenerate town
-        // gap). Damping every target on garbage would break AI targeting outright, so the gate
-        // that would suppress must FAIL on NaN. csharp-architecture.md NaN-gate rule.
-        Assert.AreEqual(1.0f, CreateSut().GetReachMultiplier(float.NaN), 0.0001f);
-    }
-
-    [TestMethod]
-    public void GetReachMultiplier_Infinity_DoesNotSuppress()
-    {
-        Assert.AreEqual(1.0f, CreateSut().GetReachMultiplier(float.PositiveInfinity), 0.0001f);
-    }
-
-    [TestMethod]
-    public void GetReachMultiplier_NegativeDistance_ReturnsUnity()
-    {
-        Assert.AreEqual(1.0f, CreateSut().GetReachMultiplier(-5f), 0.0001f);
-    }
-
-    [TestMethod]
-    public void GetReachMultiplier_IsMonotonicallyNonIncreasing()
-    {
-        // The guard against a sign error that would invert the whole feature into "prefer the far
-        // war". Steps of 0.1 across 0 to 40 gaps.
-        var sut = CreateSut();
-        float previous = sut.GetReachMultiplier(0f);
-        for (int step = 1; step <= 400; step++)
-        {
-            float d = step * 0.1f;
-            float current = sut.GetReachMultiplier(d);
-            Assert.IsTrue(current <= previous + 0.0001f,
-                $"reach rose from {previous} to {current} at {d} town gaps");
-            Assert.IsTrue(current >= _config.ReachFloor - 0.0001f, $"reach fell below the floor at {d}");
-            Assert.IsTrue(current <= 1.0f + 0.0001f, $"reach exceeded unity at {d}");
-            previous = current;
-        }
-    }
-
-    [TestMethod]
-    public void GetReachMultiplier_DoesNotDampMeasuredRealFronts()
-    {
-        // The widest genuine hostile fronts measured on the live map, in town gaps. Vanilla
-        // already applies its own ramp across this range, so TAOM must not stack a second one.
-        var sut = CreateSut();
-        foreach (float gaps in new[] { 0.18f, 1.04f, 1.76f, 2.24f, 2.52f, 2.95f })
-            Assert.AreEqual(1.0f, sut.GetReachMultiplier(gaps), 0.0001f, $"real front at {gaps} gaps was damped");
-    }
-
-    [TestMethod]
-    public void GetReachMultiplier_ContributesLessSpreadThanVanillaAlreadyDoes()
-    {
-        // The guard against re-creating the 44x version. Vanilla already supplies an 11.1x
-        // distance ramp of its own; TAOM only needs to cancel its own 3.75x priority-plus-
-        // theater stack, so anything past about 4x here means the sizing drifted back to
-        // treating vanilla as flat.
-        var sut = CreateSut();
-        float taomSpread = sut.GetReachMultiplier(0f) / sut.GetReachMultiplier(99f);
-        Assert.IsTrue(taomSpread <= 4.0f,
-            $"TAOM contributes a {taomSpread:F1}x spread on top of vanilla's own 11.1x ramp");
-    }
-
-    [TestMethod]
-    public void GetReachMultiplier_FeatureDisabled_ReturnsUnity()
+    public void IsWithinBorderRescueRange_FeatureDisabled_IsTrue()
     {
         _settings.EnableArmyStrategicIntelligence.Returns(false);
-        Assert.AreEqual(1.0f, CreateSut().GetReachMultiplier(50f), 0.0001f);
+        Assert.IsTrue(CreateSut().IsWithinBorderRescueRange(float.NaN));
     }
 
     [TestMethod]
-    public void GetReachMultiplier_NaNRadiusSetting_FallsBackToConfigRadius()
+    public void IsWithinBorderRescueRange_NaNRadiusSetting_FallsBackToConfigRadius()
     {
-        _settings.ReachRadiusInTownGaps.Returns(float.NaN);
+        _settings.BorderRescueRadiusInTownGaps.Returns(float.NaN);
         var sut = CreateSut();
-        Assert.AreEqual(1.0f, sut.GetReachMultiplier(0f), 0.0001f);
-        Assert.AreEqual(_config.ReachFloor, sut.GetReachMultiplier(6.0f), 0.0001f);
-    }
-
-    [TestMethod]
-    public void GetReachMultiplier_InnerRadiusAboveOuter_CannotInvert()
-    {
-        // MCM can drive the outer radius below the config's inner radius. The service derives the
-        // inner one from the resolved outer one so the span can never go non-positive.
-        _config.ReachInnerRadiusInTownGaps = 50f;
-        _settings.ReachRadiusInTownGaps.Returns(2.0f);
-        var sut = CreateSut();
-
-        Assert.AreEqual(1.0f, sut.GetReachMultiplier(0.5f), 0.0001f);
-        Assert.AreEqual(_config.ReachFloor, sut.GetReachMultiplier(2.0f), 0.0001f);
-        Assert.IsFalse(float.IsNaN(sut.GetReachMultiplier(1.5f)));
-    }
-
-    // ---------------------------------------------------------------- IsWithinReach
-
-    [TestMethod]
-    public void IsWithinReach_NearTarget_IsTrue()
-    {
-        Assert.IsTrue(CreateSut().IsWithinReach(1.0f));
-    }
-
-    [TestMethod]
-    public void IsWithinReach_BeyondRadius_IsFalse()
-    {
-        Assert.IsFalse(CreateSut().IsWithinReach(9.0f));
-    }
-
-    [TestMethod]
-    public void IsWithinReach_NaN_IsFalse()
-    {
-        // Opposite polarity to GetReachMultiplier and deliberately so: this gate decides whether
-        // TAOM may OVERTURN vanilla's "unreachable" verdict. Both directions defer to vanilla.
-        Assert.IsFalse(CreateSut().IsWithinReach(float.NaN));
-    }
-
-    [TestMethod]
-    public void IsWithinReach_FeatureDisabled_IsTrue()
-    {
-        _settings.EnableArmyStrategicIntelligence.Returns(false);
-        Assert.IsTrue(CreateSut().IsWithinReach(float.NaN));
+        Assert.IsTrue(sut.IsWithinBorderRescueRange(3.0f));
+        Assert.IsFalse(sut.IsWithinBorderRescueRange(5.0f));
     }
 
     // ---------------------------------------------------------------- priority index safety
@@ -299,17 +181,39 @@ public class WarTheaterAndReachTests
         }
     }
 
+    // ---------------------------------------------------------------- aggression multipliers
+
     [TestMethod]
-    public void ApplyTargetScoreModifiers_DefenderSettingOutOfRange_FallsBackToCompiledDefault()
+    public void GetStrengthMultiplier_InfiniteAggression_IsDroppedToNeutral()
     {
-        // Reverting to 1.0 would silently DISABLE the home-defence lever on a garbage MCM value
-        // rather than restoring its intended strength.
-        _settings.DefenderPriorityMultiplier.Returns(float.NaN);
+        // An infinity here makes the inflated ourStrength infinite, which defeats vanilla's
+        // `ourStrength < defenderStrength * 2` siege veto for every fortress on the map. Json.NET
+        // parses 1e39, "Infinity" and a bare Infinity token into float.PositiveInfinity.
+        _config.FactionAggressionMultipliers["empire_s"] = float.PositiveInfinity;
+        Assert.AreEqual(1.0f, CreateSut().GetStrengthMultiplier("empire_s"), 0.0001f);
+    }
 
-        float result = CreateSut().ApplyTargetScoreModifiers(
-            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Defender, targetFaction: "empire_w"));
+    [TestMethod]
+    public void GetStrengthMultiplier_NaNAggression_IsDroppedToNeutral()
+    {
+        _config.FactionAggressionMultipliers["empire_s"] = float.NaN;
+        Assert.AreEqual(1.0f, CreateSut().GetStrengthMultiplier("empire_s"), 0.0001f);
+    }
 
-        Assert.AreEqual(160f, result, 0.01f);
+    [TestMethod]
+    public void GetStrengthMultiplier_AbsurdlyLargeAggression_IsDroppedToNeutral()
+    {
+        _config.FactionAggressionMultipliers["empire_s"] = 1e30f;
+        Assert.AreEqual(1.0f, CreateSut().GetStrengthMultiplier("empire_s"), 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetEffectiveStrength_InfiniteAggression_StaysFinite()
+    {
+        _config.FactionAggressionMultipliers["empire_s"] = float.PositiveInfinity;
+        float result = CreateSut().GetEffectiveStrength("empire_s", isBesieger: true, ourStrength: 500f);
+        Assert.AreEqual(500f, result, 0.01f);
+        Assert.IsFalse(float.IsInfinity(result));
     }
 
     // ---------------------------------------------------------------- theater weighting
@@ -333,7 +237,6 @@ public class WarTheaterAndReachTests
     [TestMethod]
     public void GetTheaterWeight_NoSharedTheater_ReturnsForeignWeight()
     {
-        // The behaviour this feature exists to stop: Gondor [south, central] against Gundabad [north].
         Assert.AreEqual(_config.ForeignTheaterWeight,
             CreateSut().GetTheaterWeight("empire_w", "gundabad"), 0.0001f);
     }
@@ -383,6 +286,14 @@ public class WarTheaterAndReachTests
     }
 
     [TestMethod]
+    public void GetTheaterWeight_DuplicateEntriesInAListDoNotChangeTheVerdict()
+    {
+        _config.KingdomTheaters["empire_w"] = new List<string> { "south", "south", "central" };
+        Assert.AreEqual(_config.PrimaryTheaterWeight,
+            CreateSut().GetTheaterWeight("empire_w", "empire_s"), 0.0001f);
+    }
+
+    [TestMethod]
     public void GetTheaterWeight_TheatersDisabled_ReturnsUnity()
     {
         _settings.EnableWarTheaters.Returns(false);
@@ -403,15 +314,14 @@ public class WarTheaterAndReachTests
     {
         // The previous gate read `baseScore <= 0f`. NaN <= 0f is false, so a NaN fell straight
         // into the multiply chain instead of deferring to vanilla.
-        float result = CreateSut().ApplyTargetScoreModifiers(Ctx(baseScore: float.NaN));
-        Assert.IsTrue(float.IsNaN(result));
+        Assert.IsTrue(float.IsNaN(CreateSut().ApplyTargetScoreModifiers(Ctx(baseScore: float.NaN))));
     }
 
     [TestMethod]
     public void ApplyTargetScoreModifiers_InfiniteBaseScore_ReturnsItUnmodified()
     {
-        float result = CreateSut().ApplyTargetScoreModifiers(Ctx(baseScore: float.PositiveInfinity));
-        Assert.IsTrue(float.IsPositiveInfinity(result));
+        Assert.IsTrue(float.IsPositiveInfinity(
+            CreateSut().ApplyTargetScoreModifiers(Ctx(baseScore: float.PositiveInfinity))));
     }
 
     [TestMethod]
@@ -438,11 +348,24 @@ public class WarTheaterAndReachTests
     }
 
     [TestMethod]
+    public void ApplyTargetScoreModifiers_DefenderSettingOutOfRange_FallsBackToCompiledDefault()
+    {
+        // Reverting to 1.0 would silently DISABLE the home-defence lever on a garbage MCM value
+        // rather than restoring its intended strength.
+        _settings.DefenderPriorityMultiplier.Returns(float.NaN);
+
+        float result = CreateSut().ApplyTargetScoreModifiers(
+            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Defender, targetFaction: "empire_w"));
+
+        Assert.AreEqual(160f, result, 0.01f);
+    }
+
+    [TestMethod]
     public void ApplyTargetScoreModifiers_Raider_PassesThroughUnmodified()
     {
         // Vanilla already hard-zeroes raiders past 5 town gaps in GetDistanceScoreForRaiding.
         float result = CreateSut().ApplyTargetScoreModifiers(
-            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Raider, targetFaction: "gundabad", distance: 9f));
+            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Raider, targetFaction: "gundabad"));
         Assert.AreEqual(100f, result, 0.01f);
     }
 
@@ -450,7 +373,7 @@ public class WarTheaterAndReachTests
     public void ApplyTargetScoreModifiers_Patrolling_PassesThroughUnmodified()
     {
         float result = CreateSut().ApplyTargetScoreModifiers(
-            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Other, targetFaction: "gundabad", distance: 9f));
+            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Other, targetFaction: "gundabad"));
         Assert.AreEqual(100f, result, 0.01f);
     }
 
@@ -459,43 +382,43 @@ public class WarTheaterAndReachTests
     {
         _settings.EnableArmyStrategicIntelligence.Returns(false);
         float result = CreateSut().ApplyTargetScoreModifiers(
-            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Defender, targetFaction: "gundabad", distance: 9f));
+            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Defender, targetFaction: "gundabad"));
         Assert.AreEqual(100f, result, 0.01f);
-    }
-
-    [TestMethod]
-    public void ApplyTargetScoreModifiers_CommitmentCannotOutrunSuppression()
-    {
-        // The interaction that would otherwise pin an in-flight cross-map siege forever on an
-        // existing save: Army.AiBehaviorObject persists, and TAOM stacks a 4.0x commitment
-        // multiplier on the target an army already holds.
-        var sut = CreateSut();
-
-        float pinnedFarTarget = sut.ApplyTargetScoreModifiers(Ctx(
-            baseScore: 100f, faction: "empire_w", targetFaction: "gundabad",
-            target: "town_G1", committed: "town_G1", distance: 9.0f));
-
-        float freshNearTarget = sut.ApplyTargetScoreModifiers(Ctx(
-            baseScore: 100f, faction: "empire_w", targetFaction: "empire_s",
-            target: "town_ES1", committed: "town_G1", distance: 1.0f));
-
-        Assert.IsTrue(freshNearTarget > pinnedFarTarget,
-            $"a legal near target ({freshNearTarget}) must beat a committed cross-map siege ({pinnedFarTarget}), or armies never come home");
     }
 
     [TestMethod]
     public void ApplyTargetScoreModifiers_NearPrimaryTheaterTarget_IsBoosted()
     {
         float result = CreateSut().ApplyTargetScoreModifiers(Ctx(
-            baseScore: 100f, faction: "empire_w", targetFaction: "empire_s", distance: 1.0f));
+            baseScore: 100f, faction: "empire_w", targetFaction: "empire_s"));
         Assert.AreEqual(125f, result, 0.01f);
     }
 
     [TestMethod]
-    public void ApplyTargetScoreModifiers_FarForeignTarget_IsDamped()
+    public void ApplyTargetScoreModifiers_ForeignTarget_IsDampedButStillViable()
     {
         float result = CreateSut().ApplyTargetScoreModifiers(Ctx(
-            baseScore: 100f, faction: "empire_w", targetFaction: "gundabad", distance: 9.0f));
-        Assert.AreEqual(100f * _config.ForeignTheaterWeight * _config.ReachFloor, result, 0.01f);
+            baseScore: 100f, faction: "empire_w", targetFaction: "gundabad"));
+        Assert.AreEqual(100f * _config.ForeignTheaterWeight, result, 0.01f);
+        Assert.IsTrue(result > 0f);
+    }
+
+    [TestMethod]
+    public void ApplyTargetScoreModifiers_TaomRankingSpreadStaysBelowVanillasOwnDistanceRamp()
+    {
+        // Sizing guard. Vanilla's own besieger distance term spans 11.1x by itself. Everything TAOM
+        // contributes to candidate ranking must stay under that, or the tuning has drifted back
+        // toward treating vanilla as flat, which is the mistake that produced a 44x spread.
+        _config.FactionPriorityTargets["empire_w"] = new List<string> { "town_ES1" };
+        var sut = CreateSut();
+
+        float best = sut.ApplyTargetScoreModifiers(Ctx(
+            baseScore: 100f, targetFaction: "empire_s", target: "town_ES1", committed: "town_ES1"));
+        float worst = sut.ApplyTargetScoreModifiers(Ctx(
+            baseScore: 100f, targetFaction: "gundabad", target: "town_G1"));
+
+        float spread = best / worst;
+        Assert.IsTrue(spread <= 45.0f,
+            $"TAOM contributes a {spread:F1}x ranking spread including commitment stickiness; keep it bounded");
     }
 }

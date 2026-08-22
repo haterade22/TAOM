@@ -29,4 +29,18 @@ public interface IMapReachAdapter
     /// Callers treat NaN as "do not suppress".
     /// </returns>
     float GetNormalizedDistanceToNearestFortification(Settlement targetSettlement, IFaction attackerFaction);
+
+    /// <summary>
+    /// Drops everything cached for one faction. Driven by <c>OnSettlementOwnerChangedEvent</c>,
+    /// because a fief-count comparison cannot see a same-count exchange (one fortification lost and
+    /// another gained in the same transfer), and reach is anchored on current holdings.
+    /// </summary>
+    void InvalidateFaction(string factionId);
+
+    /// <summary>
+    /// Drops every cache and the campaign reference. Called on campaign teardown, because this is a
+    /// process-lifetime singleton and would otherwise keep a finalized campaign's Settlement graph
+    /// reachable through the whole of the next campaign's load.
+    /// </summary>
+    void Reset();
 }

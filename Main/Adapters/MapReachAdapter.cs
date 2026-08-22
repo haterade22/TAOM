@@ -37,6 +37,18 @@ public class MapReachAdapter : IMapReachAdapter
     private int _cacheDay = int.MinValue;
     private object _cacheCampaign;
 
+    public void InvalidateFaction(string factionId)
+    {
+        if (factionId != null) _byFaction.Remove(factionId);
+    }
+
+    public void Reset()
+    {
+        _byFaction.Clear();
+        _cacheCampaign = null;
+        _cacheDay = int.MinValue;
+    }
+
     public float GetNormalizedDistanceToNearestFortification(Settlement targetSettlement, IFaction attackerFaction)
     {
         var campaign = Campaign.Current;

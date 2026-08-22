@@ -24,9 +24,7 @@
     "bluecraig": [],
     "lindon": []
   },
-  "ReachInnerRadiusInTownGaps": 3.0,
-  "ReachRadiusInTownGaps": 6.0,
-  "ReachFloor": 0.35,
+  "BorderRescueRadiusInTownGaps": 3.2,
   "PrimaryTheaterWeight": 1.25,
   "SecondaryTheaterWeight": 1.0,
   "ForeignTheaterWeight": 0.35,

@@ -4,7 +4,7 @@
 
 Decides which settlement an AI army marches at. Four mechanisms, in the order they matter:
 
-1. **Reach falloff** stops TAOM's own priority and theater boosts from outrunning vanilla's distance sense at long range. It is a gentle term on purpose: vanilla is **not** flat with distance, so this is a correction, not a replacement.
+1. **A bounded border rescue.** TAOM applies **no distance term of its own**. Vanilla already ramps 10.0 to 0.9 across five town gaps and hard-vetoes non-adjacent targets. The single distance decision TAOM owns is whether `Patch22` may overturn that veto for an authored priority target, bounded by `BorderRescueRadiusInTownGaps` (3.2).
 2. **War theaters** (`north`, `central`, `south`, `east`) softly bias each kingdom toward its own front. Weighting only: no war is ever forbidden.
 3. **Commitment stickiness** stops Besieger armies re-optimising every 3 hours and abandoning a march.
 4. **Priority lists** give scripted factions a coherent axis of advance (Mordor toward Osgiliath then Minas Tirith; Isengard toward Helm's Deep then Edoras).
@@ -33,7 +33,7 @@ The AI target-selection system runs deep inside `AiMilitaryBehavior.AiHourlyTick
 1. **Commitment stickiness:** If the candidate settlement is the army's current `AiBehaviorObject`, apply `CommitmentMultiplier` (MCM, default 4×). The alternative must score 4× better before the AI diverts.
 2. **Priority list boost:** If the army's faction has a priority list in `army_targeting.json`, earlier entries receive up to `MaxPriorityBoost` (MCM, default 3×) decaying linearly to 1× at the last entry.
 3. **Strength gate bypass:** Inflates `ourStrength` **before** calling base, bypassing the vanilla `2× defender strength` hard gate that causes evil factions to sit idle. A per-faction `FactionAggressionMultipliers` value of 2.0 lets a faction siege at 1:1 parity.
-4. **Reach falloff:** multiplies *on top of* vanilla's distance term, it does not replace it. `IMapReachAdapter` measures the candidate against the attacking faction's **nearest owned fortification**, normalised by the engine's average distance between the closest two towns ("town gaps", G). Flat at 1.0 out to `ReachInnerRadiusInTownGaps` (3.0 G), then decaying to `ReachFloor` (0.35) at `ReachRadiusInTownGaps` (6.0 G).
+4. **No distance term.** A score-side falloff was built on 2026-08-21 and **removed on 2026-08-22**. Measured end to end it moved the crossover between a max-boost far target and a near neutral one from 4.029 to 3.746 town gaps: 0.283 gaps, in exchange for an adapter on the hot path, a three-way cache, and a path where suppressing a committed target pushed `Army.ThinkAboutCohesionBoost` under its `0.01f` gate and disbanded the army. `IMapReachAdapter` survives, used only by `Patch22`'s rescue gate.
 5. **Theater weighting:** each kingdom holds an ordered theater list whose first entry is its primary front. A target owned by a primary-theater member scores `PrimaryTheaterWeight` (1.25), a shared non-primary theater `SecondaryTheaterWeight` (1.0), no shared theater `ForeignTheaterWeight` (0.35). Never zero.
 6. **Home defence:** `Defender` missions take `ArmyDefenderPriority` (MCM, default 1.6).
 
@@ -43,9 +43,9 @@ The AI target-selection system runs deep inside `AiMilitaryBehavior.AiHourlyTick
 
 **Fail open, always.** A kingdom absent from `KingdomTheaters` weights at 1.0, not as foreign. Player-founded kingdoms get the runtime StringId `new_kingdom`, rebels get `<settlementId>_rebel_clan`, and neither can appear in a shipped config; failing closed would silently make the player's own realm un-besiegeable. The same rule covers an unmeasurable distance: `GetReachMultiplier(NaN)` returns 1.0 rather than suppressing on garbage.
 
-**How the falloff is sized.** Not picked, derived. TAOM's own multipliers stack to 3.75x on a far target (priority 3.0 x primary theater 1.25) against vanilla's 2.2x distance penalty at three gaps, so a floor near `2.2 / 3.75 = 0.59` is where TAOM stops outrunning vanilla; 0.35 leaves margin. The flat region runs to 3.0 G because the widest genuine hostile front measured on this map is about 2.95 G, and vanilla is already penalising those fronts on its own. `WarTheaterAndReachTests` pins both properties: real fronts stay at 1.0, and TAOM's total spread stays under 4x against vanilla's 11.1x.
+**Why the rescue radius is its own value.** It was briefly shared with the score-side falloff radius, and widening that falloff from 3 to 6 gaps silently widened this gate too, at which point all 80 authored priority entries fit inside it and the gate bounded nothing. 3.2 gaps clears the widest genuine hostile front on the live map (Lothlorien to Gundabad, 3.08 gaps by the engine's own path cache) without admitting the whole map.
 
-**Commitment cannot outrun suppression.** `Army.AiBehaviorObject` is saved, so an existing campaign can hold an army mid-march on a now-distant target. A committed far siege scores `4.0 x 0.35 x 0.35 = 0.49` against a legal near target's `1.0 x 1.25 x 1.0 = 1.25`, and vanilla's own distance term widens that further, so it re-targets rather than pinning.
+**Why no score-side distance term.** Vanilla's besieger factor is `MBMath.Map((5G - d)/G, 0f, 5f, 0.9f, 10f)`, a 10.0-to-0.9 ramp, and `CalculateDistanceScoreForBesieging` ends with `if (bestDistanceScore < 0.1f) bestDistanceScore = 0f;`. Distance is already vanilla's job and it does it hard. Adding a second falloff on top bought 0.283 town gaps of crossover movement and cost a hot-path adapter, a cache with three invalidation rules, and a cohesion-disband hazard. `simplicity-criterion.md` rejects exactly that trade.
 
 Priority list advancement is stateless — captured settlements disappear from the enemy settlement pool, so the next unconquered entry naturally becomes the highest-boosted target with no tracking required.
 
@@ -105,7 +105,7 @@ ArmyTargetingSettingsProvider (reads TaomSettings.Instance with defaults)
 | Evil Faction Aggression Scale | 1.0 | 0.5–3.0 | Global multiplier on top of per-faction `FactionAggressionMultipliers`. Raise to make evil factions siege when outnumbered. |
 | Border Proximity Floor | 0.15 | 0.0-1.0 | Minimum border-proximity score substituted for priority-list targets that vanilla rejects as out-of-range, **and only for targets inside the march radius**. 0.0 = vanilla behaviour. |
 | Enable War Theaters | true | bool | Softly bias each kingdom toward its own front. Weighting only; no war is ever forbidden. Off = every enemy weights at 1.0. |
-| Army March Radius | 6.0 | 1.0-20.0 | Distance, in town gaps, at which a siege target is fully discounted. No penalty at all inside 3 gaps, which covers every real front on the map. The config's inner radius is clamped against this so the two can never invert. |
+| Border Rescue Radius | 3.2 | 1.0-20.0 | How far, in town gaps, a priority-list target may sit and still have its unreachable verdict overturned by the Border Proximity Floor. **Not a general distance penalty**: the game already applies one. 3.2 clears the widest real front on the map. |
 | Home Defence Priority | 1.6 | 1.0-5.0 | Score multiplier on defending one of your own settlements. |
 
 ### Config File: `Main/_Module/ModuleData/configs/army_targeting.json`
@@ -121,9 +121,7 @@ All sections optional, missing entries default to vanilla behaviour. **Every val
 {
   "Theaters": ["north", "central", "south", "east"],
   "KingdomTheaters": { "<kingdom_id>": ["<primary_theater>", "<secondary>", ...] },
-  "ReachInnerRadiusInTownGaps": 3.0,
-  "ReachRadiusInTownGaps": 6.0,
-  "ReachFloor": 0.35,
+  "BorderRescueRadiusInTownGaps": 3.2,
   "PrimaryTheaterWeight": 1.25,
   "SecondaryTheaterWeight": 1.0,
   "ForeignTheaterWeight": 0.35,
@@ -134,7 +132,7 @@ All sections optional, missing entries default to vanilla behaviour. **Every val
 
 - **`Theaters`:** the closed set of legal theater names. A membership entry naming anything else is skipped with a warning, so a typo cannot become a private theater of one.
 - **`KingdomTheaters`:** kingdom StringId to its ordered theater list. **The first entry is that kingdom's primary front.** An empty list marks a deliberately passive kingdom. A kingdom *absent* from the map weights neutral, which is what keeps player-founded and rebel kingdoms working.
-- **`ReachInnerRadiusInTownGaps` / `ReachRadiusInTownGaps` / `ReachFloor`:** the falloff curve. The inner radius must clear the map's genuine fronts, the widest of which measures about 2.95 town gaps, because vanilla is already penalising those fronts with its own 11.1x ramp.
+- **`BorderRescueRadiusInTownGaps`:** bounds `Patch22`'s rescue only. It must clear the widest genuine front (3.08 gaps) and must not be wide enough to admit the whole priority list, or the gate stops bounding anything. `WarTheaterConfigInvariantsTests` pins both ends.
 - **`PrimaryTheaterWeight` / `SecondaryTheaterWeight` / `ForeignTheaterWeight`:** must be ordered foreign ≤ secondary ≤ primary, enforced on load. Foreign must be above zero: a veto strands a kingdom and costs it its army to `Army.CheckInactivity`.
 - **`FactionPriorityTargets`:** ordered target lists. Earlier entries score higher, decaying from `MaxPriorityBoost` to 1.0 across the list. Because the decay spans the list, pruning an entry re-steepens it for the survivors.
 - **`FactionAggressionMultipliers`:** how much to inflate `ourStrength` before the vanilla `2x defender` strength gate. At 2.0 the faction can siege at 1:1 parity instead of requiring 2:1.
@@ -208,7 +206,8 @@ exact dead-key class has shipped five or more times:
 | `Main/Features/ArmyTargeting/ArmyTargetingMission.cs` | TAOM's mission enum, mapped from `Army.ArmyTypes` at the boundary |
 | `Main/Features/ArmyTargeting/ArmyMissionMapper.cs` | The `Army.ArmyTypes` to `ArmyTargetingMission` converter, kept out of the model so its body stays branch-free |
 | `Main/Features/ArmyTargeting/TargetScoreContext.cs` | Primitives extracted at the model boundary (base score, effective strength, mission, both faction ids, settlement ids, normalised distance) |
-| `Main/Features/ArmyTargeting/TargetScoreContextFactory.cs` | Builds that context from the sealed engine types, so the model body stays branch-free per gamemodels.md rule 4. Also the gate that skips reach measurement entirely when the feature is off |
+| `Main/Features/ArmyTargeting/TargetScoreContextFactory.cs` | Builds that context from the sealed engine types, so the model body stays branch-free per gamemodels.md rule 4 |
+| `Main/Features/ArmyTargeting/ArmyTargetingLifecycleBehavior.cs` | Invalidates the reach cache on fief transfer (a fief-COUNT check cannot see a same-count exchange) and clears it on new game and load |
 | `Main/Adapters/IMapReachAdapter.cs` | Reach measurement interface |
 | `Main/Adapters/MapReachAdapter.cs` | Nearest-owned-fortification distance in town gaps, day-scoped memo |
 | `tools/analyze_war_theaters.py` | Read-only hostile-pair, border-gap and reach report; `--apply` prunes out-of-range priority entries |
@@ -279,9 +278,9 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 | `GetTargetMultiplier` | O(1) — 2 dict lookups | Commitment + priority index |
 | `GetTheaterWeight` | O(1): 2 dict lookups + a scan of ≤4 strings | Linear scan beats a HashSet alloc at this list length |
 | `GetReachMultiplier` | O(1): arithmetic only | The distance itself comes from the adapter |
-| `IMapReachAdapter` | O(1) on a hit; O(fiefs) on a miss, at most **27** on this map (Gondor) | Memo invalidated on campaign identity, on a change in the faction's fief COUNT, and on the campaign day as a backstop. Measured only for `Besieger`, and only while the feature is enabled, since a Raider is already distance-gated by vanilla and a Defender's target is its own fief |
+| `IMapReachAdapter` | O(1) on a hit; O(fiefs) on a miss, at most **27** on this map (Gondor) | **Off the scoring path entirely.** Reached only from `Patch22`, which itself only runs when vanilla already scored the target unreachable. Invalidated on campaign identity, on fief transfer (via `ArmyTargetingLifecycleBehavior`), on a fief-count change, and on the campaign day as a backstop |
 
-- Feature disabled: immediate `return 1.0f` in every service method, and `ITargetScoreContextFactory` skips the reach measurement entirely, so no fief walk and no distance-cache access happens
+- Feature disabled: immediate `return 1.0f` in every service method, and `Patch22` returns before touching `bestDistanceScore`, so no fief walk and no distance-cache access happens
 - All three indexes (`_priorityIndex`, `_aggressionIndex`, `_theaterIndex`) built once at service construction, zero rebuilding at runtime
 - The theater verdict is two dictionary lookups and needs no distance, so an out-of-theater target is cheap to weight
 - All lookups use `TryGetValue` — no `ContainsKey` + indexer double-lookup
@@ -328,6 +327,7 @@ To fix a flagged siege: look at the kingdom's fortification census + the leader/
 
 ## Changelog
 
+- 2026-08-22 (second pass): **Deleted the distance falloff.** A second Codex review measured it at 0.283 town gaps of crossover movement against an adapter on the hot path, a three-way cache, two singletons rooting a finalized campaign, and a cohesion-disband route. Vanilla already ramps 10.0 to 0.9 over five gaps and hard-vetoes non-adjacent targets, so TAOM now applies no distance term at all. Split `Patch22`'s rescue radius into its own `BorderRescueRadiusInTownGaps` (3.2), after the re-size below accidentally widened that gate from 3 to 6 gaps and it stopped bounding anything. Also: validated `FactionAggressionMultipliers` (an infinity there defeated vanilla's siege veto map-wide), added `ArmyTargetingLifecycleBehavior` for fief-transfer invalidation, cleared both singletons from `SubModule.OnGameEnd`, made MCM rejections warn once per property, and stopped `Patch22` converting a NaN rejection into a finite score.
 - 2026-08-22: **Corrections from a Codex adversarial pass and a second deep review.** The stated root cause was wrong and is withdrawn above: vanilla's distance term is an 11.1x ramp, not a 0.9 floor, and `CalculateDistanceScoreForBesieging` hard-vetoes non-adjacent targets, so `Patch22`'s border floor was the only thing that could produce a cross-map siege. Re-sized the falloff against the real curve (inner 1.5 to 3.0 gaps, outer 3.0 to 6.0, floor 0.05 to 0.35), which took the combined spread from 44x back to about 3x on top of vanilla's own. Reverted the 26-entry priority prune. Made `analyze_war_theaters.py` report-only. Fixed a negative priority boost from duplicate ids, an unvalidated MCM float surface that let `+Infinity` into `bestDistanceScore`, a reach cache that ignored fief transfers and rooted a finalized campaign, per-process diagnostics that went silent after the first campaign, a Defender fallback that disabled the lever instead of restoring it, and the rule-4 violation in the model body.
 - 2026-08-21: **Reach falloff + war theaters + home defence.** Replaced vanilla's never-below-0.9 distance factor with a real falloff measured from the attacking faction's nearest owned fortification (`IMapReachAdapter`), flat to 1.5 town gaps then linear to a 0.05 floor at 3.0. Added soft theater weighting over four fronts, failing open for kingdoms absent from the table so player-founded and rebel realms are unaffected. Added a `Defender` multiplier, after establishing that overriding `DefendingFactor` cannot work: it has exactly one engine read, inside `CurrentObjectiveValue`, whose only consumer is `Army.ThinkAboutCohesionBoost`, while the defender weighting that reaches target selection is a hardcoded literal. Gated `Patch22`'s border floor on being in reach. Fixed a NaN gate in `ApplyTargetScoreModifiers` that read `baseScore <= 0f` and so let NaN into the multiply chain. Deleted `FactionDistanceRangeMultipliers`, `GetDistanceCompensation` and the Long-Range Priority Boost Scale setting, being the mechanism that pushed armies far. Pruned 26 of 80 inert priority entries. Added `tools/analyze_war_theaters.py`. +49 tests.
 - 2026-07-05 — Enriched `Patch49_ArmyGatheringNreGuard` with `ISiegeGatheringDiagnosticsService`: the finalizer now records army/kingdom/focus-settlement context + a fortification census, deduplicated into one `[SiegeDiag]` WARNING per problem siege, so dead-end sieges are reviewable instead of a silent breadcrumb. +14 tests. Guard behavior unchanged.

@@ -20,9 +20,8 @@ public class TaomTargetScoreModel : DefaultTargetScoreCalculatingModel
         Settlement targetSettlement, Army.ArmyTypes missionType,
         MobileParty mobileParty, float ourStrength)
     {
-        // gamemodels.md rule 4: boundary conversion plus a direct delegate, no branching. All the
-        // sealed-type extraction, the mission mapping and the decision about whether reach needs
-        // measuring live in ITargetScoreContextFactory.
+        // gamemodels.md rule 4: boundary conversion plus a direct delegate, no branching. The
+        // sealed-type extraction and the mission mapping live in ITargetScoreContextFactory.
         //
         // Faction identity comes from MapFaction.StringId, never Culture.StringId: empire_s
         // (Mordor), empire_w (GONDOR) and empire (Dunland) all share culture "empire", so culture

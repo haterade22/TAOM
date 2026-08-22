@@ -13,22 +13,15 @@ public interface IArmyTargetingService
     float GetEffectiveStrength(string factionId, bool isBesieger, float ourStrength);
 
     /// <summary>
-    /// Reach falloff for a besieging army, replacing vanilla's distance factor which never drops
-    /// below 0.9x at ANY distance. Flat 1.0 out to the inner radius so genuine borders are
-    /// untouched, then linear decay to <c>ReachFloor</c> at the outer radius.
+    /// True when a target is close enough that Patch22 may overturn vanilla's "unreachable"
+    /// verdict for a priority-list entry. A non-finite distance returns FALSE: vanilla already
+    /// rejected the target, and an unmeasurable reading is not grounds to overrule it.
     ///
-    /// A non-finite distance means the adapter could not measure one, and returns 1.0: suppressing
-    /// every target on garbage would break AI targeting outright.
+    /// <para>This is the ONLY place TAOM consults metric distance. There is no distance term in the
+    /// score itself, because vanilla already supplies one (see ApplyTargetScoreModifiers).</para>
     /// </summary>
     /// <param name="normalizedDistance">Map distance to the attacker's nearest owned fortification, in town gaps.</param>
-    float GetReachMultiplier(float normalizedDistance);
-
-    /// <summary>
-    /// True when a target is close enough that Patch22 may override vanilla's "unreachable"
-    /// verdict. A non-finite distance returns FALSE: vanilla already rejected the target, and we
-    /// do not overturn that on an unmeasurable reading.
-    /// </summary>
-    bool IsWithinReach(float normalizedDistance);
+    bool IsWithinBorderRescueRange(float normalizedDistance);
 
     /// <summary>
     /// Soft theater weighting. Returns the primary, secondary or foreign weight depending on
@@ -40,9 +33,8 @@ public interface IArmyTargetingService
 
     /// <summary>
     /// Returns the final target score after vanilla base has computed BaseScore. Besieger armies
-    /// receive priority, theater and reach terms; Defender armies receive the home-defence
-    /// multiplier; everything else passes through. A non-finite or non-positive BaseScore is
-    /// returned unchanged.
+    /// receive the priority and theater terms; Defender armies receive the home-defence multiplier;
+    /// everything else passes through. A non-finite or non-positive BaseScore is returned unchanged.
     /// </summary>
     float ApplyTargetScoreModifiers(TargetScoreContext context);
 

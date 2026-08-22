@@ -211,21 +211,24 @@ public class WarTheaterConfigInvariantsTests
     }
 
     [TestMethod]
-    public void ReachRadii_AreOrderedAndInRange()
+    public void BorderRescueRadius_IsInRangeAndClearsTheWidestRealFront()
     {
         var config = LoadShippedConfig();
 
-        Assert.IsTrue(config.ReachInnerRadiusInTownGaps < config.ReachRadiusInTownGaps,
-            $"inner radius ({config.ReachInnerRadiusInTownGaps}) must be below the outer radius ({config.ReachRadiusInTownGaps})");
-        Assert.IsTrue(config.ReachRadiusInTownGaps >= 1.0f && config.ReachRadiusInTownGaps <= 20.0f,
-            $"outer radius {config.ReachRadiusInTownGaps} is outside [1,20]");
-        Assert.IsTrue(config.ReachFloor > 0f && config.ReachFloor <= 1.0f,
-            $"reach floor {config.ReachFloor} must be in (0,1]");
+        Assert.IsTrue(config.BorderRescueRadiusInTownGaps >= 1.0f && config.BorderRescueRadiusInTownGaps <= 20.0f,
+            $"border rescue radius {config.BorderRescueRadiusInTownGaps} is outside [1,20]");
 
-        // Measured genuine fronts on this map sit at 1.58 to 1.95 town gaps (Rohan to Mordor is 148
-        // units against a 93.95-unit gap). An inner radius below that would damp a real border war.
-        Assert.IsTrue(config.ReachInnerRadiusInTownGaps >= 1.4f,
-            $"inner radius {config.ReachInnerRadiusInTownGaps} would damp measured real fronts at 1.58 town gaps");
+        // Lothlorien to Gundabad is the widest genuine hostile front on the live map at 3.08 town
+        // gaps, measured against the engine's own path cache. The gate must clear it, or Patch22
+        // refuses to rescue a real border target vanilla's two-hop topology scored as unreachable.
+        Assert.IsTrue(config.BorderRescueRadiusInTownGaps >= 3.1f,
+            $"border rescue radius {config.BorderRescueRadiusInTownGaps} would refuse the 3.08-gap Lothlorien to Gundabad front");
+
+        // And it must not swallow the map. An earlier version shared this value with a score-side
+        // falloff radius; widening that to 6 gaps silently admitted all 80 authored entries and the
+        // gate stopped bounding anything.
+        Assert.IsTrue(config.BorderRescueRadiusInTownGaps <= 4.0f,
+            $"border rescue radius {config.BorderRescueRadiusInTownGaps} is wide enough to stop bounding the rescue");
     }
 
     [TestMethod]
@@ -240,9 +243,7 @@ public class WarTheaterConfigInvariantsTests
 
         var before = new
         {
-            config.ReachRadiusInTownGaps,
-            config.ReachInnerRadiusInTownGaps,
-            config.ReachFloor,
+            config.BorderRescueRadiusInTownGaps,
             config.PrimaryTheaterWeight,
             config.SecondaryTheaterWeight,
             config.ForeignTheaterWeight,
@@ -251,14 +252,14 @@ public class WarTheaterConfigInvariantsTests
 
         var after = provider.Validate(config);
 
-        Assert.AreEqual(before.ReachRadiusInTownGaps, after.ReachRadiusInTownGaps);
-        Assert.AreEqual(before.ReachInnerRadiusInTownGaps, after.ReachInnerRadiusInTownGaps);
-        Assert.AreEqual(before.ReachFloor, after.ReachFloor);
+        Assert.AreEqual(before.BorderRescueRadiusInTownGaps, after.BorderRescueRadiusInTownGaps);
         Assert.AreEqual(before.PrimaryTheaterWeight, after.PrimaryTheaterWeight);
         Assert.AreEqual(before.SecondaryTheaterWeight, after.SecondaryTheaterWeight);
         Assert.AreEqual(before.ForeignTheaterWeight, after.ForeignTheaterWeight);
         Assert.AreEqual(before.TheaterEntries, after.KingdomTheaters.Sum(k => k.Value?.Count ?? 0),
             "validation dropped a theater entry, so a name in the shipped file is undeclared");
+        Assert.AreEqual(80, after.FactionPriorityTargets.Sum(k => k.Value?.Count ?? 0),
+            "the shipped priority lists lost entries to validation, or the 2026-08-21 prune came back");
 
         logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }

@@ -27,7 +27,7 @@ public class ArmyTargetingServiceTests
         _settings.EvilAggressionScale.Returns(1.0f);
         _settings.BorderProximityFloor.Returns(0.15f);
         _settings.EnableWarTheaters.Returns(true);
-        _settings.ReachRadiusInTownGaps.Returns(3.0f);
+        _settings.BorderRescueRadiusInTownGaps.Returns(3.2f);
         _settings.DefenderPriorityMultiplier.Returns(1.6f);
 
         _config = new ArmyTargetingConfig

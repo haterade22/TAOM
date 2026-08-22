@@ -192,6 +192,22 @@ public class SubModule : MBSubModuleBase
 
         _timeAccelerationService = IoC.Resolve<ITimeAccelerationService>();
 
+        // Publish the time controls as native rebindable game keys so they appear in
+        // Options > Keybindings > Campaign Map. Registering here is deliberate: it is after Native's
+        // ViewSubModule has called RegisterInitialContexts (which CLEARS every category, so a
+        // context registered before it would be silently dropped), and RegisterContext flags the
+        // manager for a reload, so the player's saved bindings still land from BannerlordGameKeys.xml
+        // on the next tick.
+        try
+        {
+            TaomTimeControlHotKeyCategory.Register();
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogWarning(
+                $"[TimeAcceleration] hotkey registration failed, keys fall back to unbound: {ex.GetType().Name}: {ex.Message}");
+        }
+
         // Must be first — intercepts GetLocalizedText before any game texts are resolved.
         // Loads English string overrides from taom_module_strings.xml (removes hardcoded "The" articles).
         _harmony.PatchCategory("Patch25_LocalizationOverride");
@@ -585,6 +601,17 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>()?.ResetLifecycle();
         }
         catch { /* diagnostic is best-effort, never break OnGameEnd */ }
+
+        // ArmyTargeting holds two process-lifetime singletons that cache Settlement objects
+        // and a Campaign reference. Campaign.OnDestroy nulls Campaign.Current but nothing
+        // tells them, so without this the finalized campaign stays reachable through the
+        // whole of the next campaign's load.
+        try
+        {
+            IoC.Resolve<TAOM.Adapters.IMapReachAdapter>()?.Reset();
+            IoC.Resolve<Features.ArmyTargeting.ITargetScoreContextFactory>()?.Reset();
+        }
+        catch { /* teardown is best-effort, never break OnGameEnd */ }
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -870,6 +897,9 @@ public class SubModule : MBSubModuleBase
 
         var armyTargetingService = IoC.Resolve<IArmyTargetingService>();
         campaignStarter.AddModel(new TaomTargetScoreModel(armyTargetingService, IoC.Resolve<ITargetScoreContextFactory>()));
+        // Invalidates the reach cache on fief transfer and clears it on new game / load. Without it
+        // a same-count fief exchange leaves every cached distance measured against the old holdings.
+        campaignStarter.AddBehavior(IoC.Resolve<Features.ArmyTargeting.ArmyTargetingLifecycleBehavior>());
     }
 
     // Special-resource economy + the career system (behaviors, quests, and career GameModels).

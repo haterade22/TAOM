@@ -16,6 +16,7 @@ public static class ArmyTargetingIoC
         container.Register<IMapReachAdapter, MapReachAdapter>(Reuse.Singleton);
         // Singleton: it tracks campaign identity to reset the service's one-shot diagnostics.
         container.Register<ITargetScoreContextFactory, TargetScoreContextFactory>(Reuse.Singleton);
+        container.Register<ArmyTargetingLifecycleBehavior>(Reuse.Singleton);
         container.Register<ISiegeGatheringDiagnosticsService, SiegeGatheringDiagnosticsService>(Reuse.Singleton);
     }
 }

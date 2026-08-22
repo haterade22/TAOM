@@ -67,7 +67,7 @@ public class ArmyTargetingConfigProviderValidationTests
         var config = Valid();
         var result = _sut.Validate(config);
 
-        Assert.AreEqual(Defaults().ReachRadiusInTownGaps, result.ReachRadiusInTownGaps, 0.0001f);
+        Assert.AreEqual(Defaults().BorderRescueRadiusInTownGaps, result.BorderRescueRadiusInTownGaps, 0.0001f);
         Assert.AreEqual(2, result.KingdomTheaters["empire_w"].Count);
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
         _logger.Received().LogInfo(Arg.Any<string>());
@@ -75,106 +75,7 @@ public class ArmyTargetingConfigProviderValidationTests
 
     // ------------------------------------------------------------------ reach radii
 
-    [TestMethod]
-    public void Validate_NaNReachRadius_RevertsToDefault()
-    {
-        var config = Valid();
-        config.ReachRadiusInTownGaps = float.NaN;
-
-        var result = _sut.Validate(config);
-
-        Assert.AreEqual(Defaults().ReachRadiusInTownGaps, result.ReachRadiusInTownGaps, 0.0001f);
-        AssertWarnedAbout("ReachRadiusInTownGaps");
-        AssertSummaryWarningFired();
-    }
-
-    [TestMethod]
-    public void Validate_ReachRadiusBelowMinimum_RevertsToDefault()
-    {
-        // Zero would put every target out of reach and starve every kingdom at once.
-        var config = Valid();
-        config.ReachRadiusInTownGaps = 0f;
-
-        Assert.AreEqual(Defaults().ReachRadiusInTownGaps, _sut.Validate(config).ReachRadiusInTownGaps, 0.0001f);
-        AssertWarnedAbout("ReachRadiusInTownGaps");
-    }
-
-    [TestMethod]
-    public void Validate_ReachRadiusAboveMaximum_RevertsToDefault()
-    {
-        var config = Valid();
-        config.ReachRadiusInTownGaps = 500f;
-
-        Assert.AreEqual(Defaults().ReachRadiusInTownGaps, _sut.Validate(config).ReachRadiusInTownGaps, 0.0001f);
-        AssertWarnedAbout("ReachRadiusInTownGaps");
-    }
-
-    [TestMethod]
-    public void Validate_NaNInnerRadius_RevertsToDefault()
-    {
-        var config = Valid();
-        config.ReachInnerRadiusInTownGaps = float.NaN;
-
-        Assert.AreEqual(Defaults().ReachInnerRadiusInTownGaps, _sut.Validate(config).ReachInnerRadiusInTownGaps, 0.0001f);
-        AssertWarnedAbout("ReachInnerRadiusInTownGaps");
-    }
-
-    [TestMethod]
-    public void Validate_NegativeInnerRadius_RevertsToDefault()
-    {
-        var config = Valid();
-        config.ReachInnerRadiusInTownGaps = -2f;
-
-        Assert.AreEqual(Defaults().ReachInnerRadiusInTownGaps, _sut.Validate(config).ReachInnerRadiusInTownGaps, 0.0001f);
-        AssertWarnedAbout("ReachInnerRadiusInTownGaps");
-    }
-
-    [TestMethod]
-    public void Validate_InnerRadiusNotBelowOuter_RevertsInnerRadius()
-    {
-        // Both values are individually in range, so only the ordering rule can catch this. An
-        // inner radius at or above the outer one collapses the decay span.
-        var config = Valid();
-        config.ReachInnerRadiusInTownGaps = 5f;
-        config.ReachRadiusInTownGaps = 3f;
-
-        var result = _sut.Validate(config);
-
-        // Repaired to half the outer radius, not to the bare default: the default inner radius
-        // is itself 3.0, so reverting to it against an outer radius of 3.0 would tie and leave
-        // the decay span at zero, which is the state this rule exists to reject.
-        Assert.AreEqual(1.5f, result.ReachInnerRadiusInTownGaps, 0.0001f);
-        Assert.AreEqual(3f, result.ReachRadiusInTownGaps, 0.0001f);
-        Assert.IsTrue(result.ReachInnerRadiusInTownGaps < result.ReachRadiusInTownGaps);
-        AssertWarnedAbout("must be below");
-    }
-
     // ------------------------------------------------------------------ reach floor
-
-    [TestMethod]
-    public void Validate_NaNReachFloor_RevertsToDefault()
-    {
-        var config = Valid();
-        config.ReachFloor = float.NaN;
-
-        Assert.AreEqual(Defaults().ReachFloor, _sut.Validate(config).ReachFloor, 0.0001f);
-        AssertWarnedAbout("ReachFloor");
-    }
-
-    [TestMethod]
-    public void Validate_ZeroReachFloor_RevertsToDefault()
-    {
-        // Zero is a veto in disguise: a kingdom with only far targets would score every option at
-        // 0, gather, patrol, and lose its army to Army.CheckInactivity.
-        var config = Valid();
-        config.ReachFloor = 0f;
-
-        var result = _sut.Validate(config);
-
-        Assert.AreEqual(Defaults().ReachFloor, result.ReachFloor, 0.0001f);
-        Assert.IsTrue(result.ReachFloor > 0f);
-        AssertWarnedAbout("ReachFloor");
-    }
 
     // ------------------------------------------------------------------ theater weights
 
@@ -342,34 +243,5 @@ public class ArmyTargetingConfigProviderValidationTests
         Assert.IsNotNull(result.KingdomTheaters);
         Assert.IsNotNull(result.FactionPriorityTargets);
         Assert.IsNotNull(result.FactionAggressionMultipliers);
-    }
-
-    [TestMethod]
-    public void Validate_InvalidConfig_StillProducesAUsableConfigForTheService()
-    {
-        // End to end: the reverted config must survive construction of the real service, because
-        // degrading to vanilla is the whole point of reverting rather than throwing.
-        var config = Valid();
-        config.ReachRadiusInTownGaps = float.NaN;
-        config.ForeignTheaterWeight = 9f;
-        config.KingdomTheaters["gundabad"] = new List<string> { "nope" };
-
-        var result = _sut.Validate(config);
-
-        var settings = Substitute.For<IArmyTargetingSettingsProvider>();
-        settings.EnableArmyStrategicIntelligence.Returns(true);
-        settings.EnableWarTheaters.Returns(true);
-        settings.ReachRadiusInTownGaps.Returns(3.0f);
-        settings.DefenderPriorityMultiplier.Returns(1.6f);
-
-        var provider = Substitute.For<IArmyTargetingConfigProvider>();
-        provider.GetConfig().Returns(result);
-
-        var service = new ArmyTargetingService(settings, provider, Substitute.For<IModLogger>());
-
-        Assert.AreEqual(1.0f, service.GetReachMultiplier(0f), 0.0001f);
-        Assert.AreEqual(result.ReachFloor, service.GetReachMultiplier(50f), 0.0001f);
-        // gundabad's only theater was dropped, so it reads as passive and weights neutral.
-        Assert.AreEqual(1.0f, service.GetTheaterWeight("gundabad", "empire_w"), 0.0001f);
     }
 }

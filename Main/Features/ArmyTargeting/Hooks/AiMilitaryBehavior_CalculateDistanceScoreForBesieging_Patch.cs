@@ -48,7 +48,11 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
         ref bool isFromPort,
         ref bool isTargetingPort)
     {
-        if (bestDistanceScore > 0f) return;
+        // A NaN bestDistanceScore must NOT reach the rescue branch. Vanilla's own caller gates on
+        // `!(bestDistanceScore > 0f)`, so NaN rejects the candidate there; without the finiteness
+        // test here TAOM would convert that rejection into a finite 0.15 and hand the engine a
+        // candidate vanilla had thrown away.
+        if (!FiniteFloatValidator.IsFinite(bestDistanceScore) || bestDistanceScore > 0f) return;
 
         try
         {
@@ -70,14 +74,19 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
 
             if (!_service.IsInPriorityList(factionId, settlementId)) return;
 
-            // The floor exists to rescue a BORDER target vanilla's 2-hop topology scored as
-            // unreachable. Before the reach gate it rescued any priority-list entry at any
-            // distance, which is what turned the list into an "ignore geography" list and is
-            // named in the Patch49 registry entry as the cause of cross-map siege steering.
+            // The floor exists to rescue a BORDER target that vanilla's 2-hop topology scored as
+            // unreachable. Ungated it rescued any priority-list entry at any distance, which turned
+            // the list into an "ignore geography" list and is named in the Patch49 registry entry
+            // as the cause of cross-map siege steering.
+            //
+            // This is the ONE place TAOM consults metric distance, and its radius is its own
+            // setting rather than a shared one: an earlier version reused the score-side falloff
+            // radius, so widening that falloff silently widened this gate from 3 to 6 gaps and it
+            // stopped bounding anything (all 80 authored entries fit inside 6 gaps).
             float normalizedDistance = _reach.GetNormalizedDistanceToNearestFortification(
                 targetSettlement, mobileParty?.MapFaction);
 
-            if (!_service.IsWithinReach(normalizedDistance))
+            if (!_service.IsWithinBorderRescueRange(normalizedDistance))
             {
                 if (!_loggedReachRefusal)
                 {

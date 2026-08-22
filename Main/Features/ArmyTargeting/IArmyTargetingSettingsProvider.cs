@@ -10,10 +10,10 @@ public interface IArmyTargetingSettingsProvider
     float BorderProximityFloor { get; }
 
     /// <summary>
-    /// Outer reach radius in town gaps. Settable from MCM; the config's inner radius is clamped
-    /// against it inside the service so the two can never invert.
+    /// How far, in town gaps, Patch22 may reach when overturning vanilla's "unreachable" verdict
+    /// for a priority-list target. Not a general distance penalty: vanilla already applies one.
     /// </summary>
-    float ReachRadiusInTownGaps { get; }
+    float BorderRescueRadiusInTownGaps { get; }
 
     /// <summary>Multiplier on Defender-mission target scores, the home-defence lever.</summary>
     float DefenderPriorityMultiplier { get; }

@@ -126,41 +126,27 @@ public class ArmyTargetingConfigProvider : IArmyTargetingConfigProvider
             parsed.FactionPriorityTargets[faction] = kept;
         }
 
-        // Radii are bounded rather than merely finite: a zero or negative radius would make every
-        // target out of reach, and a radius past vanilla's own 5-gap saturation is a silent no-op.
-        if (!FiniteFloatValidator.IsFiniteInRange(parsed.ReachRadiusInTownGaps, 1.0f, 20.0f))
+        // The rescue radius bounds ONE thing: how far Patch22 may reach when overturning vanilla's
+        // unreachable verdict. It is deliberately its own value and not shared with anything else,
+        // because an earlier version reused a score-side falloff radius and widening that silently
+        // widened this gate until it bounded nothing.
+        if (!FiniteFloatValidator.IsFiniteInRange(parsed.BorderRescueRadiusInTownGaps, 1.0f, 20.0f))
         {
-            _logger.LogWarning($"ArmyTargetingConfigProvider: ReachRadiusInTownGaps={parsed.ReachRadiusInTownGaps} must be finite in [1,20], reverting to {defaults.ReachRadiusInTownGaps}");
-            parsed.ReachRadiusInTownGaps = defaults.ReachRadiusInTownGaps;
+            _logger.LogWarning($"ArmyTargetingConfigProvider: BorderRescueRadiusInTownGaps={parsed.BorderRescueRadiusInTownGaps} must be finite in [1,20], reverting to {defaults.BorderRescueRadiusInTownGaps}");
+            parsed.BorderRescueRadiusInTownGaps = defaults.BorderRescueRadiusInTownGaps;
             rejected = true;
         }
 
-        if (!FiniteFloatValidator.IsFiniteInRange(parsed.ReachInnerRadiusInTownGaps, 0f, 20.0f))
+        // Aggression multipliers inflate ourStrength BEFORE vanilla's `ourStrength < defender * 2`
+        // siege veto, so an infinity here defeats that veto for every fortress on the map. Json.NET
+        // parses 1e39, "Infinity" and a bare Infinity token into float.PositiveInfinity.
+        foreach (var faction in new List<string>(parsed.FactionAggressionMultipliers.Keys))
         {
-            _logger.LogWarning($"ArmyTargetingConfigProvider: ReachInnerRadiusInTownGaps={parsed.ReachInnerRadiusInTownGaps} must be finite in [0,20], reverting to {defaults.ReachInnerRadiusInTownGaps}");
-            parsed.ReachInnerRadiusInTownGaps = defaults.ReachInnerRadiusInTownGaps;
-            rejected = true;
-        }
+            float value = parsed.FactionAggressionMultipliers[faction];
+            if (FiniteFloatValidator.IsFiniteInRange(value, 1.0f, 100.0f)) continue;
 
-        // Ordering invariant. The service also derives the inner radius from the resolved outer one
-        // so MCM cannot invert it, but a JSON file that already reads wrong should say so here.
-        if (parsed.ReachInnerRadiusInTownGaps >= parsed.ReachRadiusInTownGaps)
-        {
-            _logger.LogWarning($"ArmyTargetingConfigProvider: ReachInnerRadiusInTownGaps={parsed.ReachInnerRadiusInTownGaps} must be below ReachRadiusInTownGaps={parsed.ReachRadiusInTownGaps}, reverting the inner radius to {defaults.ReachInnerRadiusInTownGaps}");
-            // Not the bare default: with a low outer radius the default can still tie or
-            // exceed it, leaving the file in exactly the state this rule exists to reject.
-            // Half the outer radius is the same ceiling the service derives at runtime.
-            parsed.ReachInnerRadiusInTownGaps = Math.Min(
-                defaults.ReachInnerRadiusInTownGaps, parsed.ReachRadiusInTownGaps * 0.5f);
-            rejected = true;
-        }
-
-        // Never zero: a hard zero removes a faction's whole option set on a bad day, and vanilla
-        // then disbands the army for inactivity two days later.
-        if (!FiniteFloatValidator.IsFiniteInRange(parsed.ReachFloor, 0.001f, 1.0f))
-        {
-            _logger.LogWarning($"ArmyTargetingConfigProvider: ReachFloor={parsed.ReachFloor} must be finite in [0.001,1], reverting to {defaults.ReachFloor}");
-            parsed.ReachFloor = defaults.ReachFloor;
+            _logger.LogWarning($"ArmyTargetingConfigProvider: FactionAggressionMultipliers['{faction}']={value} must be finite in [1,100], dropping it so the faction falls back to neutral");
+            parsed.FactionAggressionMultipliers.Remove(faction);
             rejected = true;
         }
 

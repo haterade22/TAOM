@@ -328,9 +328,9 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool EnableWarTheaters { get; set; } = true;
 
     [SettingPropertyGroup("AI Strategic Intelligence")]
-    [SettingPropertyFloatingInteger("Army March Radius", 1.0f, 20.0f, "#0.0", Order = 6,
-        HintText = "Distance, in average town gaps, at which a siege target is fully discounted. No penalty at all inside 3 gaps, which covers every real front on the map. Vanilla already penalises distance on its own; this only stops TAOM's priority boost from outrunning it.")]
-    public float ArmyReachRadiusInTownGaps { get; set; } = 6.0f;
+    [SettingPropertyFloatingInteger("Border Rescue Radius", 1.0f, 20.0f, "#0.0", Order = 6,
+        HintText = "How far, in average town gaps, a priority-list target may be and still have its unreachable verdict overturned by the Border Proximity Floor above. Not a general distance penalty: the game already applies one of its own. 3.2 clears the widest real front on the map.")]
+    public float ArmyBorderRescueRadius { get; set; } = 3.2f;
 
     [SettingPropertyGroup("AI Strategic Intelligence")]
     [SettingPropertyFloatingInteger("Home Defence Priority", 1.0f, 5.0f, "#0.0", Order = 7,
@@ -339,19 +339,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Time Acceleration ---
 
+    // The keys themselves are NOT configured here. They are native rebindable game keys, so they
+    // live in Options > Keybindings > Campaign Map (see TaomTimeControlHotKeyCategory). MCM v5 has
+    // no keybind widget at all, which is why these three settings tune only the multipliers.
+
     [SettingPropertyGroup("Time Acceleration", GroupOrder = 10)]
     [SettingPropertyInteger("Fast Forward Multiplier", 1, 128, Order = 0,
-        HintText = "Speed multiplier applied when pressing the fast-forward button (Space). Default: 4.")]
+        HintText = "Speed multiplier applied when pressing the fast-forward key (Space by default; rebind under Options > Keybindings > Campaign Map). Default: 4.")]
     public int FastForwardMultiplier { get; set; } = 4;
 
     [SettingPropertyGroup("Time Acceleration")]
     [SettingPropertyInteger("Extra Fast Forward Multiplier", 1, 128, Order = 1,
-        HintText = "Speed multiplier applied with the extra fast-forward button (E). Default: 8.")]
+        HintText = "Speed multiplier applied with the extra fast-forward key (E by default, which is also Rotate Camera Right; rebind either under Options > Keybindings > Campaign Map). Default: 8.")]
     public int ExtraFastForwardMultiplier { get; set; } = 8;
 
     [SettingPropertyGroup("Time Acceleration")]
-    [SettingPropertyInteger("Turbo Multiplier (Ctrl+Space)", 1, 128, Order = 2,
-        HintText = "Speed multiplier while holding Ctrl+Space. Releases back to prior speed on key-up. Default: 16.")]
+    [SettingPropertyInteger("Turbo Multiplier (hold Ctrl)", 1, 128, Order = 2,
+        HintText = "Speed multiplier while holding Ctrl and the turbo key (Space by default; rebind under Options > Keybindings > Campaign Map). Releases back to prior speed on key-up. Default: 16.")]
     public int CtrlSpaceMultiplier { get; set; } = 16;
 
     // --- Graphics / Shader Precompilation ---

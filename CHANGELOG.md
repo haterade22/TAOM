@@ -4,6 +4,107 @@
 
 ## 2026-08-22
 
+### feat(timeAcceleration): let players rebind the time-control keys
+
+The extra fast-forward key was hardcoded to `InputKey.E`. So is vanilla's `MapRotateRight` (GameKey
+59 in `MapHotKeyCategory`), which means one press of E both accelerated time and swung the camera,
+and nothing in the mod or the game could separate them. Fast-forward and turbo were hardcoded the
+same way, to Space and Ctrl+Space.
+
+All three are now native `GameKey`s registered by `TaomTimeControlHotKeyCategory`, so they appear in
+the game's own Options > Keybindings > Campaign Map list, right beside the vanilla keys they used to
+fight with. Defaults are deliberately unchanged, so nothing moves under anyone who updates; the
+collision is now visible in the controls screen and a player can move either side off E.
+
+MCM was not the mechanism, because it cannot be: MCM v5.12.1 has no keybind widget at all. Its whole
+`SettingType` vocabulary is Bool/Int/Float/String/Dropdown/Button, and the string `InputKey` does not
+appear anywhere in `MCMv5.dll`. A `Dropdown<InputKey>` was the only shape available and a bad one,
+since MCM persists dropdowns by INDEX, so any later reordering of the key list would silently move
+every player's binding to a different key. ButterLib ships a hotkey wrapper and TAOM already vendors
+ButterLib 2.11.0, but TAOM only ever touches ButterLib through string reflection and its hotkey
+subsystem is player-disableable, so the plain TaleWorlds API won on both counts. The three MCM
+settings remain, and still tune only the multipliers; no settings property was added or removed, so
+the co-op settings fingerprint is untouched.
+
+Three engine constraints shaped the ids, and all three are now pinned by tests because every one of
+them fails silently or only in a live game:
+
+- `KeyOptionVM` builds each label's localization id from `((GameKeyDefinition)Id).ToString()` rather
+  than from `StringId`. `GameKeyDefinition` is a plain enum ending at `TotalGameKeyCount` (116), so
+  an id below that resolves to a vanilla key's NAME and would quietly reuse vanilla's string. The
+  ids start at 500, which also keeps them clear of anything a future engine patch adds to the enum.
+- `RegisterGameKey` is an indexed write into a list the constructor pre-fills with `gameKeysCount`
+  nulls, so the slot count has to exceed the largest id or construction throws. The Options screen
+  null-guards the unused slots, which is what makes a sparse range safe.
+- `GameKeyOptionCategoryVM` renders only keys whose `MainCategoryId` is on the fixed allowlist from
+  `OptionsProvider.GetGameKeyCategoriesList`. `CampaignMapCategory` is already on it, so this needed
+  no Harmony patch.
+
+`IMapInputAdapter`'s members were renamed from keys to actions (`IsSpacePressed` became
+`IsFastForwardPressed`, `IsEKeyPressed` became `IsExtraFastForwardPressed`, and turbo got its own
+pressed/released pair), which is the change that actually removes the hardcoding: the old names baked
+the binding into the seam itself. `MapInputAdapter` caches the `GameKey` REFERENCE rather than the
+resolved `InputKey`, because a rebind replaces `GameKey.KeyboardKey`, so re-reading it each frame is
+what lets a mid-session rebind take effect. It latches even when the category is missing, so a failed
+registration cannot re-scan every category on every property read forever.
+
+Fast-forward and turbo still share Space by default, separated only by Ctrl, so one physical press
+raises both adapter flags in the same frame. Three tests pin that: plain Space fast-forwards instead
+of turboing, turbo rebound to its own key fires on its own, and Ctrl plus the fast-forward key stops
+turboing once turbo has moved elsewhere.
+
+Also dropped the hardcoded "(E)" from the MapBar tooltip in all 13 language files, since the key is
+no longer fixed, and added 6 keybinding strings across the 12 translations.
+
+Not-tested: the Options screen rendering, binding persistence to `BannerlordGameKeys.xml`, and the
+E-versus-camera separation all need an in-game pass.
+Research: `GameKeyContext`, `HotKeyManager`, `GameKey`, `GameKeyOptionCategoryVM`, `KeyOptionVM`,
+`MapHotKeyCategory`, `OptionsProvider.GetGameKeyCategoriesList`, `MCMv5.dll` SettingType.
+
+### fix(armyTargeting): delete the distance falloff, vanilla already had one
+
+A second Codex pass measured the reach falloff added earlier today and found it buys almost nothing.
+End to end, against the engine's own path cache, it moves the crossover between a max-boost far
+target and a near neutral one from 4.029 town gaps to 3.746. **0.283 gaps**, in exchange for an
+adapter on the hot scoring path, a cache with three invalidation rules, a pair of singletons rooting
+a finalized campaign, and a route where suppressing a committed target pushed
+`Army.ThinkAboutCohesionBoost` under its `0.01f` gate so a 29.9-cohesion army disbanded instead of
+retargeting. `simplicity-criterion.md` rejects that trade, so the term is gone.
+
+It also caught a regression the re-size introduced. `Patch22`'s rescue gate read the same
+`ReachRadiusInTownGaps` the falloff used, so widening the falloff from 3 to 6 gaps silently widened
+the gate too, at which point all 80 authored priority entries fit inside it and it bounded nothing.
+The rescue radius is now its own setting, `BorderRescueRadiusInTownGaps`, at 3.2 gaps: enough to
+clear the widest genuine hostile front on the live map (Lothlorien to Gundabad, 3.08 gaps) and not
+enough to admit the map.
+
+What remains is smaller and matches what vanilla actually does. TAOM applies **no distance term**.
+Vanilla's `MBMath.Map((5G - d)/G, 0f, 5f, 0.9f, 10f)` already ramps 10.0 to 0.9 across five gaps and
+`CalculateDistanceScoreForBesieging` hard-zeroes non-adjacent targets. TAOM contributes commitment
+stickiness, the priority boost, soft theater weighting, a Defender multiplier, and one bounded
+decision about whether to overturn vanilla's veto for an authored target.
+
+Five more defects from the same pass:
+
+- `FactionAggressionMultipliers` was the last unvalidated float surface. It inflates `ourStrength`
+  before vanilla's `ourStrength < defenderStrength * 2` siege veto, and Json.NET parses `1e39`,
+  `"Infinity"` and a bare `Infinity` token into `float.PositiveInfinity`, which defeats that veto for
+  every fortress on the map. Now range-checked at both the loader and the index builder.
+- A same-count fief exchange (one fortification lost and another gained in the same transfer) left
+  every cached distance measured against the old anchors, because the cache compared fief COUNT. New
+  `ArmyTargetingLifecycleBehavior` listens to `OnSettlementOwnerChangedEvent` and invalidates both
+  sides.
+- Cleanup was call-driven, so a finalized campaign's `Settlement` graph stayed reachable from a
+  process-lifetime singleton until the next campaign happened to score a target. `SubModule.OnGameEnd`
+  now clears both.
+- MCM rejections were silent, which `csharp-architecture.md` forbids. They now warn once per
+  property, with a summary line, rather than on every hot-path read.
+- `Patch22` let a NaN `bestDistanceScore` into its rescue branch and replaced it with a finite floor,
+  converting a candidate vanilla had rejected into one it would score.
+
+Suite 6920 green, `validate_moduledata.py` PASS. The MCM property count is unchanged at 178 reflected
+and 135 covered, because the radius setting was renamed rather than added or removed.
+
 ### fix(armyTargeting): withdraw a wrong premise and re-size the reach falloff
 
 Yesterday's entry below states that vanilla's besieger distance factor "clamps to a floor of 0.9x at
@@ -22,8 +123,8 @@ G = 93.95 to two decimals.
 The premise set the tuning, so the tuning was wrong too. A falloff sized as if vanilla were flat
 multiplied on top of an existing ramp and produced a 44x combined spread from zero to three gaps
 where vanilla alone gives 2.2x, which suppressed genuine fronts: Goblin-town to Lothlórien, Moria to
-Dale, Rivendell to Dol Guldur and Erebor to Dol Guldur all measure 2.2 to 2.6 gaps. Re-derived
-against the real curve, the falloff now only has to stop TAOM's own multipliers (priority 3.0 x
+Dale, Rivendell to Dol Guldur and Erebor to Dol Guldur all measure 2.2 to 2.6 gaps. **Superseded the same day: the falloff described below was deleted outright, see the entry
+above.** Re-derived against the real curve, the falloff then only had to stop TAOM's own multipliers (priority 3.0 x
 primary theater 1.25 = 3.75) from outrunning vanilla's 2.2x, so the inner radius moves 1.5 to 3.0
 gaps (clearing the widest measured front at 2.95), the outer 3.0 to 6.0, and the floor 0.05 to 0.35.
 TAOM now contributes about 3x on top of vanilla instead of 20x, pinned by a test.

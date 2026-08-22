@@ -4,9 +4,10 @@ namespace TAOM.Features.ArmyTargeting;
 /// Primitives extracted from the sealed TaleWorlds types at the <c>TaomTargetScoreModel</c>
 /// boundary, so the scoring policy can live in a service with no engine dependency.
 ///
-/// Introduced when the signature grew past five arguments: the theater weighting needs the
-/// target's OWNING faction (not just the settlement id), and the reach falloff needs a
-/// normalised map distance that only the model can obtain.
+/// <para>It carries no distance. TAOM's score has no metric distance term: vanilla's own besieger
+/// factor already ramps 10.0 to 0.9 across five town gaps and hard-zeroes non-adjacent targets, so
+/// a second falloff bought 0.283 gaps of crossover movement for an adapter on the hot path and a
+/// cohesion-disband hazard. Distance now enters only through Patch22's border-rescue gate.</para>
 /// </summary>
 public sealed class TargetScoreContext
 {
@@ -38,17 +39,4 @@ public sealed class TargetScoreContext
 
     /// <summary><c>Settlement.StringId</c> of the army's current commitment, or null.</summary>
     public string CommittedTargetId { get; set; }
-
-    /// <summary>
-    /// Map distance from the target to the attacking faction's NEAREST OWNED FORTIFICATION,
-    /// divided by the engine's average distance between the closest two towns ("town gaps").
-    ///
-    /// Nearest fortification rather than <c>FactionMidSettlement</c> deliberately: the medoid
-    /// distorts wide empires by up to 3.4x (Rhun to Gondor is 167 path units from its nearest
-    /// fort but 567 from its mid) and it recomputes on every fief transfer, so it drifts toward
-    /// whatever a kingdom is currently conquering.
-    ///
-    /// NaN or infinity means "could not be measured" and is treated as no suppression.
-    /// </summary>
-    public float NormalizedDistance { get; set; }
 }
