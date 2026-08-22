@@ -1,0 +1,78 @@
+# Review log: feat/yotthani-camps (SupplyLines, FieldCamp, Refuge)
+
+Working record for the three-feature port (#505/#506/#507), kept current so any session can resume
+without re-deriving state. Companion docs: the three feature docs, the provenance register entry,
+and `docs/reviews/codex-camps-round1-2026-08-22.prompt.md`.
+
+## State at last update (2026-08-22, late)
+
+| Item | State |
+|---|---|
+| Branch | `feat/yotthani-camps`, worktree `E:/repos/taom-camps`, pushed to origin |
+| Commits | `30d46e60` provenance/roadmap, `2244fed5` SupplyLines, `60d5da8b` SL docs, `24cce287` FieldCamp, `03bcd465` Refuge |
+| Suite | 7323 passed / 0 failed / 2 skipped at `03bcd465` |
+| Issues | #505 / #506 / #507 open, close on in-game smoke |
+| Deep review round A | 5 unbiased finders + 3-lens verify + critic; first run died on the weekly usage limit, RESUMED (run id `wf_ed88c686-725`) |
+| Codex review 1 | DONE: 4 P1 / 14 P2 / 2 P3, VERDICT ISSUES FOUND. Raw: `docs/reviews/raw/codex-camps-round1-report.txt` (extracted from the 3.8MB session log, both gitignored) |
+| Fix batch | Written into the plan file; STARTS after round A lands so both reviews merge into one batch |
+| Translation run | FAILED: `ANTHROPIC_API_KEY` not set (environment; user action). English fallbacks registered in all 12 language files, suite green regardless |
+| Trunk merge | Deliberately NOT done; awaiting user |
+
+## Codex round 1, condensed
+
+**P1** (all verified against source before acceptance):
+1. Cross-campaign singleton leak: the three campaign books (orders/camps/refuges) live in
+   process-lifetime singletons and only load through `SyncData` when a save record exists, so a
+   NEW campaign after quit-to-menu inherits the previous campaign's state.
+2. Caravan tracker cache survives loads and can bind a loaded save's orders (ids collide from
+   `taom_so_0`) to the PREVIOUS campaign's party objects.
+3. Dismantle copies hero/prisoner roster rows with plain `AddToCounts`, corrupting hero ownership
+   bindings; promoted-warden release path compounds it.
+4. Null persisted records (hand-corrupted saves) crash `OnGameLoaded`/`FrameTick` in all three
+   features.
+
+**P2** (14): contributor-ordering bug (FieldCamp's eager resolve materializes the overlay
+contributor list BEFORE Refuge registers its contributor: an integration-side bug, not a builder
+bug); timeout delivery grants the ORDER's cargo even when the caravan was raided down (deliver
+from live rosters instead); caravan component has null `Leader` so clicking a caravan opens
+conversation with an arbitrary troop; lord-source routes re-read the lord's CURRENT position
+instead of the dispatch origin; ambush-scan clock not reset across loads; disabling Field Camps
+freezes guards while leaving a standing lookout's sight bonus active; refuge stash food is eaten
+as party provisions (`DoesPartyConsumeFood`); militia rallies after auto-resolve counts freeze;
+militia stand-down can delete player-garrisoned survivors of the same troop stack; a refuge stays
+manageable/dismantlable during its own MapEvent; a defeated refuge leaves a stale book row until
+reload; `RefugePartyComponent` skips the `OnChangePartyLeader` contract; peace does not release
+hero prisoners stored in a refuge; founding is not transactional (warden can be promoted, then a
+spawn refusal orphans the promotion).
+
+**P3** (2): ADR-007 adapter bypass across the boundary services (repo precedent exists; document);
+nameplate patch is a 180-line entry point (extract helper).
+
+**Clean probes**: Harmony targets/signatures on installed 1.4.8; menus incl. the reserved index 4;
+save definer ids and container shapes; localization ids + placeholders across all 12 languages;
+all four tpacs (deploy path, mesh-name match, guarded fallbacks); both combat-model integrations
+and the visibility contributor chain; vanilla finance/desertion/army machinery vs the pinned
+parties; pricing/rollback/charging flows; **no source mechanic silently lost**; no re-entrancy
+defect beyond the MapEvent item above.
+
+## Process notes worth keeping
+
+- Reviewer prompts carried NO port narrative: commit messages, CHANGELOG and feature docs were
+  explicitly framed as hypotheses to check. Codex was steered by QUESTIONS (10 probe areas), not
+  by claimed answers.
+- Session/weekly usage limits killed one builder wave and one review wave mid-run; both resumed
+  cleanly via `Workflow resumeFromRunId` after reset. Builders that died had written nothing
+  (verified by file inventory before resuming).
+- The port pipeline per phase: pinned contracts first, disjoint builders (no builds allowed),
+  orchestrator integrates/builds/tests. Compile errors at integration across all three phases:
+  five (two ctor-arity, one missing using, one ambiguous TestContext, one my own wiring guess).
+
+## Remaining queue
+
+1. Round A lands -> verify its surviving findings -> merge with the Codex batch -> fix -> suite ->
+   commit -> push.
+2. Deep review round B (fresh agents over the fixed tree).
+3. Codex round 2.
+4. RCA + lessons entries; CHANGELOG for the fix batch; final status report.
+5. USER: set `ANTHROPIC_API_KEY`, rerun the 12-language translation; in-game smoke checklists on
+   #505/#506/#507; decide the trunk merge.
