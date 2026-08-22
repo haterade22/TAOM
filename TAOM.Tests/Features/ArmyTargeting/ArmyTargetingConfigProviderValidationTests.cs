@@ -140,7 +140,10 @@ public class ArmyTargetingConfigProviderValidationTests
 
         var result = _sut.Validate(config);
 
-        Assert.AreEqual(Defaults().ReachInnerRadiusInTownGaps, result.ReachInnerRadiusInTownGaps, 0.0001f);
+        // Repaired to half the outer radius, not to the bare default: the default inner radius
+        // is itself 3.0, so reverting to it against an outer radius of 3.0 would tie and leave
+        // the decay span at zero, which is the state this rule exists to reject.
+        Assert.AreEqual(1.5f, result.ReachInnerRadiusInTownGaps, 0.0001f);
         Assert.AreEqual(3f, result.ReachRadiusInTownGaps, 0.0001f);
         Assert.IsTrue(result.ReachInnerRadiusInTownGaps < result.ReachRadiusInTownGaps);
         AssertWarnedAbout("must be below");
@@ -238,6 +241,56 @@ public class ArmyTargetingConfigProviderValidationTests
         Assert.IsTrue(result.ForeignTheaterWeight <= result.SecondaryTheaterWeight);
         Assert.IsTrue(result.SecondaryTheaterWeight <= result.PrimaryTheaterWeight);
         AssertWarnedAbout("must be ordered");
+    }
+
+    // ------------------------------------------------------------------ priority targets
+
+    [TestMethod]
+    public void Validate_NullPriorityTargetId_IsSkippedWithWarning()
+    {
+        // A null id would be used as a Dictionary key while the service builds its index, throwing
+        // ArgumentNullException during model registration, i.e. at campaign start.
+        var config = Valid();
+        config.FactionPriorityTargets["empire_s"] = new List<string> { null, "town_EW3" };
+
+        var result = _sut.Validate(config);
+
+        CollectionAssert.AreEqual(new List<string> { "town_EW3" }, result.FactionPriorityTargets["empire_s"]);
+        AssertWarnedAbout("null or blank priority target");
+        AssertSummaryWarningFired();
+    }
+
+    [TestMethod]
+    public void Validate_BlankPriorityTargetId_IsSkippedWithWarning()
+    {
+        var config = Valid();
+        config.FactionPriorityTargets["empire_s"] = new List<string> { "   ", "town_EW3" };
+
+        Assert.AreEqual(1, _sut.Validate(config).FactionPriorityTargets["empire_s"].Count);
+        AssertWarnedAbout("null or blank priority target");
+    }
+
+    [TestMethod]
+    public void Validate_DuplicatePriorityTargetId_KeepsFirstPositionOnly()
+    {
+        // The duplicate is what makes the boost go NEGATIVE downstream: the deduped dictionary
+        // Count stops climbing while the raw index does not, so t exceeds 1.
+        var config = Valid();
+        config.FactionPriorityTargets["empire_s"] = new List<string> { "town_A", "town_A", "town_B" };
+
+        var result = _sut.Validate(config);
+
+        CollectionAssert.AreEqual(new List<string> { "town_A", "town_B" }, result.FactionPriorityTargets["empire_s"]);
+        AssertWarnedAbout("more than once");
+    }
+
+    [TestMethod]
+    public void Validate_NullPriorityList_CoercesToEmpty()
+    {
+        var config = Valid();
+        config.FactionPriorityTargets["empire_s"] = null;
+
+        Assert.IsNotNull(_sut.Validate(config).FactionPriorityTargets["empire_s"]);
     }
 
     // ------------------------------------------------------------------ theater membership

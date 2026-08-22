@@ -13,6 +13,9 @@ public class ArmyTargetingService : IArmyTargetingService
     /// <summary>Highest outer reach radius. Vanilla's own distance term saturates at 5 gaps, so anything past this is a no-op by construction.</summary>
     private const float MaxReachRadius = 20.0f;
 
+    /// <summary>Compiled fallback for the Defender multiplier, matching TaomSettings.ArmyDefenderPriority.</summary>
+    private const float DefaultDefenderMultiplier = 1.6f;
+
     private readonly IArmyTargetingSettingsProvider _settings;
     private readonly IModLogger _logger;
     private readonly ArmyTargetingConfig _config;
@@ -21,11 +24,16 @@ public class ArmyTargetingService : IArmyTargetingService
     private readonly Dictionary<string, string[]> _theaterIndex;
 
     // One-shot breadcrumbs: each path fires per-army-per-tick, so log the first occurrence
-    // (with real values) then stay silent. Static = once per game process.
-    private static bool _loggedTargetMultiplier;
-    private static bool _loggedStrengthMultiplier;
-    private static bool _loggedTheaterWeight;
-    private static bool _loggedReach;
+    // (with real values) then stay silent.
+    //
+    // INSTANCE, not static, and reset per campaign. These were static, which on a
+    // process-lifetime singleton meant the second campaign of a session logged nothing at all:
+    // a tester loading save B after save A would read the silence as "the feature is not firing".
+    // The FAR CANDIDATE line exists precisely so the next campaign observation is evidence.
+    private bool _loggedTargetMultiplier;
+    private bool _loggedStrengthMultiplier;
+    private bool _loggedTheaterWeight;
+    private bool _loggedReach;
 
     /// <summary>Cap on distinct far-candidate pairs recorded, so a long campaign cannot grow the log or the set without bound.</summary>
     private const int MaxLoggedFarCandidates = 200;
@@ -40,6 +48,20 @@ public class ArmyTargetingService : IArmyTargetingService
         _aggressionIndex = BuildFloatIndex(_config.FactionAggressionMultipliers);
         _theaterIndex = BuildTheaterIndex(_config);
         _logger.LogInfo($"ArmyTargeting: loaded {_priorityIndex.Count} priority factions, {_aggressionIndex.Count} aggression entries, {_theaterIndex.Count} theater assignments");
+    }
+
+    /// <summary>
+    /// Clears the one-shot diagnostic latches. Called by the context factory when it observes a new
+    /// campaign, because this service is a process-lifetime singleton and its breadcrumbs would
+    /// otherwise be spent on the first campaign of the session.
+    /// </summary>
+    public void ResetDiagnostics()
+    {
+        _loggedTargetMultiplier = false;
+        _loggedStrengthMultiplier = false;
+        _loggedTheaterWeight = false;
+        _loggedReach = false;
+        _loggedFarCandidates.Clear();
     }
 
     public float GetTargetMultiplier(string candidateId, string committedTargetId, string factionId)
@@ -274,7 +296,9 @@ public class ArmyTargetingService : IArmyTargetingService
     private float ResolvedDefenderMultiplier()
     {
         float m = _settings.DefenderPriorityMultiplier;
-        return FiniteFloatValidator.IsFiniteInRange(m, 1.0f, 5.0f) ? m : 1.0f;
+        // Falls back to the compiled default, not to 1.0. Reverting to 1.0 would silently disable
+        // the home-defence lever on a garbage MCM value instead of restoring its intended strength.
+        return FiniteFloatValidator.IsFiniteInRange(m, 1.0f, 5.0f) ? m : DefaultDefenderMultiplier;
     }
 
     private static bool Contains(string[] haystack, string needle)
@@ -320,11 +344,23 @@ public class ArmyTargetingService : IArmyTargetingService
             if (kvp.Value == null || kvp.Value.Count == 0)
                 continue;
 
+            // Indices are assigned from the DEDUPED sequence, not from the raw list position.
+            // Writing raw positions into a dictionary lets a duplicate id collapse two entries
+            // while the surviving index keeps climbing, so Count-1 no longer equals the maximum
+            // index. GetTargetMultiplier then computes t > 1 and the boost goes NEGATIVE:
+            // ["A","A","B"] yields {A:1,B:2}, Count 2, so B gets t=2 and boost 3-2*2 = -1, which
+            // flips a positive siege score to negative. Null and blank ids are skipped rather than
+            // used as dictionary keys, which would throw during model registration.
             var cultureIndex = new Dictionary<string, int>(kvp.Value.Count);
-            for (int i = 0; i < kvp.Value.Count; i++)
-                cultureIndex[kvp.Value[i]] = i;
+            foreach (var target in kvp.Value)
+            {
+                if (string.IsNullOrWhiteSpace(target)) continue;
+                if (cultureIndex.ContainsKey(target)) continue;
+                cultureIndex[target] = cultureIndex.Count;
+            }
 
-            index[kvp.Key] = cultureIndex;
+            if (cultureIndex.Count > 0)
+                index[kvp.Key] = cultureIndex;
         }
 
         return index;

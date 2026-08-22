@@ -2,9 +2,73 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-22
+
+### fix(armyTargeting): withdraw a wrong premise and re-size the reach falloff
+
+Yesterday's entry below states that vanilla's besieger distance factor "clamps to a floor of 0.9x at
+any range, so the far side of the map costs an AI army about ten percent of score." **That is wrong
+and is withdrawn.** The term is `MBMath.Map((5G - d)/G, 0f, 5f, 0.9f, 10f)`, and 0.9 is the output
+MINIMUM against a maximum of 10.0: vanilla already applies an 11.1x gradient from zero distance to
+five town gaps, and a 2.2x penalty by three gaps. `CalculateDistanceScoreForBesieging` then ends
+`if (bestDistanceScore < 0.1f) bestDistanceScore = 0f;`, a hard topological veto that removes
+non-adjacent targets before scoring. Stock 1.4.8 does not march armies across the map, so TAOM's own
+`Patch22` border floor, which exists to overturn that veto, was the only mechanism that could.
+
+An independent Codex pass and a second deep review reached the same conclusion separately, the latter
+by parsing all 487,578 path distances out of the engine's own navigation cache and recovering
+G = 93.95 to two decimals.
+
+The premise set the tuning, so the tuning was wrong too. A falloff sized as if vanilla were flat
+multiplied on top of an existing ramp and produced a 44x combined spread from zero to three gaps
+where vanilla alone gives 2.2x, which suppressed genuine fronts: Goblin-town to Lothlórien, Moria to
+Dale, Rivendell to Dol Guldur and Erebor to Dol Guldur all measure 2.2 to 2.6 gaps. Re-derived
+against the real curve, the falloff now only has to stop TAOM's own multipliers (priority 3.0 x
+primary theater 1.25 = 3.75) from outrunning vanilla's 2.2x, so the inner radius moves 1.5 to 3.0
+gaps (clearing the widest measured front at 2.95), the outer 3.0 to 6.0, and the floor 0.05 to 0.35.
+TAOM now contributes about 3x on top of vanilla instead of 20x, pinned by a test.
+
+**The priority-list prune is reverted, all 80 entries restored.** It was wrong three ways. The
+straight-line tool disagreed with the engine's path cache on `khuzait -> town_S2` (2.87 G) and
+`empire_w -> town_A6` (2.70 G), both inside the radius and both deleted. It classified against
+starting ownership when reach is anchored on current fortifications, so a far entry becomes near the
+moment the fief before it falls, which is exactly when an axis of advance matters. And because the
+boost decays across the LENGTH of a list, deleting entries re-steepened the curve for survivors,
+costing Gundabad up to 18.9 percent and Gondor 20.9 percent on targets nobody meant to touch. At the
+corrected radius, zero of the 80 entries are out of reach. `analyze_war_theaters.py` lost its
+`--apply` mode entirely and its docstring no longer claims a safety property it does not have.
+
+Seven other defects from the same two reviews, all fixed with tests:
+
+- A duplicated id in a priority list gave the following entry a boost of **-1.0**, flipping a
+  positive siege score negative. Writing raw list positions into a dictionary let the duplicate
+  collapse two entries while the surviving index kept climbing, so `Count - 1` no longer equalled the
+  maximum index. Indices now come from the deduped sequence, and null or blank ids are skipped rather
+  than used as dictionary keys, which threw during model registration.
+- The MCM surface validated nothing. `ArmyBorderProximityFloor = +Infinity` passed `floor <= 0f` and
+  was assigned into `bestDistanceScore`, which the engine multiplies into the final behaviour score,
+  so one settlement would dominate every candidate on the map. Every MCM float is now range-checked
+  through `FiniteFloatValidator` at the boundary, and the Patch22 gate is a positive requirement.
+- The reach cache invalidated only on campaign day, so a conquest at noon left every distance
+  measured against the old holdings until midnight. It now also keys on the faction's fief count.
+- The same cache held a finalized campaign's `Settlement` graph alive across quit-to-menu and through
+  the next campaign's load, because the null-campaign early return sat above the expiry.
+- The Phase 0 provenance logging was process-static on a process-lifetime singleton, so the second
+  campaign of a session logged nothing and a tester would read the silence as "not firing".
+- `ResolvedDefenderMultiplier` fell back to 1.0 on a bad value, silently disabling the home-defence
+  lever instead of restoring its 1.6 default.
+- `TaomTargetScoreModel` violated `gamemodels.md` rule 4, and measured reach before the master toggle
+  was checked, so "disabled" still walked every fortification. Both are fixed by moving the boundary
+  work into `ITargetScoreContextFactory`.
+
+Suite 6922 green, `validate_moduledata.py` PASS.
+
 ## 2026-08-21
 
 ### feat(armyTargeting): AI armies now fight on their own front instead of the whole map
+
+> **Correction 2026-08-22: the root-cause claim in the next paragraph is WITHDRAWN.** See the
+> 2026-08-22 entry above. Vanilla is not flat with distance.
 
 A player reported kingdoms treating the War of the Ring as one map-wide brawl: Gondor marching far
 north while its own cities were besieged. Three mechanisms produced it, and TAOM owned two of them.

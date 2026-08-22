@@ -10,13 +10,18 @@ namespace TAOM.Tests.Features.ArmyTargeting;
 /// The reach falloff and the soft theater weighting, which together replace the old
 /// "long-range priority boost" mechanism.
 ///
-/// Why these exist in this shape: vanilla's own besieger distance factor clamps to a floor of 0.9x
-/// at ANY range, so the far side of the map costs an AI army almost nothing. Measurement on the
-/// live map put genuine fronts at 1.58 to 1.95 town gaps (Rohan to Mordor is 148 units against a
-/// 93.95-unit gap) and the marches worth stopping at 5+ gaps. A hard theater gate was rejected
-/// because the corrected membership table severs only six pairs, all of which the falloff already
-/// kills, while a hard gate strands any kingdom whose enemies are all foreign and gets its army
-/// disbanded by Army.CheckInactivity about two days later.
+/// SIZING, and why it is gentle. Vanilla is NOT flat with distance: its besieger term is
+/// MBMath.Map((5G-d)/G, 0, 5, 0.9f, 10f), which already spans 10.0 at zero distance down to 0.9
+/// at five town gaps, an 11.1x ramp, and CalculateDistanceScoreForBesieging hard-zeroes any
+/// target whose two-hop topology score is under 0.1. TAOM multiplies on top of that rather than
+/// replacing it. So this term only has to stop TAOM's OWN multipliers (priority up to 3.0 x
+/// primary theater 1.25 = 3.75) from outrunning vanilla's 2.2x penalty at three gaps. An earlier
+/// draft sized it as if vanilla were flat and produced a 44x combined spread that crushed real
+/// fronts; the measured widest genuine hostile front on this map is about 2.95 gaps.
+///
+/// A hard theater gate was rejected on measurement: the corrected membership table severs only
+/// six pairs, all of which the falloff already handles, while a hard gate strands any kingdom
+/// whose enemies are all foreign and loses its army to Army.CheckInactivity two days later.
 /// </summary>
 [TestClass]
 public class WarTheaterAndReachTests
@@ -39,7 +44,7 @@ public class WarTheaterAndReachTests
         _settings.MaxPriorityBoost.Returns(3.0f);
         _settings.EvilAggressionScale.Returns(1.0f);
         _settings.BorderProximityFloor.Returns(0.15f);
-        _settings.ReachRadiusInTownGaps.Returns(3.0f);
+        _settings.ReachRadiusInTownGaps.Returns(6.0f);
         _settings.DefenderPriorityMultiplier.Returns(1.6f);
 
         _config = new ArmyTargetingConfig
@@ -94,21 +99,21 @@ public class WarTheaterAndReachTests
     [TestMethod]
     public void GetReachMultiplier_InsideInnerRadius_ReturnsUnity()
     {
-        // 1.58 gaps is the measured Rohan-to-Mordor border. A genuine front must not be damped.
-        Assert.AreEqual(1.0f, CreateSut().GetReachMultiplier(1.4f), 0.0001f);
+        // The widest measured genuine hostile front is about 2.95 gaps. Every real war must sit
+        // in the flat region, because vanilla already penalises them on its own.
+        Assert.AreEqual(1.0f, CreateSut().GetReachMultiplier(2.9f), 0.0001f);
     }
 
     [TestMethod]
     public void GetReachMultiplier_AtOuterRadius_ReturnsFloor()
     {
-        Assert.AreEqual(_config.ReachFloor, CreateSut().GetReachMultiplier(3.0f), 0.0001f);
+        Assert.AreEqual(_config.ReachFloor, CreateSut().GetReachMultiplier(6.0f), 0.0001f);
     }
 
     [TestMethod]
     public void GetReachMultiplier_FarBeyondRadius_ReturnsFloor()
     {
-        // Gondor to Gundabad is about 6.3 town gaps.
-        Assert.AreEqual(_config.ReachFloor, CreateSut().GetReachMultiplier(6.3f), 0.0001f);
+        Assert.AreEqual(_config.ReachFloor, CreateSut().GetReachMultiplier(9.0f), 0.0001f);
     }
 
     [TestMethod]
@@ -168,6 +173,29 @@ public class WarTheaterAndReachTests
     }
 
     [TestMethod]
+    public void GetReachMultiplier_DoesNotDampMeasuredRealFronts()
+    {
+        // The widest genuine hostile fronts measured on the live map, in town gaps. Vanilla
+        // already applies its own ramp across this range, so TAOM must not stack a second one.
+        var sut = CreateSut();
+        foreach (float gaps in new[] { 0.18f, 1.04f, 1.76f, 2.24f, 2.52f, 2.95f })
+            Assert.AreEqual(1.0f, sut.GetReachMultiplier(gaps), 0.0001f, $"real front at {gaps} gaps was damped");
+    }
+
+    [TestMethod]
+    public void GetReachMultiplier_ContributesLessSpreadThanVanillaAlreadyDoes()
+    {
+        // The guard against re-creating the 44x version. Vanilla already supplies an 11.1x
+        // distance ramp of its own; TAOM only needs to cancel its own 3.75x priority-plus-
+        // theater stack, so anything past about 4x here means the sizing drifted back to
+        // treating vanilla as flat.
+        var sut = CreateSut();
+        float taomSpread = sut.GetReachMultiplier(0f) / sut.GetReachMultiplier(99f);
+        Assert.IsTrue(taomSpread <= 4.0f,
+            $"TAOM contributes a {taomSpread:F1}x spread on top of vanilla's own 11.1x ramp");
+    }
+
+    [TestMethod]
     public void GetReachMultiplier_FeatureDisabled_ReturnsUnity()
     {
         _settings.EnableArmyStrategicIntelligence.Returns(false);
@@ -180,7 +208,7 @@ public class WarTheaterAndReachTests
         _settings.ReachRadiusInTownGaps.Returns(float.NaN);
         var sut = CreateSut();
         Assert.AreEqual(1.0f, sut.GetReachMultiplier(0f), 0.0001f);
-        Assert.AreEqual(_config.ReachFloor, sut.GetReachMultiplier(3.0f), 0.0001f);
+        Assert.AreEqual(_config.ReachFloor, sut.GetReachMultiplier(6.0f), 0.0001f);
     }
 
     [TestMethod]
@@ -208,7 +236,7 @@ public class WarTheaterAndReachTests
     [TestMethod]
     public void IsWithinReach_BeyondRadius_IsFalse()
     {
-        Assert.IsFalse(CreateSut().IsWithinReach(6.3f));
+        Assert.IsFalse(CreateSut().IsWithinReach(9.0f));
     }
 
     [TestMethod]
@@ -224,6 +252,64 @@ public class WarTheaterAndReachTests
     {
         _settings.EnableArmyStrategicIntelligence.Returns(false);
         Assert.IsTrue(CreateSut().IsWithinReach(float.NaN));
+    }
+
+    // ---------------------------------------------------------------- priority index safety
+
+    [TestMethod]
+    public void GetTargetMultiplier_DuplicatePriorityIds_NeverProducesANegativeBoost()
+    {
+        // The service builds its index defensively, independent of the config provider, because it
+        // can be constructed from a config that never went through Validate. Writing raw list
+        // positions into a dictionary lets a duplicate collapse two entries while the surviving
+        // index keeps climbing, so Count-1 no longer equals the maximum index and the boost formula
+        // computes t > 1. ["A","A","B"] gave B a boost of -1.0, flipping a positive siege score
+        // negative and making the AI actively prefer what it should avoid.
+        _config.FactionPriorityTargets["empire_s"] = new List<string> { "town_A", "town_A", "town_B" };
+        var sut = CreateSut();
+
+        foreach (var id in new[] { "town_A", "town_B" })
+        {
+            float m = sut.GetTargetMultiplier(id, null, "empire_s");
+            Assert.IsTrue(m >= 1.0f, $"{id} scored {m}; a priority entry must never be penalised");
+        }
+    }
+
+    [TestMethod]
+    public void GetTargetMultiplier_NullAndBlankPriorityIds_DoNotThrow()
+    {
+        // A null id reaching Dictionary[key] throws while the model is being registered.
+        _config.FactionPriorityTargets["empire_s"] = new List<string> { null, "  ", "town_EW3" };
+        var sut = CreateSut();
+
+        Assert.AreEqual(3.0f, sut.GetTargetMultiplier("town_EW3", null, "empire_s"), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTargetMultiplier_LongPriorityList_StaysWithinTheDeclaredBoostRange()
+    {
+        _config.FactionPriorityTargets["empire_s"] =
+            new List<string> { "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8" };
+        var sut = CreateSut();
+
+        for (int i = 1; i <= 8; i++)
+        {
+            float m = sut.GetTargetMultiplier("t" + i, null, "empire_s");
+            Assert.IsTrue(m >= 1.0f && m <= 3.0f, $"t{i} boost {m} left the [1,3] range");
+        }
+    }
+
+    [TestMethod]
+    public void ApplyTargetScoreModifiers_DefenderSettingOutOfRange_FallsBackToCompiledDefault()
+    {
+        // Reverting to 1.0 would silently DISABLE the home-defence lever on a garbage MCM value
+        // rather than restoring its intended strength.
+        _settings.DefenderPriorityMultiplier.Returns(float.NaN);
+
+        float result = CreateSut().ApplyTargetScoreModifiers(
+            Ctx(baseScore: 100f, mission: ArmyTargetingMission.Defender, targetFaction: "empire_w"));
+
+        Assert.AreEqual(160f, result, 0.01f);
     }
 
     // ---------------------------------------------------------------- theater weighting
@@ -387,7 +473,7 @@ public class WarTheaterAndReachTests
 
         float pinnedFarTarget = sut.ApplyTargetScoreModifiers(Ctx(
             baseScore: 100f, faction: "empire_w", targetFaction: "gundabad",
-            target: "town_G1", committed: "town_G1", distance: 6.3f));
+            target: "town_G1", committed: "town_G1", distance: 9.0f));
 
         float freshNearTarget = sut.ApplyTargetScoreModifiers(Ctx(
             baseScore: 100f, faction: "empire_w", targetFaction: "empire_s",
@@ -406,10 +492,10 @@ public class WarTheaterAndReachTests
     }
 
     [TestMethod]
-    public void ApplyTargetScoreModifiers_FarForeignTarget_IsHeavilyDamped()
+    public void ApplyTargetScoreModifiers_FarForeignTarget_IsDamped()
     {
         float result = CreateSut().ApplyTargetScoreModifiers(Ctx(
-            baseScore: 100f, faction: "empire_w", targetFaction: "gundabad", distance: 6.3f));
-        Assert.AreEqual(100f * 0.35f * 0.05f, result, 0.01f);
+            baseScore: 100f, faction: "empire_w", targetFaction: "gundabad", distance: 9.0f));
+        Assert.AreEqual(100f * _config.ForeignTheaterWeight * _config.ReachFloor, result, 0.01f);
     }
 }

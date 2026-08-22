@@ -14,6 +14,8 @@ public static class ArmyTargetingIoC
         // Singleton because it carries a day-scoped distance memo; a transient would rebuild the
         // per-faction fief list on every AI tick.
         container.Register<IMapReachAdapter, MapReachAdapter>(Reuse.Singleton);
+        // Singleton: it tracks campaign identity to reset the service's one-shot diagnostics.
+        container.Register<ITargetScoreContextFactory, TargetScoreContextFactory>(Reuse.Singleton);
         container.Register<ISiegeGatheringDiagnosticsService, SiegeGatheringDiagnosticsService>(Reuse.Singleton);
     }
 }

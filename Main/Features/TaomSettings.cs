@@ -329,8 +329,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("AI Strategic Intelligence")]
     [SettingPropertyFloatingInteger("Army March Radius", 1.0f, 20.0f, "#0.0", Order = 6,
-        HintText = "How far, in average town gaps, an army will march to besiege. Beyond this the target is heavily discounted. 3.0 is about 280 map units, roughly the widest genuine front. Vanilla never discounts distance below 0.9x at any range.")]
-    public float ArmyReachRadiusInTownGaps { get; set; } = 3.0f;
+        HintText = "Distance, in average town gaps, at which a siege target is fully discounted. No penalty at all inside 3 gaps, which covers every real front on the map. Vanilla already penalises distance on its own; this only stops TAOM's priority boost from outrunning it.")]
+    public float ArmyReachRadiusInTownGaps { get; set; } = 6.0f;
 
     [SettingPropertyGroup("AI Strategic Intelligence")]
     [SettingPropertyFloatingInteger("Home Defence Priority", 1.0f, 5.0f, "#0.0", Order = 7,

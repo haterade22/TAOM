@@ -2,6 +2,7 @@ using System;
 using HarmonyLib;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TaleWorlds.CampaignSystem.CampaignBehaviors.AiBehaviors;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -57,8 +58,12 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
 
             if (!_settings.EnableArmyStrategicIntelligence) return;
 
+            // Positive-requirement gate. The previous form was `floor <= 0f`, which NaN and
+            // +Infinity both PASS, and the value is then assigned straight into bestDistanceScore,
+            // which the engine multiplies into the final behaviour score. An infinity there makes
+            // one settlement dominate every candidate on the map.
             float floor = _settings.BorderProximityFloor;
-            if (floor <= 0f) return;
+            if (!(floor > 0f) || !FiniteFloatValidator.IsFinite(floor)) return;
 
             string factionId    = mobileParty?.MapFaction?.StringId;
             string settlementId = targetSettlement?.StringId;

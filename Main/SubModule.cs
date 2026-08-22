@@ -869,7 +869,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
 
         var armyTargetingService = IoC.Resolve<IArmyTargetingService>();
-        campaignStarter.AddModel(new TaomTargetScoreModel(armyTargetingService, IoC.Resolve<TAOM.Adapters.IMapReachAdapter>()));
+        campaignStarter.AddModel(new TaomTargetScoreModel(armyTargetingService, IoC.Resolve<ITargetScoreContextFactory>()));
     }
 
     // Special-resource economy + the career system (behaviors, quests, and career GameModels).

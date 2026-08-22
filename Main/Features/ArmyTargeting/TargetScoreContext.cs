@@ -13,6 +13,13 @@ public sealed class TargetScoreContext
     /// <summary>Value returned by <c>base.GetTargetScoreForFaction</c>. May be NaN if engine state is corrupt.</summary>
     public float BaseScore { get; set; }
 
+    /// <summary>
+    /// The ourStrength value to hand to vanilla, already carrying the faction aggression inflation
+    /// that bypasses vanilla's 2x-defender siege gate. Precomputed by the context factory so the
+    /// model body stays a straight-line boundary conversion.
+    /// </summary>
+    public float EffectiveStrength { get; set; }
+
     /// <summary>Mission classification, mapped from <c>Army.ArmyTypes</c>.</summary>
     public ArmyTargetingMission Mission { get; set; }
 

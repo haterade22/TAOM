@@ -45,4 +45,10 @@ public interface IArmyTargetingService
     /// returned unchanged.
     /// </summary>
     float ApplyTargetScoreModifiers(TargetScoreContext context);
+
+    /// <summary>
+    /// Clears the one-shot diagnostic latches so a second campaign in the same process still
+    /// produces provenance breadcrumbs.
+    /// </summary>
+    void ResetDiagnostics();
 }

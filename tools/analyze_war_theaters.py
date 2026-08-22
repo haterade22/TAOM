@@ -1,8 +1,20 @@
 #!/usr/bin/env python3
 """Analyse TAOM's war-theater targeting data against the live map.
 
-Read-only by default, per the tools/README.md convention for ``analyze_*``. Pass ``--apply`` to
-prune the priority lists it reports as out of reach.
+**Read-only. There is no ``--apply``, deliberately.** An earlier version pruned the priority lists
+it judged out of reach and that was wrong three ways, all found in review:
+
+* Its Euclidean ratio disagreed with the engine's path ratio on real entries. Measured against the
+  installed distance cache, ``khuzait -> town_S2`` is 2.87 G and ``empire_w -> town_A6`` is 2.70 G,
+  both inside the radius, and both were deleted.
+* It froze STARTING ownership. Reach is anchored on a faction's CURRENT fortifications, so a
+  "far" entry becomes near the moment the faction captures the fief before it. Deleting it removes
+  the axis of advance exactly when it opens.
+* Deleting an entry renormalises the boost for every survivor, because the priority boost decays
+  across the LENGTH of the list. Pruning Gundabad from 12 entries to 6 cost the survivors up to
+  18.9 percent.
+
+Use it to see the numbers. Edit the config by hand, with those three facts in mind.
 
 What it answers
 ---------------
@@ -19,20 +31,22 @@ What it answers
     falloff pins them at the floor no matter how high their priority boost is. Keeping them in the
     file just misleads the next person to edit it.
 
-Distances
----------
-Straight-line between settlement GATE positions, taken from the live navigation snapshot. The game
-uses real navmesh path distance, which is never shorter.
+Distances, and why they are only an estimate
+--------------------------------------------
+Straight-line between settlement GATE positions, from the live navigation snapshot. The game uses
+navmesh path distance.
 
-That does NOT make every number here an underestimate, because the config is expressed as a ratio
-and the same bias sits in both halves of it: this tool divides Euclidean distance by a Euclidean G,
-and the engine divides path distance by a path G. Measured, the two Gs are 78.7 and about 94, so the
-bias largely cancels and the ratios are comparable.
+An earlier version of this docstring argued the bias cancels because the config is a ratio and both
+halves carry it. **That reasoning is wrong and was disproved by measurement.** The two normalisers
+are not equally biased: Euclidean G is 78.73 while the engine's path G is 93.95, so the ratios move
+by roughly 16 percent and individual pairs move further depending on terrain. Two entries flipped
+verdict when checked against the engine's own cache.
 
-What does not cancel is terrain. A pair separated by the Misty Mountains has a path far longer than
-its straight line, so this tool understates that pair's gap and will keep a priority entry the game
-will treat as further away. That is the safe direction for ``--apply``: it can leave a too-far entry
-in place, but it will not prune one the game considers near.
+Treat every gap figure here as approximate, and never as grounds for deleting data. The exact source
+is ``Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin``, a plain
+.NET BinaryWriter stream (see ``NavigationCache.Serialize`` in the decompile), which carries the true
+pairwise path distances and the fortification neighbour graph. Reading it is the correct upgrade for
+this tool.
 
 Data sources are the LIVE module installs, not the repo shadows. ``Main/_Module/ModuleData/
 settlements.xml`` is 125 settlements stale and must not be used here.
@@ -280,54 +294,10 @@ def reach_multiplier(config: dict, gaps: float) -> float:
     return 1.0 - ((gaps - inner) / (radius - inner)) * (1.0 - floor)
 
 
-def compact_arrays(dumped):
-    """Collapse arrays of scalars onto one line.
-
-    json.dumps(indent=2) puts every settlement id on its own row, which turns a config a human
-    maintains into three times the lines with one word on each. Objects keep their indentation;
-    only arrays whose elements are all scalars are folded, and only when the result still fits.
-
-    Written as a line scan rather than a regex on purpose: the pattern needs literal brackets and
-    newlines, and getting those escapes wrong is a silent corruption of the config this rewrites.
-    """
-    out = []
-    source = dumped.split(chr(10))
-    index = 0
-    while index < len(source):
-        line = source[index]
-        if not line.rstrip().endswith("["):
-            out.append(line)
-            index += 1
-            continue
-
-        close = index + 1
-        items = []
-        scalar = True
-        while close < len(source) and source[close].strip() not in ("]", "],"):
-            token = source[close].strip().rstrip(",")
-            if token.startswith("{") or token.startswith("["):
-                scalar = False
-            items.append(token)
-            close += 1
-
-        indent = line[: len(line) - len(line.lstrip())]
-        joined = ", ".join(items)
-        fits = len(line) + len(joined) + 2 <= 110
-        if scalar and close < len(source) and fits:
-            trailing = "," if source[close].strip() == "]," else ""
-            out.append(line.rstrip() + joined + "]" + trailing)
-            index = close + 1
-        else:
-            out.append(line)
-            index += 1
-
-    return chr(10).join(out)
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--apply", action="store_true",
-                        help="prune FactionPriorityTargets entries that sit beyond the march radius")
+                        help=argparse.SUPPRESS)
     parser.add_argument("--radius", type=float, default=None,
                         help="override the march radius in town gaps (default: read from army_targeting.json)")
     args = parser.parse_args()
@@ -451,29 +421,15 @@ def main() -> int:
     print()
 
     if args.apply:
-        for faction in list(priority.keys()):
-            survivors = kept.get(faction, [])
-            if survivors:
-                priority[faction] = survivors
-            else:
-                del priority[faction]
-                print(f"  removed empty priority list for {faction}")
-        config["FactionPriorityTargets"] = priority
-        if args.radius is not None:
-            config["ReachRadiusInTownGaps"] = read_json(ARMY_TARGETING).get("ReachRadiusInTownGaps", 3.0)
-        # Preserve the file's existing line endings and BOM rather than normalising them, so
-        # the diff shows the entries that changed instead of every line in the file.
-        original = open(ARMY_TARGETING, "rb").read()
-        had_bom = original.startswith(b"\xef\xbb\xbf")
-        newline = "\r\n" if b"\r\n" in original else "\n"
-        body = compact_arrays(json.dumps(config, indent=2, ensure_ascii=False)) + "\n"
-        if newline != "\n":
-            body = body.replace("\n", newline)
-        open(ARMY_TARGETING, "wb").write((b"\xef\xbb\xbf" if had_bom else b"") + body.encode("utf-8"))
-        print(f"APPLIED: pruned {total_prunable} entries and rewrote {ARMY_TARGETING}")
-        print("Re-run the test suite: the config invariant tests read this file directly.")
+        print("REFUSED: --apply is gone. This tool measures straight-line distance, which disagreed")
+        print("  with the engine's path cache on real entries, and pruning also renormalises the")
+        print("  boost curve for every surviving entry. Edit army_targeting.json by hand.")
+        return 2
+
     elif total_prunable:
-        print("Re-run with --apply to prune them.")
+        print("These are candidates for review, NOT for deletion. An entry beyond the radius today")
+        print("  is still the axis of advance once the faction captures the fief before it, and")
+        print("  removing one re-steepens the boost curve for every entry that remains.")
 
     return 0
 

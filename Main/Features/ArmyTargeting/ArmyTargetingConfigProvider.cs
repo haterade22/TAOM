@@ -92,6 +92,40 @@ public class ArmyTargetingConfigProvider : IArmyTargetingConfigProvider
             parsed.KingdomTheaters[key] = kept;
         }
 
+        // Priority target ids are dictionary KEYS and ordinal indices downstream, so a null id
+        // throws while the model is being registered and a duplicate makes the boost curve go
+        // negative (the surviving index keeps climbing while the deduped Count does not). The
+        // service builds its index defensively too; this is the surface that can warn about it.
+        foreach (var faction in new List<string>(parsed.FactionPriorityTargets.Keys))
+        {
+            var targets = parsed.FactionPriorityTargets[faction];
+            if (targets == null)
+            {
+                parsed.FactionPriorityTargets[faction] = new List<string>();
+                continue;
+            }
+
+            var kept = new List<string>(targets.Count);
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var target in targets)
+            {
+                if (string.IsNullOrWhiteSpace(target))
+                {
+                    _logger.LogWarning($"ArmyTargetingConfigProvider: faction '{faction}' has a null or blank priority target, skipping it");
+                    rejected = true;
+                    continue;
+                }
+                if (!seen.Add(target))
+                {
+                    _logger.LogWarning($"ArmyTargetingConfigProvider: faction '{faction}' lists priority target '{target}' more than once, keeping the first position only");
+                    rejected = true;
+                    continue;
+                }
+                kept.Add(target);
+            }
+            parsed.FactionPriorityTargets[faction] = kept;
+        }
+
         // Radii are bounded rather than merely finite: a zero or negative radius would make every
         // target out of reach, and a radius past vanilla's own 5-gap saturation is a silent no-op.
         if (!FiniteFloatValidator.IsFiniteInRange(parsed.ReachRadiusInTownGaps, 1.0f, 20.0f))
@@ -113,7 +147,11 @@ public class ArmyTargetingConfigProvider : IArmyTargetingConfigProvider
         if (parsed.ReachInnerRadiusInTownGaps >= parsed.ReachRadiusInTownGaps)
         {
             _logger.LogWarning($"ArmyTargetingConfigProvider: ReachInnerRadiusInTownGaps={parsed.ReachInnerRadiusInTownGaps} must be below ReachRadiusInTownGaps={parsed.ReachRadiusInTownGaps}, reverting the inner radius to {defaults.ReachInnerRadiusInTownGaps}");
-            parsed.ReachInnerRadiusInTownGaps = defaults.ReachInnerRadiusInTownGaps;
+            // Not the bare default: with a low outer radius the default can still tie or
+            // exceed it, leaving the file in exactly the state this rule exists to reject.
+            // Half the outer radius is the same ceiling the service derives at runtime.
+            parsed.ReachInnerRadiusInTownGaps = Math.Min(
+                defaults.ReachInnerRadiusInTownGaps, parsed.ReachRadiusInTownGaps * 0.5f);
             rejected = true;
         }
 
