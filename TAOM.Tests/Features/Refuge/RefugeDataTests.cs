@@ -1,0 +1,63 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.Refuge.Domain;
+
+namespace TAOM.Tests.Features.Refuge;
+
+/// <summary>
+/// Pure-data coverage for <see cref="RefugeData"/>: the BuildProgress degenerate-hours guard, the
+/// tier int/enum round-trip and the persisted militia bookkeeping defaults. The elapsed-time
+/// branch of BuildProgress dereferences CampaignTime.Now and is exercised through the service's
+/// BuildProgressOf seam instead.
+/// </summary>
+[TestClass]
+public class RefugeDataTests
+{
+    [TestMethod]
+    public void BuildProgress_ZeroTargetHours_ReportsComplete()
+    {
+        var data = new RefugeData { BuildTargetHours = 0f };
+
+        Assert.AreEqual(1f, data.BuildProgress(), 0.0001f);
+    }
+
+    [TestMethod]
+    public void BuildProgress_NegativeTargetHours_ReportsComplete()
+    {
+        var data = new RefugeData { BuildTargetHours = -3f };
+
+        Assert.AreEqual(1f, data.BuildProgress(), 0.0001f,
+            "a poisoned negative target must not produce a negative or divide-through progress");
+    }
+
+    [TestMethod]
+    public void TierEnum_RoundTripsThroughPersistedInt()
+    {
+        var data = new RefugeData { TierEnum = RefugeTier.Stronghold };
+
+        Assert.AreEqual(1, data.Tier, "the save field carries the raw int");
+        Assert.AreEqual(RefugeTier.Stronghold, data.TierEnum);
+
+        data.Tier = 0;
+        Assert.AreEqual(RefugeTier.Refuge, data.TierEnum);
+    }
+
+    [TestMethod]
+    public void MilitiaBookkeeping_DefaultsToNothingRecorded()
+    {
+        var data = new RefugeData();
+
+        Assert.AreEqual(0, data.MilitiaAdded);
+        Assert.IsNull(data.MilitiaTroopId);
+    }
+
+    [TestMethod]
+    public void IsReady_RequiresEstablishedAndNotBuilding()
+    {
+        Assert.IsFalse(new RefugeData { Established = false, Building = false }.IsReady);
+        Assert.IsFalse(new RefugeData { Established = false, Building = true }.IsReady);
+        Assert.IsTrue(new RefugeData { Established = true, Building = false }.IsReady);
+        // The stronghold rebuild window: established but building again = not ready, so the
+        // defense bonus and militia rally both drop until the rebuild completes.
+        Assert.IsFalse(new RefugeData { Established = true, Building = true }.IsReady);
+    }
+}

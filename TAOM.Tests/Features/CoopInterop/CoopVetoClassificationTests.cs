@@ -68,6 +68,12 @@ public class CoopVetoClassificationTests
             "Skips an alliance end. Static-config condition, same peer-mismatch exposure as war."),
 
         // --- Reviewed, safe to keep enforcing ------------------------------------------------
+        ["RefugeEncounterPatch"] = new(CoopVeto.ReviewedSafe,
+            "Player-local UI redirect: when the LOCAL player clicks their own refuge, the meeting " +
+            "conversation is swapped for the refuge menu. DoMeeting only runs for the local player's " +
+            "encounter, the skipped body is presentation (conversation UI), and the condition reads " +
+            "the local player's own refuge book and enlistment state. No shared campaign mutation is " +
+            "skipped, so peers cannot diverge on it."),
         ["AllianceCampaignBehavior_AddAllianceDecision_Patch"] = new(CoopVeto.ReviewedSafe,
             "Dedup guard, not a policy veto: skips queuing a start-alliance decision for a pair that " +
             "is already allied. Condition is Kingdom.IsAllyWith — replicated vanilla state, so both " +

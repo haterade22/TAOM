@@ -890,7 +890,7 @@ public class SubModule : MBSubModuleBase
         var battleBalanceSettings = IoC.Resolve<IBattleBalanceSettingsProvider>();
         var battleBalanceConfig = IoC.Resolve<IBattleBalanceConfigProvider>();
         campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
-        campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings));
+        campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings, IoC.Resolve<Features.Refuge.IRefugeDefenseService>()));
         campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>(), IoC.Resolve<Features.Enlistment.IEnlistmentStateQuery>()));
 
         campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
@@ -965,7 +965,8 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CombatMechanics.ICreatureCombatService>(),
             IoC.Resolve<Features.CombatMechanics.IShieldPenetrationService>(),
             IoC.Resolve<Features.CombatMechanics.ICombatMechanicsConfigProvider>(),
-            IoC.Resolve<Features.CombatMechanics.ICombatMechanicsSettingsProvider>()));
+            IoC.Resolve<Features.CombatMechanics.ICombatMechanicsSettingsProvider>(),
+            IoC.Resolve<Features.Refuge.IRefugeDefenseService>()));
         campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
         // BannerBearers: the engine's BannerBearerLogic already runs in every field battle,
         // sally-out and siege — this model supplies TAOM's policy (bearers per formation, the
@@ -1032,6 +1033,16 @@ public class SubModule : MBSubModuleBase
 
         // SupplyLines (#505): resupply convoys ordered from towns/lords. The behavior owns the
         // SyncData halves; the order book itself is the singleton ISupplyOrderService.
+        // Refuge (#507): movable player bases raised from field camps.
+        campaignStarter.AddBehavior(new Features.Refuge.Hooks.RefugeCampaignBehavior(
+            IoC.Resolve<Features.Refuge.IRefugeService>(),
+            IoC.Resolve<Features.Refuge.IRefugeSettingsProvider>(),
+            IoC.Resolve<Features.Refuge.IRefugeVisualService>(),
+            IoC.Resolve<Features.Refuge.IWardenService>(),
+            IoC.Resolve<IGameMenuAdapter>(),
+            IoC.Resolve<IEncounterAdapter>(),
+            IoC.Resolve<IModLogger>()));
+
         // FieldCamp (#506): campaign-map camps. Behavior owns menus, SyncData and the tick fan-out.
         campaignStarter.AddBehavior(new Features.FieldCamp.Hooks.FieldCampCampaignBehavior(
             IoC.Resolve<Features.FieldCamp.ICampService>(),
@@ -1293,6 +1304,9 @@ public class SubModule : MBSubModuleBase
         // Patch74 (#506): camp-type icon over the player nameplate. Same PatchShield-excluded
         // namespace as Patch38, so the postfix body is written to be unable to throw.
         _harmony.PatchCategory("Patch74_FieldCampNameplateIcon");
+
+        // Patch75 (#507): refuge clan-screen listing + click-to-manage encounter interception.
+        _harmony.PatchCategory("Patch75_Refuge");
 
         // Patch53_PartyIconScale — transpiler that rewrites the two hardcoded 0.3f campaign-map scale
         // literals in MobilePartyVisual.AddCharacterToPartyIcon (leader figure + its mount) into a call

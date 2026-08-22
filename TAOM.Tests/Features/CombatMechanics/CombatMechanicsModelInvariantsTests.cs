@@ -23,6 +23,10 @@ public class CombatMechanicsModelInvariantsTests
 
     private static readonly string[] ExpectedOverrides =
     {
+        // Refuge (#507, 2026-08-22): defender damage reduction rides the model chain here rather
+        // than the source module's Harmony postfix on the same method; the auto-resolve half lives
+        // in TaomCombatSimulationModel.SimulateHit, both consulting IRefugeDefenseService.
+        "ApplyDamageReductions",
         "DecideCrushedThrough",
         "CalculateRemainingMomentum",
         "DecideWeaponCollisionReaction",

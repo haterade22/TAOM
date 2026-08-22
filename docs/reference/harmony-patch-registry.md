@@ -651,6 +651,16 @@ Injects a camp-type icon (lookout monocular, ambush, camp) above the player's pa
 
 **Service handle** captured once via `Initialize(ICampService)` in `FieldCampIoC` (the Patch38/Patch72 shape). Sprite names are vanilla atlas entries; a missing entry degrades to an invisible icon by design.
 
+## Patch75_Refuge
+
+**Targets:** `ClanPartiesVM.RefreshPartiesList()` (public, Postfix) + `PlayerEncounter.DoMeeting()` (public static, Prefix). Two patch classes, one category.
+
+**Feature:** Refuge, `Main/Features/Refuge/Hooks/RefugeClanScreenPatch.cs` + `RefugeEncounterPatch.cs`. **Status:** ACTIVE.
+
+The clan-screen postfix appends ready refuges to the Garrisons list as `ClanPartyItemVM` rows (selection wired via AccessTools to the private `OnPartySelection`). The encounter prefix is click-to-manage: when the LOCAL player meets their own ready refuge, the meeting conversation is swapped for the refuge menu (`return false`); suppressed while enlisted, because Enlistment owns encounter policy (INV-D1). Co-op disposition: ReviewedSafe (player-local UI redirect, no shared mutation skipped; `CoopVetoClassificationTests`).
+
+**What is deliberately NOT here:** the source module's two combat patches (`SimulateHit`, `ApplyDamageReductions`). Both targets are TAOM-owned model slots, so the defender damage reduction rides the model chain instead: `TaomCombatMechanicsModel.ApplyDamageReductions` (real-time) and `TaomCombatSimulationModel.SimulateHit` (auto-resolve), both consulting `IRefugeDefenseService`. One decision, two consumers, no Harmony ordering accident.
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

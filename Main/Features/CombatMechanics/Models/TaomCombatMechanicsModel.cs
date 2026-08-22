@@ -5,6 +5,9 @@ using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.CombatMechanics.Domain;
+using TAOM.Features.Refuge;
+using TaleWorlds.CampaignSystem.AgentOrigins;
+using TaleWorlds.CampaignSystem.Party;
 
 namespace TAOM.Features.CombatMechanics.Models;
 
@@ -25,6 +28,7 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     private readonly IShieldPenetrationService _shieldPenetrationService;
     private readonly ICombatMechanicsConfigProvider _configProvider;
     private readonly ICombatMechanicsSettingsProvider _settingsProvider;
+    private readonly IRefugeDefenseService _refugeDefense;
 
     public TaomCombatMechanicsModel(
         ICareerAgentStatService careerAgentStatService,
@@ -33,7 +37,8 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         ICreatureCombatService creatureCombatService,
         IShieldPenetrationService shieldPenetrationService,
         ICombatMechanicsConfigProvider configProvider,
-        ICombatMechanicsSettingsProvider settingsProvider)
+        ICombatMechanicsSettingsProvider settingsProvider,
+        IRefugeDefenseService refugeDefense = null)
         : base(careerAgentStatService)
     {
         _crushThroughService = crushThroughService;
@@ -42,6 +47,35 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         _shieldPenetrationService = shieldPenetrationService;
         _configProvider = configProvider;
         _settingsProvider = settingsProvider;
+        _refugeDefense = refugeDefense;
+    }
+
+    // Refuge (#507): defenders of a ready refuge take reduced real-time damage. base runs the
+    // career-passive reduction chain first (the parent's override), then the refuge factor rides
+    // on top: one service, shared with the auto-resolve path, so the two cannot drift. The source
+    // module reached this line with a Harmony postfix on the SAME method TAOM's chain overrides,
+    // an accidental and untested ordering; the override makes the order explicit.
+    public override float ApplyDamageReductions(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
+    {
+        var result = base.ApplyDamageReductions(in attackInformation, in collisionData, baseDamage);
+
+        var reduction = _refugeDefense?.DefenderDamageReduction(VictimPartyId(attackInformation.VictimAgentOrigin)) ?? 0f;
+        // Positive requirement so NaN applies nothing; a full (>=1) reduction is a corrupt setting.
+        if (reduction > 0f && reduction < 1f)
+            result *= 1f - reduction;
+
+        return result;
+    }
+
+    private static string VictimPartyId(TaleWorlds.Core.IAgentOriginBase origin)
+    {
+        var party = origin switch
+        {
+            PartyAgentOrigin p => p.Party,
+            PartyGroupAgentOrigin g => g.Party,
+            _ => null,
+        };
+        return party?.MobileParty?.StringId;
     }
 
     public override bool DecideCrushedThrough(Agent attackerAgent, Agent defenderAgent, float totalAttackEnergy, Agent.UsageDirection attackDirection, StrikeType strikeType, WeaponComponentData defendItem, bool isPassiveUsageHit)

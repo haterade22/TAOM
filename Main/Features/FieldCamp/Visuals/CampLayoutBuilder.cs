@@ -159,7 +159,10 @@ internal static class CampLayoutBuilder
         entities.Clear();
     }
 
-    private static void PlaceCommandTent(
+    // The granular placement helpers below are internal (not private) because RefugeVisualService
+    // composes its own bigger layout from them: the Refuge prefabs use different meshes and scales,
+    // and its fallback rings carry per-tent scaling that the camp-level Place entry does not.
+    internal static void PlaceCommandTent(
         Scene scene, in Vec3 center, float scale, Banner? banner, List<GameEntity> outEntities)
     {
         // The command tent sits slightly forward of center so the tent ring reads as around it.
@@ -178,7 +181,7 @@ internal static class CampLayoutBuilder
         PlaceMesh(scene, TentMeshName, in frame, outEntities);
     }
 
-    private static void PlaceTentWithBanner(
+    internal static void PlaceTentWithBanner(
         Scene scene, float x, float y, float zFallback, float tentScale, Banner banner,
         List<GameEntity> outEntities)
     {
@@ -241,7 +244,7 @@ internal static class CampLayoutBuilder
         }
     }
 
-    private static bool PlaceCenteredPrefab(
+    internal static bool PlaceCenteredPrefab(
         Scene scene, in Vec3 center, string meshName, float scale, List<GameEntity> outEntities)
     {
         try
@@ -286,7 +289,7 @@ internal static class CampLayoutBuilder
         }
     }
 
-    private static void PlaceBarricadeRing(
+    internal static void PlaceBarricadeRing(
         Scene scene, in Vec3 center, int count, float radius, List<GameEntity> outEntities)
     {
         for (int i = 0; i < count; i++)
@@ -305,7 +308,7 @@ internal static class CampLayoutBuilder
         }
     }
 
-    private static void PlaceMesh(Scene scene, string meshName, in MatrixFrame frame, List<GameEntity> outEntities)
+    internal static void PlaceMesh(Scene scene, string meshName, in MatrixFrame frame, List<GameEntity> outEntities)
     {
         try
         {
@@ -328,7 +331,7 @@ internal static class CampLayoutBuilder
     }
 
     /// <summary>Snaps a layout point to the map terrain so tents sit on slopes, not in them.</summary>
-    private static float TerrainHeight(float x, float y, float fallback)
+    internal static float TerrainHeight(float x, float y, float fallback)
     {
         float height = fallback;
         try

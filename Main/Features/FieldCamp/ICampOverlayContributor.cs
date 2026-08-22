@@ -21,10 +21,10 @@ public readonly struct CampOverlayStatus
 public interface ICampOverlayContributor
 {
     /// <summary>Overrides the overlay button caption, or null for the default.</summary>
-    string CaptionOverride();
+    string? CaptionOverride();
 
     /// <summary>Blocks camp creation with a player-facing reason, or null to allow.</summary>
-    string CreationBlockedReason();
+    string? CreationBlockedReason();
 
     /// <summary>Extra overlay status (a refuge raising nearby), or null when idle.</summary>
     CampOverlayStatus? OverlayStatus();

@@ -2556,5 +2556,52 @@
     <string id="taom_fc_supplies_stealth" text="Ambush and lookout camps stay hidden - no supply convoys." />
     <string id="taom_fc_too_close" text="Too close to a town or castle - pitch a field camp farther from settlements." />
     <string id="taom_rf_party_name" text="Refuge" />
+    <string id="taom_rf_attacked" text="Your refuge is under attack by" />
+    <string id="taom_rf_blocks_camp" text="A refuge stands here - dismantle it to pitch a normal camp." />
+    <string id="taom_rf_cancel" text="Cancel" />
+    <string id="taom_rf_cap_refuge" text="Refuge" />
+    <string id="taom_rf_cap_stronghold" text="Stronghold" />
+    <string id="taom_rf_confirm" text="Confirm" />
+    <string id="taom_rf_dismantled" text="The refuge is dismantled; its garrison and stores return to your party." />
+    <string id="taom_rf_enemy" text="the enemy" />
+    <string id="taom_rf_found_tooltip" text="Cost:" />
+    <string id="taom_rf_founded" text="Refuge founded - garrison it, then it will be raised." />
+    <string id="taom_rf_hold_note" text="Your company holds position while the refuge is raised. It can march once the work is done." />
+    <string id="taom_rf_menu_gone" text="No refuge stands within reach." />
+    <string id="taom_rf_menu_status" text="Your" />
+    <string id="taom_rf_menu_status_warden" text="Your" />
+    <string id="taom_rf_no_warden" text="You need a companion - or a soldier you can promote - to lead a refuge." />
+    <string id="taom_rf_opt_break" text="Dismantle refuge" />
+    <string id="taom_rf_opt_enter" text="Enter refuge" />
+    <string id="taom_rf_opt_found" text="Establish a refuge here" />
+    <string id="taom_rf_opt_items" text="Store goods" />
+    <string id="taom_rf_opt_leave" text="Leave" />
+    <string id="taom_rf_opt_manage" text="Manage garrison (troops and prisoners)" />
+    <string id="taom_rf_opt_upgrade" text="Upgrade to stronghold" />
+    <string id="taom_rf_promote_entry" text="" />
+    <string id="taom_rf_promote_failed" text="Could not assign that warden." />
+    <string id="taom_rf_raised" text="The refuge is raised. It stands as your forward base; manage it to deposit troops." />
+    <string id="taom_rf_reason_already_here" text="A refuge already stands here - manage it instead." />
+    <string id="taom_rf_reason_blocked" text="You cannot do that here." />
+    <string id="taom_rf_reason_building" text="The refuge is still being raised." />
+    <string id="taom_rf_reason_camp_type" text="Only a field or fortified camp can be raised into a refuge." />
+    <string id="taom_rf_reason_disabled" text="Refuges are disabled in the mod options." />
+    <string id="taom_rf_reason_enlisted" text="You cannot raise a refuge while serving in another lord's army." />
+    <string id="taom_rf_reason_gold" text="You cannot afford this - it costs" />
+    <string id="taom_rf_reason_limit" text="Your clan already holds the most refuges it can support (" />
+    <string id="taom_rf_reason_no_camp" text="Establish a camp here first, then raise a refuge from it." />
+    <string id="taom_rf_reason_no_refuge" text="No refuge within reach." />
+    <string id="taom_rf_reason_top_tier" text="Already a stronghold - the highest tier." />
+    <string id="taom_rf_reason_town" text="Too close to a town or castle - raise a refuge farther from settlements." />
+    <string id="taom_rf_status_raising" text="Raising refuge." />
+    <string id="taom_rf_status_upgrading" text="Rebuilding into a stronghold." />
+    <string id="taom_rf_stronghold_done" text="The stronghold is complete; its walls and garrison stand stronger." />
+    <string id="taom_rf_tier_refuge" text="refuge" />
+    <string id="taom_rf_tier_stronghold" text="stronghold" />
+    <string id="taom_rf_upgrade_no_gold" text="Not enough gold to rebuild the refuge into a stronghold." />
+    <string id="taom_rf_upgrade_tooltip" text="Cost:" />
+    <string id="taom_rf_upgrading" text="Rebuilding the refuge into a stronghold - your company must stay until it is done." />
+    <string id="taom_rf_warden_desc" text="Choose who commands the refuge - a companion, or promote one of your soldiers into an officer. They leave your party to lead it." />
+    <string id="taom_rf_warden_title" text="Assign a Warden" />
   </strings>
 </base>

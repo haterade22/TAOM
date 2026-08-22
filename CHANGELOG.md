@@ -4,6 +4,38 @@
 
 ## 2026-08-22
 
+### feat(refuge): movable player bases raised from field camps (#507)
+
+Port of yotthani's Refuge module (1.4.5, 2,027 decompiled lines) into `Main/Features/Refuge/`.
+Establish a refuge from a ready field or fortified camp: garrison, prisoner and stash storage
+through the vanilla party and stash screens, a warden (companion, or a soldier promoted into one),
+Refuge to Stronghold tiers with authored tpac visuals, a defender damage bonus in both battle and
+auto-resolve, a rallying defence militia, clan-screen listing and click-to-manage. Raids ship off,
+as in the source.
+
+The source's two Harmony combat patches are deleted: both targets are TAOM-owned model slots, so
+the reduction rides the model chain (`TaomCombatMechanicsModel.ApplyDamageReductions` +
+`TaomCombatSimulationModel.SimulateHit`, one shared `IRefugeDefenseService`), with the
+CombatMechanics override-set pin updated deliberately.
+
+Source defects fixed rather than carried:
+
+- Dismantling KILLED a promoted warden hero and refunded his troop. Nobody is killed now: a
+  promoted warden remains a clan companion, a companion warden rejoins the party, a captured
+  warden is left to his fate and the dismantle proceeds.
+- Militia bookkeeping was a transient dict, so a mid-battle save baked the militia into the
+  garrison forever, and stand-down deleted every troop of the militia type including ones the
+  player had garrisoned. It is persisted in RefugeData now, and stand-down removes
+  min(recorded, present) of the recorded troop only.
+- Refuge AI was pinned only at spawn, so a reload let refuges wander. Re-pinned on every load.
+- The EnableRefuge toggle was declared and never read. It is real now, and standing refuges
+  survive a toggle so a garrison is never stranded.
+- The dead `CampPartyComponent`-style hazards were audited: the refuge party component is in the
+  save definer (the source's camp component was not).
+
+Suite green at 7325. 48 `{=taom_rf_*}` strings registered; `RefugeEncounterPatch` classified
+ReviewedSafe in the co-op veto registry (player-local UI redirect).
+
 ### feat(fieldCamp): campaign-map camps with authored visuals (#506)
 
 Port of yotthani's FieldCamp module (1.4.5, 2,753 decompiled lines) into

@@ -168,6 +168,10 @@ public static class IoC
         SupplyLinesIoC.RegisterSupplyLinesFeature(container);
         FieldCampIoC.RegisterFieldCampFeature(container);
 
+        // AFTER FieldCamp: Refuge registers a camp-overlay contributor and its service reads the
+        // camp book at founding time.
+        Features.Refuge.RefugeIoC.RegisterRefugeFeature(container);
+
         _container = container;
 
         // Post-registration initialization
