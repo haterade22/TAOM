@@ -53,16 +53,38 @@ raises both adapter flags in the same frame. Three tests pin that: plain Space f
 of turboing, turbo rebound to its own key fires on its own, and Ctrl plus the fast-forward key stops
 turboing once turbo has moved elsewhere.
 
-The key names ship in a NEW `taom_keybind_strings.xml` rather than in `taom_module_strings.xml`, and
-that is the fix for a defect the review caught rather than a tidiness choice. `taom_module_strings`
-is registered with `<IncludedGameTypes>` limited to Campaign and CampaignStoryMode, but
-Options > Keybindings opens from the main menu, before any campaign exists. A key name placed in the
-gated file renders there as the raw lookup id `str_key_name.TaomTimeControlHotKeyCategory_500`, on
-the one screen the whole feature exists to populate. Vanilla ships its own key names in the ungated
-`Native/ModuleData/global_strings.xml` and NavalDLC's `module_strings` node is ungated as well, so
-the new file's node carries no `IncludedGameTypes` either, pinned by
-`LanguageDataXmlTests.KeybindStringsNode_IsNotGatedByGameType`. That adds a 12th per-language file,
-so the language-file count assertion moved from 11 to 12.
+The key names ship in a NEW `Main/_Module/ModuleData/global_strings.xml`, and the filename is a hard
+engine contract rather than a naming preference. The keybinding screen resolves its labels through
+`Module.CurrentModule.GlobalTextManager`, and `GlobalTextManager.LoadDefaultTexts()` populates that
+manager by walking every installed module and opening the literal path `ModuleData/global_strings.xml`.
+It never reads `SubModule.xml`. A `<XmlNode id="GameText">` declaration feeds a different manager
+entirely, the per-`Game` one built at `Game.Initialize`, so strings registered that way are absent
+from the Options screen and each TAOM row renders as
+`ERROR: Text with id str_key_name doesn't exist!`.
+
+This took two attempts. The first fix put the strings in their own file and removed its
+`<IncludedGameTypes>` gate, on the theory that the gate was what kept them out of the main-menu
+Options screen. The gate was a real problem but not the operative one: ungating a GameText node
+promotes nothing to the global manager. NavalDLC reads like a counter-example and is not, since its
+Options labels come from Native's `global_strings.xml`, which independently ships all six Naval key
+records. `{=key}` indirection works normally in `global_strings.xml` (vanilla's own uses it ~1,037
+times), so the 12 translations resolve unchanged. That adds a 12th per-language file, moving the
+language-file count assertion from 11 to 12.
+
+One more defect fell out of making fast-forward rebindable at all. That branch only ever set
+`SpeedUpMultiplier` and never touched the time mode, which looked correct for as long as its key was
+Space, because vanilla's `MapTimeTogglePause` handler performed the mode transition on the same
+press. `Campaign.TickMapTime` applies `SpeedUpMultiplier` ONLY in the three fast-forward modes, so a
+fast-forward key rebound to anything else set the multiplier onto a Play or Stop mode and did nothing
+whatsoever. `FastForwardOwnsTimeMode` is true only when TAOM's key differs from vanilla's time-toggle
+key, and only then does the service call `SetTimeSpeed(2)` itself. Doing it unconditionally would
+break the other direction: on the shared default every press would force fast-forward and the vanilla
+toggle would never toggle back.
+
+Turbo activation is also idempotent now. A second observed press while turbo was already running used
+to overwrite the saved pre-turbo speed with the already-boosted one, so the eventual restore left the
+engine at the turbo multiplier with the latch closed and nothing left that knew to undo it. That
+defect predates this change; the rename just made it easy to see.
 
 Also dropped the hardcoded "(E)" from the MapBar tooltip in all 13 language files, since the key is
 no longer fixed, and added 6 keybinding strings across the 12 translations.

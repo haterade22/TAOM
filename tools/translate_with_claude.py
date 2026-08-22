@@ -230,6 +230,7 @@ def english_source_files(module: str) -> list[tuple[Path, str]]:
         # TAOM source XMLs at ModuleData root
         for src_name, tgt_template in [
             ("taom_module_strings.xml",                       "std_taom_module_strings_{locale}.xml"),
+            ("global_strings.xml",                            "std_taom_keybind_strings_{locale}.xml"),
             ("taom_wanderer_strings.xml",                     "std_taom_wanderer_strings_{locale}.xml"),
             ("named_companions/named_companion_strings.xml",  "std_taom_named_companion_strings_{locale}.xml"),
             ("taom_cc_strings.xml",                           "std_taom_cc_strings_{locale}.xml"),

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Japanese" />
+  </tags>
+  <strings>
+    <string id="taom_key_fast_forward" text="早送り (TAOM)" />
+    <string id="taom_key_fast_forward_desc" text="TAOMの早送り速度倍率を適用します。既定ではバニラの一時停止切り替えとキーを共有していますが、これは意図的なものです。" />
+    <string id="taom_key_extra_fast_forward" text="超早送り (TAOM)" />
+    <string id="taom_key_extra_fast_forward_desc" text="TAOMのより高い早送り倍率を適用します。既定はEキーで、これは「カメラを右に回転」にも割り当てられています。同時に発動させたくない場合はどちらかを再割り当てしてください。" />
+    <string id="taom_key_turbo" text="ターボタイム、Ctrl長押し (TAOM)" />
+    <string id="taom_key_turbo_desc" text="Ctrlとこのキーを同時に長押しすると、TAOMの最高速度倍率が適用されます。どちらかのキーを離すと元の速度に戻ります。" />
+  </strings>
+</base>

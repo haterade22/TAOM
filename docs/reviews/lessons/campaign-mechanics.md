@@ -236,3 +236,27 @@ finalists casting three each. Every non-mercenary clan votes as well, not just t
   If the counter-example is reachable, the design is a bias and not a guarantee: say so in the doc.
 - **Source:** `docs/reviews/rca-fiefgranting-2026-08-14.md` finding C2, caught by the Codex pass after
   six Claude agents missed it.
+
+### Making a hardcoded value configurable re-opens the correctness of every consumer, including untouched ones
+
+TAOM's fast-forward branch set `SpeedUpMultiplier` and deliberately never touched the time mode. That
+was correct for years for one unstated reason: its key was Space, which is also vanilla
+`MapTimeTogglePause` (GameKey 63), so vanilla's handler performed the mode transition on the same
+press. `Campaign.TickMapTime` applies `SpeedUpMultiplier` ONLY in the three fast-forward modes and
+ignores it in `StoppablePlay` / `UnstoppablePlay` / `Stop` / `FastForwardStop`.
+
+The moment the key became rebindable, a key rebound off Space set the multiplier onto a Play or Stop
+mode and did nothing at all, with no error and no log line.
+
+- **Why missed:** the branch was unchanged, so a diff-based review classified it as "no behavioural
+  delta" and moved on. That verdict was true of the code and false of the system. The dependency was
+  on the key's VALUE, and the whole point of the change was to stop that value being fixed.
+- **Note the fix has two directions.** Unconditionally taking over the mode is also wrong: on the
+  shared default it would force fast-forward on every press and the vanilla toggle would never toggle
+  back. The condition is "my key differs from vanilla's", not "I am rebindable now".
+- **Prevent:** when a constant becomes configurable, list every consumer of that value and re-derive
+  its behaviour under a value that has never been used before, not under the shipped default. Ask
+  specifically what OTHER system used to observe the same input, and what stops observing it once the
+  value moves. Add at least one test that exercises a non-default value end-to-end.
+- **Source:** 2026-08-22 rebindable Time Acceleration keys.
+  `docs/reviews/rca-timeacceleration-keybinds-2026-08-22.md`.

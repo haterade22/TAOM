@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Russian" />
+  </tags>
+  <strings>
+    <string id="taom_key_fast_forward" text="Ускорение времени (TAOM)" />
+    <string id="taom_key_fast_forward_desc" text="Применяет множитель ускорения времени TAOM. По умолчанию использует ту же клавишу, что и стандартное переключение паузы, — это сделано намеренно." />
+    <string id="taom_key_extra_fast_forward" text="Сильное ускорение времени (TAOM)" />
+    <string id="taom_key_extra_fast_forward_desc" text="Применяет повышенный множитель ускорения времени TAOM. По умолчанию — клавиша E, которая также поворачивает камеру вправо; переназначьте одну из команд, чтобы они не срабатывали одновременно." />
+    <string id="taom_key_turbo" text="Турбо-время, удерживая Ctrl (TAOM)" />
+    <string id="taom_key_turbo_desc" text="Удерживайте Ctrl вместе с этой клавишей для максимального множителя скорости TAOM. Отпускание любой из клавиш возвращает прежнюю скорость." />
+  </strings>
+</base>

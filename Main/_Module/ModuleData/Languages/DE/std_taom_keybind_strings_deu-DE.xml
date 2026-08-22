@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="German" />
+  </tags>
+  <strings>
+    <string id="taom_key_fast_forward" text="Vorspulen (TAOM)" />
+    <string id="taom_key_fast_forward_desc" text="Wendet den TAOM-Zeitraffer-Multiplikator an. Teilt sich standardmäßig eine Taste mit der vanilla Pause-Umschaltung, was beabsichtigt ist." />
+    <string id="taom_key_extra_fast_forward" text="Schnelleres Vorspulen (TAOM)" />
+    <string id="taom_key_extra_fast_forward_desc" text="Wendet den höheren TAOM-Zeitraffer-Multiplikator an. Standardmäßig auf E, was auch &quot;Kamera nach rechts drehen&quot; ist; belege eine der beiden neu, damit sie nicht gleichzeitig auslösen." />
+    <string id="taom_key_turbo" text="Turbo-Zeit, Strg halten (TAOM)" />
+    <string id="taom_key_turbo_desc" text="Halte Strg zusammen mit dieser Taste für den höchsten TAOM-Geschwindigkeitsmultiplikator. Wird eine der Tasten losgelassen, wird die vorherige Geschwindigkeit wiederhergestellt." />
+  </strings>
+</base>

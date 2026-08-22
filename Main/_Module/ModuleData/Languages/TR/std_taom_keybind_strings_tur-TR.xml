@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_key_fast_forward" text="Hızlı İleri Sarma (TAOM)" />
+    <string id="taom_key_fast_forward_desc" text="TAOM hızlı ileri sarma hız çarpanını uygular. Varsayılan olarak oyunun duraklatma tuşuyla aynı tuşu paylaşır; bu bilinçli bir tercihtir." />
+    <string id="taom_key_extra_fast_forward" text="Ekstra Hızlı İleri Sarma (TAOM)" />
+    <string id="taom_key_extra_fast_forward_desc" text="Daha yüksek TAOM hızlı ileri sarma çarpanını uygular. Varsayılanı E'dir; bu tuş aynı zamanda Kamerayı Sağa Döndür tuşudur. Birlikte tetiklenmemeleri için birini yeniden atayın." />
+    <string id="taom_key_turbo" text="Turbo Zaman, Ctrl basılı tut (TAOM)" />
+    <string id="taom_key_turbo_desc" text="En yüksek TAOM hız çarpanı için Ctrl ile birlikte bu tuşu basılı tutun. Tuşlardan birini bıraktığınızda önceki hıza dönülür." />
+  </strings>
+</base>

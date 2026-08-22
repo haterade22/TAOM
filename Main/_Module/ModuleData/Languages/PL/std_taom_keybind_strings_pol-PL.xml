@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Polish" />
+  </tags>
+  <strings>
+    <string id="taom_key_fast_forward" text="Przyspieszenie (TAOM)" />
+    <string id="taom_key_fast_forward_desc" text="Stosuje mnożnik przyspieszenia TAOM. Domyślnie dzieli klawisz z podstawowym przełącznikiem pauzy, co jest zamierzone." />
+    <string id="taom_key_extra_fast_forward" text="Dodatkowe przyspieszenie (TAOM)" />
+    <string id="taom_key_extra_fast_forward_desc" text="Stosuje wyższy mnożnik przyspieszenia TAOM. Domyślnie klawisz E, który służy też do obracania kamery w prawo; zmień przypisanie jednego z nich, aby nie uruchamiały się razem." />
+    <string id="taom_key_turbo" text="Czas turbo, przytrzymaj Ctrl (TAOM)" />
+    <string id="taom_key_turbo_desc" text="Przytrzymaj Ctrl razem z tym klawiszem, aby uzyskać najwyższy mnożnik prędkości TAOM. Zwolnienie któregokolwiek klawisza przywraca poprzednią prędkość." />
+  </strings>
+</base>

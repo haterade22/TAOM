@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="Применить это массовое действие?" />
     <string id="taom_qa_yes" text="Да" />
     <string id="taom_qa_no" text="Нет" />
-    <string id="taom_extra_fast_forward_hint" text="Ускоренное время (E)" />
+    <string id="taom_extra_fast_forward_hint" text="Ускоренное время" />
     <string id="taom_str_faction_official.lindon" text="хранитель знаний Линдона" />
     <string id="taom_str_faction_official.lindon_f" text="целительница Линдона" />
     <string id="taom_str_faction_ruler.lindon" text="Владыка" />

@@ -380,3 +380,34 @@ its own cache entry either.
   12 languages by substitution; the new `{=taom_feat_bcg_ps_desc}` copied from the goblin row
   (identical English); the new `{=taom_feat_bcg_ps}` name seeded as English in all 12 and still owing
   a translator run.
+
+### Verify WHICH text manager renders a string before verifying its id
+
+Bannerlord has two, and they are populated by completely different mechanisms:
+
+| Manager | Populated by | Reaches |
+|---|---|---|
+| `Module.CurrentModule.GlobalTextManager` | `LoadDefaultTexts()`, which walks every installed module and opens the LITERAL path `ModuleData/global_strings.xml` | Main-menu screens, including Options > Keybindings |
+| per-`Game` `GameTextManager` | `SubModule.xml` `<XmlNode id="GameText" path="..."/>`, consumed at `Game.Initialize` | In-campaign text only |
+
+A correct string id in the wrong manager does not fall back and does not go blank. It renders
+`ERROR: Text with id str_key_name doesn't exist!` on the screen.
+
+- **Why missed:** the review verified the id SHAPE exhaustively (character-by-character against
+  `GameKeyOptionVM`'s `((GameKeyDefinition)Id).ToString()` construction, all 12 translations present,
+  XML parse test, invariant test) and never asked which manager performed the lookup. The data-flow
+  agent traced the same id end-to-end and returned CONNECTED. Codex answered it in one step by opening
+  `GameKeyOptionVM.RefreshValues`.
+- **The plausible wrong fix, for the record:** noticing that `taom_module_strings`'s node is
+  `<IncludedGameTypes>`-gated to Campaign and removing the gate. The gate IS a real problem for
+  main-menu text, but ungating a `GameText` node does not promote it to the global manager, so the
+  bug survives a fix that looks like it addressed it. Verifying that a condition matters is not the
+  same as verifying that removing it is sufficient.
+- **NavalDLC is not counter-evidence.** Its own `module_strings` node is ungated, but its Options
+  labels come from Native's `global_strings.xml`, which independently ships all six Naval key records.
+  ButterLib takes the third route: `GlobalTextManager.AddGameText(...)` at runtime.
+- **Prevent:** for any engine-rendered string, read the VM/screen that renders it and follow the
+  manager back to its loader before trusting the id. Pin the requirement with a test that asserts the
+  file's name and location, not just its contents, when the loader keys on a literal path.
+- **Source:** 2026-08-22 rebindable Time Acceleration keys.
+  `docs/reviews/rca-timeacceleration-keybinds-2026-08-22.md`.

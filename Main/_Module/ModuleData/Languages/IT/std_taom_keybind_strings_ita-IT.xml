@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Italian" />
+  </tags>
+  <strings>
+    <string id="taom_key_fast_forward" text="Avanzamento rapido (TAOM)" />
+    <string id="taom_key_fast_forward_desc" text="Applica il moltiplicatore di velocità di avanzamento rapido di TAOM. Per impostazione predefinita condivide il tasto con la pausa vanilla, ed è intenzionale." />
+    <string id="taom_key_extra_fast_forward" text="Avanzamento extra rapido (TAOM)" />
+    <string id="taom_key_extra_fast_forward_desc" text="Applica il moltiplicatore di avanzamento rapido più alto di TAOM. Predefinito su E, che è anche Ruota telecamera a destra; riassegna uno dei due per evitare che si attivino insieme." />
+    <string id="taom_key_turbo" text="Tempo turbo, tieni premuto Ctrl (TAOM)" />
+    <string id="taom_key_turbo_desc" text="Tieni premuto Ctrl insieme a questo tasto per il moltiplicatore di velocità più alto di TAOM. Rilasciando uno dei due tasti si ripristina la velocità precedente." />
+  </strings>
+</base>

@@ -2649,8 +2649,8 @@
 	<string id="taom_qa_yes" text="{=taom_qa_yes}Yes" />
 	<string id="taom_qa_no" text="{=taom_qa_no}No" />
 	<!-- TimeAcceleration -->
-	<string id="taom_extra_fast_forward_hint" text="{=taom_extra_fast_forward_hint}Extra Fast Forward (E)" />
-
+	<!-- No key name in this hint any more: the binding is the player's to choose. -->
+	<string id="taom_extra_fast_forward_hint" text="{=taom_extra_fast_forward_hint}Extra Fast Forward" />
 
   <!-- TAOM-NEWCULTURE:lindon:BEGIN -->
   <string id="str_faction_official.lindon" text="{=taom_str_faction_official.lindon}a loremaster of Lindon" />

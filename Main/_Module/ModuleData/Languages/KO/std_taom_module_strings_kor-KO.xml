@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="이 일괄 작업을 적용하시겠습니까?" />
     <string id="taom_qa_yes" text="예" />
     <string id="taom_qa_no" text="아니오" />
-    <string id="taom_extra_fast_forward_hint" text="추가 빨리감기 (E)" />
+    <string id="taom_extra_fast_forward_hint" text="추가 빨리감기" />
     <string id="taom_str_faction_official.lindon" text="린돈의 학자" />
     <string id="taom_str_faction_official.lindon_f" text="린돈의 치유사" />
     <string id="taom_str_faction_ruler.lindon" text="경" />

@@ -17,6 +17,38 @@ public class LanguageDataXmlTests
     private static readonly string[] SupportedLanguageDirs =
         new[] { "BR", "CNs", "CNt", "DE", "FR", "IT", "JP", "KO", "PL", "RU", "SP", "TR" };
 
+    private static string ModuleDataPath => Path.GetFullPath(
+        Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+            @"..\..\..\..\Main\_Module\ModuleData"));
+
+    [TestMethod]
+    public void KeybindNames_LiveInGlobalStringsXml_TheOnlyFileTheOptionsScreenReads()
+    {
+        // The keybinding screen resolves its labels through Module.CurrentModule.GlobalTextManager
+        // (GameKeyOptionVM.RefreshValues), and GlobalTextManager.LoadDefaultTexts() populates that
+        // manager by scanning every module for the LITERAL path ModuleData/global_strings.xml. It
+        // does NOT read <XmlNode id="GameText"> declarations from SubModule.xml, which feed the
+        // separate per-Game GameTextManager. So the file NAME and LOCATION are the contract here:
+        // move these records anywhere else and every TAOM row in Options renders as
+        // "ERROR: Text with id str_key_name doesn't exist!".
+        var path = Path.Combine(ModuleDataPath, "global_strings.xml");
+        Assert.IsTrue(File.Exists(path),
+            $"ModuleData/global_strings.xml is missing ({path}). The Options keybinding screen reads "
+            + "no other file, so the TAOM key names would render as raw ids.");
+
+        var ids = XDocument.Load(path).Descendants("string")
+            .Select(s => (string)s.Attribute("id") ?? "")
+            .ToList();
+
+        foreach (var id in new[] { "500", "501", "502" })
+        {
+            Assert.IsTrue(ids.Contains($"str_key_name.TaomTimeControlHotKeyCategory_{id}"),
+                $"global_strings.xml is missing str_key_name.TaomTimeControlHotKeyCategory_{id}");
+            Assert.IsTrue(ids.Contains($"str_key_description.TaomTimeControlHotKeyCategory_{id}"),
+                $"global_strings.xml is missing str_key_description.TaomTimeControlHotKeyCategory_{id}");
+        }
+    }
+
     [TestMethod]
     public void LanguagesDirExists()
     {
@@ -107,15 +139,34 @@ public class LanguageDataXmlTests
     }
 
     [TestMethod]
-    public void AllLanguageDirs_HaveExactlyElevenLanguageFiles()
+    public void AllLanguageDirs_HaveExactlyTwelveLanguageFiles()
     {
         foreach (var lang in SupportedLanguageDirs)
         {
             var path = Path.Combine(LanguagesPath, lang, "language_data.xml");
             var doc = XDocument.Load(path);
             var count = doc.Descendants("LanguageFile").Count();
-            Assert.AreEqual(11, count,
-                $"Languages/{lang}/language_data.xml should declare exactly 11 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt, emissary, wotr, enlistment)");
+            Assert.AreEqual(12, count,
+                $"Languages/{lang}/language_data.xml should declare exactly 12 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt, emissary, wotr, enlistment, keybind)");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveKeybindStringsFile()
+    {
+        // The keybinding names are a SEPARATE file from taom_module_strings on purpose: their
+        // XmlNode in SubModule.xml carries no IncludedGameTypes, so they load for the main-menu
+        // Options screen where taom_module_strings (Campaign-gated) would render a raw id.
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_keybind_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_keybind_strings reference");
         }
     }
 

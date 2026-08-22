@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Time-control keybinding names for Options > Keybindings > Campaign Map.
+	     This file MUST be named global_strings.xml and live at ModuleData/ root. The keybinding
+	     screen reads Module.CurrentModule.GlobalTextManager (GameKeyOptionVM.RefreshValues), and
+	     GlobalTextManager.LoadDefaultTexts() populates that manager by scanning every module for the
+	     LITERAL path ModuleData/global_strings.xml. It does NOT read <XmlNode id="GameText"> entries
+	     from SubModule.xml, which feed the separate per-Game GameTextManager instead. Native ships
+	     the vanilla and NavalDLC key names in its own global_strings.xml for exactly this reason.
+	     The trailing numbers are the game key ids: KeyOptionVM builds the lookup from
+	     ((GameKeyDefinition)Id).ToString(), not from StringId. Keep them in step with
+	     TaomTimeControlHotKeyCategory. -->
+	<string id="str_key_name.TaomTimeControlHotKeyCategory_500" text="{=taom_key_fast_forward}Fast Forward (TAOM)" />
+	<string id="str_key_description.TaomTimeControlHotKeyCategory_500" text="{=taom_key_fast_forward_desc}Applies the TAOM fast-forward speed multiplier. Shares a key with the vanilla pause toggle by default, which is deliberate." />
+	<string id="str_key_name.TaomTimeControlHotKeyCategory_501" text="{=taom_key_extra_fast_forward}Extra Fast Forward (TAOM)" />
+	<string id="str_key_description.TaomTimeControlHotKeyCategory_501" text="{=taom_key_extra_fast_forward_desc}Applies the higher TAOM fast-forward multiplier. Defaults to E, which is also Rotate Camera Right; rebind either one to stop them firing together." />
+	<string id="str_key_name.TaomTimeControlHotKeyCategory_502" text="{=taom_key_turbo}Turbo Time, hold Ctrl (TAOM)" />
+	<string id="str_key_description.TaomTimeControlHotKeyCategory_502" text="{=taom_key_turbo_desc}Hold Ctrl together with this key for the highest TAOM speed multiplier. Releasing either key restores the previous speed." />
+
+</strings>

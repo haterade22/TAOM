@@ -11,7 +11,7 @@ public class TimeAccelerationService : ITimeAccelerationService
 
     private float _savedSpeed;
     private int _savedMode;
-    private bool _ctrlSpaceActive;
+    private bool _turboActive;
 
     public TimeAccelerationService(
         IMapInputAdapter input,
@@ -36,7 +36,7 @@ public class TimeAccelerationService : ITimeAccelerationService
         // — but SpeedUpMultiplier is a SEPARATE property that nothing is known to intercept, so a
         // client pressing E still mutated campaign tick state locally, unlogged and ungated.
         //
-        // Restore first, then bail: a toggle-off mid-turbo must not latch _ctrlSpaceActive with the
+        // Restore first, then bail: a toggle-off mid-turbo must not latch _turboActive with the
         // engine left at the boosted multiplier (harmony-patches.md "Latches & Toggle Gates" — the
         // state transition is unconditional, the gate comes after).
         if (_coop.ShouldDeferToHost)
@@ -57,36 +57,47 @@ public class TimeAccelerationService : ITimeAccelerationService
             return;
         }
 
-        if (_input.IsControlDown && _input.IsSpacePressed)
+        // !_turboActive makes the opener idempotent. Without it a second observed press while turbo
+        // is already running re-saves the ALREADY BOOSTED speed and mode as the values to restore,
+        // so the eventual restore leaves the engine at the turbo multiplier with the latch closed
+        // and nothing left that knows to undo it.
+        if (!_turboActive && _input.IsControlDown && _input.IsTurboPressed)
         {
             _savedSpeed = _timeControl.SpeedUpMultiplier;
             _savedMode = _timeControl.TimeControlMode;
             _timeControl.SpeedUpMultiplier = _settings.CtrlSpaceMultiplier;
             _timeControl.SetTimeSpeed(2);
-            _ctrlSpaceActive = true;
+            _turboActive = true;
         }
-        else if (_ctrlSpaceActive && (!_input.IsControlDown || _input.IsSpaceReleased))
+        else if (_turboActive && (!_input.IsControlDown || _input.IsTurboReleased))
         {
             _timeControl.SpeedUpMultiplier = _savedSpeed;
             _timeControl.TimeControlMode = _savedMode;
-            _ctrlSpaceActive = false;
+            _turboActive = false;
         }
-        else if (_input.IsEKeyPressed)
+        else if (_input.IsExtraFastForwardPressed)
         {
             _timeControl.SpeedUpMultiplier = _settings.ExtraFastForwardMultiplier;
             _timeControl.SetTimeSpeed(2);
         }
-        else if (_input.IsSpacePressed)
+        else if (_input.IsFastForwardPressed)
         {
             _timeControl.SpeedUpMultiplier = _settings.FastForwardMultiplier;
+
+            // On the shipped default this key IS vanilla's MapTimeTogglePause, and vanilla's own
+            // handler owns the mode transition for the same press, so we deliberately set only the
+            // multiplier and leave the toggle alone. Once the player rebinds it away from that key
+            // nothing else changes the mode, and Campaign.TickMapTime applies SpeedUpMultiplier ONLY
+            // in the fast-forward modes, so without this the rebound key would visibly do nothing.
+            if (_input.FastForwardOwnsTimeMode) _timeControl.SetTimeSpeed(2);
         }
     }
 
     private void RestoreTurboIfActive()
     {
-        if (!_ctrlSpaceActive) return;
+        if (!_turboActive) return;
         _timeControl.SpeedUpMultiplier = _savedSpeed;
         _timeControl.TimeControlMode = _savedMode;
-        _ctrlSpaceActive = false;
+        _turboActive = false;
     }
 }

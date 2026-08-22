@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="要執行此批次操作嗎？" />
     <string id="taom_qa_yes" text="是" />
     <string id="taom_qa_no" text="否" />
-    <string id="taom_extra_fast_forward_hint" text="額外加速（E）" />
+    <string id="taom_extra_fast_forward_hint" text="額外加速" />
     <string id="taom_str_faction_official.lindon" text="林頓的一位博學者" />
     <string id="taom_str_faction_official.lindon_f" text="林頓的一位醫者" />
     <string id="taom_str_faction_ruler.lindon" text="領主" />

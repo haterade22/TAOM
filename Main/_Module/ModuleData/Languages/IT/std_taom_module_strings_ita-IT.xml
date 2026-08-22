@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="Applicare questa azione in blocco?" />
     <string id="taom_qa_yes" text="Sì" />
     <string id="taom_qa_no" text="No" />
-    <string id="taom_extra_fast_forward_hint" text="Avanzamento extra rapido (E)" />
+    <string id="taom_extra_fast_forward_hint" text="Avanzamento extra rapido" />
     <string id="taom_str_faction_official.lindon" text="un maestro del sapere di Lindon" />
     <string id="taom_str_faction_official.lindon_f" text="una guaritrice di Lindon" />
     <string id="taom_str_faction_ruler.lindon" text="Signore" />

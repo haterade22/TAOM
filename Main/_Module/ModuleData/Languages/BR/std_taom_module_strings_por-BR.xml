@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="Aplicar esta ação em massa?" />
     <string id="taom_qa_yes" text="Sim" />
     <string id="taom_qa_no" text="Não" />
-    <string id="taom_extra_fast_forward_hint" text="Avanço Rápido Extra (E)" />
+    <string id="taom_extra_fast_forward_hint" text="Avanço Rápido Extra" />
     <string id="taom_str_faction_official.lindon" text="um mestre do saber de Lindon" />
     <string id="taom_str_faction_official.lindon_f" text="uma curandeira de Lindon" />
     <string id="taom_str_faction_ruler.lindon" text="Senhor" />

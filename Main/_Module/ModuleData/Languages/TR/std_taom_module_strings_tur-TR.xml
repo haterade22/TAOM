@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="Bu toplu eylem uygulanacak mı?" />
     <string id="taom_qa_yes" text="Evet" />
     <string id="taom_qa_no" text="Hayır" />
-    <string id="taom_extra_fast_forward_hint" text="Ekstra Hızlı İleri (E)" />
+    <string id="taom_extra_fast_forward_hint" text="Ekstra Hızlı İleri" />
     <string id="taom_str_faction_official.lindon" text="bir Lindon bilgesi" />
     <string id="taom_str_faction_official.lindon_f" text="bir Lindon şifacısı" />
     <string id="taom_str_faction_ruler.lindon" text="Lord" />

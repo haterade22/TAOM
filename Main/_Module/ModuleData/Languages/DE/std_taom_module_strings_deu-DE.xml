@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="Diese Massenaktion anwenden?" />
     <string id="taom_qa_yes" text="Ja" />
     <string id="taom_qa_no" text="Nein" />
-    <string id="taom_extra_fast_forward_hint" text="Extra-Schnellvorlauf (E)" />
+    <string id="taom_extra_fast_forward_hint" text="Extra-Schnellvorlauf" />
     <string id="taom_str_faction_official.lindon" text="ein Loremeister von Lindon" />
     <string id="taom_str_faction_official.lindon_f" text="eine Heilerin von Lindon" />
     <string id="taom_str_faction_ruler.lindon" text="Herr" />

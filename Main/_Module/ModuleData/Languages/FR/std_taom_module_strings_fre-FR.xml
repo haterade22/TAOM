@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="Appliquer cette action groupée ?" />
     <string id="taom_qa_yes" text="Oui" />
     <string id="taom_qa_no" text="Non" />
-    <string id="taom_extra_fast_forward_hint" text="Accélération supplémentaire (E)" />
+    <string id="taom_extra_fast_forward_hint" text="Accélération supplémentaire" />
     <string id="taom_str_faction_official.lindon" text="un maître du savoir de Lindon" />
     <string id="taom_str_faction_official.lindon_f" text="une guérisseuse de Lindon" />
     <string id="taom_str_faction_ruler.lindon" text="Seigneur" />

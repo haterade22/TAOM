@@ -2412,7 +2412,7 @@
     <string id="taom_qa_confirm_msg" text="この一括操作を適用しますか？" />
     <string id="taom_qa_yes" text="はい" />
     <string id="taom_qa_no" text="いいえ" />
-    <string id="taom_extra_fast_forward_hint" text="追加早送り（E）" />
+    <string id="taom_extra_fast_forward_hint" text="追加早送り" />
     <string id="taom_str_faction_official.lindon" text="リンドンの伝承の達人" />
     <string id="taom_str_faction_official.lindon_f" text="リンドンの癒し手" />
     <string id="taom_str_faction_ruler.lindon" text="卿" />

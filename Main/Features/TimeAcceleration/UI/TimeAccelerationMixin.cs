@@ -20,7 +20,7 @@ internal class TimeAccelerationMixin : BaseViewModelMixin<MapTimeControlVM>
     {
         // Phase 9b #168 P3 — localized tooltip. Was hardcoded English literal.
         _extraFastForwardHint = new BasicTooltipViewModel(
-            () => new TextObject("{=taom_extra_fast_forward_hint}Extra Fast Forward (E)").ToString());
+            () => new TextObject("{=taom_extra_fast_forward_hint}Extra Fast Forward").ToString());
     }
 
     [DataSourceProperty]

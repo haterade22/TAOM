@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Portuguese (Brazilian)" />
+  </tags>
+  <strings>
+    <string id="taom_key_fast_forward" text="Avanço Rápido (TAOM)" />
+    <string id="taom_key_fast_forward_desc" text="Aplica o multiplicador de velocidade de avanço rápido do TAOM. Por padrão, compartilha a tecla com o botão de pausa original, o que é intencional." />
+    <string id="taom_key_extra_fast_forward" text="Avanço Extra Rápido (TAOM)" />
+    <string id="taom_key_extra_fast_forward_desc" text="Aplica o multiplicador de avanço rápido mais alto do TAOM. O padrão é E, que também é Girar Câmera à Direita; altere uma das teclas para evitar que sejam acionadas juntas." />
+    <string id="taom_key_turbo" text="Tempo Turbo, segure Ctrl (TAOM)" />
+    <string id="taom_key_turbo_desc" text="Segure Ctrl junto com esta tecla para o maior multiplicador de velocidade do TAOM. Soltar qualquer uma das teclas restaura a velocidade anterior." />
+  </strings>
+</base>

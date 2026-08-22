@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Spanish (LA)" />
+  </tags>
+  <strings>
+    <string id="taom_key_fast_forward" text="Avance rápido (TAOM)" />
+    <string id="taom_key_fast_forward_desc" text="Aplica el multiplicador de velocidad de avance rápido de TAOM. Por defecto comparte tecla con la pausa del juego base, lo cual es intencional." />
+    <string id="taom_key_extra_fast_forward" text="Avance rápido extra (TAOM)" />
+    <string id="taom_key_extra_fast_forward_desc" text="Aplica el multiplicador de avance rápido más alto de TAOM. Por defecto es E, que también es Rotar cámara a la derecha; reasigna una de las dos para que no se activen juntas." />
+    <string id="taom_key_turbo" text="Tiempo turbo, mantén Ctrl (TAOM)" />
+    <string id="taom_key_turbo_desc" text="Mantén Ctrl junto con esta tecla para el multiplicador de velocidad más alto de TAOM. Al soltar cualquiera de las teclas se restaura la velocidad anterior." />
+  </strings>
+</base>
