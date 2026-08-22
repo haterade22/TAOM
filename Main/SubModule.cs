@@ -949,7 +949,7 @@ public class SubModule : MBSubModuleBase
         // TaomAgentApplyDamageModel now delegate UpdateAgentStats + damage-amp/red +
         // shrug-off logic to ICareerAgentStatService (gamemodels.md rule 4).
         var careerAgentStat = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>();
-        campaignStarter.AddModel(new TaomMapVisibilityModel(careerPassives));
+        campaignStarter.AddModel(new TaomMapVisibilityModel(careerPassives, IoC.ResolveAll<TAOM.Core.Domain.IPartySpottingContributor>()));
         campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
         var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
         var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
@@ -1032,6 +1032,15 @@ public class SubModule : MBSubModuleBase
 
         // SupplyLines (#505): resupply convoys ordered from towns/lords. The behavior owns the
         // SyncData halves; the order book itself is the singleton ISupplyOrderService.
+        // FieldCamp (#506): campaign-map camps. Behavior owns menus, SyncData and the tick fan-out.
+        campaignStarter.AddBehavior(new Features.FieldCamp.Hooks.FieldCampCampaignBehavior(
+            IoC.Resolve<Features.FieldCamp.ICampService>(),
+            IoC.Resolve<Features.FieldCamp.ICampSettingsProvider>(),
+            IoC.Resolve<Features.FieldCamp.ICampVisualService>(),
+            IoC.Resolve<Features.SupplyLines.ISupplyLinesSettingsProvider>(),
+            IoC.Resolve<IGameMenuAdapter>(),
+            IoC.Resolve<IModLogger>()));
+
         campaignStarter.AddBehavior(new Features.SupplyLines.Hooks.SupplyLinesCampaignBehavior(
             IoC.Resolve<Features.SupplyLines.ISupplyOrderService>(),
             IoC.Resolve<Features.SupplyLines.ISupplyLinesSettingsProvider>(),
@@ -1280,6 +1289,10 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch36_FiefManagement");
         SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.Initialize(IoC.Resolve<INameplateFadeService>());
         _harmony.PatchCategory("Patch38_SettlementNameplateFade");
+
+        // Patch74 (#506): camp-type icon over the player nameplate. Same PatchShield-excluded
+        // namespace as Patch38, so the postfix body is written to be unable to throw.
+        _harmony.PatchCategory("Patch74_FieldCampNameplateIcon");
 
         // Patch53_PartyIconScale — transpiler that rewrites the two hardcoded 0.3f campaign-map scale
         // literals in MobilePartyVisual.AddCharacterToPartyIcon (leader figure + its mount) into a call

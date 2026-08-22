@@ -45,6 +45,7 @@ using TAOM.Features.SettlementFood;
 using TAOM.Features.BanditManagement;
 using TAOM.Features.CastleRecruitment;
 using TAOM.Features.EliteEmissary;
+using TAOM.Features.FieldCamp;
 using TAOM.Features.SupplyLines;
 using TAOM.Features.SiegeDismount;
 using TAOM.Features.SiegePropDiagnostics;
@@ -129,7 +130,6 @@ public static class IoC
         BanditManagementIoC.RegisterBanditManagementFeature(container);
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
         EliteEmissaryIoC.RegisterEliteEmissaryFeature(container);
-        SupplyLinesIoC.RegisterSupplyLinesFeature(container);
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
         SiegePropDiagnosticsIoC.RegisterSiegePropDiagnosticsFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
@@ -161,6 +161,12 @@ public static class IoC
         // AFTER Enlistment: FieldCommission registers a NullEnlistmentStateQuery with
         // IfAlreadyRegistered.Keep — the real query must already be in the container.
         Features.FieldCommission.FieldCommissionIoC.RegisterFieldCommissionFeature(container);
+
+        // AFTER Enlistment: FieldCampIoC eagerly resolves ICampService, whose constructor takes
+        // IEnlistmentStateQuery (camping is suppressed while enlisted). SupplyLines first: the
+        // camp service also takes ISupplyOrderService (break-camp cancels in-transit orders).
+        SupplyLinesIoC.RegisterSupplyLinesFeature(container);
+        FieldCampIoC.RegisterFieldCampFeature(container);
 
         _container = container;
 

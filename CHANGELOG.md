@@ -4,6 +4,30 @@
 
 ## 2026-08-22
 
+### feat(fieldCamp): campaign-map camps with authored visuals (#506)
+
+Port of yotthani's FieldCamp module (1.4.5, 2,753 decompiled lines) into
+`Main/Features/FieldCamp/`. Four camp types (field, fortified, ambush, lookout), a timed raise with
+an on-map progress bar, morale and grain foraging, and authored 3D encampment meshes: the four
+shipped tpacs under `Main/_Module/AssetPackages/` are the first AssetPackages content in this repo,
+with the source's complete vanilla-mesh fallback chain retained.
+
+The engine-slot collisions were resolved the way the plan called for: the lookout's sight bonus
+rides a new `IPartySpottingContributor` seam on `TaomMapVisibilityModel` (the source registered its
+own `DefaultMapVisibilityModel` subclass, which would have silently unseated CareerSystem's), and
+the nameplate camp icon is `Patch74` in a PatchShield-excluded namespace, written under the
+never-throw contract with the source's widget-dictionary leak replaced by a `ConditionalWeakTable`.
+
+Source defects fixed rather than carried: per-frame pathfinding per hostile while an ambush was
+armed (now a half-hour game-time accumulator with a straight-line prefilter), fortify silently
+wiping foraging state and restarting the raise, the hardcoded always-visible overlay button (now
+follows the master toggle), and the source's four dead overlay bindings. Terrain sets were
+re-derived against the real 1.4.8 enum with default-deny arms instead of trusting compiled ordinals
+from a drifted enum.
+
+Suite green at 7202 (+152). 66 `{=taom_fc_*}` strings registered; translation run owed with the
+other ports.
+
 ### feat(supplyLines): resupply convoys ordered from the field (#505)
 
 Port of yotthani's SupplyLines module (1.4.5, 3,969 decompiled lines) into

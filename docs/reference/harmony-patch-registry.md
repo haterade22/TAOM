@@ -639,6 +639,18 @@ This is the one place the patch deliberately departs from the service it replace
 
 **Wiring is pinned, because this feature already shipped the failure once.** `HeroRaceWiringTests` asserts the `Initialize` call in `HeroRaceIoC` and the category string in `SubModule.cs`, and that the `[HarmonyPatchCategory]` literal matches it. Both are silent when missing: no `Initialize` and the patch's null guard yields vanilla framing, no category string and Harmony never applies the postfix. `Patch72TableauRacePositionBindingTests` proves the patch *could* bind; only the wiring test proves anything asks it to.
 
+## Patch74_FieldCampNameplateIcon
+
+**Target:** `PartyPlayerNameplateWidget.UpdateNameplatesVisibility(float)` (protected override, Postfix)
+
+**Feature:** FieldCamp, `Main/Features/FieldCamp/Hooks/PartyNameplateCampIconPatch.cs`. **Status:** ACTIVE.
+
+Injects a camp-type icon (lookout monocular, ambush, camp) above the player's party nameplate. The widget is added programmatically from the postfix rather than through TAOM's nameplate prefab clone, matching the source module's approach and keeping the clone untouched.
+
+**This namespace is PatchShield-EXCLUDED** (`TaleWorlds.MountAndBlade.GauntletUI` prefix, the Patch38 lesson), so the postfix gets no shield finalizer and must never throw: the whole body sits in one try/catch with per-step null guards, and the no-camp fast path allocates nothing. Runs per nameplate per frame; the applied-state cache is a `ConditionalWeakTable` (the source module's plain dictionary leaked dead widgets forever), reset via `Reset()` from the map view's finalize and the behavior's game-over handler.
+
+**Service handle** captured once via `Initialize(ICampService)` in `FieldCampIoC` (the Patch38/Patch72 shape). Sprite names are vanilla atlas entries; a missing entry degrades to an invisible icon by design.
+
 ## Patch_MissionTime_SetMovementOrder
 
 **Target:** `Formation.SetMovementOrder(MovementOrder)` (Postfix ×2)

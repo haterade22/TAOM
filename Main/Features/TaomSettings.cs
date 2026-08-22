@@ -1105,6 +1105,129 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Draw the arrow trail from the source to your party while a convoy is on the road. Presentation only.")]
     public bool SupplyShowRouteVisual { get; set; } = true;
 
+    // --- Field Camps ---
+    //
+    // Campaign-map camps (#506, port of the yotthani FieldCamp module). Every knob here reads
+    // into campaign math (morale, food, ambush odds, placement), so all are coop
+    // simulation-relevant. Defaults are the source author's tuning.
+
+    [SettingPropertyGroup("Field Camps", GroupOrder = 46)]
+    [SettingPropertyBool("Enable Field Camps", Order = 0, RequireRestart = false,
+        HintText = "Pitch camps on the campaign map: field and fortified camps with morale and foraging, terrain-gated ambushes and lookouts. When off, the Make Camp button and camp menus disappear; an existing camp stays until you break it.")]
+    public bool EnableFieldCamps { get; set; } = true;
+
+    [SettingPropertyGroup("Field Camps")]
+    [SettingPropertyFloatingInteger("Camp Setup Hours", 0.5f, 24f, "#0.0", Order = 1, RequireRestart = false,
+        HintText = "Hours to raise a field camp. Ambushes and lookouts take a quarter of this; a fortified camp double. Default 4.")]
+    public float CampSetupHours { get; set; } = 4f;
+
+    [SettingPropertyGroup("Field Camps")]
+    [SettingPropertyFloatingInteger("Camp Morale Per Hour", 0f, 5f, "#0.00", Order = 2, RequireRestart = false,
+        HintText = "Party morale gained per camped hour once the camp is raised; fortified camps double it. Default 1.")]
+    public float CampMoralePerHour { get; set; } = 1f;
+
+    [SettingPropertyGroup("Field Camps")]
+    [SettingPropertyFloatingInteger("Forage Rate", 0f, 1f, "#0.00", Order = 3, RequireRestart = false,
+        HintText = "Foraging throughput per troop. Grain per hour also scales with terrain, the party's Scouting skill and the square root of troop count. Default 0.10.")]
+    public float CampForagePerTroopFactor { get; set; } = 0.1f;
+
+    [SettingPropertyGroup("Field Camps")]
+    [SettingPropertyFloatingInteger("Max Ambush Range", 1f, 30f, "#0.0", Order = 4, RequireRestart = false,
+        HintText = "Spotting distance inside which an armed ambush can spring on a passing hostile party. Default 10.")]
+    public float CampMaxAmbushRange { get; set; } = 10f;
+
+    [SettingPropertyGroup("Field Camps")]
+    [SettingPropertyFloatingInteger("Base Ambush Chance", 0f, 1f, "#0.00", Order = 5, RequireRestart = false,
+        HintText = "Base chance an eligible passer-by springs the ambush; proximity and Scouting raise it. Default 0.50.")]
+    public float CampBaseAmbushChance { get; set; } = 0.5f;
+
+    [SettingPropertyGroup("Field Camps")]
+    [SettingPropertyFloatingInteger("Min Town Distance", 0f, 50f, "#0.0", Order = 6, RequireRestart = false,
+        HintText = "Keep-out radius from towns and castles for pitching a field or fortified camp. 0 disables the check; ambushes and lookouts are exempt. Default 10.")]
+    public float CampMinTownDistance { get; set; } = 10f;
+
+    [SettingPropertyGroup("Field Camps")]
+    [SettingPropertyInteger("Fortified Upgrade Cost", 0, 10000, "0", Order = 7, RequireRestart = false,
+        HintText = "Gold to fortify a raised field camp. Default 500.")]
+    public int CampFortifiedUpgradeCost { get; set; } = 500;
+
+    // --- Refuge ---
+    //
+    // Movable player bases raised from field camps (#507, port of the yotthani Refuge module).
+    // Costs, distances, defence bonuses, militia and raids all read into campaign or battle math:
+    // every knob is coop simulation-relevant. Defaults are the source author's tuning; raids ship
+    // OFF as in the source (experimental).
+
+    [SettingPropertyGroup("Refuge", GroupOrder = 47)]
+    [SettingPropertyBool("Enable Refuges", Order = 0, RequireRestart = false,
+        HintText = "Raise a field or fortified camp into a persistent, garrisonable base. When off, founding and refuge menus disappear; standing refuges persist and can still be entered and dismantled, so a toggle never strands a garrison.")]
+    public bool EnableRefuges { get; set; } = true;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyInteger("Found Cost", 0, 50000, "0", Order = 1, RequireRestart = false,
+        HintText = "Gold to establish a refuge. Default 2000.")]
+    public int RefugeFoundCost { get; set; } = 2000;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyInteger("Stronghold Upgrade Cost", 0, 100000, "0", Order = 2, RequireRestart = false,
+        HintText = "Gold to upgrade a refuge into a stronghold. Default 5000.")]
+    public int RefugeStrongholdUpgradeCost { get; set; } = 5000;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyFloatingInteger("Build Hours", 1f, 48f, "#0.0", Order = 3, RequireRestart = false,
+        HintText = "Hours to raise a refuge after founding; the stronghold rebuild takes the same. Default 6.")]
+    public float RefugeBuildHours { get; set; } = 6f;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyInteger("Max Refuges (hard cap)", 1, 10, "0", Order = 4, RequireRestart = false,
+        HintText = "Ceiling on simultaneous refuges. The live limit is min(1 + clan tier / 2, this cap). Default 3.")]
+    public int RefugeMaxCap { get; set; } = 3;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyFloatingInteger("Manage Range", 1f, 15f, "#0.0", Order = 5, RequireRestart = false,
+        HintText = "How close your party must be to manage a refuge's garrison and stores. Default 4.")]
+    public float RefugeManageRange { get; set; } = 4f;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyFloatingInteger("Min Town Distance (found)", 0f, 60f, "#0.0", Order = 6, RequireRestart = false,
+        HintText = "Founding keep-out radius from towns and castles. Default 16.")]
+    public float RefugeMinTownDistance { get; set; } = 16f;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyFloatingInteger("Min Town Distance (stronghold)", 0f, 80f, "#0.0", Order = 7, RequireRestart = false,
+        HintText = "Stronghold-upgrade keep-out radius from towns and castles. Default 26.")]
+    public float RefugeStrongholdMinTownDistance { get; set; } = 26f;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyFloatingInteger("Refuge Defense Bonus", 0f, 0.9f, "#0.00", Order = 8, RequireRestart = false,
+        HintText = "Damage reduction for troops defending a refuge, in battle and in auto-resolve. Default 0.20.")]
+    public float RefugeDefenseBonus { get; set; } = 0.2f;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyFloatingInteger("Stronghold Defense Bonus", 0f, 0.9f, "#0.00", Order = 9, RequireRestart = false,
+        HintText = "Damage reduction for troops defending a stronghold. Default 0.35.")]
+    public float RefugeStrongholdDefenseBonus { get; set; } = 0.35f;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyInteger("Militia Base", 0, 50, "0", Order = 10, RequireRestart = false,
+        HintText = "Base temporary militia rallying to a refuge under attack; age of the refuge and garrison size add more. Default 6.")]
+    public int RefugeMilitiaBase { get; set; } = 6;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyInteger("Militia Max", 0, 100, "0", Order = 11, RequireRestart = false,
+        HintText = "Ceiling on the temporary defence militia. Default 40.")]
+    public int RefugeMilitiaMax { get; set; } = 40;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyBool("Enable Enemy Raids", Order = 12, RequireRestart = false,
+        HintText = "Experimental: hostile parties can attack your refuges (auto-resolved when you are away). Off by default.")]
+    public bool RefugeEnableRaids { get; set; } = false;
+
+    [SettingPropertyGroup("Refuge")]
+    [SettingPropertyFloatingInteger("Raid Range", 1f, 20f, "#0.0", Order = 13, RequireRestart = false,
+        HintText = "Search radius around a refuge for raid candidates when raids are enabled. Default 6.")]
+    public float RefugeRaidRange { get; set; } = 6f;
+
     // --- Map Tools / Distance Cache Rebuild ---
     //
     // Rebuilds Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin

@@ -2490,5 +2490,71 @@
     <string id="taom_sl_troop_row" text="{NAME} - {COUNT} available, {PRICE} denars" />
     <string id="taom_sl_troops" text="Recruits" />
     <string id="taom_sl_troops_header" text="Volunteers (recruits)" />
+    <string id="taom_fc_accept" text="晋升" />
+    <string id="taom_fc_acknowledge" text="明白了" />
+    <string id="taom_fc_ambush_enemy" text="the enemy" />
+    <string id="taom_fc_ambush_spotted" text="" />
+    <string id="taom_fc_ambush_sprung" text="Your ambush springs on" />
+    <string id="taom_fc_ambush_terrain" text="Needs concealing terrain - forest, hills, swamp, canyon, dunes, a bridge or a ford." />
+    <string id="taom_fc_btn_make" text="Make Camp" />
+    <string id="taom_fc_btn_options" text="Camp Options" />
+    <string id="taom_fc_building" text="The camp is still being set up." />
+    <string id="taom_fc_confirm_name" text="确认" />
+    <string id="taom_fc_decline" text="暂且不必" />
+    <string id="taom_fc_forage_field_only" text="Only a field or fortified camp can forage." />
+    <string id="taom_fc_forage_start" text="Forage for supplies" />
+    <string id="taom_fc_forage_stop" text="Stop foraging" />
+    <string id="taom_fc_foraged" text="Foraged +" />
+    <string id="taom_fc_fortify_cost" text="Cost:" />
+    <string id="taom_fc_fortify_field_only" text="Only a field camp can be fortified." />
+    <string id="taom_fc_keep_name" text="保留默认名字" />
+    <string id="taom_fc_lookout_terrain" text="Needs high ground or open vantage - mountains, hills, forest, steppe or plains." />
+    <string id="taom_fc_menu_active" text="Active:" />
+    <string id="taom_fc_menu_active_forage" text="Active:" />
+    <string id="taom_fc_menu_base" text="Your party makes camp." />
+    <string id="taom_fc_menu_raising" text="" />
+    <string id="taom_fc_move_no" text="Stay camped" />
+    <string id="taom_fc_move_text" text="Moving will break your camp. Break camp and move on?" />
+    <string id="taom_fc_move_title" text="Break camp?" />
+    <string id="taom_fc_move_yes" text="Break camp and move" />
+    <string id="taom_fc_need_camp" text="Establish a camp first." />
+    <string id="taom_fc_need_field" text="Establish a field camp first." />
+    <string id="taom_fc_no_gold" text="Not enough gold to fortify the camp." />
+    <string id="taom_fc_no_room_body" text="目前没有位置再容纳一名同伴。{TROOP_NAME}的晋升将在日后再次提出。" />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME}在战斗中表现出众。是否晋升为同伴？" />
+    <string id="taom_fc_offer_title" text="战场晋升" />
+    <string id="taom_fc_opt_ambush" text="Set up an ambush" />
+    <string id="taom_fc_opt_break" text="Break camp" />
+    <string id="taom_fc_opt_continue" text="Continue" />
+    <string id="taom_fc_opt_field" text="Establish a field camp" />
+    <string id="taom_fc_opt_fortify" text="Upgrade to fortified camp" />
+    <string id="taom_fc_opt_leave" text="Leave" />
+    <string id="taom_fc_opt_lookout" text="Create a lookout" />
+    <string id="taom_fc_opt_manage" text="Manage camp" />
+    <string id="taom_fc_opt_supplies" text="Order supplies" />
+    <string id="taom_fc_raising_ambush" text="Setting up the ambush." />
+    <string id="taom_fc_raising_field" text="Raising the field camp." />
+    <string id="taom_fc_raising_fortified" text="Raising the fortified camp." />
+    <string id="taom_fc_raising_generic" text="Raising the camp." />
+    <string id="taom_fc_raising_lookout" text="Raising the lookout." />
+    <string id="taom_fc_reason_blocked" text="You cannot make camp here." />
+    <string id="taom_fc_reason_disabled" text="Field camps are disabled in the mod options." />
+    <string id="taom_fc_reason_enlisted" text="You cannot make camp while serving in another lord's army." />
+    <string id="taom_fc_reason_moving" text="Halt your party before making camp." />
+    <string id="taom_fc_reason_settlement" text="You cannot pitch camp inside a settlement." />
+    <string id="taom_fc_reason_terrain" text="The ground here does not suit this camp." />
+    <string id="taom_fc_rename_body" text="为{TROOP_NAME}取一个名字，或保留其上阵时所用的名字。" />
+    <string id="taom_fc_rename_title" text="为新同伴命名" />
+    <string id="taom_fc_state_ambush" text="Ambush ready" />
+    <string id="taom_fc_state_field" text="Field camp" />
+    <string id="taom_fc_state_fortified" text="Fortified camp" />
+    <string id="taom_fc_state_generic" text="Camp" />
+    <string id="taom_fc_state_lookout" text="Lookout posted" />
+    <string id="taom_fc_status_choose" text="Choose how to make camp here." />
+    <string id="taom_fc_status_foraging" text="" />
+    <string id="taom_fc_supplies_needs" text="Supply lines are disabled." />
+    <string id="taom_fc_supplies_stealth" text="Ambush and lookout camps stay hidden - no supply convoys." />
+    <string id="taom_fc_too_close" text="Too close to a town or castle - pitch a field camp farther from settlements." />
+    <string id="taom_rf_party_name" text="Refuge" />
   </strings>
 </base>

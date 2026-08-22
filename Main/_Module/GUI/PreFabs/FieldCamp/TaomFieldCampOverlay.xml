@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <!-- Root: ALWAYS present (the Make Camp button must show even with no camp).
+         NOTE: Gauntlet has NO IsHitTestVisible (that's WPF; unknown attrs are ignored).
+         Event-transparency is DoNotAcceptEvents="true" - the EventManager still traverses
+         CHILDREN of such widgets, so the button stays reachable while everything else
+         passes clicks through to the map. -->
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+            DoNotAcceptEvents="true">
+      <Children>
+
+        <!-- The camp-type indicator icon over the army is NOT in this overlay. It rides the
+             engine-positioned party nameplate instead (Patch74_FieldCampNameplateIcon /
+             PartyNameplateCampIconPatch) - that avoids the world->screen projection + UI-scale
+             problems an absolutely-placed overlay widget had. This overlay now only carries the
+             bottom status panel + Make Camp button. -->
+
+        <!-- ============ Fixed status panel (bottom-center) ============ -->
+        <!-- Gated on IsCampActive (the root no longer is). Non-hit-testable so it never
+             blocks the map. -->
+        <!-- FIXED width so the per-percent build-progress text (whose digit count changes) can't
+             resize the panel each frame and jolt the centred bar (that was the "build progress
+             flicker"; foraging text only changes hourly so it never showed). -->
+        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                     SuggestedWidth="360"
+                     HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="150"
+                     IsVisible="@IsCampActive" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true"
+                     Brush="Frame1.Broken">
+          <Children>
+            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                       MarginTop="14" MarginBottom="14" MarginLeft="22" MarginRight="22"
+                       StackLayout.LayoutMethod="VerticalBottomToTop">
+              <Children>
+
+                <!-- Camp type / status line. FIXED width AND height (single line) + centred text,
+                     so neither the changing percent nor an occasional wrap can resize the panel and
+                     jolt the bar. -->
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26"
+                            HorizontalAlignment="Center" MarginBottom="8"
+                            Brush="Popup.Text.Medium" Brush.FontSize="18"
+                            Brush.FontColor="#FFF0C8FF"
+                            Brush.TextHorizontalAlignment="Center"
+                            Text="@CampStatusText" />
+
+                <!-- Progress bar (raising + foraging). Manual bar: a fixed-width track with a
+                     fill rectangle whose SuggestedWidth is bound to ProgressFillWidth (0..200). -->
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                        SuggestedWidth="200" SuggestedHeight="14"
+                        HorizontalAlignment="Center"
+                        IsVisible="@ProgressVisible"
+                        Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.55">
+                  <Children>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                            SuggestedWidth="@ProgressFillWidth"
+                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                            Sprite="BlankWhiteSquare_9" Color="#5BB84BFF" AlphaFactor="0.95" />
+                  </Children>
+                </Widget>
+
+              </Children>
+            </ListPanel>
+          </Children>
+        </BrushWidget>
+
+        <!-- ============ "Make Camp" button (bottom-center, near time controls) ============ -->
+        <!-- The ONLY hit-testable widget in this overlay: it opens taom_field_camp_menu on click.
+             Visible on the map while the MCM master toggle is on (ShowCampButton); enabled only
+             when stationary and clear of modals (CanMakeCamp). MarginBottom=90 lifts it ABOVE the
+             vanilla bottom bar (time controls / menu icons / stats), which covers roughly the
+             bottom ~70px. The status panel sits higher at MarginBottom=150 so the two never
+             overlap. -->
+        <!-- DoNotPassEventsToChildren is REQUIRED on Gauntlet buttons with content children:
+             the EventManager collects CHILDREN BEFORE the parent, so without it the
+             TextWidget becomes the event target and swallows hover + click (button never
+             fires). Every working button in this repo / vanilla sets it. -->
+        <ButtonWidget DoNotPassEventsToChildren="true"
+                      WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                      SuggestedWidth="150" SuggestedHeight="40"
+                      HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="90"
+                      IsVisible="@ShowCampButton" IsEnabled="@CanMakeCamp"
+                      Brush="ButtonBrush2" UpdateChildrenStates="true"
+                      Command.Click="ExecuteOpenCampMenu">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                        Brush="Popup.Text.Medium" Brush.FontSize="18"
+                        Brush.FontColor="#FFF0C8FF"
+                        Brush.TextHorizontalAlignment="Center"
+                        Brush.TextVerticalAlignment="Center"
+                        Text="@CampButtonText" />
+          </Children>
+        </ButtonWidget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>
