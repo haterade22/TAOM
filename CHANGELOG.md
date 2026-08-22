@@ -53,6 +53,17 @@ raises both adapter flags in the same frame. Three tests pin that: plain Space f
 of turboing, turbo rebound to its own key fires on its own, and Ctrl plus the fast-forward key stops
 turboing once turbo has moved elsewhere.
 
+The key names ship in a NEW `taom_keybind_strings.xml` rather than in `taom_module_strings.xml`, and
+that is the fix for a defect the review caught rather than a tidiness choice. `taom_module_strings`
+is registered with `<IncludedGameTypes>` limited to Campaign and CampaignStoryMode, but
+Options > Keybindings opens from the main menu, before any campaign exists. A key name placed in the
+gated file renders there as the raw lookup id `str_key_name.TaomTimeControlHotKeyCategory_500`, on
+the one screen the whole feature exists to populate. Vanilla ships its own key names in the ungated
+`Native/ModuleData/global_strings.xml` and NavalDLC's `module_strings` node is ungated as well, so
+the new file's node carries no `IncludedGameTypes` either, pinned by
+`LanguageDataXmlTests.KeybindStringsNode_IsNotGatedByGameType`. That adds a 12th per-language file,
+so the language-file count assertion moved from 11 to 12.
+
 Also dropped the hardcoded "(E)" from the MapBar tooltip in all 13 language files, since the key is
 no longer fixed, and added 6 keybinding strings across the 12 translations.
 
@@ -123,7 +134,7 @@ G = 93.95 to two decimals.
 The premise set the tuning, so the tuning was wrong too. A falloff sized as if vanilla were flat
 multiplied on top of an existing ramp and produced a 44x combined spread from zero to three gaps
 where vanilla alone gives 2.2x, which suppressed genuine fronts: Goblin-town to Lothlórien, Moria to
-Dale, Rivendell to Dol Guldur and Erebor to Dol Guldur all measure 2.2 to 2.6 gaps. **Superseded the same day: the falloff described below was deleted outright, see the entry
+Dale, Rivendell to Dol Guldur and Erebor to Dol Guldur all measure 2.2 to 2.6 gaps. **Superseded the same day: the falloff described below was deleted outright, see the entry
 above.** Re-derived against the real curve, the falloff then only had to stop TAOM's own multipliers (priority 3.0 x
 primary theater 1.25 = 3.75) from outrunning vanilla's 2.2x, so the inner radius moves 1.5 to 3.0
 gaps (clearing the widest measured front at 2.95), the outer 3.0 to 6.0, and the floor 0.05 to 0.35.
