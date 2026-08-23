@@ -1477,3 +1477,15 @@ the finished container. The honest gate is DryIoc Validate over the cross-featur
 (CampsContainerWiringTests, the EnlistmentContainerWiringTests shape), which reproduced
 Error.RecursiveDependencyDetected before the lazy-injection fix and pins it after. When a defect
 class is "the graph is broken", the gate must build the graph.
+
+### A module folder cannot bindingRedirect; vendored framework shims must match their consumers' exact binds (deps, 2026-08-23)
+
+.NET Framework binds strong-named assemblies to the EXACT version their consumer's metadata names,
+and a Bannerlord module folder has no app.config to redirect. TAOM.Dependencies vendored
+System.Memory 4.0.1.1 (binds Unsafe 4.0.4.1) while the csproj pinned the Unsafe PACKAGE at 6.0.0
+(assembly 6.0.0.0): ButterLib died in System.Memory's cctor on the first Trace.WriteLine, every
+tick, and the visible symptom was two layers away (MCM's Mod Options hanging). Two mechanics to
+remember: (1) nuget package versions are NOT assembly versions (package 4.5.3 = assembly 4.0.4.1;
+package 6.0.0 = 6.0.0.0) - derive the required pin from the consumer's reference metadata, never
+from "latest"; (2) build outputs overwrite vendored module files at deploy, so a wrong package pin
+silently clobbers a correct vendored DLL forever - DependenciesPairingTests now pins both sides.

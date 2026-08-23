@@ -4,6 +4,28 @@
 
 ## 2026-08-23
 
+### fix(deps): ButterLib startup death from a version-mismatched framework shim
+
+Opening MCM's Mod Options hung the game, and its screen teardown threw an NRE under a debugger.
+Root cause (crash bundle 1cc7ef56): the vendored System.Memory 4.0.1.1 in the TAOM.Dependencies
+module binds to System.Runtime.CompilerServices.Unsafe 4.0.4.1 EXACTLY (.NET Framework strict
+versioning; a module folder cannot carry a binding redirect), but the Dependencies csproj pinned
+the Unsafe package at 6.0.0 since the DR3 migration (2026-05-22), and the build output overwrote
+the module's CORRECT vendored 4.0.4.1 file on every deploy. ButterLib's first Trace.WriteLine
+then died in System.Memory's cctor (FileNotFoundException for 4.0.4.1) as a
+TypeInitializationException on every application tick, taking the whole MCM stack down with it.
+Nothing in the module consumes Unsafe at runtime (0Harmony carries no reference; MonoMod ships
+its own ILHelpers), so the 6.0.0 pin served nothing.
+
+Fix: the pin moves to 4.5.3 (the package whose net461 assembly IS 4.0.4.1, upstream ButterLib's
+exact pair), the stale Gaming.Desktop vendored copy is replaced, and a new
+DependenciesPairingTests pins both the vendored set and every build output so the csproj can
+never silently clobber the pair again (it caught the stale Release output on its first run).
+Suite 7474 passed / 2 skipped. Patch62 was exonerated: its finalizer rethrows non-AV exceptions
+by design and only relayed the crash.
+
+## 2026-08-23
+
 ### fix(camps): round C, the fix-batch regression hunt (#505, #506, #507)
 
 A targeted third review over only the batch-2 diff, because both prior fix batches had

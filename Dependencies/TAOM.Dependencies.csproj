@@ -37,7 +37,14 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+		<!-- 4.5.3 (assembly 4.0.4.1), NOT 6.0.0: the vendored System.Memory 4.0.1.1 binds to
+		     Unsafe 4.0.4.1 EXACTLY (.NET Framework strict versioning, no redirect available in a
+		     module folder), and ButterLib's first Trace.WriteLine dies in System.Memory's cctor
+		     when only 6.0.0.0 is present (TypeInitializationException every tick; Mod Options
+		     hang + teardown NRE were downstream). Nothing else here consumes Unsafe at runtime:
+		     0Harmony carries no reference to it (MonoMod ships its own ILHelpers). This is the
+		     exact pair upstream ButterLib distributes. Pinned by DependenciesPairingTests. -->
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
 		<PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" />
 		<PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" />
 
