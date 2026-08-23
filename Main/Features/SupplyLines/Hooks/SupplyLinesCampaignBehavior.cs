@@ -53,6 +53,10 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
         CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, OnHourlyTick);
         CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
         CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
+        // A caravan destroyed by an AI battle must record its loss IMMEDIATELY, not at the next
+        // hourly verdict: an autosave in that window serializes a stale InTransit row, and the
+        // load-side RespawnMissing would resurrect the whole convoy with its cargo (Codex #7).
+        CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
     }
 
     public override void SyncData(IDataStore dataStore)
@@ -146,6 +150,20 @@ public sealed class SupplyLinesCampaignBehavior : CampaignBehaviorBase
                 _frameTickFaulted = true; // per-frame handler: log the first failure, not 60/second
                 _logger.LogError($"[SupplyLines] frame tick threw (logged once): {ex}");
             }
+        }
+    }
+
+    private void OnMobilePartyDestroyed(
+        TaleWorlds.CampaignSystem.Party.MobileParty party, TaleWorlds.CampaignSystem.Party.PartyBase destroyer)
+    {
+        try
+        {
+            if (party?.PartyComponent is Components.SupplyCaravanComponent component)
+                _orders.OnCaravanDestroyed(component.OrderId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[SupplyLines] MobilePartyDestroyed handler threw: {ex}");
         }
     }
 

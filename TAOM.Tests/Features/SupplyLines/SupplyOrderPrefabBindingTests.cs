@@ -42,6 +42,12 @@ public class SupplyOrderPrefabBindingTests
     // Vanilla sprites and brushes the prefab deliberately uses. Anything referenced beyond this
     // set must be registered in TAOMSpriteData.xml / Main/_Module/GUI/Brushes or it renders
     // blank / default-styled with no error.
+    //
+    // EVERY entry here must be grep-verified against the installed game's Modules/*/GUI/Brushes
+    // before it is added: this allowlist previously vouched for Popup.Text.Medium/.Small, which
+    // exist in NO brush file anywhere (review round B critic), so the gate green-lit 22 widgets
+    // silently rendering with the engine default brush. The current text brushes are defined in
+    // Native/GUI/Brushes/Popup.xml (verified on the installed 1.4.8, 2026-08-23).
     private static readonly HashSet<string> KnownVanillaSprites = new HashSet<string>
     {
         "BlankWhiteSquare_9",
@@ -53,8 +59,8 @@ public class SupplyOrderPrefabBindingTests
         "Frame1.Broken",
         "InventoryHeaderFontBrush",
         "ButtonBrush2",
-        "Popup.Text.Medium",
-        "Popup.Text.Small",
+        "Popup.Description.Text",
+        "Popup.Button.Text",
         "TownManagement.Item.Title.Text",
     };
 

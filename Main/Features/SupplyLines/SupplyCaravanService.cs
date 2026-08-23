@@ -51,6 +51,22 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
 
     private const string CaravanIdPrefix = "taom_supply_caravan_";
 
+    // Vanilla food model: 20 men on the map eat one food per day
+    // (DefaultMobilePartyFoodConsumptionModel.NumberOfMenOnMapToEatOneFood, verified on the
+    // installed 1.4.8). The caravan is NOT IsCaravan (custom component), so DoesPartyConsumeFood
+    // returns true for it and an escorted goods-less order would starve silently for the whole
+    // transit (review round B); Spawn stocks provisions to cover the worst-case trip.
+    private const int MenPerDailyFood = 20;
+
+    // Longest possible transit is the force-deliver failsafe at 1.5x planned hours
+    // (SupplyOrderEngine.ForceDeliverFraction; keep in sync).
+    private const float WorstCaseTransitFactor = 1.5f;
+
+    // An engine DEFAULT item (DefaultItems.RegisterAll creates "grain" in code with
+    // isFood: true, verified in the 1.4.8 dump), so it exists in every campaign regardless of
+    // module data; the null-guard in StockProvisions is belt only.
+    private const string ProvisionItemId = "grain";
+
     // The path from source to player is recomputed only when the player has drifted this far from
     // the endpoint it was computed against (source module value).
     private const float RepathWhenPlayerMoved = 2.5f;
@@ -102,7 +118,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
 
             if (order.IsFromLord)
             {
-                var lord = MBObjectManager.Instance.GetObject<Hero>(order.SourceHeroId);
+                var lord = FindHero(order.SourceHeroId);
                 var lordParty = lord?.PartyBelongedTo;
                 if (order.HasDispatchOrigin)
                 {
@@ -157,6 +173,13 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 AddMercenaryGuards(party);
             else if (order.EscortEnum == SupplyEscortOption.Companion)
                 AttachCompanionEscort(party, order);
+
+            // With the roster final: record which aboard troops are NOT cargo (template guards,
+            // mercenary escort) so delivery can tell them from purchased recruits sharing a
+            // character id, and stock food for the worst-case transit so the escort does not
+            // starve silently (the party is not IsCaravan, so vanilla feeds it nothing).
+            RecordNonCargoManifest(party, order);
+            StockProvisions(party, order);
 
             party.ActualClan = Clan.PlayerClan;
             party.Aggressiveness = 0f;
@@ -244,7 +267,10 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             }
 
             goods = liveGoods;
-            troops = liveTroops;
+            // Guards and template troops are not cargo even when they share a character id with
+            // a purchased recruit: subtract the spawn-time manifest so a guard survivor is never
+            // delivered as a recruit (Codex round 2 #6). Casualties bill against cargo first.
+            troops = SubtractNonCargo(liveTroops, order.NonCargoTroops);
             return true;
         }
         catch (Exception ex)
@@ -322,7 +348,15 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 previous.x + (target.x - previous.x) * PositionSmoothingFactor,
                 previous.y + (target.y - previous.y) * PositionSmoothingFactor);
 
-            if (!tracker.HasAppliedPos || tracker.SmoothPos.Distance(tracker.LastAppliedPos) >= MinPositionDelta)
+            // Captured BEFORE the position write (which advances LastAppliedPos): one delta
+            // gate shared by the position AND bearing setters. A frame whose smoothed position
+            // barely moved cannot have meaningfully changed direction either, so the bearing
+            // write is skipped with the position write instead of running per caravan per frame
+            // (review round B).
+            bool moved = !tracker.HasAppliedPos
+                || tracker.SmoothPos.Distance(tracker.LastAppliedPos) >= MinPositionDelta;
+
+            if (moved)
             {
                 try
                 {
@@ -340,7 +374,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 }
             }
 
-            if (fraction < BearingSuppressedPastFraction)
+            if (moved && fraction < BearingSuppressedPastFraction)
                 ApplyBearing(party, tracker, previous, tracker.Origin);
         }
     }
@@ -366,6 +400,17 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 _logger.LogError($"[SupplyLines] destroy failed for caravan of order {order.OrderId}: {ex.Message}");
             }
         }
+        _caravans.Remove(order.OrderId);
+    }
+
+    public void ForgetDestroyed(SupplyOrder order)
+    {
+        if (order == null)
+            return;
+        // The party is being destroyed BY THE ENGINE (MobilePartyDestroyed listener): calling
+        // DestroyPartyAction again would double-destroy, and moving the companion mid-destroy
+        // would fight the engine's own hero resolution (capture/release). Only the tracker is
+        // dropped; the escort's fate is whatever the destroying battle decided.
         _caravans.Remove(order.OrderId);
     }
 
@@ -400,9 +445,20 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 && partiesById.TryGetValue(order.CaravanPartyId, out var survivor)
                 && survivor.IsActive)
             {
-                _caravans[order.OrderId] = new CaravanTracker { Order = order, Party = survivor };
-                PinAi(survivor); // AI pin does not survive a save round-trip
-                continue;
+                // The save row must PROVE the party it names is this order's caravan before the
+                // party is pinned, teleported and eventually destroyed on delivery: a damaged
+                // or hostile row pointing at main_party, a refuge, or another order's caravan
+                // would otherwise hand that party to the movement pass and to
+                // DestroyPartyAction (Codex round 2 #3).
+                if (survivor.PartyComponent is SupplyCaravanComponent component
+                    && component.OrderId == order.OrderId)
+                {
+                    _caravans[order.OrderId] = new CaravanTracker { Order = order, Party = survivor };
+                    PinAi(survivor); // AI pin does not survive a save round-trip
+                    continue;
+                }
+                _logger.LogWarning(
+                    $"[SupplyLines] order {order.OrderId} names party '{order.CaravanPartyId}', which is not its supply caravan; a fresh caravan will be spawned instead");
             }
 
             if (order.IsFromLord && !order.HasDispatchOrigin)
@@ -466,11 +522,101 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             party.MemberRoster.AddToCounts(guardTroop, count);
     }
 
+    /// <summary>
+    /// Records the non-cargo troop counts on the order: everything aboard beyond the purchased
+    /// recruits (template guards, mercenary escort), per character id. Recomputed on every
+    /// spawn, respawns included, because the roster is rebuilt each time.
+    /// </summary>
+    private static void RecordNonCargoManifest(MobileParty party, SupplyOrder order)
+    {
+        var aboard = new Dictionary<string, int>();
+        var roster = party?.MemberRoster;
+        if (roster != null)
+        {
+            for (int i = 0; i < roster.Count; i++)
+            {
+                var troop = roster.GetCharacterAtIndex(i);
+                if (troop?.StringId == null || troop.IsHero)
+                    continue;
+                int count = roster.GetElementNumber(i);
+                if (count <= 0)
+                    continue;
+                aboard.TryGetValue(troop.StringId, out int existing);
+                aboard[troop.StringId] = existing + count;
+            }
+        }
+
+        var manifest = new Dictionary<string, int>();
+        foreach (var pair in aboard)
+        {
+            int ordered = 0;
+            order.Recruits?.TryGetValue(pair.Key, out ordered);
+            int nonCargo = pair.Value - ordered;
+            if (nonCargo > 0)
+                manifest[pair.Key] = nonCargo;
+        }
+        order.NonCargoTroops = manifest;
+    }
+
+    /// <summary>
+    /// Removes the non-cargo counts from a live troop snapshot in place. A null manifest (an
+    /// order saved before the field existed) leaves the snapshot untouched, which is the legacy
+    /// guards-count-as-cargo behaviour for old saves only.
+    /// </summary>
+    internal static Dictionary<string, int> SubtractNonCargo(
+        Dictionary<string, int> live, Dictionary<string, int> nonCargo)
+    {
+        if (live == null || nonCargo == null || nonCargo.Count == 0)
+            return live;
+        foreach (var pair in nonCargo)
+        {
+            if (!live.TryGetValue(pair.Key, out int aboard))
+                continue;
+            int remaining = aboard - pair.Value;
+            if (remaining > 0)
+                live[pair.Key] = remaining;
+            else
+                live.Remove(pair.Key);
+        }
+        return live;
+    }
+
+    private void StockProvisions(MobileParty party, SupplyOrder order)
+    {
+        int provisions = ComputeProvisionCount(party?.MemberRoster?.TotalManCount ?? 0, order.PlannedHours);
+        if (provisions <= 0)
+            return;
+        var food = MBObjectManager.Instance.GetObject<ItemObject>(ProvisionItemId);
+        if (food == null)
+        {
+            _logger.LogWarning(
+                $"[SupplyLines] Spawn: provision item '{ProvisionItemId}' unknown; the caravan travels unprovisioned and its escort may starve");
+            return;
+        }
+        party.ItemRoster.AddToCounts(food, provisions);
+    }
+
+    /// <summary>
+    /// Food to load for the whole worst-case transit (force-deliver fires at 1.5x planned):
+    /// vanilla feeds one food per 20 men per day, plus one spare for the fractional day. Pure
+    /// and testable; non-finite or negative planned hours count as zero rather than poisoning
+    /// the ceiling maths.
+    /// </summary>
+    internal static int ComputeProvisionCount(int memberCount, float plannedHours)
+    {
+        if (memberCount <= 0)
+            return 0;
+        if (!FiniteFloatValidator.IsFinite(plannedHours) || plannedHours < 0f)
+            plannedHours = 0f;
+        float worstCaseDays = plannedHours * WorstCaseTransitFactor / 24f;
+        return (int)Math.Ceiling(worstCaseDays * memberCount / MenPerDailyFood) + 1;
+    }
+
     private void AttachCompanionEscort(MobileParty party, SupplyOrder order)
     {
         if (string.IsNullOrEmpty(order.EscortHeroId))
             return;
-        var hero = MBObjectManager.Instance.GetObject<Hero>(order.EscortHeroId);
+        var hero = FindHero(order.EscortHeroId);
         if (hero == null || !hero.IsAlive)
         {
             _logger.LogWarning($"[SupplyLines] Spawn: escort hero '{order.EscortHeroId}' unavailable, caravan goes unescorted");
@@ -504,6 +650,13 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         party?.Ai?.SetDoNotMakeNewDecisions(true);
     }
 
+    // Heroes register with CampaignObjectManager only (Hero.cs:1467-1480, verified 1.4.8);
+    // MBObjectManager.GetObject<Hero> reads XML type records and misses runtime/loaded heroes,
+    // which is why every lord source silently resolved null (Codex round 2 #5). Item and
+    // character lookups stay on MBObjectManager, which is correct for XML-defined objects.
+    private static Hero FindHero(string heroId) =>
+        string.IsNullOrEmpty(heroId) ? null : Campaign.Current?.CampaignObjectManager?.Find<Hero>(heroId);
+
     private void TryDestroyHalfSpawnedParty(MobileParty party)
     {
         if (party == null || !party.IsActive)
@@ -531,7 +684,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     {
         if (string.IsNullOrEmpty(order.EscortHeroId))
             return;
-        var hero = MBObjectManager.Instance.GetObject<Hero>(order.EscortHeroId);
+        var hero = FindHero(order.EscortHeroId);
         if (hero == null || !hero.IsAlive)
             return;
         if (caravanParty == null || hero.PartyBelongedTo != caravanParty)
@@ -563,7 +716,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         origin = default;
         if (order.IsFromLord)
         {
-            var lordParty = MBObjectManager.Instance.GetObject<Hero>(order.SourceHeroId)?.PartyBelongedTo;
+            var lordParty = FindHero(order.SourceHeroId)?.PartyBelongedTo;
             if (lordParty == null)
                 return false;
             origin = lordParty.GetPosition2D;

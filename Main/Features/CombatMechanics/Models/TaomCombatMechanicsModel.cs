@@ -60,9 +60,9 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         var result = base.ApplyDamageReductions(in attackInformation, in collisionData, baseDamage);
 
         var reduction = _refugeDefense?.DefenderDamageReduction(VictimPartyId(attackInformation.VictimAgentOrigin)) ?? 0f;
-        // Positive requirement so NaN applies nothing; a full (>=1) reduction is a corrupt setting.
-        if (reduction > 0f && reduction < 1f)
-            result *= 1f - reduction;
+        // Shared composition contract (RefugeDamageReduction): (1 - r) on the final damage; the
+        // auto-resolve site applies the identical contract. NaN/out-of-range applies nothing.
+        result = RefugeDamageReduction.Apply(result, reduction);
 
         return result;
     }

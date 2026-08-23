@@ -2,6 +2,70 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-23
+
+### fix(camps): review round B + Codex round 2 fix batch (#505, #506, #507)
+
+Second review wave over the fixed tree, overnight: six fresh no-narrative deep-review agents
+(round A's five dimensions plus a late-diff dimension over the batch-1 fix range) with 3-lens
+adversarial verification and a completeness critic, and an independent Codex round 2 that also
+re-verified its round-1 findings. Round B: 28 confirmed + 3 critic findings, 2 refuted. Codex:
+4 P1 / 8 P2 / 3 P3. Three parallel fixers landed the batch; suite 7469 passed / 2 skipped.
+
+The one that mattered most: the batch-1 contributor fix had regressed into a **DryIoc startup
+cycle** (CampService materialized its contributor collection at construction; Refuge's
+contributor needs IRefugeService; RefugeService needs ICampService back), which would have
+killed the module before Harmony registration, and both batch-1 preventive gates passed anyway
+because they scan source text rather than resolving the graph. A new CampsContainerWiringTests
+(DryIoc Validate over the three-feature graph) reproduced the exact RecursiveDependencyDetected
+first; lazy contributor injection (IEnumerable of Lazy) turned it green.
+
+- **SupplyLines.** All 8 runtime hero lookups moved off MBObjectManager.GetObject (which misses
+  runtime and save-loaded heroes; lord-sourced orders could never work) onto
+  CampaignObjectManager.Find. Payments now credit the source settlement or lord for the goods
+  and troops share (fees stay destroyed as carrier pay, documented). A MobilePartyDestroyed
+  listener records caravan losses synchronously so an autosave can never resurrect a destroyed
+  convoy with its cargo. RespawnMissing validates the component and order id before binding (a
+  hostile save row can no longer march an arbitrary party, refuges included, to its death). A
+  persisted non-cargo manifest keeps mercenary-guard survivors from being delivered as recruits.
+  Caravans stock grain for the worst-case transit (escorts no longer starve silently). The
+  force-deliver failsafe is back at the source's 1.5x with the comment corrected; lord orders
+  announce "{LORD} sends reinforcements"; caravans fly the faction banner again; unreachable
+  sources show a disabled row instead of quoting zero transport; dead CancelAll deleted.
+- **FieldCamp.** SyncData now branches on the load direction (saving no longer wipes transient
+  state or re-rolls the ambush clock; a missing save key loads an empty book instead of the
+  previous campaign's), the reset latch matches its siblings, contributor consumption contains
+  per-contributor exceptions, map inquiries pause the campaign again (ambush prioritized), the
+  ambush scan prefilters by distance before allocating, and camp placement removes half-built
+  entities when a native call throws. **Every FieldCamp localization key renamed taom_fc_ to
+  taom_fcamp_**: taom_fc_ was already FieldCommission's registered prefix, so the camps batch
+  had re-registered 10 of its keys (one double-escaped, able to shadow the real row) plus 2
+  dead keys; renamed now, at zero cost, because the camps keys are still untranslated (#508).
+- **Refuge.** The master toggle no longer strands a mid-build refuge (builds finish, enter and
+  dismantle stay; only the hold-nearby pin gates on the toggle, and the MCM hint now says what
+  ships). The clan screen's dead Party Wage control is hidden with the wage line honestly zero,
+  and building refuges are listed with a "(being raised)" label. Warden death no longer starts
+  vanilla party disbandment: the disband is cancelled and the refuge becomes an orphan-adopted,
+  dismantlable row with the player alerted. Founding is transactional through every stage, the
+  found tooltip warns that camp-placed supply orders are forfeited, persisted rows are repaired
+  on load (identity canonicalized, non-finite build targets resolved), and both combat models
+  route the defence bonus through one RefugeDamageReduction contract, (1-r) on final damage,
+  with a parity test pinning the auto-resolve vs real-time drift case.
+- **Localization plumbing.** The round-trip gate no longer lets one registration XML vouch for
+  another and now decodes numeric character references (the double-escape blind spot); the
+  regeneration script purged all 70 stale taom_fc_ rows and registered the 63 current keys; the
+  language rebuild's resurrection of the removed "(E)" hotkey suffix on the time-acceleration
+  hint was fixed at the source, one corrected row in each of the 12 translation caches.
+- Both new prefabs restyled off Popup.Text.Medium/.Small, which a Brushes-directory sweep of
+  the whole install shows exist nowhere (the pre-existing BattleActionBar.xml shares the defect
+  and is left for its own fix). Registry: Patch73 section added, Patch74's stale Initialize
+  claim corrected, category count now 79.
+
+RCA addendum (docs/reviews/rca-yotthani-camps-2026-08-23.md): Class 5 deepened (a wiring gate
+must exercise the wiring, not scan for an idiom) and new Class 8 (a key prefix is an ownership
+claim; grep the registration XMLs before claiming one), with lessons entries in
+build-tooling-workflow and localization-ui. Branch only; trunk merge waits for the user.
+
 ## 2026-08-22
 
 ### fix(camps): review round A + Codex round 1 fix batch (#505, #506, #507)

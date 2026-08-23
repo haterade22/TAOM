@@ -12,6 +12,10 @@ public sealed class WardenCandidate
 
     /// <summary>True = an existing companion; false = a soldier who would be promoted.</summary>
     public bool IsCompanion;
+
+    /// <summary>Troop tier for a promotable soldier (0 for companions). Shown in the picker: the
+    /// tier was the only datum distinguishing two same-named stacks in the source's flow.</summary>
+    public int Tier;
 }
 
 /// <summary>

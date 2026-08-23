@@ -24,7 +24,13 @@ taom_field_camp_menu (choose type) / taom_fc_camp (manage: forage, fortify, supp
 Camp raise progress derives from `EstablishedAt + BuildHours` (nothing stored), so mid-build saves
 resume exactly. Ambush and lookout raise in a quarter of the configured hours; fortifying a ready
 field camp starts a real second raise at double the setup hours. The raise completing announces
-`{=taom_fc_established}`; breaking announces `{=taom_fc_broken}`.
+`{=taom_fcamp_established}`; breaking announces `{=taom_fcamp_broken}`.
+
+All FieldCamp localization keys use the `taom_fcamp_` prefix. The port initially claimed
+`taom_fc_`, which was already FieldCommission's registered prefix (10 colliding ids, round-B
+dataflow finding); the 58 keys were renamed mechanically, same suffixes. The game-menu and
+menu-option ids (`taom_fc_camp`, `taom_fc_ambush`, ...) are NOT localization keys and keep the
+short prefix.
 
 ## Key decisions
 
@@ -35,12 +41,18 @@ field camp starts a real second raise at double the setup hours. The raise compl
   while the master toggle is off.
 - **Ambush checks are throttled** to a half-hour game-time accumulator with a straight-line
   distance prefilter. The source ran pathfinding per hostile per frame while an ambush was armed.
+  The prefilter runs INSIDE the campaign-boundary enumeration, before any candidate allocation,
+  and party names are never rendered during the scan; only the winning candidate's name resolves
+  (lazily, from its engine handle) when the inquiry is shown (round-B scan-cost finding).
 - **The ambush payoff is the source's battle flow**: on trigger the camp is spent and a two-button
-  inquiry offers the strike (`{=taom_fc_ambush_ok}` on a successful roll, `{=taom_fc_ambush_fail}`
-  when spotted, either way the player may attack). Confirming starts a real battle via
-  `StartBattleAction.ApplyStartBattle`, guarded on BOTH parties being free of a map event; only a
-  successful roll softens the target first (recent-events morale halved + disorganized). No new
-  scan runs while the inquiry is open.
+  inquiry offers the strike (`{=taom_fcamp_ambush_ok}` on a successful roll,
+  `{=taom_fcamp_ambush_fail}` when spotted, either way the player may attack). Confirming starts a
+  real battle via `StartBattleAction.ApplyStartBattle`, guarded on BOTH parties being free of a
+  map event; only a successful roll softens the target first (recent-events morale halved +
+  disorganized). No new scan runs while the inquiry is open. Both map-context inquiries carry the
+  source's `pauseGameActiveState: true` (ambush also `prioritize: true`, its `ShowInquiry(data,
+  true, true)`): without the pause the world kept marching under the modal (round-B fidelity
+  finding).
 - **The trigger chance uses the PLAYER's spotting range** (source formula): a wider sight radius
   erodes the concealment term. `ICampAmbushService.TriggerChance(playerSpottingRange, ...)` is
   named for it so nobody re-reads the first argument as a candidate distance.
@@ -60,8 +72,16 @@ field camp starts a real second raise at double the setup hours. The raise compl
 - **Session reset**: the camp book lives in a process-lifetime singleton and SyncData only runs
   when a save record exists, so the behavior tracks whether a LOADING SyncData ran and calls
   `ICampService.ResetForNewSession()` from OnSessionLaunched / OnGameLoaded otherwise (fresh
-  campaign, or a pre-feature save). `LoadFrom` also clears every transient (ambush scan clock,
-  move latch, inquiry latch) and drops null book rows, logging once.
+  campaign, or a pre-feature save). The reset latches `_syncedThisSession` so a stray later call
+  cannot wipe a camp pitched right after launch (the Refuge/SupplyLines shape). `LoadFrom` also
+  clears every transient (ambush scan clock, move latch, inquiry latch) and drops null book rows,
+  logging once.
+- **SyncData branches on direction** (the SupplyLines shape): the save half is SaveInto + SyncData
+  only, because `LoadFrom` has load-only semantics and running it on every autosave wiped live
+  latches and the scan clock (round-B). The load half nulls the local first, because the engine's
+  `BehaviorSaveData.SyncData` leaves the ref UNCHANGED on a missing key; pre-seeding from the live
+  singleton would silently keep the previous session's book on a key miss (Codex round-2 #2). A
+  missing key therefore loads as an empty book.
 - **Player capture breaks the camp cleanly** (visuals removed, camp-placed supply orders
   cancelled) from either tick, before any other camp work.
 
@@ -99,7 +119,7 @@ stripped install degrades instead of breaking; the fallback is exercised by rena
 | `Hooks/PartyNameplateCampIconPatch.cs` | Patch74 thin guarded body (registry entry has the never-throw contract) |
 | `Hooks/CampNameplateIconPresenter.cs` | Patch74's widget half: icon creation, sprite memo (same never-throw posture) |
 | `UI/FieldCampMapView.cs` + `FieldCampOverlayVM.cs` | Overlay button + status panel, 4 Hz refresh |
-| `Main/_Module/GUI/PreFabs/FieldCamp/TaomFieldCampOverlay.xml` | Ported prefab, vanilla brushes |
+| `Main/_Module/GUI/PreFabs/FieldCamp/TaomFieldCampOverlay.xml` | Ported prefab; brushes are grep-verified vanilla (`Popup.Description.Text`, `Popup.Button.Text`, `Frame1.Broken`, `ButtonBrush2`) |
 
 ## Traps
 
@@ -111,16 +131,23 @@ stripped install degrades instead of breaking; the fallback is exercised by rena
 - Banner-cloth wind is ticked from `Show`/`IsShown` polling; `CampService.FrameTick` polls
   `IsShown` every pass while the visual stands, and that poll IS the steady-state wind driver: if
   it is ever removed, flags go limp shortly after placement (visuals builder note).
-- The behavior's `_syncedThisSession` flag is set ONLY by a loading SyncData. Do not "simplify" the
-  OnSessionLaunched / OnGameLoaded reset checks away: without them a fresh campaign inherits the
-  previous campaign's camp book from the process-lifetime singleton and saves it.
+- The behavior's `_syncedThisSession` flag is set by a loading SyncData or by the one-shot reset
+  itself (the latch). Do not "simplify" the OnSessionLaunched / OnGameLoaded reset checks away:
+  without them a fresh campaign inherits the previous campaign's camp book from the
+  process-lifetime singleton and saves it.
+- `ICampOverlayContributor` consumers all contain per-contributor (and per-`Lazy` factory)
+  exceptions: `CampService.FirstContributorBlockReason` feeds a GameMenuOption condition whose
+  engine dispatch is unguarded, so a throwing contributor there is a menu-open crash, not a
+  degraded label. Keep the catch when adding consumers.
+- `CampLayoutBuilder` placement helpers remove their half-built `GameEntity` in the catch block:
+  it is not in `outEntities` yet when a native call throws, so nothing else can ever release it.
 
 ## Owed
 
 - In-game smoke per #506 checklist (all four types, fortify re-raise, forage, ambush inquiry +
   battle, save/load mid-build, toggle-off break-via-move-guard, capture-while-camped, tpac render
   + fallback).
-- Strings XML regeneration for the review-round keys added in code (`taom_fc_established`,
-  `taom_fc_broken`, `taom_fc_ambush_title`, `taom_fc_ambush_ok`, `taom_fc_ambush_fail`; the
-  no-battle flow's `taom_fc_ambush_sprung` / `taom_fc_ambush_spotted` left the code), then the
-  12-language translation run for every `{=taom_fc_*}` key.
+- Strings XML + 12-language regeneration for every `{=taom_fcamp_*}` key (the prefix rename
+  obsoletes the whole registered `taom_fc_` batch; the orchestrator's generator owns
+  `taom_module_strings.xml` and the language files, and the FieldCommission-owned `taom_fc_` rows
+  in `taom_enlistment_strings.xml` must NOT be touched).

@@ -120,12 +120,88 @@ without patching MapEvent construction; documented limitation); warden successio
 (documented limitation); Refuge BuildingMesh/BuildingScale stay provider-pinned source defaults
 with no MCM rows (TaomSettings single-owner; wiring later needs no consumer change).
 
+## Round B + Codex round 2 (landed 2026-08-23, overnight autonomous run)
+
+Round B: 6 fresh no-narrative reviewers (the 5 round-A dimensions + a late-diff dimension over
+the fix range 7f4cf559..HEAD), 3-lens adversarial verification, completeness critic. First pass
+lost 28 verify agents + the critic to the 5h usage limit; resumed after reset with full cache
+replay, 97/97 agents, 0 errors. Result: 30 raised, **28 confirmed + 3 critic findings, 2 refuted
+with recorded reasons** (raw: docs/reviews/raw/roundB-final-result.json, gitignored). One HIGH
+(clan-screen wage control live but non-functional), one critic HIGH (both prefabs style body text
+with Popup.Text.Medium/.Small, which a Brushes-directory sweep of the entire install proves exist
+NOWHERE; pre-existing BattleActionBar.xml shares the defect and is deliberately out of scope).
+
+Codex round 2 (dispatched against 16a58b51, overlapping the closing usage window since it bills
+externally): **4 P1 / 8 P2 / 3 P3** plus a round-1 re-verification table (4 FIXED, the rest
+PARTIALLY FIXED or follow-ups; raw: docs/reviews/raw/codex-camps-round2-report.txt). The headline
+P1: the batch-1 contributor-ordering fix REGRESSED DIFFERENTLY into a DryIoc startup cycle
+(CampService materializes the contributor collection; Refuge's contributor needs IRefugeService;
+RefugeService needs ICampService), invisible to the suite because nothing resolved the finished
+container: the source-scan gates checked registration STYLE. Proven RED with a new
+CampsContainerWiringTests (DryIoc Validate, the EnlistmentContainerWiringTests shape:
+Error.RecursiveDependencyDetected on the exact predicted path), fixed GREEN by lazy contributor
+injection (IEnumerable<Lazy<ICampOverlayContributor>>).
+
+Orchestrator verification calls on contested claims: Codex P2#5 CONFIRMED against Hero.cs
+(heroes register only with CampaignObjectManager; the 7 GetObject<Hero> sites miss runtime/loaded
+heroes); Codex P3#15 REFUTED by raw bytes (added language rows end 0d 0a, no trailing spaces;
+git diff --check flags the bare-CR convention itself); round B's charge-vs-quote and
+ResolveParty-linear-scan findings refuted by the verify lenses.
+
+A round-B dataflow finding exposed a prefix collision: taom_fc_ already belonged to
+FieldCommission (10 keys re-registered as duplicates, one double-escaped and able to shadow the
+correct row), plus 2 dead keys. Since the camps keys are still untranslated English fallbacks
+(#508), FieldCamp's 58 keys are being renamed to taom_fcamp_ at zero translation cost; the
+round-trip gate is hardened (registration XMLs excluded from the code-default scan, numeric
+character references unescaped) and the regeneration script purges every taom_fc_ row from
+taom_module_strings.xml. The language-file rebuild had also resurrected the stale '(E)' hotkey
+suffix on taom_extra_fast_forward_hint from the translation cache in all 12 languages (trunk
+removed it when the key became rebindable); the 12 cache rows are corrected, one line per file.
+
+Fix batch 2 fixers are running (workflow wf_cbd92536-72e, same disjoint 3-fixer shape) against
+the two raw finding files, with orchestrator-verified engine facts pinned in the briefs
+(KillCharacterAction disband branch, DisbandPartyAction.CancelDisband, ExplainedNumber.Add
+mutating BaseNumber, the verified-existing brush list). Orchestrator has already landed: the IoC
+cycle fix + container gate, Patch73's registry section + the Patch74 Initialize-location
+correction + the category count (79), the roadmap stable anchor, the cache fix, and the gate
+hardening.
+
+Backlog: the 12-language translation for the camps keys is issue #508 (user decision 2026-08-22;
+needs ANTHROPIC_API_KEY; run on or after the branch merge, now with the taom_fcamp_ prefixes).
+
+## Fix batch 2 (LANDED 2026-08-23 morning)
+
+Workflow wf_cbd92536-72e, 3 disjoint fixers, 0 errors, ~47 min. Everything above (round B 28+3,
+Codex 4P1/8P2/3P3) fixed or recorded-deferred; **suite 7469 passed / 2 skipped / 0 failed** on
+the first post-integration run, validate_moduledata PASS, lint clean. Orchestrator integration:
+strings regenerated (70 stale taom_fc_ rows purged, 63 current keys registered, parity verified
+in both directions), languages rebuilt, the Refuge MCM hint updated to the shipped toggle
+behavior, one comment reworded so the retired taom_rf_promote_entry key stops tripping the scan.
+
+Recorded-deferred with reasons (fixer reports carry the detail): supply-order PRESERVATION on
+refuge founding (needs a cross-feature seam on ISupplyOrderService; explicit-forfeiture warning
+shipped instead, seam recorded in refuge.md); the wage-figure language-change residual
+(cosmetic, needs a TaomPartyWageModel branch); BattleActionBar.xml's pre-existing phantom
+brushes; ADR-007 conversion; external-battle auto-resolve militia.
+
+Ordering caveat worth keeping: the warden-death disband-cancel relies on vanilla
+DisbandPartyCampaignBehavior's OnPartyDisbandStarted listener running before TAOM's on the same
+dispatch (vanilla behaviors register first; its handler only queues a 1-day-later flip, and
+CancelDisband dequeues). The OnGameLoaded belt covers saves written inside the wait window.
+
+In-game smoke additions the fixers recommended (for the #505/#507 checklists): a lord-sourced
+order end to end (it could never work before the Find<Hero> fix); the destroyed-caravan loss
+message after an AI battle; the faction banner on the caravan; the restyled order screen; kill a
+lone warden while garrison survives (expect the alert, no disband march, dismantle-only refuge);
+toggle Refuges off mid-build and wait out the build; a building row in the clan screen with a
+wage line of 0.
+
 ## Remaining queue
 
 1. DONE: round A verified -> merged with the Codex batch -> fixed -> suite 7421 green ->
    committed -> pushed.
-2. Deep review round B (fresh agents over the fixed tree).
-3. Codex round 2.
+2. DONE: round B (28 confirmed + 3 critic, 2 refuted).
+3. DONE: Codex round 2 (4 P1 / 8 P2 / 3 P3; startup-cycle P1 fixed RED->GREEN same night).
 4. DONE: RCA + lessons + rules + CHANGELOG. Still owed: final status report after round B/Codex 2.
-5. USER: set `ANTHROPIC_API_KEY`, rerun the 12-language translation; in-game smoke checklists on
-   #505/#506/#507; decide the trunk merge.
+5. USER: in-game smoke checklists on #505/#506/#507; decide the trunk merge. (Translation
+   moved to backlog issue #508, user decision 2026-08-22.)

@@ -2735,71 +2735,6 @@
 	<string id="taom_sl_troops" text="{=taom_sl_troops}Recruits" />
 	<string id="taom_sl_troops_header" text="{=taom_sl_troops_header}Volunteers (recruits)" />
 	<!-- FieldCamp (#506): campaign-map camps. -->
-	<string id="taom_fc_accept" text="{=taom_fc_accept}Promote" />
-	<string id="taom_fc_acknowledge" text="{=taom_fc_acknowledge}Understood" />
-	<string id="taom_fc_ambush_enemy" text="{=taom_fc_ambush_enemy}the enemy" />
-	<string id="taom_fc_ambush_spotted" text="{=taom_fc_ambush_spotted}{ENEMY} spotted your ambush before it could spring. The camp is lost." />
-	<string id="taom_fc_ambush_sprung" text="{=taom_fc_ambush_sprung}Your ambush springs on {ENEMY}! They scatter in disorder." />
-	<string id="taom_fc_ambush_terrain" text="{=taom_fc_ambush_terrain}Needs concealing terrain - forest, hills, swamp, canyon, dunes, a bridge or a ford." />
-	<string id="taom_fc_btn_make" text="{=taom_fc_btn_make}Make Camp" />
-	<string id="taom_fc_btn_options" text="{=taom_fc_btn_options}Camp Options" />
-	<string id="taom_fc_building" text="{=taom_fc_building}The camp is still being set up." />
-	<string id="taom_fc_confirm_name" text="{=taom_fc_confirm_name}Confirm" />
-	<string id="taom_fc_decline" text="{=taom_fc_decline}Not Yet" />
-	<string id="taom_fc_forage_field_only" text="{=taom_fc_forage_field_only}Only a field or fortified camp can forage." />
-	<string id="taom_fc_forage_start" text="{=taom_fc_forage_start}Forage for supplies" />
-	<string id="taom_fc_forage_stop" text="{=taom_fc_forage_stop}Stop foraging" />
-	<string id="taom_fc_foraged" text="{=taom_fc_foraged}Foraged +{N} grain (camp total: {TOTAL})." />
-	<string id="taom_fc_fortify_cost" text="{=taom_fc_fortify_cost}Cost: {GOLD}{GOLD_ICON}" />
-	<string id="taom_fc_fortify_field_only" text="{=taom_fc_fortify_field_only}Only a field camp can be fortified." />
-	<string id="taom_fc_keep_name" text="{=taom_fc_keep_name}Keep Default Name" />
-	<string id="taom_fc_lookout_terrain" text="{=taom_fc_lookout_terrain}Needs high ground or open vantage - mountains, hills, forest, steppe or plains." />
-	<string id="taom_fc_menu_active" text="{=taom_fc_menu_active}Active: {CAMP}" />
-	<string id="taom_fc_menu_active_forage" text="{=taom_fc_menu_active_forage}Active: {CAMP} (foraging for supplies)" />
-	<string id="taom_fc_menu_base" text="{=taom_fc_menu_base}Your party makes camp.{NEWLINE}{TAOM_FC_STATUS}" />
-	<string id="taom_fc_menu_raising" text="{=taom_fc_menu_raising}{RAISING} {PROGRESS}% (its effects start once set up)" />
-	<string id="taom_fc_move_no" text="{=taom_fc_move_no}Stay camped" />
-	<string id="taom_fc_move_text" text="{=taom_fc_move_text}Moving will break your camp. Break camp and move on?" />
-	<string id="taom_fc_move_title" text="{=taom_fc_move_title}Break camp?" />
-	<string id="taom_fc_move_yes" text="{=taom_fc_move_yes}Break camp and move" />
-	<string id="taom_fc_need_camp" text="{=taom_fc_need_camp}Establish a camp first." />
-	<string id="taom_fc_need_field" text="{=taom_fc_need_field}Establish a field camp first." />
-	<string id="taom_fc_no_gold" text="{=taom_fc_no_gold}Not enough gold to fortify the camp." />
-	<string id="taom_fc_no_room_body" text="{=taom_fc_no_room_body}There is no room for another companion right now. {TROOP_NAME}&amp;#x27;s promotion will be offered again later." />
-	<string id="taom_fc_offer_body" text="{=taom_fc_offer_body}{TROOP_NAME} has distinguished themselves in battle. Promote them to a companion?" />
-	<string id="taom_fc_offer_title" text="{=taom_fc_offer_title}Battlefield Promotion" />
-	<string id="taom_fc_opt_ambush" text="{=taom_fc_opt_ambush}Set up an ambush" />
-	<string id="taom_fc_opt_break" text="{=taom_fc_opt_break}Break camp" />
-	<string id="taom_fc_opt_continue" text="{=taom_fc_opt_continue}Continue" />
-	<string id="taom_fc_opt_field" text="{=taom_fc_opt_field}Establish a field camp" />
-	<string id="taom_fc_opt_fortify" text="{=taom_fc_opt_fortify}Upgrade to fortified camp" />
-	<string id="taom_fc_opt_leave" text="{=taom_fc_opt_leave}Leave" />
-	<string id="taom_fc_opt_lookout" text="{=taom_fc_opt_lookout}Create a lookout" />
-	<string id="taom_fc_opt_manage" text="{=taom_fc_opt_manage}Manage camp" />
-	<string id="taom_fc_opt_supplies" text="{=taom_fc_opt_supplies}Order supplies" />
-	<string id="taom_fc_raising_ambush" text="{=taom_fc_raising_ambush}Setting up the ambush." />
-	<string id="taom_fc_raising_field" text="{=taom_fc_raising_field}Raising the field camp." />
-	<string id="taom_fc_raising_fortified" text="{=taom_fc_raising_fortified}Raising the fortified camp." />
-	<string id="taom_fc_raising_generic" text="{=taom_fc_raising_generic}Raising the camp." />
-	<string id="taom_fc_raising_lookout" text="{=taom_fc_raising_lookout}Raising the lookout." />
-	<string id="taom_fc_reason_blocked" text="{=taom_fc_reason_blocked}You cannot make camp here." />
-	<string id="taom_fc_reason_disabled" text="{=taom_fc_reason_disabled}Field camps are disabled in the mod options." />
-	<string id="taom_fc_reason_enlisted" text="{=taom_fc_reason_enlisted}You cannot make camp while serving in another lord's army." />
-	<string id="taom_fc_reason_moving" text="{=taom_fc_reason_moving}Halt your party before making camp." />
-	<string id="taom_fc_reason_settlement" text="{=taom_fc_reason_settlement}You cannot pitch camp inside a settlement." />
-	<string id="taom_fc_reason_terrain" text="{=taom_fc_reason_terrain}The ground here does not suit this camp." />
-	<string id="taom_fc_rename_body" text="{=taom_fc_rename_body}Give {TROOP_NAME} a name, or keep the one they carried into battle." />
-	<string id="taom_fc_rename_title" text="{=taom_fc_rename_title}Name the New Companion" />
-	<string id="taom_fc_state_ambush" text="{=taom_fc_state_ambush}Ambush ready" />
-	<string id="taom_fc_state_field" text="{=taom_fc_state_field}Field camp" />
-	<string id="taom_fc_state_fortified" text="{=taom_fc_state_fortified}Fortified camp" />
-	<string id="taom_fc_state_generic" text="{=taom_fc_state_generic}Camp" />
-	<string id="taom_fc_state_lookout" text="{=taom_fc_state_lookout}Lookout posted" />
-	<string id="taom_fc_status_choose" text="{=taom_fc_status_choose}Choose how to make camp here." />
-	<string id="taom_fc_status_foraging" text="{=taom_fc_status_foraging}{CAMP} (foraging - {GRAIN} grain)" />
-	<string id="taom_fc_supplies_needs" text="{=taom_fc_supplies_needs}Supply lines are disabled." />
-	<string id="taom_fc_supplies_stealth" text="{=taom_fc_supplies_stealth}Ambush and lookout camps stay hidden - no supply convoys." />
-	<string id="taom_fc_too_close" text="{=taom_fc_too_close}Too close to a town or castle - pitch a field camp farther from settlements." />
 	<!-- Refuge (#507): the party-name string lives in the pre-written component contract. -->
 	<string id="taom_rf_party_name" text="{=taom_rf_party_name}Refuge" />
 	<!-- Refuge (#507): movable player bases. -->
@@ -2825,7 +2760,6 @@
 	<string id="taom_rf_opt_leave" text="{=taom_rf_opt_leave}Leave" />
 	<string id="taom_rf_opt_manage" text="{=taom_rf_opt_manage}Manage garrison (troops and prisoners)" />
 	<string id="taom_rf_opt_upgrade" text="{=taom_rf_opt_upgrade}Upgrade to stronghold" />
-	<string id="taom_rf_promote_entry" text="{=taom_rf_promote_entry}{NAME} (promote to officer)" />
 	<string id="taom_rf_promote_failed" text="{=taom_rf_promote_failed}Could not assign that warden." />
 	<string id="taom_rf_raised" text="{=taom_rf_raised}The refuge is raised. It stands as your forward base; manage it to deposit troops." />
 	<string id="taom_rf_reason_already_here" text="{=taom_rf_reason_already_here}A refuge already stands here - manage it instead." />
@@ -2850,13 +2784,71 @@
 	<string id="taom_rf_upgrading" text="{=taom_rf_upgrading}Rebuilding the refuge into a stronghold - your company must stay until it is done." />
 	<string id="taom_rf_warden_desc" text="{=taom_rf_warden_desc}Choose who commands the refuge - a companion, or promote one of your soldiers into an officer. They leave your party to lead it." />
 	<string id="taom_rf_warden_title" text="{=taom_rf_warden_title}Assign a Warden" />
-	<string id="taom_fc_ambush_fail" text="{=taom_fc_ambush_fail}You were spotted by {ENEMY} before you could strike - attack anyway?" />
-	<string id="taom_fc_ambush_ok" text="{=taom_fc_ambush_ok}Your ambush is set against {ENEMY} - strike now?" />
-	<string id="taom_fc_ambush_title" text="{=taom_fc_ambush_title}Ambush" />
-	<string id="taom_fc_broken" text="{=taom_fc_broken}Camp broken." />
-	<string id="taom_fc_established" text="{=taom_fc_established}{CAMP} established." />
 	<string id="taom_rf_fallen" text="{=taom_rf_fallen}Your refuge has fallen. What remains of its garrison is lost; your warden's fate rides with the survivors." />
 	<string id="taom_rf_food_note" text="{=taom_rf_food_note}The garrison eats from the stored goods; keep the stash provisioned or it will starve." />
 	<string id="taom_rf_menu_orphan" text="{=taom_rf_menu_orphan}An abandoned refuge stands here, beyond repair. It can only be dismantled." />
 	<string id="taom_sl_caravan_meet" text="{=taom_sl_caravan_meet}Your supply caravan presses on toward your position." />
+	<string id="taom_fcamp_ambush_enemy" text="{=taom_fcamp_ambush_enemy}the enemy" />
+	<string id="taom_fcamp_ambush_fail" text="{=taom_fcamp_ambush_fail}You were spotted by {ENEMY} before you could strike - attack anyway?" />
+	<string id="taom_fcamp_ambush_ok" text="{=taom_fcamp_ambush_ok}Your ambush is set against {ENEMY} - strike now?" />
+	<string id="taom_fcamp_ambush_terrain" text="{=taom_fcamp_ambush_terrain}Needs concealing terrain - forest, hills, swamp, canyon, dunes, a bridge or a ford." />
+	<string id="taom_fcamp_ambush_title" text="{=taom_fcamp_ambush_title}Ambush" />
+	<string id="taom_fcamp_broken" text="{=taom_fcamp_broken}Camp broken." />
+	<string id="taom_fcamp_btn_make" text="{=taom_fcamp_btn_make}Make Camp" />
+	<string id="taom_fcamp_btn_options" text="{=taom_fcamp_btn_options}Camp Options" />
+	<string id="taom_fcamp_building" text="{=taom_fcamp_building}The camp is still being set up." />
+	<string id="taom_fcamp_established" text="{=taom_fcamp_established}{CAMP} established." />
+	<string id="taom_fcamp_forage_field_only" text="{=taom_fcamp_forage_field_only}Only a field or fortified camp can forage." />
+	<string id="taom_fcamp_forage_start" text="{=taom_fcamp_forage_start}Forage for supplies" />
+	<string id="taom_fcamp_forage_stop" text="{=taom_fcamp_forage_stop}Stop foraging" />
+	<string id="taom_fcamp_foraged" text="{=taom_fcamp_foraged}Foraged +{N} grain (camp total: {TOTAL})." />
+	<string id="taom_fcamp_fortify_cost" text="{=taom_fcamp_fortify_cost}Cost: {GOLD}{GOLD_ICON}" />
+	<string id="taom_fcamp_fortify_field_only" text="{=taom_fcamp_fortify_field_only}Only a field camp can be fortified." />
+	<string id="taom_fcamp_lookout_terrain" text="{=taom_fcamp_lookout_terrain}Needs high ground or open vantage - mountains, hills, forest, steppe or plains." />
+	<string id="taom_fcamp_menu_active" text="{=taom_fcamp_menu_active}Active: {CAMP}" />
+	<string id="taom_fcamp_menu_active_forage" text="{=taom_fcamp_menu_active_forage}Active: {CAMP} (foraging for supplies)" />
+	<string id="taom_fcamp_menu_base" text="{=taom_fcamp_menu_base}Your party makes camp.{NEWLINE}{TAOM_FC_STATUS}" />
+	<string id="taom_fcamp_menu_raising" text="{=taom_fcamp_menu_raising}{RAISING} {PROGRESS}% (its effects start once set up)" />
+	<string id="taom_fcamp_move_no" text="{=taom_fcamp_move_no}Stay camped" />
+	<string id="taom_fcamp_move_text" text="{=taom_fcamp_move_text}Moving will break your camp. Break camp and move on?" />
+	<string id="taom_fcamp_move_title" text="{=taom_fcamp_move_title}Break camp?" />
+	<string id="taom_fcamp_move_yes" text="{=taom_fcamp_move_yes}Break camp and move" />
+	<string id="taom_fcamp_need_camp" text="{=taom_fcamp_need_camp}Establish a camp first." />
+	<string id="taom_fcamp_need_field" text="{=taom_fcamp_need_field}Establish a field camp first." />
+	<string id="taom_fcamp_no_gold" text="{=taom_fcamp_no_gold}Not enough gold to fortify the camp." />
+	<string id="taom_fcamp_opt_ambush" text="{=taom_fcamp_opt_ambush}Set up an ambush" />
+	<string id="taom_fcamp_opt_break" text="{=taom_fcamp_opt_break}Break camp" />
+	<string id="taom_fcamp_opt_continue" text="{=taom_fcamp_opt_continue}Continue" />
+	<string id="taom_fcamp_opt_field" text="{=taom_fcamp_opt_field}Establish a field camp" />
+	<string id="taom_fcamp_opt_fortify" text="{=taom_fcamp_opt_fortify}Upgrade to fortified camp" />
+	<string id="taom_fcamp_opt_leave" text="{=taom_fcamp_opt_leave}Leave" />
+	<string id="taom_fcamp_opt_lookout" text="{=taom_fcamp_opt_lookout}Create a lookout" />
+	<string id="taom_fcamp_opt_manage" text="{=taom_fcamp_opt_manage}Manage camp" />
+	<string id="taom_fcamp_opt_supplies" text="{=taom_fcamp_opt_supplies}Order supplies" />
+	<string id="taom_fcamp_raising_ambush" text="{=taom_fcamp_raising_ambush}Setting up the ambush." />
+	<string id="taom_fcamp_raising_field" text="{=taom_fcamp_raising_field}Raising the field camp." />
+	<string id="taom_fcamp_raising_fortified" text="{=taom_fcamp_raising_fortified}Raising the fortified camp." />
+	<string id="taom_fcamp_raising_generic" text="{=taom_fcamp_raising_generic}Raising the camp." />
+	<string id="taom_fcamp_raising_lookout" text="{=taom_fcamp_raising_lookout}Raising the lookout." />
+	<string id="taom_fcamp_reason_blocked" text="{=taom_fcamp_reason_blocked}You cannot make camp here." />
+	<string id="taom_fcamp_reason_disabled" text="{=taom_fcamp_reason_disabled}Field camps are disabled in the mod options." />
+	<string id="taom_fcamp_reason_enlisted" text="{=taom_fcamp_reason_enlisted}You cannot make camp while serving in another lord's army." />
+	<string id="taom_fcamp_reason_moving" text="{=taom_fcamp_reason_moving}Halt your party before making camp." />
+	<string id="taom_fcamp_reason_settlement" text="{=taom_fcamp_reason_settlement}You cannot pitch camp inside a settlement." />
+	<string id="taom_fcamp_reason_terrain" text="{=taom_fcamp_reason_terrain}The ground here does not suit this camp." />
+	<string id="taom_fcamp_state_ambush" text="{=taom_fcamp_state_ambush}Ambush ready" />
+	<string id="taom_fcamp_state_field" text="{=taom_fcamp_state_field}Field camp" />
+	<string id="taom_fcamp_state_fortified" text="{=taom_fcamp_state_fortified}Fortified camp" />
+	<string id="taom_fcamp_state_generic" text="{=taom_fcamp_state_generic}Camp" />
+	<string id="taom_fcamp_state_lookout" text="{=taom_fcamp_state_lookout}Lookout posted" />
+	<string id="taom_fcamp_status_choose" text="{=taom_fcamp_status_choose}Choose how to make camp here." />
+	<string id="taom_fcamp_status_foraging" text="{=taom_fcamp_status_foraging}{CAMP} (foraging - {GRAIN} grain)" />
+	<string id="taom_fcamp_supplies_needs" text="{=taom_fcamp_supplies_needs}Supply lines are disabled." />
+	<string id="taom_fcamp_supplies_stealth" text="{=taom_fcamp_supplies_stealth}Ambush and lookout camps stay hidden - no supply convoys." />
+	<string id="taom_fcamp_too_close" text="{=taom_fcamp_too_close}Too close to a town or castle - pitch a field camp farther from settlements." />
+	<string id="taom_rf_clan_row_building" text="{=taom_rf_clan_row_building}{NAME} (being raised)" />
+	<string id="taom_rf_found_orders_warning" text="{=taom_rf_found_orders_warning}Breaking camp to raise the refuge cancels any supply orders placed from this camp; their goods and gold are forfeit." />
+	<string id="taom_rf_promote_entry_tier" text="{=taom_rf_promote_entry_tier}{NAME} (Tier {TIER}, promote to officer)" />
+	<string id="taom_rf_warden_lost" text="{=taom_rf_warden_lost}Your refuge has lost its warden. The garrison holds the camp, but it can only be dismantled now." />
+	<string id="taom_sl_lord_dispatched" text="{=taom_sl_lord_dispatched}{LORD} sends reinforcements, they are on the way." />
 </strings>

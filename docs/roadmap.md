@@ -1,4 +1,4 @@
-# TAOM Roadmap — GameModel Override Opportunities
+﻿# TAOM Roadmap — GameModel Override Opportunities
 
 Remaining GameModel override opportunities for making TAOM more LOTR-authentic.
 TAOM currently has **31 of 121** available GameModels overridden.
@@ -43,7 +43,7 @@ Each override follows the established TAOM pattern (feature module + service + a
 
 | Model | Override Goal |
 |-------|---------------|
-| `MapVisibilityModel` | ~~Ranger scouting range, Orc night vision~~ SLOT TAKEN: `TaomMapVisibilityModel` (CareerSystem) registered at `SubModule.cs:922`; FieldCamp's lookout range also layers through it. New spotting logic joins that model via its service seam, never a second `AddModel` |
+| `MapVisibilityModel` | ~~Ranger scouting range, Orc night vision~~ SLOT TAKEN: `TaomMapVisibilityModel` (CareerSystem) registered in `SubModule.OnGameStart` alongside the other campaign models (grep `TaomMapVisibilityModel` in `SubModule.cs`); FieldCamp's lookout range also layers through it. New spotting logic joins that model via its service seam, never a second `AddModel` |
 | `DefectionModel` | Racial loyalty (Dwarves don't defect) |
 
 ## Recommended Implementation Order

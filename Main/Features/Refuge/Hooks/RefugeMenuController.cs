@@ -192,9 +192,16 @@ public sealed class RefugeMenuController
         if (reason != RefugeBlockReason.None)
             return Disabled(args, ReasonText(reason, _settings.FoundCost));
 
-        args.Tooltip = new TextObject(
+        // The forfeiture warning is appended as its OWN key: founding calls BreakPlayerCamp,
+        // which cancels every supply order placed from this camp with its goods and gold, and
+        // that loss must be explicit BEFORE the click, not only in the cancellation toast after.
+        var tooltip = new TextObject("{=!}{FOUND_TOOLTIP} {ORDER_WARNING}");
+        tooltip.SetTextVariable("FOUND_TOOLTIP", new TextObject(
                 "{=taom_rf_found_tooltip}Cost: {GOLD} denars. Choose a warden (a companion, or a soldier promoted to officer), then garrison it.")
-            .SetTextVariable("GOLD", _settings.FoundCost);
+            .SetTextVariable("GOLD", _settings.FoundCost));
+        tooltip.SetTextVariable("ORDER_WARNING", new TextObject(
+            "{=taom_rf_found_orders_warning}Breaking camp to raise the refuge cancels any supply orders placed from this camp; their goods and gold are forfeit."));
+        args.Tooltip = tooltip;
         return true;
     }
 
@@ -210,10 +217,15 @@ public sealed class RefugeMenuController
         var elements = new List<InquiryElement>(candidates.Count);
         foreach (var candidate in candidates)
         {
+            // The tier is the only datum distinguishing two same-named stacks (the source's
+            // dedicated promote picker showed it too); the tier-less first-cut key
+            // taom_rf_promote_entry was replaced rather than edited so its 12 translations do
+            // not go silently stale.
             string title = candidate.IsCompanion
                 ? candidate.DisplayName
-                : new TextObject("{=taom_rf_promote_entry}{NAME} (promote to officer)")
-                    .SetTextVariable("NAME", candidate.DisplayName).ToString();
+                : new TextObject("{=taom_rf_promote_entry_tier}{NAME} (Tier {TIER}, promote to officer)")
+                    .SetTextVariable("NAME", candidate.DisplayName)
+                    .SetTextVariable("TIER", candidate.Tier).ToString();
             elements.Add(new InquiryElement(candidate, title, null));
         }
 

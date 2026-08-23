@@ -54,7 +54,11 @@ public sealed class RefugeData
 
     public float BuildProgress()
     {
-        if (BuildTargetHours <= 0f)
+        // Positive requirement, not "<= 0": a NaN target fails BOTH polarities of a plain
+        // comparison, so "<= 0 -> done" let a NaN persist a forever-building refuge (a permanent
+        // absorbing state eating a cap slot). NaN/zero/negative all resolve to "done" here;
+        // LoadFrom additionally repairs the persisted field so the row saves back clean.
+        if (!(BuildTargetHours > 0f))
             return 1f;
         return (float)BuildStartTime.ElapsedHoursUntilNow / BuildTargetHours;
     }

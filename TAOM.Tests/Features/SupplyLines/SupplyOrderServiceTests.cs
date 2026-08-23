@@ -29,7 +29,8 @@ public class SupplyOrderServiceTests
         public double NowHours;
 
         public readonly List<string> CallSequence = new List<string>();
-        public readonly List<int> Charges = new List<int>();
+        public readonly List<(SupplySourceInfo Source, SupplyQuote Quote)> Charges =
+            new List<(SupplySourceInfo, SupplyQuote)>();
         public readonly List<SupplyOrder> Delivered = new List<SupplyOrder>();
         public IReadOnlyDictionary<string, int> LastDeliveredGoods;
         public IReadOnlyDictionary<string, int> LastDeliveredRecruits;
@@ -56,10 +57,10 @@ public class SupplyOrderServiceTests
 
         protected override float ElapsedFractionOf(SupplyOrder order) => ElapsedFraction;
 
-        protected override void ChargePlayer(int amount)
+        protected override void ChargePlayer(SupplySourceInfo source, SupplyQuote quote)
         {
             CallSequence.Add("charge");
-            Charges.Add(amount);
+            Charges.Add((source, quote));
         }
 
         protected override string PickCompanionEscortId() => CompanionId;
@@ -265,7 +266,9 @@ public class SupplyOrderServiceTests
         CollectionAssert.AreEqual(
             new[] { "consume", "spawn", "charge" }, _sut.CallSequence,
             "the charge must land only after the caravan exists (the source module charged first)");
-        Assert.AreEqual(170, _sut.Charges.Single());
+        Assert.AreEqual(170, _sut.Charges.Single().Quote.Total);
+        Assert.AreSame(_townSource, _sut.Charges.Single().Source,
+            "the charge carries the source so its share can be credited (round B: payments were a pure sink)");
         Assert.AreEqual(170, result.TotalPaid);
         Assert.AreEqual(1, _sut.ActiveOrders.Count);
     }
@@ -519,42 +522,6 @@ public class SupplyOrderServiceTests
         _caravans.Received(2).TickPositions();
     }
 
-    // --- CancelAll ---
-
-    [TestMethod]
-    public void CancelAll_ReleasesEveryEscortThenEmptiesBook()
-    {
-        var orderA = new SupplyOrder { OrderId = "taom_so_0", SourceSettlementId = "town_G1" };
-        orderA.StatusEnum = SupplyOrderStatus.InTransit;
-        var orderB = new SupplyOrder { OrderId = "taom_so_1", SourceSettlementId = "town_G2" };
-        orderB.StatusEnum = SupplyOrderStatus.InTransit;
-        _sut.LoadFrom(
-            new Dictionary<string, SupplyOrder> { [orderA.OrderId] = orderA, [orderB.OrderId] = orderB },
-            counter: 2);
-
-        _sut.CancelAll();
-
-        // The escort release (which itself destroys the party AFTER freeing the companion, inside
-        // the caravan service) must run for each order before the book is purged; purging first
-        // would drop the only reference that lets the escort come home.
-        Received.InOrder(() =>
-        {
-            _caravans.ReleaseEscortAndDestroy(orderA);
-            _caravans.ReleaseEscortAndDestroy(orderB);
-        });
-        Assert.AreEqual(0, _sut.ActiveOrders.Count);
-        Assert.AreEqual(SupplyOrderStatus.Lost, orderA.StatusEnum);
-        Assert.AreEqual(SupplyOrderStatus.Lost, orderB.StatusEnum);
-    }
-
-    [TestMethod]
-    public void CancelAll_EmptyBook_TouchesNothing()
-    {
-        _sut.CancelAll();
-
-        _caravans.DidNotReceiveWithAnyArgs().ReleaseEscortAndDestroy(default);
-    }
-
     // --- CancelCampOrders ---
 
     [TestMethod]
@@ -596,6 +563,104 @@ public class SupplyOrderServiceTests
 
         _caravans.DidNotReceiveWithAnyArgs().ReleaseEscortAndDestroy(default);
         Assert.AreEqual(1, _sut.ActiveOrders.Count);
+    }
+
+    [TestMethod]
+    public void CancelCampOrders_StatusIsLostBeforeThePartyIsDestroyed()
+    {
+        // DestroyPartyAction raises MobilePartyDestroyed synchronously; OnCaravanDestroyed must
+        // see a finished status or our own teardown is recorded as a second battle loss.
+        var campOrder = new SupplyOrder
+        {
+            OrderId = "taom_so_0",
+            SourceSettlementId = "town_G1",
+            PlacedFromCamp = true,
+        };
+        campOrder.StatusEnum = SupplyOrderStatus.InTransit;
+        _sut.LoadFrom(new Dictionary<string, SupplyOrder> { [campOrder.OrderId] = campOrder }, counter: 1);
+        SupplyOrderStatus statusAtDestroy = default;
+        _caravans.When(c => c.ReleaseEscortAndDestroy(campOrder))
+            .Do(_ => statusAtDestroy = campOrder.StatusEnum);
+
+        _sut.CancelCampOrders();
+
+        Assert.AreEqual(SupplyOrderStatus.Lost, statusAtDestroy);
+    }
+
+    [TestMethod]
+    public void HourlyTick_Deliver_StatusIsDeliveredBeforeThePartyIsDestroyed()
+    {
+        var order = SeedInTransitOrder();
+        _engine.Advance(Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), Arg.Any<bool>())
+            .Returns(SupplyOrderVerdict.Deliver);
+        SupplyOrderStatus statusAtDestroy = default;
+        _caravans.When(c => c.ReleaseEscortAndDestroy(order))
+            .Do(_ => statusAtDestroy = order.StatusEnum);
+
+        _sut.HourlyTick();
+
+        Assert.AreEqual(SupplyOrderStatus.Delivered, statusAtDestroy,
+            "a synchronous MobilePartyDestroyed must not see the just-delivered order as InTransit");
+    }
+
+    // --- OnCaravanDestroyed (engine destroyed the party, e.g. a lost AI battle) ---
+
+    [TestMethod]
+    public void OnCaravanDestroyed_InTransitOrder_MarksLostForgetsTrackerAndPurges()
+    {
+        var order = SeedInTransitOrder();
+
+        _sut.OnCaravanDestroyed(order.OrderId);
+
+        Assert.AreEqual(SupplyOrderStatus.Lost, order.StatusEnum);
+        _caravans.Received(1).ForgetDestroyed(order);
+        _caravans.DidNotReceiveWithAnyArgs().ReleaseEscortAndDestroy(default);
+        Assert.AreEqual(0, _sut.ActiveOrders.Count,
+            "the loss is recorded immediately so no later save carries a stale InTransit row");
+    }
+
+    [TestMethod]
+    public void OnCaravanDestroyed_FinishedOrder_IsIgnored()
+    {
+        // Our own Deliver/Lose/Cancel paths destroy the party AFTER flipping the status; the
+        // synchronous destroy event must fall through for them.
+        var order = SeedInTransitOrder();
+        order.StatusEnum = SupplyOrderStatus.Delivered;
+
+        _sut.OnCaravanDestroyed(order.OrderId);
+
+        Assert.AreEqual(SupplyOrderStatus.Delivered, order.StatusEnum);
+        _caravans.DidNotReceiveWithAnyArgs().ForgetDestroyed(default);
+    }
+
+    [TestMethod]
+    public void OnCaravanDestroyed_UnknownOrNullOrderId_DoesNothing()
+    {
+        SeedInTransitOrder();
+
+        _sut.OnCaravanDestroyed("taom_so_99");
+        _sut.OnCaravanDestroyed(null);
+
+        Assert.AreEqual(1, _sut.ActiveOrders.Count);
+        _caravans.DidNotReceiveWithAnyArgs().ForgetDestroyed(default);
+    }
+
+    // --- dispatch message ---
+
+    [TestMethod]
+    public void DispatchMessageTemplate_LordOrder_NamesTheLord()
+    {
+        // Source parity: the module's '{LORD} sends reinforcements' messenger line.
+        StringAssert.Contains(SupplyOrderService.DispatchMessageTemplate(isFromLord: true), "{LORD}");
+        StringAssert.Contains(
+            SupplyOrderService.DispatchMessageTemplate(isFromLord: true), "taom_sl_lord_dispatched");
+    }
+
+    [TestMethod]
+    public void DispatchMessageTemplate_SettlementOrder_UsesTheGenericCaravanLine()
+    {
+        StringAssert.Contains(
+            SupplyOrderService.DispatchMessageTemplate(isFromLord: false), "taom_sl_dispatched");
     }
 
     [TestMethod]
@@ -646,6 +711,48 @@ public class SupplyOrderServiceTests
         Assert.IsNotNull(savedBook);
         Assert.AreEqual(0, savedBook.Count);
         Assert.AreEqual(0, savedCounter, "a negative persisted counter is clamped");
+    }
+
+    [TestMethod]
+    public void LoadFrom_CounterBelowLoadedIds_DerivedFromTheIds()
+    {
+        // A recovered save can carry the book without the counter key (0 comes in); trusting it
+        // would mint taom_so_7 again over the live order (Codex round 2 #2).
+        var order = new SupplyOrder { OrderId = "taom_so_7", SourceSettlementId = "town_G1" };
+        order.StatusEnum = SupplyOrderStatus.InTransit;
+
+        _sut.LoadFrom(new Dictionary<string, SupplyOrder> { [order.OrderId] = order }, counter: 0);
+        _sut.SaveInto(out _, out var counter);
+
+        Assert.AreEqual(8, counter, "the loaded ids are authoritative; the persisted counter is only a floor");
+    }
+
+    [TestMethod]
+    public void LoadFrom_CounterAheadOfLoadedIds_Kept()
+    {
+        var order = new SupplyOrder { OrderId = "taom_so_2", SourceSettlementId = "town_G1" };
+        order.StatusEnum = SupplyOrderStatus.InTransit;
+
+        _sut.LoadFrom(new Dictionary<string, SupplyOrder> { [order.OrderId] = order }, counter: 12);
+        _sut.SaveInto(out _, out var counter);
+
+        Assert.AreEqual(12, counter, "purged orders legitimately leave the counter ahead of the book");
+    }
+
+    [TestMethod]
+    public void LoadFrom_MalformedOrderIds_DoNotPoisonTheCounter()
+    {
+        var alien = new SupplyOrder { OrderId = "not_our_prefix_5", SourceSettlementId = "town_G1" };
+        alien.StatusEnum = SupplyOrderStatus.InTransit;
+        var garbage = new SupplyOrder { OrderId = "taom_so_notanumber", SourceSettlementId = "town_G1" };
+        garbage.StatusEnum = SupplyOrderStatus.InTransit;
+
+        _sut.LoadFrom(
+            new Dictionary<string, SupplyOrder> { [alien.OrderId] = alien, [garbage.OrderId] = garbage },
+            counter: 3);
+        _sut.SaveInto(out _, out var counter);
+
+        Assert.AreEqual(3, counter);
     }
 
     [TestMethod]

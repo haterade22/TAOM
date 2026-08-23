@@ -1,4 +1,4 @@
-# Lessons — Build, Tooling & Workflow
+﻿# Lessons — Build, Tooling & Workflow
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Build, Tooling & Workflow lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -1466,3 +1466,14 @@ verification. **Prevent:** every generated registration gets a mechanical round-
 registered text must equal the code default), living in the test suite, not in the generator.
 
 **Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 4 (orchestrator-inflicted HIGH).
+
+### A wiring gate must exercise the wiring; a source-text scan only pins the idiom (camps port, 2026-08-23)
+
+The batch-1 contributor-ordering fix satisfied both of its own preventive gates (source scans for
+eager container.Resolve) while regressing into a DryIoc construction cycle that would have killed
+the module at startup: CampService materialized its contributor collection, Refuge's contributor
+needed IRefugeService, RefugeService needed ICampService back. Nothing in 7,400 tests resolved
+the finished container. The honest gate is DryIoc Validate over the cross-feature graph
+(CampsContainerWiringTests, the EnlistmentContainerWiringTests shape), which reproduced
+Error.RecursiveDependencyDetected before the lazy-injection fix and pins it after. When a defect
+class is "the graph is broken", the gate must build the graph.

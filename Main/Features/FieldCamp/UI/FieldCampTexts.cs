@@ -19,15 +19,15 @@ internal static class FieldCampTexts
         switch (type)
         {
             case CampType.Ambush:
-                return new TextObject("{=taom_fc_state_ambush}Ambush ready");
+                return new TextObject("{=taom_fcamp_state_ambush}Ambush ready");
             case CampType.Lookout:
-                return new TextObject("{=taom_fc_state_lookout}Lookout posted");
+                return new TextObject("{=taom_fcamp_state_lookout}Lookout posted");
             case CampType.Field:
-                return new TextObject("{=taom_fc_state_field}Field camp");
+                return new TextObject("{=taom_fcamp_state_field}Field camp");
             case CampType.Fortified:
-                return new TextObject("{=taom_fc_state_fortified}Fortified camp");
+                return new TextObject("{=taom_fcamp_state_fortified}Fortified camp");
             default:
-                return new TextObject("{=taom_fc_state_generic}Camp");
+                return new TextObject("{=taom_fcamp_state_generic}Camp");
         }
     }
 
@@ -37,22 +37,22 @@ internal static class FieldCampTexts
         switch (type)
         {
             case CampType.Ambush:
-                return new TextObject("{=taom_fc_raising_ambush}Setting up the ambush.");
+                return new TextObject("{=taom_fcamp_raising_ambush}Setting up the ambush.");
             case CampType.Lookout:
-                return new TextObject("{=taom_fc_raising_lookout}Raising the lookout.");
+                return new TextObject("{=taom_fcamp_raising_lookout}Raising the lookout.");
             case CampType.Field:
-                return new TextObject("{=taom_fc_raising_field}Raising the field camp.");
+                return new TextObject("{=taom_fcamp_raising_field}Raising the field camp.");
             case CampType.Fortified:
-                return new TextObject("{=taom_fc_raising_fortified}Raising the fortified camp.");
+                return new TextObject("{=taom_fcamp_raising_fortified}Raising the fortified camp.");
             default:
-                return new TextObject("{=taom_fc_raising_generic}Raising the camp.");
+                return new TextObject("{=taom_fcamp_raising_generic}Raising the camp.");
         }
     }
 
     /// <summary>Overlay status while foraging; the bar under it shows the accumulator toward the next grain.</summary>
     public static TextObject ForagingStatus(CampType type, int foragedTotal)
     {
-        return new TextObject("{=taom_fc_status_foraging}{CAMP} (foraging - {GRAIN} grain)")
+        return new TextObject("{=taom_fcamp_status_foraging}{CAMP} (foraging - {GRAIN} grain)")
             .SetTextVariable("CAMP", TypeLabel(type))
             .SetTextVariable("GRAIN", foragedTotal);
     }

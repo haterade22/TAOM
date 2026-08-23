@@ -248,8 +248,8 @@ public sealed class FieldCampOverlayVM : ViewModel
         }
 
         return camp != null
-            ? new TextObject("{=taom_fc_btn_options}Camp Options").ToString()
-            : new TextObject("{=taom_fc_btn_make}Make Camp").ToString();
+            ? new TextObject("{=taom_fcamp_btn_options}Camp Options").ToString()
+            : new TextObject("{=taom_fcamp_btn_make}Make Camp").ToString();
     }
 
     private void ApplyContributorStatus()

@@ -181,13 +181,26 @@ public class SupplyOrderService : ISupplyOrderService
         // the order state machine correct even if that side effect ever changes.
         order.StatusEnum = SupplyOrderStatus.InTransit;
 
-        // Charge only now, with the caravan alive on the map.
-        ChargePlayer(total);
+        // Charge only now, with the caravan alive on the map. The source is credited its share.
+        ChargePlayer(source, quote);
         _orders[order.OrderId] = order;
         InvalidateActiveOrders();
-        ShowMessage(new TextObject("{=taom_sl_dispatched}A supply caravan has set out for your party."), error: false);
+        var dispatched = new TextObject(DispatchMessageTemplate(order.IsFromLord));
+        if (order.IsFromLord)
+            dispatched.SetTextVariable("LORD", source.DisplayName ?? string.Empty);
+        ShowMessage(dispatched, error: false);
         return order;
     }
+
+    /// <summary>
+    /// Which dispatch confirmation an order shows. A lord-sourced order names the lord whose
+    /// roster was just debited (source parity: the module's '{LORD} sends reinforcements'
+    /// messenger line, lost in the first port pass); settlement orders keep the generic caravan
+    /// line. Internal so the branch is pinned by tests without rendering a TextObject.
+    /// </summary>
+    internal static string DispatchMessageTemplate(bool isFromLord) => isFromLord
+        ? "{=taom_sl_lord_dispatched}{LORD} sends reinforcements, they are on the way."
+        : "{=taom_sl_dispatched}A supply caravan has set out for your party.";
 
     public void HourlyTick()
     {
@@ -214,13 +227,6 @@ public class SupplyOrderService : ISupplyOrderService
             PurgeFinished();
     }
 
-    public void CancelAll()
-    {
-        int cancelled = CancelWhere(o => true);
-        if (cancelled > 0)
-            ShowMessage(new TextObject("{=taom_sl_cancelled}Supply orders cancelled; the goods and gold are lost."), error: true);
-    }
-
     public void CancelCampOrders()
     {
         int cancelled = CancelWhere(o => o.PlacedFromCamp);
@@ -238,8 +244,11 @@ public class SupplyOrderService : ISupplyOrderService
                 continue;
             if (!shouldCancel(order))
                 continue;
-            _caravans.ReleaseEscortAndDestroy(order);
+            // Status BEFORE the destroy: DestroyPartyAction raises MobilePartyDestroyed
+            // synchronously, and OnCaravanDestroyed must see a finished status so our own
+            // teardown is never double-recorded as a battle loss.
             order.StatusEnum = SupplyOrderStatus.Lost;
+            _caravans.ReleaseEscortAndDestroy(order);
             cancelled++;
         }
         if (cancelled > 0)
@@ -275,7 +284,22 @@ public class SupplyOrderService : ISupplyOrderService
         }
 
         _orders = book;
-        _counter = Math.Max(counter, 0);
+
+        // The persisted counter is only a FLOOR: a recovered save can carry the order book
+        // without the counter key (the behavior then hands 0 in), and trusting it would mint
+        // 'taom_so_0' again over a live order, silently replacing its row and tracker while the
+        // old caravan still walks the map (Codex round 2 #2). The loaded ids are authoritative.
+        int derived = 0;
+        foreach (var order in book.Values)
+        {
+            if (order.OrderId.StartsWith(OrderIdPrefix, StringComparison.Ordinal)
+                && int.TryParse(order.OrderId.Substring(OrderIdPrefix.Length), out int suffix)
+                && suffix >= 0 && suffix < int.MaxValue)
+            {
+                derived = Math.Max(derived, suffix + 1);
+            }
+        }
+        _counter = Math.Max(Math.Max(counter, 0), derived);
 
         // Transient caches never survive into a loaded book: a caravan tracker's cached party
         // belongs to the session that created it, and the loaded campaign has new objects under
@@ -358,8 +382,11 @@ public class SupplyOrderService : ISupplyOrderService
             order,
             CapByLive(order.Goods, liveGoods),
             CapByLive(order.Recruits, liveTroops));
-        _caravans.ReleaseEscortAndDestroy(order);
+        // Status BEFORE the destroy: DestroyPartyAction raises MobilePartyDestroyed
+        // synchronously, and OnCaravanDestroyed must see a finished status so our own teardown
+        // is not re-recorded as a battle loss on a just-delivered order.
         order.StatusEnum = SupplyOrderStatus.Delivered;
+        _caravans.ReleaseEscortAndDestroy(order);
         ShowMessage(new TextObject("{=taom_sl_delivered}Your supplies have arrived."), error: false);
     }
 
@@ -387,9 +414,29 @@ public class SupplyOrderService : ISupplyOrderService
 
     private void LoseOrder(SupplyOrder order)
     {
-        // Release attempts even without a live party; the caravan service checks reachability.
-        _caravans.ReleaseEscortAndDestroy(order);
+        // Status before the release (see DeliverOrder); the release itself attempts even
+        // without a live party, because the caravan service checks reachability.
         order.StatusEnum = SupplyOrderStatus.Lost;
+        _caravans.ReleaseEscortAndDestroy(order);
+        ShowMessage(new TextObject("{=taom_sl_lost}A supply caravan was lost!"), error: true);
+    }
+
+    public void OnCaravanDestroyed(string orderId)
+    {
+        if (string.IsNullOrEmpty(orderId) || !_orders.TryGetValue(orderId, out var order))
+            return;
+        // Only a live order records a loss here: Deliver/Lose/Cancel flip the status BEFORE
+        // destroying the party, so our own teardown arrives with a finished status and falls
+        // through. This path is for the ENGINE's destroys (a lost battle), and it runs
+        // synchronously at destroy time, so no save written afterwards can carry a stale
+        // InTransit row that a load would resurrect with its full cargo (Codex round 2 #7).
+        if (order.StatusEnum != SupplyOrderStatus.Ordered
+            && order.StatusEnum != SupplyOrderStatus.InTransit)
+            return;
+        _caravans.ForgetDestroyed(order);
+        order.StatusEnum = SupplyOrderStatus.Lost;
+        InvalidateActiveOrders();
+        PurgeFinished();
         ShowMessage(new TextObject("{=taom_sl_lost}A supply caravan was lost!"), error: true);
     }
 
@@ -419,10 +466,57 @@ public class SupplyOrderService : ISupplyOrderService
 
     protected virtual float ElapsedFractionOf(SupplyOrder order) => order.ElapsedFraction();
 
-    protected virtual void ChargePlayer(int amount)
+    /// <summary>
+    /// Takes the player's gold and credits the source its share (the goods and troops at their
+    /// quoted prices), matching vanilla purchases where the town or lord is paid. The port
+    /// previously destroyed the whole payment while real stock and soldiers left the source, a
+    /// one-way economy sink the #317 town ledger would show as unexplained (review round B).
+    /// Transport and guard fees ARE destroyed, deliberately: they pay the carriers, who are not
+    /// economy actors, exactly like vanilla mercenary wages.
+    /// </summary>
+    protected virtual void ChargePlayer(SupplySourceInfo source, SupplyQuote quote)
     {
-        GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, amount, disableNotification: true);
+        int sourceShare = quote.Goods + quote.Troops;
+        int fees = quote.Transport + quote.Guard;
+
+        if (sourceShare > 0)
+        {
+            if (!string.IsNullOrEmpty(source.HeroId))
+            {
+                var lord = FindHero(source.HeroId);
+                if (lord != null)
+                {
+                    GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, lord, sourceShare, disableNotification: true);
+                }
+                else
+                {
+                    _logger.LogWarning($"[SupplyLines] charge: lord '{source.HeroId}' unreachable, his share is destroyed");
+                    GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, sourceShare, disableNotification: true);
+                }
+            }
+            else
+            {
+                var settlement = Settlement.Find(source.SettlementId);
+                if (settlement != null)
+                {
+                    GiveGoldAction.ApplyForCharacterToSettlement(Hero.MainHero, settlement, sourceShare, disableNotification: true);
+                }
+                else
+                {
+                    _logger.LogWarning($"[SupplyLines] charge: settlement '{source.SettlementId}' unreachable, its share is destroyed");
+                    GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, sourceShare, disableNotification: true);
+                }
+            }
+        }
+
+        if (fees > 0)
+            GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, fees, disableNotification: true);
     }
+
+    // Heroes register with CampaignObjectManager only (Hero.cs:1467-1480, verified 1.4.8);
+    // MBObjectManager.GetObject<Hero> reads XML type records and misses runtime heroes.
+    private static Hero FindHero(string heroId) =>
+        string.IsNullOrEmpty(heroId) ? null : Campaign.Current?.CampaignObjectManager?.Find<Hero>(heroId);
 
     protected virtual string PickCompanionEscortId()
     {
@@ -488,7 +582,7 @@ public class SupplyOrderService : ISupplyOrderService
         {
             if (!string.IsNullOrEmpty(source.HeroId))
             {
-                var roster = MBObjectManager.Instance.GetObject<Hero>(source.HeroId)?.PartyBelongedTo?.MemberRoster;
+                var roster = FindHero(source.HeroId)?.PartyBelongedTo?.MemberRoster;
                 if (roster == null)
                 {
                     _logger.LogWarning($"[SupplyLines] refund: lord '{source.HeroId}' unreachable, troops not restored");

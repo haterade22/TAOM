@@ -68,17 +68,47 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
   through `CaravanExists`. The original `IsRaid` input could never fire for a field battle
   (`IsRaid` is the settlement-raid battle type only) and was retired.
 - **Delivery hands over the LIVE cargo**, capped by what was ordered: goods eaten in transit and
-  recruits lost to a battle stay lost (partial delivery), and template caravan guards or
-  mercenary escorts are never delivered because they were never in the order. Deliveries also
-  freeze while the player is a prisoner (captivity rides the same delivery-blocked input as an
-  encounter).
+  recruits lost to a battle stay lost (partial delivery). Template caravan guards and mercenary
+  escorts are never delivered even when they share a character id with a purchased recruit: the
+  order persists a **non-cargo manifest** (`SupplyOrder.NonCargoTroops`, SaveableField 117,
+  recorded at every spawn) and delivery subtracts it from the live roster before capping. The
+  contract is deterministic and conservative: casualties bill against the cargo first, so the
+  player is never handed a troop that might be a guard (Codex round 2 #6). Orders saved before
+  the field existed deserialize it as null and keep the legacy live-cap behaviour. Deliveries
+  also freeze while the player is a prisoner (captivity rides the same delivery-blocked input
+  as an encounter).
+- **Payments credit the source** (review round B): the goods and troops share of the quote goes
+  to the settlement's coffers (`GiveGoldAction.ApplyForCharacterToSettlement`) or the lord
+  (`ApplyBetweenCharacters`), matching vanilla purchases and keeping the #317 town ledger
+  explainable; the earlier port destroyed the whole payment while real stock and soldiers left
+  the source. Transport and guard fees ARE destroyed deliberately, like vanilla mercenary
+  wages: they pay carriers who are not economy actors.
+- **A destroyed caravan records its loss immediately**: the behavior listens on
+  `MobilePartyDestroyed` and routes `SupplyCaravanComponent` parties to
+  `ISupplyOrderService.OnCaravanDestroyed`, synchronously at destroy time, so an autosave
+  between an AI battle and the next hourly tick can never serialize a stale InTransit row that
+  a load would resurrect with its full cargo (Codex round 2 #7). Our own teardown paths flip
+  the order status BEFORE destroying the party, so the synchronous event ignores them; the
+  destroyed-path tracker cleanup (`ForgetDestroyed`) never re-destroys and never touches the
+  companion, whose fate the destroying battle already decided.
 - **Camp-placed orders are marked** (`SupplyOrder.PlacedFromCamp`, threaded
   `SupplyOrderScreens.Open(fromCamp) → game state → screen → VM → TryPlaceOrder`). Breaking a
   field camp calls `CancelCampOrders()`, which forfeits those and ONLY those; town-placed
-  orders keep travelling. `CancelAll` remains for genuine cancel-everything paths.
+  orders keep travelling. The blanket `CancelAll` was deleted in review round B: it had no
+  production caller, and it existed only as a footgun that looked symmetrical to
+  `CancelCampOrders` while destroying town-placed orders the player paid for.
 - **The dispatch origin is persisted on the order** (SaveableFields 114-116, set at first
   spawn): route building and respawn anchor there, never at the source lord's current position,
   and a lord-sourced caravan can now respawn after a load even when the lord lost his party.
+- **Small round-B fidelity/behaviour fixes** (2026-08-23): the caravan's map banner is the
+  player's MAP-FACTION banner again (source parity; the port briefly used the clan banner),
+  falling back to the clan banner for a factionless player. Lord-sourced orders confirm with
+  the source's named "{LORD} sends reinforcements" line instead of the generic caravan message
+  (`SupplyOrderService.DispatchMessageTemplate` pins the branch). A source row whose distance
+  resolves to the `float.MaxValue` unreachable sentinel (or NaN) is now disabled with the same
+  no-route reason the confirm path uses and shows "?" for distance, instead of quoting
+  near-zero transport for an order the service would reject. The per-frame bearing write shares
+  the position write's `MinPositionDelta` change gate instead of running per caravan per frame.
 - **Clicking the caravan never opens vanilla's meeting**: `SupplyCaravanEncounterPatch`
   (category `Patch73_SupplyLines`, prefix on `PlayerEncounter.DoMeeting`) finishes the
   encounter with a one-line notice. The component's `Leader` is null, so vanilla would strike a
@@ -95,6 +125,8 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
 | 2x-timeout delivery fired mid-battle/siege | Every delivery verdict is gated on the player not being in an encounter |
 | Whole handcart subsystem dead (flag never set) + dead settings | Not ported; `CaravanHoursPerDistance` is the honest name for the speed constant the source borrowed from the dead branch |
 | Unused order states (Arrived/PartiallyDelivered/Cancelled) | Enum has only states that occur |
+| Order counter trusted from the save alone | `LoadFrom` derives the counter floor from the loaded `taom_so_N` ids, so a recovered save missing the counter key cannot mint an id over a live order |
+| Post-load rebind trusted the party StringId alone | `RespawnMissing` binds a surviving party only when its component is `SupplyCaravanComponent` with the matching order id; anything else is logged and a fresh caravan is spawned (a hostile row could otherwise hand `main_party` to the teleport pass and to `DestroyPartyAction`) |
 
 ## Deliberate departures from the source
 
@@ -111,6 +143,27 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
   component) and its volunteers flow through the same notable-slot walk.
 - **The ambush/battle mechanics of the sibling FieldCamp feature are out of scope here**; this
   feature's only camp coupling is the `PlacedFromCamp` marker and `CancelCampOrders`.
+- **The force-deliver failsafe fires at 1.5x planned time** (`SupplyOrderEngine.ForceDeliverFraction`),
+  the source's route-tick threshold for routed caravans. The first port pass shipped the hourly
+  tick's 2.0 with a comment claiming 2.0 governed routed caravans; review round B showed that
+  claim was inverted (2.0 was only the no-route backstop, and every caravan this port spawns is
+  routed).
+
+## Food
+
+The caravan party is NOT `IsCaravan` (custom component), so vanilla's
+`DefaultMobilePartyFoodConsumptionModel.DoesPartyConsumeFood` returns true for it (verified on
+the installed 1.4.8: the exclusion list is IsGarrison/IsCaravan/IsBandit/IsMilitia/IsPatrolParty
+plus IsVillager) and `FoodConsumptionBehavior` eats from its `ItemRoster` daily. Before round B
+an escorted goods-less order starved silently for the whole transit: no message (the starving
+notifications are `IsMainParty`-gated), no resupply (the caravan has no `LeaderHero`, so
+`PartiesBuyFoodCampaignBehavior` skips it). `Spawn` now stocks provisions:
+`ComputeProvisionCount` loads one food per 20 men per day (vanilla
+`NumberOfMenOnMapToEatOneFood`) for the worst-case 1.5x-planned transit, plus one spare, as
+"grain" (an engine DEFAULT item created in code by `DefaultItems.RegisterAll`, so it exists in
+every campaign). Provisions are goods the order never listed, so delivery's cap-by-ordered
+never hands them over; ordered food that transit partially ate can still arrive whole when the
+provisions covered the consumption, which only ever favours the player.
 
 ## Configuration
 
@@ -138,12 +191,15 @@ complete so cargo is never stranded by a toggle.
 | `Hooks/SupplyLinesCampaignBehavior.cs` | Events, SyncData halves, session reset gate, town/town_keep menu options |
 | `Hooks/SupplyCaravanEncounterPatch.cs` | Patch73_SupplyLines: DoMeeting guard, caravan click-through suppressed |
 | `UI/GauntletSupplyOrderScreen.cs` + `SupplyOrderScreenVM.cs` + row VMs | The order screen (attribute path, focus layer, latched teardown) |
-| `Main/_Module/GUI/PreFabs/SupplyLines/TaomSupplyOrderScreen.xml` | Ported prefab, vanilla brushes only, `{=taom_sl_*}` texts |
+| `Main/_Module/GUI/PreFabs/SupplyLines/TaomSupplyOrderScreen.xml` | Ported prefab, `{=taom_sl_*}` texts. Text brushes are `Popup.Description.Text` / `Popup.Button.Text` (Native/GUI/Brushes/Popup.xml, grep-verified on the installed 1.4.8) with per-site `Brush.FontSize`; the port originally shipped `Popup.Text.Medium`/`.Small`, which exist in NO brush file anywhere and silently rendered 22 widgets with the engine default brush (round B critic) |
 
-Tests: pricing (36), engine verdicts (23), order book incl. reset/cancel-camp/live-cargo (37),
-order POCO incl. dispatch origin (12), behavior session-reset contract (7), VM matrix (25),
-prefab-binding round-trip (forward + reverse dead-binding), engine bindings (Bearing setter,
-VolunteerModel gate, wage model, CreateParty overload) plus the Patch73 target/category pins (3),
+Tests: pricing, engine verdicts (incl. the 1.5x force-deliver pin), the order book (reset,
+cancel-camp, live-cargo, counter derivation, destroy-event loss recording,
+status-before-destroy ordering, dispatch-message branch), cargo/provision maths
+(`SupplyCaravanCargoMathTests`), order POCO incl. dispatch origin, behavior session-reset
+contract, VM matrix (incl. the unreachable-sentinel row states), prefab-binding round-trip
+(forward + reverse dead-binding, sprite/brush allowlist), engine bindings (Bearing setter,
+VolunteerModel gate, wage model, CreateParty overload) plus the Patch73 target/category pins,
 plus the shipped-config and localization-key sweeps that gate every feature.
 
 ## Traps
@@ -171,6 +227,7 @@ plus the shipped-config and localization-key sweeps that gate every feature.
   losses (partial), cancel, camp-placed order + camp break, save/load mid-transit, click the
   caravan (no stranger conversation).
 - 12-language translation run for the `{=taom_sl_*}` keys, including the new
-  `taom_sl_caravan_meet` (English fallbacks registered; run scheduled with the
+  `taom_sl_caravan_meet` and `taom_sl_lord_dispatched` (the latter needs its registration row
+  in `taom_module_strings.xml` first, single-owner file; run scheduled with the
   FieldCamp/Refuge strings).
 - Optional fidelity restore: the `sl_reinf_*` lord conversation (see Deliberate departures).

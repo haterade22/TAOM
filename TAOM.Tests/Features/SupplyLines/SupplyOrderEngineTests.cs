@@ -206,8 +206,10 @@ public class SupplyOrderEngineTests
     }
 
     [TestMethod]
-    public void ForceDeliverFraction_MatchesSourceHourlyTimeout()
+    public void ForceDeliverFraction_MatchesSourceRouteTickTimeout()
     {
-        Assert.AreEqual(2f, _sut.ForceDeliverFraction);
+        // The source's route tick delivered routed caravans at 1.5x planned; the hourly 2.0 was
+        // only the no-route backstop, and every caravan this port spawns is routed.
+        Assert.AreEqual(1.5f, _sut.ForceDeliverFraction);
     }
 }

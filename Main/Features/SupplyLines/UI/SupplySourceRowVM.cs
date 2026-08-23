@@ -23,12 +23,16 @@ public sealed class SupplySourceRowVM : ViewModel
         Info = info;
         _onSelected = onSelected;
 
-        // Engine-derived float: a non-finite or sentinel distance must not reach pricing.
+        // Engine-derived float: a non-finite or sentinel distance must not reach pricing. But a
+        // sentinel is not "distance 0": quoting near-zero transport for a source the order
+        // service will reject with no-route lied to the player (review round B), so an
+        // unreachable row is DISABLED with the same no-route reason the confirm path uses, and
+        // its distance renders as "?" instead of a fake 0.
         var distance = info?.Distance ?? 0f;
-        Distance = FiniteFloatValidator.IsFiniteAtLeast(distance, 0f) && distance < float.MaxValue
-            ? distance
-            : 0f;
-        _distanceText = ((int)Math.Round(Distance)).ToString();
+        bool reachable = FiniteFloatValidator.IsFiniteAtLeast(distance, 0f) && distance < float.MaxValue;
+        Distance = reachable ? distance : 0f;
+        _distanceText = reachable ? ((int)Math.Round(Distance)).ToString() : "?";
+        CanOrder = (info?.CanOrder ?? false) && reachable;
 
         var name = info?.DisplayName;
         if (string.IsNullOrEmpty(name))
@@ -41,7 +45,15 @@ public sealed class SupplySourceRowVM : ViewModel
         template.SetTextVariable("NAME", name);
         template.SetTextVariable("RELATION", relation);
         if (!CanOrder)
-            template.SetTextVariable("REASON", info?.DisabledReason ?? string.Empty);
+        {
+            // An eligible-but-unreachable source reuses the placement failure's registered text
+            // so the row explains itself with the same words the confirm would have used.
+            var reason = info?.DisabledReason;
+            if (string.IsNullOrEmpty(reason) && !reachable)
+                reason = new TextObject(
+                    "{=taom_sl_fail_no_route}There is no route from that source to you right now.").ToString();
+            template.SetTextVariable("REASON", reason ?? string.Empty);
+        }
         _displayName = template.ToString();
     }
 
@@ -53,9 +65,11 @@ public sealed class SupplySourceRowVM : ViewModel
 
     public bool IsLord => !string.IsNullOrEmpty(Info?.HeroId);
 
-    /// <summary>Eligibility fixed at build time. Not a binding: the prefab drives the button
-    /// through <see cref="RowEnabled"/> (the source module's bound CanOrder was dead).</summary>
-    public bool CanOrder => Info?.CanOrder ?? false;
+    /// <summary>Eligibility fixed at build time: the source's own eligibility AND a reachable
+    /// distance (the float.MaxValue sentinel disables the row instead of quoting from 0). Not a
+    /// binding: the prefab drives the button through <see cref="RowEnabled"/> (the source
+    /// module's bound CanOrder was dead).</summary>
+    public bool CanOrder { get; }
 
     [DataSourceProperty]
     public bool RowEnabled => CanOrder && !_locked;

@@ -62,7 +62,10 @@ public interface IRefugeService
     void Dismantle(RefugeData refuge);
 
     /// <summary>Frame-cadence: build advancement, the hold-nearby rule while a refuge raises
-    /// (with a player-facing message the source never showed), visual retries. Internally throttled.</summary>
+    /// (with a player-facing message the source never showed), visual retries. Internally
+    /// throttled. Called UNCONDITIONALLY by the behavior (the CampService split): build finish,
+    /// visual retries and wind are state-protecting and run with the master toggle off; only the
+    /// hold-nearby pin gates on Enabled inside.</summary>
     void FrameTick();
 
     /// <summary>Hourly: raid rolls when enabled (off by default).</summary>
@@ -85,6 +88,12 @@ public interface IRefugeService
     /// refuges, mirroring vanilla's PrisonerReleaseCampaignBehavior (which never enumerates
     /// custom party components).</summary>
     void OnPeaceMade();
+
+    /// <summary>The engine started disbanding a refuge party (vanilla does this itself when the
+    /// warden dies with no other hero in the roster). The service cancels the disband -- dismantle
+    /// is a refuge's only exit -- and, when the warden is gone, drops the row to the leaderless
+    /// orphan-adopted state (dismantle-only).</summary>
+    void OnPartyDisbandStarted(string partyId);
 
     /// <summary>SyncData plumbing.</summary>
     void LoadFrom(Dictionary<string, RefugeData> refuges, int counter);

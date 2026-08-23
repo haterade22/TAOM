@@ -411,3 +411,14 @@ A correct string id in the wrong manager does not fall back and does not go blan
   file's name and location, not just its contents, when the loader keys on a literal path.
 - **Source:** 2026-08-22 rebindable Time Acceleration keys.
   `docs/reviews/rca-timeacceleration-keybinds-2026-08-22.md`.
+
+### A localization key prefix is an ownership claim; grep before you take one (camps port, 2026-08-23)
+
+FieldCamp generated 161 registrations under taom_fc_, which was ALREADY FieldCommission's prefix:
+10 of FieldCommission's keys got a second registration in taom_module_strings.xml (one copy
+double-escaped, able to shadow the correct row) and two review rounds missed it because the
+round-trip gate let one registration XML vouch for another as a "code default". Before a new
+feature claims a prefix, grep every ModuleData *_strings.xml for it; and a round-trip gate's
+code-default scan must exclude ALL registration XMLs, or the gate is circular. The renaming fix
+(taom_fc_ -> taom_fcamp_) was free only because the keys were still untranslated English
+fallbacks; after a translator run the same mistake costs 12 languages of churn.

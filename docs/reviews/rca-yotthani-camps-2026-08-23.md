@@ -147,6 +147,35 @@ and the batch-1 fixers align every touched doc and comment with the code as part
 
 ---
 
+## Batch-2 addendum (round B + Codex round 2, 2026-08-23)
+
+Two updates from the second review wave; instances and fixes are in the review log.
+
+### Class 5, deepened: style gates cannot see the resolved graph
+
+The batch-1 contributor fix REGRESSED DIFFERENTLY (Codex's words): moving the eager resolves into
+a post-registration block removed the ordering hazard and created a construction cycle
+(CampService materializes its contributor collection; Refuge's contributor needs IRefugeService;
+RefugeService needs ICampService). Both batch-1 preventive tests passed while the module could not
+start, because both scan SOURCE TEXT for a banned pattern; neither resolves the finished
+container. The corrected preventive artifact: CampsContainerWiringTests (DryIoc Validate over the
+three-feature graph, the EnlistmentContainerWiringTests shape), proven RED on the cycle before the
+fix (lazy contributor injection) turned it GREEN. Lesson: a wiring gate must exercise the wiring;
+a text scan only pins the idiom, and an idiom can be satisfied by a broken graph.
+
+### Class 8 (new): generated registrations claimed a prefix another feature owned
+
+The camps localization batch registered 161 keys under taom_sl_/taom_fc_/taom_rf_; taom_fc_ was
+ALREADY FieldCommission's registered prefix (taom_enlistment_strings.xml), so the generator swept
+10 of FieldCommission's inline defaults into a second registration file (one row double-escaped
+and able to shadow the correct one) and nobody noticed for two review rounds because the
+round-trip gate let one registration file vouch for another. Fixes: FieldCamp's 58 keys renamed
+to taom_fcamp_ (zero cost while the keys are untranslated English fallbacks, #508); the gate now
+excludes ALL registration XMLs from its code-default scan and decodes numeric character
+references; the regeneration script purges the foreign rows. Prevent (rule of thumb, recorded in
+the localization lessons): before a new feature claims a key prefix, grep the registration XMLs
+for that prefix; a prefix is an ownership claim, not a naming convention.
+
 ## Where each class was caught, honestly
 
 Round A's no-narrative design earned its cost: Classes 3 and 6 are structurally invisible to a

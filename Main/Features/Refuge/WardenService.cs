@@ -175,6 +175,7 @@ public class WardenService : IWardenService
                 Id = character.StringId,
                 DisplayName = character.Name?.ToString(),
                 IsCompanion = false,
+                Tier = character.Tier,
             });
         }
         return result;

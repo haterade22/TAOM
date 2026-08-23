@@ -4,8 +4,10 @@ namespace TAOM.Features.Refuge;
 /// The source module declared an EnableRefuge toggle and never read it; this one is real.</summary>
 public interface IRefugeSettingsProvider
 {
-    /// <summary>Master toggle. Off = no founding, no menus; standing refuges persist and can be
-    /// entered/dismantled so a toggle never strands a garrison.</summary>
+    /// <summary>Master toggle. Off = no founding, no upgrading, no hold-nearby pin. Standing
+    /// refuges persist, a build already in progress still finishes (state-protecting frame work
+    /// runs regardless of the toggle, the CampService split), and refuges can still be entered,
+    /// managed and dismantled -- a toggle never strands a garrison, mid-build included.</summary>
     bool Enabled { get; }
 
     /// <summary>Gold to found a refuge (default 2000).</summary>

@@ -457,13 +457,41 @@ public class SupplyOrderScreenVMTests
     }
 
     [TestMethod]
-    public void SourceRow_NonFiniteDistance_SanitizedToZero()
+    public void SourceRow_NonFiniteDistance_DisabledWithUnknownDistance()
     {
+        // TryPlaceOrder rejects a NaN distance with no-route, so the row must not pretend the
+        // source is 0 units away and orderable; the pricing-safe Distance stays 0.
         _townA.Distance = float.NaN;
 
         var vm = CreateVM();
 
-        Assert.AreEqual("0", vm.Settlements[0].DistanceText);
+        Assert.AreEqual("?", vm.Settlements[0].DistanceText);
         Assert.AreEqual(0f, vm.Settlements[0].Distance);
+        Assert.IsFalse(vm.Settlements[0].RowEnabled);
+    }
+
+    [TestMethod]
+    public void SourceRow_UnreachableSentinelDistance_DisabledWithNoRouteReason()
+    {
+        // float.MaxValue is the documented unreachable sentinel: the old row collapsed it to a
+        // distance of 0 and quoted near-zero transport for an order the service would then
+        // reject (review round B). The row now disables itself and says why.
+        _townA.Distance = float.MaxValue;
+
+        var vm = CreateVM();
+
+        Assert.AreEqual("?", vm.Settlements[0].DistanceText);
+        Assert.AreEqual(0f, vm.Settlements[0].Distance);
+        Assert.IsFalse(vm.Settlements[0].RowEnabled);
+        StringAssert.Contains(vm.Settlements[0].DisplayName, "no route");
+    }
+
+    [TestMethod]
+    public void SourceRow_ReachableDistance_StaysOrderable()
+    {
+        var vm = CreateVM();
+
+        Assert.AreEqual("10", vm.Settlements[0].DistanceText);
+        Assert.IsTrue(vm.Settlements[0].RowEnabled);
     }
 }

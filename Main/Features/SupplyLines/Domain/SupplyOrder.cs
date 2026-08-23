@@ -63,6 +63,17 @@ public sealed class SupplyOrder
     /// <summary>True once a finite dispatch origin was recorded at spawn.</summary>
     [SaveableField(116)] public bool HasDispatchOrigin;
 
+    /// <summary>
+    /// Troops aboard the caravan that are NOT purchased cargo, per character id, recorded at
+    /// spawn: the culture template's caravan guards and the mercenary escort. Delivery subtracts
+    /// these from the live roster before capping, so a guard whose character id collides with a
+    /// purchased recruit is never handed over as cargo (Codex round 2 #6). Casualties therefore
+    /// bill against the cargo first; the deterministic contract is "the player never receives a
+    /// troop that might be a guard". Null on orders saved before the field existed (the save
+    /// system bypasses field initializers); readers treat null as empty.
+    /// </summary>
+    [SaveableField(117)] public Dictionary<string, int> NonCargoTroops;
+
     /// <summary>Records the dispatch origin. Positive requirement: non-finite coordinates are
     /// refused (the flag stays false) so a corrupt position can never become a route anchor.</summary>
     public void SetDispatchOrigin(float x, float y)

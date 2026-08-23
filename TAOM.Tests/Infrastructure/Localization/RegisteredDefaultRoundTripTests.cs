@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,22 +17,26 @@ namespace TAOM.Tests.Infrastructure.Localization;
 /// text against text. A generator's output is unverified until something diffs it against its
 /// input (RCA `rca-yotthani-camps-2026-08-23.md` Class 4).</para>
 ///
-/// <para>Scoped to the camps-port prefixes to avoid re-litigating older keys registered under
-/// earlier conventions; extend the prefix list when new generated batches land.</para>
+/// <para>Scoped to the camps-port prefixes (taom_fcamp_, renamed from taom_fc_ which was
+/// FieldCommission's prefix all along) to avoid re-litigating older keys registered under
+/// earlier conventions; extend the prefix list when new generated batches land. Registration
+/// XMLs are excluded from the CODE-default scan: a registration file must never vouch for
+/// another registration file (that blind spot passed a double-escaped row straight through
+/// this gate, review round B).</para>
 /// </summary>
 [TestClass]
 public class RegisteredDefaultRoundTripTests
 {
-    private static readonly string[] Prefixes = { "taom_sl_", "taom_fc_", "taom_rf_" };
+    private static readonly string[] Prefixes = { "taom_sl_", "taom_fcamp_", "taom_rf_" };
 
     private static string RepoRoot => Path.GetFullPath(
         Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\.."));
 
     private static readonly Regex CodeDefault = new Regex(
-        "\\{=(taom_(?:sl|fc|rf)_[a-z_0-9]+)\\}([^\"]*)\"", RegexOptions.Compiled);
+        "\\{=(taom_(?:sl|fcamp|rf)_[a-z_0-9]+)\\}([^\"]*)\"", RegexOptions.Compiled);
 
     private static readonly Regex RegisteredRow = new Regex(
-        "<string id=\"(taom_(?:sl|fc|rf)_[a-z_0-9]+)\" text=\"\\{=\\1\\}([^\"]*)\" />", RegexOptions.Compiled);
+        "<string id=\"(taom_(?:sl|fcamp|rf)_[a-z_0-9]+)\" text=\"\\{=\\1\\}([^\"]*)\" />", RegexOptions.Compiled);
 
     [TestMethod]
     public void EveryRegisteredDefault_MatchesTheLongestInlineCodeDefault()
@@ -44,7 +48,12 @@ public class RegisteredDefaultRoundTripTests
             if (!file.EndsWith(".cs") && !file.EndsWith(".xml"))
                 continue;
             if (file.Contains(@"\bin\") || file.Contains(@"\obj\") ||
-                file.Contains(@"\Languages\") || file.EndsWith("taom_module_strings.xml"))
+                file.Contains(@"\Languages\"))
+                continue;
+            // Registration XMLs never count as code: one registration file vouching for another
+            // is how a double-escaped row survived this gate (review round B).
+            var name = Path.GetFileName(file);
+            if (name == "global_strings.xml" || name.EndsWith("_strings.xml"))
                 continue;
 
             foreach (Match m in CodeDefault.Matches(File.ReadAllText(file)))
@@ -83,6 +92,15 @@ public class RegisteredDefaultRoundTripTests
             "translations):\n" + string.Join("\n", problems));
     }
 
-    private static string Unescape(string s) => s
-        .Replace("&quot;", "\"").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
+    private static string Unescape(string s)
+    {
+        // Numeric character references first: the &#x27; family is what the double-escape
+        // defect rode in on, and Regex handles both hex and decimal forms.
+        s = Regex.Replace(s, "&#x([0-9A-Fa-f]+);", m =>
+            ((char)Convert.ToInt32(m.Groups[1].Value, 16)).ToString());
+        s = Regex.Replace(s, "&#([0-9]+);", m =>
+            ((char)int.Parse(m.Groups[1].Value)).ToString());
+        return s
+            .Replace("&quot;", "\"").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
+    }
 }

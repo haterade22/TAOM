@@ -30,6 +30,18 @@ public class RefugeDataTests
     }
 
     [TestMethod]
+    public void BuildProgress_NaNTargetHours_ReportsComplete()
+    {
+        // NaN fails BOTH polarities of a comparison, so the old "<= 0 -> done" guard passed a
+        // NaN through to the division and the refuge never finished: a permanent absorbing state
+        // consuming a cap slot (Codex round 2 #4). The positive-requirement gate resolves it as
+        // done; LoadFrom additionally repairs the persisted field.
+        var data = new RefugeData { BuildTargetHours = float.NaN };
+
+        Assert.AreEqual(1f, data.BuildProgress(), 0.0001f);
+    }
+
+    [TestMethod]
     public void TierEnum_RoundTripsThroughPersistedInt()
     {
         var data = new RefugeData { TierEnum = RefugeTier.Stronghold };

@@ -134,7 +134,7 @@ public sealed class SupplySourceService : ISupplySourceService
 
         if (!string.IsNullOrEmpty(source.HeroId))
         {
-            var lord = MBObjectManager.Instance.GetObject<Hero>(source.HeroId);
+            var lord = FindHero(source.HeroId);
             var roster = lord?.PartyBelongedTo?.MemberRoster;
             if (roster == null)
                 return result;
@@ -186,7 +186,7 @@ public sealed class SupplySourceService : ISupplySourceService
             return float.MaxValue;
         if (!string.IsNullOrEmpty(source.HeroId))
         {
-            var lord = MBObjectManager.Instance.GetObject<Hero>(source.HeroId);
+            var lord = FindHero(source.HeroId);
             return DistanceToLord(lord);
         }
         var settlement = Settlement.Find(source.SettlementId);
@@ -266,7 +266,7 @@ public sealed class SupplySourceService : ISupplySourceService
     {
         if (troops == null || troops.Count == 0)
             return;
-        var lord = MBObjectManager.Instance.GetObject<Hero>(heroId);
+        var lord = FindHero(heroId);
         var roster = lord?.PartyBelongedTo?.MemberRoster;
         if (roster == null)
         {
@@ -385,6 +385,12 @@ public sealed class SupplySourceService : ISupplySourceService
             return item?.Value ?? 0;
         return settlement.Town.GetItemPrice(item, MobileParty.MainParty);
     }
+
+    // Heroes register with CampaignObjectManager only (Hero.cs:1467-1480, verified 1.4.8);
+    // MBObjectManager.GetObject<Hero> reads XML type records and misses runtime heroes, which
+    // made every lord source return no troops and an unreachable distance (Codex round 2 #5).
+    private static Hero FindHero(string heroId) =>
+        string.IsNullOrEmpty(heroId) ? null : Campaign.Current?.CampaignObjectManager?.Find<Hero>(heroId);
 
     private static bool IsPlayerAtWarWithAnyKingdom()
     {

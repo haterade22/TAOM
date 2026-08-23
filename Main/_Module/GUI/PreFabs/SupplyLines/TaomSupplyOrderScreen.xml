@@ -59,11 +59,11 @@
                                             IsVisible="@IsSelected" />
                                     <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                                                 HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10"
-                                                Brush="Popup.Text.Medium" Brush.FontSize="16"
+                                                Brush="Popup.Description.Text" Brush.FontSize="16"
                                                 Text="@DisplayName" />
                                     <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                                                 HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10"
-                                                Brush="Popup.Text.Small" Brush.FontSize="13"
+                                                Brush="Popup.Description.Text" Brush.FontSize="13"
                                                 Brush.FontColor="#A09080FF" Text="@DistanceText" />
                                   </Children>
                                 </ButtonWidget>
@@ -121,7 +121,7 @@
                                             <!-- Name on its own full-width line (CoverChildren height,
                                                  so a long name grows the row instead of overlapping). -->
                                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                                        Brush="Popup.Text.Small" Brush.FontSize="14" Text="@Label" />
+                                                        Brush="Popup.Description.Text" Brush.FontSize="14" Text="@Label" />
                                             <!-- -/qty/+ controls below, right-aligned -->
                                             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                                                        HorizontalAlignment="Right" MarginTop="3" MarginRight="16"
@@ -133,14 +133,14 @@
                                                               Brush="ButtonBrush2" Command.Click="ExecuteMinus" UpdateChildrenStates="true">
                                                   <Children>
                                                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                                Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                                                Brush="Popup.Button.Text" Brush.FontSize="18"
                                                                 Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="-" />
                                                   </Children>
                                                 </ButtonWidget>
                                                 <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                                                             SuggestedWidth="44" SuggestedHeight="30"
                                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                            Brush="Popup.Text.Medium" Brush.FontSize="17"
+                                                            Brush="Popup.Description.Text" Brush.FontSize="17"
                                                             Brush.TextHorizontalAlignment="Center" Text="@QtyText" />
                                                 <ButtonWidget DoNotPassEventsToChildren="true"
                                                               WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
@@ -148,7 +148,7 @@
                                                               Brush="ButtonBrush2" Command.Click="ExecutePlus" UpdateChildrenStates="true">
                                                   <Children>
                                                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                                Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                                                Brush="Popup.Button.Text" Brush.FontSize="18"
                                                                 Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="+" />
                                                   </Children>
                                                 </ButtonWidget>
@@ -202,7 +202,7 @@
                                             <!-- Name on its own full-width line (CoverChildren height,
                                                  so a long name grows the row instead of overlapping). -->
                                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                                        Brush="Popup.Text.Small" Brush.FontSize="14" Text="@Label" />
+                                                        Brush="Popup.Description.Text" Brush.FontSize="14" Text="@Label" />
                                             <!-- -/qty/+ controls below, right-aligned -->
                                             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                                                        HorizontalAlignment="Right" MarginTop="3" MarginRight="16"
@@ -214,14 +214,14 @@
                                                               Brush="ButtonBrush2" Command.Click="ExecuteMinus" UpdateChildrenStates="true">
                                                   <Children>
                                                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                                Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                                                Brush="Popup.Button.Text" Brush.FontSize="18"
                                                                 Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="-" />
                                                   </Children>
                                                 </ButtonWidget>
                                                 <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                                                             SuggestedWidth="44" SuggestedHeight="30"
                                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                            Brush="Popup.Text.Medium" Brush.FontSize="17"
+                                                            Brush="Popup.Description.Text" Brush.FontSize="17"
                                                             Brush.TextHorizontalAlignment="Center" Text="@QtyText" />
                                                 <ButtonWidget DoNotPassEventsToChildren="true"
                                                               WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
@@ -229,7 +229,7 @@
                                                               Brush="ButtonBrush2" Command.Click="ExecutePlus" UpdateChildrenStates="true">
                                                   <Children>
                                                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                                Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                                                Brush="Popup.Button.Text" Brush.FontSize="18"
                                                                 Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="+" />
                                                   </Children>
                                                 </ButtonWidget>
@@ -273,7 +273,7 @@
                                         Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortNone" />
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Brush="Popup.Text.Small" Brush.FontSize="14" Text="{=taom_sl_escort_none}None" />
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="{=taom_sl_escort_none}None" />
                               </Children>
                             </ButtonWidget>
                             <ButtonWidget DoNotPassEventsToChildren="true"
@@ -287,7 +287,7 @@
                                         Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortMercenaries" />
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Brush="Popup.Text.Small" Brush.FontSize="14" Text="{=taom_sl_escort_mercs}Mercenaries" />
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="{=taom_sl_escort_mercs}Mercenaries" />
                               </Children>
                             </ButtonWidget>
                             <ButtonWidget DoNotPassEventsToChildren="true"
@@ -301,7 +301,7 @@
                                         Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortCompanion" />
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Brush="Popup.Text.Small" Brush.FontSize="14" Text="{=taom_sl_escort_companion}Companion" />
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="{=taom_sl_escort_companion}Companion" />
                               </Children>
                             </ButtonWidget>
                           </Children>
@@ -312,19 +312,19 @@
                                 MarginBottom="8" Sprite="horizontal_gradient_divider" />
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                     MarginBottom="4"
-                                    Brush="Popup.Text.Small" Brush.FontSize="15" Text="@GoodsText" />
+                                    Brush="Popup.Description.Text" Brush.FontSize="15" Text="@GoodsText" />
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                     MarginBottom="4"
-                                    Brush="Popup.Text.Small" Brush.FontSize="15" Text="@TroopText" />
+                                    Brush="Popup.Description.Text" Brush.FontSize="15" Text="@TroopText" />
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                     MarginBottom="4"
-                                    Brush="Popup.Text.Small" Brush.FontSize="15" Text="@TransportText" />
+                                    Brush="Popup.Description.Text" Brush.FontSize="15" Text="@TransportText" />
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                     MarginBottom="4"
-                                    Brush="Popup.Text.Small" Brush.FontSize="15" Text="@GuardText" />
+                                    Brush="Popup.Description.Text" Brush.FontSize="15" Text="@GuardText" />
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                     MarginBottom="4"
-                                    Brush="Popup.Text.Medium" Brush.FontSize="18"
+                                    Brush="Popup.Description.Text" Brush.FontSize="18"
                                     Brush.FontColor="#FFD700FF" Text="@TotalText" />
 
                       </Children>
@@ -339,7 +339,7 @@
                  closed silently on some failure paths). Sits just above the footer buttons. -->
             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                         HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="72"
-                        Brush="Popup.Text.Small" Brush.FontSize="15" Brush.FontColor="#E05545FF"
+                        Brush="Popup.Description.Text" Brush.FontSize="15" Brush.FontColor="#E05545FF"
                         Brush.TextHorizontalAlignment="Center"
                         Text="@ErrorText" IsVisible="@HasError" />
 
@@ -356,7 +356,7 @@
                   <Children>
                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Brush="Popup.Text.Medium" Brush.FontSize="16" Text="{=taom_sl_confirm}Confirm" />
+                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="{=taom_sl_confirm}Confirm" />
                   </Children>
                 </ButtonWidget>
                 <ButtonWidget DoNotPassEventsToChildren="true"
@@ -367,7 +367,7 @@
                   <Children>
                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Brush="Popup.Text.Medium" Brush.FontSize="16" Text="{=taom_sl_clear}Clear" />
+                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="{=taom_sl_clear}Clear" />
                   </Children>
                 </ButtonWidget>
                 <ButtonWidget DoNotPassEventsToChildren="true"
@@ -377,7 +377,7 @@
                   <Children>
                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Brush="Popup.Text.Medium" Brush.FontSize="16" Text="{=taom_sl_cancel}Cancel" />
+                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="{=taom_sl_cancel}Cancel" />
                   </Children>
                 </ButtonWidget>
               </Children>

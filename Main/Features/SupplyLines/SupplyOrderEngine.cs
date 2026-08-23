@@ -20,9 +20,11 @@ public sealed class SupplyOrderEngine : ISupplyOrderEngine
     // Source: route tick delivered at Distance < 1.2f. Kept as the meeting range.
     public float DeliveryRange => 1.2f;
 
-    // Source: Tick() force-delivered at elapsed/planned >= 2.0 (the route tick used 1.5; the
-    // hourly 2.0 is the one that governed orders with no route, so it is the one ported).
-    public float ForceDeliverFraction => 2f;
+    // Source: the per-frame route tick force-delivered a ROUTED caravan at elapsed/planned >= 1.5
+    // (UpdateCaravanPositions, SupplyLines.clean.cs:1878); the hourly Tick's 2.0 was only the
+    // backstop for orders with no route. Every caravan this port spawns is routed, so 1.5 is the
+    // fraction that governs (review round B corrected an inverted claim here that ported 2.0).
+    public float ForceDeliverFraction => 1.5f;
 
     public SupplyOrderVerdict Advance(
         float elapsedFraction,

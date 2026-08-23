@@ -25,9 +25,10 @@ public class FieldCampCampaignBehavior : CampaignBehaviorBase
     private readonly IModLogger _logger;
     private readonly FieldCampMenuController _menuController;
 
-    /// <summary>True only when SyncData ran in the LOADING direction this session. OnSessionLaunched
-    /// consults it FIRST: false means a fresh campaign OR a save without our record, and either way
-    /// the process-lifetime service must not keep the previous session's book (round-A CRITICAL).</summary>
+    /// <summary>True once this session's book is settled: SyncData ran in the LOADING direction,
+    /// or ResetIfNoLoadedRecord wiped the stale one. OnSessionLaunched consults it FIRST: false
+    /// means a fresh campaign OR a save without our record, and either way the process-lifetime
+    /// service must not keep the previous session's book (round-A CRITICAL).</summary>
     private bool _syncedThisSession;
 
     public FieldCampCampaignBehavior(
@@ -58,11 +59,25 @@ public class FieldCampCampaignBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
-        _camps.SaveInto(out Dictionary<string, CampState> camps);
-        dataStore.SyncData("_taomFieldCamps", ref camps);
-        _camps.LoadFrom(camps);
         if (dataStore.IsLoading)
+        {
+            // Null-first: BehaviorSaveData.SyncData returns false and leaves the ref UNCHANGED
+            // when the key is missing (CampaignBehaviorDataStore, 1.4.8), so pre-seeding from the
+            // live singleton would silently keep the previous session's book on a key miss.
+            // Null makes a missing key load as an empty book instead (round-B / Codex round-2 #2).
+            Dictionary<string, CampState> camps = null;
+            dataStore.SyncData("_taomFieldCamps", ref camps);
+            _camps.LoadFrom(camps);
             _syncedThisSession = true;
+        }
+        else
+        {
+            // Save direction never calls LoadFrom: LoadFrom carries load-only semantics
+            // (ResetTransientState wipes live inquiry latches and the ambush-scan clock), so
+            // running it on every autosave mutates live state (round-B, SupplyLines is the shape).
+            _camps.SaveInto(out Dictionary<string, CampState> camps);
+            dataStore.SyncData("_taomFieldCamps", ref camps);
+        }
     }
 
     private void OnSessionLaunched(CampaignGameStarter starter)
@@ -86,6 +101,9 @@ public class FieldCampCampaignBehavior : CampaignBehaviorBase
         if (_syncedThisSession)
             return false;
         _camps.ResetForNewSession();
+        // Latch: a stray second call must not wipe a camp pitched right after launch (the
+        // Refuge/SupplyLines twins document this guard as load-bearing; round-B parity fix).
+        _syncedThisSession = true;
         return true;
     }
 

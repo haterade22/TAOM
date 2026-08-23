@@ -110,8 +110,34 @@ public class RefugeServiceTests
             return SpawnIdOverride ?? stringId;
         }
 
-        protected override void AttachWarden(string partyId, string wardenHeroId) =>
+        public bool AttachThrows;
+
+        protected override void AttachWarden(string partyId, string wardenHeroId)
+        {
             Events.Add("attach:" + wardenHeroId);
+            if (AttachThrows)
+                throw new System.InvalidOperationException("engine attach refusal");
+        }
+
+        public readonly List<int> Refunds = new List<int>();
+
+        protected override void RefundPlayer(int amount)
+        {
+            Refunds.Add(amount);
+            Events.Add("refund");
+        }
+
+        public bool WardenWithParty = true;
+
+        protected override bool IsWardenWithParty(string partyId, string wardenHeroId) => WardenWithParty;
+
+        public readonly List<string> DisbandCancels = new List<string>();
+
+        protected override void CancelDisband(string partyId)
+        {
+            DisbandCancels.Add(partyId);
+            Events.Add("canceldisband:" + partyId);
+        }
 
         protected override void MergeRefugeIntoMainParty(string partyId)
         {
@@ -1414,6 +1440,214 @@ public class RefugeServiceTests
         Assert.AreSame(data, _sut.GetByPartyId("r1"));
         Assert.IsNull(_sut.GetByPartyId("nope"));
         Assert.IsNull(_sut.GetByPartyId(null));
+    }
+
+    // --- Master toggle off: state-protecting frame work runs, gameplay effects stop ---
+
+    [TestMethod]
+    public void FrameTick_Disabled_StillFinishesTheBuild()
+    {
+        _settings.Enabled.Returns(false);
+        var data = Seed("r1", ready: false, building: true);
+        _sut.Progress["r1"] = 1f;
+
+        _sut.FrameTick();
+
+        Assert.IsTrue(data.IsReady,
+            "a mid-build toggle-off froze the refuge forever (round B MED); builds must finish regardless");
+        _visuals.Received(1).Show("r1", RefugeTier.Refuge, false, Arg.Any<Vec2>());
+    }
+
+    [TestMethod]
+    public void FrameTick_Disabled_StillRetriesVisualsAndTicksWind()
+    {
+        _settings.Enabled.Returns(false);
+        Seed("r1");
+
+        _sut.FrameTick();
+
+        _visuals.Received(1).TickWind();
+        _visuals.Received(1).Show("r1", RefugeTier.Refuge, false, Arg.Any<Vec2>());
+    }
+
+    [TestMethod]
+    public void FrameTick_Disabled_DoesNotHoldThePartyOrNoteIt()
+    {
+        _settings.Enabled.Returns(false);
+        Seed("r1", ready: false, building: true);
+        _sut.DistancesFromMain["r1"] = 2f;
+        _sut.Progress["r1"] = 0.5f;
+
+        _sut.FrameTick();
+
+        Assert.AreEqual(0, _sut.HoldCalls, "the hold-nearby pin is a gameplay effect and gates on Enabled");
+        Assert.AreEqual(0, _sut.Messages.Count);
+    }
+
+    // --- LoadFrom row repair (hostile or damaged saves) ---
+
+    [TestMethod]
+    public void LoadFrom_DivergentInnerPartyId_CanonicalizedToTheDictionaryKey()
+    {
+        // Swapped inner ids would make Dismantle destroy a DIFFERENT party than the one the
+        // player stands at; the dictionary key is the identity every lookup resolves.
+        var data = new RefugeData { PartyId = "r2", Established = true };
+        _book["r1"] = data;
+
+        _sut.LoadFrom(_book, 0);
+
+        Assert.AreEqual("r1", data.PartyId);
+    }
+
+    [TestMethod]
+    public void LoadFrom_NaNBuildTarget_FlooredSoTheBuildCanFinish()
+    {
+        // A NaN target fails every comparison, so the row could never reach BuildProgress >= 1:
+        // a permanent absorbing state consuming a cap slot (Codex round 2 #4).
+        var data = new RefugeData { PartyId = "r1", Building = true, BuildTargetHours = float.NaN };
+        _book["r1"] = data;
+
+        _sut.LoadFrom(_book, 0);
+
+        Assert.AreEqual(0.1f, data.BuildTargetHours);
+    }
+
+    [TestMethod]
+    public void LoadFrom_InfiniteBuildTarget_FlooredSoTheBuildCanFinish()
+    {
+        var data = new RefugeData
+        {
+            PartyId = "r1", Building = true, BuildTargetHours = float.PositiveInfinity,
+        };
+        _book["r1"] = data;
+
+        _sut.LoadFrom(_book, 0);
+
+        Assert.AreEqual(0.1f, data.BuildTargetHours);
+    }
+
+    [TestMethod]
+    public void LoadFrom_UnknownTierAndNegativeMilitia_Repaired()
+    {
+        var data = new RefugeData
+        {
+            PartyId = "r1", Tier = 99, MilitiaAdded = -5, MilitiaPreRallyCount = -3,
+        };
+        _book["r1"] = data;
+
+        _sut.LoadFrom(_book, 0);
+
+        Assert.AreEqual(RefugeTier.Refuge, data.TierEnum);
+        Assert.AreEqual(0, data.MilitiaAdded);
+        Assert.AreEqual(0, data.MilitiaPreRallyCount);
+    }
+
+    // --- Found is transactional after the party exists (Codex round 2 #12) ---
+
+    [TestMethod]
+    public void Found_ThrowAfterSpawn_RollsBackWardenGoldAndParty()
+    {
+        _sut.AttachThrows = true;
+
+        var refuge = _sut.Found("hero_1", out var reason);
+
+        Assert.IsNull(refuge);
+        Assert.AreEqual(RefugeBlockReason.None, reason);
+        Assert.AreEqual(0, _sut.Charges.Count, "the throw came before the charge; nothing to refund");
+        Assert.AreEqual(0, _sut.Refunds.Count);
+        _wardens.Received(1).ReleaseWarden("hero_1", false);
+        CollectionAssert.AreEqual(new[] { "taom_refuge_0" }, _sut.DestroyedParties);
+        Assert.AreEqual(0, _sut.AllRefuges.Count, "no ghost row may survive a failed founding");
+    }
+
+    [TestMethod]
+    public void Found_ThrowInCampBreak_RefundsTheChargeToo()
+    {
+        bool breakThrew = false;
+        _camps.When(c => c.BreakPlayerCamp()).Do(_ =>
+        {
+            breakThrew = true;
+            throw new System.InvalidOperationException("camp break refusal");
+        });
+
+        var refuge = _sut.Found("hero_1", out _);
+
+        Assert.IsNull(refuge);
+        Assert.IsTrue(breakThrew);
+        CollectionAssert.AreEqual(new[] { 2000 }, _sut.Charges);
+        CollectionAssert.AreEqual(new[] { 2000 }, _sut.Refunds, "the charge completed, so it must unwind");
+        _wardens.Received(1).ReleaseWarden("hero_1", false);
+        CollectionAssert.AreEqual(new[] { "taom_refuge_0" }, _sut.DestroyedParties);
+        Assert.AreEqual(0, _sut.AllRefuges.Count);
+    }
+
+    // --- Warden death: the engine's disband flow is cancelled (Codex round 2 #10) ---
+
+    [TestMethod]
+    public void OnPartyDisbandStarted_WardenStillWithParty_CancelsAndKeepsTheRow()
+    {
+        var data = Seed("r1");
+        _sut.WardenWithParty = true;
+
+        _sut.OnPartyDisbandStarted("r1");
+
+        CollectionAssert.AreEqual(new[] { "r1" }, _sut.DisbandCancels,
+            "a refuge never disbands; dismantle is its only exit");
+        Assert.IsTrue(data.IsReady, "the row is untouched while the warden stands");
+        Assert.AreEqual("warden_1", data.WardenHeroId);
+        Assert.AreEqual(0, _sut.Messages.Count);
+    }
+
+    [TestMethod]
+    public void OnPartyDisbandStarted_WardenGone_OrphanAdoptsTheLeaderlessRow()
+    {
+        // Vanilla starts this flow itself when the warden dies with no other hero in the roster
+        // (KillCharacterAction.MakeDead -> RemovePartyLeader -> DisbandPartyAction.StartDisband).
+        var data = Seed("r1");
+        _sut.WardenWithParty = false;
+
+        _sut.OnPartyDisbandStarted("r1");
+
+        CollectionAssert.AreEqual(new[] { "r1" }, _sut.DisbandCancels);
+        Assert.IsNull(data.WardenHeroId);
+        Assert.IsTrue(data.IsOrphanAdopted, "leaderless = dismantle-only, never ready again");
+        Assert.IsFalse(data.IsReady);
+        CollectionAssert.AreEqual(new[] { true }, _sut.Messages, "the player is told, as an alert");
+    }
+
+    [TestMethod]
+    public void OnPartyDisbandStarted_MidBuildWardenGone_BuildIsAbandonedIntoOrphanState()
+    {
+        var data = Seed("r1", ready: false, building: true);
+        _sut.WardenWithParty = false;
+
+        _sut.OnPartyDisbandStarted("r1");
+
+        Assert.IsTrue(data.IsOrphanAdopted);
+        Assert.IsFalse(data.Building);
+    }
+
+    [TestMethod]
+    public void OnPartyDisbandStarted_UnknownOrNullParty_NoOp()
+    {
+        _sut.OnPartyDisbandStarted("nope");
+        _sut.OnPartyDisbandStarted(null);
+
+        Assert.AreEqual(0, _sut.DisbandCancels.Count);
+    }
+
+    [TestMethod]
+    public void OnGameLoaded_CancelsAnyPersistedDisbandOnEveryRefugeParty()
+    {
+        // A save written inside the engine's 1-day disband-wait window would flip IsDisbanding an
+        // hour after load; the belt clears the queue entry (no-op for parties never queued).
+        Seed("r1");
+        Seed("r2");
+        _sut.LiveParties = new List<string> { "r1", "r2" };
+
+        _sut.OnGameLoaded();
+
+        CollectionAssert.AreEquivalent(new[] { "r1", "r2" }, _sut.DisbandCancels);
     }
 
     // --- The dismantle hero-merge contract (no hero row ever rides a raw roster copy) ---

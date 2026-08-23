@@ -40,11 +40,14 @@ public interface ISupplyOrderService
     /// </summary>
     void FrameTick();
 
-    /// <summary>Cancels every active order (goods and gold are lost; escorts come home). For
-    /// genuine cancel-everything paths only; the FieldCamp break-camp path calls
-    /// <see cref="CancelCampOrders"/> instead, because a camp break must not forfeit orders the
-    /// camp had nothing to do with.</summary>
-    void CancelAll();
+    /// <summary>
+    /// Records the loss of an order whose caravan party the ENGINE is destroying right now
+    /// (the behavior's MobilePartyDestroyed listener). Runs synchronously at destroy time so a
+    /// save written afterwards can never carry a stale InTransit row that a load would
+    /// resurrect with its full cargo. Our own teardown paths flip the status before destroying,
+    /// so they fall through here.
+    /// </summary>
+    void OnCaravanDestroyed(string orderId);
 
     /// <summary>SyncData plumbing: replace the in-memory book with the loaded one.</summary>
     void LoadFrom(Dictionary<string, SupplyOrder> orders, int counter);

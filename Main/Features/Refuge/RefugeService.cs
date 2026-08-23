@@ -189,9 +189,30 @@ public class RefugeService : IRefugeService, IRefugeBook
             _logger.LogWarning("[Refuge] party spawn failed; founding aborted before any charge.");
             return null;
         }
-        AttachWarden(partyId, wardenHeroId);
-        ChargePlayer(_settings.FoundCost);
-        _camps.BreakPlayerCamp();
+        // Transactional from here: the party exists, so any engine throw in the remaining stages
+        // (warden attach, charge, camp break) must undo every completed stage or the player is
+        // left with an unbooked ghost party, a strayed warden, or gold gone for nothing. The
+        // menu's own unwind only covers the promotion, and only when we RETURN null -- an
+        // uncaught throw would bypass it entirely.
+        bool charged = false;
+        try
+        {
+            AttachWarden(partyId, wardenHeroId);
+            ChargePlayer(_settings.FoundCost);
+            charged = true;
+            _camps.BreakPlayerCamp();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[Refuge] founding failed after party spawn; rolling back: {ex.Message}");
+            if (charged)
+                RefundPlayer(_settings.FoundCost);
+            // The warden (if the attach got that far) rides the same action-based return the
+            // dismantle path uses; a hero must never be deleted with his party.
+            _wardens.ReleaseWarden(wardenHeroId, promoted: false);
+            DestroyRefugeParty(partyId);
+            return null;
+        }
 
         var data = new RefugeData
         {
@@ -305,6 +326,11 @@ public class RefugeService : IRefugeService, IRefugeBook
         bool holdNearby = false;
         string holdNotePartyId = null;
         float manageRange = _settings.ManageRange;
+        // The CampService split: state-protecting work (build finish, visual retries, wind) runs
+        // regardless of the master toggle -- a mid-build toggle-off must never freeze a refuge
+        // into an unreachable state with the garrison inside. Only the gameplay-effect half (the
+        // hold-nearby pin and its note) gates on Enabled.
+        bool enabled = _settings.Enabled;
 
         foreach (var pair in _refuges)
         {
@@ -317,7 +343,10 @@ public class RefugeService : IRefugeService, IRefugeBook
                     continue;
                 }
                 // Hold-nearby rule: while a build runs within manage range the company stays.
-                // Ready refuges do not pin the party; only an active build does.
+                // Ready refuges do not pin the party; only an active build does. Gameplay effect:
+                // with the feature off the build still finishes but nobody is pinned.
+                if (!enabled)
+                    continue;
                 float distance = DistanceFromMainPartyTo(pair.Key);
                 if (FiniteFloatValidator.IsFinite(distance)
                     && FiniteFloatValidator.IsFinite(manageRange)
@@ -479,6 +508,35 @@ public class RefugeService : IRefugeService, IRefugeBook
             ReleasePeacePrisoners(partyId);
     }
 
+    public void OnPartyDisbandStarted(string partyId)
+    {
+        if (partyId == null || !_refuges.TryGetValue(partyId, out var data))
+            return;
+        // A refuge never disbands; dismantle is its only exit. The engine starts this flow itself
+        // when the warden dies with no other hero in the roster (1.4.8 KillCharacterAction.MakeDead:
+        // RemovePartyLeader then DisbandPartyAction.StartDisband) -- left alone, vanilla's disband
+        // behavior would march the garrison to a settlement and dissolve it. Cancel is safe at any
+        // point of that flow: DisbandPartyCampaignBehavior only queues the party for a 1-day-later
+        // IsDisbanding flip, and CancelDisband's event removes it from that queue.
+        CancelDisband(partyId);
+
+        if (IsWardenWithParty(partyId, data.WardenHeroId))
+            return;
+
+        // Warden gone (dead, captured, removed): the refuge keeps its garrison and stash but drops
+        // to the orphan-adopted state -- leaderless, dismantle-only, never ready again. That is
+        // the deliberate leaderless design; there is no succession picker.
+        data.WardenHeroId = null;
+        data.Established = false;
+        data.Building = false;
+        data.BuildingUpgrade = false;
+        data.BuildTargetHours = 0f;
+        _holdNoteShown.Remove(partyId);
+        ShowMessage(
+            new TextObject("{=taom_rf_warden_lost}Your refuge has lost its warden. The garrison holds the camp, but it can only be dismantled now."),
+            error: true);
+    }
+
     public void LoadFrom(Dictionary<string, RefugeData> refuges, int counter)
     {
         _refuges = refuges ?? new Dictionary<string, RefugeData>();
@@ -496,6 +554,8 @@ public class RefugeService : IRefugeService, IRefugeBook
                 _refuges.Remove(key);
             _logger.LogWarning($"[Refuge] dropped {nullKeys.Count} null book row(s) from the loaded save.");
         }
+        foreach (var pair in _refuges)
+            RepairLoadedRow(pair.Key, pair.Value);
         _counter = counter < 0 ? 0 : counter;
         _visualShown.Clear();
         _holdNoteShown.Clear();
@@ -553,6 +613,11 @@ public class RefugeService : IRefugeService, IRefugeBook
             // Re-pin the AI on EVERY refuge party. The source pinned only at spawn;
             // SetDoNotMakeNewDecisions is not persisted, so loaded refuges wandered off.
             PinRefugePartyAi(partyId);
+            // Belt for a save written inside the engine's 1-day disband-wait window (or by a
+            // pre-fix build): DisbandPartyCampaignBehavior persists its waiting queue, and a
+            // queued refuge would flip IsDisbanding an hour after load. Cancel is a no-op for a
+            // party that was never queued.
+            CancelDisband(partyId);
         }
 
         List<string> orphanRows = null;
@@ -572,6 +637,41 @@ public class RefugeService : IRefugeService, IRefugeBook
     }
 
     // --- internals ---
+
+    /// <summary>Canonicalizes and validates one persisted row (hostile or damaged saves). The
+    /// DICTIONARY KEY is the identity every lookup resolves and every distance check measures, so
+    /// a divergent inner PartyId would make Dismantle/visuals act on a DIFFERENT party than the
+    /// one the player stands at -- cross-party destruction. Numeric repair kills the absorbing
+    /// states: a non-finite BuildTargetHours on a Building row could otherwise never reach
+    /// BuildProgress >= 1 (NaN fails every comparison; Infinity divides to 0) and the row eats a
+    /// cap slot forever.</summary>
+    private void RepairLoadedRow(string key, RefugeData data)
+    {
+        if (!string.Equals(data.PartyId, key, StringComparison.Ordinal))
+        {
+            _logger.LogWarning(
+                $"[Refuge] loaded row keyed '{key}' carried inner PartyId '{data.PartyId}'; canonicalized to the key.");
+            data.PartyId = key;
+        }
+        if (data.Tier != (int)RefugeTier.Refuge && data.Tier != (int)RefugeTier.Stronghold)
+        {
+            _logger.LogWarning($"[Refuge] row '{key}' had unknown tier {data.Tier}; reset to Refuge.");
+            data.TierEnum = RefugeTier.Refuge;
+        }
+        // Only NON-FINITE targets are absorbing (Infinity never divides to >= 1; NaN fails every
+        // comparison). Zero and negative targets already resolve as "done" in BuildProgress's
+        // positive-requirement gate, so they are left alone.
+        if (data.Building && !FiniteFloatValidator.IsFinite(data.BuildTargetHours))
+        {
+            _logger.LogWarning(
+                $"[Refuge] row '{key}' had non-finite BuildTargetHours {data.BuildTargetHours}; floored so the build can finish.");
+            data.BuildTargetHours = MinBuildTargetHours;
+        }
+        if (data.MilitiaAdded < 0)
+            data.MilitiaAdded = 0;
+        if (data.MilitiaPreRallyCount < 0)
+            data.MilitiaPreRallyCount = 0;
+    }
 
     private void FinishBuild(string partyId, RefugeData data)
     {
@@ -670,6 +770,11 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     protected virtual void ChargePlayer(int amount) =>
         GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, null, amount, disableNotification: true);
+
+    /// <summary>Rollback of <see cref="ChargePlayer"/> for the founding transaction (null giver =
+    /// the void, the mirror of the null-recipient charge).</summary>
+    protected virtual void RefundPlayer(int amount) =>
+        GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, amount, disableNotification: true);
 
     protected virtual int PlayerClanTier() => Clan.PlayerClan?.Tier ?? 0;
 
@@ -932,6 +1037,33 @@ public class RefugeService : IRefugeService, IRefugeBook
     }
 
     protected virtual void HoldMainParty() => MobileParty.MainParty?.SetMoveModeHold();
+
+    /// <summary>Cancels the engine's disband flow on a refuge party. Safe when no disband is in
+    /// flight: it clears the queued entry (via OnPartyDisbandCanceled), resets the custom name
+    /// StartDisband installed, and re-holds the party.</summary>
+    protected virtual void CancelDisband(string partyId)
+    {
+        var party = FindParty(partyId);
+        if (party == null)
+            return;
+        try
+        {
+            DisbandPartyAction.CancelDisband(party);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[Refuge] disband cancel failed for '{partyId}': {ex.Message}");
+        }
+    }
+
+    /// <summary>True when the recorded warden is alive and with the refuge party. False for a
+    /// null/dead/captured/removed warden -- the leaderless states that orphan-adopt the row.</summary>
+    protected virtual bool IsWardenWithParty(string partyId, string wardenHeroId)
+    {
+        var hero = FindHero(wardenHeroId);
+        return hero != null && hero.IsAlive
+            && string.Equals(hero.PartyBelongedTo?.StringId, partyId, StringComparison.Ordinal);
+    }
 
     protected virtual IReadOnlyList<string> AllRefugePartyIds()
     {

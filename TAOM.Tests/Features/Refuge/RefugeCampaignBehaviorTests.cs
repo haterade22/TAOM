@@ -117,15 +117,46 @@ public class RefugeCampaignBehaviorTests
         _refuges.DidNotReceive().OnGameLoaded();
     }
 
-    // --- SyncData plumbing ---
+    // --- SyncData plumbing (direction-split: save never replays the load-time transient wipe) ---
 
     [TestMethod]
-    public void SyncData_RoundTripsBookThroughTheService()
+    public void SyncData_Saving_WritesTheBookWithoutReloadingIt()
     {
+        // The old symmetric shape ran LoadFrom on every SAVE, wiping transients (hold-note
+        // dedupe, frame-work clock) mid-session on each autosave (round B; Codex round 2 #8).
         SyncWith(isLoading: false);
 
         _refuges.Received(1).SaveInto(out Arg.Any<Dictionary<string, RefugeData>>(), out Arg.Any<int>());
-        _refuges.Received(1).LoadFrom(Arg.Any<Dictionary<string, RefugeData>>(), Arg.Any<int>());
+        _refuges.DidNotReceive().LoadFrom(Arg.Any<Dictionary<string, RefugeData>>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void SyncData_Loading_StartsFromNulledLocals_NeverPreSeedsTheLiveBook()
+    {
+        // The store substitute leaves the ref untouched, modeling a record whose key is MISSING:
+        // the service must receive null (-> empty book), never the live singleton book the old
+        // shape pre-seeded (which silently kept the previous session's state, Codex round 2 #2).
+        SyncWith(isLoading: true);
+
+        _refuges.Received(1).LoadFrom(null, 0);
+        _refuges.DidNotReceive().SaveInto(out Arg.Any<Dictionary<string, RefugeData>>(), out Arg.Any<int>());
+    }
+
+    // --- OnTick: unconditional frame work (the CampService split) ---
+
+    [TestMethod]
+    public void OnTick_MasterToggleOff_StillPumpsFrameTick()
+    {
+        // Gating FrameTick on Enabled froze a mid-build refuge into an unreachable state
+        // (round B MED) and stopped the post-load visual rebuild + wind (round B LOW). The
+        // gameplay half (hold-nearby) gates INSIDE the service; the pump is unconditional.
+        // Setup's settings substitute defaults Enabled to false.
+        var onTick = typeof(RefugeCampaignBehavior).GetMethod(
+            "OnTick", BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(onTick);
+        onTick!.Invoke(_sut, new object[] { 0.016f });
+
+        _refuges.Received(1).FrameTick();
     }
 
     [TestMethod]

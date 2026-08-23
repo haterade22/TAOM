@@ -63,6 +63,17 @@ public class FieldCampBehaviorSessionResetTests
     }
 
     [TestMethod]
+    public void ResetIfNoLoadedRecord_Latches_SecondCallNeverWipesAgain()
+    {
+        // The Refuge/SupplyLines twins document this latch as load-bearing: a stray second call
+        // after the player pitched a camp must not wipe it (round-B parity finding).
+        Assert.IsTrue(_sut.ResetIfNoLoadedRecord());
+
+        Assert.IsFalse(_sut.ResetIfNoLoadedRecord());
+        _camps.Received(1).ResetForNewSession();
+    }
+
+    [TestMethod]
     public void LoadingSyncData_MarksTheSessionSynced_NoReset()
     {
         SyncWith(isLoading: true);
@@ -105,12 +116,26 @@ public class FieldCampBehaviorSessionResetTests
     }
 
     [TestMethod]
-    public void SyncData_RoundTripsTheBookThroughTheService()
+    public void SyncData_LoadDirection_NullsFirstSoAMissingKeyLoadsAnEmptyBook()
     {
+        // BehaviorSaveData.SyncData leaves the ref UNCHANGED on a missing key (1.4.8), and the
+        // substitute store mimics exactly that. Pre-seeding from SaveInto would hand the live
+        // singleton book straight back to LoadFrom; null-first means a key miss loads empty.
         SyncWith(isLoading: true);
 
+        _camps.DidNotReceive().SaveInto(out Arg.Any<Dictionary<string, CampState>>());
+        _camps.Received(1).LoadFrom(null);
+    }
+
+    [TestMethod]
+    public void SyncData_SaveDirection_NeverCallsLoadFrom()
+    {
+        // LoadFrom has load-only semantics (it wipes the inquiry latches and the ambush-scan
+        // clock); running it on every autosave mutates live state (round-B).
+        SyncWith(isLoading: false);
+
         _camps.Received(1).SaveInto(out Arg.Any<Dictionary<string, CampState>>());
-        _camps.Received(1).LoadFrom(Arg.Any<Dictionary<string, CampState>>());
+        _camps.DidNotReceive().LoadFrom(Arg.Any<Dictionary<string, CampState>>());
     }
 
     [TestMethod]

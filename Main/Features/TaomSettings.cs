@@ -1160,7 +1160,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Refuge", GroupOrder = 47)]
     [SettingPropertyBool("Enable Refuges", Order = 0, RequireRestart = false,
-        HintText = "Raise a field or fortified camp into a persistent, garrisonable base. When off, founding and refuge menus disappear; standing refuges persist and can still be entered and dismantled, so a toggle never strands a garrison.")]
+        HintText = "Raise a field or fortified camp into a persistent, garrisonable base. When off: no founding, no upgrading, and your party is not held in place during a build. Standing refuges persist, builds in progress still finish, and refuges can still be entered, managed and dismantled.")]
     public bool EnableRefuges { get; set; } = true;
 
     [SettingPropertyGroup("Refuge")]

@@ -20,7 +20,6 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
     public const string MenuId = "taom_refuge_menu";
 
     private readonly IRefugeService _refuges;
-    private readonly IRefugeSettingsProvider _settings;
     private readonly IRefugeVisualService _visuals;
     private readonly IModLogger _logger;
     private readonly RefugeMenuController _menuController;
@@ -35,7 +34,6 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
         IModLogger logger)
     {
         _refuges = refuges;
-        _settings = settings;
         _visuals = visuals;
         _logger = logger;
         _menuController = new RefugeMenuController(refuges, wardens, settings, menus, encounters);
@@ -58,6 +56,12 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
         // from MapEventSide.HandleMapEventEnd, AFTER OnMapEventEnded already dispatched; without
         // this listener the book row, cap slot and visuals leak until the next load's reconcile.
         CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
+        // Vanilla starts disbanding a refuge itself when the warden dies with no other hero in
+        // the roster (KillCharacterAction.MakeDead -> DisbandPartyAction.StartDisband); the
+        // service cancels it and orphan-adopts the leaderless row. Registration order matters and
+        // holds: vanilla's DisbandPartyCampaignBehavior registered first, so its queue-add runs
+        // before our cancel removes the entry again.
+        CampaignEvents.OnPartyDisbandStartedEvent.AddNonSerializedListener(this, OnPartyDisbandStarted);
         // Vanilla's peace-time prisoner release enumerates caravans, war parties, villages and
         // garrisons only; refuge-held hero prisoners need their own listener.
         CampaignEvents.MakePeace.AddNonSerializedListener(this, OnMakePeace);
@@ -68,12 +72,27 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
+        // Direction-split (the SupplyLinesCampaignBehavior shape). The old symmetric
+        // SaveInto -> SyncData -> LoadFrom ran the load-time transient wipe on every SAVE too
+        // (re-showing the once-per-build hold note, resetting the frame-work clock), and its
+        // pre-seeded ref meant a record whose key is missing silently kept the PREVIOUS
+        // session's book. Loading starts from nulled locals so a missing key yields an empty
+        // book, never an inherited one.
         if (dataStore.IsLoading)
+        {
+            Dictionary<string, RefugeData> refuges = null;
+            int counter = 0;
+            dataStore.SyncData("_taomRefuges", ref refuges);
+            dataStore.SyncData("_taomRefugeCounter", ref counter);
+            _refuges.LoadFrom(refuges, counter);
             _syncedThisSession = true;
-        _refuges.SaveInto(out Dictionary<string, RefugeData> refuges, out int counter);
-        dataStore.SyncData("_taomRefuges", ref refuges);
-        dataStore.SyncData("_taomRefugeCounter", ref counter);
-        _refuges.LoadFrom(refuges, counter);
+        }
+        else
+        {
+            _refuges.SaveInto(out Dictionary<string, RefugeData> refuges, out int counter);
+            dataStore.SyncData("_taomRefuges", ref refuges);
+            dataStore.SyncData("_taomRefugeCounter", ref counter);
+        }
     }
 
     private void OnSessionLaunched(CampaignGameStarter starter)
@@ -113,12 +132,12 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     private void OnTick(float dt)
     {
-        // Cheap gate: the whole per-frame body (build advancement, hold-nearby rule, visual
-        // retries) hangs off the master toggle. Build progress is wall-clock-derived from
-        // BuildStartTime, so a mid-build toggle-off only pauses the FINISH transition, never the
-        // clock; re-enabling completes the build on the next frame.
-        if (_settings.Enabled)
-            _refuges.FrameTick();
+        // UNCONDITIONAL, like FieldCampCampaignBehavior.OnTick: the frame work is mostly
+        // state-protecting (build finish, post-load visual rebuild, cloth wind) and gating it on
+        // the master toggle froze a mid-build refuge into an unreachable state with the garrison
+        // inside. The one gameplay effect in there (the hold-nearby pin) gates on Enabled inside
+        // the service.
+        _refuges.FrameTick();
     }
 
     private void OnHourlyTick()
@@ -147,6 +166,12 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
     {
         if (party?.PartyComponent is RefugePartyComponent && !string.IsNullOrEmpty(party.StringId))
             _refuges.OnPartyDestroyed(party.StringId);
+    }
+
+    private void OnPartyDisbandStarted(MobileParty party)
+    {
+        if (party?.PartyComponent is RefugePartyComponent && !string.IsNullOrEmpty(party.StringId))
+            _refuges.OnPartyDisbandStarted(party.StringId);
     }
 
     private void OnMakePeace(

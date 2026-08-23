@@ -17,6 +17,9 @@ refuge book (SyncData "_taomRefuges") -- RefugeData: tier, warden, build timesta
 manage: taom_refuge_menu (vanilla party screen for garrison+prisoners, stash screen for goods)
 defence: IRefugeDefenseService <- TaomCombatMechanicsModel.ApplyDamageReductions (real-time)
                                <- TaomCombatSimulationModel.SimulateHit (auto-resolve)
+   both apply RefugeDamageReduction: ONE composition contract, (1 - r) on the FINAL damage
+   (ExplainedNumber composes factors against the BASE, so the auto-resolve site scales the
+   factor by result/base; a bare AddFactor(-r) drifted from real-time under vanilla factors)
 overlay/menus: RefugeCampContributor : ICampOverlayContributor (FieldCamp's seam; the source
    assigned three mutable static delegates instead)
 clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition)
@@ -70,14 +73,42 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
 - **AI re-pinned on load** (`SetMoveModeHold` + `SetDoNotMakeNewDecisions`): the source pinned only
   at spawn, so refuges could wander after a reload.
 - **Raids ship OFF** (experimental in the source, same default here).
+- **A refuge never disbands; warden death orphan-adopts.** Vanilla starts its disband flow itself
+  when a party leader dies with no other hero in the roster (1.4.8 `KillCharacterAction.MakeDead`:
+  `RemovePartyLeader` then `DisbandPartyAction.StartDisband`), which would march the garrison to a
+  settlement and dissolve it. The behavior listens to `OnPartyDisbandStartedEvent`, cancels the
+  disband (`DisbandPartyAction.CancelDisband`), and when the warden is gone drops the row to the
+  leaderless orphan-adopted state: garrison and stash intact, dismantle-only, told to the player.
+  `OnGameLoaded` also cancels defensively per refuge party (a save written inside the engine's
+  1-day disband-wait window carries the queued entry).
+- **Founding is transactional.** After the party spawns, a throw in warden attach / charge / camp
+  break rolls back every completed stage (warden released by action, gold refunded, party
+  destroyed, no book row); the menu's own null-result unwind then rolls back the promotion.
+- **Load repairs hostile rows.** `LoadFrom` canonicalizes the inner `PartyId` to the dictionary
+  key (divergent ids meant Dismantle could destroy a different party than the one the player
+  stands at), clamps unknown tiers and negative militia fields, and floors a non-finite
+  `BuildTargetHours` on a building row (a NaN or Infinity target could never reach
+  `BuildProgress >= 1`: a permanent absorbing state eating a cap slot). `BuildProgress` itself
+  uses a positive-requirement gate so NaN resolves as done rather than never.
+- **Clan screen: every refuge listed, wage control suppressed.** All rows (ready, building with a
+  "(being raised)" suffix, orphan-adopted) appear under Garrisons (source parity; a mid-raise
+  refuge holding a deposited garrison must not vanish for the build window). The Garrison-typed
+  `ClanPartyItemVM` ctor builds a live wage slider whose figure is never charged
+  (`DefaultClanFinanceModel` processes neither `WarPartyComponents` nor `OwnedCaravans` for a
+  refuge) and whose `SetWagePaymentLimit` is a silent base-`PartyComponent` no-op, so the patch
+  suppresses it post-construction (`ShouldPartyHaveExpense = false`, `ExpenseItem = null`) and
+  recomposes the static wage line to the honest 0.
 
 ## Configuration
 
 MCM group **Refuge** (GroupOrder 47), 14 settings, all validated in `RefugeSettingsProvider`, all
 coop simulation-relevant: master toggle, found/upgrade costs (2000/5000), build hours (6), hard cap
 (3, live limit min(1 + clanTier/2, cap)), manage range (4), town distances (16/26), defence bonuses
-(0.20/0.35), militia base/max (6/40), raids toggle + range (off/6). Toggle off stops founding and
-menus; standing refuges persist and can be entered and dismantled.
+(0.20/0.35), militia base/max (6/40), raids toggle + range (off/6). Toggle off stops founding,
+upgrading and the hold-nearby pin; standing refuges persist, a build already in progress still
+finishes (the behavior pumps `FrameTick` unconditionally, the CampService split: state-protecting
+work, gameplay effects gate inside the service), and refuges stay enterable, manageable and
+dismantlable. A toggle mid-build therefore never strands a deposited garrison.
 
 The source's two remaining knobs, `RefugeBuildingMesh` ("empire_street_tent_02") and
 `RefugeBuildingScale` (0.4), exist on `IRefugeSettingsProvider` but are pinned to the source
@@ -130,13 +161,23 @@ disagrees.
 - Militia added from `MapEventStarted` (a battle the raid path did not start) reaches player-fought
   missions but not auto-resolve's frozen participant count (`MapEventParty` captures
   `NumberOfHealthyMembers` at construction, before the event dispatches).
-- A warden who dies or is captured while the refuge stands leaves the party leaderless until
-  dismantle; there is no succession picker (the component nulls its cached leader; the refuge
-  still garrisons and defends).
+- A warden who dies (or is otherwise gone when the engine starts a disband) leaves the refuge in
+  the leaderless orphan-adopted state: the disband is cancelled, garrison and stash stay, but the
+  refuge is dismantle-only and never ready again; there is no succession picker. A warden merely
+  CAPTURED while no disband starts changes nothing (the component nulls its cached leader; the
+  refuge keeps standing).
+- Founding a refuge breaks the camp under it, which cancels any supply orders placed FROM that
+  camp (goods and gold forfeit). The found tooltip now warns about this before the click
+  ({=taom_rf_found_orders_warning}); preserving such orders would need a reclassification seam on
+  `ISupplyOrderService` (the delivery anchor, the main party, does not move) and is recorded as a
+  possible follow-up, not wired.
 
 ## Owed
 
 - In-game smoke per #507 checklist (found/build/enter/store/upgrade/dismantle, defence bonus both
   paths, militia rally + stand-down, save/load with refuge under attack, warden capture path,
-  refuge wiped by a hostile lord mid-session, orphan-row dismantle).
-- 12-language translation run for the 51 `{=taom_rf_*}` keys.
+  refuge wiped by a hostile lord mid-session, orphan-row dismantle) plus the fix-pass paths:
+  toggle-off mid-build, warden death with garrison alive, clan-screen wage line and building row.
+- 12-language translation run for the `{=taom_rf_*}` keys, including the four added in the round-B
+  fix pass (`taom_rf_warden_lost`, `taom_rf_clan_row_building`, `taom_rf_promote_entry_tier`,
+  `taom_rf_found_orders_warning`; `taom_rf_promote_entry` is superseded and unreferenced).

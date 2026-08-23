@@ -185,13 +185,14 @@ internal static class CampLayoutBuilder
         Scene scene, float x, float y, float zFallback, float tentScale, Banner banner,
         List<GameEntity> outEntities)
     {
+        GameEntity? entity = null;
         try
         {
             MetaMesh? tentMesh = MetaMesh.GetCopy(TentMeshName, showErrors: false, mayReturnNull: true);
             if ((NativeObject?)tentMesh == null)
                 return;
 
-            GameEntity entity = GameEntity.CreateEmpty(scene);
+            entity = GameEntity.CreateEmpty(scene);
             if (entity == null)
                 return;
             entity.AddMultiMesh(tentMesh);
@@ -240,20 +241,24 @@ internal static class CampLayoutBuilder
         }
         catch
         {
-            // Any native failure here means this one tent is skipped; the rest of the camp stands.
+            // Any native failure here means this one tent is skipped; the rest of the camp
+            // stands. The half-built entity is removed on the spot: it is not in outEntities
+            // yet, so no later Remove pass could ever reach it (round-B orphan finding).
+            RemoveOrphan(entity);
         }
     }
 
     internal static bool PlaceCenteredPrefab(
         Scene scene, in Vec3 center, string meshName, float scale, List<GameEntity> outEntities)
     {
+        GameEntity? entity = null;
         try
         {
             MetaMesh? mesh = MetaMesh.GetCopy(meshName, showErrors: false, mayReturnNull: true);
             if ((NativeObject?)mesh == null)
                 return false;
 
-            GameEntity entity = GameEntity.CreateEmpty(scene);
+            entity = GameEntity.CreateEmpty(scene);
             if (entity == null)
                 return false;
 
@@ -268,7 +273,28 @@ internal static class CampLayoutBuilder
         catch
         {
             // Treat a native failure exactly like a missing mesh: the caller runs the fallback.
+            // Remove the half-built entity first, or the fallback layout would be drawn over an
+            // untracked orphan no Remove path can reach (round-B orphan finding).
+            RemoveOrphan(entity);
             return false;
+        }
+    }
+
+    /// <summary>Best-effort removal of an entity that threw between CreateEmpty and its
+    /// outEntities registration. Only ever called from a catch block, before the entity was
+    /// listed, so this is the orphan's one and only release path.</summary>
+    private static void RemoveOrphan(GameEntity? entity)
+    {
+        if (entity == null)
+            return;
+        _bannerCloths.RemoveAll(kv => kv.Key == entity);
+        try
+        {
+            entity.Remove(EntityRemoveReason);
+        }
+        catch
+        {
+            // The entity died with whatever killed the placement; nothing left to release.
         }
     }
 
@@ -310,13 +336,14 @@ internal static class CampLayoutBuilder
 
     internal static void PlaceMesh(Scene scene, string meshName, in MatrixFrame frame, List<GameEntity> outEntities)
     {
+        GameEntity? entity = null;
         try
         {
             MetaMesh? mesh = MetaMesh.GetCopy(meshName, showErrors: false, mayReturnNull: true);
             if ((NativeObject?)mesh == null)
                 return;
 
-            GameEntity entity = GameEntity.CreateEmpty(scene);
+            entity = GameEntity.CreateEmpty(scene);
             if (entity == null)
                 return;
 
@@ -326,7 +353,9 @@ internal static class CampLayoutBuilder
         }
         catch
         {
-            // One missing ring piece is invisible in play; a throw here would kill the whole camp.
+            // One missing ring piece is invisible in play; a throw here would kill the whole
+            // camp. The half-built entity is removed on the spot (round-B orphan finding).
+            RemoveOrphan(entity);
         }
     }
 

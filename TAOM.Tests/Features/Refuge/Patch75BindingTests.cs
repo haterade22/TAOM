@@ -100,6 +100,31 @@ public class Patch75BindingTests
     }
 
     [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void ClanPartyItemVM_WageSuppressionSurface_StaysWritable()
+    {
+        // The postfix suppresses the non-functional wage control post-construction:
+        // ShouldPartyHaveExpense=false hides the slider panel (ClanPartiesRightPanel.xml binds
+        // its IsVisible to it), ExpenseItem=null drops the dead VM, and PartyWageSubTitleText is
+        // recomposed to the honest 0 (the figure is never charged for a refuge). Name is set on
+        // building rows. All four must stay public writable instance properties.
+        RequireGame();
+        foreach (var name in new[]
+        {
+            "ShouldPartyHaveExpense", "ExpenseItem", "PartyWageSubTitleText", "Name",
+        })
+        {
+            var property = AccessTools.Property(typeof(ClanPartyItemVM), name);
+            Assert.IsNotNull(property, "ClanPartyItemVM." + name + " is gone; the wage-suppression "
+                + "or building-label half of Patch75 would not compile against the new engine, but "
+                + "a binary drift lands here first.");
+            Assert.IsTrue(property!.CanWrite && property.GetSetMethod() != null,
+                "ClanPartyItemVM." + name + " lost its public setter; the post-construct override "
+                + "would stop compiling / silently fail.");
+        }
+    }
+
+    [TestMethod]
     public void ClanPartyType_Garrison_KeepsOrdinalThree()
     {
         // The source module hard-cast (ClanPartyType)3; TAOM uses the named member, and this pin

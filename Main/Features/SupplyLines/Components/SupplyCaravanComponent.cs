@@ -41,7 +41,11 @@ public sealed class SupplyCaravanComponent : PartyComponent
     // caravan itself picking fights, which a teleport-driven party must never do.
     public override bool AvoidHostileActions => true;
 
-    public override Banner GetDefaultComponentBanner() => Hero.MainHero?.ClanBanner;
+    // Source parity (review round B): the module flew the player's MAP-FACTION banner, so a
+    // vassal's caravans carry the kingdom banner, not the clan one. Falls back to the clan
+    // banner for a factionless player.
+    public override Banner GetDefaultComponentBanner() =>
+        Hero.MainHero?.MapFaction?.Banner ?? Hero.MainHero?.ClanBanner;
 
     protected override void OnInitialize()
     {

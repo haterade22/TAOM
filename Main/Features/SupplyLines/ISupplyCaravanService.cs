@@ -35,9 +35,11 @@ public interface ISupplyCaravanService
     bool CaravanInMapEvent(SupplyOrder order);
 
     /// <summary>
-    /// Snapshot of what the caravan actually carries right now: item id -> count aboard and
-    /// non-hero troop id -> count aboard (the escort hero is never cargo). False when the party
-    /// is missing or unreadable. Delivery caps the ordered amounts by this, so goods eaten in
+    /// Snapshot of the caravan's live CARGO right now: item id -> count aboard, and non-hero
+    /// troop id -> count aboard MINUS the order's spawn-time non-cargo manifest (template
+    /// guards and mercenary escorts are never cargo, even when they share a character id with a
+    /// purchased recruit; the escort hero is never cargo either). False when the party is
+    /// missing or unreadable. Delivery caps the ordered amounts by this, so goods eaten in
     /// transit or recruits lost to a battle are not resurrected at the player's feet.
     /// </summary>
     bool TryGetLiveCargo(
@@ -66,6 +68,13 @@ public interface ISupplyCaravanService
     /// which nulled the hero's party and stranded the companion forever.
     /// </summary>
     void ReleaseEscortAndDestroy(SupplyOrder order);
+
+    /// <summary>
+    /// Drops the tracker for an order whose caravan the ENGINE is destroying right now
+    /// (MobilePartyDestroyed). Never destroys the party again and never touches the companion:
+    /// the destroying battle already decided the escort's fate.
+    /// </summary>
+    void ForgetDestroyed(SupplyOrder order);
 
     /// <summary>Re-creates caravans for in-transit orders whose party vanished across a save load.</summary>
     void RespawnMissing(System.Collections.Generic.IEnumerable<SupplyOrder> orders);

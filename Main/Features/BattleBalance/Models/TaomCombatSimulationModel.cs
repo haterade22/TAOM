@@ -35,9 +35,10 @@ public class TaomCombatSimulationModel : DefaultCombatSimulationModel
             strikerAdvantage, battle, strikerSideMorale, struckSideMorale);
 
         var reduction = _refugeDefense?.DefenderDamageReduction(struckParty?.MobileParty?.StringId) ?? 0f;
-        // Positive requirement: a NaN or out-of-range factor applies nothing.
-        if (reduction > 0f && reduction < 1f)
-            result.AddFactor(-reduction);
+        // Shared composition contract (RefugeDamageReduction): (1 - r) on the FINAL number, same
+        // as the real-time path. A bare AddFactor(-r) here composed against the BASE and drifted
+        // from real-time whenever vanilla factors were non-zero. NaN/out-of-range applies nothing.
+        RefugeDamageReduction.Apply(ref result, reduction);
 
         return result;
     }

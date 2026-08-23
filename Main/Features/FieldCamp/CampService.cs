@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
@@ -23,7 +23,12 @@ namespace TAOM.Features.FieldCamp;
 public sealed class AmbushCandidate
 {
     public string PartyId;
+
+    /// <summary>Display name. The campaign boundary leaves this null (rendering a localized name
+    /// per hostile party per scan was the round-B cost finding); the winner's name resolves
+    /// lazily from <see cref="EngineParty"/> at inquiry time. Tests may pre-fill it.</summary>
     public string Name;
+
     public float StraightLineDistance;
     public bool IsBandit;
 
@@ -99,7 +104,11 @@ public class CampService : ICampService
     private readonly ICampVisualService _visuals;
     private readonly ISupplyOrderService _supplyOrders;
     private readonly IEnlistmentStateQuery _enlistment;
-    private readonly IEnumerable<ICampOverlayContributor> _overlayContributors;
+    // Lazy on purpose: contributors are extension points registered by LATER features
+    // (Refuge's needs IRefugeService, which needs ICampService back). Materializing them in
+    // this constructor closes that loop into a DryIoc RecursiveDependencyDetected at module
+    // startup (Codex round-2 P1; CampsContainerWiringTests pins the resolvable graph).
+    private readonly IEnumerable<Lazy<ICampOverlayContributor>> _overlayContributors;
     private readonly IModLogger _logger;
 
     private Dictionary<string, CampState> _camps = new Dictionary<string, CampState>();
@@ -130,7 +139,7 @@ public class CampService : ICampService
         ICampVisualService visuals,
         ISupplyOrderService supplyOrders,
         IEnlistmentStateQuery enlistment,
-        IEnumerable<ICampOverlayContributor> overlayContributors,
+        IEnumerable<Lazy<ICampOverlayContributor>> overlayContributors,
         IModLogger logger)
     {
         _settings = settings;
@@ -233,7 +242,7 @@ public class CampService : ICampService
         _supplyOrders.CancelCampOrders();
         _movePromptOpen = false;
         _establishAnnounced = true;
-        ShowMessage(new TextObject("{=taom_fc_broken}Camp broken."), error: false);
+        ShowMessage(new TextObject("{=taom_fcamp_broken}Camp broken."), error: false);
     }
 
     public bool Fortify()
@@ -451,11 +460,21 @@ public class CampService : ICampService
 
     private string FirstContributorBlockReason()
     {
-        foreach (var contributor in _overlayContributors)
+        foreach (var lazyContributor in _overlayContributors)
         {
-            var reason = contributor?.CreationBlockedReason();
-            if (!string.IsNullOrEmpty(reason))
-                return reason;
+            // Per-contributor containment, same as the VM and menu-controller consumers: this is
+            // called from a GameMenuOption condition and the engine's dispatch is unguarded, so a
+            // throwing contributor (or a throwing Lazy factory) must be skipped, never propagated.
+            try
+            {
+                var reason = lazyContributor?.Value?.CreationBlockedReason();
+                if (!string.IsNullOrEmpty(reason))
+                    return reason;
+            }
+            catch
+            {
+                // A faulty contributor must not take the menu down.
+            }
         }
         return null;
     }
@@ -480,7 +499,7 @@ public class CampService : ICampService
         camp.ForagedTotal += wholeGrain;
         AddGrainToMainParty(wholeGrain);
         ShowMessage(
-            new TextObject("{=taom_fc_foraged}Foraged +{N} grain (camp total: {TOTAL}).")
+            new TextObject("{=taom_fcamp_foraged}Foraged +{N} grain (camp total: {TOTAL}).")
                 .SetTextVariable("N", wholeGrain)
                 .SetTextVariable("TOTAL", camp.ForagedTotal),
             error: false);
@@ -494,7 +513,7 @@ public class CampService : ICampService
             return;
         _establishAnnounced = true;
         ShowMessage(
-            new TextObject("{=taom_fc_established}{CAMP} established.")
+            new TextObject("{=taom_fcamp_established}{CAMP} established.")
                 .SetTextVariable("CAMP", UI.FieldCampTexts.TypeLabel(camp.TypeEnum)),
             error: false);
     }
@@ -558,7 +577,7 @@ public class CampService : ICampService
 
         AmbushCandidate best = null;
         float bestScore = float.MaxValue;
-        foreach (var candidate in EnumerateHostileCandidates())
+        foreach (var candidate in EnumerateHostileCandidates(reach))
         {
             if (candidate == null)
                 continue;
@@ -595,8 +614,13 @@ public class CampService : ICampService
         // The trap is spent either way: sprung or spotted, the camp is done (source behaviour).
         BreakPlayerCamp();
 
-        var enemyName = new TextObject("{=taom_fc_ambush_enemy}the enemy");
-        string name = string.IsNullOrEmpty(best.Name) ? enemyName.ToString() : best.Name;
+        // The name resolves lazily, only for the winner: rendering a localized TextObject for
+        // every hostile party campaign-wide was the round-B scan-cost finding.
+        string name = best.Name;
+        if (string.IsNullOrEmpty(name))
+            name = (best.EngineParty as MobileParty)?.Name?.ToString();
+        if (string.IsNullOrEmpty(name))
+            name = new TextObject("{=taom_fcamp_ambush_enemy}the enemy").ToString();
 
         // Source payoff: a two-button inquiry, and confirming starts a real battle. On a
         // successful roll the target is softened first (morale halved, disorganized); on a failed
@@ -766,9 +790,11 @@ public class CampService : ICampService
         return model.GetPartySpottingRange(party).ResultNumber;
     }
 
-    /// <summary>Every lord and bandit party at war with the player, with a cheap straight-line
-    /// distance; the expensive pathfinding happens only for prefilter survivors.</summary>
-    protected virtual IReadOnlyList<AmbushCandidate> EnumerateHostileCandidates()
+    /// <summary>Hostile lord and bandit parties within <paramref name="reach"/> as the crow
+    /// flies, with the straight-line distance; the expensive pathfinding happens only for these
+    /// survivors. The distance check runs BEFORE any allocation, and names are not rendered here
+    /// at all (only the eventual winner's name is ever shown; round-B scan-cost finding).</summary>
+    protected virtual IReadOnlyList<AmbushCandidate> EnumerateHostileCandidates(float reach)
     {
         var result = new List<AmbushCandidate>();
         var main = MobileParty.MainParty;
@@ -778,13 +804,13 @@ public class CampService : ICampService
             return result;
 
         var position = main.GetPosition2D;
-        CollectHostiles(campaign.LordParties, mainFaction, position, result);
-        CollectHostiles(campaign.BanditParties, mainFaction, position, result);
+        CollectHostiles(campaign.LordParties, mainFaction, position, reach, result);
+        CollectHostiles(campaign.BanditParties, mainFaction, position, reach, result);
         return result;
     }
 
     private static void CollectHostiles(
-        MBReadOnlyList<MobileParty> parties, IFaction mainFaction, Vec2 mainPosition,
+        MBReadOnlyList<MobileParty> parties, IFaction mainFaction, Vec2 mainPosition, float reach,
         List<AmbushCandidate> result)
     {
         if (parties == null)
@@ -793,14 +819,16 @@ public class CampService : ICampService
         {
             if (party == null || party.IsMainParty || !party.IsVisible || party.ShouldBeIgnored)
                 continue;
+            float distance = mainPosition.Distance(party.GetPosition2D);
+            if (!FiniteFloatValidator.IsFinite(distance) || distance > reach)
+                continue;
             var faction = party.MapFaction;
             if (faction == null || !faction.IsAtWarWith(mainFaction))
                 continue;
             result.Add(new AmbushCandidate
             {
                 PartyId = party.StringId,
-                Name = party.Name?.ToString(),
-                StraightLineDistance = mainPosition.Distance(party.GetPosition2D),
+                StraightLineDistance = distance,
                 IsBandit = party.IsBandit,
                 EngineParty = party,
             });
@@ -882,32 +910,41 @@ public class CampService : ICampService
     protected virtual void ShowAmbushInquiry(string enemyName, bool success, Action attack, Action holdBack)
     {
         var body = success
-            ? new TextObject("{=taom_fc_ambush_ok}Your ambush is set against {ENEMY} - strike now?")
+            ? new TextObject("{=taom_fcamp_ambush_ok}Your ambush is set against {ENEMY} - strike now?")
                 .SetTextVariable("ENEMY", enemyName)
-            : new TextObject("{=taom_fc_ambush_fail}You were spotted by {ENEMY} before you could strike - attack anyway?")
+            : new TextObject("{=taom_fcamp_ambush_fail}You were spotted by {ENEMY} before you could strike - attack anyway?")
                 .SetTextVariable("ENEMY", enemyName);
         InformationManager.ShowInquiry(new InquiryData(
-            new TextObject("{=taom_fc_ambush_title}Ambush").ToString(),
+            new TextObject("{=taom_fcamp_ambush_title}Ambush").ToString(),
             body.ToString(),
             true,
             true,
             GameTexts.FindText("str_ok").ToString(),
             GameTexts.FindText("str_cancel").ToString(),
             attack,
-            holdBack));
+            holdBack),
+            // Source parity (ShowInquiry(data, true, true)): freeze campaign time and jump the
+            // queue while the player decides, or the rolled target marches on under the modal
+            // and the re-check in LaunchAmbushBattle aborts strikes the source would allow.
+            pauseGameActiveState: true,
+            prioritize: true);
     }
 
     protected virtual void ShowBreakCampInquiry(Action breakAndMove, Action stayCamped)
     {
         InformationManager.ShowInquiry(new InquiryData(
-            new TextObject("{=taom_fc_move_title}Break camp?").ToString(),
-            new TextObject("{=taom_fc_move_text}Moving will break your camp. Break camp and move on?").ToString(),
+            new TextObject("{=taom_fcamp_move_title}Break camp?").ToString(),
+            new TextObject("{=taom_fcamp_move_text}Moving will break your camp. Break camp and move on?").ToString(),
             true,
             true,
-            new TextObject("{=taom_fc_move_yes}Break camp and move").ToString(),
-            new TextObject("{=taom_fc_move_no}Stay camped").ToString(),
+            new TextObject("{=taom_fcamp_move_yes}Break camp and move").ToString(),
+            new TextObject("{=taom_fcamp_move_no}Stay camped").ToString(),
             breakAndMove,
-            stayCamped));
+            stayCamped),
+            // Source parity (ShowInquiry(data, true, false)): the click that raised this modal
+            // had unpaused the map; without the pause an approaching enemy reaches the held
+            // party and starts an encounter underneath the open inquiry.
+            pauseGameActiveState: true);
     }
 
     protected virtual void ShowMessage(TextObject text, bool error)

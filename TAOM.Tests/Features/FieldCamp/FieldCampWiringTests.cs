@@ -39,11 +39,15 @@ public class FieldCampWiringTests
         "BlankWhiteSquare_9",
     };
 
+    // Every entry here must be grep-verified against the installed game's Brushes/*.xml before
+    // it is added: the allowlist previously vouched for Popup.Text.Medium, which existed nowhere
+    // and silently rendered with the engine default brush (round-B critic finding).
     private static readonly HashSet<string> KnownVanillaBrushes = new HashSet<string>
     {
         "Frame1.Broken",
         "ButtonBrush2",
-        "Popup.Text.Medium",
+        "Popup.Description.Text",
+        "Popup.Button.Text",
     };
 
     private static string ReadSource(params string[] parts)

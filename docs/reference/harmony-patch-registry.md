@@ -1,4 +1,4 @@
-# Harmony Patch Registry
+﻿# Harmony Patch Registry
 
 Full per-category rationale, history, and RCA links for every TAOM Harmony patch — moved verbatim from CLAUDE.md's Harmony Patch Categories table (repo-reorg 2026-07-12) so the eager-loaded CLAUDE.md keeps only the thin routing table (category | feature | target | status). **Before editing any patch, read its section here** and the scoped rule [.claude/rules/harmony-patches.md](../../.claude/rules/harmony-patches.md) (loads automatically when a `Main/**/Hooks/**` file is opened). Most sections end with a `docs/features/<x>.md` pointer — that feature doc remains the deep-dive.
 
@@ -639,6 +639,22 @@ This is the one place the patch deliberately departs from the service it replace
 
 **Wiring is pinned, because this feature already shipped the failure once.** `HeroRaceWiringTests` asserts the `Initialize` call in `HeroRaceIoC` and the category string in `SubModule.cs`, and that the `[HarmonyPatchCategory]` literal matches it. Both are silent when missing: no `Initialize` and the patch's null guard yields vanilla framing, no category string and Harmony never applies the postfix. `Patch72TableauRacePositionBindingTests` proves the patch *could* bind; only the wiring test proves anything asks it to.
 
+## Patch73_SupplyLines
+
+**Target:** `PlayerEncounter.DoMeeting()` (public static, Prefix)
+
+**Feature:** SupplyLines, `Main/Features/SupplyLines/Hooks/SupplyCaravanEncounterPatch.cs`. **Status:** ACTIVE.
+
+Click-through guard for the player's own supply caravans. A caravan's `PartyComponent.Leader` is
+null, so vanilla's meeting flow would strike a stranger conversation with the highest-tier roster
+troop, or hand the conversation a null partner on an empty roster (Codex round-1 P2). The prefix
+shows a one-line info message and finishes the encounter with the same teardown vanilla's own
+leave path runs (`PlayerEncounter.Finish()` + `SetMoveModeHold()`, verified against installed
+1.4.8), then skips the meeting. Coexists with Patch75's prefix on the same method: each guard acts
+only on its own component type, so at most one returns false for a given encounter. A failed guard
+degrades to vanilla's meeting (never to a dead encounter). Co-op disposition: ReviewedSafe
+(player-local UI redirect, condition reads replicated party state; `CoopVetoClassificationTests`).
+
 ## Patch74_FieldCampNameplateIcon
 
 **Target:** `PartyPlayerNameplateWidget.UpdateNameplatesVisibility(float)` (protected override, Postfix)
@@ -649,7 +665,7 @@ Injects a camp-type icon (lookout monocular, ambush, camp) above the player's pa
 
 **This namespace is PatchShield-EXCLUDED** (`TaleWorlds.MountAndBlade.GauntletUI` prefix, the Patch38 lesson), so the postfix gets no shield finalizer and must never throw: the whole body sits in one try/catch with per-step null guards, and the no-camp fast path allocates nothing. Runs per nameplate per frame; the applied-state cache is a `ConditionalWeakTable` (the source module's plain dictionary leaked dead widgets forever), reset via `Reset()` from the map view's finalize and the behavior's game-over handler.
 
-**Service handle** captured once via `Initialize(ICampService)` in `FieldCampIoC` (the Patch38/Patch72 shape). Sprite names are vanilla atlas entries; a missing entry degrades to an invisible icon by design.
+**Service handle** captured once via `Initialize(ICampService)` from `IoC.InitializePatchStatics`, the single post-registration block (moved out of `FieldCampIoC` when registration-time eager resolves were banned: resolving `ICampService` mid-registration materialized its contributor collection before Refuge registered, review round A HIGH). Widget construction and the sprite memo live in `CampNameplateIconPresenter`; the patch file is a 68-line guarded delegate. Sprite names are vanilla atlas entries; a missing entry degrades to an invisible icon by design.
 
 ## Patch75_Refuge
 

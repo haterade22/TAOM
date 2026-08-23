@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -74,7 +74,7 @@ public class CampServiceTests
             ICampVisualService visuals,
             ISupplyOrderService supplyOrders,
             IEnlistmentStateQuery enlistment,
-            IEnumerable<ICampOverlayContributor> overlayContributors,
+            IEnumerable<Lazy<ICampOverlayContributor>> overlayContributors,
             IModLogger logger)
             : base(settings, terrain, ambush, visuals, supplyOrders, enlistment, overlayContributors, logger)
         {
@@ -107,7 +107,7 @@ public class CampServiceTests
         protected override void TrackMainPartyOnMap() => TrackCalls++;
         protected override void UntrackMainPartyOnMap() => UntrackCalls++;
 
-        protected override IReadOnlyList<AmbushCandidate> EnumerateHostileCandidates()
+        protected override IReadOnlyList<AmbushCandidate> EnumerateHostileCandidates(float reach)
         {
             ScanEnumerations++;
             return Candidates;
@@ -192,7 +192,7 @@ public class CampServiceTests
 
         _sut = new TestableCampService(
             _settings, _terrain, _ambushMath, _visuals, _supply, _enlistment,
-            new[] { _contributor }, _logger);
+            new[] { new Lazy<ICampOverlayContributor>(() => _contributor) }, _logger);
     }
 
     private CampState EstablishCamp(CampType type = CampType.Field)
@@ -271,6 +271,30 @@ public class CampServiceTests
         _sut.NearestFortDistance = 1f;
 
         Assert.AreEqual(CampBlockReason.External, _sut.CanEstablish(CampType.Field));
+    }
+
+    [TestMethod]
+    public void CanEstablish_ContributorThrows_IsContainedAndSkipped()
+    {
+        // CanEstablish feeds a GameMenuOption condition whose engine dispatch is unguarded; a
+        // faulty contributor must be skipped, never propagated (round-B seam-containment finding,
+        // same contract as the VM and menu-controller consumers).
+        _contributor.CreationBlockedReason().Returns(_ => throw new InvalidOperationException("boom"));
+
+        Assert.AreEqual(CampBlockReason.None, _sut.CanEstablish(CampType.Field));
+    }
+
+    [TestMethod]
+    public void CanEstablish_LazyContributorFactoryThrows_IsContainedAndSkipped()
+    {
+        // Contributors arrive as Lazy<T> (the DryIoc cycle fix); a factory that blows up on
+        // first materialization is the same hazard as a throwing contributor body.
+        var sut = new TestableCampService(
+            _settings, _terrain, _ambushMath, _visuals, _supply, _enlistment,
+            new[] { new Lazy<ICampOverlayContributor>(() => throw new InvalidOperationException("boom")) },
+            _logger);
+
+        Assert.AreEqual(CampBlockReason.None, sut.CanEstablish(CampType.Field));
     }
 
     [TestMethod]
@@ -531,9 +555,10 @@ public class CampServiceTests
 
         Assert.IsNull(_sut.PlayerCamp);
         // Camp-scoped cancellation ONLY: a town-placed order has nothing to do with the camp and
-        // its gold/goods must never be forfeited by a routine camp break.
+        // its gold/goods must never be forfeited by a routine camp break. (The old blanket
+        // CancelAll was deleted from ISupplyOrderService in review round B: it had no
+        // production caller and existed only as a footgun that looked symmetrical to this.)
         _supply.Received(1).CancelCampOrders();
-        _supply.DidNotReceive().CancelAll();
         _visuals.Received(1).Remove("main_party");
         Assert.AreEqual(1, _sut.UntrackCalls);
     }
@@ -884,6 +909,23 @@ public class CampServiceTests
         // Source formula: the first argument is the PLAYER party's spotting range (candidate
         // distance never enters the odds); pinned so the seam cannot silently regress either way.
         _ambushMath.Received(1).TriggerChance(5f, 10f, 0.5f, 30f);
+    }
+
+    [TestMethod]
+    public void FrameTick_CandidateWithoutName_InquiryFallsBackToTheEnemy()
+    {
+        // The boundary no longer renders a name per scanned party (round-B cost finding); the
+        // winner's name resolves lazily from EngineParty, and a null handle (or a nameless
+        // party) must land on the generic fallback, never a null in the inquiry text.
+        EstablishCamp(CampType.Ambush);
+        var candidate = AddCandidate("bandit_1", straightLine: 3f, navDistance: 4f);
+        candidate.Name = null;
+        _sut.RandomRoll = 0f;
+
+        _sut.FrameTick();
+
+        Assert.AreEqual(1, _sut.AmbushInquiryCount);
+        StringAssert.Contains(_sut.LastAmbushEnemy, "the enemy");
     }
 
     [TestMethod]
