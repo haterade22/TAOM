@@ -1,4 +1,4 @@
-# Doc Lookup (task -> doc)
+﻿# Doc Lookup (task -> doc)
 
 > Task-oriented index of TAOM docs. Extracted from CLAUDE.md 2026-07-18 (Tier 2 restructure); since 2026-08-05 (diet round 2) CLAUDE.md "Doc Lookup" is a pointer only — this file is the complete task table. `docs/INDEX.md` is the fuller curated topical map.
 
@@ -73,6 +73,10 @@
 | Browse all engine process docs | [docs/reference/engine/](../../docs/reference/engine/) — full arc: campaign heartbeat → object graph → encounter seam → mission lifecycle → agent spawn → formation/team AI → mount/rider → combat stats → usable machines → UI → save/object system → GameModel → scene/script → campaign behaviors → items → module integration → settlement economy |
 
 ---
+
+| Touch supply caravans / orders / the order screen | [supply-lines.md](../../docs/features/supply-lines.md) |
+| Touch field camps / ambush / lookout / camp visuals | [field-camp.md](../../docs/features/field-camp.md) |
+| Touch refuges / wardens / refuge militia / defence bonus | [refuge.md](../../docs/features/refuge.md) |
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

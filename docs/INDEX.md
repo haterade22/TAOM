@@ -1,4 +1,4 @@
-# TAOM Knowledge Index
+﻿# TAOM Knowledge Index
 
 **Start here.** This file is the topical map across [docs/](.) — read it instead of grepping when you need to find the canonical doc for any TAOM system. CLAUDE.md describes the working rules and architecture stance; this file maps the persistent knowledge.
 
@@ -119,6 +119,9 @@
 - [diplomacy](features/diplomacy.md), [army-targeting](features/army-targeting.md) — see also TaomTargetScoreModel + Patch22 (border proximity floor)
 
 ### Sandbox, lifecycle, & UI
+- [supply-lines](features/supply-lines.md): resupply convoys from towns/castles/lords (yotthani port #505): real stock deducted, sources credited, full-screen Gauntlet order UI, TAOM's first custom PartyComponent
+- [field-camp](features/field-camp.md): campaign-map camps (yotthani port #506): field/fortified/ambush/lookout, forage + morale, tpac visuals, map-overlay Make Camp, `taom_fcamp_` loc prefix (taom_fc_ is FieldCommission's)
+- [refuge](features/refuge.md): movable player base raised from a camp (yotthani port #507): warden + garrison + stash, Refuge/Stronghold tiers, model-chain defence bonus, orphan-adopt on warden loss
 - [main-menu-customizer](features/main-menu-customizer.md) — hide Campaign, rename Sandbox → "Enter The Age Of Men"
 - [lotr-issues](features/lotr-issues.md) — **IMPLEMENTED** (2026-06-20) — all 43 vanilla procedural issues suppressed + replaced by 43 LOTR issues via XML-config + 3 generic templates (DeliverGoods/DeliverPersonnel/Combat); `RemoveBehaviors<T>` suppression + SaveableTypeDefiner (base 726900801); per-issue disposition matrix retained for provenance
 - [encyclopedia](features/encyclopedia.md) — encyclopedia screen extensions, dispatch entry points

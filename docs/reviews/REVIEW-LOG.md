@@ -1,4 +1,4 @@
-# Codex Adversarial Review Log
+﻿# Codex Adversarial Review Log
 
 Running scorecard of all reviews. **Reviews 1-88, 2026-04-05 → 2026-08-18.** 82 of those numbers have an entry below; 37, 46, 48, 63, 64 and 73 do not. The number is not a unique key: the Summary and Gap Reviews tables both carry #17 to #22 for different features, and #25, #33 and #83 each head two sections. (This line used to read "COMPLETE: 25/25 features reviewed, 2026-04-05/06", a claim about the April 2026 sweep that the log outgrew.)
 
@@ -2155,3 +2155,38 @@ Suite 6688 green, 0 failed, 2 skipped. Six lessons: enumerate-ownership-relation
 flat-Add-on-a-shared-ExplainedNumber and grep-the-call-sites-before-pricing-a-deferral
 (gamemodels-services), binary-round-trip-is-about-the-idiom-not-the-file-type
 (build-tooling-workflow). RCA: `docs/reviews/rca-ai-party-size-2026-08-18.md`.
+
+## Review 89: yotthani camps port (#505, #506, #507), three deep-review rounds + two Codex passes (2026-08-22/23)
+
+The largest review campaign to date, run autonomously overnight over the three-feature port on
+`feat/yotthani-camps` (~90 review agents across rounds, all no-narrative: reviewers got code and
+diff only, never the port rationale, with a dedicated source-fidelity dimension holding the
+decompiled originals and 3-lens adversarial verification on every finding).
+
+Round A: 42 confirmed (3 CRITICAL: cross-campaign singleton book leaks, dismantle corrupting
+Hero.PartyBelongedTo via raw roster copy+clear, camp books saved into the wrong campaign) plus
+two findings indicting the orchestrator's own builder briefs, which is exactly the bias class
+the no-narrative design existed to catch. Codex round 1 added 4 P1 / 14 P2 / 2 P3.
+
+Round B over the fixed tree: 28 + 3 critic. Codex round 2 found the campaign's worst bug: the
+batch-1 contributor fix had REGRESSED into a DryIoc startup cycle invisible to 7,400 tests
+because nothing resolved the finished container; both batch-1 preventive gates passed while the
+module could not start (they scan source text). Proven RED with CampsContainerWiringTests
+(DryIoc Validate), fixed with lazy contributor injection. Round B also exposed the taom_fc_
+prefix collision with FieldCommission (58 keys renamed taom_fcamp_ at zero cost pre-translation)
+and the phantom Popup.Text.* brushes.
+
+Round C, scoped to the batch-2 diff because both prior fix batches had introduced a regression:
+8 raised, 8 confirmed, 0 refuted. Two dimensions independently proved the warden-death
+disband-cancel ordering backwards (MbEvent dispatches LIFO; the cancel ran against an empty
+queue and the refuge still disbanded a day later in continuous sessions, invisible to save/load
+repros and to the seam-substituting unit tests). Fixed with an idempotent hourly re-cancel.
+Frame1.Broken, vouched for by an earlier substring grep, fell to round C's exact-match check.
+
+Suite arc: 7323 -> 7421 -> 7469 -> 7472 green. RCA:
+`docs/reviews/rca-yotthani-camps-2026-08-23.md` (8 root-cause classes, all preventive artifacts
+landed: 2 rules, 11 lessons, 4 new mechanical suite gates). Full state narrative:
+`docs/reviews/camps-review-log-2026-08-22.md`. Standing process lessons: fix batches get their
+own diff-scoped regression round; a wiring gate must exercise the wiring; a key prefix is an
+ownership claim; CampaignTime factories return default in tests.
+
