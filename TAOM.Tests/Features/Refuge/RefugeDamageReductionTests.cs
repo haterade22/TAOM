@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Refuge;
 using TaleWorlds.CampaignSystem;
 
@@ -66,6 +66,26 @@ public class RefugeDamageReductionTests
             Assert.AreEqual(100f, explained.ResultNumber, 0.001f, $"reduction {reduction}");
             Assert.AreEqual(90f, RefugeDamageReduction.Apply(90f, reduction), 0.001f, $"reduction {reduction}");
         }
+    }
+
+    [TestMethod]
+    public void PreClampedNumber_PinsTheDocumentedDivergence()
+    {
+        // PRECONDITION pin (round-C finding): the (1 - r)-on-final contract is exact only for an
+        // UNCLAMPED number, because the scale derives from the clamped ResultNumber. Both consult
+        // sites apply the reduction before any clamp; this test pins what a pre-clamped input
+        // does TODAY so a change in that behaviour is loud, not silent. With base 100, +100%
+        // factor, LimitMax 150: ResultNumber reads 150, scale 1.5, factor -0.30, unclamped
+        // composition 170, still above the limit, so the clamped result stays 150.
+        var explained = new ExplainedNumber(100f);
+        explained.AddFactor(1.0f);
+        explained.LimitMax(150f);
+
+        RefugeDamageReduction.Apply(ref explained, 0.2f);
+
+        Assert.AreEqual(150f, explained.ResultNumber, 0.001f,
+            "pre-clamped input: the limit still binds; (1-r)-on-final is NOT delivered here, "
+            + "which is exactly why the docstring precondition exists");
     }
 
     [TestMethod]

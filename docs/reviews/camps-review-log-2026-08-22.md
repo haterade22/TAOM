@@ -196,6 +196,30 @@ lone warden while garrison survives (expect the alert, no disband march, dismant
 toggle Refuges off mid-build and wait out the build; a building row in the clan screen with a
 wage line of 0.
 
+## Round C (targeted, LANDED 2026-08-23): the fix-batch-regression hunt earned itself again
+
+Scope: the batch-2 diff only (16a58b51..HEAD), 3 finders (regression, engine, consistency) +
+3-lens verify, 27 agents. **8 raised, 8 confirmed, 0 refuted.** The two HIGHs converged from two
+independent dimensions on the same defect: the warden-death disband-cancel relied on a listener
+ordering that is BACKWARDS (MbEvent dispatches LIFO: AddNonSerializedListener head-inserts,
+verified MbEvent`1.cs:28; TAOM registers after vanilla, so our cancel ran against a not-yet-
+populated queue and the refuge still disbanded a day later in a continuous session, self-healing
+only across save/load). Fix: an idempotent hourly re-cancel pass for every booked refuge
+(state-protecting, runs with raids and the toggle off; vanilla's 1-day wait guarantees the race),
+plus corrected comments and a pinning test. Also confirmed and fixed: the clan-screen wage
+suppression did not survive the engine's UpdateProperties (re-applied on every postfix pass for
+existing rows); Frame1.Broken was ITSELF a phantom root brush on both prefabs (only .Left/.Right
+exist; my earlier substring grep vouched for it, the round-C exact-match check caught it; swapped
+to the verified Popup.Frame); RepairLoadedRow now also resets a future BuildStartTime (the
+mirror absorbing state); the RefugeDamageReduction docstring gained its unclamped-input
+precondition with a pre-clamped pin test; two stale owed-items passages and one lessons count
+corrected.
+
+Suite after round C: **7472 passed / 2 skipped / 0 failed.** A test-harness detour worth its own
+lesson (testing-qa): every CampaignTime factory returns default in tests because the tick
+statics only initialize with a live campaign; CampaignTime.Never is the only nonzero
+constructible value.
+
 ## Remaining queue
 
 1. DONE: round A verified -> merged with the Codex batch -> fixed -> suite 7421 green ->

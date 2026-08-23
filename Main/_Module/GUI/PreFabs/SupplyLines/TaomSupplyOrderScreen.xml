@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Prefab>
   <Window>
     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
@@ -14,7 +14,7 @@
         <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                      SuggestedWidth="760" SuggestedHeight="700"
                      HorizontalAlignment="Center" VerticalAlignment="Center"
-                     Brush="Frame1.Broken">
+                     Brush="Popup.Frame">
           <Children>
 
             <!-- Title -->

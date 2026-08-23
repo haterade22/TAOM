@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Refuge.Components;
@@ -58,9 +58,10 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
         CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
         // Vanilla starts disbanding a refuge itself when the warden dies with no other hero in
         // the roster (KillCharacterAction.MakeDead -> DisbandPartyAction.StartDisband); the
-        // service cancels it and orphan-adopts the leaderless row. Registration order matters and
-        // holds: vanilla's DisbandPartyCampaignBehavior registered first, so its queue-add runs
-        // before our cancel removes the entry again.
+        // service orphan-adopts the leaderless row. Listener ORDER CANNOT be relied on here:
+        // MbEvent dispatches LIFO (head-insert), so this handler fires BEFORE vanilla's queue-add;
+        // the queue is actually emptied by RefugeService.HourlyTick's idempotent re-cancel pass
+        // (and the LoadFrom belt for saves written inside vanilla's 1-day wait).
         CampaignEvents.OnPartyDisbandStartedEvent.AddNonSerializedListener(this, OnPartyDisbandStarted);
         // Vanilla's peace-time prisoner release enumerates caravans, war parties, villages and
         // garrisons only; refuge-held hero prisoners need their own listener.

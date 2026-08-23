@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Prefab>
   <Window>
     <!-- Root: ALWAYS present (the Make Camp button must show even with no camp).
@@ -26,7 +26,7 @@
                      SuggestedWidth="360"
                      HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="150"
                      IsVisible="@IsCampActive" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true"
-                     Brush="Frame1.Broken">
+                     Brush="Popup.Frame">
           <Children>
             <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                        MarginTop="14" MarginBottom="14" MarginLeft="22" MarginRight="22"

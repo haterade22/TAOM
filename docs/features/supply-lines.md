@@ -1,4 +1,4 @@
-# Supply Lines
+﻿# Supply Lines
 
 Order resupply convoys from the field (#505). Pick a town, castle or friendly lord, choose goods
 from the source's real market stock and troops from its volunteers, pick an escort, and a caravan
@@ -226,8 +226,8 @@ plus the shipped-config and localization-key sweeps that gate every feature.
 - In-game smoke (#505 checklist): order from town, village + lord, delivery after caravan
   losses (partial), cancel, camp-placed order + camp break, save/load mid-transit, click the
   caravan (no stranger conversation).
-- 12-language translation run for the `{=taom_sl_*}` keys, including the new
-  `taom_sl_caravan_meet` and `taom_sl_lord_dispatched` (the latter needs its registration row
-  in `taom_module_strings.xml` first, single-owner file; run scheduled with the
-  FieldCamp/Refuge strings).
+- 12-language TRANSLATION run for the `{=taom_sl_*}` keys (backlog issue #508). Registration and
+  English rows are done: every key including `taom_sl_caravan_meet` and `taom_sl_lord_dispatched`
+  is registered in `taom_module_strings.xml` and present in all 12 language files as English
+  fallback (batch-2 integration).
 - Optional fidelity restore: the `sl_reinf_*` lord conversation (see Deliberate departures).

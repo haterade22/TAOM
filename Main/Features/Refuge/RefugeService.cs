@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
@@ -381,6 +381,17 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     public void HourlyTick()
     {
+        // Disband re-cancel, hourly, for every booked refuge. MbEvent dispatches listeners LIFO
+        // (AddNonSerializedListener head-inserts, 1.4.8 MbEvent`1.cs:28), so our
+        // OnPartyDisbandStarted handler fires BEFORE vanilla's queue-add and the immediate cancel
+        // strikes an empty queue; without this pass the refuge still disbands a day later in a
+        // continuous session (round-C HIGH). CancelDisband is idempotent (vanilla's canceled
+        // listener no-ops when the party is not queued) and vanilla's 1-day wait guarantees an
+        // hourly re-cancel always wins the race. State-protecting: runs with raids and the
+        // master toggle both off.
+        foreach (var partyId in _refuges.Keys)
+            CancelDisband(partyId);
+
         // Raids are experimental and OFF by default (source parity); nothing else runs hourly.
         if (!_settings.EnableRaids)
             return;
@@ -515,9 +526,11 @@ public class RefugeService : IRefugeService, IRefugeBook
         // A refuge never disbands; dismantle is its only exit. The engine starts this flow itself
         // when the warden dies with no other hero in the roster (1.4.8 KillCharacterAction.MakeDead:
         // RemovePartyLeader then DisbandPartyAction.StartDisband) -- left alone, vanilla's disband
-        // behavior would march the garrison to a settlement and dissolve it. Cancel is safe at any
-        // point of that flow: DisbandPartyCampaignBehavior only queues the party for a 1-day-later
-        // IsDisbanding flip, and CancelDisband's event removes it from that queue.
+        // behavior would march the garrison to a settlement and dissolve it. NOTE this immediate
+        // cancel runs BEFORE vanilla's own queue-add (MbEvent dispatches LIFO and TAOM registers
+        // after vanilla), so it only resets IsDisbanding; the cancel that actually empties the
+        // queue is the hourly pass in HourlyTick, and the LoadFrom belt covers saves written
+        // inside the wait window.
         CancelDisband(partyId);
 
         if (IsWardenWithParty(partyId, data.WardenHeroId))
@@ -666,6 +679,15 @@ public class RefugeService : IRefugeService, IRefugeBook
             _logger.LogWarning(
                 $"[Refuge] row '{key}' had non-finite BuildTargetHours {data.BuildTargetHours}; floored so the build can finish.");
             data.BuildTargetHours = MinBuildTargetHours;
+        }
+        // A FUTURE BuildStartTime is the same absorbing-state class from the other side: the
+        // elapsed numerator stays negative for the whole offset, the build never finishes, and
+        // the row is neither ready nor dismantlable while it eats a cap slot.
+        if (data.Building && DaysSince(data.BuildStartTime) < 0.0)
+        {
+            _logger.LogWarning(
+                $"[Refuge] row '{key}' had a future BuildStartTime; reset to now so the build can finish.");
+            data.BuildStartTime = NowTime();
         }
         if (data.MilitiaAdded < 0)
             data.MilitiaAdded = 0;

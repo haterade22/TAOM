@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
@@ -1094,6 +1094,57 @@ public class RefugeServiceTests
     }
 
     [TestMethod]
+    public void HourlyTick_ReCancelsDisbandForEveryBookedRefuge_EvenWithRaidsAndToggleOff()
+    {
+        // MbEvent dispatches LIFO, so the OnPartyDisbandStarted cancel runs BEFORE vanilla's
+        // queue-add and strikes an empty queue; this hourly idempotent re-cancel is what actually
+        // empties vanilla's 1-day disband queue in a continuous session (round-C HIGH). It is
+        // state-protecting: raids and the master toggle being off must not stop it.
+        _settings.Enabled.Returns(false);
+        _settings.EnableRaids.Returns(false);
+        Seed("r1");
+        Seed("r2");
+
+        _sut.HourlyTick();
+
+        CollectionAssert.AreEquivalent(
+            new[] { "r1", "r2" }, _sut.DisbandCancels,
+            "every booked refuge gets the idempotent re-cancel each hour");
+    }
+
+    [TestMethod]
+    public void LoadFrom_FutureBuildStart_ResetsSoTheBuildCanFinish()
+    {
+        // A future BuildStartTime keeps the elapsed numerator negative for the whole offset:
+        // never ready, not dismantlable, a cap slot gone - the mirror of the NaN-target
+        // absorbing state the load repair exists to kill.
+        _sut.Days = -41.0; // DaysSince(start) negative = the start is ahead of campaign time
+        // CampaignTime.Never is the only campaign-independent nonzero CampaignTime a test can
+        // construct: every Hours/Days factory multiplies by internal statics a live campaign
+        // initializes, so they all yield default (0 ticks) here.
+        var future = CampaignTime.Never;
+        var book = new Dictionary<string, RefugeData>
+        {
+            ["r1"] = new RefugeData
+            {
+                PartyId = "r1",
+                Established = true,
+                Building = true,
+                BuildStartTime = future,
+                BuildTargetHours = 6f,
+            },
+        };
+
+        _sut.LoadFrom(book, 1);
+
+        var row = _sut.GetByPartyId("r1");
+        // No CampaignTime.ToString in asserts: it needs a live Campaign. The harness pins
+        // NowTime() to default, so the repair must have landed exactly there.
+        Assert.IsFalse(row.BuildStartTime.Equals(future), "future start must be reset");
+        Assert.IsTrue(row.BuildStartTime.Equals(default(CampaignTime)), "reset lands on NowTime()");
+    }
+
+    [TestMethod]
     public void HourlyTick_RefugeAlreadyFighting_NoSecondBattle()
     {
         _settings.EnableRaids.Returns(true);
@@ -1146,7 +1197,9 @@ public class RefugeServiceTests
 
         _sut.HourlyTick();
 
-        CollectionAssert.AreEqual(new[] { "rally:r1", "raid:r1" }, _sut.Events,
+        // The leading canceldisband is the hourly state-protecting re-cancel pass (round C);
+        // the assertion's point is rally BEFORE raid, which must stay in this order.
+        CollectionAssert.AreEqual(new[] { "canceldisband:r1", "rally:r1", "raid:r1" }, _sut.Events,
             "MapEventParty captures NumberOfHealthyMembers at construction, so militia added "
             + "after StartBattleAction never reaches an auto-resolve's participant count");
     }

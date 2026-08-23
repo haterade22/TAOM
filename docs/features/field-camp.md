@@ -1,4 +1,4 @@
-# Field Camp
+﻿# Field Camp
 
 Pitch a visible camp on the campaign map (#506): field and fortified camps with a morale bonus and
 grain foraging, terrain-gated ambushes and lookouts, a timed raise with an on-map progress bar, and
@@ -119,7 +119,7 @@ stripped install degrades instead of breaking; the fallback is exercised by rena
 | `Hooks/PartyNameplateCampIconPatch.cs` | Patch74 thin guarded body (registry entry has the never-throw contract) |
 | `Hooks/CampNameplateIconPresenter.cs` | Patch74's widget half: icon creation, sprite memo (same never-throw posture) |
 | `UI/FieldCampMapView.cs` + `FieldCampOverlayVM.cs` | Overlay button + status panel, 4 Hz refresh |
-| `Main/_Module/GUI/PreFabs/FieldCamp/TaomFieldCampOverlay.xml` | Ported prefab; brushes are grep-verified vanilla (`Popup.Description.Text`, `Popup.Button.Text`, `Frame1.Broken`, `ButtonBrush2`) |
+| `Main/_Module/GUI/PreFabs/FieldCamp/TaomFieldCampOverlay.xml` | Ported prefab; brushes are grep-verified vanilla (`Popup.Description.Text`, `Popup.Button.Text`, `Popup.Frame`, `ButtonBrush2`); the source's root `Frame1.Broken` was a phantom too (only `.Left`/`.Right` exist), swapped for the real `Popup.Frame` in round C |
 
 ## Traps
 
@@ -147,7 +147,7 @@ stripped install degrades instead of breaking; the fallback is exercised by rena
 - In-game smoke per #506 checklist (all four types, fortify re-raise, forage, ambush inquiry +
   battle, save/load mid-build, toggle-off break-via-move-guard, capture-while-camped, tpac render
   + fallback).
-- Strings XML + 12-language regeneration for every `{=taom_fcamp_*}` key (the prefix rename
-  obsoletes the whole registered `taom_fc_` batch; the orchestrator's generator owns
-  `taom_module_strings.xml` and the language files, and the FieldCommission-owned `taom_fc_` rows
-  in `taom_enlistment_strings.xml` must NOT be touched).
+- 12-language TRANSLATION run for the `{=taom_fcamp_*}` keys (backlog issue #508). Registration
+  is done: batch-2 integration purged every `taom_fc_` row from `taom_module_strings.xml`,
+  registered all 58 `taom_fcamp_` keys, and rebuilt the 12 language files with English fallbacks;
+  FieldCommission's `taom_fc_` rows live untouched in `taom_enlistment_strings.xml`.

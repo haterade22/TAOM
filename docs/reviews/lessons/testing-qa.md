@@ -770,3 +770,14 @@ fed the impossible values directly: they proved the branch logic and pinned dead
 occur; a branch whose guarding input cannot vary is dead code wearing a test.
 
 **Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 6.
+
+### CampaignTime factories silently return default in tests; Never is the only nonzero value (camps round C, 2026-08-23)
+
+CampaignTime.Hours/Days/Weeks all multiply by internal statics (TimeTicksPerHour et al.) that only
+a live campaign initializes, so in a unit test every factory yields 0 ticks == default, and
+CampaignTime.ToString divides by the same zero static. A test that builds a "future" time with
+Hours(1000) is comparing default against default and can never fail OR never pass, depending on
+polarity; the camps future-start repair test chased a phantom production bug for four iterations
+before the tick-statics were read in the decompile. CampaignTime.Never (long.MaxValue, inline) is
+the only campaign-independent nonzero CampaignTime; time ARITHMETIC belongs behind service seams
+(DaysSince/NowTime) that tests override, never in test-visible expressions.

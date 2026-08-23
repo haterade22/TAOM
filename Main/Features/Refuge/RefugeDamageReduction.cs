@@ -1,4 +1,4 @@
-using TaleWorlds.CampaignSystem;
+﻿using TaleWorlds.CampaignSystem;
 
 namespace TAOM.Features.Refuge;
 
@@ -14,6 +14,13 @@ namespace TAOM.Features.Refuge;
 /// r = 0.20, AddFactor(-0.20) yields 1.30x base while the real-time path yields 1.20x base.
 /// Scaling the factor by result/base makes both paths exact: base * (sum - r * result/base)
 /// = result - r * result = result * (1 - r).</para>
+///
+/// <para>PRECONDITION (round-C finding): the exactness above holds only while the number is
+/// UNCLAMPED at call time. ResultNumber is the clamped view; if a LimitMin/LimitMax already
+/// binds, the derived scale under-  or over-shoots relative to the unclamped composition. Both
+/// consult sites call this before any clamp is applied on their paths (verified against the two
+/// model files); a future third consumer must keep that ordering.
+/// RefugeDamageReductionTests pins the pre-clamped behaviour so a change here is loud.</para>
 ///
 /// <para>Gates are positive requirements so NaN fails them (engine-float rule): a NaN or
 /// out-of-range reduction applies nothing, a zero/NaN base or non-finite ratio leaves the number

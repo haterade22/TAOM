@@ -77,8 +77,16 @@ public static class RefugeClanScreenPatch
                 var party = ResolveParty(refuge.PartyId);
                 if (party?.Party == null)
                     continue;
-                if (__instance.Garrisons.Any(row => row.Party == party.Party))
+                var existing = __instance.Garrisons.FirstOrDefault(row => row.Party == party.Party);
+                if (existing != null)
+                {
+                    // The engine's UpdateProperties (any RefreshValues, and repeat list
+                    // refreshes) recomposes PartyWageSubTitleText from the live TotalWage,
+                    // reverting the honest 0. Re-apply on every pass this postfix sees the row
+                    // (round-C finding: suppression must survive refresh, not just construction).
+                    SuppressWagePanel(existing);
                     continue;
+                }
 
                 var row = new ClanPartyItemVM(
                     party.Party, onSelect, noop, noop,

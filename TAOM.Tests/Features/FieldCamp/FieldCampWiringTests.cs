@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -44,7 +44,7 @@ public class FieldCampWiringTests
     // and silently rendered with the engine default brush (round-B critic finding).
     private static readonly HashSet<string> KnownVanillaBrushes = new HashSet<string>
     {
-        "Frame1.Broken",
+        "Popup.Frame",
         "ButtonBrush2",
         "Popup.Description.Text",
         "Popup.Button.Text",

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -56,7 +56,7 @@ public class SupplyOrderPrefabBindingTests
 
     private static readonly HashSet<string> KnownVanillaBrushes = new HashSet<string>
     {
-        "Frame1.Broken",
+        "Popup.Frame",
         "InventoryHeaderFontBrush",
         "ButtonBrush2",
         "Popup.Description.Text",

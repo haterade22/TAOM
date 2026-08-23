@@ -4,6 +4,37 @@
 
 ## 2026-08-23
 
+### fix(camps): round C, the fix-batch regression hunt (#505, #506, #507)
+
+A targeted third review over only the batch-2 diff, because both prior fix batches had
+introduced a regression of their own. 8 raised, 8 confirmed, 0 refuted; suite 7472 passed /
+2 skipped after the fixes.
+
+- **The warden-death disband-cancel was inverted (HIGH, found independently by two
+  dimensions).** MbEvent dispatches listeners LIFO (AddNonSerializedListener head-inserts,
+  verified in the 1.4.8 decompile), so TAOM's cancel ran BEFORE vanilla queued the disband:
+  the queue entry survived and the refuge still disbanded a day later in a continuous session,
+  with the failure invisible to save/load repros (the load belt repaired it) and to the unit
+  tests (which substitute the cancel seam). Fixed with an idempotent hourly re-cancel pass for
+  every booked refuge; vanilla's 1-day wait guarantees the hourly pass wins. Comments that had
+  documented the inverted ordering as verified are corrected.
+- The clan-screen wage suppression now survives the engine's UpdateProperties: the postfix
+  re-applies it to rows already present instead of skipping them.
+- Frame1.Broken, the root brush of both new prefabs, was itself a phantom (only its .Left and
+  .Right variants exist anywhere; an earlier substring grep had vouched for the bare name).
+  Both prefabs now use the verified Popup.Frame, and both brush allowlists prove existence.
+- RepairLoadedRow also resets a future BuildStartTime, the mirror of the NaN-target absorbing
+  state; RefugeDamageReduction documents and pins its unclamped-input precondition; two stale
+  owed-items passages and one lessons count corrected.
+- New testing lesson recorded: every CampaignTime factory returns default in unit tests (the
+  tick statics only initialize with a live campaign; ToString even divides by zero), so
+  CampaignTime.Never is the only campaign-independent nonzero value and time arithmetic
+  belongs behind overridable service seams.
+
+Branch only; trunk merge waits for the user.
+
+## 2026-08-23
+
 ### fix(camps): review round B + Codex round 2 fix batch (#505, #506, #507)
 
 Second review wave over the fixed tree, overnight: six fresh no-narrative deep-review agents
