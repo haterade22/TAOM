@@ -564,3 +564,15 @@ place-based selection pushes its horse four metres out of frame and leaves the t
 look at the config answered a question no amount of code comparison could.
 
 **Source:** `docs/reviews/rca-herorace-patch72-2026-08-21.md`.
+
+### Builder briefs may point at source lines; they must not paraphrase load-bearing behaviour
+
+Second occurrence of the fidelity class (first: the Patch72 place-vs-entity port). Two Phase-2/3
+briefs asserted what source lines did (ambush "no battle start"; a "drifted enum" justification);
+builders correctly implemented the paraphrase, and both assertions were wrong. **Prevent:** briefs
+describe behaviour only as hypotheses tied to line ranges that the builder must verify and may
+refute; and port reviews keep the no-narrative shape (reviewers get code and diff, never the port
+story) plus a dedicated source-fidelity dimension, which is what caught both.
+
+**Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 3; cross-ref the Patch72 lesson
+above ("treat a never-executed source as a hypothesis").

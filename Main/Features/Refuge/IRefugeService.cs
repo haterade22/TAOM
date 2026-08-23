@@ -42,8 +42,15 @@ public interface IRefugeService
     /// field camp, charges gold, starts the raise. Null on failure (reason out).</summary>
     RefugeData Found(string wardenHeroId, out RefugeBlockReason reason);
 
-    /// <summary>The nearest ready refuge within manage range of the main party, or null.</summary>
+    /// <summary>The nearest ready refuge within manage range of the main party that is not in a
+    /// map event, or null. A refuge mid-battle is a live participant: managing or dismantling it
+    /// would mutate the event's rosters behind the engine's back.</summary>
     RefugeData NearestManageable();
+
+    /// <summary>The nearest refuge within manage range that can be dismantled: ready refuges plus
+    /// orphan-adopted rows (see <see cref="RefugeData.IsOrphanAdopted"/>), never one in a map
+    /// event. Superset of <see cref="NearestManageable"/> so orphans have an exit.</summary>
+    RefugeData NearestDismantlable();
 
     RefugeBlockReason CanUpgrade(RefugeData refuge);
 
@@ -64,8 +71,20 @@ public interface IRefugeService
     /// <summary>Militia rally on a refuge entering a map event; delta recorded in RefugeData.</summary>
     void OnMapEventStarted(string partyId);
 
-    /// <summary>Militia stand-down: removes min(recorded, present) of the recorded troop only.</summary>
+    /// <summary>Militia stand-down: removes min(recorded, present - pre-rally baseline) of the
+    /// recorded troop, so pre-existing garrison of the same type survives (casualties are
+    /// attributed to militia first).</summary>
     void OnMapEventEnded(string partyId);
+
+    /// <summary>The engine destroyed a refuge party (lost defense, disband): drop the book row and
+    /// visuals immediately and tell the player. A promoted warden stays a clan companion; his
+    /// battle fate (death, capture) is the engine's own accounting.</summary>
+    void OnPartyDestroyed(string partyId);
+
+    /// <summary>Peace involving the player's faction: release eligible hero prisoners held in
+    /// refuges, mirroring vanilla's PrisonerReleaseCampaignBehavior (which never enumerates
+    /// custom party components).</summary>
+    void OnPeaceMade();
 
     /// <summary>SyncData plumbing.</summary>
     void LoadFrom(Dictionary<string, RefugeData> refuges, int counter);
@@ -74,4 +93,8 @@ public interface IRefugeService
 
     /// <summary>Post-load: reconcile book vs parties, re-pin AI on every refuge party.</summary>
     void OnGameLoaded();
+
+    /// <summary>Clears the book and transients for a session with no saved record; see
+    /// ISupplyOrderService.ResetForNewSession.</summary>
+    void ResetForNewSession();
 }

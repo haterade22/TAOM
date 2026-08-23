@@ -336,3 +336,27 @@ actions rather than internal ticks.
   enumerating the paths that could observe it violated; the enumeration is only ever as good as your
   grep, while the seed is true by construction.
 - **Source:** `docs/reviews/rca-enlistment-field-fixes-2026-08-11.md` finding #13.
+
+### Heroes and prisoners cross parties only through engine Actions, never raw roster copy+clear
+
+TroopRoster.AddToCountsAtIndex fires OwnerParty.OnHeroAdded/OnHeroRemoved, and Hero.OnRemovedFromParty
+sets PartyBelongedTo = null UNCONDITIONALLY, regardless of where the hero was just added. A raw
+copy-then-clear therefore re-parents the hero row and then nulls his party binding, and the desync
+persists into the save. Regular troops are data; a hero row is an entity binding with unordered
+side-channel callbacks. Use AddHeroToPartyAction / the captivity transfer actions.
+
+**Why missed:** the source module did the raw copy and the port was faithful; no rule said
+otherwise. **Prevent:** this rule; and in review, for every roster bulk move ask what vanilla does
+at its own equivalent site.
+
+**Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 2 (CRITICAL: refuge dismantle).
+
+### A party attached to a MapEvent is engine-owned: never destroy, deliver from, or teleport it
+
+Vanilla always detaches (MapEventSide = null) before DestroyPartyAction on its own parties.
+Destroying a party mid-event leaves the event ticking over a removed party. A feature timer that
+"completes" a party's job (delivery, timeout) must Continue while the party fights; defeat resolves
+honestly through the party ceasing to exist. Corollary: IsRaid is the settlement-raid battle TYPE,
+not "is being attacked": a field battle never sets it, so a raid-gated loss branch is dead code.
+
+**Source:** same RCA, Class 2 + Class 6 (delivery-vs-MapEvent; the dead IsRaid input).

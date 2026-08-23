@@ -26,8 +26,33 @@ public interface ISupplyCaravanService
     /// <summary>True while the party for this order still exists.</summary>
     bool CaravanExists(SupplyOrder order);
 
-    /// <summary>True when the caravan is currently in a raid event.</summary>
-    bool CaravanInRaid(SupplyOrder order);
+    /// <summary>
+    /// True while the caravan party is attached to ANY map event. The engine owns a fighting
+    /// party: the order must Continue, never Deliver (destroying a party still attached to a
+    /// MapEvent side violates the engine's detach-before-destroy contract) and never Lose early
+    /// (a lost battle destroys the party, which <see cref="CaravanExists"/> then reports).
+    /// </summary>
+    bool CaravanInMapEvent(SupplyOrder order);
+
+    /// <summary>
+    /// Snapshot of what the caravan actually carries right now: item id -> count aboard and
+    /// non-hero troop id -> count aboard (the escort hero is never cargo). False when the party
+    /// is missing or unreadable. Delivery caps the ordered amounts by this, so goods eaten in
+    /// transit or recruits lost to a battle are not resurrected at the player's feet.
+    /// </summary>
+    bool TryGetLiveCargo(
+        SupplyOrder order,
+        out System.Collections.Generic.IReadOnlyDictionary<string, int> goods,
+        out System.Collections.Generic.IReadOnlyDictionary<string, int> troops);
+
+    /// <summary>
+    /// Drops every caravan tracker without touching the parties. Called whenever the order book
+    /// is replaced (load, new session): a tracker's cached MobileParty belongs to the session
+    /// that created it, and a deserialized campaign has NEW party objects under the same ids,
+    /// so a stale tracker drives a ghost (round-A HIGH). Rebinding happens in
+    /// <see cref="RespawnMissing"/> from the live campaign's party list.
+    /// </summary>
+    void ClearTrackers();
 
     /// <summary>Map distance caravan → main party, or float.MaxValue when unknown.</summary>
     float DistanceToPlayer(SupplyOrder order);

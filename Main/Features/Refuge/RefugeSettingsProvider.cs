@@ -38,6 +38,13 @@ public class RefugeSettingsProvider : IRefugeSettingsProvider
 
     public float RaidRange => Sane(TaomSettings.Instance?.RefugeRaidRange, 1f, 20f, 6f);
 
+    // Source-parity fallback-layout knobs. TaomSettings (single-owner) carries no fields for
+    // these yet, so the provider pins the source module's defaults; wiring MCM rows later needs
+    // no change on the consuming side.
+    public string BuildingMesh => "empire_street_tent_02";
+
+    public float BuildingScale => 0.4f;
+
     private static float Sane(float? raw, float min, float max, float fallback)
     {
         if (!raw.HasValue)

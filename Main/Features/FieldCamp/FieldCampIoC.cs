@@ -20,7 +20,15 @@ public static class FieldCampIoC
         // seam; a second AddModel would silently unseat the CareerSystem model that owns the slot.
         container.Register<IPartySpottingContributor, LookoutSpottingContributor>(Reuse.Singleton);
 
-        var campService = container.Resolve<ICampService>();
-        PartyNameplateCampIconPatch.Initialize(campService);
+        // NOTE deliberately NO eager Resolve here. CampService's constructor materializes the
+        // ICampOverlayContributor collection, so resolving it before every feature has registered
+        // bakes the collection EMPTY and Refuge's camp-block contributor never applies (review
+        // round A / Codex round 1, same finding). All eager patch initialisation now lives in
+        // IoC.InitializePatchStatics, which runs after the last registration.
+    }
+
+    internal static void InitializePatchStatics(IContainer container)
+    {
+        PartyNameplateCampIconPatch.Initialize(container.Resolve<ICampService>());
     }
 }

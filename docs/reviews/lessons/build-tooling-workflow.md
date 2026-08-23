@@ -1456,3 +1456,13 @@ PR #447 was opened on 2026-08-10 with `tools/audit_polearm_shield_parity.py`, a 
 - **Prevent:** when a change adds a **detector** rather than a fix, merging it is the deliverable and it should jump the queue ahead of the fix it shipped with. Merge the gate first, tolerate it red if need be, rather than holding it until everything it reports is clean. A corollary for review: run a newly added gate against current `origin/bannerlord-1.4.5`, not against the branch's merge base, before believing its findings list is complete. This one went from "28 Dale findings" at merge base to "8 findings, none of them Dale" at trunk, and both numbers were correct for what they measured.
 - **Sibling entries:** the same shape as the doc-graph ratchet (2026-08-18, `2a15afaa`): `/doc-graph` shipped 2026-06-08 and was run by no hook and no CI job, so isolated docs grew 64 to 153 over ten weeks with every unit test green, because the tests checked the algorithm against synthetic fixtures and never read the real tree. Written-but-unrun and merged-but-unwired are the same failure with different plumbing.
 - **Source:** 2026-08-20, merging PR #447.
+
+### A generator's output is unverified until something diffs it against its input
+
+The localization-registration extractor stopped at the first placeholder brace; 20 registered rows
+shipped truncated into the strings XML and all 12 language files, silently, because English still
+rendered from the inline default and "39 keys registered" looked complete. A matching COUNT is not
+verification. **Prevent:** every generated registration gets a mechanical round-trip gate (the
+registered text must equal the code default), living in the test suite, not in the generator.
+
+**Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 4 (orchestrator-inflicted HIGH).

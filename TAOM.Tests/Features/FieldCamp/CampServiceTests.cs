@@ -29,6 +29,8 @@ public class CampServiceTests
         public bool Moving;
         public bool InSettlement;
         public bool InEncounter;
+        public bool Captive;
+        public bool CandidateInEvent;
         public TerrainType Terrain = TerrainType.Plain;
         public float NearestFortDistance = 100f;
         public int Gold = 10_000;
@@ -36,9 +38,9 @@ public class CampServiceTests
         public float Scouting;
         public float SpottingRange = 5f;
         public double NowHours;
-        public float ElapsedHours = 10f;
         public bool CampReady = true;
         public float RandomRoll;
+        public CapturedMoveOrder MoveOrderToCapture = new CapturedMoveOrder();
         public List<AmbushCandidate> Candidates = new List<AmbushCandidate>();
         public Dictionary<string, float> NavDistances = new Dictionary<string, float>();
 
@@ -48,14 +50,22 @@ public class CampServiceTests
         public int ScanEnumerations;
         public int NavDistanceCalls;
         public int InquiryCount;
-        public int ResumeMoveCalls;
+        public readonly List<CapturedMoveOrder> ResumedMoves = new List<CapturedMoveOrder>();
         public readonly List<int> Charges = new List<int>();
         public readonly List<float> MoraleAdded = new List<float>();
         public readonly List<int> GrainAdded = new List<int>();
         public readonly List<string> Messages = new List<string>();
+        public readonly List<string> MessageTexts = new List<string>();
         public readonly List<string> Penalties = new List<string>();
+        public readonly List<string> BattleTargets = new List<string>();
         public Action PendingBreakAndMove;
         public Action PendingStayCamped;
+
+        public int AmbushInquiryCount;
+        public bool? LastAmbushSuccess;
+        public string LastAmbushEnemy;
+        public Action PendingAmbushAttack;
+        public Action PendingAmbushHold;
 
         public TestableCampService(
             ICampSettingsProvider settings,
@@ -74,10 +84,11 @@ public class CampServiceTests
         protected override bool IsMainPartyMoving() => Moving;
         protected override bool IsMainPartyInSettlement() => InSettlement;
         protected override bool IsMainPartyInEncounter() => InEncounter;
+        protected override bool IsMainPartyCaptive() => Captive;
         protected override Vec2 MainPartyPosition() => default;
         protected override void HoldMainParty() => HoldCalls++;
-        protected override CampaignVec2 CaptureMoveTarget() => default;
-        protected override void ResumeMoveTo(CampaignVec2 target) => ResumeMoveCalls++;
+        protected override CapturedMoveOrder CaptureMoveOrder() => MoveOrderToCapture;
+        protected override void ResumeMove(CapturedMoveOrder order) => ResumedMoves.Add(order);
         protected override TerrainType CurrentTerrain() => Terrain;
         protected override float DistanceToNearestFortification() => NearestFortDistance;
         protected override int PlayerGold => Gold;
@@ -90,8 +101,9 @@ public class CampServiceTests
         protected override float NextRandomFloat() => RandomRoll;
         protected override CampaignTime CampaignTimeNow() => default;
         protected override double NowInHours() => NowHours;
-        protected override float ElapsedHoursSince(CampaignTime time) => ElapsedHours;
         protected override bool IsCampReady(CampState camp) => CampReady;
+        protected override bool IsCandidateInMapEvent(AmbushCandidate candidate) => CandidateInEvent;
+        protected override void StartBattleWith(AmbushCandidate candidate) => BattleTargets.Add(candidate.PartyId);
         protected override void TrackMainPartyOnMap() => TrackCalls++;
         protected override void UntrackMainPartyOnMap() => UntrackCalls++;
 
@@ -120,8 +132,20 @@ public class CampServiceTests
             PendingStayCamped = stayCamped;
         }
 
-        protected override void ShowMessage(TextObject text, bool error) =>
+        protected override void ShowAmbushInquiry(string enemyName, bool success, Action attack, Action holdBack)
+        {
+            AmbushInquiryCount++;
+            LastAmbushEnemy = enemyName;
+            LastAmbushSuccess = success;
+            PendingAmbushAttack = attack;
+            PendingAmbushHold = holdBack;
+        }
+
+        protected override void ShowMessage(TextObject text, bool error)
+        {
             Messages.Add(error ? "error" : "info");
+            MessageTexts.Add(text.ToString());
+        }
     }
 
     private ICampSettingsProvider _settings;
@@ -423,27 +447,29 @@ public class CampServiceTests
     }
 
     [TestMethod]
-    public void Fortify_LongStandingCamp_UsesDoubleSetupBuildHours()
+    public void Fortify_RestartsTheRaiseAtDoubleSetupHours()
     {
         EstablishCamp();
-        _sut.ElapsedHours = 20f;
 
         Assert.IsTrue(_sut.Fortify());
 
+        // Source behaviour: fortifying re-establishes the camp, a real second raise at 2x the
+        // setup hours. The camp regresses to "raising" and its effects pause until it stands.
         Assert.AreEqual(8f, _sut.PlayerCamp.BuildHours, 0.0001f);
     }
 
     [TestMethod]
-    public void Fortify_FreshlyReadyCamp_ClampsBuildHoursToElapsedSoReadinessSurvives()
+    public void Fortify_RaiseCompletion_AnnouncesAgain()
     {
         EstablishCamp();
-        _sut.ElapsedHours = 5f;
+        _sut.FrameTick();
+        Assert.AreEqual(1, _sut.MessageTexts.Count, "arrange: first raise announced");
 
         Assert.IsTrue(_sut.Fortify());
+        _sut.FrameTick();
 
-        // elapsed (5h) < double setup (8h): build hours clamp to elapsed so progress stays >= 1
-        // and the paid-for camp never regresses to "still being set up".
-        Assert.AreEqual(5f, _sut.PlayerCamp.BuildHours, 0.0001f);
+        Assert.AreEqual(2, _sut.MessageTexts.Count, "the fortified raise announces its own completion");
+        StringAssert.Contains(_sut.MessageTexts[1], "established");
     }
 
     [TestMethod]
@@ -497,16 +523,30 @@ public class CampServiceTests
     // --- BreakPlayerCamp ---
 
     [TestMethod]
-    public void BreakPlayerCamp_CancelsSuppliesRemovesVisualAndUntracks()
+    public void BreakPlayerCamp_CancelsCampOrdersRemovesVisualAndUntracks()
     {
         EstablishCamp();
 
         _sut.BreakPlayerCamp();
 
         Assert.IsNull(_sut.PlayerCamp);
-        _supply.Received(1).CancelAll();
+        // Camp-scoped cancellation ONLY: a town-placed order has nothing to do with the camp and
+        // its gold/goods must never be forfeited by a routine camp break.
+        _supply.Received(1).CancelCampOrders();
+        _supply.DidNotReceive().CancelAll();
         _visuals.Received(1).Remove("main_party");
         Assert.AreEqual(1, _sut.UntrackCalls);
+    }
+
+    [TestMethod]
+    public void BreakPlayerCamp_AnnouncesTheBreak()
+    {
+        EstablishCamp();
+
+        _sut.BreakPlayerCamp();
+
+        Assert.AreEqual(1, _sut.MessageTexts.Count);
+        StringAssert.Contains(_sut.MessageTexts[0], "Camp broken");
     }
 
     [TestMethod]
@@ -514,8 +554,9 @@ public class CampServiceTests
     {
         _sut.BreakPlayerCamp();
 
-        _supply.DidNotReceive().CancelAll();
+        _supply.DidNotReceive().CancelCampOrders();
         Assert.AreEqual(0, _sut.UntrackCalls);
+        Assert.AreEqual(0, _sut.Messages.Count);
     }
 
     // --- HourlyTick ---
@@ -585,7 +626,7 @@ public class CampServiceTests
         _sut.HourlyTick();
 
         Assert.IsNull(_sut.PlayerCamp);
-        _supply.Received(1).CancelAll();
+        _supply.Received(1).CancelCampOrders();
         Assert.AreEqual(0, _sut.MoraleAdded.Count);
     }
 
@@ -625,7 +666,7 @@ public class CampServiceTests
         _sut.HourlyTick();
 
         Assert.AreEqual(0, _sut.MoraleAdded.Count);
-        _supply.DidNotReceive().CancelAll();
+        _supply.DidNotReceive().CancelCampOrders();
     }
 
     // --- FrameTick: move guard ---
@@ -656,17 +697,22 @@ public class CampServiceTests
     }
 
     [TestMethod]
-    public void FrameTick_ConfirmBreak_BreaksCampAndResumesMove()
+    public void FrameTick_ConfirmBreak_BreaksCampAndResumesTheCapturedOrder()
     {
         EstablishCamp();
+        _sut.MoveOrderToCapture = new CapturedMoveOrder { Kind = CapturedMoveKind.Settlement };
         _sut.Moving = true;
         _sut.FrameTick();
 
         _sut.PendingBreakAndMove();
 
         Assert.IsNull(_sut.PlayerCamp);
-        Assert.AreEqual(1, _sut.ResumeMoveCalls);
-        _supply.Received(1).CancelAll();
+        // The FULL captured order object reaches the resume path: settlement/party targets are
+        // preserved, never downgraded to a stale point snapshot.
+        Assert.AreEqual(1, _sut.ResumedMoves.Count);
+        Assert.AreSame(_sut.MoveOrderToCapture, _sut.ResumedMoves[0]);
+        Assert.AreEqual(CapturedMoveKind.Settlement, _sut.ResumedMoves[0].Kind);
+        _supply.Received(1).CancelCampOrders();
     }
 
     [TestMethod]
@@ -708,7 +754,7 @@ public class CampServiceTests
     }
 
     [TestMethod]
-    public void FrameTick_AmbushSprings_BreaksCampAndPenalizesTarget()
+    public void FrameTick_AmbushTriggers_BreaksCampAndShowsStrikeInquiry()
     {
         EstablishCamp(CampType.Ambush);
         AddCandidate("bandit_1", straightLine: 3f, navDistance: 4f);
@@ -716,14 +762,31 @@ public class CampServiceTests
 
         _sut.FrameTick();
 
-        Assert.IsNull(_sut.PlayerCamp, "a sprung trap is spent");
-        CollectionAssert.AreEqual(new[] { "bandit_1:0.5" }, _sut.Penalties);
-        CollectionAssert.AreEqual(new[] { "info" }, _sut.Messages);
-        _supply.Received(1).CancelAll();
+        Assert.IsNull(_sut.PlayerCamp, "the trap is spent the moment it triggers (source)");
+        Assert.AreEqual(1, _sut.AmbushInquiryCount);
+        Assert.AreEqual(true, _sut.LastAmbushSuccess);
+        Assert.AreEqual("bandit_1", _sut.LastAmbushEnemy);
+        Assert.AreEqual(0, _sut.Penalties.Count, "penalties wait for the player's strike confirm");
+        Assert.AreEqual(0, _sut.BattleTargets.Count);
+        _supply.Received(1).CancelCampOrders();
     }
 
     [TestMethod]
-    public void FrameTick_AmbushSpotted_BreaksCampWithoutPenalty()
+    public void AmbushAttackConfirmed_Success_PenalizesTargetThenStartsBattle()
+    {
+        EstablishCamp(CampType.Ambush);
+        AddCandidate("bandit_1", straightLine: 3f, navDistance: 4f);
+        _sut.RandomRoll = 0f;
+        _sut.FrameTick();
+
+        _sut.PendingAmbushAttack();
+
+        CollectionAssert.AreEqual(new[] { "bandit_1:0.5" }, _sut.Penalties);
+        CollectionAssert.AreEqual(new[] { "bandit_1" }, _sut.BattleTargets);
+    }
+
+    [TestMethod]
+    public void FrameTick_AmbushSpotted_OffersAttackAnywayWithoutPenalty()
     {
         _ambushMath.TriggerChance(Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>())
             .Returns(0.2f);
@@ -734,8 +797,93 @@ public class CampServiceTests
         _sut.FrameTick();
 
         Assert.IsNull(_sut.PlayerCamp, "a spotted trap is spent too");
+        Assert.AreEqual(false, _sut.LastAmbushSuccess);
+
+        _sut.PendingAmbushAttack();
+
+        Assert.AreEqual(0, _sut.Penalties.Count, "a spotted ambush attacks without the softening edge");
+        CollectionAssert.AreEqual(new[] { "lord_1" }, _sut.BattleTargets);
+    }
+
+    [TestMethod]
+    public void AmbushDeclined_NoBattleNoPenalty()
+    {
+        EstablishCamp(CampType.Ambush);
+        AddCandidate("bandit_1");
+        _sut.RandomRoll = 0f;
+        _sut.FrameTick();
+
+        _sut.PendingAmbushHold();
+
         Assert.AreEqual(0, _sut.Penalties.Count);
-        CollectionAssert.AreEqual(new[] { "error" }, _sut.Messages);
+        Assert.AreEqual(0, _sut.BattleTargets.Count);
+    }
+
+    [TestMethod]
+    public void AmbushAttackConfirmed_TargetAlreadyFighting_NoBattle()
+    {
+        EstablishCamp(CampType.Ambush);
+        AddCandidate("bandit_1");
+        _sut.RandomRoll = 0f;
+        _sut.FrameTick();
+        _sut.CandidateInEvent = true;
+
+        _sut.PendingAmbushAttack();
+
+        Assert.AreEqual(0, _sut.BattleTargets.Count, "source guard: both parties must be free of a map event");
+        Assert.AreEqual(0, _sut.Penalties.Count);
+    }
+
+    [TestMethod]
+    public void AmbushAttackConfirmed_PlayerAlreadyInEncounter_NoBattle()
+    {
+        EstablishCamp(CampType.Ambush);
+        AddCandidate("bandit_1");
+        _sut.RandomRoll = 0f;
+        _sut.FrameTick();
+        _sut.InEncounter = true;
+
+        _sut.PendingAmbushAttack();
+
+        Assert.AreEqual(0, _sut.BattleTargets.Count);
+    }
+
+    [TestMethod]
+    public void AmbushInquiryOpen_SuppressesNewScans()
+    {
+        EstablishCamp(CampType.Ambush);
+        AddCandidate("bandit_1");
+        _sut.RandomRoll = 0f;
+        _sut.FrameTick();
+        Assert.AreEqual(1, _sut.AmbushInquiryCount, "arrange: inquiry is up, camp broken");
+
+        // The player re-arms a fresh ambush while the inquiry is still open; no second scan (or
+        // stacked inquiry) may run until the first is answered (the source's _inquiryPending).
+        EstablishCamp(CampType.Ambush);
+        _sut.NowHours = 10.0;
+        _sut.FrameTick();
+
+        Assert.AreEqual(1, _sut.AmbushInquiryCount);
+
+        _sut.PendingAmbushHold();
+        _sut.NowHours = 20.0;
+        _sut.FrameTick();
+        Assert.AreEqual(2, _sut.AmbushInquiryCount, "answered inquiry releases the scan latch");
+    }
+
+    [TestMethod]
+    public void FrameTick_AmbushChance_ReceivesThePlayerSpottingRange()
+    {
+        EstablishCamp(CampType.Ambush);
+        AddCandidate("bandit_1", straightLine: 3f, navDistance: 4f);
+        _sut.SpottingRange = 5f;
+        _sut.Scouting = 30f;
+
+        _sut.FrameTick();
+
+        // Source formula: the first argument is the PLAYER party's spotting range (candidate
+        // distance never enters the odds); pinned so the seam cannot silently regress either way.
+        _ambushMath.Received(1).TriggerChance(5f, 10f, 0.5f, 30f);
     }
 
     [TestMethod]
@@ -772,6 +920,8 @@ public class CampServiceTests
 
         _sut.FrameTick();
 
+        Assert.AreEqual("bandit_1", _sut.LastAmbushEnemy, "the bandit bias picks the prey");
+        _sut.PendingAmbushAttack();
         CollectionAssert.AreEqual(new[] { "bandit_1:0.5" }, _sut.Penalties);
     }
 
@@ -811,7 +961,7 @@ public class CampServiceTests
     }
 
     [TestMethod]
-    public void FrameTick_FeatureDisabled_NoWork()
+    public void FrameTick_FeatureDisabled_MoveGuardStillProtects_ScanStops()
     {
         EstablishCamp(CampType.Ambush);
         AddCandidate();
@@ -820,8 +970,182 @@ public class CampServiceTests
 
         _sut.FrameTick();
 
+        // The overlay button hides while the toggle is off, so the move guard is the only break
+        // path left; it must keep working. The ambush scan is a gameplay effect and stops.
         Assert.AreEqual(0, _sut.ScanEnumerations);
-        Assert.AreEqual(0, _sut.InquiryCount);
+        Assert.AreEqual(1, _sut.InquiryCount, "the break-camp guard protects state even while off");
+    }
+
+    [TestMethod]
+    public void HourlyTick_FeatureDisabled_SettlementEntryStillFoldsTheCamp()
+    {
+        EstablishCamp();
+        _settings.Enabled.Returns(false);
+        _sut.InSettlement = true;
+
+        _sut.HourlyTick();
+
+        Assert.IsNull(_sut.PlayerCamp, "state-protecting folds run regardless of the toggle");
+    }
+
+    // --- captivity ---
+
+    [TestMethod]
+    public void HourlyTick_PlayerCaptured_BreaksCampCleanly()
+    {
+        EstablishCamp();
+        _sut.Captive = true;
+
+        _sut.HourlyTick();
+
+        Assert.IsNull(_sut.PlayerCamp);
+        _visuals.Received(1).Remove("main_party");
+        _supply.Received(1).CancelCampOrders();
+        Assert.AreEqual(0, _sut.MoraleAdded.Count, "no camp effects tick through captivity");
+    }
+
+    [TestMethod]
+    public void FrameTick_PlayerCaptured_BreaksCampBeforeAnyGuardOrScan()
+    {
+        EstablishCamp(CampType.Ambush);
+        AddCandidate();
+        _sut.Captive = true;
+        _sut.Moving = true;
+
+        _sut.FrameTick();
+
+        Assert.IsNull(_sut.PlayerCamp);
+        Assert.AreEqual(0, _sut.ScanEnumerations);
+        Assert.AreEqual(0, _sut.InquiryCount, "no move-guard inquiry while captive");
+    }
+
+    // --- session reset + transient hygiene ---
+
+    [TestMethod]
+    public void ResetForNewSession_ClearsBookAndVisuals()
+    {
+        EstablishCamp();
+
+        _sut.ResetForNewSession();
+
+        Assert.IsNull(_sut.PlayerCamp, "a new session must not inherit the previous campaign's camp");
+        _visuals.Received(1).ClearAll();
+        _supply.DidNotReceive().CancelCampOrders();
+    }
+
+    [TestMethod]
+    public void LoadFrom_ResetsTheAmbushScanClock()
+    {
+        EstablishCamp(CampType.Ambush);
+        _sut.NowHours = 1000.0;
+        _sut.FrameTick();
+        Assert.AreEqual(1, _sut.ScanEnumerations, "arrange: scan ran, deadline now 1000.5");
+
+        // Load a save whose game time is far behind the deadline; a stale clock would stall
+        // every scan for 500 in-game hours.
+        _sut.SaveInto(out var book);
+        _sut.LoadFrom(book);
+        _sut.NowHours = 500.0;
+        _sut.FrameTick();
+
+        Assert.AreEqual(2, _sut.ScanEnumerations);
+    }
+
+    [TestMethod]
+    public void LoadFrom_ResetsTheMoveGuardLatch()
+    {
+        EstablishCamp();
+        _sut.Moving = true;
+        _sut.FrameTick();
+        Assert.AreEqual(1, _sut.InquiryCount, "arrange: latch is up");
+
+        // Quit-to-menu with the inquiry showing, then load a camped save: a stale latch would
+        // permanently kill the guard.
+        _sut.SaveInto(out var book);
+        _sut.LoadFrom(book);
+        _sut.FrameTick();
+
+        Assert.AreEqual(2, _sut.InquiryCount);
+    }
+
+    [TestMethod]
+    public void LoadFrom_NullRow_DroppedAndLoggedNotInstalled()
+    {
+        var book = new Dictionary<string, CampState>
+        {
+            ["main_party"] = null,
+            ["other_party"] = new CampState { TypeEnum = CampType.Field },
+        };
+
+        _sut.LoadFrom(book);
+
+        Assert.IsNull(_sut.PlayerCamp, "the null row is dropped, not dereferenced later");
+        _logger.Received(1).LogWarning(Arg.Any<string>());
+
+        // The surviving row still loads; ticks run over the scrubbed book without throwing.
+        _sut.FrameTick();
+        _sut.HourlyTick();
+    }
+
+    // --- establish/ready announcements ---
+
+    [TestMethod]
+    public void FrameTick_RaiseCompletes_AnnouncesOnce()
+    {
+        _sut.CampReady = false;
+        EstablishCamp();
+        _sut.FrameTick();
+        Assert.AreEqual(0, _sut.Messages.Count, "nothing announced while raising");
+
+        _sut.CampReady = true;
+        _sut.FrameTick();
+        Assert.AreEqual(1, _sut.MessageTexts.Count);
+        StringAssert.Contains(_sut.MessageTexts[0], "established");
+
+        _sut.FrameTick();
+        Assert.AreEqual(1, _sut.Messages.Count, "announced exactly once per raise");
+    }
+
+    [TestMethod]
+    public void LoadFrom_ReadyCamp_DoesNotReannounce()
+    {
+        EstablishCamp();
+        _sut.SaveInto(out var book);
+        _sut.LoadFrom(book);
+
+        _sut.FrameTick();
+
+        Assert.AreEqual(0, _sut.Messages.Count, "a loaded ready camp was announced in its own session");
+    }
+
+    [TestMethod]
+    public void LoadFrom_MidRaiseCamp_AnnouncesOnCompletion()
+    {
+        EstablishCamp();
+        _sut.SaveInto(out var book);
+        _sut.CampReady = false;
+        _sut.LoadFrom(book);
+        _sut.FrameTick();
+        Assert.AreEqual(0, _sut.Messages.Count);
+
+        _sut.CampReady = true;
+        _sut.FrameTick();
+
+        Assert.AreEqual(1, _sut.Messages.Count, "a save mid-raise still gets its completion message");
+    }
+
+    // --- wind ticker driver ---
+
+    [TestMethod]
+    public void FrameTick_VisualStanding_PollsIsShownAsTheWindDriver()
+    {
+        EstablishCamp();
+
+        _sut.FrameTick();
+
+        // Once the layout stands the IsShown poll is the steady-state driver for the banner-cloth
+        // wind ticker; without it the flags hang limp shortly after placement.
+        _visuals.Received(1).IsShown("main_party");
     }
 
     [TestMethod]

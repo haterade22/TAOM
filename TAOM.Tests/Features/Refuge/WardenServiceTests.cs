@@ -8,8 +8,9 @@ namespace TAOM.Tests.Features.Refuge;
 
 /// <summary>
 /// Decision-path coverage for <see cref="WardenService"/>: candidate ordering and the
-/// companion-slot gate, the promote-exactly-one-troop sequencing, and the release matrix under
-/// the NO-KILL contract (companion returns, promoted stays, absent no-op). Campaign statics are
+/// companion-slot gate, the promote-exactly-one-troop sequencing, the release matrix under
+/// the NO-KILL contract (companion and promoted warden both return by action, absent no-op), and
+/// the never-attached promotion rollback. Campaign statics are
 /// overridden on a test subclass; those virtual bodies are the honest untested boundary sliver.
 /// </summary>
 [TestClass]
@@ -56,6 +57,18 @@ public class WardenServiceTests
         protected override bool IsHeroWithRefugeParty(string heroId) => WithRefuge;
 
         protected override void MoveHeroToMainParty(string heroId) => MovedToMainParty.Add(heroId);
+
+        public bool RemoveMintedResult = true;
+        public readonly List<string> RemovedCompanions = new List<string>();
+        public readonly List<string> RefundedTroops = new List<string>();
+
+        protected override bool RemoveMintedCompanion(string heroId)
+        {
+            RemovedCompanions.Add(heroId);
+            return RemoveMintedResult;
+        }
+
+        protected override void AddOneTroopToMainParty(string troopId) => RefundedTroops.Add(troopId);
     }
 
     private TestableWardenService _sut;
@@ -221,14 +234,62 @@ public class WardenServiceTests
     }
 
     [TestMethod]
-    public void ReleaseWarden_PromotedWarden_StaysACompanionAndIsNeverMovedOrKilled()
+    public void ReleaseWarden_PromotedWardenWithRefuge_MovesByActionAndIsNeverKilled()
     {
         _sut.WithRefuge = true;
 
         _sut.ReleaseWarden("hero_minted", promoted: true);
 
+        CollectionAssert.AreEqual(new[] { "hero_minted" }, _sut.MovedToMainParty,
+            "a promoted warden rides the same AddHeroToPartyAction as a companion; a raw roster "
+            + "merge nulls a hero's PartyBelongedTo when the source roster clears");
+        Assert.AreEqual(0, _sut.RemovedCompanions.Count, "release NEVER kills or de-promotes");
+        Assert.AreEqual(0, _sut.RefundedTroops.Count, "the soldier became somebody; no refund");
+    }
+
+    [TestMethod]
+    public void ReleaseWarden_PromotedWardenElsewhere_NoOp()
+    {
+        _sut.WithRefuge = false;
+
+        _sut.ReleaseWarden("hero_minted", promoted: true);
+
         Assert.AreEqual(0, _sut.MovedToMainParty.Count,
-            "the promoted warden remains a clan companion; the roster merge carries him home");
+            "a captured promoted warden is left where fate put him, same as a companion");
+    }
+
+    // --- UnwindPromotion (the never-attached rollback window) ---
+
+    [TestMethod]
+    public void UnwindPromotion_RemovesMintedCompanionAndRefundsTheSoldier()
+    {
+        _sut.UnwindPromotion("hero_minted", "troop_a");
+
+        CollectionAssert.AreEqual(new[] { "hero_minted" }, _sut.RemovedCompanions);
+        CollectionAssert.AreEqual(new[] { "troop_a" }, _sut.RefundedTroops,
+            "exactly the one soldier the promotion consumed comes back");
+    }
+
+    [TestMethod]
+    public void UnwindPromotion_RemoveRefused_NoRefund()
+    {
+        _sut.RemoveMintedResult = false;
+
+        _sut.UnwindPromotion("hero_minted", "troop_a");
+
+        Assert.AreEqual(0, _sut.RefundedTroops.Count,
+            "a refund without the removal would duplicate the soldier");
+    }
+
+    [TestMethod]
+    public void UnwindPromotion_NullOrEmptyArgs_NoOp()
+    {
+        _sut.UnwindPromotion(null, "troop_a");
+        _sut.UnwindPromotion("hero_minted", null);
+        _sut.UnwindPromotion("", "");
+
+        Assert.AreEqual(0, _sut.RemovedCompanions.Count);
+        Assert.AreEqual(0, _sut.RefundedTroops.Count);
     }
 
     [TestMethod]

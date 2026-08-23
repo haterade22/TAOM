@@ -36,20 +36,23 @@ public interface ICampService
     /// <summary>Pitches the camp (holds the party, starts the raise). False when blocked.</summary>
     bool Establish(CampType type);
 
-    /// <summary>Breaks the player camp: removes visuals, cancels in-transit supply orders, frees
-    /// movement. Safe to call with no camp.</summary>
+    /// <summary>Breaks the player camp: removes visuals, cancels supply orders PLACED FROM THE
+    /// CAMP (town-placed orders keep advancing), frees movement. Safe to call with no camp.</summary>
     void BreakPlayerCamp();
 
-    /// <summary>Upgrades a READY field camp to fortified for the configured gold. Preserves the
-    /// foraging state and does NOT restart the raise from zero (the source silently wiped both).
-    /// False when not applicable or unaffordable.</summary>
+    /// <summary>Upgrades a READY field camp to fortified for the configured gold. A real second
+    /// raise at double the setup hours (source behaviour): the camp regresses to raising and its
+    /// morale/forage pause until the palisade stands. The foraging flag, accumulator and tally
+    /// survive the upgrade (the source silently wiped them). False when not applicable or
+    /// unaffordable.</summary>
     bool Fortify();
 
     /// <summary>Toggles foraging on a ready field/fortified camp. False when not applicable.</summary>
     bool ToggleForaging();
 
-    /// <summary>Hourly: morale + forage on a ready player camp; breaks the camp when the party has
-    /// entered a settlement.</summary>
+    /// <summary>Hourly: morale + forage on a ready player camp; breaks the camp cleanly when the
+    /// party has entered a settlement or been taken captive. The cleanup folds run even while the
+    /// master toggle is off; only the gameplay effects are gated.</summary>
     void HourlyTick();
 
     /// <summary>Frame-cadence upkeep, internally throttled: the move-away guard (hold + confirm
@@ -63,4 +66,8 @@ public interface ICampService
 
     /// <summary>Post-load: re-show ready-camp visuals once the map scene is live.</summary>
     void OnGameLoaded();
+
+    /// <summary>Clears the book and every transient (ambush clock, move latch, visual retries)
+    /// for a session with no saved record; see ISupplyOrderService.ResetForNewSession.</summary>
+    void ResetForNewSession();
 }

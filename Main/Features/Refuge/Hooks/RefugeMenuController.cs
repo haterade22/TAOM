@@ -63,7 +63,9 @@ public sealed class RefugeMenuController
             args =>
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
-                return _refuges.NearestManageable() != null;
+                // Dismantlable is the superset: ready refuges plus orphan-adopted rows (whose
+                // only exit is the dismantle option inside), never one fighting a map event.
+                return _refuges.NearestDismantlable() != null;
             },
             args => _menus.SwitchTo(RefugeCampaignBehavior.MenuId),
             isLeave: false, index: 4);
@@ -106,10 +108,18 @@ public sealed class RefugeMenuController
 
         starter.AddGameMenuOption(RefugeCampaignBehavior.MenuId, "taom_rf_break",
             "{=taom_rf_opt_break}Dismantle refuge",
-            args => InReachCondition(args, GameMenuOption.LeaveType.Leave),
             args =>
             {
-                var refuge = _refuges.NearestManageable();
+                // Dismantle alone accepts orphan-adopted rows (NearestDismantlable), so an
+                // orphan is not an absorbing state eating a cap slot forever.
+                args.optionLeaveType = GameMenuOption.LeaveType.Leave;
+                if (_refuges.NearestDismantlable() != null)
+                    return true;
+                return Disabled(args, ReasonText(RefugeBlockReason.NoRefugeInReach, 0));
+            },
+            args =>
+            {
+                var refuge = _refuges.NearestDismantlable();
                 if (refuge == null)
                     return;
                 _refuges.Dismantle(refuge);
@@ -126,30 +136,49 @@ public sealed class RefugeMenuController
 
     private void OnMenuInit(MenuCallbackArgs args)
     {
+        // Manageable first for the full status; an orphan-adopted row (dismantle-only) falls
+        // through to its own line so the menu explains why everything but dismantle is greyed.
         var refuge = _refuges.NearestManageable();
-        var party = refuge != null ? ResolveParty(refuge.PartyId) : null;
+        var orphan = refuge == null ? _refuges.NearestDismantlable() : null;
+        var party = refuge != null ? ResolveParty(refuge.PartyId)
+            : orphan != null ? ResolveParty(orphan.PartyId) : null;
         TextObject status;
         if (party == null)
         {
             // Reachable when the player rides out of manage range with the menu still open.
             status = new TextObject("{=taom_rf_menu_gone}No refuge stands within reach.");
         }
+        else if (refuge == null)
+        {
+            status = new TextObject(
+                "{=taom_rf_menu_orphan}An abandoned refuge stands here, beyond repair. It can only be dismantled.");
+        }
         else
         {
             var warden = (party.PartyComponent as RefugePartyComponent)?.Warden;
+            TextObject baseStatus;
             if (warden != null)
             {
-                status = new TextObject(
+                baseStatus = new TextObject(
                     "{=taom_rf_menu_status_warden}Your {TIER} stands here - garrison: {COUNT}, warden: {WARDEN}.");
-                status.SetTextVariable("WARDEN", warden.Name);
+                baseStatus.SetTextVariable("WARDEN", warden.Name);
             }
             else
             {
-                status = new TextObject(
+                baseStatus = new TextObject(
                     "{=taom_rf_menu_status}Your {TIER} stands here - garrison: {COUNT}.");
             }
-            status.SetTextVariable("TIER", TierLabel(refuge!.TierEnum));
-            status.SetTextVariable("COUNT", party.MemberRoster?.TotalManCount ?? 0);
+            baseStatus.SetTextVariable("TIER", TierLabel(refuge.TierEnum));
+            baseStatus.SetTextVariable("COUNT", party.MemberRoster?.TotalManCount ?? 0);
+
+            // The garrison is a real party to the engine's food model (a custom component is none
+            // of the exempt vanilla kinds), so the stash IS its larder - said here rather than
+            // silently starving the garrison. Composed as its own key so the two established
+            // status keys keep their translations. See docs/features/refuge.md "Food".
+            status = new TextObject("{=!}{BASE_STATUS} {FOOD_NOTE}");
+            status.SetTextVariable("BASE_STATUS", baseStatus);
+            status.SetTextVariable("FOOD_NOTE", new TextObject(
+                "{=taom_rf_food_note}The garrison eats from the stored goods; keep the stash provisioned or it will starve."));
         }
         MBTextManager.SetTextVariable("TAOM_RF_STATUS", status, false);
     }
@@ -228,6 +257,12 @@ public sealed class RefugeMenuController
         var refuge = _refuges.Found(wardenHeroId, out var reason);
         if (refuge == null)
         {
+            // Transactional unwind: the promotion minted a companion and consumed a soldier, but
+            // the founding failed before the hero ever attached to a refuge (engine spawn
+            // refusal, or a gate that closed while the picker was open). Roll both back so a
+            // failed founding costs nothing.
+            if (promoted)
+                _wardens.UnwindPromotion(wardenHeroId, promotedFromTroopId);
             Warn(ReasonText(reason, _settings.FoundCost));
             return;
         }

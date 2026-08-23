@@ -20,13 +20,16 @@ public interface ISupplyOrderService
     /// Builds, consumes, spawns and charges one order. Returns the order on success; null with
     /// <paramref name="failReason"/> set when it could not be placed (blockaded, unaffordable,
     /// stock gone, spawn failed). Never charges on failure.
+    /// <paramref name="placedFromCamp"/> marks the order as camp-placed so <see
+    /// cref="CancelCampOrders"/> can cancel it (and only it) when that camp breaks.
     /// </summary>
     SupplyOrder TryPlaceOrder(
         SupplySourceInfo source,
         IReadOnlyDictionary<string, int> goods,
         IReadOnlyDictionary<string, int> troops,
         SupplyEscortOption escort,
-        out string failReason);
+        out string failReason,
+        bool placedFromCamp = false);
 
     /// <summary>Hourly advance over every active order: applies the engine's verdicts.</summary>
     void HourlyTick();
@@ -37,8 +40,10 @@ public interface ISupplyOrderService
     /// </summary>
     void FrameTick();
 
-    /// <summary>Cancels every active order (goods and gold are lost; escorts come home). The
-    /// FieldCamp break-camp path calls this directly in the merged port.</summary>
+    /// <summary>Cancels every active order (goods and gold are lost; escorts come home). For
+    /// genuine cancel-everything paths only; the FieldCamp break-camp path calls
+    /// <see cref="CancelCampOrders"/> instead, because a camp break must not forfeit orders the
+    /// camp had nothing to do with.</summary>
     void CancelAll();
 
     /// <summary>SyncData plumbing: replace the in-memory book with the loaded one.</summary>
@@ -49,4 +54,16 @@ public interface ISupplyOrderService
 
     /// <summary>Post-load repair: respawn missing caravans, re-pin AI.</summary>
     void OnGameLoaded();
+
+    /// <summary>
+    /// Clears the book AND every transient cache (caravan trackers, route visuals) for a session
+    /// with no saved record. The services are process singletons and SyncData only fires when a
+    /// record exists, so without this a NEW campaign inherits the previous campaign's orders
+    /// (round-A CRITICAL). The behavior calls it from OnSessionLaunched when no load occurred.
+    /// </summary>
+    void ResetForNewSession();
+
+    /// <summary>Cancels only orders placed from the field camp. Breaking camp must not forfeit
+    /// town-placed orders that have nothing to do with the camp (round-A HIGH).</summary>
+    void CancelCampOrders();
 }

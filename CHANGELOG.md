@@ -4,6 +4,56 @@
 
 ## 2026-08-22
 
+### fix(camps): review round A + Codex round 1 fix batch (#505, #506, #507)
+
+The camps port went through its first full review pass: five fresh deep-review agents (code and
+diff only, no port narrative, each finding adversarially verified through three lenses) plus an
+independent Codex cold review. 42 findings survived verification, Codex added 20; three parallel
+fixers landed the batch. The big classes:
+
+- **Session lifecycle (2 CRITICAL, the worst class).** All three feature books lived in
+  process-lifetime singletons that nothing reset: a new campaign after quit-to-menu inherited,
+  and could then SAVE, the previous campaign's camps, orders and refuges, and the caravan
+  tracker cache could drive ghost parties from a dead session. Every service now has
+  ResetForNewSession wired through a session-sync latch (SyncData only marks it when actually
+  loading), LoadFrom scrubs null rows and clears every transient cache, and per-feature
+  behavior tests pin both paths.
+- **Engine-owned lifecycle (1 CRITICAL).** Refuge dismantle moved heroes by raw roster
+  copy+clear, which corrupts Hero.PartyBelongedTo (the engine's Clear nulls it after the copy
+  re-parented them). Heroes and hero prisoners now move through AddHeroToPartyAction and
+  TransferPrisonerAction. Caravans fighting a MapEvent are never delivered or destroyed
+  mid-battle; loss resolves when the engine actually kills the party.
+- **Delivery honesty.** Orders now deliver from the caravan's live rosters (a raided caravan
+  delivers what is actually aboard, not the order snapshot), lord-sourced routes run from a
+  persisted dispatch origin instead of the lord's current position, and clicking your own
+  caravan no longer strikes a stranger conversation off a leaderless roster (new
+  Patch73_SupplyLines DoMeeting guard, co-op classified ReviewedSafe).
+- **Source fidelity restored.** The ambush now breaks camp, rolls, and starts the real battle
+  through StartBattleAction as the source did; the terrain ambush/forage tables went back to
+  the source's decoded values (the port's "drifted enum" justification was reviewed and found
+  false); fortify is a real 2x re-raise; the established/broken messages are back.
+- **Refuge correctness.** Militia stand-down works from a persisted pre-rally baseline so it
+  can no longer eat the player's garrison of the same troop type; rally happens before
+  StartBattleAction so auto-resolve counts include it; founding is transactional (a failed
+  spawn unwinds the warden promotion); refuges whose party the engine destroys drop their row
+  immediately; peace releases refuge-held hero prisoners; orphaned refuges stay enterable and
+  dismantlable.
+- **Break camp keeps context.** Breaking camp cancels only orders placed FROM the camp
+  (persisted flag, the camp menu passes it), and the held party resumes its captured order
+  (settlement, engage, escort), not a stale go-to-point.
+
+Prevention, per the RCA (docs/reviews/rca-yotthani-camps-2026-08-23.md, 7 root-cause classes):
+a new csharp-architecture rule (singletons holding per-campaign state MUST have a session-reset
+story), a no-paraphrase briefing convention in agent-teams.md, five lessons entries, and two
+new mechanical gates in the suite: a localization round-trip test (registered row text must
+equal the longest inline code default; it was red until the lossy registration was regenerated)
+and an IoC discipline scan (no eager container.Resolve inside any feature Register body, with a
+verified 3-file grandfather baseline and a stale-entry companion).
+
+Suite: 7421 passed / 2 skipped (was 7323). 161 taom_sl_/fc_/rf_ keys registered and propagated
+to all 12 language files (English fallback; translator run still owed on the missing API key).
+Branch only; trunk merge waits for the user.
+
 ### feat(refuge): movable player bases raised from field camps (#507)
 
 Port of yotthani's Refuge module (1.4.5, 2,027 decompiled lines) into `Main/Features/Refuge/`.
@@ -52,10 +102,13 @@ never-throw contract with the source's widget-dictionary leak replaced by a `Con
 
 Source defects fixed rather than carried: per-frame pathfinding per hostile while an ambush was
 armed (now a half-hour game-time accumulator with a straight-line prefilter), fortify silently
-wiping foraging state and restarting the raise, the hardcoded always-visible overlay button (now
-follows the master toggle), and the source's four dead overlay bindings. Terrain sets were
-re-derived against the real 1.4.8 enum with default-deny arms instead of trusting compiled ordinals
-from a drifted enum.
+wiping foraging state (the double-hours re-raise itself is kept as source behaviour), the
+hardcoded always-visible overlay button (now follows the master toggle), and the source's four
+dead overlay bindings. Terrain tables are the source's, decoded from its compiled relative
+switches against the 1.4.8 `TerrainType` values (identical to its 1.4.5 target, so the decode is
+exact) and rewritten as explicit members with default-deny arms for future engine values. An
+earlier claim here that the source's ordinals "decoded against a drifted enum" was wrong; the
+review-A pass disproved it and the tables were restored to source parity.
 
 Suite green at 7202 (+152). 66 `{=taom_fc_*}` strings registered; translation run owed with the
 other ports.

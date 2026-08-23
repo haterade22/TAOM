@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -68,6 +68,14 @@ public class CoopVetoClassificationTests
             "Skips an alliance end. Static-config condition, same peer-mismatch exposure as war."),
 
         // --- Reviewed, safe to keep enforcing ------------------------------------------------
+        ["SupplyCaravanEncounterPatch"] = new(CoopVeto.ReviewedSafe,
+            "Player-local UI redirect, the caravan sibling of RefugeEncounterPatch: when the LOCAL " +
+            "player bumps their own supply caravan, the meeting conversation (which would strike a " +
+            "stranger dialog off a Leader-less roster) is replaced by an info line plus the same " +
+            "Finish+hold teardown vanilla's leave path runs. DoMeeting only runs for the local " +
+            "player's encounter, the condition reads the encountered party's component type " +
+            "(replicated party state, identical on every peer), and no shared campaign mutation is " +
+            "skipped."),
         ["RefugeEncounterPatch"] = new(CoopVeto.ReviewedSafe,
             "Player-local UI redirect: when the LOCAL player clicks their own refuge, the meeting " +
             "conversation is swapped for the refuge menu. DoMeeting only runs for the local player's " +

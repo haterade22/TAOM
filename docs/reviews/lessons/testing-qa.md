@@ -759,3 +759,14 @@ untestability, it is a design defect: convert it to constructor injection. Doing
 the architecture rules already wanted, and it recovered nine tests.
 
 **Source:** `docs/reviews/rca-herorace-patch72-2026-08-21.md`.
+
+### For every boolean or enum input a decision consumes, confirm the value is producible on the installed engine
+
+Two round-A findings shared one shape: an input that LOOKS meaningful but cannot vary in the real
+engine (a raid-typed MapEvent flag no field battle ever sets; AvoidHostileActions believed to stop
+AI attacks when it only gates narrative text and a relation penalty). Both had tests, and the tests
+fed the impossible values directly: they proved the branch logic and pinned dead code as coverage.
+**Prevent:** name the real producer of every consumed input and verify each consumed value can
+occur; a branch whose guarding input cannot vary is dead code wearing a test.
+
+**Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 6.

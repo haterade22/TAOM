@@ -43,6 +43,16 @@ public class SupplyOrderService : ISupplyOrderService
     private Dictionary<string, SupplyOrder> _orders = new Dictionary<string, SupplyOrder>();
     private int _counter;
 
+    // ActiveOrders is read per frame by the route visual; rebuilding a list per call was steady
+    // GC pressure for the whole transit window. Rebuilt lazily, dropped on any book mutation.
+    private List<SupplyOrder> _activeOrdersCache;
+
+    private bool _loadScrubWarned;
+
+    // Campaign hours at the last frame pass; NaN never equals anything so the first frame
+    // always runs. Equality means the clock is frozen (pause) and the pass is skipped.
+    private double _lastFrameHours = double.NaN;
+
     public SupplyOrderService(
         ISupplySourceService sources,
         ISupplyCaravanService caravans,
@@ -59,17 +69,34 @@ public class SupplyOrderService : ISupplyOrderService
         _logger = logger;
     }
 
-    public IReadOnlyCollection<SupplyOrder> ActiveOrders =>
-        _orders.Values
-            .Where(o => o.StatusEnum == SupplyOrderStatus.Ordered || o.StatusEnum == SupplyOrderStatus.InTransit)
-            .ToList();
+    public IReadOnlyCollection<SupplyOrder> ActiveOrders
+    {
+        get
+        {
+            if (_activeOrdersCache == null)
+            {
+                var active = new List<SupplyOrder>();
+                foreach (var order in _orders.Values)
+                {
+                    if (order.StatusEnum == SupplyOrderStatus.Ordered
+                        || order.StatusEnum == SupplyOrderStatus.InTransit)
+                        active.Add(order);
+                }
+                _activeOrdersCache = active;
+            }
+            return _activeOrdersCache;
+        }
+    }
+
+    private void InvalidateActiveOrders() => _activeOrdersCache = null;
 
     public SupplyOrder TryPlaceOrder(
         SupplySourceInfo source,
         IReadOnlyDictionary<string, int> goods,
         IReadOnlyDictionary<string, int> troops,
         SupplyEscortOption escort,
-        out string failReason)
+        out string failReason,
+        bool placedFromCamp = false)
     {
         failReason = null;
         if (!_settings.Enabled)
@@ -137,6 +164,7 @@ public class SupplyOrderService : ISupplyOrderService
             TotalPaid = total,
             DispatchTime = CampaignTimeNow(),
             PlannedHours = _pricing.PlannedHours(distance),
+            PlacedFromCamp = placedFromCamp,
         };
         order.EscortEnum = effectiveEscort;
         order.StatusEnum = SupplyOrderStatus.Ordered;
@@ -156,6 +184,7 @@ public class SupplyOrderService : ISupplyOrderService
         // Charge only now, with the caravan alive on the map.
         ChargePlayer(total);
         _orders[order.OrderId] = order;
+        InvalidateActiveOrders();
         ShowMessage(new TextObject("{=taom_sl_dispatched}A supply caravan has set out for your party."), error: false);
         return order;
     }
@@ -172,6 +201,12 @@ public class SupplyOrderService : ISupplyOrderService
     {
         if (_orders.Count == 0)
             return;
+        // While the campaign clock is frozen (pause) neither the travel fraction nor any party
+        // position can change, so the whole pass is skipped instead of burning work per frame.
+        double nowHours = FrameHoursNow();
+        if (nowHours == _lastFrameHours)
+            return;
+        _lastFrameHours = nowHours;
         _caravans.TickPositions();
         // Proximity delivery reuses the same engine verdict as the hourly pass; the caravan
         // service's DistanceToPlayer is a cheap straight-line check so this is per-frame safe.
@@ -181,24 +216,84 @@ public class SupplyOrderService : ISupplyOrderService
 
     public void CancelAll()
     {
+        int cancelled = CancelWhere(o => true);
+        if (cancelled > 0)
+            ShowMessage(new TextObject("{=taom_sl_cancelled}Supply orders cancelled; the goods and gold are lost."), error: true);
+    }
+
+    public void CancelCampOrders()
+    {
+        int cancelled = CancelWhere(o => o.PlacedFromCamp);
+        if (cancelled > 0)
+            ShowMessage(new TextObject("{=taom_sl_cancelled}Supply orders cancelled; the goods and gold are lost."), error: true);
+    }
+
+    /// <summary>Cancels every active order matching the filter; returns how many.</summary>
+    private int CancelWhere(Func<SupplyOrder, bool> shouldCancel)
+    {
         int cancelled = 0;
-        foreach (var order in _orders.Values.ToList())
+        foreach (var order in _orders.Values)
         {
             if (order.StatusEnum != SupplyOrderStatus.Ordered && order.StatusEnum != SupplyOrderStatus.InTransit)
+                continue;
+            if (!shouldCancel(order))
                 continue;
             _caravans.ReleaseEscortAndDestroy(order);
             order.StatusEnum = SupplyOrderStatus.Lost;
             cancelled++;
         }
-        PurgeFinished();
         if (cancelled > 0)
-            ShowMessage(new TextObject("{=taom_sl_cancelled}Supply orders cancelled; the goods and gold are lost."), error: true);
+        {
+            InvalidateActiveOrders();
+            PurgeFinished();
+        }
+        return cancelled;
     }
 
     public void LoadFrom(Dictionary<string, SupplyOrder> orders, int counter)
     {
-        _orders = orders ?? new Dictionary<string, SupplyOrder>();
+        var book = orders ?? new Dictionary<string, SupplyOrder>();
+
+        // Scrub hostile save shapes: a null row (partial recovery, external edit, version skew)
+        // must become one dropped entry with a warning, not an NRE on every subsequent tick.
+        List<string> badKeys = null;
+        foreach (var pair in book)
+        {
+            if (pair.Value == null || string.IsNullOrEmpty(pair.Value.OrderId))
+                (badKeys ?? (badKeys = new List<string>())).Add(pair.Key);
+        }
+        if (badKeys != null)
+        {
+            foreach (var key in badKeys)
+                book.Remove(key);
+            if (!_loadScrubWarned)
+            {
+                _loadScrubWarned = true;
+                _logger.LogWarning(
+                    $"[SupplyLines] LoadFrom dropped {badKeys.Count} null/invalid order row(s) from the save (logged once)");
+            }
+        }
+
+        _orders = book;
         _counter = Math.Max(counter, 0);
+
+        // Transient caches never survive into a loaded book: a caravan tracker's cached party
+        // belongs to the session that created it, and the loaded campaign has new objects under
+        // the same ids (round-A HIGH). OnGameLoaded rebinds from the live campaign.
+        _caravans.ClearTrackers();
+        InvalidateActiveOrders();
+    }
+
+    public void ResetForNewSession()
+    {
+        // A session with no saved record (fresh campaign, or a save predating the feature) must
+        // start with an empty book: the service is a process singleton and SyncData only fires
+        // when a record exists, so without this the previous campaign's orders ride along
+        // (round-A CRITICAL). The counter resets too; its value is meaningful only per campaign.
+        _orders = new Dictionary<string, SupplyOrder>();
+        _counter = 0;
+        _caravans.ClearTrackers();
+        InvalidateActiveOrders();
     }
 
     public void SaveInto(out Dictionary<string, SupplyOrder> orders, out int counter)
@@ -219,17 +314,22 @@ public class SupplyOrderService : ISupplyOrderService
     private bool AdvanceOrders()
     {
         bool anyFinished = false;
-        bool playerInEncounter = IsPlayerInEncounter();
-        foreach (var order in _orders.Values.ToList())
+        // Captivity blocks delivery exactly like an encounter: a caravan must never force-hand
+        // cargo to a prisoner (the party is not the player's to receive with). The order just
+        // waits; the 2x timeout cannot fire while this holds.
+        bool deliveryBlocked = IsPlayerInEncounter() || IsPlayerCaptive();
+        // Values is iterated directly (no per-frame ToList): verdict application only mutates
+        // order STATUS; rows are removed later by PurgeFinished.
+        foreach (var order in _orders.Values)
         {
             if (order.StatusEnum != SupplyOrderStatus.InTransit)
                 continue;
             var verdict = _engine.Advance(
                 ElapsedFractionOf(order),
                 _caravans.CaravanExists(order),
-                _caravans.CaravanInRaid(order),
+                _caravans.CaravanInMapEvent(order),
                 _caravans.DistanceToPlayer(order),
-                playerInEncounter);
+                deliveryBlocked);
             switch (verdict)
             {
                 case SupplyOrderVerdict.Deliver:
@@ -242,15 +342,47 @@ public class SupplyOrderService : ISupplyOrderService
                     break;
             }
         }
+        if (anyFinished)
+            InvalidateActiveOrders();
         return anyFinished;
     }
 
     private void DeliverOrder(SupplyOrder order)
     {
-        DeliverCargoToPlayer(order);
+        // Deliver what the caravan actually carries, capped by what was ordered: goods eaten in
+        // transit or recruits lost to a battle stay lost (partial delivery), and template
+        // caravan guards or mercenary escorts are never handed over because they were never in
+        // the order. A missing live snapshot (unreadable party) falls back to the order dicts.
+        _caravans.TryGetLiveCargo(order, out var liveGoods, out var liveTroops);
+        DeliverCargoToPlayer(
+            order,
+            CapByLive(order.Goods, liveGoods),
+            CapByLive(order.Recruits, liveTroops));
         _caravans.ReleaseEscortAndDestroy(order);
         order.StatusEnum = SupplyOrderStatus.Delivered;
         ShowMessage(new TextObject("{=taom_sl_delivered}Your supplies have arrived."), error: false);
+    }
+
+    /// <summary>
+    /// Ordered amounts capped by what is actually aboard. A null live snapshot means the roster
+    /// could not be read; the ordered amounts stand (legacy behaviour, delivery must not zero out).
+    /// </summary>
+    internal static IReadOnlyDictionary<string, int> CapByLive(
+        Dictionary<string, int> ordered, IReadOnlyDictionary<string, int> live)
+    {
+        if (ordered == null)
+            return new Dictionary<string, int>();
+        if (live == null)
+            return ordered;
+        var result = new Dictionary<string, int>();
+        foreach (var pair in ordered)
+        {
+            live.TryGetValue(pair.Key, out int aboard);
+            int quantity = Math.Min(pair.Value, aboard);
+            if (quantity > 0)
+                result[pair.Key] = quantity;
+        }
+        return result;
     }
 
     private void LoseOrder(SupplyOrder order)
@@ -283,6 +415,8 @@ public class SupplyOrderService : ISupplyOrderService
 
     protected virtual CampaignTime CampaignTimeNow() => CampaignTime.Now;
 
+    protected virtual double FrameHoursNow() => CampaignTime.Now.ToHours;
+
     protected virtual float ElapsedFractionOf(SupplyOrder order) => order.ElapsedFraction();
 
     protected virtual void ChargePlayer(int amount)
@@ -312,12 +446,20 @@ public class SupplyOrderService : ISupplyOrderService
         return PlayerEncounter.Current != null || MobileParty.MainParty?.MapEvent != null;
     }
 
-    protected virtual void DeliverCargoToPlayer(SupplyOrder order)
+    protected virtual bool IsPlayerCaptive()
+    {
+        return Hero.MainHero?.IsPrisoner == true;
+    }
+
+    protected virtual void DeliverCargoToPlayer(
+        SupplyOrder order,
+        IReadOnlyDictionary<string, int> goods,
+        IReadOnlyDictionary<string, int> recruits)
     {
         var mainParty = MobileParty.MainParty;
         if (mainParty == null)
             return;
-        foreach (var pair in order.Goods)
+        foreach (var pair in goods)
         {
             var item = MBObjectManager.Instance.GetObject<ItemObject>(pair.Key);
             if (item != null && pair.Value > 0)
@@ -325,7 +467,7 @@ public class SupplyOrderService : ISupplyOrderService
             else if (item == null)
                 _logger.LogWarning($"[SupplyLines] Deliver: unknown item id '{pair.Key}' dropped");
         }
-        foreach (var pair in order.Recruits)
+        foreach (var pair in recruits)
         {
             var troop = MBObjectManager.Instance.GetObject<CharacterObject>(pair.Key);
             if (troop != null && pair.Value > 0)

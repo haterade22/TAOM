@@ -41,6 +41,11 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
         _menuController = new RefugeMenuController(refuges, wardens, settings, menus, encounters);
     }
 
+    /// <summary>True once SyncData ran in LOADING mode this session: the book was rebuilt from a
+    /// real save record. False for a fresh campaign AND for a save written before this feature
+    /// existed - both must start from an empty book, not the previous session's singleton state.</summary>
+    private bool _syncedThisSession;
+
     public override void RegisterEvents()
     {
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -49,6 +54,13 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
         CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, OnHourlyTick);
         CampaignEvents.MapEventStarted.AddNonSerializedListener(this, OnMapEventStarted);
         CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
+        // A lost defense wipes the garrison and the engine applies DestroyPartyAction directly
+        // from MapEventSide.HandleMapEventEnd, AFTER OnMapEventEnded already dispatched; without
+        // this listener the book row, cap slot and visuals leak until the next load's reconcile.
+        CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, OnMobilePartyDestroyed);
+        // Vanilla's peace-time prisoner release enumerates caravans, war parties, villages and
+        // garrisons only; refuge-held hero prisoners need their own listener.
+        CampaignEvents.MakePeace.AddNonSerializedListener(this, OnMakePeace);
         // Best-effort session teardown; same reasoning as FieldCamp: entity handles from a dead
         // map scene must not survive into the next campaign.
         CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, OnGameOver);
@@ -56,6 +68,8 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     public override void SyncData(IDataStore dataStore)
     {
+        if (dataStore.IsLoading)
+            _syncedThisSession = true;
         _refuges.SaveInto(out Dictionary<string, RefugeData> refuges, out int counter);
         dataStore.SyncData("_taomRefuges", ref refuges);
         dataStore.SyncData("_taomRefugeCounter", ref counter);
@@ -64,13 +78,36 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        // FIRST: the session-reset gate, before any menu or tick can read the book.
+        ResetIfNoLoadedRecord();
         // Menus register unconditionally; runtime gates live at the option conditions, so an MCM
         // toggle mid-session needs no relaunch (FiefHub lesson).
         _menuController.AddMenus(starter);
     }
 
+    /// <summary>The reset half of the singleton-leak fix (the FieldCamp/SupplyLines shape): when
+    /// no save record loaded this session (fresh campaign, or a pre-feature save), the
+    /// process-lifetime service still holds the PREVIOUS campaign's book and would save it into
+    /// this one. Latches afterwards so the OnGameLoaded and OnSessionLaunched callers cannot
+    /// double-reset (a second wipe would eat anything founded right after launch). Internal for
+    /// direct test access (OnSessionLaunched also needs a real CampaignGameStarter).</summary>
+    internal bool ResetIfNoLoadedRecord()
+    {
+        if (_syncedThisSession)
+            return false;
+        _refuges.ResetForNewSession();
+        _syncedThisSession = true;
+        _logger.LogInfo("[Refuge] no saved record this session - book and transients reset.");
+        return true;
+    }
+
     private void OnGameLoaded(CampaignGameStarter starter)
     {
+        // A save from before the feature has no record: SyncData never ran and the singleton
+        // book still belongs to the previous session, so reset instead of reconciling (and
+        // re-showing) its stale state. (OnSessionLaunched re-checks for fresh campaigns.)
+        if (ResetIfNoLoadedRecord())
+            return;
         _refuges.OnGameLoaded();
     }
 
@@ -102,6 +139,24 @@ public class RefugeCampaignBehavior : CampaignBehaviorBase
     {
         foreach (var refugeId in RefugePartyIds(mapEvent))
             _refuges.OnMapEventEnded(refugeId);
+        // A defeated refuge is destroyed AFTER this callback (MapEvent.FinalizeEventAux runs
+        // MapEventSide.HandleMapEventEnd next); OnMobilePartyDestroyed is the reconcile seam.
+    }
+
+    private void OnMobilePartyDestroyed(MobileParty party, PartyBase destroyer)
+    {
+        if (party?.PartyComponent is RefugePartyComponent && !string.IsNullOrEmpty(party.StringId))
+            _refuges.OnPartyDestroyed(party.StringId);
+    }
+
+    private void OnMakePeace(
+        IFaction side1, IFaction side2, TaleWorlds.CampaignSystem.Actions.MakePeaceAction.MakePeaceDetail detail)
+    {
+        // Only a peace touching the player's own faction can change a refuge prisoner's
+        // eligibility (refuge parties are player-clan); the service re-checks per prisoner.
+        var playerFaction = Clan.PlayerClan?.MapFaction;
+        if (playerFaction == null || side1 == playerFaction || side2 == playerFaction)
+            _refuges.OnPeaceMade();
     }
 
     /// <summary>Maps a map event to the refuge parties in it. Materialized inside the guard:

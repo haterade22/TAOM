@@ -47,4 +47,12 @@ public interface IRefugeSettingsProvider
 
     /// <summary>Raid search radius around a refuge (default 6).</summary>
     float RaidRange { get; }
+
+    /// <summary>Named building mesh placed beside the command tent in the FALLBACK layout (source
+    /// default "empire_street_tent_02"); empty disables it. Source-parity knob; not yet surfaced
+    /// in MCM (TaomSettings is single-owner), so the provider returns the source default.</summary>
+    string BuildingMesh { get; }
+
+    /// <summary>Scale for <see cref="BuildingMesh"/> (source default 0.4).</summary>
+    float BuildingScale { get; }
 }

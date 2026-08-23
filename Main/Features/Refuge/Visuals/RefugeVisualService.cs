@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using SandBox.View.Map;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.FieldCamp.Visuals;
 using TAOM.Features.Refuge.Domain;
 using TaleWorlds.CampaignSystem;
@@ -60,14 +61,16 @@ public sealed class RefugeVisualService : IRefugeVisualService
     private const int WindTickIntervalMs = 500;
 
     private readonly IModLogger _logger;
+    private readonly IRefugeSettingsProvider _settings;
     private readonly Dictionary<string, RefugeVisual> _visuals =
         new Dictionary<string, RefugeVisual>(StringComparer.Ordinal);
 
     private int _lastWindTickMs;
     private bool _sceneWaitLogged;
 
-    public RefugeVisualService(IModLogger logger)
+    public RefugeVisualService(IRefugeSettingsProvider settings, IModLogger logger)
     {
+        _settings = settings;
         _logger = logger;
     }
 
@@ -111,7 +114,8 @@ public sealed class RefugeVisualService : IRefugeVisualService
 
         int troops = ResolveParty(refugeId)?.MemberRoster?.TotalManCount ?? 0;
         var center = new Vec3(position.x, position.y, 0f, -1f);
-        Place(scene, in center, tier, fortified, troops, visual.Entities);
+        Place(scene, in center, tier, fortified, troops, visual.Entities,
+            _settings.BuildingMesh, _settings.BuildingScale);
 
         visual.Shown = true;
         visual.Tier = tier;
@@ -139,14 +143,14 @@ public sealed class RefugeVisualService : IRefugeVisualService
 
     private static void Place(
         Scene scene, in Vec3 center, RefugeTier tier, bool fortified, int troops,
-        List<GameEntity> outEntities)
+        List<GameEntity> outEntities, string buildingMesh, float buildingScale)
     {
         bool stronghold = tier == RefugeTier.Stronghold;
         float campScale = stronghold ? RefugeCampScaleStronghold : RefugeCampScale;
 
         if (!CampLayoutBuilder.PlaceCenteredPrefab(scene, in center, RefugeCampMesh, campScale, outEntities))
         {
-            PlaceMilitaryLayout(scene, in center, stronghold, troops, outEntities);
+            PlaceMilitaryLayout(scene, in center, stronghold, troops, outEntities, buildingMesh, buildingScale);
             return;
         }
 
@@ -167,7 +171,8 @@ public sealed class RefugeVisualService : IRefugeVisualService
     /// a stronghold so the two tiers read differently at a glance.
     /// </summary>
     private static void PlaceMilitaryLayout(
-        Scene scene, in Vec3 center, bool stronghold, int troops, List<GameEntity> outEntities)
+        Scene scene, in Vec3 center, bool stronghold, int troops, List<GameEntity> outEntities,
+        string buildingMesh, float buildingScale)
     {
         Banner? banner = null;
         try
@@ -194,6 +199,15 @@ public sealed class RefugeVisualService : IRefugeVisualService
 
         CampLayoutBuilder.PlaceCommandTent(
             scene, in center, stronghold ? 3.2f : 2.6f, banner, outEntities);
+
+        // Source parity: an optional named building mesh beside the command tent (the source's
+        // RefugeBuildingMesh/RefugeBuildingScale MCM knobs, offsets +1/-0.2 verbatim). Positive
+        // finite gate on the scale: a degenerate value drops the prop, never a NaN frame.
+        if (!string.IsNullOrEmpty(buildingMesh)
+            && FiniteFloatValidator.IsFiniteInRange(buildingScale, 0.01f, 10f))
+        {
+            PlaceBuildingMesh(scene, center.x + 1f, center.y - 0.2f, center.z, buildingScale, buildingMesh, outEntities);
+        }
 
         float tentScale = stronghold ? 1.5f : 1.3f;
         PlaceScaledTentRing(
@@ -252,11 +266,15 @@ public sealed class RefugeVisualService : IRefugeVisualService
     {
         for (int i = 0; i < count; i++)
         {
-            // Evenly spaced and center-facing, like the barricades: these are the big set-piece
-            // tents, not part of the pitched jumble.
-            float angle = (float)(Math.PI * 2.0 * i / count);
-            float x = center.x + radius * (float)Math.Cos(angle);
-            float y = center.y + radius * (float)Math.Sin(angle);
+            // Jittered angles and radii, the source's PlaceNamedMeshRing values verbatim
+            // (noise seeds 401/411): the big set-piece tents read as pitched, not planted on a
+            // compass rose. An earlier build de-jittered this ring; that was a port drift, not
+            // design.
+            float angle = (float)(Math.PI * 2.0 * i / count)
+                + 0.4f + (CampLayoutMath.Noise(i + 401) - 0.5f) * 1f;
+            float distance = radius * (0.7f + CampLayoutMath.Noise(i + 411) * 0.55f);
+            float x = center.x + distance * (float)Math.Cos(angle);
+            float y = center.y + distance * (float)Math.Sin(angle);
 
             MatrixFrame frame = MatrixFrame.Identity;
             frame.origin = new Vec3(x, y, CampLayoutBuilder.TerrainHeight(x, y, center.z), -1f);
@@ -264,6 +282,25 @@ public sealed class RefugeVisualService : IRefugeVisualService
             frame.rotation.ApplyScaleLocal(DecorTentScale);
             CampLayoutBuilder.PlaceMesh(scene, DecorTentMesh, in frame, outEntities);
         }
+    }
+
+    /// <summary>The source's CampLayoutBuilder.PlaceNamedMesh, expressed over the shared
+    /// builder's PlaceMesh (identity frame at terrain height, uniform scale).</summary>
+    private static void PlaceBuildingMesh(
+        Scene scene, float x, float y, float zFallback, float scale, string meshName,
+        List<GameEntity> outEntities)
+    {
+        MatrixFrame frame = MatrixFrame.Identity;
+        frame.origin = new Vec3(x, y, CampLayoutBuilder.TerrainHeight(x, y, zFallback), -1f);
+        frame.rotation.ApplyScaleLocal(scale);
+        CampLayoutBuilder.PlaceMesh(scene, meshName, in frame, outEntities);
+    }
+
+    public void TickWind()
+    {
+        if (_visuals.Count == 0)
+            return;
+        TickWindThrottled();
     }
 
     private void TickWindThrottled()

@@ -79,9 +79,9 @@ public class Patch74NameplateBindingTests
         // edits. Each is an atlas path (Category\sprite), hence the separator check.
         foreach (var sprite in new[]
         {
-            PartyNameplateCampIconPatch.LookoutSprite,
-            PartyNameplateCampIconPatch.AmbushSprite,
-            PartyNameplateCampIconPatch.CampSprite,
+            CampNameplateIconPresenter.LookoutSprite,
+            CampNameplateIconPresenter.AmbushSprite,
+            CampNameplateIconPresenter.CampSprite,
         })
         {
             Assert.IsFalse(string.IsNullOrWhiteSpace(sprite), "A camp icon sprite id is empty.");
@@ -94,6 +94,6 @@ public class Patch74NameplateBindingTests
     {
         // FindIcon matches children by this id every frame; an empty id would match unrelated
         // widgets that never set one.
-        Assert.IsFalse(string.IsNullOrWhiteSpace(PartyNameplateCampIconPatch.IconWidgetId));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(CampNameplateIconPresenter.IconWidgetId));
     }
 }

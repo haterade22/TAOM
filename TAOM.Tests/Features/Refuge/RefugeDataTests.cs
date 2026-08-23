@@ -48,6 +48,19 @@ public class RefugeDataTests
 
         Assert.AreEqual(0, data.MilitiaAdded);
         Assert.IsNull(data.MilitiaTroopId);
+        Assert.AreEqual(0, data.MilitiaPreRallyCount,
+            "save-compat: the field deserializes to 0 on a pre-fix save, which reproduces the "
+            + "old min(recorded, present) stand-down for only the one battle already in flight");
+    }
+
+    [TestMethod]
+    public void IsOrphanAdopted_OnlyForUnestablishedNonBuildingRows()
+    {
+        Assert.IsTrue(new RefugeData { Established = false, Building = false }.IsOrphanAdopted);
+        Assert.IsFalse(new RefugeData { Established = false, Building = true }.IsOrphanAdopted,
+            "a raising refuge is a normal state, not an orphan");
+        Assert.IsFalse(new RefugeData { Established = true, Building = false }.IsOrphanAdopted);
+        Assert.IsFalse(new RefugeData { Established = true, Building = true }.IsOrphanAdopted);
     }
 
     [TestMethod]

@@ -22,8 +22,11 @@ public class CampTerrainServiceTests
         _sut = new CampTerrainService();
     }
 
+    // Source-decoded set (its compiled `t - 3` switch over the 1.4.8 enum values): Snow IS
+    // concealing; UnderBridge postdates the source's cases and fell to its default-false arm.
     private static readonly HashSet<TerrainType> AmbushTerrain = new HashSet<TerrainType>
     {
+        TerrainType.Snow,
         TerrainType.Forest,
         TerrainType.Fording,
         TerrainType.Mountain,
@@ -31,7 +34,6 @@ public class CampTerrainServiceTests
         TerrainType.Swamp,
         TerrainType.Dune,
         TerrainType.Bridge,
-        TerrainType.UnderBridge,
     };
 
     private static readonly HashSet<TerrainType> LookoutTerrain = new HashSet<TerrainType>
@@ -43,31 +45,34 @@ public class CampTerrainServiceTests
         TerrainType.Canyon,
     };
 
+    // Source-decoded yields (its compiled `t - 1` switch over the 1.4.8 enum values). The 0.5
+    // rows are the members that fell to the source's default arm at runtime, Cliff and the
+    // movement-restriction faces included: parity kept over a silent retune.
     private static readonly Dictionary<TerrainType, float> ForageYields = new Dictionary<TerrainType, float>
     {
         [TerrainType.Plain] = 1f,
-        [TerrainType.Steppe] = 1f,
-        [TerrainType.Forest] = 0.7f,
-        [TerrainType.RuralArea] = 0.7f,
+        [TerrainType.Forest] = 1f,
+        [TerrainType.Steppe] = 0.7f,
+        [TerrainType.Swamp] = 0.7f,
+        [TerrainType.Mountain] = 0.45f,
         [TerrainType.Canyon] = 0.45f,
-        [TerrainType.Swamp] = 0.45f,
-        [TerrainType.Fording] = 0.45f,
-        [TerrainType.Bridge] = 0.45f,
-        [TerrainType.UnderBridge] = 0.45f,
         [TerrainType.Desert] = 0.2f,
         [TerrainType.Snow] = 0.2f,
-        [TerrainType.Dune] = 0.2f,
-        [TerrainType.Beach] = 0.2f,
-        [TerrainType.Mountain] = 0f,
         [TerrainType.Lake] = 0f,
         [TerrainType.Water] = 0f,
         [TerrainType.River] = 0f,
         [TerrainType.CoastalSea] = 0f,
         [TerrainType.OpenSea] = 0f,
-        [TerrainType.Cliff] = 0f,
         [TerrainType.NonNavigableRiver] = 0f,
-        [TerrainType.LandRestriction] = 0f,
-        [TerrainType.SeaRestriction] = 0f,
+        [TerrainType.Fording] = 0.5f,
+        [TerrainType.RuralArea] = 0.5f,
+        [TerrainType.Dune] = 0.5f,
+        [TerrainType.Bridge] = 0.5f,
+        [TerrainType.Beach] = 0.5f,
+        [TerrainType.Cliff] = 0.5f,
+        [TerrainType.LandRestriction] = 0.5f,
+        [TerrainType.SeaRestriction] = 0.5f,
+        [TerrainType.UnderBridge] = 0.5f,
     };
 
     private static IEnumerable<TerrainType> AllTerrainMembers() =>
@@ -137,10 +142,10 @@ public class CampTerrainServiceTests
     }
 
     [TestMethod]
-    public void HourlyForage_ForestTerrain_AppliesReducedYield()
+    public void HourlyForage_SteppeTerrain_AppliesReducedYield()
     {
         // 0.7 * 1 * 0.1 * 10 = 0.7
-        float result = _sut.HourlyForage(TerrainType.Forest, 100, 0f, 0.1f);
+        float result = _sut.HourlyForage(TerrainType.Steppe, 100, 0f, 0.1f);
 
         Assert.AreEqual(0.7f, result, 0.0001f);
     }

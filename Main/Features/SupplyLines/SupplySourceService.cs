@@ -51,7 +51,11 @@ public sealed class SupplySourceService : ISupplySourceService
         var settlements = new List<SupplySourceInfo>();
         foreach (var settlement in Settlement.All)
         {
-            if (settlement == null || (!settlement.IsTown && !settlement.IsCastle))
+            // Towns, castles AND villages, matching the source module's eligibility. A village
+            // prices goods at item base value (no Town component; GetItemMarketValue falls
+            // back) and its volunteers flow through the same notable-slot walk as a town's.
+            if (settlement == null
+                || (!settlement.IsTown && !settlement.IsCastle && !settlement.IsVillage))
                 continue;
             if (settlement.IsUnderSiege)
                 continue;

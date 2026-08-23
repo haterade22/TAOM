@@ -115,4 +115,40 @@ public class SupplyOrderTests
 
         Assert.IsFalse(order.IsFromLord);
     }
+
+    // ---- Dispatch origin (route anchor persisted at spawn) ----
+
+    [TestMethod]
+    public void SetDispatchOrigin_FiniteCoordinates_RecordsAndFlags()
+    {
+        var order = new SupplyOrder();
+
+        order.SetDispatchOrigin(120.5f, -33.25f);
+
+        Assert.IsTrue(order.HasDispatchOrigin);
+        Assert.AreEqual(120.5f, order.DispatchOriginX);
+        Assert.AreEqual(-33.25f, order.DispatchOriginY);
+    }
+
+    [TestMethod]
+    public void SetDispatchOrigin_NonFiniteCoordinate_Refused()
+    {
+        // Positive requirement: a corrupt position must never become a route anchor; the flag
+        // stays false and the legacy origin lookup is used instead.
+        var order = new SupplyOrder();
+
+        order.SetDispatchOrigin(float.NaN, 10f);
+        Assert.IsFalse(order.HasDispatchOrigin);
+
+        order.SetDispatchOrigin(10f, float.PositiveInfinity);
+        Assert.IsFalse(order.HasDispatchOrigin);
+    }
+
+    [TestMethod]
+    public void HasDispatchOrigin_DefaultsFalse_ForOrdersFromOlderSaves()
+    {
+        // A save written before fields 114-116 existed deserializes them as defaults; the
+        // false flag is what routes such orders through the legacy origin lookup.
+        Assert.IsFalse(new SupplyOrder().HasDispatchOrigin);
+    }
 }

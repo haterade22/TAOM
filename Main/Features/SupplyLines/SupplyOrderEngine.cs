@@ -27,19 +27,26 @@ public sealed class SupplyOrderEngine : ISupplyOrderEngine
     public SupplyOrderVerdict Advance(
         float elapsedFraction,
         bool caravanExists,
-        bool caravanInRaidEvent,
+        bool caravanInMapEvent,
         float distanceToPlayer,
         bool playerInEncounter)
     {
-        // Loss outranks everything, matching the source: a missing or raided caravan is gone
-        // regardless of what the player is doing.
+        // Loss outranks everything, matching the source: a missing caravan is gone regardless
+        // of what the player is doing.
         if (!caravanExists)
             return SupplyOrderVerdict.Lose;
-        if (caravanInRaidEvent)
-            return SupplyOrderVerdict.Lose;
 
-        // Deliveries never land mid-encounter (defect fix 1). The order keeps waiting; the
-        // caravan still exists, so nothing is lost by holding it.
+        // A caravan in ANY map event belongs to the engine until the battle resolves. Neither
+        // delivery branch may fire (destroying a party still attached to a MapEvent side breaks
+        // the engine's detach-before-destroy contract), and losing early is wrong too: if the
+        // caravan loses, the engine destroys the party and the caravanExists gate above resolves
+        // the loss on the next tick. The original IsRaid input could never fire for a field
+        // battle (IsRaid is the settlement-raid battle type only), so it was retired.
+        if (caravanInMapEvent)
+            return SupplyOrderVerdict.Continue;
+
+        // Deliveries never land mid-encounter or in captivity (defect fix 1). The order keeps
+        // waiting; the caravan still exists, so nothing is lost by holding it.
         if (playerInEncounter)
             return SupplyOrderVerdict.Continue;
 

@@ -31,9 +31,11 @@ public class GauntletSupplyOrderScreen : ScreenBase, IGameStateListener
     private SupplyOrderScreenVM? _viewModel;
     private bool _closed;
 
+    private readonly bool _fromCamp;
+
     // The state argument is what GameStateScreenManager's Activator.CreateInstance passes; the
-    // screen needs nothing from it, but the single-arg ctor shape is what the attribute path
-    // requires (CareerScreenGameState precedent).
+    // single-arg ctor shape is what the attribute path requires (CareerScreenGameState
+    // precedent). FromCamp rides it into the VM so camp-placed orders carry their marker.
     public GauntletSupplyOrderScreen(SupplyOrderGameState state)
     {
         _sourceService = IoC.Resolve<ISupplySourceService>();
@@ -41,6 +43,7 @@ public class GauntletSupplyOrderScreen : ScreenBase, IGameStateListener
         _orderService = IoC.Resolve<ISupplyOrderService>();
         _settings = IoC.Resolve<ISupplyLinesSettingsProvider>();
         _logger = IoC.Resolve<IModLogger>();
+        _fromCamp = state?.FromCamp == true;
     }
 
     protected override void OnInitialize()
@@ -51,7 +54,8 @@ public class GauntletSupplyOrderScreen : ScreenBase, IGameStateListener
             _viewModel = new SupplyOrderScreenVM(
                 _sourceService, _pricingService, _orderService, _settings,
                 playerGold: () => Hero.MainHero?.Gold ?? 0,
-                closeAction: CloseScreen);
+                closeAction: CloseScreen,
+                placedFromCamp: _fromCamp);
 
             _gauntletLayer = new GauntletLayer("SupplyOrderLayer", 15)
             {

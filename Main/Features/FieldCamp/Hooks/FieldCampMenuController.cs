@@ -126,7 +126,7 @@ public sealed class FieldCampMenuController
         starter.AddGameMenuOption(FieldCampCampaignBehavior.CampSubMenuId, "taom_fc_supplies",
             "{=taom_fc_opt_supplies}Order supplies",
             SuppliesCondition,
-            args => SupplyLines.UI.SupplyOrderScreens.Open(),
+            args => SupplyLines.UI.SupplyOrderScreens.Open(fromCamp: true),
             isLeave: false, index: 2);
 
         starter.AddGameMenuOption(FieldCampCampaignBehavior.CampSubMenuId, "taom_fc_break",

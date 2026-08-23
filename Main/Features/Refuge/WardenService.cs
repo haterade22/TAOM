@@ -21,7 +21,9 @@ namespace TAOM.Features.Refuge;
 ///
 /// <para>Release NEVER kills. The source "depromoted" a promoted warden with
 /// KillCharacterAction.ApplyByRemove and refunded the troop; here the promoted warden simply
-/// remains a clan companion (he became somebody), and the soldier is not refunded.</para>
+/// remains a clan companion (he became somebody), and the soldier is not refunded. The ONE place
+/// ApplyByRemove survives is UnwindPromotion: a founding that failed after the promotion, before
+/// the minted hero ever attached to a refuge - a transactional rollback, not a release.</para>
 ///
 /// <para>Campaign statics sit behind protected virtuals (the CampService/SupplyOrderService
 /// pattern) so the candidate ordering, the promote sequencing and the release matrix are all
@@ -95,16 +97,30 @@ public class WardenService : IWardenService
     {
         if (string.IsNullOrEmpty(wardenHeroId))
             return;
-        // NO-KILL policy (the contract): a promoted warden stays a clan companion. No
-        // KillCharacterAction, no troop refund; the dismantle's roster merge carries him back
-        // with the rest of the garrison.
-        if (promoted)
-            return;
-        // A companion who is not with the refuge (captured, hospitalised) is left where fate put
+        // NO-KILL policy (the contract): a promoted warden stays a clan companion - no
+        // KillCharacterAction, no troop refund. He rides the SAME AddHeroToPartyAction move as a
+        // companion warden: an earlier build let the roster merge "carry him back", but a raw
+        // roster copy+clear nulls a hero's PartyBelongedTo (the engine's OnHeroRemoved fires on
+        // the clear), so every hero must move by action.
+        // A warden who is not with the refuge (captured, hospitalised) is left where fate put
         // him; the dismantle proceeds without touching him.
         if (!IsHeroWithRefugeParty(wardenHeroId))
             return;
         MoveHeroToMainParty(wardenHeroId);
+    }
+
+    public void UnwindPromotion(string wardenHeroId, string promotedFromTroopId)
+    {
+        if (string.IsNullOrEmpty(wardenHeroId) || string.IsNullOrEmpty(promotedFromTroopId))
+            return;
+        // The never-attached window: the hero was minted seconds ago, sits in the main party, and
+        // never led anything. Removing him here is the transactional rollback of ResolveWarden,
+        // not a violation of the no-kill release policy (which governs wardens who served).
+        if (!RemoveMintedCompanion(wardenHeroId))
+            return;
+        AddOneTroopToMainParty(promotedFromTroopId);
+        _logger.LogInfo(
+            $"[Refuge] founding failed after promotion; unwound minted warden '{wardenHeroId}' and refunded one '{promotedFromTroopId}'.");
     }
 
     // --- campaign-static seams (the untested boundary sliver; overridden in tests) ---
@@ -225,6 +241,37 @@ public class WardenService : IWardenService
             return false;
         roster.AddToCounts(troop, -1);
         return true;
+    }
+
+    /// <summary>Removes a just-minted, never-attached companion from the game (the source's
+    /// depromote action). KillCharacterAction.ApplyByRemove handles the party row, the clan
+    /// companion slot and the hero record in one engine call.</summary>
+    protected virtual bool RemoveMintedCompanion(string heroId)
+    {
+        var hero = FindHero(heroId);
+        if (hero == null || !hero.IsAlive)
+            return false;
+        try
+        {
+            KillCharacterAction.ApplyByRemove(hero);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // A failed rollback leaves an extra companion, an annoyance; a throw here would eat
+            // the player's founding-failure message.
+            _logger.LogWarning($"[Refuge] promotion unwind failed for '{heroId}': {ex.Message}");
+            return false;
+        }
+    }
+
+    protected virtual void AddOneTroopToMainParty(string troopId)
+    {
+        var roster = MobileParty.MainParty?.MemberRoster;
+        var troop = FindTroop(troopId);
+        if (roster == null || troop == null)
+            return;
+        roster.AddToCounts(troop, 1);
     }
 
     protected virtual bool IsHeroWithRefugeParty(string heroId)

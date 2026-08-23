@@ -404,3 +404,21 @@ have destroyed the one and only report. Latch AFTER the successful pass.
 - **Why missed:** the sweep is four consecutive lines near the bottom of a 1,600-line single-owner file. Nothing connected "I added a static service cache" to "there is a list I must join", and no reviewer grepped for the pattern. Standards, compatibility and efficiency review all pass a class that simply omits a call.
 - **Prevent:** `ResetForUnloadSweepTests.EveryResetForUnload_IsCalledFromOnSubModuleUnloaded` now scans `Main/` for every `public static void ResetForUnload()` and fails the build unless `OnSubModuleUnloaded` calls it. When you add a static service cache to a patch, add `ResetForUnload()` and the gate will tell you if you forget to wire it. **Verify a new gate actually fires** by breaking the thing it guards and watching it go red before trusting it (this one was: the Patch71 call was deleted, the test failed naming that class, and the call was restored).
 - **Source:** docs/reviews/rca-field-commission-reset-equipments-2026-08-20.md (finding 8, second pass), #486; sibling Codex review #46.
+
+### A process singleton holding per-campaign state needs a session-reset story, or campaign B inherits campaign A
+
+SyncData only fires when a save RECORD exists; a brand-new campaign never calls LoadFrom, so a
+process-lifetime service keeps the previous campaign's dictionaries and can then SAVE them into
+the new campaign. Transient caches (party trackers, scan clocks, guard latches, visual shown-maps)
+are worse: they survive a save LOAD too, and a loaded save has NEW engine objects under the old
+ids, so a stale tracker drives a ghost party.
+
+**Why missed:** the singleton-service precedent (RacePositionStore) is config, where process
+lifetime is correct; the contracts specified LoadFrom/SaveInto and nobody asked the no-record
+question. **Prevent:** ResetForNewSession() called from the behavior's OnSessionLaunched when no
+SyncData load happened this session, PLUS every transient cache cleared inside LoadFrom; pin both
+paths with SessionReset tests. Review lifecycle passes must walk a second campaign in one process
+and a load-with-same-ids.
+
+**Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 1 (2 CRITICAL, found independently
+by the unbiased round-A review and Codex).

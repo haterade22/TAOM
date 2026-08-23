@@ -8,10 +8,12 @@ namespace TAOM.Features.FieldCamp;
 /// Terrain policy for camps. Pure: every decision is a function of the <see cref="TerrainType"/>
 /// the boundary read from the map face.
 ///
-/// <para>Every 1.4.8 enum member is named explicitly in each switch and the default arm answers
+/// <para>The tables are the SOURCE module's, decoded from its compiled relative switches
+/// (<c>t - 3</c> / <c>t - 1</c> over case ordinals) against the real 1.4.8
+/// <see cref="TerrainType"/> values (byte-identical to the 1.4.5 enum the source targeted, so the
+/// decode is exact). Every current member is still named explicitly and the default arm answers
 /// for values the engine adds later: a future terrain can never silently allow an ambush or grow
-/// food (the source module used compiled ordinal offsets from an older enum, which is exactly how
-/// its sets drifted).</para>
+/// food.</para>
 /// </summary>
 public class CampTerrainService : ICampTerrainService
 {
@@ -19,8 +21,9 @@ public class CampTerrainService : ICampTerrainService
     {
         switch (terrain)
         {
-            // Concealment: woods, broken ground, reeds, dunes, and the choke points travellers
-            // must pass (a ford, a bridge and the bank beneath it).
+            // Source set: snowfields, woods, broken ground, reeds, dunes, and the choke points
+            // travellers must pass (a ford and a bridge).
+            case TerrainType.Snow:
             case TerrainType.Forest:
             case TerrainType.Fording:
             case TerrainType.Mountain:
@@ -28,13 +31,12 @@ public class CampTerrainService : ICampTerrainService
             case TerrainType.Swamp:
             case TerrainType.Dune:
             case TerrainType.Bridge:
-            case TerrainType.UnderBridge:
                 return true;
 
-            // Open, bare or impassable ground: nothing to hide behind (or in).
+            // Open, bare or impassable ground: nothing to hide behind (or in). UnderBridge (25)
+            // postdates the source's cases and fell to its default-false arm; kept false.
             case TerrainType.Plain:
             case TerrainType.Desert:
-            case TerrainType.Snow:
             case TerrainType.Steppe:
             case TerrainType.Lake:
             case TerrainType.Water:
@@ -47,6 +49,7 @@ public class CampTerrainService : ICampTerrainService
             case TerrainType.NonNavigableRiver:
             case TerrainType.LandRestriction:
             case TerrainType.SeaRestriction:
+            case TerrainType.UnderBridge:
                 return false;
 
             default:
@@ -97,43 +100,49 @@ public class CampTerrainService : ICampTerrainService
     {
         switch (terrain)
         {
-            // Open grassland: the best foraging.
+            // Source: grassland and woodland forage best.
             case TerrainType.Plain:
-            case TerrainType.Steppe:
+            case TerrainType.Forest:
                 return 1f;
 
-            // Game, berries and farmland gleanings.
-            case TerrainType.Forest:
-            case TerrainType.RuralArea:
+            // Source: open steppe and wetland.
+            case TerrainType.Steppe:
+            case TerrainType.Swamp:
                 return 0.7f;
 
-            // Rough ground and riverbanks: sparse but real pickings.
+            // Source: rough highland pickings.
+            case TerrainType.Mountain:
             case TerrainType.Canyon:
-            case TerrainType.Swamp:
-            case TerrainType.Fording:
-            case TerrainType.Bridge:
-            case TerrainType.UnderBridge:
                 return 0.45f;
 
-            // Near-barren ground and shoreline scraps.
+            // Source: near-barren ground.
             case TerrainType.Desert:
             case TerrainType.Snow:
-            case TerrainType.Dune:
-            case TerrainType.Beach:
                 return 0.2f;
 
-            // Nothing grows on water, bare rock, or the map's movement-restriction faces.
-            case TerrainType.Mountain:
+            // Source: nothing grows on open water.
             case TerrainType.Lake:
             case TerrainType.Water:
             case TerrainType.River:
             case TerrainType.CoastalSea:
             case TerrainType.OpenSea:
-            case TerrainType.Cliff:
             case TerrainType.NonNavigableRiver:
+                return 0f;
+
+            // Everything else fell to the source's default 0.5 arm at runtime (including, oddly,
+            // Cliff and the movement-restriction faces; a camp can rarely stand on those anyway,
+            // and parity beats a silent retune). Named explicitly so a FUTURE member does not
+            // inherit 0.5 unreviewed.
+            case TerrainType.Fording:
+            case TerrainType.RuralArea:
+            case TerrainType.Dune:
+            case TerrainType.Bridge:
+            case TerrainType.Beach:
+            case TerrainType.Cliff:
             case TerrainType.LandRestriction:
             case TerrainType.SeaRestriction:
-                return 0f;
+            case TerrainType.UnderBridge:
+                return 0.5f;
 
             default:
                 // Unknown future terrain feeds nobody until it is classified.

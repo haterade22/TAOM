@@ -5,7 +5,9 @@ namespace TAOM.Tests.Features.FieldCamp;
 
 /// <summary>
 /// The spring-chance formula: clamp01(base + concealment x 0.3 + scouting / 300), where
-/// concealment = 1 - min(1, spotting / maxRange). Non-finite or degenerate-range inputs give 0.
+/// concealment = 1 - min(1, playerSpottingRange / maxRange). The first argument is the PLAYER
+/// party's spotting range (source behaviour; a wider sight radius erodes the concealment term),
+/// not any candidate distance. Non-finite or degenerate-range inputs give 0.
 /// </summary>
 [TestClass]
 public class CampAmbushServiceTests
@@ -23,7 +25,7 @@ public class CampAmbushServiceTests
     {
         // concealment = 1 - 5/10 = 0.5; 0.5 + 0.5 * 0.3 + 30/300 = 0.75
         float chance = _sut.TriggerChance(
-            candidateSpottingDistance: 5f, maxRange: 10f, baseChance: 0.5f, scoutingSkill: 30f);
+            playerSpottingRange: 5f, maxRange: 10f, baseChance: 0.5f, scoutingSkill: 30f);
 
         Assert.AreEqual(0.75f, chance, 0.0001f);
     }

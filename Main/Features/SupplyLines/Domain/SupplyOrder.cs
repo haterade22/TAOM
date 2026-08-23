@@ -44,6 +44,37 @@ public sealed class SupplyOrder
     [SaveableField(111)] public CampaignTime DispatchTime;
     [SaveableField(112)] public float PlannedHours;
 
+    /// <summary>True when the order was placed from the field-camp menu; breaking that camp
+    /// cancels these and ONLY these.</summary>
+    [SaveableField(113)] public bool PlacedFromCamp;
+
+    /// <summary>
+    /// Map position the caravan was dispatched from, captured at spawn. Route building and
+    /// respawn read THIS, never the source's current position: a lord marches on after
+    /// dispatching, and rebuilding the route from his new position teleported the convoy
+    /// (round-A / Codex P2). <see cref="HasDispatchOrigin"/> distinguishes a real (0,0) from
+    /// the deserialization default of an order saved before these fields existed.
+    /// </summary>
+    [SaveableField(114)] public float DispatchOriginX;
+
+    /// <summary>Y half of the dispatch origin. See <see cref="DispatchOriginX"/>.</summary>
+    [SaveableField(115)] public float DispatchOriginY;
+
+    /// <summary>True once a finite dispatch origin was recorded at spawn.</summary>
+    [SaveableField(116)] public bool HasDispatchOrigin;
+
+    /// <summary>Records the dispatch origin. Positive requirement: non-finite coordinates are
+    /// refused (the flag stays false) so a corrupt position can never become a route anchor.</summary>
+    public void SetDispatchOrigin(float x, float y)
+    {
+        if (!TAOM.Core.Validation.FiniteFloatValidator.IsFinite(x)
+            || !TAOM.Core.Validation.FiniteFloatValidator.IsFinite(y))
+            return;
+        DispatchOriginX = x;
+        DispatchOriginY = y;
+        HasDispatchOrigin = true;
+    }
+
     public SupplyOrderStatus StatusEnum
     {
         get => (SupplyOrderStatus)Status;

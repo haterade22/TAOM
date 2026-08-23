@@ -13,6 +13,16 @@ public static class SupplyOrderScreens
 {
     public static void Open()
     {
+        Open(fromCamp: false);
+    }
+
+    /// <summary>
+    /// <paramref name="fromCamp"/> rides the game state into the VM and onto the placed order
+    /// (<c>SupplyOrder.PlacedFromCamp</c>): breaking that camp cancels camp-placed orders and
+    /// only those. Town/keep menu callers use the parameterless overload.
+    /// </summary>
+    public static void Open(bool fromCamp)
+    {
         IModLogger? logger = null;
         try
         {
@@ -24,7 +34,9 @@ public static class SupplyOrderScreens
                 return;
             }
 
-            manager.PushState(manager.CreateState<SupplyOrderGameState>());
+            var state = manager.CreateState<SupplyOrderGameState>();
+            state.FromCamp = fromCamp;
+            manager.PushState(state);
         }
         catch (Exception ex)
         {

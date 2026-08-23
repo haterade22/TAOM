@@ -35,6 +35,13 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         public SupplyOrder Order;
         public MobileParty Party;
         public List<Vec2> PathPoints;
+        // Cumulative arc length per path point, rebuilt with PathPoints: the per-frame
+        // point-at-fraction lookup reads these instead of re-walking every segment's sqrt.
+        public readonly List<float> CumulativeLengths = new List<float>();
+        // Route origin, resolved at repath cadence (or straight off the order's persisted
+        // dispatch origin), never per frame.
+        public Vec2 Origin;
+        public bool OriginResolved;
         public Vec2 PathEndPlayerPos;
         public Vec2 SmoothPos;
         public bool SmoothInitialized;
@@ -58,7 +65,11 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     // so the final approach does not visibly oscillate (source module value).
     private const float BearingSuppressedPastFraction = 0.88f;
 
-    private static MethodInfo _bearingSetter;
+    // Compiled open delegate over the non-public MobileParty.Bearing setter: this runs per
+    // caravan per frame, and MethodInfo.Invoke would box the Vec2 into a fresh object[] each
+    // call. Resolution still goes through AccessTools.PropertySetter (pinned by
+    // SupplyCaravanBearingBindingTests); the delegate is compiled once from that MethodInfo.
+    private static Action<MobileParty, Vec2> _bearingSetter;
     private static bool _bearingResolveAttempted;
     private static bool _bearingWarned;
 
@@ -93,14 +104,25 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             {
                 var lord = MBObjectManager.Instance.GetObject<Hero>(order.SourceHeroId);
                 var lordParty = lord?.PartyBelongedTo;
-                if (lordParty == null)
+                if (order.HasDispatchOrigin)
                 {
-                    _logger.LogWarning($"[SupplyLines] Spawn: lord '{order.SourceHeroId}' has no party, order {order.OrderId} not spawned");
+                    // Respawn (or any spawn after the origin was recorded): the caravan comes
+                    // back at the DISPATCH position, not wherever the lord marched to since,
+                    // and the lord losing his party no longer strands the order.
+                    position = new CampaignVec2(
+                        new Vec2(order.DispatchOriginX, order.DispatchOriginY), isOnLand: true);
+                }
+                else if (lordParty != null)
+                {
+                    position = lordParty.Position;
+                }
+                else
+                {
+                    _logger.LogWarning($"[SupplyLines] Spawn: lord '{order.SourceHeroId}' has no party and no dispatch origin, order {order.OrderId} not spawned");
                     return null;
                 }
-                position = lordParty.Position;
-                culture = lord.Culture ?? Hero.MainHero?.Culture;
-                home = lord.HomeSettlement ?? Hero.MainHero?.HomeSettlement;
+                culture = lord?.Culture ?? Hero.MainHero?.Culture;
+                home = lord?.HomeSettlement ?? Hero.MainHero?.HomeSettlement;
             }
             else
             {
@@ -110,10 +132,16 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                     _logger.LogWarning($"[SupplyLines] Spawn: settlement '{order.SourceSettlementId}' not found, order {order.OrderId} not spawned");
                     return null;
                 }
-                position = settlement.GatePosition;
+                position = order.HasDispatchOrigin
+                    ? new CampaignVec2(new Vec2(order.DispatchOriginX, order.DispatchOriginY), isOnLand: true)
+                    : settlement.GatePosition;
                 culture = settlement.Culture;
                 home = settlement;
             }
+
+            // First spawn records the origin; every later path build and respawn anchors here.
+            if (!order.HasDispatchOrigin)
+                order.SetDispatchOrigin(position.X, position.Y);
 
             var component = new SupplyCaravanComponent(order.OrderId, home);
             party = MobileParty.CreateParty(CaravanIdPrefix + order.OrderId, component);
@@ -144,6 +172,10 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         catch (Exception ex)
         {
             _logger.LogError($"[SupplyLines] Spawn failed for order {order.OrderId}: {ex}");
+            // Escort FIRST, exactly like ReleaseEscortAndDestroy: if the throw landed after
+            // AttachCompanionEscort, destroying the party would null the companion's party
+            // binding and strand him. ReleaseCompanion tolerates every partial state.
+            ReleaseCompanion(order, party);
             TryDestroyHalfSpawnedParty(party);
             return null;
         }
@@ -155,10 +187,78 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         return party != null && party.IsActive;
     }
 
-    public bool CaravanInRaid(SupplyOrder order)
+    public bool CaravanInMapEvent(SupplyOrder order)
     {
+        // ANY map event, deliberately not IsRaid: a caravan attacked in the field sits in a
+        // FieldBattle event, which the old IsRaid check could never see (round-A HIGH). While
+        // this is true the order Continues; a defeat destroys the party and resolves as a loss
+        // through CaravanExists.
         var party = TrackedParty(order);
-        return party?.MapEvent?.IsRaid == true;
+        return party?.MapEvent != null;
+    }
+
+    public bool TryGetLiveCargo(
+        SupplyOrder order,
+        out IReadOnlyDictionary<string, int> goods,
+        out IReadOnlyDictionary<string, int> troops)
+    {
+        goods = null;
+        troops = null;
+        var party = TrackedParty(order);
+        if (party == null || !party.IsActive)
+            return false;
+        try
+        {
+            var liveGoods = new Dictionary<string, int>();
+            var itemRoster = party.ItemRoster;
+            if (itemRoster != null)
+            {
+                for (int i = 0; i < itemRoster.Count; i++)
+                {
+                    var element = itemRoster.GetElementCopyAtIndex(i);
+                    var item = element.EquipmentElement.Item;
+                    if (item?.StringId == null || element.Amount <= 0)
+                        continue;
+                    liveGoods.TryGetValue(item.StringId, out int existing);
+                    liveGoods[item.StringId] = existing + element.Amount;
+                }
+            }
+
+            var liveTroops = new Dictionary<string, int>();
+            var memberRoster = party.MemberRoster;
+            if (memberRoster != null)
+            {
+                for (int i = 0; i < memberRoster.Count; i++)
+                {
+                    var troop = memberRoster.GetCharacterAtIndex(i);
+                    // Heroes are never cargo: the companion escort goes home through
+                    // ReleaseEscortAndDestroy, not through delivery.
+                    if (troop?.StringId == null || troop.IsHero)
+                        continue;
+                    int count = memberRoster.GetElementNumber(i);
+                    if (count <= 0)
+                        continue;
+                    liveTroops.TryGetValue(troop.StringId, out int existing);
+                    liveTroops[troop.StringId] = existing + count;
+                }
+            }
+
+            goods = liveGoods;
+            troops = liveTroops;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[SupplyLines] live cargo read failed for order {order.OrderId}: {ex.Message}");
+            goods = null;
+            troops = null;
+            return false;
+        }
+    }
+
+    public void ClearTrackers()
+    {
+        _caravans.Clear();
     }
 
     public float DistanceToPlayer(SupplyOrder order)
@@ -192,19 +292,25 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             if (party.MapEvent != null)
                 continue; // the engine owns the party while it fights
 
-            if (!TryGetOrigin(order, out Vec2 origin))
-                continue;
-
+            // Origin resolution and path geometry happen only at repath cadence; the per-frame
+            // work below reads tracker fields exclusively (no object lookups, no path re-walks).
             if (tracker.PathPoints == null
                 || tracker.PathPoints.Count == 0
                 || tracker.PathEndPlayerPos.Distance(playerPos) > RepathWhenPlayerMoved)
             {
+                if (!TryGetOrigin(order, out Vec2 origin))
+                    continue;
+                tracker.Origin = origin;
+                tracker.OriginResolved = true;
                 tracker.PathPoints = ComputeNavPathPoints(origin, playerPos);
                 tracker.PathEndPlayerPos = playerPos;
+                ComputeCumulativeLengths(tracker.PathPoints, tracker.CumulativeLengths);
             }
+            if (!tracker.OriginResolved)
+                continue;
 
             float fraction = ClampFraction(order.ElapsedFraction());
-            Vec2 target = PointAtFraction(tracker.PathPoints, fraction);
+            Vec2 target = PointAtFraction(tracker.PathPoints, tracker.CumulativeLengths, fraction);
 
             if (!tracker.SmoothInitialized)
             {
@@ -235,7 +341,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             }
 
             if (fraction < BearingSuppressedPastFraction)
-                ApplyBearing(party, tracker, previous, origin);
+                ApplyBearing(party, tracker, previous, tracker.Origin);
         }
     }
 
@@ -274,13 +380,11 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             if (order == null || order.StatusEnum != SupplyOrderStatus.InTransit)
                 continue;
 
-            if (_caravans.TryGetValue(order.OrderId, out var tracker)
-                && tracker.Party != null && tracker.Party.IsActive)
-            {
-                PinAi(tracker.Party); // AI pin does not survive a save round-trip
-                continue;
-            }
-
+            // Trackers were dropped when the book was loaded (LoadFrom → ClearTrackers), so
+            // every order re-binds against the CURRENT campaign's party objects here. There is
+            // deliberately no shortcut through a pre-existing tracker: a cached Party from the
+            // previous session still reads IsActive == true and would freeze the real caravan
+            // while a ghost travels (round-A HIGH).
             // One pass over MobileParty.All for the whole load, never per order.
             if (partiesById == null)
             {
@@ -297,15 +401,17 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 && survivor.IsActive)
             {
                 _caravans[order.OrderId] = new CaravanTracker { Order = order, Party = survivor };
-                PinAi(survivor);
+                PinAi(survivor); // AI pin does not survive a save round-trip
                 continue;
             }
 
-            if (order.IsFromLord)
+            if (order.IsFromLord && !order.HasDispatchOrigin)
             {
-                // No settlement to respawn from; the order service's next hourly tick sees the
-                // missing caravan and marks the order Lost. Logged so the loss is attributable.
-                _logger.LogWarning($"[SupplyLines] lord-source caravan for order {order.OrderId} missing after load; order will be lost");
+                // A legacy lord order with no recorded origin has nowhere to respawn from; the
+                // order service's next hourly tick sees the missing caravan and marks the order
+                // Lost. Logged so the loss is attributable. Orders with a persisted origin fall
+                // through to Spawn, which anchors at that origin.
+                _logger.LogWarning($"[SupplyLines] lord-source caravan for order {order.OrderId} missing after load with no dispatch origin; order will be lost");
                 continue;
             }
 
@@ -370,6 +476,26 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             _logger.LogWarning($"[SupplyLines] Spawn: escort hero '{order.EscortHeroId}' unavailable, caravan goes unescorted");
             return;
         }
+        // Entity-state enumeration before mutating a hero on a load path: a captured, settled
+        // or otherwise-employed escort stays where fate put him and the order continues
+        // unescorted. Without these, a respawn after load yanked an imprisoned companion out of
+        // his captor's prison roster (round-A MEDIUM, Entity State Matrix rule).
+        if (hero.IsPrisoner)
+        {
+            _logger.LogWarning($"[SupplyLines] Spawn: escort hero '{order.EscortHeroId}' is a prisoner, caravan goes unescorted");
+            return;
+        }
+        var currentParty = hero.PartyBelongedTo;
+        if (currentParty != null && currentParty != MobileParty.MainParty)
+        {
+            _logger.LogWarning($"[SupplyLines] Spawn: escort hero '{order.EscortHeroId}' rides with another party, caravan goes unescorted");
+            return;
+        }
+        if (currentParty == null && hero.CurrentSettlement != null)
+        {
+            _logger.LogWarning($"[SupplyLines] Spawn: escort hero '{order.EscortHeroId}' stays in a settlement, caravan goes unescorted");
+            return;
+        }
         AddHeroToPartyAction.Apply(hero, party, showNotification: false);
     }
 
@@ -425,6 +551,15 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
 
     private static bool TryGetOrigin(SupplyOrder order, out Vec2 origin)
     {
+        // The persisted dispatch origin always wins: it is immutable, free to read (no object
+        // lookups), and it keeps the route anchored where the caravan actually set out from
+        // even after the source lord marched away (round-A / Codex P2). The lookups below are
+        // the legacy fallback for orders recorded before the origin fields existed.
+        if (order.HasDispatchOrigin)
+        {
+            origin = new Vec2(order.DispatchOriginX, order.DispatchOriginY);
+            return true;
+        }
         origin = default;
         if (order.IsFromLord)
         {
@@ -477,7 +612,18 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             _bearingResolveAttempted = true;
             // Internal setter on MobileParty.Bearing; pinned by SupplyCaravanBearingBindingTests
             // so engine drift fails in CI instead of silently sliding caravans sideways here.
-            _bearingSetter = AccessTools.PropertySetter(typeof(MobileParty), "Bearing");
+            // Compiled to an open delegate once: this runs per caravan per frame, and a
+            // MethodInfo.Invoke would box the Vec2 into a fresh object[] every call.
+            try
+            {
+                MethodInfo setter = AccessTools.PropertySetter(typeof(MobileParty), "Bearing");
+                if (setter != null)
+                    _bearingSetter = AccessTools.MethodDelegate<Action<MobileParty, Vec2>>(setter);
+            }
+            catch (Exception)
+            {
+                _bearingSetter = null;
+            }
         }
         if (_bearingSetter == null)
         {
@@ -490,7 +636,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         }
         try
         {
-            _bearingSetter.Invoke(party, new object[] { direction });
+            _bearingSetter(party, direction);
         }
         catch (Exception ex)
         {
@@ -538,34 +684,48 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
         return points;
     }
 
-    internal static Vec2 PointAtFraction(List<Vec2> path, float fraction)
+    /// <summary>
+    /// Cumulative arc length per path point (element i = distance from the start to point i),
+    /// computed once per repath so the per-frame lookup never re-walks the path's square roots.
+    /// </summary>
+    internal static void ComputeCumulativeLengths(List<Vec2> path, List<float> cumulative)
+    {
+        cumulative.Clear();
+        if (path == null || path.Count == 0)
+            return;
+        cumulative.Add(0f);
+        float total = 0f;
+        for (int i = 0; i < path.Count - 1; i++)
+        {
+            total += path[i].Distance(path[i + 1]);
+            cumulative.Add(total);
+        }
+    }
+
+    internal static Vec2 PointAtFraction(List<Vec2> path, List<float> cumulative, float fraction)
     {
         if (path == null || path.Count == 0)
             return new Vec2(0f, 0f);
         if (path.Count == 1 || fraction <= 0f)
             return path[0];
-        if (fraction >= 1f)
+        if (fraction >= 1f || cumulative == null || cumulative.Count != path.Count)
             return path[path.Count - 1];
 
-        float totalLength = 0f;
-        for (int i = 0; i < path.Count - 1; i++)
-            totalLength += path[i].Distance(path[i + 1]);
+        float totalLength = cumulative[cumulative.Count - 1];
         if (totalLength <= 0.0001f)
             return path[path.Count - 1];
 
         float targetLength = fraction * totalLength;
-        float walked = 0f;
         for (int i = 0; i < path.Count - 1; i++)
         {
-            float segment = path[i].Distance(path[i + 1]);
-            if (walked + segment >= targetLength)
+            if (cumulative[i + 1] >= targetLength)
             {
-                float t = segment > 0.0001f ? (targetLength - walked) / segment : 0f;
+                float segment = cumulative[i + 1] - cumulative[i];
+                float t = segment > 0.0001f ? (targetLength - cumulative[i]) / segment : 0f;
                 return new Vec2(
                     path[i].x + (path[i + 1].x - path[i].x) * t,
                     path[i].y + (path[i + 1].y - path[i].y) * t);
             }
-            walked += segment;
         }
         return path[path.Count - 1];
     }

@@ -1308,6 +1308,11 @@ public class SubModule : MBSubModuleBase
         // Patch75 (#507): refuge clan-screen listing + click-to-manage encounter interception.
         _harmony.PatchCategory("Patch75_Refuge");
 
+        // Patch73 (#505): suppress the meeting conversation when the player clicks a supply
+        // caravan (its component has no Leader, so vanilla would open a conversation with an
+        // arbitrary troop; review round A / Codex round 1).
+        _harmony.PatchCategory("Patch73_SupplyLines");
+
         // Patch53_PartyIconScale — transpiler that rewrites the two hardcoded 0.3f campaign-map scale
         // literals in MobilePartyVisual.AddCharacterToPartyIcon (leader figure + its mount) into a call
         // to PartyIconScaleConfig.GetScale(), so both honour the MCM "Map Figure Scale" slider

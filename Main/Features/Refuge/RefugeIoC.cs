@@ -23,6 +23,11 @@ public static class RefugeIoC
         // (the source module assigned three mutable static delegates instead).
         container.Register<ICampOverlayContributor, RefugeCampContributor>(Reuse.Singleton);
 
+        // Eager patch initialisation deferred to IoC.InitializePatchStatics (see FieldCampIoC).
+    }
+
+    internal static void InitializePatchStatics(IContainer container)
+    {
         var refugeService = container.Resolve<IRefugeService>();
         RefugeClanScreenPatch.Initialize(refugeService);
         RefugeEncounterPatch.Initialize(

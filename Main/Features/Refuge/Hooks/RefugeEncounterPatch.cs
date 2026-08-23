@@ -51,8 +51,15 @@ public static class RefugeEncounterPatch
             if (_enlistment?.IsEnlisted == true)
                 return true;
 
-            var partyId = PlayerEncounter.EncounteredMobileParty?.StringId;
-            if (string.IsNullOrEmpty(partyId) || !IsReadyRefuge(refuges, partyId))
+            var encountered = PlayerEncounter.EncounteredMobileParty;
+            var partyId = encountered?.StringId;
+            if (string.IsNullOrEmpty(partyId) || !IsEnterableRefuge(refuges, partyId))
+                return true;
+
+            // A refuge inside a live map event is a battle participant: vanilla's encounter flow
+            // (join/observe the fight) must run, not the manage menu, whose screens would mutate
+            // the event's rosters behind the engine's back.
+            if (encountered.MapEvent != null)
                 return true;
 
             // Skip vanilla only when the refuge menu verifiably opened; on a failed open the
@@ -65,12 +72,17 @@ public static class RefugeEncounterPatch
         }
     }
 
-    private static bool IsReadyRefuge(IRefugeService refuges, string partyId)
+    /// <summary>Ready refuges open the menu; orphan-adopted rows do too, because the menu's
+    /// dismantle option is their only exit (everything else greys out for them).</summary>
+    private static bool IsEnterableRefuge(IRefugeService refuges, string partyId)
     {
         foreach (var refuge in refuges.AllRefuges)
         {
-            if (refuge.IsReady && string.Equals(refuge.PartyId, partyId, System.StringComparison.Ordinal))
+            if ((refuge.IsReady || refuge.IsOrphanAdopted)
+                && string.Equals(refuge.PartyId, partyId, System.StringComparison.Ordinal))
+            {
                 return true;
+            }
         }
         return false;
     }

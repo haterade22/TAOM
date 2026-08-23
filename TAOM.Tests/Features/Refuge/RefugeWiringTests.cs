@@ -74,6 +74,30 @@ public class RefugeWiringTests
             + "fan-out are gone with no error.");
     }
 
+    // ---- Behavior event registrations that fail SILENTLY when dropped ----
+
+    [TestMethod]
+    public void Behavior_ListensForMobilePartyDestroyed()
+    {
+        var src = ReadSource("Main", "Features", "Refuge", "Hooks", "RefugeCampaignBehavior.cs");
+
+        StringAssert.Contains(src, "CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener",
+            "Without this listener a refuge wiped in a lost defense leaves an immortal book row: "
+            + "the engine destroys the party AFTER OnMapEventEnded (MapEventSide.HandleMapEventEnd "
+            + "calls DestroyPartyAction directly), so the cap slot and visuals leak until reload.");
+    }
+
+    [TestMethod]
+    public void Behavior_ListensForMakePeace()
+    {
+        var src = ReadSource("Main", "Features", "Refuge", "Hooks", "RefugeCampaignBehavior.cs");
+
+        StringAssert.Contains(src, "CampaignEvents.MakePeace.AddNonSerializedListener",
+            "Vanilla's peace-time prisoner release enumerates caravans, war parties, villages and "
+            + "garrisons only; without this listener a hero stored in a refuge stays captive "
+            + "through every peace.");
+    }
+
     // ---- Menu insertion indexes (FieldCamp reserves INDEX 4 on both menus for Refuge) ----
 
     [TestMethod]

@@ -8,7 +8,10 @@ namespace TAOM.Tests.Features.SupplyLines;
 /// deliveries are gated on the player not being in an encounter (the source delivered recruits
 /// into sieges via its 2x-timeout path), and non-finite elapsed/distance values take the safe
 /// Continue branch instead of triggering a delivery (-Infinity distance and +Infinity elapsed
-/// would both pass a naive comparison).
+/// would both pass a naive comparison). A caravan attached to ANY map event Continues: the
+/// engine owns a fighting party (delivering would destroy it mid-battle), and a defeat resolves
+/// as a loss through caravanExists going false once the engine destroys the party. The original
+/// IsRaid input could never fire for a field battle and was retired (round-A HIGH).
 /// </summary>
 [TestClass]
 public class SupplyOrderEngineTests
@@ -27,14 +30,14 @@ public class SupplyOrderEngineTests
     private SupplyOrderVerdict Advance(
         float elapsedFraction = OnTime,
         bool caravanExists = true,
-        bool caravanInRaidEvent = false,
+        bool caravanInMapEvent = false,
         float distanceToPlayer = FarAway,
         bool playerInEncounter = false)
     {
-        return _sut.Advance(elapsedFraction, caravanExists, caravanInRaidEvent, distanceToPlayer, playerInEncounter);
+        return _sut.Advance(elapsedFraction, caravanExists, caravanInMapEvent, distanceToPlayer, playerInEncounter);
     }
 
-    // ---- Loss branches ----
+    // ---- Loss branch ----
 
     [TestMethod]
     public void Advance_CaravanMissing_Loses()
@@ -43,31 +46,39 @@ public class SupplyOrderEngineTests
     }
 
     [TestMethod]
-    public void Advance_CaravanRaided_Loses()
+    public void Advance_CaravanMissing_LosesEvenWithStaleMapEventFlag()
     {
-        Assert.AreEqual(SupplyOrderVerdict.Lose, Advance(caravanInRaidEvent: true));
+        // Missing outranks fighting: a destroyed party cannot be waited on.
+        Assert.AreEqual(SupplyOrderVerdict.Lose, Advance(caravanExists: false, caravanInMapEvent: true));
+    }
+
+    // ---- Map event: the engine owns a fighting caravan ----
+
+    [TestMethod]
+    public void Advance_CaravanInMapEvent_Continues()
+    {
+        // Not a loss: if the caravan loses the battle the engine destroys the party and the
+        // caravanExists gate resolves it next tick. If it survives, the order carries on.
+        Assert.AreEqual(SupplyOrderVerdict.Continue, Advance(caravanInMapEvent: true));
     }
 
     [TestMethod]
-    public void Advance_CaravanMissingAndRaidFlagSet_Loses()
+    public void Advance_InMapEventWhileInDeliveryRange_Continues()
     {
-        // Both loss inputs at once still resolve to Lose; there is no state where one masks
-        // the other into a delivery.
-        Assert.AreEqual(SupplyOrderVerdict.Lose, Advance(caravanExists: false, caravanInRaidEvent: true));
+        // Delivering would destroy a party still attached to a MapEvent side (engine contract
+        // violation) and hand the player cargo the attackers are mid-capture of.
+        Assert.AreEqual(
+            SupplyOrderVerdict.Continue,
+            Advance(caravanInMapEvent: true, distanceToPlayer: 0.5f));
     }
 
     [TestMethod]
-    public void Advance_RaidedWhileCaravanInDeliveryRange_LossOutranksDelivery()
+    public void Advance_InMapEventPastForceFraction_Continues()
     {
-        // A raided caravan sitting next to the player is still gone; proximity must not save it.
-        Assert.AreEqual(SupplyOrderVerdict.Lose, Advance(caravanInRaidEvent: true, distanceToPlayer: 0.5f));
-    }
-
-    [TestMethod]
-    public void Advance_RaidedWhilePlayerInEncounter_StillLoses()
-    {
-        // The encounter gate only holds DELIVERIES back; a loss is a fact about the caravan.
-        Assert.AreEqual(SupplyOrderVerdict.Lose, Advance(caravanInRaidEvent: true, playerInEncounter: true));
+        // The 2x-timeout failsafe must also wait out the battle.
+        Assert.AreEqual(
+            SupplyOrderVerdict.Continue,
+            Advance(caravanInMapEvent: true, elapsedFraction: 3f));
     }
 
     // ---- Delivery by proximity ----

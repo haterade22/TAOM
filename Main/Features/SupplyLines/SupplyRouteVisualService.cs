@@ -69,6 +69,11 @@ public sealed class SupplyRouteVisualService : ISupplyRouteVisualService
     private readonly IModLogger _logger;
 
     private readonly Dictionary<string, RouteEntry> _entries = new Dictionary<string, RouteEntry>();
+
+    // Reused across frames (Clear() allocates nothing); a fresh HashSet per frame was steady GC
+    // pressure for the whole transit window.
+    private readonly HashSet<string> _seen = new HashSet<string>();
+
     private bool _clearedWhileHidden;
     private bool _assetWarned;
 
@@ -108,7 +113,8 @@ public sealed class SupplyRouteVisualService : ISupplyRouteVisualService
             return;
         }
 
-        var seen = new HashSet<string>();
+        _seen.Clear();
+        var seen = _seen;
         double nowHours = CampaignTime.Now.ToHours;
 
         foreach (var order in active)

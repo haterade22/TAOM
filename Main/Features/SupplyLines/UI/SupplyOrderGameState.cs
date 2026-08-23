@@ -12,4 +12,8 @@ namespace TAOM.Features.SupplyLines.UI;
 public class SupplyOrderGameState : GameState
 {
     public override bool IsMenuState => true;
+
+    /// <summary>Set by <see cref="SupplyOrderScreens.Open(bool)"/> before the push: orders
+    /// confirmed on this screen are marked camp-placed (cancelled when that camp breaks).</summary>
+    public bool FromCamp { get; set; }
 }

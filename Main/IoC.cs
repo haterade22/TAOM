@@ -174,6 +174,13 @@ public static class IoC
 
         _container = container;
 
+        // Eager patch-static initialisation runs ONLY after the last registration above: an eager
+        // Resolve inside a feature IoC materializes IEnumerable<T> contributor injections, so any
+        // contributor registered later is silently invisible (round-A CRITICAL on the Refuge
+        // camp-block). One block, at the end, for every patch that captures a service statically.
+        FieldCampIoC.InitializePatchStatics(container);
+        Features.Refuge.RefugeIoC.InitializePatchStatics(container);
+
         // Post-registration initialization
         CareerSystemIoC.InitializeCalculators(container.Resolve<Features.CareerSystem.Mutations.IMutationCalculatorRegistry>());
     }

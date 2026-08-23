@@ -1,4 +1,4 @@
-# Review log: feat/yotthani-camps (SupplyLines, FieldCamp, Refuge)
+﻿# Review log: feat/yotthani-camps (SupplyLines, FieldCamp, Refuge)
 
 Working record for the three-feature port (#505/#506/#507), kept current so any session can resume
 without re-deriving state. Companion docs: the three feature docs, the provenance register entry,
@@ -67,12 +67,65 @@ defect beyond the MapEvent item above.
   orchestrator integrates/builds/tests. Compile errors at integration across all three phases:
   five (two ctor-arity, one missing using, one ambiguous TestContext, one my own wiring guess).
 
+## Round A results (landed)
+
+41 raised, **37 confirmed + 5 critic** after 3-lens adversarial verification (129 agents; full
+JSON: `docs/reviews/raw/roundA-result.json`, gitignored). Highlights beyond the Codex overlap:
+3 CRITICAL (dismantle strands heroes via raw roster copy+clear nulling `PartyBelongedTo`; the
+cross-campaign singleton-book leak, independently re-found; camp books saved INTO the wrong
+campaign), delivery-vs-MapEvent gate (`IsRaid` never fires for field battles, so the Lose path was
+dead code), break-camp cancelling town orders, the contributor-collection materialization bug, 17
+localization rows truncated at their first placeholder by the orchestrator's own registration
+script, the ambush battle-start dropped on a WRONG orchestrator brief (source truth re-verified:
+inquiry + StartBattleAction), and terrain tables silently rebalanced under a false "drifted enum"
+justification. Two findings therefore indict orchestrator briefs, not builder work: exactly the
+bias class the unbiased-review design existed to catch.
+
+## Fix batch 1 (LANDED 2026-08-22 evening)
+
+Orchestrator-owned fixes DONE: localization rows regenerated with placeholders intact + languages
+rebuilt; eager patch-inits moved to a single post-registration block (`IoC.InitializePatchStatics`);
+new seams pinned (`ResetForNewSession` x3, `CancelCampOrders` + `SupplyOrder.PlacedFromCamp`,
+`Patch73_SupplyLines` category). Three per-feature fixers running (workflow `wf_ac6a0e94-9b9`)
+against the raw finding files, incl. the shared reset pattern, the dismantle hero-move rework, the
+delivery redesign, the source-faithful ambush battle restore and terrain re-derivation.
+
+### Fixer results (workflow wf_ac6a0e94-9b9, 3 agents, 0 errors, ~33 min)
+
+All three fixers returned full result sets (raw: the workflow output file; summaries folded into
+the CHANGELOG fix entry). Cross-feature seams the fixers correctly left at the boundary, closed
+by the orchestrator at integration:
+
+- Camp menu now calls `SupplyOrderScreens.Open(fromCamp: true)` (the flag existed on both sides
+  but no caller passed it; camp-scoped cancellation was inert without this).
+- `IRefugeVisualService.TickWind()` added and driven from `RefugeService.FrameTick` BEFORE the
+  game-time throttle: a refuge standing alone had no steady-state wind driver (the camp-side
+  driver only runs while a player camp stands). `CampLayoutBuilder.TickWind` re-applies a
+  constant forced wind, so double-driving is idempotent.
+- 9 new localization keys regenerated into the strings XML + 12 language files (English
+  fallback), key sets verified equal in both directions.
+- `SupplyCaravanEncounterPatch` classified ReviewedSafe in `CoopVetoClassificationTests` (the
+  gate caught it: one suite failure, honest local-UI-redirect rationale mirrors the refuge
+  sibling's entry).
+
+**Suite: 7421 passed / 2 skipped / 0 failed** (was 7323 pre-batch; +98 tests). Both new
+preventive gates ran green after demonstrating they can fail. RCA preventive-artifacts checklist:
+all six boxes ticked (`rca-yotthani-camps-2026-08-23.md`).
+
+Deliberately not fixed (recorded by the fixers with reasons): camp visuals at 0% raise (source
+parity, pinned by the brief); the ADR-007 boundary-sliver precedent (P3, cross-feature
+architecture change, deferred); orphan refuges still count toward the cap until dismantled
+(chosen exit design); auto-resolve militia for battles not started by the raid path (unreachable
+without patching MapEvent construction; documented limitation); warden succession picker
+(documented limitation); Refuge BuildingMesh/BuildingScale stay provider-pinned source defaults
+with no MCM rows (TaomSettings single-owner; wiring later needs no consumer change).
+
 ## Remaining queue
 
-1. Round A lands -> verify its surviving findings -> merge with the Codex batch -> fix -> suite ->
-   commit -> push.
+1. DONE: round A verified -> merged with the Codex batch -> fixed -> suite 7421 green ->
+   committed -> pushed.
 2. Deep review round B (fresh agents over the fixed tree).
 3. Codex round 2.
-4. RCA + lessons entries; CHANGELOG for the fix batch; final status report.
+4. DONE: RCA + lessons + rules + CHANGELOG. Still owed: final status report after round B/Codex 2.
 5. USER: set `ANTHROPIC_API_KEY`, rerun the 12-language translation; in-game smoke checklists on
    #505/#506/#507; decide the trunk merge.

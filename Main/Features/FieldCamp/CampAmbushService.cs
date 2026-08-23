@@ -9,7 +9,8 @@ namespace TAOM.Features.FieldCamp;
 /// </summary>
 public class CampAmbushService : ICampAmbushService
 {
-    /// <summary>How much of the chance rides on the enemy walking deep into the trap.</summary>
+    /// <summary>How much of the chance rides on concealment: the shorter the player party's own
+    /// sight radius relative to the trap's reach, the better hidden the camp counts as.</summary>
     private const float ConcealmentWeight = 0.3f;
 
     /// <summary>One Scouting point buys 1/300 extra chance (source module constant).</summary>
@@ -17,10 +18,10 @@ public class CampAmbushService : ICampAmbushService
 
     public float AmbushedMoraleFactor => 0.5f;
 
-    public float TriggerChance(float candidateSpottingDistance, float maxRange, float baseChance, float scoutingSkill)
+    public float TriggerChance(float playerSpottingRange, float maxRange, float baseChance, float scoutingSkill)
     {
         // Any poisoned input zeroes the whole chance rather than rolling dice on garbage.
-        if (!FiniteFloatValidator.IsFinite(candidateSpottingDistance)
+        if (!FiniteFloatValidator.IsFinite(playerSpottingRange)
             || !FiniteFloatValidator.IsFinite(maxRange)
             || !FiniteFloatValidator.IsFinite(baseChance)
             || !FiniteFloatValidator.IsFinite(scoutingSkill))
@@ -35,7 +36,7 @@ public class CampAmbushService : ICampAmbushService
         if (!(maxRange > 0f))
             return 0f;
 
-        float concealment = 1f - Math.Min(1f, Math.Max(0f, candidateSpottingDistance) / maxRange);
+        float concealment = 1f - Math.Min(1f, Math.Max(0f, playerSpottingRange) / maxRange);
         float chance = baseChance + concealment * ConcealmentWeight + scoutingSkill / ScoutingDivisor;
         if (!FiniteFloatValidator.IsFinite(chance))
             return 0f;

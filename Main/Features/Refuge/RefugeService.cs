@@ -40,7 +40,8 @@ public sealed class RaidThreat
 /// <para>Deliberate changes from the source: the hold-nearby rule announces itself once per build
 /// instead of silently pinning the party; militia bookkeeping is persisted in RefugeData (the
 /// source's transient dictionary baked militia into the garrison across a mid-battle save) and
-/// stand-down removes min(recorded, present) instead of every troop of that type; OnGameLoaded
+/// stand-down removes min(recorded, present - pre-rally baseline) so a player-garrisoned stack of
+/// the militia's own troop type survives its casualties; OnGameLoaded
 /// re-pins the party AI (the source only pinned at spawn, so refuges wandered after reload) and
 /// logs both reconcile directions; the warden is never killed (see IWardenService).</para>
 ///
@@ -215,6 +216,12 @@ public class RefugeService : IRefugeService, IRefugeBook
         return partyId != null ? _refuges[partyId] : null;
     }
 
+    public RefugeData NearestDismantlable()
+    {
+        string partyId = NearestRefugeId(_settings.ManageRange, readyOnly: true, includeOrphans: true);
+        return partyId != null ? _refuges[partyId] : null;
+    }
+
     public RefugeBlockReason CanUpgrade(RefugeData refuge)
     {
         if (!_settings.Enabled)
@@ -256,10 +263,16 @@ public class RefugeService : IRefugeService, IRefugeBook
     {
         if (refuge?.PartyId == null || !_refuges.ContainsKey(refuge.PartyId))
             return;
+        // A refuge inside a map event is a live battle participant; destroying it now would rip
+        // rosters out from under the event. The menu gate (NearestDismantlable) already excludes
+        // this; the belt here covers a stale menu handle.
+        if (IsPartyInMapEvent(refuge.PartyId))
+            return;
 
-        // Warden first, roster merge second: releasing a companion moves him with a real
-        // AddHeroToPartyAction; merging first would copy his roster element into the main party
-        // and leave the hero's own party binding pointing at a party about to be destroyed.
+        // Warden first, roster merge second: releasing the warden (companion or promoted, same
+        // path since the promoted-warden strand fix) moves him with a real AddHeroToPartyAction.
+        // The merge then moves any REMAINING heroes (deposited companions, hero prisoners) with
+        // engine actions before bulk-copying regulars, so no hero row ever rides a raw copy.
         _wardens.ReleaseWarden(refuge.WardenHeroId, refuge.WardenPromoted);
         MergeRefugeIntoMainParty(refuge.PartyId);
         _refuges.Remove(refuge.PartyId);
@@ -276,6 +289,11 @@ public class RefugeService : IRefugeService, IRefugeBook
     {
         if (_refuges.Count == 0)
             return;
+
+        // Wind runs on REAL time, before the game-time throttle: cloths drop their forced wind
+        // even while the campaign is paused, and a refuge standing alone (no player camp) has
+        // no other driver.
+        _visuals.TickWind();
 
         // Game-time throttle: while paused nothing here can change anyway, and at speed the
         // ~36-game-second cadence still re-holds the party long before it drifts anywhere.
@@ -356,6 +374,12 @@ public class RefugeService : IRefugeService, IRefugeBook
             var threat = FindNearestHostile(pair.Key, raidRange);
             if (threat == null)
                 continue;
+            // Rally BEFORE the battle starts: MapEventParty's constructor captures
+            // NumberOfHealthyMembers and auto-resolve allocates from that frozen count, so a
+            // rally from the MapEventStarted callback arrives too late to add simulated bodies
+            // (1.4.8 MapEvent.cs:849 dispatches OnMapEventStarted after the sides are built).
+            // MapEventStarted still rallies for battles this path did not start.
+            RallyMilitia(pair.Key, data);
             StartRaid(threat, pair.Key);
             var message = new TextObject("{=taom_rf_attacked}Your refuge is under attack by {ENEMY}!");
             message.SetTextVariable("ENEMY",
@@ -370,6 +394,15 @@ public class RefugeService : IRefugeService, IRefugeBook
     {
         if (partyId == null || !_refuges.TryGetValue(partyId, out var data))
             return;
+        RallyMilitia(partyId, data);
+    }
+
+    /// <summary>Adds the militia stack once per battle. The raid path calls this BEFORE
+    /// StartBattleAction so auto-resolve sees the militia; MapEventStarted covers battles other
+    /// parties start (there the militia reaches player-fought missions, whose spawns read the
+    /// live roster, but not a frozen auto-resolve count - an engine ordering limit).</summary>
+    private void RallyMilitia(string partyId, RefugeData data)
+    {
         if (!data.IsReady)
             return;
         // Already boosted: MilitiaAdded is PERSISTED, so a save made mid-battle cannot re-add on
@@ -384,6 +417,9 @@ public class RefugeService : IRefugeService, IRefugeBook
         if (count <= 0)
             return;
 
+        // The baseline BEFORE the add is what stand-down protects: everything up to this count
+        // belongs to the garrison, everything above it (that survives) is militia.
+        data.MilitiaPreRallyCount = GetTroopCountInRefuge(partyId, troopId);
         AddTroopsToRefuge(partyId, troopId, count);
         data.MilitiaAdded = count;
         data.MilitiaTroopId = troopId;
@@ -395,20 +431,71 @@ public class RefugeService : IRefugeService, IRefugeBook
             return;
         if (data.MilitiaAdded > 0 && !string.IsNullOrEmpty(data.MilitiaTroopId))
         {
-            // Remove min(recorded, present) of the recorded troop ONLY: battle losses shrink the
-            // stack below the record, and the garrison may legitimately hold the same troop type.
+            // The roster aggregates identical characters into ONE stack, so the militia and any
+            // player-garrisoned troops of the same type are indistinguishable by row. Casualties
+            // are attributed to militia first: only the surplus above the pre-rally baseline is
+            // militia survivors, and only that (capped at the recorded add) is removed. A plain
+            // min(recorded, present) deleted the pre-existing garrison stack whenever losses
+            // exceeded the militia count.
             int present = GetTroopCountInRefuge(partyId, data.MilitiaTroopId);
-            int remove = Math.Min(data.MilitiaAdded, present);
+            int militiaSurvivors = Math.Max(0, present - data.MilitiaPreRallyCount);
+            int remove = Math.Min(data.MilitiaAdded, militiaSurvivors);
             if (remove > 0)
                 RemoveTroopsFromRefuge(partyId, data.MilitiaTroopId, remove);
         }
         data.MilitiaAdded = 0;
         data.MilitiaTroopId = null;
+        data.MilitiaPreRallyCount = 0;
+    }
+
+    public void OnPartyDestroyed(string partyId)
+    {
+        if (partyId == null || !_refuges.TryGetValue(partyId, out var data))
+            return;
+        // The engine already destroyed the party (a lost defense wipes the garrison and
+        // MapEventSide.HandleMapEventEnd applies DestroyPartyAction directly; disband paths land
+        // here too). Drop the row and visuals now instead of waiting for the next load's
+        // reconcile: a phantom row keeps counting against the refuge cap all session.
+        _refuges.Remove(partyId);
+        _visuals.Remove(partyId);
+        _visualShown.Remove(partyId);
+        _holdNoteShown.Remove(partyId);
+        if (!string.IsNullOrEmpty(data.WardenHeroId))
+        {
+            // Never orphan the warden silently: he is (or became, via promotion) a clan
+            // companion, so the clan roster still carries him; his battle fate (killed, captured,
+            // escaped) is the engine's own hero accounting from the lost fight.
+            _logger.LogInfo(
+                $"[Refuge] refuge '{partyId}' destroyed; warden '{data.WardenHeroId}' remains a clan companion (promoted: {data.WardenPromoted}).");
+        }
+        ShowMessage(
+            new TextObject("{=taom_rf_fallen}Your refuge has fallen. What remains of its garrison is lost; your warden's fate rides with the survivors."),
+            error: true);
+    }
+
+    public void OnPeaceMade()
+    {
+        foreach (var partyId in _refuges.Keys)
+            ReleasePeacePrisoners(partyId);
     }
 
     public void LoadFrom(Dictionary<string, RefugeData> refuges, int counter)
     {
         _refuges = refuges ?? new Dictionary<string, RefugeData>();
+        // A partially recovered or externally modified save can carry null rows; every tick path
+        // dereferences the value, so scrub here rather than crash on the first FrameTick.
+        List<string> nullKeys = null;
+        foreach (var pair in _refuges)
+        {
+            if (pair.Value == null)
+                (nullKeys ?? (nullKeys = new List<string>())).Add(pair.Key);
+        }
+        if (nullKeys != null)
+        {
+            foreach (var key in nullKeys)
+                _refuges.Remove(key);
+            _logger.LogWarning($"[Refuge] dropped {nullKeys.Count} null book row(s) from the loaded save.");
+        }
         _counter = counter < 0 ? 0 : counter;
         _visualShown.Clear();
         _holdNoteShown.Clear();
@@ -421,9 +508,26 @@ public class RefugeService : IRefugeService, IRefugeBook
         counter = _counter;
     }
 
+    public void ResetForNewSession()
+    {
+        // A fresh campaign (or a save written before this feature existed) runs no SyncData load,
+        // so a process-lifetime singleton would otherwise carry the previous campaign's book into
+        // this one and then SAVE it. Clear the book AND every transient cache.
+        _refuges.Clear();
+        _counter = 0;
+        _visualShown.Clear();
+        _holdNoteShown.Clear();
+        _nextFrameWorkHours = double.MinValue;
+        _visuals.ClearAll();
+    }
+
     public void OnGameLoaded()
     {
         // Entities never survive a load; clear the transient sets so the frame tick rebuilds.
+        // The VISUAL SERVICE's own records must go too: its per-refuge Shown=true short-circuit
+        // answers "already standing" with entity handles from the dead previous map scene, so
+        // after quit-to-menu + load every refuge layout would stay invisible all session.
+        _visuals.ClearAll();
         _visualShown.Clear();
         _holdNoteShown.Clear();
         _nextFrameWorkHours = double.MinValue;
@@ -503,8 +607,11 @@ public class RefugeService : IRefugeService, IRefugeBook
             _visualShown.Add(partyId);
     }
 
-    /// <summary>Nearest refuge within maxDistance of the main party, or null.</summary>
-    private string NearestRefugeId(float maxDistance, bool readyOnly)
+    /// <summary>Nearest refuge within maxDistance of the main party, or null. With readyOnly the
+    /// candidate must be manageable, which also excludes a refuge fighting a map event: its
+    /// rosters belong to the live battle, not to the manage/dismantle screens. includeOrphans
+    /// widens readyOnly to orphan-adopted rows so they stay dismantlable.</summary>
+    private string NearestRefugeId(float maxDistance, bool readyOnly, bool includeOrphans = false)
     {
         if (!FiniteFloatValidator.IsFinite(maxDistance) || !(maxDistance > 0f))
             return null;
@@ -512,8 +619,12 @@ public class RefugeService : IRefugeService, IRefugeBook
         float bestDistance = maxDistance;
         foreach (var pair in _refuges)
         {
-            if (readyOnly && !pair.Value.IsReady)
-                continue;
+            if (readyOnly)
+            {
+                bool eligible = pair.Value.IsReady || (includeOrphans && pair.Value.IsOrphanAdopted);
+                if (!eligible || IsPartyInMapEvent(pair.Key))
+                    continue;
+            }
             float distance = DistanceFromMainPartyTo(pair.Key);
             if (FiniteFloatValidator.IsFinite(distance) && distance <= bestDistance)
             {
@@ -658,8 +769,84 @@ public class RefugeService : IRefugeService, IRefugeBook
 
     /// <summary>Moves troops, prisoners and stash into the main party, ignoring party-size
     /// limits (the player chose to dismantle; dropping soldiers on the ground is worse than an
-    /// oversize party), then clears the refuge rosters.</summary>
+    /// oversize party), then clears the refuge rosters.
+    ///
+    /// <para>HEROES NEVER RIDE THE BULK COPY. TroopRoster.Add fires OnHeroAdded, but the source
+    /// roster's Clear() then fires OnHeroRemoved, and Hero.OnRemovedFromParty nulls
+    /// PartyBelongedTo UNCONDITIONALLY (1.4.8 Hero.cs:2165), leaving the hero's persisted party
+    /// binding null while his row sits in the main party - a save-corrupting desync. The same
+    /// mechanism corrupts PartyBelongedToAsPrisoner for hero prisoners. So every hero member
+    /// moves via AddHeroToPartyAction and every hero prisoner via TransferPrisonerAction FIRST;
+    /// only the remaining regulars are bulk-copied.</para></summary>
     protected virtual void MergeRefugeIntoMainParty(string partyId)
+    {
+        foreach (var heroId in HeroesInRefugeRoster(partyId))
+            MoveRefugeHeroToMainParty(heroId);
+        foreach (var heroId in HeroPrisonersInRefuge(partyId))
+            TransferHeroPrisonerToMainParty(partyId, heroId);
+        BulkMergeRegularsIntoMainParty(partyId);
+    }
+
+    /// <summary>Hero StringIds among the refuge's members (the warden, deposited companions).</summary>
+    protected virtual IReadOnlyList<string> HeroesInRefugeRoster(string partyId)
+    {
+        var result = new List<string>();
+        var roster = FindParty(partyId)?.MemberRoster;
+        if (roster == null)
+            return result;
+        for (int i = 0; i < roster.Count; i++)
+        {
+            var hero = roster.GetCharacterAtIndex(i)?.HeroObject;
+            if (hero != null)
+                result.Add(hero.StringId);
+        }
+        return result;
+    }
+
+    /// <summary>Moves one hero member into the main party with the real engine action, which
+    /// removes him from the refuge roster and rebinds PartyBelongedTo correctly.</summary>
+    protected virtual void MoveRefugeHeroToMainParty(string heroId)
+    {
+        var hero = FindHero(heroId);
+        var main = MobileParty.MainParty;
+        if (hero == null || main == null)
+            return;
+        AddHeroToPartyAction.Apply(hero, main, showNotification: false);
+    }
+
+    /// <summary>Hero StringIds among the refuge's prisoners.</summary>
+    protected virtual IReadOnlyList<string> HeroPrisonersInRefuge(string partyId)
+    {
+        var result = new List<string>();
+        var roster = FindParty(partyId)?.PrisonRoster;
+        if (roster == null)
+            return result;
+        for (int i = 0; i < roster.Count; i++)
+        {
+            var hero = roster.GetCharacterAtIndex(i)?.HeroObject;
+            if (hero != null)
+                result.Add(hero.StringId);
+        }
+        return result;
+    }
+
+    /// <summary>Transfers one hero prisoner to the main party with the engine action, which keeps
+    /// PartyBelongedToAsPrisoner in sync.</summary>
+    protected virtual void TransferHeroPrisonerToMainParty(string partyId, string heroId)
+    {
+        var refuge = FindParty(partyId);
+        var hero = FindHero(heroId);
+        var main = MobileParty.MainParty;
+        if (refuge == null || hero == null || main == null)
+            return;
+        TransferPrisonerAction.Apply(hero.CharacterObject, refuge.Party, main.Party);
+    }
+
+    /// <summary>Bulk-copies the remaining NON-HERO members, prisoners and items, then clears the
+    /// refuge rosters. Hero rows are skipped defensively even though the action-based moves above
+    /// should have emptied them (a hero the actions could not move must not be corrupted by a raw
+    /// copy+clear).</summary>
+    protected virtual void BulkMergeRegularsIntoMainParty(string partyId)
     {
         var refuge = FindParty(partyId);
         if (refuge == null)
@@ -667,14 +854,64 @@ public class RefugeService : IRefugeService, IRefugeBook
         var main = MobileParty.MainParty;
         if (main != null)
         {
-            main.MemberRoster.Add(refuge.MemberRoster);
-            main.PrisonRoster.Add(refuge.PrisonRoster);
+            CopyRegularRows(refuge.MemberRoster, main.MemberRoster);
+            CopyRegularRows(refuge.PrisonRoster, main.PrisonRoster);
             for (int i = refuge.ItemRoster.Count - 1; i >= 0; i--)
                 main.ItemRoster.Add(refuge.ItemRoster.GetElementCopyAtIndex(i));
         }
-        refuge.MemberRoster.Clear();
-        refuge.PrisonRoster.Clear();
+        RemoveRegularRows(refuge.MemberRoster);
+        RemoveRegularRows(refuge.PrisonRoster);
         refuge.ItemRoster.Clear();
+    }
+
+    private static void CopyRegularRows(
+        TaleWorlds.CampaignSystem.Roster.TroopRoster from,
+        TaleWorlds.CampaignSystem.Roster.TroopRoster to)
+    {
+        for (int i = 0; i < from.Count; i++)
+        {
+            var element = from.GetElementCopyAtIndex(i);
+            if (element.Character == null || element.Character.IsHero || element.Number <= 0)
+                continue;
+            to.AddToCounts(element.Character, element.Number, insertAtFront: false,
+                element.WoundedNumber, element.Xp);
+        }
+    }
+
+    private static void RemoveRegularRows(TaleWorlds.CampaignSystem.Roster.TroopRoster roster)
+    {
+        for (int i = roster.Count - 1; i >= 0; i--)
+        {
+            var element = roster.GetElementCopyAtIndex(i);
+            if (element.Character == null || element.Character.IsHero)
+                continue;
+            roster.AddToCountsAtIndex(i, -element.Number, -element.WoundedNumber, -element.Xp);
+        }
+    }
+
+    /// <summary>Releases the refuge's hero prisoners who are no longer at war with the refuge's
+    /// faction, mirroring vanilla PrisonerReleaseCampaignBehavior.ReleasePartyPrisoners (which
+    /// only enumerates caravans, war parties, villages and garrisons - never a custom
+    /// component). Called after a peace involving the player's faction.</summary>
+    protected virtual void ReleasePeacePrisoners(string partyId)
+    {
+        var refuge = FindParty(partyId);
+        var refugeFaction = refuge?.MapFaction;
+        if (refuge == null || refugeFaction == null)
+            return;
+        var roster = refuge.PrisonRoster;
+        for (int i = roster.Count - 1; i >= 0; i--)
+        {
+            var hero = roster.GetCharacterAtIndex(i)?.HeroObject;
+            if (hero == null || hero == Hero.MainHero)
+                continue;
+            if (hero.MapFaction != null && hero.MapFaction.IsAtWarWith(refugeFaction))
+                continue;
+            if (hero.PartyBelongedToAsPrisoner == refuge.Party)
+                EndCaptivityAction.ApplyByPeace(hero);
+            else
+                roster.RemoveTroop(hero.CharacterObject);
+        }
     }
 
     protected virtual void DestroyRefugeParty(string partyId)

@@ -37,8 +37,15 @@ public interface IWardenService
     /// candidate is a troop. Null on failure (companion limit reached, troop gone).</summary>
     string ResolveWarden(WardenCandidate candidate, out bool promoted, out string promotedFromTroopId);
 
-    /// <summary>Returns a warden home on dismantle: a companion rejoins the main party when he is
-    /// with the refuge; a promoted warden stays a companion (never killed). No-op when the hero is
-    /// elsewhere (captured), and the caller proceeds.</summary>
+    /// <summary>Returns a warden home on dismantle: companion or promoted, he rejoins the main
+    /// party via AddHeroToPartyAction when he is with the refuge (a promoted warden stays a clan
+    /// companion; never killed, no troop refund). No-op when the hero is elsewhere (captured),
+    /// and the caller proceeds.</summary>
     void ReleaseWarden(string wardenHeroId, bool promoted);
+
+    /// <summary>Unwinds a promotion whose founding then failed before the hero ever reached the
+    /// refuge (engine spawn refusal): removes the never-attached minted companion and refunds the
+    /// soldier. ONLY legal in that never-attached window; once the hero led a refuge the no-kill
+    /// policy above governs. No-op for a companion candidate (promoted == false at resolve).</summary>
+    void UnwindPromotion(string wardenHeroId, string promotedFromTroopId);
 }

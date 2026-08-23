@@ -134,8 +134,11 @@ public class RefugeServiceTests
         protected override int GetTroopCountInRefuge(string partyId, string troopId) =>
             TroopPresent.TryGetValue(partyId + ":" + troopId, out var count) ? count : 0;
 
-        protected override void AddTroopsToRefuge(string partyId, string troopId, int count) =>
+        protected override void AddTroopsToRefuge(string partyId, string troopId, int count)
+        {
             TroopAdds.Add(partyId + ":" + troopId + ":" + count);
+            Events.Add("rally:" + partyId);
+        }
 
         protected override void RemoveTroopsFromRefuge(string partyId, string troopId, int count) =>
             TroopRemovals.Add(partyId + ":" + troopId + ":" + count);
@@ -148,8 +151,16 @@ public class RefugeServiceTests
             return Threat;
         }
 
-        protected override void StartRaid(RaidThreat threat, string refugePartyId) =>
+        protected override void StartRaid(RaidThreat threat, string refugePartyId)
+        {
             RaidsStarted.Add(refugePartyId);
+            Events.Add("raid:" + refugePartyId);
+        }
+
+        public readonly List<string> PeaceReleasedParties = new List<string>();
+
+        protected override void ReleasePeacePrisoners(string partyId) =>
+            PeaceReleasedParties.Add(partyId);
 
         protected override void ShowMessage(TextObject text, bool error) => Messages.Add(error);
     }
@@ -810,6 +821,7 @@ public class RefugeServiceTests
         var data = Seed("r1");
         _sut.Days = 3;
         _sut.Garrison = 25;
+        _sut.TroopPresent["r1:militia_troop"] = 4; // the player garrisoned 4 of the same type
 
         _sut.OnMapEventStarted("r1");
 
@@ -817,6 +829,8 @@ public class RefugeServiceTests
         CollectionAssert.AreEqual(new[] { "r1:militia_troop:11" }, _sut.TroopAdds);
         Assert.AreEqual(11, data.MilitiaAdded);
         Assert.AreEqual("militia_troop", data.MilitiaTroopId);
+        Assert.AreEqual(4, data.MilitiaPreRallyCount,
+            "the pre-rally baseline is what stand-down protects from removal");
     }
 
     [TestMethod]
@@ -905,11 +919,12 @@ public class RefugeServiceTests
     }
 
     [TestMethod]
-    public void OnMapEventEnded_RemovesMinOfRecordedAndPresent_LossesCase()
+    public void OnMapEventEnded_LossesCase_RemovesOnlyTheMilitiaSurvivors()
     {
         var data = Seed("r1");
         data.MilitiaAdded = 11;
         data.MilitiaTroopId = "militia_troop";
+        data.MilitiaPreRallyCount = 0; // no garrison of this type before the rally
         _sut.TroopPresent["r1:militia_troop"] = 7; // battle losses ate 4
 
         _sut.OnMapEventEnded("r1");
@@ -917,20 +932,54 @@ public class RefugeServiceTests
         CollectionAssert.AreEqual(new[] { "r1:militia_troop:7" }, _sut.TroopRemovals);
         Assert.AreEqual(0, data.MilitiaAdded);
         Assert.IsNull(data.MilitiaTroopId);
+        Assert.AreEqual(0, data.MilitiaPreRallyCount, "bookkeeping fully reset for the next battle");
     }
 
     [TestMethod]
-    public void OnMapEventEnded_RemovesMinOfRecordedAndPresent_GarrisonedSameTypeCase()
+    public void OnMapEventEnded_GarrisonedSameTypeWithCasualties_NeverRemovesTheGarrisonStack()
     {
         var data = Seed("r1");
         data.MilitiaAdded = 11;
         data.MilitiaTroopId = "militia_troop";
-        _sut.TroopPresent["r1:militia_troop"] = 20; // 9 of them are the player's own garrison
+        data.MilitiaPreRallyCount = 9; // the player's own 9 stood in the stack before the rally
+        _sut.TroopPresent["r1:militia_troop"] = 13; // 20 fought, 7 died
+
+        _sut.OnMapEventEnded("r1");
+
+        // Casualties attribute to militia first: survivors above the baseline = 13 - 9 = 4.
+        // The old min(recorded, present) removed 11 here, deleting 7 of the player's 9.
+        CollectionAssert.AreEqual(new[] { "r1:militia_troop:4" }, _sut.TroopRemovals,
+            "only militia survivors above the pre-rally baseline stand down");
+    }
+
+    [TestMethod]
+    public void OnMapEventEnded_GarrisonedSameTypeNoCasualties_RemovesExactlyTheMilitia()
+    {
+        var data = Seed("r1");
+        data.MilitiaAdded = 11;
+        data.MilitiaTroopId = "militia_troop";
+        data.MilitiaPreRallyCount = 9;
+        _sut.TroopPresent["r1:militia_troop"] = 20; // nobody died
 
         _sut.OnMapEventEnded("r1");
 
         CollectionAssert.AreEqual(new[] { "r1:militia_troop:11" }, _sut.TroopRemovals,
-            "the source removed the whole stack, deleting player-garrisoned troops of that type");
+            "a bloodless battle stands down the full militia and leaves the garrison's 9");
+    }
+
+    [TestMethod]
+    public void OnMapEventEnded_EverybodyDied_RemovesNothing()
+    {
+        var data = Seed("r1");
+        data.MilitiaAdded = 11;
+        data.MilitiaTroopId = "militia_troop";
+        data.MilitiaPreRallyCount = 9;
+        _sut.TroopPresent["r1:militia_troop"] = 0;
+
+        _sut.OnMapEventEnded("r1");
+
+        Assert.AreEqual(0, _sut.TroopRemovals.Count);
+        Assert.AreEqual(0, data.MilitiaAdded);
     }
 
     [TestMethod]
@@ -1061,6 +1110,200 @@ public class RefugeServiceTests
         Assert.AreEqual(0, _sut.Messages.Count);
     }
 
+    [TestMethod]
+    public void HourlyTick_RalliesMilitiaBeforeStartingTheRaid()
+    {
+        _settings.EnableRaids.Returns(true);
+        Seed("r1");
+        _sut.RandomRoll = 0f;
+        _sut.Threat = new RaidThreat { PartyId = "enemy", Name = "Enemy" };
+
+        _sut.HourlyTick();
+
+        CollectionAssert.AreEqual(new[] { "rally:r1", "raid:r1" }, _sut.Events,
+            "MapEventParty captures NumberOfHealthyMembers at construction, so militia added "
+            + "after StartBattleAction never reaches an auto-resolve's participant count");
+    }
+
+    [TestMethod]
+    public void OnMapEventStarted_AfterRaidPathRallied_DoesNotDoubleRally()
+    {
+        _settings.EnableRaids.Returns(true);
+        Seed("r1");
+        _sut.RandomRoll = 0f;
+        _sut.Threat = new RaidThreat { PartyId = "enemy", Name = "Enemy" };
+        _sut.HourlyTick();
+        Assert.AreEqual(1, _sut.TroopAdds.Count, "arrange: the raid path rallied");
+
+        _sut.OnMapEventStarted("r1");
+
+        Assert.AreEqual(1, _sut.TroopAdds.Count,
+            "the MapEventStarted callback for the raid battle must see MilitiaAdded != 0 and skip");
+    }
+
+    // --- Map-event gating (manage/dismantle/enter) ---
+
+    [TestMethod]
+    public void NearestManageable_RefugeInMapEvent_Excluded()
+    {
+        Seed("r1");
+        _sut.DistancesFromMain["r1"] = 1f;
+        Assert.IsNotNull(_sut.NearestManageable(), "arrange: manageable when idle");
+
+        _sut.PartiesInMapEvent.Add("r1");
+
+        Assert.IsNull(_sut.NearestManageable(),
+            "a refuge mid-battle is a live participant; its rosters belong to the event");
+    }
+
+    [TestMethod]
+    public void Dismantle_RefugeInMapEvent_RefusedNoOp()
+    {
+        var data = Seed("r1");
+        _sut.PartiesInMapEvent.Add("r1");
+
+        _sut.Dismantle(data);
+
+        Assert.AreEqual(0, _sut.Events.Count, "no release, no merge, no destroy mid-battle");
+        Assert.IsNotNull(_sut.GetByPartyId("r1"));
+    }
+
+    // --- NearestDismantlable (the orphan exit) ---
+
+    [TestMethod]
+    public void NearestDismantlable_IncludesOrphanAdoptedRows()
+    {
+        var orphan = Seed("r_orphan", ready: false, building: false);
+        _sut.DistancesFromMain["r_orphan"] = 1f;
+
+        Assert.IsNull(_sut.NearestManageable(), "an orphan is never manageable");
+        Assert.AreSame(orphan, _sut.NearestDismantlable(),
+            "dismantle is the orphan's only exit; without it the row eats a cap slot forever");
+    }
+
+    [TestMethod]
+    public void NearestDismantlable_BuildingRefuge_StillExcluded()
+    {
+        Seed("r1", ready: false, building: true);
+        _sut.DistancesFromMain["r1"] = 1f;
+
+        Assert.IsNull(_sut.NearestDismantlable(),
+            "a raising refuge is neither ready nor orphaned; it finishes or it is not touched");
+    }
+
+    [TestMethod]
+    public void NearestDismantlable_InMapEvent_Excluded()
+    {
+        Seed("r_orphan", ready: false, building: false);
+        _sut.DistancesFromMain["r_orphan"] = 1f;
+        _sut.PartiesInMapEvent.Add("r_orphan");
+
+        Assert.IsNull(_sut.NearestDismantlable());
+    }
+
+    [TestMethod]
+    public void Dismantle_OrphanAdoptedRow_Works()
+    {
+        var orphan = Seed("r_orphan", ready: false, building: false);
+
+        _sut.Dismantle(orphan);
+
+        Assert.IsNull(_sut.GetByPartyId("r_orphan"));
+        CollectionAssert.AreEqual(new[] { "r_orphan" }, _sut.DestroyedParties);
+    }
+
+    // --- OnPartyDestroyed (engine destroyed the refuge party mid-session) ---
+
+    [TestMethod]
+    public void OnPartyDestroyed_DropsRowAndVisualsAndTellsThePlayer()
+    {
+        Seed("r1");
+        Seed("r2");
+
+        _sut.OnPartyDestroyed("r1");
+
+        Assert.IsNull(_sut.GetByPartyId("r1"), "the row must not count against the cap all session");
+        Assert.IsNotNull(_sut.GetByPartyId("r2"));
+        _visuals.Received(1).Remove("r1");
+        CollectionAssert.AreEqual(new[] { true }, _sut.Messages, "the fall is an error-red line");
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.Contains("warden_1")));
+    }
+
+    [TestMethod]
+    public void OnPartyDestroyed_FreesTheCapSlot()
+    {
+        _settings.MaxRefugesCap.Returns(1);
+        Seed("r1");
+        Assert.AreEqual(RefugeBlockReason.AtRefugeLimit, _sut.CanFound(), "arrange: at cap");
+
+        _sut.OnPartyDestroyed("r1");
+
+        Assert.AreEqual(RefugeBlockReason.None, _sut.CanFound(),
+            "a fallen refuge must not block founding its replacement until a reload");
+    }
+
+    [TestMethod]
+    public void OnPartyDestroyed_UnknownOrNullParty_NoOp()
+    {
+        Seed("r1");
+
+        _sut.OnPartyDestroyed("some_lord_party");
+        _sut.OnPartyDestroyed(null);
+
+        Assert.IsNotNull(_sut.GetByPartyId("r1"));
+        Assert.AreEqual(0, _sut.Messages.Count);
+    }
+
+    // --- OnPeaceMade (refuge-held hero prisoners; vanilla never enumerates custom components) ---
+
+    [TestMethod]
+    public void OnPeaceMade_ReleasesForEveryRefuge()
+    {
+        Seed("r1");
+        Seed("r2");
+
+        _sut.OnPeaceMade();
+
+        CollectionAssert.AreEquivalent(new[] { "r1", "r2" }, _sut.PeaceReleasedParties);
+    }
+
+    // --- ResetForNewSession (the singleton-leak fix) ---
+
+    [TestMethod]
+    public void ResetForNewSession_ClearsBookCounterAndVisuals()
+    {
+        _sut.ClanTier = 10; // limit = cap = 3, so seeding + founding both fit
+        Seed("r1");
+        var founded = _sut.Found("warden_1", out _); // advances the counter to 1
+        Assert.IsNotNull(founded, "arrange: campaign A founded taom_refuge_0");
+
+        _sut.ResetForNewSession();
+
+        Assert.AreEqual(0, _sut.AllRefuges.Count, "campaign B must not inherit campaign A's book");
+        _visuals.Received(1).ClearAll();
+        Assert.IsNotNull(_sut.Found("warden_2", out _));
+        Assert.IsNotNull(_sut.GetByPartyId("taom_refuge_0"), "the counter restarted at 0");
+    }
+
+    [TestMethod]
+    public void ResetForNewSession_ClearsTheHoldNoteFlagTransient()
+    {
+        var data = Seed("r1", ready: false, building: true);
+        _sut.DistancesFromMain["r1"] = 1f;
+        _sut.FrameTick();
+        Assert.AreEqual(1, _sut.Messages.Count, "arrange: the hold note was shown once");
+
+        _sut.ResetForNewSession();
+        // Re-add on the LIVE dictionary reference (no LoadFrom, which clears the latch itself):
+        // only ResetForNewSession can have cleared the hold-note latch here.
+        _book["r1"] = data;
+        _sut.NowHours = 1.0;
+        _sut.FrameTick();
+
+        Assert.AreEqual(2, _sut.Messages.Count,
+            "a stale hold-note latch would silently pin the new campaign's party");
+    }
+
     // --- OnGameLoaded reconcile ---
 
     [TestMethod]
@@ -1135,6 +1378,24 @@ public class RefugeServiceTests
     }
 
     [TestMethod]
+    public void LoadFrom_NullRows_ScrubbedWithOneWarning()
+    {
+        var book = new Dictionary<string, RefugeData>
+        {
+            ["r1"] = new RefugeData { PartyId = "r1", Established = true },
+            ["r_null"] = null,
+            ["r_null2"] = null,
+        };
+
+        _sut.LoadFrom(book, 2);
+
+        Assert.AreEqual(1, _sut.AllRefuges.Count,
+            "a hostile or half-recovered save's null rows must not reach FrameTick's dereference");
+        Assert.IsNotNull(_sut.GetByPartyId("r1"));
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("2")));
+    }
+
+    [TestMethod]
     public void SaveInto_HandsBackTheLiveBookAndCounter()
     {
         _sut.Found("warden_1", out _);
@@ -1153,5 +1414,96 @@ public class RefugeServiceTests
         Assert.AreSame(data, _sut.GetByPartyId("r1"));
         Assert.IsNull(_sut.GetByPartyId("nope"));
         Assert.IsNull(_sut.GetByPartyId(null));
+    }
+
+    // --- The dismantle hero-merge contract (no hero row ever rides a raw roster copy) ---
+
+    /// <summary>Overrides ONLY the small merge seams, so <c>MergeRefugeIntoMainParty</c> runs the
+    /// REAL orchestration body. TroopRoster.Add + Clear fires the engine's OnHeroRemoved, which
+    /// nulls Hero.PartyBelongedTo unconditionally; the ordering pinned here (every hero and hero
+    /// prisoner moved by engine action BEFORE the bulk copy touches anything) is the fix.</summary>
+    private sealed class HeroMergeProbeService : RefugeService
+    {
+        public readonly List<string> MergeEvents = new List<string>();
+        public List<string> Heroes = new List<string>();
+        public List<string> HeroPrisoners = new List<string>();
+
+        public HeroMergeProbeService(
+            IRefugeSettingsProvider settings,
+            IWardenService wardens,
+            ICampService camps,
+            IEnlistmentStateQuery enlistment,
+            IRefugeVisualService visuals,
+            IModLogger logger)
+            : base(settings, wardens, camps, enlistment, visuals, logger)
+        {
+        }
+
+        protected override IReadOnlyList<string> HeroesInRefugeRoster(string partyId) => Heroes;
+
+        protected override void MoveRefugeHeroToMainParty(string heroId) =>
+            MergeEvents.Add("hero:" + heroId);
+
+        protected override IReadOnlyList<string> HeroPrisonersInRefuge(string partyId) => HeroPrisoners;
+
+        protected override void TransferHeroPrisonerToMainParty(string partyId, string heroId) =>
+            MergeEvents.Add("prisoner:" + heroId);
+
+        protected override void BulkMergeRegularsIntoMainParty(string partyId) =>
+            MergeEvents.Add("bulk:" + partyId);
+
+        protected override void DestroyRefugeParty(string partyId) =>
+            MergeEvents.Add("destroy:" + partyId);
+
+        protected override bool IsPartyInMapEvent(string partyId) => false;
+
+        protected override void ShowMessage(TextObject text, bool error)
+        {
+        }
+    }
+
+    [TestMethod]
+    public void Dismantle_MovesEveryHeroAndHeroPrisonerByActionBeforeTheBulkCopy()
+    {
+        var probe = new HeroMergeProbeService(
+            _settings, _wardens, _camps, _enlistment, _visuals, _logger);
+        probe.Heroes = new List<string> { "warden_promoted", "companion_deposited" };
+        probe.HeroPrisoners = new List<string> { "captive_lord" };
+        var book = new Dictionary<string, RefugeData>
+        {
+            ["r1"] = new RefugeData { PartyId = "r1", Established = true, WardenHeroId = "warden_promoted" },
+        };
+        probe.LoadFrom(book, 0);
+
+        probe.Dismantle(book["r1"]);
+
+        CollectionAssert.AreEqual(
+            new[]
+            {
+                "hero:warden_promoted",
+                "hero:companion_deposited",
+                "prisoner:captive_lord",
+                "bulk:r1",
+                "destroy:r1",
+            },
+            probe.MergeEvents,
+            "a hero row surviving into the bulk copy+clear gets PartyBelongedTo nulled by the "
+            + "engine's roster callbacks and the desync persists into the save");
+    }
+
+    [TestMethod]
+    public void Dismantle_NoHeroesInRefuge_StillBulkMerges()
+    {
+        var probe = new HeroMergeProbeService(
+            _settings, _wardens, _camps, _enlistment, _visuals, _logger);
+        var book = new Dictionary<string, RefugeData>
+        {
+            ["r1"] = new RefugeData { PartyId = "r1", Established = true },
+        };
+        probe.LoadFrom(book, 0);
+
+        probe.Dismantle(book["r1"]);
+
+        CollectionAssert.AreEqual(new[] { "bulk:r1", "destroy:r1" }, probe.MergeEvents);
     }
 }

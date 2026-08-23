@@ -21,4 +21,10 @@ public interface IRefugeVisualService
 
     /// <summary>Removes everything (session teardown).</summary>
     void ClearAll();
+
+    /// <summary>Real-time banner-cloth wind driver. Map-scene cloths drop their forced wind on
+    /// their own, so the service layer calls this from its frame tick while any refuge visual
+    /// stands; internally throttled, and idempotent against the camp-side driver because the
+    /// shared ticker re-applies a constant wind.</summary>
+    void TickWind();
 }

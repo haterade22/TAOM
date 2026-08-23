@@ -94,8 +94,36 @@ public class SupplyOrderScreenVMTests
                 ci.ArgAt<SupplyEscortOption>(3) == SupplyEscortOption.Mercenaries ? 99 : 0));
     }
 
-    private SupplyOrderScreenVM CreateVM()
-        => new SupplyOrderScreenVM(_sourceService, _pricing, _orders, _settings, () => _gold, () => _closeCalled = true);
+    private SupplyOrderScreenVM CreateVM(bool placedFromCamp = false)
+        => new SupplyOrderScreenVM(
+            _sourceService, _pricing, _orders, _settings, () => _gold, () => _closeCalled = true, placedFromCamp);
+
+    [TestMethod]
+    public void ExecuteConfirm_FromCampScreen_MarksTheOrderCampPlaced()
+    {
+        // The camp menu opens the screen with the flag set; every order confirmed there rides
+        // it into TryPlaceOrder so a later camp break cancels these orders and only these.
+        _orders.TryPlaceOrder(
+                Arg.Any<SupplySourceInfo>(),
+                Arg.Any<IReadOnlyDictionary<string, int>>(),
+                Arg.Any<IReadOnlyDictionary<string, int>>(),
+                Arg.Any<SupplyEscortOption>(),
+                out Arg.Any<string>(),
+                Arg.Any<bool>())
+            .Returns(new SupplyOrder());
+        var vm = CreateVM(placedFromCamp: true);
+        vm.Goods[0].ExecutePlus();
+
+        vm.ExecuteConfirm();
+
+        _orders.Received(1).TryPlaceOrder(
+            Arg.Any<SupplySourceInfo>(),
+            Arg.Any<IReadOnlyDictionary<string, int>>(),
+            Arg.Any<IReadOnlyDictionary<string, int>>(),
+            Arg.Any<SupplyEscortOption>(),
+            out Arg.Any<string>(),
+            true);
+    }
 
     // --- population + auto-select ---
 

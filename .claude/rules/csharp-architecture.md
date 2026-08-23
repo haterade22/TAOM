@@ -93,6 +93,29 @@ Any provider or boundary class that exposes user-editable values must validate s
 
 **Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process — changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime.
 
+## Singleton Services Holding Per-Campaign State MUST Have a Session-Reset Story (MANDATORY)
+
+TAOM services are `Reuse.Singleton`: they live for the PROCESS, not the campaign. A singleton that
+owns campaign data (an order book, a camp dictionary, a party-tracker cache) has two lifecycle
+holes that SyncData does not cover:
+
+1. **A brand-new campaign never calls `LoadFrom`.** The engine invokes a behavior's `SyncData` only
+   when a save record exists, so campaign B inherits campaign A's dictionaries, and B's first save
+   then PERSISTS A's state into B. (Shipped as 2 CRITICALs in the camps port, found independently
+   by two reviews.)
+2. **A loaded save has NEW engine objects under the old ids.** Any transient cache keyed by id but
+   holding object references (MobileParty trackers, widget maps), and any absolute clock, latch or
+   shown-flag, silently goes stale on load and drives ghosts or disables its mechanism.
+
+**Rule:** every singleton holding per-campaign state exposes `ResetForNewSession()`; its behavior
+tracks whether `SyncData` LOADED this session and calls the reset from `OnSessionLaunched` when it
+did not. `LoadFrom` additionally clears every transient cache/clock/latch. Both paths get tests
+(`*SessionResetTests`). When reviewing, walk a second campaign in one process and a
+load-with-same-ids explicitly.
+
+**Why:** `docs/reviews/rca-yotthani-camps-2026-08-23.md` Class 1. The singleton-service precedent
+(config stores) made process lifetime look safe; campaign data is a different animal.
+
 ## Engine-Float Decision Gates: NaN Must FAIL the Gate (MANDATORY — the runtime sibling of the config rule above)
 
 The rule above protects floats at LOAD time. It does nothing for floats the ENGINE hands in at RUNTIME — momentum, velocity, damage, resistance, health, distance — which arrive per hit/per tick and can be NaN when native state is corrupt. Every NaN comparison returns `false`, so the safety of a gate depends entirely on its polarity:

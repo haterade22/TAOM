@@ -25,6 +25,7 @@ public sealed class SupplyOrderScreenVM : ViewModel
     private readonly ISupplyLinesSettingsProvider _settings;
     private readonly Func<int> _playerGold;
     private readonly Action _closeAction;
+    private readonly bool _placedFromCamp;
 
     private readonly MBBindingList<SupplySourceRowVM> _settlements = new MBBindingList<SupplySourceRowVM>();
     private readonly MBBindingList<SupplyGoodRowVM> _goods = new MBBindingList<SupplyGoodRowVM>();
@@ -53,7 +54,8 @@ public sealed class SupplyOrderScreenVM : ViewModel
         ISupplyOrderService orderService,
         ISupplyLinesSettingsProvider settings,
         Func<int> playerGold,
-        Action closeAction)
+        Action closeAction,
+        bool placedFromCamp = false)
     {
         _sourceService = sourceService;
         _pricingService = pricingService;
@@ -61,6 +63,7 @@ public sealed class SupplyOrderScreenVM : ViewModel
         _settings = settings;
         _playerGold = playerGold;
         _closeAction = closeAction;
+        _placedFromCamp = placedFromCamp;
 
         _screenTitle = new TextObject("{=taom_sl_screen_title}Supply Order").ToString();
         _goodsHeaderText = new TextObject("{=taom_sl_goods_header}Goods in stock").ToString();
@@ -352,7 +355,8 @@ public sealed class SupplyOrderScreenVM : ViewModel
                 troops[troop.ItemId] = troop.Qty;
         }
 
-        var order = _orderService.TryPlaceOrder(_selectedSource.Info, goods, troops, EffectiveEscort, out var failReason);
+        var order = _orderService.TryPlaceOrder(
+            _selectedSource.Info, goods, troops, EffectiveEscort, out var failReason, _placedFromCamp);
         if (order != null)
         {
             _closeAction?.Invoke();

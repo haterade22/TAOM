@@ -31,16 +31,55 @@ public sealed class AmbushCandidate
     public object EngineParty;
 }
 
+/// <summary>What kind of move order the player had issued when the move guard interrupted it.</summary>
+public enum CapturedMoveKind
+{
+    /// <summary>A plain point click (or any order this capture does not model): resume as GoToPoint.</summary>
+    Point = 0,
+    /// <summary>A settlement click: resume as GoToSettlement so the party actually enters.</summary>
+    Settlement = 1,
+    /// <summary>An engage order on a hostile party: resume as EngageParty so the attack happens.</summary>
+    EngageParty = 2,
+    /// <summary>An escort/follow order on a friendly party.</summary>
+    EscortParty = 3,
+}
+
+/// <summary>
+/// Full snapshot of the player's interrupted move order, captured BEFORE the move guard holds the
+/// party. Resuming only the point (the old shape) downgraded settlement/party clicks to a stale
+/// walk-to-position: the party stopped at the gate without entering, or marched to where the enemy
+/// used to be. The engine targets ride along as opaque handles (null in tests).
+/// </summary>
+public sealed class CapturedMoveOrder
+{
+    public CapturedMoveKind Kind;
+
+    /// <summary>The engine <c>Settlement</c> for <see cref="CapturedMoveKind.Settlement"/>.</summary>
+    public object TargetSettlement;
+
+    /// <summary>The engine <c>MobileParty</c> for engage/escort kinds.</summary>
+    public object TargetParty;
+
+    /// <summary>Fallback point (always captured; the resume path degrades to it when the live
+    /// target has since died or despawned).</summary>
+    public CampaignVec2 Point;
+
+    public bool TargetingPort;
+
+    public MobileParty.NavigationType NavigationType = MobileParty.NavigationType.Default;
+}
+
 /// <summary>
 /// The camp book and its state machine (port of the FieldCamp module's CampManager +
 /// campaign-behavior guts). Owns the persisted dictionary; the campaign behavior hands it through
 /// LoadFrom/SaveInto at SyncData time and pumps <see cref="HourlyTick"/> / <see cref="FrameTick"/>.
 ///
-/// <para>Deliberate changes from the source: a sprung ambush no longer starts a battle (it breaks
-/// the camp, halves the target's recent-events morale and sets it disorganized); fortifying no
-/// longer wipes the forage tally or restarts the raise from zero; the ambush scan runs on a
-/// half-hour game-time cadence with a straight-line prefilter instead of pathfinding every hostile
-/// every frame.</para>
+/// <para>Deliberate changes from the source: fortifying no longer wipes the forage tally (it does
+/// restart the raise, a real second build at double the setup hours, matching the source's
+/// re-establish); the ambush scan runs on a half-hour game-time cadence with a straight-line
+/// prefilter instead of pathfinding every hostile every frame. The ambush payoff is the source's:
+/// trigger breaks the camp, a two-button inquiry offers the strike, and confirming starts a real
+/// battle (morale halved + disorganized only on a successful roll).</para>
 ///
 /// <para>Campaign statics (party, terrain, gold, tracker, inquiries) are isolated behind protected
 /// virtual members, the SupplyOrderService precedent, so every decision path is unit-testable; the
@@ -66,11 +105,22 @@ public class CampService : ICampService
     private Dictionary<string, CampState> _camps = new Dictionary<string, CampState>();
 
     /// <summary>Reentry latch: while the break-camp inquiry is on screen the move guard must not
-    /// stack a second one every frame. Not persisted; a save cannot happen mid-inquiry.</summary>
+    /// stack a second one every frame. Transient; LoadFrom and ResetForNewSession clear it, because
+    /// a stale true (quit-to-menu with the inquiry showing) would permanently disable the guard.</summary>
     private bool _movePromptOpen;
 
+    /// <summary>Latch for the ambush strike-now inquiry (the source's <c>_inquiryPending</c>):
+    /// no new scan may run while the player is deciding. Transient, cleared like the move latch.</summary>
+    private bool _ambushPromptOpen;
+
+    /// <summary>Whether the standing player camp's completion has been announced. Transient:
+    /// LoadFrom re-derives it from readiness so a loaded ready camp never re-announces.</summary>
+    private bool _establishAnnounced = true;
+
     /// <summary>Next game-time (in hours) the ambush scan may run. MinValue = scan on the first
-    /// eligible frame, then every <see cref="AmbushScanIntervalHours"/>.</summary>
+    /// eligible frame, then every <see cref="AmbushScanIntervalHours"/>. Transient: LoadFrom resets
+    /// it, otherwise loading a save whose game time is behind the last scan stalls every ambush
+    /// camp until the clock catches up.</summary>
     private double _nextAmbushScanHours = double.MinValue;
 
     public CampService(
@@ -158,10 +208,14 @@ public class CampService : ICampService
         };
         _camps[id] = camp;
 
+        // The completion of THIS raise has not been announced yet (FrameTick announces once the
+        // camp turns ready).
+        _establishAnnounced = false;
+
         HoldMainParty();
         TrackMainPartyOnMap();
-        // The raising layout shows immediately (source behaviour); FrameTick retries while the
-        // map scene is not ready yet.
+        // The raising layout shows immediately (matching the port's staged-reveal choice);
+        // FrameTick retries while the map scene is not ready yet.
         TryShowVisual(id, camp);
         return true;
     }
@@ -174,10 +228,12 @@ public class CampService : ICampService
 
         UntrackMainPartyOnMap();
         _visuals.Remove(id);
-        // In-transit convoys have no camp to deliver to any more. Unconditional: orders keep
-        // advancing even while the supply toggle is off, so they must be cancelled regardless.
-        _supplyOrders.CancelAll();
+        // Only convoys ordered FROM this camp lose their delivery point; town-placed orders
+        // deliver to the party wherever it is and keep advancing untouched.
+        _supplyOrders.CancelCampOrders();
         _movePromptOpen = false;
+        _establishAnnounced = true;
+        ShowMessage(new TextObject("{=taom_fc_broken}Camp broken."), error: false);
     }
 
     public bool Fortify()
@@ -191,16 +247,14 @@ public class CampService : ICampService
             return false;
         ChargePlayer(cost);
 
-        // The fix over the source (which re-established the camp, restarting the raise and wiping
-        // the forage tally): EstablishedAt, Foraging, ForageAccumulator and ForagedTotal all stay.
-        // The fortified build time is nominally double the setup hours, but never more than has
-        // already elapsed, so a camp that was ready stays ready the moment the gold is paid.
-        float elapsed = ElapsedHoursSince(camp.EstablishedAt);
-        float fortifiedHours = BuildHoursFor(CampType.Fortified);
-        camp.BuildHours = FiniteFloatValidator.IsFinite(elapsed) && elapsed >= 0f
-            ? Math.Min(fortifiedHours, elapsed)
-            : fortifiedHours;
+        // Source behaviour: fortifying re-establishes the camp, a REAL second raise at double the
+        // setup hours (the palisade takes time to build; morale and forage pause until it stands).
+        // The one fix kept over the source: Foraging, ForageAccumulator and ForagedTotal survive
+        // the upgrade instead of being silently wiped, so foraging resumes when the raise ends.
+        camp.EstablishedAt = CampaignTimeNow();
+        camp.BuildHours = BuildHoursFor(CampType.Fortified);
         camp.TypeEnum = CampType.Fortified;
+        _establishAnnounced = false;
 
         // The palisade layout replaces the tent layout: drop and re-show under the new type.
         var id = MainPartyId();
@@ -225,12 +279,19 @@ public class CampService : ICampService
 
     public void HourlyTick()
     {
-        // Feature off = no ticks; the camp itself stays so a toggle never silently drops state.
-        if (!_settings.Enabled)
-            return;
         var camp = PlayerCamp;
         if (camp == null)
             return;
+
+        // State-protecting folds run even while the master toggle is off: a disabled feature must
+        // still be able to clean up a standing camp, never trap the player with dead state.
+        // Capture breaks the camp cleanly (visuals removed, camp-placed orders cancelled) instead
+        // of letting it tick along at the captor's position.
+        if (IsMainPartyCaptive())
+        {
+            BreakPlayerCamp();
+            return;
+        }
 
         // Entering a settlement folds the tents (the source's ResetIfMoving guard).
         if (IsMainPartyInSettlement())
@@ -238,6 +299,10 @@ public class CampService : ICampService
             BreakPlayerCamp();
             return;
         }
+
+        // Feature off = no gameplay effects; the camp itself stays so a toggle never drops state.
+        if (!_settings.Enabled)
+            return;
 
         if (!IsCampReady(camp))
             return;
@@ -258,8 +323,6 @@ public class CampService : ICampService
 
     public void FrameTick()
     {
-        if (!_settings.Enabled)
-            return;
         var camp = PlayerCamp;
         if (camp == null)
         {
@@ -267,8 +330,18 @@ public class CampService : ICampService
             return;
         }
 
+        if (IsMainPartyCaptive())
+        {
+            BreakPlayerCamp();
+            return;
+        }
+
+        // The move guard PROTECTS state (it is the only break path left while the toggle is off,
+        // since the overlay button hides), so it runs regardless of the master toggle. The ambush
+        // scan is a gameplay effect and stops when the feature is off.
         MoveGuardTick();
-        AmbushScanTick(camp);
+        if (_settings.Enabled)
+            AmbushScanTick(camp);
 
         // The scan may have sprung the trap and broken the camp this very frame; never retry a
         // visual for a camp that no longer exists.
@@ -276,15 +349,66 @@ public class CampService : ICampService
         if (camp == null)
             return;
 
+        if (_settings.Enabled)
+            AnnounceReadyTick(camp);
+
         // The map scene may not have existed when the visual was first requested (save load);
-        // retry until the visual service reports it standing.
+        // retry until the visual service reports it standing. Once it stands, the IsShown poll is
+        // the steady-state driver for the banner-cloth wind ticker (CampVisualService throttles).
         if (!camp.VisualShown)
             TryShowVisual(MainPartyId(), camp);
+        else
+            _visuals.IsShown(MainPartyId());
     }
 
     public void LoadFrom(Dictionary<string, CampState> camps)
     {
-        _camps = camps ?? new Dictionary<string, CampState>();
+        _camps = ScrubNullRows(camps);
+        // Stale transients must never survive into a loaded save: a forward-set ambush clock
+        // stalls every scan, a stuck move latch kills the break guard, and a pending inquiry
+        // latch from a dead session would block the first scan forever.
+        ResetTransientState();
+        // A loaded ready camp must not re-announce; a loaded mid-raise camp announces on
+        // completion exactly once.
+        var playerCamp = PlayerCamp;
+        _establishAnnounced = playerCamp == null || IsCampReady(playerCamp);
+    }
+
+    public void ResetForNewSession()
+    {
+        _camps = new Dictionary<string, CampState>();
+        ResetTransientState();
+        _establishAnnounced = true;
+        // Entity handles from the previous session's map scene must not leak into this one.
+        _visuals.ClearAll();
+    }
+
+    private void ResetTransientState()
+    {
+        _movePromptOpen = false;
+        _ambushPromptOpen = false;
+        _nextAmbushScanHours = double.MinValue;
+    }
+
+    /// <summary>Drops null rows a hostile or partially recovered save may carry; every consumer
+    /// dereferences the CampState unguarded, so one null row would NRE every tick.</summary>
+    private Dictionary<string, CampState> ScrubNullRows(Dictionary<string, CampState> camps)
+    {
+        if (camps == null)
+            return new Dictionary<string, CampState>();
+
+        int dropped = 0;
+        foreach (var key in new List<string>(camps.Keys))
+        {
+            if (camps[key] == null)
+            {
+                camps.Remove(key);
+                dropped++;
+            }
+        }
+        if (dropped > 0)
+            _logger.LogWarning($"[FieldCamp] dropped {dropped} null camp record(s) from the loaded book");
+        return camps;
     }
 
     public void SaveInto(out Dictionary<string, CampState> camps)
@@ -362,14 +486,28 @@ public class CampService : ICampService
             error: false);
     }
 
+    /// <summary>Announces the raise completing, once per raise (the source's per-type "Camp
+    /// established." feedback, folded into one key).</summary>
+    private void AnnounceReadyTick(CampState camp)
+    {
+        if (_establishAnnounced || !IsCampReady(camp))
+            return;
+        _establishAnnounced = true;
+        ShowMessage(
+            new TextObject("{=taom_fc_established}{CAMP} established.")
+                .SetTextVariable("CAMP", UI.FieldCampTexts.TypeLabel(camp.TypeEnum)),
+            error: false);
+    }
+
     private void MoveGuardTick()
     {
-        if (_movePromptOpen || !IsMainPartyMoving())
+        if (_movePromptOpen || _ambushPromptOpen || !IsMainPartyMoving())
             return;
 
-        // Capture the click target BEFORE holding, so "break camp and move" resumes the exact
-        // order instead of leaving the party stranded.
-        var target = CaptureMoveTarget();
+        // Capture the FULL click order BEFORE holding, so "break camp and move" resumes exactly
+        // what was ordered: a settlement click still enters, an engage click still attacks. A
+        // bare point snapshot would strand the party at the gate or at a stale enemy position.
+        var order = CaptureMoveOrder();
         HoldMainParty();
         _movePromptOpen = true;
         ShowBreakCampInquiry(
@@ -377,7 +515,7 @@ public class CampService : ICampService
             {
                 _movePromptOpen = false;
                 BreakPlayerCamp();
-                ResumeMoveTo(target);
+                ResumeMove(order);
             },
             stayCamped: () =>
             {
@@ -389,6 +527,9 @@ public class CampService : ICampService
     private void AmbushScanTick(CampState camp)
     {
         if (camp.TypeEnum != CampType.Ambush || !IsCampReady(camp))
+            return;
+        // No new scan while the strike-now inquiry is on screen (the source's _inquiryPending).
+        if (_ambushPromptOpen)
             return;
         if (IsMainPartyInEncounter())
             return;
@@ -445,31 +586,42 @@ public class CampService : ICampService
         if (best == null)
             return;
 
+        // Source formula: the chance rides on the PLAYER's spotting range (a wider sight radius
+        // erodes the concealment term), not on the candidate's distance.
         float chance = _ambush.TriggerChance(
             spotting, maxRange, _settings.BaseAmbushChance, MainPartyScoutingSkill());
-        bool sprung = NextRandomFloat() <= chance;
+        bool success = NextRandomFloat() <= chance;
 
-        // The trap is spent either way: sprung or spotted, the camp is done (source behaviour;
-        // the battle start was deliberately NOT ported).
+        // The trap is spent either way: sprung or spotted, the camp is done (source behaviour).
         BreakPlayerCamp();
 
         var enemyName = new TextObject("{=taom_fc_ambush_enemy}the enemy");
         string name = string.IsNullOrEmpty(best.Name) ? enemyName.ToString() : best.Name;
-        if (sprung)
-        {
-            ApplyAmbushPenalties(best, _ambush.AmbushedMoraleFactor);
-            ShowMessage(
-                new TextObject("{=taom_fc_ambush_sprung}Your ambush springs on {ENEMY}! They scatter in disorder.")
-                    .SetTextVariable("ENEMY", name),
-                error: false);
-        }
-        else
-        {
-            ShowMessage(
-                new TextObject("{=taom_fc_ambush_spotted}{ENEMY} spotted your ambush before it could spring. The camp is lost.")
-                    .SetTextVariable("ENEMY", name),
-                error: true);
-        }
+
+        // Source payoff: a two-button inquiry, and confirming starts a real battle. On a
+        // successful roll the target is softened first (morale halved, disorganized); on a failed
+        // roll the player may still attack, without the edge.
+        _ambushPromptOpen = true;
+        ShowAmbushInquiry(
+            name,
+            success,
+            attack: () =>
+            {
+                _ambushPromptOpen = false;
+                LaunchAmbushBattle(best, success);
+            },
+            holdBack: () => _ambushPromptOpen = false);
+    }
+
+    private void LaunchAmbushBattle(AmbushCandidate candidate, bool success)
+    {
+        // Source guard: no battle unless BOTH parties are free of a map event; the world kept
+        // moving while the inquiry was up.
+        if (IsMainPartyInEncounter() || IsCandidateInMapEvent(candidate))
+            return;
+        if (success)
+            ApplyAmbushPenalties(candidate, _ambush.AmbushedMoraleFactor);
+        StartBattleWith(candidate);
     }
 
     private void TryShowVisual(string partyId, CampState camp)
@@ -494,11 +646,68 @@ public class CampService : ICampService
 
     protected virtual void HoldMainParty() => MobileParty.MainParty?.SetMoveModeHold();
 
-    protected virtual CampaignVec2 CaptureMoveTarget() =>
-        MobileParty.MainParty?.MoveTargetPoint ?? default;
+    protected virtual bool IsMainPartyCaptive() =>
+        Campaign.Current != null && PlayerCaptivity.IsCaptive;
 
-    protected virtual void ResumeMoveTo(CampaignVec2 target) =>
-        MobileParty.MainParty?.SetMoveGoToPoint(target, MobileParty.NavigationType.Default);
+    protected virtual CapturedMoveOrder CaptureMoveOrder()
+    {
+        var main = MobileParty.MainParty;
+        var order = new CapturedMoveOrder();
+        if (main == null)
+            return order;
+
+        order.Point = main.MoveTargetPoint;
+        // Hold resets DesiredAiNavigationType to None, which is why the capture happens BEFORE
+        // the hold; None still maps to Default defensively.
+        if (main.DesiredAiNavigationType != MobileParty.NavigationType.None)
+            order.NavigationType = main.DesiredAiNavigationType;
+
+        switch (main.DefaultBehavior)
+        {
+            case AiBehavior.GoToSettlement when main.TargetSettlement != null:
+                order.Kind = CapturedMoveKind.Settlement;
+                order.TargetSettlement = main.TargetSettlement;
+                order.TargetingPort = main.IsTargetingPort;
+                break;
+            case AiBehavior.EngageParty when main.TargetParty != null:
+                order.Kind = CapturedMoveKind.EngageParty;
+                order.TargetParty = main.TargetParty;
+                break;
+            case AiBehavior.EscortParty when main.TargetParty != null:
+                order.Kind = CapturedMoveKind.EscortParty;
+                order.TargetParty = main.TargetParty;
+                order.TargetingPort = main.IsTargetingPort;
+                break;
+            default:
+                order.Kind = CapturedMoveKind.Point;
+                break;
+        }
+        return order;
+    }
+
+    protected virtual void ResumeMove(CapturedMoveOrder order)
+    {
+        var main = MobileParty.MainParty;
+        if (main == null || order == null)
+            return;
+
+        // A target that died or despawned while the inquiry was up degrades to the point walk.
+        switch (order.Kind)
+        {
+            case CapturedMoveKind.Settlement when order.TargetSettlement is Settlement settlement:
+                main.SetMoveGoToSettlement(settlement, order.NavigationType, order.TargetingPort);
+                return;
+            case CapturedMoveKind.EngageParty
+                when order.TargetParty is MobileParty engageTarget && engageTarget.IsActive:
+                main.SetMoveEngageParty(engageTarget, order.NavigationType);
+                return;
+            case CapturedMoveKind.EscortParty
+                when order.TargetParty is MobileParty escortTarget && escortTarget.IsActive:
+                main.SetMoveEscortParty(escortTarget, order.NavigationType, order.TargetingPort);
+                return;
+        }
+        main.SetMoveGoToPoint(order.Point, order.NavigationType);
+    }
 
     protected virtual TerrainType CurrentTerrain()
     {
@@ -615,13 +824,22 @@ public class CampService : ICampService
         target.SetDisorganized(true);
     }
 
+    protected virtual bool IsCandidateInMapEvent(AmbushCandidate candidate) =>
+        candidate.EngineParty is MobileParty target && target.MapEvent != null;
+
+    protected virtual void StartBattleWith(AmbushCandidate candidate)
+    {
+        var main = MobileParty.MainParty;
+        if (main == null || !(candidate.EngineParty is MobileParty target))
+            return;
+        StartBattleAction.ApplyStartBattle(main, target);
+    }
+
     protected virtual float NextRandomFloat() => MBRandom.RandomFloat;
 
     protected virtual CampaignTime CampaignTimeNow() => CampaignTime.Now;
 
     protected virtual double NowInHours() => CampaignTime.Now.ToHours;
-
-    protected virtual float ElapsedHoursSince(CampaignTime time) => time.ElapsedHoursUntilNow;
 
     // Readiness routes through the service so tests can pin it; CampState.IsReady dereferences
     // Campaign.Current for the elapsed clock.
@@ -659,6 +877,24 @@ public class CampService : ICampService
         {
             _logger.LogWarning($"[FieldCamp] map tracker remove failed: {ex.Message}");
         }
+    }
+
+    protected virtual void ShowAmbushInquiry(string enemyName, bool success, Action attack, Action holdBack)
+    {
+        var body = success
+            ? new TextObject("{=taom_fc_ambush_ok}Your ambush is set against {ENEMY} - strike now?")
+                .SetTextVariable("ENEMY", enemyName)
+            : new TextObject("{=taom_fc_ambush_fail}You were spotted by {ENEMY} before you could strike - attack anyway?")
+                .SetTextVariable("ENEMY", enemyName);
+        InformationManager.ShowInquiry(new InquiryData(
+            new TextObject("{=taom_fc_ambush_title}Ambush").ToString(),
+            body.ToString(),
+            true,
+            true,
+            GameTexts.FindText("str_ok").ToString(),
+            GameTexts.FindText("str_cancel").ToString(),
+            attack,
+            holdBack));
     }
 
     protected virtual void ShowBreakCampInquiry(Action breakAndMove, Action stayCamped)

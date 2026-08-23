@@ -78,6 +78,27 @@ public class FieldCampWiringTests
             + "missing service, so the nameplate icon silently never draws.");
     }
 
+    [TestMethod]
+    public void FieldCampIoC_RegistrationMethod_NeverResolvesEagerly()
+    {
+        // Round-A CRITICAL: an eager Resolve inside the registration method materializes
+        // CampService's IEnumerable<ICampOverlayContributor> BEFORE Refuge registers its
+        // contributor, baking the collection permanently empty (DryIoc snapshots injected
+        // enumerables). Eager patch-static init lives in InitializePatchStatics, which
+        // IoC.Configure calls after the LAST feature registration.
+        var src = ReadSource("Main", "Features", "FieldCamp", "FieldCampIoC.cs");
+
+        int registerBody = src.IndexOf("RegisterFieldCampFeature", StringComparison.Ordinal);
+        int initStatics = src.IndexOf("InitializePatchStatics", StringComparison.Ordinal);
+        Assert.IsTrue(registerBody >= 0 && initStatics > registerBody,
+            "FieldCampIoC lost its RegisterFieldCampFeature / InitializePatchStatics split.");
+
+        var registrationSection = src.Substring(registerBody, initStatics - registerBody);
+        Assert.IsFalse(registrationSection.Contains("container.Resolve"),
+            "RegisterFieldCampFeature resolves eagerly again; contributor collections registered "
+            + "by later features (Refuge's camp-block) would be baked empty and silently dead.");
+    }
+
     // ---- SubModule wiring (single-owner file; these pin the two lines FieldCamp depends on) ----
 
     [TestMethod]

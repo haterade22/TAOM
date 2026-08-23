@@ -330,6 +330,17 @@ Agent teams multiply token usage. Use this decision framework:
 
 ---
 
+## Briefing convention: point, never paraphrase (MANDATORY for port work)
+
+A builder brief may cite source files and line ranges; it must NOT paraphrase what those lines do
+when the behaviour is load-bearing. Builders implement briefs faithfully, so a wrong paraphrase
+ships with perfect fidelity to the error. Phrase behaviour only as a refutable hypothesis: "the
+orchestrator believes lines N-M do X; verify before implementing and report if wrong." Twice now a
+paraphrase shipped a wrong port (Patch72's place-vs-entity mapping; the camps ambush battle-start
+dropped on a misstated brief) and both were caught only by reviewers who were DENIED the narrative:
+port reviews therefore give reviewers code and diff only, plus a source-fidelity dimension holding
+the original sources. RCAs: `rca-herorace-patch72-2026-08-21.md`, `rca-yotthani-camps-2026-08-23.md`.
+
 ## Case studies
 
 > Moved verbatim from `.claude/rules/harness-facts.md` 2026-08-05 (eager-context diet round 2) —

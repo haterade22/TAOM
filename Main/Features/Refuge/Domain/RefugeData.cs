@@ -17,10 +17,12 @@ public enum RefugeTier
 /// <para>Build progress derives from <see cref="BuildStartTime"/> + <see cref="BuildTargetHours"/>
 /// (same shape as camps and supply orders: mid-build saves resume free).</para>
 ///
-/// <para><see cref="MilitiaAdded"/>/<see cref="MilitiaTroopId"/> persist the rally bookkeeping.
-/// The source kept it in a transient dictionary, so a save mid-battle baked the militia into the
-/// garrison forever, and removal deleted every troop of that type including ones the player had
-/// garrisoned. Removal now takes min(recorded, present).</para>
+/// <para><see cref="MilitiaAdded"/>/<see cref="MilitiaTroopId"/>/<see cref="MilitiaPreRallyCount"/>
+/// persist the rally bookkeeping. The source kept it in a transient dictionary, so a save
+/// mid-battle baked the militia into the garrison forever, and removal deleted every troop of
+/// that type including ones the player had garrisoned. Removal now takes
+/// min(recorded, present - pre-rally baseline): casualties attribute to militia first, and the
+/// garrison's own stack of the same type survives.</para>
 /// </summary>
 public sealed class RefugeData
 {
@@ -39,6 +41,11 @@ public sealed class RefugeData
     [SaveableField(113)] public int MilitiaAdded;
     [SaveableField(114)] public string MilitiaTroopId;
 
+    /// <summary>Garrison count of <see cref="MilitiaTroopId"/> BEFORE the rally added its stack.
+    /// Stand-down removes min(MilitiaAdded, present - this), so casualties are attributed to
+    /// militia first and a player-garrisoned stack of the same troop type is never deleted.</summary>
+    [SaveableField(115)] public int MilitiaPreRallyCount;
+
     public RefugeTier TierEnum
     {
         get => (RefugeTier)Tier;
@@ -53,4 +60,9 @@ public sealed class RefugeData
     }
 
     public bool IsReady => Established && !Building;
+
+    /// <summary>An orphan party adopted on load without a book row: never established, not
+    /// building, so <see cref="IsReady"/> can never become true. Dismantle is its only exit
+    /// (it would otherwise consume a refuge-cap slot forever).</summary>
+    public bool IsOrphanAdopted => !Established && !Building;
 }

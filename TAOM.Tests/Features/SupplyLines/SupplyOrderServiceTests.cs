@@ -23,12 +23,16 @@ public class SupplyOrderServiceTests
         public int Gold = 1_000_000;
         public bool Blockaded;
         public bool InEncounter;
+        public bool Captive;
         public string CompanionId;
         public float ElapsedFraction = 0.5f;
+        public double NowHours;
 
         public readonly List<string> CallSequence = new List<string>();
         public readonly List<int> Charges = new List<int>();
         public readonly List<SupplyOrder> Delivered = new List<SupplyOrder>();
+        public IReadOnlyDictionary<string, int> LastDeliveredGoods;
+        public IReadOnlyDictionary<string, int> LastDeliveredRecruits;
         public readonly List<SupplyConsumption> Refunds = new List<SupplyConsumption>();
 
         public TestableSupplyOrderService(
@@ -48,6 +52,8 @@ public class SupplyOrderServiceTests
 
         protected override CampaignTime CampaignTimeNow() => default;
 
+        protected override double FrameHoursNow() => NowHours;
+
         protected override float ElapsedFractionOf(SupplyOrder order) => ElapsedFraction;
 
         protected override void ChargePlayer(int amount)
@@ -62,10 +68,17 @@ public class SupplyOrderServiceTests
 
         protected override bool IsPlayerInEncounter() => InEncounter;
 
-        protected override void DeliverCargoToPlayer(SupplyOrder order)
+        protected override bool IsPlayerCaptive() => Captive;
+
+        protected override void DeliverCargoToPlayer(
+            SupplyOrder order,
+            IReadOnlyDictionary<string, int> goods,
+            IReadOnlyDictionary<string, int> recruits)
         {
             CallSequence.Add("deliver");
             Delivered.Add(order);
+            LastDeliveredGoods = goods;
+            LastDeliveredRecruits = recruits;
         }
 
         protected override void RefundConsumption(SupplySourceInfo source, SupplyConsumption consumption)
@@ -361,7 +374,7 @@ public class SupplyOrderServiceTests
         _sut.ElapsedFraction = 0.75f;
         _sut.InEncounter = true;
         _caravans.CaravanExists(order).Returns(true);
-        _caravans.CaravanInRaid(order).Returns(true);
+        _caravans.CaravanInMapEvent(order).Returns(true);
         _caravans.DistanceToPlayer(order).Returns(3.5f);
         _engine.Advance(Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), Arg.Any<bool>())
             .Returns(SupplyOrderVerdict.Continue);
@@ -369,6 +382,98 @@ public class SupplyOrderServiceTests
         _sut.HourlyTick();
 
         _engine.Received(1).Advance(0.75f, true, true, 3.5f, true);
+    }
+
+    [TestMethod]
+    public void HourlyTick_PlayerCaptive_BlocksDeliveryLikeAnEncounter()
+    {
+        // A caravan must never force-hand cargo to a prisoner: captivity rides the same
+        // delivery-blocked input as an encounter, so the engine holds the order.
+        SeedInTransitOrder();
+        _sut.InEncounter = false;
+        _sut.Captive = true;
+        _engine.Advance(Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), Arg.Any<bool>())
+            .Returns(SupplyOrderVerdict.Continue);
+
+        _sut.HourlyTick();
+
+        _engine.Received(1).Advance(
+            Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), true);
+    }
+
+    [TestMethod]
+    public void HourlyTick_Deliver_CapsCargoByLiveRosters()
+    {
+        // The caravan set out with 5 grain + 2 recruits but arrives with 3 grain and 1 recruit
+        // (food eaten, a battle lost): only what is actually aboard reaches the player.
+        var order = SeedInTransitOrder();
+        order.Goods["grain"] = 5;
+        order.Recruits["troop_a"] = 2;
+        _caravans.TryGetLiveCargo(
+                order,
+                out Arg.Any<IReadOnlyDictionary<string, int>>(),
+                out Arg.Any<IReadOnlyDictionary<string, int>>())
+            .Returns(x =>
+            {
+                x[1] = (IReadOnlyDictionary<string, int>)new Dictionary<string, int> { ["grain"] = 3 };
+                x[2] = (IReadOnlyDictionary<string, int>)new Dictionary<string, int> { ["troop_a"] = 1 };
+                return true;
+            });
+        _engine.Advance(Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), Arg.Any<bool>())
+            .Returns(SupplyOrderVerdict.Deliver);
+
+        _sut.HourlyTick();
+
+        Assert.AreEqual(3, _sut.LastDeliveredGoods["grain"]);
+        Assert.AreEqual(1, _sut.LastDeliveredRecruits["troop_a"]);
+    }
+
+    [TestMethod]
+    public void HourlyTick_Deliver_NoLiveSnapshot_DeliversOrderedAmounts()
+    {
+        // An unreadable party must not zero the delivery; the ordered amounts stand.
+        var order = SeedInTransitOrder();
+        order.Goods["grain"] = 5;
+        _caravans.TryGetLiveCargo(
+                order,
+                out Arg.Any<IReadOnlyDictionary<string, int>>(),
+                out Arg.Any<IReadOnlyDictionary<string, int>>())
+            .Returns(false);
+        _engine.Advance(Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), Arg.Any<bool>())
+            .Returns(SupplyOrderVerdict.Deliver);
+
+        _sut.HourlyTick();
+
+        Assert.AreEqual(5, _sut.LastDeliveredGoods["grain"]);
+    }
+
+    // --- CapByLive (pure) ---
+
+    [TestMethod]
+    public void CapByLive_CapsEachRowAndDropsZeroRows()
+    {
+        var ordered = new Dictionary<string, int> { ["grain"] = 5, ["fish"] = 2, ["tools"] = 3 };
+        var live = new Dictionary<string, int> { ["grain"] = 3, ["fish"] = 9 };
+
+        var result = SupplyOrderService.CapByLive(ordered, live);
+
+        Assert.AreEqual(3, result["grain"], "capped by what is aboard");
+        Assert.AreEqual(2, result["fish"], "never more than was ordered");
+        Assert.IsFalse(result.ContainsKey("tools"), "nothing aboard means no row");
+    }
+
+    [TestMethod]
+    public void CapByLive_NullLive_ReturnsOrderedUnchanged()
+    {
+        var ordered = new Dictionary<string, int> { ["grain"] = 5 };
+
+        Assert.AreSame(ordered, SupplyOrderService.CapByLive(ordered, null));
+    }
+
+    [TestMethod]
+    public void CapByLive_NullOrdered_ReturnsEmpty()
+    {
+        Assert.AreEqual(0, SupplyOrderService.CapByLive(null, new Dictionary<string, int>()).Count);
     }
 
     // --- FrameTick ---
@@ -393,6 +498,25 @@ public class SupplyOrderServiceTests
         _sut.FrameTick();
 
         _caravans.DidNotReceive().TickPositions();
+    }
+
+    [TestMethod]
+    public void FrameTick_CampaignClockFrozen_SkipsAfterTheFirstPass()
+    {
+        // Pause: neither the travel fraction nor any party position can change, so repeated
+        // frames at the same campaign hour do no work. Time moving runs the pass again.
+        SeedInTransitOrder();
+        _engine.Advance(Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), Arg.Any<bool>())
+            .Returns(SupplyOrderVerdict.Continue);
+        _sut.NowHours = 100.0;
+
+        _sut.FrameTick();
+        _sut.FrameTick();
+        _caravans.Received(1).TickPositions();
+
+        _sut.NowHours = 100.001;
+        _sut.FrameTick();
+        _caravans.Received(2).TickPositions();
     }
 
     // --- CancelAll ---
@@ -431,6 +555,72 @@ public class SupplyOrderServiceTests
         _caravans.DidNotReceiveWithAnyArgs().ReleaseEscortAndDestroy(default);
     }
 
+    // --- CancelCampOrders ---
+
+    [TestMethod]
+    public void CancelCampOrders_CancelsOnlyCampPlacedOrders()
+    {
+        var townOrder = new SupplyOrder { OrderId = "taom_so_0", SourceSettlementId = "town_G1" };
+        townOrder.StatusEnum = SupplyOrderStatus.InTransit;
+        var campOrder = new SupplyOrder
+        {
+            OrderId = "taom_so_1",
+            SourceSettlementId = "town_G2",
+            PlacedFromCamp = true,
+        };
+        campOrder.StatusEnum = SupplyOrderStatus.InTransit;
+        _sut.LoadFrom(
+            new Dictionary<string, SupplyOrder>
+            {
+                [townOrder.OrderId] = townOrder,
+                [campOrder.OrderId] = campOrder,
+            },
+            counter: 2);
+
+        _sut.CancelCampOrders();
+
+        _caravans.Received(1).ReleaseEscortAndDestroy(campOrder);
+        _caravans.DidNotReceive().ReleaseEscortAndDestroy(townOrder);
+        Assert.AreEqual(SupplyOrderStatus.Lost, campOrder.StatusEnum);
+        Assert.AreEqual(SupplyOrderStatus.InTransit, townOrder.StatusEnum,
+            "a town-placed order must survive a camp break untouched");
+        Assert.AreEqual(1, _sut.ActiveOrders.Count);
+    }
+
+    [TestMethod]
+    public void CancelCampOrders_NoCampOrders_TouchesNothing()
+    {
+        SeedInTransitOrder(); // town-placed
+
+        _sut.CancelCampOrders();
+
+        _caravans.DidNotReceiveWithAnyArgs().ReleaseEscortAndDestroy(default);
+        Assert.AreEqual(1, _sut.ActiveOrders.Count);
+    }
+
+    [TestMethod]
+    public void TryPlaceOrder_PlacedFromCamp_MarksTheOrder()
+    {
+        ArrangeConsumption();
+        ArrangeSpawn();
+
+        var result = _sut.TryPlaceOrder(
+            _townSource, null, null, SupplyEscortOption.None, out _, placedFromCamp: true);
+
+        Assert.IsTrue(result.PlacedFromCamp);
+    }
+
+    [TestMethod]
+    public void TryPlaceOrder_Default_NotMarkedAsCampPlaced()
+    {
+        ArrangeConsumption();
+        ArrangeSpawn();
+
+        var result = _sut.TryPlaceOrder(_townSource, null, null, SupplyEscortOption.None, out _);
+
+        Assert.IsFalse(result.PlacedFromCamp);
+    }
+
     // --- persistence plumbing ---
 
     [TestMethod]
@@ -467,5 +657,58 @@ public class SupplyOrderServiceTests
 
         _caravans.Received(1).RespawnMissing(
             Arg.Is<IEnumerable<SupplyOrder>>(orders => orders.Single() == inTransit));
+    }
+
+    // --- session reset + transient-cache hygiene ---
+
+    [TestMethod]
+    public void LoadFrom_ClearsCaravanTrackers()
+    {
+        // A tracker's cached MobileParty belongs to the session that created it; installing a
+        // loaded book must drop them all so OnGameLoaded rebinds against live parties.
+        SeedInTransitOrder();
+
+        _caravans.Received(1).ClearTrackers();
+    }
+
+    [TestMethod]
+    public void LoadFrom_NullAndInvalidRows_DroppedWithOneWarning()
+    {
+        var good = new SupplyOrder { OrderId = "taom_so_1", SourceSettlementId = "town_G1" };
+        good.StatusEnum = SupplyOrderStatus.InTransit;
+        var noId = new SupplyOrder(); // OrderId null: unusable row
+        var book = new Dictionary<string, SupplyOrder>
+        {
+            ["taom_so_0"] = null,
+            [good.OrderId] = good,
+            ["taom_so_2"] = noId,
+        };
+
+        _sut.LoadFrom(book, counter: 3);
+        _sut.SaveInto(out var saved, out _);
+
+        Assert.AreEqual(1, saved.Count, "null and id-less rows are scrubbed, valid rows survive");
+        Assert.AreSame(good, saved[good.OrderId]);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("dropped 2")));
+
+        // The tick paths must be NRE-safe now that the bad rows are gone.
+        _engine.Advance(Arg.Any<float>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<float>(), Arg.Any<bool>())
+            .Returns(SupplyOrderVerdict.Continue);
+        _sut.HourlyTick();
+    }
+
+    [TestMethod]
+    public void ResetForNewSession_ClearsBookCounterAndTrackers()
+    {
+        SeedInTransitOrder();
+        _caravans.ClearReceivedCalls();
+
+        _sut.ResetForNewSession();
+        _sut.SaveInto(out var saved, out var counter);
+
+        Assert.AreEqual(0, saved.Count, "a fresh session must not inherit the previous book");
+        Assert.AreEqual(0, counter, "the order counter is per-campaign");
+        Assert.AreEqual(0, _sut.ActiveOrders.Count);
+        _caravans.Received(1).ClearTrackers();
     }
 }
