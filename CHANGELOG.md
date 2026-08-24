@@ -4,6 +4,28 @@
 
 ## 2026-08-23
 
+### fix(fieldCamp): establishing a camp no longer strands the player in a stopped-time menu (#506)
+
+The first field camp ever established in the field read as a frozen game: establishing switched
+into the fc_camp sub-menu (source parity), and a standard game menu stops campaign time
+unconditionally with dead time controls (vanilla behavior), so "Raising 0%" could never progress
+while the player stood in the menu. Worse, MapState persists the open menu id, so saving there
+made every load resume "frozen" as well. Establish now exits to the map (deliberate source
+deviation): the overlay narrates the raise and Camp Options reopens the menu on demand. Manage
+camp still opens the sub-menu as a visible player choice.
+
+Two field diagnostics shipped from the incident: `taom.time_status` dumps every state that can
+freeze campaign time (menu context, time lock, engine pause, waiting flag, encounter) and
+`taom.rescue_time` recovers a frozen session in place (exits the stuck menu context, releases
+the lock, unpauses, force-resumes). The rescue recovered the stuck save without abandoning it,
+and the status dump is what turned three failed static hypotheses into a one-screenshot
+diagnosis. Suite 7474 passed / 2 skipped.
+
+Known follow-up, tracked separately: loading that save took ~10 minutes with a silent stall
+between AllBehaviorDataLoaded and session launch.
+
+## 2026-08-23
+
 ### fix(deps): ButterLib startup death from a version-mismatched framework shim
 
 Opening MCM's Mod Options hung the game, and its screen teardown threw an NRE under a debugger.

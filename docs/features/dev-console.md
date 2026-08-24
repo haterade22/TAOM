@@ -1,4 +1,4 @@
-# Dev Console (`taom.*` commands)
+﻿# Dev Console (`taom.*` commands)
 
 **Status:** Phase 0 (shared contract) built 2026-07-31 (#369, successor to #365). In-game discovery gate not yet run — see [The launch gate](#the-launch-gate).
 
@@ -295,6 +295,8 @@ answer is conclusive and fails open in every path.
 | `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit |
 | `taom.print_town_economy [town]` | A | campaign | A 4–8 in-game-day observation for #317, plus the vanilla side-by-side that answers "is the buff doing anything" |
 | `taom.print_town_ledger [town]` | A | campaign | Where the town's gold actually went, by day and by flow. **No engine code logs a gold movement at all** — the alternative is inferring the drain from a balance that changes once a day. See [economy-diagnostics.md](economy-diagnostics.md) |
+| `taom.time_status` | A | campaign | Dump every state that can freeze campaign time (menu context, time lock, engine pause, waiting flag, encounter) in one shot; built for the 2026-08-23 camp-menu freeze, replaces a decompile-and-guess loop |
+| `taom.rescue_time` | B | campaign | Recover a frozen session in the field: exit a stuck menu context, release the time lock, unpause the engine, force-resume time. Unstuck the first field-camp save without abandoning it |
 | `taom.print_caravans [settlement]` | A | campaign | Which engine gate is holding each parked caravan. Every one of them is a silent early-return, and four of them have different fixes — the gate histogram is the money output |
 | `taom.print_patches [filter]` | A | cheat mode | Grepping `taom_debug` for "did this category apply?" |
 | `taom.print_memory [label] [gpu]` | A | cheat mode | Nothing — **no TAOM or vanilla surface exposed the engine's own memory accounting at all.** `[MemSample]` reports OS totals on a timer; this asks the engine what those bytes are *for*, on demand, per station. Optional `label` names the station in the log; `gpu` also writes a GPU dump. Mirrored into `taom_debug` under `[MemProbe]`. See [battle-load-diagnostics.md](battle-load-diagnostics.md) |

@@ -121,6 +121,23 @@ stripped install degrades instead of breaking; the fallback is exercised by rena
 | `UI/FieldCampMapView.cs` + `FieldCampOverlayVM.cs` | Overlay button + status panel, 4 Hz refresh |
 | `Main/_Module/GUI/PreFabs/FieldCamp/TaomFieldCampOverlay.xml` | Ported prefab; brushes are grep-verified vanilla (`Popup.Description.Text`, `Popup.Button.Text`, `Popup.Frame`, `ButtonBrush2`); the source's root `Frame1.Broken` was a phantom too (only `.Left`/`.Right` exist), swapped for the real `Popup.Frame` in round C |
 
+## The establish flow and the menus-stop-time trap (field-tested 2026-08-23)
+
+A standard game menu stops campaign time unconditionally and deadens the time controls (vanilla
+behavior, not a bug). The source module switched into the fc_camp sub-menu right after
+establishing, which showed "Raising 0%" in a menu where the raise can never progress; the very
+first field camp ever established read as a frozen game, and because MapState persists the open
+menu id, saving there made every load resume "frozen" too. The port now EXITS to the map after
+establishing (deliberate source deviation, FieldCampMenuController.Establish): the overlay
+narrates the raise and Camp Options reopens the menu on demand. Manage camp still opens the
+sub-menu; that is a deliberate player choice with a visible panel.
+
+Field diagnostics that came out of that incident (DevConsole feature, taom.* commands):
+`taom.time_status` dumps every state that can freeze campaign time (menu context, time lock,
+engine pause, waiting flag, encounter); `taom.rescue_time` exits a stuck menu context, releases
+the lock, unpauses the engine and force-resumes time. Both live in
+`Main/Features/DevConsole/Cheats/TimeControlCheats.cs`.
+
 ## Traps
 
 - The Refuge insertion point is **index 4 on BOTH menus**; do not take it.

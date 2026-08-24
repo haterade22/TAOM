@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -193,8 +193,14 @@ public sealed class FieldCampMenuController
 
     private void Establish(CampType type)
     {
+        // DELIBERATE deviation from the source (it switched to the fc_camp sub-menu here): a
+        // standard game menu stops campaign time unconditionally and deadens the time controls,
+        // so landing in the sub-menu shows "Raising 0%" that can never progress and reads as a
+        // frozen game - and saving there persists the open menu, so loads resume "frozen" too
+        // (field-tested 2026-08-23, the first camp ever established). Exit to the map instead:
+        // the overlay narrates the raise and Camp Options reopens the menu on demand.
         if (_camps.Establish(type))
-            _menus.SwitchTo(FieldCampCampaignBehavior.CampSubMenuId);
+            _menus.ExitToLast();
     }
 
     private bool EstablishCondition(MenuCallbackArgs args, CampType type)
