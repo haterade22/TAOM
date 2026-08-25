@@ -45,6 +45,13 @@ public sealed class EncounterOwnershipPolicy : IEncounterOwnershipPolicy
         if (snapshot.ConversationInProgress)
             return EncounterFinishVerdict.SkipConversationInProgress;
 
+        // R2b — shore leave INVERTS R3, and only R3. The settlement-shaped encounter is the one
+        // TakeTownLeave opened to make the vanilla town menu safe, so ending the pass is the one
+        // moment it is ours to close. A PARTY encounter under this intent is still someone else's
+        // (a lord the player is talking to, a battle being seeded), so it falls through to R4.
+        if (intent == EncounterFinishIntent.ShoreLeaveEnd && !snapshot.HasEncounteredMobileParty)
+            return EncounterFinishVerdict.Finish;
+
         // R3 — a settlement encounter has no encountered MOBILE party. This is what keeps the oath
         // from destroying a town visit: swear in a keep and the encounter is the settlement's.
         if (!snapshot.HasEncounteredMobileParty)

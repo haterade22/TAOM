@@ -135,6 +135,16 @@ public class EnlistmentMenuBehavior : CampaignBehaviorBase
         // conversation while attached, re-assert the wait menu.
         if (!_coopSession.IsAuthority || _store.Record.State != EnlistmentState.EnlistedAttached)
             return;
+
+        // SHORE LEAVE OUTRANKS THE INVARIANT HERE TOO, the same carve-out ServiceMaintenanceService
+        // .EnsureServiceMenu makes and for the same reason. Without it, any conversation ending
+        // while the player is on a pass (a lord in the keep, the tavern) slams the service menu
+        // over the town menu he is entitled to — and since the pass is still held, the wait menu's
+        // own "take leave" option is hidden by its !alreadyOnLeave condition, so he cannot get back
+        // to the town until the column moves. Post-#510 that state also holds a live settlement
+        // encounter behind a TAOM menu, which blocks the battle latch for its duration.
+        if (_store.Record.OnTownLeave)
+            return;
         if (_gameMenu.CurrentMenuId != EnlistmentMenuService.ServiceWaitMenuId)
             _gameMenu.Activate(EnlistmentMenuService.ServiceWaitMenuId);
     }

@@ -37,6 +37,12 @@ public readonly struct EncounterOwnershipSnapshot
     public bool PlayerInsideSettlement { get; }
 
     /// <summary>A field could not be read. The policy treats this conservatively rather than guessing.</summary>
+    /// <summary>
+    /// At least one field could not be read; the adapter has already logged which. DIAGNOSTIC ONLY:
+    /// <see cref="TAOM.Features.Enlistment.EncounterOwnershipPolicy"/> deliberately does not branch
+    /// on it, because deferring on a read failure would leave the encounter live, which is the
+    /// save-breaker this feature exists to avoid. Do not read this as "handled conservatively".
+    /// </summary>
     public bool ReadFailed { get; }
 
     public EncounterOwnershipSnapshot(

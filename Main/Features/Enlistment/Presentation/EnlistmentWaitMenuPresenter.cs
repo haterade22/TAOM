@@ -84,7 +84,15 @@ public sealed class EnlistmentWaitMenuPresenter : IEnlistmentWaitMenuPresenter
     public void TakeTownLeave()
     {
         if (!_actions.TakeTownLeave())
+        {
+            // SAY SOMETHING. The refusal became reachable when the pass started requiring a real
+            // settlement encounter (#510) — before that, the menu option's own condition had
+            // already ruled out every failure, so the silent return was dead code. A button that
+            // does nothing at all reads as a broken mod, not as a refusal.
+            _inquiry.ShowMessage("taom_enlist_leave_refused",
+                "You cannot take your leave here just now.", null, null);
             return;
+        }
 
         // Vanilla decides WHICH settlement menu applies; we only ask which one the player is
         // standing in. With the pass now held, EnlistmentMenuService lets these three through

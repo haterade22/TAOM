@@ -2190,3 +2190,39 @@ landed: 2 rules, 11 lessons, 4 new mechanical suite gates). Full state narrative
 own diff-scoped regression round; a wiring gate must exercise the wiring; a key prefix is an
 ownership claim; CampaignTime factories return default in tests.
 
+## #510 settlement-encounter invariant (enlistment), 2026-08-24
+
+Player crash bundle `d7d9f7d3` (v2.0.20 on Bannerlord v1.4.8): NRE in vanilla
+`game_menu_settlement_wait_on_init`, 14 seconds after a discharge released the player into Minas
+Tirith. Root cause: TAOM placed the main party inside a settlement with `EnterSettlementAction`
+alone, creating neither `PlayerEncounter` nor `LocationEncounter`, then opened a vanilla settlement
+menu. Two sites: the discharge release (v2.0.20) and shore leave (v2.0.21, v2.0.22).
+
+Deep review, 5 agents: 4 findings, all from the data-flow agent, 3 of them regressions the fix
+itself had introduced. Codex round on the fixed tree: 3 P1, 5 P2, 1 P3. **All three P1s collapsed
+under adversarial verification** (9 verifiers plus a completeness critic), one P2 confirmed at
+severity, four P2/P3 downgraded to real-but-P3 and fixed anyway. The critic then found five more,
+three taken.
+
+Two process results worth keeping:
+
+**Codex's test-sensitivity table is the technique to steal.** For each new test it stated what the
+test would do against the pre-fix code, and caught two that passed either way. Nothing in the
+5-agent deep-review set asks that question, and a coverage count reports both as coverage.
+
+**We shipped a wrong engine fact into four artifacts.** The claim that `town_outside`'s Leave option
+no-ops on a null `Current` (a soft-lock) was inherited from a pre-existing lessons entry and a code
+comment, repeated into the #511 issue body, the feature doc and the CHANGELOG, and never checked.
+`game_menu_town_outside_on_init` derefs `PlayerEncounter.EncounterSettlement.Name` first, so it is a
+CTD at menu init. All four corrected with dated notes. The lesson generalises past this incident:
+`evidence-over-claims` C applies to our own prior prose, not only to agents and reviewers, and an
+in-repo claim is not evidence.
+
+Also caught by the round: the ban test built to prevent recurrence was itself evadable, because
+`SameMethod` compares `DeclaringType` and only the interface method was banned. Now bans the
+interface, the concrete implementation and raw `EnterSettlementAction.ApplyForParty`, and fails on
+an allow-list row that is never observed as a caller. That rotted-exemption check failed on its
+first run against a speculative row I had just added, which is the gate working.
+
+Suite arc: 7492 -> 7493 -> 7494 green. RCA:
+`docs/reviews/rca-settlement-encounter-2026-08-24.md`. Deferred with written rationale: #511.

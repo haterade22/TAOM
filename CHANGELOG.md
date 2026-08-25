@@ -2,6 +2,65 @@
 
 > **Archive:** entries before 2026-07-01 live in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md) (rolled 2026-07-12; cadence: each Jan 1 / Jul 1 — keep the current half-year here, roll the rest).
 
+## 2026-08-24
+
+### fix(enlistment): a settlement menu with no encounter behind it (#510)
+
+A player crash bundle (`d7d9f7d3`, TAOM v2.0.20 on Bannerlord v1.4.8) died in vanilla
+`game_menu_settlement_wait_on_init` fourteen seconds after a discharge released the player into
+Minas Tirith. He clicked "Wait here for some time".
+
+Vanilla has one way for the main party to be inside a settlement, and it always builds a
+`PlayerEncounter` and a `LocationEncounter`. Enlistment used `EnterSettlementAction.ApplyForParty`
+alone, which builds neither, and vanilla's settlement menus dereference both unguarded. That
+invalid state was survivable only because the redirect list swallowed `town`/`castle`/`village` and
+showed a TAOM menu instead. Two paths removed that mask. Discharge clears the record to
+`NotEnlisted` (which the redirect is gated on) BEFORE placing the player, so the raw vanilla menu
+reached him; shore leave, added a month later, released the same menus on purpose. Our own
+diagnostic printed `playerEncounter=False` at both ends of the discharge and the post-check called
+it the benign shape, which is why it went unreported for two releases.
+
+One chokepoint now enforces the invariant: `IEncounterAdapter.EnsureSettlementEncounter` follows
+vanilla's own recipe from `EncounterGameMenuBehavior`, and both sites route through it. It refuses
+rather than half-succeeding, and both callers treat a refusal as "do not open a vanilla menu":
+discharge walks the player back out, shore leave declines the pass. Shore leave's encounter is
+settlement-shaped, which `EncounterOwnershipPolicy` R3 deliberately never closes, so the revoke
+closes it under a new `ShoreLeaveEnd` intent (R2b) that inverts R3 and only R3, through the policy
+rather than a bare `Finish` because leave is also revoked when a battle starts and that encounter
+belongs to the battle service.
+
+The hazard was already written down in two places, including the doc comment on the method that
+creates it, and shore leave shipped anyway. So the guard is mechanical now:
+`SettlementEncounterInvariantTests` walks every method body in TAOM.dll and fails on any caller of
+`MoveIntoSettlement` outside a two-entry allow-list. It caught the discharge site on its first run.
+The IL walker moved out of `PartyOwnerGetterBanTests` into a shared `IlCallScanner` so both bans
+cover the same surface.
+
+Suite 7492 passed / 2 skipped.
+
+The review gate then caught three regressions the fix itself introduced, all fixed here. The revoke
+passed `forcePlayerOutFromSettlement: false` on the reasoning that leave is only revoked once the
+column has marched; it is also revoked on a state change while the player is still standing in the
+town, and vanilla `Finish` always stops time and closes the menu, so that combination left them
+inside a settlement they could not walk out of. Refusing a pass had become a silently dead button,
+because the bare `return` that was unreachable before this change is now the refusal path. And the
+ban test's allow-list justified the follow path with "no vanilla settlement menu is ever reachable
+from it", which shore leave makes false; the comment now names the chokepoint that actually
+guarantees it.
+
+A fourth finding is real and NOT fixed here: the redirect mask is gated on `EnlistedAttached` alone,
+so it disarms in `CommanderUnavailable` while the player is inside a settlement, and `Campaign.Tick`
+can then push `town_outside`. Tracked as #511; both candidate fixes need an in-game smoke.
+RCA: `docs/reviews/rca-settlement-encounter-2026-08-24.md`.
+
+Owed: the refusal message ships as a registered English row in all 12 language files, not as a
+translation. No provider API key is set in this environment, so `translate_with_claude.py` could
+seed the rows but not fill them. Run it when a key is available; the cache covers the rest of the
+backlog for free.
+
+Known limitation: the adapter's success-path branches have no unit coverage and are exercisable only
+in-game, per ADR-008. The in-game smoke is doing real work here, not confirming.
+
 ## 2026-08-23
 
 ### fix(fieldCamp): establishing a camp no longer strands the player in a stopped-time menu (#506)

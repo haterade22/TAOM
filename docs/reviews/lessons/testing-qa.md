@@ -781,3 +781,23 @@ polarity; the camps future-start repair test chased a phantom production bug for
 before the tick-statics were read in the decompile. CampaignTime.Never (long.MaxValue, inline) is
 the only campaign-independent nonzero CampaignTime; time ARITHMETIC belongs behind service seams
 (DaysSince/NowTime) that tests override, never in test-visible expressions.
+
+### For every new test, state what it would do against the pre-fix code, or it is not a regression test
+
+A test written alongside a fix routinely asserts that the NEW call happened without asserting the
+OLD one did not, and a predicate over "did the new collaborator get called before X" is vacuously
+true when the reverted code never calls that collaborator at all. Both shapes pass green either way
+and are counted as coverage. Two of the #510 fix's tests were exactly this, caught only because the
+Codex pass built a sensitivity table (test, assertion, verdict against pre-fix) instead of reading
+the tests for plausibility.
+
+A ban/invariant test has a second failure mode: the allow-list rots. An exemption row that no
+caller ever matches is a comment asserting a protection nothing exercises. Assert that every
+allow-list entry is actually OBSERVED, not merely that it names a real method. The #510 gate's
+rotted-exemption check went red on its first run against a speculative row added minutes earlier.
+
+**Why missed:** nothing in the 5-agent deep-review set asks "would this test fail against the old
+code". Coverage tooling cannot ask it either. **Prevent:** write the sensitivity line in the test's
+own comment when the assertion is not obviously discriminating, and for ban tests assert the
+allow-list is fully exercised. **Source:** `docs/reviews/rca-settlement-encounter-2026-08-24.md`
+findings 9 and the ban-test hardening; technique adopted from Codex review 82.

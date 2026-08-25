@@ -417,6 +417,8 @@
 
 	<string id="taom_enlist_lost_leave" text="{=taom_enlist_lost_leave}Dar o serviço por encerrado" />
 
+	<string id="taom_enlist_leave_refused" text="You cannot take your leave here just now." />
+
   </strings>
 
 </base>

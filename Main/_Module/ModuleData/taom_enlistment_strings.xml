@@ -54,6 +54,7 @@
 	<string id="taom_enlist_board_duty" text="{=taom_enlist_board_duty}{NEWLINE}You have orders: {DUTY_NAME}" />
 	<string id="taom_enlist_duty_already" text="{=taom_enlist_duty_already}You already have your orders. See them done first." />
 	<string id="taom_enlist_duty_none" text="{=taom_enlist_duty_none}Nothing for you at present. Stay sharp — that changes." />
+	<string id="taom_enlist_leave_refused" text="{=taom_enlist_leave_refused}You cannot take your leave here just now." />
 	<string id="taom_enlist_menu_duty" text="{=taom_enlist_menu_duty}Ask your sergeant for work" />
 	<string id="taom_enlist_menu_talk" text="{=taom_enlist_menu_talk}Speak with your commander" />
 	<string id="taom_enlist_rank_recruit" text="{=taom_enlist_rank_recruit}Recruit" />

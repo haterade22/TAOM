@@ -2,6 +2,7 @@ using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TAOM.Core.Logging;
 
@@ -251,6 +252,144 @@ public sealed class EncounterAdapter : IEncounterAdapter
             _logger?.LogError($"[Enlistment] LeaveSettlementIfUnderSiege failed: {ex.Message}");
             return false;
         }
+    }
+
+    /// <summary>
+    /// Vanilla's own recipe, lifted from
+    /// <c>EncounterGameMenuBehavior.game_menu_siege_attacker_left_return_to_settlement_on_consequence</c>
+    /// (installed v1.4.8): establish the encounter, then the location encounter, then let the
+    /// caller open the menu.
+    ///
+    /// <c>PlayerEncounter.Start()</c> + <c>SetupFields</c> rather than
+    /// <c>EncounterManager.StartSettlementEncounter</c>, for two reasons that are both engine
+    /// facts rather than preference. <c>PlayerEncounter.Init</c> is <c>internal</c>, so
+    /// <c>StartSettlementEncounter</c> is the only way to reach it, and it unconditionally calls
+    /// <c>EnterSettlement()</c> for a settlement defender. On a party that is ALREADY inside (the
+    /// enlistment follow path put it there) that re-runs <c>EnterSettlementAction.ApplyForParty</c>,
+    /// which has no already-inside guard and re-dispatches
+    /// <c>OnBeforeSettlementEntered</c>/<c>OnSettlementEntered</c>/<c>OnAfterSettlementEntered</c>.
+    /// The duty runtime treats <c>OnSettlementEntered</c> as a completion trigger. <c>SetupFields</c>
+    /// is public, sets <c>EncounterSettlementAux</c> from a settlement defender party, and TAOM
+    /// already uses it this way in <c>MessengerCampaignBehavior</c>.
+    /// </summary>
+    public bool EnsureSettlementEncounter(string settlementId)
+    {
+        // Declared OUTSIDE the try so the catch can roll back. Set ONLY on the branch that found
+        // Current null, so a PRE-EXISTING foreign encounter is never destroyed by our failure.
+        var createdHere = false;
+        try
+        {
+            var main = MobileParty.MainParty;
+            // Settlement.Find, NOT CampaignObjectManager.Find<Settlement> — the latter returns null
+            // unconditionally (no Settlement type is registered), the same trap documented on
+            // MobilePartyAttachmentAdapter.MoveIntoSettlement.
+            var settlement = string.IsNullOrEmpty(settlementId) ? null : Settlement.Find(settlementId);
+            if (main == null || settlement == null)
+            {
+                _logger?.LogError($"[Enlistment] EnsureSettlementEncounter('{settlementId}') — no main party or no such settlement");
+                return false;
+            }
+
+            // KIND CHECK BEFORE Start(), not after. CreateLocationEncounter knows four kinds; for
+            // anything else it returns null and the verify below fails — but by then we would have
+            // created a PlayerEncounter we cannot complete, and returning false while leaving one
+            // live is the save-breaker this feature already alarms on. Refuse before we allocate.
+            if (!settlement.IsTown && !settlement.IsVillage && !settlement.IsCastle && !settlement.IsHideout)
+            {
+                _logger?.LogError($"[Enlistment] EnsureSettlementEncounter('{settlementId}') — none of town/castle/village/hideout, so no LocationEncounter kind covers it");
+                return false;
+            }
+
+            if (PlayerEncounter.Current == null)
+            {
+                PlayerEncounter.Start();
+                createdHere = true;
+                // Mirror PlayerEncounter.Init (installed v1.4.8): Init assigns this and SetupFields
+                // does not, and DefaultBattleRewardModel.GetPlayerGainedRelationAmount reads it if
+                // the visit ever turns hostile. Without it that reward is computed from zero.
+                PlayerEncounter.Current.PlayerPartyInitialStrength = PartyBase.MainParty.CalculateCurrentStrength();
+                PlayerEncounter.Current.SetupFields(PartyBase.MainParty, settlement.Party);
+            }
+            else if (PlayerEncounter.EncounterSettlement != settlement)
+            {
+                // Someone else's encounter, against something other than this settlement. Do not
+                // repoint it — the caller's failure branch walks the player back out, which is far
+                // safer than handing them a menu whose encounter describes a different place.
+                _logger?.LogError(
+                    $"[Enlistment] EnsureSettlementEncounter('{settlementId}') — a live encounter already points at " +
+                    $"'{PlayerEncounter.EncounterSettlement?.StringId ?? "nothing"}'; refusing to repoint it");
+                return false;
+            }
+
+            if (PlayerEncounter.LocationEncounter == null)
+            {
+                if (main.CurrentSettlement == settlement)
+                    PlayerEncounter.LocationEncounter = CreateLocationEncounter(settlement);
+                else
+                    PlayerEncounter.EnterSettlement();
+            }
+
+            // VERIFY, never assume — and verify the location encounter points at THIS settlement.
+            // A non-null one for somewhere else is skipped by the null check above and would
+            // otherwise pass here, which is the dangerous direction: returning true is what makes
+            // both callers open a vanilla menu.
+            var ok = main.CurrentSettlement == settlement
+                && PlayerEncounter.Current != null
+                && PlayerEncounter.LocationEncounter?.Settlement == settlement;
+
+            if (!ok)
+            {
+                _logger?.LogError(
+                    $"[Enlistment] EnsureSettlementEncounter('{settlementId}') did not land: " +
+                    $"inside={main.CurrentSettlement?.StringId ?? "-"} encounter={PlayerEncounter.Current != null} " +
+                    $"location={PlayerEncounter.LocationEncounter?.Settlement?.StringId ?? "-"}");
+                RollBackIfCreatedHere(createdHere, settlementId);
+            }
+
+            return ok;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] EnsureSettlementEncounter('{settlementId}') failed: {ex.Message}");
+            RollBackIfCreatedHere(createdHere, settlementId);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// A false return must mean NOTHING was left behind. <c>PlayerEncounter.Finish</c> is the only
+    /// public route to clearing <c>Campaign.Current.PlayerEncounter</c> (the setter is internal),
+    /// and it nulls both that and <c>LocationEncounter</c> on every path. Gated on
+    /// <paramref name="createdHere"/> so a pre-existing foreign encounter is untouchable.
+    ///
+    /// <c>forcePlayerOutFromSettlement: false</c> — we may have moved the party in, but walking it
+    /// back out is the caller's decision, and both callers already handle their own placement.
+    /// </summary>
+    private void RollBackIfCreatedHere(bool createdHere, string settlementId)
+    {
+        if (!createdHere)
+            return;
+        try
+        {
+            PlayerEncounter.Finish(forcePlayerOutFromSettlement: false);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] EnsureSettlementEncounter('{settlementId}') rollback ALSO failed: {ex.Message} — a PlayerEncounter may be stranded");
+        }
+    }
+
+    /// <summary>
+    /// Mirrors vanilla's private <c>PlayerEncounter.CreateLocationEncounter</c>. Null for anything
+    /// that is none of the four kinds, which the caller treats as a failure rather than a menu.
+    /// </summary>
+    private static LocationEncounter CreateLocationEncounter(Settlement settlement)
+    {
+        if (settlement.IsTown) return new TownEncounter(settlement);
+        if (settlement.IsVillage) return new VillageEncounter(settlement);
+        if (settlement.IsCastle) return new CastleEncounter(settlement);
+        if (settlement.IsHideout) return new HideoutEncounter(settlement);
+        return null;
     }
 
     // NO DEFAULT, deliberately. The engine's own default is TRUE; this once defaulted to false,

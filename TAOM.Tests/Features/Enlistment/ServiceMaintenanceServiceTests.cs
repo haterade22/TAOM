@@ -22,6 +22,7 @@ public class ServiceMaintenanceServiceTests
     private IEnlistmentMenuService _menuService = null!;
     private IServiceStatusService _status = null!;
     private IArmyMembershipAdapter _army = null!;
+    private IEncounterAdapter _encounter = null!;
     private ServiceMaintenanceService _pump = null!;
 
     [TestInitialize]
@@ -39,10 +40,13 @@ public class ServiceMaintenanceServiceTests
 
         _status = Substitute.For<IServiceStatusService>();
         _army = Substitute.For<IArmyMembershipAdapter>();
+        _encounter = Substitute.For<IEncounterAdapter>();
+        _encounter.Finish(Arg.Any<bool>()).Returns(true);
+        Encounter(none: true);
 
         _pump = new ServiceMaintenanceService(
             _store, _machine, _attachment, _commander, _gameMenu, _menuService,
-            _status, _army, _logger);
+            _status, _army, _encounter, new EncounterOwnershipPolicy(), _logger);
 
         Commander(followable: true);
         Presence(parked: true);
@@ -63,11 +67,28 @@ public class ServiceMaintenanceServiceTests
             partyIsInMapEvent: inMapEvent, mapEventToken: token));
     }
 
-    private void Presence(bool parked = true, bool inMapEvent = false, bool encounter = false)
+    private void Presence(bool parked = true, bool inMapEvent = false, bool encounter = false,
+        string settlementId = null)
     {
         _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
             mainPartyExists: true, isActive: !parked, isVisible: !parked,
-            isInMapEvent: inMapEvent, hasPlayerEncounter: encounter));
+            isInMapEvent: inMapEvent, hasPlayerEncounter: encounter, settlementId: settlementId));
+    }
+
+    /// <summary>
+    /// What <c>IEncounterAdapter.GetOwnership</c> reports. <paramref name="none"/> is the steady
+    /// state; a settlement encounter is the shape shore leave opens (no encountered mobile party),
+    /// and a party encounter is someone else's.
+    /// </summary>
+    private void Encounter(bool none = false, bool partyShaped = false, bool playerInMapEvent = false)
+    {
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: !none,
+            conversationInProgress: false,
+            hasEncounteredMobileParty: partyShaped,
+            encounteredPartyId: partyShaped ? "lord_party_1" : null,
+            encounteredPartyIsCommanderRelated: partyShaped,
+            playerInMapEvent: playerInMapEvent));
     }
 
     /// <summary>Pump enough to cross the throttle and reach the expensive tier.</summary>
@@ -455,4 +476,117 @@ public class ServiceMaintenanceServiceTests
         _status.DidNotReceive().RefreshIfChanged();
     }
 
+    // ---- Shore leave revoke closes the encounter the pass opened (issue #510) ----------------
+    // TakeTownLeave establishes a settlement PlayerEncounter so the vanilla town menu is safe.
+    // Nothing else will ever close it: EncounterOwnershipPolicy R3 returns SkipNotOurs for an
+    // encounter with no encountered MOBILE party, which is exactly a settlement encounter's shape,
+    // so the reconciler's stranded-encounter sweep deliberately walks past it. A leak here blocks
+    // every future main-party encounter for the rest of the term.
+
+    [TestMethod]
+    public void Pump_ShoreLeaveRevoked_FinishesTheEncounterThePassOpened()
+    {
+        MakeEnlisted();
+        _store.Record.OnTownLeave = true;
+        Presence(parked: false, settlementId: null);
+        Encounter(); // settlement shape: live, no encountered mobile party
+
+        PumpExpensive();
+
+        Assert.IsFalse(_store.Record.OnTownLeave);
+        _encounter.Received(1).Finish(false);
+    }
+
+    [TestMethod]
+    public void Pump_ShoreLeaveStillValid_LeavesTheEncounterAlone()
+    {
+        MakeEnlisted();
+        _store.Record.OnTownLeave = true;
+        Presence(parked: false, encounter: true, settlementId: "town_EW1");
+        Encounter();
+
+        PumpExpensive();
+
+        Assert.IsTrue(_store.Record.OnTownLeave);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    /// <summary>
+    /// Leave is revoked for EVERY reason that is not attached-and-in-a-settlement, and one of them
+    /// is "a battle started". At that moment the live encounter is the one ServiceBattleService
+    /// seeded, and destroying it freezes the map event: MapEventManager.Tick skips the player's own
+    /// event and only PlayerEncounter.Update advances it. The revoke goes through the ownership
+    /// policy for exactly this case.
+    /// </summary>
+    [TestMethod]
+    public void Pump_ShoreLeaveRevokedDuringABattle_DoesNotDestroyTheBattleEncounter()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _store.Record.OnTownLeave = true;
+        Presence(parked: false, inMapEvent: true, encounter: true, settlementId: null);
+        Encounter(partyShaped: true, playerInMapEvent: true);
+
+        PumpExpensive();
+
+        Assert.IsFalse(_store.Record.OnTownLeave);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
+
+    /// <summary>
+    /// The revoke also fires on a STATE change, not only when the column marches, so it can run
+    /// while the player is still standing in the town. Vanilla `PlayerEncounter.Finish` always
+    /// stops time and calls `GameMenu.ExitToLast()`, and only walks the player out when
+    /// forcePlayerOutFromSettlement is true. Passing false there strands them inside a settlement
+    /// with no menu, which `MobileParty.DoUpdatePosition` will not move.
+    /// </summary>
+    [TestMethod]
+    public void Pump_ShoreLeaveRevokedWhileStillInsideTheSettlement_ForcesThePlayerOut()
+    {
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        _store.Record.OnTownLeave = true;
+        Presence(parked: false, settlementId: "town_EW1");
+        _encounter.IsInsideSettlement.Returns(true);
+        Encounter();
+
+        PumpExpensive();
+
+        Assert.IsFalse(_store.Record.OnTownLeave);
+        _encounter.Received(1).Finish(true);
+    }
+
+    /// <summary>
+    /// The force flag must come from the ENGINE's predicate, not ours. Vanilla's
+    /// <c>PlayerEncounter.InsideSettlement</c> is <c>MainParty.IsActive &amp;&amp; CurrentSettlement != null</c>;
+    /// <c>PlayerPresenceFlags.IsInSettlement</c> carries only the settlement id. Enlistment parks
+    /// the party INACTIVE without leaving the settlement, so the two disagree, and in that shape
+    /// vanilla's eject is unreachable no matter what we pass. Asking the engine keeps the argument
+    /// honest instead of asserting a walk-out that silently will not happen.
+    /// </summary>
+    [TestMethod]
+    public void Pump_ShoreLeaveRevokedWhileParkedInactiveInsideASettlement_DoesNotClaimToEjectThem()
+    {
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        _store.Record.OnTownLeave = true;
+        Presence(parked: true, settlementId: "town_EW1");   // TAOM says inside...
+        _encounter.IsInsideSettlement.Returns(false);        // ...the engine says no, party inactive
+        Encounter();
+
+        PumpExpensive();
+
+        _encounter.Received(1).Finish(false);
+    }
+
+    [TestMethod]
+    public void Pump_NoShoreLeave_NeverFinishesAnEncounter()
+    {
+        // The revoke owns exactly one encounter: the one the pass opened. An encounter the player
+        // or the battle service owns is not this pump's to close.
+        MakeEnlisted();
+        Presence(parked: true, encounter: true);
+        Encounter();
+
+        PumpExpensive();
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
 }

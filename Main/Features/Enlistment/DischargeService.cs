@@ -147,13 +147,18 @@ public class DischargeService : IDischargeService
 
         if (after != null && after.EncountersBlocked)
         {
+            // HasPlayerEncounter is REQUIRED here, not incidental. This check used to demand its
+            // ABSENCE, which is exactly backwards: inside a settlement with no encounter is the
+            // crash shape (issue #510), and calling it benign is why two releases shipped with it.
+            // A settlement encounter has no encountered mobile party, so it does not block anything
+            // the way a stranded party encounter does.
             var settlementOnly = after.IsHeldInsideSettlement
-                && after.IsActive && !after.IsInMapEvent && !after.HasPlayerEncounter && !after.IsAttachedToParty;
+                && after.IsActive && after.HasPlayerEncounter && !after.IsInMapEvent && !after.IsAttachedToParty;
 
             if (settlementOnly)
             {
-                // Expected after a release INSIDE a town: the player has a settlement menu and can
-                // walk out normally. Not the stranded shape.
+                // Expected after a release INSIDE a town: the player has a settlement menu, a live
+                // encounter behind it, and can walk out normally. Not the stranded shape.
                 _logger?.LogWarning($"[EnlistDiag] DISCHARGE({reason}) left the player inside '{after.SettlementId}' — normal for a release in a settlement, they can leave from the menu.");
             }
             else
@@ -186,13 +191,37 @@ public class DischargeService : IDischargeService
         var menuId = commander.SettlementMenuId;
         if (!string.IsNullOrEmpty(settlementId) && !string.IsNullOrEmpty(menuId))
         {
-            if (_attachment.MoveIntoSettlement(settlementId) && _gameMenu.EnsureMenuOpen(menuId))
+            // ENCOUNTER FIRST, and it is not interchangeable with MoveIntoSettlement. That one is
+            // EnterSettlementAction.ApplyForParty alone, which moves the party and creates neither
+            // PlayerEncounter.Current nor PlayerEncounter.LocationEncounter — and the menu opened
+            // on the next line is VANILLA's. game_menu_settlement_wait_on_init opens by
+            // dereferencing PlayerEncounter.EncounterSettlement, so "Wait here for some time" was a
+            // guaranteed CTD seconds after every release into a town (issue #510, crash bundle
+            // d7d9f7d3). The tavern, arena, keep and town-centre walk go the same way through
+            // LocationEncounter.
+            //
+            // The redirect list cannot cover this: it is gated on EnlistedAttached, and step 8 has
+            // already set the record to NotEnlisted by the time we get here. That is the whole bug.
+            var encounterReady = _encounter.EnsureSettlementEncounter(settlementId);
+            if (encounterReady && _gameMenu.EnsureMenuOpen(menuId))
             {
                 _logger?.LogInfo($"[EnlistDiag] DISCHARGE({reason}) released the player into '{settlementId}' ({menuId})");
                 return;
             }
 
             _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not open '{menuId}' for '{settlementId}' — leaving the settlement rather than stranding the player inside it");
+
+            // CLOSE WHAT WE JUST OPENED. Step 7 already cleared anything that was live before this,
+            // so an encounter here is the one EnsureSettlementEncounter created, and LeaveSettlement
+            // below will not take it down — that is LeaveSettlementAction only, which never touches
+            // PlayerEncounter.Current. Left live it is the save-breaker: EncounterManager refuses
+            // every main-party encounter, and it survives a reload, because ExitServiceMenuIfOpen
+            // can leave MapStateData.GameMenuId empty and SandBoxGameManager.OnLoadFinished then
+            // calls neither OnLoad() nor Finish().
+            //
+            // Only when WE created it. A false return means the adapter refused someone else's.
+            if (encounterReady && !_encounter.Finish(forcePlayerOutFromSettlement: true))
+                _logger?.LogError($"[EnlistDiag] DISCHARGE({reason}) could not finish the settlement encounter it had just opened — the player may be unable to start encounters");
         }
 
         // EVERY path that did not just open a real settlement menu must walk the player OUT of
@@ -203,11 +232,17 @@ public class DischargeService : IDischargeService
         //
         // That is terminal, not cosmetic. MobileParty.DoUpdatePosition refuses to move a party with
         // CurrentSettlement set; CheckExitingSettlementParallel explicitly skips the main party; and
-        // the menu the engine re-pushes for a fortification is "town_outside", whose Leave option
-        // calls PlayerEncounter.Finish() — which returns immediately when Current is null and never
-        // reaches its own LeaveSettlement(). For a village the engine pushes nothing at all. It
-        // survives save/reload, because the record now reads NotEnlisted and every recovery loop in
-        // this feature early-returns on exactly that.
+        // the menu the engine re-pushes for a fortification is "town_outside". For a village the
+        // engine pushes nothing at all. It survives save/reload, because the record now reads
+        // NotEnlisted and every recovery loop in this feature early-returns on exactly that.
+        //
+        // CORRECTED 2026-08-24 (#510 Codex round): this comment used to say the player is left with
+        // a "town_outside" Leave option that no-ops because PlayerEncounter.Finish returns early on
+        // a null Current. They never reach the option. game_menu_town_outside_on_init opens with
+        // `args.MenuTitle = PlayerEncounter.EncounterSettlement.Name`, and EncounterSettlement is
+        // `Current?.EncounterSettlementAux`, so with no encounter the menu NREs at init inside
+        // GameMenu.RunOnInit, which is unguarded. The outcome is a CTD, not a stuck menu. The exit
+        // below is required either way; only the failure mode was mis-described.
         var presence = _attachment.GetPresenceFlags();
         if (presence.IsInSettlement)
         {

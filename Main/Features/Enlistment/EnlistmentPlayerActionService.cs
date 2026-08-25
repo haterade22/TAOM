@@ -14,6 +14,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
     private readonly IDutyOrchestrationService _duties;
     private readonly ICoopSessionProvider _coopSession;
     private readonly IMobilePartyAttachmentAdapter _attachment;
+    private readonly IEncounterAdapter _encounter;
     private readonly IModLogger _logger;
 
     public EnlistmentPlayerActionService(
@@ -23,6 +24,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         IDutyOrchestrationService duties,
         ICoopSessionProvider coopSession,
         IMobilePartyAttachmentAdapter attachment,
+        IEncounterAdapter encounter,
         IModLogger logger)
     {
         _store = store;
@@ -31,6 +33,7 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         _duties = duties;
         _coopSession = coopSession;
         _attachment = attachment;
+        _encounter = encounter;
         _logger = logger;
     }
 
@@ -105,6 +108,26 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
         if (!CanTakeTownLeave())
             return false;
 
+        // THE PASS HANDS OVER A VANILLA SETTLEMENT MENU, so it must first make one safe to show.
+        // The follow path walked the player in with EnterSettlementAction alone, so there is no
+        // PlayerEncounter and no LocationEncounter. Issue #510.
+        //
+        // On THIS path the affordance that needs it is LocationEncounter: the tavern, the arena,
+        // the keep and the town-centre walk all route through
+        // PlayerEncounter.LocationEncounter.CreateAndOpenMissionController. "Wait here for some
+        // time" is NOT the hazard here, because it switches to town_wait_menus, which is in
+        // RedirectMenuIds and is still redirected while enlisted — only the three settlement menus
+        // are released on a pass. That option is the crash on the DISCHARGE path, where the record
+        // already reads NotEnlisted and the redirect no longer applies at all.
+        //
+        // A refused pass is a correct outcome. A pass into a CTD is not.
+        var settlementId = SettlementId();
+        if (!_encounter.EnsureSettlementEncounter(settlementId))
+        {
+            _logger?.LogError($"[Enlistment] shore leave REFUSED for '{settlementId ?? "-"}' — could not establish the settlement encounter its menu needs");
+            return false;
+        }
+
         _store.Record.OnTownLeave = true;
         _logger?.LogInfo("[Enlistment] shore leave granted — the settlement menu is the player's until the column moves");
         return true;
@@ -120,5 +143,12 @@ public class EnlistmentPlayerActionService : IEnlistmentPlayerActionService
     {
         try { return _attachment.GetPresenceFlags().IsInSettlement; }
         catch { return false; }
+    }
+
+    /// <summary>Guarded the same way, and for the same reason, as <see cref="InsideSettlement"/>.</summary>
+    private string SettlementId()
+    {
+        try { return _attachment.GetPresenceFlags().SettlementId; }
+        catch { return null; }
     }
 }

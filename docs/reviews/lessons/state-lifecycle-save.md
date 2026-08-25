@@ -226,9 +226,16 @@ branch was skipped and the wait menu was then closed. Result: `CurrentSettlement
 That is terminal, and the engine offers no way out:
 `MobileParty.DoUpdatePosition` returns early for any party with `CurrentSettlement != null`;
 `CheckExitingSettlementParallel` explicitly skips `IsMainParty`; the menu the engine re-pushes for a
-fortification is `town_outside`, whose Leave calls `PlayerEncounter.Finish()` — which returns
-immediately when `Current` is null and never reaches its own `LeaveSettlement()`. For a village it
-pushes nothing at all. And it survives save/reload, because the record now reads `NotEnlisted` and
+fortification is `town_outside`. For a village it pushes nothing at all.
+
+*(Correction, 2026-08-24, #510 Codex round: this entry used to add that `town_outside`'s Leave
+option calls `PlayerEncounter.Finish()` and no-ops on a null `Current`. The player never reaches
+that option. `game_menu_town_outside_on_init` opens with
+`args.MenuTitle = PlayerEncounter.EncounterSettlement.Name`, and `EncounterSettlement` is
+`Current?.EncounterSettlementAux`, so the menu NREs at init inside the unguarded
+`GameMenu.RunOnInit`. The failure is a CTD, not a stuck menu. The lesson below is unchanged;
+only the engine detail was wrong, and it had been copied into three other artifacts before
+anyone decompiled the init.)* And it survives save/reload, because the record now reads `NotEnlisted` and
 every recovery loop early-returns on that.
 
 **The rule:** a placement/cleanup step must be driven by the state of the actor it is placing, not
@@ -422,3 +429,30 @@ and a load-with-same-ids.
 
 **Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 1 (2 CRITICAL, found independently
 by the unbiased round-A review and Codex).
+
+### A redirect list is a MASK over an invalid state, and every mask is one un-masking away from the crash
+
+Enlistment walked the player into a settlement with `EnterSettlementAction.ApplyForParty` alone,
+which creates no `PlayerEncounter` and no `LocationEncounter`. That state is unreachable in vanilla:
+`EncounterManager.StartSettlementEncounter` always builds both. It looked safe only because
+`RedirectMenuIds` swallowed `town`/`castle`/`village` and showed a TAOM menu instead. Then two
+paths removed the mask, a month apart, and both crashed identically on
+`game_menu_settlement_wait_on_init`'s unguarded `PlayerEncounter.EncounterSettlement.IsVillage`:
+discharge, by clearing the record to `NotEnlisted` (which the redirect is gated on) before placing
+the player, and shore leave, by releasing the settlement menus on purpose.
+
+**Why missed:** the hazard WAS documented, twice, in exactly the right places. The follow path's own
+doc comment named the crash, and the feature doc said letting the player use the town needed the
+`LocationEncounter` work first. Shore leave was then written against that same feature doc and
+shipped without it. Review passes read the mask as the mechanism and never asked what state the
+mask was hiding.
+
+**Prevent:** when you find yourself suppressing vanilla UI to keep a state survivable, name the
+invalid state out loud and fix IT, or accept that you have set a trap for whoever removes the
+suppression. Route the state change through one adapter chokepoint, and pin the chokepoint with an
+IL-scanning ban test on the unsafe primitive (`SettlementEncounterInvariantTests`, built on the
+shared `IlCallScanner`). Prose in a doc comment demonstrably does not hold the line. An allow-list
+entry must state how that caller keeps the vanilla UI unreachable.
+
+**Source:** issue #510, player crash bundle `d7d9f7d3` (TAOM v2.0.20 on Bannerlord v1.4.8); site B
+shipped in v2.0.21 and v2.0.22. `docs/features/enlistment.md` "The settlement-encounter invariant".

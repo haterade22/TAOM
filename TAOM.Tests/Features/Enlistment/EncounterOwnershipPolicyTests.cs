@@ -35,6 +35,7 @@ public class EncounterOwnershipPolicyTests
     [DataRow(EncounterFinishIntent.JoinRollback)]
     [DataRow(EncounterFinishIntent.ParkedSweep)]
     [DataRow(EncounterFinishIntent.Discharge)]
+    [DataRow(EncounterFinishIntent.ShoreLeaveEnd)]
     public void Evaluate_NoEncounter_NothingToFinishForEveryIntent(EncounterFinishIntent intent)
     {
         Assert.AreEqual(EncounterFinishVerdict.NothingToFinish,
@@ -160,5 +161,56 @@ public class EncounterOwnershipPolicyTests
     public void Evaluate_ServiceIntents_SomeoneElsesParty_SkipNotOurs(EncounterFinishIntent intent)
     {
         Assert.AreEqual(EncounterFinishVerdict.SkipNotOurs, _policy.Evaluate(intent, SomeoneElsesParty()));
+    }
+
+    // ---- R2b: shore leave inverts R3, and only R3 ------------------------------------------
+    // The settlement-shaped encounter under ShoreLeaveEnd is the one TakeTownLeave opened so the
+    // vanilla town menu would not NRE (issue #510). Ending the pass is the one moment it is ours,
+    // and no other mechanism would ever close it — the parked sweep skips it by R3 above.
+
+    [TestMethod]
+    public void Evaluate_ShoreLeaveEnd_SettlementEncounter_Finish()
+    {
+        Assert.AreEqual(EncounterFinishVerdict.Finish,
+            _policy.Evaluate(EncounterFinishIntent.ShoreLeaveEnd, SettlementVisit()));
+    }
+
+    [TestMethod]
+    public void Evaluate_ShoreLeaveEnd_CommanderEncounter_Finish()
+    {
+        // A commander encounter is ours under every service intent; shore leave changes nothing.
+        Assert.AreEqual(EncounterFinishVerdict.Finish,
+            _policy.Evaluate(EncounterFinishIntent.ShoreLeaveEnd, CommanderEncounter()));
+    }
+
+    [TestMethod]
+    public void Evaluate_ShoreLeaveEnd_SomeoneElsesParty_SkipNotOurs()
+    {
+        Assert.AreEqual(EncounterFinishVerdict.SkipNotOurs,
+            _policy.Evaluate(EncounterFinishIntent.ShoreLeaveEnd, SomeoneElsesParty()));
+    }
+
+    [TestMethod]
+    public void Evaluate_ShoreLeaveEnd_PlayerInOwnBattle_Defers()
+    {
+        // Leave is revoked when a battle starts, so this is the common case, not an edge one.
+        // Finishing here freezes the map event the player is standing in.
+        var inBattle = new EncounterOwnershipSnapshot(hasEncounter: true,
+            hasEncounteredMobileParty: true, encounteredPartyId: "lord_party_1",
+            encounteredPartyIsCommanderRelated: true, playerInMapEvent: true);
+
+        Assert.AreEqual(EncounterFinishVerdict.DeferPlayerOwnBattle,
+            _policy.Evaluate(EncounterFinishIntent.ShoreLeaveEnd, inBattle));
+    }
+
+    [TestMethod]
+    public void Evaluate_ShoreLeaveEnd_ConversationRunning_Skips()
+    {
+        var talking = new EncounterOwnershipSnapshot(hasEncounter: true,
+            hasEncounteredMobileParty: false, conversationInProgress: true,
+            playerInsideSettlement: true);
+
+        Assert.AreEqual(EncounterFinishVerdict.SkipConversationInProgress,
+            _policy.Evaluate(EncounterFinishIntent.ShoreLeaveEnd, talking));
     }
 }

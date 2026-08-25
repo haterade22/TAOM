@@ -73,6 +73,22 @@ public interface IEncounterAdapter
     bool LeaveSettlementIfUnderSiege();
 
     /// <summary>
+    /// Put the main party inside a settlement the way VANILLA does, with a live
+    /// <c>PlayerEncounter</c> and its <c>LocationEncounter</c>, so a vanilla settlement menu is
+    /// safe to show. Returns true only when both halves are verifiably in place.
+    ///
+    /// THIS IS THE INVARIANT, and a false return is a hard stop: the caller must NOT open
+    /// <c>town</c>/<c>castle</c>/<c>village</c>. <c>EnterSettlementAction.ApplyForParty</c> on its
+    /// own (what <c>IMobilePartyAttachmentAdapter.MoveIntoSettlement</c> does) moves the party but
+    /// creates neither, and vanilla's settlement menus dereference both unguarded —
+    /// <c>game_menu_settlement_wait_on_init</c> opens on
+    /// <c>PlayerEncounter.EncounterSettlement.IsVillage</c>, and the tavern/arena/keep/walk options
+    /// all go through <c>PlayerEncounter.LocationEncounter</c>. Issue #510 was that NRE, reached
+    /// from "Wait here for some time" seconds after a discharge released the player into a town.
+    /// </summary>
+    bool EnsureSettlementEncounter(string settlementId);
+
+    /// <summary>
     /// Finish the current encounter. NO DEFAULT on purpose: the engine's own default is
     /// <c>true</c> and TAOM's was <c>false</c>, an inverted polarity that every call site silently
     /// inherited. <c>PlayerEncounter.Finish</c> only calls <c>LeaveSettlement()</c> when this is

@@ -22,6 +22,7 @@ public class EnlistmentPlayerActionServiceTests
     private IMapConversationAdapter _conversation;
     private IDutyOrchestrationService _duties;
     private IMobilePartyAttachmentAdapter _attachment = null!;
+    private IEncounterAdapter _encounter = null!;
     private EnlistmentPlayerActionService _sut;
 
     [TestInitialize]
@@ -43,8 +44,10 @@ public class EnlistmentPlayerActionServiceTests
         _store.Record.CommanderHeroId = "lord_1";
 
         _attachment = Substitute.For<IMobilePartyAttachmentAdapter>();
+        _encounter = Substitute.For<IEncounterAdapter>();
+        _encounter.EnsureSettlementEncounter(Arg.Any<string>()).Returns(true);
         _sut = new EnlistmentPlayerActionService(
-            _store, _commander, _conversation, _duties, Coop(), _attachment, logger);
+            _store, _commander, _conversation, _duties, Coop(), _attachment, _encounter, logger);
     }
 
     [TestMethod]
@@ -130,6 +133,47 @@ public class EnlistmentPlayerActionServiceTests
         Assert.AreEqual(DutyRequestResult.DutyAssigned, _sut.RequestDutyNow(10.0, 12.0));
         _duties.Received(1).RequestDutyNow(10.0, 12.0);
     }
+
+    // ---- Shore leave: the pass hands the player a VANILLA settlement menu (issue #510) --------
+    // The follow path put him inside with EnterSettlementAction alone, so there is no
+    // PlayerEncounter and no LocationEncounter. Releasing the town menu in that state is a CTD
+    // on "Wait here for some time", the tavern, the arena and the town-centre walk. The pass must
+    // establish the encounter first, and must refuse itself if it cannot.
+
+    [TestMethod]
+    public void TakeTownLeave_EstablishesTheSettlementEncounterBeforeGrantingThePass()
+    {
+        InsideSettlement("town_EW1");
+
+        Assert.IsTrue(_sut.TakeTownLeave());
+
+        _encounter.Received(1).EnsureSettlementEncounter("town_EW1");
+        Assert.IsTrue(_store.Record.OnTownLeave);
+    }
+
+    [TestMethod]
+    public void TakeTownLeave_EncounterCannotBeEstablished_RefusesThePass()
+    {
+        InsideSettlement("town_EW1");
+        _encounter.EnsureSettlementEncounter("town_EW1").Returns(false);
+
+        Assert.IsFalse(_sut.TakeTownLeave());
+        Assert.IsFalse(_store.Record.OnTownLeave);
+    }
+
+    [TestMethod]
+    public void TakeTownLeave_NotInASettlement_RefusesWithoutTouchingTheEncounter()
+    {
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(mainPartyExists: true));
+
+        Assert.IsFalse(_sut.TakeTownLeave());
+        _encounter.DidNotReceive().EnsureSettlementEncounter(Arg.Any<string>());
+        Assert.IsFalse(_store.Record.OnTownLeave);
+    }
+
+    private void InsideSettlement(string settlementId) =>
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
+            mainPartyExists: true, isActive: true, isVisible: true, settlementId: settlementId));
 
     private static ICoopSessionProvider Coop()
     {

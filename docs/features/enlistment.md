@@ -319,11 +319,17 @@ rejected.** `DefaultEncounterGameMenuModel.GetGenericStateMenu` dereferences
 `Campaign.cs` calls it every tick on the open map. `AttachedTo` set without an `Army` is therefore
 a guaranteed CTD, not a style question.
 
-**Settlement following places the player inside but holds them in the TAOM wait menu.** Letting
-them actually *use* the town is a separate feature: every in-settlement affordance routes through
-`PlayerEncounter.LocationEncounter`, and a live `PlayerEncounter` while `EnlistedAttached` is
-precisely what the reconciler's stranded-encounter sweeper destroys. That needs its own
-`EnlistedOnLeave` state with its own save-compat and transition work.
+**Settlement following places the player inside but holds them in the TAOM wait menu.** The
+redirect list is what holds him there. Note carefully what that means: he is inside the settlement
+with NO `PlayerEncounter`, because the follow path uses `EnterSettlementAction.ApplyForParty`
+alone. The redirect is a mask over an invalid state, not a fix for it, and the crash is one
+un-masking away. See "The settlement-encounter invariant" below, which is what shore leave and the
+discharge release both needed and neither originally had.
+
+*This paragraph used to end here, claiming letting the player use the town was future work needing
+its own `EnlistedOnLeave` state. Shore leave (2026-08-12) then shipped that feature without the
+`PlayerEncounter` work the paragraph named, which is how issue #510 happened. The requirement was
+real; only the "separate state" framing was wrong.*
 
 **The release refusal is keyed to `MinimumServiceDays` (21), deliberately NOT `ContractDays`
 (365).** Keying it to the contract would refuse every realistic request and leave desertion as the
@@ -905,6 +911,119 @@ you are not immediately re-engaged; discharge and confirm pre-enlistment wars ar
 **Add to that list:** raise an army for a battle, let a real lord join it, end the battle, then open
 the kingdom Armies tab and hover the commander's party on the map; both were the crash surface.
 Translation of the 5 new keys (#434).
+
+## The settlement-encounter invariant (#510)
+
+**Whenever TAOM puts the main party inside a settlement and a vanilla settlement menu can reach the
+player, a `PlayerEncounter` and its `LocationEncounter` must exist.** One chokepoint enforces it:
+`IEncounterAdapter.EnsureSettlementEncounter`. `IMobilePartyAttachmentAdapter.MoveIntoSettlement`
+does NOT, and `SettlementEncounterInvariantTests` bans every caller of it outside a tiny allow-list.
+
+### Why the engine leaves no room here
+
+Vanilla has exactly one way for the main party to be inside a settlement, and it always builds both
+objects. `EncounterManager.StartSettlementEncounter` calls `PlayerEncounter.Start()` then
+`PlayerEncounter.Init(...)`, and `Init` calls `PlayerEncounter.EnterSettlement()`, which creates the
+`TownEncounter` / `CastleEncounter` / `VillageEncounter` and only then runs
+`EnterSettlementAction.ApplyForParty`. Verified on installed v1.4.8:
+
+| Engine fact | Consequence when the encounter is missing |
+|---|---|
+| `game_menu_settlement_wait_on_init` opens on `PlayerEncounter.EncounterSettlement.IsVillage`, guarding `PlayerEncounter.Current` only on the NEXT line | "Wait here for some time" is a CTD |
+| `EncounterSettlement => Current?.EncounterSettlementAux` | that deref is on a null |
+| That one `on_init` backs `town_wait_menus` AND `village_wait_menus`, and the castle menu's `town_wait` routes into `town_wait_menus` | towns, castles and villages fail identically |
+| `game_menu_wait_here_on_condition` consults only `SettlementAccessModel` | the option is drawn ENABLED, so nothing warns the player |
+| `PlayerTownVisitCampaignBehavior` derefs `PlayerEncounter.LocationEncounter` unguarded in about a dozen places | tavern, arena, keep and the town-centre walk fail too, so guarding one menu is not a fix |
+| `EnterSettlementAction.ApplyForParty` has no already-inside guard and re-dispatches `OnSettlementEntered` | the chokepoint sets `LocationEncounter` directly when the party is already inside, rather than calling `EnterSettlement()` a second time and completing a cancelled duty |
+
+The recipe the chokepoint follows is vanilla's own, from
+`EncounterGameMenuBehavior.game_menu_siege_attacker_left_return_to_settlement_on_consequence`.
+It uses `PlayerEncounter.Start()` + the public `SetupFields(MainParty, settlement.Party)` because
+`Init` is `internal`, and `SetupFields` sets `EncounterSettlementAux` from a settlement defender
+party. `MessengerCampaignBehavior` already used it this way.
+
+### How it shipped twice
+
+Discharge released the player into the commander's town with the raw vanilla menu (v2.0.20; crash
+bundle `d7d9f7d3`, "Wait here for some time" 14 seconds after the release). The redirect list could
+not cover it: it is gated on `EnlistedAttached`, and the pipeline sets the record to `NotEnlisted`
+before placing the player. Shore leave then handed the same menu to a still-enlisted player
+(v2.0.21, v2.0.22), by design, without building the encounter first.
+
+`ServiceAttachmentService.FollowCommanderIntoSettlement`'s doc comment named this crash the whole
+time. So did the design note above. **A comment did not stop it; the ban test is there because
+prose cannot enforce an invariant.**
+
+### Save and reload: vanilla rebuilds the half that is not saved
+
+`Campaign.LocationEncounter` is `[CachedData]`, NOT `[SaveableProperty]`, so it genuinely does not
+survive a reload. The encounter itself does: `Campaign.PlayerEncounter` is `[SaveableProperty(54)]`
+and `EncounterSettlementAux` is `[SaveableProperty(28)]`.
+
+The missing half is rebuilt by vanilla, not by TAOM. `SandBoxGameManager.OnLoadFinished` calls
+`PlayerEncounter.Current.OnLoad()` when `MapState.GameMenuId` names a resolvable menu, and that does:
+
+```csharp
+if (InsideSettlement && Battle == null)
+    CreateLocationEncounter(MobileParty.MainParty.CurrentSettlement);
+```
+
+`InsideSettlement` is `MainParty.IsActive && CurrentSettlement != null`, which holds for every state
+this feature creates (the follow path restores presence before moving in, so the party inside a
+settlement is always active). In each of those states the player is sitting on a resolvable menu:
+`town` after a discharge release, `town`/`castle`/`village` on shore leave, the TAOM wait menu
+otherwise. So a save taken during shore leave reloads safely.
+
+Worth re-verifying on the next engine bump, because it rests on a vanilla mechanism TAOM does not
+own: if `OnLoad` stops being called, or its `InsideSettlement` gate changes, the reload path silently
+reverts to the #510 shape.
+
+### Teardown
+
+Shore leave's encounter is settlement-shaped, and `EncounterOwnershipPolicy` R3 deliberately never
+closes those (that rule is what stops the oath destroying a town visit the player owns). Nothing
+else would ever take it down, and a leaked `PlayerEncounter` blocks every main-party encounter for
+the rest of the term. So the revoke owns it, through the policy under
+`EncounterFinishIntent.ShoreLeaveEnd` (R2b), which inverts R3 and only R3. It goes through the
+policy rather than a bare `Finish` because leave is revoked for every reason including "a battle
+started", and at that moment the live encounter may be the one `ServiceBattleService` seeded.
+
+Discharge needs no special case: `EncounterFinishIntent.Discharge` already outranks R3, so a
+discharge taken while on leave closes that encounter at step 7 and step 10 builds a fresh one.
+
+The revoke passes `forcePlayerOutFromSettlement: presence.IsInSettlement`, not a bare `false`. Leave
+is revoked for every reason that is not attached-and-in-a-settlement, so it also fires on a STATE
+change while the player is still standing in the town, and vanilla `Finish` always stops time and
+calls `GameMenu.ExitToLast()`. Leaving them inside with no menu is the terminal shape from the 2026
+review pass, because `MobileParty.DoUpdatePosition` will not move a party with `CurrentSettlement`
+set. Out on the map with time stopped is merely paused.
+
+### Known gap: the mask still disarms outside `EnlistedAttached` (#511)
+
+The invariant above is enforced at the two sites that hand over a vanilla menu. It does NOT cover
+the state the follow path leaves behind. `TryRedirectMenu` and `EnsureServiceMenu` are both gated on
+`EnlistedAttached` alone, so in `CommanderUnavailable` the mask is off while the player is inside a
+settlement with no encounter, and `Campaign.Tick` force-pushes the generic state menu on every tick
+the player is not at one. For an encounter-less party inside a fortification that resolves to
+`town_outside`.
+
+**Corrected 2026-08-24, after the Codex round.** This section first claimed the failure was a
+soft-lock, on the grounds that `town_outside`'s Leave option calls `PlayerEncounter.Finish()`, which
+no-ops when `Current` is null. The player never reaches that option:
+`game_menu_town_outside_on_init` opens with `args.MenuTitle = PlayerEncounter.EncounterSettlement.Name`
+and `EncounterSettlement` is `Current?.EncounterSettlementAux`, so the menu NREs at init inside
+`GameMenu.RunOnInit`, which has no try/catch. The hazard is a CTD of the #510 class, not a soft-lock.
+
+**And the chain is harder to reach than first written.** `Campaign.Tick`'s push is gated on
+`MapState.AtMenu == false`, and nothing found in the `CommanderUnavailable` path closes the TAOM wait
+menu: its condition is `IsEnlisted`, which spans that state; every wait-menu option is registered
+`isLeave: false` so there is no Escape slot; and `EnsureServiceMenu`'s gate only stops the menu being
+RE-asserted, it never tears one down. So the smoke that would settle #511 is not "sit in a town with
+a dead commander", it is "find something that closes the wait menu in that state", plus the separate
+case of a vanilla `SwitchToMenu` swapping it, which needs no `AtMenu == false` at all.
+
+Tracked in #511 rather than fixed here because both candidate fixes need an in-game smoke, and the
+first collides with the battle path's R3 handling.
 
 ## Interactions with the rest of TAOM
 

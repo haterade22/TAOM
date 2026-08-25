@@ -21,6 +21,16 @@ public enum EncounterFinishIntent
 
     /// <summary>Service is ending; the player must be handed back interactable no matter what.</summary>
     Discharge,
+
+    /// <summary>
+    /// A shore-leave pass has been revoked and the settlement encounter it opened must come down.
+    /// The ONLY intent that treats a settlement-shaped encounter as ours: R3 exists to protect a
+    /// town visit the player owns, and under this intent we are the ones who opened it
+    /// (<c>EnlistmentPlayerActionService.TakeTownLeave</c>). Nothing else ever would: the parked
+    /// sweep skips it by R3, and a leaked encounter blocks every main-party encounter for the rest
+    /// of the term.
+    /// </summary>
+    ShoreLeaveEnd,
 }
 
 /// <summary>The decision, and the reason, so the log says which rule fired.</summary>

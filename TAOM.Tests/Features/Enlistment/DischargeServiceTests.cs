@@ -43,6 +43,7 @@ public class DischargeServiceTests
         _gameMenu.ExitToLast().Returns(true);
         _gameMenu.EnsureMenuOpen(Arg.Any<string>()).Returns(true);
         _attachment.MoveIntoSettlement(Arg.Any<string>()).Returns(true);
+        _encounter.EnsureSettlementEncounter(Arg.Any<string>()).Returns(true);
         _service = new DischargeService(_store, _machine, _attachment, _encounter,
             new EncounterOwnershipPolicy(), _commanderAdapter, _gameMenu, Substitute.For<IServiceDiplomacyService>(), _army, _logger);
     }
@@ -284,8 +285,36 @@ public class DischargeServiceTests
 
         _service.Execute(DischargeReason.PlayerRequest);
 
-        _attachment.Received(1).MoveIntoSettlement("town_A1");
+        // Issue #510: the placement must go through the ENCOUNTER-establishing path, never the
+        // bare EnterSettlementAction one. A vanilla town menu without a PlayerEncounter is a CTD.
+        _encounter.Received(1).EnsureSettlementEncounter("town_A1");
+        _attachment.DidNotReceive().MoveIntoSettlement(Arg.Any<string>());
         _gameMenu.Received(1).EnsureMenuOpen("town");
+    }
+
+    /// <summary>
+    /// Issue #510. When the encounter cannot be established, the vanilla settlement menu must NOT
+    /// be opened: it is the menu plus the null encounter that crashes, and opening it anyway would
+    /// hand the player exactly the state the bundle captured.
+    /// </summary>
+    [TestMethod]
+    public void Execute_SettlementEncounterCannotBeEstablished_NeverOpensTheVanillaMenu()
+    {
+        MakeEnlisted();
+        _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
+            exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
+            settlementId: "town_A1", settlementMenuId: "town"));
+        _encounter.EnsureSettlementEncounter("town_A1").Returns(false);
+        _attachment.GetPresenceFlags().Returns(new PlayerPresenceFlags(
+            mainPartyExists: true, isActive: true, isVisible: true, settlementId: "town_A1"));
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        _gameMenu.DidNotReceive().EnsureMenuOpen("town");
+        _attachment.Received(1).LeaveSettlement();
+        // A refusal means the adapter would not touch a live encounter it did not create, so we
+        // must not close one either. Only the success-then-menu-failure path owns a teardown.
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
     }
 
     [TestMethod]
@@ -297,7 +326,8 @@ public class DischargeServiceTests
         _commanderAdapter.GetSnapshot(Arg.Any<string>()).Returns(new CommanderSnapshot(
             exists: true, isAlive: true, partyId: "lord_party_1", partyIsActive: true,
             settlementId: "town_A1", settlementMenuId: "town"));
-        _attachment.MoveIntoSettlement(Arg.Any<string>()).Returns(true);
+        _encounter.EnsureSettlementEncounter("town_A1").Returns(true);
+        _encounter.Finish(Arg.Any<bool>()).Returns(true);
         _gameMenu.EnsureMenuOpen("town").Returns(false);
         // The move succeeded, so the player really is inside — that is the precondition for
         // backing them out again.
@@ -307,6 +337,11 @@ public class DischargeServiceTests
         _service.Execute(DischargeReason.PlayerRequest);
 
         _attachment.Received(1).LeaveSettlement();
+        // THE ASSERTION THIS TEST WAS MISSING. Without it the test passed against the pre-fix code
+        // too, and the leak it exists to catch is precisely that the encounter EnsureSettlementEncounter
+        // just created outlives the failed menu open. LeaveSettlementAction never clears it, and a
+        // reload will not either when ExitToLast has left MapStateData.GameMenuId empty.
+        _encounter.Received(1).Finish(true);
     }
 
     [TestMethod]
@@ -322,6 +357,7 @@ public class DischargeServiceTests
         _service.Execute(DischargeReason.HeirSuccessionOrPossessionMismatch);
 
         _attachment.DidNotReceive().MoveIntoSettlement(Arg.Any<string>());
+        _encounter.DidNotReceive().EnsureSettlementEncounter(Arg.Any<string>());
     }
 
     [TestMethod]
@@ -336,11 +372,15 @@ public class DischargeServiceTests
             settlementId: "town_A1", settlementMenuId: "town"));
         var subscriberRanBeforePlacement = false;
         _service.EnlistmentEnded += _ =>
-            subscriberRanBeforePlacement = _attachment.ReceivedCalls()
-                .All(c => c.GetMethodInfo().Name != nameof(IMobilePartyAttachmentAdapter.MoveIntoSettlement));
+            subscriberRanBeforePlacement = _encounter.ReceivedCalls()
+                .All(c => c.GetMethodInfo().Name != nameof(IEncounterAdapter.EnsureSettlementEncounter));
 
         _service.Execute(DischargeReason.PlayerRequest);
 
+        // BOTH halves, or the test is vacuous. The predicate above is trivially true whenever
+        // placement never went through the encounter adapter at all, so on its own it would pass
+        // against a reverted implementation that still used MoveIntoSettlement.
+        _encounter.Received(1).EnsureSettlementEncounter("town_A1");
         Assert.IsTrue(subscriberRanBeforePlacement);
     }
 
@@ -356,7 +396,8 @@ public class DischargeServiceTests
     {
         // A live PlayerEncounter that survives the pipeline is the save-breaker: EncounterManager
         // then refuses every main-party encounter, so the player can never click a lord again.
-        // Deliberately NOT the settlement shape — that one is benign and logs a warning instead.
+        // Deliberately NOT the released-into-a-settlement shape, which is benign and logs a
+        // warning instead — but only when the encounter came WITH it, see the two tests below.
         MakeEnlisted();
         _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
             mainPartyExists: true, isActive: true, isVisible: true,
@@ -421,5 +462,48 @@ public class DischargeServiceTests
         _service.Execute(DischargeReason.CommanderDead);
 
         _attachment.DidNotReceive().LeaveSettlement();
+    }
+
+    /// <summary>
+    /// Issue #510, and the reason it went unreported for two releases. The post-check called
+    /// "inside a settlement, no encounter" the BENIGN shape and logged a reassuring warning. That
+    /// is the crash shape: the vanilla settlement menu the player is looking at will NRE on
+    /// PlayerEncounter.EncounterSettlement the moment they click "Wait here for some time".
+    /// </summary>
+    [TestMethod]
+    public void Execute_LeftInsideASettlementWithNoEncounter_LogsItAsTheCrashShape()
+    {
+        MakeEnlisted();
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
+            mainPartyExists: true, isActive: true, isVisible: true,
+            settlementId: "town_EW1", hasPlayerEncounter: false));
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        _logger.Received().LogError(Arg.Is<string>(s =>
+            s.Contains("LEFT THE PLAYER UNABLE TO START ENCOUNTERS")));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s =>
+            s.Contains("normal for a release in a settlement")));
+    }
+
+    /// <summary>
+    /// The genuinely benign counterpart: released into a settlement WITH the encounter that makes
+    /// its menu safe. This is the shape the fix produces, and it must stay a warning so the real
+    /// alarm above keeps its meaning.
+    /// </summary>
+    [TestMethod]
+    public void Execute_LeftInsideASettlementWithAnEncounter_LogsTheBenignWarning()
+    {
+        MakeEnlisted();
+        _attachment.GetPresence(Arg.Any<string>()).Returns(new PlayerPresenceSnapshot(
+            mainPartyExists: true, isActive: true, isVisible: true,
+            settlementId: "town_EW1", hasPlayerEncounter: true));
+
+        _service.Execute(DischargeReason.PlayerRequest);
+
+        _logger.Received().LogWarning(Arg.Is<string>(s =>
+            s.Contains("normal for a release in a settlement")));
+        _logger.DidNotReceive().LogError(Arg.Is<string>(s =>
+            s.Contains("LEFT THE PLAYER UNABLE TO START ENCOUNTERS")));
     }
 }

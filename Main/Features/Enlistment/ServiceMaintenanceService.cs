@@ -44,6 +44,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private readonly IEnlistmentMenuService _menuService;
     private readonly IServiceStatusService _status;
     private readonly IArmyMembershipAdapter _army;
+    private readonly IEncounterAdapter _encounter;
+    private readonly IEncounterOwnershipPolicy _ownership;
     private readonly IModLogger _logger;
 
     private float _budget;
@@ -61,6 +63,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         IEnlistmentMenuService menuService,
         IServiceStatusService status,
         IArmyMembershipAdapter army,
+        IEncounterAdapter encounter,
+        IEncounterOwnershipPolicy ownership,
         IModLogger logger)
     {
         _store = store;
@@ -71,6 +75,8 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _menuService = menuService;
         _status = status;
         _army = army;
+        _encounter = encounter;
+        _ownership = ownership;
         _logger = logger;
     }
 
@@ -114,6 +120,49 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         if (TownLeavePolicy.ShouldRevokeLeave(record.State, presence.IsInSettlement, record.OnTownLeave))
         {
             record.OnTownLeave = false;
+
+            // CLOSE WHAT THE PASS OPENED. TakeTownLeave establishes a settlement PlayerEncounter so
+            // the vanilla town menu is safe to show, and nothing else ever will take it down:
+            // EncounterOwnershipPolicy R3 returns SkipNotOurs for an encounter with no encountered
+            // MOBILE party, which is exactly a settlement encounter's shape, so the reconciler's
+            // stranded sweep deliberately walks past it. Leaked, it blocks every main-party
+            // encounter for the rest of the term.
+            //
+            // THROUGH THE POLICY, never a bare Finish. Leave is revoked for every reason including
+            // "a battle started", and at that moment the live encounter may be the one
+            // ServiceBattleService seeded — destroying it freezes the map event, because
+            // MapEventManager.Tick skips the player's own and only PlayerEncounter.Update advances
+            // it. ShoreLeaveEnd finishes the settlement shape and defers on everything else.
+            //
+            // forcePlayerOutFromSettlement MIRRORS WHERE THE PLAYER ACTUALLY IS, and a bare false
+            // here is a soft-lock. Leave is revoked for every reason that is not
+            // attached-and-in-a-settlement, so it ALSO fires on a state change while the player is
+            // still standing in the town. Vanilla Finish always runs `TimeControlMode = Stop` and
+            // `GameMenu.ExitToLast()`, and walks the player out only under
+            // `if (InsideSettlement && AttachedTo == null && forcePlayerOutFromSettlement)`.
+            // Passing false in that case takes their menu, stops time, and leaves them inside a
+            // settlement — and MobileParty.DoUpdatePosition refuses to move a party with
+            // CurrentSettlement set. Out on the map with time stopped is merely paused.
+            //
+            // THE FLAG IS NECESSARY, NOT SUFFICIENT, and it must be asked of the ENGINE's predicate
+            // rather than ours. Vanilla's InsideSettlement is `MainParty.IsActive && CurrentSettlement
+            // != null`; PlayerPresenceFlags.IsInSettlement is only the settlement id, with no IsActive
+            // term. Enlistment routinely parks the party inactive WITHOUT leaving the settlement
+            // (ParkNear), so `presence.IsInSettlement && !PlayerEncounter.InsideSettlement` is a
+            // reachable shape in which passing true silently no-ops the walk-out this comment argues
+            // for. IEncounterAdapter.IsInsideSettlement is that engine predicate.
+            var verdict = _ownership.Evaluate(
+                EncounterFinishIntent.ShoreLeaveEnd, _encounter.GetOwnership(_cachedCommanderPartyId));
+            if (verdict == EncounterFinishVerdict.Finish)
+            {
+                if (!_encounter.Finish(_encounter.IsInsideSettlement))
+                    _logger?.LogError("[EnlistDiag] shore leave ended but its PlayerEncounter would not close — the player may be unable to start encounters");
+            }
+            else if (verdict != EncounterFinishVerdict.NothingToFinish)
+            {
+                _logger?.LogInfo($"[EnlistDiag] shore leave ended; left the live encounter alone: {verdict}");
+            }
+
             _logger?.LogInfo("[Enlistment] shore leave ended — the column has moved on");
         }
 
