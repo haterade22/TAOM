@@ -851,54 +851,5 @@
 			</Equipments>
 		</NPCCharacter>
 
-	<NPCCharacter id="named_companion_noxix" name="{=nc_noxix_name}Noxix Ilúvatar, Flame of the East" age="1892" voice="earnest" culture="Culture.mirkwood" race="elf" default_group="Infantry" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
-			<face>
-				<BodyProperties version="4" age="28.01" weight="0.6854" build="0.7579" key="0000D404C000314508807EB03F1F0F70108788878FF88067888878888D3017F0008DB60308FFF0AE000000000000000000000000000000000000000043040142" />
-	</face>
-			<skills>
-				<skill id="OneHanded" value="180"/>
-				<skill id="TwoHanded" value="160"/>
-				<skill id="Polearm" value="140"/>
-				<skill id="Bow" value="220"/>
-				<skill id="Crossbow" value="60"/>
-				<skill id="Throwing" value="120"/>
-				<skill id="Riding" value="160"/>
-				<skill id="Athletics" value="180"/>
-				<skill id="Crafting" value="180"/>
-				<skill id="Roguery" value="60"/>
-				<skill id="Scouting" value="200"/>
-				<skill id="Tactics" value="200"/>
-				<skill id="Charm" value="140"/>
-				<skill id="Leadership" value="180"/>
-				<skill id="Trade" value="120"/>
-				<skill id="Steward" value="180"/>
-				<skill id="Medicine" value="140"/>
-				<skill id="Engineering" value="200"/>
-			</skills>
-			<Traits>
-				<Trait id="Honor" value="0"/>
-				<Trait id="Generosity" value="1"/>
-				<Trait id="Calculating" value="2"/>
-				<Trait id="Mercy" value="-2"/>
-				<Trait id="Valor" value="2"/>
-			</Traits>
-			<Equipments>
-				<EquipmentRoster>
-					<equipment slot="Item0" id="Item.mirkwood_spear_a01" />
-					<equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
-					<equipment slot="Head" id="Item.mkwd_palace_t3_helmet_green_hc" />
-					<equipment slot="Body" id="Item.mirkwood_body" />
-					<equipment slot="Cape" id="Item.mirkwood_shoulder" />
-					<equipment slot="Gloves" id="Item.mirkwood_gloves" />
-					<equipment slot="Leg" id="Item.mirkwood_boots" />
-				</EquipmentRoster>
-				<EquipmentRoster civilian="true">
-					<equipment slot="Body" id="Item.mirkwood_body" />
-					<equipment slot="Cape" id="Item.mirkwood_shoulder" />
-					<equipment slot="Gloves" id="Item.mirkwood_gloves" />
-					<equipment slot="Leg" id="Item.mirkwood_boots" />
-				</EquipmentRoster>
-			</Equipments>
-		</NPCCharacter>
 
 </NPCCharacters>

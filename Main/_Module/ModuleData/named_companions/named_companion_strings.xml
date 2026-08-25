@@ -239,19 +239,5 @@
 		text="{=nc_response_2.named_companion_balakhor_text}All that knowledge - does it weigh heavily?" />
 	<string id="backstory_d.named_companion_balakhor"
 		text="{=nc_backstory_d.named_companion_balakhor_text}Knowledge is only heavy when hoarded. Shared freely, it lifts all who receive it. Like my brother Thyrell, I serve this realm's glory. Will you add your chapter to our endless tale?" />
-	<string id="backstory_a.named_companion_noxix"
-		text="{=nc_backstory_a.named_companion_noxix_text}I am Noxix Ilúvatar, Flame of the East. Before walking Middle-earth, I brought fire and blood to Westeros through my craft." />
-	<string id="prebackstory.named_companion_noxix"
-		text="{=nc_prebackstory.named_companion_noxix_text}The creator of A Dance of Dragons? Your work is legendary across realms!" />
-	<string id="backstory_b.named_companion_noxix"
-		text="{=nc_backstory_b.named_companion_noxix_text}In Mirkwood's shadowed paths, I learned that creation requires both light and darkness. When I crafted the Dance of Dragons, I wove together ice and fire, honor and treachery. That same vision I brought here, helping birth this Middle-earth from its first lines of code." />
-	<string id="backstory_c.named_companion_noxix"
-		text="{=nc_backstory_c.named_companion_noxix_text}They call me Flame of the East because I kindle inspiration in others. From Westeros to Middle-earth, I've stood with creators at their beginning, sharing what I've learned. This realm exists because we who've built worlds before know - the greatest creations come from collaboration, not isolation." />
-	<string id="response_1.named_companion_noxix"
-		text="{=nc_response_1.named_companion_noxix_text}Your expertise spans multiple worlds - incredible." />
-	<string id="response_2.named_companion_noxix"
-		text="{=nc_response_2.named_companion_noxix_text}From dragons to Middle-earth - quite the journey." />
-	<string id="backstory_d.named_companion_noxix"
-		text="{=nc_backstory_d.named_companion_noxix_text}Every realm teaches new lessons. Westeros taught me political complexity, Middle-earth teaches mythic depth. I offer the wisdom of both worlds and a bow that never misses. Shall we write new legends together?" />
 
 </strings>

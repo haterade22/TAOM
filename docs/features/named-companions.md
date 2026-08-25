@@ -66,7 +66,7 @@ Controls which companions spawn, where, and their race.
 | `race` | string | Race name from monsters.xml (human, elf, dwarf, uruk_hai, etc.) |
 | `enabled` | bool | Set false to disable without removing |
 
-### Current Values (18 companions)
+### Current Values (17 companions)
 
 | Companion | Race | Settlement | Culture |
 |-----------|------|-----------|---------|
@@ -87,7 +87,6 @@ Controls which companions spawn, where, and their race.
 | Solus, the Cairn | elf | town_R1 | rivendell |
 | Maztog, the Ostler's Dread | uruk_hai | town_isengard | isengard |
 | Balakhor, the Lore-Grandmaster | elf | town_R1 | rivendell |
-| Noxix Iluvatar, Flame of the East | elf | town_M1 | mirkwood |
 
 ## Key Files
 
@@ -102,7 +101,7 @@ Controls which companions spawn, where, and their race.
 | `Main/Features/NamedCompanions/NamedCompanionIoC.cs` | DryIoc registrations |
 | `Main/Adapters/INamedCompanionAdapter.cs` | Adapter interface |
 | `Main/Adapters/NamedCompanionAdapter.cs` | Wraps Hero/Settlement sealed types |
-| `Main/_Module/ModuleData/named_companions/named_companions.xml` | 18 NPCCharacter definitions |
+| `Main/_Module/ModuleData/named_companions/named_companions.xml` | 17 NPCCharacter definitions |
 | `Main/_Module/ModuleData/named_companions/named_companion_config.json` | Spawn settlement + race config |
 | `Main/_Module/ModuleData/named_companions/named_companion_strings.xml` | 126 backstory strings (7 per companion) |
 | `Main/_Module/ModuleData/characters/heroes.xml` | Hero entries (faction="Faction.neutral") |

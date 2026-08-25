@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="Apprendre du Grand-Maître des Traditions lui-même serait un honneur." />
     <string id="nc_response_2.named_companion_balakhor_text" text="Tout ce savoir - est-il un fardeau lourd à porter ?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="Le savoir n'est lourd que lorsqu'il est thésaurisé. Partagé librement, il élève tous ceux qui le reçoivent. Comme mon frère Thyrell, je sers la gloire de ce royaume. Ajouterez-vous votre chapitre à notre récit sans fin ?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="Je suis Noxix Ilúvatar, Flamme de l'Est. Avant de parcourir la Terre du Milieu, j'ai apporté le feu et le sang à Westeros par mon art." />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="Le créateur d'A Dance of Dragons ? Votre œuvre est légendaire à travers les royaumes !" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="Dans les sentiers ombragés de la Forêt Noire, j'ai appris que la création nécessite à la fois lumière et ténèbres. Lorsque j'ai créé la Danse des Dragons, j'ai tissé ensemble glace et feu, honneur et trahison. Cette même vision, je l'ai apportée ici, aidant à donner naissance à cette Terre du Milieu depuis ses premières lignes de code." />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="On me surnomme Flamme de l'Est car j'éveille l'inspiration chez les autres. De Westeros à la Terre du Milieu, j'ai accompagné les créateurs à leurs débuts, partageant ce que j'ai appris. Ce royaume existe parce que nous qui avons bâti des mondes auparavant savons - les plus grandes créations viennent de la collaboration, non de l'isolement." />
-    <string id="nc_response_1.named_companion_noxix_text" text="Votre expertise couvre plusieurs mondes - incroyable." />
-    <string id="nc_response_2.named_companion_noxix_text" text="Des dragons à la Terre du Milieu - quel voyage." />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="Chaque royaume enseigne de nouvelles leçons. Westeros m'a enseigné la complexité politique, la Terre du Milieu enseigne la profondeur mythique. J'offre la sagesse des deux mondes et un arc qui ne rate jamais sa cible. Écrirons-nous ensemble de nouvelles légendes ?" />
   </strings>
 </base>

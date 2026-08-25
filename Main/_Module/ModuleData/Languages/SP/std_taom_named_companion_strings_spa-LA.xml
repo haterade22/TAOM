@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="Aprender del Gran Maestro de la Tradición mismo sería un honor." />
     <string id="nc_response_2.named_companion_balakhor_text" text="Todo ese conocimiento... ¿pesa mucho?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="El conocimiento solo pesa cuando se acapara. Compartido libremente, eleva a todos quienes lo reciben. Como mi hermano Thyrell, sirvo a la gloria de este reino. ¿Agregarás tu capítulo a nuestro cuento infinito?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="Soy Noxix Ilúvatar, Llama del Este. Antes de caminar por la Tierra Media, llevé fuego y sangre a Poniente a través de mi oficio." />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="¿El creador de A Dance of Dragons? ¡Tu trabajo es legendario a través de los reinos!" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="En los senderos sombríos del Bosque Negro, aprendí que la creación requiere tanto luz como oscuridad. Cuando creé la Danza de Dragones, entretejí hielo y fuego, honor y traición. Esa misma visión traje aquí, ayudando a dar nacimiento a esta Tierra Media desde sus primeras líneas de código." />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="Me llaman Llama del Este porque enciendo la inspiración en otros. De Poniente a la Tierra Media, he estado con creadores en sus comienzos, compartiendo lo que he aprendido. Este reino existe porque quienes hemos construido mundos antes sabemos: las mayores creaciones vienen de la colaboración, no del aislamiento." />
-    <string id="nc_response_1.named_companion_noxix_text" text="Tu experiencia abarca múltiples mundos: increíble." />
-    <string id="nc_response_2.named_companion_noxix_text" text="De dragones a la Tierra Media: todo un viaje." />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="Cada reino enseña nuevas lecciones. Poniente me enseñó complejidad política, la Tierra Media enseña profundidad mítica. Ofrezco la sabiduría de ambos mundos y un arco que nunca falla. ¿Escribiremos juntos nuevas leyendas?" />
   </strings>
 </base>

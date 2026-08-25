@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="Aprender com o próprio Grão-Mestre do Conhecimento seria uma honra." />
     <string id="nc_response_2.named_companion_balakhor_text" text="Todo esse conhecimento - ele pesa muito?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="O conhecimento só pesa quando acumulado. Compartilhado livremente, ele eleva todos que o recebem. Como meu irmão Thyrell, sirvo à glória deste reino. Você vai adicionar seu capítulo ao nosso conto interminável?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="Eu sou Noxix Ilúvatar, Chama do Leste. Antes de caminhar pela Terra-média, trouxe fogo e sangue a Westeros através do meu ofício." />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="O criador de A Dance of Dragons? Seu trabalho é lendário através dos reinos!" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="Nos caminhos sombrios da Floresta das Trevas, aprendi que a criação requer luz e escuridão. Quando criei a Dança dos Dragões, teci juntos gelo e fogo, honra e traição. Essa mesma visão trouxe para cá, ajudando a dar à luz esta Terra-média desde suas primeiras linhas de código." />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="Me chamam de Chama do Leste porque acendo inspiração nos outros. De Westeros à Terra-média, fiquei ao lado de criadores em seus começos, compartilhando o que aprendi. Este reino existe porque nós que construímos mundos antes sabemos - as maiores criações vêm da colaboração, não do isolamento." />
-    <string id="nc_response_1.named_companion_noxix_text" text="Sua expertise abrange múltiplos mundos - incrível." />
-    <string id="nc_response_2.named_companion_noxix_text" text="De dragões à Terra-média - que jornada." />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="Cada reino ensina novas lições. Westeros me ensinou complexidade política, a Terra-média ensina profundidade mítica. Ofereço a sabedoria de ambos os mundos e um arco que nunca erra. Vamos escrever novas lendas juntos?" />
   </strings>
 </base>

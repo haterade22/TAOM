@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="能向傳說大師本人學習將是莫大的榮幸。" />
     <string id="nc_response_2.named_companion_balakhor_text" text="那麼多的知識——是否沉重?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="知識只有在囤積時才會沉重。自由地分享,它會提升所有接受它的人。就像我的兄弟瑟萊爾一樣,我為這個領域的榮耀而服務。你願意在我們無盡的故事中添加你的篇章嗎?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="我是諾西克斯·伊露維塔,東方之焰。在踏足中土大陸之前,我通過我的技藝為維斯特洛帶來了火焰與鮮血。" />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="《龍之舞》的創造者?你的作品在各個領域都是傳奇!" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="在幽暗密林的陰影小徑中,我學到創造需要光明與黑暗並存。當我打造《龍之舞》時,我將冰與火、榮譽與背叛編織在一起。我將同樣的願景帶到這裡,從最初的代碼開始幫助孕育這個中土世界。" />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="他們叫我東方之焰,因為我在他人心中點燃靈感。從維斯特洛到中土大陸,我在創作者們起步時與他們並肩而立,分享我所學到的一切。這個領域之所以存在,是因為我們這些曾經建造過世界的人知道——最偉大的創作來自協作,而非孤立。" />
-    <string id="nc_response_1.named_companion_noxix_text" text="你的專業知識橫跨多個世界——令人難以置信。" />
-    <string id="nc_response_2.named_companion_noxix_text" text="從龍族到中土大陸——真是一段了不起的旅程。" />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="每個領域都教給我新的教訓。維斯特洛教會了我政治的複雜性,中土大陸教會我神話的深度。我提供兩個世界的智慧以及一把從不失手的弓。我們一起書寫新的傳奇如何?" />
   </strings>
 </base>

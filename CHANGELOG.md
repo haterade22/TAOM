@@ -4,6 +4,30 @@
 
 ## 2026-08-25
 
+### chore(companions): remove Noxix
+
+`named_companion_noxix` is gone from the files rather than switched off. The config carries an
+`enabled` flag and the service checks it in both `SpawnCompanions` and `EnsureCompanionsPlaced`, so
+a one-line `false` would have kept them out of every new campaign, but the request was removal, not
+suppression, and that flag leaves the character and their dialogue shipping to players.
+
+Removed: the `named_companion_config.json` entry (18 companions to 17), the `<NPCCharacter>` block
+in `named_companions.xml`, the `<Hero>` entry in `characters/heroes.xml`, 7 English strings, 7 rows
+in each of the 12 language files (84 rows), 7 cache keys in each of 11 `tools/translation_cache`
+files, and the roster row plus the two counts in the feature doc. `nc_noxix_name` needed no separate
+removal: it was declared inline on the NPCCharacter and registered nowhere else.
+
+`tools/translation_cache/pl.json` still holds its 7 keys. A PL translation run was writing that file
+at the time and clearing it mid-run would have been overwritten; it goes with the PL backlog commit.
+
+The 12 language files use doubled-CR (`\r\r\n`) endings, so a row matcher ending `/>\r?\n` silently
+matches nothing and reports a clean zero. The removal count per file is asserted at 7 and the
+`\r\r\n` count is asserted to fall by exactly 7, because "0 rows removed" looked like success the
+first time.
+
+Known consequence, accepted: an existing save where Noxix had already spawned still references a
+hero id the engine can no longer resolve. New campaigns are unaffected. No guard was added.
+
 ### fix(i18n): Polish was never hand-translated, and the belief cost it every run
 
 CLAUDE.md, the `/localize` skill, `localization-map.md`, `faction-map.md` and TRANSLATOR_GUIDE.md all

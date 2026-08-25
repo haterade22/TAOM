@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="Vom Großmeister der Überlieferung selbst zu lernen wäre eine Ehre." />
     <string id="nc_response_2.named_companion_balakhor_text" text="All dieses Wissen - lastet es nicht schwer?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="Wissen lastet nur schwer, wenn man es hortet. Frei geteilt, erhebt es alle, die es empfangen. Wie mein Bruder Thyrell diene ich dem Ruhm dieses Reiches. Werdet Ihr Euer Kapitel zu unserer endlosen Geschichte hinzufügen?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="Ich bin Noxix Ilúvatar, Flamme des Ostens. Bevor ich Mittelerde durchwanderte, brachte ich Feuer und Blut nach Westeros durch mein Handwerk." />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="Der Schöpfer von A Dance of Dragons? Euer Werk ist legendär über alle Reiche hinweg!" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="Auf Düsterwalds schattigen Pfaden lernte ich, dass Schöpfung sowohl Licht als auch Dunkelheit erfordert. Als ich den Tanz der Drachen erschuf, verwob ich Eis und Feuer, Ehre und Verrat. Dieselbe Vision brachte ich hierher und half, dieses Mittelerde aus seinen ersten Codezeilen zu gebären." />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="Sie nennen mich Flamme des Ostens, weil ich Inspiration in anderen entfache. Von Westeros bis Mittelerde stand ich mit Schöpfern an ihrem Anfang und teilte, was ich gelernt habe. Dieses Reich existiert, weil wir, die zuvor Welten erschufen, wissen - die größten Schöpfungen entstehen aus Zusammenarbeit, nicht Isolation." />
-    <string id="nc_response_1.named_companion_noxix_text" text="Eure Expertise erstreckt sich über mehrere Welten - unglaublich." />
-    <string id="nc_response_2.named_companion_noxix_text" text="Von Drachen nach Mittelerde - eine beachtliche Reise." />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="Jedes Reich lehrt neue Lektionen. Westeros lehrte mich politische Komplexität, Mittelerde lehrt mythische Tiefe. Ich biete die Weisheit beider Welten und einen Bogen, der niemals verfehlt. Wollen wir gemeinsam neue Legenden schreiben?" />
   </strings>
 </base>

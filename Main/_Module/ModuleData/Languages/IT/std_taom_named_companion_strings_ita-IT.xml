@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="Apprendere dal Gran Maestro della Sapienza in persona sarebbe un onore." />
     <string id="nc_response_2.named_companion_balakhor_text" text="Tutta quella conoscenza - pesa molto?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="La conoscenza è pesante solo quando viene accumulata. Condivisa liberamente, eleva tutti coloro che la ricevono. Come mio fratello Thyrell, servo la gloria di questo reame. Aggiungerai il tuo capitolo al nostro racconto senza fine?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="Sono Noxix Ilúvatar, Fiamma dell'Est. Prima di camminare nella Terra di Mezzo, ho portato fuoco e sangue a Westeros attraverso la mia arte." />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="Il creatore di A Dance of Dragons? La tua opera è leggendaria attraverso i reami!" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="Nei sentieri ombrosi di Bosco Atro, ho imparato che la creazione richiede sia luce che oscurità. Quando ho forgiato la Danza dei Draghi, ho intessuto insieme ghiaccio e fuoco, onore e tradimento. Quella stessa visione l'ho portata qui, aiutando a far nascere questa Terra di Mezzo dalle sue prime righe di codice." />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="Mi chiamano Fiamma dell'Est perché accendo l'ispirazione negli altri. Da Westeros alla Terra di Mezzo, ho affiancato i creatori ai loro inizi, condividendo ciò che ho appreso. Questo reame esiste perché noi che abbiamo costruito mondi prima sappiamo - le più grandi creazioni nascono dalla collaborazione, non dall'isolamento." />
-    <string id="nc_response_1.named_companion_noxix_text" text="La tua esperienza abbraccia molteplici mondi - incredibile." />
-    <string id="nc_response_2.named_companion_noxix_text" text="Dai draghi alla Terra di Mezzo - un bel viaggio." />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="Ogni reame insegna nuove lezioni. Westeros mi ha insegnato la complessità politica, la Terra di Mezzo insegna profondità mitica. Offro la saggezza di entrambi i mondi e un arco che non sbaglia mai. Scriveremo insieme nuove leggende?" />
   </strings>
 </base>

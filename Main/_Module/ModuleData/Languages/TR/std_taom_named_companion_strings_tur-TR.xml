@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="Bilgi-Büyükustası'nın kendisinden öğrenmek bir onur olurdu." />
     <string id="nc_response_2.named_companion_balakhor_text" text="Bütün bu bilgi - ağır gelmiyor mu?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="Bilgi ancak saklandığında ağırdır. Özgürce paylaşıldığında, onu alan herkesi yüceltir. Kardeşim Thyrell gibi, bu diyarın şanına hizmet ediyorum. Sen de sonsuz hikayemize kendi bölümünü ekleyecek misin?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="Ben Noxix Ilúvatar, Doğu'nun Alevi. Orta Dünya'da yürümeden önce, ustalığımla Westeros'a ateş ve kan getirdim." />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="A Dance of Dragons'ın yaratıcısı mı? Eserin diyarlar arasında efsanevi!" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="Mirkwood'un gölgeli patikalarında, yaratımın hem ışığa hem karanlığa ihtiyaç duyduğunu öğrendim. Dance of Dragons'ı yarattığımda, buz ve ateşi, onuru ve ihaneti bir araya ördüm. Aynı vizyonu buraya getirdim, bu Orta Dünya'nın ilk kod satırlarından doğmasına yardım ettim." />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="Bana Doğu'nun Alevi diyorlar çünkü başkalarında ilhamı tutuşturuyorum. Westeros'tan Orta Dünya'ya, başlangıçlarında yaratıcılarla birlikte durdum, öğrendiklerimi paylaştım. Bu diyar var çünkü daha önce dünyalar inşa edenler bilir - en büyük yaratımlar yalnızlıktan değil, işbirliğinden gelir." />
-    <string id="nc_response_1.named_companion_noxix_text" text="Uzmanlığın birden fazla dünyaya yayılıyor - inanılmaz." />
-    <string id="nc_response_2.named_companion_noxix_text" text="Ejderhalardan Orta Dünya'ya - epey bir yolculuk." />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="Her diyar yeni dersler öğretir. Westeros bana siyasi karmaşıklığı öğretti, Orta Dünya efsanevi derinliği öğretiyor. Her iki dünyanın bilgeliğini ve asla ıskalamayan bir yayı sunuyorum. Birlikte yeni efsaneler yazacak mıyız?" />
   </strings>
 </base>

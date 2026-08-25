@@ -100,11 +100,5 @@
     "spawn_settlement": "town_R1",
     "race": "elf",
     "enabled": true
-  },
-  {
-    "character_id": "named_companion_noxix",
-    "spawn_settlement": "town_M1",
-    "race": "elf",
-    "enabled": true
   }
 ]

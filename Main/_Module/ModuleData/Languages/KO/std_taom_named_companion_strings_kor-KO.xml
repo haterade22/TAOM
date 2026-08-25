@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="지식의 대사장 그 자신에게서 배운다면 영광일 것이오." />
     <string id="nc_response_2.named_companion_balakhor_text" text="그 모든 지식이 - 무겁지 않소?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="지식은 쌓아두기만 할 때만 무겁소. 자유롭게 나누면, 그것을 받는 모든 이를 고양시키오. 내 형제 티렐처럼, 나는 이 영역의 영광을 섬기오. 당신은 우리의 끝없는 이야기에 당신의 장을 더하겠소?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="나는 녹식스 일루바타르, 동방의 불꽃이오. 가운데땅을 걷기 전에, 나는 내 기술을 통해 웨스테로스에 불과 피를 가져왔소." />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="드래곤들의 춤의 창조자라니? 당신의 작업은 영역들을 넘어 전설적이오!" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="어둠숲의 그늘진 길에서, 나는 창조에는 빛과 어둠 모두가 필요하다는 것을 배웠소. 드래곤들의 춤을 만들 때, 나는 얼음과 불, 명예와 배신을 함께 엮었소. 바로 그 비전을 여기에 가져와, 이 가운데땅을 첫 코드 줄부터 탄생시키는 것을 도왔소." />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="사람들이 나를 동방의 불꽃이라 부르는 것은 내가 다른 이들에게 영감을 불태우기 때문이오. 웨스테로스에서 가운데땅까지, 나는 창조자들의 시작에 함께 서서 내가 배운 것을 나누었소. 이 영역이 존재하는 것은 전에 세계를 건설했던 우리가 알기 때문이오 - 가장 위대한 창조는 고립이 아닌 협력에서 온다는 것을." />
-    <string id="nc_response_1.named_companion_noxix_text" text="당신의 전문성은 여러 세계에 걸쳐 있소 - 놀랍소." />
-    <string id="nc_response_2.named_companion_noxix_text" text="용들에서 가운데땅까지 - 대단한 여정이군." />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="모든 영역은 새로운 교훈을 가르치오. 웨스테로스는 정치적 복잡성을 가르쳤고, 가운데땅은 신화적 깊이를 가르치오. 나는 두 세계의 지혜와 절대 빗나가지 않는 활을 제공하오. 함께 새로운 전설을 쓰겠소?" />
   </strings>
 </base>

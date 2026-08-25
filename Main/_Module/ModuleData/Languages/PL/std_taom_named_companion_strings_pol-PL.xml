@@ -125,12 +125,5 @@
     <string id="nc_response_1.named_companion_balakhor_text" text="Uczyć się od samego Wielkiego Mistrza Wiedzy to byłby zaszczyt." />
     <string id="nc_response_2.named_companion_balakhor_text" text="Cała ta wiedza — czy bardzo cię przytłacza?" />
     <string id="nc_backstory_d.named_companion_balakhor_text" text="Wiedza jest ciężka tylko wtedy, gdy się ją gromadzi dla siebie. Dzielona swobodnie, podnosi wszystkich, którzy ją otrzymują. Jak mój brat Thyrell, służę chwale tego królestwa. Dopiszesz swój rozdział do naszej niekończącej się opowieści?" />
-    <string id="nc_backstory_a.named_companion_noxix_text" text="Jestem Noxix Ilúvatar, Płomień Wschodu. Nim stąpałem po Śródziemiu, niosłem ogień i krew do Westeros poprzez me rzemiosło." />
-    <string id="nc_prebackstory.named_companion_noxix_text" text="Twórca Tańca ze Smokami? Twoje dzieło jest legendarne w wielu światach!" />
-    <string id="nc_backstory_b.named_companion_noxix_text" text="Na zacienionych ścieżkach Mrocznej Puszczy nauczyłem się, że tworzenie wymaga i światła, i ciemności. Gdy tworzyłem Taniec ze Smokami, splotłem razem lód i ogień, honor i zdradę. Tę samą wizję przyniosłem tutaj, pomagając zrodzić to Śródziemie z jego pierwszych linii kodu." />
-    <string id="nc_backstory_c.named_companion_noxix_text" text="Nazywają mnie Płomieniem Wschodu, bo rozpalam natchnienie w innych. Od Westeros do Śródziemia stawałem przy twórcach na ich początku, dzieląc się tym, czego się nauczyłem. To królestwo istnieje, bo my, którzy budowaliśmy światy wcześniej, wiemy — największe dzieła rodzą się ze współpracy, nie z odosobnienia." />
-    <string id="nc_response_1.named_companion_noxix_text" text="Twoja biegłość obejmuje wiele światów — niewiarygodne." />
-    <string id="nc_response_2.named_companion_noxix_text" text="Od smoków do Śródziemia — niemała podróż." />
-    <string id="nc_backstory_d.named_companion_noxix_text" text="Każde królestwo uczy nowych lekcji. Westeros nauczyło mnie politycznej złożoności, Śródziemie uczy mitycznej głębi. Oferuję mądrość obu światów i łuk, który nigdy nie chybia. Napiszemy razem nowe legendy?" />
   </strings>
 </base>
