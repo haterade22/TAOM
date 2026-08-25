@@ -4,6 +4,86 @@
 
 ## 2026-08-25
 
+### docs(legal): say which parts are ours, and stop claiming the parts that are not
+
+A drive-by account left two "stolen code" comments on #489 eleven seconds apart, on a merged
+hook-script PR. No file named, no work claimed, account six weeks old with no other activity. That
+is harassment and it got a moderation response: both comments hidden as spam, repo interaction
+limit set to `contributors_only` through 2026-09-01. Blocking the account still needs a `user`
+scope the local `gh` token does not carry.
+
+The comments were noise. Going looking, the licensing behind them was not in shape to answer
+anything serious, and that is what actually got fixed.
+
+**The dual license claimed the same files twice.** `LICENSE-CONTENT.md` split the repo by category:
+"C# under `Main/`" as MIT against "game data, XML" as CC. `Main/_Module/ModuleData/**` satisfied
+both clauses, and ambiguity construes against the drafter. It is now split by path, with a
+precedence line saying content governs over MIT and third-party governs over both. Every bucket was
+counted against `git ls-files` rather than estimated; the four buckets plus the harness directories
+account for all 6,076 tracked files.
+
+**The root `LICENSE` says nothing about any of this, and now deliberately still does not.** The
+first attempt put a scope preamble above the MIT body. Measured, that left the MIT text at 53% of
+the file, well under the ~98% similarity GitHub's licensee needs, so the repo would have dropped
+from `mit` to "Other" and lost exactly the "code is genuinely free" signal the change was meant to
+protect. `LICENSE` is therefore byte-identical to before, and the overview moved to the top of
+`LICENSE-CONTENT.md` (which sits beside it in every file listing) plus the README table.
+
+**The blanket provenance disclaimer was doing real damage.** `THIRD-PARTY-LICENSES.txt` opened by
+disclaiming art, audio, fonts *and* game data in one sentence, while `LICENSE-CONTENT.md` licensed
+art and game data under CC. The two files contradicted each other. Art and data now sit in the CC
+claim; audio and fonts are disclaimed outright.
+
+That audio and font split is the point of the whole exercise. `ModuleSounds/` is 436 third-party
+files and the culture music set from `cf2b9c44`; `GUI/Fonts/` is Aniron, Ringbearer, and
+**Minion Pro, an Adobe commercial typeface**. None of it is TAOM's to license. Claiming a license
+over material you do not own is a false statement a hostile party can quote, and it was the only
+sentence in the repo that could have been used against us. Disclaiming it costs nothing.
+
+**`TRADEMARK.md` is new.** Neither MIT nor CC BY-NC-SA conveys trademark rights, so "TAOM" and
+"Tales From the Age of Men" were already ours and nothing said so. The policy claims the marks,
+states plainly that nominative use is fine ("a fork of TAOM", "compatible with TAOM"), and scopes
+the claim to our own branding rather than anything from Middle-earth. This is the lever Nexus
+actually acts on.
+
+**`docs/reference/asset-provenance.md` is new**, as the affirmative record behind the CC claim:
+per-directory authorship, and an honest note that raw AI-generated sprites are the weakest part of a
+copyright claim while the models, map, lore, and compilation are solid.
+
+**It very nearly shipped as a second, contradictory register.** `docs/reference/provenance-register.md`
+already exists, already calls itself the single authoritative record, and is governed by
+`.claude/rules/provenance.md`, a path-scoped rule that fires on the exact files this change touched.
+The first draft of the new file duplicated its software rows and asserted that BetaDeps' license was
+"not recorded anywhere in this repo." It is recorded, as `UNKNOWN` / `uncleared`, with a detail
+section explaining that the derivation type was corrected from `clean-room` to `behavioural-port` on
+2026-08-13. The new file now covers TAOM-owned content only and defers everything third-party to the
+register.
+
+**The register also caught two things this change was about to get wrong in the other direction.**
+The first CC bucket claimed `Main/_Module/AssetPackages/**` and `Main/_Module/Prefabs/**` as TAOM
+originals. They are not: the four `.tpac` meshes are commissioned Yotthani work redistributed as
+delivered, and the single prefab is `taom_howdah_agent.xml`, a purchased ADOD_Beasts asset. Both are
+cleared for TAOM's use and neither is TAOM's to sublicense onward, which is precisely the overreach
+the audio and font disclaimers exist to avoid. They moved to the third-party bucket.
+
+Audio and the three fonts now carry their own rows and detail sections in the register, since that is
+where the rule says they belong. All four are `uncleared`: the audio because no upstream is recorded
+anywhere, and the fonts because Minion Pro is an Adobe commercial typeface whose desktop licence does
+not generally cover redistributing the font files. Substituting a freely-licensed display face is a
+three-file change and removes that one outright.
+
+For the record, the register's own highest-priority row is untouched by this change and predates it:
+`NativeSkinFixes` is a verbatim C++ port with no identified upstream whose built DLL ships even
+though the feature is parked. Neither it nor BetaDeps is what the comments referred to, because the
+comments referred to nothing.
+
+Deliberately not done: no obfuscation, DRM, or phone-home (the source is public, so it protects
+nothing, and it would break the BUTR crash pipeline), no relicensing (impossible retroactively; the
+three existing forks are frozen MIT snapshots), and no public reply to the comments.
+
+Constraint: `gh api user/blocks` needs the `user` OAuth scope, which the local token lacks
+Not-tested: nothing executable changed; docs and license text only
+
 ### chore(i18n): clear Polish's 4,009-entry backlog
 
 PL had never been through the translator, so its backlog spanned all three modules: 5,033 entries

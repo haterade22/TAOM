@@ -78,6 +78,10 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | upstream chariot pack | `upstream chariot pack` `upstream-chariot-pack` | UNKNOWN | behavioural-port | `docs/features/chariot.md` `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
 | TOR_Core | `TOR_Core` | UNKNOWN | comparison-only | (none) | uncleared |
+| module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` | uncleared |
+| Aniron (Pete Klassen) | `aniron` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/aniron.{fnt,bfnt}` | uncleared |
+| Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
+| Ringbearer | `ringbearer` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` | uncleared |
 
 <!-- provenance-register-end -->
 
@@ -309,6 +313,43 @@ procedure, and it was not followed here.
 
 The `ModulesToLoadAfterThis` list at `Dependencies/_Module/SubModule.xml:20` is adapted from BetaDeps
 v0.7.5.1's. A list of module ids is a compatibility fact about other people's mods, not expression.
+
+### Module audio (UNCLEARED)
+
+`Main/_Module/ModuleSounds/` ships 436 tracked files (342 WAV, 93 MP3) plus the culture music set
+introduced in `cf2b9c44` ("17 cultures, 476 tracks"). No upstream, author, or terms are recorded
+anywhere in the repo, and `Main/_Module/THIRD-PARTY-LICENSES.txt` historically disclaimed audio
+provenance in the same breath as art and game data.
+
+The maintainer's position (2026-08-25) is that the audio is third-party in origin and is not
+claimed. That is now stated explicitly rather than left to a blanket disclaimer: the audio is
+excluded from TAOM's CC BY-NC-SA grant in `LICENSE-CONTENT.md`, and `THIRD-PARTY-LICENSES.txt`
+carries its own section saying TAOM does not hold rights in it.
+
+The playback engine is unaffected and is TAOM original work under MIT: `MusicPlaybackService`,
+`MusicTrackIndex`, `MusicTransitionResolver`, `Patch46_Music` and the surrounding code.
+
+**What would clear this row:** identify the upstream and its terms, or replace the audio. Until
+then it is redistributed with unknown terms, which is the same class of exposure as the
+NativeSkinFixes row below, at lower stakes only because audio is easier to swap than a native hook
+library.
+
+### Fonts: Aniron, Minion Pro, Ringbearer (UNCLEARED)
+
+`Main/_Module/GUI/Fonts/` ships three faces in Bannerlord's compiled `.fnt`/`.bfnt` form.
+
+`minionpro` is the one to look at first. Minion Pro is an Adobe commercial typeface, and an Adobe
+desktop font licence does not generally permit redistributing the font files themselves. That makes
+it the only row in this register naming a specifically commercial rights holder, as opposed to the
+unknown-terms rows around it.
+
+`aniron` and `ringbearer` are display faces associated with the Lord of the Rings films. Terms
+unrecorded.
+
+**What would clear this row:** confirm each face's redistribution terms, or substitute
+freely-licensed display faces. Substitution is a small change (three files, plus whatever GUI
+references them by name) and removes the exposure outright. Given that TAOM ships free and
+non-commercially, that is likely the cheaper path for `minionpro` in particular.
 
 ### NativeSkinFixes (UNCLEARED, and the highest-priority row here)
 

@@ -164,11 +164,22 @@ Place all modules in your Bannerlord `Modules/` directory, enable them in the la
 
 ## License
 
-**Code** (C# mod source): [MIT License](LICENSE)
+TAOM is licensed in parts. [LICENSE-CONTENT.md](LICENSE-CONTENT.md) is the overview and carries the
+path-by-path scope; [LICENSE](LICENSE) is kept as plain MIT text so license detection keeps working.
 
-**Content** (art, lore, data, XML assets derived from Tolkien's works):
-[CC BY-NC-SA 4.0](LICENSE-CONTENT.md) — non-commercial, attribution required, share-alike.
+| What | License |
+|------|---------|
+| **Code** (C# source, tests, tooling, build scripts, Gauntlet UI definitions) | [MIT](LICENSE) |
+| **Content** (art, 3D and 2D assets, the world map, game data, lore text) | [CC BY-NC-SA 4.0](LICENSE-CONTENT.md): non-commercial, attribution required, share-alike |
+| **Audio, fonts, and third-party binaries** | Not TAOM's to license. See [THIRD-PARTY-LICENSES.txt](Main/_Module/THIRD-PARTY-LICENSES.txt) |
+| **The TAOM name, "Tales From the Age of Men", and the branding** | Granted by neither license. See [TRADEMARK.md](TRADEMARK.md) |
+
+Forks are welcome and the code is genuinely free to use. Two things it does not come with: the
+audio and fonts (which are not ours to pass on) and the project's name (which no open license
+grants). "A fork of TAOM" is fine and always will be. Calling your fork TAOM is not.
+
+Provenance record for the content: [docs/reference/asset-provenance.md](docs/reference/asset-provenance.md).
 
 This mod is a fan project and is not affiliated with or endorsed by the Tolkien Estate,
-New Line Cinema, or TaleWorlds Entertainment.
+New Line Cinema, Middle-earth Enterprises, or TaleWorlds Entertainment.
 

@@ -1,9 +1,17 @@
 TAOM third-party license notices
 ================================
 
-Scope: this file covers third-party SOFTWARE redistributed inside the TAOM module,
-meaning the compiled binaries under _Module/bin/. It makes no claim at all about
-art, audio, fonts, or game data, whose provenance this file does not record.
+Scope: this file covers everything redistributed inside the TAOM module that is
+NOT TAOM's own work. That is three things: the compiled binaries under
+_Module/bin/, the audio under _Module/ModuleSounds/, and the fonts under
+_Module/GUI/Fonts/. Each is listed below.
+
+TAOM's own art, 3D and 2D assets, world map, and game data are NOT covered here.
+They are original TAOM work licensed under CC BY-NC-SA 4.0; see LICENSE-CONTENT.md
+in the TAOM repository for the path-by-path scope, and
+docs/reference/asset-provenance.md for the provenance record behind it.
+
+The TAOM name and branding are covered by neither license. See TRADEMARK.md.
 
 The BUTR / Harmony / Microsoft / Serilog stack is redistributed by the companion
 TAOM.Dependencies module and is covered by its own notice file at
@@ -48,6 +56,32 @@ work produced by a clean-room procedure: Alliance source was read once to extrac
 behavioural spec, the spec was committed, and the implementation was written from
 the spec. No Alliance source code appears in TAOM. Procedure and per-file mapping:
 docs/scene-scripts/ATTRIBUTION.md in the TAOM repository.
+
+----
+
+AUDIO  --  _Module/ModuleSounds/  (342 .wav, 93 .mp3, plus the culture music set)
+
+Third-party in origin. TAOM does not hold rights in this audio, does not claim
+it, and does not license it onward. It is redistributed as part of a free,
+non-commercial fan project. It is excluded from the CC BY-NC-SA 4.0 grant that
+covers TAOM's own content.
+
+The playback engine that plays it -- MusicPlaybackService, MusicTrackIndex,
+MusicTransitionResolver, Patch46_Music and the surrounding code -- is original
+TAOM software under the MIT License. The audio files it plays are not.
+
+----
+
+FONTS  --  _Module/GUI/Fonts/  (aniron, minionpro, ringbearer)
+
+Third-party typefaces, redistributed in Bannerlord's compiled .fnt/.bfnt form.
+TAOM does not hold rights in these faces, does not claim them, and does not
+license them onward. They are excluded from the CC BY-NC-SA 4.0 grant.
+
+minionpro is an Adobe commercial typeface. aniron and ringbearer are display
+faces associated with the Lord of the Rings films. Redistribution terms for all
+three are unconfirmed and tracked as an open item in
+docs/reference/asset-provenance.md.
 
 ----
 
