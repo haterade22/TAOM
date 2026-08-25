@@ -1,4 +1,4 @@
-namespace TAOM.Adapters;
+﻿namespace TAOM.Adapters;
 
 /// <summary>Wraps the static GameMenu switching surface for the enlistment wait-menu layer.</summary>
 public interface IGameMenuAdapter
@@ -22,6 +22,14 @@ public interface IGameMenuAdapter
     bool EnsureMenuOpen(string menuId);
 
     bool ExitToLast();
+
+    /// <summary>
+    /// Re-render the current menu in place (option text and body text variables) without
+    /// re-entering it. The old idiom, SwitchToMenu(sameId), re-initialises the menu, which on a
+    /// WAIT menu restarts the wait; MenuContext.Refresh is the in-place form. False when there is
+    /// no current context.
+    /// </summary>
+    bool RefreshCurrent();
 
     /// <summary>
     /// The vanilla menu id for the settlement the player is physically inside — "town", "castle" or

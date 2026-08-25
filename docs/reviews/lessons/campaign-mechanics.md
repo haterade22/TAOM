@@ -1,4 +1,4 @@
-# Lessons — Campaign Mechanics
+﻿# Lessons — Campaign Mechanics
 
 > Category file of the master lessons record — index + house shape: [LESSONS-LEARNED.md](../LESSONS-LEARNED.md). **Append new Campaign Mechanics lessons HERE** (`### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`).
 
@@ -260,3 +260,16 @@ mode and did nothing at all, with no error and no log line.
   value moves. Add at least one test that exercises a non-default value end-to-end.
 - **Source:** 2026-08-22 rebindable Time Acceleration keys.
   `docs/reviews/rca-timeacceleration-keybinds-2026-08-22.md`.
+
+### A standard game menu stops time and is persisted into the save; never leave the player in one after starting a timed process (camps field test, 2026-08-23)
+
+The first field camp ever established read as a frozen game: establish switched into the camp
+sub-menu (exactly as the source module did), a standard GameMenu stops campaign time
+unconditionally with dead time controls, so "Raising 0%" could never progress, and MapState
+persists the open menu id, so saving there made every load resume "frozen". Three static
+hypotheses (inquiry pause leak, listener loop, camera lock) died against the decompile; a live
+state dump (taom.time_status: MenuContext taom_fc_camp, AtMenu true, everything else clean)
+settled it in one screenshot. Two rules: after starting anything timed, land the player on the
+map or in a WAIT menu (AddWaitGameMenu; Enlistment precedent), never a standard one; and a
+source-parity port of a UX trap is still a defect, so smoke the first-run player flow of every
+port before calling it verified. Recovery in the field: taom.rescue_time.

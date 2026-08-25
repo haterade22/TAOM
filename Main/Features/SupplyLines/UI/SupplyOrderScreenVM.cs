@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -34,6 +34,15 @@ public sealed class SupplyOrderScreenVM : ViewModel
     private SupplySourceRowVM? _selectedSource;
 
     private string _screenTitle;
+    // Button labels live here, not as literal Text= in the prefab: Gauntlet does not localize
+    // literal prefab text (only VM-bound strings pass through TextObject), so a literal
+    // "{=key}Label" renders the raw token in-game (field-tested 2026-08-25).
+    private string _escortNoneText;
+    private string _escortMercsText;
+    private string _escortCompanionText;
+    private string _confirmText;
+    private string _clearText;
+    private string _cancelText;
     private string _goodsHeaderText;
     private string _troopsHeaderText;
     private bool _escortNone = true;
@@ -66,6 +75,12 @@ public sealed class SupplyOrderScreenVM : ViewModel
         _placedFromCamp = placedFromCamp;
 
         _screenTitle = new TextObject("{=taom_sl_screen_title}Supply Order").ToString();
+        _escortNoneText = new TextObject("{=taom_sl_escort_none}None").ToString();
+        _escortMercsText = new TextObject("{=taom_sl_escort_mercs}Mercenaries").ToString();
+        _escortCompanionText = new TextObject("{=taom_sl_escort_companion}Companion").ToString();
+        _confirmText = new TextObject("{=taom_sl_confirm}Confirm").ToString();
+        _clearText = new TextObject("{=taom_sl_clear}Clear").ToString();
+        _cancelText = new TextObject("{=taom_sl_cancel}Cancel").ToString();
         _goodsHeaderText = new TextObject("{=taom_sl_goods_header}Goods in stock").ToString();
         _troopsHeaderText = new TextObject("{=taom_sl_troops_header}Volunteers (recruits)").ToString();
 
@@ -102,6 +117,90 @@ public sealed class SupplyOrderScreenVM : ViewModel
             {
                 _screenTitle = value;
                 OnPropertyChangedWithValue(value, nameof(ScreenTitle));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string EscortNoneText
+    {
+        get => _escortNoneText;
+        set
+        {
+            if (_escortNoneText != value)
+            {
+                _escortNoneText = value;
+                OnPropertyChangedWithValue(value, nameof(EscortNoneText));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string EscortMercsText
+    {
+        get => _escortMercsText;
+        set
+        {
+            if (_escortMercsText != value)
+            {
+                _escortMercsText = value;
+                OnPropertyChangedWithValue(value, nameof(EscortMercsText));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string EscortCompanionText
+    {
+        get => _escortCompanionText;
+        set
+        {
+            if (_escortCompanionText != value)
+            {
+                _escortCompanionText = value;
+                OnPropertyChangedWithValue(value, nameof(EscortCompanionText));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string ConfirmText
+    {
+        get => _confirmText;
+        set
+        {
+            if (_confirmText != value)
+            {
+                _confirmText = value;
+                OnPropertyChangedWithValue(value, nameof(ConfirmText));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string ClearText
+    {
+        get => _clearText;
+        set
+        {
+            if (_clearText != value)
+            {
+                _clearText = value;
+                OnPropertyChangedWithValue(value, nameof(ClearText));
+            }
+        }
+    }
+
+    [DataSourceProperty]
+    public string CancelText
+    {
+        get => _cancelText;
+        set
+        {
+            if (_cancelText != value)
+            {
+                _cancelText = value;
+                OnPropertyChangedWithValue(value, nameof(CancelText));
             }
         }
     }

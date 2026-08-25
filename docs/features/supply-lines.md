@@ -231,3 +231,12 @@ plus the shipped-config and localization-key sweeps that gate every feature.
   is registered in `taom_module_strings.xml` and present in all 12 language files as English
   fallback (batch-2 integration).
 - Optional fidelity restore: the `sl_reinf_*` lord conversation (see Deliberate departures).
+
+## Prefab labels are VM properties (field-tested 2026-08-25)
+
+The six button labels on the order screen (escort None/Mercenaries/Companion, Confirm, Clear,
+Cancel) shipped as literal `Text="{=key}Label"` attributes and rendered the raw token in-game:
+Gauntlet does not localize literal prefab text, only VM-bound strings pass through TextObject.
+They are now `@EscortNoneText` etc., built in the SupplyOrderScreenVM constructor, and
+`SupplyOrderPrefabBindingTests.NoPrefabAnywhere_CarriesALiteralLocalizationToken` sweeps every
+prefab in the module so the class cannot ship again.

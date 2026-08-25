@@ -1,6 +1,6 @@
 ﻿# Dev Console (`taom.*` commands)
 
-**Status:** Phase 0 (shared contract) built 2026-07-31 (#369, successor to #365). In-game discovery gate not yet run — see [The launch gate](#the-launch-gate).
+**Status:** Phase 0 (shared contract) built 2026-07-31 (#369, successor to #365). In-game discovery gate PASSED 2026-08-23 (log: "Console discovery PROVEN: the engine registered all 25 taom.* commands", vanilla control present); 27 commands as of 2026-08-25 with `taom.time_status` / `taom.rescue_time`. Gate mechanics: [The launch gate](#the-launch-gate).
 
 ## Overview
 

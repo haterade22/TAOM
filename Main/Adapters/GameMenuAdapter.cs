@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TAOM.Core.Logging;
@@ -110,6 +110,23 @@ public sealed class GameMenuAdapter : IGameMenuAdapter
         catch (Exception ex)
         {
             _logger?.LogError($"[Enlistment] ExitToLast failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    public bool RefreshCurrent()
+    {
+        try
+        {
+            var context = Campaign.Current?.CurrentMenuContext;
+            if (context == null)
+                return false;
+            context.Refresh();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"[Enlistment] RefreshCurrent failed: {ex.Message}");
             return false;
         }
     }

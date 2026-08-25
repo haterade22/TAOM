@@ -220,6 +220,31 @@ lesson (testing-qa): every CampaignTime factory returns default in tests because
 statics only initialize with a live campaign; CampaignTime.Never is the only nonzero
 constructible value.
 
+## Field test (2026-08-23 to 2026-08-25): what three review rounds could not see
+
+The first real play sessions after the trunk merge surfaced four things no reviewer could,
+because none of them modeled a player's first-run flow or the shipped module folder:
+
+1. **ButterLib/MCM dead at startup** (08859a85): TAOM.Dependencies shipped System.Memory 4.0.1.1
+   beside Unsafe 6.0.0.0; the exact 4.0.4.1 bind failed in the System.Memory cctor on ButterLib's
+   first Trace.WriteLine, every tick, since the DR3 migration. Mod Options hung at open and
+   NRE'd at close. Pin moved to package 4.5.3; DependenciesPairingTests gates both vendored
+   variants and every build output. Verified in-game.
+2. **Establishing a camp "froze" the game** (4ed42d04): establish switched into a standard
+   sub-menu (source parity), which stops time; MapState persisted the open menu so loads came
+   back frozen. Three static hypotheses failed; `taom.time_status` (new) showed MenuContext
+   taom_fc_camp / AtMenu true with everything else clean. Establish now exits to the map;
+   `taom.rescue_time` recovered the save in place. Verified 2026-08-25: first camp raised.
+3. **Forage toggle re-entered the same trap** (this commit): the sub-menu is now a WAIT menu
+   (time runs with the panel open, status ticks live); forage refreshes in place; break camp
+   exits to the map. In-game verification owed.
+4. **Six raw `{=taom_sl_*}` tokens on the Supply Order buttons** (this commit): literal prefab
+   text is not localized by Gauntlet; labels moved to VM properties; a module-wide prefab sweep
+   test guards the class. In-game verification owed.
+
+Open from the field: #509, a ~10-minute save-load stall between AllBehaviorDataLoaded and
+session launch (one occurrence, busy thread not captured).
+
 ## Remaining queue
 
 1. DONE: round A verified -> merged with the Codex batch -> fixed -> suite 7421 green ->

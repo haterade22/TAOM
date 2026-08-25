@@ -145,6 +145,29 @@ public class SupplyOrderPrefabBindingTests
     }
 
     [TestMethod]
+    public void NoPrefabAnywhere_CarriesALiteralLocalizationToken()
+    {
+        // Gauntlet does not localize literal prefab text: Text="{=key}Label" renders the raw
+        // token in-game (the six Supply Order buttons shipped that way, field-tested 2026-08-25).
+        // Label text belongs on the VM as a TextObject-built property bound with @. {=!} is the
+        // engine's own "no localization" marker on text-variable bodies and is legitimate.
+        var prefabRoot = Path.Combine(RepoRoot, @"Main\_Module\GUI\PreFabs");
+        var offenders = new List<string>();
+        foreach (var file in Directory.GetFiles(prefabRoot, "*.xml", SearchOption.AllDirectories))
+        {
+            var lines = File.ReadAllLines(file);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains("Text=\"{=") && !lines[i].Contains("Text=\"{=!}"))
+                    offenders.Add($"{file}:{i + 1}");
+            }
+        }
+        Assert.AreEqual(0, offenders.Count,
+            "Literal {=key} text in a prefab renders raw in-game; move it to a VM property:\n"
+            + string.Join("\n", offenders));
+    }
+
+    [TestMethod]
     public void VmTypes_EveryDataSourceProperty_IsBoundInThePrefab()
     {
         var boundNames = new HashSet<string>(StringComparer.Ordinal);

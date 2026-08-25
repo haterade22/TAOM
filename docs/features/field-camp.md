@@ -121,18 +121,26 @@ stripped install degrades instead of breaking; the fallback is exercised by rena
 | `UI/FieldCampMapView.cs` + `FieldCampOverlayVM.cs` | Overlay button + status panel, 4 Hz refresh |
 | `Main/_Module/GUI/PreFabs/FieldCamp/TaomFieldCampOverlay.xml` | Ported prefab; brushes are grep-verified vanilla (`Popup.Description.Text`, `Popup.Button.Text`, `Popup.Frame`, `ButtonBrush2`); the source's root `Frame1.Broken` was a phantom too (only `.Left`/`.Right` exist), swapped for the real `Popup.Frame` in round C |
 
-## The establish flow and the menus-stop-time trap (field-tested 2026-08-23)
+## Menus and time: establish lands on the map, the camp sub-menu is a WAIT menu (field-tested 2026-08-23/25)
 
 A standard game menu stops campaign time unconditionally and deadens the time controls (vanilla
-behavior, not a bug). The source module switched into the fc_camp sub-menu right after
-establishing, which showed "Raising 0%" in a menu where the raise can never progress; the very
-first field camp ever established read as a frozen game, and because MapState persists the open
-menu id, saving there made every load resume "frozen" too. The port now EXITS to the map after
-establishing (deliberate source deviation, FieldCampMenuController.Establish): the overlay
-narrates the raise and Camp Options reopens the menu on demand. Manage camp still opens the
-sub-menu; that is a deliberate player choice with a visible panel.
+behavior, not a bug), and MapState persists the open menu id into the save. The source module
+switched into its camp sub-menu right after establishing, which showed "Raising 0%" in a panel
+where the raise could never progress; the very first field camp ever established read as a
+frozen game, and saving there made every load resume "frozen" too. Two deliberate deviations
+from the source close that class:
 
-Field diagnostics that came out of that incident (DevConsole feature, taom.* commands):
+- **Establish exits to the map** (`FieldCampMenuController.Establish`): the overlay narrates the
+  raise and Camp Options reopens the menu on demand. Verified in-game 2026-08-25: the first camp
+  on the fix build raised to completion on a new campaign.
+- **The camp sub-menu is a wait menu** (`AddWaitGameMenu`, `WaitMenuHideProgressAndHoursOption`;
+  the Enlistment service menu is the precedent): time runs while the panel is open, and the tick
+  re-renders the raise percent and forage grain. The forage toggle refreshes in place through
+  `IGameMenuAdapter.RefreshCurrent()` (MenuContext.Refresh) instead of SwitchTo(same id), which
+  would re-initialise the wait. Break camp exits to the map. Leave stays the only isLeave option
+  because the engine calls EndWait BEFORE an isLeave consequence (the Enlistment trap).
+
+Field diagnostics that came out of the incident (DevConsole feature, taom.* commands):
 `taom.time_status` dumps every state that can freeze campaign time (menu context, time lock,
 engine pause, waiting flag, encounter); `taom.rescue_time` exits a stuck menu context, releases
 the lock, unpauses the engine and force-resumes time. Both live in

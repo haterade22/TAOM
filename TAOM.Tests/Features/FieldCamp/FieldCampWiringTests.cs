@@ -106,6 +106,32 @@ public class FieldCampWiringTests
     // ---- SubModule wiring (single-owner file; these pin the two lines FieldCamp depends on) ----
 
     [TestMethod]
+    public void CampSubMenu_IsAWaitMenu_AndNeverReEntersItself()
+    {
+        // A standard game menu stops campaign time, so the sub-menu's live status (raise percent,
+        // forage grain) could never move while open and read as a frozen game (field test,
+        // 2026-08-23/25). The sub-menu must be a wait menu, and its actions must refresh in place:
+        // SwitchTo(same id) re-initialises a wait menu and restarts the wait.
+        var src = ReadSource("Main", "Features", "FieldCamp", "Hooks", "FieldCampMenuController.cs");
+
+        StringAssert.Contains(src, "starter.AddWaitGameMenu(",
+            "the camp sub-menu must register as a WAIT menu so time runs while it is open");
+        StringAssert.Contains(src, "GameMenu.MenuAndOptionType.WaitMenuHideProgressAndHoursOption",
+            "wait-menu type must be the hide-progress variant (the panel narrates its own status)");
+        // Exactly one SwitchTo INTO the sub-menu is legitimate: the base menu's Manage camp
+        // option (a standard menu switching into a wait menu, the vanilla town -> wait shape).
+        // A second one would be a sub-menu action re-entering itself, which restarts the wait.
+        int switchesIntoSubMenu = src
+            .Split(new[] { "_menus.SwitchTo(FieldCampCampaignBehavior.CampSubMenuId)" }, StringSplitOptions.None)
+            .Length - 1;
+        Assert.AreEqual(1, switchesIntoSubMenu,
+            "only the base menu's Manage option may switch into the sub-menu; actions inside it "
+            + "must use RefreshCurrent() in place");
+        StringAssert.Contains(src, "_menus.RefreshCurrent()",
+            "the forage toggle must re-render in place");
+    }
+
+    [TestMethod]
     public void SubModule_AddsTheFieldCampBehavior()
     {
         var src = ReadSource("Main", "SubModule.cs");

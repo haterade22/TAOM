@@ -89,11 +89,25 @@ public sealed class FieldCampMenuController
             args => _menus.ExitToLast(),
             isLeave: true, index: 5);
 
-        starter.AddGameMenu(
+        // WAIT menu, deliberately (source parity broken 2026-08-25, user decision): a standard
+        // game menu stops campaign time unconditionally, so the raise percent and forage grain
+        // this panel shows could never move while the player stood in it, and the dead time
+        // controls read as a frozen game. A wait menu lets time run with the panel open; the
+        // tick re-renders the status each pass. Enlistment's service wait menu is the precedent
+        // (EnlistmentMenuBehavior + EnlistmentWaitMenuOptions): Leave is the only isLeave option,
+        // because RunMenuOptionConsequence calls EndWait BEFORE an isLeave consequence.
+        starter.AddWaitGameMenu(
             FieldCampCampaignBehavior.CampSubMenuId,
             "{=!}{TAOM_FC_STATUS}",
             new OnInitDelegate(OnMenuInit),
-            GameMenu.MenuOverlayType.None);
+            args => _camps.PlayerCamp != null,
+            null,
+            new OnTickDelegate(OnSubMenuTick),
+            GameMenu.MenuAndOptionType.WaitMenuHideProgressAndHoursOption,
+            GameMenu.MenuOverlayType.None,
+            0f,
+            GameMenu.MenuFlags.None,
+            null);
 
         starter.AddGameMenuOption(FieldCampCampaignBehavior.CampSubMenuId, "taom_fc_forage",
             "{=!}{TAOM_FC_FORAGE}",
@@ -101,8 +115,10 @@ public sealed class FieldCampMenuController
             args =>
             {
                 _camps.ToggleForaging();
-                // Re-enter the menu so the toggled TAOM_FC_FORAGE / status text re-renders.
-                _menus.SwitchTo(FieldCampCampaignBehavior.CampSubMenuId);
+                // In-place re-render of the toggled TAOM_FC_FORAGE label. NOT SwitchTo(same id):
+                // that re-initialises the menu, which on a wait menu restarts the wait.
+                RefreshStatusVariables();
+                _menus.RefreshCurrent();
             },
             isLeave: false, index: 0);
 
@@ -141,7 +157,9 @@ public sealed class FieldCampMenuController
             args =>
             {
                 _camps.BreakPlayerCamp();
-                _menus.SwitchTo(FieldCampCampaignBehavior.BaseMenuId);
+                // The camp is gone; the map is the honest landing. Exiting also avoids switching
+                // out of a wait menu without EndWait (only an isLeave option gets that call).
+                _menus.ExitToLast();
             },
             isLeave: false, index: 3);
 
@@ -153,6 +171,13 @@ public sealed class FieldCampMenuController
     }
 
     private void OnMenuInit(MenuCallbackArgs args)
+    {
+        RefreshStatusVariables();
+    }
+
+    /// <summary>Wait-menu tick: keeps the raise percent and forage grain live while the panel
+    /// is open. Text-variable writes only; the engine re-renders the body from them.</summary>
+    private void OnSubMenuTick(MenuCallbackArgs args, CampaignTime dt)
     {
         RefreshStatusVariables();
     }

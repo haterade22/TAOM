@@ -423,3 +423,12 @@ feature claims a prefix, grep every ModuleData *_strings.xml for it; and a round
 code-default scan must exclude ALL registration XMLs, or the gate is circular. The renaming fix
 (taom_fc_ -> taom_fcamp_) was free only because the keys were still untranslated English
 fallbacks; after a translator run the same mistake costs 12 languages of churn.
+
+### A literal {=key} in a Gauntlet prefab renders the raw token; label text lives on the VM (supply order screen, 2026-08-25)
+
+Gauntlet localizes only VM-bound strings (they pass through TextObject.ToString in the VM);
+a literal Text="{=key}Label" attribute in a prefab is rendered verbatim, token and all. Six
+Supply Order buttons shipped that way and every review round missed it because the keys WERE
+registered and the round-trip gate compares registered rows against inline defaults, not
+against how a prefab consumes them. Rule: prefab text is @Property or {=!}{VARIABLE}, never a
+literal key; the prefab sweep test now enforces it module-wide.

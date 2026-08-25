@@ -176,6 +176,36 @@ references; the regeneration script purges the foreign rows. Prevent (rule of th
 the localization lessons): before a new feature claims a key prefix, grep the registration XMLs
 for that prefix; a prefix is an ownership claim, not a naming convention.
 
+## Field-test addendum (2026-08-23 to 2026-08-25)
+
+### Class 9 (new): a faithfully ported UX trap
+
+The source switched into the camp sub-menu after establishing; so did the port. A standard game
+menu stops campaign time unconditionally and MapState persists the open menu id, so the first
+camp ever established read as a frozen game and the freeze survived save/load. The forage toggle
+carried the same shape. Why missed: every review dimension verified code against source and
+engine; none walked the FIRST-RUN PLAYER FLOW ("establish, then wait for it"). Source parity
+was treated as correctness. Prevent: (1) a port's smoke checklist opens with the first-run flow,
+run by a human before the feature is called verified; (2) rule (campaign-mechanics lesson): after
+starting a timed process, land the player on the map or in a wait menu, never a standard menu;
+(3) `taom.time_status` exists so the next freeze is a one-command diagnosis.
+
+### Class 10 (new): a shipped-module pairing nobody verified
+
+TAOM.Dependencies vendored System.Memory 4.0.1.1 beside Unsafe 6.0.0.0 for three months; the
+mismatch killed ButterLib at startup and nobody had opened Mod Options since. Why missed: the
+suite exercises source and build output, never the shipped module folder's assembly pairings,
+and the csproj pin overwrote a correct vendored file on every deploy. Prevent:
+DependenciesPairingTests (vendored variants + build outputs) and the build-tooling lesson on
+package-vs-assembly versions.
+
+### Class 11 (new): literal localization tokens in prefabs
+
+Six Supply Order button labels were literal Text="{=key}Label"; Gauntlet renders those raw. Why
+missed: the keys were registered, so every localization gate passed; no gate looked at HOW a
+prefab consumes a key. Prevent: the module-wide prefab sweep test (no literal {= in any prefab)
+and the localization-ui lesson.
+
 ## Where each class was caught, honestly
 
 Round A's no-narrative design earned its cost: Classes 3 and 6 are structurally invisible to a

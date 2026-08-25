@@ -273,7 +273,7 @@
                                         Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortNone" />
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="{=taom_sl_escort_none}None" />
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="@EscortNoneText" />
                               </Children>
                             </ButtonWidget>
                             <ButtonWidget DoNotPassEventsToChildren="true"
@@ -287,7 +287,7 @@
                                         Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortMercenaries" />
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="{=taom_sl_escort_mercs}Mercenaries" />
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="@EscortMercsText" />
                               </Children>
                             </ButtonWidget>
                             <ButtonWidget DoNotPassEventsToChildren="true"
@@ -301,7 +301,7 @@
                                         Sprite="BlankWhiteSquare_9" Color="#C8A24BFF" AlphaFactor="0.85" IsVisible="@EscortCompanion" />
                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="{=taom_sl_escort_companion}Companion" />
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Text="@EscortCompanionText" />
                               </Children>
                             </ButtonWidget>
                           </Children>
@@ -356,7 +356,7 @@
                   <Children>
                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="{=taom_sl_confirm}Confirm" />
+                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="@ConfirmText" />
                   </Children>
                 </ButtonWidget>
                 <ButtonWidget DoNotPassEventsToChildren="true"
@@ -367,7 +367,7 @@
                   <Children>
                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="{=taom_sl_clear}Clear" />
+                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="@ClearText" />
                   </Children>
                 </ButtonWidget>
                 <ButtonWidget DoNotPassEventsToChildren="true"
@@ -377,7 +377,7 @@
                   <Children>
                     <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="{=taom_sl_cancel}Cancel" />
+                                Brush="Popup.Button.Text" Brush.FontSize="16" Text="@CancelText" />
                   </Children>
                 </ButtonWidget>
               </Children>

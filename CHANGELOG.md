@@ -142,7 +142,11 @@ and the status dump is what turned three failed static hypotheses into a one-scr
 diagnosis. Suite 7474 passed / 2 skipped.
 
 Known follow-up, tracked separately: loading that save took ~10 minutes with a silent stall
-between AllBehaviorDataLoaded and session launch.
+between AllBehaviorDataLoaded and session launch (#509).
+
+Verified in-game 2026-08-25: the first camp on the fix build raised to completion on a new
+campaign (log shows the Refuge session reset and the camp placement; raise completion is a
+player-visible message, not a logged event).
 
 ## 2026-08-23
 
